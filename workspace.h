@@ -254,6 +254,10 @@ private:
       int row;
     };
 
+    // desktop names and number of desktops
+    void loadDesktopSettings();
+    void saveDesktopSettings();
+    
     // mouse emulation
     WId getMouseEmulationWindow();
     enum MouseEmulation { EmuPress, EmuRelease, EmuMove };

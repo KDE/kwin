@@ -153,7 +153,7 @@ Client* Workspace::clientFactory( WId w )
 	return new NoBorderClient( this, w );
 
     switch ( ni.windowType() ) {
-    case NET::Desktop: 
+    case NET::Desktop:
 	{
 	    XLowerWindow( qt_xdisplay(), w );
 	    Client * c = new NoBorderClient( this, w);
@@ -162,11 +162,11 @@ Client* Workspace::clientFactory( WId w )
 	    return c;
 	}
 
-    case NET::Toolbar: 
+    case NET::Toolbar:
 	return new StdToolClient( this, w); // TODO use mgr.allocateClient...
-    
+
     case NET::Menu:
-    case NET::Dock: 
+    case NET::Dock:
 	{
 	    Client * c = new NoBorderClient( this, w);
 	    c->setSticky( TRUE );
@@ -280,6 +280,7 @@ void Workspace::init()
 	NET::ActiveWindow |
 	NET::WorkArea |
 	NET::CloseWindow |
+	NET::DesktopNames |
 	
 	NET::WMName |
 	NET::WMDesktop |
@@ -293,16 +294,8 @@ void Workspace::init()
 	;
 	
     rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
-	
-    KConfig config("kdeglobals");
-    config.setGroup("KDE");
-    if (!config.hasKey("NumberOfDesktops"))
-      {
-	config.writeEntry("NumberOfDesktops", 4);
-	config.sync();
-      }
-    int n = config.readNumEntry("NumberOfDesktops");
-    setNumberOfDesktops( n );
+
+    loadDesktopSettings();
     setCurrentDesktop( 1 );
 
     unsigned int i, nwins;
@@ -1798,11 +1791,7 @@ void Workspace::setNumberOfDesktops( int n )
 	return;
     number_of_desktops = n;
     rootInfo->setNumberOfDesktops( number_of_desktops );
-
-    KConfig c("kdeglobals");
-    c.setGroup("KDE");
-    c.writeEntry("NumberOfDesktops", n);
-    c.sync();
+    saveDesktopSettings();
 }
 
 /*!
@@ -1812,7 +1801,8 @@ bool Workspace::netCheck( XEvent* e )
 {
     unsigned int dirty = rootInfo->event( e );
 
-    dirty = 0; // shut up, compiler
+    if ( dirty & NET::DesktopNames )
+	saveDesktopSettings();
 
     return FALSE;
 }
@@ -2645,6 +2635,38 @@ void Workspace::updateClientArea()
 QRect Workspace::clientArea()
 {
   return area;
+}
+
+
+void Workspace::loadDesktopSettings()
+{
+    KConfig c("kdeglobals");
+    c.setGroup("Desktops");
+    if (!c.hasKey("Number"))
+	c.writeEntry("Number", 4);
+    int n = c.readNumEntry("Number");
+    number_of_desktops = n;
+    rootInfo->setNumberOfDesktops( number_of_desktops );
+    for(int i = 1; i <= n; i++) {
+	QString s = c.readEntry(QString("Name_%1").arg(i),
+				      i18n("Desktop %1").arg(i+1));
+	rootInfo->setDesktopName( i, s.utf8().data() );
+    }
+}
+
+void Workspace::saveDesktopSettings()
+{
+    KConfig c("kdeglobals");
+    c.setGroup("Desktops");
+    c.writeEntry("Number", number_of_desktops );
+    for(int i = 1; i <= number_of_desktops; i++) {
+	QString s = QString::fromUtf8( rootInfo->desktopName( i ) );
+	if ( s.isEmpty() ) {
+	    s = i18n("Desktop %1").arg(i);
+	    rootInfo->setDesktopName( i, s.utf8().data() );
+	}
+	c.writeEntry( QString("Name_%1").arg(i), s );
+    }
 }
 
 
