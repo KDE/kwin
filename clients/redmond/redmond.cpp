@@ -917,7 +917,7 @@ KDecoration *RedmondDecoFactory::createDecoration( KDecorationBridge *b )
 
 bool RedmondDecoFactory::reset( unsigned long changed )
 {
-	if ( changed & ( SettingFont | SettingBorder ) ) {
+	if ( changed & ( SettingFont | SettingBorder | SettingColors ) ) {
 		delete_pixmaps();
 		readConfig();
 		create_pixmaps();
