@@ -481,7 +481,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     QRect geom( original_geometry );
     bool placementDone = FALSE;
-    
+
     SessionInfo* session = workspace()->takeSessionInfo( this );
     if ( session )
 	geom.setRect( session->x, session->y, session->width, session->height );
@@ -856,8 +856,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	int gravity = NorthWestGravity;
 	if ( xSizeHint.flags & PWinGravity)
 	    gravity = xSizeHint.win_gravity;
-	if ( TRUE || gravity == StaticGravity ) {
-	    // the TRUE makes it work with real programs, but it's not ICCCM.
+	if ( gravity == StaticGravity ) { // only with StaticGravity according to ICCCM 4.1.5
 	    ox = windowWrapper()->x();
 	    oy = windowWrapper()->y();
 	}
