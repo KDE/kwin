@@ -62,16 +62,19 @@ protected:
     void activeChange(bool);
 
     void calcHiddenButtons();
-    void updateActiveBuffer( bool force = false );
+    void updateActiveBuffer();
 protected slots:
     void slotReset();
     void slotMaximize();
 private:
     KDEDefaultClientButton* button[5];
+    int lastButtonWidth;
     QSpacerItem* titlebar;
     bool hiddenItems;
     QHBoxLayout *hb;
     KPixmap activeBuffer;
+    bool bufferDirty;
+    int lastBufferWidth;
 };
 
 

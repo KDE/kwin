@@ -1,3 +1,4 @@
+
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "kdedefault.h"
 #include <qapplication.h>
@@ -304,6 +305,9 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity )
 {
+    lastButtonWidth = 0;
+    lastBufferWidth = 0;
+ 
     create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
@@ -365,6 +369,7 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     }
 
     hiddenItems = false;
+    bufferDirty = true;
 }
 
 void KDEClient::slotMaximize()
@@ -402,10 +407,9 @@ void KDEClient::resizeEvent( QResizeEvent* e)
     }
 }
 
-void KDEClient::captionChange( const QString& )
+void KDEClient::captionChange( const QString&str )
 {
-    if ( isActive() )
-	updateActiveBuffer( true );
+    bufferDirty = true;
     repaint( titlebar->geometry(), false );
 }
 
@@ -544,12 +548,11 @@ void KDEClient::calcHiddenButtons()
 {
     // order of hiding is help, sticky, maximize, minimize, close;
     // buttons can have
-    static int lastWidth=0;
     int minWidth = 32 + btnWidth2*3 + (providesContextHelp() ? btnWidth1*2 :
                                        btnWidth1);
 
-    if(lastWidth > width()){ // shrinking
-        lastWidth = width();
+    if(lastButtonWidth > width()){ // shrinking
+        lastButtonWidth = width();
         if(width() < minWidth){
             hiddenItems = true;
             int i;
@@ -566,7 +569,7 @@ void KDEClient::calcHiddenButtons()
         }
     }
     else if(hiddenItems){ // expanding
-        lastWidth = width();
+        lastButtonWidth = width();
         int i;
         int totalSize=32;
         for(i=4; i>=0; --i){
@@ -586,18 +589,17 @@ void KDEClient::calcHiddenButtons()
         hiddenItems = false;
     }
     else
-        lastWidth = width();
+        lastButtonWidth = width();
 }
 
-void KDEClient::updateActiveBuffer( bool force )
+void KDEClient::updateActiveBuffer( )
 {
-    static int lastWidth = 0;
-
-    if( !force && lastWidth == titlebar->geometry().width())
+    if( !bufferDirty && (lastBufferWidth == titlebar->geometry().width()))
         return;
     if ( titlebar->geometry().width() <= 0 || titlebar->geometry().height() <= 0 )
 	return;
-    lastWidth = titlebar->geometry().width();
+    lastBufferWidth = titlebar->geometry().width();
+    bufferDirty = false;
 
     activeBuffer.resize(titlebar->geometry().width(),
                         titlebar->geometry().height()-1);
