@@ -10,11 +10,11 @@
 
 static const char *description =
         I18N_NOOP("Installs a KWM theme");
- 
+
 static KCmdLineOptions options[] =
 {
     { "+[file]", I18N_NOOP("Path to a theme config file"), 0 },
-    { 0, 0, 0 }
+    KCmdLineLastOption
 };
 
 void copy(const QString &src, const QString &dest)
