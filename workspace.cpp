@@ -492,6 +492,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             tab_box->hide();
             keys->setKeyEventsEnabled( TRUE );
             tab_grab = control_grab = false;
+            return TRUE;
         }
     case ButtonRelease:
     case MotionNotify:
@@ -592,18 +593,10 @@ bool Workspace::workspaceEvent( XEvent * e )
         }
         break;
     case KeyPress:
-        if ( QWidget::keyboardGrabber() ) {
-            freeKeyboard();
-            break;
-        }
         if ( mouse_emulation )
             return keyPressMouseEmulation( e->xkey );
         return keyPress(e->xkey);
     case KeyRelease:
-        if ( QWidget::keyboardGrabber() ) {
-            freeKeyboard();
-            break;
-        }
         if ( mouse_emulation )
             return FALSE;
         return keyRelease(e->xkey);
@@ -718,13 +711,6 @@ bool Workspace::destroyClient( Client* c)
 }
 
 
-
-/*!
-  Auxiliary function to release a passive keyboard grab
- */
-void Workspace::freeKeyboard(){
-    XAllowEvents(qt_xdisplay(), AsyncKeyboard, kwin_time);
-}
 
 /*!
   Handles alt-tab / control-tab
@@ -909,14 +895,12 @@ bool Workspace::startKDEWalkThroughWindows()
 			      LeaveWindowMask | PointerMotionMask),
 		       GrabModeAsync, GrabModeAsync,
 		       None, None, kwin_time ) != GrabSuccess ) {
-	XUngrabKeyboard( qt_xdisplay(), kwin_time );
 	return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
 		       root, FALSE,
 		       GrabModeAsync, GrabModeAsync,
 		       kwin_time) != GrabSuccess ) {
-	XUngrabKeyboard( qt_xdisplay(), kwin_time );
 	XUngrabPointer( qt_xdisplay(), kwin_time);
 	return FALSE;
     }
@@ -934,15 +918,13 @@ bool Workspace::startWalkThroughDesktops( int mode )
 			      ButtonMotionMask | EnterWindowMask |
 			      LeaveWindowMask | PointerMotionMask),
 		       GrabModeAsync, GrabModeAsync,
-              None, None, kwin_time ) != GrabSuccess ) {
-	XUngrabKeyboard( qt_xdisplay(), kwin_time );
+		       None, None, kwin_time ) != GrabSuccess ) {
 	return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
 		       root, FALSE,
 		       GrabModeAsync, GrabModeAsync,
 		       kwin_time) != GrabSuccess ) {
-	XUngrabKeyboard( qt_xdisplay(), kwin_time );
 	XUngrabPointer( qt_xdisplay(), kwin_time);
 	return FALSE;
     }
@@ -1044,10 +1026,8 @@ bool Workspace::keyPress(XKeyEvent key)
     if (!control_grab){
         if( keyCombQt == walkThroughWindowsKeycode
            || keyCombQt == walkBackThroughWindowsKeycode ) {
-            if (!tab_grab) {
-                freeKeyboard();
+            if (!tab_grab) 
                 return FALSE;
-            }
             KDEWalkThroughWindows( keyCombQt == walkThroughWindowsKeycode );
         }
     }
@@ -1056,18 +1036,14 @@ bool Workspace::keyPress(XKeyEvent key)
 
         if( keyCombQt == walkThroughDesktopsKeycode
            || keyCombQt == walkBackThroughDesktopsKeycode ) {
-            if (!control_grab) {
-                freeKeyboard();
+            if (!control_grab)
                 return FALSE;
-            }
             walkThroughDesktops( keyCombQt == walkThroughDesktopsKeycode );
         }
         else if( keyCombQt == walkThroughDesktopListKeycode
            || keyCombQt == walkBackThroughDesktopListKeycode ) {
-            if (!control_grab) {
-                freeKeyboard();
+            if (!control_grab) 
                 return FALSE;
-            }
             walkThroughDesktops( keyCombQt == walkThroughDesktopListKeycode );
         }
     }
@@ -1084,7 +1060,6 @@ bool Workspace::keyPress(XKeyEvent key)
         return TRUE;
     }
 
-    freeKeyboard();
     return FALSE;
 }
 
@@ -1125,8 +1100,8 @@ bool Workspace::keyRelease(XKeyEvent key)
     if( !release )
          return FALSE;
     if (tab_grab){
-                XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 XUngrabPointer( qt_xdisplay(), kwin_time);
+                XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 tab_box->hide();
                 keys->setKeyEventsEnabled( TRUE );
                 tab_grab = false;

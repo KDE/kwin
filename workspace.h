@@ -309,7 +309,6 @@ protected:
 private:
     void init();
     void createKeybindings();
-    void freeKeyboard();
 
     bool startKDEWalkThroughWindows();
     bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
