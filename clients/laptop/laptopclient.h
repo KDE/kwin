@@ -81,6 +81,7 @@ protected:
     void calcHiddenButtons();
     void updateActiveBuffer();
 private:
+    bool mustDrawHandle() const;
     bool isTool() const;
     bool isTransient() const;
 protected slots:

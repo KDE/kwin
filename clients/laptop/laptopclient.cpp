@@ -358,7 +358,7 @@ void LaptopClient::init()
 	g->addItem( new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
 
     g->setRowStretch(3, 10);
-    spacer = new QSpacerItem(10, isResizable() ? handleSize : 4,
+    spacer = new QSpacerItem(10, mustDrawHandle() ? handleSize : 4,
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->addItem(spacer, 4, 1);
     g->addColSpacing(0, 4);
@@ -437,7 +437,7 @@ void LaptopClient::resizeEvent(QResizeEvent* e)
 	if ( e->oldSize().width() != width() )
 	    dx = 32 + QABS( e->oldSize().width() -  width() );
 	if ( e->oldSize().height() != height() )
-	    dy = isResizable() ? handleSize : 4 +
+	    dy = mustDrawHandle() ? handleSize : 4 +
 		QABS( e->oldSize().height() -  height() );
 	if ( dy )
 	    widget()->update( 0, height() - dy + 1, width(), dy );
@@ -477,7 +477,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     int th = titleHeight;
     int bb = handleSize + 2; // Bottom border
     int bs = handleSize - 2; // inner size of bottom border
-    if (!isResizable()) {
+    if (!mustDrawHandle()) {
 	bb = 6;
 	bs = 0;
     }
@@ -488,24 +488,24 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawRect(r.x() + 3, r.y() + th + 3, r.width() - 6, r.height() - th - bb);
 
     // handles
-    if (!isResizable()) {
-    } else if (r.width() > 3*handleSize + 20) {
-        int range = 8 + 3*handleSize/2;
-        qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, range,
-                        handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.x() + range + 1, r.bottom() - bs,
-		r.width() - 2*range - 2, handleSize - 2, g, false, 1,
-		isActive() ? &g.brush(QColorGroup::Background) :
-			     &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.right() - range, r.bottom() - bs,
-		range, bs, g, false, 1, &g.brush(QColorGroup::Mid));
+    if (mustDrawHandle()) {
+	if (r.width() > 3*handleSize + 20) {
+	    int range = 8 + 3*handleSize/2;
+	    qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, range, 
+		    handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
+	    qDrawShadePanel(&p, r.x() + range + 1, r.bottom() - bs,
+		    r.width() - 2*range - 2, handleSize - 2, g, false, 1,
+		    isActive() ? &g.brush(QColorGroup::Background) :
+				 &g.brush(QColorGroup::Mid));
+	    qDrawShadePanel(&p, r.right() - range, r.bottom() - bs,
+		    range, bs, g, false, 1, &g.brush(QColorGroup::Mid));
+	} else {
+	    qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs,
+		    r.width() - 2, bs, g, false, 1,
+		    isActive() ?  &g.brush(QColorGroup::Background) :
+				  &g.brush(QColorGroup::Mid));
+	}
     }
-    else
-        qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs,
-		r.width() - 2, bs, g, false, 1,
-		isActive() ?  &g.brush(QColorGroup::Background) :
-		              &g.brush(QColorGroup::Mid));
-
     r = titlebar->geometry();
     r.setRight(r.right()-1);
 
@@ -574,6 +574,16 @@ void LaptopClient::mouseDoubleClickEvent( QMouseEvent * e )
         titlebarDblClickOperation();
 }
 
+bool LaptopClient::mustDrawHandle() const 
+{ 
+    bool drawSmallBorders = !options()->moveResizeMaximizedWindows();
+    if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
+	return false;
+    } else {
+	return isResizable();
+    }
+}
+
 void LaptopClient::iconChange()
 {
     // There is no icon support in this theme
@@ -594,7 +604,7 @@ void LaptopClient::maximizeChange()
     button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
     QToolTip::remove(button[BtnMax]);
     QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
-    spacer->changeSize(10, isResizable() ? handleSize : 4,
+    spacer->changeSize(10, mustDrawHandle() ? handleSize : 4,
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
     doShape();
@@ -740,7 +750,7 @@ void LaptopClient::borders(int &left, int &right, int &top, int &bottom) const
 {
     left = right = 4;
     top = titleHeight + 4;
-    bottom = isResizable() ? handleSize : 4;
+    bottom = mustDrawHandle() ? handleSize : 4;
 }
 
 void LaptopClient::shadeChange()
