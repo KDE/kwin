@@ -20,11 +20,12 @@ class ModernButton : public QButton
     Q_OBJECT
 public:
     ModernButton( ModernSys *parent=0, const char *name=0,
-                 const unsigned char *bitmap=NULL,
+                 bool toggle = false, const unsigned char *bitmap=NULL,
                  const QString& tip=NULL, const int realizeBtns = LeftButton);
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
+    void turnOn( bool isOn );
 protected:
     void mousePressEvent( QMouseEvent* e );
     void mouseReleaseEvent( QMouseEvent* e );
@@ -68,9 +69,16 @@ protected:
     void reset( unsigned long );
 protected slots:
     void maxButtonClicked();
+    void slotAbove();
+    void slotBelow();
+    void slotShade();
+    void keepAboveChange( bool );
+    void keepBelowChange( bool );
 private:
-	enum Buttons{ BtnClose = 0, BtnSticky, BtnMinimize, BtnMaximize, BtnHelp };
-    ModernButton* button[5];
+	enum Buttons{ BtnClose = 0, BtnSticky, BtnMinimize, BtnMaximize, BtnHelp,
+                  BtnAbove, BtnBelow, BtnShade,
+                  BtnCount};
+    ModernButton* button[ModernSys::BtnCount];
     QSpacerItem* titlebar;
     QPixmap titleBuffer;
     QString oldTitle;

@@ -41,6 +41,24 @@ static unsigned char sticky_bits[] = {
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
 
+static unsigned char above_on_bits[] = {
+    0x7e, 0x00, 0x7e, 0x3c, 0x18, 0x00, 0x00, 0x00};
+
+static unsigned char above_off_bits[] = {
+    0x18, 0x3c, 0x7e, 0x00, 0x7e, 0x00, 0x00, 0x00};
+
+static unsigned char below_off_bits[] = {
+    0x00, 0x00, 0x00, 0x7e, 0x00, 0x7e, 0x3c, 0x18};
+
+static unsigned char below_on_bits[] = {
+    0x00, 0x00, 0x00, 0x18, 0x3c, 0x7e, 0x00, 0x7e};
+
+static unsigned char shade_off_bits[] = {
+    0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char shade_on_bits[] = {
+    0x00, 0x7e, 0x7e, 0x42, 0x42, 0x42, 0x7e, 0x00};
+
 static unsigned char btnhighcolor_mask_bits[] = {
     0xe0,0x41,0xf8,0x07,0xfc,0x0f,0xfe,0xdf,0xfe,0x1f,0xff,0x3f,0xff,0xff,0xff,
     0x3f,0xff,0x3f,0xff,0xff,0xff,0xff,0xfe,0x9f,0xfe,0x1f,0xfc,0x0f,0xf0,0x03,
@@ -276,12 +294,15 @@ QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
    //   BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
-ModernButton::ModernButton(ModernSys *parent, const char *name,
+ModernButton::ModernButton(ModernSys *parent, const char *name, bool toggle,
                            const unsigned char *bitmap, const QString& tip, const int realizeBtns)
     : QButton(parent->widget(), name),
       last_button( NoButton ) 
 {
     setBackgroundMode( NoBackground );
+
+    setToggleButton(toggle);
+
     setCursor( arrowCursor );
     realizeButtons = realizeBtns;
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
@@ -300,6 +321,13 @@ ModernButton::ModernButton(ModernSys *parent, const char *name,
 QSize ModernButton::sizeHint() const
 {
     return(QSize(14, 15));
+}
+
+// Make the protected member public
+void ModernButton::turnOn( bool isOn )
+{
+    if ( isToggleButton() )
+        setOn( isOn );
 }
 
 void ModernButton::reset()
@@ -359,6 +387,9 @@ ModernSys::ModernSys( KDecorationBridge* b, KDecorationFactory* f )
 
 void ModernSys::init()
 {
+    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
+    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
+
     createMainWidget( WResizeNoErase );
     widget()->installEventFilter( this );
 	bool reverse = QApplication::reverseLayout();
@@ -383,17 +414,23 @@ void ModernSys::init()
     titlebar = new QSpacerItem(10, title_height, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
 
-    button[BtnClose] = new ModernButton(this, "close", close_bits, i18n("Close"));
-    button[BtnSticky] = new ModernButton(this, "sticky", NULL, isOnAllDesktops()?i18n("Unsticky"):i18n("Sticky"));
-    button[BtnMinimize] = new ModernButton(this, "iconify", iconify_bits, i18n("Minimize"));
-    button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
-    button[BtnHelp] = new ModernButton(this, "help", question_bits, i18n("Help"));
+    button[BtnClose] = new ModernButton(this, "close", false, close_bits, i18n("Close"));
+    button[BtnSticky] = new ModernButton(this, "sticky", false, NULL, isOnAllDesktops()?i18n("Unsticky"):i18n("Sticky"));
+    button[BtnMinimize] = new ModernButton(this, "iconify", false, iconify_bits, i18n("Minimize"));
+    button[BtnMaximize] = new ModernButton(this, "maximize", false, maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
+    button[BtnHelp] = new ModernButton(this, "help", false, question_bits, i18n("Help"));
+    button[BtnAbove] = new ModernButton(this, "above", true, above_off_bits, i18n("Keep above others"));
+    button[BtnBelow] = new ModernButton(this, "below", true, below_off_bits, i18n("Keep below others"));
+    button[BtnShade] = new ModernButton(this, "shade", true, shade_off_bits, isSetShade()?i18n("Unshade"):i18n("Shade") );
 
     connect( button[BtnClose], SIGNAL(clicked()), this, SLOT( closeWindow() ) );
     connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT( toggleOnAllDesktops() ) );
     connect( button[BtnMinimize], SIGNAL(clicked()), this, SLOT( minimize() ) );
     connect( button[BtnMaximize], SIGNAL(clicked()), this, SLOT( maxButtonClicked() ) );
     connect( button[BtnHelp], SIGNAL(clicked()), this, SLOT( showContextHelp() ) );
+    connect( button[BtnAbove], SIGNAL( clicked()), this, SLOT(slotAbove()) );
+    connect( button[BtnBelow], SIGNAL( clicked()), this, SLOT(slotBelow()) );
+    connect( button[BtnShade], SIGNAL( clicked()), this, SLOT(slotShade()) );
 
     for (int i = 0; i < (int)button_pattern->length();) {
         QChar c = (*button_pattern)[i++];
@@ -428,6 +465,21 @@ void ModernSys::init()
             hb->addWidget(button[BtnHelp]);
             button[BtnHelp]->show();
         }
+        else if (c == 'F') {
+            button[BtnAbove]->setBitmap(keepAbove()?above_on_bits:above_off_bits);
+            hb->addWidget(button[BtnAbove]);
+            button[BtnAbove]->show();
+        }
+        else if (c == 'B') {
+            button[BtnBelow]->setBitmap(keepBelow()?below_on_bits:below_off_bits);
+            hb->addWidget(button[BtnBelow]);
+            button[BtnBelow]->show();
+        }
+        else if (c == 'L' && isShadeable()) {
+            button[BtnShade]->setBitmap(isSetShade()?shade_on_bits:shade_off_bits);
+            hb->addWidget(button[BtnShade]);
+            button[BtnShade]->show();
+        }
         else if (c == 't')
             hb->addItem(titlebar);
 
@@ -446,6 +498,35 @@ void ModernSys::maxButtonClicked( )
 {
     if (button[BtnMaximize]) {
         maximize(button[BtnMaximize]->last_button);
+    }
+}
+
+void ModernSys::slotAbove()
+{
+    setKeepAbove( !keepAbove());
+    if (button[BtnAbove]) {
+        button[BtnAbove]->turnOn(keepAbove());
+        button[BtnAbove]->repaint(true);
+    }
+}
+
+    
+void ModernSys::slotBelow()
+{
+    setKeepBelow( !keepBelow());
+    if (button[BtnBelow]) {
+        button[BtnBelow]->turnOn(keepBelow());
+        button[BtnBelow]->repaint(true);
+    }
+}
+
+        
+void ModernSys::slotShade()
+{
+    setShade( !isSetShade());
+    if (button[BtnShade]) {
+        button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
+        button[BtnShade]->repaint(true);
     }
 }
 
@@ -652,6 +733,23 @@ void ModernSys::activeChange()
 }
 
 
+void ModernSys::keepAboveChange( bool above )
+{
+    if (button[BtnAbove]) {
+        button[BtnAbove]->setBitmap( above ? above_on_bits : above_off_bits );
+        button[BtnAbove]->repaint(false);
+    }
+}
+        
+void ModernSys::keepBelowChange( bool below )
+{
+    if (button[BtnBelow]) {
+        button[BtnBelow]->setBitmap( below ? below_on_bits : below_off_bits );
+        button[BtnBelow]->repaint(false);
+    }
+}
+
+
 ModernSys::Position ModernSys::mousePosition( const QPoint& p) const
 {
     Position m = KDecoration::mousePosition( p );
@@ -697,6 +795,13 @@ void ModernSys::iconChange()
 
 void ModernSys::shadeChange()
 {
+    if (button[BtnShade]) {
+        bool on = isShade();
+        button[BtnShade]->turnOn(on);
+        button[BtnShade]->repaint(false);
+        QToolTip::remove( button[BtnShade] );
+        QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));
+    }
 }
 
 QSize ModernSys::minimumSize() const
