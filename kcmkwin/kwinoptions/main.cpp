@@ -27,6 +27,7 @@
 #include <kconfig.h>
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
+#include <kdialog.h>
 
 #include "mouse.h"
 #include "windows.h"
@@ -85,18 +86,22 @@ KWinOptions::KWinOptions(QWidget *parent, const char *name)
   layout->addWidget(tab);
 
   mFocus = new KFocusConfig(false, mConfig, this, "KWin Focus Config");
+  mFocus->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mFocus, i18n("&Focus"));
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mActions = new KActionsConfig(false, mConfig, this, "KWin Actions");
+  mActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mActions, i18n("Actio&ns"));
   connect(mActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mMoving = new KMovingConfig(false, mConfig, this, "KWin Moving");
+  mMoving->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mMoving, i18n("&Moving"));
   connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mAdvanced = new KAdvancedConfig(false, mConfig, this, "KWin Advanced");
+  mAdvanced->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 }

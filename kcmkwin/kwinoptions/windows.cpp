@@ -93,7 +93,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),KDialog::spacingHint());
+    QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -110,9 +110,10 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
 
     // focus policy
     fcsBox = new QButtonGroup(i18n("Focus"),this);
+    fcsBox->setColumnLayout( 0, Qt::Horizontal );
 
-    QBoxLayout *fLay = new QVBoxLayout(fcsBox, KDialog::marginHint(), KDialog::spacingHint());
-    fLay->addSpacing(fontMetrics().lineSpacing());
+    QBoxLayout *fLay = new QVBoxLayout(fcsBox->layout(), 
+        KDialog::spacingHint());
 
     QBoxLayout *cLay = new QHBoxLayout(fLay);
     QLabel *fLabel = new QLabel(i18n("&Policy:"), fcsBox);
@@ -179,10 +180,9 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     lay->addWidget(fcsBox);
 
     kbdBox = new QButtonGroup(i18n("Navigation"), this);
-    QGridLayout *kLay = new QGridLayout(kbdBox, 4, 4,
-                                        KDialog::marginHint(),
+    kbdBox->setColumnLayout( 0, Qt::Horizontal );
+    QGridLayout *kLay = new QGridLayout(kbdBox->layout(), 4, 4,
                                         KDialog::spacingHint());
-    kLay->addRowSpacing(0,fontMetrics().lineSpacing());
     QLabel *altTabLabel = new QLabel( i18n("Walk through windows mode:"), kbdBox);
     kLay->addWidget(altTabLabel, 1, 0);
     kdeMode = new QRadioButton(i18n("&KDE"), kbdBox);
@@ -438,8 +438,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
-                                       KDialog::spacingHint());
+    QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -630,14 +629,12 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
     : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
-                                       KDialog::spacingHint());
+    QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
 
     windowsBox = new QButtonGroup(i18n("Windows"), this);
+    windowsBox->setColumnLayout( 0, Qt::Horizontal );
 
-    QBoxLayout *wLay = new QVBoxLayout (windowsBox,KDialog::marginHint(),
-                                        KDialog::spacingHint());
-    wLay->addSpacing(fontMetrics().lineSpacing());
+    QBoxLayout *wLay = new QVBoxLayout (windowsBox->layout(), KDialog::spacingHint());
 
     QBoxLayout *bLay = new QVBoxLayout;
     wLay->addLayout(bLay);

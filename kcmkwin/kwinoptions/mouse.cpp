@@ -47,7 +47,7 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
   : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
-  QVBoxLayout *layout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
+  QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
   QGrid *grid;
   QGroupBox *box;
   QLabel *label;
