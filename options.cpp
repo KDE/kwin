@@ -183,6 +183,7 @@ void Options::reload()
 
     borderSnapZone = config->readNumEntry("BorderSnapZone", 10);
     windowSnapZone = config->readNumEntry("WindowSnapZone", 10);
+    magneticBorders=config->readBoolEntry("MagneticBorders",true);
 
 
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade") );

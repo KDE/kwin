@@ -2397,101 +2397,111 @@ void Workspace::slotWindowResize()
  */
 QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 {
-  //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
-  //CT adapted for kwin on 25Nov1999
-  if (options->windowSnapZone || options->borderSnapZone ) {
+   //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
+   //CT adapted for kwin on 25Nov1999
+   //aleXXX added option for different snapping style 02Nov2000
+   if (options->windowSnapZone || options->borderSnapZone )
+   {
+      bool mB=options->magneticBorders;
+      QRect maxRect = clientArea();
+      int xmin = maxRect.left();
+      int xmax = maxRect.right()+1;               //desk size
+      int ymin = maxRect.top();
+      int ymax = maxRect.bottom()+1;
 
-    int snap;        //snap trigger
+      int cx(pos.x());
+      int cy(pos.y());
+      int cw(c->width());
+      int ch(c->height());
+      int rx(cx+cw);
+      int ry(cy+ch);                 //these don't change
 
-    QRect maxRect = clientArea();
-    int xmin = maxRect.left();
-    int xmax = maxRect.right()+1;               //desk size
-    int ymin = maxRect.top();
-    int ymax = maxRect.bottom()+1;
-    int cx, cy, rx, ry, cw, ch;                 //these don't change
+      int nx(cx), ny(cy);                         //buffers
+      int deltaX(xmax);
+      int deltaY(ymax);   //minimum distance to other clients
 
-    int nx, ny;                         //buffers
-    int deltaX = xmax, deltaY = ymax;   //minimum distance to other clients
+      int lx, ly, lrx, lry; //coords and size for the comparison client, l
 
-    int lx, ly, lrx, lry; //coords and size for the comparison client, l
+      // border snap
+      int snap = options->borderSnapZone; //snap trigger
+      if (snap)
+      {
+         if ((mB?true:(cx<xmin)) && (QABS(xmin-cx)<snap))
+         {
+            deltaX = xmin-cx;
+            nx = xmin;
+         }
+         if ((mB?true:(rx>xmax)) && (QABS(rx-xmax)<snap) && (QABS(xmax-rx) < deltaX))
+         {
+            deltaX = rx-xmax;
+            nx = xmax - cw;
+         }
 
-    nx = cx = pos.x();
-    ny = cy = pos.y();
-    rx = cx + (cw = c->width());
-    ry = cy + (ch = c->height());
-
-    // border snap
-    snap = options->borderSnapZone;
-    if (snap) {
-      if ( QABS(cx-xmin) < snap ){
-	deltaX = QABS(cx - xmin);
-	nx = xmin;
+         if ((mB?true:(cy<ymin)) && (QABS(ymin-cy)<snap))
+         {
+            deltaY = ymin-cy;
+            ny = ymin;
+         }
+         if ((mB?true:(ry>ymax)) && (QABS(ry-ymax)<snap) && (QABS(ymax-ry) < deltaY))
+         {
+            deltaY =ry-ymax;
+            ny = ymax - ch;
+         }
       }
-      if ((QABS(xmax-rx) < snap) && (QABS(xmax-rx) < deltaX)) {
-	deltaX = QABS(xmax-rx);
-	nx = xmax - cw;
-      }
 
-      if ( QABS(cy-ymin) < snap ){
-	deltaY = QABS(cy-ymin);
-	ny = ymin;
-      }
-      if ((QABS(ymax-ry) < snap)  && (QABS(ymax-ry) < deltaY)) {
-	deltaY = QABS(ymax-ry);
-	ny = ymax - ch;
-      }
-    }
+      // windows snap
+      snap = options->windowSnapZone;
+      if (snap)
+      {
+         QValueList<Client *>::ConstIterator l;
+         for (l = clients.begin();l != clients.end();++l )
+         {
+            if ((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
+               !(*l)->isIconified() && (*l)->transientFor() == None && (*l) != c )
+            {
+               lx = (*l)->x();
+               ly = (*l)->y();
+               lrx = lx + (*l)->width();
+               lry = ly + (*l)->height();
 
-    // windows snap
-    snap = options->windowSnapZone;
-    if (snap) {
-      QValueList<Client *>::ConstIterator l;
-      for (l = clients.begin();l != clients.end();++l ) {
-	if((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
-	   !(*l)->isIconified() && (*l)->transientFor() == None &&
-	   (*l) != c ) {
-	  lx = (*l)->x();
-	  ly = (*l)->y();
-	  lrx = lx + (*l)->width();
-	  lry = ly + (*l)->height();
+               if ( (( cy <= lry ) && ( cy  >= ly  ))  ||
+                    (( ry >= ly  ) && ( ry  <= lry ))  ||
+                    (( cy <= ly  ) && ( ry >= lry  )) )
+               {
+                  if ((mB?true:(cx<lrx)) && (QABS(lrx-cx)<snap) && ( QABS(lrx -cx) < deltaX) )
+                  {
+                     deltaX = QABS( lrx - cx );
+                     nx = lrx;
+                  }
+                  if ((mB?true:(rx>lx)) && (QABS(rx-lx)<snap) && ( QABS( rx - lx )<deltaX) )
+                  {
+                     deltaX = QABS(rx - lx);
+                     nx = lx - cw;
+                  }
+               }
 
-	  if( ( ( cy <= lry ) && ( cy  >= ly  ) )  ||
-	      ( ( ry >= ly  ) && ( ry  <= lry ) )  ||
-	      ( ( ly >= cy  ) && ( lry <= ry  ) ) ) {
-	    if ( ( QABS( lrx - cx ) < snap )   &&
-		 ( QABS( lrx -cx ) < deltaX ) ) {
-	      deltaX = QABS( lrx - cx );
-	      nx = lrx;
-	    }
-	    if ( ( QABS( rx - lx ) < snap )    &&
-		 ( QABS( rx - lx ) < deltaX ) ) {
-	      deltaX = QABS(rx - lx);
-	      nx = lx - cw;
-	    }
-	  }
-
-	  if( ( ( cx <= lrx ) && ( cx  >= lx  ) )  ||
-	      ( ( rx >= lx  ) && ( rx  <= lrx ) )  ||
-	      ( ( lx >= cx  ) && ( lrx <= rx  ) ) ) {
-	    if ( ( QABS( lry - cy ) < snap )   &&
-		 ( QABS( lry -cy ) < deltaY ) ) {
-	      deltaY = QABS( lry - cy );
-	      ny = lry;
-	    }
-	    if ( ( QABS( ry-ly ) < snap )      &&
-		 ( QABS( ry - ly ) < deltaY ) ) {
-	      deltaY = QABS( ry - ly );
-	      ny = ly - ch;
-	    }
-	  }
-	}
+               if ( (( cx <= lrx ) && ( cx  >= lx  ))  ||
+                    (( rx >= lx  ) && ( rx  <= lrx ))  ||
+                    (( cx <= lx  ) && ( rx >= lrx  )) )
+               {
+                  if ((mB?true:(cy<lry)) && (QABS(lry-cy)<snap) && (QABS( lry -cy ) < deltaY))
+                  {
+                     deltaY = QABS( lry - cy );
+                     ny = lry;
+                  }
+                  if ((mB?true:(ry>ly)) && (QABS(ry-ly)<snap) && (QABS( ry - ly ) < deltaY ))
+                  {
+                     deltaY = QABS( ry - ly );
+                     ny = ly - ch;
+                  }
+               }
+            }
+         }
       }
-    }
-    pos = QPoint(nx, ny);
-  }
-  return pos;
+      pos = QPoint(nx, ny);
+   }
+   return pos;
 }
-
 
 
 /*!

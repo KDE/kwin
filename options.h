@@ -164,6 +164,11 @@ public:
 
 
     /**
+     * use magnetic or barrier borders
+     */
+    bool magneticBorders;
+
+    /**
      * whether we animate the minimization of windows or not
      */
     bool  animateMinimize;
