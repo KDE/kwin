@@ -3057,7 +3057,7 @@ void Workspace::desktopPopupAboutToShow()
         id = desk_popup->insertItem(
                 basic_name
                     .arg(i)
-                    .arg( desktopName(i).replace( QRegExp("&"), "&&" )),
+                    .arg( desktopName(i).replace( '&', "&&" )),
                 i
         );
         if ( active_client &&
