@@ -20,15 +20,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qcursor.h>
 
 #include <X11/Xlib.h>
-#ifdef HAVE_XINERAMA
-#  ifndef Bool
-// if Bool isn't defined, then the Xinerama header will have problems...
-#    define Bool int
-#  endif
-extern "C" {
-#include <X11/extensions/Xinerama.h>
-};
-#endif
 
 class KConfig;
 class KGlobalAccel;
@@ -443,11 +434,6 @@ private:
 
     WorkspacePrivate* d;
     static Workspace *_self;
-#ifdef HAVE_XINERAMA
-    int numHeads;
-    XineramaScreenInfo *xineramaInfo;
-    XineramaScreenInfo dummy_xineramaInfo;
-#endif
 
     void addClient( Client* c );
 };

@@ -24,11 +24,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kprocess.h>
 #include <kiconloader.h>
 #include <kstartupinfo.h>
-#if QT_VERSION < 300
-#include <kdesktopwidget.h>
-#else
 #include <qdesktopwidget.h>
-#endif
 #include "workspace.h"
 #include "client.h"
 #include "tabbox.h"
@@ -289,23 +285,6 @@ Workspace::Workspace( bool restore )
     installed_colormap = default_colormap;
     session.setAutoDelete( TRUE );
 
-#ifdef HAVE_XINERAMA
-    if (XineramaIsActive(qt_xdisplay())) {
-        xineramaInfo = XineramaQueryScreens(qt_xdisplay(), &numHeads);
-    } else {
-        xineramaInfo = &dummy_xineramaInfo;
-        QRect rect = QApplication::desktop()->geometry();
-
-        dummy_xineramaInfo.screen_number = 0;
-        dummy_xineramaInfo.x_org = rect.x();
-        dummy_xineramaInfo.y_org = rect.y();
-        dummy_xineramaInfo.width = rect.width();
-        dummy_xineramaInfo.height = rect.height();
-
-        numHeads = 1;
-    }
-#endif
-
     if ( restore )
       loadSessionInfo();
 
@@ -489,11 +468,6 @@ Workspace::~Workspace()
     delete mgr;
     delete d;
     _self = 0;
-
-#ifdef HAVE_XINERAMA
-    if (xineramaInfo != &dummy_xineramaInfo)
-        XFree(xineramaInfo);
-#endif
 }
 
 
