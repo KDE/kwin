@@ -18,6 +18,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qapplication.h>
 #include <qdesktopwidget.h>
 #include <qcursor.h>
+#include <kstringhandler.h>
 
 // specify externals before namespace
 
@@ -99,7 +100,7 @@ void TabBox::reset()
     QRect r = desktop->screenGeometry(screen);
 
 
-    int w = QMAX( wmax + 20, r.width()/3 );
+    int w = QMIN( QMAX( wmax + 20, r.width()/3 ), r.width() );
     setGeometry( (r.width()-w)/2 + r.x(),
 		 r.height()/2-fontMetrics().height()*2-10 + r.y(),
 		 w, fontMetrics().height()*4 + 20 );
@@ -241,19 +242,25 @@ void TabBox::paintContents()
     p.fillRect( r, colorGroup().brush( QColorGroup::Background ) );
     if ( mode () == WindowsMode ) {
 	if ( currentClient() ) {
+	    int textw, maxlen = client->caption().length();
+	    int icon = client->icon().isNull() ? 0 : 42;
 	    QString s;
-	    if (!client->isOnDesktop(workspace()->currentDesktop())){
-		s.append(": ");
-	    }
+	    do {
+		s = QString();
+		if (!client->isOnDesktop(workspace()->currentDesktop())){
+		    s.append(": ");
+		}
 
-	    if (client->isIconified())
-		s += QString("(")+client->caption()+")";
-	    else
-		s += client->caption();
-	    int textw = fontMetrics().width( s );
+		if (client->isIconified())
+		    s += QString("(")+KStringHandler::csqueeze(client->caption(), maxlen)+")";
+		else
+		    s += KStringHandler::csqueeze(client->caption(), maxlen);
+		textw = fontMetrics().width( s );
+		maxlen--;
+	    } while (textw > r.width() - icon);
 	    r.setLeft( r.left() + (r.width() - textw)/2);
 
-	    if ( !client->icon().isNull() ) {
+	    if ( icon ) {
 		int py = r.center().y() - 16;
 		r.setLeft( r.left() + 20 );
 		p.drawPixmap( r.left()-42, py, client->icon() );
