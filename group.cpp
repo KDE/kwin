@@ -417,7 +417,7 @@ void Client::setTransient( Window new_transient_for_id )
             transient_for = workspace()->findClient( WindowMatchPredicate( transient_for_id ));
             assert( transient_for != NULL ); // verifyTransient() had to check this
             transient_for->addTransient( this );
-            }
+            } // checkGroup() will check 'check_active_modal'
         checkGroup( NULL, true ); // force, because transiency has changed
         workspace()->updateClientLayer( this );
         }
@@ -625,8 +625,8 @@ void Client::addTransient( Client* cl )
 //    assert( !cl->hasTransient( this, true )); will be fixed in checkGroupTransients()
     assert( cl != this );
     transients_list.append( cl );
-    if( workspace()->mostRecentlyActivatedClient() == this && cl->isModal())
-        workspace()->activateClient( findModal());
+    if( workspace()->mostRecentlyActivatedClient() == this && cl->isModal())        
+        check_active_modal = true;
 //    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
 //    kdDebug() << kdBacktrace() << endl;
 //    for( ClientList::ConstIterator it = transients_list.begin();
@@ -859,6 +859,17 @@ void Client::checkGroup( Group* set_group, bool force )
 	    }
         }
     checkGroupTransients();
+    // if the active window got new modal transient, activate it
+    // cannot be done in AddTransient(), because there may temporarily
+    // exist loops, breaking findModal
+    Client* check_modal = workspace()->mostRecentlyActivatedClient();
+    if( check_modal != NULL && check_modal->check_active_modal )
+        {
+        Client* new_modal = check_modal->findModal();
+        if( new_modal != NULL && new_modal != check_modal )
+            workspace()->activateClient( new_modal );
+        check_modal->check_active_modal = false;
+        }
     workspace()->updateClientLayer( this );
     }
 

@@ -452,6 +452,7 @@ private slots:
         uint not_obscured : 1;
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
+        uint check_active_modal : 1; // see Client::addTransient()
         void getWMHints();
         void readIcons();
         void getWindowProtocols();

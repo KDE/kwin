@@ -125,6 +125,7 @@ Client::Client( Workspace *ws )
     not_obscured = false;
     urgency = false;
     ignore_focus_stealing = false;
+    check_active_modal = false;
 
     Pdeletewindow = 0;
     Ptakefocus = 0;
@@ -156,6 +157,7 @@ Client::~Client()
     assert( frame == None && wrapper == None );
     assert( decoration == NULL );
     assert( block_geometry == 0 );
+    assert( !check_active_modal );
     delete info;
     delete bridge;
     }
