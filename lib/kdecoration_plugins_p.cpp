@@ -164,7 +164,12 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     fact->checkRequirements( this ); // let it check what is supported
 
     pluginStr = nameStr;
-    
+
+    // For clients in kdeartwork    
+    QString catalogue = nameStr;
+    catalogue.replace( "kwin3_", "kwin_" );
+    KGlobal::locale()->insertCatalogue( catalogue );
+    // For clients in kdebase
     KGlobal::locale()->insertCatalogue( "kwin_clients" );
 
     old_library = oldLibrary; // save for delayed destroying
