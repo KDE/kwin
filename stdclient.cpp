@@ -7,6 +7,7 @@
 #include <qlabel.h>
 #include <qdrawutil.h>
 #include <qbitmap.h>
+#include <kdrawutil.h>
 #include "workspace.h"
 #include "options.h"
 
@@ -66,150 +67,91 @@ QPixmap* kwin_get_menu_pix_hack()
     return menu_pix;
 }
 
-/**
- * Pixmap creation routine that creates full pixmaps out of bitmaps
- * for each shade and the user defined titlebutton foreground colors. There
- * is a large amount of QBitmap constructors/copies here since loadFromData
- * with type XBM doesn't seem to work with QBitmaps, the only way I could get
- * a load from data is via the constructor :( Matthias, do you know about
- * this? <mosfet@kde.org>
- */
 static void create_pixmaps()
 {
     if ( pixmaps_created )
         return;
     pixmaps_created = true;
+    QColorGroup aGrp = options->colorGroup(Options::ButtonFg, true);
+    QColorGroup iGrp = options->colorGroup(Options::ButtonFg, false);
 
-    QPainter pact, pdis;
-    QBitmap bitmap;
-    QColor actHigh = options->color(Options::ButtonFg, true).light(150);
-    QColor actMed = options->color(Options::ButtonFg, true);
-    QColor actLow = options->color(Options::ButtonFg, true).dark(120);
-    QColor disHigh = options->color(Options::ButtonFg, false).light(150);
-    QColor disMed = options->color(Options::ButtonFg, false);
-    QColor disLow = options->color(Options::ButtonFg, false).dark(120);
-
+    QPainter aPainter, iPainter;
     close_pix = new QPixmap(16, 16);
     dis_close_pix = new QPixmap(16, 16);
-    pact.begin(close_pix); pdis.begin(dis_close_pix);
-    bitmap = QBitmap(16, 16, close_white_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actHigh); pdis.setPen(disHigh);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, close_dgray_bits, true);
-    pact.setPen(actLow); pdis.setPen(disLow);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    pact.end(); pdis.end();
-    bitmap = QBitmap(16, 16, close_mask_bits, true);
-    close_pix->setMask(bitmap); dis_close_pix->setMask(bitmap);
+    aPainter.begin(close_pix); iPainter.begin(dis_close_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, close_white_bits,
+                  NULL, NULL, close_dgray_bits, NULL, NULL);
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, close_white_bits,
+                  NULL, NULL, close_dgray_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
+    close_pix->setMask(QBitmap(16, 16, close_mask_bits, true));
+    dis_close_pix->setMask(*close_pix->mask());
 
     minimize_pix = new QPixmap(16, 16);
     dis_minimize_pix = new QPixmap(16, 16);
-    pact.begin(minimize_pix); pdis.begin(dis_minimize_pix);
-    bitmap = QBitmap(16, 16, iconify_white_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actHigh); pdis.setPen(disHigh);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, iconify_dgray_bits, true);
-    pact.setPen(actLow); pdis.setPen(disLow);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    pact.end(); pdis.end();
-    bitmap = QBitmap(16, 16, iconify_mask_bits, true);
-    minimize_pix->setMask(bitmap); dis_minimize_pix->setMask(bitmap);
+    aPainter.begin(minimize_pix); iPainter.begin(dis_minimize_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, iconify_white_bits,
+                  NULL, NULL, iconify_dgray_bits, NULL, NULL);
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, iconify_white_bits,
+                  NULL, NULL, iconify_dgray_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
+    minimize_pix->setMask(QBitmap(16, 16, iconify_mask_bits, true));
+    dis_minimize_pix->setMask(*minimize_pix->mask());
 
     maximize_pix = new QPixmap(16, 16);
     dis_maximize_pix = new QPixmap(16, 16);
-    pact.begin(maximize_pix); pdis.begin(dis_maximize_pix);
-    bitmap = QBitmap(16, 16, maximize_white_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actHigh); pdis.setPen(disHigh);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, maximize_dgray_bits, true);
-    pact.setPen(actLow); pdis.setPen(disLow);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    pact.end(); pdis.end();
-    bitmap = QBitmap(16, 16, maximize_mask_bits, true);
-    maximize_pix->setMask(bitmap); dis_maximize_pix->setMask(bitmap);
+    aPainter.begin(maximize_pix); iPainter.begin(dis_maximize_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, maximize_white_bits,
+                  NULL, NULL, maximize_dgray_bits, NULL, NULL);
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, maximize_white_bits,
+                  NULL, NULL, maximize_dgray_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
+    maximize_pix->setMask(QBitmap(16, 16, maximize_mask_bits, true));
+    dis_maximize_pix->setMask(*maximize_pix->mask());
 
     normalize_pix = new QPixmap(16, 16);
     dis_normalize_pix = new QPixmap(16, 16);
-    pact.begin(normalize_pix); pdis.begin(dis_normalize_pix);
-    bitmap = QBitmap(16, 16, maximizedown_white_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actHigh); pdis.setPen(disHigh);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, maximizedown_dgray_bits, true);
-    pact.setPen(actLow); pdis.setPen(disLow);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    pact.end(); pdis.end();
-    bitmap = QBitmap(16, 16, maximizedown_mask_bits, true);
-    normalize_pix->setMask(bitmap); dis_normalize_pix->setMask(bitmap);
+    aPainter.begin(normalize_pix); iPainter.begin(dis_normalize_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, maximizedown_white_bits,
+                  NULL, NULL, maximizedown_dgray_bits, NULL, NULL);
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, maximizedown_white_bits,
+                  NULL, NULL, maximizedown_dgray_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
+    normalize_pix->setMask(QBitmap(16, 16, maximizedown_mask_bits, true));
+    dis_normalize_pix->setMask(*normalize_pix->mask());
 
     menu_pix = new QPixmap(16, 16);
     dis_menu_pix = new QPixmap(16, 16);
-    pact.begin(menu_pix); pdis.begin(dis_menu_pix);
-    bitmap = QBitmap(16, 16, menu_white_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actHigh); pdis.setPen(disHigh);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, menu_dgray_bits, true);
-    pact.setPen(actLow); pdis.setPen(disLow);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    pact.end(); pdis.end();
-    bitmap = QBitmap(16, 16, menu_mask_bits, true);
-    menu_pix->setMask(bitmap); dis_menu_pix->setMask(bitmap);
+    aPainter.begin(menu_pix); iPainter.begin(dis_menu_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, menu_white_bits,
+                  NULL, NULL, menu_dgray_bits, NULL, NULL);
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, menu_white_bits,
+                  NULL, NULL, menu_dgray_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
+    menu_pix->setMask(QBitmap(16, 16, menu_mask_bits, true));
+    dis_menu_pix->setMask(*menu_pix->mask());
 
     pinup_pix = new QPixmap(16, 16);
     dis_pinup_pix = new QPixmap(16, 16);
-    pact.begin(pinup_pix); pdis.begin(dis_pinup_pix);
-    bitmap = QBitmap(16, 16, pinup_white_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actHigh); pdis.setPen(disHigh);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, pinup_gray_bits, true);
-    pact.setPen(actMed); pdis.setPen(disMed);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, pinup_dgray_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actLow); pdis.setPen(disLow);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    pact.end(); pdis.end();
-    bitmap = QBitmap(16, 16, pinup_mask_bits, true);
-    pinup_pix->setMask(bitmap); dis_pinup_pix->setMask(bitmap);
+    aPainter.begin(pinup_pix); iPainter.begin(dis_pinup_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, pinup_white_bits,
+                  pinup_gray_bits, NULL, pinup_dgray_bits, NULL, NULL);
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, pinup_white_bits,
+                  pinup_gray_bits, NULL, pinup_dgray_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
+    pinup_pix->setMask(QBitmap(16, 16, pinup_mask_bits, true));
+    dis_pinup_pix->setMask(*pinup_pix->mask());
 
     pindown_pix = new QPixmap(16, 16);
     dis_pindown_pix = new QPixmap(16, 16);
-    pact.begin(pindown_pix); pdis.begin(dis_pindown_pix);
-    bitmap = QBitmap(16, 16, pindown_white_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actHigh); pdis.setPen(disHigh);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, pindown_gray_bits, true);
-    pact.setPen(actMed); pdis.setPen(disMed);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    bitmap = QBitmap(16, 16, pindown_dgray_bits, true);
-    bitmap.setMask(bitmap);
-    pact.setPen(actLow); pdis.setPen(disLow);
-    pact.drawPixmap(0, 0, bitmap);
-    pdis.drawPixmap(0, 0, bitmap);
-    pact.end(); pdis.end();
-    bitmap = QBitmap(16, 16, pindown_mask_bits, true);
-    pindown_pix->setMask(bitmap); dis_pindown_pix->setMask(bitmap);
+    aPainter.begin(pindown_pix); iPainter.begin(dis_pindown_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, pindown_white_bits,
+                  pindown_gray_bits, NULL, pindown_dgray_bits, NULL, NULL);
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, pindown_white_bits,
+                  pindown_gray_bits, NULL, pindown_dgray_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
+    pindown_pix->setMask(QBitmap(16, 16, pindown_mask_bits, true));
+    dis_pindown_pix->setMask(*pindown_pix->mask());
 
     question_mark_pix = new QPixmap(question_mark );
 

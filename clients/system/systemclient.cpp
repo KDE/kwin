@@ -7,6 +7,7 @@
 #include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
+#include <kdrawutil.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
@@ -271,6 +272,10 @@ void SystemClient::captionChange( const QString& )
 
 void SystemClient::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
 {
+    kDrawRoundButton(&p, x, y, w, h,
+                     options->colorGroup(Options::Frame, isActive()), false);
+
+    /*
     int x2=x+w-1, y2=y+h-1;
     QPointArray hPntArray, lPntArray;
     hPntArray.putPoints(0, 12, x+4,y+1, x+5,y+1, // top left
@@ -297,7 +302,7 @@ void SystemClient::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
     p.drawLine(x+6, y2-1, x2-6, y2-1);
     p.drawLine(x2, y+6, x2, y2-6);
     p.drawLine(x2-1, y+6, x2-1, y2-6);
-    p.drawPoints(lPntArray);
+    p.drawPoints(lPntArray); */
 }
 
 void SystemClient::paintEvent( QPaintEvent* )
@@ -351,7 +356,10 @@ void SystemClient::doShape()
     // using a bunch of QRect lines seems much more efficent than bitmaps or
     // point arrays
     
-    QRegion mask(QRect(6, 0, width()-12, height()));
+    QRegion mask;
+    kRoundMaskRegion(mask, 0, 0, width(), height());
+    /*
+    (QRect(6, 0, width()-12, height()));
     mask += QRegion(QRect(5, 1, 1, height()-2)); // left
     mask += QRegion(QRect(4, 1, 1, height()-2));
     mask += QRegion(QRect(3, 2, 1, height()-4));
@@ -364,11 +372,8 @@ void SystemClient::doShape()
     mask += QRegion(QRect(x2-3, 2, 1, height()-4));
     mask += QRegion(QRect(x2-2, 3, 1, height()-6));
     mask += QRegion(QRect(x2-1, 4, 1, height()-8));
-    mask += QRegion(QRect(x2, 6, 1, height()-12));
-
+    mask += QRegion(QRect(x2, 6, 1, height()-12)); */
     setMask(mask);
-    
-
 }
 
 void SystemClient::showEvent(QShowEvent *ev)
