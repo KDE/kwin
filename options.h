@@ -164,9 +164,9 @@ public:
 
 
     /**
-     * use magnetic or barrier borders
+     * snap only when windows will overlap
      */
-    bool magneticBorders;
+    bool snapOnlyWhenOverlapping;
 
     /**
      * whether we animate the minimization of windows or not

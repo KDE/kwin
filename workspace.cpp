@@ -2399,10 +2399,10 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 {
    //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
    //CT adapted for kwin on 25Nov1999
-   //aleXXX added option for different snapping style 02Nov2000
+   //aleXXX 02Nov2000 added second snapping mode
    if (options->windowSnapZone || options->borderSnapZone )
    {
-      bool mB=options->magneticBorders;
+      bool sOWO=options->snapOnlyWhenOverlapping;
       QRect maxRect = clientArea();
       int xmin = maxRect.left();
       int xmax = maxRect.right()+1;               //desk size
@@ -2426,23 +2426,23 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
       int snap = options->borderSnapZone; //snap trigger
       if (snap)
       {
-         if ((mB?true:(cx<xmin)) && (QABS(xmin-cx)<snap))
+         if ((sOWO?(cx<xmin):true) && (QABS(xmin-cx)<snap))
          {
             deltaX = xmin-cx;
             nx = xmin;
          }
-         if ((mB?true:(rx>xmax)) && (QABS(rx-xmax)<snap) && (QABS(xmax-rx) < deltaX))
+         if ((sOWO?(rx>xmax):true) && (QABS(rx-xmax)<snap) && (QABS(xmax-rx) < deltaX))
          {
             deltaX = rx-xmax;
             nx = xmax - cw;
          }
 
-         if ((mB?true:(cy<ymin)) && (QABS(ymin-cy)<snap))
+         if ((sOWO?(cy<ymin):true) && (QABS(ymin-cy)<snap))
          {
             deltaY = ymin-cy;
             ny = ymin;
          }
-         if ((mB?true:(ry>ymax)) && (QABS(ry-ymax)<snap) && (QABS(ymax-ry) < deltaY))
+         if ((sOWO?(ry>ymax):true) && (QABS(ry-ymax)<snap) && (QABS(ymax-ry) < deltaY))
          {
             deltaY =ry-ymax;
             ny = ymax - ch;
@@ -2468,12 +2468,12 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
                     (( ry >= ly  ) && ( ry  <= lry ))  ||
                     (( cy <= ly  ) && ( ry >= lry  )) )
                {
-                  if ((mB?true:(cx<lrx)) && (QABS(lrx-cx)<snap) && ( QABS(lrx -cx) < deltaX) )
+                  if ((sOWO?(cx<lrx):true) && (QABS(lrx-cx)<snap) && ( QABS(lrx -cx) < deltaX) )
                   {
                      deltaX = QABS( lrx - cx );
                      nx = lrx;
                   }
-                  if ((mB?true:(rx>lx)) && (QABS(rx-lx)<snap) && ( QABS( rx - lx )<deltaX) )
+                  if ((sOWO?(rx>lx):true) && (QABS(rx-lx)<snap) && ( QABS( rx - lx )<deltaX) )
                   {
                      deltaX = QABS(rx - lx);
                      nx = lx - cw;
@@ -2484,12 +2484,13 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
                     (( rx >= lx  ) && ( rx  <= lrx ))  ||
                     (( cx <= lx  ) && ( rx >= lrx  )) )
                {
-                  if ((mB?true:(cy<lry)) && (QABS(lry-cy)<snap) && (QABS( lry -cy ) < deltaY))
+                  if ((sOWO?(cy<lry):true) && (QABS(lry-cy)<snap) && (QABS( lry -cy ) < deltaY))
                   {
                      deltaY = QABS( lry - cy );
                      ny = lry;
                   }
-                  if ((mB?true:(ry>ly)) && (QABS(ry-ly)<snap) && (QABS( ry - ly ) < deltaY ))
+                  //if ( (QABS( ry-ly ) < snap) && (QABS( ry - ly ) < deltaY ))
+                  if ((sOWO?(ry>ly):true) && (QABS(ry-ly)<snap) && (QABS( ry - ly ) < deltaY ))
                   {
                      deltaY = QABS( ry - ly );
                      ny = ly - ch;
