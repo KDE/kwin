@@ -309,12 +309,13 @@ public:
     */
     bool animateTooltips();
 
+    enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
     /**
     * @returns true if electric borders are enabled. With electric borders
     * you can change desktop by moving the mouse pointer towards the edge
     * of the screen
     */
-    bool electricBorders();
+    int electricBorders();
 
     /**
     * @returns the activation delay for electric borders in milliseconds.

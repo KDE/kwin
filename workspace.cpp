@@ -97,7 +97,7 @@ class WorkspacePrivate
 public:
     WorkspacePrivate()
      : startup(0), electric_have_borders(false),
-       electric_current_border(None),
+       electric_current_border(0),
        electric_top_border(None),
        electric_bottom_border(None),
        electric_left_border(None),
@@ -109,11 +109,15 @@ public:
     ~WorkspacePrivate() {};
     KStartupInfo* startup;
     bool electric_have_borders;
-    WId electric_current_border;
+    int electric_current_border;
     WId electric_top_border;
     WId electric_bottom_border;
     WId electric_left_border;
     WId electric_right_border;
+    int electricLeft;
+    int electricRight;
+    int electricTop;
+    int electricBottom;
     Time electric_time_first;
     Time electric_time_last;
     QPoint electric_push_point;
@@ -353,7 +357,14 @@ Workspace::Workspace( bool restore )
 
 void Workspace::init()
 {
-    if (options->electricBorders())
+    QRect r = QApplication::desktop()->geometry();
+    d->electricTop = r.top();
+    d->electricBottom = r.bottom();
+    d->electricLeft = r.left();
+    d->electricRight = r.right();
+    d->electric_current_border = 0;
+
+    if (options->electricBorders() == Options::ElectricAlways)
        createBorderWindows();
 
     supportWindow = new QWidget;
@@ -1979,7 +1990,7 @@ void Workspace::slotReconfigure()
     // NO need whatsoever to call slotResetAllClientsDelayed here,
     // updatePlugin resets all clients if necessary anyway.
 
-    if (options->electricBorders())
+    if (options->electricBorders() == Options::ElectricAlways)
        createBorderWindows();
     else
        destroyBorderWindows();
@@ -4078,7 +4089,6 @@ void Workspace::focusEnsurance()
 	Window child = root;
 	int root_x, root_y, lx, ly;
 	uint state;
-	Window w;
 	if ( ! XQueryPointer( qt_xdisplay(), root, &root_return, &child,
 			      &root_x, &root_y, &lx, &ly, &state ) )
 	    return; // cursor is on another screen, so do not play with focus
@@ -4122,7 +4132,7 @@ void Workspace::createBorderWindows()
         return;
 
     d->electric_have_borders = true;
-    d->electric_current_border = None;
+    d->electric_current_border = 0;
 
     QRect r = QApplication::desktop()->geometry();
 
@@ -4206,7 +4216,7 @@ void Workspace::destroyBorderWindows()
 }
 
 // Do we have a proper timediff function??
-static int TimeDiff(Time a, Time b)
+static int TimeDiff(unsigned long a, unsigned long b)
 {
    if (a > b)
      return a-b;
@@ -4214,20 +4224,34 @@ static int TimeDiff(Time a, Time b)
      return b-a;
 }
 
-// this function is called when the user entered an electric border
-// with the mouse. It may switch to another virtual desktop
-void Workspace::electricBorder(XEvent *e)
+void Workspace::clientMoved(const QPoint &pos, unsigned long now)
 {
-  Window border = e->xcrossing.window;
-  Time now = e->xcrossing.time;
+  if ((pos.x() != d->electricLeft) &&
+      (pos.x() != d->electricRight) &&
+      (pos.y() != d->electricTop) &&
+      (pos.y() != d->electricBottom))
+     return;
+
+  if (options->electricBorders() == Options::ElectricDisabled)
+     return;
+
   int treshold_set = options->electricBorderDelay(); // set timeout
   int treshold_reset = 250; // reset timeout
   int distance_reset = 10; // Mouse should not move more than this many pixels
-  QPoint p(e->xcrossing.x_root, e->xcrossing.y_root);
+
+  int border = 0;
+  if (pos.x() == d->electricLeft)
+     border = 1;
+  else if (pos.x() == d->electricRight)
+     border = 2;
+  else if (pos.y() == d->electricTop)
+     border = 3;
+  else if (pos.y() == d->electricBottom)
+     border = 4;
 
   if ((d->electric_current_border == border) &&
       (TimeDiff(d->electric_time_last, now) < treshold_reset) &&
-      ((p-d->electric_push_point).manhattanLength() < distance_reset))
+      ((pos-d->electric_push_point).manhattanLength() < distance_reset))
   {
      d->electric_time_last = now;
 
@@ -4238,25 +4262,31 @@ void Workspace::electricBorder(XEvent *e)
         QRect r = QApplication::desktop()->geometry();
         int offset;
 
-        if (border == d->electric_top_border){
-           offset = r.height() / 3;
-           QCursor::setPos(e->xcrossing.x_root, r.height() - offset);
-           slotSwitchDesktopUp();
-        }
-        else if (border == d->electric_bottom_border){
-           offset = r.height() / 3;
-           QCursor::setPos(e->xcrossing.x_root, offset);
-           slotSwitchDesktopDown();
-        }
-        else if (border == d->electric_left_border){
+        switch(border) 
+        {
+          case 1:
            offset = r.width() / 3;
-           QCursor::setPos(r.width() - offset, e->xcrossing.y_root);
+           QCursor::setPos(r.width() - offset, pos.y());
            slotSwitchDesktopLeft();
-        }
-        else if (border == d->electric_right_border) {
+           break;
+
+          case 2:
            offset = r.width() / 3;
-           QCursor::setPos(offset, e->xcrossing.y_root);
+           QCursor::setPos(offset, pos.y());
            slotSwitchDesktopRight();
+           break;
+
+          case 3:
+           offset = r.height() / 3;
+           QCursor::setPos(pos.x(), r.height() - offset);
+           slotSwitchDesktopUp();
+           break;
+
+          case 4:
+           offset = r.height() / 3;
+           QCursor::setPos(pos.x(), offset);
+           slotSwitchDesktopDown();
+           break;
         }
         return;
      }
@@ -4265,24 +4295,29 @@ void Workspace::electricBorder(XEvent *e)
     d->electric_current_border = border;
     d->electric_time_first = now;
     d->electric_time_last = now;
-    d->electric_push_point = p;
+    d->electric_push_point = pos;
   }
 
   int mouse_warp = 1;
 
   // reset the pointer to find out wether the user is really pushing
-  if (d->electric_current_border == d->electric_top_border){
-    QCursor::setPos(e->xcrossing.x_root, e->xcrossing.y_root+mouse_warp);
+  switch( border)
+  {
+    case 1: QCursor::setPos(pos.x()+mouse_warp, pos.y()); break;
+    case 2: QCursor::setPos(pos.x()-mouse_warp, pos.y()); break;
+    case 3: QCursor::setPos(pos.x(), pos.y()+mouse_warp); break;
+    case 4: QCursor::setPos(pos.x(), pos.y()-mouse_warp); break;
   }
-  else if (d->electric_current_border == d->electric_bottom_border){
-    QCursor::setPos(e->xcrossing.x_root, e->xcrossing.y_root-mouse_warp);
-  }
-  else if (d->electric_current_border == d->electric_left_border){
-    QCursor::setPos(e->xcrossing.x_root+mouse_warp, e->xcrossing.y_root);
-  }
-  else if (d->electric_current_border == d->electric_right_border){
-    QCursor::setPos(e->xcrossing.x_root-mouse_warp, e->xcrossing.y_root);
-  }
+}
+
+// this function is called when the user entered an electric border
+// with the mouse. It may switch to another virtual desktop
+void Workspace::electricBorder(XEvent *e)
+{
+  Time now = e->xcrossing.time;
+  QPoint p(e->xcrossing.x_root, e->xcrossing.y_root);
+
+  clientMoved(p, now);
 }
 
 // electric borders (input only windows) have to be always on the

@@ -162,6 +162,7 @@ public:
     void clientHidden( Client*  );
 
     void clientReady( Client* );
+    void clientMoved(const QPoint &pos, unsigned long time);
 
     /**
      * Returns the current virtual desktop of this workspace
