@@ -2347,7 +2347,7 @@ void Client::setShade( bool s, int hus )
 
 
     if ( isVisible() )
-        Events::raise( s ? Events::ShadeDown : Events::ShadeUp );
+        Events::raise( s ? Events::ShadeUp : Events::ShadeDown );
 
     int as = options->animateShade? 10 : 1;
 
