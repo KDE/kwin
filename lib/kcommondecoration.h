@@ -85,6 +85,8 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
          *
          * Title:
          *  ___________________________________________________________________________________
+         * | LM_ButtonMarginTop             |                |              LM_ButtonMarginTop |
+         * |________________________________|                |_________________________________|
          * | [Buttons] | LM_TitleBorderLeft | LM_TitleHeight | LM_TitleBorderRight | [Buttons] |
          * |___________|____________________|________________|_____________________|___________|
          *
@@ -110,7 +112,8 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
             LM_ButtonWidth,
             LM_ButtonHeight,
             LM_ButtonSpacing,
-            LM_ExplicitButtonSpacer
+            LM_ExplicitButtonSpacer,
+            LM_ButtonMarginTop
         };
 
         enum DecorationBehaviour
@@ -158,7 +161,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
          * @param respectWindowState Whether window states should be taken into account or a "default" state should be assumed.
          * @param button             For LM_ButtonWidth and LM_ButtonHeight, the button.
          */
-        virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton *button = 0) const = 0;
+        virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton *button = 0) const;
 
         /**
          * Create a new title bar button. KCommonDecoration takes care of memory management.

@@ -72,6 +72,40 @@ bool KCommonDecoration::decorationBehaviour(DecorationBehaviour behaviour) const
     return false;
 }
 
+int KCommonDecoration::layoutMetric(LayoutMetric lm, bool, const KCommonDecorationButton *) const
+{
+    switch (lm) {
+        case LM_BorderLeft:
+        case LM_BorderRight:
+        case LM_BorderBottom:
+        case LM_TitleEdgeTop:
+        case LM_TitleEdgeBottom:
+        case LM_TitleEdgeLeft:
+        case LM_TitleEdgeRight:
+        case LM_TitleBorderLeft:
+        case LM_TitleBorderRight:
+            return 5;
+
+
+        case LM_ButtonWidth:
+        case LM_ButtonHeight:
+        case LM_TitleHeight:
+            return 20;
+
+        case LM_ButtonSpacing:
+            return 5;
+
+        case LM_ButtonMarginTop:
+            return 0;
+
+        case LM_ExplicitButtonSpacer:
+            return 5;
+
+        default:
+            return 0;
+    }
+}
+
 void KCommonDecoration::init()
 {
     createMainWidget(WNoAutoErase);
@@ -155,9 +189,9 @@ void KCommonDecoration::updateLayout() const
     }
 
     // layout buttons
+    int y = r_y + layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_ButtonMarginTop);
     if (m_buttonsLeft.count() > 0) {
         const int buttonSpacing = layoutMetric(LM_ButtonSpacing);
-        int y = r_y + layoutMetric(LM_TitleEdgeTop);
         int x = r_x + layoutMetric(LM_TitleEdgeLeft);
         for (ButtonContainer::const_iterator it = m_buttonsLeft.begin(); it != m_buttonsLeft.end(); ++it) {
             bool elementLayouted = false;
@@ -180,7 +214,6 @@ void KCommonDecoration::updateLayout() const
         const int titleEdgeRightLeft = r_x2-layoutMetric(LM_TitleEdgeRight)+1;
 
         const int buttonSpacing = layoutMetric(LM_ButtonSpacing);
-        int y = r_y + layoutMetric(LM_TitleEdgeTop);
         int x = titleEdgeRightLeft - buttonContainerWidth(m_buttonsRight);
         for (ButtonContainer::const_iterator it = m_buttonsRight.begin(); it != m_buttonsRight.end(); ++it) {
             bool elementLayouted = false;
