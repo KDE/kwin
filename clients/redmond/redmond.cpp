@@ -18,6 +18,7 @@
 #include <qdrawutil.h>
 #include <qdatetime.h>
 #include <kpixmapeffect.h>
+#include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
 #include <qbitmap.h>
@@ -591,8 +592,20 @@ void GalliumClient::paintEvent( QPaintEvent* )
         KPixmap* titleBuffer = new KPixmap;
         titleBuffer->resize(w-8, titleHeight);
 
-        KPixmapEffect::gradient(*titleBuffer, c1, c2,
-                                KPixmapEffect::HorizontalGradient);
+        if (titleBuffer->depth() > 16)
+        {
+            KPixmapEffect::gradient(*titleBuffer, c1, c2,
+                                    KPixmapEffect::HorizontalGradient);
+        }
+        else
+        {
+            // This enables dithering on 15 and 16bit displays, preventing
+            // some pretty horrible banding effects
+            QImage image = KImageEffect::gradient(titleBuffer->size(), c1, c2,
+                                    KImageEffect::HorizontalGradient);
+
+            titleBuffer->convertFromImage(image, Qt::OrderedDither);
+        }
 
         QPainter p2( titleBuffer, this );
 
