@@ -24,74 +24,101 @@
 #define RISC_OS_CLIENT_H
 
 #include <qbutton.h>
-#include <qpixmap.h>
 #include <qpoint.h>
 
 #include "../../client.h"
 
-class RiscOSClient;
+class QPixmap;
 
-class RiscOSButton : public QButton
+namespace RiscOS {
+
+static QPixmap * px_button_base_up;
+static QPixmap * px_button_base_down;
+static QPixmap * px_button_iconify_;
+static QPixmap * px_button_close_;
+static QPixmap * px_button_lower_;
+static QPixmap * px_button_max_;
+static QPixmap * px_button_unmax_;
+static QPixmap * px_title_inactive_left_;
+static QPixmap * px_title_inactive_;
+static QPixmap * px_title_inactive_right_;
+static QPixmap * px_title_active_left_;
+static QPixmap * px_title_active_;
+static QPixmap * px_title_active_right_;
+static QPixmap * px_resize_left_;
+static QPixmap * px_resize_mid_;
+static QPixmap * px_resize_right_;
+
+// --------------------------------------------------------------------------
+
+class Manager;
+
+class Button : public QButton
 {
   Q_OBJECT
 
   public:
 
-    RiscOSButton(RiscOSClient * parent);
+    Button(Manager * parent);
 
   protected:
 
     void drawButton(QPainter *);
-    void setSymbol(const QPixmap &);
+    void setSymbol(QPixmap *);
 
   protected:
 
-    RiscOSClient * client() { return client_; }
+    Manager * client() { return client_; }
 
   private:
 
-    RiscOSClient * client_;
-
-    QPixmap px_base_up_;
-    QPixmap px_base_down_;
+    Manager * client_;
     
-    QPixmap px_symbol_;
+    QPixmap * px_symbol_;
 };
 
-class RiscOSLowerButton : public RiscOSButton
+// --------------------------------------------------------------------------
+
+class LowerButton : public Button
 {
   Q_OBJECT
 
   public:
 
-    RiscOSLowerButton(RiscOSClient * parent);
+    LowerButton(Manager * parent);
 };
 
-class RiscOSCloseButton : public RiscOSButton
+// --------------------------------------------------------------------------
+
+class CloseButton : public Button
 {
   Q_OBJECT
 
   public:
 
-    RiscOSCloseButton(RiscOSClient * parent);
+    CloseButton(Manager * parent);
 };
 
-class RiscOSIconifyButton : public RiscOSButton
+// --------------------------------------------------------------------------
+
+class IconifyButton : public Button
 {
   Q_OBJECT
 
   public:
 
-    RiscOSIconifyButton(RiscOSClient * parent);
+    IconifyButton(Manager * parent);
 };
 
-class RiscOSMaximiseButton : public RiscOSButton
+// --------------------------------------------------------------------------
+
+class MaximiseButton : public Button
 {
   Q_OBJECT
 
   public:
 
-    RiscOSMaximiseButton(RiscOSClient * parent);
+    MaximiseButton(Manager * parent);
 
     void setOn(bool);
 
@@ -100,22 +127,28 @@ class RiscOSMaximiseButton : public RiscOSButton
     void mouseReleaseEvent(QMouseEvent *);
 };
 
-class RiscOSResizeButton : public RiscOSButton
+// --------------------------------------------------------------------------
+
+class ResizeButton : public Button
 {
   Q_OBJECT
 
   public:
 
-    RiscOSResizeButton(RiscOSClient * parent);
+    ResizeButton(Manager * parent);
 };
 
-class RiscOSTitleBar : public QWidget
+// --------------------------------------------------------------------------
+
+class TitleBar : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    RiscOSTitleBar(RiscOSClient * parent);
+    TitleBar(Manager * parent);
+    virtual ~TitleBar();
+
     void update();
 
   protected:
@@ -132,49 +165,27 @@ class RiscOSTitleBar : public QWidget
 
     void _updatePixmap();
 
-    RiscOSClient * client_;
+    Manager * client_;
 
-    QPixmap px_inactive_left_;
-    QPixmap px_inactive_;
-    QPixmap px_inactive_right_;
-    QPixmap px_active_left_;
-    QPixmap px_active_;
-    QPixmap px_active_right_;
-
-    QPixmap buf_;
+    QPixmap * buf_;
 
     bool active_;
 
     QPoint clientPosToMousePos_;
 };
 
-class RiscOSResizeLeft;
-class RiscOSResizeMid;
-class RiscOSResizeRight;
+// --------------------------------------------------------------------------
 
-class RiscOSResizeBar : public QWidget
+class ResizeBar;
+
+class ResizeMid : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    RiscOSResizeBar(RiscOSClient * parent);
-    void update();
-
-  private:
-
-    RiscOSResizeLeft * left_;
-    RiscOSResizeMid * mid_;
-    RiscOSResizeRight * right_;
-};
-
-class RiscOSResizeMid : public QWidget
-{
-  Q_OBJECT
-
-  public:
-
-    RiscOSResizeMid(RiscOSResizeBar * parent, RiscOSClient * client);
+    ResizeMid(ResizeBar * parent, Manager * client);
+    virtual ~ResizeMid();
 
     void update();
 
@@ -186,24 +197,22 @@ class RiscOSResizeMid : public QWidget
 
   private:
 
-    RiscOSClient * client_;
+    Manager * client_;
 
     void _updatePixmap();
 
-    QPixmap buf_;
-
-    QPixmap px_left_;
-    QPixmap px_mid_;
-    QPixmap px_right_;
+    QPixmap * buf_;
 };
 
-class RiscOSResizeLeft : public QWidget
+// --------------------------------------------------------------------------
+
+class ResizeLeft : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    RiscOSResizeLeft(RiscOSResizeBar * parent, RiscOSClient * client);
+    ResizeLeft(ResizeBar * parent, Manager * client);
   
   protected:
 
@@ -211,16 +220,18 @@ class RiscOSResizeLeft : public QWidget
     
   private:
     
-    RiscOSClient * client_;
+    Manager * client_;
 };
 
-class RiscOSResizeRight : public QWidget
+// --------------------------------------------------------------------------
+
+class ResizeRight : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    RiscOSResizeRight(RiscOSResizeBar * parent, RiscOSClient * client);
+    ResizeRight(ResizeBar * parent, Manager * client);
 
   protected:
 
@@ -228,17 +239,37 @@ class RiscOSResizeRight : public QWidget
     
   private:
     
-    RiscOSClient * client_;
+    Manager * client_;
 };
 
-class RiscOSClient : public Client
+// --------------------------------------------------------------------------
+
+class ResizeBar : public QWidget
 {
   Q_OBJECT
 
   public:
 
-    RiscOSClient(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
-    ~RiscOSClient() {}
+    ResizeBar(Manager * parent);
+    void update();
+
+  private:
+
+    ResizeLeft * left_;
+    ResizeMid * mid_;
+    ResizeRight * right_;
+};
+
+// --------------------------------------------------------------------------
+
+class Manager : public Client
+{
+  Q_OBJECT
+
+  public:
+
+    Manager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
+    ~Manager() {}
 
     QColor colour() const { return options->color(Options::Font, isActive()); }
     QFont font() const { return options->font(isActive()); }
@@ -264,16 +295,21 @@ class RiscOSClient : public Client
 
   private:
 
-    RiscOSLowerButton * lower_;
-    RiscOSCloseButton * close_;
+    LowerButton * lower_;
+    CloseButton * close_;
 
-    RiscOSTitleBar * title_;
+    TitleBar * title_;
 
-    RiscOSIconifyButton * iconify_;
-    RiscOSMaximiseButton * maximize_;
+    IconifyButton * iconify_;
+    MaximiseButton * maximize_;
 
-    RiscOSResizeBar * resizeBar_;
+    ResizeBar * resizeBar_;
+
+    void _loadPixmaps();
+    bool pixmapsLoaded_;
 };                      
+
+} // End namespace `RiscOS'
 
 #endif
 // vim:ts=2:sw=2:tw=78

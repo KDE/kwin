@@ -1,5 +1,5 @@
 /* XPM */
-static char * unmax_xpm[] = {
+static char * button_unmax_xpm[] = {
 "12 12 5 1",
 " 	c None",
 ".	c #808080",

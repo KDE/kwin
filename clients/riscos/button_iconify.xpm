@@ -1,5 +1,5 @@
 /* XPM */
-static char * bar_xpm[] = {
+static char * button_iconify_xpm[] = {
 "12 12 4 1",
 " 	c None",
 ".	c #808080",

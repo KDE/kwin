@@ -1,5 +1,5 @@
 /* XPM */
-static char * close_xpm[] = {
+static char * button_close_xpm[] = {
 "12 12 3 1",
 " 	c None",
 ".	c #585858",

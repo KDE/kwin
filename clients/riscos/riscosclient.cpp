@@ -24,7 +24,6 @@
 #include <qlayout.h>
 #include <qpixmap.h>
 #include <qpainter.h>
-#include <qpushbutton.h>
 
 // Local includes
 #include "../../options.h"
@@ -40,13 +39,13 @@
 #include "resize_bar_left.xpm"
 #include "resize_bar_mid.xpm"
 #include "resize_bar_right.xpm"
-#include "base_up.xpm"
-#include "base_down.xpm"
-#include "close.xpm"
-#include "unmax.xpm"
-#include "max.xpm"
-#include "lower.xpm"
-#include "bar.xpm"
+#include "button_base_up.xpm"
+#include "button_base_down.xpm"
+#include "button_close.xpm"
+#include "button_unmax.xpm"
+#include "button_max.xpm"
+#include "button_lower.xpm"
+#include "button_iconify.xpm"
 
 #include <X11/Xlib.h>
 
@@ -54,17 +53,35 @@ extern "C"
 {
   Client * allocate(Workspace * workSpace, WId winId)
   {
-    return new RiscOSClient(workSpace, winId);
+    return new RiscOS::Manager(workSpace, winId);
   }
 }
 
-RiscOSButton::RiscOSButton(RiscOSClient * parent)
-  : QButton(parent, "RiscOSButton"),
-    client_(parent)
+using namespace RiscOS;
+
+QPixmap * px_button_base_up       = 0L;
+QPixmap * px_button_base_down     = 0L;
+QPixmap * px_button_iconify       = 0L;
+QPixmap * px_button_close         = 0L;
+QPixmap * px_button_lower         = 0L;
+QPixmap * px_button_max           = 0L;
+QPixmap * px_button_unmax         = 0L;
+QPixmap * px_title_inactive_left  = 0L;
+QPixmap * px_title_inactive       = 0L;
+QPixmap * px_title_inactive_right = 0L;
+QPixmap * px_title_active_left    = 0L;
+QPixmap * px_title_active         = 0L;
+QPixmap * px_title_active_right   = 0L;
+QPixmap * px_resize_left          = 0L;
+QPixmap * px_resize_mid           = 0L;
+QPixmap * px_resize_right         = 0L;
+
+Button::Button(Manager * parent)
+  : QButton(parent, "Button"),
+    client_(parent),
+    px_symbol_(0L)
 {
   setFixedSize(18, 18);
-  px_base_up_   = QPixmap(base_up_xpm);
-  px_base_down_ = QPixmap(base_down_xpm);
   
   XSetWindowAttributes wsa;
   wsa.save_under = true;
@@ -72,63 +89,64 @@ RiscOSButton::RiscOSButton(RiscOSClient * parent)
 }
 
   void
-RiscOSButton::drawButton(QPainter * p)
+Button::drawButton(QPainter * p)
 {
   if (isDown())
-    p->drawPixmap(0, 0, px_base_down_);
+    p->drawPixmap(0, 0, *px_button_base_down);
   else
-    p->drawPixmap(0, 0, px_base_up_);
+    p->drawPixmap(0, 0, *px_button_base_up);
 
-  p->drawPixmap(3, 3, px_symbol_);
+  if (px_symbol_ != 0)
+    p->drawPixmap(3, 3, *px_symbol_);
 }
 
   void
-RiscOSButton::setSymbol(const QPixmap & p)
+Button::setSymbol(QPixmap * p)
 {
   px_symbol_ = p;
   repaint(false);
 }
 
-RiscOSLowerButton::RiscOSLowerButton(RiscOSClient * parent)
-  : RiscOSButton(parent)
+LowerButton::LowerButton(Manager * parent)
+  : Button(parent)
 {
 // TODO  connect(this, SIGNAL(clicked()), client(), (SLOT(lowerAndDeactivate())));
-  setSymbol(QPixmap(lower_xpm));
+  setSymbol(px_button_lower);
 }
 
-RiscOSCloseButton::RiscOSCloseButton(RiscOSClient * parent)
-  : RiscOSButton(parent)
+CloseButton::CloseButton(Manager * parent)
+  : Button(parent)
 {
   connect(this, SIGNAL(clicked()), client(), (SLOT(closeWindow())));
-  setSymbol(QPixmap(close_xpm));
+  setSymbol(px_button_close);
 }
 
-RiscOSIconifyButton::RiscOSIconifyButton(RiscOSClient * parent)
-  : RiscOSButton(parent)
+IconifyButton::IconifyButton(Manager * parent)
+  : Button(parent)
 {
   connect(this, SIGNAL(clicked()), client(), (SLOT(iconify())));
-  setSymbol(QPixmap(bar_xpm));
+  setSymbol(px_button_iconify);
 }
 
-RiscOSMaximiseButton::RiscOSMaximiseButton(RiscOSClient * parent)
-  : RiscOSButton(parent)
+MaximiseButton::MaximiseButton(Manager * parent)
+  : Button(parent)
 {
-  setSymbol(QPixmap(max_xpm));
+  setSymbol(px_button_unmax);
 }
 
   void
-RiscOSMaximiseButton::setOn(bool on)
+MaximiseButton::setOn(bool on)
 {
   if (on)
-    setSymbol(QPixmap(unmax_xpm));
+    setSymbol(px_button_unmax);
   else
-    setSymbol(QPixmap(max_xpm));
+    setSymbol(px_button_max);
 }
 
   void
-RiscOSMaximiseButton::mouseReleaseEvent(QMouseEvent * e)
+MaximiseButton::mouseReleaseEvent(QMouseEvent * e)
 {
-  RiscOSButton::mouseReleaseEvent(e);
+  Button::mouseReleaseEvent(e);
 
   if (!rect().contains(e->pos()))
     return;
@@ -150,77 +168,77 @@ RiscOSMaximiseButton::mouseReleaseEvent(QMouseEvent * e)
   }
 }
 
-RiscOSResizeButton::RiscOSResizeButton(RiscOSClient * parent)
-  : RiscOSButton(parent)
+ResizeButton::ResizeButton(Manager * parent)
+  : Button(parent)
 {
 }
 
-RiscOSTitleBar::RiscOSTitleBar(RiscOSClient * parent)
-  : QWidget(parent, "RiscOSTitleBar"),
+TitleBar::TitleBar(Manager * parent)
+  : QWidget(parent, "TitleBar"),
     client_(parent)
 {
   setFixedHeight(18);
 
-  px_inactive_left_   = QPixmap(title_inactive_left_xpm);
-  px_inactive_        = QPixmap(title_inactive_xpm);
-  px_inactive_right_  = QPixmap(title_inactive_right_xpm);
-  px_active_left_     = QPixmap(title_active_left_xpm);
-  px_active_          = QPixmap(title_active_xpm);
-  px_active_right_    = QPixmap(title_active_right_xpm);
-  
   XSetWindowAttributes wsa;
   wsa.save_under = true;
 	XChangeWindowAttributes(qt_xdisplay(), winId(), 0, &wsa);
 
-  buf_.resize(128,18);
+  buf_ = new QPixmap;
+  buf_->resize(128, 18);
   _updatePixmap();
 }
 
-  void
-RiscOSTitleBar::_updatePixmap()
+TitleBar::~TitleBar()
 {
-  if (size().width() > buf_.width())
-    buf_.resize(size());
-
-  QPainter p;
-  p.begin(&buf_);
-
-  if (client_->isActive()) {
-
-    p.drawPixmap(0, 0, px_active_left_);
-    p.drawTiledPixmap(2, 0, width() - 4, 18, px_active_);
-    p.drawPixmap(width() - 2, 0, px_active_right_);
-
-  } else {
-    
-    p.drawPixmap(0, 0, px_inactive_left_);
-    p.drawTiledPixmap(2, 0, width() - 4, 18, px_inactive_);
-    p.drawPixmap(width() - 2, 0, px_inactive_right_);
-
-  }
-
-  p.setPen(client_->colour());
-  p.setFont(client_->font());
-  p.setFont(QFont("times", 10, QFont::Bold));
-  p.drawText(3, 0, width() - 6, 18, AlignCenter, client_->caption());
+  delete buf_;
 }
 
   void
-RiscOSTitleBar::resizeEvent(QResizeEvent * e)
+TitleBar::_updatePixmap()
+{
+  if (size().width() > buf_->width())
+    buf_->resize(size());
+
+  QPainter p;
+  p.begin(buf_);
+
+  if (client_->isActive()) {
+
+    p.drawPixmap(0, 0, *px_title_active_left);
+    p.drawTiledPixmap(2, 0, width() - 4, 18, *px_title_active);
+    p.drawPixmap(width() - 2, 0, *px_title_active_right);
+    p.setPen(Qt::white);
+    p.setFont(options->font());
+    p.drawText(3, 0, width() - 6, 18, AlignCenter, client_->caption());
+
+  } else {
+    
+    p.drawPixmap(0, 0, *px_title_inactive_left);
+    p.drawTiledPixmap(2, 0, width() - 4, 18, *px_title_inactive);
+    p.drawPixmap(width() - 2, 0, *px_title_inactive_right);
+    p.setPen(Qt::black);
+    p.setFont(options->font());
+    p.drawText(3, 0, width() - 6, 18, AlignCenter, client_->caption());
+
+  }
+}
+
+  void
+TitleBar::resizeEvent(QResizeEvent * e)
 {
   QWidget::resizeEvent(e);
   _updatePixmap();
 }
 
   void
-RiscOSTitleBar::paintEvent(QPaintEvent * e)
+TitleBar::paintEvent(QPaintEvent * e)
 {
   QRect r(e->rect());
-  bitBlt(this, r.topLeft(), &buf_, r, Qt::CopyROP);
+  bitBlt(this, r.topLeft(), buf_, r, Qt::CopyROP);
 }
   
   void
-RiscOSTitleBar::mousePressEvent(QMouseEvent * e)
+TitleBar::mousePressEvent(QMouseEvent * e)
 {
   switch (e->button()) {
 
@@ -243,12 +261,12 @@ RiscOSTitleBar::mousePressEvent(QMouseEvent * e)
 }
 
   void
-RiscOSTitleBar::mouseReleaseEvent(QMouseEvent * e)
+TitleBar::mouseReleaseEvent(QMouseEvent * e)
 {
 }
 
   void
-RiscOSTitleBar::mouseMoveEvent(QMouseEvent * e)
+TitleBar::mouseMoveEvent(QMouseEvent * e)
 {
     QPoint adjustedForCursor = e->globalPos() - clientPosToMousePos_;
 
@@ -262,26 +280,26 @@ RiscOSTitleBar::mouseMoveEvent(QMouseEvent * e)
 }
 
   void
-RiscOSTitleBar::mouseDoubleClickEvent(QMouseEvent * e)
+TitleBar::mouseDoubleClickEvent(QMouseEvent * e)
 {
   client_->setShade(!client_->isShade());
 }
 
   void
-RiscOSTitleBar::update()
+TitleBar::update()
 {
   _updatePixmap();
   repaint(false);
 }
 
-RiscOSResizeBar::RiscOSResizeBar(RiscOSClient * parent)
-  : QWidget(parent, "RiscOSResizeBar")
+ResizeBar::ResizeBar(Manager * parent)
+  : QWidget(parent, "ResizeBar")
 {
   setFixedHeight(8);
 
-  left_   = new RiscOSResizeLeft(this, parent);
-  mid_    = new RiscOSResizeMid(this, parent);
-  right_  = new RiscOSResizeRight(this, parent);
+  left_   = new ResizeLeft(this, parent);
+  mid_    = new ResizeMid(this, parent);
+  right_  = new ResizeRight(this, parent);
   
   QHBoxLayout * layout = new QHBoxLayout(this);
 
@@ -299,60 +317,63 @@ RiscOSResizeBar::RiscOSResizeBar(RiscOSClient * parent)
 }
   
   void
-RiscOSResizeBar::update()
+ResizeBar::update()
 {
   mid_->update();
 }
 
-RiscOSResizeMid::RiscOSResizeMid(RiscOSResizeBar * parent, RiscOSClient * c)
-  : QWidget(parent, "RiscOSResizeMid"),
+ResizeMid::ResizeMid(ResizeBar * parent, Manager * c)
+  : QWidget(parent, "ResizeMid"),
     client_(c)
 {
   setCursor(Qt::sizeVerCursor);
+  buf_ = new QPixmap;
+  buf_->resize(128, 8);
+}
 
-  px_left_  = QPixmap(resize_bar_left_xpm);
-  px_mid_   = QPixmap(resize_bar_mid_xpm);
-  px_right_ = QPixmap(resize_bar_right_xpm);
+ResizeMid::~ResizeMid()
+{
+  delete buf_;
 }
 
    void
-RiscOSResizeMid::_updatePixmap()
+ResizeMid::_updatePixmap()
 {
-  if (size().width() > buf_.width())
-    buf_.resize(size());
+  if (size().width() > buf_->width())
+    buf_->resize(size());
 
   QPainter p;
-  p.begin(&buf_);
+  p.begin(buf_);
   p.drawLine(0, 8, width(), 8);
 
-  p.drawPixmap(0, 0, px_left_);
-  p.drawTiledPixmap(2, 0, width() - 4, 7, px_mid_);
-  p.drawPixmap(width() - 2, 0, px_right_);
+  p.drawPixmap(0, 0, *px_resize_left);
+  p.drawTiledPixmap(2, 0, width() - 4, 7, *px_resize_mid);
+  p.drawPixmap(width() - 2, 0, *px_resize_right);
 }
 
   void
-RiscOSResizeMid::update()
+ResizeMid::update()
 {
   _updatePixmap();
   repaint(false);
 }
  
   void
-RiscOSResizeMid::resizeEvent(QResizeEvent * e)
+ResizeMid::resizeEvent(QResizeEvent * e)
 {
   QWidget::resizeEvent(e);
   _updatePixmap();
 }
 
   void
-RiscOSResizeMid::paintEvent(QPaintEvent * e)
+ResizeMid::paintEvent(QPaintEvent * e)
 {
   QRect r(e->rect());
-  bitBlt(this, r.topLeft(), &buf_, r, Qt::CopyROP);
+  bitBlt(this, r.topLeft(), buf_, r, Qt::CopyROP);
 }
 
   void
-RiscOSResizeMid::mouseMoveEvent(QMouseEvent * e)
+ResizeMid::mouseMoveEvent(QMouseEvent * e)
 {
   QRect g = client_->geometry();
   g.setBottom(e->globalPos().y());
@@ -365,8 +386,8 @@ RiscOSResizeMid::mouseMoveEvent(QMouseEvent * e)
   }
 }
 
-RiscOSResizeLeft::RiscOSResizeLeft(RiscOSResizeBar * parent, RiscOSClient * c)
-  : QWidget(parent, "RiscOSResizeLeft"),
+ResizeLeft::ResizeLeft(ResizeBar * parent, Manager * c)
+  : QWidget(parent, "ResizeLeft"),
     client_(c)
 {
   setCursor(Qt::sizeBDiagCursor);
@@ -377,14 +398,14 @@ RiscOSResizeLeft::RiscOSResizeLeft(RiscOSResizeBar * parent, RiscOSClient * c)
   pixmap.resize(30, 8);
   pixmap.fill(Qt::black);
   QPainter p(&pixmap);
-  p.drawPixmap(1,   0, QPixmap(resize_bar_left_xpm));
-  p.drawPixmap(3,   0, QPixmap(resize_bar_mid_xpm));
-  p.drawPixmap(28,  0, QPixmap(resize_bar_right_xpm));
+  p.drawPixmap(1,   0, *px_resize_left);
+  p.drawPixmap(3,   0, *px_resize_mid);
+  p.drawPixmap(28,  0, *px_resize_right);
   setBackgroundPixmap(pixmap);
 }
 
   void
-RiscOSResizeLeft::mouseMoveEvent(QMouseEvent * e)
+ResizeLeft::mouseMoveEvent(QMouseEvent * e)
 {
   QRect g = client_->geometry();
   g.setBottom(e->globalPos().y());
@@ -399,8 +420,8 @@ RiscOSResizeLeft::mouseMoveEvent(QMouseEvent * e)
   }
 }
 
-RiscOSResizeRight::RiscOSResizeRight(RiscOSResizeBar * parent, RiscOSClient * c)
-  : QWidget(parent, "RiscOSResizeRight"),
+ResizeRight::ResizeRight(ResizeBar * parent, Manager * c)
+  : QWidget(parent, "ResizeRight"),
     client_(c)
 {
   setCursor(Qt::sizeFDiagCursor);
@@ -411,14 +432,14 @@ RiscOSResizeRight::RiscOSResizeRight(RiscOSResizeBar * parent, RiscOSClient * c)
   pixmap.resize(30, 8);
   pixmap.fill(Qt::black);
   QPainter p(&pixmap);
-  p.drawPixmap(0,   0, QPixmap(resize_bar_left_xpm));
-  p.drawPixmap(2,   0, QPixmap(resize_bar_mid_xpm));
-  p.drawPixmap(27,  0, QPixmap(resize_bar_right_xpm));
+  p.drawPixmap(0,   0, *px_resize_left);
+  p.drawPixmap(2,   0, *px_resize_mid);
+  p.drawPixmap(27,  0, *px_resize_right);
   setBackgroundPixmap(pixmap);
 }
 
   void
-RiscOSResizeRight::mouseMoveEvent(QMouseEvent * e)
+ResizeRight::mouseMoveEvent(QMouseEvent * e)
 {
   QRect g = client_->geometry();
   g.setBottom(e->globalPos().y());
@@ -433,28 +454,28 @@ RiscOSResizeRight::mouseMoveEvent(QMouseEvent * e)
   }
 }
 
-RiscOSClient::RiscOSClient(
+Manager::Manager(
   Workspace * workSpace,
   WId winId,
   QWidget * parent,
   const char * name
 )
-  : Client(workSpace, winId, parent, name, WResizeNoErase)
+  : Client(workSpace, winId, parent, name, WResizeNoErase),
+    pixmapsLoaded_(false)
 {
   setMouseTracking(false); // I don't want this !
   setBackgroundColor(Qt::black);
 
+  _loadPixmaps();
+
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
-  lower_  = new RiscOSLowerButton(this);
-  close_  = new RiscOSCloseButton(this);
-
-  title_  = new RiscOSTitleBar(this);
-
-  iconify_  = new RiscOSIconifyButton(this);
-  maximize_ = new RiscOSMaximiseButton(this);
-
-  resizeBar_ = new RiscOSResizeBar(this);
+  lower_      = new LowerButton     (this);
+  close_      = new CloseButton     (this);
+  title_      = new TitleBar        (this);
+  iconify_    = new IconifyButton   (this);
+  maximize_   = new MaximiseButton  (this);
+  resizeBar_  = new ResizeBar       (this);
 
   // Layout
 
@@ -497,31 +518,31 @@ RiscOSClient::RiscOSClient(
 }
 
   void
-RiscOSClient::slotReset()
+Manager::slotReset()
 {
   // Empty.
 }
     
   void
-RiscOSClient::captionChange(const QString &)
+Manager::captionChange(const QString &)
 {
   title_->update();
 }
 
   void
-RiscOSClient::activeChange(bool b)
+Manager::activeChange(bool b)
 {
   title_->update();
 }
 
   void
-RiscOSClient::maximizeChange(bool b)
+Manager::maximizeChange(bool b)
 {
   maximize_->setOn(b);
 }
 
   void
-RiscOSClient::maximizeAndRaise()
+Manager::maximizeAndRaise()
 {
   maximize(MaximizeFull);
   workspace()->raiseClient(this);
@@ -529,7 +550,7 @@ RiscOSClient::maximizeAndRaise()
 }
 
   void
-RiscOSClient::maximizeVertically()
+Manager::maximizeVertically()
 {
   maximize(MaximizeVertical);
   workspace()->raiseClient(this);
@@ -537,19 +558,19 @@ RiscOSClient::maximizeVertically()
 }
 
   void
-RiscOSClient::maximizeNoRaise()
+Manager::maximizeNoRaise()
 {
   maximize(MaximizeFull);
 }
 
   void
-RiscOSClient::resize(int w, int h)
+Manager::resize(int w, int h)
 {
   Client::resize(w, h);
 }
 
   void
-RiscOSClient::setShade(bool b)
+Manager::setShade(bool b)
 {
 #if 0
   // Hmm. This does screwy things to the layout.
@@ -561,6 +582,49 @@ RiscOSClient::setShade(bool b)
 
   // And this is screwed. My window ends up the wrong size when unshaded.
 //  Client::setShade(b);
+}
+
+  void
+Manager::_loadPixmaps()
+{
+  if (pixmapsLoaded_) {
+
+    delete px_button_base_up;       px_button_base_up       = 0L;
+    delete px_button_base_down;     px_button_base_down     = 0L;
+    delete px_button_iconify;       px_button_iconify       = 0L;
+    delete px_button_close;         px_button_close         = 0L;
+    delete px_button_lower;         px_button_lower         = 0L;
+    delete px_button_max;           px_button_max           = 0L;
+    delete px_button_unmax;         px_button_unmax         = 0L;
+    delete px_title_inactive_left;  px_title_inactive_left  = 0L;
+    delete px_title_inactive;       px_title_inactive       = 0L;
+    delete px_title_inactive_right; px_title_inactive_right = 0L;
+    delete px_title_active_left;    px_title_active_left    = 0L;
+    delete px_title_active;         px_title_active         = 0L;
+    delete px_title_active_right;   px_title_active_right   = 0L;
+    delete px_resize_left;          px_resize_left          = 0L;
+    delete px_resize_mid;           px_resize_mid           = 0L;
+    delete px_resize_right;         px_resize_right         = 0L;
+  }
+
+  px_button_base_up       = new QPixmap(button_base_up_xpm);
+  px_button_base_down     = new QPixmap(button_base_down_xpm);
+  px_button_iconify       = new QPixmap(button_iconify_xpm);
+  px_button_close         = new QPixmap(button_close_xpm);
+  px_button_lower         = new QPixmap(button_lower_xpm);
+  px_button_max           = new QPixmap(button_max_xpm);
+  px_button_unmax         = new QPixmap(button_unmax_xpm);
+  px_title_inactive_left  = new QPixmap(title_inactive_left_xpm);
+  px_title_inactive       = new QPixmap(title_inactive_xpm);
+  px_title_inactive_right = new QPixmap(title_inactive_right_xpm);
+  px_title_active_left    = new QPixmap(title_active_left_xpm);
+  px_title_active         = new QPixmap(title_active_xpm);
+  px_title_active_right   = new QPixmap(title_active_right_xpm);
+  px_resize_left          = new QPixmap(resize_bar_left_xpm);
+  px_resize_mid           = new QPixmap(resize_bar_mid_xpm);
+  px_resize_right         = new QPixmap(resize_bar_right_xpm);
+
+  pixmapsLoaded_ = true;
 }
 
 // vim:ts=2:sw=2:tw=78
