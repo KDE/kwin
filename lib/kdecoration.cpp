@@ -283,7 +283,7 @@ bool KDecoration::animateMinimize( bool )
     return false;
     }
 
-bool KDecoration::windowDocked( Position side )
+bool KDecoration::windowDocked( Position )
     {
     return false;
     }
