@@ -30,6 +30,7 @@ DEALINGS IN THE SOFTWARE.
 #include <qobject.h>
 #include <qiconset.h>
 #include <netwm_def.h>
+#include <kdeversion.h>
 
 class KDecorationOptionsPrivate;
 class KDecorationBridge;
@@ -679,6 +680,31 @@ class KDecoration
          * just like showWindowMenu().
 	 */
 	void closeWindow();
+        /*
+         * Changes the maximize mode of the decorated window. This function should
+         * be preferred to the other maximize() overload for reacting on clicks
+         * on the maximize titlebar button.
+         * NOTE: This function is new in KDE3.3. In order to support also KDE3.2,
+         * it is recommended to use code like this:
+         * \code
+         * int button = ... ;
+         * #if KDE_IS_VERSION( 3, 3, 0 )
+         * maximize( button );
+         * #else
+         * if( button == MidButton )
+	 *     maximize( maximizeMode() ^ MaximizeVertical );
+         * else if( button == RightButton )
+         *     maximize( maximizeMode() ^ MaximizeHorizontal );
+         * else
+         *     maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+         * #endif
+         * \endcode
+         * @since 3.3
+         */
+#if KDE_IS_VERSION( 3, 90, 0 )
+#warning Update the docs.
+#endif
+        void maximize( ButtonState button );
 	/**
 	 * Set the maximize mode of the decorated window.
 	 * @param mode The maximization mode to be set.

@@ -231,6 +231,17 @@ void KDecoration::closeWindow()
     bridge_->closeWindow();
     }
 
+void KDecoration::maximize( ButtonState button )
+    {
+    // This can be made configurable if needed.
+    if( button == MidButton )
+        maximize( maximizeMode() ^ MaximizeVertical );
+    else if ( button == RightButton )
+        maximize( maximizeMode() ^ MaximizeHorizontal );
+    else
+        maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+    }
+
 void KDecoration::maximize( MaximizeMode mode )
     {
     bridge_->maximize( mode );
