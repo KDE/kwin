@@ -9,6 +9,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kapp.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 
 Options::Options()
     : QObject( 0, 0)
@@ -118,11 +119,16 @@ void Options::reload()
     colors[Font+KWINCOLORS] = config->readColorEntry("inactiveForeground",
                                                      &colors[Font+KWINCOLORS]);
 
-    activeFont = QFont("Helvetica", 12, QFont::Bold);
-    activeFont = config->readFontEntry("activeFont", &activeFont);
-    inactiveFont = config->readFontEntry("inactiveFont", &activeFont);
+    // Keep in sync with kglobalsettings.
 
-    activeFontSmall = QFont("Helvetica", 10, QFont::Bold);
+    QFont activeFontGuess("helvetica", 12, QFont::SansSerif, true);
+    activeFontGuess.setPixelSize(12);
+
+    activeFont = config->readFontEntry("activeFont", &activeFontGuess);
+    inactiveFont = config->readFontEntry("inactiveFont", &activeFontGuess);
+
+    activeFontSmall = activeFont;
+    activeFontSmall.setPointSize(activeFont.pointSize() - 2);
     activeFontSmall = config->readFontEntry("activeFontSmall", &activeFontSmall);
     inactiveFontSmall = config->readFontEntry("inactiveFontSmall", &activeFontSmall);
 
