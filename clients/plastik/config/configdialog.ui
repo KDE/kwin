@@ -1,0 +1,258 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>ConfigDialog</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>ConfigDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>541</width>
+            <height>584</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Config Dialog</string>
+    </property>
+    <hbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout1</cstring>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="5">
+                    <property name="name">
+                        <cstring>titleAlign</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Title &amp;Alignment</string>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>AlignLeft</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Left</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>AlignHCenter</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Center</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>AlignRight</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Right</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <spacer row="8" column="2" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>spacer5_2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>270</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="6" column="0">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>B&amp;order size:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>borderSize</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Here you can change the thickness of the borders to fit your taste.</string>
+                    </property>
+                </widget>
+                <widget class="QSpinBox" row="6" column="1" rowspan="1" colspan="4">
+                    <property name="name">
+                        <cstring>borderSize</cstring>
+                    </property>
+                    <property name="suffix">
+                        <string> pixel</string>
+                    </property>
+                    <property name="maxValue">
+                        <number>15</number>
+                    </property>
+                    <property name="minValue">
+                        <number>2</number>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Here you can change the thickness of the borders to fit your taste.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="4">
+                    <property name="name">
+                        <cstring>animateButtons</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Animate buttons</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Check this option if you want the buttons fade in/out when the mouse enters or leaves the button.</string>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="7" column="1" rowspan="1" colspan="4">
+                    <property name="name">
+                        <cstring>titlebarHeight</cstring>
+                    </property>
+                    <property name="minValue">
+                        <number>1</number>
+                    </property>
+                    <property name="maxValue">
+                        <number>6</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="tickmarks">
+                        <enum>NoMarks</enum>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>By adjusting this slider, you can modify the height of the title bar.
+Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="8" column="1">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Small</string>
+                    </property>
+                </widget>
+                <spacer row="9" column="3">
+                    <property name="name">
+                        <cstring>spacer6</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>200</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="5">
+                    <property name="name">
+                        <cstring>shrinkBorders</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Sh&amp;rink borders for maximized windows</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+R</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Check this option if you want parts of the borders to be hidden for maximized windows to improve accessibility of side buttons and scrollbars.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="5">
+                    <property name="name">
+                        <cstring>titleShadow</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Use shadowed &amp;text</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+T</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="7" column="0">
+                    <property name="name">
+                        <cstring>textLabel1_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Tit&amp;le bar Height:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>titlebarHeight</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>By adjusting this slider, you can modify the height of the title bar.
+Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
+                    </property>
+                </widget>
+                <spacer row="8" column="0">
+                    <property name="name">
+                        <cstring>spacer7</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>140</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="8" column="4">
+                    <property name="name">
+                        <cstring>textLabel4</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Large</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </hbox>
+</widget>
+<tabstops>
+    <tabstop>AlignLeft</tabstop>
+    <tabstop>AlignHCenter</tabstop>
+    <tabstop>AlignRight</tabstop>
+    <tabstop>animateButtons</tabstop>
+    <tabstop>titleShadow</tabstop>
+    <tabstop>shrinkBorders</tabstop>
+    <tabstop>borderSize</tabstop>
+    <tabstop>titlebarHeight</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
