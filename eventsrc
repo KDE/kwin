@@ -728,6 +728,7 @@ Name[sv]=Nytt fönster
 Name[ta]=Ò¾¢Â º¡ÇÃõ
 Name[tr]=Yeni Pencere
 Name[uk]=Нове вікно
+Name[zh_TW.Big5]=開啟新視窗
 Comment=New Window
 Comment[ca]=Finestra nova
 Comment[cs]=Nové okno
@@ -799,6 +800,7 @@ Name[sv]=Ta bort fönster
 Name[ta]=º¡ÇÃò¨¾ ¿£ìÌ
 Name[tr]=Pencereyi Sil
 Name[uk]=Видалити вікно
+Name[zh_TW.Big5]=刪除視窗
 Comment=Delete Window
 Comment[ca]=Esborra finestra
 Comment[cs]=Výmaz okna
@@ -1486,8 +1488,10 @@ soundfile=pop.wav
 
 [transnew]
 Name=New Dialog
+Name[cs]=Nové dialogové okno
 Name[gl]=Novo Diálogo
 Name[ro]=Dialog nou
+Name[zh_TW.Big5]=新的對話視窗
 Comment=Transient Window (a dialog) Appears
 Comment[ca]=Apareix una finestra transitòria (un diàleg)
 Comment[cs]=Objevilo se dialogové okno
@@ -1527,6 +1531,7 @@ default_presentation=0
 
 [transdelete]
 Name=Delete Dialog
+Name[cs]=Zrušení dialogového okna
 Name[gl]=Pechar Diálogo
 Name[ro]=Şterge dialog
 Comment=Transient Window (a dialog) is Removed
