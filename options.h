@@ -37,7 +37,7 @@ public:
     enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStricklyUnderMouse };
     FocusPolicy focusPolicy;
     
-    enum MoveResizeMode { Transparent, Opaque, HalfTransparent };
+    enum MoveResizeMode { Transparent, Opaque };
 
     /**
      * Basic color types that should be recognized by all decoration styles.

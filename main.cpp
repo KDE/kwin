@@ -52,7 +52,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
 }
 
 Application::Application( int &argc, char *argv[] )
-: QApplication( argc, argv )
+: KApplication( argc, argv, "kwin" )
 {
     initting = TRUE;
     options = new Options;
@@ -61,7 +61,7 @@ Application::Application( int &argc, char *argv[] )
     // install X11 error handler
     XSetErrorHandler( x11ErrorHandler );
 
-    // create a workspace. 
+    // create a workspace.
     workspaces += new Workspace();
     initting = FALSE;
     if ( argc > 1 ) {

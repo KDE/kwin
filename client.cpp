@@ -16,9 +16,6 @@
 
 extern Atom qt_wm_state;
 
-static QImage* imgClient = 0;
-static QPixmap* pmBackground = 0;
-static QImage* imgBackground = 0;
 
 static QRect* visible_bound = 0;
 
@@ -856,21 +853,6 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	buttonDown = FALSE;
 	if ( moveResizeMode ) {
 	    clearbound();
-	    if ( isMove() && options->moveMode == Options::HalfTransparent ) {
-		QPainter p ( workspace()->desktopWidget() );
-		if ( !mask.isNull() ) {
-		    QRegion r( mask );
-		    r.translate( x(), y() );
-		    p.setClipRegion( r );
-		}
-		p.drawImage( x(), y(), *imgClient);
-	    }
-	    delete imgClient;
-	    imgClient = 0;
-	    delete imgBackground;
-	    imgBackground = 0;
-	    delete pmBackground;
-	    pmBackground = 0;
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
 		 || ( isResize() && options->resizeMode != Options::Opaque ) )
 		XUngrabServer( qt_xdisplay() );
@@ -903,23 +885,6 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
 		 || ( isResize() && options->resizeMode != Options::Opaque ) )
 		XGrabServer( qt_xdisplay() );
-	
-	    if ( isMove() && options->moveMode == Options::HalfTransparent ) {
-		imgClient = 0; //new QImage( QPixmap::grabWidget( this ).convertToImage() );
-		// TODO SLOW!!!
-		pmBackground = new QPixmap( QPixmap::grabWindow( qt_xrootwin() ));
-		imgBackground = new QImage( pmBackground->convertToImage() );
-		QRect ww( windowWrapper()->geometry() );
-		ww.moveBy( x(), y() );
-		ww = ww.intersect( workspace()->geometry() );
-		ww.moveBy( -x(), -y() );
-		bitBlt( imgClient,
-			ww.x(),
-			ww.y(),
-			imgBackground,
-			x()+ww.x(), y()+ww.y(), ww.width(), ww.height() );
-		oldGeom.setRect(0,0,0,0);
-	    }
 	}
 	else
 	    return;
@@ -994,57 +959,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    clearbound();
 	    drawbound( geom );
 	    break;
-	case Options::HalfTransparent:
-	    {
-		QPainter p ( workspace()->desktopWidget() );
-		QRegion now( geom );
-		if ( !mask.isNull() ) {
-		    QRegion r( mask );
-		    r.translate( geom.x(), geom.y() );
-		    now = r;
-		}
-		if ( !oldGeom.isEmpty() ) {
-		    QRegion r( oldGeom );
-		    r = r.subtract( now );
-		    p.setClipRegion( r );
-		    p.drawPixmap( oldGeom.x(), oldGeom.y(),
-				  *pmBackground,
-				  oldGeom.x(), oldGeom.y(),
-				  oldGeom.width(), oldGeom.height() );
-		}
-		p.setClipRegion( now );
-		QImage img ( *imgClient );
-		img.detach();
-		QRect visibleRect = QRect( 0, 0,
-			   workspace()->geometry().width(),
-			   workspace()->geometry().height() ).intersect( geom );
-		for ( int i=visibleRect.top(); i<=visibleRect.bottom(); i++ ) {
-		    uint *p = (uint *)imgBackground->scanLine(i);
-		    uint *end = p + visibleRect.right();
-		    p += visibleRect.left();
-		    uint *pimg = (uint *)img.scanLine(i - geom.top() );
-		    pimg += visibleRect.left() - geom.left();
-		    while ( p <= end ) {
-			int r = (*p&0x00ff0000) >> 16;
-			int r2 = (*pimg&0x00ff0000) >> 16;
-			int g = (*p&0x0000ff00) >> 8;
-			int g2 = (*pimg&0x0000ff00) >> 8;
-			int b = (*p&0x000000ff );
-			int b2 = (*pimg&0x000000ff );
-			*pimg = ( ( (r+2*r2)/3  ) << 16 )
-				+ ( ( (g+2*g2)/3  ) << 8 )
-				+ ( (b+2*b2)/3 );
-			p++;
-			pimg++;
-		    }
-		}
-		
-		p.drawImage( geom.x(), geom.y(), img );
-	    }
-	    break;
 	}
     }
-
 }
 
 /*!
@@ -1577,9 +1493,8 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus()
 {
-    if ( !Ptakefocus )
-	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, CurrentTime );
-    else
+    XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, CurrentTime );
+    if ( Ptakefocus )
 	sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
 }
 

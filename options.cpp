@@ -48,7 +48,7 @@ void Options::reload()
 {
     focusPolicy = ClickToFocus;
     resizeMode = Opaque;
-    moveMode = Transparent;//HalfTransparent;
+    moveMode = Opaque;// Transparent;
 
     QPalette pal = QApplication::palette();
     KConfig *config = KGlobal::config();
