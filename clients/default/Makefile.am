@@ -12,5 +12,3 @@ kwin3_default_la_LIBADD  = $(LIB_KDECORE) ../../lib/libkdecorations.la
 METASOURCES = AUTO
 noinst_HEADERS = kdedefault.h
 
-#messages:
-#	$(XGETTEXT) *.cpp -o $(podir)/kwin_default.pot

@@ -17,8 +17,6 @@ lnk_DATA = quartz.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-#messages:
-#	$(XGETTEXT) *.cpp -o $(podir)/kwin_quartz.pot
 
 ###KMAKE-start (don't edit or delete this block)
 

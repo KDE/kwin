@@ -15,5 +15,3 @@ lnk_DATA = redmond.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-#messages:
-#	$(XGETTEXT) *.cpp -o $(podir)/kwin_redmond.pot

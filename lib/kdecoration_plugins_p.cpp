@@ -165,9 +165,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
 
     pluginStr = nameStr;
     
-    QString catalogue = nameStr;
-    catalogue.replace( "kwin3_", "kwin_" );
-    KGlobal::locale()->insertCatalogue( catalogue );
+    KGlobal::locale()->insertCatalogue( "kwin_clients" );
 
     old_library = oldLibrary; // save for delayed destroying
     old_fact = oldFactory;

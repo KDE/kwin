@@ -42,5 +42,3 @@ tiles.h: embedtool
 
 keramik.lo: tiles.h
 
-#messages:
-#	$(XGETTEXT) *.cpp -o $(podir)/kwin_keramik.pot
