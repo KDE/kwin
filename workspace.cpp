@@ -915,13 +915,16 @@ QPopupMenu* Workspace::clientPopup( Client* c )
     if ( !popup ) {
 	popup = new QPopupMenu;
 	popup->setCheckable( TRUE );
+    popup->setFont(KGlobal::menuFont());
 	connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
 	connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
 	
         PluginMenu *deco = new PluginMenu(&mgr, popup);
+        deco->setFont(KGlobal::menuFont());
 
 	desk_popup = new QPopupMenu( popup );
 	desk_popup->setCheckable( TRUE );
+    desk_popup->setFont(KGlobal::menuFont());
 	connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
 	connect( desk_popup, SIGNAL( aboutToShow() ), this, SLOT( desktopPopupAboutToShow() ) );
 
