@@ -107,6 +107,13 @@ public:
     enum AltTabStyle { KDE, CDE };
     AltTabStyle altTabStyle;
 
+    /**
+     * Xinerama options
+     */
+    bool xineramaEnabled;
+    bool xineramaPlacementEnabled;
+    bool xineramaMovementEnabled;
+    bool xineramaMaximizeEnabled;
 
     /**
       Number of desktop rowsd

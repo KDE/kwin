@@ -113,7 +113,9 @@ public:
 
     QRect geometry() const;
 
-    QRect clientArea();
+    enum clientAreaOption { PlacementArea, MovementArea, MaximizeArea };
+
+    QRect clientArea(clientAreaOption opt = MaximizeArea);
 
     void removeClient( Client* );
 

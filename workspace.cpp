@@ -21,6 +21,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kprocess.h>
 #include <kiconloader.h>
 #include <kstartupinfo.h>
+#include <kdesktopwidget.h>
 
 #include <netwm.h>
 
@@ -1361,7 +1362,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-        popup->insertItem(SmallIconSet( "configure" ), i18n("&Configure WindowManager..."), this, SLOT( configureWM() ));
+        popup->insertItem(SmallIconSet( "configure" ), i18n("&Configure..."), this, SLOT( configureWM() ));
         popup->insertItem(i18n("&To desktop"), desk_popup );
 
         popup->insertSeparator();
@@ -1460,7 +1461,7 @@ void Workspace::randomPlacement(Client* c){
     static int py = 2 * step;
     int tx,ty;
 
-    QRect maxRect = clientArea();
+    QRect maxRect = clientArea(PlacementArea);
 
     if (px < maxRect.x())
         px = maxRect.x();
@@ -1514,7 +1515,7 @@ void Workspace::smartPlacement(Client* c){
     int basket;                 //temp holder
 
     // get the maximum allowed windows space
-    QRect maxRect = clientArea();
+    QRect maxRect = clientArea(PlacementArea);
     int x = maxRect.left(), y = maxRect.top();
     x_optimal = x; y_optimal = y;
 
@@ -1660,7 +1661,7 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
 
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
-    QRect maxRect = clientArea();
+    QRect maxRect = clientArea(PlacementArea);
 
   // initialize often used vars: width and height of c; we gain speed
     int ch = c->height();
@@ -2830,7 +2831,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
    if (options->windowSnapZone || options->borderSnapZone )
    {
       bool sOWO=options->snapOnlyWhenOverlapping;
-      QRect maxRect = clientArea();
+      QRect maxRect = clientArea(MovementArea);
       int xmin = maxRect.left();
       int xmax = maxRect.right()+1;               //desk size
       int ymin = maxRect.top();
@@ -3617,35 +3618,29 @@ void Workspace::updateClientArea()
 
   \sa geometry()
  */
-QRect Workspace::clientArea()
+QRect Workspace::clientArea(clientAreaOption opt)
 {
     QRect rect = QApplication::desktop()->geometry();
+    KDesktopWidget *desktop = KApplication::desktop();
 
-#ifdef HAVE_XINERAMA
-    QPoint pos = QCursor::pos();
-
-    for (int head = 0; head < numHeads; head++) {
-	if ((xineramaInfo[head].x_org <= pos.x()) &&
-	    (xineramaInfo[head].x_org + xineramaInfo[head].width > pos.x()) && 
-	    (xineramaInfo[head].y_org <= pos.y()) &&
-	    (xineramaInfo[head].y_org + xineramaInfo[head].height > pos.y())) {
-	    rect.setRect(xineramaInfo[head].x_org,
-		    	 xineramaInfo[head].y_org,
-			 xineramaInfo[head].width,
-			 xineramaInfo[head].height);
-	}
-
+    switch (opt) {
+	case MaximizeArea:
+	    if (options->xineramaMaximizeEnabled)
+		rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+	    break;
+	case PlacementArea:
+	    if (options->xineramaPlacementEnabled)
+		rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+	    break;
+	case MovementArea:
+	    if (options->xineramaMovementEnabled)
+		rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+	    break;
     }
-#endif
     if (area.isNull()) {
 	return rect;
     }
-#ifdef HAVE_XINERAMA
-#warning hello
     return area.intersect(rect);
-#else
-    return area;
-#endif
 }
 
 

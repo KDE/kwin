@@ -184,6 +184,14 @@ void Options::reload()
     if ( val == "CDE" )
         altTabStyle = CDE;
 
+    xineramaEnabled = config->readBoolEntry ("XineramaEnabled", FALSE ) &&
+		      KApplication::desktop()->isVirtualDesktop();
+    if (xineramaEnabled) {
+	xineramaPlacementEnabled = config->readBoolEntry ("XineramaPlacementEnabled", FALSE);
+ 	xineramaMovementEnabled = config->readBoolEntry ("XineramaMovementEnabled", FALSE);
+ 	xineramaMaximizeEnabled = config->readBoolEntry ("XineramaMaximizeEnabled", FALSE);
+    }
+
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;
     else if (val == "Random") placement = Random;
