@@ -745,6 +745,9 @@ bool Workspace::destroyClient( Client* c)
     if ( !c )
         return FALSE;
 
+    if (c == popup_client)
+        popup->close();
+
     storeFakeSessionInfo( c );
 
     if (clients.contains(c))
@@ -839,7 +842,7 @@ bool areModKeysDepressed( const KShortcut& cut )
         rgKeySyms[nKeySyms++] = XK_Alt_R;
     }
     if( mod & KKey::WIN ) {
-        // HACK: it would take a lot of code to determine whether the Win key 
+        // HACK: it would take a lot of code to determine whether the Win key
         //  is associated with Super or Meta, so check for both
         rgKeySyms[nKeySyms++] = XK_Super_L;
         rgKeySyms[nKeySyms++] = XK_Super_R;
@@ -3087,7 +3090,7 @@ void Workspace::desktopPopupAboutToShow()
         return;
     desk_popup->clear();
     desk_popup->insertItem( i18n("&All Desktops"), 0 );
-    if ( popup_client->isSticky() )
+    if ( popup_client && popup_client->isSticky() )
         desk_popup->setItemChecked( 0, TRUE );
     desk_popup->insertSeparator( -1 );
     int id;
