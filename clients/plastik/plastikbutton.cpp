@@ -54,10 +54,11 @@ static const uint TIMERINTERVAL = 50; // msec
 static const uint ANIMATIONSTEPS = 4;
 
 PlastikButton::PlastikButton(PlastikClient *parent, const char *name,
-                             const QString& tip, ButtonType type, int size)
+                             const QString& tip, ButtonType type, int size, int btns)
     : QButton(parent->widget(), name),
     m_client(parent),
     m_lastMouse(0),
+    m_realizeButtons(btns),
     m_size(size),
     m_type(type),
     m_aDecoLight(QImage() ), m_iDecoLight(QImage() ),
@@ -214,7 +215,7 @@ void PlastikButton::mousePressEvent(QMouseEvent* e)
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   LeftButton, e->state());
+                   (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
 
     QButton::mousePressEvent(&me);
 }
@@ -224,7 +225,7 @@ void PlastikButton::mouseReleaseEvent(QMouseEvent* e)
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   LeftButton, e->state());
+                    (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
 
     QButton::mouseReleaseEvent(&me);
 }

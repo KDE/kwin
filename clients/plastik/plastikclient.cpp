@@ -552,7 +552,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
             switch (s[n]) {
               case 'M': // Menu button
                   if (!m_button[MenuButton]){
-                      m_button[MenuButton] = new PlastikButton(this, "menu", i18n("Menu"), MenuButton, buttonSize);
+                      m_button[MenuButton] = new PlastikButton(this, "menu", i18n("Menu"), MenuButton, buttonSize, LeftButton|RightButton);
                       connect(m_button[MenuButton], SIGNAL(pressed()), SLOT(menuButtonPressed()));
                       connect(m_button[MenuButton], SIGNAL(released()), this, SLOT(menuButtonReleased()));
                       layout->addWidget(m_button[MenuButton], 0, Qt::AlignHCenter | Qt::AlignTop);
@@ -581,7 +581,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   break;
               case 'A': // Maximize button
                   if ((!m_button[MaxButton]) && isMaximizable()){
-                      m_button[MaxButton] = new PlastikButton(this, "maximize", i18n("Maximize"), MaxButton, buttonSize);
+                      m_button[MaxButton] = new PlastikButton(this, "maximize", i18n("Maximize"), MaxButton, buttonSize, LeftButton|MidButton|RightButton);
                       connect(m_button[MaxButton], SIGNAL(clicked()), SLOT(slotMaximize()));
                       layout->addWidget(m_button[MaxButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }

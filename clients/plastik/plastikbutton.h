@@ -37,7 +37,7 @@ class PlastikButton : public QButton
 {
     Q_OBJECT
 public:
-    PlastikButton(PlastikClient *parent=0, const char *name=0, const QString &tip=NULL, ButtonType type = HelpButton, int size = 18);
+    PlastikButton(PlastikClient *parent, const char *name, const QString &tip, ButtonType type, int size, int btns = LeftButton);
     ~PlastikButton();
 
     void setOnAllDesktops(bool oad) { isOnAllDesktops = oad; repaint(false); }
@@ -63,6 +63,7 @@ private:
 private:
     PlastikClient *m_client;
     int m_lastMouse;
+    int m_realizeButtons;
 
     int m_size;
 
