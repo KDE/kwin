@@ -13,13 +13,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w, int )
-    {
-        return(new NextClient(ws, w));
-    }
-}
 
 
 static unsigned char close_bits[] = {
@@ -160,7 +153,7 @@ static void create_pixmaps()
         btnForeground = new QColor(Qt::white);
 }
 
-void delete_pixmaps()
+static void delete_pixmaps()
 {
     delete aTitlePix;
     delete iTitlePix;
@@ -179,8 +172,6 @@ void delete_pixmaps()
 
 void NextClient::slotReset()
 {
-    delete_pixmaps();
-    create_pixmaps();
     button[0]->reset();
     button[1]->reset();
     button[2]->reset();
@@ -226,7 +217,6 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     setBackgroundMode( NoBackground );
-    create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -377,5 +367,25 @@ NextClient::mousePosition( const QPoint& p ) const
   return m;
 }
 
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w, int )
+    {
+        return(new NextClient(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
+}
 
 #include "nextclient.moc"

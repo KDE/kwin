@@ -13,13 +13,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w)
-    {
-        return(new MwmClient(ws, w));
-    }
-}
 
 
 static unsigned char close_bits[] = {
@@ -93,7 +86,7 @@ static void create_pixmaps()
                             KPixmapEffect::VerticalGradient);
 }
 
-void MwmClient::slotReset()
+static void delete_pixmaps()
 {
     delete aTitlePix;
     delete iTitlePix;
@@ -102,7 +95,10 @@ void MwmClient::slotReset()
     delete aHandlePix;
     delete iHandlePix;
     pixmaps_created = false;
-    create_pixmaps();
+}
+
+void MwmClient::slotReset()
+{
     button[0]->reset();
     button[1]->reset();
     button[2]->reset();
@@ -194,7 +190,6 @@ MwmClient::MwmClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
-    create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -320,5 +315,25 @@ void MwmClient::init()
     Client::init();
 }
 
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w)
+    {
+        return(new MwmClient(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
+}
 
 #include "mwmclient.moc"

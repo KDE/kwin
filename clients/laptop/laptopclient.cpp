@@ -18,13 +18,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new LaptopClient(ws, w));
-    }
-}
 
 
 static unsigned char iconify_bits[] = {
@@ -210,6 +203,24 @@ static void create_pixmaps()
         btnForeground = Qt::white;
 }
 
+static void delete_pixmaps()
+{
+    delete titlePix;
+    if(aUpperGradient){
+        delete aUpperGradient;
+        delete iUpperGradient;
+        delete btnPix1;
+        delete btnDownPix1;
+        delete iBtnPix1;
+        delete iBtnDownPix1;
+        delete btnPix2;
+        delete btnDownPix2;
+        delete iBtnPix2;
+        delete iBtnDownPix2;
+    }
+    pixmaps_created = false;
+}
+
 
 LaptopClientButton::LaptopClientButton(int w, int h, Client *parent, const char *name,
                            const unsigned char *bitmap)
@@ -280,21 +291,6 @@ void LaptopClientButton::drawButton(QPainter *p)
 
 void LaptopClient::slotReset()
 {
-    delete titlePix;
-    if(aUpperGradient){
-        delete aUpperGradient;
-        delete iUpperGradient;
-        delete btnPix1;
-        delete btnDownPix1;
-        delete iBtnPix1;
-        delete iBtnDownPix1;
-        delete btnPix2;
-        delete btnDownPix2;
-        delete iBtnPix2;
-        delete iBtnDownPix2;
-    }
-    pixmaps_created = false;
-    create_pixmaps();
     int i;
     for(i=0; i < 5; ++i){
         if(button[i])
@@ -310,7 +306,6 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     lastButtonWidth = 0;
     lastBufferWidth = 0;
 
-    create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
@@ -683,6 +678,27 @@ LaptopClient::mousePosition( const QPoint& p ) const
   }
 
   return m;
+}
+
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w, int)
+    {
+        return(new LaptopClient(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
 }
 
 #include "laptopclient.moc"

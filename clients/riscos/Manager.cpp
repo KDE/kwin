@@ -52,6 +52,19 @@ extern "C"
     else
       return new RiscOS::Manager(workSpace, winId);
   }
+  void init()
+  {
+     (void) RiscOS::Static::instance();
+  }
+  void reset()
+  {
+     RiscOS::Static::instance()->update();
+  }
+  void deinit()
+  {
+     delete RiscOS::Static::instance();
+  }
+
 }
 
 using namespace KWinInternal;
@@ -343,7 +356,6 @@ Manager::slotReset()
 {
   for (QDictIterator<Button> it(buttonDict_); it.current(); ++it)
     it.current()->update();
-  Static::instance()->update();
   repaint();
 }
 

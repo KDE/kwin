@@ -251,6 +251,7 @@ public slots:
     void reload();
 
 signals:
+    void resetPlugin();
     void resetClients();
 
 protected:

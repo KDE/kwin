@@ -231,6 +231,7 @@ void Options::reload()
     CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"));
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"));
 
+    emit resetPlugin();
     emit resetClients();
 }
 

@@ -15,13 +15,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new SystemClient(ws, w));
-    }
-}
 
 static unsigned char iconify_bits[] = {
     0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
@@ -174,7 +167,7 @@ static void create_pixmaps()
         btnForeground = new QColor(Qt::white);
 }
 
-void delete_pixmaps()
+static void delete_pixmaps()
 {
     if(aUpperGradient){
         delete aUpperGradient;
@@ -281,8 +274,6 @@ void SystemButton::handleClicked()
 
 void SystemClient::slotReset()
 {
-    delete_pixmaps();
-    create_pixmaps();
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
     repaint();
@@ -313,7 +304,6 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
-    create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
@@ -541,5 +531,25 @@ void SystemClient::activeChange(bool)
         button[4]->reset();
 }
 
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w, int)
+    {
+        return(new SystemClient(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
+}
 
 #include "systemclient.moc"

@@ -20,13 +20,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w)
-    {
-        return(new KWMThemeClient(ws, w));
-    }
-}
 
 static QPixmap stretchPixmap(QPixmap& src, bool stretchVert){
   QPixmap dest;
@@ -85,7 +78,7 @@ static bool pixmaps_created = false;
 static bool titleSunken = false;
 static bool titleTransparent;
 
-static void init_theme()
+static void create_pixmaps()
 {
     const char *keys[] = {"wm_top", "wm_bottom", "wm_left", "wm_right",
     "wm_topleft", "wm_topright", "wm_bottomleft", "wm_bottomright"};
@@ -209,13 +202,9 @@ static void init_theme()
     }
 }
 
-void
-KWMThemeClient::slotReset()
+static void delete_pixmaps()
 {
-   if (!pixmaps_created) return;
-   pixmaps_created = false;
-
-    for(int i=0; i < 8; ++i)
+   for(int i=0; i < 8; ++i)
         delete framePixmaps[i];
 
    delete menuPix;
@@ -233,8 +222,11 @@ KWMThemeClient::slotReset()
    titleGradient = true;
    pixmaps_created = false;
    titleSunken = false;
+}
 
-   init_theme();   
+void KWMThemeClient::slotReset()
+{
+
 }
 
 void MyButton::drawButtonLabel(QPainter *p)
@@ -250,7 +242,6 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity)
 {
     stickyBtn = maxBtn = mnuBtn = 0;
-    init_theme();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset())); 
     QGridLayout *layout = new QGridLayout(this);
     layout->addColSpacing(0, maxExtent);
@@ -797,6 +788,25 @@ void KWMThemeClient::init()
     //
 }
 
-
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w)
+    {
+        return(new KWMThemeClient(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
+}
 
 #include "kwmthemeclient.moc"

@@ -28,6 +28,7 @@ public:
     QString currentPlugin() { return pluginStr; }
 public slots:
     bool updatePlugin();
+    void resetPlugin();
 signals:
     void resetAllClients();
 protected:

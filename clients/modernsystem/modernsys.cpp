@@ -18,13 +18,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new ModernSys(ws, w));
-    }
-}
 
 
 static unsigned char iconify_bits[] = {
@@ -249,8 +242,6 @@ void ModernButton::mouseReleaseEvent( QMouseEvent* e )
 
 void ModernSys::slotReset()
 {
-    delete_pixmaps();
-    create_pixmaps();
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
     button[0]->reset();
@@ -266,7 +257,6 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
-    create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
@@ -568,4 +558,26 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
     }
     return m;
 }
+
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w, int)
+    {
+        return(new ModernSys(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
+}
+
 #include "modernsys.moc"

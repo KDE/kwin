@@ -24,13 +24,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new QuartzClient(ws, w));
-    }
-}
 
 static const char *kdelogo[] = {
 /* columns rows colors chars-per-pixel */
@@ -186,7 +179,7 @@ static void create_pixmaps()
     drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
 }
 
-void delete_pixmaps()
+static void delete_pixmaps()
 {
     btnPix1 = new KPixmap;
     iBtnPix1 = new KPixmap;
@@ -328,9 +321,6 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
 
     lastButtonWidth = 0;
 
-    // Create the button and titlebar pixmaps
-    create_pixmaps();
-
     // Pack the windowWrapper() window within a grid
     QGridLayout* g = new QGridLayout(this, 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
@@ -395,9 +385,6 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
 
 void QuartzClient::slotReset()
 {
-    delete_pixmaps();
-    create_pixmaps();
-
     // ( 4 buttons - Help, Max, Iconify, Close )
     for(int i = QuartzClient::BtnHelp; i <= QuartzClient::BtnClose; i++)
         if(button[i])
@@ -666,6 +653,27 @@ void QuartzClient::menuButtonPressed()
 
     t->start();
     tc = this;           
+}
+
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w, int)
+    {
+        return(new QuartzClient(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
 }
 
 #include "quartz.moc"

@@ -22,15 +22,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 using namespace KWinInternal;
 
-extern "C"
-{
-  Client * allocate(Workspace * workSpace, WId winId, int tool )
-  {
-      if ( tool )
-	  return new StdToolClient( workSpace, winId );
-      return new StdClient(workSpace, winId);
-  }
-}
 
 
 static QPixmap* close_pix = 0;
@@ -147,7 +138,7 @@ static void create_pixmaps()
     question_mark_pix->setMask(QBitmap(16, 16, help_mask_bits, true));
 }
 
-void StdClient::slotReset()
+static void delete_pixmaps()
 {
     delete close_pix;
     delete maximize_pix;
@@ -165,8 +156,10 @@ void StdClient::slotReset()
     delete dis_menu_pix;
     delete question_mark_pix;
     pixmaps_created = false;
-    create_pixmaps();
+}
 
+void StdClient::slotReset()
+{
     if(miniIcon().isNull())
         button[0]->setIconSet(isActive() ? *menu_pix : *dis_menu_pix);
     button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
@@ -184,7 +177,6 @@ void StdClient::slotReset()
 StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
-    create_pixmaps();
     setFont(options->font(isActive() ));
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
@@ -507,7 +499,6 @@ void StdToolClient::activeChange( bool on )
 
 void StdToolClient::slotReset()
 {
-    create_pixmaps();
     QImage img = close_pix->convertToImage();
     img = img.smoothScale( 12, 12 );
     QPixmap pm;
@@ -516,6 +507,28 @@ void StdToolClient::slotReset()
     setFont(options->font(isActive(), true ));
 }
 
+extern "C"
+{
+  Client * allocate(Workspace * workSpace, WId winId, int tool )
+  {
+      if ( tool )
+	  return new StdToolClient( workSpace, winId );
+      return new StdClient(workSpace, winId);
+  }
+  void init()
+  {
+     create_pixmaps();
+  }
+  void reset()
+  {
+     delete_pixmaps();
+     create_pixmaps();
+  }
+  void deinit()
+  {
+     delete_pixmaps();
+  }
+}
 
 
 #include "kde1client.moc"

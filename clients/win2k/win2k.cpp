@@ -22,13 +22,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new GalliumClient(ws, w));
-    }
-}
 
 static const char *kdelogo[] = {
 /* columns rows colors chars-per-pixel */
@@ -369,8 +362,6 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
 
     lastButtonWidth = 0;
 
-    create_pixmaps();
-
     QGridLayout* g = new QGridLayout(this, 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 4);        // Top grab bar 
@@ -434,9 +425,6 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
 
 void GalliumClient::slotReset()
 {
-    delete_pixmaps();
-    create_pixmaps();
-
     // 0 to 3   ( 4 buttons - Help, Max, Iconify, Close )
     for(int i = GalliumClient::BtnHelp; i <= GalliumClient::BtnClose; i++)
         if(button[i])
@@ -742,5 +730,27 @@ void GalliumClient::menuButtonPressed()
     t->start();
     tc = this;           
 }
+
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w, int)
+    {
+        return(new GalliumClient(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       delete_pixmaps();
+       create_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
+}
+
 
 #include "win2k.moc" 

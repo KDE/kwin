@@ -15,16 +15,9 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new B2Client(ws, w));
-    }
-}
 
 // TODO: stick all these in an array
-static KPixmap *aClosePix=0, *aClosePixDown;
+static KPixmap *aClosePix, *aClosePixDown;
 static KPixmap *iClosePix, *iClosePixDown;
 static KPixmap *aMaxPix, *aMaxPixDown;
 static KPixmap *iMaxPix, *iMaxPixDown;
@@ -76,7 +69,6 @@ static void redraw_pixmaps();
 
 QPixmap* kwin_get_menu_pix_hack()
 {
-    create_pixmaps();
     //return menu_pix;  FIXME
     return aMenuPix;
 }
@@ -173,6 +165,40 @@ static void create_pixmaps()
     aHelpPixDown->setMask(helpMask);
     iHelpPixDown->setMask(helpMask);
     redraw_pixmaps();
+}
+
+static void delete_pixmaps()
+{
+    delete aClosePix;
+    delete aClosePixDown;
+    delete iClosePix;
+    delete iClosePixDown;
+    delete aMaxPix;
+    delete aMaxPixDown;
+    delete iMaxPix;
+    delete iMaxPixDown;
+    delete aNormalizePix;
+    delete aNormalizePixDown;
+    delete iNormalizePix;
+    delete iNormalizePixDown;
+    delete aIconifyPix;
+    delete aIconifyPixDown;
+    delete iIconifyPix;
+    delete iIconifyPixDown;
+    delete aPinupPix;
+    delete aPinupPixDown;
+    delete iPinupPix;
+    delete iPinupPixDown;
+    delete aMenuPix;
+    delete aMenuPixDown;
+    delete iMenuPix;
+    delete iMenuPixDown;
+    delete aHelpPix;
+    delete aHelpPixDown;
+    delete iHelpPix;
+    delete iHelpPixDown;
+
+    pixmaps_created = false;
 }
 
 B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
@@ -436,7 +462,6 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     bar_x_ofs = 0;
     in_unobs = 0;
 
-    create_pixmaps();
     g = new QGridLayout( this, 0, 0);
     g->addMultiCellWidget(windowWrapper(), 1, 1, 1, 2);
 
@@ -1015,6 +1040,26 @@ void B2Client::positionButtons()
 
     titlebar->resize(titleWidth,20);
     titlebar->move(bar_x_ofs, 0);
+}
+
+extern "C"
+{
+    Client *allocate(Workspace *ws, WId w, int)
+    {
+       return(new B2Client(ws, w));
+    }
+    void init()
+    {
+       create_pixmaps();
+    }
+    void reset()
+    {
+       redraw_pixmaps();
+    }
+    void deinit()
+    {
+       delete_pixmaps();
+    }
 }
 
 #include "b2client.moc"
