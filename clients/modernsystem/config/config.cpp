@@ -35,7 +35,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	handleBox = new QGroupBox( 1, Qt::Vertical, i18n("Window Resize Handle"), mainw);
 	handleBox->setSizePolicy(QSizePolicy((QSizePolicy::SizeType)1, (QSizePolicy::SizeType)4));
 
-	cbShowHandle = new QCheckBox(i18n("&Show Handle"), handleBox);
+	cbShowHandle = new QCheckBox(i18n("&Show handle"), handleBox);
 	QWhatsThis::add(cbShowHandle,
 			i18n("When selected, all windows are drawn with a resize "
 			"handle at the lower right corner. This makes window resizing "

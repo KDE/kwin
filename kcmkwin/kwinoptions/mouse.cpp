@@ -129,8 +129,8 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   combo = new QComboBox(grid);
   combo->insertItem(i18n("Raise"));
   combo->insertItem(i18n("Lower"));
-  combo->insertItem(i18n("Operations menu"));
-  combo->insertItem(i18n("Toggle raise and lower"));
+  combo->insertItem(i18n("Operations Menu"));
+  combo->insertItem(i18n("Toggle Raise and Lower"));
   connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
   coTiAct1 = combo;
 

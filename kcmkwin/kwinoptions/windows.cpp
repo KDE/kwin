@@ -123,10 +123,10 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
 
 
     focusCombo =  new QComboBox(false, fcsBox);
-    focusCombo->insertItem(i18n("Click to focus"), CLICK_TO_FOCUS);
-    focusCombo->insertItem(i18n("Focus follows mouse"), FOCUS_FOLLOWS_MOUSE);
-    focusCombo->insertItem(i18n("Focus under mouse"), FOCUS_UNDER_MOUSE);
-    focusCombo->insertItem(i18n("Focus strictly under mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
+    focusCombo->insertItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
+    focusCombo->insertItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
+    focusCombo->insertItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
+    focusCombo->insertItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
     fLay->addMultiCellWidget(focusCombo,1,1,0,1);
 
     // FIXME, when more policies have been added to KWin
@@ -506,14 +506,14 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
 #ifdef HAVE_XINERAMA
     xineramaBox = new QVButtonGroup(i18n("Xinerama"), this);
 
-    xineramaEnable = new QCheckBox(i18n("Enable Xinerama Support"), xineramaBox);
+    xineramaEnable = new QCheckBox(i18n("Enable Xinerama support"), xineramaBox);
     QWhatsThis::add(xineramaEnable, i18n("Enable support for Xinerama."));
     connect(xineramaEnable, SIGNAL(toggled(bool)), this, SLOT(setXinerama(bool)));
-    xineramaMovementEnable = new QCheckBox(i18n("Enable Window Resistance Support"), xineramaBox);
+    xineramaMovementEnable = new QCheckBox(i18n("Enable window resistance support"), xineramaBox);
     QWhatsThis::add(xineramaMovementEnable, i18n("Turn on resistance when moving a window from one physical screen to the other."));
-    xineramaPlacementEnable = new QCheckBox(i18n("Enable Window Placement Support"), xineramaBox);
+    xineramaPlacementEnable = new QCheckBox(i18n("Enable window placement support"), xineramaBox);
     QWhatsThis::add(xineramaPlacementEnable, i18n("This option opens new windows on the physical screen on which the cursor is present."));
-    xineramaMaximizeEnable = new QCheckBox(i18n("Enable Window Maximize Support"), xineramaBox);
+    xineramaMaximizeEnable = new QCheckBox(i18n("Enable window maximize support"), xineramaBox);
     QWhatsThis::add(xineramaMaximizeEnable, i18n("When this option is turned on, windows will only maximize up to the physical screen size."));
 
     lay->addWidget(xineramaBox);
