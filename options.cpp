@@ -143,7 +143,7 @@ void Options::reload()
     config->setGroup( "Windows" );
     moveMode = config->readEntry("MoveMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
     resizeMode = config->readEntry("ResizeMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
-    moveResizeMaximizedWindows = config->readBoolEntry("MoveResizeMaximizedWindows", FALSE );
+    moveResizeMaximizedWindows = config->readBoolEntry("MoveResizeMaximizedWindows", true );
 
 
     QString val;

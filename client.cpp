@@ -1259,6 +1259,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 		// in case we were maximized, reset state
 		max_mode = MaximizeRestore;
 		maximizeChange(FALSE );
+		Events::raise( Events::UnMaximize );
+		info->setState( 0, NET::Max );
 	    }
 	    workspace()->setFocusChangeEnabled(false);
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
@@ -2171,6 +2173,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    // in case we were maximized, reset state
 	    max_mode = MaximizeRestore;
 	    maximizeChange(FALSE );
+	    Events::raise( Events::UnMaximize );
+	    info->setState( 0, NET::Max );
 	}
 	workspace()->setFocusChangeEnabled(false);
 	buttonDown = TRUE;
@@ -2189,6 +2193,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    // in case we were maximized, reset state
 	    max_mode = MaximizeRestore;
 	    maximizeChange(FALSE );
+	    Events::raise( Events::UnMaximize );
+	    info->setState( 0, NET::Max );
 	}
 	workspace()->setFocusChangeEnabled(false);
 	buttonDown = TRUE;
