@@ -150,6 +150,7 @@ public:
     void raiseClient( Client* c );
     void lowerClient( Client* c );
     void raiseOrLowerClient( Client * );
+    void reconfigure();
 
     void clientHidden( Client*  );
     
@@ -208,7 +209,6 @@ public:
     // dcop interface
     void cascadeDesktop();
     void unclutterDesktop();
-    void reconfigure();
     void doNotManage(QString);
     void setCurrentDesktop( int new_desktop );
 
@@ -268,6 +268,8 @@ public slots:
 
     void slotResetAllClientsDelayed();
     void slotResetAllClients();
+
+    void slotReconfigure();
 
     void slotKillWindow();
 
@@ -399,6 +401,9 @@ private:
 
     // Timer to collect requests for 'ResetAllClients'
     QTimer resetTimer;
+
+    // Timer to collect requests for 'reconfigure'
+    QTimer reconfigureTimer;
 
     QTimer focusEnsuranceTimer;
     

@@ -368,6 +368,8 @@ void Workspace::init()
 
     connect(&resetTimer, SIGNAL(timeout()), this,
             SLOT(slotResetAllClients()));
+    connect(&reconfigureTimer, SIGNAL(timeout()), this,
+            SLOT(slotReconfigure()));
 
     connect(mgr, SIGNAL(resetAllClients()), this,
             SLOT(slotResetAllClients()));
@@ -1755,11 +1757,18 @@ void Workspace::unclutterDesktop()
 }
 
 
+void Workspace::reconfigure()
+{
+    reconfigureTimer.start(200, true);
+}
+
+
 /*!
   Reread settings
  */
-void Workspace::reconfigure()
+void Workspace::slotReconfigure()
 {
+    reconfigureTimer.stop();
     KGlobal::config()->reparseConfiguration();
     options->reload();
     keys->readSettings();
