@@ -50,7 +50,6 @@ namespace Keramik
 	const int buttonMargin     =  9;  // Margin between the window edge and the buttons
 	const int buttonSpacing    =  4;  // Spacing between the titlebar buttons
 	const int iconSpacing      =  5;  // Spacing between the icon and the text label
-	const int bottomCornerSize = 30;  // Size of the bottom diagonal resize corners
 
 	// Default button layout
 	const char default_left[]  = "M";
@@ -1507,6 +1506,7 @@ KeramikClient::MousePosition KeramikClient::mousePosition( const QPoint &p ) con
 	int leftBorder   = clientHandler->tile( BorderLeft, true )->width();
 	int rightBorder  = width() - clientHandler->tile( BorderRight, true )->width() - 1;
 	int bottomBorder = height() - clientHandler->grabBarHeight() - 1;
+	int bottomCornerSize = 3*rightBorder/2 + 24;
 
 	// Test if the mouse is over the titlebar area
 	if ( p.y() < titleBaseY + 11 ) {
