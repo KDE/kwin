@@ -47,9 +47,24 @@ Name=Activate Window
 Comment=Another Window is Activated
 default_presentation=0
 
+[new]
+New=New Window
+Comment=New Window
+default_presentation=0
+
+[delete]
+New=Delete Window
+Comment=Delete Window
+default_presentation=0
+
 [open]
 Name=Open New Window
 Comment=A New Window Appears
+default_presentation=0
+
+[close]
+Name=Window Close
+Comment=A Window Closes
 default_presentation=0
 
 [shadeup]
