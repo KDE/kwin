@@ -425,10 +425,10 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 void B2Client::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
+    positionButtons();
     /* may be the resize cuted off some space occupied by titlebar, which
        was moved, so instead of reducing it, we first try to move it */
     titleMoveAbs(bar_x_ofs);
-    positionButtons();
     doShape();
     /*
     What does this? (MM)
@@ -447,6 +447,7 @@ void B2Client::resizeEvent( QResizeEvent* e)
 void B2Client::captionChange( const QString &)
 {
     positionButtons();
+    titleMoveAbs(bar_x_ofs);
     doShape();
     //repaint();
     titlebar->repaint();
@@ -874,7 +875,3 @@ void B2Client::positionButtons()
 }
 
 #include "b2client.moc"
-
-
-
-
