@@ -33,8 +33,8 @@ static unsigned char unmaximize_bits[] =
    0x00, 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f
 };
 
-WebButtonMaximize::WebButtonMaximize(bool max, QWidget * parent)
-  : WebButton(parent, i18n("Maximize"))
+WebButtonMaximize::WebButtonMaximize(bool max, QWidget * parent, WebClient* deco)
+  : WebButton(parent, i18n("Maximize"), deco)
 {
   QBitmap b(8, 8, max ? unmaximize_bits : maximize_bits, true /* isXBitmap */);
   b.setMask(b);

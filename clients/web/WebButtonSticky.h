@@ -33,7 +33,7 @@ namespace Web
 
     public:
 
-      WebButtonSticky(bool sticky, QWidget * parent);
+      WebButtonSticky(bool sticky, QWidget * parent, WebClient* deco);
 
     protected:
 

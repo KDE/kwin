@@ -33,7 +33,7 @@ namespace Web
 
     public:
 
-      WebButtonLower(QWidget * parent);
+      WebButtonLower(QWidget * parent, WebClient* deco);
 
     protected:
 

@@ -28,8 +28,8 @@ static unsigned char lower_bits[] =
    0x1f, 0x1f, 0x1f, 0xff, 0x8f, 0x88, 0x88, 0xf8
 };
 
-WebButtonLower::WebButtonLower(QWidget * parent)
-  : WebButton(parent, i18n("Lower"))
+WebButtonLower::WebButtonLower(QWidget * parent, WebClient* deco)
+  : WebButton(parent, i18n("Lower"), deco)
 {
   QBitmap b(8, 8, lower_bits, true /* isXBitmap */);
   b.setMask(b);

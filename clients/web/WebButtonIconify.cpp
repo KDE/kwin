@@ -28,8 +28,8 @@ static unsigned char iconify_bits[] =
    0x00, 0x00, 0x00, 0x7e, 0x7e, 0x3c, 0x18, 0x00
 };
 
-WebButtonIconify::WebButtonIconify(QWidget * parent)
-  : WebButton(parent, i18n("Minimize"))
+WebButtonIconify::WebButtonIconify(QWidget * parent, WebClient* deco)
+  : WebButton(parent, i18n("Minimize"), deco)
 {
   QBitmap b(8, 8, iconify_bits, true /* isXBitmap */);
   b.setMask(b);

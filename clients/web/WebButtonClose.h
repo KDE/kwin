@@ -33,7 +33,7 @@ namespace Web
 
     public:
 
-      WebButtonClose(QWidget * parent);
+      WebButtonClose(QWidget * parent, WebClient* deco);
 
     protected:
 

@@ -29,8 +29,8 @@ static unsigned char help_bits[] =
    0x18, 0x18, 0x00, 0x1c, 0x18, 0x18, 0x18, 0x3c
 };
 
-WebButtonHelp::WebButtonHelp(QWidget * parent)
-  : WebButton(parent, i18n("Help"))
+WebButtonHelp::WebButtonHelp(QWidget * parent, WebClient* deco)
+  : WebButton(parent, i18n("Help"), deco)
 {
   QBitmap b(8, 8, help_bits, true /* isXBitmap */);
   b.setMask(b);

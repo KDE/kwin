@@ -366,39 +366,39 @@ WebClient::_createButton(const QString & s, QWidget * parent)
 
   if (("Help" == s) && providesContextHelp())
   {
-    b = new WebButtonHelp(parent);
+    b = new WebButtonHelp(parent, this);
     connect(b, SIGNAL(help()), this, SLOT(showContextHelp()));
   }
 
   else if ("OnAllDesktops" == s)
   {
-    b = new WebButtonSticky(isOnAllDesktops(), parent);
+    b = new WebButtonSticky(isOnAllDesktops(), parent, this);
     connect(b, SIGNAL(toggleSticky()), this, SLOT(toggleOnAllDesktops()));
     connect(this, SIGNAL(oadChange(bool)), b, SLOT(slotOnAllDesktopsChange(bool)));
   }
 
   else if ("Minimize" == s && isMinimizable())
   {
-    b = new WebButtonIconify(parent);
+    b = new WebButtonIconify(parent, this);
     connect(b, SIGNAL(minimize()), this, SLOT(minimize()));
   }
 
   else if ("Maximize" == s && isMaximizable())
   {
-    b = new WebButtonMaximize((maximizeMode()==MaximizeFull), parent);
+    b = new WebButtonMaximize((maximizeMode()==MaximizeFull), parent, this);
     connect(b, SIGNAL(maximize(int)), this, SLOT(slotMaximize(int)));
     connect(this, SIGNAL(maxChange(bool)), b, SLOT(slotMaximizeChange(bool)));
   }
 
   else if ("Close" == s && isCloseable())
   {
-    b = new WebButtonClose(parent);
+    b = new WebButtonClose(parent, this);
     connect(b, SIGNAL(closeWindow()), this, SLOT(closeWindow()));
   }
 
   else if ("Lower" == s)
   {
-    b = new WebButtonLower(parent);
+    b = new WebButtonLower(parent, this);
     connect(b, SIGNAL(lowerWindow()), this, SLOT(slotLowerWindow()));
   }
 

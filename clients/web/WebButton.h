@@ -29,6 +29,7 @@
 
 namespace Web
 {
+  class WebClient;
 
   class WebButton : public QButton
   {
@@ -41,7 +42,7 @@ namespace Web
         Left, Mid, Right
       };
 
-      WebButton(QWidget * parent, const QString& tip);
+      WebButton(QWidget * parent, const QString& tip, WebClient* deco);
 
       virtual ~WebButton();
 
@@ -77,6 +78,7 @@ namespace Web
       Position position_;
 
       bool shape_;
+      WebClient* deco_;
   };
 }
 

@@ -33,7 +33,7 @@ namespace Web
 
     public:
 
-      WebButtonMaximize(bool maximised, QWidget * parent);
+      WebButtonMaximize(bool maximised, QWidget * parent, WebClient* deco);
 
     protected:
 

@@ -23,18 +23,19 @@
 #include <qpainter.h>
 #include <qtooltip.h>
 #include <qapplication.h>
-#include "../../lib/kdecoration.h"
 
 #include "WebButton.h"
+#include "Web.h"
 
 namespace Web {
 
-WebButton::WebButton(QWidget * parent, const QString& tip)
+WebButton::WebButton(QWidget * parent, const QString& tip, WebClient* deco)
   : QButton (parent, 0, 0),
     mouseOver_  (false),
     mouseDown_  (false),
     position_   (Mid),
-    shape_      (false)
+    shape_      (false),
+    deco_       (deco)
 {
   setTipText(tip);
   setCursor(ArrowCursor);
@@ -68,10 +69,13 @@ WebButton::mouseReleaseEvent(QMouseEvent * e)
   mouseDown_ = false;
   repaint();
 
+  KDecorationFactory* f = deco_->factory();
   if (rect().contains(e->pos()))
   {
     clickEvent(e->button());
   }
+  if( !f->exists( deco_ )) // decoration was destroyed
+    return;
   QButton::mouseReleaseEvent(e);
 }
 

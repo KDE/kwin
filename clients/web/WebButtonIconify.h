@@ -33,7 +33,7 @@ namespace Web
 
     public:
 
-      WebButtonIconify(QWidget * parent);
+      WebButtonIconify(QWidget * parent, WebClient* deco);
 
     protected:
 
