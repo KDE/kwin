@@ -409,7 +409,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 	uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
 	    KKeyNative::modX(KKey::WIN) :
 	    KKeyNative::modX(KKey::ALT);
-	bool bModKeyHeld = e->xbutton.state & keyModX;
+	bool bModKeyHeld = ( e->xbutton.state & KKeyNative::accelModMaskX()) == keyModX;
 
 	if ( ((Client*)parentWidget())->isActive()
 	     && ( options->focusPolicy != Options::ClickToFocus
