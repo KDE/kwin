@@ -161,7 +161,7 @@ bool PluginMgr::loadPlugin(QString nameStr)
 void PluginMgr::shutdownKWin(const QString &error_msg)
 {
     qWarning( "%s", (i18n("KWin: ") + error_msg +
-                    i18n("\nKWin will now exit...")).latin1() );
+                    i18n("\nKWin will now exit...")).local8Bit().data() );
     exit(1);
 }
 
