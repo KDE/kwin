@@ -1456,7 +1456,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         }
 
     // ShadeHover or ShadeActive, ShadeNormal was already avoided above
-    if ( mode != Center && shade_mode != ShadeNone )
+    if ( mode != Center && shade_mode != ShadeNone ) // SHADE
         setShade( ShadeNone );
 
     QPoint globalPos( x_root, y_root );

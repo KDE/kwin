@@ -587,19 +587,19 @@ void Client::mapRequestEvent( XMapRequestEvent* e )
 	// also copied in clientMessage()
             if( isMinimized())
                 unminimize();
-            else if( isShade())
+            if( isShade())
                 setShade( ShadeNone );
-            else // it's on another virtual desktop
-            {
-            if( workspace()->allowClientActivation( this ))
-                workspace()->activateClient( this );
-            else
-                demandAttention();
-            }
-        break;
-    case NormalState:
-	// TODO fake MapNotify?
-        break;
+            if( !isOnCurrentDesktop())
+                {
+                if( workspace()->allowClientActivation( this ))
+                    workspace()->activateClient( this );
+                else
+                    demandAttention();
+                }
+            break;
+        case NormalState:
+	    // TODO fake MapNotify?
+            break;
         }
     }
 
@@ -668,9 +668,9 @@ void Client::clientMessageEvent( XClientMessageEvent* e )
             { // copied from mapRequest()
             if( isMinimized())
                 unminimize();
-            else if( isShade())
+            if( isShade())
                 setShade( ShadeNone );
-            else // it's on another virtual desktop
+            if( !isOnCurrentDesktop())
                 {
                 if( workspace()->allowClientActivation( this ))
                     workspace()->activateClient( this );

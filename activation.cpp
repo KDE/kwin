@@ -712,7 +712,7 @@ void Client::setActive( bool act)
         autoRaiseTimer = 0;
         }
 
-    if( shade_mode == ShadeActivated )
+    if( !active && shade_mode == ShadeActivated )
         setShade( ShadeNormal );
 
     StackingUpdatesBlocker blocker( workspace());
