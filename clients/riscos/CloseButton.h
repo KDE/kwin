@@ -38,8 +38,8 @@ class CloseButton : public Button
 
   signals:
 
-    void close();
-  
+    void closeWindow();
+
   protected:
 
     void mouseReleaseEvent(QMouseEvent *);

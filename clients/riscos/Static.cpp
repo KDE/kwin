@@ -33,6 +33,7 @@
 #include <ksimpleconfig.h>
 
 #include "../../options.h"
+#include "../../workspace.h"
 
 #include "Static.h"
 
@@ -148,306 +149,44 @@ Static * Static::instance_ = 0L;
   void
 Static::_init()
 {
+  hicolour_ = QPixmap::defaultDepth() > 8;
   animationStyle_ = 0;
-  update();
+  updatePixmaps();
 }
 
   void
-Static::update()
+Static::reset()
 {
-  QFont f(options->font(true)); // XXX false doesn't work right at the moment
+  updatePixmaps();
+  Workspace::self()->slotResetAllClientsDelayed();
+}
 
-  QFontMetrics fm(f);
+  void
+Static::updatePixmaps()
+{
+  _initSizes();
 
-  int h = fm.height();
+  _resizeAllPixmaps();
 
-  titleHeight_ = h + 6;
+  _blankAllPixmaps();
 
-  if (titleHeight_ < 20)
-    titleHeight_ = 20;
-
-  int buttonSize = titleHeight_ - 1;
-
-  resizeHeight_ = 10;
-
-  // Sizes.
-
-  aResize_          .resize(30, resizeHeight_);
-  iResize_          .resize(30, resizeHeight_);
-  aTitleTextLeft_   .resize(3, titleHeight_);
-  aTitleTextRight_  .resize(3, titleHeight_);
-  iTitleTextLeft_   .resize(3, titleHeight_);
-  iTitleTextRight_  .resize(3, titleHeight_);
-  aTitleTextMid_    .resize(64, titleHeight_);
-  iTitleTextMid_    .resize(64, titleHeight_);
-  aResizeMidLeft_   .resize(3, resizeHeight_);
-  aResizeMidRight_  .resize(3, resizeHeight_);
-  iResizeMidLeft_   .resize(3, resizeHeight_);
-  iResizeMidRight_  .resize(3, resizeHeight_);
-  aResizeMid_       .resize(64, resizeHeight_);
-  iResizeMid_       .resize(64, resizeHeight_);
-  aButtonUp_        .resize(buttonSize, buttonSize);
-  iButtonUp_        .resize(buttonSize, buttonSize);
-  aButtonDown_      .resize(buttonSize, buttonSize);
-  iButtonDown_      .resize(buttonSize, buttonSize);
-
-  aResize_          .fill(Qt::black);
-  iResize_          .fill(Qt::black);
-  aTitleTextLeft_   .fill(Qt::black);
-  aTitleTextRight_  .fill(Qt::black);
-  iTitleTextLeft_   .fill(Qt::black);
-  iTitleTextRight_  .fill(Qt::black);
-  aTitleTextMid_    .fill(Qt::black);
-  iTitleTextMid_    .fill(Qt::black);
-  aResizeMidLeft_   .fill(Qt::black);
-  aResizeMidRight_  .fill(Qt::black);
-  iResizeMidLeft_   .fill(Qt::black);
-  iResizeMidRight_  .fill(Qt::black);
-  aResizeMid_       .fill(Qt::black);
-  iResizeMid_       .fill(Qt::black);
-  aButtonUp_        .fill(Qt::black);
-  iButtonUp_        .fill(Qt::black);
-  aButtonDown_      .fill(Qt::black);
-  iButtonDown_      .fill(Qt::black);
-
-  // -------------------------------------------------------------------------
-  // Palettes
-  // -------------------------------------------------------------------------
-
-  Palette aBut, iBut;
-  QPixmap aTexture;
-  QPixmap iTexture;
-
-  QPixmap abTexture;
-  QPixmap ibTexture;
-
-  bool hicolour = QPixmap::defaultDepth() > 8;
-
-  if (hicolour) {
-
-    // -----------------------------------------------------------------------
-    // Convert colours in palettes to match colour scheme.
-    // -----------------------------------------------------------------------
-
-    setPalette(aBut, options->color(Options::ButtonBg, true));
-    setPalette(iBut, options->color(Options::ButtonBg, false));
-
-    setPalette(aTitlePal_,  options->color(Options::TitleBar, true));
-    setPalette(iTitlePal_,  options->color(Options::TitleBar, false));
-
-    setPalette(aResizePal_, options->color(Options::TitleBar, true));
-    setPalette(iResizePal_, options->color(Options::TitleBar, false));
-
-    // -----------------------------------------------------------------------
-    // Convert colours in textures to match colour scheme.
-    // -----------------------------------------------------------------------
-
-    _createTexture(aTexture,  Options::TitleBar, true);
-    _createTexture(iTexture,  Options::TitleBar, false);
-    _createTexture(abTexture, Options::ButtonBg, true);
-    _createTexture(ibTexture, Options::ButtonBg, false);
+  if (hicolour_)
+  {
+    _initPalettes();
+    _initTextures();
   }
 
-  // -------------------------------------------------------------------------
-  // Title text area sides
-  // -------------------------------------------------------------------------
+  _drawTitleTextAreaSides();
 
-  QPixmap temp(4, titleHeight_);
+  _drawResizeCentralAreaSides();
 
-  transx = transy = 0.0;
+  _drawTitleTextAreaBackground();
 
-  temp.fill(Qt::black);
-  palette_ = aTitlePal_;
-  down_ = false;
+  _drawResizeCentralAreaBackground();
 
-  _drawBorder(temp, 4, titleHeight_ - 2);
+  _drawResizeHandles();
 
-  painter_.begin(&aTitleTextLeft_);
-  painter_.drawPixmap(1, 1, temp, 0, 1);
-  painter_.end();
-
-  painter_.begin(&aTitleTextRight_);
-  painter_.drawPixmap(0, 1, temp, 2, 1);
-  painter_.end();
-
-  palette_ = iTitlePal_;
-  _drawBorder(temp, 4, titleHeight_ - 2);
-
-  painter_.begin(&iTitleTextLeft_);
-  painter_.drawPixmap(1, 1, temp, 0, 1);
-  painter_.end();
-
-  painter_.begin(&iTitleTextRight_);
-  painter_.drawPixmap(0, 1, temp, 2, 1);
-  painter_.end();
-  
-
-  // -------------------------------------------------------------------------
-  // Resize central area sides.
-  // -------------------------------------------------------------------------
-
-  transy = 1.0;
-
-  palette_ = aResizePal_;
-  temp.resize(4, resizeHeight_);
-  temp.fill(Qt::black);
-
-  _drawBorder(temp, 4, resizeHeight_ - 3);
-
-  painter_.begin(&aResizeMidLeft_);
-  painter_.drawPixmap(0, 1, temp, 0, 1);
-  painter_.end();
-
-  painter_.begin(&aResizeMidRight_);
-  painter_.drawPixmap(0, 1, temp, 2, 1);
-  painter_.end();
-
-  palette_ = iResizePal_;
-  _drawBorder(temp, 4, resizeHeight_ - 3);
-
-  painter_.begin(&iResizeMidLeft_);
-  painter_.drawPixmap(0, 1, temp, 0, 1);
-  painter_.end();
-
-  painter_.begin(&iResizeMidRight_);
-  painter_.drawPixmap(0, 1, temp, 2, 1);
-  painter_.end();
-
-
-  // -------------------------------------------------------------------------
-  // Title text area background
-  // -------------------------------------------------------------------------
-
-  transx = transy = 0.0;
-  temp.resize(70, titleHeight_);
-  temp.fill(Qt::black);
-
-  palette_ = aTitlePal_;
-  _drawBorder(temp, 70, titleHeight_ - 3);
-  
-  painter_.begin(&aTitleTextMid_);
-  painter_.drawPixmap(0, 1, temp, 2, 0);
-  if (hicolour)
-    painter_.drawTiledPixmap(0, 4, 64, titleHeight_ - 8, aTexture);
-  painter_.end();
-
-  palette_ = iTitlePal_;
-  _drawBorder(temp, 70, titleHeight_ - 3);
-  
-  painter_.begin(&iTitleTextMid_);
-  painter_.drawPixmap(0, 1, temp, 2, 0);
-  if (hicolour)
-    painter_.drawTiledPixmap(0, 4, 64, titleHeight_ - 8, iTexture);
-  painter_.end();
-
-
-  // -------------------------------------------------------------------------
-  // Resize central area background
-  // -------------------------------------------------------------------------
-
-  transy = 1.0;
-  temp.fill(Qt::black);
-
-  palette_ = aResizePal_;
-  _drawBorder(temp, 70, resizeHeight_ - 3);
-  
-  painter_.begin(&aResizeMid_);
-  painter_.drawPixmap(0, 0, temp, 2, 0);
-  if (hicolour)
-    painter_.drawTiledPixmap(0, 4, 64, resizeHeight_ - 8, aTexture);
-  painter_.end();
-
-  palette_ = iResizePal_;
-  _drawBorder(temp, 70, 7);
-  
-  painter_.begin(&iResizeMid_);
-  painter_.drawPixmap(0, 0, temp, 2, 0);
-  if (hicolour)
-    painter_.drawTiledPixmap(0, 4, 64, resizeHeight_ - 8, iTexture);
-  painter_.end();
-
-  // -------------------------------------------------------------------------
-  // Resize handles
-  // -------------------------------------------------------------------------
-
-  transx = transy = 1.0;
-
-  down_ = false;
-
-  palette_ = aResizePal_;
-  _drawBorder(aResize_, 28, resizeHeight_ - 3);
-
-  if (hicolour) {
-    painter_.begin(&aResize_);
-    painter_.drawTiledPixmap(4, 4, 20, resizeHeight_ - 8, aTexture);
-    painter_.end();
-  }
-
-  palette_ = iResizePal_;
-  _drawBorder(iResize_, 28, resizeHeight_ - 3);
-
-  if (hicolour) {
-    painter_.begin(&iResize_);
-    painter_.drawTiledPixmap(4, 4, 20, resizeHeight_ - 8, iTexture);
-    painter_.end();
-  }
-
-  // -------------------------------------------------------------------------
-  // Button backgrounds
-  // -------------------------------------------------------------------------
-
-  buttonSize -=2;
-
-  down_ = false;
-  transx = 0.0;
-  transy = 1.0;
-  palette_ = aBut;
-  _drawBorder(aButtonUp_, buttonSize, buttonSize);
-  down_ = true;
-  _drawBorder(aButtonDown_, buttonSize, buttonSize);
-
-  palette_ = iBut;
-  _drawBorder(iButtonDown_, buttonSize, buttonSize);
-  down_ = false;
-  _drawBorder(iButtonUp_, buttonSize, buttonSize);
-
-  painter_.begin(&aButtonUp_);
-
-  if (hicolour)
-    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, abTexture);
-
-  painter_.end();
-
-  painter_.begin(&iButtonUp_);
-  if (hicolour)
-    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, ibTexture);
-
-  painter_.end();
-
-  // ------------------------------------------------------------------------
-  // Button order
-  // ------------------------------------------------------------------------
-
-  KConfig * c = new KConfig("kwinriscosrc", true, true);
-  c->setGroup("WM");
-
-  leftButtons_.clear();
-  rightButtons_.clear();
-
-  if (c->hasKey("LeftButtons"))
-    leftButtons_ = c->readListEntry("LeftButtons");
-  else
-    leftButtons_ << "Lower" << "Close" << "Sticky";
-
-  if (c->hasKey("RightButtons"))
-    rightButtons_ = c->readListEntry("RightButtons");
-  else
-    rightButtons_ << "Help" << "Iconify" << "Maximize";
-
-  animationStyle_ = c->readNumEntry("IconifyAnimationStyle", 0);
-
-  delete c;
-  c = 0;
+  _drawButtonBackgrounds();
 }
 
   void
@@ -486,6 +225,275 @@ Static::buttonBase(bool active, bool down) const
       return iButtonDown_;
     else
       return iButtonUp_;
+}
+
+  void
+Static::_initSizes()
+{
+  QFont f(options->font(true)); // XXX false doesn't work right at the moment
+
+  QFontMetrics fm(f);
+
+  int h = fm.height();
+
+  titleHeight_ = h + 6;
+
+  if (titleHeight_ < 20)
+    titleHeight_ = 20;
+
+  buttonSize_ = titleHeight_ - 1;
+
+  resizeHeight_ = 10;
+}
+
+  void
+Static::_resizeAllPixmaps()
+{
+  aResize_          .resize(30, resizeHeight_);
+  iResize_          .resize(30, resizeHeight_);
+  aTitleTextLeft_   .resize(3, titleHeight_);
+  aTitleTextRight_  .resize(3, titleHeight_);
+  iTitleTextLeft_   .resize(3, titleHeight_);
+  iTitleTextRight_  .resize(3, titleHeight_);
+  aTitleTextMid_    .resize(64, titleHeight_);
+  iTitleTextMid_    .resize(64, titleHeight_);
+  aResizeMidLeft_   .resize(3, resizeHeight_);
+  aResizeMidRight_  .resize(3, resizeHeight_);
+  iResizeMidLeft_   .resize(3, resizeHeight_);
+  iResizeMidRight_  .resize(3, resizeHeight_);
+  aResizeMid_       .resize(64, resizeHeight_);
+  iResizeMid_       .resize(64, resizeHeight_);
+
+  aButtonUp_        .resize(buttonSize_, buttonSize_);
+  iButtonUp_        .resize(buttonSize_, buttonSize_);
+  aButtonDown_      .resize(buttonSize_, buttonSize_);
+  iButtonDown_      .resize(buttonSize_, buttonSize_);
+}
+
+  void
+Static::_blankAllPixmaps()
+{
+  aResize_          .fill(Qt::black);
+  iResize_          .fill(Qt::black);
+  aTitleTextLeft_   .fill(Qt::black);
+  aTitleTextRight_  .fill(Qt::black);
+  iTitleTextLeft_   .fill(Qt::black);
+  iTitleTextRight_  .fill(Qt::black);
+  aTitleTextMid_    .fill(Qt::black);
+  iTitleTextMid_    .fill(Qt::black);
+  aResizeMidLeft_   .fill(Qt::black);
+  aResizeMidRight_  .fill(Qt::black);
+  iResizeMidLeft_   .fill(Qt::black);
+  iResizeMidRight_  .fill(Qt::black);
+  aResizeMid_       .fill(Qt::black);
+  iResizeMid_       .fill(Qt::black);
+  aButtonUp_        .fill(Qt::black);
+  iButtonUp_        .fill(Qt::black);
+  aButtonDown_      .fill(Qt::black);
+  iButtonDown_      .fill(Qt::black);
+}
+
+  void
+Static::_initPalettes()
+{
+  setPalette(aButPal_, options->color(Options::ButtonBg, true));
+  setPalette(iButPal_, options->color(Options::ButtonBg, false));
+
+  setPalette(aTitlePal_,  options->color(Options::TitleBar, true));
+  setPalette(iTitlePal_,  options->color(Options::TitleBar, false));
+
+  setPalette(aResizePal_, options->color(Options::TitleBar, true));
+  setPalette(iResizePal_, options->color(Options::TitleBar, false));
+}
+
+  void
+Static::_initTextures()
+{
+  _createTexture(aTexture_,  Options::TitleBar, true);
+  _createTexture(iTexture_,  Options::TitleBar, false);
+  _createTexture(abTexture_, Options::ButtonBg, true);
+  _createTexture(ibTexture_, Options::ButtonBg, false);
+}
+
+  void
+Static::_drawTitleTextAreaSides()
+{
+  QPixmap temp(4, titleHeight_);
+  temp.fill(Qt::black);
+
+  transx = transy = 0.0;
+
+  palette_ = aTitlePal_;
+  down_ = false;
+
+  _drawBorder(temp, 4, titleHeight_ - 2);
+
+  painter_.begin(&aTitleTextLeft_);
+  painter_.drawPixmap(1, 1, temp, 0, 1);
+  painter_.end();
+
+  painter_.begin(&aTitleTextRight_);
+  painter_.drawPixmap(0, 1, temp, 2, 1);
+  painter_.end();
+
+  palette_ = iTitlePal_;
+  _drawBorder(temp, 4, titleHeight_ - 2);
+
+  painter_.begin(&iTitleTextLeft_);
+  painter_.drawPixmap(1, 1, temp, 0, 1);
+  painter_.end();
+
+  painter_.begin(&iTitleTextRight_);
+  painter_.drawPixmap(0, 1, temp, 2, 1);
+  painter_.end();
+}
+
+  void
+Static::_drawResizeCentralAreaSides()
+{
+  QPixmap temp(4, resizeHeight_);
+  temp.fill(Qt::black);
+
+  transy = 1.0;
+
+  palette_ = aResizePal_;
+
+  _drawBorder(temp, 4, resizeHeight_ - 3);
+
+  painter_.begin(&aResizeMidLeft_);
+  painter_.drawPixmap(0, 1, temp, 0, 1);
+  painter_.end();
+
+  painter_.begin(&aResizeMidRight_);
+  painter_.drawPixmap(0, 1, temp, 2, 1);
+  painter_.end();
+
+  palette_ = iResizePal_;
+  _drawBorder(temp, 4, resizeHeight_ - 3);
+
+  painter_.begin(&iResizeMidLeft_);
+  painter_.drawPixmap(0, 1, temp, 0, 1);
+  painter_.end();
+
+  painter_.begin(&iResizeMidRight_);
+  painter_.drawPixmap(0, 1, temp, 2, 1);
+  painter_.end();
+}
+
+  void
+Static::_drawTitleTextAreaBackground()
+{
+  QPixmap temp(70, titleHeight_);
+  temp.fill(Qt::black);
+
+  transx = transy = 0.0;
+
+  palette_ = aTitlePal_;
+  _drawBorder(temp, 70, titleHeight_ - 3);
+
+  painter_.begin(&aTitleTextMid_);
+  painter_.drawPixmap(0, 1, temp, 2, 0);
+  if (hicolour_)
+    painter_.drawTiledPixmap(0, 4, 64, titleHeight_ - 8, aTexture_);
+  painter_.end();
+
+  palette_ = iTitlePal_;
+  _drawBorder(temp, 70, titleHeight_ - 3);
+
+  painter_.begin(&iTitleTextMid_);
+  painter_.drawPixmap(0, 1, temp, 2, 0);
+  if (hicolour_)
+    painter_.drawTiledPixmap(0, 4, 64, titleHeight_ - 8, iTexture_);
+  painter_.end();
+}
+
+  void
+Static::_drawResizeCentralAreaBackground()
+{
+  QPixmap temp(70, titleHeight_);
+  temp.fill(Qt::black);
+
+  transy = 1.0;
+
+  palette_ = aResizePal_;
+  _drawBorder(temp, 70, resizeHeight_ - 3);
+
+  painter_.begin(&aResizeMid_);
+  painter_.drawPixmap(0, 0, temp, 2, 0);
+  if (hicolour_)
+    painter_.drawTiledPixmap(0, 4, 64, resizeHeight_ - 8, aTexture_);
+  painter_.end();
+
+  palette_ = iResizePal_;
+  _drawBorder(temp, 70, 7);
+
+  painter_.begin(&iResizeMid_);
+  painter_.drawPixmap(0, 0, temp, 2, 0);
+  if (hicolour_)
+    painter_.drawTiledPixmap(0, 4, 64, resizeHeight_ - 8, iTexture_);
+  painter_.end();
+}
+
+  void
+Static::_drawResizeHandles()
+{
+  transx = transy = 1.0;
+
+  down_ = false;
+
+  palette_ = aResizePal_;
+  _drawBorder(aResize_, 28, resizeHeight_ - 3);
+
+  if (hicolour_)
+  {
+    painter_.begin(&aResize_);
+    painter_.drawTiledPixmap(4, 4, 20, resizeHeight_ - 8, aTexture_);
+    painter_.end();
+  }
+
+  palette_ = iResizePal_;
+  _drawBorder(iResize_, 28, resizeHeight_ - 3);
+
+  if (hicolour_)
+  {
+    painter_.begin(&iResize_);
+    painter_.drawTiledPixmap(4, 4, 20, resizeHeight_ - 8, iTexture_);
+    painter_.end();
+  }
+}
+
+  void
+Static::_drawButtonBackgrounds()
+{
+  buttonSize_ -= 2;
+
+  down_ = false;
+  transx = 0.0;
+  transy = 1.0;
+  palette_ = aButPal_;
+  _drawBorder(aButtonUp_, buttonSize_, buttonSize_);
+  down_ = true;
+  _drawBorder(aButtonDown_, buttonSize_, buttonSize_);
+
+  palette_ = iButPal_;
+  _drawBorder(iButtonDown_, buttonSize_, buttonSize_);
+  down_ = false;
+  _drawBorder(iButtonUp_, buttonSize_, buttonSize_);
+
+  painter_.begin(&aButtonUp_);
+
+  if (hicolour_)
+    painter_.drawTiledPixmap
+      (2, 4, buttonSize_ - 4, buttonSize_ - 5, abTexture_);
+
+  painter_.end();
+
+  painter_.begin(&iButtonUp_);
+  if (hicolour_)
+    painter_.drawTiledPixmap
+      (2, 4, buttonSize_ - 4, buttonSize_ - 5, ibTexture_);
+
+  painter_.end();
 }
 
 } // End namespace

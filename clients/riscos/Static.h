@@ -57,8 +57,9 @@ class Static
 
       return instance_;
     }
-    
-    void update();
+
+    void reset();
+    void updatePixmaps();
 
     const QPixmap & titleTextLeft(bool active) const
     { return active ? aTitleTextLeft_ : iTitleTextLeft_; }
@@ -74,7 +75,7 @@ class Static
 
     const QPixmap & titleTextMid(bool active) const
     { return active ? aTitleTextMid_ : iTitleTextMid_; }
-    
+
     const QPixmap & resizeMidMid(bool active) const
     { return active ? aResizeMid_ : iResizeMid_; }
 
@@ -82,15 +83,6 @@ class Static
 
     const QPixmap & resize(bool active) const
     { return active ? aResize_ : iResize_; }
-
-    const Palette & standardPalette() const
-    { return standardPal_; }
-
-    const QStringList & leftButtons() const
-    { return leftButtons_; }
-
-    const QStringList & rightButtons() const
-    { return rightButtons_; }
 
     int animationStyle() const
     { return animationStyle_; }
@@ -103,14 +95,35 @@ class Static
 
   private:
 
-    void _drawBorder       (QPixmap &, int, int);
+    void _init();
+
+    void _drawBorder(QPixmap &, int, int);
     void _createTexture(QPixmap &, int, bool);
 
-    void _init();
+    void _initSizes();
+
+    void _resizeAllPixmaps();
+    void _blankAllPixmaps();
+
+    void _initPalettes();
+    void _initTextures();
+
+    void _drawTitleTextAreaSides();
+    void _drawResizeCentralAreaSides();
+    void _drawTitleTextAreaBackground();
+    void _drawResizeCentralAreaBackground();
+    void _drawResizeHandles();
+    void _drawButtonBackgrounds();
 
     static Static * instance_;
 
-    Palette standardPal_, aTitlePal_, iTitlePal_, aResizePal_, iResizePal_;
+    Palette
+      aTitlePal_,
+      iTitlePal_,
+      aResizePal_,
+      iResizePal_,
+      aButPal_,
+      iButPal_;
 
     QPixmap
       aButtonUp_,         iButtonUp_,
@@ -124,17 +137,20 @@ class Static
       aResizeMidRight_,   iResizeMidRight_,
       aResizeMid_,        iResizeMid_;
 
+    QPixmap aTexture_, iTexture_, abTexture_, ibTexture_;
+
     QPainter painter_;
     bool down_;
     Palette palette_;
     double transx, transy;
 
-    QStringList leftButtons_, rightButtons_;
-
     int animationStyle_;
 
     int titleHeight_;
+    int buttonSize_;
     int resizeHeight_;
+
+    bool hicolour_;
 };
 
 } // End namespace

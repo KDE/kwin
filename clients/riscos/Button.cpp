@@ -36,8 +36,14 @@ Button::Button(QWidget * parent)
     active_   (false)
 {
   setBackgroundColor(Qt::black);
+
+  setFixedSize
+    (
+     Static::instance()->titleHeight() - 1,
+     Static::instance()->titleHeight()
+    );
+
   connect(parent, SIGNAL(activeChanged(bool)), this, SLOT(setActive(bool)));
-  update();
 }
 
 Button::~Button()
@@ -77,15 +83,6 @@ Button::mouseReleaseEvent(QMouseEvent *)
 {
   down_ = false;
   repaint();
-}
-
-  void
-Button::update()
-{
-  setFixedSize(
-      Static::instance()->titleHeight() - 1,
-      Static::instance()->titleHeight()
-      );
 }
 
   void

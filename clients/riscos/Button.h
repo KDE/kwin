@@ -35,6 +35,8 @@ class Button : public QWidget
 
   public:
 
+    enum Type { Lower, Close, Iconify, Maximise, Sticky, Help };
+
     enum Alignment { Left, Right };
 
     Button(QWidget * parent);
@@ -43,8 +45,6 @@ class Button : public QWidget
     void setAlignment(Alignment);
 
     Alignment alignment() const;
-
-    void update();
 
   protected slots:
 

@@ -45,22 +45,29 @@
 
 extern "C"
 {
-  KWinInternal::Client * allocate(KWinInternal::Workspace * workSpace, WId winId, int tool)
+    KWinInternal::Client *
+  allocate(KWinInternal::Workspace * workSpace, WId winId, int tool)
   {
     if (tool)
-      return new RiscOS::ToolManager(workSpace, winId);
+      return new RiscOS::ToolManager(workSpace, winId, 0, "ToolManager");
     else
-      return new RiscOS::Manager(workSpace, winId);
+      return new RiscOS::Manager(workSpace, winId, 0, "Manager");
   }
-  void init()
+
+    void
+  init()
   {
      (void) RiscOS::Static::instance();
   }
-  void reset()
+
+    void
+  reset()
   {
-     RiscOS::Static::instance()->update();
+     RiscOS::Static::instance()->reset();
   }
-  void deinit()
+
+    void
+  deinit()
   {
      delete RiscOS::Static::instance();
   }
@@ -73,80 +80,24 @@ namespace RiscOS
 {
 
 
-Manager::Manager(
-  KWinInternal::Workspace * workSpace,
-  WId id,
-  QWidget * parent,
-  const char * name
-)
-  : KWinInternal::Client(workSpace, id, parent, name)
+Manager::Manager
+  (
+   KWinInternal::Workspace * workSpace,
+   WId id,
+   QWidget * parent,
+   const char * name
+  )
+  : KWinInternal::Client(workSpace, id, parent, name),
+    topLayout_    (0L),
+    titleLayout_  (0L),
+    titleSpacer_  (0L)
 {
   setBackgroundMode(NoBackground);
 
-  QStringList leftButtons = Static::instance()->leftButtons();
-  QStringList rightButtons = Static::instance()->rightButtons();
+  leftButtonList_.setAutoDelete(true);
+  rightButtonList_.setAutoDelete(true);
 
-  QVBoxLayout * l = new QVBoxLayout(this, 0, 0);
-  l->setResizeMode(QLayout::FreeResize);
-
-  lower_      = new LowerButton     (this);
-  close_      = new CloseButton     (this);
-  sticky_     = new StickyButton    (this);
-  iconify_    = new IconifyButton   (this);
-  maximise_   = new MaximiseButton  (this);
-  help_       = new HelpButton      (this);
-
-  buttonDict_.insert("Lower",    lower_);
-  buttonDict_.insert("Close",    close_);
-  buttonDict_.insert("Sticky",   sticky_);
-  buttonDict_.insert("Iconify",  iconify_);
-  buttonDict_.insert("Maximize", maximise_);
-  buttonDict_.insert("Help",     help_);
-
-  if (!providesContextHelp())
-    help_->hide();
-
-  QStringList::ConstIterator it;
-
-  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
-    if (buttonDict_[*it])
-      buttonDict_[*it]->setAlignment(Button::Left);
-
-  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
-    if (buttonDict_[*it])
-      buttonDict_[*it]->setAlignment(Button::Right);
-
-  QHBoxLayout * titleLayout = new QHBoxLayout(l);
-  titleLayout->setResizeMode(QLayout::FreeResize);
-
-  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
-    if (buttonDict_[*it])
-      titleLayout->addWidget(buttonDict_[*it]);
-
-  titleSpacer_ =
-    new QSpacerItem(
-      0,
-      Static::instance()->titleHeight(),
-      QSizePolicy::Expanding,
-      QSizePolicy::Fixed
-    );
-
-  titleLayout->addItem(titleSpacer_);
-
-  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
-    if (buttonDict_[*it])
-      titleLayout->addWidget(buttonDict_[*it]);
-
-  QHBoxLayout * midLayout = new QHBoxLayout(l);
-  midLayout->setResizeMode(QLayout::FreeResize);
-  midLayout->addSpacing(1);
-  midLayout->addWidget(windowWrapper());
-  midLayout->addSpacing(1);
-
-  if (isResizable())
-    l->addSpacing(Static::instance()->resizeHeight());
-  else
-    l->addSpacing(1);
+  resetLayout();
 
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
@@ -226,6 +177,7 @@ Manager::resizeEvent(QResizeEvent * e)
   void
 Manager::updateButtonVisibility()
 {
+#if 0
   int sizeProblem = 0;
 
   if (width() < 80) sizeProblem = 3;
@@ -274,6 +226,7 @@ Manager::updateButtonVisibility()
   }
 
   layout()->activate();
+#endif
 }
 
   void
@@ -354,9 +307,7 @@ Manager::mouseDoubleClickEvent(QMouseEvent * e)
   void
 Manager::slotReset()
 {
-  for (QDictIterator<Button> it(buttonDict_); it.current(); ++it)
-    it.current()->update();
-  repaint();
+  resetLayout();
 }
 
   void
@@ -402,6 +353,12 @@ Manager::slotLower()
 Manager::slotRaise()
 {
   workspace()->raiseClient(this);
+}
+
+  void
+Manager::slotMax()
+{
+  maximize(MaximizeFull);
 }
 
   void
@@ -609,6 +566,167 @@ void Manager::animate(bool iconify, int style)
   }
 }
 
+  void
+Manager::createTitle()
+{
+  leftButtonList_.clear();
+  rightButtonList_.clear();
+
+  QString buttons;
+
+  if (options->customButtonPositions())
+    buttons = options->titleButtonsLeft() + "|" + options->titleButtonsRight();
+  else
+    buttons = "XSH|IA";
+
+
+  QList<Button> *buttonList = &leftButtonList_;
+
+  for (unsigned int i = 0; i < buttons.length(); ++i)
+  {
+    Button * tb = 0;
+
+    switch (buttons[i].latin1())
+    {
+      case 'S': // Sticky
+        tb = createButton(Button::Sticky, this);
+        break;
+
+      case 'H': // Help
+        tb = createButton(Button::Help, this);
+        break;
+
+      case 'I': // Minimize
+        tb = createButton(Button::Iconify, this);
+        break;
+
+      case 'A': // Maximize
+        tb = createButton(Button::Maximise, this);
+        break;
+
+      case 'X': // Close
+        tb = createButton(Button::Close, this);
+        break;
+
+      case '|':
+        buttonList = &rightButtonList_;
+        break;
+    }
+
+    if (0 != tb)
+      buttonList->append(tb);
+  }
+
+  for (QListIterator<Button> it(leftButtonList_); it.current(); ++it)
+  {
+    it.current()->setAlignment(Button::Left);
+    titleLayout_->addWidget(it.current());
+  }
+
+  titleSpacer_ =
+    new QSpacerItem
+    (
+     0,
+     Static::instance()->titleHeight(),
+     QSizePolicy::Expanding,
+     QSizePolicy::Fixed
+    );
+
+  titleLayout_->addItem(titleSpacer_);
+
+  for (QListIterator<Button> it(rightButtonList_); it.current(); ++it)
+  {
+    it.current()->setAlignment(Button::Right);
+    titleLayout_->addWidget(it.current());
+  }
+}
+
+  Button *
+Manager::createButton(int type, QWidget * parent)
+{
+  Button * b = 0;
+
+  switch (Button::Type(type))
+  {
+    case Button::Help:
+
+      if (providesContextHelp())
+      {
+        b = new HelpButton(parent);
+      }
+
+      break;
+
+    case Button::Sticky:
+
+      b = new StickyButton(parent);
+
+      emit(stickyChanged(isSticky()));
+
+      break;
+
+    case Button::Iconify:
+
+      if (isMinimizable())
+      {
+        b = new IconifyButton(parent);
+      }
+
+      break;
+
+    case Button::Maximise:
+
+      if (isMaximizable())
+      {
+        b = new MaximiseButton(parent);
+
+        emit(maximiseChanged(isMaximized()));
+      }
+
+      break;
+
+    case Button::Close:
+
+      b = new CloseButton(parent);
+
+      break;
+
+    case Button::Lower:
+
+      b = new LowerButton(parent);
+
+      break;
+
+    default:
+      break;
+  }
+
+  return b;
+}
+
+  void
+Manager::resetLayout()
+{
+  delete topLayout_;
+  topLayout_ = new QVBoxLayout(this, 0, 0);
+  topLayout_->setResizeMode(QLayout::FreeResize);
+
+  titleLayout_ = new QHBoxLayout(topLayout_);
+  titleLayout_->setResizeMode(QLayout::FreeResize);
+
+  createTitle();
+
+  QHBoxLayout * midLayout = new QHBoxLayout(topLayout_);
+  midLayout->setResizeMode(QLayout::FreeResize);
+  midLayout->addSpacing(1);
+  midLayout->addWidget(windowWrapper());
+  midLayout->addSpacing(1);
+
+  if (isResizable())
+    topLayout_->addSpacing(Static::instance()->resizeHeight());
+  else
+    topLayout_->addSpacing(1);
+}
 
 ToolManager::ToolManager(
   KWinInternal::Workspace * workSpace,
@@ -623,6 +741,7 @@ ToolManager::ToolManager(
 ToolManager::~ToolManager()
 {
 }
+
 
 } // End namespace
 

@@ -28,6 +28,8 @@
 #include "../../client.h"
 
 class QSpacerItem;
+class QVBoxLayout;
+class QHBoxLayout;
 
 namespace RiscOS
 {
@@ -46,7 +48,14 @@ class Manager : public KWinInternal::Client
 
   public:
 
-    Manager(KWinInternal::Workspace *, WId, QWidget * parent = 0, const char * name = 0);
+    Manager
+      (
+       KWinInternal::Workspace *,
+       WId,
+       QWidget    * parent  = 0,
+       const char * name    = 0
+      );
+
     ~Manager();
 
   signals:
@@ -60,6 +69,7 @@ class Manager : public KWinInternal::Client
     void slotHelp();
     void slotLower();
     void slotRaise();
+    void slotMax();
     void slotVMax();
     void slotSetSticky(bool);
 
@@ -78,6 +88,11 @@ class Manager : public KWinInternal::Client
     void updateButtonVisibility();
     void updateTitleBuffer();
 
+    void createTitle();
+    Button * createButton(int type, QWidget * parent);
+
+    void resetLayout();
+
   protected slots:
 
     void captionChange(const QString &);
@@ -85,18 +100,13 @@ class Manager : public KWinInternal::Client
 
   private:
 
-    LowerButton     * lower_;
-    CloseButton     * close_;
-    IconifyButton   * iconify_;
-    MaximiseButton  * maximise_;
-    StickyButton    * sticky_;
-    HelpButton      * help_;
-
+    QVBoxLayout     * topLayout_;
+    QHBoxLayout     * titleLayout_;
     QSpacerItem     * titleSpacer_;
 
-    QDict<Button>   buttonDict_;
-
     QPixmap         titleBuf_;
+    QList<Button>   leftButtonList_;
+    QList<Button>   rightButtonList_;
 };
 
 class ToolManager : public Manager
