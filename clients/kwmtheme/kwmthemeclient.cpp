@@ -116,7 +116,8 @@ static void init_theme()
         titleAlign = Qt::AlignCenter;
     else
         titleAlign = Qt::AlignLeft | Qt::AlignVCenter;
-    titleSunken = config->readBoolEntry("TitleFrameShaded", false);
+    titleSunken = config->readBoolEntry("TitleFrameShaded", true);
+    titleSunken = true; // FIXME
     titleTransparent = config->readBoolEntry("PixmapUnderTitleText", true);
 
     tmpStr = config->readEntry("TitlebarLook");
@@ -150,8 +151,23 @@ static void init_theme()
         grType = KPixmapEffect::PipeCrossGradient;
     else if(tmpStr == "shadedElliptic")
         grType = KPixmapEffect::EllipticGradient;
-    else
+    else{
         titleGradient = false;
+        tmpStr = config->readEntry("TitlebarPixmapActive", "");
+        if(!tmpStr.isEmpty()){
+            aTitlePix = new KPixmap;
+            aTitlePix->load(localBaseDir + "/kwmtheme/themepics/" + tmpStr);
+        }
+        else
+            aTitlePix = NULL;
+        tmpStr = config->readEntry("TitlebarPixmapInactive", "");
+        if(!tmpStr.isEmpty()){
+            iTitlePix = new KPixmap;
+            iTitlePix->load(localBaseDir + "/kwmtheme/themepics/" + tmpStr);
+        }
+        else
+            iTitlePix = NULL;
+    }
 }
 
 void MyButton::drawButtonLabel(QPainter *p)
@@ -250,6 +266,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         iGradient = NULL;
     }
         
+    setBackgroundMode(NoBackground);
 }
 
 void KWMThemeClient::drawTitle(QPainter &p)
@@ -257,10 +274,13 @@ void KWMThemeClient::drawTitle(QPainter &p)
     QRect r = titlebar->geometry();
 
     if(titleSunken){
+        warning("Title is sunken");
         qDrawShadeRect(&p, r, options->colorGroup(Options::Frame, isActive()),
                        true, 1, 0);
         r.setRect(r.x()+1, r.y()+1, r.width()-2, r.height()-2);
     }
+    else
+        warning("Title is not sunken");
     
     KPixmap *fill = isActive() ? aTitlePix : iTitlePix;
     if(fill)
@@ -308,6 +328,10 @@ void KWMThemeClient::captionChange( const QString& )
 void KWMThemeClient::paintEvent( QPaintEvent* )
 {
     QPainter p;
+    p.begin(this);
+    p.fillRect(rect(), options->colorGroup(Options::Frame, isActive()).
+               brush(QColorGroup::Background));
+
     // first the corners
     int w1 = framePixmaps[FrameTopLeft]->width();
     int h1 = framePixmaps[FrameTopLeft]->height();
@@ -352,7 +376,6 @@ void KWMThemeClient::paintEvent( QPaintEvent* )
     curPix = framePixmaps[FrameRight];
     tileVert(this, curPix, width()-maxExtent+1, h2, height()-h2-h4);
 
-    p.begin(this);
     drawTitle(p);
     p.end();
 }

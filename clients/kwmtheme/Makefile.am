@@ -1,3 +1,4 @@
+SUBDIRS=applytheme defaultpics
 
 INCLUDES = $(all_includes) 
 
@@ -9,7 +10,7 @@ METASOURCES = AUTO
 noinst_HEADERS = kwmthemeclient.h
 
 lnkdir = $(kde_datadir)/kwin/
-lnk_DATA = #kwmtheme.desktop
+lnk_DATA = kwmtheme.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
