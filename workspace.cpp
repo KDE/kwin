@@ -18,7 +18,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <fixx11h.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <kmessagebox.h> 
 #include <qpopupmenu.h>
 #include <klocale.h>
 #include <qregexp.h>
@@ -2322,10 +2321,12 @@ void Workspace::startKompmgr()
         return;
     if (!kompmgr->start(KProcess::OwnGroup, KProcess::Stderr))
         {
-        {
         options->useTranslucency = FALSE;
-        KMessageBox::information(desktop_widget, i18n("<qt>The Composite Manager could not be started.<br>Make sure you have \"kompmgr\" in a $PATH directory.</qt>"),0, "UseTranslucency");
-        }
+        KProcess proc;
+        proc << "kdialog" << "--error"
+            << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
+            << "--title" << "Composite Manager failure";
+        proc.start(KProcess::DontCare);
         }
     else
         {
@@ -2358,7 +2359,11 @@ void Workspace::restartKompmgr()
     if (!allowKompmgrRestart) // uh-ohh
         {
         options->useTranslucency = FALSE;
-        KMessageBox::information(desktop_widget, i18n("The Composite Manager crashed twice within a minute and is therefore disabled for this session."), i18n("Composite Manager Failure"));
+        KProcess proc;
+        proc << "kdialog" << "--error"
+            << i18n( "The Composite Manager crashed twice within a minute and is therefore disabled for this session.")
+            << "--title" << i18n("Composite Manager Failure");
+        proc.start(KProcess::DontCare);
         return;
         }
     if (!kompmgr)
@@ -2374,7 +2379,11 @@ void Workspace::restartKompmgr()
     if (!kompmgr->start(KProcess::NotifyOnExit, KProcess::Stderr))
         {
         options->useTranslucency = FALSE;
-        KMessageBox::information(desktop_widget, i18n("<qt>The Composite Manager could not be started.<br>Make sure you have \"kompmgr\" in a $PATH directory.</qt>"));
+        KProcess proc;
+        proc << "kdialog" << "--error"
+            << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
+            << "--title" << i18n("Composite Manager failure");
+        proc.start(KProcess::DontCare);
         }
     else
         {
@@ -2383,26 +2392,37 @@ void Workspace::restartKompmgr()
         }
 }
 
-void Workspace::handleKompmgrOutput( KProcess *proc, char *buffer, int buflen)
+void Workspace::handleKompmgrOutput( KProcess* , char *buffer, int buflen)
 {
-    if (QString(buffer).contains("Started",false)); // don't do anything, just pass to the connection release
-    else if (QString(buffer).contains("Can't open display",false))
-        KMessageBox::sorry(desktop_widget, i18n("<qt><b>kompmgr failed to open the display</b><br>There is probably an invalid display entry in your ~/.xcompmgrrc.</qt>"));
-    else if (QString(buffer).contains("No render extension",false))
-        KMessageBox::sorry(desktop_widget, i18n("<qt><b>kompmgr cannot find the Xrender extension</b><br>You are using either an outdated or a crippled version of XOrg.<br>Get XOrg &ge; 6.8 from www.freedesktop.org.<br></qt>"));
-    else if (QString(buffer).contains("No composite extension",false))
-        KMessageBox::sorry(desktop_widget, i18n("<qt><b>Composite extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.<br>Additionally, you need to add a new section to your X config file:<br>"
+    QString message;
+    QString output = QString::fromLocal8Bit( buffer, buflen );
+    if (output.contains("Started",false))
+        ; // don't do anything, just pass to the connection release
+    else if (output.contains("Can't open display",false))
+        message = i18n("<qt><b>kompmgr failed to open the display</b><br>There is probably an invalid display entry in your ~/.xcompmgrrc.</qt>");
+    else if (output.contains("No render extension",false))
+        message = i18n("<qt><b>kompmgr cannot find the Xrender extension</b><br>You are using either an outdated or a crippled version of XOrg.<br>Get XOrg &ge; 6.8 from www.freedesktop.org.<br></qt>");
+    else if (output.contains("No composite extension",false))
+        message = i18n("<qt><b>Composite extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.<br>Additionally, you need to add a new section to your X config file:<br>"
         "<i>Section \"Extensions\"<br>"
         "Option \"Composite\" \"Enable\"<br>"
-        "EndSection</i></qt>"));
-    else if (QString(buffer).contains("No damage extension",false))
-        KMessageBox::sorry(desktop_widget, i18n("<qt><b>Damage extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>"));
-    else if (QString(buffer).contains("No XFixes extension",false))
-        KMessageBox::sorry(desktop_widget, i18n("<qt><b>XFixes extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>"));
+        "EndSection</i></qt>");
+    else if (output.contains("No damage extension",false))
+        message = i18n("<qt><b>Damage extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>");
+    else if (output.contains("No XFixes extension",false))
+        message = i18n("<qt><b>XFixes extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>");
     else return; //skip others
     // kompmgr startup failed or succeeded, release connection
     kompmgr->closeStderr();
     disconnect(kompmgr, SIGNAL(receivedStderr(KProcess*, char*, int)), this, SLOT(handleKompmgrOutput(KProcess*, char*, int)));
+    if( !message.isEmpty())
+        {
+        KProcess proc;
+        proc << "kdialog" << "--error"
+            << message
+            << "--title" << i18n("Composite Manager failure");
+        proc.start(KProcess::DontCare);
+        }
 }
     
         
