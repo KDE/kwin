@@ -586,7 +586,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         if ( QWhatsThis::inWhatsThisMode() )
         {
             QWidget* w = QWidget::find( e->xcrossing.window );
-            if ( w && w->inherits("WindowWrapper" ) )
+            if ( w )
                 QWhatsThis::leaveWhatsThisMode();
         }
 
