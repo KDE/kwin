@@ -2384,8 +2384,8 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     // Update focus chain:
     //  If input: chain = { 1, 2, 3, 4 } and current_desktop = 3,
     //   Output: chain = { 3, 1, 2, 4 }.
-    kdDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
-    	.arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
+//    kdDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
+//    	.arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
     for( int i = desktop_focus_chain.find( current_desktop ); i > 0; i-- )
         desktop_focus_chain[i] = desktop_focus_chain[i-1];
     desktop_focus_chain[0] = current_desktop;
@@ -2393,7 +2393,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     QString s = "desktop_focus_chain[] = { ";
     for( uint i = 0; i < desktop_focus_chain.size(); i++ )
         s += QString::number(desktop_focus_chain[i]) + ", ";
-    kdDebug(1212) << s << "}\n";
+//    kdDebug(1212) << s << "}\n";
 }
 
 void Workspace::nextDesktop()
