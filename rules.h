@@ -189,9 +189,9 @@ class Rules
 inline
 bool Rules::checkSetRule( SetRule rule, bool init )
     {
-    if( rule > static_cast< SetRule >( DontAffect )) // Unused or DontAffect
+    if( rule > ( SetRule )DontAffect) // Unused or DontAffect
         {
-        if( rule == static_cast< SetRule >( Force ) || init )
+        if( rule == ( SetRule )Force || init )
             return true;
         }
     return false;
@@ -200,7 +200,7 @@ bool Rules::checkSetRule( SetRule rule, bool init )
 inline
 bool Rules::checkForceRule( ForceRule rule )
     {
-    return rule == static_cast< ForceRule >( Force );
+    return rule == ( ForceRule )Force;
     }
 
 inline

@@ -118,7 +118,7 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE_2( placement,, Placement::policyFromString, false );
     READ_SET_RULE_DEF( position, Point,, &invalidPoint );
     READ_SET_RULE( size, Size, );
-    if( size.isEmpty() && sizerule != static_cast< SetRule >( Remember ))
+    if( size.isEmpty() && sizerule != ( SetRule )Remember)
         sizerule = UnusedSetRule;
     READ_FORCE_RULE( minsize, Size, );
     if( !minsize.isValid())
@@ -310,67 +310,67 @@ bool Rules::update( Client* c )
     {
     // TODO check this setting is for this client ?
     bool updated = false;
-    if( positionrule == static_cast< SetRule >( Remember ))
+    if( positionrule == ( SetRule )Remember)
         {
         updated = updated || position != c->pos();
         position = c->pos();
         }
-    if( sizerule == static_cast< SetRule >( Remember ))
+    if( sizerule == ( SetRule )Remember)
         {
         updated = updated || size != c->size();
         size = c->size();
         }
-    if( desktoprule == static_cast< SetRule >( Remember ))
+    if( desktoprule == ( SetRule )Remember)
         {
         updated = updated || desktop != c->desktop();
         desktop = c->desktop();
         }
-    if( maximizevertrule == static_cast< SetRule >( Remember ))
+    if( maximizevertrule == ( SetRule )Remember)
         {
         updated = updated || maximizevert != bool( c->maximizeMode() & MaximizeVertical );
         maximizevert = c->maximizeMode() & MaximizeVertical;
         }
-    if( maximizehorizrule == static_cast< SetRule >( Remember ))
+    if( maximizehorizrule == ( SetRule )Remember)
         {
         updated = updated || maximizehoriz != bool( c->maximizeMode() & MaximizeHorizontal );
         maximizehoriz = c->maximizeMode() & MaximizeHorizontal;
         }
-    if( minimizerule == static_cast< SetRule >( Remember ))
+    if( minimizerule == ( SetRule )Remember)
         {
         updated = updated || minimize != c->isMinimized();
         minimize = c->isMinimized();
         }
-    if( shaderule == static_cast< SetRule >( Remember ))
+    if( shaderule == ( SetRule )Remember)
         {
         updated = updated || ( shade != ( c->shadeMode() != ShadeNone ));
         shade = c->shadeMode() != ShadeNone;
         }
-    if( skiptaskbarrule == static_cast< SetRule >( Remember ))
+    if( skiptaskbarrule == ( SetRule )Remember)
         {
         updated = updated || skiptaskbar != c->skipTaskbar();
         skiptaskbar = c->skipTaskbar();
         }
-    if( skippagerrule == static_cast< SetRule >( Remember ))
+    if( skippagerrule == ( SetRule )Remember)
         {
         updated = updated || skippager != c->skipPager();
         skippager = c->skipPager();
         }
-    if( aboverule == static_cast< SetRule >( Remember ))
+    if( aboverule == ( SetRule )Remember)
         {
         updated = updated || above != c->keepAbove();
         above = c->keepAbove();
         }
-    if( belowrule == static_cast< SetRule >( Remember ))
+    if( belowrule == ( SetRule )Remember)
         {
         updated = updated || below != c->keepBelow();
         below = c->keepBelow();
         }
-    if( fullscreenrule == static_cast< SetRule >( Remember ))
+    if( fullscreenrule == ( SetRule )Remember)
         {
         updated = updated || fullscreen != c->isFullScreen();
         fullscreen = c->isFullScreen();
         }
-    if( noborderrule == static_cast< SetRule >( Remember ))
+    if( noborderrule == ( SetRule )Remember)
         {
         updated = updated || noborder != c->isUserNoBorder();
         noborder = c->isUserNoBorder();
