@@ -1022,6 +1022,18 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 }
 
 
+/*!  
+  Returns whether the window is resizable or has a fixed size.
+ */
+bool Client::isResizable() const
+{
+    if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
+	return TRUE;
+    return ( xSizeHint.min_width != xSizeHint.max_width  ) ||
+	  ( xSizeHint.min_height != xSizeHint.max_height  );
+}
+
+
 /*!
   Reimplemented to provide move/resize
  */
@@ -1446,7 +1458,7 @@ void Client::killWindow()
 
 void Client::maximize( MaximizeMode m)
 {
-    if (!isMovable())
+    if (!isMovable() || !isResizable() )
        return;
 
     QRect clientArea = workspace()->clientArea();

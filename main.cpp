@@ -46,7 +46,7 @@ static void crashHandler(int)
 {
    KCrash::setCrashHandler(0); // Exit on next crash.
    delete client; client = 0; // Unregister with dcop.
-   system("kwin&"); // Try to restart
+//    system("kwin&"); // Try to restart
 }
 
 int x11ErrorHandler(Display *d, XErrorEvent *e){
@@ -214,7 +214,7 @@ int main( int argc, char * argv[] )
 	signal(SIGHUP, SIG_IGN);
 
     Application a;
-    KCrash::setCrashHandler(crashHandler); // Try to restart on crash
+//     KCrash::setCrashHandler(crashHandler); // Try to restart on crash
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
     client = a.dcopClient();

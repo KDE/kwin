@@ -844,13 +844,13 @@ Client* Workspace::previousStaticClient( Client* c ) const
 
 
 /*!
-  Returns topmost visible client. Windows on the dock and the
-  desktop are excluded.
+  Returns topmost visible client. Windows on the dock, the desktop
+  or of any other special kind are excluded.
  */
 Client* Workspace::topClientOnDesktop() const
 {
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-	if ( !(*it)->isDesktop() && !(*it)->isDock() && !(*it)->isDock() )
+	if ( !(*it)->isDesktop() && (*it)->isVisible() && (*it)->wantsTabFocus() )
 	    return *it;
     }
     return 0;
@@ -1528,18 +1528,19 @@ void Workspace::lowerClient( Client* c, bool dropFocus )
     ClientList list = constrainedStackingOrder( stacking_order );
     Window* new_stack = new Window[ list.count() + 1 ];
     int i = 0;
-    Client *new_top = 0;
     for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
 	new_stack[i++] = (*it)->winId();
-	if (!new_top && (*it)->isVisible()) new_top = (*it);
     }
     XRaiseWindow(qt_xdisplay(), new_stack[0]);
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
     propagateClients( TRUE );
-    if (dropFocus && new_top) {
-        requestFocus(new_top);
+    
+    if (dropFocus ) {
+	Client* top = topClientOnDesktop();
+	if ( top )
+	    requestFocus( top);
     }
 }
 
@@ -2101,6 +2102,8 @@ void Workspace::clientPopupAboutToShow()
 {
     if ( !popup_client || !popup )
 	return;
+    popup->setItemEnabled( Options::ResizeOp, popup_client->isResizable() );
+    popup->setItemEnabled( Options::MaximizeOp, popup_client->isResizable() );
     popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
     popup->setItemChecked( Options::StaysOnTopOp, popup_client->staysOnTop() );
@@ -2642,9 +2645,7 @@ void Workspace::loadDesktopSettings()
 {
     KConfig c("kdeglobals");
     c.setGroup("Desktops");
-    if (!c.hasKey("Number"))
-	c.writeEntry("Number", 4);
-    int n = c.readNumEntry("Number");
+    int n = c.readNumEntry("Number", 4);
     number_of_desktops = n;
     rootInfo->setNumberOfDesktops( number_of_desktops );
     for(int i = 1; i <= n; i++) {
