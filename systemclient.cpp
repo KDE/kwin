@@ -12,14 +12,17 @@
 #include "options.h"
 
 static unsigned char iconify_bits[] = {
-    0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00 };
-
+    0xff, 0xff, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18};
+    
 static unsigned char close_bits[] = {
     0xc3, 0x66, 0x3c, 0x18, 0x3c, 0x66, 0xc3, 0x00 };
 
 static unsigned char maximize_bits[] = {
-    0x3f, 0x9f, 0xcf, 0x67, 0x33, 0x19, 0x0c, 0x06 };
+    0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0xff, 0xff };
 
+static unsigned char minmax_bits[] = {
+    0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
+    
 static unsigned char unsticky_bits[] = {
     0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
 
@@ -135,29 +138,22 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
 
     p.begin(&iBackground);
     p.drawPixmap(2, 2, iInternal);
+    p.setPen(options->color(Options::ButtonBg, false));
+    p.drawLine(0, 13, 13, 13);
+    p.drawLine(13, 0, 13, 13);
     p.setPen(options->color(Options::ButtonBlend, false));
-    p.drawRect(0, 0, 14, 14);
+    p.drawLine(0, 0, 12, 0);
+    p.drawLine(0, 0, 0, 12);
     p.end();
 
     p.begin(&aBackground);
     p.drawPixmap(2, 2, aInternal);
-    p.setPen(options->color(Options::ButtonBlend, true));
+    p.setPen(options->color(Options::ButtonFg, true));
     p.drawRect(0, 0, 14, 14);
+    
     p.end();
 
     resize(14, 14);
-
-    QBitmap mask;
-    mask.resize(14, 14);
-    mask.fill(color1);
-    p.begin(&mask);
-    p.setPen(color0);
-    p.drawPoint(0, 0);
-    p.drawPoint(13, 0);
-    p.drawPoint(0, 13);
-    p.drawPoint(13, 13);
-    p.end();
-    setMask(mask);
 
     if(bitmap)
         setBitmap(bitmap);
@@ -165,7 +161,7 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
 
 void SystemButton::setBitmap(const unsigned char *bitmap)
 {
-    deco = QBitmap(8, 8, bitmap);
+    deco = QBitmap(8, 8, bitmap, true);
     deco.setMask(deco);
     repaint();
 }
@@ -211,7 +207,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     g->addLayout( hb, 0, 1 );
     hb->addSpacing(2);
     hb->addWidget( button[0] );
-    titlebar = new QSpacerItem(10, 14, QSizePolicy::Expanding,
+    titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
     hb->addItem(titlebar);
     hb->addSpacing(2);
@@ -226,8 +222,6 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
         button[i]->setMouseTracking( TRUE );
         button[i]->setFixedSize( 14, 14 );
     }
-
-
 }
 
 void SystemClient::resizeEvent( QResizeEvent* e)
@@ -257,39 +251,22 @@ void SystemClient::paintEvent( QPaintEvent* )
     QRect t = titlebar->geometry();
     t.setTop( 1 );
 
-    // if we have a pixmapped bg use that, otherwise use color settings
-
-    if(colorGroup().brush(QColorGroup::Background).pixmap()){
-        qDrawShadePanel(&p, rect(), colorGroup(), false, 1,
-                        &colorGroup().brush(QColorGroup::Background));
-
-    }
-    else{
-        qDrawShadePanel(&p, rect(),
-                        options->colorGroup(Options::Frame, isActive()), false, 1,
-                        &options->colorGroup(Options::Frame, isActive()).
-                        brush(QColorGroup::Button));
-    }
     p.setPen(Qt::black);
     p.drawRect(rect());
+    QBrush fillBrush(colorGroup().brush(QColorGroup::Background).pixmap() ?
+                     colorGroup().brush(QColorGroup::Background) :
+                     options->colorGroup(Options::Frame, isActive()).
+                     brush(QColorGroup::Button));
 
-
-    if(colorGroup().brush(QColorGroup::Background).pixmap())
-        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-                        rect().height()-2, colorGroup(), false);
-    else
-        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-                        rect().height()-2, colorGroup(), false);
-
+    qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
+                    rect().height()-2,
+                    options->colorGroup(Options::Frame, isActive()), false, 1,
+                    &fillBrush);
+    
     t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
-    else if(colorGroup().brush(QColorGroup::Background).pixmap())
-        p.fillRect(t, colorGroup().brush(QColorGroup::Background));
-    else
-        p.fillRect(t, options->colorGroup(Options::Frame, false).
-                   brush(QColorGroup::Button));
-        
+
     QRegion r = rect();
     r = r.subtract( t );
     p.setClipRegion( r );
@@ -304,10 +281,9 @@ void SystemClient::paintEvent( QPaintEvent* )
     if(isActive()){
         QFontMetrics fm(options->font(true));
         p.fillRect(t.x()+((t.width()-fm.width(caption()))/2)-4, t.y(),
-                   fm.width(caption())+8, t.height(),
-                   colorGroup().brush(QColorGroup::Background));
+                   fm.width(caption())+8, t.height(), fillBrush);
     }
-    
+
     p.drawText( t, AlignCenter, caption() );
 
     qDrawShadePanel(&p, rect().x()+1, rect().bottom()-6, 24, 6,
@@ -335,12 +311,13 @@ void SystemClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void SystemClient::stickyChange(bool on)
 {
-    if(on)
-        button[1]->setBitmap(unsticky_bits);
-    else
-        button[1]->setBitmap(sticky_bits);
+    button[1]->setBitmap(on ? unsticky_bits : sticky_bits);
 }
 
+void SystemClient::maximizeChange(bool m)
+{
+    button[3]->setBitmap(m ? minmax_bits : maximize_bits);
+}
 
 void SystemClient::init()
 {

@@ -37,6 +37,7 @@ protected:
     void init();
     void captionChange( const QString& name );
     void stickyChange(bool on);
+    void maximizeChange(bool m);
 private:
     SystemButton* button[4];
     QSpacerItem* titlebar;
