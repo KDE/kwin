@@ -213,23 +213,72 @@ QCString getStringProperty(WId w, Atom prop, char separator)
     return result;
     }
 
-/*!
-  Updates qt_x_time by receiving a current timestamp from the server.
+static Time next_x_time;
+static Bool update_x_time_predicate( Display*, XEvent* event, XPointer )
+{
+    if( next_x_time != CurrentTime )
+        return False;
+    // from qapplication_x11.cpp
+    switch ( event->type ) {
+    case ButtonPress:
+	// fallthrough intended
+    case ButtonRelease:
+	next_x_time = event->xbutton.time;
+	break;
+    case MotionNotify:
+	next_x_time = event->xmotion.time;
+	break;
+    case KeyPress:
+	// fallthrough intended
+    case KeyRelease:
+	next_x_time = event->xkey.time;
+	break;
+    case PropertyNotify:
+	next_x_time = event->xproperty.time;
+	break;
+    case EnterNotify:
+    case LeaveNotify:
+	next_x_time = event->xcrossing.time;
+	break;
+    case SelectionClear:
+	next_x_time = event->xselectionclear.time;
+	break;
+    default:
+	break;
+    }
+    return False;
+}
 
-  Use this function only when really necessary. Keep in mind that it's
-  a roundtrip to the X-Server.
- */
+static Time nextXTime()
+    {
+    next_x_time = CurrentTime;
+    XEvent dummy;
+    XCheckIfEvent( qt_xdisplay(), &dummy, update_x_time_predicate, NULL );
+    return next_x_time;
+    }
+
+/*
+ Updates qt_x_time. This used to simply fetch current timestamp from the server,
+ but that can cause qt_x_time to be newer than timestamp of events that are
+ still in our events queue, thus e.g. making XSetInputFocus() caused by such
+ event to be ignored. Therefore first events queue is searched for first
+ event with timestamp.
+*/
 void updateXTime()
     {
-    static QWidget* w = 0;
-    if ( !w )
-        w = new QWidget;
-    long data = 1;
-    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
-                    PropModeAppend, (unsigned char*) &data, 1);
-    XEvent ev;
-    XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
-    qt_x_time = ev.xproperty.time;
+    qt_x_time = nextXTime();
+    if( qt_x_time == CurrentTime )
+        {
+        static QWidget* w = 0;
+        if ( !w )
+            w = new QWidget;
+        long data = 1;
+        XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
+                        PropModeAppend, (unsigned char*) &data, 1);
+        XEvent ev;
+        XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
+        qt_x_time = ev.xproperty.time;
+        }
     }
 
 static int server_grab_count = 0;

@@ -435,7 +435,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 XGetInputFocus( qt_xdisplay(), &focus, &revert );
                 if( focus == None || focus == PointerRoot )
                     {
-                    kdWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
+                    //kdWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
                     if( mostRecentlyActivatedClient() != NULL )
                         requestFocus( mostRecentlyActivatedClient(), true );
                     else
