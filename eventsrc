@@ -1,6 +1,7 @@
 [!Global!]
 IconName=kwin
 Comment=The KDE Window Manager
+Comment[af]=DIE KDE VENSTER BESTUURDER
 Comment[az]=KDE Pəncərə İdarəcisi
 Comment[bg]=Менажер на прозорци в KDE
 Comment[br]=Merour prenester KDE
@@ -48,9 +49,10 @@ Comment[zh_TW.Big5]=KDE 視窗管理員
 
 [desktop1]
 Name=Change to Desktop 1
+Name[af]=VERANDER NA DeskNAp 1
 Name[az]=1. Masa Üstünə Get
 Name[bg]=Отиди на работно място 1
-Name[br]=Gwintañ da vurev 1
+Name[br]=GwintaÃ± da vurev 1
 Name[bs]=Premjesti se na radnu površinu 1
 Name[ca]=Canvi a l'escriptori 1
 Name[cs]=Přepnutí na plochu 1
@@ -93,6 +95,7 @@ Name[uk]=Стільниця 1
 Name[zh_CN.GB2312]=切换到桌面一
 Name[zh_TW.Big5]=切換至桌面 1
 Comment=Virtual Desktop One is Selected
+Comment[af]=VIRTUELE WERKSKERM EEN IS GEKOSE
 Comment[az]=1. Masa üstü Seçildi
 Comment[bg]=Избрано е първото виртуално работно място
 Comment[br]=Burev galloudel Unan a zo diuzet
@@ -141,9 +144,10 @@ default_presentation=0
 
 [desktop2]
 Name=Change to Desktop 2
+Name[af]=VERANDER NA DeskNAp 2
 Name[az]=2. Masa Üstünə Get
 Name[bg]=Отиди на работно място 2
-Name[br]=Gwintañ da vurev 2
+Name[br]=GwintaÃ± da vurev 2
 Name[bs]=Premjesti se na radnu površinu 2
 Name[ca]=Canvi a l'escriptori 2
 Name[cs]=Přepnutí na plochu 2
@@ -186,6 +190,7 @@ Name[uk]=Стільниця 2
 Name[zh_CN.GB2312]=切换到桌面二
 Name[zh_TW.Big5]=切換至桌面 2
 Comment=Virtual Desktop Two is Selected
+Comment[af]=VIRTUELE WERKSKERM TWEE IS GEKOSE
 Comment[az]=2. Masa üstü Seçildi
 Comment[bg]=Избрано е второто виртуално работно място
 Comment[br]=Burev galloudel Daou a zo diuzet
@@ -234,9 +239,10 @@ default_presentation=0
 
 [desktop3]
 Name=Change to Desktop 3
+Name[af]=VERANDER NA DeskNAp 3
 Name[az]=3. Masa Üstünə Get
 Name[bg]=Отиди на работно място 3
-Name[br]=Gwintañ da vurev 3
+Name[br]=GwintaÃ± da vurev 3
 Name[bs]=Premjesti se na radnu površinu 3
 Name[ca]=Canvi a l'escriptori 3
 Name[cs]=Přepnutí na plochu 3
@@ -279,6 +285,7 @@ Name[uk]=Стільниця 3
 Name[zh_CN.GB2312]=切换到桌面三
 Name[zh_TW.Big5]=切換至桌面 3
 Comment=Virtual Desktop Three is Selected
+Comment[af]=VIRTUELE WERKSKERM DRIE IS GEKOSE
 Comment[az]=3. Masa üstü Seçildi
 Comment[bg]=Избрано е третото виртуално работно място
 Comment[br]=Burev galloudel Tri a zo diuzet
@@ -327,9 +334,10 @@ default_presentation=0
 
 [desktop4]
 Name=Change to Desktop 4
+Name[af]=VERANDER NA DeskNAp 4
 Name[az]=4. Masa Üstünə Get
 Name[bg]=Отиди на работно място 4
-Name[br]=Gwintañ da vurev 4
+Name[br]=GwintaÃ± da vurev 4
 Name[bs]=Premjesti se na radnu površinu 4
 Name[ca]=Canvi a l'escriptori 4
 Name[cs]=Přepnutí na plochu 4
@@ -372,6 +380,7 @@ Name[uk]=Стільниця 4
 Name[zh_CN.GB2312]=切换到桌面四
 Name[zh_TW.Big5]=切換至桌面 4
 Comment=Virtual Desktop Four is Selected
+Comment[af]=VIRTUELE WERKSKERM VIER IS GEKOSE
 Comment[az]=4. Masasüstü Seçildi
 Comment[bg]=Избрано е четвъртото виртуално работно място
 Comment[br]=Burev galloudel Pevar a zo diuzet
@@ -420,9 +429,10 @@ default_presentation=0
 
 [desktop5]
 Name=Change to Desktop 5
+Name[af]=VERANDER NA DeskNAp 5
 Name[az]=5. Masa Üstünə Get
 Name[bg]=Отиди на работно място 5
-Name[br]=Gwintañ da vurev 5
+Name[br]=GwintaÃ± da vurev 5
 Name[bs]=Premjesti se na radnu površinu 5
 Name[ca]=Canvi a l'escriptori 5
 Name[cs]=Přepnutí na plochu 5
@@ -465,6 +475,7 @@ Name[uk]=Стільниця 5
 Name[zh_CN.GB2312]=切换到桌面五
 Name[zh_TW.Big5]=切換至桌面 5
 Comment=Virtual Desktop Five is Selected
+Comment[af]=VIRTUELE WERKSKERM VYF IS GEKOSE
 Comment[az]=5. Masa üstü Seçildi
 Comment[bg]=Избрано е петото виртуално работно място
 Comment[br]=Burev galloudel Pemp a zo diuzet
@@ -499,7 +510,7 @@ Comment[pl]=Wybrane jest piąte (wirtualne) biurko
 Comment[pt_BR]=Ambiente virtual 5 está selecionado
 Comment[pt]=Ecrã virtual cinco é seleccionado
 Comment[ru]=Выбран пятый виртуальный рабочий стол
-Comment[sk]=Je zvolená virtuálna plocha Pät
+Comment[sk]=Je zvolená virtuálna plocha Päť
 Comment[sl]=Izbrano je peto navidezno namizje
 Comment[sr]=Izabrana je peta virtuelna radna površina
 Comment[sv]=Virtuellt skrivbord fem är valt
@@ -513,9 +524,10 @@ default_presentation=0
 
 [desktop6]
 Name=Change to Desktop 6
+Name[af]=VERANDER NA DeskNAp 6
 Name[az]=6. Masa Üstünə Get
 Name[bg]=Отиди на работно място 6
-Name[br]=Gwintañ da vurev 6
+Name[br]=GwintaÃ± da vurev 6
 Name[bs]=Premjesti se na radnu površinu 6
 Name[ca]=Canvi a l'escriptori 6
 Name[cs]=Přepnutí na plochu 6
@@ -558,6 +570,7 @@ Name[uk]=Стільниця 6
 Name[zh_CN.GB2312]=切换到桌面六
 Name[zh_TW.Big5]=切換至桌面 6
 Comment=Virtual Desktop Six is Selected
+Comment[af]=VIRTUELE WERKSKERM SES IS GEKOSE
 Comment[az]=6. Masa üstü Seçildi
 Comment[bg]=Избрано е шестото виртуално работно място
 Comment[br]=Burev galloudel C'hwec'h a zo diuzet
@@ -606,9 +619,10 @@ default_presentation=0
 
 [desktop7]
 Name=Change to Desktop 7
+Name[af]=VERANDER NA DeskNAp 7
 Name[az]=7. Masa Üstünə Get
 Name[bg]=Отиди на работно място 7
-Name[br]=Gwintañ da vurev 7
+Name[br]=GwintaÃ± da vurev 7
 Name[bs]=Premjesti se na radnu površinu 7
 Name[ca]=Canvi a l'escriptori 7
 Name[cs]=Přepnutí na plochu 7
@@ -651,6 +665,7 @@ Name[uk]=Стільниця 7
 Name[zh_CN.GB2312]=切换到桌面七
 Name[zh_TW.Big5]=切換至桌面 7
 Comment=Virtual Desktop Seven is Selected
+Comment[af]=VIRTUELE WERKSKERM SEWE IS GEKOSE
 Comment[az]=7. Masa üstü Seçildi
 Comment[bg]=Избрано е седмото виртуално работно място
 Comment[br]=Burev galloudel Seizh a zo diuzet
@@ -699,9 +714,10 @@ default_presentation=0
 
 [desktop8]
 Name=Change to Desktop 8
+Name[af]=VERANDER NA DeskNAp 8
 Name[az]=8. Masa Üstünə Get
 Name[bg]=Отиди на работно място 8
-Name[br]=Gwintañ da vurev 8
+Name[br]=GwintaÃ± da vurev 8
 Name[bs]=Premjesti se na radnu površinu 8
 Name[ca]=Canvi a l'escriptori 8
 Name[cs]=Přepnutí na plochu 8
@@ -744,6 +760,7 @@ Name[uk]=Стільниця 8
 Name[zh_CN.GB2312]=切换到桌面八
 Name[zh_TW.Big5]=切換至桌面 8
 Comment=Virtual Desktop Eight is Selected
+Comment[af]=VIRTUELE WERKSKERM AGT IS GEKOSE
 Comment[az]=8. Masa üstü Seçildi
 Comment[bg]=Избрано е осмото виртуално работно място
 Comment[br]=Burev galloudel Eizh a zo diuzet
@@ -792,9 +809,10 @@ default_presentation=0
 
 [activate]
 Name=Activate Window
+Name[af]=AKTIVEER VENSTER
 Name[az]=Pəncərəni Fəallaşdır
 Name[bg]=Активира прозореца
-Name[br]=Dihuniñ ar prenestr
+Name[br]=DihuniÃ± ar prenestr
 Name[bs]=Aktiviraj prozor
 Name[ca]=Activa finestra
 Name[cs]=Aktivace okna
@@ -836,6 +854,7 @@ Name[uk]=Активізувати вікно
 Name[zh_CN.GB2312]=激活窗口
 Name[zh_TW.Big5]=使用中視窗
 Comment=Another Window is Activated
+Comment[af]=NOG 'N VENSTER IS GEAKTIVEER
 Comment[az]=Başqa Bir Pəncərə Fəallaşdırdı
 Comment[bg]=Друг прозорец е активиран
 Comment[br]=Ur prenestr all a zo dihunet
@@ -883,6 +902,7 @@ default_presentation=0
 
 [new]
 Name=New Window
+Name[af]=NUWE VENSTER
 Name[az]=Yeni Pəncərə
 Name[bg]=Нов прозорец
 Name[bs]=Novi prozor
@@ -926,6 +946,7 @@ Name[uk]=Нове вікно
 Name[zh_CN.GB2312]=新建窗口
 Name[zh_TW.Big5]=開啟新視窗
 Comment=New Window
+Comment[af]=NUWE VENSTER
 Comment[az]=Yeni Pəncərə
 Comment[bg]=Нов Прозорец
 Comment[br]=Prenestr nevez
@@ -975,6 +996,7 @@ default_presentation=0
 
 [delete]
 Name=Delete Window
+Name[af]=UITVEE VENSTER
 Name[az]=Pəncərəni Sil
 Name[bg]=Изтри прозорец
 Name[bs]=Brisanje prozora
@@ -1016,6 +1038,7 @@ Name[uk]=Видалити вікно
 Name[zh_CN.GB2312]=删除窗口
 Name[zh_TW.Big5]=刪除視窗
 Comment=Delete Window
+Comment[af]=UITVEE VENSTER
 Comment[az]=Pəncərəni Sil
 Comment[bg]=Изтрива Прозорец
 Comment[br]=Lemel ur prenestr
@@ -1063,9 +1086,10 @@ Comment[zh_TW.Big5]=刪除視窗
 default_presentation=0
 [close]
 Name=Window Close
+Name[af]=VENSTER MAAK TOE
 Name[az]=Pəncərəni Qapat
 Name[bg]=Затвори прозорец
-Name[br]=Serriñ ar prenestr
+Name[br]=SerriÃ± ar prenestr
 Name[bs]=Zatvaranje prozora
 Name[ca]=Tanca finestra
 Name[cs]=Zavření okna
@@ -1108,6 +1132,7 @@ Name[uk]=Закрити вікно
 Name[zh_CN.GB2312]=关闭窗口
 Name[zh_TW.Big5]=視窗關閉
 Comment=A Window Closes
+Comment[af]=A VENSTER GAAN TOE
 Comment[az]=Bir Pəncərə Qapadıldı
 Comment[bg]=Затворен Прозорец
 Comment[br]=Sarret eo ur prenestr
@@ -1156,9 +1181,10 @@ default_presentation=0
 
 [shadeup]
 Name=Window Shade Up
+Name[af]=VENSTER SKADU BEGIN
 Name[az]=Pəncərə Yuxarı
 Name[bg]=Свий прозореца на горе
-Name[br]=Rollañ ar prenestr
+Name[br]=RollaÃ± ar prenestr
 Name[ca]=Plega la finestra
 Name[cs]=Zarolování okna
 Name[da]=Skyg vindue op
@@ -1199,6 +1225,7 @@ Name[uk]=Згорнути вікно
 Name[zh_CN.GB2312]=窗口卷起
 Name[zh_TW.Big5]=視窗陰影向上
 Comment=A Window is Shaded Up
+Comment[af]=A VENSTER IS GEDEEL BEGIN
 Comment[az]=Pəncərə Göstərildi
 Comment[bg]=Прозрец сгънат на горе
 Comment[br]=Rollet eo ur prenestr
@@ -1231,7 +1258,7 @@ Comment[pl]=Okno zostaje odsłonięte
 Comment[pt_BR]=A janela é enrolada (para cima)
 Comment[pt]=Uma janela é enrolada
 Comment[ru]=Окно свернуто в заголовок
-Comment[sk]=Okno je roztiahnuté
+Comment[sk]=Okno je zabalené
 Comment[sl]=Okno je osenčeno navzgor
 Comment[sr]=Prozor je namotan
 Comment[sv]=Ett fönster rullas upp
@@ -1245,9 +1272,10 @@ default_presentation=0
 
 [shadedown]
 Name=Window Shade Down
+Name[af]=VENSTER SKADU ONDERTOE
 Name[az]=Pəncərəni Aşağı Sal
 Name[bg]=Разтвори прозореца на долу
-Name[br]=Dirollañ ar prenestr
+Name[br]=DirollaÃ± ar prenestr
 Name[ca]=Desplega la finestra
 Name[cs]=Vyrolování okna
 Name[da]=Skyg vindue ned
@@ -1288,6 +1316,7 @@ Name[uk]=Розгорнути вікно
 Name[zh_CN.GB2312]=窗口放下
 Name[zh_TW.Big5]=視窗陰影向下
 Comment=A Window is Shaded Down
+Comment[af]=A VENSTER IS GEDEEL ONDERTOE
 Comment[az]=Pəncərə Aşağı Salındı
 Comment[bg]=Прозрез сгънат на долу
 Comment[br]=Dirollet eo ur prenestr
@@ -1334,9 +1363,10 @@ default_presentation=0
 
 [iconify]
 Name=Window Iconify
+Name[af]=VENSTER IKOONIFISEER
 Name[az]=Pəncərəni Timsallaşdır
 Name[bg]=Иконизирай прозореца
-Name[br]=Arlunañ ar prenester
+Name[br]=ArlunaÃ± ar prenester
 Name[bs]=Ikonofiranje prozora
 Name[ca]=Iconitza finestra
 Name[cs]=Minimalizace okna
@@ -1379,6 +1409,7 @@ Name[uk]=Мінімізувати вікно
 Name[zh_CN.GB2312]=最小化窗口
 Name[zh_TW.Big5]=視窗圖示化
 Comment=A Window is Iconified
+Comment[af]=A VENSTER IS GEïKONIFISEER
 Comment[az]=Bir Pəncərə Timsal Halına Gətirildi
 Comment[bg]=Прозорец в икона
 Comment[br]=Arlunet eo ur prenestr
@@ -1427,9 +1458,10 @@ default_presentation=0
 
 [deiconify]
 Name=Window Deiconify
+Name[af]=VENSTER DEïKOONIFISEER
 Name[az]=Pəncərəni Göstər
 Name[bg]=Разтвори прозореца
-Name[br]=Dizarlunañ ar prenester
+Name[br]=DizarlunaÃ± ar prenester
 Name[bs]=Deikonofiranje prozora
 Name[ca]=Deiconitza finestra
 Name[cs]=Obnovení okna po minimalizaci
@@ -1472,6 +1504,7 @@ Name[uk]=Демінімізувати вікно
 Name[zh_CN.GB2312]=恢复窗口
 Name[zh_TW.Big5]=視窗還原
 Comment=A Window is Restored
+Comment[af]=A VENSTER IS GERESTOREER
 Comment[az]=Bir Pəncərə Köhnə Böyüklüyünə Gətirildi
 Comment[bg]=Размера на прозореца е възстановен
 Comment[br]=Assavet eo ur prenestr
@@ -1518,6 +1551,7 @@ default_presentation=0
 
 [maximize]
 Name=Window Maximize
+Name[af]=VENSTER MAKSIMEER
 Name[az]=Pəncərəni Sər
 Name[bg]=Максимизира прозорец
 Name[br]=Astenn ar prenestr
@@ -1564,6 +1598,7 @@ Name[uk]=Максимізувати вікно
 Name[zh_CN.GB2312]=最大化窗口
 Name[zh_TW.Big5]=視窗最大化
 Comment=A Window is Maximized
+Comment[af]=A VENSTER IS MAKSIMEERD
 Comment[az]=Bir Pəncərə Böyüdüldü
 Comment[bg]=Прозреца е максимизиран
 Comment[br]=Astennet eo ur prenestr
@@ -1613,9 +1648,10 @@ default_presentation=0
 
 [unmaximize]
 Name=Window Unmaximize
+Name[af]=VENSTER ON-MAKSIMEER
 Name[az]=Pəncərəni Kiçilt
 Name[bg]=Демаксимизира прозорец
-Name[br]=Krennañ ar prenestr
+Name[br]=KrennaÃ± ar prenestr
 Name[bs]=Demaksimiziranje prozora
 Name[ca]=Demaximitza finestra
 Name[cs]=Obnovení okna po maximalizaci
@@ -1658,6 +1694,7 @@ Name[uk]=Демаксимізувати вікно
 Name[zh_CN.GB2312]=恢复窗口
 Name[zh_TW.Big5]=視窗非最大化
 Comment=A Window Loses Maximization
+Comment[af]=A VENSTER VERLOOR MAKSIMISERING
 Comment[az]=Bir Pəncərə Böyüdülməsini İtirdi
 Comment[bg]=Прозореца повече не може да се максимизира
 Comment[br]=Koll a ra ur prenestr e astenn
@@ -1707,9 +1744,10 @@ default_presentation=0
 
 [sticky]
 Name=Window Sticky
+Name[af]=VENSTER TAAIERIG
 Name[az]=Yapışqan Pəncərə
 Name[bg]=Прилепи прозорец
-Name[br]=Pegañ ar prenestr
+Name[br]=PegaÃ± ar prenestr
 Name[bs]=Ljepljenje prozora
 Name[ca]=Finestra apegalosa
 Name[cs]=Přilepení okna
@@ -1751,6 +1789,7 @@ Name[uk]=Закріпити вікно
 Name[zh_CN.GB2312]=粘附窗口
 Name[zh_TW.Big5]=視窗固定
 Comment=A Window is Made Sticky
+Comment[af]=A VENSTER IS GEMAAK TAAIERIG
 Comment[az]=Bir Pəncərə Yapışqan Hala Gətirildi
 Comment[bg]=Прозореца е прилепен
 Comment[br]=Peget eo ur skeudenn
@@ -1799,9 +1838,10 @@ default_presentation=0
 
 [unsticky]
 Name=Window Unsticky
+Name[af]=VENSTER NIE PLAKKERIG
 Name[az]=Sərbəst Pəncərə
 Name[bg]=Отлепи прозорец
-Name[br]=Dispegañ ar prenestr
+Name[br]=DispegaÃ± ar prenestr
 Name[bs]=Odljepljivanje prozora
 Name[ca]=Finestra no apegalosa
 Name[cs]=Odlepení okna
@@ -1843,6 +1883,7 @@ Name[uk]=Відпустити вікно
 Name[zh_CN.GB2312]=取消粘附
 Name[zh_TW.Big5]=視窗不固定
 Comment=A Window is Made Unsticky
+Comment[af]=A VENSTER IS GEMAAK NIE PLAKKERIG
 Comment[az]=Bir Pəncərə Sərbəst Hala Gətirildi
 Comment[bg]=Прозореца е отлепен
 Comment[br]=Dispeget eo ur skeudenn
@@ -1891,6 +1932,7 @@ soundfile=KDE_Window_UnSticky.wav
 
 [transnew]
 Name=New Dialog
+Name[af]=NUWE DIALOOG
 Name[az]=Yeni Pəncərə
 Name[bg]=Нов диалог
 Name[cs]=Nové dialogové okno
@@ -1963,7 +2005,7 @@ Comment[pl]=Pojawia się nietrwałe okno (dialogowe)
 Comment[pt_BR]=Aparece uma janela transiente (um diálogo)
 Comment[pt]=Uma janela transiente (um diálogo) aparece
 Comment[ru]=Выводится временное окно (диалог)
-Comment[sk]=Objavilo se dialogové okno
+Comment[sk]=Objavilo sa dialógové okno
 Comment[sl]=Odprlo se je prehodno (pogovorno) okno
 Comment[sr]=Prolazni prozor (dijalog) se pojavljuje
 Comment[sv]=Ett tillfälligt fönster (ett formulär) dyker upp
@@ -1977,6 +2019,7 @@ default_presentation=0
 
 [transdelete]
 Name=Delete Dialog
+Name[af]=UITVEE DIALOOG
 Name[az]=Dialoqu Sil
 Name[bg]=Изтрий диалог
 Name[cs]=Zrušení dialogového okna
@@ -2063,9 +2106,10 @@ default_presentation=0
 
 [movestart]
 Name=Window Move Start
+Name[af]=VENSTER BEWEEG BEGIN
 Name[az]=Pəncərə Daşıma Başlanğıcı
 Name[bg]=Начало на преместване на прозорец
-Name[br]=Kregiñ da zilec'hiañ ar prenestr
+Name[br]=KregiÃ± da zilec'hiaÃ± ar prenestr
 Name[ca]=Inici de moviment de finestra
 Name[cs]=Začátek přesunu okna
 Name[da]=Vindue flyt begynd
@@ -2138,9 +2182,10 @@ default_presentation=0
 
 [moveend]
 Name=Window Move End
+Name[af]=VENSTER BEWEEG EINDE
 Name[az]=Pəncərə Daşıma Bitişi
 Name[bg]=Край на преместване на прозорец
-Name[br]=Echuiñ da zilec'hiañ ar prenestr
+Name[br]=EchuiÃ± da zilec'hiaÃ± ar prenestr
 Name[ca]=Fi de moviment de finestra
 Name[cs]=Konec přesunu okna
 Name[da]=Vindue flyt slut
@@ -2180,9 +2225,10 @@ Name[uk]=Закінчити рухати вікно
 Name[zh_CN.GB2312]=完成移动窗口
 Name[zh_TW.Big5]=視窗移動結束
 Comment=A Window has Completed its Moving
+Comment[af]=A VENSTER HET KLAAR DIT IS BEWEEG
 Comment[az]=Bir Pəncərə Hərəkətini Tamamladı
 Comment[bg]=Прозореца е преместен
-Comment[br]=Echu eo ur prenestr da zilec'hiañ
+Comment[br]=Echu eo ur prenestr da zilec'hiaÃ±
 Comment[bs]=Prozor je završio micanje
 Comment[ca]=S'ha completat el moviment d'una finestra
 Comment[cs]=Okno dokončilo přesun
@@ -2227,9 +2273,10 @@ default_presentation=0
 
 [resizestart]
 Name=Window Resize Start
+Name[af]=VENSTER HERVERGROOT BEGIN
 Name[az]=Pəncərə Böyüklüyü Dəyişdirmə Başlanğıcı
 Name[bg]=Стартира промяна размера на прозорец
-Name[br]=Kregiñ da adventañ ar prenestr
+Name[br]=KregiÃ± da adventaÃ± ar prenestr
 Name[ca]=Inici de canvi de mida de finestra
 Name[cs]=Začátek změny velikosti okna
 Name[da]=Vindue ændr størrelse begynd
@@ -2302,9 +2349,10 @@ default_presentation=0
 
 [resizeend]
 Name=Window Resize End
+Name[af]=VENSTER HERVERGROOT EINDE
 Name[az]=Pəncərə Böyüklüyü Dəyişdirmə Bitişi
 Name[bg]=Размера на прозореца се промени
-Name[br]=Echuiñ da adventañ ar prenestr
+Name[br]=EchuiÃ± da adventaÃ± ar prenestr
 Name[ca]=Fi de canvi de mida de finestra
 Name[cs]=Konec změny velikosti okna
 Name[da]=Vindue ændr størrelse slut
@@ -2344,6 +2392,7 @@ Name[uk]=Закінчити змінювати розмір вікна
 Name[zh_CN.GB2312]=完成改变窗口大小
 Name[zh_TW.Big5]=視窗改變尺寸結束
 Comment=A Window has Finished Resizing
+Comment[af]=A VENSTER HET KLAAR GEMAAK HERVERGROOTING
 Comment[az]=Bir Pəncərənin Böyüklüyünü Dəyişdirmə Əməliyyatı Qurtardı
 Comment[bg]=Размера на прозореца е променен
 Comment[cs]=Okno dokončilo změnu velikosti
