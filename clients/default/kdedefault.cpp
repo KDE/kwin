@@ -27,6 +27,9 @@
 
 using namespace KWinInternal;
 
+namespace
+{
+
 static unsigned char iconify_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0x00, 0x78, 0x00, 0x78, 0x00,
   0x78, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -117,6 +120,8 @@ bool showTitleBarStipple;
 bool largeToolButtons;
 int	 toolTitleHeight;
 int	 normalTitleHeight;
+
+}
 
 // ===========================================================================
 
