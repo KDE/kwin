@@ -816,10 +816,14 @@ void RedmondDeco::menuButtonPressed()
     lastClient = this;
     t->start();
     if (!dbl) {
-		QPoint menupoint(button[BtnMenu]->rect().bottomLeft().x()-3,
-		                 button[BtnMenu]->rect().bottomLeft().y()+4);
+		QRect menuRect = button[BtnMenu]->rect();
+		QPoint menuTop = QPoint(menuRect.topLeft().x()-3,
+		                 menuRect.topLeft().y());
+		QPoint menuBottom = QPoint(menuRect.bottomRight().x()+3,
+		                 menuRect.bottomRight().y()+4);
                 KDecorationFactory* f = factory();
-		showWindowMenu(button[BtnMenu]->mapToGlobal(menupoint));
+		showWindowMenu(QRect(button[BtnMenu]->mapToGlobal(menuTop), 
+					button[BtnMenu]->mapToGlobal(menuBottom)));
                 if( !f->exists( this )) // 'this' was destroyed
                     return;
 		button[BtnMenu]->setDown(false);
