@@ -23,7 +23,7 @@
 #include "detectwidgetbase.h"
 
 #include <kdialogbase.h>
-#include <netwm_def.h>
+#include <kwin.h>
 
 #include "../../rules.h"
 
@@ -53,6 +53,7 @@ class DetectDialog
         QString selectedTitle() const;
         Rules::StringMatch titleMatch() const;
         QCString selectedMachine() const;
+        const KWin::WindowInfo& windowInfo() const;
     signals:
         void detectionDone( bool );
     protected:
@@ -71,7 +72,14 @@ class DetectDialog
         QCString machine;
         DetectWidget* widget;
         QDialog* grabber;
+        KWin::WindowInfo info;
     };
+
+inline
+const KWin::WindowInfo& DetectDialog::windowInfo() const
+    {
+    return info;
+    }
 
 } // namespace
 

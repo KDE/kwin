@@ -61,9 +61,7 @@ void DetectDialog::readWindow( WId w )
         emit detectionDone( false );
         return;
         }
-    KWin::WindowInfo info = KWin::windowInfo( w,
-        NET::WMName | NET::WMWindowType,
-        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine );
+    info = KWin::windowInfo( w, -1U, -1U ); // read everything
     if( !info.valid())
         {
         emit detectionDone( false );

@@ -506,6 +506,16 @@ bool RulesWidget::setWindow( WId w )
     return detect_dlg_ok;
     }
 
+#define GENERIC_PREFILL( var, func, info, uimethod ) \
+    if( !enable_##var->isChecked()) \
+        { \
+        var->uimethod( func( info )); \
+        }
+
+#define CHECKBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setChecked )
+#define LINEEDIT_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setText )
+#define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentItem )
+
 void RulesWidget::detected( bool ok )
     {
     if( ok )
@@ -540,11 +550,41 @@ void RulesWidget::detected( bool ok )
         machine->setText( detect_dlg->selectedMachine());
         machine_match->setCurrentItem( Rules::UnimportantMatch );
         machineMatchChanged();
+        // prefill values from to window to settings which already set
+        const KWin::WindowInfo& info = detect_dlg->windowInfo();
+        LINEEDIT_PREFILL( position, positionToStr, info.frameGeometry().topLeft() );
+        LINEEDIT_PREFILL( size, sizeToStr, info.frameGeometry().size() );
+        COMBOBOX_PREFILL( desktop, desktopToCombo, info.desktop() );
+        CHECKBOX_PREFILL( maximizehoriz,, info.state() & NET::MaxHoriz );
+        CHECKBOX_PREFILL( maximizevert,, info.state() & NET::MaxVert );
+        CHECKBOX_PREFILL( minimize,, info.isMinimized() );
+        CHECKBOX_PREFILL( shade,, info.state() & NET::Shaded );
+        CHECKBOX_PREFILL( fullscreen,, info.state() & NET::FullScreen );
+        //COMBOBOX_PREFILL( placement, placementToCombo );
+        CHECKBOX_PREFILL( above,, info.state() & NET::KeepAbove );
+        CHECKBOX_PREFILL( below,, info.state() & NET::KeepBelow );
+        // noborder is only internal KWin information, so let's guess
+        CHECKBOX_PREFILL( noborder,, info.frameGeometry() == info.geometry() );
+        CHECKBOX_PREFILL( skiptaskbar,, info.state() & NET::SkipTaskbar );
+        CHECKBOX_PREFILL( skippager,, info.state() & NET::SkipPager );
+        //CHECKBOX_PREFILL( acceptfocus, );
+        //CHECKBOX_PREFILL( closeable, );
+        //COMBOBOX_PREFILL( fsplevel, );
+        //COMBOBOX_PREFILL( moveresizemode, moveresizeToCombo );
+        COMBOBOX_PREFILL( type, typeToCombo, info.windowType( SUPPORTED_WINDOW_TYPES_MASK ) );
+        //CHECKBOX_PREFILL( ignoreposition, );
+        LINEEDIT_PREFILL( minsize, sizeToStr, info.frameGeometry().size() );
+        LINEEDIT_PREFILL( maxsize, sizeToStr, info.frameGeometry().size() );
         }
     delete detect_dlg;
     detect_dlg = NULL;
     detect_dlg_ok = ok;
     }
+
+#undef GENERIC_PREFILL
+#undef CHECKBOX_PREFILL
+#undef LINEEDIT_PREFILL
+#undef COMBOBOX_PREFILL
 
 bool RulesWidget::finalCheck()
     {
