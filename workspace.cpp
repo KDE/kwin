@@ -1698,11 +1698,11 @@ QPopupMenu* Workspace::clientPopup()
         popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").toString(), Options::MaximizeOp );
         popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").toString(), Options::ShadeOp );
         popup->insertItem( SmallIconSet( "attach" ), i18n("Always &on Top"), Options::StaysOnTopOp );
-        popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Settings"), Options::ToggleStoreSettingsOp );
+        popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
 
         popup->insertSeparator();
 
-        popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e..."), this, SLOT( configureWM() ));
+        popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e Window Behavior..."), this, SLOT( configureWM() ));
 
         popup->insertSeparator();
 
