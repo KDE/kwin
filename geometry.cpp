@@ -302,9 +302,9 @@ void Workspace::setClientIsMoving( Client *c )
     // window while still moving the first one.
     movingClient = c;
     if (movingClient)
-        setFocusChangeEnabled( false );
+        ++block_focus;
     else
-        setFocusChangeEnabled( true );
+        --block_focus;
     }
 
 /*!

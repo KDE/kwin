@@ -1098,6 +1098,15 @@ void Client::takeFocus( bool force, allowed_t )
     if ( !force && ( isTopMenu() || isDock() || isSplash()) )
         return; // toplevel menus and dock windows don't take focus if not forced
 
+#ifndef NDEBUG
+    static Time previous_focus_timestamp;
+    if( previous_focus_timestamp == qt_x_time )
+        {
+        kdWarning( 1212 ) << "Repeated use of the same X timestamp for focus" << endl;
+        kdDebug( 1212 ) << kdBacktrace() << endl;
+        }
+    previous_focus_timestamp = qt_x_time;
+#endif
     if ( input ) 
         {
         XSetInputFocus( qt_xdisplay(), window(), RevertToPointerRoot, qt_x_time );

@@ -117,11 +117,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void gotFocusIn( const Client* );
         bool fakeRequestedActivity( Client* c );
         void unfakeActivity( Client* c );
+        bool focusChangeEnabled() { return block_focus == 0; }
 
         void updateColormap();
-
-        void setFocusChangeEnabled(bool b) { focus_change = b; }
-        bool focusChangeEnabled() { return focus_change; }
 
         /**
          * Indicates that the client c is being moved around by the user.
@@ -445,7 +443,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool mouse_emulation;
         unsigned int mouse_emulation_state;
         WId mouse_emulation_window;
-        bool focus_change;
+        int block_focus;
 
         TabBox* tab_box;
         PopupInfo* popupinfo;

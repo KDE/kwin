@@ -49,8 +49,6 @@ namespace KWinInternal
 
 extern int screen_number;
 
-bool block_focus = FALSE;
-
 static Window null_focus_window = 0;
 
 Workspace *Workspace::_self = 0;
@@ -78,7 +76,7 @@ Workspace::Workspace( bool restore )
     control_grab      (false),
     tab_grab          (false),
     mouse_emulation   (false),
-    focus_change      (true),
+    block_focus       (0),
     tab_box           (0),
     popupinfo         (0),
     popup             (0),
@@ -289,6 +287,8 @@ void Workspace::init()
     active_client = NULL;
     rootInfo->setActiveWindow( None );
     focusToNull();
+    if( !kapp->isSessionRestored())
+        ++block_focus; // because it will be set below
 
     char nm[ 100 ];
     sprintf( nm, "_KDE_TOPMENU_OWNER_S%d", DefaultScreen( qt_xdisplay()));
@@ -352,7 +352,10 @@ void Workspace::init()
 
     Client* new_active_client = NULL;
     if( !kapp->isSessionRestored())
+        {
+        --block_focus;
         new_active_client = findClient( WindowMatchPredicate( client_info.activeWindow()));
+        }
     if( new_active_client == NULL
         && activeClient() == NULL && should_get_focus.count() == 0 ) // no client activated in manage()
         {
@@ -946,7 +949,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
     if( popup )
         popup->close();
-    block_focus = TRUE;
+    ++block_focus;
 // TODO    Q_ASSERT( block_stacking_updates == 0 ); // make sure stacking_order is up to date
     StackingUpdatesBlocker blocker( this );
 
@@ -982,7 +985,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         }
 
     // restore the focus on this desktop
-    block_focus = FALSE;
+    --block_focus;
     Client* c = 0;
 
     if ( options->focusPolicyIsReasonable()) 

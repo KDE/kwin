@@ -266,7 +266,9 @@ void Workspace::activateClient( Client* c, bool force )
     raiseClient( c );
     if (!c->isOnDesktop(currentDesktop()) )
         {
+        ++block_focus;
         setCurrentDesktop( c->desktop() );
+        --block_focus;
         // popupinfo->showInfo( desktopName(currentDesktop()) ); // AK - not sure
         }
     if( c->isMinimized())
@@ -339,8 +341,6 @@ void Workspace::requestFocus( Client* c, bool force )
 
   \a c may already be destroyed
  */
-extern bool block_focus; // SELI
-
 void Workspace::clientHidden( Client* c )
     {
     assert( !c->isShown( true ) || !c->isOnCurrentDesktop());
@@ -353,7 +353,7 @@ void Workspace::clientHidden( Client* c )
     if( c == active_client )
         setActiveClient( NULL, Allowed );
     should_get_focus.remove( c );
-    if( !block_focus )
+    if( focusChangeEnabled())
         {
         if ( c->wantsTabFocus() && focus_chain.contains( c ) )
             {
