@@ -245,6 +245,39 @@ public:
 
     static WindowOperation windowOperation(const QString &name );
     static MouseCommand mouseCommand(const QString &name);
+    
+    /**
+    * @returns true if the style should use custom button positions
+    * @see #titleButtonsLeft
+    * @see #titleButtonsRight
+    */
+    bool customButtonPositions();
+    /**
+    * If @ref customButtonPositions returns true, titleButtonsLeft
+    * returns which buttons should be on the left side of the titlebar from left
+    * to right. Characters in the returned string have this meaning :
+    * @li 'M' menu button
+    * @li 'S' sticky button
+    * @li 'H' quickhelp button
+    * @li 'I' iconify ( minimize ) button
+    * @li 'A' maximize button
+    * @li 'X' close button
+    * @li '_' spacer
+    *
+    * The default ( which is also returned if customButtonPositions returns false )
+    * is "MS".
+    */
+    QString titleButtonsLeft();
+    /**
+    * If @ref customButtonPositions returns true, titleButtonsRight
+    * returns which buttons should be on the right side of the titlebar from left
+    * to right. Characters in the return string have the same meaning like
+    * in @ref titleButtonsLeft .
+    *
+    * The default ( which is also returned if customButtonPositions returns false )
+    * is "HIAX".
+    */
+    QString titleButtonsRight();
 
 
 public slots:

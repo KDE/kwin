@@ -81,8 +81,6 @@ static unsigned char pinup_dgray_bits[] = {
 ///////////////////////////////////////////////////////////////////////////
 
 // Titlebar button positions
-QString* quartzButtonsLeft;
-QString* quartzButtonsRight;
 bool stickyButtonOnLeft = true;
 
 KPixmap* titleBlocks 	= NULL;
@@ -99,9 +97,6 @@ QuartzHandler* clientHandler;
 
 QuartzHandler::QuartzHandler()
 {
-	quartzButtonsLeft = new QString();
-	quartzButtonsRight = new QString();
-
 	readConfig();
 	createPixmaps();
 	connect( options, SIGNAL(resetClients()), this, SLOT(slotReset()) );
@@ -110,9 +105,6 @@ QuartzHandler::QuartzHandler()
 
 QuartzHandler::~QuartzHandler()
 {
-	delete quartzButtonsLeft;
-	delete quartzButtonsRight;
-
 	freePixmaps();
 }
 
@@ -130,24 +122,9 @@ void QuartzHandler::slotReset()
 
 void QuartzHandler::readConfig()
 {
-	KConfig* conf = KGlobal::config();
-	conf->setGroup("Style");
-	
-	// Do we want to use custom button positions?
-	if( conf->readBoolEntry("CustomButtonPositions", false) )
-	{
-		// Read the positions from the config file...
-		*quartzButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
-		*quartzButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
-	} else
-		{
-			// Use defaults
-			*quartzButtonsLeft = "MS";
-			*quartzButtonsRight = "HIAX";
-		}
-
+//	KConfig* conf = KGlobal::config();
 	// A small hack to make the sticky button look nicer
-	stickyButtonOnLeft = (bool)quartzButtonsLeft->contains( 'S' );
+	stickyButtonOnLeft = (bool)options->titleButtonsLeft().contains( 'S' );
 }
 
 
@@ -459,13 +436,13 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
     hb->setResizeMode( QLayout::FreeResize );
     g->addLayout ( hb, 1, 1 );
 
-	addClientButtons( *quartzButtonsLeft );
+	addClientButtons( options->titleButtonsLeft() );
 
     titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum );
     hb->addItem(titlebar);
     hb->addSpacing(2);
 
-	addClientButtons( *quartzButtonsRight, false );
+	addClientButtons( options->titleButtonsRight(), false );
 
     hb->addSpacing(2);
 }

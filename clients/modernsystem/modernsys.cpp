@@ -206,10 +206,9 @@ static bool read_config()
         hw = hs = 0;
     }
 
-    conf->setGroup("Style");
-    if (conf->readBoolEntry("CustomButtonPositions", false)) {
-        bp = "2" + conf->readEntry("ButtonsOnLeft", "X") + "3t3"
-                + conf->readEntry("ButtonsOnRight", "HSIA") + "2";
+    if (options->customButtonPositions()) {
+        bp = "2" + options->titleButtonsLeft() + "3t3"
+                + options->titleButtonsRight() + "2";
     }
     else
         bp = "2X3t3HSIA2";

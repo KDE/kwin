@@ -18,9 +18,13 @@ namespace KWinInternal
 class OptionsPrivate
 {
 public:
-    OptionsPrivate() {};
+    OptionsPrivate() : title_buttons_left( "MS" ), title_buttons_right( "HIAX" ),
+        custom_button_positions( false ) {};
     QColor colors[KWINCOLORS*2];
     QColorGroup *cg[KWINCOLORS*2];
+    QString title_buttons_left;
+    QString title_buttons_right;
+    bool custom_button_positions;
 };
 };
 
@@ -231,6 +235,15 @@ void Options::reload()
     CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"));
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"));
 
+    // custom button positions
+    config->setGroup("Style");
+    d->custom_button_positions = config->readBoolEntry("CustomButtonPositions", false);
+    if (d->custom_button_positions)
+	{
+	d->title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
+	d->title_buttons_right = config->readEntry("ButtonsOnRight", "HIAX");
+        }
+        
     emit resetPlugin();
     emit resetClients();
 }
@@ -280,5 +293,20 @@ Options::MouseCommand Options::mouseCommand(const QString &name)
     return MouseNothing;
 }
 
+QString Options::titleButtonsLeft()
+    {
+    return d->title_buttons_left;
+    }
+    
+QString Options::titleButtonsRight()
+    {
+    return d->title_buttons_right;
+    }
+    
+bool Options::customButtonPositions()
+    {
+    return d->custom_button_positions;
+    }
+    
 #include "options.moc"
 

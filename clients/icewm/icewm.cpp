@@ -212,12 +212,11 @@ void ThemeHandler::readConfig()
 	showMenuButtonIcon = conf->readBoolEntry("ShowMenuButtonIcon", false);
 	titleBarOnTop = conf->readBoolEntry("TitleBarOnTop", true);
 
-	conf->setGroup("Style");
-	customButtonPositions = conf->readBoolEntry("CustomButtonPositions", false);
+	customButtonPositions = options->customButtonPositions();
 	if (customButtonPositions)
 	{
-		*titleButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
-		*titleButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
+		*titleButtonsLeft  = options->titleButtonsLeft();
+		*titleButtonsRight = options->titleButtonsRight();
 
 		// Convert KDE to icewm style buttons
 		convertButtons( *titleButtonsLeft );		
