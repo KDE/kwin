@@ -1,5 +1,5 @@
 [!Global!]
-Name=KWin
+Name=kwin
 Comment=The KDE Window Manager
 
 [desktop1]
