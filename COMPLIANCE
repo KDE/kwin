@@ -81,7 +81,7 @@ version 1.2
 - 3.12.
 - 3.13.
 + 4.1.
-- 4.2.
++ 4.2.
 + 4.3.
         Due to implementation details KWin actually allows moving or resizing
         by keyboard when requested to be done by mouse, and vice versa.
@@ -141,8 +141,8 @@ version 1.2
         and should be replaced by manager selection or similar mechanism.
 + 6.1.
 + 6. (rest)
-- 7.4.
-        KWin currently has no support for urgent windows.
++ 7.4.
+        The urgency hint is mapped to the _NET_WM_DEMANDS_ATTENTION flag.
 * 7.5.
         Qt often sets maximum size smaller than minimum size. This seems to be caused
         by delayed layout calculations.
@@ -183,7 +183,7 @@ version 2.0
 +    - initial_state
 +    - icon - feature not supported
 +    - window_group
--    - urgency - not supported, but could be
++    - urgency - mapped to _NET_WM_DEMANDS_ATTENTION
 / 4.1.2.5 - it should be checked it's used correctly in Kicker etc.
 / 4.1.2.6 - should be checked
         NETWM section 7.3. is supported too, even though it's a slight ICCCM violation.
