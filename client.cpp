@@ -713,6 +713,9 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	}
     }
 
+    bool stacking = e.value_mask & CWStackMode;
+    int stack_mode = e.detail;
+    
     if ( e.value_mask & CWBorderWidth ) {
 	// first, get rid of a window border
 	XWindowChanges wc;
@@ -743,7 +746,23 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	resize( sizeForWindowSize( QSize( nw, nh ) ) );
     }
 
-    // TODO handle stacking!
+    
+    if ( stacking ){
+	switch (stack_mode){
+	case Above:
+	case TopIf:
+	    qDebug("raise client %s", caption().latin1());
+	    workspace()->raiseClient( this );
+	    break;
+	case Below:
+	case BottomIf:
+	    workspace()->lowerClient( this );
+	    break;
+	case Opposite:
+	default:
+	    break;
+	}
+    }
 
     sendSynteticConfigureNotify();
     return TRUE;

@@ -122,20 +122,20 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	XLowerWindow( qt_xdisplay(), w );
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
-        c->setMayMove( FALSE );
+	c->setMayMove( FALSE );
 	ws->setDesktopClient( c );
 	return c;
     }
     if ( s == "Kicker" ) {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
-        c->setMayMove( FALSE );
+	c->setMayMove( FALSE );
 	return c;
     }
     if ( s == "MAC MENU [menu]" ) {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
-        c->setMayMove( FALSE );
+	c->setMayMove( FALSE );
 	return c;
     }
     if ( ( s.right(6) == "[menu]" ) || ( s.right(7) == "[tools]" ) ) {
@@ -1409,13 +1409,18 @@ void Workspace::raiseClient( Client* c )
 {
     if ( !c )
 	return;
-    if ( c == desktop_client )
+    ClientList saveset;
+    
+    if ( c == desktop_client ) {
+	saveset.clear();
+	saveset.append( c );
+	raiseTransientsOf(saveset, c );
 	return; // deny
+    }
 
     stacking_order.remove( c );
     stacking_order.append( c );
 
-    ClientList saveset;
     if ( c->transientFor() ) {
 	saveset.append( c );
 	Client* t = findClient( c->transientFor() );
