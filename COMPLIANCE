@@ -180,15 +180,39 @@ _NET_WM_STATE			window property + message
         | KWin doesn't implement large desktops, so this state is        |
         | ignored. Note that 'sticky' here is not 'on all desktops'.     |
 	+----------------------------------------------------------------+
-  _NET_WM_STATE_MAXIMIZED_VERT	property value (atom)		
-  _NET_WM_STATE_MAXIMIZED_HORZ	property value (atom)		
-  _NET_WM_STATE_SHADED		property value (atom)		
-  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)		
-  _NET_WM_STATE_SKIP_PAGER	property value (atom)		
-  _NET_WM_STATE_HIDDEN		property value (atom)		
-  _NET_WM_STATE_FULLSCREEN	property value (atom)		
-  _NET_WM_STATE_ABOVE		property value (atom)		
-  _NET_WM_STATE_BELOW		property value (atom)		
+  _NET_WM_STATE_MAXIMIZED_VERT	property value (atom)		COMPLETE
+  _NET_WM_STATE_MAXIMIZED_HORZ	property value (atom)		COMPLETE
+  _NET_WM_STATE_SHADED		property value (atom)
+  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)
+  _NET_WM_STATE_SKIP_PAGER	property value (atom)
+  _NET_WM_STATE_HIDDEN		property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
+	+----------------------------------------------------------------+
+  _NET_WM_STATE_FULLSCREEN	property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
+	+----------------------------------------------------------------+
+  _NET_WM_STATE_ABOVE		property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
+	| Possibly a simple replace with STAYS_ON_TOP, but we need       |
+	| proper layering.                                               |
+	+----------------------------------------------------------------+
+  _NET_WM_STATE_BELOW		property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
+	+----------------------------------------------------------------+
+  _NET_WM_STATE_STAYS_ON_TOP	property value (atom)	
+	+----------------------------------------------------------------+
+	| This seems to be deprecated by _NET_WM_STATE_ABOVE and its use |
+	| is non-standard as far as the current spec goes (although it   |
+	| was 'pending' around July 2002). Should we leave this for      |
+	| backwards compatibility (we have had it since Sept. 2000) or   |
+	| replace it with STATE_ABOVE?                                   |
+	| I suggest we deprecate it as we're using the _NET_WM namespace |
+	| 'illegally' - Karol                                            |
+	+----------------------------------------------------------------+
 _NET_WM_ALLOWED_ACTIONS		window property			NIL
   _NET_WM_ACTION_MOVE		property value (atom)		
   _NET_WM_ACTION_RESIZE		property value (atom)		
