@@ -96,4 +96,12 @@ void KCMRules::moduleChanged( bool state )
 
 }
 
+// i18n freeze :-/
+#if 0
+I18N_NOOP("Remember settings separately for every window")
+I18N_NOOP("Show internal settings for remembering")
+I18N_NOOP("Internal setting for remembering")
+#endif
+
+
 #include "main.moc"
