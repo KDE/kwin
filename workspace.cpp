@@ -3201,6 +3201,8 @@ void Workspace::slotWindowOperations()
 
 void Workspace::showWindowMenu( int x, int y, Client* cl )
 {
+    if (!kapp->authorizeKAction("kwin_rmb"))
+        return;
     if( !cl )
         return;
     if ( cl->isDesktop()
