@@ -623,12 +623,12 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	else if ( info->state() & NET::MaxHoriz )
 	    maximize( Client::MaximizeHorizontal );
 	
-	if ( isMaximizable() && !isMaximized() 
+	if ( isMaximizable() && !isMaximized()
 	     && ( width() >= area.width() || height() >= area.height() ) ) {
 	  // window is too large for the screen, maximize in the
 	  // directions necessary and generate a suitable restore
 	  // geometry.
-	  QSize s = adjustedSize( QSize( width()*2/3, height()*2/3 ) ); 
+	  QSize s = adjustedSize( QSize( width()*2/3, height()*2/3 ) );
 	  if ( width() >= area.width() && height() >= area.height() ) {
 	    maximize( Client::MaximizeFull );
 	    geom_restore.setSize( s );
@@ -695,7 +695,7 @@ void Client::fetchName()
         if ( XGetTextProperty( qt_xdisplay(), win, &tp, XA_WM_NAME) != 0 && tp.value != NULL ) {
             if ( tp.encoding == XA_STRING )
                 s = QString::fromLocal8Bit( (const char*) tp.value );
-            else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success && 
+            else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success &&
                       text != NULL && count > 0 ) {
                 s = QString::fromLocal8Bit( text[0] );
                 XFreeStringList( text );
@@ -972,10 +972,10 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	QSize ns = sizeForWindowSize( QSize( nw, nh ) );
 
 	QRect area = workspace()->clientArea();
-	if ( isMaximizable() && !isMaximized() 
+	if ( isMaximizable() && !isMaximized()
 	     && ( ns.width() >= area.width() || ns.height() >= area.height() ) ) {
 	  // window is too large for the screen, maximize in the
-	  // directions necessary 
+	  // directions necessary
 	  if ( ns.width() >= area.width() && ns.height() >= area.height() ) {
 	    maximize( Client::MaximizeFull );
 	  } else if ( ns.width() >= area.width() ) {
@@ -1224,7 +1224,8 @@ bool Client::isMaximizable() const
  */
 bool Client::isMinimizable() const
 {
-    return wantsTabFocus();
+    return ( !isTransient() || !workspace()->findClient( transientFor() ) )
+	&& wantsTabFocus();
 }
 
 

@@ -440,7 +440,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    if ( c )
 		(void) c->windowEvent( e );
 	    return TRUE;
-	} 
+	}
 	
 	return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
 	
@@ -2291,7 +2291,7 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
     popup->setItemChecked( Options::StaysOnTopOp, popup_client->staysOnTop() );
-    popup->setItemEnabled( Options::IconifyOp, !popup_client->isTransient() );
+    popup->setItemEnabled( Options::IconifyOp, popup_client->isMinimizable() );
 }
 
 
