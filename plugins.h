@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
+******************************************************************/
 #ifndef __PLUGINS_H
 #define __PLUGINS_H
 

@@ -1,18 +1,13 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #ifndef MAIN_H
 #define MAIN_H
 
 #include <kapp.h>
 #include "workspace.h"
-#include <dcopobject.h>
-
-class kwiniface : virtual public DCOPObject
-{
-K_DCOP 
-public:
-   kwiniface() : DCOPObject("kwiniface") {}
-   ~kwiniface() {}
-   void logout();
-};
 
 typedef QValueList<Workspace*> WorkspaceList;
 class Application : public  KApplication
@@ -21,6 +16,9 @@ public:
     Application();
     ~Application();
 
+    void commitData( QSessionManager& sm );
+    void saveState( QSessionManager& sm );
+    
 protected:
     bool x11EventFilter( XEvent * );
 

@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #include "tabbox.h"
 #include "workspace.h"
 #include "client.h"
@@ -94,16 +99,16 @@ void TabBox::nextPrev( bool next)
 	    else
 		client = workspace()->previousClient(client);
 	} while (client != sign && client &&
-		 (( !options_traverse_all && 
-                    !client->isOnDesktop(workspace()->currentDesktop()) ) || 
-		  ( client->isIconified()  && client->mainClient() != client )) 
+		 (( !options_traverse_all &&
+                    !client->isOnDesktop(workspace()->currentDesktop()) ) ||
+		  ( client->isIconified()  && client->mainClient() != client ))
 		 );
-		
+
 
 	if (!options_traverse_all && client
 	    && !client->isOnDesktop(workspace()->currentDesktop()))
 	    client = 0;
-	
+
     }
     else { // DesktopMode
 	if ( next ) {
@@ -195,28 +200,28 @@ void TabBox::paintContents()
 		s = KWM::desktopName(client->desktop());
 		s.append(": ");
 	    }
-		
+
 	    if (client->isIconified())
 		s += QString("(")+client->caption()+")";
 	    else
 		s += client->caption();
 	    int textw = fontMetrics().width( s );
 	    r.setLeft( r.left() + (r.width() - textw)/2);
-	
+
 	    if ( !client->icon().isNull() ) {
 		int py = r.center().y() - 16;
 		r.setLeft( r.left() + 20 );
 		p.drawPixmap( r.left()-42, py, client->icon() );
 	    }
-	
+
 	    p.drawText( r, AlignVCenter, s );
-		
+
 	}
 	else {
 	    r.setBottom( r.bottom() + 20 );
 	    p.drawText( r, AlignCenter, "*** No Tasks ***" );
 	}
-	
+
 	int x = (width() - clients.count() * 20 )/2;
 	int y = height() - 26;
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {

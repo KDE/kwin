@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #include "options.h"
 #include <qpalette.h>
 #include <qpixmap.h>
@@ -185,7 +190,7 @@ void Options::reload()
 
 
     QString val;
-	
+
     val = config->readEntry ("focusPolicy", "ClickToFocus");
     if (val == "ClickToFocus")
 	focusPolicy = ClickToFocus;

@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #include <klocale.h>
 #include <qapplication.h>
 #include <qcursor.h>
@@ -108,7 +113,7 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 
     // no need to be mapped at this point
     XUnmapWindow( qt_xdisplay(), win );
-    
+
     // set the border width to 0
     XWindowChanges wc;
     wc.border_width = 0;
@@ -341,7 +346,12 @@ void Client::manage( bool isMapped )
     QRect geom( original_geometry );
     bool placementDone = FALSE;
 
-    if ( isMapped )
+    SessionInfo* info = workspace()->takeSessionInfo( this );
+    if ( info )
+	geom.setRect( info->x, info->y, info->width, info->height );
+
+
+    if ( isMapped  || info )
 	placementDone = TRUE;
     else {
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
@@ -379,25 +389,46 @@ void Client::manage( bool isMapped )
 	updateShape();
     }
 
-    // find out the initial state. Several possibilities exist
-    XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
+    // initial state
     int state = NormalState;
-    if (hints && (hints->flags & StateHint))
-	state = hints->initial_state;
-    if (hints)
-	XFree(hints);
+    if ( info ) {
+	if ( info->iconified )
+	    state = IconicState;
+    } else {
+	// find out the initial state. Several possibilities exist
+	XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
+	if (hints && (hints->flags & StateHint))
+	    state = hints->initial_state;
+	if (hints)
+	    XFree(hints);
+    }
 
-    // ### TODO check XGetWMHints() for initial mapping state, icon, etc. pp.
-    // assume window wants to be visible on the current desktop
-    desk = KWM::desktop( win ); //workspace()->currentDesktop();
-    KWM::moveToDesktop( win, desk ); // compatibility
+    // initial desktop placement
+    if ( info ) {
+	desk = info->desktop;
+    } else {
+	// assume window wants to be visible on the current desktop
+	desk =  workspace()->currentDesktop();
+
+	// KDE 1.x compatibility
+	desk = KWM::desktop( win );
+	KWM::moveToDesktop( win, desk ); // compatibility
+    }
+
+
     setMappingState( state );
     if ( state == NormalState && isOnDesktop( workspace()->currentDesktop() ) ) {
 	show();
 	if ( options->focusPolicyIsReasonable() )
 	    workspace()->requestFocus( this );
-    } 
+    }
 
+    // other settings from the previous session
+    if ( info ) {
+	setSticky( info->sticky );
+    }
+
+    delete info;
 }
 
 
@@ -927,8 +958,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    break;
 	}
     }
-    
-    QApplication::syncX(); // process our own configure events synchronously. 
+
+    QApplication::syncX(); // process our own configure events synchronously.
 }
 
 /*!
@@ -1727,6 +1758,43 @@ void Client::keyPressEvent( QKeyEvent * e )
 	return;
     }
     QCursor::setPos( pos );
+}
+
+
+QCString Client::windowRole()
+{
+    extern Atom qt_window_role;
+    Atom type;
+    int format;
+    unsigned long length, after;
+    unsigned char *data;
+    QCString result;
+    if ( XGetWindowProperty( qt_xdisplay(), win, qt_window_role, 0, 1024,
+			     FALSE, XA_STRING, &type, &format,
+			     &length, &after, &data ) == Success ) {
+	if ( data )
+	    result = (const char*) data;
+	XFree( data );
+    }
+    return result;
+}
+
+QCString Client::sessionId()
+{
+    extern Atom qt_sm_client_id;
+    Atom type;
+    int format;
+    unsigned long length, after;
+    unsigned char *data;
+    QCString result;
+    if ( XGetWindowProperty( qt_xdisplay(), win, qt_sm_client_id, 0, 1024,
+			     FALSE, XA_STRING, &type, &format,
+			     &length, &after, &data ) == Success ) {
+	if ( data )
+	    result = (const char*) data;
+	XFree( data );
+    }
+    return result;
 }
 
 

@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalaccel.h>
@@ -20,6 +25,8 @@
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include <X11/extensions/shape.h>
+
+#include <kapp.h>
 
 extern Time kwin_time;
 
@@ -91,9 +98,13 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
     return(mgr.allocateClient(ws, w));
 }
 
-Workspace::Workspace()
+Workspace::Workspace( bool restore )
 {
     root = qt_xrootwin();
+    session.setAutoDelete( TRUE );
+
+    if ( restore )
+	loadSessionInfo();
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
     desktop_widget = new QWidget(0, "desktop_widget", Qt::WType_Desktop | Qt::WPaintUnclipped );
@@ -900,7 +911,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	popup->setFont(KGlobal::menuFont());
 	connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
 	connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-	
+
 	PluginMenu *deco = new PluginMenu(&mgr, popup);
 	deco->setFont(KGlobal::menuFont());
 
@@ -1974,6 +1985,10 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 }
 
 
+/*!
+  Puts a new decoration frame around every client. Used to react on
+  style changes.
+ */
 void Workspace::slotResetAllClients()
 {
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -1991,4 +2006,73 @@ void Workspace::slotResetAllClients()
         delete oldClient;
         newClient->manage( TRUE );
     }
+}
+
+/*!
+  Stores the current session in the config file
+ */
+void Workspace::storeSession( KConfig* config )
+{
+    config->setGroup("Session" );
+    int count =  0;
+    for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
+	Client* c = (*it);
+	QCString sessionId = c->sessionId();
+	QCString windowRole = c->windowRole();
+	if ( !sessionId.isEmpty() ) {
+	    count++;
+	    QString n = QString::number(count);
+	    config->writeEntry( QString("sessionId")+n, c->sessionId().data() );
+	    config->writeEntry( QString("windowRole")+n, c->windowRole().data() );
+	    config->writeEntry( QString("x")+n, c->x() );
+	    config->writeEntry( QString("y")+n, c->y() );
+	    config->writeEntry( QString("width")+n, c->windowWrapper()->width() );
+	    config->writeEntry( QString("height")+n, c->windowWrapper()->height() );
+	    config->writeEntry( QString("desktop")+n, c->desktop() );
+	    config->writeEntry( QString("iconified")+n, c->isIconified()?"true":"false" );
+	    config->writeEntry( QString("sticky")+n, c->isSticky()?"true":"false" );
+	}
+    }
+    config->writeEntry( "count", count );
+}
+
+
+void Workspace::loadSessionInfo()
+{
+    session.clear();
+    KConfig* config = kapp->sessionConfig();
+    config->setGroup("Session" );
+    int count =  config->readNumEntry( "count" );
+    for ( int i = 1; i <= count; i++ ) {
+	QString n = QString::number(i);
+	SessionInfo* info = new SessionInfo;
+	session.append( info );
+	info->sessionId = config->readEntry( QString("sessionId")+n ).latin1();
+	info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
+	info->x = config->readNumEntry( QString("x")+n );
+	info->y = config->readNumEntry( QString("y")+n );
+	info->width = config->readNumEntry( QString("width")+n );
+	info->height = config->readNumEntry( QString("height")+n );
+	info->desktop = config->readNumEntry( QString("desktop")+n );
+	info->iconified = config->readBoolEntry( QString("iconified")+n );
+	info->sticky = config->readBoolEntry( QString("sticky")+n );
+    }
+}
+
+SessionInfo* Workspace::takeSessionInfo( Client* c )
+{
+    if ( session.isEmpty() )
+	return 0;
+
+    QCString sessionId = c->sessionId();
+    QCString windowRole = c->windowRole();
+
+    for (SessionInfo* info = session.first(); info; info = session.next() ) {
+	if ( info->sessionId == sessionId && 
+	     ( ( info->windowRole.isEmpty() && windowRole.isEmpty() )
+	       || (info->windowRole == windowRole ) ) )
+	    return session.take();
+    }
+
+    return 0;
 }

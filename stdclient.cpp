@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #include "stdclient.h"
 #include <qapplication.h>
 #include <qcursor.h>

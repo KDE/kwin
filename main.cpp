@@ -1,8 +1,15 @@
+/*****************************************************************
+kwin - the KDE window manager
+
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
+#include <kconfig.h>
 #include "main.h"
 #include "options.h"
 #include "atoms.h"
 #include "workspace.h"
 #include <dcopclient.h>
+#include <qsessionmanager.h>
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -74,10 +81,10 @@ Application::Application( )
     atoms = new Atoms;
 
     // create a workspace.
-    workspaces += new Workspace();
- 
+    workspaces += new Workspace( isSessionRestored() );
+
     syncX(); // trigger possible errors, there's still a chance to abort
-    
+
     initting = FALSE; // startup done, we are up and running now.
 }
 
@@ -89,27 +96,6 @@ Application::~Application()
      }
      delete options;
 }
-
-void kwiniface::logout()
-{
-exit (0);
-}
-
-bool kwiniface::process(const QCString &fun, const QByteArray &, QCString& replyType, QByteArray &)
-{
-	fprintf(stderr,"Logout Call Recieved\n");
-	if ( fun == "logout()" )
-	{
-		replyType = "void";
-		logout();
-		return TRUE;
-	}
-     	else
-	{
-		return FALSE;
- 	}
-}
-
 
 
 bool Application::x11EventFilter( XEvent *e )
@@ -131,7 +117,7 @@ bool Application::x11EventFilter( XEvent *e )
     case ConfigureNotify:
 	{
  	    if ( e->xconfigure.window != e->xconfigure.event  )
- 		return TRUE; 
+ 		return TRUE;
 	}
 	break;
     default:
@@ -145,6 +131,29 @@ bool Application::x11EventFilter( XEvent *e )
      return KApplication::x11EventFilter( e );
 }
 
+void Application::commitData( QSessionManager& /*sm*/ )
+{
+    // nothing to do, really
+}
+
+void Application::saveState( QSessionManager& sm )
+{
+    KApplication::saveState( sm );
+    static bool firstTime = false;
+    if ( firstTime ) {
+	firstTime = false;
+	return; // no need to save this state.
+    }
+
+    sm.release();
+//     if ( !sm.isPhase2() ) {
+// 	sm.requestPhase2();
+// 	return;
+//     }
+
+    workspaces.first()->storeSession( kapp->sessionConfig() );
+    kapp->sessionConfig()->sync();
+}
 
 
 static void sighandler(int) {
@@ -174,11 +183,6 @@ int main( int argc, char * argv[] )
     Application a;
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
-    DCOPClient *client = kapp->dcopClient();
-    client->attach();
-    client->registerAs(kapp->name(),FALSE);
-
-    kwiniface iface;
 
     return a.exec();
 

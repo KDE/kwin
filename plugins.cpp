@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
+******************************************************************/
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kstddirs.h>
@@ -24,7 +29,7 @@ void PluginMenu::slotAboutToShow()
     fileList.clear();
     insertItem(i18n("Standard"), 0);
     idCount = 1;
-    
+
     QDir dir;
     dir.setFilter(QDir::Files);
     const QFileInfoList *list;
@@ -173,5 +178,5 @@ void PluginMgr::loadPlugin(QString nameStr)
         lt_dlclose(oldHandle);
 }
 
-    
+
 

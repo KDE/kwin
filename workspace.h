@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #ifndef WORKSPACE_H
 #define WORKSPACE_H
 
@@ -6,12 +11,14 @@
 #include <qpopupmenu.h>
 #include <qguardedptr.h>
 #include <qvaluelist.h>
+#include <qlist.h>
 #include <X11/Xlib.h>
 #include "options.h"
 #include "plugins.h"
 class Client;
 class TabBox;
 
+class KConfig;
 class KGlobalAccel;
 
 typedef QValueList<Client*> ClientList;
@@ -37,6 +44,23 @@ public:
 
 typedef QValueList<DockWindow> DockWindowList;
 
+
+struct SessionInfo
+{
+    QCString sessionId;
+    QCString windowRole;
+    int x;
+    int y;
+    int width;
+    int height;
+    int desktop;
+    bool iconified;
+    bool sticky;
+};
+
+
+
+
 class Shape {
 public:
     static bool hasShape( WId w);
@@ -47,7 +71,7 @@ class Workspace : public QObject
 {
     Q_OBJECT
 public:
-    Workspace();
+    Workspace( bool restore = FALSE );
     virtual ~Workspace();
 
     virtual bool workspaceEvent( XEvent * );
@@ -104,6 +128,10 @@ public:
     void performWindowOperation( Client* c, Options::WindowOperation op );
 
     Client* clientFactory(Workspace *ws, WId w);
+    
+    void storeSession( KConfig* config );
+    
+    SessionInfo* takeSessionInfo( Client* );
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -179,9 +207,6 @@ private:
 
     QWidget* desktop_widget;
 
-    //experimental
-    void setDecoration( int deco );
-
     void propagateClients( bool onlyStacking = FALSE);
 
     DockWindowList dockwins;
@@ -190,13 +215,15 @@ private:
     void propagateDockwins();
     DockWindow findDockwin( WId w );
 
+    QList<SessionInfo> session;
+    void loadSessionInfo();
+
     //CT needed for cascading+
     struct CascadingInfo {
       QPoint pos;
       int col;
       int row;
     };
-
     QValueList<CascadingInfo> cci;
     // -cascading
     Atom kwm_command;

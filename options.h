@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+								  
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
@@ -98,11 +103,11 @@ public:
      * Return the number of animation steps (would this be general?)
      */
     const int windowSnapZone() { return window_snap_zone; };
-    
 
-    
+
+
     // mouse bindings
-    
+
     enum WindowOperation{
 	MaximizeOp = 5000,
 	RestoreOp,
@@ -117,7 +122,7 @@ public:
     };
 
     WindowOperation operationTitlebarDblClick() { return OpTitlebarDblClick; }
-    
+
     enum MouseCommand {
     MouseRaise, MouseLower, MouseOperationsMenu, MouseToggleRaiseAndLower,
     MouseActivateAndRaise, MouseActivateAndLower, MouseActivate,
@@ -125,7 +130,7 @@ public:
     MouseMove, MouseResize, MouseNothing
     };
 
-    MouseCommand commandActiveTitlebar1() { return CmdActiveTitlebar1; } 
+    MouseCommand commandActiveTitlebar1() { return CmdActiveTitlebar1; }
     MouseCommand commandActiveTitlebar2() { return CmdActiveTitlebar2; }
     MouseCommand commandActiveTitlebar3() { return CmdActiveTitlebar3; }
     MouseCommand commandInactiveTitlebar1() { return CmdInactiveTitlebar1; }
@@ -138,7 +143,7 @@ public:
     MouseCommand commandAll2() { return CmdAll2; }
     MouseCommand commandAll3() { return CmdAll3; }
 
-    
+
     static WindowOperation windowOperation(const QString &name );
     static MouseCommand mouseCommand(const QString &name);
 
@@ -148,7 +153,7 @@ public slots:
 
 signals:
     void resetClients();
-    
+
 protected:
     QFont activeFont, inactiveFont;
     QColor colors[KWINCOLORS*2];
@@ -159,7 +164,7 @@ private:
     int anim_steps;
     int border_snap_zone, window_snap_zone;
 
-    
+
     WindowOperation OpTitlebarDblClick;
 
     // mouse bindings
