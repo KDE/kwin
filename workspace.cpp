@@ -317,8 +317,8 @@ Workspace *Workspace::_self = 0;
 // lines are not too much. It's the task that is complex, not the
 // code.
 Workspace::Workspace( bool restore )
-  : QObject           (0, "workspace"),
-    DCOPObject        ("KWinInterface"),
+  : DCOPObject        ("KWinInterface"),
+    QObject           (0, "workspace"),
     current_desktop   (0),
     number_of_desktops(0),
     popup_client      (0),
