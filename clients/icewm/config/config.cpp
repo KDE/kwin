@@ -133,6 +133,8 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 	// Watch the icewm theme directory for theme additions/removals
 	KDirWatch::self()->addDir(localThemeString);
 	connect( KDirWatch::self(), SIGNAL(dirty(const QString&)), this, SLOT(findIceWMThemes()) );
+	connect( KDirWatch::self(), SIGNAL(created(const QString&)), this, SLOT(findIceWMThemes()) );
+	connect( KDirWatch::self(), SIGNAL(deleted(const QString&)), this, SLOT(findIceWMThemes()) );
 
 	// Set the konqui link url
 	QString urlThemeString = QString("file://") + localThemeString;
