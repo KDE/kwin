@@ -46,6 +46,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/keysymdef.h>
 #include <X11/extensions/shape.h>
 #include <X11/cursorfont.h>
+#include <sys/time.h>
 
 const int XIconicState = IconicState;
 #undef IconicState
@@ -142,7 +143,7 @@ QString Workspace::desktopName( int desk )
     return QString::fromUtf8( rootInfo->desktopName( desk ) );
 }
 
-extern Time kwin_time;
+extern Time qt_x_time;
 extern void kwin_updateTime();
 
 // used to store the return values of
@@ -511,7 +512,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 {
     if ( mouse_emulation && e->type == ButtonPress || e->type == ButtonRelease ) {
         mouse_emulation = FALSE;
-        XUngrabKeyboard( qt_xdisplay(), kwin_time );
+        XUngrabKeyboard( qt_xdisplay(), qt_x_time );
     }
 
     if ( e->type == PropertyNotify || e->type == ClientMessage ) {
@@ -532,8 +533,8 @@ bool Workspace::workspaceEvent( XEvent * e )
     switch (e->type) {
     case ButtonPress:
         if ( tab_grab || control_grab ) {
-            XUngrabKeyboard(qt_xdisplay(), kwin_time);
-            XUngrabPointer( qt_xdisplay(), kwin_time);
+            XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+            XUngrabPointer( qt_xdisplay(), qt_x_time);
             tab_box->hide();
             keys->setEnabled( true );
             tab_grab = control_grab = false;
@@ -542,6 +543,18 @@ bool Workspace::workspaceEvent( XEvent * e )
     case ButtonRelease:
     case MotionNotify:
         break;
+	
+    case CreateNotify:
+	if ( e->xcreatewindow.parent == root && 
+	     !QWidget::find( e->xcreatewindow.window) ) {
+	    timeval tv;
+	    gettimeofday( &tv, NULL );
+	    unsigned long now = tv.tv_sec * 10 + tv.tv_usec / 100000;
+	    XChangeProperty(qt_xdisplay(), e->xcreatewindow.window, 
+			    atoms->kde_net_user_time, XA_CARDINAL, 
+			    32, PropModeReplace, (unsigned char *)&now, 1);
+	}
+	break;
     case UnmapNotify:
         // this is special due to
         // SubstructureNotifyMask. e->xany.window is the window the
@@ -854,7 +867,7 @@ void Workspace::slotWalkThroughWindows()
     if ( tab_grab || control_grab )
         return;
     if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) {
-        //XUngrabKeyboard(qt_xdisplay(), kwin_time); // need that because of accelerator raw mode
+        //XUngrabKeyboard(qt_xdisplay(), qt_x_time); // need that because of accelerator raw mode
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
     } else {
@@ -956,14 +969,14 @@ bool Workspace::startKDEWalkThroughWindows()
                               ButtonMotionMask | EnterWindowMask |
                               LeaveWindowMask | PointerMotionMask),
                        GrabModeAsync, GrabModeAsync,
-                       None, None, kwin_time ) != GrabSuccess ) {
+                       None, None, qt_x_time ) != GrabSuccess ) {
         return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
                        root, FALSE,
                        GrabModeAsync, GrabModeAsync,
-                       kwin_time) != GrabSuccess ) {
-        XUngrabPointer( qt_xdisplay(), kwin_time);
+                       qt_x_time) != GrabSuccess ) {
+        XUngrabPointer( qt_xdisplay(), qt_x_time);
         return FALSE;
     }
     tab_grab        = TRUE;
@@ -980,14 +993,14 @@ bool Workspace::startWalkThroughDesktops( int mode )
                               ButtonMotionMask | EnterWindowMask |
                               LeaveWindowMask | PointerMotionMask),
                        GrabModeAsync, GrabModeAsync,
-                       None, None, kwin_time ) != GrabSuccess ) {
+                       None, None, qt_x_time ) != GrabSuccess ) {
         return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
                        root, FALSE,
                        GrabModeAsync, GrabModeAsync,
-                       kwin_time) != GrabSuccess ) {
-        XUngrabPointer( qt_xdisplay(), kwin_time);
+                       qt_x_time) != GrabSuccess ) {
+        XUngrabPointer( qt_xdisplay(), qt_x_time);
         return FALSE;
     }
     control_grab = TRUE;
@@ -1113,8 +1126,8 @@ bool Workspace::keyPress(XKeyEvent& ev)
 
     if (control_grab || tab_grab){
         if ((keyQt & 0xffff) == Qt::Key_Escape){
-            XUngrabKeyboard(qt_xdisplay(), kwin_time);
-            XUngrabPointer( qt_xdisplay(), kwin_time);
+            XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+            XUngrabPointer( qt_xdisplay(), qt_x_time);
             tab_box->hide();
             keys->setEnabled( true );
             tab_grab = FALSE;
@@ -1167,8 +1180,8 @@ bool Workspace::keyRelease(XKeyEvent& ev)
     if( !release )
          return FALSE;
     if (tab_grab){
-                XUngrabPointer( qt_xdisplay(), kwin_time);
-                XUngrabKeyboard(qt_xdisplay(), kwin_time);
+                XUngrabPointer( qt_xdisplay(), qt_x_time);
+                XUngrabKeyboard(qt_xdisplay(), qt_x_time);
                 tab_box->hide();
                 keys->setEnabled( true );
                 tab_grab = false;
@@ -1177,8 +1190,8 @@ bool Workspace::keyRelease(XKeyEvent& ev)
                 }
     }
     if (control_grab){
-                XUngrabPointer( qt_xdisplay(), kwin_time);
-                XUngrabKeyboard(qt_xdisplay(), kwin_time);
+                XUngrabPointer( qt_xdisplay(), qt_x_time);
+                XUngrabKeyboard(qt_xdisplay(), qt_x_time);
                 tab_box->hide();
                 keys->setEnabled( true );
                 control_grab = False;
@@ -1394,6 +1407,7 @@ void Workspace::activateClient( Client* c, bool force )
     if (!c->isOnDesktop(currentDesktop()) ) {
         setCurrentDesktop( c->desktop() );
     }
+    c->updateUserTime();
 
 }
 
@@ -2079,7 +2093,6 @@ void Workspace::lowerClient( Client* c )
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
         new_stack[i++] = (*it)->winId();
     }
-//     XRaiseWindow(qt_xdisplay(), new_stack[0]);
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
@@ -2166,7 +2179,6 @@ void Workspace::raiseClient( Client* c )
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
         new_stack[i++] = (*it)->winId();
     }
-//     XRaiseWindow(qt_xdisplay(), new_stack[0]);
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
@@ -2178,6 +2190,29 @@ void Workspace::raiseClient( Client* c )
 
     raiseElectricBorders();
 }
+
+void Workspace::stackClientUnderActive( Client* c )
+{
+    if ( !active_client || !c || active_client == c )
+	return;
+
+    ClientList::Iterator it = stacking_order.find( active_client );
+    if ( it == stacking_order.end() )
+	return;
+    stacking_order.remove( c );
+    stacking_order.insert( it, c );
+    stacking_order = constrainedStackingOrder( stacking_order );
+    Window* new_stack = new Window[ stacking_order.count() + 1 ];
+    int i = 0;
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+        new_stack[i++] = (*it)->winId();
+    }
+    XRestackWindows(qt_xdisplay(), new_stack, i);
+    delete [] new_stack;
+
+    propagateClients( TRUE );
+}
+
 
 void Workspace::raiseOrLowerClient( Client *c)
 {
@@ -2264,7 +2299,7 @@ void Workspace::focusToNull(){
                       InputOnly, CopyFromParent, mask, &attr);
     XMapWindow(qt_xdisplay(), null_focus_window);
   }
-  XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, kwin_time );
+  XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, qt_x_time );
   if( !block_focus )
       setActiveClient( NULL );
 }
@@ -2987,7 +3022,7 @@ void Workspace::slotMouseEmulation()
 {
 
     if ( mouse_emulation ) {
-        XUngrabKeyboard(qt_xdisplay(), kwin_time);
+        XUngrabKeyboard(qt_xdisplay(), qt_x_time);
         mouse_emulation = FALSE;
         return;
     }
@@ -2995,7 +3030,7 @@ void Workspace::slotMouseEmulation()
     if ( XGrabKeyboard(qt_xdisplay(),
                        root, FALSE,
                        GrabModeAsync, GrabModeAsync,
-                       kwin_time) == GrabSuccess ) {
+                       qt_x_time) == GrabSuccess ) {
         mouse_emulation = TRUE;
         mouse_emulation_state = 0;
         mouse_emulation_window = 0;
@@ -3365,7 +3400,7 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
             e.window = w;
             e.root = qt_xrootwin();
             e.subwindow = w;
-            e.time = kwin_time;
+            e.time = qt_x_time;
             e.x = x;
             e.y = y;
             e.x_root = pos.x();
@@ -3379,7 +3414,7 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
             e.window = w;
             e.root = qt_xrootwin();
             e.subwindow = w;
-            e.time = kwin_time;
+            e.time = qt_x_time;
             e.x = x;
             e.y = y;
             e.x_root = pos.x();
@@ -3495,7 +3530,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     }
     // fall through
     case XK_Escape:
-        XUngrabKeyboard(qt_xdisplay(), kwin_time);
+        XUngrabKeyboard(qt_xdisplay(), qt_x_time);
         mouse_emulation = FALSE;
         return TRUE;
     default:
@@ -3657,7 +3692,7 @@ void Workspace::storeLegacySession( KConfig* config )
             ev.xclient.message_type = atoms->wm_protocols;
             ev.xclient.format = 32;
             ev.xclient.data.l[0] = atoms->wm_save_yourself;
-            ev.xclient.data.l[1] = kwin_time;
+            ev.xclient.data.l[1] = qt_x_time;
             XSelectInput(newdisplay, w, PropertyChangeMask|StructureNotifyMask);
             XSendEvent(newdisplay, w, False, 0, &ev);
         }
@@ -4126,7 +4161,7 @@ void Workspace::focusEnsurance()
         if ( !last_active_client )
             last_active_client = topClientOnDesktop();
         if ( last_active_client && last_active_client->isVisible() ) {
-            kwin_time = CurrentTime;
+            qt_x_time = CurrentTime;
             requestFocus( last_active_client );
         }
     }

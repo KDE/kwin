@@ -163,6 +163,7 @@ public:
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
     void lowerClient( Client* c );
+    void stackClientUnderActive( Client* );
     void raiseOrLowerClient( Client * );
     void reconfigure();
 

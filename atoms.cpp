@@ -45,6 +45,9 @@ Atoms::Atoms()
     atoms[n] = &kde_wm_change_state;
     names[n++] = (char *) "_KDE_WM_CHANGE_STATE";
 
+    atoms[n] = &kde_net_user_time;
+    names[n++] = (char *) "_KDE_NET_USER_TIME";
+
     Atom fake;
     atoms[n] = &fake;
     names[n++] = (char *) "_DT_SM_WINDOW_INFO";

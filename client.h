@@ -211,6 +211,8 @@ public:
 
     void keyPressEvent( uint key_code );
 
+    void updateUserTime();
+
 public slots:
     void iconify();
     void closeWindow();
@@ -275,6 +277,8 @@ private:
     void getWmNormalHints();
     void fetchName();
     void gravitate( bool invert );
+
+    unsigned long userTime();
 
     void startMoveResize();
     void stopMoveResize();

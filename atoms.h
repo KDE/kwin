@@ -23,6 +23,7 @@ public:
     Atom motif_wm_hints;
     Atom net_wm_context_help;
     Atom kde_wm_change_state;
+    Atom kde_net_user_time;
 
 };
 

@@ -43,8 +43,7 @@ Options* options;
 
 Atoms* atoms;
 
-extern Time qt_x_time; // workaround for Qt < 2.3.2
-Time kwin_time = CurrentTime;
+extern Time qt_x_time;
 int kwin_screen_number = -1;
 
 static bool initting = FALSE;
@@ -88,7 +87,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
 }
 
 /*!
-  Updates kwin_time by receiving a current timestamp from the server.
+  Updates qt_x_time by receiving a current timestamp from the server.
 
   Use this function only when really necessary. Keep in mind that it's
   a roundtrip to the X-Server.
@@ -103,8 +102,7 @@ void kwin_updateTime()
 		    PropModeAppend, (unsigned char*) &data, 1);
     XEvent ev;
     XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
-    kwin_time = ev.xproperty.time;
-    qt_x_time = kwin_time;
+    qt_x_time = ev.xproperty.time;
 }
 
 
@@ -143,36 +141,10 @@ Application::~Application()
 }
 
 
+
 bool Application::x11EventFilter( XEvent *e )
 {
-    switch ( e->type ) {
-    case ButtonPress:
-    case ButtonRelease:
-	kwin_time = e->xbutton.time;
-	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
-	break;
-    case MotionNotify:
-	kwin_time = e->xmotion.time;
-	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
-	break;
-    case KeyPress:
-    case KeyRelease:
-	kwin_time = e->xkey.time;
-	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
-	break;
-    case PropertyNotify:
-	kwin_time = e->xproperty.time;
-	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
-	break;
-    case EnterNotify:
-    case LeaveNotify:
-	kwin_time = e->xcrossing.time;
-	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
-    default:
-	break;
-    }
-
-     if ( Workspace::self()->workspaceEvent( e ) )
+    if ( Workspace::self()->workspaceEvent( e ) )
 	     return TRUE;
      return KApplication::x11EventFilter( e );
 }

@@ -103,9 +103,14 @@ public:
 // to resolve them properly
 
 extern Atom qt_wm_state;
-extern Time kwin_time;
+extern Time qt_x_time;
 extern Atom qt_window_role;
 extern Atom qt_sm_client_id;
+
+static int nullErrorHandler(Display *, XErrorEvent *)
+{
+    return 0;
+}
 
 using namespace KWinInternal;
 
@@ -157,7 +162,7 @@ static void sendClientMessage(Window w, Atom a, long x){
   ev.xclient.message_type = a;
   ev.xclient.format = 32;
   ev.xclient.data.l[0] = x;
-  ev.xclient.data.l[1] = kwin_time;
+  ev.xclient.data.l[1] = qt_x_time;
   mask = 0L;
   if (w == qt_xrootwin())
     mask = SubstructureRedirectMask;        /* magic! */
@@ -399,24 +404,24 @@ void WindowWrapper::releaseWindow()
 bool WindowWrapper::x11Event( XEvent * e)
 {
     switch ( e->type ) {
-    case ButtonPress:
-        {
-            uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-                                KKeyNative::modX(KKey::WIN) :
-                                KKeyNative::modX(KKey::ALT);
-            bool bModKeyHeld = e->xbutton.state & keyModX;
+    case ButtonPress: {
+	((Client*)parentWidget())->updateUserTime();
+	uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
+	    KKeyNative::modX(KKey::WIN) :
+	    KKeyNative::modX(KKey::ALT);
+	bool bModKeyHeld = e->xbutton.state & keyModX;
 
-            if ( ((Client*)parentWidget())->isActive()
-                 && ( options->focusPolicy != Options::ClickToFocus
-                 &&  options->clickRaise && !bModKeyHeld ) ) {
-                if ( e->xbutton.button < 4 ) // exclude wheel
-                    ((Client*)parentWidget())->autoRaise();
-                ungrabButton( winId(), None );
-            }
+	if ( ((Client*)parentWidget())->isActive()
+	     && ( options->focusPolicy != Options::ClickToFocus
+		  &&  options->clickRaise && !bModKeyHeld ) ) {
+	    if ( e->xbutton.button < 4 ) // exclude wheel
+		((Client*)parentWidget())->autoRaise();
+	    ungrabButton( winId(), None );
+	}
 
-            Options::MouseCommand com = Options::MouseNothing;
-            if ( bModKeyHeld ){
-                switch (e->xbutton.button) {
+	Options::MouseCommand com = Options::MouseNothing;
+	if ( bModKeyHeld ){
+	    switch (e->xbutton.button) {
                 case Button1:
                     com = options->commandAll1();
                     break;
@@ -426,9 +431,9 @@ bool WindowWrapper::x11Event( XEvent * e)
                 case Button3:
                     com = options->commandAll3();
                     break;
-                }
-            } else {
-                switch (e->xbutton.button) {
+	    }
+	} else {
+	    switch (e->xbutton.button) {
                 case Button1:
                     com = options->commandWindow1();
                     break;
@@ -440,22 +445,21 @@ bool WindowWrapper::x11Event( XEvent * e)
                     break;
                 default:
                     com = Options::MouseActivateAndPassClick;
-                }
-            }
-            bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
-                            QPoint( e->xbutton.x_root, e->xbutton.y_root) );
+	    }
+	}
+	bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
+									QPoint( e->xbutton.x_root, e->xbutton.y_root) );
 
-            if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
-                 ((Client*)parentWidget())->windowType() != NET::Dialog &&
-                 ((Client*)parentWidget())->windowType() != NET::Override )
-                replay = TRUE;
+	if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
+	     ((Client*)parentWidget())->windowType() != NET::Dialog &&
+	     ((Client*)parentWidget())->windowType() != NET::Override )
+	    replay = TRUE;
 
-            XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //kwin_time);
-            return TRUE;
-        }
-        break;
+	XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //qt_x_time);
+	return TRUE;
+    } break;
     case ButtonRelease:
-        XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //kwin_time);
+        XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         break;
     default:
         break;
@@ -490,7 +494,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
         NET::WMWindowType |
         NET::WMStrut |
         NET::WMName |
-        NET::WMIconGeometry
+        NET::WMIconGeometry | 
+	NET::WMPid
         ;
 
     info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
@@ -826,10 +831,23 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         if ( isMapped ) {
             show();
         } else {
-            workspace()->raiseClient( this ); // ensure constrains
-            show();
-            if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
-                workspace()->requestFocus( this );
+	    // we only raise (and potentially activate) new clients if
+	    // the user does not actively work in the currently active
+	    // client. We can safely drop the activation when the
+	    // NET_KDE_USER_TIME of the currently active client is
+	    // defined and more recent than the one of the new client
+	    // (which we set ourselves in CreateNotify in
+	    // workspace.cpp)
+	    Client* ac = workspace()->activeClient();
+	    if ( ac && ac->userTime() <= userTime() ) {
+		workspace()->raiseClient( this );
+		show();
+		if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
+		    workspace()->requestFocus( this );
+	    } else {
+		workspace()->stackClientUnderActive( this );
+		show();
+	    }
         }
     }
 
@@ -839,6 +857,46 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     return showMe;
 }
 
+
+
+/*!  
+  Updates the user time on the client window. This is called inside
+  kwin for every action with the window that qualifies for user
+  interaction (clicking on it, activate it externally, etc.).
+ */
+void Client::updateUserTime()
+{
+    if ( window() ) {
+	timeval tv;
+	gettimeofday( &tv, NULL );
+	unsigned long now = tv.tv_sec * 10 + tv.tv_usec / 100000;
+	XChangeProperty(qt_xdisplay(), window(),
+			atoms->kde_net_user_time, XA_CARDINAL, 
+			32, PropModeReplace, (unsigned char *)&now, 1);
+    }
+}
+
+unsigned long Client::userTime()
+{
+    unsigned long result = 0;
+    Atom type;
+    int format, status;
+    unsigned long nitems = 0;
+    unsigned long extra = 0;
+    unsigned char *data = 0;
+    XErrorHandler oldHandler = XSetErrorHandler(nullErrorHandler);
+    status = XGetWindowProperty( qt_xdisplay(), window(),
+				 atoms->kde_net_user_time, 
+				 0, 10000, FALSE, XA_CARDINAL, &type, &format,
+				 &nitems, &extra, &data );
+    XSetErrorHandler(oldHandler);
+    if (status  == Success ) {
+	if (data && nitems > 0)
+	    result = *((long*) data);
+	XFree(data);
+    }
+    return result;
+}
 
 /*!
   Gets the client's normal WM hints and reconfigures itself respectively.
@@ -1611,7 +1669,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             break;
         }
     }
-    workspace()->clientMoved(globalPos, kwin_time);
+    workspace()->clientMoved(globalPos, qt_x_time);
 
 //     QApplication::syncX(); // process our own configure events synchronously.
 }
@@ -2061,7 +2119,10 @@ void Client::gravitate( bool invert )
 */
 bool Client::x11Event( XEvent * e)
 {
-    if ( e->type == EnterNotify && ( e->xcrossing.mode == NotifyNormal || e->xcrossing.mode == NotifyUngrab ) ) {
+    if ( e->type == EnterNotify && 
+	 ( e->xcrossing.mode == NotifyNormal || 
+	   ( !options->focusPolicyIsReasonable() && 
+	     e->xcrossing.mode == NotifyUngrab ) ) ) {
 
         if (options->shadeHover && isShade() && !isDesktop()) {
             delete shadeHoverTimer;
@@ -2073,8 +2134,9 @@ bool Client::x11Event( XEvent * e)
         if ( options->focusPolicy == Options::ClickToFocus )
             return TRUE;
 
-        if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled()
-             && workspace()->topClientOnDesktop() != this ) {
+        if ( options->autoRaise && !isDesktop() && 
+	     !isDock() && !isMenu() && workspace()->focusChangeEnabled() && 
+	     workspace()->topClientOnDesktop() != this ) {
             delete autoRaiseTimer;
             autoRaiseTimer = new QTimer( this );
             connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
@@ -2420,7 +2482,7 @@ void Client::takeFocus( bool force )
 
         // Qt may delay the mapping which may cause XSetInputFocus to fail, force show window
         QApplication::sendPostedEvents( windowWrapper(), QEvent::ShowWindowRequest );
-        XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
+        XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, qt_x_time );
     }
     if ( Ptakefocus )
         sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
@@ -2648,11 +2710,6 @@ void Client::keyPressEvent( uint key_code )
         return;
     }
     QCursor::setPos( pos );
-}
-
-static int nullErrorHandler(Display *, XErrorEvent *)
-{
-    return 0;
 }
 
 static QCString getStringProperty(WId w, Atom prop, char separator=0)
