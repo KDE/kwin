@@ -1,32 +1,30 @@
 INCLUDES                  = -I$(top_srcdir) $(all_includes)
-kde_module_LTLIBRARIES    = libkwinSuSE.la
+kde_module_LTLIBRARIES    = libkwinweb.la
 
-libkwinSuSE_la_SOURCES     = \
-  MachBunt.cpp \
-  MachBuntButton.cpp \
-  MachBuntButtonClose.cpp \
-  MachBuntButtonMenu.cpp \
-  MachBuntButtonHelp.cpp \
-  MachBuntButtonIconify.cpp \
-  MachBuntButtonLower.cpp \
-  MachBuntButtonMaximize.cpp \
-  MachBuntButtonSticky.cpp
+libkwinweb_la_SOURCES     = \
+  Web.cpp \
+  WebButton.cpp \
+  WebButtonClose.cpp \
+  WebButtonHelp.cpp \
+  WebButtonIconify.cpp \
+  WebButtonLower.cpp \
+  WebButtonMaximize.cpp \
+  WebButtonSticky.cpp
 
 noinst_HEADERS            = \
-  MachBunt.h \
-  MachBuntButton.h \
-  MachBuntButtonClose.h \
-  MachBuntButtonMenu.h \
-  MachBuntButtonHelp.h \
-  MachBuntButtonIconify.h \
-  MachBuntButtonLower.h \
-  MachBuntButtonMaximize.h \
-  MachBuntButtonSticky.h
+  Web.h \
+  WebButton.h \
+  WebButtonClose.h \
+  WebButtonHelp.h \
+  WebButtonIconify.h \
+  WebButtonLower.h \
+  WebButtonMaximize.h \
+  WebButtonSticky.h
 
-libkwinSuSE_la_LIBADD     = $(kde_libraries)/kwin.la
-libkwinSuSE_la_LDFLAGS    = $(all_libraries) $(KDE_PLUGIN)
+libkwinweb_la_LIBADD      = ../../kwin.la
+libkwinweb_la_LDFLAGS     = $(all_libraries) $(KDE_PLUGIN)
 METASOURCES               = AUTO
 
 linkdir                   = $(kde_datadir)/kwin/
-link_DATA                 = SuSE.desktop
+link_DATA                 = web.desktop
 EXTRA_DIST                = $(link_DATA)
