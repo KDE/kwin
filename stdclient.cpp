@@ -172,27 +172,6 @@ static QPixmap* pinup_pix = 0;
 static QPixmap* pindown_pix = 0;
 static bool pixmaps_created = FALSE;
 
-static QColorGroup *aFrameGrp = 0;
-static QColorGroup *iFrameGrp = 0;
-static QColorGroup *aTitleGrp = 0;
-static QColorGroup *iTitleGrp = 0;
-static bool colors_created = FALSE;
-
-static void create_colorgroups()
-{
-    if(colors_created)
-        return;
-    colors_created = true;
-    aFrameGrp = StdClient::makeColorGroup(options->
-                                          color(Options::Frame, true));
-    iFrameGrp = StdClient::makeColorGroup(options->
-                                          color(Options::Frame, false));
-    aTitleGrp = StdClient::makeColorGroup(options->
-                                          color(Options::TitleBar, true));
-    iTitleGrp = StdClient::makeColorGroup(options->
-                                          color(Options::TitleBar, false));
-}
-
 static void create_pixmaps()
 {
     if ( pixmaps_created )
@@ -212,8 +191,6 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     create_pixmaps();
-    create_colorgroups();
-
 
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
     g->setRowStretch( 1, 10 );
@@ -318,11 +295,11 @@ void StdClient::paintEvent( QPaintEvent* )
     QRegion r = rect();
     r = r.subtract( t );
     p.setClipRegion( r );
-    qDrawWinPanel( &p, rect(), isActive()? *aFrameGrp : *iFrameGrp );
+    qDrawWinPanel( &p, rect(), options->colorGroup(Options::Frame, isActive()));
     p.setClipping( FALSE );
     p.fillRect( t, options->color(Options::TitleBar, isActive()));
     qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
-                     isActive() ? *aTitleGrp : *iTitleGrp, TRUE );
+                     options->colorGroup(Options::TitleBar, isActive()), true);
 
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
@@ -355,9 +332,3 @@ void StdClient::iconChange()
     button[0]->repaint( FALSE );
 }
 
-QColorGroup* StdClient::makeColorGroup(const QColor &bg, const QColor &fg)
-{
-    return(new QColorGroup( fg, bg, bg.light(150), bg.dark(),
-                            bg.dark(120), fg,
-                            QApplication::palette().normal().base()));
-}

@@ -12,9 +12,6 @@ class BeClient : public Client
 public:
     BeClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~BeClient();
-    static QColorGroup* makeColorGroup(const QColor &bg,
-                                       const QColor &fg=Qt::white);
-
 protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );

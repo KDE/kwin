@@ -11,8 +11,6 @@ class StdClient : public Client
 public:
     StdClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~StdClient();
-    static QColorGroup* makeColorGroup(const QColor &bg,
-                                       const QColor &fg=Qt::white);
 protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );

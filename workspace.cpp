@@ -2,6 +2,7 @@
 #include "client.h"
 #include "stdclient.h"
 #include "beclient.h"
+#include "systemclient.h"
 #include "tabbox.h"
 #include "atoms.h"
 #include <X11/X.h>
@@ -657,6 +658,7 @@ void Workspace::showPopup( const QPoint& pos, Client* c)
 	QPopupMenu* deco = new QPopupMenu( popup );
 	deco->insertItem("KDE Classic", 100 );
 	deco->insertItem("Be-like style", 101 );
+	deco->insertItem("System style", 102 );
 			
 	popup->insertItem("Decoration", deco );
     }
@@ -670,6 +672,9 @@ void Workspace::showPopup( const QPoint& pos, Client* c)
 	break;
     case 101:
 	setDecoration( 1 );
+	break;
+    case 102:
+	setDecoration( 2 );
 	break;
     default:
 	break;
@@ -855,7 +860,10 @@ void Workspace::setDecoration( int deco )
     switch ( deco ) {
     case 1:
 	c = new BeClient( this, w);
-	break;
+        break;
+    case 2:
+        c = new SystemClient(this, w);
+        break;
     default:
 	c = new StdClient( this, w );
     }
