@@ -383,9 +383,9 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase | WRepaintNoErase ),
       bar_x_ofs(0), in_unobs(0)
 {
-    const QString tips[]= {QString(i18n("Menu")), QString(i18n("Sticky")), 
-                           QString(i18n("Minimize")), QString(i18n("Maximize")),
-                           QString(i18n("Close")), QString(i18n("Help")) };
+    const QString tips[]= {i18n("Menu"), i18n("Sticky"), 
+                           i18n("Minimize"), i18n("Maximize"),
+                           i18n("Close"), i18n("Help") };
 
     setBackgroundMode(NoBackground);
 
