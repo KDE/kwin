@@ -174,12 +174,12 @@ bool Workspace::workspaceEvent( XEvent * e )
         // fallthrough
         case MotionNotify:
             if ( tab_grab || control_grab )
-            {
-            tab_box->handleMouseEvent( e );
-            return TRUE;
-            }
-        break;
-    case KeyPress:
+                {
+                tab_box->handleMouseEvent( e );
+                return TRUE;
+                }
+            break;
+        case KeyPress:
             {
             was_user_interaction = true;
             KKeyNative keyX( (XEvent*)e );
@@ -200,11 +200,11 @@ bool Workspace::workspaceEvent( XEvent * e )
         case KeyRelease:
             was_user_interaction = true;
             if( tab_grab || control_grab )
-            {
-            tabBoxKeyRelease( e->xkey );
-            return true;
-            }
-        break;
+                {
+                tabBoxKeyRelease( e->xkey );
+                return true;
+                }
+            break;
         };
 
     if( Client* c = findClient( WindowMatchPredicate( e->xany.window )))
@@ -1036,7 +1036,8 @@ bool Client::buttonPressEvent( XButtonEvent* e )
     {
     if (buttonDown)
         {
-        Q_ASSERT( !"double button press" );
+        kdDebug( 1212 ) << "Double button press:" << ( e->window == decorationId())
+            << ":" << ( e->window == frameId()) << ":" << ( e->window == wrapperId()) << endl;
         if( e->window == wrapperId())
             XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         return true;
@@ -1139,9 +1140,13 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
     if ( !wantsInput() ) // we cannot be active, use it anyway
         active = TRUE;
 
-    if ((button == Button1  && options->commandActiveTitlebar1() != Options::MouseOperationsMenu) ||
-        (button == Button2   && options->commandActiveTitlebar2() != Options::MouseOperationsMenu) ||
-        (button == Button3 && options->commandActiveTitlebar3() != Options::MouseOperationsMenu) ) 
+    if ( button == Button1 )
+        com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
+    else if ( button == Button2 )
+        com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
+    else if ( button == Button3 )
+        com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
+    if( com != Options::MouseOperationsMenu )
         {
 // FRAME      mouseMoveEvent( e );
         buttonDown = TRUE;
@@ -1149,12 +1154,6 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
         }
-    if ( button == Button1 )
-        com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-    else if ( button == Button2 )
-        com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-    else if ( button == Button3 )
-        com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
     performMouseCommand( com, QPoint( x_root, y_root ));
     }
 
