@@ -819,8 +819,7 @@ bool Workspace::destroyClient( Client* c)
         most_recently_raised = 0;
     if ( c == should_get_focus )
         should_get_focus = 0;
-    if ( c == active_client )
-        active_client = 0;
+    assert( c != active_client );
     if ( c == last_active_client )
         last_active_client = 0;
     delete c;
@@ -1648,7 +1647,7 @@ void Workspace::clientHidden( Client* c )
 
     if( popup )
         popup->close();
-    active_client = 0;
+    setActiveClient( NULL );
     should_get_focus = 0;
     c->setActive( FALSE ); // clear the state in the client
     if (!block_focus ) {
@@ -2166,8 +2165,6 @@ void Workspace::focusToNull(){
     XMapWindow(qt_xdisplay(), null_focus_window);
   }
   XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, qt_x_time );
-  if( !block_focus )
-      setActiveClient( 0 );
 }
 
 
@@ -2258,8 +2255,6 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     if (new_desktop < 1 || new_desktop > number_of_desktops )
         return;
 
-    Client* old_active_client = active_client;
-    active_client = 0;
     if( popup )
         popup->close();
     block_focus = TRUE;
@@ -2310,9 +2305,8 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     if ( options->focusPolicyIsReasonable()) {
         // Search in focus chain
 
-        if ( focus_chain.contains( old_active_client ) && old_active_client->isVisible() ) {
-            c = old_active_client;
-            active_client = c; // the requestFocus below will fail, as the client is already active
+        if ( focus_chain.contains( active_client ) && active_client->isVisible() ) {
+            c = active_client; // the requestFocus below will fail, as the client is already active
         }
 
         if ( !c ) {
@@ -2347,9 +2341,12 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     //if "unreasonable focus policy"
     // and active_client is sticky and under mouse (hence == old_active_client),
     // conserve focus (thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
-    else if( old_active_client && old_active_client->isVisible() )
-      c= old_active_client;
+    else if( active_client && active_client->isVisible() )
+      c= active_client;
 
+    if( c != active_client )
+        setActiveClient( NULL );
+        
     if ( c ) {
         requestFocus( c );
         // don't let the panel cover fullscreen windows on desktop switches
