@@ -27,7 +27,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kmenubar.h>
 #include <kprocess.h>
 #include <kglobalaccel.h>
-#include <kwin.h>
 
 #include "plugins.h"
 #include "client.h"
@@ -743,11 +742,7 @@ void Workspace::slotReconfigure()
     topmenu_height = 0; // invalidate used menu height
     if( managingTopMenus())
         {
-        updateTopMenuSpaceGeometry();
-        for( ClientList::ConstIterator it = topmenus.begin();
-             it != topmenus.end();
-             ++it )
-            (*it)->checkWorkspacePosition();
+        updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
     }
@@ -1824,20 +1819,16 @@ void Workspace::addTopMenu( Client* c )
     assert( c->isTopMenu());
     assert( !topmenus.contains( c ));
     topmenus.append( c );
-    int minsize = c->minSize().height();
-    if( minsize > topMenuHeight())
+    if( managingTopMenus())
         {
-        topmenu_height = minsize;
-        updateTopMenuSpaceGeometry();
-        for( ClientList::ConstIterator it = topmenus.begin();
-             it != topmenus.end();
-             ++it )
+        int minsize = c->minSize().height();
+        if( minsize > topMenuHeight())
             {
-            KWin::setStrut( (*it)->window(), 0, 0, topmenu_height, 0 ); // so that kicker etc. know
-            (*it)->checkWorkspacePosition();
+            topmenu_height = minsize;
+            updateTopMenuGeometry();
             }
+        updateTopMenuGeometry( c );
         }
-    c->checkWorkspacePosition();
 //        kdDebug() << "NEW TOPMENU:" << c << endl;
     }
 
@@ -1870,6 +1861,8 @@ void Workspace::lostTopMenuSelection()
 
 void Workspace::lostTopMenuOwner()
     {
+    if( !options->topMenuEnabled())
+        return;
 //    kdDebug() << "TopMenu selection lost owner" << endl;
     if( !topmenu_selection->claim( false ))
         {
@@ -1888,13 +1881,9 @@ void Workspace::setupTopMenuHandling()
     disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     managing_topmenus = true;
     topmenu_space = new QWidget;
-    updateTopMenuSpaceGeometry();
+    updateTopMenuGeometry();
     topmenu_space->show();
     updateClientArea();
-    for( ClientList::ConstIterator it = topmenus.begin();
-         it != topmenus.end();
-         ++it )
-        (*it)->checkWorkspacePosition();
     }
 
 int Workspace::topMenuHeight() const

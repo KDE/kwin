@@ -22,6 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kapplication.h>
 #include <kglobal.h>
 #include <qpainter.h>
+#include <kwin.h>
 
 #include "placement.h"
 #include "notifications.h"
@@ -113,7 +114,7 @@ void Workspace::updateClientArea( bool force )
             rootInfo->setWorkArea( i, r );
             }
 
-        updateTopMenuSpaceGeometry();
+        updateTopMenuGeometry();
         for( ClientList::ConstIterator it = clients.begin();
              it != clients.end();
              ++it)
@@ -347,14 +348,38 @@ void Workspace::unclutterDesktop()
     }
 
 
-void Workspace::updateTopMenuSpaceGeometry()
+void Workspace::updateTopMenuGeometry( Client* c )
     {
     if( !managingTopMenus())
         return;
+    if( c != NULL )
+        {
+        XEvent ev;
+        ev.xclient.display = qt_xdisplay();
+        ev.xclient.type = ClientMessage;
+        ev.xclient.window = c->window();
+        static Atom msg_type_atom = XInternAtom( qt_xdisplay(), "_KDE_TOPMENU_MINSIZE", False );
+        ev.xclient.message_type = msg_type_atom;
+        ev.xclient.format = 32;
+        ev.xclient.data.l[0] = qt_x_time;
+        ev.xclient.data.l[1] = topmenu_space->width();
+        ev.xclient.data.l[2] = topmenu_space->height();
+        ev.xclient.data.l[3] = 0;
+        ev.xclient.data.l[4] = 0;
+        XSendEvent( qt_xdisplay(), c->window(), False, NoEventMask, &ev );
+        KWin::setStrut( c->window(), 0, 0, topmenu_height, 0 ); // so that kicker etc. know
+        c->checkWorkspacePosition();
+        return;
+        }
+    // c == NULL - update all, including topmenu_space
     QRect area;
     area = clientArea( MaximizeFullArea, QPoint( 0, 0 ), 1 ); // HACK desktop ?
     area.setHeight( topMenuHeight());
     topmenu_space->setGeometry( area );
+    for( ClientList::ConstIterator it = topmenus.begin();
+         it != topmenus.end();
+         ++it )
+        updateTopMenuGeometry( *it );
     }
 
 //********************************************

@@ -342,7 +342,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void addTopMenu( Client* c );
         void removeTopMenu( Client* c );
         void setupTopMenuHandling();
-        void updateTopMenuSpaceGeometry();
+        void updateTopMenuGeometry( Client* c = NULL );
         void updateToolWindows( bool also_hide );
 
     // this is the right way to create a new client
