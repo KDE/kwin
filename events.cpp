@@ -703,7 +703,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
     {
     if( e->window != window())
         return; // ignore frame/wrapper
-    if ( isResize() )
+    if ( isResize() || isMove())
         return; // we have better things to do right now
 
     if( isFullScreen() // refuse resizing of fullscreen windows
