@@ -585,7 +585,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         break;
     case KeyPress:
         if ( QWidget::keyboardGrabber() ) {
-            freeKeyboard( FALSE );
+            freeKeyboard();
             break;
         }
         if ( mouse_emulation )
@@ -593,7 +593,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         return keyPress(e->xkey);
     case KeyRelease:
         if ( QWidget::keyboardGrabber() ) {
-            freeKeyboard( FALSE );
+            freeKeyboard();
             break;
         }
         if ( mouse_emulation )
@@ -688,6 +688,7 @@ bool Workspace::destroyClient( Client* c)
     if ( !c )
         return FALSE;
 
+    storeFakeSessionInfo( c );
     if (clients.contains(c))
 	removeClient(c);
 
@@ -703,7 +704,6 @@ bool Workspace::destroyClient( Client* c)
         active_client = 0;
     if ( c == last_active_client )
         last_active_client = 0;
-    storeFakeSessionInfo( c );
     delete c;
     updateClientArea();
     return TRUE;
@@ -714,12 +714,8 @@ bool Workspace::destroyClient( Client* c)
 /*!
   Auxiliary function to release a passive keyboard grab
  */
-void Workspace::freeKeyboard(bool pass){
-    if (!pass)
-      XAllowEvents(qt_xdisplay(), AsyncKeyboard, kwin_time);
-    else
-      XAllowEvents(qt_xdisplay(), ReplayKeyboard, kwin_time);
-    QApplication::syncX();
+void Workspace::freeKeyboard(){
+    XAllowEvents(qt_xdisplay(), AsyncKeyboard, kwin_time);
 }
 
 #define XMODMASK ( ShiftMask | ControlMask | Mod1Mask | Mod4Mask )
@@ -833,18 +829,20 @@ void Workspace::slotWalkBackThroughDesktopList()
 bool Workspace::startKDEWalkThroughWindows()
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-          (uint)(ButtonPressMask | ButtonReleaseMask |
-              ButtonMotionMask | EnterWindowMask |
-              LeaveWindowMask | PointerMotionMask),
-          GrabModeSync, GrabModeAsync,
-          None, None, kwin_time ) != GrabSuccess ) {
-        freeKeyboard(FALSE);
+		       (uint)(ButtonPressMask | ButtonReleaseMask |
+			      ButtonMotionMask | EnterWindowMask |
+			      LeaveWindowMask | PointerMotionMask),
+		       GrabModeAsync, GrabModeAsync,
+		       None, None, kwin_time ) != GrabSuccess ) {
         return FALSE;
     }
-    XGrabKeyboard(qt_xdisplay(),
-                  root, FALSE,
-                  GrabModeAsync, GrabModeAsync,
-                  kwin_time);
+    if ( XGrabKeyboard(qt_xdisplay(),
+		       root, FALSE,
+		       GrabModeAsync, GrabModeAsync,
+		       kwin_time) != GrabSuccess ) {
+	XUngrabPointer( qt_xdisplay(), kwin_time);
+	return FALSE;
+    }
     tab_grab        = TRUE;
     keys->setKeyEventsEnabled( FALSE );
     tab_box->setMode( TabBox::WindowsMode );
@@ -855,18 +853,20 @@ bool Workspace::startKDEWalkThroughWindows()
 bool Workspace::startWalkThroughDesktops( int mode )
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-          (uint)(ButtonPressMask | ButtonReleaseMask |
-                 ButtonMotionMask | EnterWindowMask |
-                 LeaveWindowMask | PointerMotionMask),
-              GrabModeSync, GrabModeAsync,
+		       (uint)(ButtonPressMask | ButtonReleaseMask |
+			      ButtonMotionMask | EnterWindowMask |
+			      LeaveWindowMask | PointerMotionMask),
+		       GrabModeAsync, GrabModeAsync,
               None, None, kwin_time ) != GrabSuccess ) {
-        freeKeyboard(FALSE);
         return FALSE;
     }
-    XGrabKeyboard(qt_xdisplay(),
-                  root, FALSE,
-                  GrabModeAsync, GrabModeAsync,
-                  kwin_time);
+    if ( XGrabKeyboard(qt_xdisplay(),
+		       root, FALSE,
+		       GrabModeAsync, GrabModeAsync,
+		       kwin_time) != GrabSuccess ) {
+	XUngrabPointer( qt_xdisplay(), kwin_time);
+	return FALSE;
+    }
     control_grab = TRUE;
     keys->setKeyEventsEnabled( FALSE );
     tab_box->setMode( (TabBox::Mode) mode );
@@ -921,7 +921,6 @@ void Workspace::CDEWalkThroughWindows( bool forward )
         else
             raiseClient( nc );
     }
-    freeKeyboard(FALSE);
     }
 
 void Workspace::KDEOneStepThroughWindows( bool forward )
@@ -967,7 +966,7 @@ bool Workspace::keyPress(XKeyEvent key)
         if( keyCombQt == walkThroughWindowsKeycode
            || keyCombQt == walkBackThroughWindowsKeycode ) {
             if (!tab_grab) {
-                freeKeyboard(FALSE);
+                freeKeyboard();
                 return FALSE;
             }
             KDEWalkThroughWindows( keyCombQt == walkThroughWindowsKeycode );
@@ -979,7 +978,7 @@ bool Workspace::keyPress(XKeyEvent key)
         if( keyCombQt == walkThroughDesktopsKeycode
            || keyCombQt == walkBackThroughDesktopsKeycode ) {
             if (!control_grab) {
-                freeKeyboard(FALSE);
+                freeKeyboard();
                 return FALSE;
             }
             walkThroughDesktops( keyCombQt == walkThroughDesktopsKeycode );
@@ -987,7 +986,7 @@ bool Workspace::keyPress(XKeyEvent key)
         else if( keyCombQt == walkThroughDesktopListKeycode
            || keyCombQt == walkBackThroughDesktopListKeycode ) {
             if (!control_grab) {
-                freeKeyboard(FALSE);
+                freeKeyboard();
                 return FALSE;
             }
             walkThroughDesktops( keyCombQt == walkThroughDesktopListKeycode );
@@ -1002,12 +1001,11 @@ bool Workspace::keyPress(XKeyEvent key)
             keys->setKeyEventsEnabled( TRUE );
             tab_grab = FALSE;
             control_grab = FALSE;
-            return TRUE;
         }
-        return FALSE;
+        return TRUE;
     }
 
-    freeKeyboard(FALSE);
+    freeKeyboard();
     return FALSE;
 }
 
@@ -3687,8 +3685,8 @@ void Workspace::writeFakeSessionInfo()
         config->writeEntry( QString("sticky")+n, info->sticky );
         config->writeEntry( QString("shaded")+n, info->shaded );
         config->writeEntry( QString("staysOnTop")+n, info->staysOnTop );
- 	config->writeEntry( QString("skipTaskbar")+n, info->skipTaskbar );
- 	config->writeEntry( QString("skipPager")+n, info->skipPager );
+        config->writeEntry( QString("skipTaskbar")+n, info->skipTaskbar );
+        config->writeEntry( QString("skipPager")+n, info->skipPager );
     }
     config->writeEntry( "count", count );
 }

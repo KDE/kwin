@@ -790,8 +790,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	} else {
 	    workspace()->raiseClient( this ); // ensure constrains
 	    show();
-	    if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
-		workspace()->requestFocus( this );
+ 	    if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
+ 		workspace()->requestFocus( this );
 	}
     }
 

@@ -155,7 +155,7 @@ public:
     void reconfigure();
 
     void clientHidden( Client*  );
-    
+
     void clientReady( Client* );
 
     /**
@@ -306,7 +306,7 @@ protected:
 private:
     void init();
     void createKeybindings();
-    void freeKeyboard(bool pass);
+    void freeKeyboard();
 
     bool startKDEWalkThroughWindows();
     bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
@@ -427,7 +427,7 @@ private:
     QTimer reconfigureTimer;
 
     QTimer focusEnsuranceTimer;
-    
+
     WorkspacePrivate* d;
     static Workspace *_self;
 #ifdef HAVE_XINERAMA
