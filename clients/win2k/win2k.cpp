@@ -362,12 +362,8 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(2, 4);
 
     button[BtnMenu] = new GalliumButton(this, "menu", NULL, true);
-
-    if(!miniIcon().isNull())
-        button[BtnMenu]->setPixmap(miniIcon());
-    else
-        button[BtnMenu]->setPixmap(*defaultMenuPix);
-
+    iconChange();
+    
     connect(button[BtnMenu], SIGNAL(pressed()), this,
             SLOT(menuButtonPressed()));
 
@@ -417,6 +413,16 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     hiddenItems = false;
 }
 
+void GalliumClient::iconChange()
+{
+    if(!miniIcon().isNull())
+        button[BtnMenu]->setPixmap(miniIcon());
+    else
+        button[BtnMenu]->setPixmap(*defaultMenuPix);
+
+    if (button[BtnMenu]->isVisible())
+       button[BtnMenu]->repaint(false);
+}
 
 void GalliumClient::slotMaximize()
 {

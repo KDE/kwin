@@ -75,6 +75,7 @@ protected:
     void captionChange( const QString& name );
     void maximizeChange(bool m);
     void activeChange(bool);
+    void iconChange();
 
     void calcHiddenButtons();
 
