@@ -91,7 +91,7 @@ static unsigned char pindown_mask_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0xc0, 0x1f, 0xf0, 0x3f, 0xf0, 0x3f,
   0xf8, 0x3f, 0xf8, 0x3f, 0xf8, 0x1f, 0xf8, 0x1f, 0xf0, 0x1f, 0xf0, 0x0f,
   0xe0, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  
+
 static unsigned char pinup_white_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x11,
   0x3f, 0x15, 0x00, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -605,24 +605,35 @@ void KDEClient::resizeEvent( QResizeEvent* e)
 
     doShape();
     calcHiddenButtons();
-    if (isVisibleToTLW()) {
-        update(rect());
-        int dx = 0;
-	int dy = 0;
-	if ( e->oldSize().width() != width() )
-	    dx = 32 + QABS( e->oldSize().width() -  width() );
-	if ( e->oldSize().height() != height() )
-	    dy = 8 + QABS( e->oldSize().height() -  height() );
-	if ( dy )
-	    update( 0, height() - dy + 1, width(), dy );
-        if ( dx ) {
-	    update( width() - dx + 1, 0, dx, height() );
-	    update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
-	    update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
 
-            // titlebar needs no background
-	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
-	}
+    if ( !isVisible() )
+	return;
+    
+    // make layout update titlebar->geometry() in case some buttons
+    // where shown or hidden in calcHiddenButtons() above
+    QApplication::sendPostedEvents( this, QEvent::LayoutHint );
+    
+    
+    // we selected WResizeNoErase and WNorthWestGravity. That means:
+    // on a resize event, we do not get a full paint event and the
+    // background is not erased. This makes it possible for us to
+    // reduce flicker. All we have to do is to generate the necessary
+    // paint events manually. We do this using update(). The titlebar
+    // is even more special: it draws every pixel, so there is no need
+    // to erase the background. For that reasons we do not use
+    // update(), but post a paint event with the erased flag set to
+    // FALSE.
+    
+    if ( e->oldSize().width() != width() ) {
+	int dx =  (width() - titlebar->geometry().right()) + QABS( e->oldSize().width() -  width() );
+	if ( dx )
+	    update( width() - dx + 1, 0, dx, height() );
+	// titlebar needs no background
+	QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+    }
+    if ( e->oldSize().height() != height() ) {
+	int dy = 8 + QABS( e->oldSize().height() -  height() );
+	update( 0, height() - dy + 1, width(), dy );
     }
 }
 
@@ -935,7 +946,7 @@ void KDEClient::menuButtonPressed()
     static KDEClient* tc = 0;
     if ( !t )
         t = new QTime;
- 
+
     if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() ){
         workspace()->clientPopup(this)->
             popup(button[BtnMenu]->mapToGlobal(button[BtnMenu]->
@@ -946,7 +957,7 @@ void KDEClient::menuButtonPressed()
         closeWindow();
     }
     t->start();
-    tc = this;           
+    tc = this;
 }
 
 #include "kdedefault.moc"
