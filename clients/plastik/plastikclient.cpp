@@ -563,7 +563,10 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   break;
               case 'S': // OnAllDesktops button
                   if (!m_button[OnAllDesktopsButton]){
-                      m_button[OnAllDesktopsButton] = new PlastikButton(this, "on_all_desktops", i18n("On All Desktops"), OnAllDesktopsButton, buttonSize);
+                      const bool oad = isOnAllDesktops();
+                      m_button[OnAllDesktopsButton] = new PlastikButton(this, "on_all_desktops", oad?i18n("Not On All Desktops"):i18n("On All Desktops"), OnAllDesktopsButton, buttonSize);
+                      m_button[OnAllDesktopsButton]->setOnAllDesktops( oad );
+                      m_button[OnAllDesktopsButton]->setDeco(); // update deco...
                       connect(m_button[OnAllDesktopsButton], SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
                       layout->addWidget(m_button[OnAllDesktopsButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
@@ -584,7 +587,11 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   break;
               case 'A': // Maximize button
                   if ((!m_button[MaxButton]) && isMaximizable()){
-                      m_button[MaxButton] = new PlastikButton(this, "maximize", i18n("Maximize"), MaxButton, buttonSize, LeftButton|MidButton|RightButton);
+                      const bool max = maximizeMode()!=MaximizeRestore;
+                      m_button[MaxButton] = new PlastikButton(this, "maximize", max?i18n("Restore"):i18n("Maximize"), MaxButton, buttonSize, LeftButton|MidButton|RightButton);
+                      m_button[OnAllDesktopsButton]->setMaximized( max );
+                      m_button[OnAllDesktopsButton]->setDeco(); // update deco...
+                      m_button[MaxButton]->setOnAllDesktops( isOnAllDesktops() );
                       connect(m_button[MaxButton], SIGNAL(clicked()), SLOT(slotMaximize()));
                       layout->addWidget(m_button[MaxButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
