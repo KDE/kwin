@@ -332,20 +332,28 @@ void Workspace::raiseClientWithinApplication( Client* c )
     StackingUpdatesBlocker blocker( this );
     // ignore mainwindows
     
-    unconstrained_stacking_order.remove( c );
     bool raised = false;
+    bool is_above_active = false;
+    bool was_active = false;
     // first try to put it above the top-most window of the application
     for( ClientList::Iterator it = unconstrained_stacking_order.fromLast();
          it != unconstrained_stacking_order.end();
          --it )
-        if( Client::belongToSameApplication( *it, c ))
+        {
+        if( (*it)->isActive())
+            was_active = true;
+        if( Client::belongToSameApplication( *it, c ) && (*it) != c )
             {
+            unconstrained_stacking_order.remove( c );
             ++it; // insert after the found one
             unconstrained_stacking_order.insert( it, c );
             raised = true;
             break;
             }
-    if( !raised )
+        if( *it == c && !was_active ) // if it is already above the active one for some reason,
+            is_above_active = true;   // don't put it lower just because it asked to be raised
+        }
+    if( !raised && !is_above_active )
         restackClientUnderActive( c );
     }
 
