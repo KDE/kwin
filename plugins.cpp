@@ -42,9 +42,11 @@ PluginMgr::~PluginMgr()
 {
     if(library) {
         // Call the plugin's cleanup function
-	void *deinit_func = library->symbol("deinit");
-	if (deinit_func)
-	    ((void (*)())deinit_func)();
+        if( library->hasSymbol("deinit")) {
+    	    void *deinit_func = library->symbol("deinit");
+	    if (deinit_func)
+	        ((void (*)())deinit_func)();
+        }
 	library->unload();
 	library = 0;
     }
@@ -56,9 +58,11 @@ void PluginMgr::updatePlugin()
     config->reparseConfiguration();
     config->setGroup("Style");
     if ( !loadPlugin( config->readEntry("PluginLib", defaultPlugin )) && library ) {
-	void *reset_func = library->symbol("reset");
-	if (reset_func)
-	    ((void (*)())reset_func)();
+        if( library->hasSymbol("reset")) {
+	    void *reset_func = library->symbol("reset");
+	    if (reset_func)
+	        ((void (*)())reset_func)();
+        }
     }
 }
 
@@ -113,17 +117,23 @@ bool PluginMgr::loadPlugin(QString nameStr)
                           "and could not be loaded!"));
 
     // Call the plugin's initialisation function
-    void *init_func = library->symbol("init");
-    if (init_func)
-        ((void (*)())init_func)();
-
-    void* create_func = library->symbol("create");
-    if(create_func) {
-        create_ptr = (Client* (*)(Workspace *ws, WId w, NET::WindowType))create_func;
+    if( library->hasSymbol("init")) {
+        void *init_func = library->symbol("init");
+        if (init_func)
+            ((void (*)())init_func)();
     }
-    create_func = library->symbol("allocate");
-    if(create_func) {
-        old_create_ptr = (Client* (*)(Workspace *ws, WId w, int tool))create_func;
+
+    if( library->hasSymbol("create")) {
+        void* create_func = library->symbol("create");
+        if(create_func) {
+            create_ptr = (Client* (*)(Workspace *ws, WId w, NET::WindowType))create_func;
+        }
+    }
+    if( library->hasSymbol("allocate")) {
+        void* allocate_func = library->symbol("allocate");
+        if(allocate_func) {
+            old_create_ptr = (Client* (*)(Workspace *ws, WId w, int tool))allocate_func;
+        }
     }
     if(!create_ptr && !old_create_ptr) {
         kdWarning() << "KWin: The library " << path << " is not a KWin plugin." << endl;
@@ -136,9 +146,11 @@ bool PluginMgr::loadPlugin(QString nameStr)
 
     // Call the old plugin's cleanup function
     if(oldLibrary) {
-	void *deinit_func = oldLibrary->symbol("deinit");
-	if (deinit_func)
-	    ((void (*)())deinit_func)();
+        if( library->hasSymbol("deinit")) {
+	    void *deinit_func = oldLibrary->symbol("deinit");
+	    if (deinit_func)
+	        ((void (*)())deinit_func)();
+        }
 	oldLibrary->unload();
     }
     return TRUE;
