@@ -748,7 +748,7 @@ void B2Client::resize(const QSize& s)
 
 void B2Client::borders(int &left, int &right, int &top, int &bottom) const
 {
-    left = right = thickness + 1;
+    left = right = thickness;
     top = buttonSize + 4;
     bottom = thickness + (isResizable() ? 4 : 0);
 }
