@@ -115,6 +115,9 @@ public:
     void activateClient( Client* );
     void requestFocus( Client* c);
 
+    void setEnableFocusChange(bool b) { focus_change = b; }
+    bool focusChangeEnabled() { return focus_change; }
+
     void doPlacement( Client* c );
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
@@ -286,6 +289,7 @@ private:
     bool control_grab;
     bool tab_grab;
     bool mouse_emulation;
+    bool focus_change;
 
     TabBox* tab_box;
 

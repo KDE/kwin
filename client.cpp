@@ -375,6 +375,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 Client::~Client()
 {
     releaseWindow();
+    if (workspace()->activeClient() == this)
+       workspace()->setEnableFocusChange(true); // Safety
 }
 
 
@@ -937,6 +939,7 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	    setGeometry( geom );
 	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
 	    moveResizeMode = FALSE;
+            workspace()->setEnableFocusChange(true);
 	    releaseMouse();
 	    releaseKeyboard();
 	}
@@ -971,6 +974,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	QPoint p( e->pos() - moveOffset );
 	if (p.manhattanLength() >= 6) {
 	    moveResizeMode = TRUE;
+            workspace()->setEnableFocusChange(false);
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
 	    grabMouse( cursor() ); // to keep the right cursor
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
@@ -1778,6 +1782,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
            break;
 	mode = Center;
 	moveResizeMode = TRUE;
+        workspace()->setEnableFocusChange(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
@@ -1790,6 +1795,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         if (!mayMove())
            break;
 	moveResizeMode = TRUE;
+        workspace()->setEnableFocusChange(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	if ( moveOffset.x() < width()/2) {
@@ -1923,6 +1929,7 @@ void Client::keyPressEvent( QKeyEvent * e )
 	    XUngrabServer( qt_xdisplay() );
 	setGeometry( geom );
 	moveResizeMode = FALSE;
+        workspace()->setEnableFocusChange(true);
 	releaseMouse();
 	releaseKeyboard();
 	buttonDown = FALSE;

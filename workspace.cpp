@@ -168,6 +168,7 @@ Workspace::Workspace( bool restore )
     control_grab      (false),
     tab_grab          (false),
     mouse_emulation   (false),
+    focus_change      (true),
     tab_box           (0),
     popup             (0),
     desk_popup        (0),
@@ -935,6 +936,8 @@ bool Workspace::hasCaption( const QString& caption )
  */
 void Workspace::requestFocus( Client* c)
 {
+    if (!focusChangeEnabled())
+        return;
     //TODO will be different for non-root clients. (subclassing?)
     if ( !c ) {
 	focusToNull();
