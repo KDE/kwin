@@ -187,6 +187,7 @@ void ModernSys::slotReset()
     button[3]->reset();
     if(button[4])
         button[4]->reset();
+    repaint();
 }
 
 ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
