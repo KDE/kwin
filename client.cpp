@@ -419,8 +419,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
         } else
           qDebug("XTextPropertyToStringList failed");
 
-    } else {
-          qDebug("XGetTextProperty failed for atom _NET_AVOID_SPEC");
     }
 }
 
