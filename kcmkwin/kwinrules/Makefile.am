@@ -16,12 +16,12 @@ libkwinrules_la_LIBADD = $(LIB_KDEUI)
 kcm_kwinrules_la_SOURCES = kcm.cpp 
 kcm_kwinrules_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
 kcm_kwinrules_la_LIBADD = libkwinrules.la 
-kcm_kwinrules_la_COMPILE_FIRST = ruleslistbase.h
+kcm_kwinrules_la_COMPILE_FIRST = ruleslistbase.h ruleswidgetbase.h 
 
 kwin_rules_dialog_la_SOURCES = main.cpp 
 kwin_rules_dialog_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
 kwin_rules_dialog_la_LIBADD = libkwinrules.la 
-kwin_rules_dialog_la_COMPILE_FIRST = ruleslistbase.h
+kwin_rules_dialog_la_COMPILE_FIRST = ruleslistbase.h ruleswidgetbase.h
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkwinrules.pot
