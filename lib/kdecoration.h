@@ -39,6 +39,7 @@ class KDecorationFactory;
 /**
  * This class provides a namespace for all decoration related classes.
  * All shared types are defined here.
+ * @since 3.2
  */
 class KDecorationDefines
 {
@@ -157,6 +158,7 @@ class KDecorationProvides
  * This class holds various configuration settings for the decoration.
  * It is accessible from the decorations either as KDecoration::options()
  * or KDecorationFactory::options().
+ * @since 3.2
  */
 class KDecorationOptions : public KDecorationDefines
     {
@@ -272,6 +274,7 @@ protected:
  * that give various information about the decorated window, and also
  * provides pure virtual functions for controlling the decoration that
  * every decoration should implement.
+ * @since 3.2
  */
 class KDecoration
     : public QObject, public KDecorationDefines
@@ -690,6 +693,10 @@ class KDecoration
 	 * the what's this mode).
 	 */
         void showContextHelp();
+        /**
+         * Moves the window to the given desktop. Use NET::OnAllDesktops for making
+         * the window appear on all desktops.
+         */
         void setDesktop( int desktop );
 	/**
 	 * This function toggles the on-all-desktops state of the decorated window.
