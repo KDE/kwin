@@ -99,6 +99,8 @@ public:
 
     bool iconifyMeansWithdraw( Client* );
     void iconifyOrDeiconifyTransientsOf( Client* );
+    
+    bool hasCaption( const QString& caption );
 
 public slots:
     void setCurrentDesktop( int new_desktop );

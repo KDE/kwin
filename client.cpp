@@ -410,7 +410,18 @@ void Client::fetchName()
     if ( XFetchName( qt_xdisplay(), win, &name ) && name ) {
 	QString s = QString::fromLatin1( name );
 	if ( s != caption() ) {
-	    setCaption( QString::fromLatin1( name ) );
+	    setCaption( "" );
+	    if (workspace()->hasCaption( s ) ){
+		int i = 2;
+		QString s2;
+		do {
+		    s2 = s + " <" + QString::number(i) + ">";
+		    i++;
+		} while (workspace()->hasCaption(s2) );
+		s = s2;
+	    }
+	    setCaption( s );
+
 	    if ( !isWithdrawn() )
 		captionChange( caption() );
 	}

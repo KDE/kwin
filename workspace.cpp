@@ -776,6 +776,19 @@ void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 
 
 /*!
+  Returns whether a client with the specified \a caption exists, or not.
+ */
+bool Workspace::hasCaption( const QString& caption )
+{
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it)->caption() == caption )
+	    return TRUE;
+    }
+    return FALSE;
+}
+
+
+/*!
   Tries to activate the client by asking X for the input focus. This
   function does not perform any show, raise or desktop switching. See
   Workspace::activateClient() instead.
