@@ -12,5 +12,3 @@ DISTCLEANFILES               = $(METASOURCES)
 
 lnkdir                       = $(kde_datadir)/kwin
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kwin_plastik_config.pot

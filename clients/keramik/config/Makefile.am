@@ -11,5 +11,3 @@ noinst_HEADERS                 = config.h keramikconfig.h
 
 lnkdir                         = $(kde_datadir)/kwin
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kwin_keramik_config.pot

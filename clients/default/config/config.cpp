@@ -32,7 +32,7 @@ extern "C"
 KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
-	KGlobal::locale()->insertCatalogue("kwin_default_config");
+	KGlobal::locale()->insertCatalogue("kwin_clients");
 	highcolor = QPixmap::defaultDepth() > 8;
 	gb = new QVBox( parent );
         gb->setSpacing( KDialog::spacingHint() );

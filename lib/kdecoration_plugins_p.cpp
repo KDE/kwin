@@ -171,6 +171,8 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     KGlobal::locale()->insertCatalogue( catalogue );
     // For clients in kdebase
     KGlobal::locale()->insertCatalogue( "kwin_clients" );
+    // For clients in kdeartwork
+    KGlobal::locale()->insertCatalogue( "kwin_art_clients" );
 
     old_library = oldLibrary; // save for delayed destroying
     old_fact = oldFactory;
