@@ -1184,6 +1184,7 @@ void Workspace::clientHidden( Client* c )
 
     active_client = 0;
     should_get_focus = 0;
+    c->setActive( FALSE ); // clear the state in the client
     if (!block_focus ) {
         if ( c->wantsTabFocus() && focus_chain.contains( c ) ) {
             focus_chain.remove( c );
