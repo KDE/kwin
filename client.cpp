@@ -987,7 +987,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    && ( ns.width() < area.width() || ns.height() < area.height() ) ) {
 	  geom_restore.setSize( ns );
 	  maximize( Client::MaximizeRestore );
-	} else {
+	} else if ( !isMaximized() ) {
 	  if ( ns == size() )
 	    return TRUE; // broken xemacs stuff (ediff)
 	  resize( ns );
