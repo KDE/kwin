@@ -98,6 +98,7 @@ public:
     void makeFullScreen( Client* );
 
     bool iconifyMeansWithdraw( Client* );
+    void iconifyOrDeiconifyTransientsOf( Client* );
 
 public slots:
     void setCurrentDesktop( int new_desktop );

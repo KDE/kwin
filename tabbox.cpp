@@ -51,8 +51,8 @@ void TabBox::reset()
 	QFontMetrics fm( fontMetrics() );
 	int cw = 0;
 	while ( c ) {
-	    // TODO consider options_traverse_all
-	    if ( options_traverse_all ||c->isOnDesktop(workspace()->currentDesktop()) ) {
+	    if ( (options_traverse_all ||c->isOnDesktop(workspace()->currentDesktop()))
+		 && (!c->isIconified() || c->mainClient() == c ) ) {
 		if ( client == c )
 		    clients.prepend( c );
 		else
@@ -94,8 +94,11 @@ void TabBox::nextPrev( bool next)
 	    else
 		client = workspace()->previousClient(client);
 	} while (client != sign && client &&
-		 !options_traverse_all &&
-		 !client->isOnDesktop(workspace()->currentDesktop()));
+		 ( !options_traverse_all && !client->isOnDesktop(workspace()->currentDesktop()) )
+		 || 
+		 ( client->isIconified()  && client->mainClient() != client ) 
+		 );
+		
 
 	if (!options_traverse_all && client
 	    && !client->isOnDesktop(workspace()->currentDesktop()))

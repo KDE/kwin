@@ -289,7 +289,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     is_shape = FALSE;
     is_sticky = FALSE;
 
-    getIcons();
+    getWMHints();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
     fetchName();
@@ -481,6 +481,8 @@ bool Client::windowEvent( XEvent * e)
 	break;
     case ReparentNotify:
 	break;
+    case ClientMessage:
+	return clientMessage( e->xclient );
     default:
 	break;
     }
@@ -632,18 +634,36 @@ bool Client::propertyNotify( XPropertyEvent& e )
 	    transient_for = None;
 	break;
     case XA_WM_HINTS:
-	getIcons();
+	getWMHints();
 	break;
     default:
 	if ( e.atom == atoms->wm_protocols )
 	    getWindowProtocols();
 	else if ( e.atom == atoms->kwm_win_icon ) {
-	    getIcons();
+	    getWMHints(); // for the icons
 	}
 	
 	break;
     }
     return TRUE;
+}
+
+
+/*!
+   Handles client messages for the client window
+*/
+bool Client::clientMessage( XClientMessageEvent& e )
+{
+    if ( e.message_type == atoms->wm_change_state) {
+	if ( e.data.l[0] == IconicState && isNormal() )
+	    iconify();
+	return TRUE;
+    } else  if ( e.message_type == atoms->net_active_window ) {
+	workspace()->activateClient( this );
+	return TRUE;
+    }
+    
+    return FALSE;
 }
 
 
@@ -1125,6 +1145,7 @@ void Client::iconify()
     setMappingState( IconicState );
     hide();
     // TODO animation (virtual function)
+    workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
 void Client::closeWindow()
@@ -1458,12 +1479,20 @@ void Client::setDesktop( int desktop)
     KWM::moveToDesktop( win, desk );//##### compatibility
 }
 
-void Client::getIcons()
+void Client::getWMHints()
 {
     icon_pix = KWM::icon( win, 32, 32 ); // TODO sizes from workspace
     miniicon_pix = KWM::miniIcon( win, 16, 16 );
     if ( !isWithdrawn() )
 	iconChange();
+    
+    input = TRUE;
+    XWMHints *hints = XGetWMHints(qt_xdisplay(), win );
+    if ( hints ) {
+	if ( hints->flags & InputHint )
+	    input = hints->input;
+	XFree((char*)hints);
+    }
 }
 
 void Client::getWindowProtocols(){
@@ -1490,7 +1519,8 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus()
 {
-    XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, CurrentTime );
+    if ( input )
+	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, CurrentTime );
     if ( Ptakefocus )
 	sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
 }
@@ -1504,6 +1534,25 @@ void Client::setMask( const QRegion & reg)
     QWidget::setMask( reg );
 }
 
+
+/*!
+  Returns the main client. For normal windows, this is the window
+  itself. For transient windows, it is the parent.
+  
+ */
+Client* Client::mainClient()
+{
+    if  ( !isTransient() )
+	return this;
+    ClientList saveset;
+    Client* c = this;
+    do {
+	saveset.append( c );
+	c = workspace()->findClient( c->transientFor() );
+    } while ( c && c->isTransient() && !saveset.contains( c ) );
+    
+    return c?c:this;
+}
 
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )

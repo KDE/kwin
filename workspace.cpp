@@ -747,8 +747,29 @@ void Workspace::activateClient( Client* c)
     }
     raiseClient( c );
     c->show();
+    iconifyOrDeiconifyTransientsOf( c );
     if ( options->focusPolicyIsReasonable() )
 	requestFocus( c );
+}
+
+void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
+{
+    if ( c->isIconified() ) {
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	    if ( (*it)->transientFor() == c->window() && !(*it)->isIconified() ) {
+		(*it)->setMappingState( IconicState );
+		(*it)->hide();
+		iconifyOrDeiconifyTransientsOf( (*it) );
+	    }
+	}
+    } else {
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	    if ( (*it)->transientFor() == c->window() && !(*it)->isVisible() ) {
+		(*it)->show();
+		iconifyOrDeiconifyTransientsOf( (*it) );
+	    }
+	}
+    }
 }
 
 
@@ -1346,17 +1367,11 @@ void Workspace::setNumberOfDesktops( int n )
  */
 bool Workspace::clientMessage( XClientMessageEvent msg )
 {
-    if ( msg.message_type == atoms->net_active_window ) {
-	Client * c = findClient( msg.data.l[0] );
-	if ( c ) {
-	    activateClient( c );
-	    return TRUE;
-	}
-    } else if ( msg.message_type == atoms->net_current_desktop ) {
+    if ( msg.message_type == atoms->net_current_desktop ) {
 	setCurrentDesktop( msg.data.l[0] );
 	return TRUE;
     }
-
+    
     return FALSE;
 }
 
@@ -1525,6 +1540,15 @@ void Workspace::sendToDesktop( int desk )
 
     popup_client->setDesktop( desk );
     popup_client->hide();
+    
+    Client* old = popup_client;
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it)->transientFor() == popup_client->window() ) {
+	    popup_client = *it;
+	    sendToDesktop( desk );
+	    popup_client = old;
+	}
+    }
 }
 
 void Workspace::slotWindowOperations()
@@ -1555,24 +1579,24 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
   if (options->windowSnapZone() || options->borderSnapZone()) {
 
     int snap;        //snap trigger
-    
+
     QRect maxRect = clientArea();
     int xmin = maxRect.left();
     int xmax = maxRect.right();               //desk size
     int ymin = maxRect.top();
     int ymax = maxRect.bottom();
     int cx, cy, rx, ry, cw, ch;                 //these don't change
-    
+
     int nx, ny;                         //buffers
     int deltaX = xmax, deltaY = ymax;   //minimum distance to other clients
-    
+
     int lx, ly, lrx, lry; //coords and size for the comparison client, l
-    
+
     nx = cx = pos.x();
     ny = cy = pos.y();
     rx = cx + (cw = c->width());
     ry = cy + (ch = c->height());
-    
+
     // border snap
     snap = options->borderSnapZone();
     if (snap) {
@@ -1584,7 +1608,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	deltaX = abs(xmax-rx);
 	nx = xmax - cw;
       }
-      
+
       if ( QABS(cy-ymin) < snap ){
 	deltaY = QABS(cy-ymin);
 	ny = ymin;
@@ -1594,7 +1618,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	ny = ymax - ch;
       }
     }
-    
+
     // windows snap
     snap = options->windowSnapZone();
     if (snap) {
@@ -1607,7 +1631,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	  ly = (*l)->y();
 	  lrx = lx + (*l)->width();
 	  lry = ly + (*l)->height();
-	  
+	
 	  if( ( ( cy <= lry ) && ( cy  >= ly  ) )  ||
 	      ( ( ry >= ly  ) && ( ry  <= lry ) )  ||
 	      ( ( ly >= cy  ) && ( lry <= ry  ) ) ) {
@@ -1622,7 +1646,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	      nx = lx - cw;
 	    }
 	  }
-	  
+	
 	  if( ( ( cx <= lrx ) && ( cx  >= lx  ) )  ||
 	      ( ( rx >= lx  ) && ( rx  <= lrx ) )  ||
 	      ( ( lx >= cx  ) && ( lrx <= rx  ) ) ) {

@@ -20,7 +20,7 @@ public:
     WindowWrapper( WId w, Client *parent=0, const char* name=0);
     ~WindowWrapper();
 
-    inline WId window() const;
+    WId window() const;
     void releaseWindow();
     void invalidateWindow();
     QSize sizeHint() const;
@@ -56,12 +56,14 @@ public:
     Client( Workspace *ws, WId w, QWidget *parent=0, const char *name=0, WFlags f = 0);
     ~Client();
 
-    inline WId window() const;
-    inline WindowWrapper* windowWrapper() const;
-    inline Workspace* workspace() const;
+    WId window() const;
+    WindowWrapper* windowWrapper() const;
+    Workspace* workspace() const;
     void releaseWindow();
     void invalidateWindow();
-    inline WId transientFor() const;
+    WId transientFor() const;
+    bool isTransient() const;
+    Client* mainClient();
 
     virtual bool windowEvent( XEvent * );
 
@@ -81,8 +83,8 @@ public:
     int maximumWidth() const;
     int maximumHeight() const;
 
-    inline QPixmap icon() const;
-    inline QPixmap miniIcon() const;
+    QPixmap icon() const;
+    QPixmap miniIcon() const;
 
 
     // is the window in withdrawn state?
@@ -98,7 +100,7 @@ public:
 	return state == NormalState;
     }
 
-    inline bool isActive() const;
+    bool isActive() const;
     void setActive( bool );
 
     int desktop() const;
@@ -108,10 +110,10 @@ public:
     bool isShade() const;
     virtual void setShade( bool );
 
-    inline bool isMaximized() const;
+    bool isMaximized() const;
     enum MaximizeMode { MaximizeVertical, MaximizeHorizontal, MaximizeFull };
 
-    inline bool isSticky() const;
+    bool isSticky() const;
     void setSticky( bool );
 
     void takeFocus();
@@ -183,6 +185,7 @@ protected:
     bool unmapNotify( XUnmapEvent& e );
     bool configureRequest( XConfigureRequestEvent& e );
     bool propertyNotify( XPropertyEvent& e );
+    bool clientMessage( XClientMessageEvent& e );
 
 private:
     QSize sizeForWindowSize( const QSize&, bool ignore_height = FALSE ) const;
@@ -217,10 +220,11 @@ private:
     WId transient_for;
     bool is_sticky;
     bool is_shape;
-    void getIcons();
+    void getWMHints();
     void getWindowProtocols();
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
+    uint input :1; // does the window want input in its wm_hints
     uint mapped :1; // keeps track of our visiblity within the asynchronous event flow
     QPixmap icon_pix;
     QPixmap miniicon_pix;
@@ -247,6 +251,13 @@ inline WId Client::transientFor() const
 {
     return transient_for;
 }
+
+inline bool Client::isTransient() const
+{
+    return transient_for != 0;
+}
+
+
 
 inline int Client::mappingState() const
 {

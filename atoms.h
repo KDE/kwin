@@ -9,6 +9,7 @@ public:
     Atom wm_protocols;
     Atom wm_delete_window;
     Atom wm_take_focus;
+    Atom wm_change_state;
     Atom kwm_win_icon; // compatibility
     Atom kwm_running;
 

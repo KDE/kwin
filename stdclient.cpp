@@ -32,7 +32,7 @@ static QPixmap* dis_menu_pix = 0;
 static bool pixmaps_created = FALSE;
 
 static void create_pixmaps();
-QPixmap* kwin_get_menu_pix_hack() 
+QPixmap* kwin_get_menu_pix_hack()
 {
     create_pixmaps();
     return menu_pix;
@@ -241,7 +241,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
                           isActive() ? *pinup_pix : *dis_pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    button[1]->hide(); // no sticky
+    button[1]->hide(); // no sticky for now
     button[2]->hide();
 
     button[3]->setIconSet(isActive() ? *minimize_pix : *dis_minimize_pix);
@@ -250,7 +250,14 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     connect( button[4], SIGNAL( clicked(int) ), this, ( SLOT( maxButtonClicked(int) ) ) );
     button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
     connect( button[5], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
-
+    
+    if ( isTransient() ) {
+	// lighter decoration for transient windows
+	button[1]->hide();
+	button[2]->hide();
+	button[3]->hide();
+	button[4]->hide();
+    }
 }
 
 void StdClient::activeChange(bool on)
