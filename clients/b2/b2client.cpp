@@ -696,11 +696,6 @@ void B2Client::showEvent(QShowEvent *ev)
     titlebar->repaint(false);
 }
 
-void B2Client::windowWrapperShowEvent( QShowEvent* )
-{
-    doShape();
-}
-
 KDecoration::MousePosition B2Client::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
@@ -814,6 +809,9 @@ void B2Client::activeChange()
 
 void B2Client::shadeChange()
 {
+    spacer->changeSize(10, isResizable() ? 8 : 4, 
+	    QSizePolicy::Expanding, QSizePolicy::Minimum);
+    g->activate();
 }
 
 QSize B2Client::minimumSize() const
