@@ -34,13 +34,16 @@ DEALINGS IN THE SOFTWARE.
 #include <qstring.h>
 #include <qwidget.h>
 
+#include "kdecoration.h"
+
 class KLibrary;
+class KConfig;
 class KDecoration;
 class KDecorationBridge;
 class KDecorationFactory;
-class KConfig;
 
 class KDecorationPlugins
+    : public KDecorationProvides
     {
     public:
         KDecorationPlugins( KConfig* cfg );

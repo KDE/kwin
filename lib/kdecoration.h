@@ -125,7 +125,18 @@ public:
         BorderOversized, ///< Oversized borders
         BordersCount     ///< @internal
         };
+
+    enum Ability { ABILITY_DUMMY = 10000000 };
+
+    enum Requirement { REQUIREMENT_DUMMY = 1000000 };
 };    
+
+class KDecorationProvides
+    : public KDecorationDefines
+    {
+    public:
+        virtual bool provides( Requirement req ) = 0;
+    };
 
 /**
  * This class holds various configuration settings for the decoration.

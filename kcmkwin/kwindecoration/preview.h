@@ -24,11 +24,11 @@
 
 #include <qwidget.h>
 #include <kdecoration_p.h>
+#include <kdecoration_plugins_p.h>
 
 class QLabel;
 
 class KDecorationPreviewBridge;
-class KDecorationPlugins;
 class KDecorationOptions;
 
 class KDecorationPreview
@@ -117,5 +117,18 @@ class KDecorationPreviewOptions
         virtual ~KDecorationPreviewOptions();
         virtual unsigned long updateSettings();
     };
-        
+
+class KDecorationPreviewPlugins
+    : public KDecorationPlugins
+    {
+    public:
+        KDecorationPreviewPlugins( KConfig* cfg );
+        virtual bool provides( Requirement );
+    };
+
+inline KDecorationPreviewPlugins::KDecorationPreviewPlugins( KConfig* cfg )
+    : KDecorationPlugins( cfg )
+    {
+    }
+
 #endif

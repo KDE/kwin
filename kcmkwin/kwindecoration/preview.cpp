@@ -397,5 +397,10 @@ unsigned long KDecorationPreviewOptions::updateSettings()
     changed |= d->updateKWinSettings( &cfg );
     return changed;
     }
+
+bool KDecorationPreviewPlugins::provides( Requirement )
+    {
+    return false;
+    }
     
 #include "preview.moc"

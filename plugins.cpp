@@ -34,4 +34,9 @@ void PluginMgr::error( const QString &error_msg )
     exit(1);
     }
 
+bool PluginMgr::provides( Requirement )
+    {
+    return false;
+    }
+
 } // namespace

@@ -161,6 +161,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
         return false;
         }
     fact = create_ptr();
+    fact->checkRequirements( this ); // let it check what is supported
 
     pluginStr = nameStr;
     

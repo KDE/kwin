@@ -35,7 +35,6 @@ class KDecorationFactory
     : public KDecorationDefines
     {
     public:
-        enum Ability { NOTHING_YET }; // FRAME pridat, + pamatovat na 32bitu?
 	/**
 	 * Constructor. Called after loading the decoration plugin. All global
 	 * initialization of the plugin should be done in the factory constructor.
@@ -72,6 +71,8 @@ class KDecorationFactory
         virtual QValueList< BorderSize > borderSizes() const;
 
         virtual bool supports( Ability ability );
+        
+        virtual void checkRequirements( KDecorationProvides* provides );
 	/**
 	 * Returns the KDecorationOptions object, which is used to access
 	 * configuration settings for the decoration.
