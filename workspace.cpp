@@ -18,7 +18,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <kapp.h>
-#include <kipc.h>
 #include <dcopclient.h>
 #include <kprocess.h>
 #include <kiconloader.h>
@@ -2404,18 +2403,6 @@ void Workspace::setCurrentDesktop( int new_desktop ){
         }
     }
     current_desktop = new_desktop;
-
-    // code from bgsettings.cc to determine if notification is necessary
-    int screen_number = DefaultScreen(qt_xdisplay());
-    QCString configname;
-    if (screen_number == 0)
-      configname = "kdesktoprc";
-    else
-      configname.sprintf("kdesktop-screen-%drc", screen_number);
-    KConfig cfg(configname);
-    cfg.setGroup("Background Common");
-    if (!cfg.readBoolEntry("CommonDesktop", true))
-      KIPC::sendMessageAll(KIPC::BackgroundChanged, current_desktop);
 
     rootInfo->setCurrentDesktop( current_desktop );
 
