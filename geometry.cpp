@@ -1782,8 +1782,8 @@ void Client::checkUnrestrictedMoveResize()
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
     // restricted move/resize - keep at least part of the titlebar always visible 
     // how much must remain visible when moved away in that direction
-    left_marge = 100 + border_right;
-    right_marge = 100 + border_left;
+    left_marge = KMIN( 100 + border_right, moveResizeGeom.width());
+    right_marge = KMIN( 100 + border_left, moveResizeGeom.width());
     // width/height change with opaque resizing, use the initial ones
     titlebar_marge = initialMoveResizeGeom.height();
     top_marge = border_bottom;
@@ -1858,8 +1858,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     else // restricted move/resize - keep at least part of the titlebar always visible 
         {        
         // how much must remain visible when moved away in that direction
-        left_marge = 100 + border_right;
-        right_marge = 100 + border_left;
+        left_marge = KMIN( 100 + border_right, moveResizeGeom.width());
+        right_marge = KMIN( 100 + border_left, moveResizeGeom.width());
         // width/height change with opaque resizing, use the initial ones
         titlebar_marge = initialMoveResizeGeom.height();
         top_marge = border_bottom;
