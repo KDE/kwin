@@ -1,6 +1,6 @@
 INCLUDES = $(all_includes) 
 
-lib_LTLIBRARIES = libkwinriscos.la
+kde_module_LTLIBRARIES = libkwinriscos.la
 
 libkwinriscos_la_SOURCES = \
 Button.cpp \

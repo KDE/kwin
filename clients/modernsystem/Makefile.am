@@ -1,7 +1,7 @@
 
 INCLUDES = $(all_includes)
 
-lib_LTLIBRARIES = libkwinmodernsys.la
+kde_module_LTLIBRARIES = libkwinmodernsys.la
 
 libkwinmodernsys_la_SOURCES = modernsys.cpp
 libkwinmodernsys_la_LIBADD = ../../kwin.la

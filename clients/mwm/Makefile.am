@@ -1,7 +1,7 @@
 
 INCLUDES = $(all_includes) 
 
-lib_LTLIBRARIES = libkwinmwm.la
+kde_module_LTLIBRARIES = libkwinmwm.la
 
 libkwinmwm_la_SOURCES = mwmclient.cpp
 libkwinmwm_la_LIBADD = ../../kwin.la

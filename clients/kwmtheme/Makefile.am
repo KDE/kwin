@@ -1,7 +1,7 @@
 
 INCLUDES = $(all_includes) 
 
-lib_LTLIBRARIES = libkwinkwmtheme.la
+kde_module_LTLIBRARIES = libkwinkwmtheme.la
 
 libkwinkwmtheme_la_SOURCES = kwmthemeclient.cpp
 libkwinkwmtheme_la_LIBADD = ../../kwin.la

@@ -1,7 +1,7 @@
 
 INCLUDES = $(all_includes) 
 
-lib_LTLIBRARIES = libkwinkde1.la
+kde_module_LTLIBRARIES = libkwinkde1.la
 
 libkwinkde1_la_SOURCES = kde1client.cpp
 libkwinkde1_la_LIBADD = ../../kwin.la

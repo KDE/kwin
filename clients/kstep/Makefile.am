@@ -1,7 +1,7 @@
 
 INCLUDES = $(all_includes) 
 
-lib_LTLIBRARIES = libkwinkstep.la
+kde_module_LTLIBRARIES = libkwinkstep.la
 
 libkwinkstep_la_SOURCES = nextclient.cpp
 libkwinkstep_la_LIBADD = ../../kwin.la

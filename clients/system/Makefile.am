@@ -1,7 +1,7 @@
 
 INCLUDES = $(all_includes)
 
-lib_LTLIBRARIES = libkwinsystem.la
+kde_module_LTLIBRARIES = libkwinsystem.la
 
 libkwinsystem_la_SOURCES = systemclient.cpp
 libkwinsystem_la_LIBADD = ../../kwin.la
