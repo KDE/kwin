@@ -382,9 +382,7 @@ void KWMThemeClient::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
     doShape();
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
-        repaint();  // ugh! Not even this works...
-    }
+    repaint();
 }
 
 void KWMThemeClient::captionChange( const QString& )
