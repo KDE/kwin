@@ -411,7 +411,8 @@ bool WindowWrapper::x11Event( XEvent * e)
 	    if ( ((Client*)parentWidget())->isActive()
 		 && ( options->focusPolicy != Options::ClickToFocus
 		 &&  options->clickRaise && !bModKeyHeld ) ) {
-		((Client*)parentWidget())->autoRaise();
+		if ( e->xbutton.button < 4 ) // exclude wheel
+		    ((Client*)parentWidget())->autoRaise();
 		ungrabButton( winId(), None );
 	    }
 
