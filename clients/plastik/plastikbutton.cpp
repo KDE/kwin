@@ -68,7 +68,7 @@ PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent, const char 
 {
     setBackgroundMode(NoBackground);
 
-    reset();
+    // no need to reset here as the button will be resetted on first resize.
 
     animTmr = new QTimer(this);
     connect(animTmr, SIGNAL(timeout() ), this, SLOT(animate() ) );
@@ -79,85 +79,87 @@ PlastikButton::~PlastikButton()
 {
 }
 
-void PlastikButton::reset()
+void PlastikButton::reset(unsigned long changed)
 {
-    QColor aDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
-            Qt::black, 50);
-    QColor aDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
-            Qt::white, 50);
-    QColor iDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
-            Qt::black, 50);
-    QColor iDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
-            Qt::white, 50);
+    if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
+        QColor aDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
+                Qt::black, 50);
+        QColor aDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
+                Qt::white, 50);
+        QColor iDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
+                Qt::black, 50);
+        QColor iDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
+                Qt::white, 50);
 
-    int reduceW = 0, reduceH = 0;
-    if(width()>12) {
-        reduceW = static_cast<int>(2*(width()/3.5) );
+        int reduceW = 0, reduceH = 0;
+        if(width()>12) {
+            reduceW = static_cast<int>(2*(width()/3.5) );
+        }
+        else
+            reduceW = 4;
+        if(height()>12)
+            reduceH = static_cast<int>(2*(height()/3.5) );
+        else
+            reduceH = 4;
+
+        QImage img;
+        switch (type() ) {
+            case CloseButton:
+                img = QImage(close_xpm);
+                break;
+            case HelpButton:
+                img = QImage(help_xpm);
+                break;
+            case MinButton:
+                img = QImage(minimize_xpm);
+                break;
+            case MaxButton:
+                if (isOn()) {
+                    img = QImage(restore_xpm);
+                } else {
+                    img = QImage(maximize_xpm);
+                }
+                break;
+            case OnAllDesktopsButton:
+                if (isOn()) {
+                    img = QImage(unsticky_xpm);
+                } else {
+                    img = QImage(sticky_xpm);
+                }
+                break;
+            case ShadeButton:
+                if (isOn()) {
+                    img = QImage(unshade_xpm);
+                } else {
+                    img = QImage(shade_xpm);
+                }
+                break;
+            case AboveButton:
+                if (isOn()) {
+                    img = QImage(notkeepabove_xpm);
+                } else {
+                    img = QImage(keepabove_xpm);
+                }
+                break;
+            case BelowButton:
+                if (isOn()) {
+                    img = QImage(notkeepbelow_xpm);
+                } else {
+                    img = QImage(keepbelow_xpm);
+                }
+                break;
+            default:
+                img = QImage(empty_xpm);
+                break;
+        }
+
+        m_aDecoDark = recolorImage(&img, aDecoFgDark).smoothScale(width()-reduceW, height()-reduceH);
+        m_iDecoDark = recolorImage(&img, iDecoFgDark).smoothScale(width()-reduceW, height()-reduceH);
+        m_aDecoLight = recolorImage(&img, aDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
+        m_iDecoLight = recolorImage(&img, iDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
+
+        this->update();
     }
-    else
-        reduceW = 4;
-    if(height()>12)
-        reduceH = static_cast<int>(2*(height()/3.5) );
-    else
-        reduceH = 4;
-
-    QImage img;
-    switch (type() ) {
-        case CloseButton:
-            img = QImage(close_xpm);
-            break;
-        case HelpButton:
-            img = QImage(help_xpm);
-            break;
-        case MinButton:
-            img = QImage(minimize_xpm);
-            break;
-        case MaxButton:
-            if (isOn()) {
-                img = QImage(restore_xpm);
-            } else {
-                img = QImage(maximize_xpm);
-            }
-            break;
-        case OnAllDesktopsButton:
-            if (isOn()) {
-                img = QImage(unsticky_xpm);
-            } else {
-                img = QImage(sticky_xpm);
-            }
-            break;
-        case ShadeButton:
-            if (isOn()) {
-                img = QImage(unshade_xpm);
-            } else {
-                img = QImage(shade_xpm);
-            }
-            break;
-        case AboveButton:
-            if (isOn()) {
-                img = QImage(notkeepabove_xpm);
-            } else {
-                img = QImage(keepabove_xpm);
-            }
-            break;
-        case BelowButton:
-            if (isOn()) {
-                img = QImage(notkeepbelow_xpm);
-            } else {
-                img = QImage(keepbelow_xpm);
-            }
-            break;
-        default:
-            img = QImage(empty_xpm);
-            break;
-    }
-
-    m_aDecoDark = recolorImage(&img, aDecoFgDark).smoothScale(width()-reduceW, height()-reduceH);
-    m_iDecoDark = recolorImage(&img, iDecoFgDark).smoothScale(width()-reduceW, height()-reduceH);
-    m_aDecoLight = recolorImage(&img, aDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
-    m_iDecoLight = recolorImage(&img, iDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
-
-    this->update();
 }
 
 void PlastikButton::animate()

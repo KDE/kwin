@@ -45,7 +45,7 @@ enum ColorType {
 };
 
 enum Pixmaps {
-    aTitleBarTileTop, // normal windows
+    aTitleBarTileTop=0, // normal windows
     iTitleBarTileTop,
     aTitleBarTile,
     iTitleBarTile,

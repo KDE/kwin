@@ -42,7 +42,7 @@ public:
     PlastikButton(ButtonType type, PlastikClient *parent, const char *name);
     ~PlastikButton();
 
-    void reset();
+    void reset(unsigned long changed);
     PlastikClient * client() { return m_client; }
 
 protected slots:
