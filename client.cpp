@@ -1576,7 +1576,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
         return;
     }
 
-    if ( !isMovable()) return;
+    if ( !isMovable() ) return;
 
     if ( !moveResizeMode ) {
         QPoint p( e->pos() - moveOffset );
@@ -2182,7 +2182,7 @@ bool Client::x11Event( XEvent * e)
             autoRaiseTimer = 0;
             delete shadeHoverTimer;
             shadeHoverTimer = 0;
-            if ( hover_unshade && !isMove())
+            if ( hover_unshade && !moveResizeMode && !buttonDown )
                setShade( TRUE, 1 );
         }
         if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
