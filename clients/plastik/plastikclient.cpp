@@ -80,7 +80,7 @@ bool PlastikClient::decorationBehaviour(DecorationBehaviour behaviour) const
     }
 }
 
-int PlastikClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *) const
+int PlastikClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
@@ -142,11 +142,14 @@ int PlastikClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const 
         case LM_ButtonSpacing:
             return 1;
 
+        case LM_ButtonMarginTop:
+            return 0;
+
         case LM_ExplicitButtonSpacer:
             return 3;
 
         default:
-            return 0;
+            return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
     }
 }
 

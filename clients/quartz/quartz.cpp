@@ -540,7 +540,7 @@ bool QuartzClient::decorationBehaviour(DecorationBehaviour behaviour) const
 	}
 }
 
-int QuartzClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *) const
+int QuartzClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
 	bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
@@ -582,7 +582,7 @@ int QuartzClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
 			return 3;
 
 		default:
-			return 0;
+			return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
 	}
 }
 

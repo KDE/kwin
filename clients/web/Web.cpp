@@ -80,7 +80,7 @@ bool WebClient::decorationBehaviour(DecorationBehaviour behaviour) const
     }
 }
 
-int WebClient::layoutMetric(LayoutMetric lm, bool /*respectWindowState*/, const KCommonDecorationButton *) const
+int WebClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
 //   bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
@@ -112,7 +112,7 @@ int WebClient::layoutMetric(LayoutMetric lm, bool /*respectWindowState*/, const 
       return 0;
 
     default:
-      return 0;
+      return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
   }
 }
 

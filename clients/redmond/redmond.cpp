@@ -423,7 +423,7 @@ int RedmondDeco::layoutMetric(LayoutMetric lm, bool respectWindowState, const KC
 			return 2;
 
 		default:
-			return 0;
+			return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
 	}
 }
 

@@ -427,7 +427,7 @@ int LaptopClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
             return 0;
 
         default:
-            return 0;
+            return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
     }
 }
 

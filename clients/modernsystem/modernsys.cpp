@@ -407,7 +407,7 @@ bool ModernSys::decorationBehaviour(DecorationBehaviour behaviour) const
     }
 }
 
-int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *) const
+int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
@@ -451,7 +451,7 @@ int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCom
             return 3;
 
         default:
-            return 0;
+            return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
     }
 }
 
