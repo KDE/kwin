@@ -271,7 +271,7 @@ B2Client::B2Client(KDecorationBridge *b, KDecorationFactory *f)
 
 void B2Client::init()
 {
-    const QString tips[]= {i18n("Menu"), i18n("On All desktops"),
+    const QString tips[]= {i18n("Menu"), isOnAllDesktops()?i18n("Not On All Desktops"):i18n("On All desktops"),
                            i18n("Minimize"), i18n("Maximize"),
                            i18n("Close"), i18n("Help") };
 

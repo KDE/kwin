@@ -957,7 +957,9 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			case 'S' :
 				if ( !button[OnAllDesktopsButton] ) {
 					button[OnAllDesktopsButton] = new KeramikButton( this, "on_all_desktops",
-							OnAllDesktopsButton, i18n("On All Desktops") );
+							OnAllDesktopsButton, isOnAllDesktops()?i18n("Not On All Desktops"):i18n("On All Desktops") );
+					if(isOnAllDesktops())
+						button[OnAllDesktopsButton]->toggle();
 					connect( button[OnAllDesktopsButton], SIGNAL( clicked() ), SLOT( toggleOnAllDesktops() ) );
 					layout->addWidget( button[OnAllDesktopsButton] );
 				}

@@ -34,7 +34,7 @@ static unsigned char unsticky_bits[] =
 };
 
 WebButtonSticky::WebButtonSticky(bool sticky, QWidget * parent, WebClient* deco)
-  : WebButton(parent, i18n("On All Desktops"), deco)
+  : WebButton(parent, sticky?i18n("Not On All Desktops"):i18n("On All Desktops"), deco)
 {
   QBitmap b(8, 8, sticky ? unsticky_bits : sticky_bits, true /* isXBitmap */);
   b.setMask(b);

@@ -591,7 +591,7 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					if (!button[BtnOnAllDesktops])
 					{
     					button[BtnOnAllDesktops] = new QuartzButton(this, "on_all_desktops",
-								 largeButtons, isLeft, true, NULL, i18n("On All Desktops"));
+								 largeButtons, isLeft, true, NULL, isOnAllDesktops()?i18n("Not On All Desktops"):i18n("On All Desktops"));
 						button[BtnOnAllDesktops]->turnOn( isOnAllDesktops() );
     					connect( button[BtnOnAllDesktops], SIGNAL(clicked()),
 								 this, SLOT(toggleOnAllDesktops()) );

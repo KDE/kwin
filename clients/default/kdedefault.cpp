@@ -794,7 +794,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				if (!button[BtnSticky])
 				{
    					button[BtnSticky] = new KDEDefaultButton(this, "sticky",
-							largeButtons, isLeft, true, NULL, i18n("Sticky"));
+							largeButtons, isLeft, true, NULL, isOnAllDesktops()?i18n("Un-Sticky"):i18n("Sticky"));
 					button[BtnSticky]->turnOn( isOnAllDesktops() );
    					connect( button[BtnSticky], SIGNAL(clicked()),
 							this, SLOT(toggleOnAllDesktops()) );

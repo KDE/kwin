@@ -384,7 +384,7 @@ void ModernSys::init()
                                QSizePolicy::Minimum);
 
     button[BtnClose] = new ModernButton(this, "close", close_bits, i18n("Close"));
-    button[BtnSticky] = new ModernButton(this, "sticky", NULL, i18n("Sticky"));
+    button[BtnSticky] = new ModernButton(this, "sticky", NULL, isOnAllDesktops()?i18n("Un-Sticky"):i18n("Sticky"));
     button[BtnMinimize] = new ModernButton(this, "iconify", iconify_bits, i18n("Minimize"));
     button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
     button[BtnHelp] = new ModernButton(this, "help", question_bits, i18n("Help"));
