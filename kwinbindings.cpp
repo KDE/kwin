@@ -33,7 +33,7 @@
 	DEF( I18N_NOOP("Window Resize"),                       0, 0, slotWindowResize() );
 	DEF( I18N_NOOP("Window Raise"),                        0, 0, slotWindowRaise() );
 	DEF( I18N_NOOP("Window Lower"),                        0, 0, slotWindowLower() );
-	DEF( I18N_NOOP("Window Toggle Raise/Lower"),           0, 0, slotWindowRaiseOrLower() );
+	DEF( I18N_NOOP("Toggle Window Raise/Lower"),           0, 0, slotWindowRaiseOrLower() );
 
 	keys->insert( "Group:Window Desktop", i18n("Window & Desktop") );
 	DEF( I18N_NOOP("Window to Desktop 1"),                 "", "Meta+Alt+F1", slotWindowToDesktop(int) );
