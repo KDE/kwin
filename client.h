@@ -133,6 +133,8 @@ public:
     void move( const QPoint & p )
     { move( p.x(), p.y() ); }
 
+    
+    virtual bool wantsTabFocus() const { return TRUE;} //### just for now
 
 
 public slots:
@@ -311,6 +313,8 @@ class NoBorderClient : public Client
 public:
     NoBorderClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~NoBorderClient();
+
+    bool wantsTabFocus() const { return FALSE;} //### just for now
 };
 
 #endif

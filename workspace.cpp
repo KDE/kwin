@@ -169,7 +169,8 @@ void Workspace::init()
 		clients.append( c );
 		stacking_order.append( c );
 	    }
-	    focus_chain.append( c );
+	    if ( c->wantsTabFocus() )
+		focus_chain.append( c );
 	    c->manage( TRUE );
 	    if ( c == desktop_client )
 		setDesktopClient( c );
@@ -206,6 +207,7 @@ Workspace::~Workspace()
     if ( root == qt_xrootwin() )
 	XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running);
 }
+
 
 /*!
   Handles workspace specific XEvents
@@ -274,7 +276,8 @@ bool Workspace::workspaceEvent( XEvent * e )
 		    XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
 		}
 		if ( c != desktop_client ) {
-		    focus_chain.prepend( c );
+		    if ( c->wantsTabFocus() )
+			focus_chain.prepend( c );
 		    clients.append( c );
 		    stacking_order.append( c );
 		}
@@ -703,7 +706,8 @@ void Workspace::setActiveClient( Client* c )
     active_client = c;
     if ( active_client ) {
 	focus_chain.remove( c );
-	focus_chain.append( c );
+	if ( c->wantsTabFocus() )
+	    focus_chain.append( c );
     }
     WId w = active_client? active_client->window() : 0;
     XChangeProperty(qt_xdisplay(), qt_xrootwin(),
