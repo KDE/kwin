@@ -3978,7 +3978,7 @@ void Workspace::focusEnsurance()
 void Workspace::configureWM()
 {
     QStringList args;
-    args << "kwinoptions" << "kwindecoration";
+    args <<  "kwindecoration" << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced";
     KApplication::kdeinitExec( "kcmshell", args );
 }
 
