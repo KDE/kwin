@@ -1,6 +1,7 @@
 /*
   'Web' kwin client
 
+  Copyright (C) 2005 Sandro Giessl <sandro@giessl.com>
   Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 
   This program is free software; you can redistribute it and/or
@@ -24,7 +25,7 @@
 
 #include <qptrlist.h>
 
-#include "../../lib/kdecoration.h"
+#include "../../lib/kcommondecoration.h"
 #include "../../lib/kdecorationfactory.h"
 
 class QLabel;
@@ -36,78 +37,36 @@ namespace Web
 
   class WebButton;
 
-  class WebClient : public KDecoration
+  class WebClient : public KCommonDecoration
   {
-    Q_OBJECT
-
     public:
 
       WebClient(KDecorationBridge* bridge, KDecorationFactory* factory);
       ~WebClient();
 
+      virtual QString visibleName() const;
+      virtual QString defaultButtonsLeft() const;
+      virtual QString defaultButtonsRight() const;
+      virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+      virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+      virtual KCommonDecorationButton *createButton(ButtonType type);
+
+      virtual void updateWindowShape();
+
       virtual void init();
-      virtual void resize(const QSize&);
-      virtual bool eventFilter( QObject* o, QEvent* e );
 
     protected:
       virtual void reset( unsigned long changed );
 
-      virtual void resizeEvent(QResizeEvent *);
       virtual void paintEvent(QPaintEvent *);
-      virtual void showEvent(QShowEvent *);
-      virtual void mouseDoubleClickEvent(QMouseEvent *);
-
-      virtual void windowWrapperShowEvent(QShowEvent *);
-      virtual void captionChange();
-      virtual void desktopChange();
-      virtual void maximizeChange();
-      virtual void shadeChange() {};
-      virtual void activeChange();
-      virtual void iconChange();
-      virtual void doShape();
-      virtual Position mousePosition(const QPoint &) const;
-      virtual void borders(int&, int&, int&, int&) const;
-      virtual QSize minimumSize() const;
-
-    protected slots:
-
-      void slotMaximize(int button);
-
-    signals:
-
-      void oadChange(bool);
-      void maxChange(bool);
 
     private:
-      bool isTool();
-
-      enum ButtonType
-      {
-        ButtonHelp,
-        ButtonOnAllDesktops,
-        ButtonMenu,
-        ButtonSeparator,
-        ButtonIconify,
-        ButtonMaximize,
-        ButtonClose,
-        ButtonLower
-      };
 
       int titleHeight_, borderSize_;
 
       bool shape_;
 
-      WebButton *   _createButton(const QString &, QWidget *  parent);
-      void          _createButtons();
-      void          _resetLayout();
-
       QBitmap       _buttonBitmap(ButtonType t) const;
-
-      QBoxLayout    * mainLayout_;
-      QSpacerItem   * titleSpacer_;
-
-      QPtrList<WebButton> leftButtonList_;
-      QPtrList<WebButton> rightButtonList_;
   };
 
   class WebFactory : public QObject, public KDecorationFactory
@@ -127,3 +86,4 @@ namespace Web
 
 #endif
 // vim:ts=2:sw=2:tw=78:set et:
+// kate: indent-width 2; replace-tabs on; tab-width 2; space-indent on;

@@ -29,17 +29,55 @@
 
 namespace Web {
 
-WebButton::WebButton(QWidget * parent, const QString& tip, WebClient* deco)
-  : QButton (parent, 0, 0),
+  static unsigned char close_bits[] = {
+    0x42, 0xe7, 0x7e, 0x3c, 0x3c, 0x7e, 0xe7, 0x42
+  };
+  static unsigned char iconify_bits[] = {
+    0x00, 0x00, 0x00, 0x7e, 0x7e, 0x3c, 0x18, 0x00
+  };
+  static unsigned char maximize_bits[] = {
+    0xfc, 0xf8, 0xf0, 0xe0, 0xc0, 0x80, 0x00, 0x00
+  };
+  static unsigned char unmaximize_bits[] = {
+    0x00, 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f
+  };
+  static unsigned char sticky_bits[] = {
+    0x20, 0x70, 0xfa, 0x7e, 0x3c, 0x1c, 0x32, 0x01
+  };
+  static unsigned char unsticky_bits[] = {
+    0x1c, 0x1c, 0x1c, 0x3e, 0x7f, 0x08, 0x08, 0x08
+  };
+  static unsigned char help_bits[] = {
+    0x18, 0x18, 0x00, 0x1c, 0x18, 0x18, 0x18, 0x3c
+  };
+  static unsigned char shade_on_bits[] = {
+    0xff, 0xff, 0x81, 0x81, 0x99, 0xbd, 0x81, 0xff
+  };
+  static unsigned char shade_off_bits[] = {
+    0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+  };
+  static unsigned char above_on_bits[] = {
+    0xff, 0x7e, 0x3c, 0x18, 0x00, 0xff, 0xff, 0x00
+  };
+  static unsigned char above_off_bits[] = {
+    0x18, 0x3c, 0x7e, 0xff, 0x00, 0xff, 0xff, 0x00
+  };
+  static unsigned char below_on_bits[] = {
+    0x00, 0xff, 0xff, 0x00, 0x18, 0x3c, 0x7e, 0xff
+  };
+  static unsigned char below_off_bits[] = {
+    0x00, 0xff, 0xff, 0x00, 0xff, 0x7e, 0x3c, 0x18
+  };
+  static unsigned char menu_bits[] = {
+    0xff, 0x81, 0x81, 0xff, 0x81, 0xff, 0x81, 0xff
+  };
+
+WebButton::WebButton(ButtonType type, WebClient *parent, const char *name, bool shape)
+  : KCommonDecorationButton (type, parent, name),
     mouseOver_  (false),
-    mouseDown_  (false),
-    position_   (Mid),
-    shape_      (false),
-    deco_       (deco)
+    shape_      (shape),
+    deco_       (parent)
 {
-  setTipText(tip);
-  setCursor(ArrowCursor);
-  setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
   setBackgroundMode(NoBackground);
 }
 
@@ -48,37 +86,44 @@ WebButton::~WebButton()
   // Empty.
 }
 
-  void
-WebButton::setShape(bool b)
+void WebButton::reset(unsigned long changed)
 {
-  shape_ = b;
-  repaint();
-}
+  if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
+    switch (type() ) {
+      case CloseButton:
+        setBitmap(close_bits);
+        break;
+      case HelpButton:
+        setBitmap(help_bits);
+        break;
+      case MinButton:
+        setBitmap(iconify_bits);
+        break;
+      case MaxButton:
+        setBitmap( isOn() ? unmaximize_bits : maximize_bits );
+        break;
+      case OnAllDesktopsButton:
+        setBitmap( isOn() ? unsticky_bits : sticky_bits );
+        break;
+      case ShadeButton:
+        setBitmap( isOn() ? shade_on_bits : shade_off_bits );
+        break;
+      case AboveButton:
+        setBitmap( isOn() ? above_on_bits : above_off_bits );
+        break;
+      case BelowButton:
+        setBitmap( isOn() ? below_on_bits : below_off_bits );
+        break;
+      case MenuButton:
+        setBitmap(menu_bits);
+        break;
+      default:
+        setBitmap(0);
+        break;
+    }
 
-  void
-WebButton::mousePressEvent(QMouseEvent * e)
-{
-  mouseDown_ = true;
-  repaint();
-  QButton::mousePressEvent(e);
-  e->accept();
-}
-
-  void
-WebButton::mouseReleaseEvent(QMouseEvent * e)
-{
-  mouseDown_ = false;
-  repaint();
-
-  KDecorationFactory* f = deco_->factory();
-  if (rect().contains(e->pos()))
-  {
-    clickEvent(e->button());
+    this->update();
   }
-  if( !f->exists( deco_ )) // decoration was destroyed
-    return;
-  QButton::mouseReleaseEvent(e);
-  e->accept();
 }
 
   void
@@ -98,11 +143,11 @@ WebButton::leaveEvent(QEvent * e)
 }
 
   void
-WebButton::paintEvent(QPaintEvent *)
+WebButton::drawButton(QPainter *p)
 {
   QPen highlightPen;
 
-  if (mouseDown_)
+  if (isDown() )
     highlightPen = QPen(colorGroup().light());
 
   else
@@ -113,43 +158,49 @@ WebButton::paintEvent(QPaintEvent *)
       highlightPen = QPen(NoPen);
   }
 
-  QPainter p(this);
+  p->fillRect(rect(), colorGroup().background());
 
-  p.fillRect(rect(), colorGroup().background());
+  Position position_;
+  if (0 == mapToParent(rect().topLeft() ).x() )
+    position_ = Left;
+  else if (deco_->width()-1 == mapToParent(rect().topRight() ).x() )
+    position_ = Right;
+  else
+    position_ = Mid;
   switch ( position_ )
   {
     case Left:
       {
         // Draw edge.
 
-        p.setPen(Qt::black);
+        p->setPen(Qt::black);
 
-        p.drawLine(0, 0, width(), 0);
-        p.drawLine(0, 1, 0, height() - 1);
+        p->drawLine(0, 0, width(), 0);
+        p->drawLine(0, 1, 0, height() - 1);
         if (shape_)
         {
-          p.drawPoint(3, 1);
-          p.drawPoint(4, 1);
-          p.drawPoint(2, 2);
-          p.drawPoint(1, 3);
-          p.drawPoint(1, 4);
+          p->drawPoint(3, 1);
+          p->drawPoint(4, 1);
+          p->drawPoint(2, 2);
+          p->drawPoint(1, 3);
+          p->drawPoint(1, 4);
         }
         // Draw highlight.
 
-        p.setBrush(NoBrush);
-        p.setPen(highlightPen);
+        p->setBrush(NoBrush);
+        p->setPen(highlightPen);
 
         if (shape_)
-          p.setClipRegion(QRegion(rect()) - QRect(0, 0, 6, 6));
+          p->setClipRegion(QRegion(rect()) - QRect(0, 0, 6, 6));
 
-        p.drawRect(2, 2, width() - 4, height() - 4);
+        p->drawRect(2, 2, width() - 4, height() - 4);
         if (shape_)
         {
-          p.setClipRect(rect());
-          p.drawPoint(4, 3);
-          p.drawPoint(5, 3);
-          p.drawPoint(3, 4);
-          p.drawPoint(3, 5);
+          p->setClipRect(rect());
+          p->drawPoint(4, 3);
+          p->drawPoint(5, 3);
+          p->drawPoint(3, 4);
+          p->drawPoint(3, 5);
         }
       }
 
@@ -159,33 +210,33 @@ WebButton::paintEvent(QPaintEvent *)
       {
         // Draw edge.
 
-        p.setPen(Qt::black);
-        p.drawLine(0, 0, width(), 0);
-        p.drawLine(width() - 1, 1, width() - 1, height() - 1);
+        p->setPen(Qt::black);
+        p->drawLine(0, 0, width(), 0);
+        p->drawLine(width() - 1, 1, width() - 1, height() - 1);
         if (shape_)
         {
-          p.drawPoint(width() - 5, 1);
-          p.drawPoint(width() - 4, 1);
-          p.drawPoint(width() - 3, 2);
-          p.drawPoint(width() - 2, 3);
-          p.drawPoint(width() - 2, 4);
+          p->drawPoint(width() - 5, 1);
+          p->drawPoint(width() - 4, 1);
+          p->drawPoint(width() - 3, 2);
+          p->drawPoint(width() - 2, 3);
+          p->drawPoint(width() - 2, 4);
         }
         // Draw highlight.
 
-        p.setBrush(NoBrush);
-        p.setPen(highlightPen);
+        p->setBrush(NoBrush);
+        p->setPen(highlightPen);
 
         if (shape_)
-          p.setClipRegion(QRegion(rect()) - QRect(width() - 6, 0, 6, 6));
+          p->setClipRegion(QRegion(rect()) - QRect(width() - 6, 0, 6, 6));
 
-        p.drawRect(2, 2, width() - 4, height() - 4);
+        p->drawRect(2, 2, width() - 4, height() - 4);
         if (shape_)
         {
-          p.setClipRect(rect());
-          p.drawPoint(width() - 5, 3);
-          p.drawPoint(width() - 6, 3);
-          p.drawPoint(width() - 4, 4);
-          p.drawPoint(width() - 4, 5);
+          p->setClipRect(rect());
+          p->drawPoint(width() - 5, 3);
+          p->drawPoint(width() - 6, 3);
+          p->drawPoint(width() - 4, 4);
+          p->drawPoint(width() - 4, 5);
         }
       }
 
@@ -196,15 +247,15 @@ WebButton::paintEvent(QPaintEvent *)
       {
         // Draw edge.
 
-        p.setPen(Qt::black);
-        p.drawLine(0, 0, width(), 0);
+        p->setPen(Qt::black);
+        p->drawLine(0, 0, width(), 0);
 
         // Draw highlight.
 
-        p.setBrush(NoBrush);
-        p.setPen(highlightPen);
+        p->setBrush(NoBrush);
+        p->setPen(highlightPen);
 
-        p.drawRect(2, 2, width() - 4, height() - 4);
+        p->drawRect(2, 2, width() - 4, height() - 4);
       }
 
       break;
@@ -217,61 +268,23 @@ WebButton::paintEvent(QPaintEvent *)
   int bwby2(bitmap_.width() / 2);    // Bitmap Width BY 2
   int bhby2(bitmap_.height() / 2);   // Bitmap Height BY 2
 
-  p.setBrush(NoBrush);
-  p.setPen(Qt::black);
+  p->setBrush(NoBrush);
+  p->setPen(Qt::black);
 
-  p.drawPixmap(center.x() - bwby2 + 1, center.y() - bhby2 + 1, bitmap_);
-}
-
-  QSize
-WebButton::sizeHint() const
-{
-  return QSize(16, 16);
-}
-
-  QSize
-WebButton::minimumSizeHint() const
-{
-  return QSize(14, 14);
+  p->drawPixmap(center.x() - bwby2 + 1, center.y() - bhby2 + 1, bitmap_);
 }
 
   void
-WebButton::setBitmap(const QBitmap & b)
+WebButton::setBitmap(const unsigned char *bitmap)
 {
-  bitmap_ = b;
-  repaint();
-}
-
-  void
-WebButton::setPosition(Position p)
-{
-  if (  QApplication::reverseLayout() )
-  {
-      if ( p == Left )
-          position_ = Right;
-      else if ( p == Right )
-          position_ = Left;
-  }
+  if (bitmap)
+    bitmap_ = QBitmap(8,8, bitmap, true);
   else
-      position_ = p;
-  repaint();
-}
-
-  void
-WebButton::resizeEvent(QResizeEvent *)
-{
-  repaint();
-}
-
-void
-WebButton::setTipText(const QString &tip) {
-  if(KDecoration::options()->showTooltips()) {
-    QToolTip::remove(this );
-    QToolTip::add(this, tip );
-  }
+    bitmap_ = QBitmap(8,8);
+  bitmap_.setMask(bitmap_);
 }
 
 }
 
-#include "WebButton.moc"
 // vim:ts=2:sw=2:tw=78:set et:
+// kate: indent-width 2; replace-tabs on; tab-width 2; space-indent on;

@@ -27,14 +27,14 @@
 #include <qbutton.h>
 #include <klocale.h>
 
+#include "../../lib/kcommondecoration.h"
+
 namespace Web
 {
   class WebClient;
 
-  class WebButton : public QButton
+  class WebButton : public KCommonDecorationButton
   {
-    Q_OBJECT
-
     public:
 
       enum Position
@@ -42,40 +42,23 @@ namespace Web
         Left, Mid, Right
       };
 
-      WebButton(QWidget * parent, const QString& tip, WebClient* deco);
+      WebButton(ButtonType type, WebClient *parent, const char *name, bool shape);
 
       virtual ~WebButton();
 
-      virtual QSize sizeHint() const;
-      virtual QSize minimumSizeHint() const;
-
-      void setPosition(Position);
-
-      void setShape(bool);
-
-      void setTipText(const QString &tip);
+      virtual void reset(unsigned long changed);
 
     protected:
+      void setBitmap(const unsigned char *bitmap);
 
-      virtual void clickEvent(int button) = 0;
-
-      void setBitmap(const QBitmap &);
-
-      void mousePressEvent(QMouseEvent *);
-      void mouseReleaseEvent(QMouseEvent *);
-      void mouseMoveEvent(QMouseEvent *) { /* Empty */ }
       void enterEvent(QEvent *);
       void leaveEvent(QEvent *);
-      void paintEvent(QPaintEvent *);
-      void resizeEvent(QResizeEvent *);
+      void drawButton(QPainter *p);
 
     private:
       QBitmap bitmap_;
 
       bool mouseOver_;
-      bool mouseDown_;
-
-      Position position_;
 
       bool shape_;
       WebClient* deco_;
@@ -85,3 +68,4 @@ namespace Web
 #endif
 
 // vim:ts=2:sw=2:tw=78:set et:
+// kate: indent-width 2; replace-tabs on; tab-width 2; space-indent on;
