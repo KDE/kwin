@@ -170,7 +170,7 @@ Note: This setting gets overwritten if the caption font is bigger than the title
                 <string>Animate buttons</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>Check this option if you want the buttons fade in/out when the mouse enters or leaves the button.</string>
+                <string>Check this option if you want the buttons to fade in when the mouse pointer hovers over them and fade out again when it moves away.</string>
             </property>
         </widget>
         <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="4">
