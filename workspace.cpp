@@ -1351,6 +1351,10 @@ void Workspace::addClient( Client* c )
             c->lower();
             desktops.append( c );
         }
+        for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+            if ( (*it)->isTopMenu() && (*it)->mainClient()->isDesktop() )
+		(*it)->show();
+        }
     } else {
         if ( c->wantsTabFocus() )
             focus_chain.append( c );

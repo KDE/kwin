@@ -916,6 +916,9 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         }
     }
 
+    if( isTopMenu() && workspace()->activeClient() != mainClient())
+	doNotShow = true;
+	
     bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
 
     workspace()->clientReady( this ); // will call Workspace::propagateClients()
