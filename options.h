@@ -1,15 +1,21 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include <qobject.h>
 #include <qfont.h>
 #include <qpalette.h>
 
 // increment this when you add a color type (mosfet)
 #define KWINCOLORS 8
 
-class Options {
+class Options : public QObject {
+    Q_OBJECT
 public:
 
+    Options();
+    ~Options();
+    
+    
     /*!
       Different focus policies:
       <ul>
@@ -36,7 +42,7 @@ public:
      */
     enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStricklyUnderMouse };
     FocusPolicy focusPolicy;
-    
+
     enum MoveResizeMode { Transparent, Opaque };
 
     /**
@@ -84,11 +90,10 @@ public:
      * Return the number of animation steps (would this be general?)
      */
     const int animSteps() { return anim_steps; };
-    // When restarting is implemented this should get called (mosfet).
+
+public slots:
     void reload();
     
-    Options();
-    ~Options();
 protected:
     QFont activeFont, inactiveFont;
     QColor colors[KWINCOLORS*2];

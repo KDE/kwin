@@ -5,7 +5,7 @@
 
 const bool options_traverse_all = FALSE; // TODO
 
-TabBox::TabBox( Workspace *ws, const char *name=0 )
+TabBox::TabBox( Workspace *ws, const char *name )
     : QWidget( 0, name, WStyle_Customize | WStyle_NoBorder )
 {
     wspace = ws;

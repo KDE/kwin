@@ -1,11 +1,12 @@
 #include "options.h"
 #include <qpalette.h>
 #include <qpixmap.h>
-#include <qapplication.h>
+#include <kapp.h>
 #include <kconfig.h>
 #include <kglobal.h>
 
 Options::Options()
+    : QObject( 0, 0)
 {
     int i;
     for(i=0; i < KWINCOLORS*2; ++i)
@@ -16,6 +17,8 @@ Options::Options()
     placement = Smart;
     animate_shade = true;
     anim_steps = 100;
+    
+    connect( kapp, SIGNAL( appearanceChanged() ), this, SLOT(reload() ) );
 }
 
 Options::~Options(){

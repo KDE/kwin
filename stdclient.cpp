@@ -189,7 +189,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     g->setRowStretch( 1, 10 );
     g->addWidget( windowWrapper(), 1, 1 );
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
-    
+
     g->addColSpacing(0, 2);
     g->addColSpacing(2, 2);
     g->addRowSpacing(2, 2);
@@ -227,11 +227,11 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
         button[0]->setIconSet(isActive() ? *menu_pix : *dis_menu_pix);
     else
         button[0]->setIconSet( miniIcon() );
-    
+
     connect( button[0], SIGNAL( pressed() ), this, SLOT( menuButtonPressed() ) );
     button[0]->setPopupDelay( 0 );
     button[0]->setPopup( workspace()->clientPopup( this ) );
-    
+
     button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
                           isActive() ? *pinup_pix : *dis_pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
@@ -306,7 +306,7 @@ void StdClient::stickyChange( bool s)
     button[1]->setIconSet( s?*pindown_pix:*pinup_pix );
 }
 
-void StdClient::paintEvent( QPaintEvent* e)
+void StdClient::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
     QRect t = titlebar->geometry();

@@ -97,7 +97,7 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     setMouseTracking( TRUE );
 
     setBackgroundColor( colorGroup().background() );
-    
+
     // we don't want the window to be destroyed when we are destroyed
     XAddToSaveSet(qt_xdisplay(), win );
 
@@ -341,6 +341,7 @@ void Client::manage( bool isMapped )
 //  	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
     }
 
+    windowWrapper()->resize( geom.size() );
     // the clever activate() trick is necessary
     layout()->activate();
 //     resize( geom.width() + width() - windowWrapper()->width(),
@@ -351,7 +352,7 @@ void Client::manage( bool isMapped )
     move( geom.x(), geom.y() );
     gravitate( FALSE );
 
-    if ( !placementDone ) {
+    if ( !placementDone && !transient_for ) {
 	workspace()->doPlacement( this );
 	placementDone = TRUE;
     }
@@ -707,19 +708,28 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 	    h = bh + sy * xSizeHint.height_inc;
 	}
     }
+    
+    if (xSizeHint.flags & PMinSize) {
+	w = QMAX( xSizeHint.min_width, w );
+    }
+    if (xSizeHint.flags & PMaxSize) {
+	w = QMIN( xSizeHint.max_width, w );
+    }
 
     int ww = wwrap->width();
     int wh = 0;
     if ( !wwrap->testWState( WState_ForceHide ) )
  	wh = wwrap->height();
-    
+
     if ( ignore_height && wsize.height() == 0 )
 	h = 0;
 
-    return QSize( QMIN( QMAX( width() - ww + w, minimumWidth() ),
-			maximumWidth() ),
-		  ignore_height? height()-wh+h : (QMIN( QMAX( height() - wh + h, minimumHeight() ),
-						     maximumHeight() ) ) );
+    return QSize( width() - ww + w,  height()-wh+h );
+
+//     return QSize( QMIN( QMAX( width() - ww + w, minimumWidth() ),
+// 			maximumWidth() ),
+// 		  ignore_height? height()-wh+h : (QMIN( QMAX( height() - wh + h, minimumHeight() ),
+// 						     maximumHeight() ) ) );
 }
 
 
@@ -1061,7 +1071,7 @@ int Client::minimumHeight() const
 /*!
   Returns the maximum size. This function differs from QWidget::maximumSize()
   and is to be preferred
- */
+  */
 QSize Client::maximumSize() const
 {
     return QSize( maximumWidth(), maximumHeight() );
@@ -1121,16 +1131,16 @@ void Client::maximize( MaximizeMode m)
 {
     if ( isShade() )
 	setShade( FALSE );
-    
+
     if ( geom_restore.isNull() ) {
 	geom_restore = geometry();
 	switch ( m ) {
 	case MaximizeVertical:
-	    setGeometry( QRect( QPoint( x(), workspace()->geometry().top() ), 
+	    setGeometry( QRect( QPoint( x(), workspace()->geometry().top() ),
 			 adjustedSize( QSize( width(), workspace()->geometry().height()) ) ) );
 	    break;
 	case MaximizeHorizontal:
-	    setGeometry( QRect( QPoint( workspace()->geometry().left(), y() ), 
+	    setGeometry( QRect( QPoint( workspace()->geometry().left(), y() ),
 			 adjustedSize( QSize( workspace()->geometry().width(), height() ) ) ) );
 	    break;
 	default:
@@ -1481,7 +1491,7 @@ void Client::setMask( const QRegion & reg)
 
 
 
-NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 )
+NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name )
 {
     QHBoxLayout* h = new QHBoxLayout( this );

@@ -80,7 +80,7 @@ Application::~Application()
      for ( WorkspaceList::Iterator it = workspaces.begin(); it != workspaces.end(); ++it) {
 	 delete (*it);
      }
-	 delete options;
+     delete options;
 }
 
 bool Application::x11EventFilter( XEvent *e )
