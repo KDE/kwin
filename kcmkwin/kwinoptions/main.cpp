@@ -26,6 +26,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kgenericfactory.h>
+#include <kaboutdata.h>
 
 #include "mouse.h"
 #include "windows.h"
@@ -112,6 +113,26 @@ QString KWinOptions::quickHelp() const
     " <p>Please note that this configuration will not take effect if you don't use"
     " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
     " for how to customize window behavior.");
+}
+
+const KAboutData* KWinOptions::aboutData() const
+{
+    KAboutData *about =
+    new KAboutData(I18N_NOOP("kcmkwinoptions"), I18N_NOOP("Kwin Options Control Module"),
+                  0, 0, KAboutData::License_GPL,
+                  I18N_NOOP("(c) 1997 - 2002 KWin and KControl Authors"));
+
+    about->addAuthor("Matthias Ettrich",0,"ettrich@kde.org");
+    about->addAuthor("Waldo Bastian",0,"bastian@kde.org");
+    about->addAuthor("Cristian Tibirna",0,"tibirna@kde.org");
+    about->addAuthor("Matthias Kalle Dalheimer",0,"kalle@kde.org");
+    about->addAuthor("Daniel Molkentin",0,"molkentin@kde.org");
+    about->addAuthor("Wynn Wilkes",0,"wynnw@caldera.com");
+    about->addAuthor("Pat Dowler",0,"dowler@pt1B1106.FSH.UVic.CA");
+    about->addAuthor("Bernd Wuebben",0,"wuebben@kde.org");
+    about->addAuthor("Matthias Hoelzer-Kluepfel",0,"hoelzer@kde.org");
+
+    return about;
 }
 
 void KWinOptions::moduleChanged(bool state)
