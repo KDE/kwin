@@ -391,13 +391,31 @@ bool Rules::update( Client* c )
     bool updated = false;
     if( positionrule == ( SetRule )Remember)
         {
-        updated = updated || position != c->pos();
-        position = c->pos();
+        if( !c->isFullScreen())
+            {
+            QPoint new_pos = position;
+            // don't use the position in the direction which is maximized
+            if(( c->maximizeMode() & MaximizeHorizontal ) == 0 )
+                new_pos.setX( c->pos().x());
+            if(( c->maximizeMode() & MaximizeVertical ) == 0 )
+                new_pos.setY( c->pos().y());
+            updated = updated || position != new_pos;
+            position = new_pos;
+            }
         }
     if( sizerule == ( SetRule )Remember)
         {
-        updated = updated || size != c->size();
-        size = c->size();
+        if( !c->isFullScreen())
+            {
+            QSize new_size = size;
+            // don't use the position in the direction which is maximized
+            if(( c->maximizeMode() & MaximizeHorizontal ) == 0 )
+                new_size.setWidth( c->size().width());
+            if(( c->maximizeMode() & MaximizeVertical ) == 0 )
+                new_size.setHeight( c->size().height());
+            updated = updated || size != new_size;
+            size = new_size;
+            }
         }
     if( desktoprule == ( SetRule )Remember)
         {
