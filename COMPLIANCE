@@ -122,6 +122,7 @@ _NET_MOVERESIZE_WINDOW		root window message		NIL
 _NET_WM_MOVERESIZE		root window message		PARTIAL
 	+----------------------------------------------------------------+
         | Lacks keyboard modes and button support.                       |
+	| Direction::KeyboardSize + KeyboardMove are in kdecore.         |
 	+----------------------------------------------------------------+
 
 Application Window Properties:
