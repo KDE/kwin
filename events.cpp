@@ -228,26 +228,29 @@ bool Workspace::workspaceEvent( XEvent * e )
 
     if( Client* c = findClient( WindowMatchPredicate( e->xany.window )))
         {
-        c->windowEvent( e );
-        return true;
-        }
-    if( Client* c = findClient( WrapperIdMatchPredicate( e->xany.window )))
-        {
-        c->windowEvent( e );
-        return true;
-        }
-    if( Client* c = findClient( FrameIdMatchPredicate( e->xany.window )))
-        {
-        c->windowEvent( e );
-        return true;
-        }
-    Window special = findSpecialEventWindow( e );
-    if( special != None )
-        if( Client* c = findClient( WindowMatchPredicate( special )))
-            {
-            c->windowEvent( e );
+        if( c->windowEvent( e ))
             return true;
-            }
+        }
+    else if( Client* c = findClient( WrapperIdMatchPredicate( e->xany.window )))
+        {
+        if( c->windowEvent( e ))
+            return true;
+        }
+    else if( Client* c = findClient( FrameIdMatchPredicate( e->xany.window )))
+        {
+        if( c->windowEvent( e ))
+            return true;
+        }
+    else
+        {
+        Window special = findSpecialEventWindow( e );
+        if( special != None )
+            if( Client* c = findClient( WindowMatchPredicate( special )))
+                {
+                if( c->windowEvent( e ))
+                    return true;
+                }
+        }
 
     switch (e->type) 
         {
@@ -462,7 +465,7 @@ bool Workspace::netCheck( XEvent* e )
 /*!
   General handler for XEvents concerning the client window
  */
-void Client::windowEvent( XEvent* e )
+bool Client::windowEvent( XEvent* e )
     {
     if( e->xany.window == window()) // avoid doing stuff on frame or wrapper
         {
@@ -497,15 +500,20 @@ void Client::windowEvent( XEvent* e )
     switch (e->type) 
         {
         case UnmapNotify:
-            return unmapNotifyEvent( &e->xunmap );
+            unmapNotifyEvent( &e->xunmap );
+            break;
         case DestroyNotify:
-            return destroyNotifyEvent( &e->xdestroywindow );
+            destroyNotifyEvent( &e->xdestroywindow );
+            break;
         case MapRequest:
+            // this one may pass the event to workspace
             return mapRequestEvent( &e->xmaprequest );
         case ConfigureRequest:
-            return configureRequestEvent( &e->xconfigurerequest );
+            configureRequestEvent( &e->xconfigurerequest );
+            break;
         case PropertyNotify:
-            return propertyNotifyEvent( &e->xproperty );
+            propertyNotifyEvent( &e->xproperty );
+            break;
         case KeyPress:
             updateUserTime();
             workspace()->setWasUserInteraction();
@@ -515,7 +523,7 @@ void Client::windowEvent( XEvent* e )
             workspace()->setWasUserInteraction();
             buttonPressEvent( e->xbutton.window, e->xbutton.button, e->xbutton.state,
                 e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
-            return;
+            break;;
         case KeyRelease:
     // don't update user time on releases
     // e.g. if the user presses Alt+F2, the Alt release
@@ -527,11 +535,11 @@ void Client::windowEvent( XEvent* e )
     // would appear as user input to the currently active window
             buttonReleaseEvent( e->xbutton.window, e->xbutton.button, e->xbutton.state,
                 e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
-            return;
+            break;
         case MotionNotify:
             motionNotifyEvent( e->xmotion.window, e->xmotion.state,
                 e->xmotion.x, e->xmotion.y, e->xmotion.x_root, e->xmotion.y_root );
-            return;
+            break;
         case EnterNotify:
             enterNotifyEvent( &e->xcrossing );
             // MotionNotify is guaranteed to be generated only if the mouse
@@ -541,19 +549,23 @@ void Client::windowEvent( XEvent* e )
             // events simpler (Qt does that too).
             motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
                 e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
-            return;
+            break;
         case LeaveNotify:
             motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
                 e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
-            return leaveNotifyEvent( &e->xcrossing );
+            leaveNotifyEvent( &e->xcrossing );
+            break;
         case FocusIn:
-            return focusInEvent( &e->xfocus );
+            focusInEvent( &e->xfocus );
+            break;
         case FocusOut:
-            return focusOutEvent( &e->xfocus );
+            focusOutEvent( &e->xfocus );
+            break;
         case ReparentNotify:
             break;
         case ClientMessage:
-            return clientMessageEvent( &e->xclient );
+            clientMessageEvent( &e->xclient );
+            break;
         case ColormapChangeMask:
             if( e->xany.window == window())
             {
@@ -561,11 +573,12 @@ void Client::windowEvent( XEvent* e )
             if ( isActive() )
                 workspace()->updateColormap();
             }
-        break;
-      case VisibilityNotify:
-          return visibilityNotifyEvent( &e->xvisibility );
-      default:
-          if( e->xany.window == window())
+            break;
+        case VisibilityNotify:
+            visibilityNotifyEvent( &e->xvisibility );
+            break;
+        default:
+            if( e->xany.window == window())
             {
             if( e->type == Shape::shapeEvent() )
                 {
@@ -573,19 +586,22 @@ void Client::windowEvent( XEvent* e )
                 updateShape();
                 }
             }
-        break;
+            break;
         }
+    return true; // eat all events
     }
 
 /*!
   Handles map requests of the client window
  */
-void Client::mapRequestEvent( XMapRequestEvent* e )
+bool Client::mapRequestEvent( XMapRequestEvent* e )
     {
     if( e->window != window())
-        return; // no messing with frame etc.
+        {
+        return true; // no messing with frame etc.
+        }
     if( isTopMenu() && workspace()->managingTopMenus())
-        return; // kwin controls these
+        return true; // kwin controls these
     switch ( mappingState() )
         {
         case WithdrawnState:
@@ -610,8 +626,8 @@ void Client::mapRequestEvent( XMapRequestEvent* e )
 	    // TODO fake MapNotify?
             break;
         }
+    return true;
     }
-
 
 /*!
   Handles unmap notify events of the client window

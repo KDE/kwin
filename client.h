@@ -78,7 +78,7 @@ class Client : public QObject, public KDecorationDefines
         QPoint clientPos() const; // inside of geometry()
         QSize clientSize() const;
 
-        void windowEvent( XEvent* e );
+        bool windowEvent( XEvent* e );
         virtual bool eventFilter( QObject* o, QEvent* e );
 
         bool manage( Window w, bool isMapped );
@@ -297,20 +297,21 @@ class Client : public QObject, public KDecorationDefines
         void doDrawbound( const QRect& geom, bool clear );
 
     // handlers for X11 events
-        void mapRequestEvent( XMapRequestEvent* e );
+        bool mapRequestEvent( XMapRequestEvent* e );
         void unmapNotifyEvent( XUnmapEvent*e );
         void destroyNotifyEvent( XDestroyWindowEvent*e );
         void configureRequestEvent( XConfigureRequestEvent* e );
         void propertyNotifyEvent( XPropertyEvent* e );
         void clientMessageEvent( XClientMessageEvent* e );
-        bool buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
-        bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
-        bool motionNotifyEvent( Window w, int state, int x, int y, int x_root, int y_root );
         void enterNotifyEvent( XCrossingEvent* e );
         void leaveNotifyEvent( XCrossingEvent* e );
         void visibilityNotifyEvent( XVisibilityEvent* e );
         void focusInEvent( XFocusInEvent* e );
         void focusOutEvent( XFocusOutEvent* e );
+
+        bool buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
+        bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
+        bool motionNotifyEvent( Window w, int state, int x, int y, int x_root, int y_root );
 
         void processDecorationButtonPress( int button, int state, int x, int y, int x_root, int y_root );
 
