@@ -2539,8 +2539,15 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus( bool force )
 {
-    if ( !force && ( isTopMenu() || ( isDock() && staysOnTop() ) ) )
+    if ( !force && ( isTopMenu() || isDock() ) ) {
+	if ( isDock() && !staysOnTop() && workspace()->activeClient() ) {
+	    // the active client might get covered by a dock
+	    // window. Re-enable ourselves passive grabs to make
+	    // click-raise work again
+	    workspace()->activeClient()->windowWrapper()->setActive( FALSE );
+	}
         return; // toplevel menus and dock windows don't take focus if not forced
+    }
 
     if ( input ) {
         // Matthias Ettrich says to comment it so that we avoid two consecutive setActive
