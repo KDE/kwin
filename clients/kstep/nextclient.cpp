@@ -184,6 +184,7 @@ NextButton::NextButton(Client *parent, const char *name,
                        const unsigned char *bitmap, int bw, int bh)
     : QButton(parent, name)
 {
+    setBackgroundMode( NoBackground );
     client = parent;
     resize(18, 18);
 
@@ -218,6 +219,7 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
+    setBackgroundMode( NoBackground );
     create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 

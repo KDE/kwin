@@ -179,6 +179,7 @@ SystemButton::SystemButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QToolButton(parent, name)
 {
+    setBackgroundMode( NoBackground );
     resize(14, 14);
     connect( this, SIGNAL( clicked() ), this, SLOT( handleClicked() ) );
     if(bitmap)

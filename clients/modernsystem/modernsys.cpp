@@ -161,6 +161,7 @@ ModernButton::ModernButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
 {
+    setBackgroundMode( NoBackground );
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
                  btnhighcolor_mask_bits : lowcolor_mask_bits, true);
     resize(14, 15);
