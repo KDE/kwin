@@ -232,13 +232,14 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
     connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
 
-    QHBoxLayout* hb = new QHBoxLayout();
+    QHBoxLayout* hb = new QHBoxLayout(0);
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 0, 1 );
-    hb->addSpacing(2);
+    hb->addSpacing(3);
     hb->addWidget( button[0]);
     titlebar = new QSpacerItem(10, 14, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
+    hb->addSpacing(3);
     hb->addItem(titlebar);
     hb->addSpacing(3);
     if(help){
