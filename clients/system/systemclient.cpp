@@ -8,6 +8,7 @@
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
+#include <kapp.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
@@ -43,10 +44,10 @@ static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
     
 static QPixmap *titlePix=0;
-static KPixmap *aFramePix=0;
-static KPixmap *iFramePix=0;
-static KPixmap *aHandlePix=0;
-static KPixmap *iHandlePix=0;
+static KPixmap *aUpperGradient=0;
+static KPixmap *aLowerGradient=0;
+static KPixmap *iUpperGradient=0;
+static KPixmap *iLowerGradient=0;
 static bool pixmaps_created = false;
 
 static void create_pixmaps()
@@ -78,34 +79,33 @@ static void create_pixmaps()
     maskPainter.end();
     titlePix->setMask(mask);
 
-    // Bottom frame gradient
-    aFramePix = new KPixmap();
-    aFramePix->resize(32, 6);
-    KPixmapEffect::gradient(*aFramePix,
-                            options->color(Options::Frame, true).light(150),
-                            options->color(Options::Frame, true).dark(120),
-                            KPixmapEffect::VerticalGradient);
-    iFramePix = new KPixmap();
-    iFramePix->resize(32, 6);
-    KPixmapEffect::gradient(*iFramePix,
-                            options->color(Options::Frame, false).light(150),
-                            options->color(Options::Frame, false).dark(120),
-                            KPixmapEffect::VerticalGradient);
+    if(QPixmap::defaultDepth() > 8 &&
+       kapp->palette().normal().brush(QColorGroup::Background).pixmap()==NULL){
+        aUpperGradient = new KPixmap;
+        aUpperGradient->resize(32, 18);
+        iUpperGradient = new KPixmap;
+        iUpperGradient->resize(32, 18);
+        aLowerGradient = new KPixmap;
+        aLowerGradient->resize(32, 6);
+        iLowerGradient = new KPixmap;
+        iLowerGradient->resize(32, 6);
 
-    // Handle gradient
-    aHandlePix = new KPixmap();
-    aHandlePix->resize(32, 6);
-    KPixmapEffect::gradient(*aHandlePix,
-                            options->color(Options::Handle, true).light(150),
-                            options->color(Options::Handle, true).dark(120),
-                            KPixmapEffect::VerticalGradient);
-    iHandlePix = new KPixmap();
-    iHandlePix->resize(32, 6);
-    KPixmapEffect::gradient(*iHandlePix,
-                            options->color(Options::Handle, false).light(150),
-                            options->color(Options::Handle, false).dark(120),
-                            KPixmapEffect::VerticalGradient);
-
+        QColor bgColor = kapp->palette().normal().background();
+        KPixmapEffect::gradient(*aUpperGradient,
+                                options->color(Options::Frame, true).light(130),
+                                bgColor,
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(*iUpperGradient,
+                                options->color(Options::Frame, false).light(130),
+                                bgColor,
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(*aLowerGradient, bgColor,
+                                options->color(Options::Frame, true).dark(120),
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(*iLowerGradient, bgColor,
+                                options->color(Options::Frame, false).dark(120),
+                                KPixmapEffect::VerticalGradient);
+    }
 }
 
 
@@ -317,7 +317,16 @@ void SystemClient::paintEvent( QPaintEvent* )
                      brush(QColorGroup::Button));
 
     p.fillRect(rect(), fillBrush);
-    drawRoundFrame(p, 0, 0, width(), height());
+    if(aUpperGradient){
+        if(isActive()){
+            p.drawTiledPixmap(0, 0, width(), 18, *aUpperGradient);
+            p.drawTiledPixmap(0, height()-7, width(), 6, *aLowerGradient);
+        }
+        else{
+            p.drawTiledPixmap(0, 0, width(), 18, *iUpperGradient);
+            p.drawTiledPixmap(0, height()-7, width(), 6, *iLowerGradient);
+        }
+    }
     t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
@@ -335,8 +344,14 @@ void SystemClient::paintEvent( QPaintEvent* )
     p.setFont(options->font(isActive()));
     if(isActive()){
         QFontMetrics fm(options->font(true));
-        p.fillRect(t.x()+((t.width()-fm.width(caption()))/2)-4, t.y(),
-                   fm.width(caption())+8, t.height(), fillBrush);
+        if(aUpperGradient)
+            p.drawTiledPixmap(t.x()+((t.width()-fm.width(caption()))/2)-4,
+                              0, fm.width(caption())+8, 18,
+                              isActive() ? *aUpperGradient :
+                              *iUpperGradient);
+        else
+            p.fillRect(t.x()+((t.width()-fm.width(caption()))/2)-4, t.y(),
+                       fm.width(caption())+8, t.height(), fillBrush);
     }
 
     p.drawText( t, AlignCenter, caption() );
@@ -347,6 +362,8 @@ void SystemClient::paintEvent( QPaintEvent* )
     p.setPen(options->colorGroup(Options::Frame, isActive()).dark());
     p.drawLine(width()-20, height()-6, width()-10,  height()-6);
     p.drawLine(width()-20, height()-4, width()-10,  height()-4);
+
+    drawRoundFrame(p, 0, 0, width(), height());
 }
 
 #define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
