@@ -3597,9 +3597,9 @@ void Workspace::slotResetAllClients()
     else
         focusToNull();
 
-    // Add a dcop signal to allow other apps to know when the kwin client
+    // Emit a DCOP signal to allow other apps to know when the kwin client
     // has been changed by via the titlebar decoration selection.
-    kapp->dcopClient()->emitDCOPSignal("dcopResetAllClients()", QByteArray() );
+    emit dcopResetAllClients();
 }
 
 void Workspace::slotSettingsChanged(int category)
