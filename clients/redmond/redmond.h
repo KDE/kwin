@@ -3,12 +3,15 @@
  *
  * Redmond KWin client
  *
- * Copyright 2001
+ * Copyright 2001-2003
+ *   Ported to kwin_iii by Chris Lee <clee@kde.org>
  *   Karol Szwed <gallium@kde.org>
  *   http://gallium.n3.net/
  *
  * Based on the default KWin client.
  *
+ * Updated to support the new API 9/2003 (CL)
+ * Updated to emulate More Accurately 9/2003 (CL)
  * Updated to support toolwindows 3/2001 (KS)
  *
  */
@@ -20,82 +23,103 @@
 #include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
-#include "../../client.h"
-#include "../../kwinbutton.h"
+#include <kdecoration.h>
+#include <kdecorationfactory.h>
+
 class QLabel;
 class QSpacerItem;
 class QBoxLayout;
 
 namespace Redmond {
 
-using namespace KWinInternal;
+class RedmondDeco;
 
-class GalliumButton : public KWinButton
+class RedmondButton : public QButton
 {
-	public:
-		GalliumButton(Client *parent=0, const char *name=0, 
-					  const unsigned char *bitmap=NULL,
-					  bool menuButton=false, bool isMini=false,
-					  const QString& tip=NULL);
-		void setBitmap(const unsigned char *bitmap);
-		void setPixmap(const QPixmap &p);
-		void reset();
+	Q_OBJECT
+public:
+   	RedmondButton(RedmondDeco *parent=0, const char *name=0, 
+	              const unsigned char *bitmap=NULL,
+	              bool menuButton=false, bool isMini=false,
+	              const QString& tip=NULL);
+	void setBitmap(const unsigned char *bitmap);
+	void setPixmap(const QPixmap &p);
+	void reset();
 
-		QSize sizeHint() const;
-		int   last_button;
+	QSize sizeHint() const;
+	int   last_button;
 
-	protected:
-		void mousePressEvent(QMouseEvent* e);
-		void mouseReleaseEvent(QMouseEvent* e);
-		virtual void drawButton(QPainter *p);
-		void drawButtonLabel(QPainter *){;}
+protected:
+	void mousePressEvent(QMouseEvent* e);
+	void mouseReleaseEvent(QMouseEvent* e);
+	virtual void drawButton(QPainter *p);
+	void drawButtonLabel(QPainter *){;}
 
-		QBitmap  deco;
-		QPixmap  pix;
-		bool     menuBtn;
-		bool     miniBtn;
-		Client*  client;
+	QBitmap  deco;
+	QPixmap  pix;
+	bool     menuBtn;
+	bool     miniBtn;
+	RedmondDeco *client;
 };
 
 
-class GalliumClient : public Client
+class RedmondDeco : public KDecoration
 {
 	Q_OBJECT
 
-	public:
-		GalliumClient( Workspace *ws, WId w, QWidget *parent=0,
-					   const char *name=0 );
-		~GalliumClient() {;}
+public:
+	RedmondDeco(KDecorationBridge *, KDecorationFactory *);
+	~RedmondDeco() {;}
+	void init();
 
-	protected:
-		void resizeEvent( QResizeEvent* );
-		void paintEvent( QPaintEvent* );
-		void showEvent( QShowEvent* );
-		void mouseDoubleClickEvent( QMouseEvent * );
-		void captionChange( const QString& name );
-		void maximizeChange(bool m);
-		void activeChange(bool);
-		void iconChange();
-		void calcHiddenButtons();
+protected:
+	void resizeEvent(QResizeEvent*);
+	void paintEvent(QPaintEvent*);
+	void showEvent(QShowEvent*);
+	void mouseDoubleClickEvent(QMouseEvent *);
+	void captionChange(const QString& name);
+	void maximizeChange(bool m);
+	void activeChange(bool);
+	void iconChange();
+	void calcHiddenButtons();
 
-	protected slots:
-		void slotReset();
-		void slotMaximize();
-		void menuButtonPressed();
-		void menuButtonReleased();
+//	New stuff.
+	MousePosition mousePosition(const QPoint &) const;
+	void borders(int &, int &, int &, int &) const;
+	void resize(const QSize &);
+	QSize minimumSize() const;
+	void activeChange();
+	void captionChange();
+	void maximizeChange();
+	void desktopChange();
+	void shadeChange();
+	bool eventFilter(QObject *, QEvent *);
 
-	private:
-		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
-					  BtnMenu, BtnCount };
+protected slots:
+	void slotReset();
+	void slotMaximize();
+	void menuButtonPressed();
 
-		GalliumButton* button[ GalliumClient::BtnCount ];
-		int            lastButtonWidth;
-		int            titleHeight;
-		QSpacerItem*   titlebar;
-		bool           hiddenItems;
-		QBoxLayout*    hb;
-		bool           smallButtons;
-		bool           closing;
+private:
+	enum Buttons{ BtnHelp=0, BtnMax, BtnMin, BtnClose, BtnMenu, BtnCount };
+
+	RedmondButton* button[RedmondDeco::BtnCount];
+	int            lastButtonWidth;
+	int            titleHeight;
+	QSpacerItem*   titlebar;
+	bool           hiddenItems;
+	QBoxLayout*    hb;
+	bool           smallButtons;
+};
+
+class RedmondDecoFactory : public QObject, public KDecorationFactory
+{
+   Q_OBJECT
+public:
+	RedmondDecoFactory();
+	virtual ~RedmondDecoFactory();
+	virtual KDecoration *createDecoration(KDecorationBridge *);
+	virtual bool reset(unsigned long);
 };
 
 }

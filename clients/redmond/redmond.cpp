@@ -14,6 +14,7 @@
  */
 
 #include "redmond.h"  
+
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <qdatetime.h>
@@ -21,12 +22,12 @@
 #include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
-#include <qbitmap.h>
-#include "../../workspace.h"
-#include "../../options.h"
-#include <qimage.h>
 
-using namespace KWinInternal;
+#include <qbitmap.h>
+#include <qtooltip.h>
+#include <qimage.h>
+#include <qlabel.h>
+#include <qapplication.h>
 
 namespace Redmond {
 
@@ -94,6 +95,10 @@ static QPixmap *defaultMenuPix;
 static QColor  *btnForeground;
 static bool    pixmaps_created = false;
 
+static inline const KDecorationOptions *options()
+{
+   return KDecoration::options();
+}
 
 static void drawButtonFrame( KPixmap *pix, const QColorGroup &g, bool sunken )
 {
@@ -103,22 +108,22 @@ static void drawButtonFrame( KPixmap *pix, const QColorGroup &g, bool sunken )
     p.begin(pix);
 
     // titlebar button frame
-    p.setPen( sunken ? Qt::black : g.light());
+    p.setPen( sunken ? g.dark().dark(155) : g.light());
     p.drawLine(0, 0, x2-1, 0);
     p.drawLine(0, 0, 0, y2-1);
 
     if (sunken)
     {
-       p.setPen( g.dark() );
+       p.setPen( g.mid().dark(135) );
        p.drawLine(1, 1, x2-2, 1);
        p.drawLine(1, 1, 1, y2-2);
     }
 
-    p.setPen( sunken ? g.light() : g.dark());
+    p.setPen( sunken ? g.light() : g.mid().dark(135));
     p.drawLine(1, y2-1, x2-1, y2-1);
     p.drawLine(x2-1, 1, x2-1, y2-1);
 
-    p.setPen( sunken ? g.light() : Qt::black);
+    p.setPen( sunken ? g.light() : g.dark().dark(155));
     p.drawLine(0, y2, x2, y2);
     p.drawLine(x2, 0, x2, y2);
 }
@@ -126,7 +131,7 @@ static void drawButtonFrame( KPixmap *pix, const QColorGroup &g, bool sunken )
 
 static void create_pixmaps( )
 {
-    if(pixmaps_created)
+    if (pixmaps_created)
         return;
 
     pixmaps_created = true;
@@ -144,7 +149,7 @@ static void create_pixmaps( )
     defaultMenuPix = new QPixmap(kdelogo);
 
     // buttons (active/inactive, sunken/unsunken)
-    QColorGroup g = options->colorGroup(Options::ButtonBg, true);
+	QColorGroup g = options()->colorGroup(KDecoration::ColorButtonBg, true);
     QColor c = g.background();
     btnPix1->resize(16, 14);
     btnDownPix1->resize(16, 14);
@@ -156,8 +161,7 @@ static void create_pixmaps( )
     iMiniBtnPix1->resize(12, 12);
     iMiniBtnDownPix1->resize(12, 12);
 
-    if(highcolor)
-    {
+    if (highcolor && false) {
         KPixmapEffect::gradient(*btnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
         KPixmapEffect::gradient(*btnDownPix1, c.dark(130), c.light(130),
@@ -168,7 +172,7 @@ static void create_pixmaps( )
         KPixmapEffect::gradient(*miniBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
 
-        g = options->colorGroup(Options::ButtonBg, false);
+        g = options()->colorGroup(KDecoration::ColorButtonBg, false);
         c = g.background();
         KPixmapEffect::gradient(*iBtnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
@@ -178,15 +182,13 @@ static void create_pixmaps( )
                                 KPixmapEffect::VerticalGradient);
         KPixmapEffect::gradient(*iMiniBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
-    }
-    else
-    {
+    } else {
         btnPix1->fill(c.rgb());
         btnDownPix1->fill(c.rgb());
         miniBtnPix1->fill(c.rgb());
         miniBtnDownPix1->fill(c.rgb());
 
-        g = options->colorGroup(Options::ButtonBg, false);
+        g = options()->colorGroup(KDecoration::ColorButtonBg, false);
         c = g.background();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
@@ -194,20 +196,20 @@ static void create_pixmaps( )
         iMiniBtnDownPix1->fill(c.rgb());
     }
 
-    g = options->colorGroup(Options::ButtonBg, true);   
+    g = options()->colorGroup(KDecoration::ColorButtonBg, true);   
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(miniBtnPix1, g, false);
     drawButtonFrame(miniBtnDownPix1, g, true);
 
-    g = options->colorGroup(Options::ButtonBg, false);   
+    g = options()->colorGroup(KDecoration::ColorButtonBg, false);   
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
     drawButtonFrame(iMiniBtnPix1, g, false);
     drawButtonFrame(iMiniBtnDownPix1, g, true);
 
     // Make sure button pixmaps contrast with the current colour scheme.
-    if(qGray(options->color(Options::ButtonBg, true).rgb()) > 127)
+    if (qGray(options()->color(KDecoration::ColorButtonBg, true).rgb()) > 127)
         btnForeground = new QColor(Qt::black);
     else
         btnForeground = new QColor(Qt::white);
@@ -229,278 +231,273 @@ void delete_pixmaps()
 }
 
 
-GalliumButton::GalliumButton(Client *parent, const char *name,
+RedmondButton::RedmondButton(RedmondDeco *parent, const char *name,
       const unsigned char *bitmap, bool menuButton, bool isMini, const QString& tip)
-    : KWinButton(parent, name, tip)
+    : QButton(parent->widget(), name)
 {
-    // Eliminate background flicker
-    setBackgroundMode( QWidget::NoBackground ); 
+	// Eliminate background flicker
+	setBackgroundMode( NoBackground ); 
 
-    menuBtn = menuButton;
-    miniBtn = isMini;
-    client  = parent;
+	menuBtn = menuButton;
+	miniBtn = isMini;
+	client  = parent;
 
-    // Use larger button for the menu, or mini-buttons for toolwindows.
-    if ( isMini ) 
-    {
-       setFixedSize(12, 12);
-       resize(12, 12);
-    } else
-       if ( menuButton ) 
-       {
-          setFixedSize(16, 16);
-          resize(16, 16);
-       }
-       else 
-       {
-          setFixedSize(16, 14);
-          resize(16, 14);
-       }
+	// Use larger button for the menu, or mini-buttons for toolwindows.
+	if ( isMini ) {
+		setFixedSize(12, 12);
+		resize(12, 12);
+	} else {
+		if ( menuButton ) {
+			setFixedSize(16, 16);
+			resize(16, 16);
+		} else {
+			setFixedSize(16, 14);
+			resize(16, 14);
+		}
+	}
 
-    if(bitmap)
-        setBitmap(bitmap);
+	if ( bitmap ) {
+		setBitmap(bitmap);
+	}
+
+	QToolTip::add(this, tip);
 }
 
 
-QSize GalliumButton::sizeHint() const
+QSize RedmondButton::sizeHint() const
 {
-   if ( miniBtn )
-      return(QSize(12, 12));
+	if ( miniBtn )
+		return( QSize(12, 12) );
 
-   if ( menuBtn )
-      return(QSize(16, 16));
-   else
-      return(QSize(16, 14));
+	if ( menuBtn )
+		return( QSize(16, 16) );
+	else
+		return( QSize(16, 14) );
 }
 
 
-void GalliumButton::reset()
+void RedmondButton::reset()
 {
-    repaint(false);
+	repaint(false);
 }
 
 
-void GalliumButton::setBitmap(const unsigned char *bitmap)
+void RedmondButton::setBitmap(const unsigned char *bitmap)
 {
-    pix.resize(0, 0);
-    deco = QBitmap(10, 10, bitmap, true);
-    deco.setMask(deco);
-    repaint( false );   
+	pix.resize(0, 0);
+	deco = QBitmap(10, 10, bitmap, true);
+	deco.setMask(deco);
+	repaint( false );   
 }
 
 
-void GalliumButton::setPixmap( const QPixmap &p )
+void RedmondButton::setPixmap( const QPixmap &p )
 {
-    deco.resize(0, 0);
-    pix = p;
+	deco.resize(0, 0);
+	pix = p;
 
-    if (miniBtn)
-       setMask(QRect(0, 0, 12, 12));
-    else if (menuBtn)
-       setMask(QRect(0, 0, 16, 16));
-    else
-       setMask(QRect(0, 0, 16, 14));
+	if (miniBtn)
+    	setMask(QRect(0, 0, 12, 12));
+	else if (menuBtn)
+		setMask(QRect(0, 0, 16, 16));
+	else
+		setMask(QRect(0, 0, 16, 14));
 
-    repaint( false );   
+	repaint(false);
 }
 
 
-void GalliumButton::mousePressEvent( QMouseEvent* e )
+void RedmondButton::mousePressEvent( QMouseEvent* e )
+{
+	last_button = e->button();
+	QMouseEvent me(e->type(), e->pos(), e->globalPos(),
+	               LeftButton, e->state());
+	QButton::mousePressEvent( &me );
+}
+
+
+void RedmondButton::mouseReleaseEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
 					 LeftButton, e->state() );
-	KWinButton::mousePressEvent( &me );
+	QButton::mouseReleaseEvent( &me );
 }
 
 
-void GalliumButton::mouseReleaseEvent( QMouseEvent* e )
+void RedmondButton::drawButton(QPainter *p)
 {
-	last_button = e->button();
-	QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
-					 LeftButton, e->state() );
-	KWinButton::mouseReleaseEvent( &me );
+   if ( pix.isNull() ) {
+	  if ( client->isActive() ) {
+		 if ( isDown() )
+			p->drawPixmap(0, 0, miniBtn ? *miniBtnDownPix1 : *btnDownPix1);
+		 else
+			p->drawPixmap(0, 0, miniBtn ? *miniBtnPix1 : *btnPix1);
+	  } else {
+		 if ( isDown() )
+			p->drawPixmap(0, 0, miniBtn ? *iMiniBtnDownPix1 : *iBtnDownPix1);
+		 else
+			p->drawPixmap(0, 0, miniBtn ? *iMiniBtnPix1 : *iBtnPix1);
+	  }
+
+	  p->setPen( *btnForeground );
+	  int xOff = (width()-10)/2;
+	  int yOff = (height()-10)/2;
+	  p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
+   } else {
+	  p->fillRect(0, 0, width(), height(),
+			options()->color(KDecoration::ColorTitleBar, client->isActive()));
+
+	  if ( menuBtn && miniBtn ) {
+		 QPixmap tmpPix; 
+
+		 // Smooth scale the menu button pixmap
+		 tmpPix.convertFromImage( pix.convertToImage().smoothScale(12, 12));
+
+		 p->drawPixmap( 0, 0, tmpPix );            
+	  } else
+		 p->drawPixmap( 0, 0, pix );
+   }
 }
 
 
-void GalliumButton::drawButton(QPainter *p)
+RedmondDeco::RedmondDeco(KDecorationBridge *b, KDecorationFactory *f)
+    : KDecoration(b, f)
 {
-    if(pix.isNull())
-    {
-        if(client->isActive())
-        {
-           if(isDown())
-               p->drawPixmap(0, 0, miniBtn ? *miniBtnDownPix1 : *btnDownPix1);
-           else
-               p->drawPixmap(0, 0, miniBtn ? *miniBtnPix1 : *btnPix1);
-         }
-         else
-           {
-              if(isDown())
-                  p->drawPixmap(0, 0, miniBtn ? *iMiniBtnDownPix1 : *iBtnDownPix1);
-              else
-                  p->drawPixmap(0, 0, miniBtn ? *iMiniBtnPix1 : *iBtnPix1);
-           }
-
-        p->setPen( *btnForeground );
-        int xOff = (width()-10)/2;
-        int yOff = (height()-10)/2;
-        p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
-    }
-    else
-    {
-        p->fillRect(0, 0, width(), height(),
-                    options->color(Options::TitleBar, client->isActive()));
-
-        if ( menuBtn && miniBtn )
-        {
-           QPixmap tmpPix; 
-
-           // Smooth scale the menu button pixmap
-           tmpPix.convertFromImage( pix.convertToImage().smoothScale(12, 12));
-
-           p->drawPixmap( 0, 0, tmpPix );            
-        } else
-            p->drawPixmap( 0, 0, pix );
-    }
 }
 
-
-GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
-                            const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents |
-                                   WRepaintNoErase )
+void RedmondDeco::init()
 {
-    setBackgroundMode( QWidget::NoBackground );
+	createMainWidget(WResizeNoErase);
+	widget()->installEventFilter(this);
 
-    // Finally, toolwindows look small
-    if ( isTool() ) {
-       titleHeight = 14;
-       smallButtons = true;
-    } else {
-       titleHeight = 18;
-       smallButtons = false;
-    }
+	widget()->setBackgroundMode(NoBackground);
+//	bool reverse = QApplication::reverseLayout();
 
-    lastButtonWidth = 0;
+//	Finally, toolwindows look small
+//	if ( isTool() ) {
+//		titleHeight = 14;
+//		smallButtons = true;
+//	} else {
+		titleHeight = 18;
+		smallButtons = false;
+//	}
 
-    QGridLayout* g = new QGridLayout(this, 0, 0, 0);
-    g->setResizeMode(QLayout::FreeResize);
-    g->addRowSpacing(0, 4);        // Top grab bar 
-    g->addWidget(windowWrapper(), 3, 1);
-    // without the next line, unshade flickers
-    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, 
-                QSizePolicy::Expanding ) );
-    g->setRowStretch(3, 10);      // Wrapped window
-    g->addRowSpacing(4, 4);       // bottom handles
-    g->addRowSpacing(2, 1);       // Line below title bar
-    g->addColSpacing(0, 4);
-    g->addColSpacing(2, 4);
+	lastButtonWidth = 0;
 
-    button[BtnMenu]    = new GalliumButton(this, "menu", NULL, true, smallButtons, 
-                                           i18n("Menu"));
-    button[BtnClose]   = new GalliumButton(this, "close", close_bits, false, smallButtons,
-                                           i18n("Close"));
-    button[BtnIconify] = new GalliumButton(this, "iconify", iconify_bits, false, smallButtons,
-                                           i18n("Minimize"));
-    button[BtnMax]     = new GalliumButton(this, "maximize", maximize_bits, false, smallButtons,
-                                           i18n("Maximize"));
-    
-    // Connect required stuff together
-    connect( button[BtnMenu],    SIGNAL(pressed()),      this, SLOT( menuButtonPressed() ));
-    connect( button[BtnMenu],    SIGNAL(released()),     this, SLOT( menuButtonReleased() ));
-    connect( button[BtnClose],   SIGNAL( clicked() ),    this, SLOT( closeWindow() ));
-    connect( button[BtnIconify], SIGNAL( clicked() ),    this, SLOT( iconify() ));
-    connect( button[BtnMax],     SIGNAL( clicked() ),    this, SLOT( slotMaximize() ));
-    connect( options,            SIGNAL(resetClients()), this, SLOT( slotReset() ));
+	QGridLayout* g = new QGridLayout(widget(), 0, 0, 0);
+	g->setResizeMode(QLayout::FreeResize);
+	if (isPreview()) {
+		g->addWidget(new QLabel(i18n("<center><b>Redmond preview</b></center>"), widget()), 3, 1);
+	} else {
+		g->addWidget(new QWidget(widget()), 3, 1);
+	}
+
+	g->addRowSpacing(0, 4);       // Top grab bar 
+	// without the next line, unshade flickers
+	g->addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
+	g->setRowStretch(3, 10);      // Wrapped window
+	g->addRowSpacing(4, 4);       // bottom handles
+	g->addRowSpacing(2, 1);       // Line below title bar
+	g->addColSpacing(0, 4);
+	g->addColSpacing(2, 4);
+
+	button[BtnMenu] = new RedmondButton(this, "menu", NULL, true, smallButtons, i18n("Menu"));
+	button[BtnClose] = new RedmondButton(this, "close", close_bits, false, smallButtons, i18n("Close"));
+	button[BtnMin] = new RedmondButton(this, "iconify", iconify_bits, false, smallButtons, i18n("Minimize"));
+	button[BtnMax] = new RedmondButton(this, "maximize", maximize_bits, false, smallButtons, i18n("Maximize"));
+
+	// Connect required stuff together
+	connect(button[BtnMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
+	connect(button[BtnClose], SIGNAL(clicked()), this, SLOT(closeWindow()));
+	connect(button[BtnMin], SIGNAL(clicked()), this, SLOT(minimize()));
+	connect(button[BtnMax], SIGNAL(clicked()), this, SLOT(slotMaximize()));
 
 	// Pack the titleBar hbox with items
 	hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
-    hb->setResizeMode(QLayout::FreeResize);
-    g->addLayout( hb, 1, 1 );
-    hb->addSpacing(2);
-    hb->addWidget( button[BtnMenu] );  
-    titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    hb->addItem(titlebar);
-    hb->addSpacing(2);
+	hb->setResizeMode(QLayout::FreeResize);
+	hb->addSpacing(2);
+	hb->addWidget(button[BtnMenu]);  
+	titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
+	hb->addItem(titlebar);
+	hb->addSpacing(2);
 
-    if( providesContextHelp() )
-    {
-        button[BtnHelp] = new GalliumButton(this, "help", question_bits, false, smallButtons,
-                                            i18n("Help"));
-        connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
-        hb->addWidget( button[BtnHelp] );
-    }
-    else
-        button[BtnHelp] = NULL;
+	if ( providesContextHelp() ) {
+		button[BtnHelp] = new RedmondButton(this, "help", question_bits, false, smallButtons, i18n("Help"));
+		connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
+		hb->addWidget( button[BtnHelp] );
+	} else {
+		button[BtnHelp] = NULL;
+	}
 
-    hb->addWidget( button[BtnIconify] );
-    hb->addWidget( button[BtnMax] );
-    hb->addSpacing(2);
-    hb->addWidget( button[BtnClose] );
-    hb->addSpacing(2);
+	hb->addWidget(button[BtnMin]);
+	hb->addWidget(button[BtnMax]);
+	hb->addSpacing(2);
+	hb->addWidget(button[BtnClose]);
+	hb->addSpacing(2);
 
-    // Hide buttons which are not required
-    // We can un-hide them if required later
-    if ( !isMinimizable() )
-        button[BtnIconify]->hide();
-    if ( !isMaximizable() )
-        button[BtnMax]->hide();
-    if ( !isCloseable() )
-        button[BtnClose]->hide();
+	g->addLayout(hb, 1, 1);
 
-    hiddenItems = false;
-    closing = false;
+	// Hide buttons which are not required
+	// We can un-hide them if required later
+	if (!isMinimizable())
+		button[BtnMin]->hide();
+	if (!isMaximizable())
+		button[BtnMax]->hide();
+	if (!isCloseable())
+		button[BtnClose]->hide();
 
-    // Make sure that the menu button uses the correct mini-icon
-    iconChange();
+	hiddenItems = false;
+
+	// Make sure that the menu button uses the correct mini-icon
+	iconChange();
+	widget()->layout()->activate();
 }
 
 
-void GalliumClient::slotReset()
+void RedmondDeco::slotReset()
 {
     // 0 to 3   ( 4 buttons - Help, Max, Iconify, Close )
-    for(int i = GalliumClient::BtnHelp; i <= GalliumClient::BtnClose; i++)
-        if(button[i])
+    for(int i = RedmondDeco::BtnHelp; i <= RedmondDeco::BtnClose; i++)
+        if (button[i])
             button[i]->reset();
 
     // The menu is reset by iconChange()
 
-    repaint( false );  
+    widget()->repaint( false );  
 }
 
 
-void GalliumClient::iconChange()
+void RedmondDeco::iconChange()
 {
-    if(!miniIcon().isNull())
-        button[BtnMenu]->setPixmap(miniIcon());
-    else
-        button[BtnMenu]->setPixmap(*defaultMenuPix);
+	QPixmap *miniIcon = new QPixmap(icon().pixmap(QIconSet::Small, QIconSet::Normal));
 
-    if (button[BtnMenu]->isVisible())
-       button[BtnMenu]->repaint(false);
+	if (!miniIcon->isNull())
+		button[BtnMenu]->setPixmap(*miniIcon);
+	else
+		button[BtnMenu]->setPixmap(*defaultMenuPix);
+
+	if (button[BtnMenu]->isVisible())
+		button[BtnMenu]->repaint(false);
 }
 
 
-void GalliumClient::slotMaximize()
+void RedmondDeco::slotMaximize()
 {
     if ( button[BtnMax]->last_button == MidButton )
-       maximize( MaximizeVertical );
+       maximize( maximizeMode() ^ MaximizeVertical );
     else if ( button[BtnMax]->last_button == RightButton )
-       maximize( MaximizeHorizontal );
+       maximize( maximizeMode() ^ MaximizeHorizontal );
     else
-       maximize();
+       maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
 }
 
 
-void GalliumClient::resizeEvent( QResizeEvent* e)
+void RedmondDeco::resizeEvent(QResizeEvent *)
 {
-    Client::resizeEvent( e );
-
     calcHiddenButtons();
-
-    if (isVisibleToTLW()) 
-    {
+/*
+    if (isVisibleToTLW()) {
         update(rect());
         int dx = 0;
         int dy = 0;
@@ -523,24 +520,25 @@ void GalliumClient::resizeEvent( QResizeEvent* e)
 	       QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
 	    }
     } 
+ */
 }
 
 
-void GalliumClient::captionChange( const QString& )
+void RedmondDeco::captionChange( const QString& )
 {
-    repaint( titlebar->geometry(), false );
+    widget()->repaint( titlebar->geometry(), false );
 }
 
 
-void GalliumClient::paintEvent( QPaintEvent* )
+void RedmondDeco::paintEvent( QPaintEvent* )
 {
     bool hicolor = QPixmap::defaultDepth() > 8;
     int fontoffset = 1;
 
-    QPainter p(this);
+    QPainter p(widget());
 
     // Obtain widget bounds.
-    QRect r(rect());
+    QRect r(widget()->rect());
     int x = r.x();
     int y = r.y();
     int x2 = r.width()-1;
@@ -550,15 +548,15 @@ void GalliumClient::paintEvent( QPaintEvent* )
 
     // Draw part of the frame that is the frame color
     // ==============================================
-    QColorGroup g = options->colorGroup(Options::Frame, isActive());
+    QColorGroup g = options()->colorGroup(KDecoration::ColorFrame, isActive());
     p.setPen( g.background() );
     p.drawLine( x, y, x2-1, y );
     p.drawLine( x, y, x, y2-1 );
  
     // Draw line under title bar
-    p.drawLine( x + 4, y + titleHeight + 4, x2 - 4, y + titleHeight + 4 );
+    p.drawLine( x+4, y+titleHeight+4, x2-4, y+titleHeight+4 );
     // Draw a hidden line that appears during shading
-    p.drawLine( x + 4, y2 - 4, x2 - 4, y2 - 4 );
+    p.drawLine( x+4, y2-4, x2-4, y2-4 );
 
     // Fill out the border edges
     p.drawRect( x+2, y+2, w-4, h-4 );
@@ -569,41 +567,37 @@ void GalliumClient::paintEvent( QPaintEvent* )
     p.drawLine( x+1, y+1, x2-2, y+1);
     p.drawLine( x+1, y+1, x+1, y2-2);
 
-    p.setPen(g.dark());
+    p.setPen(g.mid().dark(135));
     p.drawLine( x2-1, y+1, x2-1, y2-1);
     p.drawLine( x+1, y2-1, x2-1, y2-1);
 
     // Draw black edges
-    p.setPen( Qt::black );
+    p.setPen( g.dark().dark(155) );
     p.drawLine(x2, y, x2, y2);
     p.drawLine(x, y2, x2, y2);
 
     // Draw the title bar.
     // ===================
     r = titlebar->geometry();
-    QFontMetrics fm(options->font(true));
+    QFontMetrics fm(options()->font(true));
 
     // Obtain blend colours.
-    QColor c1 = options->color(Options::TitleBar, isActive() );
-    QColor c2 = options->color(Options::TitleBlend, isActive() );
+    QColor c1 = options()->color(KDecoration::ColorTitleBar, isActive() );
+    QColor c2 = options()->color(KDecoration::ColorTitleBlend, isActive() );
 
     // Paint without a buffer if the colours are the same to
     // improve performance, and only draw gradients on hicolor displays.
-    if ((c1 != c2) && hicolor) 
-    {
+    if ((c1 != c2) && hicolor) {
         // KS - Add gradient caching if needed at a later stage.
 
         // Create a disposable pixmap buffer for the title blend
         KPixmap* titleBuffer = new KPixmap;
         titleBuffer->resize(w-8, titleHeight);
 
-        if (titleBuffer->depth() > 16)
-        {
+        if (titleBuffer->depth() > 16) {
             KPixmapEffect::gradient(*titleBuffer, c1, c2,
                                     KPixmapEffect::HorizontalGradient);
-        }
-        else
-        {
+        } else {
             // This enables dithering on 15 and 16bit displays, preventing
             // some pretty horrible banding effects
             QImage image = KImageEffect::gradient(titleBuffer->size(), c1, c2,
@@ -618,15 +612,14 @@ void GalliumClient::paintEvent( QPaintEvent* )
         // to draw the title text on the pixmap.
 
         // Reduce the font size and weight for toolwindows.
-        QFont fnt = options->font(true);
-        if ( smallButtons )
-        {
+        QFont fnt = options()->font(true);
+        if ( smallButtons ) {
            fnt.setPointSize( fnt.pointSize() - 2 ); // Shrink font by 2 pt.
            fnt.setWeight( QFont::Normal ); 
            fontoffset = 0;
         }
         p2.setFont( fnt );
-        p2.setPen( options->color(Options::Font, isActive() ));
+        p2.setPen( options()->color(KDecoration::ColorFont, isActive() ));
         p2.drawText( r.x(), fontoffset, r.width()-3, r.height()-1,
                      AlignLeft | AlignVCenter, caption() );
         p2.end();
@@ -635,14 +628,13 @@ void GalliumClient::paintEvent( QPaintEvent* )
 
         delete titleBuffer; 
 
-    } else 
-    {  
+    } else {  
        // Assume lower ended hardware, so don't use buffers.
        // Don't draw a gradient either.
        p.fillRect( 4, 4, w-8, titleHeight, c1 );
     
        // Draw the title text.
-       QFont fnt = options->font(true);
+       QFont fnt = options()->font(true);
        if ( smallButtons )
        {
           fnt.setPointSize( fnt.pointSize() - 2 ); // Shrink font by 2 pt.
@@ -650,165 +642,224 @@ void GalliumClient::paintEvent( QPaintEvent* )
           fontoffset = 0;
        }
        p.setFont( fnt );
-       p.setPen(options->color(Options::Font, isActive() ));
+       p.setPen(options()->color(KDecoration::ColorFont, isActive() ));
        p.drawText(r.x()+4, r.y()+fontoffset, r.width()-3, r.height()-1,
                   AlignLeft | AlignVCenter, caption() );
    }
 
 }
 
-
-void GalliumClient::showEvent(QShowEvent *ev)
+void RedmondDeco::showEvent(QShowEvent *)
 {
     calcHiddenButtons();  
-    show();
-    Client::showEvent(ev);
+    widget()->show();
 }
 
 
-void GalliumClient::mouseDoubleClickEvent( QMouseEvent * e )
+void RedmondDeco::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
-	workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+	   titlebarDblClickOperation();
 }
 
 
-void GalliumClient::maximizeChange(bool m)
+void RedmondDeco::maximizeChange(bool m)
 {
     button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
-    button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
 
-
-void GalliumClient::activeChange(bool)
+void RedmondDeco::calcHiddenButtons()
 {
+   // order of hiding is help, maximize, minimize, close, then menu;
+   int minWidth = 32 + 16*4 + (providesContextHelp() ? 16*2 : 16 );
 
-    if(!miniIcon().isNull())
-    {
-        button[BtnMenu]->setPixmap(miniIcon()); 
-    }
-    else
+   if (lastButtonWidth > width()) { // Shrinking
+	  lastButtonWidth = width();
+	  if (width() < minWidth) {
+		 hiddenItems = true;
+
+		 for(int i = RedmondDeco::BtnHelp; i <= RedmondDeco::BtnMenu; i++) {
+			if (button[i]) {
+			   if ( !button[i]->isHidden() ) {
+				  button[i]->hide();
+			   }
+			   minWidth -= button[i]->sizeHint().width();
+			   if (width() >= minWidth) {
+				  return;
+			   }
+			}
+		 }
+	  }
+   } else {
+	  if ( hiddenItems ) { // Expanding
+		 lastButtonWidth = width();
+		 int totalSize = 16*3;
+
+		 for (int i = RedmondDeco::BtnMenu; i >= RedmondDeco::BtnHelp; i--) {
+			if (button[i]) {
+			   if (button[i]->sizeHint().width() + totalSize <= width()) {
+				  totalSize += button[i]->sizeHint().width();
+				  button[i]->resize(button[i]->sizeHint());
+				  button[i]->show();
+			   } else {
+				  return;
+			   }
+			}
+		 }
+
+		 // all items shown now
+		 hiddenItems = false;
+	  } else {
+		 lastButtonWidth = width();
+	  }
+   }
+}
+
+RedmondDeco::MousePosition RedmondDeco::mousePosition(const QPoint &p) const
+{
+//	MousePosition m = KDecoration::mousePosition(p);
+//	return m;
+	return KDecoration::mousePosition(p);
+}
+
+void RedmondDeco::borders(int &l, int &r, int &t, int &b) const
+{
+//	bool reverse = QApplication::reverseLayout();
+	l = 4;
+	r = 4;
+	t = titlebar->geometry().height() + 5;
+	b = 4;
+}
+
+void RedmondDeco::resize(const QSize &s)
+{
+	widget()->resize(s);
+}
+
+QSize RedmondDeco::minimumSize() const
+{
+	return QSize(50, 50); // what's good for the goose....
+}
+
+void RedmondDeco::activeChange()
+{
+	QPixmap *miniIcon = new QPixmap(icon().pixmap(QIconSet::Small, QIconSet::Normal));
+
+    if (!miniIcon->isNull()) {
+        button[BtnMenu]->setPixmap(*miniIcon); 
+    } else {
         button[BtnMenu]->setPixmap(kdelogo);
+	}
 
-    for(int i=GalliumClient::BtnHelp; i < GalliumClient::BtnMenu; i++)
-    {
-        if(button[i])
-            button[i]->reset();
-    }
     // Reset the menu button ?
+	for (int i = BtnHelp; i < BtnCount; i++) {
+		if (button[i]) button[i]->reset();
+	}
 
-    repaint(false);
+    widget()->repaint(false);
 }
 
-
-void GalliumClient::calcHiddenButtons()
+void RedmondDeco::captionChange()
 {
-    // order of hiding is help, maximize, minimize, close, then menu;
-    int minWidth = 32 + 16*4 + (providesContextHelp() ? 16*2 : 16 );
-
-    if(lastButtonWidth > width())   // Shrinking
-    { 
-        lastButtonWidth = width();
-        if(width() < minWidth)
-        {
-            hiddenItems = true;
-
-            for(int i = GalliumClient::BtnHelp; i <= GalliumClient::BtnMenu; i++)
-            {
-                if(button[i])
-                {
-                    if( !button[i]->isHidden() ) 
-                    {
-                        button[i]->hide();
-                    }
-                    minWidth -= button[i]->sizeHint().width();
-                    if(width() >= minWidth)
-                        return;
-                }
-            }
-        }
-    }
-    else 
-    if(hiddenItems) // Expanding
-    { 
-        lastButtonWidth = width();
-        int totalSize = 16*3;
-
-        for(int i = GalliumClient::BtnMenu; i >= GalliumClient::BtnHelp; i--)
-        {
-            if(button[i])
-            {
-                if(button[i]->sizeHint().width() + totalSize <= width()) 
-                {
-                    totalSize += button[i]->sizeHint().width();
-                    button[i]->resize(button[i]->sizeHint());
-                    button[i]->show();
-                }
-                else
-                    return;
-            }
-        }
-
-        // all items shown now
-        hiddenItems = false;
-    }
-    else
-        lastButtonWidth = width();
+    widget()->repaint(titlebar->geometry(), false);
 }
 
+void RedmondDeco::maximizeChange()
+{
+	bool m = (maximizeMode() == MaximizeFull);
+    button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
+	QToolTip::remove(button[BtnMax]);
+	QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
+}
 
-void GalliumClient::menuButtonPressed()
+void RedmondDeco::desktopChange()
+{
+}
+
+void RedmondDeco::shadeChange()
+{
+}
+
+void RedmondDeco::menuButtonPressed()
 {
     static QTime* t = NULL;
-    static GalliumClient* lastClient = NULL;
-    if( t == NULL )
-	t = new QTime;
+    static RedmondDeco* lastClient = NULL;
+    if (t == NULL) t = new QTime;
     bool dbl = ( lastClient == this && t->elapsed() <= QApplication::doubleClickInterval());
     lastClient = this;
     t->start();
-    if( !dbl )
-    {
-	QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-3, 
-	                   button[BtnMenu]->rect().bottomLeft().y()+2 );
-	workspace()->showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ), this );
-	    button[BtnMenu]->setDown(false);
-    }
-    else
-	closing = true;
+    if (!dbl) {
+		QPoint menupoint(button[BtnMenu]->rect().bottomLeft().x()-3, 
+		                 button[BtnMenu]->rect().bottomLeft().y()+4);
+		showWindowMenu(button[BtnMenu]->mapToGlobal(menupoint));
+		button[BtnMenu]->setDown(false);
+    } else {
+		closeWindow();
+	}
 }
 
-
-void GalliumClient::menuButtonReleased()
+bool RedmondDeco::eventFilter(QObject *o, QEvent *e)
 {
-    if ( closing )
-	closeWindow();
+	if (o != widget()) { return false; }
+	switch (e->type()) {
+		case QEvent::Resize: {
+			resizeEvent(static_cast<QResizeEvent *>(e));
+			return true;
+		}
+		case QEvent::Paint: {
+			paintEvent(static_cast<QPaintEvent *>(e));
+			return true;
+		}
+		case QEvent::Show: {
+			showEvent(static_cast<QShowEvent *>(e));
+			return true;
+		}
+		case QEvent::MouseButtonDblClick: {
+			mouseDoubleClickEvent(static_cast<QMouseEvent *>(e));
+			return true;
+		}
+		case QEvent::MouseButtonPress: {
+			processMousePressEvent(static_cast<QMouseEvent *>(e));
+			return true;
+		}
+		default: {
+			break;
+		}
+	}
+
+	return false;
 }
 
-}
-
-extern "C"
+RedmondDecoFactory::RedmondDecoFactory()
 {
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new Redmond::GalliumClient(ws, w));
-    }
+	create_pixmaps();
+}
 
-    void init()
-    {
-        Redmond::create_pixmaps();
-    }
+RedmondDecoFactory::~RedmondDecoFactory()
+{
+	Redmond::delete_pixmaps();
+}
 
-    void reset()
-    {
-       Redmond::delete_pixmaps();
-       Redmond::create_pixmaps();
-       Workspace::self()->slotResetAllClientsDelayed();
-    }
+KDecoration *RedmondDecoFactory::createDecoration( KDecorationBridge *b )
+{
+	return new RedmondDeco(b, this);
+}
 
-    void deinit()
-    {
-       Redmond::delete_pixmaps();
-    }
+bool RedmondDecoFactory::reset( unsigned long changed )
+{
+	if ( changed && false ) {
+		return true;
+	} else {
+		resetDecorations(changed);
+		return false;
+	}
+}
+
+}
+
+extern "C" KDecorationFactory *create_factory()
+{
+	return new Redmond::RedmondDecoFactory();
 }
 
 

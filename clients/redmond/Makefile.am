@@ -1,21 +1,11 @@
 
-INCLUDES = $(all_includes)
+INCLUDES = -I$(srcdir)/../../lib $(all_includes)
 
-kde_module_LTLIBRARIES = kwin_redmond.la
+kde_module_LTLIBRARIES = kwin3_redmond.la
 
-kwin_redmond_la_SOURCES = redmond.cpp
-#kwin_redmond_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
-kwin_redmond_la_LDFLAGS = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
+kwin3_redmond_la_SOURCES = redmond.cpp
+kwin3_redmond_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+kwin3_redmond_la_LIBADD = $(LIB_KDECORE) ../../lib/libkwin.la
 
 METASOURCES = AUTO
 noinst_HEADERS = redmond.h
-
-lnkdir = $(kde_datadir)/kwin/
-lnk_DATA = redmond.desktop
-
-EXTRA_DIST = $(lnk_DATA)
-
-
-###KMAKE-start (don't edit or delete this block)
-
-###KMAKE-end
