@@ -121,7 +121,7 @@ void Options::reload()
 
     // Keep in sync with kglobalsettings.
 
-    QFont activeFontGuess("helvetica", 12, QFont::SansSerif, true);
+    QFont activeFontGuess("helvetica", 12, QFont::Bold);
     activeFontGuess.setPixelSize(12);
 
     activeFont = config->readFontEntry("activeFont", &activeFontGuess);
