@@ -67,7 +67,6 @@ WebClient::init()
   // title height
   const uint textVMargin   = 2;
   QFontMetrics fm(options()->font(isActive(), isTool()));
-  titleHeight_ = QMAX(14, fm.height() + textVMargin * 2);
 
   // border size
   switch(options()->preferredBorderSize()) {
@@ -78,13 +77,20 @@ WebClient::init()
       borderSize_ = 12;
       break;
     case BorderHuge:
-      borderSize_ = 16;
+      borderSize_ = 18;
+      break;
+    case BorderVeryHuge:
+      borderSize_ = 27;
+      break;
+    case BorderOversized:
+      borderSize_ = 40;
       break;
     case BorderTiny:
     case BorderNormal:
     default:
       borderSize_ = 4;
   }
+  titleHeight_ = QMAX(QMAX(14, fm.height() + textVMargin * 2), borderSize_);
 
   _resetLayout();
 
@@ -294,15 +300,16 @@ WebClient::mousePosition(const QPoint & p) const
 {
   int x = p.x();
   int y = p.y();
+  int corner = 14 + 3*borderSize_/2;
 
   if (y < titleSpacer_->geometry().height())
   {
     // rikkus: this style is not designed to be resizable at the top edge.
 
 #if 0
-    if ((y < 4 && x < 20) || x < 4)
+    if ((y < 4 && x < corner) || x < 4)
       return Client::TopLeft;
-    else if ((y < 4 && x > width() - 20) || x > width() - 4)
+    else if ((y < 4 && x > width() - corner) || x > width() - 4)
       return Client::TopRight;
     else if (y < 4)
       return Client::Top;
@@ -322,10 +329,10 @@ WebClient::mousePosition(const QPoint & p) const
   }
   else
   {
-    if (x < 20)
+    if (x < 12 + corner)
       return KDecoration::BottomLeft2;
     else
-      if (x > width() - 20)
+      if (x > width() - corner)
         return KDecoration::BottomRight2;
       else
         return KDecoration::Bottom;
