@@ -365,7 +365,7 @@ void GalliumButton::drawButton(QPainter *p)
 
 GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity |
+    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents |
                                    WRepaintNoErase )
 {
     setBackgroundMode( QWidget::NoBackground );
