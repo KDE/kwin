@@ -14,6 +14,9 @@ void Events::raise( Event e )
 
     QString event;
     switch ( e ) {
+    case Activate:
+	event = "activate";
+	break;
     case Close:
 	event = "close";
 	break;
@@ -70,7 +73,7 @@ void Events::raise( Event e )
     if ( !event )
 	return;
 
-    
+
 
     if ( !KNotifyClient::event( event ) )
 	forgetIt = TRUE;
