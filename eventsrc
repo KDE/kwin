@@ -1786,11 +1786,13 @@ default_presentation=0
 
 [minimize]
 Name=Window Minimize
+Name[da]=Minimér vindue
 Name[hu]=Ablak minimalizálása
 Name[nl]=Venster minimaliseren
 Name[sr]=Минимизација прозора
 Name[sv]=Fönster minimeras
 Comment=A Window is Minimized
+Comment[da]=Et vindue minimeres
 Comment[hu]=Egy ablak minimalizálása
 Comment[nl]=Een venster is geminimaliseerd
 Comment[sr]=Прозор је минимизован
@@ -1800,6 +1802,7 @@ default_presentation=0
 
 [unminimize]
 Name=Window Unminimize
+Name[da]=Afminimér vindue
 Name[hu]=Minimalizált ablak visszaállítása
 Name[nl]=Minimalisatie van venster ongedaan maken
 Name[sr]=Прозор се обнавља после минимизације
@@ -2117,11 +2120,13 @@ default_presentation=0
 
 [on_all_desktops]
 Name=Window On All Desktops
+Name[da]=Vindue på alle desktoppe
 Name[hu]=Ablak az összes munkaasztalra
 Name[nl]=Venster op alle bureaubladen
 Name[sr]=Прозор на свим радним површинама
 Name[sv]=Fönster på alla skrivbord
 Comment=A Window is made Visible on All Desktops
+Comment[da]=Et vindue gøres synligt på alle desktoppe
 Comment[hu]=Egy ablak megjelent az összes munkaasztalon
 Comment[nl]=Een venster is zichtbaar op alle bureaubladen
 Comment[sr]=Прозор је учињен видљивим на свим радним површинама
@@ -2131,11 +2136,13 @@ default_presentation=0
 
 [not_on_all_desktops]
 Name=Window Not On All Desktops
+Name[da]=Vindue ikke på alle desktoppe
 Name[hu]=Ablak nem az összes munkaasztalra
 Name[nl]=Venster niet op alle bureaubladen
 Name[sr]=Прозор није на свим радним површинама
 Name[sv]=Fönster inte på alla skrivbord
 Comment=A Window is no more Visible on All Desktops
+Comment[da]=Et vindue er ikke længere synligt på alle desktoppe
 Comment[hu]=Egy ablak nem jelenik meg többé az összes munkaasztalon
 Comment[nl]=Een venster is niet langer zichtbaar op alle bureaubladen
 Comment[sr]=Прозор више није видљив на свим радним површинама
