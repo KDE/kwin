@@ -712,7 +712,7 @@ Layer Client::belongsToLayer() const
     // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
     const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
     const Client* top = workspace()->topClientOnDesktop( desktop(), true );
-    if( isFullScreen() && ac != NULL
+    if( isFullScreen() && ac != NULL && top != NULL
         && ( ac == this || this->hasTransient( ac, true ))
         && ( top == this || this->hasTransient( top, true )))
         return ActiveLayer;
