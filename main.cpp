@@ -189,7 +189,7 @@ static void sighandler(int) {
     QApplication::exit();
 }
 
-static const char *version = "0.4";
+static const char *version = "0.5";
 static const char *description = I18N_NOOP( "The KDE window manager." );
 
 int main( int argc, char * argv[] )

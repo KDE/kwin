@@ -195,6 +195,7 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     XSelectInput( qt_xdisplay(), w,
 		  FocusChangeMask |
 		  PropertyChangeMask |
+		  ColormapChangeMask |
 		  EnterWindowMask | LeaveWindowMask
 		  );
 
@@ -423,6 +424,9 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     stays_on_top = FALSE;
     may_move = TRUE;
     skip_taskbar = FALSE;
+    max_mode = MaximizeRestore;
+    
+    cmap = None;
 
     getWMHints();
     getWindowProtocols();
@@ -479,15 +483,17 @@ bool Client::manage( bool isMapped, bool doNotShow )
       layout()->setResizeMode( QLayout::Minimum );
 
     XWindowAttributes attr;
-    if (XGetWindowAttributes(qt_xdisplay(), win, &attr))
+    if (XGetWindowAttributes(qt_xdisplay(), win, &attr)) {
+	cmap = attr.colormap;
 	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
+    }
 
     QRect geom( original_geometry );
     bool placementDone = FALSE;
 
     SessionInfo* session = workspace()->takeSessionInfo( this );
     if ( session )
-	geom.setRect( session->x, session->y, session->width, session->height );
+	geom = session->geometry;
 
     QRect area = workspace()->clientArea();
 
@@ -608,6 +614,10 @@ bool Client::manage( bool isMapped, bool doNotShow )
     // other settings from the previous session
     if ( session ) {
 	setSticky( session->sticky );
+	setShade( session->shaded );
+	setStaysOnTop( session->staysOnTop );
+	maximize( (MaximizeMode) session->maximize );
+	geom_restore = session->restore;
     }
 
     delete session;
@@ -742,6 +752,10 @@ bool Client::windowEvent( XEvent * e)
 	break;
     case ClientMessage:
 	return clientMessage( e->xclient );
+    case ColormapChangeMask:
+	cmap = e->xcolormap.colormap;
+	if ( isActive() )
+	    workspace()->updateColormap();
     default:
 	break;
     }
@@ -1134,11 +1148,11 @@ bool Client::isMaximizable() const
  */
 void Client::mousePressEvent( QMouseEvent * e)
 {
-    if (buttonDown) 
+    if (buttonDown)
 	return;
-    
+
     Options::MouseCommand com = Options::MouseNothing;
-    
+
     if (e->state() & AltButton) {
 	if ( e->button() == LeftButton ) {
 	    com = options->commandAll1();
@@ -1225,7 +1239,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    moveResizeMode = TRUE;
 	    if ( isMaximized() ) {
 		// in case we were maximized, reset state
-		geom_restore = QRect();
+		max_mode = MaximizeRestore;
 		maximizeChange(FALSE );
 	    }
 	    workspace()->setFocusChangeEnabled(false);
@@ -1565,8 +1579,11 @@ void Client::maximize( MaximizeMode m)
     if ( m == MaximizeAdjust ) {
 	m = max_mode;
     } else {
-	if ( !geom_restore.isNull() )
+	
+	if ( max_mode != MaximizeRestore )
 	    m = MaximizeRestore;
+	else if ( m == max_mode )
+	    return; // nothing to do
 
 	if ( m != MaximizeRestore ) {
 	    Events::raise( Events::Maximize );
@@ -1597,7 +1614,7 @@ void Client::maximize( MaximizeMode m)
     case MaximizeRestore: {
 	Events::raise( Events::UnMaximize );
 	setGeometry(geom_restore);
-	geom_restore = QRect();
+	max_mode = MaximizeRestore;
 	info->setState( 0, NET::Max );
 	} break;
 
@@ -2125,7 +2142,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	moveResizeMode = TRUE;
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
-	    geom_restore = QRect();
+	    max_mode = MaximizeRestore;
 	    maximizeChange(FALSE );
 	}
 	workspace()->setFocusChangeEnabled(false);
@@ -2143,7 +2160,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	moveResizeMode = TRUE;
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
-	    geom_restore = QRect();
+	    max_mode = MaximizeRestore;
 	    maximizeChange(FALSE );
 	}
 	workspace()->setFocusChangeEnabled(false);
@@ -2326,6 +2343,36 @@ QCString Client::sessionId()
 	XFree( data );
     }
     return result;
+}
+
+
+static int getprop(Window w, Atom a, Atom type, long len, unsigned char **p)
+{
+    Atom real_type;
+    int format;
+    unsigned long n, extra;
+    int status;
+
+    status = XGetWindowProperty(qt_xdisplay(), w, a, 0L, len, False, type, &real_type, &format, &n, &extra, p);
+    if (status != Success || *p == 0)
+	return -1;
+    if (n == 0)
+	XFree((void*) *p);
+    return n;
+}
+
+QCString Client::wmCommand()
+{
+  QCString result;
+  char *p;
+  int i,n;
+  if ((n = getprop(win, XA_WM_COMMAND, XA_STRING, 100L, (unsigned char **)&p)) > 0){
+    result = p;
+    for ( i = 0; (i += strlen(p+i)+1) < n; result.append(p+i) )
+	result.append(" ");
+    XFree((char *) p);
+  }
+  return result;
 }
 
 void Client::activateLayout()

@@ -113,8 +113,10 @@ public:
     void giveUpShade();
 
     bool isMaximized() const;
-    enum MaximizeMode { MaximizeVertical, MaximizeHorizontal, MaximizeFull, MaximizeRestore, MaximizeAdjust };
+    enum MaximizeMode { MaximizeRestore, MaximizeVertical, MaximizeHorizontal, MaximizeFull,  MaximizeAdjust };
     bool isMaximizable() const;
+    QRect geometryRestore() const;
+    MaximizeMode maximizeMode() const;
 
     bool isSticky() const;
     void setSticky( bool );
@@ -158,8 +160,11 @@ public:
 
     QCString windowRole();
     QCString sessionId();
+    QCString wmCommand();
 
     QRect adjustedClientArea( const QRect& area ) const;
+
+    Colormap colormap() const;
 
 public slots:
     void iconify();
@@ -217,7 +222,7 @@ protected:
     bool configureRequest( XConfigureRequestEvent& e );
     bool propertyNotify( XPropertyEvent& e );
     bool clientMessage( XClientMessageEvent& e );
-
+    
 private:
     QSize sizeForWindowSize( const QSize&, bool ignore_height = FALSE ) const;
     void getWmNormalHints();
@@ -269,6 +274,7 @@ private:
     QRegion mask;
     WinInfo* info;
     QTimer* autoRaiseTimer;
+    Colormap cmap;
 
 };
 
@@ -351,9 +357,18 @@ inline QPixmap Client::miniIcon() const
  */
 inline bool Client::isMaximized() const
 {
-    return !geom_restore.isNull();
+    return max_mode != MaximizeRestore;
 }
 
+inline QRect Client::geometryRestore() const
+{
+    return geom_restore;
+}
+
+inline Client::MaximizeMode Client::maximizeMode() const
+{
+    return max_mode;
+}
 
 inline bool Client::staysOnTop() const
 {
@@ -369,6 +384,12 @@ inline bool Client::shape() const
 inline const QRegion& Client::getMask() const
 {
     return mask;
+}
+
+
+inline Colormap Client::colormap() const
+{
+    return cmap;
 }
 
 class NoBorderClient : public Client

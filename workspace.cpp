@@ -15,6 +15,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kapp.h>
 #include <dcopclient.h>
 #include <kdebug.h>
+#include <kprocess.h>
 
 #include <netwm.h>
 
@@ -40,9 +41,6 @@ const int XIconicState = IconicState;
 
 #include <kwin.h>
 #include <kapp.h>
-
-
-
 
 
 // NET WM Protocol handler class
@@ -216,6 +214,8 @@ Workspace::Workspace( bool restore )
     root              (0)
 {
     root = qt_xrootwin();
+    default_colormap = DefaultColormap(qt_xdisplay(), qt_xscreen() );
+    installed_colormap = default_colormap;
     session.setAutoDelete( TRUE );
 
     area = QApplication::desktop()->geometry();
@@ -267,6 +267,16 @@ Workspace::Workspace( bool restore )
     tab_box = new TabBox( this );
 
     init();
+
+    if ( restore ) { // pseudo session management with wmCommand
+	for (SessionInfo* info = session.first(); info; info = session.next() ) {
+	    if ( info->sessionId.isEmpty() && !info->wmCommand.isEmpty() ) {
+		KShellProcess proc;
+		proc << QString::fromLatin1( info->wmCommand );
+		proc.start(KShellProcess::DontCare);	
+	    }
+	}
+    }
 }
 
 void Workspace::init()
@@ -949,6 +959,7 @@ void Workspace::setActiveClient( Client* c )
     }
 
     rootInfo->setActiveWindow( active_client? active_client->window() : 0 );
+    updateColormap();
 }
 
 
@@ -1058,6 +1069,22 @@ void Workspace::requestFocus( Client* c)
 	c->setActive( TRUE );
     }
 }
+
+
+/*!
+  Updates the current colormap according to the currently active client
+ */
+void Workspace::updateColormap()
+{
+    Colormap cmap = default_colormap;
+    if ( activeClient() && activeClient()->colormap() != None )
+	cmap = activeClient()->colormap();
+    if ( cmap != installed_colormap ) {
+	XInstallColormap(qt_xdisplay(), cmap );
+	installed_colormap = cmap;
+    }
+}
+
 
 
 /*!
@@ -1703,7 +1730,7 @@ void Workspace::focusToNull(){
     XMapWindow(qt_xdisplay(), w);
   }
   XSetInputFocus(qt_xdisplay(), w, RevertToPointerRoot, kwin_time );
-  //colormapFocus(0); TODO
+  updateColormap();
 }
 
 
@@ -2633,18 +2660,21 @@ void Workspace::storeSession( KConfig* config )
 	Client* c = (*it);
 	QCString sessionId = c->sessionId();
 	QCString windowRole = c->windowRole();
-	if ( !sessionId.isEmpty() ) {
+	QCString wmCommand = c->wmCommand();
+	if ( !sessionId.isEmpty() || !wmCommand.isEmpty() ) {
 	    count++;
 	    QString n = QString::number(count);
-	    config->writeEntry( QString("sessionId")+n, c->sessionId().data() );
-	    config->writeEntry( QString("windowRole")+n, c->windowRole().data() );
-	    config->writeEntry( QString("x")+n, c->x() );
-	    config->writeEntry( QString("y")+n, c->y() );
-	    config->writeEntry( QString("width")+n, c->windowWrapper()->width() );
-	    config->writeEntry( QString("height")+n, c->windowWrapper()->height() );
+	    config->writeEntry( QString("sessionId")+n, sessionId.data() );
+	    config->writeEntry( QString("windowRole")+n, windowRole.data() );
+	    config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
+	    config->writeEntry( QString("geometry")+n, c->geometry() );
+	    config->writeEntry( QString("restore")+n, c->geometryRestore() );
+	    config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
 	    config->writeEntry( QString("desktop")+n, c->desktop() );
 	    config->writeEntry( QString("iconified")+n, c->isIconified()?"true":"false" );
 	    config->writeEntry( QString("sticky")+n, c->isSticky()?"true":"false" );
+	    config->writeEntry( QString("shaded")+n, c->isShade()?"true":"false" );
+	    config->writeEntry( QString("staysOnTop")+n, c->staysOnTop()?"true":"false" );
 	}
     }
     config->writeEntry( "count", count );
@@ -2668,13 +2698,15 @@ void Workspace::loadSessionInfo()
 	session.append( info );
 	info->sessionId = config->readEntry( QString("sessionId")+n ).latin1();
 	info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
-	info->x = config->readNumEntry( QString("x")+n );
-	info->y = config->readNumEntry( QString("y")+n );
-	info->width = config->readNumEntry( QString("width")+n );
-	info->height = config->readNumEntry( QString("height")+n );
-	info->desktop = config->readNumEntry( QString("desktop")+n );
-	info->iconified = config->readBoolEntry( QString("iconified")+n );
-	info->sticky = config->readBoolEntry( QString("sticky")+n );
+	info->wmCommand = config->readEntry( QString("wmCommand")+n ).latin1();
+	info->geometry = config->readRectEntry( QString("geometry")+n );
+	info->restore = config->readRectEntry( QString("restore")+n );
+	info->maximize = config->readNumEntry( QString("maximize")+n, 0 );
+	info->desktop = config->readNumEntry( QString("desktop")+n, 0 );
+	info->iconified = config->readBoolEntry( QString("iconified")+n, FALSE );
+	info->sticky = config->readBoolEntry( QString("sticky")+n, FALSE );
+	info->shaded = config->readBoolEntry( QString("shaded")+n, FALSE );
+	info->staysOnTop = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
     }
 }
 
@@ -2692,9 +2724,19 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 
     QCString sessionId = c->sessionId();
     QCString windowRole = c->windowRole();
+    QCString wmCommand = c->wmCommand();
 
-    for (SessionInfo* info = session.first(); info; info = session.next() ) {
+     for (SessionInfo* info = session.first(); info; info = session.next() ) {
+	
+	 // a real session managed client
 	if ( info->sessionId == sessionId &&
+	     ( ( info->windowRole.isEmpty() && windowRole.isEmpty() )
+	       || (info->windowRole == windowRole ) ) )
+	    return session.take();
+	
+	// pseudo session management
+	if ( info->sessionId.isEmpty() && !info->wmCommand.isEmpty() &&
+	     info->wmCommand == wmCommand &&
 	     ( ( info->windowRole.isEmpty() && windowRole.isEmpty() )
 	       || (info->windowRole == windowRole ) ) )
 	    return session.take();

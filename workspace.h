@@ -54,13 +54,15 @@ struct SessionInfo
 {
     QCString sessionId;
     QCString windowRole;
-    int x;
-    int y;
-    int width;
-    int height;
+    QCString wmCommand; // compatibility
+    QRect geometry;
+    QRect restore;
+    int maximize;
     int desktop;
     bool iconified;
     bool sticky;
+    bool shaded;
+    bool staysOnTop;
 };
 
 
@@ -109,6 +111,8 @@ public:
     void setActiveClient( Client* );
     void activateClient( Client* );
     void requestFocus( Client* c);
+    
+    void updateColormap();
 
     void setFocusChangeEnabled(bool b) { focus_change = b; }
     bool focusChangeEnabled() { return focus_change; }
@@ -325,6 +329,10 @@ private:
 
     // swallowing
     QStringList doNotManageList;
+    
+    // colormap handling
+    Colormap default_colormap;
+    Colormap installed_colormap;
 };
 
 inline WId Workspace::rootWin() const
