@@ -189,13 +189,13 @@ public:
     void unclutterDesktop();
     void reconfigure();
     void doNotManage(QString);
+    void setCurrentDesktop( int new_desktop );
 
     QString desktopName( int desk );
 
     bool isNotManaged( const QString& title );
 
 public slots:
-    void setCurrentDesktop( int new_desktop );
     // keybindings
     void slotSwitchDesktop1();
     void slotSwitchDesktop2();

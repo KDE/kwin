@@ -15,6 +15,7 @@ class KWinInterface : virtual public DCOPObject
   virtual ASYNC killWindow() = 0;
   virtual void doNotManage(QString)= 0;
   virtual void showWindowMenuAt(unsigned long winId, int x, int y)= 0;
+  virtual void setCurrentDesktop(int)= 0;
 
 };
 
