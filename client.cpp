@@ -538,7 +538,14 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
     }  else {
-	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
+      // Motif apps set invalid hints. Workaround that
+      // if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
+        if ( ( ( xSizeHint.flags & PPosition ) &&
+	      // For most Motif apps (from KDE 1.1.2 kwm)
+	       ( xSizeHint.x!=0 || xSizeHint.y!=0 ) &&
+	      // Personally for Netscape - ugly, but tired of that bug ...
+	       ( xSizeHint.x!=10 || xSizeHint.y!=10 ) ) ||
+	     ( xSizeHint.flags & USPosition ) )  {
 	    placementDone = TRUE;
 	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
 		int tx = geom.x();
