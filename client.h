@@ -117,6 +117,8 @@ public:
     bool isSticky() const;
     void setSticky( bool );
 
+    bool staysOnTop() const;
+    void setStaysOnTop( bool );
 
     // auxiliary functions, depend on the windowType
     bool wantsTabFocus() const;
@@ -153,7 +155,7 @@ public:
     QCString sessionId();
 
     QRect adjustedClientArea( const QRect& area ) const;
-    
+
 public slots:
     void iconify();
     void closeWindow();
@@ -198,7 +200,7 @@ protected:
     virtual MousePosition mousePosition( const QPoint& ) const;
     virtual void setMouseCursor( MousePosition m );
 
-    
+
     virtual void  animateIconifyOrDeiconify( bool iconify );
     virtual QPixmap animationPixmap( int w );
 
@@ -242,6 +244,7 @@ private:
     uint shaded :1;
     uint active :1;
     uint is_sticky :1;
+    uint stays_on_top : 1;
     uint is_shape :1;
     uint may_move :1;
     uint passive_focus :1;
@@ -341,6 +344,11 @@ inline bool Client::isMaximized() const
 inline bool Client::isSticky() const
 {
     return is_sticky;
+}
+
+inline bool Client::staysOnTop() const
+{
+    return stays_on_top;
 }
 
 

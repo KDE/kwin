@@ -139,8 +139,8 @@ public:
     Client* previousClient(Client*) const;
     Client* nextStaticClient(Client*) const;
     Client* previousStaticClient(Client*) const;
-
-    /**
+    
+     /**
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
      */
@@ -223,6 +223,8 @@ private:
     void init();
     void createKeybindings();
     void freeKeyboard(bool pass);
+    
+    ClientList constrainedStackingOrder( const ClientList& list );
 
     Client* clientFactory(WId w);
 
@@ -326,5 +328,6 @@ inline const ClientList& Workspace::stackingOrder() const
 {
     return stacking_order;
 }
+
 
 #endif

@@ -1082,6 +1082,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	popup->insertItem( i18n("Mi&nimize"), Options::IconifyOp );
 	popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
 	popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
+	popup->insertItem( i18n("Always &On Top"), Options::StaysOnTopOp );
 
 	popup->insertSeparator();
 
@@ -1118,6 +1119,10 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 	break;
     case Options::ShadeOp:
 	c->setShade( !c->isShade() );
+	break;
+    case Options::StaysOnTopOp:
+	c->setStaysOnTop( !c->staysOnTop() );
+	raiseClient( c );
 	break;
     default:
 	break;
@@ -1450,9 +1455,9 @@ void Workspace::reconfigure()
 }
 
 
-/*!
-  Lowers the client \a c taking layers, transient windows and window
-  groups into account.
+/*!  
+  Lowers the client \a c taking stays-on-top flags, layers,
+  transient windows and window groups into account.
  */
 void Workspace::lowerClient( Client* c, bool dropFocus )
 {
@@ -1489,16 +1494,18 @@ void Workspace::lowerClient( Client* c, bool dropFocus )
     stacking_order.remove(c);
     stacking_order.prepend(c);
 
-    Window* new_stack = new Window[ stacking_order.count()+1];
+    ClientList list = constrainedStackingOrder( stacking_order );
+    Window* new_stack = new Window[ list.count() + 1 ];
     int i = 0;
     Client *new_top = 0;
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+    for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
 	new_stack[i++] = (*it)->winId();
 	if (!new_top && (*it)->isVisible()) new_top = (*it);
     }
     XRaiseWindow(qt_xdisplay(), new_stack[0]);
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
+
     propagateClients( TRUE );
     if (dropFocus && new_top) {
         requestFocus(new_top);
@@ -1506,9 +1513,9 @@ void Workspace::lowerClient( Client* c, bool dropFocus )
 }
 
 
-/*!
-  Raises the client \a c taking layers, transient windows and window
-  groups into account.
+/*!  
+  Raises the client \a c taking layers, stays-on-top flags,
+  transient windows and window groups into account.
  */
 void Workspace::raiseClient( Client* c )
 {
@@ -1546,10 +1553,11 @@ void Workspace::raiseClient( Client* c )
     saveset.clear();
     saveset.append( c );
     raiseTransientsOf(saveset, c );
-
-    Window* new_stack = new Window[ stacking_order.count()+1];
+    
+    ClientList list = constrainedStackingOrder( stacking_order );
+    Window* new_stack = new Window[ list.count() + 1 ];
     int i = 0;
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+    for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
 	new_stack[i++] = (*it)->winId();
     }
     XRaiseWindow(qt_xdisplay(), new_stack[0]);
@@ -1583,10 +1591,7 @@ void Workspace::raiseTransientsOf( ClientList& safeset, Client* c )
 void Workspace::lowerTransientsOf( ClientList& safeset, Client* c )
 {
     ClientList local = stacking_order;
-    ClientList::ConstIterator it = local.fromLast();
-    /* QT docu says --begin() is undefined, actually it is ==end(),
-       so the usual for loops work: for(bla;it!=end()...) */
-    for (; it!=local.end(); --it) {
+    for ( ClientList::ConstIterator it = local.fromLast(); it!=local.end(); --it) {
 	if ((*it)->transientFor() == c->window() && !safeset.contains(*it)) {
 	    safeset.append( *it );
 	    lowerTransientsOf( safeset, *it );
@@ -1594,6 +1599,30 @@ void Workspace::lowerTransientsOf( ClientList& safeset, Client* c )
 	    stacking_order.prepend( *it );
 	}
     }
+}
+
+
+
+/*!
+  Returns a stacking order based upon \a list that fulfills certain contained.
+  
+  Currently it obeyes the staysOnTop flag only.
+  
+  \sa Client::staysOnTop()
+ */
+ClientList Workspace::constrainedStackingOrder( const ClientList& list )
+{
+    ClientList result;
+    ClientList::ConstIterator it;
+    for (  it = list.begin(); it!=list.end(); ++it) {
+	if ( !(*it)->staysOnTop() )
+	    result.append( *it );
+    }
+    for ( it = list.begin(); it!=list.end(); ++it) {
+	if ( (*it)->staysOnTop() )
+	    result.append( *it );
+    }
+    return result;
 }
 
 /*!
@@ -1785,7 +1814,7 @@ bool Workspace::addSystemTrayWin( WId w )
     return TRUE;
 }
 
-/*!  
+/*!
   Check whether \a w is a system tray window. If so, remove it from
   the respective datastructures and propagate this to the world.
  */
@@ -2019,6 +2048,7 @@ void Workspace::clientPopupAboutToShow()
 	return;
     popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
+    popup->setItemChecked( Options::StaysOnTopOp, popup_client->staysOnTop() );
 }
 
 
@@ -2551,5 +2581,6 @@ QRect Workspace::clientArea()
 {
   return area;
 }
+
 
 #include "workspace.moc"

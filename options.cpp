@@ -161,7 +161,7 @@ void Options::reload()
     window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
 
 
-    OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "winShade") );
+    OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade") );
 
     // Mouse bindings
     config->setGroup( "MouseBindings");

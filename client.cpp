@@ -76,7 +76,12 @@ public:
 		m_client->maximize( Client::MaximizeHorizontal );
 	    else
 		m_client->maximize( Client::MaximizeRestore );
-	} 
+	}
+	
+	if ( mask & NET::StaysOnTop ) {
+	    m_client->setStaysOnTop( state & NET::StaysOnTop  );
+	    m_client->workspace()->raiseClient( m_client );
+	}
     }
 private:
     ::Client * m_client;
@@ -411,6 +416,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     passive_focus = FALSE;
     is_shape = FALSE;
     is_sticky = FALSE;
+    stays_on_top = FALSE;
     may_move = TRUE;
 
     getWMHints();
@@ -426,9 +432,16 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
 
     // should we open this window on a certain desktop?
-
-    if ( info->desktop() )
+    if ( info->desktop() == NETWinInfo::OnAllDesktops )
+	setSticky( TRUE );
+    else if ( info->desktop() ) 
 	desk= info->desktop(); // window had the initial desktop property!
+
+    
+    // window wants to stay on top?
+    stays_on_top = info->state() & NET::StaysOnTop;
+    
+    
 
 
     // if this window is transient, ensure that it is opened on the
@@ -862,7 +875,7 @@ bool Client::propertyNotify( XPropertyEvent& e )
 */
 bool Client::clientMessage( XClientMessageEvent& e )
 {
-    
+
     if ( e.message_type == atoms->kde_wm_change_state ) {
 	if ( e.data.l[0] == IconicState && isNormal() ) {
 	    if ( e.data.l[1] )
@@ -879,7 +892,7 @@ bool Client::clientMessage( XClientMessageEvent& e )
 	}
 	blockAnimation = FALSE;
     } else if ( e.message_type == atoms->wm_change_state) {
-	if ( e.data.l[0] == IconicState && isNormal() ) 
+	if ( e.data.l[0] == IconicState && isNormal() )
 	    iconify();
 	return TRUE;
     }
@@ -1372,16 +1385,16 @@ void Client::iconify()
     }
     Events::raise( Events::Iconify );
     setMappingState( IconicState );
-    
+
     if ( !isTransient() )
 	animateIconifyOrDeiconify( TRUE );
     hide();
-    
+
     workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
 
-/*!  
+/*!
   Closes the window by either sending a delete_window message or
   using XKill.
  */
@@ -1426,7 +1439,7 @@ void Client::maximize( MaximizeMode m)
 
     if ( !geom_restore.isNull() )
 	m = MaximizeRestore;
-    
+
     if ( m != MaximizeRestore ) {
 	Events::raise( Events::Maximize );
 	geom_restore = geometry();
@@ -1451,7 +1464,7 @@ void Client::maximize( MaximizeMode m)
 		    );
 	info->setState( NET::MaxHoriz, NET::MaxHoriz );
 	break;
-	    
+	
     case MaximizeRestore: {
 	Events::raise( Events::UnMaximize );
 	setGeometry(geom_restore);
@@ -1753,16 +1766,32 @@ void Client::setSticky( bool b )
     if ( is_sticky == b )
 	return;
     is_sticky = b;
-    if ( is_sticky )
-	Events::raise( Events::Sticky );
-    else
-	Events::raise( Events::UnSticky );
+    if ( isVisible() ) {
+	if ( is_sticky )
+	    Events::raise( Events::Sticky );
+	else
+	    Events::raise( Events::UnSticky );
+    }
     if ( !is_sticky )
 	setDesktop( workspace()->currentDesktop() );
     else
 	info->setDesktop( NETWinInfo::OnAllDesktops );
     workspace()->setStickyTransientsOf( this, b );
     stickyChange( is_sticky );
+}
+
+
+/*!
+  Let the window stay on top or not, depending on \a b
+  
+  \sa Workspace::setClientOnTop()
+ */
+void Client::setStaysOnTop( bool b )
+{
+    if ( b == staysOnTop() )
+	return;
+    stays_on_top = b;
+    info->setState( b?NET::StaysOnTop:0, NET::StaysOnTop );
 }
 
 
@@ -2208,15 +2237,15 @@ void Client::animateIconifyOrDeiconify( bool iconify)
 	before = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
 	after = QRect( x(), y(), width(), pm.height() );
     }
-    
+
     lf = (after.left() - before.left())/step;
-    rf = (after.right() - before.right())/step; 
-    tf = (after.top() - before.top())/step; 
+    rf = (after.right() - before.right())/step;
+    tf = (after.top() - before.top())/step;
     bf = (after.bottom() - before.bottom())/step;
 
 
     XGrabServer( qt_xdisplay() );
-    
+
     QRect area = before;
     QRect area2;
     QPixmap pm2;
@@ -2259,7 +2288,7 @@ void Client::animateIconifyOrDeiconify( bool iconify)
     } while ( t.elapsed() < step);
     if (area2 == area || need_to_clear )
 	p.drawPixmap( area2.x(), area2.y(), pm2 );
-    
+
     p.end();
     XUngrabServer( qt_xdisplay() );
 }

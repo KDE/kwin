@@ -13,6 +13,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qdrawutil.h>
 #include <qbitmap.h>
 #include <kdrawutil.h>
+#include <qdatetime.h>
 #include "workspace.h"
 #include "options.h"
 
@@ -355,8 +356,6 @@ void StdClient::init()
 {
     Client::init();
     button[0]->setIconSet( miniIcon() );
-
-   // ### TODO transient etc.
  }
 
 void StdClient::iconChange()
@@ -369,12 +368,25 @@ void StdClient::iconChange()
 }
 
 
-/*!
-  Indicates that the menu button has been clicked
+/*!  
+  Indicates that the menu button has been clicked. One press shows
+  the window operation menu, a double click closes the window.
  */
 void StdClient::menuButtonPressed()
 {
-    (void ) workspace()->clientPopup( this ); //trigger the popup menu
+    static QTime* t = 0;
+    static StdClient* tc = 0;
+    if ( !t )
+	t = new QTime;
+    
+    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() ) 
+	button[0]->setPopup( workspace()->clientPopup( this ) );
+    else {
+	button[0]->setPopup( 0 );
+	closeWindow();
+    }
+    t->start();
+    tc = this;
 }
 
 
