@@ -1,4 +1,4 @@
-INCLUDES                  = $(all_includes) -I$(kde_includes)/kwin
+INCLUDES                  = -I$(srcdir)/../.. $(all_includes)
 
 SUBDIRS                   = . config
 
