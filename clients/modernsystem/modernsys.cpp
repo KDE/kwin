@@ -59,6 +59,9 @@ static unsigned char shade_off_bits[] = {
 static unsigned char shade_on_bits[] = {
     0x00, 0x7e, 0x7e, 0x42, 0x42, 0x42, 0x7e, 0x00};
 
+static unsigned char menu_bits[] = {
+        0xff, 0x81, 0x81, 0xff, 0x81, 0xff, 0x81, 0xff};
+
 static unsigned char btnhighcolor_mask_bits[] = {
     0xe0,0x41,0xf8,0x07,0xfc,0x0f,0xfe,0xdf,0xfe,0x1f,0xff,0x3f,0xff,0xff,0xff,
     0x3f,0xff,0x3f,0xff,0xff,0xff,0xff,0xfe,0x9f,0xfe,0x1f,0xfc,0x0f,0xf0,0x03,
@@ -81,7 +84,6 @@ static QBitmap *lcDark3;
 static QBitmap *lcLight1;
 static QImage *btnSource;
 
-static QString *button_pattern = NULL;
 static bool show_handle;
 static int handle_size;
 static int handle_width;
@@ -207,15 +209,14 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
-bool ModernSysFactory::read_config()
+void ModernSysFactory::read_config()
 {
     bool showh;
     int hsize, hwidth, bwidth, theight;
-    QString bpatt;
 
     KConfig c("kwinmodernsysrc");
     c.setGroup("General");
-    showh = c.readBoolEntry("ShowHandle", true);
+    show_handle = c.readBoolEntry("ShowHandle", true);
 
     hwidth = c.readUnsignedNumEntry("HandleWidth", 6);
     hsize = c.readUnsignedNumEntry("HandleSize", 30);
@@ -265,25 +266,11 @@ bool ModernSysFactory::read_config()
     if (theight < bwidth)
         theight = bwidth;
 
-    if (options()->customButtonPositions()) {
-        bpatt = "2" + options()->titleButtonsLeft() + "3t3"
-                + options()->titleButtonsRight() + "2";
-    }
-    else
-        bpatt = "2X3t3HSIA2";
-
-    if (showh == show_handle && hwidth == handle_width && hsize == handle_size
-            && bwidth == border_width && theight == title_height
-            && bpatt == *button_pattern)
-        return false;
-
     show_handle = showh;
     handle_width = hwidth;
     handle_size = hsize;
     border_width = bwidth;
     title_height = theight;
-    *button_pattern = bpatt;
-    return true;
 }
 
 QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
@@ -294,57 +281,72 @@ QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
    //   BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
-ModernButton::ModernButton(ModernSys *parent, const char *name, bool toggle,
-                           const unsigned char *bitmap, const QString& tip, const int realizeBtns)
-    : QButton(parent->widget(), name),
-      last_button( NoButton ) 
+ModernButton::ModernButton(ButtonType type, ModernSys *parent, const char *name)
+    : KCommonDecorationButton(type, parent, name)
 {
     setBackgroundMode( NoBackground );
 
-    setToggleButton(toggle);
-
-    setCursor( arrowCursor );
-    realizeButtons = realizeBtns;
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
                  btnhighcolor_mask_bits : lowcolor_mask_bits, true);
     resize(14, 15);
 
-    if(bitmap)
-        setBitmap(bitmap);
     setMask(mask);
-    hide();
-    client = parent;
-    QToolTip::add( this, tip );
-
 }
 
-QSize ModernButton::sizeHint() const
+void ModernButton::reset(unsigned long changed)
 {
-    return(QSize(14, 15));
-}
+    if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
+        switch (type() ) {
+            case CloseButton:
+                setBitmap(close_bits);
+                break;
+            case HelpButton:
+                setBitmap(question_bits);
+                break;
+            case MinButton:
+                setBitmap(iconify_bits);
+                break;
+            case MaxButton:
+                setBitmap( isOn() ? minmax_bits : maximize_bits );
+                break;
+            case OnAllDesktopsButton:
+                setBitmap( isOn() ? unsticky_bits : sticky_bits );
+                break;
+            case ShadeButton:
+                setBitmap( isOn() ? shade_on_bits : shade_off_bits );
+                break;
+            case AboveButton:
+                setBitmap( isOn() ? above_on_bits : above_off_bits );
+                break;
+            case BelowButton:
+                setBitmap( isOn() ? below_on_bits : below_off_bits );
+                break;
+            case MenuButton:
+                setBitmap(menu_bits);
+                break;
+            default:
+                setBitmap(0);
+                break;
+        }
 
-// Make the protected member public
-void ModernButton::turnOn( bool isOn )
-{
-    if ( isToggleButton() )
-        setOn( isOn );
-}
-
-void ModernButton::reset()
-{
-    repaint(false);
+        this->update();
+    }
 }
 
 void ModernButton::setBitmap(const unsigned char *bitmap)
 {
-    deco = QBitmap(8, 8, bitmap, true);
+    if (bitmap)
+        deco = QBitmap(8, 8, bitmap, true);
+    else {
+        deco = QBitmap(8,8);
+        deco.fill(Qt::color0);
+    }
     deco.setMask(deco);
-    repaint();
 }
 
 void ModernButton::drawButton(QPainter *p)
 {
-    if(client->isActive()){
+    if(decoration()->isActive()){
         if(buttonPix)
             p->drawPixmap(0, 0, isDown() ? *buttonPixDown : *buttonPix);
     }
@@ -358,178 +360,143 @@ void ModernButton::drawButton(QPainter *p)
     }
 }
 
-void ModernButton::mousePressEvent( QMouseEvent* e )
-{
-    last_button = e->button();
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-    QButton::mousePressEvent( &me );
-}
-
-void ModernButton::mouseReleaseEvent( QMouseEvent* e )
-{
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-    QButton::mouseReleaseEvent( &me );
-}
-
-
-void ModernSys::reset( unsigned long )
+void ModernSys::reset( unsigned long changed)
 {
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
-    for (int i = 0; i < 5; button[i++]->reset());
+    resetButtons();
     widget()->repaint();
+
+    KCommonDecoration::reset(changed);
 }
 
 ModernSys::ModernSys( KDecorationBridge* b, KDecorationFactory* f )
-    : KDecoration( b, f )
+    : KCommonDecoration( b, f )
 {
+}
+
+QString ModernSys::visibleName() const
+{
+    return i18n("Modern System");
+}
+
+QString ModernSys::defaultButtonsLeft() const
+{
+    return "X";
+}
+
+QString ModernSys::defaultButtonsRight() const
+{
+    return "HSIA";
+}
+
+bool ModernSys::decorationBehaviour(DecorationBehaviour behaviour) const
+{
+    switch (behaviour) {
+        case DB_MenuClose:
+            return false;
+
+        case DB_WindowMask:
+            return true;
+
+        case DB_ButtonHide:
+            return true;
+
+        default:
+            return KCommonDecoration::decorationBehaviour(behaviour);
+    }
+}
+
+int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *) const
+{
+    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+
+    switch (lm) {
+        case LM_BorderLeft:
+            return border_width + (reverse ? handle_width : 0);
+
+        case LM_BorderRight:
+            return border_width + (reverse ? 0 : handle_width);
+
+        case LM_BorderBottom:
+            return border_width + handle_width;
+
+        case LM_TitleEdgeLeft:
+            return layoutMetric(LM_BorderLeft,respectWindowState)+3;
+        case LM_TitleEdgeRight:
+            return layoutMetric(LM_BorderRight,respectWindowState)+3;
+
+        case LM_TitleEdgeTop:
+            return 2;
+
+        case LM_TitleEdgeBottom:
+            return 2;
+
+        case LM_TitleBorderLeft:
+        case LM_TitleBorderRight:
+            return 4;
+
+        case LM_TitleHeight:
+            return title_height;
+
+        case LM_ButtonWidth:
+            return 14;
+        case LM_ButtonHeight:
+            return 15;
+
+        case LM_ButtonSpacing:
+            return 1;
+
+        case LM_ExplicitButtonSpacer:
+            return 3;
+
+        default:
+            return 0;
+    }
+}
+
+KCommonDecorationButton *ModernSys::createButton(ButtonType type)
+{
+    switch (type) {
+        case MenuButton:
+            return new ModernButton(MenuButton, this, "menu");
+
+        case OnAllDesktopsButton:
+            return new ModernButton(OnAllDesktopsButton, this, "on_all_desktops");
+
+        case HelpButton:
+            return new ModernButton(HelpButton, this, "help");
+
+        case MinButton:
+            return new ModernButton(MinButton, this, "minimize");
+
+        case MaxButton:
+            return new ModernButton(MaxButton, this, "maximize");
+
+        case CloseButton:
+            return new ModernButton(CloseButton, this, "close");
+
+        case AboveButton:
+            return new ModernButton(AboveButton, this, "above");
+
+        case BelowButton:
+            return new ModernButton(BelowButton, this, "below");
+
+        case ShadeButton:
+            return new ModernButton(ShadeButton, this, "shade");
+
+        default:
+            return 0;
+    }
 }
 
 void ModernSys::init()
 {
-    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
-    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
+    reverse = QApplication::reverseLayout();
 
-    createMainWidget( WResizeNoErase );
-    widget()->installEventFilter( this );
-	bool reverse = QApplication::reverseLayout();
+    KCommonDecoration::init();
 
-    bool help = providesContextHelp();
-
-    QGridLayout* g = new QGridLayout(widget(), 0, 0, 2);
-    if( isPreview())
-        g->addWidget( new QLabel( i18n( "<center><b>Modern System preview</b></center>" ), widget()), 1, 1 );
-    else
-        g->addItem( new QSpacerItem( 0, 0 ), 1, 1 ); // no widget in the middle
-    g->setRowStretch(1, 10);
-    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
-
-    g->addColSpacing(0, border_width-2 + (reverse ? handle_width : 0));
-    g->addColSpacing(2, border_width-2 + (reverse ? 0 : handle_width));
-
-    g->addRowSpacing(2, border_width-2 + handle_width);
-
-	QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
-    hb->setResizeMode(QLayout::FreeResize);
-    titlebar = new QSpacerItem(10, title_height, QSizePolicy::Expanding,
-                               QSizePolicy::Minimum);
-
-    button[BtnClose] = new ModernButton(this, "close", false, close_bits, i18n("Close"));
-    button[BtnSticky] = new ModernButton(this, "sticky", false, NULL, isOnAllDesktops()?i18n("Unsticky"):i18n("Sticky"));
-    button[BtnMinimize] = new ModernButton(this, "iconify", false, iconify_bits, i18n("Minimize"));
-    button[BtnMaximize] = new ModernButton(this, "maximize", false, maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
-    button[BtnHelp] = new ModernButton(this, "help", false, question_bits, i18n("Help"));
-    button[BtnAbove] = new ModernButton(this, "above", true, above_off_bits, i18n("Keep above others"));
-    button[BtnBelow] = new ModernButton(this, "below", true, below_off_bits, i18n("Keep below others"));
-    button[BtnShade] = new ModernButton(this, "shade", true, shade_off_bits, isSetShade()?i18n("Unshade"):i18n("Shade") );
-
-    connect( button[BtnClose], SIGNAL(clicked()), this, SLOT( closeWindow() ) );
-    connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT( toggleOnAllDesktops() ) );
-    connect( button[BtnMinimize], SIGNAL(clicked()), this, SLOT( minimize() ) );
-    connect( button[BtnMaximize], SIGNAL(clicked()), this, SLOT( maxButtonClicked() ) );
-    connect( button[BtnHelp], SIGNAL(clicked()), this, SLOT( showContextHelp() ) );
-    connect( button[BtnAbove], SIGNAL( clicked()), this, SLOT(slotAbove()) );
-    connect( button[BtnBelow], SIGNAL( clicked()), this, SLOT(slotBelow()) );
-    connect( button[BtnShade], SIGNAL( clicked()), this, SLOT(slotShade()) );
-
-    for (int i = 0; i < (int)button_pattern->length();) {
-        QChar c = (*button_pattern)[i++];
-        if (c == '_')
-            c = '3';
-
-        if (c.isDigit()) {
-            hb->addSpacing(int(c - '0'));
-            continue;
-        }
-        else if (c == 'X' && isCloseable()) {
-            hb->addWidget(button[BtnClose]);
-            button[BtnClose]->show();
-        }
-        else if (c == 'S') {
-            if(isOnAllDesktops())
-                button[BtnSticky]->setBitmap(unsticky_bits);
-            else
-                button[BtnSticky]->setBitmap(sticky_bits);
-            hb->addWidget(button[BtnSticky]);
-            button[BtnSticky]->show();
-        }
-        else if (c == 'I' && isMinimizable()) {
-            hb->addWidget(button[BtnMinimize]);
-            button[BtnMinimize]->show();
-        }
-        else if (c == 'A' && isMaximizable()) {
-            hb->addWidget(button[BtnMaximize]);
-            button[BtnMaximize]->show();
-        }
-        else if (help && c == 'H') {
-            hb->addWidget(button[BtnHelp]);
-            button[BtnHelp]->show();
-        }
-        else if (c == 'F') {
-            button[BtnAbove]->setBitmap(keepAbove()?above_on_bits:above_off_bits);
-            hb->addWidget(button[BtnAbove]);
-            button[BtnAbove]->show();
-        }
-        else if (c == 'B') {
-            button[BtnBelow]->setBitmap(keepBelow()?below_on_bits:below_off_bits);
-            hb->addWidget(button[BtnBelow]);
-            button[BtnBelow]->show();
-        }
-        else if (c == 'L' && isShadeable()) {
-            button[BtnShade]->setBitmap(isSetShade()?shade_on_bits:shade_off_bits);
-            hb->addWidget(button[BtnShade]);
-            button[BtnShade]->show();
-        }
-        else if (c == 't')
-            hb->addItem(titlebar);
-
-        if ((*button_pattern)[i] >= 'A' && (*button_pattern)[i] <= 'Z')
-            hb->addSpacing(1);
-    }
-
-    g->addLayout( hb, 0, 1 );
-    widget()->setBackgroundMode(NoBackground);
     recalcTitleBuffer();
-    widget()->layout()->activate();
-}
-
-
-void ModernSys::maxButtonClicked( )
-{
-    if (button[BtnMaximize]) {
-        maximize(button[BtnMaximize]->last_button);
-    }
-}
-
-void ModernSys::slotAbove()
-{
-    setKeepAbove( !keepAbove());
-    if (button[BtnAbove]) {
-        button[BtnAbove]->turnOn(keepAbove());
-        button[BtnAbove]->repaint(true);
-    }
-}
-
-    
-void ModernSys::slotBelow()
-{
-    setKeepBelow( !keepBelow());
-    if (button[BtnBelow]) {
-        button[BtnBelow]->turnOn(keepBelow());
-        button[BtnBelow]->repaint(true);
-    }
-}
-
-        
-void ModernSys::slotShade()
-{
-    setShade( !isSetShade());
-}
-
-void ModernSys::resizeEvent( QResizeEvent* )
-{
-    recalcTitleBuffer();
-    doShape();
 }
 
 void ModernSys::recalcTitleBuffer()
@@ -548,7 +515,7 @@ void ModernSys::recalcTitleBuffer()
                    options()->colorGroup(ColorTitleBar, true).
                    brush(QColorGroup::Button));
 
-    QRect t = titlebar->geometry();
+    QRect t = titleRect(); // titlebar->geometry();
     t.setTop( 2 );
     t.setLeft( t.left() );
     t.setRight( t.right() - 2 );
@@ -576,10 +543,9 @@ void ModernSys::recalcTitleBuffer()
     oldTitle = caption();
 }
 
-void ModernSys::captionChange()
+void ModernSys::updateCaption()
 {
-    recalcTitleBuffer();
-    widget()->repaint( titlebar->geometry(), false );
+    widget()->update(titleRect() );
 }
 
 void ModernSys::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
@@ -591,18 +557,22 @@ void ModernSys::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
 
 void ModernSys::paintEvent( QPaintEvent* )
 {
+    // update title buffer...
+    if (oldTitle != caption() || width() != titleBuffer.width() )
+        recalcTitleBuffer();
+
     int hs = handle_size;
     int hw = handle_width;
 
     QPainter p( widget() );
-    QRect t = titlebar->geometry();
+    QRect t = titleRect(); // titlebar->geometry();
 
     QBrush fillBrush(widget()->colorGroup().brush(QColorGroup::Background).pixmap() ?
                      widget()->colorGroup().brush(QColorGroup::Background) :
                      options()->colorGroup(ColorFrame, isActive()).
                      brush(QColorGroup::Button));
 
-    p.fillRect(1, 16, width()-2, height()-16, fillBrush);
+    p.fillRect(1, title_height+3, width()-2, height()-(title_height+3), fillBrush);
     p.fillRect(width()-6, 0, width()-1, height(), fillBrush);
 
     t.setTop( 2 );
@@ -672,7 +642,7 @@ void ModernSys::paintEvent( QPaintEvent* )
     }
 }
 
-void ModernSys::doShape()
+void ModernSys::updateWindowShape()
 {
     int hs = handle_size;
     int hw = handle_width;
@@ -694,164 +664,8 @@ void ModernSys::doShape()
     setMask(mask);
 }
 
-void ModernSys::showEvent(QShowEvent *)
-{
-    doShape();
-    widget()->repaint();
-}
-
-void ModernSys::mouseDoubleClickEvent( QMouseEvent * e )
-{
-    if (titlebar->geometry().contains( e->pos() ) )
-        titlebarDblClickOperation();
-}
-
-void ModernSys::desktopChange()
-{
-    bool sticky_on = isOnAllDesktops();
-    button[BtnSticky]->setBitmap(sticky_on ? unsticky_bits : sticky_bits);
-    QToolTip::remove( button[BtnSticky] );
-    QToolTip::add( button[BtnSticky], sticky_on ? i18n("Unsticky") : i18n("Sticky"));
-}
-
-void ModernSys::maximizeChange()
-{
-    bool m = ( maximizeMode() == MaximizeFull );
-    button[BtnMaximize]->setBitmap(m ? minmax_bits : maximize_bits);
-    QToolTip::remove( button[BtnMaximize] );
-    QToolTip::add( button[BtnMaximize], m ? i18n("Restore") : i18n("Maximize"));
-}
-
-void ModernSys::activeChange()
-{
-    widget()->repaint(false);
-    for (int i = 0; i < 5; button[i++]->reset());
-}
-
-
-void ModernSys::keepAboveChange( bool above )
-{
-    if (button[BtnAbove]) {
-        button[BtnAbove]->setBitmap( above ? above_on_bits : above_off_bits );
-        button[BtnAbove]->repaint(false);
-    }
-}
-        
-void ModernSys::keepBelowChange( bool below )
-{
-    if (button[BtnBelow]) {
-        button[BtnBelow]->setBitmap( below ? below_on_bits : below_off_bits );
-        button[BtnBelow]->repaint(false);
-    }
-}
-
-
-ModernSys::Position ModernSys::mousePosition( const QPoint& p) const
-{
-    Position m = KDecoration::mousePosition( p );
-
-    const int range = 14 + 3*border_width/2;
-    const int border = show_handle ? handle_width + border_width : border_width;
-    const int range2 = show_handle ? handle_width + border_width : range;
-    const int range3 = show_handle ? handle_width + range : range;
-
-    if ( ( p.x() > border_width && p.x() < width() - border )
-         && ( p.y() > 4 && p.y() < height() - border ) )
-        m = PositionCenter;
-    else if ( p.y() <= range && p.x() <= range)
-        m = PositionTopLeft;
-    else if ( p.y() >= height()-range2 && p.x() >= width()-range2)
-        m = PositionBottomRight;
-    else if ( p.y() >= height()-range3 && p.x() <= range)
-        m = PositionBottomLeft;
-    else if ( p.y() <= range && p.x() >= width()-range3)
-        m = PositionTopRight;
-    else if ( p.y() <= 4 )
-        m = PositionTop;
-    else if ( p.y() >= height()-border )
-        m = PositionBottom;
-    else if ( p.x() <= border_width )
-        m = PositionLeft;
-    else if ( p.x() >= width()-border )
-        m = PositionRight;
-    else
-        m = PositionCenter;
-
-    return m;
-}
-
-void ModernSys::resize( const QSize& s )
-{
-    widget()->resize( s );
-}
-
-void ModernSys::iconChange()
-{
-}
-
-void ModernSys::shadeChange()
-{
-    if (button[BtnShade]) {
-        bool on = isSetShade();
-        button[BtnShade]->turnOn(on);
-        button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
-        button[BtnShade]->repaint(false);
-        QToolTip::remove( button[BtnShade] );
-        QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));
-    }
-}
-
-QSize ModernSys::minimumSize() const
-{
-    return QSize( 50, 50 ); // FRAME
-}
-
-void ModernSys::borders( int& left, int& right, int& top, int& bottom ) const
-{
-    bool reverse = QApplication::reverseLayout();
-    left = border_width + (reverse ? handle_width : 0);
-    right = border_width + (reverse ? 0 : handle_width);
-    top = 4 + titlebar->geometry().height(); // FRAME is this ok?
-    bottom = border_width + handle_width;
-// FRAME this below needs doShape() changes
-//    if( isShade())
-//        bottom = 0;
-//    if( ( maximizeMode() & MaximizeHorizontal ) && !options()->moveResizeMaximizedWindows())
-//        left = right = 0;
-//    if( ( maximizeMode() & MaximizeVertical ) && !options()->moveResizeMaximizedWindows())
-//        bottom = 0;
-}
-
-bool ModernSys::eventFilter( QObject* o, QEvent* e )
-{
-    if( o != widget())
-	return false;
-    switch( e->type())
-	{
-	case QEvent::Resize:
-	    resizeEvent( static_cast< QResizeEvent* >( e ));
-	    return true;
-	case QEvent::Paint:
-	    paintEvent( static_cast< QPaintEvent* >( e ));
-	    return true;
-	case QEvent::MouseButtonDblClick:
-	    mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ));
-	    return true;
-	case QEvent::MouseButtonPress:
-	    processMousePressEvent( static_cast< QMouseEvent* >( e ));
-	    return true;
-	case QEvent::Show:
-	    showEvent( static_cast< QShowEvent* >( e ));
-	    return true;
-	default:
-	    break;
-	}
-    return false;
-}
-
 ModernSysFactory::ModernSysFactory()
 {
-    button_pattern = new QString;
     read_config();
     create_pixmaps();
 }
@@ -859,7 +673,6 @@ ModernSysFactory::ModernSysFactory()
 ModernSysFactory::~ModernSysFactory()
 {
     ModernSystem::delete_pixmaps();
-    delete ModernSystem::button_pattern;
 }
 
 KDecoration* ModernSysFactory::createDecoration( KDecorationBridge* b )
@@ -869,13 +682,20 @@ KDecoration* ModernSysFactory::createDecoration( KDecorationBridge* b )
 
 bool ModernSysFactory::reset( unsigned long changed )
 {
-    bool ret = read_config();
-    if( changed & (SettingColors | SettingBorder) )
+    read_config();
+
+    bool needHardReset = true;
+    if( changed & (SettingColors | SettingBorder | SettingFont) )
     {
         delete_pixmaps();
         create_pixmaps();
+        needHardReset = false;
+    } else if (changed & SettingButtons) {
+        // handled by KCommonDecoration
+        needHardReset = false;
     }
-    if( ret )
+
+    if( needHardReset )
         return true;
     else
     {
@@ -898,6 +718,7 @@ bool ModernSysFactory::supports( Ability ability )
         case AbilityButtonAboveOthers:
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
+        case AbilityButtonMenu:
             return true;
         default:
             return false;
@@ -912,7 +733,4 @@ extern "C" KDE_EXPORT KDecorationFactory* create_factory()
     return new ModernSystem::ModernSysFactory();
 }
 
-
-
-#include "modernsys.moc"
 // vim:ts=4:sw=4

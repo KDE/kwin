@@ -1,11 +1,9 @@
 #ifndef __MODSYSTEMCLIENT_H
 #define __MODSYSTEMCLIENT_H
 
-#include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
-#include <qbutton.h>
-#include <kdecoration.h>
+#include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 
 class QLabel;
@@ -15,78 +13,49 @@ namespace ModernSystem {
 
 class ModernSys;
 
-class ModernButton : public QButton
+class ModernButton : public KCommonDecorationButton
 {
-    Q_OBJECT
 public:
-    ModernButton( ModernSys *parent=0, const char *name=0,
-                 bool toggle = false, const unsigned char *bitmap=NULL,
-                 const QString& tip=NULL, const int realizeBtns = LeftButton);
+    ModernButton(ButtonType type, ModernSys *parent, const char *name);
     void setBitmap(const unsigned char *bitmap);
-    void reset();
-    QSize sizeHint() const;
-    void turnOn( bool isOn );
+    virtual void reset(unsigned long changed);
 protected:
-    void mousePressEvent( QMouseEvent* e );
-    void mouseReleaseEvent( QMouseEvent* e );
 
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     QBitmap deco;
-    ModernSys* client;
-
-    int realizeButtons;
-public:
-    ButtonState last_button;
 };
 
-class ModernSys : public KDecoration
+class ModernSys : public KCommonDecoration
 {
-    Q_OBJECT
 public:
     ModernSys( KDecorationBridge* b, KDecorationFactory* f );
     ~ModernSys(){;}
+
+    virtual QString visibleName() const;
+    virtual QString defaultButtonsLeft() const;
+    virtual QString defaultButtonsRight() const;
+    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+    virtual KCommonDecorationButton *createButton(ButtonType type);
+
+    virtual void updateWindowShape();
+    virtual void updateCaption();
+
     void init();
 protected:
-    bool eventFilter( QObject* o, QEvent* e );
     void drawRoundFrame(QPainter &p, int x, int y, int w, int h);
-    void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
-    void showEvent( QShowEvent* );
-    void mouseDoubleClickEvent( QMouseEvent * );
-    void captionChange();
-    void maximizeChange();
-    void doShape();
     void recalcTitleBuffer();
-    void activeChange();
-    Position mousePosition( const QPoint& ) const;
-    void desktopChange();
-    void shadeChange();
-    void iconChange();
-    QSize minimumSize() const;
-    void resize( const QSize& );
-    void borders( int&, int&, int&, int& ) const;
     void reset( unsigned long );
-protected slots:
-    void maxButtonClicked();
-    void slotAbove();
-    void slotBelow();
-    void slotShade();
-    void keepAboveChange( bool );
-    void keepBelowChange( bool );
 private:
-	enum Buttons{ BtnClose = 0, BtnSticky, BtnMinimize, BtnMaximize, BtnHelp,
-                  BtnAbove, BtnBelow, BtnShade,
-                  BtnCount};
-    ModernButton* button[ModernSys::BtnCount];
-    QSpacerItem* titlebar;
     QPixmap titleBuffer;
     QString oldTitle;
+    bool reverse;
 };
 
 class ModernSysFactory : public QObject, public KDecorationFactory
 {
-Q_OBJECT
 public:
     ModernSysFactory();
     virtual ~ModernSysFactory();
@@ -95,7 +64,7 @@ public:
     virtual bool supports( Ability ability );
     QValueList< BorderSize > borderSizes() const;
 private:
-    bool read_config();
+    void read_config();
 };
 
 }
