@@ -1,18 +1,52 @@
-Fri Aug 20 01:30:50 CEST 1999 
+This is kwin, kwm next generation.
 
-This is the beginning of kwin, kwm next generation.
+Currently supported options in the kwinrc:
 
-WARNING: this thing is hardly usable now, neither ICCCM nor KDE
-compliant yet!
+[WM]
+... general color stuff, usually in kdeglobals  ...
 
-All it has is a context menu that allows you to switch between two
-decoration styles, KDE classic and an experimental style.
+[Windows]
 
-Please don't work on the code, I'll finish it during my summer
-vacations (four weeks from now on).
+MoveMode=Opaque|Transparent
+ResizeMode=Opaque|Transparent
+Placement=Smart|Random|Cascade
+AnimateShade=TRUE|FALSE
+AnimSteps=<integer=20>
+BorderSnapZone=<integer=10>
+WindowSnapZone=<integer=10>
+TitlebarDoubleClickCommand=Move|Resize|
+        Maximize|Iconify|Close|Sticky|Shade|Operations
 
-kwin was only commited to allow people like Mosfet to have a look at
-the Client API (and StdClient) to write nifty new themable decorations.
+[MouseBindings]
+
+	CommandActiveTitlebar1 |
+	CommandActiveTitlebar2 |
+	CommandActiveTitlebar3 | 
+	CommandInactiveTitlebar1 |
+	CommandInactiveTitlebar2 |
+	CommandInactiveTitlebar3 |
+	CommandWindow1 |
+	CommandWindow2 |
+	CommandWindow3 |
+	CommandAll1 |
+	CommandAll2 |
+	CommandAll3 
+    =
+	Raise |
+	Lower |
+	Operations Menu |
+	Toggle raise and  lower |
+	Activate and raise |
+	Activate and lower |
+	Activate |
+	Activate, raise and pass click |
+	Activate and pass click |
+	Move |
+	Resize |
+	Nothing 
+
+
+
 
 Have fun,
 

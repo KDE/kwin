@@ -221,6 +221,7 @@ void TabBox::paintContents()
 	int y = height() - 26;
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	    if ( workspace()->hasClient( *it ) ) { // safety
+		p.save();
 		if ( !(*it)->miniIcon().isNull() )
 		    p.drawPixmap( x, y, (*it)->miniIcon() );
 		else if ( menu_pix )
@@ -228,6 +229,7 @@ void TabBox::paintContents()
 		p.setPen( (*it)==currentClient()?
 			   colorGroup().highlight():colorGroup().background() );
 		p.drawRect( x-2, y-2, 20, 20 );
+		p.setPen( colorGroup().foreground() );
 		x += 20;
 	    }
 	}

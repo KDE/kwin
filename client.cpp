@@ -211,36 +211,50 @@ void WindowWrapper::releaseWindow()
 
 
 
-void WindowWrapper::mousePressEvent( QMouseEvent*  )
-{
-    XAllowEvents( qt_xdisplay(), ReplayPointer, lastMouseEventTime );
-}
-
-void WindowWrapper::mouseReleaseEvent( QMouseEvent*  )
-{
-    XAllowEvents( qt_xdisplay(), ReplayPointer, lastMouseEventTime );
-}
-
-void WindowWrapper::mouseMoveEvent( QMouseEvent* )
-{
-    //#### we sometimes get these but shouldn't..... Maybe a Qt problem
-    //XAllowEvents( qt_xdisplay(), ReplayPointer, lastMouseEventTime );
-}
-
 
 bool WindowWrapper::x11Event( XEvent * e)
 {
     switch ( e->type ) {
     case ButtonPress:
-    case ButtonRelease:
-	lastMouseEventTime = e->xbutton.time;
-	if ( e->xbutton.button > 3 ) {
-	    XAllowEvents( qt_xdisplay(), ReplayPointer, lastMouseEventTime );
+	{
+	    bool mod1 = (e->xbutton.state & Mod1Mask) == Mod1Mask;
+	    Options::MouseCommand com = Options::MouseNothing;
+	    if ( mod1){
+		switch (e->xbutton.button) {
+		case Button1:
+		    com = options->commandAll1();
+		    break;	
+		case Button2: 	
+		    com = options->commandAll2();
+		    break;
+		case Button3:
+		    com = options->commandAll3();
+		    break;
+		}
+	    } else {
+		switch (e->xbutton.button) {
+		case Button1:
+		    com = options->commandWindow1();
+		    break;	
+		case Button2: 	
+		    com = options->commandWindow2();
+		    break;
+		case Button3:
+		    com = options->commandWindow3();
+		    break;
+		default: 
+		    com = Options::MouseActivateAndPassClick;
+		}
+	    }
+	    bool replay = ( (Client*)parentWidget() )->performMouseCommand( com, 
+			    QPoint( e->xbutton.x_root, e->xbutton.y_root) );
+	    
+	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, kwin_time);
 	    return TRUE;
 	}
 	break;
-    case MotionNotify:
-	lastMouseEventTime = e->xmotion.time;
+    case ButtonRelease: 
+	XAllowEvents(qt_xdisplay(), SyncPointer, kwin_time);
 	break;
     default:
 	break;
@@ -478,7 +492,6 @@ bool Client::windowEvent( XEvent * e)
 	return propertyNotify( e->xproperty );
     case ButtonPress:
     case ButtonRelease:
-	XAllowEvents( qt_xdisplay(), e->xbutton.time, ReplayPointer );
 	break;
     case FocusIn:
 	if ( e->xfocus.mode == NotifyUngrab )
@@ -765,6 +778,9 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 	h = QMAX( xSizeHint.min_height, h );
     }
 
+    w = QMAX( minimumWidth(), w );
+    h = QMAX( minimumHeight(), h );
+    
     int ww = wwrap->width();
     int wh = 0;
     if ( !wwrap->testWState( WState_ForceHide ) )
@@ -774,11 +790,6 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 	h = 0;
 
     return QSize( width() - ww + w,  height()-wh+h );
-
-//     return QSize( QMIN( QMAX( width() - ww + w, minimumWidth() ),
-// 			maximumWidth() ),
-// 		  ignore_height? height()-wh+h : (QMIN( QMAX( height() - wh + h, minimumHeight() ),
-// 						     maximumHeight() ) ) );
 }
 
 
@@ -806,7 +817,7 @@ void Client::mousePressEvent( QMouseEvent * e)
  */
 void Client::mouseReleaseEvent( QMouseEvent * e)
 {
-    if ( e->button() == LeftButton ) {
+    if ( (e->stateAfter() & MouseButtonMask) == 0 ) {
 	buttonDown = FALSE;
 	if ( moveResizeMode ) {
 	    clearbound();
@@ -906,8 +917,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     }
 
     if ( isResize() && geom.size() != size() ) {
+	geom.setSize( adjustedSize( geom.size() ) );
 	if  (options->resizeMode == Options::Opaque ) {
-	    geom.setSize( adjustedSize( geom.size() ) );
 	    setGeometry( geom );
 	} else if ( options->resizeMode == Options::Transparent ) {
 	    clearbound();
@@ -1085,72 +1096,6 @@ void Client::invalidateWindow()
     windowWrapper()->invalidateWindow();
 }
 
-/*!
-  Returns the minimum size. This function differs from QWidget::minimumSize()
-  and is to be preferred
- */
-QSize Client::minimumSize() const
-{
-    return QSize( minimumWidth(), minimumHeight() );
-}
-/*!
-  Returns the minimum width. This function differs from QWidget::minimumWidth()
-  and is to be preferred
- */
-int Client::minimumWidth() const
-{
-//     if (xSizeHint.flags & PMinSize)
-// 	return QMAX( width() - wwrap->width() + xSizeHint.min_width,
-// 		     QWidget::minimumWidth() );
-//     else
-	return QWidget::minimumWidth();
-}
-/*!
-  Returns the minimum height. This function differs from QWidget::minimumHeight()
-  and is to be preferred
- */
-int Client::minimumHeight() const
-{
-//     if (xSizeHint.flags & PMinSize)
-// 	return QMAX( height() - wwrap->height() + xSizeHint.min_height,
-// 		     QWidget::minimumHeight() );
-//     else
-	return QWidget::minimumHeight();
-}
-
-/*!
-  Returns the maximum size. This function differs from QWidget::maximumSize()
-  and is to be preferred
-  */
-QSize Client::maximumSize() const
-{
-    return QSize( maximumWidth(), maximumHeight() );
-}
-/*!
-  Returns the maximum width. This function differs from QWidget::maximumWidth()
-  and is to be preferred
- */
-int Client::maximumWidth() const
-{
-//     if (xSizeHint.flags & PMaxSize)
-// 	return QMIN( width() - wwrap->width() + xSizeHint.max_width,
-// 		     QWidget::maximumWidth() );
-//     else
-	return QWidget::maximumWidth();
-}
-/*!
-  Returns the maximum height. This function differs from QWidget::maximumHeight()
-  and is to be preferred
- */
-int Client::maximumHeight() const
-{
-//     if (xSizeHint.flags & PMaxSize)
-// 	return QMIN( height() - wwrap->height() + xSizeHint.max_height,
-// 		     QWidget::maximumHeight() );
-//     else
-	return QWidget::maximumHeight();
-}
-
 
 void Client::iconify()
 {
@@ -1221,11 +1166,6 @@ void Client::maximize()
 }
 
 
-void Client::fullScreen()
-{
-    workspace()->makeFullScreen( this );
-}
-
 
 
 /*!
@@ -1236,11 +1176,6 @@ bool Client::eventFilter( QObject *o, QEvent * e)
     if ( o != wwrap )
 	return FALSE;
     switch ( e->type() ) {
-    case QEvent::MouseButtonPress:
-	if ( options->focusPolicyIsReasonable() )
-	    workspace()->requestFocus( this );
-	workspace()->raiseClient( this );
-	break;
     case QEvent::MouseButtonRelease:
 	break;
     case QEvent::Show:
@@ -1573,6 +1508,81 @@ Client* Client::mainClient()
     } while ( c && c->isTransient() && !saveset.contains( c ) );
     
     return c?c:this;
+}
+
+
+
+bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos)
+{
+    bool replay = FALSE;
+    switch (command) {
+    case Options::MouseRaise:
+	break;
+    case Options::MouseLower:
+	break;
+    case Options::MouseOperationsMenu:
+	break;
+    case Options::MouseToggleRaiseAndLower:
+	break;
+    case Options::MouseActivateAndRaise:
+	workspace()->requestFocus( this );
+	workspace()->raiseClient( this );
+	break;
+    case Options::MouseActivateAndLower:
+	workspace()->requestFocus( this );
+	workspace()->raiseClient( this );
+	break;
+    case Options::MouseActivate:
+	workspace()->requestFocus( this );
+	break;
+    case Options::MouseActivateRaiseAndPassClick:
+	workspace()->requestFocus( this );
+	workspace()->raiseClient( this );
+	replay = TRUE;
+	break;
+    case Options::MouseActivateAndPassClick:
+	workspace()->requestFocus( this );
+	workspace()->raiseClient( this );
+	replay = TRUE;
+	break;
+    case Options::MouseMove:
+	mode = Center;
+	moveResizeMode = TRUE;
+	buttonDown = TRUE;
+	moveOffset = mapFromGlobal( globalPos );
+	invertedMoveOffset = rect().bottomRight() - moveOffset;
+ 	grabMouse( arrowCursor ); 
+	if ( options->moveMode != Options::Opaque )
+	    XGrabServer( qt_xdisplay() );
+	break;
+    case Options::MouseResize:
+	moveResizeMode = TRUE;
+	buttonDown = TRUE;
+	moveOffset = mapFromGlobal( globalPos );
+	if ( moveOffset.x() < width()/2) {
+	    if ( moveOffset.y() < height()/2) 
+		mode = TopLeft;
+	    else
+		mode = BottomLeft;
+	} else {
+	    if ( moveOffset.y() < height()/2) 
+		mode = TopRight;
+	    else
+		mode = BottomRight;
+	}
+	invertedMoveOffset = rect().bottomRight() - moveOffset;
+	setMouseCursor( mode );
+	grabMouse( cursor()  );
+	if ( options->resizeMode != Options::Opaque )
+	    XGrabServer( qt_xdisplay() );
+	break;
+    case Options::MouseNothing:
+	// fall through
+    default:
+	replay = TRUE;
+	break;
+    }
+    return replay;
 }
 
 

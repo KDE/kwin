@@ -57,8 +57,6 @@ const QColorGroup& Options::colorGroup(ColorType type, bool active)
 void Options::reload()
 {
     focusPolicy = ClickToFocus;
-    resizeMode = Opaque;
-    moveMode = Opaque;// Transparent;
 
     QPalette pal = QApplication::palette();
     KConfig *config = KGlobal::config();
@@ -143,9 +141,10 @@ void Options::reload()
         }
     }
 
-    //CT well, what this costs us?
-    config->setGroup("Actions");
-
+    config->setGroup( "Windows" );
+    moveMode = config->readEntry("MoveMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
+    resizeMode = config->readEntry("ResizeMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
+    
     QString val;
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;
@@ -158,5 +157,61 @@ void Options::reload()
 
     border_snap_zone = config->readNumEntry("BorderSnapZone", 10);
     window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
+    
+    
+    OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "winShade") );
 
+    // Mouse bindings
+    config->setGroup( "MouseBindings");
+    CmdActiveTitlebar1 = mouseCommand(config->readEntry("CommandActiveTitlebar1","Raise"));
+    CmdActiveTitlebar2 = mouseCommand(config->readEntry("CommandActiveTitlebar2","Lower"));
+    CmdActiveTitlebar3 = mouseCommand(config->readEntry("CommandActiveTitlebar3","Operations menu"));
+    CmdInactiveTitlebar1 = mouseCommand(config->readEntry("CommandInactiveTitlebar1","Activate and raise"));
+    CmdInactiveTitlebar2 = mouseCommand(config->readEntry("CommandInactiveTitlebar2","Activate and lower"));
+    CmdInactiveTitlebar3 = mouseCommand(config->readEntry("CommandInactiveTitlebar3","Activate"));
+    CmdWindow1 = mouseCommand(config->readEntry("CommandWindow1","Activate, raise and pass click"));
+    CmdWindow2 = mouseCommand(config->readEntry("CommandWindow2","Activate and pass click"));
+    CmdWindow3 = mouseCommand(config->readEntry("CommandWindow3","Activate and pass click"));
+    CmdAll1 = mouseCommand(config->readEntry("CommandAll1","Move"));
+    CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"));
+    CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"));
+							
+}
+
+
+Options::WindowOperation Options::windowOperation(const QString &name){
+    if (name == "Move")
+	return MoveOp;
+    else if (name == "Resize")
+	return ResizeOp;
+    else if (name == "Maximize")
+	return MaximizeOp;
+    else if (name == "Iconify")
+	return IconifyOp;
+    else if (name == "Close")
+	return CloseOp;
+    else if (name == "Sticky")
+	return StickyOp;
+    else if (name == "Shade")
+	return ShadeOp;
+    else if (name == "Operations")
+	return OperationsOp;
+    return NoOp;
+}
+
+Options::MouseCommand Options::mouseCommand(const QString &name)
+{
+    if (name == "Raise") return MouseRaise;
+    if (name == "Lower") return MouseLower;
+    if (name == "Operations menu") return MouseOperationsMenu;
+    if (name == "Toggle raise and lower") return MouseToggleRaiseAndLower;
+    if (name == "Activate and raise") return MouseActivateAndRaise;
+    if (name == "Activate and lower") return MouseActivateAndLower;
+    if (name == "Activate") return MouseActivate;
+    if (name == "Activate, raise and pass click") return MouseActivateRaiseAndPassClick;
+    if (name == "Activate and pass click") return MouseActivateAndPassClick;
+    if (name == "Move") return MouseMove;
+    if (name == "Resize") return MouseResize;
+    if (name == "Nothing") return MouseNothing;
+    return MouseNothing;
 }

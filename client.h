@@ -32,9 +32,6 @@ protected:
     void resizeEvent( QResizeEvent * );
     void showEvent( QShowEvent* );
     void hideEvent( QHideEvent* );
-    void mousePressEvent( QMouseEvent* );
-    void mouseReleaseEvent( QMouseEvent* );
-    void mouseMoveEvent( QMouseEvent* );
     bool x11Event( XEvent * );		// X11 event
 
 private:
@@ -76,12 +73,6 @@ public:
     void withdraw();
 
     QSize adjustedSize( const QSize& ) const;
-    QSize minimumSize() const;
-    int minimumWidth() const;
-    int minimumHeight() const;
-    QSize maximumSize() const;
-    int maximumWidth() const;
-    int maximumHeight() const;
 
     QPixmap icon() const;
     QPixmap miniIcon() const;
@@ -139,13 +130,13 @@ public:
 
     virtual bool wantsTabFocus() const { return TRUE;} //### just for now
 
+    bool performMouseCommand( Options::MouseCommand, QPoint globalPos );
 
 public slots:
     void iconify();
     void closeWindow();
     void maximize( MaximizeMode );
     void maximize();
-    void fullScreen();
     void toggleSticky();
 
 protected:

@@ -73,7 +73,7 @@ static Client* clientFactory( Workspace *ws, WId w )
     }
 
     KConfig *config = KGlobal::config();
-    config->setGroup("style");
+    config->setGroup("Style");
     // well, it will be soon ;-)
     QString tmpStr = config->readEntry("Plugin", "standard");
     if(tmpStr == "system")
@@ -805,6 +805,9 @@ void Workspace::requestFocus( Client* c)
 	focusToNull();
 	return;
     }
+    
+    if ( !popup || !popup->isVisible() )
+	popup_client = c;
 
     if ( c->isVisible() && !c->isShade() ) {
 	c->takeFocus();
@@ -866,13 +869,11 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
 	connect( desk_popup, SIGNAL( aboutToShow() ), this, SLOT( desktopPopupAboutToShow() ) );
 
-	popupIdMove = popup->insertItem( i18n("&Move") );
-	popupIdSize = popup->insertItem( i18n("&Size") );
-	popupIdMinimize = popup->insertItem( i18n("&Mi&nimize") );
-	popupIdMaximize = popup->insertItem( i18n("Ma&ximize") );
-// 	popupIdFullscreen = popup->insertItem( i18n("&Fullscreen") );
-	popupIdFullscreen = 0;
-	popupIdShade = popup->insertItem( i18n("Sh&ade") );
+	popup->insertItem( i18n("&Move"), Options::MoveOp );
+	popup->insertItem( i18n("&Size"), Options::ResizeOp );
+	popup->insertItem( i18n("&Mi&nimize"), Options::IconifyOp );
+	popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
+	popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
 	
 	popup->insertSeparator();
 	
@@ -882,25 +883,37 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	popup->insertSeparator();
 	
 	QString k = KAccel::keyToString( keys->currentKey( "Window close" ), true );
-	popupIdClose = popup->insertItem(i18n("&Close")+'\t'+k );
+	popup->insertItem(i18n("&Close")+'\t'+k, Options::CloseOp );
     }
     return popup;
 }
 
-void Workspace::clientPopupActivated( int id )
-{
-    if ( !popup_client )
+void Workspace::performWindowOperation( Client* c, Options::WindowOperation op ) {
+    if ( !c )
 	return;
-    if ( id == popupIdClose )
-	popup_client->closeWindow();
-    else if ( id == popupIdMaximize )
-	popup_client->maximize();
-    else if ( id == popupIdMinimize )
-	popup_client->iconify();
-    else if ( id == popupIdFullscreen )
-	popup_client->fullScreen();
-    else if ( id == popupIdShade )
-	popup_client->setShade( !popup_client->isShade() );
+    
+    switch ( op ) {
+    case Options::CloseOp:
+	c->closeWindow();
+	break;
+    case Options::MaximizeOp:
+	c->maximize();
+	break;
+    case Options::IconifyOp:
+	c->iconify();
+	break;
+    case Options::ShadeOp:
+	c->setShade( !c->isShade() );
+	break;
+    default:
+	break;
+    }
+}
+
+void Workspace::clientPopupActivated( int id ) 
+{
+    if ( popup_client )
+	performWindowOperation( popup_client, (Options::WindowOperation) id );
 }
 
 /*!
@@ -1320,11 +1333,6 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 }
 
 
-void Workspace::makeFullScreen( Client*  )
-{
-    // not yet implemented
-}
-
 
 // experimental
 void Workspace::setDecorationStyle( int deco )
@@ -1536,8 +1544,8 @@ void Workspace::clientPopupAboutToShow()
 {
     if ( !popup_client || !popup )
 	return;
-    popup->setItemChecked( popupIdMaximize, popup_client->isMaximized() );
-    popup->setItemChecked( popupIdShade, popup_client->isShade() );
+    popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
+    popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
 }
 
 void Workspace::sendToDesktop( int desk )

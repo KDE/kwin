@@ -7,7 +7,7 @@
 #include <qguardedptr.h>
 #include <qvaluelist.h>
 #include <X11/Xlib.h>
-
+#include "options.h"
 class Client;
 class TabBox;
 
@@ -95,12 +95,13 @@ public:
 
     void setDesktopClient( Client* );
 
-    void makeFullScreen( Client* );
-
     bool iconifyMeansWithdraw( Client* );
     void iconifyOrDeiconifyTransientsOf( Client* );
     
     bool hasCaption( const QString& caption );
+
+    void performWindowOperation( Client* c, Options::WindowOperation op );
+
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -116,7 +117,7 @@ public slots:
 
     void slotWindowOperations();
     void slotWindowClose();
-
+    
 
 private slots:
     void setDecorationStyle( int );
@@ -145,8 +146,6 @@ private:
     void freeKeyboard(bool pass);
     QGuardedPtr<Client> popup_client;
     QPopupMenu *popup;
-    int popupIdMove, popupIdSize, popupIdMinimize,popupIdMaximize,
-    popupIdShade, popupIdFullscreen,popupIdClose;
     QPopupMenu *desk_popup;
     Client* should_get_focus;
 

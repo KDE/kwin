@@ -197,7 +197,6 @@ void BeClient::mousePressEvent( QMouseEvent * e )
 
 void BeClient::mouseReleaseEvent( QMouseEvent * e )
 {
-    workspace()->makeFullScreen( this );
     Client::mouseReleaseEvent( e );
 }
 

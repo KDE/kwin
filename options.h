@@ -98,6 +98,50 @@ public:
      * Return the number of animation steps (would this be general?)
      */
     const int windowSnapZone() { return window_snap_zone; };
+    
+
+    
+    // mouse bindings
+    
+    enum WindowOperation{
+	MaximizeOp = 5000,
+	RestoreOp,
+	IconifyOp,
+	MoveOp,
+	ResizeOp,
+	CloseOp,
+	StickyOp,
+	ShadeOp,
+	OperationsOp,
+	NoOp
+    };
+
+    WindowOperation operationTitlebarDblClick() { return OpTitlebarDblClick; }
+    
+    enum MouseCommand {
+    MouseRaise, MouseLower, MouseOperationsMenu, MouseToggleRaiseAndLower,
+    MouseActivateAndRaise, MouseActivateAndLower, MouseActivate,
+    MouseActivateRaiseAndPassClick, MouseActivateAndPassClick,
+    MouseMove, MouseResize, MouseNothing
+    };
+
+    MouseCommand commandActiveTitlebar1() { return CmdActiveTitlebar1; } 
+    MouseCommand commandActiveTitlebar2() { return CmdActiveTitlebar2; }
+    MouseCommand commandActiveTitlebar3() { return CmdActiveTitlebar3; }
+    MouseCommand commandInactiveTitlebar1() { return CmdInactiveTitlebar1; }
+    MouseCommand commandInactiveTitlebar2() { return CmdInactiveTitlebar2; }
+    MouseCommand commandInactiveTitlebar3() { return CmdInactiveTitlebar3; }
+    MouseCommand commandWindow1() { return CmdWindow1; }
+    MouseCommand commandWindow2() { return CmdWindow2; }
+    MouseCommand commandWindow3() { return CmdWindow3; }
+    MouseCommand commandAll1() { return CmdAll1; }
+    MouseCommand commandAll2() { return CmdAll2; }
+    MouseCommand commandAll3() { return CmdAll3; }
+
+    
+    static WindowOperation windowOperation(const QString &name );
+    static MouseCommand mouseCommand(const QString &name);
+
 
 public slots:
     void reload();
@@ -108,9 +152,26 @@ protected:
     QColorGroup *cg[KWINCOLORS*2];
 
 private:
-  bool animate_shade;
-  int anim_steps;
-  int border_snap_zone, window_snap_zone;
+    bool animate_shade;
+    int anim_steps;
+    int border_snap_zone, window_snap_zone;
+
+    
+    WindowOperation OpTitlebarDblClick;
+
+    // mouse bindings
+    MouseCommand CmdActiveTitlebar1;
+    MouseCommand CmdActiveTitlebar2;
+    MouseCommand CmdActiveTitlebar3;
+    MouseCommand CmdInactiveTitlebar1;
+    MouseCommand CmdInactiveTitlebar2;
+    MouseCommand CmdInactiveTitlebar3;
+    MouseCommand CmdWindow1;
+    MouseCommand CmdWindow2;
+    MouseCommand CmdWindow3;
+    MouseCommand CmdAll1;
+    MouseCommand CmdAll2;
+    MouseCommand CmdAll3;
 };
 
 extern Options* options;
