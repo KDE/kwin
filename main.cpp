@@ -146,10 +146,15 @@ void Application::saveState( QSessionManager& sm )
     }
 
     sm.release();
-//     if ( !sm.isPhase2() ) {
-// 	sm.requestPhase2();
-// 	return;
-//     }
+    
+    // we really should do phase 2 here, unfortunately qt-2.1beta3 contains a bug. 
+    // #######TODO FIXME with final Qt-2.1
+    /*
+    if ( !sm.isPhase2() ) {
+ 	sm.requestPhase2();
+ 	return;
+    }
+    */
 
     workspaces.first()->storeSession( kapp->sessionConfig() );
     kapp->sessionConfig()->sync();
