@@ -17,7 +17,7 @@
 using namespace KWinInternal;
 
 
-static QPixmap stretchPixmap(QPixmap& src, bool stretchVert){
+/* static QPixmap stretchPixmap(QPixmap& src, bool stretchVert){
   QPixmap dest;
   QBitmap *srcMask, *destMask;
   int w, h, w2, h2;
@@ -55,7 +55,7 @@ static QPixmap stretchPixmap(QPixmap& src, bool stretchVert){
     p.end();
   }
   return dest;
-}
+} */
 
 
 
@@ -222,11 +222,6 @@ static void delete_pixmaps()
    titleSunken = false;
 }
 
-void KWMThemeClient::slotReset()
-{
-
-}
-
 void MyButton::drawButtonLabel(QPainter *p)
 {
     if(pixmap()){
@@ -252,7 +247,6 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase | WStaticContents )
 {
     stickyBtn = maxBtn = mnuBtn = 0;
-    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset())); 
     layout = new QGridLayout(this);
     layout->addColSpacing(0, maxExtent);
     layout->addColSpacing(2, maxExtent);
@@ -836,6 +830,7 @@ extern "C"
     {
        delete_pixmaps();
        create_pixmaps();
+       Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {
