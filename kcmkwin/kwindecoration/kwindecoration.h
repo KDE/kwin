@@ -56,7 +56,6 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		virtual void dcopUpdateClientList();
 
 	signals:
-		void changed(bool);
 		void pluginLoad( KConfig* conf );
 		void pluginSave( KConfig* conf );
 		void pluginDefaults();
