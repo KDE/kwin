@@ -131,39 +131,55 @@ void Workspace::propagateClients( bool propagate_new_clients )
                                 // when passig pointers around.
 
     // restack the windows according to the stacking order
-    Window* new_stack = new Window[ stacking_order.count() + 1 ];
-    int i = 0;
+    Window* new_stack = new Window[ stacking_order.count() + 2 ];
+    int pos = 0;
     // Stack all windows under the support window. The support window is
     // not used for anything (besides the NETWM property), and it's not shown,
     // but it was lowered after kwin startup. Stacking all clients below
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
-    new_stack[ i++ ] = supportWindow->winId();
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
-        new_stack[i++] = (*it)->frameId();
+    new_stack[ pos++ ] = supportWindow->winId();
+    int topmenu_space_pos = 0;
+    for( ClientList::ConstIterator it = stacking_order.fromLast();
+         it != stacking_order.end();
+         --it )
+        {
+        new_stack[ pos++ ] = (*it)->frameId();
+        if( (*it)->isTopMenu())
+            topmenu_space_pos = pos;
+        }
+    if( topmenu_space != NULL )
+        { // make sure the topmenu space is below all topmenus, if there are any
+        for( int i = pos;
+             i > topmenu_space_pos;
+             --i )
+            new_stack[ i ] = new_stack[ i - 1 ];
+        new_stack[ topmenu_space_pos ] = topmenu_space->winId();
+        ++pos;
+        }
     // TODO isn't it too inefficient to restart always all clients?
     // TODO don't restack not visible windows?
-    XRestackWindows(qt_xdisplay(), new_stack, i);
+    XRestackWindows(qt_xdisplay(), new_stack, pos);
     delete [] new_stack;
 
     if ( propagate_new_clients )
         {
         cl = new Window[ desktops.count() + clients.count()];
-        i = 0;
+        pos = 0;
 	// TODO this is still not completely in the map order
         for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it )
-            cl[i++] =  (*it)->window();
+            cl[pos++] =  (*it)->window();
         for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it )
-            cl[i++] =  (*it)->window();
-        rootInfo->setClientList( cl, i );
+            cl[pos++] =  (*it)->window();
+        rootInfo->setClientList( cl, pos );
         delete [] cl;
         }
 
     cl = new Window[ stacking_order.count()];
-    i = 0;
+    pos = 0;
     for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
-        cl[i++] =  (*it)->window();
-    rootInfo->setClientListStacking( cl, i );
+        cl[pos++] =  (*it)->window();
+    rootInfo->setClientListStacking( cl, pos );
     delete [] cl;
 
 #if 0 // not necessary anymore?

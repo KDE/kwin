@@ -82,6 +82,15 @@ void Workspace::updateClientArea( bool force )
         else
             new_areas[ (*it)->desktop() ] = new_areas[ (*it)->desktop() ].intersect( r );
         }
+    if( topmenu_space != NULL )
+        {
+        QRect topmenu_area = all;
+        topmenu_area.setTop( topMenuHeight());
+        for( int i = 1;
+             i <= numberOfDesktops();
+             ++i )
+            new_areas[ i ] = new_areas[ i ].intersect( topmenu_area );
+        }
 
     bool changed = force;
     for( int i = 1;
@@ -104,6 +113,7 @@ void Workspace::updateClientArea( bool force )
             rootInfo->setWorkArea( i, r );
             }
 
+        updateTopMenuSpaceGeometry();
         for( ClientList::ConstIterator it = clients.begin();
              it != clients.end();
              ++it)
@@ -337,6 +347,16 @@ void Workspace::unclutterDesktop()
     }
 
 
+void Workspace::updateTopMenuSpaceGeometry()
+    {
+    if( !managingTopMenus())
+        return;
+    QRect area;
+    area = clientArea( MaximizeFullArea, QPoint( 0, 0 ), 1 ); // HACK desktop ?
+    area.setHeight( topMenuHeight());
+    topmenu_space->setGeometry( area );
+    }
+
 //********************************************
 // Client
 //********************************************
@@ -351,11 +371,9 @@ void Workspace::unclutterDesktop()
 QRect Client::adjustedClientArea( const QRect& area ) const
     {
     QRect r = area;
-    if( isTopMenu() && workspace()->managingTopMenus())
-        {
-        r.setTop( r.top() + workspace()->topMenuHeight());
+    // topmenu area is reserved in updateClientArea()
+    if( isTopMenu())
         return r;
-        }
     NETStrut strut = info->strut();
     if ( strut.left > 0 )
         r.setLeft( r.left() + (int) strut.left );

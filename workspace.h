@@ -341,6 +341,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void updateCurrentTopMenu();
         void addTopMenu( Client* c );
         void removeTopMenu( Client* c );
+        void setupTopMenuHandling();
+        void updateTopMenuSpaceGeometry();
         void updateToolWindows( bool also_hide );
 
     // this is the right way to create a new client
@@ -502,6 +504,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         KSelectionWatcher* topmenu_watcher;
         ClientList topmenus; // doesn't own them
         mutable int topmenu_height;
+        QWidget* topmenu_space;
 
         int set_active_client_recursion;
         int block_stacking_updates; // when >0, stacking updates are temporarily disabled

@@ -146,6 +146,13 @@ unsigned long Options::updateSettings()
     globalConfig.setGroup("KDE");
     fade_tooltips = globalConfig.readBoolEntry("EffectFadeTooltip", false);
     animate_tooltips = globalConfig.readBoolEntry("EffectAnimateTooltip", false);
+    topmenus = globalConfig.readBoolEntry( "macStyle", false );
+
+    KConfig kdesktopcfg( "kdesktoprc", true );
+    kdesktopcfg.setGroup( "Menubar" );
+    desktop_topmenu = kdesktopcfg.readBoolEntry( "ShowMenubar", false );
+    if( desktop_topmenu )
+        topmenus = true;
 
     return changed;
     }

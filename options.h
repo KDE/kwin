@@ -252,6 +252,9 @@ class Options : public KDecorationOptions
         * @returns the activation delay for electric borders in milliseconds.
         */
         int electricBorderDelay();
+        
+        bool topMenuEnabled() const { return topmenus; }
+        bool desktopTopMenu() const { return desktop_topmenu; }
 
     private:
         WindowOperation OpTitlebarDblClick;
@@ -276,6 +279,8 @@ class Options : public KDecorationOptions
         int electric_borders;
         int electric_border_delay;
         bool show_geometry_tip;
+        bool topmenus;
+        bool desktop_topmenu;
     };
 
 extern Options* options;

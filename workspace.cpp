@@ -296,25 +296,24 @@ void Workspace::init()
     topmenu_selection = new KSelectionOwner( topmenu_atom );
     topmenu_watcher = new KSelectionWatcher( topmenu_atom );
     topmenu_height = 0;
-    if( topmenu_selection->claim( false ))
-        {
-        managing_topmenus = true;
-        connect( topmenu_selection, SIGNAL( lostOwnership()), this, SLOT( lostTopMenuSelection()));
-        }
-    else
-        {
-        managing_topmenus = false;
-        connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
-        }
-//    kdDebug() << "TOPMENU INIT:" << managing_topmenus << endl;
+    managing_topmenus = false;
+    topmenu_space = NULL;
 
         { // begin updates blocker block
         StackingUpdatesBlocker blocker( this );
+
+        if( options->topMenuEnabled() && topmenu_selection->claim( false ))
+            setupTopMenuHandling(); // this can call updateStackingOrder()
+        else
+            lostTopMenuSelection();
+
         XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
         for (i = 0; i < nwins; i++) 
             {
             XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
             if (attr.override_redirect )
+                continue;
+            if( topmenu_space && topmenu_space->winId() == wins[ i ] )
                 continue;
             if (attr.map_state != IsUnmapped) 
                 {
@@ -400,6 +399,7 @@ Workspace::~Workspace()
     delete initPositioning;
     delete topmenu_watcher;
     delete topmenu_selection;
+    delete topmenu_space;
     _self = 0;
     }
 
@@ -505,14 +505,15 @@ void Workspace::updateCurrentTopMenu()
     {
     // toplevel menubar handling
     Client* menubar = 0;
+    bool block_desktop_menubar = false;
     if( active_client )
         {
         // show the new menu bar first...
         Client* menu_client = active_client;
-        // SELI TODO make this also depend on kdesktop's setting, like in menuapplet
-        bool block_desktop_menubar = active_client->isFullScreen();
         for(;;)
             {
+            if( menu_client->isFullScreen())
+                block_desktop_menubar = true;
             for( ClientList::ConstIterator it = menu_client->transients().begin();
                  it != menu_client->transients().end();
                  ++it )
@@ -524,30 +525,26 @@ void Workspace::updateCurrentTopMenu()
             if( menubar != NULL || !menu_client->isTransient())
                 break;
             if( menu_client->isModal() || menu_client->transientFor() == NULL )
-                { // don't use mainwindow's menu if this is modal or group transient
-                if( menu_client->isModal() || menu_client->groupTransient())
-                    block_desktop_menubar = true;
-                break;
-                }
+                break; // don't use mainwindow's menu if this is modal or group transient
             menu_client = menu_client->transientFor();
             }
-        if( !menubar && active_client->keepAbove())
-            block_desktop_menubar = true;
-        if( !menubar && !block_desktop_menubar )
+        }
+    if( !options->desktopTopMenu())
+        block_desktop_menubar = true;
+    if( !menubar && !block_desktop_menubar )
+        {
+        // Find the menubar of the desktop
+        Client* desktop = findDesktop( true, currentDesktop());
+        if( desktop != NULL )
             {
-            // Find the menubar of the desktop
-            Client* desktop = findDesktop( true, currentDesktop());
-            if( desktop != NULL )
-                {
-                for( ClientList::ConstIterator it = desktop->transients().begin();
-                     it != desktop->transients().end();
-                     ++it )
-                    if( (*it)->isTopMenu())
+            for( ClientList::ConstIterator it = desktop->transients().begin();
+                 it != desktop->transients().end();
+                 ++it )
+                if( (*it)->isTopMenu())
                     {
                     menubar = *it;
                     break;
                     }
-                }
             }
         }
 
@@ -569,7 +566,7 @@ void Workspace::updateCurrentTopMenu()
             (*it)->hideClient( true );
         }
 #else
-    // TODO there should be a blank area where topmenus are placed, no need to keep
+    // There's a blank area where topmenus are placed, no need to keep
     // the desktop one always visible
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
         {
@@ -729,13 +726,28 @@ void Workspace::slotReconfigure()
     else
        destroyBorderWindows();
 
+    if( options->topMenuEnabled())
+        {
+        if( !managingTopMenus() && topmenu_selection->claim( false ))
+            setupTopMenuHandling();
+        }
+    else
+        {
+        if( managingTopMenus())
+            {
+            topmenu_selection->release();
+            lostTopMenuSelection();
+            }
+        }
     topmenu_height = 0; // invalidate used menu height
     if( managingTopMenus())
         {
+        updateTopMenuSpaceGeometry();
         for( ClientList::ConstIterator it = topmenus.begin();
              it != topmenus.end();
              ++it )
             (*it)->checkWorkspacePosition();
+        updateCurrentTopMenu();
         }
     }
 
@@ -1815,6 +1827,7 @@ void Workspace::addTopMenu( Client* c )
     if( minsize > topMenuHeight())
         {
         topmenu_height = minsize;
+        updateTopMenuSpaceGeometry();
         for( ClientList::ConstIterator it = topmenus.begin();
              it != topmenus.end();
              ++it )
@@ -1837,9 +1850,13 @@ void Workspace::removeTopMenu( Client* c )
 void Workspace::lostTopMenuSelection()
     {
 //    kdDebug() << "lost TopMenu selection" << endl;
+    if( !managing_topmenus )
+        return;
     connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     disconnect( topmenu_selection, SIGNAL( lostOwnership()), this, SLOT( lostTopMenuSelection()));
     managing_topmenus = false;
+    delete topmenu_space;
+    updateClientArea();
     for( ClientList::ConstIterator it = topmenus.begin();
          it != topmenus.end();
          ++it )
@@ -1855,9 +1872,20 @@ void Workspace::lostTopMenuOwner()
         return;
         }
 //    kdDebug() << "claimed TopMenu selection" << endl;
+    setupTopMenuHandling();
+    }
+
+void Workspace::setupTopMenuHandling()
+    {
+    if( managing_topmenus )
+        return;
     connect( topmenu_selection, SIGNAL( lostOwnership()), this, SLOT( lostTopMenuSelection()));
     disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     managing_topmenus = true;
+    topmenu_space = new QWidget;
+    updateTopMenuSpaceGeometry();
+    topmenu_space->show();
+    updateClientArea();
     for( ClientList::ConstIterator it = topmenus.begin();
          it != topmenus.end();
          ++it )
