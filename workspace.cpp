@@ -12,6 +12,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <stdlib.h>
 #include <qwhatsthis.h>
 #include <qdatastream.h>
+#include <qregexp.h>
 #include <kapp.h>
 #include <dcopclient.h>
 #include <kprocess.h>
@@ -1547,7 +1548,8 @@ void Workspace::doNotManage( QString title )
 bool Workspace::isNotManaged( const QString& title )
 {
     for ( QStringList::Iterator it = doNotManageList.begin(); it != doNotManageList.end(); ++it ) {
-	if ( (*it) == title ) {
+	QRegExp r( (*it) );
+	if (r.match(title) != -1) {
 	    doNotManageList.remove( it );
 	    return TRUE;
 	}
