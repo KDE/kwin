@@ -276,12 +276,15 @@ WebClient::mousePosition(const QPoint & p) const
 #endif
       return Client::Center;
   }
-  else if (y < height() - 20)
+  else if (y < height() - 4)
   {
     if (x < 4)
       return Client::Left;
     else
-      return Client::Right;
+      if (x > width() - 4)
+        return Client::Right;
+      else
+        return Client::Center;
   }
   else
   {
