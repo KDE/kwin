@@ -144,6 +144,7 @@ private:
     int bar_x_ofs;
     int in_unobs;
     QTime time;
+    bool resizable;
 };
 
 class B2ClientFactory : public QObject, public KDecorationFactory

@@ -403,6 +403,7 @@ void B2Client::init()
     positionButtons();
     titlebar->recalcBuffer();
     titlebar->installEventFilter(this);
+    resizable = isResizable();
 }
 
 void B2Client::addButtons(const QString& s, const QString tips[],
@@ -483,7 +484,7 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 	    }
 	    break;
 	case 'R': // Resize button
-	    if (isResizable() && !button[BtnResize]) {
+	    if (resizable && !button[BtnResize]) {
 		button[BtnResize] = new B2Button(this, tb, tips[BtnResize]);
 		button[BtnResize]->setPixmaps(P_RESIZE);
 		connect(button[BtnResize], SIGNAL(pressed()),
@@ -503,7 +504,7 @@ bool B2Client::mustDrawHandle() const
     if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
 	return false;
     } else {
-	return do_draw_handle && isResizable();
+	return do_draw_handle & resizable;
     }
 }
 
