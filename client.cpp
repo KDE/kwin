@@ -48,37 +48,37 @@ class WinInfo : public NETWinInfo
 {
 public:
     WinInfo(KWinInternal::Client * c, Display * display, Window window,
-	    Window rwin, unsigned long pr )
-	: NETWinInfo( display, window, rwin, pr, NET::WindowManager ) {
+            Window rwin, unsigned long pr )
+        : NETWinInfo( display, window, rwin, pr, NET::WindowManager ) {
         m_client = c;
     }
 
     virtual void changeDesktop(int desktop) {
-	if ( desktop == NETWinInfo::OnAllDesktops )
-	    m_client->setSticky( TRUE );
-	else
-	    m_client->workspace()->sendClientToDesktop( m_client, desktop );
+        if ( desktop == NETWinInfo::OnAllDesktops )
+            m_client->setSticky( TRUE );
+        else
+            m_client->workspace()->sendClientToDesktop( m_client, desktop );
     }
     virtual void changeState( unsigned long state, unsigned long mask ) {
-	// state : kwin.h says: possible values are or'ed combinations of NET::Modal,
-	// NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar, NET::SkipPager
+        // state : kwin.h says: possible values are or'ed combinations of NET::Modal,
+        // NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar, NET::SkipPager
 
-	state &= mask; // for safety, clear all other bits
+        state &= mask; // for safety, clear all other bits
 
-	if ( (mask & NET::Max) == NET::Max ) {
-	    m_client->maximizeRaw( state & NET::MaxVert, state & NET::MaxHoriz );
-	} else if ( mask & NET::MaxVert ) {
-	    m_client->maximizeRaw( state & NET::MaxVert, m_client->maximizeMode() & KWinInternal::Client::MaximizeHorizontal );
-	} else if ( mask & NET::MaxHoriz ) {
-	    m_client->maximizeRaw( m_client->maximizeMode() & KWinInternal::Client::MaximizeVertical, state & NET::MaxHoriz );
-	}
-	if ( mask & NET::Shaded )
-	    m_client->setShade( state & NET::Shaded );
-	if ( mask & NET::StaysOnTop) {
-	    m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
-	    if ( m_client->staysOnTop() )
-		m_client->workspace()->raiseClient( m_client );
-	}
+        if ( (mask & NET::Max) == NET::Max ) {
+            m_client->maximizeRaw( state & NET::MaxVert, state & NET::MaxHoriz );
+        } else if ( mask & NET::MaxVert ) {
+            m_client->maximizeRaw( state & NET::MaxVert, m_client->maximizeMode() & KWinInternal::Client::MaximizeHorizontal );
+        } else if ( mask & NET::MaxHoriz ) {
+            m_client->maximizeRaw( m_client->maximizeMode() & KWinInternal::Client::MaximizeVertical, state & NET::MaxHoriz );
+        }
+        if ( mask & NET::Shaded )
+            m_client->setShade( state & NET::Shaded );
+        if ( mask & NET::StaysOnTop) {
+            m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
+            if ( m_client->staysOnTop() )
+                m_client->workspace()->raiseClient( m_client );
+        }
         if( mask & NET::SkipTaskbar )
             m_client->setSkipTaskbar( ( state & NET::SkipTaskbar ) != 0 );
         if( mask & NET::SkipPager )
@@ -121,9 +121,9 @@ static QRect* visible_bound = 0;
 void Client::drawbound( const QRect& geom )
 {
     if ( visible_bound )
-	*visible_bound = geom;
+        *visible_bound = geom;
     else
-	visible_bound = new QRect( geom );
+        visible_bound = new QRect( geom );
     QPainter p ( workspace()->desktopWidget() );
     p.setPen( QPen( Qt::white, 5 ) );
     p.setRasterOp( Qt::XorROP );
@@ -133,7 +133,7 @@ void Client::drawbound( const QRect& geom )
 void Client::clearbound()
 {
     if ( !visible_bound )
-	return;
+        return;
     drawbound( *visible_bound );
     delete visible_bound;
     visible_bound = 0;
@@ -142,12 +142,12 @@ void Client::clearbound()
 void Client::updateShape()
 {
     if ( shape() )
-	XShapeCombineShape(qt_xdisplay(), winId(), ShapeBounding,
-			   windowWrapper()->x(), windowWrapper()->y(),
-			   window(), ShapeBounding, ShapeSet);
+        XShapeCombineShape(qt_xdisplay(), winId(), ShapeBounding,
+                           windowWrapper()->x(), windowWrapper()->y(),
+                           window(), ShapeBounding, ShapeSet);
     else
-	XShapeCombineMask( qt_xdisplay(), winId(), ShapeBounding, 0, 0,
-			   None, ShapeSet);
+        XShapeCombineMask( qt_xdisplay(), winId(), ShapeBounding, 0, 0,
+                           None, ShapeSet);
 }
 
 static void sendClientMessage(Window w, Atom a, long x){
@@ -163,7 +163,7 @@ static void sendClientMessage(Window w, Atom a, long x){
   ev.xclient.data.l[1] = kwin_time;
   mask = 0L;
   if (w == qt_xrootwin())
-    mask = SubstructureRedirectMask;	    /* magic! */
+    mask = SubstructureRedirectMask;        /* magic! */
   XSendEvent(qt_xdisplay(), w, False, mask, &ev);
 }
 
@@ -188,15 +188,15 @@ static void sendClientMessage(Window w, Atom a, long x){
  */
 
 const long ClientWinMask = KeyPressMask | KeyReleaseMask |
-				  ButtonPressMask | ButtonReleaseMask |
-		  KeymapStateMask |
-		  ButtonMotionMask |
-		  PointerMotionMask | // need this, too!
-		  EnterWindowMask | LeaveWindowMask |
-		  FocusChangeMask |
-		  ExposureMask |
-		  StructureNotifyMask |
-		  SubstructureRedirectMask;
+                                  ButtonPressMask | ButtonReleaseMask |
+                  KeymapStateMask |
+                  ButtonMotionMask |
+                  PointerMotionMask | // need this, too!
+                  EnterWindowMask | LeaveWindowMask |
+                  FocusChangeMask |
+                  ExposureMask |
+                  StructureNotifyMask |
+                  SubstructureRedirectMask;
 
 
 WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
@@ -224,17 +224,17 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     XSelectInput( qt_xdisplay(), winId(), ClientWinMask | SubstructureNotifyMask );
 
     XSelectInput( qt_xdisplay(), w,
-		  FocusChangeMask |
-		  PropertyChangeMask |
-		  ColormapChangeMask |
-		  EnterWindowMask | LeaveWindowMask
-		  );
+                  FocusChangeMask |
+                  PropertyChangeMask |
+                  ColormapChangeMask |
+                  EnterWindowMask | LeaveWindowMask
+                  );
 
     // install a passive grab to catch mouse button events
     XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
-		ButtonPressMask,
-		GrabModeSync, GrabModeAsync,
-		None, None );
+                ButtonPressMask,
+                GrabModeSync, GrabModeAsync,
+                None, None );
 
     reparented = FALSE;
 }
@@ -266,16 +266,16 @@ static void ungrabButton( WId winId, int modifier )
 void WindowWrapper::setActive( bool active )
 {
     if ( active ) {
-	if ( options->focusPolicy == Options::ClickToFocus ||  !options->clickRaise )
-	    ungrabButton( winId(),  None );
-	ungrabButton( winId(),	ShiftMask );
-	ungrabButton( winId(),	ControlMask );
-	ungrabButton( winId(),	ControlMask | ShiftMask );
+        if ( options->focusPolicy == Options::ClickToFocus ||  !options->clickRaise )
+            ungrabButton( winId(),  None );
+        ungrabButton( winId(),  ShiftMask );
+        ungrabButton( winId(),  ControlMask );
+        ungrabButton( winId(),  ControlMask | ShiftMask );
     } else {
-	XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
-		    ButtonPressMask,
-		    GrabModeSync, GrabModeAsync,
-		    None, None );
+        XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
+                    ButtonPressMask,
+                    GrabModeSync, GrabModeAsync,
+                    None, None );
     }
 }
 
@@ -292,24 +292,24 @@ QSizePolicy WindowWrapper::sizePolicy() const
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win && reparented ) {
-	if ( ((Client*)parentWidget())->isResize() ) {
-	    QTimer::singleShot( 0, this, SLOT( deferredResize() ) );
-	} else {
-	    XMoveResizeWindow( qt_xdisplay(), win,
-			       0, 0, width(), height() );
-	    if ( ((Client*)parentWidget())->shape() )
-		((Client*)parentWidget())->updateShape();
-	}
+        if ( ((Client*)parentWidget())->isResize() ) {
+            QTimer::singleShot( 0, this, SLOT( deferredResize() ) );
+        } else {
+            XMoveResizeWindow( qt_xdisplay(), win,
+                               0, 0, width(), height() );
+            if ( ((Client*)parentWidget())->shape() )
+                ((Client*)parentWidget())->updateShape();
+        }
     }
 }
 
 void WindowWrapper::deferredResize()
 {
     XMoveResizeWindow( qt_xdisplay(), win,
-		       0, 0, width(), height() );
+                       0, 0, width(), height() );
     ((Client*)parentWidget())->sendSyntheticConfigureNotify();
     if ( ((Client*)parentWidget())->shape() )
-	((Client*)parentWidget())->updateShape();
+        ((Client*)parentWidget())->updateShape();
     QApplication::syncX(); // process our own configure events synchronously.
 }
 
@@ -340,19 +340,19 @@ void WindowWrapper::hide()
 void WindowWrapper::map()
 {
     if ( win ) {
-	if ( !reparented ) {
-	    // get the window. We do it this late in order to
-	    // guarantee that our geometry is final. This allows
-	    // toolkits to guess the proper frame geometry when
-	    // processing the ReparentNotify event from X.
-	    XReparentWindow( qt_xdisplay(), win, winId(), 0, 0 );
-	    reparented = TRUE;
-	}
-	XMoveResizeWindow( qt_xdisplay(), win,
-			   0, 0, width(), height() );
-	XSelectInput( qt_xdisplay(), winId(), ClientWinMask );
-	XMapRaised( qt_xdisplay(), win );
-	XSelectInput( qt_xdisplay(), winId(), ClientWinMask  | SubstructureNotifyMask );
+        if ( !reparented ) {
+            // get the window. We do it this late in order to
+            // guarantee that our geometry is final. This allows
+            // toolkits to guess the proper frame geometry when
+            // processing the ReparentNotify event from X.
+            XReparentWindow( qt_xdisplay(), win, winId(), 0, 0 );
+            reparented = TRUE;
+        }
+        XMoveResizeWindow( qt_xdisplay(), win,
+                           0, 0, width(), height() );
+        XSelectInput( qt_xdisplay(), winId(), ClientWinMask );
+        XMapRaised( qt_xdisplay(), win );
+        XSelectInput( qt_xdisplay(), winId(), ClientWinMask  | SubstructureNotifyMask );
     }
 }
 
@@ -362,9 +362,9 @@ void WindowWrapper::map()
 void WindowWrapper::unmap()
 {
     if ( win ) {
-	XSelectInput( qt_xdisplay(), winId(), ClientWinMask );
-	XUnmapWindow( qt_xdisplay(), win );
-	XSelectInput( qt_xdisplay(), winId(), ClientWinMask  | SubstructureNotifyMask );
+        XSelectInput( qt_xdisplay(), winId(), ClientWinMask );
+        XUnmapWindow( qt_xdisplay(), win );
+        XSelectInput( qt_xdisplay(), winId(), ClientWinMask  | SubstructureNotifyMask );
     }
 }
 
@@ -383,16 +383,16 @@ void WindowWrapper::invalidateWindow()
 void WindowWrapper::releaseWindow()
 {
     if ( win ) {
-	if ( reparented ) {
-	    XReparentWindow( qt_xdisplay(), win,
-			     ((Client*)parentWidget())->workspace()->rootWin(),
-			     parentWidget()->x(),
-			     parentWidget()->y() );
-	}
+        if ( reparented ) {
+            XReparentWindow( qt_xdisplay(), win,
+                             ((Client*)parentWidget())->workspace()->rootWin(),
+                             parentWidget()->x(),
+                             parentWidget()->y() );
+        }
 
-	XRemoveFromSaveSet(qt_xdisplay(), win );
-	XSelectInput( qt_xdisplay(), win, NoEventMask );
-	invalidateWindow();
+        XRemoveFromSaveSet(qt_xdisplay(), win );
+        XSelectInput( qt_xdisplay(), win, NoEventMask );
+        invalidateWindow();
     }
 }
 
@@ -403,65 +403,65 @@ bool WindowWrapper::x11Event( XEvent * e)
 {
     switch ( e->type ) {
     case ButtonPress:
-	{
-	    uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-				KKeyNative::modX(KKey::WIN) :
-				KKeyNative::modX(KKey::ALT);
-	    bool bModKeyHeld = e->xbutton.state & keyModX;
+        {
+            uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
+                                KKeyNative::modX(KKey::WIN) :
+                                KKeyNative::modX(KKey::ALT);
+            bool bModKeyHeld = e->xbutton.state & keyModX;
 
-	    if ( ((Client*)parentWidget())->isActive()
-		 && ( options->focusPolicy != Options::ClickToFocus
-		 &&  options->clickRaise && !bModKeyHeld ) ) {
-		if ( e->xbutton.button < 4 ) // exclude wheel
-		    ((Client*)parentWidget())->autoRaise();
-		ungrabButton( winId(), None );
-	    }
+            if ( ((Client*)parentWidget())->isActive()
+                 && ( options->focusPolicy != Options::ClickToFocus
+                 &&  options->clickRaise && !bModKeyHeld ) ) {
+                if ( e->xbutton.button < 4 ) // exclude wheel
+                    ((Client*)parentWidget())->autoRaise();
+                ungrabButton( winId(), None );
+            }
 
-	    Options::MouseCommand com = Options::MouseNothing;
-	    if ( bModKeyHeld ){
-		switch (e->xbutton.button) {
-		case Button1:
-		    com = options->commandAll1();
-		    break;
-		case Button2:
-		    com = options->commandAll2();
-		    break;
-		case Button3:
-		    com = options->commandAll3();
-		    break;
-		}
-	    } else {
-		switch (e->xbutton.button) {
-		case Button1:
-		    com = options->commandWindow1();
-		    break;
-		case Button2:
-		    com = options->commandWindow2();
-		    break;
-		case Button3:
-		    com = options->commandWindow3();
-		    break;
-		default:
-		    com = Options::MouseActivateAndPassClick;
-		}
-	    }
-	    bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
-			    QPoint( e->xbutton.x_root, e->xbutton.y_root) );
+            Options::MouseCommand com = Options::MouseNothing;
+            if ( bModKeyHeld ){
+                switch (e->xbutton.button) {
+                case Button1:
+                    com = options->commandAll1();
+                    break;
+                case Button2:
+                    com = options->commandAll2();
+                    break;
+                case Button3:
+                    com = options->commandAll3();
+                    break;
+                }
+            } else {
+                switch (e->xbutton.button) {
+                case Button1:
+                    com = options->commandWindow1();
+                    break;
+                case Button2:
+                    com = options->commandWindow2();
+                    break;
+                case Button3:
+                    com = options->commandWindow3();
+                    break;
+                default:
+                    com = Options::MouseActivateAndPassClick;
+                }
+            }
+            bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
+                            QPoint( e->xbutton.x_root, e->xbutton.y_root) );
 
-	    if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
-		 ((Client*)parentWidget())->windowType() != NET::Dialog &&
-		 ((Client*)parentWidget())->windowType() != NET::Override )
-		replay = TRUE;
+            if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
+                 ((Client*)parentWidget())->windowType() != NET::Dialog &&
+                 ((Client*)parentWidget())->windowType() != NET::Override )
+                replay = TRUE;
 
-	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //kwin_time);
-	    return TRUE;
-	}
-	break;
+            XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //kwin_time);
+            return TRUE;
+        }
+        break;
     case ButtonRelease:
-	XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //kwin_time);
-	break;
+        XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //kwin_time);
+        break;
     default:
-	break;
+        break;
     }
     return FALSE;
 }
@@ -488,13 +488,13 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     shadeHoverTimer = 0;
 
     unsigned long properties =
-	NET::WMDesktop |
-	NET::WMState |
-	NET::WMWindowType |
-	NET::WMStrut |
-	NET::WMName |
-	NET::WMIconGeometry
-	;
+        NET::WMDesktop |
+        NET::WMState |
+        NET::WMWindowType |
+        NET::WMStrut |
+        NET::WMName |
+        NET::WMIconGeometry
+        ;
 
     info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
 
@@ -529,19 +529,19 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     Window ww;
     if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
-	transient_for = None;
+        transient_for = None;
     else {
-	transient_for = (WId) ww;
-	transient_for_defined = TRUE;
-	verifyTransientFor();
+        transient_for = (WId) ww;
+        transient_for_defined = TRUE;
+        verifyTransientFor();
     }
 
     XClassHint classHint;
     if ( XGetClassHint( qt_xdisplay(), win, &classHint ) ) {
-	resource_name = classHint.res_name;
-	resource_class = classHint.res_class;
-	XFree( classHint.res_name );
-	XFree( classHint.res_class );
+        resource_name = classHint.res_name;
+        resource_class = classHint.res_class;
+        XFree( classHint.res_name );
+        XFree( classHint.res_class );
     }
 
     getWMHints();
@@ -551,11 +551,11 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     fetchName();
 
     if ( mainClient()->isSticky() )
-	setSticky( TRUE );
+        setSticky( TRUE );
 
     // window wants to stay on top?
     stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || ( transient_for == None && transient_for_defined );
-    
+
     // window does not want a taskbar entry?
     skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
 
@@ -563,9 +563,9 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     // should we open this window on a certain desktop?
     if ( info->desktop() == NETWinInfo::OnAllDesktops )
-	setSticky( TRUE );
+        setSticky( TRUE );
     else if ( info->desktop() )
-	desk = info->desktop(); // window had the initial desktop property!
+        desk = info->desktop(); // window had the initial desktop property!
 }
 
 /*!
@@ -614,8 +614,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     XWindowAttributes attr;
     if (XGetWindowAttributes(qt_xdisplay(), win, &attr)) {
-	cmap = attr.colormap;
-	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
+        cmap = attr.colormap;
+        original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
     }
 
     geom = original_geometry;
@@ -623,63 +623,63 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     SessionInfo* session = workspace()->takeSessionInfo( this );
     if ( session )
-	geom = session->geometry;
+        geom = session->geometry;
 
     QRect area = workspace()->clientArea();
 
     if ( geom == workspace()->geometry() && inherits( "KWinInternal::NoBorderClient" ) ) {
-	if ( !stays_on_top )
-	    is_fullscreen = TRUE;
-	may_move = FALSE; // don't let fullscreen windows be moved around
+        if ( !stays_on_top )
+            is_fullscreen = TRUE;
+        may_move = FALSE; // don't let fullscreen windows be moved around
     }
 
     if ( isMapped  || session || isTransient() ) {
-	placementDone = TRUE;
+        placementDone = TRUE;
     }  else {
 
-	bool ignorePPosition = false;
-	XClassHint classHint;
-	if ( XGetClassHint(qt_xdisplay(), win, &classHint) != 0 ) {
-	    if ( classHint.res_class )
-		ignorePPosition = ( options->ignorePositionClasses.find(QString::fromLatin1(classHint.res_class)) != options->ignorePositionClasses.end() );
-	    XFree(classHint.res_name);
-	    XFree(classHint.res_class);
-	}
+        bool ignorePPosition = false;
+        XClassHint classHint;
+        if ( XGetClassHint(qt_xdisplay(), win, &classHint) != 0 ) {
+            if ( classHint.res_class )
+                ignorePPosition = ( options->ignorePositionClasses.find(QString::fromLatin1(classHint.res_class)) != options->ignorePositionClasses.end() );
+            XFree(classHint.res_name);
+            XFree(classHint.res_class);
+        }
 
-	if ((xSizeHint.flags & PPosition) && ! ignorePPosition) {
-	    int tx = geom.x();
-	    int ty = geom.y();
+        if ((xSizeHint.flags & PPosition) && ! ignorePPosition) {
+            int tx = geom.x();
+            int ty = geom.y();
 
-	    if (tx < 0)
-		tx = area.right() + tx;
-	    if (ty < 0)
-		ty = area.bottom() + ty;
-	    geom.moveTopLeft(QPoint(tx, ty));
-	}
+            if (tx < 0)
+                tx = area.right() + tx;
+            if (ty < 0)
+                ty = area.bottom() + ty;
+            geom.moveTopLeft(QPoint(tx, ty));
+        }
 
-	if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
-	     (xSizeHint.flags & USPosition) ) {
-	    placementDone = TRUE;
-	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
-		int tx = geom.x();
-		int ty = geom.y();
-		if ( tx >= 0 && tx < area.x() )
-			tx = area.x();
-		if ( ty >= 0 && ty < area.y() )
-		    ty = area.y();
-		if ( tx > area.right() || ty > area.bottom() )
-		    placementDone = FALSE; // weird, do not trust.
-		else
-		    geom.moveTopLeft( QPoint( tx, ty ) );
-	    }
-	}
-	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
-	    // keep in mind that we now actually have a size :-)
-	}
-	if (xSizeHint.flags & PMaxSize)
-	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
-	if (xSizeHint.flags & PMinSize)
-	    geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
+        if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
+             (xSizeHint.flags & USPosition) ) {
+            placementDone = TRUE;
+            if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
+                int tx = geom.x();
+                int ty = geom.y();
+                if ( tx >= 0 && tx < area.x() )
+                        tx = area.x();
+                if ( ty >= 0 && ty < area.y() )
+                    ty = area.y();
+                if ( tx > area.right() || ty > area.bottom() )
+                    placementDone = FALSE; // weird, do not trust.
+                else
+                    geom.moveTopLeft( QPoint( tx, ty ) );
+            }
+        }
+        if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
+            // keep in mind that we now actually have a size :-)
+        }
+        if (xSizeHint.flags & PMaxSize)
+            geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
+        if (xSizeHint.flags & PMinSize)
+            geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
     }
 
     windowWrapper()->resize( geom.size() );
@@ -702,114 +702,114 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     gravitate( FALSE );
 
     if ( !placementDone ) {
-	workspace()->doPlacement( this );
-	placementDone = TRUE;
+        workspace()->doPlacement( this );
+        placementDone = TRUE;
     } else if ( windowType() == NET::Normal ) {
-	if ( geometry().right() > area.right() && width() < area.width() )
-	    move( area.right() - width(), y() );
-	if ( geometry().bottom() > area.bottom() && height() < area.height() )
-	    move( x(), area.bottom() - height() );
+        if ( geometry().right() > area.right() && width() < area.width() )
+            move( area.right() - width(), y() );
+        if ( geometry().bottom() > area.bottom() && height() < area.height() )
+            move( x(), area.bottom() - height() );
     }
 
     XShapeSelectInput( qt_xdisplay(), win, ShapeNotifyMask );
     if ( (is_shape = Shape::hasShape( win )) ) {
-	updateShape();
+        updateShape();
     }
 
     // initial state
     int init_state = NormalState;
     if ( isInitial)
     {
-	if ( session ) {
-	    if ( session->iconified )
-		init_state = IconicState;
-	} else {
-	    // find out the initial state. Several possibilities exist
-	    XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
-	    if (hints && (hints->flags & StateHint))
-		init_state = hints->initial_state;
-	    if (hints)
-		XFree(hints);
-	}
+        if ( session ) {
+            if ( session->iconified )
+                init_state = IconicState;
+        } else {
+            // find out the initial state. Several possibilities exist
+            XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
+            if (hints && (hints->flags & StateHint))
+                init_state = hints->initial_state;
+            if (hints)
+                XFree(hints);
+        }
     }
 
     // initial desktop placement - note we don't clobber desk if it is
     // set to some value, in case the initial desktop code in the
     // constructor has already set a value for us
     if ( session  ) {
-	desk = session->desktop;
-	if ( desk <= 0 )
-	    desk = workspace()->currentDesktop();
+        desk = session->desktop;
+        if ( desk <= 0 )
+            desk = workspace()->currentDesktop();
     } else if ( desk <= 0 ) {
-	// if this window is transient, ensure that it is opened on the
-	// same window as its parent.  this is necessary when an application
-	// starts up on a different desktop than is currently displayed
-	//
-	if ( isTransient() && !mainClient()->isSticky() )
-	    desk = mainClient()->desktop();
+        // if this window is transient, ensure that it is opened on the
+        // same window as its parent.  this is necessary when an application
+        // starts up on a different desktop than is currently displayed
+        //
+        if ( isTransient() && !mainClient()->isSticky() )
+            desk = mainClient()->desktop();
 
-	if ( desk <= 0 ) {
-	    // assume window wants to be visible on the current desktop
-	    desk =  workspace()->currentDesktop();
-	} else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop()
-		    && !isMenu() ) {
-	    //window didn't specify any specific desktop but will appear
-	    //somewhere else. This happens for example with "save data?"
-	    //dialogs on shutdown. Switch to the respective desktop in
-	    //that case.
-	    workspace()->setCurrentDesktop( desk );
-	}
+        if ( desk <= 0 ) {
+            // assume window wants to be visible on the current desktop
+            desk =  workspace()->currentDesktop();
+        } else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop()
+                    && !isMenu() ) {
+            //window didn't specify any specific desktop but will appear
+            //somewhere else. This happens for example with "save data?"
+            //dialogs on shutdown. Switch to the respective desktop in
+            //that case.
+            workspace()->setCurrentDesktop( desk );
+        }
     }
 
     info->setDesktop( desk );
 
     if (isInitial) {
-	setMappingState( init_state );
+        setMappingState( init_state );
     }
 
     bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
 
     if ( workspace()->isNotManaged( caption() ) )
-	doNotShow = TRUE;
+        doNotShow = TRUE;
 
     // other settings from the previous session
     if ( session ) {
-	setSticky( session->sticky );
-	setStaysOnTop( session->staysOnTop );
-	setSkipTaskbar( session->skipTaskbar );
-	setSkipPager( session->skipPager );
-	maximize( (MaximizeMode) session->maximize );
-	setShade( session->shaded );
-	geom_restore = session->restore;
+        setSticky( session->sticky );
+        setStaysOnTop( session->staysOnTop );
+        setSkipTaskbar( session->skipTaskbar );
+        setSkipPager( session->skipPager );
+        maximize( (MaximizeMode) session->maximize );
+        setShade( session->shaded );
+        geom_restore = session->restore;
     } else if ( !is_fullscreen ){
-	// window may want to be maximized
-	if ( (info->state() & NET::Max) == NET::Max )
-	    maximize( Client::MaximizeFull );
-	else if ( info->state() & NET::MaxVert )
-	    maximize( Client::MaximizeVertical );
-	else if ( info->state() & NET::MaxHoriz )
-	    maximize( Client::MaximizeHorizontal );
+        // window may want to be maximized
+        if ( (info->state() & NET::Max) == NET::Max )
+            maximize( Client::MaximizeFull );
+        else if ( info->state() & NET::MaxVert )
+            maximize( Client::MaximizeVertical );
+        else if ( info->state() & NET::MaxHoriz )
+            maximize( Client::MaximizeHorizontal );
 
-	if ( isMaximizable() && !isMaximized()
-	     && ( width() >= area.width() || height() >= area.height() ) ) {
-	    // window is too large for the screen, maximize in the
-	    // directions necessary and generate a suitable restore
-	    // geometry.
-	    QSize s = adjustedSize( QSize( area.width()*2/3, area.height()*2/3 ) );
-	    if ( width() >= area.width() && height() >= area.height() ) {
-		maximize( Client::MaximizeFull );
-		geom_restore.setSize( s );
-		geom_restore.moveCenter( geometry().center() );
-	    } else if ( width() >= area.width() ) {
-		maximize( Client::MaximizeHorizontal );
-		geom_restore.setWidth( s.width() );
-		geom_restore.moveCenter( geometry().center() );
-	    } else if ( height() >= area.height() ) {
-		maximize( Client::MaximizeVertical );
-		geom_restore.setHeight( s.height() );
-		geom_restore.moveCenter( geometry().center() );
-	    }
-	}
+        if ( isMaximizable() && !isMaximized()
+             && ( width() >= area.width() || height() >= area.height() ) ) {
+            // window is too large for the screen, maximize in the
+            // directions necessary and generate a suitable restore
+            // geometry.
+            QSize s = adjustedSize( QSize( area.width()*2/3, area.height()*2/3 ) );
+            if ( width() >= area.width() && height() >= area.height() ) {
+                maximize( Client::MaximizeFull );
+                geom_restore.setSize( s );
+                geom_restore.moveCenter( geometry().center() );
+            } else if ( width() >= area.width() ) {
+                maximize( Client::MaximizeHorizontal );
+                geom_restore.setWidth( s.width() );
+                geom_restore.moveCenter( geometry().center() );
+            } else if ( height() >= area.height() ) {
+                maximize( Client::MaximizeVertical );
+                geom_restore.setHeight( s.height() );
+                geom_restore.moveCenter( geometry().center() );
+            }
+        }
     }
 
     delete session;
@@ -818,19 +818,19 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     workspace()->clientReady( this ); // will call Workspace::propagateClients()
 
     if ( showMe && !doNotShow ) {
-	Events::raise( isTransient() ? Events::TransNew : Events::New );
-	if ( isMapped ) {
-	    show();
-	} else {
-	    workspace()->raiseClient( this ); // ensure constrains
-	    show();
- 	    if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
- 		workspace()->requestFocus( this );
-	}
+        Events::raise( isTransient() ? Events::TransNew : Events::New );
+        if ( isMapped ) {
+            show();
+        } else {
+            workspace()->raiseClient( this ); // ensure constrains
+            show();
+            if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
+                workspace()->requestFocus( this );
+        }
     }
 
     if ( !doNotShow )
-	workspace()->updateClientArea();
+        workspace()->updateClientArea();
 
     return showMe;
 }
@@ -844,7 +844,7 @@ void Client::getWmNormalHints()
     // TODO keep in mind changing of fix size! if !isWithdrawn()!
     long msize;
     if (XGetWMNormalHints(qt_xdisplay(), win, &xSizeHint, &msize) == 0 )
-	xSizeHint.flags = 0;
+        xSizeHint.flags = 0;
 
 }
 
@@ -857,40 +857,40 @@ void Client::fetchName()
     QString s;
 
     if ( info->name()  ) {
-	s = QString::fromUtf8( info->name() );
+        s = QString::fromUtf8( info->name() );
     } else {
-	XTextProperty tp;
-	char **text;
-	int count;
-	if ( XGetTextProperty( qt_xdisplay(), win, &tp, XA_WM_NAME) != 0 && tp.value != NULL ) {
-	    if ( tp.encoding == XA_STRING )
-		s = QString::fromLocal8Bit( (const char*) tp.value );
-	    else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success &&
-		      text != NULL && count > 0 ) {
-		s = QString::fromLocal8Bit( text[0] );
-		XFreeStringList( text );
-	    }
-	    XFree( tp.value );
-	}
+        XTextProperty tp;
+        char **text;
+        int count;
+        if ( XGetTextProperty( qt_xdisplay(), win, &tp, XA_WM_NAME) != 0 && tp.value != NULL ) {
+            if ( tp.encoding == XA_STRING )
+                s = QString::fromLocal8Bit( (const char*) tp.value );
+            else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success &&
+                      text != NULL && count > 0 ) {
+                s = QString::fromLocal8Bit( text[0] );
+                XFreeStringList( text );
+            }
+            XFree( tp.value );
+        }
     }
 
     if ( s != caption() ) {
-	setCaption( "" );
-	if (workspace()->hasCaption( s ) ){
-	    int i = 2;
-	    QString s2;
-	    do {
-		s2 = s + " <" + QString::number(i) + ">";
-		i++;
-	    } while (workspace()->hasCaption(s2) );
-	    s = s2;
-	}
-	setCaption( s );
+        setCaption( "" );
+        if (workspace()->hasCaption( s ) ){
+            int i = 2;
+            QString s2;
+            do {
+                s2 = s + " <" + QString::number(i) + ">";
+                i++;
+            } while (workspace()->hasCaption(s2) );
+            s = s2;
+        }
+        setCaption( s );
 
-	info->setVisibleName( s.utf8() );
+        info->setVisibleName( s.utf8() );
 
-	if ( !isWithdrawn() )
-	    captionChange( caption() );
+        if ( !isWithdrawn() )
+            captionChange( caption() );
     }
 }
 
@@ -900,14 +900,14 @@ void Client::fetchName()
  */
 void Client::setMappingState(int s){
     if ( !win)
-	return;
+        return;
   unsigned long data[2];
   data[0] = (unsigned long) s;
   data[1] = (unsigned long) None;
 
   state = s;
   XChangeProperty(qt_xdisplay(), win, qt_wm_state, qt_wm_state, 32,
-		  PropModeReplace, (unsigned char *)data, 2);
+                  PropModeReplace, (unsigned char *)data, 2);
 }
 
 
@@ -920,54 +920,54 @@ bool Client::windowEvent( XEvent * e)
     unsigned int dirty = info->event( e ); // pass through the NET stuff
 
     if ( ( dirty & NET::WMName ) != 0 )
-	fetchName();
+        fetchName();
     if ( ( dirty & NET::WMStrut ) != 0 )
-	workspace()->updateClientArea();
+        workspace()->updateClientArea();
     if ( ( dirty & NET::WMIcon) != 0 )
-	getWMHints();
+        getWMHints();
 
     switch (e->type) {
     case UnmapNotify:
-	return unmapNotify( e->xunmap );
+        return unmapNotify( e->xunmap );
     case MapRequest:
-	return mapRequest( e->xmaprequest );
+        return mapRequest( e->xmaprequest );
     case ConfigureRequest:
-	return configureRequest( e->xconfigurerequest );
+        return configureRequest( e->xconfigurerequest );
     case PropertyNotify:
-	return propertyNotify( e->xproperty );
+        return propertyNotify( e->xproperty );
     case ButtonPress:
     case ButtonRelease:
-	break;
+        break;
     case FocusIn:
- 	if ( e->xfocus.mode == NotifyUngrab )
- 	    break; // we don't care
- 	if ( e->xfocus.detail == NotifyPointer )
- 	    break;  // we don't care
-	setActive( TRUE );
-	break;
+        if ( e->xfocus.mode == NotifyUngrab )
+            break; // we don't care
+        if ( e->xfocus.detail == NotifyPointer )
+            break;  // we don't care
+        setActive( TRUE );
+        break;
     case FocusOut:
- 	if ( e->xfocus.mode == NotifyGrab )
- 	    break; // we don't care
-	if ( isShade() )
-	    break; // we neither
- 	if ( e->xfocus.detail != NotifyNonlinear )
- 	    return TRUE; // hack for motif apps like netscape
- 	if ( QApplication::activePopupWidget() )
- 	    break;
-	setActive( FALSE );
-	break;
+        if ( e->xfocus.mode == NotifyGrab )
+            break; // we don't care
+        if ( isShade() )
+            break; // we neither
+        if ( e->xfocus.detail != NotifyNonlinear )
+            return TRUE; // hack for motif apps like netscape
+        if ( QApplication::activePopupWidget() )
+            break;
+        setActive( FALSE );
+        break;
     case ReparentNotify:
-	break;
+        break;
     case ClientMessage:
-	return clientMessage( e->xclient );
+        return clientMessage( e->xclient );
     case ColormapChangeMask:
-	cmap = e->xcolormap.colormap;
-	if ( isActive() )
-	    workspace()->updateColormap();
+        cmap = e->xcolormap.colormap;
+        if ( isActive() )
+            workspace()->updateColormap();
     default:
-	if ( e->type == Shape::shapeEvent() )
-	    updateShape();
-	break;
+        if ( e->type == Shape::shapeEvent() )
+            updateShape();
+        break;
     }
 
     return TRUE; // we accept everything :-)
@@ -981,20 +981,20 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
 {
     switch ( mappingState() ) {
     case WithdrawnState:
-	manage();
-	break;
+        manage();
+        break;
     case IconicState:
-	// only show window if we're on current desktop
-	if ( isOnDesktop( workspace()->currentDesktop() ) )
-	    show();
-	else
-	    setMappingState( NormalState );
-	break;
+        // only show window if we're on current desktop
+        if ( isOnDesktop( workspace()->currentDesktop() ) )
+            show();
+        else
+            setMappingState( NormalState );
+        break;
     case NormalState:
-	// only show window if we're on current desktop
-	if ( isOnDesktop( workspace()->currentDesktop() ) )
-	    show(); // for safety
-	break;
+        // only show window if we're on current desktop
+        if ( isOnDesktop( workspace()->currentDesktop() ) )
+            show(); // for safety
+        break;
     }
 
     return TRUE;
@@ -1011,32 +1011,32 @@ bool Client::unmapNotify( XUnmapEvent& e )
 
     switch ( mappingState() ) {
     case IconicState:
-	// only react on sent events, all others are produced by us
-	if ( e.send_event )
-	    withdraw();
-	break;
+        // only react on sent events, all others are produced by us
+        if ( e.send_event )
+            withdraw();
+        break;
     case NormalState:
-	if ( !windowWrapper()->isVisibleTo( 0 ) && !e.send_event )
-	    return TRUE; // this event was produced by us as well
+        if ( !windowWrapper()->isVisibleTo( 0 ) && !e.send_event )
+            return TRUE; // this event was produced by us as well
 
-	// maybe we will be destroyed soon. Check this first.
-	XEvent ev;
-	if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
-				     DestroyNotify, &ev) ){
-	    Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
-	    workspace()->destroyClient( this );
-	    return TRUE;
-	}
-	if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
-				     ReparentNotify, &ev) ){
-	  if ( ev.xreparent.window == windowWrapper()->window() &&
-	       ev.xreparent.parent != windowWrapper()->winId() )
-	    invalidateWindow();
-	}
-	// fall through
+        // maybe we will be destroyed soon. Check this first.
+        XEvent ev;
+        if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
+                                     DestroyNotify, &ev) ){
+            Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
+            workspace()->destroyClient( this );
+            return TRUE;
+        }
+        if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
+                                     ReparentNotify, &ev) ){
+          if ( ev.xreparent.window == windowWrapper()->window() &&
+               ev.xreparent.parent != windowWrapper()->winId() )
+            invalidateWindow();
+        }
+        // fall through
     case WithdrawnState: // however that has been possible....
-	withdraw();
-	break;
+        withdraw();
+        break;
     }
     return TRUE;
 }
@@ -1062,133 +1062,133 @@ void Client::withdraw()
 bool Client::configureRequest( XConfigureRequestEvent& e )
 {
     if ( isResize() )
-	return TRUE; // we have better things to do right now
+        return TRUE; // we have better things to do right now
 
     if ( isShade() )
-	setShade( FALSE );
+        setShade( FALSE );
 
     // compress configure requests
     XEvent otherEvent;
     while (XCheckTypedWindowEvent (qt_xdisplay(), win,
-				   ConfigureRequest, &otherEvent) ) {
-	if (otherEvent.xconfigurerequest.value_mask == e.value_mask)
-	    e = otherEvent.xconfigurerequest;
-	else {
-	    XPutBackEvent(qt_xdisplay(), &otherEvent);
-	    break;
-	}
+                                   ConfigureRequest, &otherEvent) ) {
+        if (otherEvent.xconfigurerequest.value_mask == e.value_mask)
+            e = otherEvent.xconfigurerequest;
+        else {
+            XPutBackEvent(qt_xdisplay(), &otherEvent);
+            break;
+        }
     }
 
     bool stacking = e.value_mask & CWStackMode;
     int stack_mode = e.detail;
 
     if ( e.value_mask & CWBorderWidth ) {
-	// first, get rid of a window border
-	XWindowChanges wc;
-	unsigned int value_mask = 0;
+        // first, get rid of a window border
+        XWindowChanges wc;
+        unsigned int value_mask = 0;
 
-	wc.border_width = 0;
-	value_mask = CWBorderWidth;
-	XConfigureWindow( qt_xdisplay(), win, value_mask, & wc );
+        wc.border_width = 0;
+        value_mask = CWBorderWidth;
+        XConfigureWindow( qt_xdisplay(), win, value_mask, & wc );
     }
 
     if ( e.value_mask & (CWX | CWY ) ) {
-	int ox = 0;
-	int oy = 0;
-	int gravity = NorthWestGravity;
-	if ( xSizeHint.flags & PWinGravity)
-	    gravity = xSizeHint.win_gravity;
-	if ( gravity == StaticGravity ) { // only with StaticGravity according to ICCCM 4.1.5
-	    ox = windowWrapper()->x();
-	    oy = windowWrapper()->y();
-	}
+        int ox = 0;
+        int oy = 0;
+        int gravity = NorthWestGravity;
+        if ( xSizeHint.flags & PWinGravity)
+            gravity = xSizeHint.win_gravity;
+        if ( gravity == StaticGravity ) { // only with StaticGravity according to ICCCM 4.1.5
+            ox = windowWrapper()->x();
+            oy = windowWrapper()->y();
+        }
 
-	int nx = x() + ox;
-	int ny = y() + oy;
+        int nx = x() + ox;
+        int ny = y() + oy;
 
-	if ( e.value_mask & CWX )
-	    nx = e.x;
-	if ( e.value_mask & CWY )
-	    ny = e.y;
-
-
-	// clever workaround for applications like xv that want to set
-	// the location to the current location but miscalculate the
-	// frame size due to kwin being a double-reparenting window
-	// manager
-	if ( ox == 0 && oy == 0 &&
-	     nx == x() + windowWrapper()->x() &&
-	     ny == y() + windowWrapper()->y() ) {
-	    nx = x();
-	    ny = y();
-	}
+        if ( e.value_mask & CWX )
+            nx = e.x;
+        if ( e.value_mask & CWY )
+            ny = e.y;
 
 
-	QPoint np( nx-ox, ny-oy);
+        // clever workaround for applications like xv that want to set
+        // the location to the current location but miscalculate the
+        // frame size due to kwin being a double-reparenting window
+        // manager
+        if ( ox == 0 && oy == 0 &&
+             nx == x() + windowWrapper()->x() &&
+             ny == y() + windowWrapper()->y() ) {
+            nx = x();
+            ny = y();
+        }
+
+
+        QPoint np( nx-ox, ny-oy);
 #if 0
-	if ( windowType() == NET::Normal && may_move ) {
-	    // crap for broken netscape
-	    QRect area = workspace()->clientArea();
-	    if ( !area.contains( np ) && width() < area.width()	 &&
-		 height() < area.height() ) {
-		if ( np.x() < area.x() )
-		    np.rx() = area.x();
-		if ( np.y() < area.y() )
-		    np.ry() = area.y();
-	    }
-	}
+        if ( windowType() == NET::Normal && may_move ) {
+            // crap for broken netscape
+            QRect area = workspace()->clientArea();
+            if ( !area.contains( np ) && width() < area.width()  &&
+                 height() < area.height() ) {
+                if ( np.x() < area.x() )
+                    np.rx() = area.x();
+                if ( np.y() < area.y() )
+                    np.ry() = area.y();
+            }
+        }
 #endif
 
-	if ( isMaximized() ) {
-	  geom_restore.moveTopLeft( np );
-	} else {
-	    move( np );
-	}
+        if ( isMaximized() ) {
+          geom_restore.moveTopLeft( np );
+        } else {
+            move( np );
+        }
     }
 
     if ( e.value_mask & (CWWidth | CWHeight ) ) {
-	int nw = windowWrapper()->width();
-	int nh = windowWrapper()->height();
-	if ( e.value_mask & CWWidth )
-	    nw = e.width;
-	if ( e.value_mask & CWHeight )
-	    nh = e.height;
-	QSize ns = sizeForWindowSize( QSize( nw, nh ) );
+        int nw = windowWrapper()->width();
+        int nh = windowWrapper()->height();
+        if ( e.value_mask & CWWidth )
+            nw = e.width;
+        if ( e.value_mask & CWHeight )
+            nh = e.height;
+        QSize ns = sizeForWindowSize( QSize( nw, nh ) );
 
-	//QRect area = workspace()->clientArea();
-	if ( isMaximizable() && isMaximized() ) {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
-	    if ( (e.value_mask & (CWX | CWY )) == 0 )
-		geom_restore.moveTopLeft( geometry().topLeft() );
-	    geom_restore.setSize( ns );
-	    maximize( Client::MaximizeRestore );
-	} else if ( !isMaximized() ) {
-	    if ( ns == size() )
-		return TRUE; // broken xemacs stuff (ediff)
-	    resize( ns );
-	}
+        //QRect area = workspace()->clientArea();
+        if ( isMaximizable() && isMaximized() ) {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
+            if ( (e.value_mask & (CWX | CWY )) == 0 )
+                geom_restore.moveTopLeft( geometry().topLeft() );
+            geom_restore.setSize( ns );
+            maximize( Client::MaximizeRestore );
+        } else if ( !isMaximized() ) {
+            if ( ns == size() )
+                return TRUE; // broken xemacs stuff (ediff)
+            resize( ns );
+        }
     }
 
 
     if ( stacking ){
-	switch (stack_mode){
-	case Above:
-	case TopIf:
-	    if ( isMenu() && mainClient() != this )
-		break; // in this case, we already do the raise
-	    workspace()->raiseClient( this );
-	    break;
-	case Below:
-	case BottomIf:
-	    workspace()->lowerClient( this );
-	    break;
-	case Opposite:
-	default:
-	    break;
-	}
+        switch (stack_mode){
+        case Above:
+        case TopIf:
+            if ( isMenu() && mainClient() != this )
+                break; // in this case, we already do the raise
+            workspace()->raiseClient( this );
+            break;
+        case Below:
+        case BottomIf:
+            workspace()->lowerClient( this );
+            break;
+        case Opposite:
+        default:
+            break;
+        }
     }
 
     if ( e.value_mask & (CWX | CWY  | CWWidth | CWHeight ) )
-	sendSyntheticConfigureNotify();
+        sendSyntheticConfigureNotify();
     return TRUE;
 }
 
@@ -1200,31 +1200,31 @@ bool Client::propertyNotify( XPropertyEvent& e )
 {
     switch ( e.atom ) {
     case XA_WM_NORMAL_HINTS:
-	getWmNormalHints();
-	break;
+        getWmNormalHints();
+        break;
     case XA_WM_NAME:
-	fetchName();
-	break;
+        fetchName();
+        break;
     case XA_WM_TRANSIENT_FOR:
-	Window ww;
-	if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) ) {
-	    transient_for = None;
-	    transient_for_defined = FALSE;
-	} else {
-	    transient_for = (WId) ww;
-	    transient_for_defined = TRUE;
-	    verifyTransientFor();
-	}
-	break;
+        Window ww;
+        if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) ) {
+            transient_for = None;
+            transient_for_defined = FALSE;
+        } else {
+            transient_for = (WId) ww;
+            transient_for_defined = TRUE;
+            verifyTransientFor();
+        }
+        break;
     case XA_WM_HINTS:
-	getWMHints();
-	break;
+        getWMHints();
+        break;
     default:
-	if ( e.atom == atoms->wm_protocols )
-	    getWindowProtocols();
+        if ( e.atom == atoms->wm_protocols )
+            getWindowProtocols();
         else if (e.atom == atoms->wm_client_leader )
             getWmClientLeader();
-	break;
+        break;
     }
     return TRUE;
 }
@@ -1237,24 +1237,24 @@ bool Client::clientMessage( XClientMessageEvent& e )
 {
 
     if ( e.message_type == atoms->kde_wm_change_state ) {
-	if ( e.data.l[0] == IconicState && isNormal() ) {
-	    if ( e.data.l[1] )
-		blockAnimation = TRUE;
-	    iconify();
-	} else if ( e.data.l[0] == NormalState && isIconified() ) {
-	    if ( e.data.l[1] )
-		blockAnimation = TRUE;
-	    // only show window if we're on current desktop
-	    if ( isOnDesktop( workspace()->currentDesktop() ) )
-		show();
-	    else
-		setMappingState( NormalState );
-	}
-	blockAnimation = FALSE;
+        if ( e.data.l[0] == IconicState && isNormal() ) {
+            if ( e.data.l[1] )
+                blockAnimation = TRUE;
+            iconify();
+        } else if ( e.data.l[0] == NormalState && isIconified() ) {
+            if ( e.data.l[1] )
+                blockAnimation = TRUE;
+            // only show window if we're on current desktop
+            if ( isOnDesktop( workspace()->currentDesktop() ) )
+                show();
+            else
+                setMappingState( NormalState );
+        }
+        blockAnimation = FALSE;
     } else if ( e.message_type == atoms->wm_change_state) {
-	if ( e.data.l[0] == IconicState && isNormal() )
-	    iconify();
-	return TRUE;
+        if ( e.data.l[0] == IconicState && isNormal() )
+            iconify();
+        return TRUE;
     }
 
     return FALSE;
@@ -1293,7 +1293,7 @@ QSize Client::adjustedSize( const QSize& frame) const
     // first, get the window size for the given frame size s
 
     QSize wsize( frame.width() - ( width() - wwrap->width() ),
-	     frame.height() - ( height() - wwrap->height() ) );
+             frame.height() - ( height() - wwrap->height() ) );
 
     return sizeForWindowSize( wsize );
 }
@@ -1317,39 +1317,39 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     int bh = 0;
 
     if (xSizeHint.flags & PBaseSize) {
-	bw = xSizeHint.base_width;
-	bh = xSizeHint.base_height;
-	if (w < xSizeHint.base_width)
-	    w = xSizeHint.base_width;
-	if (h < xSizeHint.base_height)
-	    h = xSizeHint.base_height;
+        bw = xSizeHint.base_width;
+        bh = xSizeHint.base_height;
+        if (w < xSizeHint.base_width)
+            w = xSizeHint.base_width;
+        if (h < xSizeHint.base_height)
+            h = xSizeHint.base_height;
     } else if ( xSizeHint.flags & PMinSize ) {
-	bw = xSizeHint.min_width;
-	bh = xSizeHint.min_height;
-	if (w < xSizeHint.min_width)
-	    w = xSizeHint.min_width;
-	if (h < xSizeHint.min_height)
-	    h = xSizeHint.min_height;
+        bw = xSizeHint.min_width;
+        bh = xSizeHint.min_height;
+        if (w < xSizeHint.min_width)
+            w = xSizeHint.min_width;
+        if (h < xSizeHint.min_height)
+            h = xSizeHint.min_height;
     }
 
     if (xSizeHint.flags & PResizeInc) {
-	if (  xSizeHint.width_inc > 0 ) {
-	    int sx = (w - bw) / xSizeHint.width_inc;
-	    w = bw + sx * xSizeHint.width_inc;
-	}
-	if (  xSizeHint.height_inc > 0 ) {
-	    int sy = (h - bh) / xSizeHint.height_inc;
-	    h = bh + sy * xSizeHint.height_inc;
-	}
+        if (  xSizeHint.width_inc > 0 ) {
+            int sx = (w - bw) / xSizeHint.width_inc;
+            w = bw + sx * xSizeHint.width_inc;
+        }
+        if (  xSizeHint.height_inc > 0 ) {
+            int sy = (h - bh) / xSizeHint.height_inc;
+            h = bh + sy * xSizeHint.height_inc;
+        }
     }
 
     if (xSizeHint.flags & PMaxSize) {
-	w = QMIN( xSizeHint.max_width, w );
-	h = QMIN( xSizeHint.max_height, h );
+        w = QMIN( xSizeHint.max_width, w );
+        h = QMIN( xSizeHint.max_height, h );
     }
     if (xSizeHint.flags & PMinSize) {
-	w = QMAX( xSizeHint.min_width, w );
-	h = QMAX( xSizeHint.min_height, h );
+        w = QMAX( xSizeHint.min_width, w );
+        h = QMAX( xSizeHint.min_height, h );
     }
 
     w = QMAX( minimumWidth(), w );
@@ -1358,10 +1358,10 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     int ww = wwrap->width();
     int wh = 1;
     if ( !wwrap->isHidden() )
-	wh = wwrap->height();
+        wh = wwrap->height();
 
     if ( ignore_height && wsize.height() == 0 )
-	h = 0;
+        h = 0;
 
     return QSize( width() - ww + w,  height()-wh+h );
 }
@@ -1373,14 +1373,14 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 bool Client::isResizable() const
 {
     if ( !isMovable() )
-	return FALSE;
+        return FALSE;
     if( isShade())
-	return FALSE;
+        return FALSE;
 
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
-	return TRUE;
-    return ( xSizeHint.min_width != xSizeHint.max_width	 ) ||
-	  ( xSizeHint.min_height != xSizeHint.max_height  );
+        return TRUE;
+    return ( xSizeHint.min_width != xSizeHint.max_width  ) ||
+          ( xSizeHint.min_height != xSizeHint.max_height  );
 }
 
 /*
@@ -1389,7 +1389,7 @@ bool Client::isResizable() const
 bool Client::isMaximizable() const
 {
     if ( isMaximized() )
-	return TRUE;
+        return TRUE;
     return isResizable() && !isTool();
 }
 
@@ -1399,7 +1399,7 @@ bool Client::isMaximizable() const
 bool Client::isMinimizable() const
 {
     return ( !isTransient() || !workspace()->findClient( transientFor() ) )
-	&& wantsTabFocus();
+        && wantsTabFocus();
 }
 
 
@@ -1411,37 +1411,43 @@ bool Client::isMinimizable() const
 void Client::mousePressEvent( QMouseEvent * e)
 {
     if (buttonDown)
-	return;
+        return;
 
     Options::MouseCommand com = Options::MouseNothing;
 
     if (e->state() & AltButton) {
-	if ( e->button() == LeftButton ) {
-	    com = options->commandAll1();
-	} else if (e->button() == MidButton) {
-	    com = options->commandAll2();
-	} else if (e->button() == RightButton) {
-	    com = options->commandAll3();
-	}
+        if ( e->button() == LeftButton ) {
+            com = options->commandAll1();
+        } else if (e->button() == MidButton) {
+            com = options->commandAll2();
+        } else if (e->button() == RightButton) {
+            com = options->commandAll3();
+        }
     }
     else {
-	bool active = isActive();
-	if ( !wantsInput() ) // we cannot be active, use it anyway
-	    active = TRUE;
+        bool active = isActive();
+        if ( !wantsInput() ) // we cannot be active, use it anyway
+            active = TRUE;
 
-	if ( e->button() == LeftButton ) {
-	    mouseMoveEvent( e );
-	    buttonDown = TRUE;
-	    moveOffset = e->pos();
-	    invertedMoveOffset = rect().bottomRight() - e->pos();
-	    com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-	}
-	else if ( e->button() == MidButton ) {
-	    com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-	}
-	else if ( e->button() == RightButton ) {
-	    com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-	}
+        if (active &&
+            (e->button() == LeftButton  && options->commandActiveTitlebar1() != Options::MouseOperationsMenu) ||
+            (e->button() == MidButton   && options->commandActiveTitlebar2() != Options::MouseOperationsMenu) ||
+            (e->button() == RightButton && options->commandActiveTitlebar3() != Options::MouseOperationsMenu) ) {
+          mouseMoveEvent( e );
+          buttonDown = TRUE;
+          moveOffset = e->pos();
+          invertedMoveOffset = rect().bottomRight() - e->pos();
+        }
+
+        if ( e->button() == LeftButton ) {
+            com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
+        }
+        else if ( e->button() == MidButton ) {
+            com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
+        }
+        else if ( e->button() == RightButton ) {
+            com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
+        }
     }
     performMouseCommand( com, e->globalPos());
 }
@@ -1452,15 +1458,15 @@ void Client::mousePressEvent( QMouseEvent * e)
 void Client::mouseReleaseEvent( QMouseEvent * e)
 {
     if ( (e->stateAfter() & MouseButtonMask) == 0 ) {
-	buttonDown = FALSE;
-	if ( moveResizeMode ) {
-	    clearbound();
-	    stopMoveResize();
-	    setGeometry( geom );
-	    mode = mousePosition( e->pos() );
-	    setMouseCursor( mode );
-	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
-	}
+        buttonDown = FALSE;
+        if ( moveResizeMode ) {
+            clearbound();
+            stopMoveResize();
+            setGeometry( geom );
+            mode = mousePosition( e->pos() );
+            setMouseCursor( mode );
+            Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
+        }
     }
 }
 
@@ -1487,33 +1493,33 @@ void Client::giveUpShade()
 void Client::mouseMoveEvent( QMouseEvent * e)
 {
     if ( !buttonDown ) {
-	mode = mousePosition( e->pos() );
-	setMouseCursor( mode );
-	geom = geometry();
-	return;
+        mode = mousePosition( e->pos() );
+        setMouseCursor( mode );
+        geom = geometry();
+        return;
     }
 
     if ( !isMovable()) return;
 
     if ( !moveResizeMode ) {
-	QPoint p( e->pos() - moveOffset );
-	if (p.manhattanLength() >= 6) {
-	    if ( isMaximized() ) {
-		// in case we were maximized, reset state
-		max_mode = MaximizeRestore;
-		maximizeChange(FALSE );
-		Events::raise( Events::UnMaximize );
-		info->setState( 0, NET::Max );
-	    }
-	    startMoveResize();
-	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
-	} else {
-	    return;
-	}
+        QPoint p( e->pos() - moveOffset );
+        if (p.manhattanLength() >= 6) {
+            if ( isMaximized() ) {
+                // in case we were maximized, reset state
+                max_mode = MaximizeRestore;
+                maximizeChange(FALSE );
+                Events::raise( Events::UnMaximize );
+                info->setState( 0, NET::Max );
+            }
+            startMoveResize();
+            Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
+        } else {
+            return;
+        }
     }
 
     if ( mode !=  Center && shaded )
-	giveUpShade();
+        giveUpShade();
 
     QPoint globalPos = e->globalPos(); // pos() + geometry().topLeft();
 
@@ -1525,82 +1531,82 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     QSize mpsize( geometry().right() - pp.x() + 1, geometry().bottom() - pp.y() + 1 );
     mpsize = adjustedSize( mpsize );
     QPoint mp( geometry().right() - mpsize.width() + 1,
-	       geometry().bottom() - mpsize.height() + 1 );
+               geometry().bottom() - mpsize.height() + 1 );
 
     geom = geometry();
     switch ( mode ) {
     case TopLeft:
-	geom =	QRect( mp, geometry().bottomRight() ) ;
-	break;
+        geom =  QRect( mp, geometry().bottomRight() ) ;
+        break;
     case BottomRight:
-	geom =	QRect( geometry().topLeft(), p ) ;
-	break;
+        geom =  QRect( geometry().topLeft(), p ) ;
+        break;
     case BottomLeft:
-	geom =	QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), p.y()) ) ;
-	break;
+        geom =  QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), p.y()) ) ;
+        break;
     case TopRight:
-	geom =	QRect( QPoint(geometry().x(), mp.y() ), QPoint( p.x(), geometry().bottom()) ) ;
-	break;
+        geom =  QRect( QPoint(geometry().x(), mp.y() ), QPoint( p.x(), geometry().bottom()) ) ;
+        break;
     case Top:
-	geom =	QRect( QPoint( geometry().left(), mp.y() ), geometry().bottomRight() ) ;
-	break;
+        geom =  QRect( QPoint( geometry().left(), mp.y() ), geometry().bottomRight() ) ;
+        break;
     case Bottom:
-	geom =	QRect( geometry().topLeft(), QPoint( geometry().right(), p.y() ) ) ;
-	break;
+        geom =  QRect( geometry().topLeft(), QPoint( geometry().right(), p.y() ) ) ;
+        break;
     case Left:
-	geom =	QRect( QPoint( mp.x(), geometry().top() ), geometry().bottomRight() ) ;
-	break;
+        geom =  QRect( QPoint( mp.x(), geometry().top() ), geometry().bottomRight() ) ;
+        break;
     case Right:
-	geom =	QRect( geometry().topLeft(), QPoint( p.x(), geometry().bottom() ) ) ;
-	break;
+        geom =  QRect( geometry().topLeft(), QPoint( p.x(), geometry().bottom() ) ) ;
+        break;
     case Center:
-	geom.moveTopLeft( pp );
-	break;
+        geom.moveTopLeft( pp );
+        break;
     default:
 //fprintf(stderr, "KWin::mouseMoveEvent with mode = %d\n", mode);
-	break;
+        break;
     }
 
     QRect desktopArea = workspace()->clientArea();
     int marge = 5;
 
     if ( isResize() && geom.size() != size() ) {
-	if (geom.bottom() < desktopArea.top()+marge)
-	    geom.setBottom(desktopArea.top()+marge);
-	if (geom.top() > desktopArea.bottom()-marge)
-	    geom.setTop(desktopArea.bottom()-marge);
-	if (geom.right() < desktopArea.left()+marge)
-	    geom.setRight(desktopArea.left()+marge);
-	if (geom.left() > desktopArea.right()-marge)
-	    geom.setLeft(desktopArea.right()-marge);
+        if (geom.bottom() < desktopArea.top()+marge)
+            geom.setBottom(desktopArea.top()+marge);
+        if (geom.top() > desktopArea.bottom()-marge)
+            geom.setTop(desktopArea.bottom()-marge);
+        if (geom.right() < desktopArea.left()+marge)
+            geom.setRight(desktopArea.left()+marge);
+        if (geom.left() > desktopArea.right()-marge)
+            geom.setLeft(desktopArea.right()-marge);
 
-	geom.setSize( adjustedSize( geom.size() ) );
-	if  (options->resizeMode == Options::Opaque ) {
-	    setGeometry( geom );
-	} else if ( options->resizeMode == Options::Transparent ) {
-	    clearbound();
-	    drawbound( geom );
-	}
+        geom.setSize( adjustedSize( geom.size() ) );
+        if  (options->resizeMode == Options::Opaque ) {
+            setGeometry( geom );
+        } else if ( options->resizeMode == Options::Transparent ) {
+            clearbound();
+            drawbound( geom );
+        }
     }
     else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
-	geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
-	if (geom.bottom() < desktopArea.top()+marge)
-	    geom.moveBottomLeft( QPoint( geom.left(), desktopArea.top()+marge));
-	if (geom.top() > desktopArea.bottom()-marge)
-	    geom.moveTopLeft( QPoint( geom.left(), desktopArea.bottom()-marge));
-	if (geom.right() < desktopArea.left()+marge)
-	    geom.moveTopRight( QPoint( desktopArea.left()+marge, geom.top()));
-	if (geom.left() > desktopArea.right()-marge)
-	    geom.moveTopLeft( QPoint( desktopArea.right()-marge, geom.top()));
-	switch ( options->moveMode ) {
-	case Options::Opaque:
-	    move( geom.topLeft() );
-	    break;
-	case Options::Transparent:
-	    clearbound();
-	    drawbound( geom );
-	    break;
-	}
+        geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
+        if (geom.bottom() < desktopArea.top()+marge)
+            geom.moveBottomLeft( QPoint( geom.left(), desktopArea.top()+marge));
+        if (geom.top() > desktopArea.bottom()-marge)
+            geom.moveTopLeft( QPoint( geom.left(), desktopArea.bottom()-marge));
+        if (geom.right() < desktopArea.left()+marge)
+            geom.moveTopRight( QPoint( desktopArea.left()+marge, geom.top()));
+        if (geom.left() > desktopArea.right()-marge)
+            geom.moveTopLeft( QPoint( desktopArea.right()-marge, geom.top()));
+        switch ( options->moveMode ) {
+        case Options::Opaque:
+            move( geom.topLeft() );
+            break;
+        case Options::Transparent:
+            clearbound();
+            drawbound( geom );
+            break;
+        }
     }
     workspace()->clientMoved(globalPos, kwin_time);
 
@@ -1620,7 +1626,7 @@ void Client::enterEvent( QEvent * )
 void Client::leaveEvent( QEvent * )
 {
     if ( !buttonDown )
-	setCursor( arrowCursor );
+        setCursor( arrowCursor );
 }
 
 
@@ -1632,7 +1638,7 @@ void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
     if ( !isResize() && !isMove() && isVisible() )
-	sendSyntheticConfigureNotify();
+        sendSyntheticConfigureNotify();
 }
 
 /*!
@@ -1642,7 +1648,7 @@ void Client::move( int x, int y )
 {
     QWidget::move( x, y );
     if ( !isResize() && !isMove() && isVisible() )
-	sendSyntheticConfigureNotify();
+        sendSyntheticConfigureNotify();
 }
 
 
@@ -1654,7 +1660,7 @@ void Client::move( int x, int y )
 void Client::show()
 {
     if ( isIconified() && ( !isTransient() || mainClient() == this ) )
-	animateIconifyOrDeiconify( FALSE );
+        animateIconifyOrDeiconify( FALSE );
     setMappingState( NormalState );
     QWidget::show();
     windowWrapper()->map();
@@ -1764,9 +1770,9 @@ void Client::paintEvent( QPaintEvent * )
 void Client::releaseWindow()
 {
     if ( win ) {
-	gravitate( TRUE );
-	windowWrapper()->releaseWindow();
-	win = 0;
+        gravitate( TRUE );
+        windowWrapper()->releaseWindow();
+        win = 0;
     }
 }
 
@@ -1790,13 +1796,13 @@ void Client::invalidateWindow()
 void Client::iconify()
 {
     if ( !isMinimizable() )
-	return;
+        return;
 
     setMappingState( IconicState );
     Events::raise( Events::Iconify );
 
     if ( (!isTransient() || mainClient() == this ) && isVisible() )
-	animateIconifyOrDeiconify( TRUE );
+        animateIconifyOrDeiconify( TRUE );
     hide();
 
     workspace()->iconifyOrDeiconifyTransientsOf( this );
@@ -1811,14 +1817,14 @@ void Client::closeWindow()
 {
     Events::raise( Events::Close );
     if ( Pdeletewindow ){
-	sendClientMessage( win, atoms->wm_protocols, atoms->wm_delete_window);
+        sendClientMessage( win, atoms->wm_protocols, atoms->wm_delete_window);
     }
     else {
-	// client will not react on wm_delete_window. We have not choice
-	// but destroy his connection to the XServer.
-	Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
-	XKillClient(qt_xdisplay(), win );
-	workspace()->destroyClient( this );
+        // client will not react on wm_delete_window. We have not choice
+        // but destroy his connection to the XServer.
+        Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
+        XKillClient(qt_xdisplay(), win );
+        workspace()->destroyClient( this );
     }
 }
 
@@ -1845,20 +1851,20 @@ void Client::killWindow()
 void Client::maximizeRaw( bool vertically, bool horizontally )
 {
     if ( !vertically && !horizontally ) {
-	maximize ( MaximizeRestore );
+        maximize ( MaximizeRestore );
     } else {
-	MaximizeMode m = MaximizeRestore;
-	if ( vertically && horizontally )
-	    m = MaximizeFull;
-	else if ( vertically )
-	    m = MaximizeVertical;
-	else if (horizontally )
-	    m = MaximizeHorizontal;
-	if ( m != max_mode ) {
-	    if ( isMaximized() )
-		max_mode = MaximizeAdjust;
-	    maximize( m );
-	}
+        MaximizeMode m = MaximizeRestore;
+        if ( vertically && horizontally )
+            m = MaximizeFull;
+        else if ( vertically )
+            m = MaximizeVertical;
+        else if (horizontally )
+            m = MaximizeHorizontal;
+        if ( m != max_mode ) {
+            if ( isMaximized() )
+                max_mode = MaximizeAdjust;
+            maximize( m );
+        }
     }
 }
 
@@ -1872,74 +1878,74 @@ void Client::maximizeRaw( bool vertically, bool horizontally )
 void Client::maximize( MaximizeMode m)
 {
     if ( !isMaximizable() )
-	return;
+        return;
 
     QRect clientArea = workspace()->clientArea();
 
     if (isShade())
-	setShade( FALSE );
+        setShade( FALSE );
 
     if ( m == MaximizeAdjust ) {
-	m = max_mode;
+        m = max_mode;
     } else {
 
-	if ( max_mode == m )
-	    m = MaximizeRestore;
-	if ( m == max_mode )
-	    return; // nothing to do
+        if ( max_mode == m )
+            m = MaximizeRestore;
+        if ( m == max_mode )
+            return; // nothing to do
 
-	if ( m != MaximizeRestore && max_mode != MaximizeAdjust ) {
-	    if ( max_mode == MaximizeRestore )
-		geom_restore = geometry();
-	    else if ( m != MaximizeFull)
-		m = (MaximizeMode ) ( (max_mode & MaximizeFull) ^ (m & MaximizeFull) );
-	    Events::raise( Events::Maximize );
-	}
+        if ( m != MaximizeRestore && max_mode != MaximizeAdjust ) {
+            if ( max_mode == MaximizeRestore )
+                geom_restore = geometry();
+            else if ( m != MaximizeFull)
+                m = (MaximizeMode ) ( (max_mode & MaximizeFull) ^ (m & MaximizeFull) );
+            Events::raise( Events::Maximize );
+        }
     }
 
 
     switch (m) {
 
     case MaximizeVertical:
-	setGeometry(
-		    QRect(QPoint(geom_restore.x(), clientArea.top()),
-			  adjustedSize(QSize(geom_restore.width(), clientArea.height())))
-		    );
-	info->setState( NET::MaxVert, NET::Max );
-	break;
+        setGeometry(
+                    QRect(QPoint(geom_restore.x(), clientArea.top()),
+                          adjustedSize(QSize(geom_restore.width(), clientArea.height())))
+                    );
+        info->setState( NET::MaxVert, NET::Max );
+        break;
 
     case MaximizeHorizontal:
 
-	setGeometry(
-		    QRect(
-			  QPoint(clientArea.left(), geom_restore.y()),
-			  adjustedSize(QSize(clientArea.width(), geom_restore.height())))
-		    );
-	info->setState( NET::MaxHoriz, NET::Max );
-	break;
+        setGeometry(
+                    QRect(
+                          QPoint(clientArea.left(), geom_restore.y()),
+                          adjustedSize(QSize(clientArea.width(), geom_restore.height())))
+                    );
+        info->setState( NET::MaxHoriz, NET::Max );
+        break;
 
     case MaximizeRestore: {
-	Events::raise( Events::UnMaximize );
-	setGeometry(geom_restore);
-	max_mode = MaximizeRestore;
-	info->setState( 0, NET::Max );
-	} break;
+        Events::raise( Events::UnMaximize );
+        setGeometry(geom_restore);
+        max_mode = MaximizeRestore;
+        info->setState( 0, NET::Max );
+        } break;
 
     case MaximizeFull: {
-	QRect r = QRect(clientArea.topLeft(), adjustedSize(clientArea.size()));
+        QRect r = QRect(clientArea.topLeft(), adjustedSize(clientArea.size()));
 
-	// hide right and left border of maximized windows
-	if ( !options->moveResizeMaximizedWindows ) {
-	    if ( r.left() == 0 )
-		r.setLeft( r.left() - windowWrapper()->x() );
-	    if ( r.right() == workspace()->geometry().right() )
-		r.setRight( r.right() + width() -  windowWrapper()->geometry().right() );
-	}
-	setGeometry( r );
-	info->setState( NET::Max, NET::Max );
+        // hide right and left border of maximized windows
+        if ( !options->moveResizeMaximizedWindows ) {
+            if ( r.left() == 0 )
+                r.setLeft( r.left() - windowWrapper()->x() );
+            if ( r.right() == workspace()->geometry().right() )
+                r.setRight( r.right() + width() -  windowWrapper()->geometry().right() );
+        }
+        setGeometry( r );
+        info->setState( NET::Max, NET::Max );
     } break;
     default:
-	break;
+        break;
     }
 
     max_mode = m;
@@ -1961,9 +1967,9 @@ void Client::toggleShade()
 void Client::maximize()
 {
     if ( isMaximized() )
-	maximize( MaximizeRestore );
+        maximize( MaximizeRestore );
     else
-	maximize( MaximizeFull );
+        maximize( MaximizeFull );
 }
 
 
@@ -1975,16 +1981,16 @@ void Client::maximize()
 bool Client::eventFilter( QObject *o, QEvent * e)
 {
     if ( o != wwrap )
-	return FALSE;
+        return FALSE;
     switch ( e->type() ) {
     case QEvent::Show:
-	windowWrapperShowEvent( (QShowEvent*)e );
-	break;
+        windowWrapperShowEvent( (QShowEvent*)e );
+        break;
     case QEvent::Hide:
-	windowWrapperHideEvent( (QHideEvent*)e );
-	break;
+        windowWrapperHideEvent( (QHideEvent*)e );
+        break;
     default:
-	break;
+        break;
     }
 
     return FALSE;
@@ -1997,51 +2003,51 @@ void Client::gravitate( bool invert )
 
     gravity = NorthWestGravity;
     if ( xSizeHint.flags & PWinGravity)
-	gravity = xSizeHint.win_gravity;
+        gravity = xSizeHint.win_gravity;
 
     switch (gravity) {
     case NorthWestGravity:
-	dx = 0;
-	dy = 0;
-	break;
+        dx = 0;
+        dy = 0;
+        break;
     case NorthGravity:
-	dx = -windowWrapper()->x();
-	dy = 0;
-	break;
+        dx = -windowWrapper()->x();
+        dy = 0;
+        break;
     case NorthEastGravity:
-	dx = -( width() - windowWrapper()->width() );
-	dy = 0;
-	break;
+        dx = -( width() - windowWrapper()->width() );
+        dy = 0;
+        break;
     case WestGravity:
-	dx = 0;
-	dy = -windowWrapper()->y();
-	break;
+        dx = 0;
+        dy = -windowWrapper()->y();
+        break;
     case CenterGravity:
     case StaticGravity:
-	dx = -windowWrapper()->x();
-	dy = -windowWrapper()->y();
-	break;
+        dx = -windowWrapper()->x();
+        dy = -windowWrapper()->y();
+        break;
     case EastGravity:
-	dx = -( width() - windowWrapper()->width() );
-	dy = -windowWrapper()->y();
-	break;
+        dx = -( width() - windowWrapper()->width() );
+        dy = -windowWrapper()->y();
+        break;
     case SouthWestGravity:
-	dx = 0;
-	dy = -( height() - windowWrapper()->height() );
-	break;
+        dx = 0;
+        dy = -( height() - windowWrapper()->height() );
+        break;
     case SouthGravity:
-	dx = -windowWrapper()->x();
-	dy = -( height() - windowWrapper()->height() );
-	break;
+        dx = -windowWrapper()->x();
+        dy = -( height() - windowWrapper()->height() );
+        break;
     case SouthEastGravity:
-	dx = -( width() - windowWrapper()->width() - 1 );
-	dy = -( height() - windowWrapper()->height() - 1 );
-	break;
+        dx = -( width() - windowWrapper()->width() - 1 );
+        dy = -( height() - windowWrapper()->height() - 1 );
+        break;
     }
     if (invert)
-	move( x() - dx, y() - dy );
+        move( x() - dx, y() - dy );
     else
-	move( x() + dx, y() + dy );
+        move( x() + dx, y() + dy );
 }
 
 /*!
@@ -2054,47 +2060,47 @@ bool Client::x11Event( XEvent * e)
 {
     if ( e->type == EnterNotify && ( e->xcrossing.mode == NotifyNormal || e->xcrossing.mode == NotifyUngrab ) ) {
 
-	if (options->shadeHover && isShade() && !isDesktop()) {
-	    delete shadeHoverTimer;
-	    shadeHoverTimer = new QTimer( this );
-	    connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
-	    shadeHoverTimer->start( options->shadeHoverInterval, TRUE );
-	}
+        if (options->shadeHover && isShade() && !isDesktop()) {
+            delete shadeHoverTimer;
+            shadeHoverTimer = new QTimer( this );
+            connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
+            shadeHoverTimer->start( options->shadeHoverInterval, TRUE );
+        }
 
-	if ( options->focusPolicy == Options::ClickToFocus )
-	    return TRUE;
+        if ( options->focusPolicy == Options::ClickToFocus )
+            return TRUE;
 
-	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled()
-	     && workspace()->topClientOnDesktop() != this ) {
-	    delete autoRaiseTimer;
-	    autoRaiseTimer = new QTimer( this );
-	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
-	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
-	}
+        if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled()
+             && workspace()->topClientOnDesktop() != this ) {
+            delete autoRaiseTimer;
+            autoRaiseTimer = new QTimer( this );
+            connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
+            autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
+        }
 
-	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isMenu() ) )
-	    return TRUE;
+        if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isMenu() ) )
+            return TRUE;
 
-	workspace()->requestFocus( this );
-	return TRUE;
+        workspace()->requestFocus( this );
+        return TRUE;
     }
 
     if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
-	if ( !buttonDown )
-	    setCursor( arrowCursor );
-	bool lostMouse = !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) );
-	if ( lostMouse ) {
-	    delete autoRaiseTimer;
-	    autoRaiseTimer = 0;
-	    delete shadeHoverTimer;
-	    shadeHoverTimer = 0;
-	if ( hover_unshade )
-	    setShade( TRUE, 1 );
-	}
-	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
-	    if ( isActive() && lostMouse )
-		workspace()->requestFocus( 0 ) ;
-	return TRUE;
+        if ( !buttonDown )
+            setCursor( arrowCursor );
+        bool lostMouse = !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) );
+        if ( lostMouse ) {
+            delete autoRaiseTimer;
+            autoRaiseTimer = 0;
+            delete shadeHoverTimer;
+            shadeHoverTimer = 0;
+        if ( hover_unshade )
+            setShade( TRUE, 1 );
+        }
+        if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
+            if ( isActive() && lostMouse )
+                workspace()->requestFocus( 0 ) ;
+        return TRUE;
     }
 
     return FALSE;
@@ -2115,27 +2121,27 @@ Client::MousePosition Client::mousePosition( const QPoint& p ) const
 
 
     if ( ( p.x() > border && p.x() < width() - border )
-	 && ( p.y() > border && p.y() < height() - border ) )
-	return Center;
+         && ( p.y() > border && p.y() < height() - border ) )
+        return Center;
 
     if ( p.y() <= range && p.x() <= range)
-	m = TopLeft;
+        m = TopLeft;
     else if ( p.y() >= height()-range && p.x() >= width()-range)
-	m = BottomRight;
+        m = BottomRight;
     else if ( p.y() >= height()-range && p.x() <= range)
-	m = BottomLeft;
+        m = BottomLeft;
     else if ( p.y() <= range && p.x() >= width()-range)
-	m = TopRight;
+        m = TopRight;
     else if ( p.y() <= border )
-	m = Top;
+        m = Top;
     else if ( p.y() >= height()-border )
-	m = Bottom;
+        m = Bottom;
     else if ( p.x() <= border )
-	m = Left;
+        m = Left;
     else if ( p.x() >= width()-border )
-	m = Right;
+        m = Right;
     else
-	m = Center;
+        m = Center;
     return m;
 }
 
@@ -2147,30 +2153,30 @@ Client::MousePosition Client::mousePosition( const QPoint& p ) const
 void Client::setMouseCursor( MousePosition m )
 {
     if ( !isResizable() ) {
-	setCursor( arrowCursor );
-	return;
+        setCursor( arrowCursor );
+        return;
     }
 
     switch ( m ) {
     case TopLeft:
     case BottomRight:
-	setCursor( sizeFDiagCursor );
-	break;
+        setCursor( sizeFDiagCursor );
+        break;
     case BottomLeft:
     case TopRight:
-	setCursor( sizeBDiagCursor );
-	break;
+        setCursor( sizeBDiagCursor );
+        break;
     case Top:
     case Bottom:
-	setCursor( sizeVerCursor );
-	break;
+        setCursor( sizeVerCursor );
+        break;
     case Left:
     case Right:
-	setCursor( sizeHorCursor );
-	break;
+        setCursor( sizeHorCursor );
+        break;
     default:
-	setCursor( arrowCursor );
-	break;
+        setCursor( arrowCursor );
+        break;
     }
 }
 
@@ -2191,8 +2197,8 @@ void Client::setShade( bool s, int hus )
        double clicks on the title bar and wants the window to be unshaded
     */
     if ( s && hover_unshade && !hus) {
-	hover_unshade = 0;
-	return;
+        hover_unshade = 0;
+        return;
     }
 
     hover_unshade = hus;
@@ -2204,51 +2210,51 @@ void Client::setShade( bool s, int hus )
 
 
     if ( isVisible() )
-	Events::raise( s ? Events::ShadeDown : Events::ShadeUp );
+        Events::raise( s ? Events::ShadeDown : Events::ShadeUp );
 
     int as = options->animateShade? 10 : 1;
 
     if ( shaded ) {
-	int h = height();
-	QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
-	windowWrapper()->hide();
-	repaint( FALSE );
-	bool wasStaticContents = testWFlags( WStaticContents );
-	setWFlags( WStaticContents );
-	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
-	do {
-	    h -= step;
-	    resize ( s.width(), h );
-	    QApplication::syncX();
-	} while ( h > s.height() + step );
-	if ( !wasStaticContents )
-	    clearWFlags( WStaticContents );
-	resize (s );
-	if (hus)
-	    workspace()->requestFocus( NULL );
+        int h = height();
+        QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
+        windowWrapper()->hide();
+        repaint( FALSE );
+        bool wasStaticContents = testWFlags( WStaticContents );
+        setWFlags( WStaticContents );
+        int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
+        do {
+            h -= step;
+            resize ( s.width(), h );
+            QApplication::syncX();
+        } while ( h > s.height() + step );
+        if ( !wasStaticContents )
+            clearWFlags( WStaticContents );
+        resize (s );
+        if (hus)
+            workspace()->requestFocus( NULL );
     } else {
-	int h = height();
-	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
-	bool wasStaticContents = testWFlags( WStaticContents );
-	setWFlags( WStaticContents );
-	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
-	do {
-	    h += step;
-	    resize ( s.width(), h );
-	    // assume a border
-	    // we do not have time to wait for X to send us paint events
-	    repaint( 0, h - step-5, width(), step+5, TRUE);
-	    QApplication::syncX();
-	} while ( h < s.height() - step );
-	if ( !wasStaticContents )
-	    clearWFlags( WStaticContents );
-	resize ( s );
-	if (hus)
-	    setActive( TRUE );
-	windowWrapper()->show();
-	activateLayout();
-	if ( isActive() )
-	    workspace()->requestFocus( this );
+        int h = height();
+        QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
+        bool wasStaticContents = testWFlags( WStaticContents );
+        setWFlags( WStaticContents );
+        int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
+        do {
+            h += step;
+            resize ( s.width(), h );
+            // assume a border
+            // we do not have time to wait for X to send us paint events
+            repaint( 0, h - step-5, width(), step+5, TRUE);
+            QApplication::syncX();
+        } while ( h < s.height() - step );
+        if ( !wasStaticContents )
+            clearWFlags( WStaticContents );
+        resize ( s );
+        if (hus)
+            setActive( TRUE );
+        windowWrapper()->show();
+        activateLayout();
+        if ( isActive() )
+            workspace()->requestFocus( this );
     }
 
     if(!hus)
@@ -2274,17 +2280,17 @@ void Client::setActive( bool act)
 {
     windowWrapper()->setActive( act );
     if ( act )
-	workspace()->setActiveClient( this );
+        workspace()->setActiveClient( this );
 
     if ( active == act )
-	return;
+        return;
     active = act;
     if ( active )
-	Events::raise( Events::Activate );
+        Events::raise( Events::Activate );
 
     if ( !active && autoRaiseTimer ) {
-	delete autoRaiseTimer;
-	autoRaiseTimer = 0;
+        delete autoRaiseTimer;
+        autoRaiseTimer = 0;
     }
 
     activeChange( active );
@@ -2297,18 +2303,18 @@ void Client::setActive( bool act)
 void Client::setSticky( bool b )
 {
     if ( is_sticky == b )
-	return;
+        return;
     is_sticky = b;
     if ( isVisible() ) {
-	if ( is_sticky )
-	    Events::raise( Events::Sticky );
-	else
-	    Events::raise( Events::UnSticky );
+        if ( is_sticky )
+            Events::raise( Events::Sticky );
+        else
+            Events::raise( Events::UnSticky );
     }
     if ( !is_sticky )
-	setDesktop( workspace()->currentDesktop() );
+        setDesktop( workspace()->currentDesktop() );
     else
-	info->setDesktop( NETWinInfo::OnAllDesktops );
+        info->setDesktop( NETWinInfo::OnAllDesktops );
     workspace()->setStickyTransientsOf( this, b );
     stickyChange( is_sticky );
 }
@@ -2322,7 +2328,7 @@ void Client::setSticky( bool b )
 void Client::setStaysOnTop( bool b )
 {
     if ( b == staysOnTop() )
-	return;
+        return;
     stays_on_top = b;
     info->setState( b?NET::StaysOnTop:0, NET::StaysOnTop );
 }
@@ -2331,7 +2337,7 @@ void Client::setStaysOnTop( bool b )
 void Client::setSkipTaskbar( bool b )
 {
     if ( b == skipTaskbar() )
-	return;
+        return;
     skip_taskbar = b;
     info->setState( b?NET::SkipTaskbar:0, NET::SkipTaskbar );
 }
@@ -2339,7 +2345,7 @@ void Client::setSkipTaskbar( bool b )
 void Client::setSkipPager( bool b )
 {
     if ( b == skipPager() )
-	return;
+        return;
     skip_pager = b;
     info->setState( b?NET::SkipPager:0, NET::SkipPager );
 }
@@ -2358,19 +2364,19 @@ void Client::getWMHints()
     miniicon_pix = KWin::icon( win, 16, 16, TRUE );
 
     if ( icon_pix.isNull() && mainClient() != this ) {
-	icon_pix = mainClient()->icon_pix;
-	miniicon_pix = mainClient()->miniicon_pix;
+        icon_pix = mainClient()->icon_pix;
+        miniicon_pix = mainClient()->miniicon_pix;
     }
 
     if ( !isWithdrawn() )
-	iconChange();
+        iconChange();
 
     input = TRUE;
     XWMHints *hints = XGetWMHints(qt_xdisplay(), win );
     if ( hints ) {
-	if ( hints->flags & InputHint )
-	    input = hints->input;
-	XFree((char*)hints);
+        if ( hints->flags & InputHint )
+            input = hints->input;
+        XFree((char*)hints);
     }
 }
 
@@ -2384,14 +2390,14 @@ void Client::getWindowProtocols(){
 
   if (XGetWMProtocols(qt_xdisplay(), win, &p, &n)){
       for (i = 0; i < n; i++)
-	  if (p[i] == atoms->wm_delete_window)
-	      Pdeletewindow = 1;
-	  else if (p[i] == atoms->wm_take_focus)
-	      Ptakefocus = 1;
-	  else if (p[i] == atoms->net_wm_context_help)
-	      Pcontexthelp = 1;
+          if (p[i] == atoms->wm_delete_window)
+              Pdeletewindow = 1;
+          else if (p[i] == atoms->wm_take_focus)
+              Ptakefocus = 1;
+          else if (p[i] == atoms->net_wm_context_help)
+              Pcontexthelp = 1;
       if (n>0)
-	  XFree(p);
+          XFree(p);
   }
 }
 
@@ -2402,16 +2408,16 @@ void Client::getWindowProtocols(){
 void Client::takeFocus( bool force )
 {
     if ( !force && ( isMenu() || isDock() ) )
-	return; // menus and dock windows don't take focus if not forced
+        return; // menus and dock windows don't take focus if not forced
 
     if ( input ) {
-	setActive( TRUE );
-	// Qt may delay the mapping which may cause XSetInputFocus to fail, force show window
-	QApplication::sendPostedEvents( windowWrapper(), QEvent::ShowWindowRequest );
-	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
+        setActive( TRUE );
+        // Qt may delay the mapping which may cause XSetInputFocus to fail, force show window
+        QApplication::sendPostedEvents( windowWrapper(), QEvent::ShowWindowRequest );
+        XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
     }
     if ( Ptakefocus )
-	sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
+        sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
 }
 
 
@@ -2431,16 +2437,16 @@ void Client::setMask( const QRegion & reg)
  */
 Client* Client::mainClient()
 {
-    if	( !isTransient() && transientFor() != 0 )
-	return this;
+    if  ( !isTransient() && transientFor() != 0 )
+        return this;
     ClientList saveset;
     Client *n, *c = this;
     do {
-	saveset.append( c );
-	n = workspace()->findClient( c->transientFor() );
-	if ( !n )
-	    break;
-	c = n;
+        saveset.append( c );
+        n = workspace()->findClient( c->transientFor() );
+        if ( !n )
+            break;
+        c = n;
     } while ( c && c->isTransient() && !saveset.contains( c ) );
 
     return c?c:this;
@@ -2469,8 +2475,8 @@ bool Client::providesContextHelp() const
 void Client::contextHelp()
 {
     if ( Pcontexthelp ) {
-	sendClientMessage(win, atoms->wm_protocols, atoms->net_wm_context_help);
-	QWhatsThis::enterWhatsThisMode();
+        sendClientMessage(win, atoms->wm_protocols, atoms->net_wm_context_help);
+        QWhatsThis::enterWhatsThisMode();
     }
 }
 
@@ -2483,98 +2489,98 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
     bool replay = FALSE;
     switch (command) {
     case Options::MouseRaise:
-	workspace()->raiseClient( this );
-	break;
+        workspace()->raiseClient( this );
+        break;
     case Options::MouseLower:
-	workspace()->lowerClient( this );
-	break;
+        workspace()->lowerClient( this );
+        break;
     case Options::MouseShade :
-    	setShade(!isShade());
-	break;
+        setShade(!isShade());
+        break;
     case Options::MouseOperationsMenu:
-	if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
-	    autoRaise();
+        if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
+            autoRaise();
         workspace()->clientPopup( this )->exec( globalPos );
-	workspace()->requestFocus( this );
-	break;
+        workspace()->requestFocus( this );
+        break;
     case Options::MouseToggleRaiseAndLower:
-	if ( workspace()->topClientOnDesktop() == this )
-	    workspace()->lowerClient( this );
-	else
-	    workspace()->raiseClient( this );
-	break;
+        if ( workspace()->topClientOnDesktop() == this )
+            workspace()->lowerClient( this );
+        else
+            workspace()->raiseClient( this );
+        break;
     case Options::MouseActivateAndRaise:
-	workspace()->requestFocus( this );
-	workspace()->raiseClient( this );
-	break;
+        workspace()->requestFocus( this );
+        workspace()->raiseClient( this );
+        break;
     case Options::MouseActivateAndLower:
-	workspace()->requestFocus( this );
-	workspace()->lowerClient( this );
-	break;
+        workspace()->requestFocus( this );
+        workspace()->lowerClient( this );
+        break;
     case Options::MouseActivate:
-	workspace()->requestFocus( this );
-	break;
+        workspace()->requestFocus( this );
+        break;
     case Options::MouseActivateRaiseAndPassClick:
-	workspace()->requestFocus( this );
-	workspace()->raiseClient( this );
-	replay = TRUE;
-	break;
+        workspace()->requestFocus( this );
+        workspace()->raiseClient( this );
+        replay = TRUE;
+        break;
     case Options::MouseActivateAndPassClick:
-	workspace()->requestFocus( this );
-	replay = TRUE;
-	break;
+        workspace()->requestFocus( this );
+        replay = TRUE;
+        break;
     case Options::MouseMove:
-	if (!isMovable())
-	    break;
-	mode = Center;
-	geom=geometry();
-	if ( isMaximized() ) {
-	    // in case we were maximized, reset state
-	    max_mode = MaximizeRestore;
-	    maximizeChange(FALSE );
-	    Events::raise( Events::UnMaximize );
-	    info->setState( 0, NET::Max );
-	}
-	buttonDown = TRUE;
-	moveOffset = mapFromGlobal( globalPos );
-	invertedMoveOffset = rect().bottomRight() - moveOffset;
-	startMoveResize();
-	break;
+        if (!isMovable())
+            break;
+        mode = Center;
+        geom=geometry();
+        if ( isMaximized() ) {
+            // in case we were maximized, reset state
+            max_mode = MaximizeRestore;
+            maximizeChange(FALSE );
+            Events::raise( Events::UnMaximize );
+            info->setState( 0, NET::Max );
+        }
+        buttonDown = TRUE;
+        moveOffset = mapFromGlobal( globalPos );
+        invertedMoveOffset = rect().bottomRight() - moveOffset;
+        startMoveResize();
+        break;
     case Options::MouseResize: {
-	if (!isMovable())
-	    break;
-	geom=geometry();
-	if ( isMaximized() ) {
-	    // in case we were maximized, reset state
-	    max_mode = MaximizeRestore;
-	    maximizeChange(FALSE );
-	    Events::raise( Events::UnMaximize );
-	    info->setState( 0, NET::Max );
-	}
-	buttonDown = TRUE;
-	moveOffset = mapFromGlobal( globalPos );
-	int x = moveOffset.x(), y = moveOffset.y();
-	bool left = x < width() / 3;
-	bool right = x >= 2 * width() / 3;
-	bool top = y < height() / 3;
-	bool bot = y >= 2 * height() / 3;
-	if (top)
-	    mode = left ? TopLeft : (right ? TopRight : Top);
-	else if (bot)
-	    mode = left ? BottomLeft : (right ? BottomRight : Bottom);
-	else
-	    mode = (x < width() / 2) ? Left : Right;
-	invertedMoveOffset = rect().bottomRight() - moveOffset;
-	setMouseCursor( mode );
-	startMoveResize();
-	resizeHorizontalDirectionFixed = FALSE;
-	resizeVerticalDirectionFixed = FALSE;
-	} break;
+        if (!isMovable())
+            break;
+        geom=geometry();
+        if ( isMaximized() ) {
+            // in case we were maximized, reset state
+            max_mode = MaximizeRestore;
+            maximizeChange(FALSE );
+            Events::raise( Events::UnMaximize );
+            info->setState( 0, NET::Max );
+        }
+        buttonDown = TRUE;
+        moveOffset = mapFromGlobal( globalPos );
+        int x = moveOffset.x(), y = moveOffset.y();
+        bool left = x < width() / 3;
+        bool right = x >= 2 * width() / 3;
+        bool top = y < height() / 3;
+        bool bot = y >= 2 * height() / 3;
+        if (top)
+            mode = left ? TopLeft : (right ? TopRight : Top);
+        else if (bot)
+            mode = left ? BottomLeft : (right ? BottomRight : Bottom);
+        else
+            mode = (x < width() / 2) ? Left : Right;
+        invertedMoveOffset = rect().bottomRight() - moveOffset;
+        setMouseCursor( mode );
+        startMoveResize();
+        resizeHorizontalDirectionFixed = FALSE;
+        resizeVerticalDirectionFixed = FALSE;
+        } break;
     case Options::MouseNothing:
-	// fall through
+        // fall through
     default:
-	replay = TRUE;
-	break;
+        replay = TRUE;
+        break;
     }
     return replay;
 }
@@ -2583,57 +2589,57 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 void Client::keyPressEvent( uint key_code )
 {
     if ( !isMove() && !isResize() )
-	return;
+        return;
     bool is_control = false; // e->state() & ControlButton;
     int delta = is_control?1:8;
     QPoint pos = QCursor::pos();
     switch ( key_code ) {
     case Key_Left:
-	pos.rx() -= delta;
-	if ( isResize() && !resizeHorizontalDirectionFixed ) {
-	    resizeHorizontalDirectionFixed = TRUE;
-	    resizeVerticalDirectionFixed = FALSE;
-	    mode = Right;
-	    setMouseCursor( mode );
-	}
-	break;
+        pos.rx() -= delta;
+        if ( isResize() && !resizeHorizontalDirectionFixed ) {
+            resizeHorizontalDirectionFixed = TRUE;
+            resizeVerticalDirectionFixed = FALSE;
+            mode = Right;
+            setMouseCursor( mode );
+        }
+        break;
     case Key_Right:
-	pos.rx() += delta;
-	if ( isResize() && !resizeHorizontalDirectionFixed ) {
-	    resizeHorizontalDirectionFixed = TRUE;
-	    resizeVerticalDirectionFixed = FALSE;
-	    mode = Right;
-	    setMouseCursor( mode );
-	}
-	break;
+        pos.rx() += delta;
+        if ( isResize() && !resizeHorizontalDirectionFixed ) {
+            resizeHorizontalDirectionFixed = TRUE;
+            resizeVerticalDirectionFixed = FALSE;
+            mode = Right;
+            setMouseCursor( mode );
+        }
+        break;
     case Key_Up:
-	pos.ry() -= delta;
-	if ( isResize() && !resizeVerticalDirectionFixed ) {
-	    resizeVerticalDirectionFixed = TRUE;
-	    resizeHorizontalDirectionFixed = FALSE;
-	    mode = Bottom;
-	    setMouseCursor( mode );
-	}
-	break;
+        pos.ry() -= delta;
+        if ( isResize() && !resizeVerticalDirectionFixed ) {
+            resizeVerticalDirectionFixed = TRUE;
+            resizeHorizontalDirectionFixed = FALSE;
+            mode = Bottom;
+            setMouseCursor( mode );
+        }
+        break;
     case Key_Down:
-	pos.ry() += delta;
-	if ( isResize() && !resizeVerticalDirectionFixed ) {
-	    resizeVerticalDirectionFixed = TRUE;
-	    resizeHorizontalDirectionFixed = FALSE;
-	    mode = Bottom;
-	    setMouseCursor( mode );
-	}
-	break;
+        pos.ry() += delta;
+        if ( isResize() && !resizeVerticalDirectionFixed ) {
+            resizeVerticalDirectionFixed = TRUE;
+            resizeHorizontalDirectionFixed = FALSE;
+            mode = Bottom;
+            setMouseCursor( mode );
+        }
+        break;
     case Key_Space:
     case Key_Return:
     case Key_Enter:
-	clearbound();
+        clearbound();
         stopMoveResize();
-	setGeometry( geom );
-	buttonDown = FALSE;
-	break;
+        setGeometry( geom );
+        buttonDown = FALSE;
+        break;
     default:
-	return;
+        return;
     }
     QCursor::setPos( pos );
 }
@@ -2822,7 +2828,7 @@ Window Client::wmClientLeader()
 void Client::activateLayout()
 {
     if ( layout() )
-	layout()->activate();
+        layout()->activate();
 }
 
 
@@ -2830,14 +2836,14 @@ NET::WindowType Client::windowType() const
 {
     NET::WindowType wt = info->windowType();
     if ( wt == NET::Unknown )
-	wt = NET::Normal;
+        wt = NET::Normal;
     return wt;
 }
 
 bool Client::wantsTabFocus() const
 {
     return (windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Override )
-			  && ( input || Ptakefocus ) && !skip_taskbar;
+                          && ( input || Ptakefocus ) && !skip_taskbar;
 }
 
 
@@ -2853,8 +2859,8 @@ bool Client::wantsInput() const
 bool Client::isMovable() const
 {
     return may_move &&
-	( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Toolbar ) &&
-	( !isMaximized() || ( options->moveResizeMaximizedWindows || max_mode != MaximizeFull ) );
+        ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Toolbar ) &&
+        ( !isMaximized() || ( options->moveResizeMaximizedWindows || max_mode != MaximizeFull ) );
 }
 
 bool Client::isDesktop() const
@@ -2890,13 +2896,13 @@ QRect Client::adjustedClientArea( const QRect& area ) const
     QRect r = area;
     NETStrut strut = info->strut();
     if ( strut.left > 0 )
-	r.setLeft( r.left() + (int) strut.left );
+        r.setLeft( r.left() + (int) strut.left );
     if ( strut.top > 0 )
-	r.setTop( r.top() + (int) strut.top );
+        r.setTop( r.top() + (int) strut.top );
     if ( strut.right > 0  )
-	r.setRight( r.right() - (int) strut.right );
+        r.setRight( r.right() - (int) strut.right );
     if ( strut.bottom > 0  )
-	r.setBottom( r.bottom() - (int) strut.bottom );
+        r.setBottom( r.bottom() - (int) strut.bottom );
     return r;
 }
 
@@ -2904,9 +2910,9 @@ QRect Client::adjustedClientArea( const QRect& area ) const
 void Client::animateIconifyOrDeiconify( bool iconify)
 {
     if ( blockAnimation )
-	return;
+        return;
     if ( !options->animateMinimize )
-	return;
+        return;
     // the function is a bit tricky since it will ensure that an
     // animation action needs always the same time regardless of the
     // performance of the machine or the X-Server.
@@ -2915,26 +2921,26 @@ void Client::animateIconifyOrDeiconify( bool iconify)
 
     int speed = options->animateMinimizeSpeed;
     if ( speed > 10 )
-	speed = 10;
+        speed = 10;
     if ( speed < 0 )
-	speed = 0;
+        speed = 0;
 
     step = 40. * (11 - speed );
 
     NETRect r = info->iconGeometry();
     QRect icongeom( r.pos.x, r.pos.y, r.size.width, r.size.height );
     if ( !icongeom.isValid() )
-	return;
+        return;
 
     QPixmap pm = animationPixmap( iconify ? width() : icongeom.width() );
 
     QRect before, after;
     if ( iconify ) {
-	before = QRect( x(), y(), width(), pm.height() );
-	after = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
+        before = QRect( x(), y(), width(), pm.height() );
+        after = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
     } else {
-	before = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
-	after = QRect( x(), y(), width(), pm.height() );
+        before = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
+        after = QRect( x(), y(), width(), pm.height() );
     }
 
     lf = (after.left() - before.left())/step;
@@ -2957,36 +2963,36 @@ void Client::animateIconifyOrDeiconify( bool iconify)
     bool need_to_clear = FALSE;
     QPixmap pm3;
     do {
-	if (area2 != area){
-	    pm = animationPixmap( area.width() );
-	    pm2 = QPixmap::grabWindow( qt_xrootwin(), area.x(), area.y(), area.width(), area.height() );
-	    p.drawPixmap( area.x(), area.y(), pm );
-	    if ( need_to_clear ) {
-		p.drawPixmap( area2.x(), area2.y(), pm3 );
-		need_to_clear = FALSE;
-	    }
-	    area2 = area;
-	}
-	XFlush(qt_xdisplay());
-	XSync( qt_xdisplay(), FALSE );
-	diff = t.elapsed();
-	if (diff > step)
-	    diff = step;
-	area.setLeft(before.left() + int(diff*lf));
-	area.setRight(before.right() + int(diff*rf));
-	area.setTop(before.top() + int(diff*tf));
-	area.setBottom(before.bottom() + int(diff*bf));
-	if (area2 != area ) {
-	    if ( area2.intersects( area ) )
-		p.drawPixmap( area2.x(), area2.y(), pm2 );
-	    else { // no overlap, we can clear later to avoid flicker
-		pm3 = pm2;
-		need_to_clear = TRUE;
-	    }
-	}
+        if (area2 != area){
+            pm = animationPixmap( area.width() );
+            pm2 = QPixmap::grabWindow( qt_xrootwin(), area.x(), area.y(), area.width(), area.height() );
+            p.drawPixmap( area.x(), area.y(), pm );
+            if ( need_to_clear ) {
+                p.drawPixmap( area2.x(), area2.y(), pm3 );
+                need_to_clear = FALSE;
+            }
+            area2 = area;
+        }
+        XFlush(qt_xdisplay());
+        XSync( qt_xdisplay(), FALSE );
+        diff = t.elapsed();
+        if (diff > step)
+            diff = step;
+        area.setLeft(before.left() + int(diff*lf));
+        area.setRight(before.right() + int(diff*rf));
+        area.setTop(before.top() + int(diff*tf));
+        area.setBottom(before.bottom() + int(diff*bf));
+        if (area2 != area ) {
+            if ( area2.intersects( area ) )
+                p.drawPixmap( area2.x(), area2.y(), pm2 );
+            else { // no overlap, we can clear later to avoid flicker
+                pm3 = pm2;
+                need_to_clear = TRUE;
+            }
+        }
     } while ( t.elapsed() < step);
     if (area2 == area || need_to_clear )
-	p.drawPixmap( area2.x(), area2.y(), pm2 );
+        p.drawPixmap( area2.x(), area2.y(), pm2 );
 
     p.end();
     XUngrabServer( qt_xdisplay() );
@@ -3054,23 +3060,23 @@ void Client::verifyTransientFor()
     unsigned int nwins;
     Window root_return, parent_return, *wins;
     if ( transient_for == 0 || transient_for == win )
-	return;
+        return;
     WId old_transient_for = transient_for;
     while ( transient_for &&
-	    transient_for != workspace()->rootWin() &&
-	    !workspace()->findClient( transient_for ) ) {
-	wins = 0;
-	int r = XQueryTree(qt_xdisplay(), transient_for, &root_return, &parent_return,	&wins, &nwins);
-	if ( wins )
-	    XFree((void *) wins);
-	if ( r == 0)
-	    break;
-	transient_for = parent_return;
+            transient_for != workspace()->rootWin() &&
+            !workspace()->findClient( transient_for ) ) {
+        wins = 0;
+        int r = XQueryTree(qt_xdisplay(), transient_for, &root_return, &parent_return,  &wins, &nwins);
+        if ( wins )
+            XFree((void *) wins);
+        if ( r == 0)
+            break;
+        transient_for = parent_return;
     }
     if ( old_transient_for != transient_for && workspace()->findClient( transient_for ) )
-	XSetTransientForHint( qt_xdisplay(), win, transient_for );
+        XSetTransientForHint( qt_xdisplay(), win, transient_for );
     else
-	transient_for = old_transient_for; // nice try
+        transient_for = old_transient_for; // nice try
 }
 
 
