@@ -4010,17 +4010,16 @@ void Workspace::updateClientArea( bool force )
          ++i )
          new_areas[ i ] = all;
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-        int desktop = (*it)->desktop();
         QRect r = (*it)->adjustedClientArea( all );
         if( r == all )
             continue;
-        if( desktop == NETWinInfo::OnAllDesktops )
+        if( (*it)->isSticky())
             for( int i = 1;
                  i <= numberOfDesktops();
                  ++i )
                 new_areas[ i ] = new_areas[ i ].intersect( r );
         else
-            new_areas[ desktop ] = new_areas[ desktop ].intersect( r );
+            new_areas[ (*it)->desktop() ] = new_areas[ (*it)->desktop() ].intersect( r );
     }
 
     bool changed = force;
