@@ -2005,6 +2005,9 @@ void Workspace::slotWindowOperations()
 {
     if ( !active_client )
 	return;
+    if ( !active_client->mayMove())
+        return;
+
     QPopupMenu* p = clientPopup( active_client );
     p->popup( active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() ) );
 }

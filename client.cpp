@@ -1193,6 +1193,9 @@ void Client::invalidateWindow()
 
 void Client::iconify()
 {
+    if (!mayMove())
+       return;
+
     if ( isShade() )
 	setShade( FALSE );
     if ( workspace()->iconifyMeansWithdraw( this ) ) {
@@ -1235,11 +1238,13 @@ void Client::killWindow()
 
 void Client::maximize( MaximizeMode m)
 {
+    if (!mayMove())
+       return;
+
     QRect clientArea = workspace()->clientArea();
 
     if (isShade())
 	setShade( FALSE );
-
 
     if (geom_restore.isNull()) {
 
@@ -1285,6 +1290,9 @@ void Client::maximize( MaximizeMode m)
 
 void Client::toggleSticky()
 {
+    if (!mayMove())
+       return;
+
     setSticky( !isSticky() );
 }
 
@@ -1470,6 +1478,9 @@ bool Client::isShade() const
 
 void Client::setShade( bool s )
 {
+    if (!mayMove())
+       return;
+
     if ( shaded == s )
 	return;
 
