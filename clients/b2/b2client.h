@@ -10,6 +10,7 @@
 #define __B2CLIENT_H
 
 #include <qvariant.h>
+#include <qdatetime.h>
 #include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
@@ -135,6 +136,7 @@ private:
     B2Titlebar *titlebar;
     int bar_x_ofs;
     int in_unobs;
+    QTime time;
 };
 
 class B2ClientFactory : public QObject, public KDecorationFactory

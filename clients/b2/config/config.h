@@ -11,6 +11,9 @@
 
 #include <qcheckbox.h>
 #include <qgroupbox.h>
+#include <qhgroupbox.h>
+#include <qlabel.h>
+#include <qcombobox.h>
 #include <kconfig.h>
 
 class B2Config: public QObject
@@ -36,6 +39,8 @@ class B2Config: public QObject
 	private:
 		KConfig*   b2Config;
 		QCheckBox* cbColorBorder;
+		QHGroupBox* actionsGB;
+		QComboBox*  menuDblClickOp;
 		QWidget* gb;
 };
 

@@ -35,19 +35,34 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalogue("kwin_b2_config");
 	b2Config = new KConfig("kwinb2rc");
-	gb = new QVBox( parent );
+	gb = new QVBox(parent);
 	cbColorBorder = new QCheckBox( 
-						i18n("Draw window frames using &titlebar colors"), gb );
-	QWhatsThis::add( cbColorBorder, 
-						i18n("When selected, the window decoration borders "
-						"are drawn using the titlebar colors. Otherwise, they are "
-						"drawn using normal border colors instead.") );
+			i18n("Draw window frames using &titlebar colors"), gb);
+	QWhatsThis::add(cbColorBorder, 
+			i18n("When selected, the window decoration borders " 
+				"are drawn using the titlebar colors. Otherwise, they are " 
+				"drawn using normal border colors instead."));
+    // Double click menu option support
+    actionsGB = new QHGroupBox(i18n("Actions Settings"), gb);
+    QLabel *menuDblClickLabel = new QLabel(actionsGB);
+    menuDblClickLabel->setText(i18n("Double Click on Menu Button:"));
+    menuDblClickOp = new QComboBox(actionsGB);
+    menuDblClickOp->insertItem(i18n("Do Nothing"));
+    menuDblClickOp->insertItem(i18n("Minimize Window"));
+    menuDblClickOp->insertItem(i18n("Shade Window"));
+    menuDblClickOp->insertItem(i18n("Close Window"));
+    
+    QWhatsThis::add(menuDblClickOp, 
+	    i18n("An action can be associated to a double click " 
+		 "of the menu button. Leave it to none if in doubt."));
 	// Load configuration options
-	load( conf );
+	load(conf);
 
 	// Ensure we track user changes properly
-	connect( cbColorBorder, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
-
+	connect(cbColorBorder, SIGNAL(clicked()), 
+			this, SLOT(slotSelectionChanged()));
+    connect(menuDblClickOp, SIGNAL(activated(int)), 
+		    this, SLOT(slotSelectionChanged()));
 	// Make the widgets visible in kwindecoration
 	gb->show();
 }
@@ -55,9 +70,8 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 
 B2Config::~B2Config()
 {
-	delete cbColorBorder;
+    delete b2Config;
 	delete gb;
-	delete b2Config;
 }
 
 
@@ -69,19 +83,52 @@ void B2Config::slotSelectionChanged()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void B2Config::load( KConfig* /*conf*/ )
+void B2Config::load(KConfig * /*conf*/)
 {
 	b2Config->setGroup("General");
-	bool override = b2Config->readBoolEntry( "UseTitleBarBorderColors", false );
-	cbColorBorder->setChecked( override );
+	bool override = b2Config->readBoolEntry("UseTitleBarBorderColors", false);
+	cbColorBorder->setChecked(override);
+    QString returnString = b2Config->readEntry(
+					"MenuButtonDoubleClickOperation", "NoOp");
+    
+    int op;
+    if (returnString == "Close") {
+		op = 3;
+	} else if (returnString == "Shade") {
+		op = 2;
+    } else if (returnString == "Minimize") {
+		op = 1;
+    } else {
+		op = 0;
+    }
+
+    menuDblClickOp->setCurrentItem(op);
+
+}
+
+static QString opToString(int op) 
+{
+    switch (op) {
+    case 1:
+	    return "Minimize";
+    case 2:
+	    return "Shade";
+    case 3:
+	    return "Close";
+    case 0:
+    default:
+	    return "NoOp";
+    }
 }
 
 
 // Saves the configurable options to the kwinrc config file
-void B2Config::save( KConfig* /*conf*/ )
+void B2Config::save(KConfig * /*conf*/)
 {
 	b2Config->setGroup("General");
-	b2Config->writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
+	b2Config->writeEntry("UseTitleBarBorderColors", cbColorBorder->isChecked());
+    b2Config->writeEntry("MenuButtonDoubleClickOperation", 
+	    opToString(menuDblClickOp->currentItem()));
 	// Ensure others trying to read this config get updated
 	b2Config->sync();
 }
@@ -91,6 +138,7 @@ void B2Config::save( KConfig* /*conf*/ )
 void B2Config::defaults()
 {
 	cbColorBorder->setChecked( false );
+    menuDblClickOp->setCurrentItem(0);
 }
 
 #include "config.moc"

@@ -10,6 +10,7 @@
  */
 
 #include "b2client.h"
+#include <qapplication.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
@@ -52,6 +53,15 @@ static KPixmap* titleGradient[2] = {0, 0};
 static int thickness = 4; // Frame thickness
 static int buttonSize = 16;
 
+enum DblClickOperation {
+	NoOp = 0,
+	MinimizeOp,
+	ShadeOp,
+	CloseOp
+};
+
+static DblClickOperation menu_dbl_click_op = NoOp;
+
 static bool pixmaps_created = false;
 static bool colored_frame = false;
 
@@ -81,6 +91,16 @@ static void read_config(B2ClientFactory *f)
     KConfig conf("kwinb2rc");
     conf.setGroup("General");
     colored_frame = conf.readBoolEntry( "UseTitleBarBorderColors", false );
+    QString opString = conf.readEntry("MenuButtonDoubleClickOperation", "NoOp");
+    if (opString == "Close") {
+        menu_dbl_click_op = B2::CloseOp;
+    } else if (opString == "Minimize") {
+        menu_dbl_click_op = B2::MinimizeOp;
+    } else if (opString == "Shade") {
+        menu_dbl_click_op = B2::ShadeOp;
+    } else {
+        menu_dbl_click_op = B2::NoOp;
+    }
 
     switch (options()->preferredBorderSize(f)) {
     case KDecoration::BorderTiny:
@@ -794,13 +814,36 @@ void B2Client::borders(int &left, int &right, int &top, int &bottom) const
 
 void B2Client::menuButtonPressed()
 {
-    QPoint menupoint = button[BtnMenu]->mapToGlobal(
-	    button[BtnMenu]->rect().bottomLeft());
-    KDecorationFactory* f = factory();
-    showWindowMenu(menupoint);
-    if( !f->exists( this )) // 'this' was destroyed
-        return;
-    button[BtnMenu]->setDown(false);
+    static B2Client *lastClient = NULL;
+    
+    bool dbl = (lastClient == this && 
+	        time.elapsed() <= QApplication::doubleClickInterval());
+    lastClient = this;
+    time.start();
+    if (!dbl) {
+	QPoint menupoint = button[BtnMenu]->mapToGlobal(
+		button[BtnMenu]->rect().bottomLeft());
+	KDecorationFactory* f = factory();
+	showWindowMenu(menupoint);
+	if (!f->exists(this)) // 'this' was destroyed
+	    return;
+	button[BtnMenu]->setDown(false);
+    } else {
+	switch (menu_dbl_click_op) {
+	case B2::MinimizeOp:
+	    minimize();
+	    break;
+	case B2::ShadeOp:
+	    setShade(!isShade());
+	    break;
+	case B2::CloseOp:
+	    closeWindow();
+	    break;
+	case B2::NoOp:
+	default:
+	    break;
+	}
+    }
 }
 
 void B2Client::unobscureTitlebar()
@@ -848,8 +891,6 @@ static void redraw_pixmaps()
 	QColor color = is_act ? aGrp.button() : iGrp.button();
 	drawB2Rect(&thinBox, color, is_down);
 	pix->fill(Qt::black);
-	fprintf(stderr, "thinbox width = %d, height = %d\n", 
-		thinBox.width(), thinBox.height());
 	bitBlt(pix, 0, 0, &thinBox, 
 		0, 0, thinBox.width(), thinBox.height(), Qt::CopyROP, true);
     }
