@@ -128,7 +128,10 @@ Manager::Manager(
   midLayout->addWidget(windowWrapper());
   midLayout->addSpacing(1);
 
-  l->addSpacing(Static::instance()->resizeHeight());
+  if (isResizable())
+    l->addSpacing(Static::instance()->resizeHeight());
+  else
+    l->addSpacing(1);
 
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
@@ -172,21 +175,28 @@ Manager::paintEvent(QPaintEvent * e)
 
   // Resize bar.
 
-  int rbt = height() - Static::instance()->resizeHeight(); // Resize bar top.
+  if (isResizable())
+  {
+    int rbt = height() - Static::instance()->resizeHeight(); // Resize bar top.
 
-  bitBlt(this, 0, rbt, &(s->resize(active)));
-  bitBlt(this, 30, rbt, &(s->resizeMidLeft(active)));
+    bitBlt(this, 0, rbt, &(s->resize(active)));
+    bitBlt(this, 30, rbt, &(s->resizeMidLeft(active)));
 
-  p.drawTiledPixmap(
-      32,
-      rbt,
-      width() - 34,
-      Static::instance()->resizeHeight(),
-      s->resizeMidMid(active)
-  );
+    p.drawTiledPixmap(
+        32,
+        rbt,
+        width() - 34,
+        Static::instance()->resizeHeight(),
+        s->resizeMidMid(active)
+    );
 
-  bitBlt(this, width() - 32, rbt, &(s->resizeMidRight(active)));
-  bitBlt(this, width() - 30, rbt, &(s->resize(active)));
+    bitBlt(this, width() - 32, rbt, &(s->resizeMidRight(active)));
+    bitBlt(this, width() - 30, rbt, &(s->resize(active)));
+  }
+  else
+  {
+    p.drawLine(1, height() - 1, width() - 2, height() - 1);
+  }
 }
 
   void
@@ -292,19 +302,26 @@ Manager::updateTitleBuffer()
   p.drawPixmap(tr.width() - 3, 0, s->titleTextRight(active));
 }
 
-KWinInternal::Client::MousePosition
+  KWinInternal::Client::MousePosition
 Manager::mousePosition(const QPoint & p) const
 {
   MousePosition m = Center;
 
-  if (p.y() > (height() - Static::instance()->resizeHeight())) {
-     // Keep order !
-    if (p.x() >= (width() - 30))
-      m = BottomRight;
-    else if (p.x() <= 30)
-      m = BottomLeft;
-    else
-      m = Bottom;
+  // Off-by-one here ?
+
+  if (isResizable())
+  {
+    if (p.y() > (height() - (Static::instance()->resizeHeight() + 1)))
+    {
+      // Keep order !
+
+      if (p.x() >= (width() - 30))
+        m = BottomRight;
+      else if (p.x() <= 30)
+        m = BottomLeft;
+      else
+        m = Bottom;
+    }
   }
 
   return m;
