@@ -77,6 +77,7 @@ static DblClickOperation menu_dbl_click_op = NoOp;
 static bool pixmaps_created = false;
 static bool colored_frame = false;
 static bool do_draw_handle = true;
+static bool drawSmallBorders = false;
 
 // =====================================
 
@@ -105,6 +106,8 @@ static void read_config(B2ClientFactory *f)
     conf.setGroup("General");
     colored_frame = conf.readBoolEntry("UseTitleBarBorderColors", false);
     do_draw_handle = conf.readBoolEntry("DrawGrabHandle", true);
+    drawSmallBorders = !options()->moveResizeMaximizedWindows();
+
     QString opString = conf.readEntry("MenuButtonDoubleClickOperation", "NoOp");
     if (opString == "Close") {
         menu_dbl_click_op = B2::CloseOp;
@@ -498,11 +501,10 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 
 bool B2Client::mustDrawHandle() const 
 { 
-    bool drawSmallBorders = !options()->moveResizeMaximizedWindows();
     if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
 	return false;
     } else {
-	return draw_handle && isResizable();
+	return do_draw_handle && isResizable();
     }
 }
 
@@ -694,6 +696,7 @@ void B2Client::doShape()
 	mask -= QRect(0, height() - 4, width() - 40, 4); //bottom left
     } else {
 	mask -= QRect(0, height() - 1, 1, 1); // bottom left point
+	mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
     }
 
     setMask(mask);
