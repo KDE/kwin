@@ -595,7 +595,7 @@ void KDEDefaultButton::mouseReleaseEvent( QMouseEvent* e )
 
 KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
 									const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity |
+    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents |
 								   WRepaintNoErase )
 {
 	// No flicker thanks
