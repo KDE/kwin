@@ -324,6 +324,8 @@ bool Workspace::workspaceEvent( XEvent * e )
 // a chance to reparent it back to root
 // since KWin can get MapRequest only for root window children and
 // children of WindowWrapper (=clients), the check is AFAIK useless anyway
+// Note: Now the save-set support in Client::mapRequestEvent() actually requires that
+// this code doesn't check the parent to be root.
 //            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return TRUE;
@@ -598,6 +600,20 @@ bool Client::mapRequestEvent( XMapRequestEvent* e )
     {
     if( e->window != window())
         {
+        // Special support for the save-set feature, which is a bit broken.
+        // If there's a window from one client embedded in another one,
+        // e.g. using XEMBED, and the embedder suddenly looses its X connection,
+        // save-set will reparent the embedded window to its closest ancestor
+        // that will remains. Unfortunately, with reparenting window managers,
+        // this is not the root window, but the frame (or in KWin's case,
+        // it's the wrapper for the client window). In this case,
+        // the wrapper will get ReparentNotify for a window it won't know,
+        // which will be ignored, and then it gets MapRequest, as save-set
+        // always maps. Returning true here means that Workspace::workspaceEvent()
+        // will handle this MapRequest and manage this window (i.e. act as if
+        // it was reparented to root window).
+        if( e->parent == wrapperId())
+            return false;
         return true; // no messing with frame etc.
         }
     if( isTopMenu() && workspace()->managingTopMenus())
