@@ -74,6 +74,16 @@ public:
     int autoRaiseInterval;
 
     /**
+       Whether shade hover is enabled or not
+     */
+    bool shadeHover;
+
+    /**
+       shade hover interval
+     */
+    int shadeHoverInterval;
+
+    /**
        Different Alt-Tab-Styles:
        <ul>
 
@@ -98,10 +108,10 @@ public:
        Control-TAB shortcut to switch virtual desktop.
     */
     bool useControlTab;
-    
+
     /**
       Number of desktop rowsd
-     */ 
+     */
     int desktopRows;
 
 
@@ -202,6 +212,7 @@ public:
 	ShadeOp,
 	StaysOnTopOp,
 	OperationsOp,
+	ToggleStoreSettingsOp,
 	NoOp
     };
 

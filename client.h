@@ -116,7 +116,7 @@ public:
     bool isOnDesktop( int d ) const;
 
     bool isShade() const;
-    virtual void setShade( bool );
+    virtual void setShade( bool , int = 0 );
     void giveUpShade();
 
     bool isMaximized() const;
@@ -131,6 +131,9 @@ public:
 
     bool staysOnTop() const;
     void setStaysOnTop( bool );
+    
+    bool storeSettings() const;
+    void setStoreSettings( bool );
 
     // auxiliary functions, depend on the windowType
     bool wantsTabFocus() const;
@@ -196,6 +199,7 @@ public slots:
     void toggleSticky();
     void contextHelp();
     void autoRaise();
+    void shadeHover();
 
 protected:
     void paintEvent( QPaintEvent * );
@@ -275,6 +279,7 @@ private:
     WId transient_for;
     uint transient_for_defined;
     uint shaded :1;
+    uint hover_unshade :1;
     uint active :1;
     uint is_sticky :1;
     uint stays_on_top : 1;
@@ -286,6 +291,7 @@ private:
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
     uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?
     uint input :1; // does the window want input in its wm_hints
+    uint store_settings : 1;
     void getWMHints();
     void getWindowProtocols();
     QPixmap icon_pix;
@@ -295,7 +301,10 @@ private:
     QRegion mask;
     WinInfo* info;
     QTimer* autoRaiseTimer;
+    QTimer* shadeHoverTimer;
     Colormap cmap;
+    QCString resource_name;
+    QCString resource_class;
     void verifyTransientFor();
     friend class WindowWrapper;
 };
@@ -395,6 +404,16 @@ inline Client::MaximizeMode Client::maximizeMode() const
 inline bool Client::staysOnTop() const
 {
     return stays_on_top;
+}
+
+inline bool Client::storeSettings() const
+{
+    return store_settings;
+}
+
+inline void Client::setStoreSettings( bool b )
+{
+    store_settings = b;
 }
 
 

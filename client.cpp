@@ -130,7 +130,7 @@ static void sendClientMessage(Window w, Atom a, long x){
   ev.xclient.data.l[1] = kwin_time;
   mask = 0L;
   if (w == qt_xrootwin())
-    mask = SubstructureRedirectMask;        /* magic! */
+    mask = SubstructureRedirectMask;	    /* magic! */
   XSendEvent(qt_xdisplay(), w, False, mask, &ev);
 }
 
@@ -155,7 +155,7 @@ static void sendClientMessage(Window w, Atom a, long x){
  */
 
 const long ClientWinMask = KeyPressMask | KeyReleaseMask |
-                                  ButtonPressMask | ButtonReleaseMask |
+				  ButtonPressMask | ButtonReleaseMask |
 		  KeymapStateMask |
 		  ButtonMotionMask |
 		  PointerMotionMask | // need this, too!
@@ -233,9 +233,9 @@ void WindowWrapper::setActive( bool active )
     if ( active ) {
 	if ( options->focusPolicy == Options::ClickToFocus ||  !options->clickRaise )
 	    ungrabButton( winId(),  None );
-	ungrabButton( winId(),  ShiftMask );
-	ungrabButton( winId(),  ControlMask );
-	ungrabButton( winId(),  ControlMask | ShiftMask );
+	ungrabButton( winId(),	ShiftMask );
+	ungrabButton( winId(),	ControlMask );
+	ungrabButton( winId(),	ControlMask | ShiftMask );
     } else {
 	XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
 		    ButtonPressMask,
@@ -328,7 +328,7 @@ void WindowWrapper::unmap()
 {
     if ( win ) {
 	XSelectInput( qt_xdisplay(), winId(), ClientWinMask );
- 	XUnmapWindow( qt_xdisplay(), win );
+	XUnmapWindow( qt_xdisplay(), win );
 	XSelectInput( qt_xdisplay(), winId(), ClientWinMask  | SubstructureNotifyMask );
     }
 }
@@ -375,7 +375,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 		 && ( options->focusPolicy != Options::ClickToFocus
 		 &&  options->clickRaise && !mod1 ) ) {
 		((Client*)parentWidget())->autoRaise();
-		ungrabButton( winId(),  None );
+		ungrabButton( winId(),	None );
 	    }
 	
 	    Options::MouseCommand com = Options::MouseNothing;
@@ -445,6 +445,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     wspace = ws;
     win = w;
     autoRaiseTimer = 0;
+    shadeHoverTimer = 0;
 
     unsigned long properties =
 	NET::WMDesktop |
@@ -471,6 +472,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     active = FALSE;
     shaded = FALSE;
+    hover_unshade = FALSE;
     transient_for = None;
     transient_for_defined = FALSE;
     is_shape = FALSE;
@@ -480,6 +482,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     is_fullscreen = TRUE;
     skip_taskbar = FALSE;
     max_mode = MaximizeRestore;
+    store_settings = FALSE;
 
     cmap = None;
 
@@ -487,11 +490,19 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
 	transient_for = None;
     else {
-    	transient_for = (WId) ww;
+	transient_for = (WId) ww;
 	transient_for_defined = TRUE;
 	verifyTransientFor();
     }
 
+    XClassHint classHint;
+    if ( XGetClassHint( qt_xdisplay(), win, &classHint ) ) {
+	resource_name = classHint.res_name;
+	resource_class = classHint.res_class;
+	XFree( classHint.res_name );
+	XFree( classHint.res_class );
+    }
+    
     getWMHints();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
@@ -564,7 +575,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	XClassHint classHint;
 	if ( XGetClassHint(qt_xdisplay(), win, &classHint) != 0 ) {
 	    if ( classHint.res_class )
-	        ignorePPosition = ( options->ignorePositionClasses.find(QString::fromLatin1(classHint.res_class)) != options->ignorePositionClasses.end() );
+		ignorePPosition = ( options->ignorePositionClasses.find(QString::fromLatin1(classHint.res_class)) != options->ignorePositionClasses.end() );
 	    XFree(classHint.res_name);
 	    XFree(classHint.res_class);
 	}
@@ -585,13 +596,13 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 		    geom.moveTopLeft( QPoint( tx, ty ) );
 	    }
 	}
- 	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
+	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
 	    // keep in mind that we now actually have a size :-)
- 	}
-  	if (xSizeHint.flags & PMaxSize)
-  	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
-  	if (xSizeHint.flags & PMinSize)
-  	    geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
+	}
+	if (xSizeHint.flags & PMaxSize)
+	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
+	if (xSizeHint.flags & PMinSize)
+	    geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
     }
 
     windowWrapper()->resize( geom.size() );
@@ -622,17 +633,17 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     int init_state = NormalState;
     if ( isInitial)
     {
-        if ( session ) {
-            if ( session->iconified )
-	        init_state = IconicState;
-        } else {
-            // find out the initial state. Several possibilities exist
-            XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
-            if (hints && (hints->flags & StateHint))
-	        init_state = hints->initial_state;
-            if (hints)
-                XFree(hints);
-        }
+	if ( session ) {
+	    if ( session->iconified )
+		init_state = IconicState;
+	} else {
+	    // find out the initial state. Several possibilities exist
+	    XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
+	    if (hints && (hints->flags & StateHint))
+		init_state = hints->initial_state;
+	    if (hints)
+		XFree(hints);
+	}
     }
 
     // initial desktop placement - note we don't clobber desk if it is
@@ -754,19 +765,19 @@ void Client::fetchName()
     if ( info->name()  ) {
 	s = QString::fromUtf8( info->name() );
     } else {
-        XTextProperty tp;
-        char **text;
-        int count;
-        if ( XGetTextProperty( qt_xdisplay(), win, &tp, XA_WM_NAME) != 0 && tp.value != NULL ) {
-            if ( tp.encoding == XA_STRING )
-                s = QString::fromLocal8Bit( (const char*) tp.value );
-            else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success &&
-                      text != NULL && count > 0 ) {
-                s = QString::fromLocal8Bit( text[0] );
-                XFreeStringList( text );
-            }
-            XFree( tp.value );
-        }
+	XTextProperty tp;
+	char **text;
+	int count;
+	if ( XGetTextProperty( qt_xdisplay(), win, &tp, XA_WM_NAME) != 0 && tp.value != NULL ) {
+	    if ( tp.encoding == XA_STRING )
+		s = QString::fromLocal8Bit( (const char*) tp.value );
+	    else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success &&
+		      text != NULL && count > 0 ) {
+		s = QString::fromLocal8Bit( text[0] );
+		XFreeStringList( text );
+	    }
+	    XFree( tp.value );
+	}
     }
 
     if ( s != caption() ) {
@@ -908,8 +919,8 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	    withdraw();
 	break;
     case NormalState:
-  	if ( !windowWrapper()->isVisibleTo( 0 ) && !e.send_event )
-  	    return TRUE; // this event was produced by us as well
+	if ( !windowWrapper()->isVisibleTo( 0 ) && !e.send_event )
+	    return TRUE; // this event was produced by us as well
 
 	// maybe we will be destroyed soon. Check this first.
 	XEvent ev;
@@ -1019,7 +1030,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	if ( windowType() == NET::Normal && may_move ) {
 	    // crap for broken netscape
 	    QRect area = workspace()->clientArea();
-	    if ( !area.contains( np ) && width() < area.width()  &&
+	    if ( !area.contains( np ) && width() < area.width()	 &&
 		 height() < area.height() ) {
 		if ( np.x() < area.x() )
 		    np.rx() = area.x();
@@ -1105,7 +1116,7 @@ bool Client::propertyNotify( XPropertyEvent& e )
 	fetchName();
 	break;
     case XA_WM_TRANSIENT_FOR:
-    	Window ww;
+	Window ww;
 	if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) ) {
 	    transient_for = None;
 	    transient_for_defined = FALSE;
@@ -1249,11 +1260,11 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     }
 
     if (xSizeHint.flags & PMaxSize) {
- 	w = QMIN( xSizeHint.max_width, w );
+	w = QMIN( xSizeHint.max_width, w );
 	h = QMIN( xSizeHint.max_height, h );
     }
     if (xSizeHint.flags & PMinSize) {
- 	w = QMAX( xSizeHint.min_width, w );
+	w = QMAX( xSizeHint.min_width, w );
 	h = QMAX( xSizeHint.min_height, h );
     }
 
@@ -1263,7 +1274,7 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     int ww = wwrap->width();
     int wh = 0;
     if ( !wwrap->testWState( WState_ForceHide ) )
- 	wh = wwrap->height();
+	wh = wwrap->height();
 
     if ( ignore_height && wsize.height() == 0 )
 	h = 0;
@@ -1282,7 +1293,7 @@ bool Client::isResizable() const
 
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
 	return TRUE;
-    return ( xSizeHint.min_width != xSizeHint.max_width  ) ||
+    return ( xSizeHint.min_width != xSizeHint.max_width	 ) ||
 	  ( xSizeHint.min_height != xSizeHint.max_height  );
 }
 
@@ -1332,19 +1343,19 @@ void Client::mousePressEvent( QMouseEvent * e)
 	if ( !wantsInput() ) // we cannot be active, use it anyway
 	    active = TRUE;
 	
-        if ( e->button() == LeftButton ) {
+	if ( e->button() == LeftButton ) {
 	    mouseMoveEvent( e );
 	    buttonDown = TRUE;
 	    moveOffset = e->pos();
 	    invertedMoveOffset = rect().bottomRight() - e->pos();
 	    com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-        }
-        else if ( e->button() == MidButton ) {
+	}
+	else if ( e->button() == MidButton ) {
 	    com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-        }
-        else if ( e->button() == RightButton ) {
+	}
+	else if ( e->button() == RightButton ) {
 	    com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-        }
+	}
     }
     performMouseCommand( com, e->globalPos());
 }
@@ -1442,28 +1453,28 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     geom = geometry();
     switch ( mode ) {
     case TopLeft:
-	geom =  QRect( mp, geometry().bottomRight() ) ;
+	geom =	QRect( mp, geometry().bottomRight() ) ;
 	break;
     case BottomRight:
-	geom =  QRect( geometry().topLeft(), p ) ;
+	geom =	QRect( geometry().topLeft(), p ) ;
 	break;
     case BottomLeft:
-	geom =  QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), p.y()) ) ;
+	geom =	QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), p.y()) ) ;
 	break;
     case TopRight:
-	geom =  QRect( QPoint(geometry().x(), mp.y() ), QPoint( p.x(), geometry().bottom()) ) ;
+	geom =	QRect( QPoint(geometry().x(), mp.y() ), QPoint( p.x(), geometry().bottom()) ) ;
 	break;
     case Top:
-	geom =  QRect( QPoint( geometry().left(), mp.y() ), geometry().bottomRight() ) ;
+	geom =	QRect( QPoint( geometry().left(), mp.y() ), geometry().bottomRight() ) ;
 	break;
     case Bottom:
-	geom =  QRect( geometry().topLeft(), QPoint( geometry().right(), p.y() ) ) ;
+	geom =	QRect( geometry().topLeft(), QPoint( geometry().right(), p.y() ) ) ;
 	break;
     case Left:
-	geom =  QRect( QPoint( mp.x(), geometry().top() ), geometry().bottomRight() ) ;
+	geom =	QRect( QPoint( mp.x(), geometry().top() ), geometry().bottomRight() ) ;
 	break;
     case Right:
-	geom =  QRect( geometry().topLeft(), QPoint( p.x(), geometry().bottom() ) ) ;
+	geom =	QRect( geometry().topLeft(), QPoint( p.x(), geometry().bottom() ) ) ;
 	break;
     case Center:
 	geom.moveTopLeft( pp );
@@ -1477,16 +1488,16 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     int marge = 5;
 
     if ( isResize() && geom.size() != size() ) {
-        if (geom.bottom() < desktopArea.top()+marge)
-            geom.setBottom(desktopArea.top()+marge);
-        if (geom.top() > desktopArea.bottom()-marge)
-            geom.setTop(desktopArea.bottom()-marge);
-        if (geom.right() < desktopArea.left()+marge)
-            geom.setRight(desktopArea.left()+marge);
-        if (geom.left() > desktopArea.right()-marge)
-            geom.setLeft(desktopArea.right()-marge);
+	if (geom.bottom() < desktopArea.top()+marge)
+	    geom.setBottom(desktopArea.top()+marge);
+	if (geom.top() > desktopArea.bottom()-marge)
+	    geom.setTop(desktopArea.bottom()-marge);
+	if (geom.right() < desktopArea.left()+marge)
+	    geom.setRight(desktopArea.left()+marge);
+	if (geom.left() > desktopArea.right()-marge)
+	    geom.setLeft(desktopArea.right()-marge);
 
-        geom.setSize( adjustedSize( geom.size() ) );
+	geom.setSize( adjustedSize( geom.size() ) );
 	if  (options->resizeMode == Options::Opaque ) {
 	    setGeometry( geom );
 	} else if ( options->resizeMode == Options::Transparent ) {
@@ -1496,23 +1507,23 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     }
     else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
 	geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
-        if (geom.bottom() < desktopArea.top()+marge)
-            geom.moveBottomLeft( QPoint( geom.left(), desktopArea.top()+marge));
-        if (geom.top() > desktopArea.bottom()-marge)
-            geom.moveTopLeft( QPoint( geom.left(), desktopArea.bottom()-marge));
-        if (geom.right() < desktopArea.left()+marge)
-            geom.moveTopRight( QPoint( desktopArea.left()+marge, geom.top()));
-        if (geom.left() > desktopArea.right()-marge)
-            geom.moveTopLeft( QPoint( desktopArea.right()-marge, geom.top()));
-        switch ( options->moveMode ) {
-        case Options::Opaque:
-            move( geom.topLeft() );
-            break;
-        case Options::Transparent:
-            clearbound();
-            drawbound( geom );
-            break;
-        }
+	if (geom.bottom() < desktopArea.top()+marge)
+	    geom.moveBottomLeft( QPoint( geom.left(), desktopArea.top()+marge));
+	if (geom.top() > desktopArea.bottom()-marge)
+	    geom.moveTopLeft( QPoint( geom.left(), desktopArea.bottom()-marge));
+	if (geom.right() < desktopArea.left()+marge)
+	    geom.moveTopRight( QPoint( desktopArea.left()+marge, geom.top()));
+	if (geom.left() > desktopArea.right()-marge)
+	    geom.moveTopLeft( QPoint( desktopArea.right()-marge, geom.top()));
+	switch ( options->moveMode ) {
+	case Options::Opaque:
+	    move( geom.topLeft() );
+	    break;
+	case Options::Transparent:
+	    clearbound();
+	    drawbound( geom );
+	    break;
+	}
     }
 
 //     QApplication::syncX(); // process our own configure events synchronously.
@@ -1703,7 +1714,7 @@ void Client::iconify()
     }
     setMappingState( IconicState );
     Events::raise( Events::Iconify );
-    
+
     if ( (!isTransient() || mainClient() == this ) && isVisible() )
 	animateIconifyOrDeiconify( TRUE );
     hide();
@@ -1957,6 +1968,14 @@ void Client::gravitate( bool invert )
 bool Client::x11Event( XEvent * e)
 {
     if ( e->type == EnterNotify && ( e->xcrossing.mode == NotifyNormal || e->xcrossing.mode == NotifyUngrab ) ) {
+
+	if (options->shadeHover && isShade() && !isDesktop()) {
+	    delete shadeHoverTimer;
+	    shadeHoverTimer = new QTimer( this );
+	    connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
+	    shadeHoverTimer->start( options->shadeHoverInterval, TRUE );
+	}
+
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
@@ -1968,7 +1987,7 @@ bool Client::x11Event( XEvent * e)
 	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
 	}
 	
-	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse   && ( isDesktop() || isDock() || isMenu() ) )
+	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse	 && ( isDesktop() || isDock() || isMenu() ) )
 	    return TRUE;
 	
 	workspace()->requestFocus( this );
@@ -1982,6 +2001,10 @@ bool Client::x11Event( XEvent * e)
 	if ( lostMouse ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = 0;
+	    delete shadeHoverTimer;
+	    shadeHoverTimer = 0;
+	if ( hover_unshade )
+	    setShade( TRUE, 1 );
 	}
 	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
 	    if ( isActive() && lostMouse )
@@ -2072,19 +2095,34 @@ bool Client::isShade() const
     return shaded;
 }
 
-void Client::setShade( bool s )
+void Client::setShade( bool s, int hus )
 {
-    if ( shaded == s )
+    /* This case if when we think we are:
+       1. Getting shaded
+       2. Were already unshaded because of hover unshading
+       3. and this is not a hover shade operation.
+
+       This can happen when a window is hover unshaded and the user
+       double clicks on the title bar and wants the window to be unshaded
+    */
+    if ( s && hover_unshade && !hus) {
+	hover_unshade = 0;
 	return;
+    }
+
+    hover_unshade = hus;
+
+    if ( shaded == s )
+    return;
+
+    shaded = s;
 
     if ( isVisible() )
 	Events::raise( s ? Events::ShadeDown : Events::ShadeUp );
 
-    shaded = s;
-
     int as = options->animateShade? 10 : 1;
 
-    if (shaded ) {
+    if ( shaded ) {
 	int h = height();
 	QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
 	windowWrapper()->hide();
@@ -2100,6 +2138,8 @@ void Client::setShade( bool s )
 	if ( !wasNorthWest )
 	    clearWFlags( WNorthWestGravity );
 	resize (s );
+	if (hus)
+	    workspace()->requestFocus( NULL );
     } else {
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
@@ -2111,12 +2151,14 @@ void Client::setShade( bool s )
 	    resize ( s.width(), h );
 	    // assume a border
 	    // we do not have time to wait for X to send us paint events
-  	    repaint( 0, h - step-5, width(), step+5, TRUE);
+	    repaint( 0, h - step-5, width(), step+5, TRUE);
 	    QApplication::syncX();
 	} while ( h < s.height() - step );
 	if ( !wasNorthWest )
 	    clearWFlags( WNorthWestGravity );
 	resize ( s );
+	if (hus)
+	    setActive( TRUE );
 	windowWrapper()->show();
 	activateLayout();
 	if ( isActive() )
@@ -2282,7 +2324,7 @@ void Client::setMask( const QRegion & reg)
  */
 Client* Client::mainClient()
 {
-    if  ( !isTransient() && transientFor() != 0 )
+    if	( !isTransient() && transientFor() != 0 )
 	return this;
     ClientList saveset;
     Client *n, *c = this;
@@ -2387,7 +2429,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
- 	grabMouse( arrowCursor );
+	grabMouse( arrowCursor );
 	grabKeyboard();
 	if ( options->moveMode != Options::Opaque )
 	    XGrabServer( qt_xdisplay() );
@@ -2618,26 +2660,12 @@ QCString Client::wmCommand()
 
 QCString Client::resourceName()
 {
-    QCString result;
-    XClassHint classHint;
-    if ( XGetClassHint( qt_xdisplay(), win, &classHint ) ) {
-	result = classHint.res_name;
-	XFree( classHint.res_name );
-	XFree( classHint.res_class );
-    }
-    return result;
+    return resource_name;
 }
 
 QCString Client::resourceClass()
 {
-    QCString result;
-    XClassHint classHint;
-    if ( XGetClassHint( qt_xdisplay(), win, &classHint ) ) {
-	result = classHint.res_class;
-	XFree( classHint.res_name );
-	XFree( classHint.res_class );
-    }
-    return result;
+    return resource_class;
 }
 
 
@@ -2791,8 +2819,8 @@ void Client::animateIconifyOrDeiconify( bool iconify)
 	XFlush(qt_xdisplay());
 	XSync( qt_xdisplay(), FALSE );
 	diff = t.elapsed();
- 	if (diff > step)
- 	    diff = step;
+	if (diff > step)
+	    diff = step;
 	area.setLeft(before.left() + int(diff*lf));
 	area.setRight(before.right() + int(diff*rf));
 	area.setTop(before.top() + int(diff*tf));
@@ -2838,6 +2866,13 @@ void Client::autoRaise()
     autoRaiseTimer = 0;
 }
 
+void Client::shadeHover()
+{
+    setShade(FALSE, 1);
+    delete shadeHoverTimer;
+    shadeHoverTimer = 0;
+}
+
 /*!
   Clones settings from other client. Used in
   Workspace::slotResetAllClients()
@@ -2874,7 +2909,7 @@ void Client::verifyTransientFor()
 	    transient_for != workspace()->rootWin() &&
 	    !workspace()->findClient( transient_for ) ) {
 	wins = 0;
-	int r = XQueryTree(qt_xdisplay(), transient_for, &root_return, &parent_return,  &wins, &nwins);
+	int r = XQueryTree(qt_xdisplay(), transient_for, &root_return, &parent_return,	&wins, &nwins);
 	if ( wins )
 	    XFree((void *) wins);
 	if ( r == 0)

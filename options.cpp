@@ -175,6 +175,9 @@ void Options::reload()
     autoRaise = config->readBoolEntry("AutoRaise", FALSE );
     autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
 
+    shadeHover = config->readBoolEntry("ShadeHover", TRUE );
+    shadeHoverInterval = config->readNumEntry("ShadeHoverInterval", 250 );
+
     // important: autoRaise implies ClickRaise
     clickRaise = autoRaise || config->readBoolEntry("ClickRaise", FALSE );
 

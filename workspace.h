@@ -54,7 +54,12 @@ struct SessionInfo
 {
     QCString sessionId;
     QCString windowRole;
+
     QCString wmCommand; // compatibility
+
+    QCString resourceName; // for faked session info
+    QCString resourceClass;
+
     QRect geometry;
     QRect restore;
     int maximize;
@@ -64,8 +69,6 @@ struct SessionInfo
     bool shaded;
     bool staysOnTop;
 };
-
-
 
 
 class Shape {
@@ -305,6 +308,10 @@ private:
     QWidget* desktop_widget;
 
     QList<SessionInfo> session;
+    QList<SessionInfo> fakeSession;
+    void loadFakeSessionInfo();
+    void storeFakeSessionInfo( Client* c );
+    void writeFakeSessionInfo();
     QValueList<CascadingInfo> cci;
 
     Client* desktop_client;
