@@ -30,14 +30,17 @@ public:
     SystemClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~SystemClient(){;}
 protected:
+    void drawRoundFrame(QPainter &p, int x, int y, int w, int h);
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
- 
+    void showEvent( QShowEvent* );
+    void windowWrapperShowEvent( QShowEvent* );
     void mouseDoubleClickEvent( QMouseEvent * );
     void init();
     void captionChange( const QString& name );
     void stickyChange(bool on);
     void maximizeChange(bool m);
+    void doShape();
 private:
     SystemButton* button[4];
     QSpacerItem* titlebar;

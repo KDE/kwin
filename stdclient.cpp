@@ -196,8 +196,8 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     g->addWidget( windowWrapper(), 1, 1 );
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 
-    g->addColSpacing(0, 2);
-    g->addColSpacing(2, 2);
+    g->addColSpacing(0, 1);
+    g->addColSpacing(2, 1);
     g->addRowSpacing(2, 2);
 
 

@@ -95,6 +95,7 @@ static void create_pixmaps()
 
 }
 
+
 SystemButton::SystemButton(QWidget *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
@@ -187,6 +188,9 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     g->setRowStretch(1, 10);
     g->addWidget(windowWrapper(), 1, 1 );
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+
+    g->addColSpacing(0, 2);
+    g->addColSpacing(2, 2);
     g->addRowSpacing(2, 6);
 
     button[0] = new SystemButton(this, "close", close_bits);
@@ -210,13 +214,13 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
     hb->addItem(titlebar);
-    hb->addSpacing(2);
+    hb->addSpacing(3);
     hb->addWidget( button[1] );
     hb->addSpacing(2);
     hb->addWidget( button[2] );
     hb->addSpacing(2);
     hb->addWidget( button[3] );
-    hb->addSpacing(2);
+    hb->addSpacing(3);
 
     for ( int i = 0; i < 4; i++) {
         button[i]->setMouseTracking( TRUE );
@@ -227,7 +231,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
 void SystemClient::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
-
+    doShape();
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
         QPainter p( this );
 	QRect t = titlebar->geometry();
@@ -244,6 +248,36 @@ void SystemClient::captionChange( const QString& )
     repaint( titlebar->geometry(), false );
 }
 
+void SystemClient::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
+{
+    int x2=x+w-1, y2=y+h-1;
+    QPointArray hPntArray, lPntArray;
+    hPntArray.putPoints(0, 12, x+4,y+1, x+5,y+1, // top left
+                        x+3,y+2, x+2,y+3, x+1,y+4, x+1,y+5,
+                        x+1,y2-5, x+1,y2-4, x+2,y2-3, // half corners
+                        x2-5,y+1, x2-4,y+1, x2-3,y+2);
+
+    lPntArray.putPoints(0, 17, x2-5,y2-1, x2-4,y2-1, // btm right
+                        x2-3,y2-2, x2-2,y2-3, x2-1,y2-5, x2-1,y2-4,
+ 
+                        x+3,y2-2, x+4,y2-1, x+5,y2-1, //half corners
+                        x2-2,y+3, x2-1,y+4, x2-1,y+5,
+
+                        x2-5,y2-2, x2-4,y2-2, // testing
+                        x2-3,y2-3,
+                        x2-2,y2-5, x2-2,y2-4);
+
+    p.setPen(options->colorGroup(Options::Frame, isActive()).light());
+    p.drawLine(x+6, y, x2-6, y);
+    p.drawLine(0, y+6, 0, y2-6);
+    p.drawPoints(hPntArray);
+    p.setPen(options->colorGroup(Options::Frame, isActive()).dark());
+    p.drawLine(x+6, y2, x2-6, y2);
+    p.drawLine(x+6, y2-1, x2-6, y2-1);
+    p.drawLine(x2, y+6, x2, y2-6);
+    p.drawLine(x2-1, y+6, x2-1, y2-6);
+    p.drawPoints(lPntArray);
+}
 
 void SystemClient::paintEvent( QPaintEvent* )
 {
@@ -251,18 +285,13 @@ void SystemClient::paintEvent( QPaintEvent* )
     QRect t = titlebar->geometry();
     t.setTop( 1 );
 
-    p.setPen(Qt::black);
-    p.drawRect(rect());
     QBrush fillBrush(colorGroup().brush(QColorGroup::Background).pixmap() ?
                      colorGroup().brush(QColorGroup::Background) :
                      options->colorGroup(Options::Frame, isActive()).
                      brush(QColorGroup::Button));
 
-    qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-                    rect().height()-2,
-                    options->colorGroup(Options::Frame, isActive()), false, 1,
-                    &fillBrush);
-    
+    p.fillRect(rect(), fillBrush);
+    drawRoundFrame(p, 0, 0, width(), height());
     t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
@@ -286,21 +315,52 @@ void SystemClient::paintEvent( QPaintEvent* )
 
     p.drawText( t, AlignCenter, caption() );
 
-    qDrawShadePanel(&p, rect().x()+1, rect().bottom()-6, 24, 6,
-                    options->colorGroup(Options::Handle, isActive()), false);
-    p.drawTiledPixmap(rect().x()+2, rect().bottom()-5, 22, 4,
-                      isActive() ? *aHandlePix : *iHandlePix);
-
-    qDrawShadePanel(&p, rect().x()+25, rect().bottom()-6, rect().width()-50, 6,
-                    options->colorGroup(Options::Frame, isActive()), false);
-    p.drawTiledPixmap(rect().x()+26, rect().bottom()-5, rect().width()-52, 4,
-                      isActive() ? *aFramePix : *iFramePix);
-
-    qDrawShadePanel(&p, rect().right()-24, rect().bottom()-6, 24, 6,
-                    options->colorGroup(Options::Handle, isActive()), false);
-    p.drawTiledPixmap(rect().right()-23, rect().bottom()-5, 22, 4,
-                      isActive() ? *aHandlePix : *iHandlePix);
+    p.setPen(options->colorGroup(Options::Frame, isActive()).light());
+    p.drawLine(width()-20, height()-7, width()-10,  height()-7);
+    p.drawLine(width()-20, height()-5, width()-10,  height()-5);
+    p.setPen(options->colorGroup(Options::Frame, isActive()).dark());
+    p.drawLine(width()-20, height()-6, width()-10,  height()-6);
+    p.drawLine(width()-20, height()-4, width()-10,  height()-4);
 }
+
+#define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
+
+void SystemClient::doShape()
+{
+    // using a bunch of QRect lines seems much more efficent than bitmaps or
+    // point arrays
+    
+    QRegion mask(QRect(6, 0, width()-12, height()));
+    mask += QRegion(QRect(5, 1, 1, height()-2)); // left
+    mask += QRegion(QRect(4, 1, 1, height()-2));
+    mask += QRegion(QRect(3, 2, 1, height()-4));
+    mask += QRegion(QRect(2, 3, 1, height()-6));
+    mask += QRegion(QRect(1, 4, 1, height()-8));
+    mask += QRegion(QRect(0, 6, 1, height()-12));
+    int x2 = width()-1;
+    mask += QRegion(QRect(x2-5, 1, 1, height()-2)); // right
+    mask += QRegion(QRect(x2-4, 1, 1, height()-2));
+    mask += QRegion(QRect(x2-3, 2, 1, height()-4));
+    mask += QRegion(QRect(x2-2, 3, 1, height()-6));
+    mask += QRegion(QRect(x2-1, 4, 1, height()-8));
+    mask += QRegion(QRect(x2, 6, 1, height()-12));
+
+    setMask(mask);
+    
+
+}
+
+void SystemClient::showEvent(QShowEvent *ev)
+{
+    Client::showEvent(ev);
+    doShape();
+    repaint();
+}
+
+void SystemClient::windowWrapperShowEvent( QShowEvent* )
+{
+    doShape();
+}                                                                               
 
 void SystemClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
