@@ -26,7 +26,6 @@
 
 namespace Web
 {
-  using namespace KWinInternal;
 
   class WebButtonSticky : public WebButton
   {
@@ -42,7 +41,7 @@ namespace Web
 
     protected slots:
 
-      void slotStickyChange(bool);
+      void slotOnAllDesktopsChange(bool);
 
     signals:
 

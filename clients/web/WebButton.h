@@ -24,14 +24,13 @@
 
 #include <qwidget.h>
 #include <qbitmap.h>
+#include <qbutton.h>
 #include <klocale.h>
-#include "../../kwinbutton.h"
 
 namespace Web
 {
-  using namespace KWinInternal;
 
-  class WebButton : public KWinWidgetButton
+  class WebButton : public QButton
   {
     Q_OBJECT
 
@@ -53,6 +52,8 @@ namespace Web
 
       void setShape(bool);
 
+      void setTipText(const QString &tip);
+
     protected:
 
       virtual void clickEvent(int button) = 0;
@@ -68,7 +69,6 @@ namespace Web
       void resizeEvent(QResizeEvent *);
 
     private:
-
       QBitmap bitmap_;
 
       bool mouseOver_;

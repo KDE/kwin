@@ -26,7 +26,6 @@
 
 namespace Web
 {
-  using namespace KWinInternal;
 
   class WebButtonHelp : public WebButton
   {

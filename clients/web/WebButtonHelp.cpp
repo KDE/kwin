@@ -24,8 +24,6 @@
 
 namespace Web {
 
-using namespace KWinInternal;
-
 static unsigned char help_bits[] =
 {
    0x18, 0x18, 0x00, 0x1c, 0x18, 0x18, 0x18, 0x3c

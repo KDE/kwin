@@ -26,7 +26,6 @@
 
 namespace Web
 {
-  using namespace KWinInternal;
 
   class WebButtonIconify : public WebButton
   {
@@ -42,7 +41,7 @@ namespace Web
 
     signals:
 
-      void iconify();
+      void minimize();
   };
 }
 

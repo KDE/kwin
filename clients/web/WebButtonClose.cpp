@@ -23,8 +23,6 @@
 
 namespace Web {
 
-using namespace KWinInternal;
-
 static unsigned char close_bits[] =
 {
    0x42, 0xe7, 0x7e, 0x3c, 0x3c, 0x7e, 0xe7, 0x42

@@ -26,8 +26,7 @@
 
 namespace Web
 {
- using namespace KWinInternal;
-    
+
  class WebButtonClose : public WebButton
   {
     Q_OBJECT

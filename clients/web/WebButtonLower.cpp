@@ -23,8 +23,6 @@
 
 namespace Web {
 
-using namespace KWinInternal;
-
 static unsigned char lower_bits[] =
 {
    0x1f, 0x1f, 0x1f, 0xff, 0x8f, 0x88, 0x88, 0xf8

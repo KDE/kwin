@@ -24,7 +24,8 @@
 
 #include <qptrlist.h>
 
-#include <kwin/client.h>
+#include "../../lib/kdecoration.h"
+#include "../../lib/kdecorationfactory.h"
 
 class QLabel;
 class QSpacerItem;
@@ -32,28 +33,24 @@ class QBoxLayout;
 
 namespace Web
 {
-  using namespace KWinInternal;
 
   class WebButton;
 
-  class WebClient : public Client
+  class WebClient : public KDecoration
   {
     Q_OBJECT
 
     public:
 
-      WebClient
-        (
-         Workspace *,
-         WId,
-         bool tool,
-         QWidget * parent = 0,
-         const char * name = 0
-        );
-
+      WebClient(KDecorationBridge* bridge, KDecorationFactory* factory);
       ~WebClient();
 
+      virtual void init();
+      virtual void resize(const QSize&);
+      virtual bool eventFilter( QObject* o, QEvent* e );
+
     protected:
+      virtual void reset( unsigned long changed );
 
       virtual void resizeEvent(QResizeEvent *);
       virtual void paintEvent(QPaintEvent *);
@@ -61,30 +58,33 @@ namespace Web
       virtual void mouseDoubleClickEvent(QMouseEvent *);
 
       virtual void windowWrapperShowEvent(QShowEvent *);
-      virtual void captionChange(const QString &);
-      virtual void stickyChange(bool on);
-      virtual void maximizeChange(bool);
+      virtual void captionChange();
+      virtual void desktopChange();
+      virtual void maximizeChange();
+      virtual void shadeChange() {};
+      virtual void activeChange();
+      virtual void iconChange();
       virtual void doShape();
-      virtual void activeChange(bool);
       virtual MousePosition mousePosition(const QPoint &) const;
-      virtual void animateIconifyOrDeiconify(bool);
+      virtual void borders(int&, int&, int&, int&) const;
+      virtual QSize minimumSize() const;
 
     protected slots:
 
-      void slotReset();
       void slotMaximize(int button);
 
     signals:
 
-      void stkyChange(bool);
+      void oadChange(bool);
       void maxChange(bool);
 
     private:
+      bool isTool();
 
       enum ButtonType
       {
         ButtonHelp,
-        ButtonSticky,
+        ButtonOnAllDesktops,
         ButtonMenu,
         ButtonSeparator,
         ButtonIconify,
@@ -93,8 +93,9 @@ namespace Web
         ButtonLower
       };
 
+      int titleHeight_, borderSize_;
+
       bool shape_;
-      bool tool_;
 
       WebButton *   _createButton(const QString &, QWidget *  parent);
       void          _createButtons();
@@ -107,6 +108,18 @@ namespace Web
 
       QPtrList<WebButton> leftButtonList_;
       QPtrList<WebButton> rightButtonList_;
+  };
+
+  class WebFactory : public QObject, public KDecorationFactory
+  {
+    Q_OBJECT
+
+    public:
+
+      WebFactory() {};
+      virtual ~WebFactory() {};
+      virtual KDecoration* createDecoration( KDecorationBridge* );
+      virtual bool reset( unsigned long changed );
   };
 }
 

@@ -19,21 +19,24 @@
   Boston, MA 02111-1307, USA.
 */
 
+#include <qcursor.h>
 #include <qpainter.h>
+#include <qtooltip.h>
+#include "../../lib/kdecoration.h"
 
 #include "WebButton.h"
 
 namespace Web {
 
-using namespace KWinInternal;
-
 WebButton::WebButton(QWidget * parent, const QString& tip)
-  : KWinWidgetButton (parent, 0, 0, tip),
+  : QButton (parent, 0, 0),
     mouseOver_  (false),
     mouseDown_  (false),
     position_   (Mid),
     shape_      (false)
 {
+  setTipText(tip);
+  setCursor(ArrowCursor);
   setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
   setBackgroundMode(NoBackground);
 }
@@ -55,7 +58,7 @@ WebButton::mousePressEvent(QMouseEvent * e)
 {
   mouseDown_ = true;
   repaint();
-  KWinWidgetButton::mousePressEvent(e);
+  QButton::mousePressEvent(e);
 }
 
   void
@@ -68,7 +71,7 @@ WebButton::mouseReleaseEvent(QMouseEvent * e)
   {
     clickEvent(e->button());
   }
-  KWinWidgetButton::mouseReleaseEvent(e);
+  QButton::mouseReleaseEvent(e);
 }
 
   void
@@ -76,7 +79,7 @@ WebButton::enterEvent(QEvent * e)
 {
   mouseOver_ = true;
   repaint();
-  KWinWidgetButton::enterEvent(e);
+  QButton::enterEvent(e);
 }
 
   void
@@ -84,7 +87,7 @@ WebButton::leaveEvent(QEvent * e)
 {
   mouseOver_ = false;
   repaint();
-  KWinWidgetButton::leaveEvent(e);
+  QButton::leaveEvent(e);
 }
 
   void
@@ -250,6 +253,14 @@ WebButton::setPosition(Position p)
 WebButton::resizeEvent(QResizeEvent *)
 {
   repaint();
+}
+
+void
+WebButton::setTipText(const QString &tip) {
+  if(KDecoration::options()->showTooltips()) {
+    QToolTip::remove(this );
+    QToolTip::add(this, tip );
+  }
 }
 
 }

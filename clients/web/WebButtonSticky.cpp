@@ -22,8 +22,6 @@
 #include "WebButtonSticky.h"
 
 namespace Web {
-  
-using namespace KWinInternal;
 
 static unsigned char sticky_bits[] =
 {
@@ -36,7 +34,7 @@ static unsigned char unsticky_bits[] =
 };
 
 WebButtonSticky::WebButtonSticky(bool sticky, QWidget * parent)
-  : WebButton(parent, i18n("Sticky"))
+  : WebButton(parent, i18n("On All Desktops"))
 {
   QBitmap b(8, 8, sticky ? unsticky_bits : sticky_bits, true /* isXBitmap */);
   b.setMask(b);
@@ -44,12 +42,12 @@ WebButtonSticky::WebButtonSticky(bool sticky, QWidget * parent)
 }
 
   void
-WebButtonSticky::slotStickyChange(bool sticky)
+WebButtonSticky::slotOnAllDesktopsChange(bool sticky)
 {
   QBitmap b(8, 8, sticky ? unsticky_bits : sticky_bits, true /* isXBitmap */);
   b.setMask(b);
   setBitmap(b);
-  setTipText(sticky ? i18n("Un-Sticky") : i18n("Sticky"));
+  setTipText(sticky ? i18n("Not On All Desktops") : i18n("On All Desktops"));
 }
 
   void

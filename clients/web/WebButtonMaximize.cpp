@@ -23,8 +23,6 @@
 
 namespace Web {
 
-using namespace KWinInternal;
-
 static unsigned char maximize_bits[] =
 {
    0xfc, 0xf8, 0xf0, 0xe0, 0xc0, 0x80, 0x00, 0x00

@@ -19,73 +19,37 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include <unistd.h> // for usleep
-#include <math.h>
-
+#include <qlabel.h>
 #include <qlayout.h>
 #include <qpainter.h>
 
-#include <kwin/workspace.h>
-#include <netwm.h>
-#undef Bool
-
 #include <kconfig.h>
-#include <kstandarddirs.h>
-
-#include <kapplication.h>
-#include <kwin/options.h>
 
 #include "Web.h"
 #include "WebButton.h"
 #include "WebButtonHelp.h"
-#include "WebButtonIconify.h"
+#include "WebButtonIconify.h" // minimize button
 #include "WebButtonClose.h"
-#include "WebButtonSticky.h"
+#include "WebButtonSticky.h" // onAllDesktops button
 #include "WebButtonMaximize.h"
 #include "WebButtonLower.h"
 
-using namespace KWinInternal;
-
 extern "C"
 {
-  Client * allocate(Workspace * ws, WId w, int tool)
+  KDecorationFactory *create_factory()
   {
-    return new Web::WebClient(ws, w, tool != 0);
-  }
-
-  void init()
-  {
-    // Empty.
-  }
-
-  void reset()
-  {
-    Workspace::self()->slotResetAllClientsDelayed();
-    // Empty.
-  }
-
-  void deinit()
-  {
-    // Empty.
+    return new Web::WebFactory();
   }
 }
 
 namespace Web {
-  
-WebClient::WebClient(Workspace * ws, WId w, bool tool, QWidget * parent, const char * name)
-  : Client        (ws, w, parent, name, WResizeNoErase),
-    tool_         (tool),
+
+WebClient::WebClient(KDecorationBridge* bridge, KDecorationFactory* factory)
+  : KDecoration(bridge, factory),
     mainLayout_   (0),
     titleSpacer_  (0)
 {
-  setBackgroundMode(NoBackground);
-
-  _resetLayout();
-
-  leftButtonList_   .setAutoDelete(true);
-  rightButtonList_  .setAutoDelete(true);
-
-  connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
+  // Empty.
 }
 
 WebClient::~WebClient()
@@ -94,17 +58,88 @@ WebClient::~WebClient()
 }
 
   void
-WebClient::resizeEvent(QResizeEvent * e)
+WebClient::init()
 {
-  Client::resizeEvent(e);
-  doShape();
-  repaint();
+  createMainWidget(WNoAutoErase);
+  widget()->installEventFilter( this );
+  widget()->setBackgroundMode(NoBackground);
+
+  // title height
+  const uint textVMargin   = 2;
+  QFontMetrics fm(options()->font(isActive(), isTool()));
+  titleHeight_ = QMAX(14, fm.height() + textVMargin * 2);
+
+  // border size
+  switch(options()->preferredBorderSize()) {
+    case BorderLarge:
+      borderSize_ = 8;
+      break;
+    case BorderVeryLarge:
+      borderSize_ = 12;
+      break;
+    case BorderHuge:
+      borderSize_ = 16;
+      break;
+    case BorderTiny:
+    case BorderNormal:
+    default:
+      borderSize_ = 4;
+  }
+
+  _resetLayout();
+
+  leftButtonList_   .setAutoDelete(true);
+  rightButtonList_  .setAutoDelete(true);
 }
 
   void
-WebClient::captionChange(const QString &)
+WebClient::reset( unsigned long changed )
 {
-  repaint();
+  if (changed & SettingColors)
+  {
+    // repaint the whole thing
+    widget()->repaint(false);
+  } else if (changed & SettingFont) {
+    // font has changed -- update title height
+    // title height
+    const uint textVMargin   = 2;
+    QFontMetrics fm(options()->font(isActive(), isTool()));
+    titleHeight_ = QMAX(14, fm.height() + textVMargin * 2);
+    // update buttons
+    for (QPtrListIterator<WebButton> it(leftButtonList_); it.current(); ++it)
+    {
+      it.current()->setFixedSize(titleHeight_, titleHeight_);
+    }
+    for (QPtrListIterator<WebButton> it(rightButtonList_); it.current(); ++it)
+    {
+      it.current()->setFixedSize(titleHeight_, titleHeight_);
+    }
+//     for (int n=0; n<NumButtons; n++) {
+//         if (m_button[n]) m_button[n]->setSize(s_titleHeight-1);
+//     }
+    // update the spacer
+    titleSpacer_->changeSize(0, titleHeight_, QSizePolicy::Expanding,
+                             QSizePolicy::Fixed);
+    widget()->repaint(false);
+  }
+}
+
+  void
+WebClient::resizeEvent(QResizeEvent *)
+{
+  doShape();
+  widget()->repaint();
+}
+
+  void
+WebClient::captionChange()
+{
+  widget()->repaint();
+}
+
+void WebClient::iconChange()
+{
+// Empty.
 }
 
   void
@@ -113,18 +148,18 @@ WebClient::paintEvent(QPaintEvent * pe)
   QRect titleRect(titleSpacer_->geometry());
   titleRect.setTop(1);
 
-  QPainter p(this);
+  QPainter p(widget());
 
   p.setPen(Qt::black);
-  p.setBrush(colorGroup().background());
+  p.setBrush(options()->colorGroup(ColorFrame, isActive()).background());
 
   p.setClipRegion(pe->region() - titleRect);
 
-  p.drawRect(rect());
+  p.drawRect(widget()->rect());
 
   p.setClipRegion(pe->region());
 
-  p.fillRect(titleRect, options->color(Options::TitleBar, isActive()));
+  p.fillRect(titleRect, options()->color(ColorTitleBar, isActive()));
 
   if (shape_)
   {
@@ -164,9 +199,9 @@ WebClient::paintEvent(QPaintEvent * pe)
     p.drawPoint(r - 5, b - 2);
   }
 
-  p.setFont(options->font(isActive(), tool_));
+  p.setFont(options()->font(isActive(), isTool()));
 
-  p.setPen(options->color(Options::Font, isActive()));
+  p.setPen(options()->color(ColorFont, isActive()));
 
   p.drawText(titleSpacer_->geometry(), AlignCenter, caption());
 }
@@ -217,14 +252,14 @@ WebClient::doShape()
 WebClient::showEvent(QShowEvent *)
 {
   doShape();
-  repaint();
+  widget()->repaint();
 }
 
   void
 WebClient::windowWrapperShowEvent(QShowEvent *)
 {
   doShape();
-  repaint();
+  widget()->repaint();
 }
 
   void
@@ -232,30 +267,29 @@ WebClient::mouseDoubleClickEvent(QMouseEvent * e)
 {
   if (titleSpacer_->geometry().contains(e->pos()))
   {
-    workspace()
-      ->performWindowOperation(this, options->operationTitlebarDblClick());
+    titlebarDblClickOperation();
   }
 }
 
   void
-WebClient::stickyChange(bool b)
+WebClient::desktopChange()
 {
-  emit(stkyChange(b));
+  emit(oadChange(isOnAllDesktops()));
 }
 
   void
-WebClient::maximizeChange(bool b)
+WebClient::maximizeChange()
 {
-  emit(maxChange(b));
+  emit(maxChange(maximizeMode()==MaximizeFull));
 }
 
   void
-WebClient::activeChange(bool)
+WebClient::activeChange()
 {
-  repaint();
+  widget()->repaint();
 }
 
-  Client::MousePosition
+  WebClient::MousePosition
 WebClient::mousePosition(const QPoint & p) const
 {
   int x = p.x();
@@ -274,37 +308,30 @@ WebClient::mousePosition(const QPoint & p) const
       return Client::Top;
     else
 #endif
-      return Client::Center;
+      return KDecoration::Center;
   }
-  else if (y < height() - 4)
+  else if (y < height() - borderSize_)
   {
-    if (x < 4)
-      return Client::Left;
+    if (x < borderSize_)
+      return KDecoration::Left;
     else
-      if (x > width() - 4)
-        return Client::Right;
+      if (x > width() - borderSize_)
+        return KDecoration::Right;
       else
-        return Client::Center;
+        return KDecoration::Center;
   }
   else
   {
     if (x < 20)
-      return Client::BottomLeft;
+      return KDecoration::BottomLeft2;
     else
       if (x > width() - 20)
-        return Client::BottomRight;
+        return KDecoration::BottomRight2;
       else
-        return Client::Bottom;
+        return KDecoration::Bottom;
   }
 
-  return Client::mousePosition(p);
-}
-
-  void
-WebClient::slotReset()
-{
-  _resetLayout();
-  repaint();
+  return KDecoration::mousePosition(p);
 }
 
   void
@@ -313,16 +340,16 @@ WebClient::slotMaximize(int button)
   switch (button)
   {
     case MidButton:
-      maximize(MaximizeVertical);
+      maximize(maximizeMode() ^ MaximizeVertical);
       break;
 
     case RightButton:
-      maximize(MaximizeHorizontal);
+      maximize(maximizeMode() ^ MaximizeHorizontal);
       break;
 
     case LeftButton:
     default:
-      maximize(MaximizeFull);
+      maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull);
   }
 }
 
@@ -334,25 +361,25 @@ WebClient::_createButton(const QString & s, QWidget * parent)
   if (("Help" == s) && providesContextHelp())
   {
     b = new WebButtonHelp(parent);
-    connect(b, SIGNAL(help()), this, SLOT(contextHelp()));
+    connect(b, SIGNAL(help()), this, SLOT(showContextHelp()));
   }
 
-  else if ("Sticky" == s)
+  else if ("OnAllDesktops" == s)
   {
-    b = new WebButtonSticky(isSticky(), parent);
-    connect(b, SIGNAL(toggleSticky()), this, SLOT(toggleSticky()));
-    connect(this, SIGNAL(stkyChange(bool)), b, SLOT(slotStickyChange(bool)));
+    b = new WebButtonSticky(isOnAllDesktops(), parent);
+    connect(b, SIGNAL(toggleSticky()), this, SLOT(toggleOnAllDesktops()));
+    connect(this, SIGNAL(oadChange(bool)), b, SLOT(slotOnAllDesktopsChange(bool)));
   }
 
-  else if ("Iconify" == s && isMinimizable())
+  else if ("Minimize" == s && isMinimizable())
   {
     b = new WebButtonIconify(parent);
-    connect(b, SIGNAL(iconify()), this, SLOT(iconify()));
+    connect(b, SIGNAL(minimize()), this, SLOT(minimize()));
   }
 
   else if ("Maximize" == s && isMaximizable())
   {
-    b = new WebButtonMaximize(isMaximized(), parent);
+    b = new WebButtonMaximize((maximizeMode()==MaximizeFull), parent);
     connect(b, SIGNAL(maximize(int)), this, SLOT(slotMaximize(int)));
     connect(this, SIGNAL(maxChange(bool)), b, SLOT(slotMaximizeChange(bool)));
   }
@@ -383,31 +410,31 @@ WebClient::_createButtons()
   leftButtonList_   .clear();
   rightButtonList_  .clear();
 
-  QString buttons = options->titleButtonsLeft() + "|" + options->titleButtonsRight();
+  QString buttons = options()->titleButtonsLeft() + "|" + options()->titleButtonsRight();
   QPtrList<WebButton> *buttonList = &leftButtonList_;
   for (unsigned int i = 0; i < buttons.length(); ++i)
   {
     WebButton * tb = 0;
     switch (buttons[i].latin1())
     {
-      case 'S': // Sticky
-        tb = _createButton("Sticky", this);
+      case 'S': // OnAllDesktops
+        tb = _createButton("OnAllDesktops", widget());
         break;
 
       case 'H': // Help
-        tb = _createButton("Help", this);
+        tb = _createButton("Help", widget());
         break;
 
       case 'I': // Minimize
-        tb = _createButton("Iconify", this);
+        tb = _createButton("Minimize", widget());
         break;
 
       case 'A': // Maximize
-        tb = _createButton("Maximize", this);
+        tb = _createButton("Maximize", widget());
         break;
 
       case 'X': // Close
-        tb = _createButton("Close", this);
+        tb = _createButton("Close", widget());
         break;
 
       case '|':
@@ -428,7 +455,7 @@ WebClient::_createButtons()
   void
 WebClient::_resetLayout()
 {
-  KConfig c(locate("config", "kwinwebrc"));
+  KConfig c("kwinwebrc");
   c.setGroup("General");
   shape_ = c.readBoolEntry("Shape", true);
 
@@ -438,29 +465,24 @@ WebClient::_resetLayout()
   // |__|______________________________|__|
   // | |                                | |
   // | |                                | |
-  // | |     windowWrapper              | |
+  // | |     fake window                | |
   // | |                                | | <--- midLayout
   // | |                                | |
   // | |                                | |
   // | |________________________________| |
   // |____________________________________|
 
-  const uint sideMargin    = 4;
-  const uint bottomMargin  = 4;
-  const uint textVMargin   = 2;
+  const uint sideMargin    = borderSize_;
+  const uint bottomMargin  = borderSize_;
 
-  QFontMetrics fm(options->font(isActive(), tool_));
-
-  uint titleHeight = QMAX(14, fm.height() + textVMargin * 2);
-
-  if (0 != titleHeight % 2)
-    titleHeight += 1;
+  if (0 != titleHeight_ % 2)
+    titleHeight_ += 1;
 
   delete mainLayout_;
 
-  mainLayout_  = new QVBoxLayout(this, 0, 0);
+  mainLayout_  = new QVBoxLayout(widget(), 0, 0);
 
-  titleSpacer_ = new QSpacerItem ( 0, titleHeight, QSizePolicy::Expanding,
+  titleSpacer_ = new QSpacerItem ( 0, titleHeight_, QSizePolicy::Expanding,
       QSizePolicy::Fixed);
 
   QBoxLayout * topLayout = new QBoxLayout(mainLayout_, QBoxLayout::LeftToRight, 0, 0);
@@ -473,7 +495,7 @@ WebClient::_resetLayout()
   {
     topLayout->addWidget(it.current(), Qt::AlignVCenter);
     topLayout->setStretchFactor(it.current(), 0);
-    it.current()->setFixedSize(titleHeight, titleHeight);
+    it.current()->setFixedSize(titleHeight_, titleHeight_);
   }
 
   topLayout->addItem(titleSpacer_);
@@ -483,7 +505,7 @@ WebClient::_resetLayout()
   for (QPtrListIterator<WebButton> it(rightButtonList_); it.current(); ++it)
   {
     topLayout->addWidget(it.current(), Qt::AlignVCenter);
-    it.current()->setFixedSize(titleHeight, titleHeight);
+    it.current()->setFixedSize(titleHeight_, titleHeight_);
   }
 
   // -------------------------------------------------------------------
@@ -491,7 +513,7 @@ WebClient::_resetLayout()
   QHBoxLayout * midLayout   = new QHBoxLayout(mainLayout_, 0, 0);
 
   midLayout->addSpacing(sideMargin);
-  midLayout->addWidget(windowWrapper());
+  midLayout->addWidget(new QLabel( i18n( "<center><b>Web</b></center>" ), widget())); // fake window
   midLayout->addSpacing(sideMargin);
 
   // -------------------------------------------------------------------
@@ -505,10 +527,75 @@ WebClient::_resetLayout()
   mainLayout_->setStretchFactor(midLayout, 1);
 }
 
-  void
-WebClient::animateIconifyOrDeiconify(bool /* iconify */)
+void WebClient::borders(int& left, int& right, int& top, int& bottom) const
 {
-  // Nice and simple ;)
+    left = borderSize_;
+    right = borderSize_;
+    top =  titleHeight_;
+    bottom = borderSize_;
+}
+
+void WebClient::resize( const QSize& s )
+{
+    widget()->resize( s );
+}
+
+QSize WebClient::minimumSize() const
+{
+    return QSize( 200, 50 );
+}
+
+bool WebClient::isTool()
+{
+  NET::WindowType type = windowType(NET::NormalMask|NET::ToolbarMask|NET::UtilityMask|NET::MenuMask);
+  return ((type==NET::Toolbar)||(type==NET::NET::Utility)||(type==NET::Menu));
+}
+
+bool WebClient::eventFilter( QObject* o, QEvent* e )
+{
+    if( o != widget())
+    return false;
+    switch( e->type())
+    {
+    case QEvent::Resize:
+        resizeEvent(static_cast< QResizeEvent* >( e ) );
+        return true;
+    case QEvent::Paint:
+        paintEvent(static_cast< QPaintEvent* >( e ) );
+        return true;
+    case QEvent::MouseButtonDblClick:
+        mouseDoubleClickEvent(static_cast< QMouseEvent* >( e ) );
+        return true;
+    case QEvent::MouseButtonPress:
+        processMousePressEvent(static_cast< QMouseEvent* >( e ) );
+        return true;
+    default:
+        break;
+    }
+    return false;
+}
+
+
+KDecoration* WebFactory::createDecoration( KDecorationBridge* b )
+{
+  return(new WebClient(b, this));
+}
+
+bool WebFactory::reset(unsigned long changed)
+{
+  // Do we need to "hit the wooden hammer" ?
+  bool needHardReset = true;
+  if (changed & SettingColors || changed & SettingFont)
+  {
+    needHardReset = false;
+  }
+
+  if (needHardReset) {
+    return true;
+  } else {
+    resetDecorations(changed);
+    return false;
+  }
 }
 
 }

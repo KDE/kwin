@@ -1,7 +1,7 @@
 INCLUDES                  = -I$(top_srcdir) $(all_includes)
-kde_module_LTLIBRARIES    = kwin_web.la
+kde_module_LTLIBRARIES    = kwin3_web.la
 
-kwin_web_la_SOURCES     = \
+kwin3_web_la_SOURCES     = \
   Web.cpp \
   WebButton.cpp \
   WebButtonClose.cpp \
@@ -21,8 +21,8 @@ noinst_HEADERS            = \
   WebButtonMaximize.h \
   WebButtonSticky.h
 
-#kwin_web_la_LDFLAGS     = $(all_libraries) $(KDE_PLUGIN) -module
-kwin_web_la_LDFLAGS     = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
+kwin3_web_la_LDFLAGS      = $(all_libraries) $(KDE_PLUGIN) -module
+kwin3_web_la_LIBADD       = $(LIB_KDEUI) ../../lib/libkdecorations.la
 METASOURCES               = AUTO
 
 linkdir                   = $(kde_datadir)/kwin/
