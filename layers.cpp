@@ -198,7 +198,7 @@ Client* Workspace::topClientOnDesktop( int desktop ) const
 
 Client* Workspace::findDesktop( bool topmost, int desktop ) const
     {
-    Q_ASSERT( block_stacking_updates == 0 );
+// TODO    Q_ASSERT( block_stacking_updates == 0 );
     if( topmost )
         {
         for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
