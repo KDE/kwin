@@ -702,7 +702,7 @@ class KDecoration
          * NOTE: This function is new in KDE3.3. In order to support also KDE3.2,
          * it is recommended to use code like this:
          * \code
-         * int button = ... ;
+         * ButtonState button = ... ;
          * #if KDE_IS_VERSION( 3, 3, 0 )
          * maximize( button );
          * #else
