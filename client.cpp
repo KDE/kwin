@@ -674,11 +674,19 @@ void Client::fetchName()
     if ( info->name()  ) {
 	s = QString::fromUtf8( info->name() );
     } else {
-	char* c = 0;
-	if ( XFetchName( qt_xdisplay(), win, &c ) != 0 ) {
-	    s = QString::fromLocal8Bit( c );
-	    XFree( c );
-	}
+        XTextProperty tp;
+        char **text;
+        int count;
+        if ( XGetTextProperty( qt_xdisplay(), win, &tp, XA_WM_NAME) != 0 && tp.value != NULL ) {
+            if ( tp.encoding == XA_STRING )
+                s = QString::fromLocal8Bit( (const char*) tp.value );
+            else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success && 
+                      text != NULL && count > 0 ) {
+                s = QString::fromLocal8Bit( text[0] );
+                XFreeStringList( text );
+            }
+            XFree( tp.value );
+        }
     }
 
     if ( s != caption() ) {
