@@ -1617,8 +1617,10 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         desk_popup = new QPopupMenu( popup );
         desk_popup->setCheckable( TRUE );
         desk_popup->setFont(KGlobalSettings::menuFont());
-        connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
-        connect( desk_popup, SIGNAL( aboutToShow() ), this, SLOT( desktopPopupAboutToShow() ) );
+        connect( desk_popup, SIGNAL( activated(int) ),
+                 this, SLOT( sendToDesktop(int) ) );
+        connect( desk_popup, SIGNAL( aboutToShow() ),
+                 this, SLOT( desktopPopupAboutToShow() ) );
 
         popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").toString(), Options::MoveOp );
         popup->insertItem( i18n("&Size")+'\t'+keys->shortcut("Window Resize").toString(), Options::ResizeOp );
@@ -3131,8 +3133,14 @@ void Workspace::desktopPopupAboutToShow()
         if (i<BASE) {
             basic_name.prepend('&');
         }
-        id = desk_popup->insertItem( basic_name.arg(i).arg( desktopName(i) ), i );
-        if ( popup_client && !popup_client->isSticky() && popup_client->desktop()  == i )
+        id = desk_popup->insertItem(
+                basic_name
+                    .arg(i)
+                    .arg( desktopName(i).replace( QRegExp("&"), "&&" )),
+                i
+        );
+        if ( popup_client &&
+             !popup_client->isSticky() && popup_client->desktop()  == i )
             desk_popup->setItemChecked( id, TRUE );
     }
 }
