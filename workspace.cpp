@@ -2991,6 +2991,10 @@ void Workspace::slotResetAllClients()
     block_focus = FALSE;
     if ( active )
         requestFocus( active );
+
+    // Add a dcop signal to allow other apps to know when the kwin client
+    // has been changed by via the titlebar decoration selection.
+    kapp->dcopClient()->emitDCOPSignal("dcopResetAllClients()", QByteArray() );
 }
 
 
