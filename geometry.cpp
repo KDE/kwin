@@ -217,11 +217,15 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     switch (opt)
         {
         case MaximizeArea:
-        case MaximizeFullArea:
             if (options->xineramaMaximizeEnabled)
                 return sarea;
             else
                 return warea;
+        case MaximizeFullArea:
+            if (options->xineramaMaximizeEnabled)
+                return desktopwidget->screenGeometry( desktopwidget->screenNumber( p ));
+            else
+                return desktopwidget->geometry();
         case PlacementArea:
             if (options->xineramaPlacementEnabled)
                 return sarea;
@@ -235,7 +239,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
         case WorkArea:
             return warea;
         case FullArea:
-            return QApplication::desktop()->geometry();
+            return desktopwidget->geometry();
         case ScreenArea:
             return sarea;
         }
