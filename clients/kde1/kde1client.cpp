@@ -191,7 +191,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     setFont(options->font(isActive() ));
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
-    QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
+    QGridLayout* g = new QGridLayout( this, 0, 0, 3, 2 );
     g->setRowStretch( 1, 10 );
     g->addWidget( windowWrapper(), 1, 1 );
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
@@ -299,9 +299,9 @@ void StdClient::resizeEvent( QResizeEvent* e)
     Client::resizeEvent( e );
     QRegion rr = rect();
     QRect t = titlebar->geometry();
-    t.setTop( 0 );
-    QRegion r = rr.subtract( QRect( t.x()+1, 0, t.width()-2, 1 ) );
-    setMask( r );
+//     t.setTop( 0 );
+//     QRegion r = rr.subtract( QRect( t.x()+1, 0, t.width()-2, 1 ) );
+//     setMask( r );
 
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
 	// manual clearing without the titlebar (we selected WResizeNoErase )
@@ -341,14 +341,15 @@ void StdClient::paintEvent( QPaintEvent* )
     r = r.subtract( t );
     p.setClipRegion( r );
     qDrawWinPanel( &p, rect(), colorGroup() );
-    t.setTop( 1 );
+//     t.setTop( 1 );
     p.setClipRegion( t );
-    t.setTop( 0 );
+//     t.setTop( 0 );
     p.fillRect( t, options->color(Options::TitleBar, isActive()));
-    p.setPen( options->color(Options::TitleBar, isActive()).light() );
-    p.drawLine(t.left(), t.top()+1,  t.right(), t.top()+1);
-    qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
-                     colorGroup(), true, 1 );
+//     p.setPen( options->color(Options::TitleBar, isActive()).light() );
+//     p.drawLine(t.left(), t.top()+1,  t.right(), t.top()+1);
+    if ( isActive() )
+	qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
+			 colorGroup(), true, 1 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
     p.setPen(options->color(Options::Font, isActive()));
@@ -433,12 +434,12 @@ StdToolClient::StdToolClient( Workspace *ws, WId w, QWidget *parent, const char 
     g->addColSpacing(0, 1);
     g->addColSpacing(2, 1);
     g->addRowSpacing(2, 2);
-    
+
     closeBtn = new QToolButton( this );
     connect( closeBtn, SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     closeBtn->setFixedSize( 13, 13);
     slotReset();
-    
+
     QHBoxLayout* hb = new QHBoxLayout;
     g->addLayout( hb, 0, 1 );
 
@@ -457,13 +458,13 @@ StdToolClient::~StdToolClient()
 void StdToolClient::resizeEvent( QResizeEvent* e )
 {
     Client::resizeEvent( e );
-    QRegion r = rect();
-    QRect t = titlebar->geometry();
-    t.setTop( 0 );
-    r = r.subtract( QRect(0, 0, width(), 1) );
-    r = r.subtract (QRect( 0, 0, 1, t.height() ) );
-    r = r.subtract (QRect( width()-1, 0, 1, t.height() ) );
-    setMask( r );
+//     QRegion r = rect();
+//     QRect t = titlebar->geometry();
+//     t.setTop( 0 );
+//     r = r.subtract( QRect(0, 0, width(), 1) );
+//     r = r.subtract (QRect( 0, 0, 1, t.height() ) );
+//     r = r.subtract (QRect( width()-1, 0, 1, t.height() ) );
+//     setMask( r );
 }
 
 void StdToolClient::paintEvent( QPaintEvent* )
@@ -474,7 +475,7 @@ void StdToolClient::paintEvent( QPaintEvent* )
     qDrawWinPanel( &p, r, colorGroup() );
     r.setTop( t.bottom()+1 );
     qDrawWinPanel( &p, r, colorGroup() );
-    p.fillRect( QRect( QPoint(t.topLeft() ), QPoint( width() - t.left(), t.bottom() ) ), 
+    p.fillRect( QRect( QPoint(t.topLeft() ), QPoint( width() - t.left(), t.bottom() ) ),
 		options->color(Options::TitleBar, isActive()));
     p.setPen( options->color(Options::TitleBar, isActive()).light() );
     t.setLeft( t.left() + 4 );
@@ -492,7 +493,7 @@ void StdToolClient::mouseDoubleClickEvent( QMouseEvent * e )
     workspace()->requestFocus( this );
 }
 
-void StdToolClient::init() 
+void StdToolClient::init()
 {
 }
 
@@ -500,7 +501,7 @@ void StdToolClient::captionChange( const QString& )
 {
     repaint( titlebar->geometry(), FALSE );
 }
- 
+
 void StdToolClient::activeChange( bool on )
 {
     Client::activeChange(on);
