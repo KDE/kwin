@@ -745,7 +745,7 @@ bool Workspace::destroyClient( Client* c)
     if ( !c )
         return FALSE;
 
-    if (c == popup_client)
+    if (c == popup_client && popup)
         popup->close();
 
     storeFakeSessionInfo( c );
