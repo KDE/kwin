@@ -2,5 +2,8 @@
 Encoding=UTF-8
 Name=B II
 Name[af]=B Ii
-Name[th]=ธีม B II
-X-KDE-Library=kwin_b2
+Name[fa]=B ۲
+Name[lo]= B II
+Name[th]=ชุดตกแต่ง B II
+Name[xx]=xxB IIxx
+X-KDE-Library=kwin3_b2
