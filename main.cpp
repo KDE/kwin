@@ -137,7 +137,7 @@ Application::Application( )
 
     syncX(); // trigger possible errors, there's still a chance to abort
     
-#ifdef XRANDR_SUPPORT
+#if (QT_VERSION-0 >= 0x030200) // XRANDR support
     connect( desktop(), SIGNAL( resized( int )), ws, SLOT( desktopResized()));
 #endif
 
