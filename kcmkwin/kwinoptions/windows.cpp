@@ -1199,28 +1199,28 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   QGridLayout *gLay = new QGridLayout(vLay,4,2,KDialog::spacingHint());
   gLay->setColStretch(1,1);
 
-  activeWindowTransparency = new QCheckBox(i18n("Active windows"),tGroup);
+  activeWindowTransparency = new QCheckBox(i18n("Active windows:"),tGroup);
   gLay->addWidget(activeWindowTransparency,0,0);
   activeWindowOpacity = new KIntNumInput(100, tGroup);
   activeWindowOpacity->setRange(0,100);
   activeWindowOpacity->setSuffix("%");
   gLay->addWidget(activeWindowOpacity,0,1);
 
-  inactiveWindowTransparency = new QCheckBox(i18n("Inactive windows"),tGroup);
+  inactiveWindowTransparency = new QCheckBox(i18n("Inactive windows:"),tGroup);
   gLay->addWidget(inactiveWindowTransparency,1,0);
   inactiveWindowOpacity = new KIntNumInput(100, tGroup);
   inactiveWindowOpacity->setRange(0,100);
   inactiveWindowOpacity->setSuffix("%");
   gLay->addWidget(inactiveWindowOpacity,1,1);
 
-  movingWindowTransparency = new QCheckBox(i18n("Moving windows"),tGroup);
+  movingWindowTransparency = new QCheckBox(i18n("Moving windows:"),tGroup);
   gLay->addWidget(movingWindowTransparency,2,0);
   movingWindowOpacity = new KIntNumInput(100, tGroup);
   movingWindowOpacity->setRange(0,100);
   movingWindowOpacity->setSuffix("%");
   gLay->addWidget(movingWindowOpacity,2,1);
 
-  dockWindowTransparency = new QCheckBox(i18n("Dock windows"),tGroup);
+  dockWindowTransparency = new QCheckBox(i18n("Dock windows:"),tGroup);
   gLay->addWidget(dockWindowTransparency,3,0);
   dockWindowOpacity = new KIntNumInput(100, tGroup);
   dockWindowOpacity->setRange(0,100);
@@ -1242,42 +1242,42 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   QGridLayout *gLay2 = new QGridLayout(vLay2,6,2);
   gLay2->setColStretch(1,1);
 
-  QLabel *label1 = new QLabel(i18n("Active window size"),sGroup);
+  QLabel *label1 = new QLabel(i18n("Active window size:"),sGroup);
   gLay2->addWidget(label1,0,0);
   activeWindowShadowSize = new KIntNumInput(12,sGroup);
   activeWindowShadowSize->setRange(0,32);
 //   activeWindowShadowSize->setSuffix("px");
   gLay2->addWidget(activeWindowShadowSize,0,1);
 
-  QLabel *label2 = new QLabel(i18n("Inactive window size"),sGroup);
+  QLabel *label2 = new QLabel(i18n("Inactive window size:"),sGroup);
   gLay2->addWidget(label2,1,0);
   inactiveWindowShadowSize = new KIntNumInput(6,sGroup);
   inactiveWindowShadowSize->setRange(0,32);
 //   inactiveWindowShadowSize->setSuffix("px");
   gLay2->addWidget(inactiveWindowShadowSize,1,1);
 
-  QLabel *label3 = new QLabel(i18n("Dock window size"),sGroup);
+  QLabel *label3 = new QLabel(i18n("Dock window size:"),sGroup);
   gLay2->addWidget(label3,2,0);
   dockWindowShadowSize = new KIntNumInput(6,sGroup);
   dockWindowShadowSize->setRange(0,32);
 //   dockWindowShadowSize->setSuffix("px");
   gLay2->addWidget(dockWindowShadowSize,2,1);
 
-  QLabel *label4 = new QLabel(i18n("Vertical offset"),sGroup);
+  QLabel *label4 = new QLabel(i18n("Vertical offset:"),sGroup);
   gLay2->addWidget(label4,3,0);
   shadowTopOffset = new KIntNumInput(80,sGroup);
   shadowTopOffset->setSuffix("%");
   shadowTopOffset->setRange(-200,200);
   gLay2->addWidget(shadowTopOffset,3,1);
 
-  QLabel *label5 = new QLabel(i18n("Horizontal offset"),sGroup);
+  QLabel *label5 = new QLabel(i18n("Horizontal offset:"),sGroup);
   gLay2->addWidget(label5,4,0);
   shadowLeftOffset = new KIntNumInput(0,sGroup);
   shadowLeftOffset->setSuffix("%");
   shadowLeftOffset->setRange(-200,200);
   gLay2->addWidget(shadowLeftOffset,4,1);
 
-  QLabel *label6 = new QLabel(i18n("Shadow color"),sGroup);
+  QLabel *label6 = new QLabel(i18n("Shadow color:"),sGroup);
   gLay2->addWidget(label6,5,0);
   shadowColor = new KColorButton(Qt::black,sGroup);
   gLay2->addWidget(shadowColor,5,1);
@@ -1294,10 +1294,10 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   fadeOnOpacityChange = new QCheckBox(i18n("Fade between opacity changes"),eGroup);
   fadeInSpeed = new KIntNumInput(100, eGroup);
   fadeInSpeed->setRange(1,100);
-  fadeInSpeed->setLabel("Fade-in Speed");
+  fadeInSpeed->setLabel("Fade-in speed:");
   fadeOutSpeed = new KIntNumInput(100, eGroup);
   fadeOutSpeed->setRange(1,100);
-  fadeOutSpeed->setLabel("Fade-out Speed");
+  fadeOutSpeed->setLabel("Fade-out speed:");
   vLay3->addWidget(fadeInWindows);
   vLay3->addWidget(fadeOnOpacityChange);
   vLay3->addWidget(fadeInSpeed);
