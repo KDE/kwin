@@ -210,16 +210,16 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(2, 4);
     g->addColSpacing(2, 12);
     
-    button[0] = new SystemButton(24, 12, this, "close", close_bits);
-    button[1] = new SystemButton(16, 12, this, "sticky");
+    button[0] = new SystemButton(28, 12, this, "close", close_bits);
+    button[1] = new SystemButton(18, 12, this, "sticky");
     if(isSticky())
         button[1]->setBitmap(unsticky_bits);
     else
         button[1]->setBitmap(sticky_bits);
-    button[2] = new SystemButton(24, 12, this, "iconify", iconify_bits);
-    button[3] = new SystemButton(24, 12, this, "maximize", maximize_bits);
+    button[2] = new SystemButton(28, 12, this, "iconify", iconify_bits);
+    button[3] = new SystemButton(28, 12, this, "maximize", maximize_bits);
     if(help){
-        button[4] = new SystemButton(16, 12, this, "help", question_bits);
+        button[4] = new SystemButton(18, 12, this, "help", question_bits);
         connect( button[4], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
     else
@@ -330,7 +330,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawLine(rBtn->x()-1, rBtn->y()+12, x2, rBtn->y()+12);
 
     rBtn = button[0];
-    x2 = button[0]->x()+24;
+    x2 = button[0]->x()+28;
     p.setPen(g.dark());
     p.drawLine(rBtn->x()-1, rBtn->y()-1, x2, rBtn->y()-1);
     p.drawLine(rBtn->x()-1, rBtn->y()-1, rBtn->x()-1, rBtn->y()+12);
