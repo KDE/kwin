@@ -95,7 +95,7 @@ void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client
     while ( c )
         {
         if ( ((desktop == -1) || c->isOnDesktop(desktop))
-             && (!c->isMinimized() || !c->isTransient() || c->isUtility()) && c->wantsTabFocus() )
+             && c->wantsTabFocus() )
             {
             if ( start == c )
                 {
