@@ -19,7 +19,21 @@ public:
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
+    int last_button;
+    
 protected:
+    void mousePressEvent( QMouseEvent* e )
+    {
+	last_button = e->button();
+	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QButton::mousePressEvent( &me );
+    }
+    void mouseReleaseEvent( QMouseEvent* e )
+    {
+	last_button = e->button();
+	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QButton::mouseReleaseEvent( &me );
+    }
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     QSize defaultSize;
@@ -51,13 +65,14 @@ protected:
     void updateActiveBuffer();
 protected slots:
     void slotReset();
+    void slotMaximize();
 private:
     SystemButton* button[5];
     QSpacerItem* titlebar;
     bool hiddenItems;
     QHBoxLayout *hb;
     KPixmap activeBuffer;
-};                      
+};
 
 
 

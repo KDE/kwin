@@ -2158,7 +2158,7 @@ void Workspace::clientPopupAboutToShow()
 	return;
     popup->setItemEnabled( Options::ResizeOp, popup_client->isResizable() );
     popup->setItemEnabled( Options::MoveOp, popup_client->isMovable() );
-    popup->setItemEnabled( Options::MaximizeOp, popup_client->isResizable()  && !popup_client->isTransient() );
+    popup->setItemEnabled( Options::MaximizeOp, popup_client->isMaximizable() );
     popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
     popup->setItemChecked( Options::StaysOnTopOp, popup_client->staysOnTop() );
@@ -2700,6 +2700,11 @@ void Workspace::updateClientArea()
 	r.size.height = area.height();
 	for( int i = 1; i <= numberOfDesktops(); i++)
 	    rootInfo->setWorkArea( i, r );
+	
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	    if ( (*it)->isMaximized() )
+		(*it)->maximize( Client::MaximizeAdjust );
+	}
     }
 }
 

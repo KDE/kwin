@@ -342,7 +342,7 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     connect( button[BtnClose], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     connect( button[BtnSticky], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
     connect( button[BtnIconify], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    connect( button[BtnMax], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
+    connect( button[BtnMax], SIGNAL( clicked() ), this, ( SLOT( slotMaximize() ) ) );
 
     hb = new QHBoxLayout();
     hb->setResizeMode(QLayout::FreeResize);
@@ -359,7 +359,7 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     hb->addWidget( button[BtnSticky]);
     hb->addWidget( button[BtnIconify]);
     hb->addWidget( button[BtnMax]);
-    
+
     if ( isTransient() ) {
 	button[BtnSticky]->hide();
 	button[BtnIconify]->hide();
@@ -367,6 +367,16 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     }
 
     hiddenItems = false;
+}
+
+void KDEClient::slotMaximize()
+{
+    if ( button[BtnMax]->last_button == MidButton )
+	maximize( MaximizeVertical );
+    else if ( button[BtnMax]->last_button == RightButton )
+	maximize( MaximizeHorizontal );
+    else
+	maximize();
 }
 
 void KDEClient::resizeEvent( QResizeEvent* e)

@@ -492,7 +492,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
-	if ( geom == QApplication::desktop()->geometry() )
+	if ( geom == workspace()->geometry() )
 	    may_move = FALSE; // don't let fullscreen windows be moved around
     }  else {
 	QRect area = workspace()->clientArea();
@@ -1105,6 +1105,16 @@ bool Client::isResizable() const
 	  ( xSizeHint.min_height != xSizeHint.max_height  );
 }
 
+/*
+  Returns whether the window is maximizable or not
+ */
+bool Client::isMaximizable() const
+{
+    if ( isMaximized() )
+	return TRUE;
+    return isResizable() && !isTransient();
+}
+
 
 /*!
   Reimplemented to provide move/resize
@@ -1208,6 +1218,11 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	QPoint p( e->pos() - moveOffset );
 	if (p.manhattanLength() >= 6) {
 	    moveResizeMode = TRUE;
+	    if ( isMaximized() ) {
+		// in case we were maximized, reset state
+		geom_restore = QRect(); 
+		maximizeChange(FALSE );
+	    }
 	    workspace()->setFocusChangeEnabled(false);
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
 	    grabMouse( cursor() ); // to keep the right cursor
@@ -1534,20 +1549,24 @@ void Client::killWindow()
 
 void Client::maximize( MaximizeMode m)
 {
-    if (!isMovable() || !isResizable() )
-       return;
+    if ( !isMaximizable() )
+	return;
 
     QRect clientArea = workspace()->clientArea();
 
     if (isShade())
 	setShade( FALSE );
 
-    if ( !geom_restore.isNull() )
-	m = MaximizeRestore;
+    if ( m == MaximizeAdjust ) {
+	m = max_mode;
+    } else {
+	if ( !geom_restore.isNull() )
+	    m = MaximizeRestore;
 
-    if ( m != MaximizeRestore ) {
-	Events::raise( Events::Maximize );
-	geom_restore = geometry();
+	if ( m != MaximizeRestore ) {
+	    Events::raise( Events::Maximize );
+	    geom_restore = geometry();
+	}
     }
 
     switch (m) {
@@ -1573,18 +1592,27 @@ void Client::maximize( MaximizeMode m)
     case MaximizeRestore: {
 	Events::raise( Events::UnMaximize );
 	setGeometry(geom_restore);
-	QRect invalid;
-	geom_restore = invalid;
+	geom_restore = QRect();
 	info->setState( 0, NET::Max );
 	} break;
 
-    case MaximizeFull:
-
-	setGeometry(
-		    QRect(clientArea.topLeft(), adjustedSize(clientArea.size()))
-		    );
+    case MaximizeFull: {
+	QRect r = QRect(clientArea.topLeft(), adjustedSize(clientArea.size()));
+	
+	// hide right and left border of maximized windows
+	if ( r.left() == 0 )
+	    r.setLeft( r.left() - windowWrapper()->x() );
+	if ( r.right() == workspace()->geometry().right() )
+	    r.setRight( r.right() + width() -  windowWrapper()->geometry().right() );
+	setGeometry( r );
+	
 	info->setState( NET::Max, NET::Max );
+    } break;
+    default:
+	break;
     }
+
+    max_mode = m;
 
     maximizeChange( m != MaximizeRestore );
 }
@@ -1703,7 +1731,7 @@ bool Client::x11Event( XEvent * e)
 	workspace()->requestFocus( this );
 	return TRUE;
     }
-    
+
     if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
 	if ( !buttonDown )
 	    setCursor( arrowCursor );
@@ -1717,7 +1745,7 @@ bool Client::x11Event( XEvent * e)
 		workspace()->requestFocus( 0 ) ;
 	return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -1767,6 +1795,11 @@ Client::MousePosition Client::mousePosition( const QPoint& p ) const
  */
 void Client::setMouseCursor( MousePosition m )
 {
+    if ( !isResizable() ) {
+	setCursor( arrowCursor );
+	return;
+    }
+	
     switch ( m ) {
     case TopLeft:
     case BottomRight:
@@ -2082,6 +2115,11 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    break;
 	mode = Center;
 	moveResizeMode = TRUE;
+	if ( isMaximized() ) {
+	    // in case we were maximized, reset state
+	    geom_restore = QRect(); 
+	    maximizeChange(FALSE );
+	}
 	workspace()->setFocusChangeEnabled(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
@@ -2095,6 +2133,11 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	if (!isMovable())
 	    break;
 	moveResizeMode = TRUE;
+	if ( isMaximized() ) {
+	    // in case we were maximized, reset state
+	    geom_restore = QRect(); 
+	    maximizeChange(FALSE );
+	}
 	workspace()->setFocusChangeEnabled(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
@@ -2303,7 +2346,9 @@ bool Client::wantsTabFocus() const
  */
 bool Client::isMovable() const
 {
-    return may_move && ( windowType() == NET::Normal || windowType() == NET::Toolbar );
+    return may_move && 
+	( windowType() == NET::Normal || windowType() == NET::Toolbar ) &&
+	( !isMaximized() || max_mode != MaximizeFull );
 }
 
 bool Client::isDesktop() const

@@ -113,7 +113,8 @@ public:
     void giveUpShade();
 
     bool isMaximized() const;
-    enum MaximizeMode { MaximizeVertical, MaximizeHorizontal, MaximizeFull, MaximizeRestore };
+    enum MaximizeMode { MaximizeVertical, MaximizeHorizontal, MaximizeFull, MaximizeRestore, MaximizeAdjust };
+    bool isMaximizable() const;
 
     bool isSticky() const;
     void setSticky( bool );
@@ -264,6 +265,7 @@ private:
     QPixmap icon_pix;
     QPixmap miniicon_pix;
     QRect geom_restore;
+    MaximizeMode max_mode;
     QRegion mask;
     WinInfo* info;
     QTimer* autoRaiseTimer;
@@ -363,7 +365,6 @@ inline bool Client::shape() const
 {
     return is_shape;
 }
-
 
 inline const QRegion& Client::getMask() const
 {
