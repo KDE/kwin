@@ -262,8 +262,13 @@ Workspace::Workspace( bool restore )
 
     grabKey(XK_Tab, Mod1Mask);
     grabKey(XK_Tab, Mod1Mask | ShiftMask);
-    grabKey(XK_Tab, ControlMask);
-    grabKey(XK_Tab, ControlMask | ShiftMask);
+
+    // Do this unless the user disabled it...
+    if (options->useControlTab) {
+	grabKey(XK_Tab, ControlMask);
+	grabKey(XK_Tab, ControlMask | ShiftMask);
+    }
+
     createKeybindings();
     tab_box = new TabBox( this );
 

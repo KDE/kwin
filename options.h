@@ -95,6 +95,12 @@ public:
 
 
     /**
+       Control-TAB shortcut to switch virtual desktop.
+    */
+    bool useControlTab;
+
+
+    /**
        MoveResizeMode, either Tranparent or Opaque.
      */
     enum MoveResizeMode { Transparent, Opaque };
@@ -155,13 +161,13 @@ public:
      * the number of animation steps (would this be general?)
      */
     int windowSnapZone;
-    
-    
+
+
     /**
      * whether we animate the minimization of windows or not
      */
     bool  animateMinimize;
-    
+
     /**
      * Animation speed (0 .. 10 )
     */

@@ -162,6 +162,9 @@ void Options::reload()
     if ( val == "CDE" )
 	altTabStyle = CDE;
 
+    // Enable the grab of control-TAB?
+    useControlTab = config->readBoolEntry ("ControlTab", TRUE);
+
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;
     else if (val == "Random") placement = Random;
