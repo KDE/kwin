@@ -424,7 +424,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         }
     if( ac == NULL || ac->isDesktop())
         {
-        kdDebug() << "ALL NONE" << endl;
+        kdDebug( 1212 ) << "Activation: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
     if( time == 0 ) // explicitly asked not to get focus
@@ -432,7 +432,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
     // TODO window urgency  -> return true?
     if( Client::belongToSameApplication( c, ac, true ))
         {
-        kdDebug() << "ALL SAME" << endl;
+        kdDebug( 1212 ) << "Activation: Belongs to active application" << endl;
         return true;
         }
     if( time == -1U )  // no time known
@@ -440,14 +440,15 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
             return !was_user_interaction; // see Client::readUserTimeMapTimestamp()
         else
         {
-        kdDebug() << "ALL NOT SET" << endl;
+        kdDebug() << "Activation: No timestamp at all" << endl;
             // no timestamp at all, don't activate - because there's also creation timestamp
             // done on CreateNotify, this case should happen only in case application
             // maps again already used window, i.e. this won't happen after app startup
         return false; 
         }
     Time user_time = ac->userTime();
-    kdDebug() << "ALL TIME:" << time << ":" << user_time << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
+    kdDebug( 1212 ) << "Activation, compared:" << time << ":" << user_time
+        << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
     return timestampCompare( time, user_time ) >= 0; // time >= user_time
     }
 
@@ -559,7 +560,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
     const SessionInfo* session ) const
     {
     Time time = info->userTime();
-    kdDebug() << "READ1:" << time << endl;
+    kdDebug( 1212 ) << "User timestamp, initial:" << time << endl;
     // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0
     // helps e.g. with konqy reusing
     if( asn_data != NULL && time != 0
@@ -567,7 +568,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
             || ( asn_data->timestamp() != -1U
                 && timestampCompare( asn_data->timestamp(), time ) > 0 )))
         time = asn_data->timestamp();
-    kdDebug() << "READ2:" << time << endl;
+    kdDebug( 1212 ) << "User timestamp, ASN:" << time << endl;
     if( time == -1U )
         { // The window doesn't have any timestamp.
       // If it's the first window for its application
@@ -597,7 +598,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
                 }
             if( !first_window )
                 {
-                kdDebug() << "READ3:" << 0 << endl;
+                kdDebug( 1212 ) << "User timestamp, already exists:" << 0 << endl;
                 return 0; // refuse activation
                 }
             }
@@ -614,7 +615,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
             return -1U;
         time = readUserCreationTime();
         }
-    kdDebug() << "READ4:" << time << endl;
+    kdDebug( 1212 ) << "User timestamp, final:" << time << endl;
     return time;
     }
 
