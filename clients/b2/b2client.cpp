@@ -331,8 +331,7 @@ void B2Titlebar::mousePressEvent( QMouseEvent * e )
     }
     QMouseEvent _e(QEvent::MouseButtonPress, mapToParent(e->pos()),
         e->globalPos(), e->button(), e->state());
-    //client->widget()->mousePressEvent(&_e);
-    QWidget::mousePressEvent(&_e);
+    client->processMousePressEvent(&_e);
 }
 
 void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
@@ -341,7 +340,6 @@ void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
     QMouseEvent _e(QEvent::MouseButtonRelease, mapToParent(e->pos()),
         e->globalPos(), e->button(), e->state());
     //client->widget()->mouseReleaseEvent(&_e);
-    QWidget::mouseReleaseEvent(&_e);
 }
 
 void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
@@ -357,7 +355,6 @@ void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
 	QMouseEvent _e(QEvent::MouseMove, mapToParent(e->pos()),
 	    e->globalPos(), e->button(), e->state());
 	//client->widget()->mouseMoveEvent( &_e);
-	QWidget::mouseMoveEvent(&_e);
     }
 }
 #endif
