@@ -317,7 +317,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
             hb->addWidget(maxBtn);
             maxBtn->setFixedSize(20, 20);
         }
-        else if(val == "Close"){
+        else if((val == "Close") && isCloseable()){
             btn = new MyButton(this, "close", i18n("Close"));
             btn->setPixmap(*closePix);
             connect(btn, SIGNAL(clicked()), this, SLOT(closeWindow()));

@@ -179,13 +179,6 @@ int Shape::shapeEvent()
 
 bool Motif::noBorder( WId w )
 {
-    struct MwmHints {
-        ulong flags;
-        ulong functions;
-        ulong decorations;
-        long input_mode;
-        ulong status;
-    };
     Atom type;
     int format;
     unsigned long length, after;
@@ -199,7 +192,7 @@ bool Motif::noBorder( WId w )
     }
     bool result = FALSE;
     if ( hints ) {
-        if ( hints->flags & (1L << 1 ) ) { //  // MWM_HINTS_DECORATIONS;
+        if ( hints->flags & MWM_HINTS_DECORATIONS ) {
             if ( hints->decorations == 0 )
                 result = TRUE;
         }
@@ -208,8 +201,43 @@ bool Motif::noBorder( WId w )
     return result;
 }
 
-
-
+bool Motif::funcFlags( WId w, bool& resize, bool& move, bool& minimize,
+    bool& maximize, bool& close )
+{
+    Atom type;
+    int format;
+    unsigned long length, after;
+    unsigned char* data;
+    MwmHints* hints = 0;
+    if ( XGetWindowProperty( qt_xdisplay(), w, atoms->motif_wm_hints, 0, 5,
+                             FALSE, atoms->motif_wm_hints, &type, &format,
+                             &length, &after, &data ) == Success ) {
+        if ( data )
+            hints = (MwmHints*) data;
+    }
+    if ( hints ) {
+    // To quote from Metacity 'We support those MWM hints deemed non-stupid'
+        if ( hints->flags & MWM_HINTS_FUNCTIONS ) {
+            // if MWM_FUNC_ALL is set, other flags say what to turn _off_
+            bool set_value = (( hints->functions & MWM_FUNC_ALL ) == 0 );
+            resize = move = minimize = maximize = close = !set_value;
+            if( hints->functions & MWM_FUNC_RESIZE )
+                resize = set_value;
+            if( hints->functions & MWM_FUNC_MOVE )
+                move = set_value;
+            if( hints->functions & MWM_FUNC_MINIMIZE )
+                minimize = set_value;
+            if( hints->functions & MWM_FUNC_MAXIMIZE )
+                maximize = set_value;
+            if( hints->functions & MWM_FUNC_CLOSE )
+                close = set_value;
+            XFree( data );
+            return true;
+        }
+        XFree( data );
+    }
+    return false;
+}
 
 /*!
   Creates a new client for window \a w, depending on certain hints
@@ -397,7 +425,6 @@ void Workspace::init()
         NET::CloseWindow |
         NET::DesktopNames |
         NET::KDESystemTrayWindows |
-        NET::CloseWindow |
         NET::WMName |
         NET::WMVisibleName |
         NET::WMDesktop |
@@ -2949,6 +2976,7 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemEnabled( Options::IconifyOp, active_client->isMinimizable() );
     popup->setItemEnabled( Options::ToggleStoreSettingsOp, !active_client->isTransient() );
     popup->setItemChecked( Options::ToggleStoreSettingsOp, active_client->storeSettings() );
+    popup->setItemChecked( Options::CloseOp, active_client->isCloseable() );
 }
 
 

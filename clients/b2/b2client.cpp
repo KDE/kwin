@@ -495,7 +495,7 @@ void B2Client::addButtons(const QString& s, const QString tips[],
                 }
                 break;
             case 'X':  // Close button
-                if (!button[BtnClose]) {
+                if (isCloseable() && !button[BtnClose]) {
                     button[BtnClose]= new B2Button(this, tb, tips[BtnClose]);
                     button[BtnClose]->setPixmaps(P_CLOSE);
                     connect(button[BtnClose], SIGNAL(clicked()),

@@ -518,6 +518,10 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     stays_on_top = FALSE;
     is_shape = FALSE;
     may_move = TRUE;
+    may_resize = TRUE;
+    may_minimize = TRUE;
+    may_maximize = TRUE;
+    may_close = TRUE;
     is_fullscreen = FALSE;
     skip_taskbar = FALSE;
 
@@ -534,6 +538,15 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     max_mode = MaximizeRestore;
 
     cmap = None;
+
+    bool mresize, mmove, mminimize, mmaximize, mclose;
+    if( Motif::funcFlags( win, mresize, mmove, mminimize, mmaximize, mclose )) {
+        may_resize = mresize;
+        may_move = mmove;
+        may_minimize = mminimize;
+        may_maximize = mmaximize;
+        may_close = mclose;
+    }
 
     Window ww;
     if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
@@ -641,12 +654,20 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         if ( !stays_on_top )
             is_fullscreen = TRUE;
         may_move = FALSE; // don't let fullscreen windows be moved around
+        may_resize = FALSE;
+        may_minimize = FALSE;
+        may_maximize = FALSE;
+        may_close = FALSE;
     }
 
     if ( isDesktop() ) {
         // desktops are treated slightly special
         geom = workspace()->geometry();
         may_move = FALSE;
+        may_resize = FALSE;
+        may_minimize = FALSE;
+        may_maximize = FALSE;
+        may_close = FALSE;
         isMapped = TRUE;
     }
 
@@ -1462,7 +1483,7 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
  */
 bool Client::isResizable() const
 {
-    if ( !isMovable() )
+    if ( !isMovable() || !may_resize )
         return FALSE;
 
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
@@ -1478,7 +1499,7 @@ bool Client::isMaximizable() const
 {
     if ( isMaximized() )
         return TRUE;
-    return isResizable() && !isTool();
+    return isResizable() && !isTool() && may_maximize;
 }
 
 /*
@@ -1487,7 +1508,16 @@ bool Client::isMaximizable() const
 bool Client::isMinimizable() const
 {
     return ( !isTransient() || !workspace()->findClient( transientFor() ) )
-        && wantsTabFocus();
+        && wantsTabFocus() && may_minimize;
+}
+
+/*
+  Returns whether the window may be closed (have a close button)
+ */
+bool Client::isCloseable() const
+{
+    return may_close && !isDesktop() && !isDock() && !isTopMenu() && !isToolbar()
+        && windowType() != NET::Override;
 }
 
 
@@ -1909,6 +1939,8 @@ void Client::iconify()
  */
 void Client::closeWindow()
 {
+    if( !isCloseable())
+        return;
     Events::raise( Events::Close );
     if ( Pdeletewindow ){
         sendClientMessage( win, atoms->wm_protocols, atoms->wm_delete_window);
@@ -2987,9 +3019,14 @@ bool Client::isTopMenu() const
 }
 
 
-bool Client::isTool() const
+bool Client::isToolbar() const
 {
     return windowType() == NET::Tool;
+}
+
+bool Client::isTool() const
+{
+    return isToolbar();
 }
 
 

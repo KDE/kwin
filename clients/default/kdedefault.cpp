@@ -723,7 +723,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 
 			// Close button
 			case 'X':
-				if (!button[BtnClose])
+				if (!button[BtnClose] && isCloseable())
 				{
     				button[BtnClose] = new KDEDefaultButton(this, "close",
 							largeButtons, isLeft, true, close_bits,

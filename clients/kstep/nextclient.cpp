@@ -392,12 +392,14 @@ void NextClient::addButtons(QBoxLayout* titleLayout, const QString& spec)
             break;
 
         case 'X':
+            if( isCloseable()) {
             button[CLOSE_IDX] =
                 new NextButton(this, "close", close_bits, 10, 10,
                                i18n("Close"));
             titleLayout->addWidget( button[CLOSE_IDX] );
             connect( button[CLOSE_IDX], SIGNAL(clicked()),
                      this, SLOT(closeWindow()) );
+            }
             break;
 
         case '_':

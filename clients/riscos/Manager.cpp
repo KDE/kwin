@@ -701,8 +701,11 @@ Manager::createButton(int type, QWidget * parent)
       break;
 
     case Button::Close:
-
-      b = new CloseButton(parent);
+    
+      if (isCloseable())
+      {
+        b = new CloseButton(parent);
+      }
 
       break;
 

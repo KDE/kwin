@@ -336,7 +336,7 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
             hb->addSpacing(int(c - '0'));
             continue;
         }
-        else if (c == 'X') {
+        else if (c == 'X' && isCloseable()) {
             hb->addWidget(button[BtnClose]);
             button[BtnClose]->show();
         }

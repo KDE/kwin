@@ -866,7 +866,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			
 			// Close button
 			case 'X' :
-				if ( !button[CloseButton] ) {
+				if ( !button[CloseButton] && isCloseable() ) {
 					button[CloseButton] = new KeramikButton( this, "close", CloseButton, i18n("Close") );
 					connect( button[CloseButton], SIGNAL( clicked() ), SLOT( closeWindow() ) );
 					layout->addWidget( button[CloseButton] );

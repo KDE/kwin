@@ -89,6 +89,25 @@ public:
 class Motif {
 public:
     static bool noBorder( WId w );
+    static bool funcFlags( WId w, bool& resize, bool& move, bool& minimize,
+        bool& maximize, bool& close );
+    struct MwmHints {
+        ulong flags;
+        ulong functions;
+        ulong decorations;
+        long input_mode;
+        ulong status;
+    };
+    enum {  MWM_HINTS_FUNCTIONS = (1L << 0),
+            MWM_HINTS_DECORATIONS =  (1L << 1),
+
+            MWM_FUNC_ALL = (1L << 0),
+            MWM_FUNC_RESIZE = (1L << 1),
+            MWM_FUNC_MOVE = (1L << 2),
+            MWM_FUNC_MINIMIZE = (1L << 3),
+            MWM_FUNC_MAXIMIZE = (1L << 4),
+            MWM_FUNC_CLOSE = (1L << 5)
+        };
 };
 
 class WorkspacePrivate;

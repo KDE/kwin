@@ -337,7 +337,11 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 0, 1 );
     hb->addSpacing(3);
-    hb->addWidget( button[0]);
+    if (isCloseable()) {
+        hb->addWidget( button[0]);
+    } else
+        button[0]->hide();
+        
     titlebar = new QSpacerItem(10, 14, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
     hb->addSpacing(3);

@@ -445,6 +445,8 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
         button[BtnIconify]->hide();
     if ( !isMaximizable() )
         button[BtnMax]->hide();
+    if ( !isCloseable() )
+        button[BtnClose]->hide();
 
     hiddenItems = false;
 

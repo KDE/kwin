@@ -154,10 +154,12 @@ public:
     bool isMovable() const;
     bool isDesktop() const;
     bool isDock() const;
-    bool isTool() const;
+    bool isTool() const; // KDE4 remove me
+    bool isToolbar() const;
     bool isTopMenu() const;
 
     bool isResizable() const;
+    bool isCloseable() const; // may have a close button
 
     void takeFocus( bool force = FALSE );
 
@@ -323,6 +325,10 @@ private:
     uint input :1; // does the window want input in its wm_hints
     uint store_settings : 1;
     uint skip_pager : 1;
+    uint may_resize : 1;
+    uint may_maximize : 1;
+    uint may_minimize : 1;
+    uint may_close : 1;
     void getWMHints();
     void getWindowProtocols();
     QPixmap icon_pix;

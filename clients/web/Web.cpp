@@ -354,7 +354,7 @@ WebClient::_createButton(const QString & s, QWidget * parent)
     connect(this, SIGNAL(maxChange(bool)), b, SLOT(slotMaximizeChange(bool)));
   }
 
-  else if ("Close" == s)
+  else if ("Close" == s && isCloseable())
   {
     b = new WebButtonClose(parent);
     connect(b, SIGNAL(closeWindow()), this, SLOT(closeWindow()));

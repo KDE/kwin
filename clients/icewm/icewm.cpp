@@ -815,7 +815,7 @@ void IceWMClient::addClientButtons( const QString& s )
 					break;
 
 				case 'x':
-					if ( validPixmaps(closePix) && !button[BtnClose] )
+					if ( validPixmaps(closePix) && !button[BtnClose] && isCloseable())
 					{
 						button[BtnClose] = new IceWMButton(this, "close", 
 								&closePix, false, i18n("Close"));
