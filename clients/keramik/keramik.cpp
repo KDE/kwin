@@ -65,7 +65,7 @@ namespace Keramik
 
 	// Default button layout
 	const char default_left[]  = "M";
-	const char default_right[] = "IAX";
+	const char default_right[] = "HIAX";
 
 	// Titlebar button bitmaps
 	unsigned char menu_bits[] = {
