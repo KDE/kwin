@@ -697,9 +697,7 @@ inline bool Client::isManaged() const
 inline
 Time Client::userTime() const
     {
-    Q_ASSERT( user_time != CurrentTime );
-    if( user_time == CurrentTime )
-        kdDebug() << kdBacktrace() << endl;
+    assert( user_time != CurrentTime );
     return user_time;
     }
 
