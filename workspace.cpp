@@ -293,18 +293,18 @@ Workspace::Workspace( bool restore )
 
 #ifdef HAVE_XINERAMA
     if (XineramaIsActive(qt_xdisplay())) {
-	xineramaInfo = XineramaQueryScreens(qt_xdisplay(), &numHeads);
+        xineramaInfo = XineramaQueryScreens(qt_xdisplay(), &numHeads);
     } else {
-    	xineramaInfo = &dummy_xineramaInfo;
-	QRect rect = QApplication::desktop()->geometry();
+        xineramaInfo = &dummy_xineramaInfo;
+        QRect rect = QApplication::desktop()->geometry();
 
-	dummy_xineramaInfo.screen_number = 0;
-	dummy_xineramaInfo.x_org = rect.x();
-	dummy_xineramaInfo.y_org = rect.y();
-	dummy_xineramaInfo.width = rect.width();
-	dummy_xineramaInfo.height = rect.height();
+        dummy_xineramaInfo.screen_number = 0;
+        dummy_xineramaInfo.x_org = rect.x();
+        dummy_xineramaInfo.y_org = rect.y();
+        dummy_xineramaInfo.width = rect.width();
+        dummy_xineramaInfo.height = rect.height();
 
-	numHeads = 1;
+        numHeads = 1;
     }
 #endif
 
@@ -499,7 +499,7 @@ Workspace::~Workspace()
 
 #ifdef HAVE_XINERAMA
     if (xineramaInfo != &dummy_xineramaInfo)
-    	XFree(xineramaInfo);
+        XFree(xineramaInfo);
 #endif
 }
 
@@ -746,7 +746,7 @@ bool Workspace::destroyClient( Client* c)
     storeFakeSessionInfo( c );
 
     if (clients.contains(c))
-	removeClient(c);
+        removeClient(c);
 
     c->invalidateWindow();
     clientHidden( c );
@@ -779,70 +779,70 @@ bool Workspace::destroyClient( Client* c)
 
 bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
 {
-	va_list args;
-	char keymap[32];
+        va_list args;
+        char keymap[32];
 
-	kdDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
+        kdDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
 
-	va_start( args, nKeySyms );
-	XQueryKeymap( qt_xdisplay(), keymap );
+        va_start( args, nKeySyms );
+        XQueryKeymap( qt_xdisplay(), keymap );
 
-	for( int iKeySym = 0; iKeySym < nKeySyms; iKeySym++ ) {
-		uint keySymX = va_arg( args, uint );
-		uchar keyCodeX = XKeysymToKeycode( qt_xdisplay(), keySymX );
-		int i = keyCodeX / 8;
-		char mask = 1 << (keyCodeX - (i * 8));
+        for( int iKeySym = 0; iKeySym < nKeySyms; iKeySym++ ) {
+                uint keySymX = va_arg( args, uint );
+                uchar keyCodeX = XKeysymToKeycode( qt_xdisplay(), keySymX );
+                int i = keyCodeX / 8;
+                char mask = 1 << (keyCodeX - (i * 8));
 
-		kdDebug(125) << iKeySym << ": keySymX=0x" << QString::number( keySymX, 16 )
-			<< " i=" << i << " mask=0x" << QString::number( mask, 16 )
-			<< " keymap[i]=0x" << QString::number( keymap[i], 16 ) << endl;
+                kdDebug(125) << iKeySym << ": keySymX=0x" << QString::number( keySymX, 16 )
+                        << " i=" << i << " mask=0x" << QString::number( mask, 16 )
+                        << " keymap[i]=0x" << QString::number( keymap[i], 16 ) << endl;
 
-		// Abort if bad index value,
-		if( i < 0 || i >= 32 )
-			return false;
+                // Abort if bad index value,
+                if( i < 0 || i >= 32 )
+                        return false;
 
-		// If ALL keys passed need to be depressed,
-		if( bAll ) {
-			if( (keymap[i] & mask) == 0 )
-				return false;
-		} else {
-			// If we are looking for ANY key press, and this key is depressed,
-			if( keymap[i] & mask )
-				return true;
-		}
-	}
+                // If ALL keys passed need to be depressed,
+                if( bAll ) {
+                        if( (keymap[i] & mask) == 0 )
+                                return false;
+                } else {
+                        // If we are looking for ANY key press, and this key is depressed,
+                        if( keymap[i] & mask )
+                                return true;
+                }
+        }
 
-	// If we were looking for ANY key press, then none was found, return false,
-	// If we were looking for ALL key presses, then all were found, return true.
-	return bAll;
+        // If we were looking for ANY key press, then none was found, return false,
+        // If we were looking for ALL key presses, then all were found, return true.
+        return bAll;
 }
 
 bool areModKeysDepressed( uint keyCombQt )
 {
-	uint rgKeySyms[8];
-	int nKeySyms = 0;
+        uint rgKeySyms[8];
+        int nKeySyms = 0;
 
-	if( keyCombQt & Qt::SHIFT ) {
-		rgKeySyms[nKeySyms++] = XK_Shift_L;
-		rgKeySyms[nKeySyms++] = XK_Shift_R;
-	}
-	if( keyCombQt & Qt::CTRL ) {
-		rgKeySyms[nKeySyms++] = XK_Control_L;
-		rgKeySyms[nKeySyms++] = XK_Control_R;
-	}
-	if( keyCombQt & Qt::ALT ) {
-		rgKeySyms[nKeySyms++] = XK_Alt_L;
-		rgKeySyms[nKeySyms++] = XK_Alt_R;
-	}
-	if( keyCombQt & (Qt::ALT<<1) ) {
-		rgKeySyms[nKeySyms++] = XK_Meta_L;
-		rgKeySyms[nKeySyms++] = XK_Meta_R;
-	}
+        if( keyCombQt & Qt::SHIFT ) {
+                rgKeySyms[nKeySyms++] = XK_Shift_L;
+                rgKeySyms[nKeySyms++] = XK_Shift_R;
+        }
+        if( keyCombQt & Qt::CTRL ) {
+                rgKeySyms[nKeySyms++] = XK_Control_L;
+                rgKeySyms[nKeySyms++] = XK_Control_R;
+        }
+        if( keyCombQt & Qt::ALT ) {
+                rgKeySyms[nKeySyms++] = XK_Alt_L;
+                rgKeySyms[nKeySyms++] = XK_Alt_R;
+        }
+        if( keyCombQt & (Qt::ALT<<1) ) {
+                rgKeySyms[nKeySyms++] = XK_Meta_L;
+                rgKeySyms[nKeySyms++] = XK_Meta_R;
+        }
 
-	// Is there a better way to push all 8 integer onto the stack?
-	return areKeySymXsDepressed( false, nKeySyms,
-		rgKeySyms[0], rgKeySyms[1], rgKeySyms[2], rgKeySyms[3],
-		rgKeySyms[4], rgKeySyms[5], rgKeySyms[6], rgKeySyms[7] );
+        // Is there a better way to push all 8 integer onto the stack?
+        return areKeySymXsDepressed( false, nKeySyms,
+                rgKeySyms[0], rgKeySyms[1], rgKeySyms[2], rgKeySyms[3],
+                rgKeySyms[4], rgKeySyms[5], rgKeySyms[6], rgKeySyms[7] );
 }
 
 void Workspace::slotWalkThroughWindows()
@@ -858,7 +858,7 @@ void Workspace::slotWalkThroughWindows()
     } else {
         if( areModKeysDepressed( walkThroughWindowsKeycode ) ) {
             if ( startKDEWalkThroughWindows() )
-		KDEWalkThroughWindows( true );
+                KDEWalkThroughWindows( true );
         }
         else
             // if the shortcut has no modifiers, don't show the tabbox, but
@@ -875,33 +875,33 @@ void Workspace::slotWalkThroughWindows()
 void Workspace::slotWalkBackThroughWindows()
 {
     if ( root != qt_xrootwin() )
-	return;
+        return;
     if( tab_grab || control_grab )
-	return;
+        return;
     if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) {
-	// CDE style raise / lower
-	CDEWalkThroughWindows( true );
+        // CDE style raise / lower
+        CDEWalkThroughWindows( true );
     } else {
-	if ( areModKeysDepressed( walkBackThroughWindowsKeycode ) ) {
-	    if ( startKDEWalkThroughWindows() )
-		KDEWalkThroughWindows( false );
-	} else {
-	    KDEOneStepThroughWindows( false );
-	}
+        if ( areModKeysDepressed( walkBackThroughWindowsKeycode ) ) {
+            if ( startKDEWalkThroughWindows() )
+                KDEWalkThroughWindows( false );
+        } else {
+            KDEOneStepThroughWindows( false );
+        }
     }
 }
 
 void Workspace::slotWalkThroughDesktops()
 {
     if ( root != qt_xrootwin() )
-	return;
+        return;
     if( tab_grab || control_grab )
-	return;
+        return;
     if ( areModKeysDepressed( walkThroughDesktopsKeycode ) ) {
-	if ( startWalkThroughDesktops() )
-	    walkThroughDesktops( true );
+        if ( startWalkThroughDesktops() )
+            walkThroughDesktops( true );
     } else {
-	oneStepThroughDesktops( true );
+        oneStepThroughDesktops( true );
     }
 }
 
@@ -910,26 +910,26 @@ void Workspace::slotWalkBackThroughDesktops()
     if ( root != qt_xrootwin() )
         return;
     if( tab_grab || control_grab )
-	return;
+        return;
     if ( areModKeysDepressed( walkBackThroughDesktopsKeycode ) ) {
-	if ( startWalkThroughDesktops() )
-	    walkThroughDesktops( false );
+        if ( startWalkThroughDesktops() )
+            walkThroughDesktops( false );
     } else {
-	oneStepThroughDesktops( false );
+        oneStepThroughDesktops( false );
     }
 }
 
 void Workspace::slotWalkThroughDesktopList()
 {
     if ( root != qt_xrootwin() )
-	return;
+        return;
     if( tab_grab || control_grab )
-	return;
+        return;
     if ( areModKeysDepressed( walkThroughDesktopListKeycode ) ) {
-	if ( startWalkThroughDesktopList() )
-	    walkThroughDesktops( true );
+        if ( startWalkThroughDesktopList() )
+            walkThroughDesktops( true );
     } else {
-	oneStepThroughDesktopList( true );
+        oneStepThroughDesktopList( true );
     }
 }
 
@@ -938,31 +938,31 @@ void Workspace::slotWalkBackThroughDesktopList()
     if ( root != qt_xrootwin() )
         return;
     if( tab_grab || control_grab )
-	return;
+        return;
     if ( areModKeysDepressed( walkBackThroughDesktopListKeycode ) ) {
-	if ( startWalkThroughDesktopList() )
-	    walkThroughDesktops( false );
+        if ( startWalkThroughDesktopList() )
+            walkThroughDesktops( false );
     } else {
-	oneStepThroughDesktopList( false );
+        oneStepThroughDesktopList( false );
     }
 }
 
 bool Workspace::startKDEWalkThroughWindows()
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-		       (uint)(ButtonPressMask | ButtonReleaseMask |
-			      ButtonMotionMask | EnterWindowMask |
-			      LeaveWindowMask | PointerMotionMask),
-		       GrabModeAsync, GrabModeAsync,
-		       None, None, kwin_time ) != GrabSuccess ) {
-	return FALSE;
+                       (uint)(ButtonPressMask | ButtonReleaseMask |
+                              ButtonMotionMask | EnterWindowMask |
+                              LeaveWindowMask | PointerMotionMask),
+                       GrabModeAsync, GrabModeAsync,
+                       None, None, kwin_time ) != GrabSuccess ) {
+        return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
-		       root, FALSE,
-		       GrabModeAsync, GrabModeAsync,
-		       kwin_time) != GrabSuccess ) {
-	XUngrabPointer( qt_xdisplay(), kwin_time);
-	return FALSE;
+                       root, FALSE,
+                       GrabModeAsync, GrabModeAsync,
+                       kwin_time) != GrabSuccess ) {
+        XUngrabPointer( qt_xdisplay(), kwin_time);
+        return FALSE;
     }
     tab_grab        = TRUE;
     keys->setKeyEventsEnabled( FALSE );
@@ -974,19 +974,19 @@ bool Workspace::startKDEWalkThroughWindows()
 bool Workspace::startWalkThroughDesktops( int mode )
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-		       (uint)(ButtonPressMask | ButtonReleaseMask |
-			      ButtonMotionMask | EnterWindowMask |
-			      LeaveWindowMask | PointerMotionMask),
-		       GrabModeAsync, GrabModeAsync,
-		       None, None, kwin_time ) != GrabSuccess ) {
-	return FALSE;
+                       (uint)(ButtonPressMask | ButtonReleaseMask |
+                              ButtonMotionMask | EnterWindowMask |
+                              LeaveWindowMask | PointerMotionMask),
+                       GrabModeAsync, GrabModeAsync,
+                       None, None, kwin_time ) != GrabSuccess ) {
+        return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
-		       root, FALSE,
-		       GrabModeAsync, GrabModeAsync,
-		       kwin_time) != GrabSuccess ) {
-	XUngrabPointer( qt_xdisplay(), kwin_time);
-	return FALSE;
+                       root, FALSE,
+                       GrabModeAsync, GrabModeAsync,
+                       kwin_time) != GrabSuccess ) {
+        XUngrabPointer( qt_xdisplay(), kwin_time);
+        return FALSE;
     }
     control_grab = TRUE;
     keys->setKeyEventsEnabled( FALSE );
@@ -1092,8 +1092,8 @@ bool Workspace::keyPress(XKeyEvent key)
     if (tab_grab){
         if( keyCombQt == walkThroughWindowsKeycode
            || keyCombQt == walkBackThroughWindowsKeycode ) {
-	    kdDebug() << "== " << KKeySequence(walkThroughWindowsKeycode).toString()
-	    	<< " or " << KKeySequence(walkBackThroughWindowsKeycode).toString() << endl;
+            kdDebug() << "== " << KKeySequence(walkThroughWindowsKeycode).toString()
+                << " or " << KKeySequence(walkBackThroughWindowsKeycode).toString() << endl;
             KDEWalkThroughWindows( keyCombQt == walkThroughWindowsKeycode );
         }
     }
@@ -1187,24 +1187,24 @@ bool Workspace::keyRelease(XKeyEvent key)
 
 int Workspace::nextDesktop( int iDesktop ) const
 {
-	int i = desktop_focus_chain.find( iDesktop );
-	if( i >= 0 && i+1 < (int)desktop_focus_chain.size() )
-		return desktop_focus_chain[i+1];
-	else if( desktop_focus_chain.size() > 0 )
-		return desktop_focus_chain[ 0 ];
-	else
-		return 1;
+        int i = desktop_focus_chain.find( iDesktop );
+        if( i >= 0 && i+1 < (int)desktop_focus_chain.size() )
+                return desktop_focus_chain[i+1];
+        else if( desktop_focus_chain.size() > 0 )
+                return desktop_focus_chain[ 0 ];
+        else
+                return 1;
 }
 
 int Workspace::previousDesktop( int iDesktop ) const
 {
-	int i = desktop_focus_chain.find( iDesktop );
-	if( i-1 >= 0 )
-		return desktop_focus_chain[i-1];
-	else if( desktop_focus_chain.size() > 0 )
-		return desktop_focus_chain[desktop_focus_chain.size()-1];
-	else
-		return numberOfDesktops();
+        int i = desktop_focus_chain.find( iDesktop );
+        if( i-1 >= 0 )
+                return desktop_focus_chain[i-1];
+        else if( desktop_focus_chain.size() > 0 )
+                return desktop_focus_chain[desktop_focus_chain.size()-1];
+        else
+                return numberOfDesktops();
 }
 
 /*!
@@ -1307,22 +1307,22 @@ void Workspace::setActiveClient( Client* c )
         return;
     if ( active_client ) {
         active_client->setActive( FALSE );
-	if ( active_client->isFullScreen() && active_client->staysOnTop() 
-	     && c && c->mainClient() != active_client->mainClient() ) {
-	    active_client->setStaysOnTop( FALSE );
-	    lowerClient( active_client );
-	}
+        if ( active_client->isFullScreen() && active_client->staysOnTop()
+             && c && c->mainClient() != active_client->mainClient() ) {
+            active_client->setStaysOnTop( FALSE );
+            lowerClient( active_client );
+        }
     }
     active_client = c;
     last_active_client = active_client;
     if ( active_client ) {
-	if ( active_client->isFullScreen() && !active_client->staysOnTop() ) {
-	    active_client->setStaysOnTop( TRUE );
-	    raiseClient( active_client );
-	}
-	focus_chain.remove( c );
-	if ( c->wantsTabFocus() )
-	    focus_chain.append( c );
+        if ( active_client->isFullScreen() && !active_client->staysOnTop() ) {
+            active_client->setStaysOnTop( TRUE );
+            raiseClient( active_client );
+        }
+        focus_chain.remove( c );
+        if ( c->wantsTabFocus() )
+            focus_chain.append( c );
     }
 
     // toplevel menubar handling
@@ -1570,8 +1570,8 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         QString k;
         KAccelAction* pAction = keys->basePtr()->actionPtr( "Window Close" );
-	if( pAction )
-	    k = pAction->m_rgShortcuts.toString();
+        if( pAction )
+            k = pAction->m_rgShortcuts.toString();
         popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+k, Options::CloseOp );
     }
     return popup;
@@ -1714,7 +1714,7 @@ void Workspace::smartPlacement(Client* c){
     int x_optimal, y_optimal;
     int possible;
     int desktop = c->desktop() < 0 || c->isSticky() ? currentDesktop() : c->desktop();
-    
+
     int cxl, cxr, cyt, cyb;     //temp coords
     int  xl,  xr,  yt,  yb;     //temp coords
     int basket;                 //temp holder
@@ -2001,7 +2001,7 @@ inline int currentKey( KGlobalAccel* keys, const char* psAction )
 void Workspace::slotReconfigure()
 {
     kdDebug(1212) << "Workspace::slotReconfigure()" << endl;
-    
+
     reconfigureTimer.stop();
     KGlobal::config()->reparseConfiguration();
     options->reload();
@@ -2487,6 +2487,12 @@ void Workspace::setCurrentDesktop( int new_desktop ){
         }*/
     }
 
+    //if "unreasonable focus policy"
+    // and active_client is sticky and under mouse (hence == old_active_client),
+    // conserve focus (thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
+    else if( old_active_client && old_active_client->isVisible() )
+      c= old_active_client;
+
     if ( c ) {
         requestFocus( c );
         // don't let the panel cover fullscreen windows on desktop switches
@@ -2507,7 +2513,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     //  If input: chain = { 1, 2, 3, 4 } and current_desktop = 3,
     //   Output: chain = { 3, 1, 2, 4 }.
 //    kdDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
-//    	.arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
+//      .arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
     for( int i = desktop_focus_chain.find( current_desktop ); i > 0; i-- )
         desktop_focus_chain[i] = desktop_focus_chain[i-1];
     desktop_focus_chain[0] = current_desktop;
@@ -2548,14 +2554,14 @@ void Workspace::setNumberOfDesktops( int n )
     if ( n == number_of_desktops )
         return;
     number_of_desktops = n;
-    
+
     rootInfo->setNumberOfDesktops( number_of_desktops );
     saveDesktopSettings();
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize( n );
     for( int i = 0; i < (int)desktop_focus_chain.size(); i++ )
-    	desktop_focus_chain[i] = i+1;
+        desktop_focus_chain[i] = i+1;
 }
 
 /*!
@@ -2818,7 +2824,7 @@ void Workspace::slotSwitchDesktopRight()
       int d = (dt % x) + 1;
       if (d >= x)
         d -= x;
-      dt = dt - (dt % x) + d; 
+      dt = dt - (dt % x) + d;
     }
     setCurrentDesktop(dt+1);
 }
@@ -2838,7 +2844,7 @@ void Workspace::slotSwitchDesktopLeft(){
       int d = (dt % x) - 1;
       if (d < 0)
         d += x;
-      dt = dt - (dt % x) + d; 
+      dt = dt - (dt % x) + d;
     }
     setCurrentDesktop(dt+1);
 }
@@ -2858,7 +2864,7 @@ void Workspace::slotSwitchDesktopUp(){
       int d = (dt % y) - 1;
       if (d < 0)
         d += y;
-      dt = dt - (dt % y) + d; 
+      dt = dt - (dt % y) + d;
     }
     setCurrentDesktop(dt+1);
 }
@@ -2878,34 +2884,34 @@ void Workspace::slotSwitchDesktopDown(){
       int d = (dt % y) + 1;
       if (d >= y)
         d -= y;
-      dt = dt - (dt % y) + d; 
+      dt = dt - (dt % y) + d;
     }
     setCurrentDesktop(dt+1);
 }
 
 void Workspace::slotSwitchToDesktop( int i )
 {
-	setCurrentDesktop( i );
+        setCurrentDesktop( i );
 }
 
 /*void Workspace::slotSwitchToWindow( int i )
 {
-	int n = 0;
-	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-		if( (*it)->isOnDesktop( currentDesktop() ) ) {
-			if( n == i ) {
-				activateClient( (*it) );
-				break;
-			}
-			n++;
-		}
-	}
+        int n = 0;
+        for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+                if( (*it)->isOnDesktop( currentDesktop() ) ) {
+                        if( n == i ) {
+                                activateClient( (*it) );
+                                break;
+                        }
+                        n++;
+                }
+        }
 }*/
 
 void Workspace::slotWindowToDesktop( int i )
 {
-	if( i >= 1 && i <= numberOfDesktops() && popup_client )
-		sendClientToDesktop( popup_client, i );
+        if( i >= 1 && i <= numberOfDesktops() && popup_client )
+                sendClientToDesktop( popup_client, i );
 }
 
 /*!
@@ -3070,12 +3076,12 @@ void Workspace::killWindowAtPosition(int x, int y)
 void Workspace::slotGrabWindow()
 {
     if ( active_client ) {
-	QPixmap p = QPixmap::grabWindow( active_client->winId() );
-	QClipboard *cb = QApplication::clipboard();
-	cb->setPixmap( p );
+        QPixmap p = QPixmap::grabWindow( active_client->winId() );
+        QClipboard *cb = QApplication::clipboard();
+        cb->setPixmap( p );
     }
     else
-	slotGrabDesktop();
+        slotGrabDesktop();
 }
 
 /*!
@@ -3313,9 +3319,9 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
             if ((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
                !(*l)->isIconified()
 #if 0
-		&& (*l)->transientFor() == None
+                && (*l)->transientFor() == None
 #endif
-		&& (*l) != c )
+                && (*l) != c )
             {
                lx = (*l)->x();
                ly = (*l)->y();
@@ -3864,8 +3870,8 @@ void Workspace::loadSessionInfo()
         info->sticky = config->readBoolEntry( QString("sticky")+n, FALSE );
         info->shaded = config->readBoolEntry( QString("shaded")+n, FALSE );
         info->staysOnTop = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
- 	info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
- 	info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
+        info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
+        info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
     }
 }
 
@@ -3890,8 +3896,8 @@ void Workspace::loadFakeSessionInfo()
         info->sticky = config->readBoolEntry( QString("sticky")+n, FALSE );
         info->shaded = config->readBoolEntry( QString("shaded")+n, FALSE );
         info->staysOnTop = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
- 	info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
- 	info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
+        info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
+        info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
     }
 }
 
@@ -4064,21 +4070,21 @@ QRect Workspace::clientArea(clientAreaOption opt)
 #endif
 
     switch (opt) {
-	case MaximizeArea:
-	    if (options->xineramaMaximizeEnabled)
-		rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
-	    break;
-	case PlacementArea:
-	    if (options->xineramaPlacementEnabled)
-		rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
-	    break;
-	case MovementArea:
-	    if (options->xineramaMovementEnabled)
-		rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
-	    break;
+        case MaximizeArea:
+            if (options->xineramaMaximizeEnabled)
+                rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+            break;
+        case PlacementArea:
+            if (options->xineramaPlacementEnabled)
+                rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+            break;
+        case MovementArea:
+            if (options->xineramaMovementEnabled)
+                rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+            break;
     }
     if (area.isNull()) {
-	return rect;
+        return rect;
     }
     return area.intersect(rect);
 }
@@ -4152,21 +4158,21 @@ void Workspace::focusEnsurance()
     int revert;
     XGetInputFocus( qt_xdisplay(), &focus, &revert );
     if ( focus == None || focus == PointerRoot ) {
-	
-	Window root_return;
-	Window child = root;
-	int root_x, root_y, lx, ly;
-	uint state;
-	if ( ! XQueryPointer( qt_xdisplay(), root, &root_return, &child,
-			      &root_x, &root_y, &lx, &ly, &state ) )
-	    return; // cursor is on another screen, so do not play with focus
-	
-	if ( !last_active_client )
-	    last_active_client = topClientOnDesktop();
-	if ( last_active_client && last_active_client->isVisible() ) {
-	    kwin_time = CurrentTime;
-	    requestFocus( last_active_client );
-	}
+
+        Window root_return;
+        Window child = root;
+        int root_x, root_y, lx, ly;
+        uint state;
+        if ( ! XQueryPointer( qt_xdisplay(), root, &root_return, &child,
+                              &root_x, &root_y, &lx, &ly, &state ) )
+            return; // cursor is on another screen, so do not play with focus
+
+        if ( !last_active_client )
+            last_active_client = topClientOnDesktop();
+        if ( last_active_client && last_active_client->isVisible() ) {
+            kwin_time = CurrentTime;
+            requestFocus( last_active_client );
+        }
     }
 }
 
@@ -4208,50 +4214,50 @@ void Workspace::createBorderWindows()
     unsigned long valuemask;
     attributes.override_redirect = True;
     attributes.event_mask =  (EnterWindowMask | LeaveWindowMask |
-			      VisibilityChangeMask);
+                              VisibilityChangeMask);
     valuemask=  (CWOverrideRedirect | CWEventMask | CWCursor );
     attributes.cursor = XCreateFontCursor(qt_xdisplay(),
-					  XC_sb_up_arrow);
+                                          XC_sb_up_arrow);
     d->electric_top_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
-				0,0,
-				r.width(),1,
-				0,
-				CopyFromParent, InputOnly,
-				CopyFromParent,
-				valuemask, &attributes);
+                                0,0,
+                                r.width(),1,
+                                0,
+                                CopyFromParent, InputOnly,
+                                CopyFromParent,
+                                valuemask, &attributes);
     XMapWindow(qt_xdisplay(), d->electric_top_border);
 
     attributes.cursor = XCreateFontCursor(qt_xdisplay(),
-					  XC_sb_down_arrow);
+                                          XC_sb_down_arrow);
     d->electric_bottom_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
-				   0,r.height()-1,
-				   r.width(),1,
-				   0,
-				   CopyFromParent, InputOnly,
-				   CopyFromParent,
-				   valuemask, &attributes);
+                                   0,r.height()-1,
+                                   r.width(),1,
+                                   0,
+                                   CopyFromParent, InputOnly,
+                                   CopyFromParent,
+                                   valuemask, &attributes);
     XMapWindow(qt_xdisplay(), d->electric_bottom_border);
 
     attributes.cursor = XCreateFontCursor(qt_xdisplay(),
-					  XC_sb_left_arrow);
+                                          XC_sb_left_arrow);
     d->electric_left_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
-				 0,0,
-				 1,r.height(),
-				 0,
-				 CopyFromParent, InputOnly,
-				 CopyFromParent,
-				 valuemask, &attributes);
+                                 0,0,
+                                 1,r.height(),
+                                 0,
+                                 CopyFromParent, InputOnly,
+                                 CopyFromParent,
+                                 valuemask, &attributes);
     XMapWindow(qt_xdisplay(), d->electric_left_border);
 
     attributes.cursor = XCreateFontCursor(qt_xdisplay(),
-					  XC_sb_right_arrow);
+                                          XC_sb_right_arrow);
     d->electric_right_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
-				  r.width()-1,0,
-				  1,r.height(),
-				  0,
-				  CopyFromParent, InputOnly,
-				  CopyFromParent,
-				  valuemask, &attributes);
+                                  r.width()-1,0,
+                                  1,r.height(),
+                                  0,
+                                  CopyFromParent, InputOnly,
+                                  CopyFromParent,
+                                  valuemask, &attributes);
     XMapWindow(qt_xdisplay(),  d->electric_right_border);
 }
 
@@ -4330,7 +4336,7 @@ void Workspace::clientMoved(const QPoint &pos, unsigned long now)
         QRect r = QApplication::desktop()->geometry();
         int offset;
 
-        switch(border) 
+        switch(border)
         {
           case 1:
            offset = r.width() / 3;
