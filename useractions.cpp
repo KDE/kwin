@@ -49,30 +49,31 @@ QPopupMenu* Workspace::clientPopup()
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
 
+        advanced_popup = new QPopupMenu( popup );
+        advanced_popup->setCheckable( TRUE );
+        advanced_popup->setFont(KGlobalSettings::menuFont());
+        connect( advanced_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
+        advanced_popup->insertItem( SmallIconSet( "up" ), i18n("Keep &Above Others"), Options::KeepAboveOp );
+        advanced_popup->insertItem( SmallIconSet( "down" ), i18n("Keep &Below Others"), Options::KeepBelowOp );
+        advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ), i18n("&Fullscreen"), Options::FullScreenOp );
+        advanced_popup->insertItem( i18n("&No Border"), Options::NoBorderOp );
+        advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
+
+        popup->insertItem(i18n("Ad&vanced"), advanced_popup );
+        desk_popup_index = popup->count();
         popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").seq(0).toString(), Options::MoveOp );
         popup->insertItem( i18n("Re&size")+'\t'+keys->shortcut("Window Resize").seq(0).toString(), Options::ResizeOp );
         popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").seq(0).toString(), Options::MinimizeOp );
         popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").seq(0).toString(), Options::MaximizeOp );
         popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").seq(0).toString(), Options::ShadeOp );
 
-        options_popup = new QPopupMenu( popup );
-        options_popup->setCheckable( TRUE );
-        options_popup->setFont(KGlobalSettings::menuFont());
-        connect( options_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-        options_popup->insertItem( SmallIconSet( "up" ), i18n("Keep &Above Others"), Options::KeepAboveOp );
-        options_popup->insertItem( SmallIconSet( "down" ), i18n("Keep &Below Others"), Options::KeepBelowOp );
-        options_popup->insertItem( SmallIconSet( "window_fullscreen" ), i18n("&Fullscreen"), Options::FullScreenOp );
-        options_popup->insertItem( i18n("&No Border"), Options::NoBorderOp );
-        options_popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
-        popup->insertItem(i18n("Ad&vanced"), options_popup );
-
         popup->insertSeparator();
-        desk_popup_index = popup->count();
 
         if (!KGlobal::config()->isImmutable())
+            {
             popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e Window Behavior..."), this, SLOT( configureWM() ));
-
-        popup->insertSeparator();
+            popup->insertSeparator();
+            }
 
         popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").seq(0).toString(), Options::CloseOp );
         }
@@ -106,14 +107,14 @@ void Workspace::clientPopupAboutToShow()
     // This should be checked also when hover unshaded
     popup->setItemChecked( Options::ShadeOp, popup_client->shadeMode() != Client::ShadeNone );
     popup->setItemEnabled( Options::ShadeOp, popup_client->isShadeable());
-    options_popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
-    options_popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );
-    options_popup->setItemChecked( Options::FullScreenOp, popup_client->isFullScreen() );
-    options_popup->setItemEnabled( Options::FullScreenOp, popup_client->userCanSetFullScreen() );
-    options_popup->setItemChecked( Options::NoBorderOp, popup_client->noBorder() );
-    options_popup->setItemEnabled( Options::NoBorderOp, popup_client->userCanSetNoBorder() );
+    advanced_popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
+    advanced_popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );
+    advanced_popup->setItemChecked( Options::FullScreenOp, popup_client->isFullScreen() );
+    advanced_popup->setItemEnabled( Options::FullScreenOp, popup_client->userCanSetFullScreen() );
+    advanced_popup->setItemChecked( Options::NoBorderOp, popup_client->noBorder() );
+    advanced_popup->setItemEnabled( Options::NoBorderOp, popup_client->userCanSetNoBorder() );
     popup->setItemEnabled( Options::MinimizeOp, popup_client->isMinimizable() );
-    options_popup->setItemChecked( Options::ToggleStoreSettingsOp, popup_client->storeSettings() );
+    advanced_popup->setItemChecked( Options::ToggleStoreSettingsOp, popup_client->storeSettings() );
     popup->setItemEnabled( Options::CloseOp, popup_client->isCloseable() );
     }
 

@@ -455,7 +455,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         PopupInfo* popupinfo;
 
         QPopupMenu *popup;
-        QPopupMenu *options_popup;
+        QPopupMenu *advanced_popup;
         QPopupMenu *desk_popup;
         int desk_popup_index;
 
