@@ -21,6 +21,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 
 #include <fixx11h.h>
+#include <qhbox.h>
+#include <qpushbutton.h>
+#include <qslider.h>
+#include <qtooltip.h>
 #include <qpopupmenu.h>
 #include <kglobalsettings.h>
 #include <kiconloader.h>
@@ -49,7 +53,7 @@ QPopupMenu* Workspace::clientPopup()
         popup->setFont(KGlobalSettings::menuFont());
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-
+      
         advanced_popup = new QPopupMenu( popup );
         advanced_popup->setCheckable( TRUE );
         advanced_popup->setFont(KGlobalSettings::menuFont());
@@ -67,6 +71,24 @@ QPopupMenu* Workspace::clientPopup()
 
         popup->insertItem(i18n("Ad&vanced"), advanced_popup );
         desk_popup_index = popup->count();
+        
+        if (options->useTranslucency){
+            QPopupMenu *trans_popup = new QPopupMenu( popup );
+            QVBox *transBox = new QVBox(trans_popup);
+            transButton = new QPushButton(transBox, "transButton");
+            QToolTip::add(transButton, i18n("Reset opacity to default value"));
+            transSlider = new QSlider(0, 100, 1, 100, Qt::Vertical, transBox, "transSlider");
+            QToolTip::add(transSlider, i18n("Slide this to set the window's opacity"));
+            connect(transButton, SIGNAL(clicked()), SLOT(resetClientOpacity()));
+            connect(transButton, SIGNAL(clicked()), trans_popup, SLOT(hide()));
+            connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
+            connect(transSlider, SIGNAL(sliderMoved(int)), this, SLOT(setPopupClientOpacity(int)));
+            connect(transSlider, SIGNAL(sliderReleased()), trans_popup, SLOT(hide()));
+            transSlider->setValue(100-popup_client->opacityPercentage());     
+            trans_popup->insertItem(transBox);
+            popup->insertItem(i18n("&Opacity"), trans_popup );
+        }
+        
         popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").seq(0).toString(), Options::MoveOp );
         popup->insertItem( i18n("Re&size")+'\t'+keys->shortcut("Window Resize").seq(0).toString(), Options::ResizeOp );
         popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").seq(0).toString(), Options::MinimizeOp );
@@ -86,6 +108,35 @@ QPopupMenu* Workspace::clientPopup()
         }
     return popup;
     }
+    
+//sets the transparency of the client to given value(given by slider)
+void Workspace::setPopupClientOpacity(int value)
+    {
+    popup_client->setCustomOpacityFlag(true);
+    value = 100 - value;
+    value<100?popup_client->setOpacity(true, (uint)((value/100.0)*0xffffffff)):popup_client->setOpacity(false,0xffffffff);
+    }
+
+void Workspace::setTransButtonText(int value)
+    {
+    value = 100 - value;
+    if(value < 0)
+        transButton->setText("000 %");
+    else if (value >= 100 )
+        transButton->setText("100 %");
+    else if(value < 10)
+        transButton->setText("00"+QString::number(value)+" %");
+    else if(value < 100)
+        transButton->setText("0"+QString::number(value)+" %");
+    }
+
+void Workspace::resetClientOpacity()
+    {
+    popup_client->setCustomOpacityFlag(false);
+    popup_client->updateOpacity();
+    setTransButtonText(popup_client->opacityPercentage());
+    }
+
 
 /*!
   The client popup menu will become visible soon.
@@ -122,6 +173,11 @@ void Workspace::clientPopupAboutToShow()
     advanced_popup->setItemEnabled( Options::NoBorderOp, active_popup_client->userCanSetNoBorder() );
     popup->setItemEnabled( Options::MinimizeOp, active_popup_client->isMinimizable() );
     popup->setItemEnabled( Options::CloseOp, active_popup_client->isCloseable() );
+    if (options->useTranslucency)
+        {
+        transSlider->setValue(100-popup_client->opacityPercentage());
+        setTransButtonText(popup_client->opacityPercentage());
+        }
     }
 
 

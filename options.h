@@ -255,6 +255,23 @@ class Options : public KDecorationOptions
         
         // timeout before non-responding application will be killed after attempt to close
         int killPingTimeout;
+        
+        //translucency settings
+        bool useTranslucency;
+        bool translucentActiveWindows;
+        uint activeWindowOpacity;
+        bool translucentInactiveWindows;
+        uint inactiveWindowOpacity;
+        bool translucentMovingWindows;
+        uint movingWindowOpacity;
+        bool translucentDocks;
+        uint dockOpacity;
+        bool keepAboveAsActive;
+        bool useTitleMenuSlider;
+        uint activeWindowShadowSize;
+        uint inactiveWindowShadowSize;
+        uint dockShadowSize;
+        bool resetKompmgr;
 
     private:
         WindowOperation OpTitlebarDblClick;
@@ -281,6 +298,7 @@ class Options : public KDecorationOptions
         bool desktop_topmenu;
         // List of window classes for which not to use focus stealing prevention
         QStringList ignoreFocusStealingClasses;
+        
     };
 
 extern Options* options;

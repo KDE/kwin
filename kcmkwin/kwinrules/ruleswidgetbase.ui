@@ -1149,34 +1149,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="1" column="4">
-                        <property name="name">
-                            <cstring>below</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <spacer row="7" column="3">
-                        <property name="name">
-                            <cstring>spacer33</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>70</height>
-                            </size>
-                        </property>
-                    </spacer>
                     <widget class="QCheckBox" row="0" column="0">
                         <property name="name">
                             <cstring>enable_above</cstring>
@@ -1231,6 +1203,333 @@
                         </property>
                         <property name="text">
                             <string>&amp;Closeable</string>
+                        </property>
+                    </widget>
+                    <spacer row="9" column="1">
+                        <property name="name">
+                            <cstring>spacer33</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>110</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="8" column="0">
+                        <property name="name">
+                            <cstring>enable_opacityinactive</cstring>
+                        </property>
+                        <property name="text">
+                            <string>I&amp;nactive opacity in %</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+N</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="7" column="0">
+                        <property name="name">
+                            <cstring>enable_opacityactive</cstring>
+                        </property>
+                        <property name="text">
+                            <string>A&amp;ctive opacity in %</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+C</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="8" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_opacityinactive</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="7" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_opacityactive</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="8" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>opacityinactive</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="validChars">
+                            <string>0123456789</string>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="7" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>opacityactive</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="validChars">
+                            <string>0123456789</string>
+                        </property>
+                    </widget>
+                    <spacer row="8" column="4">
+                        <property name="name">
+                            <cstring>spacer25</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>181</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="7" column="4">
+                        <property name="name">
+                            <cstring>spacer24</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>171</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="6" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer36_7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>290</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="5" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer36_6</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>290</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="4" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer36_5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>290</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="3" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer36_4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>290</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="2" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer36_3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>290</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="1" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer36_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>290</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="0" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer36</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>290</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="0" column="2">
+                        <property name="name">
+                            <cstring>above</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="2">
+                        <property name="name">
+                            <cstring>below</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="2">
+                        <property name="name">
+                            <cstring>noborder</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="2">
+                        <property name="name">
+                            <cstring>skiptaskbar</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="2">
+                        <property name="name">
+                            <cstring>skippager</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="5" column="2">
+                        <property name="name">
+                            <cstring>acceptfocus</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="2">
+                        <property name="name">
+                            <cstring>closeable</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="6" column="1">
@@ -1409,191 +1708,6 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <spacer row="0" column="5">
-                        <property name="name">
-                            <cstring>spacer36</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="1" column="5">
-                        <property name="name">
-                            <cstring>spacer36_2</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="2" column="5">
-                        <property name="name">
-                            <cstring>spacer36_3</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="3" column="5">
-                        <property name="name">
-                            <cstring>spacer36_4</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="4" column="5">
-                        <property name="name">
-                            <cstring>spacer36_5</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="5" column="5">
-                        <property name="name">
-                            <cstring>spacer36_6</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="6" column="5">
-                        <property name="name">
-                            <cstring>spacer36_7</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="0" column="4">
-                        <property name="name">
-                            <cstring>above</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="2" column="4">
-                        <property name="name">
-                            <cstring>noborder</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="3" column="4">
-                        <property name="name">
-                            <cstring>skiptaskbar</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="4" column="4">
-                        <property name="name">
-                            <cstring>skippager</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="6" column="4">
-                        <property name="name">
-                            <cstring>closeable</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="5" column="4">
-                        <property name="name">
-                            <cstring>acceptfocus</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -1613,6 +1727,9 @@
                         </property>
                         <property name="text">
                             <string>&amp;Focus stealing prevention</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+F</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="2" column="1">
@@ -1918,7 +2035,7 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>250</height>
+                                <height>90</height>
                             </size>
                         </property>
                     </spacer>
@@ -1927,8 +2044,6 @@
         </widget>
     </vbox>
 </widget>
-<customwidgets>
-</customwidgets>
 <connections>
     <connection>
         <sender>detect1</sender>
@@ -2066,16 +2181,22 @@
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
 <includehints>
+    <includehint>klineedit.h</includehint>
+    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>klistbox.h</includehint>
+    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kcombobox.h</includehint>
@@ -2091,6 +2212,10 @@
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>krestrictedline.h</includehint>
+    <includehint>krestrictedline.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>

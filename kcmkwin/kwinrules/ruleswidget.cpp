@@ -94,6 +94,8 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
     SETUP( ignoreposition, force );
     SETUP( minsize, force );
     SETUP( maxsize, force );
+    SETUP( opacityactive, force );
+    SETUP( opacityinactive, force );
     KWinModule module;
     int i;
     for( i = 1;
@@ -137,6 +139,8 @@ UPDATE_ENABLE_SLOT( type )
 UPDATE_ENABLE_SLOT( ignoreposition )
 UPDATE_ENABLE_SLOT( minsize )
 UPDATE_ENABLE_SLOT( maxsize )
+UPDATE_ENABLE_SLOT( opacityactive )
+UPDATE_ENABLE_SLOT( opacityinactive )
 
 #undef UPDATE_ENABLE_SLOT
 
@@ -200,7 +204,22 @@ static QSize strToSize( const QString& str )
     return QSize( reg.cap( 1 ).toInt(), reg.cap( 2 ).toInt());
     }
 
-
+//used for opacity settings
+static QString intToStr( const int& s )
+    {
+    if( s < 1 || s > 100 )
+        return QString::null;
+    return QString::number(s);
+    }
+ 
+static int strToInt( const QString& str )
+    {
+    int tmp = str.toInt();
+    if( tmp < 1 || tmp > 100 )
+        return 100;
+    return tmp;
+    }    
+    
 int RulesWidget::desktopToCombo( int d ) const
     {
     if( d >= 1 && d < desktop->count())
@@ -374,6 +393,8 @@ void RulesWidget::setRules( Rules* rules )
     CHECKBOX_FORCE_RULE( ignoreposition, );
     LINEEDIT_FORCE_RULE( minsize, sizeToStr );
     LINEEDIT_FORCE_RULE( maxsize, sizeToStr );
+    LINEEDIT_FORCE_RULE( opacityactive, intToStr );
+    LINEEDIT_FORCE_RULE( opacityinactive, intToStr );
     }
 
 #undef GENERIC_RULE
@@ -459,6 +480,8 @@ Rules* RulesWidget::rules() const
     CHECKBOX_FORCE_RULE( ignoreposition, );
     LINEEDIT_FORCE_RULE( minsize, strToSize );
     LINEEDIT_FORCE_RULE( maxsize, strToSize );
+    LINEEDIT_FORCE_RULE( opacityactive, strToInt );
+    LINEEDIT_FORCE_RULE( opacityinactive, strToInt );
     return rules;
     }
 
@@ -571,6 +594,8 @@ void RulesWidget::prefillUnusedValues( const KWin::WindowInfo& info )
     //CHECKBOX_PREFILL( ignoreposition, );
     LINEEDIT_PREFILL( minsize, sizeToStr, info.frameGeometry().size() );
     LINEEDIT_PREFILL( maxsize, sizeToStr, info.frameGeometry().size() );
+    LINEEDIT_PREFILL( opacityactive, intToStr, 100 /*get the actual opacity somehow*/);
+    LINEEDIT_PREFILL( opacityinactive, intToStr, 100 /*get the actual opacity somehow*/);
     }
 
 #undef GENERIC_PREFILL

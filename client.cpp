@@ -143,6 +143,9 @@ Client::Client( Workspace *ws )
     
     frame_geometry = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
     client_size = QSize( 100, 100 );
+    custom_opacity = false;
+    rule_opacity_active = 0;; //translucency rules
+    rule_opacity_inactive = 0; //dito.
 
     // SELI initialize xsizehints??
     }
@@ -174,6 +177,7 @@ void Client::deleteClient( Client* c, allowed_t )
 void Client::releaseWindow( bool on_shutdown )
     {
     StackingUpdatesBlocker blocker( workspace());
+    if (!custom_opacity) setOpacity(FALSE);
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
@@ -728,6 +732,10 @@ void Client::setShade( ShadeMode mode )
 // TODO all this unmapping, resizing etc. feels too much duplicated from elsewhere
     if ( isShade()) 
         { // shade_mode == ShadeNormal
+        // we're about to shade, texx xcompmgr to prepare
+        uint _shade = 1;
+        XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);
+        // shade
         int h = height();
         shade_geometry_change = true;
         QSize s( sizeForClientSize( QSize( clientSize().width(), 0), SizemodeShaded ) );
@@ -735,6 +743,8 @@ void Client::setShade( ShadeMode mode )
         XUnmapWindow( qt_xdisplay(), wrapper );
         XUnmapWindow( qt_xdisplay(), client );
         XSelectInput( qt_xdisplay(), wrapper, ClientWinMask | SubstructureNotifyMask );
+        //as we hid the unmap event, xcompmgr didn't recognize the client wid has vanished, so we'll extra inform it        
+        //done xcompmgr workaround
 // FRAME       repaint( FALSE );
 //        bool wasStaticContents = testWFlags( WStaticContents );
 //        setWFlags( WStaticContents );
@@ -757,6 +767,9 @@ void Client::setShade( ShadeMode mode )
             else
                 workspace()->focusToNull();
             }
+        // tell xcompmgr shade's done
+        _shade = 2;
+        XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);    
         }
     else 
         {
@@ -784,6 +797,7 @@ void Client::setShade( ShadeMode mode )
             setActive( TRUE );
         XMapWindow( qt_xdisplay(), wrapperId());
         XMapWindow( qt_xdisplay(), window());
+        XDeleteProperty (qt_xdisplay(), client, atoms->net_wm_window_shade);
         if ( isActive() )
             workspace()->requestFocus( this );
         }
@@ -1733,6 +1747,255 @@ void Client::cancelAutoRaise()
     autoRaiseTimer = 0;
     }
 
+void Client::setOpacity(bool translucent, uint opacity)
+    {
+    if (isDesktop())
+        return; // xcompmgr does not like non solid desktops and the user could set it accidently by mouse scrolling
+//     qWarning("setting opacity for %d",qt_xdisplay());
+    //rule out activated translulcency with 100% opacity
+    if (!translucent || opacity ==  0xFFFFFFFF)
+        {
+        opacity_ = 0xFFFFFFFF;
+        XDeleteProperty (qt_xdisplay(), frameId(), atoms->net_wm_window_opacity);
+        XDeleteProperty (qt_xdisplay(), window(), atoms->net_wm_window_opacity); // ??? frameId() is necessary for visible changes, window() is the winId() that would be set by apps - we set both to be sure the app knows what's currently displayd
+        }
+    else{
+        if(opacity == opacity_)
+            return;
+        opacity_ = opacity;
+        XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &opacity, 1L);
+        XChangeProperty(qt_xdisplay(), window(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &opacity, 1L);
+        }
+    }
+    
+void Client::setShadowSize(uint shadowSize)
+    {
+    // ignoring all individual settings - if we control a window, we control it's shadow
+    // TODO somehow handle individual settings for docks (besides custom sizes)
+    XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shadow, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &shadowSize, 1L);
+    }
+        
+void Client::updateOpacity()
+// extra syncscreen flag allows to avoid double syncs when active state changes (as it will usually change for two windows)
+    {
+    if (!(isNormalWindow() || isDialog() || isUtility() )|| custom_opacity)
+        return;
+    if (isActive())
+        {
+        if( ruleOpacityActive() )
+            setOpacity(rule_opacity_active < 0xFFFFFFFF, rule_opacity_active);
+        else
+            setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
+        if (isBMP())
+        // beep-media-player, only undecorated windows (gtk2 xmms, xmms doesn't work with compmgr at all - s.e.p. :P )
+            {
+            ClientList tmpGroupMembers = group()->members();
+            ClientList activeGroupMembers;
+            activeGroupMembers.append(this);
+            tmpGroupMembers.remove(this);
+            ClientList::Iterator it = tmpGroupMembers.begin();
+            while (it != tmpGroupMembers.end())
+            // search for next attached and not activated client and repeat if found
+                {
+                if ((*it) != this && (*it)->isBMP())
+                // potential "to activate" client found
+                    {
+//                     qWarning("client found");
+                    if ((*it)->touches(this)) // first test, if the new client touches the just activated one
+                        {
+//                         qWarning("found client touches me");
+                        if( ruleOpacityActive() )
+                            (*it)->setOpacity(rule_opacity_active < 0xFFFFFFFF, rule_opacity_active);
+                        else
+                            (*it)->setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
+//                         qWarning("activated, search restarted (1)");
+                        (*it)->setShadowSize(options->activeWindowShadowSize);
+                        activeGroupMembers.append(*it);
+                        tmpGroupMembers.remove(it);
+                        it = tmpGroupMembers.begin(); // restart, search next client
+                        continue;
+                        }
+                    else
+                        { // pot. client does not touch c, so we have to search if it touches some other activated client
+                        bool found = false;
+                        for( ClientList::ConstIterator it2 = activeGroupMembers.begin(); it2 != activeGroupMembers.end(); it2++ )
+                            {
+                            if ((*it2) != this && (*it2) != (*it) && (*it)->touches(*it2))
+                                {
+//                                 qWarning("found client touches other active client");
+                                if( ruleOpacityActive() )
+                                    (*it)->setOpacity(rule_opacity_active < 0xFFFFFFFF, rule_opacity_active);
+                                else
+                                    (*it)->setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
+                                (*it)->setShadowSize(options->activeWindowShadowSize);
+                                activeGroupMembers.append(*it);
+                                tmpGroupMembers.remove(it);
+                                it = tmpGroupMembers.begin(); // reset potential client search
+                                found = true;
+//                                 qWarning("activated, search restarted (2)");
+                                break; // skip this loop
+                                }
+                            }
+                        if (found) continue;
+                        }
+                    }
+                    it++;
+                }
+            }
+        else if (isNormalWindow())
+        // activate dependend minor windows as well
+            {
+            for( ClientList::ConstIterator it = group()->members().begin(); it != group()->members().end(); it++ )
+                if ((*it)->isDialog() || (*it)->isUtility())
+                    if( (*it)->ruleOpacityActive() )
+                        (*it)->setOpacity((*it)->ruleOpacityActive() < 0xFFFFFFFF, (*it)->ruleOpacityActive());
+                    else
+                        (*it)->setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
+            }
+        }
+    else
+        {
+        if( ruleOpacityInactive() )
+            setOpacity(rule_opacity_inactive < 0xFFFFFFFF, rule_opacity_inactive);
+        else
+            setOpacity(options->translucentInactiveWindows && !(keepAbove() && options->keepAboveAsActive),
+                    options->inactiveWindowOpacity);
+        // deactivate dependend minor windows as well
+        if (isBMP())
+        // beep-media-player, only undecorated windows (gtk2 xmms, xmms doesn't work with compmgr at all - s.e.p. :P )
+            {
+            ClientList tmpGroupMembers = group()->members();
+            ClientList inactiveGroupMembers;
+            inactiveGroupMembers.append(this);
+            tmpGroupMembers.remove(this);
+            ClientList::Iterator it = tmpGroupMembers.begin();
+            while ( it != tmpGroupMembers.end() )
+            // search for next attached and not activated client and repeat if found
+                {
+                if ((*it) != this && (*it)->isBMP())
+                // potential "to activate" client found
+                    {
+//                     qWarning("client found");
+                    if ((*it)->touches(this)) // first test, if the new client touches the just activated one
+                        {
+//                         qWarning("found client touches me");
+                        if( (*it)->ruleOpacityInactive() )
+                            (*it)->setOpacity((*it)->ruleOpacityInactive() < 0xFFFFFFFF, (*it)->ruleOpacityInactive());
+                        else
+                            (*it)->setOpacity(options->translucentInactiveWindows && !((*it)->keepAbove() && options->keepAboveAsActive), options->inactiveWindowOpacity);
+                        (*it)->setShadowSize(options->inactiveWindowShadowSize);
+//                         qWarning("deactivated, search restarted (1)");
+                        inactiveGroupMembers.append(*it);
+                        tmpGroupMembers.remove(it);
+                        it = tmpGroupMembers.begin(); // restart, search next client
+                        continue;
+                        }
+                    else // pot. client does not touch c, so we have to search if it touches some other activated client
+                        {
+                        bool found = false;
+                        for( ClientList::ConstIterator it2 = inactiveGroupMembers.begin(); it2 != inactiveGroupMembers.end(); it2++ )
+                            {
+                            if ((*it2) != this && (*it2) != (*it) && (*it)->touches(*it2))
+                                {
+//                                 qWarning("found client touches other inactive client");
+                                if( (*it)->ruleOpacityInactive() )
+                                    (*it)->setOpacity((*it)->ruleOpacityInactive() < 0xFFFFFFFF, (*it)->ruleOpacityInactive());
+                                else
+                                    (*it)->setOpacity(options->translucentInactiveWindows && !((*it)->keepAbove() && options->keepAboveAsActive), options->inactiveWindowOpacity);
+                                (*it)->setShadowSize(options->inactiveWindowShadowSize);
+//                                 qWarning("deactivated, search restarted (2)");
+                                inactiveGroupMembers.append(*it);
+                                tmpGroupMembers.remove(it);
+                                it = tmpGroupMembers.begin(); // reset potential client search
+                                found = true;
+                                break; // skip this loop
+                                }
+                            }
+                            if (found) continue;
+                        }
+                    }
+                    it++;
+                }
+            }
+        else if (isNormalWindow())
+            {
+            for( ClientList::ConstIterator it = group()->members().begin(); it != group()->members().end(); it++ )
+                if ((*it)->isUtility()) //don't deactivate dialogs...
+                    if( (*it)->ruleOpacityInactive() )
+                        (*it)->setOpacity((*it)->ruleOpacityInactive() < 0xFFFFFFFF, (*it)->ruleOpacityInactive());
+                    else
+                        (*it)->setOpacity(options->translucentInactiveWindows && !((*it)->keepAbove() && options->keepAboveAsActive), options->inactiveWindowOpacity);
+            }
+        }
+    }
+    
+void Client::updateShadowSize()
+// extra syncscreen flag allows to avoid double syncs when active state changes (as it will usually change for two windows)
+    {
+    if (!(isNormalWindow() || isDialog() || isUtility() ))
+        return;
+    if (isActive())
+        setShadowSize(options->activeWindowShadowSize);
+    else
+        setShadowSize(options->inactiveWindowShadowSize);
+    }
+
+uint Client::ruleOpacityInactive()
+    {
+    return rule_opacity_inactive;// != 0 ;
+    }
+
+uint Client::ruleOpacityActive()
+    {
+    return rule_opacity_active;// != 0;
+    }
+    
+bool Client::getWindowOpacity() //query translucency settings from X, returns true if window opacity is set
+    {
+    unsigned char *data = 0;
+    Atom actual;
+    int format, result;
+    unsigned long n, left;
+    result = XGetWindowProperty(qt_xdisplay(), window(), atoms->net_wm_window_opacity, 0L, 1L, False, XA_CARDINAL, &actual, &format, &n, &left, /*(unsigned char **)*/ &data);
+    if (result == Success && data != None)
+        {
+        memcpy (&opacity_, data, sizeof (unsigned int));
+        custom_opacity = true;
+//         setOpacity(opacity_ < 0xFFFFFFFF, opacity_);
+        return TRUE;
+        }
+    return FALSE;
+    }
+    
+void Client::setCustomOpacityFlag(bool custom)
+    {
+    custom_opacity = custom;
+    }
+    
+uint Client::opacity()
+    {
+    return opacity_;
+    }
+
+int Client::opacityPercentage()
+    {
+    return ((int)100*((double)opacity_/0xffffffff));
+    }
+    
+bool Client::touches(const Client* c)
+// checks if this client borders c, needed to test beep media player window state
+    {
+    if (y() == c->y() + c->height()) // this bottom to c
+        return TRUE;
+    if (y() + height() == c->y()) // this top to c
+        return TRUE;
+    if (x() == c->x() + c->width()) // this right to c
+        return TRUE;
+    if (x() + width() == c->x()) // this left to c
+        return TRUE;
+    return FALSE;
+    }
+    
 #ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Client* cl )
     {

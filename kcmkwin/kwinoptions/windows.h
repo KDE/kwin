@@ -30,12 +30,14 @@ class QRadioButton;
 class QCheckBox;
 class QPushButton;
 class QComboBox;
+class QGroupBox;
 class QLabel;
 class QSlider;
 class QButtonGroup;
 class QSpinBox;
 class QVButtonGroup;
 
+class KColorButton;
 class KIntNumInput;
 
 #define TRANSPARENT 0
@@ -225,5 +227,53 @@ private:
   QComboBox* focusStealing;
 };
 
-#endif
+class KProcess;
+class KTranslucencyConfig : public KCModule
+{
+  Q_OBJECT
+public:
+  KTranslucencyConfig( bool _standAlone, KConfig *config, QWidget *parent=0, const char* name=0 );
+  ~KTranslucencyConfig();
+  
+  void load();
+  void save();
+  void defaults();
+  
+private:
+  QCheckBox *useTranslucency;
+  QCheckBox *activeWindowTransparency;
+  QCheckBox *inactiveWindowTransparency;
+  QCheckBox *movingWindowTransparency;
+  QCheckBox *dockWindowTransparency;
+  QCheckBox *keepAboveAsActive;
+  QCheckBox *fadeInWindows;
+  QCheckBox *fadeOnOpacityChange;
+  QCheckBox *useShadows;
+  QGroupBox *sGroup;
+//   QPushButton *xcompmgrButton;
+  KIntNumInput *activeWindowOpacity;
+  KIntNumInput *inactiveWindowOpacity;
+  KIntNumInput *movingWindowOpacity;
+  KIntNumInput *dockWindowOpacity;
+  KIntNumInput *dockWindowShadowSize;
+  KIntNumInput *activeWindowShadowSize;
+  KIntNumInput *inactiveWindowShadowSize;
+  KIntNumInput *shadowTopOffset;
+  KIntNumInput *shadowLeftOffset;
+  KIntNumInput *fadeInSpeed;
+  KIntNumInput *fadeOutSpeed;
+  KColorButton *shadowColor;
+  KConfig *config;
+  bool     standAlone;
+  bool alphaActivated;
+  bool resetKompmgr_;
+  bool kompmgrAvailable();
+  KProcess *kompmgr;
+  
+private slots:
+  void resetKompmgr();
+  void showWarning(bool alphaActivated);
+  void handleXCompMgrOutput( KProcess *proc, char *buffer, int buflen);
 
+};
+#endif

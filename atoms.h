@@ -37,6 +37,9 @@ class Atoms
         Atom kde_net_wm_user_creation_time;
         Atom kde_system_tray_embedding;
         Atom net_wm_take_activity;
+        Atom net_wm_window_opacity;
+        Atom net_wm_window_shadow;
+        Atom net_wm_window_shade;
         Atom xdnd_aware;
         Atom xdnd_position;
     };

@@ -567,7 +567,7 @@ bool Client::windowEvent( XEvent* e )
             workspace()->setWasUserInteraction();
             buttonPressEvent( e->xbutton.window, e->xbutton.button, e->xbutton.state,
                 e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
-            break;;
+            break;
         case KeyRelease:
     // don't update user time on releases
     // e.g. if the user presses Alt+F2, the Alt release
@@ -1120,7 +1120,35 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
         Options::MouseCommand com = Options::MouseNothing;
         bool was_action = false;
         bool perform_handled = false;
-        if ( bModKeyHeld )
+        if (keyModX != 0 && (state & keyModX) &&  (state & ControlMask))
+            {
+            switch (button)
+                {
+                case Button5:
+                    if (opacity_ > 0)
+                        {
+                        setOpacity(TRUE, (opacity_ > 0xCCCCCCC) ? opacity_ - 0xCCCCCCC : 0);
+                        custom_opacity = true;
+                        }
+                    XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime );
+                    return true;
+                case Button4:
+                    if (opacity_ < 0xFFFFFFFF)
+                        {
+                        if (opacity_ < 0xF3333333){
+                            setOpacity(TRUE, opacity_ + 0xCCCCCCC);
+                            custom_opacity = true;
+                            }
+                        else{
+                            setOpacity(FALSE, 0xFFFFFFFF);
+                            custom_opacity = false;
+                            }
+                        }
+                    XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime );
+                    return true;
+                }
+            }
+        else if ( bModKeyHeld )
             {
             was_action = true;
             switch (button) 

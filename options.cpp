@@ -168,6 +168,28 @@ unsigned long Options::updateSettings()
     CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"), false );
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"), false );
 
+    //translucency settings
+    config->setGroup( "Translucency");
+    useTranslucency = config->readBoolEntry("UseTranslucency", false);
+    translucentActiveWindows = config->readBoolEntry("TranslucentActiveWindows", false);
+    activeWindowOpacity = (config->readNumEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF;
+    translucentInactiveWindows = config->readBoolEntry("TranslucentInactiveWindows", false);
+    inactiveWindowOpacity = (config->readNumEntry("InactiveWindowOpacity", 100)/100.0)*0xFFFFFFFF;
+    translucentMovingWindows = config->readBoolEntry("TranslucentMovingWindows", false);
+    movingWindowOpacity = (config->readNumEntry("MovingWindowOpacity", 100)/100.0)*0xFFFFFFFF;
+    translucentDocks = config->readBoolEntry("TranslucentDocks", false);
+    dockOpacity = (config->readNumEntry("DockOpacity", 100)/100.0)*0xFFFFFFFF;
+    keepAboveAsActive = config->readBoolEntry("TreatKeepAboveAsActive", true);
+    //TODO: remove this variable
+    useTitleMenuSlider = true;
+    activeWindowShadowSize = config->readNumEntry("ActiveWindowShadowSize", 100);
+    inactiveWindowShadowSize = config->readNumEntry("InactiveWindowShadowSize", 100);
+    dockShadowSize = config->readNumEntry("DockShadowSize", 100);
+    if (resetKompmgr = config->readBoolEntry("ResetKompmgr", false))
+        config->writeEntry("ResetKompmgr",FALSE);
+    
+    
+    
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the

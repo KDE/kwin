@@ -32,6 +32,7 @@ class KConfig;
 class KFocusConfig;
 class KActionsConfig;
 class KAdvancedConfig;
+class KTranslucencyConfig;
 
 class KWinOptions : public KCModule
 {
@@ -61,6 +62,7 @@ private:
   KActionsConfig *mActions;
   KMovingConfig *mMoving;
   KAdvancedConfig *mAdvanced;
+  KTranslucencyConfig *mTranslucency;
 
   KConfig *mConfig;
 };

@@ -221,8 +221,8 @@ void Workspace::setActiveClient( Client* c, allowed_t )
     ++set_active_client_recursion;
     if( active_client != NULL )
         { // note that this may call setActiveClient( NULL ), therefore the recursion counter
-        active_client->setActive( false );
-        }
+        active_client->setActive( false, !c || !c->isModal() );
+    }
     active_client = c;
     Q_ASSERT( c == NULL || c->isActive());
     if( active_client != NULL )
@@ -771,13 +771,16 @@ Time Client::userTime() const
   its own.
 
  */
-void Client::setActive( bool act)
+void Client::setActive( bool act, bool updateOpacity_)
     {
     if ( active == act )
         return;
     active = act;
     workspace()->setActiveClient( act ? this : NULL, Allowed );
-
+    
+    if (updateOpacity_) updateOpacity();
+    updateShadowSize();
+    
     if ( active )
         Notify::raise( Notify::Activate );
 

@@ -30,6 +30,7 @@ class Application : public  KApplication
         bool x11EventFilter( XEvent * );
     private slots:
         void lostSelection();
+
     private:
         KWinSelectionOwner owner;
     };

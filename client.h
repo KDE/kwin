@@ -105,7 +105,7 @@ class Client : public QObject, public KDecorationDefines
         QPixmap miniIcon() const;
 
         bool isActive() const;
-        void setActive( bool );
+        void setActive( bool, bool updateOpacity = true );
 
         int desktop() const;
         void setDesktop( int );
@@ -277,6 +277,21 @@ class Client : public QObject, public KDecorationDefines
         void cancelAutoRaise();
         void destroyClient();
         void checkActiveModal();
+        void setOpacity(bool translucent, uint opacity = 0);
+        void setShadowSize(uint shadowSize);
+        void updateOpacity();
+        void updateShadowSize();
+        bool hasCustomOpacity(){return custom_opacity;}
+        void setCustomOpacityFlag(bool custom = true);
+        bool getWindowOpacity();
+        int opacityPercentage();
+        void checkAndSetInitialRuledOpacity();
+        uint ruleOpacityInactive();
+        uint ruleOpacityActive();
+        unsigned int opacity();
+        bool isBMP();
+        void setBMP(bool b);
+        bool touches(const Client* c);
 
     private slots:
         void autoRaise();
@@ -505,6 +520,14 @@ class Client : public QObject, public KDecorationDefines
         friend struct ResetupRulesProcedure;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
+        uint opacity_;
+        uint savedOpacity_;
+        bool custom_opacity;
+        uint rule_opacity_active; //translucency rules
+        uint rule_opacity_inactive; //dto.
+        //int shadeOriginalHeight;
+        bool isBMP_;
+        
     };
 
 // NET WM Protocol handler class
@@ -856,7 +879,17 @@ inline void Client::setShortcut( const KShortcut& cut )
     _shortcut = cut;
     workspace()->clientShortcutUpdated( this );
     }
+    
+inline bool Client::isBMP()
+    {
+    return isBMP_;
+    }
 
+inline void Client::setBMP(bool b)
+    {
+    isBMP_ = b;
+    }
+    
 #ifdef NDEBUG
 inline
 kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }

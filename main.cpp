@@ -114,13 +114,14 @@ Application::Application( )
 
     options = new Options;
     atoms = new Atoms;
-
+    
     // create workspace.
     (void) new Workspace( isSessionRestored() );
 
     syncX(); // trigger possible errors, there's still a chance to abort
 
     initting = FALSE; // startup done, we are up and running now.
+       
     dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
     XEvent e;
     e.xclient.type = ClientMessage;
@@ -154,7 +155,7 @@ bool Application::x11EventFilter( XEvent *e )
              return TRUE;
     return KApplication::x11EventFilter( e );
     }
-
+    
 static void sighandler(int) 
     {
     QApplication::exit();

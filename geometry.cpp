@@ -2108,6 +2108,11 @@ bool Client::startMoveResize()
     workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
+    // rule out non opaque windows from useless translucency settings, maybe resizes?
+    if (/*isMove() && */rules()->checkMoveResizeMode( options->moveMode ) == Options::Opaque){
+        savedOpacity_ = opacity_;
+        setOpacity(options->translucentMovingWindows, options->movingWindowOpacity);
+    }
     if ( ( isMove() && rules()->checkMoveResizeMode( options->moveMode ) != Options::Opaque )
       || ( isResize() && rules()->checkMoveResizeMode( options->resizeMode ) != Options::Opaque ) )
         {
@@ -2139,6 +2144,9 @@ void Client::finishMoveResize( bool cancel )
 
 void Client::leaveMoveResize()
     {
+    // rule out non opaque windows from useless translucency settings, maybe resizes?
+    if (/*isMove() && */rules()->checkMoveResizeMode( options->moveMode ) == Options::Opaque)
+        setOpacity(true, savedOpacity_);
     clearbound();
     if (geometryTip)
         {

@@ -67,6 +67,14 @@ extern "C"
 		KConfig *c = new KConfig("kwinrc", false, true);
 		return new KAdvancedConfig(true, c, parent, name);
 	}
+        
+	KCModule *create_kwintranslucency(QWidget *parent, const char *name)
+	{
+		//CT there's need for decision: kwm or kwin?
+		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KTranslucencyConfig(true, c, parent, name);
+	}
 
 	KDE_EXPORT KCModule *create_kwinoptions ( QWidget *parent, const char* name)
 	{
@@ -104,7 +112,12 @@ KWinOptions::KWinOptions(QWidget *parent, const char *name)
   mAdvanced->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
-  
+
+  mTranslucency = new KTranslucencyConfig(false, mConfig, this, "KWin Translucency");
+  mTranslucency->layout()->setMargin( KDialog::marginHint() );
+  tab->addTab(mTranslucency, i18n("&Translucency"));
+  connect(mTranslucency, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    
   KAboutData *about =
     new KAboutData(I18N_NOOP("kcmkwinoptions"), I18N_NOOP("Window Behavior Configuration Module"),
                   0, 0, KAboutData::License_GPL,
@@ -134,6 +147,7 @@ void KWinOptions::load()
   mActions->load();
   mMoving->load();
   mAdvanced->load();
+  mTranslucency->load();
   emit KCModule::changed( false );
 }
 
@@ -144,6 +158,7 @@ void KWinOptions::save()
   mActions->save();
   mMoving->save();
   mAdvanced->save();
+  mTranslucency->save();
 
   emit KCModule::changed( false );
   // Send signal to kwin
@@ -160,6 +175,7 @@ void KWinOptions::defaults()
   mActions->defaults();
   mMoving->defaults();
   mAdvanced->defaults();
+  mTranslucency->defaults();
 }
 
 QString KWinOptions::quickHelp() const

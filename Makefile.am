@@ -1,6 +1,10 @@
 INCLUDES = -I$(srcdir)/lib $(all_includes)
 
-SUBDIRS = lib . killer kcmkwin pics clients oldheaders data
+if include_kompmgr
+KOMPMGR=kompmgr
+endif
+
+SUBDIRS = lib . killer kcmkwin pics clients oldheaders data $(KOMPMGR)
 
 bin_PROGRAMS = 
 lib_LTLIBRARIES =

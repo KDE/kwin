@@ -139,6 +139,8 @@ bool Client::manage( Window w, bool isMapped )
     init_minimize = rules()->checkMinimize( init_minimize, !isMapped );
     if( rules()->checkNoBorder( false, !isMapped ))
         setUserNoBorder( true );
+    
+    checkAndSetInitialRuledOpacity();
 
     // initial desktop placement
     if ( session ) 

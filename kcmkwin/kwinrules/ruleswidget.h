@@ -76,6 +76,8 @@ class RulesWidget
         void updateEnableignoreposition();
         void updateEnableminsize();
         void updateEnablemaxsize();
+        void updateEnableopacityactive();
+        void updateEnableopacityinactive();
         // internal
         void detected( bool );
     private:

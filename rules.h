@@ -47,6 +47,8 @@ class WindowRules
         QSize checkSize( QSize s, bool init = false ) const;
         QSize checkMinSize( QSize s ) const;
         QSize checkMaxSize( QSize s ) const;
+        int checkOpacityActive(int s) const;
+        int checkOpacityInactive(int s) const;
         bool checkIgnorePosition( bool ignore ) const;
         int checkDesktop( int desktop, bool init = false ) const;
         NET::WindowType checkType( NET::WindowType type ) const;
@@ -91,6 +93,8 @@ class Rules
         bool applySize( QSize& s, bool init ) const;
         bool applyMinSize( QSize& s ) const;
         bool applyMaxSize( QSize& s ) const;
+        bool applyOpacityActive(int& s) const;
+        bool applyOpacityInactive(int& s) const;
         bool applyIgnorePosition( bool& ignore ) const;
         bool applyDesktop( int& desktop, bool init ) const;
         bool applyType( NET::WindowType& type ) const;
@@ -177,6 +181,10 @@ class Rules
         ForceRule minsizerule;
         QSize maxsize;
         ForceRule maxsizerule;
+        int opacityactive;
+        ForceRule opacityactiverule;
+        int opacityinactive;
+        ForceRule opacityinactiverule;
         bool ignoreposition;
         ForceRule ignorepositionrule;
         int desktop;

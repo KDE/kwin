@@ -39,6 +39,8 @@ Rules::Rules()
     , sizerule( UnusedSetRule )
     , minsizerule( UnusedForceRule )
     , maxsizerule( UnusedForceRule )
+    , opacityactiverule( UnusedForceRule )
+    , opacityinactiverule( UnusedForceRule )
     , ignorepositionrule( UnusedForceRule )
     , desktoprule( UnusedSetRule )
     , typerule( UnusedForceRule )
@@ -131,6 +133,12 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE( maxsize, Size, );
     if( maxsize.isEmpty())
         maxsize = QSize( 32767, 32767 );
+    READ_FORCE_RULE( opacityactive, Num, );
+    if( opacityactive < 0 || opacityactive > 100 )
+        opacityactive = 100;
+    READ_FORCE_RULE( opacityinactive, Num, );
+    if( opacityinactive < 0 || opacityinactive > 100 )
+        opacityinactive = 100;
     READ_FORCE_RULE( ignoreposition, Bool, );
     READ_SET_RULE( desktop, Num, );
     type = readType( cfg, "type" );
@@ -216,6 +224,8 @@ void Rules::write( KConfig& cfg ) const
     WRITE_SET_RULE( size, );
     WRITE_FORCE_RULE( minsize, );
     WRITE_FORCE_RULE( maxsize, );
+    WRITE_FORCE_RULE( opacityactive, );
+    WRITE_FORCE_RULE( opacityinactive, );
     WRITE_FORCE_RULE( ignoreposition, );
     WRITE_SET_RULE( desktop, );
     WRITE_FORCE_RULE( type, );
@@ -248,6 +258,8 @@ bool Rules::isEmpty() const
         && sizerule == UnusedSetRule
         && minsizerule == UnusedForceRule
         && maxsizerule == UnusedForceRule
+        && opacityactiverule == UnusedForceRule
+        && opacityinactiverule == UnusedForceRule
         && ignorepositionrule == UnusedForceRule
         && desktoprule == UnusedSetRule
         && typerule == UnusedForceRule
@@ -472,6 +484,16 @@ bool Rules::update( Client* c )
         updated = updated || noborder != c->isUserNoBorder();
         noborder = c->isUserNoBorder();
         }
+    if (opacityactiverule == ( ForceRule )Force)
+        {
+        updated = updated || (uint) (opacityactive/100.0*0xffffffff) != c->ruleOpacityActive();
+        opacityactive = (uint)(((double)c->ruleOpacityActive())/0xffffffff*100);
+        }
+    if (opacityinactiverule == ( ForceRule )Force)
+        {
+        updated = updated || (uint) (opacityinactive/100.0*0xffffffff) != c->ruleOpacityInactive();
+        opacityinactive = (uint)(((double)c->ruleOpacityInactive())/0xffffffff*100);
+        }
     return updated;
     }
 
@@ -527,6 +549,8 @@ bool Rules::applySize( QSize& s, bool init ) const
 
 APPLY_FORCE_RULE( minsize, MinSize, QSize )
 APPLY_FORCE_RULE( maxsize, MaxSize, QSize )
+APPLY_FORCE_RULE( opacityactive, OpacityActive, int )
+APPLY_FORCE_RULE( opacityinactive, OpacityInactive, int )
 APPLY_FORCE_RULE( ignoreposition, IgnorePosition, bool )
 APPLY_RULE( desktop, Desktop, int )
 APPLY_FORCE_RULE( type, Type, NET::WindowType )
@@ -671,6 +695,8 @@ CHECK_RULE( Position, QPoint )
 CHECK_RULE( Size, QSize )
 CHECK_FORCE_RULE( MinSize, QSize )
 CHECK_FORCE_RULE( MaxSize, QSize )
+CHECK_FORCE_RULE( OpacityActive, int )
+CHECK_FORCE_RULE( OpacityInactive, int )
 CHECK_FORCE_RULE( IgnorePosition, bool )
 CHECK_RULE( Desktop, int )
 CHECK_FORCE_RULE( Type, NET::WindowType )
@@ -715,6 +741,7 @@ void Client::setupWindowRules( bool ignore_temporary )
     // check only after getting the rules, because there may be a rule forcing window type
     if( isTopMenu()) // TODO cannot have restrictions
         client_rules = WindowRules();
+    checkAndSetInitialRuledOpacity();        
     if( isManaged())
         { // apply force rules
         // Placement - does need explicit update, just like some others below
@@ -762,6 +789,43 @@ void Client::finishWindowRules()
     {
     updateWindowRules();
     client_rules = WindowRules();
+    }
+    
+void Client::checkAndSetInitialRuledOpacity()
+//apply kwin-rules for window-translucency upon hitting apply or starting to manage client
+    {
+    int tmp;
+    
+    //active translucency
+    tmp = -1;
+    tmp = rules()->checkOpacityActive(tmp);
+    if( tmp != -1 ) //rule did apply and returns valid value
+        {
+        rule_opacity_active = (uint)((tmp/100.0)*0xffffffff);
+        }
+    else
+        rule_opacity_active = 0;
+
+    //inactive translucency
+    tmp = -1;
+    tmp = rules()->checkOpacityInactive(tmp);
+    if( tmp != -1 ) //rule did apply and returns valid value
+        {
+        rule_opacity_inactive = (uint)((tmp/100.0)*0xffffffff);
+        }
+    else
+        rule_opacity_inactive = 0;
+
+    return;
+        
+    if( isDock() )
+     //workaround for docks, as they don't have active/inactive settings and don't aut, therefore we take only the active one...
+        {
+        uint tmp = rule_opacity_active ? rule_opacity_active : options->dockOpacity;
+        setOpacity(tmp < 0xFFFFFFFF && (rule_opacity_active || options->translucentDocks), tmp);
+        }
+    else
+        updateOpacity();
     }
 
 // Workspace

@@ -22,6 +22,12 @@ class KWinInterface : virtual public DCOPObject
     virtual void nextDesktop() = 0;
     virtual void previousDesktop() = 0;
     virtual void circulateDesktopApplications() = 0;
+    // kompmgr stuff
+    virtual void startKompmgr() = 0;
+    virtual void stopKompmgr() = 0;
+    virtual void setOpacity(unsigned long winId, unsigned int opacityPercent) = 0;
+    virtual void setShadowSize(unsigned long winId, unsigned int shadowSizePercent) = 0;
+    virtual void setUnshadowed(unsigned long winId) = 0;
 
     k_dcop_signals:
 

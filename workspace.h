@@ -32,6 +32,9 @@ class KShortcutDialog;
 class KStartupInfo;
 class KStartupInfoId;
 class KStartupInfoData;
+class QSlider;
+class QPushButton;
+class KProcess;
 
 namespace KWinInternal
 {
@@ -223,6 +226,11 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         void sendPingToWindow( Window w, Time timestamp ); // called from Client::pingWindow()
         void sendTakeActivity( Client* c, Time timestamp, long flags ); // called from Client::takeActivity()
+        
+        void stopKompmgr();
+        void setOpacity(unsigned long winId, unsigned int opacityPercent);
+        void setShadowSize(unsigned long winId, unsigned int shadowSizePercent);
+        void setUnshadowed(unsigned long winId); // redundant, equals setShadowSize(inId, 0)
 
     // only called from Client::destroyClient() or Client::releaseWindow()
         void removeClient( Client*, allowed_t );
@@ -258,6 +266,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         void cancelDelayFocus();
         void requestDelayFocus( Client* );
+        
+        void toggleTopDockShadows(bool on);
 
     public slots:
         void refresh();
@@ -331,6 +341,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void setupWindowShortcutDone( bool );
 
         void updateClientArea();
+        
+        // kompmgr, also dcop
+        void startKompmgr();
 
     private slots:
         void desktopPopupAboutToShow();
@@ -346,6 +359,14 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void gotTemporaryRulesMessage( const QString& );
         void cleanupTemporaryRules();
         void writeWindowRules();
+        // kompmgr
+        void setPopupClientOpacity(int v);
+        void resetClientOpacity();
+        void setTransButtonText(int value);
+        void unblockKompmgrRestart();
+        void restartKompmgr();
+        void handleKompmgrOutput( KProcess *proc, char *buffer, int buflen);
+        // end 
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -571,6 +592,15 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         Window null_focus_window;
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
+        
+        //kompmgr
+        QSlider *transSlider;
+        QPushButton *transButton;
+        // not used yet
+        /*Client* topDock;
+        int maximizedWindowCounter;
+        int topDockShadowSize;*/
+        //end
     };
 
 // helper for Workspace::blockStackingUpdates() being called in pairs (true/false)
