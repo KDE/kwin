@@ -401,10 +401,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
 
-    XWindowAttributes attr;
-    if (XGetWindowAttributes(qt_xdisplay(), win, &attr)){
-	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
-    }
     mapped = 0;
     wwrap = new WindowWrapper( w, this );
     wwrap->installEventFilter( this );
@@ -474,6 +470,11 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     if (layout())
       layout()->setResizeMode( QLayout::Minimum );
+    
+    XWindowAttributes attr;
+    if (XGetWindowAttributes(qt_xdisplay(), win, &attr))
+	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
+    
     QRect geom( original_geometry );
     bool placementDone = FALSE;
 
