@@ -73,54 +73,53 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	QVBoxLayout* layout = new QVBoxLayout(this, 0, KDialog::spacingHint()); 
 
-	QHBoxLayout *listLayout = new QHBoxLayout(layout);
-
-	QLabel *lbl = new QLabel( i18n("&Decoration:"), this );
-	decorationList = new KComboBox( this );
-	lbl->setBuddy(decorationList);
-	QString whatsThis = i18n("Select the window decoration. This is the look and feel of both "
-                             "the window borders and the window handle.");
-	QWhatsThis::add(lbl, whatsThis);
-	QWhatsThis::add(decorationList, whatsThis);
-
-	listLayout->addWidget(lbl);
-	listLayout->addWidget(decorationList);
-	listLayout->addStretch();
-
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
 
-	QVBoxLayout* previewLayout = new QVBoxLayout(layout, KDialog::spacingHint());
-
-	QFrame* preview_frame = new QFrame( this );
-	preview_frame->setFrameShape( QFrame::NoFrame );
-	QVBoxLayout* preview_layout = new QVBoxLayout( preview_frame, 0 );
-	preview = new KDecorationPreview( preview_frame );
-	preview_layout->addWidget( preview );
-	previewLayout->addWidget( preview_frame );
-	previewLayout->setStretchFactor( preview_frame, 10 );
-
 	tabWidget = new QTabWidget( this );
 	layout->addWidget( tabWidget );
-
-	preview_frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	tabWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
 	// Page 1 (General Options)
 	QWidget *pluginPage = new QWidget( tabWidget );
 
 	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage, KDialog::marginHint(), KDialog::spacingHint());
 
-	pluginConfigWidget = new QVBox(pluginPage);
+	// decoration chooser
+	decorationList = new KComboBox( pluginPage );
+	QString whatsThis = i18n("Select the window decoration. This is the look and feel of both "
+                             "the window borders and the window handle.");
+	QWhatsThis::add(decorationList, whatsThis);
+	pluginLayout->addWidget(decorationList);
 
-	pluginLayout->addWidget( pluginConfigWidget );
+	QGroupBox *pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
+	pluginSettingsGrp->setColumnLayout( 0, Vertical );
+	pluginSettingsGrp->setFlat( true );
+	pluginSettingsGrp->layout()->setMargin( 0 );
+	pluginSettingsGrp->layout()->setSpacing( KDialog::spacingHint() );
+	pluginLayout->addWidget( pluginSettingsGrp );
+
 	pluginLayout->addStretch();
 
+	// Border size chooser
+	lBorder = new QLabel( pluginSettingsGrp );
+	slBorder = new QSlider( Horizontal, pluginSettingsGrp );
+	slBorder->setPageStep(1);
+	QWhatsThis::add( slBorder, i18n( "This slider shows all border sizes supported by this decoration." ));
+	lBorder->setBuddy( slBorder );
+	lBorder->hide();
+	slBorder->hide();
+	pluginSettingsGrp->layout()->add(lBorder);
+	QHBoxLayout *sliderIndentLayout = new QHBoxLayout(pluginSettingsGrp->layout() );
+	sliderIndentLayout->addSpacing(20);
+	sliderIndentLayout->addWidget(slBorder);
+
+	pluginConfigWidget = new QVBox(pluginSettingsGrp);
+	pluginSettingsGrp->layout()->add( pluginConfigWidget );
+
 	// Page 2 (Button Selector)
-	QVBox* buttonPage = new QVBox( tabWidget );
-	buttonPage->setSpacing( KDialog::spacingHint() );
-	buttonPage->setMargin( KDialog::marginHint() );
+	QWidget* buttonPage = new QWidget( tabWidget );
+	QVBoxLayout* buttonLayout = new QVBoxLayout(buttonPage, KDialog::marginHint(), KDialog::spacingHint());
 
 	cbShowToolTips = new QCheckBox(
 			i18n("&Show window button tooltips"), buttonPage );
@@ -134,8 +133,11 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 			i18n(  "The appropriate settings can be found in the \"Buttons\" Tab; "
 				   "please note that this option is not available on all styles yet." ) );
 
-	buttonBox = new QGroupBox( 1, Qt::Horizontal,
-			i18n("Titlebar Button Positions"), buttonPage );
+	buttonBox = new QVBox( buttonPage );
+	buttonBox->setSpacing( KDialog::spacingHint() );
+
+	buttonLayout->addWidget( cbShowToolTips );
+	buttonLayout->addWidget( cbUseCustomButtonPositions );
 
 	// Add nifty dnd button modification widgets
 	QLabel* label = new QLabel( buttonBox );
@@ -146,19 +148,24 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 		"drag items within the titlebar preview to re-position them.") );
 	buttonSource = new ButtonSource( buttonBox );
 
-	// Page 3 (Border size chooser)
-	QWidget* borderPage = new QWidget( tabWidget );
-	QVBoxLayout* borderLayout = new QVBoxLayout(borderPage, KDialog::marginHint(), KDialog::spacingHint());
-	lBorder = new QLabel( borderPage );
-	slBorder = new QSlider( Horizontal, borderPage );
-	slBorder->setPageStep(1);
-	QWhatsThis::add( slBorder, i18n( "This slider shows all border sizes supported by this decoration." ));
-	lBorder->setBuddy( slBorder );
-	lBorder->hide();
-	slBorder->hide();
-	borderLayout->addWidget(lBorder);
-	borderLayout->addWidget(slBorder);
-	borderLayout->addStretch();
+	QHBoxLayout* buttonControlLayout = new QHBoxLayout(buttonLayout);
+	buttonControlLayout->addSpacing(20);
+	buttonControlLayout->addWidget(buttonBox);
+// 	buttonLayout->addStretch();
+
+	// preview
+	QVBoxLayout* previewLayout = new QVBoxLayout(layout, KDialog::spacingHint());
+
+	QFrame* preview_frame = new QFrame( this );
+	preview_frame->setFrameShape( QFrame::NoFrame );
+	QVBoxLayout* preview_layout = new QVBoxLayout( preview_frame, 0 );
+	preview = new KDecorationPreview( preview_frame );
+	preview_layout->addWidget( preview );
+	previewLayout->addWidget( preview_frame );
+	previewLayout->setStretchFactor( preview_frame, 10 );
+
+	preview_frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	tabWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
 	// Load all installed decorations into memory
 	// Set up the decoration lists and other UI settings
@@ -169,7 +176,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	tabWidget->insertTab( pluginPage, i18n("&Window Decoration") );
 	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
-	tabWidget->insertTab( borderPage, i18n("B&order Size") );
 
 	connect( dropSite, SIGNAL(buttonAdded(char)), buttonSource, SLOT(hideButton(char)) );
 	connect( dropSite, SIGNAL(buttonRemoved(char)), buttonSource, SLOT(showButton(char)) );

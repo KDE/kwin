@@ -127,7 +127,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		// Page 2
 		ButtonDropSite* dropSite;
 		ButtonSource* buttonSource;
-		QGroupBox* buttonBox;
+		QVBox* buttonBox;
 		QVBox*	 buttonPage;
 };
 
