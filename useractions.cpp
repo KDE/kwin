@@ -897,7 +897,9 @@ void Workspace::showWindowMenu( const QRect &pos, Client* cl )
 	else
 	    p->exec( QPoint( x, pos.top() - popupHeight ) );
         }
-    closeActivePopup();
+    // active popup may be already changed (e.g. the window shortcut dialog)
+    if( active_popup == p )
+        closeActivePopup();
     }
 
 /*!
