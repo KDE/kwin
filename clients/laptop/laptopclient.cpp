@@ -1,7 +1,6 @@
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
-#include <qabstractlayout.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
