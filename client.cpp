@@ -42,7 +42,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 namespace KWinInternal {
 
 // NET WM Protocol handler class
-class WinInfo : public NETWinInfo 
+class WinInfo : public NETWinInfo
 {
 public:
     WinInfo(KWinInternal::Client * c, Display * display, Window window,
@@ -602,6 +602,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
 	     (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
+	    if ( resource_name == "AWTapp" )
+		geom.moveTopLeft( QPoint(xSizeHint.x, xSizeHint.y) );
 	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
 		int tx = geom.x();
 		int ty = geom.y();
@@ -2684,7 +2686,7 @@ QCString Client::staticWmClientMachine(WId w)
             if (result == hostnamebuf)
                 result = "localhost";
             char *dot = strchr(hostnamebuf, '.');
-            if (dot && !(*dot = 0) && result == hostnamebuf) 
+            if (dot && !(*dot = 0) && result == hostnamebuf)
                 result = "localhost";
         }
     }
@@ -2729,7 +2731,7 @@ QCString Client::windowRole()
 }
 
 /*!
-  Returns sessionId for this client, 
+  Returns sessionId for this client,
   taken either from its window or from the leader window.
  */
 QCString Client::sessionId()
@@ -2741,7 +2743,7 @@ QCString Client::sessionId()
 }
 
 /*!
-  Returns the classhint resource name for this client, 
+  Returns the classhint resource name for this client,
  */
 QCString Client::resourceName()
 {
@@ -2749,7 +2751,7 @@ QCString Client::resourceName()
 }
 
 /*!
-  Returns the classhint resource class for this client, 
+  Returns the classhint resource class for this client,
  */
 QCString Client::resourceClass()
 {
@@ -2757,7 +2759,7 @@ QCString Client::resourceClass()
 }
 
 /*!
-  Returns command property for this client, 
+  Returns command property for this client,
   taken either from its window or from the leader window.
  */
 QCString Client::wmCommand()
@@ -2769,7 +2771,7 @@ QCString Client::wmCommand()
 }
 
 /*!
-  Returns client machine for this client, 
+  Returns client machine for this client,
   taken either from its window or from the leader window.
 */
 QCString Client::wmClientMachine()
@@ -2780,7 +2782,7 @@ QCString Client::wmClientMachine()
     return result;
 }
 
-/*! 
+/*!
   Returns client leader window for this client.
   Returns the client window itself if no leader window is defined.
 */
