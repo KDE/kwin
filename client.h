@@ -125,6 +125,7 @@ public:
     bool isMovable() const;
     bool isDesktop() const;
     bool isDock() const;
+    bool isMenu() const;
 
     void takeFocus();
 

@@ -1599,14 +1599,14 @@ bool Client::x11Event( XEvent * e)
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
-	if ( options->autoRaise && !isDesktop() && !isDock() ) {
+	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = new QTimer( this );
 	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
 	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
 	}
 	
-	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse   && ( isDesktop() || isDock() ) )
+	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse   && ( isDesktop() || isDock() || isMenu() ) )
 	    return TRUE;
 	
 	workspace()->requestFocus( this );
@@ -1875,6 +1875,9 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus()
 {
+    if ( isMenu() )
+	return; // menus don't take focus
+    
     if ( input )
 	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
     if ( Ptakefocus )
@@ -2215,6 +2218,12 @@ bool Client::isDock() const
 {
     return windowType() == NET::Dock;
 }
+
+bool Client::isMenu() const
+{
+    return windowType() == NET::Menu;
+}
+
 
 
 /*!

@@ -851,7 +851,7 @@ Client* Workspace::previousStaticClient( Client* c ) const
 Client* Workspace::topClientOnDesktop() const
 {
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-	if ( !(*it)->isDesktop() && !(*it)->isDock() )
+	if ( !(*it)->isDesktop() && !(*it)->isDock() && !(*it)->isDock() )
 	    return *it;
     }
     return 0;
@@ -911,6 +911,39 @@ void Workspace::setActiveClient( Client* c )
 	focus_chain.remove( c );
 	if ( c->wantsTabFocus() )
 	    focus_chain.append( c );
+    }
+    
+    // toplevel menubar handling
+    Client* main = 0;
+    if ( active_client )
+	main = active_client->mainClient();
+
+    // show the new menu bar first...
+    Client* menubar = 0;
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it)->isMenu() && (*it)->mainClient() == main ) {
+	    menubar = *it;
+	    break;
+	}
+    }
+    if ( !menubar && desktop_client ) {
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	    if ( (*it)->isMenu() && (*it)->mainClient() == desktop_client ) {
+		menubar = *it;
+		break;
+	    }
+	}
+    }
+    
+    if ( menubar ) {
+	menubar->show();
+	menubar->raise();
+    }
+    
+    // ... then hide the other ones. Avoids flickers.
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it)->isMenu() && (*it) != menubar )
+	    (*it)->hide();
     }
 
     rootInfo->setActiveWindow( active_client? active_client->window() : 0 );
