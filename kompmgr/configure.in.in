@@ -1,0 +1,5 @@
+compile_kompmgr=yes
+KDE_CHECK_HEADERS(X11/extensions/Xdamage.h,,compile_kompmgr=no,[#include <X11/Xlib.h>])
+KDE_CHECK_HEADERS(X11/extensions/Xcomposite.h,,compile_kompmgr=no,[#include <X11/Xlib.h>])
+KDE_CHECK_HEADERS(X11/extensions/Xrender.h,,compile_kompmgr=no,[#include <X11/Xlib.h>])
+AM_CONDITIONAL(include_kompmgr, test "$compile_kompmgr" = "yes" )
