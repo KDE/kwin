@@ -1693,11 +1693,6 @@ void Client::autoRaise()
     autoRaiseTimer = 0;
     }
 
-NETWinInfo * Client::netWinInfo()
-    {
-    return static_cast<NETWinInfo *>(info);
-    }
-
 #ifdef NDEBUG
 kndbgstream& operator<<( kndbgstream& stream, const Client* cl ) { return stream; }
 #else

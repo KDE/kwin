@@ -27,7 +27,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/Xutil.h>
 #include <fixx11h.h>
 
-class NETWinInfo;
 class QTimer;
 class KProcess;
 class KStartupInfoData;
@@ -298,8 +297,6 @@ class Client : public QObject, public KDecorationDefines
         void focusOutEvent( XFocusOutEvent* e );
 
         void processDecorationButtonPress( int button, int state, int x, int y, int x_root, int y_root );
-
-        NETWinInfo * netWinInfo(); // APICLEAN ???
 
     private slots:
         void pingTimeout();

@@ -84,7 +84,7 @@ bool Bridge::isPreview() const
 
 QRect Bridge::iconGeometry() const
     {
-    NETRect r = c->netWinInfo()->iconGeometry();
+    NETRect r = c->info->iconGeometry();
     return QRect( r.pos.x, r.pos.y, r.size.width, r.size.height );
     }
 
