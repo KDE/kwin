@@ -371,7 +371,6 @@ KDEDefaultClientButton::KDEDefaultClientButton(Client *parent, const char *name,
     resize(16, 16);
     if(bitmap)
         setBitmap(bitmap);
-    //setBackgroundMode(QWidget::NoBackground);
 }
 
 QSize KDEDefaultClientButton::sizeHint() const
@@ -398,7 +397,7 @@ void KDEDefaultClientButton::setPixmap(const QPixmap &p,
     deco.resize(0, 0);
     pix = p;
     moPix = mouseOverPix;
-    setMask(QRect(0, 0, 16, 16));
+    clearMask();
     repaint();
 }
 
@@ -499,6 +498,8 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     g->addRowSpacing(0, 3);
     g->addRowSpacing(2, 1);
     g->addWidget(windowWrapper(), 3, 1);
+    // without the next line, unshade flickers
+    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
     g->setRowStretch(3, 10);
     g->addRowSpacing(4, 8); // bottom handles
     g->addColSpacing(0, 4);
@@ -604,15 +605,15 @@ void KDEClient::resizeEvent( QResizeEvent* e)
     Client::resizeEvent( e );
 
     doShape();
-    calcHiddenButtons();
+    if ( e->oldSize().width() != width() ) {
+ 	calcHiddenButtons();
+	// make layout update titlebar->geometry() in case some buttons
+	// where shown or hidden in calcHiddenButtons() above
+	QApplication::sendPostedEvents( this, QEvent::LayoutHint );
+    }
 
     if ( !isVisible() )
 	return;
-    
-    // make layout update titlebar->geometry() in case some buttons
-    // where shown or hidden in calcHiddenButtons() above
-    QApplication::sendPostedEvents( this, QEvent::LayoutHint );
-    
     
     // we selected WResizeNoErase and WNorthWestGravity. That means:
     // on a resize event, we do not get a full paint event and the
@@ -775,11 +776,6 @@ void KDEClient::showEvent(QShowEvent *ev)
     doShape();
     calcHiddenButtons();
     repaint();
-}
-
-void KDEClient::windowWrapperShowEvent( QShowEvent* )
-{
-    doShape();
 }
 
 void KDEClient::mouseDoubleClickEvent( QMouseEvent * e )

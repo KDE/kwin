@@ -12,7 +12,7 @@ class QHBoxLayout;
 
 // get rid of autohide :P
 class KDEDefaultClientButton : public QToolButton
-{                         
+{
 public:
     KDEDefaultClientButton(Client *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL);
@@ -57,7 +57,6 @@ protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
     void showEvent( QShowEvent* );
-    void windowWrapperShowEvent( QShowEvent* );
     void mouseDoubleClickEvent( QMouseEvent * );
     void init();
     void captionChange( const QString& name );

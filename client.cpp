@@ -16,6 +16,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qwhatsthis.h>
+#include <qobjectlist.h>
 #include <qdatetime.h>
 #include <qtimer.h>
 #include <kwin.h>
@@ -2077,7 +2078,7 @@ void Client::setShade( bool s )
 	int h = height();
 	QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
 	windowWrapper()->hide();
-	repaint( FALSE ); // force direct repaint
+	repaint( FALSE );
 	bool wasNorthWest = testWFlags( WNorthWestGravity );
 	setWFlags( WNorthWestGravity );
 	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
@@ -2095,6 +2096,7 @@ void Client::setShade( bool s )
     } else {
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
+	bool wasNorthWest = testWFlags( WNorthWestGravity );
 	setWFlags( WNorthWestGravity );
 	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
 	do {
@@ -2105,11 +2107,11 @@ void Client::setShade( bool s )
   	    repaint( 0, h - step-5, width(), step+5, TRUE);
 	    QApplication::syncX();
 	} while ( h < s.height() - step );
-	clearWFlags( WNorthWestGravity );
+	if ( !wasNorthWest )
+	    clearWFlags( WNorthWestGravity );
 	resize ( s );
 	windowWrapper()->show();
 	activateLayout();
-	repaint();
 	if ( isActive() )
 	    workspace()->requestFocus( this );
   	XEvent tmpE;
