@@ -33,7 +33,7 @@
  keys->insertItem(i18n("Window raise"),"Window raise", "");
  keys->insertItem(i18n("Window lower"),"Window lower", "");
 
- keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "F12");
+ keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "ALT+F12");
 
  keys->insertItem(i18n("Logout"),"Logout", "CTRL+ALT+Delete");
 
