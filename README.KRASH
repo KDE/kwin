@@ -4,7 +4,6 @@ Contents:
 * Muliple Style Support
 * Memory Usage
 * Theme Support
-* Things removed for Krash
 
 * Multiple Style Support And Themes:
 KWin now supports multiple styles in the same fashion as KDE widgets although
