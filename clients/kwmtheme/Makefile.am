@@ -1,4 +1,4 @@
-
+SUBDIRS=cli_installer
 INCLUDES = $(all_includes) 
 
 kde_module_LTLIBRARIES = libkwinkwmtheme.la

@@ -63,7 +63,7 @@ static void init_theme()
     QString localBaseDir=*(appDirs.end());
     
     for(i=0; i < 8; ++i){
-        framePixmaps[i] = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+        framePixmaps[i] = new QPixmap(localBaseDir + "/kwmtheme/" +
                                       config->readEntry(keys[i], " "));
         if(framePixmaps[i]->isNull())
             qWarning("Unable to load frame pixmap for %s", keys[i]);
@@ -78,38 +78,38 @@ static void init_theme()
     if(framePixmaps[FrameRight]->width() > maxExtent)
         maxExtent = framePixmaps[FrameRight]->width();
 
-    menuPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+    menuPix = new QPixmap(localBaseDir + "/kwmtheme/" +
                           config->readEntry("menu", " "));
-    iconifyPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+    iconifyPix = new QPixmap(localBaseDir + "/kwmtheme/" +
                              config->readEntry("iconify", " "));
-    maxPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+    maxPix = new QPixmap(localBaseDir + "/kwmtheme/" +
                          config->readEntry("maximize", " "));
-    minmaxPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+    minmaxPix = new QPixmap(localBaseDir + "/kwmtheme/" +
                             config->readEntry("maximizedown", " "));
-    closePix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+    closePix = new QPixmap(localBaseDir + "/kwmtheme/" +
                            config->readEntry("close", " "));
-    pinupPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+    pinupPix = new QPixmap(localBaseDir + "/kwmtheme/" +
                            config->readEntry("pinup", " "));
-    pindownPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+    pindownPix = new QPixmap(localBaseDir + "/kwmtheme/" +
                              config->readEntry("pindown", " "));
     if(menuPix->isNull())
-        menuPix->load(baseDir + "/kwmtheme/defaultpics/menu.png");
+        menuPix->load(baseDir + "/pics/menu.png");
     if(iconifyPix->isNull())
         iconifyPix->
-            load(baseDir + "/kwmtheme/defaultpics/iconify.png");
+            load(baseDir + "/pics/iconify.png");
     if(maxPix->isNull())
         maxPix->
-            load(baseDir +"/kwmtheme/defaultpics/maximize.png");
+            load(baseDir +"/pics/maximize.png");
     if(minmaxPix->isNull())
         minmaxPix->
-            load(baseDir + "/kwmtheme/defaultpics/maximizedown.png");
+            load(baseDir + "/pics/maximizedown.png");
     if(closePix->isNull())
-        closePix->load(baseDir + "/kwmtheme/defaultpics/close.png");
+        closePix->load(baseDir + "/pics/close.png");
     if(pinupPix->isNull())
-        pinupPix->load(baseDir + "/kwmtheme/defaultpics/pinup.png");
+        pinupPix->load(baseDir + "/pics/pinup.png");
     if(pindownPix->isNull())
         pindownPix->
-            load(baseDir + "/kwmtheme/defaultpics/pindown.png");
+            load(baseDir + "/pics/pindown.png");
     
     
     QString tmpStr = config->readEntry("TitleAlignment");
@@ -159,14 +159,14 @@ static void init_theme()
         tmpStr = config->readEntry("TitlebarPixmapActive", "");
         if(!tmpStr.isEmpty()){
             aTitlePix = new KPixmap;
-            aTitlePix->load(localBaseDir + "/kwmtheme/themepics/" + tmpStr);
+            aTitlePix->load(localBaseDir + "/kwmtheme/" + tmpStr);
         }
         else
             aTitlePix = NULL;
         tmpStr = config->readEntry("TitlebarPixmapInactive", "");
         if(!tmpStr.isEmpty()){
             iTitlePix = new KPixmap;
-            iTitlePix->load(localBaseDir + "/kwmtheme/themepics/" + tmpStr);
+            iTitlePix->load(localBaseDir + "/kwmtheme/" + tmpStr);
         }
         else
             iTitlePix = NULL;
