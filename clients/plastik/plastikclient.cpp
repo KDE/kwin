@@ -119,6 +119,9 @@ bool PlastikClient::isTool()
 void PlastikClient::resizeEvent()
 {
     doShape();
+
+    // FIXME: don't update() here! this would result in two paintEvent()s
+    // because there is already "something" else triggering the repaint...
 //     widget()->update();
 }
 
