@@ -217,11 +217,11 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
                   " windows to the current desktop." );
     QWhatsThis::add( traverseAll, wtstr );
 
-    rollOverDesktops = new QCheckBox( i18n("Desktops navigation wraps around"), kbdBox );
+    rollOverDesktops = new QCheckBox( i18n("Desktop navigation wraps around"), kbdBox );
     kLay->addMultiCellWidget(rollOverDesktops, 3, 3, 0, 2);
 
-    wtstr = i18n( "Enable this option if you want that keyboard or electric border navigation beyond"
-                  " an edge desktop brings you to the desktop at the opposite edge" );
+    wtstr = i18n( "Enable this option if you want keyboard or electric border navigation beyond"
+                  " an edge desktop to bring you to the desktop at the opposite edge." );
     QWhatsThis::add( rollOverDesktops, wtstr );
 
     lay->addWidget(kbdBox);
