@@ -90,6 +90,14 @@ public:
      * Return the number of animation steps (would this be general?)
      */
     const int animSteps() { return anim_steps; };
+    /**
+     * Return the size of the zone that triggers snapping on desktop borders
+     */
+    const int borderSnapZone() { return border_snap_zone; };
+    /**
+     * Return the number of animation steps (would this be general?)
+     */
+    const int windowSnapZone() { return window_snap_zone; };
 
 public slots:
     void reload();
@@ -102,6 +110,7 @@ protected:
 private:
   bool animate_shade;
   int anim_steps;
+  int border_snap_zone, window_snap_zone;
 };
 
 extern Options* options;

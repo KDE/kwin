@@ -17,6 +17,7 @@ Options::Options()
     placement = Smart;
     animate_shade = true;
     anim_steps = 100;
+    border_snap_zone = window_snap_zone = 10;
     
     connect( kapp, SIGNAL( appearanceChanged() ), this, SLOT(reload() ) );
 }
@@ -154,4 +155,8 @@ void Options::reload()
     animate_shade = config->readBoolEntry("AnimateShade", true);
 
     anim_steps = config->readNumEntry("AnimSteps", 100);
+
+    border_snap_zone = config->readNumEntry("BorderSnapZone", 10);
+    window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
+
 }
