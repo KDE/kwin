@@ -703,7 +703,7 @@ void IceWMButton::mouseReleaseEvent( QMouseEvent* e )
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity | WRepaintNoErase )
+    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents | WRepaintNoErase )
 {
 	// Set button pointers to null so we can track things
 	for(int i= IceWMClient::BtnSysMenu; i < IceWMClient::BtnCount; i++)
