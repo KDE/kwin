@@ -15,7 +15,7 @@
 
 extern "C"
 {
-    Client *allocate(Workspace *ws, WId w)
+    Client *allocate(Workspace *ws, WId w, int)
     {
         return(new SystemClient(ws, w));
     }
@@ -23,13 +23,13 @@ extern "C"
 
 static unsigned char iconify_bits[] = {
     0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
-    
+
 static unsigned char maximize_bits[] = {
     0x00, 0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0x00};
-    
+
 static unsigned char minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
-    
+
 static unsigned char unsticky_bits[] = {
     0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
 
@@ -38,7 +38,7 @@ static unsigned char sticky_bits[] = {
 
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
-    
+
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
 
@@ -131,7 +131,7 @@ static void create_pixmaps()
         bitBlt(iBtnPix, 2, 2, &iPix, 0, 0, 10, 10, Qt::CopyROP, true);
         drawButtonFrame(iBtnPix, options->colorGroup(Options::Frame, false));
 
-        
+
         // pressed buttons
         hColor = options->color(Options::ButtonBg, false);
         KPixmapEffect::gradient(iInternal,
@@ -171,7 +171,7 @@ static void create_pixmaps()
         btnForeground = Qt::black;
     else
         btnForeground = Qt::white;
-}   
+}
 
 
 SystemButton::SystemButton(Client *parent, const char *name,
@@ -233,9 +233,9 @@ void SystemButton::drawButton(QPainter *p)
         p->setPen(isDown() ? g.light() : g.mid());
         p->drawLine(x2-2, 2, x2-2, y2-2);
         p->drawLine(2, x2-2, y2-2, x2-2);
-        
+
     }
-        
+
     if(!deco.isNull()){
         p->setPen(btnForeground);
         p->drawPixmap(isDown() ? 4 : 3, isDown() ? 4 : 3, deco);
@@ -359,7 +359,7 @@ void SystemClient::recalcTitleBuffer()
         p.fillRect(0, 0, width(), 18,
                    options->colorGroup(Options::Frame, true).
                    brush(QColorGroup::Button));
-    
+
     QRect t = titlebar->geometry();
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
@@ -386,7 +386,7 @@ void SystemClient::recalcTitleBuffer()
     p.end();
     oldTitle = caption();
 }
-    
+
 void SystemClient::captionChange( const QString &)
 {
     recalcTitleBuffer();
@@ -415,7 +415,7 @@ void SystemClient::paintEvent( QPaintEvent* )
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
-    
+
     if(isActive())
         p.drawPixmap(0, 0, titleBuffer);
     else{
@@ -427,7 +427,7 @@ void SystemClient::paintEvent( QPaintEvent* )
         p.setFont(options->font(isActive()));
         p.drawText(t, AlignCenter, caption() );
     }
-        
+
 
 
     p.setPen(options->colorGroup(Options::Frame, isActive()).light());
@@ -446,7 +446,7 @@ void SystemClient::doShape()
 {
     // using a bunch of QRect lines seems much more efficent than bitmaps or
     // point arrays
-    
+
     QRegion mask;
     kRoundMaskRegion(mask, 0, 0, width(), height());
     setMask(mask);
@@ -462,7 +462,7 @@ void SystemClient::showEvent(QShowEvent *ev)
 void SystemClient::windowWrapperShowEvent( QShowEvent* )
 {
     doShape();
-}                                                                               
+}
 
 void SystemClient::mouseDoubleClickEvent( QMouseEvent * e )
 {

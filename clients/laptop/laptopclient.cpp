@@ -17,7 +17,7 @@
 
 extern "C"
 {
-    Client *allocate(Workspace *ws, WId w)
+    Client *allocate(Workspace *ws, WId w, int)
     {
         return(new LaptopClient(ws, w));
     }
@@ -359,7 +359,7 @@ void LaptopClient::resizeEvent( QResizeEvent* e)
 	    dx = 16 + QABS( e->oldSize().width() -  width() );
 	if ( e->oldSize().height() != height() )
 	    dy = 16 + QABS( e->oldSize().height() -  height() );
-	if ( dy ) 
+	if ( dy )
 	    update( 0, height() - dy + 1, width(), dy );
 	if ( dx ) {
 	    update( width() - dx + 1, 0, dx, height() );

@@ -22,9 +22,11 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 extern "C"
 {
-  Client * allocate(Workspace * workSpace, WId winId)
+  Client * allocate(Workspace * workSpace, WId winId, int tool )
   {
-    return new StdClient(workSpace, winId);
+      if ( tool )
+	  return new StdToolClient( workSpace, winId );
+      return new StdClient(workSpace, winId);
   }
 }
 

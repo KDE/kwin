@@ -15,7 +15,7 @@
 
 extern "C"
 {
-    Client *allocate(Workspace *ws, WId w)
+    Client *allocate(Workspace *ws, WId w, int)
     {
         return(new B2Client(ws, w));
     }

@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+								
 Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 ******************************************************************/
 #ifndef __PLUGINS_H
@@ -22,13 +22,13 @@ class PluginMgr : public QObject
 public:
     PluginMgr();
     ~PluginMgr();
-    Client *allocateClient(Workspace *ws, WId w);
+    Client *allocateClient(Workspace *ws, WId w, bool tool);
     void loadPlugin(QString name);
     QString currentPlugin() { return pluginStr; }
 signals:
     void resetAllClients();
 protected:
-    Client* (*alloc_ptr)(Workspace *ws, WId w);
+    Client* (*alloc_ptr)(Workspace *ws, WId w, int tool);
     lt_dlhandle handle;
     QString pluginStr;
 };

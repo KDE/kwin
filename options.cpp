@@ -169,9 +169,9 @@ void Options::reload()
 
     animateShade = config->readBoolEntry("AnimateShade", TRUE );
 
-    animSteps = config->readNumEntry("AnimSteps", 10);
-
-
+    animateMinimize = config->readBoolEntry("AnimateMinimize", TRUE );
+    animateMinimizeSpeed = config->readNumEntry("AnimateMinimizeSpeed", 1 );
+    
     autoRaise = config->readBoolEntry("AutoRaise", FALSE );
     autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
 

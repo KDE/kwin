@@ -1,6 +1,6 @@
 /*
   RISC OS KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -33,7 +33,7 @@
 
 extern "C"
 {
-  Client * allocate(Workspace * workSpace, WId winId)
+  Client * allocate(Workspace * workSpace, WId winId, int)
   {
     return new RiscOS::Manager(workSpace, winId);
   }
@@ -70,7 +70,7 @@ Manager::slotReset()
   Static::instance()->update();
   _updateDisplay();
 }
-    
+
   void
 Manager::captionChange(const QString &)
 {
@@ -80,7 +80,7 @@ Manager::captionChange(const QString &)
   void
 Manager::paletteChange(const QPalette &)
 {
-  Static::instance()->update(); 
+  Static::instance()->update();
   _updateDisplay();
 }
 
@@ -127,12 +127,12 @@ Manager::paintEvent(QPaintEvent * e)
 
     if (intersectsLeft)
       p.drawLine(0, r.top(), 0, r.bottom());
-  
+
     if (intersectsRight)
       p.drawLine(width() - 1, r.top(), width() - 1, r.bottom());
   }
 }
-    
+
   Client::MousePosition
 Manager::mousePosition(const QPoint & p) const
 {
@@ -173,7 +173,7 @@ Manager::_updateLayout()
   titleBar_       ->  setGeometry(0, 0, width(), 20);
   windowWrapper() ->  setGeometry(1, 20, width() - 2, height() - 30);
   resizeBar_      ->  setGeometry(0, height() - 10, width(), 10);
-  
+
   _updateDisplay();
 }
 
@@ -193,7 +193,7 @@ Manager::fakeMouseEvent(QMouseEvent * e, QWidget * w)
   Client::event(&fake);
 }
 
-  void 
+  void
 Manager::mouseDoubleClickEvent( QMouseEvent * )
 {
     workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );

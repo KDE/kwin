@@ -423,6 +423,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     is_sticky = FALSE;
     stays_on_top = FALSE;
     may_move = TRUE;
+    is_fullscreen = TRUE;
     skip_taskbar = FALSE;
     max_mode = MaximizeRestore;
 
@@ -497,15 +498,17 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     QRect area = workspace()->clientArea();
 
-    if ( geom == workspace()->geometry() )
+    if ( geom == workspace()->geometry() ) {
+	is_fullscreen = TRUE;
 	may_move = FALSE; // don't let fullscreen windows be moved around
-    
+    }
+
     if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
     }  else {
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
-	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) { 
+	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
 		int tx = geom.x();
 		int ty = geom.y();
 		if ( tx >= 0 && tx < area.x() )
@@ -1144,8 +1147,18 @@ bool Client::isMaximizable() const
 {
     if ( isMaximized() )
 	return TRUE;
-    return isResizable() && !isTransient();
+    return isResizable() && !isTransient() && !isTool();
 }
+
+/*
+  Returns whether the window is minimizable or not
+ */
+bool Client::isMinimizable() const
+{
+    return wantsTabFocus();
+}
+
+
 
 
 /*!
@@ -1516,9 +1529,9 @@ void Client::invalidateWindow()
  */
 void Client::iconify()
 {
-    if ( windowType() != NET::Normal && windowType() != NET::Toolbar ) // desktop and dock cannot be minimized
+    if ( !isMinimizable() )
 	return;
-
+    
     if ( isShade() )
 	setShade( FALSE );
     if ( workspace()->iconifyMeansWithdraw( this ) ) {
@@ -1867,7 +1880,7 @@ void Client::setShade( bool s )
 
     shaded = s;
 
-    int as = options->animateShade? options->animSteps : 1;
+    int as = options->animateShade? 10 : 1;
 
     if (shaded ) {
 	int h = height();
@@ -2406,6 +2419,12 @@ bool Client::wantsTabFocus() const
     return (windowType() == NET::Normal || windowType() == NET::Override ) && ( input || Ptakefocus ) && !skip_taskbar;
 }
 
+
+bool Client::wantsInput() const
+{
+    return input;
+}
+
 /*!
   Returns whether the window is moveable or has a fixed
   position. !isMovable implies !isResizable.
@@ -2430,6 +2449,12 @@ bool Client::isDock() const
 bool Client::isMenu() const
 {
     return windowType() == NET::Menu;
+}
+
+
+bool Client::isTool() const
+{
+    return windowType() == NET::Tool;
 }
 
 
@@ -2465,9 +2490,13 @@ void Client::animateIconifyOrDeiconify( bool iconify)
 
     float lf,rf,tf,bf,step;
 
-    int options_dot_ResizeAnimation = 1;
+    int speed = options->animateMinimizeSpeed;
+    if ( speed > 10 )
+	speed = 10;
+    if ( speed < 0 )
+	speed = 0;
 
-    step = 40. * (11 - options_dot_ResizeAnimation);
+    step = 40. * (11 - speed );
 
     NETRect r = info->iconGeometry();
     QRect icongeom( r.pos.x, r.pos.y, r.size.width, r.size.height );

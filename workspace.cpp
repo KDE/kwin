@@ -162,13 +162,13 @@ Client* Workspace::clientFactory( WId w )
 	    return c;
 	}
 
-    case NET::Toolbar:
-	return (mgr.allocateClient(this,w) ); // TODO use mgr.allocateClient in toolbar mode
+    case NET::Tool:
+	return ( mgr.allocateClient( this, w, true ) );
 
     case NET::Menu:
     case NET::Dock:
 	{
-	    Client * c = new NoBorderClient( this, w);
+	    Client * c = new NoBorderClient( this, w );
 	    c->setSticky( TRUE );
 	    return c;
 	}
@@ -183,7 +183,7 @@ Client* Workspace::clientFactory( WId w )
     if ( Shape::hasShape( w ) ){
 	return new NoBorderClient( this, w );
     }
-    return(mgr.allocateClient(this, w));
+    return ( mgr.allocateClient( this, w, false ) );
 }
 
 // Rikkus: This class is too complex. It needs splitting further.
@@ -703,6 +703,7 @@ bool Workspace::keyPress(XKeyEvent key)
 		tab_box->reset();
 	    }
 	    tab_box->nextPrev( (km & ShiftMask) == 0 );
+	    keys->setEnabled( FALSE );
 	    tab_box->delayedShow();
 	}
     }
@@ -730,6 +731,7 @@ bool Workspace::keyPress(XKeyEvent key)
 		tab_box->reset();
 	    }
 	    tab_box->nextPrev( (km & ShiftMask) == 0 );
+	    keys->setEnabled( FALSE );
 	    tab_box->delayedShow();
 	}
     }
@@ -737,8 +739,9 @@ bool Workspace::keyPress(XKeyEvent key)
     if (control_grab || tab_grab){
 	if (kc == XK_Escape){
 	    XUngrabKeyboard(qt_xdisplay(), kwin_time);
-            XUngrabPointer( qt_xdisplay(), kwin_time);
+	    XUngrabPointer( qt_xdisplay(), kwin_time);
 	    tab_box->hide();
+	    keys->setEnabled( TRUE );
 	    tab_grab = FALSE;
 	    control_grab = FALSE;
 	    return TRUE;
@@ -764,8 +767,9 @@ bool Workspace::keyRelease(XKeyEvent key)
 	    if (xmk->modifiermap[xmk->max_keypermod * Mod1MapIndex + i]
 		== key.keycode){
 		XUngrabKeyboard(qt_xdisplay(), kwin_time);
-                XUngrabPointer( qt_xdisplay(), kwin_time);
+		XUngrabPointer( qt_xdisplay(), kwin_time);
 		tab_box->hide();
+		keys->setEnabled( TRUE );
 		tab_grab = false;
  		if ( tab_box->currentClient() ){
 
@@ -779,9 +783,10 @@ bool Workspace::keyRelease(XKeyEvent key)
 	for (i=0; i<xmk->max_keypermod; i++)
 	    if (xmk->modifiermap[xmk->max_keypermod * ControlMapIndex + i]
 		== key.keycode){
-                XUngrabPointer( qt_xdisplay(), kwin_time);
+		XUngrabPointer( qt_xdisplay(), kwin_time);
 		XUngrabKeyboard(qt_xdisplay(), kwin_time);
 		tab_box->hide();
+		keys->setEnabled( TRUE );
 		control_grab = False;
 		if ( tab_box->currentDesktop() != -1 )
 		    setCurrentDesktop( tab_box->currentDesktop() );
@@ -1071,7 +1076,8 @@ void Workspace::requestFocus( Client* c, bool force )
     } else if ( c->isShade() ) {
 	// client cannot accept focus, but at least the window should be active (window menu, et. al. )
 	focusToNull();
-	c->setActive( TRUE );
+	if ( c->wantsInput() )
+	    c->setActive( TRUE );
     }
 }
 
@@ -1653,6 +1659,26 @@ void Workspace::raiseClient( Client* c )
     raiseTransientsOf(saveset, c );
 
     ClientList list = constrainedStackingOrder( stacking_order );
+
+    /* workaround to help broken full-screen applications to keep (modal) dialogs visible
+     */
+    if ( c->isTransient() && c->mainClient() == c ) {
+	bool has_full_screen = false;
+	for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
+	    if ( (*it) ==  c )
+		break;
+	    if ( (*it)->isVisible() && (*it)->isFullScreen() ) {
+		has_full_screen = true;
+		break;
+	    }
+	}
+	if ( has_full_screen ) {
+	    list.remove( c );
+	    list.append( c );
+	}
+    }
+    /* end workaround */
+
     Window* new_stack = new Window[ list.count() + 1 ];
     int i = 0;
     for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
@@ -2309,6 +2335,10 @@ void Workspace::slotWindowOperations()
  */
 void Workspace::slotWindowClose()
 {
+    if ( tab_box->isVisible() ) {
+	qDebug("ARGGGLLLLLLLLL");
+	return;
+    }
     performWindowOperation( popup_client, Options::CloseOp );
 }
 
@@ -2652,7 +2682,7 @@ void Workspace::slotResetAllClients()
 	(*jt) = newClient;
 	jt = focus_chain.find (oldClient);
 	(*jt) = newClient;
-        newClient->cloneMode(oldClient);
+	newClient->cloneMode(oldClient);
 	delete oldClient;
 	bool showIt = newClient->manage( TRUE, TRUE, FALSE );
 	if ( prev ) {

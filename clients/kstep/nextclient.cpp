@@ -13,7 +13,7 @@
 
 extern "C"
 {
-    Client *allocate(Workspace *ws, WId w)
+    Client *allocate(Workspace *ws, WId w, int )
     {
         return(new NextClient(ws, w));
     }
@@ -105,7 +105,7 @@ static void create_pixmaps()
     aBtnDown->resize(18, 18);
     KPixmap internal;
     internal.resize(12, 12);
-    
+
     // inactive buttons
     QColor c(options->color(Options::ButtonBg, false));
     KPixmapEffect::gradient(*iBtn, c.light(120), c.dark(120),
@@ -170,7 +170,7 @@ void NextClient::slotReset()
     delete iBtn;
     delete aBtnDown;
     delete iBtnDown;
-    
+
     pixmaps_created = false;
     create_pixmaps();
     button[0]->reset();
@@ -218,7 +218,7 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
 {
     create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
-    
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QHBoxLayout *titleLayout = new QHBoxLayout();
     QHBoxLayout *windowLayout = new QHBoxLayout();

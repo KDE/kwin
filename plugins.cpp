@@ -120,10 +120,10 @@ PluginMgr::~PluginMgr()
         lt_dlclose(handle);
 }
 
-Client* PluginMgr::allocateClient(Workspace *ws, WId w)
+Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
 {
     if(alloc_ptr)
-        return(alloc_ptr(ws, w));
+        return(alloc_ptr(ws, w, tool));
     else
         return(new KDEClient(ws, w));
 }
@@ -134,7 +134,7 @@ void PluginMgr::loadPlugin(QString nameStr)
     static lt_dlhandle oldHandle = 0;
 
     pluginStr = nameStr;
-  
+
     oldHandle = handle;
 
     // Rikkus: temporary change in semantics.
@@ -166,7 +166,7 @@ void PluginMgr::loadPlugin(QString nameStr)
         else{
             lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
             if(alloc_func)
-                alloc_ptr = (Client* (*)(Workspace *ws, WId w))alloc_func;
+                alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
             else{
                 qWarning("KWin: %s is not a KWin plugin.", nameStr.latin1());
                 lt_dlclose(handle);

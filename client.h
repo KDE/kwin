@@ -117,6 +117,7 @@ public:
     bool isMaximizable() const;
     QRect geometryRestore() const;
     MaximizeMode maximizeMode() const;
+    bool isMinimizable() const;
 
     bool isSticky() const;
     void setSticky( bool );
@@ -126,9 +127,11 @@ public:
 
     // auxiliary functions, depend on the windowType
     bool wantsTabFocus() const;
+    bool wantsInput() const;
     bool isMovable() const;
     bool isDesktop() const;
     bool isDock() const;
+    bool isTool() const;
     bool isMenu() const;
 
     bool isResizable() const;
@@ -142,6 +145,8 @@ public:
     virtual void drawbound( const QRect& geom );
     virtual void clearbound();
 
+    // fullscreen hint, for stacking
+    bool isFullScreen() const;
 
     // shape extensions
     bool shape() const;
@@ -264,6 +269,7 @@ private:
     uint stays_on_top : 1;
     uint is_shape :1;
     uint may_move :1;
+    uint is_fullscreen :1;
     uint skip_taskbar :1;
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
@@ -384,6 +390,12 @@ inline bool Client::staysOnTop() const
 inline bool Client::shape() const
 {
     return is_shape;
+}
+
+
+inline bool Client::isFullScreen() const
+{
+    return is_fullscreen;
 }
 
 inline const QRegion& Client::getMask() const

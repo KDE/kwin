@@ -146,11 +146,6 @@ public:
     bool animateShade;
 
     /**
-     * the number of animation steps (would this be general?)
-     */
-    int animSteps;
-
-    /**
      * the size of the zone that triggers snapping on desktop borders
      */
     int borderSnapZone;
@@ -159,7 +154,17 @@ public:
      * the number of animation steps (would this be general?)
      */
     int windowSnapZone;
-
+    
+    
+    /**
+     * whether we animate the minimization of windows or not
+     */
+    bool  animateMinimize;
+    
+    /**
+     * Animation speed (0 .. 10 )
+    */
+    int animateMinimizeSpeed;
 
 
     // mouse bindings

@@ -18,7 +18,7 @@
 
 extern "C"
 {
-    Client *allocate(Workspace *ws, WId w)
+    Client *allocate(Workspace *ws, WId w, int)
     {
         return(new KDEClient(ws, w));
     }
@@ -307,7 +307,7 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
 {
     lastButtonWidth = 0;
     lastBufferWidth = 0;
- 
+
     create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
@@ -323,18 +323,22 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
-    button[BtnClose] = new KDEDefaultClientButton(27, titleHeight, this, "close", close_bits);
-    button[BtnSticky] = new KDEDefaultClientButton(17, titleHeight, this, "sticky");
+    int th = titleHeight;
+    if ( isTool() )
+	th -= 2;
+
+    button[BtnClose] = new KDEDefaultClientButton(27, th, this, "close", close_bits);
+    button[BtnSticky] = new KDEDefaultClientButton(17, th, this, "sticky");
     if(isSticky())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
         button[BtnSticky]->setBitmap(sticky_bits);
-    button[BtnIconify] = new KDEDefaultClientButton(27, titleHeight, this, "iconify",
+    button[BtnIconify] = new KDEDefaultClientButton(27, th, this, "iconify",
                                           iconify_bits);
-    button[BtnMax] = new KDEDefaultClientButton(27, titleHeight, this, "maximize",
+    button[BtnMax] = new KDEDefaultClientButton(27, th, this, "maximize",
                                       maximize_bits);
     if(help){
-        button[BtnHelp] = new KDEDefaultClientButton(17, titleHeight, this, "help",
+        button[BtnHelp] = new KDEDefaultClientButton(17, th, this, "help",
                                      question_bits);
         connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
@@ -351,7 +355,7 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     g->addLayout( hb, 1, 1 );
     hb->addWidget( button[BtnClose]);
     hb->addSpacing(1);
-    titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding,
+    titlebar = new QSpacerItem(10, th, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
     hb->addItem(titlebar);
     hb->addSpacing(1);
@@ -362,11 +366,12 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     hb->addWidget( button[BtnIconify]);
     hb->addWidget( button[BtnMax]);
 
-    if ( isTransient() ) {
+    if ( isTransient() || isTool() )
 	button[BtnSticky]->hide();
+    if ( !isMinimizable() )
 	button[BtnIconify]->hide();
+    if ( !isMaximizable() )
 	button[BtnMax]->hide();
-    }
 
     hiddenItems = false;
     bufferDirty = true;
@@ -429,9 +434,13 @@ void KDEClient::paintEvent( QPaintEvent* )
     p.drawLine(r.right()-1, r.y()+1, r.right()-1, r.bottom()-1);
     p.drawLine(r.x()+1, r.bottom()-1, r.right()-1, r.bottom()-1);
 
+    int th = titleHeight;
+    if ( isTool() )
+	th -= 2;
+
     // inner rect
-    p.drawRect(r.x()+3, r.y()+titleHeight+3, r.width()-6,
-               r.height()-titleHeight-10);
+    p.drawRect(r.x()+3, r.y()+th+3, r.width()-6,
+               r.height()-th-10);
     // handles
     if(r.width() > 44){
         qDrawShadePanel(&p, r.x()+1, r.bottom()-6, 20,
@@ -464,7 +473,7 @@ void KDEClient::paintEvent( QPaintEvent* )
             p.fillRect(r.x(), r.y(), r.width(), r.height()-1,
                        options->color(Options::TitleBar, false));
 
-        p.setFont(options->font(false));
+        p.setFont(options->font(false, isTool() ));
         QFontMetrics fm(options->font(false));
         g = options->colorGroup(Options::TitleBar, false);
         if(iUpperGradient)
@@ -582,7 +591,12 @@ void KDEClient::calcHiddenButtons()
             if(button[i]){
                 if(button[i]->sizeHint().width() + totalSize <= width()){
                     totalSize+=button[i]->sizeHint().width();
-                    if(button[i]->isHidden() && ( !isTransient() || ( i != BtnIconify && i != BtnSticky && i != BtnMax ) ) ){
+                    if(button[i]->isHidden() &&
+		       ( !isTransient() || !isTransient() || i != BtnSticky ) &&
+		       ( isMinimizable() || i != BtnIconify ) &&
+		       ( isMaximizable() || ( i != BtnIconify && i != BtnSticky && i != BtnMax ) )
+		
+		       ) {
                         button[i]->resize(button[i]->sizeHint());
                         button[i]->show();
                     }
@@ -621,7 +635,7 @@ void KDEClient::updateActiveBuffer( )
     if(titlePix)
         p.drawTiledPixmap(r, *titlePix);
 
-    p.setFont(options->font(true));
+    p.setFont(options->font(true, isTool() ));
     QFontMetrics fm(options->font(true));
     QColorGroup g = options->colorGroup(Options::TitleBar, true);
     if(aUpperGradient)
