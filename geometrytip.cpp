@@ -62,4 +62,4 @@ void GeometryTip::setGeometry( const QRect& geom )
 	  geom.y() + ((geom.height() - height()) / 2) );
 }
 
-
+#include "geometrytip.moc"
