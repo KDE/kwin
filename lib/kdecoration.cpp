@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <qapplication.h>
 #include <assert.h>
 #include <X11/Xlib.h>
+#include <fixx11h.h>
 
 #include "kdecoration_p.h"
 #include "kdecorationfactory.h"
