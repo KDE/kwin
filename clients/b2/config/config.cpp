@@ -41,15 +41,15 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 			i18n("Draw window frames using &titlebar colors"), gb);
 	QWhatsThis::add(cbColorBorder,
 			i18n("When selected, the window borders "
-				"are drawn using the titlebar colors. Otherwise, they are "
-				"drawn using normal border colors instead."));
+				"are drawn using the titlebar colors; otherwise, they are "
+				"drawn using normal border colors."));
 
 	// Grab Handle
     showGrabHandleCb = new QCheckBox(
 	    i18n("Draw &resize handle"), gb);
     QWhatsThis::add(showGrabHandleCb,
 	    i18n("When selected, decorations are drawn with a \"grab handle\" "
-		 "in the bottom left corner of the windows; "
+		 "in the bottom right corner of the windows; "
 		 "otherwise, no grab handle is drawn."));
 
     // Double click menu option support
