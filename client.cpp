@@ -263,25 +263,25 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     XReparentWindow( qt_xdisplay(), win, winId(), 0, 0 );
 
 //     // overwrite Qt-defaults because we need SubstructureNotifyMask
-//     XSelectInput( qt_xdisplay(), winId(),
-//   		 KeyPressMask | KeyReleaseMask |
-//   		 ButtonPressMask | ButtonReleaseMask |
-//   		 KeymapStateMask |
-//    		 ButtonMotionMask |
-//    		 PointerMotionMask | // need this, too!
-//   		 EnterWindowMask | LeaveWindowMask |
-//   		 FocusChangeMask |
-//   		 ExposureMask |
-// 		 StructureNotifyMask |
-// 		 SubstructureRedirectMask |
-// 		 SubstructureNotifyMask
-//   		 );
+     XSelectInput( qt_xdisplay(), winId(),
+		   KeyPressMask | KeyReleaseMask |
+		   ButtonPressMask | ButtonReleaseMask |
+		   KeymapStateMask |
+		   ButtonMotionMask |
+		   PointerMotionMask | // need this, too!
+		   EnterWindowMask | LeaveWindowMask |
+		   FocusChangeMask |
+		   ExposureMask |
+		   StructureNotifyMask |
+		   SubstructureRedirectMask |
+		   SubstructureNotifyMask
+		   );
 
-    XSelectInput( qt_xdisplay(), w,
-		  FocusChangeMask |
-		  PropertyChangeMask |
-		  StructureNotifyMask
-		  );
+     XSelectInput( qt_xdisplay(), w,
+		   FocusChangeMask |
+		   PropertyChangeMask |
+		   StructureNotifyMask
+		   );
 
 
     // install a passive grab to catch mouse button events
@@ -343,6 +343,7 @@ void WindowWrapper::releaseWindow()
 			 ((Client*)parentWidget())->workspace()->rootWin(),
 			 parentWidget()->x(),
 			 parentWidget()->y() );
+	
 	XRemoveFromSaveSet(qt_xdisplay(), win );
 	invalidateWindow();
     }

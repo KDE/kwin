@@ -131,7 +131,9 @@ void Workspace::init()
 Workspace::~Workspace()
 {
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	WId win = (*it)->window();
 	delete (*it);
+	XMapWindow( qt_xdisplay(), win );
     }
     delete tab_box;
     delete popup;
