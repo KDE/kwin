@@ -624,11 +624,25 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	else if ( info->state() & NET::MaxHoriz )
 	    maximize( Client::MaximizeHorizontal );
 	
-	
-	if ( isMaximizable() && !isMaximized() && width() >= area.width() && height() >= area.height()
-	     && ( geom.topLeft() == area.topLeft() ||
-		  geom.topLeft() == workspace()->geometry().topLeft() ) ) {
+	if ( isMaximizable() && !isMaximized() 
+	     && ( width() >= area.width() || height() >= area.height() ) ) {
+	  // window is too large for the screen, maximize in the
+	  // directions necessary and generate a suitable restore
+	  // geometry.
+	  QSize s = adjustedSize( QSize( width()*2/3, height()*2/3 ) ); 
+	  if ( width() >= area.width() && height() >= area.height() ) {
 	    maximize( Client::MaximizeFull );
+	    geom_restore.setSize( s );
+	    geom_restore.moveCenter( geometry().center() );
+	  } else if ( width() >= area.width() ) {
+	    maximize( Client::MaximizeHorizontal );
+	    geom_restore.setWidth( s.width() );
+	    geom_restore.moveCenter( geometry().center() );
+	  } else if ( height() >= area.height() ) {
+	    maximize( Client::MaximizeVertical );
+	    geom_restore.setHeight( s.height() );
+	    geom_restore.moveCenter( geometry().center() );
+	  }
 	}
     }
 
