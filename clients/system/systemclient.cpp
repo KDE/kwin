@@ -69,7 +69,7 @@ static void create_pixmaps()
         aUpperGradient->resize(32, 18);
         iUpperGradient = new KPixmap;
         iUpperGradient->resize(32, 18);
-        QColor bgColor = kapp->palette().normal().background();
+        QColor bgColor = kapp->palette().active().background();
         KPixmapEffect::gradient(*aUpperGradient,
                                 options->color(Options::Frame, true).light(130),
                                 bgColor,
@@ -372,7 +372,7 @@ void SystemClient::resizeEvent( QResizeEvent* )
     recalcTitleBuffer();
     doShape();
     /*
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
+    if ( isVisibleToTLW() && !testWFlags( WStaticContents )) {
         QPainter p( this );
 	QRect t = titlebar->geometry();
 	t.setTop( 0 );
