@@ -5,6 +5,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #ifndef STDCLIENT_H
 #define STDCLIENT_H
+#include <qvariant.h>
 #include "../../client.h"
 #include "../../kwinbutton.h"
 class QLabel;
