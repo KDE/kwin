@@ -1,43 +1,51 @@
-Important notes on KWin for the Krash (1.89) developers release:
+Important notes on KWin for the 2.0 Betas:
 
-Contents:
-* Muliple Style Support
+Contents
+--------
+
+* Multiple Style Support And Themes
 * Memory Usage
 * Theme Support
 
-* Multiple Style Support And Themes:
-KWin now supports multiple styles in the same fashion as KDE widgets although
-the KWin support is much less complete as of this time. The mechanism is very
-similar - KWin can allocate different client decoration code at runtime in
-order to decorate the windows. This means that developers can easily code
-window manager styles that do absolutely anything they can think of. It also
-means that for simple look and feels using a theme engine is not required but
-can be coded directly into a window manager component, making it very efficent.
+Multiple Style Support And Themes
+---------------------------------
+
+KWin now supports multiple styles in the same fashion as KDE widgets
+although the KWin support is much less complete as of this time. The
+mechanism is very similar - KWin can allocate different client decoration
+code at runtime in order to decorate the windows. This means that
+developers can easily code window manager styles that do absolutely
+anything they can think of. It also means that for simple look and feels
+using a theme engine is not required but can be coded directly into a
+window manager component, making it very efficient.
 
 Right now the infrastructure to support this is in development. Most
-importantly, dynamic loading of client style components is not implemented.
-The ones currently available are actually compiled into the window manager.
-This is not good and will be resolved prior to beta releases. Compiling all
-the styles currently entails a lot of overhead.
+importantly, dynamic loading of client style components is not
+implemented. The ones currently available are actually compiled into the
+window manager. This is not good and will be resolved prior to beta
+releases. Compiling all the styles currently entails a lot of overhead.
 
 Secondly, color schemes that are applicable to one style don't necessarily
-look good in another. For example, the default color scheme for the standard
-style looks horrible on System and neither color scheme really looks good on
-Next. In the future styles will be able to set their own default color scheme.
-Until then you must set them yourself. Color schemes for System and Next are
-provided. Also note that currently style gradient calculation is not dynamic -
-so it is important to set the color scheme before the style. All this will
-be resolved before release.
+look good in another. For example, the default color scheme for the
+standard style looks horrible on System and neither color scheme really
+looks good on Next. In the future styles will be able to set their own
+default color scheme. Until then you must set them yourself. Color schemes
+for System and Next are provided. Also note that currently style gradient
+calculation is not dynamic - so it is important to set the color scheme
+before the style. All this will be resolved before release.
 
-* Memory Usage:
+Memory Usage
+------------
+
 Right now the memory usage of KWin can be high due to all the compiled-in
-styles mentioned above. The window manager itself is actually very lean. Once
-component loading is complete you will be able to see that ;-)
+styles mentioned above. The window manager itself is actually very lean.
+Once component loading is complete you will be able to see that ;-)
 
-* Theme Support:
+Theme Support
+-------------
+
 A KWM theme compatible plugin is mostly done and will be announced shortly.
 A new theme plugin is also in the works but not ready at this time.
 
-Daniel M. Duley
-mosfet@kde.org
+Daniel M. Duley <mosfet@kde.org>
 

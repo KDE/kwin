@@ -1,4 +1,4 @@
-This is kwin, kwm next generation.
+This is KWin, kwm next generation.
 
 Currently supported options in the kwinrc:
 
@@ -33,7 +33,7 @@ TitlebarDoubleClickCommand=Move | Resize |
       mouse pointer becomes active. The invariant is: no window can
       have focus that is not under the mouse. This also means that
       Alt-Tab won't work properly and popup dialogs are usually
-      unsable with the keyboard. Note that the desktop and windows on
+      usable with the keyboard. Note that the desktop and windows on
       the dock are excluded for convenience. They get focus only when
       clicking on it.
 
@@ -44,7 +44,7 @@ TitlebarDoubleClickCommand=Move | Resize |
       same holds for windows on the dock.
 
       Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
-      particulary useful. They are only provided for old-fashined
+      particularly useful. They are only provided for old-fashioned
       die-hard UNIX people ;-)
 
       </ul>
@@ -103,7 +103,7 @@ AltTabStyle=KDE | CDE
 
 
 
-Kwin raises the following sound events via KNotifyClient:
+KWin raises the following sound events via KNotifyClient:
                   "Window Close"
                   "Window Iconify"
                   "Window DeIconify"
@@ -125,5 +125,4 @@ Kwin raises the following sound events via KNotifyClient:
 
 Have fun,
 
-   Matthias
-  <ettrich@kde.org>
+   Matthias Ettrich <ettrich@kde.org>
