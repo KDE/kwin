@@ -1,5 +1,6 @@
 #include "options.h"
 #include <qpalette.h>
+#include <qpixmap.h>
 #include <qapplication.h>
 #include <kconfig.h>
 #include <kglobal.h>
@@ -40,7 +41,7 @@ const QColorGroup& Options::colorGroup(ColorType type, bool active)
     cg[idx] = new QColorGroup(Qt::black, colors[idx], colors[idx].light(150),
                               colors[idx].dark(), colors[idx].dark(120),
                               Qt::black, QApplication::palette().normal().
-	                          base());
+                              base());
     return(*cg[idx]);
 }
 
@@ -59,47 +60,64 @@ void Options::reload()
     colors[Frame] = config->readColorEntry("frame", &colors[Frame]);
     colors[Handle] = QColor( 140, 140, 140 );
     colors[Handle] = config->readColorEntry("handle", &colors[Handle]);
-    colors[ButtonBg] = QColor(163,163,163 );
+    colors[ButtonBg] = colors[Frame];
     colors[ButtonBg] = config->readColorEntry("buttonBackgroundDown",
                                               &colors[Frame]);
-    colors[ButtonBlend] = QColor(0,0,0);
+    if(QPixmap::defaultDepth() < 15)
+        colors[ButtonBlend] = colors[ ButtonBg ];
+    else
+        colors[ButtonBlend] = colors[ ButtonBg ].dark(150);
     colors[ButtonBlend] = config->readColorEntry("buttonBlendDown",
                                                  &colors[ButtonBlend]);
     colors[TitleBar] = Qt::darkBlue;
     colors[TitleBar] = config->readColorEntry("activeBackground",
                                               &colors[TitleBar]);
-    colors[TitleBlend] = colors[ TitleBar ];
+    if(QPixmap::defaultDepth() < 15)
+        colors[TitleBlend] = colors[ TitleBar ];
+    else
+        colors[TitleBlend] = colors[ TitleBar ].dark(150);
     colors[TitleBlend] = config->readColorEntry("activeBlend",
                                                 &colors[TitleBlend]);
 
     colors[Font] = Qt::white;
     colors[Font] = config->readColorEntry("activeForeground", &colors[Font]);
-    colors[ButtonFg] = QColor(144,170,191);
+    colors[ButtonFg] = Qt::darkGray;
     colors[ButtonFg] = config->readColorEntry("buttonForegroundDown",
                                               &colors[ButtonFg]);
 
     // inactive
-    colors[Frame+KWINCOLORS] =
-        config->readColorEntry("inactiveFrame", &colors[Frame]);
-    colors[TitleBar+KWINCOLORS] = Qt::darkGray;
+    colors[Frame+KWINCOLORS] = config->readColorEntry("inactiveFrame",
+                                                      &colors[Frame]);
+    colors[TitleBar+KWINCOLORS] = colors[TitleBar];
     colors[TitleBar+KWINCOLORS] = config->
         readColorEntry("inactiveBackground", &colors[TitleBar+KWINCOLORS]);
+
+    if(QPixmap::defaultDepth() < 15)
+        colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ];
+    else
+        colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ].dark(150);
     colors[TitleBlend+KWINCOLORS] =
-        config->readColorEntry("inactiveBlend", &colors[TitleBar+KWINCOLORS]);
-    colors[ButtonBg+KWINCOLORS] = QColor(163,163,163);
+        config->readColorEntry("inactiveBlend", &colors[TitleBlend+KWINCOLORS]);
+
+    colors[ButtonBg+KWINCOLORS] = colors[Frame+KWINCOLORS];
     colors[ButtonBg+KWINCOLORS] =
         config->readColorEntry("buttonBackground",
                                &colors[ButtonBg]);
+
+    if(QPixmap::defaultDepth() < 15)
+        colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ];
+    else
+        colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ].dark(150);
     colors[ButtonBlend+KWINCOLORS] =
-        config->readColorEntry("buttonBlend",
-                               &colors[ButtonBlend]);
+        config->readColorEntry("buttonBlend", &colors[ButtonBlend+KWINCOLORS]);
+
     colors[ButtonFg+KWINCOLORS] = config->
         readColorEntry("buttonForeground", &colors[ButtonFg]);
 
     colors[Handle+KWINCOLORS] =
         config->readColorEntry("inactiveHandle", &colors[Handle]);
 
-    colors[Font+KWINCOLORS] = Qt::lightGray;
+    colors[Font+KWINCOLORS] = Qt::darkGray;
     colors[Font+KWINCOLORS] = config->readColorEntry("inactiveForeground",
                                                      &colors[Font+KWINCOLORS]);
 

@@ -237,15 +237,7 @@ void SystemClient::paintEvent( QPaintEvent* )
                     rect().height()-2,
                     options->colorGroup(Options::Frame, isActive()), false);
 
-    //qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-    //                21, options->colorGroup(Options::Frame, isActive()),
-    //                false);
 
-    p.setPen(options->colorGroup(Options::Frame, isActive()).dark());
-    p.drawLine(rect().x()+1, 20, rect().right()-1, 20);
-    p.setPen(options->colorGroup(Options::Frame, isActive()).light());
-    p.drawLine(rect().x()+1, 21, rect().right()-1, 21);
-    
     QRegion r = rect();
     r = r.subtract( t );
     p.setClipRegion( r );
