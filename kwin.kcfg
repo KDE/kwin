@@ -45,6 +45,8 @@
   <entry key="Placement" type="String" />
   <entry key="AutoRaise" type="Bool" />
   <entry key="AutoRaiseInterval" type="Int" />
+  <entry key="DelayFocus" type="Bool" />
+  <entry key="DelayFocusInterval" type="Int" />
   <entry key="ShadeHoverInterval" type="Int" />
   <entry key="ClickRaise" type="Bool" />
   <entry key="BorderSnapZone" type="Int" />

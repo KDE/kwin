@@ -890,8 +890,11 @@ void Client::enterNotifyEvent( XCrossingEvent* e )
 
         if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isTopMenu() ) )
             return;
+        if ( options->delayFocus )
+            workspace()->requestDelayFocus( this );
+        else
+            workspace()->requestFocus( this );
 
-        workspace()->requestFocus( this );
         return;
         }
     }
@@ -927,6 +930,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
         if ( lostMouse ) 
             {
             cancelAutoRaise();
+            workspace()->cancelDelayFocus();
             delete shadeHoverTimer;
             shadeHoverTimer = 0;
             if ( shade_mode == ShadeHover && !moveResizeMode && !buttonDown )

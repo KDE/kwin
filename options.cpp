@@ -108,11 +108,15 @@ unsigned long Options::updateSettings()
         {
         autoRaise = false;
         autoRaiseInterval = 0;
+        delayFocus = false;
+        delayFocusInterval = 0;
         }
     else 
         {
         autoRaise = config->readBoolEntry("AutoRaise", FALSE );
         autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
+        delayFocus = config->readBoolEntry("DelayFocus", FALSE );
+        delayFocusInterval = config->readNumEntry("DelayFocusInterval", 0 );
         }
 
     shadeHover = config->readBoolEntry("ShadeHover", FALSE );

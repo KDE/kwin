@@ -57,6 +57,8 @@
 #define KWIN_GEOMETRY		   "GeometryTip"
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
 #define KWIN_AUTORAISE             "AutoRaise"
+#define KWIN_DELAYFOCUS_INTERVAL   "DelayFocusInterval"
+#define KWIN_DELAYFOCUS            "DelayFocus"
 #define KWIN_CLICKRAISE            "ClickRaise"
 #define KWIN_ANIMSHADE             "AnimateShade"
 #define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
@@ -164,6 +166,19 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     autoRaise->setSuffix(i18n(" msec"));
     fLay->addWidget(autoRaise);
 
+    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()) );
+    
+    delayFocusOn = new QCheckBox(i18n("Delay focus"), fcsBox);
+    fLay->addWidget(delayFocusOn);
+    connect(delayFocusOn,SIGNAL(toggled(bool)), this, SLOT(delayFocusOnTog(bool)));
+
+    delayFocus = new KIntNumInput(500, fcsBox);
+    delayFocus->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
+    delayFocus->setRange(0, 3000, 100, true);
+    delayFocus->setSteps(100,100);
+    delayFocus->setSuffix(i18n(" msec"));
+    fLay->addWidget(delayFocus);
+    
     clickRaiseOn = new QCheckBox(i18n("C&lick raise active window"), fcsBox);
     connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
     fLay->addWidget(clickRaiseOn);
@@ -181,6 +196,11 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
                                         " front when you click somewhere into the window contents. To change"
                                         " it for inactive windows, you need to change the settings"
                                         " in the Actions tab.") );
+
+    QWhatsThis::add( delayFocusOn, i18n("When this option is enabled, there will be a delay after which the"
+                                        " window the mouse pointer is over will become active (receive focus).") );
+    QWhatsThis::add( delayFocus, i18n("This is the delay after which the window the mouse pointer is over"
+                                       " will automatically receive focus.") );
 
     lay->addWidget(fcsBox);
 
@@ -235,6 +255,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     connect(focusCombo, SIGNAL(activated(int)), SLOT(changed()));
     connect(fcsBox, SIGNAL(clicked(int)), SLOT(changed()));
     connect(autoRaise, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(delayFocus, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(kdeMode, SIGNAL(clicked()), SLOT(changed()));
     connect(cdeMode, SIGNAL(clicked()), SLOT(changed()));
     connect(traverseAll, SIGNAL(clicked()), SLOT(changed()));
@@ -263,14 +284,29 @@ void KFocusConfig::setAutoRaiseInterval(int tb)
     autoRaise->setValue(tb);
 }
 
+void KFocusConfig::setDelayFocusInterval(int tb)
+{
+    delayFocus->setValue(tb);
+}
+
 int KFocusConfig::getAutoRaiseInterval()
 {
     return autoRaise->value();
 }
 
+int KFocusConfig::getDelayFocusInterval()
+{
+    return delayFocus->value();
+}
+
 void KFocusConfig::setAutoRaise(bool on)
 {
     autoRaiseOn->setChecked(on);
+}
+
+void KFocusConfig::setDelayFocus(bool on)
+{
+    delayFocusOn->setChecked(on);
 }
 
 void KFocusConfig::setClickRaise(bool on)
@@ -293,10 +329,28 @@ void KFocusConfig::setAutoRaiseEnabled()
     }
 }
 
+void KFocusConfig::setDelayFocusEnabled()
+{
+    // the delayed focus related widgets are: delayFocus
+    if ( focusCombo->currentItem() != CLICK_TO_FOCUS )
+    {
+        delayFocusOn->setEnabled(true);
+        delayFocusOnTog(delayFocusOn->isChecked());
+    }
+    else
+    {
+        delayFocusOn->setEnabled(false);
+        delayFocusOnTog(false);
+    }
+}
 
 void KFocusConfig::autoRaiseOnTog(bool a) {
     autoRaise->setEnabled(a);
     clickRaiseOn->setEnabled( !a );
+}
+
+void KFocusConfig::delayFocusOnTog(bool a) {
+    delayFocus->setEnabled(a);
 }
 
 void KFocusConfig::clickRaiseOnTog(bool ) {
@@ -338,11 +392,17 @@ void KFocusConfig::load( void )
     int k = config->readNumEntry(KWIN_AUTORAISE_INTERVAL,750);
     setAutoRaiseInterval(k);
 
+    k = config->readNumEntry(KWIN_DELAYFOCUS_INTERVAL,750);
+    setDelayFocusInterval(k);
+    
     key = config->readEntry(KWIN_AUTORAISE);
     setAutoRaise(key == "on");
+    key = config->readEntry(KWIN_DELAYFOCUS);
+    setDelayFocus(key == "on");
     key = config->readEntry(KWIN_CLICKRAISE);
     setClickRaise(key != "off");
     setAutoRaiseEnabled();      // this will disable/hide the auto raise delay widget if focus==click
+    setDelayFocusEnabled();
 
     key = config->readEntry(KWIN_ALTTABMODE, "KDE");
     setAltTabMode(key == "KDE");
@@ -379,10 +439,19 @@ void KFocusConfig::save( void )
     if (v <0) v = 0;
     config->writeEntry(KWIN_AUTORAISE_INTERVAL,v);
 
+    v = getDelayFocusInterval();
+    if (v <0) v = 0;
+    config->writeEntry(KWIN_DELAYFOCUS_INTERVAL,v);
+    
     if (autoRaiseOn->isChecked())
         config->writeEntry(KWIN_AUTORAISE, "on");
     else
         config->writeEntry(KWIN_AUTORAISE, "off");
+
+    if (delayFocusOn->isChecked())
+        config->writeEntry(KWIN_DELAYFOCUS, "on");
+    else
+        config->writeEntry(KWIN_DELAYFOCUS, "off");
 
     if (clickRaiseOn->isChecked())
         config->writeEntry(KWIN_CLICKRAISE, "on");
@@ -417,8 +486,10 @@ void KFocusConfig::save( void )
 void KFocusConfig::defaults()
 {
     setAutoRaiseInterval(0);
+    setDelayFocusInterval(0);
     setFocus(CLICK_TO_FOCUS);
     setAutoRaise(false);
+    setDelayFocus(false);
     setClickRaise(true);
     setAltTabMode(true);
     setTraverseAll( false );

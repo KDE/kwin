@@ -77,8 +77,10 @@ public:
   void defaults();
 
 private slots:
+  void setDelayFocusEnabled();
   void setAutoRaiseEnabled();
   void autoRaiseOnTog(bool);//CT 23Oct1998
+  void delayFocusOnTog(bool);
   void clickRaiseOnTog(bool);
 	void changed() { emit KCModule::changed(true); }
 
@@ -87,10 +89,13 @@ private:
 
   int getFocus( void );
   int getAutoRaiseInterval( void );
+  int getDelayFocusInterval( void );
 
   void setFocus(int);
   void setAutoRaiseInterval(int);
   void setAutoRaise(bool);
+  void setDelayFocusInterval(int);
+  void setDelayFocus(bool);
   void setClickRaise(bool);
   void setAltTabMode(bool);
   void setTraverseAll(bool);
@@ -100,8 +105,10 @@ private:
   QButtonGroup *fcsBox;
   QComboBox *focusCombo;
   QCheckBox *autoRaiseOn;
+  QCheckBox *delayFocusOn;
   QCheckBox *clickRaiseOn;
   KIntNumInput *autoRaise;
+  KIntNumInput *delayFocus;
 
   QButtonGroup *kbdBox;
   QRadioButton *kdeMode;

@@ -84,6 +84,16 @@ class Options : public KDecorationOptions
         int autoRaiseInterval;
 
         /**
+           whether delay focus is enabled or not.
+         */
+        bool delayFocus;
+
+        /**
+           delayed focus interval
+         */
+        int delayFocusInterval;
+
+        /**
            Whether shade hover is enabled or not
          */
         bool shadeHover;

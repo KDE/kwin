@@ -70,6 +70,7 @@ Workspace::Workspace( bool restore )
     most_recently_raised (0),
     movingClient(0),
     pending_take_activity ( NULL ),
+    delayfocus_client (0),
     was_user_interaction (false),
     session_saving    (false),
     control_grab      (false),
@@ -109,6 +110,8 @@ Workspace::Workspace( bool restore )
 
     updateXTime(); // needed for proper initialization of user_time in Client ctor
 
+    delayFocusTimer = 0; 
+    
     electric_time_first = qt_x_time;
     electric_time_last = qt_x_time;
 
@@ -1641,7 +1644,27 @@ QWidget* Workspace::desktopWidget()
     return desktop_widget;
     }
 
-
+//Delayed focus functions
+void Workspace::delayFocus()
+    {
+    requestFocus( delayfocus_client );
+    cancelDelayFocus();
+    }
+    
+void Workspace::requestDelayFocus( Client* c )
+    {
+    delayfocus_client = c;
+    delete delayFocusTimer;
+    delayFocusTimer = new QTimer( this );
+    connect( delayFocusTimer, SIGNAL( timeout() ), this, SLOT( delayFocus() ) );
+    delayFocusTimer->start( options->delayFocusInterval, TRUE  );
+    }
+    
+void Workspace::cancelDelayFocus()
+    {
+    delete delayFocusTimer;
+    delayFocusTimer = 0;
+    }
 
 // Electric Borders
 //========================================================================//

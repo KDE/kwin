@@ -331,6 +331,7 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
             c = modal;
             handled = false;
             }
+        cancelDelayFocus();
         }
     if ( !( flags & ActivityFocusForce ) && ( c->isTopMenu() || c->isDock() || c->isSplash()) )
         flags &= ~ActivityFocus; // toplevel menus and dock windows don't take focus if not forced

@@ -244,6 +244,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         static QStringList configModules(bool controlCenter);
 
+        void cancelDelayFocus();
+        void requestDelayFocus( Client* );
+
     public slots:
         void refresh();
     // keybindings
@@ -320,6 +323,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void slotUpdateToolWindows();
         void lostTopMenuSelection();
         void lostTopMenuOwner();
+        void delayFocus();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -430,6 +434,10 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         Client* most_recently_raised; // used _only_ by raiseOrLowerClient()
         Client* movingClient;
         Client* pending_take_activity;
+
+    // delay(ed) window focus timer and client
+        QTimer* delayFocusTimer;
+        Client* delayfocus_client;
 
         ClientList clients;
         ClientList desktops;
