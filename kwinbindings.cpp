@@ -43,9 +43,5 @@
 
  keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "ALT+F12");
 
- keys->insertItem(i18n("Lock screen"),"Lock screen", "CTRL+ALT+L");
- 
- keys->insertItem(i18n("Logout"),"Logout", "CTRL+ALT+Delete");
-
  keys->insertItem(i18n("Kill Window"),"Kill Window", "CTRL+ALT+Escape");
   

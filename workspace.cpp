@@ -2425,10 +2425,6 @@ void Workspace::createKeybindings(){
 
     keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
 
-    keys->connectItem( "Lock screen", this, SLOT( slotLockScreen() ) );
-
-    keys->connectItem( "Logout", this, SLOT( slotLogout() ) );
-
     keys->connectItem( "Kill Window", this, SLOT( slotKillWindow() ) );
     keys->readSettings();
     walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
@@ -2644,18 +2640,6 @@ void Workspace::slotMouseEmulation()
         mouse_emulation_window = 0;
     }
 }
-
-void Workspace::slotLockScreen()
-{
-  DCOPClient *client = kapp->dcopClient();
-  client->send("kdesktop", "KScreensaverIface", "lock()", "");
-}
-
-void Workspace::slotLogout()
-{
-  kapp->requestShutDown();
-}
-
 
 /*!
   Kill Window feature, similar to xkill

@@ -264,10 +264,6 @@ public slots:
     void slotResetAllClientsDelayed();
     void slotResetAllClients();
 
-    void slotLockScreen();
-    
-    void slotLogout();
-
     void slotKillWindow();
 
 private slots:
