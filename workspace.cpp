@@ -1768,7 +1768,7 @@ void Workspace::focusToNull(){
   if (w == 0) {
     mask = CWOverrideRedirect;
     attr.override_redirect = 1;
-    w = XCreateWindow(qt_xdisplay(), qt_xrootwin(), 0, 0, 1, 1, 0, CopyFromParent,
+    w = XCreateWindow(qt_xdisplay(), qt_xrootwin(), -1,-1, 1, 1, 0, CopyFromParent,
 		      InputOnly, CopyFromParent, mask, &attr);
     XMapWindow(qt_xdisplay(), w);
   }
