@@ -157,7 +157,7 @@ static Window null_focus_window = 0;
 bool Shape::hasShape( WId w){
     int xws, yws, xbs, ybs;
     unsigned int wws, hws, wbs, hbs;
-    int boundingShaped, clipShaped;
+    int boundingShaped = 0, clipShaped = 0;
     if (!kwin_has_shape)
         return FALSE;
     XShapeQueryExtents(qt_xdisplay(), w,
