@@ -1199,7 +1199,6 @@ void IceWMClient::mouseDoubleClickEvent( QMouseEvent * e )
 	if ( r.contains( e->pos() ) )
 		workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
 
-	workspace()->requestFocus( this );
 }
 
 
