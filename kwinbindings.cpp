@@ -70,7 +70,7 @@
 	DEF( "Switch to Desktop 15", "CTRL+SHIFT+F3", "", slotSwitchToDesktop(int) );
 	DEF( "Switch to Desktop 16", "CTRL+SHIFT+F4", "", slotSwitchToDesktop(int) );
 	DEF( "Switch to Next Desktop", "", "", slotSwitchDesktopNext() );
-	DEF( "Switch to Previous Desktop", "", "", slotSwitchDesktopPrev() );
+	DEF( "Switch to Previous Desktop", "", "", slotSwitchDesktopPrevious() );
 	DEF( "Switch One Desktop to the Right", "", "", slotSwitchDesktopRight() );
 	DEF( "Switch One Desktop to the Left", "", "", slotSwitchDesktopLeft() );
 	DEF( "Switch One Desktop Up", "", "", slotSwitchDesktopUp() );
