@@ -10,7 +10,7 @@
 	Supports new kwin configuration plugins, and titlebar button position
 	modification via dnd interface.
 
-	Based on original "kwintheme" (Window Borders) 
+	Based on original "kwintheme" (Window Borders)
 	Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 */
 
@@ -19,7 +19,7 @@
 
 #include <kcmodule.h>
 #include <dcopobject.h>
-#include <buttons.h>
+#include "buttons.h"
 #include <kconfig.h>
 #include <klibloader.h>
 
