@@ -1162,7 +1162,7 @@ void Client::takeFocus( allowed_t )
     previous_focus_timestamp = qt_x_time;
     previous_client = this;
 #endif
-    if ( input ) 
+    if ( rules()->checkAcceptFocus( input ))
         {
         XSetInputFocus( qt_xdisplay(), window(), RevertToPointerRoot, qt_x_time );
         }
@@ -1496,13 +1496,13 @@ Window Client::wmClientLeader() const
 bool Client::wantsTabFocus() const
     {
     return ( isNormalWindow() || isDialog() || isOverride())
-                          && ( input || Ptakefocus ) && !skip_taskbar;
+        && wantsInput() && !skip_taskbar;
     }
 
 
 bool Client::wantsInput() const
     {
-    return input || Ptakefocus;
+    return rules()->checkAcceptFocus( input || Ptakefocus );
     }
 
 bool Client::isDesktop() const

@@ -47,6 +47,7 @@ WindowRules::WindowRules()
     , fullscreenrule( DontCareRule )
     , noborderrule( DontCareRule )
     , fspleveladjustrule( DontCareRule )
+    , acceptfocusrule( DontCareRule )
     {
     }
 
@@ -101,6 +102,7 @@ WindowRules::WindowRules( KConfig& cfg )
     READ_SET_RULE( fullscreen, Bool, );
     READ_SET_RULE( noborder, Bool, );
     READ_FORCE_RULE( fspleveladjust, Num, );
+    READ_FORCE_RULE( acceptfocus, Bool, );
     kdDebug() << "READ RULE:" << wmclass << endl;
     }
 
@@ -169,6 +171,7 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_SET_RULE( fullscreen, );
     WRITE_SET_RULE( noborder, );
     WRITE_SET_RULE( fspleveladjust, );
+    WRITE_SET_RULE( acceptfocus, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -378,6 +381,11 @@ int WindowRules::checkFSP( int fsp ) const
     if( !checkForceRule( fspleveladjustrule ))
         return fsp;
     return QMIN( 4, QMAX( 0, fsp + fspleveladjust ));
+    }
+
+bool WindowRules::checkAcceptFocus( bool focus ) const
+    {
+    return checkForceRule( acceptfocusrule ) ? this->acceptfocus : focus;
     }
 
 // Client
