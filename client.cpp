@@ -798,7 +798,8 @@ void Client::withdraw()
 {
     Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
     setMappingState( WithdrawnState );
-//###     KWM::moveToDesktop( win, -1 ); // compatibility
+    info->setDesktop( 0 );
+    desk = 0;
     releaseWindow();
     workspace()->destroyClient( this );
 }

@@ -11,7 +11,7 @@ void Events::raise( Event e )
     static bool forgetIt = FALSE;
     if ( forgetIt )
 	return; // no connection was possible, don't try each time
-    
+
     QString event;
     switch ( e ) {
     case Close:
