@@ -1650,7 +1650,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         bottom_marge = border_top;
         }
 
-    if ( isResize() && moveResizeGeom.size() != previousMoveResizeGeom.size() )
+    bool update = false;
+    if( isResize())
         {
         if( moveResizeGeom.bottom() < desktopArea.top() + top_marge )
             moveResizeGeom.setBottom( desktopArea.top() + top_marge );
@@ -1664,6 +1665,27 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             moveResizeGeom.setTop( desktopArea.top());
 
         moveResizeGeom.setSize( adjustedSize( moveResizeGeom.size() ) );
+        if( moveResizeGeom.size() != previousMoveResizeGeom.size())
+            update = true;
+        }
+    else if( isMove())
+        {
+        moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
+        if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge ) // titlebar mustn't go out
+            moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge );
+        // no need to check top_marge, titlebar_marge already handles it
+        if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
+            moveResizeGeom.moveTop( desktopArea.bottom() - bottom_marge );
+        if( moveResizeGeom.right() < desktopArea.left() + left_marge )
+            moveResizeGeom.moveRight( desktopArea.left() + left_marge );
+        if( moveResizeGeom.left() > desktopArea.right() - right_marge )
+            moveResizeGeom.moveLeft(desktopArea.right() - right_marge );
+        if( moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
+            update = true;
+        }
+
+    if( update )
+        {
         if  (options->resizeMode == Options::Opaque )
             {
             setGeometry( moveResizeGeom );
@@ -1676,32 +1698,6 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             drawbound( moveResizeGeom ); // they overlap; the paint event will come after this,
             }                               // so the geometry tip will be painted above the outline
         }
-    else if ( isMove() && moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft() )
-        {
-        moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
-        if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge ) // titlebar mustn't go out
-            moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge );
-        // no need to check top_marge, titlebar_marge already handles it
-        if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
-            moveResizeGeom.moveTop( desktopArea.bottom() - bottom_marge );
-        if( moveResizeGeom.right() < desktopArea.left() + left_marge )
-            moveResizeGeom.moveRight( desktopArea.left() + left_marge );
-        if( moveResizeGeom.left() > desktopArea.right() - right_marge )
-            moveResizeGeom.moveLeft(desktopArea.right() - right_marge );
-        switch ( options->moveMode )
-            {
-            case Options::Opaque:
-                move( moveResizeGeom.topLeft() );
-                positionGeometryTip();
-                break;
-            case Options::Transparent:
-                clearbound();
-                positionGeometryTip();
-                drawbound( moveResizeGeom );
-                break;
-            }
-        }
-
     if ( isMove() )
       workspace()->clientMoved(globalPos, qt_x_time);
     }
