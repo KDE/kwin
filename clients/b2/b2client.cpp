@@ -1211,7 +1211,6 @@ void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
     client->titlebarDblClickOperation();
 }
 
-#if 0
 void B2Titlebar::mousePressEvent( QMouseEvent * e )
 {
     shift_move = e->state() & ShiftButton;
@@ -1219,7 +1218,6 @@ void B2Titlebar::mousePressEvent( QMouseEvent * e )
         moveOffset = e->globalPos();
     } else {
 	client->processMousePressEvent(e);
-   	// client->performWindowOperation(KDecoration::MoveOp); 
     }
 }
 
@@ -1237,12 +1235,12 @@ void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
 	if (oldx >= 0 && oldx <= rect().right()) {
             client->titleMoveRel(xdiff);
 	}
+    } else {
+    	e->ignore();
     } 
 }
 
-#endif
-
-}
+} // namespace B2
 
 #include "b2client.moc"
 
