@@ -112,14 +112,6 @@ void PlastikButton::reset(unsigned long changed)
                 break;
         }
 
-        // button mask
-        if (type() != MenuButton) {
-            QRegion mask(rect() );
-            mask -= QRegion(0,0,1,1) + QRegion(0,height()-1,1,1) +
-                    QRegion(width()-1,0,1,1) + QRegion(width()-1,height()-1,1,1);
-            setMask(mask);
-        }
-
         this->update();
     }
 }
@@ -208,11 +200,8 @@ void PlastikButton::drawButton(QPainter *painter)
     buffer.resize(width(), height());
     QPainter bP(&buffer);
 
-    if (type() == MenuButton)
-    {
-        // fake the titlebar background
-        bP.drawTiledPixmap(0, 0, width(), width(), m_client->getTitleBarTile(active) );
-    }
+    // fake the titlebar background
+    bP.drawTiledPixmap(0, 0, width(), width(), m_client->getTitleBarTile(active) );
 
     if (type() != MenuButton || hover || animProgress != 0) {
         // contour
