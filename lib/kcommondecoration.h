@@ -278,7 +278,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
 
     public:
         KCommonDecorationButton(ButtonType type, KCommonDecoration *parent, const char *name);
-        ~KCommonDecorationButton();
+        virtual ~KCommonDecorationButton();
 
         /**
          * These flags specify what has changed, e.g. the reason for a reset().
@@ -294,7 +294,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
         /**
          * Initialize the button after size change etc.
          */
-        virtual void reset(unsigned long changed);
+        virtual void reset(unsigned long changed) = 0;
         /**
          * @returns the KCommonDecoration the button belongs to.
          */

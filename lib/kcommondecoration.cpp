@@ -744,10 +744,6 @@ ButtonType KCommonDecorationButton::type()
     return m_type;;
 }
 
-void KCommonDecorationButton::reset(unsigned long)
-{
-}
-
 void KCommonDecorationButton::setRealizeButtons(int btns)
 {
     m_realizeButtons = btns;
@@ -755,7 +751,7 @@ void KCommonDecorationButton::setRealizeButtons(int btns)
 
 void KCommonDecorationButton::setSize(const QSize &s)
 {
-    if (s != size() ) {
+    if (!m_size.isValid() || s != size() ) {
         m_size = s;
 
         setFixedSize(m_size);
