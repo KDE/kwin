@@ -366,7 +366,7 @@ void ModernSys::init()
 
     QGridLayout* g = new QGridLayout(widget(), 0, 0, 2);
     if( isPreview())
-        g->addWidget( new QLabel( i18n( "<center><b>ModernSys preview</b></center>" ), widget()), 1, 1 );
+        g->addWidget( new QLabel( i18n( "<center><b>Modern System preview</b></center>" ), widget()), 1, 1 );
     else
         g->addItem( new QSpacerItem( 0, 0 ), 1, 1 ); // no widget in the middle
     g->setRowStretch(1, 10);
