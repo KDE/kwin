@@ -1121,6 +1121,8 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
         switch( mode )
             {
             case SizemodeAny:
+#if 0 // make SizemodeAny equal to SizemodeFixedW - prefer keeping fixed width,
+      // so that changing aspect ratio to a different value and back keeps the same size (#87298)
                 {
                 ASPECT_CHECK_SHRINK_H_GROW_W
                 ASPECT_CHECK_SHRINK_W_GROW_H
@@ -1128,6 +1130,7 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
                 ASPECT_CHECK_GROW_W
                 break;
                 }
+#endif
             case SizemodeFixedW:
                 {
                 // the checks are order so that attempts to modify height are first
