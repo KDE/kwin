@@ -4,6 +4,8 @@ kwin - the KDE window manager
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #include <klocale.h>
+#include <kapp.h>
+#include <dcopclient.h>
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qbitmap.h>
@@ -463,6 +465,20 @@ void Client::manage( bool isMapped )
     }
 
     delete info;
+
+    // Notify kicker that an app has mapped a window.
+
+    XClassHint xch;
+    XGetClassHint(qt_xdisplay(), win, &xch);
+    QByteArray params;
+    QDataStream stream(params, IO_WriteOnly);
+    stream << QString::fromUtf8(xch.res_name);
+    kapp->dcopClient()->send(
+      "kicker",
+      "TaskbarApplet",
+      "clientMapped(QString)",
+      params
+    );
 }
 
 

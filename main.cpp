@@ -188,6 +188,9 @@ int main( int argc, char * argv[] )
     Application a;
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
+    DCOPClient * client = a.dcopClient();
+    client->attach();
+    client->registerAs(a.name());
 
     return a.exec();
 
