@@ -211,6 +211,8 @@ public:
     void unclutterDesktop();
     void doNotManage(QString);
     void setCurrentDesktop( int new_desktop );
+	void nextDesktop();
+	void previousDesktop();
 
     QString desktopName( int desk );
 

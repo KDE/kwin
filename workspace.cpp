@@ -2250,7 +2250,17 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     }
 }
 
+void Workspace::nextDesktop()
+{
+    int desktop = currentDesktop() + 1;
+    setCurrentDesktop(desktop > numberOfDesktops() ? 1 : desktop);
+}
 
+void Workspace::previousDesktop()
+{
+    int desktop = currentDesktop() - 1;
+    setCurrentDesktop(desktop ? desktop : numberOfDesktops());
+}
 
 /*!
   Returns the workspace's desktop widget. The desktop widget is
