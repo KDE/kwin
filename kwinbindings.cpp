@@ -33,6 +33,8 @@
  keys->insertItem(i18n("Window raise"),"Window raise", "");
  keys->insertItem(i18n("Window lower"),"Window lower", "");
  keys->insertItem(i18n("Window raise-or-lower"), "Toggle raise and lower", "");
+ keys->insertItem(i18n("Window to next desktop"),"Window to next desktop", "");
+ keys->insertItem(i18n("Window to previous desktop"),"Window to previous desktop", "");
  
  keys->insertItem(i18n("Walk through desktops"),"Walk through desktops", "CTRL+Tab");
  keys->insertItem(i18n("Walk back through desktops"),"Walk back through desktops", "SHIFT+CTRL+Tab");

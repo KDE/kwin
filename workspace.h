@@ -250,6 +250,9 @@ public slots:
     void slotWindowMove();
     void slotWindowResize();
 
+    void slotWindowNextDesktop();
+    void slotWindowPreviousDesktop();
+
     void slotMouseEmulation();
 
     void slotResetAllClientsDelayed();

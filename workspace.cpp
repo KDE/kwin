@@ -2388,6 +2388,8 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window raise", this, SLOT( slotWindowRaise() ) );
     keys->connectItem( "Window lower", this, SLOT( slotWindowLower() ) );
     keys->connectItem( "Toggle raise and lower", this, SLOT( slotWindowRaiseOrLower() ) );
+    keys->connectItem( "Window to next desktop", this, SLOT( slotWindowNextDesktop() ) );
+    keys->connectItem( "Window to previous desktop", this, SLOT( slotWindowPreviousDesktop() ) );
 
     keys->connectItem( "Walk through desktops", this, SLOT( slotWalkThroughDesktops()));
     keys->connectItem( "Walk back through desktops", this, SLOT( slotWalkBackThroughDesktops()));
@@ -2568,6 +2570,29 @@ void Workspace::slotWindowRaiseOrLower()
         raiseOrLowerClient( popup_client );
 }
 
+/*!
+  Move window to next desktop
+ */
+void Workspace::slotWindowNextDesktop(){
+    int d = currentDesktop() + 1;
+    if ( d > numberOfDesktops() )
+        d = 1;
+    if (popup_client)
+      sendClientToDesktop(popup_client,d);
+    setCurrentDesktop(d);
+}
+
+/*!
+  Move window to previous desktop
+ */
+void Workspace::slotWindowPreviousDesktop(){
+    int d = currentDesktop() - 1;
+    if ( d <= 0 )
+        d = numberOfDesktops();
+    if (popup_client)
+      sendClientToDesktop(popup_client,d);
+    setCurrentDesktop(d);
+}
 
 /*!
   Invokes keyboard mouse emulation
