@@ -1704,8 +1704,6 @@ bool Client::startMoveResize()
     if( QApplication::activePopupWidget() != NULL )
         return false; // popups have grab
     bool has_grab = false;
-    if( mode == PositionCenter )
-        setCursor( sizeAllCursor ); // change from arrow cursor if moving
     // This reportedly improves smoothness of the moveresize operation,
     // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
     // (http://lists.kde.org/?t=107302193400001&r=1&w=2)
@@ -1844,6 +1842,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             if( !startMoveResize())
                 {
                 buttonDown = false;
+                setCursor( mode );
                 return;
                 }
             }

@@ -1184,6 +1184,7 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         moveOffset = QPoint( x, y );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
+        setCursor( mode ); // update to sizeAllCursor if about to move
         }
     performMouseCommand( com, QPoint( x_root, y_root ));
     }
@@ -1237,8 +1238,8 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
             // mouse position is still relative to old Client position, adjust it
             QPoint mousepos( x_root - x, y_root - y );
             mode = mousePosition( mousepos );
-            setCursor( mode );
             }
+        setCursor( mode );
         }
     return true;
     }
@@ -1424,7 +1425,10 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
         mode = convert[ direction ];
         setCursor( mode );
         if( !startMoveResize())
+            {
             buttonDown = false;
+            setCursor( mode );
+            }
         }
     else if( direction == NET::KeyboardMove )
         { // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
@@ -1467,10 +1471,12 @@ void Client::keyPressEvent( uint key_code )
         case Key_Enter:
             finishMoveResize( false );
             buttonDown = FALSE;
+            setCursor( mode );
             break;
         case Key_Escape:
             finishMoveResize( true );
             buttonDown = FALSE;
+            setCursor( mode );
             break;
         default:
             return;

@@ -1588,7 +1588,10 @@ void Client::setCursor( Position m )
             setCursor( sizeHorCursor );
             break;
         default:
-            setCursor( arrowCursor );
+            if( buttonDown )
+                setCursor( sizeAllCursor );
+            else
+                setCursor( arrowCursor );
             break;
         }
     }
