@@ -29,7 +29,7 @@ public:
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
-    int last_button;
+    ButtonState last_button;
 
 protected:
     void mousePressEvent( QMouseEvent* e )

@@ -424,18 +424,7 @@ void LaptopClient::init()
 
 void LaptopClient::slotMaximize()
 {
-    switch (button[BtnMax]->last_button) {
-    case MidButton:
-       maximize( maximizeMode() ^ MaximizeVertical );
-       break;
-    case RightButton:
-       maximize( maximizeMode() ^ MaximizeHorizontal );
-       break;
-    case LeftButton:
-    default:
-       maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull);
-       break;
-    }
+    maximize(button[BtnMax]->last_button);
 }
 
 void LaptopClient::resizeEvent(QResizeEvent* e)
