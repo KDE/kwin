@@ -102,7 +102,9 @@ void PluginMenu::slotActivated(int id)
     config->setGroup("Style");
     config->writeEntry("PluginLib", newPlugin);
     config->sync();
-    mgr->loadPlugin(newPlugin);
+    // We can't do this directly because we might destruct a client 
+    // underneath our own feet while doing so.
+    QTimer::singleShot(0, mgr, SLOT(updatePlugin()));
 }
 
 PluginMgr::PluginMgr()

@@ -24,8 +24,9 @@ public:
     ~PluginMgr();
     Client *allocateClient(Workspace *ws, WId w, bool tool);
     void loadPlugin(QString name);
-    bool updatePlugin();
     QString currentPlugin() { return pluginStr; }
+public slots:
+    bool updatePlugin();
 signals:
     void resetAllClients();
 protected:
