@@ -889,7 +889,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
             unsigned long usertime = 0;
             if ( !isTransient() && !session && ac && !ac->isDesktop() &&
-                   ac->resourceClass() != resourceClass() &&
+                   ac->resourceName() != resourceName() &&
                    ( usertime = userTime() ) > 0 && ac->userTime() > usertime ) {
                 workspace()->stackClientUnderActive( this );
                 show();
