@@ -2692,6 +2692,11 @@ void Client::cloneMode(Client *client)
     setCaption(client->caption());
 }
 
+NETWinInfo * Client::netWinInfo()
+{
+  return static_cast<NETWinInfo *>(info);
+}
+
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name )

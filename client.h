@@ -19,6 +19,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 class Workspace;
 class Client;
 class WinInfo;
+class NETWinInfo;
 
 class WindowWrapper : public QWidget
 {
@@ -232,6 +233,8 @@ protected:
     bool configureRequest( XConfigureRequestEvent& e );
     bool propertyNotify( XPropertyEvent& e );
     bool clientMessage( XClientMessageEvent& e );
+
+    NETWinInfo * netWinInfo();
 
 private:
     QSize sizeForWindowSize( const QSize&, bool ignore_height = FALSE ) const;
