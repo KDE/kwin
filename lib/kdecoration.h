@@ -326,8 +326,19 @@ class KDecoration
         bool isShadeable() const;
 	/**
 	 * Returns @a true if the decorated window is currently shaded.
+         * If the window is e.g. hover unshaded, it's not considered to be shaded.
+         *
+         * @see isSetShade
 	 */
         bool isShade() const;
+	/**
+	 * Returns @a true if the decorated window was set to be shaded. This function
+         * returns also true if the window is e.g. hover unshaded, so it doesn't
+         * always correspond to the actual window state.
+         *
+         * @see isShade
+	 */
+        bool isSetShade() const;
 	/**
 	 * Returns @a true if the decorated window should be kept above other windows.
 	 */

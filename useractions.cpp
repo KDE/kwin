@@ -103,8 +103,8 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemEnabled( Options::MoveOp, popup_client->isMovable() );
     popup->setItemEnabled( Options::MaximizeOp, popup_client->isMaximizable() );
     popup->setItemChecked( Options::MaximizeOp, popup_client->maximizeMode() == Client::MaximizeFull );
-    // TODO this doesn't show it's shaded when it's hovered or activated
-    popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
+    // This should be checked also when hover unshaded
+    popup->setItemChecked( Options::ShadeOp, popup_client->shadeMode() != Client::ShadeNone );
     popup->setItemEnabled( Options::ShadeOp, popup_client->isShadeable());
     options_popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
     options_popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );

@@ -69,6 +69,7 @@ class KDecorationBridge : public KDecorationDefines
         virtual bool isModal() const = 0;
         virtual bool isShadeable() const = 0;
         virtual bool isShade() const = 0;
+        virtual bool isSetShade() const = 0;
         virtual bool keepAbove() const = 0;
         virtual bool keepBelow() const = 0;
         virtual bool isMovable() const = 0;

@@ -256,6 +256,11 @@ bool KDecorationPreviewBridge::isShade() const
     return false;
     }
     
+bool KDecorationPreviewBridge::isSetShade() const
+    {
+    return false;
+    }
+    
 bool KDecorationPreviewBridge::keepAbove() const
     {
     return false;

@@ -128,6 +128,11 @@ bool KDecoration::isShade() const
     return bridge_->isShade();
     }
     
+bool KDecoration::isSetShade() const
+    {
+    return bridge_->isSetShade();
+    }
+    
 bool KDecoration::keepAbove() const
     {
     return bridge_->keepAbove();

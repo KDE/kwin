@@ -62,6 +62,11 @@ QIconSet Bridge::icon() const
     return QIconSet( c->miniIcon(), c->icon());
     }
 
+bool Bridge::isSetShade() const
+    {
+    return c->shadeMode() != Client::ShadeNone;
+    }
+
 void Bridge::showWindowMenu( QPoint p )
     {
     c->workspace()->showWindowMenu( p, c );

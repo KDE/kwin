@@ -117,7 +117,8 @@ class Client : public QObject, public KDecorationDefines
             ShadeHover, // "shaded", but visible due to hover unshade
             ShadeActivated // "shaded", but visible due to alt+tab to the window
             };
-        bool isShade() const;
+        bool isShade() const; // true only for ShadeNormal
+        ShadeMode shadeMode() const; // prefer isShade()
         void setShade( ShadeMode mode );
         bool isShadeable() const;
 
@@ -610,6 +611,12 @@ inline
 bool Client::isShade() const
     {
     return shade_mode == ShadeNormal;
+    }
+
+inline
+Client::ShadeMode Client::shadeMode() const
+    {
+    return shade_mode;
     }
 
 inline QPixmap Client::icon() const

@@ -75,6 +75,7 @@ class KDecorationPreviewBridge
         virtual bool isModal() const;
         virtual bool isShadeable() const;
         virtual bool isShade() const;
+        virtual bool isSetShade() const;
         virtual bool keepAbove() const;
         virtual bool keepBelow() const;
         virtual bool isMovable() const;
