@@ -68,7 +68,7 @@ QPopupMenu* Workspace::clientPopup()
         advanced_popup->insertItem( i18n("&No Border")+'\t'+keys->shortcut("Window No Border").seq(0).toString(), Options::NoBorderOp );
         advanced_popup->insertItem( SmallIconSet("key_bindings"),
             i18n("Window &Shortcut...")+'\t'+keys->shortcut("Setup Window Shortcut").seq(0).toString(), Options::SetupWindowShortcutOp );
-        advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
+        advanced_popup->insertItem( SmallIconSet( "wizard" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
 
         popup->insertItem(i18n("Ad&vanced"), advanced_popup );
         desk_popup_index = popup->count();
