@@ -32,8 +32,8 @@ public:
     void placeAtRandom            (Client* c);
     void placeCascaded            (Client* c, bool re_init = false);
     void placeSmart               (Client* c);
-    void placeStupidlyCentered    (Client* c);
-    void placeStupidlyZeroCornered(Client* c);
+    void placeCentered    (Client* c);
+    void placeZeroCornered(Client* c);
 
 private:
 

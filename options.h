@@ -135,7 +135,7 @@ public:
      * Normally you don't have to worry. What the WM adds to the startup time
      * is nil compared to the creation of the window itself in the memory
      */
-    enum PlacementPolicy { Random, Smart, Cascade, StupidlyCentered, StupidlyZeroCornered };
+    enum PlacementPolicy { Random, Smart, Cascade, Centered, ZeroCornered };
     PlacementPolicy placement;
 
     bool focusPolicyIsReasonable() {

@@ -66,8 +66,8 @@ void Placement::place(Client* c)
 {
     if      (options->placement == Options::Random)               placeAtRandom(c);
     else if (options->placement == Options::Cascade)              placeCascaded(c);
-    else if (options->placement == Options::StupidlyCentered)     placeStupidlyCentered(c);
-    else if (options->placement == Options::StupidlyZeroCornered) placeStupidlyZeroCornered(c);
+    else if (options->placement == Options::Centered)     placeCentered(c);
+    else if (options->placement == Options::ZeroCornered) placeZeroCornered(c);
     else                                                          placeSmart(c);
 }
 
@@ -349,9 +349,9 @@ void Placement::placeCascaded (Client* c, bool re_init)
 }
 
 /*!
-  Place windows stupidly centered, on top of all others
+  Place windows centered, on top of all others
 */
-void Placement::placeStupidlyCentered (Client* c){
+void Placement::placeCentered (Client* c){
 
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
@@ -364,7 +364,10 @@ void Placement::placeStupidlyCentered (Client* c){
     c->move(QPoint(xp, yp));
 }
 
-void Placement::placeStupidlyZeroCornered(Client* c)
+/*!
+  Place windows in the (0,0) corner, on top of all others
+*/
+void Placement::placeZeroCornered(Client* c)
 {
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
