@@ -1,4 +1,4 @@
-INCLUDES                  = -I$(srcdir)/../.. $(all_includes)
+INCLUDES                  = -I$(srcdir)/../../lib $(all_includes)
 
 SUBDIRS                   = . config
 
@@ -10,14 +10,13 @@ embedtool_SOURCES         = embedtool.cpp
 embedtool_LDADD           = $(LIB_QT)
 embedtool_LDFLAGS         = $(all_libraries) $(KDE_RPATH)
 
-kde_module_LTLIBRARIES    = kwin_keramik.la
+kde_module_LTLIBRARIES    = kwin3_keramik.la
 
-kwin_keramik_la_SOURCES   = keramik.cpp
-kwin_keramik_la_COMPILE_FIRST = tiles.h
-# as long as it can't link with -no-undefined    
-# kwin_keramik_la_LDFLAGS   = $(all_libraries) $(KDE_PLUGIN) -module
-# kwin_keramik_la_LIBADD    = $(LIB_KDEUI)
-kwin_keramik_la_LDFLAGS   = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
+kwin3_keramik_la_SOURCES   = keramik.cpp
+kwin3_keramik_la_COMPILE_FIRST = tiles.h
+kwin3_keramik_la_LDFLAGS   = $(all_libraries) $(KDE_PLUGIN) -module
+kwin3_keramik_la_LIBADD    = $(LIB_KDEUI) ../../lib/libkwin.la
+#kwin3_keramik_la_LDFLAGS   = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
 
 METASOURCES               = AUTO
 noinst_headers        	  = keramik.h tiles.h

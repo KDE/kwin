@@ -6,10 +6,14 @@ Name[cs]=Keramika
 Name[eo]=Ceramiko
 Name[fa]=کرامیک
 Name[it]=Ceramica
+Name[lo]=ເຄຣາມິກ - K
 Name[lv]=Keramika
+Name[mn]=Ваар
 Name[nb]=Keramikk
 Name[nn]=Keramikk
+Name[sr]=Керамика
 Name[ta]=¦¸Ã¡Á¢ì
-Name[th]=เครามิก - K
-X-KDE-Library=kwin_keramik
+Name[th]=เครามิก
+Name[xx]=xxKeramikxx
+X-KDE-Library=kwin3_keramik
 
