@@ -978,6 +978,8 @@ bool Client::unmapNotify( XUnmapEvent& e )
 void Client::withdraw()
 {
     Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
+    // remove early from client list
+    workspace()->removeClient( this );
     setMappingState( WithdrawnState );
     info->setDesktop( 0 );
     desk = 0;

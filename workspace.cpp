@@ -627,6 +627,14 @@ QRect Workspace::geometry() const
     }
 }
 
+
+void Workspace::removeClient( Client* c) {
+    clients.remove( c );
+    stacking_order.remove( c );
+    focus_chain.remove( c );
+    propagateClients();
+}
+
 /*
   Destroys the client \a c
  */
@@ -634,9 +642,10 @@ bool Workspace::destroyClient( Client* c)
 {
     if ( !c )
         return FALSE;
-    clients.remove( c );
-    stacking_order.remove( c );
-    focus_chain.remove( c );
+
+    if (clients.contains(c))
+	removeClient(c);
+
     c->invalidateWindow();
     clientHidden( c );
     if ( c == desktop_client )
@@ -651,7 +660,6 @@ bool Workspace::destroyClient( Client* c)
         last_active_client = 0;
     storeFakeSessionInfo( c );
     delete c;
-    propagateClients();
     updateClientArea();
     return TRUE;
 }

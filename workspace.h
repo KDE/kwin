@@ -102,6 +102,8 @@ public:
 
     QRect clientArea();
 
+    void removeClient( Client* );
+
     bool destroyClient( Client* );
 
     void killWindowAtPosition(int x, int y);
