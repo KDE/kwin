@@ -175,9 +175,9 @@ public:
     void unclutterDesktop();
     void reconfigure();
     void doNotManage(QString);
-    
+
     QString desktopName( int desk );
-    
+
     bool isNotManaged( const QString& title );
 
 public slots:
@@ -199,6 +199,8 @@ public slots:
     void slotWindowMaximizeHorizontal();
     void slotWindowIconify();
     void slotWindowShade();
+    void slotWindowRaise();
+    void slotWindowLower();
 
     void slotWindowOperations();
     void slotWindowClose();
@@ -312,7 +314,7 @@ private:
     QWidget* supportWindow;
 
     QRect area;
-    
+
     // swallowing
     QStringList doNotManageList;
 };

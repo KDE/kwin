@@ -18,6 +18,8 @@
  keys->insertItem(i18n("Window shade"),"Window shade", "");
  keys->insertItem(i18n("Window move"),"Window move", "");
  keys->insertItem(i18n("Window resize"),"Window resize", "");
+ keys->insertItem(i18n("Window raise"),"Window raise", "");
+ keys->insertItem(i18n("Window lower"),"Window lower", "");
 
  keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "F12");
 

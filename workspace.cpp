@@ -1957,6 +1957,8 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window shade", this, SLOT( slotWindowShade() ) );
     keys->connectItem( "Window move", this, SLOT( slotWindowMove() ) );
     keys->connectItem( "Window resize", this, SLOT( slotWindowResize() ) );
+    keys->connectItem( "Window raise", this, SLOT( slotWindowRaise() ) );
+    keys->connectItem( "Window lower", this, SLOT( slotWindowLower() ) );
 
     keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
 
@@ -2045,6 +2047,24 @@ void Workspace::slotWindowIconify()
 void Workspace::slotWindowShade()
 {
     performWindowOperation( popup_client, Options::ShadeOp );
+}
+
+/*!
+  Raises the popup client
+ */
+void Workspace::slotWindowRaise()
+{
+    if ( popup_client )
+	raiseClient( popup_client );
+}
+
+/*!
+  Lowers the popup client
+ */
+void Workspace::slotWindowLower()
+{
+    if ( popup_client )
+	lowerClient( popup_client );
 }
 
 
