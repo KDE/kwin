@@ -218,7 +218,7 @@ QCString getStringProperty(WId w, Atom prop, char separator)
   Use this function only when really necessary. Keep in mind that it's
   a roundtrip to the X-Server.
  */
-void kwin_updateTime()
+void updateXTime()
     {
     static QWidget* w = 0;
     if ( !w )

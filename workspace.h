@@ -150,7 +150,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void clientHidden( Client*  );
         void clientAttentionChanged( Client* c, bool set );
 
-        void clientMoved(const QPoint &pos, unsigned long time);
+        void clientMoved(const QPoint &pos, Time time);
 
         /**
          * Returns the current virtual desktop of this workspace
@@ -327,7 +327,6 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void initShortcuts();
         void readShortcuts();
         void initDesktopPopup();
-        void updateXTime();
 
         bool startKDEWalkThroughWindows();
         bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode

@@ -130,7 +130,7 @@ class KWinSelectionOwner
 
 
 QCString getStringProperty(WId w, Atom prop, char separator=0);
-void kwin_updateTime();
+void updateXTime();
 
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint
@@ -169,6 +169,12 @@ int timestampCompare( Time time1, Time time2 ) // like strcmp()
     return ( time1 - time2 ) < 1000000000 ? 1 : -1; // time1 > time2 -> 1, handle wrapping
     }
 
+inline
+Time timestampDiff( Time time1, Time time2 ) // returns time2 - time1
+    { // no need to handle wrapping?
+    return time2 - time1;
+    }
+    
 } // namespace
 
 #endif

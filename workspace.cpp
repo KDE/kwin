@@ -92,8 +92,6 @@ Workspace::Workspace( bool restore )
     electric_bottom_border(None),
     electric_left_border(None),
     electric_right_border(None),
-    electric_time_first(0),
-    electric_time_last(0),
     layoutOrientation(Qt::Vertical),
     layoutX(-1),
     layoutY(2),
@@ -109,6 +107,9 @@ Workspace::Workspace( bool restore )
     session.setAutoDelete( TRUE );
 
     updateXTime(); // needed for proper initialization of user_time in Client ctor
+
+    electric_time_first = qt_x_time;
+    electric_time_last = qt_x_time;
 
     if ( restore )
       loadSessionInfo();
@@ -1650,16 +1651,7 @@ void Workspace::destroyBorderWindows()
     electric_right_border  = None;
     }
 
-// Do we have a proper timediff function??
-static int TimeDiff(unsigned long a, unsigned long b)
-    {
-    if (a > b)
-      return a-b;
-    else
-      return b-a;
-    }
-
-void Workspace::clientMoved(const QPoint &pos, unsigned long now)
+void Workspace::clientMoved(const QPoint &pos, Time now)
     {
     if (options->electricBorders() == Options::ElectricDisabled)
        return;
@@ -1670,8 +1662,8 @@ void Workspace::clientMoved(const QPoint &pos, unsigned long now)
         (pos.y() != electricBottom))
        return;
 
-    int treshold_set = options->electricBorderDelay(); // set timeout
-    int treshold_reset = 250; // reset timeout
+    Time treshold_set = options->electricBorderDelay(); // set timeout
+    Time treshold_reset = 250; // reset timeout
     int distance_reset = 10; // Mouse should not move more than this many pixels
 
     int border = 0;
@@ -1685,12 +1677,12 @@ void Workspace::clientMoved(const QPoint &pos, unsigned long now)
        border = 4;
 
     if ((electric_current_border == border) &&
-        (TimeDiff(electric_time_last, now) < treshold_reset) &&
+        (timestampDiff(electric_time_last, now) < treshold_reset) &&
         ((pos-electric_push_point).manhattanLength() < distance_reset))
         {
         electric_time_last = now;
 
-        if (TimeDiff(electric_time_first, now) > treshold_set)
+        if (timestampDiff(electric_time_first, now) > treshold_set)
             {
             electric_current_border = 0;
 
@@ -1834,25 +1826,6 @@ KDecoration* Workspace::createDecoration( KDecorationBridge* bridge )
 QString Workspace::desktopName( int desk ) const
     {
     return QString::fromUtf8( rootInfo->desktopName( desk ) );
-    }
-
-/*!
-  Updates qt_x_time by receiving a current timestamp from the server.
-
-  Use this function only when really necessary. Keep in mind that it's
-  a roundtrip to the X-Server.
- */
-void Workspace::updateXTime()
-    {
-    static QWidget* w = 0;
-    if ( !w )
-        w = new QWidget;
-    long data = 1;
-    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
-                    PropModeAppend, (unsigned char*) &data, 1);
-    XEvent ev;
-    XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
-    qt_x_time = ev.xproperty.time;
     }
 
 bool Workspace::checkStartupNotification( const Client* c, KStartupInfoData& data )

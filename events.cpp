@@ -132,7 +132,7 @@ void RootInfo::moveResize(Window w, int x_root, int y_root, unsigned long direct
     Client* c = workspace->findClient( WindowMatchPredicate( w ));
     if ( c )
         {
-        kwin_updateTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
+        updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
         c->NETMoveResize( x_root, y_root, (Direction)direction);
         }
     }
