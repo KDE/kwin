@@ -172,9 +172,6 @@ public:
 
     Colormap colormap() const;
 
-    /**
-     * Clone settings from other client.
-     */
     void cloneMode(Client *);
 
 public slots:
@@ -289,7 +286,7 @@ private:
     WinInfo* info;
     QTimer* autoRaiseTimer;
     Colormap cmap;
-
+    void verifyTransientFor();
 };
 
 inline WId Client::window() const

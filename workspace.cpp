@@ -312,7 +312,7 @@ void Workspace::init()
     setCurrentDesktop( 1 );
 
     unsigned int i, nwins;
-    Window dw1, dw2, *wins;
+    Window root_return, parent_return, *wins;
     XWindowAttributes attr;
 
     connect(&mgr, SIGNAL(resetAllClients()), this,
@@ -320,8 +320,7 @@ void Workspace::init()
     connect(kapp, SIGNAL(appearanceChanged()), this,
             SLOT(slotResetAllClients()));
 
-//     XGrabServer( qt_xdisplay() );
-    XQueryTree(qt_xdisplay(), root, &dw1, &dw2, &wins, &nwins);
+    XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
     for (i = 0; i < nwins; i++) {
 	XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
 	if (attr.override_redirect )
@@ -346,8 +345,8 @@ void Workspace::init()
 	    }
 	}
     }
-    XFree((void *) wins);
-//     XUngrabServer( qt_xdisplay() );
+    if ( wins )
+	XFree((void *) wins);
     propagateClients();
 
     //CT initialize the cascading info

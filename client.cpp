@@ -443,6 +443,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     else {
     	transient_for = (WId) ww;
 	transient_for_defined = TRUE;
+	verifyTransientFor();
     }
 
     if ( mainClient()->isSticky() )
@@ -1036,6 +1037,7 @@ bool Client::propertyNotify( XPropertyEvent& e )
 	} else {
 	    transient_for = (WId) ww;
 	    transient_for_defined = TRUE;
+	    verifyTransientFor();
 	}
 	break;
     case XA_WM_HINTS:
@@ -2682,6 +2684,10 @@ void Client::autoRaise()
     autoRaiseTimer = 0;
 }
 
+/*!  
+  Clones settings from other client. Used in
+  Workspace::slotResetAllClients()
+ */
 void Client::cloneMode(Client *client)
 {
     shaded = client->shaded;
@@ -2697,6 +2703,32 @@ NETWinInfo * Client::netWinInfo()
   return static_cast<NETWinInfo *>(info);
 }
 
+/*!  
+  The transient_for window may be embedded in another application,
+  so kwin cannot see it. Try to find the managed client for the
+  window and fix the transient_for property if possible.
+ */
+void Client::verifyTransientFor()
+{
+    unsigned int nwins;
+    Window root_return, parent_return, *wins;
+    if ( transient_for == 0 || transient_for == win )
+	return;
+    WId old_transient_for = transient_for;
+    while ( transient_for && 
+	    transient_for != workspace()->rootWin() && 
+	    !workspace()->findClient( transient_for ) ) {
+	wins = 0;
+	int r = XQueryTree(qt_xdisplay(), transient_for, &root_return, &parent_return,  &wins, &nwins);
+	if ( wins )
+	    XFree((void *) wins);
+	if ( r == 0)
+	    break;
+	transient_for = parent_return;
+    }
+    if ( old_transient_for != transient_for && workspace()->findClient( transient_for ) )
+	XSetTransientForHint( qt_xdisplay(), win, transient_for );
+}
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name )
