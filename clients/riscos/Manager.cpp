@@ -294,12 +294,14 @@ Manager::mousePosition(const QPoint & p) const
     }
     else
     {
-      m = Client::mousePosition(p);
+      m = Center;
+      //Client::mousePosition(p);
     }
   }
   else
   {
-      m = Client::mousePosition(p);
+    m = Client::mousePosition(p);
+    m = Center;
   }
 
   return m;
