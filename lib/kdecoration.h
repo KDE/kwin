@@ -143,7 +143,26 @@ public:
         BordersCount     ///< @internal
         };
 
-    enum Ability { ABILITY_DUMMY = 10000000 };
+    /**
+     * Used to find out which features the decoration supports.
+     * @see KDecorationFactory::supports()
+     */
+    enum Ability
+        {
+        AbilityAnnounceButtons = 0, ///< decoration supports AbilityButton* values (always use)
+        AbilityButtonMenu = 1000,   ///< decoration supports the menu button
+        AbilityButtonOnAllDesktops = 1001, ///< decoration supports the on all desktops button
+        AbilityButtonSpacer = 1002, ///< decoration supports inserting spacers between buttons
+        AbilityButtonHelp = 1003,   ///< decoration supports what's this help button
+        AbilityButtonMinimize = 1004,  ///< decoration supports a minimize button
+        AbilityButtonMaximize = 1005, ///< decoration supports a maximize button
+        AbilityButtonClose = 1006, ///< decoration supports a close button
+        AbilityButtonAboveOthers = 1007, ///< decoration supports an above button
+        AbilityButtonBelowOthers = 1008, ///< decoration supports a below button
+        AbilityButtonShade = 1009, ///< decoration supports a shade button
+        AbilityButtonResize = 1010, ///< decoration supports a resize button
+        ABILITY_DUMMY = 10000000
+        };
 
     enum Requirement { REQUIREMENT_DUMMY = 1000000 };
 };    
@@ -216,9 +235,9 @@ public:
     *
     * The default ( which is also returned if customButtonPositions returns false )
     * is "MS".
+    * Unknown buttons in the returned string must be ignored.
     * The changed flags for this setting is SettingButtons.
     */
-    // FRAME vice druhu tlacitek
     QString titleButtonsLeft() const;
     /**
     * If customButtonPositions() returns true, titleButtonsRight
@@ -228,6 +247,7 @@ public:
     *
     * The default ( which is also returned if customButtonPositions returns false )
     * is "HIAX".
+    * Unknown buttons in the returned string must be ignored.
     * The changed flags for this setting is SettingButtons.
     */
     QString titleButtonsRight() const;
