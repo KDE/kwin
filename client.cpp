@@ -498,7 +498,7 @@ bool Client::isMinimizable() const
 /*!
   Minimizes this client plus its transients
  */
-void Client::minimize()
+void Client::minimize( bool avoid_animation )
     {
     if ( !isMinimizable() || isMinimized())
         return;
@@ -508,7 +508,7 @@ void Client::minimize()
     Notify::raise( Notify::Minimize );
 
     // SELI mainClients().isEmpty() ??? - and in unminimize() too
-    if ( mainClients().isEmpty() && isOnCurrentDesktop())
+    if ( mainClients().isEmpty() && isOnCurrentDesktop() && !avoid_animation )
         animateMinimizeOrUnminimize( true ); // was visible or shaded
 
     setMappingState( IconicState );
@@ -518,7 +518,7 @@ void Client::minimize()
     workspace()->updateMinimizedOfTransients( this );
     }
 
-void Client::unminimize()
+void Client::unminimize( bool avoid_animation )
     {
     if( !isMinimized())
         return;
@@ -528,7 +528,7 @@ void Client::unminimize()
     info->setState( 0, NET::Hidden );
     if( isOnCurrentDesktop())
         {
-        if( mainClients().isEmpty())
+        if( mainClients().isEmpty() && !avoid_animation )
             animateMinimizeOrUnminimize( FALSE );
         if( isShown( false ))
             setMappingState( NormalState );

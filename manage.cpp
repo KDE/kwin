@@ -306,7 +306,7 @@ bool Client::manage( Window w, bool isMapped )
         }
 
     if( init_minimize )
-        minimize();
+        minimize( true ); // no animation
 
     // SELI this seems to be mainly for kstart and ksystraycmd
     // probably should be replaced by something better

@@ -266,8 +266,8 @@ class Client : public QObject, public KDecorationDefines
         static bool belongToSameApplication( const Client* c1, const Client* c2, bool active_hack = false );
         static void readIcons( Window win, QPixmap* icon, QPixmap* miniicon );
 
-        void minimize();
-        void unminimize();
+        void minimize( bool avoid_animation = false );
+        void unminimize( bool avoid_animation = false );
         void closeWindow();
         void killWindow();
         void maximize( MaximizeMode );

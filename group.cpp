@@ -173,7 +173,7 @@ void Workspace::updateMinimizedOfTransients( Client* c )
                  && !(*it)->isShade()
                  && !(*it)->isTopMenu() ) // topmenus are not minimized, they're hidden
                 {
-                (*it)->minimize();
+                (*it)->minimize( true ); // avoid animation
                 updateMinimizedOfTransients( (*it) );
                 }
             }
@@ -187,7 +187,7 @@ void Workspace::updateMinimizedOfTransients( Client* c )
             if( (*it)->isMinimized()
                 && !(*it)->isTopMenu())
                 {
-                (*it)->unminimize();
+                (*it)->unminimize( true ); // avoid animation
                 updateMinimizedOfTransients( (*it) );
                 }
             }
