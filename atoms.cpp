@@ -37,7 +37,7 @@ Atoms::Atoms()
 
     atoms[n] = &kwm_command;
     names[n++] = (char *) "KWM_COMMAND";
-    
+
     atoms[n] = &motif_wm_hints;
     names[n++] = (char *) "_MOTIF_WM_HINTS";
 
@@ -61,6 +61,9 @@ Atoms::Atoms()
 
     atoms[n] = &net_kde_docking_windows;
     names[n++] = (char *) "_NET_KDE_DOCKING_WINDOWS";
+
+    atoms[n] = &net_avoid_spec;
+    names[n++] = (char *) "_NET_AVOID_SPEC";
 
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
