@@ -831,7 +831,7 @@ void Client::setMappingState(int s)
   Proper mapping state should be set before showing the client.
  */
 void Client::rawShow()
-    {  // FRAME spravne poradi
+    {
     if( decoration != NULL )
         decoration->widget()->show(); // not really necessary, but let it know the state
     XMapWindow( qt_xdisplay(), frame );

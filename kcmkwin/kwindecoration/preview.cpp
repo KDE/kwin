@@ -52,7 +52,6 @@ KDecorationPreview::KDecorationPreview( QWidget* parent, const char* name )
 
     setMinimumSize( 100, 100 );
     no_preview->resize( size());
-    // FRAME i neco, co bude v pozici client window?
     }
 
 KDecorationPreview::~KDecorationPreview()
@@ -69,7 +68,7 @@ bool KDecorationPreview::recreateDecoration( KDecorationPlugins* plugins )
     {
     for ( int i = 0; i < NumWindows; i++ )
         {
-        delete deco[i];   // FRAME deletes also window
+        delete deco[i];   // deletes also window
         deco[i] = plugins->createDecoration( bridge[i] );
         deco[i]->init();
         }

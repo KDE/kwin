@@ -229,7 +229,7 @@ void KDecoration::maximize( MaximizeMode mode )
     }
     
 void KDecoration::minimize()
-    { // FRAME tady se da usetrit v bridge_ pouzitim performWindowOperation()
+    {
     bridge_->minimize();
     }
 
@@ -308,7 +308,7 @@ KDecoration::MousePosition KDecoration::mousePosition( const QPoint& p ) const
     MousePosition m = Nowhere;
 
 
-    if ( ( p.x() > border && p.x() < widget()->width() - border ) // FRAME widget()->  ???
+    if ( ( p.x() > border && p.x() < widget()->width() - border )
          && ( p.y() > border && p.y() < widget()->height() - border ) )
         return Center;
 

@@ -55,7 +55,6 @@ class KDecorationOptionsPrivate : public KDecorationDefines
         bool move_resize_maximized_windows;
     };
 
-// FRAME internal
 class KDecorationBridge : public KDecorationDefines
     {
     public:

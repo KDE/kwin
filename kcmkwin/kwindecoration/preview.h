@@ -20,8 +20,6 @@
 #ifndef KWINDECORATION_PREVIEW_H
 #define KWINDECORATION_PREVIEW_H
 
-// FRAME license
-
 #include <qwidget.h>
 #include <kdecoration_p.h>
 #include <kdecoration_plugins_p.h>
