@@ -676,7 +676,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
         // Unless it was the active window at the time
         // of session saving and there was no user interaction yet,
         // this check will be done in Workspace::allowClientActiovationTimestamp().
-        if( session )
+        if( session && !session->fake )
             return -1U;
         time = readUserCreationTime();
         }
