@@ -1448,8 +1448,8 @@ void KTranslucencyConfig::save( void )
   // (speed reasons, so the shadow matrix hasn't to be recreated for every window)
   // we set inactive windows to 100%, the radius to the inactive window value and adjust the multiplicators for docks and active windows
   // this way the user can set the three values without caring about the radius/multiplicator stuff
-  config->writeEntry("DockShadowSize",100.0*dockWindowShadowSize->value()/inactiveWindowShadowSize->value());
-  config->writeEntry("ActiveWindowShadowSize",100.0*activeWindowShadowSize->value()/inactiveWindowShadowSize->value());
+  config->writeEntry("DockShadowSize",(int)(100.0*dockWindowShadowSize->value()/inactiveWindowShadowSize->value()));
+  config->writeEntry("ActiveWindowShadowSize",(int)(100.0*activeWindowShadowSize->value()/inactiveWindowShadowSize->value()));
   config->writeEntry("InctiveWindowShadowSize",100);
   config->writeEntry("ResetKompmgr",resetKompmgr_);
   
