@@ -50,8 +50,8 @@ static void create_pixmaps()
     if ( pixmaps_created )
         return;
     pixmaps_created = true;
-    QColorGroup aGrp = options->colorGroup(Options::ButtonSingleColor, true);
-    QColorGroup iGrp = options->colorGroup(Options::ButtonSingleColor, false);
+    QColorGroup aGrp = options->colorGroup(Options::ButtonBg, true);
+    QColorGroup iGrp = options->colorGroup(Options::ButtonBg, false);
 
     QPainter aPainter, iPainter;
     close_pix = new QPixmap(16, 16);
@@ -395,3 +395,4 @@ void StdClient::maxButtonClicked( int button )
 	break;
     }
 }
+

@@ -48,9 +48,38 @@ static unsigned char question_bits[] = {
 static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
+// buttons active, inactive, up, down, and 2 sizes :P
+static KPixmap *btnPix1;
+static KPixmap *btnDownPix1;
+static KPixmap *iBtnPix1;
+static KPixmap *iBtnDownPix1;
+static KPixmap *btnPix2;
+static KPixmap *btnDownPix2;
+static KPixmap *iBtnPix2;
+static KPixmap *iBtnDownPix2;
+static QColor btnForeground;
+
 static bool pixmaps_created = false;
 
 static int titleHeight = -1;
+static int btnWidth1 = 18;
+static int btnWidth2 = 28;
+
+
+static void drawButtonFrame(KPixmap *pix, const QColorGroup &g, bool sunken)
+{
+    QPainter p;
+    int w = pix->width();
+    int h = pix->height();
+    p.begin(pix);
+    p.setPen(sunken ? g.dark() : g.light());
+    p.drawLine(0, 0, w-1, 0);
+    p.drawLine(0, 0, 0, w-1);
+    p.setPen(sunken ? g.light() : g.dark());
+    p.drawLine(w-1, 0, w-1, h-1);
+    p.drawLine(0, h-1, w-1, h-1);
+    p.end();
+}
 
 static void create_pixmaps()
 {
@@ -88,7 +117,6 @@ static void create_pixmaps()
         aUpperGradient->resize(32, titleHeight+2);
         iUpperGradient = new KPixmap;
         iUpperGradient->resize(32, titleHeight+2);
-        //QColor bgColor = kapp->palette().normal().background();
         QColor bgColor = options->color(Options::TitleBar, true);
         KPixmapEffect::gradient(*aUpperGradient,
                                 bgColor.light(120),
@@ -99,19 +127,66 @@ static void create_pixmaps()
                                 bgColor.light(120),
                                 bgColor.dark(120),
                                 KPixmapEffect::VerticalGradient);
+        // buttons (active, 2 sizes)
+        QColorGroup g = options->colorGroup(Options::ButtonBg, true);
+        QColor c = g.background();
+        btnPix1 = new KPixmap;
+        btnPix1->resize(btnWidth1, titleHeight-2);
+        KPixmapEffect::gradient(*btnPix1, c.light(120), c.dark(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(btnPix1, g, false);
+        btnDownPix1 = new KPixmap;
+        btnDownPix1->resize(btnWidth1, titleHeight-2);
+        KPixmapEffect::gradient(*btnDownPix1, c.dark(120), c.light(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(btnDownPix1, g, true);
+        btnPix2 = new KPixmap;
+        btnPix2->resize(btnWidth2, titleHeight-2);
+        KPixmapEffect::gradient(*btnPix2, c.light(120), c.dark(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(btnPix2, g, false);
+        btnDownPix2 = new KPixmap;
+        btnDownPix2->resize(btnWidth2, titleHeight-2);
+        KPixmapEffect::gradient(*btnDownPix2, c.dark(120), c.light(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(btnDownPix2, g, true);
+        // inactive
+        g = options->colorGroup(Options::ButtonBg, false);
+        c = g.background();
+        iBtnPix1 = new KPixmap;
+        iBtnPix1->resize(btnWidth1, titleHeight-2);
+        KPixmapEffect::gradient(*iBtnPix1, c.light(120), c.dark(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(iBtnPix1, g, false);
+        iBtnDownPix1 = new KPixmap;
+        iBtnDownPix1->resize(btnWidth1, titleHeight-2);
+        KPixmapEffect::gradient(*iBtnDownPix1, c.dark(120), c.light(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(iBtnDownPix1, g, true);
+        iBtnPix2 = new KPixmap;
+        iBtnPix2->resize(btnWidth2, titleHeight-2);
+        KPixmapEffect::gradient(*iBtnPix2, c.light(120), c.dark(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(iBtnPix2, g, false);
+        iBtnDownPix2 = new KPixmap;
+        iBtnDownPix2->resize(btnWidth2, titleHeight-2);
+        KPixmapEffect::gradient(*iBtnDownPix2, c.dark(120), c.light(120),
+                                KPixmapEffect::DiagonalGradient);
+        drawButtonFrame(iBtnDownPix2, g, true);
     }
+    if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
+        btnForeground = Qt::black;
+    else
+        btnForeground = Qt::white;      
 }
 
 
-SystemButton::SystemButton(int w, int h, QWidget *parent, const char *name,
+SystemButton::SystemButton(int w, int h, Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
 {
+    client = parent;
     setFixedSize(w, h);
-    aBackground.resize(w, h);
-    iBackground.resize(w, h);
-    reset();
-    //resize(22, 12);
 
     if(bitmap)
         setBitmap(bitmap);
@@ -125,37 +200,7 @@ QSize SystemButton::sizeHint() const
 
 void SystemButton::reset()
 {
-    QPainter p;
-    int w = width();
-    int h = height();
-    QColor hColor(options->color(Options::ButtonBg, true));
-    QColor lColor(options->color(Options::ButtonBlend, true));
-
-    KPixmapEffect::gradient(aBackground, hColor.light(150), lColor.dark(150),
-                            KPixmapEffect::DiagonalGradient);
-    p.begin(&aBackground);
-    p.setPen(options->colorGroup(Options::ButtonBg, false).dark());
-    p.drawLine(0, 0, w-1, 0);
-    p.drawLine(0, 0, 0, w-1);
-    p.setPen(options->colorGroup(Options::ButtonBg, false).light());
-    p.drawLine(w-1, 0, w-1, h-1);
-    p.drawLine(0, h-1, w-1, h-1);
-    p.end();
-
-    hColor = (options->color(Options::ButtonBg, false));
-    lColor = (options->color(Options::ButtonBlend, false));
-    KPixmapEffect::gradient(iBackground, hColor.light(150), lColor.dark(150),
-                            KPixmapEffect::DiagonalGradient);
-    p.begin(&iBackground);
-    p.setPen(options->colorGroup(Options::ButtonBg, false).light());
-    p.drawLine(0, 0, w-1, 0);
-    p.drawLine(0, 0, 0, h-1);
-    p.setPen(options->colorGroup(Options::ButtonBg, false).dark());
-    p.drawLine(w-1, 0, w-1, h-1);
-    p.drawLine(0, h-1, w-1, h-1);
-    p.end();
-
-
+    repaint(false);
 }
 
 void SystemButton::setBitmap(const unsigned char *bitmap)
@@ -167,12 +212,36 @@ void SystemButton::setBitmap(const unsigned char *bitmap)
 
 void SystemButton::drawButton(QPainter *p)
 {
-    if(isDown())
-        p->drawPixmap(0, 0, aBackground);
-    else
-        p->drawPixmap(0, 0, iBackground);
+    bool smallBtn = width() == btnWidth1;
+    if(btnPix1){
+        if(client->isActive()){
+            if(isDown())
+                p->drawPixmap(0, 0, smallBtn ? *btnDownPix1 : *btnDownPix2);
+            else
+                p->drawPixmap(0, 0, smallBtn ? *btnPix1 : *btnPix2);
+        }
+        else{
+            if(isDown())
+                p->drawPixmap(0, 0, smallBtn ? *iBtnDownPix1 : *iBtnDownPix2);
+            else
+                p->drawPixmap(0, 0, smallBtn ? *iBtnPix1 : *iBtnPix2);
+        }
+    }
+    else{
+        QColorGroup g = options->colorGroup(Options::ButtonBg,
+                                            client->isActive());
+        int w = width();
+        int h = height();
+        p->fillRect(1, 1, w-2, h-2, isDown() ? g.mid() : g.button());
+        p->setPen(isDown() ? g.dark() : g.light());
+        p->drawLine(0, 0, w-1, 0);
+        p->drawLine(0, 0, 0, w-1);
+        p->setPen(isDown() ? g.light() : g.dark());
+        p->drawLine(w-1, 0, w-1, h-1);
+        p->drawLine(0, h-1, w-1, h-1);
+    }
 
-    p->setPen(options->color(Options::ButtonFg, isDown()));
+    p->setPen(btnForeground);
     int xOff = (width()-8)/2;
     int yOff = (height()-8)/2;
     p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
@@ -184,6 +253,14 @@ void LaptopClient::slotReset()
     if(aUpperGradient){
         delete aUpperGradient;
         delete iUpperGradient;
+        delete btnPix1;
+        delete btnDownPix1;
+        delete iBtnPix1;
+        delete iBtnDownPix1;
+        delete btnPix2;
+        delete btnDownPix2;
+        delete iBtnPix2;
+        delete iBtnDownPix2;
     }
     pixmaps_created = false;
     create_pixmaps();
@@ -433,6 +510,17 @@ void LaptopClient::maximizeChange(bool m)
 void LaptopClient::init()
 {
     //
+}
+
+void LaptopClient::activeChange(bool)
+{
+    repaint(false);
+    button[0]->reset();
+    button[1]->reset();
+    button[2]->reset();
+    button[3]->reset();
+    if(button[4])
+        button[4]->reset();
 }
 
 

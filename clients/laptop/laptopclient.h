@@ -13,7 +13,7 @@ class QSpacerItem;
 class SystemButton : public QButton
 {
 public:
-    SystemButton(int w, int h, QWidget *parent=0, const char *name=0,
+    SystemButton(int w, int h, Client *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
@@ -21,8 +21,8 @@ public:
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
-    KPixmap aBackground, iBackground;
     QBitmap deco;
+    Client *client;
 };
 
 class LaptopClient : public Client
@@ -42,6 +42,7 @@ protected:
     void stickyChange(bool on);
     void maximizeChange(bool m);
     void doShape();
+    void activeChange(bool);
 protected slots:
     void slotReset();
 private:

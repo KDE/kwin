@@ -354,7 +354,7 @@ void ModernSys::paintEvent( QPaintEvent* )
             p.drawTiledPixmap(1, 1, w-2, 18, *iUpperGradient);
         else
             p.fillRect(1, 1, w-2, 18, fillBrush);
-        p.setPen(options->color(Options::GrooveText, isActive()));
+        p.setPen(options->color(Options::Font, isActive()));
         p.setFont(options->font(isActive()));
         p.drawText(t, AlignCenter, caption() );
     }

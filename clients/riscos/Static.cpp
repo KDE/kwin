@@ -374,8 +374,17 @@ Static::update()
     setPalette(aBut, options->color(Options::ButtonBg, true));
     setPalette(iBut, options->color(Options::ButtonBg, false));
 
-    setInversePalette(aSym,  options->color(Options::ButtonFg, true));
-    setInversePalette(iSym,  options->color(Options::ButtonFg, false));
+    QColor btnForeground;
+    if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
+        btnForeground = Qt::black;
+    else
+        btnForeground = Qt::white;   
+    setInversePalette(aSym,  btnForeground);
+    if(qGray(options->color(Options::ButtonBg, false).rgb()) > 128)
+        btnForeground = Qt::black;
+    else
+        btnForeground = Qt::white;   
+    setInversePalette(iSym, btnForeground);
    
     setPalette(aTitlePal_,  options->color(Options::TitleBar, true));
     setPalette(iTitlePal_,  options->color(Options::TitleBar, false));

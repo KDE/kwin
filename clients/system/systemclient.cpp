@@ -370,13 +370,13 @@ void SystemClient::recalcTitleBuffer()
     p.setClipRegion(r);
     int i, ly;
     for(i=0, ly=4; i < 4; ++i, ly+=3){
-        p.setPen(options->color(Options::Groove, true).light(150));
+        p.setPen(options->color(Options::TitleBar, true).light(150));
         p.drawLine(0, ly, width()-1, ly);
-        p.setPen(options->color(Options::Groove, true).dark(120));
+        p.setPen(options->color(Options::TitleBar, true).dark(120));
         p.drawLine(0, ly+1, width()-1, ly+1);
     }
     p.setClipRect(t);
-    p.setPen(options->color(Options::GrooveText, true));
+    p.setPen(options->color(Options::Font, true));
     p.setFont(options->font(true));
 
     p.drawText(t.x()+((t.width()-fm.width(caption()))/2)-4,
@@ -422,7 +422,7 @@ void SystemClient::paintEvent( QPaintEvent* )
             p.drawTiledPixmap(0, 0, width(), 18, *iUpperGradient);
         else
             p.fillRect(0, 0, width(), 18, fillBrush);
-        p.setPen(options->color(Options::GrooveText, isActive()));
+        p.setPen(options->color(Options::Font, isActive()));
         p.setFont(options->font(isActive()));
         p.drawText(t, AlignCenter, caption() );
     }
