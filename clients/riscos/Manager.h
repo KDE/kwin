@@ -43,7 +43,7 @@ class Manager : public Client
     void setShade(bool);
 
     void fakeMouseEvent(QMouseEvent *, QWidget *);
-
+    
   signals:
 
     void maximiseChanged(bool);
@@ -63,6 +63,7 @@ class Manager : public Client
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
     void activateLayout();
+    void mouseDoubleClickEvent( QMouseEvent * );
     
   protected slots:
 

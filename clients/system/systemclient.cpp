@@ -467,7 +467,7 @@ void SystemClient::windowWrapperShowEvent( QShowEvent* )
 void SystemClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
-        setShade( !isShade() );
+	workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
     workspace()->requestFocus( this );
 }
 

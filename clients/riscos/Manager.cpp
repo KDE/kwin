@@ -193,6 +193,13 @@ Manager::fakeMouseEvent(QMouseEvent * e, QWidget * w)
   Client::event(&fake);
 }
 
+  void 
+Manager::mouseDoubleClickEvent( QMouseEvent * )
+{
+    workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+    workspace()->requestFocus( this );
+}
+
 } // End namespace
 
 // vim:ts=2:sw=2:tw=78
