@@ -204,14 +204,16 @@ void KDEDefaultHandler::createPixmaps()
 		iUpperGradient = new KPixmap;
         iUpperGradient->resize(128, normalTitleHeight+2);
         QColorGroup bgColor = options->colorGroup(Options::TitleBar, true);
+		QColorGroup bgColorDrop = options->colorGroup(Options::TitleBlend, true);
         KPixmapEffect::gradient(*aUpperGradient,
                                 bgColor.midlight(),
-                                bgColor.mid(),
+                                bgColorDrop.mid(),
                                 KPixmapEffect::VerticalGradient);
         bgColor = options->colorGroup(Options::TitleBar, false);
+		bgColorDrop = options->colorGroup(Options::TitleBlend, false);
         KPixmapEffect::gradient(*iUpperGradient,
                                 bgColor.midlight(),
-                                bgColor.mid(),
+                                bgColorDrop.mid(),
                                 KPixmapEffect::VerticalGradient);
     } else {
 		aUpperGradient = NULL;
@@ -783,6 +785,8 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 
 	QColorGroup g;
 	int offset;
+
+	bool highcolor = useGradients && (QPixmap::defaultDepth() > 8);
 	KPixmap* upperGradient = isActive() ? aUpperGradient : iUpperGradient;
 
     QPainter p(this);
@@ -813,13 +817,17 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawRect(x,y,w,h);
 
     // Draw part of the frame that is the titlebar color
-   	g = options->colorGroup(Options::TitleBar, isActive());
-	p.setPen(g.light());
+	if (highcolor)
+		g = options->colorGroup(Options::TitleBlend, isActive());
+	else
+	   	g = options->colorGroup(Options::TitleBar, isActive());
+
+	p.setPen( highcolor ? g.mid().light() : g.light());
 	p.drawLine(x+1, y+1, rightOffset-1, y+1);
 	p.drawLine(x+1, y+1, x+1, leftFrameStart);
 
 	// Draw titlebar colour separator line
-	p.setPen(g.dark());
+	p.setPen( highcolor ? g.mid().dark() : g.dark());
 	p.drawLine(rightOffset-1, y+1, rightOffset-1, titleHeight+2);
 
 	// Finish drawing the titlebar extension
