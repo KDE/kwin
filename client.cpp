@@ -424,8 +424,11 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     getWmNormalHints(); // get xSizeHint
     fetchName();
 
-    if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, (Window*) &transient_for ) )
+    Window ww;
+    if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
 	transient_for = None;
+    else
+    	transient_for = (WId) ww;
 
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
@@ -854,8 +857,11 @@ bool Client::propertyNotify( XPropertyEvent& e )
 	fetchName();
 	break;
     case XA_WM_TRANSIENT_FOR:
-	if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, (Window*) &transient_for ) )
+    	Window ww;
+	if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
 	    transient_for = None;
+	else
+	    transient_for = (WId) ww;
 	break;
     case XA_WM_HINTS:
 	getWMHints();
