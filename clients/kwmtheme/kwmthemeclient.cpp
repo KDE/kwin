@@ -1,19 +1,13 @@
 #include <kconfig.h>
 #include "kwmthemeclient.h"
 #include <kglobal.h>
-#include <qapplication.h>
-#include <qcursor.h>
-#include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qtoolbutton.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kstddirs.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <qbitmap.h>
-#include <qtooltip.h>
 #include "../../workspace.h"
 #include "../../options.h"
 
@@ -232,7 +226,13 @@ void KWMThemeClient::slotReset()
 void MyButton::drawButtonLabel(QPainter *p)
 {
     if(pixmap()){
-        style().drawItem(p, 0, 0, width(), height(), AlignCenter, colorGroup(),
+	// If we have a theme who's button covers the entire width or
+	// entire height, we shift down/right by 1 pixel so we have
+	// some visual notification of button presses. i.e. for MGBriezh
+	int offset = (isDown() && ((pixmap()->width() >= width()) || 
+                         (pixmap()->height() >= height()))) ? 1 : 0;
+        style().drawItem(p, offset, offset, width(), height(), 
+                         AlignCenter, colorGroup(),
                          true, pixmap(), QString::null);
     }
 }
@@ -243,7 +243,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
 {
     stickyBtn = maxBtn = mnuBtn = 0;
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset())); 
-    QGridLayout *layout = new QGridLayout(this);
+    layout = new QGridLayout(this);
     layout->addColSpacing(0, maxExtent);
     layout->addColSpacing(2, maxExtent);
 
@@ -253,6 +253,8 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
                                     QSizePolicy::Expanding));
 
     layout->addWidget(windowWrapper(), 2, 1);
+    // Without the next line, shading flickers
+    layout->addItem( new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding) );
     layout->addRowSpacing(3, maxExtent);
     layout->setRowStretch(2, 10);
     layout->setColStretch(1, 10);
@@ -287,19 +289,22 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         }
         else if(val == "Sticky"){
             stickyBtn = new MyButton(this, "sticky");
-            stickyBtn->setPixmap(*pinupPix);
+            if (isSticky())
+                stickyBtn->setPixmap(*pindownPix);
+            else
+                stickyBtn->setPixmap(*pinupPix);
             connect(stickyBtn, SIGNAL( clicked() ), this, SLOT(toggleSticky()));
             hb->addWidget(stickyBtn);
             stickyBtn->setFixedSize(20, 20);
         }
-        else if(val == "Iconify"){
+        else if((val == "Iconify") && isMinimizable()){
             btn = new MyButton(this, "iconify");
             btn->setPixmap(*iconifyPix);
             connect(btn, SIGNAL(clicked()), this, SLOT(iconify()));
             hb->addWidget(btn);
             btn->setFixedSize(20, 20);
         }
-        else if(val == "Maximize"){
+        else if((val == "Maximize") && isMaximizable()){
             maxBtn = new MyButton(this, "max");
             maxBtn->setPixmap(*maxPix);
             connect(maxBtn, SIGNAL(clicked()), this, SLOT(maximize()));
@@ -314,8 +319,11 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
             btn->setFixedSize(20, 20);
         }
         else{
-            if(val != "Off")
+            if((val != "Off") && 
+               ((val == "Iconify") && !isMinimizable()) &&
+               ((val == "Maximize") && !isMaximizable()))
                 qWarning("KWin: Unrecognized button value: %s", val.latin1());
+
         }
     }
     if(titleGradient){
@@ -536,13 +544,20 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
     }
     }
     drawTitle(p);
+
+    QColor c = colorGroup().background();
+
     // KWM evidently had a 1 pixel border around the client window. We
     // emulate it here, but should be removed at some point in order to
     // seamlessly mesh widget themes
-    p.setPen(colorGroup().background());
+    p.setPen(c);
     p.drawRect(maxExtent-1, maxExtent-1, width()-(maxExtent-1)*2,
                height()-(maxExtent-1)*2);
 
+    // We fill the area behind the wrapped widget to ensure that
+    // shading animation is drawn as smoothly as possible
+    QRect r(layout->cellGeometry(2, 1));
+    p.fillRect( r.x(), r.y(), r.width(), r.height(), c);
     p.end();
 }
 
@@ -715,7 +730,7 @@ void KWMThemeClient::mouseDoubleClickEvent( QMouseEvent * e )
 void KWMThemeClient::stickyChange(bool on)
 {
     if (stickyBtn)
-       stickyBtn->setPixmap(on ? *pinupPix : *pindownPix);
+       stickyBtn->setPixmap(on ? *pindownPix : *pinupPix);
 }
 
 void KWMThemeClient::maximizeChange(bool m)

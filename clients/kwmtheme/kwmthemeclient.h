@@ -7,6 +7,7 @@
 #include "../../client.h"
 class QLabel;
 class QSpacerItem;
+class QGridLayout;
 
 namespace KWinInternal{
 
@@ -48,6 +49,7 @@ private:
     KPixmap *aGradient, *iGradient;
     MyButton *maxBtn, *stickyBtn, *mnuBtn;
     QSpacerItem *titlebar;
+    QGridLayout* layout;
 };
 
 };
