@@ -1799,6 +1799,11 @@ void Workspace::place(Client* c)
     d->initPositioning->place(c);
 }
 
+void Workspace::doPlacement(Client* c )
+{
+    place( c );
+}
+
 /*!
   Marks the client as being moved around by the user.
  */

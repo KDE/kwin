@@ -178,6 +178,7 @@ public:
     void setClientIsMoving( Client *c );
 
     void place(Client *c);
+    void doPlacement(Client* c ); // obsolete KDE4 remove
 
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
