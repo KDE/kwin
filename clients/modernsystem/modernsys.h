@@ -57,6 +57,7 @@ protected slots:
     void slotReset();
     void maxButtonClicked();
 private:
+	enum Buttons{ BtnClose = 0, BtnSticky, BtnMinimize, BtnMaximize, BtnHelp };
     ModernButton* button[5];
     QSpacerItem* titlebar;
     QPixmap titleBuffer;

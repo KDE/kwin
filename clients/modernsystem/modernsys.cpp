@@ -1,3 +1,9 @@
+// Daniel M. DULEY <mosfet@kde.org>               original work
+// Melchior FRANZ  <a8603365@unet.univie.ac.at>   configuration options & modification 
+
+#include <kconfig.h>
+#include <kglobal.h>
+#include <qstring.h>
 #include "modernsys.h"
 #include <qapplication.h>
 #include <qcursor.h>
@@ -21,32 +27,31 @@ using namespace KWinInternal;
 
 
 static unsigned char iconify_bits[] = {
-  0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
+    0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
 
-/* not used currently
 static unsigned char close_bits[] = {
-    0xc3, 0x66, 0x3c, 0x18, 0x3c, 0x66, 0xc3, 0x00};
-*/
+    0x00, 0x66, 0x7e, 0x3c, 0x3c, 0x7e, 0x66, 0x00};
+
 static unsigned char maximize_bits[] = {
-  0x00, 0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0x00};
+    0x00, 0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0x00};
 
 static unsigned char minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
 
 static unsigned char unsticky_bits[] = {
-   0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
+    0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
 
 static unsigned char sticky_bits[] = {
-   0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
+    0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
 
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
 
 static unsigned char btnhighcolor_mask_bits[] = {
- 0xe0,0x41,0xf8,0x07,0xfc,0x0f,0xfe,0xdf,0xfe,0x1f,0xff,0x3f,0xff,0xff,0xff,
- 0x3f,0xff,0x3f,0xff,0xff,0xff,0xff,0xfe,0x9f,0xfe,0x1f,0xfc,0x0f,0xf0,0x03,
- 0x00,0x40,0x80,0x00,0x00,0x00,0x39,0x00,0x00,0x00,0x20,0x99,0x0f,0x08,0xc4,
- 0x00,0x00,0x00,0x67,0x00,0x00,0x00,0x58,0x5f,0x43,0x68,0x61,0x6e,0x67,0x65 };
+    0xe0,0x41,0xf8,0x07,0xfc,0x0f,0xfe,0xdf,0xfe,0x1f,0xff,0x3f,0xff,0xff,0xff,
+    0x3f,0xff,0x3f,0xff,0xff,0xff,0xff,0xfe,0x9f,0xfe,0x1f,0xfc,0x0f,0xf0,0x03,
+    0x00,0x40,0x80,0x00,0x00,0x00,0x39,0x00,0x00,0x00,0x20,0x99,0x0f,0x08,0xc4,
+    0x00,0x00,0x00,0x67,0x00,0x00,0x00,0x58,0x5f,0x43,0x68,0x61,0x6e,0x67,0x65 };
 
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
@@ -63,6 +68,12 @@ static QBitmap *lcDark2;
 static QBitmap *lcDark3;
 static QBitmap *lcLight1;
 static QImage *btnSource;
+
+static QString *button_pattern = NULL;
+static bool show_handle;
+static int handle_size;
+static int handle_width;
+static bool config_changed;
 
 static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
 {
@@ -178,6 +189,42 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
+static bool read_config()
+{
+    bool sh, changed = false;
+    int hs, hw;
+    QString bp;
+
+    KConfig* conf = KGlobal::config();
+    conf->setGroup("ModernSystem");
+    sh = conf->readBoolEntry("ShowHandle", true);
+
+    hw = conf->readUnsignedNumEntry("HandleWidth", 6);
+    hs = conf->readUnsignedNumEntry("HandleSize", 30);
+    if (!(sh && hs && hw)) {
+        sh = false;
+        hw = hs = 0;
+    }
+
+    conf->setGroup("Style");
+    if (conf->readBoolEntry("CustomButtonOrder", false)) {
+        bp = "2" + conf->readEntry("ButtonsOnLeft", "X") + "3t3"
+                + conf->readEntry("ButtonsOnRight", "HSIA") + "2";
+    }
+    else
+        bp = "2X3t3HSIA2";
+
+    if (sh != show_handle || hw != handle_width || hs != handle_size
+            || bp != *button_pattern)
+        changed = true;
+    
+    show_handle = sh;
+    handle_width = hw;
+    handle_size = hs;
+    *button_pattern = bp;
+    return changed;
+}
+
 ModernButton::ModernButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
@@ -191,6 +238,7 @@ ModernButton::ModernButton(Client *parent, const char *name,
         setBitmap(bitmap);
     setMask(mask);
     client = parent;
+    hide();
 }
 
 QSize ModernButton::sizeHint() const
@@ -242,14 +290,13 @@ void ModernButton::mouseReleaseEvent( QMouseEvent* e )
 
 void ModernSys::slotReset()
 {
+    if (config_changed) {
+        workspace()->slotResetAllClientsDelayed();
+        config_changed = false;
+    }
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
-    button[0]->reset();
-    button[1]->reset();
-    button[2]->reset();
-    button[3]->reset();
-    if(button[4])
-        button[4]->reset();
+    for (int i = 0; i < 5; button[i++]->reset());
     repaint();
 }
 
@@ -266,58 +313,76 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 
     g->addColSpacing(0, 2);
-    g->addColSpacing(2, 8);
+    g->addColSpacing(2, 2 + handle_width);
 
-    g->addRowSpacing(2, 8);
-
-    button[0] = new ModernButton(this, "close"/*, close_bits*/);
-    button[1] = new ModernButton(this, "sticky");
-    if(isSticky())
-        button[1]->setBitmap(unsticky_bits);
-    else
-        button[1]->setBitmap(sticky_bits);
-    button[2] = new ModernButton(this, "iconify", iconify_bits);
-    button[3] = new ModernButton(this, "maximize", maximize_bits);
-    if(help){
-        button[4] = new ModernButton(this, "help", question_bits);
-        connect( button[4], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
-    }
-    else
-        button[4] = NULL;
-
-    connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
-    connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maxButtonClicked() ) ) );
+    g->addRowSpacing(2, 2 + handle_width);
 
     QHBoxLayout* hb = new QHBoxLayout(0);
     hb->setResizeMode(QLayout::FreeResize);
-    g->addLayout( hb, 0, 1 );
-    //hb->addSpacing(3);
-    hb->addWidget( button[0]);
     titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
-    hb->addSpacing(3);
-    hb->addItem(titlebar);
-    hb->addSpacing(3);
-    if(help){
-        hb->addWidget( button[4]);
-        hb->addSpacing(1);
-    }
-    hb->addWidget( button[1]);
-    hb->addSpacing(1);
-    hb->addWidget( button[2]);
-    hb->addSpacing(1);
-    hb->addWidget( button[3]);
-    hb->addSpacing(2);
 
+    button[BtnClose] = new ModernButton(this, "close", close_bits);
+    button[BtnSticky] = new ModernButton(this, "sticky");
+    button[BtnMinimize] = new ModernButton(this, "iconify", iconify_bits);
+    button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits);
+    button[BtnHelp] = new ModernButton(this, "help", question_bits);
+
+    connect( button[BtnClose], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
+    connect( button[BtnSticky], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
+    connect( button[BtnMinimize], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
+    connect( button[BtnMaximize], SIGNAL( clicked() ), this, ( SLOT( maxButtonClicked() ) ) );
+    connect( button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+
+    for (int i = 0; i < (int)button_pattern->length();) {
+        QChar c = (*button_pattern)[i++];
+        if (c == '_')
+            c = '3';
+
+        if (c.isDigit()) {
+            hb->addSpacing(int(c - '0'));
+            continue;
+        }
+        else if (c == 'X') {
+            hb->addWidget(button[BtnClose]);
+            button[BtnClose]->show();
+        }
+        else if (c == 'S') {
+            if(isSticky())
+                button[BtnSticky]->setBitmap(unsticky_bits);
+            else
+                button[BtnSticky]->setBitmap(sticky_bits);
+            hb->addWidget(button[BtnSticky]);
+            button[BtnSticky]->show();
+        }
+        else if (c == 'I') {
+            hb->addWidget(button[BtnMinimize]);
+            button[BtnMinimize]->show();
+        }
+        else if (c == 'A') {
+            hb->addWidget(button[BtnMaximize]);
+            button[BtnMaximize]->show();
+        }
+        else if (help && c == 'H') {
+            hb->addWidget(button[BtnHelp]);
+            button[BtnHelp]->show();
+        }
+        else if (c == 't')
+            hb->addItem(titlebar);
+
+        if ((*button_pattern)[i] >= 'A' && (*button_pattern)[i] <= 'Z')
+            hb->addSpacing(1);
+    }
+
+    g->addLayout( hb, 0, 1 );
     setBackgroundMode(NoBackground);
     recalcTitleBuffer();
 }
 
+
 void ModernSys::maxButtonClicked( )
 {
-    switch ( button[3]->last_button ) {
+    switch ( button[BtnMaximize]->last_button ) {
     case MidButton:
        maximize( MaximizeVertical );
        break;
@@ -332,19 +397,8 @@ void ModernSys::maxButtonClicked( )
 
 void ModernSys::resizeEvent( QResizeEvent* )
 {
-    //Client::resizeEvent( e );
     recalcTitleBuffer();
     doShape();
-    /*
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
-        QPainter p( this );
-	QRect t = titlebar->geometry();
-	t.setTop( 0 );
-	QRegion r = rect();
-	r = r.subtract( t );
-	p.setClipRegion( r );
-	p.eraseRect( rect() );
-        }*/
 }
 
 void ModernSys::recalcTitleBuffer()
@@ -364,7 +418,7 @@ void ModernSys::recalcTitleBuffer()
 
     QRect t = titlebar->geometry();
     t.setTop( 2 );
-    t.setLeft( t.left() + 4 );
+    t.setLeft( t.left() );
     t.setRight( t.right() - 2 );
 
     QRegion r(t.x(), 0, t.width(), 18);
@@ -404,6 +458,9 @@ void ModernSys::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
 
 void ModernSys::paintEvent( QPaintEvent* )
 {
+    int hs = handle_size;
+    int hw = handle_width;
+
     QPainter p( this );
     QRect t = titlebar->geometry();
 
@@ -416,11 +473,11 @@ void ModernSys::paintEvent( QPaintEvent* )
     p.fillRect(width()-6, 0, width()-1, height(), fillBrush);
 
     t.setTop( 2 );
-    t.setLeft( t.left() + 4 );
+    t.setLeft( t.left() );
     t.setRight( t.right() - 2 );
 
-    int w = width()-6; // exclude handle
-    int h = height()-6;
+    int w = width() - hw; // exclude handle
+    int h = height() - hw;
 
     // titlebar
     QColorGroup g = options->colorGroup(Options::TitleBar, isActive());
@@ -457,45 +514,50 @@ void ModernSys::paintEvent( QPaintEvent* )
 
     qDrawShadePanel(&p, 3, 19, w-6, h-22, g, true);
 
-    // handle
-    p.setPen(g.dark());
-    p.drawLine(width()-3, height()-29, width()-3, height()-3);
-    p.drawLine(width()-29, height()-3, width()-3, height()-3);
+    if (show_handle) {
+        p.setPen(g.dark());
+        p.drawLine(width()-3, height()-hs-1, width()-3, height()-3);
+        p.drawLine(width()-hs-1, height()-3, width()-3, height()-3);
 
-    p.setPen(g.light());
-    p.drawLine(width()-6, height()-29, width()-6, height()-6);
-    p.drawLine(width()-29, height()-6, width()-6, height()-6);
-    p.drawLine(width()-6, height()-29, width()-4, height()-29);
-    p.drawLine(width()-29, height()-6, width()-29, height()-4);
+        p.setPen(g.light());
+        p.drawLine(width()-hw, height()-hs-1, width()-hw, height()-hw);
+        p.drawLine(width()-hs-1, height()-hw, width()-hw, height()-hw);
+        p.drawLine(width()-hw, height()-hs-1, width()-4, height()-hs-1);
+        p.drawLine(width()-hs-1, height()-hw, width()-hs-1, height()-4);
 
+        p.setPen(Qt::black);
+        p.drawRect(0, 0, w, h);
 
-    p.setPen(Qt::black);
-    p.drawRect(0, 0, w, h);
-
-    // handle outline
-    p.drawLine(width()-6, height()-30, width(), height()-30);
-    p.drawLine(width()-2, height()-30, width()-2, height()-2);
-    p.drawLine(width()-30, height()-2, width()-2, height()-2);
-    p.drawLine(width()-30, height()-6, width()-30, height()-2);
-
-
+        // handle outline
+        p.drawLine(width()-hw, height()-hs, width(), height()-hs);
+        p.drawLine(width()-2, height()-hs, width()-2, height()-2);
+        p.drawLine(width()-hs, height()-2, width()-2, height()-2);
+        p.drawLine(width()-hs, height()-hw, width()-hs, height()-2);
+    } else {
+        p.setPen(Qt::black);
+        p.drawRect(0, 0, w, h);
+    }
 }
-
-#define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
 
 void ModernSys::doShape()
 {
+    int hs = handle_size;
+    int hw = handle_width;
     QRegion mask;
-    mask += QRect(0, 0, width()-6, height()-6);
-    mask += QRect(width()-30, height()-30, 29, 29);
+    mask += QRect(0, 0, width()-hw, height()-hw);
     //single points
     mask -= QRect(0, 0, 1, 1);
-    mask -= QRect(width()-7, 0, 1, 1);
-    mask -= QRect(0, height()-7, 1, 1);
-    mask -= QRect(width()-2, height()-2, 1, 1);
-    mask -= QRect(width()-2, height()-30, 1, 1);
-    mask -= QRect(width()-30, height()-2, 1, 1);
+    mask -= QRect(width()-hw-1, 0, 1, 1);
+    mask -= QRect(0, height()-hw-1, 1, 1);
 
+    if (show_handle) {
+        mask += QRect(width()-hs, height()-hs, hs-1, hs-1);
+        mask -= QRect(width()-2, height()-2, 1, 1);
+        mask -= QRect(width()-2, height()-hs, 1, 1);
+        mask -= QRect(width()-hs, height()-2, 1, 1);
+    } else {
+        mask -= QRect(width()-1, height()-1, 1, 1);
+    }
     setMask(mask);
 }
 
@@ -514,18 +576,18 @@ void ModernSys::windowWrapperShowEvent( QShowEvent* )
 void ModernSys::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
-	workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+        workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
     workspace()->requestFocus( this );
 }
 
 void ModernSys::stickyChange(bool on)
 {
-    button[1]->setBitmap(on ? unsticky_bits : sticky_bits);
+    button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
 }
 
 void ModernSys::maximizeChange(bool m)
 {
-    button[3]->setBitmap(m ? minmax_bits : maximize_bits);
+    button[BtnMaximize]->setBitmap(m ? minmax_bits : maximize_bits);
 }
 
 void ModernSys::init()
@@ -536,12 +598,7 @@ void ModernSys::init()
 void ModernSys::activeChange(bool)
 {
     repaint(false);
-    button[0]->reset();
-    button[1]->reset();
-    button[2]->reset();
-    button[3]->reset();
-    if(button[4])
-        button[4]->reset();
+    for (int i = 0; i < 5; button[i++]->reset());
 }
 
 
@@ -549,16 +606,20 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
 {
     MousePosition m = Client::mousePosition( p );
 
-    if ( m == Center ) {
-	int border = 10;
-	if ( p.y() >= height()-border )
-	    m =  Bottom;
-	else if ( p.x() >= width()-border )
-	    m =  Right;
+    if ( show_handle && m == Center ) {
+       int border = handle_width + 4;
+       if ( p.x() >= width()-border && p.y() >= height()-border )
+           m = BottomRight;
+       else if ( p.y() >= height()-border )
+           m =  Bottom;
+       else if ( p.x() >= width()-border )
+           m =  Right;
     }
     return m;
 }
 
+
+// KWin extended plugin interface
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
@@ -567,17 +628,24 @@ extern "C"
     }
     void init()
     {
-       create_pixmaps();
+        button_pattern = new QString;
+        create_pixmaps();
+        read_config();
+        config_changed = true;
     }
     void reset()
     {
-       delete_pixmaps();
-       create_pixmaps();
+        if (read_config())
+            config_changed = true;
+		delete_pixmaps();
+		create_pixmaps();
     }
     void deinit()
     {
-       delete_pixmaps();
+        delete_pixmaps();
+        delete button_pattern;
     }
 }
 
 #include "modernsys.moc"
+// vim:ts=4:sw=4

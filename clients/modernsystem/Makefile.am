@@ -1,6 +1,8 @@
 
 INCLUDES = $(all_includes)
 
+SUBDIRS = . config
+
 kde_module_LTLIBRARIES = libkwinmodernsys.la
 
 libkwinmodernsys_la_SOURCES = modernsys.cpp
