@@ -487,7 +487,6 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	if ( geom == QApplication::desktop()->geometry() )
 	    may_move = FALSE; // don't let fullscreen windows be moved around
     }  else {
-	qDebug("2");
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
 	    if ( (xSizeHint.flags & USPosition) == 0 ) {
 		QRect area = workspace()->clientArea();
