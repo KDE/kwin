@@ -1603,8 +1603,7 @@ void Client::setCursor( Position m )
     {
     if ( !isResizable() || isShade() || noBorder())
         {
-        setCursor( arrowCursor );
-        return;
+        m = PositionCenter;
         }
     switch ( m ) 
         {
