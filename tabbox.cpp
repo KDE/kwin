@@ -29,6 +29,7 @@ TabBox::TabBox( Workspace *ws, const char *name )
     : QWidget( 0, name, WStyle_Customize | WStyle_NoBorder )
 {
     no_tasks = i18n("*** No Tasks ***");
+    m = DesktopMode; // init variables
     wspace = ws;
     reconfigure();
     reset();

@@ -197,6 +197,8 @@ void Options::reload()
 	xineramaPlacementEnabled = config->readBoolEntry ("XineramaPlacementEnabled", FALSE);
  	xineramaMovementEnabled = config->readBoolEntry ("XineramaMovementEnabled", FALSE);
  	xineramaMaximizeEnabled = config->readBoolEntry ("XineramaMaximizeEnabled", FALSE);
+    } else {
+	 xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = false;
     }
 
     val = config->readEntry("Placement","Smart");
