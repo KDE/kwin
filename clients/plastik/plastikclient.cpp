@@ -605,28 +605,26 @@ const QPixmap &PlastikClient::captionPixmap() const
 
     QFontMetrics fm(s_titleFont);
     int captionWidth  = fm.width(c);
+    int captionHeight = fm.height();
 
     const int th  = layoutMetric(LM_TitleHeight, false);
 
-    QPixmap textPixmap;
     QPainter painter;
-    if(Handler()->titleShadow())
-    {
-        // prepare the shadow
-        textPixmap = QPixmap(captionWidth+2*2, th ); // 2*2 px shadow space
-        textPixmap.fill(QColor(0,0,0));
-        textPixmap.setMask( textPixmap.createHeuristicMask(TRUE) );
+
+    const int thickness = 2;
+    QPixmap textPixmap(captionWidth+2*thickness, captionHeight+2*thickness);
+    if(Handler()->titleShadow()) {
+        textPixmap.fill(QColor(0,0,0) );
+
         painter.begin(&textPixmap);
         painter.setFont(s_titleFont);
-        painter.setPen(white);
+        painter.setPen(Qt::white);
         painter.drawText(textPixmap.rect(), AlignCenter, c );
+
         painter.end();
     }
 
-    QImage shadow;
-    ShadowEngine se;
-
-    QPixmap *captionPixmap = new QPixmap(captionWidth+4, th);
+    QPixmap *captionPixmap = new QPixmap(captionWidth+2*thickness, th);
 
     painter.begin(captionPixmap);
     painter.drawTiledPixmap(captionPixmap->rect(),
@@ -638,8 +636,7 @@ const QPixmap &PlastikClient::captionPixmap() const
             shadowColor = QColor(255, 255, 255);
         else
             shadowColor = QColor(0,0,0);
-        shadow = se.makeShadow(textPixmap, shadowColor);
-        painter.drawImage(1, 1, shadow);
+        paintShadow(&painter, textPixmap, 0,1, thickness, shadowColor);
     }
     painter.setFont(s_titleFont);
     painter.setPen(Handler()->getColor(TitleFont,active) );

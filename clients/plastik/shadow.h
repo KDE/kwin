@@ -1,19 +1,18 @@
-/* Copyright (C) 2003 by Sandro Giessl
- * based on the nice CVS KDesktop KShadowEngine class. thanks!
- * looking forward to see KShadowEngine in kdefx somewhen btw.. :)
- * ------------------------------------------------------------------------
- * these are the original copyright notes:
- * This file is proposed to be part of the KDE libraries.
- * Copyright (C) 2003 Laur Ivan <laurivan@eircom.net>
+/* Copyright (C) 2003-2005 by Sandro Giessl
  *
- * Many thanks to:
- *  - Bernardo Hung <deciare@gta.igs.net> for the enhanced shadow
- *    algorithm (currently used)
- *  - Tim Jansen <tim@tjansen.de> for the API updates and fixes.
+ * based on the text shadow code from KHTML. Original copyright notes:
+ *
+ * This file is part of the DOM implementation for KDE.
+ *
+ * Copyright (C) 1999-2003 Lars Knoll (knoll@kde.org)
+ *           (C) 2000-2003 Dirk Mueller (mueller@kde.org)
+ *           (C) 2003 Apple Computer, Inc.
+ *           (C) 2004-2005 Allan Sandfeld Jensen (kde@carewolf.com)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
- * License version 2 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,23 +28,10 @@
 #ifndef __FX_SHADOW
 #define __FX_SHADOW
 
-#include <qpixmap.h>
-#include <qimage.h>
-#include <qcolor.h>
+class QColor;
+class QPainter;
+class QPixmap;
 
-class ShadowEngine
-{
-    public:
-        ShadowEngine();
-        ~ShadowEngine();
-        void setThickness(int thickness) { thickness_ = thickness; }
-        void setMultiplicationFactor(double factor) { multiplicationFactor_ = factor; }
-        QImage makeShadow(const QPixmap& textPixmap, const QColor &bgColor);
-    private:
-        double decay(QImage& source, int x, int y);
-
-        int thickness_;
-        double multiplicationFactor_;
-};
+void paintShadow(QPainter *pt, const QPixmap& textPixmap, int x, int y, int thickness, const QColor &color);
 
 #endif
