@@ -500,10 +500,17 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
             break;
         new_transient_for = parent_return;
         }
-    if( !workspace()->findClient( WindowMatchPredicate( new_transient_for )))
-        new_transient_for = before_search; // nice try
+    if( Client* new_transient_for_client = workspace()->findClient( WindowMatchPredicate( new_transient_for )))
+        {
+        if( new_transient_for != before_search )
+            {
+            kdDebug( 1212 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
+                << before_search << ", child of " << new_transient_for_client << ", adjusting." << endl;
+            new_property_value = new_transient_for; // also fix the property
+            }
+        }
     else
-        new_property_value = new_transient_for; // also fix the property
+        new_transient_for = before_search; // nice try
 // loop detection
 // group transients cannot cause loops, because they're considered transient only for non-transient
 // windows in the group
