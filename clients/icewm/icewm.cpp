@@ -108,7 +108,7 @@ bool validframe  = false;
 bool themeTitleTextColors = true;	// Allow theme to set colors. kcontrol will have no effect
 bool titleBarOnTop 		  = true;	// Titlebars can be below windows too :)
 bool showMenuButtonIcon   = false;	// Draw a mini icon over the menu pixmap.
-bool themeButtonPositions = true; 	// Let the theme dictate the btn pos.
+bool customButtonPositions = false;	// Let the theme dictate the btn pos.
 bool titleBarCentered 	  = true;
 
 
@@ -188,13 +188,13 @@ void ThemeHandler::readConfig()
 	conf->setGroup("IceWM");
 	themeName = conf->readEntry("CurrentTheme", "");
 	themeTitleTextColors = conf->readBoolEntry("ThemeTitleTextColors", true);
-	themeButtonPositions = conf->readBoolEntry("ThemeButtonPositions", true);
 	showMenuButtonIcon = conf->readBoolEntry("ShowMenuButtonIcon", false);
 	titleBarOnTop = conf->readBoolEntry("TitleBarOnTop", true);
 
-	if (!themeButtonPositions)
+	conf->setGroup("Style");
+	customButtonPositions = conf->readBoolEntry("CustomButtonPositions", false);
+	if (customButtonPositions)
 	{
-		conf->setGroup("Style");
 		titleButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
 		titleButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
 
@@ -233,7 +233,7 @@ void ThemeHandler::initTheme()
 		showMenuButtonIcon = (bool) config.readNumEntry("ShowMenuButtonIcon", 0); 
 	titleBarHeight = config.readNumEntry("TitleBarHeight", 20);
 	
-	if (themeButtonPositions)
+	if (!customButtonPositions)
 	{
 		// Read in the button configuration, stripping any quotes
 		// Ignore sticky 'd' on the left buttons (some themes look bad with it on by default)

@@ -45,7 +45,6 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 	urlLabel->setText( i18n("Open Konqueror Window at KDE's IceWM theme directory") );
 
 	gb2 = new QGroupBox( 1, Qt::Horizontal, i18n("IceWM Decoration Settings"), parent );
-	cbThemeButtonPositions = new QCheckBox( i18n("Use theme &button positions"), gb2 );
 	cbThemeTitleTextColors = new QCheckBox( i18n("Use theme &title text colors"), gb2 );
 	cbTitleBarOnTop 	   = new QCheckBox( i18n("&Show title bar on top of windows"), gb2 );
 	cbShowMenuButtonIcon   = new QCheckBox( i18n("&Menu button always shows application mini icon"), gb2 );
@@ -56,7 +55,6 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 	// Ensure we track user changes properly
 	connect( themeListBox, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()) );
 	connect( urlLabel, SIGNAL(leftClickedURL(const QString&)), this, SLOT(callURL(const QString&)));
-	connect( cbThemeButtonPositions, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
 	connect( cbThemeTitleTextColors, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
 	connect( cbTitleBarOnTop, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
 	connect( cbShowMenuButtonIcon, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
@@ -150,10 +148,8 @@ void IceWMConfig::slotSelectionChanged()
 void IceWMConfig::load( KConfig* conf )
 {
 	conf->setGroup("IceWM");
-	bool override = conf->readBoolEntry( "ThemeButtonPositions", true );
-	cbThemeButtonPositions->setChecked( override );
 
-	override = conf->readBoolEntry( "ThemeTitleTextColors", true );
+	bool override = conf->readBoolEntry( "ThemeTitleTextColors", true );
 	cbThemeTitleTextColors->setChecked( override );
 
 	override = conf->readBoolEntry( "TitleBarOnTop", true );
@@ -183,7 +179,6 @@ void IceWMConfig::save( KConfig* conf )
 {
 	conf->setGroup("IceWM");
 	conf->writeEntry( "ThemeTitleTextColors", cbThemeTitleTextColors->isChecked() );
-	conf->writeEntry( "ThemeButtonPositions", cbThemeButtonPositions->isChecked() );
 	conf->writeEntry( "TitleBarOnTop", cbTitleBarOnTop->isChecked() );
 	conf->writeEntry( "ShowMenuButtonIcon", cbShowMenuButtonIcon->isChecked() );
 
@@ -198,7 +193,6 @@ void IceWMConfig::save( KConfig* conf )
 void IceWMConfig::defaults()
 {
 	cbThemeTitleTextColors->setChecked( true );
-	cbThemeButtonPositions->setChecked( true );
 	cbTitleBarOnTop->setChecked( true );
 	cbShowMenuButtonIcon->setChecked( false );
 	themeListBox->setCurrentItem( themeListBox->findItem(i18n("Infadel #2 (default)")) );
