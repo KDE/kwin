@@ -426,6 +426,7 @@ void Workspace::addClient( Client* c, allowed_t )
         }
     if( !unconstrained_stacking_order.contains( c ))
         unconstrained_stacking_order.append( c );
+    updateClientArea(); // this cannot be in manage(), because the client got added only now
     updateClientLayer( c );
     if( c->isDesktop())
         {

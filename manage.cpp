@@ -474,12 +474,6 @@ bool Client::manage( Window w, bool isMapped )
     if( isTopMenu())
         hideClient( true );
 
-    if ( !doNotShow )
-        {
-        workspace()->updateClientArea();
-        area = workspace()->clientArea( geometry().center() );
-        }
-
     if( user_time == CurrentTime ) // no known user time, set something old
         user_time = qt_x_time - 1000000;
 
