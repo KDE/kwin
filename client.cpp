@@ -3167,7 +3167,7 @@ void Client::activateLayout()
 
 NET::WindowType Client::windowType() const
 {
-    NET::WindowType wt = info->windowType();
+    NET::WindowType wt = info->windowType( SUPPORTED_WINDOW_TYPES_MASK );
     if ( wt == NET::Unknown )
         wt = NET::Normal;
     if ( wt == NET::Menu ) {

@@ -245,12 +245,13 @@ bool Motif::funcFlags( WId w, bool& resize, bool& move, bool& minimize,
 Client* Workspace::clientFactory( WId w )
 {
     NETWinInfo ni( qt_xdisplay(), w, root, NET::WMWindowType );
+    NET::WindowType wType = ni.windowType( SUPPORTED_WINDOW_TYPES_MASK );
 
-    if ( (ni.windowType() == NET::Normal || ni.windowType() == NET::Unknown)
+    if ( (wType == NET::Normal || wType == NET::Unknown)
          && Motif::noBorder( w ) )
         return new NoBorderClient( this, w );
 
-    switch ( ni.windowType() ) {
+    switch ( wType ) {
     // when adding new window types, add a fallback for them in PluginMgr::createClient()
     case NET::Desktop:
         {
@@ -303,7 +304,7 @@ Client* Workspace::clientFactory( WId w )
     if ( Shape::hasShape( w ) ){
         return new NoBorderClient( this, w );
     }
-    return ( mgr->createClient( this, w, ni.windowType()) );
+    return ( mgr->createClient( this, w, wType) );
 }
 
 Workspace *Workspace::_self = 0;

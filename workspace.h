@@ -26,6 +26,9 @@ class KGlobalAccel;
 
 namespace KWinInternal {
 
+const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
+    | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask;
+
 class Client;
 class TabBox;
 class PopupInfo;
