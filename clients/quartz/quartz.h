@@ -57,7 +57,7 @@ class QuartzButton : public QButton
 		void setBitmap(const unsigned char *bitmap);
 		void setTipText(const QString &tip);
 		QSize sizeHint() const;
-		int   last_button;
+		ButtonState last_button;
 		void turnOn( bool isOn );
 
 	protected:

@@ -330,7 +330,8 @@ QValueList< QuartzHandler::BorderSize > QuartzHandler::borderSizes() const
 QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeButton,
 		bool isLeftButton, bool isOnAllDesktopsButton, const unsigned char *bitmap,
 		const QString& tip, const int realizeBtns)
-    : QButton(parent->widget(), name)
+    : QButton(parent->widget(), name),
+      last_button(NoButton)
 {
 	setTipText(tip);
 	setCursor(ArrowCursor);
@@ -674,17 +675,7 @@ void QuartzClient::slotMaximize()
 {
 	if (button[BtnMax])
 	{
-		switch (button[BtnMax]->last_button)
-		{
-			case MidButton:
-				maximize(maximizeMode() ^ MaximizeVertical );
-				break;
-			case RightButton:
-				maximize(maximizeMode() ^ MaximizeHorizontal );
-				break;
-			default:
-				maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
-		}
+		maximize(button[BtnMax]->last_button);
 	}
 }
 
