@@ -88,7 +88,7 @@ void Options::reload()
     // inactive
     colors[Frame+KWINCOLORS] = config->readColorEntry("inactiveFrame",
                                                       &colors[Frame]);
-    colors[TitleBar+KWINCOLORS] = colors[TitleBar];
+    colors[TitleBar+KWINCOLORS] = colors[Frame];
     colors[TitleBar+KWINCOLORS] = config->
         readColorEntry("inactiveBackground", &colors[TitleBar+KWINCOLORS]);
 
