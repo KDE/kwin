@@ -2286,8 +2286,13 @@ void Workspace::desktopPopupAboutToShow()
 	desk_popup->setItemChecked( 0, TRUE );
     desk_popup->insertSeparator( -1 );
     int id;
+    const int BASE = 10;
     for ( int i = 1; i <= numberOfDesktops(); i++ ) {
-	id = desk_popup->insertItem( QString("&%1  %2").arg(i).arg( desktopName(i) ), i );
+        QString basic_name("%1  %2");
+        if (i<BASE) {
+            basic_name.prepend('&');
+        }
+	id = desk_popup->insertItem( basic_name.arg(i).arg( desktopName(i) ), i );
 	if ( popup_client && !popup_client->isSticky() && popup_client->desktop()  == i )
 	    desk_popup->setItemChecked( id, TRUE );
     }
