@@ -576,6 +576,11 @@ void Workspace::updateCurrentTopMenu()
             menubar->setDesktop( active_client->desktop());
         menubar->hideClient( false );
         topmenu_space->hide();
+        // make it appear like it's been raised manually - it's in the Dock layer anyway,
+        // and not raising it could mess up stacking order of topmenus within one application,
+        // and thus break raising of mainclients in raiseClient()
+        unconstrained_stacking_order.remove( menubar );
+        unconstrained_stacking_order.append( menubar );
         }
     else if( !block_desktop_menubar )
         { // no topmenu active - show the space window, so that there's not empty space
