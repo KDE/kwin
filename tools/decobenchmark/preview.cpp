@@ -293,7 +293,7 @@ void KDecorationPreviewBridge::setMask( const QRegion& reg, int mode )
 
 bool KDecorationPreviewBridge::isPreview() const
     {
-    return true;
+    return false;
     }
 
 QRect KDecorationPreviewBridge::geometry() const
