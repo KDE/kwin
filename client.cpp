@@ -1632,6 +1632,12 @@ void Client::autoRaise()
     autoRaiseTimer = 0;
     }
 
+void Client::cancelAutoRaise()
+    {
+    delete autoRaiseTimer;
+    autoRaiseTimer = 0;
+    }
+
 #ifdef NDEBUG
 kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }
 kndbgstream& operator<<( kndbgstream& stream, const ClientList&  ) { return stream; }

@@ -269,6 +269,8 @@ void Workspace::lowerClient( Client* c )
     if ( !c )
         return;
 
+    c->cancelAutoRaise();
+
     StackingUpdatesBlocker blocker( this );
 
     unconstrained_stacking_order.remove( c );
@@ -291,6 +293,8 @@ void Workspace::lowerClientWithinApplication( Client* c )
     {
     if ( !c )
         return;
+
+    c->cancelAutoRaise();
 
     StackingUpdatesBlocker blocker( this );
 
@@ -316,6 +320,8 @@ void Workspace::raiseClient( Client* c )
     if ( !c )
         return;
 
+    c->cancelAutoRaise();
+
     StackingUpdatesBlocker blocker( this );
 
     if( c->isTransient())
@@ -338,6 +344,8 @@ void Workspace::raiseClientWithinApplication( Client* c )
     {
     if ( !c )
         return;
+
+    c->cancelAutoRaise();
 
     StackingUpdatesBlocker blocker( this );
     // ignore mainwindows

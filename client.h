@@ -276,6 +276,7 @@ class Client : public QObject, public KDecorationDefines
         void toggleShade();
         void showContextHelp();
         void autoRaise();
+        void cancelAutoRaise();
         void shadeHover();
         void destroyClient();
 

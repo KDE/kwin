@@ -704,11 +704,8 @@ void Client::setActive( bool act)
     if ( active )
         Notify::raise( Notify::Activate );
 
-    if ( !active && autoRaiseTimer ) 
-        {
-        delete autoRaiseTimer;
-        autoRaiseTimer = 0;
-        }
+    if( !active )
+        cancelAutoRaise();
 
     if( !active && shade_mode == ShadeActivated )
         setShade( ShadeNormal );

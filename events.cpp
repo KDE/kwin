@@ -893,8 +893,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
             }
         if ( lostMouse ) 
             {
-            delete autoRaiseTimer;
-            autoRaiseTimer = 0;
+            cancelAutoRaise();
             delete shadeHoverTimer;
             shadeHoverTimer = 0;
             if ( shade_mode == ShadeHover && !moveResizeMode && !buttonDown )
