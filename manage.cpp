@@ -482,13 +482,14 @@ bool Client::manage( Window w, bool isMapped )
 
     delete session;
 
-    checkActiveModal();
-
     ungrabXServer();
     
     client_rules.discardTemporary();
     updateWindowRules(); // was blocked while !isManaged()
 
+// TODO there's a small problem here - isManaged() depends on the mapping state,
+// but this client is not yet in Workspace's client list at this point, will
+// be only done in addClient()
     return true;
     }
 

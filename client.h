@@ -273,6 +273,7 @@ class Client : public QObject, public KDecorationDefines
         void showContextHelp();
         void cancelAutoRaise();
         void destroyClient();
+        void checkActiveModal();
 
     private slots:
         void autoRaise();
@@ -423,7 +424,6 @@ class Client : public QObject, public KDecorationDefines
         void cleanGrouping();
         void checkGroupTransients();
         void setTransient( Window new_transient_for_id );
-        void checkActiveModal();
         Client* transient_for;
         Window transient_for_id;
         Window original_transient_for_id;

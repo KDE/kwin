@@ -481,6 +481,7 @@ void Workspace::addClient( Client* c, allowed_t )
         if( activeClient() == NULL && should_get_focus.count() == 0 )
             activateClient( findDesktop( true, currentDesktop()));
         }
+    c->checkActiveModal();
     checkTransients( c->window()); // SELI does this really belong here?
     updateStackingOrder( true ); // propagate new client
     if( c->isUtility() || c->isMenu() || c->isToolbar())
