@@ -2413,6 +2413,7 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window maximize horizontal", this, SLOT( slotWindowMaximizeHorizontal() ) );
     keys->connectItem( "Window maximize vertical", this, SLOT( slotWindowMaximizeVertical() ) );
     keys->connectItem( "Window iconify", this, SLOT( slotWindowIconify() ) );
+    keys->connectItem( "Window iconify all", this, SLOT( slotWindowIconifyAll() ) );
     keys->connectItem( "Window shade", this, SLOT( slotWindowShade() ) );
     keys->connectItem( "Window move", this, SLOT( slotWindowMove() ) );
     keys->connectItem( "Window resize", this, SLOT( slotWindowResize() ) );
@@ -2562,6 +2563,16 @@ void Workspace::slotWindowMaximizeHorizontal()
 void Workspace::slotWindowIconify()
 {
     performWindowOperation( popup_client, Options::IconifyOp );
+}
+
+void Workspace::slotWindowIconifyAll()
+{
+    int iDesktop = currentDesktop();
+
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+        if( (*it)->isOnDesktop( iDesktop ) && !(*it)->isIconified() )
+            performWindowOperation( *it, Options::IconifyOp );
+    }
 }
 
 /*!

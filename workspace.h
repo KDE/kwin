@@ -246,6 +246,7 @@ public slots:
     void slotWindowMaximizeVertical();
     void slotWindowMaximizeHorizontal();
     void slotWindowIconify();
+    void slotWindowIconifyAll();
     void slotWindowShade();
     void slotWindowRaise();
     void slotWindowLower();

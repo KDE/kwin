@@ -10,6 +10,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
+#include <kaccel.h> // for KAccel::keyboardHasMetaKey()
 
 using namespace KWinInternal;
 
@@ -239,6 +240,7 @@ void Options::reload()
     CmdWindow1 = mouseCommand(config->readEntry("CommandWindow1","Activate, raise and pass click"));
     CmdWindow2 = mouseCommand(config->readEntry("CommandWindow2","Activate and pass click"));
     CmdWindow3 = mouseCommand(config->readEntry("CommandWindow3","Activate and pass click"));
+    CmdAllModKey = (config->readEntry("CommandAllKey", KAccel::keyboardHasMetaKey() ? "Meta" : "Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
     CmdAll1 = mouseCommand(config->readEntry("CommandAll1","Move"));
     CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"));
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"));
@@ -254,7 +256,7 @@ void Options::reload()
 	d->title_buttons_left  = "MS";
 	d->title_buttons_right = "HIAX";
     }
-        
+
     emit resetPlugin();
     emit resetClients();
 }
@@ -308,16 +310,16 @@ QString Options::titleButtonsLeft()
 {
     return d->title_buttons_left;
 }
-    
+
 QString Options::titleButtonsRight()
 {
     return d->title_buttons_right;
 }
-    
+
 bool Options::customButtonPositions()
 {
     return d->custom_button_positions;
 }
-    
+
 #include "options.moc"
 

@@ -26,6 +26,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "client.h"
 #include "events.h"
 #include "atoms.h"
+#include <kaccel.h> // Needed in x11Event() below
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -403,17 +404,19 @@ bool WindowWrapper::x11Event( XEvent * e)
     switch ( e->type ) {
     case ButtonPress:
 	{
-	    bool mod1 = (e->xbutton.state & Mod1Mask) == Mod1Mask;
+	    uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
+	    			KAccel::keyModXMeta() : KAccel::keyModXAlt();
+	    bool bModKeyHeld = e->xbutton.state & keyModX;
 
 	    if ( ((Client*)parentWidget())->isActive()
 		 && ( options->focusPolicy != Options::ClickToFocus
-		 &&  options->clickRaise && !mod1 ) ) {
+		 &&  options->clickRaise && !bModKeyHeld ) ) {
 		((Client*)parentWidget())->autoRaise();
 		ungrabButton( winId(), None );
 	    }
 
 	    Options::MouseCommand com = Options::MouseNothing;
-	    if ( mod1){
+	    if ( bModKeyHeld ){
 		switch (e->xbutton.button) {
 		case Button1:
 		    com = options->commandAll1();

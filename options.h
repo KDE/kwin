@@ -231,7 +231,7 @@ public:
     MouseRaise, MouseLower, MouseOperationsMenu, MouseToggleRaiseAndLower,
     MouseActivateAndRaise, MouseActivateAndLower, MouseActivate,
     MouseActivateRaiseAndPassClick, MouseActivateAndPassClick,
-    MouseMove, MouseResize, 
+    MouseMove, MouseResize,
     MouseShade,
     MouseNothing
     };
@@ -248,6 +248,7 @@ public:
     MouseCommand commandAll1() { return CmdAll1; }
     MouseCommand commandAll2() { return CmdAll2; }
     MouseCommand commandAll3() { return CmdAll3; }
+    uint keyCmdAllModKey() { return CmdAllModKey; }
 
 
     static WindowOperation windowOperation(const QString &name );
@@ -316,7 +317,8 @@ private:
     MouseCommand CmdAll1;
     MouseCommand CmdAll2;
     MouseCommand CmdAll3;
-    
+    uint CmdAllModKey;
+
     OptionsPrivate* d;
 };
 
