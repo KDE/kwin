@@ -72,7 +72,7 @@ void PlastikConfig::load(KConfig*)
 
 
     QString value = m_config->readEntry("TitleAlignment", "AlignHCenter");
-    QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->child(value);
+    QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->child(value.latin1());
     if (button) button->setChecked(true);
     bool animateButtons = m_config->readBoolEntry("AnimateButtons", true);
     m_dialog->animateButtons->setChecked(animateButtons);
