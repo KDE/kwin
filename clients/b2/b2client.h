@@ -99,6 +99,8 @@ public:
     void unobscureTitlebar();
     void titleMoveAbs(int new_ofs);
     void titleMoveRel(int xdiff);
+    // transparent stuff
+    virtual bool drawbound(const QRect& geom, bool clear);
 protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );

@@ -993,6 +993,49 @@ void B2Client::positionButtons()
     titlebar->move(bar_x_ofs, 0);
 }
 
+// Transparent bound stuff.
+
+static QRect *visible_bound;
+static QPointArray bound_shape;
+
+bool B2Client::drawbound(const QRect& geom, bool clear)
+{
+    if (clear) {
+	if (!visible_bound) return true;
+    }
+
+    if (!visible_bound) {
+	visible_bound = new QRect(geom);
+	QRect t = titlebar->geometry();
+	int frameTop = geom.top() + t.bottom();
+	int barLeft = geom.left() + bar_x_ofs;
+	int barRight = barLeft + t.width() - 1; 
+	if (barRight > geom.right()) barRight = geom.right();
+	
+	bound_shape.putPoints(0, 8,
+		geom.left(), frameTop,
+		barLeft, frameTop,
+		barLeft, geom.top(),
+		barRight, geom.top(),
+		barRight, frameTop,
+		geom.right(), frameTop,
+		geom.right(), geom.bottom(),
+		geom.left(), geom.bottom());
+    } else {
+	*visible_bound = geom;
+    }
+    QPainter p(workspaceWidget());
+    p.setPen(QPen(Qt::white, 5));
+    p.setRasterOp(Qt::XorROP);
+    p.drawPolygon(bound_shape);
+
+    if (clear) {
+	delete visible_bound;
+	visible_bound = 0;
+    }
+    return true;
+}
+
 bool B2Client::eventFilter(QObject *o, QEvent *e)
 {
     if (o != widget())
