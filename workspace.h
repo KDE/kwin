@@ -80,9 +80,10 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
         template< typename T > void forEachClient( T procedure );
 
-        Group* findGroup( Window leader );
+        Group* findGroup( Window leader ) const;
         void addGroup( Group* group, allowed_t );
         void removeGroup( Group* group, allowed_t );
+        Group* findClientLeaderGroup( const Client* c ) const;
 
         QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         QRect clientArea( clientAreaOption, const Client* c ) const;

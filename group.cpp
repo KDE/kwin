@@ -48,24 +48,26 @@ QPixmap Group::icon() const
     {
     if( leader_client != NULL )
         return leader_client->icon();
-    else
+    else if( leader_wid != None )
         {
         QPixmap ic;
         Client::readIcons( leader_wid, &ic, NULL );
         return ic;
         }
+    return QPixmap();
     }
 
 QPixmap Group::miniIcon() const
     {
     if( leader_client != NULL )
         return leader_client->miniIcon();
-    else
+    else if( leader_wid != None )
         {
         QPixmap ic;
         Client::readIcons( leader_wid, NULL, &ic );
         return ic;
         }
+    return QPixmap();
     }
 
 void Group::addMember( Client* member_P )
@@ -110,7 +112,7 @@ void Group::lostLeader()
 // Workspace
 //***************************************
 
-Group* Workspace::findGroup( Window leader )
+Group* Workspace::findGroup( Window leader ) const
     {
     assert( leader != None );
     for( GroupList::ConstIterator it = groups.begin();
@@ -118,6 +120,22 @@ Group* Workspace::findGroup( Window leader )
          ++it )
         if( (*it)->leader() == leader )
             return *it;
+    return NULL;
+    }
+
+// Client is group transient, but has no group set. Try to find
+// group with windows with the same client leader.
+Group* Workspace::findClientLeaderGroup( const Client* c ) const
+    {
+    for( ClientList::ConstIterator it = clients.begin();
+         it != clients.end();
+         ++it )
+        {
+        if( *it == c )
+            continue;
+        if( (*it)->wmClientLeader() == c->wmClientLeader())
+            return (*it)->group();
+        }
     return NULL;
     }
 
@@ -248,19 +266,23 @@ bool Client::sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool ac
         while( c1->transientFor() != NULL )
             c1 = c1->transientFor();
         if( c1->groupTransient())
-            return c1->group() == c2->group()
+            return c1->group() == c2->group();
+#if 0
                 // if a group transient is in its own group, it didn't possibly have a group,
                 // and therefore should be considered belonging to the same app like
                 // all other windows from the same app
                 || c1->group()->leaderClient() == c1 || c2->group()->leaderClient() == c2;
+#endif
         }
     if( c2->isTransient())
         {
         while( c2->transientFor() != NULL )
             c2 = c2->transientFor();
         if( c2->groupTransient())
-            return c1->group() == c2->group()
+            return c1->group() == c2->group();
+#if 0
                 || c1->group()->leaderClient() == c1 || c2->group()->leaderClient() == c2;
+#endif
         }
     int pos1 = c1->windowRole().find( '#' );
     int pos2 = c2->windowRole().find( '#' );
@@ -349,8 +371,15 @@ void Client::setTransient( Window new_transient_for_id )
         removeFromMainClients();
         transient_for = NULL;
         transient_for_id = new_transient_for_id;
-        if( groupTransient())
+        if( transient_for_id != None && !groupTransient())
             {
+            transient_for = workspace()->findClient( WindowMatchPredicate( transient_for_id ));
+            assert( transient_for != NULL ); // verifyTransient() had to check this
+            transient_for->addTransient( this );
+            }
+        checkGroup(); // first check group
+        if( groupTransient())
+            { // and make transient for all in the group
             for( ClientList::ConstIterator it = group()->members().begin();
                  it != group()->members().end();
                  ++it )
@@ -360,13 +389,6 @@ void Client::setTransient( Window new_transient_for_id )
                 (*it)->addTransient( this );
                 }
             }
-        else if( transient_for_id != None )
-            {
-            transient_for = workspace()->findClient( WindowMatchPredicate( transient_for_id ));
-            assert( transient_for != NULL ); // verifyTransient() had to check this
-            transient_for->addTransient( this );
-            }
-        checkGroup();
         checkGroupTransients();
         workspace()->updateClientLayer( this );
         }
@@ -710,8 +732,22 @@ void Client::checkGroup()
                 in_group->addMember( this );
                 }
             }
+        else if( groupTransient())
+            { // group transient which actually doesn't have a group :(
+              // try creating group with other windows with the same client leader
+            Group* new_group = workspace()->findClientLeaderGroup( this );
+            if( new_group == NULL )
+                new_group = new Group( None, workspace());
+            if( new_group != in_group )
+                {
+                if( in_group != NULL )
+                    in_group->removeMember( this );
+                in_group = new_group;
+                in_group->addMember( this );
+                }
+            }
         else // not transient without a group, put it in its own group
-            {    // (can be also group transient which actually doesn't have a group :( )
+            {
             if( in_group != NULL && in_group->leader() != window())
                 {
                 in_group->removeMember( this );            
@@ -719,9 +755,8 @@ void Client::checkGroup()
                 }
             if( in_group == NULL )
                 {
-                in_group = new Group( window(), workspace());
+                in_group = new Group( None, workspace());
                 in_group->addMember( this );
-                in_group->gotLeader( this );
                 }
             }
         }

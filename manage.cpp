@@ -104,11 +104,11 @@ bool Client::manage( Window w, bool isMapped )
     fetchName();
     fetchIconicName();
     getWMHints(); // needs to be done before readTransient() because of reading the group
+    getWmClientLeader(); // needs to be done before readTransient() because of same app comparing
     readTransient();
     getIcons();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
-    getWmClientLeader();
     window_role = getStringProperty( w, qt_window_role );
 
     // TODO try to obey all state information from info->state()
