@@ -9,7 +9,10 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <klocale.h>
 #include <stdlib.h>
 #include <qwhatsthis.h>
+#include <qdatastream.h>
 #include <kwin.h>
+#include <kapp.h>
+#include <dcopclient.h>
 
 #include "workspace.h"
 #include "client.h"
@@ -142,16 +145,40 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
     return(mgr.allocateClient(ws, w));
 }
 
+// Rikkus: This class is too complex. It needs splitting further.
+// It's a nightmare to understand, especially with so few comments :(
 Workspace::Workspace( bool restore )
+  : QObject           (0, "workspace"),
+    DCOPObject        ("KWinInterface"),
+    current_desktop   (0),
+    number_of_desktops(0),
+    desktop_widget    (0),
+    desktop_client    (0),
+    active_client     (0),
+    should_get_focus  (0),
+    control_grab      (false),
+    tab_grab          (false),
+    mouse_emulation   (false),
+    tab_box           (0),
+    popup             (0),
+    desk_popup        (0),
+    keys              (0),
+    root              (0)
 {
     root = qt_xrootwin();
     session.setAutoDelete( TRUE );
 
     if ( restore )
-	loadSessionInfo();
+      loadSessionInfo();
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
-    desktop_widget = new QWidget(0, "desktop_widget", Qt::WType_Desktop | Qt::WPaintUnclipped );
+
+    desktop_widget =
+      new QWidget(
+        0,
+        "desktop_widget",
+        Qt::WType_Desktop | Qt::WPaintUnclipped
+    );
 
     // select windowmanager privileges
     XSelectInput(qt_xdisplay(), root,
@@ -163,14 +190,23 @@ Workspace::Workspace( bool restore )
 		 );
 
     int dummy;
-    kwin_has_shape = XShapeQueryExtension(qt_xdisplay(), &kwin_shape_event, &dummy);
+    kwin_has_shape =
+      XShapeQueryExtension(qt_xdisplay(), &kwin_shape_event, &dummy);
 
     // compatibility
     long data = 1;
-    XChangeProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running, atoms->kwm_running, 32,
-		    PropModeAppend, (unsigned char*) &data, 1);
 
-    keys = 0;
+    XChangeProperty(
+      qt_xdisplay(),
+      qt_xrootwin(),
+      atoms->kwm_running,
+      atoms->kwm_running,
+      32,
+      PropModeAppend,
+      (unsigned char*) &data,
+      1
+    );
+
     grabKey(XK_Tab, Mod1Mask);
     grabKey(XK_Tab, Mod1Mask | ShiftMask);
     grabKey(XK_Tab, ControlMask);
@@ -179,23 +215,11 @@ Workspace::Workspace( bool restore )
 
     init();
 
-    control_grab = FALSE;
-    tab_grab = FALSE;
-    mouse_emulation = FALSE;
     tab_box = new TabBox( this );
 }
 
 void Workspace::init()
 {
-    tab_box = 0;
-    active_client = 0;
-    should_get_focus = 0;
-    desktop_client = 0;
-    current_desktop = 0;
-    number_of_desktops = 0;
-    popup = 0;
-    desk_popup = 0;
-    popup_client = 0;
     KConfig* config = KGlobal::config();
     config->setGroup("Desktops");
     if (!config->hasKey("NumberOfDesktops"))
@@ -2218,6 +2242,8 @@ Workspace::updateClientArea()
 
   for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it)
   {
+    (*it)->updateAvoidPolicy();
+
     if ((*it)->avoid()) {
   
       switch (AnchorEdge((*it)->anchorEdge())) {
@@ -2252,8 +2278,46 @@ Workspace::updateClientArea()
       }
     }
   }
+
+  DCOPClient * client = kapp->dcopClient();
+
+  if (!client->isAttached())
+    client->attach();
+
+  QByteArray param;
+  QDataStream str(param, IO_WriteOnly);
+
+  str << clientArea_;
+
+  client->send("kdesktop", "KDesktopIface", "clientAreaUpdated(QRect)", param);
+
 // Useful when you want to see whether the client area has been
 // updated correctly...
-//  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.right(), clientArea_.top(), clientArea_.bottom());
+  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
+}
+
+WId Workspace::rootWin() const
+{
+    return root;
+}
+
+Client* Workspace::activeClient() const
+{
+    return active_client;
+}
+
+int Workspace::currentDesktop() const
+{
+    return current_desktop;
+}
+
+int Workspace::numberOfDesktops() const
+{
+    return number_of_desktops;
+}
+
+const ClientList& Workspace::stackingOrder() const
+{
+    return stacking_order;
 }
 

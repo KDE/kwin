@@ -2,12 +2,10 @@ This theme emulates the look and feel of the RISC OS 'window manager'.
 Actually, RISC OS doesn't have a window manager in the same way X
 does, but if you imagine it does, this is an emulation of that ;)
 
-I've optimised it for speed, so you should find it quite nippy.
-Particularly the fact that the left and right borders are single-pixel
-gives a large speedup on my Matrox card when dragging windows.
-
-I've requested save-under in the window decorations for that extra
-speed kick, plus double-buffered the title bar and resize bar.
+The look is obviously quite different, but coming anywhere close to
+the unique look of RISC OS would be quite blatantly obvious, so to
+avoid copyright issues, the look of this theme is unique. You may
+consider it to be RISC OS grown up ;)
 
 Functions that will be implemented but are currently missing:
   Transparent resize.
@@ -49,9 +47,11 @@ Titlebar:
 
   Left button: Raise, focus and move window
 
-  Middle button: Menu
+  Middle button: Move window
 
-  Right button: Move window
+  Right button: Menu
+                Note: Buttons are this way around for compatibility with
+                other kwin themes.
 
 Button Three:
 

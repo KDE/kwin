@@ -88,6 +88,50 @@ TitleBar::~TitleBar()
 {
 }
 
+  void
+TitleBar::resizeEvent(QResizeEvent * e)
+{
+  int sizeProblem = 0;
+
+  if (width() < 80) sizeProblem = 3;
+  else if (width() < 100) sizeProblem = 2;
+  else if (width() < 120) sizeProblem = 1;
+
+  switch (sizeProblem) {
+
+    case 1:
+      lower_    ->hide();
+      iconify_  ->show();
+      maximise_ ->hide();
+      close_    ->show();
+      break;
+
+    case 2:
+      lower_    ->hide();
+      iconify_  ->hide();
+      maximise_ ->hide();
+      close_    ->show();
+      break;
+
+    case 3:
+      lower_    ->hide();
+      iconify_  ->hide();
+      maximise_ ->hide();
+      close_    ->hide();
+      break;
+
+    case 0:
+    default:
+      lower_    ->show();
+      iconify_  ->show();
+      maximise_ ->show();
+      close_    ->show();
+      break;
+  }
+
+  QWidget::resizeEvent(e);
+}
+
 } // End namespace
 
 // vim:ts=2:sw=2:tw=78

@@ -46,6 +46,10 @@ class TitleBar : public QWidget
     void updateText();
     void updateMaximise(bool);
 
+  protected:
+
+    void resizeEvent(QResizeEvent *);
+
   private:
 
     LowerButton * lower_;

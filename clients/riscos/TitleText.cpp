@@ -63,16 +63,17 @@ TitleText::mousePressEvent(QMouseEvent * e)
   switch (e->button()) {
 
     case MidButton:
-      client_->workspace()->clientPopup(client_)->popup(e->globalPos());
+      clientPosToMousePos_ = e->globalPos() - client_->pos();
       break;
 
     case LeftButton:
+      clientPosToMousePos_ = e->globalPos() - client_->pos();
       client_->workspace()->raiseClient(client_);
       client_->workspace()->requestFocus(client_);
+      break;
 
     case RightButton:
-
-      clientPosToMousePos_ = e->globalPos() - client_->pos();
+      client_->workspace()->clientPopup(client_)->popup(e->globalPos());
       break;
 
     default:

@@ -152,16 +152,7 @@ Manager::updateDisplay()
   void
 Manager::setShade(bool)
 {
-#if 0
-  // Hmm. This does screwy things to the layout.
-  if (b)
-    resizeBar_->hide();
-  else
-    resizeBar_->show();
-#endif
-
-  // And this is screwed. My window ends up the wrong size when unshaded.
-//  Client::setShade(b);
+  // Wait for parent class version to work.
 }
 
   void
@@ -178,7 +169,6 @@ Manager::paintEvent(QPaintEvent * e)
   if (intersectsLeft || intersectsRight) {
 
     QPainter p(this);
-// ???    p.setPen(options->color(Options::Frame, isActive()));
     p.setPen(Qt::black);
 
     if (intersectsLeft)

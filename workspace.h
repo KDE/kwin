@@ -15,6 +15,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/Xlib.h>
 #include "options.h"
 #include "plugins.h"
+#include "KWinInterface.h"
+
 class Client;
 class TabBox;
 
@@ -74,7 +76,7 @@ public:
     static bool noBorder( WId w );
 };
 
-class Workspace : public QObject
+class Workspace : public QObject, virtual public KWinInterface
 {
     Q_OBJECT
 public:
@@ -94,7 +96,12 @@ public:
 
     WId rootWin() const;
 
+    /**
+     * Returns the active client, i.e. the client that has the focus (or None
+     * if no client has the focus)
+     */
     Client* activeClient() const;
+
     void setActiveClient( Client* );
     void activateClient( Client* );
     void requestFocus( Client* c);
@@ -106,7 +113,14 @@ public:
 
     void clientHidden( Client*  );
 
+    /**
+     * Returns the current virtual desktop of this workspace
+     */
     int currentDesktop() const;
+
+    /**
+     * Returns the number of virtual desktops of this workspace
+     */
     int numberOfDesktops() const;
     void setNumberOfDesktops( int n );
 
@@ -118,6 +132,11 @@ public:
     Client* previousClient(Client*) const;
     Client* nextStaticClient(Client*) const;
     Client* previousStaticClient(Client*) const;
+
+    /**
+     * Returns the list of clients sorted in stacking order, with topmost client
+     * at the last position
+     */
     const ClientList& stackingOrder() const;
 
     //#### TODO right layers as default
@@ -142,7 +161,12 @@ public:
 
     SessionInfo* takeSessionInfo( Client* );
     
-    void updateClientArea();
+    /**
+     * When the area that is available for clients (that which is not
+     * taken by windows like panels, the top-of-screen menu etc) may
+     * have changed, this will recalculate the available space.
+     */
+    virtual void updateClientArea();
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -185,22 +209,8 @@ protected:
 
 private:
     void init();
-    KGlobalAccel *keys;
     void createKeybindings();
-    WId root;
-    ClientList clients;
-    ClientList stacking_order;
-    ClientList focus_chain;
-    Client* active_client;
-    bool control_grab;
-    bool tab_grab;
-    bool mouse_emulation;
-    TabBox* tab_box;
     void freeKeyboard(bool pass);
-    QGuardedPtr<Client> popup_client;
-    QPopupMenu *popup;
-    QPopupMenu *desk_popup;
-    Client* should_get_focus;
 
     void raiseTransientsOf( ClientList& safeset, Client* c );
     void lowerTransientsOf( ClientList& safeset, Client* c );
@@ -212,23 +222,15 @@ private:
     void deskCleanup(CleanupType);
 
     void focusToNull();
-    Client* desktop_client;
-    int current_desktop;
-    int number_of_desktops;
-    Client* findClientWidthId( WId w ) const;
 
-    QWidget* desktop_widget;
+    Client* findClientWidthId( WId w ) const;
 
     void propagateClients( bool onlyStacking = FALSE);
 
-    DockWindowList dockwins;
     bool addDockwin( WId w );
     bool removeDockwin( WId w );
     void propagateDockwins();
     DockWindow findDockwin( WId w );
-
-    QList<SessionInfo> session;
-    void loadSessionInfo();
 
     //CT needed for cascading+
     struct CascadingInfo {
@@ -236,7 +238,43 @@ private:
       int col;
       int row;
     };
+
+    // ------------------
+
+    DockWindowList dockwins;
+
+    int current_desktop;
+    int number_of_desktops;
+
+    QGuardedPtr<Client> popup_client;
+
+    void loadSessionInfo();
+    
+    QWidget* desktop_widget;
+
+    QList<SessionInfo> session;
     QValueList<CascadingInfo> cci;
+
+    Client* desktop_client;
+    Client* active_client;
+    Client* should_get_focus;
+    
+    ClientList clients;
+    ClientList stacking_order;
+    ClientList focus_chain;
+
+    bool control_grab;
+    bool tab_grab;
+    bool mouse_emulation;
+
+    TabBox* tab_box;
+
+    QPopupMenu *popup;
+    QPopupMenu *desk_popup;
+
+    KGlobalAccel *keys;
+    WId root;
+
     // -cascading
     Atom kwm_command;
 
@@ -245,43 +283,4 @@ private:
     QRect clientArea_;
 };
 
-inline WId Workspace::rootWin() const
-{
-    return root;
-}
-
-/*!
-  Returns the active client, i.e. the client that has the focus (or None if no
-  client has the focus)
- */
-inline Client* Workspace::activeClient() const
-{
-    return active_client;
-}
-
-
-/*!
-  Returns the current virtual desktop of this workspace
- */
-inline int Workspace::currentDesktop() const
-{
-    return current_desktop;
-}
-
-/*!
-  Returns the number of virtual desktops of this workspace
- */
-inline int Workspace::numberOfDesktops() const
-{
-    return number_of_desktops;
-}
-
-/*!
-  Returns the list of clients sorted in stacking order, with topmost client
-  at the last position
- */
-inline const ClientList& Workspace::stackingOrder() const
-{
-    return stacking_order;
-}
 #endif

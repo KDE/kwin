@@ -63,6 +63,7 @@ public:
     bool isTransient() const;
     Client* mainClient();
 
+    void updateAvoidPolicy();
     bool avoid() const { return avoid_; }
     int anchorEdge() const { return anchorEdge_; }
 

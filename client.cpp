@@ -361,65 +361,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
 
-    // Find out if we should be avoided.
-
-    // If this atom isn't set, set it now.
-    Atom avoidAtom = XInternAtom(qt_xdisplay(), "_NET_AVOID_SPEC", False);
-
-    XTextProperty avoidProp;
-
-    Status avoidStatus =
-        XGetTextProperty(qt_xdisplay(), w, &avoidProp, avoidAtom);
-
-    if (0 != avoidStatus) {
-          
-      qDebug("XGetTextProperty worked for atom _NET_AVOID_SPEC");
-
-        char ** avoidList;
-        int avoidListCount;
-
-        Status convertStatus =
-          XTextPropertyToStringList(&avoidProp, &avoidList, &avoidListCount);
-
-        if (0 != convertStatus) {
-          
-          qDebug("XTextPropertyToStringList succeded");
-
-          avoid_ = true;
-
-          if (avoidListCount != 1) {
-            qDebug("Extra values in avoidance list. Ignoring.");
-          }
-
-          char * itemZero = avoidList[0];
-          
-          qDebug("Anchoring to border %s", itemZero);
-
-          switch (*itemZero) {
-
-            case 'N':
-              anchorEdge_ = AnchorNorth;
-              break;
-            case 'S':
-              anchorEdge_ = AnchorSouth;
-              break;
-            case 'E':
-              anchorEdge_ = AnchorEast;
-              break;
-            case 'W':
-              anchorEdge_ = AnchorWest;
-              break;
-            default:
-              anchorEdge_ = AnchorNorth;
-              break;
-          }
-
-          XFreeStringList(avoidList);
-
-        } else
-          qDebug("XTextPropertyToStringList failed");
-
-    }
+    updateAvoidPolicy();
 }
 
 /*!
@@ -1948,6 +1890,69 @@ QCString Client::sessionId()
 	XFree( data );
     }
     return result;
+}
+
+void Client::updateAvoidPolicy()
+{
+  // Find out if we should be avoided.
+
+  // If this atom isn't set, set it now.
+  Atom avoidAtom = XInternAtom(qt_xdisplay(), "_NET_AVOID_SPEC", False);
+
+  XTextProperty avoidProp;
+
+  Status avoidStatus =
+    XGetTextProperty(qt_xdisplay(), win, &avoidProp, avoidAtom);
+
+  if (0 != avoidStatus) {
+
+    qDebug("XGetTextProperty worked for atom _NET_AVOID_SPEC");
+
+    char ** avoidList;
+    int avoidListCount;
+
+    Status convertStatus =
+      XTextPropertyToStringList(&avoidProp, &avoidList, &avoidListCount);
+
+    if (0 != convertStatus) {
+
+      qDebug("XTextPropertyToStringList succeded");
+
+      avoid_ = true;
+
+      if (avoidListCount != 1) {
+        qDebug("Extra values in avoidance list. Ignoring.");
+      }
+
+      char * itemZero = avoidList[0];
+
+      qDebug("Anchoring to border %s", itemZero);
+
+      switch (*itemZero) {
+
+        case 'N':
+          anchorEdge_ = AnchorNorth;
+          break;
+        case 'S':
+          anchorEdge_ = AnchorSouth;
+          break;
+        case 'E':
+          anchorEdge_ = AnchorEast;
+          break;
+        case 'W':
+          anchorEdge_ = AnchorWest;
+          break;
+        default:
+          avoid_ = false;
+          break;
+      }
+
+      XFreeStringList(avoidList);
+
+    } else
+      qDebug("XTextPropertyToStringList failed");
+
+  }
 }
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
