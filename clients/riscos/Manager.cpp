@@ -21,6 +21,7 @@
 */
 
 #include <unistd.h> // for usleep
+#include <config.h> // for usleep on non-linux platforms
 
 #include <qpainter.h>
 #include <qimage.h>
