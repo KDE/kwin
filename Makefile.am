@@ -23,6 +23,8 @@ kwin_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 KDE_ICON = kwin
 
+KDE_OPTIONS = nofinal
+
 METASOURCES = AUTO
 
 messages:
