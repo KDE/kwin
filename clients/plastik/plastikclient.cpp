@@ -589,8 +589,8 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   if ((!m_button[MaxButton]) && isMaximizable()){
                       const bool max = maximizeMode()!=MaximizeRestore;
                       m_button[MaxButton] = new PlastikButton(this, "maximize", max?i18n("Restore"):i18n("Maximize"), MaxButton, buttonSize, LeftButton|MidButton|RightButton);
-                      m_button[OnAllDesktopsButton]->setMaximized( max );
-                      m_button[OnAllDesktopsButton]->setDeco(); // update deco...
+                      m_button[MaxButton]->setMaximized( max );
+                      m_button[MaxButton]->setDeco(); // update deco...
                       m_button[MaxButton]->setOnAllDesktops( isOnAllDesktops() );
                       connect(m_button[MaxButton], SIGNAL(clicked()), SLOT(slotMaximize()));
                       layout->addWidget(m_button[MaxButton], 0, Qt::AlignHCenter | Qt::AlignTop);
