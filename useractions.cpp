@@ -640,6 +640,12 @@ void Workspace::slotWindowFullScreen()
         performWindowOperation( active_client, Options::FullScreenOp );
     }
 
+void Workspace::slotWindowNoBorder()
+    {
+    if( active_client )
+        performWindowOperation( active_client, Options::NoBorderOp );
+    }
+
 void Workspace::slotWindowAbove()
     {
     if( active_client )

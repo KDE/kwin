@@ -32,6 +32,7 @@
 	DEF( I18N_NOOP("Window Lower"),                        0, 0, slotWindowLower() );
         DEF( I18N_NOOP("Window On All Desktops"),              0, 0, slotWindowOnAllDesktops() );
         DEF( I18N_NOOP("Window Fullscreen"),                   0, 0, slotWindowFullScreen() );
+        DEF( I18N_NOOP("Window No Border"),                    0, 0, slotWindowNoBorder() );
         DEF( I18N_NOOP("Window Above Other Windows"),          0, 0, slotWindowAbove() );
         DEF( I18N_NOOP("Window Below Other Windows"),          0, 0, slotWindowBelow() );
 	DEF( I18N_NOOP("Toggle Window Raise/Lower"),           0, 0, slotWindowRaiseOrLower() );

@@ -314,6 +314,7 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
         void slotWindowBelow();
         void slotWindowOnAllDesktops();
         void slotWindowFullScreen();
+        void slotWindowNoBorder();
 
         void slotWindowToNextDesktop();
         void slotWindowToPreviousDesktop();
