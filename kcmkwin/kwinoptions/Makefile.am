@@ -21,8 +21,3 @@ datadir = $(kde_appsdir)/.hidden
 data2_DATA = kwinoptions.desktop
 data2dir = $(kde_appsdir)/Settings/Desktop
 
-install-data-local: uninstall.desktop
-	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows/actions.desktop
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows/kwinmouse.desktop
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows/mouse.desktop
