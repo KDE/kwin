@@ -1162,7 +1162,6 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	popup->insertItem( i18n("Mi&nimize"), Options::IconifyOp );
 	popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
 	popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
-	popup->insertItem( i18n("S&ticky"), Options::StickyOp );
 	popup->insertItem( i18n("Always &On Top"), Options::StaysOnTopOp );
 
 	popup->insertSeparator();
@@ -1951,18 +1950,16 @@ void Workspace::propagateClients( bool onlyStacking )
     if ( !onlyStacking ) {
 	cl = new WId[ clients.count()];
 	i = 0;
-	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it ) {
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it )
 	    cl[i++] =  (*it)->window();
-	}
 	rootInfo->setClientList( (Window*) cl, i );
 	delete [] cl;
     }
 
     cl = new WId[ stacking_order.count()];
     i = 0;
-    for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
+    for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
 	cl[i++] =  (*it)->window();
-    }
     rootInfo->setClientListStacking(  (Window*) cl, i );
     delete [] cl;
 }
@@ -2299,7 +2296,6 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemEnabled( Options::MaximizeOp, popup_client->isMaximizable() );
     popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
-    popup->setItemChecked( Options::StickyOp, popup_client->isSticky() );
     popup->setItemChecked( Options::StaysOnTopOp, popup_client->staysOnTop() );
     popup->setItemEnabled( Options::IconifyOp, popup_client->isMinimizable() );
 }
