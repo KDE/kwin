@@ -274,7 +274,7 @@ int kdemain( int argc, char * argv[] )
 
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
 			  version, description, KAboutData::License_BSD,
-			  "(c) 1999-2001, The KDE Developers");
+			  I18N_NOOP("(c) 1999-2001, The KDE Developers"));
     aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
 
