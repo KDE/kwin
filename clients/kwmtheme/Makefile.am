@@ -9,10 +9,10 @@ libkwinkwmtheme_la_SOURCES = kwmthemeclient.cpp
 METASOURCES = AUTO
 noinst_HEADERS = kwmthemeclient.h
 
-lnkdir = $(kde_datadir)/kwin/
-lnk_DATA = kwmtheme.desktop
+#lnkdir = $(kde_datadir)/kwin/
+#lnk_DATA = kwmtheme.desktop
 
-EXTRA_DIST = $(lnk_DATA)
+#EXTRA_DIST = $(lnk_DATA)
 
 libkwinkwmtheme_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic
 
