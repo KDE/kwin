@@ -1024,8 +1024,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
             updateShape();
         // SELI TODO won't this be too expensive?
         updateWorkareaDiffs();
-        if ( !isResize() ) 
-            sendSyntheticConfigureNotify(); // TODO make this ICCCM compliant
+        sendSyntheticConfigureNotify(); // TODO optimize this?
         }
     }
 
@@ -1062,13 +1061,8 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         if( shape())
             updateShape();
         updateWorkareaDiffs();
-        if ( !isResize() ) 
-            sendSyntheticConfigureNotify(); // TODO make this ICCCM compliant
+        sendSyntheticConfigureNotify();
         }
-// TODO to be done with synt. notify cleanup
-// resize() is called from manage(), can't send synt. notify here
-//    if ( !isResize() && isVisible() )
-//        sendSyntheticConfigureNotify();
     }
 
 /*!
@@ -1083,8 +1077,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     if( block_geometry == 0 )
         {
         XMoveWindow( qt_xdisplay(), frameId(), x, y );
-        if ( !isResize() )  // TODO isMove() ?
-            sendSyntheticConfigureNotify();  // TODO make this ICCCM compliant
+        sendSyntheticConfigureNotify();
         }
     }
 
