@@ -41,7 +41,8 @@
 KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
     : KDecoration (bridge, factory),
         m_previewWidget(0),
-        minBtnHideWidth(200),
+        btnHideMinWidth(200),
+        btnHideLastWidth(0),
         closing(false)
 {
     // sizeof(...) is calculated at compile time
@@ -275,10 +276,11 @@ void KCommonDecoration::resetLayout()
     updateLayout();
 
     const int minTitleBarWidth = 35;
-    minBtnHideWidth = buttonContainerWidth(m_buttonsLeft,true) + buttonContainerWidth(m_buttonsRight,true) +
+    btnHideMinWidth = buttonContainerWidth(m_buttonsLeft,true) + buttonContainerWidth(m_buttonsRight,true) +
             layoutMetric(LM_TitleEdgeLeft,false) + layoutMetric(LM_TitleEdgeRight,false) +
             layoutMetric(LM_TitleBorderLeft,false) + layoutMetric(LM_TitleBorderRight,false) +
             minTitleBarWidth;
+    btnHideLastWidth = 0;
 }
 
 int KCommonDecoration::buttonsLeftWidth() const
@@ -446,8 +448,12 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
 
 void KCommonDecoration::calcHiddenButtons()
 {
-    //Hide buttons in this order:
-    //Shade, Below, Above, OnAllDesktops, Help, Maximize, Menu, Minimize, Close.
+    if (width() == btnHideLastWidth)
+        return;
+
+    btnHideLastWidth = width();
+
+    //Hide buttons in the following order:
     KCommonDecorationButton* btnArray[] = { m_button[HelpButton], m_button[ShadeButton], m_button[BelowButton],
         m_button[AboveButton], m_button[OnAllDesktopsButton], m_button[MaxButton],
         m_button[MinButton], m_button[MenuButton], m_button[CloseButton] };
@@ -455,28 +461,27 @@ void KCommonDecoration::calcHiddenButtons()
 
     int current_width = width();
     int count = 0;
-    int i;
 
-    // Find out how many buttons we have to hide.
-    while (current_width < minBtnHideWidth && count < buttonsCount)
+    // Hide buttons
+    while (current_width < btnHideMinWidth && count < buttonsCount)
     {
-        if (btnArray[count] )
+        if (btnArray[count] ) {
             current_width += btnArray[count]->width();
+            if (btnArray[count]->isVisible() )
+                btnArray[count]->hide();
+        }
         count++;
     }
-
-    // Hide the required buttons...
-    for(i = 0; i < count; i++)
-    {
-        if (btnArray[i] && btnArray[i]->isVisible() )
-            btnArray[i]->hide();
-    }
-
     // Show the rest of the buttons...
-    for(i = count; i < buttonsCount; i++)
+    for(int i = count; i < buttonsCount; i++)
     {
-        if (btnArray[i] && (!btnArray[i]->isVisible()) )
+        if (btnArray[i] ) {
+
+            if (! btnArray[i]->isHidden() )
+                break; // all buttons shown...
+
             btnArray[i]->show();
+        }
     }
 }
 

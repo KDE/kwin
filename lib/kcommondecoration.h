@@ -265,7 +265,6 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         typedef QValueVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
         int buttonContainerWidth(const ButtonContainer &btnContainer, bool countHidden = false) const;
         void addButtons(ButtonContainer &btnContainer, const QString& buttons, bool isLeft);
-        void calcHiddenButtons();
 
         KCommonDecorationButton *m_button[NumButtons];
 
@@ -274,7 +273,10 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
 
         QWidget *m_previewWidget;
 
-        int minBtnHideWidth;
+        // button hiding for small windows
+        void calcHiddenButtons();
+        int btnHideMinWidth;
+        int btnHideLastWidth;
 
         bool closing; // for menu doubleclick closing...
 
