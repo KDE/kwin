@@ -810,50 +810,6 @@
                             <string>0123456789-+,xX:</string>
                         </property>
                     </widget>
-                    <widget class="KComboBox" row="2" column="3">
-                        <property name="name">
-                            <cstring>desktop</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget class="KComboBox" row="2" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Do Not Affect</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Apply Initially</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Remember</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Force</string>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>rule_desktop</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="2" column="0">
-                        <property name="name">
-                            <cstring>enable_desktop</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Desktop</string>
-                        </property>
-                    </widget>
                     <widget class="KComboBox" row="0" column="1">
                         <item>
                             <property name="text">
@@ -882,7 +838,35 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="KComboBox" row="5" column="1">
+                    <spacer row="9" column="2">
+                        <property name="name">
+                            <cstring>spacer31</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="3" column="3">
+                        <property name="name">
+                            <cstring>maximizevert</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="2" column="1">
                         <item>
                             <property name="text">
                                 <string>Do Not Affect</string>
@@ -904,13 +888,79 @@
                             </property>
                         </item>
                         <property name="name">
-                            <cstring>rule_minimize</cstring>
+                            <cstring>rule_maximizehoriz</cstring>
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
                         </property>
                     </widget>
+                    <widget class="QCheckBox" row="4" column="3">
+                        <property name="name">
+                            <cstring>fullscreen</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0">
+                        <property name="name">
+                            <cstring>enable_maximizehoriz</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Maximized &amp;horizontally</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="3">
+                        <property name="name">
+                            <cstring>maximizehoriz</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
                     <widget class="KComboBox" row="4" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_fullscreen</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="0">
+                        <property name="name">
+                            <cstring>enable_fullscreen</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Fullscreen</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="3" column="1">
                         <item>
                             <property name="text">
                                 <string>Do Not Affect</string>
@@ -940,13 +990,13 @@
                     </widget>
                     <widget class="QCheckBox" row="3" column="0">
                         <property name="name">
-                            <cstring>enable_maximizehoriz</cstring>
+                            <cstring>enable_maximizevert</cstring>
                         </property>
                         <property name="text">
-                            <string>Maximized &amp;horizontally</string>
+                            <string>Maximized &amp;vertically</string>
                         </property>
                     </widget>
-                    <widget class="KComboBox" row="7" column="1">
+                    <widget class="KComboBox" row="5" column="1">
                         <item>
                             <property name="text">
                                 <string>Do Not Affect</string>
@@ -968,21 +1018,29 @@
                             </property>
                         </item>
                         <property name="name">
-                            <cstring>rule_fullscreen</cstring>
+                            <cstring>rule_desktop</cstring>
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="7" column="0">
+                    <widget class="KComboBox" row="5" column="3">
                         <property name="name">
-                            <cstring>enable_fullscreen</cstring>
+                            <cstring>desktop</cstring>
                         </property>
-                        <property name="text">
-                            <string>&amp;Fullscreen</string>
+                        <property name="enabled">
+                            <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="6" column="0">
+                    <widget class="QCheckBox" row="5" column="0">
+                        <property name="name">
+                            <cstring>enable_desktop</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Desktop</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="7" column="0">
                         <property name="name">
                             <cstring>enable_shade</cstring>
                         </property>
@@ -990,15 +1048,7 @@
                             <string>Sh&amp;aded</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="5" column="0">
-                        <property name="name">
-                            <cstring>enable_minimize</cstring>
-                        </property>
-                        <property name="text">
-                            <string>M&amp;inimized</string>
-                        </property>
-                    </widget>
-                    <widget class="KComboBox" row="6" column="1">
+                    <widget class="KComboBox" row="7" column="1">
                         <item>
                             <property name="text">
                                 <string>Do Not Affect</string>
@@ -1026,15 +1076,18 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="4" column="0">
+                    <widget class="QCheckBox" row="7" column="3">
                         <property name="name">
-                            <cstring>enable_maximizevert</cstring>
+                            <cstring>shade</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
                         </property>
                         <property name="text">
-                            <string>Maximized &amp;vertically</string>
+                            <string></string>
                         </property>
                     </widget>
-                    <widget class="KComboBox" row="3" column="1">
+                    <widget class="KComboBox" row="6" column="1">
                         <item>
                             <property name="text">
                                 <string>Do Not Affect</string>
@@ -1056,7 +1109,44 @@
                             </property>
                         </item>
                         <property name="name">
-                            <cstring>rule_maximizehoriz</cstring>
+                            <cstring>rule_minimize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="3">
+                        <property name="name">
+                            <cstring>minimize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="0">
+                        <property name="name">
+                            <cstring>enable_minimize</cstring>
+                        </property>
+                        <property name="text">
+                            <string>M&amp;inimized</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="8" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_placement</cstring>
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
@@ -1121,96 +1211,6 @@
                         </property>
                         <property name="text">
                             <string>P&amp;lacement</string>
-                        </property>
-                    </widget>
-                    <widget class="KComboBox" row="8" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Do Not Affect</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Force</string>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>rule_placement</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <spacer row="9" column="2">
-                        <property name="name">
-                            <cstring>spacer31</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>140</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="3" column="3">
-                        <property name="name">
-                            <cstring>maximizehoriz</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="4" column="3">
-                        <property name="name">
-                            <cstring>maximizevert</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="5" column="3">
-                        <property name="name">
-                            <cstring>minimize</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="6" column="3">
-                        <property name="name">
-                            <cstring>shade</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="7" column="3">
-                        <property name="name">
-                            <cstring>fullscreen</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
                         </property>
                     </widget>
                 </grid>
@@ -2055,6 +2055,7 @@
     <tabstop>role_match</tabstop>
     <tabstop>edit_reg_role</tabstop>
     <tabstop>detect1</tabstop>
+    <tabstop>types</tabstop>
     <tabstop>title</tabstop>
     <tabstop>title_match</tabstop>
     <tabstop>edit_reg_title</tabstop>
@@ -2070,24 +2071,24 @@
     <tabstop>enable_size</tabstop>
     <tabstop>rule_size</tabstop>
     <tabstop>size</tabstop>
-    <tabstop>enable_desktop</tabstop>
-    <tabstop>rule_desktop</tabstop>
-    <tabstop>desktop</tabstop>
     <tabstop>enable_maximizehoriz</tabstop>
     <tabstop>rule_maximizehoriz</tabstop>
     <tabstop>maximizehoriz</tabstop>
     <tabstop>enable_maximizevert</tabstop>
     <tabstop>rule_maximizevert</tabstop>
     <tabstop>maximizevert</tabstop>
+    <tabstop>enable_fullscreen</tabstop>
+    <tabstop>rule_fullscreen</tabstop>
+    <tabstop>fullscreen</tabstop>
+    <tabstop>enable_desktop</tabstop>
+    <tabstop>rule_desktop</tabstop>
+    <tabstop>desktop</tabstop>
     <tabstop>enable_minimize</tabstop>
     <tabstop>rule_minimize</tabstop>
     <tabstop>minimize</tabstop>
     <tabstop>enable_shade</tabstop>
     <tabstop>rule_shade</tabstop>
     <tabstop>shade</tabstop>
-    <tabstop>enable_fullscreen</tabstop>
-    <tabstop>rule_fullscreen</tabstop>
-    <tabstop>fullscreen</tabstop>
     <tabstop>enable_placement</tabstop>
     <tabstop>rule_placement</tabstop>
     <tabstop>placement</tabstop>
