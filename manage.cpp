@@ -221,7 +221,12 @@ bool Client::manage( Window w, bool isMapped )
     else if( isDialog() && hasNETSupport())
     // if the dialog is actually non-NETWM transient window, don't try to apply placement to it,
     // it breaks with too many things (xmms, display)
-        ; // force using placement policy
+        {
+        if( mainClients().count() >= 1 )
+            ; // force using placement policy
+        else
+            usePosition = true;
+        }
     else if( isSplash())
         ; // force using placement policy
     else
