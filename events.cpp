@@ -635,8 +635,8 @@ void Client::unmapNotifyEvent( XUnmapEvent* e )
                 destroyClient(); // deletes this
                 return;
                 }
-        releaseWindow();
-      break;
+            releaseWindow();
+          break;
     default:
         assert( false );
         }

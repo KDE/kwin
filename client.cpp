@@ -177,7 +177,6 @@ void Client::releaseWindow( bool on_shutdown )
         workspace()->clientHidden( this );
     destroyDecoration();
     cleanGrouping();
-    setMappingState( WithdrawnState );
     if( !on_shutdown )
         {
         workspace()->removeClient( this, Allowed );
@@ -197,6 +196,13 @@ void Client::releaseWindow( bool on_shutdown )
         XMapWindow( qt_xdisplay(), client );
 	// TODO preserve minimized, shaded etc. state?
         }
+    else
+        {
+        // Make sure it's not unmapped if the app unmapped it (#65279). The app
+        // may do map+unmap before we initially map the window by calling rawShow() from manage().
+        XUnmapWindow( qt_xdisplay(), client ); 
+        }
+    setMappingState( WithdrawnState ); // after all is done, tell the app
     client = None;
     XDestroyWindow( qt_xdisplay(), wrapper );
     wrapper = None;
