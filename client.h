@@ -201,7 +201,7 @@ private:
 	return moveResizeMode && mode == Center;
     }
     bool isResize() const {
-	return !isMove();
+	return moveResizeMode && !isMove();
     }
     MousePosition mode;
     QPoint moveOffset;
