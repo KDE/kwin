@@ -31,7 +31,7 @@ void PluginMenu::slotAboutToShow()
 {
     clear();
     fileList.clear();
-    insertItem(i18n("Standard"), 0);
+    insertItem(i18n("KDE 1"), 0);
     idCount = 1;
 
     QDir dir;
