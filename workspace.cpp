@@ -2,6 +2,7 @@
 #include <kglobal.h>
 #include <kglobalaccel.h>
 #include <klocale.h>
+#include <stdlib.h>
 #include <qwhatsthis.h>
 #include <kwin.h>
 

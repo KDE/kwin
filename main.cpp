@@ -8,6 +8,7 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <signal.h>
 #define INT8 _X11INT8
 #define INT32 _X11INT32
