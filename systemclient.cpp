@@ -36,12 +36,12 @@ static void create_pixmaps()
     // titlebar
     QPainter p;
     int i, y;
-    titlePix = new QPixmap(32, 18);
+    titlePix = new QPixmap(32, 17);
     p.begin(titlePix);
-    p.fillRect(0, 0, 32, 18,
+    p.fillRect(0, 0, 32, 17,
                QBrush(options->color(Options::Frame, true),
                       QBrush::SolidPattern));
-    for(i=0, y=5; i < 4; ++i, y+=3){
+    for(i=0, y=4; i < 4; ++i, y+=3){
         p.setPen(options->color(Options::TitleBar, true).light(150));
         p.drawLine(0, y, 31, y);
         p.setPen(options->color(Options::TitleBar, true).dark(120));
@@ -227,15 +227,18 @@ void SystemClient::paintEvent( QPaintEvent* )
     p.drawRect(rect());
     QRect t = titlebar->geometry();
     t.setTop( 1 );
+    qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
+                    rect().height()-2,
+                    options->colorGroup(Options::Frame, isActive()), false, 1,
+                    &options->colorGroup(Options::Frame, isActive()).
+                    brush(QColorGroup::Button));
+    t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
     else
         p.fillRect(t, options->colorGroup(Options::Frame, false).
                    brush(QColorGroup::Button));
 
-    qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-                    rect().height()-2,
-                    options->colorGroup(Options::Frame, isActive()), false);
 
 
     QRegion r = rect();
