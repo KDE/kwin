@@ -3655,7 +3655,6 @@ void Workspace::restoreLegacySession( KConfig* config )
             QCString wmClientMachine = config->readEntry( QString("clientMachine")+n ).latin1();
             if ( !wmCommand.isEmpty() && !wmClientMachine.isEmpty() ) {
                 KProcess proc;
-                proc.setUseShell(true);
                 if ( wmClientMachine != "localhost" )
                     proc << "xon" << wmClientMachine;
                 proc << QString::fromLatin1( wmCommand );
