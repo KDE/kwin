@@ -250,6 +250,8 @@ void Workspace::init()
       inf.row = 0;
       cci.append(inf);
     }
+
+    updateClientArea();
 }
 
 Workspace::~Workspace()
@@ -2187,6 +2189,8 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
   void
 Workspace::updateClientArea()
 {
+  qDebug("KWin: Updating client area");
+
   clientArea_ = geometry();
 
   for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it)
@@ -2196,23 +2200,31 @@ Workspace::updateClientArea()
       switch (AnchorEdge((*it)->anchorEdge())) {
 
         case AnchorNorth:
+          qDebug("KWin: Ignoring a client at edge N");
           clientArea_
             .setTop(QMAX(clientArea_.top(), (*it)->geometry().bottom()));
           break;
 
         case AnchorSouth:
+          qDebug("KWin: Ignoring a client at edge S");
           clientArea_
             .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top()));
           break;
         
         case AnchorEast:
+          qDebug("KWin: Ignoring a client at edge E");
           clientArea_
             .setRight(QMIN(clientArea_.right(), (*it)->geometry().left()));
           break;
         
         case AnchorWest:
+          qDebug("KWin: Ignoring a client at edge W");
           clientArea_
             .setLeft(QMAX(clientArea_.left(), (*it)->geometry().right()));
+          break;
+          
+        default:
+          qDebug("KWin: Trying to ignore a client, but don't know which edge");
           break;
       }
     }
