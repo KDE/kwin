@@ -28,13 +28,17 @@
 namespace RiscOS
 {
 
-class Manager;
-
 class LowerButton : public Button
 {
+  Q_OBJECT
+
   public:
 
-    LowerButton(QWidget * parent, Manager * client);
+    LowerButton(QWidget * parent);
+
+  signals:
+
+    void lowerClient();
 
   protected:
 

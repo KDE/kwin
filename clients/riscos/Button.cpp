@@ -20,24 +20,18 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include <qpixmap.h>
-#include <qpainter.h>
-
-#include "../../options.h"
-
 #include "Button.h"
-#include "Manager.h"
 #include "Static.h"
 
 namespace RiscOS
 {
 
-Button::Button(QWidget * parent, Manager * client, SymbolType t)
+Button::Button(QWidget * parent, SymbolType t)
   : QWidget   (parent, "Button", WRepaintNoErase | WPaintUnclipped),
-    client_   (client),
     type_     (t),
     align_    (Left),
-    down_     (false)
+    down_     (false),
+    active_   (false)
 {
   setFixedSize(19, 20);
 }
@@ -50,8 +44,25 @@ Button::~Button()
   void
 Button::updateDisplay()
 {
-  setBackgroundPixmap(Static::instance()->button(type_, client_->isActive(), down_));
+  setBackgroundPixmap(
+    Static::instance()->button(type_, active_, down_)
+  );
+
   repaint(true);
+}
+
+  void
+Button::setType(SymbolType t)
+{
+  type_ = t;
+  updateDisplay();
+}
+
+  void
+Button::setActive(bool b)
+{
+  active_ = b;
+  updateDisplay();
 }
   
 } // End namespace

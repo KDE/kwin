@@ -21,14 +21,12 @@
 */
 
 #include "CloseButton.h"
-#include "Manager.h"
-#include "Static.h"
 
 namespace RiscOS
 {
 
-CloseButton::CloseButton(QWidget * parent, Manager * client)
-  : Button(parent, client, Close)
+CloseButton::CloseButton(QWidget * parent)
+  : Button(parent, Close)
 {
 }
 
@@ -43,16 +41,16 @@ CloseButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     case RightButton:
-      client()->closeWindow();
+      emit(closeClient());
       break;
 
     case MidButton:
-      client()->closeWindow();
+      emit(closeClient());
       break;
 
     case LeftButton:
     default:
-      client()->closeWindow();
+      emit(closeClient());
       break;
   }
 }

@@ -21,14 +21,12 @@
 */
 
 #include "MaximiseButton.h"
-#include "Static.h"
-#include "Manager.h"
 
 namespace RiscOS
 {
 
-MaximiseButton::MaximiseButton(QWidget * parent, Manager * client)
-  : Button(parent, client, Max)
+MaximiseButton::MaximiseButton(QWidget * parent)
+  : Button(parent, Max)
 {
 }
 
@@ -50,16 +48,17 @@ MaximiseButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     case RightButton:
-      client()->maximizeNoRaise();
+      emit(maximiseClient());
       break;
 
     case MidButton:
-      client()->maximizeVertically();
+      emit(vMaxClient());
       break;
 
     case LeftButton:
     default:
-      client()->maximizeAndRaise();
+      emit(raiseClient());
+      emit(maximiseClient());
       break;
   }
 }

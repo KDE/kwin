@@ -33,18 +33,16 @@
 namespace RiscOS
 {
 
-TitleBar::TitleBar(QWidget * parent, Manager * client)
-  : QWidget(parent),
-    client_(client)
+TitleBar::TitleBar(Manager * client)
+  : QWidget(client)
 {
   setBackgroundMode(NoBackground);
-  setFixedHeight(20);
 
-  lower_      = new LowerButton     (this, client_);
-  close_      = new CloseButton     (this, client_);
-  text_       = new TitleText       (this, client_);
-  iconify_    = new IconifyButton   (this, client_);
-  maximise_   = new MaximiseButton  (this, client_);
+  lower_      = new LowerButton     (this);
+  close_      = new CloseButton     (this);
+  text_       = new TitleText       (this, client);
+  iconify_    = new IconifyButton   (this);
+  maximise_   = new MaximiseButton  (this);
 
   lower_    ->setAlign(Button::Left);
   close_    ->setAlign(Button::Left);
@@ -60,6 +58,14 @@ TitleBar::TitleBar(QWidget * parent, Manager * client)
   layout->addWidget(text_, 1);
   layout->addWidget(iconify_);
   layout->addWidget(maximise_);
+
+  connect(lower_,     SIGNAL(lowerClient()),          client,     SLOT(lower()));
+  connect(close_,     SIGNAL(closeClient()),          client,     SLOT(closeWindow()));
+  connect(iconify_,   SIGNAL(iconifyClient()),        client,     SLOT(iconify()));
+  connect(maximise_,  SIGNAL(maximiseClient()),       client,     SLOT(maximize()));
+  connect(maximise_,  SIGNAL(vMaxClient()),           client,     SLOT(vMax()));
+  connect(maximise_,  SIGNAL(raiseClient()),          client,     SLOT(raise()));
+  connect(client,     SIGNAL(maximiseChanged(bool)),  maximise_,  SLOT(setOn(bool)));
 }
  
   void
@@ -73,12 +79,6 @@ TitleBar::updateDisplay()
 }
   
   void
-TitleBar::updateMaximise(bool b)
-{
-  maximise_->setOn(b);
-}
-
-  void
 TitleBar::updateText()
 {
   text_->updateDisplay();
@@ -89,7 +89,7 @@ TitleBar::~TitleBar()
 }
 
   void
-TitleBar::resizeEvent(QResizeEvent * e)
+TitleBar::resizeEvent(QResizeEvent *)
 {
   int sizeProblem = 0;
 
@@ -128,8 +128,16 @@ TitleBar::resizeEvent(QResizeEvent * e)
       close_    ->show();
       break;
   }
+}
 
-  QWidget::resizeEvent(e);
+  void
+TitleBar::setActive(bool b)
+{
+  lower_->setActive(b);
+  close_->setActive(b);
+  text_->setActive(b);
+  iconify_->setActive(b);
+  maximise_->setActive(b);
 }
 
 } // End namespace

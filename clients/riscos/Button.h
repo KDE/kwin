@@ -23,42 +23,45 @@
 #ifndef RISC_OS_BUTTON_H
 #define RISC_OS_BUTTON_H
 
-#include <qwidget.h>
-
 #include "Static.h"
+#include <qwidget.h>
 
 namespace RiscOS
 {
 
-class Manager;
-
 class Button : public QWidget
 {
+  Q_OBJECT
+
   public:
 
     enum Alignment { Left, Right };
 
-    Button(QWidget * parent, Manager * client, SymbolType);
+    enum SymbolType;
+
+    Button(QWidget * parent, SymbolType);
     virtual ~Button();
     
     void updateDisplay();
 
     void setAlign(Alignment a)  { align_ = a; updateDisplay(); }
-    void setType(SymbolType t)  { type_ = t;  updateDisplay(); }
+    void setType(SymbolType t);
+
+    void setActive(bool);
  
   protected:
 
-    Manager * client() { return client_; }
+    bool active() const { return active_; }
 
     void mousePressEvent(QMouseEvent *)   { down_ = true; updateDisplay(); }
     void mouseReleaseEvent(QMouseEvent *) { down_ = false; updateDisplay(); }
 
   private:
 
-    Manager *   client_;
     SymbolType  type_;
     Alignment   align_;
     bool        down_;
+    bool        active_;
 };
 
 } // End namespace

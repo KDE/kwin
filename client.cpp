@@ -946,7 +946,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     if ( !moveResizeMode )
     {
 	QPoint p( e->pos() - moveOffset );
-	if ( (QABS( p.x()) >= 4) || (QABS( p.y() ) >= 4 )) {
+	if (p.manhattanLength() >= 6) {
 	    moveResizeMode = TRUE;
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
 	    grabMouse( cursor() ); // to keep the right cursor
@@ -1501,7 +1501,7 @@ void Client::setShade( bool s )
 	clearWFlags( WNorthWestGravity );
 	resize ( s );
 	windowWrapper()->show();
-  activateLayout();
+	activateLayout();
 	repaint();
 	if ( isActive() )
 	    workspace()->requestFocus( this );

@@ -34,9 +34,9 @@ namespace RiscOS
 
 TitleText::TitleText(QWidget * parent, Manager * client)
   : DBWidget(parent, "TitleText"),
-    client_(client)
+    client_(client),
+    active_(false)
 {
-  setFixedHeight(20);
 }
 
 TitleText::~TitleText()
@@ -44,15 +44,23 @@ TitleText::~TitleText()
 }
 
   void
+TitleText::setActive(bool b)
+{
+  active_ = b;
+  updateDisplay();
+}
+
+  void
 TitleText::updatePixmap()
 {
   QPainter p(&buf());
 
-  p.drawPixmap(0, 0, Static::instance()->titleTextLeft(client_->isActive()));
-  p.drawPixmap(width() - 3, 0, Static::instance()->titleTextRight(client_->isActive()));
-  p.drawTiledPixmap(3, 0, width() - 6, 20, Static::instance()->titleTextMid(client_->isActive()));
+  Static * s = Static::instance();
 
-  p.setPen(options->color(Options::Font, client_->isActive()));
+  p.drawPixmap(0, 0, s->titleTextLeft(active_));
+  p.drawPixmap(width() - 3, 0, s->titleTextRight(active_));
+  p.drawTiledPixmap(3, 0, width() - 6, 20, s->titleTextMid(active_));
+  p.setPen(options->color(Options::Font, active_));
   p.setFont(options->font());
   p.drawText(4, 0, width() - 8, 18, AlignCenter, client_->caption());
 }
@@ -60,50 +68,25 @@ TitleText::updatePixmap()
   void
 TitleText::mousePressEvent(QMouseEvent * e)
 {
-  switch (e->button()) {
-
-    case MidButton:
-      clientPosToMousePos_ = e->globalPos() - client_->pos();
-      break;
-
-    case LeftButton:
-      clientPosToMousePos_ = e->globalPos() - client_->pos();
-      client_->workspace()->raiseClient(client_);
-      client_->workspace()->requestFocus(client_);
-      break;
-
-    case RightButton:
-      client_->workspace()->clientPopup(client_)->popup(e->globalPos());
-      break;
-
-    default:
-      break;
-  }
+  client_->mousePressEvent(e);
 }
 
   void
-TitleText::mouseReleaseEvent(QMouseEvent *)
+TitleText::mouseReleaseEvent(QMouseEvent * e)
 {
-  // Anything to do ?
+  client_->mouseReleaseEvent(e);
 }
 
   void
 TitleText::mouseMoveEvent(QMouseEvent * e)
 {
-  // Need to be a little clever here.
-
-  QPoint adjustedForCursor = e->globalPos() - clientPosToMousePos_;
-
-  QPoint adjustedForSnap =
-    client_->workspace()->adjustClientPosition(client_, adjustedForCursor);
-
-  client_->move(adjustedForSnap);
+  client_->mouseMoveEvent(e);
 }
 
   void
-TitleText::mouseDoubleClickEvent(QMouseEvent *)
+TitleText::mouseDoubleClickEvent(QMouseEvent * e)
 {
-  client_->setShade(!client_->isShade());
+  client_->mouseDoubleClickEvent(e);
 }
 
 } // End namespace

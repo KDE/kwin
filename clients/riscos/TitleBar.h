@@ -39,12 +39,14 @@ class TitleBar : public QWidget
 {
   public:
 
-    TitleBar(QWidget * parent, Manager * client);
+    TitleBar(Manager * client);
     virtual ~TitleBar();
 
     void updateDisplay();
     void updateText();
     void updateMaximise(bool);
+
+    void setActive(bool);
 
   protected:
 
@@ -59,8 +61,6 @@ class TitleBar : public QWidget
 
     IconifyButton * iconify_;
     MaximiseButton * maximise_;
-
-    Manager * client_;
 };
 
 } // End namespace

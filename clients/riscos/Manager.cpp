@@ -50,30 +50,14 @@ Manager::Manager(
 )
   : Client(workSpace, id, parent, name)
 {
-  Static::instance();
-
   setBackgroundMode(NoBackground);
 
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
-  titleBar_   = new TitleBar(this, this);
+  titleBar_   = new TitleBar(this);
   resizeBar_  = new ResizeBar(this, this);
 
-  // Border Window Border
-  QHBoxLayout * windowLayout  = new QHBoxLayout(0, "windowLayout");
-  windowLayout->addSpacing(1);
-  windowLayout->addWidget(windowWrapper(), 1);
-  windowLayout->addSpacing(1);
-  
-  // Titlebar (has own single pixel border)
-  // Window
-  // Resize bar (has own single pixel border)
-  QVBoxLayout * mainLayout = new QVBoxLayout(this, 0, 0, "mainLayout");
-  mainLayout->addWidget(titleBar_);
-  mainLayout->addLayout(windowLayout, 1);
-  mainLayout->addWidget(resizeBar_);
-
-  updateDisplay();
+  activateLayout();
 }
 
 Manager::~Manager()
@@ -84,8 +68,7 @@ Manager::~Manager()
 Manager::slotReset()
 {
   Static::instance()->update();
-  titleBar_->updateDisplay();
-  resizeBar_->updateDisplay();
+  _updateDisplay();
 }
     
   void
@@ -98,46 +81,23 @@ Manager::captionChange(const QString &)
 Manager::paletteChange(const QPalette &)
 {
   Static::instance()->update(); 
-  titleBar_->updateDisplay();
+  _updateDisplay();
 }
 
   void
-Manager::activeChange(bool)
+Manager::activeChange(bool b)
 {
-  titleBar_->updateDisplay();
-  resizeBar_->updateDisplay();
+  titleBar_->setActive(b);
 }
 
   void
 Manager::maximizeChange(bool b)
 {
-  titleBar_->updateMaximise(b);
+  emit(maximiseChanged(b));
 }
 
   void
-Manager::maximizeAndRaise()
-{
-  maximize(MaximizeFull);
-  workspace()->raiseClient(this);
-  workspace()->requestFocus(this);
-}
-
-  void
-Manager::maximizeVertically()
-{
-  maximize(MaximizeVertical);
-  workspace()->raiseClient(this);
-  workspace()->requestFocus(this);
-}
-
-  void
-Manager::maximizeNoRaise()
-{
-  maximize(MaximizeFull);
-}
-
-  void
-Manager::updateDisplay()
+Manager::_updateDisplay()
 {
   titleBar_->updateDisplay();
   resizeBar_->updateDisplay();
@@ -173,31 +133,54 @@ Manager::paintEvent(QPaintEvent * e)
   }
 }
     
-  void
-Manager::mouseMoveEvent(QMouseEvent * e)
+  Client::MousePosition
+Manager::mousePosition(const QPoint & p) const
 {
-  if ((e->pos().x() == 0) || (e->pos().y() == 0))
-    return;
-
-  Client::mouseMoveEvent(e);
+  if (titleBar_->rect().contains(p))
+    return Client::Center;
+  else
+    return Client::Nowhere;
 }
 
   void
-Manager::mousePressEvent(QMouseEvent * e)
+Manager::lower()
 {
-  if ((e->pos().x() == 0) || (e->pos().y() == 0))
-    return;
-
-  Client::mousePressEvent(e);
+  workspace()->lowerClient(this);
 }
 
   void
-Manager::mouseReleaseEvent(QMouseEvent * e)
+Manager::raise()
 {
-  if ((e->pos().x() == 0) || (e->pos().y() == 0))
-    return;
+  workspace()->raiseClient(this);
+}
 
-  Client::mouseReleaseEvent(e);
+  void
+Manager::vMax()
+{
+  maximize(MaximizeVertical);
+}
+
+  void
+Manager::resizeEvent(QResizeEvent * e)
+{
+  Client::resizeEvent(e);
+  _updateLayout();
+}
+
+  void
+Manager::_updateLayout()
+{
+  titleBar_       ->  setGeometry(0, 0, width(), 20);
+  windowWrapper() ->  setGeometry(1, 20, width() - 2, height() - 30);
+  resizeBar_      ->  setGeometry(0, height() - 10, width(), 10);
+  
+  _updateDisplay();
+}
+
+  void
+Manager::activateLayout()
+{
+  _updateLayout();
 }
 
 } // End namespace

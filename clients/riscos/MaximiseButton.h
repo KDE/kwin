@@ -23,22 +23,28 @@
 #ifndef RISC_OS_MAXIMISE_BUTTON_H
 #define RISC_OS_MAXIMISE_BUTTON_H
 
-#include <qwidget.h>
-
 #include "Button.h"
 
 namespace RiscOS
 {
 
-class Manager;
-
 class MaximiseButton : public Button
 {
+  Q_OBJECT
+
   public:
 
-    MaximiseButton(QWidget * parent, Manager * client);
+    MaximiseButton(QWidget * parent);
+
+  public slots:
 
     void setOn(bool);
+
+  signals:
+
+    void maximiseClient();
+    void raiseClient();
+    void vMaxClient();
 
   protected:
 

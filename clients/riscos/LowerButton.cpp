@@ -20,17 +20,13 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include "../../workspace.h"
-
 #include "LowerButton.h"
-#include "Manager.h"
-#include "Static.h"
 
 namespace RiscOS
 {
 
-LowerButton::LowerButton(QWidget * parent, Manager * client)
-  : Button(parent, client, Lower)
+LowerButton::LowerButton(QWidget * parent)
+  : Button(parent, Lower)
 {
 }
 
@@ -45,12 +41,11 @@ LowerButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     default:
-      client()->workspace()->lowerClient(client());
+      emit(lowerClient());
       break;
   }
 
 }
-
 
 } // End namespace;
 

@@ -21,14 +21,12 @@
 */
 
 #include "IconifyButton.h"
-#include "Manager.h"
-#include "Static.h"
 
 namespace RiscOS
 {
 
-IconifyButton::IconifyButton(QWidget * parent, Manager * client)
-  : Button(parent, client, Iconify)
+IconifyButton::IconifyButton(QWidget * parent)
+  : Button(parent, Iconify)
 {
 }
 
@@ -43,16 +41,16 @@ IconifyButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     case RightButton:
-      client()->iconify();
+      emit(iconifyClient());
       break;
 
     case MidButton:
-      client()->iconify();
+      emit(iconifyClient());
       break;
 
     case LeftButton:
     default:
-      client()->iconify();
+      emit(iconifyClient());
       break;
   }
 

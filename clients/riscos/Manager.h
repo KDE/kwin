@@ -35,35 +35,44 @@ class Manager : public Client
 {
   Q_OBJECT
 
+  friend class TitleText;
+
   public:
 
     Manager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
     ~Manager();
 
-    void maximizeVertically();
-    void maximizeAndRaise();
-    void maximizeNoRaise();
-
     void setShade(bool);
 
-    void updateDisplay();
+  signals:
+
+    void maximiseChanged(bool);
+
+  public slots:
+
+    void lower();
+    void raise();
+    void vMax();
 
   protected:
 
+    Client::MousePosition mousePosition(const QPoint &) const;
     void paletteChange(const QPalette &);
     void activeChange(bool);
     void maximizeChange(bool);
     void paintEvent(QPaintEvent *);
-    void mouseMoveEvent(QMouseEvent *);
-    void mousePressEvent(QMouseEvent *);
-    void mouseReleaseEvent(QMouseEvent *);
-
+    void resizeEvent(QResizeEvent *);
+    void activateLayout();
+    
   protected slots:
 
     void captionChange(const QString &);
     void slotReset();
 
   private:
+
+    void _updateDisplay();
+    void _updateLayout();
    
     TitleBar * titleBar_;
     ResizeBar * resizeBar_;

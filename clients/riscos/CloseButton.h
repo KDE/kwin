@@ -28,13 +28,17 @@
 namespace RiscOS
 {
 
-class Manager;
-
 class CloseButton : public Button
 {
+  Q_OBJECT
+
   public:
 
-    CloseButton(QWidget * parent, Manager * client);
+    CloseButton(QWidget * parent);
+
+  signals:
+
+    void closeClient();
   
   protected:
 

@@ -36,7 +36,6 @@ ResizeBar::ResizeBar(QWidget * parent, Manager * client)
     client_ (client)
 {
   setBackgroundMode(NoBackground);
-  setFixedHeight(10);
 
   left_   = new ResizeSide(this, client_, ResizeSide::Left);
   mid_    = new ResizeMid(this, client_);

@@ -40,6 +40,8 @@ class TitleText : public DBWidget
     TitleText(QWidget * parent, Manager * client);
     virtual ~TitleText();
 
+    void setActive(bool);
+
   protected:
     
     void updatePixmap();
@@ -52,8 +54,7 @@ class TitleText : public DBWidget
   private:
 
     Manager * client_;
-
-    QPoint clientPosToMousePos_;
+    bool active_;
 };
 
 } // End namespace

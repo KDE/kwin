@@ -28,14 +28,17 @@
 namespace RiscOS
 {
 
-class Manager;
-
-
 class IconifyButton : public Button
 {
+  Q_OBJECT
+
   public:
 
-    IconifyButton(QWidget * parent, Manager * client);
+    IconifyButton(QWidget * parent);
+
+  signals:
+
+    void iconifyClient();
   
   protected:
 

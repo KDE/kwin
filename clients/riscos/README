@@ -84,4 +84,7 @@ in the lower right corner of the window (actually inside the window).
 To emulate this would mean covering part of the window with the decorations,
 which is not acceptable. RISC OS gets away with it by making sure that
 there is a vertical scrollbar visible at all times, which is just stupid.
+It's also an impossibility with X11, as the window manager does not know
+anything about scrollbars - they belong to the application, so don't ask
+me to implement it.
 
