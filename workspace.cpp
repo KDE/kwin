@@ -3112,9 +3112,6 @@ void Workspace::slotWindowOperations()
 {
     if ( !active_client )
         return;
-    if ( !active_client->isMovable())
-        return;
-
     QPopupMenu* p = clientPopup( active_client );
     Client* c = active_client;
     p->exec( active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() ) );
