@@ -15,7 +15,7 @@
 
 extern "C"
 {
-	QObject* allocate_config( KConfig* conf, QWidget* parent )
+	QObject* KDE_EXPORT allocate_config( KConfig* conf, QWidget* parent )
 	{
 		return(new B2Config(conf, parent));
 	}
