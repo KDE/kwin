@@ -71,7 +71,7 @@ void B2Config::slotSelectionChanged()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void B2Config::load( KConfig* conf )
+void B2Config::load( KConfig* /*conf*/ )
 {
 	b2Config->setGroup("General");
 	bool override = b2Config->readBoolEntry( "UseTitleBarBorderColors", false );
@@ -80,7 +80,7 @@ void B2Config::load( KConfig* conf )
 
 
 // Saves the configurable options to the kwinrc config file
-void B2Config::save( KConfig* conf )
+void B2Config::save( KConfig* /*conf*/ )
 {
 	b2Config->setGroup("General");
 	b2Config->writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
