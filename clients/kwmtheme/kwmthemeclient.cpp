@@ -1,7 +1,6 @@
 #include <kconfig.h>
 #include "kwmthemeclient.h"
 #include <kglobal.h>
-#include <kiconloader.h>
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qabstractlayout.h>
@@ -23,6 +22,7 @@ extern "C"
         return(new KWMThemeClient(ws, w));
     }
 }
+
 
 
 enum FramePixmap{FrameTop=0, FrameBottom, FrameLeft, FrameRight, FrameTopLeft,
@@ -51,13 +51,17 @@ static void init_theme()
         return;
     pixmaps_created = true;
     
-    KIconLoader *ldr = KGlobal::iconLoader();
     KConfig *config = KGlobal::config();
     config->setGroup("General");
 
     int i;
+
+    QString baseDir="/usr/local/kde2/share/apps/kwin/";
+    QString localBaseDir="/home/mosfet/.kde/share/apps/kwin/";
+    
     for(i=0; i < 8; ++i){
-        framePixmaps[i] = new QPixmap(ldr->loadIcon(keys[i]));
+        framePixmaps[i] = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                                      config->readEntry(keys[i], " "));
         if(framePixmaps[i]->isNull())
             warning("Unable to load frame pixmap for %s", keys[i]);
         else
@@ -71,13 +75,39 @@ static void init_theme()
     if(framePixmaps[FrameRight]->width() > maxExtent)
         maxExtent = framePixmaps[FrameRight]->width();
 
-    menuPix = new QPixmap(ldr->loadIcon("menu"));
-    iconifyPix = new QPixmap(ldr->loadIcon("iconify"));
-    maxPix = new QPixmap(ldr->loadIcon("maximize"));
-    minmaxPix = new QPixmap(ldr->loadIcon("maximizedown"));
-    closePix = new QPixmap(ldr->loadIcon("close"));
-    pinupPix = new QPixmap(ldr->loadIcon("pinup"));
-    pindownPix = new QPixmap(ldr->loadIcon("pindown"));
+    menuPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                          config->readEntry("menu", " "));
+    iconifyPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                             config->readEntry("iconify", " "));
+    maxPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                         config->readEntry("maximize", " "));
+    minmaxPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                            config->readEntry("maximizedown", " "));
+    closePix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                           config->readEntry("close", " "));
+    pinupPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                           config->readEntry("pinup", " "));
+    pindownPix = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
+                             config->readEntry("pindown", " "));
+    if(menuPix->isNull())
+        menuPix->load(baseDir + "/kwmtheme/defaultpics/menu.png");
+    if(iconifyPix->isNull())
+        iconifyPix->
+            load(baseDir + "/kwmtheme/defaultpics/iconify.png");
+    if(maxPix->isNull())
+        maxPix->
+            load(baseDir +"/kwmtheme/defaultpics/maximize.png");
+    if(minmaxPix->isNull())
+        minmaxPix->
+            load(baseDir + "/kwmtheme/defaultpics/maximizedown.png");
+    if(closePix->isNull())
+        closePix->load(baseDir + "/kwmtheme/defaultpics/close.png");
+    if(pinupPix->isNull())
+        pinupPix->load(baseDir + "/kwmtheme/defaultpics/pinup.png");
+    if(pindownPix->isNull())
+        pindownPix->
+            load(baseDir + "/kwmtheme/defaultpics/pindown.png");
+    
     
     QString tmpStr = config->readEntry("TitleAlignment");
     if(tmpStr == "right")
@@ -278,141 +308,51 @@ void KWMThemeClient::captionChange( const QString& )
 void KWMThemeClient::paintEvent( QPaintEvent* )
 {
     QPainter p;
-    p.begin(this);
-    int x,y;
     // first the corners
     int w1 = framePixmaps[FrameTopLeft]->width();
     int h1 = framePixmaps[FrameTopLeft]->height();
     if (w1 > width()/2) w1 = width()/2;
     if (h1 > height()/2) h1 = height()/2;
-    p.drawPixmap(0,0,*(framePixmaps[FrameTopLeft]),
-                 0,0, w1, h1);
+    bitBlt(this, 0,0, framePixmaps[FrameTopLeft],
+           0,0, w1, h1);
 
     int w2 = framePixmaps[FrameTopRight]->width();
     int h2 = framePixmaps[FrameTopRight]->height();
     if (w2 > width()/2) w2 = width()/2;
     if (h2 > height()/2) h2 = height()/2;
-    p.drawPixmap(width()-w2,0,*(framePixmaps[FrameTopRight]),
-                 framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
+    bitBlt(this, width()-w2,0, framePixmaps[FrameTopRight],
+           framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
 
     int w3 = framePixmaps[FrameBottomLeft]->width();
     int h3 = framePixmaps[FrameBottomLeft]->height();
     if (w3 > width()/2) w3 = width()/2;
     if (h3 > height()/2) h3 = height()/2;
-    p.drawPixmap(0,height()-h3,*(framePixmaps[FrameBottomLeft]),
-		 0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
+    bitBlt(this, 0,height()-h3, framePixmaps[FrameBottomLeft],
+           0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
 
     int w4 = framePixmaps[FrameBottomRight]->width();
     int h4 = framePixmaps[FrameBottomRight]->height();
     if (w4 > width()/2) w4 = width()/2;
     if (h4 > height()/2) h4 = height()/2;
-    p.drawPixmap(width()-w4,height()-h4,*(framePixmaps[FrameBottomRight]),
-		 framePixmaps[FrameBottomRight]->width()-w4,
-		 framePixmaps[FrameBottomRight]->height()-h4,
-		 w4, h4);
+    bitBlt(this, width()-w4,height()-h4, framePixmaps[FrameBottomRight],
+           framePixmaps[FrameBottomRight]->width()-w4,
+           framePixmaps[FrameBottomRight]->height()-h4,
+           w4, h4);
 
-    QPixmap pm;
-    QWMatrix m;
-    int n,s,w;
-    //top
-    pm = *(framePixmaps[FrameTop]);
+    QPixmap *curPix = framePixmaps[FrameTop];
+    tileHoriz(this, curPix, w1, maxExtent-curPix->height()-1, width()-w2-w1);
 
-    s = width()-w2-w1;
-    n = s/pm.width();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
+    
+    curPix = framePixmaps[FrameBottom];
+    tileHoriz(this, curPix, w3, height()-maxExtent+1, width()-w3-w4);
 
-    x = w1;
-    while (1){
-        if (pm.width() < width()-w2-x){
-            p.drawPixmap(x,maxExtent-pm.height()-1,
-                         pm);
-            x += pm.width();
-        }
-        else {
-            p.drawPixmap(x,maxExtent-pm.height()-1,
-                         pm,
-                         0,0,width()-w2-x,pm.height());
-            break;
-        }
-    }
+    curPix = framePixmaps[FrameLeft];
+    tileVert(this, curPix, maxExtent-curPix->width()-1, h1, height()-h1-h3);
+    
+    curPix = framePixmaps[FrameRight];
+    tileVert(this, curPix, width()-maxExtent+1, h2, height()-h2-h4);
 
-    //bottom
-    pm = *(framePixmaps[FrameBottom]);
-
-    s = width()-w4-w3;
-    n = s/pm.width();
-    w = n>0 ? s/n : s;
-    m.reset();
-    m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
-
-    x = w3;
-    while (1){
-        if (pm.width() < width()-w4-x){
-            p.drawPixmap(x,height()-maxExtent+1,pm);
-            x += pm.width();
-        }
-        else {
-	p.drawPixmap(x,height()-maxExtent+1,pm,
-                     0,0,width()-w4-x,pm.height());
-        break;
-        }
-    }
-
-    //left
-    pm = *(framePixmaps[FrameLeft]);
-
-    s = height()-h3-h1;
-    n = s/pm.height();
-    w = n>0 ? s/n : s;
-    m.reset();
-    m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
-
-    y = h1;
-    while (1){
-        if (pm.height() < height()-h3-y){
-            p.drawPixmap(maxExtent-pm.width()-1, y,
-                         pm);
-            y += pm.height();
-        }
-        else {
-            p.drawPixmap(maxExtent-pm.width()-1, y,
-		     pm,
-                         0,0, pm.width(),
-                         height()-h3-y);
-            break;
-        }
-    }
-
-    //right
-    pm = *(framePixmaps[FrameRight]);
-
-    s = height()-h4-h2;
-    n = s/pm.height();
-    w = n>0 ? s/n : s;
-    m.reset();
-    m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
-
-    y = h2;
-    while (1){
-        if (pm.height() < height()-h4-y){
-            p.drawPixmap(width()-maxExtent+1, y,
-                         pm);
-            y += pm.height();
-        }
-        else {
-            p.drawPixmap(width()-maxExtent+1, y,
-                         pm,
-                         0,0, pm.width(),
-                         height()-h4-y);
-            break;
-        }
-    }
+    p.begin(this);
     drawTitle(p);
     p.end();
 }
@@ -422,147 +362,54 @@ void KWMThemeClient::doShape()
     QBitmap mask(width(), height());
     mask.fill(color0);
     QPainter p;
-    p.begin(&mask);
-    p.setBrush(color1);
-    p.setPen(color1);
 
-    int x,y;
     // first the corners
     int w1 = framePixmaps[FrameTopLeft]->width();
     int h1 = framePixmaps[FrameTopLeft]->height();
     if (w1 > width()/2) w1 = width()/2;
     if (h1 > height()/2) h1 = height()/2;
-    p.drawPixmap(0,0,*(framePixmaps[FrameTopLeft]->mask()),
-		 0,0,w1, h1);
+    bitBlt(&mask, 0,0,framePixmaps[FrameTopLeft]->mask(),
+           0,0,w1, h1);
     int w2 = framePixmaps[FrameTopRight]->width();
     int h2 = framePixmaps[FrameTopRight]->height();
     if (w2 > width()/2) w2 = width()/2;
     if (h2 > height()/2) h2 = height()/2;
-    p.drawPixmap(width()-w2,0,*(framePixmaps[FrameTopRight]->mask()),
-                 framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
+    bitBlt(&mask, width()-w2,0,framePixmaps[FrameTopRight]->mask(),
+           framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
 
     int w3 = framePixmaps[FrameBottomLeft]->width();
     int h3 = framePixmaps[FrameBottomLeft]->height();
     if (w3 > width()/2) w3 = width()/2;
     if (h3 > height()/2) h3 = height()/2;
-    p.drawPixmap(0,height()-h3,*(framePixmaps[FrameBottomLeft]->mask()),
-                 0, framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
+    bitBlt(&mask, 0,height()-h3,framePixmaps[FrameBottomLeft]->mask(),
+           0, framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
 
     int w4 = framePixmaps[FrameBottomRight]->width();
     int h4 = framePixmaps[FrameBottomRight]->height();
     if (w4 > width()/2) w4 = width()/2;
     if (h4 > height()/2) h4 = height()/2;
-    p.drawPixmap(width()-w4,height()-h4,*(framePixmaps[FrameBottomRight]->mask()),
-		 framePixmaps[FrameBottomRight]->width()-w4,
-		 framePixmaps[FrameBottomRight]->height()-h4,
-                 w4, h4);
+    bitBlt(&mask, width()-w4,height()-h4,framePixmaps[FrameBottomRight]->mask(),
+           framePixmaps[FrameBottomRight]->width()-w4,
+           framePixmaps[FrameBottomRight]->height()-h4,
+           w4, h4);
 
+    const QBitmap *curPix = framePixmaps[FrameTop]->mask();
+    tileHoriz(&mask, curPix, w1, maxExtent-curPix->height()-1, width()-w2-w1);
+    
+    curPix = framePixmaps[FrameBottom]->mask();
+    tileHoriz(&mask, curPix, w3, height()-maxExtent+1, width()-w3-w4);
 
-    QPixmap pm;
-    QWMatrix m;
-    int n,s,w;
-    //top
-    pm = *(framePixmaps[FrameTop]->mask());
+    curPix = framePixmaps[FrameLeft]->mask();
+    tileVert(&mask, curPix, maxExtent-curPix->width()-1, h1, height()-h1-h3);
+    
+    curPix = framePixmaps[FrameRight]->mask();
+    tileVert(&mask, curPix, width()-maxExtent+1, h2, height()-h2-h4);
 
-    s = width()-w2-w1;
-    n = s/pm.width();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
-
-    x = w1;
-    while (1){
-      if (pm.width() < width()-w2-x){
-	p.drawPixmap(x,maxExtent-pm.height()-1,
-		     pm);
-	x += pm.width();
-      }
-      else {
-	p.drawPixmap(x,maxExtent-pm.height()-1,
-		     pm,
-		     0,0,width()-w2-x,pm.height());
-	break;
-      }
-    }
-
-    //bottom
-    pm = *(framePixmaps[FrameBottom]->mask());
-
-    s = width()-w4-w3;
-    n = s/pm.width();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
-
-    x = w3;
-    while (1){
-      if (pm.width() < width()-w4-x){
-          p.drawPixmap(x,height()-maxExtent+1,pm);
-          x += pm.width();
-      }
-      else {
-	p.drawPixmap(x,height()-maxExtent+1,pm,
-		     0,0,width()-w4-x,pm.height());
-	break;
-      }
-    }
-
-    //left
-    pm = *(framePixmaps[FrameLeft]->mask());
-
-    s = height()-h3-h1;
-    n = s/pm.height();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
-
-    y = h1;
-    while (1){
-      if (pm.height() < height()-h3-y){
-	p.drawPixmap(maxExtent-pm.width()-1, y,
-		     pm);
-	y += pm.height();
-      }
-      else {
-	p.drawPixmap(maxExtent-pm.width()-1, y,
-		     pm,
-		     0,0, pm.width(),
-		     height()-h3-y);
-	break;
-      }
-    }
-
-    //right
-    pm = *(framePixmaps[FrameRight]->mask());
-
-    s = height()-h4-h2;
-    n = s/pm.height();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
-
-    y = h2;
-    while (1){
-      if (pm.height() < height()-h4-y){
-	p.drawPixmap(width()-maxExtent+1, y,
-		     pm);
-	y += pm.height();
-      }
-      else {
-	p.drawPixmap(width()-maxExtent+1, y,
-		     pm,
-		     0,0, pm.width(),
-		     height()-h4-y);
-	break;
-      }
-    }
-
-    p.fillRect(maxExtent-1, maxExtent-1, width()-2*maxExtent+2, height()-2*maxExtent+2, color1);
-
+    p.begin(&mask);
+    p.setBrush(color1);
+    p.setPen(color1);
+    p.fillRect(maxExtent-1, maxExtent-1, width()-2*maxExtent+2,
+               height()-2*maxExtent+2, color1);
     p.end();
     setMask(mask);
 }

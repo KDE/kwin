@@ -13,7 +13,7 @@ class MyButton : public QToolButton
 {
 public:
     MyButton(QWidget *parent=0, const char *name=0)
-        : QToolButton(parent, name){;}
+        : QToolButton(parent, name){setAutoRaise(true);}
 protected:
     void drawButtonLabel(QPainter *p);
 };
@@ -37,10 +37,37 @@ protected:
     void stickyChange(bool on);
     void maximizeChange(bool m);
 private:
+    inline void tileHoriz(QPaintDevice *dest, const QPixmap *src,
+                          int x, int y, int w);
+    inline void tileVert(QPaintDevice *dest, const QPixmap *src,
+                          int x, int y, int h);
     KPixmap *aGradient, *iGradient;
     MyButton *maxBtn, *stickyBtn;
     QSpacerItem *titlebar;
 };
+
+inline void KWMThemeClient::tileHoriz(QPaintDevice *dest, const QPixmap *src,
+                                      int x, int y, int w)
+{
+    int cx;
+    for(cx = x; cx < x+w; cx+=src->width()){
+        bitBlt(dest, cx, y, src, 0, 0, cx+src->width() <= x+w ? src->width() :
+               (x+w)-cx);
+    }
+}
+
+inline void KWMThemeClient::tileVert(QPaintDevice *dest, const QPixmap *src,
+                                     int x, int y, int h)
+{
+    int cy;
+    for(cy = y; cy < y+h; cy+=src->height()){
+        bitBlt(dest, x, cy, src, 0, 0, src->width(),
+               cy+src->height() <= y+h ? src->height() :
+               (y+h)-cy);
+    }
+}
+
+
 
 
 
