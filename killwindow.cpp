@@ -4,7 +4,9 @@ kwin - the KDE window manager
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 
+#ifndef QT_CLEAN_NAMESPACE
 #define QT_CLEAN_NAMESPACE
+#endif
 #include "killwindow.h"
 #include <X11/Xlib.h>
 #include <X11/keysym.h>

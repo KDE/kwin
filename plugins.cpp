@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+
 Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 ******************************************************************/
 #include <kglobal.h>
@@ -76,7 +76,7 @@ void PluginMenu::parseDesktop(QFileInfo *fi)
     config.setDesktopGroup();
     tmpStr = config.readEntry("X-KDE-Library", "");
     if(tmpStr.isEmpty()){
-        warning("KWin: Invalid plugin: %s", fi->absFilePath().latin1());
+        qWarning("KWin: Invalid plugin: %s", fi->absFilePath().latin1());
         return;
     }
     fileList.append(tmpStr);
@@ -148,7 +148,7 @@ void PluginMgr::loadPlugin(QString nameStr)
     nameStr = KGlobal::dirs()->findResource("lib", nameStr);
 
     if(!nameStr){
-        warning("KWin: cannot find client plugin.");
+        qWarning("KWin: cannot find client plugin.");
         handle = 0;
         alloc_ptr = NULL;
         config->writeEntry("PluginLib", "standard");
@@ -156,7 +156,7 @@ void PluginMgr::loadPlugin(QString nameStr)
     else{
         handle = lt_dlopen(nameStr.latin1());
         if(!handle){
-            warning("KWin: cannot load client plugin %s.", nameStr.latin1());
+            qWarning("KWin: cannot load client plugin %s.", nameStr.latin1());
             handle = 0;
             alloc_ptr = NULL;
             config->writeEntry("PluginLib", "standard");
@@ -166,7 +166,7 @@ void PluginMgr::loadPlugin(QString nameStr)
             if(alloc_func)
                 alloc_ptr = (Client* (*)(Workspace *ws, WId w))alloc_func;
             else{
-                warning("KWin: %s is not a KWin plugin.", nameStr.latin1());
+                qWarning("KWin: %s is not a KWin plugin.", nameStr.latin1());
                 lt_dlclose(handle);
                 handle = 0;
                 alloc_ptr = NULL;
