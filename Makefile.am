@@ -6,7 +6,7 @@ bin_PROGRAMS = kwin
 lib_LTLIBRARIES = kwin.la
 
 # workspace.cpp has to be first in order not to break --enable-final
-kwin_la_SOURCES = workspace.cpp placement.cpp atoms.cpp  client.cpp main.cpp \
+kwin_la_SOURCES = client.cpp workspace.cpp placement.cpp atoms.cpp  main.cpp \
 	popupinfo.cpp tabbox.cpp options.cpp plugins.cpp events.cpp KWinInterface.skel \
 	killwindow.cpp kwinbutton.cpp
 kwin_la_LIBADD = $(LIB_KDEUI)
@@ -22,8 +22,6 @@ kwin_LDADD = kwin.la
 kwin_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 KDE_ICON = kwin
-
-KDE_OPTIONS = nofinal
 
 METASOURCES = AUTO
 

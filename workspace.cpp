@@ -5,7 +5,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 
 //#define QT_CLEAN_NAMESPACE
-#define select kwin_hide_select
 
 #include <config.h>
 #include <kconfig.h>
@@ -45,6 +44,12 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/extensions/shape.h>
 #include <X11/cursorfont.h>
 #include <sys/time.h>
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 const int XIconicState = IconicState;
 #undef IconicState
@@ -53,15 +58,6 @@ const int XAbove = Above;
 
 #include <kwin.h>
 #include <kdebug.h>
-
-// Possible protoypes for select() were hidden as `kwin_hide_select.
-// Undo the hiding definition and defines an acceptable prototype.
-// This is how Qt does this. It should work where Qt works.
-#ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
-#undef select
-extern "C" int select(int,void*,void*,void*,struct timeval*);
 
 namespace KWinInternal {
 
