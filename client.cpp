@@ -1298,10 +1298,12 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 
         //QRect area = workspace()->clientArea();
         if ( isMaximizable() && isMaximized() ) {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
-            if ( (e.value_mask & (CWX | CWY )) == 0 )
-                geom_restore.moveTopLeft( geometry().topLeft() );
-            geom_restore.setSize( ns );
-            maximize( Client::MaximizeRestore );
+            if( ns != size()) { // don't restore if some app sets its own size again
+                if ( (e.value_mask & (CWX | CWY )) == 0 )
+                    geom_restore.moveTopLeft( geometry().topLeft() );
+                geom_restore.setSize( ns );
+                maximize( Client::MaximizeRestore );
+            }
         } else if ( !isMaximized() ) {
             if ( ns == size() )
                 return TRUE; // broken xemacs stuff (ediff)
