@@ -1,3 +1,4 @@
+#include <klocale.h>
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qbitmap.h>
@@ -407,25 +408,29 @@ void Client::getWmNormalHints()
 void Client::fetchName()
 {
     char* name = 0;
+    QString s;
     if ( XFetchName( qt_xdisplay(), win, &name ) && name ) {
-	QString s = QString::fromLatin1( name );
-	if ( s != caption() ) {
-	    setCaption( "" );
-	    if (workspace()->hasCaption( s ) ){
-		int i = 2;
-		QString s2;
-		do {
-		    s2 = s + " <" + QString::number(i) + ">";
-		    i++;
-		} while (workspace()->hasCaption(s2) );
-		s = s2;
-	    }
-	    setCaption( s );
-
-	    if ( !isWithdrawn() )
-		captionChange( caption() );
-	}
+	s = QString::fromLatin1( name );
 	XFree( name );
+    }
+    if ( s.isEmpty() )
+	s = i18n("unnamed");
+    
+    if ( s != caption() ) {
+	setCaption( "" );
+	if (workspace()->hasCaption( s ) ){
+	    int i = 2;
+	    QString s2;
+	    do {
+		s2 = s + " <" + QString::number(i) + ">";
+		i++;
+	    } while (workspace()->hasCaption(s2) );
+	    s = s2;
+	}
+	setCaption( s );
+
+	if ( !isWithdrawn() )
+	    captionChange( caption() );
     }
 }
 
