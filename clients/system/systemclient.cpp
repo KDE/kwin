@@ -45,9 +45,7 @@ static unsigned char question_bits[] = {
     
 static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
-static KPixmap *aLowerGradient=0;
 static KPixmap *iUpperGradient=0;
-static KPixmap *iLowerGradient=0;
 static bool pixmaps_created = false;
 
 static void create_pixmaps()
@@ -85,11 +83,6 @@ static void create_pixmaps()
         aUpperGradient->resize(32, 18);
         iUpperGradient = new KPixmap;
         iUpperGradient->resize(32, 18);
-        aLowerGradient = new KPixmap;
-        aLowerGradient->resize(32, 6);
-        iLowerGradient = new KPixmap;
-        iLowerGradient->resize(32, 6);
-
         QColor bgColor = kapp->palette().normal().background();
         KPixmapEffect::gradient(*aUpperGradient,
                                 options->color(Options::Frame, true).light(130),
@@ -98,12 +91,6 @@ static void create_pixmaps()
         KPixmapEffect::gradient(*iUpperGradient,
                                 options->color(Options::Frame, false).light(130),
                                 bgColor,
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*aLowerGradient, bgColor,
-                                options->color(Options::Frame, true).dark(120),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*iLowerGradient, bgColor,
-                                options->color(Options::Frame, false).dark(120),
                                 KPixmapEffect::VerticalGradient);
     }
 }
@@ -320,11 +307,9 @@ void SystemClient::paintEvent( QPaintEvent* )
     if(aUpperGradient){
         if(isActive()){
             p.drawTiledPixmap(0, 0, width(), 18, *aUpperGradient);
-            p.drawTiledPixmap(0, height()-7, width(), 6, *aLowerGradient);
         }
         else{
             p.drawTiledPixmap(0, 0, width(), 18, *iUpperGradient);
-            p.drawTiledPixmap(0, height()-7, width(), 6, *iLowerGradient);
         }
     }
     t.setTop( 2 );
