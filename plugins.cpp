@@ -82,12 +82,12 @@ void PluginMgr::loadPlugin(QString nameStr)
        lt_dlinit();
     }
 
-    QString path = KLibLoader::findLibrary(nameStr.latin1());
+    QString path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
 
     // If the plugin was not found, try to find the default
     if (path.isEmpty()) {
         nameStr = defaultPlugin;
-        path = KLibLoader::findLibrary(nameStr.latin1());
+        path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
     }
 
     // If no library was found, exit kwin with an error message
@@ -99,14 +99,14 @@ void PluginMgr::loadPlugin(QString nameStr)
 	return;
 
     // Try loading the requested plugin
-    handle = lt_dlopen(path.latin1());
+    handle = lt_dlopen(QFile::encodeName(path));
 
     // If that fails, fall back to the default plugin
     if (!handle) {
         nameStr = defaultPlugin;
-        path = KLibLoader::findLibrary(nameStr.latin1());
+        path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
 	if (!path.isEmpty())
-            handle = lt_dlopen(path.latin1());
+            handle = lt_dlopen(QFile::encodeName(path));
     }
 
     if (!handle)
