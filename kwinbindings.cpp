@@ -21,3 +21,5 @@
  keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "F12");
 
  keys->insertItem(i18n("Logout"),"Logout", "CTRL+ALT+Delete");
+
+ keys->insertItem(i18n("Kill Window"),"Kill Window", "CTRL+ALT+Escape");

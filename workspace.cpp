@@ -28,6 +28,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include <X11/extensions/shape.h>
+#include <X11/cursorfont.h>
 
 const int XIconicState = IconicState;
 #undef IconicState
@@ -1754,6 +1755,8 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
 
     keys->connectItem( "Logout", this, SLOT( slotLogout() ) );
+
+    keys->connectItem( "Kill Window", this, SLOT( slotKillWindow() ) );
     keys->readSettings();
 }
 
@@ -1845,6 +1848,86 @@ void Workspace::slotMouseEmulation()
 void Workspace::slotLogout()
 {
   kapp->requestShutDown();
+}
+
+void Workspace::slotKillWindow()
+{
+    static Cursor kill_cursor = 0;
+    if (!kill_cursor)
+        kill_cursor = XCreateFontCursor(qt_xdisplay(), XC_pirate);
+
+    if (XGrabPointer(qt_xdisplay(), qt_xrootwin(), False,
+                     ButtonPressMask | ButtonReleaseMask |
+                     PointerMotionMask |
+                     EnterWindowMask | LeaveWindowMask,
+                     GrabModeAsync, GrabModeAsync, None,
+                     kill_cursor, CurrentTime) == GrabSuccess)
+    {
+        XGrabKeyboard(qt_xdisplay(), qt_xrootwin(), False,
+                      GrabModeAsync, GrabModeAsync, CurrentTime);
+
+        XEvent ev;
+        int return_pressed  = 0;
+        int escape_pressed  = 0;
+        int button_released = 0;
+
+        XGrabServer(qt_xdisplay());
+
+        while (!return_pressed && !escape_pressed && !button_released)
+        {
+            XMaskEvent(qt_xdisplay(), KeyPressMask | ButtonPressMask |
+                       ButtonReleaseMask | PointerMotionMask, &ev);
+
+            if (ev.type == KeyPress)
+            {
+                int kc = XKeycodeToKeysym(qt_xdisplay(), ev.xkey.keycode, 0);
+                int mx = 0;
+                int my = 0;
+                return_pressed = (kc == XK_Return) || (kc == XK_space);
+                escape_pressed = (kc == XK_Escape);
+                if (kc == XK_Left)  mx = -10;
+                if (kc == XK_Right) mx = 10;
+                if (kc == XK_Up)    my = -10;
+                if (kc == XK_Down)  my = 10;
+                if (ev.xkey.state & ControlMask)
+                {
+                    mx /= 10;
+                    my /= 10;
+                }
+                QCursor::setPos(QCursor::pos()+QPoint(mx, my));
+            }
+
+            if (ev.type == ButtonRelease)
+            {
+                button_released = (ev.xbutton.button == Button1);
+                killWindowAtPosition(ev.xbutton.x_root, ev.xbutton.y_root);
+            }
+            continue;
+        }
+        if (return_pressed)
+            killWindowAtPosition(QCursor::pos().x(), QCursor::pos().y());
+
+        XUngrabServer(qt_xdisplay());
+
+        XUngrabKeyboard(qt_xdisplay(), CurrentTime);
+        XUngrabPointer(qt_xdisplay(), CurrentTime);
+    }
+}
+
+void Workspace::killWindowAtPosition(int x, int y)
+{
+    ClientList::ConstIterator it(clients.begin());
+    for ( ; it != clients.end(); ++it)
+    {
+        Client *client = (*it);
+        if ( client->rect().contains(QPoint(x, y)) &&
+             client->isOnDesktop( currentDesktop() ) && 
+             !client->isIconified() )
+        {
+            client->killWindow();
+            return;
+        }
+    }
 }
 
 /*!

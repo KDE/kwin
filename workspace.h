@@ -101,6 +101,8 @@ public:
 
     bool destroyClient( Client* );
 
+    void killWindowAtPosition(int x, int y);
+
     WId rootWin() const;
 
     /**
@@ -210,6 +212,8 @@ public slots:
     void slotResetAllClients();
 
     void slotLogout();
+
+    void slotKillWindow();
 
 private slots:
     void desktopPopupAboutToShow();

@@ -1222,6 +1222,17 @@ void Client::closeWindow()
     }
 }
 
+void Client::killWindow()
+{
+    // not sure if we need an Events::Kill or not.. until then, use
+    // Events::Close
+    Events::raise( Events::Close );
+
+    // always kill this client at the server
+    XKillClient(qt_xdisplay(), win );
+    workspace()->destroyClient( this );
+}
+
 void Client::maximize( MaximizeMode m)
 {
     QRect clientArea = workspace()->clientArea();

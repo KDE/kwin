@@ -156,6 +156,7 @@ public:
 public slots:
     void iconify();
     void closeWindow();
+    void killWindow();
     void maximize( MaximizeMode );
     void maximize();
     void toggleSticky();
