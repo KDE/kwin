@@ -282,15 +282,11 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
         else
             button[BtnMax]->setPixmaps(iMaxPix, iMaxPixDown);
     }
-//    QColor c = options->colorGroup(Options::TitleBar, isActive()).
-//        color(QColorGroup::Button);
-    QColor c = options->colorGroup(Options::TitleBar, true).
+    QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
     for(i=0; i < 6; ++i)
         button[i]->setBg(c);
-	
-	setBackgroundColor(c);
-	
+
     positionButtons();
     connect(button[BtnMenu], SIGNAL(clicked()), this, SLOT(menuButtonPressed()));
     connect(button[BtnSticky], SIGNAL(clicked()), this, SLOT(toggleSticky()));
@@ -323,14 +319,13 @@ void B2Client::captionChange( const QString &)
 {
     positionButtons();
     doShape();
-    repaint(false);
+    repaint();
 }
 
 void B2Client::paintEvent( QPaintEvent* )
 {
-	QPixmap pm(size());
-    QPainter p;
-	p.begin( &pm, this );
+
+    QPainter p( this );
 
     QRect t = g->cellGeometry(0, 1);
     t.setRight(button[BtnClose]->x()+17);
@@ -387,8 +382,6 @@ void B2Client::paintEvent( QPaintEvent* )
            button[BtnSticky]->x()+17);
     t.setRight(button[BtnIconify]->x()-1);
     p.drawText(t, AlignLeft | AlignVCenter, caption());
-	p.end();
-	bitBlt(this, 0, 0, &pm);
 }
 
 #define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
@@ -421,7 +414,7 @@ void B2Client::showEvent(QShowEvent *ev)
 {
     Client::showEvent(ev);
     doShape();
-    repaint(false);
+    repaint();
 }
 
 void B2Client::windowWrapperShowEvent( QShowEvent* )
@@ -511,7 +504,7 @@ void B2Client::mouseMoveEvent( QMouseEvent * e)
 	    if (bar_x_ofs != old_ofs) {
 	        positionButtons();
                 doShape();
-                repaint( 0, 0, width(), t.height(), false );
+                repaint( 0, 0, width(), t.height(), true );
 	    }
 	}
     } else
@@ -537,7 +530,7 @@ void B2Client::maximizeChange(bool m)
         else
             button[BtnMax]->setPixmaps(iMaxPix, iMaxPixDown);
     }
-    button[BtnMax]->repaint(false);
+    button[BtnMax]->repaint();
 }
 
 
@@ -570,7 +563,7 @@ void B2Client::activeChange(bool on)
         color(QColorGroup::Button);
     for(i=0; i < 6; ++i){
         button[i]->setBg(c);
-        button[i]->repaint(false);
+        button[i]->repaint();
     }
     Client::activeChange(on);
 }
@@ -597,7 +590,7 @@ void B2Client::slotReset()
         button[i]->setBg(c);
         button[i]->repaint(false);
     }
-    repaint(false);
+    repaint();
 }
 
 static void redraw_pixmaps()

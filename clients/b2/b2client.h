@@ -16,7 +16,7 @@ public:
     B2Button(QWidget *parent=0, const char *name=0)
         : QButton(parent, name){useMiniIcon = false;}
     B2Button(KPixmap *pix, KPixmap *pixDown, QWidget *parent=0, const char *name=0);
-    void setBg(const QColor &c){bg = c; setBackgroundColor(c);}
+    void setBg(const QColor &c){bg = c;}
     void setPixmaps(KPixmap *pix, KPixmap *pixDown);
     void setToggle(){setToggleType(Toggle);}
     void setActive(bool on){setOn(on);}
