@@ -1,0 +1,48 @@
+# Xerithane:
+#
+# Well, Artwiz inspired me (dirty lil blackbox user <g>)
+# So, I ripped his font (snap.pcf), and then got the chrome style idea and 
+# adapted the theme as a rip of the e.t.o page (get it, Infadel..)
+# Some of the borrowed style is from Area 51 (by RudeSka, herald of #icewm)
+# Also borrowed are some icons from Area 51.
+#
+# tbf:
+#
+# Extended Artwiz's snap font, added cursors, polished the applets.
+# Invented depth, hide, rollup and rolldown buttons. Redraw the others.
+# Reduced number of colors.
+
+# closeI.xpm depthI.xpm maximizeI.xpm minimizeI.xpm restoreI.xpm hideI.xpm 
+# rollupI.xpm rolldownI.xpm menuButtonI.xpm 
+# closeA.xpm depthA.xpm maximizeA.xpm minimizeA.xpm restoreA.xpm hideA.xpm
+# rollupA.xpm rolldownA.xpm menuButtonA.xpm
+
+# PLEASE NOTE:
+# ============
+# Heavily modified by gallium for the purposes of kwin-icewm. 
+# Please do not use this for icewm. Use the original icewm Infadel #2 instead.
+# The full Infadel #2 theme will still work with kwin-icewm as well, but
+# this trimmed version is included here for space reasons.
+
+ThemeDescription="Infadel/1.0.7(kwin)"
+ThemeAuthor="xerithane@nerdfarm.org"
+Look=pixmap
+
+TitleButtonsLeft="s"
+TitleButtonsRight="xmi"
+TitleButtonsSupported="sxmihrd"
+TitleBarCentered=1
+TitleBarHeight=17
+
+# Modified border sizes so they're more user "grip" friendly
+BorderSizeX=3
+BorderSizeY=3
+CornerSizeX=28
+CornerSizeY=28
+
+ColorNormalTitleBarText="#c0c0c0"
+ColorActiveTitleBarText="#ffffff"
+ColorActiveBorder="#868687"
+ColorNormalBorder="#575757"
+
+ShowMenuButtonIcon=0
