@@ -356,6 +356,7 @@ run_fades (Display *dpy)
     int	    now = get_time_in_milliseconds();
     fade    *f, *next;
     int	    steps;
+    Bool    need_dequeue;
 
 #if 0
     printf ("run fades\n");
@@ -376,12 +377,14 @@ run_fades (Display *dpy)
 	printf ("opacity now %g -> %g\n", f->cur, f->finish);
 #endif
 	w->opacity = f->cur * OPAQUE;
+	need_dequeue = False;
 	if (f->step > 0)
 	{
 	    if (f->cur >= f->finish)
 	    {
 		w->opacity = f->finish*OPAQUE;
-		dequeue_fade (dpy, f);
+                need_dequeue = True;
+                /*dequeue_fade (dpy, f);*/
 	    }
 	}
 	else
@@ -389,16 +392,20 @@ run_fades (Display *dpy)
 	    if (f->cur <= f->finish)
 	    {
 		w->opacity = f->finish*OPAQUE;
-		dequeue_fade (dpy, f);
+                need_dequeue = True;
+                /*dequeue_fade (dpy, f);*/
 	    }
 	}
-	determine_mode (dpy, w);
 	if (w->shadow)
 	{
 	    XRenderFreePicture (dpy, w->shadow);
 	    w->shadow = None;
 	    w->extents = win_extents(dpy, w);
+            /* Must do this last as it might destroy f->w in callbacks */
+            if (need_dequeue)
+                dequeue_fade (dpy, f);
 	}
+        determine_mode (dpy, w);
     }
     fade_time = now + fade_delta;
 }
@@ -1397,7 +1404,7 @@ get_shade_prop(Display *dpy, win *w)
     return 0;
 }
 
-static unsigned int
+static Bool
 get_shapable_prop(Display *dpy, win *w)
 {
     Atom actual;
@@ -1413,9 +1420,9 @@ get_shapable_prop(Display *dpy, win *w)
         unsigned int i;
         memcpy (&i, data, sizeof (unsigned int));
         XFree( (void *) data);
-        return i;
+        return i==1;
     }
-    return 1; /*in general, the window should be shapable*/
+    return True; /*in general, the window should be shapable*/
 }
 
 /* Get the opacity property from the window in a percent format
@@ -1610,6 +1617,7 @@ add_win (Display *dpy, Window id, Window prev)
     /* moved mode setting to one place */
     new->opacity = get_opacity_prop (dpy, new, OPAQUE);
     new->shadowSize = get_shadow_prop (dpy, new);
+    new->shapable = get_shapable_prop(dpy, new);
     new->windowType = determine_wintype (dpy, new->id);
     determine_mode (dpy, new);
     
@@ -2529,7 +2537,13 @@ main (int argc, char **argv)
                 else if (ev.xproperty.atom == shapableAtom)
                     {
                         win * w = find_win(dpy, ev.xproperty.window);
-                        if (w) w->shapable = get_shapable_prop(dpy, w);
+                        if (w)
+			{
+			w->shapable = get_shapable_prop(dpy, w);
+/*			printf("%u is %s shapable\n",w->id,w->shapable?"":"not");*/
+			}
+			else
+			    printf("arrrg, window not found\n");
                     }
                 /* check if Trans or Shadow property was changed */    
                 else if (ev.xproperty.atom == opacityAtom || ev.xproperty.atom == shadowAtom)
@@ -2548,7 +2562,7 @@ main (int argc, char **argv)
                                 if (fadeTrans)
                                     {
                                     set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE,
-                                            fade_out_step, 0, False, True, False);
+                                            fade_out_step, 0, False, True, True);
                                     break;
                                     }
                                 else
@@ -2587,6 +2601,16 @@ main (int argc, char **argv)
                     win * w = find_win(dpy, ev.xany.window);
                     if (w && w->shapable) 
                     {
+#if 1
+			if (w->shadowSize != 0)
+			{
+			    w->shadowSize = 0;
+			    XRenderFreePicture (dpy, w->shadow);
+                            w->shadow = None;
+			    determine_mode(dpy, w);
+                            w->extents = win_extents (dpy, w);
+			}
+#endif		
                         /*this is hardly efficient, but a current workaraound 
                         shaping support isn't that good so far (e.g. we lack shaped shadows)
                         IDEA: use XRender to scale/shift a copy of the window and then blurr it*/
