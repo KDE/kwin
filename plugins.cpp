@@ -18,7 +18,6 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include <qfile.h>
 
 #include "plugins.h"
-#include "kdedefault.h"
 
 #if 0
 #define lt_ptr lt_ptr_t
@@ -26,168 +25,112 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 
 using namespace KWinInternal;
 
-PluginMenu::PluginMenu(PluginMgr *manager, QWidget *parent, const char *name)
-    : QPopupMenu(parent, name)
-{
-    connect(this, SIGNAL(aboutToShow()), SLOT(slotAboutToShow()));
-    connect(this, SIGNAL(activated(int)), SLOT(slotActivated(int)));
-    mgr = manager;
-}
+const char* defaultPlugin = "libkwindefault";
 
-void PluginMenu::slotAboutToShow()
-{
-    clear();
-    fileList.clear();
-    insertItem(i18n("KDE 2"), 0);
-    idCount = 1;
-    idCurrent = 0;
-
-    QDir dir;
-    dir.setFilter(QDir::Files);
-    const QFileInfoList *list;
-    int count = KGlobal::dirs()->findDirs("data", "kwin").count();
-    if(count){
-        dir.setPath(KGlobal::dirs()->findDirs("data", "kwin")
-                    [count > 1 ? 1 : 0]);
-        if(dir.exists()){
-            list =  dir.entryInfoList();
-            if(list){
-                QFileInfoListIterator it(*list);
-                QFileInfo *fi;
-                for(; (fi = it.current()) != NULL; ++it){
-                    if(KDesktopFile::isDesktopFile(fi->absFilePath()))
-                        parseDesktop(fi);
-                }
-            }
-        }
-        if(count > 1){
-            dir.setPath(KGlobal::dirs()->findDirs("data", "kwin")[0]);
-            if(dir.exists()){
-                list = dir.entryInfoList();
-                if(list){
-                    QFileInfoListIterator it(*list);
-                    QFileInfo *fi;
-                    for(; (fi = it.current()) != NULL; ++it){
-                        if(KDesktopFile::isDesktopFile(fi->absFilePath()))
-                            parseDesktop(fi);
-                    }
-                }
-            }
-        }
-    }
-    setItemChecked(idCurrent, true);
-}
-
-void PluginMenu::parseDesktop(QFileInfo *fi)
-{
-    QString tmpStr;
-    KSimpleConfig config(fi->absFilePath(), true);
-    config.setDesktopGroup();
-    tmpStr = config.readEntry("X-KDE-Library", "");
-    if(tmpStr.isEmpty()){
-        qWarning("KWin: Invalid plugin: %s", fi->absFilePath().latin1());
-        return;
-    }
-    fileList.append(tmpStr);
-    if (tmpStr == mgr->currentPlugin())
-       idCurrent = idCount;
-    tmpStr = config.readEntry("Name", "");
-    if(tmpStr.isEmpty())
-        tmpStr = fi->baseName();
-    insertItem(tmpStr, idCount);
-    ++idCount;
-}
-
-void PluginMenu::slotActivated(int id)
-{
-    QString newPlugin;
-    if (id > 0)
-        newPlugin = fileList[id-1];
-
-    KConfig *config = KGlobal::config();
-    config->setGroup("Style");
-    config->writeEntry("PluginLib", newPlugin);
-    config->sync();
-    // We can't do this directly because we might destruct a client
-    // underneath our own feet while doing so.
-    QTimer::singleShot(0, mgr, SLOT(updatePlugin()));
-}
 
 PluginMgr::PluginMgr()
     : QObject()
 {
     alloc_ptr = NULL;
     handle = 0;
-    pluginStr = "standard";
+    pluginStr = "kwin_undefined";
 
     updatePlugin();
 }
 
 PluginMgr::~PluginMgr()
 {
-    if(handle)
+    if(handle) {
+        // Call the plugin's cleanup function
+	lt_ptr_t deinit_func = lt_dlsym(handle, "deinit");
+	if (deinit_func)
+	    ((void (*)())deinit_func)();
         lt_dlclose(handle);
+    }
 }
 
-bool
-PluginMgr::updatePlugin()
+void PluginMgr::updatePlugin()
 {
     KConfig *config = KGlobal::config();
     config->reparseConfiguration();
     config->setGroup("Style");
-    QString newPlugin = config->readEntry("PluginLib", "standard" );
-    if (newPlugin != pluginStr) {
-       loadPlugin(newPlugin);
-       return true;
-    }
-    return false;
+    QString newPlugin = config->readEntry("PluginLib", defaultPlugin);
+
+    if (newPlugin != pluginStr) 
+         loadPlugin(newPlugin);
 }
 
 Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
 {
-    if(alloc_ptr)
+    // We are guaranteed to have a plugin loaded,
+    // otherwise, kwin exits during loadPlugin - but verify anyway
+    if (alloc_ptr)
         return(alloc_ptr(ws, w, tool));
     else
-        return(new KDEClient(ws, w));
+        return NULL;
 }
 
+// returns true if plugin was loaded successfully
 void PluginMgr::loadPlugin(QString nameStr)
 {
     static bool dlregistered = false;
     lt_dlhandle oldHandle = handle;
-    pluginStr = "standard";
     handle = 0;
-    alloc_ptr = 0;
 
-    if ( !nameStr.isEmpty() && nameStr != "standard" ) {
-	if(!dlregistered){
-	    dlregistered = true;
-	    lt_dlinit();
-	}
-	QString path = KLibLoader::findLibrary(nameStr.latin1());
-
-	if( !path.isEmpty() ) {
-	    if ( (handle = lt_dlopen(path.latin1() ) ) ) {
-		lt_ptr_t init_func = lt_dlsym(handle, "init");
-		if (init_func)
-		    ((void (*)())init_func)();
-		lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
-		if(alloc_func) {
-		    alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
-		} else{
-		    qWarning("KWin: %s is not a KWin plugin.", path.latin1());
-		    lt_dlclose(handle);
-		    handle = 0;
-		}
-	    } else {
-		qWarning("KWin: cannot load client plugin %s.", path.latin1());
-	    }
-	}
+    if(!dlregistered) {
+       dlregistered = true;
+       lt_dlinit();
     }
-    if ( alloc_ptr )
-	pluginStr = nameStr;
 
+    QString path = KLibLoader::findLibrary(nameStr.latin1());
+
+    // If the plugin was not found, try to find the default
+    if (path.isEmpty()) {
+        nameStr = defaultPlugin;
+        path = KLibLoader::findLibrary(nameStr.latin1());
+    }
+
+    // If no library was found, exit kwin with an error message
+    if (path.isEmpty())
+        shutdownKWin(i18n("No window decoration plugin library was found!"));
+
+    // Check if this library is not already loaded.
+    if(pluginStr == nameStr) 
+	return;
+
+    // Try loading the requested plugin
+    handle = lt_dlopen(path.latin1());
+
+    // If that fails, fall back to the default plugin
+    if (!handle) {
+        nameStr = defaultPlugin;
+        path = KLibLoader::findLibrary(nameStr.latin1());
+	if (!path.isEmpty())
+            handle = lt_dlopen(path.latin1());
+    }
+
+    if (!handle)
+        shutdownKWin(i18n("The default decoration plugin is corrupt "
+                          "and could not be loaded!"));
+
+    // Call the plugin's initialisation function
+    lt_ptr_t init_func = lt_dlsym(handle, "init");
+    if (init_func)
+        ((void (*)())init_func)();
+
+    lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
+    if(alloc_func) {
+        alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
+    } else {
+        qWarning("KWin: The library %s is not a KWin plugin.", path.latin1());
+        lt_dlclose(handle);
+        exit(1);
+    }
+
+    pluginStr = nameStr;
     emit resetAllClients();
+
+    // Call the old plugin's cleanup function
     if(oldHandle) {
 	lt_ptr_t deinit_func = lt_dlsym(oldHandle, "deinit");
 	if (deinit_func)
@@ -201,6 +144,13 @@ void PluginMgr::resetPlugin()
     lt_ptr_t reset_func = lt_dlsym(handle, "reset");
     if (reset_func)
        ((void (*)())reset_func)();
+}
+
+void PluginMgr::shutdownKWin(const QString &error_msg)
+{
+    qWarning( (i18n("KWin: ") + error_msg + 
+               i18n("\nKWin will now exit...")).latin1() );
+    exit(1);
 }
 
 #include "plugins.moc"
