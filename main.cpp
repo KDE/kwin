@@ -20,6 +20,8 @@
 Options* options;
 Atoms* atoms;
 
+Time kwin_time = CurrentTime;
+
 static bool initting = FALSE;
 int x11ErrorHandler(Display *d, XErrorEvent *e){
     char msg[80], req[80], number[80];
@@ -85,6 +87,24 @@ Application::~Application()
 
 bool Application::x11EventFilter( XEvent *e )
 {
+    switch ( e->type ) {
+    case ButtonPress:
+    case ButtonRelease:
+    case MotionNotify:
+	kwin_time = (e->type == MotionNotify) ?
+		    e->xmotion.time : e->xbutton.time;
+	break;
+    case KeyPress:
+    case KeyRelease: 
+	kwin_time = e->xkey.time;
+	break;
+    case PropertyNotify:
+	kwin_time = e->xproperty.time;
+	break;
+    default:
+	break;
+    }
+    
      for ( WorkspaceList::Iterator it = workspaces.begin(); it != workspaces.end(); ++it) {
 	 if ( (*it)->workspaceEvent( e ) )
 	     return TRUE;

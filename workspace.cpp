@@ -19,6 +19,8 @@
 #include <X11/keysym.h>
 #include <X11/extensions/shape.h>
 
+extern Time kwin_time;
+
 // used to store the return values of
 // XShapeQueryExtension.
 // Necessary since shaped window are an extension to X
@@ -447,9 +449,9 @@ bool Workspace::destroyClient( Client* c)
  */
 void Workspace::freeKeyboard(bool pass){
     if (!pass)
-      XAllowEvents(qt_xdisplay(), AsyncKeyboard, CurrentTime);
+      XAllowEvents(qt_xdisplay(), AsyncKeyboard, kwin_time);
     else
-      XAllowEvents(qt_xdisplay(), ReplayKeyboard, CurrentTime);
+      XAllowEvents(qt_xdisplay(), ReplayKeyboard, kwin_time);
     QApplication::syncX();
 }
 
@@ -500,7 +502,7 @@ bool Workspace::keyPress(XKeyEvent key)
 		XGrabKeyboard(qt_xdisplay(),
 			      root, FALSE,
 			      GrabModeAsync, GrabModeAsync,
-			      CurrentTime);
+			      kwin_time);
 		tab_grab 	= TRUE;
 		tab_box->setMode( TabBox::WindowsMode );
 		tab_box->reset();
@@ -525,7 +527,7 @@ bool Workspace::keyPress(XKeyEvent key)
 		XGrabKeyboard(qt_xdisplay(),
 			      root, FALSE,
 			      GrabModeAsync, GrabModeAsync,
-			      CurrentTime);
+			      kwin_time);
 		control_grab = TRUE;
 		tab_box->setMode( TabBox::DesktopMode );
 		tab_box->reset();
@@ -537,7 +539,7 @@ bool Workspace::keyPress(XKeyEvent key)
 
     if (control_grab || tab_grab){
 	if (kc == XK_Escape){
-	    XUngrabKeyboard(qt_xdisplay(), CurrentTime);
+	    XUngrabKeyboard(qt_xdisplay(), kwin_time);
 	    tab_box->hide();
 	    tab_grab = FALSE;
 	    control_grab = FALSE;
@@ -563,7 +565,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 	for (i=0; i<xmk->max_keypermod; i++)
 	    if (xmk->modifiermap[xmk->max_keypermod * Mod1MapIndex + i]
 		== key.keycode){
-		XUngrabKeyboard(qt_xdisplay(), CurrentTime);
+		XUngrabKeyboard(qt_xdisplay(), kwin_time);
 		tab_box->hide();
 		tab_grab = false;
  		if ( tab_box->currentClient() ){
@@ -577,7 +579,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 	for (i=0; i<xmk->max_keypermod; i++)
 	    if (xmk->modifiermap[xmk->max_keypermod * ControlMapIndex + i]
 		== key.keycode){
-		XUngrabKeyboard(qt_xdisplay(), CurrentTime);
+		XUngrabKeyboard(qt_xdisplay(), kwin_time);
 		tab_box->hide();
 		control_grab = False;
 		if ( tab_box->currentDesktop() != -1 )
@@ -1244,7 +1246,7 @@ void Workspace::focusToNull(){
 		      InputOnly, CopyFromParent, mask, &attr);
     XMapWindow(qt_xdisplay(), w);
   }
-  XSetInputFocus(qt_xdisplay(), w, RevertToPointerRoot, CurrentTime );
+  XSetInputFocus(qt_xdisplay(), w, RevertToPointerRoot, kwin_time );
   //colormapFocus(0); TODO
 }
 

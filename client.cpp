@@ -17,6 +17,7 @@
 #include <X11/extensions/shape.h>
 
 extern Atom qt_wm_state;
+extern Time kwin_time;
 
 
 static QRect* visible_bound = 0;
@@ -63,7 +64,7 @@ static void sendClientMessage(Window w, Atom a, long x){
   ev.xclient.message_type = a;
   ev.xclient.format = 32;
   ev.xclient.data.l[0] = x;
-  ev.xclient.data.l[1] = CurrentTime;
+  ev.xclient.data.l[1] = kwin_time;
   mask = 0L;
   if (w == qt_xrootwin())
     mask = SubstructureRedirectMask;        /* magic! */
@@ -1540,7 +1541,7 @@ void Client::getWindowProtocols(){
 void Client::takeFocus()
 {
     if ( input )
-	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, CurrentTime );
+	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
     if ( Ptakefocus )
 	sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
 }
