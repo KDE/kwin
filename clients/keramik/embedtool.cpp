@@ -211,7 +211,7 @@ void KeramikEmbedder::writeIndex()
 int main( int argv, char **argc )
 {
 	if ( argv < 2 ) {
-		std::cout << "Insufficient arguments" << endl;
+		std::cout << "Insufficient arguments" << std::endl;
 		return 1;
 	}
 
@@ -219,7 +219,7 @@ int main( int argv, char **argc )
 
 	for ( int i = 1; i < argv; i++ )
 	{
-		std::cout << argc[i] << endl;
+		std::cout << argc[i] << std::endl;
 		embedder.embed( argc[i] );
 	}
 
