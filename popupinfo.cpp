@@ -2,6 +2,7 @@
 kwin - the KDE window manager
 								
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+Copyright (C) 2002 Alexander Kellett <lypanov@kde.org>
 ******************************************************************/
 //#define QT_CLEAN_NAMESPACE
 #include "popupinfo.h"
@@ -111,8 +112,8 @@ void PopupInfo::reconfigure()
 {
     KConfig * c(KGlobal::config());
     c->setGroup("PopupInfo");
-    m_show = c->readNumEntry("Show", false );
-    m_delayTime = c->readNumEntry("HideDelay", 250 );
+    m_show = c->readNumEntry("ShowPopup", false );
+    m_delayTime = c->readNumEntry("PopupHideDelay", 350 );
 }
 
 void PopupInfo::showInfo(QString infoString)

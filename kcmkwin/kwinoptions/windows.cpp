@@ -61,7 +61,7 @@
 #define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
 #define KWIN_ALTTABMODE            "AltTabStyle"
 #define KWIN_TRAVERSE_ALL          "TraverseAll"
-#define KWIN_SHOW                  "Show"
+#define KWIN_SHOW_POPUP            "ShowPopup"
 #define KWIN_ROLL_OVER_DESKTOPS    "RollOverDesktops"
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
@@ -226,11 +226,11 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
                   " an edge desktop to bring you to the desktop at the opposite edge." );
     QWhatsThis::add( rollOverDesktops, wtstr );
 
-    showPopupinfo = new QCheckBox( i18n("Show desktop name on switch"), kbdBox );
+    showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop switch"), kbdBox );
     kLay->addMultiCellWidget(showPopupinfo, 4, 4, 0, 2);
 
     wtstr = i18n( "Enable this option if you wish to see the current desktop"
-                  " name when the current desktop is changed." );
+                  " name popup whenever the current desktop is changed." );
     QWhatsThis::add( showPopupinfo, wtstr );
 
     lay->addWidget(kbdBox);
@@ -371,7 +371,7 @@ void KFocusConfig::load( void )
     setRollOverDesktops( config->readBoolEntry(KWIN_ROLL_OVER_DESKTOPS, true ));
 
     config->setGroup( "PopupInfo" );
-    setShowPopupinfo( config->readBoolEntry(KWIN_SHOW, false ));
+    setShowPopupinfo( config->readBoolEntry(KWIN_SHOW_POPUP, false ));
 
     config->setGroup( "TabBox" );
     setTraverseAll( config->readBoolEntry(KWIN_TRAVERSE_ALL, false ));
@@ -417,7 +417,7 @@ void KFocusConfig::save( void )
     config->writeEntry( KWIN_ROLL_OVER_DESKTOPS, rollOverDesktops->isChecked());
 
     config->setGroup( "PopupInfo" );
-    config->writeEntry( KWIN_SHOW, showPopupinfo->isChecked());
+    config->writeEntry( KWIN_SHOW_POPUP, showPopupinfo->isChecked());
 
     config->setGroup( "TabBox" );
     config->writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
