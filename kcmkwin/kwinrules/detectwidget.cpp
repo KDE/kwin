@@ -55,7 +55,7 @@ void DetectDialog::detect( WId window )
         readWindow( window );
     }
 
-static QCString getStringProperty(WId w, Atom prop, char separator)
+static QCString getStringProperty(WId w, Atom prop, char separator=0)
     {
     Atom type;
     int format, status;

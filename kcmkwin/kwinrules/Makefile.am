@@ -2,6 +2,8 @@ METASOURCES = AUTO
 AM_CPPFLAGS = $(all_includes) -DKCMRULES
 INCLUDES = -I$(top_srcdir)/kwin/lib
 
+KDE_OPTIONS = nofinal
+
 kde_module_LTLIBRARIES = kcm_kwinrules.la 
 
 kcm_kwinrules_la_SOURCES = main.cpp ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp \
