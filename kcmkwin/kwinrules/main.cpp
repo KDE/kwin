@@ -142,7 +142,7 @@ static int edit( Window wid )
     loadRules( rules );
     Rules* orig_rule = findRule( rules, wid );
     RulesDialog dlg;
-    // dlg.edit() creates new Rules instance
+    // dlg.edit() creates new Rules instance if edited
     Rules* edited_rule = dlg.edit( orig_rule, wid );
     if( edited_rule == NULL ) // cancelled
         return 0;
@@ -160,7 +160,7 @@ static int edit( Window wid )
             delete edited_rule;
             }
         }
-    else // not empty
+    else if( edited_rule != orig_rule )
         {
         QValueList< Rules* >::Iterator pos = rules.find( orig_rule );
         if( pos != rules.end())
