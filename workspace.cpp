@@ -3170,7 +3170,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
    if (options->windowSnapZone || options->borderSnapZone )
    {
       bool sOWO=options->snapOnlyWhenOverlapping;
-      QRect maxRect = clientArea(MovementArea);
+      QRect maxRect = clientArea(MovementArea, pos+c->rect().center());
       int xmin = maxRect.left();
       int xmax = maxRect.right()+1;               //desk size
       int ymin = maxRect.top();
@@ -3970,39 +3970,41 @@ void Workspace::updateClientArea()
 
   \sa geometry()
  */
-QRect Workspace::clientArea(clientAreaOption opt)
+QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p)
 {
     QRect rect = QApplication::desktop()->geometry();
-#if QT_VERSION < 300
-    KDesktopWidget *desktop = KApplication::desktop();
-#else
     QDesktopWidget *desktop = KApplication::desktop();
-#endif
 
     switch (opt) {
         case MaximizeArea:
             if (options->xineramaMaximizeEnabled)
-                rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+                rect = desktop->screenGeometry(desktop->screenNumber(p));
             break;
         case PlacementArea:
             if (options->xineramaPlacementEnabled)
-                rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+                rect = desktop->screenGeometry(desktop->screenNumber(p));
             break;
         case MovementArea:
             if (options->xineramaMovementEnabled)
-                rect = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
+                rect = desktop->screenGeometry(desktop->screenNumber(p));
             break;
     }
-    if (area.isNull()) {
+
+    if (area.isNull())
         return rect;
-    }
+
     return area.intersect(rect);
 }
 
-// ### KDE3: remove me!
-QRect Workspace::clientArea()
+QRect Workspace::clientArea(const QPoint& p)
 {
-    return clientArea( MaximizeArea );
+    int screenNum = QApplication::desktop()->screenNumber(p);
+    QRect rect = QApplication::desktop()->screenGeometry(screenNum);
+
+    if (area.isNull())
+        return rect;
+
+    return area.intersect(rect);
 }
 
 void Workspace::loadDesktopSettings()

@@ -625,7 +625,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     if ( session )
         geom = session->geometry;
 
-    QRect area = workspace()->clientArea();
+    QRect area = workspace()->clientArea( geom.center() );
 
     if ( geom == workspace()->geometry() && inherits( "KWinInternal::NoBorderClient" ) ) {
         if ( !stays_on_top )
@@ -1567,7 +1567,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
         break;
     }
 
-    QRect desktopArea = workspace()->clientArea();
+    QRect desktopArea = workspace()->clientArea(e->globalPos());
     int marge = 5;
 
     if ( isResize() && geom.size() != size() ) {
@@ -1880,7 +1880,7 @@ void Client::maximize( MaximizeMode m)
     if ( !isMaximizable() )
         return;
 
-    QRect clientArea = workspace()->clientArea();
+    QRect clientArea = workspace()->clientArea(geometry().center());
 
     if (isShade())
         setShade( FALSE );

@@ -17,6 +17,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "options.h"
 #include "KWinInterface.h"
 #include <kshortcut.h>
+#include <qcursor.h>
 
 #include <X11/Xlib.h>
 #ifdef HAVE_XINERAMA
@@ -124,8 +125,9 @@ public:
 
 
     // default is MaximizeArea
-    QRect clientArea();  // ### KDE3: remove me!
-    QRect clientArea(clientAreaOption);
+    QRect clientArea(clientAreaOption, const QPoint& p);
+    QRect clientArea(const QPoint& p);
+    inline QRect clientArea(clientAreaOption opt) { return clientArea(opt, QCursor::pos()); }
 
     void removeClient( Client* );
 
