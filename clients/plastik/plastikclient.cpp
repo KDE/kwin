@@ -996,7 +996,12 @@ void PlastikClient::update_captionBuffer()
     painter.drawTiledPixmap(aCaptionBuffer->rect(), *aTitleBarTile);
     if(PlastikHandler::titleShadow())
     {
-        shadow = se.makeShadow(textPixmap, QColor(0, 0, 0));
+        QColor shadowColor;
+        if (qGray(PlastikHandler::getColor(TitleFont,true).rgb()) < 100) 
+            shadowColor = QColor(255, 255, 255);
+        else
+            shadowColor = QColor(0,0,0);
+        shadow = se.makeShadow(textPixmap, shadowColor);
         painter.drawImage(1, 1, shadow);
     }
     painter.setFont(s_titleFont);

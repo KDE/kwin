@@ -1300,8 +1300,11 @@ void KeramikClient::updateCaptionBuffer()
 	if ( clientHandler->useShadowedText() )
 	{
 		p.translate( QApplication::reverseLayout() ? -1 : 1, 1 );
-		p.setPen( options()->color(ColorTitleBar, active).dark() );
-		p.setPen( black );
+		//p.setPen( options()->color(ColorTitleBar, active).dark() );
+                if (qGray(options()->color(ColorFont, active).rgb()) < 100)
+                    p.setPen( QColor(200,200,200) );
+                else
+                    p.setPen( black );
 		p.drawText( tr, flags, caption() );
 		p.translate( QApplication::reverseLayout() ? 1 : -1, -1 );
 	}
