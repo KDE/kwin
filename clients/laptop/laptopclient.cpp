@@ -362,14 +362,14 @@ void LaptopClient::init()
     if(help){
         button[BtnHelp] = new LaptopClientButton(17, th, this, "help",
                                      question_bits, i18n("Help"));
-        connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+        connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( showContextHelp() ) ) );
     }
     else
         button[BtnHelp] = NULL;
 
     connect( button[BtnClose], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
-    connect( button[BtnSticky], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    connect( button[BtnIconify], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
+    connect( button[BtnSticky], SIGNAL( clicked() ), this, ( SLOT( toggleOnAllDesktops() ) ) );
+    connect( button[BtnIconify], SIGNAL( clicked() ), this, ( SLOT( minimize() ) ) );
     connect( button[BtnMax], SIGNAL( clicked() ), this, ( SLOT( slotMaximize() ) ) );
 
     hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
