@@ -19,6 +19,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kapp.h>
 #include <dcopclient.h>
 #include <kprocess.h>
+#include <kiconloader.h>
 
 #include <netwm.h>
 
@@ -1326,13 +1327,13 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
         connect( desk_popup, SIGNAL( aboutToShow() ), this, SLOT( desktopPopupAboutToShow() ) );
 
-        popup->insertItem( i18n("&Move"), Options::MoveOp );
+        popup->insertItem( SmallIconSet( "move" ), i18n("&Move"), Options::MoveOp );
         popup->insertItem( i18n("&Size"), Options::ResizeOp );
         popup->insertItem( i18n("Mi&nimize"), Options::IconifyOp );
         popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
         popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
-        popup->insertItem( i18n("Always &On Top"), Options::StaysOnTopOp );
-        popup->insertItem( i18n("Sto&re Settings"), Options::ToggleStoreSettingsOp );
+        popup->insertItem( SmallIconSet( "attach" ), i18n("Always &On Top"), Options::StaysOnTopOp );
+        popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Settings"), Options::ToggleStoreSettingsOp );
 
         popup->insertSeparator();
 
@@ -1344,7 +1345,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         popup->insertSeparator();
 
         QString k = KAccel::keyToString( keys->currentKey( "Window close" ), true );
-        popup->insertItem(i18n("&Close")+'\t'+k, Options::CloseOp );
+        popup->insertItem( SmallIconSet( "exit" ), i18n("&Close")+'\t'+k, Options::CloseOp );
     }
     return popup;
 }
