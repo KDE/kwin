@@ -75,8 +75,12 @@ bool ButtonDrag::decode( QDropEvent* e, Button& btn )
 		ushort type;
 		stream >> type;
 		btn.type = QChar(type);
-		stream >> (int) btn.duplicate;
-		stream >> (int) btn.supported;
+		int duplicate;
+		stream >> duplicate;
+		btn.duplicate = duplicate;
+		int supported;
+		stream >> supported;
+		btn.supported = supported;
 		return TRUE;
 	}
 	return FALSE;
