@@ -775,8 +775,8 @@ void PlastikClient::maximizeChange()
     if (!PlastikHandler::initialized()) return;
 
     if( m_button[MaxButton] ) {
-        m_button[MaxButton]->setOn( maximizeMode()!=MaximizeRestore);
-        m_button[MaxButton]->setTipText( (maximizeMode()==MaximizeRestore) ?
+        m_button[MaxButton]->setOn( maximizeMode()==MaximizeFull);
+        m_button[MaxButton]->setTipText( (maximizeMode()!=MaximizeFull) ?
                 i18n("Maximize")
                 : i18n("Restore"));
     }
