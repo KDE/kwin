@@ -58,6 +58,7 @@ Rules::Rules()
     , acceptfocusrule( UnusedForceRule )
     , moveresizemoderule( UnusedForceRule )
     , closeablerule( UnusedForceRule )
+    , strictgeometry( UnusedForceRule )
     {
     }
 
@@ -157,6 +158,7 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE( acceptfocus, Bool, );
     READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
     READ_FORCE_RULE( closeable, Bool, );
+    READ_FORCE_RULE( strictgeometry, Bool, );
     }
 
 #undef READ_MATCH_STRING
@@ -243,6 +245,7 @@ void Rules::write( KConfig& cfg ) const
     WRITE_FORCE_RULE( acceptfocus, );
     WRITE_FORCE_RULE( moveresizemode, Options::moveResizeModeToString );
     WRITE_FORCE_RULE( closeable, );
+    WRITE_FORCE_RULE( strictgeometry, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -276,7 +279,8 @@ bool Rules::isEmpty() const
         && fsplevelrule == UnusedForceRule
         && acceptfocusrule == UnusedForceRule
         && moveresizemoderule == UnusedForceRule
-        && closeablerule == UnusedForceRule );
+        && closeablerule == UnusedForceRule
+        && strictgeometryrule == UnusedForceRule );
     }
 
 Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
@@ -593,6 +597,7 @@ APPLY_FORCE_RULE( fsplevel, FSP, int )
 APPLY_FORCE_RULE( acceptfocus, AcceptFocus, bool )
 APPLY_FORCE_RULE( moveresizemode, MoveResizeMode, Options::MoveResizeMode )
 APPLY_FORCE_RULE( closeable, Closeable, bool )
+APPLY_FORCE_RULE( strictgeometry, StrictGeometry, bool )
 
 #undef APPLY_RULE
 #undef APPLY_FORCE_RULE
@@ -722,6 +727,7 @@ CHECK_FORCE_RULE( FSP, int )
 CHECK_FORCE_RULE( AcceptFocus, bool )
 CHECK_FORCE_RULE( MoveResizeMode, Options::MoveResizeMode )
 CHECK_FORCE_RULE( Closeable, bool )
+CHECK_FORCE_RULE( StrictGeometry, bool )
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE
@@ -773,6 +779,9 @@ void Client::setupWindowRules( bool ignore_temporary )
             workspace()->activateNextClient( this );
         // MoveResizeMode
         // Closeable
+        QSize s = adjustedSize( size());
+        if( s != size())
+            resizeWithChecks( s );
         }
     }
 

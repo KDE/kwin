@@ -348,7 +348,7 @@ class Client : public QObject, public KDecorationDefines
         bool isNormalState() const;
         bool isManaged() const; // returns false if this client is not yet managed
         void updateAllowedActions( bool force = false );
-        QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny ) const;
+        QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny, bool noframe = false ) const;
         void changeMaximize( bool horizontal, bool vertical, bool adjust );
         void checkMaximizeGeometry();
         bool checkFullScreenHack( const QRect& geom ) const;

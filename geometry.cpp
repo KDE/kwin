@@ -1003,7 +1003,7 @@ QSize Client::adjustedSize( const QSize& frame, Sizemode mode ) const
     QSize wsize( frame.width() - ( border_left + border_right ),
              frame.height() - ( border_top + border_bottom ));
 
-    return sizeForClientSize( wsize, mode );
+    return sizeForClientSize( wsize, mode, false );
     }
 
 /*!
@@ -1014,7 +1014,7 @@ QSize Client::adjustedSize( const QSize& frame, Sizemode mode ) const
   maximum and incremental size changes).
 
  */
-QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode ) const
+QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe ) const
     {
     int w = wsize.width();
     int h = wsize.height();
@@ -1164,17 +1164,23 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode ) const
         w += xSizeHint.base_width;
         h += xSizeHint.base_height;
         }
-    // disobey increments and aspect when maximized
-    if( maximizeMode() & MaximizeHorizontal )
-        w = w1;
-    if( maximizeMode() & MaximizeVertical )
-        h = h1;
+    if( !rules()->checkStrictGeometry( false ))
+        {
+        // disobey increments and aspect when maximized
+        if( maximizeMode() & MaximizeHorizontal )
+            w = w1;
+        if( maximizeMode() & MaximizeVertical )
+            h = h1;
+        }
 
-    w += border_left + border_right;
-    h += border_top + border_bottom;
+    if( !noframe )
+        {
+        w += border_left + border_right;
+        h += border_top + border_bottom;
+        }
     QSize ret = rules()->checkSize( QSize( w, h ));
     if ( mode == SizemodeShaded && wsize.height() == 0 )
-        ret.setHeight( border_top + border_bottom );
+        ret.setHeight( noframe ? 0 : border_top + border_bottom );
     return ret;
     }
 
@@ -1919,13 +1925,22 @@ bool Client::isFullScreenable( bool fullscreen_hack ) const
         return false;
     if( fullscreen_hack )
         return isNormalWindow() || isOverride();
-    else // don't check size constrains - some apps request fullscreen despite requesting fixed size
-        return !isSpecialWindow(); // also better disallow only weird types to go fullscreen
+    if( rules()->checkStrictGeometry( false ))
+        {
+        // the app wouldn't fit exactly fullscreen geometry due its strict geometry requirements
+        QRect fsarea = workspace()->clientArea( FullScreenArea, this );
+        if( sizeForClientSize( fsarea.size(), SizemodeAny, true ) != fsarea.size())
+            return false;
+        }
+     // don't check size constrains - some apps request fullscreen despite requesting fixed size
+    return !isSpecialWindow(); // also better disallow only weird types to go fullscreen
     }
 
 bool Client::userCanSetFullScreen() const
     {
     if( fullscreen_mode == FullScreenHack )
+        return false;
+    if( !isFullScreenable( false ))
         return false;
     // isMaximizable() returns false if fullscreen
     TemporaryAssign< FullScreenMode > tmp( fullscreen_mode, FullScreenNone );

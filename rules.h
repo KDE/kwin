@@ -65,6 +65,7 @@ class WindowRules
         bool checkAcceptFocus( bool focus ) const;
         Options::MoveResizeMode checkMoveResizeMode( Options::MoveResizeMode mode ) const;
         bool checkCloseable( bool closeable ) const;
+        bool checkStrictGeometry( bool strict ) const;
     private:
         MaximizeMode checkMaximizeVert( MaximizeMode mode, bool init ) const;
         MaximizeMode checkMaximizeHoriz( MaximizeMode mode, bool init ) const;
@@ -112,6 +113,7 @@ class Rules
         bool applyAcceptFocus( bool& focus ) const;
         bool applyMoveResizeMode( Options::MoveResizeMode& mode ) const;
         bool applyCloseable( bool& closeable ) const;
+        bool applyStrictGeometry( bool& strict ) const;
     private:
 #endif
         bool matchType( NET::WindowType match_type ) const;
@@ -219,6 +221,8 @@ class Rules
         ForceRule moveresizemoderule;
         bool closeable;
         ForceRule closeablerule;
+        bool strictgeometry;
+        ForceRule strictgeometryrule;
         friend kdbgstream& operator<<( kdbgstream& stream, const Rules* );
     };
 

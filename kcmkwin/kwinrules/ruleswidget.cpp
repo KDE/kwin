@@ -96,6 +96,7 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
     SETUP( ignoreposition, force );
     SETUP( minsize, force );
     SETUP( maxsize, force );
+    SETUP( strictgeometry, force );
     KWinModule module;
     int i;
     for( i = 1;
@@ -141,6 +142,7 @@ UPDATE_ENABLE_SLOT( type )
 UPDATE_ENABLE_SLOT( ignoreposition )
 UPDATE_ENABLE_SLOT( minsize )
 UPDATE_ENABLE_SLOT( maxsize )
+UPDATE_ENABLE_SLOT( strictgeometry )
 
 #undef UPDATE_ENABLE_SLOT
 
@@ -395,6 +397,7 @@ void RulesWidget::setRules( Rules* rules )
     CHECKBOX_FORCE_RULE( ignoreposition, );
     LINEEDIT_FORCE_RULE( minsize, sizeToStr );
     LINEEDIT_FORCE_RULE( maxsize, sizeToStr );
+    CHECKBOX_FORCE_RULE( strictgeometry, );
     }
 
 #undef GENERIC_RULE
@@ -482,6 +485,7 @@ Rules* RulesWidget::rules() const
     CHECKBOX_FORCE_RULE( ignoreposition, );
     LINEEDIT_FORCE_RULE( minsize, strToSize );
     LINEEDIT_FORCE_RULE( maxsize, strToSize );
+    CHECKBOX_FORCE_RULE( strictgeometry, );
     return rules;
     }
 
@@ -596,6 +600,7 @@ void RulesWidget::prefillUnusedValues( const KWin::WindowInfo& info )
     //CHECKBOX_PREFILL( ignoreposition, );
     LINEEDIT_PREFILL( minsize, sizeToStr, info.frameGeometry().size() );
     LINEEDIT_PREFILL( maxsize, sizeToStr, info.frameGeometry().size() );
+    //CHECKBOX_PREFILL( strictgeometry, );
     }
 
 #undef GENERIC_PREFILL

@@ -1913,43 +1913,6 @@
                             <string>0123456789-+,xX:</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="3" column="3">
-                        <property name="name">
-                            <cstring>ignoreposition</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="3" column="0">
-                        <property name="name">
-                            <cstring>enable_ignoreposition</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Ignore requested &amp;position</string>
-                        </property>
-                    </widget>
-                    <widget class="KComboBox" row="3" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Do Not Affect</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Force</string>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>rule_ignoreposition</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
                     <widget class="QCheckBox" row="4" column="0">
                         <property name="name">
                             <cstring>enable_minsize</cstring>
@@ -2013,7 +1976,33 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <spacer row="6" column="2">
+                    <widget class="QCheckBox" row="3" column="0">
+                        <property name="name">
+                            <cstring>enable_ignoreposition</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Ignore requested &amp;position</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="3" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_ignoreposition</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <spacer row="7" column="2">
                         <property name="name">
                             <cstring>spacer35</cstring>
                         </property>
@@ -2026,10 +2015,61 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>90</height>
+                                <height>190</height>
                             </size>
                         </property>
                     </spacer>
+                    <widget class="QCheckBox" row="3" column="3">
+                        <property name="name">
+                            <cstring>ignoreposition</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="0">
+                        <property name="name">
+                            <cstring>enable_strictgeometry</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Strictly obey geometry</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="6" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_strictgeometry</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="3">
+                        <property name="name">
+                            <cstring>strictgeometry</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </widget>
@@ -2222,8 +2262,9 @@
     <includehint>kcombobox.h</includehint>
     <includehint>krestrictedline.h</includehint>
     <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
     <includehint>krestrictedline.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
 </includehints>
 </UI>

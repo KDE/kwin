@@ -78,6 +78,7 @@ class RulesWidget
         void updateEnableignoreposition();
         void updateEnableminsize();
         void updateEnablemaxsize();
+        void updateEnablestrictgeometry();
         // internal
         void detected( bool );
     private:
