@@ -1706,14 +1706,26 @@ bool Client::startMoveResize()
     bool has_grab = false;
     if( mode == PositionCenter )
         setCursor( sizeAllCursor ); // change from arrow cursor if moving
-    if( XGrabPointer( qt_xdisplay(), frameId(), False,
+    // This reportedly improves smoothness of the moveresize operation,
+    // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
+    // (http://lists.kde.org/?t=107302193400001&r=1&w=2)
+    XSetWindowAttributes attrs;
+    QRect r = workspace()->clientArea( FullArea, this );
+    move_resize_grab_window = XCreateWindow( qt_xdisplay(), workspace()->rootWin(), r.x(), r.y(),
+        r.width(), r.height(), 0, CopyFromParent, InputOnly, CopyFromParent, 0, &attrs );
+    XMapRaised( qt_xdisplay(), move_resize_grab_window );
+    if( XGrabPointer( qt_xdisplay(), move_resize_grab_window, False,
         ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
         GrabModeAsync, GrabModeAsync, None, cursor.handle(), qt_x_time ) == Success )
         has_grab = true;
     if( XGrabKeyboard( qt_xdisplay(), frameId(), False, GrabModeAsync, GrabModeAsync, qt_x_time ) == Success )
         has_grab = true;
     if( !has_grab ) // at least one grab is necessary in order to be able to finish move/resize
+        {
+        XDestroyWindow( qt_xdisplay(), move_resize_grab_window );
+        move_resize_grab_window = None;
         return false;
+        }
     if ( maximizeMode() != MaximizeRestore )
         resetMaximize();
     moveResizeMode = true;
@@ -1762,6 +1774,8 @@ void Client::leaveMoveResize()
         ungrabXServer();
     XUngrabKeyboard( qt_xdisplay(), qt_x_time );
     XUngrabPointer( qt_xdisplay(), qt_x_time );
+    XDestroyWindow( qt_xdisplay(), move_resize_grab_window );
+    move_resize_grab_window = None;
     workspace()->setClientIsMoving(0);
     if( move_faked_activity )
         workspace()->unfakeActivity( this );

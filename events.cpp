@@ -255,6 +255,12 @@ bool Workspace::workspaceEvent( XEvent * e )
                     return true;
                 }
         }
+    if( movingClient != NULL && movingClient->moveResizeGrabWindow() == e->xany.window
+        && ( e->type == MotionNotify || e->type == ButtonPress || e->type == ButtonRelease ))
+        {
+        if( movingClient->windowEvent( e ))
+            return true;
+        }
 
     switch (e->type) 
         {
@@ -1218,9 +1224,10 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
         XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         return true;
         }
-    if( w != frameId() && w != decorationId())
+    if( w != moveResizeGrabWindow())
         return true;
-
+    x = this->x(); // translate from grab window to local coords
+    y = this->y();
     if ( (state & ( Button1Mask & Button2Mask & Button3Mask )) == 0 )
         {
         buttonDown = FALSE;
@@ -1273,7 +1280,7 @@ static bool waitingMotionEvent()
 // return value matters only when filtering events before decoration gets them
 bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_root, int y_root )
     {
-    if( w != frameId() && w != decorationId())
+    if( w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
     if ( !buttonDown ) 
         {
@@ -1283,7 +1290,11 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
         mode = newmode;
         return false;
         }
-
+    if( w == moveResizeGrabWindow())
+        {
+        x = this->x(); // translate from grab window to local coords
+        y = this->y();
+        }
     if( !waitingMotionEvent())
         handleMoveResize( x, y, x_root, y_root );
     return true;

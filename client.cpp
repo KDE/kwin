@@ -74,6 +74,7 @@ Client::Client( Workspace *ws )
         wspace( ws ),
         bridge( new Bridge( this )),
         move_faked_activity( false ),
+        move_resize_grab_window( None ),
         transient_for( NULL ),
         transient_for_id( None ),
         original_transient_for_id( None ),

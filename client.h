@@ -239,6 +239,7 @@ class Client : public QObject, public KDecorationDefines
 
         void keyPressEvent( uint key_code ); // FRAME ??
         void updateMouseGrab();
+        Window moveResizeGrabWindow() const;
 
         const QPoint calculateGravitation( bool invert, int gravity = 0 ) const; // FRAME public?
 
@@ -389,6 +390,7 @@ private slots:
         bool buttonDown;
         bool moveResizeMode;
         bool move_faked_activity;
+        Window move_resize_grab_window;
         bool unrestrictedMoveResize;
         bool isMove() const 
             {
@@ -820,6 +822,11 @@ inline void Client::resizeWithChecks( const QSize& s, ForceGeometry_t force )
 inline bool Client::hasUserTimeSupport() const
     {
     return info->userTime() != -1U;
+    }
+
+inline Window Client::moveResizeGrabWindow() const
+    {
+    return move_resize_grab_window;
     }
 
 #ifdef NDEBUG
