@@ -40,8 +40,6 @@
 #include <kdialog.h>
 #include <dcopclient.h>
 
-#include <kapplication.h>
-
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -612,7 +610,7 @@ void KAdvancedConfig::save( void )
 
     config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
-    
+
     if (standAlone)
     {
         config->sync();
