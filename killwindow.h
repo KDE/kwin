@@ -3,8 +3,8 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
-#ifndef KILLWINDOW_H
-#define KILLWINDOW_H
+#ifndef KWIN_KILLWINDOW_H
+#define KWIN_KILLWINDOW_H
 
 #include "workspace.h"
 

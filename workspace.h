@@ -3,8 +3,8 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
-#ifndef WORKSPACE_H
-#define WORKSPACE_H
+#ifndef KWIN_WORKSPACE_H
+#define KWIN_WORKSPACE_H
 
 #include <qwidget.h>
 #include <qapplication.h>
@@ -13,7 +13,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qvaluelist.h>
 #include <qptrlist.h>
 #include <qtimer.h>
-#include <config.h>
 #include "options.h"
 #include "KWinInterface.h"
 #include <kshortcut.h>

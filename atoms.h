@@ -3,8 +3,8 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
-#ifndef ATOMS_H
-#define ATOMS_H
+#ifndef KWIN_ATOMS_H
+#define KWIN_ATOMS_H
 #include <X11/Xlib.h>
 
 class Atoms {

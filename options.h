@@ -3,8 +3,8 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#ifndef KWIN_OPTIONS_H
+#define KWIN_OPTIONS_H
 
 #include <qobject.h>
 #include <qfont.h>

@@ -3,8 +3,8 @@ kwin - the KDE window manager
 								  
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
-#ifndef TABBOX_H
-#define TABBOX_H
+#ifndef KWIN_TABBOX_H
+#define KWIN_TABBOX_H
 #include <qwidget.h>
 #include <qtimer.h>
 #include <qvaluelist.h>

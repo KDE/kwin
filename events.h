@@ -4,8 +4,8 @@ kwin - the KDE window manager
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 
-#ifndef EVENTS_H
-#define EVENTS_H
+#ifndef KWIN_EVENTS_H
+#define KWIN_EVENTS_H
 
 class Events
 {

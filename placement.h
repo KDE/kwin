@@ -7,8 +7,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Placement algorithms
 Copyright (C) 1997 to 2002 Cristian Tibirna <tibirna@kde.org>
 ******************************************************************/
-#ifndef PLACEMENT_H
-#define PLACEMENT_H
+#ifndef KWIN_PLACEMENT_H
+#define KWIN_PLACEMENT_H
 
 #include <qpoint.h>
 #include <qvaluelist.h>
