@@ -1587,42 +1587,10 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         setShade( ShadeNone );
 
     QPoint globalPos( x_root, y_root );
-    QRect desktopArea = workspace()->clientArea( WorkArea, globalPos, desktop());
-
     // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
     QPoint topleft = globalPos - moveOffset;
     QPoint bottomright = globalPos + invertedMoveOffset;
-
-    if( !unrestrictedMoveResize )
-        {
-        // width/height change with opaque resizing, use the initial ones
-        int init_width = initialMoveResizeGeom.width();
-        int init_height = initialMoveResizeGeom.height();
-        // how much must remain visible when moved away in that direction
-        const int left_limit = 100 + border_right;
-        const int right_limit = 100 + border_left;
-        const int top_limit = init_height;
-        const int bottom_limit = border_top;
-        int left_overlap = KMAX( init_width - left_limit, 0 );
-        int right_overlap = KMAX( init_width - right_limit, 0 );
-        int top_overlap = KMAX( init_height - top_limit, 0 );
-        int bottom_overlap = KMAX( init_height - bottom_limit, 0 );
-        if( mode == Center ) // moving
-            {
-            topleft.setX( KMIN( desktopArea.right() + right_overlap - init_width,
-                KMAX( desktopArea.left() - left_overlap, topleft.x())));
-            topleft.setY( KMIN( desktopArea.bottom() + bottom_overlap - init_height,
-                KMAX( desktopArea.top() - top_overlap, topleft.y())));
-            }
-        else
-            { // resizing
-            topleft.setX( KMAX( desktopArea.left() - left_overlap, topleft.x()));
-            topleft.setY( KMAX( desktopArea.top() - top_overlap, topleft.y()));
-            bottomright.setX( KMIN( desktopArea.right() + right_overlap, bottomright.x()));
-            bottomright.setY( KMIN( desktopArea.bottom() + bottom_overlap, bottomright.y()));
-            }
-        }
 
     QSize mpsize( geometry().right() - topleft.x() + 1, geometry().bottom() - topleft.y() + 1 );
     mpsize = adjustedSize( mpsize );
@@ -1664,20 +1632,36 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             break;
         }
 
-    const int marge = 5;
-
     // TODO move whole group when moving its leader or when the leader is not mapped?
+
+    // compute bounds
+    QRect desktopArea = workspace()->clientArea( WorkArea, globalPos, desktop());
+    int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
+    if( unrestrictedMoveResize ) // unrestricted, just don't let it go out completely
+        left_marge = right_marge = top_marge = bottom_marge = titlebar_marge = 5;
+    else // restricted move/resize - keep at least part of the titlebar always visible 
+        {        
+        // how much must remain visible when moved away in that direction
+        left_marge = 100 + border_right;
+        right_marge = 100 + border_left;
+        // width/height change with opaque resizing, use the initial ones
+        titlebar_marge = initialMoveResizeGeom.height();
+        top_marge = border_bottom;
+        bottom_marge = border_top;
+        }
 
     if ( isResize() && moveResizeGeom.size() != previousMoveResizeGeom.size() )
         {
-        if (moveResizeGeom.bottom() < desktopArea.top()+marge)
-            moveResizeGeom.setBottom(desktopArea.top()+marge);
-        if (moveResizeGeom.top() > desktopArea.bottom()-marge)
-            moveResizeGeom.setTop(desktopArea.bottom()-marge);
-        if (moveResizeGeom.right() < desktopArea.left()+marge)
-            moveResizeGeom.setRight(desktopArea.left()+marge);
-        if (moveResizeGeom.left() > desktopArea.right()-marge)
-            moveResizeGeom.setLeft(desktopArea.right()-marge);
+        if( moveResizeGeom.bottom() < desktopArea.top() + top_marge )
+            moveResizeGeom.setBottom( desktopArea.top() + top_marge );
+        if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
+            moveResizeGeom.setTop( desktopArea.bottom() - bottom_marge );
+        if( moveResizeGeom.right() < desktopArea.left() + left_marge )
+            moveResizeGeom.setRight( desktopArea.left() + left_marge );
+        if( moveResizeGeom.left() > desktopArea.right() - right_marge )
+            moveResizeGeom.setLeft(desktopArea.right() - right_marge );
+        if( !unrestrictedMoveResize && moveResizeGeom.top() < desktopArea.top() ) // titlebar mustn't go out
+            moveResizeGeom.setTop( desktopArea.top());
 
         moveResizeGeom.setSize( adjustedSize( moveResizeGeom.size() ) );
         if  (options->resizeMode == Options::Opaque )
@@ -1695,14 +1679,15 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     else if ( isMove() && moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft() )
         {
         moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
-        if (moveResizeGeom.bottom() < desktopArea.top()+marge)
-            moveResizeGeom.moveBottomLeft( QPoint( moveResizeGeom.left(), desktopArea.top()+marge));
-        if (moveResizeGeom.top() > desktopArea.bottom()-marge)
-            moveResizeGeom.moveTopLeft( QPoint( moveResizeGeom.left(), desktopArea.bottom()-marge));
-        if (moveResizeGeom.right() < desktopArea.left()+marge)
-            moveResizeGeom.moveTopRight( QPoint( desktopArea.left()+marge, moveResizeGeom.top()));
-        if (moveResizeGeom.left() > desktopArea.right()-marge)
-            moveResizeGeom.moveTopLeft( QPoint( desktopArea.right()-marge, moveResizeGeom.top()));
+        if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge ) // titlebar mustn't go out
+            moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge );
+        // no need to check top_marge, titlebar_marge already handles it
+        if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
+            moveResizeGeom.moveTop( desktopArea.bottom() - bottom_marge );
+        if( moveResizeGeom.right() < desktopArea.left() + left_marge )
+            moveResizeGeom.moveRight( desktopArea.left() + left_marge );
+        if( moveResizeGeom.left() > desktopArea.right() - right_marge )
+            moveResizeGeom.moveLeft(desktopArea.right() - right_marge );
         switch ( options->moveMode )
             {
             case Options::Opaque:
