@@ -1955,6 +1955,7 @@ default_presentation=0
 [minimize]
 Name=Window Minimize
 Name[ar]=تصغير الشاشة
+Name[be]=Мінімалізацыя акна
 Name[bg]=Минимизиране на прозорец
 Name[bs]=Minimiziranje prozora
 Name[ca]=Minimitza finestra
@@ -2427,6 +2428,7 @@ default_presentation=0
 [on_all_desktops]
 Name=Window On All Desktops
 Name[ar]=النافذة على كل أسطح المكاتب
+Name[be]=Акно на ўсіх працоўных cталох
 Name[bg]=Прозорец на всички работни плотове
 Name[bs]=Prozor na svim desktopima
 Name[ca]=Finestra a tots els escriptoris
