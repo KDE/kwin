@@ -388,6 +388,14 @@ void MwmClient::paintEvent( QPaintEvent* )
 	s_frameWidth,
 	mrect.height() - s_frameWidth - s_buttonSize - 1 );
 
+    // Draw something behind wrapped window when shaded
+    p.drawLine(
+	wrect.x(),
+	wrect.y(),
+	wrect.x() + wrect.width() - 1,
+	wrect.y() );
+
+
     p.setPen( Qt::NoPen );
 
     // draw titlebar:
@@ -406,13 +414,44 @@ void MwmClient::paintEvent( QPaintEvent* )
 	AlignHCenter | AlignVCenter, caption() );
 }
 
+Client::MousePosition MwmClient::mousePosition( const QPoint& p ) const
+{
+    const int range = s_frameWidth + s_buttonSize;
+    const int border = s_frameWidth;
+
+    MousePosition m = Nowhere;
+
+    if ( ( p.x() > border && p.x() < width() - border )
+         && ( p.y() > border && p.y() < height() - border ) )
+        return Center;
+
+    if ( p.y() <= range && p.x() <= range)
+        m = TopLeft;
+    else if ( p.y() >= height()-range && p.x() >= width()-range)
+        m = BottomRight;
+    else if ( p.y() >= height()-range && p.x() <= range)
+        m = BottomLeft;
+    else if ( p.y() <= range && p.x() >= width()-range)
+        m = TopRight;
+    else if ( p.y() <= border )
+        m = Top;
+    else if ( p.y() >= height()-border )
+        m = Bottom;
+    else if ( p.x() <= border )
+        m = Left;
+    else if ( p.x() >= width()-border )
+        m = Right;
+    else
+        m = Center;
+    return m;
+}
+
 void MwmClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if ( titlebar->geometry().contains( e->pos() ) )
-    {
-	workspace()->lowerClient( this );
-	workspace()->requestFocus( workspace()->topClientOnDesktop() );
-    }
+        workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+
+    workspace()->requestFocus(this);
 }
 
 void MwmClient::init()

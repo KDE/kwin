@@ -44,6 +44,7 @@ protected:
     void init();
     void captionChange( const QString& );
     void activeChange( bool );
+    MousePosition mousePosition( const QPoint& p ) const;
 
 protected slots:
     void slotReset();
