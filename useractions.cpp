@@ -176,7 +176,7 @@ void Workspace::clientPopupAboutToShow()
     if (options->useTranslucency)
         {
         transSlider->setValue(100-active_popup_client->opacityPercentage());
-        setTransButtonText(active_popup_client->opacityPercentage());
+        setTransButtonText(100-active_popup_client->opacityPercentage());
         }
     }
 
