@@ -359,17 +359,49 @@ KActionsConfig::~KActionsConfig()
   delete config;
 }
 
+const char* KActionsConfig::fixup( const char* s )
+{
+// these texts got changed in order to match the style guide,
+// but they are used as values in the config file
+// so change the config texts to the GUI texts,
+// otherwise people will get stupid settings after they change
+// something in KWin configuration
+    static const char* const orig_txt[] = {
+        "Toggle raise and lower",
+        "Activate and raise",
+        "Activate and pass click",
+        "Activate, raise and pass click",
+        "Activate and lower",
+        NULL };
+    static const char* const new_txt[] = {
+        "Toggle Raise & Lower",
+        "Activate & Raise",
+        "Activate & Pass Click",
+        "Activate, Raise & Pass Click",
+        "Activate & Lower",
+        NULL };
+    for( int pos = 0;
+         orig_txt[ pos ] != NULL;
+         ++pos )
+        if( strcmp( s, orig_txt[ pos ] ) == 0 )
+            return new_txt[ pos ];
+    return s;
+}
+
 void KActionsConfig::setComboText(QComboBox* combo, const char* text){
   int i;
-  QString s = i18n(text); // no problem. These are already translated!
+  QString s = i18n(fixup(text)); // no problem. These are already translated!
   for (i=0;i<combo->count();i++){
-    if (s==combo->text(i)){
+    if (s.lower()==combo->text(i).lower()){
       combo->setCurrentItem(i);
       return;
     }
   }
 }
 
+// do NOT change the texts below, they are written to config file
+// and are not shown in the GUI
+// if you change some GUI texts, adjust fixup() above
 const char*  KActionsConfig::functionTiDbl(int i)
 {
   switch (i){
@@ -387,8 +419,8 @@ const char*  KActionsConfig::functionTiAc(int i)
   switch (i){
   case 0: return "Raise"; break;
   case 1: return "Lower"; break;
-  case 2: return "Operations Menu"; break;
-  case 3: return "Toggle Raise and Lower"; break;
+  case 2: return "Operations menu"; break;
+  case 3: return "Toggle raise and lower"; break;
   case 4: return "Nothing"; break;
   case 5: return "Shade"; break;
   }
