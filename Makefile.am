@@ -9,7 +9,7 @@ lib_LTLIBRARIES = kwin.la
 kwin_la_SOURCES = workspace.cpp atoms.cpp  client.cpp main.cpp \
 	tabbox.cpp options.cpp plugins.cpp events.cpp KWinInterface.skel \
 	killwindow.cpp 
-kwin_la_LIBADD = $(LIB_KDEUI)
+kwin_la_LIBADD = $(LIB_KDEUI) $(LIBXINERAMA)
 kwin_la_LDFLAGS = $(all_libraries) -module -avoid-version
 
 include_HEADERS = KWinInterface.h
