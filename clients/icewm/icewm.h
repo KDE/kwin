@@ -116,10 +116,10 @@ class IceWMClient : public KWinInternal::Client
 	protected slots:
 	    void slotMaximize();
 	    void menuButtonPressed();
-	    int  titleTextWidth( const QString& s );
-		void addClientButtons( const QString& s );
 
 	private:
+	    int  titleTextWidth( const QString& s );
+		void addClientButtons( const QString& s );
 		QSpacerItem* addPixmapSpacer( QPixmap* p[], QSizePolicy::SizeType = QSizePolicy::Maximum,
 									  int hsize = -1 );
 

@@ -37,13 +37,6 @@
 
 using namespace KWinInternal;
 
-extern "C"
-{
-	Client* allocate(Workspace *ws, WId w, int)
-    {
-        return(new IceWMClient(ws, w));
-    }
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Here's the global pixmap stuff - as memory efficient as it can be :)
@@ -81,26 +74,24 @@ QPixmap* titleB[] = {NULL, NULL};
 QPixmap* titleR[] = {NULL, NULL};
 QPixmap* titleQ[] = {NULL, NULL};
 
+ThemeHandler* clientHandler;
+
+QString* titleButtonsLeft;
+QString* titleButtonsRight;
+QString* themeName;
+
+QColor* colorActiveBorder;
+QColor* colorInActiveBorder;
+QColor* colorActiveTitleBarText;
+QColor* colorInActiveTitleBarText;
+QColor* colorActiveTitleBar;
+QColor* colorInActiveTitleBar;
+
 int  cornerSizeX;
 int  cornerSizeY;
 int  titleBarHeight;
 int  borderSizeX;
 int  borderSizeY;
-
-QString titleButtonsLeft;
-QString titleButtonsRight;
-QString themeName;
-
-QColor colorActiveBorder;
-QColor colorInActiveBorder;
-QColor colorActiveTitleBarText;
-QColor colorInActiveTitleBarText;
-QColor colorActiveTitleBar;
-QColor colorInActiveTitleBar;
-
-ThemeHandler theme_handler;
-Workspace* workspace_internal = NULL;	// We really shouldn't need this
-
 bool initialized = false;
 bool validframe  = false;
 
@@ -136,6 +127,19 @@ bool validPixmaps( QPixmap* p[] )
 
 ThemeHandler::ThemeHandler(): QObject( 0L )
 {
+	// Prevent having globals objects (use pointers to objects)
+	titleButtonsLeft 	= new QString();
+	titleButtonsRight 	= new QString();
+	themeName 			= new QString();
+
+	colorActiveBorder 			= new QColor();
+	colorInActiveBorder 		= new QColor();
+	colorActiveTitleBarText 	= new QColor();
+	colorInActiveTitleBarText	= new QColor();
+	colorActiveTitleBar 		= new QColor();
+	colorInActiveTitleBar 		= new QColor();
+
+	// Initialize
 	readConfig();
 	initTheme();
 	validframe = isFrameValid();
@@ -148,6 +152,17 @@ ThemeHandler::~ThemeHandler()
 {
 	if (initialized) 
 		freePixmaps();
+
+	delete colorInActiveBorder;
+	delete colorActiveTitleBarText;
+	delete colorInActiveTitleBarText;
+	delete colorActiveTitleBar;
+	delete colorInActiveTitleBar;
+	delete colorActiveBorder;
+
+	delete themeName;
+	delete titleButtonsRight;
+	delete titleButtonsLeft;
 }
 
 
@@ -186,7 +201,7 @@ void ThemeHandler::readConfig()
 {
 	KConfig* conf = KGlobal::config();
 	conf->setGroup("IceWM");
-	themeName = conf->readEntry("CurrentTheme", "");
+	*themeName = conf->readEntry("CurrentTheme", "");
 	themeTitleTextColors = conf->readBoolEntry("ThemeTitleTextColors", true);
 	showMenuButtonIcon = conf->readBoolEntry("ShowMenuButtonIcon", false);
 	titleBarOnTop = conf->readBoolEntry("TitleBarOnTop", true);
@@ -195,17 +210,17 @@ void ThemeHandler::readConfig()
 	customButtonPositions = conf->readBoolEntry("CustomButtonPositions", false);
 	if (customButtonPositions)
 	{
-		titleButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
-		titleButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
+		*titleButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
+		*titleButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
 
 		// Convert KDE to icewm style buttons
-		convertButtons( titleButtonsLeft );		
-		convertButtons( titleButtonsRight );
+		convertButtons( *titleButtonsLeft );		
+		convertButtons( *titleButtonsRight );
 	}
 
 	// Provide a default theme alias
-	if (themeName == "default")
-		themeName = "";
+	if (*themeName == "default")
+		*themeName = "";
 }
 
 
@@ -214,12 +229,12 @@ void ThemeHandler::readConfig()
 void ThemeHandler::initTheme()
 {
 	// Add a slash if required
-	if ( themeName != "" )
-		themeName += "/";
+	if ( *themeName != "" )
+		*themeName += "/";
 
 	// We use kconfig to read icewm config files...
 	// this is easy since icewm uses key=value pairs!
-	KConfig config( locate("appdata", QString("icewm-themes/") + themeName + QString("default.theme")) );
+	KConfig config( locate("appdata", QString("icewm-themes/") + *themeName + QString("default.theme")) );
 
 	// Load specifics, or use IceWM defaults instead.
 	borderSizeX = config.readNumEntry("BorderSizeX", 6);
@@ -237,34 +252,34 @@ void ThemeHandler::initTheme()
 	{
 		// Read in the button configuration, stripping any quotes
 		// Ignore sticky 'd' on the left buttons (some themes look bad with it on by default)
-		titleButtonsLeft = config.readEntry("TitleButtonsLeft", "s");
-		titleButtonsLeft = titleButtonsLeft.replace( QRegExp(QString("\"")), "");
-		titleButtonsRight = config.readEntry("TitleButtonsRight", "xmi");
-		titleButtonsRight = titleButtonsRight.replace( QRegExp(QString("\"")), "");
+		*titleButtonsLeft = config.readEntry("TitleButtonsLeft", "s");
+		*titleButtonsLeft = titleButtonsLeft->replace( QRegExp(QString("\"")), "");
+		*titleButtonsRight = config.readEntry("TitleButtonsRight", "xmi");
+		*titleButtonsRight = titleButtonsRight->replace( QRegExp(QString("\"")), "");
 
 		// I have no idea why the right side buttons in icewm are reversed
-		titleButtonsRight = reverseString( titleButtonsRight );
+		*titleButtonsRight = reverseString( *titleButtonsRight );
 	}
 
 	// Read the default border and text colours from the config file
 	// And use IceWM defaults if not found
 	QString s;
 	s = config.readEntry("ColorActiveBorder", "#C0C0C0");
-	colorActiveBorder = decodeColor( s );
+	*colorActiveBorder = decodeColor( s );
 	s = config.readEntry("ColorNormalBorder", "#C0C0C0");
-	colorInActiveBorder = decodeColor( s );
+	*colorInActiveBorder = decodeColor( s );
 
 	// Use these as a last resort
 	s = config.readEntry("ColorActiveTitleBar", "#0000A0");
-	colorActiveTitleBar = decodeColor( s );
+	*colorActiveTitleBar = decodeColor( s );
 	s = config.readEntry("ColorNormalTitleBar", "#808080");
-	colorInActiveTitleBar = decodeColor( s );
+	*colorInActiveTitleBar = decodeColor( s );
 
 	// Read titlebar text colours
 	s = config.readEntry("ColorActiveTitleBarText", "#FFFFFF");
-	colorActiveTitleBarText = decodeColor( s );
+	*colorActiveTitleBarText = decodeColor( s );
 	s = config.readEntry("ColorNormalTitleBarText", "#000000");
-	colorInActiveTitleBarText = decodeColor( s );
+	*colorInActiveTitleBarText = decodeColor( s );
 
 	// Stretch pixmaps for speed, where required
 	setPixmap( titleJ, "title", "J.xpm" );
@@ -435,8 +450,8 @@ void ThemeHandler::setPixmap( QPixmap* p[], QString s1, QString s2, bool stretch
 	if ( p[InActive] )
 		qWarning("kwin-icewm: setPixmap - should be null (2)\n"); 
 
-	p[Active]   = new QPixmap( locate("appdata", QString("icewm-themes/") + themeName + s1 + "A" + s2) );
-	p[InActive] = new QPixmap( locate("appdata", QString("icewm-themes/") + themeName + s1 + "I" + s2) );
+	p[Active]   = new QPixmap( locate("appdata", QString("icewm-themes/") + *themeName + s1 + "A" + s2) );
+	p[InActive] = new QPixmap( locate("appdata", QString("icewm-themes/") + *themeName + s1 + "I" + s2) );
 
 	if ( (!p[Active]) || (!p[InActive]) )
 		qWarning("kwin-icewm: Could not locate requested XBM file(s), or memory exhausted.\n");
@@ -482,21 +497,15 @@ bool ThemeHandler::isFrameValid()
 // Resets the theme, and re-clients all kwin's wrapped windows.
 void ThemeHandler::slotReset()
 {
-	// Don't reset if a client has never been made, and the workspace
-	// pointer hasn't been set. This is a hack - the workspace is not
-	// globally visible like options is, which isn't nice.
-	if (workspace_internal)
-	{
-		initialized = false;
-		freePixmaps();
-		readConfig();
-		initTheme();
-		validframe = isFrameValid();
-		initialized = true;
+	initialized = false;
+	freePixmaps();
+	readConfig();
+	initTheme();
+	validframe = isFrameValid();
+	initialized = true;
 
-		// Make kwin create new clients for each window...
-		workspace_internal->slotResetAllClientsDelayed();
-	}
+	// Make kwin create new clients for each window...
+	Workspace::self()->slotResetAllClientsDelayed();
 }
 
 
@@ -598,8 +607,6 @@ void IceWMButton::mouseReleaseEvent( QMouseEvent* e )
 IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity | WRepaintNoErase )
 {
-	workspace_internal = ws;
-
 	// Set button pointers to null so we can track things
 	for(int i= IceWMClient::BtnSysMenu; i < IceWMClient::BtnCount; i++)
 		button[i] = NULL;
@@ -635,7 +642,7 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 
 	titleSpacerJ = addPixmapSpacer( titleJ );
 
-	addClientButtons( titleButtonsLeft );
+	addClientButtons( *titleButtonsLeft );
 	titleSpacerL = addPixmapSpacer( titleL );
 
 	// Centre titlebar if required.
@@ -652,7 +659,7 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 	titleSpacerB = addPixmapSpacer( titleB, QSizePolicy::Expanding, 1 );
 	titleSpacerR = addPixmapSpacer( titleR );
 
-	addClientButtons( titleButtonsRight );
+	addClientButtons( *titleButtonsRight );
 
 	titleSpacerQ = addPixmapSpacer( titleQ );
 
@@ -913,7 +920,7 @@ void IceWMClient::paintEvent( QPaintEvent* )
 	} else
 	{
 		// Draw a stock IceWM frame instead of a pixmap frame
-		c1 = isActive() ? colorActiveBorder : colorInActiveBorder;
+		c1 = isActive() ? *colorActiveBorder : *colorInActiveBorder;
 		p.setPen( c1.light(135) );
 		p.drawLine(0, 0, w-2, 0);
 		p.drawLine(0, 0, 0, h-2);
@@ -980,7 +987,7 @@ void IceWMClient::paintEvent( QPaintEvent* )
 
 		// Select appropriate title text color
 		if (themeTitleTextColors)
-			p.setPen( isActive() ? colorActiveTitleBarText : colorInActiveTitleBarText );
+			p.setPen( isActive() ? *colorActiveTitleBarText : *colorInActiveTitleBarText );
 		else
 			p.setPen( options->color(Options::Font, isActive() ));
 	
@@ -1009,7 +1016,7 @@ void IceWMClient::paintEvent( QPaintEvent* )
 			// for the _whole_ titlebar (something's obviously wrong with the theme)
 			QRect r2 = geometry();
 			QRect r3( borderSizeX, borderSizeY, r2.width()-(2*borderSizeX), titleBarHeight);
-			p.fillRect( r3, act ? colorActiveTitleBar : colorInActiveTitleBar );
+			p.fillRect( r3, act ? *colorActiveTitleBar : *colorInActiveTitleBar );
 	
 			// Draw the text immediately after the rect to reduce flicker
 			p.drawText(r3.x()+2, r3.y(), r.width(), r.height(), AlignLeft | AlignVCenter, caption());
@@ -1174,5 +1181,30 @@ void IceWMClient::menuButtonPressed()
 	t->start();
 	tc = this;           
 }
+
+
+extern "C"
+{
+	Client* allocate(Workspace *ws, WId w, int)
+    {
+        return(new IceWMClient(ws, w));
+    }
+
+	void init()
+	{
+		clientHandler = new ThemeHandler;
+	}
+	
+	void reset()
+	{
+		// The ThemeHandler does this automatically
+	}
+
+	void deinit()
+	{
+		delete clientHandler;
+	}
+}
+
 
 #include "icewm.moc"
