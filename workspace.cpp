@@ -1569,9 +1569,9 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         popup->insertSeparator();
 
         QString k;
-        KAccelAction* pAction = keys->basePtr()->actionPtr( "Window Close" );
-        if( pAction )
-            k = pAction->m_rgShortcuts.toString();
+        KAccelAction* pAction = keys->actions().actionPtr( "Window Close" );
+	if( pAction )
+	    k = pAction->m_rgShortcuts.toString();
         popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+k, Options::CloseOp );
     }
     return popup;
@@ -1988,7 +1988,7 @@ void Workspace::reconfigure()
 //  uint's for keycodes.
 inline int currentKey( KGlobalAccel* keys, const char* psAction )
 {
-    KAccelAction* pAction = keys->basePtr()->actionPtr( psAction );
+    KAccelAction* pAction = keys->actions().actionPtr( psAction );
     if( pAction )
         return pAction->getShortcut(0).getSequence(0).getKey(0).keyQt();
     else
