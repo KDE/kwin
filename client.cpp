@@ -371,6 +371,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
         XGetTextProperty(qt_xdisplay(), w, &avoidProp, avoidAtom);
 
     if (0 != avoidStatus) {
+          
+      qDebug("XGetTextProperty worked for atom _NET_AVOID_SPEC");
 
         char ** avoidList;
         int avoidListCount;
@@ -379,14 +381,18 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
           XTextPropertyToStringList(&avoidProp, &avoidList, &avoidListCount);
 
         if (0 != convertStatus) {
+          
+          qDebug("XTextPropertyToStringList succeded");
 
           avoid_ = true;
 
           if (avoidListCount != 1) {
-//            qDebug("Extra values in avoidance list. Ignoring.");
+            qDebug("Extra values in avoidance list. Ignoring.");
           }
 
           char * itemZero = avoidList[0];
+          
+          qDebug("Anchoring to border %s", itemZero);
 
           switch (*itemZero) {
 
@@ -408,7 +414,12 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
           }
 
           XFreeStringList(avoidList);
-        }
+
+        } else
+          qDebug("XTextPropertyToStringList failed");
+
+    } else {
+          qDebug("XGetTextProperty failed for atom _NET_AVOID_SPEC");
     }
 }
 
@@ -520,16 +531,23 @@ void Client::manage( bool isMapped )
     // Notify kicker that an app has mapped a window.
 
     XClassHint xch;
-    XGetClassHint(qt_xdisplay(), win, &xch);
-    QByteArray params;
-    QDataStream stream(params, IO_WriteOnly);
-    stream << QString::fromUtf8(xch.res_name);
-    kapp->dcopClient()->send(
-      "kicker",
-      "TaskbarApplet",
-      "clientMapped(QString)",
-      params
-    );
+
+    if (0 != XGetClassHint(qt_xdisplay(), win, &xch)) {
+
+      QByteArray params;
+      QDataStream stream(params, IO_WriteOnly);
+      stream << QString::fromUtf8(xch.res_name);
+
+      kapp->dcopClient()->send(
+        "kicker",
+        "TaskbarApplet",
+        "clientMapped(QString)",
+        params
+      );
+
+      XFree(xch.res_name);
+      XFree(xch.res_class);
+    }
 }
 
 
