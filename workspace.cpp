@@ -2340,7 +2340,7 @@ void Workspace::startKompmgr()
 
 void Workspace::stopKompmgr()
 {
-    if(!kompmgr)
+    if (!kompmgr  || !kompmgr->isRunning())
         return;
     kompmgr->disconnect(this, SLOT(restartKompmgr()));
     options->useTranslucency = FALSE;
