@@ -63,7 +63,7 @@ public:
 	// NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar
 
 	state &= mask; // for safety, clear all other bits
-	
+
 	if ( mask & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
@@ -377,7 +377,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 		((Client*)parentWidget())->autoRaise();
 		ungrabButton( winId(),	None );
 	    }
-	
+
 	    Options::MouseCommand com = Options::MouseNothing;
 	    if ( mod1){
 		switch (e->xbutton.button) {
@@ -413,7 +413,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 		 ((Client*)parentWidget())->windowType() != NET::Dialog &&
 		 ((Client*)parentWidget())->windowType() != NET::Override )
 		replay = TRUE;
-		
+
 	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, kwin_time);
 	    return TRUE;
 	}
@@ -660,7 +660,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	//
 	if ( isTransient() && !mainClient()->isSticky() )
 	    desk = mainClient()->desktop();
-	
+
 	if ( desk <= 0 ) {
 	    // assume window wants to be visible on the current desktop
 	    desk =  workspace()->currentDesktop();
@@ -700,7 +700,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	    maximize( Client::MaximizeVertical );
 	else if ( info->state() & NET::MaxHoriz )
 	    maximize( Client::MaximizeHorizontal );
-	
+
 	if ( isMaximizable() && !isMaximized()
 	     && ( width() >= area.width() || height() >= area.height() ) ) {
 	  // window is too large for the screen, maximize in the
@@ -794,7 +794,7 @@ void Client::fetchName()
 	    s = s2;
 	}
 	setCaption( s );
-	
+
 	info->setVisibleName( s.utf8() );
 
 	if ( !isWithdrawn() )
@@ -1005,16 +1005,16 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    ox = windowWrapper()->x();
 	    oy = windowWrapper()->y();
 	}
-	
+
 	int nx = x() + ox;
 	int ny = y() + oy;
-	
+
 	if ( e.value_mask & CWX )
 	    nx = e.x;
 	if ( e.value_mask & CWY )
 	    ny = e.y;
 
-	
+
 	// clever workaround for applications like xv that want to set
 	// the location to the current location but miscalculate the
 	// frame size due to kwin being a double-reparenting window
@@ -1025,10 +1025,10 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    nx = x();
 	    ny = y();
 	}
-	
-	
+
+
 	QPoint np( nx-ox, ny-oy);
-#if 0	
+#if 0
 	if ( windowType() == NET::Normal && may_move ) {
 	    // crap for broken netscape
 	    QRect area = workspace()->clientArea();
@@ -1040,8 +1040,8 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 		    np.ry() = area.y();
 	    }
 	}
-#endif	
-	
+#endif
+
 	if ( isMaximized() ) {
 	  geom_restore.moveTopLeft( np );
 	} else {
@@ -1344,7 +1344,7 @@ void Client::mousePressEvent( QMouseEvent * e)
 	bool active = isActive();
 	if ( !wantsInput() ) // we cannot be active, use it anyway
 	    active = TRUE;
-	
+
 	if ( e->button() == LeftButton ) {
 	    mouseMoveEvent( e );
 	    buttonDown = TRUE;
@@ -1804,7 +1804,7 @@ void Client::maximize( MaximizeMode m)
     if ( m == MaximizeAdjust ) {
 	m = max_mode;
     } else {
-	
+
 	if ( max_mode == m )
 	    m = MaximizeRestore;
 	if ( m == max_mode )
@@ -1839,7 +1839,7 @@ void Client::maximize( MaximizeMode m)
 		    );
 	info->setState( NET::MaxHoriz, NET::Max );
 	break;
-	
+
     case MaximizeRestore: {
 	Events::raise( Events::UnMaximize );
 	setGeometry(geom_restore);
@@ -1849,7 +1849,7 @@ void Client::maximize( MaximizeMode m)
 
     case MaximizeFull: {
 	QRect r = QRect(clientArea.topLeft(), adjustedSize(clientArea.size()));
-	
+
 	// hide right and left border of maximized windows
 	if ( !options->moveResizeMaximizedWindows ) {
 	    if ( r.left() == 0 )
@@ -1980,7 +1980,7 @@ bool Client::x11Event( XEvent * e)
 
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
-	
+
 	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled()
 	     && workspace()->topClientOnDesktop() != this ) {
 	    delete autoRaiseTimer;
@@ -1988,10 +1988,10 @@ bool Client::x11Event( XEvent * e)
 	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
 	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
 	}
-	
+
 	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse	 && ( isDesktop() || isDock() || isMenu() ) )
 	    return TRUE;
-	
+
 	workspace()->requestFocus( this );
 	return TRUE;
     }
@@ -2067,7 +2067,7 @@ void Client::setMouseCursor( MousePosition m )
 	setCursor( arrowCursor );
 	return;
     }
-	
+
     switch ( m ) {
     case TopLeft:
     case BottomRight:
@@ -2119,6 +2119,7 @@ void Client::setShade( bool s, int hus )
 
     shaded = s;
 
+
     if ( isVisible() )
 	Events::raise( s ? Events::ShadeDown : Events::ShadeUp );
 
@@ -2167,6 +2168,9 @@ void Client::setShade( bool s, int hus )
 	    workspace()->requestFocus( this );
     }
 
+    if(!hus)
+        info->setState( shaded?NET::Shaded:0, NET::Shaded );
+
     workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
@@ -2193,7 +2197,7 @@ void Client::setActive( bool act)
     active = act;
     if ( active )
 	Events::raise( Events::Activate );
-	
+
     if ( !active && autoRaiseTimer ) {
 	delete autoRaiseTimer;
 	autoRaiseTimer = 0;
@@ -2302,7 +2306,7 @@ void Client::takeFocus( bool force )
 	setActive( TRUE );
 	// Qt may delay the mapping which may cause XSetInputFocus to fail, force show window
 	QApplication::sendPostedEvents( windowWrapper(), QEvent::ShowWindowRequest );
-	
+
 	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
     }
     if ( Ptakefocus )
@@ -2688,7 +2692,7 @@ NET::WindowType Client::windowType() const
 
 bool Client::wantsTabFocus() const
 {
-    return (windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Override ) 
+    return (windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Override )
 			  && ( input || Ptakefocus ) && !skip_taskbar;
 }
 
