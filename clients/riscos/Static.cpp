@@ -198,8 +198,9 @@ Static::_createTexture(QPixmap & px, int t, bool active)
 
   QColor c(options->color(Options::ColorType(t), active));
 
-  QRgb light(c.light(110).rgb());
-  QRgb dark (c.dark(110).rgb());
+  QRgb mid    (c.rgb());
+  QRgb light  (c.light(110).rgb());
+  QRgb dark   (c.dark(110).rgb());
 
   QRgb * data(reinterpret_cast<QRgb *>(texture.bits()));
 
@@ -208,6 +209,8 @@ Static::_createTexture(QPixmap & px, int t, bool active)
       data[x] = light;
     else if (data[x] == b)
       data[x] = dark;
+    else
+      data[x] = mid;
 
   px.convertFromImage(texture);
 }

@@ -127,6 +127,11 @@ Button::setPixmap(const QPixmap & p)
     aPixmap_.convertFromImage(aTx);
     iPixmap_.convertFromImage(iTx);
 
+    if (0 != p.mask())
+    {
+      aPixmap_.setMask(*p.mask());
+      iPixmap_.setMask(*p.mask());
+    }
   }
 
   repaint();
