@@ -20,13 +20,12 @@ EXTRA_DIST                = $(lnk_DATA)
 
 QEMBED                    = $(QTDIR)/tools/qembed/qembed
 
-keramik.cpp: tiles.h
-
-PICS := $(shell ls $(srcdir)/pics/*.png 2>/dev/null)
+keramik.lo: tiles.h
 
 .PHONY: make-embed
 
 make-embed: $(PICS)
-	$(QEMBED) --images $^ | \
+	PICS=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\
+	$(QEMBED) --images $$pics | \
 	sed -e 's,static QDict<QImage> dict;,,' | \
 	sed -e 's,dict\.find,imageDict.find,' > $(srcdir)/tiles.h
