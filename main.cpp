@@ -165,7 +165,6 @@ bool Application::x11EventFilter( XEvent *e )
 {
     if ( Workspace::self()->workspaceEvent( e ) )
 	     return TRUE;
-    owner.filterEvent( e );
     return KApplication::x11EventFilter( e );
 }
 
