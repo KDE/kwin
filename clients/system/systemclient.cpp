@@ -154,7 +154,7 @@ void SystemButton::reset()
 
     p.begin(&aBackground);
     p.drawPixmap(2, 2, aInternal);
-    p.setPen(options->color(Options::ButtonFg, true));
+    p.setPen(options->colorGroup(Options::ButtonBg, true).mid());
     p.drawRect(0, 0, 14, 14);
     
     p.end();
@@ -252,9 +252,6 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     hb->addWidget( button[3]);
     hb->addSpacing(3);
 
-    for ( int i = 0; i < (help ? 5 : 4); i++) {
-        button[i]->setMouseTracking( TRUE );
-    }
 }
 
 void SystemClient::resizeEvent( QResizeEvent* e)
