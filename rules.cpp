@@ -23,9 +23,11 @@ static WindowRules dummyRules; // dummy used to avoid NULL checks
 
 WindowRules::WindowRules()
     : wmclassregexp( false )
+    , wmclasscomplete( false )
     , windowroleregexp( false )
     , titleregexp( false )
     , extraroleregexp( false )
+    , clientmachineregexp( false )
     , desktoprule( DontCareRule )
     , aboverule( DontCareRule )
     , belowrule( DontCareRule )
@@ -33,22 +35,18 @@ WindowRules::WindowRules()
     }
     
 WindowRules::WindowRules( KConfig& cfg )
-    : wmclassregexp( false )
-    , windowroleregexp( false )
-    , titleregexp( false )
-    , extraroleregexp( false )
-    , desktoprule( DontCareRule )
-    , aboverule( DontCareRule )
-    , belowrule( DontCareRule )
     {
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
     wmclassregexp = cfg.readBoolEntry( "wmclassregexp" );
+    wmclasscomplete = cfg.readBoolEntry( "wmclasscomplete" );
     windowrole = cfg.readEntry( "windowrole" ).lower().latin1();
     windowroleregexp = cfg.readBoolEntry( "windowroleregexp" );
     title = cfg.readEntry( "title" );
     titleregexp = cfg.readBoolEntry( "titleregexp" );
     extrarole = cfg.readEntry( "extrarole" ).lower().latin1();
     extraroleregexp = cfg.readBoolEntry( "extraroleregexp" );
+    clientmachine = cfg.readEntry( "clientmachine" ).lower().latin1();
+    clientmachineregexp = cfg.readBoolEntry( "clientmachineregexp" );
     desktop = cfg.readNumEntry( "desktop" );
     desktoprule = readRule( cfg, "desktoprule" );
     above = cfg.readBoolEntry( "above" );
@@ -87,9 +85,11 @@ void WindowRules::write( KConfig& cfg ) const
     // always write wmclass
     cfg.writeEntry( "wmclass", ( const char* )wmclass );
     cfg.writeEntry( "wmclassregexp", wmclassregexp );
+    cfg.writeEntry( "wmclasscomplete", wmclasscomplete );
     WRITE_MATCH_STRING( windowrole, (const char*) );
     WRITE_MATCH_STRING( title, );
     WRITE_MATCH_STRING( extrarole, (const char*) );
+    WRITE_MATCH_STRING( clientmachine, (const char*) );
     WRITE_SET_RULE( desktop );
     WRITE_SET_RULE( above );
     WRITE_SET_RULE( below );
@@ -122,26 +122,39 @@ bool WindowRules::match( const Client* c ) const
     // TODO exactMatch() for regexp?
     if( !wmclass.isEmpty())
         { // TODO optimize?
-        if( wmclassregexp && !QRegExp( wmclass ).exactMatch( c->resourceClass()))
+        QCString cwmclass = wmclasscomplete
+            ? c->resourceClass() + ' ' + c->resourceName() : c->resourceClass();
+        if( wmclassregexp && !QRegExp( wmclass ).exactMatch( cwmclass ))
             return false;
-        if( !wmclassregexp && wmclass != c->resourceClass())
+        if( !wmclassregexp && wmclass != cwmclass )
             return false;
         }
     if( !windowrole.isEmpty())
         {
-        if( windowroleregexp && QRegExp( windowrole ).exactMatch( c->windowRole()))
+        if( windowroleregexp && !QRegExp( windowrole ).exactMatch( c->windowRole()))
             return false;
         if( !windowroleregexp && windowrole != c->windowRole())
             return false;
         }
     if( !title.isEmpty())
         {
-        if( titleregexp && QRegExp( title ).exactMatch( c->caption( false )))
+        if( titleregexp && !QRegExp( title ).exactMatch( c->caption( false )))
             return false;
         if( !titleregexp && title != c->caption( false ))
             return false;
         }
     // TODO extrarole
+    if( !clientmachine.isEmpty())
+        {
+        if( clientmachineregexp
+            && !QRegExp( clientmachine ).exactMatch( c->wmClientMachine( true ))
+            && !QRegExp( clientmachine ).exactMatch( c->wmClientMachine( false )))
+            return false;
+        if( !clientmachineregexp
+            && clientmachine != c->wmClientMachine( true )
+            && clientmachine != c->wmClientMachine( false ))
+            return false;
+        }
     return true;
     }
 

@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kxerrorhandler.h>
 #include <assert.h>
+#include <unistd.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
@@ -292,6 +293,25 @@ void ungrabXServer()
     assert( server_grab_count > 0 );
     if( --server_grab_count == 0 )
         XUngrabServer( qt_xdisplay());
+    }
+
+bool isLocalMachine( const QCString& host )
+    {
+#ifdef HOST_NAME_MAX
+    char hostnamebuf[HOST_NAME_MAX];
+#else
+    char hostnamebuf[256];
+#endif
+    if (gethostname (hostnamebuf, sizeof hostnamebuf) >= 0) 
+        {
+        hostnamebuf[sizeof(hostnamebuf)-1] = 0;
+        if (host == hostnamebuf)
+            return true;
+        char *dot = strchr(hostnamebuf, '.');
+        if (dot && !(*dot = 0) && host == hostnamebuf)
+            return true;
+        }
+    return false;
     }
 
 } // namespace

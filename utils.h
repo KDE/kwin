@@ -209,6 +209,8 @@ Time timestampDiff( Time time1, Time time2 ) // returns time2 - time1
     { // no need to handle wrapping?
     return time2 - time1;
     }
+
+bool isLocalMachine( const QCString& host );
     
 } // namespace
 

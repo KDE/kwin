@@ -1007,7 +1007,7 @@ void Client::killProcess( bool ask, Time timestamp )
     if( process_killer != NULL )
         return;
     Q_ASSERT( !ask || timestamp != CurrentTime );
-    QCString machine = wmClientMachine();
+    QCString machine = wmClientMachine( true );
     pid_t pid = info->pid();
     if( pid <= 0 || machine.isEmpty()) // needed properties missing
         return;
@@ -1388,29 +1388,12 @@ QCString Client::staticWmCommand(WId w)
 
 /*!
   Returns WM_CLIENT_MACHINE property for a given window.
-  Local machine is always returned as "localhost".
  */
 QCString Client::staticWmClientMachine(WId w)
     {
     QCString result = getStringProperty(w, XA_WM_CLIENT_MACHINE);
     if (result.isEmpty()) 
-        {
         result = "localhost";
-        }
-    else 
-        {
-        // special name for the local machine (localhost)
-        char hostnamebuf[80];
-        if (gethostname (hostnamebuf, sizeof hostnamebuf) >= 0) 
-            {
-            hostnamebuf[sizeof(hostnamebuf)-1] = 0;
-            if (result == hostnamebuf)
-                result = "localhost";
-            char *dot = strchr(hostnamebuf, '.');
-            if (dot && !(*dot = 0) && result == hostnamebuf)
-                result = "localhost";
-            }
-        }
     return result;
     }
 
@@ -1473,11 +1456,16 @@ QCString Client::wmCommand()
   Returns client machine for this client,
   taken either from its window or from the leader window.
 */
-QCString Client::wmClientMachine() const
+QCString Client::wmClientMachine( bool use_localhost ) const
     {
     QCString result = staticWmClientMachine(window());
     if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=window())
         result = staticWmClientMachine(wmClientLeaderWin);
+    if( use_localhost )
+        { // special name for the local machine (localhost)
+        if( result != "localhost" && isLocalMachine( result ))
+            result = "localhost";
+        }
     return result;
     }
 

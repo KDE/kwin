@@ -45,13 +45,15 @@ class WindowRules
         static bool checkRule( SettingRule rule, bool init );
         QCString wmclass;
         bool wmclassregexp;
-        // TODO bool wmclasscomplete - class+name
+        bool wmclasscomplete;
         QCString windowrole;
         bool windowroleregexp;
         QString title; // TODO "caption" ?
         bool titleregexp;
         QCString extrarole;
         bool extraroleregexp;
+        QCString clientmachine;
+        bool clientmachineregexp;
         // TODO window type? both to which it applies and to which value to force it
         int desktop;
         SettingRule desktoprule;

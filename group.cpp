@@ -266,7 +266,7 @@ bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool a
     else if( c2->isTransient() && c1->hasTransient( c2, true ))
         same_app = true; // c2 has c1 as mainwindow
     else if( c1->pid() != c2->pid()
-        || c1->wmClientMachine() != c2->wmClientMachine())
+        || c1->wmClientMachine( false ) != c2->wmClientMachine( false ))
         ; // different processes
     else if( c1->wmClientLeader() != c2->wmClientLeader()
         && c1->wmClientLeader() != c1->window() // if WM_CLIENT_LEADER is not set, it returns window(),

@@ -91,7 +91,7 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             config->writeEntry( QString("sessionId")+n, sessionId.data() );
             config->writeEntry( QString("windowRole")+n, c->windowRole().data() );
             config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
-            config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine().data() );
+            config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine( true ).data() );
             config->writeEntry( QString("resourceName")+n, c->resourceName().data() );
             config->writeEntry( QString("resourceClass")+n, c->resourceClass().data() );
             config->writeEntry( QString("geometry")+n,  QRect( c->calculateGravitation(TRUE), c->clientSize() ) ); // FRAME
@@ -196,7 +196,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     QCString sessionId = c->sessionId();
     QCString windowRole = c->windowRole();
     QCString wmCommand = c->wmCommand();
-    QCString wmClientMachine = c->wmClientMachine();
+    QCString wmClientMachine = c->wmClientMachine( true );
     QCString resourceName = c->resourceName();
     QCString resourceClass = c->resourceClass();
 

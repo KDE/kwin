@@ -223,7 +223,7 @@ class Client : public QObject, public KDecorationDefines
         QCString resourceName() const;
         QCString resourceClass() const;
         QCString wmCommand();
-        QCString wmClientMachine() const;
+        QCString wmClientMachine( bool use_localhost ) const;
         Window   wmClientLeader() const;
         pid_t pid() const;
 
