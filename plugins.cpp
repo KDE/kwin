@@ -9,6 +9,7 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include <kdesktopfile.h>
 #include <ksimpleconfig.h>
 #include <klocale.h>
+#include <klibloader.h>
 
 // X11/Qt conflict
 #undef Unsorted
@@ -146,10 +147,9 @@ void PluginMgr::loadPlugin(QString nameStr)
         dlregistered = true;
         lt_dlinit();
     }
-    nameStr += ".la";
-    nameStr = KGlobal::dirs()->findResource("lib", nameStr);
+    nameStr = KLibLoader::findLibrary(nameStr.latin1());
 
-    if(!nameStr){
+    if(nameStr.isNull()){
         qWarning("KWin: cannot find client plugin.");
         handle = 0;
         alloc_ptr = NULL;
