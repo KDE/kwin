@@ -1568,34 +1568,34 @@ bool Client::isSpecialWindow() const
         || isToolbar(); // TODO
     }
 
-NET::WindowType Client::windowType( bool strict, int supported_types ) const
+NET::WindowType Client::windowType( bool direct, int supported_types ) const
     {
     NET::WindowType wt = info->windowType( supported_types );
+    if( direct )
+        return wt;
     NET::WindowType wt2 = rules()->checkType( wt );
     if( wt != wt2 )
         {
         wt = wt2;
         info->setWindowType( wt ); // force hint change
         }
-    // TODO is this 'strict' really needed (and used?)
-    if( !strict )
-        { // hacks here
-        if( wt == NET::Menu )
-            {
-            // ugly hack to support the times when NET::Menu meant NET::TopMenu
-            // if it's as wide as the screen, not very high and has its upper-left
-            // corner a bit above the screen's upper-left cornet, it's a topmenu
-            if( x() == 0 && y() < 0 && y() > -10 && height() < 100
-                && abs( width() - workspace()->clientArea( FullArea, this ).width()) < 10 )
-                wt = NET::TopMenu;
-            }
-        const char* const oo_prefix = "openoffice.org"; // QCString has no startsWith()
-        // oo_prefix is lowercase, because resourceClass() is forced to be lowercase
-        if( qstrncmp( resourceClass(), oo_prefix, strlen( oo_prefix )) == 0 && wt == NET::Dialog )
-            wt = NET::Normal; // see bug #66065
-        if( wt == NET::Unknown ) // this is more or less suggested in NETWM spec
-            wt = isTransient() ? NET::Dialog : NET::Normal;
+    // hacks here
+    if( wt == NET::Menu )
+        {
+        // ugly hack to support the times when NET::Menu meant NET::TopMenu
+        // if it's as wide as the screen, not very high and has its upper-left
+        // corner a bit above the screen's upper-left cornet, it's a topmenu
+        if( x() == 0 && y() < 0 && y() > -10 && height() < 100
+            && abs( width() - workspace()->clientArea( FullArea, this ).width()) < 10 )
+            wt = NET::TopMenu;
         }
+    // TODO change this to rule
+    const char* const oo_prefix = "openoffice.org"; // QCString has no startsWith()
+    // oo_prefix is lowercase, because resourceClass() is forced to be lowercase
+    if( qstrncmp( resourceClass(), oo_prefix, strlen( oo_prefix )) == 0 && wt == NET::Dialog )
+        wt = NET::Normal; // see bug #66065
+    if( wt == NET::Unknown ) // this is more or less suggested in NETWM spec
+        wt = isTransient() ? NET::Dialog : NET::Normal;
     return wt;
     }
 

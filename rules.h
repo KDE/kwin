@@ -59,9 +59,10 @@ class WindowRules
         bool extraroleregexp;
         QCString clientmachine;
         bool clientmachineregexp;
+        unsigned long types; // types for matching
         int desktop;
         SettingRule desktoprule;
-        NET::WindowType type;
+        NET::WindowType type; // type for setting
         SettingRule typerule;
         bool above;
         SettingRule aboverule;

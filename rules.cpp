@@ -28,13 +28,14 @@ WindowRules::WindowRules()
     , titleregexp( false )
     , extraroleregexp( false )
     , clientmachineregexp( false )
+    , types( NET::AllTypesMask )
     , desktoprule( DontCareRule )
     , typerule( DontCareRule )
     , aboverule( DontCareRule )
     , belowrule( DontCareRule )
     {
     }
-    
+
 WindowRules::WindowRules( KConfig& cfg )
     {
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
@@ -48,6 +49,7 @@ WindowRules::WindowRules( KConfig& cfg )
     extraroleregexp = cfg.readBoolEntry( "extraroleregexp" );
     clientmachine = cfg.readEntry( "clientmachine" ).lower().latin1();
     clientmachineregexp = cfg.readBoolEntry( "clientmachineregexp" );
+    types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
     desktop = cfg.readNumEntry( "desktop" );
     desktoprule = readRule( cfg, "desktoprule" );
     type = readType( cfg, "type" );
@@ -83,6 +85,13 @@ WindowRules::WindowRules( KConfig& cfg )
         cfg.deleteEntry( #var "rule" ); \
         }
 
+#define WRITE_WITH_DEFAULT( var, default ) \
+    if( var != default ) \
+        cfg.writeEntry( #var, var ); \
+    else \
+        cfg.deleteEntry( #var );
+
+
 void WindowRules::write( KConfig& cfg ) const
     {
     // always write wmclass
@@ -93,6 +102,7 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( title, );
     WRITE_MATCH_STRING( extrarole, (const char*) );
     WRITE_MATCH_STRING( clientmachine, (const char*) );
+    WRITE_WITH_DEFAULT( types, NET::AllTypesMask );
     WRITE_SET_RULE( desktop );
     WRITE_SET_RULE( type );
     WRITE_SET_RULE( above );
@@ -101,6 +111,7 @@ void WindowRules::write( KConfig& cfg ) const
     
 #undef WRITE_MATCH_STRING
 #undef WRITE_SET_RULE
+#undef WRITE_WITH_DEFAULT
 
 SettingRule WindowRules::readRule( KConfig& cfg, const QString& key )
     {
@@ -128,6 +139,11 @@ NET::WindowType WindowRules::readType( KConfig& cfg, const QString& key )
 
 bool WindowRules::match( const Client* c ) const
     {
+    if( types != NET::AllTypesMask )
+        {
+        if( !NET::typeMatchesMask( c->windowType( true ), types )) // direct
+            return false;
+        }
     // TODO exactMatch() for regexp?
     if( !wmclass.isEmpty())
         { // TODO optimize?
