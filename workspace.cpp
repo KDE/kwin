@@ -1724,9 +1724,11 @@ QPopupMenu* Workspace::clientPopup()
         popup->insertItem( SmallIconSet( "attach" ), i18n("Always &on Top"), Options::StaysOnTopOp );
         popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
 
-        popup->insertSeparator();
-
-        popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e Window Behavior..."), this, SLOT( configureWM() ));
+        if (!KGlobal::config()->isImmutable())
+        {
+            popup->insertSeparator();
+            popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e Window Behavior..."), this, SLOT( configureWM() ));
+        }
 
         popup->insertSeparator();
 
