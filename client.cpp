@@ -880,6 +880,7 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	XEvent ev;
 	if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
 				     DestroyNotify, &ev) ){
+	    Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
 	    workspace()->destroyClient( this );
 	    return TRUE;
 	}
@@ -1685,6 +1686,7 @@ void Client::closeWindow()
     else {
 	// client will not react on wm_delete_window. We have not choice
 	// but destroy his connection to the XServer.
+	Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
 	XKillClient(qt_xdisplay(), win );
 	workspace()->destroyClient( this );
     }
