@@ -1330,6 +1330,7 @@ void Client::setFullScreen( bool set, bool user )
         return;
     if( user && !userCanSetFullScreen())
         return;
+    setShade( ShadeNone );
     bool was_fs = isFullScreen();
     if( !was_fs )
         geom_fs_restore = geometry();
