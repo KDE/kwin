@@ -468,19 +468,19 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         // got FocusOut, and therefore got deactivated.
         ac = last_active_client;
         }
+    if( time == 0 ) // explicitly asked not to get focus
+        return false;
     if( options->focusStealingPreventionLevel == 0 ) // none
         return true;
     if( options->focusStealingPreventionLevel == 4 ) // extreme
         return false;
+    if( c->ignoreFocusStealing())
+        return true;
     if( ac == NULL || ac->isDesktop())
         {
         kdDebug( 1212 ) << "Activation: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
-    if( c->ignoreFocusStealing())
-        return true;
-    if( time == 0 ) // explicitly asked not to get focus
-        return false;
     // TODO window urgency  -> return true?
     if( Client::belongToSameApplication( c, ac, true ))
         {
