@@ -309,6 +309,12 @@ public:
     */
     bool animateTooltips();
 
+    /**
+    * @returns true if electric borders are enabled. With electric borders
+    * you can change desktop by moving the mouse pointer towards the edge
+    * of the screen
+    */
+    bool electricBorders();
 
 public slots:
     void reload();

@@ -359,6 +359,12 @@ private:
     enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
     unsigned int sendFakedMouseEvent( QPoint pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
 
+    // electric borders
+    void createBorderWindows();
+    void destroyBorderWindows();
+    void electricBorder(XEvent * e); 
+    void raiseElectricBorders();
+
     // ------------------
 
     SystemTrayWindowList systemTrayWins;

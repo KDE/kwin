@@ -91,9 +91,26 @@ private:
 class WorkspacePrivate
 {
 public:
-    WorkspacePrivate() {};
+    WorkspacePrivate() 
+     : startup(0), electric_have_borders(false), 
+       electric_current_border(None),
+       electric_top_border(None),
+       electric_bottom_border(None),
+       electric_left_border(None),
+       electric_right_border(None),
+       electric_time_first(0),
+       electric_time_last(0)
+    { };
     ~WorkspacePrivate() {};
     KStartupInfo* startup;
+    bool electric_have_borders;
+    WId electric_current_border;
+    WId electric_top_border;
+    WId electric_bottom_border;
+    WId electric_left_border;
+    WId electric_right_border;
+    Time electric_time_first;
+    Time electric_time_last;
 };
 
 };
@@ -329,6 +346,9 @@ Workspace::Workspace( bool restore )
 
 void Workspace::init()
 {
+    if (options->electricBorders())
+       createBorderWindows();
+
     supportWindow = new QWidget;
 
     unsigned long protocols =
@@ -418,7 +438,7 @@ void Workspace::init()
     }
 
     updateClientArea();
-
+    raiseElectricBorders();
 }
 
 Workspace::~Workspace()
@@ -556,12 +576,21 @@ bool Workspace::workspaceEvent( XEvent * e )
         }
         break;
     case EnterNotify:
-        if ( !QWhatsThis::inWhatsThisMode() )
-            break;
+        if ( QWhatsThis::inWhatsThisMode() )
         {
             QWidget* w = QWidget::find( e->xcrossing.window );
             if ( w && w->inherits("WindowWrapper" ) )
                 QWhatsThis::leaveWhatsThisMode();
+        }
+
+        if (d->electric_have_borders &&
+           (e->xcrossing.window == d->electric_top_border ||
+            e->xcrossing.window == d->electric_left_border ||
+            e->xcrossing.window == d->electric_bottom_border ||
+            e->xcrossing.window == d->electric_right_border))
+        {
+            // the user entered an electric border
+            electricBorder(e);
         }
         break;
     case LeaveNotify:
@@ -1278,6 +1307,7 @@ void Workspace::setActiveClient( Client* c )
     if ( menubar ) {
         menubar->show();
         menubar->raise(); // better for FocusFollowsMouse than raiseClient(menubar)
+        raiseElectricBorders();
     }
 
     // ... then hide the other ones. Avoids flickers.
@@ -1912,6 +1942,11 @@ void Workspace::slotReconfigure()
     mgr->updatePlugin();
     // NO need whatsoever to call slotResetAllClientsDelayed here,
     // updatePlugin resets all clients if necessary anyway.
+
+    if (options->electricBorders())
+       createBorderWindows();
+    else
+       destroyBorderWindows();
 }
 
 /*!
@@ -2079,6 +2114,7 @@ void Workspace::raiseClient( Client* c )
     if ( tab_box->isVisible() )
         tab_box->raise();
 
+    raiseElectricBorders();
 }
 
 void Workspace::raiseOrLowerClient( Client *c)
@@ -2918,8 +2954,6 @@ void Workspace::killWindowAtPosition(int x, int y)
 */
 void Workspace::slotGrabWindow()
 {
-  qWarning( "grabbing window!!!\n" );
-
     if ( active_client ) {
 	QPixmap p = QPixmap::grabWindow( active_client->winId() );
 	QClipboard *cb = QApplication::clipboard();
@@ -2934,8 +2968,6 @@ void Workspace::slotGrabWindow()
 */
 void Workspace::slotGrabDesktop()
 {
-  qWarning( "grabbing desktop!!!\n" );
-
     QPixmap p = QPixmap::grabWindow( qt_xrootwin() );
     QClipboard *cb = QApplication::clipboard();
     cb->setPixmap( p );
@@ -4030,5 +4062,192 @@ void Workspace::checkStartOnDesktop( WId w )
     if( info.desktop() == 0 )
         info.setDesktop( data.desktop());
 }
+
+// Electric Borders
+//========================================================================//
+// Electric Border Window management. Electric borders allow a user
+// to change the virtual desktop by moving the mouse pointer to the
+// borders. Technically this is done with input only windows. Since
+// electric borders can be switched on and off, we have these two
+// functions to create and destroy them.
+void Workspace::createBorderWindows()
+{
+    if ( d->electric_have_borders )
+        return;
+
+    d->electric_have_borders = true;
+    d->electric_current_border = None;
+
+    QRect r = QApplication::desktop()->geometry();
+
+    XSetWindowAttributes attributes;
+    unsigned long valuemask;
+    attributes.override_redirect = True;
+    attributes.event_mask =  (EnterWindowMask | LeaveWindowMask |
+			      VisibilityChangeMask);
+    valuemask=  (CWOverrideRedirect | CWEventMask | CWCursor );
+    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+					  XC_sb_up_arrow);
+    d->electric_top_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+				0,0,
+				r.width(),1,
+				0,
+				CopyFromParent, InputOnly,
+				CopyFromParent,
+				valuemask, &attributes);
+    XMapWindow(qt_xdisplay(), d->electric_top_border);
+
+    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+					  XC_sb_down_arrow);
+    d->electric_bottom_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+				   0,r.height()-1,
+				   r.width(),1,
+				   0,
+				   CopyFromParent, InputOnly,
+				   CopyFromParent,
+				   valuemask, &attributes);
+    XMapWindow(qt_xdisplay(), d->electric_bottom_border);
+
+    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+					  XC_sb_left_arrow);
+    d->electric_left_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+				 0,0,
+				 1,r.height(),
+				 0,
+				 CopyFromParent, InputOnly,
+				 CopyFromParent,
+				 valuemask, &attributes);
+    XMapWindow(qt_xdisplay(), d->electric_left_border);
+
+    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+					  XC_sb_right_arrow);
+    d->electric_right_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+				  r.width()-1,0,
+				  1,r.height(),
+				  0,
+				  CopyFromParent, InputOnly,
+				  CopyFromParent,
+				  valuemask, &attributes);
+    XMapWindow(qt_xdisplay(),  d->electric_right_border);
+}
+
+
+// Electric Border Window management. Electric borders allow a user
+// to change the virtual desktop by moving the mouse pointer to the
+// borders. Technically this is done with input only windows. Since
+// electric borders can be switched on and off, we have these two
+// functions to create and destroy them.
+void Workspace::destroyBorderWindows()
+{
+  if( !d->electric_have_borders)
+    return;
+
+  d->electric_have_borders = false;
+
+  if(d->electric_top_border)
+    XDestroyWindow(qt_xdisplay(),d->electric_top_border);
+  if(d->electric_bottom_border)
+    XDestroyWindow(qt_xdisplay(),d->electric_bottom_border);
+  if(d->electric_left_border)
+    XDestroyWindow(qt_xdisplay(),d->electric_left_border);
+  if(d->electric_right_border)
+    XDestroyWindow(qt_xdisplay(),d->electric_right_border);
+
+  d->electric_top_border    = None;
+  d->electric_bottom_border = None;
+  d->electric_left_border   = None;
+  d->electric_right_border  = None;
+}
+
+// Do we have a proper timediff function??
+static int TimeDiff(Time a, Time b)
+{
+   if (a > b)
+     return a-b;
+   else
+     return b-a;
+}
+
+// this function is called when the user entered an electric border
+// with the mouse. It may switch to another virtual desktop
+void Workspace::electricBorder(XEvent *e)
+{
+  Window border = e->xcrossing.window;
+  Time now = e->xcrossing.time;
+  int treshold_set = 150; // set timeout
+  int treshold_reset = 150; // reset timeout
+
+  if ((d->electric_current_border == border) &&
+      (TimeDiff(d->electric_time_last, now) < treshold_reset))
+  {
+     d->electric_time_last = now;
+
+     if (TimeDiff(d->electric_time_first, now) > treshold_set)
+     {
+        d->electric_current_border = 0;
+
+        QRect r = QApplication::desktop()->geometry();
+        int offset;
+        
+        if (border == d->electric_top_border){
+           offset = r.height() / 3;
+           QCursor::setPos(e->xcrossing.x_root, r.height() - offset);
+           slotSwitchDesktopUp();
+        }
+        else if (border == d->electric_bottom_border){
+           offset = r.height() / 3;
+           QCursor::setPos(e->xcrossing.x_root, offset);
+           slotSwitchDesktopDown();
+        }
+        else if (border == d->electric_left_border){
+           offset = r.width() / 3;
+           QCursor::setPos(r.width() - offset, e->xcrossing.y_root);
+           slotSwitchDesktopLeft();
+        }
+        else if (border == d->electric_right_border) {
+           offset = r.width() / 3;
+           QCursor::setPos(offset, e->xcrossing.y_root);
+           slotSwitchDesktopRight();
+        }
+        return;
+     }
+  }
+  else {
+    d->electric_current_border = border;
+    d->electric_time_first = now;
+    d->electric_time_last = now;
+  }
+
+  int mouse_warp = 1;
+
+  // reset the pointer to find out wether the user is really pushing
+  if (d->electric_current_border == d->electric_top_border){
+    QCursor::setPos(e->xcrossing.x_root, e->xcrossing.y_root+mouse_warp);
+  }
+  else if (d->electric_current_border == d->electric_bottom_border){
+    QCursor::setPos(e->xcrossing.x_root, e->xcrossing.y_root-mouse_warp);
+  }
+  else if (d->electric_current_border == d->electric_left_border){
+    QCursor::setPos(e->xcrossing.x_root+mouse_warp, e->xcrossing.y_root);
+  }
+  else if (d->electric_current_border == d->electric_right_border){
+    QCursor::setPos(e->xcrossing.x_root-mouse_warp, e->xcrossing.y_root);
+  }
+}
+
+// electric borders (input only windows) have to be always on the
+// top. For that reason kwm calls this function always after some
+// windows have been raised.
+void Workspace::raiseElectricBorders(){
+
+  if(d->electric_have_borders){
+    XRaiseWindow(qt_xdisplay(), d->electric_top_border);
+    XRaiseWindow(qt_xdisplay(), d->electric_left_border);
+    XRaiseWindow(qt_xdisplay(), d->electric_bottom_border);
+    XRaiseWindow(qt_xdisplay(), d->electric_right_border);
+  }
+}
+
+
 
 #include "workspace.moc"
