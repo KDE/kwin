@@ -1100,7 +1100,7 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	    setGeometry( geom );
 	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
 	    moveResizeMode = FALSE;
-            workspace()->setFocusChangeEnabled(true);
+	    workspace()->setFocusChangeEnabled(true);
 	    releaseMouse();
 	    releaseKeyboard();
 	}
@@ -1267,8 +1267,7 @@ void Client::leaveEvent( QEvent * )
 void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
-    if ( !isResize() )
-	sendSynteticConfigureNotify();
+    sendSynteticConfigureNotify();
 }
 
 /*!
