@@ -92,7 +92,12 @@ private:
 class WindowWrapperPrivate
 {
 public:
-    WindowWrapperPrivate() {};
+    WindowWrapperPrivate()
+     : not_obscured( false ),
+       active( false )
+     {};
+    uint not_obscured : 1; // as in 'not obscured', may be true also if the client is hidden
+    uint active : 1;
 };
 
 class ClientPrivate
@@ -202,6 +207,7 @@ const long ClientWinMask = KeyPressMask | KeyReleaseMask |
                   EnterWindowMask | LeaveWindowMask |
                   FocusChangeMask |
                   ExposureMask |
+                  VisibilityChangeMask |
                   StructureNotifyMask |
                   SubstructureRedirectMask;
 
@@ -238,10 +244,7 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
                   );
 
     // install a passive grab to catch mouse button events
-    XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
-                ButtonPressMask,
-                GrabModeSync, GrabModeAsync,
-                None, None );
+    updateMouseGrab();
 
     reparented = FALSE;
 }
@@ -254,38 +257,77 @@ WindowWrapper::~WindowWrapper()
 
 
 
+#define XCapL KKeyNative::modXLock()
+#define XNumL KKeyNative::modXNumLock()
+#define XScrL KKeyNative::modXScrollLock()
+static void grabButton( WId winId, int modifier )
+{
+    unsigned int mods[ 8 ] = {
+        0, XCapL, XNumL, XNumL | XCapL,
+        XScrL, XScrL | XCapL,
+        XScrL | XNumL, XScrL | XNumL | XCapL };
+    for( int i = 0;
+         i < 8;
+         ++i )
+        XGrabButton( qt_xdisplay(), AnyButton,
+            modifier | mods[ i ],
+            winId,  FALSE, ButtonPressMask,
+            GrabModeSync, GrabModeAsync, None, None );
+}
 
 static void ungrabButton( WId winId, int modifier )
 {
-    XUngrabButton( qt_xdisplay(), AnyButton, modifier, winId );
-    XUngrabButton( qt_xdisplay(), AnyButton, modifier | LockMask, winId );
+    unsigned int mods[ 8 ] = {
+        0, XCapL, XNumL, XNumL | XCapL,
+        XScrL, XScrL | XCapL,
+        XScrL | XNumL, XScrL | XNumL | XCapL };
+    for( int i = 0;
+         i < 8;
+         ++i )
+        XUngrabButton( qt_xdisplay(), AnyButton,
+            modifier | mods[ i ], winId );
 }
+#undef XCapL
+#undef XNumL
+#undef XScrL
 
 /*!
   Called by the client to notify the window wrapper when activation
   state changes.
+ */
+void WindowWrapper::setActive( bool active )
+{
+    d->active = active;
+    updateMouseGrab();
+}
 
+ 
+/*
   Releases the passive grab for some modifier combinations when a
   window becomes active. This helps broken X programs that
   missinterpret LeaveNotify events in grab mode to work properly
   (Motif, AWT, Tk, ...)
  */
-void WindowWrapper::setActive( bool active )
+void WindowWrapper::updateMouseGrab()
 {
-    if ( active ) {
-      if ( !options->clickRaise )
-          // TODO but we could at least ungrab when the window is the top client
-          // and grab again after it's lowered
-	ungrabButton( winId(),  None );
-      ungrabButton( winId(),  ShiftMask );
-      ungrabButton( winId(),  ControlMask );
-      ungrabButton( winId(),  ControlMask | ShiftMask );
-    } else {
+    if( d->active )
+        {
+        // remove the grab for no modifiers only if the window
+        // is unobscured or if the user doesn't want click raise
+        if( !options->clickRaise || d->not_obscured )
+	    ungrabButton( winId(),  None );
+        else
+            grabButton( winId(), None );
+        ungrabButton( winId(),  ShiftMask );
+        ungrabButton( winId(),  ControlMask );
+        ungrabButton( winId(),  ControlMask | ShiftMask );
+        }
+    else
+        // simply grab all modifier combinations
         XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
-                    ButtonPressMask,
-                    GrabModeSync, GrabModeAsync,
-                    None, None );
-    }
+            ButtonPressMask,
+            GrabModeSync, GrabModeAsync,
+            None, None );
 }
 
 QSize WindowWrapper::sizeHint() const
@@ -467,6 +509,14 @@ bool WindowWrapper::x11Event( XEvent * e)
     case ButtonRelease:
         XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         break;
+    case VisibilityNotify:
+        {
+        bool old_not_obscured = d->not_obscured;
+        d->not_obscured = ( e->xvisibility.state == VisibilityUnobscured );
+        if( old_not_obscured != d->not_obscured )
+            updateMouseGrab();
+        break;
+        }
     default:
         break;
     }

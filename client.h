@@ -56,6 +56,7 @@ private slots:
     void deferredResize();
 
 private:
+    void updateMouseGrab();
     WId win;
     Time lastMouseEventTime;
     bool reparented;
