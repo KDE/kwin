@@ -451,6 +451,7 @@ void Workspace::gotFocusIn( const Client* c )
 void Workspace::setShouldGetFocus( Client* c )
     {
     should_get_focus.append( c );
+    updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
     }
 
 // focus_in -> the window got FocusIn event

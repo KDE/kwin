@@ -712,14 +712,14 @@ Layer Client::belongsToLayer() const
         return DockLayer;
     if( isTopMenu())
         return DockLayer;
-    // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
-    // i.e. the window set to be topmost by the user
-    bool raise_special_active_windows = ( workspace()->topClientOnDesktop( desktop(), true ) == this );
     if( keepAbove())
         return AboveLayer;
-    if( isFullScreen() && workspace()->activeClient() != NULL
-        && ( workspace()->activeClient() == this || this->hasTransient( workspace()->activeClient(), true ))
-        && raise_special_active_windows )
+    // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
+    // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
+    const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
+    if( isFullScreen() && ac != NULL
+        && workspace()->topClientOnDesktop( desktop(), true ) == ac
+        && ( ac == this || this->hasTransient( ac, true )))
         return ActiveLayer;
     return NormalLayer;
     }

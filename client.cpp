@@ -173,6 +173,7 @@ void Client::deleteClient( Client* c, allowed_t )
  */
 void Client::releaseWindow( bool on_shutdown )
     {
+    StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
@@ -221,6 +222,7 @@ void Client::releaseWindow( bool on_shutdown )
 // (e.g. the application closed it)
 void Client::destroyClient()
     {
+    StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
