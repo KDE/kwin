@@ -208,9 +208,12 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
     QDesktopWidget *desktopwidget = KApplication::desktop();
+    int screen = desktopwidget->screenNumber( p );
+    if( screen < 0 )
+        screen = desktopwidget->primaryScreen();
     QRect sarea = screenarea // may be NULL during KWin initialization
-        ? screenarea[ desktop ][ desktopwidget->screenNumber( p ) ]
-        : desktopwidget->screenGeometry( desktopwidget->screenNumber( p ));
+        ? screenarea[ desktop ][ screen ]
+        : desktopwidget->screenGeometry( screen );
     QRect warea = workarea[ desktop ].isNull()
         ? QApplication::desktop()->geometry()
         : workarea[ desktop ];
@@ -223,7 +226,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
                 return warea;
         case MaximizeFullArea:
             if (options->xineramaMaximizeEnabled)
-                return desktopwidget->screenGeometry( desktopwidget->screenNumber( p ));
+                return desktopwidget->screenGeometry( screen );
             else
                 return desktopwidget->geometry();
         case PlacementArea:
