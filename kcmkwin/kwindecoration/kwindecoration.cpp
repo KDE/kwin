@@ -456,8 +456,13 @@ void KWinDecorationModule::defaults()
 QString KWinDecorationModule::quickHelp() const
 {
 	return i18n( "<h1>Window Decorations</h1>"
-                 "This module allows you to choose the window border decorations, "
-                "as well as titlebar button positions and custom decoration options.");
+                 "<p>This module allows you to choose the window border decorations, "
+                "as well as titlebar button positions and custom decoration options.</p>"
+		"To choose a theme for your window decoration click on the name of it and apply your choice by clicking the \"Apply\" button right below."
+		" If you do not want to apply your choice you might press the \"Reset\" button to discard your changes."
+		"<p>You can configure each theme in the \"Configure[]\" tab. There are different options specific for each theme.</p>"
+		"<p>As general option (if available) you can activate the \"Buttons\" tab by checking the \"Use custom titlebar button positions\" box."
+		" In the \"Buttons\" tab you can change the positions of your buttons, so that you like your new style.</p>" );
 }
 
 
