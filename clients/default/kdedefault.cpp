@@ -197,29 +197,39 @@ void KDEDefaultHandler::createPixmaps()
 	} else
 		titlePix = NULL;
 
+	QColor activeTitleColor1(options->color(Options::TitleBar,      true));
+	QColor activeTitleColor2(options->color(Options::TitleBlend,    true));
+
+	QColor inactiveTitleColor1(options->color(Options::TitleBar,    false));
+	QColor inactiveTitleColor2(options->color(Options::TitleBlend,  false));
+
 	// Create titlebar gradient images if required
+	aUpperGradient = NULL;
+	iUpperGradient = NULL;
+
 	if(highcolor)
 	{
 		// Create the titlebar gradients
-		aUpperGradient = new KPixmap;
-		aUpperGradient->resize(128, normalTitleHeight+2);
-		iUpperGradient = new KPixmap;
-        iUpperGradient->resize(128, normalTitleHeight+2);
-        QColorGroup bgColor = options->colorGroup(Options::TitleBar, true);
-		QColorGroup bgColorDrop = options->colorGroup(Options::TitleBlend, true);
-        KPixmapEffect::gradient(*aUpperGradient,
-                                bgColor.midlight(),
-                                bgColorDrop.mid(),
-                                KPixmapEffect::VerticalGradient);
-        bgColor = options->colorGroup(Options::TitleBar, false);
-		bgColorDrop = options->colorGroup(Options::TitleBlend, false);
-        KPixmapEffect::gradient(*iUpperGradient,
-                                bgColor.midlight(),
-                                bgColorDrop.mid(),
-                                KPixmapEffect::VerticalGradient);
-    } else {
-		aUpperGradient = NULL;
-		iUpperGradient = NULL;
+		if (activeTitleColor1 != activeTitleColor2)
+		{
+			aUpperGradient = new KPixmap;
+			aUpperGradient->resize(128, normalTitleHeight+2);
+			KPixmapEffect::gradient(*aUpperGradient,
+				activeTitleColor1,
+				activeTitleColor2,
+				KPixmapEffect::VerticalGradient);
+		}
+
+		if (inactiveTitleColor1 != inactiveTitleColor2)
+		{
+			iUpperGradient = new KPixmap;
+			iUpperGradient->resize(128, normalTitleHeight+2);
+
+			KPixmapEffect::gradient(*iUpperGradient,
+					inactiveTitleColor1,
+					inactiveTitleColor2,
+			KPixmapEffect::VerticalGradient);
+		}
 	}
 
 	// Set the sticky pin pixmaps;
@@ -808,7 +818,6 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	QColorGroup g;
 	int offset;
 
-	bool highcolor = useGradients && (QPixmap::defaultDepth() > 8);
 	KPixmap* upperGradient = isActive() ? aUpperGradient : iUpperGradient;
 
     QPainter p(this);
