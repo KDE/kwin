@@ -31,7 +31,7 @@
 #include <kdialog.h>
 #include <kglobalsettings.h>
 #include <kseparator.h>
-#include <kkeynative.h>	// For KKeyNative::keyboardHasWinKey()
+#include <kkeynative.h> // For KKeyNative::keyboardHasWinKey()
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -455,7 +455,7 @@ void KActionsConfig::load()
   setComboText(coWin1,config->readEntry("CommandWindow1","Activate, raise and pass click").ascii());
   setComboText(coWin2,config->readEntry("CommandWindow2","Activate and pass click").ascii());
   setComboText(coWin3,config->readEntry("CommandWindow3","Activate and pass click").ascii());
-  setComboText(coAllKey,config->readEntry("CommandAllKey","Alt").ascii());
+  setComboText(coAllKey,config->readEntry("CommandAllKey",KKeyNative::keyboardHasWinKey() ? "Meta" : "Alt").ascii());
   setComboText(coAll1,config->readEntry("CommandAll1","Move").ascii());
   setComboText(coAll2,config->readEntry("CommandAll2","Toggle raise and lower").ascii());
   setComboText(coAll3,config->readEntry("CommandAll3","Resize").ascii());
