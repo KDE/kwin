@@ -118,6 +118,7 @@ bool Client::manage( Window w, bool isMapped )
     fetchIconicName();
     getWMHints(); // needs to be done before readTransient() because of reading the group
     getWmClientLeader(); // needs to be done before readTransient() because of same app comparing
+    modal = ( info->state() & NET::Modal ) != 0; // needs to be valid before handling groups
     readTransient();
     getIcons();
     getWindowProtocols();
@@ -127,7 +128,6 @@ bool Client::manage( Window w, bool isMapped )
 
     original_skip_taskbar = skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
     skip_pager = ( info->state() & NET::SkipPager) != 0;
-    modal = ( info->state() & NET::Modal ) != 0;
 
     KStartupInfoId asn_id;
     KStartupInfoData asn_data;
