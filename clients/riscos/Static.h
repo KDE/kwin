@@ -92,9 +92,17 @@ class Static
     const QStringList & rightButtons() const
     { return rightButtons_; }
 
+    int animationStyle() const
+    { return animationStyle_; }
+
+    int titleHeight() const
+    { return titleHeight_; }
+
+    int resizeHeight() const
+    { return resizeHeight_; }
+
   private:
 
-    void _drawButtonBorder (QPixmap &);
     void _drawBorder       (QPixmap &, int, int);
 
     void _init();
@@ -121,6 +129,11 @@ class Static
     double transx, transy;
 
     QStringList leftButtons_, rightButtons_;
+
+    int animationStyle_;
+
+    int titleHeight_;
+    int resizeHeight_;
 };
 
 } // End namespace

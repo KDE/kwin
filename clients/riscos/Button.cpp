@@ -34,8 +34,8 @@ Button::Button(QWidget * parent)
     active_   (false)
 {
   setBackgroundColor(Qt::black);
-  setFixedSize(19, 20);
   connect(parent, SIGNAL(activeChanged(bool)), this, SLOT(setActive(bool)));
+  update();
 }
 
 Button::~Button()
@@ -75,6 +75,15 @@ Button::mouseReleaseEvent(QMouseEvent *)
 {
   down_ = false;
   repaint();
+}
+
+  void
+Button::update()
+{
+  setFixedSize(
+      Static::instance()->titleHeight() - 1,
+      Static::instance()->titleHeight()
+      );
 }
 
   void
@@ -128,10 +137,12 @@ Button::paintEvent(QPaintEvent *)
   bitBlt(this, alignment_ == Left ? 1 : 0, 0,
       &Static::instance()->buttonBase(active_, down_));
 
+  int i = width() / 2 - 6;
+
   if (active_)
-    bitBlt(this, alignment_ == Left ? 4 : 3, 4, &aPixmap_);
+    bitBlt(this, alignment_ == Left ? i + 1 : i, i + 1, &aPixmap_);
   else
-    bitBlt(this, alignment_ == Left ? 4 : 3, 4, &iPixmap_);
+    bitBlt(this, alignment_ == Left ? i + 1 : i, i + 1, &iPixmap_);
 }
 
 } // End namespace

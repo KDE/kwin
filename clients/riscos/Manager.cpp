@@ -22,11 +22,13 @@
 
 #include <unistd.h> // for usleep
 #include <config.h> // for usleep on non-linux platforms
+#include <math.h> // for sin and cos
 
 #include <qpainter.h>
 #include <qimage.h>
 #include <qlayout.h>
 
+#include <kapp.h>
 #include <netwm.h>
 
 #include "../../options.h"
@@ -106,8 +108,14 @@ Manager::Manager(
     if (buttonDict_[*it])
       titleLayout->addWidget(buttonDict_[*it]);
 
-  titleSpacer_ = new QSpacerItem(0, 20, QSizePolicy::Expanding,
-      QSizePolicy::Fixed);
+  titleSpacer_ =
+    new QSpacerItem(
+      0,
+      Static::instance()->titleHeight(),
+      QSizePolicy::Expanding,
+      QSizePolicy::Fixed
+    );
+
   titleLayout->addItem(titleSpacer_);
 
   for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
@@ -120,7 +128,7 @@ Manager::Manager(
   midLayout->addWidget(windowWrapper());
   midLayout->addSpacing(1);
 
-  l->addSpacing(10);
+  l->addSpacing(Static::instance()->resizeHeight());
 
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
@@ -157,36 +165,42 @@ Manager::paintEvent(QPaintEvent * e)
 
   bool active = isActive();
 
-  QRect tr = titleSpacer_->geometry();
-
   // Title bar.
-  p.drawPixmap(tr.left(), 0, s->titleTextLeft(active));
 
-  p.drawTiledPixmap(tr.left() + 3, 0, tr.width() - 6, 20, s->titleTextMid(active));
-  p.setPen(options->color(Options::Font, active));
-  p.setFont(options->font(true)); // XXX false doesn't work right at the moment
-  p.drawText(tr.left() + 4, 0, tr.width() - 8, 18, AlignCenter, caption());
-
-  p.drawPixmap(tr.right() - 2, 0, s->titleTextRight(active));
+  QRect tr = titleSpacer_->geometry();
+  bitBlt(this, tr.topLeft(), &titleBuf_);
 
   // Resize bar.
 
-  int rbt = height() - 10; // Resize bar top.
+  int rbt = height() - Static::instance()->resizeHeight(); // Resize bar top.
 
-  p.drawPixmap(0, rbt, s->resize(active));
+  bitBlt(this, 0, rbt, &(s->resize(active)));
+  bitBlt(this, 30, rbt, &(s->resizeMidLeft(active)));
 
-  p.drawPixmap(30, rbt, s->resizeMidLeft(active));
-  p.drawTiledPixmap(32, rbt, width() - 34, 10, s->resizeMidMid(active));
-  p.drawPixmap(width() - 32, rbt, s->resizeMidRight(active));
+  p.drawTiledPixmap(
+      32,
+      rbt,
+      width() - 34,
+      Static::instance()->resizeHeight(),
+      s->resizeMidMid(active)
+  );
 
-  p.drawPixmap(width() - 30, rbt, s->resize(active));
+  bitBlt(this, width() - 32, rbt, &(s->resizeMidRight(active)));
+  bitBlt(this, width() - 30, rbt, &(s->resize(active)));
 }
 
   void
 Manager::resizeEvent(QResizeEvent * e)
 {
   Client::resizeEvent(e);
+  updateButtonVisibility();
+  updateTitleBuffer();
+  repaint();
+}
 
+  void
+Manager::updateButtonVisibility()
+{
   int sizeProblem = 0;
 
   if (width() < 80) sizeProblem = 3;
@@ -233,8 +247,44 @@ Manager::resizeEvent(QResizeEvent * e)
       close_    ->show();
       break;
   }
+}
 
-  repaint();
+  void
+Manager::updateTitleBuffer()
+{
+  bool active = isActive();
+
+  Static * s = Static::instance();
+
+  QRect tr = titleSpacer_->geometry();
+
+  titleBuf_.resize(tr.size());
+
+  QPainter p(&titleBuf_);
+
+  p.drawPixmap(0, 0, s->titleTextLeft(active));
+
+  p.drawTiledPixmap(
+      3,
+      0,
+      tr.width() - 6,
+      Static::instance()->titleHeight(),
+      s->titleTextMid(active)
+    );
+
+  p.setPen(options->color(Options::Font, active));
+
+  p.setFont(options->font(true)); // XXX false doesn't work right at the moment
+
+  p.drawText(
+      4,
+      2,
+      tr.width() - 8,
+      Static::instance()->titleHeight() - 4,
+      AlignCenter, caption()
+  );
+
+  p.drawPixmap(tr.width() - 3, 0, s->titleTextRight(active));
 }
 
   Client::MousePosition
@@ -242,7 +292,7 @@ Manager::mousePosition(const QPoint & p) const
 {
   MousePosition m = Center;
 
-  if (p.y() > (height() - 10)) {
+  if (p.y() > (height() - Static::instance()->resizeHeight())) {
      // Keep order !
     if (p.x() >= (width() - 30))
       m = BottomRight;
@@ -267,6 +317,8 @@ Manager::mouseDoubleClickEvent(QMouseEvent * e)
   void
 Manager::slotReset()
 {
+  for (QDictIterator<Button> it(buttonDict_); it.current(); ++it)
+    it.current()->update();
   Static::instance()->update();
   repaint();
 }
@@ -274,20 +326,21 @@ Manager::slotReset()
   void
 Manager::captionChange(const QString &)
 {
+  updateTitleBuffer();
   repaint();
 }
 
   void
 Manager::paletteChange(const QPalette &)
 {
-  Static::instance()->update();
-  repaint();
+  slotReset();
 }
 
   void
 Manager::activeChange(bool b)
 {
   emit(activeChanged(b));
+  updateTitleBuffer();
   repaint();
 }
 
@@ -336,43 +389,146 @@ Manager::slotHelp()
   void
 Manager::animateIconifyOrDeiconify(bool iconify)
 {
-  NETRect r = netWinInfo()->iconGeometry();
+  animate(iconify, Static::instance()->animationStyle());
+}
 
-  QRect icongeom(r.pos.x, r.pos.y, r.size.width, r.size.height);
+void Manager::animate(bool iconify, int style)
+{
+  switch (style) {
 
-  if (!icongeom.isValid())
-    return;
+    case 1:
+      {
+        // Double twisting double back, with pike ;)
 
-  QRect wingeom(x(), y(), width(), height());
+        if (!iconify) // No animation for restore.
+          return;
 
-  XGrabServer(qt_xdisplay());
+        // Go away quick.
+        hide();
+        qApp->syncX();
 
-  QPainter p(workspace()->desktopWidget());
+        NETRect r = netWinInfo()->iconGeometry();
 
-  p.setRasterOp(Qt::NotROP);
+        if (!QRect(r.pos.x, r.pos.y, r.size.width, r.size.height).isValid())
+          return;
 
-  if (iconify)
-    p.setClipRegion(QRegion(workspace()->desktopWidget()->rect()) - wingeom);
+        // Algorithm taken from Window Maker (http://www.windowmaker.org)
 
-  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
-  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
-  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
-  p.drawLine(wingeom.topRight(), icongeom.topRight());
+        int sx = x();
+        int sy = y();
+        int sw = width();
+        int sh = height();
+        int dx = r.pos.x;
+        int dy = r.pos.y;
+        int dw = r.size.width;
+        int dh = r.size.height;
 
-  p.flush();
+        double steps = 12;
 
-  XSync( qt_xdisplay(), FALSE );
+        double xstep = double((dx-sx)/steps);
+        double ystep = double((dy-sy)/steps);
+        double wstep = double((dw-sw)/steps);
+        double hstep = double((dh-sh)/steps);
 
-  usleep(30000);
+        double cx = sx;
+        double cy = sy;
+        double cw = sw;
+        double ch = sh;
 
-  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
-  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
-  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
-  p.drawLine(wingeom.topRight(), icongeom.topRight());
+        double finalAngle = 3.14159265358979323846;
 
-  p.end();
+        double delta  = finalAngle / steps;
 
-  XUngrabServer( qt_xdisplay() );
+        QPainter p(workspace()->desktopWidget());
+        p.setRasterOp(Qt::NotROP);
+
+        for (double angle = 0; ; angle += delta) {
+
+          if (angle > finalAngle)
+            angle = finalAngle;
+
+          double dx = (cw / 10) - ((cw / 5) * sin(angle));
+          double dch = (ch / 2) * cos(angle);
+          double midy = cy + (ch / 2);
+
+          QPoint p1(cx + dx, midy - dch);
+          QPoint p2(cx + cw - dx, p1.y());
+          QPoint p3(cx + dw + dx, midy + dch);
+          QPoint p4(cx - dx, p3.y());
+       
+          XGrabServer(qt_xdisplay());
+
+          p.drawLine(p1, p2);
+          p.drawLine(p2, p3);
+          p.drawLine(p3, p4);
+          p.drawLine(p4, p1);
+
+          p.flush();
+
+          usleep(500);
+
+          p.drawLine(p1, p2);
+          p.drawLine(p2, p3);
+          p.drawLine(p3, p4);
+          p.drawLine(p4, p1);
+
+          XUngrabServer(qt_xdisplay());
+
+          kapp->processEvents();
+
+          cx += xstep;
+          cy += ystep;
+          cw += wstep;
+          ch += hstep;
+
+          if (angle >= finalAngle)
+            break;
+        }
+      }
+      break;
+
+    default:
+      {
+        NETRect r = netWinInfo()->iconGeometry();
+
+        QRect icongeom(r.pos.x, r.pos.y, r.size.width, r.size.height);
+
+        if (!icongeom.isValid())
+          return;
+
+        QRect wingeom(x(), y(), width(), height());
+
+        QPainter p(workspace()->desktopWidget());
+
+        p.setRasterOp(Qt::NotROP);
+
+        if (iconify)
+          p.setClipRegion(
+              QRegion(workspace()->desktopWidget()->rect()) - wingeom
+          );
+
+        XGrabServer(qt_xdisplay());
+
+        p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
+        p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
+        p.drawLine(wingeom.topLeft(), icongeom.topLeft());
+        p.drawLine(wingeom.topRight(), icongeom.topRight());
+
+        p.flush();
+
+        qApp->syncX();
+
+        usleep(30000);
+
+        p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
+        p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
+        p.drawLine(wingeom.topLeft(), icongeom.topLeft());
+        p.drawLine(wingeom.topRight(), icongeom.topRight());
+
+        XUngrabServer(qt_xdisplay());
+      }
+      break;
+  }
 }
 
 
@@ -382,229 +538,12 @@ ToolManager::ToolManager(
   QWidget * parent,
   const char * name
 )
-  : Client(workSpace, id, parent, name)
+  : Manager(workSpace, id, parent, name)
 {
-  setBackgroundMode(NoBackground);
-
-  QStringList leftButtons = Static::instance()->leftButtons();
-  QStringList rightButtons = Static::instance()->rightButtons();
-
-  QVBoxLayout * l = new QVBoxLayout(this, 0, 0);
-
-  close_      = new CloseButton     (this);
-  help_       = new HelpButton      (this);
-
-  buttonDict_.insert("Close",    close_);
-  buttonDict_.insert("Help",     help_);
-
-  if (!providesContextHelp())
-    help_->hide();
-
-  QStringList::ConstIterator it;
-
-  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
-    if (buttonDict_[*it])
-      buttonDict_[*it]->setAlignment(Button::Left);
-
-  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
-    if (buttonDict_[*it])
-      buttonDict_[*it]->setAlignment(Button::Left);
-
-  QHBoxLayout * titleLayout = new QHBoxLayout(l);
-
-  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
-    if (buttonDict_[*it])
-      titleLayout->addWidget(buttonDict_[*it]);
-
-  titleSpacer_ = new QSpacerItem(0, 20);
-  titleLayout->addItem(titleSpacer_);
-
-  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
-    if (buttonDict_[*it])
-      titleLayout->addWidget(buttonDict_[*it]);
-
-  QHBoxLayout * midLayout = new QHBoxLayout(l);
-  midLayout->addSpacing(1);
-  midLayout->addWidget(windowWrapper());
-  midLayout->addSpacing(1);
-
-  l->addSpacing(10);
-
-  connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
 
 ToolManager::~ToolManager()
 {
-}
-
-  void
-ToolManager::paintEvent(QPaintEvent * e)
-{
-  QPainter p(this);
-
-  QRect r(e->rect());
-
-  bool intersectsLeft =
-    r.intersects(QRect(0, 0, 1, height()));
-
-  bool intersectsRight =
-    r.intersects(QRect(width() - 1, 0, width(), height()));
-
-  if (intersectsLeft || intersectsRight) {
-
-    p.setPen(Qt::black);
-
-    if (intersectsLeft)
-      p.drawLine(0, r.top(), 0, r.bottom());
-
-    if (intersectsRight)
-      p.drawLine(width() - 1, r.top(), width() - 1, r.bottom());
-  }
-
-  Static * s = Static::instance();
-
-  bool active = isActive();
-
-  QRect tr = titleSpacer_->geometry();
-
-  // Title bar.
-  p.drawPixmap(tr.left(), 0, s->titleTextLeft(active));
-
-  p.drawTiledPixmap(tr.left() + 3, 0, tr.width() - 6, 20, s->titleTextMid(active));
-  p.setPen(options->color(Options::Font, active));
-  p.setFont(options->font(active));
-  p.drawText(tr.left() + 4, 0, tr.width() - 8, 18, AlignCenter, caption());
-
-  p.drawPixmap(tr.right() - 2, 0, s->titleTextRight(active));
-
-  // Resize bar.
-
-  int rbt = height() - 10; // Resize bar top.
-
-  p.drawPixmap(0, rbt, s->resize(active));
-
-  p.drawPixmap(30, rbt, s->resizeMidLeft(active));
-  p.drawTiledPixmap(32, rbt, width() - 34, 10, s->resizeMidMid(active));
-  p.drawPixmap(width() - 32, rbt, s->resizeMidRight(active));
-
-  p.drawPixmap(width() - 30, rbt, s->resize(active));
-}
-
-  void
-ToolManager::resizeEvent(QResizeEvent *)
-{
-  if (width() < 80) {
-    help_     ->hide();
-    close_    ->hide();
-  } else {
-    if (providesContextHelp())
-      help_     ->show();
-    close_    ->show();
-  }
-
-  repaint();
-}
-
-  Client::MousePosition
-ToolManager::mousePosition(const QPoint & p) const
-{
-  MousePosition m = Center;
-
-  if (p.y() > (height() - 10)) {
-     // Keep order !
-    if (p.x() >= (width() - 30))
-      m = BottomRight;
-    else if (p.x() <= 30)
-      m = BottomLeft;
-    else
-      m = Bottom;
-  }
-
-  return m;
-}
-
-  void
-ToolManager::mouseDoubleClickEvent(QMouseEvent * e)
-{
-  if (titleSpacer_->geometry().contains(e->pos()))
-    workspace()
-      ->performWindowOperation(this, options->operationTitlebarDblClick());
-  workspace()->requestFocus(this);
-}
-
-  void
-ToolManager::slotReset()
-{
-  Static::instance()->update();
-  repaint();
-}
-
-  void
-ToolManager::captionChange(const QString &)
-{
-  repaint();
-}
-
-  void
-ToolManager::paletteChange(const QPalette &)
-{
-  Static::instance()->update();
-  repaint();
-}
-
-  void
-ToolManager::activeChange(bool b)
-{
-  emit(activeChanged(b));
-  repaint();
-}
-
-  void
-ToolManager::slotHelp()
-{
-  contextHelp();
-}
-
-  void
-ToolManager::animateIconifyOrDeiconify(bool iconify)
-{
-  NETRect r = netWinInfo()->iconGeometry();
-
-  QRect icongeom(r.pos.x, r.pos.y, r.size.width, r.size.height);
-
-  if (!icongeom.isValid())
-    return;
-
-  QRect wingeom(x(), y(), width(), height());
-
-  XGrabServer(qt_xdisplay());
-
-  QPainter p(workspace()->desktopWidget());
-
-  p.setRasterOp(Qt::NotROP);
-
-  if (iconify)
-    p.setClipRegion(QRegion(workspace()->desktopWidget()->rect()) - wingeom);
-
-  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
-  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
-  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
-  p.drawLine(wingeom.topRight(), icongeom.topRight());
-
-  p.flush();
-
-  XSync( qt_xdisplay(), FALSE );
-
-  usleep(30000);
-
-  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
-  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
-  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
-  p.drawLine(wingeom.topRight(), icongeom.topRight());
-
-  p.end();
-
-  XUngrabServer( qt_xdisplay() );
 }
 
 } // End namespace

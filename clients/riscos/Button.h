@@ -44,6 +44,8 @@ class Button : public QWidget
 
     Alignment alignment() const;
 
+    void update();
+
   protected slots:
 
     void setActive(bool);

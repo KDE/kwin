@@ -74,6 +74,9 @@ class Manager : public Client
     void resizeEvent(QResizeEvent *);
     void mouseDoubleClickEvent(QMouseEvent *);
     void animateIconifyOrDeiconify(bool);
+    void animate(bool, int);
+    void updateButtonVisibility();
+    void updateTitleBuffer();
 
   protected slots:
 
@@ -92,9 +95,11 @@ class Manager : public Client
     QSpacerItem     * titleSpacer_;
 
     QDict<Button>   buttonDict_;
+
+    QPixmap         titleBuf_;
 };
 
-class ToolManager : public Client
+class ToolManager : public Manager
 {
   Q_OBJECT
 
@@ -102,38 +107,6 @@ class ToolManager : public Client
 
     ToolManager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
     ~ToolManager();
-
-  signals:
-
-    void activeChanged(bool);
-
-  public slots:
-
-    void slotHelp();
-
-  protected:
-
-    Client::MousePosition mousePosition(const QPoint &) const;
-    void paletteChange(const QPalette &);
-    void activeChange(bool);
-    void paintEvent(QPaintEvent *);
-    void resizeEvent(QResizeEvent *);
-    void mouseDoubleClickEvent(QMouseEvent *);
-    void animateIconifyOrDeiconify(bool);
-
-  protected slots:
-
-    void captionChange(const QString &);
-    void slotReset();
-
-  private:
-
-    CloseButton     * close_;
-    HelpButton      * help_;
-
-    QSpacerItem     * titleSpacer_;
-
-    QDict<Button>   buttonDict_;
 };
 
 
