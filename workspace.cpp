@@ -99,6 +99,11 @@ Workspace::Workspace( bool restore )
     layoutY(2),
     workarea(NULL),
     screenarea(NULL),
+    managing_topmenus( false ),
+    topmenu_selection( NULL ),
+    topmenu_watcher( NULL ),
+    topmenu_height( 0 ),
+    topmenu_space( NULL ),
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
     forced_global_mouse_grab( false )
@@ -309,9 +314,6 @@ void Workspace::init()
     Atom topmenu_atom = XInternAtom( qt_xdisplay(), nm, False );
     topmenu_selection = new KSelectionOwner( topmenu_atom );
     topmenu_watcher = new KSelectionWatcher( topmenu_atom );
-    topmenu_height = 0;
-    managing_topmenus = false;
-    topmenu_space = NULL;
 // TODO grabXServer(); - where exactly put this? topmenu selection claiming down belong must be before
 
         { // begin updates blocker block
@@ -1110,6 +1112,8 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         if( w_tmp == null_focus_window ) // CHECKME?
             requestFocus( findDesktop( true, currentDesktop()));
         }
+
+    updateCurrentTopMenu();
 
     // Update focus chain:
     //  If input: chain = { 1, 2, 3, 4 } and current_desktop = 3,
