@@ -796,13 +796,31 @@ bool KCommonDecoration::isToolWindow() const
     return ((type==NET::Toolbar)||(type==NET::Utility)||(type==NET::Menu));
 }
 
+QRect KCommonDecoration::titleRect()
+{
+    int r_x, r_y, r_x2, r_y2;
+    widget()->rect().coords(&r_x, &r_y, &r_x2, &r_y2);
+    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
+    const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
+    const int titleEdgeRight = layoutMetric(LM_TitleEdgeRight);
+    const int titleEdgeBottom = layoutMetric(LM_TitleEdgeBottom);
+    const int titleBorderLeft = layoutMetric(LM_TitleBorderLeft);
+    const int titleBorderRight = layoutMetric(LM_TitleBorderRight);
+    const int ttlHeight = layoutMetric(LM_TitleHeight);
+    const int titleEdgeBottomBottom = r_y+titleEdgeTop+ttlHeight+titleEdgeBottom-1;
+    return QRect(r_x+titleEdgeLeft+buttonsLeftWidth()+titleBorderLeft, r_y+titleEdgeTop,
+              r_x2-titleEdgeRight-buttonsRightWidth()-(r_x+titleEdgeLeft+buttonsLeftWidth()+titleBorderLeft),
+              titleEdgeBottomBottom-(r_y+titleEdgeTop) );
+}
+
 
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent, const char *name)
     : QButton(parent->widget(), name),
         m_decoration(parent),
         m_type(type),
         m_realizeButtons(LeftButton),
-        m_lastMouse(NoButton)
+        m_lastMouse(NoButton),
+        m_isLeft(true)
 {
     setCursor(ArrowCursor);
 }
@@ -811,17 +829,17 @@ KCommonDecorationButton::~KCommonDecorationButton()
 {
 }
 
-KCommonDecoration *KCommonDecorationButton::decoration()
+KCommonDecoration *KCommonDecorationButton::decoration() const
 {
     return m_decoration;
 }
 
-ButtonType KCommonDecorationButton::type()
+ButtonType KCommonDecorationButton::type() const
 {
-    return m_type;;
+    return m_type;
 }
 
-bool KCommonDecorationButton::isLeft()
+bool KCommonDecorationButton::isLeft() const
 {
     return m_isLeft;
 }

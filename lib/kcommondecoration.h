@@ -212,6 +212,11 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
          * @returns true if the window type is NET::Toolbar, NET::Utility, or NET::Menu
          */
         bool isToolWindow() const;
+        /**
+         * Convenience method.
+         * @returns the title rect.
+         */
+         QRect titleRect();
 
     public:
         /**
@@ -303,17 +308,17 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
         /**
          * @returns the KCommonDecoration the button belongs to.
          */
-        KCommonDecoration *decoration();
+        KCommonDecoration *decoration() const;
         /**
          * @returns the button type.
          * @see ButtonType
          */
-        ButtonType type();
+        ButtonType type() const;
 
         /**
          * Whether the button is left of the titlebar or not.
          */
-        bool isLeft();
+        bool isLeft() const;
 
         /**
          * Set which mouse buttons the button should honor. Used e.g. to prevent accidental right mouse clicks.
