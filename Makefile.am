@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I$(top_srcdir)/kwin/default
+INCLUDES = -I$(top_srcdir)/kwin/default $(all_includes)
 
 SUBDIRS = default . pics clients
 
