@@ -396,7 +396,6 @@ class Client : public QObject, public KDecorationDefines
         uint active :1;
         uint keep_above : 1; // NET::KeepAbove (was stays_on_top)
         uint is_shape :1;
-        uint may_move :1;
         uint skip_taskbar :1;
         uint original_skip_taskbar :1; // unaffected by KWin
         uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
@@ -406,10 +405,9 @@ class Client : public QObject, public KDecorationDefines
         uint input :1; // does the window want input in its wm_hints
         uint store_settings : 1;
         uint skip_pager : 1;
-        uint may_resize : 1;
-        uint may_maximize : 1;
-        uint may_minimize : 1;
-        uint may_close : 1;
+        uint motif_may_resize : 1;
+        uint motif_may_move :1;
+        uint motif_may_close : 1;
         uint keep_below : 1; // NET::KeepBelow
         uint minimized : 1;
         uint hidden : 1; // forcibly hidden by calling hide()

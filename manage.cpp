@@ -101,11 +101,11 @@ bool Client::manage( Window w, bool isMapped )
     bool mresize, mmove, mminimize, mmaximize, mclose;
     if( Motif::funcFlags( client, mresize, mmove, mminimize, mmaximize, mclose )) 
         {
-        may_resize = mresize;
-        may_move = mmove;
-        may_minimize = mminimize;
-        may_maximize = mmaximize;
-        may_close = mclose;
+        motif_may_resize = mresize; // this should be set using minsize==maxsize, but oh well
+        motif_may_move = mmove;
+        // mminimize; - ignore, bogus - e.g. shading or sending to another desktop is "minimizing" too
+        // mmaximize; - ignore, bogus - maximizing is basically just resizing
+        motif_may_close = mclose; // motif apps like to crash when they set this hint and WM closes them anyway
         }
 
     XClassHint classHint;
@@ -272,7 +272,7 @@ bool Client::manage( Window w, bool isMapped )
     if (xSizeHint.flags & PMinSize)
         geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
 
-    if( may_move )
+    if( isMovable())
         {
         if( geom.x() > area.right() || geom.y() > area.bottom())
             placementDone = FALSE; // weird, do not trust.
@@ -290,7 +290,7 @@ bool Client::manage( Window w, bool isMapped )
         placementDone = TRUE;
         }
 
-    if (( !isSpecialWindow() || isToolbar()) && may_move )
+    if (( !isSpecialWindow() || isToolbar()) && isMovable())
         {
         if ( geometry().right() > area.right() && width() < area.width() )
             move( area.right() - width(), y() );

@@ -547,7 +547,7 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
                 }
             return;
             }
-        if( may_resize )
+        if( isResizable())
             {
             if( rect.width() > area.width())
                 rect.setWidth( area.width());
@@ -559,17 +559,17 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
                     rect.setRight( area.right() - ( old_diff - 1 ));
                 }
             }
-        if( may_move )
+        if( isMovable())
             {
             if( old_diff < 0 ) // was in left third, keep distance from left edge
                 rect.moveLeft( area.left() + ( -old_diff - 1 ));
             else // old_diff > 0 // was in right third, keep distance from right edge
                 rect.moveRight( area.right() - ( old_diff - 1 ));
             }
-        // this may_resize block is copied from above, the difference is
+        // this isResizable() block is copied from above, the difference is
         // the condition with 'area.width() / 2' - for windows that are not wide,
         // moving is preffered to resizing
-        if( may_resize )
+        if( isResizable())
             {
             if( old_diff < 0 )
                 rect.setLeft( area.left() + ( -old_diff - 1 ) );
@@ -579,7 +579,7 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
         }
     if( rect.right() < area.left() + 5 || rect.left() > area.right() - 5 )
         { // not visible (almost) at all - try to make it at least partially visible
-        if( may_move )
+        if( isMovable())
             {
             if( rect.left() < area.left() + 5 )
                 rect.moveRight( area.left() + 5 );
@@ -772,7 +772,7 @@ void Client::sendSyntheticConfigureNotify()
  */
 bool Client::isResizable() const
     {
-    if ( !isMovable() || !may_resize || isSplash())
+    if ( !isMovable() || !motif_may_resize || isSplash())
         return FALSE;
 
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
@@ -788,7 +788,7 @@ bool Client::isMaximizable() const
     {
     if ( maximizeMode() != MaximizeRestore )
         return TRUE;
-    if( !isResizable() || isToolbar() || !may_maximize ) // SELI isToolbar() ?
+    if( !isResizable() || isToolbar()) // SELI isToolbar() ?
         return false;
     if( xSizeHint.max_height < 32767 || xSizeHint.max_width < 32767 ) // sizes are 16bit with X
         return false;

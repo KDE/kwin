@@ -110,11 +110,9 @@ Client::Client( Workspace *ws )
     keep_above = FALSE;
     keep_below = FALSE;
     is_shape = FALSE;
-    may_move = TRUE;
-    may_resize = TRUE;
-    may_minimize = TRUE;
-    may_maximize = TRUE;
-    may_close = TRUE;
+    motif_may_move = TRUE;
+    motif_may_resize = TRUE;
+    motif_may_close = TRUE;
     fullscreen_mode = FullScreenNone;
     skip_taskbar = FALSE;
     original_skip_taskbar = false;
@@ -577,7 +575,7 @@ void Client::hideClient( bool hide )
 bool Client::isMinimizable() const
     {
     if( !wantsTabFocus() // SELI co NET::Utility? a proc wantsTabFocus() - skiptaskbar? ?
-        || !may_minimize || ( isSpecialWindow() && !isOverride()))
+        || ( isSpecialWindow() && !isOverride()))
         return false;
     if( isTransient())
         { // transients may be minimized only if mainwindow is not shown
@@ -977,7 +975,7 @@ static void sendClientMessage(Window w, Atom a, long x)
  */
 bool Client::isCloseable() const
     {
-    return may_close && ( !isSpecialWindow() || isOverride()); // TODO is NET::Override special?
+    return motif_may_close && ( !isSpecialWindow() || isOverride()); // TODO is NET::Override special?
     }
 
 /*!
@@ -1577,7 +1575,7 @@ bool Client::wantsInput() const
  */
 bool Client::isMovable() const
     {
-    return may_move && !isFullScreen() &&
+    return motif_may_move && !isFullScreen() &&
         ( !isSpecialWindow() || isOverride() || isSplash() || isToolbar()) && // allow moving of splashscreens :)
         ( maximizeMode() != MaximizeFull || options->moveResizeMaximizedWindows() );
     }

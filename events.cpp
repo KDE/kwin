@@ -744,7 +744,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
 
         QPoint np( nx-ox, ny-oy);
 #if 0
-        if ( windowType() == NET::Normal && may_move ) 
+        if ( windowType() == NET::Normal && isMovable()) 
             {
             // crap for broken netscape
             QRect area = workspace()->clientArea();
