@@ -439,7 +439,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     // window wants to stay on top?
     stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || transient_for == workspace()->rootWin();
-    
+
     // window does not want a taskbar entry?
     skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
 
@@ -491,8 +491,9 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	if ( geom == QApplication::desktop()->geometry() )
 	    may_move = FALSE; // don't let fullscreen windows be moved around
     }  else {
+	QRect area = workspace()->clientArea();
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
-	    QRect area = workspace()->clientArea();
+	    placementDone = TRUE;
 	    if ( !area.contains( geom.topLeft() ) ) {
 		int tx = geom.x();
 		int ty = geom.y();
@@ -500,9 +501,11 @@ bool Client::manage( bool isMapped, bool doNotShow )
 			tx = area.x();
 		if ( ty >= 0 && ty < area.y() )
 		    ty = area.y();
-		geom.moveTopLeft( QPoint( tx, ty ) );
+		if ( tx > area.right() || ty > area.right() )
+		    placementDone = FALSE; // weird, do not trust.
+		else
+		    geom.moveTopLeft( QPoint( tx, ty ) );
 	    }
-	    placementDone = TRUE;
 	}
  	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
 	    // keep in mind that we now actually have a size :-)
@@ -685,7 +688,7 @@ bool Client::windowEvent( XEvent * e)
 	fetchName();
     if ( ( dirty & NET::WMStrut ) != 0 )
 	workspace()->updateClientArea();
-    
+
 
     switch (e->type) {
     case UnmapNotify:
@@ -874,7 +877,10 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    nw = e.width;
 	if ( e.value_mask & CWHeight )
 	    nh = e.height;
-	resize( sizeForWindowSize( QSize( nw, nh ) ) );
+	QSize ns = sizeForWindowSize( QSize( nw, nh ) );
+	if ( ns == size() )
+	    return; // broken xemacs stuff (ediff)
+	resize( ns );
     }
 
 
