@@ -126,4 +126,31 @@ void Bridge::helperShowHide( bool show )
         c->rawHide();
     }
 
+QRegion Bridge::unobscuredRegion( const QRegion& r ) const
+    {
+    QRegion reg( r );
+    const ClientList stacking_order = c->workspace()->stackingOrder();
+    ClientList::ConstIterator it = stacking_order.find( c );
+    ++it;
+    for(;
+         it != stacking_order.end();
+         ++it )
+        {
+        /* the clients all have their mask-regions in local coords
+	   so we have to translate them to a shared coord system
+	   we choose ours */
+	int dx = (*it)->x() - c->x();
+	int dy = (*it)->y() - c->y();
+	QRegion creg = (*it)->mask();
+	creg.translate(dx, dy);
+	reg -= creg;
+	if (reg.isEmpty())
+            {
+	    // early out, we are completely obscured
+	    break;
+	    }
+        }
+    return reg;
+    }
+
 } // namespace

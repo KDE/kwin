@@ -163,12 +163,32 @@ void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode, bool acti
 	    xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
+    if( active )
+        mask = reg; // keep shape of the active window for unobscuredRegion()
     }
 
 QRect KDecorationPreview::windowGeometry( bool active ) const
     {
     QWidget *widget = active ? deco[Active]->widget() : deco[Inactive]->widget();
     return widget->geometry();
+    }
+
+QRegion KDecorationPreview::unobscuredRegion( bool active, const QRegion& r ) const
+    {
+    if( active ) // this one is not obscured
+        return r;
+    else
+        {
+        // copied from KWin core's code
+        QRegion ret = r;
+        QRegion r2 = mask;
+        if( r2.isEmpty())
+            r2 = QRegion( windowGeometry( true ));
+        r2.translate( windowGeometry( true ).x() - windowGeometry( false ).x(),
+            windowGeometry( true ).y() - windowGeometry( false ).y());
+        ret -= r2;
+        return ret;
+        }
     }
 
 KDecorationPreviewBridge::KDecorationPreviewBridge( KDecorationPreview* p, bool a )
@@ -302,7 +322,12 @@ QRect KDecorationPreviewBridge::iconGeometry() const
     {
     return QRect();
     }
-        
+
+QRegion KDecorationPreviewBridge::unobscuredRegion( const QRegion& r ) const
+    {
+    return preview->unobscuredRegion( active, r );
+    }
+
 QWidget* KDecorationPreviewBridge::workspaceWidget() const
     {
     return preview;

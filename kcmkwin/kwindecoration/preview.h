@@ -47,6 +47,7 @@ class KDecorationPreview
         void enablePreview();
         void disablePreview();
         void setPreviewMask( const QRegion&, int, bool );
+        QRegion unobscuredRegion( bool, const QRegion& ) const;
         QRect windowGeometry( bool ) const;
     protected:
         virtual void resizeEvent( QResizeEvent* );
@@ -56,6 +57,7 @@ class KDecorationPreview
         KDecorationPreviewBridge* bridge[NumWindows];
         KDecoration* deco[NumWindows];
         QLabel* no_preview;
+        QRegion mask;
     };
 
 class KDecorationPreviewBridge
@@ -87,6 +89,7 @@ class KDecorationPreviewBridge
         virtual bool isPreview() const;
         virtual QRect geometry() const;
         virtual QRect iconGeometry() const;
+        virtual QRegion unobscuredRegion( const QRegion& r ) const;
         virtual QWidget* workspaceWidget() const;
 	virtual void closeWindow();
 	virtual void maximize( MaximizeMode mode );

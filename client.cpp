@@ -437,6 +437,7 @@ void Client::updateShape()
 
 void Client::setMask( const QRegion& reg, int mode )
     {
+    _mask = reg;
     if( reg.isNull())
         XShapeCombineMask( qt_xdisplay(), frameId(), ShapeBounding, 0, 0,
             None, ShapeSet );
@@ -460,6 +461,13 @@ void Client::setMask( const QRegion& reg, int mode )
             xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
+    }
+
+QRegion Client::mask() const
+    {
+    if( _mask.isEmpty())
+        return QRegion( 0, 0, width(), height());
+    return _mask;
     }
 
 void Client::hideClient( bool hide )

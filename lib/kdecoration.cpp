@@ -203,6 +203,11 @@ QRect KDecoration::iconGeometry() const
     return bridge_->iconGeometry();
     }
 
+QRegion KDecoration::unobscuredRegion( const QRegion& r ) const
+    {
+    return bridge_->unobscuredRegion( r );
+    }
+
 QWidget* KDecoration::workspaceWidget() const
     {
     return bridge_->workspaceWidget();

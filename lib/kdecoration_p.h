@@ -83,6 +83,7 @@ class KDecorationBridge : public KDecorationDefines
         virtual bool isPreview() const = 0;
         virtual QRect geometry() const = 0;
         virtual QRect iconGeometry() const = 0;
+        virtual QRegion unobscuredRegion( const QRegion& r ) const = 0;
         virtual QWidget* workspaceWidget() const = 0;
 	virtual void closeWindow() = 0;
 	virtual void maximize( MaximizeMode mode ) = 0;

@@ -416,6 +416,15 @@ class KDecoration
 	 * the geometry may be null.
 	 */
         QRect iconGeometry() const;
+        /**
+         * Returns the intersection of the given region with the region left
+         * unobscured by the windows stacked above the current one. You can use
+         * this function to, for example, try to keep the titlebar visible if
+         * there is an hole available. The region returned is in the coordinate
+         * space of the decoration.
+         * @param r The region you want to check for holes
+         */
+        QRegion unobscuredRegion( const QRegion& r ) const;
 	/**
 	 * Returns the main workspace widget. The main purpose of this function is to
 	 * allow painting the minimize animation or the transparent move bound on it.

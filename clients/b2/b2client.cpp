@@ -785,7 +785,6 @@ void B2Client::slotReset()
 
 void B2Client::unobscureTitlebar()
 {
-#if 0 // TODO JUMPYTITLEBAR
     /* we just noticed, that we got obscured by other windows
        so we look at all windows above us (stacking_order) merging their
        masks, intersecting it with our titlebar area, and see if we can
@@ -795,23 +794,7 @@ void B2Client::unobscureTitlebar()
     }
     in_unobs = 1;
     QRegion reg(QRect(0,0,width(), buttonSize + 4));
-    ClientList::ConstIterator it = workspace()->stackingOrder().find(this);
-    ++it;
-    while (it != workspace()->stackingOrder().end()) {
-        /* the clients all have their mask-regions in local coords
-	   so we have to translate them to a shared coord system
-	   we choose ours */
-	int dx = (*it)->x() - x();
-	int dy = (*it)->y() - y();
-	QRegion creg = (*it)->getMask();
-	creg.translate(dx, dy);
-	reg -= creg;
-	if (reg.isEmpty()) {
-	    // early out, we are completely obscured
-	    break;
-	}
-	++it;
-    }
+    reg = unobscuredRegion( reg );
     if (!reg.isEmpty()) {
         // there is at least _one_ pixel from our title area, which is not
 	// obscured, we use the first rect we find
@@ -820,7 +803,6 @@ void B2Client::unobscureTitlebar()
 	titleMoveAbs(reg.boundingRect().x());
     }
     in_unobs = 0;
-#endif
 }
 
 static void redraw_pixmaps()
@@ -1122,8 +1104,6 @@ B2Titlebar::B2Titlebar(B2Client *parent)
     captionSpacer = new QSpacerItem(10, buttonSize + 4, 
 	    QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
-
-// TODO JUMPYTITLEBAR This is not useful until titlebar revealing can be reenabled
 
 bool B2Titlebar::x11Event(XEvent *e)
 {

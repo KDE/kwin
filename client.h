@@ -179,6 +179,7 @@ class Client : public QObject, public KDecorationDefines
         void demandAttention( bool set = true );
 
         void setMask( const QRegion& r, int mode = X::Unsorted );
+        QRegion mask() const;
 
         void updateDecoration( bool check_workspace_pos, bool force = false );
         void checkBorderSizes();
@@ -463,6 +464,7 @@ class Client : public QObject, public KDecorationDefines
         int block_geometry; // >0 - new geometry is remembered, but not actually set
         bool shade_geometry_change;
         int border_left, border_right, border_top, border_bottom;
+        QRegion _mask;
         friend struct FetchNameInternalPredicate;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
@@ -793,7 +795,7 @@ inline bool Client::hasUserTimeSupport() const
     {
     return info->userTime() != -1U;
     }
-    
+
 #ifdef NDEBUG
 kndbgstream& operator<<( kndbgstream& stream, const Client* );
 #else
