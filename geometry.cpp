@@ -1589,9 +1589,10 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     QPoint globalPos( x_root, y_root );
     QRect desktopArea = workspace()->clientArea( WorkArea, globalPos, desktop());
 
-    QPoint p = globalPos + invertedMoveOffset;
-
-    QPoint pp = globalPos - moveOffset;
+    // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
+    // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
+    QPoint topleft = globalPos - moveOffset;
+    QPoint bottomright = globalPos + invertedMoveOffset;
 
     if( !unrestrictedMoveResize )
         {
@@ -1607,24 +1608,23 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         int right_overlap = KMAX( init_width - right_limit, 0 );
         int top_overlap = KMAX( init_height - top_limit, 0 );
         int bottom_overlap = KMAX( init_height - bottom_limit, 0 );
-        // 'pp' is top left corner, 'p' is bottom right corner
         if( mode == Center ) // moving
             {
-            pp.setX( KMIN( desktopArea.right() + right_overlap - init_width,
-                KMAX( desktopArea.left() - left_overlap, pp.x())));
-            pp.setY( KMIN( desktopArea.bottom() + bottom_overlap - init_height,
-                KMAX( desktopArea.top() - top_overlap, pp.y())));
+            topleft.setX( KMIN( desktopArea.right() + right_overlap - init_width,
+                KMAX( desktopArea.left() - left_overlap, topleft.x())));
+            topleft.setY( KMIN( desktopArea.bottom() + bottom_overlap - init_height,
+                KMAX( desktopArea.top() - top_overlap, topleft.y())));
             }
         else
             { // resizing
-            pp.setX( KMAX( desktopArea.left() - left_overlap, pp.x()));
-            pp.setY( KMAX( desktopArea.top() - top_overlap, pp.y()));
-            p.setX( KMIN( desktopArea.right() + right_overlap, p.x()));
-            p.setY( KMIN( desktopArea.bottom() + bottom_overlap, p.y()));
+            topleft.setX( KMAX( desktopArea.left() - left_overlap, topleft.x()));
+            topleft.setY( KMAX( desktopArea.top() - top_overlap, topleft.y()));
+            bottomright.setX( KMIN( desktopArea.right() + right_overlap, bottomright.x()));
+            bottomright.setY( KMIN( desktopArea.bottom() + bottom_overlap, bottomright.y()));
             }
         }
 
-    QSize mpsize( geometry().right() - pp.x() + 1, geometry().bottom() - pp.y() + 1 );
+    QSize mpsize( geometry().right() - topleft.x() + 1, geometry().bottom() - topleft.y() + 1 );
     mpsize = adjustedSize( mpsize );
     QPoint mp( geometry().right() - mpsize.width() + 1,
                geometry().bottom() - mpsize.height() + 1 );
@@ -1636,28 +1636,28 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             moveResizeGeom =  QRect( mp, geometry().bottomRight() ) ;
             break;
         case BottomRight2:
-            moveResizeGeom =  QRect( geometry().topLeft(), p ) ;
+            moveResizeGeom =  QRect( geometry().topLeft(), bottomright ) ;
             break;
         case BottomLeft2:
-            moveResizeGeom =  QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), p.y()) ) ;
+            moveResizeGeom =  QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), bottomright.y()) ) ;
             break;
         case TopRight2:
-            moveResizeGeom =  QRect( QPoint(geometry().x(), mp.y() ), QPoint( p.x(), geometry().bottom()) ) ;
+            moveResizeGeom =  QRect( QPoint(geometry().x(), mp.y() ), QPoint( bottomright.x(), geometry().bottom()) ) ;
             break;
         case Top:
             moveResizeGeom =  QRect( QPoint( geometry().left(), mp.y() ), geometry().bottomRight() ) ;
             break;
         case Bottom:
-            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( geometry().right(), p.y() ) ) ;
+            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( geometry().right(), bottomright.y() ) ) ;
             break;
         case Left:
             moveResizeGeom =  QRect( QPoint( mp.x(), geometry().top() ), geometry().bottomRight() ) ;
             break;
         case Right:
-            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( p.x(), geometry().bottom() ) ) ;
+            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( bottomright.x(), geometry().bottom() ) ) ;
             break;
         case Center:
-            moveResizeGeom.moveTopLeft( pp );
+            moveResizeGeom.moveTopLeft( topleft );
             break;
         default:
             assert( false );
