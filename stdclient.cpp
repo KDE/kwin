@@ -165,14 +165,14 @@ void StdClient::slotReset()
     if (button[6])
         button[6]->setIconSet( *question_mark_pix );
 }
-    
+
 
 StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
-    
+
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
     g->setRowStretch( 1, 10 );
     g->addWidget( windowWrapper(), 1, 1 );
@@ -317,7 +317,7 @@ void StdClient::stickyChange( bool s)
     button[1]->setIconSet( s?*pindown_pix:*pinup_pix );
 }
 
-void StdClient::paintEvent( QPaintEvent* )
+void StdClient::paintEvent( QPaintEvent* e)
 {
     QPainter p( this );
     QRect t = titlebar->geometry();

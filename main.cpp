@@ -21,9 +21,6 @@
 #include <kaboutdata.h>
 #include <klocale.h>
 
-static const char *version = "0.9";
-
-static const char *description = I18N_NOOP( "KDE Window Manager." );
 
 static KCmdLineOptions cmdOptions[]  =
 {
@@ -108,7 +105,7 @@ exit (0);
 }
 
 bool kwiniface::process(const QCString &fun, const QByteArray &, QCString& replyType, QByteArray &)
-{	
+{
 	fprintf(stderr,"Logout Call Recieved\n");
 	if ( fun == "logout()" )
 	{
@@ -140,10 +137,10 @@ bool Application::x11EventFilter( XEvent *e )
     case PropertyNotify:
 	kwin_time = e->xproperty.time;
 	break;
-    case ConfigureNotify:			
+    case ConfigureNotify:
 	{
-	    if ( e->xconfigure.window != e->xconfigure.event )
-		return TRUE;
+ 	    if ( e->xconfigure.window != e->xconfigure.event  )
+ 		return TRUE; 
 	}
 	break;
     default:
@@ -163,9 +160,16 @@ static void sighandler(int) {
     QApplication::exit();
 }
 
+static const char *version = "0.4";
+static const char *description = I18N_NOOP( "The KDE window manager." );
+
 int main( int argc, char * argv[] )
 {
-    KAboutData aboutData( "kwin", I18N_NOOP("KWin"), version, description);
+    KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
+       version, description, KAboutData::License_BSD,
+       "(c) 1999-2000, The KDE Developers");
+    aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
+    aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
     KCmdLineArgs::addCmdLineOptions( cmdOptions );

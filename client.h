@@ -26,8 +26,6 @@ public:
     QSize sizeHint() const;
     QSizePolicy sizePolicy() const;
 
-    void pseudoShow();
-
 protected:
     void resizeEvent( QResizeEvent * );
     void showEvent( QShowEvent* );

@@ -19,6 +19,7 @@
 
 extern Atom qt_wm_state;
 extern Time kwin_time;
+extern void updateTime(); // defined in workspace.cpp
 
 static bool resizeHorizontalDirectionFixed = FALSE;
 static bool resizeVerticalDirectionFixed = FALSE;
@@ -158,15 +159,6 @@ QSizePolicy WindowWrapper::sizePolicy() const
 }
 
 
-/**
-   Gives layout the illusion the wrapper was visible
- */
-void WindowWrapper::pseudoShow()
-{
-    clearWState( WState_ForceHide );
-}
-
-
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win ) {
@@ -206,7 +198,7 @@ void WindowWrapper::releaseWindow()
 			 ((Client*)parentWidget())->workspace()->rootWin(),
 			 parentWidget()->x(),
 			 parentWidget()->y() );
-	
+
 	XRemoveFromSaveSet(qt_xdisplay(), win );
 	invalidateWindow();
     }
@@ -226,8 +218,8 @@ bool WindowWrapper::x11Event( XEvent * e)
 		switch (e->xbutton.button) {
 		case Button1:
 		    com = options->commandAll1();
-		    break;	
-		case Button2: 	
+		    break;
+		case Button2:
 		    com = options->commandAll2();
 		    break;
 		case Button3:
@@ -238,8 +230,8 @@ bool WindowWrapper::x11Event( XEvent * e)
 		switch (e->xbutton.button) {
 		case Button1:
 		    com = options->commandWindow1();
-		    break;	
-		case Button2: 	
+		    break;
+		case Button2:
 		    com = options->commandWindow2();
 		    break;
 		case Button3:
@@ -251,7 +243,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 	    }
 	    bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
 			    QPoint( e->xbutton.x_root, e->xbutton.y_root) );
-	
+
 	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, kwin_time);
 	    return TRUE;
 	}
@@ -374,7 +366,7 @@ void Client::manage( bool isMapped )
 // 	// transient_for workaround for broken qt snapshot, #####
 // 	placementDone = TRUE;
 //     }
-	
+
 
     if ( !placementDone ) {
 	workspace()->doPlacement( this );
@@ -609,7 +601,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	// first, get rid of a window border
 	XWindowChanges wc;
 	unsigned int value_mask = 0;
-	
+
 	wc.border_width = 0;
 	value_mask = CWBorderWidth;
 	XConfigureWindow( qt_xdisplay(), win, value_mask, & wc );
@@ -667,7 +659,7 @@ bool Client::propertyNotify( XPropertyEvent& e )
 	else if ( e.atom == atoms->kwm_win_icon ) {
 	    getWMHints(); // for the icons
 	}
-	
+
 	break;
     }
     return TRUE;
@@ -933,6 +925,11 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    break;
 	}
     }
+    
+    // slow down the window manager in order to give the client time
+    // to process the configure event. Results in a better overal
+    // performance.
+    updateTime(); 
 }
 
 /*!

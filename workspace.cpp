@@ -48,7 +48,7 @@ int Shape::shapeEvent()
 }
 
 
-static void updateTime()
+void updateTime()
 {
     static QWidget* w = 0;
     if ( !w )
@@ -260,14 +260,14 @@ bool Workspace::workspaceEvent( XEvent * e )
 	// SubstructureNotifyMask. e->xany.window is the window the
 	// event is reported to. Take care not to confuse Qt.
 	c = findClient( e->xunmap.window );
-	
+
 	if ( c )
 	    return c->windowEvent( e );
 
 	// check for dock windows
 	if ( removeDockwin( e->xunmap.window ) )
 	    return TRUE;
-	
+
 	if ( e->xunmap.event == root ) {
 	    // keep track of map/unmap for own own windows to avoid
 	    // race conditions
@@ -275,7 +275,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    if ( c )
 		return c->windowEvent( e );
 	}
-	
+
 	if ( e->xunmap.event != e->xunmap.window ) // hide wm typical event from Qt
 	    return TRUE;
     case MapNotify:
@@ -357,7 +357,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    wc.stack_mode = Above;
 	    value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
 	    XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, & wc );
-	
+
 	    return TRUE;
 	}
 	break;
@@ -369,7 +369,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	if ( mouse_emulation )
 	    return keyPressMouseEmulation( e->xkey );
 	return keyPress(e->xkey);
-    case KeyRelease:	
+    case KeyRelease:
 	if ( QWidget::keyboardGrabber() ) {
 	    freeKeyboard( FALSE );
 	    break;
@@ -616,7 +616,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 		tab_box->hide();
 		tab_grab = false;
  		if ( tab_box->currentClient() ){
-		
+
 		    activateClient( tab_box->currentClient() );
  		}
 	    }
@@ -918,7 +918,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
     popup->setFont(KGlobal::menuFont());
 	connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
 	connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-	
+
         PluginMenu *deco = new PluginMenu(&mgr, popup);
         deco->setFont(KGlobal::menuFont());
 
@@ -933,14 +933,14 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	popup->insertItem( i18n("Mi&nimize"), Options::IconifyOp );
 	popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
 	popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
-	
+
 	popup->insertSeparator();
-	
+
     	popup->insertItem(i18n("&Decoration"), deco );
     	popup->insertItem(i18n("&To desktop"), desk_popup );
-	
+
 	popup->insertSeparator();
-	
+
 	QString k = KAccel::keyToString( keys->currentKey( "Window close" ), true );
 	popup->insertItem(i18n("&Close")+'\t'+k, Options::CloseOp );
     }
@@ -1045,7 +1045,7 @@ void Workspace::smartPlacement(Client* c){
      */
 
     const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
-    long int overlap, min_overlap;
+    long int overlap, min_overlap = 0;
     int x_optimal, y_optimal;
     int possible;
 
@@ -1078,10 +1078,10 @@ void Workspace::smartPlacement(Client* c){
 	    for(l = clients.begin(); l != clients.end() ; ++l ) {
 		if((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
 		   !(*l)->isIconified() && (*l) != c ) {
-	
+
 		    xl = (*l)->x();          yt = (*l)->y();
 		    xr = xl + (*l)->width(); yb = yt + (*l)->height();
-	
+
 		    //if windows overlap, calc the overall overlapping
 		    if((cxl < xr) && (cxr > xl) &&
 		       (cyt < yb) && (cyb > yt)) {
@@ -1120,20 +1120,20 @@ void Workspace::smartPlacement(Client* c){
 	    // compare to the position of each client on the current desk
 	    QValueList<Client*>::ConstIterator l;
 	    for(l = clients.begin(); l != clients.end() ; ++l) {
-	
+
 		if ( (*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
 		     !(*l)->isIconified() &&  (*l) != c ) {
 
 		    xl = (*l)->x();          yt = (*l)->y();
 		    xr = xl + (*l)->width(); yb = yt + (*l)->height();
-	
+
 		    // if not enough room above or under the current tested client
 		    // determine the first non-overlapped x position
 		    if( ( y < yb ) && ( yt < ch + y ) ) {
-	
+
 			if( xr > x )
 			    possible = possible < xr ? possible : xr;
-	
+
 			if( xl - cw > x )
 			    possible = possible < xl - cw ? possible : xl - cw;
 		    }
@@ -1154,13 +1154,13 @@ void Workspace::smartPlacement(Client* c){
 	    for( l = clients.begin(); l != clients.end() ; ++l ) {
 		if( (*l)->isOnDesktop( currentDesktop() ) && (*l) != desktop_client &&
 		    (*l) != c   &&  !c->isIconified() ) {
-	
+
 		    xl = (*l)->x();          yt = (*l)->y();
 		    xr = xl + (*l)->width(); yb = yt + (*l)->height();
-	
+
 		    if( yb > y)
 			possible = possible < yb ? possible : yb;
-	
+
 		    if( yt - ch > y )
 			possible = possible < yt - ch ? possible : yt - ch;
 		}
@@ -1171,7 +1171,7 @@ void Workspace::smartPlacement(Client* c){
     while( overlap != none && overlap != h_wrong );
 
     // place the window
-    c->move( x_optimal, y_optimal );	
+    c->move( x_optimal, y_optimal );
 
 }
 
@@ -1864,7 +1864,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	  ly = (*l)->y();
 	  lrx = lx + (*l)->width();
 	  lry = ly + (*l)->height();
-	
+
 	  if( ( ( cy <= lry ) && ( cy  >= ly  ) )  ||
 	      ( ( ry >= ly  ) && ( ry  <= lry ) )  ||
 	      ( ( ly >= cy  ) && ( lry <= ry  ) ) ) {
@@ -1879,7 +1879,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	      nx = lx - cw;
 	    }
 	  }
-	
+
 	  if( ( ( cx <= lrx ) && ( cx  >= lx  ) )  ||
 	      ( ( rx >= lx  ) && ( rx  <= lrx ) )  ||
 	      ( ( lx >= cx  ) && ( lrx <= rx  ) ) ) {
@@ -1953,7 +1953,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 		XQueryPointer( qt_xdisplay(), w, &root, &child,
 			       &root_x, &root_y, &lx, &ly, &state );
 	    } while  ( child != None && child != w );
-	
+
 	    if ( c && !c->isActive() )
 		activateClient( c );
 
