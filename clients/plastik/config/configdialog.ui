@@ -66,9 +66,6 @@
             <property name="text">
                 <string>Use shadowed &amp;text</string>
             </property>
-            <property name="accel">
-                <string>Alt+T</string>
-            </property>
             <property name="whatsThis" stdset="0">
                 <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
             </property>
