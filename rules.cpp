@@ -219,7 +219,7 @@ bool WindowRules::match( const Client* c ) const
     if( !wmclass.isEmpty())
         { // TODO optimize?
         QCString cwmclass = wmclasscomplete
-            ? c->resourceClass() + ' ' + c->resourceName() : c->resourceClass();
+            ? c->resourceName() + ' ' + c->resourceClass() : c->resourceClass();
         if( wmclassregexp && !QRegExp( wmclass ).exactMatch( cwmclass ))
             return false;
         if( !wmclassregexp && wmclass != cwmclass )
