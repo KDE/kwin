@@ -20,6 +20,10 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include "plugins.h"
 #include "kdedefault.h"
 
+#if 0
+#define lt_ptr lt_ptr_t
+#endif
+
 using namespace KWinInternal;
 
 PluginMenu::PluginMenu(PluginMgr *manager, QWidget *parent, const char *name)
@@ -184,11 +188,10 @@ void PluginMgr::loadPlugin(QString nameStr)
 	pluginStr = nameStr;
 
     emit resetAllClients();
-    if(oldHandle)
-    {
+    if(oldHandle) {
 	lt_ptr deinit_func = lt_dlsym(oldHandle, "deinit");
-        if (deinit_func)
-           ((void (*)())deinit_func)();
+	if (deinit_func)
+	    ((void (*)())deinit_func)();
         lt_dlclose(oldHandle);
     }
 }
