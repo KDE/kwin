@@ -2244,14 +2244,6 @@ void Client::maximize( MaximizeMode m)
     case MaximizeFull: {
         QSize adjSize = adjustedSize(clientArea.size());
         QRect r = QRect(clientArea.topLeft(), adjSize);
-
-        // hide right and left border of maximized windows
-        if ( !options->moveResizeMaximizedWindows && adjSize == clientArea.size()) {
-            if ( r.left() == 0 )
-                r.setLeft( r.left() - windowWrapper()->x() );
-            if ( r.right() == workspace()->geometry().right() )
-                r.setRight( r.right() + width() -  windowWrapper()->geometry().right() );
-        }
         setGeometry( r );
         info->setState( NET::Max, NET::Max );
     } break;
