@@ -709,13 +709,16 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     }
 
     int ww = wwrap->width();
-    int wh = 0;;
+    int wh = 0;
     if ( !wwrap->testWState( WState_ForceHide ) )
-	wh = wwrap->height();
+ 	wh = wwrap->height();
+    
+    if ( ignore_height && wsize.height() == 0 )
+	h = 0;
 
     return QSize( QMIN( QMAX( width() - ww + w, minimumWidth() ),
 			maximumWidth() ),
-		  ignore_height? height()-wh : (QMIN( QMAX( height() - wh + h, minimumHeight() ),
+		  ignore_height? height()-wh+h : (QMIN( QMAX( height() - wh + h, minimumHeight() ),
 						     maximumHeight() ) ) );
 }
 
@@ -1363,7 +1366,7 @@ void Client::setShade( bool s )
 	resize (s );
     } else {
 	int h = height();
-	QSize s( sizeForWindowSize( windowWrapper()->size() )  );
+	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
 	setWFlags( WNorthWestGravity );
 	int step = QMAX( 15, QABS( h - s.height() ) / 30 )+1;
 	while ( h < s.height() - step ) {
