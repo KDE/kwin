@@ -9,6 +9,7 @@
  */
 
 #include "config.h"
+#include <kglobal.h>
 #include <qwhatsthis.h>
 #include <klocale.h>
 #include <qpixmap.h>
@@ -30,6 +31,7 @@ extern "C"
 KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
+	KGlobal::locale()->insertCatalogue("libkwindefault_config");
 	highcolor = QPixmap::defaultDepth() > 8;
 	gb = new QGroupBox( 1, Qt::Horizontal, 
 		i18n("Decoration Settings"), parent );

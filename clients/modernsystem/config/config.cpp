@@ -4,6 +4,7 @@
 #include "config.h"
 #include <kconfig.h>
 #include <klocale.h>
+#include <kglobal.h>
 #include <qwhatsthis.h>
 
 
@@ -25,6 +26,7 @@ extern "C"
 ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(parent)
 {	
 	clientrc = new KConfig("kwinmodernsysrc");
+	KGlobal::locale()->insertCatalogue("libkwinmodernsys_config");
 	gb = new QGroupBox(1, Qt::Horizontal, i18n("Decoration Settings"), parent);
 	cbShowHandle = new QCheckBox(i18n("&Show resize handle"), gb);
 	QWhatsThis::add(cbShowHandle, i18n("When selected, all windows are drawn with a resize "
