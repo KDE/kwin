@@ -21,7 +21,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qobjectlist.h>
 #include <qdatetime.h>
 #include <qtimer.h>
-#include <kwin.h>
 #include <kiconloader.h>
 #include "workspace.h"
 #include "client.h"
@@ -34,12 +33,16 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/shape.h>
+#include <X11/keysym.h>
+#include <X11/keysymdef.h>
 
 // Needed for --enable-final
 // XIconincState is defined in workspace.cpp
 #ifndef IconicState
 #define IconicState XIconicState
 #endif
+
+#include <kwin.h>
 
 namespace KWinInternal {
 
@@ -2677,15 +2680,15 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 }
 
 
-void Client::keyPressEvent( uint key_code )
+void Client::keyPressEvent( KKeyNative& keyX)
 {
     if ( !isMove() && !isResize() )
         return;
-    bool is_control = false; // e->state() & ControlButton;
+    bool is_control = keyX.mod() == KKeyNative::modX(KKey::CTRL);
     int delta = is_control?1:8;
     QPoint pos = QCursor::pos();
-    switch ( key_code ) {
-    case Key_Left:
+    switch ( keyX.sym() ) {
+    case XK_Left:
         pos.rx() -= delta;
         if ( isResize() && !resizeHorizontalDirectionFixed ) {
             resizeHorizontalDirectionFixed = TRUE;
@@ -2694,7 +2697,7 @@ void Client::keyPressEvent( uint key_code )
             setMouseCursor( mode );
         }
         break;
-    case Key_Right:
+    case XK_Right:
         pos.rx() += delta;
         if ( isResize() && !resizeHorizontalDirectionFixed ) {
             resizeHorizontalDirectionFixed = TRUE;
@@ -2703,7 +2706,7 @@ void Client::keyPressEvent( uint key_code )
             setMouseCursor( mode );
         }
         break;
-    case Key_Up:
+    case XK_Up:
         pos.ry() -= delta;
         if ( isResize() && !resizeVerticalDirectionFixed ) {
             resizeVerticalDirectionFixed = TRUE;
@@ -2712,7 +2715,7 @@ void Client::keyPressEvent( uint key_code )
             setMouseCursor( mode );
         }
         break;
-    case Key_Down:
+    case XK_Down:
         pos.ry() += delta;
         if ( isResize() && !resizeVerticalDirectionFixed ) {
             resizeVerticalDirectionFixed = TRUE;
@@ -2721,9 +2724,9 @@ void Client::keyPressEvent( uint key_code )
             setMouseCursor( mode );
         }
         break;
-    case Key_Space:
-    case Key_Return:
-    case Key_Enter:
+    case XK_Return:
+    case XK_KP_Space:
+    case XK_KP_Enter:
         clearbound();
         stopMoveResize();
         setGeometry( geom );

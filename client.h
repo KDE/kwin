@@ -209,7 +209,7 @@ public:
     QString caption() const;
     void setCaption( const QString &);
 
-    void keyPressEvent( uint key_code );
+    void keyPressEvent( KKeyNative& keyX );
 
     void updateUserTime();
 
