@@ -62,8 +62,6 @@ public:
 
 	state &= mask; // for safety, clear all other bits
 	
-	if ( mask & NET::Sticky )
-	    m_client->setSticky( state & NET::Sticky );
 	if ( mask & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
@@ -490,12 +488,13 @@ bool Client::manage( bool isMapped, bool doNotShow )
     if ( session )
 	geom.setRect( session->x, session->y, session->width, session->height );
 
+    QRect area = workspace()->clientArea();
+    
     if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
 	if ( geom == workspace()->geometry() )
 	    may_move = FALSE; // don't let fullscreen windows be moved around
     }  else {
-	QRect area = workspace()->clientArea();
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
 	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) ) {
@@ -529,10 +528,15 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
-
+    
     if ( !placementDone ) {
 	workspace()->doPlacement( this );
 	placementDone = TRUE;
+    } else if ( windowType() == NET::Normal ) {
+	if ( geometry().right() > area.right() && width() < area.width() )
+	    move( area.right() - width(), y() );
+	if ( geometry().bottom() > area.bottom() && height() < area.height() )
+	    move( x(), area.bottom() - height() );
     }
 
     if ( (is_shape = Shape::hasShape( win )) ) {
@@ -563,7 +567,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	// same window as its parent.  this is necessary when an application
 	// starts up on a different desktop than is currently displayed
 	//
-	if ( isTransient() )
+	if ( isTransient() && !mainClient()->isSticky() )
 	    desk = mainClient()->desktop();
 	
 	if ( desk <= 0 ) {
@@ -623,7 +627,7 @@ void Client::getWmNormalHints()
     long msize;
     if (XGetWMNormalHints(qt_xdisplay(), win, &xSizeHint, &msize) == 0 )
 	xSizeHint.flags = 0;
-    
+
 }
 
 /*!
