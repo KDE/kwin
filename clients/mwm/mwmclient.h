@@ -10,37 +10,45 @@ class QSpacerItem;
 
 namespace KWinInternal {
 
-// get rid of autohide :P
+
+enum Buttons { BtnMenu=0, BtnIconify=1, BtnMax=2 };
+
+class MwmClient;
+
 class MwmButton : public QButton
 {
 public:
-    MwmButton(QWidget *parent=0, const char *name=0,
-                 const unsigned char *bitmap=NULL, int bw=0, int bh=0);
-    void setBitmap(const unsigned char *bitmap, int bw, int bh);
+    MwmButton( MwmClient* parent=0, const char* name=0, int btnType=0 );
     void reset();
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
-    KPixmap aBackground, iBackground;
-    QBitmap deco;
+private:
+    MwmClient* m_parent;
+    int m_btnType;
 };
 
 class MwmClient : public KWinInternal::Client
 {
     Q_OBJECT
 public:
-    MwmClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
-    ~MwmClient(){;}
+    MwmClient( Workspace* ws, WId w, QWidget* parent=0, const char* name=0 );
+    ~MwmClient() {};
+
 protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
  
-    void mouseDoubleClickEvent( QMouseEvent * );
+    void mouseDoubleClickEvent( QMouseEvent* );
     void init();
-    void captionChange( const QString& name );
-    void stickyChange(bool on);
+    void captionChange( const QString& );
+    void activeChange( bool );
+
 protected slots:
     void slotReset();
+    void slotMaximize();
+    void menuButtonPressed();
+
 private:
     MwmButton* button[3];
     QSpacerItem* titlebar;
