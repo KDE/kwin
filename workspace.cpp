@@ -929,14 +929,11 @@ void Workspace::slotWalkThroughWindows()
                 KDEWalkThroughWindows( true );
         }
         else
-            // if the shortcut has no modifiers, don't show the tabbox, but
-            // simply go to the next window; if the shortcut has no modifiers,
-            // the only sane thing to do is to release the key immediately
-            // anyway, so the tabbox wouldn't appear anyway
-            // it's done this way without grabbing because with grabbing
-            // the keyboard wasn't ungrabbed and I really have no idea why
-            // <l.lunak@kde.org>
-            KDEOneStepThroughWindows( true );
+            // if the shortcut has no modifiers, don't show the tabbox,
+            // don't grab, but simply go to the next window
+            // use the CDE style, because with KDE style it would cycle
+            // between the active and previously active window
+            CDEWalkThroughWindows( true );
     }
 }
 
@@ -948,13 +945,13 @@ void Workspace::slotWalkBackThroughWindows()
         return;
     if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) {
         // CDE style raise / lower
-        CDEWalkThroughWindows( true );
+        CDEWalkThroughWindows( false );
     } else {
         if ( areModKeysDepressed( cutWalkThroughWindowsReverse ) ) {
             if ( startKDEWalkThroughWindows() )
                 KDEWalkThroughWindows( false );
         } else {
-            KDEOneStepThroughWindows( false );
+            CDEWalkThroughWindows( false );
         }
     }
 }
