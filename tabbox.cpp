@@ -15,6 +15,9 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kglobal.h>
 #include <kconfig.h>
 #include <klocale.h>
+#include <qapplication.h>
+#include <qdesktopwidget.h>
+#include <qcursor.h>
 
 // specify externals before namespace
 
@@ -89,10 +92,17 @@ void TabBox::reset()
 	desk = workspace()->currentDesktop();
     }
 
-    int w = QMAX( wmax + 20, qApp->desktop()->width()/3 );
-    setGeometry( (qApp->desktop()->width()-w)/2,
-		 qApp->desktop()->height()/2-fontMetrics().height()*2-10,
+
+    QDesktopWidget* desktop = qApp->desktop();
+    int screen =  desktop->screenNumber( QCursor::pos() );
+    QRect r = desktop->screenGeometry(screen);
+
+
+    int w = QMAX( wmax + 20, r.width()/3 );
+    setGeometry( (r.width()-w)/2 + r.x(),
+		 r.height()/2-fontMetrics().height()*2-10 + r.y(),
 		 w, fontMetrics().height()*4 + 20 );
+
     wmax = QMIN( wmax, width() - 12 );
 }
 
