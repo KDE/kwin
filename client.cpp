@@ -106,39 +106,41 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     // we don't want the window to be destroyed when we are destroyed
     XAddToSaveSet(qt_xdisplay(), win );
 
+    // no need to be mapped at this point
+    XUnmapWindow( qt_xdisplay(), win );
+    
     // set the border width to 0
     XWindowChanges wc;
     wc.border_width = 0;
     XConfigureWindow( qt_xdisplay(), win, CWBorderWidth, &wc );
 
-//     // overwrite Qt-defaults because we need SubstructureNotifyMask
-     XSelectInput( qt_xdisplay(), winId(),
-		   KeyPressMask | KeyReleaseMask |
-		   ButtonPressMask | ButtonReleaseMask |
-		   KeymapStateMask |
-		   ButtonMotionMask |
-		   PointerMotionMask | // need this, too!
-		   EnterWindowMask | LeaveWindowMask |
-		   FocusChangeMask |
-		   ExposureMask |
- 		   StructureNotifyMask |
-		   SubstructureRedirectMask |
-		   SubstructureNotifyMask
-		   );
+    // overwrite Qt-defaults because we need SubstructureNotifyMask
+    XSelectInput( qt_xdisplay(), winId(),
+		  KeyPressMask | KeyReleaseMask |
+		  ButtonPressMask | ButtonReleaseMask |
+		  KeymapStateMask |
+		  ButtonMotionMask |
+		  PointerMotionMask | // need this, too!
+		  EnterWindowMask | LeaveWindowMask |
+		  FocusChangeMask |
+		  ExposureMask |
+		  StructureNotifyMask |
+		  SubstructureRedirectMask |
+		  SubstructureNotifyMask
+		  );
 
-     XSelectInput( qt_xdisplay(), w,
-		   FocusChangeMask |
-		   PropertyChangeMask
-// 		   StructureNotifyMask
-		   );
+    XSelectInput( qt_xdisplay(), w,
+		  FocusChangeMask |
+		  PropertyChangeMask
+		  );
 
-     // install a passive grab to catch mouse button events
-     XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
-		 ButtonPressMask,
-		 GrabModeSync, GrabModeAsync,
-		 None, None );
-     
-     reparented = FALSE;
+    // install a passive grab to catch mouse button events
+    XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
+		ButtonPressMask,
+		GrabModeSync, GrabModeAsync,
+		None, None );
+
+    reparented = FALSE;
 }
 
 WindowWrapper::~WindowWrapper()
@@ -171,7 +173,10 @@ void WindowWrapper::showEvent( QShowEvent* )
 {
     if ( win ) {
 	if ( !reparented ) {
-	    // get the window
+	    // get the window. We do it this late in order to
+	    // guarantee that our geometry is final. This allows
+	    // toolkits to guess the proper frame geometry when
+	    // processing the ReparentNotify event from X.
 	    XReparentWindow( qt_xdisplay(), win, winId(), 0, 0 );
 	    reparented = TRUE;
 	}
@@ -269,8 +274,6 @@ bool WindowWrapper::x11Event( XEvent * e)
 
   \brief The Client class encapsulates a window decoration frame.
 
-  TODO
-
 */
 
 /*!
@@ -367,12 +370,6 @@ void Client::manage( bool isMapped )
     move( geom.x(), geom.y() );
     gravitate( FALSE );
 
-//     if ( !placementDone && transient_for ) {
-// 	// transient_for workaround for broken qt snapshot, #####
-// 	placementDone = TRUE;
-//     }
-
-
     if ( !placementDone ) {
 	workspace()->doPlacement( this );
 	placementDone = TRUE;
@@ -399,7 +396,7 @@ void Client::manage( bool isMapped )
 	show();
 	if ( options->focusPolicyIsReasonable() )
 	    workspace()->requestFocus( this );
-    }
+    } 
 
 }
 
@@ -974,7 +971,6 @@ void Client::move( int x, int y )
 void Client::showEvent( QShowEvent* )
 {
     setMappingState( NormalState );
-    windowWrapper()->show();// ########## hack for qt < 2.1
  }
 
 /*!
@@ -983,7 +979,6 @@ void Client::showEvent( QShowEvent* )
  */
 void Client::hideEvent( QHideEvent* )
 {
-    windowWrapper()->hide();// ########## hack for qt < 2.1
     workspace()->clientHidden( this );
 }
 
