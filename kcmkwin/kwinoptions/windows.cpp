@@ -17,6 +17,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * $Id$
+ *
  */
 
 #include <config.h>
@@ -571,6 +574,10 @@ void KAdvancedConfig::setXinerama(bool on) {
     xineramaMovementEnable->setEnabled(on);
     xineramaPlacementEnable->setEnabled(on);
     xineramaMaximizeEnable->setEnabled(on);
+#else
+    // Silly way to work around unused variable
+    if (on == on)
+	return;
 #endif
 }
 
