@@ -40,15 +40,11 @@ protected:
     void hideEvent( QHideEvent* );
     bool x11Event( XEvent * );		// X11 event
 
-private slots:
-    void doResize();
-    
+
 private:
     WId win;
     Time lastMouseEventTime;
     bool reparented;
-    QTimer* timer;
-    int cnt;
 };
 
 inline WId WindowWrapper::window() const

@@ -118,12 +118,6 @@ bool Application::x11EventFilter( XEvent *e )
     case PropertyNotify:
 	kwin_time = e->xproperty.time;
 	break;
-    case ConfigureNotify:
-	{
- 	    if ( e->xconfigure.window != e->xconfigure.event  )
- 		return TRUE;
-	}
-	break;
     default:
 	break;
     }
@@ -150,8 +144,8 @@ void Application::saveState( QSessionManager& sm )
     }
 
     sm.release();
-    
-    // we really should do phase 2 here, unfortunately qt-2.1beta3 contains a bug. 
+
+    // we really should do phase 2 here, unfortunately qt-2.1beta3 contains a bug.
     // #######TODO FIXME with final Qt-2.1
     /*
     if ( !sm.isPhase2() ) {

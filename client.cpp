@@ -108,8 +108,6 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     : QWidget( parent, name )
 {
     win = w;
-    timer = 0;
-    cnt = 0;
 
     setMouseTracking( TRUE );
 
@@ -207,34 +205,12 @@ QSizePolicy WindowWrapper::sizePolicy() const
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win && reparented ) {
-	if ( isVisible() ) {
-	    if ( ++cnt > 3 ) {
-		doResize(); // Too many pending, do it now.
-	    } else {
-		delete timer;
-		timer = new QTimer( this );
-		connect( timer, SIGNAL( timeout() ),
-			 this, SLOT( doResize() ) );
-		timer->start( 10, TRUE );
-	    }
-	} else {
-	    XMoveResizeWindow( qt_xdisplay(), win,
-			       0, 0, width(), height() );
-	}
+	XMoveResizeWindow( qt_xdisplay(), win,
+			   0, 0, width(), height() );
 	if ( ((Client*)parentWidget())->shape() )
 	    ((Client*)parentWidget())->updateShape();
     }
 }
-
-void WindowWrapper::doResize()
-{
-    cnt=0;
-    delete timer;
-    timer = 0;
-    XMoveResizeWindow( qt_xdisplay(), win,
-		       0, 0, width(), height() );
-}
-
 
 void WindowWrapper::showEvent( QShowEvent* )
 {
