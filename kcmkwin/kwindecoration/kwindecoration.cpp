@@ -10,7 +10,7 @@
 	Supports new kwin configuration plugins, and titlebar button position
 	modification via dnd interface.
 
-	Based on original "kwintheme" (Window Borders) 
+	Based on original "kwintheme" (Window Borders)
 	Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 */
 
@@ -18,7 +18,6 @@
 #include <qfileinfo.h>
 #include <qlayout.h>
 #include <qwhatsthis.h>
-#include <qlistbox.h>
 #include <qgroupbox.h>
 #include <qcheckbox.h>
 #include <qtabwidget.h>
@@ -27,6 +26,7 @@
 #include <qfile.h>
 
 #include <kapplication.h>
+#include <kcombobox.h>
 #include <kdebug.h>
 #include <kdesktopfile.h>
 #include <kstandarddirs.h>
@@ -46,7 +46,8 @@ typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") );
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, const QStringList &)
-       : DCOPObject("KWinClientDecoration"), KCModule(KWinDecoFactory::instance(), parent, name) 
+       : DCOPObject("KWinClientDecoration"), KCModule(KWinDecoFactory::instance(), parent, name),
+         pluginObject(0)
 {
 	KConfig kwinConfig("kwinrc");
 	kwinConfig.setGroup("Style");
@@ -56,15 +57,33 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	layout->addWidget( tabWidget );
 
 	// Page 1 (General Options)
-	QVBox* page1 = new QVBox( tabWidget );
-	page1->setSpacing( KDialog::spacingHint() );
-	page1->setMargin( KDialog::marginHint() );
+	QWidget *pluginPage = new QWidget( tabWidget );
 
-	QGroupBox* btnGroup = new QGroupBox( 1, Qt::Horizontal, i18n("Window Decoration"), page1 );
-	QWhatsThis::add( btnGroup, 
-			i18n("Select the window decoration. This is the look and feel of both "
-			"the window borders and the window handle.") );
-	decorationListBox = new QListBox( btnGroup );
+	QHBox *hbox = new QHBox(pluginPage);
+	hbox->setSpacing(KDialog::spacingHint());
+//	QLabel *lbl = new QLabel( i18n("&Decoration:"), hbox );
+	decorationList = new KComboBox( hbox );
+	hbox->setStretchFactor(decorationList, 10);
+//	lbl->setBuddy(decorationList);
+	QString whatsThis = i18n("Select the window decoration. This is the look and feel of both "
+                             "the window borders and the window handle.");
+//	QWhatsThis::add(lbl, whatsThis);
+	QWhatsThis::add(decorationList, whatsThis);
+
+	QLabel *lbl = new QLabel( i18n("Decoration Options"), pluginPage );
+	QFrame* line = new QFrame( pluginPage );
+	line->setFrameStyle( QFrame::HLine | QFrame::Plain );
+	pluginConfigWidget = new QVBox(pluginPage);
+	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage, KDialog::marginHint(), KDialog::spacingHint());
+	pluginLayout->addWidget(hbox);
+	pluginLayout->addSpacing(KDialog::spacingHint());
+	pluginLayout->addWidget(lbl);
+	pluginLayout->addWidget(line);
+	pluginLayout->addWidget(pluginConfigWidget);
+	pluginLayout->addStretch(10);
+
+	noPluginSettings = new QLabel( pluginConfigWidget);
+	noPluginSettings->hide();
 
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
@@ -98,12 +117,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 		"drag items within the titlebar preview to re-position them.") );
 	buttonSource = new ButtonSource( buttonBox );
 
-	// Page 3 (Configure decoration via client plugin page)
-	pluginPage = new QVBox( tabWidget );
-	pluginPage->setSpacing( KDialog::spacingHint() );
-	pluginPage->setMargin( KDialog::marginHint() );
-	pluginObject = NULL;
-
 	// Load all installed decorations into memory
 	// Set up the decoration lists and other UI settings
 	findDecorations();
@@ -111,21 +124,17 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	readConfig( &kwinConfig );
 	resetPlugin( &kwinConfig );
 
-	tabWidget->insertTab( page1, i18n("&General") );
+	tabWidget->insertTab( pluginPage, i18n("&Window Decoration") );
 	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
-	tabWidget->insertTab( pluginPage, i18n("&Configure [") + 
-						  decorationListBox->currentText() + i18n("]") );
-
-	tabWidget->setTabEnabled( pluginPage, pluginObject ? true : false );
 
 	connect( dropSite, SIGNAL(buttonAdded(char)), buttonSource, SLOT(hideButton(char)) );
 	connect( dropSite, SIGNAL(buttonRemoved(char)), buttonSource, SLOT(showButton(char)) );
 	connect( buttonSource, SIGNAL(buttonDropped()), dropSite, SLOT(removeClickedButton()) );
 	connect( dropSite, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );
 	connect( buttonSource, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()) );
-	connect( decorationListBox, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()) );
-	connect( decorationListBox, SIGNAL(highlighted(const QString&)), 
-								SLOT(slotDecorationHighlighted(const QString&)) );
+	connect( decorationList, SIGNAL(activated(const QString&)), SLOT(slotSelectionChanged()) );
+	connect( decorationList, SIGNAL(activated(const QString&)),
+								SLOT(slotChangeDecoration(const QString&)) );
 	connect( cbUseCustomButtonPositions, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), buttonBox, SLOT(setEnabled(bool)));
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
@@ -173,34 +182,31 @@ void KWinDecorationModule::findDecorations()
 }
 
 
-// Fills the decorationListBox with a list of available kwin decorations
+// Fills the decorationList with a list of available kwin decorations
 void KWinDecorationModule::createDecorationList()
 {
 	QValueList<DecorationInfo>::ConstIterator it;
 
 	// Sync with kwin hardcoded KDE2 style which has no desktop item
-	decorationListBox->insertItem( i18n("KDE 2") ); 
-
+    QStringList decorationNames;
+	decorationNames.append( i18n("KDE 2") );
 	for (it = decorations.begin(); it != decorations.end(); ++it)
 	{
-		DecorationInfo info = *it;
-		decorationListBox->insertItem( info.name );
+		decorationNames.append((*it).name);
 	}
-	decorationListBox->sort();
+	decorationNames.sort();
+    decorationList->insertStringList(decorationNames);
 }
 
 
 // Reset the decoration plugin to what the user just selected
-void KWinDecorationModule::slotDecorationHighlighted( const QString& s )
+void KWinDecorationModule::slotChangeDecoration( const QString & text)
 {
 	KConfig kwinConfig("kwinrc");
 	kwinConfig.setGroup("Style");
 
 	// Let the user see config options for the currently selected decoration
-	resetPlugin( &kwinConfig, &s );
-
-	tabWidget->setTabEnabled( pluginPage, pluginObject ? true : false );
-	tabWidget->changeTab( pluginPage, i18n("&Configure [%1]").arg( decorationListBox->currentText() ) );
+	resetPlugin( &kwinConfig, text );
 }
 
 
@@ -242,15 +248,15 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 		}
 
 	if (libName.isEmpty())
-		libName = "kwin_default";	// KDE 2 
+		libName = "kwin_default";	// KDE 2
 
 	return libName;
 }
 
 
 // Loads/unloads and inserts the decoration config plugin into the
-// pluginPage, allowing for dynamic configuration of decorations
-void KWinDecorationModule::resetPlugin( KConfig* conf, const QString* currentDecoName )
+// pluginConfigWidget, allowing for dynamic configuration of decorations
+void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDecoName )
 {
 	// Config names are "kwin_icewm_config"
 	// for "kwin_icewm" kwin client
@@ -259,8 +265,8 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString* currentDec
 	oldName += "_config";
 
 	QString currentName;
-	if (currentDecoName)
-		currentName = decorationLibName( *currentDecoName ); // Use what the user selected
+	if (!currentDecoName.isEmpty())
+		currentName = decorationLibName( currentDecoName ); // Use what the user selected
 	else
 		currentName = currentLibraryName; // Use what was read from readConfig()
 
@@ -279,25 +285,27 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString* currentDec
 
 	KLibrary* library = loader->library( QFile::encodeName(currentName) );
 	if (library != NULL)
-	{		
+	{
 		void* alloc_ptr = library->symbol("allocate_config");
 
 		if (alloc_ptr != NULL)
 		{
 			allocatePlugin = (QObject* (*)(KConfig* conf, QWidget* parent))alloc_ptr;
-			pluginObject = allocatePlugin( conf, pluginPage );
-				
+			pluginObject = static_cast<QWidget*>(allocatePlugin( conf, pluginConfigWidget ));
+
 			// connect required signals and slots together...
-			connect( pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );	
+			connect( pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );
 			connect( this, SIGNAL(pluginLoad(KConfig*)), pluginObject, SLOT(load(KConfig*)) );
 			connect( this, SIGNAL(pluginSave(KConfig*)), pluginObject, SLOT(save(KConfig*)) );
 			connect( this, SIGNAL(pluginDefaults()), pluginObject, SLOT(defaults()) );
-
+			noPluginSettings->hide();
 			return;
-		} 
+		}
 	}
 
-	pluginObject = NULL;
+	pluginObject = 0;
+	noPluginSettings->setText(i18n("There are no special options available for the <strong>%1</strong> window decoration.").arg(currentDecoName));
+	noPluginSettings->show();
 }
 
 
@@ -315,16 +323,23 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	// the current plugin library name
 
 	oldLibraryName = currentLibraryName;
-	currentLibraryName = conf->readEntry("PluginLib", 
+	currentLibraryName = conf->readEntry("PluginLib",
 					((QPixmap::defaultDepth() > 8) ? "kwin_keramik" : "kwin_quartz"));
 	QString decoName = decorationName( currentLibraryName );
 
 	// If we are using the "default" kde client, use the "default" entry.
 	if (decoName.isEmpty())
-		decorationListBox->setSelected( decorationListBox->findItem( i18n("KDE 2") ), true );
-	else
-		// Update the decoration listbox
-		decorationListBox->setSelected( decorationListBox->findItem( decoName ), true);
+		decoName = i18n("KDE 2");
+
+    int numDecos = decorationList->count();
+	for (int i = 0; i < numDecos; ++i)
+    {
+		 if (decorationList->text(i) == decoName)
+		 {
+		 		 decorationList->setCurrentItem(i);
+		 		 break;
+		 }
+	}
 
 	// Buttons tab
 	// ============
@@ -353,12 +368,12 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 // Writes the selected user configuration to the kwin config file
 void KWinDecorationModule::writeConfig( KConfig* conf )
 {
-	QString name = decorationListBox->currentText();
+	QString name = decorationList->currentText();
 	QString libName = decorationLibName( name );
 
 	KConfig kwinConfig("kwinrc");
 	kwinConfig.setGroup("Style");
-    
+
 	// General settings
 	conf->writeEntry("PluginLib", libName);
 	conf->writeEntry("CustomButtonPositions", cbUseCustomButtonPositions->isChecked());
@@ -395,7 +410,7 @@ void KWinDecorationModule::load()
 	KConfig kwinConfig("kwinrc");
 	kwinConfig.setGroup("Style");
 
-	// Reset by re-reading the config 
+	// Reset by re-reading the config
 	// The plugin doesn't need changing, as we have not saved
 	readConfig( &kwinConfig );
 	emit pluginLoad( &kwinConfig );
@@ -424,8 +439,8 @@ void KWinDecorationModule::defaults()
 	cbShowToolTips->setChecked( true );
 //	cbUseMiniWindows->setChecked( false);
 // Don't set default for now
-//	decorationListBox->setSelected( 
-//		decorationListBox->findItem( i18n("KDE 2") ), true );  // KDE classic client
+//	decorationList->setSelected(
+//		decorationList->findItem( i18n("KDE 2") ), true );  // KDE classic client
 
 	dropSite->buttonsLeft = "MS";
 	dropSite->buttonsRight= "HIAX";
@@ -459,7 +474,7 @@ QString KWinDecorationModule::quickHelp() const
 
 const KAboutData* KWinDecorationModule::aboutData() const
 {
-	KAboutData* about = 
+	KAboutData* about =
 		new KAboutData(I18N_NOOP("kcmkwindecoration"),
 				I18N_NOOP("Window Decoration Control Module"),
 				0, 0, KAboutData::License_GPL,
@@ -473,7 +488,7 @@ void KWinDecorationModule::resetKWin()
 {
 	bool ok = kapp->dcopClient()->send("kwin", "KWinInterface",
                         "reconfigure()", QByteArray());
-	if (!ok) 
+	if (!ok)
 		kdDebug() << "kcmkwindecoration: Could not reconfigure kwin" << endl;
 }
 

@@ -25,8 +25,9 @@
 
 #include "kwindecorationIface.h"
 
-class QListBox;
+class KComboBox;
 class QCheckBox;
+class QLabel;
 class QTabWidget;
 class QVBox;
 
@@ -63,7 +64,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 	protected slots:
 		// Allows us to turn "save" on
 		void slotSelectionChanged();
-		void slotDecorationHighlighted( const QString& s );
+		void slotChangeDecoration( const QString &  );
 
 	private:
 		void readConfig( KConfig* conf );
@@ -73,13 +74,13 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		void updateSelection();
 		QString decorationLibName( const QString& name );
 		QString decorationName ( QString& libName );
-		void resetPlugin( KConfig* conf, const QString* currentDecoName = 0 );
+		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString::null );
 		void resetKWin();
 
 		QTabWidget* tabWidget;
 
 		// Page 1
-		QListBox* decorationListBox;
+		KComboBox* decorationList;
 		QValueList<DecorationInfo> decorations;
 		QCheckBox* cbUseCustomButtonPositions;
 	//	QCheckBox* cbUseMiniWindows;
@@ -90,10 +91,11 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		ButtonSource* buttonSource;
 
 		// Page 3
-		QObject* pluginObject;
+		QWidget* pluginObject;
+		QLabel* noPluginSettings;
 		QString  currentLibraryName;
 		QString  oldLibraryName;
-		QVBox*   pluginPage;
+		QWidget* pluginConfigWidget;
 		QVBox*	 buttonPage;
 		QObject* (*allocatePlugin)( KConfig* conf, QWidget* parent );
 		QGroupBox* buttonBox;
