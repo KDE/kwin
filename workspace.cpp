@@ -470,12 +470,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
 	break;
     case EnterNotify:
-	qDebug("EnterNotify");
-	{
-	    QWidget* w = QWidget::find( e->xcrossing.window );
-	    if (w )
-		qDebug("w = %s", w->className() );
-	}
 	if ( !QWhatsThis::inWhatsThisMode() )
 	    break;
 	{
@@ -485,7 +479,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
 	break;
     case LeaveNotify:
-	qDebug("LeaveNotify");
 	if ( !QWhatsThis::inWhatsThisMode() )
 	    break;
 	c = findClientWidthId( e->xcrossing.window );

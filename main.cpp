@@ -46,7 +46,7 @@ static void crashHandler(int)
 {
    KCrash::setCrashHandler(0); // Exit on next crash.
    client->detach();  // Unregister with dcop.
-//    system("kwin&"); // Try to restart
+   system("kwin&"); // Try to restart
 }
 
 int x11ErrorHandler(Display *d, XErrorEvent *e){
