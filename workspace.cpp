@@ -321,10 +321,13 @@ void Workspace::init()
     Window root_return, parent_return, *wins;
     XWindowAttributes attr;
 
+    connect(&resetTimer, SIGNAL(timeout()), this,
+	    SLOT(slotResetAllClients()));            
+
     connect(&mgr, SIGNAL(resetAllClients()), this,
 	    SLOT(slotResetAllClients()));
     connect(kapp, SIGNAL(appearanceChanged()), this,
-	    SLOT(slotResetAllClients()));
+	    SLOT(slotResetAllClientsDelayed()));
 
     XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
     for (i = 0; i < nwins; i++) {
@@ -1592,6 +1595,7 @@ void Workspace::unclutterDesktop()
  */
 void Workspace::reconfigure()
 {
+    slotResetAllClientsDelayed();
     KGlobal::config()->reparseConfiguration();
     mgr.updatePlugin();
     options->reload();
@@ -2786,6 +2790,10 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 
 }
 
+void Workspace::slotResetAllClientsDelayed()
+{
+    resetTimer.start(200, true);
+}
 
 /*!
   Puts a new decoration frame around every client. Used to react on
@@ -2793,7 +2801,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
  */
 void Workspace::slotResetAllClients()
 {
-
+    resetTimer.stop();
     ClientList stack = stacking_order;
     Client* active = activeClient();
     block_focus = TRUE;

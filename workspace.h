@@ -12,6 +12,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qguardedptr.h>
 #include <qvaluelist.h>
 #include <qlist.h>
+#include <qtimer.h>
 #include "options.h"
 #include "plugins.h"
 #include "KWinInterface.h"
@@ -233,6 +234,7 @@ public slots:
 
     void slotMouseEmulation();
 
+    void slotResetAllClientsDelayed();
     void slotResetAllClients();
 
     void slotLogout();
@@ -350,6 +352,9 @@ private:
     // colormap handling
     Colormap default_colormap;
     Colormap installed_colormap;
+     
+    // Timer to collect requests for 'ResetAllClients'
+    QTimer resetTimer;
 };
 
 inline WId Workspace::rootWin() const
