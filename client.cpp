@@ -525,7 +525,7 @@ void Client::manage( bool isMapped )
     activateLayout();
     resize ( sizeForWindowSize( geom.size() ) );
     activateLayout();
-    
+
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
@@ -604,7 +604,7 @@ void Client::getWmNormalHints()
 void Client::fetchName()
 {
     QString s;
-    
+
     if ( info->name()  ) {
 	s = QString::fromUtf8( info->name() );
     } else {
@@ -660,7 +660,8 @@ bool Client::windowEvent( XEvent * e)
 
     unsigned int dirty = info->event( e ); // pass through the NET stuff
 
-    dirty = 0; // shut up, compiler
+    if ( ( dirty & NET::WMName ) != 0 )
+	fetchName();
 
     switch (e->type) {
     case UnmapNotify:
