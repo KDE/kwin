@@ -458,7 +458,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
             return !was_user_interaction; // see Client::readUserTimeMapTimestamp()
         else
         {
-        kdDebug() << "Activation: No timestamp at all" << endl;
+        kdDebug( 1212 ) << "Activation: No timestamp at all" << endl;
         if( options->focusStealingPreventionLevel == 1 ) // low
             return true;
         // no timestamp at all, don't activate - because there's also creation timestamp
@@ -506,12 +506,12 @@ bool Workspace::allowFullClientRaising( const Client* c )
         return false;
     if( !c->hasUserTimeSupport())
         {
-        kdDebug() << "Raising: No support" << endl;
+        kdDebug( 1212 ) << "Raising: No support" << endl;
         if( options->focusStealingPreventionLevel == 1 ) // low
             return true;
         }
     // options->focusStealingPreventionLevel == 2 // normal
-    kdDebug() << "Raising: Refusing" << endl;
+    kdDebug( 1212 ) << "Raising: Refusing" << endl;
     return false;
     }
 
