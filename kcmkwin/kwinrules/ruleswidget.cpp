@@ -187,6 +187,8 @@ static QPoint strToPosition( const QString& str )
 
 static QString sizeToStr( const QSize& s )
     {
+    if( !s.isValid())
+        return QString::null;
     return QString::number( s.width()) + "," + QString::number( s.height());
     }
 

@@ -127,10 +127,10 @@ void Rules::readFromCfg( KConfig& cfg )
         sizerule = UnusedSetRule;
     READ_FORCE_RULE( minsize, Size, );
     if( !minsize.isValid())
-        minsizerule = UnusedForceRule;
+        minsize = QSize( 1, 1 );
     READ_FORCE_RULE( maxsize, Size, );
     if( maxsize.isEmpty())
-        maxsizerule = UnusedForceRule;
+        maxsize = QSize( 32767, 32767 );
     READ_FORCE_RULE( ignoreposition, Bool, );
     READ_SET_RULE( desktop, Num, );
     type = readType( cfg, "type" );
