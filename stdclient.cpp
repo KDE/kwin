@@ -325,14 +325,12 @@ void StdClient::paintEvent( QPaintEvent* )
     r = r.subtract( t );
     p.setClipRegion( r );
     qDrawWinPanel( &p, rect(), colorGroup() );
-    t.setTop( 1 );
+    t.setTop( 4 );
     p.setClipRegion( t );
-    t.setTop( 0 );
     p.fillRect( t, options->color(Options::TitleBar, isActive()));
-    p.setPen( options->color(Options::TitleBar, isActive()).light() );
-    p.drawLine(t.left(), t.top()+1,  t.right(), t.top()+1);
     qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
                      colorGroup(), true, 1 );
+    t.setTop( 0 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
     p.setPen(options->color(Options::Font, isActive()));
