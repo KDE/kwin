@@ -533,15 +533,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 
 		// Intensify the image if required
 		if (isMouseOver) {
-			if( btnpix.mask() != 0 ) {
-                                QBitmap save_mask = *btnpix.mask();
-                                QImage image = btnpix.convertToImage();
-                                KImageEffect::intensity(image, 0.8);
-                            // fix Qt problem, when QPixmap has alpha channel, mask is ignored
-                                image.setAlphaBuffer( false );
-                                btnpix.convertFromImage(image);
-				btnpix.setMask( save_mask );
-			}
+                    btnpix = KPixmapEffect::intensity(btnpix, 0.8);
 		}
 
 		// Smooth scale the pixmap for small titlebars
