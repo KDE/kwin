@@ -115,7 +115,7 @@ Application::Application( )
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     if( !owner.claim( args->isSet( "replace" ), true ))
     {
-        fputs(i18n("kwin: couldn't claim manager selection, another wm running? (try using --replace)\n").local8Bit(), stderr);
+        fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").local8Bit(), stderr);
         ::exit(1);
     }
     connect( &owner, SIGNAL( lostOwnership()), SLOT( quit()));
