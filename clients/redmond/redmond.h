@@ -16,6 +16,7 @@
 #ifndef __KDE_REDMOND_H
 #define __KDE_REDMOND_H
 
+#include <qvariant.h>
 #include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
