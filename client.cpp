@@ -902,7 +902,8 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	if ( windowType() == NET::Normal && may_move ) {
 	    // crap for broken netscape
 	    QRect area = workspace()->clientArea();
-	    if ( !area.contains( np ) ){
+	    if ( !area.contains( np ) && width() < area.width()  &&
+		 height() < area.height() ) {
 		if ( np.x() < area.x() )
 		    np.rx() = area.x();
 		if ( np.y() < area.y() )
