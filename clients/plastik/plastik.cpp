@@ -62,7 +62,7 @@ bool PlastikHandler::reset(unsigned long changed)
     m_titleFont = KDecoration::options()->font(true, false); // not small
     m_titleFontTool = KDecoration::options()->font(true, true); // small
 
-    switch(KDecoration::options()->preferredBorderSize()) {
+    switch(KDecoration::options()->preferredBorderSize( this )) {
         case BorderTiny:
             m_borderSize = 2;
             break;
