@@ -207,7 +207,7 @@ static void sighandler(int) {
     QApplication::exit();
 }
 
-static const char *version = "0.9";
+static const char *version = "0.95";
 static const char *description = I18N_NOOP( "The KDE window manager." );
 
 extern "C" { int kdemain(int, char *[]); }
@@ -274,7 +274,7 @@ int kdemain( int argc, char * argv[] )
 
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
 			  version, description, KAboutData::License_BSD,
-			  "(c) 1999-2000, The KDE Developers");
+			  "(c) 1999-2001, The KDE Developers");
     aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
 
