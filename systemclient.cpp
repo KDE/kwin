@@ -41,19 +41,26 @@ static void create_pixmaps()
 
     // titlebar
     QPainter p;
+    QPainter maskPainter;
     int i, y;
     titlePix = new QPixmap(32, 17);
+    QBitmap mask(32, 17);
+    mask.fill(Qt::color0);
+    
     p.begin(titlePix);
-    p.fillRect(0, 0, 32, 17,
-               QBrush(options->color(Options::Frame, true),
-                      QBrush::SolidPattern));
+    maskPainter.begin(&mask);
+    maskPainter.setPen(Qt::color1);
     for(i=0, y=4; i < 4; ++i, y+=3){
         p.setPen(options->color(Options::TitleBar, true).light(150));
         p.drawLine(0, y, 31, y);
+        maskPainter.drawLine(0, y, 31, y);
         p.setPen(options->color(Options::TitleBar, true).dark(120));
         p.drawLine(0, y+1, 31, y+1);
+        maskPainter.drawLine(0, y+1, 31, y+1);
     }
     p.end();
+    maskPainter.end();
+    titlePix->setMask(mask);
 
     // Bottom frame gradient
     aFramePix = new KPixmap();
@@ -249,18 +256,27 @@ void SystemClient::paintEvent( QPaintEvent* )
     p.drawRect(rect());
     QRect t = titlebar->geometry();
     t.setTop( 1 );
-    qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-                    rect().height()-2,
-                    options->colorGroup(Options::Frame, isActive()), false, 1,
-                    &options->colorGroup(Options::Frame, isActive()).
-                    brush(QColorGroup::Button));
+
+    // if we have a pixmapped bg use that, otherwise use color settings
+    if(colorGroup().brush(QColorGroup::Background).pixmap())
+        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
+                        rect().height()-2, colorGroup(), false, 1,
+                        &colorGroup().brush(QColorGroup::Background));
+    else
+        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
+                        rect().height()-2,
+                        options->colorGroup(Options::Frame, isActive()), false, 1,
+                        &options->colorGroup(Options::Frame, isActive()).
+                        brush(QColorGroup::Button));
     t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
+    else if(colorGroup().brush(QColorGroup::Background).pixmap())
+        p.fillRect(t, colorGroup().brush(QColorGroup::Background));
     else
         p.fillRect(t, options->colorGroup(Options::Frame, false).
                    brush(QColorGroup::Button));
-
+        
 
 
     QRegion r = rect();
