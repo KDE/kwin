@@ -17,5 +17,3 @@ kwin3_plastik_la_METASOURCES = AUTO
 
 DISTCLEANFILES = $(kwin3_plastik_la_METASOURCES)
 
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kwin_plastik.pot
