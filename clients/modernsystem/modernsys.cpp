@@ -524,10 +524,6 @@ void ModernSys::slotBelow()
 void ModernSys::slotShade()
 {
     setShade( !isSetShade());
-    if (button[BtnShade]) {
-        button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
-        button[BtnShade]->repaint(true);
-    }
 }
 
 void ModernSys::resizeEvent( QResizeEvent* )
@@ -796,8 +792,9 @@ void ModernSys::iconChange()
 void ModernSys::shadeChange()
 {
     if (button[BtnShade]) {
-        bool on = isShade();
+        bool on = isSetShade();
         button[BtnShade]->turnOn(on);
+        button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
         button[BtnShade]->repaint(false);
         QToolTip::remove( button[BtnShade] );
         QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));

@@ -606,7 +606,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   break;
               case 'L': // Shade button
                   if ((!m_button[ShadeButton]) && isShadeable()){
-                      bool shaded = isShade();
+                      bool shaded = isSetShade();
                       m_button[ShadeButton] = new PlastikButton(this, "shade",
                               shaded?i18n("Unshade"):i18n("Shade"), ShadeButton, buttonSize, true);
                       m_button[ShadeButton]->setOn( shaded );
@@ -762,7 +762,7 @@ void PlastikClient::desktopChange()
 void PlastikClient::shadeChange()
 {
     if ( m_button[ShadeButton] ) {
-        bool shaded = isShade();
+        bool shaded = isSetShade();
         m_button[ShadeButton]->setOn( shaded );
         m_button[ShadeButton]->setTipText( shaded ?
                 i18n("Unshade")
@@ -781,7 +781,7 @@ void PlastikClient::slotMaximize()
 
 void PlastikClient::slotShade()
 {
-    setShade( !isShade() );
+    setShade( !isSetShade() );
 }
 
 void PlastikClient::slotKeepAbove()

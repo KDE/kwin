@@ -329,7 +329,7 @@ void B2Client::maxButtonClicked()
 
 void B2Client::shadeButtonClicked()
 {
-    setShade(!isShade());
+    setShade(!isSetShade());
 }
 
 void B2Client::resizeButtonPressed()
@@ -350,7 +350,7 @@ void B2Client::init()
 	    i18n("Not on all desktops") : i18n("On all desktops"), 
 	i18n("Minimize"), i18n("Maximize"), 
 	i18n("Close"), i18n("Help"),
-	isShade() ? i18n("Unshade") : i18n("Shade"),
+	isSetShade() ? i18n("Unshade") : i18n("Shade"),
 	i18n("Resize") 
     };
 
@@ -845,7 +845,7 @@ void B2Client::shadeChange()
     doShape();
     if (B2Button *b = button[BtnShade]) {
 	QToolTip::remove(b);
-	QToolTip::add(b, isShade() ? i18n("Unshade") : i18n("Shade"));
+	QToolTip::add(b, isSetShade() ? i18n("Unshade") : i18n("Shade"));
     }
 }
 
@@ -891,7 +891,7 @@ void B2Client::menuButtonPressed()
 	    minimize();
 	    break;
 	case B2::ShadeOp:
-	    setShade(!isShade());
+	    setShade(!isSetShade());
 	    break;
 	case B2::CloseOp:
 	    closeWindow();

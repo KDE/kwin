@@ -377,6 +377,8 @@ class KWIN_EXPORT KDecoration
 	/**
 	 * Returns @a true if the decorated window is currently shaded.
          * If the window is e.g. hover unshaded, it's not considered to be shaded.
+         * This function should not be used for the shade titlebar button, use
+         * @ref isSetShade() instead.
          *
          * @see isSetShade
 	 */

@@ -700,7 +700,11 @@ void Client::setShade( ShadeMode mode )
     ShadeMode was_shade_mode = shade_mode;
     shade_mode = mode;
     if( was_shade == isShade())
+        {
+        if( decoration != NULL ) // decoration may want to update after e.g. hover-shade changes
+            decoration->shadeChange();
         return; // no real change in shaded state
+        }
 
     if( shade_mode == ShadeNormal )
         {

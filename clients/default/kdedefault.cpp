@@ -1021,8 +1021,6 @@ void KDEDefaultClient::slotBelow()
 void KDEDefaultClient::slotShade()
 {
     setShade( !isSetShade());
-    button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
-    button[BtnShade]->repaint(true);
 }
 
 void KDEDefaultClient::resizeEvent( QResizeEvent* e)
@@ -1285,7 +1283,8 @@ void KDEDefaultClient::activeChange()
 void KDEDefaultClient::shadeChange()
 {
 	if (button[BtnShade]) {
-                bool on = isShade();
+		bool on = isSetShade();
+		button[BtnShade]->setBitmap( on ? shade_on_bits : shade_off_bits );
 		button[BtnShade]->turnOn(on);
 		button[BtnShade]->repaint(false);
                 QToolTip::remove( button[BtnShade] );

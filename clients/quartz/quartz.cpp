@@ -782,8 +782,9 @@ void QuartzClient::keepBelowChange( bool below )
 void QuartzClient::shadeChange()
 {
     if (button[BtnShade]) {
-        bool on = isShade();
+        bool on = isSetShade();
         button[BtnShade]->turnOn(on);
+        button[BtnShade]->setBitmap(on ? shade_on_bits : shade_off_bits );
         button[BtnShade]->repaint(false);
         QToolTip::remove( button[BtnShade] );
         QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));
@@ -819,8 +820,6 @@ void QuartzClient::slotBelow()
 void QuartzClient::slotShade()
 {
     setShade( !isSetShade());
-    button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
-    button[BtnShade]->repaint(true);
 }
 
 
