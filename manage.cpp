@@ -129,8 +129,9 @@ bool Client::manage( Window w, bool isMapped )
     if( keep_above && keep_below )
         keep_above = keep_below = false;
 
+    KStartupInfoId asn_id;
     KStartupInfoData asn_data;
-    bool asn_valid = workspace()->checkStartupNotification( window(), asn_data );
+    bool asn_valid = workspace()->checkStartupNotification( window(), asn_id, asn_data );
 
     workspace()->updateClientLayer( this );
 
@@ -393,7 +394,7 @@ bool Client::manage( Window w, bool isMapped )
     // - keep it?
     XLowerWindow( qt_xdisplay(), frameId());
 
-    user_time = readUserTimeMapTimestamp( asn_valid ? &asn_data : NULL, session );
+    user_time = readUserTimeMapTimestamp( asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session );
 
     if( isTopMenu()) // they're shown in Workspace::addClient() if their mainwindow
         hideClient( true ); // is the active one

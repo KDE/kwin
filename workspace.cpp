@@ -1977,9 +1977,9 @@ QString Workspace::desktopName( int desk ) const
     return QString::fromUtf8( rootInfo->desktopName( desk ) );
     }
 
-bool Workspace::checkStartupNotification( Window w, KStartupInfoData& data )
+bool Workspace::checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data )
     {
-    return startup->checkStartup( w, data ) == KStartupInfo::Match;
+    return startup->checkStartup( w, id, data ) == KStartupInfo::Match;
     }
 
 /*!

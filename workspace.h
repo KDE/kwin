@@ -28,6 +28,7 @@ class QPopupMenu;
 class KConfig;
 class KGlobalAccel;
 class KStartupInfo;
+class KStartupInfoId;
 class KStartupInfoData;
 
 namespace KWinInternal
@@ -222,7 +223,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void removeGroup( Group* group, allowed_t );
         Group* findClientLeaderGroup( const Client* c ) const;
 
-        bool checkStartupNotification( Window w, KStartupInfoData& data );
+        bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
         

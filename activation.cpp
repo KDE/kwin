@@ -661,18 +661,27 @@ KWIN_COMPARE_PREDICATE( SameApplicationActiveHackPredicate, const Client*,
     !cl->isSplash() && !cl->isToolbar() && !cl->isTopMenu() && !cl->isUtility() && !cl->isMenu()
     && Client::belongToSameApplication( cl, value, true ) && cl != value);
 
-Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
+Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
     const SessionInfo* session ) const
     {
     Time time = info->userTime();
     kdDebug( 1212 ) << "User timestamp, initial:" << time << endl;
     // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0
     // helps e.g. with konqy reusing
-    if( asn_data != NULL && time != 0
-        && ( time == -1U
-            || ( asn_data->timestamp() != -1U
-                && timestampCompare( asn_data->timestamp(), time ) > 0 )))
-        time = asn_data->timestamp();
+    if( asn_data != NULL && time != 0 )
+        {
+        // prefer timestamp from ASN id (timestamp from data is obsolete way)
+        if( asn_id->timestamp() != 0
+            && ( time == -1U || timestampCompare( asn_id->timestamp(), time ) > 0 ))
+            {
+            time = asn_id->timestamp();
+            }
+        else if( asn_data->timestamp() != -1U
+            && ( time == -1U || timestampCompare( asn_data->timestamp(), time ) > 0 ))
+            {
+            time = asn_data->timestamp();
+            }
+        }
     kdDebug( 1212 ) << "User timestamp, ASN:" << time << endl;
     if( time == -1U )
         { // The window doesn't have any timestamp.
@@ -785,13 +794,17 @@ void Client::setActive( bool act)
 
 void Client::startupIdChanged()
     {
+    KStartupInfoId asn_id;
     KStartupInfoData asn_data;
-    bool asn_valid = workspace()->checkStartupNotification( window(), asn_data );
+    bool asn_valid = workspace()->checkStartupNotification( window(), asn_id, asn_data );
     if( !asn_valid )
         return;
     if( asn_data.desktop() != 0 )
         workspace()->sendClientToDesktop( this, asn_data.desktop(), true );
-    if( asn_data.timestamp() != -1U )
+    Time timestamp = asn_id.timestamp();
+    if( timestamp == 0 && asn_data.timestamp() != -1U )
+        timestamp = asn_data.timestamp();
+    if( timestamp != 0 )
         {
         bool activate = workspace()->allowClientActivation( this, asn_data.timestamp());
         if( asn_data.desktop() != 0 && !isOnCurrentDesktop())
@@ -815,13 +828,21 @@ void Client::updateUrgency()
     
 void Group::startupIdChanged()
     {
+    KStartupInfoId asn_id;
     KStartupInfoData asn_data;
-    bool asn_valid = workspace()->checkStartupNotification( leader_wid, asn_data );
+    bool asn_valid = workspace()->checkStartupNotification( leader_wid, asn_id, asn_data );
     if( !asn_valid )
         return;
-    if( asn_data.timestamp() != -1U && user_time != -1U
-        &&timestampCompare( asn_data.timestamp(), user_time ) > 0 )
+    if( asn_id.timestamp() != 0 && user_time != -1U
+        && timestampCompare( asn_id.timestamp(), user_time ) > 0 )
+        {
+        user_time = asn_id.timestamp();
+        }
+    else if( asn_data.timestamp() != -1U && user_time != -1U
+        && timestampCompare( asn_data.timestamp(), user_time ) > 0 )
+        {
         user_time = asn_data.timestamp();
+        }
     }
 
 void Group::updateUserTime( Time time )

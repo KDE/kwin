@@ -379,7 +379,7 @@ private slots:
         void rawShow(); // just shows it
         void rawHide(); // just hides it
 
-        Time readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
+        Time readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
             const SessionInfo* session ) const;
         Time readUserCreationTime() const;
         static bool sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool active_hack );
