@@ -39,6 +39,7 @@ class Group
         void lostLeader();
         Workspace* workspace();
         bool groupEvent( XEvent* e );
+        void updateUserTime( Time time = CurrentTime );
         Time userTime() const;
     private:
         void getIcons();

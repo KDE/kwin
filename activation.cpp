@@ -580,7 +580,7 @@ void Workspace::unfakeActivity( Client* c )
   externally, etc.).
  */
 void Client::updateUserTime( Time time )
-    {
+    { // copied in Group::updateUserTime
     if( time == CurrentTime )
         time = qt_x_time;
     if( time != -1U
@@ -637,10 +637,6 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
             || ( asn_data->timestamp() != -1U
                 && timestampCompare( asn_data->timestamp(), time ) > 0 )))
         time = asn_data->timestamp();
-    if( time == -1U
-         || ( group()->userTime() != -1U
-                 && timestampCompare( time, group()->userTime()) > 0 ))
-        time = group()->userTime();
     kdDebug( 1212 ) << "User timestamp, ASN:" << time << endl;
     if( time == -1U )
         { // The window doesn't have any timestamp.
@@ -693,6 +689,16 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
     return time;
     }
 
+Time Client::userTime() const
+    {
+    Time time = user_time;
+    assert( group() != NULL );
+    if( time == -1U
+         || ( group()->userTime() != -1U
+                 && timestampCompare( group()->userTime(), time ) > 0 ))
+        time = group()->userTime();
+    return time;
+    }
 
 /*!
   Sets the client's active state to \a act.
@@ -775,6 +781,16 @@ void Group::startupIdChanged()
     if( asn_data.timestamp() != -1U && user_time != -1U
         &&timestampCompare( asn_data.timestamp(), user_time ) > 0 )
         user_time = asn_data.timestamp();
+    }
+
+void Group::updateUserTime( Time time )
+    { // copy of Client::updateUserTime
+    if( time == CurrentTime )
+        time = qt_x_time;
+    if( time != -1U
+        && ( user_time == CurrentTime
+            || timestampCompare( time, user_time ) > 0 )) // time > user_time
+        user_time = time;
     }
 
 } // namespace

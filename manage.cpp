@@ -427,7 +427,7 @@ bool Client::manage( Window w, bool isMapped )
                 }
             else
                 {
-                if( workspace()->allowClientActivation( this, user_time, false, session && session->active ))
+                if( workspace()->allowClientActivation( this, userTime(), false, session && session->active ))
                     {
                     workspace()->raiseClient( this );
                     rawShow();

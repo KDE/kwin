@@ -735,14 +735,6 @@ inline bool Client::isManaged() const
     return mapping_state != WithdrawnState;
     }
 
-inline
-Time Client::userTime() const
-    {
-    assert( user_time != CurrentTime );
-    assert( user_time != -1U );
-    return user_time;
-    }
-
 inline QCString Client::windowRole() const
     {
     return window_role;
