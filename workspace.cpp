@@ -263,9 +263,9 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    return TRUE;
 	return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
-	if ( e->xmaprequest.parent == root ) {
-	    c = findClient( e->xmaprequest.window );
-	    if ( !c ) {
+	c = findClient( e->xmaprequest.window );
+	if ( !c ) {
+	    if ( e->xmaprequest.parent == root ) {
 		if ( addDockwin( e->xmaprequest.window ) )
 		    return TRUE;
 		c = clientFactory( this, e->xmaprequest.window );
@@ -274,11 +274,14 @@ bool Workspace::workspaceEvent( XEvent * e )
 		    XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
 		}
 		if ( c != desktop_client ) {
+		    focus_chain.prepend( c );
 		    clients.append( c );
 		    stacking_order.append( c );
 		}
 		propagateClients();
 	    }
+	}
+	if ( c ) {
 	    bool result = c->windowEvent( e );
 	    if ( c == desktop_client )
 		setDesktopClient( c );
@@ -410,6 +413,7 @@ bool Workspace::destroyClient( Client* c)
 {
     if ( !c )
 	return FALSE;
+    qDebug("Workspace:.destroyClient");
     clients.remove( c );
     stacking_order.remove( c );
     focus_chain.remove( c );

@@ -25,6 +25,8 @@ public:
     void invalidateWindow();
     QSize sizeHint() const;
     QSizePolicy sizePolicy() const;
+    
+    void pseudoShow();
 
 protected:
     void resizeEvent( QResizeEvent * );
@@ -146,6 +148,7 @@ protected:
     void mousePressEvent( QMouseEvent * );
     void mouseReleaseEvent( QMouseEvent * );
     void mouseMoveEvent( QMouseEvent * );
+    void resizeEvent( QResizeEvent * );
     void enterEvent( QEvent * );
     void leaveEvent( QEvent * );
     void showEvent( QShowEvent* );

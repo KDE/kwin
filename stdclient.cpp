@@ -45,7 +45,7 @@ static void create_pixmaps()
     if ( pixmaps_created )
         return;
     pixmaps_created = true;
-    
+
     QPainter pact, pdis;
     QBitmap bitmap;
     QColor actHigh = options->color(Options::ButtonFg, true).light(150);
@@ -54,7 +54,7 @@ static void create_pixmaps()
     QColor disHigh = options->color(Options::ButtonFg, false).light(150);
     QColor disMed = options->color(Options::ButtonFg, false);
     QColor disLow = options->color(Options::ButtonFg, false).dark(120);
-    
+
     close_pix = new QPixmap(16, 16);
     dis_close_pix = new QPixmap(16, 16);
     pact.begin(close_pix); pdis.begin(dis_close_pix);
@@ -86,7 +86,7 @@ static void create_pixmaps()
     pact.end(); pdis.end();
     bitmap = QBitmap(16, 16, iconify_mask_bits, true);
     minimize_pix->setMask(bitmap); dis_minimize_pix->setMask(bitmap);
-    
+
     maximize_pix = new QPixmap(16, 16);
     dis_maximize_pix = new QPixmap(16, 16);
     pact.begin(maximize_pix); pdis.begin(dis_maximize_pix);
@@ -155,7 +155,7 @@ static void create_pixmaps()
     pact.end(); pdis.end();
     bitmap = QBitmap(16, 16, pinup_mask_bits, true);
     pinup_pix->setMask(bitmap); dis_pinup_pix->setMask(bitmap);
-    
+
     pindown_pix = new QPixmap(16, 16);
     dis_pindown_pix = new QPixmap(16, 16);
     pact.begin(pindown_pix); pdis.begin(dis_pindown_pix);
@@ -176,7 +176,7 @@ static void create_pixmaps()
     pact.end(); pdis.end();
     bitmap = QBitmap(16, 16, pindown_mask_bits, true);
     pindown_pix->setMask(bitmap); dis_pindown_pix->setMask(bitmap);
-    
+
 }
 
 
@@ -265,7 +265,7 @@ void StdClient::resizeEvent( QResizeEvent* e)
     t.setTop( 0 );
     QRegion r = rr.subtract( QRect( t.x()+1, 0, t.width()-2, 1 ) );
     setMask( r );
-    
+
     if ( isVisibleToTLW() ) {
 	// manual clearing without the titlebar (we selected WResizeNoErase )
 	QPainter p( this );
@@ -298,7 +298,7 @@ void StdClient::stickyChange( bool s)
     button[1]->setIconSet( s?*pindown_pix:*pinup_pix );
 }
 
-void StdClient::paintEvent( QPaintEvent* )
+void StdClient::paintEvent( QPaintEvent* e)
 {
     QPainter p( this );
     QRect t = titlebar->geometry();

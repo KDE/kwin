@@ -151,6 +151,15 @@ QSizePolicy WindowWrapper::sizePolicy() const
 }
 
 
+/**
+   Gives layout the illusion the wrapper was visible
+ */
+void WindowWrapper::pseudoShow()
+{
+    clearWState( WState_ForceHide );
+}
+
+
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win ) {
@@ -349,17 +358,23 @@ void Client::manage( bool isMapped )
 	updateShape();
     }
 
+    // find out the initial state. Several possibilities exist
+    XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
+    int state = NormalState;
+    if (hints && (hints->flags & StateHint))
+	state = hints->initial_state;
+    if (hints)
+	XFree(hints);
 
     // ### TODO check XGetWMHints() for initial mapping state, icon, etc. pp.
     // assume window wants to be visible on the current desktop
     desk = KWM::desktop( win ); //workspace()->currentDesktop();
-    setMappingState( NormalState );
-    if ( isOnDesktop( workspace()->currentDesktop() ) ) {
+    setMappingState( state );
+    if ( state == NormalState && isOnDesktop( workspace()->currentDesktop() ) ) {
 	show();
+	if ( options->focusPolicyIsReasonable() )
+	    workspace()->requestFocus( this );
     }
-
-    if ( options->focusPolicyIsReasonable() )
-	workspace()->requestFocus( this );
 
 }
 
@@ -506,7 +521,7 @@ bool Client::unmapNotify( XUnmapEvent& e )
 
 	// maybe we will be destroyed soon. Check this first.
 	XEvent ev;
-	if  ( XCheckTypedWindowEvent (qt_xdisplay(), win,
+	if  ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
 				      DestroyNotify, &ev) ){
 	    workspace()->destroyClient( this );
 	    return TRUE;
@@ -691,14 +706,14 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     }
 
     int ww = wwrap->width();
-    int wh = 0;
+    int wh = 0;;
     if ( !wwrap->testWState( WState_ForceHide ) )
 	wh = wwrap->height();
-
+    
     return QSize( QMIN( QMAX( width() - ww + w, minimumWidth() ),
 			maximumWidth() ),
-		  ignore_height? height()-wh : QMIN( QMAX( height() - wh + h, minimumHeight() ),
-						     maximumHeight() ) );
+		  ignore_height? height()-wh : (QMIN( QMAX( height() - wh + h, minimumHeight() ),
+						     maximumHeight() ) ) );
 }
 
 
@@ -739,6 +754,15 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	}
     }
 }
+
+
+/*!
+ */
+void Client::resizeEvent( QResizeEvent * e)
+{
+    QWidget::resizeEvent( e );
+}
+
 
 /*!
   Reimplemented to provide move/resize
@@ -1306,9 +1330,10 @@ void Client::setShade( bool s )
 	resize (s );
     } else {
 	QSize s( sizeForWindowSize( windowWrapper()->size() )  );
+	resize (  s );
 	windowWrapper()->show();
 	layout()->activate();
-	resize (  s );
+	repaint();
 	if ( isActive() )
 	    workspace()->requestFocus( this );
     }
