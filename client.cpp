@@ -588,7 +588,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	if ( desk <= 0 ) {
 	    // assume window wants to be visible on the current desktop
 	    desk =  workspace()->currentDesktop();
-	} else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop() ) {
+	} else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop() 
+		    && !isMenu() ) {
 	    //window didn't specify any specific desktop but will appear
 	    //somewhere else. This happens for example with "save data?"
 	    //dialogs on shutdown. Switch to the respective desktop in
