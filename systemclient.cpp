@@ -1,5 +1,3 @@
-#include <kwin.h> // need to include this first due to conflicts
-
 #include "systemclient.h"
 #include <qapplication.h>
 #include <qcursor.h>
@@ -188,6 +186,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     create_pixmaps();
+    bool help = providesContextHelp();
 
     QGridLayout* g = new QGridLayout(this, 0, 0, 2);
     g->setRowStretch(1, 10);
@@ -199,20 +198,22 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     g->addRowSpacing(2, 6);
 
     button[0] = new SystemButton(this, "close", close_bits);
-    button[1] = new SystemButton(this, "help", question_bits);
-    button[2] = new SystemButton(this, "sticky");
+    button[1] = new SystemButton(this, "sticky");
     if(isSticky())
-        button[2]->setBitmap(unsticky_bits);
+        button[1]->setBitmap(unsticky_bits);
     else
-        button[2]->setBitmap(sticky_bits);
-    button[3] = new SystemButton(this, "iconify", iconify_bits);
-    button[4] = new SystemButton(this, "maximize", maximize_bits);
+        button[1]->setBitmap(sticky_bits);
+    button[2] = new SystemButton(this, "iconify", iconify_bits);
+    button[3] = new SystemButton(this, "maximize", maximize_bits);
+    if(help){
+        button[4] = new SystemButton(this, "help", question_bits);
+        connect( button[4], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+    }
 
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
-    connect( button[1], SIGNAL( clicked() ), this, ( SLOT( slotContextHelp() ) ) );
-    connect( button[2], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    connect( button[3], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    connect( button[4], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
+    connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
+    connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
+    connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
 
     QHBoxLayout* hb = new QHBoxLayout();
     g->addLayout( hb, 0, 1 );
@@ -222,16 +223,18 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
                                QSizePolicy::Minimum);
     hb->addItem(titlebar);
     hb->addSpacing(3);
+    if(help){
+        hb->addWidget( button[4] );
+        hb->addSpacing(1);
+    }
     hb->addWidget( button[1] );
     hb->addSpacing(1);
     hb->addWidget( button[2] );
     hb->addSpacing(1);
     hb->addWidget( button[3] );
-    hb->addSpacing(1);
-    hb->addWidget( button[4] );
     hb->addSpacing(3);
 
-    for ( int i = 0; i < 5; i++) {
+    for ( int i = 0; i < (help ? 5 : 4); i++) {
         button[i]->setMouseTracking( TRUE );
         button[i]->setFixedSize( 14, 14 );
     }
@@ -380,12 +383,12 @@ void SystemClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void SystemClient::stickyChange(bool on)
 {
-    button[2]->setBitmap(on ? unsticky_bits : sticky_bits);
+    button[1]->setBitmap(on ? unsticky_bits : sticky_bits);
 }
 
 void SystemClient::maximizeChange(bool m)
 {
-    button[4]->setBitmap(m ? minmax_bits : maximize_bits);
+    button[3]->setBitmap(m ? minmax_bits : maximize_bits);
 }
 
 void SystemClient::init()
@@ -393,8 +396,4 @@ void SystemClient::init()
     //
 }
 
-void SystemClient::slotContextHelp()
-{
-    KWin::invokeContextHelp();
-}
 
