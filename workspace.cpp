@@ -250,7 +250,6 @@ void Workspace::init()
       inf.row = 0;
       cci.append(inf);
     }
-    updateClientArea();
 }
 
 Workspace::~Workspace()
@@ -344,7 +343,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 		if ( addDockwin( e->xmaprequest.window ) )
 		    return TRUE;
 		c = clientFactory( this, e->xmaprequest.window );
-    updateClientArea();
 		if ( root != qt_xrootwin() ) {
 		    // TODO may use QWidget:.create
 		    XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
@@ -526,6 +524,7 @@ bool Workspace::destroyClient( Client* c)
     if ( c == desktop_client )
 	desktop_client = 0;
     propagateClients();
+    updateClientArea();
     return TRUE;
 }
 
@@ -1333,6 +1332,10 @@ void Workspace::deskCleanup(CleanupType ct)
  */
 void Workspace::lowerClient( Client* c )
 {
+  // This isn't working yet and the window disappears, so don't
+  // do anything for now.
+  return;
+
   if ( !c )
     return;
 
@@ -2110,7 +2113,6 @@ void Workspace::slotResetAllClients()
         delete oldClient;
         newClient->manage( TRUE );
     }
-  updateClientArea();
 }
 
 /*!
@@ -2190,7 +2192,7 @@ Workspace::updateClientArea()
   for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it)
   {
     if ((*it)->avoid()) {
-
+  
       switch (AnchorEdge((*it)->anchorEdge())) {
 
         case AnchorNorth:
@@ -2215,5 +2217,8 @@ Workspace::updateClientArea()
       }
     }
   }
+// Useful when you want to see whether the client area has been
+// updated correctly...
+//  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.right(), clientArea_.top(), clientArea_.bottom());
 }
 

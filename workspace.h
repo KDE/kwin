@@ -140,6 +140,8 @@ public:
     void storeSession( KConfig* config );
 
     SessionInfo* takeSessionInfo( Client* );
+    
+    void updateClientArea();
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -238,7 +240,6 @@ private:
 
     PluginMgr mgr;
 
-    void updateClientArea();
     QRect clientArea_;
 };
 

@@ -547,6 +547,8 @@ void Client::manage( bool isMapped )
       XFree(xch.res_name);
       XFree(xch.res_class);
     }
+
+    workspace()->updateClientArea();
 }
 
 
@@ -1268,31 +1270,54 @@ void Client::closeWindow()
 
 void Client::maximize( MaximizeMode m)
 {
-    if ( isShade() )
-	setShade( FALSE );
+  QRect clientArea = workspace()->clientArea();
 
-    if ( geom_restore.isNull() ) {
-	geom_restore = geometry();
-	switch ( m ) {
-	case MaximizeVertical:
-	    setGeometry( QRect( QPoint( x(), workspace()->geometry().top() ),
-			 adjustedSize( QSize( width(), workspace()->geometry().height()) ) ) );
-	    break;
-	case MaximizeHorizontal:
-	    setGeometry( QRect( QPoint( workspace()->geometry().left(), y() ),
-			 adjustedSize( QSize( workspace()->geometry().width(), height() ) ) ) );
-	    break;
-	default:
-	    setGeometry( QRect( workspace()->geometry().topLeft(), adjustedSize(workspace()->geometry().size()) ) );
-	}
-	maximizeChange( TRUE );
+  qDebug("Client::maximise() - area: l: %d r: %d t: %d b: %d",
+    clientArea.left(), clientArea.right(),
+    clientArea.top(), clientArea.bottom());
+
+  if (isShade())
+    setShade(false);
+
+  if (geom_restore.isNull()) {
+
+    geom_restore = geometry();
+
+    switch (m) {
+
+      case MaximizeVertical:
+
+        setGeometry(
+          QRect(QPoint(x(), clientArea.top()),
+          adjustedSize(QSize(width(), clientArea.height())))
+        );
+        break;
+
+      case MaximizeHorizontal:
+
+        setGeometry(
+          QRect(
+            QPoint(clientArea.left(), y()),
+            adjustedSize(QSize(clientArea.width(), height())))
+          );
+        break;
+
+      default:
+
+        setGeometry(
+          QRect(clientArea.topLeft(), adjustedSize(clientArea.size()))
+        );
     }
-    else {
-	setGeometry( geom_restore );
-	QRect invalid;
-	geom_restore = invalid;
-	maximizeChange( FALSE );
-    }
+
+    maximizeChange(true);
+
+  } else {
+
+    setGeometry(geom_restore);
+    QRect invalid;
+    geom_restore = invalid;
+    maximizeChange(false);
+  }
 }
 
 
