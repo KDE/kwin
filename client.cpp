@@ -842,7 +842,8 @@ bool Client::windowEvent( XEvent * e)
 	fetchName();
     if ( ( dirty & NET::WMStrut ) != 0 )
 	workspace()->updateClientArea();
-
+    if ( ( dirty & NET::WMIcon) != 0 ) 
+	getWMHints();
 
     switch (e->type) {
     case UnmapNotify:
@@ -1136,7 +1137,6 @@ bool Client::propertyNotify( XPropertyEvent& e )
     default:
 	if ( e.atom == atoms->wm_protocols )
 	    getWindowProtocols();
-
 	break;
     }
     return TRUE;
