@@ -1035,6 +1035,8 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode ) const
     w = QMAX( min_size.width(), w );
     h = QMAX( min_size.height(), h );
 
+    int w1 = w;
+    int h1 = h;
     int width_inc = xSizeHint.width_inc;
     int height_inc = xSizeHint.height_inc;
     int basew_inc = xSizeHint.min_width; // see getWmNormalHints()
@@ -1154,6 +1156,11 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode ) const
         w += xSizeHint.base_width;
         h += xSizeHint.base_height;
         }
+    // disobey increments and aspect when maximized
+    if( maximizeMode() & MaximizeHorizontal )
+        w = w1;
+    if( maximizeMode() & MaximizeVertical )
+        h = h1;
 
     w += border_left + border_right;
     h += border_top + border_bottom;
