@@ -16,39 +16,39 @@
 
 namespace Laptop {
 
-static unsigned char iconify_bits[] = {
+static const unsigned char iconify_bits[] = {
     0xff, 0xff, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18};
 
-static unsigned char close_bits[] = {
+static const unsigned char close_bits[] = {
     0x42, 0xe7, 0x7e, 0x3c, 0x3c, 0x7e, 0xe7, 0x42};
 
-static unsigned char maximize_bits[] = {
+static const unsigned char maximize_bits[] = {
     0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0xff, 0xff };
 
-static unsigned char minmax_bits[] = {
+static const unsigned char minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
 
-static unsigned char question_bits[] = {
+static const unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
 
-static unsigned char unsticky_bits[] = {
+static const unsigned char unsticky_bits[] = {
    0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
 
-static unsigned char sticky_bits[] = {
+static const unsigned char sticky_bits[] = {
    0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
 
-static QPixmap *titlePix=0;
-static KPixmap *aUpperGradient=0;
-static KPixmap *iUpperGradient=0;
+static QPixmap *titlePix;
+static KPixmap *aUpperGradient;
+static KPixmap *iUpperGradient;
 // buttons active, inactive, up, down, and 2 sizes :P
-static KPixmap *btnPix1=0;
-static KPixmap *iBtnPix1=0;
-static KPixmap *btnDownPix1=0;
-static KPixmap *iBtnDownPix1=0;
-static KPixmap *btnPix2=0;
-static KPixmap *btnDownPix2=0;
-static KPixmap *iBtnPix2=0;
-static KPixmap *iBtnDownPix2=0;
+static KPixmap *btnPix1;
+static KPixmap *iBtnPix1;
+static KPixmap *btnDownPix1;
+static KPixmap *iBtnDownPix1;
+static KPixmap *btnPix2;
+static KPixmap *btnDownPix2;
+static KPixmap *iBtnPix2;
+static KPixmap *iBtnDownPix2;
 static QColor btnForeground;
 
 static bool pixmaps_created = false;
