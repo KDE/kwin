@@ -820,16 +820,15 @@ void Workspace::slotReconfigure()
 
 void Workspace::loadDesktopSettings()
     {
-    KConfig c("kwinrc");
-
+    KConfig* c = KGlobal::config();
     QCString groupname;
     if (screen_number == 0)
         groupname = "Desktops";
     else
         groupname.sprintf("Desktops-screen-%d", screen_number);
-    c.setGroup(groupname);
+    KConfigGroupSaver saver(c,groupname);
 
-    int n = c.readNumEntry("Number", 4);
+    int n = c->readNumEntry("Number", 4);
     number_of_desktops = n;
     delete workarea;
     workarea = new QRect[ n + 1 ];
@@ -839,7 +838,7 @@ void Workspace::loadDesktopSettings()
     desktop_focus_chain.resize( n );
     for(int i = 1; i <= n; i++) 
         {
-        QString s = c.readEntry(QString("Name_%1").arg(i),
+        QString s = c->readEntry(QString("Name_%1").arg(i),
                                 i18n("Desktop %1").arg(i));
         rootInfo->setDesktopName( i, s.utf8().data() );
         desktop_focus_chain[i-1] = i;
@@ -848,16 +847,15 @@ void Workspace::loadDesktopSettings()
 
 void Workspace::saveDesktopSettings()
     {
-    KConfig c("kwinrc");
-
+    KConfig* c = KGlobal::config();
     QCString groupname;
     if (screen_number == 0)
         groupname = "Desktops";
     else
         groupname.sprintf("Desktops-screen-%d", screen_number);
-    c.setGroup(groupname);
+    KConfigGroupSaver saver(c,groupname);
 
-    c.writeEntry("Number", number_of_desktops );
+    c->writeEntry("Number", number_of_desktops );
     for(int i = 1; i <= number_of_desktops; i++) 
         {
         QString s = desktopName( i );
@@ -870,13 +868,13 @@ void Workspace::saveDesktopSettings()
 
         if (s != defaultvalue) 
             {
-            c.writeEntry( QString("Name_%1").arg(i), s );
+            c->writeEntry( QString("Name_%1").arg(i), s );
             }
         else 
             {
-            QString currentvalue = c.readEntry(QString("Name_%1").arg(i));
+            QString currentvalue = c->readEntry(QString("Name_%1").arg(i));
             if (currentvalue != defaultvalue)
-                c.writeEntry( QString("Name_%1").arg(i), "" );
+                c->writeEntry( QString("Name_%1").arg(i), "" );
             }
         }
     }
