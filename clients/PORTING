@@ -106,6 +106,10 @@ inline const KDecorationOptions* options() { return KDecoration::options(); }
   means that there's also no maximize() slot).
   Also, if your decoration button has only two visual states representing the maximalization state,
   it's recommended that it shows the maximized state only for MaximizeFull state.
+- Make sure the decoration matches the window state after init() is finished, that is, that
+  the buttons represent correctly the maximalization, on-all-desktops etc. states. As the
+  simplest solution, you can call maximizeChange(), desktopChange(), etc. at the end
+  of init().
 - Use 'titlebarDblClickOperation()' for performing the application after doubleclicking
   the titlebar.
 - Implement borders() returning the width of the top,left,right and bottom border. You may
