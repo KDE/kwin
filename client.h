@@ -35,6 +35,7 @@ protected:
 private:
     WId win;
     Time lastMouseEventTime;
+    bool reparented;
 };
 
 inline WId WindowWrapper::window() const

@@ -317,7 +317,7 @@ void StdClient::stickyChange( bool s)
     button[1]->setIconSet( s?*pindown_pix:*pinup_pix );
 }
 
-void StdClient::paintEvent( QPaintEvent* e)
+void StdClient::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
     QRect t = titlebar->geometry();

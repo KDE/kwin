@@ -111,9 +111,6 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     wc.border_width = 0;
     XConfigureWindow( qt_xdisplay(), win, CWBorderWidth, &wc );
 
-    // get the window
-    XReparentWindow( qt_xdisplay(), win, winId(), 0, 0 );
-
 //     // overwrite Qt-defaults because we need SubstructureNotifyMask
      XSelectInput( qt_xdisplay(), winId(),
 		   KeyPressMask | KeyReleaseMask |
@@ -140,6 +137,8 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 		 ButtonPressMask,
 		 GrabModeSync, GrabModeAsync,
 		 None, None );
+     
+     reparented = FALSE;
 }
 
 WindowWrapper::~WindowWrapper()
@@ -160,7 +159,7 @@ QSizePolicy WindowWrapper::sizePolicy() const
 
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
-    if ( win ) {
+    if ( win && reparented ) {
 	XMoveResizeWindow( qt_xdisplay(), win,
 			   0, 0, width(), height() );
 	if ( ((Client*)parentWidget())->shape() )
@@ -171,6 +170,11 @@ void WindowWrapper::resizeEvent( QResizeEvent * )
 void WindowWrapper::showEvent( QShowEvent* )
 {
     if ( win ) {
+	if ( !reparented ) {
+	    // get the window
+	    XReparentWindow( qt_xdisplay(), win, winId(), 0, 0 );
+	    reparented = TRUE;
+	}
 	XMoveResizeWindow( qt_xdisplay(), win,
 			   0, 0, width(), height() );
 	XMapRaised( qt_xdisplay(), win );
@@ -193,10 +197,12 @@ void WindowWrapper::invalidateWindow()
 void WindowWrapper::releaseWindow()
 {
     if ( win ) {
-	XReparentWindow( qt_xdisplay(), win,
-			 ((Client*)parentWidget())->workspace()->rootWin(),
-			 parentWidget()->x(),
-			 parentWidget()->y() );
+	if ( reparented ) {
+	    XReparentWindow( qt_xdisplay(), win,
+			     ((Client*)parentWidget())->workspace()->rootWin(),
+			     parentWidget()->x(),
+			     parentWidget()->y() );
+	}
 
 	XRemoveFromSaveSet(qt_xdisplay(), win );
 	invalidateWindow();
