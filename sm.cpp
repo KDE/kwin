@@ -34,24 +34,20 @@ bool SessionManaged::saveState( QSessionManager& sm )
     // as ksmserver assures no interaction will be done
     // before the WM finishes phase 1. Saving in phase 2 is
     // too late, as possible user interaction may change some things.
+    // Phase2 is still needed though (ICCCM 5.2)
     char* sm_vendor = SmcVendor( static_cast< SmcConn >( sm.handle()));
     bool ksmserver = qstrcmp( sm_vendor, "KDE" ) == 0;
     free( sm_vendor );
     if ( !sm.isPhase2() )
         {
         Workspace::self()->sessionSaveStarted();
-        if( ksmserver )
-            {
-            Workspace::self()->storeSession( kapp->sessionConfig() );
-            kapp->sessionConfig()->sync();
-            // we don't need phase 2 actually
-            return true;
-            }
+        if( ksmserver ) // save stacking order etc. before "save file?" etc. dialogs change it
+            Workspace::self()->storeSession( kapp->sessionConfig(), SMSavePhase0 );
         sm.release(); // Qt doesn't automatically release in this case (bug?)
         sm.requestPhase2();
         return true;
         }
-    Workspace::self()->storeSession( kapp->sessionConfig() );
+    Workspace::self()->storeSession( kapp->sessionConfig(), ksmserver ? SMSavePhase2 : SMSavePhase2Full );
     kapp->sessionConfig()->sync();
     return true;
     }
@@ -71,7 +67,7 @@ bool SessionManaged::commitData( QSessionManager& sm )
 
   \sa loadSessionInfo()
  */
-void Workspace::storeSession( KConfig* config )
+void Workspace::storeSession( KConfig* config, SMSavePhase phase )
     {
     config->setGroup("Session" );
     int count =  0;
@@ -90,36 +86,56 @@ void Workspace::storeSession( KConfig* config )
         if( c->isActive())
             active_client = count;
         QString n = QString::number(count);
-        config->writeEntry( QString("sessionId")+n, sessionId.data() );
-        config->writeEntry( QString("windowRole")+n, c->windowRole().data() );
-        config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
-        config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine().data() );
-        config->writeEntry( QString("resourceName")+n, c->resourceName().data() );
-        config->writeEntry( QString("resourceClass")+n, c->resourceClass().data() );
-        config->writeEntry( QString("geometry")+n,  QRect( c->calculateGravitation(TRUE), c->clientSize() ) ); // FRAME
-        config->writeEntry( QString("restore")+n, c->geometryRestore() );
-        config->writeEntry( QString("fsrestore")+n, c->geometryFSRestore() );
-        config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
-        config->writeEntry( QString("fullscreen")+n, (int) c->fullScreenMode() );
-        config->writeEntry( QString("desktop")+n, c->desktop() );
-	// the config entry is called "iconified" for back. comp. reasons
-	// (kconf_update script for updating session files would be too complicated)
-        config->writeEntry( QString("iconified")+n, c->isMinimized() );
-	// the config entry is called "sticky" for back. comp. reasons
-        config->writeEntry( QString("sticky")+n, c->isOnAllDesktops() );
-        config->writeEntry( QString("shaded")+n, c->isShade() );
-        // the config entry is called "staysOnTop" for back. comp. reasons
-        config->writeEntry( QString("staysOnTop")+n, c->keepAbove() );
-        config->writeEntry( QString("keepBelow")+n, c->keepBelow() );
-        config->writeEntry( QString("skipTaskbar")+n, c->skipTaskbar( true ) );
-        config->writeEntry( QString("skipPager")+n, c->skipPager() );
-        config->writeEntry( QString("userNoBorder")+n, c->isUserNoBorder() );
-        config->writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
+        if( phase == SMSavePhase2 || phase == SMSavePhase2Full )
+            {
+            config->writeEntry( QString("sessionId")+n, sessionId.data() );
+            config->writeEntry( QString("windowRole")+n, c->windowRole().data() );
+            config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
+            config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine().data() );
+            config->writeEntry( QString("resourceName")+n, c->resourceName().data() );
+            config->writeEntry( QString("resourceClass")+n, c->resourceClass().data() );
+            config->writeEntry( QString("geometry")+n,  QRect( c->calculateGravitation(TRUE), c->clientSize() ) ); // FRAME
+            config->writeEntry( QString("restore")+n, c->geometryRestore() );
+            config->writeEntry( QString("fsrestore")+n, c->geometryFSRestore() );
+            config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
+            config->writeEntry( QString("fullscreen")+n, (int) c->fullScreenMode() );
+            config->writeEntry( QString("desktop")+n, c->desktop() );
+    	    // the config entry is called "iconified" for back. comp. reasons
+            // (kconf_update script for updating session files would be too complicated)
+            config->writeEntry( QString("iconified")+n, c->isMinimized() );
+            // the config entry is called "sticky" for back. comp. reasons
+            config->writeEntry( QString("sticky")+n, c->isOnAllDesktops() );
+            config->writeEntry( QString("shaded")+n, c->isShade() );
+            // the config entry is called "staysOnTop" for back. comp. reasons
+            config->writeEntry( QString("staysOnTop")+n, c->keepAbove() );
+            config->writeEntry( QString("keepBelow")+n, c->keepBelow() );
+            config->writeEntry( QString("skipTaskbar")+n, c->skipTaskbar( true ) );
+            config->writeEntry( QString("skipPager")+n, c->skipPager() );
+            config->writeEntry( QString("userNoBorder")+n, c->isUserNoBorder() );
+            config->writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
+            }
         }
-    config->writeEntry( "count", count );
-    config->writeEntry( "active", active_client );
-
-    config->writeEntry( "desktop", currentDesktop());
+    // TODO store also stacking order
+    if( phase == SMSavePhase0 )
+        {
+        // it would be much simpler to save these values to the config file,
+        // but both Qt and KDE treat phase1 and phase2 separately,
+        // which results in different sessionkey and different config file :(
+        session_active_client = active_client;
+        session_desktop = currentDesktop();
+        }
+    else if( phase == SMSavePhase2 )
+        {
+        config->writeEntry( "count", count );
+        config->writeEntry( "active", session_active_client );
+        config->writeEntry( "desktop", session_desktop );
+        }
+    else // SMSavePhase2Full
+        {
+        config->writeEntry( "count", count );
+        config->writeEntry( "active", session_active_client );
+        config->writeEntry( "desktop", currentDesktop());
+        }
     }
 
 

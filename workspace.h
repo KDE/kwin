@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "KWinInterface.h"
 #include "utils.h"
 #include "kdecoration.h"
+#include "sm.h"
 
 #include <X11/Xlib.h>
 
@@ -225,7 +226,7 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
 
         void performWindowOperation( Client* c, WindowOperation op );
 
-        void storeSession( KConfig* config );
+        void storeSession( KConfig* config, SMSavePhase phase );
 
         SessionInfo* takeSessionInfo( Client* );
 
@@ -451,6 +452,8 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
 
         bool was_user_interaction;
         bool session_saving;
+        int session_active_client;
+        int session_desktop;
 
         bool control_grab;
         bool tab_grab;
