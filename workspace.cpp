@@ -1017,13 +1017,13 @@ void Workspace::setActiveClient( Client* c )
   setActiveClient() and the operation is complete. This may not happen
   with certain focus policies, though.
 
-  \sa setActiveClient(), requestFocus()
+  \sa stActiveClient(), requestFocus()
  */
 void Workspace::activateClient( Client* c, bool force )
 {
-    if (!c->isOnDesktop(currentDesktop()) ) {
-        setCurrentDesktop( c->desktop() );
-    }
+    //if (!c->isOnDesktop(currentDesktop()) ) {
+    //    setCurrentDesktop( c->desktop() );
+    //}
     raiseClient( c );
     if ( c->isIconified() )
         Events::raise( Events::DeIconify );
@@ -1031,6 +1031,10 @@ void Workspace::activateClient( Client* c, bool force )
     iconifyOrDeiconifyTransientsOf( c );
     if ( options->focusPolicyIsReasonable() ) {
         requestFocus( c, force );
+    }
+
+    if (!c->isOnDesktop(currentDesktop()) ) {
+        setCurrentDesktop( c->desktop() );
     }
 }
 
