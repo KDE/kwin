@@ -136,9 +136,6 @@ class Options : public KDecorationOptions
         enum PlacementPolicy { Random, Smart, Cascade, Centered, ZeroCornered };
         PlacementPolicy placement;
 
-        enum DialogPlacementPolicy { ObeyApplication, DialogCentered, OnMainWindow, UnderMouse, DialogPlaced };
-        DialogPlacementPolicy dialog_placement;
-
         bool focusPolicyIsReasonable() 
             {
             return focusPolicy == ClickToFocus || focusPolicy == FocusFollowsMouse;

@@ -402,20 +402,9 @@ void Placement::placeUtility(Client* c)
     }
 
 
-void Placement::placeDialog(Client* c)
+void Placement::placeDialog(Client*)
     {
-    if( options->dialog_placement == Options::ObeyApplication )
-        ;
-    else if( options->dialog_placement == Options::DialogCentered )
-        placeCentered( c );
-    else if( options->dialog_placement == Options::OnMainWindow )
-        placeOnMainWindow( c );
-    else if( options->dialog_placement == Options::UnderMouse )
-        placeUnderMouse( c );
-    else
-        placeInternal( c ); // Standard - normal placement policy
     }
-
 
 void Placement::placeUnderMouse(Client* c)
     {

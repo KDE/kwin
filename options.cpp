@@ -90,13 +90,6 @@ unsigned long Options::updateSettings()
     else if (val == "ZeroCornered") placement = ZeroCornered;
     else                            placement = Smart;
 
-    val = config->readEntry("DialogPlacement", "ObeyApplication" ); // TODO is this good default?
-    if( val == "DialogCentered" ) dialog_placement = DialogCentered;
-    else if( val == "OnMainWindow" ) dialog_placement = OnMainWindow;
-    else if( val == "UnderMouse" ) dialog_placement = UnderMouse;
-    else if( val == "DialogPlaced" ) dialog_placement = DialogPlaced;
-    else dialog_placement = ObeyApplication;
-
     animateShade = config->readBoolEntry("AnimateShade", TRUE );
 
     animateMinimize = config->readBoolEntry("AnimateMinimize", TRUE );

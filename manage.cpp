@@ -222,7 +222,7 @@ bool Client::manage( Window w, bool isMapped )
         }
     else if( isDialog())
         {
-        if( options->dialog_placement == Options::ObeyApplication )
+        if( false )
             placementDone = true;
         // else force using placement policy
         }
