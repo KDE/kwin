@@ -238,6 +238,7 @@ class Client : public QObject, public KDecorationDefines
         QString caption() const;
 
         void keyPressEvent( uint key_code ); // FRAME ??
+        void updateMouseGrab();
 
         const QPoint calculateGravitation( bool invert, int gravity = 0 ) const; // FRAME public?
 
@@ -351,7 +352,6 @@ class Client : public QObject, public KDecorationDefines
         void checkUnrestrictedMoveResize();
         void handleMoveResize( int x, int y, int x_root, int y_root );
         void positionGeometryTip();
-        void updateMouseGrab();
         void grabButton( int mod );
         void ungrabButton( int mod );
         void resetMaximize();

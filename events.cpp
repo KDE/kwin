@@ -952,8 +952,8 @@ void Client::ungrabButton( int modifier )
   (Motif, AWT, Tk, ...)
  */
 void Client::updateMouseGrab()
-    {
-    if( isActive() )
+    {                   // see Workspace::establishTabBoxGrab()
+    if( isActive() && !workspace()->forcedGlobalMouseGrab())
         {
         // remove the grab for no modifiers only if the window
         // is unobscured or if the user doesn't want click raise

@@ -1,4 +1,4 @@
-/*****************************************************************
+/********x*********************************************************
  KWin - the KDE window manager
  This file is part of the KDE project.
 
@@ -541,7 +541,10 @@ void TabBox::handleMouseEvent( XEvent* e )
         return;
     QPoint pos( e->xbutton.x_root, e->xbutton.y_root );
     if( !geometry().contains( pos ))
+        {
+        workspace()->closeTabBox();  // click outside closes tab
         return;
+        }
     pos.rx() -= x(); // pos is now inside tabbox
     pos.ry() -= y();
     int num = (pos.y()-frameWidth()) / lineHeight;
@@ -798,13 +801,8 @@ void Workspace::slotWalkBackThroughDesktopList()
 
 bool Workspace::startKDEWalkThroughWindows()
     {
-    if ( XGrabKeyboard(qt_xdisplay(),
-                       root, FALSE,
-                       GrabModeAsync, GrabModeAsync,
-                       qt_x_time) != GrabSuccess ) 
-        {
-        return FALSE;
-        }
+    if( !establishTabBoxGrab())
+        return false;
     tab_grab        = TRUE;
     keys->setEnabled( false );
     tab_box->setMode( TabBox::WindowsMode );
@@ -814,13 +812,8 @@ bool Workspace::startKDEWalkThroughWindows()
 
 bool Workspace::startWalkThroughDesktops( int mode )
     {
-    if ( XGrabKeyboard(qt_xdisplay(),
-                       root, FALSE,
-                       GrabModeAsync, GrabModeAsync,
-                       qt_x_time) != GrabSuccess ) 
-        {
-        return FALSE;
-        }
+    if( !establishTabBoxGrab())
+        return false;
     control_grab = TRUE;
     keys->setEnabled( false );
     tab_box->setMode( (TabBox::Mode) mode );
@@ -964,13 +957,18 @@ void Workspace::tabBoxKeyPress( const KKeyNative& keyX )
         if ( ((keyQt & 0xffff) == Qt::Key_Escape)
             && !(forward || backward) )
             { // if Escape is part of the shortcut, don't cancel
-            XUngrabKeyboard(qt_xdisplay(), qt_x_time);
-            tab_box->hide();
-            keys->setEnabled( true );
-            tab_grab = FALSE;
-            control_grab = FALSE;
+            closeTabBox();
             }
         }
+    }
+
+void Workspace::closeTabBox()
+    {
+    removeTabBoxGrab();
+    tab_box->hide();
+    keys->setEnabled( true );
+    tab_grab = FALSE;
+    control_grab = FALSE;
     }
 
 /*!
@@ -1013,7 +1011,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
          return;
     if (tab_grab)
         {
-        XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+        removeTabBoxGrab();
         tab_box->hide();
         keys->setEnabled( true );
         tab_grab = false;
@@ -1026,7 +1024,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         }
     if (control_grab)
         {
-        XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+        removeTabBoxGrab();
         tab_box->hide();
         keys->setEnabled( true );
         control_grab = False;
@@ -1128,6 +1126,31 @@ Client* Workspace::previousStaticClient( Client* c ) const
     return *it;
     }
 
+bool Workspace::establishTabBoxGrab()
+    {
+    if( XGrabKeyboard( qt_xdisplay(), root, FALSE,
+        GrabModeAsync, GrabModeAsync, qt_x_time) != GrabSuccess )
+        return false;
+    // Don't try to establish a global mouse grab using XGrabPointer, as that would prevent
+    // using Alt+Tab while DND (#44972). However force passive grabs on all windows
+    // in order to catch MouseRelease events and close the tabbox (#67416).
+    // All clients already have passive grabs in their wrapper windows, so check only
+    // the active client, which may not have it.
+    assert( !forced_global_mouse_grab );
+    forced_global_mouse_grab = true;
+    if( active_client != NULL )
+        active_client->updateMouseGrab();
+    return true;
+    }
+
+void Workspace::removeTabBoxGrab()
+    {
+    XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+    assert( forced_global_mouse_grab );
+    forced_global_mouse_grab = false;
+    if( active_client != NULL )
+        active_client->updateMouseGrab();
+    }
 
 } // namespace
 

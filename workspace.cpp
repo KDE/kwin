@@ -95,7 +95,8 @@ Workspace::Workspace( bool restore )
     layoutY(2),
     workarea(NULL),
     set_active_client_recursion( 0 ),
-    block_stacking_updates( 0 )
+    block_stacking_updates( 0 ),
+    forced_global_mouse_grab( false )
     {
     _self = this;
     mgr = new PluginMgr;

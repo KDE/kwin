@@ -164,6 +164,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         Client* previousStaticClient(Client*) const;
         int nextDesktopFocusChain( int iDesktop ) const;
         int previousDesktopFocusChain( int iDesktop ) const;
+        void closeTabBox();
 
          /**
          * Returns the list of clients sorted in stacking order, with topmost client
@@ -220,6 +221,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool checkStartupNotification( const Client* c, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
+        
+        bool forcedGlobalMouseGrab() const;
 
         void sessionSaveStarted();
         void sessionSaveDone();
@@ -332,6 +335,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void oneStepThroughDesktops( bool forward, int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
         void oneStepThroughDesktops( bool forward );
         void oneStepThroughDesktopList( bool forward );
+        bool establishTabBoxGrab();
+        void removeTabBoxGrab();
 
         void updateStackingOrder( bool propagate_new_clients = false );
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
@@ -513,6 +518,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         int block_stacking_updates; // when >0, stacking updates are temporarily disabled
         bool blocked_propagating_new_clients; // propagate also new clients after enabling stacking updates?
         Window null_focus_window;
+        bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
     };
 
@@ -626,6 +632,11 @@ inline void Workspace::sessionSaveDone()
 inline bool Workspace::sessionSaving() const
     {
     return session_saving;
+    }
+
+inline bool Workspace::forcedGlobalMouseGrab() const
+    {
+    return forced_global_mouse_grab;
     }
 
 template< typename T >
