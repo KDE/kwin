@@ -70,6 +70,7 @@ Manager::Manager(
   QStringList rightButtons = Static::instance()->rightButtons();
 
   QVBoxLayout * l = new QVBoxLayout(this, 0, 0);
+  l->setResizeMode(QLayout::FreeResize);
 
   lower_      = new LowerButton     (this);
   close_      = new CloseButton     (this);
@@ -99,12 +100,14 @@ Manager::Manager(
       buttonDict_[*it]->setAlignment(Button::Right);
 
   QHBoxLayout * titleLayout = new QHBoxLayout(l);
+  titleLayout->setResizeMode(QLayout::FreeResize);
 
   for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
     if (buttonDict_[*it])
       titleLayout->addWidget(buttonDict_[*it]);
 
-  titleSpacer_ = new QSpacerItem(0, 20);
+  titleSpacer_ = new QSpacerItem(0, 20, QSizePolicy::Expanding,
+      QSizePolicy::Fixed);
   titleLayout->addItem(titleSpacer_);
 
   for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
@@ -112,6 +115,7 @@ Manager::Manager(
       titleLayout->addWidget(buttonDict_[*it]);
 
   QHBoxLayout * midLayout = new QHBoxLayout(l);
+  midLayout->setResizeMode(QLayout::FreeResize);
   midLayout->addSpacing(1);
   midLayout->addWidget(windowWrapper());
   midLayout->addSpacing(1);
@@ -160,7 +164,7 @@ Manager::paintEvent(QPaintEvent * e)
 
   p.drawTiledPixmap(tr.left() + 3, 0, tr.width() - 6, 20, s->titleTextMid(active));
   p.setPen(options->color(Options::Font, active));
-  p.setFont(options->font(active));
+  p.setFont(options->font(true)); // XXX false doesn't work right at the moment
   p.drawText(tr.left() + 4, 0, tr.width() - 8, 18, AlignCenter, caption());
 
   p.drawPixmap(tr.right() - 2, 0, s->titleTextRight(active));
@@ -179,8 +183,11 @@ Manager::paintEvent(QPaintEvent * e)
 }
 
   void
-Manager::resizeEvent(QResizeEvent *)
+Manager::resizeEvent(QResizeEvent * e)
 {
+  qDebug("resizeEvent(%d, %d)", e->size().width(), e->size().height());
+  Client::resizeEvent(e);
+
   int sizeProblem = 0;
 
   if (width() < 80) sizeProblem = 3;
