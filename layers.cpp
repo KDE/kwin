@@ -662,7 +662,8 @@ void Client::setKeepAbove( bool b )
         }
     keep_above = b;
     info->setState( keepAbove() ? NET::KeepAbove : 0, NET::KeepAbove );
-    // TODO emit a signal about the change to the style plugin
+    if( decoration != NULL )
+        decoration->emitKeepAboveChanged( keepAbove());
     workspace()->updateClientLayer( this );
     updateWindowRules();
     }
@@ -681,6 +682,8 @@ void Client::setKeepBelow( bool b )
         }
     keep_below = b;
     info->setState( keepBelow() ? NET::KeepBelow : 0, NET::KeepBelow );
+    if( decoration != NULL )
+        decoration->emitKeepBelowChanged( keepBelow());
     workspace()->updateClientLayer( this );
     updateWindowRules();
     }

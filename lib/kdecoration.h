@@ -577,6 +577,21 @@ class KDecoration
 	 * isShade() to get the current state.
 	 */
         virtual void shadeChange() = 0;
+#if KDE_IS_VERSION( 3, 90, 0 )
+#warning Redo all the XYZChange() virtuals as signals.
+#endif
+    signals:
+        /**
+         * This signal is emitted whenever the window's keep-above state changes.
+         * @since 3.3
+         */
+        void keepAboveChanged( bool );
+        /**
+         * This signal is emitted whenever the window's keep-below state changes.
+         * @since 3.3
+         */
+        void keepBelowChanged( bool );
+    public:
 	/**
 	 * This function may be reimplemented to provide custom bound drawing
 	 * for transparent moving or resizing of the window.
@@ -748,6 +763,14 @@ class KDecoration
 	 * @param set Whether to keep the window below others
 	 */
         void setKeepBelow( bool set );
+        /**
+         * @internal
+         */
+        void emitKeepAboveChanged( bool above ) { emit keepAboveChanged( above ); }
+        /**
+         * @internal
+         */
+        void emitKeepBelowChanged( bool below ) { emit keepBelowChanged( below ); }
     private:
 	KDecorationBridge* bridge_;
 	QWidget* w_;
