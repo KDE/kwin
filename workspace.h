@@ -61,34 +61,6 @@ class SystemTrayWindow
 
 typedef QValueList<SystemTrayWindow> SystemTrayWindowList;
 
-struct SessionInfo
-    {
-    QCString sessionId;
-    QCString windowRole;
-    QCString wmCommand;
-    QCString wmClientMachine;
-    QCString resourceName;
-    QCString resourceClass;
-
-    QRect geometry;
-    QRect restore;
-    QRect fsrestore;
-    int maximized;
-    int fullscreen;
-    int desktop;
-    bool minimized;
-    bool onAllDesktops;
-    bool shaded;
-    bool keepAbove;
-    bool keepBelow;
-    bool skipTaskbar;
-    bool skipPager;
-    bool userNoBorder;
-    NET::WindowType windowType;
-    bool active; // means 'was active in the saved session', not used otherwise
-    };
-
-
 class Workspace : public QObject, public KWinInterface, public KDecorationDefines
     {
     Q_OBJECT

@@ -14,11 +14,40 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <X11/SM/SMlib.h>
 #include <kapplication.h>
+#include <netwm_def.h>
 
 class QSocketNotifier;
 
 namespace KWinInternal
 {
+
+struct SessionInfo
+    {
+    QCString sessionId;
+    QCString windowRole;
+    QCString wmCommand;
+    QCString wmClientMachine;
+    QCString resourceName;
+    QCString resourceClass;
+
+    QRect geometry;
+    QRect restore;
+    QRect fsrestore;
+    int maximized;
+    int fullscreen;
+    int desktop;
+    bool minimized;
+    bool onAllDesktops;
+    bool shaded;
+    bool keepAbove;
+    bool keepBelow;
+    bool skipTaskbar;
+    bool skipPager;
+    bool userNoBorder;
+    NET::WindowType windowType;
+    bool active; // means 'was active in the saved session', not used otherwise
+    };
+
 
 enum SMSavePhase
     {
