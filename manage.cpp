@@ -483,7 +483,7 @@ bool Client::manage( Window w, bool isMapped )
 
     delete session;
 
-//    XUngrabServer( qt_xdisplay()); FRAME
+//    XUngrabServer( qt_xdisplay()); //FRAME
 
     return true;
     }

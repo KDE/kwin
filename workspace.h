@@ -89,7 +89,7 @@ struct SessionInfo
     };
 
 
-class Workspace : public QObject, virtual public KWinInterface, public KDecorationDefines
+class Workspace : public QObject, public KWinInterface, public KDecorationDefines
     {
     Q_OBJECT
     public:
@@ -98,7 +98,7 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
 
         static Workspace * self() { return _self; }
 
-        virtual bool workspaceEvent( XEvent * );
+        bool workspaceEvent( XEvent * );
 
         KDecoration* createDecoration( KDecorationBridge* bridge );
 
@@ -383,6 +383,8 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
     // this is the right way to create a new client
         Client* createClient( Window w, bool is_mapped );
         void addClient( Client* c, allowed_t );
+
+        Window findSpecialEventWindow( XEvent* e );
 
         void randomPlacement(Client* c);
         void smartPlacement(Client* c);

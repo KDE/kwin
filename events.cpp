@@ -234,6 +234,13 @@ bool Workspace::workspaceEvent( XEvent * e )
         c->windowEvent( e );
         return true;
         }
+    Window special = findSpecialEventWindow( e );
+    if( special != None )
+        if( Client* c = findClient( WindowMatchPredicate( special )))
+            {
+            c->windowEvent( e );
+            return true;
+            }
 
     switch (e->type) 
         {
@@ -251,13 +258,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 
     case UnmapNotify:
             {
-            // get also synthetic UnmapNotify from XWithdrawWindow(),
-            // xunmap.window is different from xany.window
-            if( Client* c = findClient( WindowMatchPredicate( e->xunmap.window )))
-                {
-                c->windowEvent( e );
-                return true;
-                }
         // check for system tray windows
             if ( removeSystemTrayWin( e->xunmap.window ) ) 
                 {
@@ -305,6 +305,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             updateXTime();
 
             // e->xmaprequest.window is different from e->xany.window
+            // TODO this shouldn't be necessary now
             Client* c = findClient( WindowMatchPredicate( e->xmaprequest.window ));
             if ( !c ) 
                 {
@@ -377,9 +378,8 @@ bool Workspace::workspaceEvent( XEvent * e )
                 wc.sibling = None;
                 wc.stack_mode = Above;
                 value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
-                XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, & wc );
-
-                return TRUE;
+                XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, &wc );
+                return true;
                 }
             break;
             }
@@ -395,15 +395,43 @@ bool Workspace::workspaceEvent( XEvent * e )
         case FocusOut:
             return true; // always eat these, they would tell Qt that KWin is the active app
         default:
-            if  ( e->type == Shape::shapeEvent() ) 
-                {
-                Client* c = findClient( WindowMatchPredicate( ((XShapeEvent *)e)->window ));
-                if ( c )
-                    c->updateShape();
-                }
             break;
         }
     return FALSE;
+    }
+
+// Some events don't have the actual window which caused the event
+// as e->xany.window (e.g. ConfigureRequest), but as some other
+// field in the XEvent structure.
+Window Workspace::findSpecialEventWindow( XEvent* e )
+    {
+    switch( e->type )
+        {
+        case CreateNotify:
+            return e->xcreatewindow.window;
+        case DestroyNotify:
+            return e->xdestroywindow.window;
+        case UnmapNotify:
+            return e->xunmap.window;
+        case MapNotify:
+            return e->xmap.window;
+        case MapRequest:
+            return e->xmaprequest.window;
+        case ReparentNotify:
+            return e->xreparent.window;
+        case ConfigureNotify:
+            return e->xconfigure.window;
+        case GravityNotify:
+            return e->xgravity.window;
+        case ConfigureRequest:
+            return e->xconfigurerequest.window;
+        case CirculateNotify:
+            return e->xcirculate.window;
+        case CirculateRequest:
+            return e->xcirculaterequest.window;
+        default:
+            return None;
+        };
     }
 
 /*!
