@@ -312,7 +312,7 @@ void TabBox::delayedShow()
 	return;
     }
 
-    int delayTime = c->readNumEntry("DelayTime", 75);
+    int delayTime = c->readNumEntry("DelayTime", 90);
     delayedShowTimer.start(delayTime, true);
 }
 
