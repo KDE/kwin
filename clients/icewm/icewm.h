@@ -54,6 +54,9 @@ class ThemeHandler: public QObject
 		void slotReset();
 
 	private:
+		bool	initialized;
+		QString themeName;
+
 		void readConfig();
 		QColor decodeColor( QString& s );
 		bool isFrameValid();
@@ -62,6 +65,7 @@ class ThemeHandler: public QObject
 		void freePixmapGroup( QPixmap* p[] );
 		void setPixmap( QPixmap* p[], QString s1, QString s2, bool stretch=false, bool stretchHoriz=true );
 		QPixmap* stretchPixmap( QPixmap* src, bool stretchHoriz=true, int stretchSize=-1);
+		QPixmap* duplicateValidPixmap( bool act, int size = -1 );
 		void convertButtons( QString& s );
 		QString reverseString( QString s );
 };
@@ -119,6 +123,7 @@ class IceWMClient : public KWinInternal::Client
 	    // These are all the icewm button types :)
 	    enum Buttons{ BtnSysMenu=0, BtnClose, BtnMaximize, BtnMinimize, BtnHide, BtnRollup, BtnDepth, BtnCount };
 
+		QString shortenCaption( const QString* s );
 		void calcHiddenButtons();
 	    int  titleTextWidth( const QString& s );
 		void addClientButtons( const QString& s );

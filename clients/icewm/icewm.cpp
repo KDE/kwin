@@ -78,7 +78,6 @@ ThemeHandler* clientHandler;
 
 QString* titleButtonsLeft;
 QString* titleButtonsRight;
-QString* themeName;
 
 QColor* colorActiveBorder;
 QColor* colorInActiveBorder;
@@ -95,17 +94,18 @@ int  titleBarHeight;
 int  borderSizeX;
 int  borderSizeY;
 
-bool initialized 			= false;
 bool validframe  			= false;
 bool useActiveShadow 		= false;
 bool useInActiveShadow 		= false;
 
 // KControl Settings - Read from kwinrc config file or icewm theme
-bool themeTitleTextColors 	= true;	// Allow theme to set colors. kcontrol will have no effect
-bool titleBarOnTop 		  	= true;	// Titlebars can be below windows too :)
+bool themeTitleTextColors 	= true;		// Allow theme to set colors. kcontrol will have no effect
+bool titleBarOnTop 		  	= true;		// Titlebars can be below windows too :)
 bool showMenuButtonIcon   	= false;	// Draw a mini icon over the menu pixmap.
 bool customButtonPositions 	= false;	// Let the theme dictate the btn pos.
 bool titleBarCentered 	  	= true;
+
+#define TITLE_TEXT_SIZE_POLICY QSizePolicy::Preferred
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,11 +115,9 @@ bool titleBarCentered 	  	= true;
 // Returns true if both active and inactive pixmaps are valid, and not null
 bool validPixmaps( QPixmap* p[] )
 {
-	// If p[Active] exists, then p[InActive] is guaranteed to exist
-	// only if p[Active] is valid (see setPixmap func)
-	return (p[Active] && !p[Active]->isNull());
+	return ( p[Active]   && ( !p[Active]->isNull()   ) &&
+			 p[InActive] && ( !p[InActive]->isNull() ) );
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,12 +128,13 @@ bool validPixmaps( QPixmap* p[] )
 // initialisation / destruction in general.
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-ThemeHandler::ThemeHandler(): QObject( 0L )
+ThemeHandler::ThemeHandler(): QObject( NULL )
 {
+	initialized = false;
+
 	// Prevent having globals objects (use pointers to objects)
 	titleButtonsLeft 	= new QString();
 	titleButtonsRight 	= new QString();
-	themeName 			= new QString();
 
 	colorActiveBorder 			= new QColor();
 	colorInActiveBorder 		= new QColor();
@@ -169,7 +168,6 @@ ThemeHandler::~ThemeHandler()
 	delete colorInActiveTitleBar;
 	delete colorActiveBorder;
 
-	delete themeName;
 	delete titleButtonsRight;
 	delete titleButtonsLeft;
 }
@@ -210,7 +208,7 @@ void ThemeHandler::readConfig()
 {
 	KConfig* conf = KGlobal::config();
 	conf->setGroup("IceWM");
-	*themeName = conf->readEntry("CurrentTheme", "");
+	themeName = conf->readEntry("CurrentTheme", "");
 	themeTitleTextColors = conf->readBoolEntry("ThemeTitleTextColors", true);
 	showMenuButtonIcon = conf->readBoolEntry("ShowMenuButtonIcon", false);
 	titleBarOnTop = conf->readBoolEntry("TitleBarOnTop", true);
@@ -228,8 +226,8 @@ void ThemeHandler::readConfig()
 	}
 
 	// Provide a default theme alias
-	if (*themeName == "default")
-		*themeName = "";
+	if (themeName == "default")
+		themeName = "";
 }
 
 
@@ -238,12 +236,12 @@ void ThemeHandler::readConfig()
 void ThemeHandler::initTheme()
 {
 	// Add a slash if required
-	if ( *themeName != "" )
-		*themeName += "/";
+	if ( themeName != "" )
+		themeName += "/";
 
 	// We use kconfig to read icewm config files...
 	// this is easy since icewm uses key=value pairs!
-	KConfig config( locate("appdata", QString("icewm-themes/") + *themeName + QString("default.theme")) );
+	KConfig config( locate("appdata", QString("icewm-themes/") + themeName + QString("default.theme")) );
 
 	// Load specifics, or use IceWM defaults instead.
 	borderSizeX = config.readNumEntry("BorderSizeX", 6);
@@ -355,6 +353,54 @@ void ThemeHandler::initTheme()
 		borderSizeX = 0;
 	if (borderSizeY < 0)
 		borderSizeY = 0;
+
+	// This is a work-around for some themes
+	if (!titleT[Active])
+		titleT[Active] = duplicateValidPixmap( Active );
+
+	if (!titleB[Active])
+		titleB[Active] = duplicateValidPixmap( Active );
+
+
+	if (titleL[Active] && !titleL[InActive])
+		titleL[InActive] = duplicateValidPixmap( InActive, titleL[Active]->width() );
+
+	if (titleS[Active] && !titleS[InActive])
+		titleS[InActive] = duplicateValidPixmap( InActive, titleS[Active]->width() );
+
+	if (titleP[Active] && !titleP[InActive])
+		titleP[InActive] = duplicateValidPixmap( InActive, titleP[Active]->width() );
+
+	if (titleT[Active] && !titleT[InActive])
+		titleT[InActive] = duplicateValidPixmap( InActive, titleT[Active]->width() );
+
+	if (titleM[Active] && !titleM[InActive])
+		titleM[InActive] = duplicateValidPixmap( InActive, titleM[Active]->width() );
+
+	if (titleB[Active] && !titleB[InActive])
+		titleB[InActive] = duplicateValidPixmap( InActive, titleB[Active]->width() );
+
+	if (titleR[Active] && !titleR[InActive])
+		titleR[InActive] = duplicateValidPixmap( InActive, titleR[Active]->width() );
+}
+
+
+QPixmap* ThemeHandler::duplicateValidPixmap( bool act, int size )
+{
+	QPixmap* p1 = NULL;
+	// Use the stretch or title pixmaps instead
+	if ( titleS[act] )
+		p1 = new QPixmap( *titleS[act] );
+	else if ( titleB[act] )
+		p1 = new QPixmap( *titleB[act] );
+	else if ( titleT[act] )
+		p1 = new QPixmap( *titleT[act] );
+
+	// Stretch if required
+	if ( (size != -1) && p1 && (!p1->isNull()) )
+		p1 = stretchPixmap( p1, true, size );
+	
+	return p1;
 }
 
 
@@ -399,8 +445,8 @@ void ThemeHandler::freePixmapGroup( QPixmap* p[] )
 	{
 		if (p[Active])   delete p[Active];
 		if (p[InActive]) delete p[InActive]; 
-		p[Active] = 0L;
-		p[InActive] = 0L;
+		p[Active] = NULL;
+		p[InActive] = NULL;
 	} else
 		qWarning("kwin-icewm: freePixmapGroup - invalid QPixmap** 'p'\n");
 }
@@ -432,8 +478,8 @@ QColor ThemeHandler::decodeColor( QString& s )
 // repetition in patterns, so as not to make them mismatched
 QPixmap* ThemeHandler::stretchPixmap( QPixmap* src, bool stretchHoriz, int stretchSize )
 {
-	if (!src) return 0L;
-	if (src->isNull()) return 0L;
+	if (!src) return NULL;
+	if (src->isNull()) return NULL;
 
 	int s_inc, size;
 
@@ -483,31 +529,25 @@ void ThemeHandler::setPixmap( QPixmap* p[], QString s1, QString s2, bool stretch
 	if ( p[InActive] )
 		qWarning("kwin-icewm: setPixmap - should be null (2)\n"); 
 
-	p[Active]   = new QPixmap( locate("appdata", QString("icewm-themes/") + *themeName + s1 + "A" + s2) );
-	p[InActive] = new QPixmap( locate("appdata", QString("icewm-themes/") + *themeName + s1 + "I" + s2) );
-
-	if ( (!p[Active]) || (!p[InActive]) )
-		qWarning("kwin-icewm: Could not locate requested XBM file(s), or memory exhausted.\n");
-
-	// If we don't get an inactive pixmap from the files,
-	// use the same pixmap as the active one 
-	if (p[InActive]->isNull())
-	{
-		delete p[InActive];
-		p[InActive] = new QPixmap( *p[Active] );		
-	}
+	p[Active]   = new QPixmap( locate("appdata", QString("icewm-themes/") + themeName + s1 + "A" + s2) );
+	p[InActive] = new QPixmap( locate("appdata", QString("icewm-themes/") + themeName + s1 + "I" + s2) );
 
 	// Stretch the pixmap if requested.
 	if ( stretch )
 	{
-		p[Active] = stretchPixmap( p[Active], stretchHoriz );
-		p[InActive] = stretchPixmap( p[InActive], stretchHoriz );
-	} else
+		if (p[Active]) 
+			p[Active] = stretchPixmap( p[Active], stretchHoriz );
+		if (p[InActive])
+			p[InActive] = stretchPixmap( p[InActive], stretchHoriz );
+	}
+
+	if ( p[Active] && p[InActive] )
 	{
 		// Make sure active and inactive pixmaps are the same width for proper painting
 		if (p[Active]->width() > p[InActive]->width())
 			p[InActive] = stretchPixmap( p[InActive], true, p[Active]->width() );
 	}
+
 }
 
 
@@ -685,7 +725,7 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 	titleSpacerP = addPixmapSpacer( titleP );
 
 	titlebar = new QSpacerItem( titleTextWidth(caption()), titleBarHeight, 
-								QSizePolicy::Preferred, QSizePolicy::Fixed );
+								TITLE_TEXT_SIZE_POLICY, QSizePolicy::Fixed );
 	hb->addItem(titlebar);
 
 	titleSpacerM = addPixmapSpacer( titleM );
@@ -804,10 +844,10 @@ QSpacerItem* IceWMClient::addPixmapSpacer( QPixmap* p[], QSizePolicy::SizeType s
 	QSpacerItem* sp;
 
 	// Add a null spacer for zero image
-	if ( validPixmaps(p) )
+	if ( p && p[Active] )
 	{
 		int w = (hsize == -1) ? p[Active]->width(): hsize;
-		sp = new QSpacerItem( w, p[Active]->height(), s, QSizePolicy::Fixed );  
+		sp = new QSpacerItem( w, titleBarHeight, s, QSizePolicy::Fixed );  
 	}
 	else
 		sp = new QSpacerItem(0, 0, QSizePolicy::Maximum, QSizePolicy::Fixed );
@@ -897,25 +937,23 @@ void IceWMClient::resizeEvent( QResizeEvent* e )
 // IceWM Paint magic goes here.
 void IceWMClient::paintEvent( QPaintEvent* )
 {
-	QPixmap* tmpPix;
+	QColor colorTitleShadow;
+	QColor colorTitle;
 	QColor c1;
+	int rx, rw;
 
 	QPainter p(this);
 	int act = isActive() ? Active: InActive; 
 
-	// Added titlebar shadows - pre-compute values to improve drawing speed
-	QColor colorTitle;
-	QColor colorTitleShadow;
-
+	// Determine titlebar shadow colors
 	bool useShadow = isActive() ? useActiveShadow : useInActiveShadow;
+	if ( useShadow )
+		colorTitleShadow = isActive() ? *colorActiveTitleTextShadow : *colorInActiveTitleTextShadow;
 
 	if ( themeTitleTextColors )
  		colorTitle = isActive()? *colorActiveTitleBarText : *colorInActiveTitleBarText;
 	else
 		colorTitle = options->color(Options::Font, isActive());
-
-	if ( useShadow )
-		colorTitleShadow = isActive() ? *colorActiveTitleTextShadow : *colorInActiveTitleTextShadow;
 
 	// Obtain widget bounds.
 	QRect r;
@@ -995,107 +1033,77 @@ void IceWMClient::paintEvent( QPaintEvent* )
 	}
 
 	// Draw the title elements, which are visible
+	QPixmap* titleBuffer = new QPixmap( width()-(2*borderSizeX), titleBarHeight );
+	QPainter p2( titleBuffer, this );
+	titleBuffer->fill( act ? *colorActiveTitleBar : *colorInActiveTitleBar );
+
 	r = titleSpacerJ->geometry();
-	if (!r.isEmpty() && validPixmaps( titleJ ))
-		p.drawPixmap( r.x(), r.y(), *titleJ[ act ]);
+	if (!r.isEmpty() && titleJ[ act ])
+		p2.drawPixmap( r.x()-borderSizeX, 0, *titleJ[ act ]);
 
 	r = titleSpacerL->geometry();
-	if (!r.isEmpty() && validPixmaps( titleL ))
-		p.drawPixmap( r.x(), r.y(), *titleL[ act ]);
+	if (!r.isEmpty() && titleL[ act ])
+		p2.drawPixmap( r.x()-borderSizeX, 0, *titleL[ act ]);
 
 	r = titleSpacerS->geometry();
-	if (!r.isEmpty() && validPixmaps( titleS ))
-		p.drawTiledPixmap( r, *titleS[ act ]);
+	if (!r.isEmpty() && titleS[ act ])
+		p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleS[ act ]);
 
 	r = titleSpacerP->geometry();
-	if (!r.isEmpty() && validPixmaps( titleP ))
-		p.drawPixmap( r.x(), r.y(), *titleP[ act ]);
+	if (!r.isEmpty() && titleP[ act ])
+		p2.drawPixmap( r.x()-borderSizeX, 0, *titleP[ act ]);
 
 	r = titlebar->geometry();
-	if (!r.isEmpty())
-	{
-		// Try to "debug" themes which have the title[A,I]T.xpm images missing
-		// e.g. xp theme
-		if (validPixmaps( titleT ))
-			tmpPix = titleT[ act ]; 
-		else if (validPixmaps( titleS ))
-			tmpPix = titleS[ act ];
-		else if (validPixmaps( titleB ))
-			tmpPix = titleB[ act ];
-		else
-			tmpPix = 0L;
-	
-		p.setFont( options->font(true) );
-
-		// Draw the titlebar pixmap
-		if (tmpPix)
-		{
-			// Pre-compute as much as possible so text flickers less
-			// via caching function call results
-			int rx, ry, rw, rh, talign;
-			QString tts;
-
-			rx = r.x();
-			ry = r.y();
-			rw = r.width();
-			rh = r.height();
-			tts = caption();
-			talign = titleBarCentered ? AlignCenter|AlignVCenter : AlignLeft|AlignVCenter;
-
-			// Pre-set the color to reduce flicker
-			if ( useShadow )
-				p.setPen( colorTitleShadow );
-			else
-				p.setPen( colorTitle );
-
-			p.drawTiledPixmap( r, *tmpPix);
-
-			if ( useShadow )
-			{
-				// Draw the text immediately after the rect to reduce flicker
-				p.drawText(rx+1, ry+1, rw-1, rh, talign, tts);
-				// Select appropriate title text color
-				p.setPen( colorTitle );
-			} 
-			p.drawText(rx, ry, rw, rh, talign, tts);
-
-		}
-		else
-		{
-			// Draw a standard icewm title using stock fill colour as a last resort
-			// for the _whole_ titlebar (something's obviously wrong with the theme)
-			QRect r2 = geometry();
-			QRect r3( borderSizeX, borderSizeY, r2.width()-(2*borderSizeX), titleBarHeight);
-			p.fillRect( r3, act ? *colorActiveTitleBar : *colorInActiveTitleBar );
-	
-			// Draw the text immediately after the rect to reduce flicker
-			p.drawText(r3.x()+2, r3.y(), r.width(), r.height(), AlignLeft | AlignVCenter, caption());
-		}
-	}
+	if (!r.isEmpty() && titleT[ act ] )
+		p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleT[ act ]);
 
 	r = titleSpacerM->geometry();
-	if (!r.isEmpty() && validPixmaps( titleM ))
-		p.drawPixmap( r.x(), r.y(), *titleM[ act ], 0, 0, r.width(), r.height());
+	if (!r.isEmpty() && titleM[ act ])
+		p2.drawPixmap( r.x()-borderSizeX, 0, *titleM[ act ], 0, 0, r.width(), r.height());
 
 	r = titleSpacerB->geometry();
-	if (!r.isEmpty() && validPixmaps( titleB ))
-		p.drawTiledPixmap( r, *titleB[ act ]);
+	if (!r.isEmpty() && titleB[ act ])
+		p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleB[ act ]);
 
 	r = titleSpacerR->geometry();
-	if (!r.isEmpty() && validPixmaps( titleR ))
-		p.drawPixmap( r.x(), r.y(), *titleR[ act ]);
+	if (!r.isEmpty() && titleR[ act ])
+		p2.drawPixmap( r.x()-borderSizeX, 0, *titleR[ act ], 0, 0, r.width(), r.height());
 
 	r = titleSpacerQ->geometry();
-	if (!r.isEmpty() && validPixmaps( titleQ ))
-		p.drawPixmap( r.x(), r.y(), *titleQ[ act ]);
+	if (!r.isEmpty() && titleQ[ act ])
+		p2.drawPixmap( r.x()-borderSizeX, 0, *titleQ[ act ], 0, 0, r.width(), r.height());
+
+	p2.setFont( options->font(true) );
+
+	// Pre-compute as much as possible
+	r = titlebar->geometry();
+	rx = r.x() - borderSizeX;
+	rw = width()-(2*borderSizeX)-r.x();
+
+	// Paint a title text shadow if requested
+	if ( useShadow )
+	{
+		p2.setPen( colorTitleShadow );
+		p2.drawText(rx+1, 1, rw, titleBarHeight, AlignLeft|AlignVCenter, caption());
+	} 
+	
+	// Draw the title text
+	p2.setPen( colorTitle );
+	p2.drawText(rx, 0, rw, titleBarHeight, AlignLeft|AlignVCenter, caption());
+	p2.end();
+
+	bitBlt( this, hb->geometry().topLeft(), titleBuffer );
+	
+	delete titleBuffer;
 }
 
 
 void IceWMClient::showEvent(QShowEvent *ev)
 {
 	calcHiddenButtons();
+
 	titlebar->changeSize( titleTextWidth(caption()), titleBarHeight, 
-						  QSizePolicy::Preferred, QSizePolicy::Fixed );
+						  TITLE_TEXT_SIZE_POLICY, QSizePolicy::Fixed );
 	grid->activate();
 	show();
 	Client::showEvent(ev);
@@ -1130,11 +1138,10 @@ void IceWMClient::iconChange()
 // Please don't modify the following unless you want layout problems
 void IceWMClient::captionChange( const QString& s )
 {
-	QRect r( 0, borderSizeY, geometry().width(),
-			 titleBarHeight);
+	QRect r( 0, borderSizeY, geometry().width(), titleBarHeight);
 
-	titlebar->changeSize( titleTextWidth(s), titleBarHeight, 
-						  QSizePolicy::Preferred, QSizePolicy::Fixed );
+	titlebar->changeSize( titleTextWidth( s ), titleBarHeight, 
+						  TITLE_TEXT_SIZE_POLICY, QSizePolicy::Fixed );
 	titlebar->invalidate();
     grid->activate();
     repaint( r, false );
@@ -1161,12 +1168,12 @@ void IceWMClient::shadeChange(bool s)
 
 void IceWMClient::activeChange(bool)
 {
+	repaint(false);
+
     // Reset the button pixmaps.
 	for(int i= IceWMClient::BtnSysMenu; i < IceWMClient::BtnCount; i++)
 		if(button[i])
 			button[i]->repaint( false );
-
-	repaint(false);
 }
 
 
