@@ -353,7 +353,7 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
     c->takeActivity( flags, handled, Allowed );
     }
 
-void Workspace::handleTakeActivity( Client* c, /*Time timestamp*/, int flags )
+void Workspace::handleTakeActivity( Client* c, Time /*timestamp*/, int flags )
     {
     if( pending_take_activity != c ) // pending_take_activity is reset when doing restack or activation
         return;
