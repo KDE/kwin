@@ -243,8 +243,52 @@ TitleBar::_updatePixmap()
     p.drawPixmap(0, 0, *px_title_inactive_left);
     p.drawTiledPixmap(2, 0, width() - 4, 18, *px_title_inactive);
     p.drawPixmap(width() - 2, 0, *px_title_inactive_right);
-    p.setPen(Qt::black);
+    p.setPen(QColor(0xC3, 0xC3, 0xC3));
     p.setFont(options->font());
+
+    QRect textRect;
+
+    p.drawText(
+      3, 0, width() - 6, 18, AlignCenter, client_->caption(), -1, &textRect);
+
+    textRect.setTop(2);
+    textRect.setBottom(15);
+    textRect.setLeft(textRect.left() - 4);
+    textRect.setRight(textRect.right() + 4);
+
+    p.fillRect(textRect, QBrush(QColor(0xC3, 0xC3, 0xC3)));
+
+    int l = textRect.left() - 2;
+    int r = textRect.right() + 2;
+
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 1; r += 1;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 1; r += 1;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 2; r += 2;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 1; r += 1;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 1; r += 1;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 2; r += 2;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 2; r += 2;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    l -= 2; r += 2;
+    p.drawLine(l, 2, l, 15);
+    p.drawLine(r, 2, r, 15);
+    
+    p.setPen(Qt::black);
     p.drawText(3, 0, width() - 6, 18, AlignCenter, client_->caption());
 
   }
