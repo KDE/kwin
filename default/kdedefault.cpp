@@ -36,16 +36,14 @@ static unsigned char maximize_bits[] = {
 static unsigned char minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
 
-static unsigned char unsticky_bits[] = {
-    0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
-
-static unsigned char sticky_bits[] = {
-    0x00, 0x00, 0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00};
-
-
-
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
+
+static unsigned char unsticky_bits[] = {
+   0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
+ 
+static unsigned char sticky_bits[] = {
+   0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c}; 
 
 static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
@@ -64,8 +62,8 @@ static QColor btnForeground;
 static bool pixmaps_created = false;
 
 static int titleHeight = 14; // configurable title height not implemented yet
-static int btnWidth1 = 18;
-static int btnWidth2 = 28;
+static int btnWidth1 = 17;
+static int btnWidth2 = 27;
 
 
 static void drawButtonFrame(KPixmap *pix, const QColorGroup &g, bool sunken)
@@ -321,18 +319,18 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
-    button[BtnClose] = new KDEDefaultClientButton(28, titleHeight, this, "close", close_bits);
-    button[BtnSticky] = new KDEDefaultClientButton(18, titleHeight, this, "sticky");
+    button[BtnClose] = new KDEDefaultClientButton(27, titleHeight, this, "close", close_bits);
+    button[BtnSticky] = new KDEDefaultClientButton(17, titleHeight, this, "sticky");
     if(isSticky())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
         button[BtnSticky]->setBitmap(sticky_bits);
-    button[BtnIconify] = new KDEDefaultClientButton(28, titleHeight, this, "iconify",
+    button[BtnIconify] = new KDEDefaultClientButton(27, titleHeight, this, "iconify",
                                           iconify_bits);
-    button[BtnMax] = new KDEDefaultClientButton(28, titleHeight, this, "maximize",
+    button[BtnMax] = new KDEDefaultClientButton(27, titleHeight, this, "maximize",
                                       maximize_bits);
     if(help){
-        button[BtnHelp] = new KDEDefaultClientButton(18, titleHeight, this, "help",
+        button[BtnHelp] = new KDEDefaultClientButton(17, titleHeight, this, "help",
                                      question_bits);
         connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
