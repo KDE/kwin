@@ -1060,7 +1060,15 @@ void Client::resize( int w, int h, UseGravity_t use_gravity, ForceGeometry_t for
     if( !isShade())
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
     else
+        {
+        // check that the frame is not resized to full size when it should be shaded
+        if( !shade_geometry_change && h != border_top + border_bottom )
+            {
+            kdDebug() << "h:" << h << ":t:" << border_top << ":b:" << border_bottom << endl;
+            assert( false );
+            }
         client_size = QSize( w - border_left - border_right, client_size.height());
+        }
     updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
