@@ -700,7 +700,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
                                           " while resizing it, instead of just showing a window 'skeleton'. The result may not be satisfying"
                                           " on slow machines.") );
 
-    geometryTipOn = new QCheckBox(i18n("Display window geometry when moving or resizing"), windowsBox);
+    geometryTipOn = new QCheckBox(i18n("Display window &geometry when moving or resizing"), windowsBox);
     bLay->addWidget(geometryTipOn);
     QWhatsThis::add(geometryTipOn, i18n("Enable this option if you want a window's geometry to be displayed"
 			    		" while it is being moved or resized. The window position relative"
