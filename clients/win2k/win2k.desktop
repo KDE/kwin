@@ -1,3 +1,7 @@
 [Desktop Entry]
 Name=Win2K
+Name[cs]=Win2k
+Name[de]=Windows 2000
+Name[eo]=Vindozo 2000
+Name[ko]=윈도우즈 2000
 X-KDE-Library=libkwin2k
