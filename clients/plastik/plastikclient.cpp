@@ -639,7 +639,7 @@ void PlastikClient::reset( unsigned long changed )
 
 PlastikClient::MousePosition PlastikClient::mousePosition(const QPoint &point) const
 {
-    const int corner = 24;
+    const int corner = 18+3*PlastikHandler::borderSize()/2;
     MousePosition pos = Center;
 
     // often needed coords..

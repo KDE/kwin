@@ -71,7 +71,13 @@ bool PlastikHandler::reset(unsigned long changed)
             m_borderSize = 12;
             break;
         case BorderHuge:
-            m_borderSize = 16;
+            m_borderSize = 18;
+            break;
+        case BorderVeryHuge:
+            m_borderSize = 27;
+            break;
+        case BorderOversized:
+            m_borderSize = 40;
             break;
         case BorderNormal:
         default:
