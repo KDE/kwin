@@ -276,11 +276,14 @@ bool B2Titlebar::x11Event(XEvent *e)
     return QWidget::x11Event(e);
 }
 
-void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
+void B2Titlebar::recalcBuffer()
 {
-    QPainter p(this);
+    QFontMetrics fm(options->font(true));
+    titleBuffer.resize(width(), height());
+
+    QPainter p;
+    p.begin(&titleBuffer);
     QRect t=rect();
-    bool active = client->isActive();
 
     // black titlebar frame
     p.setPen(Qt::black);
@@ -290,20 +293,63 @@ void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
 
     // titlebar fill
     qDrawShadeRect(&p, 1, 1, t.right()-1, t.height()-1,
-                   options->colorGroup(Options::TitleBar, active),
+                   options->colorGroup(Options::TitleBar, true),
                    false, 1, 0,
-                   &options->colorGroup(Options::TitleBar, active).
-                   brush(QColorGroup::Button));
+                   &options->colorGroup(Options::TitleBar, true).
+                   brush(QColorGroup::Background));
 
     // and the caption
-    p.setPen(options->color(Options::Font, active));
-    p.setFont(options->font(active));
+    p.setPen(options->color(Options::Font, true));
+    p.setFont(options->font(true));
 
     t.setX(client->providesContextHelp() ?
            client->button[B2Client::BtnHelp]->x()+17 :
            client->button[B2Client::BtnSticky]->x()+17);
     t.setRight(client->button[B2Client::BtnIconify]->x()-1);
     p.drawText(t, AlignLeft | AlignVCenter, client->caption());
+    p.end();
+    
+    oldTitle = caption();
+}
+
+void B2Titlebar::resizeEvent(QResizeEvent *)
+{
+    recalcBuffer();
+    repaint(false);
+}
+    
+
+void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
+{
+    if(client->isActive())
+        bitBlt(this, 0, 0, &titleBuffer, 0, 0, titleBuffer.width(),
+               titleBuffer.height(), Qt::CopyROP, true);
+    else{
+        QPainter p(this);
+        QRect t=rect();
+        // black titlebar frame
+        p.setPen(Qt::black);
+        p.drawLine(0, 0, 0, t.bottom() );
+        p.drawLine(0, 0, t.right(), 0);
+        p.drawLine(t.right(), 0, t.right(), t.bottom());
+
+        // titlebar fill
+        qDrawShadeRect(&p, 1, 1, t.right()-1, t.height()-1,
+                       options->colorGroup(Options::TitleBar, false),
+                       false, 1, 0,
+                       &options->colorGroup(Options::TitleBar, false).
+                       brush(QColorGroup::Button));
+
+        // and the caption
+        p.setPen(options->color(Options::Font, false));
+        p.setFont(options->font(false));
+
+        t.setX(client->providesContextHelp() ?
+               client->button[B2Client::BtnHelp]->x()+17 :
+               client->button[B2Client::BtnSticky]->x()+17);
+        t.setRight(client->button[B2Client::BtnIconify]->x()-1);
+        p.drawText(t, AlignLeft | AlignVCenter, client->caption());
+    }
 }
 
 void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
@@ -408,6 +454,7 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
     titlebar->setBackgroundColor(c);
+    titlebar->recalcBuffer();
     for(i=0; i < 6; ++i)
         button[i]->setBg(c);
 
@@ -450,7 +497,8 @@ void B2Client::captionChange( const QString &)
     titleMoveAbs(bar_x_ofs);
     doShape();
     //repaint();
-    titlebar->repaint();
+    titlebar->recalcBuffer();
+    titlebar->repaint(false);
 }
 
 void B2Client::paintEvent( QPaintEvent* e)
@@ -669,7 +717,8 @@ void B2Client::slotReset()
         button[i]->repaint(false);
     }
     repaint();
-    titlebar->repaint();
+    titlebar->recalcBuffer();
+    titlebar->repaint(false);
 }
 
 void B2Client::unobscureTitlebar()

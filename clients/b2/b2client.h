@@ -42,6 +42,7 @@ public:
     B2Titlebar(B2Client *parent);
     ~B2Titlebar(){;}
     bool isFullyObscured() const {return isfullyobscured;}
+    void recalcBuffer();
 protected:
     void paintEvent( QPaintEvent* );
     bool x11Event(XEvent *e);
@@ -50,6 +51,10 @@ protected:
     void mouseReleaseEvent( QMouseEvent * );
     void mouseMoveEvent(QMouseEvent *);
     void init();
+    void resizeEvent(QResizeEvent *ev);
+    
+    QString oldTitle;
+    KPixmap titleBuffer;
     bool set_x11mask;
     bool isfullyobscured;
     bool shift_move;
