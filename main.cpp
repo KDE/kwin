@@ -249,7 +249,7 @@ int kdemain( int argc, char * argv[] )
     aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
     aboutData.addAuthor("Cristian Tibirna",0, "tibirna@kde.org");
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
-    aboutData.addAuthor("Lubos Lunak", 0, "l.lunak@kde.org");
+    aboutData.addAuthor("Luboš Luňák", I18N_NOOP( "Maintainer" ), "l.lunak@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
     KCmdLineArgs::addCmdLineOptions( args );
