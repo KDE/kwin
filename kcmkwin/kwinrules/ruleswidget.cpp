@@ -325,10 +325,7 @@ void RulesWidget::setRules( Rules* rules )
     {
     Rules tmp;
     if( rules == NULL )
-        {
-        tmp.description = i18n( "New Entry" );
         rules = &tmp; // empty
-        }
     description->setText( rules->description );
     wmclass->setText( rules->wmclass );
     whole_wmclass->setChecked( rules->wmclasscomplete );
@@ -415,7 +412,7 @@ Rules* RulesWidget::rules() const
     rules->windowrolematch = static_cast< Rules::StringMatch >( role_match->currentItem());
     rules->types = 0;
     bool all_types = true;
-    for( int i = 0;
+    for( unsigned int i = 0;
          i < types->count();
          ++i )
         if( !types->isSelected( i ))
@@ -516,8 +513,15 @@ void RulesWidget::detected( bool ok )
 
 bool RulesWidget::finalCheck()
     {
+    if( description->text().isEmpty())
+        {
+        if( !wmclass->text().isEmpty())
+            description->setText( i18n( "Settings for %1" ).arg( wmclass->text()));
+        else
+            description->setText( i18n( "Unnamed entry" ));
+        }
     bool all_types = true;
-    for( int i = 0;
+    for( unsigned int i = 0;
          i < types->count();
          ++i )
         if( !types->isSelected( i ))
