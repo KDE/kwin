@@ -884,17 +884,40 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
  */
 void Client::mousePressEvent( QMouseEvent * e)
 {
-    if ( e->button() == LeftButton ) {
-	mouseMoveEvent( e );
-	buttonDown = TRUE;
-	moveOffset = e->pos();
-	invertedMoveOffset = rect().bottomRight() - e->pos();
+    if (buttonDown) return;
+    if (e->state() & AltButton)
+    {
+	Options::MouseCommand com = Options::MouseNothing;
+	if ( e->button() == LeftButton ) {
+	    com = options->commandAll1();
+	}
+	else if (e->button() == MidButton) {
+	    com = options->commandAll2();
+	}
+	else if (e->button() == RightButton) {
+	    com = options->commandAll3();
+	}
+	else {
+	    return;
+	}
+	performMouseCommand( com, e->globalPos());
     }
-    else if ( !buttonDown && e->button() == MidButton ) {
-        workspace()->lowerClient( this );
-    }
-    else if ( !buttonDown && e->button() == RightButton ) {
-	workspace()->clientPopup( this ) ->popup( e->globalPos() );
+    else {
+        if ( e->button() == LeftButton ) {
+	    if ( options->focusPolicyIsReasonable() )
+	        workspace()->requestFocus( this );
+	    workspace()->raiseClient( this );
+	    mouseMoveEvent( e );
+	    buttonDown = TRUE;
+	    moveOffset = e->pos();
+	    invertedMoveOffset = rect().bottomRight() - e->pos();
+        }
+        else if ( e->button() == MidButton ) {
+            workspace()->lowerClient( this );
+        }
+        else if ( e->button() == RightButton ) {
+	    workspace()->clientPopup( this ) ->popup( e->globalPos() );
+        }
     }
 }
 
@@ -904,11 +927,6 @@ void Client::mousePressEvent( QMouseEvent * e)
 void Client::mouseReleaseEvent( QMouseEvent * e)
 {
     if ( (e->stateAfter() & MouseButtonMask) == 0 ) {
-	if (buttonDown && !moveResizeMode) {
-            if ( options->focusPolicyIsReasonable() )
-	        workspace()->requestFocus( this );
-	    workspace()->raiseClient( this );
-        }
 	buttonDown = FALSE;
 	if ( moveResizeMode ) {
 	    clearbound();
