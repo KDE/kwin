@@ -1177,57 +1177,58 @@ bool Client::eventFilter( QObject *o, QEvent * e)
     return FALSE;
 }
 
-void Client::gravitate( bool invert ){
-  int gravity, dx, dy;
-  dx = dy = 0;
+void Client::gravitate( bool invert )
+{
+    int gravity, dx, dy;
+    dx = dy = 0;
 
-  gravity = NorthWestGravity;
-  if ( xSizeHint.flags & PWinGravity)
-      gravity = xSizeHint.win_gravity;
+    gravity = NorthWestGravity;
+    if ( xSizeHint.flags & PWinGravity)
+	gravity = xSizeHint.win_gravity;
 
-  switch (gravity) {
-  case NorthWestGravity:
-    dx = 0;
-    dy = 0;
-    break;
-  case NorthGravity:
-    dx = -windowWrapper()->x();
-    dy = 0;
-    break;
-  case NorthEastGravity:
-    dx = -( width() - windowWrapper()->width() );
-    dy = 0;
-    break;
-  case WestGravity:
-    dx = 0;
-    dy = -windowWrapper()->y();
-    break;
-  case CenterGravity:
-  case StaticGravity:
-    dx = -windowWrapper()->x();
-    dy = -windowWrapper()->y();
-    break;
-  case EastGravity:
-    dx = -( width() - windowWrapper()->width() );
-    dy = -windowWrapper()->y();
-    break;
-  case SouthWestGravity:
-    dx = 0;
-    dy = -( height() - windowWrapper()->height() );
-    break;
-  case SouthGravity:
-    dx = -windowWrapper()->x();
-    dy = -( height() - windowWrapper()->height() );
-    break;
-  case SouthEastGravity:
-    dx = -( width() - windowWrapper()->width() - 1 );
-    dy = -( height() - windowWrapper()->height() - 1 );
-    break;
-  }
-  if (invert)
-      move( x() - dx, y() - dy );
-  else
-      move( x() + dx, y() + dy );
+    switch (gravity) {
+    case NorthWestGravity:
+	dx = 0;
+	dy = 0;
+	break;
+    case NorthGravity:
+	dx = -windowWrapper()->x();
+	dy = 0;
+	break;
+    case NorthEastGravity:
+	dx = -( width() - windowWrapper()->width() );
+	dy = 0;
+	break;
+    case WestGravity:
+	dx = 0;
+	dy = -windowWrapper()->y();
+	break;
+    case CenterGravity:
+    case StaticGravity:
+	dx = -windowWrapper()->x();
+	dy = -windowWrapper()->y();
+	break;
+    case EastGravity:
+	dx = -( width() - windowWrapper()->width() );
+	dy = -windowWrapper()->y();
+	break;
+    case SouthWestGravity:
+	dx = 0;
+	dy = -( height() - windowWrapper()->height() );
+	break;
+    case SouthGravity:
+	dx = -windowWrapper()->x();
+	dy = -( height() - windowWrapper()->height() );
+	break;
+    case SouthEastGravity:
+	dx = -( width() - windowWrapper()->width() - 1 );
+	dy = -( height() - windowWrapper()->height() - 1 );
+	break;
+    }
+    if (invert)
+	move( x() - dx, y() - dy );
+    else
+	move( x() + dx, y() + dy );
 }
 
 /*!
