@@ -2573,7 +2573,7 @@ NoBorderClient::~NoBorderClient()
 {
 }
 
-static QPixmap * kwin_get_menu_pix_hack()
+QPixmap * kwin_get_menu_pix_hack()
 {
   static QPixmap p;
   if ( p.isNull() )
