@@ -372,6 +372,7 @@ KDEDefaultClientButton::KDEDefaultClientButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QToolButton(parent, name)
 {
+    setBackgroundMode( NoBackground );
     isMouseOver = false;
     client = parent;
     setFixedSize(16, 16);
