@@ -13,8 +13,8 @@ class QSpacerItem;
 class NextButton : public QButton
 {
 public:
-    NextButton(QWidget *parent=0, const char *name=0,
-                 const unsigned char *bitmap=NULL, int bw=0, int bh=0);
+    NextButton(Client *parent=0, const char *name=0,
+               const unsigned char *bitmap=NULL, int bw=0, int bh=0);
     void setBitmap(const unsigned char *bitmap, int bw, int bh);
     void reset();
 protected:
@@ -22,6 +22,7 @@ protected:
     void drawButtonLabel(QPainter *){;}
     KPixmap aBackground, iBackground;
     QBitmap deco;
+    Client *client;
 };
 
 class NextClient : public Client
@@ -38,6 +39,7 @@ protected:
     void init();
     void captionChange( const QString& name );
     void stickyChange(bool on);
+    void activeChange(bool);
 protected slots:
     void slotReset();
 private:

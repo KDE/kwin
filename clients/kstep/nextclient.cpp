@@ -42,7 +42,12 @@ static KPixmap *aFramePix=0;
 static KPixmap *iFramePix=0;
 static KPixmap *aHandlePix=0;
 static KPixmap *iHandlePix=0;
+static KPixmap *aBtn=0;
+static KPixmap *aBtnDown=0;
+static KPixmap *iBtn=0;
+static KPixmap *iBtnDown=0;
 static bool pixmaps_created = false;
+static QColor btnForeground;
 
 static void create_pixmaps()
 {
@@ -89,6 +94,68 @@ static void create_pixmaps()
                             options->color(Options::Handle, false).light(150),
                             options->color(Options::Handle, false).dark(120),
                             KPixmapEffect::VerticalGradient);
+
+    iBtn = new KPixmap;
+    iBtn->resize(18, 18);
+    iBtnDown = new KPixmap;
+    iBtnDown->resize(18, 18);
+    aBtn = new KPixmap;
+    aBtn->resize(18, 18);
+    aBtnDown = new KPixmap;
+    aBtnDown->resize(18, 18);
+    KPixmap internal;
+    internal.resize(12, 12);
+    
+    // inactive buttons
+    QColor c(options->color(Options::ButtonBg, false));
+    KPixmapEffect::gradient(*iBtn, c.light(120), c.dark(120),
+                            KPixmapEffect::DiagonalGradient);
+    KPixmapEffect::gradient(internal, c.dark(120), c.light(120),
+                            KPixmapEffect::DiagonalGradient);
+    bitBlt(iBtn, 3, 3, &internal, 0, 0, 12, 12, Qt::CopyROP, true);
+
+    KPixmapEffect::gradient(*iBtnDown, c.dark(120), c.light(120),
+                            KPixmapEffect::DiagonalGradient);
+    KPixmapEffect::gradient(internal, c.light(120), c.dark(120),
+                            KPixmapEffect::DiagonalGradient);
+    bitBlt(iBtnDown, 3, 3, &internal, 0, 0, 12, 12, Qt::CopyROP, true);
+
+    // active buttons
+    c = options->color(Options::ButtonBg, true);
+    KPixmapEffect::gradient(*aBtn, c.light(120), c.dark(120),
+                            KPixmapEffect::DiagonalGradient);
+    KPixmapEffect::gradient(internal, c.dark(120), c.light(120),
+                            KPixmapEffect::DiagonalGradient);
+    bitBlt(aBtn, 3, 3, &internal, 0, 0, 12, 12, Qt::CopyROP, true);
+
+    KPixmapEffect::gradient(*aBtnDown, c.dark(120), c.light(120),
+                            KPixmapEffect::DiagonalGradient);
+    KPixmapEffect::gradient(internal, c.light(120), c.dark(120),
+                            KPixmapEffect::DiagonalGradient);
+    bitBlt(aBtnDown, 3, 3, &internal, 0, 0, 12, 12, Qt::CopyROP, true);
+
+    QPainter p;
+    p.begin(aBtn);
+    p.setPen(Qt::black);
+    p.drawRect(0, 0, 18, 18);
+    p.end();
+    p.begin(iBtn);
+    p.setPen(Qt::black);
+    p.drawRect(0, 0, 18, 18);
+    p.end();
+    p.begin(aBtnDown);
+    p.setPen(Qt::black);
+    p.drawRect(0, 0, 18, 18);
+    p.end();
+    p.begin(iBtnDown);
+    p.setPen(Qt::black);
+    p.drawRect(0, 0, 18, 18);
+    p.end();
+
+    if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
+        btnForeground = Qt::black;
+    else
+        btnForeground = Qt::white;
 }
 
 void NextClient::slotReset()
@@ -99,6 +166,11 @@ void NextClient::slotReset()
     delete iFramePix;
     delete aHandlePix;
     delete iHandlePix;
+    delete aBtn;
+    delete iBtn;
+    delete aBtnDown;
+    delete iBtnDown;
+    
     pixmaps_created = false;
     create_pixmaps();
     button[0]->reset();
@@ -106,15 +178,11 @@ void NextClient::slotReset()
     button[2]->reset();
 }
 
-NextButton::NextButton(QWidget *parent, const char *name,
+NextButton::NextButton(Client *parent, const char *name,
                        const unsigned char *bitmap, int bw, int bh)
     : QButton(parent, name)
 {
-    QPainter p;
-
-    aBackground.resize(18, 18);
-    iBackground.resize(18, 18);
-    reset();
+    client = parent;
     resize(18, 18);
 
     if(bitmap)
@@ -123,51 +191,7 @@ NextButton::NextButton(QWidget *parent, const char *name,
 
 void NextButton::reset()
 {
-    QPainter p;
-
-    QColor hColor(options->color(Options::ButtonBg, true));
-    QColor lColor(options->color(Options::ButtonBlend, true));
-    // only do this if we can dim/brighten equally
-    if(hColor.red() < 226 && hColor.green() < 226 && hColor.blue() < 226)
-        hColor.setRgb(hColor.red()+30, hColor.green()+30, hColor.blue()+30);
-    if(lColor.red() > 29 && lColor.green() > 29 && lColor.blue() > 29)
-        lColor.setRgb(lColor.red()-30, lColor.green()-30, lColor.blue()-30);
-    KPixmapEffect::gradient(iBackground, hColor, lColor,
-                            KPixmapEffect::DiagonalGradient);
-
-    hColor = options->color(Options::ButtonBlend, false);
-    lColor = options->color(Options::ButtonBg, false);
-    if(hColor.red() > 29 && hColor.green() > 29 && hColor.blue() > 29)
-        hColor.setRgb(hColor.red()-30, hColor.green()-30, hColor.blue()-30);
-    if(lColor.red() < 226 && lColor.green() < 226 && lColor.blue() < 226)
-        lColor.setRgb(lColor.red()+30, lColor.green()+30, lColor.blue()+30);
-    KPixmapEffect::gradient(aBackground, hColor, lColor,
-                            KPixmapEffect::DiagonalGradient);
-
-    KPixmap aInternal;
-    aInternal.resize(12, 12);
-    KPixmap iInternal;
-    iInternal.resize(12, 12);
-    KPixmapEffect::gradient(iInternal,
-                            options->color(Options::ButtonBlend, true),
-                            options->color(Options::ButtonBg, true),
-                            KPixmapEffect::DiagonalGradient);
-    KPixmapEffect::gradient(aInternal,
-                            options->color(Options::ButtonBg, false),
-                            options->color(Options::ButtonBlend, false),
-                            KPixmapEffect::DiagonalGradient);
-
-    p.begin(&iBackground);
-    p.drawPixmap(3, 3, iInternal);
-    p.setPen(Qt::black);
-    p.drawRect(0, 0, 18, 18);
-    p.end();
-
-    p.begin(&aBackground);
-    p.drawPixmap(3, 3, aInternal);
-    p.setPen(Qt::black);
-    p.drawRect(0, 0, 18, 18);
-    p.end();
+    repaint(false);
 }
 
 void NextButton::setBitmap(const unsigned char *bitmap, int w, int h)
@@ -179,12 +203,12 @@ void NextButton::setBitmap(const unsigned char *bitmap, int w, int h)
 
 void NextButton::drawButton(QPainter *p)
 {
-    if(isDown())
-        p->drawPixmap(0, 0, aBackground);
+    if(client->isActive())
+        p->drawPixmap(0, 0, isDown() ? *aBtnDown : *aBtn);
     else
-        p->drawPixmap(0, 0, iBackground);
+        p->drawPixmap(0, 0, isDown() ? *iBtnDown : *iBtn);
 
-    p->setPen(options->color(Options::ButtonFg, isDown()));
+    p->setPen(btnForeground);
     p->drawPixmap(isDown()? 5 : 4, isDown() ? 5 : 4, deco);
 }
 
@@ -316,5 +340,13 @@ void NextClient::stickyChange(bool on)
 void NextClient::init()
 {
     Client::init();
+}
+
+void NextClient::activeChange(bool)
+{
+    repaint(false);
+    button[0]->reset();
+    button[1]->reset();
+    button[2]->reset();
 }
 
