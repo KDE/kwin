@@ -1254,7 +1254,7 @@ bool Client::x11Event( XEvent * e)
     if ( e->type == LeaveNotify ) {
 	if ( !buttonDown )
 	    setCursor( arrowCursor );
-	if ( options->focusPolicy == Options::FocusStricklyUnderMouse ) {
+	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse ) {
 	    if ( isActive() && !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) ) )
 		workspace()->requestFocus( 0 ) ;
 	}

@@ -29,18 +29,18 @@ public:
       <li>FocusUnderMouse - The window that happens to be under the
       mouse pointer becomes active.
 
-      <li>FocusStricklyUnderMouse - Only the window under the mouse
+      <li>FocusStrictlyUnderMouse - Only the window under the mouse
       pointer is active. If the mouse points nowhere, nothing has the
       focus. In practice, this is the same as FocusUnderMouse, since
       kdesktop can take the focus.
 
-      Note that FocusUnderMouse and FocusStricklyUnderMouse are not
+      Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
       particulary useful. They are only provided for old-fashined
       die-hard UNIX people ;-)
 
       </ul>
      */
-    enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStricklyUnderMouse };
+    enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStrictlyUnderMouse };
     FocusPolicy focusPolicy;
 
     enum MoveResizeMode { Transparent, Opaque };

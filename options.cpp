@@ -50,8 +50,6 @@ const QColorGroup& Options::colorGroup(ColorType type, bool active)
 
 void Options::reload()
 {
-    focusPolicy = ClickToFocus;
-
     QPalette pal = QApplication::palette();
     KConfig *config = KGlobal::config();
     config->setGroup("WM");
@@ -138,8 +136,16 @@ void Options::reload()
     config->setGroup( "Windows" );
     moveMode = config->readEntry("MoveMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
     resizeMode = config->readEntry("ResizeMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
-    
+
+
     QString val;
+	
+    val = config->readEntry ("focusPolicy", "ClickToFocus");
+    if (val == "ClickToFocus")
+	focusPolicy = ClickToFocus;
+    else
+	focusPolicy = FocusFollowsMouse;
+
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;
     else if (val == "Random") placement = Random;
@@ -151,8 +157,8 @@ void Options::reload()
 
     border_snap_zone = config->readNumEntry("BorderSnapZone", 10);
     window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
-    
-    
+
+
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "winShade") );
 
     // Mouse bindings
