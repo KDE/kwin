@@ -1689,7 +1689,7 @@
                             <cstring>enable_fsplevel</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Focus-stealing prevention</string>
+                            <string>&amp;Focus stealing prevention</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="2" column="1">
