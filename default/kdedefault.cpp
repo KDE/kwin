@@ -602,7 +602,7 @@ void KDEClient::updateActiveBuffer( )
     bufferDirty = false;
 
     activeBuffer.resize(titlebar->geometry().width(),
-                        titlebar->geometry().height()-1);
+                        titlebar->geometry().height());
     QPainter p;
     QRect r(0, 0, activeBuffer.width(), activeBuffer.height());
     p.begin(&activeBuffer);
