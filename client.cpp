@@ -1540,7 +1540,8 @@ NET::WindowType Client::windowType( bool strict, int supported_types ) const
                 && abs( width() - workspace()->clientArea( FullArea, this ).width()) < 10 )
                 wt = NET::TopMenu;
             }
-        const char* const oo_prefix = "OpenOffice.org"; // QCString has no startsWith()
+        const char* const oo_prefix = "openoffice.org"; // QCString has no startsWith()
+        // oo_prefix is lowercase, because resourceClass() is forced to be lowercase
         if( qstrncmp( resourceClass(), oo_prefix, strlen( oo_prefix )) == 0 && wt == NET::Dialog )
             wt = NET::Normal; // see bug #66065
         if( wt == NET::Unknown ) // this is more or less suggested in NETWM spec

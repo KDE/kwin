@@ -573,12 +573,12 @@ inline int Client::mappingState() const
 
 inline QCString Client::resourceName() const
     {
-    return resource_name;
+    return resource_name; // it is always lowercase
     }
 
 inline QCString Client::resourceClass() const
     {
-    return resource_class;
+    return resource_class; // it is always lowercase
     }
 
 inline

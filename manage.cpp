@@ -95,8 +95,10 @@ bool Client::manage( Window w, bool isMapped )
     XClassHint classHint;
     if ( XGetClassHint( qt_xdisplay(), client, &classHint ) ) 
         {
-        resource_name = classHint.res_name;
-        resource_class = classHint.res_class;
+        // Qt3.2 and older had this all lowercase, Qt3.3 capitalized resource class
+        // force lowercase, so that workarounds listing resource classes still work
+        resource_name = QCString( classHint.res_name ).lower();
+        resource_class = QCString( classHint.res_class ).lower();
         XFree( classHint.res_name );
         XFree( classHint.res_class );
         }

@@ -127,6 +127,16 @@ unsigned long Options::updateSettings()
 
     ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
     ignoreFocusStealingClasses = config->readListEntry("IgnoreFocusStealingClasses");
+    // Qt3.2 and older had resource class all lowercase, but Qt3.3 has it capitalized
+    // therefore Client::resourceClass() forces lowercase, force here lowercase as well
+    for( QStringList::Iterator it = ignorePositionClasses.begin();
+         it != ignorePositionClasses.end();
+         ++it )
+        (*it) = (*it).lower();
+    for( QStringList::Iterator it = ignoreFocusStealingClasses.begin();
+         it != ignoreFocusStealingClasses.end();
+         ++it )
+        (*it) = (*it).lower();
 
     // Mouse bindings
     config->setGroup( "MouseBindings");

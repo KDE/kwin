@@ -161,7 +161,7 @@ void Workspace::loadSessionInfo()
         info->wmCommand = config->readEntry( QString("wmCommand")+n ).latin1();
         info->wmClientMachine = config->readEntry( QString("wmClientMachine")+n ).latin1();
         info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
-        info->resourceClass = config->readEntry( QString("resourceClass")+n ).latin1();
+        info->resourceClass = config->readEntry( QString("resourceClass")+n ).lower().latin1();
         info->geometry = config->readRectEntry( QString("geometry")+n );
         info->restore = config->readRectEntry( QString("restore")+n );
         info->fsrestore = config->readRectEntry( QString("fsrestore")+n );
@@ -195,7 +195,7 @@ void Workspace::loadFakeSessionInfo()
         fakeSession.append( info );
         info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
         info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
-        info->resourceClass = config->readEntry( QString("resourceClass")+n ).latin1();
+        info->resourceClass = config->readEntry( QString("resourceClass")+n ).lower().latin1();
         info->wmClientMachine = config->readEntry( QString("clientMachine")+n ).latin1();
         info->geometry = config->readRectEntry( QString("geometry")+n );
         info->restore = config->readRectEntry( QString("restore")+n );
