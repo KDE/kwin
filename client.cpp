@@ -755,6 +755,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     delete session;
 
+    sendSyntheticConfigureNotify();
+    
     if ( showMe && !doNotShow ) {
 	Events::raise( isTransient() ? Events::TransNew : Events::New );
 	if ( isMapped ) {
@@ -1208,6 +1210,7 @@ void Client::sendSyntheticConfigureNotify()
 {
     XConfigureEvent c;
     c.type = ConfigureNotify;
+    c.send_event = True;
     c.event = win;
     c.window = win;
     c.x = x() + windowWrapper()->x();
