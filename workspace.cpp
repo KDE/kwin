@@ -1158,8 +1158,8 @@ bool Workspace::keyPress(XKeyEvent& ev)
         bool forward = cutWalkThroughWindows.contains( keyX );
         bool backward = cutWalkThroughWindowsReverse.contains( keyX );
         if (forward || backward){
-            kdDebug(125) << "== " << cutWalkThroughWindows.toString()
-                << " or " << cutWalkThroughWindowsReverse.toString() << endl;
+            kdDebug(125) << "== " << cutWalkThroughWindows.toStringInternal()
+                << " or " << cutWalkThroughWindowsReverse.toStringInternal() << endl;
             KDEWalkThroughWindows( forward );
         }
     }
@@ -1692,11 +1692,11 @@ QPopupMenu* Workspace::clientPopup()
         // PluginMenu *deco = new PluginMenu(mgr, popup);
         // deco->setFont(KGlobalSettings::menuFont());
 
-        popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").toString(), Options::MoveOp );
-        popup->insertItem( i18n("&Size")+'\t'+keys->shortcut("Window Resize").toString(), Options::ResizeOp );
-        popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").toString(), Options::IconifyOp );
-        popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").toString(), Options::MaximizeOp );
-        popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").toString(), Options::ShadeOp );
+        popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").seq(0).toString(), Options::MoveOp );
+        popup->insertItem( i18n("&Size")+'\t'+keys->shortcut("Window Resize").seq(0).toString(), Options::ResizeOp );
+        popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").seq(0).toString(), Options::IconifyOp );
+        popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").seq(0).toString(), Options::MaximizeOp );
+        popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").seq(0).toString(), Options::ShadeOp );
         popup->insertItem( SmallIconSet( "attach" ), i18n("Always &on Top"), Options::StaysOnTopOp );
         popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
 
@@ -1706,7 +1706,7 @@ QPopupMenu* Workspace::clientPopup()
 
         popup->insertSeparator();
 
-        popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").toString(), Options::CloseOp );
+        popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").seq(0).toString(), Options::CloseOp );
     }
     return popup;
 }
