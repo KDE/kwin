@@ -63,6 +63,9 @@ bool KCommonDecoration::decorationBehaviour(DecorationBehaviour behaviour) const
 
         case DB_WindowMask:
             return false;
+
+        case DB_ButtonHide:
+            return true;
     }
 
     return false;
@@ -156,13 +159,18 @@ void KCommonDecoration::updateLayout() const
         int y = r_y + layoutMetric(LM_TitleEdgeTop);
         int x = r_x + layoutMetric(LM_TitleEdgeLeft);
         for (ButtonContainer::const_iterator it = m_buttonsLeft.begin(); it != m_buttonsLeft.end(); ++it) {
+            bool elementLayouted = false;
             if (*it) {
-                moveWidget(x,y, *it);
-                x += layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );
+                if (!(*it)->isHidden() ) {
+                    moveWidget(x,y, *it);
+                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );
+                    elementLayouted = true;
+                }
             } else {
                 x+= layoutMetric(LM_ExplicitButtonSpacer);
+                elementLayouted = true;
             }
-            if (it != m_buttonsLeft.end() )
+            if (elementLayouted && it != m_buttonsLeft.end() )
                 x += buttonSpacing;
         }
     }
@@ -174,14 +182,18 @@ void KCommonDecoration::updateLayout() const
         int y = r_y + layoutMetric(LM_TitleEdgeTop);
         int x = titleEdgeRightLeft - buttonContainerWidth(m_buttonsRight);
         for (ButtonContainer::const_iterator it = m_buttonsRight.begin(); it != m_buttonsRight.end(); ++it) {
+            bool elementLayouted = false;
             if (*it) {
-                int buttonWidth = layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );
-                moveWidget(x,y, *it);
-                x += buttonWidth;
+                if (!(*it)->isHidden() ) {
+                    moveWidget(x,y, *it);
+                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );;
+                    elementLayouted = true;
+                }
             } else {
                 x += layoutMetric(LM_ExplicitButtonSpacer);
+                elementLayouted = true;
             }
-            if (it != m_buttonsRight.end() )
+            if (elementLayouted && it != m_buttonsRight.end() )
                 x += buttonSpacing;
         }
     }
@@ -220,9 +232,11 @@ void KCommonDecoration::resetLayout()
     }
 
     addButtons(m_buttonsLeft,
-               options()->customButtonPositions() ? options()->titleButtonsLeft() : defaultButtonsLeft() );
+               options()->customButtonPositions() ? options()->titleButtonsLeft() : defaultButtonsLeft(),
+               true);
     addButtons(m_buttonsRight,
-               options()->customButtonPositions() ? options()->titleButtonsRight() : defaultButtonsRight() );
+               options()->customButtonPositions() ? options()->titleButtonsRight() : defaultButtonsRight(),
+               false);
 
     updateLayout();
 }
@@ -241,20 +255,26 @@ int KCommonDecoration::buttonContainerWidth(const ButtonContainer &btnContainer)
 {
     int explicitSpacer = layoutMetric(LM_ExplicitButtonSpacer);
 
+    int shownElementsCount = 0;
+
     int w = 0;
     for (ButtonContainer::const_iterator it = btnContainer.begin(); it != btnContainer.end(); ++it) {
         if (*it) {
-            w += (*it)->width();
+            if (!(*it)->isHidden() ) {
+                w += (*it)->width();
+                ++shownElementsCount;
+            }
         } else {
             w += explicitSpacer;
+            ++shownElementsCount;
         }
     }
-    w += layoutMetric(LM_ButtonSpacing)*(btnContainer.count()-1);
+    w += layoutMetric(LM_ButtonSpacing)*(shownElementsCount-1);
 
     return w;
 }
 
-void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString& s)
+void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString& s, bool isLeft)
 {
     if (s.length() > 0) {
         for (unsigned n=0; n < s.length(); n++) {
@@ -374,6 +394,7 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
 
 
             if (btn) {
+                btn->setLeft(isLeft);
                 btn->setSize(QSize(layoutMetric(LM_ButtonWidth, true, btn),layoutMetric(LM_ButtonHeight, true, btn)) );
                 btn->show();
                 btnContainer.append(btn);
@@ -383,8 +404,47 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
     }
 }
 
+void KCommonDecoration::calcHiddenButtons()
+{
+    //Hide buttons in this order:
+    //Shade, Below, Above, OnAllDesktops, Help, Maximize, Menu, Minimize, Close.
+    KCommonDecorationButton* btnArray[] = { m_button[ShadeButton], m_button[BelowButton], m_button[AboveButton],
+        m_button[OnAllDesktopsButton], m_button[HelpButton], m_button[MaxButton],
+        m_button[MenuButton], m_button[MinButton], m_button[CloseButton] };
+    const int buttonsCount = sizeof( btnArray ) / sizeof( btnArray[ 0 ] );
+
+    int minwidth = 160; // TODO: calculate a better value taking the button width into account...
+    int current_width = width();
+    int count = 0;
+    int i;
+
+    // Find out how many buttons we have to hide.
+    while (current_width < minwidth && count < buttonsCount)
+    {
+        if (btnArray[count] )
+            current_width += btnArray[count]->width();
+        count++;
+    }
+
+    // Hide the required buttons...
+    for(i = 0; i < count; i++)
+    {
+        if (btnArray[i] && btnArray[i]->isVisible() )
+            btnArray[i]->hide();
+    }
+
+    // Show the rest of the buttons...
+    for(i = count; i < buttonsCount; i++)
+    {
+        if (btnArray[i] && (!btnArray[i]->isVisible()) )
+            btnArray[i]->show();
+    }
+}
+
 void KCommonDecoration::show()
 {
+    if (decorationBehaviour(DB_ButtonHide) )
+        calcHiddenButtons();
     widget()->show();
 }
 
@@ -541,6 +601,9 @@ void KCommonDecoration::menuButtonReleased()
 
 void KCommonDecoration::resizeEvent(QResizeEvent */*e*/)
 {
+    if (decorationBehaviour(DB_ButtonHide) )
+        calcHiddenButtons();
+
     updateLayout();
 
     updateWindowShape();
@@ -750,6 +813,16 @@ KCommonDecoration *KCommonDecorationButton::decoration()
 ButtonType KCommonDecorationButton::type()
 {
     return m_type;;
+}
+
+bool KCommonDecorationButton::isLeft()
+{
+    return m_isLeft;
+}
+
+void KCommonDecorationButton::setLeft(bool left)
+{
+    m_isLeft = left;
 }
 
 void KCommonDecorationButton::setRealizeButtons(int btns)

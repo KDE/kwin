@@ -116,7 +116,8 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         enum DecorationBehaviour
         {
             DB_MenuClose, ///< Close window on double clicking the menu
-            DB_WindowMask ///< Set a mask on the window
+            DB_WindowMask, ///< Set a mask on the window
+            DB_ButtonHide  ///< Hide buttons when there is not enough space in the titlebar
         };
 
         enum WindowCorner
@@ -255,7 +256,8 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
 
         typedef QValueVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
         int buttonContainerWidth(const ButtonContainer &btnContainer) const;
-        void addButtons(ButtonContainer &btnContainer, const QString& buttons);
+        void addButtons(ButtonContainer &btnContainer, const QString& buttons, bool isLeft);
+        void calcHiddenButtons();
 
         KCommonDecorationButton *m_button[NumButtons];
 
@@ -307,6 +309,11 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
         ButtonType type();
 
         /**
+         * Whether the button is left of the titlebar or not.
+         */
+        bool isLeft();
+
+        /**
          * Set which mouse buttons the button should honor. Used e.g. to prevent accidental right mouse clicks.
          */
         void setRealizeButtons(int btns);
@@ -328,6 +335,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
     protected:
         void setToggleButton(bool toggle);
         void setOn(bool on);
+        void setLeft(bool left);
         void mousePressEvent(QMouseEvent *e);
         void mouseReleaseEvent(QMouseEvent *e);
 
@@ -337,6 +345,8 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
         int m_realizeButtons;
         QSize m_size;
         ButtonState m_lastMouse;
+
+        bool m_isLeft;
 
         KCommonDecorationButtonPrivate *d;
 };
