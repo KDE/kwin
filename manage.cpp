@@ -234,19 +234,6 @@ bool Client::manage( Window w, bool isMapped )
         {
         bool ignorePPosition = ( options->ignorePositionClasses.contains(QString::fromLatin1(resourceClass())));
 
-        if ((xSizeHint.flags & PPosition) && ! ignorePPosition) 
-            {
-            int tx = geom.x();
-            int ty = geom.y();
-
-// TODO tyhle testy nepocitaji s dekoraci, ani s gravity
-            if (tx < 0)
-                tx = area.right() + tx;
-            if (ty < 0)
-                ty = area.bottom() + ty;
-            geom.moveTopLeft(QPoint(tx, ty));
-            }
-
         if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
              (xSizeHint.flags & USPosition) ) 
             {
