@@ -992,10 +992,11 @@ void PlastikClient::borders( int& left, int& right, int& top, int& bottom ) cons
 {
     if ((maximizeMode()==MaximizeFull) && !options()->moveResizeMaximizedWindows()) {
         left = right = bottom = 0;
-        top = s_titleHeight + DECOHEIGHT;
+        top = s_titleHeight;
 
         // update layout etc.
         topSpacer_->changeSize(1, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        decoSpacer_->changeSize(1, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
         leftSpacer_->changeSize(left, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
         leftTitleSpacer_->changeSize(left, s_titleHeight, QSizePolicy::Fixed, QSizePolicy::Fixed);
         rightSpacer_->changeSize(right, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -1007,6 +1008,7 @@ void PlastikClient::borders( int& left, int& right, int& top, int& bottom ) cons
 
         // update layout etc.
         topSpacer_->changeSize(1, TOPMARGIN, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        decoSpacer_->changeSize(1, DECOHEIGHT, QSizePolicy::Expanding, QSizePolicy::Fixed);
         leftSpacer_->changeSize(left, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
         leftTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
                 QSizePolicy::Fixed, QSizePolicy::Fixed);
