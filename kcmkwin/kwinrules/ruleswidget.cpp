@@ -660,7 +660,7 @@ void RulesWidget::shortcutEditClicked()
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
-: KDialogBase( parent, name, true, i18n( "Edit window-specific settings" ), Ok | Cancel )
+: KDialogBase( parent, name, true, i18n( "Edit Window-Specific Settings" ), Ok | Cancel )
     {
     widget = new RulesWidget( this );
     setMainWidget( widget );

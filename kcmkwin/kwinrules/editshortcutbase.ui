@@ -78,7 +78,7 @@ For example "&lt;b&gt;Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b&gt;" will first try
                         <cstring>pushButton1</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Single shortcut</string>
+                        <string>&amp;Single Shortcut</string>
                     </property>
                 </widget>
                 <spacer>
