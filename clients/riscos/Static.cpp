@@ -116,6 +116,8 @@ Static::_drawBorder(QPixmap & pix, int w, int h)
   painter_.drawPoint(w, h);
   
   painter_.end();
+
+  painter_.resetXForm();
 }
 
   void
@@ -458,13 +460,13 @@ Static::update()
   painter_.begin(&aButtonUp_);
 
   if (hicolour)
-    painter_.drawTiledPixmap(4, 4, buttonSize - 8, buttonSize - 8, aTexture);
+    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, aTexture);
 
   painter_.end();
 
   painter_.begin(&iButtonUp_);
   if (hicolour)
-    painter_.drawTiledPixmap(4, 4, buttonSize - 8, buttonSize - 8, iTexture);
+    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, iTexture);
 
   painter_.end();
 
