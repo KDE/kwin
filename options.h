@@ -14,8 +14,8 @@ public:
 
     Options();
     ~Options();
-    
-    
+
+
     /*!
       Different focus policies:
       <ul>
@@ -93,7 +93,7 @@ public:
 
 public slots:
     void reload();
-    
+
 protected:
     QFont activeFont, inactiveFont;
     QColor colors[KWINCOLORS*2];

@@ -321,7 +321,7 @@ void Client::manage( bool isMapped )
     if ( isMapped )
 	placementDone = TRUE;
     else {
-	if ( xSizeHint.flags & PPosition || xSizeHint.flags & USPosition ) {
+	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
 	    // support for obsolete hints
 	    if ( xSizeHint.x != 0 && geom.x() == 0 )
 		geom.setRect( xSizeHint.x, geom.y(), geom.width(), geom.height() );
@@ -329,16 +329,16 @@ void Client::manage( bool isMapped )
 		geom.setRect( geom.x(), xSizeHint.y, geom.width(), geom.height() );
 	    placementDone = TRUE;
 	}
-	if ( xSizeHint.flags & USSize || xSizeHint.flags & PSize ) {
+	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
 	    if ( xSizeHint.width != 0 )
 		geom.setWidth( xSizeHint.width );
 	    if ( xSizeHint.height != 0 )
 		geom.setHeight( xSizeHint.height );
 	}
-//  	if (xSizeHint.flags & PMinSize)
-//  	    geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
-//  	if (xSizeHint.flags & PMaxSize)
-//  	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
+  	if (xSizeHint.flags & PMaxSize)
+  	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
+  	if (xSizeHint.flags & PMinSize)
+  	    geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
     }
 
     windowWrapper()->resize( geom.size() );
@@ -352,7 +352,13 @@ void Client::manage( bool isMapped )
     move( geom.x(), geom.y() );
     gravitate( FALSE );
 
-    if ( !placementDone && !transient_for ) {
+    if ( !placementDone && transient_for ) {
+	// transient_for workaround for broken qt snapshot, #####
+	placementDone = TRUE;
+    }
+	
+    
+    if ( !placementDone ) {
 	workspace()->doPlacement( this );
 	placementDone = TRUE;
     }
@@ -553,6 +559,9 @@ void Client::withdraw()
  */
 bool Client::configureRequest( XConfigureRequestEvent& e )
 {
+    if ( isResize() )
+	return TRUE; // we have better things to do right now 
+
     if ( isShade() )
 	setShade( FALSE );
 
@@ -708,12 +717,14 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 	    h = bh + sy * xSizeHint.height_inc;
 	}
     }
-    
-    if (xSizeHint.flags & PMinSize) {
-	w = QMAX( xSizeHint.min_width, w );
-    }
+
     if (xSizeHint.flags & PMaxSize) {
-	w = QMIN( xSizeHint.max_width, w );
+ 	w = QMIN( xSizeHint.max_width, w );
+	h = QMIN( xSizeHint.max_height, h );
+    }
+    if (xSizeHint.flags & PMinSize) {
+ 	w = QMAX( xSizeHint.min_width, w );
+	h = QMAX( xSizeHint.min_height, h );
     }
 
     int ww = wwrap->width();
@@ -1049,10 +1060,10 @@ QSize Client::minimumSize() const
  */
 int Client::minimumWidth() const
 {
-    if (xSizeHint.flags & PMinSize)
-	return QMAX( width() - wwrap->width() + xSizeHint.min_width,
-		     QWidget::minimumWidth() );
-    else
+//     if (xSizeHint.flags & PMinSize)
+// 	return QMAX( width() - wwrap->width() + xSizeHint.min_width,
+// 		     QWidget::minimumWidth() );
+//     else
 	return QWidget::minimumWidth();
 }
 /*!
@@ -1061,10 +1072,10 @@ int Client::minimumWidth() const
  */
 int Client::minimumHeight() const
 {
-    if (xSizeHint.flags & PMinSize)
-	return QMAX( height() - wwrap->height() + xSizeHint.min_height,
-		     QWidget::minimumHeight() );
-    else
+//     if (xSizeHint.flags & PMinSize)
+// 	return QMAX( height() - wwrap->height() + xSizeHint.min_height,
+// 		     QWidget::minimumHeight() );
+//     else
 	return QWidget::minimumHeight();
 }
 
@@ -1082,10 +1093,10 @@ QSize Client::maximumSize() const
  */
 int Client::maximumWidth() const
 {
-    if (xSizeHint.flags & PMaxSize)
-	return QMIN( width() - wwrap->width() + xSizeHint.max_width,
-		     QWidget::maximumWidth() );
-    else
+//     if (xSizeHint.flags & PMaxSize)
+// 	return QMIN( width() - wwrap->width() + xSizeHint.max_width,
+// 		     QWidget::maximumWidth() );
+//     else
 	return QWidget::maximumWidth();
 }
 /*!
@@ -1094,10 +1105,10 @@ int Client::maximumWidth() const
  */
 int Client::maximumHeight() const
 {
-    if (xSizeHint.flags & PMaxSize)
-	return QMIN( height() - wwrap->height() + xSizeHint.max_height,
-		     QWidget::maximumHeight() );
-    else
+//     if (xSizeHint.flags & PMaxSize)
+// 	return QMIN( height() - wwrap->height() + xSizeHint.max_height,
+// 		     QWidget::maximumHeight() );
+//     else
 	return QWidget::maximumHeight();
 }
 
