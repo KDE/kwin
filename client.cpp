@@ -842,8 +842,9 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             // window does not stem from a restored session.
             Client* ac = workspace()->activeClient();
 
-            if ( !session && ac && ac->userTime() > userTime()
-                 && ( !isTransient() || mainClient() != ac ) ) {
+            if ( !session && ac && !ac->isDesktop() &&
+		 ac->userTime() > userTime() && 
+		 ( !isTransient() || mainClient() != ac ) ) {
                 workspace()->stackClientUnderActive( this );
                 show();
             } else {
