@@ -509,7 +509,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     // set the initial mapping state
     setMappingState( WithdrawnState );
-    desk = -1; // and no desktop yet
+    desk = 0; // and no desktop yet
+    is_sticky_ = FALSE;
 
     mode = Nowhere;
     buttonDown = FALSE;
@@ -520,7 +521,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     shaded = FALSE;
     hover_unshade = FALSE;
     active = FALSE;
-    is_sticky = FALSE;
     stays_on_top = FALSE;
     is_shape = FALSE;
     may_move = TRUE;
@@ -545,6 +545,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     cmap = None;
 
+    // TODO shouldn't all this go to manage() ?
+    
     bool mresize, mmove, mminimize, mmaximize, mclose;
     if( Motif::funcFlags( win, mresize, mmove, mminimize, mmaximize, mclose )) {
         may_resize = mresize;
@@ -578,9 +580,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     fetchName();
     d->windowRole = getStringProperty( w, qt_window_role );
 
-    if ( mainClient()->isSticky() )
-        setSticky( TRUE );
-
     // window wants to stay on top?
     stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || ( transient_for == None && transient_for_defined );
 
@@ -588,12 +587,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
 
     skip_pager = ( info->state() & NET::SkipPager) != 0;
-
-    // should we open this window on a certain desktop?
-    if ( info->desktop() == NETWinInfo::OnAllDesktops )
-        setSticky( TRUE );
-    else if ( info->desktop() )
-        desk = info->desktop(); // window had the initial desktop property!
 }
 
 /*!
@@ -794,19 +787,17 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         }
     }
 
-    // initial desktop placement - note we don't clobber desk if it is
-    // set to some value, in case the initial desktop code in the
-    // constructor has already set a value for us
+    // initial desktop placement
+    if ( info->desktop() )
+        desk = info->desktop(); // window had the initial desktop property!
+    if ( mainClient()->isSticky() )
+        desk = NET::OnAllDesktops;
     
-    if ( session  ) {
+    if ( session ) {
         desk = session->desktop;
-        if ( desk <= 0 )
-            desk = workspace()->currentDesktop();
         if( session->sticky )
-            setSticky( true );
-        else
-            info->setDesktop( desk );
-    } else if ( desk <= 0 && !isSticky()) {
+            desk = NET::OnAllDesktops;
+    } else if ( desk == 0 ) {
         // if this window is transient, ensure that it is opened on the
         // same window as its parent.  this is necessary when an application
         // starts up on a different desktop than is currently displayed
@@ -814,10 +805,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         if ( isTransient() && !mainClient()->isSticky() )
             desk = mainClient()->desktop();
 
-        if ( desk <= 0 ) {
-            // assume window wants to be visible on the current desktop
-            desk =  workspace()->currentDesktop();
-        } else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop()
+        if ( desk != 0 && !isMapped && !doNotShow && desk != workspace()->currentDesktop()
                     && !isTopMenu() ) {
             //window didn't specify any specific desktop but will appear
             //somewhere else. This happens for example with "save data?"
@@ -827,12 +815,13 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             // focus stealing to me
             workspace()->setCurrentDesktop( desk );
         }
-        info->setDesktop( desk );
-    } else if( isSticky()) {
-        info->setDesktop( NETWinInfo::OnAllDesktops );
-    } else
-        info->setDesktop( desk );
-    
+    }
+    if ( desk == 0 ) // assume window wants to be visible on the current desktop
+        desk = workspace()->currentDesktop();
+    info->setDesktop( desk );
+    is_sticky_ = ( desk == NET::OnAllDesktops );
+    workspace()->setStickyTransientsOf( this, isSticky());
+    stickyChange( isSticky());
 
     if (isInitial) {
         setMappingState( init_state );
@@ -1197,6 +1186,7 @@ void Client::withdraw()
     workspace()->removeClient( this );
     info->setDesktop( 0 );
     desk = 0;
+    is_sticky_ = false;
     releaseWindow(TRUE);
     workspace()->destroyClient( this );
 }
@@ -2491,29 +2481,6 @@ void Client::setActive( bool act)
 
 
 /*!
-  Sets the window's sticky property to b
- */
-void Client::setSticky( bool b )
-{
-    if ( is_sticky == b )
-        return;
-    is_sticky = b;
-    if ( isVisible() ) {
-        if ( is_sticky )
-            Events::raise( Events::Sticky );
-        else
-            Events::raise( Events::UnSticky );
-    }
-    if ( !is_sticky )
-        setDesktop( workspace()->currentDesktop() );
-    else
-        info->setDesktop( NETWinInfo::OnAllDesktops );
-    workspace()->setStickyTransientsOf( this, b );
-    stickyChange( is_sticky );
-}
-
-
-/*!
   Let the window stay on top or not, depending on \a b
 
   \sa Workspace::setClientOnTop()
@@ -2544,10 +2511,32 @@ void Client::setSkipPager( bool b )
 }
 
 
-void Client::setDesktop( int desktop)
+void Client::setDesktop( int desktop )
 {
+    if( desk == desktop )
+        return;
+    int was_desk = desk;
     desk = desktop;
+    is_sticky_ = ( desk == NET::OnAllDesktops );
     info->setDesktop( desktop );
+    if(( was_desk == NET::OnAllDesktops ) != ( desktop == NET::OnAllDesktops )) {
+        // sticky changed
+        if ( isVisible())
+            Events::raise( isSticky() ? Events::Sticky : Events::UnSticky );
+        workspace()->setStickyTransientsOf( this, isSticky());
+        stickyChange( isSticky());
+    }
+}
+
+void Client::setSticky( bool b )
+{
+    if(( b && isSticky())
+        || ( !b && !isSticky()))
+        return;
+    if( b )
+        setDesktop( NET::OnAllDesktops );
+    else
+        setDesktop( workspace()->currentDesktop());
 }
 
 void Client::getWMHints()

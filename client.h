@@ -321,7 +321,7 @@ private:
     uint shaded :1;
     uint hover_unshade :1;
     uint active :1;
-    uint is_sticky :1;
+    uint is_sticky_ :1; // KDE4 remove, equal to desk == NET::OnAllDesktops
     uint stays_on_top : 1;
     uint is_shape :1;
     uint may_move :1;
@@ -408,9 +408,9 @@ inline bool Client::isActive() const
 
 /*!
   Returns the virtual desktop within the workspace() the client window
-  is located in, -1 if it isn't located on any special desktop. This may be
-  if the window wasn't mapped yet or if the window is sticky. Do not use
-  desktop() directly, use isOnDesktop() instead.
+  is located in, 0 if it isn't located on any special desktop (not mapped yet),
+  or NET::OnAllDesktops (sticky). Do not use desktop() directly, use
+  isOnDesktop() instead.
  */
 inline int Client::desktop() const
 {
@@ -419,7 +419,7 @@ inline int Client::desktop() const
 
 inline bool Client::isSticky() const
 {
-    return is_sticky;
+    return desk == NET::OnAllDesktops; // equal to is_sticky_
 }
 /*!
   Returns whether the client is on visible or iconified on the virtual
@@ -427,7 +427,7 @@ inline bool Client::isSticky() const
  */
 inline bool Client::isOnDesktop( int d ) const
 {
-    return desk == d || desk == -1 || isSticky();
+    return desk == d || /*desk == 0 ||*/ isSticky();
 }
 
 

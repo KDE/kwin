@@ -259,7 +259,7 @@ Client* Workspace::clientFactory( WId w )
         {
             XLowerWindow( qt_xdisplay(), w );
             Client * c = new NoBorderClient( this, w);
-            c->setSticky( TRUE );
+            c->setSticky( TRUE ); // TODO remove this?
             return c;
         }
 
@@ -3052,15 +3052,10 @@ void Workspace::clientPopupAboutToShow()
  */
 void Workspace::sendClientToDesktop( Client* c, int desk )
 {
-    if ( c->isSticky() && desk != NETWinInfo::OnAllDesktops )
-        c->setSticky( FALSE );
-
-    if ( c->isOnDesktop( desk ) )
+    if ( c->desktop() == desk )
         return;
 
     c->setDesktop( desk );
-    if( desk == NETWinInfo::OnAllDesktops )
-        c->setSticky( true );
 
     if ( c->isOnDesktop( currentDesktop() ) ) {
         c->show();
@@ -3094,7 +3089,7 @@ void Workspace::sendToDesktop( int desk )
 {
     if ( !popup_client )
         return;
-    if ( desk == 0 ) {
+    if ( desk == 0 ) { // the 'sticky' menu entry
         popup_client->setSticky( !popup_client->isSticky() );
         return;
     }
