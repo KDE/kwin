@@ -21,6 +21,7 @@
 */
 
 #include <qpainter.h>
+#include <qimage.h>
 #include <qlayout.h>
 #include "../../options.h"
 #include "../../workspace.h"
@@ -44,6 +45,7 @@ extern "C"
 
 namespace RiscOS
 {
+
 
 Manager::Manager(
   Workspace * workSpace,
@@ -193,7 +195,6 @@ Manager::paintEvent(QPaintEvent * e)
   bool active = isActive();
 
   QRect tr = titleSpacer_->geometry();
-
 
   // Title bar.
   p.drawPixmap(tr.left(), 0, s->titleTextLeft(active));

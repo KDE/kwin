@@ -31,6 +31,25 @@
 namespace RiscOS
 {
 
+/* XPM */
+static const char * const texture_xpm[] = {
+"64 12 3 1",
+" 	c None",
+"a	c #000000",
+"b	c #FFFFFF",
+"   b           b         b     b   b b       b        a       b ",
+" b       aa   b  aaa aaa     b   a   b   aab     bb           a ",
+" b     b    a b    b   b             b       aa      b b   aa   ",
+" b b     b     a         a b   b b b  aa  ab             ab     ",
+"         b     b   b b       b                 b   b  ba        ",
+" aaa aaa         aa       b          b b b   b           b      ",
+"   b       b      bb a b     aa  b         a  a  aaa a     b    ",
+" b         b b b b     a b       b       b         b           b",
+"   b b       b              b  a a b  b  aa      b       baa    ",
+"       a     b    a  bb  aa    bb aa aaa  b     aa a            ",
+"   a a       aab       b  b   aa aab          a  b              ",
+" b        a        b   b aaa  a      b      bb     b   b     b b"};
+
   void
 Static::_drawButtonBorder(QPixmap & pix)
 {
@@ -129,14 +148,14 @@ Static::_init()
   aTitleTextRight_  .resize(3, 20);
   iTitleTextLeft_   .resize(3, 20);
   iTitleTextRight_  .resize(3, 20);
-  aTitleTextMid_    .resize(128, 20);
-  iTitleTextMid_    .resize(128, 20);
+  aTitleTextMid_    .resize(64, 20);
+  iTitleTextMid_    .resize(64, 20);
   aResizeMidLeft_   .resize(3, 12);
   aResizeMidRight_  .resize(3, 12);
   iResizeMidLeft_   .resize(3, 12);
   iResizeMidRight_  .resize(3, 12);
-  aResizeMid_       .resize(128, 10);
-  iResizeMid_       .resize(128, 10);
+  aResizeMid_       .resize(64, 10);
+  iResizeMid_       .resize(64, 10);
   aButtonUp_        .resize(19, 19);
   iButtonUp_        .resize(19, 19);
   aButtonDown_      .resize(19, 19);
@@ -210,6 +229,43 @@ Static::update()
     setPalette(iResizePal_, options->color(Options::Handle, false));
   }
 
+  QRgb light, dark;
+  QRgb * data;
+  QRgb w = qRgb(255,255,255);
+  QRgb b = qRgb(0,0,0);
+
+  QPixmap tx = QPixmap((const char **)texture_xpm);
+  QImage aTx(tx.convertToImage());
+  QImage iTx(aTx.copy());
+
+  light  = options->color(Options::TitleBar, true).light(110).rgb();
+  dark   = options->color(Options::TitleBar, true).dark(110).rgb();
+
+  data = (QRgb *)aTx.bits();
+
+  for (int x = 0; x < 64*12; x++)
+    if (data[x] == w)
+      data[x] = light;
+    else if (data[x] == b)
+      data[x] = dark;
+
+  light  = options->color(Options::TitleBar, false).light(110).rgb();
+  dark   = options->color(Options::TitleBar, false).dark(110).rgb();
+
+  data = (QRgb *)iTx.bits();
+
+  for (int x = 0; x < 64*12; x++)
+    if (data[x] == w)
+      data[x] = light;
+    else if (data[x] == b)
+      data[x] = dark;
+
+
+  QPixmap aTexture;
+  aTexture.convertFromImage(aTx);
+  QPixmap iTexture;
+  iTexture.convertFromImage(iTx);
+
   // -------------------------------------------------------------------------
   // Bevels
   // -------------------------------------------------------------------------
@@ -272,22 +328,24 @@ Static::update()
 
   transx = transy = 0.0;
 
-  temp.resize(132, 20);
+  temp.resize(70, 20);
   
   temp.fill(Qt::black);
 
   palette_ = aTitlePal_;
-  _drawBorder(temp, 132, 17);
+  _drawBorder(temp, 70, 17);
   
   painter_.begin(&aTitleTextMid_);
   painter_.drawPixmap(0, 1, temp, 2, 0);
+  painter_.drawPixmap(0, 4, aTexture);
   painter_.end();
 
   palette_ = iTitlePal_;
-  _drawBorder(temp, 132, 17);
+  _drawBorder(temp, 70, 17);
   
   painter_.begin(&iTitleTextMid_);
   painter_.drawPixmap(0, 1, temp, 2, 0);
+  painter_.drawPixmap(0, 4, iTexture);
   painter_.end();
 
   transy = 1.0;
@@ -295,14 +353,14 @@ Static::update()
   temp.fill(Qt::black);
 
   palette_ = aResizePal_;
-  _drawBorder(temp, 132, 7);
+  _drawBorder(temp, 70, 7);
   
   painter_.begin(&aResizeMid_);
   painter_.drawPixmap(0, 0, temp, 2, 0);
   painter_.end();
 
   palette_ = iResizePal_;
-  _drawBorder(temp, 132, 7);
+  _drawBorder(temp, 70, 7);
   
   painter_.begin(&iResizeMid_);
   painter_.drawPixmap(0, 0, temp, 2, 0);
