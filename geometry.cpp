@@ -845,11 +845,6 @@ void Client::setGeometry( int x, int y, int w, int h, bool force )
 
 void Client::resize( int w, int h, bool force )
     { // TODO make this deffered with isResize() ? old kwin did
-    int deltaX = width() - w;
-    if (QApplication::reverseLayout()){
-    	move( x() + deltaX, y() );
-    }
-      
     if( !force && frame_geometry.size() == QSize( w, h ))
         return;
     frame_geometry.setSize( QSize( w, h ));
