@@ -276,6 +276,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     shaded = FALSE;
     transient_for = None;
     is_shape = FALSE;
+    is_sticky = FALSE;
 
     getIcons();
     getWindowProtocols();
