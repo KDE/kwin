@@ -432,11 +432,12 @@ int Client::computeWorkareaDiff( int left, int right, int a_left, int a_right )
         return INT_MIN;
     else // fully inside workarea in this direction direction
         {
-        int a_third = ( a_right - a_left ) / 3;
+        // max distance from edge where it's still considered to be close and is kept at that distance
+        int max_diff = ( a_right - a_left ) / 10;
         if( left_diff < right_diff )
-            return left_diff < a_third ? -left_diff - 1 : INT_MAX;
+            return left_diff < max_diff ? -left_diff - 1 : INT_MAX;
         else if( left_diff > right_diff )
-            return right_diff < a_third ? right_diff + 1 : INT_MAX;
+            return right_diff < max_diff ? right_diff + 1 : INT_MAX;
         return INT_MAX; // not close to workarea edge
         }
     }
@@ -520,7 +521,7 @@ void Client::checkWorkspacePosition()
         }
     if( final_geom != geometry() )
         setGeometry( final_geom );
-    updateWorkareaDiffs( area );
+//    updateWorkareaDiffs( area ); done already by setGeometry()
     }
 
 // Try to be smart about keeping the clients visible.
@@ -807,6 +808,7 @@ void Client::setGeometry( int x, int y, int w, int h, bool force )
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
     else
         client_size = QSize( w - border_left - border_right, client_size.height());
+    updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
         XMoveResizeWindow( qt_xdisplay(), frameId(), x, y, w, h );
@@ -837,6 +839,7 @@ void Client::resize( int w, int h, bool force )
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
     else
         client_size = QSize( w - border_left - border_right, client_size.height());
+    updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
         // FRAME tady poradi tak, at neni flicker
@@ -869,6 +872,7 @@ void Client::move( int x, int y, bool force )
     if( !force && frame_geometry.topLeft() == QPoint( x, y ))
         return;
     frame_geometry.moveTopLeft( QPoint( x, y ));
+    updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
         XMoveWindow( qt_xdisplay(), frameId(), x, y );

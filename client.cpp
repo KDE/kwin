@@ -267,7 +267,11 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         XReparentWindow( qt_xdisplay(), decoration->widget()->winId(), frameId(), 0, 0 );
         decoration->widget()->lower();
         decoration->borders( border_left, border_right, border_top, border_bottom );
+        int save_workarea_diff_x = workarea_diff_x;
+        int save_workarea_diff_y = workarea_diff_y;
         setGeometry( QRect( calculateGravitation( false ), sizeForClientSize( clientSize())));
+        workarea_diff_x = save_workarea_diff_x;
+        workarea_diff_y = save_workarea_diff_y;
         decoration->widget()->show();
         }
     else
@@ -287,7 +291,11 @@ void Client::destroyDecoration()
         border_left = border_right = border_top = border_bottom = 0;
         decoration = NULL;
         setMask( QRegion()); // reset shape mask
+        int save_workarea_diff_x = workarea_diff_x;
+        int save_workarea_diff_y = workarea_diff_y;
         setGeometry( QRect( calculateGravitation( true ), clientSize()), true );
+        workarea_diff_x = save_workarea_diff_x;
+        workarea_diff_y = save_workarea_diff_y;
         }
     }
 
