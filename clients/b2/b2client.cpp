@@ -4,8 +4,9 @@
  * Changes:
  *   Customizable button positions by Karol Szwed <gallium@kde.org>
  *
- *   Thin frame in fixed size windows, titlebar gradient support and
- *   accessibility improvements are
+ *   Thin frame in fixed size windows, titlebar gradient support, accessibility
+ *   improvements, customizable menu double click action and button hover
+ *   effects are
  *   Copyright (c) 2003,2004 Luciano Montanaro <mikelima@cirulla.net>
  */
 
@@ -14,6 +15,9 @@
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
+#include <kimageeffect.h>
+#include <kicontheme.h>
+#include <kiconeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
 #include <kconfig.h>
@@ -27,26 +31,34 @@ namespace B2 {
 
 #include "bitmaps.h"
 
-#define P_CLOSE 0
-#define P_MAX 1
-#define P_NORMALIZE 2
-#define P_ICONIFY 3
-#define P_PINUP 4
-#define P_MENU 5
-#define P_HELP 6
-#define P_SHADE 7
-#define NUM_PIXMAPS ((P_SHADE + 1) * 4)
+enum { 
+    Norm = 0, 
+    Hover, Down, INorm, IHover, IDown, 
+    NumStates 
+};
+
+enum {
+    P_CLOSE = 0, 
+    P_MAX, P_NORMALIZE, P_ICONIFY, P_PINUP, P_MENU, P_HELP, P_SHADE, 
+    P_NUM_BUTTON_TYPES
+};
+
+#define NUM_PIXMAPS (P_NUM_BUTTON_TYPES * NumStates)
 
 static KPixmap *pixmap[NUM_PIXMAPS];
 
-//active
-#define PIXMAP_A(i)  (pixmap[(i)*4])
-//active, down
-#define PIXMAP_AD(i) (pixmap[(i)*4 +1])
-//inactive
-#define PIXMAP_I(i)  (pixmap[(i)*4 +2])
-//inactive, down
-#define PIXMAP_ID(i) (pixmap[(i)*4 +3])
+// active
+#define PIXMAP_A(i)  (pixmap[(i) * NumStates + Norm])
+// active, hover
+#define PIXMAP_AH(i) (pixmap[(i) * NumStates + Hover])
+// active, down
+#define PIXMAP_AD(i) (pixmap[(i) * NumStates + Down])
+// inactive
+#define PIXMAP_I(i)  (pixmap[(i) * NumStates + INorm])
+// inactive, hover
+#define PIXMAP_IH(i) (pixmap[(i) * NumStates + IHover])
+// inactive, down
+#define PIXMAP_ID(i) (pixmap[(i) * NumStates + IDown])
 
 static KPixmap* titleGradient[2] = {0, 0};
 
@@ -169,7 +181,7 @@ static void create_pixmaps()
 
     for (i = 0; i < NUM_PIXMAPS; i++) {
         pixmap[i] = new KPixmap;
-	switch (i / 4) {
+	switch (i / NumStates) {
 	case P_MAX: // will be initialized by copying P_CLOSE
 	    break;
 	case P_ICONIFY:
@@ -192,10 +204,12 @@ static void create_pixmaps()
     PIXMAP_ID(P_PINUP)->setMask(pindownMask);
 
     QBitmap menuMask(16, 16, menu_mask_bits, true);
-    for (i = 0; i < 4; i++) pixmap[P_MENU * 4 + i]->setMask(menuMask);
+    for (i = 0; i < NumStates; i++) 
+	pixmap[P_MENU * NumStates + i]->setMask(menuMask);
 
     QBitmap helpMask(16, 16, help_mask_bits, true);
-    for (i = 0; i < 4; i++) pixmap[P_HELP * 4 + i]->setMask(helpMask);
+    for (i = 0; i < NumStates; i++) 
+	pixmap[P_HELP * NumStates + i]->setMask(helpMask);
 
     QBitmap normalizeMask(16, 16, true);
     // draw normalize icon mask
@@ -208,13 +222,15 @@ static void create_pixmaps()
     mask.fillRect(0, 0, 10, 10, one);
     mask.end();
 
-    for (i = 0; i < 4; i++) pixmap[P_NORMALIZE * 4 + i]->setMask(normalizeMask);
+    for (i = 0; i < NumStates; i++) 
+	pixmap[P_NORMALIZE * NumStates + i]->setMask(normalizeMask);
     
     QBitmap shadeMask(bsize, bsize, true);
     mask.begin(&shadeMask);
     mask.fillRect(0, 0, bsize, 6, one);
     mask.end();
-    for (i = 0; i < 4; i++) pixmap[P_SHADE * 4 + i]->setMask(shadeMask);
+    for (i = 0; i < NumStates; i++) 
+	pixmap[P_SHADE * NumStates + i]->setMask(shadeMask);
 
     titleGradient[0] = 0;
     titleGradient[1] = 0;
@@ -400,7 +416,7 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 			LeftButton | RightButton);
 		button[BtnMenu]->setPixmaps(P_MENU);
 		button[BtnMenu]->setUseMiniIcon();
-		connect(button[BtnMenu], SIGNAL(clicked()),
+		connect(button[BtnMenu], SIGNAL(pressed()),
 			this, SLOT(menuButtonPressed()));
 		titleLayout->addWidget(button[BtnMenu]);
 	    }
@@ -821,10 +837,18 @@ void B2Client::menuButtonPressed()
     lastClient = this;
     time.start();
     if (!dbl) {
+	KDecorationFactory* f = factory();
+#if 0
+	QPoint menutop = button[BtnMenu]->mapToGlobal(
+		button[BtnMenu]->rect().topLeft());
+	QPoint menubottom = button[BtnMenu]->mapToGlobal(
+		button[BtnMenu]->rect().bottomRight());
+	showWindowMenu(QRect(menutop, menubottom));
+#else
 	QPoint menupoint = button[BtnMenu]->mapToGlobal(
 		button[BtnMenu]->rect().bottomLeft());
-	KDecorationFactory* f = factory();
 	showWindowMenu(menupoint);
+#endif
 	if (!f->exists(this)) // 'this' was destroyed
 	    return;
 	button[BtnMenu]->setDown(false);
@@ -876,18 +900,20 @@ static void redraw_pixmaps()
 
     // close
     drawB2Rect(PIXMAP_A(P_CLOSE), aGrp.button(), false);
+    drawB2Rect(PIXMAP_AH(P_CLOSE), aGrp.button(), true);
     drawB2Rect(PIXMAP_AD(P_CLOSE), aGrp.button(), true);
 
     drawB2Rect(PIXMAP_I(P_CLOSE), iGrp.button(), false);
+    drawB2Rect(PIXMAP_IH(P_CLOSE), iGrp.button(), true);
     drawB2Rect(PIXMAP_ID(P_CLOSE), iGrp.button(), true);
 
     // shade
     KPixmap thinBox;
     thinBox.resize(buttonSize - 2, 6);
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < NumStates; i++) {
 	bool is_act = (i < 2);
 	bool is_down = ((i & 1) == 1);
-	KPixmap *pix = pixmap[P_SHADE * 4 + i];
+	KPixmap *pix = pixmap[P_SHADE * NumStates + i];
 	QColor color = is_act ? aGrp.button() : iGrp.button();
 	drawB2Rect(&thinBox, color, is_down);
 	pix->fill(Qt::black);
@@ -896,9 +922,9 @@ static void redraw_pixmaps()
     }
 
     // maximize
-    for (i = 0; i < 4; i++) {
-	*pixmap[P_MAX*4 + i] = *pixmap[P_CLOSE*4 + i];
-	pixmap[P_MAX*4 + i]->detach();
+    for (i = 0; i < NumStates; i++) {
+	*pixmap[P_MAX * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
+	pixmap[P_MAX * NumStates + i]->detach();
     }
 
     // normalize + iconify
@@ -907,10 +933,10 @@ static void redraw_pixmaps()
     KPixmap largeBox;
     largeBox.resize(12, 12);
 
-    for (i = 0; i < 4; i++) {
-	bool is_act = (i < 2);
-	bool is_down = ((i & 1) == 1);
-	KPixmap *pix = pixmap[P_NORMALIZE*4 + i];
+    for (i = 0; i < 6; i++) {
+	bool is_act = (i < 3);
+	bool is_down = (i == Down || i == IDown);
+	KPixmap *pix = pixmap[P_NORMALIZE * NumStates + i];
 	drawB2Rect(&smallBox, is_act ? aGrp.button() : iGrp.button(), is_down);
 	drawB2Rect(&largeBox, is_act ? aGrp.button() : iGrp.button(), is_down);
 	pix->fill(options()->color(KDecoration::ColorTitleBar, is_act));
@@ -918,51 +944,62 @@ static void redraw_pixmaps()
 	       0, 0, 12, 12, Qt::CopyROP, true);
 	bitBlt(pix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
 
-	bitBlt(pixmap[P_ICONIFY * 4 + i], 0, 0,
+	bitBlt(pixmap[P_ICONIFY * NumStates + i], 0, 0,
 	       &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
     }
 
     QPainter p;
     // x for close + menu + help
-    int pix = P_CLOSE;
-    const unsigned char *light = close_white_bits;
-    const unsigned char *dark = close_dgray_bits;
-    int off = (pixmap[pix * 4]->width() - 16) / 2;
-    for (i = 0; i < 4; i++) {
-	p.begin(pixmap[pix * 4 + i]);
-	kColorBitmaps(&p, (i < 2) ? aGrp : iGrp, off, off, 16, 16, true,
-		      light, NULL, NULL, dark, NULL, NULL);
-	p.end();
-    }
-    // x for close + menu + help
-    for (int j = 0; j < 2; j++) {
+    for (int j = 0; j < 3; j++) {
+        int pix;
+        unsigned const char *light, *dark;
         switch (j) {
-	case 1:
-	    pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits;
-	    break;
+        case 0:
+            pix = P_CLOSE; light = close_white_bits; dark = close_dgray_bits;
+            break;
+        case 1:
+            pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits;
+            break;
         default:
-	    pix = P_HELP; light = help_light_bits; dark = help_dark_bits;
-	    break;
+            pix = P_HELP; light = help_light_bits; dark = help_dark_bits;
+            break;
         }
-        for (i = 0; i < 4; i++) {
-            p.begin(pixmap[pix * 4 + i]);
-            kColorBitmaps(&p, (i < 2) ? aGrp : iGrp, 0, 0, 16, 16, true,
+	int off = (pixmap[pix * NumStates]->width() - 16) / 2;
+        for (i = 0; i < NumStates; i++) {
+            p.begin(pixmap[pix * NumStates + i]);
+            kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, off, off, 16, 16, true,
                           light, NULL, NULL, dark, NULL, NULL);
             p.end();
         }
     }
 
     // pin
-    for (i = 0; i < 4; i++) {
-        const unsigned char *white = (i&1) ? pindown_white_bits : pinup_white_bits;
-        const unsigned char *gray = (i&1) ? pindown_gray_bits : pinup_gray_bits;
-        const unsigned char *dgray = (i&1) ? pindown_dgray_bits : pinup_dgray_bits;
-        p.begin(pixmap[P_PINUP*4 + i]);
-        kColorBitmaps(&p, (i<2)?aGrp:iGrp, 0, 0, 16, 16, true, white,
+    for (i = 0; i < NumStates; i++) {
+	bool isDown = (i == Down || i == IDown);
+        unsigned const char *white = isDown ? pindown_white_bits : pinup_white_bits;
+        unsigned const char *gray = isDown ? pindown_gray_bits : pinup_gray_bits;
+        unsigned const char *dgray =isDown ? pindown_dgray_bits : pinup_dgray_bits;
+        p.begin(pixmap[P_PINUP * NumStates + i]);
+        kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, 0, 0, 16, 16, true, white,
                       gray, NULL, dgray, NULL, NULL);
         p.end();
     }
 
+    // Apply the hilight effect to the 'Hover' icons
+    KIconEffect ie;
+    QPixmap hilighted;
+    for (i = 0; i < P_NUM_BUTTON_TYPES; i++) {
+	int offset = i * NumStates;
+	hilighted = ie.apply(*pixmap[offset + Norm], 
+		KIcon::Small, KIcon::ActiveState);
+	*pixmap[offset + Hover] = hilighted;    
+
+	hilighted = ie.apply(*pixmap[offset + INorm], 
+		KIcon::Small, KIcon::ActiveState);
+	*pixmap[offset + IHover] = hilighted;    
+    }
+
+    
     // Create the titlebar gradients
     if (QPixmap::defaultDepth() > 8) {
 	QColor titleColor[4] = {
@@ -1082,8 +1119,9 @@ bool B2Client::eventFilter(QObject *o, QEvent *e)
 
 // =====================================
 
-B2Button::B2Button(B2Client *_client, QWidget *parent, const QString& tip, const int realizeBtns)
-   : QButton(parent, 0)
+B2Button::B2Button(B2Client *_client, QWidget *parent, 
+	const QString& tip, const int realizeBtns)
+   : QButton(parent, 0), hover(false)
 {
     setBackgroundMode(NoBackground);
     realizeButtons = realizeBtns;
@@ -1115,62 +1153,68 @@ void B2Button::drawButton(QPainter *p)
     if (useMiniIcon) {
         QPixmap miniIcon = client->icon().pixmap(QIconSet::Small,
 		client->isActive() ? QIconSet::Normal : QIconSet::Disabled);
-        p->drawPixmap((width()-miniIcon.width())/2,
-                      (height()-miniIcon.height())/2, miniIcon);
-    }
-    else{
-        if(client->isActive()){
-            if (isDown())
-                p->drawPixmap((width()-pDown->width())/2,
-                              (height()-pDown->height())/2, *pDown);
+        p->drawPixmap((width() - miniIcon.width()) / 2,
+                      (height() - miniIcon.height()) / 2, miniIcon);
+    } else {
+	int type;
+        if (client->isActive()) {
+            if (isOn() || isDown())
+		type = Down;
+            else if (hover)
+		type = Hover;
+	    else
+		type = Norm;
+        } else {
+            if (isOn() || isDown())
+		type = IDown;
+	    else if (hover)
+		type = IHover;
             else
-                p->drawPixmap((width()-pNorm->width())/2,
-                              (height()-pNorm->height())/2, *pNorm);
+		type = INorm;
         }
-        else{
-            if (isDown())
-                p->drawPixmap((width()-pDown->width())/2,
-                              (height()-pDown->height())/2, *iDown);
-            else
-                p->drawPixmap((width()-pNorm->width())/2,
-                              (height()-pNorm->height())/2, *iNorm);
-        }
+	p->drawPixmap((width() - icon[type]->width()) / 2, 
+		(height() - icon[type]->height()) / 2, *icon[type]);
     }
-}
-
-void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
-                          KPixmap *iPixDown)
-{
-    pNorm = pix;
-    pDown = pixDown;
-    iNorm = iPix;
-    iDown = iPixDown;
-    repaint(false);
 }
 
 void B2Button::setPixmaps(int button_id)
 {
-  button_id *= 4;
-  setPixmaps(B2::pixmap[button_id], B2::pixmap[button_id+1],
-	     B2::pixmap[button_id+2], B2::pixmap[button_id+3]);
+    button_id *= NumStates;
+    for (int i = 0; i < NumStates; i++) {
+	icon[i] = B2::pixmap[button_id + i];
+    }
+    repaint(false);
 }
 
-void B2Button::mousePressEvent( QMouseEvent* e )
+void B2Button::mousePressEvent(QMouseEvent * e)
 {
     last_button = e->button();
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                    (e->button()&realizeButtons)?LeftButton:NoButton, e->state());
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(), 
+	    (e->button() & realizeButtons) ? LeftButton : NoButton, 
+	    e->state());
     QButton::mousePressEvent(&me);
 }
 
-void B2Button::mouseReleaseEvent( QMouseEvent* e )
+void B2Button::mouseReleaseEvent(QMouseEvent * e)
 {
     last_button = e->button();
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&realizeButtons)?LeftButton:NoButton, e->state());
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(), 
+	    (e->button() & realizeButtons) ? LeftButton : NoButton, 
+	    e->state());
     QButton::mouseReleaseEvent(&me);
 }
 
+void B2Button::enterEvent(QEvent *)
+{
+    hover = true;
+    repaint(false);
+}
+
+void B2Button::leaveEvent(QEvent *)
+{
+    hover = false;
+    repaint(false);
+}
 // =====================================
 
 B2Titlebar::B2Titlebar(B2Client *parent)

@@ -44,17 +44,21 @@ protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
 
-    bool useMiniIcon;
-    KPixmap *pNorm, *pDown, *iNorm, *iDown;
-    QColor bg; //only use one color (the rest is pixmap) so forget QPalette ;)
-
     void mousePressEvent( QMouseEvent* e );
     void mouseReleaseEvent( QMouseEvent* e );
+private:
+    void enterEvent(QEvent *e);
+    void leaveEvent(QEvent *e);
+    
+    bool useMiniIcon;
+    KPixmap *icon[6];
+    QColor bg; //only use one color (the rest is pixmap) so forget QPalette ;)
 
 public:
     B2Client* client;
     int last_button;
     int realizeButtons;
+    bool hover;
 };
 
 class B2Titlebar : public QWidget
