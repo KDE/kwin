@@ -945,7 +945,6 @@ void Client::ungrabButton( int modifier )
  */
 void Client::updateMouseGrab()
     {
-    XUngrabButton( qt_xdisplay(), AnyButton, AnyModifier, wrapperId());
     if( isActive() )
         {
         // remove the grab for no modifiers only if the window
@@ -959,11 +958,14 @@ void Client::updateMouseGrab()
         ungrabButton( ControlMask | ShiftMask );
         }
     else
+        {
+        XUngrabButton( qt_xdisplay(), AnyButton, AnyModifier, wrapperId());
         // simply grab all modifier combinations
         XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, wrapperId(), FALSE,
             ButtonPressMask,
             GrabModeSync, GrabModeAsync,
             None, None );
+        }
     }
 
 int qtToX11Button( Qt::ButtonState button )
