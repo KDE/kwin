@@ -73,6 +73,7 @@ private:
   const char* functionAll(int);
 
   void setComboText(QComboBox* combo, const char* text);
+  const char* fixup( const char* s );
 
 };
 
