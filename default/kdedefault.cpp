@@ -1,4 +1,9 @@
+/*****************************************************************
+KDE Default style
 
+Copyright (C) 1999, 2000 Daniel Duley <mosfet@kde.org>
+Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "kdedefault.h"
 #include <qapplication.h>
