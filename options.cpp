@@ -304,9 +304,9 @@ Options::WindowOperation Options::windowOperation(const QString &name){
 Options::MouseCommand Options::mouseCommand(const QString &name)
 {
     QString lowerName = name.lower();
-    if (lowerName == "rise") return MouseRaise;
+    if (lowerName == "raise") return MouseRaise;
     if (lowerName == "lower") return MouseLower;
-    if (lowerName == "operations menu") return MouseOperationsMenu; 
+    if (lowerName == "operations menu") return MouseOperationsMenu;
     if (lowerName == "toggle raise and lower") return MouseToggleRaiseAndLower;
     if (lowerName == "activate and raise") return MouseActivateAndRaise;
     if (lowerName == "activate and lower") return MouseActivateAndLower;
