@@ -90,7 +90,7 @@ public:
     Client* findClient( WId w ) const;
 
     QRect geometry() const;
-    
+
     /**
      * @return the area available for clients. This is the desktop
      * geometry adjusted for edge-anchored windows.
@@ -169,14 +169,14 @@ public:
     void storeSession( KConfig* config );
 
     SessionInfo* takeSessionInfo( Client* );
-    
+
     /**
      * When the area that is available for clients (that which is not
      * taken by windows like panels, the top-of-screen menu etc) may
      * have changed, this will recalculate the available space.
      */
     virtual void updateClientArea();
-   
+
     /**
      * @return the area available for edge-anchored windows. This
      * is the desktop geometry adjusted for other edge-anchored
@@ -269,7 +269,7 @@ private:
     QGuardedPtr<Client> popup_client;
 
     void loadSessionInfo();
-    
+
     QWidget* desktop_widget;
 
     QList<SessionInfo> session;
@@ -278,7 +278,7 @@ private:
     Client* desktop_client;
     Client* active_client;
     Client* should_get_focus;
-    
+
     ClientList clients;
     ClientList stacking_order;
     ClientList focus_chain;

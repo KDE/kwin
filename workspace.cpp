@@ -1421,7 +1421,7 @@ void Workspace::raiseClient( Client* c )
     if ( !c )
 	return;
     ClientList saveset;
-    
+
     if ( c == desktop_client ) {
 	saveset.clear();
 	saveset.append( c );
@@ -1931,7 +1931,7 @@ void Workspace::killWindowAtPosition(int x, int y)
     {
         Client *client = (*it);
         if ( client->rect().contains(QPoint(x, y)) &&
-             client->isOnDesktop( currentDesktop() ) && 
+             client->isOnDesktop( currentDesktop() ) &&
              !client->isIconified() )
         {
             client->killWindow();
@@ -2333,76 +2333,54 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     return 0;
 }
 
-  void
-Workspace::updateClientArea()
+void Workspace::updateClientArea()
 {
-  kdDebug() << "KWin: Updating client area" << endl;
+    QRect area = QApplication::desktop()->geometry();
+    QRect edgeArea = QApplication::desktop()->geometry();
 
-  clientArea_ = QApplication::desktop()->geometry();
-  edgeClientArea_ = QApplication::desktop()->geometry();
+    for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it) {
+	(*it)->updateAvoidPolicy();
 
-  for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it)
-  {
-    (*it)->updateAvoidPolicy();
+	if ((*it)->isAvoid() ) {
+	    switch (AnchorEdge((*it)->anchorEdge())) {
 
-    kdDebug() << "Looking at client " << (KWM::title((*it)->winId()))
-              << (*it)->winId() << endl;
-    kdDebug() << "Avoid policy is " << (*it)->avoid() << endl;
+	    case AnchorNorth:
+		area.setTop(QMAX(area.top(), (*it)->geometry().bottom()));
+		break;
 
-    if ((*it)->avoid()) {
+	    case AnchorSouth:
+		area.setBottom(QMIN(area.bottom(), (*it)->geometry().top() - 1));
+		break;
 
-      switch (AnchorEdge((*it)->anchorEdge())) {
+	    case AnchorEast:
+		area.setRight(QMIN(area.right(), (*it)->geometry().left() - 1));
+		break;
 
-        case AnchorNorth:
-          kdDebug() <<"KWin: Ignoring at edge N" << endl;
-          clientArea_
-            .setTop(QMAX(clientArea_.top(), (*it)->geometry().bottom()));
-          break;
+	    case AnchorWest:
+		area.setLeft(QMAX(area.left(), (*it)->geometry().right()));
+		break;
 
-        case AnchorSouth:
-          kdDebug() <<"KWin: Ignoring at edge S" << endl;
-          clientArea_
-            .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top() - 1));
-          break;
+	    default:
+		break;
+	    }
+	}
 
-        case AnchorEast:
-          kdDebug() <<"KWin: Ignoring at edge E" << endl;
-          clientArea_
-            .setRight(QMIN(clientArea_.right(), (*it)->geometry().left() - 1));
-          break;
-
-        case AnchorWest:
-          kdDebug() <<"KWin: Ignoring at edge W" << endl;
-          clientArea_
-            .setLeft(QMAX(clientArea_.left(), (*it)->geometry().right()));
-          break;
-
-        default:
-          kdDebug() <<"KWin: Not ignoring" << endl;
-          break;
-      }
+	// FIXME: Using the hackish method...
+	if (KWM::title((*it)->winId()) == "MAC MENU [menu]")
+	    edgeArea.setTop((*it)->geometry().bottom());
     }
-
-    // FIXME: Using the hackish method...
-    if (KWM::title((*it)->winId()) == "MAC MENU [menu]")
-      edgeClientArea_.setTop((*it)->geometry().bottom());
-  }
-
-  DCOPClient * client = kapp->dcopClient();
-
-  if (!client->isAttached())
-    client->attach();
-
-  QByteArray param;
-  QDataStream str(param, IO_WriteOnly);
-
-  str << clientArea_;
-
-  client->send("kdesktop", "KDesktopIface", "clientAreaUpdated(QRect)", param);
-
-// Useful when you want to see whether the client area has been
-// updated correctly...
-  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
+    
+    edgeClientArea_ = edgeArea;
+    
+    if ( clientArea_ != area ) {
+	// something changed, remember it and notify kdesktop
+	clientArea_ = area;
+	
+	QByteArray data;
+	QDataStream arg( data, IO_WriteOnly );
+	arg << clientArea_;
+	kapp->dcopClient()->send("kdesktop", "KDesktopIface", "clientAreaUpdated(QRect)", data);
+    }
 }
 
 QRect Workspace::clientArea()

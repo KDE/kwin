@@ -71,8 +71,8 @@ public:
     Client* mainClient();
 
     void updateAvoidPolicy();
-    bool avoid() const { return avoid_; }
-    int anchorEdge() const { return anchorEdge_; }
+    bool isAvoid() const { return avoid; }
+    int anchorEdge() const { return anchor; }
 
     virtual bool windowEvent( XEvent * );
 
@@ -176,7 +176,7 @@ protected:
     void showEvent( QShowEvent* );
     void hideEvent( QHideEvent* );
     bool x11Event( XEvent * );		// X11 event
-    
+
     virtual void activateLayout();
 
     bool eventFilter( QObject *, QEvent * );
@@ -250,8 +250,8 @@ private:
     QRect geom_restore;
     QRegion mask;
 
-    bool avoid_;
-    int anchorEdge_;
+    bool avoid;
+    int anchor;
 };
 
 inline WId Client::window() const

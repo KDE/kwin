@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+								
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #include "stdclient.h"
@@ -292,10 +292,8 @@ void StdClient::resizeEvent( QResizeEvent* e)
 
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
 	// manual clearing without the titlebar (we selected WResizeNoErase )
-	QPainter p( this );
-	r = rr.subtract( t );
-	p.setClipRegion( r );
-	p.fillRect( rect(), colorGroup().brush( QColorGroup::Background ) );
+	QRect cr( 2, 2, width()-4, height()- 4 );
+	erase( QRegion( cr ).subtract( t ) );
     }
 }
 
