@@ -501,7 +501,7 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	    withdraw();
 	break;
     case NormalState:
-  	if ( !mapped && !e.send_event )
+  	if ( ( !mapped || !windowWrapper()->isVisibleTo( this )) && !e.send_event )
   	    return TRUE; // this event was produced by us as well
 
 	// maybe we will be destroyed soon. Check this first.
@@ -771,7 +771,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	shaded = FALSE;
     }
 
-    QPoint globalPos = e->pos() + geometry().topLeft();
+    QPoint globalPos = e->globalPos(); // pos() + geometry().topLeft();
 
 
     QPoint p = globalPos + invertedMoveOffset;

@@ -666,19 +666,19 @@ void Workspace::grabKey(KeySym keysym, unsigned int mod){
   }
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod,
-	   qt_xrootwin(), TRUE,
+	   qt_xrootwin(), FALSE,
 	   GrabModeSync, GrabModeSync);
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask,
-	   qt_xrootwin(), TRUE,
+	   qt_xrootwin(), FALSE,
 	   GrabModeSync, GrabModeSync);
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod | NumLockMask,
-	   qt_xrootwin(), TRUE,
+	   qt_xrootwin(), FALSE,
 	   GrabModeSync, GrabModeSync);
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask | NumLockMask,
-	   qt_xrootwin(), TRUE,
+	   qt_xrootwin(), FALSE,
 	   GrabModeSync, GrabModeSync);
 
 }
