@@ -165,26 +165,7 @@ bool Application::x11EventFilter( XEvent *e )
 {
     if ( Workspace::self()->workspaceEvent( e ) )
 	     return TRUE;
-    bool handled = false;
-    switch( e->type )
-    {
-	case SelectionClear:
-	    handled = owner.filterSelectionClear( e->xselectionclear );
-	  break;
-	case SelectionNotify:
-	    handled = owner.filterSelectionNotify( e->xselection );
-	  break;
-	case SelectionRequest:
-	    handled = owner.filterSelectionRequest( e->xselectionrequest );
-	  break;
-	case DestroyNotify:
-	    handled = owner.filterDestroyNotify( e->xdestroywindow );
-	  break;
-	default:
-	  break;
-    }
-    if( handled )
-	return true;
+    owner.filterEvent( e );
     return KApplication::x11EventFilter( e );
 }
 
