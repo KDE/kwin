@@ -54,6 +54,38 @@ int Shape::shapeEvent()
     return kwin_shape_event;
 }
 
+bool Motif::noBorder( WId w )
+{
+    struct MwmHints {
+	ulong flags;
+	ulong functions;
+	ulong decorations;
+	long input_mode;
+	ulong status;
+    };
+    Atom type;
+    int format;
+    unsigned long length, after;
+    unsigned char* data;
+    MwmHints* hints = 0;
+    if ( XGetWindowProperty( qt_xdisplay(), w, atoms->motif_wm_hints, 0, 5,
+			     FALSE, atoms->motif_wm_hints, &type, &format,
+			     &length, &after, &data ) == Success ) {
+	if ( data )
+	    hints = (MwmHints*) data;
+    }
+    bool result = FALSE;
+    if ( hints ) {
+	if ( hints->flags & (1L << 1 ) ) { //  // MWM_HINTS_DECORATIONS;
+	    if ( hints->decorations == 0 )
+		result = TRUE;
+	}
+	XFree( data );
+    }
+    return result;
+}
+
+
 
 /*!
   Updates kwin_time by receiving a current timestamp from the server.
@@ -73,6 +105,10 @@ static void updateTime()
 
 Client* Workspace::clientFactory( Workspace *ws, WId w )
 {
+    if ( Motif::noBorder( w ) )
+	return new NoBorderClient( ws, w );
+    
+    
     // hack TODO hints
     QString s = KWM::title( w );
     if ( s == "THE DESKTOP" ) {
@@ -2068,7 +2104,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     QCString windowRole = c->windowRole();
 
     for (SessionInfo* info = session.first(); info; info = session.next() ) {
-	if ( info->sessionId == sessionId && 
+	if ( info->sessionId == sessionId &&
 	     ( ( info->windowRole.isEmpty() && windowRole.isEmpty() )
 	       || (info->windowRole == windowRole ) ) )
 	    return session.take();

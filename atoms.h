@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #ifndef ATOMS_H
@@ -18,6 +18,8 @@ public:
     Atom kwm_win_icon; // compatibility
     Atom kwm_command;  // compatibility
     Atom kwm_running;
+    
+    Atom motif_wm_hints;
 
     Atom net_number_of_desktops;
     Atom net_current_desktop;

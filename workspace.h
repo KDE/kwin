@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #ifndef WORKSPACE_H
@@ -67,6 +67,11 @@ public:
     static int shapeEvent();
 };
 
+class Motif {
+public:
+    static bool noBorder( WId w );
+};
+
 class Workspace : public QObject
 {
     Q_OBJECT
@@ -128,9 +133,9 @@ public:
     void performWindowOperation( Client* c, Options::WindowOperation op );
 
     Client* clientFactory(Workspace *ws, WId w);
-    
+
     void storeSession( KConfig* config );
-    
+
     SessionInfo* takeSessionInfo( Client* );
 
 public slots:

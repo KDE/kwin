@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #include <qapplication.h>
@@ -37,6 +37,9 @@ Atoms::Atoms()
 
     atoms[n] = &kwm_command;
     names[n++] = (char *) "KWM_COMMAND";
+    
+    atoms[n] = &motif_wm_hints;
+    names[n++] = (char *) "_MOTIF_WM_HINTS";
 
     atoms[n] = &net_number_of_desktops;
     names[n++] = (char *) "_NET_NUMBER_OF_DESKTOPS";
