@@ -509,7 +509,7 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
 
 const QBitmap &PlastikHandler::buttonBitmap(ButtonIcon type, const QSize &size, bool toolWindow)
 {
-    int typeIndex = NumPixmaps+type;
+    int typeIndex = type;
 
     // btn icon size...
     int reduceW = 0, reduceH = 0;
