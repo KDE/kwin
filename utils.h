@@ -16,7 +16,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qwidget.h>
 #include <kmanagerselection.h>
 #include <netwm_def.h>
-#include <kshortcutdialog.h>
 
 namespace KWinInternal
 {
@@ -243,23 +242,7 @@ Time timestampDiff( Time time1, Time time2 ) // returns time2 - time1
     }
 
 bool isLocalMachine( const QCString& host );
-
-#ifndef KCMRULES
-// Qt dialogs emit no signal when closed :(
-class ShortcutDialog
-    : public KShortcutDialog
-    {
-    Q_OBJECT
-    public:
-        ShortcutDialog( const KShortcut& cut );
-        virtual void accept();
-    signals:
-        void dialogDone( bool ok );
-    protected:
-        virtual void done( int r ) { KShortcutDialog::done( r ); emit dialogDone( r == Accepted ); }
-    };
-#endif
-
+    
 } // namespace
 
 #endif

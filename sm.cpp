@@ -113,7 +113,6 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             config->writeEntry( QString("skipPager")+n, c->skipPager() );
             config->writeEntry( QString("userNoBorder")+n, c->isUserNoBorder() );
             config->writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
-            config->writeEntry( QString("shortcut")+n, c->shortcut().toStringInternal());
             }
         }
     // TODO store also stacking order
@@ -178,7 +177,6 @@ void Workspace::loadSessionInfo()
         info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
         info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
-        info->shortcut = KShortcut( config->readEntry( QString("shortcut")+n ));
         info->active = ( active_client == i );
         }
     }

@@ -131,10 +131,6 @@ bool Client::manage( Window w, bool isMapped )
         if( session->userNoBorder )
             setUserNoBorder( true );
         }
-        
-    if( session && !session->shortcut.isNull())
-        setShortcut( session->shortcut );
-    // TODO use also rules for shortcut
 
     init_minimize = rules()->checkMinimize( init_minimize, !isMapped );
     if( rules()->checkNoBorder( false, !isMapped ))

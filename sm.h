@@ -15,7 +15,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/SM/SMlib.h>
 #include <kapplication.h>
 #include <netwm_def.h>
-#include <kshortcut.h>
 
 class QSocketNotifier;
 
@@ -46,7 +45,6 @@ struct SessionInfo
     bool skipPager;
     bool userNoBorder;
     NET::WindowType windowType;
-    KShortcut shortcut;
     bool active; // means 'was active in the saved session'
     };
 

@@ -304,50 +304,6 @@ bool isLocalMachine( const QCString& host )
     return false;
     }
 
-#ifndef KCMRULES
-ShortcutDialog::ShortcutDialog( const KShortcut& cut )
-    : KShortcutDialog( cut, false /*TODO???*/ )
-    {
-    // make it a popup, so that it has the grab
-    XSetWindowAttributes attrs;
-    attrs.override_redirect = True;
-    XChangeWindowAttributes( qt_xdisplay(), winId(), CWOverrideRedirect, &attrs );
-    setWFlags( WType_Popup );
-    }
-
-void ShortcutDialog::accept()
-    {
-    for( int i = 0;
-         ;
-         ++i )
-        {
-        KKeySequence seq = shortcut().seq( i );
-        if( seq.isNull())
-            break;
-        if( seq.key( 0 ) == Key_Escape )
-            {
-            reject();
-            return;
-            }
-        if( seq.key( 0 ) == Key_Space )
-            { // clear
-            setShortcut( KShortcut());
-            KShortcutDialog::accept();
-            return;
-            }
-        if( seq.key( 0 ).modFlags() == 0 )
-            { // no shortcuts without modifiers
-            KShortcut cut = shortcut();
-            cut.setSeq( i, KKeySequence());
-            setShortcut( cut );
-            return;
-            }
-        }
-    KShortcutDialog::accept();
-    }
-#endif
-
-
 } // namespace
 
 #ifndef KCMRULES

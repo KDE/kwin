@@ -18,7 +18,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <netwm.h>
 #include <kdebug.h>
 #include <assert.h>
-#include <kshortcut.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -211,8 +210,6 @@ class Client : public QObject, public KDecorationDefines
         void shrinkVertical();
 
         bool providesContextHelp() const;
-        KShortcut shortcut() const;
-        void setShortcut( const KShortcut& cut );
 
         bool performMouseCommand( Options::MouseCommand, QPoint globalPos, bool handled = false );
 
@@ -281,7 +278,6 @@ class Client : public QObject, public KDecorationDefines
     private slots:
         void autoRaise();
         void shadeHover();
-        void shortcutActivated();
 
     private:
         friend class Bridge; // FRAME
@@ -499,7 +495,6 @@ class Client : public QObject, public KDecorationDefines
         int border_left, border_right, border_top, border_bottom;
         QRegion _mask;
         static bool check_active_modal; // see Client::checkActiveModal()
-        KShortcut _shortcut;
         friend struct FetchNameInternalPredicate;
         friend struct CheckIgnoreFocusStealingProcedure;
         friend struct ResetupRulesProcedure;
@@ -842,19 +837,6 @@ KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, cl->ignore_focus_stealing = o
 inline Window Client::moveResizeGrabWindow() const
     {
     return move_resize_grab_window;
-    }
-
-inline KShortcut Client::shortcut() const
-    {
-    return _shortcut;
-    }
-
-inline void Client::setShortcut( const KShortcut& cut )
-    {
-    if( _shortcut == cut )
-        return;
-    _shortcut = cut;
-    workspace()->clientShortcutUpdated( this );
     }
 
 #ifdef NDEBUG

@@ -12,9 +12,6 @@
             <height>325</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>Form3</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -202,17 +199,6 @@
                     </property>
                     <property name="whatsThis" stdset="0">
                         <string>With some (non-KDE) applications whole window class can be sufficient for selecting a specific window in an application, as they set whole window class to contain both application and window role.</string>
-                    </property>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>match_title</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Match also window &amp;title</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+T</string>
                     </property>
                 </widget>
             </vbox>
