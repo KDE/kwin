@@ -1301,6 +1301,7 @@ void Workspace::circulateDesktopApplications()
         new_stack[i++] = (*it)->winId();
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
+    propagateClients( true, false );
 }
 
 void Workspace::addClient( Client* c )
