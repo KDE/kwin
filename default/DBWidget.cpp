@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -26,11 +26,9 @@ namespace Default
 {
 
 DBWidget::DBWidget(QWidget * parent, const char * name)
-  : QWidget(parent, name, WResizeNoErase | WRepaintNoErase | WPaintUnclipped |
-WNorthWestGravity)
+  : QWidget(parent, name, WResizeNoErase | WRepaintNoErase | WPaintUnclipped | WNorthWestGravity)
 {
   buf_.resize(20, 20);
-  setBackgroundMode(NoBackground);
 }
 
   void

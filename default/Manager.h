@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -49,7 +49,6 @@ class Manager : public Client
 
   public slots:
 
-    void toggleSticky();
     void raise();
     void vMax();
 
@@ -60,9 +59,7 @@ class Manager : public Client
     void maximizeChange(bool);
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
-    void activateLayout();
-    void toggleShaded();
-    
+
   protected slots:
 
     void captionChange(const QString &);
@@ -72,13 +69,10 @@ class Manager : public Client
   private:
 
     void _updateDisplay();
-    void _updateLayout();
-   
+
     TitleBar * titleBar_;
     ResizeBar * resizeBar_;
 
-    bool shaded_;
-    QSize oldSize_;
 };
 
 class ToolManager : public Manager

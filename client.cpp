@@ -1139,6 +1139,14 @@ void Client::resizeEvent( QResizeEvent * e)
 }
 
 
+void Client::giveUpShade()
+{
+    wwrap->show();
+    workspace()->requestFocus( this );
+    shaded = FALSE;
+}
+
+
 /*!
   Reimplemented to provide move/resize
  */
@@ -1169,11 +1177,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    return;
     }
 
-    if ( mode !=  Center && shaded ) {
-	wwrap->show();
-	workspace()->requestFocus( this );
-	shaded = FALSE;
-    }
+    if ( mode !=  Center && shaded ) 
+	giveUpShade();
 
     QPoint globalPos = e->globalPos(); // pos() + geometry().topLeft();
 

@@ -2130,10 +2130,11 @@ void Workspace::clientPopupAboutToShow()
     if ( !popup_client || !popup )
 	return;
     popup->setItemEnabled( Options::ResizeOp, popup_client->isResizable() );
-    popup->setItemEnabled( Options::MaximizeOp, popup_client->isResizable() );
+    popup->setItemEnabled( Options::MaximizeOp, popup_client->isResizable()  && !popup_client->isTransient() );
     popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
     popup->setItemChecked( Options::StaysOnTopOp, popup_client->staysOnTop() );
+    popup->setItemEnabled( Options::IconifyOp, !popup_client->isTransient() );
 }
 
 

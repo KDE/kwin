@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -107,8 +107,16 @@ TitleBar::TitleBar(Manager * client)
       question_,  SIGNAL(contextHelp()),
       client,     SLOT(contextHelp())
     );
+  
+  if ( client->isTransient() ) {
+      // lighter decoration for transient windows
+      sticky_->hide();
+      iconify_->hide();
+      maximise_->hide();
+  }
+  
 }
- 
+
   void
 TitleBar::updateDisplay()
 {
@@ -139,13 +147,16 @@ TitleBar::resizeEvent(QResizeEvent *)
   if (width() < 120) sizeProblem = 3;
   else if (width() < 160) sizeProblem = 2;
   else if (width() < 200) sizeProblem = 1;
+  
+  bool transient = ( (Client*) parentWidget() )->isTransient();
 
   switch (sizeProblem) {
 
     case 1:
       close_    ->show();
       sticky_   ->hide();
-      iconify_  ->show();
+      if ( !transient )
+	  iconify_  ->show();
       if (0 != question_)
         question_ ->hide();
       maximise_ ->hide();
@@ -174,9 +185,11 @@ TitleBar::resizeEvent(QResizeEvent *)
       close_    ->show();
       if (0 != question_)
         question_->show();
-      sticky_   ->show();
-      iconify_  ->show();
-      maximise_ ->show();
+      if ( !transient ) {
+	  sticky_   ->show();
+	  iconify_  ->show();
+	  maximise_ ->show();
+      }
       break;
   }
 }

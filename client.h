@@ -110,6 +110,7 @@ public:
 
     bool isShade() const;
     virtual void setShade( bool );
+    void giveUpShade();
 
     bool isMaximized() const;
     enum MaximizeMode { MaximizeVertical, MaximizeHorizontal, MaximizeFull, MaximizeRestore };

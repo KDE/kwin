@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -71,11 +71,12 @@ ResizeMid::mouseMoveEvent(QMouseEvent * e)
   QRect g = client_->geometry();
   g.setBottom(e->globalPos().y());
 
+  if ( client_->isShade() )
+      client_->giveUpShade();
   QSize adjustedSize = client_->adjustedSize(g.size());
 
   if (adjustedSize != client_->size()) {
-    g.setBottom(g.top() + adjustedSize.height());
-    client_->setGeometry(g);
+      client_->resize( adjustedSize );
   }
 }
 

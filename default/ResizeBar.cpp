@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -30,18 +30,17 @@ namespace Default
 {
 
 ResizeBar::ResizeBar(QWidget * parent, Manager * client)
-  : QWidget (parent, "ResizeBar"),
+  : QWidget (parent, "ResizeBar", WResizeNoErase | WRepaintNoErase),
     client_ (client)
 {
-  setBackgroundMode(NoBackground);
 
   left_   = new ResizeSide(this, client_, ResizeSide::Left);
   mid_    = new ResizeMid(this, client_);
   right_  = new ResizeSide(this, client_, ResizeSide::Right);
-  
+
   mid_->move(30, 0);
 }
-  
+
   void
 ResizeBar::updateDisplay()
 {

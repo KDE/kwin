@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -56,7 +56,7 @@ TitleText::updatePixmap()
   QPainter p(&buf());
 
   Static * s = Static::instance();
-  
+
   p.drawPixmap(0, 0, s->titleLeft(active_));
   p.drawPixmap(width() - 2, 0, s->titleRight(active_));
   p.drawTiledPixmap(2, 0, width() - 2, height(), s->title(active_));
@@ -96,7 +96,7 @@ TitleText::mouseMoveEvent(QMouseEvent * e)
 }
 
   void
-TitleText::mouseDoubleClickEvent(QMouseEvent * e)
+TitleText::mouseDoubleClickEvent(QMouseEvent * )
 {
   client_->workspace()->performWindowOperation(
       client_,

@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -44,6 +44,8 @@ ResizeSide::ResizeSide(QWidget * parent, Manager * client, Side s)
   void
 ResizeSide::mouseMoveEvent(QMouseEvent * e)
 {
+  if ( client_->isShade() )
+      client_->giveUpShade();
   QRect g = client_->geometry();
   g.setBottom(e->globalPos().y());
   if (side_ == Left)
@@ -51,16 +53,16 @@ ResizeSide::mouseMoveEvent(QMouseEvent * e)
   else
     g.setRight(e->globalPos().x());
 
-	QSize adjustedSize = client_->adjustedSize(g.size());
+  QSize adjustedSize = client_->adjustedSize(g.size());
 
   if (adjustedSize != client_->size()) {
 
     if (side_ == Left)
-      g.setLeft(g.right() - adjustedSize.width());
+      g.setLeft(g.right() - adjustedSize.width() + 1);
     else
-      g.setRight(g.left() + adjustedSize.width());
+      g.setRight(g.left() + adjustedSize.width() - 1);
 
-    g.setBottom(g.top() + adjustedSize.height());
+    g.setBottom(g.top() + adjustedSize.height() - 1);
 
     client_->setGeometry(g);
   }

@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -50,14 +50,24 @@ Manager::Manager(
 )
   : Client(workSpace, id, parent, name)
 {
-  shaded_ = false;
 
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
   titleBar_   = new TitleBar(this);
+  titleBar_->setFixedHeight( Static::instance()->titleHeight() );
   resizeBar_  = new ResizeBar(this, this);
+  resizeBar_->setFixedHeight( RESIZE_BAR_HEIGHT );
 
-  activateLayout();
+  QVBoxLayout* vbox = new QVBoxLayout( this );
+  vbox->addWidget( titleBar_ );
+  QHBoxLayout* hbox = new QHBoxLayout;
+  vbox->addLayout( hbox, 10 );
+  hbox->addSpacing( 3 );
+  hbox->addWidget( windowWrapper(), 10 );
+  hbox->addSpacing( 3 );
+  vbox->addWidget( resizeBar_ );
+  
+  _updateDisplay();
 }
 
 Manager::~Manager()
@@ -68,9 +78,10 @@ Manager::~Manager()
 Manager::slotReset()
 {
   Static::instance()->update();
+  titleBar_->setFixedHeight( Static::instance()->titleHeight() );
   _updateDisplay();
 }
-    
+
   void
 Manager::captionChange(const QString &)
 {
@@ -86,7 +97,7 @@ Manager::stickyChange(bool b)
   void
 Manager::paletteChange(const QPalette &)
 {
-  Static::instance()->update(); 
+  Static::instance()->update();
   _updateDisplay();
 }
 
@@ -134,12 +145,6 @@ Manager::paintEvent(QPaintEvent * e)
 }
 
   void
-Manager::toggleSticky()
-{
-  setSticky(!isSticky());
-}
-
-  void
 Manager::raise()
 {
   workspace()->raiseClient(this);
@@ -155,69 +160,18 @@ Manager::vMax()
 Manager::resizeEvent(QResizeEvent * e)
 {
   Client::resizeEvent(e);
-  _updateLayout();
 }
 
-  void
-Manager::_updateLayout()
-{
-  titleBar_       ->  setGeometry(
-    0,
-    0,
-    width(),
-    Static::instance()->titleHeight()
-  );
-
-  windowWrapper() ->  setGeometry(
-    3,
-    Static::instance()->titleHeight(),
-    width() - 6,
-    height() - Static::instance()->titleHeight() - RESIZE_BAR_HEIGHT
-  );
-
-  resizeBar_      ->  setGeometry(
-    0,
-    height() - RESIZE_BAR_HEIGHT,
-    width(),
-    RESIZE_BAR_HEIGHT
-  );
-
-  _updateDisplay();
-}
-
-  void
-Manager::activateLayout()
-{
-  _updateLayout();
-}
 
   void
 Manager::fakeMouseEvent(QMouseEvent * e, QWidget * w)
 {
   QPoint adjustedPos = w->pos() + e->pos();
 
-  if (e->type() == QEvent::MouseButtonDblClick)
-    toggleShaded();
-
   QMouseEvent fake(e->type(), adjustedPos, e->button(), e->state());
-
   Client::event(&fake);
 }
 
-  void
-Manager::toggleShaded()
-{
-  if (shaded_)
-    resize(oldSize_);
-  else {
-    oldSize_ = size();
-    resize(width(), Static::instance()->titleHeight() + RESIZE_BAR_HEIGHT);
-  }
-
-  _updateLayout();
-
-  shaded_ = !shaded_;
-}
 
 } // End namespace
 
