@@ -487,6 +487,48 @@ void Manager::animate(bool iconify, int style)
       }
       break;
 
+    case 2:
+      {
+        // KVirc style ? Maybe. For qwertz.
+
+        if (!iconify) // No animation for restore.
+          return;
+
+        // Go away quick.
+        hide();
+        qApp->syncX();
+
+        int stepCount = 12;
+
+        QRect r(geometry());
+
+        int dx = r.width() / (stepCount * 2);
+        int dy = r.height() / (stepCount * 2);
+
+        QPainter p(workspace()->desktopWidget());
+        p.setRasterOp(Qt::NotROP);
+
+        for (int step = 0; step < stepCount; step++) {
+
+          r.moveBy(dx, dy);
+          r.setWidth(r.width() - 2 * dx);
+          r.setHeight(r.height() - 2 * dy);
+
+          XGrabServer(qt_xdisplay());
+
+          p.drawRect(r);
+          p.flush();
+          usleep(200);
+          p.drawRect(r);
+
+          XUngrabServer(qt_xdisplay());
+
+          kapp->processEvents();
+        }
+      }
+      break;
+
+
     default:
       {
         NETRect r = netWinInfo()->iconGeometry();
