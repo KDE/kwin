@@ -126,8 +126,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
          */
         void setClientIsMoving( Client *c );
 
-        void place(Client *c);
-        void placeSmart( Client* c );
+        void place( Client *c, QRect& area );
+        void placeSmart( Client* c, const QRect& area );
 
         QPoint adjustClientPosition( Client* c, QPoint pos );
         void raiseClient( Client* c );

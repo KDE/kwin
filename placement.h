@@ -28,21 +28,22 @@ class Placement
 
         Placement(Workspace* w);
 
-        void place(Client* c);
+        void place(Client* c, QRect& area );
 
-        void placeAtRandom            (Client* c);
-        void placeCascaded            (Client* c, bool re_init = false);
-        void placeSmart               (Client* c);
-        void placeCentered    (Client* c);
-        void placeZeroCornered(Client* c);
-        void placeDialog      (Client* c);
-        void placeUtility     (Client* c);
+        void placeAtRandom            (Client* c, const QRect& area );
+        void placeCascaded            (Client* c, const QRect& area, bool re_init = false);
+        void placeSmart               (Client* c, const QRect& area );
+        void placeCentered    (Client* c, const QRect& area );
+        void placeZeroCornered(Client* c, const QRect& area );
+        void placeDialog      (Client* c, QRect& area );
+        void placeUtility     (Client* c, QRect& area );
 
     private:
 
-        void placeInternal(Client* c);
-        void placeUnderMouse(Client* c);
-        void placeOnMainWindow(Client* c);
+        void placeInternal(Client* c, const QRect& area );
+        void placeUnderMouse(Client* c, QRect& area );
+        void placeOnMainWindow(Client* c, QRect& area );
+        QRect checkArea( const Client*c, const QRect& area );
 
         Placement();
 

@@ -182,7 +182,9 @@ bool Client::manage( Window w, bool isMapped )
         geom = session->geometry;
 
     QRect area;
-    if( !isMapped && options->xineramaPlacementEnabled )
+    if( isMapped )
+        area = workspace()->clientArea( WorkArea, geom.center(), desktop());
+    else if( options->xineramaPlacementEnabled )
         area = workspace()->clientArea( PlacementArea, QCursor::pos(), desktop());
     else
         area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
@@ -263,27 +265,12 @@ bool Client::manage( Window w, bool isMapped )
 
     if( !placementDone ) 
         { // placement needs to be after setting size
-        workspace()->place( this );
+        workspace()->place( this, area );
         placementDone = TRUE;
         }
 
     if (( !isSpecialWindow() || isToolbar()) && isMovable())
-        {
-        if ( geometry().right() > area.right() && width() < area.width() )
-            move( area.right() - width(), y() );
-        if ( geometry().bottom() > area.bottom() && height() < area.height() )
-            move( x(), area.bottom() - height() );
-        if( !area.contains( geometry().topLeft() ))
-            {
-            int tx = x();
-            int ty = y();
-            if ( tx < area.x() )
-                tx = area.x();
-            if ( ty < area.y() )
-                ty = area.y();
-            move( tx, ty );
-            }
-        }
+        keepInArea( area );
 
     XShapeSelectInput( qt_xdisplay(), window(), ShapeNotifyMask );
     if ( (is_shape = Shape::hasShape( window())) ) 

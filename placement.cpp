@@ -40,38 +40,38 @@ Placement::Placement(Workspace* w)
 /*!
   Places the client \a c according to the workspace's layout policy
  */
-void Placement::place(Client* c)
+void Placement::place(Client* c, QRect& area )
     {
     if( c->isUtility())
-        placeUtility(c);
+        placeUtility(c, area);
     else if( c->isDialog())
-        placeDialog(c);
+        placeDialog(c, area);
     else if( c->isSplash())
-        placeOnMainWindow( c ); // on mainwindow, if any, otherwise centered
+        placeOnMainWindow( c, area ); // on mainwindow, if any, otherwise centered
     else
-        placeInternal(c);
+        placeInternal(c, area);
     }
 
-void Placement::placeInternal(Client* c)
+void Placement::placeInternal(Client* c, const QRect& area )
     {
-    if (options->placement == Options::Random)               placeAtRandom(c);
-    else if (options->placement == Options::Cascade)              placeCascaded(c);
-    else if (options->placement == Options::Centered)     placeCentered(c);
-    else if (options->placement == Options::ZeroCornered) placeZeroCornered(c);
-    else                                                          placeSmart(c);
+    if (options->placement == Options::Random)               placeAtRandom(c, area);
+    else if (options->placement == Options::Cascade)              placeCascaded(c, area);
+    else if (options->placement == Options::Centered)     placeCentered(c, area);
+    else if (options->placement == Options::ZeroCornered) placeZeroCornered(c, area);
+    else                                                          placeSmart(c, area);
     }
 
 /*!
   Place the client \a c according to a simply "random" placement algorithm.
  */
-void Placement::placeAtRandom(Client* c)
+void Placement::placeAtRandom(Client* c, const QRect& area )
     {
     const int step  = 24;
     static int px = step;
     static int py = 2 * step;
     int tx,ty;
 
-    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
+    const QRect maxRect = checkArea( c, area );
 
     if (px < maxRect.x())
         px = maxRect.x();
@@ -107,7 +107,7 @@ void Placement::placeAtRandom(Client* c)
 /*!
   Place the client \a c according to a really smart placement algorithm :-)
 */
-void Placement::placeSmart(Client* c)
+void Placement::placeSmart(Client* c, const QRect& area )
     {
     /*
      * SmartPlacement by Cristian Tibirna (tibirna@kde.org)
@@ -129,7 +129,7 @@ void Placement::placeSmart(Client* c)
     int basket;                 //temp holder
 
     // get the maximum allowed windows space
-    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
+    const QRect maxRect = checkArea( c, area );
     int x = maxRect.left(), y = maxRect.top();
     x_optimal = x; y_optimal = y;
 
@@ -278,7 +278,7 @@ void Placement::placeSmart(Client* c)
 /*!
   Place windows in a cascading order, remembering positions for each desktop
 */
-void Placement::placeCascaded (Client* c, bool re_init)
+void Placement::placeCascaded (Client* c, const QRect& area, bool re_init)
     {
     /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
      */
@@ -292,8 +292,7 @@ void Placement::placeCascaded (Client* c, bool re_init)
     const int dn = c->desktop() == 0 || c->isOnAllDesktops() ? (m_WorkspacePtr->currentDesktop() - 1) : (c->desktop() - 1);
 
     // get the maximum allowed windows space and desk's origin
-    //    (CT 20Nov1999 - is this common to all desktops?)
-    QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
+    QRect maxRect = checkArea( c, area );
 
     // initialize often used vars: width and height of c; we gain speed
     const int ch = c->height();
@@ -320,7 +319,7 @@ void Placement::placeCascaded (Client* c, bool re_init)
     if ((xp + cw) > W)
         if (!yp) 
         {
-        placeSmart(c);
+        placeSmart(c,area);
         return;
         }
     else xp = X;
@@ -349,7 +348,7 @@ void Placement::placeCascaded (Client* c, bool re_init)
         // last resort: if still doesn't fit, smart place it
         if (((xp + cw) > W - X) || ((yp + ch) > H - Y)) 
             {
-            placeSmart(c);
+            placeSmart(c,area);
             return;
             }
         }
@@ -364,12 +363,11 @@ void Placement::placeCascaded (Client* c, bool re_init)
 /*!
   Place windows centered, on top of all others
 */
-void Placement::placeCentered (Client* c)
+void Placement::placeCentered (Client* c, const QRect& area )
     {
 
     // get the maximum allowed windows space and desk's origin
-    //    (CT 20Nov1999 - is this common to all desktops?)
-    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
+    const QRect maxRect = checkArea( c, area );
 
     const int xp = maxRect.left() + (maxRect.width() -  c->width())  / 2;
     const int yp = maxRect.top()  + (maxRect.height() - c->height()) / 2;
@@ -381,69 +379,73 @@ void Placement::placeCentered (Client* c)
 /*!
   Place windows in the (0,0) corner, on top of all others
 */
-void Placement::placeZeroCornered(Client* c)
+void Placement::placeZeroCornered(Client* c, const QRect& area )
     {
     // get the maximum allowed windows space and desk's origin
-    //    (CT 20Nov1999 - is this common to all desktops?)
-    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
+    const QRect maxRect = checkArea( c, area );
 
     // place the window
     c->move(QPoint(maxRect.left(), maxRect.top()));
     }
 
-void Placement::placeUtility(Client* c)
+void Placement::placeUtility(Client* c, QRect& area )
     {
 // TODO kwin should try to place utility windows next to their mainwindow,
 // preferably at the right edge, and going down if there are more of them
 // if there's not enough place outside the mainwindow, it should prefer
 // top-right corner
     // use the default placement for now
-    placeInternal( c );
+    placeInternal( c, area );
     }
 
 
-void Placement::placeDialog(Client* c)
+void Placement::placeDialog(Client* c, QRect& area )
     {
     // if the dialog is actually non-NETWM transient window, don't apply placement to it,
     // it breaks with too many things (xmms, display)
     if( !c->hasNETSupport())
         return;
-    placeOnMainWindow( c );
+    placeOnMainWindow( c, area );
     }
 
-void Placement::placeUnderMouse(Client* c)
+void Placement::placeUnderMouse(Client* c, QRect& area )
     {
+    area = checkArea( c, area );
     QRect geom = c->geometry();
     geom.moveCenter( QCursor::pos());
     c->move( geom.topLeft());
+    c->keepInArea( area ); // make sure it's kept inside workarea
     }
 
-void Placement::placeOnMainWindow(Client* c)
+void Placement::placeOnMainWindow(Client* c, QRect& area )
     {
+    area = checkArea( c, area );
     ClientList mainwindows = c->mainClients();
     Client* place_on = NULL;
+    int mains_count = 0;
     for( ClientList::ConstIterator it = mainwindows.begin();
          it != mainwindows.end();
          ++it )
         {
         if( (*it)->isSpecialWindow() && !(*it)->isOverride())
             continue; // don't consider toolbars etc when placing
+        ++mains_count;
         if( (*it)->isOnCurrentDesktop())
             {
             if( place_on == NULL )
                 place_on = *it;
             else
                 { // two or more on current desktop -> center
-                placeCentered( c );
+                placeCentered( c, area );
                 return;
                 }
             }
         }
     if( place_on == NULL )
-        {
-        if( mainwindows.count() != 1 )
+        { // 'mains_count' is used because it doesn't include ignored mainwindows
+        if( mains_count != 1 )
             {
-            placeCentered( c );
+            placeCentered( c, area );
             return;
             }
         place_on = mainwindows.first();
@@ -451,6 +453,15 @@ void Placement::placeOnMainWindow(Client* c)
     QRect geom = c->geometry();
     geom.moveCenter( place_on->geometry().center());
     c->move( geom.topLeft());
+    // get area again, because the mainwindow may be on different xinerama screen
+    area = checkArea( c, QRect()); 
+    }
+
+QRect Placement::checkArea( const Client* c, const QRect& area )
+    {
+    if( area.isNull())
+        return m_WorkspacePtr->clientArea( PlacementArea, c->geometry().center(), c->desktop());
+    return area;
     }
 
 // ********************
@@ -666,15 +677,14 @@ int Workspace::packPositionDown( const Client* cl, int oldy, bool bottom_edge ) 
 /*!
   Asks the internal positioning object to place a client
 */
-void Workspace::place(Client* c)
+void Workspace::place(Client* c, QRect& area)
     {
-    initPositioning->place(c);
+    initPositioning->place( c, area );
     }
 
-void Workspace::placeSmart(Client* c)
+void Workspace::placeSmart(Client* c, const QRect& area)
     {
-    initPositioning->placeSmart(c);
+    initPositioning->placeSmart( c, area );
     }
-
 
 } // namespace

@@ -312,6 +312,7 @@ void Workspace::setClientIsMoving( Client *c )
  */
 void Workspace::cascadeDesktop()
     {
+// TODO XINERAMA this probably is not right for xinerama
     Q_ASSERT( block_stacking_updates == 0 );
     ClientList::ConstIterator it(stackingOrder().begin());
     bool re_init_cascade_at_first_client = true;
@@ -322,7 +323,7 @@ void Workspace::cascadeDesktop()
            ((*it)->isOnAllDesktops())              ||
            (!(*it)->isMovable()) )
             continue;
-        initPositioning->placeCascaded(*it, re_init_cascade_at_first_client);
+        initPositioning->placeCascaded(*it, QRect(), re_init_cascade_at_first_client);
         //CT is an if faster than an attribution??
         if (re_init_cascade_at_first_client)
           re_init_cascade_at_first_client = false;
@@ -343,7 +344,7 @@ void Workspace::unclutterDesktop()
            ((*it)->isOnAllDesktops())              ||
            (!(*it)->isMovable()) )
             continue;
-        initPositioning->placeSmart(*it);
+        initPositioning->placeSmart(*it, QRect());
         }
     }
 
@@ -386,6 +387,24 @@ void Workspace::updateTopMenuGeometry( Client* c )
 // Client
 //********************************************
 
+
+void Client::keepInArea( const QRect& area )
+    {
+    if ( geometry().right() > area.right() && width() < area.width() )
+        move( area.right() - width(), y() );
+    if ( geometry().bottom() > area.bottom() && height() < area.height() )
+        move( x(), area.bottom() - height() );
+    if( !area.contains( geometry().topLeft() ))
+        {
+        int tx = x();
+        int ty = y();
+        if ( tx < area.x() )
+            tx = area.x();
+        if ( ty < area.y() )
+            ty = area.y();
+        move( tx, ty );
+        }
+    }
 
 /*!
   Returns \a area with the client's strut taken into account.
@@ -1271,7 +1290,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 if( geom_restore.width() == 0 )
                     { // needs placement
                     plainResize( adjustedSize(QSize(width(), clientArea.height()), SizemodeFixedH ));
-                    workspace()->placeSmart( this );
+                    workspace()->placeSmart( this, clientArea );
                     }
                 else
                     setGeometry( QRect(QPoint( geom_restore.x(), clientArea.top()),
@@ -1291,7 +1310,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 if( geom_restore.height() == 0 )
                     { // needs placement
                     plainResize( adjustedSize(QSize(clientArea.width(), height()), SizemodeFixedW ));
-                    workspace()->placeSmart( this );
+                    workspace()->placeSmart( this, clientArea );
                     }
                 else
                     setGeometry( QRect( QPoint(clientArea.left(), geom_restore.y()),
@@ -1326,7 +1345,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 if( geom_restore.height() > 0 )
                     s.setHeight( geom_restore.height());
                 plainResize( adjustedSize( s ));
-                workspace()->placeSmart( this );
+                workspace()->placeSmart( this, clientArea );
                 restore = geometry();
                 if( geom_restore.width() > 0 )
                     restore.moveLeft( geom_restore.x());
