@@ -158,15 +158,22 @@ bool Client::manage( Window w, bool isMapped )
             {
             ClientList mainclients = mainClients();
             bool on_current = false;
+            Client* maincl = NULL;
+            // this is slightly duplicated from Placement::placeOnMainWindow()
             for( ClientList::ConstIterator it = mainclients.begin();
                  it != mainclients.end();
                  ++it )
+                {
+                if( (*it)->isSpecialWindow() && !(*it)->isOverride())
+                    continue; // don't consider toolbars etc when placing
+                maincl = *it;
                 if( (*it)->isOnCurrentDesktop())
                     on_current = true;
+                }
             if( on_current )
                 desk = workspace()->currentDesktop();
-            else if( mainclients.count() > 0 )
-                desk = mainclients.first()->desktop();
+            else if( maincl != NULL )
+                desk = maincl->desktop();
             }
         }
     if ( desk == 0 ) // assume window wants to be visible on the current desktop
