@@ -49,7 +49,7 @@ Comment[zh_TW.Big5]=KDE 視窗管理員
 
 [desktop1]
 Name=Change to Desktop 1
-Name[af]=VERANDER NA DeskNAp 1
+Name[af]=VERANDER AAN DeskAANp 1
 Name[az]=1. Masa Üstünə Get
 Name[bg]=Отиди на работно място 1
 Name[br]=GwintaÃ± da vurev 1
@@ -144,7 +144,7 @@ default_presentation=0
 
 [desktop2]
 Name=Change to Desktop 2
-Name[af]=VERANDER NA DeskNAp 2
+Name[af]=VERANDER AAN DeskAANp 2
 Name[az]=2. Masa Üstünə Get
 Name[bg]=Отиди на работно място 2
 Name[br]=GwintaÃ± da vurev 2
@@ -239,7 +239,7 @@ default_presentation=0
 
 [desktop3]
 Name=Change to Desktop 3
-Name[af]=VERANDER NA DeskNAp 3
+Name[af]=VERANDER AAN DeskAANp 3
 Name[az]=3. Masa Üstünə Get
 Name[bg]=Отиди на работно място 3
 Name[br]=GwintaÃ± da vurev 3
@@ -334,7 +334,7 @@ default_presentation=0
 
 [desktop4]
 Name=Change to Desktop 4
-Name[af]=VERANDER NA DeskNAp 4
+Name[af]=VERANDER AAN DeskAANp 4
 Name[az]=4. Masa Üstünə Get
 Name[bg]=Отиди на работно място 4
 Name[br]=GwintaÃ± da vurev 4
@@ -429,7 +429,7 @@ default_presentation=0
 
 [desktop5]
 Name=Change to Desktop 5
-Name[af]=VERANDER NA DeskNAp 5
+Name[af]=VERANDER AAN DeskAANp 5
 Name[az]=5. Masa Üstünə Get
 Name[bg]=Отиди на работно място 5
 Name[br]=GwintaÃ± da vurev 5
@@ -524,7 +524,7 @@ default_presentation=0
 
 [desktop6]
 Name=Change to Desktop 6
-Name[af]=VERANDER NA DeskNAp 6
+Name[af]=VERANDER AAN DeskAANp 6
 Name[az]=6. Masa Üstünə Get
 Name[bg]=Отиди на работно място 6
 Name[br]=GwintaÃ± da vurev 6
@@ -619,7 +619,7 @@ default_presentation=0
 
 [desktop7]
 Name=Change to Desktop 7
-Name[af]=VERANDER NA DeskNAp 7
+Name[af]=VERANDER AAN DeskAANp 7
 Name[az]=7. Masa Üstünə Get
 Name[bg]=Отиди на работно място 7
 Name[br]=GwintaÃ± da vurev 7
@@ -714,7 +714,7 @@ default_presentation=0
 
 [desktop8]
 Name=Change to Desktop 8
-Name[af]=VERANDER NA DeskNAp 8
+Name[af]=VERANDER AAN DeskAANp 8
 Name[az]=8. Masa Üstünə Get
 Name[bg]=Отиди на работно място 8
 Name[br]=GwintaÃ± da vurev 8
@@ -1972,6 +1972,7 @@ Name[uk]=Нове вікно діалогу
 Name[zh_CN.GB2312]=新建对话
 Name[zh_TW.Big5]=新的對話視窗
 Comment=Transient Window (a dialog) Appears
+Comment[af]=OORGANG VENSTER (a DIALOOG) VERSKYN
 Comment[az]=Bir Rabitə Qutusu Göründü
 Comment[bg]=Извеждане на временен прозорец (диалог)
 Comment[br]=Ur voest kendiviz a zeu war wel
@@ -2059,6 +2060,7 @@ Name[uk]=Видалити вікно діалогу
 Name[zh_CN.GB2312]=删除对话
 Name[zh_TW.Big5]=刪除對話視窗
 Comment=Transient Window (a dialog) is Removed
+Comment[af]=OORGANG VENSTER (a DIALOOG) IS VERWYDER
 Comment[az]=Bir Rabitə Qutusu Silindi
 Comment[bg]=Временният прозорец (диалог) е изтрит
 Comment[br]=Ur voest kendiviz a ya diwar wel
@@ -2149,6 +2151,7 @@ Name[uk]=Почати рухати вікно
 Name[zh_CN.GB2312]=开始移动窗口
 Name[zh_TW.Big5]=視窗移動開始
 Comment=A Window has Begun Moving
+Comment[af]=A VENSTER HET BEGIN BEWEEG
 Comment[az]=Bir Pəncərə Hərəkət Etməyə Başladı
 Comment[bg]=Прозореца се премества
 Comment[cs]=Okno započalo přesun
@@ -2180,6 +2183,7 @@ Comment[sv]=Ett fönster har börjat flyttas
 Comment[ta]=´Õ º¡ÇÃõ ¿¸Ãò ¦¾¡¼í¸¢ÂÐ
 Comment[tr]=Bir Pencere Hareket Etmeye Başladı
 Comment[uk]=Вікно починає рухатись
+Comment[zh_CN.GB2312]=窗口开始移动
 default_presentation=0
 
 [moveend]
@@ -2318,6 +2322,7 @@ Name[uk]=Почати змінювати розмір вікна
 Name[zh_CN.GB2312]=开始改变窗口大小
 Name[zh_TW.Big5]=視窗改變尺寸開始
 Comment=A Window has Begun Resizing
+Comment[af]=A VENSTER HET BEGIN HERVERGROOTING
 Comment[az]=Bir Pəncərənin Böyüklüyü Dəyişdirilməyə Başlandı
 Comment[bg]=Променя се размера на прозорец
 Comment[cs]=Okno započalo změnu velikosti
@@ -2349,6 +2354,7 @@ Comment[sv]=Ett fönster har börjat ändra storlek
 Comment[ta]=´Õ º¡ÇÃò¾¢ý «Ç× Á¡Èò ¦¾¡¼í¸¢ÂÐ
 Comment[tr]=Bir Pencere Yeniden Boyutlandırılmaya Başladı
 Comment[uk]=Вікно почало змінювати розмір
+Comment[zh_CN.GB2312]=窗口开始改变大小
 default_presentation=0
 
 [resizeend]
@@ -2428,4 +2434,5 @@ Comment[sv]=Storleksändring av ett fönster har avslutats
 Comment[ta]=´Õ º¡ÇÃò¾¢ý «Ç× Á¡üÈõ ÓÊó¾Ð
 Comment[tr]=Bir Pencerenin Yeniden Boyutlandırma İşlemi Bitti
 Comment[uk]=Вікно закінчило змінювати розмір
+Comment[zh_CN.GB2312]=窗口完成改变大小
 default_presentation=0
