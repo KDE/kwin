@@ -114,7 +114,7 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
         if( src != NET::FromApplication && src != FromTool )
             src = NET::FromTool;
         if( src == NET::FromTool )
-            workspace->activateClient( c );
+            workspace->activateClient( c, true ); // force
         else // NET::FromApplication
             {
             Client* c2;
