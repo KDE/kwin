@@ -112,6 +112,9 @@ static void create_pixmaps()
     titleHeight &= ~1; // Make title height even
     if (titleHeight < 14) titleHeight = 14;
     
+    btnWidth1 = titleHeight + 3;
+    btnWidth2 = 3*titleHeight/2 + 6;
+    
     // titlebar
     QPainter p;
     QPainter maskPainter;
@@ -363,20 +366,20 @@ void LaptopClient::init()
     if ( isTool() )
 	th -= 2;
 
-    button[BtnClose] = new LaptopClientButton(27, th, this, "close", 
+    button[BtnClose] = new LaptopClientButton(btnWidth2, th, this, "close", 
                                  close_bits, i18n("Close"));
-    button[BtnSticky] = new LaptopClientButton(17, th, this, "sticky",
+    button[BtnSticky] = new LaptopClientButton(btnWidth1, th, this, "sticky",
                                  NULL, i18n("Sticky"));
     if(isOnAllDesktops())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
         button[BtnSticky]->setBitmap(sticky_bits);
-    button[BtnIconify] = new LaptopClientButton(27, th, this, "iconify",
+    button[BtnIconify] = new LaptopClientButton(btnWidth2, th, this, "iconify",
                                           iconify_bits, i18n("Minimize"));
-    button[BtnMax] = new LaptopClientButton(27, th, this, "maximize",
+    button[BtnMax] = new LaptopClientButton(btnWidth2, th, this, "maximize",
                                       maximize_bits, i18n("Maximize"));
     if(help){
-        button[BtnHelp] = new LaptopClientButton(17, th, this, "help",
+        button[BtnHelp] = new LaptopClientButton(btnWidth1, th, this, "help",
                                      question_bits, i18n("Help"));
         connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( showContextHelp() ) ) );
     }
@@ -495,15 +498,16 @@ void LaptopClient::paintEvent( QPaintEvent* )
     
     // handles
     if (!isResizable()) {
-    } else if (r.width() > 44) {
-        qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, 20,
+    } else if (r.width() > 3*handleSize + 20) {
+        int range = 8 + 3*handleSize/2;
+        qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, range,
                         handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.x() + 21, r.bottom() - bs, 
-		r.width() - 42, handleSize - 2, g, false, 1, 
+        qDrawShadePanel(&p, r.x() + range + 1, r.bottom() - bs, 
+		r.width() - 2*range - 2, handleSize - 2, g, false, 1, 
 		isActive() ? &g.brush(QColorGroup::Background) : 
 			     &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.right() - 20, r.bottom() - bs, 
-		20, bs, g, false, 1, &g.brush(QColorGroup::Mid));
+        qDrawShadePanel(&p, r.right() - range, r.bottom() - bs, 
+		range, bs, g, false, 1, &g.brush(QColorGroup::Mid));
     }
     else
         qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, 
@@ -724,14 +728,15 @@ void LaptopClient::updateActiveBuffer( )
 LaptopClient::MousePosition LaptopClient::mousePosition(const QPoint & p) const
 {
   MousePosition m = Nowhere;
+  int range = 8 + 3*handleSize/2;
 
   if (p.y() < (height() - handleSize + 1))
     m = KDecoration::mousePosition(p);
 
   else {
-    if (p.x() >= (width() - 20))
+    if (p.x() >= (width() - range))
       m = BottomRight2;
-    else if (p.x() <= 20)
+    else if (p.x() <= range)
       m = BottomLeft2;
     else
       m = Bottom;
@@ -752,7 +757,7 @@ void LaptopClient::shadeChange()
 
 QSize LaptopClient::minimumSize() const
 {
-    return QSize(100, titleHeight + handleSize + 2); 
+    return QSize(4 * handleSize, handleSize); 
 }
 
 void LaptopClient::resize(const QSize& s)
