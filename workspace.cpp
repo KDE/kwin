@@ -453,10 +453,7 @@ void Workspace::addClient( Client* c, allowed_t )
     if( !unconstrained_stacking_order.contains( c ))
         unconstrained_stacking_order.append( c );
     if( c->isTopMenu())
-        {
         addTopMenu( c );
-        updateCurrentTopMenu(); // SELI make sure this is called correctly WRT things done in manage()
-        }
     updateClientArea(); // this cannot be in manage(), because the client got added only now
     updateClientLayer( c );
     if( c->isDesktop())
@@ -764,18 +761,17 @@ void Workspace::slotReconfigure()
     else
        destroyBorderWindows();
 
-    if( options->topMenuEnabled())
+    if( options->topMenuEnabled() && !managingTopMenus())
         {
-        if( !managingTopMenus() && topmenu_selection->claim( false ))
+        if( topmenu_selection->claim( false ))
             setupTopMenuHandling();
-        }
-    else
-        {
-        if( managingTopMenus())
-            {
-            topmenu_selection->release();
+        else
             lostTopMenuSelection();
-            }
+        }
+    else if( !options->topMenuEnabled() && managingTopMenus())
+        {
+        topmenu_selection->release();
+        lostTopMenuSelection();
         }
     topmenu_height = 0; // invalidate used menu height
     if( managingTopMenus())
@@ -1869,6 +1865,7 @@ void Workspace::addTopMenu( Client* c )
             updateTopMenuGeometry();
             }
         updateTopMenuGeometry( c );
+        updateCurrentTopMenu();
         }
 //        kdDebug() << "NEW TOPMENU:" << c << endl;
     }
@@ -1880,12 +1877,16 @@ void Workspace::removeTopMenu( Client* c )
     assert( c->isTopMenu());
     assert( topmenus.contains( c ));
     topmenus.remove( c );
+    updateCurrentTopMenu();
     // TODO reduce topMenuHeight() if possible?
     }
 
 void Workspace::lostTopMenuSelection()
     {
 //    kdDebug() << "lost TopMenu selection" << endl;
+    // make sure this signal is always set when not owning the selection
+    disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
+    connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     if( !managing_topmenus )
         return;
     connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
@@ -1925,6 +1926,7 @@ void Workspace::setupTopMenuHandling()
     updateTopMenuGeometry();
     topmenu_space->show();
     updateClientArea();
+    updateCurrentTopMenu();
     }
 
 int Workspace::topMenuHeight() const
