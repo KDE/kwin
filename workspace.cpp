@@ -3512,6 +3512,8 @@ void Workspace::slotResetAllClients()
         }
         if ( showIt )
             newClient->show();
+        if( oldMaxMode != Client::MaximizeRestore )
+            newClient->maximize(Client::MaximizeRestore); // needed
         newClient->maximize(oldMaxMode);
         prev = newClient;
     }
