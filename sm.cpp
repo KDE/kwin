@@ -178,104 +178,7 @@ void Workspace::loadSessionInfo()
         info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
         info->active = ( active_client == i );
-        info->fake = false;
         }
-    }
-
-void Workspace::loadFakeSessionInfo()
-    {
-    fakeSession.clear();
-    KConfig *config = KGlobal::config();
-    config->setGroup("FakeSession" );
-    int count =  config->readNumEntry( "count" );
-    for ( int i = 1; i <= count; i++ ) 
-        {
-        QString n = QString::number(i);
-        SessionInfo* info = new SessionInfo;
-        fakeSession.append( info );
-        info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
-        info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
-        info->resourceClass = config->readEntry( QString("resourceClass")+n ).lower().latin1();
-        info->wmClientMachine = config->readEntry( QString("clientMachine")+n ).latin1();
-        info->geometry = config->readRectEntry( QString("geometry")+n );
-        info->restore = config->readRectEntry( QString("restore")+n );
-        info->fsrestore = config->readRectEntry( QString("fsrestore")+n );
-        info->maximized = config->readNumEntry( QString("maximize")+n, 0 );
-        info->fullscreen = config->readNumEntry( QString("fullscreen")+n, 0 );
-        info->desktop = config->readNumEntry( QString("desktop")+n, 0 );
-        info->minimized = config->readBoolEntry( QString("iconified")+n, FALSE );
-        info->onAllDesktops = config->readBoolEntry( QString("sticky")+n, FALSE );
-        info->shaded = config->readBoolEntry( QString("shaded")+n, FALSE );
-        info->keepAbove = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
-        info->keepBelow = config->readBoolEntry( QString("keepBelow")+n, FALSE  );
-        info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
-        info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
-        info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
-        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
-        info->active = false;
-        info->fake = true;
-        }
-    }
-
-void Workspace::storeFakeSessionInfo( Client* c )
-    {
-    if ( !c->storeSettings() )
-        return;
-    SessionInfo* info = new SessionInfo;
-    fakeSession.append( info );
-    info->windowRole = c->windowRole();
-    info->resourceName = c->resourceName();
-    info->resourceClass = c->resourceClass();
-    info->wmClientMachine = c->wmClientMachine();
-    info->geometry = QRect( c->calculateGravitation(TRUE), c->clientSize() ) ; // FRAME
-    info->restore = c->geometryRestore();
-    info->fsrestore = c->geometryFSRestore();
-    info->maximized = (int)c->maximizeMode();
-    info->fullscreen = (int)c->fullScreenMode();
-    info->desktop = c->desktop();
-    info->minimized = c->isMinimized();
-    info->onAllDesktops = c->isOnAllDesktops();
-    info->shaded = c->isShade();
-    info->keepAbove = c->keepAbove();
-    info->keepBelow = c->keepBelow();
-    info->skipTaskbar = c->skipTaskbar( true );
-    info->skipPager = c->skipPager();
-    info->userNoBorder = c->isUserNoBorder();
-    info->windowType = c->windowType();
-    info->active = false;
-    info->fake = true;
-    }
-
-void Workspace::writeFakeSessionInfo()
-    {
-    KConfig *config = KGlobal::config();
-    config->setGroup("FakeSession" );
-    int count = 0;
-    for ( SessionInfo* info = fakeSession.first(); info; info = fakeSession.next() ) 
-        {
-        count++;
-        QString n = QString::number(count);
-        config->writeEntry( QString("windowRole")+n, info->windowRole.data() );
-        config->writeEntry( QString("resourceName")+n, info->resourceName.data() );
-        config->writeEntry( QString("resourceClass")+n, info->resourceClass.data() );
-        config->writeEntry( QString("clientMachine")+n, info->wmClientMachine.data() );
-        config->writeEntry( QString("geometry")+n,  info->geometry );
-        config->writeEntry( QString("restore")+n, info->restore );
-        config->writeEntry( QString("fsrestore")+n, info->fsrestore );
-        config->writeEntry( QString("maximize")+n, info->maximized );
-        config->writeEntry( QString("fullscreen")+n, info->fullscreen );
-        config->writeEntry( QString("desktop")+n, info->desktop );
-        config->writeEntry( QString("iconified")+n, info->minimized );
-        config->writeEntry( QString("onAllDesktops")+n, info->onAllDesktops );
-        config->writeEntry( QString("shaded")+n, info->shaded );
-        config->writeEntry( QString("staysOnTop")+n, info->keepAbove );
-        config->writeEntry( QString("keepBelow")+n, info->keepBelow );
-        config->writeEntry( QString("skipTaskbar")+n, info->skipTaskbar );
-        config->writeEntry( QString("skipPager")+n, info->skipPager );
-        config->writeEntry( QString("userNoBorder")+n, info->userNoBorder );
-        config->writeEntry( QString("windowType")+n, windowTypeToTxt( info->windowType ));
-        }
-    config->writeEntry( "count", count );
     }
 
 /*!
@@ -283,16 +186,13 @@ void Workspace::writeFakeSessionInfo()
   info is removed from the storage. It's up to the caller to delete it.
 
   This function is called when a new window is mapped and must be managed.
-  We try to find a matching entry in the session.  We also try to find
-  a matching entry in the fakeSession to see if the user had seclected the
-  ``store settings'' menu entry.
+  We try to find a matching entry in the session.
 
   May return 0 if there's no session info for the client.
  */
 SessionInfo* Workspace::takeSessionInfo( Client* c )
     {
     SessionInfo *realInfo = 0;
-    SessionInfo *fakeInfo = 0;
     QCString sessionId = c->sessionId();
     QCString windowRole = c->windowRole();
     QCString wmCommand = c->wmCommand();
@@ -333,24 +233,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
                     realInfo = session.take();
         }
 
-    // Now search ``fakeSession''
-    for (SessionInfo* info = fakeSession.first(); info && !fakeInfo; info = fakeSession.next() )
-        if ( info->resourceName == resourceName &&
-             info->resourceClass == resourceClass &&
-             ( windowRole.isEmpty() || windowRole == info->windowRole ) &&
-             sessionInfoWindowTypeMatch( c, info ))
-            fakeInfo = fakeSession.take();
-
-    // Reconciliate
-    if (fakeInfo)
-        c->setStoreSettings( TRUE );
-    if (fakeInfo && realInfo)
-        delete fakeInfo;
-    if (realInfo)
-        return realInfo;
-    if (fakeInfo)
-        return fakeInfo;
-    return 0;
+    return realInfo;
     }
 
 bool Workspace::sessionInfoWindowTypeMatch( Client* c, SessionInfo* info )

@@ -39,6 +39,7 @@ class Client;
 class WinInfo;
 class SessionInfo;
 class Bridge;
+class WindowRules;
 
 class Client : public QObject, public KDecorationDefines
     {
@@ -66,6 +67,7 @@ class Client : public QObject, public KDecorationDefines
         void checkGroup( Group* gr = NULL, bool force = false );
     // prefer isXXX() instead
         NET::WindowType windowType( bool strict = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
+        const WindowRules* rules() const;
 
         QRect geometry() const;
         QSize size() const;
@@ -160,9 +162,6 @@ class Client : public QObject, public KDecorationDefines
         void setModal( bool modal );
         bool isModal() const;
 
-        bool storeSettings() const;
-        void setStoreSettings( bool );
-
     // auxiliary functions, depend on the windowType
         bool wantsTabFocus() const;
         bool wantsInput() const;
@@ -237,7 +236,7 @@ class Client : public QObject, public KDecorationDefines
     // updates visibility depending on whether it's on the current desktop
         void virtualDesktopChange();
 
-        QString caption() const;
+        QString caption( bool full = true ) const;
 
         void keyPressEvent( uint key_code ); // FRAME ??
         void updateMouseGrab();
@@ -275,7 +274,6 @@ class Client : public QObject, public KDecorationDefines
         void closeWindow();
         void killWindow();
         void maximize( MaximizeMode );
-        void toggleOnAllDesktops();
         void toggleShade();
         void showContextHelp();
         void cancelAutoRaise();
@@ -343,6 +341,8 @@ private slots:
         void fetchName();
         void fetchIconicName();
         bool hasTransientInternal( const Client* c, bool indirect, ConstClientList& set ) const;
+        void initWindowRules();
+        void updateWindowRules();
 
         void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
@@ -380,7 +380,7 @@ private slots:
         void rawHide(); // just hides it
 
         Time readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
-            const SessionInfo* session ) const;
+            bool session ) const;
         Time readUserCreationTime() const;
         static bool sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool active_hack );
         void startupIdChanged();
@@ -438,7 +438,6 @@ private slots:
         uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?
         uint Pping : 1; // does it support _NET_WM_PING?
         uint input :1; // does the window want input in its wm_hints
-        uint store_settings : 1;
         uint skip_pager : 1;
         uint motif_may_resize : 1;
         uint motif_may_move :1;
@@ -453,6 +452,7 @@ private slots:
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint check_active_modal : 1; // see Client::addTransient()
+        WindowRules* client_rules;
         void getWMHints();
         void readIcons();
         void getWindowProtocols();
@@ -685,17 +685,6 @@ inline bool Client::keepBelow() const
     return keep_below;
     }
 
-inline bool Client::storeSettings() const
-    {
-    return store_settings;
-    }
-
-inline void Client::setStoreSettings( bool b )
-    {
-    store_settings = b;
-    }
-
-
 inline bool Client::shape() const
     {
     return is_shape;
@@ -835,6 +824,11 @@ inline bool Client::hasUserTimeSupport() const
 inline bool Client::ignoreFocusStealing() const
     {
     return ignore_focus_stealing;
+    }
+
+inline const WindowRules* Client::rules() const
+    {
+    return client_rules;
     }
 
 KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing( cl ));

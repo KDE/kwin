@@ -86,7 +86,8 @@ public:
         KeepAboveOp,
         KeepBelowOp,
         OperationsOp,
-        ToggleStoreSettingsOp,
+        WindowRulesOp,
+        ToggleStoreSettingsOp = WindowRulesOp, ///< @obsolete
         HMaximizeOp,
         VMaximizeOp,
         LowerOp,

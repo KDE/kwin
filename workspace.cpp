@@ -36,6 +36,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "placement.h"
 #include "notifications.h"
 #include "group.h"
+#include "rules.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -118,7 +119,7 @@ Workspace::Workspace( bool restore )
     if ( restore )
       loadSessionInfo();
 
-    loadFakeSessionInfo();
+    loadWindowRules();
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
 
@@ -393,9 +394,8 @@ Workspace::~Workspace()
          ++it )
         {
 	// only release the window
-        if( !(*it)->isDesktop()) // TODO ?
-            storeFakeSessionInfo( *it );
         (*it)->releaseWindow( true );
+        // no removeClient() is called !
         }
     delete desktop_widget;
     delete tab_box;
@@ -404,7 +404,7 @@ Workspace::~Workspace()
     if ( root == qt_xrootwin() )
         XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwin_running);
 
-    writeFakeSessionInfo();
+    writeWindowRules();
     KGlobal::config()->sync();
 
     delete rootInfo;
@@ -417,6 +417,11 @@ Workspace::~Workspace()
     delete topmenu_watcher;
     delete topmenu_selection;
     delete topmenu_space;
+    while( !windowRules.isEmpty())
+        {
+        delete windowRules.front();
+        windowRules.pop_front();
+        }
     XDestroyWindow( qt_xdisplay(), null_focus_window );
 // TODO    ungrabXServer();
     _self = 0;
@@ -486,8 +491,6 @@ void Workspace::removeClient( Client* c, allowed_t )
         Notify::raise( Notify::TransDelete );
     if( c->isNormalWindow())
         Notify::raise( Notify::Delete );
-
-    storeFakeSessionInfo( c );
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
     clients.remove( c );
@@ -1169,11 +1172,10 @@ void Workspace::setNumberOfDesktops( int n )
  */
 void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     {
-    if ( c->desktop() == desk )
-        return;
-
     bool was_on_desktop = c->isOnDesktop( desk ) || c->isOnAllDesktops();
     c->setDesktop( desk );
+    if ( c->desktop() == desk ) // no change or desktop forced
+        return;
     desk = c->desktop(); // Client did range checking
 
     if ( c->isOnDesktop( currentDesktop() ) )

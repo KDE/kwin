@@ -320,7 +320,11 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
         if( modal != NULL && modal != c )	
             { 
             if( !modal->isOnDesktop( c->desktop()))
+                {
                 modal->setDesktop( c->desktop());
+                if( modal->desktop() != c->desktop()) // forced desktop
+                    activateClient( modal );
+                }
             // if the click was inside the window (i.e. handled is set),
             // but it has a modal, there's no need to use handled mode, because
             // the modal doesn't get the click anyway
@@ -663,7 +667,7 @@ KWIN_COMPARE_PREDICATE( SameApplicationActiveHackPredicate, const Client*,
     && Client::belongToSameApplication( cl, value, true ) && cl != value);
 
 Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
-    const SessionInfo* session ) const
+    bool session ) const
     {
     Time time = info->userTime();
     kdDebug( 1212 ) << "User timestamp, initial:" << time << endl;
@@ -727,7 +731,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
         // Unless it was the active window at the time
         // of session saving and there was no user interaction yet,
         // this check will be done in Workspace::allowClientActiovationTimestamp().
-        if( session && !session->fake )
+        if( session )
             return -1U;
         if( ignoreFocusStealing() && act != NULL )
             time = act->userTime();

@@ -64,13 +64,15 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <assert.h>
 
+#include <kdebug.h>
+
 #include "utils.h"
 #include "client.h"
 #include "workspace.h"
 #include "tabbox.h"
 #include "popupinfo.h"
 #include "group.h"
-#include <kdebug.h>
+#include "rules.h"
 
 extern Time qt_x_time;
 
@@ -642,22 +644,36 @@ void Client::restackWindow( Window /*above TODO */, int detail, NET::RequestSour
     
 void Client::setKeepAbove( bool b )
     {
-    if ( b == keepAbove() )
+    b = rules()->checkKeepAbove( b );
+    if( b )
+        setKeepBelow( false );
+    if ( b == keepAbove()
+        || ( b && keepBelow())) // forced below
+        { // force hint change if different
+        if( bool( info->state() & NET::KeepAbove ) != keepAbove())
+            info->setState( keepAbove() ? NET::KeepAbove : 0, NET::KeepAbove );
         return;
-    setKeepBelow( false );
+        }
     keep_above = b;
-    info->setState( b ? NET::KeepAbove : 0, NET::KeepAbove );
+    info->setState( keepAbove() ? NET::KeepAbove : 0, NET::KeepAbove );
     // TODO emit a signal about the change to the style plugin
     workspace()->updateClientLayer( this );
     }
 
 void Client::setKeepBelow( bool b )
     {
-    if ( b == keepBelow() )
+    b = rules()->checkKeepBelow( b );
+    if( b )
+        setKeepAbove( false );
+    if ( b == keepBelow()
+        || ( b && keepAbove())) // forced above
+        { // force hint change if different
+        if( bool( info->state() & NET::KeepBelow ) != keepBelow())
+            info->setState( keepBelow() ? NET::KeepBelow : 0, NET::KeepBelow );
         return;
-    setKeepAbove( false );
+        }
     keep_below = b;
-    info->setState( b ? NET::KeepBelow : 0, NET::KeepBelow );
+    info->setState( keepBelow() ? NET::KeepBelow : 0, NET::KeepBelow );
     workspace()->updateClientLayer( this );
     }
 

@@ -22,6 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/shape.h>
 
 #include "notifications.h"
+#include "rules.h"
 
 extern Time qt_x_time;
 extern Atom qt_window_role;
@@ -105,8 +106,11 @@ bool Client::manage( Window w, bool isMapped )
         }
     ignore_focus_stealing = options->checkIgnoreFocusStealing( this );
 
-    detectNoBorder();
     fetchName();
+    window_role = getStringProperty( w, qt_window_role );
+    initWindowRules();
+
+    detectNoBorder();
     fetchIconicName();
     getWMHints(); // needs to be done before readTransient() because of reading the group
     getWmClientLeader(); // needs to be done before readTransient() because of same app comparing
@@ -114,20 +118,12 @@ bool Client::manage( Window w, bool isMapped )
     getIcons();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
-    window_role = getStringProperty( w, qt_window_role );
 
     // TODO try to obey all state information from info->state()
 
     original_skip_taskbar = skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
     skip_pager = ( info->state() & NET::SkipPager) != 0;
     modal = ( info->state() & NET::Modal ) != 0;
-
-    // window wants to stay on top?
-    keep_above = ( info->state() & NET::KeepAbove ) != 0;
-    // window wants to stay on bottom?
-    keep_below = ( info->state() & NET::KeepBelow ) != 0;
-    if( keep_above && keep_below )
-        keep_above = keep_below = false;
 
     KStartupInfoId asn_id;
     KStartupInfoData asn_data;
@@ -136,6 +132,7 @@ bool Client::manage( Window w, bool isMapped )
     workspace()->updateClientLayer( this );
 
     SessionInfo* session = workspace()->takeSessionInfo( this );
+    
     if ( session )
         {
         if ( session->minimized )
@@ -186,6 +183,7 @@ bool Client::manage( Window w, bool isMapped )
         desk = workspace()->currentDesktop();
     if( desk != NET::OnAllDesktops ) // do range check
         desk = KMAX( 1, KMIN( workspace()->numberOfDesktops(), desk ));
+    desk = rules()->checkDesktop( desk, !isMapped );
     info->setDesktop( desk );
     workspace()->updateOnAllDesktopsOfTransients( this ); // SELI
 //    onAllDesktopsChange(); decoration doesn't exist here yet
@@ -308,6 +306,8 @@ bool Client::manage( Window w, bool isMapped )
     // other settings from the previous session
     if ( session ) 
         {
+        // session restored windows are not considered to be new windows WRT rules,
+        // i.e. obey only forcing rules
         setKeepAbove( session->keepAbove );
         setKeepBelow( session->keepBelow );
         setSkipTaskbar( session->skipTaskbar, true );
@@ -368,10 +368,8 @@ bool Client::manage( Window w, bool isMapped )
         // read other initial states
         if( info->state() & NET::Shaded )
             setShade( ShadeNormal );
-        if( info->state() & NET::KeepAbove )
-            setKeepAbove( true );
-        if( info->state() & NET::KeepBelow )
-            setKeepBelow( true );
+        setKeepAbove( rules()->checkKeepAbove( info->state() & NET::KeepAbove, !isMapped ));
+        setKeepBelow( rules()->checkKeepBelow( info->state() & NET::KeepBelow, !isMapped ));
         if( info->state() & NET::SkipTaskbar )
             setSkipTaskbar( true, true );
         if( info->state() & NET::SkipPager )
@@ -433,7 +431,7 @@ bool Client::manage( Window w, bool isMapped )
                     {
                     workspace()->restackClientUnderActive( this );
                     rawShow();
-                    if( ( !session || session->fake ) && ( !isSpecialWindow() || isOverride()))
+                    if( !session && ( !isSpecialWindow() || isOverride()))
                         demandAttention();
                     }
                 }
@@ -442,7 +440,7 @@ bool Client::manage( Window w, bool isMapped )
             {
             virtualDesktopChange();
             workspace()->raiseClient( this );
-            if( ( !session || session->fake ) && !isMapped )
+            if( !session && !isMapped )
                 demandAttention();
             }
         }

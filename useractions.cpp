@@ -57,7 +57,7 @@ QPopupMenu* Workspace::clientPopup()
         advanced_popup->insertItem( SmallIconSet( "down" ), i18n("Keep &Below Others"), Options::KeepBelowOp );
         advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ), i18n("&Fullscreen"), Options::FullScreenOp );
         advanced_popup->insertItem( i18n("&No Border"), Options::NoBorderOp );
-        advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
+        advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("&Special Window Rules"), Options::WindowRulesOp );
 
         popup->insertItem(i18n("Ad&vanced"), advanced_popup );
         desk_popup_index = popup->count();
@@ -115,7 +115,6 @@ void Workspace::clientPopupAboutToShow()
     advanced_popup->setItemChecked( Options::NoBorderOp, popup_client->noBorder() );
     advanced_popup->setItemEnabled( Options::NoBorderOp, popup_client->userCanSetNoBorder() );
     popup->setItemEnabled( Options::MinimizeOp, popup_client->isMinimizable() );
-    advanced_popup->setItemChecked( Options::ToggleStoreSettingsOp, popup_client->storeSettings() );
     popup->setItemEnabled( Options::CloseOp, popup_client->isCloseable() );
     }
 
@@ -129,7 +128,7 @@ void Workspace::initDesktopPopup()
     desk_popup->setCheckable( TRUE );
     desk_popup->setFont(KGlobalSettings::menuFont());
     connect( desk_popup, SIGNAL( activated(int) ),
-             this, SLOT( sendToDesktop(int) ) );
+             this, SLOT( slotSendToDesktop(int) ) );
     connect( desk_popup, SIGNAL( aboutToShow() ),
              this, SLOT( desktopPopupAboutToShow() ) );
 
@@ -278,8 +277,8 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
         case Options::KeepBelowOp:
             c->setKeepBelow( !c->keepBelow() );
             break;
-        case Options::ToggleStoreSettingsOp:
-            c->setStoreSettings( !c->storeSettings() );
+        case Options::WindowRulesOp:
+            editWindowRules( c );
             break;
         case Options::LowerOp:
             lowerClient(c);
@@ -666,7 +665,7 @@ void Workspace::slotWindowRaiseOrLower()
 void Workspace::slotWindowOnAllDesktops()
     {
     if( active_client )
-        active_client->toggleOnAllDesktops();
+        active_client->setOnAllDesktops( !active_client->isOnAllDesktops());
     }
 
 void Workspace::slotWindowFullScreen()
@@ -737,7 +736,7 @@ void Workspace::slotKillWindow()
 
   Internal slot for the window operation menu
  */
-void Workspace::sendToDesktop( int desk )
+void Workspace::slotSendToDesktop( int desk )
     {
     if ( !popup_client )
         return;

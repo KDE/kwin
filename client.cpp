@@ -27,6 +27,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "atoms.h"
 #include "notifications.h"
+#include "rules.h"
 
 #include <X11/extensions/shape.h>
 
@@ -78,6 +79,7 @@ Client::Client( Workspace *ws )
         transient_for( NULL ),
         transient_for_id( None ),
         original_transient_for_id( None ),
+        client_rules( NULL ),
         in_group( NULL ),
         window_group( None ),
         in_layer( UnknownLayer ),
@@ -133,9 +135,7 @@ Client::Client( Workspace *ws )
     Pcontexthelp = 0;
     Pping = 0;
     input = FALSE;
-    store_settings = FALSE;
     skip_pager = FALSE;
-
 
     max_mode = MaximizeRestore;
 
@@ -175,6 +175,7 @@ void Client::releaseWindow( bool on_shutdown )
     {
     if (moveResizeMode)
        leaveMoveResize();
+    updateWindowRules();
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
@@ -222,6 +223,7 @@ void Client::destroyClient()
     {
     if (moveResizeMode)
        leaveMoveResize();
+    updateWindowRules();
     ++block_geometry;
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
@@ -1077,15 +1079,11 @@ void Client::setModal( bool m )
     // _NET_WM_STATE_MODAL should possibly rather be _NET_WM_WINDOW_TYPE_MODAL_DIALOG
     }
 
-void Client::toggleOnAllDesktops()
-    {
-    setOnAllDesktops( !isOnAllDesktops());
-    }
-
 void Client::setDesktop( int desktop )
     {
     if( desktop != NET::OnAllDesktops ) // do range check
         desktop = KMAX( 1, KMIN( workspace()->numberOfDesktops(), desktop ));
+    desktop = rules()->checkDesktop( desktop );
     if( desk == desktop )
         return;
     int was_desk = desk;
@@ -1264,9 +1262,9 @@ void Client::fetchIconicName()
 
 /*!\reimp
  */
-QString Client::caption() const
+QString Client::caption( bool full ) const
     {
-    return cap_normal + cap_suffix;
+    return full ? cap_normal + cap_suffix : cap_normal;
     }
 
 void Client::getWMHints()

@@ -40,6 +40,7 @@ class PopupInfo;
 class RootInfo;
 class PluginMgr;
 class Placement;
+class WindowRules;
 
 class SystemTrayWindow
     {
@@ -196,7 +197,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void storeSession( KConfig* config, SMSavePhase phase );
 
         SessionInfo* takeSessionInfo( Client* );
-
+        WindowRules* findWindowRules( const Client* ) const;
 
     // dcop interface
         void cascadeDesktop();
@@ -316,7 +317,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
     private slots:
         void desktopPopupAboutToShow();
         void clientPopupAboutToShow();
-        void sendToDesktop( int );
+        void slotSendToDesktop( int );
         void clientPopupActivated( int );
         void configureWM();
         void desktopResized();
@@ -416,15 +417,15 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         Client* popup_client;
 
-        void loadSessionInfo();
-
         QWidget* desktop_widget;
 
+        void loadSessionInfo();
+        void loadWindowRules();
+        void writeWindowRules();
+        void editWindowRules( Client* );
+
         QPtrList<SessionInfo> session;
-        QPtrList<SessionInfo> fakeSession;
-        void loadFakeSessionInfo();
-        void storeFakeSessionInfo( Client* c );
-        void writeFakeSessionInfo();
+        QValueList<WindowRules*> windowRules;
         static const char* windowTypeToTxt( NET::WindowType type );
         static NET::WindowType txtToWindowType( const char* txt );
         static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );

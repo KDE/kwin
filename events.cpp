@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "atoms.h"
 #include "tabbox.h"
 #include "group.h"
+#include "rules.h"
 
 #include <qwhatsthis.h>
 #include <kkeynative.h>
