@@ -49,7 +49,7 @@ static KPixmap *aBtnDown=0;
 static KPixmap *iBtn=0;
 static KPixmap *iBtnDown=0;
 static bool pixmaps_created = false;
-static QColor btnForeground;
+static QColor *btnForeground;
 
 static void create_pixmaps()
 {
@@ -155,12 +155,12 @@ static void create_pixmaps()
     p.end();
 
     if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
-        btnForeground = Qt::black;
+        btnForeground = new QColor(Qt::black);
     else
-        btnForeground = Qt::white;
+        btnForeground = new QColor(Qt::white);
 }
 
-void NextClient::slotReset()
+void delete_pixmaps()
 {
     delete aTitlePix;
     delete iTitlePix;
@@ -172,8 +172,14 @@ void NextClient::slotReset()
     delete iBtn;
     delete aBtnDown;
     delete iBtnDown;
+    delete btnForeground;
 
     pixmaps_created = false;
+}
+
+void NextClient::slotReset()
+{
+    delete_pixmaps();
     create_pixmaps();
     button[0]->reset();
     button[1]->reset();
@@ -211,7 +217,7 @@ void NextButton::drawButton(QPainter *p)
     else
         p->drawPixmap(0, 0, isDown() ? *iBtnDown : *iBtn);
 
-    p->setPen(btnForeground);
+    p->setPen(*btnForeground);
     p->drawPixmap(isDown()? 5 : 4, isDown() ? 5 : 4, deco);
 }
 
