@@ -48,8 +48,8 @@ TitlebarDoubleClickCommand=Move|Resize|
 
 
 Kwin raises the following sound events via KNotifyClient:
-	 "Window Close"
-	 "Window Iconify"
+                  "Window Close"
+                  "Window Iconify"
                   "Window DeIconify"
                   "Window Maximize"
                   "Window UnMaximize"
