@@ -2838,11 +2838,19 @@ void Workspace::saveDesktopSettings()
     c.writeEntry("Number", number_of_desktops );
     for(int i = 1; i <= number_of_desktops; i++) {
 	QString s = desktopName( i );
+	QString defaultvalue = i18n("Desktop %1").arg(i);
 	if ( s.isEmpty() ) {
-	    s = i18n("Desktop %1").arg(i);
+	    s = defaultvalue;
 	    rootInfo->setDesktopName( i, s.utf8().data() );
 	}
-	c.writeEntry( QString("Name_%1").arg(i), s );
+	
+	if (s != defaultvalue) {
+   	    c.writeEntry( QString("Name_%1").arg(i), s );
+	} else {
+ 	    QString currentvalue = c.readEntry(QString("Name_%1").arg(i));
+  	    if (currentvalue != defaultvalue) 
+	        c.writeEntry( QString("Name_%1").arg(i), "" );
+	}
     }
 }
 
