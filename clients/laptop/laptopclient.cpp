@@ -1,6 +1,7 @@
 /*
  * Laptop KWin Decoration
  *
+ * Copyright (c) 2005 Sandro Giessl <sandro@giessl.com>
  * Port of this decoration to KDE 3.2, accessibility enhancement are
  * Copyright (c) 2003 Luciano Montanaro <mikelima@cirulla.net>
  */
@@ -17,10 +18,6 @@
 #include <qbitmap.h>
 #include <qtooltip.h>
 #include <qlabel.h>
-
-// Default button layout
-const char default_left[]  = "X";
-const char default_right[] = "HSIA";
 
 namespace Laptop {
 
@@ -253,38 +250,52 @@ static void delete_pixmaps()
 
 // =====================================
 
-LaptopButton::LaptopButton(int w, int h, LaptopClient *parent,
-        const char *name, const unsigned char *bitmap,
-        const QString& tip, const int realizeBtns)
-    : QButton(parent->widget(), name), client(parent)
+LaptopButton::LaptopButton(ButtonType type, LaptopClient *parent, const char *name)
+    : KCommonDecorationButton(type, parent, name)
 {
-    realizeButtons = realizeBtns;
-
-    setCursor( arrowCursor );
-    defaultSize = QSize(w, h);
-    setFixedHeight(h);
-    resize(defaultSize);
-    if(bitmap)
-        setBitmap(bitmap);
-
-    //setBackgroundMode(QWidget::NoBackground);
-
-    QToolTip::add(this, tip);
+    setBackgroundMode(QWidget::NoBackground);
 }
 
-QSize LaptopButton::sizeHint() const
+void LaptopButton::reset(unsigned long changed)
 {
-    return(defaultSize);
-}
+    if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
+        switch (type() ) {
+            case CloseButton:
+                setBitmap(close_bits);
+                break;
+            case HelpButton:
+                setBitmap(question_bits);
+                break;
+            case MinButton:
+                setBitmap(iconify_bits);
+                break;
+            case MaxButton:
+                if (isOn() ) {
+                    setBitmap(isLeft() ? l_minmax_bits : r_minmax_bits);
+                } else {
+                    setBitmap(maximize_bits);
+                }
+                break;
+            case OnAllDesktopsButton:
+                setBitmap( isOn() ? unsticky_bits : sticky_bits );
+                break;
+            default:
+                setBitmap(0);
+                break;
+        }
 
-void LaptopButton::reset()
-{
-    repaint(false);
+        this->update();
+    }
 }
 
 void LaptopButton::setBitmap(const unsigned char *bitmap)
 {
-    deco = QBitmap(8, 8, bitmap, true);
+    if (bitmap)
+        deco = QBitmap(8, 8, bitmap, true);
+    else {
+        deco = QBitmap(8,8);
+        deco.fill(Qt::color0);
+    }
     deco.setMask(deco);
     repaint();
 }
@@ -293,7 +304,7 @@ void LaptopButton::drawButton(QPainter *p)
 {
     bool smallBtn = width() == btnWidth1;
     if(btnPix1){
-        if(client->isActive()){
+        if(decoration()->isActive()){
             if(isDown())
                 p->drawPixmap(0, 0, smallBtn ? *btnDownPix1 : *btnDownPix2);
             else
@@ -307,8 +318,7 @@ void LaptopButton::drawButton(QPainter *p)
         }
     }
     else{
-        QColorGroup g = options()->colorGroup(KDecoration::ColorButtonBg,
-                                            client->isActive());
+        QColorGroup g = options()->colorGroup(KDecoration::ColorButtonBg, decoration()->isActive());
         int w = width();
         int h = height();
         p->fillRect(1, 1, w-2, h-2, isDown() ? g.mid() : g.button());
@@ -328,186 +338,131 @@ void LaptopButton::drawButton(QPainter *p)
 
 // =====================================
 
-void LaptopClient::reset(unsigned long)
+void LaptopClient::reset(unsigned long changed)
 {
-    for (int i=0; i<BtnTypeCount; i++) {
-        if (button[i])
-            button[i]->reset();
-    }
-    widget()->repaint();
+    KCommonDecoration::reset(changed);
 }
 
 LaptopClient::LaptopClient(KDecorationBridge *b, KDecorationFactory *f)
-    : KDecoration(b, f)
+    : KCommonDecoration(b, f)
 {
 }
 
 LaptopClient::~LaptopClient()
 {
-    for (int n=0; n<BtnTypeCount; n++) {
-        if (button[n]) delete button[n];
+}
+
+QString LaptopClient::visibleName() const
+{
+    return i18n("Laptop");
+}
+
+QString LaptopClient::defaultButtonsLeft() const
+{
+    return "X";
+}
+
+QString LaptopClient::defaultButtonsRight() const
+{
+    return "HSIA";
+}
+
+bool LaptopClient::decorationBehaviour(DecorationBehaviour behaviour) const
+{
+    switch (behaviour) {
+        case DB_MenuClose:
+            return false;
+
+        case DB_WindowMask:
+            return true;
+
+        case DB_ButtonHide:
+            return true;
+
+        default:
+            return KCommonDecoration::decorationBehaviour(behaviour);
+    }
+}
+
+int LaptopClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
+{
+    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+
+    switch (lm) {
+        case LM_TitleEdgeLeft:
+        case LM_TitleEdgeRight:
+        case LM_BorderLeft:
+        case LM_BorderRight:
+            return 4;
+
+        case LM_BorderBottom:
+            return mustDrawHandle() ? handleSize : 4;
+
+        case LM_TitleEdgeTop:
+            return 3;
+
+        case LM_TitleEdgeBottom:
+            return 1;
+
+        case LM_TitleBorderLeft:
+        case LM_TitleBorderRight:
+            return 0;
+
+        case LM_ButtonWidth:
+        {
+            if (btn && (btn->type()==HelpButton||btn->type()==OnAllDesktopsButton) ) {
+                return btnWidth1;
+            } else {
+                return btnWidth2;
+            }
+        }
+
+        case LM_ButtonHeight:
+        case LM_TitleHeight:
+            if (isToolWindow() )
+                return titleHeight-2;
+            else
+                return titleHeight;
+
+        case LM_ButtonSpacing:
+            return 0;
+
+        case LM_ExplicitButtonSpacer:
+            return 0;
+
+        default:
+            return 0;
+    }
+}
+
+KCommonDecorationButton *LaptopClient::createButton(ButtonType type)
+{
+    switch (type) {
+        case OnAllDesktopsButton:
+            return new LaptopButton(OnAllDesktopsButton, this, "on_all_desktops");
+
+        case HelpButton:
+            return new LaptopButton(HelpButton, this, "help");
+
+        case MinButton:
+            return new LaptopButton(MinButton, this, "minimize");
+
+        case MaxButton:
+            return new LaptopButton(MaxButton, this, "maximize");
+
+        case CloseButton:
+            return new LaptopButton(CloseButton, this, "close");
+
+        default:
+            return 0;
     }
 }
 
 void LaptopClient::init()
 {
-    createMainWidget(WResizeNoErase | WStaticContents);
-    widget()->installEventFilter(this);
-
-    lastButtonWidth = 0;
-    lastBufferWidth = 0;
-
-    // XXX Check how to do this...
-    // connect(options(), SIGNAL(resetClients()), this, SLOT(slotReset()));
-    
-    g = new QGridLayout(widget(), 0, 0, 0);
-    g->setResizeMode(QLayout::FreeResize);
-    g->addRowSpacing(0, 3);
-    g->addRowSpacing(2, 1);
-    if (isPreview())
-    g->addWidget(new QLabel(i18n("<center><b>Laptop preview</b></center>"),
-		    widget()), 3, 1);
-    else
-	g->addItem( new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
-
-    g->setRowStretch(3, 10);
-    spacer = new QSpacerItem(10, mustDrawHandle() ? handleSize : 4,
-			QSizePolicy::Expanding, QSizePolicy::Minimum);
-    g->addItem(spacer, 4, 1);
-    g->addColSpacing(0, 4);
-    g->addColSpacing(2, 4);
-
-    int th = titleHeight;
-    if ( isTool() )
-	th -= 2;
-
-    hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
-    hb->setResizeMode(QLayout::FreeResize);
-    g->addLayout( hb, 1, 1 );
-    
-    titlebar = new QSpacerItem(10, th, QSizePolicy::Expanding,
-                               QSizePolicy::Minimum);    
-    
-    // setup titlebar buttons
-    for (int n=0; n<BtnTypeCount; n++) button[n] = 0;
-    addButtons(hb, th, options()->customButtonPositions() ? options()->titleButtonsLeft() : QString(default_left));
-    hb->addSpacing(1);
-    hb->addItem(titlebar);
-    hb->addSpacing(1);
-    addButtons(hb, th, options()->customButtonPositions() ? options()->titleButtonsRight() : QString(default_right));
-
-    hiddenItems = false;
     bufferDirty = true;
 
-}
-  
-void LaptopClient::addButtons(QBoxLayout *hb, int th, const QString& s)
-{
-    const unsigned char *bitmap;
-    bool m = maximizeMode() == MaximizeFull;
-    int l_max = options()->titleButtonsLeft().find('A');
-    QString tip;
-    
-    if (s.length() > 0) {
-        for (unsigned n=0; n < s.length(); n++) {
-            switch (s[n]) {
-              case 'S': // Sticky button
-                  if ((!button[BtnSticky]) && (!isTransient() || !isTool())) {
-                     button[BtnSticky] = new LaptopButton(btnWidth1, th, this, "sticky",
-                             NULL, isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops") );
-                     if(isOnAllDesktops())
-                         button[BtnSticky]->setBitmap(unsticky_bits);
-                     else
-                         button[BtnSticky]->setBitmap(sticky_bits);
-                     connect( button[BtnSticky], SIGNAL( clicked() ), this, SLOT( toggleOnAllDesktops() ) );
-                     hb->addWidget( button[BtnSticky]);
-                  }
-                  break;
-
-              case 'H': // Help button
-                  if ((!button[BtnHelp]) && providesContextHelp()) {
-                      button[BtnHelp] = new LaptopButton(btnWidth1, th, this, "help",
-                             question_bits, i18n("Help"));
-                      connect(button[BtnHelp], SIGNAL( clicked() ), this, SLOT( showContextHelp() ) );
-                      hb->addWidget(button[BtnHelp]);
-                  }
-                  break;
-
-              case 'I': // Minimize button
-                  if ((!button[BtnIconify]) && isMinimizable())  {
-                      button[BtnIconify] = new LaptopButton(btnWidth2, th, this, "iconify",
-                                                            iconify_bits, i18n("Minimize"));
-                      connect( button[BtnIconify], SIGNAL( clicked() ), this, SLOT( minimize() ) );
-                      hb->addWidget( button[BtnIconify]);
-                  }
-                  break;
-
-              case 'A': // Maximize button
-                  if ((!button[BtnMax]) && isMaximizable()) {
-                      if (!m) {
-                         bitmap = maximize_bits;
-                         tip = i18n("Maximize");
-                      } else {
-                          if (options()->customButtonPositions() && (l_max>-1))
-                              bitmap = l_minmax_bits;
-                          else 
-                              bitmap = r_minmax_bits;
-                          tip = i18n("Restore");
-                      }
-                      button[BtnMax] = new LaptopButton(btnWidth2, th, this, "maximize",
-                                                        bitmap, tip, LeftButton|MidButton|RightButton);
-                      connect( button[BtnMax], SIGNAL( clicked() ), this, SLOT( slotMaximize() ) );
-                      hb->addWidget( button[BtnMax]);
-                  }
-                  break;
-
-              case 'X': // Close button
-                  if ((!button[BtnClose]) && isCloseable()) {
-                      button[BtnClose] = new LaptopButton(btnWidth2, th, this, "close",
-                                                          close_bits, i18n("Close"));
-                      connect( button[BtnClose], SIGNAL( clicked() ), this, SLOT( closeWindow() ) );
-                      hb->addWidget( button[BtnClose]);
-                  }
-                  break;
-            }
-        }
-    }
-}
-
-void LaptopClient::slotMaximize()
-{
-    maximize(button[BtnMax]->last_button);
-}
-
-void LaptopClient::resizeEvent(QResizeEvent* e)
-{
-    doShape();
-    calcHiddenButtons();
-    if ( widget()->isVisibleToTLW() ) {
-	int dx = 0;
-	int dy = 0;
-	if ( e->oldSize().width() != width() )
-	    dx = 32 + QABS( e->oldSize().width() -  width() );
-	if ( e->oldSize().height() != height() )
-	    dy = mustDrawHandle() ? handleSize : 4 +
-		QABS( e->oldSize().height() -  height() );
-	if ( dy )
-	    widget()->update( 0, height() - dy + 1, width(), dy );
-	if ( dx ) {
-	    widget()->update( width() - dx + 1, 0, dx, height() );
-	    widget()->update( QRect( QPoint(4,4),
-			titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
-	    widget()->update( QRect( titlebar->geometry().topRight(),
-			QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
-	    widget()->update(titlebar->geometry());
-	}
-    }
-}
-
-void LaptopClient::captionChange()
-{
-    bufferDirty = true;
-    widget()->repaint(titlebar->geometry(), false);
+    KCommonDecoration::init();
 }
 
 void LaptopClient::paintEvent( QPaintEvent* )
@@ -518,6 +473,17 @@ void LaptopClient::paintEvent( QPaintEvent* )
     QRect r(widget()->rect());
     p.setPen(Qt::black);
     p.drawRect(r);
+
+    // fill mid frame...
+    p.setPen(g.background() );
+    p.drawLine(r.x()+2, r.y()+2, r.right()-2, r.y()+2);
+    p.drawLine(r.left()+2, r.y()+3, r.left()+2, r.bottom()-layoutMetric(LM_BorderBottom)+1 );
+    p.drawLine(r.right()-2, r.y()+3, r.right()-2, r.bottom()-layoutMetric(LM_BorderBottom)+1 );
+    p.drawLine(r.left()+3, r.y()+3, r.left()+3, r.y()+layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeTop) );
+    p.drawLine(r.right()-3, r.y()+3, r.right()-3, r.y()+layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeTop) );
+    if (!mustDrawHandle() )
+        p.drawLine(r.left()+1, r.bottom()-2, r.right()-1, r.bottom()-2);
+
     // outer frame
     p.setPen(g.light());
     p.drawLine(r.x()+1, r.y()+1, r.right()-1, r.y()+1);
@@ -533,7 +499,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
 	bb = 6;
 	bs = 0;
     }
-    if ( isTool() )
+    if ( isToolWindow() )
 	th -= 2;
 
     // inner rect
@@ -558,12 +524,16 @@ void LaptopClient::paintEvent( QPaintEvent* )
 				  &g.brush(QColorGroup::Mid));
 	}
     }
-    r = titlebar->geometry();
-    r.setRight(r.right()-1);
+
+    r = titleRect();
 
     if(isActive()){
         updateActiveBuffer();
         p.drawPixmap(r.x(), r.y(), activeBuffer);
+        p.setPen(g.background());
+        p.drawPoint(r.x(), r.y());
+        p.drawPoint(r.right(), r.y());
+        p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());
     }
     else{
         if(iUpperGradient)
@@ -573,7 +543,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
             p.fillRect(r.x(), r.y(), r.width(), r.height()-1,
                        options()->color(KDecoration::ColorTitleBar, false));
 
-        p.setFont(options()->font(false, isTool() ));
+        p.setFont(options()->font(false, isToolWindow() ));
         QFontMetrics fm(options()->font(false));
         g = options()->colorGroup(KDecoration::ColorTitleBar, false);
         if(iUpperGradient)
@@ -601,29 +571,28 @@ void LaptopClient::paintEvent( QPaintEvent* )
     }
 }
 
-#define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
-
-void LaptopClient::doShape()
+QRegion LaptopClient::cornerShape(WindowCorner corner)
 {
-    QRegion mask(QRect(0, 0, width(), height()));
-    mask -= QRect(0, 0, 1, 1);
-    mask -= QRect(width()-1, 0, 1, 1);
-    mask -= QRect(0, height()-1, 1, 1);
-    mask -= QRect(width()-1, height()-1, 1, 1);
+    int w = widget()->width();
+    int h = widget()->height();
 
-    setMask(mask);
-}
+    switch (corner) {
+        case WC_TopLeft:
+            return QRect(0, 0, 1, 1);
 
-void LaptopClient::showEvent(QShowEvent *)
-{
-    doShape();
-    widget()->repaint();
-}
+        case WC_TopRight:
+            return QRect(width()-1, 0, 1, 1);
 
-void LaptopClient::mouseDoubleClickEvent( QMouseEvent * e )
-{
-    if (titlebar->geometry().contains( e->pos() ) )
-        titlebarDblClickOperation();
+        case WC_BottomLeft:
+            return QRect(0, height()-1, 1, 1);
+
+        case WC_BottomRight:
+            return QRect(width()-1, height()-1, 1, 1);
+
+        default:
+            return QRegion();
+    }
+
 }
 
 bool LaptopClient::mustDrawHandle() const 
@@ -636,122 +605,20 @@ bool LaptopClient::mustDrawHandle() const
     }
 }
 
-void LaptopClient::iconChange()
-{
-    // There is no icon support in this theme
-}
-
-void LaptopClient::desktopChange()
-{
-    bool on = isOnAllDesktops();
-    if(button[BtnSticky]) {
-        button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
-        QToolTip::remove(button[BtnSticky]);
-        QToolTip::add(button[BtnSticky],
-	          on ? i18n("Not on all desktops") : i18n("On all desktops"));
-    }
-}
-
-void LaptopClient::maximizeChange()
-{
-    bool m = (maximizeMode() == MaximizeFull);
-    int l_max = options()->titleButtonsLeft().find('A');
-    if (button[BtnMax]) {
-        if (!m)
-            button[BtnMax]->setBitmap(maximize_bits); 
-        else {        
-            if (options()->customButtonPositions() && (l_max>-1))
-                button[BtnMax]->setBitmap(l_minmax_bits);
-            else
-                button[BtnMax]->setBitmap(r_minmax_bits);
-        }
-        QToolTip::remove(button[BtnMax]);
-        QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
-        spacer->changeSize(10, mustDrawHandle() ? handleSize : 4,
-	        QSizePolicy::Expanding, QSizePolicy::Minimum);
-        g->activate();
-        doShape();
-        widget()->repaint(false);
-    }
-}
-
-void LaptopClient::activeChange()
-{
-    widget()->repaint(false);
-    int i;
-    for(i=0; i<BtnTypeCount; i++){
-        if(button[i])
-            button[i]->reset();
-    }
-}
-
-
-void LaptopClient::calcHiddenButtons()
-{
-    // order of hiding is help, sticky, maximize, minimize, close;
-    // buttons can have
-    int minWidth = 32 + btnWidth2*3 + (providesContextHelp() ? btnWidth1*2 :
-                                       btnWidth1);
-
-    if(lastButtonWidth > width()){ // shrinking
-        lastButtonWidth = width();
-        if(width() < minWidth){
-            hiddenItems = true;
-            int i;
-            for(i=0; i<BtnTypeCount; i++){
-                if(button[i]){
-                    if( !button[i]->isHidden() ) {
-                        button[i]->hide();
-                    }
-                    minWidth-=button[i]->sizeHint().width();
-                    if(width() >= minWidth)
-                        return;
-                }
-            }
-        }
-    }
-    else if(hiddenItems){ // expanding
-        lastButtonWidth = width();
-        int i;
-        int totalSize=32;
-        for(i=(BtnTypeCount-1); i>=0; --i){
-            if(button[i]){
-                if(button[i]->sizeHint().width() + totalSize <= width()){
-                    totalSize+=button[i]->sizeHint().width();
-                    if(button[i]->isHidden() &&
-		       ( !isTransient() || i != BtnSticky ) &&
-		       ( isMinimizable() || i != BtnIconify ) &&
-		       ( isMaximizable() || ( i != BtnIconify && i != BtnSticky && i != BtnMax ) )
-
-		       ) {
-                        button[i]->resize(button[i]->sizeHint());
-                        button[i]->show();
-                    }
-                }
-                else
-                    return;
-            }
-        }
-        // all items shown now
-        hiddenItems = false;
-    }
-    else
-        lastButtonWidth = width();
-}
-
 void LaptopClient::updateActiveBuffer( )
 {
-    if( !bufferDirty && (lastBufferWidth == titlebar->geometry().width()))
+    QRect rTitle = titleRect();
+    if( !bufferDirty && (lastBufferWidth == rTitle.width()))
         return;
-    if ( titlebar->geometry().width() <= 0 || titlebar->geometry().height() <= 0 )
+    if ( rTitle.width() <= 0 || rTitle.height() <= 0 )
 	return;
-    lastBufferWidth = titlebar->geometry().width();
+    lastBufferWidth = rTitle.width();
     bufferDirty = false;
 
-    activeBuffer.resize(titlebar->geometry().width(),
-                        titlebar->geometry().height());
+    activeBuffer.resize(rTitle.width(),
+                        rTitle.height());
     QPainter p;
-    QRect r(0, 0, activeBuffer.width()-1, activeBuffer.height());
+    QRect r(0, 0, activeBuffer.width(), activeBuffer.height());
     p.begin(&activeBuffer);
     if(aUpperGradient){
         p.drawTiledPixmap(r, *aUpperGradient);
@@ -762,7 +629,7 @@ void LaptopClient::updateActiveBuffer( )
     if(titlePix)
         p.drawTiledPixmap(r, *titlePix);
 
-    p.setFont(options()->font(true, isTool() ));
+    p.setFont(options()->font(true, isToolWindow() ));
     QFontMetrics fm(options()->font(true));
     QColorGroup g = options()->colorGroup(KDecoration::ColorTitleBar, true);
     if(aUpperGradient)
@@ -790,48 +657,6 @@ void LaptopClient::updateActiveBuffer( )
     p.end();
 }
 
-LaptopClient::Position LaptopClient::mousePosition(const QPoint & p) const
-{
-  Position m = PositionCenter;
-  int range = 8 + 3*handleSize/2;
-
-  if (p.y() < (height() - handleSize + 1))
-    m = KDecoration::mousePosition(p);
-
-  else {
-    if (p.x() >= (width() - range))
-      m = PositionBottomRight;
-    else if (p.x() <= range)
-      m = PositionBottomLeft;
-    else
-      m = PositionBottom;
-  }
-
-  return m;
-}
-
-void LaptopClient::borders(int &left, int &right, int &top, int &bottom) const
-{
-    left = right = 4;
-    top = titleHeight + 4;
-    bottom = mustDrawHandle() ? handleSize : 4;
-}
-
-void LaptopClient::shadeChange()
-{
-}
-
-QSize LaptopClient::minimumSize() const
-{
-    return QSize(4 * handleSize, handleSize);
-}
-
-void LaptopClient::resize(const QSize& s)
-{
-    widget()->resize(s);
-    widget()->repaint(); //there is some strange wrong repaint of the frame without
-}
-
 static const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask |
     NET::DesktopMask | NET::DockMask | NET::ToolbarMask | NET::MenuMask |
     NET::DialogMask | NET::OverrideMask | NET::TopMenuMask |
@@ -841,38 +666,6 @@ bool LaptopClient::isTransient() const
 {
     NET::WindowType type = windowType(SUPPORTED_WINDOW_TYPES_MASK);
     return type == NET::Dialog;
-}
-
-bool LaptopClient::isTool() const
-{
-    NET::WindowType type = windowType(SUPPORTED_WINDOW_TYPES_MASK);
-    return type == NET::Toolbar || type == NET::Utility || type == NET::Menu;
-}
-
-bool LaptopClient::eventFilter(QObject *o, QEvent *e)
-{
-    if (o != widget())
-	return false;
-    switch (e->type()) {
-    case QEvent::Resize:
-	resizeEvent(static_cast< QResizeEvent* >( e ));
-	return true;
-    case QEvent::Paint:
-	paintEvent(static_cast< QPaintEvent* >( e ));
-	return true;
-    case QEvent::MouseButtonDblClick:
-	mouseDoubleClickEvent(static_cast< QMouseEvent* >( e ));
-	return true;
-    case QEvent::MouseButtonPress:
-	processMousePressEvent(static_cast< QMouseEvent* >( e ));
-	return true;
-    case QEvent::Show:
-	showEvent(static_cast< QShowEvent* >( e ));
-	return true;
-    default:
-	break;
-    }
-    return false;
 }
 
 // =====================================
@@ -893,7 +686,7 @@ KDecoration *LaptopClientFactory::createDecoration(KDecorationBridge *b)
     return new Laptop::LaptopClient(b, this);
 }
 
-bool LaptopClientFactory::reset(unsigned long /*changed*/)
+bool LaptopClientFactory::reset(unsigned long changed)
 {
     findPreferredHandleSize();
 
@@ -901,8 +694,19 @@ bool LaptopClientFactory::reset(unsigned long /*changed*/)
     // ModernSystem for how to do that
     Laptop::delete_pixmaps();
     Laptop::create_pixmaps();
-    // For now just return true.
-    return true;
+
+    bool needHardReset = true;
+    if (changed & SettingButtons) {
+		// handled by KCommonDecoration
+        needHardReset = false;
+    }
+
+    if (needHardReset) {
+        return true;
+    } else {
+        resetDecorations(changed);
+        return false;
+    }
 }
 
 bool LaptopClientFactory::supports( Ability ability )
@@ -955,7 +759,5 @@ void LaptopClientFactory::findPreferredHandleSize()
 }
 
 } // Laptop namespace
-
-#include "laptopclient.moc"
 
 // vim: sw=4
