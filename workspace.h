@@ -26,7 +26,7 @@ public:
     DockWindow( WId w, WId wf  )
 	: dockWin(w),dockFor(wf)
     {}
-    
+
     bool operator==( const DockWindow& other )
     { return dockWin == other.dockWin; }
     WId dockWin;
@@ -138,6 +138,7 @@ private:
     Client* desktop_client;
     int current_desktop;
     int number_of_desktops;
+    Client* findClientWidthId( WId w ) const;
 
     Client* popup_client;
     QWidget* desktop_widget;

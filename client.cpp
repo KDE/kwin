@@ -117,15 +117,15 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 		   EnterWindowMask | LeaveWindowMask |
 		   FocusChangeMask |
 		   ExposureMask |
-		   StructureNotifyMask |
+ 		   StructureNotifyMask |
 		   SubstructureRedirectMask |
 		   SubstructureNotifyMask
 		   );
 
      XSelectInput( qt_xdisplay(), w,
 		   FocusChangeMask |
-		   PropertyChangeMask |
-		   StructureNotifyMask
+		   PropertyChangeMask
+// 		   StructureNotifyMask
 		   );
 
     // install a passive grab to catch mouse button events
@@ -172,7 +172,7 @@ void WindowWrapper::showEvent( QShowEvent* )
 void WindowWrapper::hideEvent( QHideEvent* )
 {
     if ( win )
-	XUnmapWindow( qt_xdisplay(), win );
+ 	XUnmapWindow( qt_xdisplay(), win );
 }
 
 void WindowWrapper::invalidateWindow()
@@ -253,13 +253,13 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     : QWidget( parent, name, f | WStyle_Customize | WStyle_NoBorder )
 {
 
-    reparented = FALSE;
     wspace = ws;
     win = w;
     XWindowAttributes attr;
     if (XGetWindowAttributes(qt_xdisplay(), win, &attr)){
 	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
     }
+    mapped = 0;
     wwrap = new WindowWrapper( w, this );
     wwrap->installEventFilter( this );
 
@@ -417,7 +417,17 @@ bool Client::windowEvent( XEvent * e)
 {
     switch (e->type) {
     case UnmapNotify:
+	if ( e->xunmap.window == winId() ) {
+	    mapped = 0;
+	    return FALSE;
+	}
 	return unmapNotify( e->xunmap );
+    case MapNotify:
+	if ( e->xmap.window == winId() ) {
+	    mapped = 1;
+	    return FALSE;
+	}
+	break;
     case MapRequest:
 	return mapRequest( e->xmaprequest );
     case ConfigureRequest:
@@ -445,7 +455,6 @@ bool Client::windowEvent( XEvent * e)
 	setActive( FALSE );
 	break;
     case ReparentNotify:
-	reparented = TRUE;
 	break;
     default:
 	break;
@@ -482,6 +491,9 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
 bool Client::unmapNotify( XUnmapEvent& e )
 {
 
+    if ( e.event != windowWrapper()->winId() && !e.send_event )
+      return TRUE;
+
     switch ( mappingState() ) {
     case IconicState:
 	// only react on sent events, all others are produced by us
@@ -489,14 +501,11 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	    withdraw();
 	break;
     case NormalState:
-	if ( !reparented )
-	    return TRUE; // we produced this event
-	if ( !windowWrapper()->isVisible() && !e.send_event )
-	    return TRUE; // this event was produced by us as well
+  	if ( !mapped && !e.send_event )
+  	    return TRUE; // this event was produced by us as well
 
 	// maybe we will be destroyed soon. Check this first.
 	XEvent ev;
-	QApplication::syncX();
 	if  ( XCheckTypedWindowEvent (qt_xdisplay(), win,
 				      DestroyNotify, &ev) ){
 	    workspace()->destroyClient( this );

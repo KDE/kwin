@@ -222,7 +222,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	break;
     case UnmapNotify:
 	// this is special due to
-	// SubstructureRedirectMask. e->xany.window is the window the
+	// SubstructureNotifyMask. e->xany.window is the window the
 	// event is reported to. Take care not to confuse Qt.
 	c = findClient( e->xunmap.window );
 	
@@ -233,8 +233,24 @@ bool Workspace::workspaceEvent( XEvent * e )
 	if ( removeDockwin( e->xunmap.window ) )
 	    return TRUE;
 	
+	if ( e->xunmap.event == root ) { 
+	    // keep track of map/unmap for own own windows to avoid
+	    // race conditions
+	    c = findClientWidthId( e->xunmap.window );
+	    if ( c )
+		return c->windowEvent( e );
+	}
+	
 	if ( e->xunmap.event != e->xunmap.window ) // hide wm typical event from Qt
 	    return TRUE;
+    case MapNotify:
+	if ( e->xunmap.event == root ) { 
+	    // keep track of map/unmap for own own windows to avoid
+	    // race conditions
+	    c = findClientWidthId( e->xmap.window );
+	    if ( c )
+		return c->windowEvent( e );
+	}
     case ReparentNotify:
 	c = findClient( e->xreparent.window );
 	if ( c )
@@ -334,6 +350,18 @@ Client* Workspace::findClient( WId w ) const
     }
     if ( desktop_client && w == desktop_client->window() )
 	return desktop_client;
+    return 0;
+}
+
+/*!
+  Finds the client with window id \a w
+ */
+Client* Workspace::findClientWidthId( WId w ) const
+{
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it)->winId() == w )
+	    return *it;
+    }
     return 0;
 }
 
@@ -980,6 +1008,8 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     XChangeProperty(qt_xdisplay(), qt_xrootwin(),
 		    atoms->net_current_desktop, XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *)&current_desktop, 1);
+
+    QApplication::syncX();
     KWM::switchToDesktop( current_desktop ); // ### compatibility
 }
 

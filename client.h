@@ -130,8 +130,8 @@ public:
     void move( int x, int y );
     void move( const QPoint & p )
     { move( p.x(), p.y() ); }
-    
-    
+
+
 
 public slots:
     void iconify();
@@ -203,7 +203,6 @@ private:
     void sendSynteticConfigureNotify();
     int state;
     bool active;
-    bool reparented;
     QRect original_geometry;
     QRect geom; //### TODO
     bool shaded;
@@ -214,6 +213,7 @@ private:
     void getWindowProtocols();
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
+    uint mapped :1; // keeps track of our visiblity within the asynchronous event flow 
     QPixmap icon_pix;
     QPixmap miniicon_pix;
     QRect geom_restore;
