@@ -86,21 +86,26 @@ QColor* colorActiveTitleBarText;
 QColor* colorInActiveTitleBarText;
 QColor* colorActiveTitleBar;
 QColor* colorInActiveTitleBar;
+QColor* colorActiveTitleTextShadow;
+QColor* colorInActiveTitleTextShadow;
 
 int  cornerSizeX;
 int  cornerSizeY;
 int  titleBarHeight;
 int  borderSizeX;
 int  borderSizeY;
-bool initialized = false;
-bool validframe  = false;
+
+bool initialized 			= false;
+bool validframe  			= false;
+bool useActiveShadow 		= false;
+bool useInActiveShadow 		= false;
 
 // KControl Settings - Read from kwinrc config file or icewm theme
-bool themeTitleTextColors = true;	// Allow theme to set colors. kcontrol will have no effect
-bool titleBarOnTop 		  = true;	// Titlebars can be below windows too :)
-bool showMenuButtonIcon   = false;	// Draw a mini icon over the menu pixmap.
-bool customButtonPositions = false;	// Let the theme dictate the btn pos.
-bool titleBarCentered 	  = true;
+bool themeTitleTextColors 	= true;	// Allow theme to set colors. kcontrol will have no effect
+bool titleBarOnTop 		  	= true;	// Titlebars can be below windows too :)
+bool showMenuButtonIcon   	= false;	// Draw a mini icon over the menu pixmap.
+bool customButtonPositions 	= false;	// Let the theme dictate the btn pos.
+bool titleBarCentered 	  	= true;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,6 +143,8 @@ ThemeHandler::ThemeHandler(): QObject( 0L )
 	colorInActiveTitleBarText	= new QColor();
 	colorActiveTitleBar 		= new QColor();
 	colorInActiveTitleBar 		= new QColor();
+	colorActiveTitleTextShadow	= new QColor();
+	colorInActiveTitleTextShadow = new QColor();
 
 	// Initialize
 	readConfig();
@@ -153,6 +160,8 @@ ThemeHandler::~ThemeHandler()
 	if (initialized) 
 		freePixmaps();
 
+	delete colorInActiveTitleTextShadow;
+	delete colorActiveTitleTextShadow;
 	delete colorInActiveBorder;
 	delete colorActiveTitleBarText;
 	delete colorInActiveTitleBarText;
@@ -280,6 +289,30 @@ void ThemeHandler::initTheme()
 	*colorActiveTitleBarText = decodeColor( s );
 	s = config.readEntry("ColorNormalTitleBarText", "#000000");
 	*colorInActiveTitleBarText = decodeColor( s );
+
+	// Use title text shadows only with theme title text colors
+	if ( themeTitleTextColors )
+	{
+		s = config.readEntry("ColorActiveTitleBarShadow", "");
+		if (s.length() > 0)
+		{
+			*colorActiveTitleTextShadow = decodeColor( s );
+			useActiveShadow = true;
+		} else
+			useActiveShadow = false;
+
+		s = config.readEntry("ColorNormalTitleBarShadow", "");
+		if (s.length() > 0)
+		{
+			*colorInActiveTitleTextShadow = decodeColor( s );
+			useInActiveShadow = true;
+		} else
+			useInActiveShadow = false;
+	} else
+		{
+			useActiveShadow = false;
+			useInActiveShadow = false;
+		}
 
 	// Stretch pixmaps for speed, where required
 	setPixmap( titleJ, "title", "J.xpm" );
@@ -875,6 +908,20 @@ void IceWMClient::paintEvent( QPaintEvent* )
 	QPainter p(this);
 	int act = isActive() ? Active: InActive; 
 
+	// Added titlebar shadows - pre-compute values to improve drawing speed
+	QColor colorTitle;
+	QColor colorTitleShadow;
+
+	bool useShadow = isActive() ? useActiveShadow : useInActiveShadow;
+
+	if ( themeTitleTextColors )
+ 		colorTitle = isActive()? *colorActiveTitleBarText : *colorInActiveTitleBarText;
+	else
+		colorTitle = options->color(Options::Font, isActive());
+
+	if ( useShadow )
+		colorTitleShadow = isActive() ? *colorActiveTitleTextShadow : *colorInActiveTitleTextShadow;
+
 	// Obtain widget bounds.
 	QRect r;
 	r = rect();
@@ -985,12 +1032,6 @@ void IceWMClient::paintEvent( QPaintEvent* )
 	
 		p.setFont( options->font(true) );
 
-		// Select appropriate title text color
-		if (themeTitleTextColors)
-			p.setPen( isActive() ? *colorActiveTitleBarText : *colorInActiveTitleBarText );
-		else
-			p.setPen( options->color(Options::Font, isActive() ));
-	
 		// Draw the titlebar pixmap
 		if (tmpPix)
 		{
@@ -1006,9 +1047,23 @@ void IceWMClient::paintEvent( QPaintEvent* )
 			tts = caption();
 			talign = titleBarCentered ? AlignCenter|AlignVCenter : AlignLeft|AlignVCenter;
 
+			// Pre-set the color to reduce flicker
+			if ( useShadow )
+				p.setPen( colorTitleShadow );
+			else
+				p.setPen( colorTitle );
+
 			p.drawTiledPixmap( r, *tmpPix);
-			// Draw the text immediately after the pixmap, to reduce flicker
+
+			if ( useShadow )
+			{
+				// Draw the text immediately after the rect to reduce flicker
+				p.drawText(rx+1, ry+1, rw-1, rh, talign, tts);
+				// Select appropriate title text color
+				p.setPen( colorTitle );
+			} 
 			p.drawText(rx, ry, rw, rh, talign, tts);
+
 		}
 		else
 		{
