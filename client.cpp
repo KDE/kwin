@@ -1624,13 +1624,47 @@ void Client::autoRaise()
     }
 
 #ifdef NDEBUG
-kndbgstream& operator<<( kndbgstream& stream, const Client* cl ) { return stream; }
+kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }
+kndbgstream& operator<<( kndbgstream& stream, const ClientList&  ) { return stream; }
+kndbgstream& operator<<( kndbgstream& stream, const ConstClientList& ) { return stream; }
 #else
 kdbgstream& operator<<( kdbgstream& stream, const Client* cl )
     {
     if( cl == NULL )
         return stream << "\'NULL_CLIENT\'";
     return stream << "\'ID:" << cl->window() << ";WMCLASS:" << cl->resourceClass() << ":" << cl->resourceName() << ";Caption:" << cl->caption() << "\'";
+    }
+kdbgstream& operator<<( kdbgstream& stream, const ClientList& list )
+    {
+    stream << "LIST:(";
+    bool first = true;
+    for( ClientList::ConstIterator it = list.begin();
+         it != list.end();
+         ++it )
+        {
+        if( !first )
+            stream << ":";
+        first = false;
+        stream << *it;
+        }
+    stream << ")";
+    return stream;
+    }
+kdbgstream& operator<<( kdbgstream& stream, const ConstClientList& list )
+    {
+    stream << "LIST:(";
+    bool first = true;
+    for( ConstClientList::ConstIterator it = list.begin();
+         it != list.end();
+         ++it )
+        {
+        if( !first )
+            stream << ":";
+        first = false;
+        stream << *it;
+        }
+    stream << ")";
+    return stream;
     }
 #endif
 

@@ -817,8 +817,12 @@ inline bool Client::hasUserTimeSupport() const
 
 #ifdef NDEBUG
 kndbgstream& operator<<( kndbgstream& stream, const Client* );
+kndbgstream& operator<<( kndbgstream& stream, const ClientList& );
+kndbgstream& operator<<( kndbgstream& stream, const ConstClientList& );
 #else
 kdbgstream& operator<<( kdbgstream& stream, const Client* );
+kdbgstream& operator<<( kdbgstream& stream, const ClientList& );
+kdbgstream& operator<<( kdbgstream& stream, const ConstClientList& );
 #endif
 
 KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Window, cl->window() == value );
