@@ -1489,10 +1489,13 @@ void Workspace::desktopPopupAboutToShow()
     if ( !desk_popup ) 
 	return;
     desk_popup->clear();
+    desk_popup->insertItem( i18n("&All desktops"), 0 );
+    if ( popup_client->isSticky() )
+	desk_popup->setItemChecked( 0, TRUE );
     int id;
     for ( int i = 1; i <= numberOfDesktops(); i++ ) {
 	id = desk_popup->insertItem( QString("&")+QString::number(i ), i );
-	if ( popup_client && popup_client->desktop()  == i )
+	if ( popup_client && !popup_client->isSticky() && popup_client->desktop()  == i )
 	    desk_popup->setItemChecked( id, TRUE );
     }
 }
@@ -1509,6 +1512,14 @@ void Workspace::sendToDesktop( int desk )
 {
     if ( !popup_client )
 	return;
+    if ( desk == 0 ) {
+	popup_client->setSticky( !popup_client->isSticky() );
+	return;
+    }
+    
+    if ( popup_client->isSticky() )
+	popup_client->setSticky( FALSE );
+    
     if ( popup_client->isOnDesktop( desk ) )
 	return;
     
