@@ -446,7 +446,7 @@ bool Client::manage( Window w, bool isMapped )
                     {
                     workspace()->restackClientUnderActive( this );
                     rawShow();
-                    if( !session && ( !isSpecialWindow() || isOverride()))
+                    if( ( !session || session->fake ) && ( !isSpecialWindow() || isOverride()))
                         demandAttention();
                     }
                 }
@@ -455,7 +455,7 @@ bool Client::manage( Window w, bool isMapped )
             {
             virtualDesktopChange();
             workspace()->raiseClient( this );
-            if( !session && !isMapped )
+            if( ( !session || session->fake ) && !isMapped )
                 demandAttention();
             }
         }

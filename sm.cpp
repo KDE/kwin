@@ -178,6 +178,7 @@ void Workspace::loadSessionInfo()
         info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
         info->active = ( active_client == i );
+        info->fake = false;
         }
     }
 
@@ -212,6 +213,7 @@ void Workspace::loadFakeSessionInfo()
         info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
         info->active = false;
+        info->fake = true;
         }
     }
 
@@ -241,6 +243,7 @@ void Workspace::storeFakeSessionInfo( Client* c )
     info->userNoBorder = c->isUserNoBorder();
     info->windowType = c->windowType();
     info->active = false;
+    info->fake = true;
     }
 
 void Workspace::writeFakeSessionInfo()
