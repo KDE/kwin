@@ -502,6 +502,7 @@ ClientList Workspace::constrainedStackingOrder()
                     break;
                 }
             }
+//        kdDebug() << "STACK:" << (*it) << ":" << ( it2 == stacking.end() ? ((Client*)0) : (*it2)) << endl;
         if( it2 == stacking.end())
             {
             --it;
@@ -511,6 +512,8 @@ ClientList Workspace::constrainedStackingOrder()
         ClientList::Iterator remove_it = it;
         --it;
         stacking.remove( remove_it );
+        if( !current->transients().isEmpty())  // this one now can be possibly above its transients,
+            it = it2; // so go again higher in the stack order and possibly move those transients again
         ++it2; // insert after the mainwindow, it's ok if it2 is now stacking.end()
         stacking.insert( it2, current );
         }
