@@ -1612,12 +1612,13 @@ void Client::maximize( MaximizeMode m)
 	QRect r = QRect(clientArea.topLeft(), adjustedSize(clientArea.size()));
 	
 	// hide right and left border of maximized windows
-	if ( r.left() == 0 )
-	    r.setLeft( r.left() - windowWrapper()->x() );
-	if ( r.right() == workspace()->geometry().right() )
-	    r.setRight( r.right() + width() -  windowWrapper()->geometry().right() );
+	if ( !options->moveResizeMaximizedWindows ) {
+	    if ( r.left() == 0 )
+		r.setLeft( r.left() - windowWrapper()->x() );
+	    if ( r.right() == workspace()->geometry().right() )
+		r.setRight( r.right() + width() -  windowWrapper()->geometry().right() );
+	}
 	setGeometry( r );
-	
 	info->setState( NET::Max, NET::Max );
     } break;
     default:
@@ -2362,7 +2363,7 @@ bool Client::isMovable() const
 {
     return may_move &&
 	( windowType() == NET::Normal || windowType() == NET::Toolbar ) &&
-	( !isMaximized() || max_mode != MaximizeFull );
+	( !isMaximized() || ( options->moveResizeMaximizedWindows || max_mode != MaximizeFull ) );
 }
 
 bool Client::isDesktop() const

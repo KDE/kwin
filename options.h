@@ -102,6 +102,11 @@ public:
     MoveResizeMode moveMode;
 
     /**
+     * Can maximized windows be moved or resized
+     */
+    bool moveResizeMaximizedWindows;
+
+    /**
      * Placement policies. How workspace decides the way windows get positioned
      * on the screen. The better the policy, the heavier the resource use.
      * Normally you don't have to worry. What the WM adds to the startup time
