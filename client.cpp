@@ -1157,7 +1157,7 @@ bool Client::clientMessage( XClientMessageEvent& e )
 	    if ( e.data.l[1] )
 		blockAnimation = TRUE;
 	    iconify();
-	} else if ( e.data.l[1] == NormalState && isIconified() ) {
+	} else if ( e.data.l[0] == NormalState && isIconified() ) {
 	    if ( e.data.l[1] )
 		blockAnimation = TRUE;
 	    // only show window if we're on current desktop
