@@ -118,6 +118,7 @@ void KWinOptions::load()
   mActions->load();
   mMoving->load();
   mAdvanced->load();
+  setChanged( false );
 }
 
 
@@ -128,6 +129,7 @@ void KWinOptions::save()
   mMoving->save();
   mAdvanced->save();
 
+  setChanged( false );
   // Send signal to kwin
   mConfig->sync();
   if ( !kapp->dcopClient()->isAttached() )
