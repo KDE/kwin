@@ -309,6 +309,8 @@ void WindowWrapper::releaseWindow()
 	}
 
 	XRemoveFromSaveSet(qt_xdisplay(), win );
+	qWarning("release window, give up select");
+	XSelectInput( qt_xdisplay(), win, NoEventMask );
 	invalidateWindow();
     }
 }
@@ -827,6 +829,8 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
 bool Client::unmapNotify( XUnmapEvent& e )
 {
 
+  qWarning("unmapNotify for window %ld", e.window);
+
     if ( e.event != windowWrapper()->winId() && !e.send_event )
       return TRUE;
 
@@ -837,16 +841,27 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	    withdraw();
 	break;
     case NormalState:
+      qWarning("in normal state: %s", caption().latin1() );
   	if ( ( !mapped || !windowWrapper()->isVisibleTo( this )) && !e.send_event )
   	    return TRUE; // this event was produced by us as well
 
 	// maybe we will be destroyed soon. Check this first.
+	qWarning("do something");
 	XEvent ev;
-	if  ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
-				      DestroyNotify, &ev) ){
+	if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
+				     DestroyNotify, &ev) ){
 	    workspace()->destroyClient( this );
 	    return TRUE;
 	}
+	if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
+				     ReparentNotify, &ev) ){
+	  if ( ev.xreparent.window == windowWrapper()->window() &&
+	       ev.xreparent.parent != windowWrapper()->winId() ) {
+	    qWarning("will miss window");
+	    invalidateWindow();
+	  }
+	}
+	qWarning("do withdraw");
 	// fall through
     case WithdrawnState: // however that has been possible....
 	withdraw();

@@ -213,7 +213,6 @@ Workspace::Workspace( bool restore )
     keys              (0),
     root              (0)
 {
-    Events::raise(Events::StartKDE);
     root = qt_xrootwin();
     default_colormap = DefaultColormap(qt_xdisplay(), qt_xscreen() );
     installed_colormap = default_colormap;
@@ -2222,8 +2221,6 @@ void Workspace::slotMouseEmulation()
 
 void Workspace::slotLogout()
 {
-  Events::raise(Events::ExitKDE);
-
   kapp->requestShutDown();
 }
 

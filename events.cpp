@@ -68,12 +68,6 @@ void Events::raise( Event e )
     case ResizeEnd:
 	event = "resizeend";
 	break;
-    case StartKDE:
-	event = "startkde";
-	break;
-    case ExitKDE:
-	event = "exitkde";
-	break;
     }
 
     if ( !event )

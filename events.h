@@ -29,9 +29,7 @@ public:
 	MoveStart,
 	MoveEnd,
 	ResizeStart,
-	ResizeEnd,
-	StartKDE,
-	ExitKDE
+	ResizeEnd
     };
 	
     static void raise( Event );
