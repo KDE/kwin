@@ -387,10 +387,10 @@ void Workspace::restackClientUnderActive( Client* c )
 
     // put in the stacking order below _all_ windows belonging to the active application
     assert( unconstrained_stacking_order.contains( active_client ));
-    for( ClientList::Iterator it = unconstrained_stacking_order.fromLast();
+    for( ClientList::Iterator it = unconstrained_stacking_order.begin();
          it != unconstrained_stacking_order.end();
-         --it )
-        {
+         ++it )
+        { // TODO ignore topmenus?
         if( Client::belongToSameApplication( active_client, *it ))
             {
             if( *it != c )
