@@ -85,6 +85,12 @@ private:
     KWinInternal::Workspace* workspace;
 };
 
+class WorkspacePrivate
+{
+public:
+    WorkspacePrivate() {};
+};
+
 };
 
 using namespace KWinInternal;
@@ -234,6 +240,7 @@ Workspace::Workspace( bool restore )
     keys              (0),
     root              (0)
 {
+    d = new WorkspacePrivate;
     mgr = new PluginMgr;
     root = qt_xrootwin();
     default_colormap = DefaultColormap(qt_xdisplay(), qt_xscreen() );
@@ -410,6 +417,7 @@ Workspace::~Workspace()
     delete rootInfo;
     delete supportWindow;
     delete mgr;
+    delete d;
 }
 
 

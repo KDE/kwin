@@ -85,6 +85,18 @@ private:
     KWinInternal::Client * m_client;
 };
 
+class WindowWrapperPrivate
+{
+public:
+    WindowWrapperPrivate() {};
+};
+
+class ClientPrivate
+{
+public:
+    ClientPrivate() {};
+};
+
 };
 
 // put all externs before the namespace statement to allow the linker
@@ -187,6 +199,7 @@ const long ClientWinMask = KeyPressMask | KeyReleaseMask |
 WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     : QWidget( parent, name )
 {
+    d = new WindowWrapperPrivate;
     win = w;
 
     setMouseTracking( TRUE );
@@ -226,6 +239,7 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 WindowWrapper::~WindowWrapper()
 {
     releaseWindow();
+    delete d;
 }
 
 
@@ -460,6 +474,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags f )
     : QWidget( parent, name, f | WStyle_Customize | WStyle_NoBorder )
 {
+    d = new ClientPrivate;
     wspace = ws;
     win = w;
     autoRaiseTimer = 0;
@@ -553,6 +568,7 @@ Client::~Client()
        workspace()->setFocusChangeEnabled(true); // Safety
 
     delete info;
+    delete d;
 }
 
 

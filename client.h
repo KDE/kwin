@@ -24,6 +24,9 @@ class Workspace;
 class Client;
 class WinInfo;
 
+class WindowWrapperPrivate;
+class ClientPrivate;
+
 class WindowWrapper : public QWidget
 {
     Q_OBJECT
@@ -56,6 +59,7 @@ private:
     WId win;
     Time lastMouseEventTime;
     bool reparented;
+    WindowWrapperPrivate* d;
 };
 
 inline WId WindowWrapper::window() const
@@ -328,6 +332,9 @@ private:
     static QCString staticWmCommand(WId);
     static QCString staticWmClientMachine(WId);
     static Window   staticWmClientLeader(WId);
+    
+ private:
+    ClientPrivate* d;
 
 };
 

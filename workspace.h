@@ -84,6 +84,8 @@ public:
     static bool noBorder( WId w );
 };
 
+class WorkspacePrivate;
+
 class Workspace : public QObject, virtual public KWinInterface
 {
     Q_OBJECT
@@ -379,6 +381,8 @@ private:
     QTimer resetTimer;
 
     QTimer focusEnsuranceTimer;
+    
+    WorkspacePrivate* d;
 };
 
 inline WId Workspace::rootWin() const
