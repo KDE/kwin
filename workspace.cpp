@@ -1752,6 +1752,8 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window resize", this, SLOT( slotWindowResize() ) );
 
     keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
+
+    keys->connectItem( "Logout", this, SLOT( slotLogout() ) );
     keys->readSettings();
 }
 
@@ -1840,6 +1842,10 @@ void Workspace::slotMouseEmulation()
     }
 }
 
+void Workspace::slotLogout()
+{
+  kapp->requestShutDown();
+}
 
 /*!
   Adjusts the desktop popup to the current values and the location of

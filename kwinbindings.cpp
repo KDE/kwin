@@ -19,3 +19,5 @@
  keys->insertItem(i18n("Window resize"),"Window resize", "");
 
  keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "F12");
+
+ keys->insertItem(i18n("Logout"),"Logout", "CTRL+ALT+Delete");

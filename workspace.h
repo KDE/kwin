@@ -209,6 +209,8 @@ public slots:
 
     void slotResetAllClients();
 
+    void slotLogout();
+
 private slots:
     void desktopPopupAboutToShow();
     void clientPopupAboutToShow();
