@@ -725,7 +725,6 @@ void QuartzClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
        workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
-    workspace()->requestFocus( this );
 }
 
 
