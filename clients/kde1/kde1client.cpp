@@ -12,6 +12,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qbitmap.h>
 #include <kdrawutil.h>
 #include <klocale.h>
+#include <kpixmap.h>
 #include <qdatetime.h>
 #include <qimage.h>
 #include "../../workspace.h"
@@ -21,30 +22,32 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 using namespace KWinInternal;
 
+namespace
+{
 
+QPixmap* close_pix = 0;
+QPixmap* maximize_pix = 0;
+QPixmap* minimize_pix = 0;
+QPixmap* normalize_pix = 0;
+QPixmap* pinup_pix = 0;
+QPixmap* pindown_pix = 0;
+QPixmap* menu_pix = 0;
+QPixmap* question_mark_pix = 0;
 
-static QPixmap* close_pix = 0;
-static QPixmap* maximize_pix = 0;
-static QPixmap* minimize_pix = 0;
-static QPixmap* normalize_pix = 0;
-static QPixmap* pinup_pix = 0;
-static QPixmap* pindown_pix = 0;
-static QPixmap* menu_pix = 0;
-static QPixmap* question_mark_pix = 0;
+QPixmap* dis_close_pix = 0;
+QPixmap* dis_maximize_pix = 0;
+QPixmap* dis_minimize_pix = 0;
+QPixmap* dis_normalize_pix = 0;
+QPixmap* dis_pinup_pix = 0;
+QPixmap* dis_pindown_pix = 0;
+QPixmap* dis_menu_pix = 0;
+QPixmap* dis_question_mark_pix = 0;
 
-static QPixmap* dis_close_pix = 0;
-static QPixmap* dis_maximize_pix = 0;
-static QPixmap* dis_minimize_pix = 0;
-static QPixmap* dis_normalize_pix = 0;
-static QPixmap* dis_pinup_pix = 0;
-static QPixmap* dis_pindown_pix = 0;
-static QPixmap* dis_menu_pix = 0;
-static QPixmap* dis_question_mark_pix = 0;
+QPixmap* titleBuffer = 0;
 
+bool pixmaps_created = FALSE;
 
-static bool pixmaps_created = FALSE;
-
-static void create_pixmaps()
+void create_pixmaps()
 {
     if ( pixmaps_created )
         return;
@@ -140,9 +143,11 @@ static void create_pixmaps()
     aPainter.end(); iPainter.end();
     question_mark_pix->setMask(QBitmap(16, 16, help_mask_bits, true));
     dis_question_mark_pix->setMask(*question_mark_pix->mask());
+
+    titleBuffer = new KPixmap;
 }
 
-static void delete_pixmaps()
+void delete_pixmaps()
 {
     delete close_pix;
     delete maximize_pix;
@@ -160,10 +165,11 @@ static void delete_pixmaps()
     delete dis_pindown_pix;
     delete dis_menu_pix;
     delete dis_question_mark_pix;
+    delete titleBuffer;
     pixmaps_created = false;
 }
 
-static void drawGradient
+void drawGradient
 (
   QPainter & p,
   const QRect & t,
@@ -208,6 +214,8 @@ static void drawGradient
     p.drawLine(t.x() + x, 0, t.x() + x, t.y() + t.height() - 1);
   }
 }
+
+} // anyonmous namespace
 
 void StdClient::slotReset()
 {
@@ -384,19 +392,27 @@ void StdClient::paintEvent( QPaintEvent* )
     p.setClipRegion( r );
     qDrawWinPanel( &p, rect(), colorGroup() );
 //     t.setTop( 1 );
-    p.setClipRegion( t );
+//     p.setClipRegion( t );
 //     t.setTop( 0 );
-    drawGradient(p, t, options->color(Options::TitleBar, isActive()), options->color(Options::TitleBlend, isActive()));
+
+    QRect titleRect( 0, 0, t.width(), t.height() );
+    titleBuffer->resize( titleRect.width(), titleRect.height() );
+    QPainter p2( titleBuffer );
+    
+    drawGradient(p2, titleRect, options->color(Options::TitleBar, isActive()), options->color(Options::TitleBlend, isActive()));
 //     p.setPen( options->color(Options::TitleBar, isActive()).light() );
 //     p.drawLine(t.left(), t.top()+1,  t.right(), t.top()+1);
     if ( isActive() )
-	qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
+	qDrawShadePanel( &p2, 0, 0, titleRect.width(), titleRect.height(),
 			 colorGroup(), true, 1 );
-    t.setLeft( t.left() + 4 );
-    t.setRight( t.right() - 2 );
-    p.setPen(options->color(Options::Font, isActive()));
-    p.setFont(options->font(isActive()));
-    p.drawText( t, AlignLeft|AlignVCenter|SingleLine, caption() );
+    titleRect.setLeft( 4 );
+    titleRect.setWidth( titleRect.width() - 2 );
+    p2.setPen(options->color(Options::Font, isActive()));
+    p2.setFont(options->font(isActive()));
+    p2.drawText( titleRect, AlignLeft|AlignVCenter|SingleLine, caption() );
+    p2.end();
+    p.end();
+    bitBlt( this, t.topLeft(), titleBuffer );
 }
 
 
