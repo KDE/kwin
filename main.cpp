@@ -107,7 +107,7 @@ void kwiniface::logout()
 exit (0);
 }
 
-bool kwiniface::process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData)
+bool kwiniface::process(const QCString &fun, const QByteArray &, QCString& replyType, QByteArray &)
 {	
 	fprintf(stderr,"Logout Call Recieved\n");
 	if ( fun == "logout()" )
@@ -118,8 +118,7 @@ bool kwiniface::process(const QCString &fun, const QByteArray &data, QCString& r
 	}
      	else 
 	{
-	
-	return FALSE;
+		return FALSE;
  	}
 }
 
@@ -179,7 +178,8 @@ int main( int argc, char * argv[] )
     client->attach();
     client->registerAs("kwin");
 
+    kwiniface iface;
 
-     return a.exec();
+    return a.exec();
 
 }
