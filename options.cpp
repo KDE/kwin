@@ -61,13 +61,13 @@ void Options::reload()
     colors[Handle] = QColor( 140, 140, 140 );
     colors[Handle] = config->readColorEntry("handle", &colors[Handle]);
     colors[ButtonBg] = colors[Frame];
-    colors[ButtonBg] = config->readColorEntry("buttonBackgroundDown",
+    colors[ButtonBg] = config->readColorEntry("activeTitleBtnBg",
                                               &colors[Frame]);
     if(QPixmap::defaultDepth() < 15)
         colors[ButtonBlend] = colors[ ButtonBg ];
     else
         colors[ButtonBlend] = colors[ ButtonBg ].dark(150);
-    colors[ButtonBlend] = config->readColorEntry("buttonBlendDown",
+    colors[ButtonBlend] = config->readColorEntry("activeTitleBtnBlend",
                                                  &colors[ButtonBlend]);
     colors[TitleBar] = Qt::darkBlue;
     colors[TitleBar] = config->readColorEntry("activeBackground",
@@ -82,7 +82,7 @@ void Options::reload()
     colors[Font] = Qt::white;
     colors[Font] = config->readColorEntry("activeForeground", &colors[Font]);
     colors[ButtonFg] = Qt::darkGray;
-    colors[ButtonFg] = config->readColorEntry("buttonForegroundDown",
+    colors[ButtonFg] = config->readColorEntry("activeTitleBtnFg",
                                               &colors[ButtonFg]);
 
     // inactive
@@ -101,7 +101,7 @@ void Options::reload()
 
     colors[ButtonBg+KWINCOLORS] = colors[Frame+KWINCOLORS];
     colors[ButtonBg+KWINCOLORS] =
-        config->readColorEntry("buttonBackground",
+        config->readColorEntry("inactiveTitleBtnBg",
                                &colors[ButtonBg]);
 
     if(QPixmap::defaultDepth() < 15)
@@ -109,10 +109,11 @@ void Options::reload()
     else
         colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ].dark(150);
     colors[ButtonBlend+KWINCOLORS] =
-        config->readColorEntry("buttonBlend", &colors[ButtonBlend+KWINCOLORS]);
+        config->readColorEntry("inactiveTitleBtnBlend",
+                               &colors[ButtonBlend+KWINCOLORS]);
 
     colors[ButtonFg+KWINCOLORS] = config->
-        readColorEntry("buttonForeground", &colors[ButtonFg]);
+        readColorEntry("inactiveTitleBtnFg", &colors[ButtonFg]);
 
     colors[Handle+KWINCOLORS] = colors[Frame];
         config->readColorEntry("inactiveHandle", &colors[Handle]);
