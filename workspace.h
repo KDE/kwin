@@ -264,6 +264,7 @@ private slots:
     void clientPopupAboutToShow();
     void sendToDesktop( int );
     void clientPopupActivated( int );
+    void configureWM();
     void focusEnsurance();
 
 protected:

@@ -1318,8 +1318,8 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
 
-        PluginMenu *deco = new PluginMenu(mgr, popup);
-        deco->setFont(KGlobalSettings::menuFont());
+        // PluginMenu *deco = new PluginMenu(mgr, popup);
+        // deco->setFont(KGlobalSettings::menuFont());
 
         desk_popup = new QPopupMenu( popup );
         desk_popup->setCheckable( TRUE );
@@ -1337,15 +1337,13 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-	// danimo: Tackat says: use kcontrol!
-	// Will remove the stuff behind later
-        // popup->insertItem(i18n("&Decoration"), deco );
+        popup->insertItem(SmallIconSet( "configure" ), i18n("&Configure WindowManager..."), this, SLOT( configureWM() ));
         popup->insertItem(i18n("&To desktop"), desk_popup );
 
         popup->insertSeparator();
 
         QString k = KAccel::keyToString( keys->currentKey( "Window close" ), true );
-        popup->insertItem( SmallIconSet( "exit" ), i18n("&Close")+'\t'+k, Options::CloseOp );
+        popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+k, Options::CloseOp );
     }
     return popup;
 }
@@ -3643,6 +3641,13 @@ void Workspace::focusEnsurance()
             requestFocus( last_active_client );
         }
     }
+}
+
+void Workspace::configureWM()
+{
+    QStringList args;
+    args << "kwinoptions" << "kwindecoration";
+    KApplication::kdeinitExec( "kcmshell", args );
 }
 
 
