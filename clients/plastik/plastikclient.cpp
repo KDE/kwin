@@ -312,15 +312,31 @@ void PlastikClient::paintEvent(QPaintEvent *e)
 
     QRect tempRect;
 
-    // topSpacer
-    if(titleEdgeTop > 0)
-    {
-        painter.setPen(windowContour );
+    // Draw the window contour
+    painter.setPen(windowContour );
+    if (titleEdgeTop > 0) {
         painter.drawLine(r_x+2, r_y, r_x2-2, r_y );
         painter.drawPoint(r_x+1, r_y+1 );
         painter.drawPoint(r_x2-1, r_y+1 );
         painter.drawLine(r_x, r_y+2, r_x, titleEdgeTopBottom );
         painter.drawLine(r_x2, r_y+2, r_x2, titleEdgeTopBottom );
+    }
+    if(borderLeft > 0 && sideHeight > 0) {
+        painter.drawLine(r_x, Rtitle.top()/*titleEdgeBottomBottom+1*/,
+                         r_x, r_y2-1 );
+    }
+    if(borderRight > 0 && sideHeight > 0) {
+        painter.drawLine(r_x2, Rtitle.top()/*titleEdgeBottomBottom+1*/,
+                         r_x2, r_y2-1 );
+    }
+    if(borderBottom > 0) {
+        painter.drawLine(r_x+1, r_y2,
+                         r_x2-1, r_y2 );
+    }
+
+    // topSpacer
+    if(titleEdgeTop > 0)
+    {
         painter.setPen(highlightTop );
         painter.drawLine(r_x+3, r_y+1, r_x2-3, r_y+1 );
         // a bit anti-aliasing for the window contour...
@@ -355,9 +371,6 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     int titleMarginRight = 0;
     if(titleEdgeLeft > 0)
     {
-        painter.setPen(windowContour );
-        painter.drawLine(r_x, Rtitle.top(),
-                         r_x, Rtitle.bottom() );
         painter.setPen(highlightTitleLeft);
         painter.drawLine(r_x+1, Rtitle.top(),
                          r_x+1, Rtitle.bottom() );
@@ -368,9 +381,6 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     // rightTitleSpacer
     if(titleEdgeRight > 0)
     {
-        painter.setPen(windowContour );
-        painter.drawLine(r_x2, Rtitle.top(),
-                         r_x2, Rtitle.bottom() );
         painter.setPen(highlightTitleRight);
         painter.drawLine(r_x2-1, Rtitle.top(),
                          r_x2-1, Rtitle.bottom() );
@@ -423,15 +433,11 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         painter.drawLine(l, titleEdgeBottomBottom-1, r, titleEdgeBottomBottom-1 );
         painter.drawLine(l, titleEdgeBottomBottom, r, titleEdgeBottomBottom );
         if(borderLeft != 0) {
-            painter.setPen(windowContour );
-            painter.drawLine(r_x, titleEdgeBottomTop, r_x, titleEdgeBottomBottom );
             painter.setPen(highlightTitleLeft);
             painter.drawLine(r_x+1, titleEdgeBottomTop,
                             r_x+1, titleEdgeBottomBottom );
         }
         if(borderRight != 0) {
-        painter.setPen(windowContour );
-        painter.drawLine(r_x2, titleEdgeBottomTop, r_x2, titleEdgeBottomBottom );
         painter.setPen(highlightTitleRight);
         painter.drawLine(r_x2-1, titleEdgeBottomTop,
                          r_x2-1, titleEdgeBottomBottom );
@@ -441,9 +447,6 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     // leftSpacer
     if(borderLeft > 0 && sideHeight > 0)
     {
-        painter.setPen(windowContour );
-        painter.drawLine(r_x, titleEdgeBottomBottom+1,
-                            r_x, borderBottomTop-1 );
         painter.setPen(highlightLeft );
         painter.drawLine(r_x+1, titleEdgeBottomBottom+1,
                             r_x+1, borderBottomTop-1 );
@@ -457,9 +460,6 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     // rightSpacer
     if(borderRight > 0 && sideHeight > 0)
     {
-        painter.setPen(windowContour );
-        painter.drawLine(r_x2, titleEdgeBottomBottom+1,
-                            r_x2, borderBottomTop-1 );
         painter.setPen(highlightRight );
         painter.drawLine(r_x2-1, titleEdgeBottomBottom+1,
                          r_x2-1, borderBottomTop-1 );
@@ -473,14 +473,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     // bottomSpacer
     if(borderBottom > 0)
     {
-        painter.setPen(windowContour );
-        painter.drawLine(r_x+1, r_y2,
-                         r_x2-1, r_y2 );
-
         if(borderLeft != 0) {
-            painter.setPen(windowContour );
-            painter.drawLine(r_x, borderBottomTop,
-                            r_x, r_y2-1 );
             painter.setPen(highlightLeft );
             painter.drawLine(r_x+1, borderBottomTop,
                             r_x+1, r_y2-2 );
@@ -489,9 +482,6 @@ void PlastikClient::paintEvent(QPaintEvent *e)
             painter.drawPoint(r_x+1, r_y2-1);
         }
         if(borderRight != 0) {
-            painter.setPen(windowContour );
-            painter.drawLine(r_x2, borderBottomTop,
-                            r_x2, r_y2-1 );
             painter.setPen(highlightRight );
             painter.drawLine(r_x2-1, borderBottomTop,
                             r_x2-1, r_y2-2 );
