@@ -693,8 +693,14 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     rLay->addWidget(minimizeAnimOn,0,0);
 
     minimizeAnimSlider = new QSlider(0,10,10,0,QSlider::Horizontal, windowsBox);
-    minimizeAnimSlider->setSteps(10,1);
+    minimizeAnimSlider->setSteps(1, 1);
+    // QSlider::Below clashes with a X11/X.h #define
+    #undef Below
+    minimizeAnimSlider->setTickmarks(QSlider::Below);
     rLay->addMultiCellWidget(minimizeAnimSlider,0,0,1,2);
+
+    connect(minimizeAnimOn, SIGNAL(toggled(bool)), this, SLOT(setMinimizeAnim(bool)));
+    connect(minimizeAnimSlider, SIGNAL(valueChanged(int)), this, SLOT(setMinimizeAnimSpeed(int)));
 
     minimizeAnimSlowLabel= new QLabel(i18n("Slow"),windowsBox);
     minimizeAnimSlowLabel->setAlignment(AlignTop|AlignLeft);
@@ -715,7 +721,6 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     QWhatsThis::add(moveResizeMaximized, i18n("When enabled, this feature activates the border of maximized windows"
                                               " and allows you to move or resize them,"
                                               " just like for normal windows"));
-
 
     rLay = new QGridLayout(1,3);
     bLay->addLayout(rLay);
@@ -803,7 +808,7 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     // Any changes goes to slotChanged()
     connect( opaque, SIGNAL(clicked()), this, SLOT(slotChanged()));
     connect( resizeOpaqueOn, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect( minimizeAnimOn, SIGNAL(clicked() ), SLOT(slotChanged()));
+    connect( minimizeAnimOn, SIGNAL(clicked() ), this, SLOT(slotChanged()));
     connect( minimizeAnimSlider, SIGNAL(valueChanged(int)), this, SLOT(slotChanged()));
     connect( moveResizeMaximized, SIGNAL(toggled(bool)), this, SLOT(slotChanged()));
     connect( placementCombo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
@@ -820,18 +825,12 @@ void KMovingConfig::slotChanged()
 
 int KMovingConfig::getMove()
 {
-    if (opaque->isChecked())
-        return OPAQUE;
-    else
-        return TRANSPARENT;
+    return (opaque->isChecked())? OPAQUE : TRANSPARENT;
 }
 
 void KMovingConfig::setMove(int trans)
 {
-    if (trans == TRANSPARENT)
-        opaque->setChecked(false);
-    else
-        opaque->setChecked(true);
+    opaque->setChecked(trans == OPAQUE);
 }
 
 // placement policy --- CT 31jan98 ---
@@ -855,29 +854,27 @@ int KMovingConfig::getMinimizeAnimSpeed()
     return minimizeAnimSlider->value();
 }
 
-void KMovingConfig::setMinimizeAnim(bool anim, int speed)
+void KMovingConfig::setMinimizeAnim(bool anim)
 {
     minimizeAnimOn->setChecked( anim );
-    minimizeAnimSlider->setValue(speed);
     minimizeAnimSlider->setEnabled( anim );
     minimizeAnimSlowLabel->setEnabled( anim );
     minimizeAnimFastLabel->setEnabled( anim );
 }
 
+void KMovingConfig::setMinimizeAnimSpeed(int speed)
+{
+    minimizeAnimSlider->setValue(speed);
+}
+
 int KMovingConfig::getResizeOpaque()
 {
-    if (resizeOpaqueOn->isChecked())
-        return RESIZE_OPAQUE;
-    else
-        return RESIZE_TRANSPARENT;
+    return (resizeOpaqueOn->isChecked())? RESIZE_OPAQUE : RESIZE_TRANSPARENT;
 }
 
 void KMovingConfig::setResizeOpaque(int opaque)
 {
-    if (opaque == RESIZE_OPAQUE)
-        resizeOpaqueOn->setChecked(true);
-    else
-        resizeOpaqueOn->setChecked(false);
+    resizeOpaqueOn->setChecked(opaque == RESIZE_OPAQUE);
 }
 
 void KMovingConfig::setMoveResizeMaximized(bool a) {
@@ -897,18 +894,12 @@ void KMovingConfig::load( void )
         setMove(OPAQUE);
 
     //CT 17Jun1998 - variable animation speed from 0 (none!!) to 10 (max)
-    int anim = 1;
-    if (config->hasKey(KWIN_MINIMIZE_ANIM_SPEED)) {
-        anim = config->readNumEntry(KWIN_MINIMIZE_ANIM_SPEED);
-        if( anim < 1 ) anim = 0;
-        if( anim > 10 ) anim = 10;
-        setMinimizeAnim( config->readBoolEntry(KWIN_MINIMIZE_ANIM, true ), anim );
-    }
-    else{
-        config->writeEntry(KWIN_MINIMIZE_ANIM, true );
-        config->writeEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
-        setMinimizeAnim(true, 5);
-    }
+    bool anim = config->readBoolEntry(KWIN_MINIMIZE_ANIM, true );
+    int animSpeed = config->readNumEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
+    if( animSpeed < 1 ) animSpeed = 0;
+    if( animSpeed > 10 ) animSpeed = 10;
+    setMinimizeAnim( anim );
+    setMinimizeAnimSpeed( animSpeed );
 
     // DF: please keep the default consistent with kwin (options.cpp line 145)
     key = config->readEntry(KWIN_RESIZE_OPAQUE, "Opaque");
@@ -995,10 +986,6 @@ void KMovingConfig::save( void )
 
     config->writeEntry(KWIN_MINIMIZE_ANIM, getMinimizeAnim());
     config->writeEntry(KWIN_MINIMIZE_ANIM_SPEED, getMinimizeAnimSpeed());
-
-    if ( getMinimizeAnim() > 0 )
-        config->writeEntry("AnimateMinimize", true );
-
 
     v = getResizeOpaque();
     if (v == RESIZE_OPAQUE)

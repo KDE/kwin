@@ -126,9 +126,10 @@ signals:
 
 private slots:
   void slotChanged();
+  void setMinimizeAnim( bool );
+  void setMinimizeAnimSpeed( int );
 
 private:
-
   int getMove( void );
   bool getMinimizeAnim( void );
   int getMinimizeAnimSpeed( void );
@@ -136,7 +137,6 @@ private:
   int getPlacement( void ); //CT
 
   void setMove(int);
-  void setMinimizeAnim(bool,int);
   void setResizeOpaque(int);
   void setPlacement(int); //CT
   void setMoveResizeMaximized(bool);
