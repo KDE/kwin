@@ -908,14 +908,15 @@ void Client::grabButton( int modifier )
         {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
-        XScrL | XNumL, XScrL | XNumL | XCapL };
-for( int i = 0;
-     i < 8;
-     ++i )
-    XGrabButton( qt_xdisplay(), AnyButton,
-        modifier | mods[ i ],
-        wrapperId(),  FALSE, ButtonPressMask,
-        GrabModeSync, GrabModeAsync, None, None );
+        XScrL | XNumL, XScrL | XNumL | XCapL
+        };
+    for( int i = 0;
+         i < 8;
+         ++i )
+        XGrabButton( qt_xdisplay(), AnyButton,
+            modifier | mods[ i ],
+            wrapperId(),  FALSE, ButtonPressMask,
+            GrabModeSync, GrabModeAsync, None, None );
     }
 
 void Client::ungrabButton( int modifier )
@@ -924,12 +925,13 @@ void Client::ungrabButton( int modifier )
         {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
-        XScrL | XNumL, XScrL | XNumL | XCapL };
-for( int i = 0;
-     i < 8;
-     ++i )
-    XUngrabButton( qt_xdisplay(), AnyButton,
-        modifier | mods[ i ], wrapperId());
+        XScrL | XNumL, XScrL | XNumL | XCapL
+        };
+    for( int i = 0;
+         i < 8;
+         ++i )
+        XUngrabButton( qt_xdisplay(), AnyButton,
+            modifier | mods[ i ], wrapperId());
     }
 #undef XCapL
 #undef XNumL
@@ -943,6 +945,7 @@ for( int i = 0;
  */
 void Client::updateMouseGrab()
     {
+    XUngrabButton( qt_xdisplay(), AnyButton, AnyModifier, wrapperId());
     if( isActive() )
         {
         // remove the grab for no modifiers only if the window
