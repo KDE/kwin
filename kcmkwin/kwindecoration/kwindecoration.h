@@ -86,6 +86,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		QCheckBox* cbUseCustomButtonPositions;
 	//	QCheckBox* cbUseMiniWindows;
 		QCheckBox* cbShowToolTips;
+		QCheckBox* cbReverseBIDIWindows;
 
 		// Page 2
 		ButtonDropSite* dropSite;

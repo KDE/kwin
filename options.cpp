@@ -31,6 +31,7 @@ public:
     bool animate_tooltips;
     int electric_borders;
     int electric_border_delay;
+    bool reverse_BIDI_windows;
 };
 };
 
@@ -261,6 +262,7 @@ void Options::reload()
 
     // button tooltips
     d->show_tooltips = config->readBoolEntry("ShowToolTips", true);
+    d->reverse_BIDI_windows =config->readBoolEntry("ReverseBIDIWindows", true );
 
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
@@ -358,6 +360,11 @@ int Options::electricBorders()
 int Options::electricBorderDelay()
 {
     return d->electric_border_delay;
+}
+
+bool Options::reverseBIDIWindows()
+{
+    return d->reverse_BIDI_windows;
 }
 
 #include "options.moc"

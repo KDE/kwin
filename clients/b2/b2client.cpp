@@ -411,17 +411,31 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 
     if (options->customButtonPositions())
     {
-        addButtons( options->titleButtonsLeft(), tips, titlebar, titleLayout );
-        titleLayout->addItem(titlebar->captionSpacer);
-        addButtons( options->titleButtonsRight(), tips, titlebar, titleLayout );
+	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
+		addButtons( options->titleButtonsRight(), tips, titlebar, titleLayout );
+		titleLayout->addItem(titlebar->captionSpacer);
+		addButtons( options->titleButtonsLeft(), tips, titlebar, titleLayout );
+	}
+	else{
+		addButtons( options->titleButtonsLeft(), tips, titlebar, titleLayout );
+		titleLayout->addItem(titlebar->captionSpacer);
+		addButtons( options->titleButtonsRight(), tips, titlebar, titleLayout );
+	}
     } else {
-        addButtons( "MSH", tips, titlebar, titleLayout );
-        titleLayout->addItem(titlebar->captionSpacer);
-        addButtons( "IAX", tips, titlebar, titleLayout );
+    	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
+		addButtons( "IAX", tips, titlebar, titleLayout );
+		titleLayout->addItem(titlebar->captionSpacer);
+		addButtons( "MSH", tips, titlebar, titleLayout );
+	}
+	else{
+		addButtons( "MSH", tips, titlebar, titleLayout );
+		titleLayout->addItem(titlebar->captionSpacer);
+		addButtons( "IAX", tips, titlebar, titleLayout );
+	}
     }
 
     titleLayout->addSpacing(3);
- 
+
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
 
@@ -438,11 +452,13 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 void B2Client::addButtons(const QString& s, const QString tips[],
                           B2Titlebar* tb, QHBoxLayout* titleLayout)
 {
-    if (s.length() <= 0)
+    int str_len = s.length();
+    if (str_len <= 0)
 	return;
 
     for(unsigned int i = 0; i < s.length(); i++) {
-        switch(s[i].latin1()) {
+        switch( (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
+		? s[str_len-i-1].latin1():s[i].latin1()) {
             case 'M':  // Menu button
                 if (!button[BtnMenu]) {
                     button[BtnMenu] = new B2Button(this, tb, tips[BtnMenu]);

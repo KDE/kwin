@@ -70,7 +70,7 @@ QPixmap* frameL [] = {NULL, NULL};
 QPixmap* frameR [] = {NULL, NULL};
 QPixmap* frameBL[] = {NULL, NULL};
 QPixmap* frameB [] = {NULL, NULL};
-QPixmap* frameBR[] = {NULL, NULL}; 
+QPixmap* frameBR[] = {NULL, NULL};
 
 // Button pixmaps
 QPixmap* closePix[]      = {NULL, NULL};
@@ -177,7 +177,7 @@ ThemeHandler::ThemeHandler(): QObject( NULL )
 
 ThemeHandler::~ThemeHandler()
 {
-	if (initialized) 
+	if (initialized)
 		freePixmaps();
 
 	delete colorInActiveTitleTextShadow;
@@ -241,7 +241,7 @@ void ThemeHandler::readConfig()
 		*titleButtonsRight = options->titleButtonsRight();
 
 		// Convert KDE to icewm style buttons
-		convertButtons( *titleButtonsLeft );		
+		convertButtons( *titleButtonsLeft );
 		convertButtons( *titleButtonsRight );
 	}
 
@@ -368,7 +368,7 @@ void ThemeHandler::initTheme()
 	// Bottom
 	setPixmap( frameBL, "frame", "BL.xpm" ); 
 	setPixmap( frameB,  "frame", "B.xpm", true ); 
-	setPixmap( frameBR, "frame", "BR.xpm" ); 
+	setPixmap( frameBR, "frame", "BR.xpm" );
 
     // Make sure border sizes are at least reasonable...
 	if (borderSizeX < 0)
@@ -553,7 +553,7 @@ void ThemeHandler::setPixmap( QPixmap* p[], QString s1, QString s2,
 	if ( p[Active] )
 		qWarning("kwin-icewm: setPixmap - should be null (1)\n"); 
 	if ( p[InActive] )
-		qWarning("kwin-icewm: setPixmap - should be null (2)\n"); 
+		qWarning("kwin-icewm: setPixmap - should be null (2)\n");
 
 	p[Active]   = new QPixmap( locate("appdata", QString("icewm-themes/") 
 								+ themeName + s1 + "A" + s2) );
@@ -723,19 +723,19 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 
 	// Do something IceWM can't do :)
 	if (titleBarOnTop) {
-		grid->addWidget(windowWrapper(), 2, 1); 
+		grid->addWidget(windowWrapper(), 2, 1);
 		// no shade flicker
-    	grid->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,									   QSizePolicy::Expanding ) );    
-    }
+		grid->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+	}
 	else {
 		// no shade flicker
-    	grid->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,									   QSizePolicy::Expanding ) );    
+		grid->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 		grid->addWidget(windowWrapper(), 1, 1);
-    }
+	}
 
 	grid->setRowStretch(1, 10);
 	grid->setRowStretch(2, 10);
-	grid->setColStretch(1, 10); 
+	grid->setColStretch(1, 10);
 	grid->addRowSpacing(3, borderSizeY);
 	grid->addColSpacing(0, borderSizeX);
 	grid->addColSpacing(2, borderSizeX);
@@ -746,7 +746,10 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 
 	titleSpacerJ = addPixmapSpacer( titleJ );
 
-	addClientButtons( *titleButtonsLeft );
+	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()) )
+		addClientButtons( *titleButtonsRight );
+	else
+		addClientButtons( *titleButtonsLeft );
 	titleSpacerL = addPixmapSpacer( titleL );
 
 	// Centre titlebar if required.
@@ -755,15 +758,22 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 	titleSpacerS = addPixmapSpacer( titleS, spTitleBar, 1 );
 	titleSpacerP = addPixmapSpacer( titleP );
 
-	titlebar = new QSpacerItem( titleTextWidth(caption()), titleBarHeight, 
+	titlebar = new QSpacerItem( titleTextWidth(caption()), titleBarHeight,
 								QSizePolicy::Preferred, QSizePolicy::Fixed );
 	hb->addItem(titlebar);
 
-	titleSpacerM = addPixmapSpacer( titleM );
-	titleSpacerB = addPixmapSpacer( titleB, QSizePolicy::Expanding, 1 );
-	titleSpacerR = addPixmapSpacer( titleR );
-
-	addClientButtons( *titleButtonsRight );
+	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()) ){
+		titleSpacerR = addPixmapSpacer( titleR );
+		titleSpacerB = addPixmapSpacer( titleB, QSizePolicy::Expanding, 1 );
+		titleSpacerM = addPixmapSpacer( titleM );
+		addClientButtons( *titleButtonsLeft );
+	}
+	else{
+		titleSpacerM = addPixmapSpacer( titleM );
+		titleSpacerB = addPixmapSpacer( titleB, QSizePolicy::Expanding, 1 );
+		titleSpacerR = addPixmapSpacer( titleR );
+		addClientButtons( *titleButtonsRight );
+	}
 
 	titleSpacerQ = addPixmapSpacer( titleQ );
 
@@ -788,25 +798,31 @@ IceWMClient::~IceWMClient()
 // in the button string 's'
 void IceWMClient::addClientButtons( const QString& s )
 {
-	if (s.length() > 0)
-		for(unsigned int i = 0; i < s.length(); i++)	
+/*	QString ss = s;
+	if (QApplication::reverseLayout())
+		ss = clientHandler->reverseString( s );*/
+	int str_len = s.length();
+
+	if (str_len > 0)
+		for(unsigned int i = 0; i < str_len; i++)
 		{
-			switch ( s[i].latin1() ) 
+			switch ( (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))?
+				 s[str_len-i-1].latin1():s[i].latin1() )
 			{
 				case 's':
-					// Create the menu icons, and render with the current mini-icon 
+					// Create the menu icons, and render with the current mini-icon
 					// if explicitly requested by the theme.
 					if ( validPixmaps(menuButtonPix) && !button[BtnSysMenu])
 					{
 						if (showMenuButtonIcon) {
 							renderMenuIcons();
-							button[BtnSysMenu] = new IceWMButton(this, "menu", 
-								&menuButtonWithIconPix, false, i18n("Menu")); 
+							button[BtnSysMenu] = new IceWMButton(this, "menu",
+								&menuButtonWithIconPix, false, i18n("Menu"));
 						}
 						else
-							button[BtnSysMenu] = new IceWMButton(this, "menu", 
-								&menuButtonPix, false, i18n("Menu")); 
-	
+							button[BtnSysMenu] = new IceWMButton(this, "menu",
+								&menuButtonPix, false, i18n("Menu"));
+
 						connect( button[BtnSysMenu], SIGNAL(pressed()), 
 								 this, SLOT(menuButtonPressed()));
 						hb->addWidget( button[BtnSysMenu] );
@@ -954,7 +970,7 @@ void IceWMClient::resizeEvent( QResizeEvent* e )
 	Client::resizeEvent( e );
 	calcHiddenButtons();
 
-	if (isVisibleToTLW()) 
+	if (isVisibleToTLW())
 	{
 		 update(rect());
 		int dx = 0;

@@ -596,12 +596,16 @@ Manager::createTitle()
 
 
   QPtrList<Button> *buttonList = &leftButtonList_;
+  unsigned int str_len = buttons.length();
 
-  for (unsigned int i = 0; i < buttons.length(); ++i)
+  for (unsigned int i = 0; i < str_len; ++i)
   {
     Button * tb = 0;
-
-    switch (buttons[i].latin1())
+    switch ((QApplication::reverseLayout() && (!options->reverseBIDIWindows()))?
+      buttons[str_len-i-1].latin1():
+      buttons[i].latin1()
+      )
+    //switch (buttons[i].latin1())
     {
       case 'S': // Sticky
         tb = createButton(Button::Sticky, this);
@@ -632,9 +636,15 @@ Manager::createTitle()
       buttonList->append(tb);
   }
 
-  for (QPtrListIterator<Button> it(leftButtonList_); it.current(); ++it)
+  for (QPtrListIterator<Button>
+//	it(QApplication::reverseLayout()?rightButtonList_:leftButtonList_);
+	it(leftButtonList_);
+	it.current(); ++it)
   {
-    it.current()->setAlignment(Button::Left);
+//    it.current()->setAlignment(Button::Left);
+    it.current()->setAlignment( 
+	QApplication::reverseLayout() && (!options->reverseBIDIWindows())?
+	Button::Right:Button::Left);
     titleLayout_->addWidget(it.current());
   }
 
@@ -649,9 +659,14 @@ Manager::createTitle()
 
   titleLayout_->addItem(titleSpacer_);
 
-  for (QPtrListIterator<Button> it(rightButtonList_); it.current(); ++it)
+  for (QPtrListIterator<Button>
+//	it(QApplication::reverseLayout()?leftButtonList_:rightButtonList_);
+	it(rightButtonList_);
+	it.current(); ++it)
   {
-    it.current()->setAlignment(Button::Right);
+    it.current()->setAlignment(
+	QApplication::reverseLayout() && (!options->reverseBIDIWindows())?
+	Button::Left:Button::Right);
     titleLayout_->addWidget(it.current());
   }
 }

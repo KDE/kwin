@@ -338,8 +338,14 @@ void NextClient::initializeButtonsAndTitlebar(QHBoxLayout* titleLayout)
  * titleButtonsLeft and titleBUttonsRight. */
 void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
 {
+    int str_len = spec.length();
+    if (str_len <= 0)
+	return;
+
     for (unsigned int i=0; i<spec.length(); i++) {
-        switch (spec[i].latin1()) {
+        //switch (spec[i].latin1()) {
+	switch( (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))?
+		spec[str_len-i-1].latin1():spec[i].latin1()){
         case 'A':
             if (isMaximizable()) {
                 button[MAXIMIZE_IDX] =
@@ -370,7 +376,7 @@ void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
                          this, SLOT(iconify()) );
             }
             break;
-            
+
         case 'M':
             button[MENU_IDX] =
                 new NextButton(this, "menu", NULL, 10, 10, i18n("Menu"));

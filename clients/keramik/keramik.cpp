@@ -128,7 +128,7 @@ namespace Keramik
 	KeramikHandler *clientHandler = NULL;
 	bool keramik_initialized = false;
 
-} // namespace Keramik 
+} // namespace Keramik
 
 
 
@@ -164,7 +164,7 @@ KeramikHandler::KeramikHandler()
 	if ( QApplication::reverseLayout() ) {
 		for ( int i = 0; i < Help; i++ )
 			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
-		
+
 		for ( int i = Help + 1; i < NumButtonDecos; i++ )
 			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
 	}
@@ -404,7 +404,7 @@ void KeramikHandler::readConfig()
 
 	if ( ! settings_cache ) {
 		settings_cache = new SettingsCache;
-	
+
 		if ( options->customButtonPositions() ) {
 			settings_cache->buttonsLeft  = options->titleButtonsLeft();
 			settings_cache->buttonsRight = options->titleButtonsRight();
@@ -412,12 +412,13 @@ void KeramikHandler::readConfig()
 			settings_cache->buttonsLeft  = QString( default_left );
 			settings_cache->buttonsRight = QString( default_right );
 		}
-		
+
 		settings_cache->aTitleColor = options->color( Options::TitleBar,   true );
 		settings_cache->aTitleBlend = options->color( Options::TitleBlend, true );
 		settings_cache->iTitleColor = options->color( Options::TitleBar,   false );
 		settings_cache->iTitleBlend = options->color( Options::TitleBlend, false );
 		settings_cache->buttonColor = options->color( Options::ButtonBg,   true );
+		settings_cache->reverseBIDIWindows = options->reverseBIDIWindows();
 	}
 
 	delete c;
@@ -433,14 +434,14 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 	// Clear the destination image
 	Q_UINT32 *data = reinterpret_cast<Q_UINT32*>( dest.bits() );
 	for (int i = 0; i < width * height; i++)
-		*(data++) = 0;	
+		*(data++) = 0;
 
 	// Copy the under image (bottom aligned) to the destination image
 	for (int y1 = height - under->height(), y2 = 0; y1 < height; y1++, y2++ )
 	{
 		register Q_UINT32 *dst = reinterpret_cast<Q_UINT32*>( dest.scanLine(y1) );
 		register Q_UINT32 *src = reinterpret_cast<Q_UINT32*>( under->scanLine(y2) );
-	
+
 		for ( int x = 0; x < width; x++ )
 			*(dst++) = *(src++);
 	}
@@ -456,33 +457,33 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 
 		if ( a == 0xff )
 			*dst = *src;
-		
+
 		else if ( a != 0x00 )
 			*dst = qRgba( Q_UINT8( r1 + (((r2 - r1) * a) >> 8) ),
 		                  Q_UINT8( g1 + (((g2 - g1) * a) >> 8) ),
 		                  Q_UINT8( b1 + (((b2 - b1) * a) >> 8) ),
 		                  0xff );
-		
+
 		else if ( qAlpha(*dst) == 0x00 )
 			*dst = 0;
-		
+
 		src++; dst++;
 
 	}
-	
+
 	// Compute a 1 bpp mask from the alpha channel
 	QImage alphaMask = dest.createAlphaMask();
 	dest.setAlphaBuffer( false );
-	
+
 	// Create the final pixmap
 	QPixmap *pix = new QPixmap( dest );
-	
+
 	// Set the computed mask for the pixmap
 	if ( ! alphaMask.isNull() ) {
 		QBitmap mask;
 		mask.convertFromImage( alphaMask );
 		pix->setMask( mask );
-	} 
+	}
 
 	return pix;	
 }
@@ -512,9 +513,9 @@ QPixmap *KeramikHandler::loadPixmap( const QString &name, const QColor &col )
 void KeramikHandler::reset()
 {
 	QString buttonsLeft, buttonsRight;
-	
+
 	keramik_initialized = false;
-	
+
 	bool needHardReset  = false;
 	bool pixmapsInvalid = false;
 
@@ -530,7 +531,7 @@ void KeramikHandler::reset()
 	{
 		pixmapsInvalid = true;
 	}
-	
+
 	// Check if button positions have changed
 	if ( options->customButtonPositions() ) {
 		buttonsLeft  = options->titleButtonsLeft();
@@ -539,12 +540,16 @@ void KeramikHandler::reset()
 		buttonsLeft  = QString( default_left );
 		buttonsRight = QString( default_right );
 	}
-		
+
 	if ( (settings_cache->buttonsLeft != buttonsLeft) ||
 			(settings_cache->buttonsRight != buttonsRight) ) {
 		needHardReset = true;
 	}
 	
+	// bidi is always a mess..
+	if (settings_cache->reverseBIDIWindows != options->reverseBIDIWindows())
+		needHardReset = true;
+
 	// Update our config cache
 	settings_cache->aTitleColor         = options->color( Options::TitleBar,   true  );
 	settings_cache->aTitleBlend         = options->color( Options::TitleBlend, true  );
@@ -553,8 +558,8 @@ void KeramikHandler::reset()
 	settings_cache->buttonColor         = options->color( Options::ButtonBg,   true  );
 	settings_cache->buttonsLeft         = buttonsLeft;
 	settings_cache->buttonsRight        = buttonsRight;
-	
-	
+	settings_cache->reverseBIDIWindows  = options->reverseBIDIWindows();
+
 	// Do we need to recreate the pixmaps?
 	if ( pixmapsInvalid ) {
 		destroyPixmaps();
@@ -721,21 +726,26 @@ KeramikClient::KeramikClient( Workspace *ws, WId w, QWidget *parent, const char 
 
 	largeTitlebar = ( !maximizedVertical() && clientHandler->largeCaptionBubbles() );
 	largeCaption = ( isActive() && largeTitlebar );
-	
+
 	int topSpacing = ( largeTitlebar ? 4 : 1 );
 	topSpacer = new QSpacerItem( 10, topSpacing,
 				QSizePolicy::Expanding, QSizePolicy::Minimum );
 
 	mainLayout->addItem( topSpacer );
-	
+
 	mainLayout->addLayout( titleLayout );         // Titlebar
 	mainLayout->addLayout( windowLayout, 1 );     // Left border + window + right border
 	mainLayout->addSpacing( 8 );                  // Bottom grab bar + shadow
 
 	titleLayout->setSpacing( buttonSpacing );
-	
+
 	titleLayout->addSpacing( buttonMargin );      // Left button margin
-	addButtons( titleLayout, options->customButtonPositions() ?
+
+	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
+		addButtons( titleLayout, options->customButtonPositions() ?
+			options->titleButtonsRight() : QString(default_left) );
+	else
+		addButtons( titleLayout, options->customButtonPositions() ?
 			options->titleButtonsLeft() : QString(default_left) );
 
 	titlebar = new QSpacerItem( 10, clientHandler->titleBarHeight(largeTitlebar)
@@ -743,8 +753,14 @@ KeramikClient::KeramikClient( Workspace *ws, WId w, QWidget *parent, const char 
 	titleLayout->addItem( titlebar );
 
 	titleLayout->addSpacing( buttonSpacing );
-	addButtons( titleLayout, options->customButtonPositions() ?
+
+	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
+		addButtons( titleLayout, options->customButtonPositions() ?
+				options->titleButtonsLeft() : QString(default_right) );
+	else
+		addButtons( titleLayout, options->customButtonPositions() ?
 				options->titleButtonsRight() : QString(default_right) );
+
 	titleLayout->addSpacing( buttonMargin - 1 );  // Right button margin
 
 	windowLayout->addSpacing( 3 );                // Left border
@@ -803,7 +819,7 @@ void KeramikClient::reset()
 	// (i.e. not minimized and on the current desktop)
 	if ( isVisible() ) {
 		repaint( false );
-		
+
 		for ( int i = 0; i < NumButtons; i++ )
 			if ( button[i] ) button[i]->repaint( false );
 	}
@@ -812,8 +828,11 @@ void KeramikClient::reset()
 
 void KeramikClient::addButtons( QHBoxLayout *layout, const QString &s )
 {
-	for ( uint i=0; i < s.length(); i++ )
-	{
+	uint i = 0;
+	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
+		i = s.length() - 1;
+	
+	for( ; ( i < s.length()) ;) { // i>=0
 		switch ( s[i].latin1() )
 		{
 			// Menu button
@@ -833,7 +852,7 @@ void KeramikClient::addButtons( QHBoxLayout *layout, const QString &s )
 					layout->addWidget( button[StickyButton] );
 				}
 				break;
-				
+
 			// Help button
 			case 'H' :
 				if ( !button[HelpButton] && providesContextHelp() ) {
@@ -860,7 +879,7 @@ void KeramikClient::addButtons( QHBoxLayout *layout, const QString &s )
 					layout->addWidget( button[MaxButton] );
 				}
 				break;
-			
+
 			// Close button
 			case 'X' :
 				if ( !button[CloseButton] ) {
@@ -869,12 +888,18 @@ void KeramikClient::addButtons( QHBoxLayout *layout, const QString &s )
 					layout->addWidget( button[CloseButton] );
 				}
 				break;
-				
+
 			// Additional spacing
 			case '_' :
 				layout->addSpacing( buttonSpacing );
 				break;
 		}
+
+		if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
+			i--;
+		else
+			i++;
+
 	}
 }
 

@@ -412,31 +412,59 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     connect( button[BtnMax],     SIGNAL( clicked() ),    this, SLOT( slotMaximize() ));
     connect( options,            SIGNAL(resetClients()), this, SLOT( slotReset() ));
 
+
     // Pack the titleBar hbox with items
     hb = new QHBoxLayout();
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 1, 1 );
-    hb->addSpacing(2);
-    hb->addWidget( button[BtnMenu] );  
-    titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    hb->addItem(titlebar);
-    hb->addSpacing(2);
+    
+    if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
+	hb->addWidget( button[BtnClose] );
+	hb->addSpacing(2);
+	hb->addWidget( button[BtnMax] );
+	hb->addWidget( button[BtnIconify] );
+	hb->addSpacing(2);
 
-    if( providesContextHelp() )
-    {
-        button[BtnHelp] = new GalliumButton(this, "help", question_bits, false, smallButtons,
-                                            i18n("Help"));
-        connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
-        hb->addWidget( button[BtnHelp] );
+	if( providesContextHelp() )
+	{
+		button[BtnHelp] = new GalliumButton(this, "help", question_bits, false, smallButtons,
+						i18n("Help"));
+		connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
+		hb->addWidget( button[BtnHelp] );
+	}
+	else
+		button[BtnHelp] = NULL;
+		
+	titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
+	hb->addItem(titlebar);
+	hb->addSpacing(2);
+	hb->addWidget( button[BtnMenu] );
+	hb->addSpacing(2);
     }
-    else
-        button[BtnHelp] = NULL;
+    else{
+	hb->addSpacing(2);
+	hb->addWidget( button[BtnMenu] );
+	titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
+	hb->addItem(titlebar);
+	hb->addSpacing(2);
 
-    hb->addWidget( button[BtnIconify] );
-    hb->addWidget( button[BtnMax] );
-    hb->addSpacing(2);
-    hb->addWidget( button[BtnClose] );
-    hb->addSpacing(2);
+	if( providesContextHelp() )
+	{
+		button[BtnHelp] = new GalliumButton(this, "help", question_bits, false, smallButtons,
+						i18n("Help"));
+		hb->addSpacing(2);
+	connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
+		hb->addWidget( button[BtnHelp] );
+	}
+	else
+		button[BtnHelp] = NULL;
+
+	hb->addWidget( button[BtnIconify] );
+	hb->addWidget( button[BtnMax] );
+	hb->addSpacing(2);
+	hb->addWidget( button[BtnClose] );
+	hb->addSpacing(2);
+    }
 
     // Hide buttons which are not required
     // We can un-hide them if required later

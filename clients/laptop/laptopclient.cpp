@@ -219,8 +219,8 @@ static void delete_pixmaps()
 }
 
 
-LaptopClientButton::LaptopClientButton(int w, int h, Client *parent, 
-        const char *name, const unsigned char *bitmap, 
+LaptopClientButton::LaptopClientButton(int w, int h, Client *parent,
+        const char *name, const unsigned char *bitmap,
         const QString& tip)
     : KWinButton(parent, name, tip)
 {
@@ -230,7 +230,7 @@ LaptopClientButton::LaptopClientButton(int w, int h, Client *parent,
     resize(defaultSize);
     if(bitmap)
         setBitmap(bitmap);
-    //setBackgroundMode(QWidget::NoBackground);
+    setBackgroundMode(QWidget::NoBackground);
 }
 
 QSize LaptopClientButton::sizeHint() const
@@ -322,7 +322,7 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     if ( isTool() )
 	th -= 2;
 
-    button[BtnClose] = new LaptopClientButton(27, th, this, "close", 
+    button[BtnClose] = new LaptopClientButton(27, th, this, "close",
                                  close_bits, i18n("Close"));
     button[BtnSticky] = new LaptopClientButton(17, th, this, "sticky",
                                  NULL, i18n("Sticky"));
@@ -350,18 +350,34 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     hb = new QHBoxLayout();
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 1, 1 );
-    hb->addWidget( button[BtnClose]);
-    hb->addSpacing(1);
-    titlebar = new QSpacerItem(10, th, QSizePolicy::Expanding,
-                               QSizePolicy::Minimum);
-    hb->addItem(titlebar);
-    hb->addSpacing(1);
-    if(help){
-        hb->addWidget( button[BtnHelp]);
+    titlebar = new QSpacerItem(10, th, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
+	hb->addWidget( button[BtnMax]);
+	hb->addWidget( button[BtnIconify]);
+	hb->addWidget( button[BtnSticky]);
+	if(help){
+		hb->addWidget( button[BtnHelp]);
+	}
+	hb->addSpacing(1);
+	hb->addItem(titlebar);
+	hb->addSpacing(1);
+	hb->addWidget( button[BtnClose]);
     }
-    hb->addWidget( button[BtnSticky]);
-    hb->addWidget( button[BtnIconify]);
-    hb->addWidget( button[BtnMax]);
+    else{
+	hb->addWidget( button[BtnClose]);
+	hb->addSpacing(1);
+	hb->addItem(titlebar);
+	hb->addSpacing(1);
+	if(help){
+		hb->addWidget( button[BtnHelp]);
+	}
+	hb->addWidget( button[BtnSticky]);
+	hb->addWidget( button[BtnIconify]);
+	hb->addWidget( button[BtnMax]);
+    }
+    
+
 
     if ( isTransient() || isTool() )
 	button[BtnSticky]->hide();

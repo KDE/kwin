@@ -62,6 +62,7 @@ namespace Keramik {
 		QColor  buttonColor;
 		QString buttonsLeft;
 		QString buttonsRight;
+		bool    reverseBIDIWindows;
 	};
 					   
 	class KeramikHandler : public QObject {

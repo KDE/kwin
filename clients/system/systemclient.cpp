@@ -335,35 +335,43 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     QHBoxLayout* hb = new QHBoxLayout(0);
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 0, 1 );
-    hb->addSpacing(3);
-    hb->addWidget( button[0]);
-    titlebar = new QSpacerItem(10, 14, QSizePolicy::Expanding,
-                               QSizePolicy::Minimum);
-    hb->addSpacing(3);
-    hb->addItem(titlebar);
-    hb->addSpacing(3);
-    if(help){
-        hb->addWidget( button[4]);
-        hb->addSpacing(1);
+    titlebar = new QSpacerItem(10, 14, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
+	if (isMaximizable()) { hb->addWidget(button[3]); hb->addSpacing(3); }
+	else button[3]->hide();
+
+	if (isMinimizable()) { hb->addWidget(button[2]); hb->addSpacing(1); }
+	else button[2]->hide();
+
+	hb->addSpacing(1);
+	hb->addWidget( button[1]);
+	if(help){ hb->addWidget( button[4]); hb->addSpacing(1); }
+	hb->addSpacing(3);
+	hb->addItem(titlebar);
+	hb->addSpacing(3);
+	hb->addWidget( button[0]);
+	hb->addSpacing(3);
     }
-    hb->addWidget( button[1]);
-    hb->addSpacing(1);
+    else{
+	hb->addSpacing(3);
+	hb->addWidget( button[0]);
+	hb->addSpacing(3);
+	hb->addItem(titlebar);
+	hb->addSpacing(3);
+	if(help){ hb->addWidget( button[4]); hb->addSpacing(1); }
+	hb->addWidget( button[1]);
+	hb->addSpacing(1);
 
-    if (isMinimizable()) {
-         hb->addWidget(button[2]);
-         hb->addSpacing(1);
-    } else
-         button[2]->hide();
+	if (isMinimizable()) { hb->addWidget(button[2]); hb->addSpacing(1); }
+	else button[2]->hide();
 
-    if (isMaximizable()) {
-         hb->addWidget(button[3]);
-         hb->addSpacing(3);
-    } else
-         button[3]->hide();
+	if (isMaximizable()) { hb->addWidget(button[3]); hb->addSpacing(3); }
+	else button[3]->hide();
+    }
 
     setBackgroundMode(NoBackground);
     recalcTitleBuffer();
-
 }
 
 void SystemClient::resizeEvent( QResizeEvent* )

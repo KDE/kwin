@@ -259,28 +259,44 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 
     QHBoxLayout* hb = new QHBoxLayout;
     g->addLayout( hb, 0, 1 );
-    hb->addWidget( button[0] );
-    hb->addWidget( button[1] );
-//    hb->addWidget( button[2] );
-
     int fh = fontMetrics().lineSpacing();
-
     titlebar = new QSpacerItem(10, fh, QSizePolicy::Expanding,
 			       QSizePolicy::Minimum );
-    hb->addItem( titlebar );
 
-    button[6] = 0;
-    if ( providesContextHelp() ) {
-	button[6] = new KWinToolButton( this, 0, i18n("Help") );
-	hb->addWidget( button[6] ); // help  button
-	hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
-	button[6]->setIconSet( isActive() ? *question_mark_pix : *dis_question_mark_pix);
-	connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+    if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
+	hb->addWidget( button[5] );
+	hb->addWidget( button[4] );
+	hb->addWidget( button[3] );
+	if ( providesContextHelp() ) {
+		button[6] = new KWinToolButton( this, 0, i18n("Help") );
+		hb->addWidget( button[6] ); // help  button
+		hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+		button[6]->setIconSet( isActive() ? *question_mark_pix : *dis_question_mark_pix);
+		connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+	}
+	button[6] = 0;
+	hb->addItem( titlebar );
+	//    hb->addWidget( button[2] );
+	hb->addWidget( button[1] );
+	hb->addWidget( button[0] );
     }
-
-    hb->addWidget( button[3] );
-    hb->addWidget( button[4] );
-    hb->addWidget( button[5] );
+    else{
+	hb->addWidget( button[0] );
+	hb->addWidget( button[1] );
+	//    hb->addWidget( button[2] );
+	hb->addItem( titlebar );
+	button[6] = 0;
+	if ( providesContextHelp() ) {
+		button[6] = new KWinToolButton( this, 0, i18n("Help") );
+		hb->addWidget( button[6] ); // help  button
+		hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+		button[6]->setIconSet( isActive() ? *question_mark_pix : *dis_question_mark_pix);
+		connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+	}
+	hb->addWidget( button[3] );
+	hb->addWidget( button[4] );
+	hb->addWidget( button[5] );
+    }
 
     for ( int i = 0; i < 7; i++) {
 	if ( !button[i] )
@@ -309,8 +325,8 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
     connect( button[5], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
 
-    if ( button[6] ) {
-    }
+//    if ( button[6] ) {
+//  }
 
 
     if ( isTransient() ) {

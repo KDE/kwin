@@ -325,7 +325,12 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     connect( button[BtnHelp], SIGNAL(clicked()), this, SLOT( contextHelp() ) );
 
     for (int i = 0; i < (int)button_pattern->length();) {
-        QChar c = (*button_pattern)[i++];
+        QChar c;
+	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
+		c = (*button_pattern)[button_pattern->length()-i++];
+	else
+		c = (*button_pattern)[i++];
+
         if (c == '_')
             c = '3';
 

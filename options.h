@@ -319,6 +319,15 @@ public:
     * @returns the activation delay for electric borders in milliseconds.
     */
     int electricBorderDelay();
+    
+    /**
+    * @returns wheather clients should be reversed in BIDI enabled desktops
+    * In BIDI enabled desktops, when you choose this option kwin clients should
+    * display them selves reversed.
+    * Since QT does that already when QApplication::reversedLayout(), the clients should
+    * reverse the widgets only when (QApplication::reversedLayout() && !reverseBIDIWindows())
+    */
+    bool reverseBIDIWindows();
 
     void reload();
 
