@@ -1,4 +1,4 @@
-/*****************************************************************
+ /*****************************************************************
 kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
@@ -16,59 +16,61 @@ return; // seems like knotify is unusable
     QString event;
     switch ( e ) {
     case Close:
-	event = "Window Close";
+	event = "close";
 	break;
     case Iconify:
-	event = "Window Iconify";
+	event = "iconify";
 	break;
     case DeIconify:
-	event = "Window DeIconify";
+	event = "deiconify";
 	break;
     case Maximize:
-	event = "Window Maximize";
+	event = "maximize";
 	break;
     case UnMaximize:
-	event = "Window UnMaximize";
+	event = "unmaximize";
 	break;
     case Sticky:
-	event = "Window Sticky";
+	event = "sticky";
 	break;
     case UnSticky:
-	event = "Window UnSticky";
+	event = "unsticky";
 	break;
     case New:
-	event = "Window New";
+	event = "new";
 	break;
     case Delete:
-	event = "Window Delete";
+	event = "delete";
 	break;
     case TransNew:
-	event = "Window TransNew";
+	event = "transnew";
 	break;
     case TransDelete:
-	event = "Window TransDelete";
+	event = "transdelete";
 	break;
     case ShadeUp:
-	event = "Window ShadeUp";
+	event = "shadeup";
 	break;
     case ShadeDown:
-	event = "Window ShadeDown";
+	event = "shadedown";
 	break;
     case MoveStart:
-	event = "Window Move Start";
+	event = "movestart";
 	break;
     case MoveEnd:
-	event = "Window Move End";
+	event = "moveend";
 	break;
     case ResizeStart:
-	event = "Window Resize Start";
+	event = "resizestart";
 	break;
     case ResizeEnd:
-	event = "Window Resize End";
+	event = "resizeend";
 	break;
     }
+
     if ( !event )
 	return;
+
     
 
     if ( !KNotifyClient::event( event ) )
