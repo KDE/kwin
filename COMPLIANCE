@@ -35,19 +35,55 @@ Property Name			Type				Compliance
 
 Root Window Properties (and Related Messages):
 
-_NET_SUPPORTED			root window property		partial
-_NET_CLIENT_LIST		root window property		
-_NET_NUMBER_OF_DESKTOPS		root window property + message	complete
-_NET_DESKTOP_GEOMETRY		root window property + message
-_NET_DESKTOP_VIEWPORT		root window property + message
-_NET_CURRENT_DESKTOP		root window property + message
-_NET_DESKTOP_NAMES		root window property		
-_NET_ACTIVE_WINDOW		root window property + message
-_NET_WORKAREA			root window property	
-_NET_SUPPORTING_WM_CHECK	root window property
-_NET_VIRTUAL_ROOTS		root window property		
-_NET_DESKTOP_LAYOUT (pager)	root window property
-_NET_SHOWING_DESKTOP		root window property + message
+_NET_SUPPORTED			root window property		COMPLETE
+	+----------------------------------------------------------------+
+	| Please add all other supported _NET properties here            |
+	| after they are implemented. This property is complete in the   |
+	| sence that all implemented properties are listed here.	 |
+	+----------------------------------------------------------------+
+_NET_CLIENT_LIST		root window property		PARTIAL
+	+----------------------------------------------------------------+
+	| With xprop it seems only one WinID is stored, whereas an array |
+	| of all managed windows should be stored instead!               |
+	+----------------------------------------------------------------+
+_NET_CLIENT_LIST_STACKING	root window property		PARTIAL
+	+----------------------------------------------------------------+
+	| With xprop it seems only one WinID is stored, whereas an array |
+	| of all managed windows should be stored instead!               |
+	+----------------------------------------------------------------+
+_NET_NUMBER_OF_DESKTOPS		root window property + message	PARTIAL
+	+----------------------------------------------------------------+
+	| _NET_VIRTUAL_ROOTS MUST be set to the new number of desktop    |
+	| virtual root window IDs. Currently this property is NOT set,   |
+	| but a WM SHOULD set this property and respond to the message.  |
+	| We have NETRootInfo::setVirtualRoots() but we don't use it!!   |
+	+----------------------------------------------------------------+
+_NET_DESKTOP_GEOMETRY		root window property + message	NIL
+	+----------------------------------------------------------------+
+	| Neither the message or property are implemented.               |
+	| The WM SHOULD implement the property and respond to the        |
+	| message, so not implementing this isn't violating the spec.    |
+	| We have NETRootInfo::setDesktopGeometry() but we don't use it! |
+	+----------------------------------------------------------------+
+_NET_DESKTOP_VIEWPORT		root window property + message	COMPLETE
+_NET_CURRENT_DESKTOP		root window property + message	COMPLETE
+_NET_DESKTOP_NAMES		root window property		COMPLETE
+_NET_ACTIVE_WINDOW		root window property + message	COMPLETE
+_NET_WORKAREA			root window property		COMPLETE (seems buggy)
+	+----------------------------------------------------------------+
+	| Work Area takes into account the _NET_WM_STRUT property set on |
+	| client windows. I had a problem where _NET_NUMBER_OF_DESKTOPS  |
+	| was 3, but _NET_WORKAREA had only two geometries set.          |
+	| I need to investigate this -- Karol                            |
+	+----------------------------------------------------------------+
+_NET_SUPPORTING_WM_CHECK	root window property		COMPLETE
+_NET_VIRTUAL_ROOTS		root window property		NIL
+	+----------------------------------------------------------------+
+	| This property is currently NOT set.                            |
+	| We have NETRootInfo::setVirtualRoots() but we don't use it!!   |
+	+----------------------------------------------------------------+
+_NET_DESKTOP_LAYOUT (pager)	root window property		NIL
+_NET_SHOWING_DESKTOP		root window property + message	NIL
 
 Other Root Window Messages:
 
