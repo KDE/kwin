@@ -1495,6 +1495,10 @@ void Workspace::createKeybindings(){
 
     keys->connectItem( "Pop-up window operations menu", this, SLOT( slotWindowOperations() ) );
     keys->connectItem( "Window close", this, SLOT( slotWindowClose() ) );
+    keys->connectItem( "Window maximize", this, SLOT( slotWindowMaximize() ) );
+    keys->connectItem( "Window maximize horizontal", this, SLOT( slotWindowMaximizeHorizontal() ) );
+    keys->connectItem( "Window maximize vertical", this, SLOT( slotWindowMaximizeVertical() ) );
+    keys->connectItem( "Window iconify", this, SLOT( slotWindowIconify() ) );
 
     keys->readSettings();
 }
@@ -1522,6 +1526,28 @@ void Workspace::slotSwitchDesktop7(){
 }
 void Workspace::slotSwitchDesktop8(){
     setCurrentDesktop(8);
+}
+
+
+void Workspace::slotWindowMaximize()
+{
+    if ( popup_client )
+	popup_client->maximize( Client::MaximizeFull );
+}
+void Workspace::slotWindowMaximizeVertical()
+{
+    if ( popup_client )
+	popup_client->maximize( Client::MaximizeVertical );
+}
+void Workspace::slotWindowMaximizeHorizontal()
+{
+    if ( popup_client )
+	popup_client->maximize( Client::MaximizeHorizontal );
+}
+void Workspace::slotWindowIconify()
+{
+    if ( popup_client )
+	popup_client->iconify();
 }
 
 void Workspace::desktopPopupAboutToShow()
@@ -1586,9 +1612,8 @@ void Workspace::slotWindowOperations()
 
 void Workspace::slotWindowClose()
 {
-    if ( !popup_client )
-	return;
-    popup_client->closeWindow();
+    if ( popup_client )
+	popup_client->closeWindow();
 }
 
 

@@ -9,4 +9,8 @@
 
 
  keys->insertItem(i18n("Window operations menu"),  "Pop-up window operations menu"   ,"ALT+F3");
- keys->insertItem(i18n("Window close"),"Window close"     ,"ALT+F4");
+ keys->insertItem(i18n("Window close"),"Window close", "ALT+F4");
+ keys->insertItem(i18n("Window maximize"),"Window maximize", "");
+ keys->insertItem(i18n("Window maximize vertical"),"Window maximize vertical", "");
+ keys->insertItem(i18n("Window maximize horizontal"),"Window maximize horizontal", "");
+ keys->insertItem(i18n("Window iconify"),"Window iconify", "");
