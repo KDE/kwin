@@ -160,6 +160,27 @@ class KWinSelectionOwner
         static Atom xa_version;
     };
 
+// Class which saves original value of the variable, assigns the new value
+// to it, and in the destructor restores the value.
+// Used in Client::isMaximizable() and so on.
+// It also casts away contness and generally this looks like a hack.
+template< typename T >
+class TemporaryAssign
+    {
+    public:
+        TemporaryAssign( const T& var, const T& value )
+            : variable( var ), orig( var )
+            {
+            const_cast< T& >( variable ) = value;
+            }
+        ~TemporaryAssign()
+            {
+            const_cast< T& >( variable ) = orig;
+            }
+    private:
+        const T& variable;
+        T orig;
+    };
 
 QCString getStringProperty(WId w, Atom prop, char separator=0);
 void updateXTime();

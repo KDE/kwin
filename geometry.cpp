@@ -1527,8 +1527,8 @@ bool Client::isMovable() const
         return false;
     if( isSpecialWindow() && !isOverride() && !isSplash() && !isToolbar()) // allow moving of splashscreens :)
         return false;
-//    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
-//        return false;
+    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
+        return false;
     if( rules()->checkPosition( invalidPoint ) != invalidPoint ) // forced position
         return false;
     return true;
@@ -1543,11 +1543,8 @@ bool Client::isResizable() const
         return false;
     if(( isSpecialWindow() || isSplash() || isToolbar()) && !isOverride())
         return false;
-#if KDE_IS_VERSION( 3, 3, 90 )
-#warning Rename the moveresize maximize option.
-#endif
-//    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
-//        return false;
+    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
+        return false;
     if( rules()->checkSize( QSize()).isValid()) // forced size
         return false;
 
@@ -1561,8 +1558,12 @@ bool Client::isResizable() const
  */
 bool Client::isMaximizable() const
     {
-    if( !isMovable() || !isResizable() || isToolbar()) // SELI isToolbar() ?
-        return false;
+        { // isMovable() and isResizable() may be false for maximized windows
+          // with moving/resizing maximized windows disabled
+        TemporaryAssign< MaximizeMode > tmp( max_mode, MaximizeRestore );
+        if( !isMovable() || !isResizable() || isToolbar()) // SELI isToolbar() ?
+            return false;
+        }
     if ( maximizeMode() != MaximizeRestore )
         return TRUE;
     QSize max = maxSize();
@@ -1880,8 +1881,11 @@ bool Client::isFullScreenable( bool fullscreen_hack ) const
 
 bool Client::userCanSetFullScreen() const
     {
-    return isNormalWindow() && fullscreen_mode != FullScreenHack
-        && ( isMaximizable() || isFullScreen()); // isMaximizable() is false for isFullScreen()
+    if( fullscreen_mode == FullScreenHack )
+        return false;
+    // isMaximizable() returns false if fullscreen
+    TemporaryAssign< FullScreenMode > tmp( fullscreen_mode, FullScreenNone );
+    return isNormalWindow() && isMaximizable();
     }
 
 void Client::setFullScreen( bool set, bool user )
