@@ -476,14 +476,14 @@ QRect Placement::checkArea( const Client* c, const QRect& area )
  */
 void Workspace::slotWindowPackLeft()
     {
-    if( active_client )
+    if( active_client && active_client->isMovable())
         active_client->move( packPositionLeft( active_client, active_client->geometry().left(), true ),
             active_client->y());
     }
 
 void Workspace::slotWindowPackRight()
     {
-    if( active_client )
+    if( active_client && active_client->isMovable())
         active_client->move( 
             packPositionRight( active_client, active_client->geometry().right(), true )
             - active_client->width() + 1, active_client->y());
@@ -491,14 +491,14 @@ void Workspace::slotWindowPackRight()
 
 void Workspace::slotWindowPackUp()
     {
-    if( active_client )
+    if( active_client && active_client->isMovable())
         active_client->move( active_client->x(),
             packPositionUp( active_client, active_client->geometry().top(), true ));
     }
 
 void Workspace::slotWindowPackDown()
     {
-    if( active_client )
+    if( active_client && active_client->isMovable())
         active_client->move( active_client->x(),
             packPositionDown( active_client, active_client->geometry().bottom(), true ) - active_client->height() + 1 );
     }
@@ -511,6 +511,8 @@ void Workspace::slotWindowGrowHorizontal()
 
 void Client::growHorizontal()
     {
+    if( !isResizable())
+        return;
     QRect geom = geometry();
     geom.setRight( workspace()->packPositionRight( this, geom.right(), true ));
     QSize adjsize = adjustedSize( geom.size(), SizemodeFixedW );
@@ -535,6 +537,8 @@ void Workspace::slotWindowShrinkHorizontal()
 
 void Client::shrinkHorizontal()
     {
+    if( !isResizable())
+        return;
     QRect geom = geometry();
     geom.setRight( workspace()->packPositionLeft( this, geom.right(), false ));
     if( geom.width() <= 1 )
@@ -552,6 +556,8 @@ void Workspace::slotWindowGrowVertical()
 
 void Client::growVertical()
     {
+    if( !isResizable())
+        return;
     QRect geom = geometry();
     geom.setBottom( workspace()->packPositionDown( this, geom.bottom(), true ));
     QSize adjsize = adjustedSize( geom.size(), SizemodeFixedH );
@@ -576,6 +582,8 @@ void Workspace::slotWindowShrinkVertical()
 
 void Client::shrinkVertical()
     {
+    if( !isResizable())
+        return;
     QRect geom = geometry();
     geom.setBottom( workspace()->packPositionUp( this, geom.bottom(), false ));
     if( geom.height() <= 1 )
