@@ -204,6 +204,9 @@ public:
     * @li 'I' minimize ( iconify ) button
     * @li 'A' maximize button
     * @li 'X' close button
+    * @li 'F' keep_above_others button
+    * @li 'B' keep_below_others button
+    * @li 'L' shade button
     * @li '_' spacer
     *
     * The default ( which is also returned if customButtonPositions returns false )

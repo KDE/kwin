@@ -38,7 +38,7 @@
 //===============================================================
 
 enum Buttons{ BtnMenu=0, BtnOnAllDesktops, BtnSpacer, BtnHelp,
-			  BtnMinimize, BtnMaximize, BtnClose, BtnCount };
+			  BtnMinimize, BtnMaximize, BtnClose, BtnAboveOthers, BtnBelowOthers, BtnShade, BtnCount };
 QListBoxPixmap* buttons[ BtnCount ];
 QPixmap*	 	pixmaps[ BtnCount ];
 QPixmap* 		miniSpacer;
@@ -105,6 +105,15 @@ static int btnIndex( char btn )
 		case 'X':
 			return BtnClose;
 			break;
+		case 'F':
+			return BtnAboveOthers;
+			break;
+		case 'B':
+			return BtnBelowOthers;
+			break;
+		case 'L':
+			return BtnShade;
+			break;
 		default:
 			return -1;	// Not found...
 	}
@@ -137,11 +146,17 @@ ButtonSource::ButtonSource( QWidget* parent, const char* name )
 	pixmaps[ BtnMinimize ] 	= new QPixmap( button_minimize_xpm );
 	pixmaps[ BtnMaximize ] 	= new QPixmap( button_maximize_xpm );
 	pixmaps[ BtnClose ] 	= new QPixmap( button_close_xpm );
+	pixmaps[ BtnAboveOthers ]	= new QPixmap( button_above_others_xpm );
+	pixmaps[ BtnBelowOthers ]	= new QPixmap( button_below_others_xpm );
+	pixmaps[ BtnShade ]	= new QPixmap( button_shade_xpm );
 	miniSpacer 				= new QPixmap( titlebarspacer_xpm );
 
 	// Add all possible button/spacer types to the list box.
 	buttons[ BtnMenu ]	 	= new QListBoxPixmap( this, *pixmaps[BtnMenu], i18n("Menu") );
 	buttons[ BtnOnAllDesktops] 	= new QListBoxPixmap( this, *pixmaps[BtnOnAllDesktops], i18n("On All Desktops") );
+	buttons[ BtnAboveOthers ]	= new QListBoxPixmap( this, *pixmaps[BtnAboveOthers], i18n("Keep Above Others") );
+	buttons[ BtnBelowOthers ]	= new QListBoxPixmap( this, *pixmaps[BtnBelowOthers], i18n("Keep Below Others") );
+	buttons[ BtnShade ]		= new QListBoxPixmap( this, *pixmaps[BtnShade], i18n("Shade") );
 	buttons[ BtnSpacer ] 	= new QListBoxPixmap( this, *pixmaps[BtnSpacer], i18n("Spacer") );
 	buttons[ BtnHelp ]		= new QListBoxPixmap( this, *pixmaps[BtnHelp], i18n("Help") );
 	buttons[ BtnMinimize ]	= new QListBoxPixmap( this, *pixmaps[BtnMinimize], i18n("Minimize") );
@@ -171,6 +186,12 @@ void ButtonSource::hideAllButtons()
 		takeItem( buttons[BtnMenu] );
 	if (index( buttons[BtnOnAllDesktops] )!= -1)
 		takeItem( buttons[BtnOnAllDesktops] );
+	if (index( buttons[BtnAboveOthers] )!= -1)
+		takeItem( buttons[BtnAboveOthers] );
+	if (index( buttons[BtnBelowOthers] )!= -1)
+		takeItem( buttons[BtnBelowOthers] );
+	if (index( buttons[BtnShade] )!= -1)
+		takeItem( buttons[BtnShade] );
 	if (index( buttons[BtnHelp] ) != -1)
 		takeItem( buttons[BtnHelp] );
 	if (index( buttons[BtnMinimize] ) != -1)
@@ -192,6 +213,12 @@ void ButtonSource::showAllButtons()
 		insertItem( buttons[BtnMenu] );
 	if (index( buttons[BtnOnAllDesktops] )== -1)
 		insertItem( buttons[BtnOnAllDesktops] );
+	if (index( buttons[BtnAboveOthers] )== -1)
+		insertItem( buttons[BtnAboveOthers] );
+	if (index( buttons[BtnBelowOthers] )== -1)
+		insertItem( buttons[BtnBelowOthers] );
+	if (index( buttons[BtnShade] )== -1)
+		insertItem( buttons[BtnShade] );
 	if (index( buttons[BtnHelp] ) == -1)
 		insertItem( buttons[BtnHelp] );
 	if (index( buttons[BtnMinimize] ) == -1)
@@ -268,6 +295,12 @@ char ButtonSource::convertToChar( QString s )
 		return 'A';
 	else if (s == i18n("Close"))
 		return 'X';
+	else if (s == i18n("Keep Above Others"))
+		return 'F';
+	else if (s == i18n("Keep Below Others"))
+		return 'B';
+	else if (s == i18n("Shade"))
+		return 'L';
 	else
 		return '?';
 }
