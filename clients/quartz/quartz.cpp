@@ -563,7 +563,7 @@ const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET
 bool QuartzClient::isTool()
 {
 	NET::WindowType type = windowType( SUPPORTED_WINDOW_TYPES_MASK );
-	return ((type==NET::Toolbar)||(type==NET::NET::Utility)||(type==NET::Menu));
+	return ((type==NET::Toolbar)||(type==NET::Utility)||(type==NET::Menu));
 }
 
 
