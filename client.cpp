@@ -703,8 +703,8 @@ void Client::setShade( ShadeMode mode )
         shade_geometry_change = true;
         QSize s( sizeForClientSize( QSize( clientSize().width(), 0), SizemodeShaded ) );
         XSelectInput( qt_xdisplay(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-        XUnmapWindow( qt_xdisplay(), client );
         XUnmapWindow( qt_xdisplay(), wrapper );
+        XUnmapWindow( qt_xdisplay(), client );
         XSelectInput( qt_xdisplay(), wrapper, ClientWinMask | SubstructureNotifyMask );
 // FRAME       repaint( FALSE );
 //        bool wasStaticContents = testWFlags( WStaticContents );
@@ -857,9 +857,9 @@ void Client::rawHide()
 // will be missed is also very minimal, so I don't think it's needed to grab the server
 // here.
     XSelectInput( qt_xdisplay(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-    XUnmapWindow( qt_xdisplay(), client );
-    XUnmapWindow( qt_xdisplay(), wrapper );
     XUnmapWindow( qt_xdisplay(), frame );
+    XUnmapWindow( qt_xdisplay(), wrapper );
+    XUnmapWindow( qt_xdisplay(), client );
     XSelectInput( qt_xdisplay(), wrapper, ClientWinMask | SubstructureNotifyMask );
     if( decoration != NULL )
         decoration->widget()->hide(); // not really necessary, but let it know the state
