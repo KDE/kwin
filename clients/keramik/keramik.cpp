@@ -685,10 +685,12 @@ QValueList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
 
 
 
-KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, const QString &tip )
+KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, const QString &tip, const int realizeBtns )
 		: QButton( c->widget(), name ),
 		client( c ), button( btn ), hover( false ), lastbutton( 0 )
 {
+	realizeButtons = realizeBtns;
+
 	QToolTip::add( this, tip ); // FRAME
 	setBackgroundMode( NoBackground );
         setCursor( arrowCursor );
@@ -726,7 +728,7 @@ void KeramikButton::leaveEvent( QEvent *e )
 void KeramikButton::mousePressEvent( QMouseEvent *e )
 {
 	lastbutton = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mousePressEvent( &me );
 }
 
@@ -734,7 +736,7 @@ void KeramikButton::mousePressEvent( QMouseEvent *e )
 void KeramikButton::mouseReleaseEvent( QMouseEvent *e )
 {
 	lastbutton = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mouseReleaseEvent( &me );
 }
 
@@ -945,7 +947,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Menu button
 			case 'M' :
 				if ( !button[MenuButton] ) {
-					button[MenuButton] = new KeramikButton( this, "menu", MenuButton, i18n("Menu") );
+					button[MenuButton] = new KeramikButton( this, "menu", MenuButton, i18n("Menu"), LeftButton|RightButton );
 					connect( button[MenuButton], SIGNAL( pressed() ), SLOT( menuButtonPressed() ) );
 					layout->addWidget( button[MenuButton] );
 				}
@@ -982,7 +984,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Maximize button
 			case 'A' :
 				if ( !button[MaxButton] && isMaximizable() ) {
-					button[MaxButton] = new KeramikButton( this, "maximize", MaxButton, i18n("Maximize") );
+					button[MaxButton] = new KeramikButton( this, "maximize", MaxButton, i18n("Maximize"), LeftButton|MidButton|RightButton );
 					connect( button[MaxButton], SIGNAL( clicked() ), SLOT( slotMaximize() ) );
 					layout->addWidget( button[MaxButton] );
 				}

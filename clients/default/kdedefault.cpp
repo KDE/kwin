@@ -204,7 +204,7 @@ unsigned long KDEDefaultHandler::readConfig( bool update )
 	if (new_titleHeight < new_borderWidth) new_titleHeight = new_borderWidth;
 	if (new_toolTitleHeight < 12)              new_toolTitleHeight = 12;
 	if (new_toolTitleHeight < new_borderWidth) new_toolTitleHeight = new_borderWidth;
-	
+
         if( update )
         {
                 if( new_showGrabBar != showGrabBar
@@ -218,7 +218,7 @@ unsigned long KDEDefaultHandler::readConfig( bool update )
                     || new_toolTitleHeight != toolTitleHeight )
                         changed |= SettingColors; // just recreate the pixmaps and repaint
         }
-            
+
         showGrabBar             = new_showGrabBar;
         showTitleBarStipple     = new_showTitleBarStipple;
         useGradients            = new_useGradients;
@@ -515,9 +515,11 @@ QValueList< KDEDefaultHandler::BorderSize > KDEDefaultHandler::borderSizes() con
 
 KDEDefaultButton::KDEDefaultButton(KDEDefaultClient *parent, const char *name,
            bool largeButton, bool isLeftButton, bool isStickyButton,
-           const unsigned char *bitmap, const QString& tip )
+           const unsigned char *bitmap, const QString& tip, const int realizeBtns )
     : QButton(parent->widget(), name)
 {
+	realizeButtons = realizeBtns;
+
     QToolTip::add( this, tip );
     setCursor( arrowCursor );
     setBackgroundMode( QWidget::NoBackground );
@@ -685,7 +687,7 @@ void KDEDefaultButton::mousePressEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					LeftButton, e->state() );
+					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mousePressEvent( &me );
 }
 
@@ -694,7 +696,7 @@ void KDEDefaultButton::mouseReleaseEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					LeftButton, e->state() );
+					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mouseReleaseEvent( &me );
 }
 
@@ -745,8 +747,8 @@ void KDEDefaultClient::init()
     g->setRowStretch(3, 10);      // Wrapped window
 
 	// Determine the size of the lower grab bar
-    spacer = new QSpacerItem(10, 
-			showGrabBar && isResizable() ? grabBorderWidth : borderWidth, 
+    spacer = new QSpacerItem(10,
+			showGrabBar && isResizable() ? grabBorderWidth : borderWidth,
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->addItem(spacer, 4, 1);
 
@@ -778,7 +780,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				if (!button[BtnMenu])
 				{
    					button[BtnMenu] = new KDEDefaultButton(this, "menu",
-							largeButtons, isLeft, false, NULL, i18n("Menu"));
+							largeButtons, isLeft, false, NULL, i18n("Menu"), LeftButton|RightButton);
    					connect( button[BtnMenu], SIGNAL(pressed()),
 							this, SLOT(menuButtonPressed()) );
 					connect( button[BtnMenu], SIGNAL(released()),
@@ -832,7 +834,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				{
 				    button[BtnMax]  = new KDEDefaultButton(this, "maximize",
 							largeButtons, isLeft, true, maximize_bits,
-							i18n("Maximize"));
+							i18n("Maximize"), LeftButton|MidButton|RightButton);
 				    connect( button[BtnMax], SIGNAL( clicked()),
 							this, SLOT(slotMaximize()) );
 					hb->addWidget( button[BtnMax] );
@@ -1095,7 +1097,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
     p2.end();
 
 	// Ensure a shaded window has no unpainted areas
-	// Is this still needed? 
+	// Is this still needed?
 #if 1
 	p.setPen(c2);
     p.drawLine(x+borderWidth, y+titleHeight+4, x2-borderWidth, y+titleHeight+4);
@@ -1218,7 +1220,7 @@ KDecoration::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) co
 	MousePosition m = Nowhere;
 
 	int bottomSize  = (showGrabBar && isResizable()) ? grabBorderWidth : borderWidth;
-	    
+
     const int range = 14 + 3*borderWidth/2;
 
     if ( ( p.x() > borderWidth && p.x() < width() - borderWidth )

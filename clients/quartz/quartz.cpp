@@ -160,7 +160,7 @@ void QuartzHandler::readConfig()
 
 	// A small hack to make the on all desktops button look nicer
 	onAllDesktopsButtonOnLeft = KDecoration::options()->titleButtonsLeft().contains( 'S' );
-	
+
 	switch(options()->preferredBorderSize(this)) {
 	case BorderLarge:
 		borderWidth = 8;
@@ -186,7 +186,7 @@ void QuartzHandler::readConfig()
 	normalTitleHeight = QFontMetrics(options()->font(true)).height();
 	if (normalTitleHeight < 18) normalTitleHeight = 18;
 	if (normalTitleHeight < borderWidth) normalTitleHeight = borderWidth;
-	
+
 	toolTitleHeight = QFontMetrics(options()->font(true, true)).height();
 	if (toolTitleHeight < 12) toolTitleHeight = 12;
 	if (toolTitleHeight < borderWidth) toolTitleHeight = borderWidth;
@@ -203,10 +203,10 @@ void QuartzHandler::drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const
 
 	// Draw a background gradient first
 	KPixmapEffect::gradient(p, c1, c2, KPixmapEffect::HorizontalGradient);
-	
+
 	int factor = (pi->height()-2)/4;
 	int square = factor - (factor+2)/4;
-	
+
 	int x = pi->width() - 5*factor - square;
 	int y = (pi->height() - 4*factor)/2;
 
@@ -335,7 +335,7 @@ QValueList< QuartzHandler::BorderSize > QuartzHandler::borderSizes() const
 
 QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeButton,
 		bool isLeftButton, bool isOnAllDesktopsButton, const unsigned char *bitmap,
-		const QString& tip)
+		const QString& tip, const int realizeBtns)
     : QButton(parent->widget(), name)
 {
 	setTipText(tip);
@@ -344,6 +344,8 @@ QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeBut
     // Eliminate any possible background flicker
     setBackgroundMode( QWidget::NoBackground );
 	setToggleButton( isOnAllDesktopsButton );
+
+	realizeButtons = realizeBtns;
 
 	deco 	 = NULL;
     large 	 = largeButton;
@@ -469,7 +471,7 @@ void QuartzButton::mousePressEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					LeftButton, e->state() );
+					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mousePressEvent( &me );
 }
 
@@ -478,7 +480,7 @@ void QuartzButton::mouseReleaseEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					LeftButton, e->state() );
+					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mouseReleaseEvent( &me );
 }
 
@@ -578,7 +580,7 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					if (!button[BtnMenu])
 					{
     					button[BtnMenu] = new QuartzButton(this, "menu",
-								 largeButtons, isLeft, false, NULL, i18n("Menu"));
+								 largeButtons, isLeft, false, NULL, i18n("Menu"), LeftButton|RightButton);
     					connect( button[BtnMenu], SIGNAL(pressed()),
 								 this, SLOT(menuButtonPressed()) );
 						hb->addWidget( button[BtnMenu] );
@@ -629,7 +631,7 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					if ( (!button[BtnMax]) && isMaximizable())
 					{
 					    button[BtnMax]  = new QuartzButton(this, "maximize",
- 								 largeButtons, isLeft, true, maximize_bits, i18n("Maximize"));
+ 								 largeButtons, isLeft, true, maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
 					    connect( button[BtnMax], SIGNAL( clicked()),
 								 this, SLOT(slotMaximize()) );
 						hb->addWidget( button[BtnMax] );

@@ -25,7 +25,7 @@ class LaptopButton : public QButton
 {
 public:
     LaptopButton(int w, int h, LaptopClient *parent=0, const char *name=0,
-                 const unsigned char *bitmap=NULL, const QString& tip=NULL);
+                 const unsigned char *bitmap=NULL, const QString& tip=NULL, const int realizeBtns = LeftButton);
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
@@ -35,13 +35,13 @@ protected:
     void mousePressEvent( QMouseEvent* e )
     {
 	last_button = e->button();
-	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mousePressEvent( &me );
     }
     void mouseReleaseEvent( QMouseEvent* e )
     {
 	last_button = e->button();
-	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mouseReleaseEvent( &me );
     }
     virtual void drawButton(QPainter *p);
@@ -49,6 +49,7 @@ protected:
     LaptopClient *client;
     QSize defaultSize;
     QBitmap deco;
+    int realizeButtons;
 };
 
 class LaptopClient : public KDecoration

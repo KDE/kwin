@@ -38,10 +38,10 @@ class RedmondButton : public QButton
 {
 	Q_OBJECT
 public:
-   	RedmondButton(RedmondDeco *parent=0, const char *name=0, 
+   	RedmondButton(RedmondDeco *parent=0, const char *name=0,
 	              const unsigned char *bitmap=NULL,
 	              bool menuButton=false, bool isMini=false, int size = 16,
-	              const QString& tip=NULL);
+	              const QString& tip=NULL, const int realizeBtns = LeftButton);
 	void setBitmap(const unsigned char *bitmap);
 	void setPixmap(const QPixmap &p);
 	void reset();
@@ -61,6 +61,8 @@ protected:
 	bool     miniBtn;
 	RedmondDeco *client;
 	int      size;
+
+	int realizeButtons;
 };
 
 

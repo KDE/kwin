@@ -13,7 +13,7 @@
  *
  */
 
-#include "redmond.h"  
+#include "redmond.h"
 
 #include <qlayout.h>
 #include <qdrawutil.h>
@@ -81,12 +81,12 @@ static unsigned char question_bits[] = {
 
 
 // Up / Down titlebar button images
-static KPixmap *btnPix1; 
+static KPixmap *btnPix1;
 static KPixmap *iBtnPix1;
 static KPixmap *btnDownPix1;
 static KPixmap *iBtnDownPix1;
 
-static KPixmap *miniBtnPix1; 
+static KPixmap *miniBtnPix1;
 static KPixmap *iMiniBtnPix1;
 static KPixmap *miniBtnDownPix1;
 static KPixmap *iMiniBtnDownPix1;
@@ -200,13 +200,13 @@ static void create_pixmaps ()
         iMiniBtnDownPix1->fill(c.rgb());
     }
 
-    g = options()->colorGroup(KDecoration::ColorButtonBg, true);   
+    g = options()->colorGroup(KDecoration::ColorButtonBg, true);
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(miniBtnPix1, g, false);
     drawButtonFrame(miniBtnDownPix1, g, true);
 
-    g = options()->colorGroup(KDecoration::ColorButtonBg, false);   
+    g = options()->colorGroup(KDecoration::ColorButtonBg, false);
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
     drawButtonFrame(iMiniBtnPix1, g, false);
@@ -230,23 +230,24 @@ void delete_pixmaps()
     delete iMiniBtnPix1;
     delete iMiniBtnDownPix1;
     delete defaultMenuPix;
-    delete btnForeground;    
+    delete btnForeground;
     pixmaps_created = false;
 }
 
 
 RedmondButton::RedmondButton(RedmondDeco *parent, const char *name,
-      const unsigned char *bitmap, bool menuButton, bool isMini, int size, const QString& tip)
+      const unsigned char *bitmap, bool menuButton, bool isMini, int size, const QString& tip, const int realizeBtns)
     : QButton(parent->widget(), name)
 {
 	// Eliminate background flicker
-	setBackgroundMode( NoBackground ); 
+	setBackgroundMode( NoBackground );
         setCursor( arrowCursor );
 
 	menuBtn = menuButton;
 	miniBtn = isMini;
 	client  = parent;
 	this->size = size;
+	realizeButtons = realizeBtns;
 
 	// Use larger button for the menu, or mini-buttons for toolwindows.
 	if ( isMini || menuButton ) {
@@ -285,7 +286,7 @@ void RedmondButton::setBitmap(const unsigned char *bitmap)
 	pix.resize(0, 0);
 	deco = QBitmap(10, 10, bitmap, true);
 	deco.setMask(deco);
-	repaint( false );   
+	repaint( false );
 }
 
 
@@ -307,7 +308,7 @@ void RedmondButton::mousePressEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-	               LeftButton, e->state());
+	               (e->button()&realizeButtons)?LeftButton:NoButton, e->state());
 	QButton::mousePressEvent( &me );
 }
 
@@ -316,7 +317,7 @@ void RedmondButton::mouseReleaseEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
-					 LeftButton, e->state() );
+					 (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
 	QButton::mouseReleaseEvent( &me );
 }
 
@@ -345,13 +346,13 @@ void RedmondButton::drawButton(QPainter *p)
 			options()->color(KDecoration::ColorTitleBar, client->isActive()));
 
 	  if ( menuBtn && size < 16) {
-		 QPixmap tmpPix; 
+		 QPixmap tmpPix;
 
 		 // Smooth scale the menu button pixmap
 		 tmpPix.convertFromImage(
 		 pix.convertToImage().smoothScale(size, size));
 
-		 p->drawPixmap( 0, 0, tmpPix );            
+		 p->drawPixmap( 0, 0, tmpPix );
 	  } else {
 		 int xOff = (width() -pix.width() )/2;
 		 int yOff = (height()-pix.height())/2;
@@ -393,7 +394,7 @@ void RedmondDeco::init()
 		g->addItem(new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
 	}
 
-	g->addRowSpacing(0, borderWidth);       // Top grab bar 
+	g->addRowSpacing(0, borderWidth);       // Top grab bar
 	// without the next line, unshade flickers
 	g->addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
 	g->setRowStretch(3, 10);      // Wrapped window
@@ -402,10 +403,10 @@ void RedmondDeco::init()
 	g->addColSpacing(0, borderWidth);
 	g->addColSpacing(2, borderWidth);
 
-	button[BtnMenu] = new RedmondButton(this, "menu", NULL, true, smallButtons, titleHeight-2, i18n("Menu"));
+	button[BtnMenu] = new RedmondButton(this, "menu", NULL, true, smallButtons, titleHeight-2, i18n("Menu"), LeftButton|RightButton);
 	button[BtnClose] = new RedmondButton(this, "close", close_bits, false, smallButtons, titleHeight-2, i18n("Close"));
 	button[BtnMin] = new RedmondButton(this, "iconify", iconify_bits, false, smallButtons, titleHeight-2, i18n("Minimize"));
-	button[BtnMax] = new RedmondButton(this, "maximize", maximize_bits, false, smallButtons, titleHeight-2, i18n("Maximize"));
+	button[BtnMax] = new RedmondButton(this, "maximize", maximize_bits, false, smallButtons, titleHeight-2, i18n("Maximize"), LeftButton|MidButton|RightButton);
 
 	// Connect required stuff together
 	connect(button[BtnMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
@@ -417,7 +418,7 @@ void RedmondDeco::init()
 	hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
 	hb->setResizeMode(QLayout::FreeResize);
 	hb->addSpacing(2);
-	hb->addWidget(button[BtnMenu]);  
+	hb->addWidget(button[BtnMenu]);
 	titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
 	hb->addItem(titlebar);
 	hb->addSpacing(borderWidth/2);
@@ -464,7 +465,7 @@ void RedmondDeco::slotReset()
 
     // The menu is reset by iconChange()
 
-    widget()->repaint( false );  
+    widget()->repaint( false );
 }
 
 
@@ -511,7 +512,7 @@ void RedmondDeco::resizeEvent(QResizeEvent *)
 	    if ( dy )
 	       update( 0, height() - dy + 1, width(), dy );
 
-        if ( dx ) 
+        if ( dx )
         {
 	       update( width() - dx + 1, 0, dx, height() );
 	       update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
@@ -519,7 +520,7 @@ void RedmondDeco::resizeEvent(QResizeEvent *)
            // Titlebar needs no paint event
 	       QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
 	    }
-    } 
+    }
  */
 }
 
@@ -552,7 +553,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
     p.setPen( g.background() );
     p.drawLine( x, y, x2-1, y );
     p.drawLine( x, y, x, y2-1 );
- 
+
     // Draw line under title bar
     p.drawLine( x+borderWidth, y+titleHeight+borderWidth, x2-borderWidth, y+titleHeight+borderWidth );
     // Draw a hidden line that appears during shading
@@ -612,14 +613,14 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
         QPainter p2( titleBuffer, this );
 
-        // Since drawing the gradient is (relatively) slow, it is best 
+        // Since drawing the gradient is (relatively) slow, it is best
         // to draw the title text on the pixmap.
 
         // Reduce the font size and weight for toolwindows.
         QFont fnt = options()->font(true);
         if ( smallButtons ) {
            fnt.setPointSize( fnt.pointSize() - 2 ); // Shrink font by 2 pt.
-           fnt.setWeight( QFont::Normal ); 
+           fnt.setWeight( QFont::Normal );
            fontoffset = 0;
         }
         p2.setFont( fnt );
@@ -630,19 +631,19 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
         p.drawPixmap( borderWidth, borderWidth, *titleBuffer );
 
-        delete titleBuffer; 
+        delete titleBuffer;
 
-    } else {  
+    } else {
        // Assume lower ended hardware, so don't use buffers.
        // Don't draw a gradient either.
        p.fillRect( borderWidth, borderWidth, w-2*borderWidth, titleHeight, c1 );
-    
+
        // Draw the title text.
        QFont fnt = options()->font(true);
        if ( smallButtons )
        {
           fnt.setPointSize( fnt.pointSize() - 2 ); // Shrink font by 2 pt.
-          fnt.setWeight( QFont::Normal ); 
+          fnt.setWeight( QFont::Normal );
           fontoffset = 0;
        }
        p.setFont( fnt );
@@ -655,7 +656,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
 void RedmondDeco::showEvent(QShowEvent *)
 {
-    calcHiddenButtons();  
+    calcHiddenButtons();
     widget()->show();
 }
 
@@ -774,7 +775,7 @@ void RedmondDeco::activeChange()
 	QPixmap *miniIcon = new QPixmap(icon().pixmap(QIconSet::Small, QIconSet::Normal));
 
     if (!miniIcon->isNull()) {
-        button[BtnMenu]->setPixmap(*miniIcon); 
+        button[BtnMenu]->setPixmap(*miniIcon);
     } else {
         button[BtnMenu]->setPixmap(kdelogo);
 	}
@@ -817,7 +818,7 @@ void RedmondDeco::menuButtonPressed()
     lastClient = this;
     t->start();
     if (!dbl) {
-		QPoint menupoint(button[BtnMenu]->rect().bottomLeft().x()-3, 
+		QPoint menupoint(button[BtnMenu]->rect().bottomLeft().x()-3,
 		                 button[BtnMenu]->rect().bottomLeft().y()+4);
                 KDecorationFactory* f = factory();
 		showWindowMenu(button[BtnMenu]->mapToGlobal(menupoint));
@@ -943,5 +944,5 @@ extern "C" KDecorationFactory *create_factory()
 }
 
 
-#include "redmond.moc" 
+#include "redmond.moc"
 // vim: ts=4

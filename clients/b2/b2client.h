@@ -1,10 +1,10 @@
-/* 
+/*
  * B-II KWin Client
  *
  * Changes:
  * 	Customizable button positions by Karol Szwed <gallium@kde.org>
  * 	Ported to the kde3.2 API by Luciano Montanaro <mikelima@virgilio.it>
- */ 
+ */
 
 #ifndef __B2CLIENT_H
 #define __B2CLIENT_H
@@ -27,7 +27,7 @@ class B2Client;
 class B2Button : public QButton
 {
 public:
-    B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL);
+    B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL, const int realizeBtns = LeftButton);
     ~B2Button() {};
 
     void setBg(const QColor &c){bg = c;}
@@ -42,17 +42,18 @@ public:
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
-    
+
     bool useMiniIcon;
     KPixmap *pNorm, *pDown, *iNorm, *iDown;
     QColor bg; //only use one color (the rest is pixmap) so forget QPalette ;)
-    
+
     void mousePressEvent( QMouseEvent* e );
     void mouseReleaseEvent( QMouseEvent* e );
 
 public:
     B2Client* client;
-    int last_button;    
+    int last_button;
+    int realizeButtons;
 };
 
 class B2Titlebar : public QWidget
@@ -74,7 +75,7 @@ protected:
     void resizeEvent(QResizeEvent *ev);
 private:
     void drawTitlebar(QPainter &p, bool state);
-    
+
     B2Client *client;
     QString oldTitle;
     KPixmap titleBuffer;
@@ -119,7 +120,7 @@ private slots:
     //void slotReset();
     void maxButtonClicked();
 private:
-    void addButtons(const QString& s, const QString tips[], 
+    void addButtons(const QString& s, const QString tips[],
                     B2Titlebar* tb, QBoxLayout* titleLayout);
     void positionButtons();
     void calcHiddenButtons();

@@ -22,7 +22,7 @@ class ModernButton : public QButton
 public:
     ModernButton( ModernSys *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL,
-                 const QString& tip=NULL);
+                 const QString& tip=NULL, const int realizeBtns = LeftButton);
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
@@ -34,6 +34,8 @@ protected:
     void drawButtonLabel(QPainter *){;}
     QBitmap deco;
     ModernSys* client;
+
+    int realizeButtons;
 public:
     int last_button;
 };

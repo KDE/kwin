@@ -247,7 +247,7 @@ bool ModernSysFactory::read_config()
         theight = 16;
     if (theight < bwidth)
         theight = bwidth;
-    
+
     if (options()->customButtonPositions()) {
         bpatt = "2" + options()->titleButtonsLeft() + "3t3"
                 + options()->titleButtonsRight() + "2";
@@ -259,7 +259,7 @@ bool ModernSysFactory::read_config()
             && bwidth == border_width && theight == title_height
             && bpatt == *button_pattern)
         return false;
-    
+
     show_handle = showh;
     handle_width = hwidth;
     handle_size = hsize;
@@ -278,11 +278,12 @@ QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
 }
 
 ModernButton::ModernButton(ModernSys *parent, const char *name,
-                           const unsigned char *bitmap, const QString& tip)
+                           const unsigned char *bitmap, const QString& tip, const int realizeBtns)
     : QButton(parent->widget(), name)
 {
     setBackgroundMode( NoBackground );
     setCursor( arrowCursor );
+    realizeButtons = realizeBtns;
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
                  btnhighcolor_mask_bits : lowcolor_mask_bits, true);
     resize(14, 15);
@@ -293,7 +294,7 @@ ModernButton::ModernButton(ModernSys *parent, const char *name,
     hide();
     client = parent;
     QToolTip::add( this, tip );
-        
+
 }
 
 QSize ModernButton::sizeHint() const
@@ -332,13 +333,13 @@ void ModernButton::drawButton(QPainter *p)
 void ModernButton::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
     QButton::mousePressEvent( &me );
 }
 
 void ModernButton::mouseReleaseEvent( QMouseEvent* e )
 {
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
     QButton::mouseReleaseEvent( &me );
 }
 
@@ -385,7 +386,7 @@ void ModernSys::init()
     button[BtnClose] = new ModernButton(this, "close", close_bits, i18n("Close"));
     button[BtnSticky] = new ModernButton(this, "sticky", NULL, i18n("Sticky"));
     button[BtnMinimize] = new ModernButton(this, "iconify", iconify_bits, i18n("Minimize"));
-    button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits, i18n("Maximize"));
+    button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
     button[BtnHelp] = new ModernButton(this, "help", question_bits, i18n("Help"));
 
     connect( button[BtnClose], SIGNAL(clicked()), this, SLOT( closeWindow() ) );

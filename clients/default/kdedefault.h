@@ -53,7 +53,7 @@ class KDEDefaultButton : public QButton, public KDecorationDefines
 		KDEDefaultButton(KDEDefaultClient *parent=0, const char *name=0,
 			 bool largeButton=true, bool isLeftButton=true,
 			 bool isStickyButton=false, const unsigned char *bitmap=NULL,
-			 const QString& tip=NULL);
+			 const QString& tip=NULL, const int realizeBtns = LeftButton);
 		~KDEDefaultButton();
 
 		int last_button;
@@ -75,6 +75,8 @@ class KDEDefaultButton : public QButton, public KDecorationDefines
 		bool    isSticky;
 		bool	isMouseOver;
 		KDEDefaultClient* client;
+
+		int realizeButtons;
 };
 
 

@@ -113,7 +113,7 @@ namespace Keramik {
 	class KeramikButton : public QButton
 	{
 		public:
-			KeramikButton( KeramikClient *, const char *, Button, const QString & );
+			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = LeftButton );
 			~KeramikButton();
 
 			int lastButton() const { return lastbutton; }
@@ -130,6 +130,7 @@ namespace Keramik {
 			Button button;
 			bool hover;
 			int lastbutton;
+			int realizeButtons;
 	}; // class KeramikButton
 
 

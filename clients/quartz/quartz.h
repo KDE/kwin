@@ -54,7 +54,7 @@ class QuartzButton : public QButton
 	public:
 		QuartzButton(QuartzClient *parent=0, const char *name=0, bool largeButton=true,
 					 bool isLeftButton=true, bool isOnAllDesktopsButton=false,
-					 const unsigned char *bitmap=NULL, const QString& tip=NULL);
+					 const unsigned char *bitmap=NULL, const QString& tip=NULL, const int realizeBtns = LeftButton);
 		~QuartzButton();
 		void setBitmap(const unsigned char *bitmap);
 		void setTipText(const QString &tip);
@@ -73,6 +73,8 @@ class QuartzButton : public QButton
 		bool	 isLeft;
 		bool 	 isOnAllDesktops;
 		QuartzClient*  client;
+
+		int realizeButtons;
 };
 
 
