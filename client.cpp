@@ -604,10 +604,11 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	geom = session->geometry;
 
     QRect area = workspace()->clientArea();
-
-    if ( geom == workspace()->geometry() && inherits( "NoBorderClient" ) ) {
+    
+    if ( geom == workspace()->geometry() && inherits( "KWinInternal::NoBorderClient" ) ) {
 	is_fullscreen = TRUE;
 	may_move = FALSE; // don't let fullscreen windows be moved around
+ 	setStaysOnTop( TRUE ); // fullscreen windows shall be on top
     }
 
     if ( isMapped  || session || isTransient() ) {
@@ -758,7 +759,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	setSkipPager( session->skipPager );
 	maximize( (MaximizeMode) session->maximize );
 	geom_restore = session->restore;
-    } else {
+    } else if ( !is_fullscreen ){
 	// window may want to be maximized
 	if ( (info->state() & NET::Max) == NET::Max )
 	    maximize( Client::MaximizeFull );
