@@ -16,6 +16,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qwhatsthis.h>
 #include <qdatastream.h>
 #include <qregexp.h>
+#include <qclipboard.h>
 #include <kapp.h>
 #include <dcopclient.h>
 #include <kprocess.h>
@@ -2572,6 +2573,10 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
 
     keys->connectItem( "Kill Window", this, SLOT( slotKillWindow() ) );
+
+    keys->connectItem( "Screenshot of active window", this, SLOT( slotGrabWindow() ) );
+    keys->connectItem( "Screenshot of desktop", this, SLOT( slotGrabDesktop() ) );
+
     keys->readSettings();
     walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
     walkBackThroughDesktopsKeycode = keys->currentKey( "Walk back through desktops" );
@@ -2856,6 +2861,34 @@ void Workspace::killWindowAtPosition(int x, int y)
             return;
         }
     }
+}
+
+/*!
+  Takes a screenshot of the current window and puts it in the clipboard.
+*/
+void Workspace::slotGrabWindow()
+{
+  qWarning( "grabbing window!!!\n" );
+
+    if ( active_client ) {
+	QPixmap p = QPixmap::grabWindow( active_client->window() );
+	QClipboard *cb = QApplication::clipboard();
+	cb->setPixmap( p );
+    }
+    else
+	slotGrabDesktop();
+}
+
+/*!
+  Takes a screenshot of the whole desktop and puts it in the clipboard.
+*/
+void Workspace::slotGrabDesktop()
+{
+  qWarning( "grabbing desktop!!!\n" );
+
+    QPixmap p = QPixmap::grabWindow( qt_xrootwin() );
+    QClipboard *cb = QApplication::clipboard();
+    cb->setPixmap( p );
 }
 
 /*!

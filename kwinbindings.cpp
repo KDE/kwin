@@ -113,3 +113,6 @@ This belongs in taskbar rather than here, so it'll have to wait until after 2.2 
 #endif
  keys->insertItem(i18n("Mouse Emulation"), "Mouse emulation", KKey("ALT+F12"), KKey());
  keys->insertItem(i18n("Kill Window"), "Kill Window", KKey("CTRL+ALT+Escape"), KKey("Meta+Ctrl+Delete"));
+ keys->insertItem(i18n("Window Screenshot"), "Screenshot of active window", KKey("Print"), KKey());
+ keys->insertItem(i18n("Desktop Screenshot"), "Screenshot of desktop", KKey("CTRL+PrtSc"), KKey());
+

@@ -288,6 +288,9 @@ public slots:
 
     void slotKillWindow();
 
+    void slotGrabWindow();
+    void slotGrabDesktop();
+
 private slots:
     void desktopPopupAboutToShow();
     void clientPopupAboutToShow();
