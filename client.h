@@ -118,7 +118,7 @@ public:
     void giveUpShade();
 
     bool isMaximized() const;
-    enum MaximizeMode { MaximizeRestore, MaximizeVertical, MaximizeHorizontal, MaximizeFull,  MaximizeAdjust };
+    enum MaximizeMode { MaximizeRestore = 0, MaximizeVertical = 1, MaximizeHorizontal = 2, MaximizeFull = 3,  MaximizeAdjust };
     bool isMaximizable() const;
     QRect geometryRestore() const;
     MaximizeMode maximizeMode() const;
@@ -181,11 +181,13 @@ public:
     void show();
     void hide();
 
+    void maximizeRaw( bool vertically, bool horizontally );
+
 public slots:
     void iconify();
     void closeWindow();
     void killWindow();
-    void maximize( MaximizeMode );
+    void maximize( MaximizeMode m );
     void maximize();
     void toggleSticky();
     void contextHelp();

@@ -66,16 +66,12 @@ public:
 	if ( mask & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
-	if ( mask & NET::Max ) {
-	    if ( (state & NET::Max) == NET::Max )
-		m_client->maximize( Client::MaximizeFull );
-	    else if ( state & NET::MaxVert )
-		m_client->maximize( Client::MaximizeVertical );
-	    else if ( state & NET::MaxHoriz )
-		m_client->maximize( Client::MaximizeHorizontal );
-	    else
-		m_client->maximize( Client::MaximizeRestore );
-	}
+	if ( (mask & NET::Max) == NET::Max ) 
+	    m_client->maximizeRaw( state & NET::MaxVert, state & NET::MaxHoriz );
+	else if ( mask & NET::MaxVert )
+	    m_client->maximizeRaw( state & NET::MaxVert, m_client->maximizeMode() & Client::MaximizeHorizontal );
+	else if ( mask & NET::MaxHoriz )
+	    m_client->maximizeRaw( m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxVert );
 	
 	if ( mask & NET::StaysOnTop) {
 	    m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
@@ -1724,6 +1720,41 @@ void Client::killWindow()
     workspace()->destroyClient( this );
 }
 
+
+
+/*!
+  Sets the maximization according to \a vertically and \a horizontally
+ */
+void Client::maximizeRaw( bool vertically, bool horizontally )
+{
+    if ( !vertically && !horizontally ) {
+	maximize ( MaximizeRestore );
+    } else { 
+	QRect geom = geometry();
+	if ( isMaximized() )
+	    geom = geom_restore;
+	MaximizeMode m = MaximizeRestore;
+	if ( vertically && horizontally )
+	    m = MaximizeFull;
+	else if ( vertically )
+	    m = MaximizeVertical;
+	else if (horizontally )
+	    m = MaximizeHorizontal;
+	if ( m != max_mode ) {
+	    max_mode = MaximizeRestore;
+	    maximize( m );
+	    geom_restore = geom;
+	}
+    }
+}
+
+/*!  
+  Maximizes the client according to mode \a m. If the client is
+  already maximized with the same mode, it gets restored. Does some
+  smart magic like vertically + horizontally = full.
+  
+  This is the slot to connect to from your client subclass.
+ */
 void Client::maximize( MaximizeMode m)
 {
     if ( !isMaximizable() )
@@ -1733,28 +1764,32 @@ void Client::maximize( MaximizeMode m)
 
     if (isShade())
 	setShade( FALSE );
-
+    
     if ( m == MaximizeAdjust ) {
 	m = max_mode;
     } else {
 	
-	if ( max_mode != MaximizeRestore )
+	if ( max_mode == m )
 	    m = MaximizeRestore;
-	else if ( m == max_mode )
+	if ( m == max_mode )
 	    return; // nothing to do
 
 	if ( m != MaximizeRestore ) {
+	    if ( max_mode == MaximizeRestore )
+		geom_restore = geometry();
+	    if ( m != MaximizeFull)
+		m = (MaximizeMode ) ( (max_mode & MaximizeFull) ^ (m & MaximizeFull) );
 	    Events::raise( Events::Maximize );
-	    geom_restore = geometry();
 	}
     }
 
+    
     switch (m) {
 
     case MaximizeVertical:
 	setGeometry(
-		    QRect(QPoint(x(), clientArea.top()),
-			  adjustedSize(QSize(width(), clientArea.height())))
+		    QRect(QPoint(geom_restore.x(), clientArea.top()),
+			  adjustedSize(QSize(geom_restore.width(), clientArea.height())))
 		    );
 	info->setState( NET::MaxVert, NET::MaxVert );
 	break;
@@ -1763,8 +1798,8 @@ void Client::maximize( MaximizeMode m)
 
 	setGeometry(
 		    QRect(
-			  QPoint(clientArea.left(), y()),
-			  adjustedSize(QSize(clientArea.width(), height())))
+			  QPoint(clientArea.left(), geom_restore.y()),
+			  adjustedSize(QSize(clientArea.width(), geom_restore.height())))
 		    );
 	info->setState( NET::MaxHoriz, NET::MaxHoriz );
 	break;
@@ -1806,7 +1841,10 @@ void Client::toggleSticky()
 
 void Client::maximize()
 {
-    maximize( MaximizeFull );
+    if ( isMaximized() )
+	maximize( MaximizeRestore );
+    else
+	maximize( MaximizeFull );
 }
 
 
