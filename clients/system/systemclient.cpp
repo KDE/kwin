@@ -175,10 +175,10 @@ static void create_pixmaps()
 
 SystemButton::SystemButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
-    : QButton(parent, name)
+    : QToolButton(parent, name)
 {
     resize(14, 14);
-
+    connect( this, SIGNAL( clicked() ), this, SLOT( handleClicked() ) );
     if(bitmap)
         setBitmap(bitmap);
     client = parent;
@@ -239,7 +239,28 @@ void SystemButton::drawButton(QPainter *p)
         p->setPen(btnForeground);
         p->drawPixmap(isDown() ? 4 : 3, isDown() ? 4 : 3, deco);
     }
+
+    
 }
+
+void SystemButton::mousePressEvent( QMouseEvent* e )
+{
+    last_button = e->button();
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QToolButton::mousePressEvent( &me );
+}
+
+void SystemButton::mouseReleaseEvent( QMouseEvent* e )
+{
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QToolButton::mouseReleaseEvent( &me );
+}
+
+void SystemButton::handleClicked()
+{
+    emit clicked( last_button );
+}
+
 
 void SystemClient::slotReset()
 {
@@ -262,6 +283,21 @@ void SystemClient::slotReset()
     button[3]->reset();
     if(button[4])
         button[4]->reset();
+}
+
+void SystemClient::maxButtonClicked( int button )
+{
+    switch ( button  ){
+    case MidButton:
+	maximize( MaximizeVertical );
+	break;
+    case RightButton:
+	maximize( MaximizeHorizontal );
+	break;
+    default: //LeftButton:
+	maximize( MaximizeFull );
+	break;
+    }
 }
 
 SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
@@ -299,7 +335,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
     connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
+    connect( button[3], SIGNAL( clicked(int) ), this, ( SLOT( maxButtonClicked(int) ) ) );
 
     QHBoxLayout* hb = new QHBoxLayout(0);
     hb->setResizeMode(QLayout::FreeResize);
