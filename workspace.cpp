@@ -100,7 +100,8 @@ public:
        electric_left_border(None),
        electric_right_border(None),
        electric_time_first(0),
-       electric_time_last(0)
+       electric_time_last(0),
+       movingClient(0)
     { };
     ~WorkspacePrivate() {};
     KStartupInfo* startup;
@@ -112,6 +113,7 @@ public:
     WId electric_right_border;
     Time electric_time_first;
     Time electric_time_last;
+    Client *movingClient;
 };
 
 };
@@ -1883,6 +1885,19 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
     cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
 }
 
+/*!
+  Marks the client as being moved around by the user.
+ */
+void Workspace::setClientIsMoving( Client *c )
+{
+//    assert(!c || !d->movingClient); // Catch attempts to move a second
+    // window while still moving the first one.
+    d->movingClient = c;
+    if (d->movingClient)
+       focus_change = false;
+    else
+       focus_change = true;
+}
 
 /*!
   Cascades all clients on the current desktop
@@ -2340,6 +2355,11 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
         ObscuringWindows obs_wins;
 
+        if (d->movingClient && !d->movingClient->isSticky())
+        {
+            d->movingClient->setDesktop(-1); // All desktops
+        }
+
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
             if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
                 obs_wins.create( *it );
@@ -2355,6 +2375,11 @@ void Workspace::setCurrentDesktop( int new_desktop ){
                 (*it)->show();
                 mapList += (*it);
             }
+        }
+
+        if (d->movingClient && !d->movingClient->isSticky())
+        {
+            d->movingClient->setDesktop(new_desktop);
         }
     }
     current_desktop = new_desktop;

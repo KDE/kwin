@@ -144,8 +144,13 @@ public:
 
     void updateColormap();
 
-    void setFocusChangeEnabled(bool b) { focus_change = b; }
-    bool focusChangeEnabled() { return focus_change; }
+    void setFocusChangeEnabled(bool b) { focus_change = b; }  // KDE 3.0: No longer used
+    bool focusChangeEnabled() { return focus_change; }  // KDE 3.0: No longer used
+
+    /**
+     * Indicates that the client c is being moved around by the user.
+     */ 
+    void setClientIsMoving( Client *c );
 
     void doPlacement( Client* c );
     QPoint adjustClientPosition( Client* c, QPoint pos );

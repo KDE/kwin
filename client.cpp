@@ -574,7 +574,7 @@ Client::~Client()
 {
     releaseWindow();
     if (moveResizeMode)
-       workspace()->setFocusChangeEnabled(true);
+       workspace()->setClientIsMoving(0);
 
     delete info;
     delete d;
@@ -1436,7 +1436,7 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	    moveResizeMode = FALSE;
 	    setGeometry( geom );
 	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
-	    workspace()->setFocusChangeEnabled(true);
+	    workspace()->setClientIsMoving(0);
 	    releaseMouse();
 	    releaseKeyboard();
 	}
@@ -1485,7 +1485,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 		Events::raise( Events::UnMaximize );
 		info->setState( 0, NET::Max );
 	    }
-	    workspace()->setFocusChangeEnabled(false);
+	    workspace()->setClientIsMoving(this);
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
 	    grabMouse( cursor() ); // to keep the right cursor
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
@@ -2518,7 +2518,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    Events::raise( Events::UnMaximize );
 	    info->setState( 0, NET::Max );
 	}
-	workspace()->setFocusChangeEnabled(false);
+	workspace()->setClientIsMoving(this);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
@@ -2539,7 +2539,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    Events::raise( Events::UnMaximize );
 	    info->setState( 0, NET::Max );
 	}
-	workspace()->setFocusChangeEnabled(false);
+	workspace()->setClientIsMoving(this);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	int x = moveOffset.x(), y = moveOffset.y();
@@ -2673,7 +2673,7 @@ void Client::keyPressEvent( QKeyEvent * e )
 	    XUngrabServer( qt_xdisplay() );
 	setGeometry( geom );
 	moveResizeMode = FALSE;
-	workspace()->setFocusChangeEnabled(true);
+	workspace()->setClientIsMoving(0);
 	releaseMouse();
 	releaseKeyboard();
 	buttonDown = FALSE;
