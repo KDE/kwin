@@ -362,7 +362,7 @@ void KDEDefaultHandler::freePixmaps()
 }
 
 
-void KDEDefaultHandler::drawButtonBackground(KPixmap *pix, 
+void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
 		const QColorGroup &g, bool sunken)
 {
     QPainter p;
@@ -402,7 +402,7 @@ void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
 
 // ===========================================================================
 
-KDEDefaultButton::KDEDefaultButton(Client *parent, const char *name, 
+KDEDefaultButton::KDEDefaultButton(Client *parent, const char *name,
            bool largeButton, bool isLeftButton, bool isStickyButton,
            const unsigned char *bitmap, const QString& tip )
     : KWinButton(parent, name, tip)
@@ -465,7 +465,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 
 		if (isLeft)	{
 			if (isDown())
-				btnbg = client->isActive() ? 
+				btnbg = client->isActive() ?
 							*leftBtnDownPix : *ileftBtnDownPix;
 			else
 				btnbg = client->isActive() ?
@@ -511,7 +511,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 	// otherwise we paint a menu button (with mini icon), or a sticky button.
 	if( deco ) {
 		// Select the appropriate button decoration color
-   		bool darkDeco = qGray( options->color( 
+   		bool darkDeco = qGray( options->color(
 				isLeft? Options::TitleBar : Options::ButtonBg,
 				client->isActive()).rgb() ) > 127;
 
@@ -558,18 +558,18 @@ void KDEDefaultButton::turnOn( bool isOn )
 }
 
 
-void KDEDefaultButton::enterEvent(QEvent *e) 
-{ 
+void KDEDefaultButton::enterEvent(QEvent *e)
+{
 	isMouseOver=true;
-	repaint(false); 
+	repaint(false);
 	KWinButton::enterEvent(e);
 }
 
 
 void KDEDefaultButton::leaveEvent(QEvent *e)
-{ 
+{
 	isMouseOver=false;
-	repaint(false); 
+	repaint(false);
 	KWinButton::leaveEvent(e);
 }
 
@@ -643,7 +643,7 @@ KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
     g->addLayout ( hb, 1, 1 );
 
 	addClientButtons( options->titleButtonsLeft() );
-    titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding, 
+    titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding,
 								QSizePolicy::Minimum );
     hb->addItem(titlebar);
     hb->addSpacing(2);
@@ -673,10 +673,10 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 			case 'S':
 				if (!button[BtnSticky])
 				{
-   					button[BtnSticky] = new KDEDefaultButton(this, "sticky", 
+   					button[BtnSticky] = new KDEDefaultButton(this, "sticky",
 							largeButtons, isLeft, true, NULL, i18n("Sticky"));
 					button[BtnSticky]->turnOn( isSticky() );
-   					connect( button[BtnSticky], SIGNAL(clicked()), 
+   					connect( button[BtnSticky], SIGNAL(clicked()),
 							this, SLOT(toggleSticky()) );
 					hb->addWidget( button[BtnSticky] );
 				}
@@ -793,7 +793,7 @@ void KDEDefaultClient::resizeEvent( QResizeEvent* e)
         if ( dx )
         {
   	       update( width() - dx + 1, 0, dx, height() );
-	       update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - 
+	       update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() -
 					QPoint(1,0) ) );
 	       update( QRect( titlebar->geometry().topRight(), QPoint(width() - 4,
 						  titlebar->geometry().bottom()) ) );
@@ -1073,6 +1073,18 @@ Client::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) const
 // Make sure the menu button follows double click conventions set in kcontrol
 void KDEDefaultClient::menuButtonPressed()
 {
+	static QTime t;
+	static KDEDefaultClient* lastClient = NULL;
+	bool dbl = ( lastClient == this && t.elapsed() <= QApplication::doubleClickInterval());
+	lastClient = this;
+	t.start();
+
+	if (dbl)
+	{
+		closeWindow();
+		return;
+	}
+
 	QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1,
 					   button[BtnMenu]->rect().bottomLeft().y()+2 );
 	workspace()->showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ), this );
