@@ -266,8 +266,10 @@ static void ungrabButton( WId winId, int modifier )
 void WindowWrapper::setActive( bool active )
 {
     if ( active ) {
-        if ( options->focusPolicy == Options::ClickToFocus ||  !options->clickRaise )
-            ungrabButton( winId(),  None );
+// Don't release this grab because then we won't get the events
+// necessary for raising an active but not topmost windows
+//        if ( options->focusPolicy == Options::ClickToFocus ||  !options->clickRaise )
+//            ungrabButton( winId(),  None );
         ungrabButton( winId(),  ShiftMask );
         ungrabButton( winId(),  ControlMask );
         ungrabButton( winId(),  ControlMask | ShiftMask );
@@ -2613,6 +2615,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             workspace()->raiseClient( this );
         break;
     case Options::MouseActivateAndRaise:
+        // We might already be active, in which case we want to pass the click on
+        replay = isActive();
         workspace()->requestFocus( this );
         workspace()->raiseClient( this );
         break;
