@@ -591,6 +591,8 @@ void KWMThemeClient::doShape()
     if (framePixmaps[FrameTopLeft]->mask())
         p.drawPixmap(0,0,*framePixmaps[FrameTopLeft]->mask(),
 		     0,0,w1, h1);
+    else
+        p.fillRect(0,0,w1,h1,color1);
     int w2 = framePixmaps[FrameTopRight]->width();
     int h2 = framePixmaps[FrameTopRight]->height();
     if (w2 > width()/2) w2 = width()/2;
@@ -598,6 +600,8 @@ void KWMThemeClient::doShape()
     if (framePixmaps[FrameTopRight]->mask())
         p.drawPixmap(width()-w2,0,*framePixmaps[FrameTopRight]->mask(),
 		     framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
+    else
+        p.fillRect(width()-w2,0,w2, h2,color1);
 
     int w3 = framePixmaps[FrameBottomLeft]->width();
     int h3 = framePixmaps[FrameBottomLeft]->height();
@@ -606,6 +610,8 @@ void KWMThemeClient::doShape()
     if (framePixmaps[FrameBottomLeft]->mask())
         p.drawPixmap(0,height()-h3,*framePixmaps[FrameBottomLeft]->mask(),
 		     0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
+    else
+        p.fillRect(0,height()-h3,w3,h3,color1);
 
     int w4 = framePixmaps[FrameBottomRight]->width();
     int h4 = framePixmaps[FrameBottomRight]->height();
@@ -616,6 +622,8 @@ void KWMThemeClient::doShape()
 		     framePixmaps[FrameBottomRight]->width()-w4,
 		     framePixmaps[FrameBottomRight]->height()-h4,
 		     w4, h4);
+    else
+        p.fillRect(width()-w4,height()-h4,w4,h4,color1);
 
     QPixmap pm;
     QWMatrix m;
