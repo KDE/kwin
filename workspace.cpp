@@ -2699,7 +2699,7 @@ void Workspace::loadDesktopSettings()
     rootInfo->setNumberOfDesktops( number_of_desktops );
     for(int i = 1; i <= n; i++) {
 	QString s = c.readEntry(QString("Name_%1").arg(i),
-				      i18n("Desktop %1").arg(i+1));
+				      i18n("Desktop %1").arg(i));
 	rootInfo->setDesktopName( i, s.utf8().data() );
     }
 }
