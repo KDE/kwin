@@ -74,7 +74,7 @@ public:
 
     virtual bool windowEvent( XEvent * );
 
-    void manage( bool isMapped = FALSE );
+    bool manage( bool isMapped = FALSE, bool isReset = FALSE );
 
     void setMappingState( int s );
     int mappingState() const;

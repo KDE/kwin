@@ -1559,6 +1559,7 @@ void Workspace::raiseClient( Client* c )
     if ( !c )
 	return;
 
+    qDebug("raise client %s", c->caption().latin1() );
     if ( tab_box->isVisible() )
 	return;
 
@@ -2499,21 +2500,42 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
  */
 void Workspace::slotResetAllClients()
 {
-    for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
-        Client *oldClient = (*it);
-        WId w = oldClient->window();
-        oldClient->hide();
-        oldClient->releaseWindow();
-        // Replace oldClient with newClient in all lists
-        Client *newClient = clientFactory (w);
-        (*it) = newClient;
-        ClientList::Iterator jt = stacking_order.find (oldClient);
-        (*jt) = newClient;
-        jt = focus_chain.find (oldClient);
-        (*jt) = newClient;
-        delete oldClient;
-        newClient->manage( TRUE );
+ 
+    ClientList stack = stacking_order;
+    Client* active = activeClient();
+    block_focus = TRUE;
+    Client* prev = 0;
+    for (ClientList::Iterator it = stack.fromLast(); it != stack.end(); --it) {
+	Client *oldClient = (*it);
+	oldClient->hide();
+	WId w = oldClient->window();
+	XUnmapWindow( qt_xdisplay(), w );
+	oldClient->releaseWindow();
+	// Replace oldClient with newClient in all lists
+	Client *newClient = clientFactory (w);
+	if ( oldClient == active )
+	    active = newClient;
+	ClientList::Iterator jt = clients.find (oldClient);
+	(*jt) = newClient;
+	jt = stacking_order.find (oldClient);
+	(*jt) = newClient;
+	jt = focus_chain.find (oldClient);
+	(*jt) = newClient;
+	delete oldClient;
+	bool showIt = newClient->manage( TRUE, TRUE );
+	if ( prev ) {
+	    Window stack[2];
+	    stack[0] = prev->winId();;
+	    stack[1] = newClient->winId();
+	    XRestackWindows(  qt_xdisplay(), stack, 2 );
+	}
+	if ( showIt )
+	    newClient->show();
+	prev = newClient;
     }
+    block_focus = FALSE;
+    if ( active )
+	requestFocus( active );
 }
 
 /*!
