@@ -1278,14 +1278,24 @@ void Workspace::setActiveClient( Client* c )
 {
     if ( active_client == c )
         return;
-    if ( active_client )
+    if ( active_client ) {
         active_client->setActive( FALSE );
+	if ( active_client->isFullScreen() && active_client->staysOnTop() 
+	     && c && c->mainClient() != active_client->mainClient() ) {
+	    active_client->setStaysOnTop( FALSE );
+	    lowerClient( active_client );
+	}
+    }
     active_client = c;
     last_active_client = active_client;
     if ( active_client ) {
-        focus_chain.remove( c );
-        if ( c->wantsTabFocus() )
-            focus_chain.append( c );
+	if ( active_client->isFullScreen() && !active_client->staysOnTop() ) {
+	    active_client->setStaysOnTop( TRUE );
+	    raiseClient( active_client );
+	}
+	focus_chain.remove( c );
+	if ( c->wantsTabFocus() )
+	    focus_chain.append( c );
     }
 
     // toplevel menubar handling
@@ -1352,6 +1362,7 @@ void Workspace::activateClient( Client* c, bool force )
     if (!c->isOnDesktop(currentDesktop()) ) {
         setCurrentDesktop( c->desktop() );
     }
+
 }
 
 void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )

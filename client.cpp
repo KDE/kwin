@@ -609,7 +609,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     if ( geom == workspace()->geometry() && inherits( "KWinInternal::NoBorderClient" ) ) {
 	is_fullscreen = TRUE;
 	may_move = FALSE; // don't let fullscreen windows be moved around
- 	setStaysOnTop( TRUE ); // fullscreen windows shall be on top
     }
 
     if ( isMapped  || session || isTransient() ) {
@@ -2271,6 +2270,7 @@ void Client::setActive( bool act)
 	delete autoRaiseTimer;
 	autoRaiseTimer = 0;
     }
+
     activeChange( active );
 }
 
