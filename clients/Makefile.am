@@ -1,1 +1,1 @@
-SUBDIRS = default kde1 kstep system b2 laptop riscos modernsystem win2k kwmtheme quartz icewm web mwm
+SUBDIRS = default kde1 riscos win2k quartz icewm web mwm
