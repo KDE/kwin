@@ -66,6 +66,14 @@ inline void operator++( Layer& lay )
     lay = static_cast< Layer >( lay + 1 );
     }
 
+// for Client::takeActivity()
+enum ActivityFlags
+    {
+    ActivityFocus = 1 << 0, // focus the window
+    ActivityFocusForce = 1 << 1, // focus even if Dock etc.
+    ActivityRaise = 1 << 2 // raise the window
+    };
+
 // Some KWin classes, mainly Client and Workspace, are very tighly coupled,
 // and some of the methods of one class may be called only from speficic places.
 // Those methods have additional allowed_t argument. If you pass Allowed

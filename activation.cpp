@@ -297,45 +297,65 @@ void Workspace::activateClient( Client* c, bool force )
   \sa Workspace::activateClient()
  */
 void Workspace::requestFocus( Client* c, bool force )
-    { // the 'if( c == active_client ) return;' optimization mustn't be done here
+    {
+    takeActivity( c, ActivityFocus | ( force ? ActivityFocusForce : 0 ), false);
+    }
+    
+void Workspace::takeActivity( Client* c, int flags, bool handled )
+    {
+     // the 'if( c == active_client ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && ( c != active_client) )
-        return;
+        flags &= ~ActivityFocus;
 
-    //TODO will be different for non-root clients. (subclassing?)
     if ( !c ) 
         {
         focusToNull();
         return;
         }
 
-    if( !c->isOnCurrentDesktop()) // shouldn't happen, call activateClient() if needed
+    if( flags & ActivityFocus )
         {
-        kdWarning( 1212 ) << "requestFocus: not on current desktop" << endl;
-        return;
+        Client* modal = c->findModal();
+        if( modal != NULL && modal != c )	
+            { 
+            if( !modal->isOnDesktop( c->desktop()))
+                modal->setDesktop( c->desktop());
+            // if the click was inside the window (i.e. handled is set),
+            // but it has a modal, there's no need to use handled mode, because
+            // the modal doesn't get the click anyway
+            // raising of the original window needs to be still done
+            if( flags & ActivityRaise )
+                raiseClient( c );
+            flags &= ~ActivityRaise;
+            c = modal;
+            handled = false;
+            }
         }
-
-    Client* modal = c->findModal();
-    if( modal != NULL && modal != c )	
-        { 
-        if( !modal->isOnDesktop( c->desktop())) // move the modal to client's desktop
-            modal->setDesktop( c->isOnAllDesktops() ? currentDesktop() : c->desktop());
-        requestFocus( modal, force );
-        return;
-        }
-    if ( c->isShown( false ) ) 
+    if ( !( flags & ActivityFocusForce ) && ( c->isTopMenu() || c->isDock() || c->isSplash()) )
+        flags &= ~ActivityFocus; // toplevel menus and dock windows don't take focus if not forced
+    if( c->isShade())
         {
-        c->takeFocus( force, Allowed );
-        should_get_focus.append( c );
-        focus_chain.remove( c );
-        if ( c->wantsTabFocus() )
-            focus_chain.append( c );
-        }
-    else if ( c->isShade() && c->wantsInput()) 
-        {
+        if( c->wantsInput() && ( flags & ActivityFocus ))
+            {
         // client cannot accept focus, but at least the window should be active (window menu, et. al. )
-        c->setActive( true );
-        focusToNull();
+            c->setActive( true );
+            focusToNull();
+            }
+        flags &= ~ActivityFocus;
+        handled = false; // no point, can't get clicks
         }
+    if( !c->isShown( true )) // shouldn't happen, call activateClient() if needed
+        {
+        kdWarning( 1212 ) << "takeActivity: not shown" << endl;
+        return;
+        }
+    c->takeActivity( flags, handled, Allowed );
+    }
+
+void Workspace::handleActivityRaise( Client* c, Time timestamp )
+    {
+    if( last_restack == CurrentTime || timestampCompare( timestamp, last_restack ) >= 0 )
+        raiseClient( c );
     }
 
 /*!
@@ -415,6 +435,10 @@ void Workspace::gotFocusIn( const Client* c )
         }
     }
 
+void Workspace::setShouldGetFocus( Client* c )
+    {
+    should_get_focus.append( c );
+    }
 
 // focus_in -> the window got FocusIn event
 // session_active -> the window was active when saving session

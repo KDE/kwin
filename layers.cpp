@@ -72,6 +72,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "group.h"
 #include <kdebug.h>
 
+extern Time qt_x_time;
+
 namespace KWinInternal
 {
 
@@ -337,7 +339,10 @@ void Workspace::raiseClient( Client* c )
     unconstrained_stacking_order.append( c );
 
     if( !c->isSpecialWindow())
+        {
         most_recently_raised = c;
+        last_restack = qt_x_time;
+        }
     }
 
 void Workspace::raiseClientWithinApplication( Client* c )

@@ -18,7 +18,7 @@ namespace KWinInternal
 Atoms::Atoms()
     {
 
-    const int max = 20;
+    const int max = 50;
     Atom* atoms[max];
     char* names[max];
     Atom atoms_return[max];
@@ -61,6 +61,9 @@ Atoms::Atoms()
 
     atoms[n] = &kde_system_tray_embedding;
     names[n++] = (char*) "_KDE_SYSTEM_TRAY_EMBEDDING";
+    
+    atoms[n] = &net_wm_take_activity;
+    names[n++] = (char*) "_NET_WM_TAKE_ACTIVITY";
 
     Atom fake;
     atoms[n] = &fake;

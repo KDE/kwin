@@ -186,7 +186,8 @@ class Client : public QObject, public KDecorationDefines
         bool isResizable() const;
         bool isCloseable() const; // may be closed by the user (may have a close button)
 
-        void takeFocus( bool force, allowed_t );
+        void takeActivity( int flags, bool handled, allowed_t ); // takes ActivityFlags as arg (in utils.h)
+        void takeFocus( allowed_t );
         void demandAttention( bool set = true );
 
         void setMask( const QRegion& r, int mode = X::Unsorted );
@@ -215,7 +216,7 @@ class Client : public QObject, public KDecorationDefines
 
         bool providesContextHelp() const;
 
-        bool performMouseCommand( Options::MouseCommand, QPoint globalPos );
+        bool performMouseCommand( Options::MouseCommand, QPoint globalPos, bool handled = false );
 
         QCString windowRole() const;
         QCString sessionId();
@@ -366,6 +367,8 @@ private slots:
         void pingWindow();
         void killProcess( bool ask, Time timestamp = CurrentTime );
         void updateUrgency();
+        static void sendClientMessage( Window w, Atom a, Atom protocol,
+            long data1 = 0, long data2 = 0, long data3 = 0 );
 
         void embedClient( Window w, const XWindowAttributes &attr );    
         void detectNoBorder();
@@ -430,6 +433,7 @@ private slots:
         uint original_skip_taskbar :1; // unaffected by KWin
         uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
         uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
+        uint Ptakeactivity : 1; // does it support _NET_WM_TAKE_ACTIVITY
         uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?
         uint Pping : 1; // does it support _NET_WM_PING?
         uint input :1; // does the window want input in its wm_hints

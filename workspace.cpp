@@ -69,6 +69,7 @@ Workspace::Workspace( bool restore )
     last_active_client     (0),
     most_recently_raised (0),
     movingClient(0),
+    last_restack      (CurrentTime),
     was_user_interaction (false),
     session_saving    (false),
     control_grab      (false),

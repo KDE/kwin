@@ -128,6 +128,7 @@ Client::Client( Workspace *ws )
 
     Pdeletewindow = 0;
     Ptakefocus = 0;
+    Ptakeactivity = 0;
     Pcontexthelp = 0;
     Pping = 0;
     input = FALSE;
@@ -871,7 +872,7 @@ void Client::rawHide()
     workspace()->clientHidden( this );
     }
 
-static void sendClientMessage(Window w, Atom a, long x)
+void Client::sendClientMessage(Window w, Atom a, Atom protocol, long data1, long data2, long data3)
     {
     XEvent ev;
     long mask;
@@ -881,8 +882,11 @@ static void sendClientMessage(Window w, Atom a, long x)
     ev.xclient.window = w;
     ev.xclient.message_type = a;
     ev.xclient.format = 32;
-    ev.xclient.data.l[0] = x;
+    ev.xclient.data.l[0] = protocol;
     ev.xclient.data.l[1] = qt_x_time;
+    ev.xclient.data.l[2] = data1;
+    ev.xclient.data.l[3] = data2;
+    ev.xclient.data.l[4] = data3;
     mask = 0L;
     if (w == qt_xrootwin())
       mask = SubstructureRedirectMask;        /* magic! */
@@ -1101,15 +1105,43 @@ bool Client::isOnCurrentDesktop() const
     return isOnDesktop( workspace()->currentDesktop());
     }
 
-/*!
-  Puts the focus on this window. Clients should never calls this
-  themselves, instead they should use Workspace::requestFocus().
- */
-void Client::takeFocus( bool force, allowed_t )
+// performs activation and/or raising of the window
+void Client::takeActivity( int flags, bool handled, allowed_t )
     {
-    if ( !force && ( isTopMenu() || isDock() || isSplash()) )
-        return; // toplevel menus and dock windows don't take focus if not forced
+    if( !handled || !Ptakeactivity )
+        {
+        if( flags & ActivityFocus )
+            takeFocus( Allowed );
+        if( flags & ActivityRaise )
+            workspace()->raiseClient( this );
+        return;
+        }
 
+#ifndef NDEBUG
+    static Time previous_activity_timestamp;
+    static Client* previous_client;
+    if( previous_activity_timestamp == qt_x_time && previous_client != this )
+        {
+        kdWarning( 1212 ) << "Repeated use of the same X timestamp for activity" << endl;
+        kdDebug( 1212 ) << kdBacktrace() << endl;
+        }
+    previous_activity_timestamp = qt_x_time;
+    previous_client = this;
+#endif
+    int flg = 0;
+    if( flags & ActivityFocus )
+        {
+        flg |= 1 << 0;
+        workspace()->setShouldGetFocus( this );
+        }
+    if( flags & ActivityRaise )
+        flg |= 1 << 1;
+    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_take_activity, flg );
+    }
+
+// performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS
+void Client::takeFocus( allowed_t )
+    {
 #ifndef NDEBUG
     static Time previous_focus_timestamp;
     static Client* previous_client;
@@ -1127,6 +1159,7 @@ void Client::takeFocus( bool force, allowed_t )
         }
     if ( Ptakefocus )
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
+    workspace()->setShouldGetFocus( this );
     }
 
 /*!
@@ -1299,6 +1332,7 @@ void Client::getWindowProtocols()
 
     Pdeletewindow = 0;
     Ptakefocus = 0;
+    Ptakeactivity = 0;
     Pcontexthelp = 0;
     Pping = 0;
 
@@ -1309,6 +1343,8 @@ void Client::getWindowProtocols()
                 Pdeletewindow = 1;
             else if (p[i] == atoms->wm_take_focus)
                 Ptakefocus = 1;
+            else if (p[i] == atoms->net_wm_take_activity)
+                Ptakeactivity = 1;
             else if (p[i] == atoms->net_wm_context_help)
                 Pcontexthelp = 1;
             else if (p[i] == atoms->net_wm_ping)
@@ -1462,7 +1498,7 @@ bool Client::wantsTabFocus() const
 
 bool Client::wantsInput() const
     {
-    return input;
+    return input || Ptakefocus;
     }
 
 /*!
@@ -1647,10 +1683,9 @@ void Client::updateAllowedActions( bool force )
 void Client::autoRaise()
     {
     workspace()->raiseClient( this );
-    delete autoRaiseTimer;
-    autoRaiseTimer = 0;
+    cancelAutoRaise();
     }
-
+    
 void Client::cancelAutoRaise()
     {
     delete autoRaiseTimer;

@@ -80,11 +80,6 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
         template< typename T > void forEachClient( T procedure );
 
-        Group* findGroup( Window leader ) const;
-        void addGroup( Group* group, allowed_t );
-        void removeGroup( Group* group, allowed_t );
-        Group* findClientLeaderGroup( const Client* c ) const;
-
         QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         QRect clientArea( clientAreaOption, const Client* c ) const;
 
@@ -109,13 +104,15 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         // stealing prevention code.
         Client* mostRecentlyActivatedClient() const;
 
-        void setActiveClient( Client*, allowed_t );
         void activateClient( Client*, bool force = FALSE  );
         void requestFocus( Client* c, bool force = FALSE );
+        void takeActivity( Client* c, int flags, bool handled ); // flags are ActivityFlags
+        void handleActivityRaise( Client* c, Time timestamp );
         bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false,
             bool session_active = false );
         void restoreFocus();
         void gotFocusIn( const Client* );
+        void setShouldGetFocus( Client* );
         bool fakeRequestedActivity( Client* c );
         void unfakeActivity( Client* c );
         void activateNextClient( Client* c );
@@ -218,6 +215,11 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
     // only called from Client::destroyClient() or Client::releaseWindow()
         void removeClient( Client*, allowed_t );
+        void setActiveClient( Client*, allowed_t );
+        Group* findGroup( Window leader ) const;
+        void addGroup( Group* group, allowed_t );
+        void removeGroup( Group* group, allowed_t );
+        Group* findClientLeaderGroup( const Client* c ) const;
 
         bool checkStartupNotification( Window w, KStartupInfoData& data );
 
@@ -424,6 +426,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         Client* last_active_client;
         Client* most_recently_raised; // used _only_ by raiseOrLowerClient()
         Client* movingClient;
+        Time last_restack;
 
         ClientList clients;
         ClientList desktops;

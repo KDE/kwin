@@ -292,7 +292,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 /*!
   Performs a mouse command on this client (see options.h)
  */
-bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos)
+bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos, bool handled )
     {
     bool replay = FALSE;
     switch (command) 
@@ -316,8 +316,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             break;
         case Options::MouseActivateAndRaise:
             replay = isActive(); // for clickraise mode
-            workspace()->requestFocus( this );
-            workspace()->raiseClient( this );
+            workspace()->takeActivity( this, ActivityFocus | ActivityRaise, handled && replay );
             break;
         case Options::MouseActivateAndLower:
             workspace()->requestFocus( this );
@@ -325,15 +324,14 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             break;
         case Options::MouseActivate:
             replay = isActive(); // for clickraise mode
-            workspace()->requestFocus( this );
+            workspace()->takeActivity( this, ActivityFocus, handled && replay );
             break;
         case Options::MouseActivateRaiseAndPassClick:
-            workspace()->requestFocus( this );
-            workspace()->raiseClient( this );
+            workspace()->takeActivity( this, ActivityFocus | ActivityRaise, handled );
             replay = TRUE;
             break;
         case Options::MouseActivateAndPassClick:
-            workspace()->requestFocus( this );
+            workspace()->takeActivity( this, ActivityFocus, handled );
             replay = TRUE;
             break;
         case Options::MouseActivateRaiseAndMove:

@@ -110,8 +110,8 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
         {
         if( timestamp == CurrentTime )
             timestamp = c->userTime();
-        if( src == NET::FromUnknown )
-            src = NET::FromTool; // KWIN_FOCUS, use qt_x_time as timestamp?
+        if( src != NET::FromApplication && src != NET::FromActivity && src != FromTool )
+            src = NET::FromTool;
         if( src == NET::FromTool )
             workspace->activateClient( c );
         else // NET::FromApplication
@@ -128,6 +128,21 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
             else
                 c->demandAttention();
             }
+        }
+    }
+
+void RootInfo::restackWindow( Window w, RequestSource src, Window above, int detail, Time timestamp )
+    {
+    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
+        {
+        if( timestamp == CurrentTime )
+            timestamp = c->userTime();
+        if( src != NET::FromApplication && src != NET::FromActivity && src != FromTool )
+            src = NET::FromTool;
+        if( src == NET::FromActivity )
+            workspace->handleActivityRaise( c, timestamp );
+        else
+            c->restackWindow( above, detail, src, timestamp, true );
         }
     }
 
@@ -159,12 +174,6 @@ void RootInfo::gotPing( Window w, Time timestamp )
     {
     if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
         c->gotPing( timestamp );
-    }
-
-void RootInfo::restackWindow( Window w, RequestSource source, Window above, int detail, Time timestamp )
-    {
-    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
-        c->restackWindow( above, detail, source, timestamp, true );
     }
 
 // ****************************************
@@ -1089,15 +1098,9 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             return true;
             }
 
-        if ( isActive() && w == wrapperId()
-             && ( options->clickRaise && !bModKeyHeld ) ) 
-            {
-            if ( button < 4 ) // exclude wheel
-                autoRaise();
-            }
-
         Options::MouseCommand com = Options::MouseNothing;
         bool was_action = false;
+        bool perform_handled = false;
         if ( bModKeyHeld )
             {
             was_action = true;
@@ -1119,6 +1122,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             if( !isActive() && w == wrapperId())
                 {
                 was_action = true;
+                perform_handled = true;
                 switch (button) 
                     {
                     case Button1:
@@ -1134,10 +1138,18 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
                         com = Options::MouseActivateAndPassClick;
                     }
                 }
+            // active inner window
+            if( isActive() && w == wrapperId()
+                && options->clickRaise && button < 4 ) // exclude wheel
+                {
+                com = Options::MouseActivateAndPassClick;
+                was_action = true;
+                perform_handled = true;
+                }
             }
         if( was_action )
             {
-            bool replay = performMouseCommand( com, QPoint( x_root, y_root) );
+            bool replay = performMouseCommand( com, QPoint( x_root, y_root), perform_handled );
 
             if ( isSpecialWindow() && !isOverride())
                 replay = TRUE;
