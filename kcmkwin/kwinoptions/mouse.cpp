@@ -79,7 +79,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
 /** Titlebar and frame  **************/
 
-  box = new QVGroupBox( i18n("Titlebar and Frame"), this, "Titlebar and Frame");
+  box = new QVGroupBox( i18n("Titlebar && Frame"), this, "Titlebar and Frame");
   box->layout()->setMargin(KDialog::marginHint());
   box->layout()->setSpacing(KDialog::spacingHint());
   layout->addWidget(box);
@@ -126,7 +126,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   combo->insertItem(i18n("Raise"));
   combo->insertItem(i18n("Lower"));
   combo->insertItem(i18n("Operations Menu"));
-  combo->insertItem(i18n("Toggle Raise and Lower"));
+  combo->insertItem(i18n("Toggle Raise & Lower"));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct1 = combo;
 
@@ -146,7 +146,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   items << i18n("Raise")
         << i18n("Lower")
         << i18n("Operations Menu")
-        << i18n("Toggle Raise and Lower")
+        << i18n("Toggle Raise & Lower")
         << i18n("Nothing")
         << i18n("Shade");
 
@@ -178,8 +178,8 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
                                " or the frame of an inactive window.") );
 
   items.clear();
-  items  << i18n("Activate and Raise")
-         << i18n("Activate and Lower")
+  items  << i18n("Activate & Raise")
+         << i18n("Activate & Lower")
          << i18n("Activate")
          << i18n("Shade");
 
@@ -247,10 +247,10 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   QWhatsThis::add( label, strWin3 );
 
   items.clear();
-  items   << i18n("Activate, Raise and Pass Click")
-          << i18n("Activate and Pass Click")
+  items   << i18n("Activate, Raise & Pass Click")
+          << i18n("Activate & Pass Click")
           << i18n("Activate")
-          << i18n("Activate and Raise");
+          << i18n("Activate & Raise");
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
@@ -273,7 +273,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
 /** Inner window, titlebar and frame **************/
 
-  box = new QVGroupBox(i18n("Inner Window, Titlebar and Frame"), this, "Inner Window, Titlebar and Frame");
+  box = new QVGroupBox(i18n("Inner Window, Titlebar && Frame"), this, "Inner Window, Titlebar and Frame");
   box->layout()->setMargin(KDialog::marginHint());
   box->layout()->setSpacing(KDialog::spacingHint());
   layout->addWidget(box);
@@ -325,7 +325,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   items.clear();
   items << i18n("Move")
-        << i18n("Toggle Raise and Lower")
+        << i18n("Toggle Raise & Lower")
         << i18n("Resize")
         << i18n("Raise")
         << i18n("Lower")
