@@ -35,6 +35,7 @@ class Atoms
         Atom kde_wm_change_state;
         Atom net_wm_user_time;
         Atom kde_net_wm_user_creation_time;
+        Atom kde_system_tray_embedding;
     };
 
 

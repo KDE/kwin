@@ -259,7 +259,7 @@ bool Workspace::workspaceEvent( XEvent * e )
     case UnmapNotify:
             {
         // check for system tray windows
-            if ( removeSystemTrayWin( e->xunmap.window ) ) 
+            if ( removeSystemTrayWin( e->xunmap.window, true ) ) 
                 {
 	    // If the system tray gets destroyed, the system tray
 	    // icons automatically get unmapped, reparented and mapped
@@ -296,7 +296,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             }
         case DestroyNotify:
             {
-            if ( removeSystemTrayWin( e->xdestroywindow.window ) )
+            if ( removeSystemTrayWin( e->xdestroywindow.window, false ) )
                 return TRUE;
             return false;
             }

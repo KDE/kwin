@@ -1188,10 +1188,34 @@ bool Workspace::addSystemTrayWin( WId w )
   Check whether \a w is a system tray window. If so, remove it from
   the respective datastructures and propagate this to the world.
  */
-bool Workspace::removeSystemTrayWin( WId w )
+bool Workspace::removeSystemTrayWin( WId w, bool check )
     {
     if ( !systemTrayWins.contains( w ) )
         return FALSE;
+    if( check )
+        {
+    // When getting UnmapNotify, it's not clear if it's the systray
+    // reparenting the window into itself, or if it's the window
+    // going away. This is obviously a flaw in the design, and we were
+    // just lucky it worked for so long. Kicker's systray temporarily
+    // sets _KDE_SYSTEM_TRAY_EMBEDDING property on the window while
+    // embedding it, allowing KWin to figure out. Kicker just mustn't
+    // crash before removing it again ... *shrug* .
+        int num_props;
+        Atom* props = XListProperties( qt_xdisplay(), w, &num_props );
+        if( props != NULL )
+            {
+            for( int i = 0;
+                 i < num_props;
+                 ++i )
+                if( props[ i ] == atoms->kde_system_tray_embedding )
+                    {
+                    XFree( props );
+                    return false;
+                    }
+            XFree( props );
+            }
+        }
     systemTrayWins.remove( w );
     propagateSystemTrayWins();
     return TRUE;

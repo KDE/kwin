@@ -352,7 +352,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void cascadePlacement(Client* c, bool re_init = false);
 
         bool addSystemTrayWin( WId w );
-        bool removeSystemTrayWin( WId w );
+        bool removeSystemTrayWin( WId w, bool check );
         void propagateSystemTrayWins();
         SystemTrayWindow findSystemTrayWin( WId w );
 

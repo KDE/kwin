@@ -59,6 +59,9 @@ Atoms::Atoms()
     atoms[n] = &kde_net_wm_user_creation_time;
     names[n++] = (char *) "_KDE_NET_WM_USER_CREATION_TIME";
 
+    atoms[n] = &kde_system_tray_embedding;
+    names[n++] = (char*) "_KDE_SYSTEM_TRAY_EMBEDDING";
+
     Atom fake;
     atoms[n] = &fake;
     names[n++] = (char *) "_DT_SM_WINDOW_INFO";
