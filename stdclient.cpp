@@ -28,6 +28,34 @@ static QPixmap* dis_pinup_pix = 0;
 static QPixmap* dis_pindown_pix = 0;
 static QPixmap* dis_menu_pix = 0;
 
+static QPixmap* question_mark_pix = 0;
+
+/* XPM */
+static const char *question_mark[] = {
+/* width height ncolors chars_per_pixel */
+"16 16 2 1",
+/* colors */
+"  c #000000",
+"X c None",
+/* pixels */
+"XXXXXXXXXXXXXXXX",
+"XXXXX        XXX",
+"XXXX  XXXXX   XX",
+"XXX  XXXXXXX  XX",
+"XXX  XXXXXXX  XX",
+"XXXXXXXXXXX   XX",
+"XXXXXXXXXX   XXX",
+"XXXXXXXXX   XXXX",
+"XXXXXXXX  XXXXXX",
+"XXXXXXX  XXXXXXX",
+"XXXXXXX  XXXXXXX",
+"XXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXX",
+"XXXXXXX  XXXXXXX",
+"XXXXXXX  XXXXXXX",
+"XXXXXXXXXXXXXXXX"
+};
+
 
 static bool pixmaps_created = FALSE;
 
@@ -183,6 +211,8 @@ static void create_pixmaps()
     bitmap = QBitmap(16, 16, pindown_mask_bits, true);
     pindown_pix->setMask(bitmap); dis_pindown_pix->setMask(bitmap);
 
+    question_mark_pix = new QPixmap(question_mark );
+
 }
 
 
@@ -220,11 +250,22 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 			       QSizePolicy::Minimum );
     hb->addItem( titlebar );
 
+    button[6] = 0;
+    if ( providesContextHelp() ) {
+	button[6] = new QToolButton( this );
+	hb->addWidget( button[6] ); // help  button
+	hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+	button[6]->setIconSet( *question_mark_pix );
+	connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+    }
+    
     hb->addWidget( button[3] );
     hb->addWidget( button[4] );
     hb->addWidget( button[5] );
 
-    for ( int i = 0; i < 6; i++) {
+    for ( int i = 0; i < 7; i++) {
+	if ( !button[i] )
+	    continue;
 	button[i]->setBackgroundMode( PaletteBackground );
 	button[i]->setMouseTracking( TRUE );
 	button[i]->setFixedSize( 20, 20 );
@@ -250,6 +291,10 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     connect( button[4], SIGNAL( clicked(int) ), this, ( SLOT( maxButtonClicked(int) ) ) );
     button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
     connect( button[5], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
+
+    if ( button[6] ) {
+    }
+    
     
     if ( isTransient() ) {
 	// lighter decoration for transient windows

@@ -18,7 +18,7 @@ public:
     Atom net_active_window;
     Atom net_client_list;
     Atom net_client_list_stacking;
-
+    Atom net_wm_context_help;
 
     Atom net_kde_docking_windows;
 };

@@ -129,6 +129,8 @@ public:
 
 
     virtual bool wantsTabFocus() const { return TRUE;} //### just for now
+    
+    bool providesContextHelp() const;
 
     bool performMouseCommand( Options::MouseCommand, QPoint globalPos );
 
@@ -138,6 +140,7 @@ public slots:
     void maximize( MaximizeMode );
     void maximize();
     void toggleSticky();
+    void contextHelp();
 
 protected:
     void paintEvent( QPaintEvent * );
@@ -215,6 +218,7 @@ private:
     void getWindowProtocols();
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
+    uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?
     uint input :1; // does the window want input in its wm_hints
     uint mapped :1; // keeps track of our visiblity within the asynchronous event flow
     QPixmap icon_pix;

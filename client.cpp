@@ -6,6 +6,7 @@
 #include <qwmatrix.h>
 #include <qlayout.h>
 #include <qpainter.h>
+#include <qwhatsthis.h>
 #include "workspace.h"
 #include "client.h"
 #include "atoms.h"
@@ -1455,6 +1456,7 @@ void Client::getWindowProtocols(){
 
   Pdeletewindow = 0;
   Ptakefocus = 0;
+  Pcontexthelp = 0;
 
   if (XGetWMProtocols(qt_xdisplay(), win, &p, &n)){
       for (i = 0; i < n; i++)
@@ -1462,6 +1464,8 @@ void Client::getWindowProtocols(){
 	      Pdeletewindow = 1;
 	  else if (p[i] == atoms->wm_take_focus)
 	      Ptakefocus = 1;
+	  else if (p[i] == atoms->net_wm_context_help)
+	      Pcontexthelp = 1;
       if (n>0)
 	  XFree(p);
   }
@@ -1508,6 +1512,33 @@ Client* Client::mainClient()
     return c?c:this;
 }
 
+
+/*!
+  Returns whether the window provides context help or not. If it does,
+  you should show a help menu item or a help button lie '?' and call
+  contextHelp() if this is invoked.
+  
+  \sa contextHelp()
+ */
+bool Client::providesContextHelp() const
+{
+    return Pcontexthelp;
+}
+
+
+/*!
+  Invokes context help on the window. Only works if the window
+  actually provides context help.
+  
+  \sa providesContextHelp()
+ */
+void Client::contextHelp()
+{
+    if ( Pcontexthelp ) {
+	sendClientMessage(win, atoms->wm_protocols, atoms->net_wm_context_help);
+	QWhatsThis::enterWhatsThisMode();
+    }
+}
 
 
 bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos)

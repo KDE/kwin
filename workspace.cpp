@@ -2,6 +2,7 @@
 #include <kglobal.h>
 #include <kglobalaccel.h>
 #include <klocale.h>
+#include <qwhatsthis.h>
 #include <kwin.h>
 
 #include "workspace.h"
@@ -304,6 +305,22 @@ bool Workspace::workspaceEvent( XEvent * e )
 		setDesktopClient( c );
 	    return result;
 	}
+	break;
+    case EnterNotify:
+	if ( !QWhatsThis::inWhatsThisMode() )
+	    break;
+	{
+	    QWidget* w = QWidget::find( e->xcrossing.window );
+	    if ( w && w->inherits("WindowWrapper" ) )
+		QWhatsThis::leaveWhatsThisMode();
+	}
+	break;
+    case LeaveNotify:
+	if ( !QWhatsThis::inWhatsThisMode() )
+	    break;
+	c = findClientWidthId( e->xcrossing.window );
+	if ( c && e->xcrossing.detail != NotifyInferior )
+	    QWhatsThis::leaveWhatsThisMode();
 	break;
     case ConfigureRequest:
 	c = findClient( e->xconfigurerequest.window );

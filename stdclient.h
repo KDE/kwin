@@ -28,14 +28,14 @@ private slots:
     void maxButtonClicked( int );
 
 private:
-    QToolButton* button[6];
+    QToolButton* button[7];
     QSpacerItem* titlebar;
 };
 
 
 
 /*
-  Like QToolButton, but provides a clicked(int) signals that 
+  Like QToolButton, but provides a clicked(int) signals that
   has the last pressed mouse button as argument
  */
 class ThreeButtonButton: public QToolButton
@@ -47,12 +47,12 @@ public:
     {
 	connect( this, SIGNAL( clicked() ), this, SLOT( handleClicked() ) );
     }
-  ~ThreeButtonButton () 
+  ~ThreeButtonButton ()
     {}
 
 signals:
     void clicked( int );
-    
+
 protected:
     void mousePressEvent( QMouseEvent* e )
     {
@@ -60,7 +60,7 @@ protected:
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
 	QToolButton::mousePressEvent( &me );
     }
-    
+
     void mouseReleaseEvent( QMouseEvent* e )
     {
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
@@ -72,10 +72,10 @@ private slots:
     {
 	emit clicked( last_button );
     }
-    
+
 private:
     int last_button;
-    
+
 };
 
 
