@@ -1728,11 +1728,12 @@ void Client::move( int x, int y )
  */
 void Client::show()
 {
-    if ( isIconified() && ( !isTransient() || mainClient() == this ) )
+    if ( isIconified() && ( !isTransient() || mainClient() == this ) ) {
         animateIconifyOrDeiconify( FALSE );
-
-    if (isShade())
-      setShade(false);
+        //CT and unshade it
+        if (isShade())
+            setShade(false);
+    }
 
     setMappingState( NormalState );
     QWidget::show();
