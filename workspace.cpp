@@ -1441,8 +1441,10 @@ void Workspace::setActiveClient( Client* c )
     }
 
     // ... then hide the other ones. Avoids flickers.
+    // Leave the desktop menubars always visible. Helps visually when the app doesn't show
+    // its menubar immediately.
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-        if ( (*it)->isTopMenu() && (*it) != menubar )
+        if ( (*it)->isTopMenu() && (*it) != menubar && !(*it)->mainClient()->isDesktop() )
             (*it)->hide();
     }
 
