@@ -1,11 +1,13 @@
 #include "nextclient.h"
 #include <qabstractlayout.h>
-#include <qlayout.h>
+#include <qdatetime.h>
 #include <qdrawutil.h>
+#include <qlayout.h>
 #include <qpainter.h>
-#include <kpixmapeffect.h>
-#include <klocale.h>
 #include <qbitmap.h>
+#include <kdebug.h>
+#include <klocale.h>
+#include <kpixmapeffect.h>
 #include "../../workspace.h"
 #include "../../options.h"
 
@@ -21,6 +23,10 @@ static unsigned char iconify_bits[] = {
   0xff, 0x03, 0xff, 0x03, 0xff, 0x03, 0xff, 0x03, 0x03, 0x03, 0x03, 0x03,
   0x03, 0x03, 0x03, 0x03, 0xff, 0x03, 0xff, 0x03};
 
+static unsigned char question_bits[] = {
+  0x00, 0x00, 0x78, 0x00, 0xcc, 0x00, 0xc0, 0x00, 0x60, 0x00, 0x30, 0x00,
+  0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00};
+
 static unsigned char sticky_bits[] = {
   0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x30, 0x00, 0xfe, 0x01, 0xfe, 0x01,
   0x30, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00};
@@ -28,6 +34,37 @@ static unsigned char sticky_bits[] = {
 static unsigned char unsticky_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char maximize_bits[] = {
+   0x30, 0x00, 0x78, 0x00, 0xfc, 0x00, 0xfe, 0x01, 0x00, 0x00, 0xfe, 0x01,
+   0x02, 0x01, 0x84, 0x00, 0x48, 0x00, 0x30, 0x00 };
+
+// If the maximize graphic above (which I did quickly in about a
+// minute, just so I could have something) doesn't please, maybe one
+// of the following would be better.  IMO it doesn't matter, as long
+// as it's not offensive---people will get used to whatever you use.
+// True NeXT fans won't turn on the maximize button anyway.
+//
+// static unsigned char maximize_bits[] = {
+//    0xcf, 0x03, 0x87, 0x03, 0xcf, 0x03, 0xfd, 0x02, 0x48, 0x00, 0x48, 0x00,
+//    0xfd, 0x02, 0xcf, 0x03, 0x87, 0x03, 0xcf, 0x03 };
+//
+// static unsigned char maximize_bits[] = {
+//    0xcf, 0x03, 0x87, 0x03, 0x87, 0x03, 0x79, 0x02, 0x48, 0x00, 0x48, 0x00,
+//    0x79, 0x02, 0x87, 0x03, 0x87, 0x03, 0xcf, 0x03 };
+//
+// static unsigned char maximize_bits[] = {
+//    0x87, 0x03, 0x03, 0x03, 0xfd, 0x02, 0x84, 0x00, 0x84, 0x00, 0x84, 0x00,
+//    0x84, 0x00, 0xfd, 0x02, 0x03, 0x03, 0x87, 0x03 };
+//
+// static unsigned char maximize_bits[] = {
+//    0x30, 0x00, 0x78, 0x00, 0xcc, 0x00, 0x86, 0x01, 0x33, 0x03, 0x79, 0x02,
+//    0xcd, 0x02, 0x87, 0x03, 0x03, 0x03, 0x01, 0x02 };
+//
+// static unsigned char maximize_bits[] = {
+//    0x30, 0x00, 0x78, 0x00, 0x78, 0x00, 0xfc, 0x00, 0xfc, 0x00, 0xfe, 0x01,
+//    0xfe, 0x01, 0xff, 0x03, 0xff, 0x03, 0xff, 0x03 };
+
 
 static KPixmap *aTitlePix=0;
 static KPixmap *iTitlePix=0;
@@ -168,20 +205,13 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
-void NextClient::slotReset()
-{
-    button[0]->reset();
-    button[1]->reset();
-    button[2]->reset();
-}
-
 NextButton::NextButton(Client *parent, const char *name,
                        const unsigned char *bitmap, int bw, int bh,
                        const QString& tip)
-    : KWinButton(parent, name, tip)
+    : KWinButton(parent, name, tip),
+      deco(NULL), client(parent), last_button(NoButton)
 {
     setBackgroundMode( NoBackground );
-    client = parent;
     resize(18, 18);
 
     if(bitmap)
@@ -195,8 +225,8 @@ void NextButton::reset()
 
 void NextButton::setBitmap(const unsigned char *bitmap, int w, int h)
 {
-    deco = QBitmap(w, h, bitmap, true);
-    deco.setMask(deco);
+    deco = new QBitmap(w, h, bitmap, true);
+    deco->setMask(*deco);
     repaint();
 }
 
@@ -207,9 +237,33 @@ void NextButton::drawButton(QPainter *p)
     else
         p->drawPixmap(0, 0, isDown() ? *iBtnDown : *iBtn);
 
-    p->setPen(*btnForeground);
-    p->drawPixmap(isDown()? 5 : 4, isDown() ? 5 : 4, deco);
+    // If we have a decoration, draw it; otherwise, we have the menu
+    // button (remember, we set the bitmap to NULL).
+    if (deco) {
+        p->setPen(*btnForeground);
+        p->drawPixmap(isDown()? 5 : 4, isDown() ? 5 : 4, *deco);
+    } else {
+        KPixmap btnpix = client->miniIcon();
+        p->drawPixmap( 0, 0, btnpix );
+    }
 }
+
+void NextButton::mousePressEvent( QMouseEvent* e )
+{
+    last_button = e->button();
+    QMouseEvent me( e->type(), e->pos(), e->globalPos(),
+                    LeftButton, e->state() );
+    KWinButton::mousePressEvent( &me );
+}
+
+void NextButton::mouseReleaseEvent( QMouseEvent* e )
+{
+    last_button = e->button();
+    QMouseEvent me( e->type(), e->pos(), e->globalPos(),
+                    LeftButton, e->state() );
+    KWinButton::mouseReleaseEvent( &me );
+}
+
 
 NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
@@ -230,26 +284,176 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
     windowLayout->addWidget(windowWrapper(), 1);
     windowLayout->addSpacing(1);
 
+    initializeButtonsAndTitlebar(titleLayout);
+}
 
-    button[0] = new NextButton(this, "close", close_bits, 10, 10, i18n("Close"));
-    button[1] = new NextButton(this, "sticky", NULL, 0, 0, i18n("Sticky"));
-    stickyChange(isSticky());
-    button[2] = new NextButton(this, "iconify", iconify_bits, 10, 10, i18n("Minimize"));
+/**
+   Preconditions:
+       + this->button is an array of length MAX_NUM_BUTTONS
 
-    connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
-    connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    titleLayout->addWidget( button[2] );
+   Postconditions:
+       + Title bar and buttons have been initialized and laid out
+       + for all i in 0..(MAX_NUM_BUTTONS-1), button[i] points to
+         either (1) a valid NextButton instance, if the corresponding
+         button is selected in the current button scheme, or (2) null
+         otherwise.
+ */
+void NextClient::initializeButtonsAndTitlebar(QHBoxLayout* titleLayout)
+{
+    // Null the buttons to begin with (they are not guaranteed to be null).
+    for (int i=0; i<MAX_NUM_BUTTONS; i++) {
+        button[i] = NULL;
+    }
+
+    // The default button positions for other styles do not match the
+    // behavior of older versions of KStep, so we have to set these
+    // manually when customButtonPositions isn't enabled.
+    QString left, right;
+    if (options->customButtonPositions()) {
+        left = options->titleButtonsLeft();
+        right = options->titleButtonsRight();
+    } else {
+        left = QString("I");
+        right = QString("SX");
+    }
+
+    // Do actual creation and addition to titleLayout
+    addButtons(titleLayout, left);
     titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
                                QSizePolicy::Minimum );
     titleLayout->addItem(titlebar);
-    titleLayout->addWidget( button[1] );
-    titleLayout->addWidget( button[0] );
-    for ( int i = 0; i < 3; i++) {
-        button[i]->setMouseTracking( TRUE );
-        button[i]->setFixedSize( 18, 18 );
+    addButtons(titleLayout, right);
+
+    // Finally, activate all live buttons
+    for ( int i = 0; i < MAX_NUM_BUTTONS; i++) {
+        if (button[i]) {
+            button[i]->setMouseTracking( TRUE );
+            button[i]->setFixedSize( 18, 18 );
+        }
+    }
+}
+
+/** Adds the buttons for one side of the title bar, based on the spec
+ * string; see the KWinInternal::Options class, methods
+ * titleButtonsLeft and titleBUttonsRight. */
+void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
+{
+    for (unsigned int i=0; i<spec.length(); i++) {
+        switch (spec[i].latin1()) {
+        case 'A':
+            if (isMaximizable()) {
+                button[MAXIMIZE_IDX] =
+                    new NextButton(this, "maximize", maximize_bits, 10, 10,
+                                   i18n("Maximize"));
+                titleLayout->addWidget( button[MAXIMIZE_IDX] );
+                connect( button[MAXIMIZE_IDX], SIGNAL(clicked()),
+                         this, SLOT(maximizeButtonClicked()) );
+            }
+            break;
+
+        case 'H':
+            button[HELP_IDX] =
+                new NextButton(this, "help", question_bits, 10, 10,
+                               i18n("Help"));
+            titleLayout->addWidget( button[HELP_IDX] );
+            connect( button[HELP_IDX], SIGNAL(clicked()),
+                     this, SLOT(contextHelp()) );
+            break;
+
+        case 'I':
+            if (isMinimizable()) {
+                button[ICONIFY_IDX] =
+                    new NextButton(this, "iconify", iconify_bits, 10, 10,
+                                   i18n("Minimize"));
+                titleLayout->addWidget( button[ICONIFY_IDX] );
+                connect( button[ICONIFY_IDX], SIGNAL(clicked()),
+                         this, SLOT(iconify()) );
+            }
+            break;
+            
+        case 'M':
+            button[MENU_IDX] =
+                new NextButton(this, "menu", NULL, 10, 10, i18n("Menu"));
+            titleLayout->addWidget( button[MENU_IDX] );
+            // NOTE DIFFERENCE: capture pressed(), not clicked()
+            connect( button[MENU_IDX], SIGNAL(pressed()),
+                     this, SLOT(menuButtonPressed()) );
+            break;
+
+        case 'S':
+            button[STICKY_IDX] =
+                new NextButton(this, "sticky", NULL, 0, 0, i18n("Sticky"));
+            titleLayout->addWidget( button[STICKY_IDX] );
+            connect( button[STICKY_IDX], SIGNAL(clicked()),
+                     this, SLOT(toggleSticky()) );
+            // NOTE DIFFERENCE: set the pixmap separately (2 states)
+            stickyChange(isSticky());
+            break;
+
+        case 'X':
+            button[CLOSE_IDX] =
+                new NextButton(this, "close", close_bits, 10, 10,
+                               i18n("Close"));
+            titleLayout->addWidget( button[CLOSE_IDX] );
+            connect( button[CLOSE_IDX], SIGNAL(clicked()),
+                     this, SLOT(closeWindow()) );
+            break;
+
+        case '_':
+            // TODO: Add spacer handling
+            break;
+
+        default:
+            kdDebug() << " Can't happen: unknown button code "
+                      << QString(spec[i]);
+            break;
+        }
+    }
+}
+
+// Make sure the menu button follows double click conventions set in kcontrol
+// (Note: this was almost straight copy and paste from KDEDefaultClient.)
+void NextClient::menuButtonPressed()
+{
+    static QTime* t = 0;
+    static NextClient* tc = 0;
+    if ( !t ) {
+        t = new QTime;
     }
 
+    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
+    {
+        // Probably don't need this null check, but we might as well.
+        if (button[MENU_IDX]) {
+            QPoint menupoint ( button[MENU_IDX]->rect().bottomLeft().x()-1,
+                               button[MENU_IDX]->rect().bottomLeft().y()+2 );
+            workspace()->clientPopup(this)->popup(
+                button[MENU_IDX]->mapToGlobal( menupoint ));
+        }
+    } else {
+        closeWindow();
+    }
+
+    t->start();
+    tc = this;
+}
+
+// Copied, with minor edits, from KDEDefaultClient::slotMaximize()
+void NextClient::maximizeButtonClicked()
+{
+    if (button[MAXIMIZE_IDX]) {
+        switch (button[MAXIMIZE_IDX]->lastButton()) {
+        case MidButton:
+            maximize( MaximizeVertical );
+            break;
+        case RightButton:
+            maximize( MaximizeHorizontal );
+            break;
+        default:
+            maximize();
+            break;
+        }
+    }
 }
 
 void NextClient::resizeEvent( QResizeEvent* e)
@@ -325,8 +529,10 @@ void NextClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void NextClient::stickyChange(bool on)
 {
-    button[1]->setBitmap( on ? unsticky_bits : sticky_bits, 10, 10);
-    button[1]->setTipText( on ? i18n("Un-Sticky") : i18n("Sticky") );
+    if (NextButton * b = button[STICKY_IDX]) {
+        b->setBitmap( on ? unsticky_bits : sticky_bits, 10, 10);
+        b->setTipText( on ? i18n("Un-Sticky") : i18n("Sticky") );
+    }
 }
 
 
@@ -338,12 +544,19 @@ void NextClient::init()
 void NextClient::activeChange(bool)
 {
     repaint(false);
-    button[0]->reset();
-    button[1]->reset();
-    button[2]->reset();
+    slotReset();
 }
 
-  Client::MousePosition
+void NextClient::slotReset()
+{
+    for (int i=0; i<MAX_NUM_BUTTONS; i++) {
+        if (button[i]) {
+            button[i]->reset();
+        }
+    }
+}
+
+Client::MousePosition
 NextClient::mousePosition( const QPoint& p ) const
 {
   MousePosition m = Nowhere;
