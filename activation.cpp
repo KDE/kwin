@@ -725,6 +725,8 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
 Time Client::userTime() const
     {
     Time time = user_time;
+    if( time == 0 ) // doesn't want focus after showing
+        return 0;
     assert( group() != NULL );
     if( time == -1U
          || ( group()->userTime() != -1U
