@@ -541,6 +541,25 @@ void Client::checkGroupTransients()
             // TODO This could possibly be optimized, it also requires hasTransient() to check for loops.
             if( (*it2)->groupTransient() && (*it1)->hasTransient( *it2, true ) && (*it2)->hasTransient( *it1, true ))
                 (*it2)->transients_list.remove( *it1 );
+            // if there are already windows W1 and W2, W2 being transient for W1, and group transient W3
+            // is added, make it transient only for W2, not for W1, because it's already indirectly
+            // transient for it - the indirect transiency actually shouldn't break anything,
+            // but it can lead to exponentially expensive operations (#95231)
+            // TODO this is pretty slow as well
+            for( ClientList::ConstIterator it3 = group()->members().begin();
+                 it3 != group()->members().end();
+                 ++it3 )
+                {
+                if( *it1 == *it2 || *it2 == *it3 || *it1 == *it3 )
+                    continue;
+                if( (*it2)->hasTransient( *it1, false ) && (*it3)->hasTransient( *it1, false ))
+                    {
+                    if( (*it2)->hasTransient( *it3, true ))
+                        (*it3)->transients_list.remove( *it1 );
+                    if( (*it3)->hasTransient( *it2, true ))
+                        (*it2)->transients_list.remove( *it1 );
+                    }
+                }
             }
         }
     }
