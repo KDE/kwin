@@ -4009,12 +4009,22 @@ void Workspace::focusEnsurance()
     int revert;
     XGetInputFocus( qt_xdisplay(), &focus, &revert );
     if ( focus == None || focus == PointerRoot ) {
-        if ( !last_active_client )
-            last_active_client = topClientOnDesktop();
-        if ( last_active_client && last_active_client->isVisible() ) {
-            kwin_time = CurrentTime;
-            requestFocus( last_active_client );
-        }
+	
+	Window root_return;
+	Window child = root;
+	int root_x, root_y, lx, ly;
+	uint state;
+	Window w;
+	if ( ! XQueryPointer( qt_xdisplay(), root, &root_return, &child,
+			      &root_x, &root_y, &lx, &ly, &state ) )
+	    return; // cursor is on another screen, so do not play with focus
+	
+	if ( !last_active_client )
+	    last_active_client = topClientOnDesktop();
+	if ( last_active_client && last_active_client->isVisible() ) {
+	    kwin_time = CurrentTime;
+	    requestFocus( last_active_client );
+	}
     }
 }
 
@@ -4030,7 +4040,7 @@ void Workspace::checkStartOnDesktop( WId w )
     KStartupInfoData data;
     if( d->startup->checkStartup( w, data ) != KStartupInfo::Match || data.desktop() == 0 )
         return;
-    NETWinInfo info( qt_xdisplay(),  w, qt_xrootwin(), NET::WMDesktop );
+    NETWinInfo info( qt_xdisplay(),  w, root, NET::WMDesktop );
     if( info.desktop() == 0 )
         info.setDesktop( data.desktop());
 }
