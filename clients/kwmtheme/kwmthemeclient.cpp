@@ -44,7 +44,7 @@ extern Options *options;
 
 static void init_theme()
 {
-    static char *keys[] = {"wm_top", "wm_bottom", "wm_left", "wm_right",
+    const char *keys[] = {"wm_top", "wm_bottom", "wm_left", "wm_right",
     "wm_topleft", "wm_topright", "wm_bottomleft", "wm_bottomright"};
 
     if(pixmaps_created)
