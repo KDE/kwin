@@ -487,9 +487,8 @@ Workspace::~Workspace()
     delete rootInfo;
     delete supportWindow;
     delete mgr;
-    //CT was this a(n unimportant) leak until 29Jun2002?
-    if (d->startup) delete d->startup;
-    if (d->initPositioning) delete d->initPositioning;
+    delete d->startup;
+    delete d->initPositioning;
     delete d;
     _self = 0;
 }
