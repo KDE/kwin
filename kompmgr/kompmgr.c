@@ -48,6 +48,7 @@ check baghira.sf.net for more infos
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xdamage.h>
 #include <X11/extensions/Xrender.h>
+#include <X11/extensions/shape.h>
 
 #if COMPOSITE_MAJOR > 0 || COMPOSITE_MINOR >= 2
 #define HAS_NAME_WINDOW_PIXMAP 1
@@ -90,6 +91,7 @@ typedef struct _win {
     unsigned int	shadowSize;
     Atom                windowType;
     unsigned long	damage_sequence;    /* sequence when damage was created */
+    Bool                shapable; /* this will allow window managers to exclude windows if just the deco is shaped*/
 
     /* for drawing translucent windows */
     XserverRegion	borderClip;
@@ -137,10 +139,13 @@ int		render_event, render_error;
 Bool		synchronize;
 int		composite_opcode;
 
+int             shapeEvent;
+
 /* find these once and be done with it */
 Atom		opacityAtom;
 Atom		shadowAtom;
 Atom		shadeAtom;
+Atom		shapableAtom;
 Atom            winTypeAtom;
 Atom            winDesktopAtom;
 Atom            winDockAtom;
@@ -155,6 +160,7 @@ Atom            winNormalAtom;
 #define OPACITY_PROP	"_KDE_WM_WINDOW_OPACITY"
 #define SHADOW_PROP	"_KDE_WM_WINDOW_SHADOW"
 #define SHADE_PROP	"_KDE_WM_WINDOW_SHADE"
+#define SHAPABLE_PROP	"_KDE_WM_WINDOW_SHAPABLE"
 
 #define TRANSLUCENT	0xe0000000
 #define OPAQUE		0xffffffff
@@ -1389,6 +1395,27 @@ get_shade_prop(Display *dpy, win *w)
     return 0;
 }
 
+static unsigned int
+get_shapable_prop(Display *dpy, win *w)
+{
+    Atom actual;
+    int format;
+    unsigned long n, left;
+
+    unsigned char *data = NULL;
+    int result = XGetWindowProperty(dpy, w->id, shapableAtom, 0L, 1L, False, 
+                                    XA_CARDINAL, &actual, &format, 
+                                    &n, &left, &data);
+    if (result == Success && data != NULL)
+    {
+        unsigned int i;
+        memcpy (&i, data, sizeof (unsigned int));
+        XFree( (void *) data);
+        return i;
+    }
+    return 1; /*in general, the window should be shapable*/
+}
+
 /* Get the opacity property from the window in a percent format
    not found: default
    otherwise: the value
@@ -1575,6 +1602,8 @@ add_win (Display *dpy, Window id, Window prev)
 
     new->borderClip = None;
     new->prev_trans = 0;
+    
+    XShapeSelectInput( dpy, id, ShapeNotifyMask );
 
     /* moved mode setting to one place */
     new->opacity = get_opacity_prop (dpy, new, OPAQUE);
@@ -2364,6 +2393,7 @@ main (int argc, char **argv)
     shadowAtom = XInternAtom (dpy, SHADOW_PROP, False);
     opacityAtom = XInternAtom (dpy, OPACITY_PROP, False);
     shadeAtom = XInternAtom (dpy, SHADE_PROP, False);
+    shapableAtom = XInternAtom (dpy, SHAPABLE_PROP, False);
     winTypeAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
     winDesktopAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
     winDockAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
@@ -2373,7 +2403,7 @@ main (int argc, char **argv)
     winSplashAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_SPLASH", False);
     winDialogAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
     winNormalAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_NORMAL", False);
-
+    
     pa.subwindow_mode = IncludeInferiors;
 
     if (compMode == CompClientShadows)
@@ -2405,7 +2435,13 @@ main (int argc, char **argv)
 		      SubstructureNotifyMask|
 		      ExposureMask|
 		      StructureNotifyMask|
-		      PropertyChangeMask);
+		      PropertyChangeMask |
+                      VisibilityChangeMask);
+        
+        /*shaping stuff*/
+        int dummy;
+        XShapeQueryExtension(dpy, &shapeEvent, &dummy);
+        printf("shapeEvent: %d\n",shapeEvent);
 	XQueryTree (dpy, root, &root_return, &parent_return, &children, &nchildren);
 	for (i = 0; i < nchildren; i++)
 	    add_win (dpy, children[i], i ? children[i-1] : None);
@@ -2518,7 +2554,7 @@ main (int argc, char **argv)
                         if (tmp == 1)
                             {
                             w->preShadeOpacity = w->opacity;
-                            w->opacity = 0;
+                            w->opacity = w->opacity-1; /*assuming that no human being will ever be able to shade an invisable window ;) */
                             determine_mode(dpy, w);
                             }
                         else if (tmp == 2)
@@ -2528,6 +2564,11 @@ main (int argc, char **argv)
                             }                       
                         }
                     break;
+                    }
+                else if (ev.xproperty.atom == shapableAtom)
+                    {
+                        win * w = find_win(dpy, ev.xproperty.window);
+                        if (w) w->shapable = get_shapable_prop(dpy, w);
                     }
                 /* check if Trans or Shadow property was changed */    
                 else if (ev.xproperty.atom == opacityAtom || ev.xproperty.atom == shadowAtom)
@@ -2576,10 +2617,22 @@ main (int argc, char **argv)
                             }
 		    }
 		}
-		break;
+                break;
 	    default:
 		if (ev.type == damage_event + XDamageNotify)
 		    damage_win (dpy, (XDamageNotifyEvent *) &ev);
+                else if (ev.type == shapeEvent)
+                {
+                    win * w = find_win(dpy, ev.xany.window);
+                    if (w && w->shapable) 
+                    {
+                        /*this is hardly efficient, but a current workaraound 
+                        shaping support isn't that good so far (e.g. we lack shaped shadows)
+                        IDEA: use XRender to scale/shift a copy of the window and then blurr it*/
+                        clipChanged = True;
+                        repair_win (dpy, w);
+                    }
+                }
 		break;
 	    }
 	} while (QLength (dpy));
