@@ -1198,7 +1198,7 @@ void Client::sendSynteticConfigureNotify()
     c.width = windowWrapper()->width();
     c.height = windowWrapper()->height();
     c.border_width = 0;
-    XSendEvent( qt_xdisplay(), c.event, TRUE, NoEventMask, (XEvent*)&c );
+    XSendEvent( qt_xdisplay(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
 }
 
 
@@ -1708,7 +1708,7 @@ void Client::iconify()
 
     if ( isShade() )
 	setShade( FALSE );
-    
+
     setMappingState( IconicState );
     Events::raise( Events::Iconify );
 
