@@ -20,7 +20,8 @@ class OptionsPrivate
 {
 public:
     OptionsPrivate() : title_buttons_left( "MS" ), title_buttons_right( "HIAX" ),
-        custom_button_positions( false ), electric_borders( false ) {};
+        custom_button_positions( false ), electric_borders( false ),
+        electric_border_delay(0) {};
     QColor colors[KWINCOLORS*2];
     QColorGroup *cg[KWINCOLORS*2];
     QString title_buttons_left;
@@ -30,6 +31,7 @@ public:
     bool fade_tooltips;
     bool animate_tooltips;
     bool electric_borders;
+    int electric_border_delay;
 };
 };
 
@@ -220,6 +222,7 @@ void Options::reload()
     windowSnapZone = config->readNumEntry("WindowSnapZone", 10);
     snapOnlyWhenOverlapping=config->readBoolEntry("SnapOnlyWhenOverlapping",FALSE);
     d->electric_borders = config->readBoolEntry("ElectricBorders", false);
+    d->electric_border_delay = config->readNumEntry("ElectricBorderDelay", 150);
 
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade") );
 
@@ -355,6 +358,11 @@ bool Options::animateTooltips()
 bool Options::electricBorders()
 {
     return d->electric_borders;
+}
+
+int Options::electricBorderDelay()
+{
+    return d->electric_border_delay;
 }
 
 #include "options.moc"

@@ -116,6 +116,7 @@ public:
     WId electric_right_border;
     Time electric_time_first;
     Time electric_time_last;
+    QPoint electric_push_point;
     Client *movingClient;
 };
 
@@ -4215,11 +4216,14 @@ void Workspace::electricBorder(XEvent *e)
 {
   Window border = e->xcrossing.window;
   Time now = e->xcrossing.time;
-  int treshold_set = 150; // set timeout
-  int treshold_reset = 150; // reset timeout
+  int treshold_set = options->electricBorderDelay(); // set timeout
+  int treshold_reset = 250; // reset timeout
+  int distance_reset = 10; // Mouse should not move more than this many pixels
+  QPoint p(e->xcrossing.x_root, e->xcrossing.y_root);
 
   if ((d->electric_current_border == border) &&
-      (TimeDiff(d->electric_time_last, now) < treshold_reset))
+      (TimeDiff(d->electric_time_last, now) < treshold_reset) &&
+      ((p-d->electric_push_point).manhattanLength() < distance_reset))
   {
      d->electric_time_last = now;
 
@@ -4257,6 +4261,7 @@ void Workspace::electricBorder(XEvent *e)
     d->electric_current_border = border;
     d->electric_time_first = now;
     d->electric_time_last = now;
+    d->electric_push_point = p;
   }
 
   int mouse_warp = 1;

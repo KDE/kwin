@@ -316,6 +316,11 @@ public:
     */
     bool electricBorders();
 
+    /**
+    * @returns the activation delay for electric borders in milliseconds.
+    */
+    int electricBorderDelay();
+
 public slots:
     void reload();
 
