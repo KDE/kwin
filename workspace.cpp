@@ -901,7 +901,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
 	popup->insertItem( i18n("&Move"), Options::MoveOp );
 	popup->insertItem( i18n("&Size"), Options::ResizeOp );
-	popup->insertItem( i18n("&Mi&nimize"), Options::IconifyOp );
+	popup->insertItem( i18n("Mi&nimize"), Options::IconifyOp );
 	popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
 	popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
 	
