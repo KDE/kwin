@@ -513,15 +513,15 @@ const QBitmap &PlastikHandler::buttonBitmap(ButtonIcon type, const QSize &size, 
 
     // btn icon size...
     int reduceW = 0, reduceH = 0;
-    if(size.width()>12) {
+    if(size.width()>14) {
         reduceW = static_cast<int>(2*(size.width()/3.5) );
     }
     else
-        reduceW = 4;
-    if(size.height()>12)
+        reduceW = 6;
+    if(size.height()>14)
         reduceH = static_cast<int>(2*(size.height()/3.5) );
     else
-        reduceH = 4;
+        reduceH = 6;
 
     int w = size.width() - reduceW;
     int h = size.height() - reduceH;
