@@ -26,7 +26,6 @@ class B2Client;
 
 class B2Button : public QButton
 {
-    Q_OBJECT
 public:
     B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL);
     ~B2Button() {};
@@ -58,7 +57,6 @@ public:
 
 class B2Titlebar : public QWidget
 {
-    Q_OBJECT
     friend class B2Client;
 public:
     B2Titlebar(B2Client *parent);
@@ -142,7 +140,6 @@ private:
 
 class B2ClientFactory : public QObject, public KDecorationFactory
 {
-Q_OBJECT
 public:
     B2ClientFactory();
     virtual ~B2ClientFactory();
