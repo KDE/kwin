@@ -108,6 +108,8 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
     {
     if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
         {
+        if( timestamp == CurrentTime )
+            timestamp = c->userTime();
         if( src == NET::FromUnknown )
             src = NET::FromTool; // KWIN_FOCUS, use qt_x_time as timestamp?
         if( src == NET::FromTool )
@@ -120,7 +122,8 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
             // if activation of the requestor's window would be allowed, allow activation too
             else if( active_window != None
                 && ( c2 = workspace->findClient( WindowMatchPredicate( active_window ))) != NULL
-                && workspace->allowClientActivation( c2, timestamp ))
+                && workspace->allowClientActivation( c2,
+                    timestampCompare( timestamp, c2->userTime() > 0 ? timestamp : c2->userTime())))
                 workspace->activateClient( c );
             else
                 c->demandAttention();

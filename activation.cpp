@@ -419,6 +419,8 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
     // 3 - high    - new window gets focus only if it belongs to the active application,
     //              or when no window is currently active
     // 4 - extreme - no window gets focus without user intervention
+    if( time == -1U )
+        time = c->userTime();
     if( session_saving
         && options->focusStealingPreventionLevel <= 3 ) // <= normal
         {
