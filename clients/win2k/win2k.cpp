@@ -80,20 +80,18 @@ static unsigned char question_bits[] = {
 
 
 // Up / Down titlebar button images
-// Since we have no idea when this client will be unloaded from kwin, there is
-// no way to free dynamic memory. Hence, these pixmaps must be static.
-static KPixmap btnPix1; 
-static KPixmap iBtnPix1;
-static KPixmap btnDownPix1;
-static KPixmap iBtnDownPix1;
+static KPixmap *btnPix1; 
+static KPixmap *iBtnPix1;
+static KPixmap *btnDownPix1;
+static KPixmap *iBtnDownPix1;
 
-static KPixmap miniBtnPix1; 
-static KPixmap iMiniBtnPix1;
-static KPixmap miniBtnDownPix1;
-static KPixmap iMiniBtnDownPix1;
+static KPixmap *miniBtnPix1; 
+static KPixmap *iMiniBtnPix1;
+static KPixmap *miniBtnDownPix1;
+static KPixmap *iMiniBtnDownPix1;
 
-static QPixmap defaultMenuPix(kdelogo);
-static QColor  btnForeground;
+static QPixmap *defaultMenuPix;
+static QColor  *btnForeground;
 static bool    pixmaps_created = false;
 
 
@@ -135,75 +133,100 @@ static void create_pixmaps( )
 
     bool highcolor = QPixmap::defaultDepth() > 8;
 
+    btnPix1 = new KPixmap;
+    btnDownPix1 = new KPixmap;
+    iBtnPix1 = new KPixmap;
+    iBtnDownPix1 = new KPixmap;
+    miniBtnPix1 = new KPixmap;
+    miniBtnDownPix1 = new KPixmap;
+    iMiniBtnPix1 = new KPixmap;
+    iMiniBtnDownPix1 = new KPixmap;
+    defaultMenuPix = new QPixmap(kdelogo);
+
     // buttons (active/inactive, sunken/unsunken)
     QColorGroup g = options->colorGroup(Options::ButtonBg, true);
     QColor c = g.background();
-    btnPix1.resize(16, 14);
-    btnDownPix1.resize(16, 14);
-    iBtnPix1.resize(16, 14);
-    iBtnDownPix1.resize(16, 14);
+    btnPix1->resize(16, 14);
+    btnDownPix1->resize(16, 14);
+    iBtnPix1->resize(16, 14);
+    iBtnDownPix1->resize(16, 14);
 
-    miniBtnPix1.resize(12, 12);
-    miniBtnDownPix1.resize(12, 12);
-    iMiniBtnPix1.resize(12, 12);
-    iMiniBtnDownPix1.resize(12, 12);
+    miniBtnPix1->resize(12, 12);
+    miniBtnDownPix1->resize(12, 12);
+    iMiniBtnPix1->resize(12, 12);
+    iMiniBtnDownPix1->resize(12, 12);
 
     // Give Win2k what it never had ;)
     if(highcolor)
     {
-        KPixmapEffect::gradient(btnPix1, c.light(130), c.dark(130),
+        KPixmapEffect::gradient(*btnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(btnDownPix1, c.dark(130), c.light(130),
+        KPixmapEffect::gradient(*btnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
 
-        KPixmapEffect::gradient(miniBtnPix1, c.light(130), c.dark(130),
+        KPixmapEffect::gradient(*miniBtnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(miniBtnDownPix1, c.dark(130), c.light(130),
+        KPixmapEffect::gradient(*miniBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
 
         g = options->colorGroup(Options::ButtonBg, false);
         c = g.background();
-        KPixmapEffect::gradient(iBtnPix1, c.light(130), c.dark(130),
+        KPixmapEffect::gradient(*iBtnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(iBtnDownPix1, c.dark(130), c.light(130),
+        KPixmapEffect::gradient(*iBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(iMiniBtnPix1, c.light(130), c.dark(130),
+        KPixmapEffect::gradient(*iMiniBtnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(iMiniBtnDownPix1, c.dark(130), c.light(130),
+        KPixmapEffect::gradient(*iMiniBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
     }
     else
     {
-        btnPix1.fill(c.rgb());
-        btnDownPix1.fill(c.rgb());
-        miniBtnPix1.fill(c.rgb());
-        miniBtnDownPix1.fill(c.rgb());
+        btnPix1->fill(c.rgb());
+        btnDownPix1->fill(c.rgb());
+        miniBtnPix1->fill(c.rgb());
+        miniBtnDownPix1->fill(c.rgb());
 
         g = options->colorGroup(Options::ButtonBg, false);
         c = g.background();
-        iBtnPix1.fill(c.rgb());
-        iBtnDownPix1.fill(c.rgb());
-        iMiniBtnPix1.fill(c.rgb());
-        iMiniBtnDownPix1.fill(c.rgb());
+        iBtnPix1->fill(c.rgb());
+        iBtnDownPix1->fill(c.rgb());
+        iMiniBtnPix1->fill(c.rgb());
+        iMiniBtnDownPix1->fill(c.rgb());
     }
 
     g = options->colorGroup(Options::ButtonBg, true);   
-    drawButtonFrame(&btnPix1, g, false);
-    drawButtonFrame(&btnDownPix1, g, true);
-    drawButtonFrame(&miniBtnPix1, g, false);
-    drawButtonFrame(&miniBtnDownPix1, g, true);
+    drawButtonFrame(btnPix1, g, false);
+    drawButtonFrame(btnDownPix1, g, true);
+    drawButtonFrame(miniBtnPix1, g, false);
+    drawButtonFrame(miniBtnDownPix1, g, true);
 
     g = options->colorGroup(Options::ButtonBg, false);   
-    drawButtonFrame(&iBtnPix1, g, false);
-    drawButtonFrame(&iBtnDownPix1, g, true);
-    drawButtonFrame(&iMiniBtnPix1, g, false);
-    drawButtonFrame(&iMiniBtnDownPix1, g, true);
+    drawButtonFrame(iBtnPix1, g, false);
+    drawButtonFrame(iBtnDownPix1, g, true);
+    drawButtonFrame(iMiniBtnPix1, g, false);
+    drawButtonFrame(iMiniBtnDownPix1, g, true);
 
     // Make sure button pixmaps contrast with the current colour scheme.
     if(qGray(options->color(Options::ButtonBg, true).rgb()) > 127)
-        btnForeground = Qt::black;
+        btnForeground = new QColor(Qt::black);
     else
-        btnForeground = Qt::white;
+        btnForeground = new QColor(Qt::white);
+}
+
+void delete_pixmaps()
+{
+    delete btnPix1;
+    delete btnDownPix1;
+    delete iBtnPix1;
+    delete iBtnDownPix1;
+    delete miniBtnPix1;
+    delete miniBtnDownPix1;
+    delete iMiniBtnPix1;
+    delete iMiniBtnDownPix1;
+    delete defaultMenuPix;
+    delete btnForeground;    
+    pixmaps_created = false;
 }
 
 
@@ -292,19 +315,19 @@ void GalliumButton::drawButton(QPainter *p)
         if(client->isActive())
         {
            if(isDown())
-               p->drawPixmap(0, 0, miniBtn ? miniBtnDownPix1 : btnDownPix1);
+               p->drawPixmap(0, 0, miniBtn ? *miniBtnDownPix1 : *btnDownPix1);
            else
-               p->drawPixmap(0, 0, miniBtn ? miniBtnPix1 : btnPix1);
+               p->drawPixmap(0, 0, miniBtn ? *miniBtnPix1 : *btnPix1);
          }
          else
            {
               if(isDown())
-                  p->drawPixmap(0, 0, miniBtn ? iMiniBtnDownPix1 : iBtnDownPix1);
+                  p->drawPixmap(0, 0, miniBtn ? *iMiniBtnDownPix1 : *iBtnDownPix1);
               else
-                  p->drawPixmap(0, 0, miniBtn ? iMiniBtnPix1 : iBtnPix1);
+                  p->drawPixmap(0, 0, miniBtn ? *iMiniBtnPix1 : *iBtnPix1);
            }
 
-        p->setPen( btnForeground );
+        p->setPen( *btnForeground );
         int xOff = (width()-10)/2;
         int yOff = (height()-10)/2;
         p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
@@ -411,7 +434,7 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
 
 void GalliumClient::slotReset()
 {
-    pixmaps_created = false;
+    delete_pixmaps();
     create_pixmaps();
 
     // 0 to 3   ( 4 buttons - Help, Max, Iconify, Close )
@@ -430,7 +453,7 @@ void GalliumClient::iconChange()
     if(!miniIcon().isNull())
         button[BtnMenu]->setPixmap(miniIcon());
     else
-        button[BtnMenu]->setPixmap(defaultMenuPix);
+        button[BtnMenu]->setPixmap(*defaultMenuPix);
 
     if (button[BtnMenu]->isVisible())
        button[BtnMenu]->repaint(false);
