@@ -62,15 +62,15 @@ static void create_pixmaps()
     QPainter p;
     QPainter maskPainter;
     int i, x, y;
-    titlePix = new QPixmap(32, 12);
-    QBitmap mask(32, 12);
+    titlePix = new QPixmap(33, 12);
+    QBitmap mask(33, 12);
     mask.fill(Qt::color0);
     
     p.begin(titlePix);
     maskPainter.begin(&mask);
     maskPainter.setPen(Qt::color1);
     for(i=0, y=2; i < 3; ++i, y+=4){
-        for(x=1; x < 30; x+=4){
+        for(x=1; x <= 33; x+=3){
             p.setPen(options->color(Options::TitleBar, true).light(150));
             p.drawPoint(x, y);
             maskPainter.drawPoint(x, y);
