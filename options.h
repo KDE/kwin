@@ -184,6 +184,8 @@ class Options : public KDecorationOptions
          * List of window classes to ignore PPosition size hint
          */
         QStringList ignorePositionClasses;
+        // List of window classes for which not to use focus stealing prevention
+        QStringList ignoreFocusStealingClasses;
 
         WindowOperation operationTitlebarDblClick() { return OpTitlebarDblClick; }
 

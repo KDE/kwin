@@ -440,6 +440,8 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         kdDebug( 1212 ) << "Activation: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
+    if( options->ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass())))
+        return true;
     if( time == 0 ) // explicitly asked not to get focus
         return false;
     // TODO window urgency  -> return true?
@@ -491,6 +493,8 @@ bool Workspace::allowFullClientRaising( const Client* c )
         kdDebug( 1212 ) << "Raising: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
+    if( options->ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass())))
+        return true;
     // TODO window urgency  -> return true?
     if( Client::belongToSameApplication( c, ac, true ))
         {

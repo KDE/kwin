@@ -124,6 +124,7 @@ unsigned long Options::updateSettings()
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade"), true );
 
     ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
+    ignoreFocusStealingClasses = config->readListEntry("IgnoreFocusStealingClasses");
 
     // Mouse bindings
     config->setGroup( "MouseBindings");
