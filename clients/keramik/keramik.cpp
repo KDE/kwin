@@ -1314,7 +1314,10 @@ void KeramikClient::menuButtonPressed()
 {
 	QPoint menuPoint ( button[MenuButton]->rect().bottomLeft().x() - 6,
 					   button[MenuButton]->rect().bottomLeft().y() + 3 );
+        KDecorationFactory* f = factory();
 	showWindowMenu( button[MenuButton]->mapToGlobal( menuPoint ));
+        if( !f->exists( this )) // 'this' was destroyed
+            return;
 	button[MenuButton]->setDown(false);
 }
 

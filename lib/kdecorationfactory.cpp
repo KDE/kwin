@@ -52,6 +52,11 @@ QValueList< KDecorationDefines::BorderSize > KDecorationFactory::borderSizes() c
     return QValueList< BorderSize >() << BorderNormal;
     }
     
+bool KDecorationFactory::exists( const KDecoration* deco ) const
+    {
+    return _decorations.contains( const_cast< KDecoration* >( deco ));
+    }
+    
 void KDecorationFactory::addDecoration( KDecoration* deco )
     {
     _decorations.append( deco );

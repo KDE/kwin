@@ -78,6 +78,13 @@ class KDecorationFactory
 	 */
         const KDecorationOptions* options(); // convenience
         /**
+         * Returns true if the given decoration object still exists. This is necessary
+         * e.g. when calling KDecoration::showWindowMenu(), which may cause the decoration
+         * to be destroyed. Note that this function is reliable only if called immediately
+         * after such actions.
+         */
+        bool exists( const KDecoration* deco ) const;
+        /**
          * @internal
          */
         void addDecoration( KDecoration* );

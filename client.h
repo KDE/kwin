@@ -180,7 +180,7 @@ class Client : public QObject, public KDecorationDefines
 
         void setMask( const QRegion& r, int mode = X::Unsorted );
 
-        void updateDecoration( bool check_workspace_pos, bool force = false, bool delay_delete = false );
+        void updateDecoration( bool check_workspace_pos, bool force = false );
         void checkBorderSizes();
 
     // shape extensions
@@ -349,7 +349,7 @@ class Client : public QObject, public KDecorationDefines
 
         void embedClient( Window w );    
         void detectNoBorder();
-        void destroyDecoration( bool delay_delete = false );
+        void destroyDecoration();
         void updateFrameStrut();
 
         void rawShow(); // just shows it

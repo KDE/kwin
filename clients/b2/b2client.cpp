@@ -757,7 +757,10 @@ void B2Client::menuButtonPressed()
 {
     QPoint menupoint = button[BtnMenu]->mapToGlobal(
 	    button[BtnMenu]->rect().bottomLeft());
+    KDecorationFactory* f = factory();
     showWindowMenu(menupoint);
+    if( !f->exists( this )) // 'this' was destroyed
+        return;
     button[BtnMenu]->setDown(false);
 }
 

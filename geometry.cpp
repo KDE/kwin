@@ -653,8 +653,7 @@ void Client::getWmNormalHints()
     long msize;
     if (XGetWMNormalHints(qt_xdisplay(), window(), &xSizeHint, &msize) == 0 )
         xSizeHint.flags = 0;
-    // set defined values for basesize, minsize, maxsize, aspect and resizeinc,
-    // even if they're not in flags
+    // set defined values for the fields, even if they're not in flags
 
     // basesize is just like minsize, except for minsize is not used for aspect ratios
     // keep basesize only for aspect ratios, for size increments, keep the base
@@ -696,7 +695,7 @@ void Client::getWmNormalHints()
         xSizeHint.max_aspect.x = INT_MAX;
         xSizeHint.max_aspect.y = 1;
         }
-    if( !xSizeHint.flags & PWinGravity )
+    if( ! ( xSizeHint.flags & PWinGravity ))
         xSizeHint.win_gravity = NorthWestGravity;
     if( isManaged())
         { // update to match restrictions
@@ -1288,7 +1287,7 @@ void Client::setFullScreen( bool set, bool user )
     StackingUpdatesBlocker blocker( workspace());
     workspace()->updateClientLayer( this ); // active fullscreens get different layer
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
-    updateDecoration( false, false, true ); // delayed deletion of decoration
+    updateDecoration( false, false );
     if( isFullScreen())
         setGeometry( workspace()->clientArea( MaximizeFullArea, this ));
     else

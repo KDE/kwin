@@ -971,7 +971,10 @@ void QuartzClient::menuButtonPressed()
     QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1,
                        button[BtnMenu]->rect().bottomLeft().y()+2 );
 	menupoint = button[BtnMenu]->mapToGlobal( menupoint );
-	showWindowMenu(menupoint);
+        KDecorationFactory* f = factory();
+        showWindowMenu(menupoint);
+        if( !f->exists( this )) // 'this' was destroyed
+            return;
 	button[BtnMenu]->setDown(false);
 }
 

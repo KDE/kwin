@@ -366,9 +366,26 @@ class KDecoration
 	 */
 	QString caption() const;
 	/**
-	 * This function invokes the window operations menu.
+	 * This function invokes the window operations menu. IMPORTANT: As a result
+         * of this function, the decoration object that called it may be destroyed
+         * after the function returns. This means that the decoration object must
+         * either return immediately after calling showWindowMenu(), or it must
+         * use KDecorationFactory::exists() to check it's still valid. For example,
+         * the code handling clicks on the menu button should look similarly like this:
+         *
+         * \code
+         * KDecorationFactory* f = factory(); // needs to be saved before
+         * showWindowMenu( button[MenuButton]->mapToGlobal( menuPoint ));
+         * if( !f->exists( this )) // destroyed, return immediately
+         *     return;
+	 * button[MenuButton]->setDown(false);
+         * \endcode
 	 */
 	void showWindowMenu( QPoint pos );
+        /**
+         * This function performs the given window operation. This function may destroy
+         * the current decoration object, just like showWindowMenu().
+         */
 	void performWindowOperation( WindowOperation op );
 	/**
 	 * If the decoration is non-rectangular, this function needs to be called
@@ -571,6 +588,8 @@ class KDecoration
 	 * This function can be called by the decoration to request 
 	 * closing of the decorated window. Note that closing the window
 	 * also involves destroying the decoration.
+         * IMPORTANT: This function may destroy the current decoration object,
+         * just like showWindowMenu().
 	 */
 	void closeWindow();
 	/**

@@ -1277,7 +1277,10 @@ void KDEDefaultClient::menuButtonPressed()
 
 	QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1,
 					   button[BtnMenu]->rect().bottomLeft().y()+2 );
+        KDecorationFactory* f = factory();
 	showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ));
+        if( !f->exists( this )) // 'this' was destroyed
+            return;
 	button[BtnMenu]->setDown(false);
 }
 

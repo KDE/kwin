@@ -225,7 +225,7 @@ void Client::destroyClient()
     deleteClient( this, Allowed );
     }
 
-void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_delete )
+void Client::updateDecoration( bool check_workspace_pos, bool force )
     {
     if( !force && (( decoration == NULL && noBorder())
                     || ( decoration != NULL && !noBorder())))
@@ -233,7 +233,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_
     bool do_show = false;
     ++block_geometry;
     if( force )
-        destroyDecoration( delay_delete );
+        destroyDecoration();
     if( !noBorder())
         {
         decoration = workspace()->createDecoration( bridge );
@@ -255,7 +255,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_
         do_show = true;
         }
     else
-        destroyDecoration( delay_delete );
+        destroyDecoration();
     if( check_workspace_pos )
         checkWorkspacePosition();
     --block_geometry;
@@ -265,21 +265,14 @@ void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_
     updateFrameStrut();
     }
 
-void Client::destroyDecoration( bool delay_delete )
+void Client::destroyDecoration()
     {
     if( decoration != NULL )
         {
-        // When selecting the noborder operation from the popup menu after clicking on the menu
-        // button, the decoration should be deleted. But after closing the popup, the flow
-        // of control is still in the decoration, and the decorations usually do
-        // "button->setDown( false )". Therefore, delay the actual deleting.
-        if( delay_delete )
-            decoration->deleteLater();
-        else
-            delete decoration;
+        delete decoration;
+        decoration = NULL;
         QPoint grav = calculateGravitation( true );
         border_left = border_right = border_top = border_bottom = 0;
-        decoration = NULL;
         setMask( QRegion()); // reset shape mask
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
@@ -395,7 +388,7 @@ void Client::setUserNoBorder( bool set )
     if( user_noborder == set )
         return;
     user_noborder = set;
-    updateDecoration( true, false, true ); // delayed deletion of decoration
+    updateDecoration( true, false );
     }
 
 bool Client::grabInput()
@@ -948,10 +941,7 @@ void Client::killWindow()
     killProcess( false );
     // always kill this client at the server
     XKillClient(qt_xdisplay(), window() );
-    // needs to be delayed, because this may be called from the client
-    // popup menu, and there may be possibly code still touching
-    // this instance after returning from killWindow()
-    QTimer::singleShot( 0, this, SLOT( destroyClient()));
+    destroyClient();
     }
 
 // send a ping to the window using _NET_WM_PING if possible
