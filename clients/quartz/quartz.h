@@ -20,25 +20,25 @@
 #include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
-#include "../../client.h"
-#include "../../kwinbutton.h"
+#include "../../lib/kdecoration.h"
+#include "../../lib/kdecorationfactory.h"
 
 class QSpacerItem;
 class QBoxLayout;
 
 namespace Quartz {
 
-using namespace KWinInternal;
+class QuartzClient;
 
-class QuartzHandler: public QObject
+class QuartzHandler: public QObject, public KDecorationFactory
 {
 	Q_OBJECT
 	public:
 		QuartzHandler();
 		~QuartzHandler();
 
-	public slots:
-		void slotReset();
+		virtual KDecoration* createDecoration( KDecorationBridge* );
+		virtual bool reset(unsigned long changed);
 
 	private:
 		void readConfig();
@@ -48,14 +48,15 @@ class QuartzHandler: public QObject
 };
 
 
-class QuartzButton : public KWinButton
+class QuartzButton : public QButton
 {
 	public:
-		QuartzButton(Client *parent=0, const char *name=0, bool largeButton=true,
-					 bool isLeftButton=true, bool isStickyButton=false,
+		QuartzButton(QuartzClient *parent=0, const char *name=0, bool largeButton=true,
+					 bool isLeftButton=true, bool isOnAllDesktopsButton=false,
 					 const unsigned char *bitmap=NULL, const QString& tip=NULL);
 		~QuartzButton();
 		void setBitmap(const unsigned char *bitmap);
+		void setTipText(const QString &tip);
 		QSize sizeHint() const;
 		int   last_button;
 		void turnOn( bool isOn );
@@ -69,44 +70,53 @@ class QuartzButton : public KWinButton
 		QBitmap* deco;
 		bool     large;
 		bool	 isLeft;
-		bool 	 isSticky;
-		Client*  client;
+		bool 	 isOnAllDesktops;
+		QuartzClient*  client;
 };
 
 
-class QuartzClient : public Client
+class QuartzClient : public KDecoration
 {
 	Q_OBJECT
 
 	public:
-		QuartzClient( Workspace *ws, WId w, QWidget *parent=0, 
-					  const char *name=0 );
+		QuartzClient(KDecorationBridge* bridge, KDecorationFactory* factory);
 		~QuartzClient() {;}
 
+		virtual void init();
+		virtual void resize(const QSize&);
+		virtual bool eventFilter( QObject* o, QEvent* e );
+
 	protected:
+		virtual void reset( unsigned long changed );
 		void resizeEvent( QResizeEvent* );
 		void paintEvent( QPaintEvent* );
 		void showEvent( QShowEvent* );
 		void mouseDoubleClickEvent( QMouseEvent * );
-		void captionChange( const QString& name );
-		void maximizeChange(bool m);
-		void activeChange(bool);
-		void iconChange();
-		void stickyChange(bool on);
+		virtual void captionChange();
+		void maximizeChange();
+		virtual void shadeChange() {};
+		virtual void activeChange();
+		virtual void iconChange();
+		virtual void desktopChange();
+		virtual QuartzClient::MousePosition mousePosition(const QPoint &point) const;
+		virtual void borders(int&, int&, int&, int&) const;
+		virtual QSize minimumSize() const;
 
 	protected slots:
 		void slotMaximize();
 		void menuButtonPressed();
 
 	private:
+		bool isTool();
 		void calcHiddenButtons();
 		void addClientButtons( const QString& s, bool isLeft=true );
 
-		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, 
-					  BtnMenu, BtnSticky, BtnCount };
+		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
+					  BtnMenu, BtnOnAllDesktops, BtnCount };
 		QuartzButton* button[ QuartzClient::BtnCount ];
 		int           lastButtonWidth;
-		int 		  titleHeight;
+		int 		  titleHeight, borderSize;
 		bool          largeButtons;
 		QBoxLayout*   hb;
 		QSpacerItem*  titlebar;
