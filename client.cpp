@@ -440,26 +440,15 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
 
+    // window wants to stay on top?
+    stays_on_top = ( info->state() & NET::StaysOnTop) != 0;
+    
 
     // should we open this window on a certain desktop?
     if ( info->desktop() == NETWinInfo::OnAllDesktops )
 	setSticky( TRUE );
     else if ( info->desktop() )
-	desk= info->desktop(); // window had the initial desktop property!
-
-
-    // window wants to stay on top?
-    stays_on_top = ( info->state() & NET::StaysOnTop) != 0;
-
-
-
-
-    // if this window is transient, ensure that it is opened on the
-    // same window as its parent.  this is necessary when an application
-    // starts up on a different desktop than is currently displayed
-    //
-    if ( isTransient() )
-	desk = mainClient()->desktop();
+	desk = info->desktop(); // window had the initial desktop property!
 
 }
 
@@ -559,8 +548,23 @@ bool Client::manage( bool isMapped, bool doNotShow )
     if ( session  ) {
 	desk = session->desktop;
     } else if ( desk <= 0 ) {
-	// assume window wants to be visible on the current desktop
-	desk =  workspace()->currentDesktop();
+	// if this window is transient, ensure that it is opened on the
+	// same window as its parent.  this is necessary when an application
+	// starts up on a different desktop than is currently displayed
+	//
+	if ( isTransient() )
+	    desk = mainClient()->desktop();
+	
+	if ( desk <= 0 ) {
+	    // assume window wants to be visible on the current desktop
+	    desk =  workspace()->currentDesktop();
+	} else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop() ) {
+	    //window didn't specify any specific desktop but will appear
+	    //somewhere else. This happens for example with "save data?" 
+	    //dialogs on shutdown. Switch to the respective desktop in
+	    //that case.
+	    workspace()->setCurrentDesktop( desk );
+	}
     }
 
     info->setDesktop( desk );
@@ -569,7 +573,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
     setMappingState( state );
 
     bool showMe = state == NormalState && isOnDesktop( workspace()->currentDesktop() );
-    
+
     if ( workspace()->isNotManaged( caption() ) )
 	doNotShow = TRUE;
 
