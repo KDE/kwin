@@ -36,10 +36,14 @@ public:
 
     void setActive( bool );
 
+    void show();
+    void hide();
+
+    void map();
+    void unmap();
+
 protected:
     void resizeEvent( QResizeEvent * );
-    void showEvent( QShowEvent* );
-    void hideEvent( QHideEvent* );
     bool x11Event( XEvent * );		// X11 event
 
 
@@ -174,6 +178,9 @@ public:
 
     void cloneMode(Client *);
 
+    void show();
+    void hide();
+
 public slots:
     void iconify();
     void closeWindow();
@@ -195,8 +202,6 @@ protected:
     virtual void windowWrapperHideEvent( QHideEvent* ){}
     void enterEvent( QEvent * );
     void leaveEvent( QEvent * );
-    void showEvent( QShowEvent* );
-    void hideEvent( QHideEvent* );
     bool x11Event( XEvent * );		// X11 event
 
     virtual void activateLayout();
@@ -275,7 +280,6 @@ private:
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
     uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?
     uint input :1; // does the window want input in its wm_hints
-    uint mapped :1; // keeps track of our visiblity within the asynchronous event flow
     void getWMHints();
     void getWindowProtocols();
     QPixmap icon_pix;

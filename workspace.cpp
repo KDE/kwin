@@ -420,27 +420,10 @@ bool Workspace::workspaceEvent( XEvent * e )
  	if ( removeSystemTrayWin( e->xunmap.window ) )
  	    return TRUE;
 
-	if ( e->xunmap.event == root ) {
-	    // keep track of map/unmap for own own windows to avoid
-	    // race conditions
-	    c = findClientWidthId( e->xunmap.window );
-	    if ( c )
-		(void) c->windowEvent( e );
-	}
-
 	return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
 	
     case MapNotify:
 
-	if ( e->xmap.event == root ) {
-	    // keep track of map/unmap for own own windows to avoid
-	    // race conditions
-	    c = findClientWidthId( e->xmap.window );
-	    if ( c )
-		(void) c->windowEvent( e );
-	    return TRUE;
-	}
-	
 	return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
 	
     case ReparentNotify:
@@ -1816,6 +1799,9 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     Client* old_active_client = active_client;
     active_client = 0;
     block_focus = TRUE;
+    
+    ClientList mapList;
+    ClientList unmapList;
 
     if (new_desktop != current_desktop) {
 	/*
@@ -1826,6 +1812,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
 	    if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
 		(*it)->hide();
+		unmapList += (*it);
 	    }
 	}
 	current_desktop = new_desktop;
@@ -1834,6 +1821,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	    if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
 		(*it)->show();
+		mapList += (*it);
 	    }
 	}
     }
@@ -1892,6 +1880,15 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     }
 
     QApplication::syncX();
+    XEvent tmpE;
+    for ( ClientList::ConstIterator it = mapList.begin(); it != mapList.end(); ++it) {
+	while ( XCheckTypedWindowEvent( qt_xdisplay(), (*it)->windowWrapper()->winId(), UnmapNotify, &tmpE ) )
+	    ; // eat event
+    }
+    for ( ClientList::ConstIterator it = unmapList.begin(); it != unmapList.end(); ++it) {
+	while ( XCheckTypedWindowEvent( qt_xdisplay(), (*it)->windowWrapper()->winId(), MapNotify, &tmpE ) )
+	    ; // eat event
+    }
 }
 
 

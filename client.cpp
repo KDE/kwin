@@ -268,7 +268,30 @@ void WindowWrapper::resizeEvent( QResizeEvent * )
     }
 }
 
-void WindowWrapper::showEvent( QShowEvent* )
+/*!
+  Reimplemented to do map() as well
+ */
+void WindowWrapper::show()
+{
+    map();
+    QWidget::show();
+}
+
+
+
+/*!
+  Reimplemented to do unmap() as well
+ */
+void WindowWrapper::hide()
+{
+    QWidget::hide();
+    unmap();
+}
+
+/*!
+  Maps the managed window.
+ */
+void WindowWrapper::map()
 {
     if ( win ) {
 	if ( !reparented ) {
@@ -284,12 +307,20 @@ void WindowWrapper::showEvent( QShowEvent* )
 	XMapRaised( qt_xdisplay(), win );
     }
 }
-void WindowWrapper::hideEvent( QHideEvent* )
+
+/*!
+  Unmaps the managed window.
+ */
+void WindowWrapper::unmap()
 {
     if ( win )
  	XUnmapWindow( qt_xdisplay(), win );
 }
 
+
+/*!
+  Invalidates the managed window. After that, window() returns 0.
+*/
 void WindowWrapper::invalidateWindow()
 {
     win = 0;
@@ -405,7 +436,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
 
-    mapped = 0;
     wwrap = new WindowWrapper( w, this );
     wwrap->installEventFilter( this );
 
@@ -491,7 +521,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
     }
 
-    QRect geom( original_geometry );
+    geom = original_geometry;
     bool placementDone = FALSE;
 
     SessionInfo* session = workspace()->takeSessionInfo( this );
@@ -588,7 +618,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	if ( desk <= 0 ) {
 	    // assume window wants to be visible on the current desktop
 	    desk =  workspace()->currentDesktop();
-	} else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop() 
+	} else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop()
 		    && !isMenu() ) {
 	    //window didn't specify any specific desktop but will appear
 	    //somewhere else. This happens for example with "save data?"
@@ -759,17 +789,7 @@ bool Client::windowEvent( XEvent * e)
 
     switch (e->type) {
     case UnmapNotify:
-	if ( e->xunmap.window == winId() ) {
-	    mapped = 0;
-	    return FALSE;
-	}
 	return unmapNotify( e->xunmap );
-    case MapNotify:
-	if ( e->xmap.window == winId() ) {
-	    mapped = 1;
-	    return FALSE;
-	}
-	break;
     case MapRequest:
 	return mapRequest( e->xmaprequest );
     case ConfigureRequest:
@@ -853,8 +873,9 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	    withdraw();
 	break;
     case NormalState:
-  	if ( ( !mapped || !windowWrapper()->isVisibleTo( this )) && !e.send_event )
+  	if ( !windowWrapper()->isVisibleTo( 0 ) && !e.send_event )
   	    return TRUE; // this event was produced by us as well
+	qDebug("UnmapNotify for %s.", caption().latin1() );
 
 	// maybe we will be destroyed soon. Check this first.
 	XEvent ev;
@@ -936,12 +957,28 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    ox = windowWrapper()->x();
 	    oy = windowWrapper()->y();
 	}
+	
 	int nx = x() + ox;
 	int ny = y() + oy;
+	
 	if ( e.value_mask & CWX )
 	    nx = e.x;
 	if ( e.value_mask & CWY )
 	    ny = e.y;
+
+	
+	// clever workaround for applications like xv that want to set
+	// the location to the current location but miscalculate the
+	// frame size due to kwin being a double-reparenting window
+	// manager
+	if ( ox == 0 && oy == 0 && 
+	     nx == x() + windowWrapper()->x() && 
+	     ny == y() + windowWrapper()->y() ) {
+	    nx = x();
+	    ny = y();
+	}
+	    
+	
 	QPoint np( nx-ox, ny-oy);
 #if 0	
 	if ( windowType() == NET::Normal && may_move ) {
@@ -1481,24 +1518,30 @@ void Client::move( int x, int y )
 }
 
 
-/*!\reimp
+/*!
+  Reimplemented to set the mapping state and to map the managed
+  window in the window wrapper. Alo takes care of deiconification of
+  transients.
  */
-void Client::showEvent( QShowEvent* )
+void Client::show()
 {
+    QWidget::show();
     if ( isIconified() && !isTransient() )
 	animateIconifyOrDeiconify( FALSE );
     setMappingState( NormalState );
- }
-
-/*!
-  Reimplemented to hide the window wrapper as well. Also informs the
-  workspace.
- */
-void Client::hideEvent( QHideEvent* )
-{
-    workspace()->clientHidden( this );
+    windowWrapper()->map();
 }
 
+/*!
+  Reimplemented to unmap the managed window in the window
+wrapper. Also informs the workspace.
+*/
+void Client::hide()
+{
+    QWidget::hide();
+    workspace()->clientHidden( this );
+    windowWrapper()->unmap();
+}
 
 
 /*!
@@ -1838,7 +1881,7 @@ bool Client::x11Event( XEvent * e)
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
-	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled() 
+	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled()
 	     && workspace()->topClientOnDesktop() != this ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = new QTimer( this );
@@ -1978,11 +2021,9 @@ void Client::setShade( bool s )
 	if ( !wasNorthWest )
 	    clearWFlags( WNorthWestGravity );
 	resize (s );
-	XEvent tmpE;
-	do {
-	    XWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
-			  SubstructureNotifyMask, &tmpE);
-	} while ( tmpE.type != UnmapNotify  || tmpE.xunmap.window != win );
+  	XEvent tmpE;
+	while ( XCheckTypedWindowEvent( qt_xdisplay(), windowWrapper()->winId(), UnmapNotify, &tmpE ) )
+	    ; // eat event
     } else {
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
@@ -2003,6 +2044,9 @@ void Client::setShade( bool s )
 	repaint();
 	if ( isActive() )
 	    workspace()->requestFocus( this );
+  	XEvent tmpE;
+	while ( XCheckTypedWindowEvent( qt_xdisplay(), windowWrapper()->winId(), MapNotify, &tmpE ) )
+	    ; // eat event
     }
 
     workspace()->iconifyOrDeiconifyTransientsOf( this );
@@ -2251,7 +2295,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    break;
 	mode = Center;
 	moveResizeMode = TRUE;
-        geom=geometry();
+	geom=geometry();
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
 	    max_mode = MaximizeRestore;
@@ -2697,7 +2741,6 @@ void Client::cloneMode(Client *client)
     shaded = client->shaded;
     geom_restore = client->geom_restore;
     max_mode = client->max_mode;
-//    cmap = client->cmap;
     state = client->state;
     setCaption(client->caption());
 }
