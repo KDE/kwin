@@ -937,7 +937,7 @@ bool Workspace::keyPress(XKeyEvent key)
     }
 
     if (control_grab || tab_grab){
-        if ((keyCombQt & 0xffff) == XK_Escape){
+        if ((keyCombQt & 0xffff) == Qt::Key_Escape){
             XUngrabKeyboard(qt_xdisplay(), kwin_time);
             XUngrabPointer( qt_xdisplay(), kwin_time);
             tab_box->hide();
