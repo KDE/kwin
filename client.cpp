@@ -572,14 +572,34 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
  */
 Client::~Client()
 {
-    releaseWindow();
     if (moveResizeMode)
-       workspace()->setClientIsMoving(0);
-
+       stopMoveResize();
+    releaseWindow();
     delete info;
     delete d;
 }
 
+void Client::startMoveResize()
+{
+    moveResizeMode = true;
+    workspace()->setClientIsMoving(this);
+    grabMouse(); 
+    grabKeyboard();
+    if ( ( isMove() && options->moveMode != Options::Opaque )
+      || ( isResize() && options->resizeMode != Options::Opaque ) )
+        XGrabServer( qt_xdisplay() );
+}
+
+void Client::stopMoveResize()
+{
+    if ( ( isMove() && options->moveMode != Options::Opaque )
+      || ( isResize() && options->resizeMode != Options::Opaque ) )
+        XUngrabServer( qt_xdisplay() );
+    releaseKeyboard();
+    releaseMouse();
+    workspace()->setClientIsMoving(0);
+    moveResizeMode = false;
+}
 
 /*!
   Manages the clients. This means handling the very first maprequest:
@@ -1431,15 +1451,9 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	buttonDown = FALSE;
 	if ( moveResizeMode ) {
 	    clearbound();
-	    if ( ( isMove() && options->moveMode != Options::Opaque )
-		 || ( isResize() && options->resizeMode != Options::Opaque ) )
-		XUngrabServer( qt_xdisplay() );
-	    moveResizeMode = FALSE;
+            stopMoveResize();
 	    setGeometry( geom );
 	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
-	    workspace()->setClientIsMoving(0);
-	    releaseMouse();
-	    releaseKeyboard();
 	}
     }
 }
@@ -1478,7 +1492,6 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     if ( !moveResizeMode ) {
 	QPoint p( e->pos() - moveOffset );
 	if (p.manhattanLength() >= 6) {
-	    moveResizeMode = TRUE;
 	    if ( isMaximized() ) {
 		// in case we were maximized, reset state
 		max_mode = MaximizeRestore;
@@ -1486,12 +1499,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 		Events::raise( Events::UnMaximize );
 		info->setState( 0, NET::Max );
 	    }
-	    workspace()->setClientIsMoving(this);
+            startMoveResize();
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
-	    grabMouse( cursor() ); // to keep the right cursor
-	    if ( ( isMove() && options->moveMode != Options::Opaque )
-		 || ( isResize() && options->resizeMode != Options::Opaque ) )
-		XGrabServer( qt_xdisplay() );
 	} else {
 	    return;
 	}
@@ -1625,7 +1634,7 @@ void Client::setGeometry( int x, int y, int w, int h )
 void Client::move( int x, int y )
 {
     QWidget::move( x, y );
-    if ( !isMove() && isVisible() )
+    if ( !isResize() && !isMove() && isVisible() )
 	sendSyntheticConfigureNotify();
 }
 
@@ -2478,7 +2487,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
     case Options::MouseOperationsMenu:
 	if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
 	    autoRaise();
-	workspace()->clientPopup( this )->exec( globalPos );
+        workspace()->clientPopup( this )->exec( globalPos );
 	workspace()->requestFocus( this );
 	break;
     case Options::MouseToggleRaiseAndLower:
@@ -2511,7 +2520,6 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	if (!isMovable())
 	    break;
 	mode = Center;
-	moveResizeMode = TRUE;
 	geom=geometry();
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
@@ -2520,19 +2528,14 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    Events::raise( Events::UnMaximize );
 	    info->setState( 0, NET::Max );
 	}
-	workspace()->setClientIsMoving(this);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
-	grabMouse( arrowCursor );
-	grabKeyboard();
-	if ( options->moveMode != Options::Opaque )
-	    XGrabServer( qt_xdisplay() );
+        startMoveResize();
 	break;
     case Options::MouseResize: {
 	if (!isMovable())
 	    break;
-	moveResizeMode = TRUE;
 	geom=geometry();
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
@@ -2541,7 +2544,6 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    Events::raise( Events::UnMaximize );
 	    info->setState( 0, NET::Max );
 	}
-	workspace()->setClientIsMoving(this);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	int x = moveOffset.x(), y = moveOffset.y();
@@ -2557,12 +2559,9 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    mode = (x < width() / 2) ? Left : Right;
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
 	setMouseCursor( mode );
-	grabMouse( cursor()  );
-	grabKeyboard();
+        startMoveResize();
 	resizeHorizontalDirectionFixed = FALSE;
 	resizeVerticalDirectionFixed = FALSE;
-	if ( options->resizeMode != Options::Opaque )
-	    XGrabServer( qt_xdisplay() );
 	} break;
     case Options::MouseNothing:
 	// fall through
@@ -2574,110 +2573,56 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 }
 
 
-void Client::keyPressEvent( QKeyEvent * e )
+void Client::keyPressEvent( uint key_code )
 {
     if ( !isMove() && !isResize() )
 	return;
-    bool is_control = e->state() & ControlButton;
+    bool is_control = false; // e->state() & ControlButton;
     int delta = is_control?1:8;
     QPoint pos = QCursor::pos();
-    switch ( e->key() ) {
+    switch ( key_code ) {
     case Key_Left:
 	pos.rx() -= delta;
-	if ( pos.x() <= workspace()->geometry().left() ) {
-	    if ( mode == TopLeft || mode == BottomLeft ) {
-		moveOffset.rx() += delta;
-		invertedMoveOffset.rx() += delta;
-	    } else {
-		moveOffset.rx() -= delta;
-		invertedMoveOffset.rx() -= delta;
-	    }
-	}
 	if ( isResize() && !resizeHorizontalDirectionFixed ) {
 	    resizeHorizontalDirectionFixed = TRUE;
-	    if ( mode == BottomRight )
-		mode = BottomLeft;
-	    else if ( mode == TopRight )
-		mode = TopLeft;
+	    resizeVerticalDirectionFixed = FALSE;
+	    mode = Right;
 	    setMouseCursor( mode );
-	    grabMouse( cursor() );
 	}
 	break;
     case Key_Right:
 	pos.rx() += delta;
-	if ( pos.x() >= workspace()->geometry().right() ) {
-	    if ( mode == TopRight || mode == BottomRight ) {
-		moveOffset.rx() += delta;
-		invertedMoveOffset.rx() += delta;
-	    } else {
-		moveOffset.rx() -= delta;
-		invertedMoveOffset.rx() -= delta;
-	    }
-	}
 	if ( isResize() && !resizeHorizontalDirectionFixed ) {
 	    resizeHorizontalDirectionFixed = TRUE;
-	    if ( mode == BottomLeft )
-		mode = BottomRight;
-	    else if ( mode == TopLeft )
-		mode = TopRight;
+	    resizeVerticalDirectionFixed = FALSE;
+	    mode = Right;
 	    setMouseCursor( mode );
-	    grabMouse( cursor() );
 	}
 	break;
     case Key_Up:
 	pos.ry() -= delta;
-	if ( pos.y() <= workspace()->geometry().top() ) {
-	    if ( mode == TopLeft || mode == TopRight ) {
-		moveOffset.ry() += delta;
-		invertedMoveOffset.ry() += delta;
-	    } else {
-		moveOffset.ry() -= delta;
-		invertedMoveOffset.ry() -= delta;
-	    }
-	}
 	if ( isResize() && !resizeVerticalDirectionFixed ) {
 	    resizeVerticalDirectionFixed = TRUE;
-	    if ( mode == BottomLeft )
-		mode = TopLeft;
-	    else if ( mode == BottomRight )
-		mode = TopRight;
+	    resizeHorizontalDirectionFixed = FALSE;
+	    mode = Bottom;
 	    setMouseCursor( mode );
-	    grabMouse( cursor() );
 	}
 	break;
     case Key_Down:
 	pos.ry() += delta;
-	if ( pos.y() >= workspace()->geometry().bottom() ) {
-	    if ( mode == BottomLeft || mode == BottomRight ) {
-		moveOffset.ry() += delta;
-		invertedMoveOffset.ry() += delta;
-	    } else {
-		moveOffset.ry() -= delta;
-		invertedMoveOffset.ry() -= delta;
-	    }
-	}
 	if ( isResize() && !resizeVerticalDirectionFixed ) {
 	    resizeVerticalDirectionFixed = TRUE;
-	    if ( mode == TopLeft )
-		mode = BottomLeft;
-	    else if ( mode == TopRight )
-		mode = BottomRight;
+	    resizeHorizontalDirectionFixed = FALSE;
+	    mode = Bottom;
 	    setMouseCursor( mode );
-	    grabMouse( cursor() );
 	}
 	break;
     case Key_Space:
     case Key_Return:
     case Key_Enter:
 	clearbound();
-	if ( ( isMove() && options->moveMode != Options::Opaque )
-	     || ( isResize() && options->resizeMode != Options::Opaque ) )
-	    XUngrabServer( qt_xdisplay() );
+        stopMoveResize();
 	setGeometry( geom );
-	moveResizeMode = FALSE;
-	workspace()->setClientIsMoving(0);
-	releaseMouse();
-	releaseKeyboard();
 	buttonDown = FALSE;
 	break;
     default:

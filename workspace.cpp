@@ -1058,6 +1058,11 @@ bool Workspace::keyPress(XKeyEvent key)
         return FALSE;
 
     uint keyCombQt = KAccel::keyEventXToKeyQt( (XEvent*)&key );
+    if (d->movingClient)
+    {
+        d->movingClient->keyPressEvent(keyCombQt);
+        return TRUE;
+    }
 
     if (!control_grab){
         if( keyCombQt == walkThroughWindowsKeycode
@@ -1905,7 +1910,7 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
  */
 void Workspace::setClientIsMoving( Client *c )
 {
-//    assert(!c || !d->movingClient); // Catch attempts to move a second
+    Q_ASSERT(!c || !d->movingClient); // Catch attempts to move a second
     // window while still moving the first one.
     d->movingClient = c;
     if (d->movingClient)

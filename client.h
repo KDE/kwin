@@ -209,6 +209,8 @@ public:
     QString caption() const;
     void setCaption( const QString &);
 
+    void keyPressEvent( uint key_code );
+
 public slots:
     void iconify();
     void closeWindow();
@@ -226,7 +228,6 @@ protected:
     void mousePressEvent( QMouseEvent * );
     void mouseReleaseEvent( QMouseEvent * );
     void mouseMoveEvent( QMouseEvent * );
-    void keyPressEvent( QKeyEvent * );
     void resizeEvent( QResizeEvent * );
     virtual void windowWrapperShowEvent( QShowEvent* ){}
     virtual void windowWrapperHideEvent( QHideEvent* ){}
@@ -275,6 +276,8 @@ private:
     void fetchName();
     void gravitate( bool invert );
 
+    void startMoveResize();
+    void stopMoveResize();
 
     WId win;
     WindowWrapper* wwrap;
