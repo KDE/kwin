@@ -28,7 +28,7 @@
  keys->insertItem(i18n("Window Resize"), "Window resize", 0);
  keys->insertItem(i18n("Window Raise"), "Window raise", 0);
  keys->insertItem(i18n("Window Lower"), "Window lower", 0);
- keys->insertItem(i18n("Window Raise or lower"), "Toggle raise and lower", 0);
+ keys->insertItem(i18n("Window Raise or Lower"), "Toggle raise and lower", 0);
 /*
 This belongs in taskbar rather than here, so it'll have to wait until after 2.2 is done.
   -- ellis
