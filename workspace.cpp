@@ -460,6 +460,8 @@ void Workspace::addClient( Client* c, allowed_t )
         }
     if( !unconstrained_stacking_order.contains( c ))
         unconstrained_stacking_order.append( c );
+    if( !stacking_order.contains( c )) // it'll be updated later, and updateToolWindows() requires
+        stacking_order.append( c );    // c to be in stacking_order
     if( c->isTopMenu())
         addTopMenu( c );
     updateClientArea(); // this cannot be in manage(), because the client got added only now
@@ -471,10 +473,10 @@ void Workspace::addClient( Client* c, allowed_t )
         if( activeClient() == NULL && should_get_focus.count() == 0 )
             activateClient( findDesktop( true, currentDesktop()));
         }
-    if( c->isUtility() || c->isMenu() || c->isToolbar())
-        updateToolWindows( true );
     checkTransients( c->window()); // SELI does this really belong here?
     updateStackingOrder( true ); // propagate new client
+    if( c->isUtility() || c->isMenu() || c->isToolbar())
+        updateToolWindows( true );
     }
 
 /*
@@ -669,10 +671,25 @@ void Workspace::updateToolWindows( bool also_hide )
                 else
                     show = false;
                 }
+            if( !show && also_hide )
+                {
+                const ClientList mainclients = (*it)->mainClients();
+                // don't hide utility windows which are standalone(?) or
+                // have e.g. kicker as mainwindow
+                if( mainclients.isEmpty())
+                    show = true;
+                for( ClientList::ConstIterator it2 = mainclients.begin();
+                     it2 != mainclients.end();
+                     ++it2 )
+                    {
+                    if( (*it2)->isSpecialWindow())
+                        show = true;
+                    }
+                if( !show )
+                    to_hide.append( *it );
+                }
             if( show )
                 to_show.append( *it );
-            else if( also_hide )
-                to_hide.append( *it );
             }
         } // first show new ones, then hide
     for( ClientList::ConstIterator it = to_show.fromLast();
