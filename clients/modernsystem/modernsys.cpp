@@ -207,7 +207,7 @@ static bool read_config()
     }
 
     conf->setGroup("Style");
-    if (conf->readBoolEntry("CustomButtonOrder", false)) {
+    if (conf->readBoolEntry("CustomButtonPositions", false)) {
         bp = "2" + conf->readEntry("ButtonsOnLeft", "X") + "3t3"
                 + conf->readEntry("ButtonsOnRight", "HSIA") + "2";
     }
