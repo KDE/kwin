@@ -8,7 +8,7 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-static const char *description =
+static const char description[] =
         I18N_NOOP("Installs a KWM theme");
 
 static KCmdLineOptions options[] =
