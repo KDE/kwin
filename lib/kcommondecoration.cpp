@@ -588,7 +588,7 @@ void KCommonDecoration::menuButtonPressed()
     if (!dbl || !decorationBehaviour(DB_MenuClose) ) {
         QRect menuRect = m_button[MenuButton]->rect();
         QPoint menutop = m_button[MenuButton]->mapToGlobal(menuRect.topLeft());
-        QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight());
+        QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight())+QPoint(0,2);
         KDecorationFactory* f = factory();
         showWindowMenu(QRect(menutop, menubottom));
         if( !f->exists( this )) // 'this' was deleted
