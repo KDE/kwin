@@ -399,6 +399,21 @@ bool Client::manage( Window w, bool isMapped )
         else if ( info->state() & NET::MaxHoriz )
             maximize( Client::MaximizeHorizontal );
 
+        // read other initial states
+        if( info->state() & NET::Shaded )
+            setShade( ShadeNormal );
+        if( info->state() & NET::KeepAbove )
+            setKeepAbove( true );
+        if( info->state() & NET::KeepBelow )
+            setKeepBelow( true );
+        if( info->state() & NET::SkipTaskbar )
+            setSkipTaskbar( true, true );
+        if( info->state() & NET::SkipPager )
+            setSkipPager( true );
+        if( info->state() & NET::DemandsAttention )
+            demandAttention();
+        if( info->state() & NET::Modal )
+            setModal( true );
         if( fullscreen_mode != FullScreenHack )
             {
             if(( info->state() & NET::FullScreen ) != 0 && isFullScreenable())
