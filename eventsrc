@@ -1786,12 +1786,18 @@ default_presentation=0
 
 [minimize]
 Name=Window Minimize
+Name[hu]=Ablak minimalizálása
+Name[sv]=Fönster minimeras
 Comment=A Window is Minimized
+Comment[hu]=Egy ablak minimalizálása
+Comment[sv]=Ett fönster minimeras
 default_sound=KDE_Window_Iconify.wav
 default_presentation=0
 
 [unminimize]
 Name=Window Unminimize
+Name[hu]=Minimalizált ablak visszaállítása
+Name[sv]=Fönsterminimering tas bort
 Comment=A Window is Restored
 Comment[af]='n Venster is Gerestoreer
 Comment[az]=Bir Pəncərə Köhnə Böyüklüyünə Gətirildi
@@ -2105,13 +2111,21 @@ default_presentation=0
 
 [on_all_desktops]
 Name=Window On All Desktops
+Name[hu]=Ablak az összes munkaasztalra
+Name[sv]=Fönster på alla skrivbord
 Comment=A Window is made Visible on All Desktops
+Comment[hu]=Egy ablak megjelent az összes munkaasztalon
+Comment[sv]=Ett fönster görs synligt på alla skrivbord
 default_sound=KDE_Window_Sticky.wav
 default_presentation=0
 
 [not_on_all_desktops]
 Name=Window Not On All Desktops
+Name[hu]=Ablak nem az összes munkaasztalra
+Name[sv]=Fönster inte på alla skrivbord
 Comment=A Window is no more Visible on All Desktops
+Comment[hu]=Egy ablak nem jelenik meg többé az összes munkaasztalon
+Comment[sv]=Ett fönster blir inte längre synligt på alla skrivbord
 default_presentation=1
 default_sound=KDE_Window_UnSticky.wav
 
