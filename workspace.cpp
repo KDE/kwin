@@ -489,7 +489,7 @@ void Workspace::init()
     }
     if ( wins )
         XFree((void *) wins);
-    propagateClients();
+    propagateClients( false, false );
 
     updateClientArea();
     raiseElectricBorders();
@@ -802,7 +802,7 @@ void Workspace::removeClient( Client* c) {
     stacking_order.remove( c );
     focus_chain.remove( c );
     desktops.remove( c );
-    propagateClients();
+    propagateClients( false, false ); // no need for XRestack
 }
 
 /*
@@ -1963,14 +1963,7 @@ void Workspace::lowerClient( Client* c )
     stacking_order.prepend(c);
 
     stacking_order = constrainedStackingOrder( stacking_order );
-    Window* new_stack = new Window[ stacking_order.count() + 1 ];
-    int i = 0;
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
-        new_stack[i++] = (*it)->winId();
-    XRestackWindows(qt_xdisplay(), new_stack, i);
-    delete [] new_stack;
-
-    propagateClients( TRUE );
+    propagateClients( true, true );
 
     if ( c == most_recently_raised )
         most_recently_raised = 0;
@@ -1993,6 +1986,7 @@ void Workspace::raiseClient( Client* c )
         saveset.clear();
         saveset.append( c );
         raiseTransientsOf(saveset, c );
+        propagateClients( true, true );
         return; // deny
     }
 
@@ -2048,15 +2042,7 @@ void Workspace::raiseClient( Client* c )
     }
     /* end workaround */
 
-    Window* new_stack = new Window[ stacking_order.count() + 1 ];
-    int i = 0;
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
-        new_stack[i++] = (*it)->winId();
-    XRestackWindows(qt_xdisplay(), new_stack, i);
-    delete [] new_stack;
-
-
-    propagateClients( TRUE );
+    propagateClients( true, true );
 
     if ( tab_box->isVisible() )
         tab_box->raise();
@@ -2078,15 +2064,7 @@ void Workspace::stackClientUnderActive( Client* c )
     stacking_order.remove( c );
     stacking_order.insert( it, c );
     stacking_order = constrainedStackingOrder( stacking_order );
-    Window* new_stack = new Window[ stacking_order.count() + 1 ];
-    int i = 0;
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-        new_stack[i++] = (*it)->winId();
-    }
-    XRestackWindows(qt_xdisplay(), new_stack, i);
-    delete [] new_stack;
-
-    propagateClients( TRUE );
+    propagateClients( true, true );
 }
 
 
@@ -2480,16 +2458,25 @@ bool Workspace::netCheck( XEvent* e )
  */
 void Workspace::clientReady( Client* )
 {
-    propagateClients();
+    propagateClients( false, false );
 }
 
 /*!
   Propagates the managed clients to the world
  */
-void Workspace::propagateClients( bool onlyStacking )
+void Workspace::propagateClients( bool onlyStacking, bool alsoXRestack )
 {
     Window *cl; // MW we should not assume WId and Window to be compatible
                                 // when passig pointers around.
+
+    if( alsoXRestack ) {
+        Window* new_stack = new Window[ stacking_order.count() ];
+        int i = 0;
+        for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
+            new_stack[i++] = (*it)->winId();
+        XRestackWindows(qt_xdisplay(), new_stack, i);
+        delete [] new_stack;
+    }
 
     int i;
     if ( !onlyStacking ) {

@@ -373,7 +373,7 @@ private:
 
     Client* findClientWithId( WId w ) const;
 
-    void propagateClients( bool onlyStacking = FALSE);
+    void propagateClients( bool onlyStacking, bool alsoXRestack );
 
     bool addSystemTrayWin( WId w );
     bool removeSystemTrayWin( WId w );
