@@ -137,9 +137,10 @@ bool Application::x11EventFilter( XEvent *e )
     switch ( e->type ) {
     case ButtonPress:
     case ButtonRelease:
+	kwin_time = e->xbutton.time;
+	break;
     case MotionNotify:
-	kwin_time = (e->type == MotionNotify) ?
-		    e->xmotion.time : e->xbutton.time;
+	kwin_time = e->xmotion.time;
 	break;
     case KeyPress:
     case KeyRelease:

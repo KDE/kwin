@@ -254,16 +254,30 @@ QSizePolicy WindowWrapper::sizePolicy() const
     return QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Preferred );
 }
 
-
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win && reparented ) {
-	XMoveResizeWindow( qt_xdisplay(), win,
-			   0, 0, width(), height() );
-	if ( ((Client*)parentWidget())->shape() )
-	    ((Client*)parentWidget())->updateShape();
+	if ( ((Client*)parentWidget())->isResize() ) {
+	    QTimer::singleShot( 0, this, SLOT( deferredResize() ) );
+	} else {
+	    XMoveResizeWindow( qt_xdisplay(), win,
+			       0, 0, width(), height() );
+	    if ( ((Client*)parentWidget())->shape() )
+		((Client*)parentWidget())->updateShape();
+	}
     }
 }
+
+void WindowWrapper::deferredResize()
+{
+    XMoveResizeWindow( qt_xdisplay(), win,
+		       0, 0, width(), height() );
+    ((Client*)parentWidget())->sendSynteticConfigureNotify();
+    if ( ((Client*)parentWidget())->shape() )
+	((Client*)parentWidget())->updateShape();
+    QApplication::syncX(); // process our own configure events synchronously.
+}
+
 
 /*!
   Reimplemented to do map() as well
@@ -1518,7 +1532,8 @@ void Client::leaveEvent( QEvent * )
 void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
-    sendSynteticConfigureNotify();
+    if ( !isResize() )
+	sendSynteticConfigureNotify();
 }
 
 /*!
@@ -1730,7 +1745,6 @@ void Client::maximizeRaw( bool vertically, bool horizontally )
     if ( !vertically && !horizontally ) {
 	maximize ( MaximizeRestore );
     } else {
-	QRect geom = geometry();
 	MaximizeMode m = MaximizeRestore;
 	if ( vertically && horizontally )
 	    m = MaximizeFull;

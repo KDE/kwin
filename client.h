@@ -46,7 +46,9 @@ protected:
     void resizeEvent( QResizeEvent * );
     bool x11Event( XEvent * );		// X11 event
 
-
+private slots:
+    void deferredResize();
+    
 private:
     WId win;
     Time lastMouseEventTime;
@@ -293,6 +295,7 @@ private:
     QTimer* autoRaiseTimer;
     Colormap cmap;
     void verifyTransientFor();
+    friend class WindowWrapper;
 };
 
 inline WId Client::window() const
