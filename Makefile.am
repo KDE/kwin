@@ -1,6 +1,6 @@
 INCLUDES = -I$(srcdir)/lib $(all_includes)
 
-SUBDIRS = lib . killer dialog kcmkwin pics clients oldheaders
+SUBDIRS = lib . killer kcmkwin pics clients oldheaders
 
 bin_PROGRAMS = 
 lib_LTLIBRARIES =

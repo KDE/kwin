@@ -1858,26 +1858,41 @@ void Workspace::helperDialog( const QString& message, const Client* c )
     {
     QStringList args;
     QString type;
-    if( message == "noborderaltf3" || message == "fullscreenaltf3" )
+    if( message == "noborderaltf3" )
         {
-        args.append( "\'" + keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString() + "\'" );
+        args << "--msgbox" << ( "\'"
+            + i18n( "You have selected to show a window without its border.\n"
+                    "Without the border, you won't be able to enable the border "
+                    "again using the mouse. Use the window operations menu instead, "
+                    "activated using the %1 keyboard shortcut." )
+                .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString()) + "\'" );
+        type = "altf3warning";
+        }
+    else if( message == "fullscreenaltf3" )
+        {
+        args << "--msgbox" << ( "\'"
+            + i18n( "You have selected to show a window in fullscreen mode.\n"
+                    "If the application itself doesn't have an option to turn the fullscreen "
+                    "mode off, you won't be able to disable it "
+                    "again using the mouse. Use the window operations menu instead, "
+                    "activated using the %1 keyboard shortcut." )
+                .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString()) + "\'" );
         type = "altf3warning";
         }
     else
-        return;
+        assert( false );
     KProcess proc;
-    proc << "kwin_dialog_helper" << "--message" << message;
+    proc << "kdialog" << args;
     if( !type.isEmpty())
         {
-        KConfig cfg( "kwin_dialog_helperrc" );
+        KConfig cfg( "kwin_dialogsrc" );
         cfg.setGroup( "Notification Messages" ); // this depends on KMessageBox
         if( !cfg.readBoolEntry( type, true )) // has don't show again checked
-            return;
-        proc << "--type" << type;
+            return;                           // save launching kdialog
+        proc << "--dontagain" << "kwin_dialogsrc:" + type;
         }
     if( c != NULL )
-        proc << "--window" << QString::number( c->window());
-    proc << "--" << args;
+        proc << "--embed" << QString::number( c->window());
     proc.start( KProcess::DontCare );
     }
 
