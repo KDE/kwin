@@ -281,7 +281,6 @@ bool Client::manage( Window w, bool isMapped )
     if ( placementDone )
         move( geom.x(), geom.y() ); // before gravitating
 
-    resize( 100, 100 ); // so that the decoration doesn't get the size as (0,0) CHECKME
     updateDecoration( false ); // also gravitates
     resize ( sizeForClientSize( geom.size() ) );
 

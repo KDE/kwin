@@ -1064,6 +1064,19 @@ bool Client::eventFilter( QObject* o, QEvent* e )
         return motionNotifyEvent( decorationId(), qtToX11State( ev->state()),
             ev->x(), ev->y(), ev->globalX(), ev->globalY() );
         }
+    if( e->type() == QEvent::Resize )
+        {
+        QResizeEvent* ev = static_cast< QResizeEvent* >( e );
+        // Filter out resize events that inform about size different than frame size.
+        // This will ensure that decoration->width() etc. and decoration->widget()->width() will be in sync.
+        // These events only seem to be delayed events from initial resizing before show() was called
+        // on the decoration widget.
+        if( ev->size() != size())
+            {
+            kdDebug( 1212 ) << "Filtering out decoration resize event:" << size() << ":" << ev->size() << ":" << ev->oldSize() << endl;
+            return true;
+            }
+        }
     return false;
     }
 

@@ -137,6 +137,9 @@ Client::Client( Workspace *ws )
     max_mode = MaximizeRestore;
 
     cmap = None;
+    
+    frame_geometry = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
+    client_size = QSize( 100, 100 );
 
     // SELI initialize xsizehints??
     }
@@ -255,6 +258,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     if( !force && (( decoration == NULL && noBorder())
                     || ( decoration != NULL && !noBorder())))
         return;
+    bool do_show = false;
     ++block_geometry;
     if( force )
         destroyDecoration();
@@ -272,7 +276,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         setGeometry( QRect( calculateGravitation( false ), sizeForClientSize( clientSize())));
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
-        decoration->widget()->show();
+        do_show = true;
         }
     else
         destroyDecoration();
@@ -280,6 +284,8 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         checkWorkspacePosition();
     --block_geometry;
     setGeometry( geometry(), true );
+    if( do_show )
+        decoration->widget()->show();
     updateFrameStrut();
     }
 
