@@ -140,8 +140,12 @@ Application::Application( )
     initting = FALSE; // startup done, we are up and running now.
     dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
     
+#ifndef NO_LEGACY_SESSION_MANAGEMENT
     if ( isSessionRestored() )
 	ws->restoreLegacySession( kapp->sessionConfig() );
+#else
+    ws = ws; // shut up
+#endif
 }
 
 

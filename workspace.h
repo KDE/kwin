@@ -248,8 +248,11 @@ public:
 
     void performWindowOperation( Client* c, Options::WindowOperation op );
 
+#define NO_LEGACY_SESSION_MANAGEMENT // moved to ksmserver
+#ifndef NO_LEGACY_SESSION_MANAGEMENT
     void restoreLegacySession( KConfig* config );
     void storeLegacySession( KConfig* config );
+#endif
     void storeSession( KConfig* config );
 
     SessionInfo* takeSessionInfo( Client* );

@@ -3713,7 +3713,6 @@ void Workspace::storeLegacySession( KConfig* config )
     // All events should be there because of the XSync above.
     kapp->processEvents(10);
 }
-#endif
 
 /*!
   Restores legacy session management data (i.e. restart applications)
@@ -3737,6 +3736,7 @@ void Workspace::restoreLegacySession( KConfig* config )
         }
     }
 }
+#endif
 
 /*!
   Stores the current session in the config file
@@ -3755,12 +3755,12 @@ void Workspace::storeSession( KConfig* config )
         QCString sessionId = c->sessionId();
         QCString wmCommand = c->wmCommand();
         if ( sessionId.isEmpty() )
-#ifndef NO_LEGACY_SESSION_MANAGEMENT
+//#ifndef NO_LEGACY_SESSION_MANAGEMENT // remember also legacy apps anyway
             // This is the only connection between the determination of legacy
             // session managed applications (storeLegacySession) and the
             // recollection of the window geometries (this function).
             if ( wmCommand.isEmpty() )
-#endif
+//#endif
                 continue;
         count++;
         QString n = QString::number(count);
