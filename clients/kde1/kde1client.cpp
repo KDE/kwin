@@ -433,7 +433,7 @@ StdToolClient::StdToolClient( Workspace *ws, WId w, QWidget *parent, const char 
 
     g->addColSpacing(0, 1);
     g->addColSpacing(2, 1);
-    g->addRowoSpacing(2, 2);
+    g->addRowSpacing(2, 2);
 
     closeBtn = new QToolButton( this );
     connect( closeBtn, SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
