@@ -1606,8 +1606,9 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
-        XMoveResizeWindow( qt_xdisplay(), frameId(), x, y, w, h );
         resizeDecoration( QSize( w, h ));
+        XMoveResizeWindow( qt_xdisplay(), frameId(), x, y, w, h );
+//         resizeDecoration( QSize( w, h ));
         if( !isShade())
             {
             QSize cs = clientSize();
@@ -1644,8 +1645,9 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
-        XResizeWindow( qt_xdisplay(), frameId(), w, h );
         resizeDecoration( QSize( w, h ));
+        XResizeWindow( qt_xdisplay(), frameId(), w, h );
+//         resizeDecoration( QSize( w, h ));
         if( !isShade())
             {
             QSize cs = clientSize();
