@@ -68,7 +68,7 @@ void Workspace::updateClientArea( bool force )
     int nscreens = desktopwidget -> numScreens ();
 //    kdDebug () << "screens: " << nscreens << endl;
     QRect* new_wareas = new QRect[ numberOfDesktops() + 1 ];
-    QRect** new_sareas = new (QRect*)[ numberOfDesktops() + 1];
+    QRect** new_sareas = new QRect*[ numberOfDesktops() + 1];
     QRect screens [ nscreens ];
     QRect desktopArea = desktopwidget -> geometry ();
     for( int iS = 0;
@@ -244,6 +244,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
             return sarea;
         }
     assert( false );
+    return QRect();
     }
 
 QRect Workspace::clientArea( clientAreaOption opt, const Client* c ) const
