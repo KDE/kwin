@@ -1207,45 +1207,6 @@ void Client::showContextHelp()
     }
 
 
-void Client::keyPressEvent( uint key_code )
-    {
-    updateUserTime();
-    if ( !isMove() && !isResize() )
-        return;
-    bool is_control = key_code & Qt::CTRL;
-    key_code = key_code & 0xffff;
-    int delta = is_control?1:8;
-    QPoint pos = QCursor::pos();
-    switch ( key_code ) 
-        {
-        case Key_Left:
-            pos.rx() -= delta;
-            break;
-        case Key_Right:
-            pos.rx() += delta;
-            break;
-        case Key_Up:
-            pos.ry() -= delta;
-            break;
-        case Key_Down:
-            pos.ry() += delta;
-            break;
-        case Key_Space:
-        case Key_Return:
-        case Key_Enter:
-            finishMoveResize( false );
-            buttonDown = FALSE;
-            break;
-        case Key_Escape:
-            finishMoveResize( true );
-            buttonDown = FALSE;
-            break;
-        default:
-            return;
-        }
-    QCursor::setPos( pos );
-    }
-
 /*!
   Fetches the window's caption (WM_NAME property). It will be
   stored in the client's caption().
