@@ -269,6 +269,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 	button[i]->setBackgroundMode( PaletteBackground );
 	button[i]->setMouseTracking( TRUE );
 	button[i]->setAutoRaise( TRUE );
+	button[i]->setFocusPolicy( NoFocus );
 	button[i]->setFixedSize( 20, 20 );
     }
     if(miniIcon().isNull())
