@@ -335,7 +335,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 
 	// If we are using the "default" kde client, use the "default" entry.
 	if (decoName.isEmpty())
-		decorationListBox->setSelected( 0, true );
+		decorationListBox->setSelected( decorationListBox->findItem( i18n("KDE2 default") ), true );
 	else
 		// Update the decoration listbox
 		decorationListBox->setSelected( decorationListBox->findItem( decoName ), true);
@@ -434,7 +434,8 @@ void KWinDecorationModule::defaults()
 	cbShowToolTips->setChecked( true );
 //	cbUseMiniWindows->setChecked( false);
 // Don't set default for now
-//	decorationListBox->setSelected( 0, true );  // KDE2 default client
+//	decorationListBox->setSelected( 
+//		decorationListBox->findItem( i18n("KDE2 default") ), true );  // KDE2 default client
 
 	dropSite->buttonsLeft = "MS";
 	dropSite->buttonsRight= "HIAX";
