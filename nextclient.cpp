@@ -18,7 +18,7 @@ static unsigned char close_bits[] = {
 static unsigned char iconify_bits[] = {
   0xff, 0x03, 0xff, 0x03, 0xff, 0x03, 0xff, 0x03, 0x03, 0x03, 0x03, 0x03,
   0x03, 0x03, 0x03, 0x03, 0xff, 0x03, 0xff, 0x03};
-  
+
 static unsigned char sticky_bits[] = {
   0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x30, 0x00, 0xfe, 0x01, 0xfe, 0x01,
   0x30, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00};
@@ -26,7 +26,7 @@ static unsigned char sticky_bits[] = {
 static unsigned char unsticky_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  
+
 static KPixmap *aTitlePix=0;
 static KPixmap *iTitlePix=0;
 static KPixmap *aFramePix=0;
@@ -176,8 +176,8 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
     windowLayout->addSpacing(1);
     windowLayout->addWidget(windowWrapper(), 1);
     windowLayout->addSpacing(1);
-    
-    
+
+
     button[0] = new NextButton(this, "close", close_bits, 10, 10);
     button[1] = new NextButton(this, "sticky");
     if(isSticky())
@@ -199,7 +199,7 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
         button[i]->setMouseTracking( TRUE );
         button[i]->setFixedSize( 18, 18 );
     }
-    
+
 }
 
 void NextClient::resizeEvent( QResizeEvent* e)
@@ -285,6 +285,6 @@ void NextClient::stickyChange(bool on)
 
 void NextClient::init()
 {
-    //
+    Client::init();
 }
 

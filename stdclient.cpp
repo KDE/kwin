@@ -398,7 +398,8 @@ void StdClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void StdClient::init()
 {
-   button[0]->setIconSet( miniIcon() );
+    Client::init();
+    button[0]->setIconSet( miniIcon() );
 
    // ### TODO transient etc.
  }
