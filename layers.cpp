@@ -607,6 +607,9 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
     // group transients way too high.
     if( mainwindow->isTopMenu() && transient->groupTransient())
         return false;
+    // #93832 - don't keep splashscreens above dialogs
+    if( transient->isSplash() && mainwindow->isDialog())
+        return false;
     // This is rather a hack for #76026. Don't keep non-modal dialogs above
     // the mainwindow, but only if they're group transient (since only such dialogs
     // have taskbar entry in Kicker). A proper way of doing this (both kwin and kicker)
