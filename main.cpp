@@ -122,8 +122,15 @@ Application::Application( )
 
     initting = FALSE; // startup done, we are up and running now.
     dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
+    XEvent e;
+    e.xclient.type = ClientMessage;
+    e.xclient.message_type = XInternAtom( qt_xdisplay(), "_KDE_SPLASH_PROGRESS", False );
+    e.xclient.display = qt_xdisplay();
+    e.xclient.window = qt_xrootwin();
+    e.xclient.format = 8;
+    strcpy( e.xclient.data.b, "wm started" );
+    XSendEvent( qt_xdisplay(), qt_xrootwin(), False, SubstructureNotifyMask, &e );
     }
-
 
 Application::~Application()
     {
