@@ -476,14 +476,22 @@ ClientList Workspace::constrainedStackingOrder()
     kdDebug() << "stacking1:" << endl;
 #endif
     // build the order from layers
+    QMap< Group*, Layer > minimum_layer;
     for( ClientList::ConstIterator it = unconstrained_stacking_order.begin();
          it != unconstrained_stacking_order.end();
          ++it )
         {
-#if 0
-        kdDebug() << (void*)(*it) << *it << endl;
-#endif
-        layer[ (*it)->layer() ].append( *it );
+        Layer l = (*it)->layer();
+        // If a window is raised above some other window in the same window group
+        // which is in a higher layer, make sure it stays above that window (see #95731).
+        if(( l == NormalLayer || l == AboveLayer )
+            && minimum_layer.contains( (*it)->group())
+            && l < minimum_layer[ (*it)->group() ] )
+            {
+            l = minimum_layer[ (*it)->group() ];
+            }
+        minimum_layer[ (*it)->group() ] = l;
+        layer[ l ].append( *it );
         }
     ClientList stacking;    
     for( Layer lay = FirstLayer;
