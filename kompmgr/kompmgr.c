@@ -2266,6 +2266,7 @@ setValue(Option option, char *value ){
 			}
 			break;
 		case Display_:
+                        break;
 			display = strdup(value);
 			break;
 		case DisableARGB:
