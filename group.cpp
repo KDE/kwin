@@ -419,6 +419,8 @@ void Client::setTransient( Window new_transient_for_id )
             transient_for->addTransient( this );
             } // checkGroup() will check 'check_active_modal'
         checkGroup( NULL, true ); // force, because transiency has changed
+        if( isTopMenu())
+            workspace()->updateCurrentTopMenu();
         workspace()->updateClientLayer( this );
         }
     }

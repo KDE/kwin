@@ -245,6 +245,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         bool managingTopMenus() const;
         int topMenuHeight() const;
+        void updateCurrentTopMenu();
 
         int packPositionLeft( const Client* cl, int oldx, bool left_edge ) const;
         int packPositionRight( const Client* cl, int oldx, bool right_edge ) const;
@@ -369,7 +370,6 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool allowFullClientRaising( const Client* c, Time timestamp );
         bool keepTransientAbove( const Client* mainwindow, const Client* transient );
         void blockStackingUpdates( bool block );
-        void updateCurrentTopMenu();
         void addTopMenu( Client* c );
         void removeTopMenu( Client* c );
         void setupTopMenuHandling();
