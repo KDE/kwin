@@ -1,15 +1,23 @@
+/* 
+ * $Id$
+ *
+ * B-II KWin Client
+ *
+ * Changes:
+ * 	Customizable button positions by Karol Szwed <gallium@kde.org>
+ */ 
+
 #ifndef __B2CLIENT_H
 #define __B2CLIENT_H
 
-#include <qtoolbutton.h>
 #include <qvariant.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
 #include "../../kwinbutton.h"
-class QLabel;
-//class QSpacerItem;
-//class QHBoxLayout;
+
+class QSpacerItem;
+class QHBoxLayout;
 class QGridLayout;
 
 namespace KWinInternal {
@@ -19,10 +27,12 @@ class B2Button : public KWinInternal::KWinButton
     Q_OBJECT
 public:
     B2Button(Client *_client=0, QWidget *parent=0, const QString& tip=NULL)
-        : KWinButton(parent, 0, tip) {client = _client; useMiniIcon = false;}
-
-//    B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix, KPixmap *iPixDown,
-//             Client *_client=0, QWidget *parent=0, const char *name=0, const QString& tip=NULL);
+        : KWinButton(parent, 0, tip) 
+    { 
+        client = _client;
+        useMiniIcon = false;
+        setFixedSize(16,16); 
+    };
 
     void setBg(const QColor &c){bg = c;}
     void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
@@ -59,6 +69,7 @@ public:
     ~B2Titlebar(){;}
     bool isFullyObscured() const {return isfullyobscured;}
     void recalcBuffer();
+    QSpacerItem *captionSpacer;
 protected:
     void paintEvent( QPaintEvent* );
     bool x11Event(XEvent *e);
@@ -66,7 +77,6 @@ protected:
     void mousePressEvent( QMouseEvent * );
     void mouseReleaseEvent( QMouseEvent * );
     void mouseMoveEvent(QMouseEvent *);
-    void init();
     void resizeEvent(QResizeEvent *ev);
     
     QString oldTitle;
@@ -93,7 +103,6 @@ protected:
     void paintEvent( QPaintEvent* );
     void showEvent( QShowEvent* );
     void windowWrapperShowEvent( QShowEvent* );
-    void init();
     void captionChange( const QString& name );
     void stickyChange(bool on);
     void activeChange(bool on);
@@ -106,18 +115,17 @@ private slots:
     void slotReset();
     void maxButtonClicked();
 private:
+    void addButtons(const QString& s, const QString tips[], 
+                    B2Titlebar* tb, QHBoxLayout* titleLayout);
     void positionButtons();
+    void calcHiddenButtons();
     enum ButtonType{BtnMenu=0, BtnSticky, BtnIconify, BtnMax, BtnClose,
-        BtnHelp};
-    //B2Button* button[5];
-    B2Button* button[6];
-    //QSpacerItem* titlebar;
-    //QHBoxLayout *tLayout;
+        BtnHelp, BtnCount};
+    B2Button* button[BtnCount];
     QGridLayout *g;
     int bar_x_ofs;
     B2Titlebar *titlebar;
     int in_unobs;
-    
 };
 
 };

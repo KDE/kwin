@@ -1,8 +1,14 @@
+/* 
+ * $Id$
+ *
+ * B-II KWin Client
+ *
+ * Changes:
+ * 	Customizable button positions by Karol Szwed <gallium@kde.org>
+ */ 
+
 #include "b2client.h"
-#include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qtoolbutton.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
@@ -115,17 +121,6 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
-/*B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
-                   KPixmap *iPixDown, Client *_client, QWidget *parent,
-		   const char *name, const QString& tip)
-    : KWinButton(parent, name, tip),
-      pNorm(pix), pDown(pixDown), iNorm(iPix), iDown(iPixDown),
-      client(_client)
-{
-    setFixedSize(16, 16);
-    setFocusPolicy(NoFocus);
-    resize(16, 16);
-}*/
 
 QSize B2Button::sizeHint() const
 {
@@ -136,7 +131,6 @@ QSizePolicy B2Button::sizePolicy() const
 {
     return(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 }
-
 
 void B2Button::drawButton(QPainter *p)
 {
@@ -186,21 +180,25 @@ void B2Button::setPixmaps(int button_id)
 void B2Button::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
+                     LeftButton, e->state() );
     KWinButton::mousePressEvent( &me );
 }
 
 void B2Button::mouseReleaseEvent( QMouseEvent* e )
 {
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
+                     LeftButton, e->state() );
     KWinButton::mouseReleaseEvent( &me );
 }
 
 B2Titlebar::B2Titlebar(B2Client *parent)
-    : QWidget(parent),
+    : QWidget(parent, 0, WStyle_Customize | WRepaintNoErase),
       set_x11mask(false), isfullyobscured(false), shift_move(false),
       client(parent)
 {
+    captionSpacer = new QSpacerItem(10, 20, QSizePolicy::Expanding,
+                                            QSizePolicy::Fixed);
 }
 
 bool B2Titlebar::x11Event(XEvent *e)
@@ -258,13 +256,7 @@ void B2Titlebar::recalcBuffer()
     // and the caption
     p.setPen(options->color(Options::Font, true));
     p.setFont(options->font(true));
-
-    QLayoutIterator it=layout()->iterator();
-    ++it;
-    ++it;
-    ++it;
-    t=(++it)->geometry();
-
+    t = captionSpacer->geometry();
     p.drawText(t, AlignLeft | AlignVCenter, client->caption());
     p.end();
 
@@ -278,7 +270,7 @@ void B2Titlebar::resizeEvent(QResizeEvent *)
 }
 
 
-void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
+void B2Titlebar::paintEvent(QPaintEvent *)
 {
     if(client->isActive())
         bitBlt(this, 0, 0, &titleBuffer, 0, 0, titleBuffer.width(),
@@ -302,13 +294,7 @@ void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
         // and the caption
         p.setPen(options->color(Options::Font, false));
         p.setFont(options->font(false));
-
-	QLayoutIterator it=layout()->iterator();
-	++it;
-	++it;
-	++it;
-	t=(++it)->geometry();
-
+	t = captionSpacer->geometry();
         p.drawText(t, AlignLeft | AlignVCenter, client->caption());
     }
 }
@@ -327,7 +313,6 @@ void B2Titlebar::mousePressEvent( QMouseEvent * e )
     }
     QMouseEvent _e(QEvent::MouseButtonPress, mapToParent(e->pos()),
         e->globalPos(), e->button(), e->state());
-    //QWidget::mousePressEvent( e );
     client->mousePressEvent( &_e);
 }
 
@@ -336,7 +321,6 @@ void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
     shift_move = false;
     QMouseEvent _e(QEvent::MouseButtonRelease, mapToParent(e->pos()),
         e->globalPos(), e->button(), e->state());
-    //QWidget::mouseReleaseEvent( e );
     client->mouseReleaseEvent( &_e);
 }
 
@@ -376,23 +360,22 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase ),
       bar_x_ofs(0), in_unobs(0)
 {
-    const QString tips[] = { QString(i18n("Menu")), QString(i18n("Sticky")), 
-                             QString(i18n("Minimize")), QString(i18n("Maximize")),
-                             QString(i18n("Close")), QString(i18n("Help")) };
+    const QString tips[]= {QString(i18n("Menu")), QString(i18n("Sticky")), 
+                           QString(i18n("Minimize")), QString(i18n("Maximize")),
+                           QString(i18n("Close")), QString(i18n("Help")) };
+
+    // Set button pointers to NULL so we know what has been created
+    for(int i = 0; i < BtnCount; i++)
+        button[i] = NULL;        
 
     g = new QGridLayout( this, 0, 0);
     g->addMultiCellWidget(windowWrapper(), 1, 1, 1, 2);
-
     g->addColSpacing(0, 4);
-
     g->addColSpacing(1, 16);
-
     g->setColStretch(2, 1);
-
     g->setRowStretch(1, 1);
     g->addColSpacing(3, 4);
     g->addRowSpacing(2, 8);
-
     // titlebar
     g->addRowSpacing(0, 20);
 
@@ -400,136 +383,160 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     titlebar->setMinimumWidth(16);
     titlebar->setFixedHeight(20);
 
-    int i;
-    for(i=0; i < 6; ++i){
-        button[i] = new B2Button(this, titlebar, tips[i]);
-        button[i]->setFixedSize(16, 16);
-    }
-    
-    QHBoxLayout *titleLayout=new QHBoxLayout(titlebar);
+    QHBoxLayout *titleLayout = new QHBoxLayout(titlebar);
     titleLayout->setSpacing(1);
-   
     titleLayout->addSpacing(3);
-    titleLayout->addWidget(button[BtnMenu]);
-    titleLayout->addWidget(button[BtnSticky]);
-    titleLayout->addWidget(button[BtnHelp]);
-    titleLayout->addStretch(1);
-    titleLayout->addWidget(button[BtnIconify]);
-    titleLayout->addWidget(button[BtnMax]);
-    titleLayout->addWidget(button[BtnClose]);
+
+    if (options->customButtonPositions())
+    {
+        addButtons( options->titleButtonsLeft(), tips, titlebar, titleLayout );
+        titleLayout->addItem(titlebar->captionSpacer);
+        addButtons( options->titleButtonsRight(), tips, titlebar, titleLayout );
+    } else {
+        addButtons( "MSH", tips, titlebar, titleLayout );
+        titleLayout->addItem(titlebar->captionSpacer);
+        addButtons( "IAX", tips, titlebar, titleLayout );
+    }
+
     titleLayout->addSpacing(3);
  
-    button[BtnSticky]->setToggle();
-    button[BtnSticky]->setDown(isSticky());
-    button[BtnMenu]->setUseMiniIcon();
-
-    if(!providesContextHelp())
-        button[BtnHelp]->hide();
-
-    button[BtnMenu]->setPixmaps(P_MENU);
-    button[BtnSticky]->setPixmaps(P_PINUP);
-    button[BtnIconify]->setPixmaps(P_ICONIFY);
-    button[BtnClose]->setPixmaps(P_CLOSE);
-    button[BtnHelp]->setPixmaps(P_HELP);
-
-    if(isMaximized())
-        button[BtnMax]->setPixmaps(P_NORMALIZE);
-    else
-        button[BtnMax]->setPixmaps(P_MAX);
-
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
+
+    for(int i = 0; i < BtnCount; i++)
+        if (button[i])
+            button[i]->setBg(c);
+
     titlebar->setBackgroundColor(c);
     titlebar->recalcBuffer();
-    for(i=0; i < 6; ++i)
-        button[i]->setBg(c);
-
     positionButtons();
-    connect(button[BtnMenu], SIGNAL(clicked()), this, SLOT(menuButtonPressed()));
-    connect(button[BtnSticky], SIGNAL(clicked()), this, SLOT(toggleSticky()));
-    connect(button[BtnIconify], SIGNAL(clicked()), this, SLOT(iconify()));
-    connect(button[BtnMax], SIGNAL( clicked() ), this, SLOT( maxButtonClicked()));
-    connect(button[BtnClose], SIGNAL(clicked()), this, SLOT(closeWindow()));
-    connect(button[BtnHelp], SIGNAL(clicked()), this, SLOT(contextHelp()));
 
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
 
+void B2Client::addButtons(const QString& s, const QString tips[],
+                          B2Titlebar* tb, QHBoxLayout* titleLayout)
+{
+    if (s.length() <= 0)
+	return;
+
+    for(unsigned int i = 0; i < s.length(); i++) {
+        switch(s[i].latin1()) {
+            case 'M':  // Menu button
+                if (!button[BtnMenu]) {
+                    button[BtnMenu] = new B2Button(this, tb, tips[BtnMenu]);
+                    button[BtnMenu]->setPixmaps(P_MENU);
+                    button[BtnMenu]->setUseMiniIcon();
+                    connect(button[BtnMenu], SIGNAL(clicked()),
+                            this, SLOT(menuButtonPressed()));
+                    titleLayout->addWidget(button[BtnMenu]);
+                }
+                break;
+            case 'S':  // Sticky button
+                if (!button[BtnSticky]) {
+                    button[BtnSticky] = new B2Button(this, tb, tips[BtnSticky]);
+                    button[BtnSticky]->setPixmaps(P_PINUP);
+                    button[BtnSticky]->setToggle();
+                    button[BtnSticky]->setDown(isSticky());
+                    connect(button[BtnSticky], SIGNAL(clicked()),
+                            this, SLOT(toggleSticky()));
+                    titleLayout->addWidget(button[BtnSticky]);
+                }
+                break;
+            case 'H':  // Help button
+                if (providesContextHelp() && (!button[BtnHelp])) {
+                    button[BtnHelp] = new B2Button(this, tb, tips[BtnHelp]);
+                    button[BtnHelp]->setPixmaps(P_HELP);
+                    connect(button[BtnHelp], SIGNAL(clicked()),
+                            this, SLOT(contextHelp()));
+                    titleLayout->addWidget(button[BtnHelp]);
+                }
+                break;
+            case 'I':  // Minimize button
+                if (isMinimizable() && (!button[BtnIconify])) {
+                    button[BtnIconify]= new B2Button(this, tb,tips[BtnIconify]);
+                    button[BtnIconify]->setPixmaps(P_ICONIFY);
+                    connect(button[BtnIconify], SIGNAL(clicked()),
+                            this, SLOT(iconify()));
+                    titleLayout->addWidget(button[BtnIconify]);
+                }
+                break;
+            case 'A':  // Maximize button
+                if (isMaximizable() && (!button[BtnMax])) {
+                    button[BtnMax]= new B2Button(this, tb, tips[BtnMax]);
+                    button[BtnMax]->setPixmaps(isMaximized() ? 
+                                               P_NORMALIZE : P_MAX);
+                    connect(button[BtnMax], SIGNAL(clicked()),
+                            this, SLOT(maxButtonClicked()));
+                    titleLayout->addWidget(button[BtnMax]);
+                }
+                break;
+            case 'X':  // Close button
+                if (!button[BtnClose]) {
+                    button[BtnClose]= new B2Button(this, tb, tips[BtnClose]);
+                    button[BtnClose]->setPixmaps(P_CLOSE);
+                    connect(button[BtnClose], SIGNAL(clicked()),
+                            this, SLOT(closeWindow()));
+                    titleLayout->addWidget(button[BtnClose]);
+                }
+	}
+    } 
+}
+
+
 void B2Client::iconChange()
 {
-    button[BtnMenu]->repaint( false );   
+    if (button[BtnMenu])
+        button[BtnMenu]->repaint(false);   
+}
+
+
+// Gallium: New button show/hide magic for customizable
+//          button positions.
+void B2Client::calcHiddenButtons()
+{
+    // Hide buttons in this order:
+    // Sticky, Help, Maximize, Minimize, Close, Menu
+    B2Button* btnArray[] = { button[BtnSticky], button[BtnHelp],
+                             button[BtnMax], button[BtnIconify],
+                             button[BtnClose], button[BtnMenu] };
+    int minWidth = 120; 
+    int currentWidth = width();
+    int count = 0;
+    int i;
+
+    // Determine how many buttons we need to hide
+    while(currentWidth < minWidth) {
+        currentWidth += 17;  // Allow for spacer (extra 1pix)
+        count++;
+    }
+    // Bound the number of buttons to hide
+    if (count > BtnCount) count = BtnCount;
+
+    // Hide the required buttons
+    for(i = 0; i < count; i++) {
+        if (btnArray[i] && btnArray[i]->isVisible())
+            btnArray[i]->hide();
+    }
+    // Show the rest of the buttons
+    for(i = count; i < BtnCount; i++) {
+        if (btnArray[i] && (!btnArray[i]->isVisible()))
+            btnArray[i]->show();
+    }
 }
 
 void B2Client::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
-  
-    int sizeProblem = 0;
-
-    if (width() < 45) sizeProblem = 3;
-    else if (width() < 70) sizeProblem = 2;
-    else if (width() < 120) sizeProblem = 1;
- 
-    switch (sizeProblem) {
- 
-      case 1:
-        button[BtnMenu]    ->show();
-        button[BtnClose]   ->show();
-        button[BtnSticky]  ->hide();
-	button[BtnIconify] ->show();
-	button[BtnMax] 	   ->hide();
-	button[BtnHelp]    ->hide();
-	break;
-
-      case 2:
-        button[BtnMenu]    ->show();
-	button[BtnClose]   ->show();
-        button[BtnSticky]  ->hide();
-	button[BtnIconify] ->hide();
-	button[BtnMax] 	   ->hide();
-	button[BtnHelp]    ->hide();
-	break;
-
-      case 3:
-        button[BtnMenu]    ->hide();
-	button[BtnClose]   ->hide();
-        button[BtnSticky]  ->hide();
-	button[BtnIconify] ->hide();
-	button[BtnMax] 	   ->hide();
-	button[BtnHelp]    ->hide();
-	break;
- 
-      case 0:
-      default:
-        button[BtnMenu]    ->show();
-	button[BtnClose]   ->show();
-        button[BtnSticky]  ->show();
-	button[BtnIconify] ->show();
-	button[BtnMax] 	   ->show();
-	if(providesContextHelp())
-	  button[BtnHelp]->show();
-	break;
-    }   
-
+    calcHiddenButtons();
     titlebar->layout()->activate();
-
     positionButtons();
+
     /* may be the resize cuted off some space occupied by titlebar, which
        was moved, so instead of reducing it, we first try to move it */
     titleMoveAbs(bar_x_ofs);
     doShape();
 
-    /*
-    What does this? (MM)
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
-        QPainter p( this );
-        QRect t = titlebar->geometry();
-	QRegion r = rect();
-	r = r.subtract( t );
-	p.setClipRegion( r );
-	p.eraseRect( rect() );
-    }
-    */
     repaint(); //there is some strange wrong repaint of the frame without
 }
 
@@ -538,7 +545,6 @@ void B2Client::captionChange( const QString &)
     positionButtons();
     titleMoveAbs(bar_x_ofs);
     doShape();
-    //repaint();
     titlebar->recalcBuffer();
     titlebar->repaint(false);
 }
@@ -564,7 +570,6 @@ void B2Client::paintEvent( QPaintEvent* e)
     int hx = width()-40;
     int hw = 40;
 
-    //p.drawRect(hx, height()-8, hw, 8);
     p.drawLine(width()-1, height()-8, width()-1, height()-1);
     p.drawLine(hx, height()-1, width()-1, height()-1);
     p.drawLine(hx, height()-4, hx, height()-1);
@@ -624,10 +629,11 @@ void B2Client::doShape()
 
 void B2Client::showEvent(QShowEvent *ev)
 {
+    calcHiddenButtons();
     Client::showEvent(ev);
     doShape();
     repaint();
-    titlebar->repaint();
+    titlebar->repaint(false);
 }
 
 void B2Client::windowWrapperShowEvent( QShowEvent* )
@@ -639,9 +645,6 @@ Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
     const int border = 4;
-    /*QRect t = g->cellGeometry(0, 1);
-    t.setRight(button[BtnClose]->x()+17);
-    */
     QRect t = titlebar->geometry();
     t.setHeight(20-border);
     int ly = t.bottom();
@@ -706,38 +709,34 @@ void B2Client::titleMoveRel(int xdiff)
 
 void B2Client::stickyChange(bool on)
 {
-    button[BtnSticky]->setDown(on);
-    button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
+    if (button[BtnSticky]) {
+        button[BtnSticky]->setDown(on);
+        button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
+    }
 }
 
 void B2Client::maximizeChange(bool m)
 {
-    if(m){
-        button[BtnMax]->setPixmaps(P_NORMALIZE);
+    if (button[BtnMax]) {
+        button[BtnMax]->setPixmaps( m ? P_NORMALIZE : P_MAX );
+        button[BtnMax]->repaint();
+        button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
     }
-    else{
-        button[BtnMax]->setPixmaps(P_MAX);
-    }
-    button[BtnMax]->repaint();
-    button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
 
 void B2Client::activeChange(bool on)
 {
-    int i;
     repaint(false);
     titlebar->repaint(false);
+
     QColor c = options->colorGroup(Options::TitleBar, on).
         color(QColorGroup::Button);
-    for(i=0; i < 6; ++i){
-        button[i]->setBg(c);
-        button[i]->repaint();
-    }
-}
 
-void B2Client::init()
-{
-    //
+    for(int i = 0; i < BtnCount; i++)
+        if (button[i]) {
+           button[i]->setBg(c);
+           button[i]->repaint(false);
+        }
 }
 
 void B2Client::menuButtonPressed()
@@ -752,11 +751,13 @@ void B2Client::slotReset()
     redraw_pixmaps();
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
-    int i;
-    for(i=0; i < 6; ++i){
-        button[i]->setBg(c);
-        button[i]->repaint(false);
-    }
+
+    for(int i = 0; i < BtnCount; i++)
+        if (button[i]) {
+            button[i]->setBg(c);
+            button[i]->repaint(false);
+        }
+
     repaint();
     titlebar->recalcBuffer();
     titlebar->repaint(false);
@@ -829,8 +830,8 @@ static void redraw_pixmaps()
 	bool is_act = (i < 2);
 	bool is_down = ((i & 1) == 1);
 	KPixmap *pix = pixmap[P_NORMALIZE*4 + i];
-	drawB2Rect(&smallBox, aGrp.button(), is_down);
-	drawB2Rect(&largeBox, aGrp.button(), is_down);
+	drawB2Rect(&smallBox, is_act ? aGrp.button() : iGrp.button(), is_down);
+	drawB2Rect(&largeBox, is_act ? aGrp.button() : iGrp.button(), is_down);
 	pix->fill(options->color(Options::TitleBar, is_act));
 	bitBlt(pix, 3, 3, &largeBox, 0, 0, 12, 12, Qt::CopyROP, true);
 	bitBlt(pix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
@@ -851,7 +852,7 @@ static void redraw_pixmaps()
           case 1 :
             pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits;
             break;
-          case 2 :
+          default:
             pix = P_HELP; light = help_light_bits; dark = help_dark_bits;
             break;
         }
@@ -878,18 +879,13 @@ static void redraw_pixmaps()
 void B2Client::positionButtons()
 {
     QFontMetrics fm(options->font(isActive()));
-
     int textLen = fm.width(caption());
-    QLayoutIterator it=titlebar->layout()->iterator();
-    ++it;
-    ++it;
-    ++it;
 
-    int titleWidth=titlebar->width()-(++it)->geometry().width()+textLen+2;
-   
+    QRect t = titlebar->captionSpacer->geometry();
+    int titleWidth = titlebar->width() - t.width() + textLen+2;
     if( titleWidth > width()) titleWidth=width();
 
-    titlebar->resize(titleWidth,20);
+    titlebar->resize(titleWidth, 20);
     titlebar->move(bar_x_ofs, 0);
 }
 
