@@ -216,7 +216,6 @@ int kdemain( int argc, char * argv[] )
         }
     }
     
-    QCString envir;
     if (! restored) {
         // we only do the multihead fork if we are not restored by the session
 	// manager, since the session manager will register multiple kwins,
@@ -241,6 +240,7 @@ int kdemain( int argc, char * argv[] )
 	    if ((pos = display_name.findRev('.')) != -1 )
 		display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
 
+            QCString envir;
 	    if (number_of_screens != 1) {
 		for (int i = 0; i < number_of_screens; i++ ) {
 		    // if execution doesn't pass by here, then kwin
@@ -256,7 +256,7 @@ int kdemain( int argc, char * argv[] )
 		//   number. If it had it, it was removed at the "pos" check
 		envir.sprintf("DISPLAY=%s.%d", display_name.data(), kwin_screen_number);
 
-		if (putenv(envir.data())) {
+		if (putenv(strdup(envir.data()))) {
 		    fprintf(stderr,
 			    "%s: WARNING: unable to set DISPLAY environment variable\n",
 			    argv[0]);
