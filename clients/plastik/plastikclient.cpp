@@ -119,7 +119,7 @@ bool PlastikClient::isTool()
 void PlastikClient::resizeEvent()
 {
     doShape();
-    widget()->update();
+//     widget()->update();
 }
 
 void PlastikClient::paintEvent(QPaintEvent*)
