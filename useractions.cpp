@@ -710,9 +710,12 @@ void Workspace::slotWindowToNextDesktop()
         d = 1;
     if (active_client && !active_client->isDesktop()
         && !active_client->isDock() && !active_client->isTopMenu())
-      sendClientToDesktop(active_client,d,true);
-    setCurrentDesktop(d);
-    popupinfo->showInfo( desktopName(currentDesktop()) );
+        {
+        setClientIsMoving( active_client );
+        setCurrentDesktop( d );
+        setClientIsMoving( NULL );
+        popupinfo->showInfo( desktopName(currentDesktop()) );
+        }
     }
 
 /*!
@@ -725,9 +728,12 @@ void Workspace::slotWindowToPreviousDesktop()
         d = numberOfDesktops();
     if (active_client && !active_client->isDesktop()
         && !active_client->isDock() && !active_client->isTopMenu())
-      sendClientToDesktop(active_client,d,true);
-    setCurrentDesktop(d);
-    popupinfo->showInfo( desktopName(currentDesktop()) );
+        {
+        setClientIsMoving( active_client );
+        setCurrentDesktop( d );
+        setClientIsMoving( NULL );
+        popupinfo->showInfo( desktopName(currentDesktop()) );
+        }
     }
 
 /*!
