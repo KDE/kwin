@@ -2408,7 +2408,10 @@ void Client::takeFocus( bool force )
         return; // menus and dock windows don't take focus if not forced
 
     if ( input ) {
-        setActive( TRUE );
+        // Matthias Ettrich says to comment it so that we avoid two consecutive setActive
+        //   We will have to look after it anyways, in case people will get problems
+        //setActive( TRUE );
+
         // Qt may delay the mapping which may cause XSetInputFocus to fail, force show window
         QApplication::sendPostedEvents( windowWrapper(), QEvent::ShowWindowRequest );
         XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
