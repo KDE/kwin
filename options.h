@@ -252,6 +252,9 @@ class Options : public KDecorationOptions
         
         bool topMenuEnabled() const { return topmenus; }
         bool desktopTopMenu() const { return desktop_topmenu; }
+        
+        // timeout before non-responding application will be killed after attempt to close
+        int killPingTimeout;
 
     private:
         WindowOperation OpTitlebarDblClick;

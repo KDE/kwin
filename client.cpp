@@ -973,11 +973,13 @@ void Client::pingWindow()
     {
     if( !Pping )
         return; // can't ping :(
+    if( options->killPingTimeout == 0 )
+        return; // turned off
     if( ping_timer != NULL )
         return; // pinging already
     ping_timer = new QTimer( this );
     connect( ping_timer, SIGNAL( timeout()), SLOT( pingTimeout()));
-    ping_timer->start( 5000, true ); // give it 5 seconds
+    ping_timer->start( options->killPingTimeout, true );
     ping_timestamp = qt_x_time;
     workspace()->sendPingToWindow( window(), ping_timestamp );
     }

@@ -141,6 +141,8 @@ unsigned long Options::updateSettings()
          ++it )
         (*it) = (*it).lower();
 
+    killPingTimeout = config->readNumEntry( "KillPingTimeout", 5000 );
+
     // Mouse bindings
     config->setGroup( "MouseBindings");
     CmdActiveTitlebar1 = mouseCommand(config->readEntry("CommandActiveTitlebar1","Raise"), true );
