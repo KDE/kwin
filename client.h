@@ -387,6 +387,7 @@ class Client : public QObject, public KDecorationDefines
         void addTransient( Client* cl );
         void removeTransient( Client* cl );
         void removeFromMainClients();
+        void cleanGrouping();
         void checkGroupTransients();
         void setTransient( Window new_transient_for_id );
         Client* transient_for;

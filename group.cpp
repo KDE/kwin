@@ -65,10 +65,14 @@ QPixmap Group::miniIcon() const
 void Group::addMember( Client* member_P )
     {
     _members.append( member_P );
+//    kdDebug() << "GROUPADD:" << this << ":" << member_P << endl;
+//    kdDebug() << kdBacktrace() << endl;
     }
 
 void Group::removeMember( Client* member_P )
     {
+//    kdDebug() << "GROUPREMOVE:" << this << ":" << member_P << endl;
+//    kdDebug() << kdBacktrace() << endl;
     Q_ASSERT( _members.contains( member_P ));
     _members.remove( member_P );
     if( _members.isEmpty())
@@ -360,6 +364,75 @@ void Client::removeFromMainClients()
         }
     }
 
+// *sigh* this transiency handling is madness :(
+// This one is called when destroying/releasing a window.
+// It makes sure this client is removed from all grouping
+// related lists.
+void Client::cleanGrouping()
+    {
+//    kdDebug() << "CLEANGROUPING:" << this << endl;
+//    for( ClientList::ConstIterator it = group()->members().begin();
+//         it != group()->members().end();
+//         ++it )
+//        kdDebug() << "CL:" << *it << endl;
+//    ClientList mains;
+//    mains = mainClients();
+//    for( ClientList::ConstIterator it = mains.begin();
+//         it != mains.end();
+//         ++it )
+//        kdDebug() << "MN:" << *it << endl;
+    removeFromMainClients();
+//    kdDebug() << "CLEANGROUPING2:" << this << endl;
+//    for( ClientList::ConstIterator it = group()->members().begin();
+//         it != group()->members().end();
+//         ++it )
+//        kdDebug() << "CL2:" << *it << endl;
+//    mains = mainClients();
+//    for( ClientList::ConstIterator it = mains.begin();
+//         it != mains.end();
+//         ++it )
+//        kdDebug() << "MN2:" << *it << endl;
+    for( ClientList::ConstIterator it = transients_list.begin();
+         it != transients_list.end();
+         )
+        {
+        if( (*it)->transientFor() == this )
+            {
+            ClientList::ConstIterator it2 = it++;
+            removeTransient( *it2 );
+            }
+        else
+            ++it;
+        }
+//    kdDebug() << "CLEANGROUPING3:" << this << endl;
+//    for( ClientList::ConstIterator it = group()->members().begin();
+//         it != group()->members().end();
+//         ++it )
+//        kdDebug() << "CL3:" << *it << endl;
+//    mains = mainClients();
+//    for( ClientList::ConstIterator it = mains.begin();
+//         it != mains.end();
+//         ++it )
+//        kdDebug() << "MN3:" << *it << endl;
+    // HACK
+    // removeFromMainClients() did remove 'this' from transient
+    // lists of all group members, but then made windows that
+    // were transient for 'this' group transient, which again
+    // added 'this' to those transient lists :(
+    ClientList group_members = group()->members();
+    group()->removeMember( this );
+    in_group = NULL;
+    for( ClientList::ConstIterator it = group_members.begin();
+         it != group_members.end();
+         ++it )
+        (*it)->removeTransient( this );
+//    kdDebug() << "CLEANGROUPING4:" << this << endl;
+//    for( ClientList::ConstIterator it = group_members.begin();
+//         it != group_members.end();
+//         ++it )
+//        kdDebug() << "CL4:" << *it << endl;
+    }
+
 // Make sure that no group transient is considered transient
 // for a window trat is (directly or indirectly) for it.
 // Group transients not being transient for each other is already
@@ -463,16 +536,23 @@ void Client::addTransient( Client* cl )
     assert( !transients_list.contains( cl ));
     assert( cl != this );
     transients_list.append( cl );
+//    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
+//    kdDebug() << kdBacktrace() << endl;
     }
 
 void Client::removeTransient( Client* cl )
     {
+//    kdDebug() << "REMOVETRANS:" << this << ":" << cl << endl;
+//    kdDebug() << kdBacktrace() << endl;
     transients_list.remove( cl );
+    // cl is transient for this, but this is going away
+    // make cl group transient
     if( cl->transientFor() == this )
         {
         cl->transient_for_id = None;
         cl->transient_for = NULL; // SELI
-        cl->setTransient( workspace()->rootWin());
+// SELI       cl->setTransient( workspace()->rootWin());
+        cl->setTransient( None );
         }
     }
 
@@ -548,8 +628,8 @@ void Client::checkGroup()
         {
         Group* new_group = workspace()->findGroup( window_group );
         if( transientFor() != NULL && transientFor()->group() != new_group )
-            {
-            kdWarning( 1216 ) << this << " is transient for " << transientFor() << ", which is in different group" << endl;
+            { // move the window to the right group (e.g. a dialog provided
+              // by different app, but transient for this one, so make it part of that group)
             new_group = transientFor()->group();
             }
         if( new_group == NULL ) // doesn't exist yet

@@ -173,21 +173,7 @@ void Client::releaseWindow( bool on_shutdown )
     if( !on_shutdown )
         workspace()->clientHidden( this );
     destroyDecoration();
-    removeFromMainClients();
-    for( ClientList::ConstIterator it = transients_list.begin();
-         it != transients_list.end();
-         )
-        {
-        if( (*it)->transientFor() == this )
-            {
-            ClientList::ConstIterator it2 = it++;
-            removeTransient( *it2 );
-            }
-        else
-            ++it;
-        }
-    group()->removeMember( this );
-    in_group = NULL;
+    cleanGrouping();
     setMappingState( WithdrawnState );
     if( !on_shutdown )
         {
@@ -226,21 +212,7 @@ void Client::destroyClient()
     setModal( false );
     workspace()->clientHidden( this );
     destroyDecoration();
-    removeFromMainClients();
-    for( ClientList::ConstIterator it = transients_list.begin();
-         it != transients_list.end();
-         )
-        if( (*it)->transientFor() == this )
-        {
-        ClientList::ConstIterator it2 = it++;
-        removeTransient( *it2 );
-        }
-    else
-        {
-        ++it;
-        }
-    group()->removeMember( this );
-    in_group = NULL;
+    cleanGrouping();
     workspace()->removeClient( this, Allowed );
     client = None; // invalidate
     XDestroyWindow( qt_xdisplay(), wrapper );
