@@ -1,40 +1,151 @@
-Just a checklist for now, maybe a full HOWTO later.
+It's suggested you check sources of some KDE CVS decoration if in doubts or in need of an example.
+Also, the API is documented in the .h header files.
 
-porting:
-    - note that decorations are ported from HEAD, not from the branch - HEAD may have fixes that are not in the branch
-    - Makefile.am - LDFLAGS, LIBADD, kwin_ -> kwin3_, if in kdebase, add INCLUDES for libkdecorations before $(all_includes)
-    - .desktop - kwin_ -> kwin3_
-    - KWinButton -> QButton + QToolTip
-    - #include qbutton.h, kdecoration.h, kdecorationfactory.h
-    - Client* -> MyClient* in button class, pass parent->widget() to QButton
-    - inherit from KDecoration instead of Client
-    - no internal kwin #include, no namespace KWinInternal
-    - ctor takes KDecorationBridge* and KDecorationFactory*
-    - WResizeNoErase atd -> pass to createMainWidget()
-    - ctor is empty, all initialization done in init()
-    - createMainWidget() as the fist thing in init(), and widget()->installEventFilter( this )
-    - implement eventFilter()
-    - maximize changes - to flip a value, use maximize( maximizeMode() ^ XYZ ), for full maximize flip
-        use maximizeMode() == MaximizeFull ? maximize( MaximizeRestore ) : maximize( MaximizeFull )
-    - Sticky -> OnAllDesktops
-    - iconify -> minimize
-    - ther's no signal resetClients(), use KDecorationFactory::reset(), KDecorationFactory::resetDecorations(), KDecoration::reset()
-    - often this -> widget() , or prepend widget()-> , sometimes it may be handy to create wrapper functions for e.g. width()
-    - layout is created in init(), so call createLayout() directly there (if it's implemented)
-    - options -> options()
-    - no calls to Client::XYZ()
-    - titlebarDblClickOperation() for doubleclick on titlebar
-    - use extern "C" create_factory() returning your KDecorationFactory
-    - init(), deinit(), reset(), create()/allocate() -> KDecorationFactory
-    - reset() - instead of resetAllClients() return true, use argument for change detection, use resetDecorations()
-        for reseting decorations if not requesting recreating of decoration by returning true
-    - activeChange(bool) -> activeChange() + isActive(), etc.
-    - minimumSize()
-    - borders()
-    - contextHelp() -> showContextHelp()
-    - color setting values - prepend Color
-    - windowWrapperShowEvent() is gone
-    - animateIconifyOrDeiconify() -> animateMinimize() - just drop it if it's empty
-    - pay special attention to SLOT() names and cases where you need to use 'widget()' instead of 'this'
-    - buttons should use setCursor() if they don't want cursor set by mousePosition()
-    - X(un)GrabServer() -> (un)grabXServer()
+Makefile.am:
+- Change kwin_ to kwin3_ (in LDFLAGS, LIBADD, kde_module_LTLIBRARIES, SOURCES).
+- Make sure LDFLAGS contains $(KDE_PLUGIN) and -module .
+- Add -lkdecorations to LIBADD.
+- Do NOT rename the directory where the .desktop file is installed ( $(kde_datadir)/kwin/ ).
+
+.desktop file:
+- Change kwin_ to kwin3_ in X-KDE-Library.
+
+Sources:
+- There are no kwin/something.h includes, and don't use the KWinInternal namespace.
+- Use QToolTip instead of KWinToolTip.
+- Use QButton instead of KWinButton, QToolButton instead of KWinToolButton and QWidget
+  instead of KWinWidgetButton.
+- For tooltips, use simply QToolTip:add().
+- Change Client* to MyClient* (or whatever is your main client class) in your MyButton.
+- Pass parent->widget() to QButton constructor in your MyButton constructor.
+- Make your MyClient class inherit from KDecoration instead of Client.
+- Make MyClient constructor take KDecorationBridge* and KDecorationFactory* as arguments,
+  and pass these arguments to KDecoration constructor.
+- Except for data members initialization, make the constructor empty, move everything
+  to void MyClient::init().
+- As the first thing in init(), call createMainWidget(); if your client class took some
+  flags such as WResizeNoErase, pass them to this function.
+- Then, do 'widget()->installEventFilter( this );'.
+- Implement MyClient::eventFilter() - as MyClient is now no longer QWidget, you need the event
+  filter to call all the functions that used to be called directly. Usually, it's something
+  like:
+=====
+bool MyClient::eventFilter( QObject* o, QEvent* e )
+{
+	if ( o != widget() )
+		return false;
+
+	switch ( e->type() )
+	{
+		case QEvent::Resize:
+			resizeEvent( static_cast< QResizeEvent* >( e ) );
+			return true;
+
+		case QEvent::Paint:
+			paintEvent( static_cast< QPaintEvent* >( e ) );
+			return true;
+
+		case QEvent::MouseButtonDblClick:
+			mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ) );
+			return true;
+
+		case QEvent::MouseButtonPress:
+			processMousePressEvent( static_cast< QMouseEvent* >( e ) );
+			return true;
+
+		case QEvent::Show:
+			showEvent( static_cast< QShowEvent* >( e ) );
+			return true;
+
+		default:
+	    		return false;
+	}
+}
+=====
+- In MyClient, 'this' will have to be often replaced with 'widget()', pay special attention
+  to cases where this won't cause compile error (e.g. in connect() calls, which take QObject* ).
+- Also, many calls may need 'widget()->' prepended.
+- Layout is created in init(), so call createLayout() directly there (if it's implemented).
+- Remove calls to Client methods (Client::resizeEvent() and so on).
+- Replace Options:: with KDecorationOptions:: .
+- Replace 'options' with 'options()' in MyClient (which is KDecoration::options()), if often used
+  outside of MyClient, you may want to create (this assumes your code is in its namespace):
+=====
+inline const KDecorationOptions* options() { return KDecoration::options(); }
+=====
+- Options for colors need 'Color' prepended (e.g. 'ColorButtonBg').
+- Replace miniIcon() with getting the right pixmap from icon() (usually
+    'icon().pixmap( QIconset::Small, QIconSet::Normal )' ).
+- Replace stickyChange() with desktopChange(), and test isOnAllDesktops().
+- Replace Sticky with OnAllDestops.
+- Replace iconify with minimize.
+- Change activeChange(bool) to activeChange(), and use isActive() to check the state.
+  Similar for desktopChange, captionChange(), iconChange(), maximizeChange().
+- Replace 'contextHelp()' with 'showContextHelp()'.
+- WindowWrapperShowEvent() is gone, simply use showEvent() filtered by the event filter if needed.
+- Change 'animateIconifyOrDeiconify()' to 'animateMinize()', if it's empty, simply remove it.
+  Make sure it doesn't reenter the event loop (no kapp->processEvents()).
+- Buttons should use explicit setCursor() if they don't want cursor set by mousePosition().
+  I.e. usually call setCursor( arrowCursor ) in your MyButton.
+- In the part where you insert windowWrapper() into the layout, i.e. something like
+=====
+    layout->addWidget( windowWrapper());
+=====
+  replace it with something like
+=====
+    if( isPreview())
+        layout->addWidget( new QLabel( i18n( "<center><b>MyDecoration</b></center>" ), widget()));
+    else
+        layout->addItem( new QSpacerItem( 0, 0 ));
+=====
+- Implement MyClient::minimumSize().
+- Handling maximization - to change vertical or horizontal maximalization, use e.g.
+  'maximize( maximizeMode() ^ MaximizeVertical', to change normal maximalization, i.e. after
+  left-clicking on the button, use
+  'maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );' (which also
+  means that there's also no maximize() slot).
+  Also, if your decoration button has only two visual states representing the maximalization state,
+  it's recommended that it shows the maximized state only for MaximizeFull state.
+- Use 'titlebarDblClickOperation()' for performing the application after doubleclicking
+  the titlebar.
+- Implement borders() returning the width of the top,left,right and bottom border. You may
+  check values like 'maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows()'
+  to check whether you can disable some borders completely.
+  Note that your painting code must of course match these sizes.
+- If your code uses XGrabServer() or XUnGrabServer(), replace them with (un)grabXServer().
+- In cases where you call some function from the KDecoration API that can possibly destroy
+  the decoration (e.g. showWindowMenu() or closeWindow()), make sure to use exists() if some more
+  code will follow this call. Refer to showWindowMenu() documentation for an example.
+- Create class MyFactory inheriting from KDecorationFactory, and move the code that was
+  in 'extern "C"' to it: From init() to constructor, from deinit() to destructor, from allocate()
+  or create() to createDecoration(). Pass the KDecorationBridge* argument and 'this' to created
+  MyClient objects. If createDecoration() needs to know the window type (e.g. it used the tool
+  argument), use windowType() similarly like in KDecoration, and pass it the KDecorationBridge*
+  argument.
+- Add something like this:
+=====
+extern "C"
+{
+	KDecorationFactory *create_factory()
+	{
+                return new MyNamespace::MyFactory();
+	}
+}
+=====
+- The reset handling has changed: There's no signal resetClients(), and no
+  slotResetAllClientsDelayed(). If your MyClient has some slotReset(), make it
+  reset( unsigned long ), where the argument is mask of things that have changed ( SettingXYZ ).
+  If you have some global function that handles resetting, make it
+  MyFactory::reset( unsigned long ). Try to minimize the effects of the changed things,
+  e.g. if only the color setting has changed, doing a repaint is often enough, and there's no need
+  to recreate the decorations. If you need to recreate the decorations, return true
+  from MyFactory::reset(), otherwise, you may call resetDecorations() to call reset() in all
+  MyClient instances.
+- Implement resize() to resize the decoration to the given size
+  (usually 'widget()->resize( s );' is enough).
+- Review mousePosition() if it's implemented. Position constants need 'Position' prepended,
+  e.g. Top -> PositionTop.
+- Note that you cannot use "appdata" with KStandardDirs, as the decoration will be used
+  also in other applications than kwin.
+- Implement all missing pure virtual functions. For mousePosition(), you may call
+  KDecoration::mousePosition() if it's sufficient.
