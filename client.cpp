@@ -104,7 +104,7 @@ public:
 
 extern Atom qt_wm_state;
 extern Time qt_x_time;
-extern Atom qt_wm_window_role;
+extern Atom qt_window_role;
 extern Atom qt_sm_client_id;
 
 static int nullErrorHandler(Display *, XErrorEvent *)
@@ -2857,7 +2857,7 @@ static QCString getStringProperty(WId w, Atom prop, char separator=0)
  */
 QCString Client::staticWindowRole(WId w)
 {
-    return getStringProperty(w, qt_wm_window_role);
+    return getStringProperty(w, qt_window_role);
 }
 
 /*!
