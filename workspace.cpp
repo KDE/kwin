@@ -48,7 +48,7 @@ int Shape::shapeEvent()
 }
 
 
-/*!  
+/*!
   Updates kwin_time by receiving a current timestamp from the server.
  */
 static void updateTime()
@@ -897,16 +897,16 @@ QPopupMenu* Workspace::clientPopup( Client* c )
     if ( !popup ) {
 	popup = new QPopupMenu;
 	popup->setCheckable( TRUE );
-    popup->setFont(KGlobal::menuFont());
+	popup->setFont(KGlobal::menuFont());
 	connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
 	connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-
-        PluginMenu *deco = new PluginMenu(&mgr, popup);
-        deco->setFont(KGlobal::menuFont());
+	
+	PluginMenu *deco = new PluginMenu(&mgr, popup);
+	deco->setFont(KGlobal::menuFont());
 
 	desk_popup = new QPopupMenu( popup );
 	desk_popup->setCheckable( TRUE );
-    desk_popup->setFont(KGlobal::menuFont());
+	desk_popup->setFont(KGlobal::menuFont());
 	connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
 	connect( desk_popup, SIGNAL( aboutToShow() ), this, SLOT( desktopPopupAboutToShow() ) );
 
@@ -1978,22 +1978,17 @@ void Workspace::slotResetAllClients()
 {
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
         Client *oldClient = (*it);
-
         WId w = oldClient->window();
-        bool mapped = oldClient->isVisible();
         oldClient->hide();
         oldClient->releaseWindow();
         // Replace oldClient with newClient in all lists
         Client *newClient = clientFactory (this, w);
         (*it) = newClient;
         ClientList::Iterator jt = stacking_order.find (oldClient);
-        //assert (jt != stacking_order.end());
         (*jt) = newClient;
         jt = focus_chain.find (oldClient);
-        //assert (jt != focus_chain.end());
         (*jt) = newClient;
-        // Delete the old, display the new
         delete oldClient;
-        newClient->manage (mapped);
+        newClient->manage( TRUE );
     }
 }
