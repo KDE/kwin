@@ -70,6 +70,7 @@ struct SessionInfo
     bool shaded;
     bool staysOnTop;
     bool skipTaskbar;
+    bool skipPager;
 
     private:
     SessionInfoPrivate* d;

@@ -142,6 +142,9 @@ public:
     bool skipTaskbar() const;
     void setSkipTaskbar( bool );
 
+    bool skipPager() const;
+    void setSkipPager( bool );
+
     bool storeSettings() const;
     void setStoreSettings( bool );
 
@@ -309,6 +312,7 @@ private:
     uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?
     uint input :1; // does the window want input in its wm_hints
     uint store_settings : 1;
+    uint skip_pager : 1;
     void getWMHints();
     void getWindowProtocols();
     QPixmap icon_pix;
@@ -440,6 +444,11 @@ inline bool Client::staysOnTop() const
 inline bool Client::skipTaskbar() const
 {
     return skip_taskbar;
+}
+
+inline bool Client::skipPager() const
+{
+    return skip_pager;
 }
 
 inline bool Client::storeSettings() const

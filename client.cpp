@@ -59,7 +59,7 @@ public:
     }
     virtual void changeState( unsigned long state, unsigned long mask ) {
 	// state : kwin.h says: possible values are or'ed combinations of NET::Modal,
-	// NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar
+	// NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar, NET::SkipPager
 
 	state &= mask; // for safety, clear all other bits
 
@@ -80,6 +80,8 @@ public:
 	}
         if( mask & NET::SkipTaskbar )
             m_client->setSkipTaskbar( ( state & NET::SkipTaskbar ) != 0 );
+        if( mask & NET::SkipPager )
+            m_client->setSkipPager( ( state & NET::SkipPager ) != 0 );
     }
 private:
     KWinInternal::Client * m_client;
@@ -514,6 +516,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     may_move = TRUE;
     is_fullscreen = TRUE;
     skip_taskbar = FALSE;
+    skip_pager = FALSE;
     max_mode = MaximizeRestore;
     store_settings = FALSE;
 
@@ -550,6 +553,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     // window does not want a taskbar entry?
     skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
+
+    skip_pager = ( info->state() & NET::SkipPager) != 0;
 
     // should we open this window on a certain desktop?
     if ( info->desktop() == NETWinInfo::OnAllDesktops )
@@ -736,6 +741,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	setShade( session->shaded );
 	setStaysOnTop( session->staysOnTop );
 	setSkipTaskbar( session->skipTaskbar );
+	setSkipPager( session->skipPager );
 	maximize( (MaximizeMode) session->maximize );
 	geom_restore = session->restore;
     } else {
@@ -2294,6 +2300,14 @@ void Client::setSkipTaskbar( bool b )
 	return;
     skip_taskbar = b;
     info->setState( b?NET::SkipTaskbar:0, NET::SkipTaskbar );
+}
+
+void Client::setSkipPager( bool b )
+{
+    if ( b == skipPager() )
+	return;
+    skip_pager = b;
+    info->setState( b?NET::SkipPager:0, NET::SkipPager );
 }
 
 
