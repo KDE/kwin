@@ -68,6 +68,8 @@ static inline const KDecorationOptions *options()
     return KDecoration::options();
 }
 
+static void redraw_pixmaps();
+
 static void read_config(B2ClientFactory *f)
 {
     // Force button size to be in a reasonable range.
@@ -90,6 +92,8 @@ static void read_config(B2ClientFactory *f)
 	thickness = 8;
 	break;
     case KDecoration::BorderHuge:
+	thickness = 12;
+	break;
     case KDecoration::BorderVeryHuge:
     case KDecoration::BorderOversized:
     case KDecoration::BorderNormal:
@@ -100,7 +104,7 @@ static void read_config(B2ClientFactory *f)
 
 static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
 {
-    QPainter p;
+    QPainter p(pix);
     QColor hColor = primary.light(150);
     QColor lColor = primary.dark(150);
 
@@ -116,20 +120,15 @@ static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
         pix->fill(primary);
     int x2 = pix->width()-1;
     int y2 = pix->height()-1;
-    p.begin(pix);
     p.setPen(down ? hColor : lColor);
     p.drawLine(0, 0, x2, 0);
     p.drawLine(0, 0, 0, y2);
-    p.drawLine(1, x2-1, y2-1, x2-1);
+    p.drawLine(1, x2-1, x2-1, y2-1);
     p.drawLine(x2-1, 1, x2-1, y2-1);
     p.setPen(down ? lColor : hColor);
     p.drawRect(1, 1, x2, y2);
-    p.end();
 
 }
-
-static void create_pixmaps();
-static void redraw_pixmaps();
 
 QPixmap* kwin_get_menu_pix_hack()
 {
@@ -144,12 +143,20 @@ static void create_pixmaps()
     pixmaps_created = true;
 
     int i;
+    int bsize = buttonSize - 2;
+    if (bsize < 16) bsize = 16;
+    
     for (i = 0; i < NUM_PIXMAPS; i++) {
         pixmap[i] = new KPixmap;
 	switch (i / 4) {
-  	    case P_MAX : break;  // will be initialized by copying P_CLOSE
-  	    case P_ICONIFY : pixmap[i]->resize(10,10); break;
-  	    default : pixmap[i]->resize(16, 16); break;
+	case P_MAX: // will be initialized by copying P_CLOSE
+	    break;  
+	case P_ICONIFY: 
+	    pixmap[i]->resize(10, 10); break;
+	case P_CLOSE: 
+	    pixmap[i]->resize(bsize, bsize); break;
+	default: 
+	    pixmap[i]->resize(16, 16); break;
 	}
     }
 
@@ -215,21 +222,27 @@ KDecoration *B2ClientFactory::createDecoration(KDecorationBridge *b)
     return new B2::B2Client(b, this);
 }
 
-bool B2ClientFactory::reset(unsigned long /*changed*/)
+bool B2ClientFactory::reset(unsigned long changed)
 {
+    bool needsReset = SettingColor ? true : false;
     // TODO Do not recreate decorations if it is not needed. Look at
     // ModernSystem for how to do that
     read_config(this);
+    if (changed & SettingFont) {
+    	delete_pixmaps();
+    	create_pixmaps();
+	needsReset = true;
+    }
     redraw_pixmaps();
     // For now just return true.
-    return true;
+    return needsReset;
 }
 
 QValueList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
 { 
     // the list must be sorted
     return QValueList< BorderSize >() << BorderTiny << BorderNormal << 
-	BorderLarge << BorderVeryLarge;
+	BorderLarge << BorderVeryLarge << BorderHuge;
 }
 
 // =====================================
@@ -839,32 +852,39 @@ static void redraw_pixmaps()
 	drawB2Rect(&smallBox, is_act ? aGrp.button() : iGrp.button(), is_down);
 	drawB2Rect(&largeBox, is_act ? aGrp.button() : iGrp.button(), is_down);
 	pix->fill(options()->color(KDecoration::ColorTitleBar, is_act));
-	bitBlt(pix, 3, 3, &largeBox, 0, 0, 12, 12, Qt::CopyROP, true);
+	bitBlt(pix, pix->width() - 12, pix->width() - 12, &largeBox, 
+	       0, 0, 12, 12, Qt::CopyROP, true);
 	bitBlt(pix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
 
-	bitBlt(pixmap[P_ICONIFY*4 + i],
-	       0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
+	bitBlt(pixmap[P_ICONIFY * 4 + i], 0, 0, 
+	       &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
     }
 
     QPainter p;
     // x for close + menu + help
-    for (int j = 0; j < 3; j++) {
-        int pix;
-        const unsigned char *light, *dark;
-        switch (j) {
-          case 0 :
-            pix = P_CLOSE; light = close_white_bits; dark = close_dgray_bits;
-            break;
-          case 1 :
-            pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits;
-            break;
-          default:
-            pix = P_HELP; light = help_light_bits; dark = help_dark_bits;
-            break;
+    int pix = P_CLOSE;
+    const unsigned char *light = close_white_bits;
+    const unsigned char *dark = close_dgray_bits;
+    int off = (pixmap[pix * 4]->width() - 16) / 2;
+    for (i = 0; i < 4; i++) {
+	p.begin(pixmap[pix * 4 + i]);
+	kColorBitmaps(&p, (i < 2) ? aGrp : iGrp, off, off, 16, 16, true,
+		      light, NULL, NULL, dark, NULL, NULL);
+	p.end();
+    }
+    // x for close + menu + help
+    for (int j = 0; j < 2; j++) {
+        switch (j) { 
+	case 1: 
+	    pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits; 
+	    break;
+        default:
+	    pix = P_HELP; light = help_light_bits; dark = help_dark_bits;
+	    break;
         }
         for (i = 0; i < 4; i++) {
-            p.begin(pixmap[pix*4 + i]);
-            kColorBitmaps(&p, (i<2)?aGrp:iGrp, 0, 0, 16, 16, true,
+            p.begin(pixmap[pix * 4 + i]);
+            kColorBitmaps(&p, (i < 2) ? aGrp : iGrp, 0, 0, 16, 16, true,
                           light, NULL, NULL, dark, NULL, NULL);
             p.end();
         }
