@@ -14,6 +14,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qbitmap.h>
 #include <kdrawutil.h>
 #include <qdatetime.h>
+#include <qimage.h>
 #include "workspace.h"
 #include "options.h"
 
@@ -169,6 +170,8 @@ void StdClient::slotReset()
     button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
     if (button[6])
         button[6]->setIconSet( *question_mark_pix );
+
+    setFont(options->font(isActive() ));
 }
 
 
@@ -176,6 +179,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     create_pixmaps();
+    setFont(options->font(isActive() ));
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
@@ -368,7 +372,7 @@ void StdClient::iconChange()
 }
 
 
-/*!  
+/*!
   Indicates that the menu button has been clicked. One press shows
   the window operation menu, a double click closes the window.
  */
@@ -378,8 +382,8 @@ void StdClient::menuButtonPressed()
     static StdClient* tc = 0;
     if ( !t )
 	t = new QTime;
-    
-    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() ) 
+
+    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
 	button[0]->setPopup( workspace()->clientPopup( this ) );
     else {
 	button[0]->setPopup( 0 );
@@ -404,5 +408,107 @@ void StdClient::maxButtonClicked( int button )
 	break;
     }
 }
+
+
+StdToolClient::StdToolClient( Workspace *ws, WId w, QWidget *parent, const char *name )
+    : Client( ws, w, parent, name )
+{
+    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
+    setFont(options->font(isActive(), true ));
+
+    QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
+    g->setRowStretch( 1, 10 );
+    g->addWidget( windowWrapper(), 1, 1 );
+    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+
+    g->addColSpacing(0, 1);
+    g->addColSpacing(2, 1);
+    g->addRowSpacing(2, 2);
+    
+    closeBtn = new QToolButton( this );
+    connect( closeBtn, SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
+    closeBtn->setFixedSize( 13, 13);
+    slotReset();
+    
+    QHBoxLayout* hb = new QHBoxLayout;
+    g->addLayout( hb, 0, 1 );
+
+    int fh = fontMetrics().lineSpacing()+2;
+
+    titlebar = new QSpacerItem(10, fh, QSizePolicy::Expanding,
+			       QSizePolicy::Minimum );
+    hb->addItem( titlebar );
+    hb->addWidget( closeBtn );
+}
+
+StdToolClient::~StdToolClient()
+{
+}
+
+void StdToolClient::resizeEvent( QResizeEvent* e )
+{
+    Client::resizeEvent( e );
+    QRegion r = rect();
+    QRect t = titlebar->geometry();
+    t.setTop( 0 );
+    r = r.subtract( QRect(0, 0, width(), 1) );
+    r = r.subtract (QRect( 0, 0, 1, t.height() ) );
+    r = r.subtract (QRect( width()-1, 0, 1, t.height() ) );
+    setMask( r );
+}
+
+void StdToolClient::paintEvent( QPaintEvent* )
+{
+    QPainter p( this );
+    QRect t = titlebar->geometry();
+    QRect r = rect();
+    qDrawWinPanel( &p, r, colorGroup() );
+    r.setTop( t.bottom()+1 );
+    qDrawWinPanel( &p, r, colorGroup() );
+    p.fillRect( QRect( QPoint(t.topLeft() ), QPoint( width() - t.left(), t.bottom() ) ), 
+		options->color(Options::TitleBar, isActive()));
+    p.setPen( options->color(Options::TitleBar, isActive()).light() );
+    t.setLeft( t.left() + 4 );
+    t.setRight( t.right() - 2 );
+    p.setPen(options->color(Options::Font, isActive()));
+    p.setFont(options->font(isActive(), true));
+    p.drawText( t, AlignLeft|AlignVCenter|SingleLine, caption() );
+}
+
+
+void StdToolClient::mouseDoubleClickEvent( QMouseEvent * e )
+{
+    if ( titlebar->geometry().contains( e->pos() ) )
+	workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+    workspace()->requestFocus( this );
+}
+
+void StdToolClient::init() 
+{
+}
+
+void StdToolClient::captionChange( const QString& )
+{
+    repaint( titlebar->geometry(), FALSE );
+}
+ 
+void StdToolClient::activeChange( bool on )
+{
+    Client::activeChange(on);
+}
+
+
+void StdToolClient::slotReset()
+{
+    create_pixmaps();
+    QImage img = close_pix->convertToImage();
+    img = img.smoothScale( 12, 12 );
+    QPixmap pm;
+    pm.convertFromImage( img );
+    closeBtn->setPixmap( pm );
+    setFont(options->font(isActive(), true ));
+}
+
+
 
 #include "stdclient.moc"

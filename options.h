@@ -66,7 +66,7 @@ public:
        whether autoraise is enabled FocusFollowsMouse mode or not.
      */
     bool autoRaise;
-    
+
     /**
        autoraise interval
      */
@@ -133,7 +133,7 @@ public:
     /**
      * Return the active or inactive decoration font.
      */
-    const QFont& font(bool active=true);
+    const QFont& font(bool active=true, bool small = false);
 
     /**
      * whether we animate the shading of windows to titlebar or not
@@ -207,7 +207,7 @@ signals:
     void resetClients();
 
 protected:
-    QFont activeFont, inactiveFont;
+    QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;
     QColor colors[KWINCOLORS*2];
     QColorGroup *cg[KWINCOLORS*2];
 

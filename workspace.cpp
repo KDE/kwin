@@ -153,25 +153,28 @@ Client* Workspace::clientFactory( WId w )
 	return new NoBorderClient( this, w );
 
     switch ( ni.windowType() ) {
-    case NET::Desktop: {
-	XLowerWindow( qt_xdisplay(), w );
-	Client * c = new NoBorderClient( this, w);
-	c->setSticky( TRUE );
-	setDesktopClient( c );
-	return c;
-    }
+    case NET::Desktop: 
+	{
+	    XLowerWindow( qt_xdisplay(), w );
+	    Client * c = new NoBorderClient( this, w);
+	    c->setSticky( TRUE );
+	    setDesktopClient( c );
+	    return c;
+	}
 
+    case NET::Toolbar: 
+	return new StdToolClient( this, w); // TODO use mgr.allocateClient...
+    
     case NET::Menu:
-    case NET::Dock: {
-	Client * c = new NoBorderClient( this, w);
-	c->setSticky( TRUE );
-	return c;
-    }
+    case NET::Dock: 
+	{
+	    Client * c = new NoBorderClient( this, w);
+	    c->setSticky( TRUE );
+	    return c;
+	}
 
-    case NET::Toolbar: {
-	Client * c = new NoBorderClient( this, w);
-	return c;
-    }
+    case NET::Override:
+	return new NoBorderClient( this, w);
 
     default:
 	break;

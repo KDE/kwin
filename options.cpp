@@ -36,9 +36,12 @@ const QColor& Options::color(ColorType type, bool active)
     return(colors[type + (active ? 0 : KWINCOLORS)]);
 }
 
-const QFont& Options::font(bool active)
+const QFont& Options::font(bool active, bool small)
 {
-    return(active ? activeFont : inactiveFont);
+    if ( small )
+	return(active ? activeFontSmall : inactiveFontSmall);
+    else	
+	return(active ? activeFont : inactiveFont);
 }
 
 const QColorGroup& Options::colorGroup(ColorType type, bool active)
@@ -118,6 +121,10 @@ void Options::reload()
     activeFont = QFont("Helvetica", 12, QFont::Bold);
     activeFont = config->readFontEntry("activeFont", &activeFont);
     inactiveFont = config->readFontEntry("inactiveFont", &activeFont);
+
+    activeFontSmall = QFont("Helvetica", 10, QFont::Bold);
+    activeFontSmall = config->readFontEntry("activeFontSmall", &activeFontSmall);
+    inactiveFontSmall = config->readFontEntry("inactiveFontSmall", &activeFontSmall);
 
     int i;
     for(i=0; i < KWINCOLORS*2; ++i){

@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+								
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #ifndef STDCLIENT_H
@@ -35,6 +35,28 @@ private slots:
 
 private:
     QToolButton* button[7];
+    QSpacerItem* titlebar;
+};
+
+class StdToolClient : public Client
+{
+    Q_OBJECT
+public:
+    StdToolClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
+    ~StdToolClient();
+protected:
+    void resizeEvent( QResizeEvent* );
+    void paintEvent( QPaintEvent* );
+
+    void mouseDoubleClickEvent( QMouseEvent * );
+    void init();
+    void captionChange( const QString& name );
+    void activeChange( bool );
+
+private slots:
+    void slotReset();
+private:
+    QToolButton* closeBtn;
     QSpacerItem* titlebar;
 };
 

@@ -166,7 +166,7 @@ public slots:
     void toggleSticky();
     void contextHelp();
     void autoRaise();
-    
+
 protected:
     void paintEvent( QPaintEvent * );
     void mousePressEvent( QMouseEvent * );
@@ -315,6 +315,10 @@ inline int Client::desktop() const
     return desk;
  }
 
+inline bool Client::isSticky() const
+{
+    return is_sticky;
+}
 /*!
   Returns whether the client is on visible or iconified on the virtual
   desktop \a d. This is always TRUE for sticky clients.
@@ -344,10 +348,6 @@ inline bool Client::isMaximized() const
     return !geom_restore.isNull();
 }
 
-inline bool Client::isSticky() const
-{
-    return is_sticky;
-}
 
 inline bool Client::staysOnTop() const
 {
