@@ -1274,8 +1274,8 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     h = QMAX( minimumHeight(), h );
 
     int ww = wwrap->width();
-    int wh = 0;
-    if ( !wwrap->testWState( WState_ForceHide ) )
+    int wh = 1;
+    if ( !wwrap->isHidden() )
 	wh = wwrap->height();
 
     if ( ignore_height && wsize.height() == 0 )
