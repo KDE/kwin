@@ -206,11 +206,37 @@ void SystemButton::setBitmap(const unsigned char *bitmap)
 
 void SystemButton::drawButton(QPainter *p)
 {
-    if(client->isActive())
-        p->drawPixmap(0, 0, isDown() ? *btnPixDown : *btnPix);
-    else
-        p->drawPixmap(0, 0, isDown() ? *iBtnPixDown : *iBtnPix);
-
+    if(btnPixDown){
+        if(client->isActive())
+            p->drawPixmap(0, 0, isDown() ? *btnPixDown : *btnPix);
+        else
+            p->drawPixmap(0, 0, isDown() ? *iBtnPixDown : *iBtnPix);
+    }
+    else{
+        QColorGroup g = options->colorGroup(Options::ButtonBg,
+                                            client->isActive());
+        p->fillRect(0, 0, width(), height(), g.background());
+        int x2 = width()-1;
+        int y2 = height()-1;
+        // outer frame
+        p->setPen(g.mid());
+        p->drawLine(0, 0, x2, 0);
+        p->drawLine(0, 0, 0, y2);
+        p->setPen(g.light());
+        p->drawLine(x2, 0, x2, y2);
+        p->drawLine(0, x2, y2, x2);
+        p->setPen(g.dark());
+        p->drawRect(1, 1, width()-2, height()-2);
+        // inner frame
+        p->setPen(isDown() ? g.mid() : g.light());
+        p->drawLine(2, 2, x2-2, 2);
+        p->drawLine(2, 2, 2, y2-2);
+        p->setPen(isDown() ? g.light() : g.mid());
+        p->drawLine(x2-2, 2, x2-2, y2-2);
+        p->drawLine(2, x2-2, y2-2, x2-2);
+        
+    }
+        
     if(!deco.isNull()){
         p->setPen(btnForeground);
         p->drawPixmap(isDown() ? 4 : 3, isDown() ? 4 : 3, deco);
