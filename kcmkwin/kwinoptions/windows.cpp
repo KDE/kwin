@@ -193,12 +193,12 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *)
     cdeMode = new QRadioButton(i18n("CD&E"), kbdBox);
     kLay->addWidget(cdeMode, 1, 2);
 
-    wtstr = i18n("Keep the Alt key pressed and hit the Tab key repeatedly to walk"
+    wtstr = i18n("Hold down the Alt key and press the Tab key repeatedly to walk"
                  " through the windows on the current desktop (the Alt+Tab"
                  " combination can be reconfigured). The two different modes mean:<ul>"
                  "<li><b>KDE</b>: a nice widget is shown, displaying the icons of all windows to"
                  " walk through and the title of the currently selected one;"
-                 "<li><b>CDE</b>: the focus is passed to a new window each time Tab is hit."
+                 "<li><b>CDE</b>: the focus is passed to a new window each time Tab is pressed."
                  " No fancy widget.</li></ul>");
     QWhatsThis::add( altTabLabel, wtstr );
     QWhatsThis::add( kdeMode, wtstr );
