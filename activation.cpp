@@ -308,8 +308,8 @@ void Workspace::requestFocus( Client* c, bool force )
     Client* modal = c->findModal();
     if( modal != NULL && modal != c )	
         { 
-        if( !modal->isOnDesktop( c->desktop()))
-            modal->setDesktop( c->desktop());
+        if( !modal->isOnDesktop( c->desktop())) // move the modal to client's desktop
+            modal->setDesktop( c->isOnAllDesktops() ? currentDesktop() : c->desktop());
         requestFocus( modal, force );
         return;
         }
