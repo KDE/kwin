@@ -46,7 +46,7 @@ static KPixmap *pixmap[NUM_PIXMAPS];
 //inactive, down
 #define PIXMAP_ID(i) (pixmap[(i)*4 +3])
 
-KPixmap* titleGradient[2] = {0, 0};
+static KPixmap* titleGradient[2] = {0, 0};
 
 static int thickness = 4; // Frame thickness
 static int buttonSize = 16;
