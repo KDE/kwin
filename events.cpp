@@ -290,10 +290,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 
         case ReparentNotify:
             {
-            // Check if a systray has been reparented back to the root window, even if not mapped.
-            // QXEmbed doesn't map the window when reparenting back.
-            if( e->xreparent.parent == root )
-                addSystemTrayWin( e->xreparent.window );
         //do not confuse Qt with these events. After all, _we_ are the
         //window manager who does the reparenting.
             return TRUE;
