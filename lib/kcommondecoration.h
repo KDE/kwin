@@ -201,6 +201,10 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
          * Makes sure all buttons are repainted.
          */
         void updateButtons() const;
+        /**
+         * Manually call reset() on each button.
+         */
+        void resetButtons() const;
 
         /**
          * Convenience method.
@@ -277,9 +281,20 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
         ~KCommonDecorationButton();
 
         /**
+         * These flags specify what has changed, e.g. the reason for a reset().
+         */
+        enum
+        {
+            ManualReset     = 1 << 0, ///< The button might want to do a full reset for some reason...
+            SizeChange      = 1 << 1, ///< The button size changed @see setSize()
+            ToggleChange    = 1 << 2, ///< The button toggle state has changed @see setToggleButton()
+            StateChange     = 1 << 3, ///< The button has been set pressed or not... @see setOn()
+            DecorationReset = 1 << 4  ///< E.g. when decoration colors have changed
+        };
+        /**
          * Initialize the button after size change etc.
          */
-        virtual void reset();
+        virtual void reset(unsigned long changed);
         /**
          * @returns the KCommonDecoration the button belongs to.
          */

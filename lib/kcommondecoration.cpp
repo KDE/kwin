@@ -193,6 +193,12 @@ void KCommonDecoration::updateButtons() const
         if (m_button[n]) m_button[n]->update();
 }
 
+void KCommonDecoration::resetButtons() const
+{
+    for (int n=0; n<NumButtons; n++)
+        if (m_button[n]) m_button[n]->reset(KCommonDecorationButton::ManualReset);
+}
+
 void KCommonDecoration::resetLayout()
 {
     for (int n=0; n<NumButtons; n++) {
@@ -738,7 +744,7 @@ ButtonType KCommonDecorationButton::type()
     return m_type;;
 }
 
-void KCommonDecorationButton::reset()
+void KCommonDecorationButton::reset(unsigned long)
 {
 }
 
@@ -749,10 +755,12 @@ void KCommonDecorationButton::setRealizeButtons(int btns)
 
 void KCommonDecorationButton::setSize(const QSize &s)
 {
-    m_size = s;
+    if (s != size() ) {
+        m_size = s;
 
-    setFixedSize(m_size);
-    reset();
+        setFixedSize(m_size);
+        reset(SizeChange);
+    }
 }
 
 QSize KCommonDecorationButton::sizeHint() const
@@ -768,13 +776,15 @@ void KCommonDecorationButton::setTipText(const QString &tip) {
 void KCommonDecorationButton::setToggleButton(bool toggle)
 {
     QButton::setToggleButton(toggle);
-    reset();
+    reset(ToggleChange);
 }
 
 void KCommonDecorationButton::setOn(bool on)
 {
-    QButton::setOn(on);
-    reset();
+    if (on != isOn() ) {
+        QButton::setOn(on);
+        reset(StateChange);
+    }
 }
 
 void KCommonDecorationButton::mousePressEvent(QMouseEvent* e)
