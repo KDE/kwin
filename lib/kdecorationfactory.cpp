@@ -26,6 +26,8 @@ DEALINGS IN THE SOFTWARE.
 
 #include <assert.h>
 
+#include "kdecoration_p.h"
+
 KDecorationFactory::KDecorationFactory()
     {
     }
@@ -66,4 +68,9 @@ void KDecorationFactory::resetDecorations( unsigned long changed )
          it != _decorations.end();
          ++it )
         (*it)->reset( changed );
+    }
+
+NET::WindowType KDecorationFactory::windowType( unsigned long supported_types, KDecorationBridge* bridge ) const
+    {
+    return bridge->windowType( supported_types );
     }

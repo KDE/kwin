@@ -149,7 +149,7 @@ bool KDecoration::isResizable() const
     }
 
 NET::WindowType KDecoration::windowType( unsigned long supported_types ) const
-    {
+    { // this one is also duplicated in KDecorationFactory
     return bridge_->windowType( supported_types );
     }
 

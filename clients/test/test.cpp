@@ -313,9 +313,12 @@ bool Decoration::animateMinimize(bool iconify)
   }
   return true;
 }
-    
+
 KDecoration* Factory::createDecoration( KDecorationBridge* bridge )
     {
+    NET::WindowType type = windowType( SUPPORTED_WINDOW_TYPES_MASK, bridge );
+    if( type == NET::Dialog )
+        ;
     return new Decoration( bridge, this );
     }
 

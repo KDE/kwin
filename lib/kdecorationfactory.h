@@ -91,6 +91,14 @@ class KDecorationFactory
 	 * objects.
 	 */
         void resetDecorations( unsigned long changed ); // convenience
+        /**
+         * This function has the same functionality like KDecoration::windowType().
+         * It can be used in createDecoration() to return different KDecoration
+         * inherited classes depending on the window type, as at that time
+         * KDecoration::windowType() is not available yet. The additional argument
+         * is the one passed to createDecoration().
+         */
+        NET::WindowType windowType( unsigned long supported_types, KDecorationBridge* bridge ) const;
     private:
         QValueList< KDecoration* > _decorations;
         KDecorationFactoryPrivate* d;
