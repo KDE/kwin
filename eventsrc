@@ -404,6 +404,7 @@ Comment[pt]=Aparece Uma Nova Janela
 Comment[pt_BR]=Aparece Uma Nova Janela
 Comment[ro]=Apare o nouă fereastră
 Comment[sl]=Prikaže se novo okno
+Comment[sv]=Ett nytt fönster visar sig
 default_presentation=0
 
 [close]
@@ -792,6 +793,7 @@ Name[pt]=Janela começa a mover-se
 Name[pt_BR]=Janela começa a mover-se
 Name[ro]=Start mutare fereastră
 Name[sl]=Premakni začetek okna
+Name[sv]=Fönsterförflyttning börjar
 Comment=A Window has Began Moving
 Comment[da]=Et vindue begyndte at flyttes
 Comment[de]=Die Verschiebung eines Fensters hat begonnen
@@ -826,6 +828,7 @@ Name[pt]=Janela para de mover-se
 Name[pt_BR]=Janela para de mover-se
 Name[ro]=Oprire mutare fereastră
 Name[sl]=Premakni konec okna
+Name[sv]=Fönsterförflyttning slutar
 Comment=A Window has Completed its Moving
 Comment[da]=Et vindue er færdigt med at flytte
 Comment[de]=Die Verschiebung eines Fensters ist abgeschlossen
