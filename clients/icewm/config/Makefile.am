@@ -12,7 +12,7 @@ noinst_HEADERS = config.h
 lnkdir = $(kde_datadir)/kwin/
 
 messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kwinicewm_config.pot
+	$(XGETTEXT) *.cpp -o $(podir)/kwin_icewm_config.pot
 
 ###KMAKE-start (don't edit or delete this block)
 

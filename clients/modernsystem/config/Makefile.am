@@ -14,4 +14,4 @@ noinst_HEADERS = config.h
 lnkdir = $(kde_datadir)/kwin/
 
 messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kwinmodernsys_config.pot
+	$(XGETTEXT) *.cpp -o $(podir)/kwin_modernsys_config.pot
