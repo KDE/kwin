@@ -12,9 +12,6 @@
             <height>325</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>Form3</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -174,9 +171,6 @@
                     </property>
                     <property name="text">
                         <string>Use window &amp;class (whole application)</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+C</string>
                     </property>
                     <property name="checked">
                         <bool>true</bool>
