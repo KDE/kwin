@@ -352,7 +352,7 @@ void LaptopClient::init()
     g->addRowSpacing(0, 3);
     g->addRowSpacing(2, 1);
     if (isPreview())
-	g->addWidget(new QLabel(i18n("<center><b></b>Laptop preview</center>"),
+    g->addWidget(new QLabel(i18n("<center><b>Laptop preview</b></center>"),
 		    widget()), 3, 1);
     else
 	g->addItem( new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle

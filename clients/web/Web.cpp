@@ -507,7 +507,7 @@ WebClient::_resetLayout()
 
   midLayout->addSpacing(sideMargin);
   if( isPreview())
-    midLayout->addWidget(new QLabel( i18n( "<center><b>Web</b></center>" ), widget()));
+    midLayout->addWidget(new QLabel( i18n( "<center><b>Web preview</b></center>" ), widget()));
   else
     midLayout->addItem( new QSpacerItem( 0, 0 )); // no widget in the middle
   midLayout->addSpacing(sideMargin);

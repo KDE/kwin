@@ -567,7 +567,7 @@ void QuartzClient::init()
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, borderSize-1);       // Top grab bar
     if( isPreview())
-	g->addWidget(new QLabel( i18n( "<center><b>Quartz</b></center>" ), widget()), 3, 1);
+	g->addWidget(new QLabel( i18n( "<center><b>Quartz preview</b></center>" ), widget()), 3, 1);
     else
 	g->addItem(new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
 

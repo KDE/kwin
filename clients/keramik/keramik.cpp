@@ -958,7 +958,7 @@ void KeramikClient::createLayout()
 
 	windowLayout->addSpacing( leftBorderWidth );                // Left border
         if( isPreview())
-	    windowLayout->addWidget( new QLabel( i18n( "<center><b>Keramik</b></center>" ), widget()));
+	    windowLayout->addWidget( new QLabel( i18n( "<center><b>Keramik preview</b></center>" ), widget()));
         else
             windowLayout->addItem( new QSpacerItem( 0, 0 )); //no widget in the middle
 	windowLayout->addSpacing( rightBorderWidth );                // Right border
