@@ -42,7 +42,7 @@ protected:
     void iconChange();
     MousePosition mousePosition(const QPoint &) const;
 protected slots:
-    void slotReset();
+    //void slotReset();
     void menuButtonPressed();
 private:
     QPixmap buffer;
