@@ -1,6 +1,4 @@
 /* 	
- * $Id$
- *
  *	This file contains the B2 configuration widget
  *
  *	Copyright (c) 2001
