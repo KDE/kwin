@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration_p.h"
 
 #include <kconfig.h>
+#include <kglobalsettings.h>
 #include <qpalette.h>
 #include <qapplication.h>
 #include <assert.h>
@@ -141,8 +142,8 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QFont old_activeFontSmall = activeFontSmall;
     QFont old_inactiveFontSmall = inactiveFontSmall;
 
-    // Keep in sync with kglobalsettings.
-    QFont activeFontGuess("helvetica", 12, QFont::Bold);
+    QFont activeFontGuess = KGlobalSettings::generalFont();
+    activeFontGuess.setBold(true);
     activeFontGuess.setPixelSize(12);
 
     activeFont = config->readFontEntry("activeFont", &activeFontGuess);
