@@ -56,8 +56,8 @@ public:
     }
     ~RootInfo() {}
 
-    void changeNumberOfDesktops(Q_UINT32 n) { workspace->setNumberOfDesktops( n ); }
-    void changeCurrentDesktop(Q_UINT32 d) { workspace->setCurrentDesktop( d ); }
+    void changeNumberOfDesktops(int n) { workspace->setNumberOfDesktops( n ); }
+    void changeCurrentDesktop(int d) { workspace->setCurrentDesktop( d ); }
     void changeActiveWindow(Window w) {
 	::Client* c = workspace->findClient( (WId) w );
 	if ( c )
@@ -1657,6 +1657,9 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	    }
 	}
     }
+    current_desktop = new_desktop;
+
+    rootInfo->setCurrentDesktop( current_desktop );
 
     // restore the focus on this desktop
     block_focus = FALSE;

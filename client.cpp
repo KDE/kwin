@@ -50,13 +50,13 @@ public:
       m_client = c;
     }
 
-    virtual void changeDesktop(Q_UINT32 desktop) {
+    virtual void changeDesktop(int desktop) {
 	if ( desktop == NETWinInfo::OnAllDesktops )
 	    m_client->setSticky( TRUE );
 	else
 	    m_client->workspace()->sendClientToDesktop( m_client, desktop );
     }
-    virtual void changeState(Q_UINT32 state, Q_UINT32 mask ) {
+    virtual void changeState( unsigned long state, unsigned long mask ) {
 	// state : kwin.h says: possible values are or'ed combinations of NET::Modal,
 	// NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar
 
