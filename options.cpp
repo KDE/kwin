@@ -212,14 +212,21 @@ void Options::reload()
     animateMinimize = config->readBoolEntry("AnimateMinimize", TRUE );
     animateMinimizeSpeed = config->readNumEntry("AnimateMinimizeSpeed", 5 );
 
-    autoRaise = config->readBoolEntry("AutoRaise", FALSE );
-    autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
+    if( focusPolicy == ClickToFocus ) {
+        autoRaise = false;
+        autoRaiseInterval = 0;
+    } else {
+        autoRaise = config->readBoolEntry("AutoRaise", FALSE );
+        autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
+    }
 
     shadeHover = config->readBoolEntry("ShadeHover", FALSE );
     shadeHoverInterval = config->readNumEntry("ShadeHoverInterval", 250 );
 
     // important: autoRaise implies ClickRaise
-    clickRaise = autoRaise || config->readBoolEntry("ClickRaise", FALSE );
+    // ClickToFocus implies clickRaise too
+    clickRaise = autoRaise || ( focusPolicy == ClickToFocus )
+        || config->readBoolEntry("ClickRaise", FALSE );
 
     borderSnapZone = config->readNumEntry("BorderSnapZone", 10);
     windowSnapZone = config->readNumEntry("WindowSnapZone", 10);
