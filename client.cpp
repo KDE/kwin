@@ -1357,9 +1357,9 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
 		 || ( isResize() && options->resizeMode != Options::Opaque ) )
 		XUngrabServer( qt_xdisplay() );
+	    moveResizeMode = FALSE;
 	    setGeometry( geom );
 	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
-	    moveResizeMode = FALSE;
 	    workspace()->setFocusChangeEnabled(true);
 	    releaseMouse();
 	    releaseKeyboard();
@@ -1511,7 +1511,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
         }
     }
 
-    QApplication::syncX(); // process our own configure events synchronously.
+//     QApplication::syncX(); // process our own configure events synchronously.
 }
 
 /*!
@@ -1538,7 +1538,7 @@ void Client::leaveEvent( QEvent * )
 void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
-    if ( !isResize() )
+    if ( !isResize() && !isMove() )
 	sendSynteticConfigureNotify();
 }
 
@@ -1548,7 +1548,8 @@ void Client::setGeometry( int x, int y, int w, int h )
 void Client::move( int x, int y )
 {
     QWidget::move( x, y );
-    sendSynteticConfigureNotify();
+    if ( !isMove() )
+	sendSynteticConfigureNotify();
 }
 
 

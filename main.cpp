@@ -197,6 +197,40 @@ extern "C" { int kdemain(int, char *[]); }
 
 int kdemain( int argc, char * argv[] )
 {
+    
+    Display* dpy = XOpenDisplay( NULL );
+    if ( !dpy ) {
+	fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
+		argv[0], XDisplayName(NULL ) );
+	exit (1);
+    }
+    int number_of_screens = ScreenCount( dpy );
+    int screen_number= DefaultScreen( dpy );
+    int pos; // temporarily needed to reconstruct DISPLAY var if multi-head
+    QCString display_name = XDisplayString( dpy );
+    XCloseDisplay( dpy );
+    if ((pos = display_name.findRev('.')) != -1 )
+	display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
+    QCString envir;
+    if (number_of_screens != 1) {
+	for (int i = 0; i < number_of_screens; i++ ) {
+	    // if execution doesn't pass by here, then kwin
+	    // acts exactly as previously
+	    if ( i != screen_number && fork() == 0 ) {
+		screen_number = i;
+	    }
+	}
+	// in the next statement, display_name shouldn't contain a screen
+	//   number. If it had it, it was removed at the "pos" check
+	envir.sprintf("DISPLAY=%s.%d", display_name.data(), screen_number);
+	if (putenv(envir.data())) {
+	    fprintf(stderr,
+		    "%s: WARNING: unable to set DISPLAY environment variable\n",
+		    argv[0]);
+	    perror("putenv()");
+	}
+    }
+    
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
        version, description, KAboutData::License_BSD,
        "(c) 1999-2000, The KDE Developers");

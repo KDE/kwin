@@ -1215,7 +1215,6 @@ void Workspace::showWindowMenuAt( unsigned long id, int x, int y )
         return;
 
     QPopupMenu* p = clientPopup( target );
-    p->setFocus();
     p->popup( QPoint( x, y ) );
 }
 
