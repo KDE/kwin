@@ -618,7 +618,7 @@ KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
     }
 
     // Pack the windowWrapper() window within a grid
-    QGridLayout* g = new QGridLayout(this, 0, 0, 0);
+    g = new QGridLayout(this, 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 3);       // Top grab bar
     g->addRowSpacing(2, 1);       // line under titlebar
@@ -630,10 +630,10 @@ KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
     g->setRowStretch(3, 10);      // Wrapped window
 
 	// Determine the size of the lower grab bar
-	if ( showGrabBar && (!isTool()) )
-	    g->addRowSpacing(4, 8);   // bottom handles
-	else
-	    g->addRowSpacing(4, 4);   // bottom handles
+    spacer = new QSpacerItem(10, 
+			showGrabBar && isResizable() && (!isTool()) ? 8 : 4, 
+			QSizePolicy::Expanding, QSizePolicy::Minimum);
+    g->addItem(spacer, 4, 1);
 
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
@@ -881,7 +881,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawLine(x2-2, y+titleHeight+3, x2-2, y2-2);
 
 	// Draw the bottom handle if required
-	if (showGrabBar && (!isTool()) )
+	if (showGrabBar && isResizable() && (!isTool()) )
 	{
 		if(w > 50)
 		{
@@ -996,6 +996,9 @@ void KDEDefaultClient::maximizeChange(bool m)
 		button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
 		button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 	}
+	spacer->changeSize(10, showGrabBar && isResizable() && !isTool() ? 8 : 4,
+			QSizePolicy::Expanding, QSizePolicy::Minimum);
+	g->activate();
 }
 
 
@@ -1054,7 +1057,7 @@ Client::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) const
 	MousePosition m = Nowhere;
 
 	// Modify the mouse position if we are using a grab bar.
-	if (showGrabBar && (!isTool()) )
+	if (showGrabBar && isResizable() && (!isTool()) )
 		if (p.y() < (height() - 8))
 			m = Client::mousePosition(p);
 		else

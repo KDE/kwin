@@ -16,6 +16,7 @@
 
 #include <qbutton.h>
 #include <qbitmap.h>
+#include <qdatetime.h>
 #include <kpixmap.h>
 #include "../../client.h"
 #include "../../kwinbutton.h"
@@ -112,8 +113,10 @@ class KDEDefaultClient : public Client
 		int           lastButtonWidth;
 		int           titleHeight;
 		bool          largeButtons;
+		QGridLayout*  g;
 		QBoxLayout*   hb;
 		QSpacerItem*  titlebar;
+		QSpacerItem*  spacer;
 		bool m_closing;
 };
 
