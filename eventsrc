@@ -444,7 +444,7 @@ default_presentation=0
 [shadeup]
 Name=Window Shade Up
 Name[da]=Skyg vindue op
-Name[de]=Fenster-Rollladen nach oben
+Name[de]=Fensterheber nach oben
 Name[eo]=Fenestro supren volviĝas
 Name[et]=Akna varjamine
 Name[fr]=Enrouler une fenêtre
@@ -459,7 +459,7 @@ Name[ro]=Strînge fereastra
 Name[sl]=Okno naj ima senco
 Comment=A Window is Shaded Up
 Comment[da]=Et vindue skygges op
-Comment[de]=Ein Fenster wird nach oben gerollt
+Comment[de]=Ein Fenster wird eingefahren, so dass nur noch die Titelleiste sichtbar bleibt
 Comment[eo]=Fenestro volviĝis supren
 Comment[et]=Aken rullitakse üles
 Comment[fr]=Une fenêtre est enroulée
@@ -471,13 +471,14 @@ Comment[no_NY]=Eit vindauge vert rulla opp
 Comment[pt]=Uma Janela é Enrolada
 Comment[pt_BR]=Uma Janela é Enrolada
 Comment[ro]=Este rulată o fereastră
+Comment[sl]=Okno je osenčeno navzgor
 Comment[sv]=Ett fönster uppskuggas
 default_presentation=0
 
 [shadedown]
 Name=Window Shade Down
 Name[da]=Skyf vindue ned
-Name[de]=Fenster-Rollladen nach unten
+Name[de]=Fensterheber nach unten
 Name[eo]=Fenestro malsupren volviĝas
 Name[et]=Akna uuesti näitamine
 Name[fr]=Dérouler une fenêtre
@@ -492,7 +493,7 @@ Name[ro]=Desface fereastra
 Name[sl]=Okno naj nima sence
 Comment=A Window is Shaded Down
 Comment[da]=Et vindue skygges ned
-Comment[de]=Ein Fenster ist heruntergerollt
+Comment[de]=Ein Fenster wird herausgefahren und ist wieder voll sichtbar
 Comment[eo]=Fenestro volviĝis malsupren
 Comment[et]=Aken rullitakse alla
 Comment[fr]=Une fenêtre est déroulée
@@ -504,6 +505,7 @@ Comment[no_NY]=Eit vindauge vert rulla ned
 Comment[pt]=Uma Janela é Desenrolada
 Comment[pt_BR]=Uma Janela é Desenrolada
 Comment[ro]=Este derulată o fereastră
+Comment[sl]=Okno je osenčeno navzdol
 Comment[sv]=Ett fönster nedskuggas
 default_presentation=0
 
@@ -538,6 +540,7 @@ Comment[no_NY]=Eit vindauge vert ikonisert
 Comment[pt]=Uma Janela é Iconificada
 Comment[pt_BR]=Uma Janela é Iconificada
 Comment[ro]=O fereastră este inconizată
+Comment[sl]=Okno je ikonizirano
 Comment[sv]=Ett fönster ikonifieras
 default_presentation=0
 
@@ -804,6 +807,7 @@ Comment[pt]=Uma Janela Começou a Movimentar-se
 Comment[pt_BR]=Uma Janela Começou a Movimentar-se
 Comment[ro]=O fereastră a început să se mute
 Comment[sl]=Okno se je začelo premikati
+Comment[sv]=Ett fönster har börjat flyttats
 default_presentation=0
 
 [moveend]
@@ -837,6 +841,7 @@ Comment[pt]=Uma Janela Acabou de Mover-se
 Comment[pt_BR]=Uma Janela Acabou de Mover-se
 Comment[ro]=O fereastră şi-a terminat mutarea
 Comment[sl]=Okno se je prenehalo premikati
+Comment[sv]=Ett fönster har flyttats klart
 default_presentation=0
 
 [resizestart]
@@ -854,6 +859,7 @@ Name[no_NY]=Start endring av vindaugsstorleik
 Name[pt]=Janela começa a mudar de tamanho
 Name[pt_BR]=Janela começa a mudar de tamanho
 Name[ro]=Start redimensionare fereastră
+Name[sl]=Začetek raztezanja okna
 Comment=A Window has Began Resizing
 Comment[da]=Et vindue begyndte at ændre størrelse
 Comment[de]=Die Größenänderung eines Fensters hat begonnen
@@ -886,6 +892,7 @@ Name[no_NY]=Slutt endring av vindaugsstorleik
 Name[pt]=Janela acaba de mudar de tamanho
 Name[pt_BR]=Janela acaba de mudar de tamanho
 Name[ro]=Oprire redimensionare fereastră
+Name[sl]=Konec raztezanja okna
 Comment=A Window has Done Resizing
 Comment[da]=Et vindue er færdigt merd at ændre størrelse
 Comment[de]=Die Größenänderung eines Fensters ist abgeschlossen
