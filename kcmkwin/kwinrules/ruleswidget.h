@@ -21,6 +21,7 @@
 #define __RULESWIDGET_H__
 
 #include <kdialogbase.h>
+#include <kwin.h>
 
 #include "ruleswidgetbase.h"
 
@@ -39,7 +40,7 @@ class RulesWidget
         void setRules( Rules* r );
         Rules* rules() const;
         bool finalCheck();
-        void focusSettings();
+        void prepareWindowSpecific( WId window );
     signals:
         void changed( bool state );
     protected slots:
@@ -80,6 +81,7 @@ class RulesWidget
     private:
         int desktopToCombo( int d ) const;
         int comboToDesktop( int val ) const;
+        void prefillUnusedValues( const KWin::WindowInfo& info );
         DetectDialog* detect_dlg;
         bool detect_dlg_ok;
     };
@@ -90,7 +92,7 @@ class RulesDialog
     Q_OBJECT
     public:
         RulesDialog( QWidget* parent = NULL, const char* name = NULL );
-        Rules* edit( Rules* r, bool focus_settings );
+        Rules* edit( Rules* r, WId window );
     protected:
         virtual void accept();
     private:

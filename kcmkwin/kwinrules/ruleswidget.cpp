@@ -493,16 +493,6 @@ void RulesWidget::detectClicked()
     detect_dlg->detect( 0 );
     }
 
-#define GENERIC_PREFILL( var, func, info, uimethod ) \
-    if( !enable_##var->isChecked()) \
-        { \
-        var->uimethod( func( info )); \
-        }
-
-#define CHECKBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setChecked )
-#define LINEEDIT_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setText )
-#define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentItem )
-
 void RulesWidget::detected( bool ok )
     {
     if( ok )
@@ -539,33 +529,48 @@ void RulesWidget::detected( bool ok )
         machineMatchChanged();
         // prefill values from to window to settings which already set
         const KWin::WindowInfo& info = detect_dlg->windowInfo();
-        LINEEDIT_PREFILL( position, positionToStr, info.frameGeometry().topLeft() );
-        LINEEDIT_PREFILL( size, sizeToStr, info.frameGeometry().size() );
-        COMBOBOX_PREFILL( desktop, desktopToCombo, info.desktop() );
-        CHECKBOX_PREFILL( maximizehoriz,, info.state() & NET::MaxHoriz );
-        CHECKBOX_PREFILL( maximizevert,, info.state() & NET::MaxVert );
-        CHECKBOX_PREFILL( minimize,, info.isMinimized() );
-        CHECKBOX_PREFILL( shade,, info.state() & NET::Shaded );
-        CHECKBOX_PREFILL( fullscreen,, info.state() & NET::FullScreen );
-        //COMBOBOX_PREFILL( placement, placementToCombo );
-        CHECKBOX_PREFILL( above,, info.state() & NET::KeepAbove );
-        CHECKBOX_PREFILL( below,, info.state() & NET::KeepBelow );
-        // noborder is only internal KWin information, so let's guess
-        CHECKBOX_PREFILL( noborder,, info.frameGeometry() == info.geometry() );
-        CHECKBOX_PREFILL( skiptaskbar,, info.state() & NET::SkipTaskbar );
-        CHECKBOX_PREFILL( skippager,, info.state() & NET::SkipPager );
-        //CHECKBOX_PREFILL( acceptfocus, );
-        //CHECKBOX_PREFILL( closeable, );
-        //COMBOBOX_PREFILL( fsplevel, );
-        //COMBOBOX_PREFILL( moveresizemode, moveresizeToCombo );
-        COMBOBOX_PREFILL( type, typeToCombo, info.windowType( SUPPORTED_WINDOW_TYPES_MASK ) );
-        //CHECKBOX_PREFILL( ignoreposition, );
-        LINEEDIT_PREFILL( minsize, sizeToStr, info.frameGeometry().size() );
-        LINEEDIT_PREFILL( maxsize, sizeToStr, info.frameGeometry().size() );
+        prefillUnusedValues( info );
         }
     delete detect_dlg;
     detect_dlg = NULL;
     detect_dlg_ok = ok;
+    }
+
+#define GENERIC_PREFILL( var, func, info, uimethod ) \
+    if( !enable_##var->isChecked()) \
+        { \
+        var->uimethod( func( info )); \
+        }
+
+#define CHECKBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setChecked )
+#define LINEEDIT_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setText )
+#define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentItem )
+
+void RulesWidget::prefillUnusedValues( const KWin::WindowInfo& info )
+    {
+    LINEEDIT_PREFILL( position, positionToStr, info.frameGeometry().topLeft() );
+    LINEEDIT_PREFILL( size, sizeToStr, info.frameGeometry().size() );
+    COMBOBOX_PREFILL( desktop, desktopToCombo, info.desktop() );
+    CHECKBOX_PREFILL( maximizehoriz,, info.state() & NET::MaxHoriz );
+    CHECKBOX_PREFILL( maximizevert,, info.state() & NET::MaxVert );
+    CHECKBOX_PREFILL( minimize,, info.isMinimized() );
+    CHECKBOX_PREFILL( shade,, info.state() & NET::Shaded );
+    CHECKBOX_PREFILL( fullscreen,, info.state() & NET::FullScreen );
+    //COMBOBOX_PREFILL( placement, placementToCombo );
+    CHECKBOX_PREFILL( above,, info.state() & NET::KeepAbove );
+    CHECKBOX_PREFILL( below,, info.state() & NET::KeepBelow );
+    // noborder is only internal KWin information, so let's guess
+    CHECKBOX_PREFILL( noborder,, info.frameGeometry() == info.geometry() );
+    CHECKBOX_PREFILL( skiptaskbar,, info.state() & NET::SkipTaskbar );
+    CHECKBOX_PREFILL( skippager,, info.state() & NET::SkipPager );
+    //CHECKBOX_PREFILL( acceptfocus, );
+    //CHECKBOX_PREFILL( closeable, );
+    //COMBOBOX_PREFILL( fsplevel, );
+    //COMBOBOX_PREFILL( moveresizemode, moveresizeToCombo );
+    COMBOBOX_PREFILL( type, typeToCombo, info.windowType( SUPPORTED_WINDOW_TYPES_MASK ) );
+    //CHECKBOX_PREFILL( ignoreposition, );
+    LINEEDIT_PREFILL( minsize, sizeToStr, info.frameGeometry().size() );
+    LINEEDIT_PREFILL( maxsize, sizeToStr, info.frameGeometry().size() );
     }
 
 #undef GENERIC_PREFILL
@@ -600,9 +605,11 @@ bool RulesWidget::finalCheck()
     return true;
     }
 
-void RulesWidget::focusSettings()
+void RulesWidget::prepareWindowSpecific( WId window )
     {
     tabs->setCurrentPage( 2 ); // geometry tab, skip tabs for window identification
+    KWin::WindowInfo info( window, -1U, -1U ); // read everything
+    prefillUnusedValues( info );
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
@@ -612,12 +619,14 @@ RulesDialog::RulesDialog( QWidget* parent, const char* name )
     setMainWidget( widget );
     }
 
-Rules* RulesDialog::edit( Rules* r, bool focus_settings )
+// window is set only for Alt+F3/Window-specific settings, because the dialog
+// is then related to one specific window
+Rules* RulesDialog::edit( Rules* r, WId window )
     {
     rules = r;
     widget->setRules( rules );
-    if( focus_settings )
-        widget->focusSettings();
+    if( window != 0 )
+        widget->prepareWindowSpecific( window );
     exec();
     return rules;
     }
