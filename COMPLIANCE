@@ -149,9 +149,6 @@ _NET_WM_DESKTOP			window property + message	PARTIAL
         | After the WM_Sn (ICCCM) manager selection is implemented, it   |
         | should be checked that the property is removed on withdrawal,  |
         | but not on shutdown.                                           |
-        | Also, Client::is_sticky should be obsoleted (removed if it     |
-        | weren't BIC), and simply desktop == OnAllDesktops should be    |
-        | used.                                                          |
 	+----------------------------------------------------------------+
 _NET_WM_WINDOW_TYPE		window property			PARTIAL
 	+----------------------------------------------------------------+
@@ -181,6 +178,11 @@ _NET_WM_WINDOW_TYPE		window property			PARTIAL
   _NET_WM_WINDOW_TYPE_DIALOG	property value (atom)
   _NET_WM_WINDOW_TYPE_NORMAL	property value (atom)		
 _NET_WM_STATE			window property + message			
+	+----------------------------------------------------------------+
+        | After the WM_Sn (ICCCM) manager selection is implemented, it   |
+        | should be checked that the property is removed on withdrawal,  |
+        | but not on shutdown.                                           |
+	+----------------------------------------------------------------+
   _NET_WM_STATE_MODAL		property value (atom)		
   _NET_WM_STATE_STICKY		property value (atom)		COMPLETE
 	+----------------------------------------------------------------+
@@ -360,7 +362,7 @@ version 2.0
 2. (rest of the section) COMPLETE (selections, not a KWin thing)
 3. COMPLETE - NOT SUPPORTED, OBSOLETE
 4.
-5. PARTIAL - patch sent to TT to make it COMPLETE
+5. PARTIAL - patch sent to TT to make it COMPLETE (not KWin thing anyway)
 5.3. COMPLETE - not KWin related
 6.1. clients thing
 6.2. clients thing
