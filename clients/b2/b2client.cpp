@@ -180,7 +180,8 @@ static void create_pixmaps()
     QPainter mask(&normalizeMask);
 
     QBrush one(Qt::color1);
-    mask.fillRect(3, 3, 12, 12, one);
+    mask.fillRect(normalizeMask.width() - 12, normalizeMask.height() - 12, 
+		  12, 12, one);
     mask.fillRect(0, 0, 10, 10, one);
 
     for (i = 0; i < 4; i++) pixmap[P_NORMALIZE * 4 + i]->setMask(normalizeMask);
