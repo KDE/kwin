@@ -104,6 +104,7 @@ class Static
   private:
 
     void _drawBorder       (QPixmap &, int, int);
+    void _createTexture(QPixmap &, int, bool);
 
     void _init();
 

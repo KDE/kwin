@@ -28,6 +28,7 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qpainter.h>
+#include <qlist.h>
 
 #include <ksimpleconfig.h>
 
@@ -146,32 +147,6 @@ Static * Static::instance_ = 0L;
 Static::_init()
 {
   animationStyle_ = 0;
-
-  aButtonUp_        .setOptimization(QPixmap::BestOptim);
-  aButtonDown_      .setOptimization(QPixmap::BestOptim);
-
-  iButtonUp_        .setOptimization(QPixmap::MemoryOptim);
-  iButtonDown_      .setOptimization(QPixmap::MemoryOptim);
-
-  aTitleTextLeft_   .setOptimization(QPixmap::BestOptim);
-  aTitleTextRight_  .setOptimization(QPixmap::BestOptim);
-  aTitleTextMid_    .setOptimization(QPixmap::BestOptim);
-
-  iTitleTextLeft_   .setOptimization(QPixmap::BestOptim);
-  iTitleTextRight_  .setOptimization(QPixmap::BestOptim);
-  iTitleTextMid_    .setOptimization(QPixmap::BestOptim);
-
-  aResizeMidLeft_   .setOptimization(QPixmap::BestOptim);
-  aResizeMidRight_  .setOptimization(QPixmap::BestOptim);
-  aResizeMid_       .setOptimization(QPixmap::BestOptim);
-
-  iResizeMidLeft_   .setOptimization(QPixmap::BestOptim);
-  iResizeMidRight_  .setOptimization(QPixmap::BestOptim);
-  iResizeMid_       .setOptimization(QPixmap::BestOptim);
-
-  aResize_          .setOptimization(QPixmap::BestOptim);
-  iResize_          .setOptimization(QPixmap::BestOptim);
-
   update();
 }
 
@@ -241,9 +216,16 @@ Static::update()
   QPixmap aTexture;
   QPixmap iTexture;
 
+  QPixmap abTexture;
+  QPixmap ibTexture;
+
   bool hicolour = QPixmap::defaultDepth() > 8;
 
   if (hicolour) {
+
+    // -----------------------------------------------------------------------
+    // Convert colours in palettes to match colour scheme.
+    // -----------------------------------------------------------------------
 
     setPalette(aBut, options->color(Options::ButtonBg, true));
     setPalette(iBut, options->color(Options::ButtonBg, false));
@@ -255,43 +237,13 @@ Static::update()
     setPalette(iResizePal_, options->color(Options::TitleBar, false));
 
     // -----------------------------------------------------------------------
-    // Convert colours in texture to match colour scheme.
+    // Convert colours in textures to match colour scheme.
     // -----------------------------------------------------------------------
 
-    QRgb light, dark;
-    QRgb * data;
-    QRgb w = qRgb(255,255,255);
-    QRgb b = qRgb(0,0,0);
-
-    QPixmap tx = QPixmap((const char **)texture_xpm);
-    QImage aTx(tx.convertToImage());
-    QImage iTx(aTx.copy());
-
-    light  = options->color(Options::TitleBar, true).light(110).rgb();
-    dark   = options->color(Options::TitleBar, true).dark(110).rgb();
-
-    data = (QRgb *)aTx.bits();
-
-    for (int x = 0; x < 64*12; x++)
-      if (data[x] == w)
-        data[x] = light;
-      else if (data[x] == b)
-        data[x] = dark;
-
-    light  = options->color(Options::TitleBar, false).light(110).rgb();
-    dark   = options->color(Options::TitleBar, false).dark(110).rgb();
-
-    data = (QRgb *)iTx.bits();
-
-    for (int x = 0; x < 64*12; x++)
-      if (data[x] == w)
-        data[x] = light;
-      else if (data[x] == b)
-        data[x] = dark;
-
-
-    aTexture.convertFromImage(aTx);
-    iTexture.convertFromImage(iTx);
+    _createTexture(aTexture,  Options::TitleBar, true);
+    _createTexture(iTexture,  Options::TitleBar, false);
+    _createTexture(abTexture, Options::ButtonBg, true);
+    _createTexture(ibTexture, Options::ButtonBg, false);
   }
 
   // -------------------------------------------------------------------------
@@ -460,13 +412,13 @@ Static::update()
   painter_.begin(&aButtonUp_);
 
   if (hicolour)
-    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, aTexture);
+    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, abTexture);
 
   painter_.end();
 
   painter_.begin(&iButtonUp_);
   if (hicolour)
-    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, iTexture);
+    painter_.drawTiledPixmap(2, 4, buttonSize - 4, buttonSize - 5, ibTexture);
 
   painter_.end();
 
@@ -494,6 +446,29 @@ Static::update()
 
   delete c;
   c = 0;
+}
+
+  void
+Static::_createTexture(QPixmap & px, int t, bool active)
+{
+  const QImage texture(QPixmap((const char **)texture_xpm).convertToImage());
+  const QRgb w(qRgb(255, 255, 255));
+  const QRgb b(qRgb(0, 0, 0));
+
+  QColor c(options->color(Options::ColorType(t), active));
+
+  QRgb light(c.light(110).rgb());
+  QRgb dark (c.dark(110).rgb());
+
+  QRgb * data(reinterpret_cast<QRgb *>(texture.bits()));
+
+  for (int x = 0; x < 64*12; x++)
+    if (data[x] == w)
+      data[x] = light;
+    else if (data[x] == b)
+      data[x] = dark;
+
+  px.convertFromImage(texture);
 }
 
   const QPixmap &
