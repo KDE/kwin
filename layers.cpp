@@ -197,10 +197,23 @@ void Workspace::propagateClients( bool propagate_new_clients )
   doesn't accept focus it's excluded.
  */
 // TODO misleading name for this method
-Client* Workspace::topClientOnDesktop( int desktop ) const
+Client* Workspace::topClientOnDesktop( int desktop, bool unconstrained ) const
     {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) 
+    ClientList::ConstIterator begin, end;
+    if( !unconstrained )
+        {
+        begin = stacking_order.fromLast();
+        end = stacking_order.end();
+        }
+    else
+        {
+        begin = unconstrained_stacking_order.fromLast();
+        end = unconstrained_stacking_order.end();
+        }
+    for( ClientList::ConstIterator it = begin;
+        it != end;
+        --it )
         {
         if ( (*it)->isOnDesktop( desktop ) && !(*it)->isSpecialWindow()
             && (*it)->isShown( false ) && (*it)->wantsTabFocus())
@@ -663,10 +676,9 @@ Layer Client::belongsToLayer() const
         return DockLayer;
     if( isTopMenu())
         return DockLayer;
-    // TODO this feature doesn't work very well with mouse focus policies - window A gets focus in, and is
-    // raised, but if meanwhile B gets focus in, A is lowered below B again, then the focus in for A
-    // is processed, A is raised above B, but meanwhile B's focus in is processed ...
-    bool raise_special_active_windows = options->focusPolicy == Options::ClickToFocus; // || options->autoRaise );
+    // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
+    // i.e. the window set to be topmost by the user
+    bool raise_special_active_windows = ( workspace()->topClientOnDesktop( desktop(), true ) == this );
     if( isDialog() && workspace()->activeClient() == this && raise_special_active_windows )
         return ActiveLayer;
     if( keepAbove())

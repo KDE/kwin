@@ -172,7 +172,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         ClientList ensureStackingOrder( const ClientList& clients ) const;
 
-        Client* topClientOnDesktop( int desktop ) const;
+        Client* topClientOnDesktop( int desktop, bool unconstrained = false ) const;
         Client* findDesktop( bool topmost, int desktop ) const;
         void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
 
