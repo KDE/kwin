@@ -175,6 +175,8 @@ static const Rules::ForceRule combo_to_force_rule[] =
 
 static QString positionToStr( const QPoint& p )
     {
+    if( p == invalidPoint )
+        return QString::null;
     return QString::number( p.x()) + "," + QString::number( p.y());
     }
 
