@@ -60,10 +60,6 @@ License. See the file "COPYING" for the exact licensing terms.
  helper class) it's possible to temporarily disable updates
  and the stacking order will be updated once after it's allowed again.
 
- SELI TODO
-- FullScreen support is not yet complete (even though the layering for it
-     should be ok) - also NET::Override way of creating fullscreens needs
-     to be checked
 */
 
 #include <assert.h>
