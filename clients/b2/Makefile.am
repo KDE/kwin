@@ -18,6 +18,8 @@ lnk_DATA = b2.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
+messages:
+	$(XGETTEXT) *.cpp -o $(podir)/kwin_b2.pot
 
 ###KMAKE-start (don't edit or delete this block)
 
