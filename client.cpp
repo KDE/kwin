@@ -2612,24 +2612,32 @@ void Client::keyPressEvent( QKeyEvent * e )
     QCursor::setPos( pos );
 }
 
+static int nullErrorHandler(Display *, XErrorEvent *)
+{
+    return 0;
+}
+
 static QCString getStringProperty(WId w, Atom prop, char separator=0)
 {
     Atom type;
-    int format;
+    int format, status;
     unsigned long nitems = 0;
     unsigned long extra = 0;
     unsigned char *data = 0;
     QCString result = "";
-    if ( XGetWindowProperty( qt_xdisplay(), w, prop, 0, 10000,
-			     FALSE, XA_STRING, &type, &format,
-			     &nitems, &extra, &data ) == Success ) {
+    XErrorHandler oldHandler = XSetErrorHandler(nullErrorHandler);
+    status = XGetWindowProperty( qt_xdisplay(), w, prop, 0, 10000,
+                                 FALSE, XA_STRING, &type, &format,
+                                 &nitems, &extra, &data );
+    XSetErrorHandler(oldHandler);
+    if ( status == Success) {
         if (data && separator) {
             for (int i=0; i<(int)nitems; i++)
                 if (!data[i] && i+1<(int)nitems)
                     data[i] = separator;
         }
         if (data)
-          result = (const char*) data;
+            result = (const char*) data;
         XFree(data);
     }
     return result;
@@ -2689,14 +2697,17 @@ QCString Client::staticWmClientMachine(WId w)
 Window Client::staticWmClientLeader(WId w)
 {
     Atom type;
-    int format;
+    int format, status;
     unsigned long nitems = 0;
     unsigned long extra = 0;
     unsigned char *data = 0;
     Window result = w;
-    if ( XGetWindowProperty( qt_xdisplay(), w, atoms->wm_client_leader, 0, 10000,
-			     FALSE, XA_WINDOW, &type, &format,
-			     &nitems, &extra, &data ) == Success ) {
+    XErrorHandler oldHandler = XSetErrorHandler(nullErrorHandler);
+    status = XGetWindowProperty( qt_xdisplay(), w, atoms->wm_client_leader, 0, 10000,
+                                 FALSE, XA_WINDOW, &type, &format,
+                                 &nitems, &extra, &data );
+    XSetErrorHandler(oldHandler);
+    if (status  == Success ) {
         if (data && nitems > 0)
             result = *((Window*) data);
         XFree(data);

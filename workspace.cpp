@@ -2999,20 +2999,21 @@ void Workspace::slotResetAllClients()
  */
 
 #ifndef NO_LEGACY_SESSION_MANAGEMENT
+#define WM_SAVE_YOURSELF_TIMEOUT 4000 
 
-#define WM_SAVE_YOURSELF_TIMEOUT 2000 
+typedef QMap<WId,int> WindowMap;
+#define HAS_ERROR          0
+#define HAS_WMCOMMAND      1
+#define HAS_WMSAVEYOURSELF 2
 
-enum WinState { W_INVALID, W_VALID, W_SAVE_YOURSELF, W_SAVE_YOURSELF_OK };
-typedef QMap<WId,WinState> WinMap;
-
-static WinMap *winsPtr = 0;
+static WindowMap *windowMapPtr = 0;
 
 static int winsErrorHandler(Display *, XErrorEvent *ev)
 {
-    if (winsPtr) {
-        WinMap::Iterator it = winsPtr->find(ev->resourceid);
-        if (it != winsPtr->end())
-            it.data() = W_INVALID;
+    if (windowMapPtr) {
+        WindowMap::Iterator it = windowMapPtr->find(ev->resourceid);
+        if (it != windowMapPtr->end())
+            it.data() = HAS_ERROR;
     }
     return 0;
 }
@@ -3022,17 +3023,30 @@ static int winsErrorHandler(Display *, XErrorEvent *ev)
 */
 void Workspace::storeLegacySession( KConfig* config )
 {
-    // Compute set of leader windows that 
-    // might require legacy session management
-    WinMap wins;
+    // Setup error handler
+    WindowMap wins;
+    windowMapPtr = &wins;
+    XErrorHandler oldHandler = XSetErrorHandler(winsErrorHandler);
+    // Compute set of leader windows that need legacy session management
+    // and determine which style (WM_COMMAND or WM_SAVE_YOURSELF)
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
         Client* c = (*it);
         WId leader = c->wmClientLeader();
-        if (!wins.contains(leader) && c->sessionId().isEmpty())
-            wins.insert(leader, W_VALID);
+        if (!wins.contains(leader) && c->sessionId().isEmpty()) {
+            int wtype = HAS_WMCOMMAND;
+            int nprotocols = 0;
+            Atom *protocols = 0;
+            XGetWMProtocols(qt_xdisplay(), leader, &protocols, &nprotocols);
+            for (int i=0; i<nprotocols; i++)
+                if (protocols[i] == atoms->wm_save_yourself) {
+                    wtype = HAS_WMSAVEYOURSELF;
+                    break;
+                }
+            XFree((void*) protocols);
+            wins.insert(leader, wtype);
+        }
     }
-    
-    // Open a new display for safely doing the WM_SAVE_YOURSELF protocol
+    // Open fresh display for sending WM_SAVE_YOURSELF
     XSync(qt_xdisplay(), False);
     Display *newdisplay = XOpenDisplay(DisplayString(qt_xdisplay()));
     if (!newdisplay) return;
@@ -3041,28 +3055,11 @@ void Workspace::storeLegacySession( KConfig* config )
                   GrabModeAsync, GrabModeAsync, CurrentTime);
     XGrabPointer(newdisplay, root, False, Button1Mask|Button2Mask|Button3Mask,
                  GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
-    winsPtr = &wins;
-    XErrorHandler oldHandler = XSetErrorHandler(winsErrorHandler);
-    
-    // Send WM_SAVE_YOURSELF messages to relevant windows
+    // Send WM_SAVE_YOURSELF messages
     XEvent ev;
     int awaiting_replies = 0;
-    for (WinMap::Iterator it = wins.begin(); it != wins.end(); ++it) {
-        if ( atoms->wm_protocols == None || atoms->wm_save_yourself == None)
-            break;
-        if ( it.data() == W_VALID ) {
-            WId w = it.key();
-            Atom *protocols = 0;
-            int nprotocols = 0;
-            XGetWMProtocols(newdisplay, w, &protocols, &nprotocols);
-            for (int i=0; i<nprotocols; i++)
-              if (protocols[i] == atoms->wm_save_yourself) {
-                it.data() = W_SAVE_YOURSELF;
-                break;
-              }
-            XFree((void*) protocols);
-        }
-        if ( it.data() == W_SAVE_YOURSELF ) {
+    for (WindowMap::Iterator it = wins.begin(); it != wins.end(); ++it) {
+        if ( it.data() == HAS_WMSAVEYOURSELF ) {
             WId w = it.key();
             awaiting_replies += 1;
             memset(&ev, 0, sizeof(ev));
@@ -3076,22 +3073,21 @@ void Workspace::storeLegacySession( KConfig* config )
             XSendEvent(newdisplay, w, False, 0, &ev);
         }
     }
-    
-    // Wait for change in WM_COMMAND (with timeout)
+    // Wait for change in WM_COMMAND with timeout
     XFlush(newdisplay);
     QTime start = QTime::currentTime();
     while (awaiting_replies > 0) {
         if (XPending(newdisplay)) {
             /* Process pending event */
             XNextEvent(newdisplay, &ev);
-            WinMap::Iterator it = wins.find( ev.xany.window );
-            if (it == wins.end() || it.data() == W_SAVE_YOURSELF_OK)
-                continue;
-            if ( ev.type == UnmapNotify ||
-                 ( ev.xany.type == PropertyNotify 
-                   && ev.xproperty.atom == XA_WM_COMMAND ) ) {
-                awaiting_replies -= 1;
-                it.data() = W_SAVE_YOURSELF_OK;
+            if ( ( ev.xany.type == UnmapNotify ) ||
+                 ( ev.xany.type == PropertyNotify && ev.xproperty.atom == XA_WM_COMMAND ) ) {
+                WindowMap::Iterator it = wins.find( ev.xany.window );
+                if ( it != wins.end() && it.data() != HAS_WMCOMMAND ) {
+                    awaiting_replies -= 1;
+                    if ( it.data() != HAS_ERROR )
+                        it.data() = HAS_WMCOMMAND;
+                }
             }
         } else {
             /* Check timeout */
@@ -3099,45 +3095,41 @@ void Workspace::storeLegacySession( KConfig* config )
             if (msecs >= WM_SAVE_YOURSELF_TIMEOUT)
                 break;
             /* Wait for more events */
-            struct timeval tmwait;
-            int fd = ConnectionNumber(newdisplay);
             fd_set fds;
             FD_ZERO(&fds);
+            int fd = ConnectionNumber(newdisplay);
             FD_SET(fd, &fds);
+            struct timeval tmwait;
             tmwait.tv_sec = (WM_SAVE_YOURSELF_TIMEOUT - msecs) / 1000;
             tmwait.tv_usec = ((WM_SAVE_YOURSELF_TIMEOUT - msecs) % 1000) * 1000;
             ::select(fd+1, &fds, NULL, &fds, &tmwait);
         }
     }
-
     // Terminate work in new display
     XAllowEvents(newdisplay, ReplayPointer, CurrentTime);
     XAllowEvents(newdisplay, ReplayKeyboard, CurrentTime);
     XSync(newdisplay, False);
     XCloseDisplay(newdisplay);
-    
     // Write LegacySession data
     config->setGroup("LegacySession" );
     int count = 0;
-    for (WinMap::Iterator it = wins.begin(); it != wins.end(); ++it) {
-      if (it.data() != W_INVALID) {
-        WId w = it.key();
-        QCString wmCommand = Client::staticWmCommand(w);
-        QCString wmClientMachine = Client::staticWmClientMachine(w);
-        if ( !wmCommand.isEmpty() && !wmClientMachine.isEmpty() ) {
-          count++;
-          QString n = QString::number(count);
-          config->writeEntry( QString("command")+n, wmCommand.data() );
-          config->writeEntry( QString("clientMachine")+n, wmClientMachine.data() );
+    for (WindowMap::Iterator it = wins.begin(); it != wins.end(); ++it) {
+        if (it.data() != HAS_ERROR) {
+            WId w = it.key();
+            QCString wmCommand = Client::staticWmCommand(w);
+            QCString wmClientMachine = Client::staticWmClientMachine(w);
+            if ( !wmCommand.isEmpty() && !wmClientMachine.isEmpty() ) {
+                count++;
+                QString n = QString::number(count);
+                config->writeEntry( QString("command")+n, wmCommand.data() );
+                config->writeEntry( QString("clientMachine")+n, wmClientMachine.data() );
+            }
         }
-      }
     }
     config->writeEntry( "count", count );
-    
     // Restore old error handler
     XSync(qt_xdisplay(), False);
     XSetErrorHandler(oldHandler);
-    
     // Process a few events to update the client list.
     // All events should be there because of the XSync above.
     kapp->processEvents(10);
