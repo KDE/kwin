@@ -68,7 +68,7 @@ extern "C"
 		return new KAdvancedConfig(true, c, parent, name);
 	}
         
-	KCModule *create_kwintranslucency(QWidget *parent, const char *name)
+	KDE_EXPORT KCModule *create_kwintranslucency(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
 		KGlobal::locale()->insertCatalogue("kcmkwm");
