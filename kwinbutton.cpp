@@ -123,13 +123,13 @@ void KWinToolTip::showTip()
 
 	positionTip();
 
-	// Display the tooltip the Qt way
-	if (QApplication::isEffectEnabled(UI_AnimateTooltip) == FALSE)
-		show();
-	else if (QApplication::isEffectEnabled(UI_FadeTooltip)) 
-		qFadeEffect(this);
-	else
+	// Show tooltips the Qt way
+	if (options->fadeTooltips())
+		qFadeEffect(this); 
+	else if (options->animateTooltips()) 
 		qScrollEffect(this);
+	else
+		show();
 	raise();
 
 	// Hide after 10 seconds
@@ -177,7 +177,7 @@ KWinButton::KWinButton(QWidget *parent, const char *name, const QString& tip)
     : QButton(parent, name, WStyle_Customize | WRepaintNoErase |
                             WResizeNoErase   | WStyle_NoBorder )
 {
-	buttonTip = options->showToolTips() ? new KWinToolTip(this, tip) : NULL;
+	buttonTip = options->showTooltips() ? new KWinToolTip(this, tip) : NULL;
 }
 
 KWinButton::~KWinButton()
@@ -219,7 +219,7 @@ void KWinButton::mousePressEvent(QMouseEvent* e)
 KWinToolButton::KWinToolButton(QWidget *parent, const char *name, const QString& tip)
     : QToolButton(parent, name)
 {
-	buttonTip = options->showToolTips() ? new KWinToolTip(this, tip) : NULL;
+	buttonTip = options->showTooltips() ? new KWinToolTip(this, tip) : NULL;
 }
 
 KWinToolButton::~KWinToolButton()
@@ -262,7 +262,7 @@ KWinWidgetButton::KWinWidgetButton(QWidget *parent, const char *name,
 	  WFlags f, const QString& tip)
     : QWidget(parent, name, f)
 {
-	buttonTip = options->showToolTips() ? new KWinToolTip(this, tip) : NULL;
+	buttonTip = options->showTooltips() ? new KWinToolTip(this, tip) : NULL;
 }
 
 KWinWidgetButton::~KWinWidgetButton()

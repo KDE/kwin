@@ -291,7 +291,24 @@ public:
     /**
     * @returns true if the style should use tooltips for window buttons
     */
-    bool showToolTips();
+    bool showTooltips();
+
+    /**
+    * @returns true if window button tooltips should use a fade-in effect
+    * @see #animateTooltips
+    * @see #showTooltips
+    */
+    bool fadeTooltips();
+
+    /**
+    * @returns true if window button tooltips should use an animated effect.
+    * When this is true, tooltips should use a animated scroll effect. If
+    * fadeToolTips is also true, tooltips should be faded-in instead.
+    * @see #fadeTooltips
+    * @see #showTooltips
+    */
+    bool animateTooltips();
+
 
 public slots:
     void reload();

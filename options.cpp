@@ -27,6 +27,8 @@ public:
     QString title_buttons_right;
     bool custom_button_positions;
     bool show_tooltips;
+    bool fade_tooltips;
+    bool animate_tooltips;
 };
 };
 
@@ -261,6 +263,15 @@ void Options::reload()
     // button tooltips
     d->show_tooltips = config->readBoolEntry("ShowToolTips", true);
 
+    // Read button tooltip animation effect from kdeglobals
+    // Since we want to allow users to enable window decoration tooltips
+    // and not kstyle tooltips and vise-versa, we don't read the
+    // "EffectNoTooltip" setting from kdeglobals.
+    KConfig globalConfig("kdeglobals");
+    globalConfig.setGroup("KDE");
+    d->fade_tooltips = globalConfig.readBoolEntry("EffectFadeTooltip", false);
+    d->animate_tooltips = globalConfig.readBoolEntry("EffectAnimateTooltip", false);
+
     emit resetPlugin();
     emit resetClients();
 }
@@ -325,9 +336,19 @@ bool Options::customButtonPositions()
     return d->custom_button_positions;
 }
 
-bool Options::showToolTips()
+bool Options::showTooltips()
 {
     return d->show_tooltips;
+}
+
+bool Options::fadeTooltips()
+{
+    return d->fade_tooltips;
+}
+
+bool Options::animateTooltips()
+{
+    return d->animate_tooltips;
 }
 
 #include "options.moc"
