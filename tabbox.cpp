@@ -43,7 +43,7 @@ namespace KWinInternal
 extern QPixmap* kwin_get_menu_pix_hack();
 
 TabBox::TabBox( Workspace *ws, const char *name )
-    : QWidget( 0, name, WX11BypassWM )
+    : QWidget( 0, name )
     {
     no_tasks = i18n("*** No Tasks ***");
     m = DesktopMode; // init variables

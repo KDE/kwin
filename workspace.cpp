@@ -702,7 +702,7 @@ void Workspace::slotReconfigure()
     if( mgr->reset( changed ))
         { // decorations need to be recreated
 #if 0 // This actually seems to make things worse now
-        QWidget curtain( 0, 0, WX11BypassWM );
+        QWidget curtain;
         curtain.setBackgroundMode( NoBackground );
         curtain.setGeometry( QApplication::desktop()->geometry() );
         curtain.show();
@@ -833,7 +833,7 @@ bool Workspace::isNotManaged( const QString& title )
  */
 void Workspace::refresh() 
     {
-    QWidget w( 0, 0, WX11BypassWM );
+    QWidget w;
     w.setGeometry( QApplication::desktop()->geometry() );
     w.show();
     w.hide();

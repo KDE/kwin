@@ -14,7 +14,7 @@ namespace KWinInternal
 {
 
 GeometryTip::GeometryTip( const XSizeHints* xSizeHints, bool save_under ):
-    QLabel(NULL, "kwingeometry", WX11BypassWM )
+    QLabel(NULL, "kwingeometry" )
     {
     setMargin(1);
     setIndent(0);

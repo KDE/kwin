@@ -115,7 +115,7 @@ QWidget* Bridge::initialParentWidget() const
 
 Qt::WFlags Bridge::initialWFlags() const
     {
-    return Qt::WX11BypassWM;
+    return 0;
     }
 
 void Bridge::helperShowHide( bool show )

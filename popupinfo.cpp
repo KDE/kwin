@@ -35,7 +35,7 @@ namespace KWinInternal
 {
 
 PopupInfo::PopupInfo( const char *name )
-    : QWidget( 0, name, WX11BypassWM )
+    : QWidget( 0, name )
     {
     m_infoString = "";
     reset();
