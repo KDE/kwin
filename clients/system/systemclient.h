@@ -43,12 +43,16 @@ protected:
     void stickyChange(bool on);
     void maximizeChange(bool m);
     void doShape();
+    void recalcTitleBuffer();
 protected slots:
     void slotReset();
 private:
     SystemButton* button[5];
     QSpacerItem* titlebar;
-};                      
+    QPixmap titleBuffer;
+    QString oldTitle;
+};
+
 
 
 

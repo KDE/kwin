@@ -43,7 +43,6 @@ static unsigned char sticky_bits[] = {
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
     
-static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
 static bool pixmaps_created = false;
@@ -54,29 +53,7 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
-    // titlebar
     QPainter p;
-    QPainter maskPainter;
-    int i, y;
-    titlePix = new QPixmap(32, 14);
-    QBitmap mask(32, 14);
-    mask.fill(Qt::color0);
-    
-    p.begin(titlePix);
-    maskPainter.begin(&mask);
-    maskPainter.setPen(Qt::color1);
-    for(i=0, y=2; i < 4; ++i, y+=3){
-        p.setPen(options->color(Options::Groove, true).light(150));
-        p.drawLine(0, y, 31, y);
-        maskPainter.drawLine(0, y, 31, y);
-        p.setPen(options->color(Options::Groove, true).dark(120));
-        p.drawLine(0, y+1, 31, y+1);
-        maskPainter.drawLine(0, y+1, 31, y+1);
-    }
-    p.end();
-    maskPainter.end();
-    titlePix->setMask(mask);
-
     if(QPixmap::defaultDepth() > 8 &&
        kapp->palette().normal().brush(QColorGroup::Background).pixmap()==NULL){
         aUpperGradient = new KPixmap;
@@ -92,6 +69,7 @@ static void create_pixmaps()
                                 options->color(Options::Frame, false).light(130),
                                 bgColor,
                                 KPixmapEffect::VerticalGradient);
+        
     }
 }
 
@@ -180,13 +158,14 @@ void SystemButton::drawButton(QPainter *p)
 
 void SystemClient::slotReset()
 {
-    delete titlePix;
     if(aUpperGradient){
         delete aUpperGradient;
         delete iUpperGradient;
     }
     pixmaps_created = false;
     create_pixmaps();
+    titleBuffer.resize(0, 0);
+    recalcTitleBuffer();
     button[0]->reset();
     button[1]->reset();
     button[2]->reset();
@@ -253,13 +232,17 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     hb->addWidget( button[3]);
     hb->addSpacing(3);
 
+    setBackgroundMode(NoBackground);
+    recalcTitleBuffer();
+
 }
 
-void SystemClient::resizeEvent( QResizeEvent* e)
+void SystemClient::resizeEvent( QResizeEvent* )
 {
-    Client::resizeEvent( e );
-
+    //Client::resizeEvent( e );
+    recalcTitleBuffer();
     doShape();
+    /*
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
         QPainter p( this );
 	QRect t = titlebar->geometry();
@@ -268,11 +251,54 @@ void SystemClient::resizeEvent( QResizeEvent* e)
 	r = r.subtract( t );
 	p.setClipRegion( r );
 	p.eraseRect( rect() );
-    }
+        }*/
 }
 
-void SystemClient::captionChange( const QString& )
+void SystemClient::recalcTitleBuffer()
 {
+    if(oldTitle == caption() && width() == titleBuffer.width())
+        return;
+    QFontMetrics fm(options->font(true));
+    titleBuffer.resize(width(), 18);
+    QPainter p;
+    p.begin(&titleBuffer);
+    if(aUpperGradient)
+        p.drawTiledPixmap(0, 0, width(), 18, *aUpperGradient);
+    else
+        p.fillRect(0, 0, width(), 18,
+                   options->colorGroup(Options::Frame, true).
+                   brush(QColorGroup::Button));
+    
+    QRect t = titlebar->geometry();
+    t.setTop( 2 );
+    t.setLeft( t.left() + 4 );
+    t.setRight( t.right() - 2 );
+
+    QRegion r(t.x(), 0, t.width(), 18);
+    r -= QRect(t.x()+((t.width()-fm.width(caption()))/2)-4,
+               0, fm.width(caption())+8, 18);
+    p.setClipRegion(r);
+    int i, ly;
+    for(i=0, ly=4; i < 4; ++i, ly+=3){
+        p.setPen(options->color(Options::Groove, true).light(150));
+        p.drawLine(0, ly, width()-1, ly);
+        p.setPen(options->color(Options::Groove, true).dark(120));
+        p.drawLine(0, ly+1, width()-1, ly+1);
+    }
+    p.setClipRect(t);
+    p.setPen(options->color(Options::GrooveText, true));
+    p.setFont(options->font(true));
+
+    p.drawText(t.x()+((t.width()-fm.width(caption()))/2)-4,
+               0, fm.width(caption())+8, 18, AlignCenter, caption());
+    p.setClipping(false);
+    p.end();
+    oldTitle = caption();
+}
+    
+void SystemClient::captionChange( const QString &)
+{
+    recalcTitleBuffer();
     repaint( titlebar->geometry(), false );
 }
 
@@ -287,50 +313,33 @@ void SystemClient::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
     QRect t = titlebar->geometry();
-    t.setTop( 1 );
 
     QBrush fillBrush(colorGroup().brush(QColorGroup::Background).pixmap() ?
                      colorGroup().brush(QColorGroup::Background) :
                      options->colorGroup(Options::Frame, isActive()).
                      brush(QColorGroup::Button));
 
-    p.fillRect(rect(), fillBrush);
-    if(aUpperGradient){
-        if(isActive()){
-            p.drawTiledPixmap(0, 0, width(), 18, *aUpperGradient);
-        }
-        else{
-            p.drawTiledPixmap(0, 0, width(), 18, *iUpperGradient);
-        }
-    }
-    t.setTop( 1 );
-    if(isActive())
-        p.drawTiledPixmap(t, *titlePix);
-
-    QRegion r = rect();
-    r = r.subtract( t );
-    p.setClipRegion( r );
-    p.setClipping( FALSE );
+    p.fillRect(1, 18, width()-2, height()-19, fillBrush);
 
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
-
-    p.setPen(options->color(Options::GrooveText, isActive()));
-    p.setFont(options->font(isActive()));
-    if(isActive()){
-        QFontMetrics fm(options->font(true));
-        if(aUpperGradient)
-            p.drawTiledPixmap(t.x()+((t.width()-fm.width(caption()))/2)-4,
-                              0, fm.width(caption())+8, 18,
-                              isActive() ? *aUpperGradient :
-                              *iUpperGradient);
+    
+    if(isActive())
+        p.drawPixmap(0, 0, titleBuffer);
+    else{
+        if(iUpperGradient)
+            p.drawTiledPixmap(0, 0, width(), 18, *iUpperGradient);
         else
-            p.fillRect(t.x()+((t.width()-fm.width(caption()))/2)-4, t.y(),
-                       fm.width(caption())+8, t.height(), fillBrush);
+            p.fillRect(0, 0, width(), 18,
+                       options->colorGroup(Options::Frame, false).
+                       brush(QColorGroup::Button));
+        p.setPen(options->color(Options::GrooveText, isActive()));
+        p.setFont(options->font(isActive()));
+        p.drawText(t, AlignCenter, caption() );
     }
+        
 
-    p.drawText( t, AlignCenter, caption() );
 
     p.setPen(options->colorGroup(Options::Frame, isActive()).light());
     p.drawLine(width()-20, height()-7, width()-10,  height()-7);
@@ -351,21 +360,6 @@ void SystemClient::doShape()
     
     QRegion mask;
     kRoundMaskRegion(mask, 0, 0, width(), height());
-    /*
-    (QRect(6, 0, width()-12, height()));
-    mask += QRegion(QRect(5, 1, 1, height()-2)); // left
-    mask += QRegion(QRect(4, 1, 1, height()-2));
-    mask += QRegion(QRect(3, 2, 1, height()-4));
-    mask += QRegion(QRect(2, 3, 1, height()-6));
-    mask += QRegion(QRect(1, 4, 1, height()-8));
-    mask += QRegion(QRect(0, 6, 1, height()-12));
-    int x2 = width()-1;
-    mask += QRegion(QRect(x2-5, 1, 1, height()-2)); // right
-    mask += QRegion(QRect(x2-4, 1, 1, height()-2));
-    mask += QRegion(QRect(x2-3, 2, 1, height()-4));
-    mask += QRegion(QRect(x2-2, 3, 1, height()-6));
-    mask += QRegion(QRect(x2-1, 4, 1, height()-8));
-    mask += QRegion(QRect(x2, 6, 1, height()-12)); */
     setMask(mask);
 }
 
