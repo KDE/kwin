@@ -573,8 +573,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 Client::~Client()
 {
     releaseWindow();
-    if (workspace()->activeClient() == this)
-       workspace()->setFocusChangeEnabled(true); // Safety
+    if (moveResizeMode)
+       workspace()->setFocusChangeEnabled(true);
 
     delete info;
     delete d;
