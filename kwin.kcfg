@@ -1,0 +1,75 @@
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+ <kcfgfile name="kwinrc" />
+ <group name="Desktops" >
+  <entry key="Name_1" type="String" />
+  <entry key="Name_2" type="String" />
+  <entry key="Name_3" type="String" />
+  <entry key="Name_4" type="String" />
+  <entry key="Number" type="Int" />
+ </group>
+ <group name="FakeSession" >
+  <entry key="count" type="Int" />
+ </group>
+ <group name="MouseBindings" >
+  <entry key="CommandActiveTitlebar2" type="String" />
+  <entry key="CommandActiveTitlebar3" type="String" />
+  <entry key="CommandActiveTitlebar1" type="String" />
+  <entry key="CommandInactiveTitlebar1" type="String" />
+  <entry key="CommandInactiveTitlebar2" type="String" />
+  <entry key="CommandInactiveTitlebar3" type="String" />
+ </group>
+ <group name="Style" >
+  <entry key="ButtonsOnLeft" type="String" />
+  <entry key="ButtonsOnRight" type="String" />
+  <entry key="PluginLib" type="String" />
+  <entry key="BorderSize" type="Int" />
+  <entry key="CustomButtonPositions" type="Bool" />
+  <entry key="ShowToolTips" type="Bool" />
+ </group>
+ <group name="Windows" >
+  <entry key="AltTabStyle" type="String" />
+  <entry key="FocusPolicy" type="String" />
+  <entry key="MoveMode" type="String" />
+  <entry key="ResizeMode" type="String" />
+  <entry key="TitlebarDoubleClickCommand" type="String" />
+  <entry key="AnimateMinimize" type="Bool" />
+  <entry key="AnimateShade" type="Bool" />
+  <entry key="IgnoreFocusStealingClasses" type="StringList" />
+  <entry key="MoveResizeMaximizedWindows" type="Bool" />
+  <entry key="ShadeHover" type="Bool" />
+  <entry key="GeometryTip" type="Bool" />
+  <entry key="RollOverDesktops" type="Bool" />
+  <entry key="FocusStealingPreventionLevel" type="Int" />
+  <entry key="AnimateMinimizeSpeed" type="Int" />
+  <entry key="Placement" type="String" />
+  <entry key="AutoRaise" type="Bool" />
+  <entry key="AutoRaiseInterval" type="Int" />
+  <entry key="ShadeHoverInterval" type="Int" />
+  <entry key="ClickRaise" type="Bool" />
+  <entry key="BorderSnapZone" type="Int" />
+  <entry key="WindowSnapZone" type="Int" />
+  <entry key="SnapOnlyWhenOverlapping" type="Bool" />
+  <entry key="ElectricBorders" type="Int" />
+  <entry key="ElectricBorderDelay" type="Int" />
+  <entry key="IgnorePositionClasses" type="StringList" />
+ </group>
+ <group name="WM" >
+  <entry key="frame" type="Color" />
+  <entry key="handle" type="Color" />
+  <entry key="activeBackground" type="Color" />
+  <entry key="activeBlend" type="Color" />
+  <entry key="activeFont" type="Font" />
+  <entry key="activeFontSmall" type="Font" />
+  <entry key="activeForeground" type="Color" />
+  <entry key="activeTitleBtnBg" type="Color" />
+  <entry key="inactiveBackground" type="Color" />
+  <entry key="inactiveBlend" type="Color" />
+  <entry key="inactiveFont" type="Color" />
+  <entry key="inactiveFontSmall" type="Color" />
+  <entry key="inactiveForeground" type="Color" />
+  <entry key="inactiveFrame" type="Color" />
+  <entry key="inactiveHandle" type="Color" />
+  <entry key="inactiveTitleBtnBg" type="Color" />
+ </group>
+</kcfg>

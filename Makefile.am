@@ -29,6 +29,8 @@ kwin_datadir = $(kde_datadir)/kwin
 
 kwin_data_DATA= eventsrc
 
+kde_kcfg_DATA = kwin.kcfg
+
 sounddir= $(kde_sounddir)
 sound_DATA = pop.wav
 
