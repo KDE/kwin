@@ -1,14 +1,17 @@
 /*
-  Gallium-Win2k KWin client
-
-  Copyright 2001
-    Karol Szwed <karlmail@usa.net>
-    http://gallium.n3.net/
-
-  Based on the default KWin client.
-
-  Major code cleanups, bug fixes and updates to support toolwindows 3/2001 - KS
-*/
+ * $Id$
+ *
+ * Gallium-Win2k KWin client
+ *
+ * Copyright 2001
+ *   Karol Szwed <gallium@kde.org>
+ *   http://gallium.n3.net/
+ *
+ * Based on the default KWin client.
+ *
+ * Updated to support toolwindows 3/2001 (KS)
+ *
+ */
 
 #include "win2k.h"  
 #include <qlayout.h>
@@ -366,6 +369,9 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 4);        // Top grab bar 
     g->addWidget(windowWrapper(), 3, 1);
+    // without the next line, unshade flickers
+    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, 
+                QSizePolicy::Expanding ) );
     g->setRowStretch(3, 10);      // Wrapped window
     g->addRowSpacing(4, 4);       // bottom handles
     g->addRowSpacing(2, 1);       // Line below title bar
@@ -523,6 +529,8 @@ void GalliumClient::paintEvent( QPaintEvent* )
  
     // Draw line under title bar
     p.drawLine( x + 4, y + titleHeight + 4, x2 - 4, y + titleHeight + 4 );
+    // Draw a hidden line that appears during shading
+    p.drawLine( x + 4, y2 - 4, x2 - 4, y2 - 4 );
 
     // Fill out the border edges
     p.drawRect( x+2, y+2, w-4, h-4 );
@@ -721,8 +729,8 @@ void GalliumClient::menuButtonPressed()
         // KS - move the menu left by 3 pixels, and down 2 pixels.
         QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-3, 
                            button[BtnMenu]->rect().bottomLeft().y()+2 );
-        workspace()->clientPopup(this)->
-            popup(button[BtnMenu]->mapToGlobal( menupoint ));
+        workspace()->clientPopup(this)->popup(
+           button[BtnMenu]->mapToGlobal( menupoint ));
     }
     else {
         closeWindow();
@@ -737,15 +745,18 @@ extern "C"
     {
         return(new GalliumClient(ws, w));
     }
+
     void init()
     {
        create_pixmaps();
     }
+
     void reset()
     {
        delete_pixmaps();
        create_pixmaps();
     }
+
     void deinit()
     {
        delete_pixmaps();

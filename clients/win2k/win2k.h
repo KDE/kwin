@@ -1,14 +1,17 @@
 /*
-  Gallium-Win2k KWin client
-  
-  Copyright 2001
-    Karol Szwed <karlmail@usa.net>
-    http://gallium.n3.net/
-
-  Based on the default KWin client.
-
-  Major code cleanups, bug fixes and updates to support toolwindows 3/2001 - KS
-*/
+ * $Id$
+ *
+ * Gallium-Win2k KWin client
+ *
+ * Copyright 2001
+ *   Karol Szwed <gallium@kde.org>
+ *   http://gallium.n3.net/
+ *
+ * Based on the default KWin client.
+ *
+ * Updated to support toolwindows 3/2001 (KS)
+ *
+ */
 
 #ifndef __KDEGALLIUM_WIN2K_H
 #define __KDEGALLIUM_WIN2K_H
@@ -27,7 +30,8 @@ class GalliumButton : public QButton
 {
 
 public:
-    GalliumButton(Client *parent=0, const char *name=0, const unsigned char *bitmap=NULL,
+    GalliumButton(Client *parent=0, const char *name=0, 
+                  const unsigned char *bitmap=NULL,
                   bool menuButton=false, bool isMini=false );
     void setBitmap(const unsigned char *bitmap);
     void setPixmap(const QPixmap &p);
@@ -39,18 +43,18 @@ public:
 protected:
     void mousePressEvent( QMouseEvent* e )
     {
-	   last_button = e->button();
+       last_button = e->button();
        QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
                         LeftButton, e->state() );
-	   QButton::mousePressEvent( &me );
+       QButton::mousePressEvent( &me );
     }
 
     void mouseReleaseEvent( QMouseEvent* e )
     {
-	   last_button = e->button();
-	   QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
+       last_button = e->button();
+       QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
                         LeftButton, e->state() );
-	   QButton::mouseReleaseEvent( &me );
+       QButton::mouseReleaseEvent( &me );
     }
 
     virtual void drawButton(QPainter *p);
@@ -69,10 +73,9 @@ class GalliumClient : public KWinInternal::Client
     Q_OBJECT
 
 public:
-    enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, BtnMenu, BtnCount };
-    GalliumClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
+    GalliumClient( Workspace *ws, WId w, QWidget *parent=0,
+		   const char *name=0 );
     ~GalliumClient() {;}
-    int titleHeight;
 
 protected:
     void resizeEvent( QResizeEvent* );
@@ -92,8 +95,12 @@ protected slots:
     void menuButtonPressed();
 
 private:
+    enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
+		  BtnMenu, BtnCount };
+
     GalliumButton* button[ GalliumClient::BtnCount ];
     int            lastButtonWidth;
+    int            titleHeight;
     QSpacerItem*   titlebar;
     bool           hiddenItems;
     QHBoxLayout*   hb;
