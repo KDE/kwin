@@ -1412,7 +1412,6 @@ void Client::sendSyntheticConfigureNotify()
     c.border_width = 0;
     c.above = None;
     c.override_redirect = 0;
-    qDebug("sending width: %d, %d", c.width, c.height);
     XSendEvent( qt_xdisplay(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
 }
 
@@ -2250,7 +2249,7 @@ bool Client::x11Event( XEvent * e)
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
         // (i.e. the LeaveNotify event comes before leaving the rect and no LeaveNotify event
         // comes after leaving the rect) - so lets check if the pointer is really outside the window
-        
+
         // TODO this still sucks if a window appears above this one - it should lose the mouse
         // if this window is another client, but not if it's a popup ... maybe after KDE3.1 :(
         // (repeat after me 'AARGHL!')
@@ -2854,7 +2853,7 @@ static QCString getStringProperty(WId w, Atom prop, char separator=0)
 }
 
 /*!
-  Returns WINDOW_ROLE property for a given window.
+  Returns WM_WINDOW_ROLE property for a given window.
  */
 QCString Client::staticWindowRole(WId w)
 {
@@ -2932,7 +2931,7 @@ void Client::getWmClientLeader()
 }
 
 /*!
-  Returns WINDOW_ROLE for this client
+  Returns WM_WINDOW_ROLE for this client
  */
 QCString Client::windowRole()
 {
