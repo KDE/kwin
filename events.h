@@ -12,6 +12,7 @@ class Events
 public:
 
     enum Event {
+	Activate,
 	Close,
 	Iconify,
 	DeIconify,

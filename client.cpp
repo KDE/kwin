@@ -425,7 +425,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     may_move = TRUE;
     skip_taskbar = FALSE;
     max_mode = MaximizeRestore;
-    
+
     cmap = None;
 
     getWMHints();
@@ -1856,6 +1856,9 @@ void Client::setShade( bool s )
 {
     if ( shaded == s )
 	return;
+    
+    if ( isVisible() )
+	Events::raise( s ? Events::ShadeDown : Events::ShadeUp );
 
     shaded = s;
 

@@ -984,8 +984,10 @@ void Workspace::activateClient( Client* c)
 	Events::raise( Events::DeIconify );
     c->show();
     iconifyOrDeiconifyTransientsOf( c );
-    if ( options->focusPolicyIsReasonable() )
+    if ( options->focusPolicyIsReasonable() ) {
 	requestFocus( c );
+	Events::raise( Events::Activate );
+    }
 }
 
 void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
