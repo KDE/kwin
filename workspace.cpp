@@ -14,6 +14,31 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
+#include <X11/extensions/shape.h>
+
+// used to store the return values of
+// XShapeQueryExtension.
+// Necessary since shaped window are an extension to X
+static int kwin_has_shape = 0;
+static int kwin_shape_event = 0;
+
+// does the window w  need a shape combine mask around it?
+bool Shape::hasShape( WId w){
+  int xws, yws, xbs, ybs;
+  unsigned wws, hws, wbs, hbs;
+  int boundingShaped, clipShaped;
+  if (!kwin_has_shape)
+      return FALSE;
+  XShapeQueryExtents(qt_xdisplay(), w,
+		     &boundingShaped, &xws, &yws, &wws, &hws,
+		     &clipShaped, &xbs, &ybs, &wbs, &hbs);
+  return boundingShaped != 0;
+}
+
+int Shape::shapeEvent()
+{
+    return kwin_shape_event;
+}
 
 
 static Client* clientFactory( Workspace *ws, WId w )
@@ -37,17 +62,21 @@ static Client* clientFactory( Workspace *ws, WId w )
 	c->setSticky( TRUE );
 	return c;
     }
+    
+    if ( Shape::hasShape( w ) ){
+	return new NoBorderClient( ws, w );
+    }
 
     KConfig *config = KGlobal::config();
     config->setGroup("style");
     // well, it will be soon ;-)
     QString tmpStr = config->readEntry("Plugin", "standard");
-    if(tmpStr == "standard")
-        return new StdClient( ws, w );
-    else if(tmpStr == "system")
-        return new SystemClient( ws, w );
+    if(tmpStr == "system")
+	return new SystemClient( ws, w );
     else if(tmpStr == "be")
-        return new BeClient( ws, w );
+	return new BeClient( ws, w );
+    else
+	return new StdClient( ws, w );
 }
 
 Workspace::Workspace()
@@ -66,6 +95,9 @@ Workspace::Workspace()
 		 SubstructureNotifyMask
 		 );
 
+    int dummy;
+    kwin_has_shape = XShapeQueryExtension(qt_xdisplay(), &kwin_shape_event, &dummy);
+    
     init();
     control_grab = FALSE;
     tab_grab = FALSE;
@@ -227,7 +259,10 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
 	break;
     case ConfigureRequest:
-	if ( e->xconfigurerequest.parent == root ) {
+	c = findClient( e->xconfigurerequest.window );
+	if ( c )
+	    return c->windowEvent( e );
+	else if ( e->xconfigurerequest.parent == root ) {
 	    XWindowChanges wc;
 	    unsigned int value_mask = 0;
 	    wc.border_width = 0;
@@ -239,29 +274,9 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    wc.stack_mode = Above;
 	    value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
 	    XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, & wc );
-	
-	    XWindowAttributes attr;
-	    if (XGetWindowAttributes(qt_xdisplay(), e->xconfigurerequest.window, &attr)){
-		// send a synthetic configure notify in any case (even if we didn't change anything)
-		XConfigureEvent c;
-		c.type = ConfigureNotify;
-		c.event = e->xconfigurerequest.window;
-		c.window = e->xconfigurerequest.window;
-		c.x = attr.x;
-		c.y = attr.y;
-		c.width = attr.width;
-		c.height = attr.height;
-		c.border_width = 0;
-		XSendEvent( qt_xdisplay(), c.event, TRUE, NoEventMask, (XEvent*)&c );
-	    }
+	    
 	    return TRUE;
 	}
-	else {
-	    c = findClient( e->xconfigurerequest.window );
-	    if ( c )
-		return c->windowEvent( e );
-	}
-
 	break;
     case KeyPress:
 	return keyPress(e->xkey);
@@ -277,6 +292,11 @@ bool Workspace::workspaceEvent( XEvent * e )
 	return clientMessage(e->xclient);
 	break;
     default:
+	if  ( e->type == Shape::shapeEvent() ) {
+	    c = findClient( ((XShapeEvent *)e)->window );
+	    if ( c )
+		c->updateShape();
+	}
 	break;
     }
     return FALSE;

@@ -13,6 +13,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
+#include <X11/extensions/shape.h>
 
 extern Atom qt_wm_state;
 
@@ -30,6 +31,7 @@ void Client::drawbound( const QRect& geom )
     p.setRasterOp( Qt::XorROP );
     p.drawRect( geom );
 }
+
 void Client::clearbound()
 {
     if ( !visible_bound )
@@ -39,6 +41,16 @@ void Client::clearbound()
     visible_bound = 0;
 }
 
+void Client::updateShape()
+{
+    if ( shape() ) 
+	XShapeCombineShape(qt_xdisplay(), winId(), ShapeBounding,
+			   windowWrapper()->x(), windowWrapper()->y(),
+			   window(), ShapeBounding, ShapeSet);
+    else 
+	XShapeCombineMask( qt_xdisplay(), winId(), ShapeBounding, 0, 0,
+			   None, ShapeSet);
+}
 
 static void sendClientMessage(Window w, Atom a, long x){
   XEvent ev;
@@ -116,7 +128,6 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 		   StructureNotifyMask
 		   );
 
-
     // install a passive grab to catch mouse button events
     XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
 		ButtonPressMask, GrabModeSync, GrabModeSync,
@@ -145,7 +156,9 @@ void WindowWrapper::resizeEvent( QResizeEvent * )
     if ( win ) {
 	XMoveResizeWindow( qt_xdisplay(), win,
 			   0, 0, width(), height() );
-}
+	if ( ((Client*)parentWidget())->shape() )
+	    ((Client*)parentWidget())->updateShape();
+    }
 }
 
 void WindowWrapper::showEvent( QShowEvent* )
@@ -262,7 +275,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     active = FALSE;
     shaded = FALSE;
     transient_for = None;
-    is_sticky = FALSE;
+    is_shape = FALSE;
 
     getIcons();
     getWindowProtocols();
@@ -324,6 +337,11 @@ void Client::manage( bool isMapped )
 	workspace()->doPlacement( this );
 	placementDone = TRUE;
     }
+
+    if ( (is_shape = Shape::hasShape( win )) ) {
+	updateShape();
+    }
+    
 
     // ### TODO check XGetWMHints() for initial mapping state, icon, etc. pp.
     // assume window wants to be visible on the current desktop

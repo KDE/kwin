@@ -118,6 +118,11 @@ public:
     // transparent stuff
     virtual void drawbound( const QRect& geom );
     virtual void clearbound();
+    
+    
+    // shape extensions
+    bool shape() const;
+    void updateShape();
 
 public slots:
     void iconify();
@@ -196,6 +201,7 @@ private:
     bool shaded;
     WId transient_for;
     bool is_sticky;
+    bool is_shape;
     void getIcons();
     void getWindowProtocols();
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
@@ -282,6 +288,11 @@ inline bool Client::isSticky() const
     return is_sticky;
 }
 
+
+inline bool Client::shape() const
+{
+    return is_shape;
+}
 
 class NoBorderClient : public Client
 {

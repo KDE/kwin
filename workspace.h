@@ -15,6 +15,12 @@ class KGlobalAccel;
 typedef QValueList<Client*> ClientList;
 typedef QValueList<WId> WIdList;
 
+class Shape {
+public:
+    static bool hasShape( WId w);
+    static int shapeEvent();
+};
+
 class Workspace : public QObject
 {
     Q_OBJECT
@@ -105,7 +111,7 @@ private:
     void setDecoration( int deco );
 
     void propagateClients( bool onlyStacking = FALSE);
-    
+
     WIdList dockwins;
     bool addDockwin( WId w );
     bool removeDockwin( WId w );
