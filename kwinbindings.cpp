@@ -57,6 +57,7 @@
         DEF2( "Window Below Other Windows", I18N_NOOP("Keep Window Below Others"),
             0, 0, slotWindowBelow() );
         DEF( I18N_NOOP("Activate Window Demanding Attention"), CTRL+ALT+Qt::Key_A, 0, slotActivateAttentionWindow());
+        DEF( I18N_NOOP("Setup Window Shortcut"), 0, 0, slotSetupWindowShortcut());
         DEF2( "Window Pack Left", I18N_NOOP("Pack Window to the Left"),
             0, 0, slotWindowPackLeft() );
         DEF2( "Window Pack Right", I18N_NOOP("Pack Window to the Right"),

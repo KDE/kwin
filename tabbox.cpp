@@ -844,6 +844,7 @@ bool Workspace::startKDEWalkThroughWindows()
         return false;
     tab_grab        = TRUE;
     keys->setEnabled( false );
+    client_keys->setEnabled( false );
     tab_box->setMode( TabBox::WindowsMode );
     tab_box->reset();
     return TRUE;
@@ -855,6 +856,7 @@ bool Workspace::startWalkThroughDesktops( int mode )
         return false;
     control_grab = TRUE;
     keys->setEnabled( false );
+    client_keys->setEnabled( false );
     tab_box->setMode( (TabBox::Mode) mode );
     tab_box->reset();
     return TRUE;
@@ -1006,6 +1008,7 @@ void Workspace::closeTabBox()
     removeTabBoxGrab();
     tab_box->hide();
     keys->setEnabled( true );
+    client_keys->setEnabled( true );
     tab_grab = FALSE;
     control_grab = FALSE;
     }
@@ -1053,6 +1056,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         removeTabBoxGrab();
         tab_box->hide();
         keys->setEnabled( true );
+        client_keys->setEnabled( true );
         tab_grab = false;
         if( Client* c = tab_box->currentClient())
             {
@@ -1066,6 +1070,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         removeTabBoxGrab();
         tab_box->hide();
         keys->setEnabled( true );
+        client_keys->setEnabled( true );
         control_grab = False;
         if ( tab_box->currentDesktop() != -1 )
             {

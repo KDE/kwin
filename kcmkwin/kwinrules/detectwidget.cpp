@@ -24,6 +24,7 @@
 #include <kwin.h>
 #include <qlabel.h>
 #include <qradiobutton.h>
+#include <qcheckbox.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -137,10 +138,7 @@ QString DetectDialog::selectedTitle() const
 
 Rules::StringMatch DetectDialog::titleMatch() const
     {
-#if KDE_IS_VERSION( 3, 3, 90 )
-#warning Offer possibilities here
-#endif
-    return Rules::UnimportantMatch;
+    return widget->match_title->isChecked() ? Rules::ExactMatch : Rules::UnimportantMatch;
     }
 
 bool DetectDialog::selectedWholeApp() const
