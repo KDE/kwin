@@ -345,7 +345,7 @@ private slots:
         void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
         static int computeWorkareaDiff( int left, int right, int a_left, int a_right );
-        void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity = 0 );
+        void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool );
         // resizeWithChecks() resizes according to gravity, and checks workarea position
         void resizeWithChecks( int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );

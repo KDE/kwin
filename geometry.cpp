@@ -1328,7 +1328,7 @@ const QPoint Client::calculateGravitation( bool invert, int gravity ) const
         return QPoint( x() - dx, y() - dy );
     }
 
-void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity )
+void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool )
     {
     if( gravity == 0 ) // default (nonsense) value for the argument
         gravity = xSizeHint.win_gravity;
@@ -1367,6 +1367,8 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             ++block_geometry;
             move( new_pos );
             plainResize( ns ); // TODO must(?) resize before gravitating?
+            if( !from_tool && ( !isSpecialWindow() || isToolbar()))
+                keepInArea( workspace()->clientArea( WorkArea, this ));
             --block_geometry;
             setGeometry( QRect( calculateGravitation( false, gravity ), size()), ForceGeometrySet );
 
@@ -1400,6 +1402,8 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             xSizeHint.win_gravity = gravity;
             resizeWithChecks( ns );
             xSizeHint.win_gravity = save_gravity;
+            if( !from_tool && ( !isSpecialWindow() || isToolbar()))
+                keepInArea( workspace()->clientArea( WorkArea, this ));
             }
         }
     // No need to send synthetic configure notify event here, either it's sent together
@@ -1491,7 +1495,7 @@ void Client::NETMoveResizeWindow( int flags, int x, int y, int width, int height
         value_mask |= CWWidth;
     if( flags & ( 1 << 11 ))
         value_mask |= CWHeight;
-    configureRequest( value_mask, x, y, width, height, gravity );
+    configureRequest( value_mask, x, y, width, height, gravity, true );
     }
 
 /*!

@@ -805,7 +805,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
         }
 
     if( e->value_mask & ( CWX | CWY | CWHeight | CWWidth ))
-        configureRequest( e->value_mask, e->x, e->y, e->width, e->height );
+        configureRequest( e->value_mask, e->x, e->y, e->width, e->height, 0, false );
 
     if ( e->value_mask & CWStackMode )
         restackWindow( e->above, e->detail, NET::FromApplication, userTime(), false );
