@@ -284,7 +284,6 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
                           isActive() ? *pinup_pix : *dis_pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    button[1]->hide(); // no sticky for now
     button[2]->hide();
 
     button[3]->setIconSet(isActive() ? *minimize_pix : *dis_minimize_pix);
