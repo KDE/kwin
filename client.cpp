@@ -1837,12 +1837,18 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
     bool replay = FALSE;
     switch (command) {
     case Options::MouseRaise:
+	workspace()->raiseClient( this );
 	break;
     case Options::MouseLower:
+	workspace()->lowerClient( this );
 	break;
     case Options::MouseOperationsMenu:
 	break;
     case Options::MouseToggleRaiseAndLower:
+	if ( workspace()->topClientOnDesktop() == this )
+	    workspace()->lowerClient( this );
+	else
+	    workspace()->raiseClient( this );
 	break;
     case Options::MouseActivateAndRaise:
 	workspace()->requestFocus( this );
@@ -1866,11 +1872,11 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	replay = TRUE;
 	break;
     case Options::MouseMove:
-        if (!isMovable())
-           break;
+	if (!isMovable())
+	    break;
 	mode = Center;
 	moveResizeMode = TRUE;
-        workspace()->setEnableFocusChange(false);
+	workspace()->setEnableFocusChange(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
@@ -1880,10 +1886,10 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    XGrabServer( qt_xdisplay() );
 	break;
     case Options::MouseResize:
-        if (!isMovable())
-           break;
+	if (!isMovable())
+	    break;
 	moveResizeMode = TRUE;
-        workspace()->setEnableFocusChange(false);
+	workspace()->setEnableFocusChange(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	if ( moveOffset.x() < width()/2) {
