@@ -1513,8 +1513,9 @@ bool Client::isSpecialWindow() const
 NET::WindowType Client::windowType( bool strict, int supported_types ) const
     {
     NET::WindowType wt = info->windowType( supported_types );
+    // TODO is this 'strict' really needed (and used?)
     if( !strict )
-        {
+        { // hacks here
         if( wt == NET::Menu )
             {
             // ugly hack to support the times when NET::Menu meant NET::TopMenu
@@ -1524,7 +1525,10 @@ NET::WindowType Client::windowType( bool strict, int supported_types ) const
                 && abs( width() - workspace()->clientArea( FullArea, this ).width()) < 10 )
                 wt = NET::TopMenu;
             }
-        if( wt == NET::Unknown )
+        const char* const oo_prefix = "OpenOffice.org"; // QCString has no startsWith()
+        if( qstrncmp( resourceClass(), oo_prefix, strlen( oo_prefix )) == 0 && wt == NET::Dialog )
+            wt = NET::Normal; // see bug #66065
+        if( wt == NET::Unknown ) // this is more or less suggested in NETWM spec
             wt = isTransient() ? NET::Dialog : NET::Normal;
         }
     return wt;
