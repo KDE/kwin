@@ -42,8 +42,11 @@ class WindowRules
     public:
         WindowRules();
         WindowRules( KConfig& );
+        WindowRules( const QString&, bool temporary );
         void write( KConfig& ) const;
         void update( Client* );
+        bool isTemporary() const;
+        bool discardTemporary( bool force ); // removes if temporary and forced or too old
         bool match( const Client* c ) const;
         Placement::Policy checkPlacement( Placement::Policy placement ) const;
         QRect checkGeometry( const QRect& rect, bool init = false ) const;
@@ -68,11 +71,13 @@ class WindowRules
         Options::MoveResizeMode checkMoveResizeMode( Options::MoveResizeMode mode ) const;
         bool checkCloseable( bool closeable ) const;
     private:
+        void readFromCfg( KConfig& cfg );
         static SettingRule readRule( KConfig&, const QString& key );
         static SettingRule readForceRule( KConfig&, const QString& key );
         static NET::WindowType readType( KConfig&, const QString& key );
         static bool checkRule( SettingRule rule, bool init );
         static bool checkForceRule( SettingRule rule );
+        int temporary_state; // e.g. for kstart
         QCString wmclass;
         bool wmclassregexp;
         bool wmclasscomplete;

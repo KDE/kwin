@@ -344,7 +344,7 @@ private slots:
         QString readName() const;
         void setCaption( const QString& s, bool force = false );
         bool hasTransientInternal( const Client* c, bool indirect, ConstClientList& set ) const;
-        void setupWindowRules();
+        void setupWindowRules( bool ignore_temporary );
         void updateWindowRules();
         void finishWindowRules();
 

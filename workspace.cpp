@@ -66,6 +66,7 @@ Workspace::Workspace( bool restore )
     number_of_desktops(0),
     popup_client      (0),
     desktop_widget    (0),
+    temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false ),
     active_client     (0),
     last_active_client     (0),
     most_recently_raised (0),
@@ -108,6 +109,9 @@ Workspace::Workspace( bool restore )
     default_colormap = DefaultColormap(qt_xdisplay(), qt_xscreen() );
     installed_colormap = default_colormap;
     session.setAutoDelete( TRUE );
+
+    connect( &temporaryRulesMessages, SIGNAL( gotMessage( const QString& )),
+        this, SLOT( gotTemporaryRulesMessage( const QString& )));
 
     updateXTime(); // needed for proper initialization of user_time in Client ctor
 
@@ -247,6 +251,7 @@ void Workspace::init()
         NET::WM2RestackWindow |
         NET::WM2MoveResizeWindow |
         NET::WM2ExtendedStrut |
+        NET::WM2KDETemporaryRules |
         0
         ,
         NET::ActionMove |

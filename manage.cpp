@@ -111,7 +111,7 @@ bool Client::manage( Window w, bool isMapped )
     // and only then really set the caption using setCaption(), which checks for duplicates etc.
     // and also relies on rules already existing
     cap_normal = readName();
-    setupWindowRules();
+    setupWindowRules( false );
     setCaption( cap_normal, true );
 
     detectNoBorder();
@@ -482,6 +482,9 @@ bool Client::manage( Window w, bool isMapped )
     delete session;
 
     ungrabXServer();
+    
+    if( client_rules->discardTemporary( true ))
+        setupWindowRules( true );
 
     return true;
     }

@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kshortcut.h>
 #include <qcursor.h>
 #include <netwm.h>
+#include <kxmessages.h>
 
 #include "KWinInterface.h"
 #include "utils.h"
@@ -202,7 +203,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void storeSession( KConfig* config, SMSavePhase phase );
 
         SessionInfo* takeSessionInfo( Client* );
-        WindowRules* findWindowRules( const Client* ) const;
+        WindowRules* findWindowRules( const Client*, bool );
 
     // dcop interface
         void cascadeDesktop();
@@ -330,6 +331,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void lostTopMenuSelection();
         void lostTopMenuOwner();
         void delayFocus();
+        void gotTemporaryRulesMessage( const QString& );
+        void cleanupTemporaryRules();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -431,6 +434,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         QPtrList<SessionInfo> session;
         QValueList<WindowRules*> windowRules;
+        KXMessages temporaryRulesMessages;
         static const char* windowTypeToTxt( NET::WindowType type );
         static NET::WindowType txtToWindowType( const char* txt );
         static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );

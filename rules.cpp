@@ -12,6 +12,9 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kconfig.h>
 #include <qregexp.h>
+#include <ktempfile.h>
+#include <ksimpleconfig.h>
+#include <qfile.h>
 
 #include "client.h"
 #include "workspace.h"
@@ -22,7 +25,8 @@ namespace KWinInternal
 static WindowRules dummyRules; // dummy used to avoid NULL checks
 
 WindowRules::WindowRules()
-    : wmclassregexp( false )
+    : temporary_state( 0 )
+    , wmclassregexp( false )
     , wmclasscomplete( false )
     , windowroleregexp( false )
     , titleregexp( false )
@@ -53,6 +57,22 @@ WindowRules::WindowRules()
     {
     }
 
+WindowRules::WindowRules( const QString& str, bool temporary )
+    : temporary_state( temporary ? 2 : 0 )
+    {
+    KTempFile file;
+    QFile* f = file.file();
+    if( f != NULL )
+        {
+        QCString s = str.utf8();
+        f->writeBlock( s.data(), s.length());
+        }
+    file.close();
+    KSimpleConfig cfg( file.name());
+    readFromCfg( cfg );
+    file.unlink();
+    }
+
 #define READ_MATCH_STRING( var, func ) \
     var = cfg.readEntry( #var ) func; \
     var##regexp = cfg.readBoolEntry( #var "regexp" );
@@ -70,6 +90,12 @@ WindowRules::WindowRules()
     var##rule = readForceRule( cfg, #var "rule" );
 
 WindowRules::WindowRules( KConfig& cfg )
+    : temporary_state( 0 )
+    {
+    readFromCfg( cfg );
+    }
+
+void WindowRules::readFromCfg( KConfig& cfg )
     {
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
     wmclassregexp = cfg.readBoolEntry( "wmclassregexp" );
@@ -107,7 +133,7 @@ WindowRules::WindowRules( KConfig& cfg )
     READ_FORCE_RULE( acceptfocus, Bool, );
     READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
     READ_FORCE_RULE( closeable, Bool, );
-    kdDebug() << "READ RULE:" << wmclass << endl;
+    kdDebug() << "READ RULE:" << wmclass << "/" << title << endl;
     }
 
 #undef READ_MATCH_STRING
@@ -212,29 +238,31 @@ bool WindowRules::match( const Client* c ) const
     {
     if( types != NET::AllTypesMask )
         {
-        if( !NET::typeMatchesMask( c->windowType( true ), types )) // direct
+        NET::WindowType t = c->windowType( true ); // direct type
+        if( t == NET::Unknown )
+            t = NET::Normal; // NET::Unknown->NET::Normal is only here for matching
+        if( !NET::typeMatchesMask( t, types ))
             return false;
         }
-    // TODO exactMatch() for regexp?
     if( !wmclass.isEmpty())
         { // TODO optimize?
         QCString cwmclass = wmclasscomplete
             ? c->resourceName() + ' ' + c->resourceClass() : c->resourceClass();
-        if( wmclassregexp && !QRegExp( wmclass ).exactMatch( cwmclass ))
+        if( wmclassregexp && QRegExp( wmclass ).search( cwmclass ) == -1 )
             return false;
         if( !wmclassregexp && wmclass != cwmclass )
             return false;
         }
     if( !windowrole.isEmpty())
         {
-        if( windowroleregexp && !QRegExp( windowrole ).exactMatch( c->windowRole()))
+        if( windowroleregexp && QRegExp( windowrole ).search( c->windowRole()) == -1 )
             return false;
         if( !windowroleregexp && windowrole != c->windowRole())
             return false;
         }
     if( !title.isEmpty())
         {
-        if( titleregexp && !QRegExp( title ).exactMatch( c->caption( false )))
+        if( titleregexp && QRegExp( title ).search( c->caption( false )) == -1 )
             return false;
         if( !titleregexp && title != c->caption( false ))
             return false;
@@ -243,8 +271,8 @@ bool WindowRules::match( const Client* c ) const
     if( !clientmachine.isEmpty())
         {
         if( clientmachineregexp
-            && !QRegExp( clientmachine ).exactMatch( c->wmClientMachine( true ))
-            && !QRegExp( clientmachine ).exactMatch( c->wmClientMachine( false )))
+            && QRegExp( clientmachine ).search( c->wmClientMachine( true )) == -1
+            && QRegExp( clientmachine ).search( c->wmClientMachine( false )) == -1 )
             return false;
         if( !clientmachineregexp
             && clientmachine != c->wmClientMachine( true )
@@ -404,11 +432,29 @@ bool WindowRules::checkCloseable( bool closeable ) const
     return checkForceRule( closeablerule ) ? this->closeable : closeable;
     }
 
+bool WindowRules::isTemporary() const
+    {
+    return temporary_state > 0;
+    }
+
+bool WindowRules::discardTemporary( bool force )
+    {
+    if( temporary_state == 0 ) // not temporary
+        return false;
+    if( force || --temporary_state == 0 ) // too old
+        {
+        kdDebug() << "DISCARD:" << wmclass << "/" << title << endl;
+        delete this;
+        return true;
+        }
+    return false;
+    }
+
 // Client
 
-void Client::setupWindowRules()
+void Client::setupWindowRules( bool ignore_temporary )
     {
-    client_rules = workspace()->findWindowRules( this );
+    client_rules = workspace()->findWindowRules( this, ignore_temporary );
     // check only after getting the rules, because there may be a rule forcing window type
     if( isTopMenu()) // TODO cannot have restrictions
         client_rules = &dummyRules;
@@ -427,17 +473,22 @@ void Client::finishWindowRules()
 
 // Workspace
 
-WindowRules* Workspace::findWindowRules( const Client* c ) const
+WindowRules* Workspace::findWindowRules( const Client* c, bool ignore_temporary )
     {
     for( QValueList< WindowRules* >::ConstIterator it = windowRules.begin();
          it != windowRules.end();
          ++it )
         {
-        // chaining for wildcard matches
+        if( ignore_temporary && (*it)->isTemporary())
+            continue;
+        // TODO chaining for wildcard matches
         if( (*it)->match( c ))
             {
             kdDebug() << "RULE FOUND:" << c << endl;
-            return *it;
+            WindowRules* ret = *it;
+            if( ret->isTemporary())
+                windowRules.remove( *it );
+            return ret;
             }
         }
     kdDebug() << "RULE DUMMY:" << c << endl;
@@ -478,11 +529,49 @@ void Workspace::writeWindowRules()
     int i = 1;
     for( QValueList< WindowRules* >::ConstIterator it = windowRules.begin();
          it != windowRules.end();
-         ++it, ++i )
+         ++it )
         {
+        if( (*it)->isTemporary())
+            continue;
         cfg.setGroup( QString::number( i ));
         (*it)->write( cfg );
+        ++i;
         }
+    }
+
+void Workspace::gotTemporaryRulesMessage( const QString& message )
+    {
+    bool was_temporary = false;
+    for( QValueList< WindowRules* >::ConstIterator it = windowRules.begin();
+         it != windowRules.end();
+         ++it )
+        if( (*it)->isTemporary())
+            was_temporary = true;
+    WindowRules* rule = new WindowRules( message, true );
+    windowRules.prepend( rule ); // highest priority first
+    if( !was_temporary )
+        QTimer::singleShot( 60000, this, SLOT( cleanupTemporaryRules()));
+    }
+
+void Workspace::cleanupTemporaryRules()
+    {
+    kdDebug() << "CLEANUP" << endl;
+    bool has_temporary = false;
+    for( QValueList< WindowRules* >::Iterator it = windowRules.begin();
+         it != windowRules.end();
+         )
+        {
+        if( (*it)->discardTemporary( false ))
+            it = windowRules.remove( it );
+        else
+            {
+            if( (*it)->isTemporary())
+                has_temporary = true;
+            ++it;
+            }
+        }
+    if( has_temporary )
+        QTimer::singleShot( 60000, this, SLOT( cleanupTemporaryRules()));
     }
 
 } // namespace
