@@ -588,7 +588,9 @@ void KAdvancedConfig::load( void )
     setElectricBorders(config->readNumEntry(KWM_ELECTRIC_BORDER, false));
     setElectricBorderDelay(config->readNumEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
 
-    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 2 ));
+//    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 2 ));
+    // TODO default to low for now
+    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 1 ));
 
     emit KCModule::changed(false);
 }
@@ -630,7 +632,9 @@ void KAdvancedConfig::defaults()
     setShadeHoverInterval(250);
     setElectricBorders(0);
     setElectricBorderDelay(150);
-    setFocusStealing(2);
+//    setFocusStealing(2);
+    // TODO default to low for now
+    setFocusStealing(1);
     emit KCModule::changed(true);
 }
 

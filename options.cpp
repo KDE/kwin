@@ -64,7 +64,9 @@ unsigned long Options::updateSettings()
 
     rollOverDesktops = config->readBoolEntry("RollOverDesktops", TRUE);
     
-    focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 2 );
+//    focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 2 );
+    // TODO use low level for now
+    focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 1 );
     focusStealingPreventionLevel = KMAX( 0, KMIN( 4, focusStealingPreventionLevel ));
 
     KConfig *gc = new KConfig("kdeglobals", false, false);
