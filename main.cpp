@@ -107,11 +107,19 @@ void kwin_updateTime()
 
 
 Application::Application( )
-: KApplication( )
+: KApplication( ), owner( kwin_screen_number )
 {
     if (kwin_screen_number == -1)
         kwin_screen_number = DefaultScreen(qt_xdisplay());
 
+    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    if( !owner.claim( args->isSet( "replace" ), true ))
+    {
+        fputs(i18n("kwin: couldn't claim manager selection, another wm running? (try using --replace)\n").local8Bit(), stderr);
+        ::exit(1);
+    }
+    connect( &owner, SIGNAL( lostOwnership()), SLOT( quit()));
+	
     initting = TRUE; // startup....
 
     // install X11 error handler
@@ -149,7 +157,27 @@ bool Application::x11EventFilter( XEvent *e )
 {
     if ( Workspace::self()->workspaceEvent( e ) )
 	     return TRUE;
-     return KApplication::x11EventFilter( e );
+    bool handled = false;
+    switch( e->type )
+    {
+	case SelectionClear:
+	    handled = owner.filterSelectionClear( e->xselectionclear );
+	  break;
+	case SelectionNotify:
+	    handled = owner.filterSelectionNotify( e->xselection );
+	  break;
+	case SelectionRequest:
+	    handled = owner.filterSelectionRequest( e->xselectionrequest );
+	  break;
+	case DestroyNotify:
+	    handled = owner.filterDestroyNotify( e->xdestroywindow );
+	  break;
+	default:
+	  break;
+    }
+    if( handled )
+	return true;
+    return KApplication::x11EventFilter( e );
 }
 
 class SessionManaged : public KSessionManaged
@@ -175,6 +203,12 @@ static const char *version = "0.95";
 static const char *description = I18N_NOOP( "The KDE window manager." );
 
 extern "C" { int kdemain(int, char *[]); }
+
+static KCmdLineOptions args[] =
+{
+    { "replace", I18N_NOOP("Replace already running ICCCM2.0 compliant window manager."), 0 },
+    KCmdLineLastOption
+};
 
 int kdemain( int argc, char * argv[] )
 {
@@ -244,6 +278,7 @@ int kdemain( int argc, char * argv[] )
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions( args );
 
     if (signal(SIGTERM, sighandler) == SIG_IGN)
 	signal(SIGTERM, SIG_IGN);
@@ -270,3 +305,60 @@ int kdemain( int argc, char * argv[] )
 
     return a.exec();
 }
+
+//************************************
+// KWinSelectionOwner
+//************************************
+
+KWinSelectionOwner::KWinSelectionOwner( int screen_P )
+    : KSelectionOwner( make_selection_atom( screen_P ), screen_P )
+    {
+    }
+
+Atom KWinSelectionOwner::make_selection_atom( int screen_P )
+    {
+    if( screen_P < 0 )
+	screen_P = DefaultScreen( qt_xdisplay());
+    char tmp[ 30 ];
+    sprintf( tmp, "WM_S%d", screen_P );
+    return XInternAtom( qt_xdisplay(), tmp, False );
+    }
+    
+void KWinSelectionOwner::getAtoms()
+    {
+    KSelectionOwner::getAtoms();
+    if( xa_version == None )
+        {
+        Atom atoms[ 1 ];
+        const char* const names[] =
+            { "VERSION" };
+        XInternAtoms( qt_xdisplay(), const_cast< char** >( names ), 1, False, atoms );
+        xa_version = atoms[ 0 ];
+        }
+    }
+
+void KWinSelectionOwner::replyTargets( Atom property_P, Window requestor_P )
+    {
+    KSelectionOwner::replyTargets( property_P, requestor_P );
+    Atom atoms[ 1 ] = { xa_version };
+    // PropModeAppend !
+    XChangeProperty( qt_xdisplay(), requestor_P, property_P, XA_ATOM, 32, PropModeAppend,
+        reinterpret_cast< unsigned char* >( atoms ), 1 );
+    }
+
+bool KWinSelectionOwner::genericReply( Atom target_P, Atom property_P, Window requestor_P )
+    {
+    if( target_P == xa_version )
+        {
+        Q_INT32 version[] = { 2, 0 };
+        XChangeProperty( qt_xdisplay(), requestor_P, property_P, XA_INTEGER, 32,
+            PropModeReplace, reinterpret_cast< unsigned char* >( &version ), 2 );
+        }
+    else
+        return KSelectionOwner::genericReply( target_P, property_P, requestor_P );
+    return true;    
+    }
+
+Atom KWinSelectionOwner::xa_version = None;
+
+#include "main.moc"
