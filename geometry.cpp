@@ -968,7 +968,7 @@ void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
         }
     // if it would be moved outside of workarea, keep it inside,
     // see also Client::computeWorkareaDiff()
-    if( workarea_diff_x != INT_MIN ) // was inside
+    if( workarea_diff_x != INT_MIN && w <= area.width()) // was inside and can still fit
         {
         if( newx < area.left())
             newx = area.left();
@@ -976,7 +976,7 @@ void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
             newx = area.right() + 1 - w;
         assert( newx >= area.left() && newx + w <= area.right() + 1 ); // width was checked above
         }
-    if( workarea_diff_y != INT_MIN ) // was inside
+    if( workarea_diff_y != INT_MIN && h <= area.height()) // was inside and can still fit
         {
         if( newy < area.top())
             newy = area.top();
