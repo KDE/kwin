@@ -73,7 +73,9 @@ public:
     static int  borderSize() { return m_borderSize; }
     static bool useHighContrastHoveredButtons() { return m_useHighContrastHoveredButtons; }
     static bool animateButtons() { return m_animateButtons; }
+    static bool menuClose() { return m_menuClose; }
     static Qt::AlignmentFlags titleAlign() { return m_titleAlign; }
+    static bool reverseLayout() { return m_reverse; }
     static QColor getColor(KWinPlastik::ColorType type, const bool active = true);
 private:
     void readConfig();
@@ -82,6 +84,8 @@ private:
     static bool m_shrinkBorders;
     static bool m_useHighContrastHoveredButtons;
     static bool m_animateButtons;
+    static bool m_menuClose;
+    static bool m_reverse;
     static int  m_borderSize;
     static int  m_titleHeight;
     static int  m_titleHeightTool;

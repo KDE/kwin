@@ -75,6 +75,7 @@ protected:
 private slots:
     void slotMaximize();
     void menuButtonPressed();
+    void menuButtonReleased();
     bool isTool();
 private:
     void _resetLayout();
@@ -99,6 +100,8 @@ private:
     PlastikButton *m_button[NumButtons];
 
     bool captionBufferDirty;
+
+    bool closing;
 
     // settings...
     int   s_titleHeight;

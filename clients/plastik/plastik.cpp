@@ -36,6 +36,8 @@ bool PlastikHandler::m_initialized    = false;
 bool PlastikHandler::m_animateButtons = true;
 bool PlastikHandler::m_titleShadow    = true;
 bool PlastikHandler::m_shrinkBorders  = true;
+bool PlastikHandler::m_menuClose      = false;
+bool PlastikHandler::m_reverse        = false;
 int  PlastikHandler::m_borderSize     = 4;
 int  PlastikHandler::m_titleHeight    = 19;
 int  PlastikHandler::m_titleHeightTool= 12;
@@ -83,6 +85,9 @@ bool PlastikHandler::reset(unsigned long changed)
         default:
             m_borderSize = 4;
     }
+
+    // check if we are in reverse layout mode
+    m_reverse = QApplication::reverseLayout();
 
     // read in the configuration
     readConfig();
@@ -136,6 +141,7 @@ void PlastikHandler::readConfig()
     else if (value == "AlignRight")   m_titleAlign = Qt::AlignRight;
 
     m_animateButtons = config.readBoolEntry("AnimateButtons", true);
+    m_menuClose = config.readBoolEntry("CloseOnMenuDoubleClick", true);
 }
 
 QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)

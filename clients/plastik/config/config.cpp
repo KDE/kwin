@@ -53,6 +53,8 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
             this, SIGNAL(changed()));
     connect(m_dialog->animateButtons, SIGNAL(toggled(bool)),
             this, SIGNAL(changed()));
+    connect(m_dialog->menuClose, SIGNAL(toggled(bool)),
+            this, SIGNAL(changed()));
     connect(m_dialog->titleShadow, SIGNAL(toggled(bool)),
             this, SIGNAL(changed()));
     connect(m_dialog->titlebarHeight, SIGNAL(valueChanged(int)),
@@ -76,6 +78,8 @@ void PlastikConfig::load(KConfig*)
     if (button) button->setChecked(true);
     bool animateButtons = m_config->readBoolEntry("AnimateButtons", true);
     m_dialog->animateButtons->setChecked(animateButtons);
+    bool menuClose = m_config->readBoolEntry("CloseOnMenuDoubleClick", true);
+    m_dialog->menuClose->setChecked(menuClose);
     bool titleShadow = m_config->readBoolEntry("TitleShadow", true);
     m_dialog->titleShadow->setChecked(titleShadow);
     int titlebarHeight = m_config->readNumEntry("TitleHeightMin", 19);
@@ -112,6 +116,7 @@ void PlastikConfig::save(KConfig*)
     QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->selected();
     if (button) m_config->writeEntry("TitleAlignment", QString(button->name()));
     m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
+    m_config->writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
     m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
     switch(m_dialog->titlebarHeight->value())
     {
@@ -143,6 +148,7 @@ void PlastikConfig::defaults()
         (QRadioButton*)m_dialog->titleAlign->child("AlignHCenter");
     if (button) button->setChecked(true);
     m_dialog->animateButtons->setChecked(true);
+    m_dialog->menuClose->setChecked(false);
     m_dialog->titleShadow->setChecked(true);
     m_dialog->titlebarHeight->setValue(2);
 }

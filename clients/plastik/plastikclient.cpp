@@ -60,6 +60,7 @@ PlastikClient::PlastikClient(KDecorationBridge* bridge, KDecorationFactory* fact
     aTitleBarTile(0), iTitleBarTile(0), aTitleBarTopTile(0), iTitleBarTopTile(0),
     pixmaps_created(false),
     captionBufferDirty(true),
+    closing(false),
     s_titleHeight(0),
     s_titleFont(QFont() )
 { }
@@ -516,7 +517,7 @@ void PlastikClient::_resetLayout()
     // sizeof(...) is calculated at compile time
     memset(m_button, 0, sizeof(PlastikButton *) * NumButtons);
 
-    titleLayout_->addItem(leftTitleSpacer_);
+    titleLayout_->addItem(PlastikHandler::reverseLayout()?rightTitleSpacer_:leftTitleSpacer_);
     addButtons(titleLayout_,
                options()->customButtonPositions() ? options()->titleButtonsLeft() : QString(default_left),
                s_titleHeight-1);
@@ -524,16 +525,16 @@ void PlastikClient::_resetLayout()
     addButtons(titleLayout_,
                options()->customButtonPositions() ? options()->titleButtonsRight() : QString(default_right),
                s_titleHeight-1);
-    titleLayout_->addItem(rightTitleSpacer_);
+    titleLayout_->addItem(PlastikHandler::reverseLayout()?leftTitleSpacer_:rightTitleSpacer_);
 
     // deco
     mainLayout_->addItem(decoSpacer_);
 
     //Mid
     QHBoxLayout * midLayout   = new QHBoxLayout(mainLayout_, 0, 0);
-    midLayout->addItem(leftSpacer_);
+    midLayout->addItem(PlastikHandler::reverseLayout()?rightSpacer_:leftSpacer_);
     midLayout->addWidget(new QLabel( i18n( "<center><b>Plastik</b></center>" ), widget()) );
-    midLayout->addItem(rightSpacer_);
+    midLayout->addItem(PlastikHandler::reverseLayout()?leftSpacer_:rightSpacer_);
 
     //Bottom
     mainLayout_->addItem(bottomSpacer_);
@@ -550,6 +551,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   if (!m_button[MenuButton]){
                       m_button[MenuButton] = new PlastikButton(this, "menu", i18n("Menu"), MenuButton, buttonSize);
                       connect(m_button[MenuButton], SIGNAL(pressed()), SLOT(menuButtonPressed()));
+                      connect(m_button[MenuButton], SIGNAL(released()), this, SLOT(menuButtonReleased()));
                       layout->addWidget(m_button[MenuButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
@@ -756,9 +758,26 @@ void PlastikClient::slotMaximize()
 
 void PlastikClient::menuButtonPressed()
 {
-    QPoint pos = m_button[MenuButton]->mapToGlobal(m_button[MenuButton]->rect().bottomLeft() );
-    showWindowMenu( pos );
-    m_button[MenuButton]->setDown(false);
+    static QTime* t = NULL;
+    static PlastikClient* lastClient = NULL;
+    if (t == NULL)
+        t = new QTime;
+    bool dbl = (lastClient==this && t->elapsed() <= QApplication::doubleClickInterval());
+    lastClient = this;
+    t->start();
+    if (!dbl || !PlastikHandler::menuClose()) {
+        QPoint pos = m_button[MenuButton]->mapToGlobal(m_button[MenuButton]->rect().bottomLeft() );
+        showWindowMenu( pos );
+        m_button[MenuButton]->setDown(false);
+    }
+    else
+        closing = true;
+}
+
+void PlastikClient::menuButtonReleased()
+{
+    if(closing)
+        closeWindow();
 }
 
 void PlastikClient::create_pixmaps()

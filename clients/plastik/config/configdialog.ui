@@ -9,178 +9,179 @@
             <x>0</x>
             <y>0</y>
             <width>541</width>
-            <height>188</height>
+            <height>214</height>
         </rect>
     </property>
     <property name="caption">
         <string>Config Dialog</string>
     </property>
-    <hbox>
+    <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLayoutWidget">
+        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="4">
             <property name="name">
-                <cstring>layout1</cstring>
+                <cstring>titleAlign</cstring>
             </property>
-            <grid>
+            <property name="title">
+                <string>Title &amp;Alignment</string>
+            </property>
+            <hbox>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
-                <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="5">
+                <widget class="QRadioButton">
                     <property name="name">
-                        <cstring>titleAlign</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Title &amp;Alignment</string>
-                    </property>
-                    <hbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QRadioButton">
-                            <property name="name">
-                                <cstring>AlignLeft</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Left</string>
-                            </property>
-                        </widget>
-                        <widget class="QRadioButton">
-                            <property name="name">
-                                <cstring>AlignHCenter</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Center</string>
-                            </property>
-                        </widget>
-                        <widget class="QRadioButton">
-                            <property name="name">
-                                <cstring>AlignRight</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Right</string>
-                            </property>
-                        </widget>
-                    </hbox>
-                </widget>
-                <spacer row="8" column="2" rowspan="1" colspan="2">
-                    <property name="name">
-                        <cstring>spacer5_2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>270</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="4">
-                    <property name="name">
-                        <cstring>animateButtons</cstring>
+                        <cstring>AlignLeft</cstring>
                     </property>
                     <property name="text">
-                        <string>Animate buttons</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Check this option if you want the buttons fade in/out when the mouse enters or leaves the button.</string>
+                        <string>Left</string>
                     </property>
                 </widget>
-                <widget class="QSlider" row="7" column="1" rowspan="1" colspan="4">
+                <widget class="QRadioButton">
                     <property name="name">
-                        <cstring>titlebarHeight</cstring>
-                    </property>
-                    <property name="minValue">
-                        <number>1</number>
-                    </property>
-                    <property name="maxValue">
-                        <number>6</number>
-                    </property>
-                    <property name="pageStep">
-                        <number>1</number>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="tickmarks">
-                        <enum>NoMarks</enum>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>By adjusting this slider, you can modify the height of the title bar.
-Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
-                    </property>
-                </widget>
-                <widget class="QLabel" row="8" column="1">
-                    <property name="name">
-                        <cstring>textLabel2</cstring>
+                        <cstring>AlignHCenter</cstring>
                     </property>
                     <property name="text">
-                        <string>Small</string>
+                        <string>Center</string>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="5">
+                <widget class="QRadioButton">
                     <property name="name">
-                        <cstring>titleShadow</cstring>
+                        <cstring>AlignRight</cstring>
                     </property>
                     <property name="text">
-                        <string>Use shadowed &amp;text</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+T</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
+                        <string>Right</string>
                     </property>
                 </widget>
-                <widget class="QLabel" row="7" column="0">
-                    <property name="name">
-                        <cstring>textLabel1_2</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Tit&amp;le bar height:</string>
-                    </property>
-                    <property name="buddy" stdset="0">
-                        <cstring>titlebarHeight</cstring>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>By adjusting this slider, you can modify the height of the title bar.
-Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
-                    </property>
-                </widget>
-                <spacer row="8" column="0">
-                    <property name="name">
-                        <cstring>spacer7</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>140</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QLabel" row="8" column="4">
-                    <property name="name">
-                        <cstring>textLabel4</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Large</string>
-                    </property>
-                </widget>
-            </grid>
+            </hbox>
         </widget>
-    </hbox>
+        <spacer row="5" column="2">
+            <property name="name">
+                <cstring>spacer5_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>270</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QSlider" row="4" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>titlebarHeight</cstring>
+            </property>
+            <property name="minValue">
+                <number>1</number>
+            </property>
+            <property name="maxValue">
+                <number>6</number>
+            </property>
+            <property name="pageStep">
+                <number>1</number>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="tickmarks">
+                <enum>NoMarks</enum>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>By adjusting this slider, you can modify the height of the title bar.
+Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="5" column="1">
+            <property name="name">
+                <cstring>textLabel2</cstring>
+            </property>
+            <property name="text">
+                <string>Small</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="4" column="0">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="text">
+                <string>Tit&amp;le bar height:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>titlebarHeight</cstring>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>By adjusting this slider, you can modify the height of the title bar.
+Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
+            </property>
+        </widget>
+        <spacer row="5" column="0">
+            <property name="name">
+                <cstring>spacer7</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>161</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="5" column="3">
+            <property name="name">
+                <cstring>textLabel4</cstring>
+            </property>
+            <property name="text">
+                <string>Large</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>titleShadow</cstring>
+            </property>
+            <property name="text">
+                <string>Use shadowed &amp;text</string>
+            </property>
+            <property name="accel">
+                <string>Alt+T</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>animateButtons</cstring>
+            </property>
+            <property name="text">
+                <string>Animate buttons</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you want the buttons fade in/out when the mouse enters or leaves the button.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>menuClose</cstring>
+            </property>
+            <property name="text">
+                <string>Close windows by double clicking the menu button</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you want windows to be closed when you double click the menu button, similar to Microsoft Windows.</string>
+            </property>
+        </widget>
+    </grid>
 </widget>
 <tabstops>
     <tabstop>AlignLeft</tabstop>
