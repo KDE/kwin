@@ -1566,8 +1566,8 @@ void Client::show()
 {
     if ( isIconified() && ( !isTransient() || mainClient() == this ) )
 	animateIconifyOrDeiconify( FALSE );
-    QWidget::show();
     setMappingState( NormalState );
+    QWidget::show();
     windowWrapper()->map();
 }
 
@@ -1701,13 +1701,13 @@ void Client::iconify()
 	hide();
 	return;
     }
+    setMappingState( IconicState );
     Events::raise( Events::Iconify );
-
+    
     if ( (!isTransient() || mainClient() == this ) && isVisible() )
 	animateIconifyOrDeiconify( TRUE );
     hide();
 
-    setMappingState( IconicState );
     workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
