@@ -6,6 +6,22 @@
  *	Copyright (c) 2001
  *		Karol Szwed <gallium@kde.org>
  *		http://gallium.n3.net/
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; see the file COPYING.  If not, write to
+ *  the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ *  Boston, MA 02111-1307, USA.
+ *
  */
 
 #include "config.h"
@@ -14,6 +30,7 @@
 #include <qwhatsthis.h>
 #include <klocale.h>
 #include <kstddirs.h>
+#include <kdirwatch.h>
 #include <kapp.h>
 
 
@@ -106,27 +123,34 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 			 this, SLOT(slotSelectionChanged()) );
 
 	// Create the theme directory (if not found) ... and obtain the path as we do so.
-	QString localThemeString = KGlobal::dirs()->saveLocation("data", "kwin");
-
+	localThemeString = KGlobal::dirs()->saveLocation("data", "kwin");
 	localThemeString += "/icewm-themes";
 	if (!QFile::exists(localThemeString))
 		QDir().mkdir(localThemeString);
 
+	// Watch the icewm theme directory for theme additions/removals
+	KDirWatch::self()->addDir(localThemeString);
+	connect( KDirWatch::self(), SIGNAL(dirty(const QString&)), this, SLOT(findIceWMThemes()) );
+
 	// Set the konqui link url
-	localThemeString = QString("file://") + localThemeString;
-	localThemeString.replace( QRegExp("~"), "$HOME" );
-	urlLabel->setURL( localThemeString );
+	QString urlThemeString = QString("file://") + localThemeString;
+	urlThemeString.replace( QRegExp("~"), "$HOME" );
+	urlLabel->setURL( urlThemeString );
 
 	// Make the widgets visible in kwindecoration
 	gb1->show();
 	themeLabel->show();
 	urlLabel->show();
 	gb2->show();
+
+	KDirWatch::self()->startScan();
 }
 
 
 IceWMConfig::~IceWMConfig()
 {
+	KDirWatch::self()->removeDir(localThemeString);
+	KDirWatch::self()->stopScan();
 	delete gb2;
 	delete urlLabel;
 	delete themeLabel;
@@ -175,6 +199,19 @@ void IceWMConfig::findIceWMThemes()
 
 	// Sort the items
 	themeListBox->sort();
+
+	// Select the currently used IceWM theme
+	QString themeName = icewmConfig->readEntry("CurrentTheme", "");
+
+	// Provide a theme alias
+	if (themeName == "default")
+		themeName = "";
+
+	if (themeName == "")
+		themeListBox->setCurrentItem( 
+			themeListBox->findItem( i18n("Infadel #2 (default)") ) );
+	else
+		themeListBox->setCurrentItem( themeListBox->findItem(themeName) );
 }
 
 
@@ -191,7 +228,6 @@ void IceWMConfig::slotSelectionChanged()
 
 
 // Loads the configurable options from the kwinicewmrc config file
-// It is passed the open config from kwindecoration to improve efficiency
 void IceWMConfig::load( KConfig* )
 {
 	icewmConfig->setGroup("General");
@@ -206,18 +242,6 @@ void IceWMConfig::load( KConfig* )
 	cbShowMenuButtonIcon->setChecked( override );
 
 	findIceWMThemes();
-	QString themeName = icewmConfig->readEntry("CurrentTheme", "");
-
-	// Provide a theme alias
-	if (themeName == "default")
-		themeName = "";
-
-	// Select the currently used IceWM theme
-	if (themeName == "")
-		themeListBox->setCurrentItem( 
-			themeListBox->findItem( i18n("Infadel #2 (default)") ) );
-	else
-		themeListBox->setCurrentItem( themeListBox->findItem(themeName) );
 }
 
 
