@@ -1100,12 +1100,14 @@ void Client::takeFocus( bool force, allowed_t )
 
 #ifndef NDEBUG
     static Time previous_focus_timestamp;
-    if( previous_focus_timestamp == qt_x_time )
+    static Client* previous_client;
+    if( previous_focus_timestamp == qt_x_time && previous_client != this )
         {
         kdWarning( 1212 ) << "Repeated use of the same X timestamp for focus" << endl;
         kdDebug( 1212 ) << kdBacktrace() << endl;
         }
     previous_focus_timestamp = qt_x_time;
+    previous_client = this;
 #endif
     if ( input ) 
         {
