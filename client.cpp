@@ -511,21 +511,29 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     moveResizeMode = FALSE;
     setMouseTracking( TRUE );
 
-    active = FALSE;
+    
     shaded = FALSE;
     hover_unshade = FALSE;
-    transient_for = None;
-    transient_for_defined = FALSE;
-    is_shape = FALSE;
+    active = FALSE; 
     is_sticky = FALSE;
     stays_on_top = FALSE;
+    is_shape = FALSE;
     may_move = TRUE;
     is_fullscreen = FALSE;
     skip_taskbar = FALSE;
-    skip_pager = FALSE;
-    max_mode = MaximizeRestore;
+    
+    Pdeletewindow = 0;
+    Ptakefocus = 0;
+    Pcontexthelp = 0;
+    input = FALSE;
     store_settings = FALSE;
+    skip_pager = FALSE;
 
+    transient_for = None;
+    transient_for_defined = FALSE;
+
+    max_mode = MaximizeRestore;
+  
     cmap = None;
 
     Window ww;
