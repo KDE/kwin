@@ -48,7 +48,10 @@ int Shape::shapeEvent()
 }
 
 
-void updateTime()
+/*!  
+  Updates kwin_time by receiving a current timestamp from the server.
+ */
+static void updateTime()
 {
     static QWidget* w = 0;
     if ( !w )
@@ -1390,17 +1393,17 @@ void Workspace::setCurrentDesktop( int new_desktop ){
        mapping done from front to back => less exposure events
     */
 
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+    for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
 	if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
 	    (*it)->hide();
 	}
     }
-
-    for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
 	    (*it)->show();
 	}
     }
+
 
     current_desktop = new_desktop;
 

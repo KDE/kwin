@@ -19,7 +19,6 @@
 
 extern Atom qt_wm_state;
 extern Time kwin_time;
-extern void updateTime(); // defined in workspace.cpp
 
 static bool resizeHorizontalDirectionFixed = FALSE;
 static bool resizeVerticalDirectionFixed = FALSE;
@@ -925,11 +924,6 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    break;
 	}
     }
-    
-    // slow down the window manager in order to give the client time
-    // to process the configure event. Results in a better overal
-    // performance.
-    updateTime(); 
 }
 
 /*!
