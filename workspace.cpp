@@ -1926,11 +1926,11 @@ void Workspace::slotKillWindow()
 
 void Workspace::killWindowAtPosition(int x, int y)
 {
-    ClientList::ConstIterator it(clients.begin());
-    for ( ; it != clients.end(); ++it)
+    ClientList::ConstIterator it(stacking_order.fromLast());
+    for ( ; it != stacking_order.end(); --it)
     {
         Client *client = (*it);
-        if ( client->rect().contains(QPoint(x, y)) &&
+        if ( client->frameGeometry().contains(QPoint(x, y)) &&
              client->isOnDesktop( currentDesktop() ) &&
              !client->isIconified() )
         {
