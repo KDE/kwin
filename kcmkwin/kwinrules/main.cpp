@@ -16,88 +16,174 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "main.h"
-
-#include <kglobal.h>
-#include <qlayout.h>
-#include <klocale.h>
+#include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <dcopclient.h>
-#include <kaboutdata.h>
+#include <kconfig.h>
+#include <klocale.h>
+#include <kwin.h>
 
-#include "ruleslist.h"
+#include <X11/Xlib.h>
+#include <fixx11h.h>
 
-extern "C"
-KCModule *create_kwinrules( QWidget *parent, const char *name )
-    {
-    //CT there's need for decision: kwm or kwin?
-    KGlobal::locale()->insertCatalogue( "kcmkwinrules" );
-    return new KWinInternal::KCMRules( parent, name );
-    }
+#include "ruleswidget.h"
+#include "../../rules.h"
 
 namespace KWinInternal
 {
 
-KCMRules::KCMRules( QWidget *parent, const char *name )
-: KCModule( parent, name )
-, config( "kwinrulesrc" )
+static void loadRules( QValueList< Rules* >& rules )
     {
-    QVBoxLayout *layout = new QVBoxLayout( this );
-    widget = new KCMRulesList( this );
-    layout->addWidget( widget );
-    connect( widget, SIGNAL( changed( bool )), SLOT( moduleChanged( bool )));
-    KAboutData *about = new KAboutData(I18N_NOOP( "kcmkwinrules" ),
-        I18N_NOOP( "Window-Specific Settings Configuration Module" ),
-        0, 0, KAboutData::License_GPL, I18N_NOOP( "(c) 2004 KWin and KControl Authors" ));
-    about->addAuthor("Lubos Lunak",0,"l.lunak@kde.org");
-    setAboutData(about);
+    KConfig cfg( "kwinrulesrc", true );
+    cfg.setGroup( "General" );
+    int count = cfg.readNumEntry( "count" );
+    for( int i = 1;
+         i <= count;
+         ++i )
+        {
+        cfg.setGroup( QString::number( i ));
+        Rules* rule = new Rules( cfg );
+        rules.append( rule );
+        }
     }
 
-void KCMRules::load()
+static void saveRules( const QValueList< Rules* >& rules )
     {
-    config.reparseConfiguration();
-    widget->load();
-    emit KCModule::changed( false );
+    KConfig cfg( "kwinrulesrc" );
+    cfg.setGroup( "General" );
+    cfg.writeEntry( "count", rules.count());
+    int i = 1;
+    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+         it != rules.end();
+         ++it )
+        {
+        cfg.setGroup( QString::number( i ));
+        (*it)->write( cfg );
+        ++i;
+        }
     }
 
-void KCMRules::save()
+static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
     {
-    widget->save();
-    emit KCModule::changed( false );
-    // Send signal to kwin
-    config.sync();
+    KWin::WindowInfo info = KWin::windowInfo( wid,
+        NET::WMName | NET::WMWindowType,
+        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine );
+    if( !info.valid()) // shouldn't really happen
+        return NULL;
+    QCString wmclass_class = info.windowClassClass().lower();
+    QCString wmclass_name = info.windowClassName().lower();
+    QCString role = info.windowRole().lower();
+    NET::WindowType type = info.windowType( NET::NormalMask | NET::DesktopMask | NET::DockMask
+        | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
+        | NET::UtilityMask | NET::SplashMask );
+    QString title = info.name().lower();
+//    QCString extrarole = ""; // TODO
+    QCString machine = info.clientMachine().lower();
+    Rules* best_match = NULL;
+    int match_quality = 0; // 0 - no, 1 - generic windowrole or title, 2 - exact match
+    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+         it != rules.end();
+         ++it )
+        {
+        // try to find an exact match, i.e. not a generic rule
+        Rules* rule = *it;
+        int quality = 0;
+        bool generic = true;
+        if( rule->wmclassmatch != Rules::ExactMatch )
+            continue; // too generic
+        if( !rule->matchWMClass( wmclass_class, wmclass_name ))
+            continue;
+        // from now on, it matches the app - now try to match for a specific window
+        if( rule->wmclasscomplete )
+            {
+            quality += 1;
+            generic = false;  // this can be considered specific enough (old X apps)
+            }
+        if( rule->windowrolematch != Rules::UnimportantMatch )
+            {
+            quality += rule->windowrolematch == Rules::ExactMatch ? 5 : 1;
+            generic = false;
+            }
+        if( rule->titlematch != Rules::UnimportantMatch )
+            {
+            quality += rule->titlematch == Rules::ExactMatch ? 3 : 1;
+            generic = false;
+            }
+        if( rule->types != NET::AllTypesMask )
+            {
+            int bits = 0;
+            for( int bit = 1;
+                 bit < 1 << 31;
+                 bit <<= 1 )
+                if( rule->types & bit )
+                    ++bits;
+            if( bits == 1 )
+                quality += 2;
+            }
+        if( generic )
+            continue;
+        if( !rule->matchType( type )
+            || !rule->matchRole( role )
+            || !rule->matchTitle( title )
+            || !rule->matchClientMachine( machine ))
+            continue;
+        if( quality > match_quality )
+            {
+            best_match = rule;
+            match_quality = quality;
+            }
+        }
+    return best_match;
+    }
+
+static int edit( Window wid )
+    {
+    QValueList< Rules* > rules;
+    loadRules( rules );
+    Rules* rule = findRule( rules, wid );
+    RulesDialog dlg;
+    rule = dlg.edit( rule, wid );
+    if( rule == NULL ) // cancelled
+        return 0;
+    if( rule->isEmpty())
+        {
+        delete rule;
+        return 0;
+        }
+    if( !rules.contains( rule ))
+        rules.prepend( rule );
+    saveRules( rules );
     if( !kapp->dcopClient()->isAttached())
         kapp->dcopClient()->attach();
     kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    return 0;
     }
+    
+} // namespace
 
-void KCMRules::defaults()
+static const KCmdLineOptions options[] =
     {
-    widget->defaults();
-    }
+    // no need for I18N_NOOP(), this is not supposed to be used directly
+        { "wid <wid>", "WId of the window for special window settings.", 0 },
+        KCmdLineLastOption
+    };
 
-QString KCMRules::quickHelp() const
+extern "C"
+int kdemain( int argc, char* argv[] )
     {
-    return i18n("<h1>Window-specific Settings</h1> Here you can customize window settings specifically only"
-        " for some windows."
-        " <p>Please note that this configuration will not take effect if you do not use"
-        " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
-        " for how to customize window behavior.");
+    KLocale::setMainCatalogue( "kcmkwinrules" );
+    KCmdLineArgs::init( argc, argv, "kwin_rules_dialog", I18N_NOOP( "KWin" ),
+	I18N_NOOP( "KWin helper utility" ), "1.0" );
+    KCmdLineArgs::addCmdLineOptions( options );
+    KApplication app;
+    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    bool id_ok = false;
+    Window id = args->getOption( "wid" ).toULong( &id_ok );
+    args->clear();
+    if( !id_ok || id == None )
+        {
+	KCmdLineArgs::usage( i18n( "This helper utility is not supposed to be called directly." ));
+	return 1;
+        }
+    return KWinInternal::edit( id );
     }
-
-void KCMRules::moduleChanged( bool state )
-    {
-    emit KCModule::changed( state );
-    }
-
-}
-
-// i18n freeze :-/
-#if 0
-I18N_NOOP("Remember settings separately for every window")
-I18N_NOOP("Show internal settings for remembering")
-I18N_NOOP("Internal setting for remembering")
-#endif
-
-
-#include "main.moc"

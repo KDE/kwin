@@ -496,6 +496,16 @@ void RulesWidget::detectClicked()
     detect_dlg->detect( 0 );
     }
 
+bool RulesWidget::setWindow( WId w )
+    {
+    assert( detect_dlg == NULL );
+    detect_dlg_ok = false;
+    detect_dlg = new DetectDialog;
+    connect( detect_dlg, SIGNAL( detectionDone( bool )), this, SLOT( detected( bool )));
+    detect_dlg->detect( w );
+    return detect_dlg_ok;
+    }
+
 void RulesWidget::detected( bool ok )
     {
     if( ok )
@@ -511,6 +521,7 @@ void RulesWidget::detected( bool ok )
         }
     delete detect_dlg;
     detect_dlg = NULL;
+    detect_dlg_ok = ok;
     }
 
 bool RulesWidget::finalCheck()
@@ -547,10 +558,13 @@ RulesDialog::RulesDialog( QWidget* parent, const char* name )
     setMainWidget( widget );
     }
 
-Rules* RulesDialog::edit( Rules* r )
+Rules* RulesDialog::edit( Rules* r, WId w )
     {
     rules = r;
     widget->setRules( rules );
+    if( rules == NULL && w != 0 ) // creating new one, read data from window
+        if( !widget->setWindow( w ))
+            return rules;
     exec();
     return rules;
     }

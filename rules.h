@@ -78,10 +78,11 @@ class Rules
         Rules( KConfig& );
         Rules( const QString&, bool temporary );
         void write( KConfig& ) const;
+        bool isEmpty() const;
 #ifndef KCMRULES
+        bool match( const Client* c ) const;
         bool update( Client* );
         bool isTemporary() const;
-        bool match( const Client* c ) const;
         bool discardTemporary( bool force ); // removes if temporary and forced or too old
         bool applyPlacement( Placement::Policy& placement ) const;
         bool applyGeometry( QRect& rect, bool init ) const;
@@ -109,6 +110,11 @@ class Rules
         bool applyCloseable( bool& closeable ) const;
     private:
 #endif
+        bool matchType( NET::WindowType match_type ) const;
+        bool matchWMClass( const QCString& match_class, const QCString& match_name ) const;
+        bool matchRole( const QCString& match_role ) const;
+        bool matchTitle( const QString& match_title ) const;
+        bool matchClientMachine( const QCString& match_machine ) const;
         enum // values are saved to the cfg file
             {
             Unused = 0,

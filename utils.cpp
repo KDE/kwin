@@ -16,20 +16,28 @@ License. See the file "COPYING" for the exact licensing terms.
 */
 
 #include "utils.h"
-#include "atoms.h"
+
+#include <unistd.h>
+
+#ifndef KCMRULES
 
 #include <kxerrorhandler.h>
 #include <assert.h>
-#include <unistd.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
 
+#include "atoms.h"
+
 extern Time qt_x_time;
+
+#endif
 
 namespace KWinInternal
 {
+
+#ifndef KCMRULES
 
 // used to store the return values of
 // XShapeQueryExtension.
@@ -275,6 +283,7 @@ void ungrabXServer()
     if( --server_grab_count == 0 )
         XUngrabServer( qt_xdisplay());
     }
+#endif
 
 bool isLocalMachine( const QCString& host )
     {
@@ -297,4 +306,6 @@ bool isLocalMachine( const QCString& host )
 
 } // namespace
 
+#ifndef KCMRULES
 #include "utils.moc"
+#endif

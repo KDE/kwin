@@ -240,6 +240,33 @@ void Rules::write( KConfig& cfg ) const
 #undef WRITE_FORCE_RULE
 #undef WRITE_WITH_DEFAULT
 
+// returns true if it doesn't affect anything
+bool Rules::isEmpty() const
+    {
+    return( placementrule == UnusedForceRule
+        && positionrule == UnusedSetRule
+        && sizerule == UnusedSetRule
+        && minsizerule == UnusedForceRule
+        && maxsizerule == UnusedForceRule
+        && ignorepositionrule == UnusedForceRule
+        && desktoprule == UnusedSetRule
+        && typerule == UnusedForceRule
+        && maximizevertrule == UnusedSetRule
+        && maximizehorizrule == UnusedSetRule
+        && minimizerule == UnusedSetRule
+        && shaderule == UnusedSetRule
+        && skiptaskbarrule == UnusedSetRule
+        && skippagerrule == UnusedSetRule
+        && aboverule == UnusedSetRule
+        && belowrule == UnusedSetRule
+        && fullscreenrule == UnusedSetRule
+        && noborderrule == UnusedSetRule
+        && fsplevelrule == UnusedForceRule
+        && acceptfocusrule == UnusedForceRule
+        && moveresizemoderule == UnusedForceRule
+        && closeablerule == UnusedForceRule );
+    }
+
 Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
     {
     int v = cfg.readNumEntry( key );
@@ -264,21 +291,24 @@ NET::WindowType Rules::readType( KConfig& cfg, const QString& key )
     return NET::Unknown;
     }
 
-#ifndef KCMRULES
-bool Rules::match( const Client* c ) const
+bool Rules::matchType( NET::WindowType match_type ) const
     {
     if( types != NET::AllTypesMask )
         {
-        NET::WindowType t = c->windowType( true ); // direct type
-        if( t == NET::Unknown )
-            t = NET::Normal; // NET::Unknown->NET::Normal is only here for matching
-        if( !NET::typeMatchesMask( t, types ))
+        if( match_type == NET::Unknown )
+            match_type = NET::Normal; // NET::Unknown->NET::Normal is only here for matching
+        if( !NET::typeMatchesMask( match_type, types ))
             return false;
         }
+    return true;
+    }
+    
+bool Rules::matchWMClass( const QCString& match_class, const QCString& match_name ) const
+    {
     if( wmclassmatch != UnimportantMatch )
         { // TODO optimize?
         QCString cwmclass = wmclasscomplete
-            ? c->resourceName() + ' ' + c->resourceClass() : c->resourceClass();
+            ? match_name + ' ' + match_class : match_class;
         if( wmclassmatch == RegExpMatch && QRegExp( wmclass ).search( cwmclass ) == -1 )
             return false;
         if( wmclassmatch == ExactMatch && wmclass != cwmclass )
@@ -286,40 +316,72 @@ bool Rules::match( const Client* c ) const
         if( wmclassmatch == SubstringMatch && !cwmclass.contains( wmclass ))
             return false;
         }
+    return true;
+    }
+    
+bool Rules::matchRole( const QCString& match_role ) const
+    {
     if( windowrolematch != UnimportantMatch )
         {
-        if( windowrolematch == RegExpMatch && QRegExp( windowrole ).search( c->windowRole()) == -1 )
+        if( windowrolematch == RegExpMatch && QRegExp( windowrole ).search( match_role ) == -1 )
             return false;
-        if( windowrolematch == ExactMatch && windowrole != c->windowRole())
+        if( windowrolematch == ExactMatch && windowrole != match_role )
             return false;
-        if( windowrolematch == SubstringMatch && !c->windowRole().contains( windowrole ))
+        if( windowrolematch == SubstringMatch && !match_role.contains( windowrole ))
             return false;
         }
+    return true;
+    }
+    
+bool Rules::matchTitle( const QString& match_title ) const
+    {
     if( titlematch != UnimportantMatch )
         {
-        if( titlematch == RegExpMatch && QRegExp( title ).search( c->caption( false )) == -1 )
+        if( titlematch == RegExpMatch && QRegExp( title ).search( match_title ) == -1 )
             return false;
-        if( titlematch == ExactMatch && title != c->caption( false ))
+        if( titlematch == ExactMatch && title != match_title )
             return false;
-        if( titlematch == SubstringMatch && !c->caption( false ).contains( title ))
+        if( titlematch == SubstringMatch && !match_title.contains( title ))
             return false;
         }
-    // TODO extrarole
+    return true;
+    }
+
+bool Rules::matchClientMachine( const QCString& match_machine ) const
+    {
     if( clientmachinematch != UnimportantMatch )
         {
+        // if it's localhost, check also "localhost" before checking hostname
+        if( match_machine != "localhost" && isLocalMachine( match_machine )
+            && matchClientMachine( "localhost" ))
+            return true;
         if( clientmachinematch == RegExpMatch
-            && QRegExp( clientmachine ).search( c->wmClientMachine( true )) == -1
-            && QRegExp( clientmachine ).search( c->wmClientMachine( false )) == -1 )
+            && QRegExp( clientmachine ).search( match_machine ) == -1 )
             return false;
         if( clientmachinematch == ExactMatch
-            && clientmachine != c->wmClientMachine( true )
-            && clientmachine != c->wmClientMachine( false ))
+            && clientmachine != match_machine )
             return false;
         if( clientmachinematch == SubstringMatch
-            && !c->wmClientMachine( true ).contains( clientmachine )
-            && !c->wmClientMachine( false ).contains( clientmachine ))
+            && !match_machine.contains( clientmachine ))
             return false;
         }
+    return true;
+    }
+
+#ifndef KCMRULES
+bool Rules::match( const Client* c ) const
+    {
+    if( !matchType( c->windowType( true )))
+        return false;
+    if( !matchWMClass( c->resourceClass(), c->resourceName()))
+        return false;
+    if( !matchRole( c->windowRole()))
+        return false;
+    if( !matchTitle( c->caption( false )))
+        return false;
+    // TODO extrarole
+    if( !matchClientMachine( c->wmClientMachine( false )))
+        return false;
     return true;
     }
 
@@ -675,8 +737,7 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
 
 void Workspace::editWindowRules( Client* c )
     {
-    // TODO this should try to select or create a rule specific for the window
-    KApplication::kdeinitExec( "kcmshell", "kwinrules" );
+    KApplication::kdeinitExec( "kwin_rules_dialog", QStringList() << "--wid" << QString::number( c->window()));
     }
 
 void Workspace::loadWindowRules()
