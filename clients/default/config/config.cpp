@@ -32,7 +32,7 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 {
 	highcolor = QPixmap::defaultDepth() > 8;
 	gb = new QGroupBox( 1, Qt::Horizontal, 
-		i18n("KDE2 Default Decoration Settings"), parent );
+		i18n("Decoration Settings"), parent );
 
 	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), gb );
 	QWhatsThis::add( cbShowStipple, 

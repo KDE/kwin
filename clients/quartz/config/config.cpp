@@ -35,7 +35,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 {
 	quartzConfig = new KConfig("kwinquartzrc");
 	gb = new QGroupBox( 1, Qt::Horizontal, 
-						i18n("Quartz Decoration Settings"), parent );
+						i18n("Decoration Settings"), parent );
 	cbColorBorder = new QCheckBox( 
 						i18n("Draw window frames using &titlebar colors"), gb );
 	QWhatsThis::add( cbColorBorder, 
