@@ -537,10 +537,6 @@ Time Client::readUserCreationTime() const
             result = *((long*) data);
         XFree(data);
         }
-    // HACK - make the timestamp one second older, as apps tend to show splashscreens
-    // very quickly, perhaps even faster than the user is typing
-    if( isSplash() && result != 0 && result != -1 ) 
-        result -= 200;  
     return result;       
     }
 
