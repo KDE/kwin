@@ -14,6 +14,10 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 // increment this when you add a color type (mosfet)
 #define KWINCOLORS 6
 
+namespace KWinInternal {
+
+class OptionsPrivate;
+
 class Options : public QObject {
     Q_OBJECT
 public:
@@ -251,8 +255,6 @@ signals:
 
 protected:
     QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;
-    QColor colors[KWINCOLORS*2];
-    QColorGroup *cg[KWINCOLORS*2];
 
 private:
 
@@ -273,8 +275,12 @@ private:
     MouseCommand CmdAll1;
     MouseCommand CmdAll2;
     MouseCommand CmdAll3;
+    
+    OptionsPrivate* d;
 };
 
 extern Options* options;
+
+}; // namespace
 
 #endif

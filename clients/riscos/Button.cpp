@@ -24,6 +24,8 @@
 #include "Button.h"
 #include "Static.h"
 
+using namespace KWinInternal;
+
 namespace RiscOS
 {
 

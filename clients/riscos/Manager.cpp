@@ -54,6 +54,8 @@ extern "C"
   }
 }
 
+using namespace KWinInternal;
+
 namespace RiscOS
 {
 

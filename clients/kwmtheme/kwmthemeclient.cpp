@@ -85,8 +85,6 @@ static bool pixmaps_created = false;
 static bool titleSunken = false;
 static bool titleTransparent;
 
-extern Options *options;
-
 static void init_theme()
 {
     const char *keys[] = {"wm_top", "wm_bottom", "wm_left", "wm_right",

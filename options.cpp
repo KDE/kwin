@@ -11,9 +11,26 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 
+using namespace KWinInternal;
+
+namespace KWinInternal
+{
+class OptionsPrivate
+{
+public:
+    OptionsPrivate() {};
+    QColor colors[KWINCOLORS*2];
+    QColorGroup *cg[KWINCOLORS*2];
+};
+};
+
+#define colors (d->colors)
+#define cg (d->cg)
+
 Options::Options()
     : QObject( 0, 0)
 {
+    d = new OptionsPrivate;
     int i;
     for(i=0; i < KWINCOLORS*2; ++i)
         cg[i] = NULL;
@@ -30,6 +47,7 @@ Options::~Options(){
             cg[i] = NULL;
         }
     }
+    delete d;
 }
 
 const QColor& Options::color(ColorType type, bool active)

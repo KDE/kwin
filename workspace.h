@@ -51,7 +51,7 @@ public:
 
 typedef QValueList<SystemTrayWindow> SystemTrayWindowList;
 
-
+struct SessionInfoPrivate;
 struct SessionInfo
 {
     QCString sessionId;
@@ -70,6 +70,9 @@ struct SessionInfo
     bool shaded;
     bool staysOnTop;
     bool skipTaskbar;
+
+    private:
+    SessionInfoPrivate* d;
 };
 
 

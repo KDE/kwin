@@ -37,7 +37,10 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 using namespace KWinInternal;
 
+namespace KWinInternal {
 Options* options;
+};
+
 Atoms* atoms;
 
 Time kwin_time = CurrentTime;

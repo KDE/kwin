@@ -36,6 +36,8 @@
 
 #include "Static.h"
 
+using namespace KWinInternal;
+
 namespace RiscOS
 {
 
