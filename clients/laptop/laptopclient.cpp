@@ -18,6 +18,10 @@
 #include <qtooltip.h>
 #include <qlabel.h>
 
+// Default button layout
+const char default_left[]  = "X";
+const char default_right[] = "HSIA";
+
 namespace Laptop {
 
 static const unsigned char iconify_bits[] = {
@@ -29,8 +33,11 @@ static const unsigned char close_bits[] = {
 static const unsigned char maximize_bits[] = {
     0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0xff, 0xff };
 
-static const unsigned char minmax_bits[] = {
+static const unsigned char r_minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
+
+static const unsigned char l_minmax_bits[] = {
+    0x30, 0x18, 0xcc, 0xe6, 0xf3, 0xf9, 0xfc, 0xfc};
 
 static const unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
@@ -323,7 +330,7 @@ void LaptopButton::drawButton(QPainter *p)
 
 void LaptopClient::reset(unsigned long)
 {
-    for (int i = 0; i < 5; ++i) {
+    for (int i=0; i<BtnTypeCount; i++) {
         if (button[i])
             button[i]->reset();
     }
@@ -333,6 +340,13 @@ void LaptopClient::reset(unsigned long)
 LaptopClient::LaptopClient(KDecorationBridge *b, KDecorationFactory *f)
     : KDecoration(b, f)
 {
+}
+
+LaptopClient::~LaptopClient()
+{
+    for (int n=0; n<BtnTypeCount; n++) {
+        if (button[n]) delete button[n];
+    }
 }
 
 void LaptopClient::init()
@@ -345,8 +359,7 @@ void LaptopClient::init()
 
     // XXX Check how to do this...
     // connect(options(), SIGNAL(resetClients()), this, SLOT(slotReset()));
-    bool help = providesContextHelp();
-
+    
     g = new QGridLayout(widget(), 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 3);
@@ -368,58 +381,97 @@ void LaptopClient::init()
     if ( isTool() )
 	th -= 2;
 
-    button[BtnClose] = new LaptopButton(btnWidth2, th, this, "close",
-                                 close_bits, i18n("Close"));
-    button[BtnSticky] = new LaptopButton(btnWidth1, th, this, "sticky",
-                                 NULL, isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops"));
-    if(isOnAllDesktops())
-        button[BtnSticky]->setBitmap(unsticky_bits);
-    else
-        button[BtnSticky]->setBitmap(sticky_bits);
-    button[BtnIconify] = new LaptopButton(btnWidth2, th, this, "iconify",
-                                          iconify_bits, i18n("Minimize"));
-    button[BtnMax] = new LaptopButton(btnWidth2, th, this, "maximize",
-                                      maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
-    if (help) {
-        button[BtnHelp] = new LaptopButton(btnWidth1, th, this, "help",
-                                     question_bits, i18n("Help"));
-        connect(button[BtnHelp], SIGNAL( clicked() ), this, SLOT( showContextHelp() ) );
-    }
-    else
-        button[BtnHelp] = NULL;
-
-    connect( button[BtnClose], SIGNAL( clicked() ), this, SLOT( closeWindow() ) );
-    connect( button[BtnSticky], SIGNAL( clicked() ), this, SLOT( toggleOnAllDesktops() ) );
-    connect( button[BtnIconify], SIGNAL( clicked() ), this, SLOT( minimize() ) );
-    connect( button[BtnMax], SIGNAL( clicked() ), this, SLOT( slotMaximize() ) );
-
     hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 1, 1 );
-    hb->addWidget( button[BtnClose]);
-    hb->addSpacing(1);
+    
     titlebar = new QSpacerItem(10, th, QSizePolicy::Expanding,
-                               QSizePolicy::Minimum);
+                               QSizePolicy::Minimum);    
+    
+    // setup titlebar buttons
+    for (int n=0; n<BtnTypeCount; n++) button[n] = 0;
+    addButtons(hb, th, options()->customButtonPositions() ? options()->titleButtonsLeft() : QString(default_left));
+    hb->addSpacing(1);
     hb->addItem(titlebar);
     hb->addSpacing(1);
-    if (help) {
-        hb->addWidget(button[BtnHelp]);
-    }
-    hb->addWidget( button[BtnSticky]);
-    hb->addWidget( button[BtnIconify]);
-    hb->addWidget( button[BtnMax]);
-
-    if ( isTransient() || isTool() )
-	button[BtnSticky]->hide();
-    if ( !isMinimizable() )
-	button[BtnIconify]->hide();
-    if ( !isMaximizable() )
-	button[BtnMax]->hide();
-    if ( !isCloseable() )
-        button[BtnClose]->hide();
+    addButtons(hb, th, options()->customButtonPositions() ? options()->titleButtonsRight() : QString(default_right));
 
     hiddenItems = false;
     bufferDirty = true;
+
+}
+  
+void LaptopClient::addButtons(QBoxLayout *hb, int th, const QString& s)
+{
+    const unsigned char *bitmap;
+    bool m = maximizeMode() == MaximizeFull;
+    int l_max = options()->titleButtonsLeft().find('A');
+    QString tip;
+    
+    if (s.length() > 0) {
+        for (unsigned n=0; n < s.length(); n++) {
+            switch (s[n]) {
+              case 'S': // Sticky button
+                  if ((!button[BtnSticky]) && (!isTransient() || !isTool())) {
+                     button[BtnSticky] = new LaptopButton(btnWidth1, th, this, "sticky",
+                             NULL, isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops") );
+                     if(isOnAllDesktops())
+                         button[BtnSticky]->setBitmap(unsticky_bits);
+                     else
+                         button[BtnSticky]->setBitmap(sticky_bits);
+                     connect( button[BtnSticky], SIGNAL( clicked() ), this, SLOT( toggleOnAllDesktops() ) );
+                     hb->addWidget( button[BtnSticky]);
+                  }
+                  break;
+
+              case 'H': // Help button
+                  if ((!button[BtnHelp]) && providesContextHelp()) {
+                      button[BtnHelp] = new LaptopButton(btnWidth1, th, this, "help",
+                             question_bits, i18n("Help"));
+                      connect(button[BtnHelp], SIGNAL( clicked() ), this, SLOT( showContextHelp() ) );
+                      hb->addWidget(button[BtnHelp]);
+                  }
+                  break;
+
+              case 'I': // Minimize button
+                  if ((!button[BtnIconify]) && isMinimizable())  {
+                      button[BtnIconify] = new LaptopButton(btnWidth2, th, this, "iconify",
+                                                            iconify_bits, i18n("Minimize"));
+                      connect( button[BtnIconify], SIGNAL( clicked() ), this, SLOT( minimize() ) );
+                      hb->addWidget( button[BtnIconify]);
+                  }
+                  break;
+
+              case 'A': // Maximize button
+                  if ((!button[BtnMax]) && isMaximizable()) {
+                      if (!m) {
+                         bitmap = maximize_bits;
+                         tip = i18n("Maximize");
+                      } else {
+                          if (options()->customButtonPositions() && (l_max>-1))
+                              bitmap = l_minmax_bits;
+                          else 
+                              bitmap = r_minmax_bits;
+                          tip = i18n("Restore");
+                      }
+                      button[BtnMax] = new LaptopButton(btnWidth2, th, this, "maximize",
+                                                        bitmap, tip, LeftButton|MidButton|RightButton);
+                      connect( button[BtnMax], SIGNAL( clicked() ), this, SLOT( slotMaximize() ) );
+                      hb->addWidget( button[BtnMax]);
+                  }
+                  break;
+
+              case 'X': // Close button
+                  if ((!button[BtnClose]) && isCloseable()) {
+                      button[BtnClose] = new LaptopButton(btnWidth2, th, this, "close",
+                                                          close_bits, i18n("Close"));
+                      connect( button[BtnClose], SIGNAL( clicked() ), this, SLOT( closeWindow() ) );
+                      hb->addWidget( button[BtnClose]);
+                  }
+                  break;
+            }
+        }
+    }
 }
 
 void LaptopClient::slotMaximize()
@@ -592,30 +644,42 @@ void LaptopClient::iconChange()
 void LaptopClient::desktopChange()
 {
     bool on = isOnAllDesktops();
-    button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
-    QToolTip::remove(button[BtnSticky]);
-    QToolTip::add(button[BtnSticky],
-	    on ? i18n("Not on all desktops") : i18n("On all desktops"));
+    if(button[BtnSticky]) {
+        button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
+        QToolTip::remove(button[BtnSticky]);
+        QToolTip::add(button[BtnSticky],
+	          on ? i18n("Not on all desktops") : i18n("On all desktops"));
+    }
 }
 
 void LaptopClient::maximizeChange()
 {
     bool m = (maximizeMode() == MaximizeFull);
-    button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
-    QToolTip::remove(button[BtnMax]);
-    QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
-    spacer->changeSize(10, mustDrawHandle() ? handleSize : 4,
-	    QSizePolicy::Expanding, QSizePolicy::Minimum);
-    g->activate();
-    doShape();
-    widget()->repaint(false);
+    int l_max = options()->titleButtonsLeft().find('A');
+    if (button[BtnMax]) {
+        if (!m)
+            button[BtnMax]->setBitmap(maximize_bits); 
+        else {        
+            if (options()->customButtonPositions() && (l_max>-1))
+                button[BtnMax]->setBitmap(l_minmax_bits);
+            else
+                button[BtnMax]->setBitmap(r_minmax_bits);
+        }
+        QToolTip::remove(button[BtnMax]);
+        QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
+        spacer->changeSize(10, mustDrawHandle() ? handleSize : 4,
+	        QSizePolicy::Expanding, QSizePolicy::Minimum);
+        g->activate();
+        doShape();
+        widget()->repaint(false);
+    }
 }
 
 void LaptopClient::activeChange()
 {
     widget()->repaint(false);
     int i;
-    for(i=0; i < 5; ++i){
+    for(i=0; i<BtnTypeCount; i++){
         if(button[i])
             button[i]->reset();
     }
@@ -634,7 +698,7 @@ void LaptopClient::calcHiddenButtons()
         if(width() < minWidth){
             hiddenItems = true;
             int i;
-            for(i=0; i<5; ++i){
+            for(i=0; i<BtnTypeCount; i++){
                 if(button[i]){
                     if( !button[i]->isHidden() ) {
                         button[i]->hide();
@@ -650,7 +714,7 @@ void LaptopClient::calcHiddenButtons()
         lastButtonWidth = width();
         int i;
         int totalSize=32;
-        for(i=4; i>=0; --i){
+        for(i=(BtnTypeCount-1); i>=0; --i){
             if(button[i]){
                 if(button[i]->sizeHint().width() + totalSize <= width()){
                     totalSize+=button[i]->sizeHint().width();
@@ -846,16 +910,11 @@ bool LaptopClientFactory::supports( Ability ability )
     switch( ability )
     {
         case AbilityAnnounceButtons:
-        case AbilityButtonMenu:
         case AbilityButtonOnAllDesktops:
-        case AbilityButtonSpacer:
         case AbilityButtonHelp:
         case AbilityButtonMinimize:
         case AbilityButtonMaximize:
         case AbilityButtonClose:
-        case AbilityButtonAboveOthers:
-        case AbilityButtonBelowOthers:
-        case AbilityButtonShade:
             return true;
         default:
             return false;

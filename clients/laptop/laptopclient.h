@@ -13,6 +13,7 @@
 #include <kdecorationfactory.h>
 
 class QLabel;
+class QLayout;
 class QSpacerItem;
 class QBoxLayout;
 class QGridLayout;
@@ -56,9 +57,9 @@ class LaptopClient : public KDecoration
 {
     Q_OBJECT
 public:
-    enum Buttons{BtnHelp=0, BtnSticky, BtnMax, BtnIconify, BtnClose};
+    enum Buttons{BtnHelp=0, BtnSticky, BtnMax, BtnIconify, BtnClose, BtnTypeCount};
     LaptopClient( KDecorationBridge* b, KDecorationFactory* f );
-    ~LaptopClient() {}
+    ~LaptopClient();
     void init();
 protected:
     bool eventFilter( QObject* o, QEvent* e );
@@ -81,13 +82,14 @@ protected:
     void calcHiddenButtons();
     void updateActiveBuffer();
 private:
+    void addButtons(QBoxLayout* layout, int, const QString& buttons);
     bool mustDrawHandle() const;
     bool isTool() const;
     bool isTransient() const;
 protected slots:
     void slotMaximize();
 private:
-    LaptopButton* button[5];
+    LaptopButton* button[BtnTypeCount];
     QGridLayout *g;
     QBoxLayout* hb;
     QSpacerItem* titlebar;
