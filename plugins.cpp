@@ -75,7 +75,6 @@ Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
 bool PluginMgr::loadPlugin(QString nameStr)
 {
     KLibrary *oldLibrary = library;
-    library = 0;
 
     QString path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
 
@@ -90,7 +89,7 @@ bool PluginMgr::loadPlugin(QString nameStr)
         shutdownKWin(i18n("No window decoration plugin library was found!"));
 
     // Check if this library is not already loaded.
-    if(pluginStr == nameStr) 
+    if(pluginStr == nameStr)
 	return FALSE;
 
     // Try loading the requested plugin
@@ -140,7 +139,7 @@ bool PluginMgr::loadPlugin(QString nameStr)
 
 void PluginMgr::shutdownKWin(const QString &error_msg)
 {
-    qWarning( (i18n("KWin: ") + error_msg + 
+    qWarning( (i18n("KWin: ") + error_msg +
                i18n("\nKWin will now exit...")).latin1() );
     exit(1);
 }
