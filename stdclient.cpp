@@ -232,7 +232,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[1]->setIconSet( isSticky()?*pindown_pix:*pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
     button[2]->hide();
-    
+
     button[3]->setIconSet( *minimize_pix );
     connect( button[3], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
     button[4]->setIconSet( *maximize_pix  );
@@ -251,14 +251,16 @@ StdClient::~StdClient()
 void StdClient::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
-
+    QRegion rr = rect();
+    QRect t = titlebar->geometry();
+    t.setTop( 0 );
+    QRegion r = rr.subtract( QRect( t.x(), 0, t.width(), 1 ) );
+    setMask( r );
+    
     if ( isVisibleToTLW() ) {
 	// manual clearing without the titlebar (we selected WResizeNoErase )
 	QPainter p( this );
-	QRect t = titlebar->geometry();
-	t.setTop( 0 );
-	QRegion r = rect();
-	r = r.subtract( t );
+	r = rr.subtract( t );
 	p.setClipRegion( r );
 	p.eraseRect( rect() );
     }
@@ -298,8 +300,9 @@ void StdClient::paintEvent( QPaintEvent* )
     qDrawWinPanel( &p, rect(), options->colorGroup(Options::Frame, isActive()));
     p.setClipping( FALSE );
     p.fillRect( t, options->color(Options::TitleBar, isActive()));
+    QBrush b( options->color( Options::TitleBar, isActive() ) ); 
     qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
-                     options->colorGroup(Options::TitleBar, isActive()), true);
+                     options->colorGroup(Options::Frame, isActive()), true, 1, &b );
 
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
