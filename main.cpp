@@ -45,8 +45,8 @@ static DCOPClient * client = 0;
 static void crashHandler(int)
 {
    KCrash::setCrashHandler(0); // Exit on next crash.
-   delete client; client = 0; // Unregister with dcop.
-   system("kwin&"); // Try to restart
+   client->detach();  // Unregister with dcop.
+//    system("kwin&"); // Try to restart
 }
 
 int x11ErrorHandler(Display *d, XErrorEvent *e){

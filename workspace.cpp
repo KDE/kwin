@@ -470,6 +470,12 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
 	break;
     case EnterNotify:
+	qDebug("EnterNotify");
+	{
+	    QWidget* w = QWidget::find( e->xcrossing.window );
+	    if (w )
+		qDebug("w = %s", w->className() );
+	}
 	if ( !QWhatsThis::inWhatsThisMode() )
 	    break;
 	{
@@ -479,6 +485,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
 	break;
     case LeaveNotify:
+	qDebug("LeaveNotify");
 	if ( !QWhatsThis::inWhatsThisMode() )
 	    break;
 	c = findClientWidthId( e->xcrossing.window );
@@ -1626,7 +1633,7 @@ void Workspace::raiseClient( Client* c )
 
 
     propagateClients( TRUE );
-    
+
     if ( tab_box->isVisible() )
 	tab_box->raise();
 }
@@ -2073,13 +2080,13 @@ void Workspace::slotWindowLower()
  */
 void Workspace::slotMouseEmulation()
 {
-    
+
     if ( mouse_emulation ) {
 	XUngrabKeyboard(qt_xdisplay(), kwin_time);
 	mouse_emulation = FALSE;
 	return;
-    } 
-    
+    }
+
     if ( XGrabKeyboard(qt_xdisplay(),
 		       root, FALSE,
 		       GrabModeAsync, GrabModeAsync,

@@ -195,7 +195,8 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 
     XSelectInput( qt_xdisplay(), w,
 		  FocusChangeMask |
-		  PropertyChangeMask
+		  PropertyChangeMask |
+		  EnterWindowMask | LeaveWindowMask
 		  );
 
     // install a passive grab to catch mouse button events
@@ -1702,6 +1703,7 @@ bool Client::x11Event( XEvent * e)
 	workspace()->requestFocus( this );
 	return TRUE;
     }
+    
     if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
 	if ( !buttonDown )
 	    setCursor( arrowCursor );
@@ -1709,12 +1711,13 @@ bool Client::x11Event( XEvent * e)
 	if ( lostMouse ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = 0;
-	    }
+	}
 	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
 	    if ( isActive() && lostMouse )
 		workspace()->requestFocus( 0 ) ;
 	return TRUE;
     }
+    
     return FALSE;
 }
 
