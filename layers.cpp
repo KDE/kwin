@@ -114,7 +114,7 @@ void Workspace::updateStackingOrder( bool propagate_new_clients )
         for( ClientList::ConstIterator it = stacking_order.begin();
              it != stacking_order.end();
              ++it )
-            kdDebug() << (void*)(*it) << *it << endl;
+            kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer() << endl;
         }
 #endif
     if( changed || propagate_new_clients )
@@ -182,16 +182,6 @@ void Workspace::propagateClients( bool propagate_new_clients )
         cl[pos++] =  (*it)->window();
     rootInfo->setClientListStacking( cl, pos );
     delete [] cl;
-
-#if 0 // not necessary anymore?
-    if ( tab_box->isVisible() )
-        tab_box->raise();
-
-    if ( popupinfo->isVisible() )
-        popupinfo->raise();
-
-    raiseElectricBorders();
-#endif
     }
 
 
@@ -504,7 +494,7 @@ ClientList Workspace::constrainedStackingOrder()
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kdDebug() << (void*)(*it) << *it << endl;
+        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer() << endl;
 #endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
@@ -571,7 +561,7 @@ ClientList Workspace::constrainedStackingOrder()
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kdDebug() << (void*)(*it) << *it << endl;
+        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer() << endl;
     kdDebug() << "\n\n" << endl;
 #endif
     return stacking;
