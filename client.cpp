@@ -83,7 +83,6 @@ Client::Client( Workspace *ws )
         ping_timer( NULL ),
         process_killer( NULL ),
         user_time( CurrentTime ), // not known yet
-        input_grabbed( false ),
         allowed_actions( 0 ),
         block_geometry( 0 ),
         shade_geometry_change( false ),
@@ -397,33 +396,6 @@ void Client::setUserNoBorder( bool set )
         return;
     user_noborder = set;
     updateDecoration( true, false );
-    }
-
-bool Client::grabInput()
-    {
-    assert( !input_grabbed );
-    assert( QWidget::keyboardGrabber() == NULL );
-    assert( QWidget::mouseGrabber() == NULL );
-    if( XGrabPointer( qt_xdisplay(), frameId(), False, ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
-        GrabModeAsync, GrabModeAsync, None, cursor.handle(), qt_x_time ) != Success )
-        return false;
-    if( XGrabKeyboard( qt_xdisplay(), frameId(), False, GrabModeAsync, GrabModeAsync, qt_x_time ) != Success )
-        {
-        XUngrabPointer( qt_xdisplay(), qt_x_time );
-        return false;
-        }
-    input_grabbed = true;
-    return true;
-    }
-
-void Client::ungrabInput()
-    {
-    assert( input_grabbed );
-    assert( QWidget::keyboardGrabber() == NULL );
-    assert( QWidget::mouseGrabber() == NULL );
-    XUngrabKeyboard( qt_xdisplay(), qt_x_time );
-    XUngrabPointer( qt_xdisplay(), qt_x_time );
-    input_grabbed = false;
     }
 
 void Client::updateShape()

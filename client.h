@@ -337,8 +337,6 @@ class Client : public QObject, public KDecorationDefines
         void leaveMoveResize();
         void handleMoveResize( int x, int y, int x_root, int y_root );
         void positionGeometryTip();
-        bool grabInput();
-        void ungrabInput();
         void updateMouseGrab();
         void grabButton( int mod );
         void ungrabButton( int mod );
@@ -458,7 +456,6 @@ class Client : public QObject, public KDecorationDefines
         KProcess* process_killer;
         Time ping_timestamp;
         Time user_time;
-        bool input_grabbed;
         unsigned long allowed_actions;
         QRect frame_geometry;
         QSize client_size;

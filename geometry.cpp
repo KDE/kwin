@@ -1441,11 +1441,20 @@ class EatAllPaintEvents
 
 static EatAllPaintEvents* eater = 0;
 
-// TODO kontrolovat navratovou hodnotu
 bool Client::startMoveResize()
     {
     assert( !moveResizeMode );
-    if( !grabInput())
+    assert( QWidget::keyboardGrabber() == NULL );
+    assert( QWidget::mouseGrabber() == NULL );
+    if( QApplication::activePopupWidget() != NULL )
+        return false; // popups have grab
+    bool has_grab = false;
+    if( XGrabPointer( qt_xdisplay(), frameId(), False, ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
+        GrabModeAsync, GrabModeAsync, None, cursor.handle(), qt_x_time ) == Success )
+        has_grab = true;
+    if( XGrabKeyboard( qt_xdisplay(), frameId(), False, GrabModeAsync, GrabModeAsync, qt_x_time ) == Success )
+        has_grab = true;
+    if( !has_grab ) // at least one grab is necessary in order to be able to finish move/resize
         return false;
     if( mode == Center )
         setCursor( sizeAllCursor ); // change from arrow cursor if moving
@@ -1494,7 +1503,8 @@ void Client::leaveMoveResize()
     if ( ( isMove() && options->moveMode != Options::Opaque )
       || ( isResize() && options->resizeMode != Options::Opaque ) )
         XUngrabServer( qt_xdisplay() );
-    ungrabInput();
+    XUngrabKeyboard( qt_xdisplay(), qt_x_time );
+    XUngrabPointer( qt_xdisplay(), qt_x_time );
     workspace()->setClientIsMoving(0);
     if( move_faked_activity )
         workspace()->unfakeActivity( this );
