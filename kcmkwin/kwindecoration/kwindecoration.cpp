@@ -102,17 +102,16 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	pluginLayout->addStretch();
 
 	// Border size chooser
-	lBorder = new QLabel( pluginSettingsGrp );
-	slBorder = new QSlider( Horizontal, pluginSettingsGrp );
-	slBorder->setPageStep(1);
-	QWhatsThis::add( slBorder, i18n( "This slider shows all border sizes supported by this decoration." ));
-	lBorder->setBuddy( slBorder );
+	lBorder = new QLabel (i18n("B&order size:"), pluginSettingsGrp);
+	cBorder = new QComboBox(pluginSettingsGrp);
+	lBorder->setBuddy(cBorder);
+	QWhatsThis::add( cBorder, i18n( "Use this combobox to change the border size of the decoration." ));
 	lBorder->hide();
-	slBorder->hide();
-	pluginSettingsGrp->layout()->add(lBorder);
-	QHBoxLayout *sliderIndentLayout = new QHBoxLayout(pluginSettingsGrp->layout() );
-	sliderIndentLayout->addSpacing(20);
-	sliderIndentLayout->addWidget(slBorder);
+	cBorder->hide();
+	QHBoxLayout *borderSizeLayout = new QHBoxLayout(pluginSettingsGrp->layout() );
+	borderSizeLayout->addWidget(lBorder);
+	borderSizeLayout->addWidget(cBorder);
+	borderSizeLayout->addStretch();
 
 	pluginConfigWidget = new QVBox(pluginSettingsGrp);
 	pluginSettingsGrp->layout()->add( pluginConfigWidget );
@@ -186,7 +185,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), buttonBox, SLOT(setEnabled(bool)));
 	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), this, SLOT(slotButtonsChanged()) );
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
-        connect( slBorder, SIGNAL( valueChanged( int )), SLOT( slotBorderChanged( int )));
+	connect( cBorder, SIGNAL( activated( int )), SLOT( slotBorderChanged( int )));
 //	connect( cbUseMiniWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 
 	// Allow kwin dcop signal to update our selection list
@@ -277,13 +276,13 @@ void KWinDecorationModule::slotSelectionChanged()
 
 static const char* const border_names[ KDecorationDefines::BordersCount ] =
     {
-    I18N_NOOP( "Border size: Tiny" ),
-    I18N_NOOP( "Border size: Normal" ),
-    I18N_NOOP( "Border size: Large" ),
-    I18N_NOOP( "Border size: Very Large" ),
-    I18N_NOOP( "Border size: Huge" ),
-    I18N_NOOP( "Border size: Very Huge" ),
-    I18N_NOOP( "Border size: Oversized" )
+    I18N_NOOP( "Tiny" ),
+    I18N_NOOP( "Normal" ),
+    I18N_NOOP( "Large" ),
+    I18N_NOOP( "Very Large" ),
+    I18N_NOOP( "Huge" ),
+    I18N_NOOP( "Very Huge" ),
+    I18N_NOOP( "Oversized" )
     };
 
 int KWinDecorationModule::borderSizeToIndex( BorderSize size, QValueList< BorderSize > sizes )
@@ -319,7 +318,6 @@ void KWinDecorationModule::slotBorderChanged( int size )
             sizes = plugins->factory()->borderSizes();
         assert( sizes.count() >= 2 );
         border_size = indexToBorderSize( size, sizes );
-        lBorder->setText( i18n( border_names[ border_size ] ));
 
 	// update preview
 	preview->setTempBorderSize(plugins, border_size);
@@ -590,18 +588,23 @@ void KWinDecorationModule::defaults()
 void KWinDecorationModule::checkSupportedBorderSizes()
 {
         QValueList< BorderSize > sizes;
-        slBorder->hide();
-        lBorder->hide();
         if( plugins->factory() != NULL )
             sizes = plugins->factory()->borderSizes();
-        if( sizes.count() < 2 )
-            return;
-        slBorder->setRange( 0, sizes.count() - 1 );
-        int pos = borderSizeToIndex( border_size, sizes );
-        lBorder->show();
-        slBorder->show();
-        slBorder->setValue( pos );
-        slotBorderChanged( pos );
+	if( sizes.count() < 2 ) {
+		lBorder->hide();
+		cBorder->hide();
+	} else {
+		cBorder->clear();
+		for (QValueList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
+			BorderSize size = *it;
+			cBorder->insertItem(border_names[size], borderSizeToIndex(size,sizes) );
+		}
+		int pos = borderSizeToIndex( border_size, sizes );
+		lBorder->show();
+		cBorder->show();
+		cBorder->setCurrentItem(pos);
+		slotBorderChanged( pos );
+	}
 }
 
 QString KWinDecorationModule::styleToConfigLib( QString& styleLib )

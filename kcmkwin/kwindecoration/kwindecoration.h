@@ -115,7 +115,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 	//	QCheckBox* cbUseMiniWindows;
 		QCheckBox* cbShowToolTips;
 		QLabel*    lBorder;
-		QSlider*   slBorder;
+		QComboBox* cBorder;
 		BorderSize border_size;
 
 		QObject* pluginObject;
