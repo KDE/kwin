@@ -30,6 +30,7 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 
+#include <kdecorationfactory.h>
 #include <kdecoration_plugins_p.h>
 
 // FRAME the preview doesn't update to reflect the changes done in the kcm
@@ -172,6 +173,36 @@ QRect KDecorationPreview::windowGeometry( bool active ) const
     {
     QWidget *widget = active ? deco[Active]->widget() : deco[Inactive]->widget();
     return widget->geometry();
+    }
+
+void KDecorationPreview::setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size)
+    {
+    options->setCustomBorderSize(size);
+    if (plugin->factory()->reset(KDecorationDefines::SettingBorder) )
+        {
+        // can't handle the change, recreate decorations then
+        recreateDecoration(plugin);
+        }
+    else
+        {
+        // handles the update, only update position...
+        positionPreviews();
+        }
+    }
+
+void KDecorationPreview::setTempButtons(KDecorationPlugins* plugin, const QString &left, const QString &right)
+    {
+    options->setCustomTitleButtons(left, right);
+    if (plugin->factory()->reset(KDecorationDefines::SettingButtons) )
+        {
+        // can't handle the change, recreate decorations then
+        recreateDecoration(plugin);
+        }
+    else
+        {
+        // handles the update, only update position...
+        positionPreviews();
+        }
     }
 
 QRegion KDecorationPreview::unobscuredRegion( bool active, const QRegion& r ) const
@@ -394,6 +425,10 @@ void KDecorationPreviewBridge::grabXServer( bool )
 
 KDecorationPreviewOptions::KDecorationPreviewOptions()
     {
+    customBorderSize = BordersCount; // invalid
+    customTitleButtonsLeft = QString::null; // invalid
+    customTitleButtonsRight = QString::null; // invalid
+
     d = new KDecorationOptionsPrivate;
     d->defaultKWinSettings();
     updateSettings();
@@ -409,12 +444,36 @@ unsigned long KDecorationPreviewOptions::updateSettings()
     KConfig cfg( "kwinrc", true );
     unsigned long changed = 0;
     changed |= d->updateKWinSettings( &cfg );
+
+    // set custom border size/buttons
+    if (customBorderSize != BordersCount)
+        d->border_size = customBorderSize;
+    if (!customTitleButtonsLeft.isNull() )
+        d->title_buttons_left = customTitleButtonsLeft;
+    if (!customTitleButtonsRight.isNull() )
+        d->title_buttons_right = customTitleButtonsRight;
+
     return changed;
+    }
+
+void KDecorationPreviewOptions::setCustomBorderSize(BorderSize size)
+    {
+    customBorderSize = size;
+
+    updateSettings();
+    }
+
+void KDecorationPreviewOptions::setCustomTitleButtons(const QString &left, const QString &right)
+    {
+    customTitleButtonsLeft = left;
+    customTitleButtonsRight = right;
+
+    updateSettings();
     }
 
 bool KDecorationPreviewPlugins::provides( Requirement )
     {
     return false;
     }
-    
+
 #include "preview.moc"

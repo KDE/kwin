@@ -27,7 +27,7 @@
 class QLabel;
 
 class KDecorationPreviewBridge;
-class KDecorationOptions;
+class KDecorationPreviewOptions;
 
 class KDecorationPreview
     : public QWidget
@@ -47,11 +47,13 @@ class KDecorationPreview
         void setPreviewMask( const QRegion&, int, bool );
         QRegion unobscuredRegion( bool, const QRegion& ) const;
         QRect windowGeometry( bool ) const;
+        void setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size);
+        void setTempButtons(KDecorationPlugins* plugin, const QString &left, const QString &right);
     protected:
         virtual void resizeEvent( QResizeEvent* );
     private:
         void positionPreviews();
-        KDecorationOptions* options;
+        KDecorationPreviewOptions* options;
         KDecorationPreviewBridge* bridge[NumWindows];
         KDecoration* deco[NumWindows];
         QLabel* no_preview;
@@ -117,6 +119,14 @@ class KDecorationPreviewOptions
         KDecorationPreviewOptions();
         virtual ~KDecorationPreviewOptions();
         virtual unsigned long updateSettings();
+
+        void setCustomBorderSize(BorderSize size);
+        void setCustomTitleButtons(const QString &left, const QString &right);
+
+    private:
+        BorderSize customBorderSize;
+        QString customTitleButtonsLeft;
+        QString customTitleButtonsRight;
     };
 
 class KDecorationPreviewPlugins
