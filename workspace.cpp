@@ -1581,7 +1581,6 @@ void Workspace::raiseClient( Client* c )
     if ( !c )
 	return;
 
-    qDebug("raise client %s", c->caption().latin1() );
     if ( tab_box->isVisible() )
 	return;
 
