@@ -139,6 +139,7 @@ int		composite_event, composite_error;
 int		render_event, render_error;
 Bool		synchronize;
 int		composite_opcode;
+Bool            disable_argb = False;
 
 int             shapeEvent;
 
@@ -391,8 +392,6 @@ run_fades (Display *dpy)
 		dequeue_fade (dpy, f);
 	    }
 	}
-        /*if (w->fadesBlocked)
-        clipChanged = False;*/
 	determine_mode (dpy, w);
 	if (w->shadow)
 	{
@@ -1493,7 +1492,7 @@ determine_mode(Display *dpy, win *w)
 	format = XRenderFindVisualFormat (dpy, w->a.visual);
     }
 
-    if (format && format->type == PictTypeDirect && format->direct.alphaMask)
+    if (!disable_argb && format && format->type == PictTypeDirect && format->direct.alphaMask)
     {
 	mode = WINDOW_ARGB;
     }
@@ -2014,6 +2013,7 @@ typedef enum _option{
     FadeOutStep,
     FadeInStep,
     FadeDelta,
+    DisableARGB,
     NUMBEROFOPTIONS
 } Option;
 
@@ -2034,6 +2034,7 @@ options[NUMBEROFOPTIONS] = {
     "FadeOutStep",          /*12*/
     "FadeInStep",           /*13*/
     "FadeDelta",            /*14*/
+    "DisableARGB",          /*15*/
     /*put your thingy in here...*/    
 };
 
@@ -2045,106 +2046,63 @@ setValue(Option option, char *value ){
             fade_delta = atoi(value);
             if (fade_delta < 1)
                 fade_delta = 10;
-            printf("config: using fade_delta: \t\t%d\n", fade_delta);
             break;
         case FadeInStep:
             fade_in_step = atof(value);
             if (fade_in_step <= 0)
                 fade_in_step = 0.01;
-            printf("config: using fade_in_step: \t\t%f\n", fade_in_step);
             break;
         case FadeOutStep:
             fade_out_step = atof(value);
             if (fade_out_step <= 0)
                 fade_out_step = 0.01;
-            printf("config: using fade_out_step: \t\t%f\n", fade_out_step);
             break;
         case ShadowOffsetY:
             shadowOffsetY = atoi(value);
-            printf("config: using shadowOffsetY: \t\t%d\n", shadowOffsetY);
             break;
         case ShadowOffsetX:
             shadowOffsetX = atoi(value);
-            printf("config: using shadowOffsetX: \t\t%d\n", shadowOffsetX);
             break;
         case ShadowOpacity:
             shadowOpacity = atof(value);
-            printf("config: using shadowOpacity: \t\t%f\n", shadowOpacity);
             break;
         case ShadowRadius:
             shadowRadius = atoi(value);
-            printf("config: using shadowRadius: \t\t%d\n", shadowRadius);
             break;                    
         case ShadowColor:
             setShadowColor(value);
             break;
         case Synchronize:
-            if( strcasecmp(value, "true") == 0 ){
-                synchronize = True;
-                printf("config: using synchronize: \t\tTrue\n");
-            }
-            else{
-                synchronize = False;
-                printf("config: using synchronize: \t\tFalse\n");
-            }
+            synchronize = ( strcasecmp(value, "true") == 0 );
             break;
         case AutoRedirect:
-            if( strcasecmp(value, "true") == 0 ){
-                autoRedirect = True;
-                printf("config: using autoredirect: \t\tTrue\n");
-            }
-            else{
-                autoRedirect = False;
-                printf("config: using autoredirect: \t\tFalse\n");
-            }
+            autoRedirect = ( strcasecmp(value, "true") == 0 );
             break;
         case FadeTrans:
-            if( strcasecmp(value, "true") == 0 ){
-                fadeTrans = True;
-                printf("config: using fadetrans: \t\tTrue\n");
-            }
-            else{
-                fadeTrans = False;
-                printf("config: using fadetrans: \t\tFalse\n");
-            }
+            fadeTrans = ( strcasecmp(value, "true") == 0 );
             break;
         case FadeWindows:
-            if( strcasecmp(value, "true") == 0 ){
-                fadeWindows = True;
-                printf("config: using fadewindows: \t\tTrue\n");
-            }
-            else{
-                fadeWindows = False;
-                printf("config: using fadewindows: \t\tFalse\n");
-            }
+            fadeWindows = ( strcasecmp(value, "true") == 0 );
             break;
         case ExcludeDockShadows:
-            if( strcasecmp(value, "true") == 0 ){
-                excludeDockShadows = True;
-                printf("config: using excludeDockShadows: \tTrue\n");
-            }
-            else{
-                excludeDockShadows = False;
-                printf("config: using excludeDockShadows: \tFalse\n");
-            }
+            excludeDockShadows = ( strcasecmp(value, "true") == 0 );
             break;
         case Compmode:
             if( strcasecmp(value, "CompClientShadows") == 0 ){
                 compMode = CompClientShadows;
-                printf("config: using compMode: \t\tCompClientShadows\n");
             }
             else if( strcasecmp(value, "CompServerShadows") == 0 ){
                 compMode = CompServerShadows;
-                printf("config: using compMode: \t\tCompServerShadows\n");
             }
             else{
                 compMode = CompSimple; /*default*/
-                printf("config: using compMode: \t\tCompSimple\n");
             }
             break;
         case Display_:
             display = strdup(value);
-            printf("config: using display: \t\t\t%s\n", display);
+            break;
+        case DisableARGB:
+            disable_argb = ( strcasecmp(value, "true") == 0 );
             break;
         default:
             break;
@@ -2444,7 +2402,7 @@ main (int argc, char **argv)
         /*shaping stuff*/
         int dummy;
         XShapeQueryExtension(dpy, &shapeEvent, &dummy);
-        printf("shapeEvent: %d\n",shapeEvent);
+        
 	XQueryTree (dpy, root, &root_return, &parent_return, &children, &nchildren);
 	for (i = 0; i < nchildren; i++)
 	    add_win (dpy, children[i], i ? children[i-1] : None);

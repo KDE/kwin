@@ -1229,6 +1229,10 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
 
   keepAboveAsActive = new QCheckBox(i18n("Treat 'keep above' windows as active ones"),tGroup);
   vLay->addWidget(keepAboveAsActive);
+
+  disableARGB = new QCheckBox(i18n("Disable ARGB windows (ignores window alpha maps, fixes gtk1 apps)"),tGroup);
+  vLay->addWidget(disableARGB);
+
   vLay->addStretch();
   tabW->addTab(tGroup, i18n("Translucency"));
 
@@ -1323,6 +1327,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   connect(movingWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(dockWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(keepAboveAsActive, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(disableARGB, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(useShadows, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(removeShadowsOnResize, SIGNAL(toggled(bool)), SLOT(changed()));
 
@@ -1356,6 +1361,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
 
   // handle kompmgr restarts if necessary
   connect(useTranslucency, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
+  connect(disableARGB, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
   connect(useShadows, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
   connect(inactiveWindowShadowSize, SIGNAL(valueChanged(int)), SLOT(resetKompmgr()));
   connect(shadowTopOffset, SIGNAL(valueChanged(int)), SLOT(resetKompmgr()));
@@ -1404,6 +1410,8 @@ void KTranslucencyConfig::load( void )
 
   KConfig conf_(QDir::homeDirPath() + "/.xcompmgrrc");
   conf_.setGroup("xcompmgr");
+  
+  disableARGB->setChecked(conf_.readBoolEntry("DisableARGB",FALSE));
 
   useShadows->setChecked(conf_.readEntry("Compmode","CompClientShadows").compare("CompClientShadows") == 0);
   shadowTopOffset->setValue(-1*(conf_.readNumEntry("ShadowOffsetY",-80)));
@@ -1462,6 +1470,7 @@ void KTranslucencyConfig::save( void )
   conf_->setGroup("xcompmgr");
 
   conf_->writeEntry("Compmode",useShadows->isChecked()?"CompClientShadows":"");
+  conf_->writeEntry("DisableARGB",disableARGB->isChecked());
   conf_->writeEntry("ShadowOffsetY",-1*shadowTopOffset->value());
   conf_->writeEntry("ShadowOffsetX",-1*shadowLeftOffset->value());
 
@@ -1497,6 +1506,7 @@ void KTranslucencyConfig::defaults()
   movingWindowTransparency->setChecked(false);
   dockWindowTransparency->setChecked(true);
   keepAboveAsActive->setChecked(true);
+  disableARGB->setChecked(false);
 
   activeWindowOpacity->setValue(100);
   inactiveWindowOpacity->setValue(50);

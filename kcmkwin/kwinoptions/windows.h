@@ -246,6 +246,7 @@ private:
   QCheckBox *movingWindowTransparency;
   QCheckBox *dockWindowTransparency;
   QCheckBox *keepAboveAsActive;
+  QCheckBox *disableARGB;
   QCheckBox *fadeInWindows;
   QCheckBox *fadeOnOpacityChange;
   QCheckBox *useShadows;
