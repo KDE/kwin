@@ -128,7 +128,7 @@ void Workspace::updateClientArea( bool force )
         {
             for( int iS = 0;
                     iS < nscreens;
-                    iS ++ )
+                    iS ++ );
 //                kdDebug () << "new_sarea: " << new_sareas[ i ][ iS ] << endl;
         }
     // TODO topmenu update for screenarea changes?
