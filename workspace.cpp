@@ -434,7 +434,7 @@ void Workspace::init()
             if ( addSystemTrayWin( wins[i] ) )
                 continue;
             Client* c = clientFactory( wins[i] );
-	    addClient( c );
+            addClient( c );
             c->manage( TRUE );
 
             if ( root != qt_xrootwin() ) {
@@ -591,7 +591,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                     // TODO may use QWidget:.create
                     XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
                 }
-		addClient( c );
+                addClient( c );
             }
         }
         if ( c ) {
@@ -1214,14 +1214,14 @@ int Workspace::previousDesktop( int iDesktop ) const
 void Workspace::circulateDesktopApplications()
 {
     if ( desktops.count() <= 1 )
-	return;
+        return;
     Client* first = desktops.first();
     desktops.remove( first );
     desktops.append( first );
     Window* new_stack = new Window[ desktops.count() + 1 ];
     int i = 0;
     for ( ClientList::ConstIterator it = desktops.fromLast(); it != desktops.end(); --it)
-	new_stack[i++] = (*it)->winId();
+        new_stack[i++] = (*it)->winId();
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 }
@@ -1229,23 +1229,23 @@ void Workspace::circulateDesktopApplications()
 void Workspace::addClient( Client* c )
 {
     if ( c->isDesktop() ) {
-	if ( !desktops.isEmpty() ) {
-	    Client* first = desktops.first();
-	    Window stack[2];
-	    stack[0] = first->winId();
-	    stack[1] = c->winId();
-	    XRestackWindows(  qt_xdisplay(), stack, 2 );
-	    desktops.prepend( c );
-	    circulateDesktopApplications();
-	} else {
-	    c->lower();
-	    desktops.append( c );
-	}
+        if ( !desktops.isEmpty() ) {
+            Client* first = desktops.first();
+            Window stack[2];
+            stack[0] = first->winId();
+            stack[1] = c->winId();
+            XRestackWindows(  qt_xdisplay(), stack, 2 );
+            desktops.prepend( c );
+            circulateDesktopApplications();
+        } else {
+            c->lower();
+            desktops.append( c );
+        }
     } else {
-	if ( c->wantsTabFocus() )
-	    focus_chain.append( c );
-	clients.append( c );
-	stacking_order.append( c );
+        if ( c->wantsTabFocus() )
+            focus_chain.append( c );
+        clients.append( c );
+        stacking_order.append( c );
     }
 }
 
@@ -1567,14 +1567,14 @@ void Workspace::clientHidden( Client* c )
                 }
             }
         }
-	if ( !c->isDesktop() && !desktops.isEmpty() )
-	    requestFocus( desktops.last() );
-	else
-	    focusToNull();
+        if ( !c->isDesktop() && !desktops.isEmpty() )
+            requestFocus( desktops.last() );
+        else
+            focusToNull();
     } else {
-	// if blocking focus, move focus to the desktop later if needed
-	// in order to avoid flickering
-	focusToNull();
+        // if blocking focus, move focus to the desktop later if needed
+        // in order to avoid flickering
+        focusToNull();
     }
 }
 
@@ -1636,6 +1636,9 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     if ( !c )
         return;
 
+    if (op == Options::MoveOp || op == Options::ResizeOp) {
+        QCursor::setPos( c->geometry().center() );
+    }
     switch ( op ) {
     case Options::MoveOp:
         c->performMouseCommand( Options::MouseMove, QCursor::pos() );
@@ -1785,7 +1788,7 @@ void Workspace::smartPlacement(Client* c){
             cyt = y; cyb = y + ch;
             QValueList<Client*>::ConstIterator l;
             for(l = clients.begin(); l != clients.end() ; ++l ) {
-                if((*l)->isOnDesktop(desktop) && 
+                if((*l)->isOnDesktop(desktop) &&
                    !(*l)->isIconified() && (*l) != c ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -1833,7 +1836,7 @@ void Workspace::smartPlacement(Client* c){
             QValueList<Client*>::ConstIterator l;
             for(l = clients.begin(); l != clients.end() ; ++l) {
 
-                if ( (*l)->isOnDesktop(desktop) && 
+                if ( (*l)->isOnDesktop(desktop) &&
                      !(*l)->isIconified() &&  (*l) != c ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -1863,7 +1866,7 @@ void Workspace::smartPlacement(Client* c){
             //test the position of each window on the desk
             QValueList<Client*>::ConstIterator l;
             for( l = clients.begin(); l != clients.end() ; ++l ) {
-                if( (*l)->isOnDesktop(desktop) && 
+                if( (*l)->isOnDesktop(desktop) &&
                     (*l) != c   &&  !c->isIconified() ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -3280,7 +3283,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
          QValueList<Client *>::ConstIterator l;
          for (l = clients.begin();l != clients.end();++l )
          {
-            if ((*l)->isOnDesktop(currentDesktop()) && 
+            if ((*l)->isOnDesktop(currentDesktop()) &&
                !(*l)->isIconified()
 #if 0
                 && (*l)->transientFor() == None
