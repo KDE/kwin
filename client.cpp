@@ -324,10 +324,16 @@ void Client::manage( bool isMapped )
 	    if ( xSizeHint.height != 0 )
 		geom.setHeight( xSizeHint.height );
 	}
+//  	if (xSizeHint.flags & PMinSize)
+//  	    geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
+//  	if (xSizeHint.flags & PMaxSize)
+//  	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
     }
 
     // the clever activate() trick is necessary
     layout()->activate();
+//     resize( geom.width() + width() - windowWrapper()->width(), 
+// 	    geom.height() + height() - windowWrapper()->height() );
     resize ( sizeForWindowSize( geom.size() ) );
     layout()->activate();
 
@@ -522,6 +528,18 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
     if ( isShade() )
 	setShade( FALSE );
 
+      // compress configure requests
+    XEvent otherEvent;
+    while (XCheckTypedWindowEvent (qt_xdisplay(), win,
+				   ConfigureRequest, &otherEvent) ) {
+	if (otherEvent.xconfigurerequest.value_mask == e.value_mask)
+	    e = otherEvent.xconfigurerequest;
+	else {
+	    XPutBackEvent(qt_xdisplay(), &otherEvent);
+	    break;
+	}
+    }
+    
     if ( e.value_mask & CWBorderWidth ) {
 	// first, get rid of a window border
 	XWindowChanges wc;
