@@ -182,6 +182,41 @@ KeramikHandler::~KeramikHandler()
 
 void KeramikHandler::createPixmaps()
 {
+	int heightOffset;
+	int widthOffset;
+	switch(options()->preferredBorderSize(this)) {
+	case BorderLarge:
+		widthOffset = 4;
+		heightOffset = 0;
+		break;
+	case BorderVeryLarge:
+		widthOffset = 8;
+		heightOffset = 0;
+		break;
+	case BorderHuge:
+		widthOffset = 14;
+		heightOffset = 0;
+		break;
+	case BorderVeryHuge:
+		widthOffset = 23;
+		heightOffset = 10;
+		break;
+	case BorderOversized:
+		widthOffset = 36;
+		heightOffset = 25;
+		break;
+	case BorderTiny:
+	case BorderNormal:
+	default:
+		widthOffset = 0;
+		heightOffset = 0;
+	}
+	int fontHeight = QFontMetrics(options()->font(true)).height();
+	if (fontHeight > heightOffset + 20)
+		heightOffset = fontHeight - 20;
+	
+	QString size = (heightOffset < 8) ? "" : (heightOffset < 20) ? "-large" : "-huge";
+
 	QColor titleColor, captionColor, buttonColor;
 	QImage *titleCenter = NULL, *captionLeft = NULL,
 		*captionRight = NULL, *captionCenter = NULL;
@@ -290,8 +325,8 @@ void KeramikHandler::createPixmaps()
 	// -------------------------------------------------------------------------
 	buttonColor  = QColor(); //KDecoration::options()->color( ButtonBg, true );
 
-	titleButtonRound  = loadPixmap( "titlebutton-round",  buttonColor );
-	titleButtonSquare = loadPixmap( "titlebutton-square", buttonColor );
+	titleButtonRound  = loadPixmap( "titlebutton-round"+size,  buttonColor );
+	titleButtonSquare = loadPixmap( "titlebutton-square"+size, buttonColor );
 
 
 	// Prepare the tiles for use
@@ -330,6 +365,42 @@ void KeramikHandler::createPixmaps()
 	pretile( inactiveTiles[ GrabBarCenter ], 128, Qt::Horizontal );
 	pretile( inactiveTiles[ BorderLeft ], 128, Qt::Vertical );
 	pretile( inactiveTiles[ BorderRight ], 128, Qt::Vertical );
+	
+	if (heightOffset > 0) {
+		addHeight (heightOffset, activeTiles[TitleLeft]);
+		addHeight (heightOffset, activeTiles[TitleCenter]);
+		addHeight (heightOffset, activeTiles[TitleRight]);
+		addHeight (heightOffset, activeTiles[CaptionSmallLeft]);
+		addHeight (heightOffset, activeTiles[CaptionSmallCenter]);
+		addHeight (heightOffset, activeTiles[CaptionSmallRight]);
+		addHeight (heightOffset, activeTiles[CaptionLargeLeft]);
+		addHeight (heightOffset, activeTiles[CaptionLargeCenter]);
+		addHeight (heightOffset, activeTiles[CaptionLargeRight]);
+	
+		addHeight (heightOffset, inactiveTiles[TitleLeft]);
+		addHeight (heightOffset, inactiveTiles[TitleCenter]);
+		addHeight (heightOffset, inactiveTiles[TitleRight]);
+		addHeight (heightOffset, inactiveTiles[CaptionSmallLeft]);
+		addHeight (heightOffset, inactiveTiles[CaptionSmallCenter]);
+		addHeight (heightOffset, inactiveTiles[CaptionSmallRight]);
+	}
+	
+	if (widthOffset > 0) {
+		addWidth (widthOffset, activeTiles[BorderLeft], true, activeTiles[GrabBarCenter]);
+		addWidth (widthOffset, activeTiles[BorderRight], false, activeTiles[GrabBarCenter]);
+		addWidth (widthOffset, inactiveTiles[BorderLeft], true, inactiveTiles[GrabBarCenter]);
+		addWidth (widthOffset, inactiveTiles[BorderRight], false, inactiveTiles[GrabBarCenter]);
+		
+		if (largeGrabBars)
+			widthOffset = widthOffset*3/2;
+		
+		addHeight (widthOffset, activeTiles[GrabBarLeft]);
+		addHeight (widthOffset, activeTiles[GrabBarCenter]);
+		addHeight (widthOffset, activeTiles[GrabBarRight]);
+		addHeight (widthOffset, inactiveTiles[GrabBarLeft]);
+		addHeight (widthOffset, inactiveTiles[GrabBarCenter]);
+		addHeight (widthOffset, inactiveTiles[GrabBarRight]);
+	}
 }
 
 
@@ -345,6 +416,57 @@ void KeramikHandler::destroyPixmaps()
 
 	delete titleButtonRound;
 	delete titleButtonSquare;
+}
+
+
+void KeramikHandler::addWidth (int width, QPixmap *&pix, bool left, QPixmap *bottomPix) {
+	int w = pix->width()+width;
+	int h = pix->height();
+
+	QPixmap *tmp = new QPixmap (w, h);
+	tmp->fill ();
+	QPainter p;
+	p.begin (tmp);
+	
+	for (int i = 0; i < h; i++)
+		p.drawPixmap (0, i, *bottomPix, i%2, 0, w,1);
+	
+	if (left)
+		p.drawPixmap(0, 0, *pix);
+	else
+		p.drawPixmap(width, 0, *pix);
+	
+	p.end();
+
+	delete pix;
+	pix = tmp;
+}
+
+
+void KeramikHandler::addHeight (int height, QPixmap *&pix) {
+	int w = pix->width();
+	int h = pix->height()+height;
+
+	QPixmap *tmp = new QPixmap (w, h);
+	QPainter p;
+	p.begin (tmp);
+	if (pix->height() > 10) {
+		p.drawPixmap(0, 0, *pix, 0, 0, w, 11);
+		for (int i = 0; i < height; i+=2)
+			p.drawPixmap(0, 11+i, *pix, 0, 11, w, 2);
+		p.drawPixmap(0, 11+height, *pix, 0, 11, w, -1);
+	}
+	else {
+		int lines  = h-3;
+		int factor = pix->height()-3;
+		for (int i = 0; i < lines; i++)
+			p.drawPixmap(0, i, *pix, 0, i*factor/lines, w, 1);
+		p.drawPixmap(0, lines, *pix, 0, factor, w, 3);
+	}
+	p.end();
+
+	delete pix;
+	pix = tmp;
 }
 
 
@@ -402,6 +524,7 @@ void KeramikHandler::readConfig()
 	if ( ! settings_cache ) {
 		settings_cache = new SettingsCache;
 		settings_cache->largeGrabBars = largeGrabBars;
+		settings_cache->smallCaptionBubbles = smallCaptionBubbles;
 	}
 
 	delete c;
@@ -488,6 +611,16 @@ bool KeramikHandler::reset( unsigned long changed )
 	// Re-read the config file
 	readConfig();
 
+	if ( changed & SettingBorder )
+	{
+		pixmapsInvalid = true;
+		needHardReset = true;
+	}
+	if ( changed & SettingFont )
+	{
+		pixmapsInvalid = true;
+		needHardReset = true;
+	}
 	// Check if the color scheme has changed
 	if ( changed & SettingColors )
 	{
@@ -509,8 +642,13 @@ bool KeramikHandler::reset( unsigned long changed )
 		needHardReset = true;
 	}
 
+	if ( (settings_cache->smallCaptionBubbles != smallCaptionBubbles) ) {
+		needHardReset = true;
+	}
+
 	// Update our config cache
 	settings_cache->largeGrabBars       = largeGrabBars;
+	settings_cache->smallCaptionBubbles = smallCaptionBubbles;
 
 	// Do we need to recreate the pixmaps?
 	if ( pixmapsInvalid ) {
@@ -537,6 +675,12 @@ KDecoration* KeramikHandler::createDecoration( KDecorationBridge* bridge )
         return new KeramikClient( bridge, this );
 }
 
+QValueList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
+{ // the list must be sorted
+  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+      BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
+}
+
 
 // -------------------------------------------------------------------------------------------
 
@@ -549,7 +693,8 @@ KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, co
 	QToolTip::add( this, tip ); // FRAME
 	setBackgroundMode( NoBackground );
         setCursor( arrowCursor );
-	setFixedSize( 17, 17 );
+	int size = clientHandler->roundButton()->height();
+	setFixedSize( size, size );
 
 	setToggleButton( (button == OnAllDesktopsButton) );
 }
@@ -599,6 +744,7 @@ void KeramikButton::drawButton( QPainter *p )
 {
 	const QPixmap *pix;
 	const QBitmap *deco;
+	int size = clientHandler->roundButton()->height();
 
 	// Get the bevel from the client handler
 	if ( button == MenuButton || button == OnAllDesktopsButton || button == HelpButton )
@@ -607,19 +753,20 @@ void KeramikButton::drawButton( QPainter *p )
 		pix = clientHandler->squareButton();
 
 	// Draw the button background
-	p->drawPixmap( 0, 0, *clientHandler->tile( TitleCenter, client->isActive() ),
-			0, 5, 17, 17 );
+	const QPixmap *background = clientHandler->tile( TitleCenter, client->isActive() );
+	p->drawPixmap( 0, 0, *background,
+			0, (background->height()-size+1)/2, size, size );
 
 	if ( isDown() ) {
 		// Pressed
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(34, 0, 17, 17), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(2*size, 0, size, size), pix->rect() ) );
 		p->translate( QApplication::reverseLayout() ? -1 : 1,  1 );
 	} else if ( hover )
 		// Mouse over
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(17, 0, 17, 17), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(size, 0, size, size), pix->rect() ) );
 	else
 		// Normal
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(0, 0, 17, 17), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(0, 0, size, size), pix->rect() ) );
 
 
 	// Draw the button deco on the bevel
@@ -658,7 +805,7 @@ void KeramikButton::drawButton( QPainter *p )
 	}
 
 	p->setPen( Qt::black ); // ### hardcoded color
-	p->drawPixmap( 0, 0, *deco );
+	p->drawPixmap( (size-17)/2, (size-17)/2, *deco );
 }
 
 
@@ -699,6 +846,8 @@ void KeramikClient::createLayout()
 
 	int grabBarHeight = clientHandler->grabBarHeight();
 	int topSpacing = ( largeTitlebar ? 4 : 1 );
+	int leftBorderWidth    = clientHandler->tile( BorderLeft, true )->width();
+	int rightBorderWidth   = clientHandler->tile( BorderRight, true )->width();
 	topSpacer = new QSpacerItem( 10, topSpacing,
 				QSizePolicy::Expanding, QSizePolicy::Minimum );
 
@@ -723,9 +872,9 @@ void KeramikClient::createLayout()
 				options()->titleButtonsRight() : QString(default_right) );
 	titleLayout->addSpacing( buttonMargin - 1 );  // Right button margin
 
-	windowLayout->addSpacing( 3 );                // Left border
+	windowLayout->addSpacing( leftBorderWidth );                // Left border
 	windowLayout->addWidget( new QLabel( i18n( "<center><b>Keramik</b></center>" ), widget()));   // Window wrapper FRAME
-	windowLayout->addSpacing( 4 );                // Right border
+	windowLayout->addSpacing( rightBorderWidth );                // Right border
 }
 
 

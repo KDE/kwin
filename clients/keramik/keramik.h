@@ -50,6 +50,7 @@ namespace Keramik {
 	struct SettingsCache
 	{
 		bool largeGrabBars:1;
+		bool smallCaptionBubbles:1;
 	};
 
 	class KeramikHandler : public KDecorationFactory
@@ -58,6 +59,7 @@ namespace Keramik {
 			KeramikHandler();
 			~KeramikHandler();
 
+			virtual QValueList< BorderSize > borderSizes() const;
 			virtual bool reset( unsigned long changed );
                         virtual KDecoration* createDecoration( KDecorationBridge* );
 
@@ -85,6 +87,8 @@ namespace Keramik {
 			void createPixmaps();
 			void destroyPixmaps();
 
+			void addWidth  (int width,  QPixmap *&pix, bool left, QPixmap *bottomPix);
+			void addHeight (int height, QPixmap *&pix);
 			void flip( QPixmap *&, QPixmap *& );
 			void flip( QPixmap *& );
 			void pretile( QPixmap *&, int, Qt::Orientation );
