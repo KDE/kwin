@@ -102,7 +102,7 @@ static void read_config(B2ClientFactory *f)
 
     KConfig conf("kwinb2rc");
     conf.setGroup("General");
-    colored_frame = conf.readBoolEntry( "UseTitleBarBorderColors", false );
+    colored_frame = conf.readBoolEntry("UseTitleBarBorderColors", false);
     QString opString = conf.readEntry("MenuButtonDoubleClickOperation", "NoOp");
     if (opString == "Close") {
         menu_dbl_click_op = B2::CloseOp;
@@ -294,9 +294,9 @@ QValueList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
 
 // =====================================
 
-void B2Client::maxButtonClicked( )
+void B2Client::maxButtonClicked()
 {
-    switch ( button[BtnMax]->last_button ) {
+    switch (button[BtnMax]->last_button) {
     case MidButton:
 	maximize(maximizeMode() ^ MaximizeVertical);
 	break;
@@ -343,11 +343,11 @@ void B2Client::init()
     g = new QGridLayout(widget(), 0, 0);
     if (isPreview()) {
         g->addMultiCellWidget(
-		new QLabel(i18n( "<b><center>B II preview</center></b>"),
+		new QLabel(i18n("<b><center>B II preview</center></b>"),
 		    widget()),
 		1, 1, 1, 2);
     } else {
-	g->addMultiCell( new QSpacerItem( 0, 0 ), 1, 1, 1, 2);
+	g->addMultiCell(new QSpacerItem(0, 0), 1, 1, 1, 2);
     }
 
     // Left and right border width
@@ -374,18 +374,18 @@ void B2Client::init()
     titlebar->setMinimumWidth(16);
     titlebar->setFixedHeight(buttonSize + 4);
 
-    QBoxLayout *titleLayout = new QBoxLayout(titlebar, QBoxLayout::LeftToRight, 0, 1, 0);
+    QBoxLayout *titleLayout = new QBoxLayout(titlebar, 
+	    QBoxLayout::LeftToRight, 0, 1, 0);
     titleLayout->addSpacing(3);
 
-    if (options()->customButtonPositions())
-    {
-        addButtons( options()->titleButtonsLeft(), tips, titlebar, titleLayout );
+    if (options()->customButtonPositions()) {
+        addButtons(options()->titleButtonsLeft(), tips, titlebar, titleLayout);
         titleLayout->addItem(titlebar->captionSpacer);
-        addButtons( options()->titleButtonsRight(), tips, titlebar, titleLayout );
+        addButtons(options()->titleButtonsRight(), tips, titlebar, titleLayout);
     } else {
-        addButtons( "MSH", tips, titlebar, titleLayout );
+        addButtons("MSH", tips, titlebar, titleLayout);
         titleLayout->addItem(titlebar->captionSpacer);
-        addButtons( "IAX", tips, titlebar, titleLayout );
+        addButtons("IAX", tips, titlebar, titleLayout);
     }
 
     titleLayout->addSpacing(3);
@@ -397,9 +397,9 @@ void B2Client::init()
         if (button[i])
             button[i]->setBg(c);
 
+    positionButtons();
     titlebar->recalcBuffer();
     titlebar->installEventFilter(this);
-    positionButtons();
 }
 
 void B2Client::addButtons(const QString& s, const QString tips[],
@@ -551,7 +551,7 @@ void B2Client::captionChange()
     titlebar->repaint(false);
 }
 
-void B2Client::paintEvent( QPaintEvent* e)
+void B2Client::paintEvent(QPaintEvent* e)
 {
     QPainter p(widget());
 
@@ -571,12 +571,13 @@ void B2Client::paintEvent( QPaintEvent* e)
     QBrush fillBrush(options()->color(frameColorGroup, isActive()));
 
     // outer frame rect
-    p.drawRect(0, t.bottom() - thickness + 1, width(), fHeight - bb + thickness);
+    p.drawRect(0, t.bottom() - thickness + 1, 
+	    width(), fHeight - bb + thickness);
 
     if (thickness >= 2) {
 	// inner window rect
-	p.drawRect(thickness - 1, t.bottom(), width() - 2 * (thickness - 1),
-		fHeight - bDepth + 2);
+	p.drawRect(thickness - 1, t.bottom(), 
+		width() - 2 * (thickness - 1), fHeight - bDepth + 2);
 
 	if (thickness >= 3) {
 	    // frame shade panel
@@ -649,7 +650,7 @@ void B2Client::paintEvent( QPaintEvent* e)
     }
 }
 
-#define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
+#define QCOORDARRLEN(x) sizeof(x) / (sizeof(QCOORD) * 2)
 
 void B2Client::doShape()
 {
@@ -687,7 +688,7 @@ void B2Client::showEvent(QShowEvent *)
     titlebar->repaint(false);
 }
 
-KDecoration::Position B2Client::mousePosition( const QPoint& p ) const
+KDecoration::Position B2Client::mousePosition(const QPoint& p) const
 {
     const int range = 16;
     QRect t = titlebar->geometry();
@@ -696,28 +697,28 @@ KDecoration::Position B2Client::mousePosition( const QPoint& p ) const
     int lx = t.right();
     int bb = isResizable() ? 0 : 5;
 
-    if ( p.x() > t.right() ) {
-        if ( p.y() <= ly + range && p.x() >= width()-range)
+    if (p.x() > t.right()) {
+        if (p.y() <= ly + range && p.x() >= width() - range)
             return PositionTopRight;
-        else if ( p.y() <= ly + thickness )
+        else if (p.y() <= ly + thickness)
             return PositionTop;
-    } else if ( p.x() < bar_x_ofs ) {
-        if ( p.y() <= ly + range && p.x() <= range )
+    } else if (p.x() < bar_x_ofs) {
+        if (p.y() <= ly + range && p.x() <= range)
             return PositionTopLeft;
-        else if ( p.y() <= ly + thickness )
+        else if (p.y() <= ly + thickness)
             return PositionTop;
-    } else if ( p.y() < ly ) {
+    } else if (p.y() < ly) {
         if (p.x() > bar_x_ofs + thickness &&
 		p.x() < lx - thickness && p.y() > thickness)
             return KDecoration::mousePosition(p);
         if (p.x() > bar_x_ofs + range && p.x() < lx - range)
             return PositionTop;
-        if ( p.y() <= range ) {
-            if ( p.x() <= bar_x_ofs + range )
+        if (p.y() <= range) {
+            if (p.x() <= bar_x_ofs + range)
                 return PositionTopLeft;
             else return PositionTopRight;
         } else {
-            if ( p.x() <= bar_x_ofs + range )
+            if (p.x() <= bar_x_ofs + range)
                 return PositionLeft;
             else return PositionRight;
         }
@@ -744,7 +745,7 @@ void B2Client::titleMoveAbs(int new_ofs)
         bar_x_ofs = new_ofs;
 	positionButtons();
 	doShape();
-	widget()->repaint( 0, 0, width(), buttonSize + 4, false );
+	widget()->repaint(0, 0, width(), buttonSize + 4, false);
 	titlebar->repaint(false);
     }
 }
@@ -760,7 +761,8 @@ void B2Client::desktopChange()
     if (B2Button *b = button[BtnSticky]) {
         b->setDown(on);
 	QToolTip::remove(b);
-	QToolTip::add(b, on ? i18n("Not On All Desktops") : i18n("On All Desktops"));
+	QToolTip::add(b, 
+		on ? i18n("Not On All Desktops") : i18n("On All Desktops"));
     }
 }
 
@@ -768,7 +770,7 @@ void B2Client::maximizeChange()
 {
     bool m = maximizeMode() == MaximizeFull;
     if (button[BtnMax]) {
-        button[BtnMax]->setPixmaps( m ? P_NORMALIZE : P_MAX );
+        button[BtnMax]->setPixmaps(m ? P_NORMALIZE : P_MAX);
         button[BtnMax]->repaint();
 	QToolTip::remove(button[BtnMax]);
 	QToolTip::add(button[BtnMax],
@@ -838,10 +840,10 @@ void B2Client::menuButtonPressed()
     time.start();
     if (!dbl) {
 	KDecorationFactory* f = factory();
-	QRect menuRect =button[BtnMenu]->rect();
-	QPoint menutop = button[BtnMenu]->mapToGlobal(menuRect.topLeft());
-	QPoint menubottom = button[BtnMenu]->mapToGlobal(menuRect.bottomRight());
-	showWindowMenu(QRect(menutop, menubottom));
+	QRect menuRect = button[BtnMenu]->rect();
+	QPoint menuTop = button[BtnMenu]->mapToGlobal(menuRect.topLeft());
+	QPoint menuBottom = button[BtnMenu]->mapToGlobal(menuRect.bottomRight());
+	showWindowMenu(QRect(menuTop, menuBottom));
 	if (!f->exists(this)) // 'this' was destroyed
 	    return;
 	button[BtnMenu]->setDown(false);
@@ -874,7 +876,7 @@ void B2Client::unobscureTitlebar()
     }
     in_unobs = 1;
     QRegion reg(QRect(0,0,width(), buttonSize + 4));
-    reg = unobscuredRegion( reg );
+    reg = unobscuredRegion(reg);
     if (!reg.isEmpty()) {
         // there is at least _one_ pixel from our title area, which is not
 	// obscured, we use the first rect we find
@@ -1240,7 +1242,7 @@ bool B2Titlebar::x11Event(XEvent *e)
 	    StructureNotifyMask | SubstructureRedirectMask |
 	    VisibilityChangeMask);
     }
-    switch ( e->type ) {
+    switch (e->type) {
     case VisibilityNotify:
 	isfullyobscured = false;
 	if (e->xvisibility.state == VisibilityFullyObscured) {
@@ -1315,7 +1317,7 @@ void B2Titlebar::mouseDoubleClickEvent(QMouseEvent *e)
     }
 }
 
-void B2Titlebar::mousePressEvent( QMouseEvent * e )
+void B2Titlebar::mousePressEvent(QMouseEvent * e)
 {
     shift_move = e->state() & ShiftButton;
     if (shift_move) {
@@ -1325,13 +1327,13 @@ void B2Titlebar::mousePressEvent( QMouseEvent * e )
     }
 }
 
-void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
+void B2Titlebar::mouseReleaseEvent(QMouseEvent * e)
 {
     if (shift_move) shift_move = false;
     else e->ignore();
 }
 
-void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
+void B2Titlebar::mouseMoveEvent(QMouseEvent * e)
 {
     if (shift_move) {
 	int oldx = mapFromGlobal(moveOffset).x();
