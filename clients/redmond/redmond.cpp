@@ -471,10 +471,10 @@ void RedmondDeco::slotReset()
 
 void RedmondDeco::iconChange()
 {
-	QPixmap *miniIcon = new QPixmap(icon().pixmap(QIconSet::Small, QIconSet::Normal));
+	QPixmap miniIcon = icon().pixmap(QIconSet::Small, QIconSet::Normal);
 
-	if (!miniIcon->isNull())
-		button[BtnMenu]->setPixmap(*miniIcon);
+	if (!miniIcon.isNull())
+		button[BtnMenu]->setPixmap(miniIcon);
 	else
 		button[BtnMenu]->setPixmap(*defaultMenuPix);
 
@@ -772,10 +772,9 @@ QSize RedmondDeco::minimumSize() const
 
 void RedmondDeco::activeChange()
 {
-	QPixmap *miniIcon = new QPixmap(icon().pixmap(QIconSet::Small, QIconSet::Normal));
-
-    if (!miniIcon->isNull()) {
-        button[BtnMenu]->setPixmap(*miniIcon);
+    QPixmap miniIcon = icon().pixmap(QIconSet::Small, QIconSet::Normal);
+    if (!miniIcon.isNull()) {
+        button[BtnMenu]->setPixmap(miniIcon);
     } else {
         button[BtnMenu]->setPixmap(kdelogo);
 	}
