@@ -485,9 +485,6 @@ void Workspace::init()
     connect(kapp, SIGNAL(settingsChanged(int)), this,
             SLOT(slotSettingsChanged(int)));
 
-    connect(&focusEnsuranceTimer, SIGNAL(timeout()), this,
-            SLOT(focusEnsurance()));
-
     XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
     for (i = 0; i < nwins; i++) {
         XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
@@ -576,11 +573,6 @@ bool Workspace::workspaceEvent( XEvent * e )
             return TRUE;
     }
 
-
-    if ( e->type == FocusIn )
-        focusEnsuranceTimer.stop();
-    else if ( e->type == FocusOut )
-        focusEnsuranceTimer.start(50);
 
     Client * c = findClient( e->xany.window );
     if ( c )
@@ -4278,34 +4270,6 @@ void Workspace::saveDesktopSettings()
             QString currentvalue = c.readEntry(QString("Name_%1").arg(i));
             if (currentvalue != defaultvalue)
                 c.writeEntry( QString("Name_%1").arg(i), "" );
-        }
-    }
-}
-
-
-/*!
-  Checks whether focus is in nirvana, and activates a client instead.
- */
-void Workspace::focusEnsurance()
-{
-    Window focus;
-    int revert;
-    XGetInputFocus( qt_xdisplay(), &focus, &revert );
-    if ( focus == None || focus == PointerRoot ) {
-
-        Window root_return;
-        Window child = root;
-        int root_x, root_y, lx, ly;
-        uint state;
-        if ( ! XQueryPointer( qt_xdisplay(), root, &root_return, &child,
-                              &root_x, &root_y, &lx, &ly, &state ) )
-            return; // cursor is on another screen, so do not play with focus
-
-        if ( !last_active_client )
-            last_active_client = topClientOnDesktop();
-        if ( last_active_client && last_active_client->isVisible() ) {
-            qt_x_time = CurrentTime;
-            requestFocus( last_active_client );
         }
     }
 }
