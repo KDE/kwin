@@ -11,5 +11,5 @@ kwin_LDADD = $(LIB_KDECORE) $(LIB_KDEUI)
 METASOURCES = AUTO
 
 messages:
-	$(XGETTEXT) -C -ktranslate -kaliasLocal -ki18n -x $(includedir)/kde.pot *.h *.cpp && mv messages.po ../po/kwin.pot
+	$(XGETTEXT) -C -ktranslate -kaliasLocal -ki18n -x $(includedir)/kde.pot *.h *.cpp && mv messages.po $(podir)/kwin.pot
 
