@@ -302,10 +302,12 @@ void B2Titlebar::recalcBuffer()
     p.setPen(options->color(Options::Font, true));
     p.setFont(options->font(true));
 
-    t.setX(client->providesContextHelp() ?
-           client->button[B2Client::BtnHelp]->x()+17 :
-           client->button[B2Client::BtnSticky]->x()+17);
-    t.setRight(client->button[B2Client::BtnIconify]->x()-1);
+    QLayoutIterator it=layout()->iterator();
+    ++it;
+    ++it;
+    ++it;
+    t=(++it)->geometry();
+
     p.drawText(t, AlignLeft | AlignVCenter, client->caption());
     p.end();
 
@@ -344,10 +346,12 @@ void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
         p.setPen(options->color(Options::Font, false));
         p.setFont(options->font(false));
 
-        t.setX(client->providesContextHelp() ?
-               client->button[B2Client::BtnHelp]->x()+17 :
-               client->button[B2Client::BtnSticky]->x()+17);
-        t.setRight(client->button[B2Client::BtnIconify]->x()-1);
+	QLayoutIterator it=layout()->iterator();
+	++it;
+	++it;
+	++it;
+	t=(++it)->geometry();
+
         p.drawText(t, AlignLeft | AlignVCenter, client->caption());
     }
 }
@@ -408,7 +412,7 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 
     g->addColSpacing(0, 4);
 
-    g->addColSpacing(1, providesContextHelp() ? 102 : 85);
+    g->addColSpacing(1, 16);
 
     g->setColStretch(2, 1);
 
@@ -420,18 +424,34 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     g->addRowSpacing(0, 20);
 
     titlebar = new B2Titlebar(this);
-    int i;
+    titlebar->setMinimumWidth(16);
+    titlebar->setFixedHeight(20);
+
+   int i;
     for(i=0; i < 6; ++i){
         button[i] = new B2Button(this, titlebar/*this*/);
         button[i]->setFixedSize(16, 16);
     }
-
+    
+    QHBoxLayout *titleLayout=new QHBoxLayout(titlebar);
+    titleLayout->setSpacing(1);
+   
+    titleLayout->addSpacing(3);
+    titleLayout->addWidget(button[BtnMenu]);
+    titleLayout->addWidget(button[BtnSticky]);
+    titleLayout->addWidget(button[BtnHelp]);
+    titleLayout->addStretch(1);
+    titleLayout->addWidget(button[BtnIconify]);
+    titleLayout->addWidget(button[BtnMax]);
+    titleLayout->addWidget(button[BtnClose]);
+    titleLayout->addSpacing(3);
+ 
     button[BtnSticky]->setToggle();
     button[BtnSticky]->setDown(isSticky());
     button[BtnMenu]->setUseMiniIcon();
 
     if(!providesContextHelp())
-        button[5]->hide();
+        button[BtnHelp]->hide();
 
     button[BtnMenu]->setPixmaps(aMenuPix, aMenuPixDown, iMenuPix,
                                 iMenuPixDown);
@@ -472,11 +492,62 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 void B2Client::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
+  
+    int sizeProblem = 0;
+
+    if (width() < 45) sizeProblem = 3;
+    else if (width() < 70) sizeProblem = 2;
+    else if (width() < 120) sizeProblem = 1;
+ 
+    switch (sizeProblem) {
+ 
+      case 1:
+        button[BtnMenu]    ->show();
+        button[BtnClose]   ->show();
+        button[BtnSticky]  ->hide();
+	button[BtnIconify] ->show();
+	button[BtnMax] 	   ->hide();
+	button[BtnHelp]    ->hide();
+	break;
+
+      case 2:
+        button[BtnMenu]    ->show();
+	button[BtnClose]   ->show();
+        button[BtnSticky]  ->hide();
+	button[BtnIconify] ->hide();
+	button[BtnMax] 	   ->hide();
+	button[BtnHelp]    ->hide();
+	break;
+
+      case 3:
+        button[BtnMenu]    ->hide();
+	button[BtnClose]   ->hide();
+        button[BtnSticky]  ->hide();
+	button[BtnIconify] ->hide();
+	button[BtnMax] 	   ->hide();
+	button[BtnHelp]    ->hide();
+	break;
+ 
+      case 0:
+      default:
+        button[BtnMenu]    ->show();
+	button[BtnClose]   ->show();
+        button[BtnSticky]  ->show();
+	button[BtnIconify] ->show();
+	button[BtnMax] 	   ->show();
+	if(providesContextHelp())
+	  button[BtnHelp]->show();
+	break;
+    }   
+
+    titlebar->layout()->activate();
+
     positionButtons();
     /* may be the resize cuted off some space occupied by titlebar, which
        was moved, so instead of reducing it, we first try to move it */
     titleMoveAbs(bar_x_ofs);
     doShape();
+
     /*
     What does this? (MM)
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
@@ -898,28 +969,16 @@ void B2Client::positionButtons()
     QFontMetrics fm(options->font(isActive()));
 
     int textLen = fm.width(caption());
-    //int xpos = bar_x_ofs+4;
-    int xpos = 4;
-    button[BtnMenu]->move(xpos, 2);
-    xpos+=17;
-    button[BtnSticky]->move(xpos, 2);
-    xpos+=17;
-    if(providesContextHelp()){
-        button[BtnHelp]->move(xpos, 2);
-        xpos+=17;
-    }
+    QLayoutIterator it=titlebar->layout()->iterator();
+    ++it;
+    ++it;
+    ++it;
 
-    if(xpos + textLen+52 < width()-3)
-        xpos += textLen+1;
-    else
-        xpos = width()-3-52;
+    int titleWidth=titlebar->width()-(++it)->geometry().width()+textLen+2;
+   
+    if( titleWidth > width()) titleWidth=width();
 
-    button[BtnIconify]->move(xpos, 2);
-    xpos+=17;
-    button[BtnMax]->move(xpos, 2);
-    xpos+=17;
-    button[BtnClose]->move(xpos, 2);
-    titlebar->setFixedSize(xpos+17+4,20);
+    titlebar->resize(titleWidth,20);
     titlebar->move(bar_x_ofs, 0);
 }
 
