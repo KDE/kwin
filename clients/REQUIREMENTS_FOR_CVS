@@ -8,7 +8,7 @@ to convert them into individual bitmaps. Once this is done you can
 draw the bitmaps using a colorgroup with kColorBitmaps.
 
 If your client is just a set of pixmaps that doesn't follow any of the options
-I suggest you make a KWM theme so the user gets the those options to 
+I suggest you make a KWM theme so the user gets those options to 
 configure the pixmaps and look. Making a plain pixmapped dedicated style 
 makes no sense since it is less configurable than KWM themes and cannot follow
 client plugin options. 
