@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=kcmkwm
+Type=Application
+Exec=kcmshell kwinmoving
+DocPath=kcontrol/window-behavior.html
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kwinoptions
+X-KDE-FactoryName=kwinmoving
+
+Name=Moving
+Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=kcmkwm
+Type=Application
+Exec=kcmshell kwinfocus
+DocPath=kcontrol/window-behavior.html
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kwinoptions
+X-KDE-FactoryName=kwinfocus
+
+Name=Focus
+Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
