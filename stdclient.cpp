@@ -394,3 +394,4 @@ void StdClient::maxButtonClicked( int button )
     }
 }
 
+#include "stdclient.moc"

@@ -210,3 +210,6 @@ Options::MouseCommand Options::mouseCommand(const QString &name)
     if (name == "Nothing") return MouseNothing;
     return MouseNothing;
 }
+
+#include "options.moc"
+

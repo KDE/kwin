@@ -296,3 +296,4 @@ TabBox::delayedShow()
   delayedShowTimer.start(delayTime, true);
 }
 
+#include "tabbox.moc"

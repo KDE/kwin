@@ -182,5 +182,5 @@ void PluginMgr::loadPlugin(QString nameStr)
         lt_dlclose(oldHandle);
 }
 
-
+#include "plugins.moc"
 

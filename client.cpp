@@ -2071,4 +2071,5 @@ NoBorderClient::~NoBorderClient()
 {
 }
 
+#include "client.moc"
 
