@@ -52,6 +52,7 @@ Comment[xh]=Umphathi we KDE Window
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=KDE 窗口管理器
 Comment[zh_TW.Big5]=KDE 視窗管理程式
+Comment[zu]=Umphathi Windi le KDE
 
 [desktop1]
 Name=Change to Desktop 1
@@ -106,6 +107,7 @@ Name[xh]=Tshintshela kwi Desktop yokuqala
 Name[xx]=xx
 Name[zh_CN.GB2312]=切换到桌面一
 Name[zh_TW.Big5]=切換到桌面一
+Name[zu]=Shintshela kwi Desktop 1
 Comment=Virtual Desktop One is Selected
 Comment[af]=virtuele werkskerm een is gekose
 Comment[ar]=سطح المكتب رقم 1 مختار
@@ -158,6 +160,7 @@ Comment[xh]=iDesktop enesiqhamo Enye ikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面一被选中
 Comment[zh_TW.Big5]=虛擬桌面一被選取
+Comment[zu]= I Desktop Eyodwa Enokubonakalayo Ikhethiwe
 default_sound=KDE_Desktop1.wav
 default_presentation=0
 
@@ -266,6 +269,7 @@ Comment[xh]=iDesktop enesiqhamo Ezimbini zikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面二被选中
 Comment[zh_TW.Big5]=虛擬桌面二被選取
+Comment[zu]=iDesktop Enokubonakalayo Okubili Ikhethiwe
 default_sound=KDE_Desktop2.wav
 default_presentation=0
 
@@ -374,6 +378,7 @@ Comment[xh]=iDesktop enesiqhamo Ezintathu zikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面三被选中
 Comment[zh_TW.Big5]=虛擬桌面三被選取
+Comment[zu]=iDesktop Enokubonakalayo Okuthathu Ikhethiwe
 default_sound=KDE_Desktop3.wav 
 default_presentation=0
 
@@ -482,6 +487,7 @@ Comment[xh]=iDesktop enesiqhamo Ezine zikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面四被选中
 Comment[zh_TW.Big5]=虛擬桌面四被選取
+Comment[zu]=iDesktop Enokubonakalayo Yesine Ikhethiwe
 default_sound=KDE_Desktop4.wav 
 default_presentation=0
 
@@ -590,6 +596,7 @@ Comment[xh]=iDesktop enesiqhamo Ezintlanu zikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面五被选中
 Comment[zh_TW.Big5]=虛擬桌面五被選取
+Comment[zu]=iDesktop Enokubonakalayo Eyesihlanu Ikhethiwe
 default_sound=KDE_Desktop5.wav 
 default_presentation=0
 
@@ -698,6 +705,7 @@ Comment[xh]=iDesktop enesiqhamo Ezintandathu zikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面六被选中
 Comment[zh_TW.Big5]=虛擬桌面六被選取
+Comment[zu]=iDesktop Enokubonakalayo Yesithupha Ikhethiwe
 default_sound=KDE_Desktop6.wav 
 default_presentation=0
 
@@ -806,6 +814,7 @@ Comment[xh]=iDesktop enesiqhamo Ezisixhenxe zikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面七被选中
 Comment[zh_TW.Big5]=虛擬桌面七被選取
+Comment[zu]=iDesktop Enokubonakalayo Yesikhombisa Ikhethiwe
 default_sound=KDE_Desktop7.wav 
 default_presentation=0
 
@@ -914,6 +923,7 @@ Comment[xh]=iDesktopenesiqhamo Ezibhozo zikhethiwe
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=虚拟桌面八被选中
 Comment[zh_TW.Big5]=虛擬桌面八被選取
+Comment[zu]=iDesktop Enokubonakalayo Yesishagalombili Ikhethiwe
 default_sound=KDE_Desktop8.wav 
 default_presentation=0
 
@@ -1022,6 +1032,7 @@ Comment[xh]=Enye iWindow iyasetyenziswa
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=另外一个窗口被激活
 Comment[zh_TW.Big5]=另一個視窗活動中
+Comment[zu]=Elinye Iwindi Liyasentshenziswa
 default_presentation=0
 
 [new]
@@ -1128,6 +1139,7 @@ Comment[xh]=iWindow entsha
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=新建窗口
 Comment[zh_TW.Big5]=新建視窗
+Comment[zu]=Iwindi Elisha
 default_sound=KDE_Window_Open.wav
 default_presentation=0
 
@@ -1233,6 +1245,7 @@ Comment[xh]=Cima iWindow
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=删除窗口
 Comment[zh_TW.Big5]=刪除視窗
+Comment[zu]=Cisha Iwindi
 default_presentation=0
 [close]
 Name=Window Close
@@ -1339,6 +1352,7 @@ Comment[xh]=iWindow iyavala
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=关闭一个窗口
 Comment[zh_TW.Big5]=關閉一個視窗
+Comment[zu]=Iwindi Liyavalwa
 default_sound=KDE_Window_Close.wav
 default_presentation=0
 
@@ -1443,6 +1457,7 @@ Comment[xh]=iWindow yenziwa umthunzi phezulu
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口被卷起
 Comment[zh_TW.Big5]=視窗已收起
+Comment[zu]=Iwindi lisithiwe Phezulu
 default_sound=KDE_Window_Shade_Up.wav
 default_presentation=0
 
@@ -1547,6 +1562,7 @@ Comment[xh]=iWindow yenziwa umthunzi ezantsi
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口放下
 Comment[zh_TW.Big5]=視窗已展開
+Comment[zu]=Iwindi Lisithiwe Ngezansi
 default_sound=KDE_Window_Shade_Down.wav
 default_presentation=0
 
@@ -1655,6 +1671,7 @@ Comment[xh]=iWindow yenziwa i icon
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口被最小化
 Comment[zh_TW.Big5]=視窗被最小化
+Comment[zu]=iWindi Li Iconified
 default_sound=KDE_Window_Iconify.wav
 default_presentation=0
 
@@ -1762,6 +1779,7 @@ Comment[xh]=iWindow igciniwe kwakhona
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口恢复大小
 Comment[zh_TW.Big5]=視窗恢復大小
+Comment[zu]=Iwindi LIphindwe Lagcinwa futhi
 default_sound=KDE_Window_DeIconify.wav   
 default_presentation=0
 
@@ -1872,6 +1890,7 @@ Comment[xh]=iWindow yenziwa nkulu
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口被最大化
 Comment[zh_TW.Big5]=視窗被最大化
+Comment[zu]=Iwindi Lenziwa Labalikhulu
 default_sound=KDE_Window_Maximize.wav   
 default_presentation=0
 
@@ -1982,6 +2001,7 @@ Comment[xh]=iWindow ilahla ubukhulu
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口恢复大小
 Comment[zh_TW.Big5]=視窗取消最大化
+Comment[zu]=Iwindi Lilahlekelwe Ubukhulu
 default_sound=KDE_Window_UnMaximize.wav
 default_presentation=0
 
@@ -2090,6 +2110,7 @@ Comment[xh]=iWindow yenziwa shushu nafumileyo
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口已粘附
 Comment[zh_TW.Big5]=視窗已黏附
+Comment[zu]=Iwindi Lenziwe Lanamathela
 default_sound=KDE_Window_Sticky.wav
 default_presentation=0
 
@@ -2198,6 +2219,7 @@ Comment[xh]=iWindow ayenziwa shushu nafumileyo
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口已取消粘附
 Comment[zh_TW.Big5]=視窗已取消黏附
+Comment[zu]=Iwindi Lenziwe Langanamathela
 default_presentation=1
 default_sound=KDE_Window_UnSticky.wav
 
@@ -2301,6 +2323,7 @@ Comment[xh]=iWindow ethatha ixesha elifutshane (incoko yababini) iyavela
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=暂态窗口(对话)出现
 Comment[zh_TW.Big5]=暫態視窗(對話)出現
+Comment[zu]=Iwindi Lesikhashana (lengxoxo) Liyaqhamuka
 default_sound=KDE_Dialog_Appear.wav
 default_presentation=0
 
@@ -2404,6 +2427,7 @@ Comment[xh]=iWindow ethatha ixesha elifutshane (incoko yababini) iyasuswa
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=暂态窗口(对话)删除
 Comment[zh_TW.Big5]=暫態視窗(對話)刪除
+Comment[zu]=Iwindi Elesikhashana(legxoxo) Liyasuswa
 default_sound=KDE_Dialog_Disappear.wav
 default_presentation=0
 
@@ -2501,6 +2525,7 @@ Comment[xh]=iWindow iqalile ukushukuma
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口开始移动
 Comment[zh_TW.Big5]=視窗開始移動
+Comment[zu]=Iwindi Seliqalile Ukunyakaza
 default_presentation=0
 
 [moveend]
@@ -2606,6 +2631,7 @@ Comment[xh]=iWindow ilugqibile ushukumo lwayo
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口完成移动
 Comment[zh_TW.Big5]=視窗完成移動
+Comment[zu]=Iwindi Seliwuqedile Umnyakazo walo
 default_presentation=0
 
 [resizestart]
@@ -2703,6 +2729,7 @@ Comment[xh]=iWindow iqalile ukwenza ubungakanani kwakhona
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口开始改变大小
 Comment[zh_TW.Big5]=視窗開始改變大小
+Comment[zu]=Iwindi Seliqalile Ukushintsha usayizi
 default_presentation=0
 
 [resizeend]
@@ -2755,6 +2782,7 @@ Name[xh]=Isiphelo sobungakanani kwakhona se Window
 Name[xx]=xx
 Name[zh_CN.GB2312]=完成改变窗口大小
 Name[zh_TW.Big5]=完成改變視窗大小
+Name[zu]=Isiphetho Sokushintsha usayizi we Windi
 Comment=A Window has Finished Resizing
 Comment[af]=a venster het klaar gemaak hervergrooting
 Comment[ar]=انتهت نافذة من التحجيم
@@ -2799,4 +2827,5 @@ Comment[xh]=iWindow igqibile ukwenza ubungakanani kwakhona
 Comment[xx]=xx
 Comment[zh_CN.GB2312]=窗口完成改变大小
 Comment[zh_TW.Big5]=視窗完成改變大小
+Comment[zu]=Iwindi Seliqedile Ukushintsha usayizi
 default_presentation=0
