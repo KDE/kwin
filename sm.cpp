@@ -178,7 +178,7 @@ void Workspace::loadSessionInfo()
         info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
         info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
-        info->shortcut = KShortcut( config->readEntry( QString("shortcut")+n ));
+        info->shortcut = config->readEntry( QString("shortcut")+n );
         info->active = ( active_client == i );
         }
     }

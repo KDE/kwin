@@ -32,6 +32,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <kglobalaccel.h>
 #include <kapplication.h>
+#include <qregexp.h>
 
 #include "popupinfo.h"
 #include "killwindow.h"
@@ -297,7 +298,7 @@ void Workspace::setupWindowShortcutDone( bool ok )
     client_keys->setEnabled( true );
     if( ok )
         {
-        client_keys_client->setShortcut( client_keys_dialog->shortcut());
+        client_keys_client->setShortcut( KShortcut( client_keys_dialog->shortcut()).toString());
         }
     closeActivePopup();
     delete client_keys_dialog;
@@ -923,6 +924,84 @@ void Workspace::slotWindowMove()
 void Workspace::slotWindowResize()
     {
     performWindowOperation( active_client, Options::UnrestrictedResizeOp );
+    }
+
+void Client::setShortcut( const QString& _cut )
+    {
+    QString cut = rules()->checkShortcut( _cut );
+    if( cut.isEmpty())
+        return setShortcutInternal( KShortcut());
+// Format:
+// *base+[abcdef]|base+[abcdef]
+// E.g. Alt+Ctrl+[ABCDEF]|Win+X,Win+[ABCDEF]
+    if( cut[ 0 ] != '*' )
+        {
+        if( workspace()->shortcutAvailable( KShortcut( cut )))
+            setShortcutInternal( KShortcut( cut ));
+        else
+            setShortcutInternal( KShortcut());
+        return;
+        }
+    QValueList< KShortcut > keys;
+    QStringList groups = QStringList::split( '|', cut.mid( 1 ));
+    for( QStringList::ConstIterator it = groups.begin();
+         it != groups.end();
+         ++it )
+        {
+        QRegExp reg( "(.*\\+)\\[(.*)\\]" );
+        if( reg.search( *it ) > -1 )
+            {
+            QString base = reg.cap( 1 );
+            QString list = reg.cap( 2 );
+            for( unsigned int i = 0;
+                 i < list.length();
+                 ++i )
+                {
+                KShortcut c( base + list[ i ] );
+                if( !c.isNull())
+                    keys.append( c );
+                }
+            }
+        }
+    for( QValueList< KShortcut >::ConstIterator it = keys.begin();
+         it != keys.end();
+         ++it )
+        {
+        if( _shortcut == *it ) // current one is in the list
+            return;
+        }
+    for( QValueList< KShortcut >::ConstIterator it = keys.begin();
+         it != keys.end();
+         ++it )
+        {
+        if( workspace()->shortcutAvailable( *it, this ))
+            {
+            setShortcutInternal( *it );
+            return;
+            }
+        }
+    setShortcutInternal( KShortcut());
+    }
+
+void Client::setShortcutInternal( const KShortcut& cut )
+    {
+    if( _shortcut == cut )
+        return;
+    _shortcut = cut;
+    workspace()->clientShortcutUpdated( this );
+    }
+
+bool Workspace::shortcutAvailable( const KShortcut& cut, Client* ignore ) const
+    {
+    // TODO check global shortcuts etc.
+    for( ClientList::ConstIterator it = clients.begin();
+         it != clients.end();
+         ++it )
+        {
+        if( (*it) != ignore && (*it)->shortcut() == cut )
+            return false;    
+        }
+    return true;
     }
 
 } // namespace

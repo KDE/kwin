@@ -212,7 +212,7 @@ class Client : public QObject, public KDecorationDefines
 
         bool providesContextHelp() const;
         KShortcut shortcut() const;
-        void setShortcut( const KShortcut& cut );
+        void setShortcut( const QString& cut );
 
         bool performMouseCommand( Options::MouseCommand, QPoint globalPos, bool handled = false );
 
@@ -365,6 +365,7 @@ class Client : public QObject, public KDecorationDefines
         void setupWindowRules( bool ignore_temporary );
         void updateWindowRules();
         void finishWindowRules();
+        void setShortcutInternal( const KShortcut& cut );
 
         void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
@@ -872,14 +873,6 @@ inline KShortcut Client::shortcut() const
     return _shortcut;
     }
 
-inline void Client::setShortcut( const KShortcut& cut )
-    {
-    if( _shortcut == cut )
-        return;
-    _shortcut = cut;
-    workspace()->clientShortcutUpdated( this );
-    }
-    
 inline bool Client::isBMP()
     {
     return isBMP_;

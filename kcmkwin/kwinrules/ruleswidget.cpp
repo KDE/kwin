@@ -89,6 +89,7 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
     SETUP( closeable, force );
     SETUP( opacityactive, force );
     SETUP( opacityinactive, force );
+    SETUP( shortcut, force );
     // workarounds tab
     SETUP( fsplevel, force );
     SETUP( moveresizemode, force );
@@ -135,6 +136,11 @@ UPDATE_ENABLE_SLOT( acceptfocus )
 UPDATE_ENABLE_SLOT( closeable )
 UPDATE_ENABLE_SLOT( opacityactive )
 UPDATE_ENABLE_SLOT( opacityinactive )
+void RulesWidget::updateEnableshortcut()
+    {
+    shortcut->setEnabled( enable_shortcut->isChecked() && rule_shortcut->currentItem() != 0 );
+    shortcut_edit->setEnabled( enable_shortcut->isChecked() && rule_shortcut->currentItem() != 0 );
+    }
 // workarounds tab
 UPDATE_ENABLE_SLOT( fsplevel )
 UPDATE_ENABLE_SLOT( moveresizemode )
@@ -391,6 +397,7 @@ void RulesWidget::setRules( Rules* rules )
     CHECKBOX_FORCE_RULE( closeable, );
     LINEEDIT_FORCE_RULE( opacityactive, intToStr );
     LINEEDIT_FORCE_RULE( opacityinactive, intToStr );
+    LINEEDIT_SET_RULE( shortcut, );
     COMBOBOX_FORCE_RULE( fsplevel, );
     COMBOBOX_FORCE_RULE( moveresizemode, moveresizeToCombo );
     COMBOBOX_FORCE_RULE( type, typeToCombo );
@@ -479,6 +486,7 @@ Rules* RulesWidget::rules() const
     CHECKBOX_FORCE_RULE( closeable, );
     LINEEDIT_FORCE_RULE( opacityactive, strToInt );
     LINEEDIT_FORCE_RULE( opacityinactive, strToInt );
+    LINEEDIT_SET_RULE( shortcut, );
     COMBOBOX_FORCE_RULE( fsplevel, );
     COMBOBOX_FORCE_RULE( moveresizemode, comboToMoveResize );
     COMBOBOX_FORCE_RULE( type, comboToType );
@@ -594,6 +602,7 @@ void RulesWidget::prefillUnusedValues( const KWin::WindowInfo& info )
     //CHECKBOX_PREFILL( closeable, );
     LINEEDIT_PREFILL( opacityactive, intToStr, 100 /*get the actual opacity somehow*/);
     LINEEDIT_PREFILL( opacityinactive, intToStr, 100 /*get the actual opacity somehow*/);
+    //LINEEDIT_PREFILL( shortcut, );
     //COMBOBOX_PREFILL( fsplevel, );
     //COMBOBOX_PREFILL( moveresizemode, moveresizeToCombo );
     COMBOBOX_PREFILL( type, typeToCombo, info.windowType( SUPPORTED_WINDOW_TYPES_MASK ) );
@@ -640,6 +649,11 @@ void RulesWidget::prepareWindowSpecific( WId window )
     tabs->setCurrentPage( 2 ); // geometry tab, skip tabs for window identification
     KWin::WindowInfo info( window, -1U, -1U ); // read everything
     prefillUnusedValues( info );
+    }
+
+void RulesWidget::shortcutEditClicked()
+    {
+// TODO
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )

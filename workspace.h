@@ -246,6 +246,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         
         bool forcedGlobalMouseGrab() const;
         void clientShortcutUpdated( Client* c );
+        bool shortcutAvailable( const KShortcut& cut, Client* ignore = NULL ) const;
 
         void sessionSaveStarted();
         void sessionSaveDone();

@@ -66,6 +66,7 @@ class WindowRules
         Options::MoveResizeMode checkMoveResizeMode( Options::MoveResizeMode mode ) const;
         bool checkCloseable( bool closeable ) const;
         bool checkStrictGeometry( bool strict ) const;
+        QString checkShortcut( QString s, bool init = false ) const;
     private:
         MaximizeMode checkMaximizeVert( MaximizeMode mode, bool init ) const;
         MaximizeMode checkMaximizeHoriz( MaximizeMode mode, bool init ) const;
@@ -114,6 +115,7 @@ class Rules
         bool applyMoveResizeMode( Options::MoveResizeMode& mode ) const;
         bool applyCloseable( bool& closeable ) const;
         bool applyStrictGeometry( bool& strict ) const;
+        bool applyShortcut( QString& shortcut, bool init ) const;
     private:
 #endif
         bool matchType( NET::WindowType match_type ) const;
@@ -223,6 +225,8 @@ class Rules
         ForceRule closeablerule;
         bool strictgeometry;
         ForceRule strictgeometryrule;
+        QString shortcut;
+        SetRule shortcutrule;
         friend kdbgstream& operator<<( kdbgstream& stream, const Rules* );
     };
 

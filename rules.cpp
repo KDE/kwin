@@ -58,7 +58,8 @@ Rules::Rules()
     , acceptfocusrule( UnusedForceRule )
     , moveresizemoderule( UnusedForceRule )
     , closeablerule( UnusedForceRule )
-    , strictgeometry( UnusedForceRule )
+    , strictgeometryrule( UnusedForceRule )
+    , shortcutrule( UnusedSetRule )
     {
     }
 
@@ -159,6 +160,7 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
     READ_FORCE_RULE( closeable, Bool, );
     READ_FORCE_RULE( strictgeometry, Bool, );
+    READ_SET_RULE( shortcut, , );
     }
 
 #undef READ_MATCH_STRING
@@ -246,6 +248,7 @@ void Rules::write( KConfig& cfg ) const
     WRITE_FORCE_RULE( moveresizemode, Options::moveResizeModeToString );
     WRITE_FORCE_RULE( closeable, );
     WRITE_FORCE_RULE( strictgeometry, );
+    WRITE_SET_RULE( shortcut, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -280,7 +283,8 @@ bool Rules::isEmpty() const
         && acceptfocusrule == UnusedForceRule
         && moveresizemoderule == UnusedForceRule
         && closeablerule == UnusedForceRule
-        && strictgeometryrule == UnusedForceRule );
+        && strictgeometryrule == UnusedForceRule
+        && shortcutrule == UnusedSetRule );
     }
 
 Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
@@ -598,6 +602,7 @@ APPLY_FORCE_RULE( acceptfocus, AcceptFocus, bool )
 APPLY_FORCE_RULE( moveresizemode, MoveResizeMode, Options::MoveResizeMode )
 APPLY_FORCE_RULE( closeable, Closeable, bool )
 APPLY_FORCE_RULE( strictgeometry, StrictGeometry, bool )
+APPLY_RULE( shortcut, Shortcut, QString )
 
 #undef APPLY_RULE
 #undef APPLY_FORCE_RULE
@@ -728,6 +733,7 @@ CHECK_FORCE_RULE( AcceptFocus, bool )
 CHECK_FORCE_RULE( MoveResizeMode, Options::MoveResizeMode )
 CHECK_FORCE_RULE( Closeable, bool )
 CHECK_FORCE_RULE( StrictGeometry, bool )
+CHECK_RULE( Shortcut, QString )
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE
@@ -782,6 +788,7 @@ void Client::setupWindowRules( bool ignore_temporary )
         QSize s = adjustedSize( size());
         if( s != size())
             resizeWithChecks( s );
+        setShortcut( rules()->checkShortcut( shortcut().toString()));
         }
     }
 

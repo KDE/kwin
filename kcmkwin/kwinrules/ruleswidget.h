@@ -50,6 +50,7 @@ class RulesWidget
         virtual void titleMatchChanged();
         virtual void extraMatchChanged();
         virtual void machineMatchChanged();
+        virtual void shortcutEditClicked();
     private slots:
         // geometry tab
         void updateEnableposition();
@@ -79,6 +80,7 @@ class RulesWidget
         void updateEnableminsize();
         void updateEnablemaxsize();
         void updateEnablestrictgeometry();
+        void updateEnableshortcut();
         // internal
         void detected( bool );
     private:

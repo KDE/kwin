@@ -12,6 +12,9 @@
             <height>503</height>
         </rect>
     </property>
+    <property name="caption">
+        <string>Form2</string>
+    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -1205,55 +1208,12 @@
                             <string>&amp;Closeable</string>
                         </property>
                     </widget>
-                    <spacer row="9" column="1">
-                        <property name="name">
-                            <cstring>spacer33</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>110</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="8" column="0">
-                        <property name="name">
-                            <cstring>enable_opacityinactive</cstring>
-                        </property>
-                        <property name="text">
-                            <string>I&amp;nactive opacity in %</string>
-                        </property>
-                    </widget>
                     <widget class="QCheckBox" row="7" column="0">
                         <property name="name">
                             <cstring>enable_opacityactive</cstring>
                         </property>
                         <property name="text">
                             <string>A&amp;ctive opacity in %</string>
-                        </property>
-                    </widget>
-                    <widget class="KComboBox" row="8" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Do Not Affect</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Force</string>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>rule_opacityinactive</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="7" column="1">
@@ -1274,17 +1234,6 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="KRestrictedLine" row="8" column="2" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>opacityinactive</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="validChars">
-                            <string>0123456789</string>
-                        </property>
-                    </widget>
                     <widget class="KRestrictedLine" row="7" column="2" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>opacityactive</cstring>
@@ -1296,24 +1245,7 @@
                             <string>0123456789</string>
                         </property>
                     </widget>
-                    <spacer row="8" column="4">
-                        <property name="name">
-                            <cstring>spacer25</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>181</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <spacer row="7" column="4">
+                    <spacer row="7" column="4" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>spacer24</cstring>
                         </property>
@@ -1330,7 +1262,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="6" column="3" rowspan="1" colspan="2">
+                    <spacer row="6" column="3" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>spacer36_7</cstring>
                         </property>
@@ -1347,7 +1279,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="5" column="3" rowspan="1" colspan="2">
+                    <spacer row="5" column="3" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>spacer36_6</cstring>
                         </property>
@@ -1364,7 +1296,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="4" column="3" rowspan="1" colspan="2">
+                    <spacer row="4" column="3" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>spacer36_5</cstring>
                         </property>
@@ -1381,7 +1313,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="3" column="3" rowspan="1" colspan="2">
+                    <spacer row="3" column="3" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>spacer36_4</cstring>
                         </property>
@@ -1398,7 +1330,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="2" column="3" rowspan="1" colspan="2">
+                    <spacer row="2" column="3" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>spacer36_3</cstring>
                         </property>
@@ -1415,7 +1347,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="1" column="3" rowspan="1" colspan="2">
+                    <spacer row="1" column="3" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>spacer36_2</cstring>
                         </property>
@@ -1432,7 +1364,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <spacer row="0" column="3" rowspan="1" colspan="2">
+                    <spacer row="0" column="3" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>spacer36</cstring>
                         </property>
@@ -1697,6 +1629,132 @@
                         </item>
                         <property name="name">
                             <cstring>rule_above</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <spacer row="10" column="1">
+                        <property name="name">
+                            <cstring>spacer33</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>80</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KComboBox" row="8" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_opacityinactive</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="8" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>opacityinactive</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="validChars">
+                            <string>0123456789</string>
+                        </property>
+                    </widget>
+                    <spacer row="8" column="4" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer25</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>181</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="8" column="0">
+                        <property name="name">
+                            <cstring>enable_opacityinactive</cstring>
+                        </property>
+                        <property name="text">
+                            <string>I&amp;nactive opacity in %</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="9" column="0">
+                        <property name="name">
+                            <cstring>enable_shortcut</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Shortcut</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="9" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_shortcut</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="9" column="5">
+                        <property name="name">
+                            <cstring>shortcut_edit</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Edit</string>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="9" column="2" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>shortcut</cstring>
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
@@ -2075,6 +2133,8 @@
         </widget>
     </vbox>
 </widget>
+<customwidgets>
+</customwidgets>
 <connections>
     <connection>
         <sender>detect1</sender>
@@ -2111,6 +2171,12 @@
         <signal>activated(int)</signal>
         <receiver>Form2</receiver>
         <slot>machineMatchChanged()</slot>
+    </connection>
+    <connection>
+        <sender>shortcut_edit</sender>
+        <signal>clicked()</signal>
+        <receiver>Form2</receiver>
+        <slot>shortcutEditClicked()</slot>
     </connection>
 </connections>
 <tabstops>
@@ -2208,26 +2274,21 @@
     <slot access="protected" specifier="pure virtual">titleMatchChanged()</slot>
     <slot access="protected" specifier="pure virtual">extraMatchChanged()</slot>
     <slot access="protected" specifier="pure virtual">machineMatchChanged()</slot>
+    <slot access="protected" specifier="pure virtual">shortcutEditClicked()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
 <includehints>
-    <includehint>klineedit.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>klistbox.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kcombobox.h</includehint>
@@ -2244,8 +2305,6 @@
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
     <includehint>krestrictedline.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
@@ -2254,6 +2313,10 @@
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>krestrictedline.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>krestrictedline.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
