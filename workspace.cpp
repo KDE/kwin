@@ -1703,6 +1703,7 @@ void Workspace::desktopPopupAboutToShow()
     desk_popup->insertItem( i18n("&All desktops"), 0 );
     if ( popup_client->isSticky() )
 	desk_popup->setItemChecked( 0, TRUE );
+    desk_popup->insertSeparator( -1 );
     int id;
     for ( int i = 1; i <= numberOfDesktops(); i++ ) {
 	id = desk_popup->insertItem( QString("&")+QString::number(i ), i );
