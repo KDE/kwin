@@ -66,22 +66,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 			"the window borders and the window handle.") );
 	decorationListBox = new QListBox( btnGroup );
 
-	QGroupBox* checkGroup = new QGroupBox( 1, Qt::Horizontal, 
-			i18n("General Options (if available)"), page1 );
-			
-
-	cbUseCustomButtonPositions = new QCheckBox(
-			i18n("Use custom titlebar button &positions"), checkGroup );
-	QWhatsThis::add( cbUseCustomButtonPositions,
-			i18n(  "The appropriate settings can be found in the \"Buttons\" Tab. "
-				   "Please note that this option is not available on all styles yet!" ) );
-
-	cbShowToolTips = new QCheckBox( 
-			i18n("&Show window button tooltips"), checkGroup );
-	QWhatsThis::add( cbShowToolTips, 
-			i18n(  "Enabling this checkbox will show window button tooltips. "
-				   "If this checkbox is off, no window button tooltips will be shown."));
-
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
@@ -91,10 +75,22 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	buttonPage->setSpacing( KDialog::spacingHint() );
 	buttonPage->setMargin( KDialog::marginHint() );
 
-	QGroupBox* buttonBox = new QGroupBox( 1, Qt::Horizontal, 
-			i18n("Titlebar Button Position"), buttonPage );
+	cbShowToolTips = new QCheckBox(
+			i18n("&Show window button tooltips"), buttonPage );
+	QWhatsThis::add( cbShowToolTips,
+			i18n(  "Enabling this checkbox will show window button tooltips. "
+				   "If this checkbox is off, no window button tooltips will be shown."));
 
-	// Add nifty dnd button modification widgets    
+	cbUseCustomButtonPositions = new QCheckBox(
+			i18n("Use custom titlebar button &positions"), buttonPage );
+	QWhatsThis::add( cbUseCustomButtonPositions,
+			i18n(  "The appropriate settings can be found in the \"Buttons\" Tab. "
+				   "Please note that this option is not available on all styles yet!" ) );
+
+	buttonBox = new QGroupBox( 1, Qt::Horizontal,
+			i18n("Titlebar Button Positions"), buttonPage );
+
+	// Add nifty dnd button modification widgets
 	QLabel* label = new QLabel( buttonBox );
 	dropSite = new ButtonDropSite( buttonBox );
 	label->setText( i18n( "To add or remove titlebar buttons, simply <i>drag</i> items "
@@ -120,7 +116,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	tabWidget->insertTab( pluginPage, i18n("&Configure [") + 
 						  decorationListBox->currentText() + i18n("]") );
 
-	tabWidget->setTabEnabled( buttonPage, cbUseCustomButtonPositions->isChecked() );
 	tabWidget->setTabEnabled( pluginPage, pluginObject ? true : false );
 
 	connect( dropSite, SIGNAL(buttonAdded(char)), buttonSource, SLOT(hideButton(char)) );
@@ -132,7 +127,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	connect( decorationListBox, SIGNAL(highlighted(const QString&)), 
 								SLOT(slotDecorationHighlighted(const QString&)) );
 	connect( cbUseCustomButtonPositions, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
-	connect( cbUseCustomButtonPositions, SIGNAL(toggled(bool)), SLOT(slotEnableButtonTab(bool)) );
+	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), buttonBox, SLOT(setEnabled(bool)));
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 //	connect( cbUseMiniWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 
@@ -213,12 +208,6 @@ void KWinDecorationModule::slotDecorationHighlighted( const QString& s )
 void KWinDecorationModule::slotSelectionChanged()
 {
 	emit changed(true);
-}
-
-
-void KWinDecorationModule::slotEnableButtonTab(bool on)
-{
-	tabWidget->setTabEnabled( buttonPage, on );
 }
 
 
@@ -319,8 +308,6 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 {
 	// General tab
 	// ============
-	cbUseCustomButtonPositions->setChecked( conf->readBoolEntry("CustomButtonPositions", false));
-	tabWidget->setTabEnabled( buttonPage, cbUseCustomButtonPositions->isChecked() );
 	cbShowToolTips->setChecked( conf->readBoolEntry("ShowToolTips", true ));
 //	cbUseMiniWindows->setChecked( conf->readBoolEntry("MiniWindowBorders", false));
 
@@ -341,6 +328,9 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 
 	// Buttons tab
 	// ============
+	bool customPositions = conf->readBoolEntry("CustomButtonPositions", false);
+	cbUseCustomButtonPositions->setChecked( customPositions );
+	buttonBox->setEnabled( customPositions );
 	// Menu and sticky buttons are default on LHS
 	dropSite->buttonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
 	// Help, Minimize, Maximize and Close are default on RHS
@@ -430,6 +420,7 @@ void KWinDecorationModule::defaults()
 {
 	// Set the KDE defaults
 	cbUseCustomButtonPositions->setChecked( false );
+	buttonBox->setEnabled( false );
 	cbShowToolTips->setChecked( true );
 //	cbUseMiniWindows->setChecked( false);
 // Don't set default for now
