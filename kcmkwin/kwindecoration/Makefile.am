@@ -16,6 +16,6 @@ messages:
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkwindecoration.pot
 
 lnf_DATA = kwindecoration.desktop
-lnfdir = $(kde_appsdir)/Settings/LookNFeel
+lnfdir = $(kde_appsdir)/Settings/Windows
 
 EXTRA_DIST = $(lnf_DATA)
