@@ -483,11 +483,11 @@ ClientList Workspace::constrainedStackingOrder()
         {
         Layer l = (*it)->layer();
         // If a window is raised above some other window in the same window group
-        // which is in a higher layer, make sure it stays above that window (see #95731).
-        if(( l == NormalLayer || l == AboveLayer )
-            && !(*it)->isDock()
-            && minimum_layer.contains( (*it)->group())
-            && l < minimum_layer[ (*it)->group() ] )
+        // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
+        // above that window (see #95731).
+        if( minimum_layer.contains( (*it)->group())
+            && minimum_layer[ (*it)->group() ] == ActiveLayer
+            && ( l == NormalLayer || l == AboveLayer ))
             {
             l = minimum_layer[ (*it)->group() ];
             }
