@@ -2,7 +2,11 @@
 Encoding=UTF-8
 Icon=
 Name=Plastik
+Name[he]=פלסטיק
 Name[hi]=प्लास्टिक
+Name[is]=Plast
+Name[ru]=Пластик
+Name[ta]=பிளாஸ்டிக்
 Name[xx]=xxPlastikxx
 Name[zh_CN]=塑料
 X-KDE-Library=kwin3_plastik

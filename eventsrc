@@ -148,6 +148,7 @@ Comment[pt_BR]=O ecrã virtual um é seleccionado
 Comment[sv]=Virtuellt skrivbord ett är valt
 Comment[tr]=Sanal masaüstü bir seçili
 Comment[uz]=Биринчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面一被选中
 default_sound=KDE_Desktop1.wav
 default_presentation=0
 
@@ -231,6 +232,7 @@ Comment[pt_BR]=O ecrã virtual dois é seleccionado
 Comment[sv]=Virtuellt skrivbord två är valt
 Comment[tr]=Sanal masaüstü iki seçili
 Comment[uz]=Иккинчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面二被选中
 default_sound=KDE_Desktop2.wav
 default_presentation=0
 
@@ -314,6 +316,7 @@ Comment[pt_BR]=O ecrã virtual três é seleccionado
 Comment[sv]=Virtuellt skrivbord tre är valt
 Comment[tr]=Sanal masaüstü üç seçili
 Comment[uz]=Учинчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面三被选中
 default_sound=KDE_Desktop3.wav 
 default_presentation=0
 
@@ -397,6 +400,7 @@ Comment[pt_BR]=O ecrã virtual quatro é seleccionado
 Comment[sv]=Virtuellt skrivbord fyra är valt
 Comment[tr]=Sanal masaüstü dört seçili
 Comment[uz]=Тўртинчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面四被选中
 default_sound=KDE_Desktop4.wav 
 default_presentation=0
 
@@ -480,6 +484,7 @@ Comment[pt_BR]=O ecrã virtual cinco é seleccionado
 Comment[sv]=Virtuellt skrivbord fem är valt
 Comment[tr]=Sanal masaüstü beş seçili
 Comment[uz]=Бешинчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面五被选中
 default_sound=KDE_Desktop5.wav 
 default_presentation=0
 
@@ -563,6 +568,7 @@ Comment[pt_BR]=O ecrã virtual seis é seleccionado
 Comment[sv]=Virtuellt skrivbord sex är valt
 Comment[tr]=Sanal masaüstü altı seçili
 Comment[uz]=Олтинчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面六被选中
 default_sound=KDE_Desktop6.wav 
 default_presentation=0
 
@@ -646,6 +652,7 @@ Comment[pt_BR]=O ecrã virtual sete é seleccionado
 Comment[sv]=Virtuellt skrivbord sju är valt
 Comment[tr]=Sanal masaüstü yedi seçili
 Comment[uz]=Еттинчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面七被选中
 default_sound=KDE_Desktop7.wav 
 default_presentation=0
 
@@ -729,6 +736,7 @@ Comment[pt_BR]=O ecrã virtual oito é seleccionado
 Comment[sv]=Virtuellt skrivbord åtta är valt
 Comment[tr]=Sanal masaüstü sekiz seçili
 Comment[uz]=Саккизинчи виртуал иш столи танланган
+Comment[zh_CN]=虚拟桌面八被选中
 default_sound=KDE_Desktop8.wav 
 default_presentation=0
 
@@ -813,6 +821,7 @@ Comment[pt_BR]=Outra janela é activada
 Comment[sv]=Ett annat fönster är aktiverat
 Comment[tr]=Başka bir pencere etkinleştirildi
 Comment[uz]=Бошқа ойна актив бўлди
+Comment[zh_CN]=另外一个窗口被激活
 default_presentation=0
 
 [new]
@@ -896,6 +905,7 @@ Comment[pt_BR]=Nova janela
 Comment[sv]=Nytt fönster
 Comment[tr]=Yeni pencere
 Comment[uz]=Янги ойна
+Comment[zh_CN]=新建窗口
 default_sound=KDE_Window_Open.wav
 default_presentation=0
 
@@ -979,6 +989,7 @@ Comment[pt_BR]=Apagar a janela
 Comment[sv]=Ta bort fönster
 Comment[tr]=Pencereyi sil
 Comment[uz]=Ойнани ўчириш
+Comment[zh_CN]=删除窗口
 default_presentation=0
 [close]
 Name=Window Close
@@ -1061,6 +1072,7 @@ Comment[pt_BR]=Uma janela é fechada
 Comment[sv]=Ett fönster stängs
 Comment[tr]=Bir pencere kapatıldı
 Comment[uz]=Ойна ёпилмоқда
+Comment[zh_CN]=关闭一个窗口
 default_sound=KDE_Window_Close.wav
 default_presentation=0
 
@@ -1139,6 +1151,7 @@ Comment[pt]=Uma janela é enrolada
 Comment[pt_BR]=Uma janela é enrolada
 Comment[sv]=Ett fönster rullas upp
 Comment[tr]=Pencere yukarı gizlendi
+Comment[zh_CN]=窗口被卷起
 default_sound=KDE_Window_Shade_Up.wav
 default_presentation=0
 
@@ -1218,6 +1231,7 @@ Comment[pt]=Uma janela é desenrolada
 Comment[pt_BR]=Uma janela é desenrolada
 Comment[sv]=Ett fönster rullas ner
 Comment[tr]=Pencere aşağı gizlendi
+Comment[zh_CN]=窗口放下
 default_sound=KDE_Window_Shade_Down.wav
 default_presentation=0
 
@@ -1287,6 +1301,7 @@ Comment[pt_BR]=Uma janela é minimizada
 Comment[sv]=Ett fönster minimeras
 Comment[tr]=Bir pencere simge haline getirildi
 Comment[uz]=Ойна йиғилган
+Comment[zh_CN]=窗口被最小化
 default_sound=KDE_Window_Iconify.wav
 default_presentation=0
 
@@ -1350,6 +1365,7 @@ Comment[pt_BR]=Uma janela é restaurada
 Comment[sv]=Ett fönster återställs
 Comment[tr]=Bir pencere eski boyutuna getirildi
 Comment[uz]=Ойна тикланган
+Comment[zh_CN]=窗口恢复大小
 default_sound=KDE_Window_DeIconify.wav   
 default_presentation=0
 
@@ -1435,6 +1451,7 @@ Comment[pt_BR]=Uma janela é maximizada
 Comment[sv]=Ett fönster maximeras
 Comment[tr]=Bir pencere büyütüldü
 Comment[uz]=Ойна ёйилган
+Comment[zh_CN]=窗口被最大化
 default_sound=KDE_Window_Maximize.wav   
 default_presentation=0
 
@@ -1515,6 +1532,7 @@ Comment[pt]=Uma janela deixa de estar maximizada
 Comment[pt_BR]=Uma janela deixa de estar maximizada
 Comment[sv]=Ett fönster förlorar maximering
 Comment[tr]=Bir pencere büyümesini kaybetti
+Comment[zh_CN]=窗口恢复大小
 default_sound=KDE_Window_UnMaximize.wav
 default_presentation=0
 
@@ -1581,6 +1599,7 @@ Comment[pt_BR]=Uma janela passa a aparecer em todos os ecrãs
 Comment[sv]=Ett fönster görs synligt på alla skrivbord
 Comment[tr]=Bir pencere tüm masaüstlerinde görünür hale getirildi
 Comment[uz]=Ойна ҳамма иш столларида кўринадиган қилинди
+Comment[zh_CN]=窗口已放在全部桌面上
 default_sound=KDE_Window_Sticky.wav
 default_presentation=0
 
@@ -1645,6 +1664,7 @@ Comment[pt_BR]=Uma janela deixa de aparecer em todos os ecrãs
 Comment[sv]=Ett fönster blir inte längre synligt på alla skrivbord
 Comment[tr]=Bir pencere tüm masaüstlerinde gizli hale getirildi
 Comment[uz]=Ойна ҳамма иш столларида кўринмайдиган қилинди
+Comment[zh_CN]=窗口不再放在全部桌面上
 default_presentation=1
 default_sound=KDE_Window_UnSticky.wav
 
@@ -1727,6 +1747,7 @@ Comment[pt_BR]=Uma janela transitória (uma janela de diálogo) aparece
 Comment[sv]=Ett tillfälligt fönster (en dialogruta) dyker upp
 Comment[tr]=Bir iletişim kutusu belirdi
 Comment[uz]=Мулоқат ойнаси пайдо бўлди
+Comment[zh_CN]=暂态窗口(对话框)出现
 default_sound=KDE_Dialog_Appear.wav
 default_presentation=0
 
@@ -1808,6 +1829,7 @@ Comment[pt_BR]=Uma janela transitória (uma janela de diálogo) desaparece
 Comment[sv]=Ett tillfälligt fönster (en dialogruta) försvinner
 Comment[tr]=Bir iletişim kutusu kaldırıldı
 Comment[uz]=Мулоқат ойнаси ёпилди
+Comment[zh_CN]=暂态窗口(对话框)删除
 default_sound=KDE_Dialog_Disappear.wav
 default_presentation=0
 
@@ -1888,6 +1910,7 @@ Comment[pt_BR]=Uma janela começou a movimentar-se
 Comment[sv]=Ett fönster har börjat flyttas
 Comment[tr]=Bir pencere hareket etmeye başladı
 Comment[uz]=Ойна кўчиб бошлади
+Comment[zh_CN]=窗口开始移动
 default_presentation=0
 
 [moveend]
@@ -1967,6 +1990,7 @@ Comment[pt_BR]=Uma janela acabou de movimentar-se
 Comment[sv]=Ett fönster har flyttats klart
 Comment[tr]=Bir pencere hareketini tamamladı
 Comment[uz]=Ойна кўчишни тугатди
+Comment[zh_CN]=窗口移动完毕
 default_presentation=0
 
 [resizestart]
@@ -2046,6 +2070,7 @@ Comment[pt_BR]=Uma janela começou a mudar de tamanho
 Comment[sv]=Storleksändring av ett fönster har påbörjats
 Comment[tr]=Bir pencere yeniden boyutlandırılmaya başladı
 Comment[uz]=Ойнанинг ўлчами ўзгариб бошлади
+Comment[zh_CN]=窗口开始改变大小
 default_presentation=0
 
 [resizeend]
@@ -2125,4 +2150,5 @@ Comment[pt_BR]=Uma janela acabou de mudar de tamanho
 Comment[sv]=Storleksändring av ett fönster har avslutats
 Comment[tr]=Bir pencerenin yeniden boyutlandırma işlemi bitti
 Comment[uz]=Ойнанинг ўлчами ўзгариб бўлди
+Comment[zh_CN]=窗口改变大小完毕
 default_presentation=0
