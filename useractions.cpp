@@ -50,7 +50,7 @@ QPopupMenu* Workspace::clientPopup()
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
 
         popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").seq(0).toString(), Options::MoveOp );
-        popup->insertItem( i18n("&Size")+'\t'+keys->shortcut("Window Resize").seq(0).toString(), Options::ResizeOp );
+        popup->insertItem( i18n("Re&size")+'\t'+keys->shortcut("Window Resize").seq(0).toString(), Options::ResizeOp );
         popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").seq(0).toString(), Options::MinimizeOp );
         popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").seq(0).toString(), Options::MaximizeOp );
         popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").seq(0).toString(), Options::ShadeOp );
@@ -59,12 +59,12 @@ QPopupMenu* Workspace::clientPopup()
         options_popup->setCheckable( TRUE );
         options_popup->setFont(KGlobalSettings::menuFont());
         connect( options_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-        options_popup->insertItem( SmallIconSet( "attach" ), i18n("Window &Above Others"), Options::KeepAboveOp );
-        options_popup->insertItem( i18n("Window &Below Others"), Options::KeepBelowOp );
-        options_popup->insertItem( i18n("Window &Fullscreen"), Options::FullScreenOp );
-        options_popup->insertItem( i18n("Window &Noborder"), Options::NoBorderOp );
+        options_popup->insertItem( SmallIconSet( "up" ), i18n("Keep &Above Others"), Options::KeepAboveOp );
+        options_popup->insertItem( SmallIconSet( "down" ), i18n("Keep &Below Others"), Options::KeepBelowOp );
+        options_popup->insertItem( SmallIconSet( "window_fullscreen" ), i18n("&Fullscreen"), Options::FullScreenOp );
+        options_popup->insertItem( i18n("&No Border"), Options::NoBorderOp );
         options_popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
-        popup->insertItem(i18n("&Window Settings"), options_popup );
+        popup->insertItem(i18n("Ad&vanced"), options_popup );
 
         popup->insertSeparator();
         desk_popup_index = popup->count();
