@@ -1,1 +1,1 @@
-SUBDIRS=be kstep system kwmtheme b2
+SUBDIRS=kstep system b2 laptop
