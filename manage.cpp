@@ -39,31 +39,6 @@ bool Client::manage( Window w, bool isMapped )
     if( !XGetWindowAttributes(qt_xdisplay(), w, &attr))
         return false;
 
-    // initial state
-    int init_mapping_state = NormalState;
-    XWMHints * hints = XGetWMHints(qt_xdisplay(), w );
-    if (hints && (hints->flags & StateHint))
-        init_mapping_state = hints->initial_state;
-    if (hints)
-        XFree(hints);
-    if( isMapped )
-        init_mapping_state = NormalState; // if it's already mapped, ignore hint
-
-    if( init_mapping_state != NormalState
-        && init_mapping_state != IconicState )
-        { // don't manage windows with strange initial mapping state
-      // it's mapped and unmapped for WindowMaker applets
-      // they usually map with initial_state == Withdrawn,
-      // and don't want to be mapped
-      // mapping it for a while will give the docking panel
-      // a chance to get MapNotify for it, and swallow the matching
-      // window
-      // SELI 
-        XMapWindow( qt_xdisplay(), w );
-        XUnmapWindow( qt_xdisplay(), w );
-        return false;
-        }
-
 //    XGrabServer( qt_xdisplay()); // FRAME
 
     // from this place on, manage() mustn't return false
@@ -73,7 +48,14 @@ bool Client::manage( Window w, bool isMapped )
 
     // SELI order all these things in some sane manner
 
-    bool init_minimize = init_mapping_state == IconicState;
+    bool init_minimize = false;
+    XWMHints * hints = XGetWMHints(qt_xdisplay(), w );
+    if (hints && (hints->flags & StateHint) && hints->initial_state == IconicState)
+        init_minimize = true;
+    if (hints)
+        XFree(hints);
+    if( isMapped )
+        init_minimize = false; // if it's already mapped, ignore hint
 
     unsigned long properties[ 2 ];
     properties[ WinInfo::PROTOCOLS ] =
