@@ -27,6 +27,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "client.h"
 #include "events.h"
 #include "atoms.h"
+#include "geometrytip.h"
 #include <netwm.h>
 #include <stdlib.h>
 #include <X11/X.h>
@@ -118,9 +119,9 @@ static int nullErrorHandler(Display *, XErrorEvent *)
 
 using namespace KWinInternal;
 
-static bool blockAnimation = FALSE;
-
-static QRect* visible_bound = 0;
+static bool         blockAnimation = FALSE;
+static QRect*       visible_bound  = 0;
+static GeometryTip* geometryTip    = 0;
 
 static QCString getStringProperty(WId w, Atom prop, char separator=0);
 
@@ -1616,6 +1617,11 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
     if ( (e->stateAfter() & MouseButtonMask) == 0 ) {
         buttonDown = FALSE;
         if ( moveResizeMode ) {
+	    if (geometryTip) {
+		geometryTip->hide();
+		delete geometryTip;
+		geometryTip = NULL;
+	    }
             clearbound();
             stopMoveResize();
             setGeometry( geom );
@@ -1736,6 +1742,16 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             clearbound();
             drawbound( geom );
         }
+
+	// Position and Size display
+	if (!geometryTip)
+	    geometryTip = new GeometryTip( this, &xSizeHint );
+
+	geometryTip->setGeometry( geom );
+	if (!geometryTip->isVisible()) {
+	    geometryTip->show();
+	    geometryTip->raise();
+	}
     }
     else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
         geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
@@ -1756,6 +1772,16 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             drawbound( geom );
             break;
         }
+
+	// Position and Size display
+	if (!geometryTip)
+	    geometryTip = new GeometryTip( this, &xSizeHint );
+
+	geometryTip->setGeometry( geom );
+	if (!geometryTip->isVisible()) {
+	    geometryTip->show();
+	    geometryTip->raise();
+	}
     }
 
     if ( isMove() )

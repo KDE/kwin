@@ -8,7 +8,7 @@ lib_LTLIBRARIES = kwin.la
 # workspace.cpp has to be first in order not to break --enable-final
 kwin_la_SOURCES = client.cpp workspace.cpp placement.cpp atoms.cpp  main.cpp \
 	popupinfo.cpp tabbox.cpp options.cpp plugins.cpp events.cpp KWinInterface.skel \
-	killwindow.cpp kwinbutton.cpp
+	killwindow.cpp kwinbutton.cpp geometrytip.cpp
 kwin_la_LIBADD = $(LIB_KDEUI)
 kwin_la_LDFLAGS = $(all_libraries) -module -avoid-version
 
