@@ -719,11 +719,8 @@ void Workspace::freeKeyboard(bool pass){
     QApplication::syncX();
 }
 
-#if 0 // 4 mods
 #define XMODMASK ( ShiftMask | ControlMask | Mod1Mask | Mod4Mask )
-#else
-#define XMODMASK ( ShiftMask | ControlMask | Mod1Mask )
-#endif
+
 /*!
   Handles alt-tab / control-tab
  */
