@@ -149,7 +149,6 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE( acceptfocus, Bool, );
     READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
     READ_FORCE_RULE( closeable, Bool, );
-    kdDebug() << "READ RULE:" << this << endl;
     }
 
 #undef READ_MATCH_STRING
@@ -505,7 +504,6 @@ bool Rules::discardTemporary( bool force )
         return false;
     if( force || --temporary_state == 0 ) // too old
         {
-        kdDebug() << "DISCARD:" << this << endl;
         delete this;
         return true;
         }
@@ -662,7 +660,7 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
         if( (*it)->match( c ))
             {
             Rules* rule = *it;
-            kdDebug() << "RULE FOUND:" << rule << ":" << c << endl;
+            kdDebug( 1212 ) << "Rule found:" << rule << ":" << c << endl;
             if( rule->isTemporary())
                 it = rules.remove( it );
             else
@@ -691,7 +689,6 @@ void Workspace::loadWindowRules()
     KConfig cfg( "kwinrulesrc", true );
     cfg.setGroup( "General" );
     int count = cfg.readNumEntry( "count" );
-    kdDebug() << "RULES:" << count << endl;
     for( int i = 1;
          i <= count;
          ++i )
@@ -736,7 +733,6 @@ void Workspace::gotTemporaryRulesMessage( const QString& message )
 
 void Workspace::cleanupTemporaryRules()
     {
-    kdDebug() << "CLEANUP" << endl;
     bool has_temporary = false;
     for( QValueList< Rules* >::Iterator it = rules.begin();
          it != rules.end();
