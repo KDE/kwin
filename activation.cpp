@@ -276,7 +276,7 @@ void Workspace::activateClient( Client* c, bool force )
         requestFocus( c, force );
     else
         {
-        if( activeClient() != c )
+        if( mostRecentlyActivatedClient() != c )
             c->demandAttention();
         }
 
@@ -422,7 +422,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         {
         return true;
         }
-    Client* ac = activeClient();
+    Client* ac = mostRecentlyActivatedClient();
     if( focus_in )
         {
         if( should_get_focus.contains( const_cast< Client* >( c )))
@@ -481,7 +481,7 @@ bool Workspace::allowFullClientRaising( const Client* c )
         {
         return true;
         }
-    Client* ac = activeClient();
+    Client* ac = mostRecentlyActivatedClient();
     if( options->focusStealingPreventionLevel == 0 ) // none
         return true;
     if( options->focusStealingPreventionLevel == 5 ) // extreme
@@ -640,13 +640,13 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
       // Otherwise, refuse activation of a window
       // from already running application if this application
       // is not the active one.
-        if( workspace()->activeClient() != NULL
-            && !belongToSameApplication( workspace()->activeClient(), this, true ))
+        Client* act = workspace()->mostRecentlyActivatedClient();
+        if( act != NULL && !belongToSameApplication( act, this, true ))
             {
             bool first_window = true;
             if( isTransient())
                 {
-                if( workspace()->activeClient()->hasTransient( this, true ))
+                if( act->hasTransient( this, true ))
                     ; // is transient for currently active window, even though it's not
                       // the same app (e.g. kcookiejar dialog) -> allow activation
                 else if( groupTransient() && mainClients().isEmpty())

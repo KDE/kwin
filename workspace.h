@@ -103,6 +103,10 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
          * if no client has the focus)
          */
         Client* activeClient() const;
+        // Client that was activated, but it's not yet really activeClient(), because
+        // we didn't process yet the matching FocusIn event. Used mostly in focus
+        // stealing prevention code.
+        Client* mostRecentlyActivatedClient() const;
 
         void setActiveClient( Client*, allowed_t );
         void activateClient( Client*, bool force = FALSE  );
@@ -559,6 +563,11 @@ inline bool Workspace::initializing() const
 inline Client* Workspace::activeClient() const
     {
     return active_client;
+    }
+
+inline Client* Workspace::mostRecentlyActivatedClient() const
+    {
+    return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
     }
 
 inline int Workspace::currentDesktop() const
