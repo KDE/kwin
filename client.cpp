@@ -1685,7 +1685,9 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             break;
         }
     }
-    workspace()->clientMoved(globalPos, qt_x_time);
+
+    if ( isMove() )
+      workspace()->clientMoved(globalPos, qt_x_time);
 
 //     QApplication::syncX(); // process our own configure events synchronously.
 }
