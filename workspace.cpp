@@ -546,6 +546,20 @@ void Workspace::updateCurrentTopMenu()
                     break;
                     }
             }
+        // TODO to be cleaned app with window grouping
+        // Without qt-copy patch #0009, the topmenu and desktop are not in the same group,
+        // thus the topmenu is not transient for it :-/.
+        if( menubar == NULL )
+            {
+            for( ClientList::ConstIterator it = topmenus.begin();
+                 it != topmenus.end();
+                 ++it )
+                if( (*it)->groupTransient())
+                    {
+                    menubar = *it;
+                    break;
+                    }
+            }
         }
 
 //    kdDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client << endl;
