@@ -217,16 +217,7 @@ bool Client::manage( Window w, bool isMapped )
         ; // force using placement policy
     else
         {
-
-        bool ignorePPosition = false;
-        XClassHint classHint; // APICLEAN tohle je zduplikovane seshora
-        if ( XGetClassHint(qt_xdisplay(), window(), &classHint) != 0 ) 
-            {
-            if ( classHint.res_class )
-                ignorePPosition = ( options->ignorePositionClasses.find(QString::fromLatin1(classHint.res_class)) != options->ignorePositionClasses.end() );
-            XFree(classHint.res_name);
-            XFree(classHint.res_class);
-            }
+        bool ignorePPosition = ( options->ignorePositionClasses.contains(QString::fromLatin1(resourceClass())));
 
         if ((xSizeHint.flags & PPosition) && ! ignorePPosition) 
             {
