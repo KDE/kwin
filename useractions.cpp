@@ -41,7 +41,7 @@ namespace KWinInternal
 
 QPopupMenu* Workspace::clientPopup()
     {
-    if ( !popup ) 
+    if ( !popup )
         {
         popup = new QPopupMenu;
         popup->setCheckable( TRUE );
@@ -54,11 +54,18 @@ QPopupMenu* Workspace::clientPopup()
         popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").seq(0).toString(), Options::MinimizeOp );
         popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").seq(0).toString(), Options::MaximizeOp );
         popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").seq(0).toString(), Options::ShadeOp );
-        popup->insertItem( SmallIconSet( "attach" ), i18n("Window &Above Others"), Options::KeepAboveOp );
-        popup->insertItem( i18n("Window &Below Others"), Options::KeepBelowOp );
-        popup->insertItem( i18n("Window &Fullscreen"), Options::FullScreenOp );
-        popup->insertItem( i18n("Window &Noborder"), Options::NoBorderOp );
-        popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
+
+        options_popup = new QPopupMenu( popup );
+        options_popup->setCheckable( TRUE );
+        options_popup->setFont(KGlobalSettings::menuFont());
+        connect( options_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
+        options_popup->insertItem( SmallIconSet( "attach" ), i18n("Window &Above Others"), Options::KeepAboveOp );
+        options_popup->insertItem( i18n("Window &Below Others"), Options::KeepBelowOp );
+        options_popup->insertItem( i18n("Window &Fullscreen"), Options::FullScreenOp );
+        options_popup->insertItem( i18n("Window &Noborder"), Options::NoBorderOp );
+        options_popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
+        popup->insertItem(i18n("&Window Settings"), options_popup );
+
         popup->insertSeparator();
         desk_popup_index = popup->count();
 
@@ -98,14 +105,14 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemChecked( Options::MaximizeOp, popup_client->maximizeMode() == Client::MaximizeFull );
     // TODO this doesn't show it's shaded when it's hovered or activated
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
-    popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
-    popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );
-    popup->setItemChecked( Options::FullScreenOp, popup_client->isFullScreen() );
-    popup->setItemEnabled( Options::FullScreenOp, popup_client->userCanSetFullScreen() );
-    popup->setItemChecked( Options::NoBorderOp, popup_client->noBorder() );
-    popup->setItemEnabled( Options::NoBorderOp, popup_client->userCanSetNoBorder() );
+    options_popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
+    options_popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );
+    options_popup->setItemChecked( Options::FullScreenOp, popup_client->isFullScreen() );
+    options_popup->setItemEnabled( Options::FullScreenOp, popup_client->userCanSetFullScreen() );
+    options_popup->setItemChecked( Options::NoBorderOp, popup_client->noBorder() );
+    options_popup->setItemEnabled( Options::NoBorderOp, popup_client->userCanSetNoBorder() );
     popup->setItemEnabled( Options::MinimizeOp, popup_client->isMinimizable() );
-    popup->setItemChecked( Options::ToggleStoreSettingsOp, popup_client->storeSettings() );
+    options_popup->setItemChecked( Options::ToggleStoreSettingsOp, popup_client->storeSettings() );
     popup->setItemEnabled( Options::CloseOp, popup_client->isCloseable() );
     }
 
@@ -145,7 +152,7 @@ void Workspace::desktopPopupAboutToShow()
     for ( int i = 1; i <= numberOfDesktops(); i++ ) 
         {
         QString basic_name("%1  %2");
-        if (i<BASE) 
+        if (i<BASE)
             {
             basic_name.prepend('&');
             }
