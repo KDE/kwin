@@ -187,7 +187,7 @@ public:
      */
     const QFont& font(bool active=true, bool small = false) const;
     /**
-    * @Returns @a true if the style should use custom button positions
+    * Returns @a true if the style should use custom button positions
     * The changed flags for this setting is SettingButtons.
     *
     * @see titleButtonsLeft
