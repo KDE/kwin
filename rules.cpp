@@ -29,6 +29,7 @@ WindowRules::WindowRules()
     , extraroleregexp( false )
     , clientmachineregexp( false )
     , types( NET::AllTypesMask )
+    , placementrule( DontCareRule )
     , desktoprule( DontCareRule )
     , typerule( DontCareRule )
     , aboverule( DontCareRule )
@@ -50,6 +51,8 @@ WindowRules::WindowRules( KConfig& cfg )
     clientmachine = cfg.readEntry( "clientmachine" ).lower().latin1();
     clientmachineregexp = cfg.readBoolEntry( "clientmachineregexp" );
     types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
+    placement = Placement::policyFromString( cfg.readEntry( "placement" ), false );
+    placementrule = readRule( cfg, "placementrule" );
     desktop = cfg.readNumEntry( "desktop" );
     desktoprule = readRule( cfg, "desktoprule" );
     type = readType( cfg, "type" );
@@ -73,10 +76,10 @@ WindowRules::WindowRules( KConfig& cfg )
         cfg.deleteEntry( #var "regexp" ); \
         }
 
-#define WRITE_SET_RULE( var ) \
+#define WRITE_SET_RULE( var, func ) \
     if( var##rule != DontCareRule ) \
         { \
-        cfg.writeEntry( #var, var ); \
+        cfg.writeEntry( #var, func ( var )); \
         cfg.writeEntry( #var "rule", var##rule ); \
         } \
     else \
@@ -103,10 +106,11 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( extrarole, (const char*) );
     WRITE_MATCH_STRING( clientmachine, (const char*) );
     WRITE_WITH_DEFAULT( types, NET::AllTypesMask );
-    WRITE_SET_RULE( desktop );
-    WRITE_SET_RULE( type );
-    WRITE_SET_RULE( above );
-    WRITE_SET_RULE( below );
+    WRITE_SET_RULE( placement, Placement::policyToString );
+    WRITE_SET_RULE( desktop, );
+    WRITE_SET_RULE( type, );
+    WRITE_SET_RULE( above, );
+    WRITE_SET_RULE( below, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -194,25 +198,30 @@ void WindowRules::update( Client* c )
         below = c->keepBelow();
     }
 
+Placement::Policy WindowRules::checkPlacement( Placement::Policy placement ) const
+    {
+    return checkForceRule( placementrule ) ? this->placement : placement;
+    }
+
 int WindowRules::checkDesktop( int req_desktop, bool init ) const
     {
     // TODO chaining?
-    return checkRule( desktoprule, init ) ? desktop : req_desktop;
+    return checkRule( desktoprule, init ) ? this->desktop : req_desktop;
     }
 
 bool WindowRules::checkKeepAbove( bool req_above, bool init ) const
     {
-    return checkRule( aboverule, init ) ? above : req_above;
+    return checkRule( aboverule, init ) ? this->above : req_above;
     }
 
 bool WindowRules::checkKeepBelow( bool req_below, bool init ) const
     {
-    return checkRule( belowrule, init ) ? below : req_below;
+    return checkRule( belowrule, init ) ? this->below : req_below;
     }
     
 NET::WindowType WindowRules::checkType( NET::WindowType req_type ) const
     {
-    return checkForceRule( typerule ) ? type : req_type;
+    return checkForceRule( typerule ) ? this->type : req_type;
     }
 
 // Client

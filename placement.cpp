@@ -10,13 +10,13 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+#include <qrect.h>
+
 #include "workspace.h"
 #include "client.h"
 #include "options.h"
 #include "placement.h"
-
-#include <qrect.h>
-
+#include "rules.h"
 
 namespace KWinInternal
 {
@@ -42,6 +42,10 @@ Placement::Placement(Workspace* w)
  */
 void Placement::place(Client* c, QRect& area )
     {
+    Policy policy = c->rules()->checkPlacement( Default );
+    if( policy != Default )
+        return place( c, policy, area );
+
     if( c->isUtility())
         placeUtility(c, area);
     else if( c->isDialog())
@@ -49,16 +53,29 @@ void Placement::place(Client* c, QRect& area )
     else if( c->isSplash())
         placeOnMainWindow( c, area ); // on mainwindow, if any, otherwise centered
     else
-        placeInternal(c, area);
+        place(c, options->placement, area);
     }
 
-void Placement::placeInternal(Client* c, const QRect& area )
+void Placement::place(Client* c, Policy policy, QRect& area )
     {
-    if (options->placement == Options::Random)               placeAtRandom(c, area);
-    else if (options->placement == Options::Cascade)              placeCascaded(c, area);
-    else if (options->placement == Options::Centered)     placeCentered(c, area);
-    else if (options->placement == Options::ZeroCornered) placeZeroCornered(c, area);
-    else                                                          placeSmart(c, area);
+    if( policy == Default )
+        policy = options->placement;
+    if( policy == NoPlacement )
+        return;
+    else if (policy == Random)
+        placeAtRandom(c, area);
+    else if (policy == Cascade)
+        placeCascaded(c, area);
+    else if (policy == Centered)
+        placeCentered(c, area);
+    else if (policy == ZeroCornered)
+        placeZeroCornered(c, area);
+    else if (policy == UnderMouse)
+        placeUnderMouse(c, area);
+    else if (policy == OnMainWindow)
+        placeOnMainWindow(c, area);
+    else
+        placeSmart(c, area);
     }
 
 /*!
@@ -395,7 +412,7 @@ void Placement::placeUtility(Client* c, QRect& area )
 // if there's not enough place outside the mainwindow, it should prefer
 // top-right corner
     // use the default placement for now
-    placeInternal( c, area );
+    place( c, Default, area );
     }
 
 
@@ -466,6 +483,38 @@ QRect Placement::checkArea( const Client* c, const QRect& area )
         return m_WorkspacePtr->clientArea( PlacementArea, c->geometry().center(), c->desktop());
     return area;
     }
+
+Placement::Policy Placement::policyFromString( const QString& policy, bool no_special )
+    {
+    if( policy == "NoPlacement" )
+        return NoPlacement;
+    else if( policy == "Default" && !no_special )
+        return Default;
+    else if( policy == "Random" )
+        return Random;
+    else if( policy == "Cascade" )
+        return Cascade;
+    else if( policy == "Centered" )
+        return Centered;
+    else if( policy == "ZeroCornered" )
+        return ZeroCornered;
+    else if( policy == "UnderMouse" && !no_special)
+        return UnderMouse;
+    else if( policy == "OnMainWindow" && !no_special)
+        return OnMainWindow;
+    else
+        return Smart;
+    }
+
+const char* Placement::policyToString( Policy policy )
+    {
+    const char* const policies[] =
+        { "NoPlacement", "Default", "Random", "Smart", "Cascade", "Centered",
+            "ZeroCornered", "UnderMouse", "OnMainWindow" };
+    assert( policy < int( sizeof( policies ) / sizeof( policies[ 0 ] )));
+    return policies[ policy ];
+    }
+
 
 // ********************
 // Workspace

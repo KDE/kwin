@@ -92,12 +92,7 @@ unsigned long Options::updateSettings()
         }
     delete gc;
 
-    val = config->readEntry("Placement","Smart");
-    if (val == "Random")               placement = Random;
-    else if (val == "Cascade")              placement = Cascade;
-    else if (val == "Centered")     placement = Centered;
-    else if (val == "ZeroCornered") placement = ZeroCornered;
-    else                            placement = Smart;
+    placement = Placement::policyFromString( config->readEntry("Placement"), true );
 
     animateShade = config->readBoolEntry("AnimateShade", TRUE );
 

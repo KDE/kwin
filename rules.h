@@ -14,6 +14,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qstring.h>
 #include <netwm_def.h>
 
+#include "placement.h"
+
 class KConfig;
 
 namespace KWinInternal
@@ -38,10 +40,11 @@ class WindowRules
         void write( KConfig& ) const;
         void update( Client* );
         bool match( const Client* c ) const;
+        Placement::Policy checkPlacement( Placement::Policy placement ) const;
         int checkDesktop( int desktop, bool init = false ) const;
+        NET::WindowType checkType( NET::WindowType type ) const;
         bool checkKeepAbove( bool above, bool init = false ) const;
         bool checkKeepBelow( bool above, bool init = false ) const;
-        NET::WindowType checkType( NET::WindowType type ) const;
     private:
         static SettingRule readRule( KConfig&, const QString& key );
         static SettingRule readForceRule( KConfig&, const QString& key );
@@ -60,6 +63,8 @@ class WindowRules
         QCString clientmachine;
         bool clientmachineregexp;
         unsigned long types; // types for matching
+        Placement::Policy placement;
+        SettingRule placementrule;
         int desktop;
         SettingRule desktoprule;
         NET::WindowType type; // type for setting

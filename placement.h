@@ -38,9 +38,31 @@ class Placement
         void placeDialog      (Client* c, QRect& area );
         void placeUtility     (Client* c, QRect& area );
 
+        /**
+         * Placement policies. How workspace decides the way windows get positioned
+         * on the screen. The better the policy, the heavier the resource use.
+         * Normally you don't have to worry. What the WM adds to the startup time
+         * is nil compared to the creation of the window itself in the memory
+         */
+        enum Policy
+            {
+            NoPlacement, // not really a placement
+            Default, // special, means to use the global default
+            Random,
+            Smart,
+            Cascade,
+            Centered,
+            ZeroCornered,
+            UnderMouse, // special
+            OnMainWindow // special
+            };
+
+        static Policy policyFromString( const QString& policy, bool no_special );
+        static const char* policyToString( Policy policy );
+
     private:
 
-        void placeInternal(Client* c, const QRect& area );
+        void place(Client* c, Policy policy, QRect& area);
         void placeUnderMouse(Client* c, QRect& area );
         void placeOnMainWindow(Client* c, QRect& area );
         QRect checkArea( const Client*c, const QRect& area );
