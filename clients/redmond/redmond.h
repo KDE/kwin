@@ -18,100 +18,56 @@
 #ifndef __KDE_REDMOND_H
 #define __KDE_REDMOND_H
 
-#include <qvariant.h>
-#include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
-#include <kdecoration.h>
+#include <kcommondecoration.h>
 #include <kdecorationfactory.h>
-
-class QLabel;
-class QSpacerItem;
-class QBoxLayout;
 
 namespace Redmond {
 
 class RedmondDeco;
 
-class RedmondButton : public QButton
+class RedmondButton : public KCommonDecorationButton
 {
 	Q_OBJECT
 public:
-   	RedmondButton(RedmondDeco *parent=0, const char *name=0,
-	              const unsigned char *bitmap=NULL,
-	              bool menuButton=false, bool isMini=false, int size = 16,
-	              const QString& tip=NULL, const int realizeBtns = LeftButton);
+	RedmondButton(ButtonType type, RedmondDeco *parent, const char *name);
 	void setBitmap(const unsigned char *bitmap);
 	void setPixmap(const QPixmap &p);
-	void reset();
-
-	QSize sizeHint() const;
-	ButtonState last_button;
+	void reset(unsigned long changed);
 
 protected:
-	void mousePressEvent(QMouseEvent* e);
-	void mouseReleaseEvent(QMouseEvent* e);
 	virtual void drawButton(QPainter *p);
 	void drawButtonLabel(QPainter *){;}
 
 	QBitmap  deco;
 	QPixmap  pix;
-	bool     menuBtn;
 	bool     miniBtn;
-	RedmondDeco *client;
-	int      size;
-
-	int realizeButtons;
 };
 
 
-class RedmondDeco : public KDecoration
+class RedmondDeco : public KCommonDecoration
 {
-	Q_OBJECT
-
 public:
 	RedmondDeco(KDecorationBridge *, KDecorationFactory *);
 	~RedmondDeco() {;}
+
+	virtual QString visibleName() const;
+	virtual QString defaultButtonsLeft() const;
+	virtual QString defaultButtonsRight() const;
+	virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+	virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+	virtual KCommonDecorationButton *createButton(ButtonType type);
+
 	void init();
 
 protected:
-	void resizeEvent(QResizeEvent*);
+    virtual void reset( unsigned long changed );
+
 	void paintEvent(QPaintEvent*);
-	void showEvent(QShowEvent*);
-	void mouseDoubleClickEvent(QMouseEvent *);
-	void captionChange(const QString& name);
-	void maximizeChange(bool m);
-	void activeChange(bool);
-	void iconChange();
-	void calcHiddenButtons();
-
-//	New stuff.
-	Position mousePosition(const QPoint &) const;
-	void borders(int &, int &, int &, int &) const;
-	void resize(const QSize &);
-	QSize minimumSize() const;
-	void activeChange();
-	void captionChange();
-	void maximizeChange();
-	void desktopChange();
-	void shadeChange();
-	bool eventFilter(QObject *, QEvent *);
-
-protected slots:
-	void slotReset();
-	void slotMaximize();
-	void menuButtonPressed();
 
 private:
-	enum Buttons{ BtnHelp=0, BtnMax, BtnMin, BtnClose, BtnMenu, BtnCount };
-
-	RedmondButton* button[RedmondDeco::BtnCount];
-	int            lastButtonWidth;
 	int            titleHeight;
-	QSpacerItem*   titlebar;
-	bool           hiddenItems;
-	QBoxLayout*    hb;
-	bool           smallButtons;
 };
 
 class RedmondDecoFactory : public QObject, public KDecorationFactory
@@ -132,3 +88,4 @@ private:
 
 #endif
 // vim: ts=4
+// kate: space-indent off; tab-width 4;
