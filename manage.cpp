@@ -228,7 +228,19 @@ bool Client::manage( Window w, bool isMapped )
     // it breaks with too many things (xmms, display)
         {
         if( mainClients().count() >= 1 )
+            {
+#if 1
+            // TODO #78082 - Ok, it seems there are after all some cases when an application has a good
+            // reason to specify a position for its dialog. Too bad other WMs have never bothered
+            // with placement for dialogs, so apps always specify positions for their dialogs,
+            // including such silly positions like always centered on the screen or under mouse.
+            // Using ignoring requested position in window-specific settings helps, but at least
+            // for Qt apps this should work better.
+            usePosition = true;
+#else
             ; // force using placement policy
+#endif
+            }
         else
             usePosition = true;
         }
