@@ -3089,7 +3089,7 @@ void Workspace::storeLegacySession( KConfig* config )
             ev.xclient.message_type = atoms->wm_protocols;
             ev.xclient.format = 32;
             ev.xclient.data.l[0] = atoms->wm_save_yourself;
-            ev.xclient.data.l[1] = CurrentTime;
+            ev.xclient.data.l[1] = kwin_time;
             XSelectInput(newdisplay, w, PropertyChangeMask|StructureNotifyMask);
             XSendEvent(newdisplay, w, False, 0, &ev);
         }
