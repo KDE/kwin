@@ -1,5 +1,5 @@
 
-INCLUDES = $(all_includes) 
+INCLUDES = $(all_includes)
 
 lib_LTLIBRARIES = libkwinsystem.la
 
@@ -13,7 +13,8 @@ lnk_DATA = system.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-libkwinsystem_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic
+libkwinsystem_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
+libkwinsystem_la_LIBADD = $(LIB_KDEUI)
 
 ###KMAKE-start (don't edit or delete this block)
 
