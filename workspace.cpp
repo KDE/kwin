@@ -10,7 +10,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <stdlib.h>
 #include <qwhatsthis.h>
 #include <qdatastream.h>
-#include <kwin.h>
 #include <kapp.h>
 #include <dcopclient.h>
 
@@ -29,6 +28,10 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/keysymdef.h>
 #include <X11/extensions/shape.h>
 
+const int XIconicState = IconicState;
+#undef IconicState
+
+#include <kwin.h>
 #include <kapp.h>
 
 extern Time kwin_time;
@@ -110,8 +113,8 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 {
     if ( Motif::noBorder( w ) )
 	return new NoBorderClient( ws, w );
-    
-    
+
+
     // hack TODO hints
     QString s = KWM::title( w );
     if ( s == "THE DESKTOP" ) {
@@ -872,7 +875,7 @@ void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 	    if ( (*it)->transientFor() == c->window()
 		 && !(*it)->isIconified()
 		 && !(*it)->isShade() ) {
-		(*it)->setMappingState( IconicState );
+		(*it)->setMappingState( XIconicState );
 		(*it)->hide();
 		iconifyOrDeiconifyTransientsOf( (*it) );
 	    }
@@ -2229,9 +2232,9 @@ Workspace::updateClientArea()
     (*it)->updateAvoidPolicy();
 
     if ((*it)->avoid()) {
-    
+
 //      qDebug("Looking at client " + (KWM::title((*it)->winId())));
-  
+
       switch (AnchorEdge((*it)->anchorEdge())) {
 
         case AnchorNorth:
@@ -2245,25 +2248,25 @@ Workspace::updateClientArea()
           clientArea_
             .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top() - 1));
           break;
-        
+
         case AnchorEast:
 //          qDebug("KWin: Ignoring at edge E");
           clientArea_
             .setRight(QMIN(clientArea_.right(), (*it)->geometry().left() - 1));
           break;
-        
+
         case AnchorWest:
 //          qDebug("KWin: Ignoring at edge W");
           clientArea_
             .setLeft(QMAX(clientArea_.left(), (*it)->geometry().right()));
           break;
-          
+
         default:
 //          qDebug("KWin: Not ignoring");
           break;
       }
     }
-    
+
     // FIXME: Using the hackish method...
     if (KWM::title((*it)->winId()) == "MAC MENU [menu]") {
       edgeClientArea_ = geometry();
