@@ -117,7 +117,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     // If no library was found, exit kwin with an error message
     if (path.isEmpty())
         {
-        error( i18n("No window decoration plugin library was found!" ));
+        error( i18n("No window decoration plugin library was found." ));
         return false;
         }
 
@@ -143,7 +143,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     if (!library)
         {
         error( i18n("The default decoration plugin is corrupt "
-                          "and could not be loaded!" ));
+                          "and could not be loaded." ));
         return false;
         }
 

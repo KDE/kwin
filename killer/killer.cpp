@@ -64,7 +64,7 @@ int main( int argc, char* argv[] )
     if( !pid_ok || pid == 0 || !id_ok || id == None || !time_ok || timestamp == CurrentTime
 	|| hostname.isEmpty() || caption.isEmpty() || appname.isEmpty())
         {
-	KCmdLineArgs::usage( i18n( "This helper utility is not supposed to be called directly!" ));
+	KCmdLineArgs::usage( i18n( "This helper utility is not supposed to be called directly." ));
 	return 1;
         }
     QString question = i18n(

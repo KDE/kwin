@@ -2001,8 +2001,8 @@ void Workspace::helperDialog( const QString& message, const Client* c )
             .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window without its border.\n"
-                    "Without the border, you won't be able to enable the border "
-                    "again using the mouse. Use the window operations menu instead, "
+                    "Without the border, you will not be able to enable the border "
+                    "again using the mouse: use the window operations menu instead, "
                     "activated using the %1 keyboard shortcut." )
                 .arg( shortcut );
         type = "altf3warning";
@@ -2013,9 +2013,9 @@ void Workspace::helperDialog( const QString& message, const Client* c )
             .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window in fullscreen mode.\n"
-                    "If the application itself doesn't have an option to turn the fullscreen "
-                    "mode off, you won't be able to disable it "
-                    "again using the mouse. Use the window operations menu instead, "
+                    "If the application itself does not have an option to turn the fullscreen "
+                    "mode off you will not be able to disable it "
+                    "again using the mouse: use the window operations menu instead, "
                     "activated using the %1 keyboard shortcut." )
                 .arg( shortcut );
         type = "altf3warning";
