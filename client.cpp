@@ -154,6 +154,17 @@ static void sendClientMessage(Window w, Atom a, long x){
 
  */
 
+const long ClientWinMask = KeyPressMask | KeyReleaseMask |
+                                  ButtonPressMask | ButtonReleaseMask |
+		  KeymapStateMask |
+		  ButtonMotionMask |
+		  PointerMotionMask | // need this, too!
+		  EnterWindowMask | LeaveWindowMask |
+		  FocusChangeMask |
+		  ExposureMask |
+		  StructureNotifyMask |
+		  SubstructureRedirectMask;
+
 
 WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     : QWidget( parent, name )
@@ -176,19 +187,7 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     XConfigureWindow( qt_xdisplay(), win, CWBorderWidth, &wc );
 
     // overwrite Qt-defaults because we need SubstructureNotifyMask
-    XSelectInput( qt_xdisplay(), winId(),
-		  KeyPressMask | KeyReleaseMask |
-		  ButtonPressMask | ButtonReleaseMask |
-		  KeymapStateMask |
-		  ButtonMotionMask |
-		  PointerMotionMask | // need this, too!
-		  EnterWindowMask | LeaveWindowMask |
-		  FocusChangeMask |
-		  ExposureMask |
-		  StructureNotifyMask |
-		  SubstructureRedirectMask |
-		  SubstructureNotifyMask
-		  );
+    XSelectInput( qt_xdisplay(), winId(), ClientWinMask | SubstructureNotifyMask );
 
     XSelectInput( qt_xdisplay(), w,
 		  FocusChangeMask |
@@ -316,7 +315,9 @@ void WindowWrapper::map()
 	}
 	XMoveResizeWindow( qt_xdisplay(), win,
 			   0, 0, width(), height() );
+	XSelectInput( qt_xdisplay(), winId(), ClientWinMask );
 	XMapRaised( qt_xdisplay(), win );
+	XSelectInput( qt_xdisplay(), winId(), ClientWinMask  | SubstructureNotifyMask );
     }
 }
 
@@ -325,8 +326,11 @@ void WindowWrapper::map()
  */
 void WindowWrapper::unmap()
 {
-    if ( win )
+    if ( win ) {
+	XSelectInput( qt_xdisplay(), winId(), ClientWinMask );
  	XUnmapWindow( qt_xdisplay(), win );
+	XSelectInput( qt_xdisplay(), winId(), ClientWinMask  | SubstructureNotifyMask );
+    }
 }
 
 
@@ -479,11 +483,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     cmap = None;
 
-    getWMHints();
-    getWindowProtocols();
-    getWmNormalHints(); // get xSizeHint
-    fetchName();
-
     Window ww;
     if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
 	transient_for = None;
@@ -492,6 +491,11 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 	transient_for_defined = TRUE;
 	verifyTransientFor();
     }
+
+    getWMHints();
+    getWindowProtocols();
+    getWmNormalHints(); // get xSizeHint
+    fetchName();
 
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
@@ -1698,12 +1702,12 @@ void Client::iconify()
 	return;
     }
     Events::raise( Events::Iconify );
-    setMappingState( IconicState );
 
     if ( (!isTransient() || mainClient() == this ) && isVisible() )
 	animateIconifyOrDeiconify( TRUE );
     hide();
 
+    setMappingState( IconicState );
     workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
@@ -1960,7 +1964,7 @@ bool Client::x11Event( XEvent * e)
 	     && workspace()->topClientOnDesktop() != this ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = new QTimer( this );
-	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaiseTimerDone() ) );
+	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
 	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
 	}
 	
@@ -2096,9 +2100,6 @@ void Client::setShade( bool s )
 	if ( !wasNorthWest )
 	    clearWFlags( WNorthWestGravity );
 	resize (s );
-  	XEvent tmpE;
-	while ( XCheckTypedWindowEvent( qt_xdisplay(), windowWrapper()->winId(), UnmapNotify, &tmpE ) )
-	    ; // eat event
     } else {
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
@@ -2120,9 +2121,6 @@ void Client::setShade( bool s )
 	activateLayout();
 	if ( isActive() )
 	    workspace()->requestFocus( this );
-  	XEvent tmpE;
-	while ( XCheckTypedWindowEvent( qt_xdisplay(), windowWrapper()->winId(), MapNotify, &tmpE ) )
-	    ; // eat event
     }
 
     workspace()->iconifyOrDeiconifyTransientsOf( this );
@@ -2208,6 +2206,12 @@ void Client::getWMHints()
     // get the icons, allow scaling
     icon_pix = KWin::icon( win, 32, 32, TRUE );
     miniicon_pix = KWin::icon( win, 16, 16, TRUE );
+
+    if ( icon_pix.isNull() && mainClient() != this ) {
+	icon_pix = mainClient()->icon_pix;
+	miniicon_pix = mainClient()->miniicon_pix;
+    }
+
     if ( !isWithdrawn() )
 	iconChange();
 
@@ -2612,6 +2616,31 @@ QCString Client::wmCommand()
   return result;
 }
 
+QCString Client::resourceName()
+{
+    QCString result;
+    XClassHint classHint;
+    if ( XGetClassHint( qt_xdisplay(), win, &classHint ) ) {
+	result = classHint.res_name;
+	XFree( classHint.res_name );
+	XFree( classHint.res_class );
+    }
+    return result;
+}
+
+QCString Client::resourceClass()
+{
+    QCString result;
+    XClassHint classHint;
+    if ( XGetClassHint( qt_xdisplay(), win, &classHint ) ) {
+	result = classHint.res_class;
+	XFree( classHint.res_name );
+	XFree( classHint.res_class );
+    }
+    return result;
+}
+
+
 void Client::activateLayout()
 {
     if ( layout() )
@@ -2802,29 +2831,11 @@ QPixmap Client::animationPixmap( int w )
 }
 
 
-
 void Client::autoRaise()
 {
     workspace()->raiseClient( this );
     delete autoRaiseTimer;
     autoRaiseTimer = 0;
-}
-
-void Client::autoRaiseTimerDone()
-{
-    // ensure there's no popup menu open
-    if ( XGrabPointer( qt_xdisplay(), workspace()->rootWin(), TRUE,
-		       (uint)(ButtonPressMask | ButtonReleaseMask |
-			      ButtonMotionMask | EnterWindowMask |
-			      LeaveWindowMask | PointerMotionMask),
-		       GrabModeAsync, GrabModeAsync,
-		       None, None, kwin_time ) == GrabSuccess ) {
-	XUngrabPointer( qt_xdisplay(), kwin_time);
-	autoRaise();
-    } else {
-	// if there is, try again
-	autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
-    }
 }
 
 /*!

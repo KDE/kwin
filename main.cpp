@@ -197,7 +197,7 @@ extern "C" { int kdemain(int, char *[]); }
 
 int kdemain( int argc, char * argv[] )
 {
-    
+    /*
     Display* dpy = XOpenDisplay( NULL );
     if ( !dpy ) {
 	fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
@@ -230,7 +230,8 @@ int kdemain( int argc, char * argv[] )
 	    perror("putenv()");
 	}
     }
-    
+    */
+
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
        version, description, KAboutData::License_BSD,
        "(c) 1999-2000, The KDE Developers");

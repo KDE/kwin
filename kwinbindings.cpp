@@ -14,8 +14,12 @@
  keys->insertItem(i18n("Switch to desktop 14"),  "Switch to desktop 14"   ,"CTRL+SHIFT+F2");
  keys->insertItem(i18n("Switch to desktop 15"),  "Switch to desktop 15"   ,"CTRL+SHIFT+F3");
  keys->insertItem(i18n("Switch to desktop 16"),  "Switch to desktop 16"   ,"CTRL+SHIFT+F4");
- keys->insertItem(i18n("Switch one desktop to the left"),  "Switch desktop left"   ,"");
+ keys->insertItem(i18n("Switch to  next desktop"),  "Switch desktop next"   ,"");
+ keys->insertItem(i18n("Switch to  previous desktop"),  "Switch desktop previous"   ,"");
  keys->insertItem(i18n("Switch one desktop to the right"),  "Switch desktop right"   ,"");
+ keys->insertItem(i18n("Switch one desktop to the left"),  "Switch desktop left"   ,"");
+ keys->insertItem(i18n("Switch one desktop up"),  "Switch desktop up"   ,"");
+ keys->insertItem(i18n("Switch one desktop down"),  "Switch desktop down"   ,"");
 
  keys->insertItem(i18n("Window operations menu"),  "Pop-up window operations menu"   ,"ALT+F3");
  keys->insertItem(i18n("Window close"),"Window close", "ALT+F4");

@@ -162,9 +162,6 @@ void Options::reload()
     if ( val == "CDE" )
 	altTabStyle = CDE;
 
-    // Enable the grab of control-TAB?
-    useControlTab = config->readBoolEntry ("ControlTab", TRUE);
-
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;
     else if (val == "Random") placement = Random;
@@ -189,6 +186,16 @@ void Options::reload()
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade") );
 
     ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
+
+    
+    // desktop settings
+    
+    config->setGroup("Desktops");
+    // Enable the grab of control-TAB?
+    useControlTab = config->readBoolEntry ("ControlTab", TRUE);
+    desktopRows = config->readNumEntry( "DesktopRows", 2 );
+    if ( desktopRows < 1 )
+	desktopRows = 1;
 
     // Mouse bindings
     config->setGroup( "MouseBindings");

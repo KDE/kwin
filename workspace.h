@@ -209,8 +209,12 @@ public slots:
     void slotSwitchDesktop14();
     void slotSwitchDesktop15();
     void slotSwitchDesktop16();
+    void slotSwitchDesktopNext();
+    void slotSwitchDesktopPrevious();
     void slotSwitchDesktopRight();
     void slotSwitchDesktopLeft();
+    void slotSwitchDesktopUp();
+    void slotSwitchDesktopDown();
 
     void slotWindowMaximize();
     void slotWindowMaximizeVertical();

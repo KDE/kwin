@@ -173,6 +173,8 @@ public:
     QCString windowRole();
     QCString sessionId();
     QCString wmCommand();
+    QCString resourceName();
+    QCString resourceClass();
 
     QRect adjustedClientArea( const QRect& area ) const;
 
@@ -194,7 +196,6 @@ public slots:
     void toggleSticky();
     void contextHelp();
     void autoRaise();
-    void autoRaiseTimerDone();
 
 protected:
     void paintEvent( QPaintEvent * );

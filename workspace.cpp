@@ -1670,7 +1670,7 @@ void Workspace::lowerClient( Client* c )
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
         new_stack[i++] = (*it)->winId();
     }
-    XRaiseWindow(qt_xdisplay(), new_stack[0]);
+//     XRaiseWindow(qt_xdisplay(), new_stack[0]);
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
@@ -1757,7 +1757,7 @@ void Workspace::raiseClient( Client* c )
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
         new_stack[i++] = (*it)->winId();
     }
-    XRaiseWindow(qt_xdisplay(), new_stack[0]);
+//     XRaiseWindow(qt_xdisplay(), new_stack[0]);
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
@@ -1951,17 +1951,6 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     } else {
         focusToNull();
     }
-
-    QApplication::syncX();
-    XEvent tmpE;
-    for ( ClientList::ConstIterator it = mapList.begin(); it != mapList.end(); ++it) {
-        while ( XCheckTypedWindowEvent( qt_xdisplay(), (*it)->windowWrapper()->winId(), UnmapNotify, &tmpE ) )
-            ; // eat event
-    }
-    for ( ClientList::ConstIterator it = unmapList.begin(); it != unmapList.end(); ++it) {
-        while ( XCheckTypedWindowEvent( qt_xdisplay(), (*it)->windowWrapper()->winId(), MapNotify, &tmpE ) )
-            ; // eat event
-    }
 }
 
 
@@ -2120,8 +2109,12 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Switch to desktop 14", this, SLOT( slotSwitchDesktop14() ));
     keys->connectItem( "Switch to desktop 15", this, SLOT( slotSwitchDesktop15() ));
     keys->connectItem( "Switch to desktop 16", this, SLOT( slotSwitchDesktop16() ));
+    keys->connectItem( "Switch desktop previous", this, SLOT( slotSwitchDesktopPrevious() ));
+    keys->connectItem( "Switch desktop next", this, SLOT( slotSwitchDesktopNext() ));
     keys->connectItem( "Switch desktop left", this, SLOT( slotSwitchDesktopLeft() ));
     keys->connectItem( "Switch desktop right", this, SLOT( slotSwitchDesktopRight() ));
+    keys->connectItem( "Switch desktop up", this, SLOT( slotSwitchDesktopUp() ));
+    keys->connectItem( "Switch desktop down", this, SLOT( slotSwitchDesktopDown() ));
 
     keys->connectItem( "Pop-up window operations menu", this, SLOT( slotWindowOperations() ) );
     keys->connectItem( "Window close", this, SLOT( slotWindowClose() ) );
@@ -2191,17 +2184,47 @@ void Workspace::slotSwitchDesktop15(){
 void Workspace::slotSwitchDesktop16(){
     setCurrentDesktop(16);
 }
+
+void Workspace::slotSwitchDesktopNext(){
+    int d = currentDesktop() + 1;
+    if ( d > numberOfDesktops() )
+	d = 1;
+    setCurrentDesktop(d);
+}
+void Workspace::slotSwitchDesktopPrevious(){
+    int d = currentDesktop() - 1;
+    if ( d <= 0 )
+	d = numberOfDesktops();
+    setCurrentDesktop(d);
+}
 void Workspace::slotSwitchDesktopRight(){
-  int d = currentDesktop() + 1;
-  if ( d > number_of_desktops )
-    d = 1;
-  setCurrentDesktop(d);
+
+    int d = currentDesktop() + options->desktopRows;
+    if ( d > numberOfDesktops() )
+	d -= numberOfDesktops();
+    setCurrentDesktop(d);
 }
 void Workspace::slotSwitchDesktopLeft(){
-  int d = currentDesktop() - 1;
-  if ( d <= 0 )
-    d = number_of_desktops;
-  setCurrentDesktop(d);
+    int d = currentDesktop() - options->desktopRows;
+    if ( d < 1 )
+	d += numberOfDesktops();
+    setCurrentDesktop(d);
+}
+void Workspace::slotSwitchDesktopUp(){
+    int d = currentDesktop();
+    if ( (d-1) % options->desktopRows == 0 )
+	d += options->desktopRows - 1;
+    else
+	d--;
+    setCurrentDesktop(d);
+}
+void Workspace::slotSwitchDesktopDown(){
+    int d = currentDesktop();
+    if ( d % options->desktopRows == 0 )
+	d -= options->desktopRows - 1;
+    else
+	d++;
+    setCurrentDesktop(d);
 }
 
 /*!
