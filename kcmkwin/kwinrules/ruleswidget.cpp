@@ -180,7 +180,7 @@ static QString positionToStr( const QPoint& p )
 
 static QPoint strToPosition( const QString& str )
     {            // two numbers, with + or -, separated by any of , x X :
-    QRegExp reg( "\\s*[+-]?[0-9]*\\s*[,xX:]\\s*[-+]?[0-9]*\\s*" );
+    QRegExp reg( "\\s*([+-]?[0-9]*)\\s*[,xX:]\\s*([+-]?[0-9]*)\\s*" );
     if( !reg.exactMatch( str ))
         return invalidPoint;
     return QPoint( reg.cap( 1 ).toInt(), reg.cap( 2 ).toInt());
@@ -195,7 +195,7 @@ static QString sizeToStr( const QSize& s )
 
 static QSize strToSize( const QString& str )
     {            // two numbers, with + or -, separated by any of , x X :
-    QRegExp reg( "\\s*[+-]?[0-9]*\\s*[,xX:]\\s*[-+]?[0-9]*\\s*" );
+    QRegExp reg( "\\s*([+-]?[0-9]*)\\s*[,xX:]\\s*([+-]?[0-9]*)\\s*" );
     if( !reg.exactMatch( str ))
         return QSize();
     return QSize( reg.cap( 1 ).toInt(), reg.cap( 2 ).toInt());
