@@ -170,7 +170,7 @@ void KeramikEmbedder::writeIndex()
 	uint prime = 0;
 	
 	for ( i = 0; i < 50; i++ )
-		if ( (prime = primes[i]) > index->count() )
+		if ( (prime = primes[i]) >= index->count() )
 			break;
 	
 	stream << "\tclass KeramikImageDb {\n";

@@ -249,10 +249,15 @@ void KeramikHandler::createPixmaps()
 	activeTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
 
 	// Load the bottom grabbar pixmaps
-	activeTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
-	activeTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
-	activeTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
-
+	if ( largeGrabBars ) {
+		activeTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
+		activeTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
+		activeTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
+	} else {
+		activeTiles[ GrabBarLeft ]   = loadPixmap( "bottom-left",   titleColor );
+		activeTiles[ GrabBarRight ]  = loadPixmap( "bottom-right",  titleColor );
+		activeTiles[ GrabBarCenter ] = loadPixmap( "bottom-center", titleColor );
+	}
 
 	// Inactive tiles
 	// -------------------------------------------------------------------------
@@ -283,10 +288,15 @@ void KeramikHandler::createPixmaps()
 	inactiveTiles[ BorderLeft ]  = loadPixmap( "border-left",  titleColor );
 	inactiveTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
 
-	inactiveTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
-	inactiveTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
-	inactiveTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
-
+	if ( largeGrabBars ) {
+		inactiveTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
+		inactiveTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
+		inactiveTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
+	} else {
+		inactiveTiles[ GrabBarLeft ]   = loadPixmap( "bottom-left",   titleColor );
+		inactiveTiles[ GrabBarRight ]  = loadPixmap( "bottom-right",  titleColor );
+		inactiveTiles[ GrabBarCenter ] = loadPixmap( "bottom-center", titleColor );
+	}
 
 	// Buttons
 	// -------------------------------------------------------------------------
@@ -404,10 +414,11 @@ void KeramikHandler::readConfig()
 	showIcons = c->readBoolEntry( "ShowAppIcons", true );
 	shadowedText = c->readBoolEntry( "UseShadowedText", true );
 	smallCaptionBubbles = c->readBoolEntry( "SmallCaptionBubbles", false );
+	largeGrabBars = c->readBoolEntry( "LargeGrabBars", true );
 
 	if ( ! settings_cache ) {
 		settings_cache = new SettingsCache;
-	
+
 		if ( options->customButtonPositions() ) {
 			settings_cache->buttonsLeft  = options->titleButtonsLeft();
 			settings_cache->buttonsRight = options->titleButtonsRight();
@@ -415,12 +426,14 @@ void KeramikHandler::readConfig()
 			settings_cache->buttonsLeft  = QString( default_left );
 			settings_cache->buttonsRight = QString( default_right );
 		}
-		
-		settings_cache->aTitleColor = options->color( Options::TitleBar,   true );
-		settings_cache->aTitleBlend = options->color( Options::TitleBlend, true );
-		settings_cache->iTitleColor = options->color( Options::TitleBar,   false );
-		settings_cache->iTitleBlend = options->color( Options::TitleBlend, false );
-		settings_cache->buttonColor = options->color( Options::ButtonBg,   true );
+
+		settings_cache->aTitleColor   = options->color( Options::TitleBar,   true );
+		settings_cache->aTitleBlend   = options->color( Options::TitleBlend, true );
+		settings_cache->iTitleColor   = options->color( Options::TitleBar,   false );
+		settings_cache->iTitleBlend   = options->color( Options::TitleBlend, false );
+		settings_cache->buttonColor   = options->color( Options::ButtonBg,   true );
+		settings_cache->showTooltips  = options->showTooltips();
+		settings_cache->largeGrabBars = largeGrabBars;
 	}
 
 	delete c;
@@ -500,9 +513,9 @@ QPixmap *KeramikHandler::loadPixmap( const QString &name, const QColor &col )
 void KeramikHandler::reset()
 {
 	QString buttonsLeft, buttonsRight;
-	
+
 	keramik_initialized = false;
-	
+
 	bool needHardReset  = false;
 	bool pixmapsInvalid = false;
 
@@ -518,7 +531,7 @@ void KeramikHandler::reset()
 	{
 		pixmapsInvalid = true;
 	}
-	
+
 	// Check if button positions have changed
 	if ( options->customButtonPositions() ) {
 		buttonsLeft  = options->titleButtonsLeft();
@@ -527,22 +540,33 @@ void KeramikHandler::reset()
 		buttonsLeft  = QString( default_left );
 		buttonsRight = QString( default_right );
 	}
-		
+
 	if ( (settings_cache->buttonsLeft != buttonsLeft) ||
 			(settings_cache->buttonsRight != buttonsRight) ) {
 		needHardReset = true;
 	}
-	
+
+	// Check if tooltips options have changed
+	if ( (settings_cache->showTooltips != options->showTooltips()) ) {
+		needHardReset = true;
+	}
+
+	if ( (settings_cache->largeGrabBars != largeGrabBars) ) {
+		pixmapsInvalid = true;
+		needHardReset = true;
+	}
+
 	// Update our config cache
 	settings_cache->aTitleColor         = options->color( Options::TitleBar,   true  );
 	settings_cache->aTitleBlend         = options->color( Options::TitleBlend, true  );
 	settings_cache->iTitleColor         = options->color( Options::TitleBar,   false );
 	settings_cache->iTitleBlend         = options->color( Options::TitleBlend, false );
 	settings_cache->buttonColor         = options->color( Options::ButtonBg,   true  );
+	settings_cache->showTooltips        = options->showTooltips();
 	settings_cache->buttonsLeft         = buttonsLeft;
 	settings_cache->buttonsRight        = buttonsRight;
-	
-	
+	settings_cache->largeGrabBars       = largeGrabBars;	
+
 	// Do we need to recreate the pixmaps?
 	if ( pixmapsInvalid ) {
 		destroyPixmaps();
@@ -710,15 +734,16 @@ KeramikClient::KeramikClient( Workspace *ws, WId w, QWidget *parent, const char 
 	largeTitlebar = ( !maximizedVertical() && clientHandler->largeCaptionBubbles() );
 	largeCaption = ( isActive() && largeTitlebar );
 	
+	int grabBarHeight = clientHandler->grabBarHeight();
 	int topSpacing = ( largeTitlebar ? 4 : 1 );
 	topSpacer = new QSpacerItem( 10, topSpacing,
 				QSizePolicy::Expanding, QSizePolicy::Minimum );
 
 	mainLayout->addItem( topSpacer );
 	
-	mainLayout->addLayout( titleLayout );         // Titlebar
-	mainLayout->addLayout( windowLayout, 1 );     // Left border + window + right border
-	mainLayout->addSpacing( 8 );                  // Bottom grab bar + shadow
+	mainLayout->addLayout( titleLayout );     // Titlebar
+	mainLayout->addLayout( windowLayout, 1 ); // Left border + window + right border
+	mainLayout->addSpacing( grabBarHeight );  // Bottom grab bar
 
 	titleLayout->setSpacing( buttonSpacing );
 	
@@ -1206,6 +1231,7 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 
 	int titleBaseY         = ( largeTitlebar ? 3 : 0 );
 	int titleBarHeight     = clientHandler->titleBarHeight( largeTitlebar );
+	int grabBarHeight      = clientHandler->grabBarHeight();
 	
 	if ( maskDirty )
 		updateMask();
@@ -1259,10 +1285,11 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 
 	// Borders
 	// -----------------------------------------------------------------------
-	if ( updateRect.bottom() >= titleBarHeight && updateRect.top() < height() - 8 )
+	if ( updateRect.bottom() >= titleBarHeight &&
+			updateRect.top() < height() - grabBarHeight )
 	{
 		int top    = QMAX( titleBarHeight, updateRect.top() );
-		int bottom = QMIN( updateRect.bottom(), height() - 8 );
+		int bottom = QMIN( updateRect.bottom(), height() - grabBarHeight );
 		
 		// Left border
 		if ( updateRect.x() <= 4 ) {
@@ -1280,10 +1307,10 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 	
 	// Bottom grab bar
 	// -----------------------------------------------------------------------
-	if ( updateRect.bottom() >= height() - 8 ) {
+	if ( updateRect.bottom() >= height() - grabBarHeight ) {
 		// Bottom left corner
 		if ( updateRect.x() < 9 )
-			p.drawPixmap( 0, height() - 8,
+			p.drawPixmap( 0, height() - grabBarHeight,
 					*clientHandler->tile( GrabBarLeft, active ) );
 
 		// Space between the left corner and the right corner
@@ -1291,13 +1318,13 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 			int x1 = QMAX( 9, updateRect.x() );
 			int x2 = QMIN( width() - 9, updateRect.right() );
 			
-			p.drawTiledPixmap( x1, height() - 8, x2 - x1 + 1, 8,
-					*clientHandler->tile( GrabBarCenter, active ) );
+			p.drawTiledPixmap( x1, height() - grabBarHeight, x2 - x1 + 1,
+					grabBarHeight, *clientHandler->tile( GrabBarCenter, active ) );
 		}
 
 		// Bottom right corner
 		if ( updateRect.right() > width() - 9 )
-			p.drawPixmap( width()-9, height()-8,
+			p.drawPixmap( width() - 9, height() - grabBarHeight,
 					*clientHandler->tile( GrabBarRight, active ) );
 	}
 }
@@ -1405,13 +1432,15 @@ Client::MousePosition KeramikClient::mousePosition( const QPoint &p ) const
 			&& p.y() < titleBaseY+3 )
 		return Top;
 
-	if ( p.y() >= height() - 8 )
+	if ( p.y() >= height() - clientHandler->grabBarHeight() )
 		return Bottom;
 
 	return Center;
 }
 
 }; // namespace Keramik
+
+
 
 // -------------------------------------------------------------------------------------------
 

@@ -30,7 +30,8 @@ tiles.h: pics/caption-large-left.png pics/caption-small-right.png pics/titlebar-
 	pics/grabbar-center.png pics/titlebar-left.png pics/border-right.png \
 	pics/caption-small-center.png pics/grabbar-left.png pics/titlebar-right.png \
 	pics/caption-large-center.png  pics/caption-small-left.png pics/grabbar-right.png \
-	pics/titlebutton-round.png
+	pics/titlebutton-round.png pics/bottom-left.png pics/bottom-right.png \
+	pics/bottom-center.png
 
 tiles.h: embedtool
 	pics=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\

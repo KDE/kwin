@@ -58,6 +58,7 @@ KeramikConfig::KeramikConfig( KConfig* conf, QWidget* parent )
 	ui = new KeramikConfigUI( parent );
 	connect( ui->showAppIcons,    SIGNAL(clicked()), SIGNAL(changed()) );
 	connect( ui->smallCaptions,   SIGNAL(clicked()), SIGNAL(changed()) );
+	connect( ui->largeGrabBars,   SIGNAL(clicked()), SIGNAL(changed()) );
 	connect( ui->useShadowedText, SIGNAL(clicked()), SIGNAL(changed()) );
 
 	load( conf );
@@ -79,6 +80,7 @@ void KeramikConfig::load( KConfig* )
 	c->setGroup("General");
 	ui->showAppIcons->setChecked( c->readBoolEntry("ShowAppIcons", true) );
 	ui->smallCaptions->setChecked( c->readBoolEntry("SmallCaptionBubbles", false) );
+	ui->largeGrabBars->setChecked( c->readBoolEntry("LargeGrabBars", true) );
 	ui->useShadowedText->setChecked( c->readBoolEntry("UseShadowedText", true) );
 }
 
@@ -89,6 +91,7 @@ void KeramikConfig::save( KConfig* )
 	c->setGroup( "General" );
 	c->writeEntry( "ShowAppIcons", ui->showAppIcons->isChecked() );
 	c->writeEntry( "SmallCaptionBubbles", ui->smallCaptions->isChecked() );
+	c->writeEntry( "LargeGrabBars", ui->largeGrabBars->isChecked() );
 	c->writeEntry( "UseShadowedText", ui->useShadowedText->isChecked() );
 	c->sync();
 }
@@ -99,6 +102,7 @@ void KeramikConfig::defaults()
 {
 	ui->showAppIcons->setChecked( true );
 	ui->smallCaptions->setChecked( false );
+	ui->largeGrabBars->setChecked( true );
 	ui->useShadowedText->setChecked( true );
 	
 	emit changed();

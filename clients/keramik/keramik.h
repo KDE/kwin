@@ -56,6 +56,8 @@ namespace Keramik {
 		QColor  buttonColor;
 		QString buttonsLeft;
 		QString buttonsRight;
+		bool showTooltips:1;
+		bool largeGrabBars:1;
 	};
 					   
 	class KeramikHandler : public QObject {
@@ -76,7 +78,10 @@ namespace Keramik {
 				return ( large ? activeTiles[CaptionLargeCenter]->height()
 						: activeTiles[CaptionSmallCenter]->height() );
 			}
-			
+
+			int grabBarHeight() const
+				{ return activeTiles[GrabBarCenter]->height(); }
+
 			const QPixmap *roundButton() const  { return titleButtonRound; }
 			const QPixmap *squareButton() const { return titleButtonSquare; }
 			const QBitmap *buttonDeco( ButtonDeco deco ) const
@@ -100,7 +105,8 @@ namespace Keramik {
 			QPixmap *loadPixmap( const QString &, const QColor & );
 
 		private:
-			bool showIcons:1, shadowedText:1, smallCaptionBubbles:1;
+			bool showIcons:1, shadowedText:1,
+				smallCaptionBubbles:1, largeGrabBars:1;
 			SettingsCache *settings_cache;
 			KeramikImageDb *imageDb;
 			
