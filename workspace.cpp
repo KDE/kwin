@@ -2306,9 +2306,11 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
         ObscuringWindows obs_wins;
 
+	bool updateMovingClientDesktop = false;
         if (d->movingClient && !d->movingClient->isSticky())
         {
-            d->movingClient->setDesktop(-1); // All desktops
+	    updateMovingClientDesktop = true;
+            d->movingClient->setDesktop( -1 );
         }
 
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
@@ -2326,7 +2328,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
             }
         }
 
-        if (d->movingClient && !d->movingClient->isSticky())
+        if (d->movingClient && updateMovingClientDesktop )
         {
             d->movingClient->setDesktop(new_desktop);
         }
