@@ -271,9 +271,6 @@ void Options::reload()
     globalConfig.setGroup("KDE");
     d->fade_tooltips = globalConfig.readBoolEntry("EffectFadeTooltip", false);
     d->animate_tooltips = globalConfig.readBoolEntry("EffectAnimateTooltip", false);
-
-    emit resetPlugin();
-    emit resetClients();
 }
 
 

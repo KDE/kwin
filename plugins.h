@@ -24,11 +24,10 @@ public:
     PluginMgr();
     ~PluginMgr();
     Client *allocateClient(Workspace *ws, WId w, bool tool);
-    void loadPlugin(QString name);
+    bool loadPlugin(QString name);
     QString currentPlugin() { return pluginStr; }
 public slots:
     void updatePlugin();
-    void resetPlugin();
 signals:
     void resetAllClients();
 protected:

@@ -32,7 +32,9 @@ PluginMgr::PluginMgr()
     library = 0;
     pluginStr = "kwin_undefined";
 
-    updatePlugin();
+    KConfig *config = KGlobal::config();
+    config->setGroup("Style");
+    loadPlugin( config->readEntry("PluginLib", defaultPlugin) );
 }
 
 PluginMgr::~PluginMgr()
@@ -52,10 +54,11 @@ void PluginMgr::updatePlugin()
     KConfig *config = KGlobal::config();
     config->reparseConfiguration();
     config->setGroup("Style");
-    QString newPlugin = config->readEntry("PluginLib", defaultPlugin);
-
-    if (newPlugin != pluginStr) 
-         loadPlugin(newPlugin);
+    if ( !loadPlugin( config->readEntry("PluginLib", defaultPlugin )) && library ) {
+	void *reset_func = library->symbol("reset");
+	if (reset_func)
+	    ((void (*)())reset_func)();
+    }
 }
 
 Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
@@ -69,7 +72,7 @@ Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
 }
 
 // returns true if plugin was loaded successfully
-void PluginMgr::loadPlugin(QString nameStr)
+bool PluginMgr::loadPlugin(QString nameStr)
 {
     KLibrary *oldLibrary = library;
     library = 0;
@@ -88,14 +91,17 @@ void PluginMgr::loadPlugin(QString nameStr)
 
     // Check if this library is not already loaded.
     if(pluginStr == nameStr) 
-	return;
+	return FALSE;
 
     // Try loading the requested plugin
     library = KLibLoader::self()->library(QFile::encodeName(path));
 
     // If that fails, fall back to the default plugin
     if (!library) {
+	kdDebug() << " could not load library, try default plugin again" << endl;
         nameStr = defaultPlugin;
+	if ( pluginStr == nameStr )
+	    return FALSE;
         path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
 	if (!path.isEmpty())
             library = KLibLoader::self()->library(QFile::encodeName(path));
@@ -129,13 +135,7 @@ void PluginMgr::loadPlugin(QString nameStr)
 	    ((void (*)())deinit_func)();
 	oldLibrary->unload();
     }
-}
-
-void PluginMgr::resetPlugin()
-{
-    void *reset_func = library->symbol("reset");
-    if (reset_func)
-       ((void (*)())reset_func)();
+    return TRUE;
 }
 
 void PluginMgr::shutdownKWin(const QString &error_msg)

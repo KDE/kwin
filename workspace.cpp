@@ -2005,18 +2005,13 @@ void Workspace::reconfigure()
 void Workspace::slotReconfigure()
 {
     kdDebug(1212) << "Workspace::slotReconfigure()" << endl;
-
     reconfigureTimer.stop();
     KGlobal::config()->reparseConfiguration();
     options->reload();
     tab_box->reconfigure();
-
     readShortcuts();
 
-
     mgr->updatePlugin();
-    // NO need whatsoever to call slotResetAllClientsDelayed here,
-    // updatePlugin resets all clients if necessary anyway.
 
     if (options->electricBorders() == Options::ElectricAlways)
        createBorderWindows();
