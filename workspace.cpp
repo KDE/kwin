@@ -1962,9 +1962,9 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 
     QRect maxRect = clientArea();
     int xmin = maxRect.left();
-    int xmax = maxRect.right();               //desk size
+    int xmax = maxRect.right()+1;               //desk size
     int ymin = maxRect.top();
-    int ymax = maxRect.bottom();
+    int ymax = maxRect.bottom()+1;
     int cx, cy, rx, ry, cw, ch;                 //these don't change
 
     int nx, ny;                         //buffers
@@ -1985,7 +1985,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	nx = xmin;
       }
       if ((QABS(xmax-rx) < snap) && (QABS(xmax-rx) < deltaX)) {
-	deltaX = abs(xmax-rx);
+	deltaX = QABS(xmax-rx);
 	nx = xmax - cw;
       }
 
@@ -2022,7 +2022,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 	    }
 	    if ( ( QABS( rx - lx ) < snap )    &&
 		 ( QABS( rx - lx ) < deltaX ) ) {
-	      deltaX = abs(rx - lx);
+	      deltaX = QABS(rx - lx);
 	      nx = lx - cw;
 	    }
 	  }
