@@ -1570,10 +1570,8 @@ void Client::resizeEvent( QResizeEvent * e)
 void Client::mouseMoveEvent( QMouseEvent * e)
 {
     if ( !buttonDown ) {
-        MousePosition newmode = mousePosition( e->pos() );
-        if( newmode != mode )
-            setMouseCursor( newmode );
-        mode = newmode;
+        mode = mousePosition( e->pos() );
+        setMouseCursor( mode );
         geom = geometry();
         return;
     }
