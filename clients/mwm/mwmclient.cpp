@@ -16,6 +16,30 @@ using namespace KWinInternal;
 static const int s_frameWidth = 5;
 static const int s_buttonSize = 19;
 
+static void fixColorGroup(QColorGroup & colorGroup)
+{
+    QColor light = colorGroup.light();
+
+    int hue, saturation, value;
+
+    light.hsv(&hue, &saturation, &value);
+
+    if (value < 128)
+    {
+      light.setHsv(hue, saturation, 128);
+      colorGroup.setColor(QColorGroup::Light, light);
+    }
+
+    QColor dark = colorGroup.light();
+
+    dark.hsv(&hue, &saturation, &value);
+
+    if (value < 84)
+    {
+      dark.setHsv(hue, saturation, 84);
+      colorGroup.setColor(QColorGroup::Dark, dark);
+    }
+}
 
 MwmButton::MwmButton( MwmClient* parent, const char* name, int btnType )
     : QButton( parent, name , WStyle_Customize | WStyle_NoBorder
@@ -36,22 +60,24 @@ void MwmButton::drawButton( QPainter* p )
     p->setBrush( options->color( Options::TitleBar, m_parent->isActive() ) );
     p->drawRect( 0, 0, s_buttonSize, s_buttonSize );
 
+    QColorGroup colorGroup =
+      options->colorGroup( Options::TitleBar, m_parent->isActive() );
+
+    fixColorGroup(colorGroup);
+
     qDrawShadePanel( p, 0, 0, s_buttonSize, s_buttonSize,
-	options->colorGroup( Options::TitleBar, m_parent->isActive() ), isDown() );
+	colorGroup, isDown() );
 
     switch ( m_btnType )
     {
 	case (BtnMenu):
-	    qDrawShadePanel( p, 4, 7, 11, 4,
-		options->colorGroup( Options::TitleBar,	m_parent->isActive() ) );
+	    qDrawShadePanel( p, 4, 7, 11, 4, colorGroup );
 	break;
 	case (BtnIconify):
-	    qDrawShadePanel( p, 7, 7, 5, 5,
-		options->colorGroup( Options::TitleBar,	m_parent->isActive() ) );
+	    qDrawShadePanel( p, 7, 7, 5, 5, colorGroup );
 	break;
 	case (BtnMax):
-	    qDrawShadePanel( p, 4, 4, 11, 11,
-		options->colorGroup( Options::TitleBar, m_parent->isActive() ) );
+	    qDrawShadePanel( p, 4, 4, 11, 11, colorGroup );
 	break;
     }
 }
@@ -187,6 +213,11 @@ void MwmClient::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
 
+    QColorGroup colorGroup =
+      options->colorGroup( Options::TitleBar, isActive() );
+
+    fixColorGroup(colorGroup);
+
     QRect trect = titlebar->geometry();
     QRect wrect = windowWrapper()->geometry();
     QRect mrect = rect();
@@ -196,7 +227,7 @@ void MwmClient::paintEvent( QPaintEvent* )
     p.drawRect( mrect );
     p.setPen( Qt::NoPen );
 
-    p.setBrush( options->color( Options::TitleBar, isActive() ) );
+    p.setBrush( colorGroup.background() );
 
     // draw frame-background:
     p.drawRect(
@@ -226,7 +257,7 @@ void MwmClient::paintEvent( QPaintEvent* )
 	wrect.y(),
 	s_frameWidth,
 	wrect.height() - s_buttonSize,
-			options->colorGroup( Options::TitleBar, isActive() ) );
+			colorGroup );
 
     // draw right frame:
     qDrawShadePanel( &p,
@@ -234,7 +265,7 @@ void MwmClient::paintEvent( QPaintEvent* )
 	wrect.y(),
 	s_frameWidth,
 	wrect.height() - s_buttonSize,
-			options->colorGroup( Options::TitleBar, isActive() ) );
+			colorGroup );
 
     // draw top frame:
     qDrawShadePanel( &p,
@@ -242,7 +273,7 @@ void MwmClient::paintEvent( QPaintEvent* )
 	1,
 	wrect.width() - 2*s_buttonSize,
 	s_frameWidth,
-			options->colorGroup( Options::TitleBar, isActive() ) );
+			colorGroup );
 
     // draw bottom frame:
     qDrawShadePanel( &p,
@@ -250,10 +281,11 @@ void MwmClient::paintEvent( QPaintEvent* )
 	mrect.height() - s_frameWidth - 1,
 	wrect.width() - 2*s_buttonSize,
 	s_frameWidth,
-			options->colorGroup( Options::TitleBar, isActive() ) );
+			colorGroup );
 
     // draw light corner parts:
-    p.setPen( options->colorGroup( Options::TitleBar, isActive() ).light() );
+    p.setPen( colorGroup.light() );
+
     // tl corner:
     p.drawLine(
 	1,
@@ -322,7 +354,7 @@ void MwmClient::paintEvent( QPaintEvent* )
 //    p.setPen( Qt::NoPen );
 
     // draw dark corner parts:
-    p.setPen( options->colorGroup( Options::TitleBar, isActive() ).dark() );
+    p.setPen( colorGroup.dark() );
     // tl corner:
     p.drawLine(
 	1,
@@ -401,7 +433,7 @@ void MwmClient::paintEvent( QPaintEvent* )
     // draw titlebar:
     p.drawRect( trect );
     qDrawShadePanel( &p, trect,
-	options->colorGroup( Options::TitleBar, isActive() ) );
+	colorGroup );
 
     // draw caption:	
     p.setFont( options->font( true ) );
