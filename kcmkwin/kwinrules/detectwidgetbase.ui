@@ -177,7 +177,7 @@
                         <string>Use window class and window &amp;role (specific window)</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>For selecting a specific window in an application, both window class and window role should be selected. Window class will determine the application and window role the specific window in the application. Many applications don't provide useful window roles though.</string>
+                        <string>For selecting a specific window in an application, both window class and window role should be selected. Window class will determine the application, and window role the specific window in the application; many applications do not provide useful window roles though.</string>
                     </property>
                 </widget>
                 <widget class="QRadioButton">

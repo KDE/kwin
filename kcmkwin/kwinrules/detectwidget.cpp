@@ -123,7 +123,7 @@ void DetectDialog::executeDialog()
         I18N_NOOP( "Desktop" ),
         I18N_NOOP( "Dock (panel)" ),
         I18N_NOOP( "Toolbar" ),
-        I18N_NOOP( "Torn Off Menu" ),
+        I18N_NOOP( "Torn-Off Menu" ),
         I18N_NOOP( "Dialog Window" ),
         I18N_NOOP( "Override Type" ),
         I18N_NOOP( "Standalone Menubar" ),
