@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     if(localDirStr.isEmpty()){
         localDirStr = KGlobal::dirs()->saveLocation("data", "kwin");
     }
-    localDirStr += "/kwmtheme/";
+    localDirStr += "/pics/";
     if(!QFile::exists(localDirStr))
         QDir().mkdir(localDirStr);
 
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
     tmpStr = input.readEntry("shapePixmapTop");
     if(!tmpStr.isEmpty()){
-        copy(srcStr+tmpStr, localDirStr);
+        copy(srcStr+tmpStr, localDirStr+tmpStr);
     }
     output->writeEntry("wm_top", tmpStr, true, true);
     tmpStr = input.readEntry("shapePixmapBottom");
