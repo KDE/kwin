@@ -28,7 +28,7 @@
 #include "ruleslist.h"
 
 extern "C"
-KCModule *create_kwinrules( QWidget *parent, const char *name )
+    KDE_EXPORT KCModule *create_kwinrules( QWidget *parent, const char *name )
     {
     //CT there's need for decision: kwm or kwin?
     KGlobal::locale()->insertCatalogue( "kcmkwinrules" );

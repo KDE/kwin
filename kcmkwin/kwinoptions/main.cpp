@@ -36,7 +36,7 @@
 
 extern "C"
 {
-	KCModule *create_kwinfocus(QWidget *parent, const char *name)
+	KDE_EXPORT KCModule *create_kwinfocus(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
 		KGlobal::locale()->insertCatalogue("kcmkwm");
@@ -44,7 +44,7 @@ extern "C"
 		return new KFocusConfig(true, c, parent, name);
 	}
 
-	KCModule *create_kwinactions(QWidget *parent, const char *name)
+	KDE_EXPORT KCModule *create_kwinactions(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
 		KGlobal::locale()->insertCatalogue("kcmkwm");
@@ -52,7 +52,7 @@ extern "C"
 		return new KActionsConfig(true, c, parent, name);
 	}
 
-	KCModule *create_kwinmoving(QWidget *parent, const char *name)
+	KDE_EXPORT KCModule *create_kwinmoving(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
 		KGlobal::locale()->insertCatalogue("kcmkwm");
@@ -60,7 +60,7 @@ extern "C"
 		return new KMovingConfig(true, c, parent, name);
 	}
 
-	KCModule *create_kwinadvanced(QWidget *parent, const char *name)
+	KDE_EXPORT KCModule *create_kwinadvanced(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
 		KGlobal::locale()->insertCatalogue("kcmkwm");
@@ -68,7 +68,7 @@ extern "C"
 		return new KAdvancedConfig(true, c, parent, name);
 	}
 
-	KCModule *create_kwinoptions ( QWidget *parent, const char* name)
+	KDE_EXPORT KCModule *create_kwinoptions ( QWidget *parent, const char* name)
 	{
 		//CT there's need for decision: kwm or kwin?
 		KGlobal::locale()->insertCatalogue("kcmkwm");
