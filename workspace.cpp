@@ -546,6 +546,17 @@ void Workspace::updateCurrentTopMenu()
                 break; // don't use mainwindow's menu if this is modal or group transient
             menu_client = menu_client->transientFor();
             }
+        if( !menubar )
+            { // try to find any topmenu from the application (#72113)
+            for( ClientList::ConstIterator it = active_client->group()->members().begin();
+                 it != active_client->group()->members().end();
+                 ++it )
+                if( (*it)->isTopMenu())
+                    {
+                    menubar = *it;
+                    break;
+                    }
+            }
         }
     if( !menubar && !block_desktop_menubar && options->desktopTopMenu())
         {
