@@ -543,18 +543,18 @@ bool Workspace::workspaceEvent( XEvent * e )
     case ButtonRelease:
     case MotionNotify:
         break;
-	
+
     case CreateNotify:
-	if ( e->xcreatewindow.parent == root && 
-	     !QWidget::find( e->xcreatewindow.window) ) {
-	    timeval tv;
-	    gettimeofday( &tv, NULL );
-	    unsigned long now = tv.tv_sec * 10 + tv.tv_usec / 100000;
-	    XChangeProperty(qt_xdisplay(), e->xcreatewindow.window, 
-			    atoms->kde_net_user_time, XA_CARDINAL, 
-			    32, PropModeReplace, (unsigned char *)&now, 1);
-	}
-	break;
+        if ( e->xcreatewindow.parent == root &&
+             !QWidget::find( e->xcreatewindow.window) ) {
+            timeval tv;
+            gettimeofday( &tv, NULL );
+            unsigned long now = tv.tv_sec * 10 + tv.tv_usec / 100000;
+            XChangeProperty(qt_xdisplay(), e->xcreatewindow.window,
+                            atoms->kde_net_user_time, XA_CARDINAL,
+                            32, PropModeReplace, (unsigned char *)&now, 1);
+        }
+        break;
     case UnmapNotify:
         // this is special due to
         // SubstructureNotifyMask. e->xany.window is the window the
@@ -2189,11 +2189,11 @@ void Workspace::raiseClient( Client* c )
 void Workspace::stackClientUnderActive( Client* c )
 {
     if ( !active_client || !c || active_client == c )
-	return;
+        return;
 
     ClientList::Iterator it = stacking_order.find( active_client );
     if ( it == stacking_order.end() )
-	return;
+        return;
     stacking_order.remove( c );
     stacking_order.insert( it, c );
     stacking_order = constrainedStackingOrder( stacking_order );
@@ -3810,7 +3810,7 @@ void Workspace::storeSession( KConfig* config )
         config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine().data() );
         config->writeEntry( QString("resourceName")+n, c->resourceName().data() );
         config->writeEntry( QString("resourceClass")+n, c->resourceClass().data() );
-        config->writeEntry( QString("geometry")+n,  QRect( c->pos(), c->windowWrapper()->size() ) );
+        config->writeEntry( QString("geometry")+n,  QRect( c->gravitate(TRUE), c->windowWrapper()->size() ) );
         config->writeEntry( QString("restore")+n, c->geometryRestore() );
         config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
         config->writeEntry( QString("desktop")+n, c->desktop() );
@@ -3894,7 +3894,7 @@ void Workspace::storeFakeSessionInfo( Client* c )
     info->resourceName = c->resourceName();
     info->resourceClass = c->resourceClass();
     info->wmClientMachine = c->wmClientMachine();
-    info->geometry = QRect( c->pos(), c->windowWrapper()->size() ) ;
+    info->geometry = QRect( c->gravitate(TRUE), c->windowWrapper()->size() ) ;
     info->restore = c->geometryRestore();
     info->maximize = (int)c->maximizeMode();
     info->desktop = c->desktop();

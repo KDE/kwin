@@ -405,23 +405,23 @@ bool WindowWrapper::x11Event( XEvent * e)
 {
     switch ( e->type ) {
     case ButtonPress: {
-	((Client*)parentWidget())->updateUserTime();
-	uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-	    KKeyNative::modX(KKey::WIN) :
-	    KKeyNative::modX(KKey::ALT);
-	bool bModKeyHeld = ( e->xbutton.state & KKeyNative::accelModMaskX()) == keyModX;
+        ((Client*)parentWidget())->updateUserTime();
+        uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
+            KKeyNative::modX(KKey::WIN) :
+            KKeyNative::modX(KKey::ALT);
+        bool bModKeyHeld = ( e->xbutton.state & KKeyNative::accelModMaskX()) == keyModX;
 
-	if ( ((Client*)parentWidget())->isActive()
-	     && ( options->focusPolicy != Options::ClickToFocus
-		  &&  options->clickRaise && !bModKeyHeld ) ) {
-	    if ( e->xbutton.button < 4 ) // exclude wheel
-		((Client*)parentWidget())->autoRaise();
-	    ungrabButton( winId(), None );
-	}
+        if ( ((Client*)parentWidget())->isActive()
+             && ( options->focusPolicy != Options::ClickToFocus
+                  &&  options->clickRaise && !bModKeyHeld ) ) {
+            if ( e->xbutton.button < 4 ) // exclude wheel
+                ((Client*)parentWidget())->autoRaise();
+            ungrabButton( winId(), None );
+        }
 
-	Options::MouseCommand com = Options::MouseNothing;
-	if ( bModKeyHeld ){
-	    switch (e->xbutton.button) {
+        Options::MouseCommand com = Options::MouseNothing;
+        if ( bModKeyHeld ){
+            switch (e->xbutton.button) {
                 case Button1:
                     com = options->commandAll1();
                     break;
@@ -431,9 +431,9 @@ bool WindowWrapper::x11Event( XEvent * e)
                 case Button3:
                     com = options->commandAll3();
                     break;
-	    }
-	} else {
-	    switch (e->xbutton.button) {
+            }
+        } else {
+            switch (e->xbutton.button) {
                 case Button1:
                     com = options->commandWindow1();
                     break;
@@ -445,18 +445,18 @@ bool WindowWrapper::x11Event( XEvent * e)
                     break;
                 default:
                     com = Options::MouseActivateAndPassClick;
-	    }
-	}
-	bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
-									QPoint( e->xbutton.x_root, e->xbutton.y_root) );
+            }
+        }
+        bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
+                                                                        QPoint( e->xbutton.x_root, e->xbutton.y_root) );
 
-	if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
-	     ((Client*)parentWidget())->windowType() != NET::Dialog &&
-	     ((Client*)parentWidget())->windowType() != NET::Override )
-	    replay = TRUE;
+        if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
+             ((Client*)parentWidget())->windowType() != NET::Dialog &&
+             ((Client*)parentWidget())->windowType() != NET::Override )
+            replay = TRUE;
 
-	XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //qt_x_time);
-	return TRUE;
+        XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //qt_x_time);
+        return TRUE;
     } break;
     case ButtonRelease:
         XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
@@ -494,8 +494,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
         NET::WMWindowType |
         NET::WMStrut |
         NET::WMName |
-        NET::WMIconGeometry | 
-	NET::WMPid
+        NET::WMIconGeometry |
+        NET::WMPid
         ;
 
     info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
@@ -701,7 +701,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     info->setKDEFrameStrut( strut );
 
     move( geom.x(), geom.y() );
-    gravitate( FALSE );
+    move(gravitate( FALSE ) ); // take the decoration size into account
 
     if ( !placementDone ) {
         workspace()->doPlacement( this );
@@ -731,6 +731,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             if (hints && (hints->flags & StateHint)) {
                 init_state = hints->initial_state;
                 //CT extra check for stupid jdk 1.3.1. But should make sense in general
+                // if client has initial state set to Iconic and is transient with a parent
+                // window that is not Iconic, set init_state to Normal
                 if ((init_state == IconicState) && isTransient() && transientFor() != 0) {
                   if(!workspace()->findClient(transientFor())->isIconified()) {
                     init_state = NormalState;
@@ -829,27 +831,27 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         if ( isMapped ) {
             show();
         } else {
-	    // we only raise (and potentially activate) new clients if
-	    // the user does not actively work in the currently active
-	    // client. We can safely drop the activation when the new
-	    // window is not a dialog of the active client and
-	    // NET_KDE_USER_TIME of the currently active client is
-	    // defined and more recent than the one of the new client
-	    // (which we set ourselves in CreateNotify in
-	    // workspace.cpp).  Of course we only do that magic if the
-	    // window does not stem from a restored session.
-	    Client* ac = workspace()->activeClient();
-	    
-	    if ( !session && ac && ac->userTime() > userTime() 
-		 && ( !isTransient() || mainClient() != ac ) ) {
-		workspace()->stackClientUnderActive( this );
-		show();
-	    } else {
-		workspace()->raiseClient( this );
-		show();
-		if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
-		    workspace()->requestFocus( this );
-	    }
+            // we only raise (and potentially activate) new clients if
+            // the user does not actively work in the currently active
+            // client. We can safely drop the activation when the new
+            // window is not a dialog of the active client and
+            // NET_KDE_USER_TIME of the currently active client is
+            // defined and more recent than the one of the new client
+            // (which we set ourselves in CreateNotify in
+            // workspace.cpp).  Of course we only do that magic if the
+            // window does not stem from a restored session.
+            Client* ac = workspace()->activeClient();
+
+            if ( !session && ac && ac->userTime() > userTime()
+                 && ( !isTransient() || mainClient() != ac ) ) {
+                workspace()->stackClientUnderActive( this );
+                show();
+            } else {
+                workspace()->raiseClient( this );
+                show();
+                if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
+                    workspace()->requestFocus( this );
+            }
         }
     }
 
@@ -862,7 +864,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
 
 
-/*!  
+/*!
   Updates the user time on the client window. This is called inside
   kwin for every action with the window that qualifies for user
   interaction (clicking on it, activate it externally, etc.).
@@ -870,12 +872,12 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 void Client::updateUserTime()
 {
     if ( window() ) {
-	timeval tv;
-	gettimeofday( &tv, NULL );
-	unsigned long now = tv.tv_sec * 10 + tv.tv_usec / 100000;
-	XChangeProperty(qt_xdisplay(), window(),
-			atoms->kde_net_user_time, XA_CARDINAL, 
-			32, PropModeReplace, (unsigned char *)&now, 1);
+        timeval tv;
+        gettimeofday( &tv, NULL );
+        unsigned long now = tv.tv_sec * 10 + tv.tv_usec / 100000;
+        XChangeProperty(qt_xdisplay(), window(),
+                        atoms->kde_net_user_time, XA_CARDINAL,
+                        32, PropModeReplace, (unsigned char *)&now, 1);
     }
 }
 
@@ -889,14 +891,14 @@ unsigned long Client::userTime()
     unsigned char *data = 0;
     XErrorHandler oldHandler = XSetErrorHandler(nullErrorHandler);
     status = XGetWindowProperty( qt_xdisplay(), window(),
-				 atoms->kde_net_user_time, 
-				 0, 10000, FALSE, XA_CARDINAL, &type, &format,
-				 &nitems, &extra, &data );
+                                 atoms->kde_net_user_time,
+                                 0, 10000, FALSE, XA_CARDINAL, &type, &format,
+                                 &nitems, &extra, &data );
     XSetErrorHandler(oldHandler);
     if (status  == Success ) {
-	if (data && nitems > 0)
-	    result = *((long*) data);
-	XFree(data);
+        if (data && nitems > 0)
+            result = *((long*) data);
+        XFree(data);
     }
     return result;
 }
@@ -1834,7 +1836,7 @@ void Client::paintEvent( QPaintEvent * )
 void Client::releaseWindow()
 {
     if ( win ) {
-        gravitate( TRUE );
+        move(gravitate(TRUE));
         windowWrapper()->releaseWindow();
         win = 0;
     }
@@ -2060,7 +2062,7 @@ bool Client::eventFilter( QObject *o, QEvent * e)
     return FALSE;
 }
 
-void Client::gravitate( bool invert )
+const QPoint Client::gravitate( bool invert ) const
 {
     int gravity, dx, dy;
     dx = dy = 0;
@@ -2075,43 +2077,43 @@ void Client::gravitate( bool invert )
         dy = 0;
         break;
     case NorthGravity:
-        dx = -windowWrapper()->x();
+        dx = windowWrapper()->x();
         dy = 0;
         break;
     case NorthEastGravity:
-        dx = -( width() - windowWrapper()->width() );
+        dx =  width() - windowWrapper()->width();
         dy = 0;
         break;
     case WestGravity:
         dx = 0;
-        dy = -windowWrapper()->y();
+        dy = windowWrapper()->y();
         break;
     case CenterGravity:
     case StaticGravity:
-        dx = -windowWrapper()->x();
-        dy = -windowWrapper()->y();
+        dx = windowWrapper()->x();
+        dy = windowWrapper()->y();
         break;
     case EastGravity:
-        dx = -( width() - windowWrapper()->width() );
-        dy = -windowWrapper()->y();
+        dx = width() - windowWrapper()->width();
+        dy = windowWrapper()->y();
         break;
     case SouthWestGravity:
         dx = 0;
-        dy = -( height() - windowWrapper()->height() );
+        dy = height() - windowWrapper()->height();
         break;
     case SouthGravity:
-        dx = -windowWrapper()->x();
-        dy = -( height() - windowWrapper()->height() );
+        dx = windowWrapper()->x();
+        dy = height() - windowWrapper()->height();
         break;
     case SouthEastGravity:
-        dx = -( width() - windowWrapper()->width() - 1 );
-        dy = -( height() - windowWrapper()->height() - 1 );
+        dx = width() - windowWrapper()->width();
+        dy = height() - windowWrapper()->height();
         break;
     }
     if (invert)
-        move( x() - dx, y() - dy );
+        return QPoint( x() + dx, y() + dy );
     else
-        move( x() + dx, y() + dy );
+        return QPoint( x() - dx, y() - dy );
 }
 
 /*!
@@ -2122,10 +2124,10 @@ void Client::gravitate( bool invert )
 */
 bool Client::x11Event( XEvent * e)
 {
-    if ( e->type == EnterNotify && 
-	 ( e->xcrossing.mode == NotifyNormal || 
-	   ( !options->focusPolicyIsReasonable() && 
-	     e->xcrossing.mode == NotifyUngrab ) ) ) {
+    if ( e->type == EnterNotify &&
+         ( e->xcrossing.mode == NotifyNormal ||
+           ( !options->focusPolicyIsReasonable() &&
+             e->xcrossing.mode == NotifyUngrab ) ) ) {
 
         if (options->shadeHover && isShade() && !isDesktop()) {
             delete shadeHoverTimer;
@@ -2137,9 +2139,9 @@ bool Client::x11Event( XEvent * e)
         if ( options->focusPolicy == Options::ClickToFocus )
             return TRUE;
 
-        if ( options->autoRaise && !isDesktop() && 
-	     !isDock() && !isMenu() && workspace()->focusChangeEnabled() && 
-	     workspace()->topClientOnDesktop() != this ) {
+        if ( options->autoRaise && !isDesktop() &&
+             !isDock() && !isMenu() && workspace()->focusChangeEnabled() &&
+             workspace()->topClientOnDesktop() != this ) {
             delete autoRaiseTimer;
             autoRaiseTimer = new QTimer( this );
             connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );

@@ -50,7 +50,7 @@ public:
 
 protected:
     void resizeEvent( QResizeEvent * );
-    bool x11Event( XEvent * );		// X11 event
+    bool x11Event( XEvent * );          // X11 event
 
 private slots:
     void deferredResize();
@@ -105,15 +105,15 @@ public:
 
     // is the window in withdrawn state?
     bool isWithdrawn(){
-	return state == WithdrawnState;
+        return state == WithdrawnState;
     }
     // is the window in iconic state?
     bool isIconified(){
-	return state == IconicState;
+        return state == IconicState;
     }
     // is the window in normal state?
     bool isNormal(){
-	return state == NormalState;
+        return state == NormalState;
     }
 
     bool isActive() const;
@@ -213,6 +213,8 @@ public:
 
     void updateUserTime();
 
+  const QPoint gravitate( bool invert ) const;
+
 public slots:
     void iconify();
     void closeWindow();
@@ -235,7 +237,7 @@ protected:
     virtual void windowWrapperHideEvent( QHideEvent* ){}
     void enterEvent( QEvent * );
     void leaveEvent( QEvent * );
-    bool x11Event( XEvent * );		// X11 event
+    bool x11Event( XEvent * );          // X11 event
 
     virtual void activateLayout();
 
@@ -252,7 +254,7 @@ protected:
 
 
     enum MousePosition {
-	Nowhere, TopLeft , BottomRight, BottomLeft, TopRight, Top, Bottom, Left, Right, Center
+        Nowhere, TopLeft , BottomRight, BottomLeft, TopRight, Top, Bottom, Left, Right, Center
     };
 
     virtual MousePosition mousePosition( const QPoint& ) const;
@@ -276,7 +278,6 @@ private:
     QSize sizeForWindowSize( const QSize&, bool ignore_height = FALSE ) const;
     void getWmNormalHints();
     void fetchName();
-    void gravitate( bool invert );
 
     unsigned long userTime();
 
@@ -290,10 +291,10 @@ private:
     bool buttonDown;
     bool moveResizeMode;
     bool isMove() const {
-	return moveResizeMode && mode == Center;
+        return moveResizeMode && mode == Center;
     }
     bool isResize() const {
-	return moveResizeMode && !isMove();
+        return moveResizeMode && !isMove();
     }
     MousePosition mode;
     QPoint moveOffset;
@@ -346,7 +347,7 @@ private:
     static QCString staticWmCommand(WId);
     static QCString staticWmClientMachine(WId);
     static Window   staticWmClientLeader(WId);
-    
+
  private:
     ClientPrivate* d;
 
