@@ -31,7 +31,7 @@
 #include <kdialog.h>
 #include <kglobalsettings.h>
 #include <kseparator.h>
-#include <kshortcut.h>	// For KKeyNative::keyboardHasMetaKey()
+#include <kkeynative.h>	// For KKeyNative::keyboardHasWinKey()
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -499,7 +499,7 @@ void KActionsConfig::defaults()
   setComboText(coWin1,"Activate, raise and pass click");
   setComboText(coWin2,"Activate and pass click");
   setComboText(coWin3,"Activate and pass click");
-  setComboText(coAllKey, KKeyNative::keyboardHasMetaKey() ? "Meta" : "Alt");
+  setComboText(coAllKey, KKeyNative::keyboardHasWinKey() ? "Meta" : "Alt");
   setComboText (coAll1,"Move");
   setComboText(coAll2,"Toggle raise and lower");
   setComboText(coAll3,"Resize");
