@@ -1388,7 +1388,7 @@ static int nullErrorHandler(Display *, XErrorEvent *)
  */
 QCString Client::staticWindowRole(WId w)
     {
-    return getStringProperty(w, qt_window_role);
+    return getStringProperty(w, qt_window_role).lower();
     }
 
 /*!

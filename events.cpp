@@ -853,7 +853,7 @@ void Client::propertyNotifyEvent( XPropertyEvent* e )
             else if (e->atom == atoms->wm_client_leader )
                 getWmClientLeader();
             else if( e->atom == qt_window_role )
-                window_role = getStringProperty( window(), qt_window_role );
+                window_role = staticWindowRole( window());
             break;
         }
     }

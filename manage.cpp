@@ -25,7 +25,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 
 extern Time qt_x_time;
-extern Atom qt_window_role;
 
 namespace KWinInternal
 {
@@ -106,7 +105,7 @@ bool Client::manage( Window w, bool isMapped )
         }
     ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
 
-    window_role = getStringProperty( w, qt_window_role );
+    window_role = staticWindowRole( w );
     // first only read the caption text, so that setupWindowRules() can use it for matching,
     // and only then really set the caption using setCaption(), which checks for duplicates etc.
     // and also relies on rules already existing
