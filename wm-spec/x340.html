@@ -4,21 +4,27 @@
 >Window Manager Protocols</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.52"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.72
+"><LINK
 REL="HOME"
-TITLE="Extended Window Manager Hints"
 HREF="index.html"><LINK
 REL="PREVIOUS"
 TITLE="Application Window Properties"
-HREF="x137.html"><LINK
+HREF="x225.html"><LINK
 REL="NEXT"
 TITLE="Implementation notes"
-HREF="x216.html"></HEAD
+HREF="x351.html"></HEAD
 ><BODY
 CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
 ><DIV
 CLASS="NAVHEADER"
 ><TABLE
+SUMMARY="Header navigation table"
 WIDTH="100%"
 BORDER="0"
 CELLPADDING="0"
@@ -27,7 +33,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->Extended Window Manager Hints</TH
+></TH
 ></TR
 ><TR
 ><TD
@@ -35,7 +41,8 @@ WIDTH="10%"
 ALIGN="left"
 VALIGN="bottom"
 ><A
-HREF="x137.html"
+HREF="x225.html"
+ACCESSKEY="P"
 >Prev</A
 ></TD
 ><TD
@@ -48,7 +55,8 @@ WIDTH="10%"
 ALIGN="right"
 VALIGN="bottom"
 ><A
-HREF="x216.html"
+HREF="x351.html"
+ACCESSKEY="N"
 >Next</A
 ></TD
 ></TR
@@ -61,16 +69,16 @@ CLASS="SECT1"
 ><H1
 CLASS="SECT1"
 ><A
-NAME="AEN207"
->Window Manager Protocols</A
+NAME="AEN340"
+>6. Window Manager Protocols</A
 ></H1
 ><DIV
 CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="AEN209"
->_NET_WM_PING</A
+NAME="AEN342"
+>6.1. _NET_WM_PING</A
 ></H2
 ><P
 >This protocol allows the Window Manager to determine if the Client is still
@@ -85,23 +93,14 @@ client window.
 >A Window Manager can use this protocol at any time by sending a client message
 as follows:
 		</P
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="PROGRAMLISTING"
 >type = ClientMessage
-window = &#60;client window&#62;
+window = the respective client window
 message_type = WM_PROTOCOLS
 format = 32
 data.l[0] = _NET_WM_PING
-data.l[1] = &#60;timestamp&#62;</PRE
-></TD
-></TR
-></TABLE
+data.l[1] = timestamp</PRE
 ><P
 >A participating Client receiving this message MUST send it back to the root
 window immediately, by setting window = root, and calling XSendEvent.  The
@@ -112,6 +111,12 @@ to uniquely identify the ping.
 >The Window Manager MAY kill the Client (using _NET_WM_PID) if it fails to
 respond to this protocol within a reasonable time.
 		</P
+><P
+>See also the implementation notes on <A
+HREF="x351.html#KILLINGWINDOWS"
+>killing hung processes</A
+>.
+		</P
 ></DIV
 ></DIV
 ><DIV
@@ -119,6 +124,7 @@ CLASS="NAVFOOTER"
 ><HR
 ALIGN="LEFT"
 WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
 WIDTH="100%"
 BORDER="0"
 CELLPADDING="0"
@@ -129,7 +135,8 @@ WIDTH="33%"
 ALIGN="left"
 VALIGN="top"
 ><A
-HREF="x137.html"
+HREF="x225.html"
+ACCESSKEY="P"
 >Prev</A
 ></TD
 ><TD
@@ -138,6 +145,7 @@ ALIGN="center"
 VALIGN="top"
 ><A
 HREF="index.html"
+ACCESSKEY="H"
 >Home</A
 ></TD
 ><TD
@@ -145,7 +153,8 @@ WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
 ><A
-HREF="x216.html"
+HREF="x351.html"
+ACCESSKEY="N"
 >Next</A
 ></TD
 ></TR

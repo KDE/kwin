@@ -1,0 +1,648 @@
+<HTML
+><HEAD
+><TITLE
+>Implementation notes</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.72
+"><LINK
+REL="HOME"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Window Manager Protocols"
+HREF="x340.html"><LINK
+REL="NEXT"
+TITLE="References"
+HREF="x479.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x340.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x479.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN351"
+>7. Implementation notes</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN353"
+>7.1. Desktop/workspace model</A
+></H2
+><P
+>This spec assumes a desktop model that consists of one or more completely
+independent desktops which may or may not be larger than the screen area.
+When a desktop is larger than the screen it is left to the window manager if
+it will implement scrolling or paging.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN356"
+>7.2. File Manager desktop</A
+></H2
+><P
+>This spec suggests implementing the file manager desktop by mapping a
+desktop-sized window (no shape) to all desktops, with
+_NET_WM_WINDOW_TYPE_DESKTOP.  This makes the desktop focusable and greatly
+simplifies implementation of the file manager.  It is also faster than
+managing lots of small shaped windows. The file manager draws the background
+on this window.  There should be a root property with a window handle for use
+in applications that want to draw the background (xearth).
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN359"
+>7.3. Implementing enhanced support for application transient windows</A
+></H2
+><P
+>If the WM_TRANSIENT_FOR property is set to None or Root window, the window
+should be treated as a transient for all other windows in the same group.  It
+has been noted that this is a slight ICCCM violation, but as this behaviour is
+pretty standard for many toolkits and window managers, and is extremely
+unlikely to break anything, it seems reasonable to document it as standard.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="URGENCY"
+>7.4. Urgency</A
+></H2
+><P
+>	Dialog boxes should indicate their urgency level (information or warning) using the urgency bit in the WM_HINTS.flags property, as defined in the ICCCM.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NORESIZE"
+>7.5. Fixed size windows</A
+></H2
+><P
+>	Windows can indicate that they are non-resizable by setting minheight = maxheight and minwidth = maxwidth in the ICCCM WM_NORMAL_HINTS property.  The Window Manager MAY decorate such windows differently.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN368"
+>7.6. Pagers and Taskbars</A
+></H2
+><P
+>	This specification attempts to make reasonable provisions for WM independent pagers and taskbars.  Window Managers that require / desire additional functionality beyond what can be achieved using the mechanisms set out in this specification may choose to implement their own pagers, which communicates with the Window Manager using further, WM-specific hints, or some other means.
+	</P
+><P
+>        Pagers should decide whether to show a miniature version of a
+        window using the following guidelines:
+          <P
+></P
+><UL
+><LI
+><P
+>                If either _NET_WM_STATE_SKIP_PAGER or
+                _NET_WM_STATE_HIDDEN are set on a window, then the
+                pager should not show that window.
+              </P
+></LI
+><LI
+><P
+>                The pager may choose not to display windows with 
+                certain semantic types; this spec has no
+                recommendations, but common practice is to avoid 
+                displaying _NET_WM_WINDOW_TYPE_DOCK for example.
+              </P
+></LI
+><LI
+><P
+>                If the _NET_WM_STATE_SKIP_PAGER and
+                _NET_WM_STATE_HIDDEN hints are not present, and the
+                window manager claims to support _NET_WM_STATE_HIDDEN,
+                then the window should be shown if it's in either
+                NormalState or IconicState.
+              </P
+></LI
+><LI
+><P
+>                For window managers that do not support
+                _NET_WM_STATE_HIDDEN, the pager should 
+                not show windows in IconicState. These window 
+                managers are probably using an older version 
+                of this specification.
+              </P
+></LI
+></UL
+>
+        </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN381"
+>7.7. Window Movement</A
+></H2
+><P
+>Window manager implementors should refer to the ICCCM for definitive
+specifications of how to handle MapRequest and ConfigureRequest events.
+However, since these aspects of the ICCCM are easily misread, this
+document offers the following clarifications:
+	</P
+><P
+></P
+><UL
+><LI
+><P
+>Window managers MUST honour the win_gravity field of WM_NORMAL_HINTS
+   for both MapRequest _and_ ConfigureRequest events [1]
+		</P
+></LI
+><LI
+><P
+>Applications are free to change their win_gravity setting at any time
+		</P
+><P
+>If application changes its gravity then Window manager should adjust the
+reference point, so that client window will not move as the result.
+For example if client's gravity was NorthWestGravity and reference point
+was
+at the top-left corner of the frame window, then after change of gravity to
+the SouthEast reference point should be adjusted to point to the
+lower-right
+corner of the frame.
+		</P
+></LI
+><LI
+><P
+>When generating synthetic ConfigureNotify events, the position given
+   MUST be the top-left corner of the client window in relation to the
+   origin of the root window (i.e., ignoring win_gravity) [2]
+		</P
+></LI
+><LI
+><P
+>XMoveWindow(w,x,y) behaviour depends on the window gravity. Upon receiving a
+request from client application the Window Manager calculates a new reference
+point, based on the client window's own size, border width and gravity. For given client
+window dimentions (width, height) and border width (bw), the reference point will be
+placed at:
+		</P
+><DIV
+CLASS="INFORMALTABLE"
+><A
+NAME="AEN394"
+></A
+><P
+></P
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>Gravity:</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>ref_x:</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>ref_y:</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>StaticGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>NorthWestGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x-bw</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y-bw</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>NorthGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x+(width/2)</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y-bw</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>NorthEastGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x+width+bw</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y-bw</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>EastGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x+width+bw</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y+(height/2)</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>SouthEastGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x+width+bw</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y+height+bw</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>SouthGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x+(width/2)</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y+height+bw</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>SouthWestGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x-bw</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y+height+bw</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>WestGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x-bw</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y+(height/2)</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>CenterGravity</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>x+(width/2)</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>y+(height/2)</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+></DIV
+><P
+>The Window manager will use the reference point as calculated above,
+until next XMoveWindow request. The Window Manager will place frame decorations
+in the following position, based on the window gravity :
+		</P
+><P
+>StaticGravity:
+		</P
+><P
+>window's left top corner will be placed at (ref_x,ref_y)
+		</P
+><P
+>NorthWestGravity:
+		</P
+><P
+>window frame's left top corner will be placed at (ref_x,ref_y)
+		</P
+><P
+>NorthGravity:
+		</P
+><P
+>window frame's top side's center will be placed at (ref_x,ref_y)
+		</P
+><P
+>NorthEastGravity:
+		</P
+><P
+>window frame's right top corner will be placed at (ref_x,ref_y)
+		</P
+><P
+>EastGravity:
+		</P
+><P
+>window frame's right side's center will be placed at (ref_x,ref_y)
+		</P
+><P
+>SouthWestGravity:
+		</P
+><P
+>window frame's left bottom corner will be placed at (ref_x,ref_y)
+		</P
+><P
+>SouthGravity:
+		</P
+><P
+>window frame's bottom side's center will be placed at (ref_x,ref_y)
+		</P
+><P
+>SouthEastGravity:
+		</P
+><P
+>window frame's right bottom corner will be placed at (ref_x,ref_y)
+		</P
+><P
+>WestGravity:
+		</P
+><P
+>window frame's left side's center will be placed at (ref_x,ref_y)
+		</P
+><P
+>CenterGravity:
+		</P
+><P
+>window frame's center will be placed at (ref_x,ref_y)
+		</P
+></LI
+><LI
+><P
+>Implementation Note for Application developers:
+		</P
+><P
+>When client window is resized - its reference point does not move.
+So for example if window has SouthEastGravity and it is resized -
+the bottom-right corner of its frame will not move but instead
+top-left corner will be adjusted by the difference in size.
+		</P
+></LI
+><LI
+><P
+>Implementation Note for WM developers :
+		</P
+><P
+>when calculating reference point at the time of initial placement -
+initial window's width should be taken into consideration, as if it
+was the frame for this window.
+		</P
+></LI
+></UL
+><P
+>[1] ICCCM Version 2.0, &sect;4.1.2.3 and &sect;4.1.5
+	</P
+><P
+>[2] ICCCM Version 2.0, &sect;4.2.3
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN470"
+>7.8. Window-in-Window MDI</A
+></H2
+><P
+>	The authors of this specification acknowledge that there is no standard
+	method to allow the Window Manager to manage windows that are part of a
+	Window-in-Window MDI application.  Application authors are advised to
+	use some other form of MDI, or to propose a mechanism to be included in
+	a future revision of this specification.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="KILLINGWINDOWS"
+>7.9. Killing Hung Processes</A
+></H2
+><P
+>If processes fail to respond to the _NET_WM_PING protocol _NET_WM_PID may be
+used in combination with the ICCCM specified WM_CLIENT_MACHINE to 
+attempt to kill a process.
+		</P
+><P
+>WM_CLIENT_MACHINE must be set to the fully-qualified domain name of the client's
+host. This would normally be retrieved using gethostname(2).  When gethostname()
+is not available on the client's platform implementors may use the value of the
+nodename field of struct utsname as returned by uname(2).  An example of how to
+retrieve a value for WM_CLIENT_MACHINE:
+		</P
+><P
+>	<PRE
+CLASS="PROGRAMLISTING"
+>int net_get_hostname (char *buf, size_t maxlen)
+{
+#ifdef HAVE_GETHOSTNAME
+	if (buf == NULL) return 0;
+
+	gethostname (buf, maxlen);
+	buf [maxlen - 1] = '\0';
+
+	return strlen(buf);
+#else
+	struct utsname name;
+	size_t len;
+
+	if (buf == NULL) return 0;
+
+	uname (&#38;name);
+	len = strlen (name.nodename);
+
+	if (len &#62;= maxlen) len = maxlen - 1;
+	strncpy (buf, name.nodename, len);
+	buf[len] = '\0';
+
+	return len;
+#endif
+}</PRE
+>
+		</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x340.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x479.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Window Manager Protocols</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>References</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

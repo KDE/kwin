@@ -1,0 +1,496 @@
+<HTML
+><HEAD
+><TITLE
+>Non-ICCCM features</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.72
+"><LINK
+REL="HOME"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+HREF="index.html"><LINK
+REL="NEXT"
+TITLE="Root Window Properties (+Related Messages)"
+HREF="x107.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="index.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x107.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN24"
+>2. Non-ICCCM features</A
+></H1
+><P
+>There is a number of window management features or behaviours which are 
+not specified in the ICCCM, but are commonly met in modern Window Managers and Desktop Environments.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN27"
+>2.1. Additional States</A
+></H2
+><P
+>The ICCCM allows Window Managers to implement additional window states, which will 
+appear to clients as substates of NormalState and IconicState.  Two 
+commonly met examples are Maximized and Shaded.  A Window Manager may implement these
+as proper substates of NormalState and IconicState, or it may treat them 
+as independent flags, allowing e.g. a maximized window to be iconified
+and to re-appear as maximized upon de-iconification.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN30"
+>2.1.1. Maximization</A
+></H3
+><P
+>Maximization is a very old feature of Window Managers.  There was even a ZoomedState
+in early ICCCM drafts.  Maximizing a window should give it as much of the
+screen area as possible (this may not be the full screen area, but only
+a smaller 'workarea', since the Window Manager may have reserved certain areas for other 
+windows).  A Window Manager is expected to remember the geometry of a maximized window 
+and restore it upon de-maximization.  Modern Window Managers typically allow separate 
+horizontal and vertical maximization.</P
+><P
+>With the introduction of the Xinerama extension in X11 R6.4, maximization
+has become more involved.  Xinerama allows a screen to span multiple 
+monitors in a freely configurable geometry.  In such a setting, maximizing 
+a window would ideally not grow it to fill the whole screen, but only the 
+monitor it is shown on.  There are of course borderline cases for windows 
+crossing monitor boundaries, and 'real' maximization to the full screen may 
+sometimes be useful.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN34"
+>2.1.2. Shading</A
+></H3
+><P
+>Some Desktop Environments offer shading (also known as rollup) as an alternative to 
+iconfication. A shaded window typically shows only the titlebar, the client 
+window is hidden, thus shading is not useful for windows which are not 
+decorated with a titlebar.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN37"
+>2.2. Modality</A
+></H2
+><P
+>The Window Manager _TRANSIENT_FOR hint of the ICCCM allows clients to specify that a 
+toplevel window may be closed before the client finishes.  A typical example 
+of a transient window is a dialog.  Some dialogs can be open for a long time,  
+while the user continues to work in the main window.  Other dialogs have to be 
+closed before the user can continue to work in the main window.  This property 
+is called modality.  While clients can implement modal windows in an ICCCM 
+compliant way using the globally active input model, some Window Managers offer support 
+for handling modality.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="LARGEDESKS"
+>2.3. Large Desktops</A
+></H2
+><P
+>The Window Manager may offer to arrange the managed windows on a desktop that is 
+larger than the root window. The screen functions as a viewport on this large 
+desktop. Different policies regarding the positioning of the viewport on the 
+desktop can be implemented:  The Window Manager may only allow to change the viewport 
+position in increments of the screen size (paging) or it may allow arbitrary 
+positions (scrolling).</P
+><P
+>To fulfill the ICCCM principle that clients should behave the same
+regardless wether a Window Manager is running or not, Window Managers which 
+implement large desktops must interpret all client-provided geometries with 
+respect to the current viewport.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="LARGEDESKSIMPL"
+>2.3.1. Implementation note</A
+></H3
+><P
+>There are two options for implementing a large desktop: The first is to 
+keep the managed windows (or, if reparenting, their frames) as children
+of the root window.  Moving the viewport is achieved by moving all managed
+windows in the opposite direction.</P
+><P
+>The second alternative is to reparent all managed windows to a dedicated 
+large window (somewhat inappropriately called a 'virtual root').  Moving 
+the viewport is then achieved by moving the virtual root in the opposite 
+direction.</P
+><P
+>Both alternatives are completely ICCCM compliant, although the second one 
+may be somewhat problematic for clients trying to figure out the Window Manager decorations
+around their toplevel windows and for clients trying to draw background 
+images on the root window.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN49"
+>2.4. Sticky windows</A
+></H2
+><P
+>A Window Manager which implements a large desktop typically offers a way for the user 
+to make certain windows 'stick to the glass', i.e. these windows will stay 
+at the same position on the screen when the viewport is moved.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN52"
+>2.5. Virtual Desktops</A
+></H2
+><P
+>Most X servers have only a single screen.  The Window Manager may virtualize this 
+resource and offer multiple so-called 'virtual desktops', of which only one 
+can be shown on the screen at a time.  There is some variation among the 
+features of virtual desktop implementations.  There may be a fixed number 
+of desktops, or new ones may be created dynamically.  The size of the desktops 
+may be fixed or variable.  If the desktops are larger than the root window, 
+their viewports (see <A
+HREF="x24.html#LARGEDESKS"
+>Section 2.3</A
+>) may be independent or forced to be at the same 
+position.</P
+><P
+>A Window Manager which implements virtual desktops generally offers a way for the user
+to move clients between desktops.  Clients may be allowed to occupy more than
+one desktop simultaneously.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN57"
+>2.5.1. Implementation note</A
+></H3
+><P
+>There are at least two options for implementing virtual desktops.  
+The first is to use multiple virtual roots (see <A
+HREF="x24.html#LARGEDESKSIMPL"
+>Section 2.3.1</A
+>) and change the current 
+desktop by manipulating the stacking order of the virtual roots.  This is 
+completely ICCCM compliant, but has the issues outlined in <A
+HREF="x24.html#LARGEDESKSIMPL"
+>Section 2.3.1</A
+></P
+><P
+>The second option is to keep all managed windows as children of the root 
+window and unmap the frames of those which are not on the current
+desktop. Unmapped windows should be placed in IconicState, according to 
+the ICCCM. Windows which are actually iconified or minimized 
+should have the _NET_WM_STATE_HIDDEN property set, to 
+communicate to Pagers that the window should not be represented as 
+"onscreen."</P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN63"
+>2.6. Pagers</A
+></H2
+><P
+>A pager offers a different UI for window management tasks.  It shows a 
+miniature view of the desktop(s) representing managed windows by small 
+rectangles and allows the user to initiate various Window Manager actions by manipulating 
+these representations.  Typically offered actions are activation (see <A
+HREF="x24.html#ACTIVATION"
+>Section 2.8</A
+>), 
+moving, restacking, iconification, maximization and closing.  On a large 
+desktop, the pager may offer a way to move the viewport.  On virtual desktops, 
+the pager may offer ways to move windows between desktops and to change the 
+current desktop.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN67"
+>2.7. Taskbars</A
+></H2
+><P
+>A taskbar offers another UI for window management tasks.  It typically 
+represents client windows as a list of buttons labelled with the window
+titles and possibly icons.  Pressing a button initiates a Window Manager action on the
+represented window, typical actions being activation and iconification. 
+In environments with a taskbar, icons are often considered inappropriate,
+since the iconified windows are already represented in the taskbar.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="ACTIVATION"
+>2.8. Activation</A
+></H2
+><P
+>In the X world, activating a window means to give it the input focus.
+This may not be possible if the window is unmapped, because it is on a
+different desktop.  Thus, activating a window may involve additional steps
+like moving it to the current desktop (or changing to the desktop the window
+is on), deiconifying it or raising it.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN73"
+>2.9. Animated iconification</A
+></H2
+><P
+>Some Window Managers display some form of animation when (de-)iconifying a window.
+This may be a line drawing connecting the corners of the window with
+the corners of the icon or the window may be opaquely moved and resized 
+on some trajectory joining the window location and the icon location.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN76"
+>2.10. Window-in-window MDI</A
+></H2
+><P
+>Window-in-window MDI is a multiple document interface known from MS
+Windows platforms. Programs employing it have a single top-level window
+which contains a workspace which contains the subwindows for the open
+documents. These subwindows are decorated with Window Manager frames and can be
+manipulated within their parent window just like ordinary top-level
+windows on the root window.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN79"
+>2.11. Layered stacking order</A
+></H2
+><P
+>Some Window Managers keep the toplevel windows not in a single linear stack,
+but subdivide the stack into several layers.  There is a lot of variation 
+among the features of layered stacking order implementations. The number of
+layers may or may not be fixed. The layer of a toplevel window may be explicit
+and directly modifyable or derived from other properties of the window, e.g. 
+the <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>type</I
+></SPAN
+> of the window. The stacking order may or may not
+be strict, i.e. not allow the user to raise or lower windows beyond their 
+layer.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN83"
+>2.12. Scope of this spec</A
+></H2
+><P
+>This spec tries to address the following issues:</P
+><P
+></P
+><UL
+><LI
+><P
+>Allow clients to influence their initial state with respect 
+to maximization, shading, stickyness, desktop, stacking order.</P
+></LI
+><LI
+><P
+>Improve the Window Managers ability to vary window 
+decorations and maintain the stacking order by allowing clients to hint the 
+Window Manager about the type of their windows.</P
+></LI
+><LI
+><P
+>Enable pagers and taskbars to be implemented as separate 
+clients and allow them to work with any compliant Window Manager.</P
+></LI
+></UL
+><P
+>This spec doesn't cover any of the following:</P
+><P
+></P
+><UL
+><LI
+><P
+>Other IPC mechanisms like ICE or Corba.</P
+></LI
+><LI
+><P
+>Window Manager configuration.</P
+></LI
+><LI
+><P
+>Window Manager documentation.</P
+></LI
+><LI
+><P
+>Clients appearing on a proper subset of desktops.</P
+></LI
+><LI
+><P
+>Window-in-window MDI.</P
+></LI
+></UL
+><P
+>The Window Manager is supposed to be in charge of window management 
+policy, so that there is consistent behaviour on the user's screen no matter 
+who wrote the clients.</P
+><P
+>The spec offers a lot of external control about Window Manager actions.  
+This is intended mainly to allow pagers, taskbars and similar Window Manager 
+UIs to be implemented as separate clients.  "Ordinary" clients shouldn't use 
+these except maybe in response to a direct user request (i.e. setting a 
+config option to start maximized or specifying a -desk n cmdline 
+argument).</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x107.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Root Window Properties (+Related Messages)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
