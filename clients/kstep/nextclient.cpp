@@ -256,7 +256,7 @@ void NextClient::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
 
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
+    if ( isVisibleToTLW() && !testWFlags( WStaticContents )) {
         QPainter p( this );
 	QRect t = titlebar->geometry();
 	t.setTop( 0 );
