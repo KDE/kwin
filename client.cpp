@@ -36,6 +36,8 @@ extern Time kwin_time;
 
 static bool resizeHorizontalDirectionFixed = FALSE;
 static bool resizeVerticalDirectionFixed = FALSE;
+static bool blockAnimation = FALSE;
+
 
 static QRect* visible_bound = 0;
 
@@ -685,7 +687,11 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
 	manage();
 	break;
     case IconicState:
-	show();
+	// only show window if we're on current desktop
+	if ( isOnDesktop( workspace()->currentDesktop() ) )
+	    show();
+	else
+	    setMappingState( NormalState );
 	break;
     case NormalState:
 	// only show window if we're on current desktop
@@ -856,8 +862,24 @@ bool Client::propertyNotify( XPropertyEvent& e )
 */
 bool Client::clientMessage( XClientMessageEvent& e )
 {
-    if ( e.message_type == atoms->wm_change_state) {
-	if ( e.data.l[0] == IconicState && isNormal() )
+    
+    if ( e.message_type == atoms->kde_wm_change_state ) {
+	if ( e.data.l[0] == IconicState && isNormal() ) {
+	    if ( e.data.l[1] )
+		blockAnimation = TRUE;
+	    iconify();
+	} else if ( e.data.l[1] == NormalState && isIconified() ) {
+	    if ( e.data.l[1] )
+		blockAnimation = TRUE;
+	    // only show window if we're on current desktop
+	    if ( isOnDesktop( workspace()->currentDesktop() ) )
+		show();
+	    else
+		setMappingState( NormalState );
+	}
+	blockAnimation = FALSE;
+    } else if ( e.message_type == atoms->wm_change_state) {
+	if ( e.data.l[0] == IconicState && isNormal() ) 
 	    iconify();
 	return TRUE;
     }
@@ -2159,6 +2181,8 @@ QRect Client::adjustedClientArea( const QRect& area ) const
 
 void Client::animateIconifyOrDeiconify( bool iconify)
 {
+    if ( blockAnimation )
+	return;
     // the function is a bit tricky since it will ensure that an
     // animation action needs always the same time regardless of the
     // performance of the machine or the X-Server.

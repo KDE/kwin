@@ -36,6 +36,9 @@ Atoms::Atoms()
     atoms[n] = &net_wm_context_help;
     names[n++] = (char *) "_NET_WM_CONTEXT_HELP";
 
+    atoms[n] = &kde_wm_change_state;
+    names[n++] = (char *) "_KDE_WM_CHANGE_STATE";
+    
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
 	*atoms[i] = atoms_return[i];

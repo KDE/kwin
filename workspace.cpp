@@ -1648,15 +1648,15 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 		(*it)->hide();
 	    }
 	}
+	current_desktop = new_desktop;
+	rootInfo->setCurrentDesktop( current_desktop ); // propagate befor the shows below
+	
 	for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	    if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
 		(*it)->show();
 	    }
 	}
     }
-    current_desktop = new_desktop;
-
-    rootInfo->setCurrentDesktop( current_desktop );
 
     // restore the focus on this desktop
     block_focus = FALSE;
@@ -2017,7 +2017,7 @@ void Workspace::clientPopupAboutToShow()
 
 /*!
   Sends client \a c to desktop \a desk.
-  
+
   Takes care of transients as well.
  */
 void Workspace::sendClientToDesktop( Client* c, int desk )
@@ -2040,7 +2040,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk )
 
 /*!
   Sends the popup client to desktop \a desk
-  
+
   Internal slot for the window operation menu
  */
 void Workspace::sendToDesktop( int desk )
@@ -2051,7 +2051,7 @@ void Workspace::sendToDesktop( int desk )
 	popup_client->setSticky( !popup_client->isSticky() );
 	return;
     }
-    
+
     sendClientToDesktop( popup_client, desk );
 
 }
