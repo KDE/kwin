@@ -39,7 +39,6 @@ class RulesWidget
         void setRules( Rules* r );
         Rules* rules() const;
         bool finalCheck();
-        bool setWindow( WId w );
     signals:
         void changed( bool state );
     protected slots:
@@ -90,7 +89,7 @@ class RulesDialog
     Q_OBJECT
     public:
         RulesDialog( QWidget* parent = NULL, const char* name = NULL );
-        Rules* edit( Rules* r, WId w = 0 );
+        Rules* edit( Rules* r );
     protected:
         virtual void accept();
     private:

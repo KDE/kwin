@@ -80,7 +80,7 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
 //    QCString extrarole = ""; // TODO
     QCString machine = info.clientMachine().lower();
     Rules* best_match = NULL;
-    int match_quality = 0; // 0 - no, 1 - generic windowrole or title, 2 - exact match
+    int match_quality = 0;
     for( QValueList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
@@ -120,7 +120,7 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
             if( bits == 1 )
                 quality += 2;
             }
-        if( generic )
+        if( generic ) // ignore generic rules, use only the ones that are for this window
             continue;
         if( !rule->matchType( type )
             || !rule->matchRole( role )
@@ -133,7 +133,51 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
             match_quality = quality;
             }
         }
-    return best_match;
+    if( best_match != NULL )
+        return best_match;
+    Rules* ret = new Rules;
+    ret->description = i18n( "Settings for %1" ).arg( wmclass_class );
+    if( type == NET::Unknown )
+        ret->types = NET::NormalMask;
+    else
+        ret->types = 1 << type; // convert type to its mask
+    ret->title = title; // set, but make unimportant
+    ret->titlematch = Rules::UnimportantMatch;
+//    ret->extrarole = extra; TODO
+    ret->extrarolematch = Rules::UnimportantMatch;
+    if( !role.isEmpty()
+        && role != "unknown" && role != "unnamed" ) // Qt sets this if not specified
+        {
+        ret->wmclasscomplete = false;
+        ret->wmclass = wmclass_class;
+        ret->wmclassmatch = Rules::ExactMatch;
+        ret->windowrole = role;
+        ret->windowrolematch = Rules::ExactMatch;
+        }
+    else // no role set
+        {
+        if( wmclass_name != wmclass_class )
+            {
+            ret->wmclasscomplete = true;
+            ret->wmclass = wmclass_name + ' ' + wmclass_class;
+            ret->wmclassmatch = Rules::ExactMatch;
+            }
+        else
+            {
+            // This is a window that has no role set, and both components of WM_CLASS
+            // match (possibly only differing in case), which most likely means either
+            // the application doesn't give a damn about distinguishing its various
+            // windows, or it's an app that uses role for that, but this window
+            // lacks it for some reason. Use non-complete WM_CLASS matching, also
+            // include window title in the matching, and pray it causes many more positive
+            // matches than negative matches.
+            ret->titlematch = Rules::ExactMatch;
+            ret->wmclasscomplete = false;
+            ret->wmclass = wmclass_class;
+            ret->wmclassmatch = Rules::ExactMatch;
+            }
+        }
+    return ret;
     }
 
 static int edit( Window wid )
@@ -143,22 +187,13 @@ static int edit( Window wid )
     Rules* orig_rule = findRule( rules, wid );
     RulesDialog dlg;
     // dlg.edit() creates new Rules instance if edited
-    Rules* edited_rule = dlg.edit( orig_rule, wid );
-    if( edited_rule == NULL ) // cancelled
-        return 0;
-    if( edited_rule->isEmpty())
+    Rules* edited_rule = dlg.edit( orig_rule );
+    if( edited_rule == NULL || edited_rule->isEmpty())
         {
-        if( orig_rule == NULL )
-            { // new, without any settings
+        rules.remove( orig_rule );
+        delete orig_rule;
+        if( orig_rule != edited_rule )
             delete edited_rule;
-            return 0;
-            }
-        else
-            { // removed all settings from already existing
-            rules.remove( orig_rule );
-            delete orig_rule;
-            delete edited_rule;
-            }
         }
     else if( edited_rule != orig_rule )
         {

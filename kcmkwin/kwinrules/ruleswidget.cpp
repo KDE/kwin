@@ -492,16 +492,6 @@ void RulesWidget::detectClicked()
     detect_dlg->detect( 0 );
     }
 
-bool RulesWidget::setWindow( WId w )
-    {
-    assert( detect_dlg == NULL );
-    detect_dlg_ok = false;
-    detect_dlg = new DetectDialog;
-    connect( detect_dlg, SIGNAL( detectionDone( bool )), this, SLOT( detected( bool )));
-    detect_dlg->detect( w );
-    return detect_dlg_ok;
-    }
-
 #define GENERIC_PREFILL( var, func, info, uimethod ) \
     if( !enable_##var->isChecked()) \
         { \
@@ -616,13 +606,10 @@ RulesDialog::RulesDialog( QWidget* parent, const char* name )
     setMainWidget( widget );
     }
 
-Rules* RulesDialog::edit( Rules* r, WId w )
+Rules* RulesDialog::edit( Rules* r )
     {
     rules = r;
     widget->setRules( rules );
-    if( rules == NULL && w != 0 ) // creating new one, read data from window
-        if( !widget->setWindow( w ))
-            return rules;
     exec();
     return rules;
     }
