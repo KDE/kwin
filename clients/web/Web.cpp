@@ -368,51 +368,39 @@ Web::_createButtons()
   leftButtonList_   .clear();
   rightButtonList_  .clear();
 
-  QValueList<ButtonType> buttonSetupLeft, buttonSetupRight;
-
-  KConfig c("kwinwebrc");
-
-  QStringList buttonList;
-
-  if (c.hasGroup("Buttons"))
+  QString buttons = options->titleButtonsLeft() + "|" + options->titleButtonsRight();
+  QList<WebButton> *buttonList = &leftButtonList_;
+  for (unsigned int i = 0; i < buttons.length(); ++i)
   {
-    c.setGroup("Buttons");
+    WebButton * tb = 0;
+    switch (buttons[i].latin1())
+    {
+      case 'S': // Sticky
+        tb = _createButton("Sticky", this);
+        break;
 
-    buttonList = c.readListEntry("Layout");
-  }
-  else
-  {
-    buttonList << "Iconify" << "Sticky";
+      case 'H': // Help
+        tb = _createButton("Help", this);
+        break;
 
-    if (providesContextHelp())
-      buttonList << "Help";
+      case 'I': // Minimize
+        tb = _createButton("Iconify", this);
+        break;
 
-    buttonList << "Title";
+      case 'A': // Maximize
+        tb = _createButton("Maximize", this);
+        break;
 
-    buttonList << "Maximize" << "Close";
-  }
+      case 'X': // Close
+        tb = _createButton("Close", this);
+        break;
 
-  QStringList::ConstIterator it(buttonList.begin());
-
-  for (; it != buttonList.end(); ++it)
-  {
-    QString s(*it);
-
-    if ("Title" == s)
-      break; // Move to right-side buttons.
-
-    WebButton * tb = _createButton(*it, this);
-
+      case '|':
+        buttonList = &rightButtonList_;
+        break;
+    }
     if (0 != tb)
-      leftButtonList_.append(tb);
-  }
-
-  for (; it != buttonList.end(); ++it)
-  {
-    WebButton * tb = _createButton(*it, this);
-
-    if (0 != tb)
-      rightButtonList_.append(tb);
+      buttonList->append(tb);
   }
 
   if (!leftButtonList_.isEmpty())
