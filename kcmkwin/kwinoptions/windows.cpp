@@ -488,7 +488,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
 
-    xineramaBox = new QVButtonGroup(i18n("Multiple monitor support"), this);
+    xineramaBox = new QVButtonGroup(i18n("Multiple Monitor Support"), this);
     xineramaBox->setEnabled(QApplication::desktop()->isVirtualDesktop());
     xineramaEnable = new QCheckBox(i18n("Enable multiple monitor support"), xineramaBox);
     QWhatsThis::add(xineramaEnable, i18n("Enable support for multiple monitors merged to form a single desktop."));
