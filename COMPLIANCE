@@ -1,0 +1,152 @@
+W A R N I N G: 
+--------------
+This document is a work in progress and is in no way complete or accurate!
+Its current purpose is in aiding the KWin NetWM audit for a future KWin release.
+
+NetWM Compliance Document:
+==========================
+
+Listed below are all the NetWM (or EWM) hints decided upon on freedesktop.org 
+(as of version 1.3draft, Nov 27, 2002) and KWin's current level of 
+compliance with the spec. Some parts also involve the pager and clients which
+this document will cater for as well where applicable.
+
+If you modify the level of NetWM compliance (via modification of kwin/*,
+kdecore/netwm.* or kdecore/kwin.* etc.), or notice any new hints that
+were added after version 1.2, please modify this document appropriately.
+Properties are ordered in the table in the order they are found in the 
+specification. To list any important notes regarding a property, just 
+add them as follows:
+
+_NET_NUMBER_OF_DESKTOPS		root window property		done
+        +----------------------------------------------------------------+
+	| This property SHOULD be updated by the Window Manager to 	 |
+	| indicate the number of virtual desktops. KWin DOES update this |
+	| property when the pager changes the number of desktops.	 |
+	+----------------------------------------------------------------+
+
+If you have any questions regarding the specification, feel free to ask on the KWin 
+mailing list <kwin@kde.org>, or on the Window Manager Spec list <wm-spec-list@gnome.org>.
+  -- Karol <kszwed@kde.org>
+
+
+Property Name			Type				Compliance
+==========================================================================
+
+Root Window Properties (and Related Messages):
+
+_NET_SUPPORTED			root window property		partial
+_NET_CLIENT_LIST		root window property		
+_NET_NUMBER_OF_DESKTOPS		root window property + message	complete
+_NET_DESKTOP_GEOMETRY		root window property + message
+_NET_DESKTOP_VIEWPORT		root window property + message
+_NET_CURRENT_DESKTOP		root window property + message
+_NET_DESKTOP_NAMES		root window property		
+_NET_ACTIVE_WINDOW		root window property + message
+_NET_WORKAREA			root window property	
+_NET_SUPPORTING_WM_CHECK	root window property
+_NET_VIRTUAL_ROOTS		root window property		
+_NET_DESKTOP_LAYOUT (pager)	root window property
+_NET_SHOWING_DESKTOP		root window property + message
+
+Other Root Window Messages:
+
+_NET_CLOSE_WINDOW		root window message		
+_NET_MOVERESIZE_WINDOW		root window message		
+_NET_WM_MOVERESIZE		root window message		
+
+Application Window Properties:
+
+_NET_WM_NAME			window property			
+_NET_WM_VISIBLE_NAME		window property			
+_NET_WM_ICON_NAME		window property			
+_NET_WM_VISIBLE_ICON_NAME	window property			
+_NET_WM_DESKTOP			window property + message	
+_NET_WM_WINDOW_TYPE		window property			
+  _NET_WM_WINDOW_TYPE_DESKTOP	property value (atom)		
+  _NET_WM_WINDOW_TYPE_DOCK	property value (atom)		
+  _NET_WM_WINDOW_TYPE_TOOLBAR	property value (atom)		
+  _NET_WM_WINDOW_TYPE_MENU	property value (atom)		
+  _NET_WM_WINDOW_TYPE_UTILITY	property value (atom)		nil
+  _NET_WM_WINDOW_TYPE_SPLASH	property value (atom)		nil
+  _NET_WM_WINDOW_TYPE_DIALOG	property value (atom)
+  _NET_WM_WINDOW_TYPE_NORMAL	property value (atom)		
+_NET_WM_STATE			window property + message			
+  _NET_WM_STATE_MODAL		property value (atom)		
+  _NET_WM_STATE_STICKY		property value (atom)		
+  _NET_WM_STATE_MAXIMIZED_VERT	property value (atom)		
+  _NET_WM_STATE_MAXIMIZED_HORZ	property value (atom)		
+  _NET_WM_STATE_SHADED		property value (atom)		
+  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)		
+  _NET_WM_STATE_SKIP_PAGER	property value (atom)		
+  _NET_WM_STATE_HIDDEN		property value (atom)		
+  _NET_WM_STATE_FULLSCREEN	property value (atom)		
+  _NET_WM_STATE_ABOVE		property value (atom)		
+  _NET_WM_STATE_BELOW		property value (atom)		
+_NET_WM_ALLOWED_ACTIONS		window property			
+  _NET_WM_ACTION_MOVE		property value (atom)		
+  _NET_WM_ACTION_RESIZE		property value (atom)		
+  _NET_WM_ACTION_MINIMIZE	property value (atom)		
+  _NET_WM_ACTION_MAXIMIZE_VERT	property value (atom)		
+  _NET_WM_ACTION_MAXIMIZE_HORZ	property value (atom)		
+  _NET_WM_ACTION_SHADE		property value (atom)		
+  _NET_WM_ACTION_STICK		property value (atom)		
+  _NET_WM_ACTION_FULLSCREEN	property value (atom)		
+  _NET_WM_ACTION_CHANGE_DESKTOP	property value (atom)		
+  _NET_WM_ACTION_CLOSE		property value (atom)		
+_NET_WM_STRUT			window property			
+_NET_WM_ICON_GEOMETRY		window property
+_NET_WM_ICON			window property			
+_NET_WM_PID			window property			
+	+----------------------------------------------------------------+
+	| The ICCCM specified property WM_CLIENT_MACHINE must be set to  |
+	| a fully qualified domain name of client's host to allow the WM |
+	| to kill windows that do not respond to a _NET_WM_PING		 |
+	+----------------------------------------------------------------+
+_NET_WM_HANDLED_ICONS		window property
+
+Window Manager Protocols:
+
+_NET_WM_PING			window property + message	
+===========================================================================
+
+
+KDE-specific extensions (for completeness):
+
+Property Name				Type
+==========================================================================
+_KDE_WM_CHANGE_STATE			root window message
+_KDE_NET_SYSTEM_TRAY_WINDOWS		root window property
+_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR	window property
+_KDE_NET_WM_FRAME_STRUT			window property
+_KDE_NET_WM_WINDOW_TYPE_OVERRIDE	window property
+_KDE_NET_WM_WINDOW_TYPE_TOPMENU		window property
+==========================================================================
+
+
+Inter-Client Communication Conventions Manual (ICCCM) specs (for completeness):
+
+Property Name		Type				Contents / Format
+==========================================================================
+
+Client properties:
+
+WM_NAME			window property			String / 8
+WM_ICON_NAME		window property			Text
+WM_NORMAL_HINTS		window property			Window / 32
+WM_HINTS		window property			WM_HINTS / 32
+WM_CLASS		window property			Text
+WM_TRANSIENT_FOR	window property			WM_ICON_SIZE / 32
+WM_PROTOCOLS		window property			Atom / 32
+WM_COLORMAP_WINDOWS	top-level window property	WM_STATE / 32
+WM_CLIENT_MACHINE	window property			Window / 32
+WM_STATE				
+WM_CLIENT_LEADER	window property			Window / 32
+WM_CLIENT_ROLE		window property			String / 8
+
+Window manager properties:
+
+WM_STATE		window property			WM_STATE / 8?
+WM_ICON_SIZE		window property			WM_ICON_SIZE / 8?
+==========================================================================
+
