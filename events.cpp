@@ -1239,8 +1239,8 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
             finishMoveResize( false );
             // mouse position is still relative to old Client position, adjust it
             QPoint mousepos( x_root - x, y_root - y );
-                mode = mousePosition( mousepos );
-                setCursor( mode );
+            mode = mousePosition( mousepos );
+            setCursor( mode );
             }
         }
     return true;

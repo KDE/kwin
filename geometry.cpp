@@ -1273,15 +1273,33 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
     if( !unrestrictedMoveResize )
         {
-        int left_overlap = width() - border_left - 100;
-        int right_overlap = width() - border_right - 100;
-        int top_overlap = 0;
-        int bottom_overlap = height() - border_top;
+        // width/height change with opaque resizing, use the initial ones
+        int init_width = initialMoveResizeGeom.width(); 
+        int init_height = initialMoveResizeGeom.height();
+        // how much must remain visible when moved away in that direction
+        const int left_limit = 100 + border_right;
+        const int right_limit = 100 + border_left;
+        const int top_limit = init_height;
+        const int bottom_limit = border_top;
+        int left_overlap = KMAX( init_width - left_limit, 0 );
+        int right_overlap = KMAX( init_width - right_limit, 0 );
+        int top_overlap = KMAX( init_height - top_limit, 0 );
+        int bottom_overlap = KMAX( init_height - bottom_limit, 0 );
         // 'pp' is top left corner, 'p' is bottom right corner
-        pp.setX( QMIN( desktopArea.right() + right_overlap - width(), QMAX( desktopArea.left() - left_overlap, pp.x())));
-        pp.setY( QMIN( desktopArea.bottom() + bottom_overlap - height(), QMAX( desktopArea.top() - top_overlap, pp.y())));
-        p.setX( QMIN( desktopArea.right() + right_overlap, QMAX( desktopArea.left() - left_overlap + width(), p.x())));
-        p.setY( QMIN( desktopArea.bottom() + bottom_overlap, QMAX( desktopArea.top() - top_overlap + height(), p.y())));
+        if( mode == Center ) // moving
+            {
+            pp.setX( KMIN( desktopArea.right() + right_overlap - init_width,
+                KMAX( desktopArea.left() - left_overlap, pp.x())));
+            pp.setY( KMIN( desktopArea.bottom() + bottom_overlap - init_height,
+                KMAX( desktopArea.top() - top_overlap, pp.y())));
+            }
+        else
+            { // resizing
+            pp.setX( KMAX( desktopArea.left() - left_overlap, pp.x()));
+            pp.setY( KMAX( desktopArea.top() - top_overlap, pp.y()));
+            p.setX( KMIN( desktopArea.right() + right_overlap, p.x()));
+            p.setY( KMIN( desktopArea.bottom() + bottom_overlap, p.y()));
+            }
         }
 
     QSize mpsize( geometry().right() - pp.x() + 1, geometry().bottom() - pp.y() + 1 );
