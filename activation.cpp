@@ -339,10 +339,16 @@ void Workspace::requestFocus( Client* c, bool force )
 void Workspace::clientHidden( Client* c )
     {
     assert( !c->isShown( true ) || !c->isOnCurrentDesktop());
+    activateNextClient( c );
+    }
+
+// deactivates 'c' and activates next client    
+void Workspace::activateNextClient( Client* c )
+    {
+    // if 'c' is not the active or the to-become active one, do nothing
     if( !( c == active_client
             || ( should_get_focus.count() > 0 && c == should_get_focus.last())))
         return;
-
     if( popup )
         popup->close();
     if( c == active_client )

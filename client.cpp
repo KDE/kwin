@@ -672,6 +672,7 @@ void Client::setShade( ShadeMode mode )
     if( shade_mode == mode )
         return;
     bool was_shade = isShade();
+    ShadeMode was_shade_mode = shade_mode;
     shade_mode = mode;
     if( was_shade == isShade())
         return; // no real change in shaded state
@@ -719,7 +720,12 @@ void Client::setShade( ShadeMode mode )
         shade_geometry_change = false;
         plainResize( s );
         if( isActive())
-            workspace()->focusToNull();
+            {
+            if( was_shade_mode == ShadeHover )
+                workspace()->activateNextClient( this );
+            else
+                workspace()->focusToNull();
+            }
         }
     else 
         {
