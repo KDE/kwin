@@ -25,11 +25,15 @@
 
 #include "../../client.h"
 
+class QSpacerItem;
+
 namespace RiscOS
 {
 
-class TitleBar;
-class ResizeBar;
+class LowerButton;
+class CloseButton;
+class IconifyButton;
+class MaximiseButton;
 
 class Manager : public Client
 {
@@ -40,10 +44,6 @@ class Manager : public Client
     Manager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
     ~Manager();
 
-    void setShade(bool);
-
-    void fakeMouseEvent(QMouseEvent *, QWidget *);
-    
   signals:
 
     void maximiseChanged(bool);
@@ -62,9 +62,8 @@ class Manager : public Client
     void maximizeChange(bool);
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
-    void activateLayout();
-    void mouseDoubleClickEvent( QMouseEvent * );
-    
+    void mouseDoubleClickEvent(QMouseEvent *);
+
   protected slots:
 
     void captionChange(const QString &);
@@ -72,12 +71,13 @@ class Manager : public Client
 
   private:
 
-    void _updateDisplay();
-    void _updateLayout();
-   
-    TitleBar * titleBar_;
-    ResizeBar * resizeBar_;
+    LowerButton * lower_;
+    CloseButton * close_;
 
+    IconifyButton * iconify_;
+    MaximiseButton * maximise_;
+
+    QSpacerItem * titleSpacer_;
 };
 
 } // End namespace

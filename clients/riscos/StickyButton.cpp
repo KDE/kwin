@@ -20,43 +20,59 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef RISC_OS_RESIZE_BAR_H
-#define RISC_OS_RESIZE_BAR_H
-
-#include <qwidget.h>
+#include "StickyButton.h"
 
 namespace RiscOS
 {
 
-class Manager;
+/* XPM */
+static const char * const sticky_xpm[] = {
+"12 12 3 1",
+" 	c None",
+".	c #000000",
+"+	c #FFFFFF",
+"        .   ",
+"       . .  ",
+"      . + . ",
+"     . + + .",
+" .... + + . ",
+"  .+ + + .  ",
+"   .+ + .   ",
+"    .+ .    ",
+"   . .+.    ",
+"  .   .+    ",
+" .     .    ",
+".           "};
 
-class ResizeMid;
-class ResizeSide;
-
-class ResizeBar : public QWidget
+StickyButton::StickyButton(QWidget * parent)
+  : Button(parent),
+    on_(false)
 {
-  Q_OBJECT
+  setPixmap(QPixmap((const char **)sticky_xpm));
+}
 
-  public:
+  void
+StickyButton::setOn(bool on)
+{
+  on_ = on;
+  repaint();
+}
 
-    ResizeBar(QWidget * parent, Manager * client);
-    void updateDisplay();
+  void
+StickyButton::mouseReleaseEvent(QMouseEvent * e)
+{
+  Button::mouseReleaseEvent(e);
 
-  protected:
+  if (!rect().contains(e->pos()))
+    return;
 
-    void resizeEvent(QResizeEvent *);
-
-  private:
-
-    Manager * client_;
-
-    ResizeSide  * left_;
-    ResizeMid   * mid_;
-    ResizeSide  * right_;
-};
-
+  switch (e->button())
+  {
+    default:
+      break;
+  }
+}
 } // End namespace
 
-#endif
-
 // vim:ts=2:sw=2:tw=78
+#include "StickyButton.moc"

@@ -26,13 +26,13 @@
 namespace RiscOS
 {
 
-Button::Button(QWidget * parent, SymbolType t)
-  : QWidget   (parent, "Button", WRepaintNoErase | WPaintUnclipped),
-    type_     (t),
-    align_    (Left),
+Button::Button(QWidget * parent)
+  : QWidget   (parent, "Button"),
+    alignment_(Left),
     down_     (false),
     active_   (false)
 {
+  setBackgroundColor(Qt::black);
   setFixedSize(19, 20);
 }
 
@@ -42,29 +42,54 @@ Button::~Button()
 }
 
   void
-Button::updateDisplay()
+Button::setAlignment(Alignment a)
 {
-  setBackgroundPixmap(
-    Static::instance()->button(type_, active_, down_)
-  );
-
-  repaint(true);
-}
-
-  void
-Button::setType(SymbolType t)
-{
-  type_ = t;
-  updateDisplay();
+  alignment_ = a;
+  repaint();
 }
 
   void
 Button::setActive(bool b)
 {
   active_ = b;
-  updateDisplay();
+  repaint();
 }
-  
+
+  Button::Alignment
+Button::alignment() const
+{
+  return alignment_;
+}
+
+  void
+Button::mousePressEvent(QMouseEvent *)
+{
+  down_ = true;
+  repaint();
+}
+
+  void
+Button::mouseReleaseEvent(QMouseEvent *)
+{
+  down_ = false;
+  repaint();
+}
+
+  void
+Button::setPixmap(const QPixmap & p)
+{
+  pixmap_ = p;
+  repaint();
+}
+
+  void
+Button::paintEvent(QPaintEvent *)
+{
+  bitBlt(this, alignment_ == Left ? 1 : 0, 0,
+      &Static::instance()->buttonBase(active_, down_));
+  bitBlt(this, alignment_ == Left ? 4 : 3, 4, &pixmap_);
+}
+
 } // End namespace
 
 // vim:ts=2:sw=2:tw=78

@@ -25,9 +25,29 @@
 namespace RiscOS
 {
 
+/* XPM */
+static const char * const close_xpm[] = {
+"12 12 3 1",
+" 	c None",
+".	c #000000",
+"+	c #FFFFFF",
+" ..      .. ",
+". +.    .+ .",
+".+ +.  .+ +.",
+" .+ +..+ +. ",
+"  .+ +  +.  ",
+"   .+ + .   ",
+"   . + +.   ",
+"  .+  + +.  ",
+" .+ +..+ +. ",
+".+ +.  .+ +.",
+". +.    .+ .",
+" ..      .. "};
+
 CloseButton::CloseButton(QWidget * parent)
-  : Button(parent, Close)
+  : Button(parent)
 {
+  setPixmap(QPixmap((const char **)close_xpm));
 }
 
   void

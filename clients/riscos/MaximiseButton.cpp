@@ -25,16 +25,56 @@
 namespace RiscOS
 {
 
+/* XPM */
+static const char * const maximise_xpm[] = {
+"12 12 3 1",
+" 	c None",
+".	c #000000",
+"+	c #FFFFFF",
+" .......... ",
+".+ + + + + .",
+". + + + + +.",
+".+ + + + + .",
+". + + + + +.",
+".+ + + + + .",
+". + + + + +.",
+".+ + + + + .",
+". + + + + +.",
+".+ + + + + .",
+". + + + + +.",
+" .......... "};
+
+/* XPM */
+static const char * const unmaximise_xpm[] = {
+"12 12 3 1",
+" 	c None",
+".	c #000000",
+"+	c #FFFFFF",
+"            ",
+"            ",
+"   ......   ",
+"  .+ + + .  ",
+"  . + + +.  ",
+"  .+ + + .  ",
+"  . + + +.  ",
+"  .+ + + .  ",
+"  . + + +.  ",
+"   ......   ",
+"            ",
+"            "};
+
 MaximiseButton::MaximiseButton(QWidget * parent)
-  : Button(parent, Max)
+  : Button(parent),
+    on_(false)
 {
+  setPixmap(QPixmap((const char **)maximise_xpm));
 }
 
   void
 MaximiseButton::setOn(bool on)
 {
-  setType(on ? Unmax: Max);
-  updateDisplay();
+  on_ = on;
+  repaint();
 }
 
   void

@@ -20,33 +20,34 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef RISC_OS_RESIZE_MID_H
-#define RISC_OS_RESIZE_MID_H
+#ifndef RISC_OS_STICKY_BUTTON_H
+#define RISC_OS_STICKY_BUTTON_H
 
-#include "DBWidget.h"
+#include "Button.h"
 
 namespace RiscOS
 {
 
-class Manager;
-
-class ResizeMid : public DBWidget
+class StickyButton : public Button
 {
+  Q_OBJECT
+
   public:
 
-    ResizeMid(QWidget * parent, Manager * client);
-    virtual ~ResizeMid();
+    StickyButton(QWidget * parent);
+
+  public slots:
+
+    void setOn(bool);
+
+  signals:
+
+    void stickClient();
+    void unstickClient();
 
   protected:
 
-    void updatePixmap();
-
-    void mousePressEvent(QMouseEvent *);
-    void mouseMoveEvent(QMouseEvent *);
-
-  private:
-
-    Manager * client_;
+    void mouseReleaseEvent(QMouseEvent *);
 };
 
 } // End namespace

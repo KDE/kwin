@@ -25,9 +25,29 @@
 namespace RiscOS
 {
 
+/* XPM */
+static const char * const iconify_xpm[] = {
+"12 12 3 1",
+" 	c None",
+".	c #000000",
+"+	c #FFFFFF",
+"            ",
+"            ",
+"            ",
+"            ",
+" .......... ",
+".+ + + + + .",
+". + + + + +.",
+" .......... ",
+"            ",
+"            ",
+"            ",
+"            "};
+
 IconifyButton::IconifyButton(QWidget * parent)
-  : Button(parent, Iconify)
+  : Button(parent)
 {
+  setPixmap(QPixmap((const char **)iconify_xpm));
 }
 
   void
@@ -53,8 +73,6 @@ IconifyButton::mouseReleaseEvent(QMouseEvent * e)
       emit(iconifyClient());
       break;
   }
-
-
 }
 
 } // End namespace;

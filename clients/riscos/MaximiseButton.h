@@ -49,6 +49,10 @@ class MaximiseButton : public Button
   protected:
 
     void mouseReleaseEvent(QMouseEvent *);
+
+  private:
+
+    bool on_;
 };
 
 } // End namespace

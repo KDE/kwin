@@ -61,41 +61,36 @@ class Static
     
     void update();
 
-    QPixmap titleTextLeft(bool active)
+    const QPixmap & titleTextLeft(bool active) const
     { return active ? aTitleTextLeft_ : iTitleTextLeft_; }
 
-    QPixmap titleTextRight(bool active)
+    const QPixmap & titleTextRight(bool active) const
     { return active ? aTitleTextRight_ : iTitleTextRight_; }
 
-    QPixmap resizeMidLeft(bool active)
+    const QPixmap & resizeMidLeft(bool active) const
     { return active ? aResizeMidLeft_ : iResizeMidLeft_; }
 
-    QPixmap resizeMidRight(bool active)
+    const QPixmap & resizeMidRight(bool active) const
     { return active ? aResizeMidRight_ : iResizeMidRight_; }
 
-    QPixmap titleTextMid(bool active)
+    const QPixmap & titleTextMid(bool active) const
     { return active ? aTitleTextMid_ : iTitleTextMid_; }
     
-    QPixmap resizeMidMid(bool active)
+    const QPixmap & resizeMidMid(bool active) const
     { return active ? aResizeMid_ : iResizeMid_; }
 
-    QPixmap button(SymbolType t, bool active, bool down);
+    const QPixmap & buttonBase(bool active, bool down) const;
 
-    QPixmap resize(bool active)
+    const QPixmap & resize(bool active) const
     { return active ? aResize_ : iResize_; }
 
-    Palette & standardPalette()
+    const Palette & standardPalette() const
     { return standardPal_; }
 
   private:
 
     void _drawButtonBorder (QPixmap &);
     void _drawBorder       (QPixmap &, int, int);
-    void _drawCloseSymbol  (QPixmap &);
-    void _drawIconifySymbol(QPixmap &);
-    void _drawLowerSymbol  (QPixmap &);
-    void _drawMaxSymbol    (QPixmap &);
-    void _drawUnmaxSymbol  (QPixmap &);
 
     void _init();
 
@@ -103,20 +98,17 @@ class Static
 
     Palette standardPal_, aTitlePal_, iTitlePal_, aResizePal_, iResizePal_;
 
-    QPixmap aIconify_, aClose_, aLower_, aMax_, aUnmax_,
-            iIconify_, iClose_, iLower_, iMax_, iUnmax_,
-            aResize_, iResize_,
-            aIconifyDown_, aCloseDown_, aLowerDown_, aMaxDown_, aUnmaxDown_,
-            iIconifyDown_, iCloseDown_, iLowerDown_, iMaxDown_, iUnmaxDown_,
-            aResizeDown_, iResizeDown_,
-            aTitleTextLeft_, aTitleTextRight_,
-            aResizeMidLeft_, aResizeMidRight_,
-            iTitleTextLeft_, iTitleTextRight_,
-            iResizeMidLeft_, iResizeMidRight_,
-            aTitleTextMid_, iTitleTextMid_,
-            aResizeMid_, iResizeMid_;
-
-    QList<QPixmap> buttonPixmaps_;
+    QPixmap
+      aButtonUp_,         iButtonUp_,
+      aButtonDown_,       iButtonDown_,
+      aResize_,           iResize_,
+      aResizeDown_,       iResizeDown_,
+      aTitleTextLeft_,    iTitleTextLeft_,
+      aTitleTextRight_,   iTitleTextRight_,
+      aTitleTextMid_,     iTitleTextMid_,
+      aResizeMidLeft_,    iResizeMidLeft_,
+      aResizeMidRight_,   iResizeMidRight_,
+      aResizeMid_,        iResizeMid_;
 
     QPainter painter_;
     bool down_;

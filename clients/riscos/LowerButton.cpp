@@ -25,9 +25,29 @@
 namespace RiscOS
 {
 
+/* XPM */
+static const char * const lower_xpm[] = {
+"12 12 3 1",
+" 	c None",
+".	c #000000",
+"+	c #FFFFFF",
+" .....      ",
+".+ + +.     ",
+". + + .     ",
+".+ + +.     ",
+". + + ..... ",
+".+ + .+ + +.",
+". + +. + + .",
+" .....+ + +.",
+"     . + + .",
+"     .+ + +.",
+"     . + + .",
+"      ..... "};
+
 LowerButton::LowerButton(QWidget * parent)
-  : Button(parent, Lower)
+  : Button(parent)
 {
+  setPixmap(QPixmap((const char **)lower_xpm));
 }
 
   void
@@ -46,7 +66,6 @@ LowerButton::mouseReleaseEvent(QMouseEvent * e)
   }
 
 }
-
 } // End namespace;
 
 // vim:ts=2:sw=2:tw=78

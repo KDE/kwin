@@ -22,14 +22,15 @@
 
 #include <qpainter.h>
 #include <qlayout.h>
-
 #include "../../options.h"
 #include "../../workspace.h"
 
 #include "Manager.h"
 #include "Static.h"
-#include "TitleBar.h"
-#include "ResizeBar.h"
+#include "LowerButton.h"
+#include "CloseButton.h"
+#include "IconifyButton.h"
+#include "MaximiseButton.h"
 
 extern "C"
 {
@@ -54,10 +55,43 @@ Manager::Manager(
 
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
-  titleBar_   = new TitleBar(this);
-  resizeBar_  = new ResizeBar(this, this);
+  QVBoxLayout * l = new QVBoxLayout(this, 0, 0);
 
-  activateLayout();
+  lower_      = new LowerButton     (this);
+  close_      = new CloseButton     (this);
+  iconify_    = new IconifyButton   (this);
+  maximise_   = new MaximiseButton  (this);
+
+  lower_    ->setAlignment(Button::Left);
+  close_    ->setAlignment(Button::Left);
+  iconify_  ->setAlignment(Button::Right);
+  maximise_ ->setAlignment(Button::Right);
+
+  // Lower | Close | Text | Iconify | Maximise
+
+  QHBoxLayout * titleLayout = new QHBoxLayout(l);
+
+  titleLayout->addWidget(lower_);
+  titleLayout->addWidget(close_);
+  titleSpacer_ = new QSpacerItem(0, 20);
+  titleLayout->addItem(titleSpacer_);
+  titleLayout->addWidget(iconify_);
+  titleLayout->addWidget(maximise_);
+
+  QHBoxLayout * midLayout = new QHBoxLayout(l);
+  midLayout->addSpacing(1);
+  midLayout->addWidget(windowWrapper());
+  midLayout->addSpacing(1);
+
+  l->addSpacing(10);
+
+  connect(lower_,     SIGNAL(lowerClient()),          this,     SLOT(lower()));
+  connect(close_,     SIGNAL(closeClient()),          this,     SLOT(closeWindow()));
+  connect(iconify_,   SIGNAL(iconifyClient()),        this,     SLOT(iconify()));
+  connect(maximise_,  SIGNAL(maximiseClient()),       this,     SLOT(maximize()));
+  connect(maximise_,  SIGNAL(vMaxClient()),           this,     SLOT(vMax()));
+  connect(maximise_,  SIGNAL(raiseClient()),          this,     SLOT(raise()));
+  connect(this,       SIGNAL(maximiseChanged(bool)),  maximise_,SLOT(setOn(bool)));
 }
 
 Manager::~Manager()
@@ -68,26 +102,26 @@ Manager::~Manager()
 Manager::slotReset()
 {
   Static::instance()->update();
-  _updateDisplay();
+  repaint();
 }
 
   void
 Manager::captionChange(const QString &)
 {
-  titleBar_->updateText();
+  repaint();
 }
 
   void
 Manager::paletteChange(const QPalette &)
 {
   Static::instance()->update();
-  _updateDisplay();
+  repaint();
 }
 
   void
-Manager::activeChange(bool b)
+Manager::activeChange(bool)
 {
-  titleBar_->setActive(b);
+  repaint();
 }
 
   void
@@ -97,21 +131,10 @@ Manager::maximizeChange(bool b)
 }
 
   void
-Manager::_updateDisplay()
-{
-  titleBar_->updateDisplay();
-  resizeBar_->updateDisplay();
-}
-
-  void
-Manager::setShade(bool)
-{
-  // Wait for parent class version to work.
-}
-
-  void
 Manager::paintEvent(QPaintEvent * e)
 {
+  QPainter p(this);
+
   QRect r(e->rect());
 
   bool intersectsLeft =
@@ -122,7 +145,6 @@ Manager::paintEvent(QPaintEvent * e)
 
   if (intersectsLeft || intersectsRight) {
 
-    QPainter p(this);
     p.setPen(Qt::black);
 
     if (intersectsLeft)
@@ -131,15 +153,35 @@ Manager::paintEvent(QPaintEvent * e)
     if (intersectsRight)
       p.drawLine(width() - 1, r.top(), width() - 1, r.bottom());
   }
-}
 
-  Client::MousePosition
-Manager::mousePosition(const QPoint & p) const
-{
-  if (titleBar_->rect().contains(p))
-    return Client::Center;
-  else
-    return Client::Nowhere;
+  Static * s = Static::instance();
+
+  bool active = isActive();
+
+  QRect tr = titleSpacer_->geometry();
+
+
+  // Title bar.
+  p.drawPixmap(tr.left(), 0, s->titleTextLeft(active));
+
+  p.drawTiledPixmap(tr.left() + 3, 0, tr.width() - 6, 20, s->titleTextMid(active));
+  p.setPen(options->color(Options::Font, active));
+  p.setFont(options->font());
+  p.drawText(tr.left() + 4, 0, tr.width() - 8, 18, AlignCenter, caption());
+
+  p.drawPixmap(tr.right() - 2, 0, s->titleTextRight(active));
+
+  // Resize bar.
+
+  int rbt = height() - 10; // Resize bar top.
+
+  p.drawPixmap(0, rbt, s->resize(active));
+
+  p.drawPixmap(30, rbt, s->resizeMidLeft(active));
+  p.drawTiledPixmap(32, rbt, width() - 34, 10, s->resizeMidMid(active));
+  p.drawPixmap(width() - 32, rbt, s->resizeMidRight(active));
+
+  p.drawPixmap(width() - 30, rbt, s->resize(active));
 }
 
   void
@@ -161,43 +203,72 @@ Manager::vMax()
 }
 
   void
-Manager::resizeEvent(QResizeEvent * e)
+Manager::resizeEvent(QResizeEvent *)
 {
-  Client::resizeEvent(e);
-  _updateLayout();
+  int sizeProblem = 0;
+
+  if (width() < 80) sizeProblem = 3;
+  else if (width() < 100) sizeProblem = 2;
+  else if (width() < 120) sizeProblem = 1;
+
+  switch (sizeProblem) {
+
+    case 1:
+      lower_    ->hide();
+      iconify_  ->show();
+      maximise_ ->hide();
+      close_    ->show();
+      break;
+
+    case 2:
+      lower_    ->hide();
+      iconify_  ->hide();
+      maximise_ ->hide();
+      close_    ->show();
+      break;
+
+    case 3:
+      lower_    ->hide();
+      iconify_  ->hide();
+      maximise_ ->hide();
+      close_    ->hide();
+      break;
+
+    case 0:
+    default:
+      lower_    ->show();
+      iconify_  ->show();
+      maximise_ ->show();
+      close_    ->show();
+      break;
+  }
+}
+
+  Client::MousePosition
+Manager::mousePosition(const QPoint & p) const
+{
+  MousePosition m = Center;
+
+  if (p.y() > (height() - 10)) {
+     // Keep order !
+    if (p.x() >= (width() - 30))
+      m = BottomRight;
+    else if (p.x() <= 30)
+      m = BottomLeft;
+    else
+      m = Bottom;
+  }
+
+  return m;
 }
 
   void
-Manager::_updateLayout()
+Manager::mouseDoubleClickEvent(QMouseEvent * e)
 {
-  titleBar_       ->  setGeometry(0, 0, width(), 20);
-  windowWrapper() ->  setGeometry(1, 20, width() - 2, height() - 30);
-  resizeBar_      ->  setGeometry(0, height() - 10, width(), 10);
-
-  _updateDisplay();
-}
-
-  void
-Manager::activateLayout()
-{
-  _updateLayout();
-}
-
-  void
-Manager::fakeMouseEvent(QMouseEvent * e, QWidget * w)
-{
-  QPoint adjustedPos = w->pos() + e->pos();
-
-  QMouseEvent fake(e->type(), adjustedPos, e->button(), e->state());
-
-  Client::event(&fake);
-}
-
-  void
-Manager::mouseDoubleClickEvent( QMouseEvent * )
-{
-    workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
-    workspace()->requestFocus( this );
+  if (titleSpacer_->geometry().contains(e->pos()))
+    workspace()
+      ->performWindowOperation(this, options->operationTitlebarDblClick());
+  workspace()->requestFocus(this);
 }
 
 } // End namespace

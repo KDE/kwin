@@ -5,16 +5,10 @@ lib_LTLIBRARIES = libkwinriscos.la
 libkwinriscos_la_SOURCES = \
 Button.cpp \
 CloseButton.cpp \
-DBWidget.cpp \
 IconifyButton.cpp \
 LowerButton.cpp \
 Manager.cpp \
 MaximiseButton.cpp \
-ResizeBar.cpp \
-ResizeMid.cpp \
-ResizeSide.cpp \
-TitleBar.cpp \
-TitleText.cpp \
 Static.cpp
 libkwinriscos_la_LIBADD = ../../kwin.la
 libkwinriscos_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
@@ -23,16 +17,11 @@ METASOURCES = AUTO
 noinst_HEADERS = \
 Button.h \
 CloseButton.h \
-DBWidget.h \
 IconifyButton.h \
 LowerButton.h \
-Manager.h \
 MaximiseButton.h \
-ResizeBar.h \
-ResizeMid.h \
-ResizeSide.h \
-TitleBar.h \
-TitleText.h \
+StickyButton.h \
+Manager.h \
 Static.h
 
 lnkdir = $(kde_datadir)/kwin/

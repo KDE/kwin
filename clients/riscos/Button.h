@@ -23,7 +23,7 @@
 #ifndef RISC_OS_BUTTON_H
 #define RISC_OS_BUTTON_H
 
-#include "Static.h"
+#include <qpixmap.h>
 #include <qwidget.h>
 
 namespace RiscOS
@@ -37,29 +37,29 @@ class Button : public QWidget
 
     enum Alignment { Left, Right };
 
-    Button(QWidget * parent, SymbolType);
+    Button(QWidget * parent);
     virtual ~Button();
-    
-    void updateDisplay();
 
-    void setAlign(Alignment a)  { align_ = a; updateDisplay(); }
-    void setType(SymbolType t);
-
+    void setAlignment(Alignment);
     void setActive(bool);
- 
+
+    Alignment alignment() const;
+
   protected:
 
-    bool active() const { return active_; }
+    void paintEvent(QPaintEvent *);
 
-    void mousePressEvent(QMouseEvent *)   { down_ = true; updateDisplay(); }
-    void mouseReleaseEvent(QMouseEvent *) { down_ = false; updateDisplay(); }
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+
+    void setPixmap(const QPixmap &);
 
   private:
 
-    SymbolType  type_;
-    Alignment   align_;
+    Alignment   alignment_;
     bool        down_;
     bool        active_;
+    QPixmap     pixmap_;
 };
 
 } // End namespace
