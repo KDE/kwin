@@ -1032,26 +1032,24 @@ void Workspace::requestFocus( Client* c)
  */
 void Workspace::clientHidden( Client* c )
 {
-    if ( c == active_client || ( !active_client && c == should_get_focus ) )
-    {
-	active_client = 0;
-	should_get_focus = 0;
-        if (!block_focus &&
-            options->focusPolicyIsReasonable() &&
-	    !focus_chain.isEmpty()
-	   )
-	{
-	    for (ClientList::ConstIterator it = focus_chain.fromLast();
-	         it != focus_chain.end();
-	         --it)
-	    {
-	        if ((*it)->isVisible()) {
-	            requestFocus(*it);
-	            return;
-	        }
- 	    }
-        }	
-    }
+    if ( c != active_client && ( active_client ||  c != should_get_focus ) )
+	return;
+    
+    active_client = 0;
+    should_get_focus = 0;
+    if (!block_focus &&
+	options->focusPolicyIsReasonable() &&
+	!focus_chain.isEmpty()
+	) {
+	for (ClientList::ConstIterator it = focus_chain.fromLast();
+	     it != focus_chain.end();
+	     --it) {
+	    if ((*it)->isVisible()) {
+		requestFocus(*it);
+		return;
+	    }
+	}
+    }	
     if ( desktop_client )
 	requestFocus( desktop_client );
     else
