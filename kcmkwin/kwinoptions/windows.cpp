@@ -210,6 +210,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
 
     traverseAll = new QCheckBox( i18n( "Traverse windows on all desktops" ), kbdBox );
     kLay->addMultiCellWidget( traverseAll, 2, 2, 0, 2 );
+    connect( cdeMode, SIGNAL( toggled( bool )), traverseAll, SLOT( setDisabled( bool )));
 
     wtstr = i18n( "Leave this option disabled if you want to limit walking through"
                   " windows to the current desktop." );
