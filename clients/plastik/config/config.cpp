@@ -57,7 +57,8 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
             this, SIGNAL(changed()));
     connect(m_dialog->titleShadow, SIGNAL(toggled(bool)),
             this, SIGNAL(changed()));
-
+    connect(m_dialog->coloredBorder, SIGNAL(toggled(bool)),
+            this, SIGNAL(changed()));
 }
 
 PlastikConfig::~PlastikConfig()
@@ -80,6 +81,8 @@ void PlastikConfig::load(KConfig*)
     m_dialog->menuClose->setChecked(menuClose);
     bool titleShadow = m_config->readBoolEntry("TitleShadow", true);
     m_dialog->titleShadow->setChecked(titleShadow);
+    bool coloredBorder = m_config->readBoolEntry("ColoredBorder", true);
+    m_dialog->coloredBorder->setChecked(coloredBorder);
 }
 
 void PlastikConfig::save(KConfig*)
@@ -91,6 +94,7 @@ void PlastikConfig::save(KConfig*)
     m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
     m_config->writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
     m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
+    m_config->writeEntry("ColoredBorder", m_dialog->coloredBorder->isChecked() );
     m_config->sync();
 }
 
@@ -102,6 +106,7 @@ void PlastikConfig::defaults()
     m_dialog->animateButtons->setChecked(true);
     m_dialog->menuClose->setChecked(false);
     m_dialog->titleShadow->setChecked(true);
+    m_dialog->coloredBorder->setChecked(true);
 }
 
 //////////////////////////////////////////////////////////////////////////////

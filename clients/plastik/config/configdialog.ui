@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>ConfigDialog</class>
 <widget class="QWidget">
     <property name="name">
@@ -9,20 +9,20 @@
             <x>0</x>
             <y>0</y>
             <width>541</width>
-            <height>167</height>
+            <height>170</height>
         </rect>
     </property>
     <property name="caption">
         <string>Config Dialog</string>
     </property>
-    <grid>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
             <number>0</number>
         </property>
-        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="4">
+        <widget class="QButtonGroup">
             <property name="name">
                 <cstring>titleAlign</cstring>
             </property>
@@ -59,7 +59,21 @@
                 </widget>
             </hbox>
         </widget>
-        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="4">
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>coloredBorder</cstring>
+            </property>
+            <property name="text">
+                <string>Colored Window Border</string>
+            </property>
+            <property name="accel">
+                <string></string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you the window border should be painted in the titlebar color. Otherwise it will be painted in the background color.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
             <property name="name">
                 <cstring>titleShadow</cstring>
             </property>
@@ -70,7 +84,7 @@
                 <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
             </property>
         </widget>
-        <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
+        <widget class="QCheckBox">
             <property name="name">
                 <cstring>animateButtons</cstring>
             </property>
@@ -81,7 +95,7 @@
                 <string>Check this option if you want the buttons to fade in when the mouse pointer hovers over them and fade out again when it moves away.</string>
             </property>
         </widget>
-        <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="4">
+        <widget class="QCheckBox">
             <property name="name">
                 <cstring>menuClose</cstring>
             </property>
@@ -92,7 +106,7 @@
                 <string>Check this option if you want windows to be closed when you double click the menu button, similar to Microsoft Windows.</string>
             </property>
         </widget>
-    </grid>
+    </vbox>
 </widget>
 <tabstops>
     <tabstop>AlignLeft</tabstop>

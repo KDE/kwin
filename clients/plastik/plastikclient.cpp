@@ -336,7 +336,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     // leftSpacer
     if(borderLeft > 0 && sideHeight > 0)
     {
-        tempRect.setCoords(r_x, titleEdgeBottomBottom+1, borderLeftRight, borderBottomTop);
+        tempRect.setCoords(r_x, titleEdgeBottomBottom+1, borderLeftRight, borderBottomTop-1);
         if (tempRect.isValid() && region.contains(tempRect) ) {
             painter.drawTiledPixmap(tempRect, handler->pixmap(BorderLeftTile, active, toolWindow) );
         }
@@ -345,7 +345,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     // rightSpacer
     if(borderRight > 0 && sideHeight > 0)
     {
-        tempRect.setCoords(borderRightLeft, titleEdgeBottomBottom+1, r_x2, borderBottomTop);
+        tempRect.setCoords(borderRightLeft, titleEdgeBottomBottom+1, r_x2, borderBottomTop-1);
         if (tempRect.isValid() && region.contains(tempRect) ) {
             painter.drawTiledPixmap(tempRect, handler->pixmap(BorderRightTile, active, toolWindow) );
         }

@@ -101,6 +101,7 @@ public:
 private:
     void readConfig();
 
+    bool m_coloredBorder;
     bool m_titleShadow;
     bool m_animateButtons;
     bool m_menuClose;

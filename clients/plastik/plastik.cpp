@@ -65,7 +65,7 @@ bool PlastikHandler::reset(unsigned long changed)
 
     switch(KDecoration::options()->preferredBorderSize( this )) {
         case BorderTiny:
-            m_borderSize = 2;
+            m_borderSize = 3;
             break;
         case BorderLarge:
             m_borderSize = 8;
@@ -186,6 +186,7 @@ void PlastikHandler::readConfig()
     else if (value == "AlignHCenter") m_titleAlign = Qt::AlignHCenter;
     else if (value == "AlignRight")   m_titleAlign = Qt::AlignRight;
 
+    m_coloredBorder = config.readBoolEntry("ColoredBorder", true);
     m_animateButtons = config.readBoolEntry("AnimateButtons", true);
     m_menuClose = config.readBoolEntry("CloseOnMenuDoubleClick", true);
 }
@@ -206,11 +207,11 @@ QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
             break;
         case ShadeTitleLight:
             return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
-                                    Qt::white, active?150:160);
+                                    Qt::white, active?205:215);
             break;
         case ShadeTitleDark:
             return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
-                                    Qt::black, active?150:160);
+                                    Qt::black, active?205:215);
             break;
         case Border:
             return KDecoration::options()->color(ColorFrame, active);
@@ -269,7 +270,11 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
                 pm = new QPixmap(1, titleBarTileHeight);
                 painter.begin(pm);
                 painter.drawPixmap(0, 0, gradient, 0,2);
-                painter.setPen(getColor(TitleGradient3, active) );
+                if (m_coloredBorder) {
+                    painter.setPen(getColor(TitleGradient3, active).dark(110) );
+                } else {
+                    painter.setPen(getColor(TitleGradient3, active) );
+                }
                 painter.drawPoint(0,titleBarTileHeight-1);
                 painter.end();
             }
@@ -292,10 +297,14 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             painter.drawLine(0,0, 0,h);
             painter.drawPoint(1,1);
 
-            const QColor highlightTitleLeft = alphaBlendColors(getColor(TitleGradient3, active),
-                    getColor(ShadeTitleLight, active), 150);
+            const QColor highlightTitleLeft = getColor(ShadeTitleLight, active);
             painter.setPen(highlightTitleLeft);
             painter.drawLine(1,2, 1,h);
+
+            if (m_coloredBorder) {
+                painter.setPen(getColor(TitleGradient3, active) );
+                painter.drawLine(2,h-1, w-1,h-1);
+            }
 
             // outside the region normally masked by doShape
             painter.setPen(QColor(0,0,0) );
@@ -320,10 +329,14 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             painter.drawLine(w-1,0, w-1,h);
             painter.drawPoint(w-2,1);
 
-            const QColor highlightTitleRight = alphaBlendColors(getColor(TitleGradient3, active),
-                    getColor(ShadeTitleDark, active), 150);
+            const QColor highlightTitleRight = getColor(ShadeTitleDark, active);
             painter.setPen(highlightTitleRight);
             painter.drawLine(w-2,2, w-2,h);
+
+            if (m_coloredBorder) {
+                painter.setPen(getColor(TitleGradient3, active) );
+                painter.drawLine(0,h-1, w-3,h-1);
+            }
 
             // outside the region normally masked by doShape
             painter.setPen(QColor(0,0,0) );
@@ -339,14 +352,27 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
 
             pm = new QPixmap(w, 1);
             QPainter painter(pm);
-            painter.setPen(getColor(WindowContour, active) );
-            painter.drawPoint(0, 0);
-            painter.setPen(
-                    alphaBlendColors(getColor(Border, active),
-                                     getColor(ShadeTitleLight, active), 150) );
-            painter.drawPoint(1, 0);
-            painter.setPen(getColor(Border, active) );
-            painter.drawLine(2,0, w-1,0);
+            if (m_coloredBorder) {
+                painter.setPen(getColor(WindowContour, active) );
+                painter.drawPoint(0, 0);
+                painter.setPen(getColor(ShadeTitleLight, active) );
+                painter.drawPoint(1, 0);
+                if (w > 3) {
+                    painter.setPen(getColor(TitleGradient3, active) );
+                    painter.drawLine(2,0, w-2,0);
+                }
+                painter.setPen(getColor(TitleGradient3, active).dark(110) );
+                painter.drawPoint(w-1,0);
+            } else {
+                painter.setPen(getColor(WindowContour, active) );
+                painter.drawPoint(0, 0);
+                painter.setPen(
+                        alphaBlendColors(getColor(Border, active),
+                                         getColor(ShadeTitleLight, active), 130) );
+                painter.drawPoint(1, 0);
+                painter.setPen(getColor(Border, active) );
+                painter.drawLine(2,0, w-1,0);
+            }
 
             painter.end();
 
@@ -359,14 +385,27 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
 
             pm = new QPixmap(w, 1);
             QPainter painter(pm);
-            painter.setPen(getColor(Border, active) );
-            painter.drawLine(0,0, w-3,0);
-            painter.setPen(
-                    alphaBlendColors(getColor(Border, active),
-                                     getColor(ShadeTitleDark, active), 150) );
-            painter.drawPoint(w-2, 0);
-            painter.setPen(getColor(WindowContour, active) );
-            painter.drawPoint(w-1, 0);
+            if (m_coloredBorder) {
+                painter.setPen(getColor(TitleGradient3, active).dark(110) );
+                painter.drawPoint(0,0);
+                if (w > 3) {
+                    painter.setPen(getColor(TitleGradient3, active) );
+                    painter.drawLine(1,0, w-3,0);
+                }
+                painter.setPen(getColor(ShadeTitleDark, active) );
+                painter.drawPoint(w-2, 0);
+                painter.setPen(getColor(WindowContour, active) );
+                painter.drawPoint(w-1, 0);
+            } else {
+                painter.setPen(getColor(Border, active) );
+                painter.drawLine(0,0, w-3,0);
+                painter.setPen(
+                        alphaBlendColors(getColor(Border, active),
+                                         getColor(ShadeTitleDark, active), 130) );
+                painter.drawPoint(w-2, 0);
+                painter.setPen(getColor(WindowContour, active) );
+                painter.drawPoint(w-1, 0);
+            }
             painter.end();
 
             break;
@@ -382,10 +421,20 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             painter.drawTiledPixmap(0,0,w,h, pixmap(BorderBottomTile, active, toolWindow) );
             painter.setPen(getColor(WindowContour, active) );
             painter.drawLine(0,0, 0,h);
-            painter.setPen(
-                    alphaBlendColors(getColor(Border, active),
-                                     getColor(ShadeTitleLight, active), 150) );
-            painter.drawLine(1,0, 1,h-2);
+            if (m_coloredBorder) {
+                if (h > 3) {
+                    painter.setPen(getColor(ShadeTitleLight, active) );
+                    painter.drawLine(1,0, 1,h-2);
+                }
+
+                painter.setPen(getColor(TitleGradient3, active) );
+                painter.drawLine(2,0, w-1,0);
+            } else {
+                painter.setPen(
+                        alphaBlendColors(getColor(Border, active),
+                                        getColor(ShadeTitleLight, active), 130) );
+                painter.drawLine(1,0, 1,h-2);
+            }
 
             painter.end();
 
@@ -402,10 +451,18 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             painter.drawTiledPixmap(0,0,w,h, pixmap(BorderBottomTile, active, toolWindow) );
             painter.setPen(getColor(WindowContour, active) );
             painter.drawLine(w-1,0, w-1,h);
-            painter.setPen(
-                    alphaBlendColors(getColor(Border, active),
-                                     getColor(ShadeTitleDark, active), 150) );
-            painter.drawLine(w-2,0, w-2,h-2);
+            if (m_coloredBorder) {
+                painter.setPen(getColor(ShadeTitleDark, active) );
+                painter.drawLine(w-2,0, w-2,h-2);
+
+                painter.setPen(getColor(TitleGradient3, active) );
+                painter.drawLine(0,0, w-3,0);
+            } else {
+                painter.setPen(
+                        alphaBlendColors(getColor(Border, active),
+                                         getColor(ShadeTitleDark, active), 130) );
+                painter.drawLine(w-2,0, w-2,h-2);
+            }
 
             painter.end();
 
@@ -419,12 +476,22 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
 
             pm = new QPixmap(1, m_borderSize);
             QPainter painter(pm);
-            painter.setPen(getColor(Border, active) );
-            painter.drawLine(0,0, 0,h-3);
-            painter.setPen(
-                    alphaBlendColors(getColor(Border, active),
-                                     getColor(ShadeTitleDark, active), 150) );
-            painter.drawPoint(0, h-2);
+
+            if (m_coloredBorder) {
+                painter.setPen(getColor(TitleGradient3, active).dark(110) );
+                painter.drawPoint(0,0);
+                painter.setPen(getColor(TitleGradient3, active) );
+                painter.drawLine(0,1, 0,h-3);
+                painter.setPen(getColor(ShadeTitleDark, active) );
+                painter.drawPoint(0, h-2);
+            } else {
+                painter.setPen(getColor(Border, active) );
+                painter.drawLine(0,0, 0,h-3);
+                painter.setPen(
+                        alphaBlendColors(getColor(Border, active),
+                                        getColor(ShadeTitleDark, active), 130) );
+                painter.drawPoint(0, h-2);
+            }
             painter.setPen(getColor(WindowContour, active) );
             painter.drawPoint(0, h-1);
             painter.end();
