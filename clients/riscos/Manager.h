@@ -43,7 +43,6 @@ class Manager : public Client
     void maximizeVertically();
     void maximizeAndRaise();
     void maximizeNoRaise();
-    void resize(int, int);
 
     void setShade(bool);
 
@@ -55,9 +54,9 @@ class Manager : public Client
     void activeChange(bool);
     void maximizeChange(bool);
     void paintEvent(QPaintEvent *);
-    void mouseMoveEvent(QMouseEvent *) {} // Disabled
-    void mousePressEvent(QMouseEvent *) {} // Disabled
-    void mouseReleaseEvent(QMouseEvent *) {} // Disabled
+    void mouseMoveEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
 
   protected slots:
 

@@ -137,12 +137,6 @@ Manager::maximizeNoRaise()
 }
 
   void
-Manager::resize(int w, int h)
-{
-  Client::resize(w, h);
-}
-
-  void
 Manager::updateDisplay()
 {
   titleBar_->updateDisplay();
@@ -177,6 +171,33 @@ Manager::paintEvent(QPaintEvent * e)
     if (intersectsRight)
       p.drawLine(width() - 1, r.top(), width() - 1, r.bottom());
   }
+}
+    
+  void
+Manager::mouseMoveEvent(QMouseEvent * e)
+{
+  if ((e->pos().x() == 0) || (e->pos().y() == 0))
+    return;
+
+  Client::mouseMoveEvent(e);
+}
+
+  void
+Manager::mousePressEvent(QMouseEvent * e)
+{
+  if ((e->pos().x() == 0) || (e->pos().y() == 0))
+    return;
+
+  Client::mousePressEvent(e);
+}
+
+  void
+Manager::mouseReleaseEvent(QMouseEvent * e)
+{
+  if ((e->pos().x() == 0) || (e->pos().y() == 0))
+    return;
+
+  Client::mouseReleaseEvent(e);
 }
 
 } // End namespace
