@@ -1131,7 +1131,7 @@ void Workspace::smartPlacement(Client* c){
 			    possible = possible < xl - cw ? possible : xl - cw;
 		    }
 		}
-		x = possible;
+		x_optimal = x = possible;
 	    }
 	}
 
@@ -1157,7 +1157,7 @@ void Workspace::smartPlacement(Client* c){
 		    if( yt - ch > y )
 			possible = possible < yt - ch ? possible : yt - ch;
 		}
-		y = possible;
+		y_optimal = y = possible;
 	    }
 	}
     }
