@@ -726,14 +726,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QLabel" row="1" column="2">
-                        <property name="name">
-                            <cstring>label_size</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Size:</string>
-                        </property>
-                    </widget>
                     <widget class="KComboBox" row="1" column="1">
                         <item>
                             <property name="text">
@@ -778,7 +770,7 @@
                             <cstring>enable_size</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Size</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="0" column="0">
@@ -786,7 +778,7 @@
                             <cstring>enable_position</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Position</string>
                         </property>
                     </widget>
                     <widget class="KRestrictedLine" row="0" column="3">
@@ -806,14 +798,6 @@
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="2">
-                        <property name="name">
-                            <cstring>label_desktop</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Desktop:</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="2" column="1">
@@ -849,7 +833,7 @@
                             <cstring>enable_desktop</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Desktop</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="0" column="1">
@@ -941,7 +925,7 @@
                             <cstring>enable_maximizehoriz</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Maximized horizontally</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="7" column="1">
@@ -977,7 +961,7 @@
                             <cstring>enable_fullscreen</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Fullscreen</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="6" column="0">
@@ -985,7 +969,7 @@
                             <cstring>enable_shade</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Shaded</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="5" column="0">
@@ -993,7 +977,7 @@
                             <cstring>enable_minimize</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Minimized</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="6" column="1">
@@ -1029,7 +1013,7 @@
                             <cstring>enable_maximizevert</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Maximized vertically</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="3" column="1">
@@ -1058,54 +1042,6 @@
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="2">
-                        <property name="name">
-                            <cstring>label_position</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Position:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="7" column="2">
-                        <property name="name">
-                            <cstring>label_fullscreen</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Fullscreen</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="6" column="2">
-                        <property name="name">
-                            <cstring>label_shade</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Shaded</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="5" column="2">
-                        <property name="name">
-                            <cstring>label_minimize</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Minimized</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="4" column="2">
-                        <property name="name">
-                            <cstring>label_maximizevert</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Maximized vertically</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="3" column="2">
-                        <property name="name">
-                            <cstring>label_maximizehoriz</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Maximized horizontally</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="8" column="3">
@@ -1161,20 +1097,12 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="8" column="2">
-                        <property name="name">
-                            <cstring>label_placement</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Placement:</string>
-                        </property>
-                    </widget>
                     <widget class="QCheckBox" row="8" column="0">
                         <property name="name">
                             <cstring>enable_placement</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Placement</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="8" column="1">
@@ -1313,7 +1241,7 @@
                             <cstring>enable_above</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Keep above</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="1" column="0">
@@ -1321,7 +1249,7 @@
                             <cstring>enable_below</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Keep below</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="4" column="0">
@@ -1329,7 +1257,7 @@
                             <cstring>enable_skippager</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Skip pager</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="3" column="0">
@@ -1337,7 +1265,7 @@
                             <cstring>enable_skiptaskbar</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Skip taskbar</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="2" column="0">
@@ -1345,7 +1273,7 @@
                             <cstring>enable_noborder</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>No border</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="5" column="0">
@@ -1353,7 +1281,7 @@
                             <cstring>enable_acceptfocus</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Accept focus</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="6" column="0">
@@ -1361,7 +1289,7 @@
                             <cstring>enable_closeable</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Closeable</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="6" column="1">
@@ -1538,62 +1466,6 @@
                         </property>
                         <property name="enabled">
                             <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="2">
-                        <property name="name">
-                            <cstring>label_above</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Keep above</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="1" column="2">
-                        <property name="name">
-                            <cstring>label_below</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Keep below</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="2">
-                        <property name="name">
-                            <cstring>label_noborder</cstring>
-                        </property>
-                        <property name="text">
-                            <string>No border</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="3" column="2">
-                        <property name="name">
-                            <cstring>label_skiptaskbar</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Skip taskbar</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="4" column="2">
-                        <property name="name">
-                            <cstring>label_skippager</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Skip pager</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="5" column="2">
-                        <property name="name">
-                            <cstring>label_acceptfocus</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Accept focus</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="6" column="2">
-                        <property name="name">
-                            <cstring>label_closeable</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Closeable</string>
                         </property>
                     </widget>
                     <spacer row="0" column="5">
@@ -1799,15 +1671,7 @@
                             <cstring>enable_fsplevel</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="2">
-                        <property name="name">
-                            <cstring>label_fsplevel</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Focus stealing prevention:</string>
+                            <string>Focus stealing prevention</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="2" column="1">
@@ -1909,15 +1773,7 @@
                             <cstring>enable_type</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="2">
-                        <property name="name">
-                            <cstring>label_type</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Window type:</string>
+                            <string>Window type</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="1" column="0">
@@ -1925,15 +1781,7 @@
                             <cstring>enable_moveresizemode</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="1" column="2">
-                        <property name="name">
-                            <cstring>label_moveresizemode</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Moving/resizing:</string>
+                            <string>Moving/resizing</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="0" column="1">
@@ -2016,14 +1864,6 @@
                             <string>0123456789-+,xX:</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="5" column="2">
-                        <property name="name">
-                            <cstring>label_maxsize</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Maximum size:</string>
-                        </property>
-                    </widget>
                     <widget class="QCheckBox" row="3" column="3">
                         <property name="name">
                             <cstring>ignoreposition</cstring>
@@ -2040,7 +1880,7 @@
                             <cstring>enable_ignoreposition</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Ignore requested position</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="3" column="1">
@@ -2066,7 +1906,7 @@
                             <cstring>enable_minsize</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Minimum size</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="4" column="1">
@@ -2092,7 +1932,7 @@
                             <cstring>enable_maxsize</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
+                            <string>Maximum size</string>
                         </property>
                     </widget>
                     <widget class="KRestrictedLine" row="4" column="3">
@@ -2104,22 +1944,6 @@
                         </property>
                         <property name="validChars">
                             <string>0123456789-+,xX:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="3" column="2">
-                        <property name="name">
-                            <cstring>label_ignoreposition</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Ignore requested position</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="4" column="2">
-                        <property name="name">
-                            <cstring>label_minsize</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Minimum size:</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="5" column="1">
