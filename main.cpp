@@ -125,12 +125,15 @@ Application::Application( )
     atoms = new Atoms;
 
     // create workspace.
-    (void) new Workspace( isSessionRestored() );
+    Workspace* ws = new Workspace( isSessionRestored() );
 
     syncX(); // trigger possible errors, there's still a chance to abort
 
     initting = FALSE; // startup done, we are up and running now.
     dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
+    
+    if ( isSessionRestored() )
+	ws->restoreLegacySession( kapp->sessionConfig() );
 }
 
 

@@ -336,9 +336,6 @@ Workspace::Workspace( bool restore )
     popupinfo = new PopupInfo( );
 
     init();
-
-    if ( restore )
-        restoreLegacySession(kapp->sessionConfig());
 }
 
 
@@ -480,7 +477,7 @@ Workspace::~Workspace()
  */
 bool Workspace::workspaceEvent( XEvent * e )
 {
-    if ( mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease) ) {
+    if ( mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease ) ) {
         mouse_emulation = FALSE;
         XUngrabKeyboard( qt_xdisplay(), qt_x_time );
     }
