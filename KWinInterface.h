@@ -14,6 +14,7 @@ class KWinInterface : virtual public DCOPObject
   virtual ASYNC reconfigure() = 0;
   virtual ASYNC killWindow() = 0;
   virtual void doNotManage(QString)= 0;
+  virtual void showWindowMenuAt(unsigned long,int,int)= 0;
 
 };
 

@@ -1177,6 +1177,18 @@ QPopupMenu* Workspace::clientPopup( Client* c )
     return popup;
 }
 
+void Workspace::showWindowMenuAt( unsigned long id, int x, int y )
+{
+    Client *target = findClient( id );
+    
+    if (!target)
+        return;
+
+    QPopupMenu* p = clientPopup( target );
+    p->setFocus();
+    p->popup( QPoint( x, y ) );
+}
+
 void Workspace::performWindowOperation( Client* c, Options::WindowOperation op ) {
     if ( !c )
 	return;

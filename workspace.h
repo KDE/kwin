@@ -158,6 +158,7 @@ public:
 
 
     QPopupMenu* clientPopup( Client* );
+    void showWindowMenuAt( unsigned long id, int x, int y );
 
     void setDesktopClient( Client* );
 
