@@ -663,7 +663,10 @@ Layer Client::belongsToLayer() const
         return DockLayer;
     if( isTopMenu())
         return DockLayer;
-    bool raise_special_active_windows = ( options->focusPolicy == Options::ClickToFocus || options->autoRaise );
+    // TODO this feature doesn't work very well with mouse focus policies - window A gets focus in, and is
+    // raised, but if meanwhile B gets focus in, A is lowered below B again, then the focus in for A
+    // is processed, A is raised above B, but meanwhile B's focus in is processed ...
+    bool raise_special_active_windows = options->focusPolicy == Options::ClickToFocus; // || options->autoRaise );
     if( isDialog() && workspace()->activeClient() == this && raise_special_active_windows )
         return ActiveLayer;
     if( keepAbove())
