@@ -227,6 +227,8 @@ public:
     void NETMoveResize( int x_root, int y_root, NET::Direction direction );
     
     void checkWorkspacePosition();
+    
+    void demandAttention( bool set );
 
 public slots:
     void iconify();

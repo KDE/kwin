@@ -84,6 +84,8 @@ public:
             m_client->setSkipTaskbar( ( state & NET::SkipTaskbar ) != 0 );
         if( mask & NET::SkipPager )
             m_client->setSkipPager( ( state & NET::SkipPager ) != 0 );
+        if( mask & NET::DemandsAttention )
+            m_client->demandAttention(( state & NET::DemandsAttention ) != 0 );
     }
 private:
     KWinInternal::Client * m_client;
@@ -2620,6 +2622,13 @@ void Client::setActive( bool act)
     activeChange( active );
 }
 
+
+void Client::demandAttention( bool set )
+{
+    if( isActive())
+        set = false;
+    info->setState( set ? NET::DemandsAttention : 0, NET::DemandsAttention );
+}
 
 /*!
   Let the window stay on top or not, depending on \a b

@@ -1459,6 +1459,7 @@ void Workspace::setActiveClient( Client* c )
         focus_chain.remove( c );
         if ( c->wantsTabFocus() )
             focus_chain.append( c );
+        active_client->demandAttention( false );
     }
 
     // toplevel menubar handling
