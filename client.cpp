@@ -710,7 +710,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     if ( !moveResizeMode )
     {
 	QPoint p( e->pos() - moveOffset );
-	if ( QABS( p.x() >= 4) || QABS( p.y() ) >= 4 ) {
+	if ( (QABS( p.x()) >= 4) || (QABS( p.y() ) >= 4 )) {
 	    moveResizeMode = TRUE;
 	    grabMouse( cursor() ); // to keep the right cursor
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
