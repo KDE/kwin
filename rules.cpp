@@ -27,12 +27,12 @@ namespace KWinInternal
 
 Rules::Rules()
     : temporary_state( 0 )
-    , wmclassregexp( false )
-    , wmclasscomplete( false )
-    , windowroleregexp( false )
-    , titleregexp( false )
-    , extraroleregexp( false )
-    , clientmachineregexp( false )
+    , wmclassmatch( UnimportantMatch )
+    , wmclasscomplete( UnimportantMatch )
+    , windowrolematch( UnimportantMatch )
+    , titlematch( UnimportantMatch )
+    , extrarolematch( UnimportantMatch )
+    , clientmachinematch( UnimportantMatch )
     , types( NET::AllTypesMask )
     , placementrule( UnusedForceRule )
     , positionrule( UnusedSetRule )
@@ -79,7 +79,7 @@ Rules::Rules( const QString& str, bool temporary )
 
 #define READ_MATCH_STRING( var, func ) \
     var = cfg.readEntry( #var ) func; \
-    var##regexp = cfg.readBoolEntry( #var "regexp" );
+    var##match = (StringMatch) QMAX( FirstStringMatch, QMIN( LastStringMatch, cfg.readNumEntry( #var "match" )));
     
 #define READ_SET_RULE( var, type, func ) \
     var = func ( cfg.read##type##Entry( #var )); \
@@ -113,8 +113,7 @@ static int limit0to4( int i ) { return QMAX( 0, QMIN( 4, i )); }
 void Rules::readFromCfg( KConfig& cfg )
     {
     description = cfg.readEntry( "description" );
-    wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
-    wmclassregexp = cfg.readBoolEntry( "wmclassregexp" );
+    READ_MATCH_STRING( wmclass, .lower().latin1() );
     wmclasscomplete = cfg.readBoolEntry( "wmclasscomplete" );
     READ_MATCH_STRING( windowrole, .lower().latin1() );
     READ_MATCH_STRING( title, );
@@ -159,16 +158,16 @@ void Rules::readFromCfg( KConfig& cfg )
 #undef READ_FORCE_RULE
 #undef READ_FORCE_RULE_2
 
-#define WRITE_MATCH_STRING( var, cast ) \
-    if( !var.isEmpty()) \
+#define WRITE_MATCH_STRING( var, cast, force ) \
+    if( !var.isEmpty() || force ) \
         { \
         cfg.writeEntry( #var, cast var ); \
-        cfg.writeEntry( #var "regexp", var##regexp ); \
+        cfg.writeEntry( #var "match", var##match ); \
         } \
     else \
         { \
         cfg.deleteEntry( #var ); \
-        cfg.deleteEntry( #var "regexp" ); \
+        cfg.deleteEntry( #var "match" ); \
         }
 
 #define WRITE_SET_RULE( var, func ) \
@@ -206,13 +205,12 @@ void Rules::write( KConfig& cfg ) const
     {
     cfg.writeEntry( "description", description );
     // always write wmclass
-    cfg.writeEntry( "wmclass", ( const char* )wmclass );
-    cfg.writeEntry( "wmclassregexp", wmclassregexp );
+    WRITE_MATCH_STRING( wmclass, (const char*), true );
     cfg.writeEntry( "wmclasscomplete", wmclasscomplete );
-    WRITE_MATCH_STRING( windowrole, (const char*) );
-    WRITE_MATCH_STRING( title, );
-    WRITE_MATCH_STRING( extrarole, (const char*) );
-    WRITE_MATCH_STRING( clientmachine, (const char*) );
+    WRITE_MATCH_STRING( windowrole, (const char*), false );
+    WRITE_MATCH_STRING( title,, false );
+    WRITE_MATCH_STRING( extrarole, (const char*), false );
+    WRITE_MATCH_STRING( clientmachine, (const char*), false );
     WRITE_WITH_DEFAULT( types, NET::AllTypesMask );
     WRITE_FORCE_RULE( placement, Placement::policyToString );
     WRITE_SET_RULE( position, );
@@ -278,39 +276,49 @@ bool Rules::match( const Client* c ) const
         if( !NET::typeMatchesMask( t, types ))
             return false;
         }
-    if( !wmclass.isEmpty())
+    if( wmclassmatch != UnimportantMatch )
         { // TODO optimize?
         QCString cwmclass = wmclasscomplete
             ? c->resourceName() + ' ' + c->resourceClass() : c->resourceClass();
-        if( wmclassregexp && QRegExp( wmclass ).search( cwmclass ) == -1 )
+        if( wmclassmatch == RegExpMatch && QRegExp( wmclass ).search( cwmclass ) == -1 )
             return false;
-        if( !wmclassregexp && wmclass != cwmclass )
+        if( wmclassmatch == ExactMatch && wmclass != cwmclass )
             return false;
-        }
-    if( !windowrole.isEmpty())
-        {
-        if( windowroleregexp && QRegExp( windowrole ).search( c->windowRole()) == -1 )
-            return false;
-        if( !windowroleregexp && windowrole != c->windowRole())
+        if( wmclassmatch == SubstringMatch && !cwmclass.contains( wmclass ))
             return false;
         }
-    if( !title.isEmpty())
+    if( windowrolematch != UnimportantMatch )
         {
-        if( titleregexp && QRegExp( title ).search( c->caption( false )) == -1 )
+        if( windowrolematch == RegExpMatch && QRegExp( windowrole ).search( c->windowRole()) == -1 )
             return false;
-        if( !titleregexp && title != c->caption( false ))
+        if( windowrolematch == ExactMatch && windowrole != c->windowRole())
+            return false;
+        if( windowrolematch == SubstringMatch && !c->windowRole().contains( windowrole ))
+            return false;
+        }
+    if( titlematch != UnimportantMatch )
+        {
+        if( titlematch == RegExpMatch && QRegExp( title ).search( c->caption( false )) == -1 )
+            return false;
+        if( titlematch == ExactMatch && title != c->caption( false ))
+            return false;
+        if( titlematch == SubstringMatch && !c->caption( false ).contains( title ))
             return false;
         }
     // TODO extrarole
-    if( !clientmachine.isEmpty())
+    if( clientmachinematch != UnimportantMatch )
         {
-        if( clientmachineregexp
+        if( clientmachinematch == RegExpMatch
             && QRegExp( clientmachine ).search( c->wmClientMachine( true )) == -1
             && QRegExp( clientmachine ).search( c->wmClientMachine( false )) == -1 )
             return false;
-        if( !clientmachineregexp
+        if( clientmachinematch == ExactMatch
             && clientmachine != c->wmClientMachine( true )
             && clientmachine != c->wmClientMachine( false ))
+            return false;
+        if( clientmachinematch == SubstringMatch
+            && !c->wmClientMachine( true ).contains( clientmachine )
+            && !c->wmClientMachine( false ).contains( clientmachine ))
             return false;
         }
     return true;

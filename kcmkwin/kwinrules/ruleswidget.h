@@ -42,6 +42,11 @@ class RulesWidget
         void changed( bool state );
     protected slots:
         virtual void detectClicked();
+        virtual void wmclassMatchChanged();
+        virtual void roleMatchChanged();
+        virtual void titleMatchChanged();
+        virtual void extraMatchChanged();
+        virtual void machineMatchChanged();
     private slots:
         // geometry tab
         void updateEnableposition();

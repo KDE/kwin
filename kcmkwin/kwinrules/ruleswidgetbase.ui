@@ -8,11 +8,11 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>737</width>
-            <height>477</height>
+            <width>700</width>
+            <height>500</height>
         </rect>
     </property>
-    <vbox>
+    <hbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
@@ -80,21 +80,35 @@
                     </widget>
                     <widget class="QLayoutWidget">
                         <property name="name">
-                            <cstring>layout1</cstring>
+                            <cstring>layout22</cstring>
                         </property>
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QCheckBox">
+                            <widget class="KComboBox">
+                                <item>
+                                    <property name="text">
+                                        <string>Unimportant</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Exact Match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Substring match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Regular expression</string>
+                                    </property>
+                                </item>
                                 <property name="name">
-                                    <cstring>reg_wmclass</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Regular expression</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
+                                    <cstring>wmclass_match</cstring>
                                 </property>
                             </widget>
                             <spacer>
@@ -109,7 +123,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -140,7 +154,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -162,21 +176,35 @@
                     </widget>
                     <widget class="QLayoutWidget">
                         <property name="name">
-                            <cstring>layout2</cstring>
+                            <cstring>layout23</cstring>
                         </property>
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QCheckBox">
+                            <widget class="KComboBox">
+                                <item>
+                                    <property name="text">
+                                        <string>Unimportant</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Exact Match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Substring match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Regular expression</string>
+                                    </property>
+                                </item>
                                 <property name="name">
-                                    <cstring>reg_role</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Regular expression</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
+                                    <cstring>role_match</cstring>
                                 </property>
                             </widget>
                             <spacer>
@@ -219,7 +247,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -412,21 +440,35 @@
                     </widget>
                     <widget class="QLayoutWidget">
                         <property name="name">
-                            <cstring>layout1_2</cstring>
+                            <cstring>layout24</cstring>
                         </property>
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QCheckBox">
+                            <widget class="KComboBox">
+                                <item>
+                                    <property name="text">
+                                        <string>Unimportant</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Exact Match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Substring match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Regular expression</string>
+                                    </property>
+                                </item>
                                 <property name="name">
-                                    <cstring>reg_title</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Regular expression</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
+                                    <cstring>title_match</cstring>
                                 </property>
                             </widget>
                             <spacer>
@@ -441,7 +483,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -472,7 +514,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -494,21 +536,35 @@
                     </widget>
                     <widget class="QLayoutWidget">
                         <property name="name">
-                            <cstring>layout1_2_2</cstring>
+                            <cstring>layout25</cstring>
                         </property>
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QCheckBox">
+                            <widget class="KComboBox">
+                                <item>
+                                    <property name="text">
+                                        <string>Unimportant</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Exact Match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Substring match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Regular expression</string>
+                                    </property>
+                                </item>
                                 <property name="name">
-                                    <cstring>reg_extra</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Regular expression</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
+                                    <cstring>extra_match</cstring>
                                 </property>
                             </widget>
                             <spacer>
@@ -523,7 +579,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -554,7 +610,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -576,21 +632,35 @@
                     </widget>
                     <widget class="QLayoutWidget">
                         <property name="name">
-                            <cstring>layout1_2_3</cstring>
+                            <cstring>layout26</cstring>
                         </property>
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QCheckBox">
+                            <widget class="KComboBox">
+                                <item>
+                                    <property name="text">
+                                        <string>Unimportant</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Exact Match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Substring match</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Regular expression</string>
+                                    </property>
+                                </item>
                                 <property name="name">
-                                    <cstring>reg_machine</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Regular expression</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
+                                    <cstring>machine_match</cstring>
                                 </property>
                             </widget>
                             <spacer>
@@ -605,7 +675,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -636,7 +706,7 @@
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>40</width>
+                                        <width>20</width>
                                         <height>20</height>
                                     </size>
                                 </property>
@@ -2090,46 +2160,44 @@
                 </grid>
             </widget>
         </widget>
-    </vbox>
+    </hbox>
 </widget>
-<customwidgets>
-</customwidgets>
 <connections>
-    <connection>
-        <sender>reg_role</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>edit_reg_role</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>reg_title</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>edit_reg_title</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>reg_extra</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>edit_reg_extra</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>reg_machine</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>edit_reg_machine</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>reg_wmclass</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>edit_reg_wmclass</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
     <connection>
         <sender>detect1</sender>
         <signal>clicked()</signal>
         <receiver>Form2</receiver>
         <slot>detectClicked()</slot>
+    </connection>
+    <connection>
+        <sender>wmclass_match</sender>
+        <signal>activated(int)</signal>
+        <receiver>Form2</receiver>
+        <slot>wmclassMatchChanged()</slot>
+    </connection>
+    <connection>
+        <sender>role_match</sender>
+        <signal>activated(int)</signal>
+        <receiver>Form2</receiver>
+        <slot>roleMatchChanged()</slot>
+    </connection>
+    <connection>
+        <sender>title_match</sender>
+        <signal>activated(int)</signal>
+        <receiver>Form2</receiver>
+        <slot>titleMatchChanged()</slot>
+    </connection>
+    <connection>
+        <sender>extra_match</sender>
+        <signal>activated(int)</signal>
+        <receiver>Form2</receiver>
+        <slot>extraMatchChanged()</slot>
+    </connection>
+    <connection>
+        <sender>machine_match</sender>
+        <signal>activated(int)</signal>
+        <receiver>Form2</receiver>
+        <slot>machineMatchChanged()</slot>
     </connection>
 </connections>
 <tabstops>
@@ -2137,20 +2205,20 @@
     <tabstop>description</tabstop>
     <tabstop>wmclass</tabstop>
     <tabstop>whole_wmclass</tabstop>
-    <tabstop>reg_wmclass</tabstop>
+    <tabstop>wmclass_match</tabstop>
     <tabstop>edit_reg_wmclass</tabstop>
     <tabstop>role</tabstop>
-    <tabstop>reg_role</tabstop>
+    <tabstop>role_match</tabstop>
     <tabstop>edit_reg_role</tabstop>
     <tabstop>detect1</tabstop>
     <tabstop>title</tabstop>
-    <tabstop>reg_title</tabstop>
+    <tabstop>title_match</tabstop>
     <tabstop>edit_reg_title</tabstop>
     <tabstop>extra</tabstop>
-    <tabstop>reg_extra</tabstop>
+    <tabstop>extra_match</tabstop>
     <tabstop>edit_reg_extra</tabstop>
     <tabstop>machine</tabstop>
-    <tabstop>reg_machine</tabstop>
+    <tabstop>machine_match</tabstop>
     <tabstop>edit_reg_machine</tabstop>
     <tabstop>enable_position</tabstop>
     <tabstop>rule_position</tabstop>
@@ -2220,48 +2288,13 @@
     <tabstop>maxsize</tabstop>
 </tabstops>
 <slots>
-    <slot access="protected">detectClicked()</slot>
+    <slot access="protected" specifier="pure virtual">detectClicked()</slot>
+    <slot access="protected" specifier="pure virtual">wmclassMatchChanged()</slot>
+    <slot access="protected" specifier="pure virtual">roleMatchChanged()</slot>
+    <slot access="protected" specifier="pure virtual">titleMatchChanged()</slot>
+    <slot access="protected" specifier="pure virtual">extraMatchChanged()</slot>
+    <slot access="protected" specifier="pure virtual">machineMatchChanged()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
-<includehints>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>klistbox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-</includehints>
 </UI>

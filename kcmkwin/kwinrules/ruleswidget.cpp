@@ -329,9 +329,11 @@ void RulesWidget::setRules( Rules* rules )
     description->setText( rules->description );
     wmclass->setText( rules->wmclass );
     whole_wmclass->setChecked( rules->wmclasscomplete );
-    reg_wmclass->setChecked( rules->wmclassregexp );
+    wmclass_match->setCurrentItem( rules->wmclassmatch );
+    wmclassMatchChanged();
     role->setText( rules->windowrole );
-    reg_role->setChecked( rules->windowroleregexp );
+    role_match->setCurrentItem( rules->windowrolematch );
+    roleMatchChanged();
     types->setSelected( 0, rules->types & NET::NormalMask );
     types->setSelected( 1, rules->types & NET::DialogMask );
     types->setSelected( 2, rules->types & NET::UtilityMask );
@@ -343,11 +345,14 @@ void RulesWidget::setRules( Rules* rules )
     types->setSelected( 8, rules->types & NET::OverrideMask );
     types->setSelected( 9, rules->types & NET::TopMenuMask );
     title->setText( rules->title );
-    reg_title->setChecked( rules->titleregexp );
+    title_match->setCurrentItem( rules->titlematch );
+    titleMatchChanged();
     extra->setText( rules->extrarole );
-    reg_extra->setChecked( rules->extraroleregexp );
+    extra_match->setCurrentItem( rules->extrarolematch );
+    extraMatchChanged();
     machine->setText( rules->clientmachine );
-    reg_machine->setChecked( rules->clientmachineregexp );
+    machine_match->setCurrentItem( rules->clientmachinematch );
+    machineMatchChanged();
     LINEEDIT_SET_RULE( position, positionToStr );
     LINEEDIT_SET_RULE( size, sizeToStr );
     COMBOBOX_SET_RULE( desktop, desktopToCombo );
@@ -402,9 +407,9 @@ Rules* RulesWidget::rules() const
     rules->description = description->text();
     rules->wmclass = wmclass->text().utf8();
     rules->wmclasscomplete = whole_wmclass->isChecked();
-    rules->wmclassregexp = reg_wmclass->isChecked();
+    rules->wmclassmatch = static_cast< Rules::StringMatch >( wmclass_match->currentItem());
     rules->windowrole = role->text().utf8();
-    rules->windowroleregexp = reg_role->isChecked();
+    rules->windowrolematch = static_cast< Rules::StringMatch >( role_match->currentItem());
     rules->types = 0;
     bool all_types = true;
     for( int i = 0;
@@ -428,11 +433,11 @@ Rules* RulesWidget::rules() const
         rules->types |= types->isSelected( 9 ) ? NET::TopMenuMask : 0;
         }
     rules->title = title->text();
-    rules->titleregexp = reg_title->isChecked();
+    rules->titlematch = static_cast< Rules::StringMatch >( title_match->currentItem());
     rules->extrarole = extra->text().utf8();
-    rules->extraroleregexp = reg_extra->isChecked();
+    rules->extrarolematch = static_cast< Rules::StringMatch >( extra_match->currentItem());
     rules->clientmachine = machine->text().utf8();
-    rules->clientmachineregexp = reg_machine->isChecked();
+    rules->clientmachinematch = static_cast< Rules::StringMatch >( machine_match->currentItem());
     LINEEDIT_SET_RULE( position, strToPosition );
     LINEEDIT_SET_RULE( size, strToSize );
     COMBOBOX_SET_RULE( desktop, comboToDesktop );
@@ -466,6 +471,21 @@ Rules* RulesWidget::rules() const
 #undef LINEEDIT_FORCE_RULE
 #undef COMBOBOX_FORCE_RULE
 
+#define STRING_MATCH_COMBO( type ) \
+void RulesWidget::type##MatchChanged() \
+    { \
+    edit_reg_##type->setEnabled( type##_match->currentItem() == Rules::RegExpMatch ); \
+    type->setEnabled( type##_match->currentItem() != Rules::UnimportantMatch ); \
+    }
+
+STRING_MATCH_COMBO( wmclass )
+STRING_MATCH_COMBO( role )
+STRING_MATCH_COMBO( title )
+STRING_MATCH_COMBO( extra )
+STRING_MATCH_COMBO( machine )
+
+#undef STRING_MATCH_COMBO
+
 void RulesWidget::detectClicked()
     {
     assert( detect_dlg == NULL );
@@ -479,8 +499,13 @@ void RulesWidget::detected( bool ok )
     if( ok )
         {
         wmclass->setText( detect_dlg->selectedClass());
+        wmclass_match->setCurrentItem( Rules::ExactMatch );
+        wmclassMatchChanged(); // grrr
         whole_wmclass->setChecked( detect_dlg->selectedWholeClass());
         role->setText( detect_dlg->selectedRole());
+        role_match->setCurrentItem( detect_dlg->selectedRole().isEmpty()
+            ? Rules::UnimportantMatch : Rules::ExactMatch );
+        roleMatchChanged();
         }
     delete detect_dlg;
     detect_dlg = NULL;

@@ -110,8 +110,12 @@ void writeRules( KConfig& cfg )
         cfg.writeEntry( "description", ( const char* ) ( info->resourceClass + " (KDE3.2)" ));
         cfg.writeEntry( "wmclass", ( const char* )( info->resourceName + ' ' + info->resourceClass ));
         cfg.writeEntry( "wmclasscomplete", true );
+        cfg.writeEntry( "wmclassmatch", 1 ); // 1 == exact match
         if( !info->windowRole.isEmpty())
+            {
             cfg.writeEntry( "windowrole", ( const char* ) info->windowRole );
+            cfg.writeEntry( "windowrolematch", 1 );
+            }
         if( info->windowType == static_cast< NET::WindowType >( -2 )) // undefined
             ; // all types
         if( info->windowType == NET::Unknown )

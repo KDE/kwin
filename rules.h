@@ -127,6 +127,15 @@ class Rules
             UnusedForceRule = Unused,
             ForceRuleDummy = 256   // so that it's at least short int
             };
+        enum StringMatch
+            {
+            FirstStringMatch,
+            UnimportantMatch = FirstStringMatch,
+            ExactMatch,
+            SubstringMatch,
+            RegExpMatch,
+            LastStringMatch = RegExpMatch
+            };
         void readFromCfg( KConfig& cfg );
         static SetRule readSetRule( KConfig&, const QString& key );
         static ForceRule readForceRule( KConfig&, const QString& key );
@@ -140,16 +149,16 @@ class Rules
         int temporary_state; // e.g. for kstart
         QString description;
         QCString wmclass;
-        bool wmclassregexp;
+        StringMatch wmclassmatch;
         bool wmclasscomplete;
         QCString windowrole;
-        bool windowroleregexp;
+        StringMatch windowrolematch;
         QString title; // TODO "caption" ?
-        bool titleregexp;
+        StringMatch titlematch;
         QCString extrarole;
-        bool extraroleregexp;
+        StringMatch extrarolematch;
         QCString clientmachine;
-        bool clientmachineregexp;
+        StringMatch clientmachinematch;
         unsigned long types; // types for matching
         Placement::Policy placement;
         ForceRule placementrule;
