@@ -645,10 +645,10 @@ void PlastikClient::reset( unsigned long changed )
     }
 }
 
-PlastikClient::MousePosition PlastikClient::mousePosition(const QPoint &point) const
+PlastikClient::Position PlastikClient::mousePosition(const QPoint &point) const
 {
     const int corner = 18+3*PlastikHandler::borderSize()/2;
-    MousePosition pos = Center;
+    Position pos = PositionCenter;
 
     // often needed coords..
     QRect topRect(topSpacer_->geometry());
@@ -660,41 +660,41 @@ PlastikClient::MousePosition PlastikClient::mousePosition(const QPoint &point) c
     QRect bottomRect(bottomSpacer_->geometry());
 
     if(bottomRect.contains(point)) {
-        if      (point.x() <= bottomRect.left()+corner)  pos = KDecorationDefines::BottomLeft2;
-        else if (point.x() >= bottomRect.right()-corner) pos = KDecorationDefines::BottomRight2;
-        else                                             pos = KDecorationDefines::Bottom;
+        if      (point.x() <= bottomRect.left()+corner)  pos = PositionBottomLeft;
+        else if (point.x() >= bottomRect.right()-corner) pos = PositionBottomRight;
+        else                                             pos = PositionBottom;
     }
     else if(leftRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopLeft2;
-        else if (point.y() >= bottomRect.bottom()-corner) pos = KDecorationDefines::BottomLeft2;
-        else                                              pos = KDecorationDefines::Left;
+        if      (point.y() <= topRect.top()+corner)       pos = PositionTopLeft;
+        else if (point.y() >= bottomRect.bottom()-corner) pos = PositionBottomLeft;
+        else                                              pos = PositionLeft;
     }
     else if(leftTitleRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopLeft2;
-        else                                              pos = KDecorationDefines::Left;
+        if      (point.y() <= topRect.top()+corner)       pos = PositionTopLeft;
+        else                                              pos = PositionLeft;
     }
     else if(rightRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopRight2;
-        else if (point.y() >= bottomRect.bottom()-corner) pos = KDecorationDefines::BottomRight2;
-        else                                              pos = KDecorationDefines::Right;
+        if      (point.y() <= topRect.top()+corner)       pos = PositionTopRight;
+        else if (point.y() >= bottomRect.bottom()-corner) pos = PositionBottomRight;
+        else                                              pos = PositionRight;
     }
     else if(rightTitleRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopRight2;
-        else                                              pos = KDecorationDefines::Right;
+        if      (point.y() <= topRect.top()+corner)       pos = PositionTopRight;
+        else                                              pos = PositionRight;
     }
     else if(topRect.contains(point)) {
-        if      (point.x() <= topRect.left()+corner)      pos = KDecorationDefines::TopLeft2;
-        else if (point.x() >= topRect.right()-corner)     pos = KDecorationDefines::TopRight2;
-        else                                              pos = KDecorationDefines::Top;
+        if      (point.x() <= topRect.left()+corner)      pos = PositionTopLeft;
+        else if (point.x() >= topRect.right()-corner)     pos = PositionTopRight;
+        else                                              pos = PositionTop;
     }
     else if(decoRect.contains(point)) {
         if(point.x() <= leftTitleRect.right()) {
-            if(point.y() <= topRect.top()+corner)         pos = KDecorationDefines::TopLeft2;
-            else                                          pos = KDecorationDefines::Left;
+            if(point.y() <= topRect.top()+corner)         pos = PositionTopLeft;
+            else                                          pos = PositionLeft;
         }
         else if(point.x() >= rightTitleRect.left()) {
-            if(point.y() <= topRect.top()+corner)         pos = KDecorationDefines::TopRight2;
-            else                                          pos = KDecorationDefines::Right;
+            if(point.y() <= topRect.top()+corner)         pos = PositionTopRight;
+            else                                          pos = PositionRight;
         }
     }
 

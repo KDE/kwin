@@ -70,7 +70,7 @@ protected:
     virtual void captionChange();
     virtual void iconChange();
     virtual void activeChange();
-    virtual MousePosition mousePosition(const QPoint &point) const;
+    virtual Position mousePosition(const QPoint &point) const;
 
 private slots:
     void slotMaximize();
