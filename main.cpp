@@ -2,6 +2,7 @@
 #include "options.h"
 #include "atoms.h"
 #include "workspace.h"
+#include <dcopclient.h>
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -101,6 +102,29 @@ Application::~Application()
      delete options;
 }
 
+void kwiniface::logout()
+{
+exit (0);
+}
+
+bool kwiniface::process(const QCString &fun, const QByteArray &data, QCString& replyType, QByteArray &replyData)
+{	
+	fprintf(stderr,"Logout Call Recieved\n");
+	if ( fun == "logout()" )
+	{
+		replyType = "void";
+		logout();
+		return TRUE;
+	}
+     	else 
+	{
+	
+	return FALSE;
+ 	}
+}
+
+
+
 bool Application::x11EventFilter( XEvent *e )
 {
     switch ( e->type ) {
@@ -151,5 +175,11 @@ int main( int argc, char * argv[] )
     Application a;
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
-    return a.exec();
+    DCOPClient *client = kapp->dcopClient();
+    client->attach();
+    client->registerAs("kwin");
+
+
+     return a.exec();
+
 }
