@@ -1294,6 +1294,15 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     case Options::ToggleStoreSettingsOp:
         c->setStoreSettings( !c->storeSettings() );
         break;
+    case Options::HMaximizeOp:
+        c->maximize(Client::MaximizeHorizontal);
+        break;
+    case Options::VMaximizeOp:
+        c->maximize(Client::MaximizeVertical);
+        break;
+    case Options::LowerOp:
+        lowerClient(c);
+        break;
     default:
         break;
     }

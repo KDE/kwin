@@ -213,6 +213,9 @@ public:
 	StaysOnTopOp,
 	OperationsOp,
 	ToggleStoreSettingsOp,
+	HMaximizeOp,
+	VMaximizeOp,
+	LowerOp,
 	NoOp
     };
 

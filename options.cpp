@@ -236,6 +236,12 @@ Options::WindowOperation Options::windowOperation(const QString &name){
         return ShadeOp;
     else if (name == "Operations")
         return OperationsOp;
+    else if (name == "Maximize (vertical only)")
+        return VMaximizeOp;
+    else if (name == "Maximize (horizontal only)")
+        return HMaximizeOp;
+    else if (name == "Lower")
+        return LowerOp;
     return NoOp;
 }
 
