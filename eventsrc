@@ -2303,6 +2303,7 @@ Name[tr]=Pencere Tüm Masaüstlerinde Değil
 Name[uk]=Вікно не на всі стільниці
 Name[xx]=xxWindow Not On All Desktopsxx
 Comment=A Window is no longer Visible on All Desktops
+Comment[bg]=Прозорец само на един работен плот
 Comment[ca]=Una finestra es fa no visible a tots els escriptoris
 Comment[cs]=Okno již není viditelné na všech plochách
 Comment[da]=Et vindue er ikke længere synligt på alle skriveborde
