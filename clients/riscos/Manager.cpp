@@ -303,7 +303,6 @@ Manager::mouseDoubleClickEvent(QMouseEvent * e)
   if (titleSpacer_->geometry().contains(e->pos()))
     workspace()
       ->performWindowOperation(this, options->operationTitlebarDblClick());
-  workspace()->requestFocus(this);
 }
 
   void
