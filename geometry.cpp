@@ -1743,7 +1743,7 @@ bool Client::startMoveResize()
         // eat them, otherwise XOR painting will be broken (#58054)
         // paint events for the geometrytip need to be allowed, though
         eater = new EatAllPaintEvents;
-        kapp->installEventFilter( eater );
+// not needed anymore?        kapp->installEventFilter( eater );
         }
     Notify::raise( isResize() ? Notify::ResizeStart : Notify::MoveStart );
     return true;
