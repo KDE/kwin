@@ -572,12 +572,12 @@ void B2Client::resizeEvent(QResizeEvent * /*e*/)
     titlebar->layout()->activate();
     positionButtons();
 
-    /* may be the resize cuted off some space occupied by titlebar, which
+    /* may be the resize cut off some space occupied by titlebar, which
        was moved, so instead of reducing it, we first try to move it */
     titleMoveAbs(bar_x_ofs);
     doShape();
 
-    widget()->repaint(); //there is some strange wrong repaint of the frame without
+    widget()->repaint(); // the frame is misrendered without this
 }
 
 void B2Client::captionChange()
