@@ -141,7 +141,7 @@ QSize ModernButton::sizeHint() const
 
 void ModernButton::reset()
 {
-    repaint();
+    repaint(false);
 }
 
 void ModernButton::setBitmap(const unsigned char *bitmap)
@@ -161,8 +161,10 @@ void ModernButton::drawButton(QPainter *p)
         if(iButtonPix)
             p->drawPixmap(0, 0, isDown() ? *iButtonPixDown : *iButtonPix);
     }
-    p->setPen(buttonFg);
-    p->drawPixmap(isDown() ? 4 : 3, isDown() ? 5 : 4, deco);
+    if(!deco.isNull()){
+        p->setPen(buttonFg);
+        p->drawPixmap(isDown() ? 4 : 3, isDown() ? 5 : 4, deco);
+    }
 }
 
 void ModernSys::slotReset()
@@ -451,6 +453,17 @@ void ModernSys::maximizeChange(bool m)
 void ModernSys::init()
 {
     //
+}
+
+void ModernSys::activeChange(bool)
+{
+    repaint(false);
+    button[0]->reset();
+    button[1]->reset();
+    button[2]->reset();
+    button[3]->reset();
+    if(button[4])
+        button[4]->reset();
 }
 
 
