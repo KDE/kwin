@@ -940,7 +940,7 @@ void Workspace::setActiveClient( Client* c )
 
     if ( menubar ) {
 	menubar->show();
-	menubar->raise();
+	raiseClient( menubar );
     }
 
     // ... then hide the other ones. Avoids flickers.

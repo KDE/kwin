@@ -437,7 +437,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 	setSticky( TRUE );
 
     // window wants to stay on top?
-    stays_on_top = ( info->state() & NET::StaysOnTop) != 0;
+    stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || transient_for == workspace()->rootWin();
 
 
     // should we open this window on a certain desktop?
@@ -1177,7 +1177,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    return;
     }
 
-    if ( mode !=  Center && shaded ) 
+    if ( mode !=  Center && shaded )
 	giveUpShade();
 
     QPoint globalPos = e->globalPos(); // pos() + geometry().topLeft();
