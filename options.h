@@ -17,7 +17,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 namespace KWinInternal {
 
 class OptionsPrivate;
-
+// NOTE: this class has to keep binary compatibility, just like other
+// KWin classes accessible from the plugins
 class Options : public QObject {
     Q_OBJECT
 public:

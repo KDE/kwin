@@ -95,6 +95,8 @@ public:
 };
 
 class WorkspacePrivate;
+// NOTE: this class has to keep binary compatibility, just like other
+// KWin classes accessible from the plugins
 
 class Workspace : public QObject, virtual public KWinInterface
 {

@@ -68,7 +68,8 @@ inline WId WindowWrapper::window() const
 }
 
 
-
+// NOTE: this class has to keep binary compatibility, just like other
+// KWin classes accessible from the plugins
 class Client : public QWidget
 {
     Q_OBJECT
