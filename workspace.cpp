@@ -2001,14 +2001,18 @@ void Workspace::setClientIsMoving( Client *c )
  */
 void Workspace::cascadeDesktop()
 {
-    ClientList::Iterator it(clients.fromLast());
-    for (; it != clients.end(); --it) {
+    ClientList::Iterator it(stacking_order.begin());
+    bool re_init_cascade_at_first_client = true;
+    for (; it != stacking_order.end(); ++it) {
         if((!(*it)->isOnDesktop(currentDesktop())) ||
            ((*it)->isIconified())                  ||
            ((*it)->isSticky())                     ||
            (!(*it)->isMovable()) )
             continue;
-        cascadePlacement(*it);
+        cascadePlacement(*it, re_init_cascade_at_first_client);
+        //CT is an if faster than an attribution??
+        if (re_init_cascade_at_first_client)
+          re_init_cascade_at_first_client = false;
     }
 }
 
