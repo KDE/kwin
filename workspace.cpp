@@ -27,6 +27,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kmenubar.h>
 #include <kprocess.h>
 #include <kglobalaccel.h>
+#include <dcopclient.h>
 
 #include "plugins.h"
 #include "client.h"
@@ -2334,6 +2335,10 @@ void Workspace::startKompmgr()
         options->useTranslucency = TRUE;
         allowKompmgrRestart = FALSE;
         QTimer::singleShot( 60000, this, SLOT(unblockKompmgrRestart()) );
+        QByteArray ba;
+        QDataStream arg(ba, IO_WriteOnly);
+        arg << "";
+        kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStarted()", ba);
         }
         if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
 }
@@ -2346,6 +2351,15 @@ void Workspace::stopKompmgr()
     options->useTranslucency = FALSE;
     if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
     kompmgr->kill();
+    QByteArray ba;
+    QDataStream arg(ba, IO_WriteOnly);
+    arg << "";
+    kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStopped()", ba);
+}
+
+bool Workspace::kompmgrIsRunning()
+{
+   return kompmgr->isRunning();
 }
 
 void Workspace::unblockKompmgrRestart()
