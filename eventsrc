@@ -1486,6 +1486,8 @@ soundfile=pop.wav
 
 [transnew]
 Name=New Dialog
+Name[gl]=Novo Diálogo
+Name[ro]=Dialog nou
 Comment=Transient Window (a dialog) Appears
 Comment[ca]=Apareix una finestra transitòria (un diàleg)
 Comment[cs]=Objevilo se dialogové okno
@@ -1525,6 +1527,8 @@ default_presentation=0
 
 [transdelete]
 Name=Delete Dialog
+Name[gl]=Pechar Diálogo
+Name[ro]=Şterge dialog
 Comment=Transient Window (a dialog) is Removed
 Comment[ca]=S'elimina una finestra transitòria (un diàleg)
 Comment[cs]=Dialogové okno bylo zavřeno
@@ -1698,7 +1702,7 @@ Comment[ro]=O fereastră şi-a terminat mutarea
 Comment[ru]=Окно закончило движение
 Comment[sk]=Presun okna je ukončený
 Comment[sl]=Okno se je prenehalo premikati
-Comment[sr]=Prozor je završio premeštanje
+Comment[sr]=Prozor je zavr¹io preme¹tanje
 Comment[sv]=Ett fönster har flyttats klart
 Comment[ta]=´Õ º¡ÇÃõ ¿¸÷¾ø ÓÊó¾Ð
 Comment[tr]=Bir Pencere Hareketini Tamamladı
