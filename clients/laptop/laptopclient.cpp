@@ -299,7 +299,7 @@ void LaptopClient::slotReset()
 
 LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity )
+    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents )
 {
     lastButtonWidth = 0;
     lastBufferWidth = 0;
