@@ -919,7 +919,10 @@ static void redraw_pixmaps()
 void B2Client::positionButtons()
 {
     QFontMetrics fm(options->font(isActive()));
-    int textLen = fm.width(caption());
+    QString cap = caption();
+    if( cap.length() < 5 ) // make sure the titlebar has sufficiently wide
+        cap = "XXXXX";     // area for dragging the window
+    int textLen = fm.width( cap );
 
     QRect t = titlebar->captionSpacer->geometry();
     int titleWidth = titlebar->width() - t.width() + textLen+2;
