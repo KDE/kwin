@@ -343,20 +343,7 @@ WebClient::mousePosition(const QPoint & p) const
   void
 WebClient::slotMaximize(int button)
 {
-  switch (button)
-  {
-    case MidButton:
-      maximize(maximizeMode() ^ MaximizeVertical);
-      break;
-
-    case RightButton:
-      maximize(maximizeMode() ^ MaximizeHorizontal);
-      break;
-
-    case LeftButton:
-    default:
-      maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull);
-  }
+  maximize( static_cast<ButtonState>(button) );
 }
 
   WebButton *
