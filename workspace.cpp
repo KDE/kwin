@@ -687,19 +687,19 @@ void Workspace::grabKey(KeySym keysym, unsigned int mod){
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod,
 	   qt_xrootwin(), FALSE,
-	   GrabModeSync, GrabModeSync);
+	   GrabModeAsync, GrabModeSync);
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask,
 	   qt_xrootwin(), FALSE,
-	   GrabModeSync, GrabModeSync);
+	   GrabModeAsync, GrabModeSync);
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod | NumLockMask,
 	   qt_xrootwin(), FALSE,
-	   GrabModeSync, GrabModeSync);
+	   GrabModeAsync, GrabModeSync);
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask | NumLockMask,
 	   qt_xrootwin(), FALSE,
-	   GrabModeSync, GrabModeSync);
+	   GrabModeAsync, GrabModeSync);
 
 }
 
@@ -758,8 +758,8 @@ void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 {
     if ( c->isIconified() || c->isShade() ) {
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-	    if ( (*it)->transientFor() == c->window() 
-		 && !(*it)->isIconified() 
+	    if ( (*it)->transientFor() == c->window()
+		 && !(*it)->isIconified()
 		 && !(*it)->isShade() ) {
 		(*it)->setMappingState( IconicState );
 		(*it)->hide();
@@ -805,7 +805,7 @@ void Workspace::requestFocus( Client* c)
 	focusToNull();
 	return;
     }
-    
+
     if ( !popup || !popup->isVisible() )
 	popup_client = c;
 
@@ -891,7 +891,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 void Workspace::performWindowOperation( Client* c, Options::WindowOperation op ) {
     if ( !c )
 	return;
-    
+
     switch ( op ) {
     case Options::CloseOp:
 	c->closeWindow();
@@ -910,7 +910,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     }
 }
 
-void Workspace::clientPopupActivated( int id ) 
+void Workspace::clientPopupActivated( int id )
 {
     if ( popup_client )
 	performWindowOperation( popup_client, (Options::WindowOperation) id );
@@ -1285,7 +1285,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
     active_client = 0;
     block_focus = TRUE;
-    
+
     /*
        optimized Desktop switching: unmapping done from back to front
        mapping done from front to back => less exposure events
@@ -1400,7 +1400,7 @@ bool Workspace::clientMessage( XClientMessageEvent msg )
 	setCurrentDesktop( msg.data.l[0] );
 	return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -1602,7 +1602,7 @@ void Workspace::sendToDesktop( int desk )
 
     popup_client->setDesktop( desk );
     popup_client->hide();
-    
+
     Client* old = popup_client;
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	if ( (*it)->transientFor() == popup_client->window() ) {

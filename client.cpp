@@ -132,11 +132,10 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 // 		   StructureNotifyMask
 		   );
 
-    // install a passive grab to catch mouse button events
-    XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
-		ButtonPressMask, GrabModeSync, GrabModeSync,
-		None, None );
-
+     // install a passive grab to catch mouse button events
+     XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
+		 ButtonPressMask, GrabModeSync, GrabModeAsync,
+		 None, None );
 }
 
 WindowWrapper::~WindowWrapper()
@@ -242,18 +241,18 @@ bool WindowWrapper::x11Event( XEvent * e)
 		case Button3:
 		    com = options->commandWindow3();
 		    break;
-		default: 
+		default:
 		    com = Options::MouseActivateAndPassClick;
 		}
 	    }
-	    bool replay = ( (Client*)parentWidget() )->performMouseCommand( com, 
+	    bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
 			    QPoint( e->xbutton.x_root, e->xbutton.y_root) );
-	    
+	
 	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, kwin_time);
 	    return TRUE;
 	}
 	break;
-    case ButtonRelease: 
+    case ButtonRelease:
 	XAllowEvents(qt_xdisplay(), SyncPointer, kwin_time);
 	break;
     default:
@@ -430,7 +429,7 @@ void Client::fetchName()
     }
     if ( s.isEmpty() )
 	s = i18n("unnamed");
-    
+
     if ( s != caption() ) {
 	setCaption( "" );
 	if (workspace()->hasCaption( s ) ){
@@ -692,7 +691,7 @@ bool Client::clientMessage( XClientMessageEvent& e )
 	workspace()->activateClient( this );
 	return TRUE;
     }
-    
+
     return FALSE;
 }
 
@@ -780,7 +779,7 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 
     w = QMAX( minimumWidth(), w );
     h = QMAX( minimumHeight(), h );
-    
+
     int ww = wwrap->width();
     int wh = 0;
     if ( !wwrap->testWState( WState_ForceHide ) )
@@ -1390,7 +1389,7 @@ void Client::setShade( bool s )
 	if ( isActive() )
 	    workspace()->requestFocus( this );
     }
-    
+
     workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
@@ -1446,7 +1445,7 @@ void Client::getWMHints()
     miniicon_pix = KWM::miniIcon( win, 16, 16 );
     if ( !isWithdrawn() )
 	iconChange();
-    
+
     input = TRUE;
     XWMHints *hints = XGetWMHints(qt_xdisplay(), win );
     if ( hints ) {
@@ -1499,7 +1498,7 @@ void Client::setMask( const QRegion & reg)
 /*!
   Returns the main client. For normal windows, this is the window
   itself. For transient windows, it is the parent.
-  
+
  */
 Client* Client::mainClient()
 {
@@ -1511,7 +1510,7 @@ Client* Client::mainClient()
 	saveset.append( c );
 	c = workspace()->findClient( c->transientFor() );
     } while ( c && c->isTransient() && !saveset.contains( c ) );
-    
+
     return c?c:this;
 }
 
@@ -1556,7 +1555,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
- 	grabMouse( arrowCursor ); 
+ 	grabMouse( arrowCursor );
 	if ( options->moveMode != Options::Opaque )
 	    XGrabServer( qt_xdisplay() );
 	break;
@@ -1565,12 +1564,12 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	if ( moveOffset.x() < width()/2) {
-	    if ( moveOffset.y() < height()/2) 
+	    if ( moveOffset.y() < height()/2)
 		mode = TopLeft;
 	    else
 		mode = BottomLeft;
 	} else {
-	    if ( moveOffset.y() < height()/2) 
+	    if ( moveOffset.y() < height()/2)
 		mode = TopRight;
 	    else
 		mode = BottomRight;

@@ -95,7 +95,7 @@ bool Application::x11EventFilter( XEvent *e )
 		    e->xmotion.time : e->xbutton.time;
 	break;
     case KeyPress:
-    case KeyRelease: 
+    case KeyRelease:
 	kwin_time = e->xkey.time;
 	break;
     case PropertyNotify:
@@ -104,7 +104,7 @@ bool Application::x11EventFilter( XEvent *e )
     default:
 	break;
     }
-    
+
      for ( WorkspaceList::Iterator it = workspaces.begin(); it != workspaces.end(); ++it) {
 	 if ( (*it)->workspaceEvent( e ) )
 	     return TRUE;
