@@ -603,13 +603,16 @@ void Client::getWmNormalHints()
  */
 void Client::fetchName()
 {
-//####     QString s = KWM::title( win );
     QString s;
-
-    char* c = 0;
-    if ( XFetchName( qt_xdisplay(), win, &c ) != 0 ) {
-	s = QString::fromLocal8Bit( c );
-	XFree( c );
+    
+    if ( info->name()  ) {
+	s = QString::fromUtf8( info->name() );
+    } else {
+	char* c = 0;
+	if ( XFetchName( qt_xdisplay(), win, &c ) != 0 ) {
+	    s = QString::fromLocal8Bit( c );
+	    XFree( c );
+	}
     }
 
     if ( s != caption() ) {

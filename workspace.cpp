@@ -1032,7 +1032,8 @@ bool Workspace::hasCaption( const QString& caption )
 void Workspace::requestFocus( Client* c)
 {
     if (!focusChangeEnabled())
-        return;
+	return;
+    
     //TODO will be different for non-root clients. (subclassing?)
     if ( !c ) {
 	focusToNull();
