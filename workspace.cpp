@@ -910,39 +910,34 @@ bool Workspace::keyPress(XKeyEvent key)
 {
     if ( root != qt_xrootwin() )
         return FALSE;
-    unsigned int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
-    unsigned int km = key.state & XMODMASK;
+
+    uint keyCombQt = KAccel::keyEventXToKeyQt( (XEvent*)&key );
+
     if (!control_grab){
-        if( ( kc == keyToXSym( walkThroughWindowsKeycode )
-              && km == keyToXMod( walkThroughWindowsKeycode ))
-           || ( kc == keyToXSym( walkBackThroughWindowsKeycode )
-              && km == keyToXMod( walkBackThroughWindowsKeycode ))) {
+        if( keyCombQt == walkThroughWindowsKeycode
+           || keyCombQt == walkBackThroughWindowsKeycode ) {
             if (!tab_grab) {
                 freeKeyboard(FALSE);
                 return FALSE;
             }
-            KDEWalkThroughWindows( ( kc == keyToXSym( walkThroughWindowsKeycode )
-              && km == keyToXMod( walkThroughWindowsKeycode )));
+            KDEWalkThroughWindows( keyCombQt == walkThroughWindowsKeycode );
         }
     }
 
     if (!tab_grab){
 
-        if( ( kc == keyToXSym( walkThroughDesktopsKeycode )
-              && km == keyToXMod( walkThroughDesktopsKeycode ))
-           || ( kc == keyToXSym( walkBackThroughDesktopsKeycode )
-              && km == keyToXMod( walkBackThroughDesktopsKeycode ))) {
+        if( keyCombQt == walkThroughDesktopsKeycode
+           || keyCombQt == walkBackThroughDesktopsKeycode ) {
             if (!control_grab) {
                 freeKeyboard(FALSE);
                 return FALSE;
             }
-            walkThroughDesktops( ( kc == keyToXSym( walkThroughDesktopsKeycode )
-              && km == keyToXMod( walkThroughDesktopsKeycode )));
+            walkThroughDesktops( keyCombQt == walkThroughDesktopsKeycode );
         }
     }
 
     if (control_grab || tab_grab){
-        if (kc == XK_Escape){
+        if ((keyCombQt & 0xffff) == XK_Escape){
             XUngrabKeyboard(qt_xdisplay(), kwin_time);
             XUngrabPointer( qt_xdisplay(), kwin_time);
             tab_box->hide();
