@@ -1,0 +1,20 @@
+Fri Aug 20 01:30:50 CEST 1999 
+
+This is the beginning of kwin, kwm next generation.
+
+WARNING: this thing is hardly usable now, neither ICCCM nor KDE
+compliant yet!
+
+All it has is a context menu that allows you to switch between two
+decoration styles, KDE classic and an experimental style.
+
+Please don't work on the code, I'll finish it during my summer
+vacations (four weeks from now on).
+
+kwin was only commited to allow people like Mosfet to have a look at
+the Client API (and StdClient) to write nifty new themable decorations.
+
+Have fun,
+
+   Matthias
+  <ettrich@kde.org>
