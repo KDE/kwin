@@ -1797,6 +1797,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             drawbound( geom );
         }
 
+#if 0
 	// Position and Size display
 	if (!geometryTip)
 	    geometryTip = new GeometryTip( this, &xSizeHint );
@@ -1806,6 +1807,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    geometryTip->show();
 	    geometryTip->raise();
 	}
+#endif
     }
     else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
         geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
@@ -1827,6 +1829,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             break;
         }
 
+#if 0
 	// Position and Size display
 	if (!geometryTip)
 	    geometryTip = new GeometryTip( this, &xSizeHint );
@@ -1836,6 +1839,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    geometryTip->show();
 	    geometryTip->raise();
 	}
+#endif
     }
 
     if ( isMove() )
