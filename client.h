@@ -112,8 +112,12 @@ public:
         return state == IconicState;
     }
     // is the window in normal state?
-    bool isNormal(){
+    bool isNormalState(){
         return state == NormalState;
+    }
+    // obsolete, don't use - KDE4 - remove it
+    bool isNormal(){
+        return isNormalState();
     }
 
     bool isActive() const;
@@ -157,6 +161,8 @@ public:
     bool isTool() const; // KDE4 remove me
     bool isToolbar() const;
     bool isTopMenu() const;
+    bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
+    bool isDialog() const;
 
     bool isResizable() const;
     bool isCloseable() const; // may have a close button

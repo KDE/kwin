@@ -869,7 +869,10 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     workspace()->clientReady( this ); // will call Workspace::propagateClients()
 
     if ( showMe && !doNotShow ) {
-        Events::raise( isTransient() ? Events::TransNew : Events::New );
+        if( isDialog())
+            Events::raise( Events::TransNew );
+        if( isNormalWindow())
+            Events::raise( Events::New );
         if ( isMapped ) {
             show();
         } else {
@@ -1134,7 +1137,10 @@ bool Client::unmapNotify( XUnmapEvent& e )
         XEvent ev;
         if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
                                      DestroyNotify, &ev) ){
-            Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
+            if( isDialog())
+                Events::raise( Events::TransDelete );
+            if( isNormalWindow())
+                Events::raise( Events::Delete );
             workspace()->destroyClient( this );
             return TRUE;
         }
@@ -1157,7 +1163,10 @@ bool Client::unmapNotify( XUnmapEvent& e )
  */
 void Client::withdraw()
 {
-    Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
+    if( isDialog())
+        Events::raise( Events::TransDelete );
+    if( isNormalWindow())
+        Events::raise( Events::Delete );
     // remove early from client list
     workspace()->removeClient( this );
     info->setDesktop( 0 );
@@ -1953,7 +1962,10 @@ void Client::closeWindow()
     else {
         // client will not react on wm_delete_window. We have not choice
         // but destroy his connection to the XServer.
-        Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
+        if( isDialog())
+            Events::raise( Events::TransDelete );
+        if( isNormalWindow())
+            Events::raise( Events::Delete );
         XKillClient(qt_xdisplay(), win );
         workspace()->destroyClient( this );
     }
@@ -3050,6 +3062,20 @@ bool Client::isTool() const
     return isToolbar();
 }
 
+bool Client::isDialog() const
+{
+    return windowType() == NET::Dialog
+        || ( windowType() == NET::Unknown && isTransient())
+         // NET::Normal workaround for Qt<3.1 not setting NET::Dialog
+        || ( windowType() == NET::Normal && isTransient());
+}
+
+bool Client::isNormalWindow() const
+{
+         // NET::Normal workaround for Qt<3.1 not setting NET::Dialog
+    return ( windowType() == NET::Normal && !isTransient())
+        || ( windowType() == NET::Unknown && !isTransient());
+}
 
 
 /*!
