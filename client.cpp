@@ -1971,24 +1971,24 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	if ( options->moveMode != Options::Opaque )
 	    XGrabServer( qt_xdisplay() );
 	break;
-    case Options::MouseResize:
+    case Options::MouseResize: {
 	if (!isMovable())
 	    break;
 	moveResizeMode = TRUE;
 	workspace()->setEnableFocusChange(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
-	if ( moveOffset.x() < width()/2) {
-	    if ( moveOffset.y() < height()/2)
-		mode = TopLeft;
-	    else
-		mode = BottomLeft;
-	} else {
-	    if ( moveOffset.y() < height()/2)
-		mode = TopRight;
-	    else
-		mode = BottomRight;
-	}
+	int x = moveOffset.x(), y = moveOffset.y();
+	bool left = x < width() / 3;
+	bool right = x >= 2 * width() / 3;
+	bool top = y < height() / 3;
+	bool bot = y >= 2 * height() / 3;
+	if (top)
+	    mode = left ? TopLeft : (right ? TopRight : Top);
+	else if (bot)
+	    mode = left ? BottomLeft : (right ? BottomRight : Bottom);
+	else
+	    mode = (x < width() / 2) ? Left : Right;
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
 	setMouseCursor( mode );
 	grabMouse( cursor()  );
@@ -1997,7 +1997,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	resizeVerticalDirectionFixed = FALSE;
 	if ( options->resizeMode != Options::Opaque )
 	    XGrabServer( qt_xdisplay() );
-	break;
+	} break;
     case Options::MouseNothing:
 	// fall through
     default:
