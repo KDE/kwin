@@ -495,6 +495,7 @@ bool Client::manage( Window w, bool isMapped )
     ungrabXServer();
     
     client_rules.discardTemporary();
+    updateWindowRules(); // was blocked while !isManaged()
 
     return true;
     }

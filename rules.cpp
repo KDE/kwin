@@ -634,6 +634,8 @@ void Client::setupWindowRules( bool ignore_temporary )
 
 void Client::updateWindowRules()
     {
+    if( !isManaged()) // not fully setup yet
+        return;
     client_rules.update( this );
     }
 
