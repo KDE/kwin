@@ -963,22 +963,32 @@ void Workspace::requestFocus( Client* c)
  */
 void Workspace::clientHidden( Client* c )
 {
-    if ( c == active_client || ( !active_client && c == should_get_focus ) ) {
-	active_client = 0;
-	should_get_focus = 0;
-	if ( clients.contains( c ) ) {
-	    focus_chain.remove( c );
-	    focus_chain.prepend( c );
-	}
-	if ( !block_focus && options->focusPolicyIsReasonable() ) {
-	    for ( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.begin(); --it) {
-		if ( (*it)->isVisible() ) {
-		    requestFocus( *it );
-		    break;
+	if ( c == active_client || ( !active_client && c == should_get_focus ) )
+	{
+		active_client = 0;
+		should_get_focus = 0;
+		if ( clients.contains( c ) ) {
+		    focus_chain.remove( c );
+		    focus_chain.prepend( c );
 		}
-	    }
+		if (
+		!block_focus &&
+		options->focusPolicyIsReasonable() &&
+		!focus_chain.isEmpty()
+		)
+		{
+
+			ClientList::ConstIterator it = focus_chain.fromLast();
+	
+			do {
+				if ((*it)->isVisible()) {
+					requestFocus(*it);
+					break;
+				}
+				it--;
+			} while (it != focus_chain.begin());
+		}
 	}
-    }
 }
 
 
