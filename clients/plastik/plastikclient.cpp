@@ -318,18 +318,6 @@ void PlastikClient::paintEvent(QPaintEvent*)
         }
     }
 
-    if(Rleft.height() == 1 && Rright.height() == 1) // the window is shaded... hopefully
-    {
-        // let's orient on the bottomSpacer which should have the prper x coords...
-        painter.setPen(windowContour );
-        painter.drawPoint(Rbottom.left(), Rleft.top() );
-        painter.drawPoint(Rbottom.right(), Rright.top() );
-        painter.setPen(border );
-        painter.drawLine(Rbottom.left()+1, Rleft.top(), Rbottom.right()-1, Rright.top() );
-
-    }
-    else
-    {
         // leftSpacer
         if(Rleft.width() > 0 && Rleft.height() > 0)
         {
@@ -361,7 +349,6 @@ void PlastikClient::paintEvent(QPaintEvent*)
                 painter.fillRect(tempRect, border );
             }
         }
-    }
 
     // bottomSpacer
     if(Rbottom.height() > 0)
