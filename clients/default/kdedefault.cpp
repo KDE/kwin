@@ -1475,7 +1475,7 @@ bool KDEDefaultClient::eventFilter( QObject* o, QEvent* e )
 } // namespace
 
 // Extended KWin plugin interface
-extern "C" KDecorationFactory* create_factory()
+extern "C" KDE_EXPORT KDecorationFactory* create_factory()
 {
     return new Default::KDEDefaultHandler();
 }

@@ -910,7 +910,7 @@ bool ModernSysFactory::supports( Ability ability )
 }
 
 // KWin extended plugin interface
-extern "C" KDecorationFactory* create_factory()
+extern "C" KDE_EXPORT KDecorationFactory* create_factory()
 {
     return new ModernSystem::ModernSysFactory();
 }

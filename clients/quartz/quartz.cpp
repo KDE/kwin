@@ -1155,7 +1155,7 @@ bool QuartzClient::eventFilter( QObject* o, QEvent* e )
 /////////////////////////////////
 extern "C"
 {
-	KDecorationFactory *create_factory()
+	KDE_EXPORT KDecorationFactory *create_factory()
 	{
 		Quartz::clientHandler = new Quartz::QuartzHandler();
 		return Quartz::clientHandler;

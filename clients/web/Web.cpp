@@ -36,7 +36,7 @@
 
 extern "C"
 {
-  KDecorationFactory *create_factory()
+  KDE_EXPORT KDecorationFactory *create_factory()
   {
     return new Web::WebFactory();
   }

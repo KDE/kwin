@@ -219,7 +219,7 @@ static KWinPlastik::PlastikHandler *handler = 0;
 
 extern "C"
 {
-    KDecorationFactory *create_factory()
+    KDE_EXPORT KDecorationFactory *create_factory()
     {
         handler = new KWinPlastik::PlastikHandler();
         return handler;
