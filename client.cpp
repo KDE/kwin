@@ -2883,7 +2883,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         buttonDown = TRUE;
         moveOffset = mapFromGlobal( globalPos );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
-        setMouseCursor( mode );
+     // setMouseCursor( mode );
+        setCursor(sizeAllCursor);
         startMoveResize();
         break;
     case Options::MouseResize: {
