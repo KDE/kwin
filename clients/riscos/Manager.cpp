@@ -456,11 +456,11 @@ void Manager::animate(bool iconify, int style)
           double dch = (ch / 2) * cos(angle);
           double midy = cy + (ch / 2);
 
-          QPoint p1(cx + dx, midy - dch);
-          QPoint p2(cx + cw - dx, p1.y());
-          QPoint p3(cx + dw + dx, midy + dch);
-          QPoint p4(cx - dx, p3.y());
-       
+          QPoint p1(int(cx + dx), int(midy - dch));
+          QPoint p2(int(cx + cw - dx), p1.y());
+          QPoint p3(int(cx + dw + dx), int(midy + dch));
+          QPoint p4(int(cx - dx), p3.y());
+
           XGrabServer(qt_xdisplay());
 
           p.drawLine(p1, p2);
