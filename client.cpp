@@ -66,12 +66,12 @@ public:
 	if ( mask & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
-	if ( (mask & NET::Max) == NET::Max ) 
+	if ( (mask & NET::Max) == NET::Max )
 	    m_client->maximizeRaw( state & NET::MaxVert, state & NET::MaxHoriz );
 	else if ( mask & NET::MaxVert )
 	    m_client->maximizeRaw( state & NET::MaxVert, m_client->maximizeMode() & Client::MaximizeHorizontal );
 	else if ( mask & NET::MaxHoriz )
-	    m_client->maximizeRaw( m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxVert );
+	    m_client->maximizeRaw( m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxHoriz );
 	
 	if ( mask & NET::StaysOnTop) {
 	    m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
@@ -589,7 +589,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	    move( x(), area.bottom() - height() );
     }
 
-    XShapeSelectInput( qt_xdisplay(), win, ShapeNotifyMask ); 
+    XShapeSelectInput( qt_xdisplay(), win, ShapeNotifyMask );
     if ( (is_shape = Shape::hasShape( win )) ) {
 	updateShape();
     }
@@ -833,7 +833,7 @@ bool Client::windowEvent( XEvent * e)
 	if ( isActive() )
 	    workspace()->updateColormap();
     default:
-	if ( e->type == Shape::shapeEvent() ) 
+	if ( e->type == Shape::shapeEvent() )
 	    updateShape();
 	break;
     }
@@ -1729,7 +1729,7 @@ void Client::maximizeRaw( bool vertically, bool horizontally )
 {
     if ( !vertically && !horizontally ) {
 	maximize ( MaximizeRestore );
-    } else { 
+    } else {
 	QRect geom = geometry();
 	if ( isMaximized() )
 	    geom = geom_restore;
@@ -1748,11 +1748,11 @@ void Client::maximizeRaw( bool vertically, bool horizontally )
     }
 }
 
-/*!  
+/*!
   Maximizes the client according to mode \a m. If the client is
   already maximized with the same mode, it gets restored. Does some
   smart magic like vertically + horizontally = full.
-  
+
   This is the slot to connect to from your client subclass.
  */
 void Client::maximize( MaximizeMode m)
@@ -1764,7 +1764,7 @@ void Client::maximize( MaximizeMode m)
 
     if (isShade())
 	setShade( FALSE );
-    
+
     if ( m == MaximizeAdjust ) {
 	m = max_mode;
     } else {
@@ -1777,13 +1777,13 @@ void Client::maximize( MaximizeMode m)
 	if ( m != MaximizeRestore ) {
 	    if ( max_mode == MaximizeRestore )
 		geom_restore = geometry();
-	    if ( m != MaximizeFull)
+	    else if ( m != MaximizeFull)
 		m = (MaximizeMode ) ( (max_mode & MaximizeFull) ^ (m & MaximizeFull) );
 	    Events::raise( Events::Maximize );
 	}
     }
 
-    
+
     switch (m) {
 
     case MaximizeVertical:
