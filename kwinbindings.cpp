@@ -36,7 +36,7 @@
         DEF( I18N_NOOP("Window Above Other Windows"),          0, 0, slotWindowAbove() );
         DEF( I18N_NOOP("Window Below Other Windows"),          0, 0, slotWindowBelow() );
 	DEF( I18N_NOOP("Toggle Window Raise/Lower"),           0, 0, slotWindowRaiseOrLower() );
-        DEF( I18N_NOOP("Activate Window Demanding Attention"), 0, 0, slotActivateAttentionWindow());
+        DEF( I18N_NOOP("Activate Window Demanding Attention"), CTRL+ALT+Qt::Key_A, 0, slotActivateAttentionWindow());
         DEF( I18N_NOOP("Window Pack Left"),                    CTRL+ALT+Qt::Key_Left, 0, slotWindowPackLeft() );
         DEF( I18N_NOOP("Window Pack Right"),                   CTRL+ALT+Qt::Key_Right, 0, slotWindowPackRight() );
         DEF( I18N_NOOP("Window Pack Up"),                      CTRL+ALT+Qt::Key_Up, 0, slotWindowPackUp() );
