@@ -814,7 +814,7 @@ void Client::startupIdChanged()
         timestamp = asn_data.timestamp();
     if( timestamp != 0 )
         {
-        bool activate = workspace()->allowClientActivation( this, asn_data.timestamp());
+        bool activate = workspace()->allowClientActivation( this, timestamp );
         if( asn_data.desktop() != 0 && !isOnCurrentDesktop())
             activate = false; // it was started on different desktop than current one
         if( activate )
