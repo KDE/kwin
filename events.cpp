@@ -854,6 +854,8 @@ void Client::propertyNotifyEvent( XPropertyEvent* e )
                 getWmClientLeader();
             else if( e->atom == qt_window_role )
                 window_role = staticWindowRole( window());
+            else if( e->atom == atoms->motif_wm_hints )
+                getMotifHints();
             break;
         }
     }

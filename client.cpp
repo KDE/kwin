@@ -112,6 +112,7 @@ Client::Client( Workspace *ws )
     keep_above = FALSE;
     keep_below = FALSE;
     is_shape = FALSE;
+    motif_noborder = false;
     motif_may_move = TRUE;
     motif_may_resize = TRUE;
     motif_may_close = TRUE;
@@ -324,9 +325,9 @@ void Client::checkBorderSizes()
 
 void Client::detectNoBorder()
     {
-    if( Shape::hasShape( window()) || Motif::noBorder( window()))
+    if( Shape::hasShape( window()))
         {
-        noborder = true; // TODO for all window types?
+        noborder = true;
         return;
         }
     switch( windowType())
@@ -382,7 +383,7 @@ void Client::resizeDecoration( const QSize& s )
 
 bool Client::noBorder() const
     {
-    return noborder || isFullScreen() || user_noborder;
+    return noborder || isFullScreen() || user_noborder || motif_noborder;
     }
 
 bool Client::userCanSetNoBorder() const
@@ -1306,6 +1307,23 @@ void Client::getWMHints()
     checkGroup();
     updateUrgency();
     updateAllowedActions(); // group affects isMinimizable()
+    }
+
+void Client::getMotifHints()
+    {
+    bool mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
+    Motif::readFlags( client, mnoborder, mresize, mmove, mminimize, mmaximize, mclose );
+    motif_noborder = mnoborder;
+    if( !hasNETSupport()) // NETWM apps should set type and size constraints
+        {
+        motif_may_resize = mresize; // this should be set using minsize==maxsize, but oh well
+        motif_may_move = mmove;
+        }
+    // mminimize; - ignore, bogus - e.g. shading or sending to another desktop is "minimizing" too
+    // mmaximize; - ignore, bogus - maximizing is basically just resizing
+    motif_may_close = mclose; // motif apps like to crash when they set this hint and WM closes them anyway
+    if( isManaged())
+        updateDecoration( true ); // check if noborder state has changed
     }
 
 void Client::readIcons( Window win, QPixmap* icon, QPixmap* miniicon )

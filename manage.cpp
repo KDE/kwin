@@ -80,19 +80,6 @@ bool Client::manage( Window w, bool isMapped )
 
     cmap = attr.colormap;
 
-    bool mresize, mmove, mminimize, mmaximize, mclose;
-    if( Motif::funcFlags( client, mresize, mmove, mminimize, mmaximize, mclose )) 
-        {
-        if( !hasNETSupport()) // NETWM apps should set type and size constraints
-            {
-            motif_may_resize = mresize; // this should be set using minsize==maxsize, but oh well
-            motif_may_move = mmove;
-            }
-        // mminimize; - ignore, bogus - e.g. shading or sending to another desktop is "minimizing" too
-        // mmaximize; - ignore, bogus - maximizing is basically just resizing
-        motif_may_close = mclose; // motif apps like to crash when they set this hint and WM closes them anyway
-        }
-
     XClassHint classHint;
     if ( XGetClassHint( qt_xdisplay(), client, &classHint ) ) 
         {
@@ -122,6 +109,7 @@ bool Client::manage( Window w, bool isMapped )
     getIcons();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
+    getMotifHints();
 
     // TODO try to obey all state information from info->state()
 
