@@ -530,7 +530,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
                   "and new windows always become activated.</li>"
                   "<li><em>Low:</em> Prevention is enabled; when some window doesn't have support "
                   "for the underlying mechanism and KWin cannot reliably decide whether to "
-                  "activate the window or not, it will be activated. This setting may have both"
+                  "activate the window or not, it will be activated. This setting may have both "
                   "worse and better results than normal level, depending on the applications.</li>"
                   "<li><em>Normal:</em> Prevention is enabled; the default setting.</li>"
                   "<li><em>High:</em> New windows get activated only if no window is currently active "
