@@ -25,7 +25,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "client.h"
 #include "events.h"
 #include "atoms.h"
-#include <kaccel.h> // Needed in x11Event() below
+#include <kkey_x11.h> // Needed in x11Event() below
 #include <netwm.h>
 #include <X11/X.h>
 #include <X11/Xos.h>
@@ -405,7 +405,7 @@ bool WindowWrapper::x11Event( XEvent * e)
     case ButtonPress:
 	{
 	    uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-	    			KAccel::keyModXMeta() : KAccel::keyModXAlt();
+	    			KKeyX11::keyModXMeta() : KKeyX11::keyModXAlt();
 	    bool bModKeyHeld = e->xbutton.state & keyModX;
 
 	    if ( ((Client*)parentWidget())->isActive()

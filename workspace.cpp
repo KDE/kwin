@@ -28,6 +28,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #else
 #include <qdesktopwidget.h>
 #endif
+#include <kkey_x11.h>
 #include "workspace.h"
 #include "client.h"
 #include "tabbox.h"
@@ -1057,7 +1058,7 @@ bool Workspace::keyPress(XKeyEvent key)
     if ( root != qt_xrootwin() )
         return FALSE;
 
-    uint keyCombQt = KAccel::keyEventXToKeyQt( (XEvent*)&key );
+    uint keyCombQt = KKeyX11::keyEventXToKeyQt( (XEvent*)&key );
     if (d->movingClient)
     {
         d->movingClient->keyPressEvent(keyCombQt);
@@ -1113,7 +1114,7 @@ bool Workspace::keyRelease(XKeyEvent key)
         return FALSE;
     if( !tab_grab && !control_grab )
         return FALSE;
-    unsigned int mk = key.state & KAccel::accelModMaskX();
+    unsigned int mk = key.state & KKeyX11::accelModMaskX();
     // key.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released is : only one modifier is active and the currently released
@@ -1547,7 +1548,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-        QString k = KAccel::keyToString( keys->currentKey( "Window close" ), true );
+        QString k = KKey::keyToString( keys->currentKey( "Window close" ), true );
         popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+k, Options::CloseOp );
     }
     return popup;
