@@ -343,6 +343,7 @@ extern bool block_focus; // SELI
 
 void Workspace::clientHidden( Client* c )
     {
+    assert( !c->isShown( true ) || !c->isOnCurrentDesktop());
     if( !( c == active_client
             || ( should_get_focus.count() > 0 && c == should_get_focus.last())))
         return;
@@ -378,13 +379,10 @@ void Workspace::clientHidden( Client* c )
                 if( get_focus == NULL )
                     get_focus = *it;
                 }
+            if( get_focus == NULL )
+                get_focus = findDesktop( true, currentDesktop());
             if( get_focus != NULL )
-                {
                 requestFocus( get_focus );
-                return;
-                }
-            if ( !desktops.isEmpty() )
-                requestFocus( findDesktop( true, currentDesktop()));
             else
                 focusToNull();
             }

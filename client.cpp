@@ -172,6 +172,7 @@ void Client::releaseWindow( bool on_shutdown )
     if (moveResizeMode)
        leaveMoveResize();
     setModal( false ); // otherwise its mainwindow wouldn't get focus
+    hidden = true; // so that it's not considered visible anymore
     if( !on_shutdown )
         workspace()->clientHidden( this );
     destroyDecoration();
@@ -212,6 +213,7 @@ void Client::destroyClient()
        leaveMoveResize();
     ++block_geometry;
     setModal( false );
+    hidden = true; // so that it's not considered visible anymore
     workspace()->clientHidden( this );
     destroyDecoration();
     cleanGrouping();
