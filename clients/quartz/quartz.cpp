@@ -165,6 +165,9 @@ bool QuartzHandler::reset(unsigned long changed)
 	if (changed & SettingColors)
 	{
 		needHardReset = false;
+	} else if (changed & SettingButtons) {
+		// handled by KCommonDecoration
+		needHardReset = false;
 	}
 
 	if (needHardReset) {
@@ -191,6 +194,7 @@ bool QuartzHandler::supports( Ability ability )
         case AbilityButtonAboveOthers:
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
+		case AbilityButtonSpacer:
             return true;
         default:
             return false;
@@ -376,37 +380,13 @@ QValueList< QuartzHandler::BorderSize > QuartzHandler::borderSizes() const
 }
 
 
-QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeButton,
-		bool isLeftButton, bool isOnAllDesktopsButton, const unsigned char *bitmap,
-		const QString& tip, const int realizeBtns)
-    : QButton(parent->widget(), name),
-      last_button(NoButton)
+QuartzButton::QuartzButton(ButtonType type, QuartzClient *parent, const char *name)
+    : KCommonDecorationButton(type, parent, name)
 {
-	setTipText(tip);
-	setCursor(ArrowCursor);
-
     // Eliminate any possible background flicker
     setBackgroundMode( QWidget::NoBackground );
-	setToggleButton( isOnAllDesktopsButton );
 
-	realizeButtons = realizeBtns;
-
-	deco 	 = NULL;
-        large 	 = largeButton;
-        if ( QApplication::reverseLayout() )
-             isLeft 	 = !isLeftButton;
-         else
-             isLeft 	 = isLeftButton;
-	isOnAllDesktops = isOnAllDesktopsButton;
-	client   = parent;
-
-    if ( large )
-       setFixedSize(normalTitleHeight-2, normalTitleHeight-2);
-    else
-       setFixedSize(toolTitleHeight-2, toolTitleHeight-2);
-
-    if(bitmap)
-        setBitmap(bitmap);
+	deco = 0;
 }
 
 
@@ -415,33 +395,54 @@ QuartzButton::~QuartzButton()
     delete deco;
 }
 
-
-QSize QuartzButton::sizeHint() const
+void QuartzButton::reset(unsigned long changed)
 {
-   if ( large )
-      return( QSize(normalTitleHeight-2, normalTitleHeight-2) );
-   else
-      return( QSize(toolTitleHeight-2, toolTitleHeight-2) );
-}
+    if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
+		switch (type() ) {
+			case CloseButton:
+				setBitmap(close_bits);
+				break;
+			case HelpButton:
+				setBitmap(question_bits);
+				break;
+			case MinButton:
+				setBitmap(iconify_bits);
+				break;
+			case MaxButton:
+				setBitmap( isOn() ? minmax_bits : maximize_bits );
+				break;
+			case OnAllDesktopsButton:
+				setBitmap(0);
+				break;
+			case ShadeButton:
+				setBitmap( isOn() ? shade_on_bits : shade_off_bits );
+				break;
+			case AboveButton:
+				setBitmap( isOn() ? above_on_bits : above_off_bits );
+				break;
+			case BelowButton:
+				setBitmap( isOn() ? below_on_bits : below_off_bits );
+				break;
+			default:
+				setBitmap(0);
+				break;
+		}
 
+        this->update();
+    }
+}
 
 void QuartzButton::setBitmap(const unsigned char *bitmap)
 {
-    delete deco;
+	delete deco;
+	deco = 0;
 
-    deco = new QBitmap(10, 10, bitmap, true);
-    deco->setMask( *deco );
-    repaint( false );
-}
-
-
-void QuartzButton::setTipText(const QString &tip) {
-	if(KDecoration::options()->showTooltips()) {
-		QToolTip::remove(this );
-		QToolTip::add(this, tip );
+	if (bitmap) {
+		deco = new QBitmap(10, 10, bitmap, true);
+		deco->setMask( *deco );
+		repaint( false );
 	}
 }
-
 
 void QuartzButton::drawButton(QPainter *p)
 {
@@ -451,10 +452,10 @@ void QuartzButton::drawButton(QPainter *p)
 
 	QColor c;
 
-	if (isLeft)
-		c = KDecoration::options()->color(KDecoration::ColorTitleBar, client->isActive()).light(130);
+	if (isLeft() )
+		c = KDecoration::options()->color(KDecoration::ColorTitleBar, decoration()->isActive()).light(130);
 	else
-		c = KDecoration::options()->color(KDecoration::ColorTitleBlend, client->isActive());
+		c = KDecoration::options()->color(KDecoration::ColorTitleBlend, decoration()->isActive());
 
 	// Fill the button background with an appropriate color
 	p->fillRect(0, 0, width(), height(), c );
@@ -467,26 +468,26 @@ void QuartzButton::drawButton(QPainter *p)
 		int yOff = (height()-10)/2;
 		p->setPen( Qt::black );
 		p->drawPixmap(isDown() ? xOff+2: xOff+1, isDown() ? yOff+2 : yOff+1, *deco);
-		p->setPen( KDecoration::options()->color(KDecoration::ColorButtonBg, client->isActive()).light(150) );
+		p->setPen( KDecoration::options()->color(KDecoration::ColorButtonBg, decoration()->isActive()).light(150) );
 		p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, *deco);
 	} else
 		{
 			QPixmap btnpix;
 			int Offset = 0;
 
-			if (isOnAllDesktops)
+			if (type() == OnAllDesktopsButton)
 			{
 				if (isDown())
 					Offset = 1;
 
 				// Select the right onAllDesktops button to paint
-				if (client->isActive())
+				if (decoration()->isActive())
 					btnpix = isOn() ? *pinDownPix : *pinUpPix;
 				else
 					btnpix = isOn() ? *ipinDownPix : *ipinUpPix;
 
 			} else
-				btnpix = client->icon().pixmap( QIconSet::Small, QIconSet::Normal);
+				btnpix = decoration()->icon().pixmap( QIconSet::Small, QIconSet::Normal);
 
 			// Shrink the miniIcon for tiny titlebars.
 			if ( height() < 16)
@@ -503,59 +504,131 @@ void QuartzButton::drawButton(QPainter *p)
 	}
 }
 
-
-// Make the protected member public
-void QuartzButton::turnOn( bool isOn )
-{
-	if ( isToggleButton() )
-		setOn( isOn );
-}
-
-
-void QuartzButton::mousePressEvent( QMouseEvent* e )
-{
-	last_button = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-	QButton::mousePressEvent( &me );
-}
-
-
-void QuartzButton::mouseReleaseEvent( QMouseEvent* e )
-{
-	last_button = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-	QButton::mouseReleaseEvent( &me );
-}
-
-
 ///////////////////////////////////////////////////////////////////////////
 
 QuartzClient::QuartzClient(KDecorationBridge* bridge, KDecorationFactory* factory)
-    : KDecoration (bridge, factory)
+    : KCommonDecoration (bridge, factory)
 {
+}
+
+QString QuartzClient::visibleName() const
+{
+	return i18n("Quartz");
+}
+
+QString QuartzClient::defaultButtonsLeft() const
+{
+	return "M";
+}
+
+QString QuartzClient::defaultButtonsRight() const
+{
+	return "HIAX";
+}
+
+bool QuartzClient::decorationBehaviour(DecorationBehaviour behaviour) const
+{
+	switch (behaviour) {
+		case DB_MenuClose:
+			return false;
+
+		case DB_WindowMask:
+			return false;
+
+		case DB_ButtonHide:
+			return true;
+
+		default:
+			return KCommonDecoration::decorationBehaviour(behaviour);
+	}
+}
+
+int QuartzClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *) const
+{
+	bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+
+	switch (lm) {
+		case LM_BorderLeft:
+		case LM_BorderRight:
+		case LM_BorderBottom:
+		case LM_TitleEdgeLeft:
+		case LM_TitleEdgeRight:
+		{
+			if (respectWindowState && maximized) {
+				return 0;
+			} else {
+				return borderSize;
+			}
+		}
+
+		case LM_TitleEdgeTop:
+			return borderSize-1;
+
+		case LM_TitleEdgeBottom:
+			return 1;
+
+		case LM_TitleBorderLeft:
+		case LM_TitleBorderRight:
+			return 5;
+
+		case LM_TitleHeight:
+			return titleHeight;
+
+		case LM_ButtonWidth:
+		case LM_ButtonHeight:
+			return titleHeight-2;
+
+		case LM_ButtonSpacing:
+			return 1;
+
+		case LM_ExplicitButtonSpacer:
+			return 3;
+
+		default:
+			return 0;
+	}
+}
+
+KCommonDecorationButton *QuartzClient::createButton(ButtonType type)
+{
+    switch (type) {
+        case MenuButton:
+            return new QuartzButton(MenuButton, this, "menu");
+
+        case OnAllDesktopsButton:
+            return new QuartzButton(OnAllDesktopsButton, this, "on_all_desktops");
+
+        case HelpButton:
+            return new QuartzButton(HelpButton, this, "help");
+
+        case MinButton:
+            return new QuartzButton(MinButton, this, "minimize");
+
+        case MaxButton:
+            return new QuartzButton(MaxButton, this, "maximize");
+
+        case CloseButton:
+            return new QuartzButton(CloseButton, this, "close");
+
+        case AboveButton:
+            return new QuartzButton(AboveButton, this, "above");
+
+        case BelowButton:
+            return new QuartzButton(BelowButton, this, "below");
+
+        case ShadeButton:
+            return new QuartzButton(ShadeButton, this, "shade");
+
+        default:
+            return 0;
+    }
 }
 
 
 void QuartzClient::init()
 {
-    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
-    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
-
-	createMainWidget(WNoAutoErase | WStaticContents);
-
-	widget()->installEventFilter( this );
-
-	// No flicker thanks
-	widget()->setBackgroundMode( QWidget::NoBackground );
-
-	// Set button pointers to NULL so we can track things
-	for(int i=0; i < QuartzClient::BtnCount; i++)
-		button[i] = NULL;
-
 	// Finally, toolWindows look small
-	if ( isTool() ) {
+	if ( isToolWindow() ) {
 		titleHeight  = toolTitleHeight;
 		largeButtons = false;
 	}
@@ -566,38 +639,7 @@ void QuartzClient::init()
 
     borderSize = borderWidth;
 
-    // Pack the fake window window within a grid
-    QGridLayout* g = new QGridLayout(widget(), 0, 0, 0);
-    g->setResizeMode(QLayout::FreeResize);
-    g->addRowSpacing(0, borderSize-1);       // Top grab bar
-    if( isPreview())
-	g->addWidget(new QLabel( i18n( "<center><b>Quartz preview</b></center>" ), widget()), 3, 1);
-    else
-	g->addItem(new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
-
-	// without the next line, unshade flickers
-	g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,
-				QSizePolicy::Expanding ) );
-    g->setRowStretch(3, 10);      // Wrapped window
-    g->addRowSpacing(2, 1);       // line under titlebar
-    g->addRowSpacing(4, borderSize);       // bottom handles
-    g->addColSpacing(0, borderSize);
-    g->addColSpacing(2, borderSize);
-
-    // Pack the titlebar HBox with items
-    hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
-    hb->setResizeMode( QLayout::FreeResize );
-    g->addLayout ( hb, 1, 1 );
-
-	addClientButtons( options()->titleButtonsLeft() );
-
-    titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum );
-    hb->addItem(titlebar);
-    hb->addSpacing(2);
-
-	addClientButtons( options()->titleButtonsRight(), false );
-
-    hb->addSpacing(2);
+    KCommonDecoration::init();
 }
 
 void QuartzClient::reset( unsigned long changed )
@@ -607,260 +649,8 @@ void QuartzClient::reset( unsigned long changed )
 		// repaint the whole thing
 		widget()->repaint(false);
 	}
-}
 
-const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
-    | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
-    | NET::UtilityMask | NET::SplashMask;
-
-bool QuartzClient::isTool()
-{
-	NET::WindowType type = windowType( SUPPORTED_WINDOW_TYPES_MASK );
-	return ((type==NET::Toolbar)||(type==NET::Utility)||(type==NET::Menu));
-}
-
-
-void QuartzClient::addClientButtons( const QString& s, bool isLeft )
-{
-	if (s.length() > 0)
-		for(unsigned int i = 0; i < s.length(); i++)
-		{
-			switch( s[i].latin1() )
-			{
-				// Menu button
-				case 'M':
-					if (!button[BtnMenu])
-					{
-    					button[BtnMenu] = new QuartzButton(this, "menu",
-								 largeButtons, isLeft, false, NULL, i18n("Menu"), LeftButton|RightButton);
-    					connect( button[BtnMenu], SIGNAL(pressed()),
-								 this, SLOT(menuButtonPressed()) );
-						hb->addWidget( button[BtnMenu] );
-					}
-					break;
-
-				// On all desktops button
-				case 'S':
-					if (!button[BtnOnAllDesktops])
-					{
-    					button[BtnOnAllDesktops] = new QuartzButton(this, "on_all_desktops",
-								 largeButtons, isLeft, true, NULL, isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops"));
-						button[BtnOnAllDesktops]->turnOn( isOnAllDesktops() );
-    					connect( button[BtnOnAllDesktops], SIGNAL(clicked()),
-								 this, SLOT(toggleOnAllDesktops()) );
-    					hb->addSpacing(1);
-						hb->addWidget( button[BtnOnAllDesktops] );
-    					hb->addSpacing(1);
-					}
-					break;
-
-				// Help button
-				case 'H':
-    				if( providesContextHelp() && (!button[BtnHelp]) )
-					{
-						button[BtnHelp] = new QuartzButton(this, "help",
-								 largeButtons, isLeft, true, question_bits, i18n("Help"));
-						connect( button[BtnHelp], SIGNAL( clicked() ),
-								 this, SLOT(showContextHelp()));
-						hb->addWidget( button[BtnHelp] );
-					}
-					break;
-
-				// Minimize button
-				case 'I':
-					if ( (!button[BtnIconify]) && isMinimizable())
-					{
-					    button[BtnIconify] = new QuartzButton(this, "iconify",
-								 largeButtons, isLeft, true, iconify_bits, i18n("Minimize"));
-					    connect( button[BtnIconify], SIGNAL( clicked()),
-								 this, SLOT(minimize()) );
-						hb->addWidget( button[BtnIconify] );
-					}
-					break;
-
-				// Maximize button
-				case 'A':
-					if ( (!button[BtnMax]) && isMaximizable())
-					{
-					    button[BtnMax]  = new QuartzButton(this, "maximize",
- 								 largeButtons, isLeft, true, maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
-					    connect( button[BtnMax], SIGNAL( clicked()),
-								 this, SLOT(slotMaximize()) );
-						hb->addWidget( button[BtnMax] );
-					}
-					break;
-
-				// Close button
-				case 'X':
-					if (!button[BtnClose] && isCloseable())
-					{
-		    			button[BtnClose] = new QuartzButton(this, "close",
-								 largeButtons, isLeft, true, close_bits, i18n("Close"));
-					    connect( button[BtnClose], SIGNAL( clicked()),
-								 this, SLOT(closeWindow()) );
-						hb->addWidget( button[BtnClose] );
-					}
-                    break;
-
-                // Above button
-                case 'F':
-                    if ( (!button[BtnAbove]))
-                    {
-                        button[BtnAbove]  = new QuartzButton(this, "above",
-                                largeButtons, isLeft, true,
-                                keepAbove() ? above_on_bits : above_off_bits,
-                                i18n("Keep Above Others"));
-                        connect( button[BtnAbove], SIGNAL( clicked()),
-                                 this, SLOT(slotAbove()) );
-                        hb->addWidget( button[BtnAbove] );
-                    }
-                    break;
-                        
-                // Below button
-                case 'B':
-                    if ( (!button[BtnBelow]))
-                    {
-                        button[BtnBelow]  = new QuartzButton(this, "below",
-                                largeButtons, isLeft, true,
-                                keepBelow() ? below_on_bits : below_off_bits,
-                                i18n("Keep Below Others"));
-                        connect( button[BtnBelow], SIGNAL( clicked()),
-                                 this, SLOT(slotBelow()) );
-                        hb->addWidget( button[BtnBelow] );
-                    }
-                    break;
-                            
-                // Shade button
-                case 'L':
-                    if ( (!button[BtnShade]) && isShadeable())
-                    {
-                        button[BtnShade]  = new QuartzButton(this, "shade",
-                                largeButtons, isLeft, true,
-                                isSetShade() ? shade_on_bits : shade_off_bits,
-                                isSetShade() ? i18n( "Unshade" ) : i18n("Shade"));
-                        connect( button[BtnShade], SIGNAL( clicked()),
-                                 this, SLOT(slotShade()) );
-                        hb->addWidget( button[BtnShade] );
-                    }
-                    break;
-			}
-		}
-}
-
-
-void QuartzClient::iconChange()
-{
-	if (button[BtnMenu] && button[BtnMenu]->isVisible())
-		button[BtnMenu]->repaint(false);
-}
-
-
-void QuartzClient::desktopChange()
-{
-	if (button[BtnOnAllDesktops])
-	{
-		button[BtnOnAllDesktops]->turnOn(isOnAllDesktops());
-		button[BtnOnAllDesktops]->repaint(false);
-		button[BtnOnAllDesktops]->setTipText(isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops"));
-	}
-}
-
-
-void QuartzClient::keepAboveChange( bool above )
-{
-    if (button[BtnAbove]) {
-        button[BtnAbove]->setBitmap( above ? above_on_bits : above_off_bits );
-        button[BtnAbove]->repaint(false);
-    }
-}
-
-        
-void QuartzClient::keepBelowChange( bool below )
-{
-    if (button[BtnBelow]) {
-        button[BtnBelow]->setBitmap( below ? below_on_bits : below_off_bits );
-        button[BtnBelow]->repaint(false);
-    }
-}
-
-void QuartzClient::shadeChange()
-{
-    if (button[BtnShade]) {
-        bool on = isSetShade();
-        button[BtnShade]->turnOn(on);
-        button[BtnShade]->setBitmap(on ? shade_on_bits : shade_off_bits );
-        button[BtnShade]->repaint(false);
-        QToolTip::remove( button[BtnShade] );
-        QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));
-    }
-}
-
-
-void QuartzClient::slotMaximize()
-{
-	if (button[BtnMax])
-	{
-		maximize(button[BtnMax]->last_button);
-	}
-}
-
-
-void QuartzClient::slotAbove()
-{
-    setKeepAbove( !keepAbove());
-    button[BtnAbove]->turnOn(keepAbove());
-    button[BtnAbove]->repaint(true);
-}
-
-    
-void QuartzClient::slotBelow()
-{
-    setKeepBelow( !keepBelow());
-    button[BtnBelow]->turnOn(keepBelow());
-    button[BtnBelow]->repaint(true);
-}
-
-        
-void QuartzClient::slotShade()
-{
-    setShade( !isSetShade());
-}
-
-
-void QuartzClient::resizeEvent( QResizeEvent* e)
-{
-    calcHiddenButtons();
-
-    if (widget()->isVisibleToTLW())
-    {
-        widget()->update(widget()->rect());
-        int dx = 0;
-        int dy = 0;
-
-        if ( e->oldSize().width() != width() )
-           dx = 32 + QABS( e->oldSize().width() -  width() );
-
-        if ( e->oldSize().height() != height() )
-	       dy = 8 + QABS( e->oldSize().height() -  height() );
-
-        if ( dy )
-	       widget()->update( 0, height() - dy + 1, width(), dy );
-
-        if ( dx )
-        {
-  	       widget()->update( width() - dx + 1, 0, dx, height() );
-	       widget()->update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
-	       widget()->update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
-           // Titlebar needs no paint event
-           widget()->repaint(titlebar->geometry(), false);
-        }
-    }
-}
-
-
-void QuartzClient::captionChange()
-{
-    widget()->repaint( titlebar->geometry(), false );
+	KCommonDecoration::reset(changed);
 }
 
 
@@ -935,7 +725,17 @@ void QuartzClient::paintEvent( QPaintEvent* )
 
     // Draw the title bar.
     // ===================
-    r = titlebar->geometry();
+    int r_x, r_y, r_x2, r_y2;
+    widget()->rect().coords(&r_x, &r_y, &r_x2, &r_y2);
+    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
+    const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
+    const int titleEdgeRight = layoutMetric(LM_TitleEdgeRight);
+    const int titleEdgeBottom = layoutMetric(LM_TitleEdgeBottom);
+    const int ttlHeight = layoutMetric(LM_TitleHeight);
+    const int titleEdgeBottomBottom = r_y+titleEdgeTop+ttlHeight+titleEdgeBottom-1;
+    r = QRect(r_x+titleEdgeLeft+buttonsLeftWidth(), r_y+titleEdgeTop,
+              r_x2-titleEdgeRight-buttonsRightWidth()-(r_x+titleEdgeLeft+buttonsLeftWidth()),
+              titleEdgeBottomBottom-(r_y+titleEdgeTop) );
 
     // Obtain titlebar blend colours
     QColor c1 = options()->color(ColorTitleBar, isActive() ).light(130);
@@ -980,178 +780,6 @@ void QuartzClient::paintEvent( QPaintEvent* )
     delete titleBuffer;
 }
 
-
-void QuartzClient::showEvent(QShowEvent *)
-{
-    calcHiddenButtons();
-    widget()->show();
-}
-
-
-void QuartzClient::mouseDoubleClickEvent( QMouseEvent * e )
-{
-    if (titlebar->geometry().contains( e->pos() ) )
-       titlebarDblClickOperation();
-}
-
-
-void QuartzClient::maximizeChange()
-{
-	if (button[BtnMax]) {
-	    button[BtnMax]->setBitmap((maximizeMode()==MaximizeFull) ? minmax_bits : maximize_bits);
-		button[BtnMax]->setTipText((maximizeMode()==MaximizeFull) ? i18n("Restore") : i18n("Maximize"));
-	}
-}
-
-
-void QuartzClient::activeChange()
-{
-	for(int i=QuartzClient::BtnHelp; i < QuartzClient::BtnCount; i++)
-		if(button[i])
-			button[i]->repaint(false);
-
-	widget()->repaint(false);
-}
-
-
-QuartzClient::Position QuartzClient::mousePosition(const QPoint &point) const
-{
-	const int corner = 3*borderSize/2 + 18;
-	Position pos = PositionCenter;
-
-	QRect r(widget()->rect());
-
-	if(point.y() < (borderSize-1)) {
-		if(point.x() < corner)                   return PositionTopLeft;
-		else if(point.x() > (r.right()-corner))  return PositionTopRight;
-		else                                     return PositionTop;
-	} else if(point.y() > (r.bottom()-borderSize)) {
-		if(point.x() < corner)                   return PositionBottomLeft;
-		else if(point.x() > (r.right()-corner))  return PositionBottomRight;
-		else                                     return PositionBottom;
-	} else if(point.x() < borderSize) {
-		if(point.y() < corner)                   return PositionTopLeft;
-		else if(point.y() > (r.bottom()-corner)) return PositionBottomLeft;
-		else                                     return PositionLeft;
-	} else if(point.x() > (r.right()-borderSize)) {
-		if(point.y() < corner)                   return PositionTopRight;
-		else if(point.y() > (r.bottom()-corner)) return PositionBottomRight;
-		else                                     return PositionRight;
-	}
-
-	return pos;
-}
-
-
-void QuartzClient::borders(int& left, int& right, int& top, int& bottom) const
-{
-    left = borderSize;
-    right = borderSize;
-    top =  1 + titleHeight + (borderSize-1);
-    bottom = borderSize;
-
-    if ((maximizeMode()==MaximizeFull) && !options()->moveResizeMaximizedWindows()) {
-        left = right = bottom = 0;
-        top = 1 + titleHeight + (borderSize-1);
-    }
-}
-
-
-void QuartzClient::resize( const QSize& s )
-{
-    widget()->resize( s );
-}
-
-
-QSize QuartzClient::minimumSize() const
-{
-    return widget()->minimumSize();
-}
-
-
-// The hiding button while shrinking, show button while expanding magic
-void QuartzClient::calcHiddenButtons()
-{
-	//Hide buttons in this order:
-	//Shade, Below, Above, OnAllDesktops, Help, Maximize, Menu, Minimize, Close.
-    QuartzButton* btnArray[] = { button[BtnShade], button[BtnBelow], button[BtnAbove],
-								 button[BtnOnAllDesktops], button[BtnHelp], button[BtnMax],
-								 button[BtnMenu], button[BtnIconify], button[BtnClose] };
-    const int buttons_cnt = sizeof( btnArray ) / sizeof( btnArray[ 0 ] );
-
-	int minwidth  = largeButtons ? 180 : 140;	// Start hiding buttons at this width
-	int btn_width = largeButtons ? 16 : 10;
-	int current_width = width();
-	int count = 0;
-	int i;
-
-	// Find out how many buttons we have to hide.
-	while (current_width < minwidth)
-	{
-		current_width += btn_width;
-		count++;
-	}
-
-	// Bound the number of buttons to hide
-    if (count > buttons_cnt) count = buttons_cnt;
-
-	// Hide the required buttons...
-	for(i = 0; i < count; i++)
-	{
-		if (btnArray[i] && btnArray[i]->isVisible() )
-			btnArray[i]->hide();
-	}
-
-	// Show the rest of the buttons...
-    for(i = count; i < buttons_cnt; i++)
-	{
-		if (btnArray[i] && (!btnArray[i]->isVisible()) )
-			btnArray[i]->show();
-	}
-}
-
-
-// Make sure the menu button follows double click conventions set in kcontrol
-void QuartzClient::menuButtonPressed()
-{
-    QRect menuRect = button[BtnMenu]->rect();
-    QPoint menuTop ( menuRect.topLeft() );
-    QPoint menuBottom ( menuRect.bottomRight() );
-	menuTop += QPoint(-1, 2);
-	menuBottom += QPoint(1, 2);
-	menuTop = button[BtnMenu]->mapToGlobal( menuTop );
-	menuBottom = button[BtnMenu]->mapToGlobal( menuBottom );
-    KDecorationFactory* f = factory();
-    showWindowMenu(QRect(menuTop, menuBottom));
-    if( !f->exists( this )) // 'this' was destroyed
-        return;
-	button[BtnMenu]->setDown(false);
-}
-
-bool QuartzClient::eventFilter( QObject* o, QEvent* e )
-{
-    if( o != widget())
-    return false;
-    switch( e->type())
-    {
-    case QEvent::Resize:
-        resizeEvent(static_cast< QResizeEvent* >( e ) );
-        return true;
-    case QEvent::Paint:
-        paintEvent(static_cast< QPaintEvent* >( e ) );
-        return true;
-    case QEvent::MouseButtonDblClick:
-        mouseDoubleClickEvent(static_cast< QMouseEvent* >( e ) );
-        return true;
-    case QEvent::MouseButtonPress:
-        processMousePressEvent(static_cast< QMouseEvent* >( e ) );
-        return true;
-    default:
-        break;
-    }
-    return false;
-}
-
 }
 
 // Extended KWin plugin interface
@@ -1169,3 +797,4 @@ extern "C"
 
 #include "quartz.moc"
 // vim: ts=4
+// kate: space-indent off; tab-width 4;

@@ -18,7 +18,7 @@
 #include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
-#include "../../lib/kdecoration.h"
+#include "../../lib/kcommondecoration.h"
 #include "../../lib/kdecorationfactory.h"
 
 class QSpacerItem;
@@ -48,89 +48,48 @@ class QuartzHandler: public QObject, public KDecorationFactory
 };
 
 
-class QuartzButton : public QButton
+class QuartzButton : public KCommonDecorationButton
 {
 	public:
-		QuartzButton(QuartzClient *parent=0, const char *name=0, bool largeButton=true,
-					 bool isLeftButton=true, bool isOnAllDesktopsButton=false,
-					 const unsigned char *bitmap=NULL, const QString& tip=NULL, const int realizeBtns = LeftButton);
+		QuartzButton(ButtonType type, QuartzClient *parent, const char *name);
 		~QuartzButton();
 		void setBitmap(const unsigned char *bitmap);
-		void setTipText(const QString &tip);
-		QSize sizeHint() const;
-		ButtonState last_button;
-		void turnOn( bool isOn );
+
+		void reset(unsigned long changed);
 
 	protected:
-		void mousePressEvent( QMouseEvent* e );
-		void mouseReleaseEvent( QMouseEvent* e );
 		void drawButton(QPainter *p);
-		void drawButtonLabel(QPainter*) {;}
 
 		QBitmap* deco;
-		bool     large;
-		bool	 isLeft;
-		bool 	 isOnAllDesktops;
-		QuartzClient*  client;
-
-		int realizeButtons;
 };
 
 
-class QuartzClient : public KDecoration
+class QuartzClient : public KCommonDecoration
 {
-	Q_OBJECT
-
 	public:
 		QuartzClient(KDecorationBridge* bridge, KDecorationFactory* factory);
 		~QuartzClient() {;}
 
+		virtual QString visibleName() const;
+		virtual QString defaultButtonsLeft() const;
+		virtual QString defaultButtonsRight() const;
+		virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+		virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+		virtual KCommonDecorationButton *createButton(ButtonType type);
+
 		virtual void init();
-		virtual void resize(const QSize&);
-		virtual bool eventFilter( QObject* o, QEvent* e );
 
 	protected:
 		virtual void reset( unsigned long changed );
-		void resizeEvent( QResizeEvent* );
 		void paintEvent( QPaintEvent* );
-		void showEvent( QShowEvent* );
-		void mouseDoubleClickEvent( QMouseEvent * );
-		virtual void captionChange();
-		void maximizeChange();
-		virtual void shadeChange();
-		virtual void activeChange();
-		virtual void iconChange();
-		virtual void desktopChange();
-		virtual QuartzClient::Position mousePosition(const QPoint &point) const;
-		virtual void borders(int&, int&, int&, int&) const;
-		virtual QSize minimumSize() const;
-
-	protected slots:
-		void slotMaximize();
-		void slotAbove();
-		void slotBelow();
-		void slotShade();
-		void menuButtonPressed();
-		void keepAboveChange( bool );
-		void keepBelowChange( bool );
 
 	private:
-		bool isTool();
-		void calcHiddenButtons();
-		void addClientButtons( const QString& s, bool isLeft=true );
-
-		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
-					  BtnMenu, BtnOnAllDesktops, BtnAbove, BtnBelow,
-					  BtnShade, BtnCount };
-		QuartzButton* button[ QuartzClient::BtnCount ];
-		int           lastButtonWidth;
 		int 		  titleHeight, borderSize;
 		bool          largeButtons;
-		QBoxLayout*   hb;
-		QSpacerItem*  titlebar;
 };
 
 }
 
 #endif
 // vim: ts=4
+// kate: space-indent off; tab-width 4;
