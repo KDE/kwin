@@ -1833,8 +1833,11 @@ void Workspace::cancelDelayFocus()
 // borders. Technically this is done with input only windows. Since
 // electric borders can be switched on and off, we have these two
 // functions to create and destroy them.
-void Workspace::checkElectricBorders()
+void Workspace::checkElectricBorders( bool force )
     {
+    if( force )
+        destroyBorderWindows();
+    
     electric_current_border = 0;
 
     QRect r = QApplication::desktop()->geometry();

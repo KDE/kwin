@@ -44,7 +44,7 @@ namespace KWinInternal
 void Workspace::desktopResized()
     {
     updateClientArea();
-    checkElectricBorders();
+    checkElectricBorders( true );
     }
 
 /*!

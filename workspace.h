@@ -412,7 +412,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void tabBoxKeyRelease( const XKeyEvent& ev );
 
     // electric borders
-        void checkElectricBorders();
+        void checkElectricBorders( bool force = false );
         void createBorderWindows();
         void destroyBorderWindows();
         void electricBorder(XEvent * e);
