@@ -64,7 +64,7 @@ PlastikButton::PlastikButton(PlastikClient *parent, const char *name,
                              int size, bool toggle, int btns)
     : QButton(parent->widget(), name),
     m_client(parent),
-    m_lastMouse(0),
+    m_lastMouse(NoButton),
     m_realizeButtons(btns),
     m_size(size),
     m_type(type),

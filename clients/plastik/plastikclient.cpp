@@ -797,17 +797,7 @@ void PlastikClient::slotMaximize()
 {
     if (m_button[MaxButton])
     {
-        switch (m_button[MaxButton]->lastMousePress())
-        {
-          case MidButton:
-              maximize(maximizeMode() ^ MaximizeVertical );
-              break;
-          case RightButton:
-              maximize(maximizeMode() ^ MaximizeHorizontal );
-              break;
-          default:
-              maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
-        }
+        maximize(m_button[MaxButton]->lastMousePress() );
         doShape();
     }
 }

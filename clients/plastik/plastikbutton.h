@@ -41,7 +41,7 @@ public:
     ~PlastikButton();
 
     QSize sizeHint() const; ///< Return size hint.
-    int lastMousePress() const { return m_lastMouse; }
+    ButtonState lastMousePress() const { return m_lastMouse; }
     void reset() { repaint(false); }
     PlastikClient * client() { return m_client; }
     virtual void setOn(bool on);
@@ -61,7 +61,7 @@ private:
 
 private:
     PlastikClient *m_client;
-    int m_lastMouse;
+    ButtonState m_lastMouse;
     int m_realizeButtons;
 
     int m_size;
