@@ -90,7 +90,7 @@ static bool block_focus = FALSE;
 // does the window w  need a shape combine mask around it?
 bool Shape::hasShape( WId w){
     int xws, yws, xbs, ybs;
-    unsigned int wws, hws, wbs, hbs; 
+    unsigned int wws, hws, wbs, hbs;
     int boundingShaped, clipShaped;
     if (!kwin_has_shape)
 	return FALSE;
@@ -408,7 +408,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	if ( netCheck( e ) )
 	    return TRUE;
     }
-    
+
     Client * c = findClient( e->xany.window );
     if ( c )
 	return c->windowEvent( e );
@@ -2267,9 +2267,9 @@ void Workspace::killWindowAtPosition(int x, int y)
     {
         Client *client = (*it);
         if ( client->frameGeometry().contains(QPoint(x, y)) &&
-             client->isOnDesktop( currentDesktop() ) &&
-             !client->isIconified() )
-        {
+	     client->isOnDesktop( currentDesktop() ) &&
+	     !client->isMenu() && !client->isDesktop() &&
+	     !client->isIconified() ) {
             client->killWindow();
             return;
         }

@@ -790,7 +790,6 @@ void KDEClient::showEvent(QShowEvent *ev)
     Client::showEvent(ev);
     doShape();
     calcHiddenButtons();
-    repaint();
 }
 
 void KDEClient::mouseDoubleClickEvent( QMouseEvent * e )
