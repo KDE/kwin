@@ -579,7 +579,7 @@ void B2Client::paintEvent( QPaintEvent* e)
 
     // inner window rect
     p.drawRect(3, t.bottom(), width()-6, height()-t.height()-6);
-    p.drawLine(4, t.bottom()-1, width()-8, t.bottom()-1);
+    p.drawLine(4, t.bottom()+1, width()-5, t.bottom()+1);
 
     // outer frame rect
     p.drawRect(0, t.bottom()-3, width(), height()-t.height());
@@ -598,7 +598,7 @@ void B2Client::paintEvent( QPaintEvent* e)
        qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
                    options->colorGroup(Options::TitleBar, isActive()), false);
    else
-    qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
+       qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
                     options->colorGroup(Options::Frame, isActive()), false);
    
     //bottom handle rect
