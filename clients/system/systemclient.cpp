@@ -54,8 +54,7 @@ static void create_pixmaps()
     pixmaps_created = true;
 
     QPainter p;
-    if(QPixmap::defaultDepth() > 8 &&
-       kapp->palette().normal().brush(QColorGroup::Background).pixmap()==NULL){
+    if(QPixmap::defaultDepth() > 8){
         aUpperGradient = new KPixmap;
         aUpperGradient->resize(32, 18);
         iUpperGradient = new KPixmap;
@@ -331,9 +330,7 @@ void SystemClient::paintEvent( QPaintEvent* )
         if(iUpperGradient)
             p.drawTiledPixmap(0, 0, width(), 18, *iUpperGradient);
         else
-            p.fillRect(0, 0, width(), 18,
-                       options->colorGroup(Options::Frame, false).
-                       brush(QColorGroup::Button));
+            p.fillRect(0, 0, width(), 18, fillBrush);
         p.setPen(options->color(Options::GrooveText, isActive()));
         p.setFont(options->font(isActive()));
         p.drawText(t, AlignCenter, caption() );
