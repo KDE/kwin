@@ -1363,13 +1363,16 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if ( maximizeMode() != MaximizeFull
             || ns != size())
             {
+            QRect orig_geometry = geometry();
             resetMaximize();
             ++block_geometry;
             move( new_pos );
             plainResize( ns ); // TODO must(?) resize before gravitating?
             updateFullScreenHack( QRect( new_pos, QSize( nw, nh )));
-            if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen())
-                keepInArea( workspace()->clientArea( WorkArea, this ));
+            QRect area = workspace()->clientArea( WorkArea, this );
+            if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
+                && area.contains( orig_geometry ))
+                keepInArea( area );
             --block_geometry;
             setGeometry( QRect( calculateGravitation( false, gravity ), size()), ForceGeometrySet );
 
@@ -1398,14 +1401,17 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
 
         if( ns != size())  // don't restore if some app sets its own size again
             {
+            QRect orig_geometry = geometry();
             resetMaximize();
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
             resizeWithChecks( ns );
             xSizeHint.win_gravity = save_gravity;
             updateFullScreenHack( QRect( calculateGravitation( true, xSizeHint.win_gravity ), QSize( nw, nh )));
-            if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen())
-                keepInArea( workspace()->clientArea( WorkArea, this ));
+            QRect area = workspace()->clientArea( WorkArea, this );
+            if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
+                && area.contains( orig_geometry ))
+                keepInArea( area );
             }
         }
     // No need to send synthetic configure notify event here, either it's sent together
