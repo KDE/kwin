@@ -499,7 +499,13 @@ void KCommonDecoration::resize( const QSize& s )
 
 QSize KCommonDecoration::minimumSize() const
 {
-    return widget()->minimumSize();
+    const int minWidth = QMAX(layoutMetric(LM_TitleEdgeLeft), layoutMetric(LM_BorderLeft))
+            +QMAX(layoutMetric(LM_TitleEdgeRight), layoutMetric(LM_BorderRight))
+            +layoutMetric(LM_TitleBorderLeft)+layoutMetric(LM_TitleBorderRight);
+    return QSize(minWidth,
+                 layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)
+                         +layoutMetric(LM_TitleEdgeBottom)
+                         +layoutMetric(LM_BorderBottom) );
 }
 
 void KCommonDecoration::maximizeChange()
@@ -697,7 +703,7 @@ KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point
     int p_x = point.x();
     int p_y = point.y();
     const int borderLeft = layoutMetric(LM_BorderLeft);
-    const int borderRight = layoutMetric(LM_BorderRight);
+//     const int borderRight = layoutMetric(LM_BorderRight);
     const int borderBottom = layoutMetric(LM_BorderBottom);
     const int titleHeight = layoutMetric(LM_TitleHeight);
     const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
