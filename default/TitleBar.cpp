@@ -35,14 +35,17 @@ namespace Default
 {
 
 TitleBar::TitleBar(Manager * client)
-  : QWidget(client)
+  : QWidget(client),
+    question_(0L)
 {
   close_      = new CloseButton     (this);
   text_       = new TitleText       (this, client);
   iconify_    = new IconifyButton   (this);
   maximise_   = new MaximiseButton  (this);
   sticky_     = new StickyButton    (this);
-  question_   = new QuestionButton  (this);
+
+  if (client->providesContextHelp())
+    question_ = new QuestionButton(this);
 
   // Close | Text | Question | Sticky | Iconify | Maximise
 
@@ -53,7 +56,8 @@ TitleBar::TitleBar(Manager * client)
   layout->addSpacing(2);
   layout->addWidget(text_, 1);
   layout->addSpacing(2);
-  layout->addWidget(question_);
+  if (0 != question_)
+    layout->addWidget(question_);
   layout->addWidget(sticky_);
   layout->addWidget(iconify_);
   layout->addWidget(maximise_);
@@ -98,10 +102,11 @@ TitleBar::TitleBar(Manager * client)
     maximise_,  SLOT(setOn(bool))
   );
 
-  connect(
-    question_,  SIGNAL(contextHelp()),
-    client,     SLOT(contextHelp())
-  );
+  if (0 != question_)
+    connect(
+      question_,  SIGNAL(contextHelp()),
+      client,     SLOT(contextHelp())
+    );
 }
  
   void
@@ -109,7 +114,8 @@ TitleBar::updateDisplay()
 {
   close_    ->updateDisplay();
   sticky_   ->updateDisplay();
-  question_ ->updateDisplay();
+  if (0 != question_)
+    question_ ->updateDisplay();
   text_     ->updateDisplay();
   iconify_  ->updateDisplay();
   maximise_ ->updateDisplay();
@@ -140,13 +146,15 @@ TitleBar::resizeEvent(QResizeEvent *)
       close_    ->show();
       sticky_   ->hide();
       iconify_  ->show();
-      question_ ->hide();
+      if (0 != question_)
+        question_ ->hide();
       maximise_ ->hide();
       break;
 
     case 2:
       close_    ->show();
-      question_ ->hide();
+      if (0 != question_)
+        question_ ->hide();
       sticky_   ->hide();
       iconify_  ->hide();
       maximise_ ->hide();
@@ -154,7 +162,8 @@ TitleBar::resizeEvent(QResizeEvent *)
 
     case 3:
       close_    ->hide();
-      question_ ->hide();
+      if (0 != question_)
+        question_ ->hide();
       sticky_   ->hide();
       iconify_  ->hide();
       maximise_ ->hide();
@@ -163,7 +172,8 @@ TitleBar::resizeEvent(QResizeEvent *)
     case 0:
     default:
       close_    ->show();
-      question_ ->show();
+      if (0 != question_)
+        question_->show();
       sticky_   ->show();
       iconify_  ->show();
       maximise_ ->show();
@@ -179,7 +189,8 @@ TitleBar::setActive(bool b)
   text_->setActive(b);
   iconify_->setActive(b);
   maximise_->setActive(b);
-  question_->setActive(b);
+  if (0 != question_)
+    question_->setActive(b);
 }
 
   void

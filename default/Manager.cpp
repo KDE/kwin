@@ -50,8 +50,6 @@ Manager::Manager(
 )
   : Client(workSpace, id, parent, name)
 {
-  setBackgroundMode(NoBackground);
-
   shaded_ = false;
 
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
@@ -129,19 +127,10 @@ Manager::paintEvent(QPaintEvent * e)
 
     if (intersectsLeft)
       p.drawLine(0, r.top(), 0, r.bottom());
-  
+
     if (intersectsRight)
       p.drawLine(width() - 1, r.top(), width() - 1, r.bottom());
   }
-}
-    
-  Client::MousePosition
-Manager::mousePosition(const QPoint & p) const
-{
-  if (titleBar_->rect().contains(p))
-    return Client::Center;
-  else
-    return Client::Nowhere;
 }
 
   void
@@ -180,9 +169,9 @@ Manager::_updateLayout()
   );
 
   windowWrapper() ->  setGeometry(
-    1,
+    3,
     Static::instance()->titleHeight(),
-    width() - 2,
+    width() - 6,
     height() - Static::instance()->titleHeight() - RESIZE_BAR_HEIGHT
   );
 

@@ -55,7 +55,6 @@ class Manager : public Client
 
   protected:
 
-    Client::MousePosition mousePosition(const QPoint &) const;
     void paletteChange(const QPalette &);
     void activeChange(bool);
     void maximizeChange(bool);

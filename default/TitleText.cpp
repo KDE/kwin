@@ -23,6 +23,7 @@
 #include <qpainter.h>
 
 #include "../options.h"
+#include "../workspace.h"
 
 #include "TitleText.h"
 #include "Manager.h"
@@ -97,7 +98,11 @@ TitleText::mouseMoveEvent(QMouseEvent * e)
   void
 TitleText::mouseDoubleClickEvent(QMouseEvent * e)
 {
-  client_->fakeMouseEvent(e, this);
+  client_->workspace()->performWindowOperation(
+      client_,
+      options->operationTitlebarDblClick());
+
+  client_->workspace()->requestFocus(client_);
 }
 
 } // End namespace
