@@ -7,6 +7,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 //#define QT_CLEAN_NAMESPACE
 #define select kwin_hide_select
 
+#include <config.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
