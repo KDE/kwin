@@ -33,7 +33,8 @@ namespace B2 {
 #define P_PINUP 4
 #define P_MENU 5
 #define P_HELP 6
-#define NUM_PIXMAPS ((P_HELP + 1) * 4)
+#define P_SHADE 7
+#define NUM_PIXMAPS ((P_SHADE + 1) * 4)
 
 static KPixmap *pixmap[NUM_PIXMAPS];
 
@@ -108,8 +109,8 @@ static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
     QColor hColor = primary.light(150);
     QColor lColor = primary.dark(150);
 
-    if(QPixmap::defaultDepth() > 8){
-        if(down)
+    if (QPixmap::defaultDepth() > 8) {
+        if (down)
             KPixmapEffect::gradient(*pix, lColor, hColor,
                                     KPixmapEffect::DiagonalGradient);
         else
@@ -138,7 +139,7 @@ QPixmap* kwin_get_menu_pix_hack()
 
 static void create_pixmaps()
 {
-    if ( pixmaps_created )
+    if (pixmaps_created)
         return;
     pixmaps_created = true;
 
@@ -153,6 +154,7 @@ static void create_pixmaps()
 	    break;
 	case P_ICONIFY:
 	    pixmap[i]->resize(10, 10); break;
+	case P_SHADE:
 	case P_CLOSE:
 	    pixmap[i]->resize(bsize, bsize); break;
 	default:
@@ -177,14 +179,22 @@ static void create_pixmaps()
 
     QBitmap normalizeMask(16, 16, true);
     // draw normalize icon mask
-    QPainter mask(&normalizeMask);
+    QPainter mask;
+    mask.begin(&normalizeMask);
 
     QBrush one(Qt::color1);
     mask.fillRect(normalizeMask.width() - 12, normalizeMask.height() - 12, 
 		  12, 12, one);
     mask.fillRect(0, 0, 10, 10, one);
+    mask.end();
 
     for (i = 0; i < 4; i++) pixmap[P_NORMALIZE * 4 + i]->setMask(normalizeMask);
+    
+    QBitmap shadeMask(bsize, bsize, true);
+    mask.begin(&shadeMask);
+    mask.fillRect(0, 0, bsize, 6, one);
+    mask.end();
+    for (i = 0; i < 4; i++) pixmap[P_SHADE * 4 + i]->setMask(shadeMask);
 
     titleGradient[0] = 0;
     titleGradient[1] = 0;
@@ -264,6 +274,11 @@ void B2Client::maxButtonClicked( )
     }
 }
 
+void B2Client::shadeButtonClicked()
+{
+    setShade(!isShade());
+}
+
 B2Client::B2Client(KDecorationBridge *b, KDecorationFactory *f)
     : KDecoration(b, f), bar_x_ofs(0), in_unobs(0)
 {
@@ -271,9 +286,14 @@ B2Client::B2Client(KDecorationBridge *b, KDecorationFactory *f)
 
 void B2Client::init()
 {
-    const QString tips[]= {i18n("Menu"), isOnAllDesktops()?i18n("Not On All Desktops"):i18n("On All desktops"),
-                           i18n("Minimize"), i18n("Maximize"),
-                           i18n("Close"), i18n("Help") };
+    const QString tips[] = {
+	i18n("Menu"), 
+	isOnAllDesktops() ? 
+	    i18n("Not On All Desktops") : i18n("On All desktops"), 
+	i18n("Minimize"), i18n("Maximize"), 
+	i18n("Close"), i18n("Help"),
+	i18n("Shade")
+    };
 
     createMainWidget(WResizeNoErase | WRepaintNoErase);
     widget()->installEventFilter(this);
@@ -412,6 +432,15 @@ void B2Client::addButtons(const QString& s, const QString tips[],
                     titleLayout->addWidget(button[BtnClose]);
                 }
 		break;
+	    case 'L': // Shade button
+		if (isShadeable() && !button[BtnShade]) {
+                    button[BtnShade]= new B2Button(this, tb, tips[BtnShade]);
+                    button[BtnShade]->setPixmaps(P_SHADE);
+                    connect(button[BtnShade], SIGNAL(clicked()),
+                            this, SLOT(shadeButtonClicked()));
+                    titleLayout->addWidget(button[BtnShade]);
+		}
+		break;
 	    case '_': // Additional spacing
 		titleLayout->addSpacing(4);
 		break;
@@ -432,9 +461,10 @@ void B2Client::calcHiddenButtons()
 {
     // Hide buttons in this order:
     // Sticky, Help, Maximize, Minimize, Close, Menu
-    B2Button* btnArray[] = { button[BtnSticky], button[BtnHelp],
-                             button[BtnMax], button[BtnIconify],
-                             button[BtnClose], button[BtnMenu] };
+    B2Button* btnArray[] = { 
+	button[BtnShade], button[BtnSticky], button[BtnHelp], 
+	button[BtnMax], button[BtnIconify], button[BtnClose], button[BtnMenu] 
+    };
     int minWidth = 120;
     int currentWidth = width();
     int count = 0;
@@ -767,25 +797,6 @@ void B2Client::menuButtonPressed()
     button[BtnMenu]->setDown(false);
 }
 
-#if 0
-void B2Client::slotReset()
-{
-    redraw_pixmaps();
-    QColor c = options()->colorGroup(KDecoration::ColorTitleBar, isActive()).
-        color(QColorGroup::Button);
-
-    for (int i = 0; i < BtnCount; i++)
-        if (button[i]) {
-            button[i]->setBg(c);
-            button[i]->repaint(false);
-        }
-
-    widget()->repaint();
-    titlebar->recalcBuffer();
-    titlebar->repaint(false);
-}
-#endif
-
 void B2Client::unobscureTitlebar()
 {
     /* we just noticed, that we got obscured by other windows
@@ -810,6 +821,7 @@ void B2Client::unobscureTitlebar()
 
 static void redraw_pixmaps()
 {
+    int i;
     QColorGroup aGrp = options()->colorGroup(KDecoration::ColorButtonBg, true);
     QColorGroup iGrp = options()->colorGroup(KDecoration::ColorButtonBg, false);
 
@@ -820,8 +832,23 @@ static void redraw_pixmaps()
     drawB2Rect(PIXMAP_I(P_CLOSE), iGrp.button(), false);
     drawB2Rect(PIXMAP_ID(P_CLOSE), iGrp.button(), true);
 
+    // shade
+    KPixmap thinBox;
+    thinBox.resize(buttonSize - 2, 6);
+    for (i = 0; i < 4; i++) {
+	bool is_act = (i < 2);
+	bool is_down = ((i & 1) == 1);
+	KPixmap *pix = pixmap[P_SHADE * 4 + i];
+	QColor color = is_act ? aGrp.button() : iGrp.button();
+	drawB2Rect(&thinBox, color, is_down);
+	pix->fill(Qt::black);
+	fprintf(stderr, "thinbox width = %d, height = %d\n", 
+		thinBox.width(), thinBox.height());
+	bitBlt(pix, 0, 0, &thinBox, 
+		0, 0, thinBox.width(), thinBox.height(), Qt::CopyROP, true);
+    }
+
     // maximize
-    int i;
     for (i = 0; i < 4; i++) {
 	*pixmap[P_MAX*4 + i] = *pixmap[P_CLOSE*4 + i];
 	pixmap[P_MAX*4 + i]->detach();

@@ -119,13 +119,14 @@ private slots:
     void menuButtonPressed();
     //void slotReset();
     void maxButtonClicked();
+    void shadeButtonClicked();
 private:
     void addButtons(const QString& s, const QString tips[],
                     B2Titlebar* tb, QBoxLayout* titleLayout);
     void positionButtons();
     void calcHiddenButtons();
     enum ButtonType{BtnMenu=0, BtnSticky, BtnIconify, BtnMax, BtnClose,
-        BtnHelp, BtnCount};
+        BtnHelp, BtnShade, BtnCount};
     B2Button* button[BtnCount];
     QGridLayout *g;
     QSpacerItem *spacer; // Bottom border spacer
