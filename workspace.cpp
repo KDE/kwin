@@ -895,8 +895,8 @@ void Workspace::smartPlacement(Client* c){
    * Anthony Martin (amartin@engr.csulb.edu).
    */
 
-  const int none = 0, least = -1, wrong = -2; // overlap types
-  int overlap, min_overlap;
+  const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
+  long int overlap, min_overlap;
   int x_optimal, y_optimal;
   int possible;
 
@@ -906,18 +906,20 @@ void Workspace::smartPlacement(Client* c){
   // get the maximum allowed windows space
   QRect maxRect = clientArea();
   int x = maxRect.left(), y = maxRect.top();
+  x_optimal = x; y_optimal = y;
   
   //client gabarit
   int ch = c->height(), cw = c->width();
 
+  bool first_pass = true; //CT lame flag. Don't like it. What else would do?
+
   //loop over possible positions
   do {
-
     //test if enough room in x and y directions
     if ( y + ch > maxRect.bottom() )
-      overlap = -1;
+      overlap = h_wrong; // this throws the algorithm to an exit
     else if( x + cw > maxRect.right() ) 
-      overlap = -2;
+      overlap = w_wrong;
     else {
       overlap = none; //initialize
       
@@ -925,13 +927,13 @@ void Workspace::smartPlacement(Client* c){
       cyt = y; cyb = y + ch;
       QValueList<Client*>::ConstIterator l;
       for(l = clients.begin(); l != clients.end() ; ++l ) {
-	if((*l)->isOnDesktop(currentDesktop()) ||
-	   !(*l)->isIconified() || !((*l) == c) ) {
+	if((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
+	   !(*l)->isIconified() && (*l) != c ) {
 	  
 	  xl = (*l)->x();           yt = (*l)->y();
 	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
 	  
-	  //if windows overlap, calc the overlapping
+	  //if windows overlap, calc the overall overlapping
 	  if((cxl < xr) && (cxr > xl) &&
 	     (cyt < yb) && (cyb > yt)) {
 	    xl = QMAX(cxl, xl); xr = QMIN(cxr, xr);
@@ -941,7 +943,18 @@ void Workspace::smartPlacement(Client* c){
 	}
       }
     }
-    
+
+    if (first_pass) {
+      first_pass = false;
+      min_overlap = overlap;
+    }
+    //CT save the best position and the minimum overlap up to now
+    else if ( overlap >= none && overlap < min_overlap) {
+      min_overlap = overlap;
+      x_optimal = x;
+      y_optimal = y;
+    }
+
     // really need to loop? test if there's any overlap
     if ( overlap > none ) {
       
@@ -952,8 +965,8 @@ void Workspace::smartPlacement(Client* c){
       QValueList<Client*>::ConstIterator l;
       for(l = clients.begin(); l != clients.end() ; ++l) {
 	
-	if ( (*l)->isOnDesktop(currentDesktop()) ||
-	     !(*l)->isIconified() || !((*l) == c) ) {
+	if ( (*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
+	     !(*l)->isIconified() &&  (*l) != c ) {
 
 	  xl = (*l)->x();           yt = (*l)->y();
 	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
@@ -973,20 +986,18 @@ void Workspace::smartPlacement(Client* c){
       }
     }
     
-    // ... else => not enough x dimension (overlap was -2)
-    else if (overlap == wrong) {
+    // ... else ==> not enough x dimension (overlap was wrong on horizontal)
+    else if ( overlap == w_wrong ) {
       x = maxRect.left();
-      
       possible = maxRect.bottom();
       
-      if(possible - ch > y) possible -= ch;
+      if ( possible - ch > y ) possible -= ch;
       
       //test the position of each window on current desk
-      //07mar98. fixed bug which made iconified windows avoided as if visible
       QValueList<Client*>::ConstIterator l;
-      for(l = clients.begin(); l != clients.end() ; ++l) {
-	if( (*l)->isOnDesktop( currentDesktop() ) ||
-	    !((*l) == c)  ||  !c->isIconified() ) {
+      for( l = clients.begin(); l != clients.end() ; ++l ) {
+	if( (*l)->isOnDesktop( currentDesktop() ) && (*l) != desktop_client &&
+	     (*l) != c   &&  !c->isIconified() ) {
 	  
 	  xl = (*l)->x();           yt = (*l)->y();
 	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
@@ -1000,13 +1011,8 @@ void Workspace::smartPlacement(Client* c){
 	y = possible;
       }
     }
-
-    min_overlap = overlap;
-    x_optimal = x;
-    y_optimal = y;
-
   }
-  while((overlap != none) && (overlap != least));
+  while( overlap != none && overlap != h_wrong );
   
   // place the window
   c->move( x_optimal, y_optimal );	

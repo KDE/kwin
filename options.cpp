@@ -13,7 +13,7 @@ Options::Options()
     reload();
 
     //CT 
-    placement = Random; //ACHTUNG!! for the moment *only*
+    placement = Smart; //ACHTUNG!! for the moment *only*
 }
 
 Options::~Options(){
