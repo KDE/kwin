@@ -734,6 +734,7 @@ void Workspace::slotReconfigure()
     tab_box->reconfigure();
     popupinfo->reconfigure();
     readShortcuts();
+    forEachClient( CheckIgnoreFocusStealingProcedure());
 
     if( mgr->reset( changed ))
         { // decorations need to be recreated

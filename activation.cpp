@@ -278,7 +278,15 @@ void Workspace::activateClient( Client* c, bool force )
     if( options->focusPolicyIsReasonable())
         requestFocus( c, force );
 
-    c->updateUserTime();
+    // Don't update user time for clients that have focus stealing workaround.
+    // As they usually belong to the current active window but fail to provide
+    // this information, updating their user time would make the user time
+    // of the currently active window old, and reject further activation for it.
+    // E.g. typing URL in minicli which will show kio_uiserver dialog (with workaround),
+    // and then kdesktop shows dialog about SSL certificate.
+    // This needs also avoiding user creation time in Client::readUserTimeMapTimestamp().
+    if( !c->ignoreFocusStealing())
+        c->updateUserTime();
     }
 
 /*!
@@ -445,7 +453,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         kdDebug( 1212 ) << "Activation: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
-    if( options->ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass())))
+    if( c->ignoreFocusStealing())
         return true;
     if( time == 0 ) // explicitly asked not to get focus
         return false;
@@ -472,7 +480,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         }
     // options->focusStealingPreventionLevel == 2 // normal
     Time user_time = ac->userTime();
-    kdDebug( 1212 ) << "Activation, compared:" << time << ":" << user_time
+    kdDebug( 1212 ) << "Activation, compared:" << c << ":" << time << ":" << user_time
         << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
     return timestampCompare( time, user_time ) >= 0; // time >= user_time
     }
@@ -498,7 +506,7 @@ bool Workspace::allowFullClientRaising( const Client* c )
         kdDebug( 1212 ) << "Raising: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
-    if( options->ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass())))
+    if( c->ignoreFocusStealing())
         return true;
     // TODO window urgency  -> return true?
     if( Client::belongToSameApplication( c, ac, true ))
@@ -686,9 +694,12 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
         // this check will be done in Workspace::allowClientActiovationTimestamp().
         if( session && !session->fake )
             return -1U;
-        time = readUserCreationTime();
+        if( ignoreFocusStealing() && act != NULL )
+            time = act->userTime();
+        else
+            time = readUserCreationTime();
         }
-    kdDebug( 1212 ) << "User timestamp, final:" << time << endl;
+    kdDebug( 1212 ) << "User timestamp, final:" << this << ":" << time << endl;
     return time;
     }
 

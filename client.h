@@ -259,6 +259,7 @@ class Client : public QObject, public KDecorationDefines
         void updateUserTime( Time time = CurrentTime );
         Time userTime() const;
         bool hasUserTimeSupport() const;
+        bool ignoreFocusStealing() const;
 
     // does 'delete c;'
         static void deleteClient( Client* c, allowed_t );
@@ -445,6 +446,7 @@ private slots:
         uint user_noborder : 1;
         uint not_obscured : 1;
         uint urgency : 1; // XWMHints, UrgencyHint
+        uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         void getWMHints();
         void readIcons();
         void getWindowProtocols();
@@ -484,6 +486,7 @@ private slots:
         int border_left, border_right, border_top, border_bottom;
         QRegion _mask;
         friend struct FetchNameInternalPredicate;
+        friend struct CheckIgnoreFocusStealingProcedure;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
     };
@@ -823,6 +826,13 @@ inline bool Client::hasUserTimeSupport() const
     {
     return info->userTime() != -1U;
     }
+    
+inline bool Client::ignoreFocusStealing() const
+    {
+    return ignore_focus_stealing;
+    }
+
+KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing( cl ));
 
 inline Window Client::moveResizeGrabWindow() const
     {

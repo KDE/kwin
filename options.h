@@ -21,6 +21,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
+class Client;
+
 class Options : public KDecorationOptions 
     {
     public:
@@ -184,8 +186,8 @@ class Options : public KDecorationOptions
          * List of window classes to ignore PPosition size hint
          */
         QStringList ignorePositionClasses;
-        // List of window classes for which not to use focus stealing prevention
-        QStringList ignoreFocusStealingClasses;
+        
+        bool checkIgnoreFocusStealing( const Client* c );
 
         WindowOperation operationTitlebarDblClick() { return OpTitlebarDblClick; }
 
@@ -265,6 +267,8 @@ class Options : public KDecorationOptions
         bool show_geometry_tip;
         bool topmenus;
         bool desktop_topmenu;
+        // List of window classes for which not to use focus stealing prevention
+        QStringList ignoreFocusStealingClasses;
     };
 
 extern Options* options;

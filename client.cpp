@@ -124,6 +124,7 @@ Client::Client( Workspace *ws )
     user_noborder = false;
     not_obscured = false;
     urgency = false;
+    ignore_focus_stealing = false;
 
     Pdeletewindow = 0;
     Ptakefocus = 0;

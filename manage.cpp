@@ -103,6 +103,7 @@ bool Client::manage( Window w, bool isMapped )
         XFree( classHint.res_name );
         XFree( classHint.res_class );
         }
+    ignore_focus_stealing = options->checkIgnoreFocusStealing( this );
 
     detectNoBorder();
     fetchName();

@@ -10,6 +10,7 @@ License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
 #include "options.h"
+
 #include <qpalette.h>
 #include <qpixmap.h>
 #include <kapplication.h>
@@ -17,6 +18,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <qtooltip.h>
+
+#include "client.h"
 
 namespace KWinInternal
 {
@@ -240,6 +243,11 @@ int Options::electricBorders()
 int Options::electricBorderDelay()
     {
     return electric_border_delay;
+    }
+
+bool Options::checkIgnoreFocusStealing( const Client* c )
+    {
+    return ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass()));
     }
 
 } // namespace
