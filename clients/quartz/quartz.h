@@ -4,11 +4,10 @@
  * Gallium-Quartz KWin client
  *
  * Copyright 2001
- *   Karol Szwed <karlmail@usa.net>
+ *   Karol Szwed <gallium@kde.org>
  *   http://gallium.n3.net/
  *
- * Based upon the Win2K kwin client, which is based on the
- * KDE default client.
+ * Based on the KDE default client.
  *
  * Includes mini titlebars for ToolWindow Support.
  * Button positions are now customizable.
