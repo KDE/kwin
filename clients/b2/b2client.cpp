@@ -3,7 +3,9 @@
  *
  * Changes:
  *   Customizable button positions by Karol Szwed <gallium@kde.org>
- *   Thin frame in fixed size windows by Luciano Montanaro <mikelima@virgilio.it>
+ *   
+ *   Thin frame in fixed size windows and titlebar gradient support are 
+ *   Copyright (c) 2003 Luciano Montanaro <mikelima@virgilio.it>
  */ 
 
 #include "b2client.h"
@@ -42,6 +44,8 @@ static KPixmap *pixmap[NUM_PIXMAPS];
 #define PIXMAP_I(i)  (pixmap[(i)*4 +2])
 //inactive, down
 #define PIXMAP_ID(i) (pixmap[(i)*4 +3])
+
+KPixmap* titleGradient[2] = {0, 0};
 
 static bool pixmaps_created = false;
 static bool colored_frame = false;
@@ -127,13 +131,33 @@ static void create_pixmaps()
 
     QBitmap helpMask(16, 16, help_mask_bits, true);
     for (i = 0; i < 4; i++) pixmap[P_HELP * 4 + i]->setMask(helpMask);
+    
+    QBitmap normalizeMask(16, 16, true);
+    // draw normalize icon mask
+    QPainter mask(&normalizeMask);
+	
+    QBrush one(Qt::color1);
+    mask.fillRect(3, 3, 12, 12, one);
+    mask.fillRect(0, 0, 10, 10, one);
+    
+    for (i = 0; i < 4; i++) pixmap[P_NORMALIZE * 4 + i]->setMask(normalizeMask);
+    
+    titleGradient[0] = 0;
+    titleGradient[1] = 0;
+
     redraw_pixmaps();
 }
 
 static void delete_pixmaps()
 {
-    for (int i = 0; i < NUM_PIXMAPS; i++)
-      delete pixmap[i];
+    for (int i = 0; i < NUM_PIXMAPS; i++) {
+    	delete pixmap[i];
+	pixmap[i] = 0;
+    }
+    for (int i = 0; i < 2; i++) {
+    	delete titleGradient[i];
+	titleGradient[i] = 0;
+    }
     pixmaps_created = false;
 }
 
@@ -162,7 +186,12 @@ QSizePolicy B2Button::sizePolicy() const
 
 void B2Button::drawButton(QPainter *p)
 {
-    p->fillRect(rect(), bg);
+    KPixmap* gradient = titleGradient[client->isActive() ? 0 : 1];
+    if (gradient) { 
+	p->drawTiledPixmap(0, 0, 16, 16, *gradient, 0, 2);
+    } else { 
+	p->fillRect(rect(), bg);
+    }
     if (useMiniIcon) {
         QPixmap miniIcon = client->icon().pixmap(QIconSet::Small,
 		client->isActive() ? QIconSet::Normal : QIconSet::Disabled);
@@ -268,6 +297,8 @@ bool B2Titlebar::x11Event(XEvent *e)
 
 void B2Titlebar::drawTitlebar(QPainter &p, bool state)
 {
+    KPixmap* gradient = titleGradient[state ? 0 : 1];
+    
     QRect t = rect();
     // black titlebar frame
     p.setPen(Qt::black);
@@ -276,11 +307,12 @@ void B2Titlebar::drawTitlebar(QPainter &p, bool state)
     p.drawLine(t.right(), 0, t.right(), t.bottom());
 
     // titlebar fill
-    qDrawShadeRect(&p, 1, 1, t.right()-1, t.height()-1,
-                   options()->colorGroup(KDecoration::ColorTitleBar, state),
-                   false, 1, 0,
-                   &options()->colorGroup(KDecoration::ColorTitleBar, state).
-                   brush(QColorGroup::Background));
+    const QColorGroup cg = 
+	options()->colorGroup(KDecoration::ColorTitleBar, state);
+    QBrush brush(cg.background());
+    if (gradient) brush.setPixmap(*gradient);
+    qDrawShadeRect(&p, 1, 1, t.right() - 1, t.height() - 1, 
+		   cg, false, 1, 0, &brush);
 
     // and the caption
     p.setPen(options()->color(KDecoration::ColorFont, state));
@@ -442,8 +474,6 @@ void B2Client::init()
     titlebar->recalcBuffer();
     titlebar->installEventFilter(this);
     positionButtons();
-
-    //connect(options(), SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
 
 void B2Client::addButtons(const QString& s, const QString tips[],
@@ -968,6 +998,37 @@ static void redraw_pixmaps()
         kColorBitmaps(&p, (i<2)?aGrp:iGrp, 0, 0, 16, 16, true, white,
                       gray, NULL, dgray, NULL, NULL);
         p.end();
+    }
+    
+    // Create the titlebar gradients
+    if (QPixmap::defaultDepth() > 8) {
+	QColor titleColor[4] = {
+	    options()->color(KDecoration::ColorTitleBar, true),
+            options()->color(KDecoration::ColorFrame, true),
+
+	    options()->color(KDecoration::ColorTitleBlend, false),
+	    options()->color(KDecoration::ColorTitleBar, false)
+	};
+
+	if (colored_frame) {
+	    titleColor[0] = options()->color(KDecoration::ColorTitleBlend, true);
+	    titleColor[1] = options()->color(KDecoration::ColorTitleBar, true);
+	}
+	
+	for (i = 0; i < 2; i++) {
+	    if (titleColor[2 * i] != titleColor[2 * i + 1]) {
+		if (!titleGradient[i]) {
+		    titleGradient[i] = new KPixmap;
+		    titleGradient[i]->resize(64, 19);
+		}
+		KPixmapEffect::gradient(*titleGradient[i], 
+			titleColor[2 * i], titleColor[2 * i + 1],
+			KPixmapEffect::VerticalGradient);
+	    } else { 
+	       delete titleGradient[i]; 
+	       titleGradient[i] = 0;
+	    }
+	}
     }
 }
 
