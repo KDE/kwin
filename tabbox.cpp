@@ -94,9 +94,9 @@ void TabBox::nextPrev( bool next)
 	    else
 		client = workspace()->previousClient(client);
 	} while (client != sign && client &&
-		 ( !options_traverse_all && !client->isOnDesktop(workspace()->currentDesktop()) )
-		 || 
-		 ( client->isIconified()  && client->mainClient() != client ) 
+		 (( !options_traverse_all && 
+                    !client->isOnDesktop(workspace()->currentDesktop()) ) || 
+		  ( client->isIconified()  && client->mainClient() != client )) 
 		 );
 		
 
