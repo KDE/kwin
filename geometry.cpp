@@ -1591,46 +1591,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
     QPoint topleft = globalPos - moveOffset;
     QPoint bottomright = globalPos + invertedMoveOffset;
-
-    QSize mpsize( geometry().right() - topleft.x() + 1, geometry().bottom() - topleft.y() + 1 );
-    mpsize = adjustedSize( mpsize );
-    QPoint mp( geometry().right() - mpsize.width() + 1,
-               geometry().bottom() - mpsize.height() + 1 );
-
     QRect previousMoveResizeGeom = moveResizeGeom;
-    switch ( mode )
-        {
-        case TopLeft2:
-            moveResizeGeom =  QRect( mp, geometry().bottomRight() ) ;
-            break;
-        case BottomRight2:
-            moveResizeGeom =  QRect( geometry().topLeft(), bottomright ) ;
-            break;
-        case BottomLeft2:
-            moveResizeGeom =  QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), bottomright.y()) ) ;
-            break;
-        case TopRight2:
-            moveResizeGeom =  QRect( QPoint(geometry().x(), mp.y() ), QPoint( bottomright.x(), geometry().bottom()) ) ;
-            break;
-        case Top:
-            moveResizeGeom =  QRect( QPoint( geometry().left(), mp.y() ), geometry().bottomRight() ) ;
-            break;
-        case Bottom:
-            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( geometry().right(), bottomright.y() ) ) ;
-            break;
-        case Left:
-            moveResizeGeom =  QRect( QPoint( mp.x(), geometry().top() ), geometry().bottomRight() ) ;
-            break;
-        case Right:
-            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( bottomright.x(), geometry().bottom() ) ) ;
-            break;
-        case Center:
-            moveResizeGeom.moveTopLeft( topleft );
-            break;
-        default:
-            assert( false );
-            break;
-        }
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
@@ -1653,6 +1614,45 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     bool update = false;
     if( isResize())
         {
+        // first resize (without checking constrains), then snap, then check bounds, then check constrains
+        QRect orig = initialMoveResizeGeom;
+        Sizemode sizemode = SizemodeAny;
+        switch ( mode )
+            {
+            case TopLeft2:
+                moveResizeGeom =  QRect( topleft, orig.bottomRight() ) ;
+                break;
+            case BottomRight2:
+                moveResizeGeom =  QRect( orig.topLeft(), bottomright ) ;
+                break;
+            case BottomLeft2:
+                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.y() ), QPoint( orig.right(), bottomright.y()) ) ;
+                break;
+            case TopRight2:
+                moveResizeGeom =  QRect( QPoint( orig.x(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
+                break;
+            case Top:
+                moveResizeGeom =  QRect( QPoint( orig.left(), topleft.y() ), orig.bottomRight() ) ;
+                sizemode = SizemodeFixedH; // try not to affect height
+                break;
+            case Bottom:
+                moveResizeGeom =  QRect( orig.topLeft(), QPoint( orig.right(), bottomright.y() ) ) ;
+                sizemode = SizemodeFixedH;
+                break;
+            case Left:
+                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.top() ), orig.bottomRight() ) ;
+                sizemode = SizemodeFixedW;
+                break;
+            case Right:
+                moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), orig.bottom() ) ) ;
+                sizemode = SizemodeFixedW;
+                break;
+            case Center:
+            default:
+                assert( false );
+                break;
+            }
+        // TODO snap
         if( moveResizeGeom.bottom() < desktopArea.top() + top_marge )
             moveResizeGeom.setBottom( desktopArea.top() + top_marge );
         if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
@@ -1664,12 +1664,53 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         if( !unrestrictedMoveResize && moveResizeGeom.top() < desktopArea.top() ) // titlebar mustn't go out
             moveResizeGeom.setTop( desktopArea.top());
 
-        moveResizeGeom.setSize( adjustedSize( moveResizeGeom.size() ) );
+        QSize size = adjustedSize( moveResizeGeom.size(), sizemode );
+        // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
+        topleft = QPoint( moveResizeGeom.right() - size.width() + 1, moveResizeGeom.bottom() - size.height() + 1 );
+        bottomright = QPoint( moveResizeGeom.left() + size.width() - 1, moveResizeGeom.top() + size.height() - 1 );
+        orig = moveResizeGeom;
+        switch ( mode )
+            { // these 4 corners ones are copied from above
+            case TopLeft2:
+                moveResizeGeom =  QRect( topleft, orig.bottomRight() ) ;
+                break;
+            case BottomRight2:
+                moveResizeGeom =  QRect( orig.topLeft(), bottomright ) ;
+                break;
+            case BottomLeft2:
+                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.y() ), QPoint( orig.right(), bottomright.y()) ) ;
+                break;
+            case TopRight2:
+                moveResizeGeom =  QRect( QPoint( orig.x(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
+                break;
+            // The side ones can't be copied exactly - if aspect ratios are specified, both dimensions may change.
+            // Therefore grow to the right/bottom if needed.
+            // TODO it should probably obey gravity rather than always using right/bottom ?
+            case Top:
+                moveResizeGeom =  QRect( QPoint( orig.left(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
+                break;
+            case Bottom:
+                moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
+                break;
+            case Left:
+                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.top() ), QPoint( orig.right(), bottomright.y()));
+                break;
+            case Right:
+                moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
+                break;
+            case Center:
+            default:
+                assert( false );
+                break;
+            }
         if( moveResizeGeom.size() != previousMoveResizeGeom.size())
             update = true;
         }
     else if( isMove())
         {
+        assert( mode == Center );
+        // first move, then snap, then check bounds
+        moveResizeGeom.moveTopLeft( topleft );
         moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
         if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge ) // titlebar mustn't go out
             moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge );
@@ -1683,6 +1724,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         if( moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
             update = true;
         }
+    else
+        assert( false );
 
     if( update )
         {
