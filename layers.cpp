@@ -687,8 +687,6 @@ Layer Client::belongsToLayer() const
     // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
     // i.e. the window set to be topmost by the user
     bool raise_special_active_windows = ( workspace()->topClientOnDesktop( desktop(), true ) == this );
-    if( isDialog() && workspace()->activeClient() == this && raise_special_active_windows )
-        return ActiveLayer;
     if( keepAbove())
         return AboveLayer;
     if( isFullScreen() && workspace()->activeClient() != NULL
