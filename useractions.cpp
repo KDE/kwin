@@ -134,7 +134,8 @@ void Workspace::resetClientOpacity()
     {
     active_popup_client->setCustomOpacityFlag(false);
     active_popup_client->updateOpacity();
-    setTransButtonText(active_popup_client->opacityPercentage());
+    transSlider->setValue(100-active_popup_client->opacityPercentage());
+    setTransButtonText(100-active_popup_client->opacityPercentage());
     }
 
 
