@@ -14,6 +14,7 @@
 #include "../../options.h"
 
 #include "buttondata.h"
+#include "btnhighcolor.h"
 
 extern "C"
 {
@@ -38,13 +39,19 @@ static unsigned char minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
 
 static unsigned char unsticky_bits[] = {
-    0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
+   0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
 
 static unsigned char sticky_bits[] = {
-    0x00, 0x00, 0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00};
+   0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
 
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
+
+static unsigned char btnhighcolor_mask_bits[] = {
+ 0xe0,0x41,0xf8,0x07,0xfc,0x0f,0xfe,0xdf,0xfe,0x1f,0xff,0x3f,0xff,0xff,0xff,
+ 0x3f,0xff,0x3f,0xff,0xff,0xff,0xff,0xfe,0x9f,0xfe,0x1f,0xfc,0x0f,0xf0,0x03,
+ 0x00,0x40,0x80,0x00,0x00,0x00,0x39,0x00,0x00,0x00,0x20,0x99,0x0f,0x08,0xc4,
+ 0x00,0x00,0x00,0x67,0x00,0x00,0x00,0x58,0x5f,0x43,0x68,0x61,0x6e,0x67,0x65 }; 
 
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
@@ -58,43 +65,53 @@ static bool pixmaps_created = false;
 
 static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
 {
-    static QBitmap bDark1(14, 15, bmap_6a696a_bits, true);
-    static QBitmap bDark2(14, 15, bmap_949194_bits, true);
-    static QBitmap bDark3(14, 15, bmap_b4b6b4_bits, true);
-    static QBitmap bLight1(14, 15, bmap_e6e6e6_bits, true);
-
-    if(!bDark1.mask()){
-        bDark1.setMask(bDark1);
-        bDark2.setMask(bDark2);
-        bDark3.setMask(bDark3);
-        bLight1.setMask(bLight1);
-    }
+    static QBitmap lcDark1(14, 15, lowcolor_6a696a_bits, true);
+    static QBitmap lcDark2(14, 15, lowcolor_949194_bits, true);
+    static QBitmap lcDark3(14, 15, lowcolor_b4b6b4_bits, true);
+    static QBitmap lcLight1(14, 15, lowcolor_e6e6e6_bits, true);
+    static QImage btnSource(btnhighcolor_xpm);
 
     pix->fill(g.background());
     QPainter p(pix);
+
     if(QPixmap::defaultDepth() > 8){
+        int i, destH, destS, destV, srcH, srcS, srcV;
         QColor btnColor = g.background();
+
+        if(btnSource.depth() < 32)
+            btnSource = btnSource.convertDepth(32);
         if(light)
             btnColor = btnColor.light(120);
-        p.setPen(btnColor.dark(120));
-        p.drawPixmap(0, 0, bDark3);
-        p.setPen(btnColor.dark(140));
-        p.drawPixmap(0, 0, bDark2);
-        p.setPen(btnColor.dark(150));
-        p.drawPixmap(0, 0, bDark1);
-        p.setPen(btnColor.light(130));
-        p.drawPixmap(0, 0, bLight1);
+        btnColor.hsv(&destH, &destS, &destV);
+        QImage btnDest(14, 15, 32);
+
+        unsigned int *srcData = (unsigned int *)btnSource.bits();
+        unsigned int *destData = (unsigned int *)btnDest.bits();
+        QColor srcColor;
+        for(i=0; i < btnSource.width()*btnSource.height(); ++i){
+            srcColor.setRgb(srcData[i]);
+            srcColor.hsv(&srcH, &srcS, &srcV);
+            srcColor.setHsv(destH, destS, srcV);
+            destData[i] = srcColor.rgb();
+        }
+        pix->convertFromImage(btnDest);
+
     }
     else{
+        if(!lcDark1.mask()){
+            lcDark1.setMask(lcDark1);
+            lcDark2.setMask(lcDark2);
+            lcDark3.setMask(lcDark3);
+            lcLight1.setMask(lcLight1);
+        }
         p.setPen(g.dark());
-        p.drawPixmap(0, 0, bDark2);
-        p.drawPixmap(0, 0, bDark1);
+        p.drawPixmap(0, 0, lcDark2);
+        p.drawPixmap(0, 0, lcDark1);
         p.setPen(g.mid());
-        p.drawPixmap(0, 0, bDark3);
+        p.drawPixmap(0, 0, lcDark3);
         p.setPen(g.light());
-        p.drawPixmap(0, 0, bLight1);
+        p.drawPixmap(0, 0, lcLight1);
     }
-    p.end();
 }
 
 
@@ -142,7 +159,8 @@ ModernButton::ModernButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
 {
-    static QBitmap mask(14, 15, bmap_mask_bits, true);
+    QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
+                 btnhighcolor_mask_bits : lowcolor_mask_bits, true);
     resize(14, 15);
 
     if(bitmap)
