@@ -52,6 +52,8 @@ Manager::Manager(
 {
   setBackgroundMode(NoBackground);
 
+  shaded_ = false;
+
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
   titleBar_   = new TitleBar(this);
@@ -107,12 +109,6 @@ Manager::_updateDisplay()
 {
   titleBar_->updateDisplay();
   resizeBar_->updateDisplay();
-}
-
-  void
-Manager::setShade(bool)
-{
-  // Wait for parent class version to work.
 }
 
   void
@@ -209,11 +205,30 @@ Manager::activateLayout()
   void
 Manager::fakeMouseEvent(QMouseEvent * e, QWidget * w)
 {
+  qDebug("fakeMouseEvent %d", e->type());
   QPoint adjustedPos = w->pos() + e->pos();
+
+  if (e->type() == QEvent::MouseButtonDblClick)
+    toggleShaded();
 
   QMouseEvent fake(e->type(), adjustedPos, e->button(), e->state());
 
   Client::event(&fake);
+}
+
+  void
+Manager::toggleShaded()
+{
+  if (shaded_)
+    resize(oldSize_);
+  else {
+    oldSize_ = size();
+    resize(width(), Static::instance()->titleHeight() + RESIZE_BAR_HEIGHT);
+  }
+
+  _updateLayout();
+
+  shaded_ = !shaded_;
 }
 
 } // End namespace

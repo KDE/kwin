@@ -77,18 +77,21 @@ TitleText::updatePixmap()
 TitleText::mousePressEvent(QMouseEvent * e)
 {
   client_->fakeMouseEvent(e, this);
+  DBWidget::mousePressEvent(e);
 }
 
   void
 TitleText::mouseReleaseEvent(QMouseEvent * e)
 {
   client_->fakeMouseEvent(e, this);
+  DBWidget::mouseReleaseEvent(e);
 }
 
   void
 TitleText::mouseMoveEvent(QMouseEvent * e)
 {
   client_->fakeMouseEvent(e, this);
+  DBWidget::mouseMoveEvent(e);
 }
 
   void

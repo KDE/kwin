@@ -40,8 +40,6 @@ class Manager : public Client
     Manager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
     ~Manager();
 
-    void setShade(bool);
-
     void fakeMouseEvent(QMouseEvent *, QWidget *);
 
   signals:
@@ -64,6 +62,7 @@ class Manager : public Client
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
     void activateLayout();
+    void toggleShaded();
     
   protected slots:
 
@@ -79,6 +78,8 @@ class Manager : public Client
     TitleBar * titleBar_;
     ResizeBar * resizeBar_;
 
+    bool shaded_;
+    QSize oldSize_;
 };
 
 class ToolManager : public Manager
