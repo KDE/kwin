@@ -19,10 +19,6 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 
 #include "plugins.h"
 
-#ifndef lt_ptr_t
-#define lt_ptr_t lt_ptr
-#endif
-
 using namespace KWinInternal;
 
 const char* defaultPlugin = "kwin_default";
@@ -32,7 +28,7 @@ PluginMgr::PluginMgr()
     : QObject()
 {
     alloc_ptr = NULL;
-    handle = 0;
+    library = 0;
     pluginStr = "kwin_undefined";
 
     updatePlugin();
@@ -40,12 +36,13 @@ PluginMgr::PluginMgr()
 
 PluginMgr::~PluginMgr()
 {
-    if(handle) {
+    if(library) {
         // Call the plugin's cleanup function
-	lt_ptr_t deinit_func = lt_dlsym(handle, "deinit");
+	void *deinit_func = library->symbol("deinit");
 	if (deinit_func)
 	    ((void (*)())deinit_func)();
-        lt_dlclose(handle);
+	library->unload();
+	library = 0;
     }
 }
 
@@ -73,14 +70,8 @@ Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
 // returns true if plugin was loaded successfully
 void PluginMgr::loadPlugin(QString nameStr)
 {
-    static bool dlregistered = false;
-    lt_dlhandle oldHandle = handle;
-    handle = 0;
-
-    if(!dlregistered) {
-       dlregistered = true;
-       lt_dlinit();
-    }
+    KLibrary *oldLibrary = library;
+    library = 0;
 
     QString path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
 
@@ -99,31 +90,31 @@ void PluginMgr::loadPlugin(QString nameStr)
 	return;
 
     // Try loading the requested plugin
-    handle = lt_dlopen(QFile::encodeName(path));
+    library = KLibLoader::self()->library(QFile::encodeName(path));
 
     // If that fails, fall back to the default plugin
-    if (!handle) {
+    if (!library) {
         nameStr = defaultPlugin;
         path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
 	if (!path.isEmpty())
-            handle = lt_dlopen(QFile::encodeName(path));
+            library = KLibLoader::self()->library(QFile::encodeName(path));
     }
 
-    if (!handle)
+    if (!library)
         shutdownKWin(i18n("The default decoration plugin is corrupt "
                           "and could not be loaded!"));
 
     // Call the plugin's initialisation function
-    lt_ptr_t init_func = lt_dlsym(handle, "init");
+    void *init_func = library->symbol("init");
     if (init_func)
         ((void (*)())init_func)();
 
-    lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
+    void *alloc_func = library->symbol("allocate");
     if(alloc_func) {
         alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
     } else {
         qWarning("KWin: The library %s is not a KWin plugin.", path.latin1());
-        lt_dlclose(handle);
+        library->unload();
         exit(1);
     }
 
@@ -131,17 +122,17 @@ void PluginMgr::loadPlugin(QString nameStr)
     emit resetAllClients();
 
     // Call the old plugin's cleanup function
-    if(oldHandle) {
-	lt_ptr_t deinit_func = lt_dlsym(oldHandle, "deinit");
+    if(oldLibrary) {
+	void *deinit_func = oldLibrary->symbol("deinit");
 	if (deinit_func)
 	    ((void (*)())deinit_func)();
-        lt_dlclose(oldHandle);
+	oldLibrary->unload();
     }
 }
 
 void PluginMgr::resetPlugin()
 {
-    lt_ptr_t reset_func = lt_dlsym(handle, "reset");
+    void *reset_func = library->symbol("reset");
     if (reset_func)
        ((void (*)())reset_func)();
 }

@@ -8,9 +8,9 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 
 #include <qpopupmenu.h>
 #include <qstringlist.h>
-#include <ltdl.h>
 
 class QFileInfo;
+class KLibrary;
 
 namespace KWinInternal {
 
@@ -34,7 +34,7 @@ signals:
 protected:
     void shutdownKWin(const QString& error_msg);
     Client* (*alloc_ptr)(Workspace *ws, WId w, int tool);
-    lt_dlhandle handle;
+    KLibrary *library;
     QString pluginStr;
 };
 
