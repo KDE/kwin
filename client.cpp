@@ -623,6 +623,17 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	    XFree(classHint.res_class);
 	}
 
+	if ((xSizeHint.flags & PPosition) && ! ignorePPosition) {
+	    int tx = geom.x();
+	    int ty = geom.y();
+
+	    if (tx < 0)
+		tx = area.right() + tx;
+	    if (ty < 0)
+		ty = area.bottom() + ty;
+	    geom.moveTopLeft(QPoint(tx, ty));
+	}
+
 	if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
 	     (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
@@ -2773,6 +2784,7 @@ Window Client::staticWmClientLeader(WId w)
     }
     return result;
 }
+
 
 void Client::getWmClientLeader()
 {
