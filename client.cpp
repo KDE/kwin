@@ -833,20 +833,23 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         } else {
 	    // we only raise (and potentially activate) new clients if
 	    // the user does not actively work in the currently active
-	    // client. We can safely drop the activation when the
+	    // client. We can safely drop the activation when the new
+	    // window is not a dialog of the active client and
 	    // NET_KDE_USER_TIME of the currently active client is
 	    // defined and more recent than the one of the new client
 	    // (which we set ourselves in CreateNotify in
 	    // workspace.cpp)
 	    Client* ac = workspace()->activeClient();
-	    if ( ac && ac->userTime() <= userTime() ) {
+	    
+	    if ( ac && ac->userTime() > userTime() 
+		 && ( !isTransient() || mainClient() != ac ) ) {
+		workspace()->stackClientUnderActive( this );
+		show();
+	    } else {
 		workspace()->raiseClient( this );
 		show();
 		if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
 		    workspace()->requestFocus( this );
-	    } else {
-		workspace()->stackClientUnderActive( this );
-		show();
 	    }
         }
     }
