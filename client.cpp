@@ -38,17 +38,42 @@ static bool resizeVerticalDirectionFixed = FALSE;
 
 static QRect* visible_bound = 0;
 
-
 // NET WM Protocol handler class
 class WinInfo : public NETWinInfo {
 public:
-    WinInfo(Display * display, Window window,
+    WinInfo(::Client * c, Display * display, Window window,
 	    Window rwin, unsigned long pr )
 	: NETWinInfo( display, window, rwin, pr, NET::WindowManager ) {
+      m_client = c;
     }
 
-    void changeDesktop(CARD32 /* desktop */) { }
-    void changeState(CARD32 /* state */, CARD32 /* mask */) { }
+    virtual void changeDesktop(CARD32 desktop) {
+      m_client->setDesktop( desktop );
+    }
+    virtual void changeState(CARD32 state, CARD32 /* mask */) {
+      // What's the mask ?
+      // Warning: this code was written by David who has no clue about window managers :/
+
+      // state : kwin.h says: possible values are or'ed combinations of NET::Modal,
+      // NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar
+
+      m_client->setSticky( state & NET::Sticky );
+      m_client->setShade( state & NET::Shaded );
+
+      if ( state & NET::MaxVert )
+        if ( state & NET::MaxHoriz )
+          m_client->maximize( Client::MaximizeFull );
+        else
+          m_client->maximize( Client::MaximizeVertical );
+      else if ( state & NET::MaxHoriz )
+          m_client->maximize( Client::MaximizeHorizontal );
+
+      // if ( state & NET::Modal ) ???
+      // if ( state & NET::SkipTaskbar ) ???
+
+    }
+private:
+    ::Client * m_client;
 };
 
 
@@ -354,7 +379,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 	NET::WMName
 	;
 
-    info = new WinInfo( qt_xdisplay(), win, qt_xrootwin(), properties );
+    info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
 
     XWindowAttributes attr;
     if (XGetWindowAttributes(qt_xdisplay(), win, &attr)){
@@ -403,7 +428,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     // same window as its parent.  this is necessary when an application
     // starts up on a different desktop than is currently displayed
     //
-    if ( isTransient() ) 
+    if ( isTransient() )
 	desk = mainClient()->desktop();
 
 }
@@ -499,7 +524,7 @@ void Client::manage( bool isMapped )
 	// assume window wants to be visible on the current desktop
 	desk =  workspace()->currentDesktop();
     }
-    
+
     info->setDesktop( desk );
 
 
