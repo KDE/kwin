@@ -213,6 +213,7 @@ bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool a
         ; // "different" apps
     else if( c1->pid() == 0 || c2->pid() == 0 )
         ; // old apps that don't have _NET_WM_PID, consider them different
+    else
         same_app = true; // looks like it's the same app
     return same_app;
     }
