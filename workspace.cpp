@@ -51,12 +51,7 @@ int Shape::shapeEvent()
 Client* Workspace::clientFactory( Workspace *ws, WId w )
 {
     // hack TODO hints
-    char* name = 0;
-    QString s;
-    if ( XFetchName( qt_xdisplay(), (Window) w, &name ) && name ) {
-	s = QString::fromLatin1( name );
-	XFree( name );
-    }
+    QString s = KWM::title( w );
     if ( s == "THE DESKTOP" ) {
 	XLowerWindow( qt_xdisplay(), w );
 	Client * c = new NoBorderClient( ws, w);
@@ -1236,12 +1231,7 @@ void Workspace::deskCleanup(CleanupType ct)
 {
   QValueList<Client *>::Iterator it(clients.fromLast());
   for (; it != clients.begin(); --it) {
-    QString s;
-    char *name = 0;
-    if ( XFetchName( qt_xdisplay(), (*it)->window(), &name ) && name ) {
-	s = QString::fromLatin1( name );
-	XFree( name );
-    }
+    QString s = KWM::title( (*it)->window() );
     if (s == "Kicker" ||
 	s == "THE DESKTOP")
       continue;

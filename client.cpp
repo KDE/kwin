@@ -420,14 +420,7 @@ void Client::getWmNormalHints()
  */
 void Client::fetchName()
 {
-    char* name = 0;
-    QString s;
-    if ( XFetchName( qt_xdisplay(), win, &name ) && name ) {
-	s = QString::fromLatin1( name );
-	XFree( name );
-    }
-    if ( s.isEmpty() )
-	s = i18n("unnamed");
+    QString s = KWM::title( win );
 
     if ( s != caption() ) {
 	setCaption( "" );
