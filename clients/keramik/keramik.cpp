@@ -1506,7 +1506,7 @@ KeramikClient::MousePosition KeramikClient::mousePosition( const QPoint &p ) con
 	int leftBorder   = clientHandler->tile( BorderLeft, true )->width();
 	int rightBorder  = width() - clientHandler->tile( BorderRight, true )->width() - 1;
 	int bottomBorder = height() - clientHandler->grabBarHeight() - 1;
-	int bottomCornerSize = 3*rightBorder/2 + 24;
+	int bottomCornerSize = 3*clientHandler->tile( BorderRight, true )->width()/2 + 24;
 
 	// Test if the mouse is over the titlebar area
 	if ( p.y() < titleBaseY + 11 ) {
