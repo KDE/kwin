@@ -13,5 +13,5 @@ noinst_HEADERS = kwmthemeclient.h
 lnkdir = $(kde_datadir)/kwin
 lnk_DATA = kwmtheme.desktop
 
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kwin_kwmtheme.pot
+#messages:
+#	$(XGETTEXT) *.cpp -o $(podir)/kwin_kwmtheme.pot

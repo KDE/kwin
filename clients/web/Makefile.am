@@ -29,5 +29,5 @@ linkdir                   = $(kde_datadir)/kwin/
 link_DATA                 = web.desktop
 EXTRA_DIST                = $(link_DATA)
 
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kwin_web.pot
+#messages:
+#	$(XGETTEXT) *.cpp -o $(podir)/kwin_web.pot
