@@ -74,7 +74,7 @@ void KCMRulesList::activeChanged( QListBoxItem* item )
 void KCMRulesList::newClicked()
     {
     RulesDialog dlg;
-    Rules* rule = dlg.edit( NULL );
+    Rules* rule = dlg.edit( NULL, false );
     if( rule == NULL )
         return;
     int pos = rules_listbox->currentItem() + 1;
@@ -90,7 +90,7 @@ void KCMRulesList::modifyClicked()
     if ( pos == -1 )
         return;
     RulesDialog dlg;
-    Rules* rule = dlg.edit( rules[ pos ] );
+    Rules* rule = dlg.edit( rules[ pos ], false );
     if( rule == rules[ pos ] )
         return;
     delete rules[ pos ];

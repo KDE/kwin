@@ -30,6 +30,7 @@
 #include <qwhatsthis.h>
 #include <assert.h>
 #include <kmessagebox.h>
+#include <qtabwidget.h>
 
 #include "../../rules.h"
 
@@ -599,6 +600,11 @@ bool RulesWidget::finalCheck()
     return true;
     }
 
+void RulesWidget::focusSettings()
+    {
+    tabs->setCurrentPage( 2 ); // geometry tab, skip tabs for window identification
+    }
+
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
 : KDialogBase( parent, name, true, "", Ok | Cancel )
     {
@@ -606,10 +612,12 @@ RulesDialog::RulesDialog( QWidget* parent, const char* name )
     setMainWidget( widget );
     }
 
-Rules* RulesDialog::edit( Rules* r )
+Rules* RulesDialog::edit( Rules* r, bool focus_settings )
     {
     rules = r;
     widget->setRules( rules );
+    if( focus_settings )
+        widget->focusSettings();
     exec();
     return rules;
     }

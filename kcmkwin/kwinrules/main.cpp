@@ -199,7 +199,7 @@ static int edit( Window wid )
     Rules* orig_rule = findRule( rules, wid );
     RulesDialog dlg;
     // dlg.edit() creates new Rules instance if edited
-    Rules* edited_rule = dlg.edit( orig_rule );
+    Rules* edited_rule = dlg.edit( orig_rule, true );
     if( edited_rule == NULL || edited_rule->isEmpty())
         {
         rules.remove( orig_rule );

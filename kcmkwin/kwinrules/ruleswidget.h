@@ -39,6 +39,7 @@ class RulesWidget
         void setRules( Rules* r );
         Rules* rules() const;
         bool finalCheck();
+        void focusSettings();
     signals:
         void changed( bool state );
     protected slots:
@@ -89,7 +90,7 @@ class RulesDialog
     Q_OBJECT
     public:
         RulesDialog( QWidget* parent = NULL, const char* name = NULL );
-        Rules* edit( Rules* r );
+        Rules* edit( Rules* r, bool focus_settings );
     protected:
         virtual void accept();
     private:
