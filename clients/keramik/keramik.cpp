@@ -1328,6 +1328,11 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 			p.drawPixmap( width() - 9, height() - grabBarHeight,
 					*clientHandler->tile( GrabBarRight, active ) );
 	}
+
+	// Extra drawline for the 1 pixel empty space QLayout leaves when a window is shaded.
+	p.setPen( options->color( Options::TitleBlend, active ) );
+	p.drawLine( 3, height() - grabBarHeight - 1, 
+				width() - 4, height() - grabBarHeight - 1 );
 }
 
 
