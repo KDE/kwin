@@ -340,7 +340,6 @@ private slots:
     void sendToDesktop( int );
     void clientPopupActivated( int );
     void configureWM();
-    void focusEnsurance();
 
 protected:
     bool keyPress( XKeyEvent& ev );
@@ -484,7 +483,7 @@ private:
     // Timer to collect requests for 'reconfigure'
     QTimer reconfigureTimer;
 
-    QTimer focusEnsuranceTimer;
+    QTimer focusEnsuranceTimer; // unused
 
     WorkspacePrivate* d;
     static Workspace *_self;
