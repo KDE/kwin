@@ -54,10 +54,7 @@ public:
     }
 
     virtual void changeDesktop(int desktop) {
-        if ( desktop == NETWinInfo::OnAllDesktops )
-            m_client->setSticky( TRUE );
-        else
-            m_client->workspace()->sendClientToDesktop( m_client, desktop );
+        m_client->workspace()->sendClientToDesktop( m_client, desktop );
     }
     virtual void changeState( unsigned long state, unsigned long mask ) {
         // state : kwin.h says: possible values are or'ed combinations of NET::Modal,
@@ -767,8 +764,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         setMappingState( init_state );
     }
 
-    bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
-
     if ( workspace()->isNotManaged( caption() ) )
         doNotShow = TRUE;
 
@@ -813,6 +808,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     }
 
     delete session;
+
+    bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
 
     sendSyntheticConfigureNotify();
     workspace()->clientReady( this ); // will call Workspace::propagateClients()

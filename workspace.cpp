@@ -3067,13 +3067,15 @@ void Workspace::clientPopupAboutToShow()
  */
 void Workspace::sendClientToDesktop( Client* c, int desk )
 {
-    if ( c->isSticky() )
+    if ( c->isSticky() && desk != NETWinInfo::OnAllDesktops )
         c->setSticky( FALSE );
 
     if ( c->isOnDesktop( desk ) )
         return;
 
     c->setDesktop( desk );
+    if( desk == NETWinInfo::OnAllDesktops )
+	c->setSticky( true );
 
     if ( c->isOnDesktop( currentDesktop() ) ) {
         c->show();
