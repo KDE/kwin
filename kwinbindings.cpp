@@ -37,14 +37,14 @@
         DEF( I18N_NOOP("Window Below Other Windows"),          0, 0, slotWindowBelow() );
 	DEF( I18N_NOOP("Toggle Window Raise/Lower"),           0, 0, slotWindowRaiseOrLower() );
         DEF( I18N_NOOP("Activate Window Demanding Attention"), CTRL+ALT+Qt::Key_A, 0, slotActivateAttentionWindow());
-        DEF( I18N_NOOP("Window Pack Left"),                    CTRL+ALT+Qt::Key_Left, 0, slotWindowPackLeft() );
-        DEF( I18N_NOOP("Window Pack Right"),                   CTRL+ALT+Qt::Key_Right, 0, slotWindowPackRight() );
-        DEF( I18N_NOOP("Window Pack Up"),                      CTRL+ALT+Qt::Key_Up, 0, slotWindowPackUp() );
-        DEF( I18N_NOOP("Window Pack Down"),                    CTRL+ALT+Qt::Key_Down, 0, slotWindowPackDown() );
-        DEF( I18N_NOOP("Window Grow Horizontal"),              SHIFT+ALT+Qt::Key_Left, 0, slotWindowGrowHorizontal() );
-        DEF( I18N_NOOP("Window Grow Vertical"),                SHIFT+ALT+Qt::Key_Right, 0, slotWindowGrowVertical() );
-        DEF( I18N_NOOP("Window Shrink Horizontal"),            CTRL+ALT+Qt::Key_Up, 0, slotWindowShrinkHorizontal() );
-        DEF( I18N_NOOP("Window Shrink Vertical"),              CTRL+ALT+Qt::Key_Down, 0, slotWindowShrinkVertical() );
+        DEF( I18N_NOOP("Window Pack Left"),                    0, 0, slotWindowPackLeft() );
+        DEF( I18N_NOOP("Window Pack Right"),                   0, 0, slotWindowPackRight() );
+        DEF( I18N_NOOP("Window Pack Up"),                      0, 0, slotWindowPackUp() );
+        DEF( I18N_NOOP("Window Pack Down"),                    0, 0, slotWindowPackDown() );
+        DEF( I18N_NOOP("Window Grow Horizontal"),              0, 0, slotWindowGrowHorizontal() );
+        DEF( I18N_NOOP("Window Grow Vertical"),                0, 0, slotWindowGrowVertical() );
+        DEF( I18N_NOOP("Window Shrink Horizontal"),            0, 0, slotWindowShrinkHorizontal() );
+        DEF( I18N_NOOP("Window Shrink Vertical"),              0, 0, slotWindowShrinkVertical() );
 
 	keys->insert( "Group:Window Desktop", i18n("Window & Desktop") );
 	DEF( I18N_NOOP("Window to Desktop 1"),                 0, WIN+ALT+Qt::Key_F1, slotWindowToDesktop(int) );
