@@ -4,6 +4,8 @@ INCLUDES = $(all_includes)
 lib_LTLIBRARIES = libkwinsystem.la
 
 libkwinsystem_la_SOURCES = systemclient.cpp
+libkwinsystem_la_LIBADD = ../../kwin.la
+libkwinsystem_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 METASOURCES = AUTO
 noinst_HEADERS = systemclient.h
@@ -13,8 +15,6 @@ lnk_DATA = system.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-libkwinsystem_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
-libkwinsystem_la_LIBADD = $(LIB_KDEUI)
 
 ###KMAKE-start (don't edit or delete this block)
 

@@ -4,6 +4,8 @@ INCLUDES = $(all_includes)
 lib_LTLIBRARIES = libkwinmwm.la
 
 libkwinmwm_la_SOURCES = mwmclient.cpp
+libkwinmwm_la_LIBADD = ../../kwin.la
+libkwinmwm_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 METASOURCES = AUTO
 noinst_HEADERS = mwmclient.h
@@ -13,7 +15,6 @@ lnk_DATA = mwm.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-libkwinmwm_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic
 
 ###KMAKE-start (don't edit or delete this block)
 

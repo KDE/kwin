@@ -4,6 +4,8 @@ INCLUDES = $(all_includes)
 lib_LTLIBRARIES = libkwinkstep.la
 
 libkwinkstep_la_SOURCES = nextclient.cpp
+libkwinkstep_la_LIBADD = ../../kwin.la
+libkwinkstep_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 METASOURCES = AUTO
 noinst_HEADERS = nextclient.h
@@ -13,7 +15,6 @@ lnk_DATA = kstep.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-libkwinkstep_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic
 
 ###KMAKE-start (don't edit or delete this block)
 

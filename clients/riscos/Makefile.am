@@ -16,6 +16,8 @@ ResizeSide.cpp \
 TitleBar.cpp \
 TitleText.cpp \
 Static.cpp
+libkwinriscos_la_LIBADD = ../../kwin.la
+libkwinriscos_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 METASOURCES = AUTO
 noinst_HEADERS = \
@@ -38,6 +40,4 @@ lnk_DATA = riscos.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-libkwinriscos_la_LIBADD = $(LIB_QT) ../../kwin.la
-libkwinriscos_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic -no-undefined
 

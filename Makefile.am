@@ -14,7 +14,7 @@ include_HEADERS = KWinInterface.h
 
 kwin_SOURCES = dummy.cpp
 kwin_LDADD = kwin.la
-kwin_LDFLAGS = $(all_libraries) $(KDE_RPATH) -export-dynamic -rdynamic
+kwin_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 KDE_ICON = kwin
 

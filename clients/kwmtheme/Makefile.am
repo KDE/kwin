@@ -1,10 +1,11 @@
-SUBDIRS=
 
 INCLUDES = $(all_includes) 
 
 lib_LTLIBRARIES = libkwinkwmtheme.la
 
 libkwinkwmtheme_la_SOURCES = kwmthemeclient.cpp
+libkwinkwmtheme_la_LIBADD = ../../kwin.la
+libkwinkwmtheme_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 METASOURCES = AUTO
 noinst_HEADERS = kwmthemeclient.h
@@ -14,7 +15,6 @@ noinst_HEADERS = kwmthemeclient.h
 
 #EXTRA_DIST = $(lnk_DATA)
 
-libkwinkwmtheme_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic
 
 ###KMAKE-start (don't edit or delete this block)
 
