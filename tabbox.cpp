@@ -51,7 +51,7 @@ TabBox::TabBox( Workspace *ws, const char *name )
 
     showMiniIcon = false;
 
-    no_tasks = i18n("*** No Tasks ***");
+    no_tasks = i18n("*** No Windows ***");
     m = DesktopMode; // init variables
     reconfigure();
     reset();
@@ -223,22 +223,22 @@ void TabBox::reset()
  */
 void TabBox::nextPrev( bool next)
     {
-    if ( mode() == WindowsMode ) 
+    if ( mode() == WindowsMode )
         {
         Client* firstClient = 0;
-        do 
+        do
             {
             if ( next )
                 client = workspace()->nextFocusChainClient(client);
             else
                 client = workspace()->previousFocusChainClient(client);
-            if (!firstClient) 
+            if (!firstClient)
                 {
 		// When we see our first client for the second time,
 		// it's time to stop.
                 firstClient = client;
                 }
-            else if (client == firstClient) 
+            else if (client == firstClient)
                 {
 		// No candidates found.
                 client = 0;
@@ -246,22 +246,22 @@ void TabBox::nextPrev( bool next)
                 }
             } while ( client && !clients.contains( client ));
         }
-    else if( mode() == DesktopMode ) 
+    else if( mode() == DesktopMode )
         {
         if ( next )
             desk = workspace()->nextDesktopFocusChain( desk );
         else
             desk = workspace()->previousDesktopFocusChain( desk );
         }
-    else 
+    else
         { // DesktopListMode
-        if ( next ) 
+        if ( next )
             {
             desk++;
             if ( desk > workspace()->numberOfDesktops() )
                 desk = 1;
             }
-        else 
+        else
             {
             desk--;
             if ( desk < 1 )
@@ -335,7 +335,7 @@ void TabBox::drawContents( QPainter * )
     int x = 0;
     int y = 0;
 
-    if ( mode () == WindowsMode ) 
+    if ( mode () == WindowsMode )
         {
         if ( !currentClient() )
             {
@@ -348,7 +348,7 @@ void TabBox::drawContents( QPainter * )
             }
         else
             {
-            for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
+            for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
               {
               if ( workspace()->hasClient( *it ) )  // safety
                   {
@@ -396,7 +396,7 @@ void TabBox::drawContents( QPainter * )
               }
             }
         }
-    else 
+    else
         { // DesktopMode || DesktopListMode
         int iconHeight = iconWidth;
 
@@ -407,7 +407,7 @@ void TabBox::drawContents( QPainter * )
         QFontMetrics fm(f);
 
         int wmax = 0;
-        for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ ) 
+        for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ )
             {
             wmax = QMAX(wmax, fontMetrics().width(workspace()->desktopName(i)));
 
@@ -419,7 +419,7 @@ void TabBox::drawContents( QPainter * )
         // In DesktopMode, start at the current desktop
         // In DesktopListMode, start at desktop #1
         int iDesktop = (mode() == DesktopMode) ? workspace()->currentDesktop() : 1;
-        for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ ) 
+        for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ )
             {
             // draw highlight background
             if ( iDesktop == desk )  // current desktop
@@ -523,7 +523,7 @@ void TabBox::delayedShow()
     c->setGroup("TabBox");
     bool delay = c->readNumEntry("ShowDelay", true);
 
-    if (!delay) 
+    if (!delay)
         {
         show();
         return;
@@ -605,7 +605,7 @@ bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
     va_start( args, nKeySyms );
     XQueryKeymap( qt_xdisplay(), keymap );
 
-    for( int iKeySym = 0; iKeySym < nKeySyms; iKeySym++ ) 
+    for( int iKeySym = 0; iKeySym < nKeySyms; iKeySym++ )
         {
         uint keySymX = va_arg( args, uint );
         uchar keyCodeX = XKeysymToKeycode( qt_xdisplay(), keySymX );
@@ -621,12 +621,12 @@ bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
                 return false;
 
                 // If ALL keys passed need to be depressed,
-        if( bAll ) 
+        if( bAll )
             {
             if( (keymap[i] & mask) == 0 )
                     return false;
             }
-        else 
+        else
             {
                         // If we are looking for ANY key press, and this key is depressed,
             if( keymap[i] & mask )
@@ -647,22 +647,22 @@ bool areModKeysDepressed( const KShortcut& cut )
     int nKeySyms = 0;
     int mod = cut.seq(0).key(0).modFlags();
 
-    if ( mod & KKey::SHIFT ) 
+    if ( mod & KKey::SHIFT )
         {
         rgKeySyms[nKeySyms++] = XK_Shift_L;
         rgKeySyms[nKeySyms++] = XK_Shift_R;
         }
-    if ( mod & KKey::CTRL ) 
+    if ( mod & KKey::CTRL )
         {
         rgKeySyms[nKeySyms++] = XK_Control_L;
         rgKeySyms[nKeySyms++] = XK_Control_R;
         }
-    if( mod & KKey::ALT ) 
+    if( mod & KKey::ALT )
         {
         rgKeySyms[nKeySyms++] = XK_Alt_L;
         rgKeySyms[nKeySyms++] = XK_Alt_R;
         }
-    if( mod & KKey::WIN ) 
+    if( mod & KKey::WIN )
         {
         // HACK: it would take a lot of code to determine whether the Win key
         //  is associated with Super or Meta, so check for both
@@ -684,15 +684,15 @@ void Workspace::slotWalkThroughWindows()
         return;
     if ( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) 
+    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
         {
         //XUngrabKeyboard(qt_xdisplay(), qt_x_time); // need that because of accelerator raw mode
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
         }
-    else 
+    else
         {
-        if ( areModKeysDepressed( cutWalkThroughWindows ) ) 
+        if ( areModKeysDepressed( cutWalkThroughWindows ) )
             {
             if ( startKDEWalkThroughWindows() )
                 KDEWalkThroughWindows( true );
@@ -712,19 +712,19 @@ void Workspace::slotWalkBackThroughWindows()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) 
+    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
         {
         // CDE style raise / lower
         CDEWalkThroughWindows( false );
         }
-    else 
+    else
         {
-        if ( areModKeysDepressed( cutWalkThroughWindowsReverse ) ) 
+        if ( areModKeysDepressed( cutWalkThroughWindowsReverse ) )
             {
             if ( startKDEWalkThroughWindows() )
                 KDEWalkThroughWindows( false );
             }
-        else 
+        else
             {
             CDEWalkThroughWindows( false );
             }
@@ -737,12 +737,12 @@ void Workspace::slotWalkThroughDesktops()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( cutWalkThroughDesktops ) ) 
+    if ( areModKeysDepressed( cutWalkThroughDesktops ) )
         {
         if ( startWalkThroughDesktops() )
             walkThroughDesktops( true );
         }
-    else 
+    else
         {
         oneStepThroughDesktops( true );
         }
@@ -754,12 +754,12 @@ void Workspace::slotWalkBackThroughDesktops()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( cutWalkThroughDesktopsReverse ) ) 
+    if ( areModKeysDepressed( cutWalkThroughDesktopsReverse ) )
         {
         if ( startWalkThroughDesktops() )
             walkThroughDesktops( false );
         }
-    else 
+    else
         {
         oneStepThroughDesktops( false );
         }
@@ -771,12 +771,12 @@ void Workspace::slotWalkThroughDesktopList()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( cutWalkThroughDesktopList ) ) 
+    if ( areModKeysDepressed( cutWalkThroughDesktopList ) )
         {
         if ( startWalkThroughDesktopList() )
             walkThroughDesktops( true );
         }
-    else 
+    else
         {
         oneStepThroughDesktopList( true );
         }
@@ -788,12 +788,12 @@ void Workspace::slotWalkBackThroughDesktopList()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( cutWalkThroughDesktopListReverse ) ) 
+    if ( areModKeysDepressed( cutWalkThroughDesktopListReverse ) )
         {
         if ( startWalkThroughDesktopList() )
             walkThroughDesktops( false );
         }
-    else 
+    else
         {
         oneStepThroughDesktopList( false );
         }
@@ -855,7 +855,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
 
     if ( !forward )
         {
-        do 
+        do
             {
             nc = previousStaticClient(nc);
             } while (nc && nc != c &&
@@ -864,7 +864,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
         }
     else
         {
-            do 
+            do
             {
             nc = nextStaticClient(nc);
             } while (nc && nc != c &&
@@ -873,7 +873,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
         }
     if (c && c != nc)
         lowerClient( c );
-    if (nc) 
+    if (nc)
         {
         if ( options->focusPolicyIsReasonable() )
             {
@@ -989,7 +989,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
     for( int i = ShiftMapIndex;
          i <= Mod5MapIndex;
          ++i )
-        if(( mk & ( 1 << i )) != 0 ) 
+        if(( mk & ( 1 << i )) != 0 )
         {
         if( mod_index >= 0 )
             return;
@@ -998,7 +998,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
     bool release = false;
     if( mod_index == -1 )
         release = true;
-    else 
+    else
         {
         XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
         for (int i=0; i<xmk->max_keypermod; i++)
@@ -1028,7 +1028,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         tab_box->hide();
         keys->setEnabled( true );
         control_grab = False;
-        if ( tab_box->currentDesktop() != -1 ) 
+        if ( tab_box->currentDesktop() != -1 )
             {
             setCurrentDesktop( tab_box->currentDesktop() );
                     // popupinfo->showInfo( desktopName(currentDesktop()) ); // AK - not sure
@@ -1061,7 +1061,7 @@ int Workspace::previousDesktopFocusChain( int iDesktop ) const
 
 /*!
   auxiliary functions to travers all clients according the focus
-  order. Useful for kwm´s Alt-tab feature.
+  order. Useful for kwms Alt-tab feature.
 */
 Client* Workspace::nextFocusChainClient( Client* c ) const
     {
@@ -1078,7 +1078,7 @@ Client* Workspace::nextFocusChainClient( Client* c ) const
 
 /*!
   auxiliary functions to travers all clients according the focus
-  order. Useful for kwm´s Alt-tab feature.
+  order. Useful for kwms Alt-tab feature.
 */
 Client* Workspace::previousFocusChainClient( Client* c ) const
     {
