@@ -1615,11 +1615,11 @@ ClientList Workspace::constrainedStackingOrder( const ClientList& list )
     ClientList result;
     ClientList::ConstIterator it;
     for (  it = list.begin(); it!=list.end(); ++it) {
-	if ( !(*it)->staysOnTop() )
+	if ( !(*it)->staysOnTop() && !(*it)->mainClient()->staysOnTop())
 	    result.append( *it );
     }
     for ( it = list.begin(); it!=list.end(); ++it) {
-	if ( (*it)->staysOnTop() )
+	if ( (*it)->staysOnTop() || (*it)->mainClient()->staysOnTop() )
 	    result.append( *it );
     }
     return result;
