@@ -2284,6 +2284,7 @@ Comment[sl]=Okno je vidno na vseh namizjih
 Comment[sr]=Прозор је учињен видљивим на свим радним површинама
 Comment[sv]=Ett fönster görs synligt på alla skrivbord
 Comment[tr]=Bir Pencere Tüm Masaüstlerinde Görünür Hale Getirildi
+Comment[uk]=Вікно зроблено видимим на всіх стільницях
 Comment[xx]=xxA Window is made Visible on All Desktopsxx
 Comment[zh_TW]=視窗可在所有桌面被看到
 default_sound=KDE_Window_Sticky.wav
@@ -2334,6 +2335,7 @@ Comment[sl]=Okno ni več vidno na vseh namizjih
 Comment[sr]=Прозор више није видљив на свим радним површинама
 Comment[sv]=Ett fönster blir inte längre synligt på alla skrivbord
 Comment[tr]=Bir Pencere Tüm Masaüstlerinde Gizli Hale Getirildi
+Comment[uk]=Вікно більше не є видимим на всіх стільницях
 default_presentation=1
 default_sound=KDE_Window_UnSticky.wav
 
