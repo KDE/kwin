@@ -33,7 +33,7 @@
 Version 2.x of xcompmgr, kompmgr changes by Thomas Lübking and Heiko Przybyl
 check baghira.sf.net for more infos
 */
-#define _VERSION_ 2.01
+#define _VERSION_ 2.02
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -211,6 +211,15 @@ Bool	autoRedirect = False;
 int            Gsize = -1;
 unsigned char *shadowCorner = NULL;
 unsigned char *shadowTop = NULL;
+
+sXRenderFindVisualFormat(Display *dpy, _Xconst Visual *visual)
+{
+    XRenderPictFormat* format = XRenderFindVisualFormat(dpy,visual);
+    if (format)
+        return format;
+    else
+        return XRenderFindStandardFormat (dpy, PictStandardA8);
+}
 
 int
 get_time_in_milliseconds ()
@@ -811,7 +820,7 @@ root_tile (Display *dpy)
     }
     pa.repeat = True;
     picture = XRenderCreatePicture (dpy, pixmap,
-				    XRenderFindVisualFormat (dpy,
+				    sXRenderFindVisualFormat (dpy,
 							     DefaultVisual (dpy, scr)),
 				    CPRepeat, &pa);
     if (fill)
@@ -945,7 +954,7 @@ paint_all (Display *dpy, XserverRegion region)
 	Pixmap	rootPixmap = XCreatePixmap (dpy, root, root_width, root_height,
 					    DefaultDepth (dpy, scr));
 	rootBuffer = XRenderCreatePicture (dpy, rootPixmap,
-					   XRenderFindVisualFormat (dpy,
+					   sXRenderFindVisualFormat (dpy,
 								    DefaultVisual (dpy, scr)),
 					   0, 0);
 	XFreePixmap (dpy, rootPixmap);
@@ -985,7 +994,7 @@ paint_all (Display *dpy, XserverRegion region)
 	    if (w->pixmap)
 		draw = w->pixmap;
 #endif
-	    format = XRenderFindVisualFormat (dpy, w->a.visual);
+	    format = sXRenderFindVisualFormat (dpy, w->a.visual);
 	    pa.subwindow_mode = IncludeInferiors;
 	    w->picture = XRenderCreatePicture (dpy, draw,
 					       format,
@@ -2377,7 +2386,7 @@ main (int argc, char **argv)
     root_height = DisplayHeight (dpy, scr);
 
     rootPicture = XRenderCreatePicture (dpy, root, 
-					XRenderFindVisualFormat (dpy,
+					sXRenderFindVisualFormat (dpy,
 								 DefaultVisual (dpy, scr)),
 					CPSubwindowMode,
 					&pa);
