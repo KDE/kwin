@@ -122,6 +122,13 @@ public:
     bool mayMove() const { return may_move; }
     void setMayMove( bool m) { may_move = m; }
 
+    /**
+     * A window with passive focus will only get focus when
+     * the user explicitly selects the window.
+     **/
+    bool passiveFocus() const { return passive_focus; }
+    void setPassiveFocus( bool p) { passive_focus = p; }
+
     void takeFocus();
 
     void setMask( const QRegion & );
@@ -238,6 +245,7 @@ private:
     bool is_sticky;
     bool is_shape;
     bool may_move;
+    bool passive_focus;
     void getWMHints();
     void getWindowProtocols();
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?

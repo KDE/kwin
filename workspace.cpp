@@ -126,18 +126,21 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
 	ws->setDesktopClient( c );
+        c->setPassiveFocus( TRUE );
 	return c;
     }
     if ( s.lower().right(6) == "kicker" ) {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
+        c->setPassiveFocus( TRUE );
 	return c;
     }
     if ( s == "MAC MENU [menu]" ) {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
+        c->setPassiveFocus( TRUE );
 	return c;
     }
     if ( ( s.right(6) == "[menu]" ) || ( s.right(7) == "[tools]" ) ) {
@@ -1537,29 +1540,28 @@ void Workspace::setDesktopClient( Client* c)
   propages the new desktop to the world
  */
 void Workspace::setCurrentDesktop( int new_desktop ){
-    if (new_desktop == current_desktop || new_desktop < 1 || new_desktop > number_of_desktops )
+    if (new_desktop < 1 || new_desktop > number_of_desktops )
 	return;
 
-    active_client = 0;
     block_focus = TRUE;
 
-    /*
-       optimized Desktop switching: unmapping done from back to front
-       mapping done from front to back => less exposure events
-    */
+    if (new_desktop != current_desktop) {
+        /*
+           optimized Desktop switching: unmapping done from back to front
+           mapping done from front to back => less exposure events
+         */
 
-    for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
-	if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
-	    (*it)->hide();
-	}
+        for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
+            if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
+	        (*it)->hide();
+	    }
+        }
+        for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+	    if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
+	        (*it)->show();
+	    }
+        }
     }
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-	if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
-	    (*it)->show();
-	}
-    }
-
-
     current_desktop = new_desktop;
 
     XChangeProperty(qt_xdisplay(), qt_xrootwin(),
@@ -1569,25 +1571,31 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
     // restore the focus on this desktop
     block_focus = FALSE;
-    Client* c = active_client?active_client:previousClient(0);
-    Client* stop = c;
-    while ( c && !c->isVisible() ) {
-	c = previousClient( c );
-	if ( c == stop )
-	    break;
+    Client* c = active_client;
+
+    if ( !c || !c->isVisible() || c->passiveFocus()) {
+        c = nextClient(0);
+        Client* stop = c;
+        while ( c && (!c->isVisible() || c->passiveFocus()) ) {
+            c = nextClient( c );
+            if ( c == stop )
+                break;
+        }
     }
 
-    if ( !c || !c->isVisible() ) {
+    if ( !c || !c->isVisible() || c->passiveFocus()) {
 	// there's no suitable client in the focus chain. Try to find any other client then.
 	for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
-	    if ( (*it)->isVisible() ) {
+	    if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
 		c = *it;
 		break;
 	    }
 	}
     }
-    if ( c && c->isVisible() )
+    if ( c && c->isVisible() && !c->passiveFocus())
 	requestFocus( c );
+    else
+        focusToNull();
 
     QApplication::syncX();
     KWM::switchToDesktop( current_desktop ); // ### compatibility
