@@ -1,6 +1,7 @@
 // $Id$
-// Melchior FRANZ  <a8603365@unet.univie.ac.at>	-- 2001-04-22
+// Melchior FRANZ  <mfranz@kde.org>	-- 2001-04-22
 
+#include <kapplication.h>
 #include <kconfig.h>
 #include <klocale.h>
 #include <kglobal.h>
@@ -31,9 +32,9 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	vbox = new QVBoxLayout(mainw);
 	vbox->setSpacing(6);
 	vbox->setMargin(0);
-	
+
 	handleBox = new QGroupBox( 1, Qt::Vertical, i18n("Window Resize Handle"), mainw);
-	handleBox->setSizePolicy(QSizePolicy((QSizePolicy::SizeType)1, (QSizePolicy::SizeType)4));
+	handleBox->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
 
 	cbShowHandle = new QCheckBox(i18n("&Show handle"), handleBox);
 	QWhatsThis::add(cbShowHandle,
@@ -44,7 +45,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	handleBox->addSpace(20);
 	connect(cbShowHandle, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()));
 
-	sliderBox = new QVBox(handleBox);	
+	sliderBox = new QVBox(handleBox);
 	handleSizeSlider = new QSlider(0, 4, 1, 0, QSlider::Horizontal, sliderBox);
 	QWhatsThis::add(handleSizeSlider,
 			i18n("Here you can change the size of the resize handle."));
@@ -54,11 +55,14 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 
 	hbox = new QHBox(sliderBox);
 	hbox->setSpacing(6);
+
+	bool rtl = kapp->reverseLayout();
 	label1 = new QLabel(i18n("Small"), hbox);
+	label1->setAlignment(rtl ? AlignRight : AlignLeft);
 	label2 = new QLabel(i18n("Medium"), hbox);
 	label2->setAlignment(AlignHCenter);
 	label3 = new QLabel(i18n("Large"), hbox);
-	label3->setAlignment(AlignRight);
+	label3->setAlignment(rtl ? AlignLeft : AlignRight);
 	
 	vbox->addWidget(handleBox);
 	vbox->addStretch(1);
