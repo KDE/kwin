@@ -81,6 +81,10 @@ WindowRules::WindowRules( const QString& str, bool temporary )
     var = func ( cfg.read##type##Entry( #var )); \
     var##rule = readRule( cfg, #var "rule" );
     
+#define READ_SET_RULE_DEF( var, type, func, def ) \
+    var = func ( cfg.read##type##Entry( #var, def )); \
+    var##rule = readRule( cfg, #var "rule" );
+    
 #define READ_SET_RULE_2( var, type, func, funcarg ) \
     var = func ( cfg.read##type##Entry( #var ), funcarg ); \
     var##rule = readRule( cfg, #var "rule" );
@@ -108,9 +112,9 @@ void WindowRules::readFromCfg( KConfig& cfg )
     READ_MATCH_STRING( clientmachine, .lower().latin1() );
     types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
     READ_SET_RULE_2( placement,, Placement::policyFromString, false );
-    READ_SET_RULE( position, Point, );
+    READ_SET_RULE_DEF( position, Point,, &invalidPoint );
     READ_SET_RULE( size, Size, );
-    if( size.isEmpty())
+    if( size.isEmpty() && sizerule != RememberRule )
         sizerule = DontCareRule;
     READ_SET_RULE( minsize, Size, );
     if( !minsize.isValid())
@@ -365,18 +369,20 @@ Placement::Policy WindowRules::checkPlacement( Placement::Policy placement ) con
 // TODO at to porad jeste kontroluje min/max size , + udelat override pro min/max?
 QRect WindowRules::checkGeometry( const QRect& rect, bool init ) const
     {
-    return QRect( checkRule( positionrule, init ) ? this->position : rect.topLeft(),
-        checkRule( sizerule, init ) ? this->size : rect.size());
+    return QRect( checkRule( positionrule, init ) && this->position != invalidPoint
+        ? this->position : rect.topLeft(),
+        checkRule( sizerule, init ) && this->size.isValid() ? this->size : rect.size());
     }
 
 QPoint WindowRules::checkPosition( const QPoint& pos, bool init ) const
     {
-    return checkRule( positionrule, init ) ? this->position : pos;
+    return checkRule( positionrule, init ) && this->position != invalidPoint
+        ? this->position : pos;
     }
 
 QSize WindowRules::checkSize( const QSize& s, bool init ) const
     {
-    return checkRule( sizerule, init ) ? this->size : s;
+    return checkRule( sizerule, init ) && this->size.isValid() ? this->size : s;
     }
 
 QSize WindowRules::checkMinSize( const QSize& s ) const
