@@ -322,7 +322,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 	{
 	    if ( ((Client*)parentWidget())->isActive()
 		 && ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) ) {
-		((Client*)parentWidget())->workspace()->raiseClient( (Client*) parentWidget() );
+		((Client*)parentWidget())->autoRaise();
 		ungrabButton( winId(),  None );
 	    }
 	
@@ -1058,7 +1058,9 @@ void Client::mousePressEvent( QMouseEvent * e)
             workspace()->lowerClient( this );
         }
         else if ( e->button() == RightButton ) {
-	    workspace()->clientPopup( this ) ->popup( e->globalPos() );
+	    if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
+		autoRaise();
+	    workspace()->clientPopup( this )->popup( e->globalPos() );
         }
     }
 }

@@ -165,8 +165,6 @@ public slots:
     void maximize();
     void toggleSticky();
     void contextHelp();
-
-private slots:
     void autoRaise();
     
 protected:
