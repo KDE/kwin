@@ -1,5 +1,7 @@
 noinst_PROGRAMS = test_gravity
 
+SUBDIRS = decobenchmark
+
 INCLUDES = $(all_includes)
 
 test_gravity_SOURCES = test_gravity.cpp
