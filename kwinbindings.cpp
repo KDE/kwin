@@ -1,9 +1,9 @@
 #ifndef NOSLOTS
 # define DEF( name, key3, key4, fnSlot ) \
-   keys->insertAction( name, i18n(name), key3, key4, this, SLOT(fnSlot) )
+   keys->insertAction( name, i18n(name), QString::null, key3, key4, this, SLOT(fnSlot) )
 #else
 # define DEF( name, key3, key4, fnSlot ) \
-   keys->insertAction( name, i18n(name), key3, key4 )
+   keys->insertAction( name, i18n(name), QString::null, key3, key4 )
 #endif
 
 	keys->insertLabel( "Program:kwin", i18n("System") );
