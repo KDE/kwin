@@ -2121,7 +2121,7 @@ void Client::closeWindow()
         if( isNormalWindow())
             Events::raise( Events::Delete );
         XKillClient(qt_xdisplay(), win );
-        workspace()->destroyClient( this );
+	QTimer::singleShot( 0, this, SLOT( destroyClient()));
     }
 }
 
