@@ -21,6 +21,9 @@ METASOURCES = AUTO
 messages:
 	$(XGETTEXT) -kaliasLocal *.h *.cpp -o $(podir)/kwin.pot
 
+datadir = $(kde_datadir)/kwin
+
+data_DATA= eventsrc
 
 dummy.cpp:
 	echo > dummy.cpp

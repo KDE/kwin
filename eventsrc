@@ -1,0 +1,123 @@
+[!Global!]
+Name=KWin
+Comment=The KDE Window Manager
+
+[desktop1]
+Name=Change to Desktop 1
+Comment=Virtual Desktop One is Selected
+default_presentation=0
+
+[desktop2]
+Name=Change to Desktop 2
+Comment=Virtual Desktop Two is Selected
+default_presentation=0
+
+[desktop3]
+Name=Change to Desktop 3
+Comment=Virtual Desktop Three is Selected
+default_presentation=0
+
+[desktop4]
+Name=Change to Desktop 4
+Comment=Virtual Desktop Four is Selected
+default_presentation=0
+
+[desktop5]
+Name=Change to Desktop 5
+Comment=Virtual Desktop Five is Selected
+default_presentation=0
+
+[desktop6]
+Name=Change to Desktop 6
+Comment=Virtual Desktop Six is Selected
+default_presentation=0
+
+[desktop7]
+Name=Change to Desktop 7
+Comment=Virtual Desktop Seven is Selected
+default_presentation=0
+
+[desktop8]
+Name=Change to Desktop 8
+Comment=Virtual Desktop Eight is Selected
+default_presentation=0
+
+[activate]
+Name=Activate Window
+Comment=Another Window is Activated
+default_presentation=0
+
+[open]
+Name=Open New Window
+Comment=A New Window Appears
+default_presentation=0
+
+[shadeup]
+Name=Window Shade Up
+Comment=A Window is Shaded Up
+default_presentation=0
+
+[shadedown]
+Name=Window Shade Down
+Comment=A Window is Shaded Down
+default_presentation=0
+
+[iconify]
+Name=Window Iconify
+Comment=A Window is Iconified
+default_presentation=0
+
+[deiconify]
+Name=Window Deiconify
+Comment=A Window is Restored
+default_presentation=0
+
+[maximize]
+Name=Window Maximize
+Comment=A Window is Maximized
+default_presentation=0
+
+[unmaximize]
+Name=Window Unmaximize
+Comment=A Window Loses Maximization
+default_presentation=0
+
+[sticky]
+Name=Window Sticky
+Comment=A Window is Made Sticky
+default_presentation=0
+
+[unsticky]
+Name=Window Unsticky
+Comment=A Window is Made Unsticky
+default_presentation=0
+
+[transnew]
+Name=Window Trans New
+Comment=Who knows what this does :)
+default_presentation=0
+
+[transdelete]
+Name=Window Trans Delete
+Comment=Eh?
+default_presentation=0
+
+[movestart]
+Name=Window Move Start
+Comment=A Window has Began Moving
+default_presentation=0
+
+[moveend]
+Name=Window Move End
+Comment=A Window has Completed its Moving
+default_presentation=0
+
+[resizestart]
+Name=Window Resize Start
+Comment=A Window has Began Resizing
+default_presentation=0
+
+[resizeend]
+Name=Window Resize End
+Comment=A Window has Done Resizing
+default_presentation=0
