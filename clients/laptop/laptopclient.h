@@ -31,6 +31,7 @@ class LaptopClient : public Client
 public:
     LaptopClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~LaptopClient(){;}
+    MousePosition mousePosition( const QPoint& ) const;
 protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
@@ -48,7 +49,7 @@ protected slots:
 private:
     SystemButton* button[5];
     QSpacerItem* titlebar;
-};                      
+};
 
 
 

@@ -26,7 +26,7 @@ extern "C"
 
 static unsigned char iconify_bits[] = {
     0xff, 0xff, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18};
-    
+
 static unsigned char close_bits[] = {
     0xc3, 0x66, 0x3c, 0x18, 0x3c, 0x66, 0xc3, 0x00 };
 
@@ -35,7 +35,7 @@ static unsigned char maximize_bits[] = {
 
 static unsigned char minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
-    
+
 static unsigned char unsticky_bits[] = {
     0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
 
@@ -44,7 +44,7 @@ static unsigned char sticky_bits[] = {
 
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
-    
+
 static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
@@ -94,7 +94,7 @@ static void create_pixmaps()
     titlePix = new QPixmap(33, 12);
     QBitmap mask(33, 12);
     mask.fill(Qt::color0);
-    
+
     p.begin(titlePix);
     maskPainter.begin(&mask);
     maskPainter.setPen(Qt::color1);
@@ -177,7 +177,7 @@ static void create_pixmaps()
     if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
         btnForeground = Qt::black;
     else
-        btnForeground = Qt::white;      
+        btnForeground = Qt::white;
 }
 
 
@@ -275,7 +275,7 @@ void LaptopClient::slotReset()
 
 LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase )
+    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity )
 {
     if(titleHeight == -1){
         KConfig *config = KGlobal::config();
@@ -286,12 +286,12 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
         if(titleHeight > 32)
             titleHeight = 32;
     }
-    
+
     create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
-    
+
     QGridLayout* g = new QGridLayout(this, 0, 0, 0);
     g->addRowSpacing(0, 3);
     g->addRowSpacing(2, 1);
@@ -301,7 +301,7 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
     g->addColSpacing(2, 12);
-    
+
     button[0] = new SystemButton(28, titleHeight-2, this, "close", close_bits);
     button[1] = new SystemButton(18, titleHeight-2, this, "sticky");
     if(isSticky())
@@ -352,14 +352,15 @@ void LaptopClient::resizeEvent( QResizeEvent* e)
     Client::resizeEvent( e );
 
     doShape();
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
-        QPainter p( this );
-	QRect t = titlebar->geometry();
-	t.setTop( 0 );
-	QRegion r = rect();
-	r = r.subtract( t );
-	p.setClipRegion( r );
-	p.eraseRect( rect() );
+    if ( isVisibleToTLW() ) {
+	int dx = 16 + QABS( e->oldSize().width() -  width() );
+	int dy = 16 + QABS( e->oldSize().height() -  height() );
+	update( 0, height() - dy + 1, width(), dy );
+	update( width() - dx + 1, 0, dx, height() );
+	update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() ) );
+	update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+	// titlebar needs no background
+	QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
     }
 }
 
@@ -377,8 +378,8 @@ void LaptopClient::paintEvent( QPaintEvent* )
     QRect r(width()-33, height()-33, 33, 33);
     p.setPen(Qt::black);
     p.drawRect(r);
-    qDrawShadePanel(&p, r.x()+1, r.y()+1, r.width()-2, r.height()-2, g, false, 1,
-                    &g.brush(QColorGroup::Background));
+    qDrawShadePanel(&p, r.x()+1, r.y()+1, r.width()-2, r.height()-2, g, false, 1 );
+//                     &g.brush(QColorGroup::Background));
     p.setPen(g.light());
     p.drawLine(r.right()-7, r.y()+1, r.right()-7, r.bottom()-8);
     p.drawLine(r.x()+1, r.bottom()-7, r.right()-7, r.bottom()-7);
@@ -387,19 +388,17 @@ void LaptopClient::paintEvent( QPaintEvent* )
     r = QRect(rect());
     r.setHeight(r.height()-8);
     r.setWidth(r.width()-8);
-    
+
     p.setPen(Qt::black);
     p.drawRect(r);
     qDrawShadeRect(&p, r.x()+1, r.y()+1, r.width()-2, r.height()-2, g, false,
-                   1, 0, &g.brush(QColorGroup::Background));
-    //qDrawShadePanel(&p, r.x()+3, r.y()+17, r.width()-6, r.height()-20, g,
-    //                true, 1);
+                   1, 0 ); //, &g.brush(QColorGroup::Background));
     qDrawShadePanel(&p, r.x()+3, r.y()+titleHeight+3, r.width()-6,
                     r.height()-titleHeight-6, g, true, 1);
 
     r = titlebar->geometry();
     KPixmap *grPix = isActive() ? aUpperGradient : iUpperGradient;
-    
+
     if(grPix){
         p.drawTiledPixmap(r.x(), r.y(), r.width(), r.height()-1, *grPix);
     }
@@ -409,7 +408,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
 
     if(titlePix && isActive())
         p.drawTiledPixmap(r.x(), r.y(), r.width(), r.height()-1, *titlePix);
-    
+
 
     QButton *rBtn = providesContextHelp() ? button[4] : button[1];
     int x2 = button[3]->x()+button[3]->width();
@@ -488,7 +487,7 @@ void LaptopClient::showEvent(QShowEvent *ev)
 void LaptopClient::windowWrapperShowEvent( QShowEvent* )
 {
     doShape();
-}                                                                               
+}
 
 void LaptopClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
@@ -510,6 +509,16 @@ void LaptopClient::maximizeChange(bool m)
 void LaptopClient::init()
 {
     //
+}
+
+Client::MousePosition LaptopClient::mousePosition( const QPoint& pos) const
+{
+    QPoint p = pos;
+    if ( pos.x() > rect().right() - 12 )
+	p.rx() += 8;
+    if ( pos.y() > rect().bottom() - 12 )
+	p.ry() += 8;
+    return Client::mousePosition( p );
 }
 
 void LaptopClient::activeChange(bool)
