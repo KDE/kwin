@@ -48,6 +48,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 const int XIconicState = IconicState;
 #undef IconicState
+const int XAbove = Above;
+#undef Above
 
 #include <kwin.h>
 #include <kdebug.h>
@@ -67,8 +69,8 @@ namespace KWinInternal {
 class RootInfo : public NETRootInfo
 {
 public:
-    RootInfo( KWinInternal::Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr, int scr= -1)
-        : NETRootInfo( dpy, w, name, pr, scr ) {
+    RootInfo( KWinInternal::Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr= -1)
+        : NETRootInfo( dpy, w, name, pr, pr_num, scr ) {
             workspace = ws;
     }
     ~RootInfo() {}
@@ -414,11 +416,13 @@ void Workspace::init()
 
     supportWindow = new QWidget;
 
-    unsigned long protocols =
+    unsigned long protocols[ 3 ] =
+        {
         NET::Supported |
         NET::SupportingWMCheck |
         NET::ClientList |
         NET::ClientListStacking |
+        NET::DesktopGeometry |
         NET::NumberOfDesktops |
         NET::CurrentDesktop |
         NET::ActiveWindow |
@@ -438,9 +442,36 @@ void Workspace::init()
         NET::WMMoveResize |
         NET::WMKDESystemTrayWinFor |
         NET::WMKDEFrameStrut
-        ;
-
-    rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
+        ,
+        NET::NormalMask |
+        NET::DesktopMask |
+        NET::DockMask |
+        NET::ToolbarMask |
+        NET::MenuMask |
+        NET::DialogMask |
+        NET::OverrideMask |
+        NET::TopMenuMask |
+//        NET::UtilityMask |  TODO
+//        NET::SplashMask | TODO
+        0
+        ,
+//        NET::Modal | TODO
+//        NET::Sticky |
+        NET::MaxVert |
+        NET::MaxHoriz |
+        NET::Shaded |
+        NET::SkipTaskbar |
+        NET::Above |
+//        NET::StaysOnTop |  the same like Above
+        NET::SkipPager |
+//        NET::Hidden |  TODO
+//        NET::FullScreen | TODO
+//        NET::Below | TODO
+        0
+        };
+        
+    rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin",
+        protocols, 3, qt_xscreen() );
 
     loadDesktopSettings();
     setCurrentDesktop( 1 );
@@ -701,7 +732,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             wc.width = e->xconfigurerequest.width;
             wc.height = e->xconfigurerequest.height;
             wc.sibling = None;
-            wc.stack_mode = Above;
+            wc.stack_mode = XAbove;
             value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
             XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, & wc );
 
