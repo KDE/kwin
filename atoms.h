@@ -10,13 +10,15 @@ public:
     Atom wm_delete_window;
     Atom wm_take_focus;
     Atom kwm_win_icon; // compatibility
+    Atom kwm_running;
 
     Atom net_number_of_desktops;
     Atom net_current_desktop;
     Atom net_active_window;
     Atom net_client_list;
     Atom net_client_list_stacking;
-    
+
+
     Atom net_kde_docking_windows;
 };
 

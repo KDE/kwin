@@ -100,6 +100,11 @@ Workspace::Workspace()
     int dummy;
     kwin_has_shape = XShapeQueryExtension(qt_xdisplay(), &kwin_shape_event, &dummy);
     
+    // compatibility
+    long data = 1;
+    XChangeProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running, atoms->kwm_running, 32,
+		    PropModeAppend, (unsigned char*) &data, 1);
+    
     init();
     control_grab = FALSE;
     tab_grab = FALSE;
@@ -197,6 +202,8 @@ Workspace::~Workspace()
     delete tab_box;
     delete popup;
     delete keys;
+    if ( root == qt_xrootwin() )
+	XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running);
 }
 
 /*!

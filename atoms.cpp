@@ -11,6 +11,7 @@ Atoms::Atoms()
 
      // compatibility
     kwm_win_icon = XInternAtom(qt_xdisplay(), "KWM_WIN_ICON", FALSE);
+    kwm_running = XInternAtom(qt_xdisplay(), "KWM_RUNNING", FALSE);
 
 
     net_number_of_desktops = XInternAtom(qt_xdisplay(), "_NET_NUMBER_OF_DESKTOPS", False);
