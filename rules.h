@@ -45,6 +45,7 @@ class WindowRules
         QSize checkSize( QSize s, bool init = false ) const;
         QSize checkMinSize( QSize s ) const;
         QSize checkMaxSize( QSize s ) const;
+        bool checkIgnorePosition( bool ignore ) const;
         int checkDesktop( int desktop, bool init = false ) const;
         NET::WindowType checkType( NET::WindowType type ) const;
         MaximizeMode checkMaximize( MaximizeMode mode, bool init = false ) const;
@@ -85,6 +86,7 @@ class Rules
         bool applySize( QSize& s, bool init ) const;
         bool applyMinSize( QSize& s ) const;
         bool applyMaxSize( QSize& s ) const;
+        bool applyIgnorePosition( bool& ignore ) const;
         bool applyDesktop( int& desktop, bool init ) const;
         bool applyType( NET::WindowType& type ) const;
         bool applyMaximizeVert( MaximizeMode& mode, bool init ) const;
@@ -151,6 +153,8 @@ class Rules
         ForceRule minsizerule;
         QSize maxsize;
         ForceRule maxsizerule;
+        bool ignoreposition;
+        ForceRule ignorepositionrule;
         int desktop;
         SetRule desktoprule;
         NET::WindowType type; // type for setting

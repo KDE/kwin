@@ -418,10 +418,6 @@ void Placement::placeUtility(Client* c, QRect& area )
 
 void Placement::placeDialog(Client* c, QRect& area )
     {
-    // if the dialog is actually non-NETWM transient window, don't apply placement to it,
-    // it breaks with too many things (xmms, display)
-    if( !c->hasNETSupport())
-        return;
     placeOnMainWindow( c, area );
     }
 

@@ -227,18 +227,22 @@ bool Client::manage( Window w, bool isMapped )
         placementDone = true;
         }
 
-    if ( isMapped || session || placementDone
-         || ( isTransient() && !isUtility() && !isDialog() && !isSplash())) 
-        {  // TODO
-        placementDone = TRUE;
-        }
+    bool usePosition = false;
+    if ( isMapped || session || placementDone )
+        placementDone = true; // use geometry
+    else if( isTransient() && !isUtility() && !isDialog() && !isSplash())
+        usePosition = true;
     else if( isTransient() && !hasNETSupport())
-        placementDone = true;
-    else if( isDialog() && hasNETSupport()) // see Placement::placeDialog()
+        usePosition = true;
+    else if( isDialog() && hasNETSupport())
+    // if the dialog is actually non-NETWM transient window, don't try to apply placement to it,
+    // it breaks with too many things (xmms, display)
         ; // force using placement policy
     else if( isSplash())
         ; // force using placement policy
     else
+        usePosition = true;
+    if( !rules()->checkIgnorePosition( !usePosition ))
         {
         bool ignorePPosition = ( options->ignorePositionClasses.contains(QString::fromLatin1(resourceClass())));
 
@@ -249,11 +253,12 @@ bool Client::manage( Window w, bool isMapped )
             // disobey xinerama placement option for now (#70943)
             area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
             }
+        }
+    if( true ) // size is always obeyed for now, only with constraints applied
         if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) 
             {
             // keep in mind that we now actually have a size :-)
             }
-        }
 
     if (xSizeHint.flags & PMaxSize)
         geom.setSize( geom.size().boundedTo(

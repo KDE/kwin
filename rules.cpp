@@ -37,6 +37,7 @@ Rules::Rules()
     , sizerule( UnusedSetRule )
     , minsizerule( UnusedForceRule )
     , maxsizerule( UnusedForceRule )
+    , ignorepositionrule( UnusedForceRule )
     , desktoprule( UnusedSetRule )
     , typerule( UnusedForceRule )
     , maximizevertrule( UnusedSetRule )
@@ -126,6 +127,7 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE( maxsize, Size, );
     if( maxsize.isEmpty())
         maxsizerule = UnusedForceRule;
+    READ_FORCE_RULE( ignoreposition, Bool, );
     READ_SET_RULE( desktop, Num, );
     type = readType( cfg, "type" );
     typerule = type != NET::Unknown ? readForceRule( cfg, "typerule" ) : UnusedForceRule;
@@ -211,6 +213,7 @@ void Rules::write( KConfig& cfg ) const
     WRITE_SET_RULE( size, );
     WRITE_FORCE_RULE( minsize, );
     WRITE_FORCE_RULE( maxsize, );
+    WRITE_FORCE_RULE( ignoreposition, );
     WRITE_SET_RULE( desktop, );
     WRITE_FORCE_RULE( type, );
     WRITE_SET_RULE( maximizevert, );
@@ -430,6 +433,7 @@ bool Rules::applySize( QSize& s, bool init ) const
 
 APPLY_FORCE_RULE( minsize, MinSize, QSize )
 APPLY_FORCE_RULE( maxsize, MaxSize, QSize )
+APPLY_FORCE_RULE( ignoreposition, IgnorePosition, bool )
 APPLY_RULE( desktop, Desktop, int )
 APPLY_FORCE_RULE( type, Type, NET::WindowType )
 
@@ -572,6 +576,7 @@ CHECK_RULE( Position, QPoint )
 CHECK_RULE( Size, QSize )
 CHECK_FORCE_RULE( MinSize, QSize )
 CHECK_FORCE_RULE( MaxSize, QSize )
+CHECK_FORCE_RULE( IgnorePosition, bool )
 CHECK_RULE( Desktop, int )
 CHECK_FORCE_RULE( Type, NET::WindowType )
 CHECK_RULE( MaximizeVert, KDecorationDefines::MaximizeMode )
