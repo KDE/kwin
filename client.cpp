@@ -723,8 +723,15 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         } else {
             // find out the initial state. Several possibilities exist
             XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
-            if (hints && (hints->flags & StateHint))
+            if (hints && (hints->flags & StateHint)) {
                 init_state = hints->initial_state;
+                //CT extra check for stupid jdk 1.3.1. But should make sense in general
+                if ((init_state == IconicState) && isTransient() && transientFor() != 0) {
+                  if(!workspace()->findClient(transientFor())->isIconified()) {
+                    init_state = NormalState;
+                  }
+                }
+            }
             if (hints)
                 XFree(hints);
         }
@@ -827,7 +834,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     }
 
     if ( !doNotShow )
-        workspace()->updateClientArea();
+      workspace()->updateClientArea();
 
     return showMe;
 }
