@@ -1191,9 +1191,11 @@ void B2Titlebar::paintEvent(QPaintEvent *)
     }
 }
 
-void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
+void B2Titlebar::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    client->titlebarDblClickOperation();
+    if (e->y() < height()) {
+	client->titlebarDblClickOperation();
+    }
 }
 
 void B2Titlebar::mousePressEvent( QMouseEvent * e )
