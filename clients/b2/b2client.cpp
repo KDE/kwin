@@ -354,6 +354,9 @@ void B2Client::init()
 	i18n("Resize") 
     };
 
+    // Check this early, otherwise the preview will be rendered badly.
+    resizable = isResizable();
+
     createMainWidget(WResizeNoErase | WRepaintNoErase);
     widget()->installEventFilter(this);
 
@@ -363,35 +366,39 @@ void B2Client::init()
     for (int i = 0; i < BtnCount; i++)
         button[i] = NULL;
 
-    g = new QGridLayout(widget(), 0, 0);
-    if (isPreview()) {
-        g->addMultiCellWidget(
-		new QLabel(i18n("<b><center>B II preview</center></b>"),
-		    widget()),
-		1, 1, 1, 2);
-    } else {
-	g->addMultiCell(new QSpacerItem(0, 0), 1, 1, 1, 2);
-    }
-
+    g = new QGridLayout(widget(), 3, 3);
     // Left and right border width
+
     leftSpacer = new QSpacerItem(thickness, 16,
 	    QSizePolicy::Fixed, QSizePolicy::Expanding);
     rightSpacer = new QSpacerItem(thickness, 16,
 	    QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     g->addItem(leftSpacer, 1, 0);
-    g->addColSpacing(1, 16);
-    g->setColStretch(2, 1);
-    g->setRowStretch(1, 1);
-    g->addItem(rightSpacer, 1, 3);
+    g->addItem(rightSpacer, 1, 2);
 
-    // Bottom border height
-    spacer = new QSpacerItem(10, thickness + (mustDrawHandle() ? 4 : 0),
+    // Top border height
+    topSpacer = new QSpacerItem(10, buttonSize + 4,
 	    QSizePolicy::Expanding, QSizePolicy::Fixed);
-    g->addItem(spacer, 3, 1);
+    g->addItem(topSpacer, 0, 1);
+    
+    // Bottom border height. 
+    bottomSpacer = new QSpacerItem(10, 
+		thickness + (mustDrawHandle() ? 4 : 0), 
+		QSizePolicy::Expanding, QSizePolicy::Fixed);
+    g->addItem(bottomSpacer, 2, 1);
+    if (isPreview()) {
+	QLabel *previewLabel = new QLabel(
+		i18n("<b><center>B II preview</center></b>"), 
+		widget());
+        g->addWidget(previewLabel, 1, 1);
+	
+    } else {
+	g->addItem(new QSpacerItem(0, 0), 1, 1);
+    }
 
     // titlebar
-    g->addRowSpacing(0, buttonSize + 4);
+    g->setRowSpacing(0, buttonSize + 4);
 
     titlebar = new B2Titlebar(this);
     titlebar->setMinimumWidth(buttonSize + 4);
@@ -425,7 +432,6 @@ void B2Client::init()
     positionButtons();
     titlebar->recalcBuffer();
     titlebar->installEventFilter(this);
-    resizable = isResizable();
 }
 
 void B2Client::addButtons(const QString& s, const QString tips[],
@@ -699,8 +705,10 @@ void B2Client::doShape()
     QRegion mask(widget()->rect());
     // top to the tilebar right
     if (bar_x_ofs) {
-	mask -= QRect(0, 0, bar_x_ofs, t.height() - thickness); //left from bar
-	mask -= QRect(0, t.height() - thickness, 1, 1); //top left point
+	// left from bar
+	mask -= QRect(0, 0, bar_x_ofs, t.height() - thickness); 
+	// top left point
+	mask -= QRect(0, t.height() - thickness, 1, 1); 
     }
     if (t.right() < width() - 1) {
 	mask -= QRect(width() - 1,
@@ -708,13 +716,18 @@ void B2Client::doShape()
 	mask -= QRect(t.right() + 1, 0,
 		width() - t.right() - 1, t.height() - thickness);
     }
-    mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
+    // bottom right point
+    mask -= QRect(width() - 1, height() - 1, 1, 1); 
     if (mustDrawHandle()) {
-	mask -= QRect(0, height() - 5, 1, 1); //bottom left point
-	mask -= QRect(width() - 40, height() - 1, 1, 1); //handle left point
-	mask -= QRect(0, height() - 4, width() - 40, 4); //bottom left
+	// bottom left point
+	mask -= QRect(0, height() - 5, 1, 1); 
+	// handle left point
+	mask -= QRect(width() - 40, height() - 1, 1, 1);
+	// bottom left 
+	mask -= QRect(0, height() - 4, width() - 40, 4);
     } else {
-	mask -= QRect(0, height() - 1, 1, 1); // bottom left point
+	// bottom left point
+	mask -= QRect(0, height() - 1, 1, 1); 
     }
 
     setMask(mask);
@@ -814,7 +827,7 @@ void B2Client::maximizeChange()
 	QToolTip::add(button[BtnMax],
 		m ? i18n("Restore") : i18n("Maximize"));
     }
-    spacer->changeSize(10, thickness + (mustDrawHandle() ? 4 : 0),
+    bottomSpacer->changeSize(10, thickness + (mustDrawHandle() ? 4 : 0),
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     g->activate();
@@ -839,7 +852,7 @@ void B2Client::activeChange()
 
 void B2Client::shadeChange()
 {
-    spacer->changeSize(10, thickness + (mustDrawHandle() ? 4 : 0),
+    bottomSpacer->changeSize(10, thickness + (mustDrawHandle() ? 4 : 0),
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
     doShape();

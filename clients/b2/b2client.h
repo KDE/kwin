@@ -137,7 +137,9 @@ private:
         BtnHelp, BtnShade, BtnResize, BtnCount};
     B2Button* button[BtnCount];
     QGridLayout *g;
-    QSpacerItem *spacer; // Bottom border spacer
+    // Border spacers
+    QSpacerItem *topSpacer; 
+    QSpacerItem *bottomSpacer; 
     QSpacerItem *leftSpacer;
     QSpacerItem *rightSpacer;
     B2Titlebar *titlebar;
