@@ -59,9 +59,10 @@ using namespace KWinInternal;
 namespace Keramik
 {
 
-	const int buttonMargin    = 9;
-	const int buttonSpacing   = 4;
-	const int iconSpacing     = 5;
+	const int buttonMargin     =  9;  // Margin between the window edge and the buttons
+	const int buttonSpacing    =  4;  // Spacing between the titlebar buttons
+	const int iconSpacing      =  5;  // Spacing between the icon and the text label
+	const int bottomCornerSize = 30;  // Size of the bottom diagonal resize corners
 
 	// Default button layout
 	const char default_left[]  = "M";
@@ -1381,61 +1382,75 @@ Client::MousePosition KeramikClient::mousePosition( const QPoint &p ) const
 {
 	int titleBaseY = (largeTitlebar ? 3 : 0);
 
-	int leftBorder  = clientHandler->tile( BorderLeft, true )->width();
-	int rightBorder = width() - clientHandler->tile( BorderRight, true )->width() - 1;
-	
-	
-	// Test corners & sides
-	if ( p.x() < leftBorder + 11 ) {
-		if ( p.y() < titleBaseY + 11 ) {
+	int leftBorder   = clientHandler->tile( BorderLeft, true )->width();
+	int rightBorder  = width() - clientHandler->tile( BorderRight, true )->width() - 1;
+	int bottomBorder = height() - clientHandler->grabBarHeight() - 1;
+
+	// Test if the mouse is over the titlebar area
+	if ( p.y() < titleBaseY + 11 ) {
+		// Test for the top left corner
+		if ( p.x() < leftBorder + 11 ) {
 			if ( (p.y() < titleBaseY + 3 && p.x() < leftBorder + 11) ||
 					(p.y() < titleBaseY + 6 && p.x() < leftBorder + 6) ||
 					(p.y() < titleBaseY + 11 && p.x() < leftBorder + 3) )
 				return TopLeft;
-			else
-				return Center;
 		}
 
-		if ( p.y() > height()-23 )
-			return BottomLeft;
-
-		if ( p.x() > leftBorder )
-			return Center;
-
-		return Left;
-	}
-
-	if ( p.x() > rightBorder - 11 ) {
-		if ( p.y() < titleBaseY + 11 ) {
+		// Test for the top right corner
+		if ( p.x() > rightBorder - 11 ) {
 			if ( (p.y() < titleBaseY + 3 && p.x() > rightBorder - 11) ||
 					(p.y() < titleBaseY + 6 && p.x() > rightBorder - 6) ||
 					(p.y() < titleBaseY + 11 && p.x() > rightBorder - 3) )
 				return TopRight;
-			else
-				return Center;
 		}
-		
-		if ( p.y() > height()-23 )
-			return BottomRight;
-		
-		if ( p.x() < rightBorder )
-			return Center;
-		
-		return Right;
+
+		// Test for the top border
+		if ( p.y() <= 3 || (p.y() <= titleBaseY+3 &&
+					(p.x() < captionRect.left() || p.x() > captionRect.right()) ) )
+			return Top;
+
+		// The cursor must be over the center of the titlebar.
+		return Center;
 	}
 
-	// Test top & bottom
-	if ( p.y() <= 3 )
-		return Top;
+	// Test the sides
+	else if ( p.y() < bottomBorder ) {
+		// Test for the left side
+		if ( p.x() < leftBorder ) {
+			if ( p.y() < height() - bottomCornerSize )
+				return Left;
+			else
+				return BottomLeft;
+		}
 
-	if ( (p.x() < captionRect.left() || p.x() > captionRect.right())
-			&& p.y() < titleBaseY+3 )
-		return Top;
+		// Test for the right side
+		else if ( p.x() > rightBorder ) {
+			if ( p.y() < height() - bottomCornerSize )
+				return Right;
+			else
+				return BottomRight;
+		}
 
-	if ( p.y() >= height() - clientHandler->grabBarHeight() )
+		// The cursor must be over the center of the window
+		return Center;
+	}
+
+	// Test the grab bar / bottom border
+	else {
+		// Test for the bottom left corner
+		if ( p.x() < bottomCornerSize )
+			return BottomLeft;
+
+		// Test for the bottom right corner
+		else if ( p.x() > width() - bottomCornerSize - 1 )
+			return BottomRight;
+
+		// The cursor must be over the bottom border
 		return Bottom;
+	}
 
-	return Center;
+	// We should never get here
+	return Nowhere;
 }
 
 }; // namespace Keramik
