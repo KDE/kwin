@@ -720,7 +720,13 @@ void PlastikClient::maximizeChange()
 {
     if (!PlastikHandler::initialized()) return;
 
-
+    if( m_button[MaxButton] ) {
+        m_button[MaxButton]->setMaximized( maximizeMode()!=MaximizeRestore);
+        m_button[MaxButton]->setTipText( (maximizeMode()==MaximizeRestore) ?
+                i18n("Maximize")
+                : i18n("Restore"));
+        m_button[MaxButton]->setDeco(); // update the button icon...
+    }
 }
 
 void PlastikClient::desktopChange()
@@ -742,22 +748,13 @@ void PlastikClient::slotMaximize()
         {
           case MidButton:
               maximize(maximizeMode() ^ MaximizeVertical );
-              maximizeChange();
               break;
           case RightButton:
               maximize(maximizeMode() ^ MaximizeHorizontal );
-              maximizeChange();
               break;
           default:
               maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
-              maximizeChange();
         }
-
-        m_button[MaxButton]->setMaximized( maximizeMode()!=MaximizeRestore);
-        m_button[MaxButton]->setTipText( (maximizeMode()==MaximizeRestore) ?
-                i18n("Maximize")
-                : i18n("Restore"));
-        m_button[MaxButton]->setDeco(); // update the button icon...
         doShape();
     }
 }
