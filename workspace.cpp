@@ -244,7 +244,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	if ( removeDockwin( e->xunmap.window ) )
 	    return TRUE;
 	
-	if ( e->xunmap.event == root ) { 
+	if ( e->xunmap.event == root ) {
 	    // keep track of map/unmap for own own windows to avoid
 	    // race conditions
 	    c = findClientWidthId( e->xunmap.window );
@@ -255,7 +255,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	if ( e->xunmap.event != e->xunmap.window ) // hide wm typical event from Qt
 	    return TRUE;
     case MapNotify:
-	if ( e->xunmap.event == root ) { 
+	if ( e->xunmap.event == root ) {
 	    // keep track of map/unmap for own own windows to avoid
 	    // race conditions
 	    c = findClientWidthId( e->xmap.window );
@@ -922,7 +922,7 @@ void Workspace::smartPlacement(Client* c){
   QRect maxRect = clientArea();
   int x = maxRect.left(), y = maxRect.top();
   x_optimal = x; y_optimal = y;
-  
+
   //client gabarit
   int ch = c->height(), cw = c->width();
 
@@ -933,21 +933,21 @@ void Workspace::smartPlacement(Client* c){
     //test if enough room in x and y directions
     if ( y + ch > maxRect.bottom() )
       overlap = h_wrong; // this throws the algorithm to an exit
-    else if( x + cw > maxRect.right() ) 
+    else if( x + cw > maxRect.right() )
       overlap = w_wrong;
     else {
       overlap = none; //initialize
-      
+
       cxl = x; cxr = x + cw;
       cyt = y; cyb = y + ch;
       QValueList<Client*>::ConstIterator l;
       for(l = clients.begin(); l != clients.end() ; ++l ) {
 	if((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
 	   !(*l)->isIconified() && (*l) != c ) {
-	  
+	
 	  xl = (*l)->x();           yt = (*l)->y();
 	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
-	  
+	
 	  //if windows overlap, calc the overall overlapping
 	  if((cxl < xr) && (cxr > xl) &&
 	     (cyt < yb) && (cyb > yt)) {
@@ -979,10 +979,10 @@ void Workspace::smartPlacement(Client* c){
 
     // really need to loop? test if there's any overlap
     if ( overlap > none ) {
-      
+
       possible = maxRect.right();
       if ( possible - cw > x) possible -= cw;
-      
+
       // compare to the position of each client on the current desk
       QValueList<Client*>::ConstIterator l;
       for(l = clients.begin(); l != clients.end() ; ++l) {
@@ -992,42 +992,42 @@ void Workspace::smartPlacement(Client* c){
 
 	  xl = (*l)->x();           yt = (*l)->y();
 	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
-	  
+	
 	  // if not enough room above or under the current tested client
 	  // determine the first non-overlapped x position
 	  if( y < yb  && yt < ch + y ) {
-	    
-	    if( yb > x ) 
+	
+	    if( yb > x )
 	      possible = possible < yb ? possible : yb;
-	    
-	    if( xl - cw > x ) 
+	
+	    if( xl - cw > x )
 	      possible = possible < xl - cw ? possible : xl - cw;
 	  }
 	}
 	x = possible;
       }
     }
-    
+
     // ... else ==> not enough x dimension (overlap was wrong on horizontal)
     else if ( overlap == w_wrong ) {
       x = maxRect.left();
       possible = maxRect.bottom();
-      
+
       if ( possible - ch > y ) possible -= ch;
-      
+
       //test the position of each window on current desk
       QValueList<Client*>::ConstIterator l;
       for( l = clients.begin(); l != clients.end() ; ++l ) {
 	if( (*l)->isOnDesktop( currentDesktop() ) && (*l) != desktop_client &&
 	     (*l) != c   &&  !c->isIconified() ) {
-	  
+	
 	  xl = (*l)->x();           yt = (*l)->y();
 	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
-	  
-	  if( yb > y) 
+	
+	  if( yb > y)
 	    possible = possible < yb ? possible : yb;
-	  
-	  if( yt - ch > y ) 
+	
+	  if( yt - ch > y )
 	    possible = possible < yt - ch ? possible : yt - ch;
 	}
 	y = possible;
@@ -1035,7 +1035,7 @@ void Workspace::smartPlacement(Client* c){
     }
   }
   while( overlap != none && overlap != h_wrong );
-  
+
   // place the window
   c->move( x_optimal, y_optimal );	
 
@@ -1043,7 +1043,7 @@ void Workspace::smartPlacement(Client* c){
 
 /*!
   Place windows in a cascading order, remembering positions for each desktop
-*/ 
+*/
 void Workspace::cascadePlacement (Client* c, bool re_init) {
 /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
  */
@@ -1052,12 +1052,12 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
   int xp, yp;
 
   //CT how do I get from the 'Client' class the size that NW squarish "handle"
-  int delta_x = 24; 
+  int delta_x = 24;
   int delta_y = 24;
 
   int d = currentDesktop() - 1;
 
-  // get the maximum allowed windows space and desk's origin 
+  // get the maximum allowed windows space and desk's origin
   //    (CT 20Nov1999 - is this common to all desktops?)
   QRect maxRect = clientArea();
 
@@ -1093,17 +1093,17 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
   if ( cci[d].pos.x() != X && cci[d].pos.y() != Y ) {
     if ( xp != X && yp == Y ) xp = delta_x * (++(cci[d].col));
     if ( yp != Y && xp == X ) yp = delta_y * (++(cci[d].row));
-    
+
     // last resort: if still doesn't fit, smart place it
     if ( ((xp + cw) > W - X) || ((yp + ch) > H - Y) ) {
       smartPlacement(c);
       return;
     }
   }
-  
+
   // place the window
   c->move( QPoint( xp, yp ) );
-  
+
   // new position
   cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
 }
@@ -1225,9 +1225,8 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     }
 
     for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
-	if ( (*it)->isOnDesktop( new_desktop ) ) {
+	if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
 	    (*it)->show();
-	    //XMapWindow( qt_xdisplay(), (*it)->winId() );
 	}
     }
 
@@ -1236,6 +1235,28 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     XChangeProperty(qt_xdisplay(), qt_xrootwin(),
 		    atoms->net_current_desktop, XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *)&current_desktop, 1);
+
+    
+    // try to restore the focus on this desktop
+    Client* c = active_client?active_client:previousClient(0);
+    Client* stop = c;
+    while ( c && !c->isVisible() ) {
+	c = previousClient( c );
+	if ( c == stop )
+	    break;
+    }
+    
+    if ( !c || !c->isVisible() ) {
+	// there's no suitable client in the focus chain. Try to find any other client then.
+	for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
+	    if ( (*it)->isVisible() ) {
+		c = *it;
+		break;
+	    }
+	}
+    }
+    if ( c && c->isVisible() )
+	requestFocus( c );
 
     QApplication::syncX();
     KWM::switchToDesktop( current_desktop ); // ### compatibility
