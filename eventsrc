@@ -783,8 +783,7 @@ Comment[it]=Una finestra viene attaccata
 Comment[ja]=ウィンドウを常に表示します
 Comment[mk]=Прозорот станува леплив
 Comment[nl]=Een venster is plakkerig gemaakt
-default_presentation=1
-soundfile=pop.wav
+default_presentation=0
 
 [unsticky]
 Name=Window Unsticky
@@ -1053,3 +1052,16 @@ Comment[ja]=ウィンドウのリサイズが終了しました
 Comment[mk]=Прозорот завршува со предименционирањето
 Comment[nl]=Een venster is klaar met het wijzigen van grootte
 default_presentation=0
+
+[startkde]
+Name=Login
+Comment=KDE is Starting Up
+default_presentation=1
+default_sound=KDE_Startup.wav
+ 
+[exitkde]
+Name=Logout
+Comment=KDE is Exiting
+default_presentation=1
+default_sound=KDE_Logout.wav
+
