@@ -39,7 +39,7 @@ KDecorationPreview::KDecorationPreview( QWidget* parent, const char* name )
     :   QWidget( parent, name )
     {
     options = new KDecorationPreviewOptions;
-    
+
     bridge[Active]   = new KDecorationPreviewBridge( this, true );
     bridge[Inactive] = new KDecorationPreviewBridge( this, false );
 
@@ -78,7 +78,7 @@ bool KDecorationPreview::recreateDecoration( KDecorationPlugins* plugins )
         {
         return false;
         }
-  
+
     positionPreviews();
     deco[Inactive]->widget()->show();
     deco[Active]->widget()->show();
@@ -90,7 +90,7 @@ void KDecorationPreview::enablePreview()
     {
     no_preview->hide();
     }
-    
+
 void KDecorationPreview::disablePreview()
     {
     delete deco[Active];
@@ -104,18 +104,18 @@ void KDecorationPreview::resizeEvent( QResizeEvent* e )
     QWidget::resizeEvent( e );
     positionPreviews();
     }
-    
+
 void KDecorationPreview::positionPreviews()
     {
     int titleBarHeight, leftBorder, rightBorder, xoffset,
         dummy1, dummy2, dummy3;
     QRect geometry;
     QSize size;
- 
+
     no_preview->resize( this->size() );
 
     if ( !deco[Active] || !deco[Inactive] )
-        return; 
+        return;
 
     // don't have more than one reference to the same dummy variable in one borders() call.
     deco[Active]->borders( dummy1, dummy2, titleBarHeight, dummy3 );
@@ -233,7 +233,7 @@ QWidget* KDecorationPreviewBridge::initialParentWidget() const
     {
     return preview;
     }
-    
+
 Qt::WFlags KDecorationPreviewBridge::initialWFlags() const
     {
     return 0;
@@ -243,82 +243,82 @@ bool KDecorationPreviewBridge::isActive() const
     {
     return active;
     }
-    
+
 bool KDecorationPreviewBridge::isCloseable() const
     {
     return true;
     }
-    
+
 bool KDecorationPreviewBridge::isMaximizable() const
     {
     return true;
     }
-    
+
 KDecoration::MaximizeMode KDecorationPreviewBridge::maximizeMode() const
     {
     return KDecoration::MaximizeRestore;
     }
-    
+
 bool KDecorationPreviewBridge::isMinimizable() const
     {
     return true;
     }
-    
+
 bool KDecorationPreviewBridge::providesContextHelp() const
     {
     return true;
     }
-    
+
 int KDecorationPreviewBridge::desktop() const
     {
     return 1;
     }
-    
+
 bool KDecorationPreviewBridge::isModal() const
     {
     return false;
     }
-    
+
 bool KDecorationPreviewBridge::isShadeable() const
     {
     return true;
     }
-    
+
 bool KDecorationPreviewBridge::isShade() const
     {
     return false;
     }
-    
+
 bool KDecorationPreviewBridge::isSetShade() const
     {
     return false;
     }
-    
+
 bool KDecorationPreviewBridge::keepAbove() const
     {
     return false;
     }
-    
+
 bool KDecorationPreviewBridge::keepBelow() const
     {
     return false;
     }
-    
+
 bool KDecorationPreviewBridge::isMovable() const
     {
     return true;
     }
-    
+
 bool KDecorationPreviewBridge::isResizable() const
     {
     return true;
     }
-    
+
 NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
     {
     return NET::Normal;
     }
-    
+
 QIconSet KDecorationPreviewBridge::icon() const
     {
     return SmallIconSet( "xapp" );
@@ -326,13 +326,13 @@ QIconSet KDecorationPreviewBridge::icon() const
 
 QString KDecorationPreviewBridge::caption() const
     {
-    return active ? i18n( "Active window" ) : i18n( "Inactive window" );
+    return active ? i18n( "Active Window" ) : i18n( "Inactive Window" );
     }
-    
+
 void KDecorationPreviewBridge::processMousePressEvent( QMouseEvent* )
     {
     }
-    
+
 void KDecorationPreviewBridge::showWindowMenu( const QRect &)
     {
     }
@@ -340,16 +340,16 @@ void KDecorationPreviewBridge::showWindowMenu( const QRect &)
 void KDecorationPreviewBridge::showWindowMenu( QPoint )
     {
     }
-    
+
 void KDecorationPreviewBridge::performWindowOperation( WindowOperation )
     {
     }
-    
+
 void KDecorationPreviewBridge::setMask( const QRegion& reg, int mode )
     {
     preview->setPreviewMask( reg, mode, active );
     }
-    
+
 bool KDecorationPreviewBridge::isPreview() const
     {
     return true;
@@ -359,7 +359,7 @@ QRect KDecorationPreviewBridge::geometry() const
     {
     return preview->windowGeometry( active );
     }
-        
+
 QRect KDecorationPreviewBridge::iconGeometry() const
     {
     return QRect();
@@ -374,7 +374,7 @@ QWidget* KDecorationPreviewBridge::workspaceWidget() const
     {
     return preview;
     }
-        
+
 WId KDecorationPreviewBridge::windowId() const
     {
     return 0; // no decorated window
@@ -383,39 +383,39 @@ WId KDecorationPreviewBridge::windowId() const
 void KDecorationPreviewBridge::closeWindow()
     {
     }
-    
+
 void KDecorationPreviewBridge::maximize( MaximizeMode )
     {
     }
-    
+
 void KDecorationPreviewBridge::minimize()
     {
     }
-    
+
 void KDecorationPreviewBridge::showContextHelp()
     {
     }
-    
+
 void KDecorationPreviewBridge::setDesktop( int )
     {
     }
-    
+
 void KDecorationPreviewBridge::titlebarDblClickOperation()
     {
     }
-    
+
 void KDecorationPreviewBridge::setShade( bool )
     {
     }
-    
+
 void KDecorationPreviewBridge::setKeepAbove( bool )
     {
     }
-    
+
 void KDecorationPreviewBridge::setKeepBelow( bool )
     {
     }
-    
+
 int KDecorationPreviewBridge::currentDesktop() const
     {
     return 1;
