@@ -134,6 +134,7 @@ private:
     void raiseTransientsOf( ClientList& safeset, Client* c );
     void randomPlacement(Client* c);
     void smartPlacement(Client* c);
+    void cascadePlacement(Client* c, bool re_init = false);
 
     void focusToNull();
     Client* desktop_client;
@@ -154,6 +155,16 @@ private:
     bool removeDockwin( WId w );
     void propagateDockwins();
     DockWindow findDockwin( WId w );
+
+    //CT needed for cascading+
+    struct CascadingInfo {
+      QPoint pos;
+      int col;
+      int row;
+    };
+
+    QValueList<CascadingInfo> cci;
+    // -cascading 
 };
 
 inline WId Workspace::rootWin() const

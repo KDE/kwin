@@ -12,8 +12,10 @@ Options::Options()
         cg[i] = NULL;
     reload();
 
-    //CT 
-    placement = Smart; //ACHTUNG!! for the moment *only*
+    //CT fix them for now. Will be read from rc
+    placement = Smart;
+    animate_shade = true;
+    anim_steps = 100;
 }
 
 Options::~Options(){
@@ -136,4 +138,17 @@ void Options::reload()
             cg[i] = NULL;
         }
     }
+
+    //CT well, what this costs us?
+    config->setGroup("Actions");
+    
+    QString val;
+    val = config->readEntry("Placement","Smart");
+    if (val == "Smart") placement = Smart;
+    else if (val == "Random") placement = Random;
+    else if (val == "Cascade") placement = Cascade;
+
+    animate_shade = config->readBoolEntry("AnimateShade", true);
+
+    anim_steps = config->readNumEntry("AnimSteps", 100);
 }

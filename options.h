@@ -57,7 +57,7 @@ public:
      * Normally you don't have to worry. What the WM adds to the startup time
      * is nil compared to the creation of the window itself in the memory
      */
-    enum PlacementPolicy { Random, Smart };
+    enum PlacementPolicy { Random, Smart, Cascade };
     PlacementPolicy placement;
 
     bool focusPolicyIsReasonable() {
@@ -76,6 +76,14 @@ public:
      * Return the active or inactive decoration font.
      */
     const QFont& font(bool active=true);
+    /**
+     * Return whether we animate the shading of windows to titlebar or not
+     */
+    const bool animateShade() { return animate_shade; };
+    /**
+     * Return the number of animation steps (would this be general?)
+     */
+    const int animSteps() { return anim_steps; };
     // When restarting is implemented this should get called (mosfet).
     void reload();
     
@@ -85,6 +93,10 @@ protected:
     QFont activeFont, inactiveFont;
     QColor colors[KWINCOLORS*2];
     QColorGroup *cg[KWINCOLORS*2];
+
+private:
+  bool animate_shade;
+  int anim_steps;
 };
 
 extern Options* options;

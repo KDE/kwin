@@ -186,6 +186,15 @@ void Workspace::init()
     XUngrabServer( qt_xdisplay() );
     popup = 0;
     propagateClients();
+
+    //CT initialize the cascading info
+    for( int i = 0; i < numberOfDesktops(); i++) {
+      CascadingInfo inf;
+      inf.pos = QPoint(0,0);
+      inf.col = 0;
+      inf.row = 0;
+      cci.append(inf);
+    }
 }
 
 Workspace::~Workspace()
@@ -846,6 +855,8 @@ void Workspace::doPlacement( Client* c )
     randomPlacement( c );
   else if (options->placement == Options::Smart)
     smartPlacement( c );
+  else if (options->placement == Options::Cascade)
+    cascadePlacement( c );
 }
 
 /*!
@@ -948,6 +959,13 @@ void Workspace::smartPlacement(Client* c){
       }
     }
 
+    //CT first time we get no overlap we stop.
+    if (overlap == none) {
+      x_optimal = x;
+      y_optimal = y;
+      break;
+    }
+
     if (first_pass) {
       first_pass = false;
       min_overlap = overlap;
@@ -1021,6 +1039,73 @@ void Workspace::smartPlacement(Client* c){
   // place the window
   c->move( x_optimal, y_optimal );	
 
+}
+
+/*!
+  Place windows in a cascading order, remembering positions for each desktop
+*/ 
+void Workspace::cascadePlacement (Client* c, bool re_init) {
+/* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
+ */
+
+  // work coords
+  int xp, yp;
+
+  //CT how do I get from the 'Client' class the size that NW squarish "handle"
+  int delta_x = 24; 
+  int delta_y = 24;
+
+  int d = currentDesktop() - 1;
+
+  // get the maximum allowed windows space and desk's origin 
+  //    (CT 20Nov1999 - is this common to all desktops?)
+  QRect maxRect = clientArea();
+
+  // initialize often used vars: width and height of c; we gain speed
+  int ch = c->height();
+  int cw = c->width();
+  int H = maxRect.bottom();
+  int W = maxRect.right();
+  int X = maxRect.left();
+  int Y = maxRect.top();
+
+  //initialize if needed
+  if (re_init) {
+    cci[d].pos = QPoint(X, Y);
+    cci[d].col = cci[d].row = 0;
+  }
+
+
+  xp = cci[d].pos.x();
+  yp = cci[d].pos.y();
+
+  //here to touch in case people vote for resize on placement
+  if ((yp + ch ) > H) yp = Y;
+
+  if ((xp + cw ) > W)
+    if (!yp) {
+      smartPlacement(c);
+      return;
+    }
+    else xp = X;
+
+  //if this isn't the first window
+  if ( cci[d].pos.x() != X && cci[d].pos.y() != Y ) {
+    if ( xp != X && yp == Y ) xp = delta_x * (++(cci[d].col));
+    if ( yp != Y && xp == X ) yp = delta_y * (++(cci[d].row));
+    
+    // last resort: if still doesn't fit, smart place it
+    if ( ((xp + cw) > W - X) || ((yp + ch) > H - Y) ) {
+      smartPlacement(c);
+      return;
+    }
+  }
+  
+  // place the window
+  c->move( QPoint( xp, yp ) );
+  
+  // new position
+  cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
 }
 
 
