@@ -20,7 +20,11 @@
   Boston, MA 02111-1307, USA.
  */
 
+#include <qpainter.h>
+
 #include <kconfig.h>
+#include <kpixmap.h>
+#include <kpixmapeffect.h>
 
 #include "misc.h"
 #include "plastik.h"
@@ -29,8 +33,6 @@
 
 namespace KWinPlastik
 {
-
-// static bool pixmaps_created = false;
 
 bool PlastikHandler::m_initialized    = false;
 bool PlastikHandler::m_animateButtons = true;
@@ -47,12 +49,18 @@ Qt::AlignmentFlags PlastikHandler::m_titleAlign = Qt::AlignHCenter;
 
 PlastikHandler::PlastikHandler()
 {
+    memset(m_pixmaps, 0, sizeof(QPixmap *) * NumPixmaps); // set elements to 0
+
     reset(0);
 }
 
 PlastikHandler::~PlastikHandler()
 {
     m_initialized = false;
+
+    for (int n=0; n<NumPixmaps; n++) {
+        if (m_pixmaps[n]) delete m_pixmaps[n];
+    }
 }
 
 bool PlastikHandler::reset(unsigned long changed)
@@ -91,6 +99,14 @@ bool PlastikHandler::reset(unsigned long changed)
 
     // read in the configuration
     readConfig();
+
+    // pixmaps probably need to be updated, so delete the cache.
+    for (int n=0; n<NumPixmaps; n++) {
+        if (m_pixmaps[n]) {
+            delete m_pixmaps[n];
+            m_pixmaps[n] = 0;
+        }
+    }
 
     m_initialized = true;
 
@@ -200,6 +216,77 @@ QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
     }
 }
 
+const QPixmap &PlastikHandler::pixmap(Pixmaps type) {
+
+    if (m_pixmaps[type])
+        return *m_pixmaps[type];
+
+    switch (type) {
+        case aTitleBarTileTop:
+        case iTitleBarTileTop:
+        case atTitleBarTileTop:
+        case itTitleBarTileTop:
+        {
+            int h = 4-2; // TODO: don't hardcode the height...
+
+            bool active = false;
+            if (type == aTitleBarTileTop || type == atTitleBarTileTop) {
+                active = true;
+            }
+
+            KPixmap tempPixmap;
+            tempPixmap.resize(1, h);
+            KPixmapEffect::gradient(tempPixmap,
+                                    getColor(TitleGradientToTop, active),
+                                    getColor(TitleGradientFrom, active),
+                                    KPixmapEffect::VerticalGradient);
+            QPixmap *pixmap = new QPixmap(1, h);
+            QPainter painter(pixmap);
+            painter.drawPixmap(0, 0, tempPixmap);
+            painter.end();
+
+            m_pixmaps[type] = pixmap;
+            return *pixmap;
+
+            break;
+        }
+
+        case aTitleBarTile:
+        case iTitleBarTile:
+        case atTitleBarTile:
+        case itTitleBarTile:
+        {
+            bool active = false;
+            if (type == aTitleBarTile || type == atTitleBarTile) {
+                active = true;
+            }
+            bool toolWindow = false;
+            if (type == atTitleBarTile || type == itTitleBarTile) {
+                toolWindow = true;
+            }
+
+            int h = toolWindow ? m_titleHeightTool : m_titleHeight;
+
+            KPixmap tempPixmap;
+            tempPixmap.resize(5, h);
+            KPixmapEffect::gradient(tempPixmap,
+                                    PlastikHandler::getColor(TitleGradientFrom, active),
+                                    PlastikHandler::getColor(TitleGradientTo, active),
+                                    KPixmapEffect::VerticalGradient);
+            QPixmap *pixmap = new QPixmap(5, h);
+            QPainter painter(pixmap);
+            painter.drawPixmap(0, 0, tempPixmap);
+            painter.end();
+
+            m_pixmaps[type] = pixmap;
+            return *pixmap;
+
+            break;
+        }
+
+    }
+}
+
 QValueList< PlastikHandler::BorderSize >
 PlastikHandler::borderSizes() const
 {
@@ -209,19 +296,24 @@ PlastikHandler::borderSizes() const
 	BorderVeryHuge << BorderOversized;
 }
 
+// make the handler accessible to other classes...
+static PlastikHandler *handler = 0;
+PlastikHandler* Handler()
+{
+    return handler;
+}
+
 } // KWinPlastik
 
 //////////////////////////////////////////////////////////////////////////////
 // Plugin Stuff                                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-static KWinPlastik::PlastikHandler *handler = 0;
-
 extern "C"
 {
     KDE_EXPORT KDecorationFactory *create_factory()
     {
-        handler = new KWinPlastik::PlastikHandler();
-        return handler;
+        KWinPlastik::handler = new KWinPlastik::PlastikHandler();
+        return KWinPlastik::handler;
     }
 }

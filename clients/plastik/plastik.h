@@ -20,15 +20,16 @@
   Boston, MA 02111-1307, USA.
  */
 
-#ifndef KNIFTY_H
-#define KNIFTY_H
+#ifndef PLASTIK_H
+#define PLASTIK_H
+
+#include <qintcache.h>
+#include <qfont.h>
 
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
 namespace KWinPlastik {
-
-#include <qfont.h>
 
 enum ColorType {
     WindowContour=0,
@@ -43,6 +44,18 @@ enum ColorType {
     TitleFont
 };
 
+enum Pixmaps {
+    aTitleBarTileTop, // normal windows
+    iTitleBarTileTop,
+    aTitleBarTile,
+    iTitleBarTile,
+    atTitleBarTileTop, // tool windows
+    itTitleBarTileTop,
+    atTitleBarTile,
+    itTitleBarTile,
+    NumPixmaps
+};
+
 class PlastikHandler: public QObject, public KDecorationFactory
 {
     Q_OBJECT
@@ -55,6 +68,8 @@ public:
     virtual bool supports( Ability ability );
 
     static bool initialized() { return m_initialized; }
+
+    const QPixmap &pixmap(Pixmaps pixmap);
 
     static int  titleHeight() { return m_titleHeight; }
     static int  titleHeightTool() { return m_titleHeightTool; }
@@ -84,8 +99,13 @@ private:
     static Qt::AlignmentFlags m_titleAlign;
 
     static bool m_initialized;
+
+    // pixmap cache
+    QPixmap *m_pixmaps[NumPixmaps];
 };
+
+PlastikHandler* Handler();
 
 } // KWinPlastik
 
-#endif // KNIFT_H
+#endif // PLASTIK_H

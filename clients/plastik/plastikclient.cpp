@@ -43,19 +43,20 @@
 namespace KWinPlastik
 {
 
+#define TITLEBARTILETOP (isToolWindow()? (isActive()?atTitleBarTileTop  : itTitleBarTileTop) \
+    : (isActive()?aTitleBarTileTop : iTitleBarTileTop))
+#define TITLEBARTILE (isToolWindow()? (isActive()?KWinPlastik::atTitleBarTile  : KWinPlastik::itTitleBarTile) \
+    : (isActive()?KWinPlastik::aTitleBarTile : KWinPlastik::iTitleBarTile))
+
 PlastikClient::PlastikClient(KDecorationBridge* bridge, KDecorationFactory* factory)
     : KCommonDecoration (bridge, factory),
     aCaptionBuffer(0), iCaptionBuffer(0),
-    aTitleBarTile(0), iTitleBarTile(0), aTitleBarTopTile(0), iTitleBarTopTile(0),
-    pixmaps_created(false),
     captionBufferDirty(true),
     s_titleFont(QFont() )
 { }
 
 PlastikClient::~PlastikClient()
 {
-    delete_pixmaps();
-
     delete aCaptionBuffer;
     delete iCaptionBuffer;
 }
@@ -200,7 +201,7 @@ void PlastikClient::init()
             PlastikHandler::titleFontTool()
     : PlastikHandler::titleFont();
 
-    create_pixmaps();
+//     create_pixmaps();
 
     aCaptionBuffer = new QPixmap();
     iCaptionBuffer = new QPixmap();
@@ -248,6 +249,8 @@ QRegion PlastikClient::cornerShape(WindowCorner corner)
 void PlastikClient::paintEvent(QPaintEvent *e)
 {
     QRegion region = e->region();
+
+    PlastikHandler *handler = Handler();
 
     if (oldCaption != caption() )
         captionBufferDirty = true;
@@ -355,7 +358,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
 
         tempRect.setRect(r_x+2, r_y+2, r_w-2*2, titleEdgeTop-2 );
         if (tempRect.isValid() && region.contains(tempRect) ) {
-            painter.drawTiledPixmap(tempRect, active ? *aTitleBarTopTile : *iTitleBarTopTile);
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TITLEBARTILETOP) );
         }
 
         // outside the region normally masked by doShape
@@ -402,14 +405,14 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         tempRect.setRect(r_x+titleMarginLeft, m_captionRect.top(),
                          m_captionRect.left() - (r_x+titleMarginLeft), m_captionRect.height() );
         if (tempRect.isValid() && region.contains(tempRect) ) {
-            painter.drawTiledPixmap(tempRect, active ? *aTitleBarTile : *iTitleBarTile);
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TITLEBARTILE) );
         }
 
         // right to the title
         tempRect.setRect(m_captionRect.right()+1, m_captionRect.top(),
                          (r_x2-titleMarginRight) - m_captionRect.right(), m_captionRect.height() );
         if (tempRect.isValid() && region.contains(tempRect) ) {
-            painter.drawTiledPixmap(tempRect, active ? *aTitleBarTile : *iTitleBarTile);
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TITLEBARTILE) );
         }
 
     }
@@ -579,8 +582,6 @@ void PlastikClient::reset( unsigned long changed )
     if (changed & SettingColors)
     {
         // repaint the whole thing
-        delete_pixmaps();
-        create_pixmaps();
         captionBufferDirty = true;
         widget()->update();
         updateButtons();
@@ -593,8 +594,6 @@ void PlastikClient::reset( unsigned long changed )
         updateLayout();
 
         // then repaint
-        delete_pixmaps();
-        create_pixmaps();
         captionBufferDirty = true;
         widget()->update();
     }
@@ -602,79 +601,10 @@ void PlastikClient::reset( unsigned long changed )
     KCommonDecoration::reset(changed);
 }
 
-void PlastikClient::create_pixmaps()
+const QPixmap &PlastikClient::getTitleBarTile(bool active) const
 {
-    if(pixmaps_created)
-        return;
-
-    KPixmap tempPixmap;
-    QPainter painter;
-
-    const int tet = layoutMetric(LM_TitleEdgeTop, false);
-    const int th  = layoutMetric(LM_TitleHeight, false);
-
-    // aTitleBarTopTile
-    tempPixmap.resize(1, tet-1-1 );
-    KPixmapEffect::gradient(tempPixmap,
-                            PlastikHandler::getColor(TitleGradientToTop, true),
-                            PlastikHandler::getColor(TitleGradientFrom, true),
-                            KPixmapEffect::VerticalGradient);
-    aTitleBarTopTile = new QPixmap(1, tet-1-1 );
-    painter.begin(aTitleBarTopTile);
-    painter.drawPixmap(0, 0, tempPixmap);
-    painter.end();
-
-    // aTitleBarTile
-    tempPixmap.resize(1, th );
-    KPixmapEffect::gradient(tempPixmap,
-                            PlastikHandler::getColor(TitleGradientFrom, true),
-                            PlastikHandler::getColor(TitleGradientTo, true),
-                            KPixmapEffect::VerticalGradient);
-    aTitleBarTile = new QPixmap(1, th );
-    painter.begin(aTitleBarTile);
-    painter.drawPixmap(0, 0, tempPixmap);
-    painter.end();
-
-    // iTitleBarTopTile
-    tempPixmap.resize(1, tet-1-1 );
-    KPixmapEffect::gradient(tempPixmap,
-                            PlastikHandler::getColor(TitleGradientToTop, false),
-                            PlastikHandler::getColor(TitleGradientFrom, false),
-                            KPixmapEffect::VerticalGradient);
-    iTitleBarTopTile = new QPixmap(1, tet-1-1 );
-    painter.begin(iTitleBarTopTile);
-    painter.drawPixmap(0, 0, tempPixmap);
-    painter.end();
-
-    // iTitleBarTile
-    tempPixmap.resize(1, th );
-    KPixmapEffect::gradient(tempPixmap,
-                            PlastikHandler::getColor(TitleGradientFrom, false),
-                            PlastikHandler::getColor(TitleGradientTo, false),
-                            KPixmapEffect::VerticalGradient);
-    iTitleBarTile = new QPixmap(1, th );
-    painter.begin(iTitleBarTile);
-    painter.drawPixmap(0, 0, tempPixmap);
-    painter.end();
-
-    pixmaps_created = true;
-}
-
-void PlastikClient::delete_pixmaps()
-{
-    delete aTitleBarTopTile;
-    aTitleBarTopTile = 0;
-
-    delete iTitleBarTopTile;
-    iTitleBarTopTile = 0;
-
-    delete aTitleBarTile;
-    aTitleBarTile = 0;
-
-    delete iTitleBarTile;
-    iTitleBarTile = 0;
-
-    pixmaps_created = false;
+    return Handler()->pixmap(isToolWindow() ?
+            (active? atTitleBarTile : itTitleBarTile) : (active? aTitleBarTile : iTitleBarTile) );
 }
 
 void PlastikClient::update_captionBuffer()
@@ -714,7 +644,8 @@ void PlastikClient::update_captionBuffer()
     // active
     aCaptionBuffer->resize(captionWidth+4, th ); // 4 px shadow
     painter.begin(aCaptionBuffer);
-    painter.drawTiledPixmap(aCaptionBuffer->rect(), *aTitleBarTile);
+    painter.drawTiledPixmap(aCaptionBuffer->rect(),
+                            Handler()->pixmap(isToolWindow()?KWinPlastik::atTitleBarTile:KWinPlastik::aTitleBarTile) );
     if(PlastikHandler::titleShadow())
     {
         QColor shadowColor;
@@ -734,7 +665,8 @@ void PlastikClient::update_captionBuffer()
     // inactive
     iCaptionBuffer->resize(captionWidth+4, th );
     painter.begin(iCaptionBuffer);
-    painter.drawTiledPixmap(iCaptionBuffer->rect(), *iTitleBarTile);
+    painter.drawTiledPixmap(iCaptionBuffer->rect(),
+                            Handler()->pixmap(isToolWindow()?KWinPlastik::itTitleBarTile:KWinPlastik::iTitleBarTile) );
     if(PlastikHandler::titleShadow())
     {
         painter.drawImage(1, 1, shadow);

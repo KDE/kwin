@@ -51,21 +51,13 @@ public:
     virtual void paintEvent(QPaintEvent *e);
     virtual void updateCaption();
 
-    QPixmap getTitleBarTile(bool active) const
-    {
-        return active ? *aTitleBarTile : *iTitleBarTile;
-    }
+    const QPixmap &getTitleBarTile(bool active) const;
 
 private:
     QRect captionRect() const;
 
     QPixmap *aCaptionBuffer, *iCaptionBuffer;
     void update_captionBuffer();
-
-    QPixmap *aTitleBarTile, *iTitleBarTile, *aTitleBarTopTile, *iTitleBarTopTile;
-    bool pixmaps_created;
-    void create_pixmaps();
-    void delete_pixmaps();
 
     QRect m_captionRect;
     QString oldCaption;
