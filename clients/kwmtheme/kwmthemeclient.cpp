@@ -57,13 +57,12 @@ static void init_theme()
     config->setGroup("General");
     QString tmpStr;
 
-    for(int i=0; i < 8; ++i){
+    for(int i=0; i < 8; ++i)
+    {
         framePixmaps[i] = new QPixmap(locate("appdata",
                                       "pics/"+config->readEntry(keys[i], " ")));
-		if(framePixmaps[i]->isNull())
+        if(framePixmaps[i]->isNull())
             qWarning("Unable to load frame pixmap for %s", keys[i]);
-        else
-            qWarning("Loaded pixmap %d", i+1);
     }
     maxExtent = framePixmaps[FrameTop]->height();
     if(framePixmaps[FrameBottom]->height() > maxExtent)
@@ -296,13 +295,10 @@ void KWMThemeClient::drawTitle(QPainter &p)
     QRect r = titlebar->geometry();
 
     if(titleSunken){
-        qWarning("Title is sunken");
         qDrawShadeRect(&p, r, options->colorGroup(Options::Frame, isActive()),
                        true, 1, 0);
         r.setRect(r.x()+1, r.y()+1, r.width()-2, r.height()-2);
     }
-    else
-        qWarning("Title is not sunken");
     
     KPixmap *fill = isActive() ? aTitlePix : iTitlePix;
     if(fill)
@@ -324,6 +320,9 @@ void KWMThemeClient::drawTitle(QPainter &p)
     }
     p.setFont(options->font(isActive()));
     p.setPen(options->color(Options::Font, isActive()));
+    // Add left & right margin
+    r.setLeft(r.left()+5);
+    r.setRight(r.right()-5);
     p.drawText(r, titleAlign, caption());
 }
 
@@ -347,7 +346,7 @@ void KWMThemeClient::captionChange( const QString& )
     repaint( titlebar->geometry(), false );
 }
 
-void KWMThemeClient::paintEvent( QPaintEvent* )
+void KWMThemeClient::paintEvent( QPaintEvent*e )
 {
     QPainter p;
     p.begin(this);
@@ -384,17 +383,17 @@ void KWMThemeClient::paintEvent( QPaintEvent* )
            w4, h4);
 
     QPixmap *curPix = framePixmaps[FrameTop];
-    p.drawTiledPixmap(w1, maxExtent-curPix->height()-1, width()-w2-w1,
+    p.drawTiledPixmap(w1, maxExtent-curPix->height(), width()-w2-w1,
                       curPix->height(), *curPix);
     curPix = framePixmaps[FrameBottom];
-    p.drawTiledPixmap(w3, height()-maxExtent+1, width()-w3-w4,
+    p.drawTiledPixmap(w3, height()-maxExtent, width()-w3-w4,
                       curPix->height(), *curPix);
     curPix = framePixmaps[FrameLeft];
-    p.drawTiledPixmap(maxExtent-curPix->width()-1, h1, curPix->width(),
+    p.drawTiledPixmap(maxExtent-curPix->width(), h1, curPix->width(),
                       height()-h1-h3, *curPix);
 
     curPix = framePixmaps[FrameRight];
-    p.drawTiledPixmap(width()-maxExtent+1, h2, curPix->width(),
+    p.drawTiledPixmap(width()-maxExtent, h2, curPix->width(),
                       height()-h2-h4, *curPix);
     drawTitle(p);
     p.end();
@@ -439,24 +438,24 @@ void KWMThemeClient::doShape()
     p.begin(&mask);
     const QBitmap *curPix = framePixmaps[FrameTop]->mask();
     if (curPix)
-       p.drawTiledPixmap(w1, maxExtent-curPix->height()-1, width()-w2-w1,
+       p.drawTiledPixmap(w1, maxExtent-curPix->height(), width()-w2-w1,
                          curPix->height(), *curPix);
     curPix = framePixmaps[FrameBottom]->mask();
     if (curPix)
-       p.drawTiledPixmap(w3, height()-maxExtent+1, width()-w3-w4,
+       p.drawTiledPixmap(w3, height()-maxExtent, width()-w3-w4,
                       curPix->height(), *curPix);
     curPix = framePixmaps[FrameLeft]->mask();
     if (curPix)
-       p.drawTiledPixmap(maxExtent-curPix->width()-1, h1, curPix->width(),
+       p.drawTiledPixmap(maxExtent-curPix->width(), h1, curPix->width(),
                       height()-h1-h3, *curPix);
     curPix = framePixmaps[FrameRight]->mask();
     if (curPix)
-       p.drawTiledPixmap(width()-maxExtent+1, h2, curPix->width(),
+       p.drawTiledPixmap(width()-maxExtent, h2, curPix->width(),
                       height()-h2-h4, *curPix);
     p.setBrush(color1);
     p.setPen(color1);
-    p.fillRect(maxExtent-1, maxExtent-1, width()-2*maxExtent+2,
-               height()-2*maxExtent+2, color1);
+    p.fillRect(maxExtent, maxExtent, width()-2*maxExtent,
+               height()-2*maxExtent, color1);
     p.end();
     setMask(mask);
 }
