@@ -380,7 +380,7 @@ run_fades (Display *dpy)
 	if (fade_time - now > 0)
 		return;
 	steps = 1 + (now - fade_time) / fade_delta;
-	for (next = fades; f = next; )
+        for (next = fades; (f = next); )
 	{
 		win *w = f->w;
 		next = f->next;
@@ -1169,6 +1169,8 @@ paint_all (Display *dpy, XserverRegion region)
 									0, 0, 0, 0, x, y, wid, w->titleHeight);
 							break;
 						}
+                                    default:
+                                        break;
 				}
 		}
 		if (!w->borderClip)
@@ -1419,7 +1421,22 @@ finish_unmap_win (Display *dpy, win *w)
 		XFixesDestroyRegion (dpy, w->borderSize);
 		w->borderSize = None;
 	}
-	if (w->shadow)
+        
+        if (w->titleSize)
+        {
+            set_ignore (dpy, NextRequest (dpy));
+            XFixesDestroyRegion (dpy, w->titleSize);
+            w->titleSize = None;
+        }
+        
+        if (w->contentSize)
+        {
+            set_ignore (dpy, NextRequest (dpy));
+            XFixesDestroyRegion (dpy, w->contentSize);
+            w->contentSize = None;
+        }
+	
+        if (w->shadow)
 	{
 		XRenderFreePicture (dpy, w->shadow);
 		w->shadow = None;
@@ -1829,8 +1846,8 @@ configure_win (Display *dpy, XConfigureEvent *ce)
 #endif
 	{
 		damage = XFixesCreateRegion (dpy, 0, 0);
-		if (w->extents != None)	
-			XFixesCopyRegion (dpy, damage, w->extents);
+		if (w->extents != None)
+                    XFixesCopyRegion (dpy, damage, w->extents);
 	}
 	w->a.x = ce->x;
 	w->a.y = ce->y;
@@ -1858,12 +1875,12 @@ configure_win (Display *dpy, XConfigureEvent *ce)
 	w->a.height = ce->height;
 	w->a.border_width = ce->border_width;
 	w->a.override_redirect = ce->override_redirect;
-	restack_win (dpy, w, ce->above);
+        restack_win (dpy, w, ce->above);
 	if (damage)
 	{
 		XserverRegion	extents = win_extents (dpy, w);
-		XFixesUnionRegion (dpy, damage, damage, extents);
-		XFixesDestroyRegion (dpy, extents);
+                XFixesUnionRegion (dpy, damage, damage, extents);
+                XFixesDestroyRegion (dpy, extents);
 		add_damage (dpy, damage);
 	}
 	clipChanged = True;
@@ -2799,10 +2816,10 @@ main (int argc, char **argv)
 	} while (QLength (dpy));
 	if (allDamage && !autoRedirect)
 	{
-	    static int	paint;
+            /*static int	paint;*/
 	    paint_all (dpy, allDamage);
-	    paint++;
-	    XSync (dpy, False);
+            /*paint++;*/
+            XSync (dpy, False);
 	    allDamage = None;
 	    clipChanged = False;
 	}
