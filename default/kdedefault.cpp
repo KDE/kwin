@@ -389,10 +389,10 @@ void KDEClient::resizeEvent( QResizeEvent* e)
 	int dx = 0;
 	int dy = 0;
 	if ( e->oldSize().width() != width() )
-	    dx = 16 + QABS( e->oldSize().width() -  width() );
+	    dx = 32 + QABS( e->oldSize().width() -  width() );
 	if ( e->oldSize().height() != height() )
 	    dy = 8 + QABS( e->oldSize().height() -  height() );
-	if ( dy ) 
+	if ( dy )
 	    update( 0, height() - dy + 1, width(), dy );
 	if ( dx ) {
 	    update( width() - dx + 1, 0, dx, height() );
