@@ -1295,7 +1295,7 @@ void Workspace::smartPlacement(Client* c){
     //loop over possible positions
     do {
 	//test if enough room in x and y directions
-	if ( y + ch > maxRect.bottom() && ch <= maxRect.height()) 
+	if ( y + ch > maxRect.bottom() && ch <= maxRect.height())
 	    overlap = h_wrong; // this throws the algorithm to an exit
 	else if( x + cw > maxRect.right() )
 	    overlap = w_wrong;
@@ -1596,10 +1596,10 @@ void Workspace::lowerClient( Client* c, bool dropFocus )
     stacking_order.remove(c);
     stacking_order.prepend(c);
 
-    ClientList list = constrainedStackingOrder( stacking_order );
-    Window* new_stack = new Window[ list.count() + 1 ];
+    stacking_order = constrainedStackingOrder( stacking_order );
+    Window* new_stack = new Window[ stacking_order.count() + 1 ];
     int i = 0;
-    for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	new_stack[i++] = (*it)->winId();
     }
     XRaiseWindow(qt_xdisplay(), new_stack[0]);
@@ -1658,30 +1658,34 @@ void Workspace::raiseClient( Client* c )
     saveset.append( c );
     raiseTransientsOf(saveset, c );
 
-    ClientList list = constrainedStackingOrder( stacking_order );
+    stacking_order = constrainedStackingOrder( stacking_order );
 
     /* workaround to help broken full-screen applications to keep (modal) dialogs visible
      */
     if ( c->isTransient() && c->mainClient() == c ) {
 	bool has_full_screen = false;
-	for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
+	for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	    if ( (*it) ==  c )
 		break;
-	    if ( (*it)->isVisible() && (*it)->isFullScreen() ) {
+	    if ( (*it)->isVisible() && (*it)->isFullScreen() && 
+		 !(*it)->isDesktop() && (*it)->staysOnTop() ) {
 		has_full_screen = true;
 		break;
 	    }
 	}
 	if ( has_full_screen ) {
-	    list.remove( c );
-	    list.append( c );
+	    stacking_order.remove( c );
+	    stacking_order.append( c );
+	    saveset.clear();
+	    saveset.append( c );
+	    raiseTransientsOf( saveset, c);
 	}
     }
     /* end workaround */
 
-    Window* new_stack = new Window[ list.count() + 1 ];
+    Window* new_stack = new Window[ stacking_order.count() + 1 ];
     int i = 0;
-    for ( ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it) {
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	new_stack[i++] = (*it)->winId();
     }
     XRaiseWindow(qt_xdisplay(), new_stack[0]);
@@ -1863,10 +1867,14 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	}
     }
 
-    if ( c )
+    if ( c ) {
 	requestFocus( c );
-    else
+	// don't let the panel cover fullscreen windows on desktop switches
+	if ( c->isFullScreen() && !c->isDesktop() && c->staysOnTop() )
+	    raiseClient( c );
+    } else {
 	focusToNull();
+    }
 
     QApplication::syncX();
 }
@@ -2880,7 +2888,7 @@ void Workspace::saveDesktopSettings()
    	    c.writeEntry( QString("Name_%1").arg(i), s );
 	} else {
  	    QString currentvalue = c.readEntry(QString("Name_%1").arg(i));
-  	    if (currentvalue != defaultvalue) 
+  	    if (currentvalue != defaultvalue)
 	        c.writeEntry( QString("Name_%1").arg(i), "" );
 	}
     }
