@@ -1,4 +1,4 @@
-SUBDIRS=applytheme defaultpics
+SUBDIRS=
 
 INCLUDES = $(all_includes) 
 
