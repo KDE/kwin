@@ -360,118 +360,128 @@ KActionsConfig::~KActionsConfig()
     delete config;
 }
 
-const char* KActionsConfig::fixup( const char* s )
-{
-// these texts got changed in order to match the style guide,
-// but they are used as values in the config file
-// so change the config texts to the GUI texts,
-// otherwise people will get stupid settings after they change
-// something in KWin configuration
-    static const char* const orig_txt[] = {
-        "Toggle raise and lower",
-        "Activate and raise",
-        "Activate and pass click",
-        "Activate, raise and pass click",
-        "Activate and lower",
-        NULL };
-    static const char* const new_txt[] = {
-        "Toggle Raise & Lower",
-        "Activate & Raise",
-        "Activate & Pass Click",
-        "Activate, Raise & Pass Click",
-        "Activate & Lower",
-        NULL };
-    for( int pos = 0;
-         orig_txt[ pos ] != NULL;
-         ++pos )
-        if( strcmp( s, orig_txt[ pos ] ) == 0 )
-            return new_txt[ pos ];
-    return s;
-}
-
-void KActionsConfig::setComboText(QComboBox* combo, const char* text){
-  int i;
-  QString s = i18n(fixup(text)); // no problem. These are already translated!
-  for (i=0;i<combo->count();i++){
-    if (s.lower()==combo->text(i).lower()){
-      combo->setCurrentItem(i);
-      return;
-    }
-  }
-}
-
 // do NOT change the texts below, they are written to config file
 // and are not shown in the GUI
-// if you change some GUI texts, adjust fixup() above
-const char*  KActionsConfig::functionTiDbl(int i)
+// they have to match the order of items in GUI elements though
+const char* tbl_TiDbl[] = {
+    "Maximize",
+    "Maximize (vertical only)",
+    "Maximize (horizontal only)",
+    "Shade",
+    "Lower",
+    "" };
+
+const char* tbl_TiAc[] = {
+    "Raise",
+    "Lower",
+    "Operations menu",
+    "Toggle raise and lower",
+    "Nothing",
+    "Shade",
+    "" };
+
+const char* tbl_TiInAc[] = {
+    "Activate and raise",
+    "Activate and lower",
+    "Activate",
+    "Shade",
+    "" };
+
+const char* tbl_Win[] = {
+    "Activate, raise and pass click",
+    "Activate and pass click",
+    "Activate",
+    "Activate and raise",
+    "" };
+
+const char* tbl_AllKey[] = {
+    "Meta",
+    "Alt",
+    "" };
+
+const char* tbl_All[] = {
+    "Move",
+    "Toggle raise and lower",
+    "Resize",
+    "Raise",
+    "Lower",
+    "Nothing",
+    "" };
+
+static const char* tbl_num_lookup( const char* arr[], int pos )
 {
-  switch (i){
-  case 0: return "Maximize"; break;
-  case 1: return "Maximize (vertical only)"; break;
-  case 2: return "Maximize (horizontal only)"; break;
-  case 3: return "Shade"; break;
-  case 4: return "Lower"; break;
-  }
-  return "";
+    for( int i = 0;
+         arr[ i ][ 0 ] != '\0' && pos >= 0;
+         ++i )
+    {
+        if( pos == 0 )
+            return arr[ i ];
+        --pos;
+    }
+    abort(); // should never happen this way
 }
 
-const char*  KActionsConfig::functionTiAc(int i)
+static int tbl_txt_lookup( const char* arr[], const char* txt )
 {
-  switch (i){
-  case 0: return "Raise"; break;
-  case 1: return "Lower"; break;
-  case 2: return "Operations menu"; break;
-  case 3: return "Toggle raise and lower"; break;
-  case 4: return "Nothing"; break;
-  case 5: return "Shade"; break;
-  }
-  return "";
-}
-const char*  KActionsConfig::functionTiInAc(int i)
-{
-  switch (i){
-  case 0: return "Activate and raise"; break;
-  case 1: return "Activate and lower"; break;
-  case 2: return "Activate"; break;
-  case 3: return "Shade"; break;
-  case 4: return ""; break;
-  case 5: return ""; break;
-  }
-  return "";
-}
-const char*  KActionsConfig::functionWin(int i)
-{
-  switch (i){
-  case 0: return "Activate, raise and pass click"; break;
-  case 1: return "Activate and pass click"; break;
-  case 2: return "Activate"; break;
-  case 3: return "Activate and raise"; break;
-  case 4: return ""; break;
-  case 5: return ""; break;
-  }
-  return "";
-}
-const char*  KActionsConfig::functionAllKey(int i)
-{
-  switch (i){
-  case 0: return "Meta"; break;
-  case 1: return "Alt"; break;
-  }
-  return "";
-}
-const char*  KActionsConfig::functionAll(int i)
-{
-  switch (i){
-  case 0: return "Move"; break;
-  case 1: return "Toggle raise and lower"; break;
-  case 2: return "Resize"; break;
-  case 3: return "Raise"; break;
-  case 4: return "Lower"; break;
-  case 5: return "Nothing"; break;
-  }
-  return "";
+    int pos = 0;
+    for( int i = 0;
+         arr[ i ][ 0 ] != '\0';
+         ++i )
+    {
+        if( qstricmp( txt, arr[ i ] ) == 0 )
+            return pos;
+        ++pos;
+    }
+    return 0;
 }
 
+void KActionsConfig::setComboText( QComboBox* combo, const char*txt )
+{
+    if( combo == coTiDbl )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_TiDbl, txt ));
+    else if( combo == coTiAct1 || combo == coTiAct2 || combo == coTiAct3 )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_TiAc, txt ));
+    else if( combo == coTiInAct1 || combo == coTiInAct2 || combo == coTiInAct3 )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_TiInAc, txt ));
+    else if( combo == coWin1 || combo == coWin2 || combo == coWin3 )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_Win, txt ));
+    else if( combo == coAllKey )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_AllKey, txt ));
+    else if( combo == coAll1 || combo == coAll2 || combo == coAll3 )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_All, txt ));
+    else
+        abort();
+}
+
+const char* KActionsConfig::functionTiDbl( int i )
+{
+    return tbl_num_lookup( tbl_TiDbl, i );
+}
+
+const char* KActionsConfig::functionTiAc( int i )
+{
+    return tbl_num_lookup( tbl_TiAc, i );
+}
+
+const char* KActionsConfig::functionTiInAc( int i )
+{
+    return tbl_num_lookup( tbl_TiInAc, i );
+}
+
+const char* KActionsConfig::functionWin( int i )
+{
+    return tbl_num_lookup( tbl_Win, i );
+}
+
+const char* KActionsConfig::functionAllKey( int i )
+{
+    return tbl_num_lookup( tbl_AllKey, i );
+}
+
+const char* KActionsConfig::functionAll( int i )
+{
+    return tbl_num_lookup( tbl_All, i );
+}
 
 void KActionsConfig::load()
 {
