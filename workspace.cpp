@@ -826,7 +826,6 @@ QRect Workspace::geometry() const
 
 
 void Workspace::removeClient( Client* c) {
-    Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
     clients.remove( c );
     stacking_order.remove( c );
     focus_chain.remove( c );
