@@ -200,7 +200,7 @@ Manager::paintEvent(QPaintEvent * e)
 
   p.drawTiledPixmap(tr.left() + 3, 0, tr.width() - 6, 20, s->titleTextMid(active));
   p.setPen(options->color(Options::Font, active));
-  p.setFont(options->font());
+  p.setFont(options->font(active));
   p.drawText(tr.left() + 4, 0, tr.width() - 8, 18, AlignCenter, caption());
 
   p.drawPixmap(tr.right() - 2, 0, s->titleTextRight(active));
