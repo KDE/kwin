@@ -167,7 +167,7 @@ void Application::commitData( QSessionManager& /*sm*/ )
 void Application::saveState( QSessionManager& sm )
 {
     KApplication::saveState( sm );
-    static bool firstTime = false;
+    static bool firstTime = true;
     if ( firstTime ) {
 	firstTime = false;
 	return; // no need to save this state.
@@ -175,15 +175,11 @@ void Application::saveState( QSessionManager& sm )
 
     sm.release();
 
-    // we really should do phase 2 here, unfortunately qt-2.1beta3 contains a bug.
-    // #######TODO FIXME with final Qt-2.1
-    /*
     if ( !sm.isPhase2() ) {
- 	sm.requestPhase2();
- 	return;
+	sm.requestPhase2();
+	return;
     }
-    */
-
+    
     workspaces.first()->storeSession( kapp->sessionConfig() );
     kapp->sessionConfig()->sync();
 }
