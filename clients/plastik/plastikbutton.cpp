@@ -1,5 +1,5 @@
 /* Plastik KWin window decoration
-  Copyright (C) 2003 Sandro Giessl <ceebx@users.sourceforge.net>
+  Copyright (C) 2003-2005 Sandro Giessl <sandro@giessl.com>
 
   based on the window decoration "Web":
   Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
@@ -23,13 +23,10 @@
 // #include <kwin/options.h>
 
 #include <qbitmap.h>
-#include <qcursor.h>
-#include <qimage.h>
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <kpixmap.h>
 #include <kpixmapeffect.h>
-#include <qtooltip.h>
 #include <qtimer.h>
 
 #include "plastikbutton.h"
@@ -116,6 +113,14 @@ void PlastikButton::reset(unsigned long changed)
                 break;
         }
 
+        // button mask
+        if (type() != MenuButton) {
+            QRegion mask(rect() );
+            mask -= QRegion(0,0,1,1) + QRegion(0,height()-1,1,1) +
+                    QRegion(width()-1,0,1,1) + QRegion(width()-1,height()-1,1,1);
+            setMask(mask);
+        }
+
         this->update();
     }
 }
@@ -168,7 +173,6 @@ void PlastikButton::drawButton(QPainter *painter)
     QRect r(0,0,width(),height());
 
     bool active = m_client->isActive();
-    QPixmap backgroundTile = m_client->getTitleBarTile(active);
     KPixmap tempKPixmap;
 
     QColor highlightColor;
@@ -205,8 +209,11 @@ void PlastikButton::drawButton(QPainter *painter)
     buffer.resize(width(), height());
     QPainter bP(&buffer);
 
-    // fill with the titlebar background
-    bP.drawTiledPixmap(0, 0, width(), width(), backgroundTile);
+    if (type() == MenuButton)
+    {
+        // fake the titlebar background
+        bP.drawTiledPixmap(0, 0, width(), width(), m_client->getTitleBarTile(active) );
+    }
 
     if (type() != MenuButton || hover || animProgress != 0) {
         // contour

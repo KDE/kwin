@@ -1,5 +1,5 @@
 /* Plastik KWin window decoration
-  Copyright (C) 2003 Sandro Giessl <ceebx@users.sourceforge.net>
+  Copyright (C) 2003-2005 Sandro Giessl <sandro@giessl.com>
 
   based on the window decoration "Web":
   Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
@@ -20,8 +20,8 @@
   Boston, MA 02111-1307, USA.
  */
 
-#ifndef KNIFTYCLIENT_H
-#define KNIFTYCLIENT_H
+#ifndef PLASTIKCLIENT_H
+#define PLASTIKCLIENT_H
 
 #include <kcommondecoration.h>
 
@@ -70,4 +70,4 @@ private:
 
 } // KWinPlastik
 
-#endif // KNIFTCLIENT_H
+#endif // PLASTIKCLIENT_H

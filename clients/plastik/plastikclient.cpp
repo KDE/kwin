@@ -1,5 +1,5 @@
 /* Plastik KWin window decoration
-  Copyright (C) 2003 Sandro Giessl <ceebx@users.sourceforge.net>
+  Copyright (C) 2003-2005 Sandro Giessl <sandro@giessl.com>
 
   based on the window decoration "Web":
   Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
@@ -21,9 +21,6 @@
  */
 
 #include <klocale.h>
-#include <kpixmap.h>
-#include <kpixmapeffect.h>
-#include <kapplication.h>
 
 #include <qbitmap.h>
 #include <qdatetime.h>
