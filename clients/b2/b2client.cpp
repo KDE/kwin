@@ -502,6 +502,10 @@ void B2Client::addButtons(const QString& s, const QString tips[],
                             this, SLOT(closeWindow()));
                     titleLayout->addWidget(button[BtnClose]);
                 }
+		break;
+	    case '_': // Additional spacing
+		titleLayout->addSpacing(4);
+		break;
 	}
     } 
 }
