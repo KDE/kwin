@@ -746,7 +746,7 @@ void Client::getWmNormalHints()
     if( isManaged())
         { // update to match restrictions
         QSize new_size = adjustedSize( size());
-        if( new_size != size())
+        if( new_size != size() && !isShade()) // SHADE
             resizeWithChecks( new_size );
         }
     updateAllowedActions(); // affects isResizeable()
@@ -847,9 +847,6 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         gravity = xSizeHint.win_gravity;
     if( value_mask & ( CWX | CWY )) 
         {
-        if ( isShade()) // SELI SHADE
-            setShade( ShadeNone );
-
         QPoint new_pos = calculateGravitation( true, gravity ); // undo gravitation
         if ( value_mask & CWX )
             new_pos.setX( rx );
@@ -894,6 +891,9 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
     if ( value_mask & (CWWidth | CWHeight )
         && ! ( value_mask & ( CWX | CWY )) )  // pure resize
         {
+        if ( isShade()) // SELI SHADE
+            setShade( ShadeNone );
+
         int nw = clientSize().width();
         int nh = clientSize().height();
         if ( value_mask & CWWidth )
