@@ -249,36 +249,34 @@ static Bool update_x_time_predicate( Display*, XEvent* event, XPointer )
     return False;
 }
 
-static Time nextXTime()
-    {
-    next_x_time = CurrentTime;
-    XEvent dummy;
-    XCheckIfEvent( qt_xdisplay(), &dummy, update_x_time_predicate, NULL );
-    return next_x_time;
-    }
-
 /*
  Updates qt_x_time. This used to simply fetch current timestamp from the server,
  but that can cause qt_x_time to be newer than timestamp of events that are
  still in our events queue, thus e.g. making XSetInputFocus() caused by such
- event to be ignored. Therefore first events queue is searched for first
- event with timestamp.
+ event to be ignored. Therefore events queue is searched for first
+ event with timestamp, and extra PropertyNotify is generated in order to make
+ sure such event is found.
 */
 void updateXTime()
     {
-    qt_x_time = nextXTime();
-    if( qt_x_time == CurrentTime )
+    static QWidget* w = 0;
+    if ( !w )
+        w = new QWidget;
+    long data = 1;
+    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
+                    PropModeAppend, (unsigned char*) &data, 1);
+    next_x_time = CurrentTime;
+    XEvent dummy;
+    XCheckIfEvent( qt_xdisplay(), &dummy, update_x_time_predicate, NULL );
+    if( next_x_time == CurrentTime )
         {
-        static QWidget* w = 0;
-        if ( !w )
-            w = new QWidget;
-        long data = 1;
-        XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
-                        PropModeAppend, (unsigned char*) &data, 1);
-        XEvent ev;
-        XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
-        qt_x_time = ev.xproperty.time;
+        XSync( qt_xdisplay(), False );
+        XCheckIfEvent( qt_xdisplay(), &dummy, update_x_time_predicate, NULL );
         }
+    assert( next_x_time != CurrentTime );
+    qt_x_time = next_x_time;
+    XEvent ev; // remove the PropertyNotify event from the events queue
+    XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
     }
 
 static int server_grab_count = 0;
