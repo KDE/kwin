@@ -974,7 +974,7 @@ void Workspace::setActiveClient( Client* c )
 
   \sa setActiveClient(), requestFocus()
  */
-void Workspace::activateClient( Client* c)
+void Workspace::activateClient( Client* c, bool force )
 {
     if (!c->isOnDesktop(currentDesktop()) ) {
 	setCurrentDesktop( c->desktop() );
@@ -985,7 +985,7 @@ void Workspace::activateClient( Client* c)
     c->show();
     iconifyOrDeiconifyTransientsOf( c );
     if ( options->focusPolicyIsReasonable() ) {
-	requestFocus( c );
+	requestFocus( c, force );
     }
 }
 
@@ -1044,7 +1044,7 @@ bool Workspace::hasCaption( const QString& caption )
 
   \sa Workspace::activateClient()
  */
-void Workspace::requestFocus( Client* c)
+void Workspace::requestFocus( Client* c, bool force )
 {
     if (!focusChangeEnabled())
 	return;
@@ -1059,7 +1059,7 @@ void Workspace::requestFocus( Client* c)
 	popup_client = c;
 
     if ( c->isVisible() && !c->isShade() ) {
-	c->takeFocus();
+	c->takeFocus( force );
 	should_get_focus = c;
 	focus_chain.remove( c );
 	if ( c->wantsTabFocus() )

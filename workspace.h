@@ -109,9 +109,9 @@ public:
     Client* activeClient() const;
 
     void setActiveClient( Client* );
-    void activateClient( Client* );
-    void requestFocus( Client* c);
-    
+    void activateClient( Client*, bool force = FALSE  );
+    void requestFocus( Client* c, bool force = FALSE );
+
     void updateColormap();
 
     void setFocusChangeEnabled(bool b) { focus_change = b; }
@@ -329,7 +329,7 @@ private:
 
     // swallowing
     QStringList doNotManageList;
-    
+
     // colormap handling
     Colormap default_colormap;
     Colormap installed_colormap;

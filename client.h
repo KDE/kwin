@@ -133,7 +133,7 @@ public:
 
     bool isResizable() const;
 
-    void takeFocus();
+    void takeFocus( bool force = FALSE );
 
     void setMask( const QRegion & );
     const QRegion& getMask() const;
@@ -227,7 +227,7 @@ protected:
     bool configureRequest( XConfigureRequestEvent& e );
     bool propertyNotify( XPropertyEvent& e );
     bool clientMessage( XClientMessageEvent& e );
-    
+
 private:
     QSize sizeForWindowSize( const QSize&, bool ignore_height = FALSE ) const;
     void getWmNormalHints();

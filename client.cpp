@@ -594,9 +594,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     info->setDesktop( desk );
 
-    if (isInitial)
-    {
-       setMappingState( init_state );
+    if (isInitial) {
+	setMappingState( init_state );
     }
 
     bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
@@ -1861,7 +1860,7 @@ void Client::setShade( bool s )
 {
     if ( shaded == s )
 	return;
-    
+
     if ( isVisible() )
 	Events::raise( s ? Events::ShadeDown : Events::ShadeUp );
 
@@ -2032,10 +2031,10 @@ void Client::getWindowProtocols(){
   Puts the focus on this window. Clients should never calls this
   themselves, instead they should use Workspace::requestFocus().
  */
-void Client::takeFocus()
+void Client::takeFocus( bool force )
 {
-    if ( isMenu() )
-	return; // menus don't take focus
+    if ( !force && ( isMenu() || isDock() ) )
+	return; // menus and dock windows don't take focus if not forced
 
     if ( input )
 	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
