@@ -1414,16 +1414,7 @@ void Workspace::setActiveClient( Client* c )
     if ( !menubar && !has_full_screen)
     {
         // Find the menubar of the desktop
-        if ( desktops.isEmpty() ) {
-            for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-                if ( (*it)->isTopMenu() && (*it)->mainClient() == (*it) ) {
-                    menubar = *it;
-                    break;
-                }
-            }
-        }
-        else
-        {
+        if ( !desktops.isEmpty() ) {
             for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
                 if ( (*it)->isTopMenu() && (*it)->mainClient()->isDesktop() ) {
                     menubar = *it;
@@ -1431,6 +1422,19 @@ void Workspace::setActiveClient( Client* c )
                 }
             }
         }
+#if 0 // I don't like this - why to show a menubar belonging to another application?
+      // either show the app's menubar, or the desktop's one, otherwise none at all
+        else
+        {
+            for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+                if ( (*it)->isTopMenu() && (*it)->mainClient() == (*it)
+                    && (*it)->isOnDesktop( currentDesktop())) {
+                    menubar = *it;
+                    break;
+                }
+            }
+        }
+#endif
     }
 
     if ( menubar ) {
