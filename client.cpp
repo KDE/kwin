@@ -315,6 +315,10 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, (Window*) &transient_for ) )
 	transient_for = None;
+    
+    if ( mainClient()->isSticky() )
+	setSticky( TRUE );
+    
 }
 
 /*!
