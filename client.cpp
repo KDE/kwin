@@ -483,18 +483,29 @@ void Client::hideClient( bool hide )
  */
 bool Client::isMinimizable() const
     {
-    if( !wantsTabFocus() // SELI co NET::Utility? a proc wantsTabFocus() - skiptaskbar? ?
-        || ( isSpecialWindow() && !isOverride()))
+    if( isSpecialWindow() && !isOverride())
         return false;
-    if( isTransient())
-        { // transients may be minimized only if mainwindow is not shown
+    if( isTransient() && !wantsTabFocus())
+        { // #66868 - let other xmms windows be minimized when the mainwindow is minimized
+        bool shown_mainwindow = false;
         ClientList mainclients = mainClients();
         for( ClientList::ConstIterator it = mainclients.begin();
              it != mainclients.end();
              ++it )
+            {
             if( (*it)->isShown( true ))
-                return false;
+                shown_mainwindow = true;
+            }
+        if( !shown_mainwindow )
+            return true;
         }
+    // this is here because kicker's taskbar doesn't provide separate entries
+    // for windows with an explicitly given parent
+    // TODO perhaps this should be redone
+    if( transientFor() != NULL )
+        return false;
+    if( !wantsTabFocus()) // SELI - NET::Utility? why wantsTabFocus() - skiptaskbar? ?
+        return false;
     return true;
     }
 
