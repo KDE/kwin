@@ -1046,11 +1046,15 @@ void Workspace::clientHidden( Client* c )
 	    {
 	        if ((*it)->isVisible()) {
 	            requestFocus(*it);
-	            break;
+	            return;
 	        }
  	    }
         }	
     }
+    if ( desktop_client )
+	requestFocus( desktop_client );
+    else
+	focusToNull();
 }
 
 
