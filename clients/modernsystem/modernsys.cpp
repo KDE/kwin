@@ -4,27 +4,19 @@
 
 #include <kconfig.h>
 #include <kglobal.h>
-#include <qstring.h>
-#include "modernsys.h"
-#include <qapplication.h>
-#include <qcursor.h>
-#include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qtoolbutton.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
-#include <kapp.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
+#include "modernsys.h"
 
 #include "buttondata.h"
 #include "btnhighcolor.h"
 
 using namespace KWinInternal;
-
 
 
 static unsigned char iconify_bits[] = {
@@ -355,11 +347,11 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
             hb->addWidget(button[BtnSticky]);
             button[BtnSticky]->show();
         }
-        else if (c == 'I') {
+        else if (c == 'I' && isMinimizable()) {
             hb->addWidget(button[BtnMinimize]);
             button[BtnMinimize]->show();
         }
-        else if (c == 'A') {
+        else if (c == 'A' && isMaximizable()) {
             hb->addWidget(button[BtnMaximize]);
             button[BtnMaximize]->show();
         }
