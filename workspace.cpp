@@ -2137,9 +2137,9 @@ void Workspace::setCurrentDesktop( int new_desktop ){
           mapping done from front to back => less exposure events
         */
         Events::raise((Events::Event) (Events::DesktopChange+new_desktop));
-        
+
         ObscuringWindows obs_wins;
-        
+
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
             if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
                 obs_wins.create( *it );
@@ -2832,7 +2832,11 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
          for (l = clients.begin();l != clients.end();++l )
          {
             if ((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
-               !(*l)->isIconified() && (*l)->transientFor() == None && (*l) != c )
+               !(*l)->isIconified() 
+#if 0		
+		&& (*l)->transientFor() == None 
+#endif		
+		&& (*l) != c )
             {
                lx = (*l)->x();
                ly = (*l)->y();
