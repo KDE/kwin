@@ -639,8 +639,6 @@ Client::~Client()
     if (moveResizeMode)
        stopMoveResize();
     releaseWindow();
-    if( workspace()->activeClient() == this ) // this really shouldn't happen,
-        workspace()->setActiveClient( NULL ); // but just in case
     delete info;
     delete d;
 }
