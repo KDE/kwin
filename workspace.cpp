@@ -377,6 +377,7 @@ Workspace::~Workspace()
 	delete (*it);
 	XMapWindow( qt_xdisplay(), win );
     }
+    delete desktop_widget;
     delete tab_box;
     delete popup;
     delete keys;
@@ -772,6 +773,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 		    activateClient( tab_box->currentClient() );
  		}
 	    }
+	XFreeModifiermap(xmk);
     }
     if (control_grab){
 	XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
@@ -785,6 +787,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 		if ( tab_box->currentDesktop() != -1 )
 		    setCurrentDesktop( tab_box->currentDesktop() );
 	    }
+	XFreeModifiermap(xmk);
     }
     return FALSE;
 }
@@ -885,6 +888,7 @@ void Workspace::grabKey(KeySym keysym, unsigned int mod){
 	  XKeysymToKeycode(qt_xdisplay(), XK_Num_Lock))
 	NumLockMask = (1<<i);
     }
+    XFreeModifiermap(xmk);
   }
   XGrabKey(qt_xdisplay(),
 	   XKeysymToKeycode(qt_xdisplay(), keysym), mod,
