@@ -306,7 +306,7 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString* currentDec
 	QWidget* plugin = new QGroupBox( 1, Qt::Horizontal, "", pluginPage );
 	(void) new QLabel( 
 		i18n("<H3>No Configurable Options Available</H3>"
-	        "Sorry, no configurable options are available for the "
+	        "No configurable options are available for the "
 			"currently selected decoration."), plugin );
 
 	plugin->show();
