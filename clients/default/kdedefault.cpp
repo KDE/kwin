@@ -148,6 +148,7 @@ KDecoration* KDEDefaultHandler::createDecoration( KDecorationBridge* b )
 
 bool KDEDefaultHandler::reset( unsigned long changed )
 {
+	Q_UNUSED( changed )
 // FRAME
 	KDEDefault_initialized = false;
 	freePixmaps();
