@@ -63,7 +63,7 @@ public:
 
 	state &= mask; // for safety, clear all other bits
 	
-	if ( state & NET::Shaded )
+	if ( mask & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
 	if ( mask & NET::Max ) {
