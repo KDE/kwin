@@ -254,33 +254,35 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     // we don't want the window to be destroyed when we are destroyed
     XAddToSaveSet(qt_xdisplay(), win );
 
-    // overwrite Qt-defaults because we need SubstructureNotifyMask
-    XSelectInput( qt_xdisplay(), winId(),
-  		 KeyPressMask | KeyReleaseMask |
-  		 ButtonPressMask | ButtonReleaseMask |
-  		 KeymapStateMask |
-   		 ButtonMotionMask |
-   		 PointerMotionMask | // need this, too!
-  		 EnterWindowMask | LeaveWindowMask |
-  		 FocusChangeMask |
-  		 ExposureMask |
-		 StructureNotifyMask |
-		 SubstructureRedirectMask |
-		 SubstructureNotifyMask
-  		 );
-
-    XSelectInput( qt_xdisplay(), w,
-		  FocusChangeMask |
-		  PropertyChangeMask
-		  );
-
     // set the border width to 0
     XWindowChanges wc;
     wc.border_width = 0;
     XConfigureWindow( qt_xdisplay(), win, CWBorderWidth, &wc );
 
-    // finally, get the window
+    // get the window
     XReparentWindow( qt_xdisplay(), win, winId(), 0, 0 );
+
+//     // overwrite Qt-defaults because we need SubstructureNotifyMask
+//     XSelectInput( qt_xdisplay(), winId(),
+//   		 KeyPressMask | KeyReleaseMask |
+//   		 ButtonPressMask | ButtonReleaseMask |
+//   		 KeymapStateMask |
+//    		 ButtonMotionMask |
+//    		 PointerMotionMask | // need this, too!
+//   		 EnterWindowMask | LeaveWindowMask |
+//   		 FocusChangeMask |
+//   		 ExposureMask |
+// 		 StructureNotifyMask |
+// 		 SubstructureRedirectMask |
+// 		 SubstructureNotifyMask
+//   		 );
+
+    XSelectInput( qt_xdisplay(), w,
+		  FocusChangeMask |
+		  PropertyChangeMask |
+		  StructureNotifyMask
+		  );
+
 
     // install a passive grab to catch mouse button events
     XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
@@ -403,6 +405,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     : QWidget( parent, name, f | WStyle_Customize | WStyle_NoBorder )
 {
 
+    reparented = FALSE;
     wspace = ws;
     win = w;
     XWindowAttributes attr;
@@ -425,8 +428,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     shaded = FALSE;
     transient_for = None;
     is_sticky = FALSE;
-
-    ignore_unmap = 0;
 
     getIcons();
     getWindowProtocols();
@@ -499,9 +500,6 @@ void Client::manage( bool isMapped )
     if ( options->focusPolicyIsReasonable() )
 	workspace()->requestFocus( this );
 
-    // ignore unmap notify send by the xserver cause the window was already mapped
-    if ( isMapped )
-	ignore_unmap++;
 
 }
 
@@ -587,6 +585,9 @@ bool Client::windowEvent( XEvent * e)
 	    return TRUE; // hack for motif apps like netscape
 	setActive( FALSE );
 	break;
+    case ReparentNotify:
+	reparented = TRUE;
+	break;
     default:
 	break;
     }
@@ -622,12 +623,6 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
 bool Client::unmapNotify( XUnmapEvent& e )
 {
 
-    if ( ignore_unmap ) {
-	ignore_unmap--;
-	return TRUE;
-    }
-
-
     switch ( mappingState() ) {
     case IconicState:
 	// only react on sent events, all others are produced by us
@@ -635,13 +630,15 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	    withdraw();
 	break;
     case NormalState:
+	if ( !reparented )
+	    return TRUE; // we produced this event
 	if ( !windowWrapper()->isVisible() && !e.send_event )
 	    return TRUE; // this event was produced by us as well
 
 	// maybe we will be destroyed soon. Check this first.
 	XEvent ev;
 	QApplication::syncX();
-	if  ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
+	if  ( XCheckTypedWindowEvent (qt_xdisplay(), win, 
 				      DestroyNotify, &ev) ){
 	    workspace()->destroyClient( this );
 	    return TRUE;
@@ -873,8 +870,6 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	setMouseCursor( mode );
 	return;
     }
-
-    QRect oldGeom( geom );
 
     if ( !moveResizeMode )
     {

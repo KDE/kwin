@@ -120,7 +120,7 @@ public:
     void takeFocus();
 
     void setMask( const QRegion & );
-    
+
     // transparent stuff
     virtual void drawbound( const QRect& geom );
     virtual void clearbound();
@@ -196,7 +196,7 @@ private:
     void sendSynteticConfigureNotify();
     int state;
     bool active;
-    int ignore_unmap;
+    bool reparented;
     QRect original_geometry;
     QRect geom; //### TODO
     bool shaded;

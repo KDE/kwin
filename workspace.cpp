@@ -162,18 +162,18 @@ bool Workspace::workspaceEvent( XEvent * e )
 	if ( e->xunmap.event != e->xunmap.window ) // hide wm typical event from Qt
 	    return TRUE;
     case ReparentNotify:
+	c = findClient( e->xreparent.window );
+	if ( c )
+	    (void) c->windowEvent( e );
 	//do not confuse Qt with these events. After all, _we_ are the
 	//window manager who does the reparenting.
-	return true;
+	return TRUE;
     case DestroyNotify:
 	return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
-	qDebug("map request");
 	if ( e->xmaprequest.parent == root ) {
-	    qDebug("map request on root window");
 	    c = findClient( e->xmaprequest.window );
 	    if ( !c ) {
-		qDebug("didn't find a client, make a new one");
 		c = clientFactory( this, e->xmaprequest.window );
 		if ( root != qt_xrootwin() ) {
 		    // TODO may use QWidget:.create
