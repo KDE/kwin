@@ -80,7 +80,7 @@ private slots:
   void setAutoRaiseEnabled();
   void autoRaiseOnTog(bool);//CT 23Oct1998
   void clickRaiseOnTog(bool);
-	void changed() { setChanged(true); }
+	void changed() { emit KCModule::changed(true); }
 
 
 private:
@@ -128,7 +128,7 @@ public:
 private slots:
   void setMinimizeAnim( bool );
   void setMinimizeAnimSpeed( int );
-	void changed() { setChanged(true); }
+	void changed() { emit KCModule::changed(true); }
 
 private:
   int getMove( void );
@@ -186,7 +186,7 @@ private slots:
   //copied from kcontrol/konq/kwindesktop, aleXXX
   void setEBorders();
 
-  void changed() { setChanged(true); }
+  void changed() { emit KCModule::changed(true); }
 
 private:
 

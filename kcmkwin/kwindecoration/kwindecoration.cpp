@@ -250,7 +250,7 @@ void KWinDecorationModule::slotChangeDecoration( const QString & text)
 // This is the selection handler setting
 void KWinDecorationModule::slotSelectionChanged()
 {
-	setChanged(true);
+	emit KCModule::changed(true);
 }
 
 static const char* const border_names[ KDecorationDefines::BordersCount ] =
@@ -291,7 +291,7 @@ void KWinDecorationModule::slotBorderChanged( int size )
 {
         if( lBorder->isHidden())
             return;
-        setChanged( true );
+        emit KCModule::changed( true );
         QValueList< BorderSize > sizes;
         if( plugins->factory() != NULL )
             sizes = plugins->factory()->borderSizes();
@@ -456,7 +456,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
             border_size = BorderNormal;
         checkSupportedBorderSizes();
 
-	setChanged(false);
+	emit KCModule::changed(false);
 }
 
 
@@ -484,7 +484,7 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 	currentLibraryName = libName;
 
 	// We saved, so tell kcmodule that there have been  no new user changes made.
-	setChanged(false);
+	emit KCModule::changed(false);
 }
 
 

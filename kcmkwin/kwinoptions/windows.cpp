@@ -361,7 +361,7 @@ void KFocusConfig::load( void )
     setTraverseAll( config->readBoolEntry(KWIN_TRAVERSE_ALL, false ));
 
     config->setGroup("Desktops");
-    setChanged(false);
+    emit KCModule::changed(false);
 }
 
 void KFocusConfig::save( void )
@@ -416,7 +416,7 @@ void KFocusConfig::save( void )
             kapp->dcopClient()->attach();
         kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
     }
-    setChanged(false);
+    emit KCModule::changed(false);
 }
 
 void KFocusConfig::defaults()
@@ -429,7 +429,7 @@ void KFocusConfig::defaults()
     setTraverseAll( false );
     setRollOverDesktops(true);
     setShowPopupinfo(false);
-    setChanged(true);
+    emit KCModule::changed(true);
 }
 
 KAdvancedConfig::~KAdvancedConfig ()
@@ -590,7 +590,7 @@ void KAdvancedConfig::load( void )
 
     setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 2 ));
 
-    setChanged(false);
+    emit KCModule::changed(false);
 }
 
 void KAdvancedConfig::save( void )
@@ -620,7 +620,7 @@ void KAdvancedConfig::save( void )
             kapp->dcopClient()->attach();
         kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
     }
-    setChanged(false);
+    emit KCModule::changed(false);
 }
 
 void KAdvancedConfig::defaults()
@@ -631,7 +631,7 @@ void KAdvancedConfig::defaults()
     setElectricBorders(0);
     setElectricBorderDelay(150);
     setFocusStealing(2);
-    setChanged(true);
+    emit KCModule::changed(true);
 }
 
 void KAdvancedConfig::setEBorders()
@@ -991,7 +991,7 @@ void KMovingConfig::load( void )
     else setWindowSnapZone(v);
 
     OverlapSnap->setChecked(config->readBoolEntry("SnapOnlyWhenOverlapping",false));
-    setChanged(false);
+    emit KCModule::changed(false);
 }
 
 void KMovingConfig::save( void )
@@ -1051,7 +1051,7 @@ void KMovingConfig::save( void )
             kapp->dcopClient()->attach();
         kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
     }
-    setChanged(false);
+    emit KCModule::changed(false);
 }
 
 void KMovingConfig::defaults()
@@ -1069,7 +1069,7 @@ void KMovingConfig::defaults()
 
     setMinimizeAnim( true );
     setMinimizeAnimSpeed( 5 );
-    setChanged(true);
+    emit KCModule::changed(true);
 }
 
 int KMovingConfig::getBorderSnapZone() {

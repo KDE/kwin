@@ -42,7 +42,7 @@ public:
   void defaults();
 
 public slots:
-	void changed() { setChanged(true); }
+	void changed() { emit KCModule::changed(true); }
 
 private:
   QComboBox* coTiDbl;
