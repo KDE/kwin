@@ -8,16 +8,12 @@
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
-#include <qlayout.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <kglobal.h>
-#include <kapplication.h>
 #include <klocale.h>
 #include <qbitmap.h>
-#include <qtooltip.h>
-#include <qlabel.h>
 
 namespace Laptop {
 

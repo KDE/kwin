@@ -19,10 +19,7 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include <qcursor.h>
 #include <qpainter.h>
-#include <qtooltip.h>
-#include <qapplication.h>
 
 #include "WebButton.h"
 #include "Web.h"

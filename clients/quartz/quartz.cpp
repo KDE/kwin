@@ -20,12 +20,8 @@
 #include <klocale.h>
 #include <kpixmapeffect.h>
 #include <qbitmap.h>
-#include <qcursor.h>
 #include <qdrawutil.h>
 #include <qimage.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qtooltip.h>
 #include <qapplication.h>
 
 #include "quartz.h"

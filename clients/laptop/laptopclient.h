@@ -7,7 +7,6 @@
 #ifndef __KDECLIENT_H
 #define __KDECLIENT_H
 
-#include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include <kcommondecoration.h>

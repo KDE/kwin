@@ -20,8 +20,6 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include <qlabel.h>
-#include <qlayout.h>
 #include <qpainter.h>
 
 #include <kconfig.h>

@@ -16,7 +16,6 @@
 #ifndef __KDEGALLIUM_QUARTZ_H
 #define __KDEGALLIUM_QUARTZ_H
 
-#include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../lib/kcommondecoration.h"

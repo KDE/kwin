@@ -23,8 +23,6 @@
 #ifndef KWIN_WEB_H
 #define KWIN_WEB_H
 
-#include <qptrlist.h>
-
 #include "../../lib/kcommondecoration.h"
 #include "../../lib/kdecorationfactory.h"
 

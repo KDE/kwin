@@ -24,7 +24,6 @@
 
 #include <qwidget.h>
 #include <qbitmap.h>
-#include <qbutton.h>
 #include <klocale.h>
 
 #include "../../lib/kcommondecoration.h"
