@@ -30,6 +30,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobalaccel.h>
 #include <kkeynative.h>
 #include <kglobalsettings.h>
+#include <kiconeffect.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 
@@ -358,16 +359,24 @@ void TabBox::drawContents( QPainter * )
                     p.fillRect(x, y, r.width(), lineHeight, colorGroup().highlight());
 
                   // draw icon
+                  QPixmap icon;
                   if ( showMiniIcon )
                     {
                     if ( !(*it)->miniIcon().isNull() )
-                      p.drawPixmap( x+5, y + (lineHeight - iconWidth)/2, (*it)->miniIcon() );
+                      icon = (*it)->miniIcon();
                     }
                   else
                     if ( !(*it)->icon().isNull() )
-                      p.drawPixmap( x+5, y + (lineHeight - iconWidth)/2, (*it)->icon() );
+                      icon = (*it)->icon();
                     else if ( menu_pix )
-                      p.drawPixmap( x, y + (lineHeight - iconWidth)/2, *menu_pix );
+                      icon = *menu_pix;
+                
+                  if( !icon.isNull())
+                    {
+                    if( (*it)->isMinimized())
+                        KIconEffect::semiTransparent( icon );
+                    p.drawPixmap( x+5, y + (lineHeight - iconWidth)/2, icon );
+                    }
 
                   // generate text to display
                   QString s;
@@ -385,6 +394,23 @@ void TabBox::drawContents( QPainter * )
                   // draw text
                   if ( (*it) == currentClient() )
                     p.setPen(colorGroup().highlightedText());
+                  else if( (*it)->isMinimized())
+                    {
+                    QColor c1 = colorGroup().text();
+                    QColor c2 = colorGroup().background();
+                    // from kicker's TaskContainer::blendColors()
+                    int r1, g1, b1;
+                    int r2, g2, b2;
+
+                    c1.rgb( &r1, &g1, &b1 );
+                    c2.rgb( &r2, &g2, &b2 );
+
+                    r1 += (int) ( .5 * ( r2 - r1 ) );
+                    g1 += (int) ( .5 * ( g2 - g1 ) );
+                    b1 += (int) ( .5 * ( b2 - b1 ) );
+
+                    p.setPen(QColor( r1, g1, b1 ));
+                    }
                   else
                     p.setPen(colorGroup().text());
 
