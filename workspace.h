@@ -131,6 +131,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void placeSmart( Client* c, const QRect& area );
 
         QPoint adjustClientPosition( Client* c, QPoint pos );
+        QRect adjustClientSize( Client* c, QRect moveResizeGeom, int mode );
         void raiseClient( Client* c );
         void lowerClient( Client* c );
         void raiseClientRequest( Client* c, NET::RequestSource src, Time timestamp );

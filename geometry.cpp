@@ -270,19 +270,19 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
    //aleXXX 02Nov2000 added second snapping mode
     if (options->windowSnapZone || options->borderSnapZone )
         {
-        bool sOWO=options->snapOnlyWhenOverlapping;
-        QRect maxRect = clientArea(MovementArea, pos+c->rect().center(), c->desktop());
-        int xmin = maxRect.left();
-        int xmax = maxRect.right()+1;               //desk size
-        int ymin = maxRect.top();
-        int ymax = maxRect.bottom()+1;
+        const bool sOWO=options->snapOnlyWhenOverlapping;
+        const QRect maxRect = clientArea(MovementArea, pos+c->rect().center(), c->desktop());
+        const int xmin = maxRect.left();
+        const int xmax = maxRect.right()+1;               //desk size
+        const int ymin = maxRect.top();
+        const int ymax = maxRect.bottom()+1;
 
-        int cx(pos.x());
-        int cy(pos.y());
-        int cw(c->width());
-        int ch(c->height());
-        int rx(cx+cw);
-        int ry(cy+ch);                 //these don't change
+        const int cx(pos.x());
+        const int cy(pos.y());
+        const int cw(c->width());
+        const int ch(c->height());
+        const int rx(cx+cw);
+        const int ry(cy+ch);                 //these don't change
 
         int nx(cx), ny(cy);                         //buffers
         int deltaX(xmax);
@@ -371,6 +371,202 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
         pos = QPoint(nx, ny);
         }
     return pos;
+    }
+
+QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
+    {
+   //adapted from adjustClientPosition on 29May2004
+   //this function is called when resizing a window and will modify
+   //the new dimensions to snap to other windows/borders if appropriate
+    if ( options->windowSnapZone || options->borderSnapZone  )
+        {
+        const bool sOWO=options->snapOnlyWhenOverlapping;
+
+        const QRect maxRect = clientArea(MovementArea, c->rect().center(), c->desktop());
+        const int xmin = maxRect.left();
+        const int xmax = maxRect.right()+1;               //desk size
+        const int ymin = maxRect.top();
+        const int ymax = maxRect.bottom()+1;
+
+        const int cx(moveResizeGeom.left());
+        const int cy(moveResizeGeom.top());
+        const int rx(moveResizeGeom.right());
+        const int ry(moveResizeGeom.bottom());
+
+        int newcx(cx), newcy(cy);                         //buffers
+        int newrx(rx), newry(ry);
+        int deltaX(xmax);
+        int deltaY(ymax);   //minimum distance to other clients
+
+        int lx, ly, lrx, lry; //coords and size for the comparison client, l
+
+      // border snap
+        int snap = options->borderSnapZone; //snap trigger
+        if (snap)
+            {
+            deltaX = int(snap);
+            deltaY = int(snap);
+
+#define SNAP_BORDER_TOP \
+            if ((sOWO?(newcy<ymin):true) && (QABS(ymin-newcy)<deltaY)) \
+              { \
+                deltaY = QABS(ymin-newcy); \
+                newcy = ymin; \
+               }
+
+#define SNAP_BORDER_BOTTOM \
+            if ((sOWO?(newry>ymax):true) && (QABS(ymax-newry)<deltaY)) \
+              { \
+                deltaY = QABS(ymax-newcy); \
+                newry = ymax; \
+               }
+
+#define SNAP_BORDER_LEFT \
+            if ((sOWO?(newcx<xmin):true) && (QABS(xmin-newcx)<deltaX)) \
+              { \
+                deltaX = QABS(xmin-newcx); \
+                newcx = xmin; \
+               }
+
+#define SNAP_BORDER_RIGHT \
+            if ((sOWO?(newrx>xmax):true) && (QABS(xmax-newrx)<deltaX)) \
+              { \
+                deltaX = QABS(xmax-newrx); \
+                newrx = xmax; \
+               }
+                     switch ( mode )
+                      {
+                      case PositionBottomRight:
+                        SNAP_BORDER_BOTTOM
+                        SNAP_BORDER_RIGHT
+                        break;
+                      case PositionRight:
+                        SNAP_BORDER_RIGHT
+                        break;
+                      case PositionBottom:
+                        SNAP_BORDER_BOTTOM
+                        break;
+                      case PositionTopLeft:
+                        SNAP_BORDER_TOP
+                        SNAP_BORDER_LEFT
+                        break;
+                      case PositionLeft:
+                        SNAP_BORDER_LEFT
+                        break;
+                      case PositionTop:
+                        SNAP_BORDER_TOP
+                        break;
+                      case PositionTopRight:
+                        SNAP_BORDER_TOP
+                        SNAP_BORDER_RIGHT
+                        break;
+                      case PositionBottomLeft:
+                        SNAP_BORDER_BOTTOM
+                        SNAP_BORDER_LEFT
+                        break;
+                      default:
+                        assert( false );
+                        break;
+                      }
+
+
+            }
+
+      // windows snap
+        snap = options->windowSnapZone;
+        if (snap)
+            {
+            deltaX = int(snap);
+            deltaY = int(snap);
+            QValueList<Client *>::ConstIterator l;
+            for (l = clients.begin();l != clients.end();++l )
+                {
+                if ((*l)->isOnDesktop(currentDesktop()) &&
+                   !(*l)->isMinimized()
+                    && (*l) != c )
+                    {
+                    lx = (*l)->x();
+                    ly = (*l)->y();
+                    lrx = lx + (*l)->width();
+                    lry = ly + (*l)->height();
+
+#define WITHIN_HEIGHT ((( newcy <= lry ) && ( newcy  >= ly  ))  || \
+                         (( newry >= ly  ) && ( newry  <= lry ))  || \
+                         (( newcy <= ly  ) && ( newry >= lry  )) )
+
+#define WITHIN_WIDTH  ( (( cx <= lrx ) && ( cx  >= lx  ))  || \
+                         (( rx >= lx  ) && ( rx  <= lrx ))  || \
+                         (( cx <= lx  ) && ( rx >= lrx  )) )
+
+#define SNAP_WINDOW_TOP  if ( (sOWO?(newcy<lry):true) \
+                  && WITHIN_WIDTH  \
+                  && (QABS( lry - newcy ) < deltaY) ) {  \
+                  deltaY = QABS( lry - newcy ); \
+                  newcy=lry; \
+                  }
+
+#define SNAP_WINDOW_BOTTOM  if ( (sOWO?(newry>ly):true)  \
+                     && WITHIN_WIDTH  \
+                     && (QABS( ly - newry ) < deltaY) ) {  \
+                     deltaY = QABS( ly - newry );  \
+                     newry=ly;  \
+                     }
+
+#define SNAP_WINDOW_LEFT  if ( (sOWO?(newcx<lrx):true)  \
+                   && WITHIN_HEIGHT  \
+                   && (QABS( lrx - newcx ) < deltaX)) {  \
+                   deltaX = QABS( lrx - newcx );  \
+                   newcx=lrx;  \
+                   }
+
+#define SNAP_WINDOW_RIGHT  if ( (sOWO?(newrx>lx):true)  \
+                    && WITHIN_HEIGHT  \
+                    && (QABS( lx - newrx ) < deltaX))  \
+                    {  \
+                    deltaX = QABS( lx - newrx );  \
+                    newrx=lx;  \
+                    }
+
+                    switch ( mode )
+                      {
+                      case PositionBottomRight:
+                        SNAP_WINDOW_BOTTOM
+                        SNAP_WINDOW_RIGHT
+                        break;
+                      case PositionRight:
+                        SNAP_WINDOW_RIGHT
+                        break;
+                      case PositionBottom:
+                        SNAP_WINDOW_BOTTOM
+                        break;
+                      case PositionTopLeft:
+                        SNAP_WINDOW_TOP
+                        SNAP_WINDOW_LEFT
+                        break;
+                      case PositionLeft:
+                        SNAP_WINDOW_LEFT
+                        break;
+                      case PositionTop:
+                        SNAP_WINDOW_TOP
+                        break;
+                      case PositionTopRight:
+                        SNAP_WINDOW_TOP
+                        SNAP_WINDOW_RIGHT
+                        break;
+                      case PositionBottomLeft:
+                        SNAP_WINDOW_BOTTOM
+                        SNAP_WINDOW_LEFT
+                        break;
+                      default:
+                        assert( false );
+                        break;
+                      }
+                    }
+                }
+            }
+       moveResizeGeom = QRect(QPoint(newcx, newcy), QPoint(newrx, newry));
+       }
+    return moveResizeGeom;
     }
 
 /*!
@@ -1968,7 +2164,10 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                 assert( false );
                 break;
             }
-        // TODO snap
+
+        // adjust new size to snap to other windows/borders
+        moveResizeGeom = workspace()->adjustClientSize( this, moveResizeGeom, mode );
+
         // NOTE: This is duped in checkUnrestrictedMoveResize().
         if( moveResizeGeom.bottom() < desktopArea.top() + top_marge )
             moveResizeGeom.setBottom( desktopArea.top() + top_marge );
