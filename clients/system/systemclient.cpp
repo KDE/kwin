@@ -256,6 +256,7 @@ void SystemClient::slotReset()
     create_pixmaps();
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
+    repaint();
     button[0]->reset();
     button[1]->reset();
     button[2]->reset();
