@@ -48,7 +48,7 @@ protected:
 
 private slots:
     void deferredResize();
-    
+
 private:
     WId win;
     Time lastMouseEventTime;
@@ -194,6 +194,7 @@ public slots:
     void toggleSticky();
     void contextHelp();
     void autoRaise();
+    void autoRaiseTimerDone();
 
 protected:
     void paintEvent( QPaintEvent * );

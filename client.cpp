@@ -1960,7 +1960,7 @@ bool Client::x11Event( XEvent * e)
 	     && workspace()->topClientOnDesktop() != this ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = new QTimer( this );
-	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
+	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaiseTimerDone() ) );
 	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
 	}
 	
@@ -2808,6 +2808,23 @@ void Client::autoRaise()
     workspace()->raiseClient( this );
     delete autoRaiseTimer;
     autoRaiseTimer = 0;
+}
+
+void Client::autoRaiseTimerDone()
+{
+    // ensure there's no popup menu open
+    if ( XGrabPointer( qt_xdisplay(), workspace()->rootWin(), TRUE,
+		       (uint)(ButtonPressMask | ButtonReleaseMask |
+			      ButtonMotionMask | EnterWindowMask |
+			      LeaveWindowMask | PointerMotionMask),
+		       GrabModeAsync, GrabModeAsync,
+		       None, None, kwin_time ) == GrabSuccess ) {
+	XUngrabPointer( qt_xdisplay(), kwin_time);
+	autoRaise();
+    } else {
+	// if there is, try again
+	autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
+    }
 }
 
 /*!
