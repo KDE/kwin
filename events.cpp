@@ -16,62 +16,59 @@ return; // seems like knotify is unusable
     QString event;
     switch ( e ) {
     case Close:
-	event = "close";
+	event = "Window Close";
 	break;
     case Iconify:
-	event = "iconify";
+	event = "Window Iconify";
 	break;
     case DeIconify:
-	event = "deiconify";
+	event = "Window DeIconify";
 	break;
     case Maximize:
-	event = "maximize";
+	event = "Window Maximize";
 	break;
     case UnMaximize:
-	event = "unmaximize";
+	event = "Window UnMaximize";
 	break;
     case Sticky:
-	event = "sticky";
+	event = "Window Sticky";
 	break;
     case UnSticky:
-	event = "unsticky";
+	event = "Window UnSticky";
 	break;
     case New:
-	event = "new";
+	event = "Window New";
 	break;
     case Delete:
-	event = "delete";
+	event = "Window Delete";
 	break;
     case TransNew:
-	event = "transnew";
+	event = "Window TransNew";
 	break;
     case TransDelete:
-	event = "transdelete";
+	event = "Window TransDelete";
 	break;
     case ShadeUp:
-	event = "shadeup";
+	event = "Window ShadeUp";
 	break;
     case ShadeDown:
-	event = "shadedown";
+	event = "Window ShadeDown";
 	break;
     case MoveStart:
-	event = "movestart";
+	event = "Window Move Start";
 	break;
     case MoveEnd:
-	event = "moveend";
+	event = "Window Move End";
 	break;
     case ResizeStart:
-	event = "resizestart";
+	event = "Window Resize Start";
 	break;
     case ResizeEnd:
-	event = "resizeend";
+	event = "Window Resize End";
 	break;
     }
-
-    // The notifications are called, but are not necessarily hooked
-    // to anything (until the user sets it in the control panel)
-//    if ( !event )
-//	return;
+    if ( !event )
+	return;
     
 
     if ( !KNotifyClient::event( event ) )
