@@ -204,15 +204,13 @@ QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
         case TitleGradient3:
             return KDecoration::options()->color(ColorTitleBar, active);
             break;
-        case TitleHighlightTop:
-        case SideHighlightLeft:
+        case ShadeTitleLight:
             return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
-                    Qt::white, active?150:160);
+                                    Qt::white, active?150:160);
             break;
-        case SideHighlightRight:
-        case SideHighlightBottom:
+        case ShadeTitleDark:
             return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
-                    Qt::black, active?150:160);
+                                    Qt::black, active?150:160);
             break;
         case Border:
             return KDecoration::options()->color(ColorFrame, active);
@@ -228,55 +226,215 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
     if (m_pixmaps[toolWindow][active][type])
         return *m_pixmaps[toolWindow][active][type];
 
+    QPixmap *pm = 0;
+
     switch (type) {
         case TitleBarTileTop:
         case TitleBarTile:
         {
-            const int topHeight = 2;
-            const int topGradientHeight = 4;
-
-            int h = (toolWindow ? m_titleHeightTool : m_titleHeight) + topHeight;
-
-            QPixmap gradient(1, h); // TODO: test width of 5 or so for performance
-
+            const int titleBarTileHeight = (toolWindow ? m_titleHeightTool : m_titleHeight) + 2;
+            // gradient used as well in TitleBarTileTop as TitleBarTile
+            const int gradientHeight = 2 + titleBarTileHeight-1;
+            QPixmap gradient(1, gradientHeight);
             QPainter painter(&gradient);
-
             KPixmap tempPixmap;
-            tempPixmap.resize(1, topGradientHeight);
+            tempPixmap.resize(1, 4);
             KPixmapEffect::gradient(tempPixmap,
                                     getColor(TitleGradient1, active),
                                     getColor(TitleGradient2, active),
                                     KPixmapEffect::VerticalGradient);
             painter.drawPixmap(0,0, tempPixmap);
-
-            tempPixmap.resize(1, h-topGradientHeight);
+            tempPixmap.resize(1, gradientHeight-4);
             KPixmapEffect::gradient(tempPixmap,
                                     getColor(TitleGradient2, active),
                                     getColor(TitleGradient3, active),
                                     KPixmapEffect::VerticalGradient);
-            painter.drawPixmap(0,topGradientHeight, tempPixmap);
+            painter.drawPixmap(0,4, tempPixmap);
             painter.end();
 
-            QPixmap *pixmap;
+            // actual titlebar tiles
             if (type == TitleBarTileTop) {
-                pixmap = new QPixmap(1, topHeight);
-                painter.begin(pixmap);
-                painter.drawPixmap(0, 0, gradient);
+                pm = new QPixmap(1, 4);
+                painter.begin(pm);
+                // contour
+                painter.setPen(getColor(WindowContour, active) );
+                painter.drawPoint(0,0);
+                // top highlight
+                painter.setPen(getColor(ShadeTitleLight, active) );
+                painter.drawPoint(0,1);
+                // gradient
+                painter.drawPixmap(0, 2, gradient);
                 painter.end();
             } else {
-                pixmap = new QPixmap(1, h-topHeight);
-                painter.begin(pixmap);
-                painter.drawPixmap(0, 0, gradient, 0,topHeight);
+                pm = new QPixmap(1, titleBarTileHeight);
+                painter.begin(pm);
+                painter.drawPixmap(0, 0, gradient, 0,2);
+                painter.setPen(getColor(TitleGradient3, active) );
+                painter.drawPoint(0,titleBarTileHeight-1);
                 painter.end();
             }
-
-            m_pixmaps[toolWindow][active][type] = pixmap;
-            return *pixmap;
 
             break;
         }
 
+        case TitleBarLeft:
+        {
+            const int w = m_borderSize;
+            const int h = 4 + (toolWindow ? m_titleHeightTool : m_titleHeight) + 2;
+
+            pm = new QPixmap(w, h);
+            QPainter painter(pm);
+
+            painter.drawTiledPixmap(0,0, w, 4, pixmap(TitleBarTileTop, active, toolWindow) );
+            painter.drawTiledPixmap(0,4, w, h-4, pixmap(TitleBarTile, active, toolWindow) );
+
+            painter.setPen(getColor(WindowContour, active) );
+            painter.drawLine(0,0, 0,h);
+            painter.drawPoint(1,1);
+
+            const QColor highlightTitleLeft = alphaBlendColors(getColor(TitleGradient3, active),
+                    getColor(ShadeTitleLight, active), 150);
+            painter.setPen(highlightTitleLeft);
+            painter.drawLine(1,2, 1,h);
+
+            // outside the region normally masked by doShape
+            painter.setPen(QColor(0,0,0) );
+            painter.drawLine(0, 0, 1, 0 );
+            painter.drawPoint(0, 1);
+
+            break;
+        }
+
+        case TitleBarRight:
+        {
+            const int w = m_borderSize;
+            const int h = 4 + (toolWindow ? m_titleHeightTool : m_titleHeight) + 2;
+
+            pm = new QPixmap(w, h);
+            QPainter painter(pm);
+
+            painter.drawTiledPixmap(0,0, w, 4, pixmap(TitleBarTileTop, active, toolWindow) );
+            painter.drawTiledPixmap(0,4, w, h-4, pixmap(TitleBarTile, active, toolWindow) );
+
+            painter.setPen(getColor(WindowContour, active) );
+            painter.drawLine(w-1,0, w-1,h);
+            painter.drawPoint(w-2,1);
+
+            const QColor highlightTitleRight = alphaBlendColors(getColor(TitleGradient3, active),
+                    getColor(ShadeTitleDark, active), 150);
+            painter.setPen(highlightTitleRight);
+            painter.drawLine(w-2,2, w-2,h);
+
+            // outside the region normally masked by doShape
+            painter.setPen(QColor(0,0,0) );
+            painter.drawLine(w-2, 0, w-1, 0 );
+            painter.drawPoint(w-1, 1);
+
+            break;
+        }
+
+        case BorderLeftTile:
+        {
+            const int w = m_borderSize;
+
+            pm = new QPixmap(w, 1);
+            QPainter painter(pm);
+            painter.setPen(getColor(WindowContour, active) );
+            painter.drawPoint(0, 0);
+            painter.setPen(
+                    alphaBlendColors(getColor(Border, active),
+                                     getColor(ShadeTitleLight, active), 150) );
+            painter.drawPoint(1, 0);
+            painter.setPen(getColor(Border, active) );
+            painter.drawLine(2,0, w-1,0);
+
+            painter.end();
+
+            break;
+        }
+
+        case BorderRightTile:
+        {
+            const int w = m_borderSize;
+
+            pm = new QPixmap(w, 1);
+            QPainter painter(pm);
+            painter.setPen(getColor(Border, active) );
+            painter.drawLine(0,0, w-3,0);
+            painter.setPen(
+                    alphaBlendColors(getColor(Border, active),
+                                     getColor(ShadeTitleDark, active), 150) );
+            painter.drawPoint(w-2, 0);
+            painter.setPen(getColor(WindowContour, active) );
+            painter.drawPoint(w-1, 0);
+            painter.end();
+
+            break;
+        }
+
+        case BorderBottomLeft:
+        {
+            const int w = m_borderSize;
+            const int h = m_borderSize;
+
+            pm = new QPixmap(w, h);
+            QPainter painter(pm);
+            painter.drawTiledPixmap(0,0,w,h, pixmap(BorderBottomTile, active, toolWindow) );
+            painter.setPen(getColor(WindowContour, active) );
+            painter.drawLine(0,0, 0,h);
+            painter.setPen(
+                    alphaBlendColors(getColor(Border, active),
+                                     getColor(ShadeTitleLight, active), 150) );
+            painter.drawLine(1,0, 1,h-2);
+
+            painter.end();
+
+            break;
+        }
+
+        case BorderBottomRight:
+        {
+            const int w = m_borderSize;
+            const int h = m_borderSize;
+
+            pm = new QPixmap(w, h);
+            QPainter painter(pm);
+            painter.drawTiledPixmap(0,0,w,h, pixmap(BorderBottomTile, active, toolWindow) );
+            painter.setPen(getColor(WindowContour, active) );
+            painter.drawLine(w-1,0, w-1,h);
+            painter.setPen(
+                    alphaBlendColors(getColor(Border, active),
+                                     getColor(ShadeTitleDark, active), 150) );
+            painter.drawLine(w-2,0, w-2,h-2);
+
+            painter.end();
+
+            break;
+        }
+
+        case BorderBottomTile:
+        default:
+        {
+            const int h = m_borderSize;
+
+            pm = new QPixmap(1, m_borderSize);
+            QPainter painter(pm);
+            painter.setPen(getColor(Border, active) );
+            painter.drawLine(0,0, 0,h-3);
+            painter.setPen(
+                    alphaBlendColors(getColor(Border, active),
+                                     getColor(ShadeTitleDark, active), 150) );
+            painter.drawPoint(0, h-2);
+            painter.setPen(getColor(WindowContour, active) );
+            painter.drawPoint(0, h-1);
+            painter.end();
+
+            break;
+        }
     }
+
+    m_pixmaps[toolWindow][active][type] = pm;
+    return *pm;
 }
 
 const QBitmap &PlastikHandler::buttonBitmap(ButtonIcon type, const QSize &size, bool toolWindow)

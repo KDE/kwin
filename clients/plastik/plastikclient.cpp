@@ -110,11 +110,11 @@ int PlastikClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const 
 
         case LM_TitleEdgeBottom:
         {
-            if (respectWindowState && maximized) {
-                return 1;
-            } else {
+//             if (respectWindowState && maximized) {
+//                 return 1;
+//             } else {
                 return 2;
-            }
+//             }
         }
 
         case LM_TitleEdgeLeft:
@@ -247,27 +247,6 @@ void PlastikClient::paintEvent(QPaintEvent *e)
 
     QPainter painter(widget() );
 
-    QRegion mask;
-
-    // colors...
-    const QColor windowContour = Handler()->getColor(WindowContour, active);
-    const QColor deco = Handler()->getColor(TitleGradient3, active);
-    const QColor border = Handler()->getColor(Border, active);
-    const QColor highlightTop = Handler()->getColor(TitleHighlightTop, active);
-    const QColor highlightTitleLeft = alphaBlendColors(deco,
-            Handler()->getColor(SideHighlightLeft, active), 150);
-    const QColor highlightTitleRight = alphaBlendColors(deco,
-            Handler()->getColor(SideHighlightRight, active), 150);
-    const QColor highlightLeft = alphaBlendColors(border,
-            Handler()->getColor(SideHighlightLeft, active), 150);
-    const QColor highlightRight = alphaBlendColors(border,
-            Handler()->getColor(SideHighlightRight, active), 150);
-    const QColor highlightBottom = alphaBlendColors(border,
-            Handler()->getColor(SideHighlightBottom, active), 150);
-    const QColor filledCorner = QColor(0,0,0);
-
-
-
     // often needed coordinates
     QRect r = widget()->rect();
 
@@ -287,10 +266,6 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     const int borderBottomTop = r_y2-borderBottom+1;
     const int borderLeftRight = r_x+borderLeft-1;
     const int borderRightLeft = r_x2-borderRight+1;
-    const int titleEdgeLeftRight = r_x+titleEdgeLeft-1;
-    const int titleEdgeRightLeft = r_x2-titleEdgeRight+1;
-    const int titleEdgeTopBottom = r_y+titleEdgeTop;
-    const int titleEdgeBottomTop = r_y+titleEdgeTop+titleHeight+1;
     const int titleEdgeBottomBottom = r_y+titleEdgeTop+titleHeight+titleEdgeBottom-1;
 
     const int sideHeight = borderBottomTop-titleEdgeBottomBottom-1;
@@ -301,50 +276,13 @@ void PlastikClient::paintEvent(QPaintEvent *e)
 
     QRect tempRect;
 
-    // Draw the window contour
-    painter.setPen(windowContour );
-    if (titleEdgeTop > 0) {
-        painter.drawLine(r_x+2, r_y, r_x2-2, r_y );
-        painter.drawPoint(r_x+1, r_y+1 );
-        painter.drawPoint(r_x2-1, r_y+1 );
-        painter.drawLine(r_x, r_y+2, r_x, titleEdgeTopBottom );
-        painter.drawLine(r_x2, r_y+2, r_x2, titleEdgeTopBottom );
-    }
-    if(borderLeft > 0 && sideHeight > 0) {
-        painter.drawLine(r_x, Rtitle.top()/*titleEdgeBottomBottom+1*/,
-                         r_x, r_y2-1 );
-    }
-    if(borderRight > 0 && sideHeight > 0) {
-        painter.drawLine(r_x2, Rtitle.top()/*titleEdgeBottomBottom+1*/,
-                         r_x2, r_y2-1 );
-    }
-    if(borderBottom > 0) {
-        painter.drawLine(r_x+1, r_y2,
-                         r_x2-1, r_y2 );
-    }
-
     // topSpacer
     if(titleEdgeTop > 0)
     {
-        painter.setPen(highlightTop );
-        painter.drawLine(r_x+2, r_y+1, r_x2-2, r_y+1 );
-        // highlight...
-        painter.setPen(highlightTitleLeft);
-        painter.drawLine(r_x+1, r_y+2, r_x+1, titleEdgeTopBottom );
-        painter.setPen(highlightTitleRight);
-        painter.drawLine(r_x2-1, r_y+2, r_x2-1, titleEdgeTopBottom );
-
-        tempRect.setRect(r_x+2, r_y+2, r_w-2*2, titleEdgeTop-2 );
+        tempRect.setRect(r_x+2, r_y, r_w-2*2, titleEdgeTop );
         if (tempRect.isValid() && region.contains(tempRect) ) {
             painter.drawTiledPixmap(tempRect, handler->pixmap(TitleBarTileTop, active, toolWindow) );
         }
-
-        // outside the region normally masked by doShape
-        painter.setPen(filledCorner);
-        painter.drawLine(r_x, r_y, r_x+1, r_y );
-        painter.drawPoint(r_x, r_y+1);
-        painter.drawLine(r_x2, r_y, r_x2-1, r_y );
-        painter.drawPoint(r_x2, r_y+1);
     }
 
     // leftTitleSpacer
@@ -352,26 +290,25 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     int titleMarginRight = 0;
     if(titleEdgeLeft > 0)
     {
-        painter.setPen(highlightTitleLeft);
-        painter.drawLine(r_x+1, Rtitle.top(),
-                         r_x+1, Rtitle.bottom() );
-
-        titleMarginLeft = 2;
+        tempRect.setRect(r_x, r_y, borderLeft, titleEdgeTop+titleHeight+titleEdgeBottom);
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TitleBarLeft, active, toolWindow) );
+            titleMarginLeft = borderLeft;
+        }
     }
 
     // rightTitleSpacer
     if(titleEdgeRight > 0)
     {
-        painter.setPen(highlightTitleRight);
-        painter.drawLine(r_x2-1, Rtitle.top(),
-                         r_x2-1, Rtitle.bottom() );
-
-        titleMarginRight = 2;
+        tempRect.setRect(borderRightLeft, r_y, borderRight, titleEdgeTop+titleHeight+titleEdgeBottom);
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TitleBarRight, active, toolWindow) );
+            titleMarginRight = borderRight;
+        }
     }
 
     // titleSpacer
     const QPixmap &caption = captionPixmap();
-//     QPixmap *titleBfrPtr = active ? aCaptionBuffer : iCaptionBuffer;
     if(Rtitle.width() > 0)
     {
         m_captionRect = captionRect(); // also update m_captionRect!
@@ -395,104 +332,47 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         }
 
     }
-//     titleBfrPtr = 0;
-
-    // decoSpacer
-    if(titleEdgeBottom > 0)
-    {
-        int l;
-        if(borderLeft != 0)
-            l = r_x+2;
-        else
-            l = r_x;
-        int r;
-        if(borderRight != 0)
-            r = r_x2-2;
-        else
-            r = r_x2;
-
-        painter.setPen(deco );
-        painter.drawLine(l, titleEdgeBottomBottom-1, r, titleEdgeBottomBottom-1 );
-        painter.drawLine(l, titleEdgeBottomBottom, r, titleEdgeBottomBottom );
-        if(borderLeft != 0) {
-            painter.setPen(highlightTitleLeft);
-            painter.drawLine(r_x+1, titleEdgeBottomTop,
-                            r_x+1, titleEdgeBottomBottom );
-        }
-        if(borderRight != 0) {
-        painter.setPen(highlightTitleRight);
-        painter.drawLine(r_x2-1, titleEdgeBottomTop,
-                         r_x2-1, titleEdgeBottomBottom );
-        }
-    }
 
     // leftSpacer
     if(borderLeft > 0 && sideHeight > 0)
     {
-        painter.setPen(highlightLeft );
-        painter.drawLine(r_x+1, titleEdgeBottomBottom+1,
-                            r_x+1, borderBottomTop-1 );
-        if(borderLeft > 2) {
-            tempRect.setCoords(r_x+2, titleEdgeBottomBottom+1,
-                            borderLeftRight, borderBottomTop-1 );
-            painter.fillRect(tempRect, border );
+        tempRect.setCoords(r_x, titleEdgeBottomBottom+1, borderLeftRight, borderBottomTop);
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, handler->pixmap(BorderLeftTile, active, toolWindow) );
         }
     }
 
     // rightSpacer
     if(borderRight > 0 && sideHeight > 0)
     {
-        painter.setPen(highlightRight );
-        painter.drawLine(r_x2-1, titleEdgeBottomBottom+1,
-                         r_x2-1, borderBottomTop-1 );
-        if(borderRight > 2) {
-            tempRect.setCoords(borderRightLeft, titleEdgeBottomBottom+1,
-                               r_x2-2, borderBottomTop-1 );
-            painter.fillRect(tempRect, border );
+        tempRect.setCoords(borderRightLeft, titleEdgeBottomBottom+1, r_x2, borderBottomTop);
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, handler->pixmap(BorderRightTile, active, toolWindow) );
         }
     }
 
     // bottomSpacer
     if(borderBottom > 0)
     {
-        if(borderLeft != 0) {
-            painter.setPen(highlightLeft );
-            painter.drawLine(r_x+1, borderBottomTop,
-                            r_x+1, r_y2-2 );
-            // anti-alias for the window contour...
-            painter.setPen(alphaBlendColors(border, windowContour, 110) );
-            painter.drawPoint(r_x+1, r_y2-1);
+        int l = r_x;
+        int r = r_x2;
+
+        tempRect.setRect(r_x, borderBottomTop, borderLeft, borderBottom);
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, handler->pixmap(BorderBottomLeft, active, toolWindow) );
+            l = tempRect.right()+1;
         }
-        if(borderRight != 0) {
-            painter.setPen(highlightRight );
-            painter.drawLine(r_x2-1, borderBottomTop,
-                            r_x2-1, r_y2-2 );
-            // anti-alias for the window contour...
-            painter.setPen(alphaBlendColors(border, windowContour, 110) );
-            painter.drawPoint(r_x2-1, r_y2-1);
+
+        tempRect.setRect(borderRightLeft, borderBottomTop, borderLeft, borderBottom);
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, handler->pixmap(BorderBottomRight, active, toolWindow) );
+            r = tempRect.left()-1;
         }
-        // outside the region normally masked by doShape
-        painter.setPen(filledCorner);
-        painter.drawPoint(r_x, r_y2);
-        painter.drawPoint(r_x2, r_y2);
 
-        int l;
-        if(borderLeft != 0)
-            l = r_x+2;
-        else
-            l = r_x;
-        int r;
-        if(borderRight != 0)
-            r = r_x2-2;
-        else
-            r = r_x2;
-
-        painter.setPen(highlightBottom );
-        painter.drawLine(l, r_y2-1,
-                         r, r_y2-1 );
-
-        tempRect.setCoords(l, borderBottomTop, r, r_y2-2);
-        painter.fillRect(tempRect, border );
+        tempRect.setCoords(l, borderBottomTop, r, r_y2);
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, handler->pixmap(BorderBottomTile, active, toolWindow) );
+        }
     }
 }
 
@@ -502,6 +382,7 @@ QRect PlastikClient::captionRect() const
     QRect r = widget()->rect();
 
     const int titleHeight = layoutMetric(LM_TitleHeight);
+    const int titleEdgeBottom = layoutMetric(LM_TitleEdgeBottom);
     const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
     const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
     const int marginLeft = layoutMetric(LM_TitleBorderLeft);
@@ -532,7 +413,7 @@ QRect PlastikClient::captionRect() const
         tX = titleLeft+titleWidth-caption.width();
     }
 
-    return QRect(tX, r.top()+titleEdgeTop, tW, titleHeight);
+    return QRect(tX, r.top()+titleEdgeTop, tW, titleHeight+titleEdgeBottom);
 }
 
 void PlastikClient::updateCaption()
@@ -598,7 +479,7 @@ const QPixmap &PlastikClient::captionPixmap() const
     int captionWidth  = fm.width(c);
     int captionHeight = fm.height();
 
-    const int th  = layoutMetric(LM_TitleHeight, false);
+    const int th  = layoutMetric(LM_TitleHeight, false) + layoutMetric(LM_TitleEdgeBottom, false);
 
     QPainter painter;
 

@@ -35,10 +35,8 @@ enum ColorType {
     TitleGradient1, // top
     TitleGradient2,
     TitleGradient3, // bottom
-    TitleHighlightTop,
-    SideHighlightLeft,
-    SideHighlightRight,
-    SideHighlightBottom,
+    ShadeTitleLight,
+    ShadeTitleDark,
     Border,
     TitleFont
 };
@@ -46,6 +44,13 @@ enum ColorType {
 enum Pixmaps {
     TitleBarTileTop=0,
     TitleBarTile,
+    TitleBarLeft,
+    TitleBarRight,
+    BorderLeftTile,
+    BorderRightTile,
+    BorderBottomTile,
+    BorderBottomLeft,
+    BorderBottomRight,
     NumPixmaps
 };
 
@@ -97,7 +102,6 @@ private:
     void readConfig();
 
     bool m_titleShadow;
-    bool m_shrinkBorders;
     bool m_animateButtons;
     bool m_menuClose;
     bool m_reverse;
