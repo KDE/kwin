@@ -696,7 +696,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
       // use the _KDE_NET_WM_USER_CREATION_TIME trick.
       // Otherwise, refuse activation of a window
       // from already running application if this application
-      // is not the active one.
+      // is not the active one (unless focus stealing prevention is turned off).
         Client* act = workspace()->mostRecentlyActivatedClient();
         if( act != NULL && !belongToSameApplication( act, this, true ))
             {
@@ -717,7 +717,8 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
                 if( workspace()->findClient( SameApplicationActiveHackPredicate( this )))
                     first_window = false;
                 }
-            if( !first_window )
+            // don't refuse if focus stealing prevention is turned off
+            if( !first_window && rules()->checkFSP( options->focusStealingPreventionLevel ) > 0 )
                 {
                 kdDebug( 1212 ) << "User timestamp, already exists:" << 0 << endl;
                 return 0; // refuse activation
