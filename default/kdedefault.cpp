@@ -605,16 +605,19 @@ void KDEClient::resizeEvent( QResizeEvent* e)
     Client::resizeEvent( e );
 
     doShape();
+    bool titlebar_moved = FALSE;
     if ( e->oldSize().width() != width() ) {
+	QRect t = titlebar->geometry();
  	calcHiddenButtons();
 	// make layout update titlebar->geometry() in case some buttons
 	// where shown or hidden in calcHiddenButtons() above
 	QApplication::sendPostedEvents( this, QEvent::LayoutHint );
+	titlebar_moved = t != titlebar->geometry();
     }
 
     if ( !isVisible() )
 	return;
-    
+
     // we selected WResizeNoErase and WNorthWestGravity. That means:
     // on a resize event, we do not get a full paint event and the
     // background is not erased. This makes it possible for us to
@@ -624,13 +627,20 @@ void KDEClient::resizeEvent( QResizeEvent* e)
     // to erase the background. For that reasons we do not use
     // update(), but post a paint event with the erased flag set to
     // FALSE.
-    
+
+
     if ( e->oldSize().width() != width() ) {
-	int dx =  (width() - titlebar->geometry().right()) + QABS( e->oldSize().width() -  width() );
-	if ( dx )
-	    update( width() - dx + 1, 0, dx, height() );
-	// titlebar needs no background
-	QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+ 	int dx =  (width() - titlebar->geometry().right()) + QABS( e->oldSize().width() -  width() );
+ 	if ( dx )
+ 	    update( width() - dx + 1, 0, dx, height() );
+	int dx2 = width() - e->oldSize().width();
+ 	// titlebar needs no background
+	if ( titlebar_moved )
+	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+	else if ( dx2 > 0 ) {
+	    dx2 += 2;
+	    QApplication::postEvent( this, new QPaintEvent( QRect( titlebar->geometry().right()-dx2, titlebar->geometry().top(), dx2, titlebar->geometry().height()), FALSE ) );
+	}
     }
     if ( e->oldSize().height() != height() ) {
 	int dy = 8 + QABS( e->oldSize().height() -  height() );
