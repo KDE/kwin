@@ -189,7 +189,7 @@ bool Client::manage( Window w, bool isMapped )
         geom = session->geometry;
 
     QRect area;
-    if( isMapped )
+    if( isMapped || session )
         area = workspace()->clientArea( WorkArea, geom.center(), desktop());
     else if( options->xineramaPlacementEnabled )
         area = workspace()->clientArea( PlacementArea, QCursor::pos(), desktop());
