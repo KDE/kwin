@@ -203,6 +203,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity)
 {
+    stickyBtn = maxBtn = 0;
     init_theme();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset())); 
     QGridLayout *layout = new QGridLayout(this);
@@ -482,12 +483,14 @@ void KWMThemeClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void KWMThemeClient::stickyChange(bool on)
 {
-    stickyBtn->setPixmap(on ? *pinupPix : *pindownPix);
+    if (stickyBtn)
+       stickyBtn->setPixmap(on ? *pinupPix : *pindownPix);
 }
 
 void KWMThemeClient::maximizeChange(bool m)
 {
-    maxBtn->setPixmap(m ? *minmaxPix : *maxPix);
+    if (maxBtn)
+       maxBtn->setPixmap(m ? *minmaxPix : *maxPix);
 }
 
 Client::MousePosition KWMThemeClient::mousePosition(const QPoint &p) const
