@@ -205,7 +205,7 @@ Note: This setting gets overwritten if the caption font is bigger than the title
                         <cstring>textLabel1_2</cstring>
                     </property>
                     <property name="text">
-                        <string>Tit&amp;le bar Height:</string>
+                        <string>Tit&amp;le bar height:</string>
                     </property>
                     <property name="buddy" stdset="0">
                         <cstring>titlebarHeight</cstring>
