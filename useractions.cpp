@@ -84,7 +84,7 @@ QPopupMenu* Workspace::clientPopup()
             connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
             connect(transSlider, SIGNAL(sliderMoved(int)), this, SLOT(setPopupClientOpacity(int)));
             connect(transSlider, SIGNAL(sliderReleased()), trans_popup, SLOT(hide()));
-            transSlider->setValue(100-popup_client->opacityPercentage());     
+            transSlider->setValue(100-active_popup_client->opacityPercentage());     
             trans_popup->insertItem(transBox);
             popup->insertItem(i18n("&Opacity"), trans_popup );
         }
@@ -112,9 +112,9 @@ QPopupMenu* Workspace::clientPopup()
 //sets the transparency of the client to given value(given by slider)
 void Workspace::setPopupClientOpacity(int value)
     {
-    popup_client->setCustomOpacityFlag(true);
+    active_popup_client->setCustomOpacityFlag(true);
     value = 100 - value;
-    value<100?popup_client->setOpacity(true, (uint)((value/100.0)*0xffffffff)):popup_client->setOpacity(false,0xffffffff);
+    value<100?active_popup_client->setOpacity(true, (uint)((value/100.0)*0xffffffff)):active_popup_client->setOpacity(false,0xffffffff);
     }
 
 void Workspace::setTransButtonText(int value)
@@ -132,9 +132,9 @@ void Workspace::setTransButtonText(int value)
 
 void Workspace::resetClientOpacity()
     {
-    popup_client->setCustomOpacityFlag(false);
-    popup_client->updateOpacity();
-    setTransButtonText(popup_client->opacityPercentage());
+    active_popup_client->setCustomOpacityFlag(false);
+    active_popup_client->updateOpacity();
+    setTransButtonText(active_popup_client->opacityPercentage());
     }
 
 
@@ -175,8 +175,8 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemEnabled( Options::CloseOp, active_popup_client->isCloseable() );
     if (options->useTranslucency)
         {
-        transSlider->setValue(100-popup_client->opacityPercentage());
-        setTransButtonText(popup_client->opacityPercentage());
+        transSlider->setValue(100-active_popup_client->opacityPercentage());
+        setTransButtonText(active_popup_client->opacityPercentage());
         }
     }
 
