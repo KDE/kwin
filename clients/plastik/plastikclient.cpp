@@ -337,9 +337,11 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         painter.setPen(highlightTitleRight);
         painter.drawLine(r_x2-1, r_y+3, r_x2-1, titleEdgeTopBottom );
 
-        painter.drawTiledPixmap(r_x+2, r_y+2,
-                                r_w-2*2, titleEdgeTop-2,
-                                active ? *aTitleBarTopTile : *iTitleBarTopTile );
+        tempRect.setRect(r_x+2, r_y+2, r_w-2*2, titleEdgeTop-2 );
+        if (tempRect.isValid() && region.contains(tempRect) ) {
+            painter.drawTiledPixmap(tempRect, active ? *aTitleBarTopTile : *iTitleBarTopTile);
+        }
+
         // outside the region normally masked by doShape
         painter.setPen(filledCorner);
         painter.drawLine(r_x, r_y, r_x+1, r_y );
@@ -349,6 +351,8 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     }
 
     // leftTitleSpacer
+    int titleMarginLeft = 0;
+    int titleMarginRight = 0;
     if(titleEdgeLeft > 0)
     {
         painter.setPen(windowContour );
@@ -358,15 +362,8 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         painter.drawLine(r_x+1, Rtitle.top(),
                          r_x+1, Rtitle.bottom() );
 
-        painter.drawTiledPixmap(r_x+2, Rtitle.top(), titleEdgeLeft-2, Rtitle.height(),
-                active ? *aTitleBarTile : *iTitleBarTile );
+        titleMarginLeft = 2;
     }
-
-    // Space under the left button group
-    painter.drawTiledPixmap(titleEdgeLeftRight+1, Rtitle.top(),
-                            (Rtitle.left()-1)-titleEdgeLeftRight, Rtitle.height(),
-                            active ? *aTitleBarTile : *iTitleBarTile );
-
 
     // rightTitleSpacer
     if(titleEdgeRight > 0)
@@ -378,14 +375,8 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         painter.drawLine(r_x2-1, Rtitle.top(),
                          r_x2-1, Rtitle.bottom() );
 
-        painter.drawTiledPixmap(titleEdgeRightLeft, Rtitle.top(), titleEdgeRight-2, Rtitle.height(),
-                active ? *aTitleBarTile : *iTitleBarTile );
+        titleMarginRight = 2;
     }
-
-    // Space under the right button group
-    painter.drawTiledPixmap(Rtitle.right()+1, Rtitle.top(),
-                            (titleEdgeRightLeft-1)-Rtitle.right(), Rtitle.height(),
-                            active ? *aTitleBarTile : *iTitleBarTile );
 
     // titleSpacer
     QPixmap *titleBfrPtr = active ? aCaptionBuffer : iCaptionBuffer;
@@ -398,15 +389,15 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         }
 
         // left to the title
-        tempRect.setRect(Rtitle.left(), m_captionRect.top(),
-                         m_captionRect.left() - Rtitle.left(), m_captionRect.height() );
+        tempRect.setRect(r_x+titleMarginLeft, m_captionRect.top(),
+                         m_captionRect.left() - (r_x+titleMarginLeft), m_captionRect.height() );
         if (tempRect.isValid() && region.contains(tempRect) ) {
             painter.drawTiledPixmap(tempRect, active ? *aTitleBarTile : *iTitleBarTile);
         }
 
         // right to the title
         tempRect.setRect(m_captionRect.right()+1, m_captionRect.top(),
-                         Rtitle.right() - m_captionRect.right(), m_captionRect.height() );
+                         (r_x2-titleMarginRight) - m_captionRect.right(), m_captionRect.height() );
         if (tempRect.isValid() && region.contains(tempRect) ) {
             painter.drawTiledPixmap(tempRect, active ? *aTitleBarTile : *iTitleBarTile);
         }
