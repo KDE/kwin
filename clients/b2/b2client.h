@@ -131,7 +131,7 @@ private:
                     B2Titlebar* tb, QBoxLayout* titleLayout);
     void positionButtons();
     void calcHiddenButtons();
-    bool mustDrawHandle() const { return draw_handle && isResizable(); }
+    bool mustDrawHandle() const;
     
     enum ButtonType{BtnMenu=0, BtnSticky, BtnIconify, BtnMax, BtnClose,
         BtnHelp, BtnShade, BtnResize, BtnCount};

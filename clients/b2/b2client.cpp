@@ -496,12 +496,21 @@ void B2Client::addButtons(const QString& s, const QString tips[],
     }
 }
 
+bool B2Client::mustDrawHandle() const 
+{ 
+    bool drawSmallBorders = !options()->moveResizeMaximizedWindows();
+    if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
+	return false;
+    } else {
+	return draw_handle && isResizable();
+    }
+}
+
 void B2Client::iconChange()
 {
     if (button[BtnMenu])
         button[BtnMenu]->repaint(false);
 }
-
 
 // Gallium: New button show/hide magic for customizable
 //          button positions.
@@ -744,7 +753,6 @@ KDecoration::Position B2Client::mousePosition(const QPoint& p) const
 
     return KDecoration::mousePosition(p);
 }
-
 
 void B2Client::titleMoveAbs(int new_ofs)
 {
