@@ -1928,6 +1928,33 @@ void Workspace::setDesktopClient( Client* c)
 
 
 /*!
+  Refreshes all the client windows
+ */
+void Workspace::refresh() {
+   /* This idea/code is borrowed from FVWM 2.x */
+   XSetWindowAttributes attributes;
+   unsigned long valuemask = CWOverrideRedirect|
+                             CWBackingStore|
+                             CWSaveUnder|
+                             CWBackPixmap;
+   attributes.background_pixmap = None;
+   attributes.save_under = False;
+   attributes.override_redirect = True;
+   attributes.backing_store = NotUseful;
+   WId rw = XCreateWindow(qt_xdisplay(), root, 0, 0,
+                          desktop_client->width(),
+                          desktop_client->height(),
+                          0,
+                          CopyFromParent, CopyFromParent,
+                          CopyFromParent, valuemask,
+                          &attributes);
+   XMapWindow(qt_xdisplay(), rw);
+   XDestroyWindow(qt_xdisplay(), rw);
+   XFlush(qt_xdisplay());
+}
+
+
+/*!
   Sets the current desktop to \a new_desktop
 
   Shows/Hides windows according to the stacking order and finally

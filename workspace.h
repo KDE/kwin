@@ -199,6 +199,7 @@ public:
     bool isNotManaged( const QString& title );
 
 public slots:
+    void refresh();
     // keybindings
     void slotSwitchDesktop1();
     void slotSwitchDesktop2();
