@@ -36,7 +36,7 @@ static unsigned char maximize_bits[] = {
 
 static unsigned char minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
-    
+
 static unsigned char unsticky_bits[] = {
     0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
 
@@ -45,7 +45,7 @@ static unsigned char sticky_bits[] = {
 
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
-    
+
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
 static QPixmap *buttonPix=0;
@@ -69,7 +69,7 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
         bDark3.setMask(bDark3);
         bLight1.setMask(bLight1);
     }
-    
+
     pix->fill(g.background());
     QPainter p(pix);
     if(QPixmap::defaultDepth() > 8){
@@ -96,7 +96,7 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
     }
     p.end();
 }
-    
+
 
 static void create_pixmaps()
 {
@@ -131,7 +131,7 @@ static void create_pixmaps()
     iButtonPixDown = new QPixmap(14, 15);
     make_button_fx(btnColor, iButtonPixDown, true);
 
-    
+
     if(qGray(btnColor.background().rgb()) < 150)
         buttonFg = Qt::white;
     else
@@ -303,7 +303,7 @@ void ModernSys::recalcTitleBuffer()
         p.fillRect(0, 0, width(), 18,
                    options->colorGroup(Options::TitleBar, true).
                    brush(QColorGroup::Button));
-    
+
     QRect t = titlebar->geometry();
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
@@ -330,7 +330,7 @@ void ModernSys::recalcTitleBuffer()
     p.end();
     oldTitle = caption();
 }
-    
+
 void ModernSys::captionChange( const QString &)
 {
     recalcTitleBuffer();
@@ -356,14 +356,14 @@ void ModernSys::paintEvent( QPaintEvent* )
 
     p.fillRect(1, 16, width()-2, height()-16, fillBrush);
     p.fillRect(width()-6, 0, width()-1, height(), fillBrush);
-    
+
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
 
     int w = width()-6; // exclude handle
     int h = height()-6;
-    
+
     // titlebar
     QColorGroup g = options->colorGroup(Options::TitleBar, isActive());
     if(isActive()){
@@ -419,8 +419,8 @@ void ModernSys::paintEvent( QPaintEvent* )
     p.drawLine(width()-2, height()-30, width()-2, height()-2);
     p.drawLine(width()-30, height()-2, width()-2, height()-2);
     p.drawLine(width()-30, height()-6, width()-30, height()-2);
-    
-    
+
+
 }
 
 #define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
@@ -437,7 +437,7 @@ void ModernSys::doShape()
     mask -= QRect(width()-2, height()-2, 1, 1);
     mask -= QRect(width()-2, height()-30, 1, 1);
     mask -= QRect(width()-30, height()-2, 1, 1);
-    
+
     setMask(mask);
 }
 
@@ -451,7 +451,7 @@ void ModernSys::showEvent(QShowEvent *ev)
 void ModernSys::windowWrapperShowEvent( QShowEvent* )
 {
     doShape();
-}                                                                               
+}
 
 void ModernSys::mouseDoubleClickEvent( QMouseEvent * e )
 {
@@ -487,3 +487,16 @@ void ModernSys::activeChange(bool)
 }
 
 
+Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
+{
+    MousePosition m = Client::mousePosition( p );
+    
+    if ( m == Center ) {
+	int border = 30;
+	if ( p.y() >= height()-border )
+	    m =  Bottom;
+	else if ( p.x() >= width()-border )
+	    m =  Right;
+    }
+    return m;
+}

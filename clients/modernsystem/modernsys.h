@@ -45,6 +45,7 @@ protected:
     void doShape();
     void recalcTitleBuffer();
     void activeChange(bool);
+    MousePosition mousePosition( const QPoint& ) const;
 protected slots:
     void slotReset();
 private:
@@ -53,9 +54,6 @@ private:
     QPixmap titleBuffer;
     QString oldTitle;
 };
-
-
-
 
 
 #endif
