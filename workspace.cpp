@@ -2669,10 +2669,8 @@ void Workspace::updateClientArea()
 	r.pos.y = area.y();
 	r.size.width = area.width();
 	r.size.height = area.height();
-	for( int i = 1; i <= numberOfDesktops(); i++) {
-	    qDebug("setWorkArea %d   to %d %d %d %d", i, area.x(), area.y(), area.width(), area.height() );
+	for( int i = 1; i <= numberOfDesktops(); i++)
 	    rootInfo->setWorkArea( i, r );
-	}
     }
 }
 

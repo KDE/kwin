@@ -470,11 +470,11 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     if (layout())
       layout()->setResizeMode( QLayout::Minimum );
-    
+
     XWindowAttributes attr;
     if (XGetWindowAttributes(qt_xdisplay(), win, &attr))
 	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
-    
+
     QRect geom( original_geometry );
     bool placementDone = FALSE;
 
