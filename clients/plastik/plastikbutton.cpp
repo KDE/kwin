@@ -183,13 +183,13 @@ void PlastikButton::drawButton(QPainter *painter)
     }
 
     QColor contourTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
-            Qt::white, 215);
+            Qt::black, 215);
     QColor contourBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
-            Qt::white, 215);
+            Qt::black, 215);
     QColor sourfaceTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
-            Qt::black, 225);
+            Qt::white, 210);
     QColor sourfaceBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
-            Qt::black, 225);
+            Qt::white, 210);
 
     int highlightAlpha = static_cast<int>(255-((60/static_cast<double>(ANIMATIONSTEPS))*
                                           static_cast<double>(animProgress) ) );
