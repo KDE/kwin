@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Keramik KWin client (version 0.6)
+ * Keramik KWin client (version 0.7)
  *
  * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>
  *
@@ -55,90 +55,85 @@ using namespace KWinInternal;
 // -------------------------------------------------------------------------------------------
 
 
+
 namespace
 {
 
-const int buttonMargin    = 9;
-const int buttonSpacing   = 4;
-const int iconSpacing     = 5;
+	const int buttonMargin    = 9;
+	const int buttonSpacing   = 4;
+	const int iconSpacing     = 5;
 
-const bool recolorPixmaps = false; // ### only for debugging
+	// Default button layout
+	const char default_left[]  = "M";
+	const char default_right[] = "IAX";
 
-// Default button layout
-const char default_left[]  = "M";
-const char default_right[] = "IAX";
+	// Titlebar button bitmaps
+	unsigned char menu_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x0f, 0x00, 0xf0, 0x07, 0x00,
+	   0xe0, 0x03, 0x00, 0xc0, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
-// Titlebar button bitmaps
-unsigned char menu_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x0f, 0x00, 0xf0, 0x07, 0x00,
-   0xe0, 0x03, 0x00, 0xc0, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
+	unsigned char sticky_on_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x80, 0x01, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00, 0xf0, 0x0f, 0x00,
+	   0xf0, 0x0f, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
-unsigned char sticky_on_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x80, 0x01, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00, 0xf0, 0x0f, 0x00,
-   0xf0, 0x0f, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
+	unsigned char sticky_off_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00,
+	   0xf0, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
-unsigned char sticky_off_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00,
-   0xf0, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
+	unsigned char help_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x03, 0x00,
+	   0xf0, 0x07, 0x00, 0x30, 0x06, 0x00, 0x00, 0x07, 0x00, 0x80, 0x03, 0x00,
+	   0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
-unsigned char help_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x03, 0x00,
-   0xf0, 0x07, 0x00, 0x30, 0x06, 0x00, 0x00, 0x07, 0x00, 0x80, 0x03, 0x00,
-   0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80, 0x01, 0x00, 0x80, 0x01, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
+	unsigned char iconify_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
-unsigned char iconify_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
+	unsigned char maximize_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x80, 0x01, 0x00, 0xc0, 0x03, 0x00, 0xe0, 0x07, 0x00, 0xf0, 0x0f, 0x00,
+	   0xf0, 0x0f, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
-unsigned char maximize_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x80, 0x01, 0x00, 0xc0, 0x03, 0x00, 0xe0, 0x07, 0x00, 0xf0, 0x0f, 0x00,
-   0xf0, 0x0f, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
+	unsigned char restore_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00,
+	   0xf0, 0x0f, 0x00, 0xe0, 0x07, 0x00, 0xc0, 0x03, 0x00, 0x80, 0x01, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
-unsigned char restore_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00,
-   0xf0, 0x0f, 0x00, 0xe0, 0x07, 0x00, 0xc0, 0x03, 0x00, 0x80, 0x01, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
-
-unsigned char close_bits[] = {
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x30, 0x0c, 0x00, 0x70, 0x0e, 0x00, 0xe0, 0x07, 0x00, 0xc0, 0x03, 0x00,
-   0xc0, 0x03, 0x00, 0xe0, 0x07, 0x00, 0x70, 0x0e, 0x00, 0x30, 0x0c, 0x00,
-   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-   0x00, 0x00, 0x00};
+	unsigned char close_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x30, 0x0c, 0x00, 0x70, 0x0e, 0x00, 0xe0, 0x07, 0x00, 0xc0, 0x03, 0x00,
+	   0xc0, 0x03, 0x00, 0xe0, 0x07, 0x00, 0x70, 0x0e, 0x00, 0x30, 0x0c, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00};
 
 
+	KeramikHandler *clientHandler = NULL;
+	bool keramik_initialized = false;
 
-// ------------------------------------------------------------------------------------------
-
-
-
-KeramikHandler *clientHandler = NULL;
-bool keramik_initialized = false;
+} // anonymous namespace
 
 
 
 // -------------------------------------------------------------------------------------------
 
-} // anonymous namespace
 
 
 KeramikHandler::KeramikHandler()
@@ -167,7 +162,10 @@ KeramikHandler::KeramikHandler()
 
 	// Flip the bitmaps horizontally in right-to-left mode
 	if ( QApplication::reverseLayout() ) {
-		for ( int i = 0; i < NumButtonDecos; i++ )
+		for ( int i = 0; i < Help; i++ )
+			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
+		
+		for ( int i = Help + 1; i < NumButtonDecos; i++ )
 			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
 	}
 
@@ -193,48 +191,103 @@ KeramikHandler::~KeramikHandler()
 
 void KeramikHandler::createPixmaps()
 {
-	QColor titleColor  = options->color( Options::TitleBar, true );
-	QColor buttonColor = options->color( Options::ButtonBg, true );
+	QColor titleColor, captionColor, buttonColor;
+	QImage *titleCenter = NULL, *captionLeft = NULL,
+		*captionRight = NULL, *captionCenter = NULL;
 
-	activeTiles[ TitleLeft ]       = loadPixmap( "titlebar-active-left",   titleColor );
-	activeTiles[ TitleCenter ]     = loadPixmap( "titlebar-active-center", titleColor );
-	activeTiles[ TitleRight ]      = loadPixmap( "titlebar-active-right",  titleColor );
 
-	inactiveTiles[ TitleLeft ]     = loadPixmap( "titlebar-inactive-left",   titleColor );
-	inactiveTiles[ TitleCenter ]   = loadPixmap( "titlebar-inactive-center", titleColor );
-	inactiveTiles[ TitleRight ]    = loadPixmap( "titlebar-inactive-right",  titleColor );
-
+	// Active tiles
+	// -------------------------------------------------------------------------
+	captionColor = options->color( Options::TitleBar,   true );
+	titleColor   = options->color( Options::TitleBlend, true );
+		
+	// Load the titlebar corners.
+	activeTiles[ TitleLeft ]  = loadPixmap( "titlebar-left",  titleColor );
+	activeTiles[ TitleRight ] = loadPixmap( "titlebar-right", titleColor );
+	
+	// Load the titlebar center tile image (this will be used as
+	//     the background for the caption bubble tiles).
+	titleCenter = loadImage( "titlebar-center", titleColor );
+	
+	// Load the caption bubble corner & center images.
 	if ( smallCaptionBubbles ) {
-		activeTiles[ CaptionLeft ]   = loadPixmap( "caption-active-small-left",   titleColor );
-		activeTiles[ CaptionCenter ] = loadPixmap( "caption-active-small-center", titleColor );
-		activeTiles[ CaptionRight ]  = loadPixmap( "caption-active-small-right",  titleColor );
+		captionLeft   = loadImage( "caption-small-left",   captionColor );
+		captionRight  = loadImage( "caption-small-right",  captionColor );
+		captionCenter = loadImage( "caption-small-center", captionColor );
 	} else {
-		activeTiles[ CaptionLeft ]   = loadPixmap( "caption-active-large-left",   titleColor );
-		activeTiles[ CaptionCenter ] = loadPixmap( "caption-active-large-center", titleColor );
-		activeTiles[ CaptionRight ]  = loadPixmap( "caption-active-large-right",  titleColor );
+		captionLeft   = loadImage( "caption-large-left",   captionColor );
+		captionRight  = loadImage( "caption-large-right",  captionColor );
+		captionCenter = loadImage( "caption-large-center", captionColor );
 	}
+	
+	// Create the caption bubble tiles (by blending them onto the titlebar)
+	activeTiles[ CaptionLeft   ] = composite( captionLeft,   titleCenter );
+	activeTiles[ CaptionRight  ] = composite( captionRight,  titleCenter );
+	activeTiles[ CaptionCenter ] = composite( captionCenter, titleCenter );
+	
+	delete captionLeft;
+	delete captionRight;
+	delete captionCenter;
+	
+	// Create the titlebar center tile
+	activeTiles[ TitleCenter ] = new QPixmap( *titleCenter );
+	
+	delete titleCenter;
+	
+	// Load the left & right border pixmaps
+	activeTiles[ BorderLeft ]  = loadPixmap( "border-left",  titleColor );
+	activeTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
+	
+	// Load the bottom grabbar pixmaps
+	activeTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
+	activeTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
+	activeTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
+	
 
-	inactiveTiles[ CaptionLeft ]   = loadPixmap( "caption-inactive-left",   titleColor );
-	inactiveTiles[ CaptionCenter ] = loadPixmap( "caption-inactive-center", titleColor );
-	inactiveTiles[ CaptionRight ]  = loadPixmap( "caption-inactive-right",  titleColor );
+	// Inactive tiles
+	// -------------------------------------------------------------------------
+	captionColor = options->color( Options::TitleBar,   false );
+	titleColor   = options->color( Options::TitleBlend, false );
+	
+	inactiveTiles[ TitleLeft ]  = loadPixmap( "titlebar-left",  titleColor );
+	inactiveTiles[ TitleRight ] = loadPixmap( "titlebar-right", titleColor );
+	
+	titleCenter = loadImage( "titlebar-center", titleColor );
+	
+	captionLeft   = loadImage( "caption-small-left",   captionColor );
+	captionRight  = loadImage( "caption-small-right",  captionColor );
+	captionCenter = loadImage( "caption-small-center", captionColor );
+		
+	inactiveTiles[ CaptionLeft  ]  = composite( captionLeft,   titleCenter );
+	inactiveTiles[ CaptionRight ]  = composite( captionRight,  titleCenter );
+	inactiveTiles[ CaptionCenter ] = composite( captionCenter, titleCenter );
+	
+	delete captionLeft;
+	delete captionRight;
+	delete captionCenter;
+	
+	inactiveTiles[ TitleCenter ] = new QPixmap( *titleCenter );
+	
+	delete titleCenter;
+	
+	inactiveTiles[ BorderLeft ]  = loadPixmap( "border-left",  titleColor );
+	inactiveTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
+	
+	inactiveTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
+	inactiveTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
+	inactiveTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
+	
 
-	activeTiles[ GrabBarLeft ]     = loadPixmap( "grabbar-active-left",   titleColor );
-	activeTiles[ GrabBarCenter ]   = loadPixmap( "grabbar-active-center", titleColor );
-	activeTiles[ GrabBarRight ]    = loadPixmap( "grabbar-active-right",  titleColor );
-
-	inactiveTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-inactive-left",   titleColor );
-	inactiveTiles[ GrabBarCenter ] = loadPixmap( "grabbar-inactive-center", titleColor );
-	inactiveTiles[ GrabBarRight ]  = loadPixmap( "grabbar-inactive-right",  titleColor );
-
-	activeTiles[ BorderLeft ]    = loadPixmap( "border-active-left",  titleColor );
-	activeTiles[ BorderRight ]   = loadPixmap( "border-active-right", titleColor );
-
-	inactiveTiles[ BorderLeft ]  = loadPixmap( "border-inactive-left",  titleColor );
-	inactiveTiles[ BorderRight ] = loadPixmap( "border-inactive-right", titleColor );
+	// Buttons
+	// -------------------------------------------------------------------------
+	buttonColor  = QColor(); //options->color( Options::ButtonBg, true );
 	
 	titleButtonRound  = loadPixmap( "titlebutton-round",  buttonColor );
 	titleButtonSquare = loadPixmap( "titlebutton-square", buttonColor );
 
+
+	// Prepare the tiles for use
+	// -------------------------------------------------------------------------
 	if ( QApplication::reverseLayout() ) {
 		
 		// Fix lighting
@@ -253,6 +306,19 @@ void KeramikHandler::createPixmaps()
 		flip( titleButtonRound );
 		flip( titleButtonSquare );
 	}
+
+	// Pretile the center & border tiles for optimal performance
+	pretile( activeTiles[ CaptionCenter ], 64, Qt::Horizontal );
+	pretile( activeTiles[ TitleCenter ], 64, Qt::Horizontal );
+	pretile( activeTiles[ GrabBarCenter ], 128, Qt::Horizontal );
+	pretile( activeTiles[ BorderLeft ], 128, Qt::Vertical );
+	pretile( activeTiles[ BorderRight ], 128, Qt::Vertical );
+	
+	pretile( inactiveTiles[ CaptionCenter ], 64, Qt::Horizontal );
+	pretile( inactiveTiles[ TitleCenter ], 64, Qt::Horizontal );
+	pretile( inactiveTiles[ GrabBarCenter ], 128, Qt::Horizontal );
+	pretile( inactiveTiles[ BorderLeft ], 128, Qt::Vertical );
+	pretile( inactiveTiles[ BorderRight ], 128, Qt::Vertical );
 }
 
 
@@ -298,6 +364,25 @@ void KeramikHandler::flip( QPixmap *&pix )
 }
 
 
+void KeramikHandler::pretile( QPixmap *&pix, int size, Qt::Orientation dir )
+{
+	QPixmap *newpix;
+	QPainter p;
+	
+	if ( dir == Qt::Horizontal )
+		newpix = new QPixmap( size, pix->height() );
+	else
+		newpix = new QPixmap( pix->width(), size );
+	
+	p.begin( newpix );
+	p.drawTiledPixmap( newpix->rect(), *pix ) ;
+	p.end();
+
+	delete pix;
+	pix = newpix;
+}
+
+
 void KeramikHandler::readConfig()
 {
 	KConfig *c = new KConfig( "kwinkeramikrc" );
@@ -318,8 +403,12 @@ void KeramikHandler::readConfig()
 			settings_cache->buttonsRight = QString( default_right );
 		}
 		
-		settings_cache->titleColor  = options->color( Options::TitleBar, true );
-		settings_cache->buttonColor = options->color( Options::ButtonBg, true );
+		settings_cache->aTitleColor = options->color( Options::TitleBar,   true );
+		settings_cache->aTitleBlend = options->color( Options::TitleBlend, true );
+		settings_cache->iTitleColor = options->color( Options::TitleBar,   false );
+		settings_cache->iTitleBlend = options->color( Options::TitleBlend, false );
+		settings_cache->buttonColor = options->color( Options::ButtonBg,   true );
+		
 		settings_cache->smallCaptionBubbles = smallCaptionBubbles;
 	}
 
@@ -327,41 +416,88 @@ void KeramikHandler::readConfig()
 }
 
 
-QPixmap *KeramikHandler::loadPixmap( const QString &name, const QColor &col )
+QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 {
-	if ( recolorPixmaps ) {
-		QImage img = qembed_findImage( name ).copy();
-		//KIconEffect::colorize( img, col, 1.0 );
-		recolor( img, col );
-		return new QPixmap( img );
-	} else
-		return new QPixmap( qembed_findImage(name) );
+	QImage dest( over->width(), over->height(), 32 );
+	int width = over->width(), height = over->height();
+	dest.setAlphaBuffer( true );
+
+	// Clear the destination image
+	Q_UINT32 *data = reinterpret_cast<Q_UINT32*>( dest.bits() );
+	for (int i = 0; i < width * height; i++)
+		*(data++) = 0;	
+
+	// Copy the under image (bottom aligned) to the destination image
+	for (int y1 = height - under->height(), y2 = 0; y1 < height; y1++, y2++ )
+	{
+		register Q_UINT32 *dst = reinterpret_cast<Q_UINT32*>( dest.scanLine(y1) );
+		register Q_UINT32 *src = reinterpret_cast<Q_UINT32*>( under->scanLine(y2) );
+	
+		for ( int x = 0; x < width; x++ )
+			*(dst++) = *(src++);
+	}
+
+	// Blend the over image onto the destination
+	register Q_UINT32 *dst = reinterpret_cast<Q_UINT32*>( dest.bits() );
+	register Q_UINT32 *src = reinterpret_cast<Q_UINT32*>( over->bits() );
+	for ( int i = 0; i < width * height; i++ )
+	{
+		int r1 = qRed( *dst ), g1 = qGreen( *dst ), b1 = qBlue( *dst );
+		int r2 = qRed( *src ), g2 = qGreen( *src ), b2 = qBlue( *src );
+		int a  = qAlpha( *src );
+
+		if ( a == 0xff )
+			*dst = *src;
+		
+		else if ( a != 0x00 )
+			*dst = qRgba( Q_UINT8( r1 + (((r2 - r1) * a) >> 8) ),
+		                  Q_UINT8( g1 + (((g2 - g1) * a) >> 8) ),
+		                  Q_UINT8( b1 + (((b2 - b1) * a) >> 8) ),
+		                  0xff );
+		
+		else if ( qAlpha(*dst) == 0x00 )
+			*dst = 0;
+		
+		src++; dst++;
+
+	}
+	
+	// Compute a 1 bpp mask from the alpha channel
+	QImage alphaMask = dest.createAlphaMask();
+	dest.setAlphaBuffer( false );
+	
+	// Create the final pixmap
+	QPixmap *pix = new QPixmap( dest );
+	
+	// Set the computed mask for the pixmap
+	if ( ! alphaMask.isNull() ) {
+		QBitmap mask;
+		mask.convertFromImage( alphaMask );
+		pix->setMask( mask );
+	} 
+
+	return pix;	
 }
 
 
-// This is the recoloring method from the Keramik widget style,
-// copyright (c) 2002 Malte Starostik <malte@kde.org>.
-// Modified to work with 8bpp images.
-void KeramikHandler::recolor( QImage &img, const QColor& color )
+QImage *KeramikHandler::loadImage( const QString &name, const QColor &col )
 {
-	int hue = -1, sat = 0, val = 228;
-	if ( color.isValid() ) color.hsv( &hue, &sat, &val );
+	if ( col.isValid() ) {
+		QImage *img = new QImage( qembed_findImage(name).copy() );
+		KIconEffect::colorize( *img, col, 1.0 );
+		return img;
+	} else
+		return new QImage( qembed_findImage(name).copy() );
+}
 
-	register int pixels = (img.depth() > 8 ? img.width() * img.height() : img.numColors());
-	register Q_UINT32* data = ( img.depth() > 8 ? reinterpret_cast< Q_UINT32* >( img.bits() ) :
-			reinterpret_cast< Q_UINT32* >( img.colorTable() ) );
+
+QPixmap *KeramikHandler::loadPixmap( const QString &name, const QColor &col )
+{
+	QImage *img = loadImage( name, col );
+	QPixmap *pix = new QPixmap( *img );
+	delete img;
 	
-	for ( int i = 0; i < pixels; i++ )
-	{
-		QColor c( *data );
-		int h, s, v;
-		c.hsv( &h, &s, &v );
-		if ( hue >= 0 && h >= 0 ) h = ( h + 114 + hue ) % 360;
-		if ( s ) s += sat / 2;
-		c.setHsv( h, QMIN( s, 255 ), QMIN( v * val / 228, 255 ) );
-		*data = ( c.rgb() & RGB_MASK ) | ( *data & ~RGB_MASK );
-		data++;
-	}
+	return pix;
 }
 
 
@@ -378,8 +514,12 @@ void KeramikHandler::reset()
 	readConfig();
 
 	// Check if the color scheme has changed
-	if ( settings_cache->titleColor != options->color(Options::TitleBar, true) ||
-			settings_cache->buttonColor != options->color(Options::ButtonBg, true) ) {
+	if ( settings_cache->aTitleColor != options->color(Options::TitleBar,   true ) ||
+	     settings_cache->aTitleBlend != options->color(Options::TitleBlend, true ) ||
+	     settings_cache->iTitleColor != options->color(Options::TitleBar,   false) ||
+	     settings_cache->iTitleBlend != options->color(Options::TitleBlend, false) ||
+	     settings_cache->buttonColor != options->color(Options::ButtonBg,   true ) )
+	{
 		pixmapsInvalid = true;
 	}
 	
@@ -404,8 +544,11 @@ void KeramikHandler::reset()
 	}
 	
 	// Update our config cache
-	settings_cache->titleColor          = options->color( Options::TitleBar, true );
-	settings_cache->buttonColor         = options->color( Options::ButtonBg, true );
+	settings_cache->aTitleColor         = options->color( Options::TitleBar,   true  );
+	settings_cache->aTitleBlend         = options->color( Options::TitleBlend, true  );
+	settings_cache->iTitleColor         = options->color( Options::TitleBar,   false );
+	settings_cache->iTitleBlend         = options->color( Options::TitleBlend, false );
+	settings_cache->buttonColor         = options->color( Options::ButtonBg,   true  );
 	settings_cache->smallCaptionBubbles = smallCaptionBubbles;
 	settings_cache->buttonsLeft         = buttonsLeft;
 	settings_cache->buttonsRight        = buttonsRight;
@@ -528,6 +671,11 @@ void KeramikButton::drawButton( QPainter *p )
 
 		case HelpButton:
 			deco = clientHandler->buttonDeco( Help );
+			// The '?' won't be flipped around in the ctor, so we need to
+			//  shift it to the right to compensate for the button shadow
+			//  being on the left side of the button in RTL mode.
+			if ( QApplication::reverseLayout() )
+				p->translate( 2, 0 );
 			break;
 			
 		case MinButton:
@@ -592,7 +740,7 @@ KeramikClient::KeramikClient( Workspace *ws, WId w, QWidget *parent, const char 
 	titleLayout->addSpacing( buttonSpacing );
 	addButtons( titleLayout, options->customButtonPositions() ?
 				options->titleButtonsRight() : QString(default_right) );
-	titleLayout->addSpacing( buttonMargin );      // Right button margin
+	titleLayout->addSpacing( buttonMargin - 1 );  // Right button margin
 
 	windowLayout->addSpacing( 3 );                // Left border
 	windowLayout->addWidget( windowWrapper() );   // Window wrapper
@@ -620,9 +768,14 @@ void KeramikClient::reset()
 	
 	captionBufferDirty = maskDirty = true;
 
-	if ( isVisible() )
+	if ( isVisible() ) {
 		repaint( false );
+		
+		for ( int i = 0; i < NumButtons; i++ )
+			if ( button[i] ) button[i]->repaint( false );
+	}
 }
+
 
 void KeramikClient::addButtons( QHBoxLayout *layout, const QString &s )
 {
@@ -703,7 +856,6 @@ void KeramikClient::updateMask()
 
 	Display *dpy = QPaintDevice::x11AppDisplay();
 	int screen   = QPaintDevice::x11Screen();
-	
 	Pixmap pix   = XCreatePixmap( dpy, handle(), width(), height(), 1 );
 
 	const QBitmap *tile;
@@ -730,20 +882,20 @@ void KeramikClient::updateMask()
 	XFillRectangle( dpy, pix, gc, 15, titleBaseY, width() - 30, clientHandler->titleBarBaseHeight() );
 
 	// Caption bubble
-	if ( isActive() && titleBaseY && captionRect.width() >= 28 ) {
+	if ( isActive() && titleBaseY && captionRect.width() >= 25 ) {
 		// Left caption corner
 		tile = clientHandler->tile( CaptionLeft, true )->mask();
 		XCopyArea( dpy, tile->handle(), pix, gc, 0, 0, tile->width(), tile->height(),
 				captionRect.left(), 0 );
 
 		// Caption center
-		XFillRectangle( dpy, pix, gc, captionRect.left() + 14, 0, captionRect.width() - 28,
+		XFillRectangle( dpy, pix, gc, captionRect.left() + 15, 0, captionRect.width() - 30,
 				clientHandler->titleBarHeight() );
 
 		// Right caption corner
 		tile = clientHandler->tile( CaptionRight, true )->mask();
 		XCopyArea( dpy, tile->handle(), pix, gc, 0, 0, tile->width(), tile->height(),
-				captionRect.left() + captionRect.width() - 14, 0 );
+				captionRect.left() + captionRect.width() - 15, 0 );
 	}
 
 	// Top right corner
@@ -754,7 +906,7 @@ void KeramikClient::updateMask()
 	// Bottom part of the window
 	XFillRectangle( dpy, pix, gc, 0, clientHandler->titleBarHeight(), width(),
 			height() - clientHandler->titleBarHeight() );
-	
+
 	XFreeGC( dpy, gc );
 
 	// Set the mask
@@ -780,29 +932,19 @@ void KeramikClient::updateCaptionBuffer()
 
 	// Draw the caption bubble
 	p.drawPixmap( 0, 0, *clientHandler->tile( CaptionLeft, active ) );
-	p.drawTiledPixmap( 14, 0, captionRect.width() - 28, clientHandler->titleBarHeight(),
+	p.drawTiledPixmap( 15, 0, captionRect.width() - 30, clientHandler->titleBarHeight(),
 		*clientHandler->tile( CaptionCenter, active ) );
-	p.drawPixmap( captionRect.width() - 14, 0, *clientHandler->tile( CaptionRight, active ) );
+	p.drawPixmap( captionRect.width() - 15, 0, *clientHandler->tile( CaptionRight, active ) );
 	
 	if ( clientHandler->showAppIcons() )
 	{
 		if ( active ) {
-			if ( ! activeIcon ) {
-				if ( miniIcon().width() > 16 ) {
-					QImage img = miniIcon().convertToImage();
-					img.smoothScale( 16, 16 );
-					activeIcon = new QPixmap( img );
-				} else
-					activeIcon = new QPixmap( miniIcon() );
-			}
+			if ( ! activeIcon )
+				activeIcon = new QPixmap( miniIcon() );
 			icon = activeIcon;
 		} else {
 			if ( ! inactiveIcon ) {
 				QImage img = miniIcon().convertToImage();
-
-				if ( img.width() > 16 )
-					img.smoothScale( 16, 16 );
-
 				KIconEffect::semiTransparent( img );
 				inactiveIcon = new QPixmap( img );
 			}
@@ -814,7 +956,7 @@ void KeramikClient::updateCaptionBuffer()
 	int tw = p.fontMetrics().width( caption() ) +
 		( clientHandler->showAppIcons() ? 16 + iconSpacing : 0 );
 
-	int xpos = QMAX( (captionRect.width() - tw) / 3, 10 );
+	int xpos = QMAX( (captionRect.width() - tw) / 3, 8 );
 	QRect tr = QStyle::visualRect( QRect(xpos, 1, captionRect.width() - xpos - 10,
 				captionRect.height() - 4), captionBuffer.rect() );
 
@@ -824,12 +966,23 @@ void KeramikClient::updateCaptionBuffer()
 	// Application icon
 	if ( clientHandler->showAppIcons() )
 	{
-		if ( tr.width() > 14 ) {
-			QRect iconRect = QStyle::visualRect( QRect(tr.x(),
-						1 + (captionRect.height() - 4 - 16) / 2, 16, 16), tr );
-			QRect r( icon->rect() );
-			r.moveCenter( iconRect.center() );
+		QRect iconRect = QStyle::visualRect( QRect(tr.x(),
+					1 + (captionRect.height() - 4 - 16) / 2, 16, 16), tr );
+		QRect r( icon->rect() );
+		r.moveCenter( iconRect.center() );
+	
+		if ( tr.width() > 16 ) {
 			p.drawPixmap( r, *icon );
+		} else {
+			QRect sr( 0, 0, icon->width(), icon->height() );
+			
+			if ( QApplication::reverseLayout() )
+				sr.addCoords( icon->width() - tr.width(), 0, 0, 0 );
+			else
+				sr.addCoords( 0, 0, -( icon->width() - tr.width() ), 0 ); 
+			
+			p.drawPixmap( r.x() + sr.x(), r.y() + sr.y(), *icon,
+					sr.x(), sr.y(), sr.width(), sr.height() );
 		}
 		
 		//p.drawRect( r ); // debug
@@ -847,14 +1000,12 @@ void KeramikClient::updateCaptionBuffer()
 	if ( clientHandler->useShadowedText() )
 	{
 		p.translate( QApplication::reverseLayout() ? -1 : 1, 1 );
-		p.setPen( active ? QColor(65,153,238).dark() :
-				QColor(180,210,246).dark() ); // ### hardcoded color
+		p.setPen( options->color(Options::TitleBar, active).dark() );
 		p.drawText( tr,	flags, caption() );
 		p.translate( QApplication::reverseLayout() ? 1 : -1, -1 );
 	}
 
-	p.setPen( Qt::white ); // ### hardcoded color
-	//p.setPen( options->color( Options::Font, active ) );
+	p.setPen( options->color( Options::Font, active ) );
 	p.drawText( tr,	flags, caption() );
 
 	captionBufferDirty = false;
@@ -925,7 +1076,7 @@ void KeramikClient::activeChange( bool )
 	repaint( false );
 
 	for ( int i=0; i < NumButtons; i++ )
-		if ( button[i] ) button[i]->repaint();
+		if ( button[i] ) button[i]->repaint( false );
 }
 
 
@@ -1011,7 +1162,7 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 			p.drawPixmap( 0, titleBaseY, *clientHandler->tile( TitleLeft, active ) );
 
 		// Space between the top left corner and the caption bubble
-		if ( updateRect.x() < captionRect.left() && updateRect.right() > 15 ) {
+		if ( updateRect.x() < captionRect.left() && updateRect.right() >= 15 ) {
 			int x1 = QMAX( 15, updateRect.x() );
 			int x2 = QMIN( captionRect.left(), updateRect.right() );
 		
@@ -1020,8 +1171,8 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 		}
 
 		// Caption bubble
-		if ( updateRect.x() < captionRect.right() && updateRect.right() > 15 ) {
-			if ( captionRect.width() >= 28 )
+		if ( updateRect.x() <= captionRect.right() && updateRect.right() > 15 ) {
+			if ( captionRect.width() >= 25 )
 				p.drawPixmap( captionRect.left(), active ? 0 : titleBaseY, captionBuffer );
 			else
 				p.drawTiledPixmap( captionRect.x(), titleBaseY, captionRect.width(),
@@ -1039,13 +1190,13 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 		}
 
 		// Top right corner
-		if ( updateRect.right() > width() - 15 )
+		if ( updateRect.right() >= width() - 15 )
 			p.drawPixmap( width() - 15, titleBaseY, *clientHandler->tile( TitleRight, active ) );
 	}
 
 	// Borders
 	// -----------------------------------------------------------------------
-	if ( updateRect.bottom() > clientHandler->titleBarHeight()
+	if ( updateRect.bottom() >= clientHandler->titleBarHeight()
 			&& updateRect.top() < height() - 8 )
 	{
 		int top    = QMAX( clientHandler->titleBarHeight(), updateRect.top() );
@@ -1067,7 +1218,7 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 	
 	// Bottom grab bar
 	// -----------------------------------------------------------------------
-	if ( updateRect.bottom() > height() - 8 ) {
+	if ( updateRect.bottom() >= height() - 8 ) {
 		// Bottom left corner
 		if ( updateRect.x() < 9 )
 			p.drawPixmap( 0, height() - 8, *clientHandler->tile( GrabBarLeft, active ) );

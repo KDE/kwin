@@ -1,7 +1,7 @@
 /*
  * $Id$
  * 
- * Keramik KWin client (version 0.6)
+ * Keramik KWin client (version 0.7)
  *
  * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>
  *
@@ -52,7 +52,10 @@ namespace KWinInternal {
 
 	struct SettingsCache
 	{
-		QColor  titleColor;
+		QColor  aTitleColor;
+		QColor  iTitleColor;
+		QColor  aTitleBlend;
+		QColor  iTitleBlend;
 		QColor  buttonColor;
 		QString buttonsLeft;
 		QString buttonsRight;
@@ -91,7 +94,9 @@ namespace KWinInternal {
 
 			void flip( QPixmap *&, QPixmap *& );
 			void flip( QPixmap *& );
-			void recolor( QImage &, const QColor & );
+			void pretile( QPixmap *&, int, Qt::Orientation );
+			QPixmap *composite( QImage *, QImage * );
+			QImage  *loadImage( const QString &, const QColor & );
 			QPixmap *loadPixmap( const QString &, const QColor & );
 
 		private:
