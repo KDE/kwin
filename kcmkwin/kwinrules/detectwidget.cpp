@@ -21,7 +21,6 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kxerrorhandler.h>
 #include <kwin.h>
 #include <qlabel.h>
 #include <qradiobutton.h>
@@ -62,7 +61,6 @@ void DetectDialog::readWindow( WId w )
         emit detectionDone( false );
         return;
         }
-    KXErrorHandler err;
     KWin::WindowInfo info = KWin::windowInfo( w,
         NET::WMName | NET::WMWindowType,
         NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine );
@@ -80,11 +78,6 @@ void DetectDialog::readWindow( WId w )
     title = info.name();
     extrarole = ""; // TODO
     machine = info.clientMachine();
-    if( err.error( true ))
-        {
-        emit detectionDone( false );
-        return;
-        }
     executeDialog();
     }
 
