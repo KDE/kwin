@@ -1334,49 +1334,49 @@ void Workspace::deskCleanup(CleanupType ct)
  */
 void Workspace::lowerClient( Client* c )
 {
-  // This isn't working yet and the window disappears, so don't
-  // do anything for now.
-  return;
+    if ( !c )
+	return;
 
-  if ( !c )
-    return;
+    if ( c == desktop_client )
+	return; // deny
 
-  if ( c == desktop_client )
-    return; // deny
+    ClientList saveset;
 
-  stacking_order.remove( c );
-  stacking_order.prepend( c );
+    if ( c->transientFor() ) {
+	/* search for a non-transient managed window, which this client
+	   is transient to (possibly over many ways) */
+	saveset.append( c );
+	Client* t = findClient( c->transientFor() );
+	Client* tmp;
+	while ( t && !saveset.contains( t ) && t->transientFor() ) {
+	    tmp = findClient( t->transientFor() );
+	    if ( !tmp )
+		break;
+	    saveset.append( t );
+	    t = tmp;
+	}
+	if ( t && !saveset.contains( t ) && t != desktop_client ) {
+	    lowerClient( t );
+	    return;
+	}
+    }
 
-  // Not sure what this is doing. Disable for now.
-#if 0
-  ClientList saveset;
-
-  if ( c->transientFor() ) {
-
+    saveset.clear();
     saveset.append( c );
-    Client* t = findClient( c->transientFor() );
-    Client* tmp;
-    while ( t && !saveset.contains( t ) && t->transientFor() ) {
-      tmp = findClient( t->transientFor() );
-      if ( !tmp )
-        break;
-      saveset.append( t );
-      t = tmp;
+    lowerTransientsOf(saveset, c );
+    stacking_order.remove(c);
+    stacking_order.prepend(c);
+
+    Window* new_stack = new Window[ stacking_order.count()+1];
+    int i = 0;
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+	new_stack[i++] = (*it)->winId();
     }
-    if ( t && !saveset.contains( t ) && t != desktop_client ) {
-      raiseClient( t );
-      return;
-    }
-  }
+    XRaiseWindow(qt_xdisplay(), new_stack[0]);
+    XRestackWindows(qt_xdisplay(), new_stack, i);
+    delete [] new_stack;
 
-  saveset.clear();
-  saveset.append( c );
-  raiseTransientsOf(saveset, c );
-#endif
-
-  XLowerWindow(qt_xdisplay(), c->winId());
-
-  propagateClients( TRUE );
+    propagateClients( TRUE );
 }
 
 
@@ -1443,6 +1443,27 @@ void Workspace::raiseTransientsOf( ClientList& safeset, Client* c )
 	    stacking_order.append( *it );
 	    raiseTransientsOf( safeset, *it );
 	}
+    }
+}
+
+/*!
+  Private auxiliary function used in lowerClient()
+ */
+void Workspace::lowerTransientsOf( ClientList& safeset, Client* c )
+{
+    ClientList local = stacking_order;
+    ClientList::ConstIterator it = local.fromLast();
+    //why the hell is --begin() undefined (OK same, as ++end(), but end()
+    //isn't usable, while begin() is)
+    while (1) {
+	if ( (*it)->transientFor() == c->window() && !safeset.contains( *it ) ) {
+	    safeset.append( *it );
+	    lowerTransientsOf( safeset, *it );
+	    stacking_order.remove( *it );
+	    stacking_order.prepend( *it );
+	}
+	if (it == local.begin()) break;
+	--it;
     }
 }
 

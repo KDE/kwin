@@ -203,6 +203,7 @@ private:
     Client* should_get_focus;
 
     void raiseTransientsOf( ClientList& safeset, Client* c );
+    void lowerTransientsOf( ClientList& safeset, Client* c );
     void randomPlacement(Client* c);
     void smartPlacement(Client* c);
     void cascadePlacement(Client* c, bool re_init = false);

@@ -947,6 +947,9 @@ void Client::mousePressEvent( QMouseEvent * e)
 	moveOffset = e->pos();
 	invertedMoveOffset = rect().bottomRight() - e->pos();
     }
+    else if ( !buttonDown && e->button() == MidButton ) {
+        workspace()->lowerClient( this );
+    }
     else if ( !buttonDown && e->button() == RightButton ) {
 	workspace()->clientPopup( this ) ->popup( e->globalPos() );
     }
