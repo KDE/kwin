@@ -451,12 +451,12 @@ bool WindowWrapper::x11Event( XEvent * e)
 		 ((Client*)parentWidget())->windowType() != NET::Override )
 		replay = TRUE;
 
-	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, kwin_time);
+	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //kwin_time);
 	    return TRUE;
 	}
 	break;
     case ButtonRelease:
-	XAllowEvents(qt_xdisplay(), SyncPointer, kwin_time);
+	XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //kwin_time);
 	break;
     default:
 	break;
@@ -604,7 +604,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	geom = session->geometry;
 
     QRect area = workspace()->clientArea();
-    
+
     if ( geom == workspace()->geometry() && inherits( "KWinInternal::NoBorderClient" ) ) {
 	is_fullscreen = TRUE;
 	may_move = FALSE; // don't let fullscreen windows be moved around
