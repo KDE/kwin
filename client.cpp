@@ -1181,18 +1181,22 @@ void Client::mousePressEvent( QMouseEvent * e)
 	}
     }
     else {
+	bool active = isActive();
+	if ( !wantsInput() ) // we cannot be active, use it anyway
+	    active = TRUE;
+	
         if ( e->button() == LeftButton ) {
 	    mouseMoveEvent( e );
 	    buttonDown = TRUE;
 	    moveOffset = e->pos();
 	    invertedMoveOffset = rect().bottomRight() - e->pos();
-	    com = isActive() ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
+	    com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
         }
         else if ( e->button() == MidButton ) {
-	    com = isActive() ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
+	    com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
         }
         else if ( e->button() == RightButton ) {
-	    com = isActive() ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
+	    com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
         }
     }
     performMouseCommand( com, e->globalPos());
