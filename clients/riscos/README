@@ -45,6 +45,14 @@ Button Two:
                 If I were to implement this, I would do it in konqy
                 and probably not bother for other apps.
 
+Titlebar:
+
+  Left button: Raise, focus and move window
+
+  Middle button: Menu
+
+  Right button: Move window
+
 Button Three:
 
   Left button: Iconify window.
