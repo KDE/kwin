@@ -24,10 +24,14 @@ Name[ja]=詳細
 Name[ko]=고급
 Name[mt]=Avvanzat
 Name[nb]=Viderkommende
+Name[nl]=Geavanceerd
 Name[pt_BR]=Avançado
 Name[sk]=Pokročilé
 Name[sl]=Napredno
 Name[sv]=Avancerat
+
+Comment=Configure advanced window management features
+
 Keywords=shading,border,hover,active borders
 Keywords[af]=shading,border,hover,active grense
 Keywords[da]=skygning,kant,svæv,aktive kanter
@@ -38,6 +42,7 @@ Keywords[hu]=árnyékolás,szegély,lebegés,aktív szegélyek
 Keywords[ja]=隠す,枠,アクティブな枠
 Keywords[mt]=shading,border,hover,active borders,bordura
 Keywords[nb]=shading,border,hover,active borders, bor,aktivt vindu,vindu
+Keywords[nl]=oprollen,afrollen,rand,hoover,actieve randen,randen magnetisch,magnetische randen
 Keywords[pt_BR]=ocultamento,borda,pairar,bordas ativas
 Keywords[sk]=zabalenie,okraj,presun,aktívne okraje
 Keywords[sv]=skuggning,kant,sväva,aktiva kanter

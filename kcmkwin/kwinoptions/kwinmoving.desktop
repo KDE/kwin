@@ -22,9 +22,13 @@ Name[hu]=Mozgatás
 Name[ja]=移動
 Name[mt]=Tmexxija
 Name[nb]=Flytting
+Name[nl]=Verplaatsing
 Name[pt_BR]=Movendo
 Name[sk]=Presun
 Name[sv]=Förflyttning
+
+Comment=Configure the way that windows are moved
+
 Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border
 Keywords[da]=flytter,smart,stabl,maksimér,snapzone,snap,kant
 Keywords[de]=Verschieben,Gestaffelt,Maximieren,Minimieren,Einrastzone,Ränder
@@ -34,6 +38,7 @@ Keywords[hu]=mozgatás,intelligens,lépcsőzetes,maximalizálás,illeszkedési z
 Keywords[ja]=移動,スマート,カスケード,最大化,最小化,スナップ領域,スナップ,枠
 Keywords[mt]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,tmexxija,kaskada,massimizza,faqqa',bordura
 Keywords[nb]=moving,smart,cascade,maximize,maximise,snap zone,snap,border, flytting,smart,kaskade,maksimer,festesone,fest
+Keywords[nl]=verplaatsing,intteligent,plaatsing,trapgewijz,maximaliseren,randen magnetisch,magnetisch veld,rand,magnetische randen
 Keywords[pt_BR]=movendo,pequeno,cascata,maximizar,zona rápida,snap,borda
 Keywords[sk]=presun,inteligentný,kaskádovať,maximalizácia,minimalizácia,priťahovanie,zóna priťahovania,okraje
 Keywords[sv]=förflyttning,smart,kaskad,maximera,bindningszon,bind,kant

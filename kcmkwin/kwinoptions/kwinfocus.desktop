@@ -24,6 +24,9 @@ Name[nb]=Fokus
 Name[pt_BR]=Foco
 Name[sk]=Fokus
 Name[sv]=Fokus
+
+Comment=Configure the window focus policy
+
 Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
 Keywords[af]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all werkskerm
 Keywords[da]=fokus,placering,autohæv,hæv,klikhæv,tastatur,CDE,alt-tab,alle skriveborde
@@ -34,6 +37,7 @@ Keywords[hu]=fókusz,elhelyezés,automatikus előrehozás,előrehozás,előrehoz
 Keywords[ja]=フォーカス,配置,自動上昇,前面に,クリックで前面に,キーボード ,CDE,alt-tab,全てのデスクトップ
 Keywords[mt]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,tella',tastiera
 Keywords[nb]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop, fokus,plassering,autotopp,hev,klikkhev,tastatur,hele arbeidsflaten
+Keywords[nl]=focus,aandacht,plaatsing,voorgrond,achtergrond,klikken,toetsenbord,CDE,alt-tab,alle bureaubladen
 Keywords[pt_BR]=foco,posição,auto elevar,elevar,teclado,CDE,alt-tab,todos os ambiente de trabalho
 Keywords[sk]=fokus,umiestnenie,automatický presun,dopredu,dopredu na kliknutie,klávesnica,CDE,alt-tab,všetky plochy
 Keywords[sv]=fokus,placering,autohöjning,höjning,höjning med klick,tangentbord,CDE,alt-tab,alla skrivbord

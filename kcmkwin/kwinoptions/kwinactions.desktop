@@ -23,9 +23,13 @@ Name[hu]=Műveletek
 Name[ja]=動作
 Name[mt]=Azzjonijiet
 Name[nb]=Handlinger
+Name[nl]=Acties
 Name[pt_BR]=Ações
 Name[sk]=Akcie
 Name[sv]=Åtgärder
+
+Comment=Configure keyboard and mouse settings
+
 Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
 Keywords[da]=skyg,maksimér,minimér,sænk,operationsmenu,titellinje,ændr størrelse
 Keywords[de]=Fensterheber,Maximieren,Minimieren,Nach oben/unten,Titelleiste,Größe ändern
@@ -35,6 +39,7 @@ Keywords[hu]=felgördítés,maximalizálás,maximalizált,minimalizálás,minima
 Keywords[ja]=隠す,最大化,最小化,下,操作メニュー,タイトルバー,サイズ変更
 Keywords[mt]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,massimizza,minimma,baxxi,ċekken,kabbar,daqqas
 Keywords[nb]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize, skygge,maksimer,minimer,små bokstaver,operasjoner,meny,tittel,skalere
+Keywords[nl]= shade,oprollen,maximaliseren,minimaliseren,naar achtergrond,lower,menu,tibelbalk,grootte wijzigen
 Keywords[pt_BR]=esconder,maximizar,minimizar,menor,menu de operações,barra de operações,redimensionar
 Keywords[sk]=zabalenie,maximalizácia,minimalizácia,presun dozadu,presun dopredu,operácie menu,titulok,zmena veľkosti
 Keywords[sv]=rulla upp,maximera,minimera,sänk,åtgärdsmeny,namnlist,ändra storlek
