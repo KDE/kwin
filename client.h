@@ -11,7 +11,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qvbox.h>
 #include <qpixmap.h>
 #include <qtimer.h>
-#include <qvariant.h> // it's not Bool safe, so include it here first
 #include <netwm_def.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
