@@ -182,9 +182,13 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void showWindowMenuAt( unsigned long id, int x, int y );
 
         /**
-         * Shows the menu operations menu for the client
-         * and makes it active if it's not already.
+	 * Shows the menu operations menu for the client and makes it active if
+	 * it's not already.
          */
+        void showWindowMenu( const QRect &pos, Client* cl );
+	/**
+	 * Backwards compatibility.
+	 */
         void showWindowMenu( int x, int y, Client* cl );
         void showWindowMenu( QPoint pos, Client* cl );
 
@@ -624,7 +628,12 @@ inline const ClientList& Workspace::stackingOrder() const
 
 inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
     {
-    showWindowMenu(pos.x(), pos.y(), cl);
+    showWindowMenu(QRect(pos, pos), cl);
+    }
+
+inline void Workspace::showWindowMenu(int x, int y, Client* cl)
+    {
+    showWindowMenu(QRect(QPoint(x, y), QPoint(x, y)), cl);
     }
 
 inline

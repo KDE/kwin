@@ -72,6 +72,11 @@ void Bridge::showWindowMenu( QPoint p )
     c->workspace()->showWindowMenu( p, c );
     }
 
+void Bridge::showWindowMenu( const QRect &p )
+    {
+    c->workspace()->showWindowMenu( p, c );
+    }
+
 void Bridge::performWindowOperation( WindowOperation op )
     {
     c->workspace()->performWindowOperation( c, op );

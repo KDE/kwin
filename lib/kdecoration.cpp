@@ -176,11 +176,16 @@ void KDecoration::processMousePressEvent( QMouseEvent* e )
     return bridge_->processMousePressEvent( e );
     }
 
-void KDecoration::showWindowMenu( QPoint pos )
+void KDecoration::showWindowMenu( const QRect &pos )
     {
     bridge_->showWindowMenu( pos );
     }
     
+void KDecoration::showWindowMenu( QPoint pos )
+    {
+    bridge_->showWindowMenu( pos );
+    }
+
 void KDecoration::performWindowOperation( WindowOperation op )
     {
     bridge_->performWindowOperation( op );

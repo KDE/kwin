@@ -761,7 +761,7 @@ void Workspace::slotWindowOperations()
     showWindowMenu( pos.x(), pos.y(), active_client );
     }
 
-void Workspace::showWindowMenu( int x, int y, Client* cl )
+void Workspace::showWindowMenu( const QRect &pos, Client* cl )
     {
     if (!kapp->authorizeKAction("kwin_rmb"))
         return;
@@ -776,7 +776,19 @@ void Workspace::showWindowMenu( int x, int y, Client* cl )
 
     popup_client = cl;
     QPopupMenu* p = clientPopup();
-    p->exec( QPoint( x, y ) );
+    int x = pos.left();
+    int y = pos.bottom();
+    if (y == pos.top()) {
+	p->exec( QPoint( x, y ) );
+    } else {
+	QRect area = clientArea(ScreenArea, QPoint(x, y), currentDesktop());
+	int popupHeight = p->sizeHint().height();
+	if (y + popupHeight < area.height()) {
+	    p->exec( QPoint( x, y ) );
+	} else {
+	    p->exec( QPoint( x, pos.top() - popupHeight ) );
+	}
+    }
     popup_client = 0;
     }
 

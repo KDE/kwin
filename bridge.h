@@ -42,6 +42,7 @@ class Bridge : public KDecorationBridge
         virtual QString caption() const;
         virtual void processMousePressEvent( QMouseEvent* );
         virtual void showWindowMenu( QPoint );
+        virtual void showWindowMenu( const QRect & );
         virtual void performWindowOperation( WindowOperation );
         virtual void setMask( const QRegion&, int );
         virtual bool isPreview() const;

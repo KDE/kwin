@@ -77,6 +77,7 @@ class KDecorationBridge : public KDecorationDefines
 	virtual QIconSet icon() const = 0;
 	virtual QString caption() const = 0;
 	virtual void processMousePressEvent( QMouseEvent* ) = 0;
+	virtual void showWindowMenu( const QRect &) = 0;
 	virtual void showWindowMenu( QPoint ) = 0;
 	virtual void performWindowOperation( WindowOperation ) = 0;
         virtual void setMask( const QRegion&, int ) = 0;

@@ -301,6 +301,10 @@ void KDecorationPreviewBridge::processMousePressEvent( QMouseEvent* )
     {
     }
     
+void KDecorationPreviewBridge::showWindowMenu( const QRect &)
+    {
+    }
+
 void KDecorationPreviewBridge::showWindowMenu( QPoint )
     {
     }

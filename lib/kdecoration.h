@@ -406,12 +406,22 @@ class KDecoration
 	 */
 	QString caption() const;
 	/**
-	 * This function invokes the window operations menu. IMPORTANT: As a result
-         * of this function, the decoration object that called it may be destroyed
-         * after the function returns. This means that the decoration object must
-         * either return immediately after calling showWindowMenu(), or it must
-         * use KDecorationFactory::exists() to check it's still valid. For example,
-         * the code handling clicks on the menu button should look similarly like this:
+	 * This function invokes the window operations menu. 
+	 * \param pos specifies the place on the screen where the menu should
+	 * show up. The menu pops up at the bottom-left corner of the specified
+	 * rectangle, unless there is no space, in which case the menu is
+	 * displayed above the rectangle.
+	 * 
+	 * \note Decorations that enable a double-click operation for the menu
+	 * button must ensure to call \a showWindowMenu() with the \a pos
+	 * rectangle set to the menu button geometry.
+	 * IMPORTANT: As a result of this function, the decoration object that
+	 * called it may be destroyed after the function returns. This means
+	 * that the decoration object must either return immediately after
+	 * calling showWindowMenu(), or it must use
+	 * KDecorationFactory::exists() to check it's still valid. For example,
+	 * the code handling clicks on the menu button should look similarly
+	 * like this:
          *
          * \code
          * KDecorationFactory* f = factory(); // needs to be saved before
@@ -420,6 +430,11 @@ class KDecoration
          *     return;
 	 * button[MenuButton]->setDown(false);
          * \endcode
+	 */
+	void showWindowMenu( const QRect &pos );
+
+	/**
+	 * Overloaded version of the above. 
 	 */
 	void showWindowMenu( QPoint pos );
         /**
@@ -460,7 +475,7 @@ class KDecoration
          * Returns the intersection of the given region with the region left
          * unobscured by the windows stacked above the current one. You can use
          * this function to, for example, try to keep the titlebar visible if
-         * there is an hole available. The region returned is in the coordinate
+         * there is a hole available. The region returned is in the coordinate
          * space of the decoration.
          * @param r The region you want to check for holes
          */
