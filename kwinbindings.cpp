@@ -7,10 +7,10 @@
 #endif
  keys->insertItem(i18n("Walk through Windows"), "Walk through windows", KKey("ALT+Tab"), KKey("Alt+Tab"));
  keys->insertItem(i18n("Walk through Windows (Reverse)"), "Walk back through windows", KKey("SHIFT+ALT+Tab"), KKey("Alt+Shift+Tab"));
- keys->insertItem(i18n("Walk through Desktops"), "Walk through desktops", KKey("CTRL+Tab"), KKey("Meta+Tab"));
- keys->insertItem(i18n("Walk through Desktops (Reverse)"), "Walk back through desktops", KKey("SHIFT+CTRL+Tab"), KKey("Meta+Shift+Tab"));
- keys->insertItem(i18n("Walk through Desktop List"), "Walk through desktop list", KKey(), KKey());
- keys->insertItem(i18n("Walk through Desktop List (Reverse)"), "Walk back through desktop list", KKey(), KKey());
+ keys->insertItem(i18n("Walk through Desktops"), "Walk through desktops", KKey(), KKey("Meta+Tab"));
+ keys->insertItem(i18n("Walk through Desktops (Reverse)"), "Walk back through desktops", KKey(), KKey("Meta+Shift+Tab"));
+ keys->insertItem(i18n("Walk through Desktop List"), "Walk through desktop list", KKey("CTRL+Tab"), KKey());
+ keys->insertItem(i18n("Walk through Desktop List (Reverse)"), "Walk back through desktop list", KKey("SHIFT+CTRL+Tab"), KKey());
 
 #ifdef WITH_LABELS
  keys->insertItem(i18n("Windows"), "Group:Windows", 0);
