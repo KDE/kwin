@@ -1518,7 +1518,7 @@ bool Client::isNormalWindow() const
 bool Client::isSpecialWindow() const
     {
     return isDesktop() || isDock() || isSplash() || isTopMenu()
-        || isOverride() // SELI is NET::Override special or not?
+        || ( isOverride() && !isFullScreen())// SELI is NET::Override special or not?
         || isToolbar(); // TODO
     }
 
