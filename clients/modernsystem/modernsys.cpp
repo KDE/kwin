@@ -62,17 +62,17 @@ static QPixmap *buttonPixDown=0;
 static QPixmap *iButtonPix=0;
 static QPixmap *iButtonPixDown=0;
 
-static QColor buttonFg;
+static QColor *buttonFg;
 static bool pixmaps_created = false;
+
+static QBitmap *lcDark1;
+static QBitmap *lcDark2;
+static QBitmap *lcDark3;
+static QBitmap *lcLight1;
+static QImage *btnSource;
 
 static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
 {
-    static QBitmap lcDark1(14, 15, lowcolor_6a696a_bits, true);
-    static QBitmap lcDark2(14, 15, lowcolor_949194_bits, true);
-    static QBitmap lcDark3(14, 15, lowcolor_b4b6b4_bits, true);
-    static QBitmap lcLight1(14, 15, lowcolor_e6e6e6_bits, true);
-    static QImage btnSource(btnhighcolor_xpm);
-
     pix->fill(g.background());
     QPainter p(pix);
 
@@ -80,17 +80,17 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
         int i, destH, destS, destV, srcH, srcS, srcV;
         QColor btnColor = g.background();
 
-        if(btnSource.depth() < 32)
-            btnSource = btnSource.convertDepth(32);
+        if(btnSource->depth() < 32)
+            *btnSource = btnSource->convertDepth(32);
         if(light)
             btnColor = btnColor.light(120);
         btnColor.hsv(&destH, &destS, &destV);
         QImage btnDest(14, 15, 32);
 
-        unsigned int *srcData = (unsigned int *)btnSource.bits();
+        unsigned int *srcData = (unsigned int *)btnSource->bits();
         unsigned int *destData = (unsigned int *)btnDest.bits();
         QColor srcColor;
-        for(i=0; i < btnSource.width()*btnSource.height(); ++i){
+        for(i=0; i < btnSource->width()*btnSource->height(); ++i){
             srcColor.setRgb(srcData[i]);
             srcColor.hsv(&srcH, &srcS, &srcV);
             srcColor.setHsv(destH, destS, srcV);
@@ -100,19 +100,19 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
 
     }
     else{
-        if(!lcDark1.mask()){
-            lcDark1.setMask(lcDark1);
-            lcDark2.setMask(lcDark2);
-            lcDark3.setMask(lcDark3);
-            lcLight1.setMask(lcLight1);
+        if(!lcDark1->mask()){
+            lcDark1->setMask(*lcDark1);
+            lcDark2->setMask(*lcDark2);
+            lcDark3->setMask(*lcDark3);
+            lcLight1->setMask(*lcLight1);
         }
         p.setPen(g.dark());
-        p.drawPixmap(0, 0, lcDark2);
-        p.drawPixmap(0, 0, lcDark1);
+        p.drawPixmap(0, 0, *lcDark2);
+        p.drawPixmap(0, 0, *lcDark1);
         p.setPen(g.mid());
-        p.drawPixmap(0, 0, lcDark3);
+        p.drawPixmap(0, 0, *lcDark3);
         p.setPen(g.light());
-        p.drawPixmap(0, 0, lcLight1);
+        p.drawPixmap(0, 0, *lcLight1);
     }
 }
 
@@ -122,6 +122,12 @@ static void create_pixmaps()
     if(pixmaps_created)
         return;
     pixmaps_created = true;
+
+    lcDark1 = new QBitmap(14, 15, lowcolor_6a696a_bits, true);
+    lcDark2 = new QBitmap(14, 15, lowcolor_949194_bits, true);
+    lcDark3 = new QBitmap(14, 15, lowcolor_b4b6b4_bits, true);
+    lcLight1 = new QBitmap(14, 15, lowcolor_e6e6e6_bits, true);
+    btnSource = new QImage(btnhighcolor_xpm);
 
     if(QPixmap::defaultDepth() > 8){
         aUpperGradient = new KPixmap;
@@ -152,9 +158,31 @@ static void create_pixmaps()
 
 
     if(qGray(btnColor.background().rgb()) < 150)
-        buttonFg = Qt::white;
+        buttonFg = new QColor(Qt::white);
     else
-        buttonFg = Qt::black;
+        buttonFg = new QColor(Qt::black);
+
+    delete lcDark1;
+    delete lcDark2;
+    delete lcDark3;
+    delete lcLight1;
+    delete btnSource;
+}
+
+static void delete_pixmaps()
+{
+    if(aUpperGradient){
+        delete aUpperGradient;
+        delete iUpperGradient;
+    }
+    delete buttonPix;
+    delete buttonPixDown;
+    delete iButtonPix;
+    delete iButtonPixDown;
+
+    delete buttonFg;
+
+    pixmaps_created = false;
 }
 
 ModernButton::ModernButton(Client *parent, const char *name,
@@ -200,7 +228,7 @@ void ModernButton::drawButton(QPainter *p)
             p->drawPixmap(0, 0, isDown() ? *iButtonPixDown : *iButtonPix);
     }
     if(!deco.isNull()){
-        p->setPen(buttonFg);
+        p->setPen(*buttonFg);
         p->drawPixmap(isDown() ? 4 : 3, isDown() ? 5 : 4, deco);
     }
 }
@@ -221,16 +249,7 @@ void ModernButton::mouseReleaseEvent( QMouseEvent* e )
 
 void ModernSys::slotReset()
 {
-    if(aUpperGradient){
-        delete aUpperGradient;
-        delete iUpperGradient;
-    }
-    delete buttonPix;
-    delete buttonPixDown;
-    delete iButtonPix;
-    delete iButtonPixDown;
-
-    pixmaps_created = false;
+    delete_pixmaps();
     create_pixmaps();
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
@@ -304,7 +323,6 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
 
     setBackgroundMode(NoBackground);
     recalcTitleBuffer();
-
 }
 
 void ModernSys::maxButtonClicked( )
@@ -321,8 +339,6 @@ void ModernSys::maxButtonClicked( )
        break;
     }
 }
-
-
 
 void ModernSys::resizeEvent( QResizeEvent* )
 {
