@@ -106,7 +106,8 @@ void KDecorationPreview::resizeEvent( QResizeEvent* e )
     
 void KDecorationPreview::positionPreviews()
     {
-    int titleBarHeight, leftBorder, rightBorder, xoffset, dummy;
+    int titleBarHeight, leftBorder, rightBorder, xoffset,
+        dummy1, dummy2, dummy3;
     QRect geometry;
     QSize size;
  
@@ -115,8 +116,9 @@ void KDecorationPreview::positionPreviews()
     if ( !deco[Active] || !deco[Inactive] )
         return; 
 
-    deco[Active]->borders( dummy, dummy, titleBarHeight, dummy );
-    deco[Inactive]->borders( leftBorder, rightBorder, dummy, dummy );
+    // don't have more than one reference to the same dummy variable in one borders() call.
+    deco[Active]->borders( dummy1, dummy2, titleBarHeight, dummy3 );
+    deco[Inactive]->borders( leftBorder, rightBorder, dummy1, dummy2 );
 
     titleBarHeight = kMin( int( titleBarHeight * .9 ), 30 );
     xoffset = kMin( kMax( 10, QApplication::reverseLayout()
