@@ -28,7 +28,8 @@ const char* defaultPlugin = "kwin_default";
 PluginMgr::PluginMgr()
     : QObject()
 {
-    alloc_ptr = NULL;
+    create_ptr = NULL;
+    old_create_ptr = NULL;
     library = 0;
     pluginStr = "kwin_undefined";
 
@@ -61,14 +62,15 @@ void PluginMgr::updatePlugin()
     }
 }
 
-Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
+Client* PluginMgr::createClient(Workspace *ws, WId w, NET::WindowType type)
 {
+    if (create_ptr) // prefer the newer function which accepts exact window type
+        return(create_ptr(ws, w, type));
+    if (old_create_ptr)
+        return(old_create_ptr(ws, w, type == NET::Tool || type == NET::Menu));
     // We are guaranteed to have a plugin loaded,
     // otherwise, kwin exits during loadPlugin - but verify anyway
-    if (alloc_ptr)
-        return(alloc_ptr(ws, w, tool));
-    else
-        return NULL;
+    return NULL;
 }
 
 // returns true if plugin was loaded successfully
@@ -115,10 +117,15 @@ bool PluginMgr::loadPlugin(QString nameStr)
     if (init_func)
         ((void (*)())init_func)();
 
-    void *alloc_func = library->symbol("allocate");
-    if(alloc_func) {
-        alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
-    } else {
+    void* create_func = library->symbol("create");
+    if(create_func) {
+        create_ptr = (Client* (*)(Workspace *ws, WId w, NET::WindowType, NET::WindowType))create_func;
+    }
+    create_func = library->symbol("allocate");
+    if(create_func) {
+        old_create_ptr = (Client* (*)(Workspace *ws, WId w, int tool))create_func;
+    }
+    if(!create_ptr && !old_create_ptr) {
         kdWarning() << "KWin: The library " << path << " is not a KWin plugin." << endl;
         library->unload();
         exit(1);

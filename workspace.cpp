@@ -224,6 +224,7 @@ Client* Workspace::clientFactory( WId w )
         return new NoBorderClient( this, w );
 
     switch ( ni.windowType() ) {
+    // when adding new window types, add a fallback for them in PluginMgr::createClient()
     case NET::Desktop:
         {
             XLowerWindow( qt_xdisplay(), w );
@@ -232,9 +233,6 @@ Client* Workspace::clientFactory( WId w )
             return c;
         }
 
-    case NET::Tool:
-        return ( mgr->allocateClient( this, w, true ) );
-
     case NET::Dock:
         {
             Client * c = new NoBorderClient( this, w );
@@ -242,12 +240,27 @@ Client* Workspace::clientFactory( WId w )
             return c;
         }
 
-    case NET::Menu:
+    case NET::TopMenu:
         return new NoBorderClient( this, w );
 
     case NET::Override:
         return new NoBorderClient( this, w);
 
+    case NET::Menu:
+        {
+            Window dummy1;
+            int x, y;
+            unsigned int width, height, dummy2, dummy3;
+            XGetGeometry( qt_xdisplay(), w, &dummy1, &x, &y, &width, &height,
+                &dummy2, &dummy3 );
+            // ugly hack to support the times when NET::Menu meant NET::TopMenu
+            // if it's as wide as the screen, not very high and has its upper-left
+            // corner a bit above the screen's upper-left cornet, it's a topmenu
+            if( x == 0 && y < 0 && y > -10 && height < 100 && int(width) == geometry().width())
+                return new NoBorderClient( this, w );
+        // fall through
+        }
+    case NET::Tool:
     default:
         break;
     }
@@ -255,7 +268,7 @@ Client* Workspace::clientFactory( WId w )
     if ( Shape::hasShape( w ) ){
         return new NoBorderClient( this, w );
     }
-    return ( mgr->allocateClient( this, w, false ) );
+    return ( mgr->createClient( this, w, ni.windowType()) );
 }
 
 Workspace *Workspace::_self = 0;
@@ -1391,7 +1404,7 @@ void Workspace::setActiveClient( Client* c )
     Client* menubar = 0;
     bool has_full_screen = false;
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-        if ( (*it)->isMenu() && (*it)->mainClient() == main ) {
+        if ( (*it)->isTopMenu() && (*it)->mainClient() == main ) {
             menubar = *it;
         }
         if ( (*it)->isVisible() && (*it)->isFullScreen() &&
@@ -1404,7 +1417,7 @@ void Workspace::setActiveClient( Client* c )
         // Find the menubar of the desktop
         if ( desktops.isEmpty() ) {
             for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-                if ( (*it)->isMenu() && (*it)->mainClient() == (*it) ) {
+                if ( (*it)->isTopMenu() && (*it)->mainClient() == (*it) ) {
                     menubar = *it;
                     break;
                 }
@@ -1413,7 +1426,7 @@ void Workspace::setActiveClient( Client* c )
         else
         {
             for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-                if ( (*it)->isMenu() && (*it)->mainClient()->isDesktop() ) {
+                if ( (*it)->isTopMenu() && (*it)->mainClient()->isDesktop() ) {
                     menubar = *it;
                     break;
                 }
@@ -1429,7 +1442,7 @@ void Workspace::setActiveClient( Client* c )
 
     // ... then hide the other ones. Avoids flickers.
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-        if ( (*it)->isMenu() && (*it) != menubar )
+        if ( (*it)->isTopMenu() && (*it) != menubar )
             (*it)->hide();
     }
 
@@ -1471,12 +1484,12 @@ void Workspace::activateClient( Client* c, bool force )
 void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 {
     if ( c->isIconified() || c->isShade() ) {
-        bool exclude_menu = !c->isIconified();
+        bool exclude_topmenu = !c->isIconified();
         for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
             if ( (*it)->transientFor() == c->window()
                  && !(*it)->isIconified()
                  && !(*it)->isShade()
-                 && ( !exclude_menu || !(*it)->isMenu() ) ) {
+                 && ( !exclude_topmenu || !(*it)->isTopMenu() ) ) {
                 (*it)->setMappingState( XIconicState );
                 (*it)->hide();
                 iconifyOrDeiconifyTransientsOf( (*it) );
@@ -2820,7 +2833,7 @@ void Workspace::killWindowAtPosition(int x, int y)
         Client *client = (*it);
         if ( client->frameGeometry().contains(QPoint(x, y)) &&
              client->isOnDesktop( currentDesktop() ) &&
-             !client->isMenu() && !client->isDesktop() &&
+             !client->isTopMenu() && !client->isDesktop() &&
              !client->isIconified() ) {
             client->killWindow();
             return;

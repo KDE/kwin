@@ -8,6 +8,7 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 
 #include <qpopupmenu.h>
 #include <qstringlist.h>
+#include <netwm_def.h>
 
 class QFileInfo;
 class KLibrary;
@@ -23,7 +24,7 @@ class PluginMgr : public QObject
 public:
     PluginMgr();
     ~PluginMgr();
-    Client *allocateClient(Workspace *ws, WId w, bool tool);
+    Client *createClient(Workspace *ws, WId w, NET::WindowType type);
     bool loadPlugin(QString name);
     QString currentPlugin() { return pluginStr; }
 public slots:
@@ -32,7 +33,8 @@ signals:
     void resetAllClients();
 protected:
     void shutdownKWin(const QString& error_msg);
-    Client* (*alloc_ptr)(Workspace *ws, WId w, int tool);
+    Client* (*create_ptr)(Workspace *ws, WId w, NET::WindowType type);
+    Client* (*old_create_ptr)(Workspace *ws, WId w, int tool);
     KLibrary *library;
     QString pluginStr;
 };

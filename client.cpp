@@ -450,6 +450,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 
         if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
              ((Client*)parentWidget())->windowType() != NET::Dialog &&
+             ((Client*)parentWidget())->windowType() != NET::Menu &&
              ((Client*)parentWidget())->windowType() != NET::Override )
             replay = TRUE;
 
@@ -776,7 +777,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             // assume window wants to be visible on the current desktop
             desk =  workspace()->currentDesktop();
         } else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop()
-                    && !isMenu() ) {
+                    && !isTopMenu() ) {
             //window didn't specify any specific desktop but will appear
             //somewhere else. This happens for example with "save data?"
             //dialogs on shutdown. Switch to the respective desktop in
@@ -1260,7 +1261,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
         switch (stack_mode){
         case Above:
         case TopIf:
-            if ( isMenu() && mainClient() != this )
+            if ( isTopMenu() && mainClient() != this )
                 break; // in this case, we already do the raise
             workspace()->raiseClient( this );
             break;
@@ -2165,7 +2166,7 @@ bool Client::x11Event( XEvent * e)
             return TRUE;
 
         if ( options->autoRaise && !isDesktop() &&
-             !isDock() && !isMenu() && workspace()->focusChangeEnabled() &&
+             !isDock() && !isTopMenu() && workspace()->focusChangeEnabled() &&
              workspace()->topClientOnDesktop() != this ) {
             delete autoRaiseTimer;
             autoRaiseTimer = new QTimer( this );
@@ -2173,7 +2174,7 @@ bool Client::x11Event( XEvent * e)
             autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
         }
 
-        if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isMenu() ) )
+        if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isTopMenu() ) )
             return TRUE;
 
         workspace()->requestFocus( this );
@@ -2502,8 +2503,8 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus( bool force )
 {
-    if ( !force && ( isMenu() || isDock() ) )
-        return; // menus and dock windows don't take focus if not forced
+    if ( !force && ( isTopMenu() || isDock() ) )
+        return; // toplevel menus and dock windows don't take focus if not forced
 
     if ( input ) {
         // Matthias Ettrich says to comment it so that we avoid two consecutive setActive
@@ -2933,6 +2934,18 @@ NET::WindowType Client::windowType() const
     NET::WindowType wt = info->windowType();
     if ( wt == NET::Unknown )
         wt = NET::Normal;
+    if ( wt == NET::Menu ) {
+        Window dummy1;
+        int x, y;
+        unsigned int width, height, dummy2, dummy3;
+        XGetGeometry( qt_xdisplay(), window(), &dummy1, &x, &y, &width, &height,
+            &dummy2, &dummy3 );
+        // ugly hack to support the times when NET::Menu meant NET::TopMenu
+        // if it's as wide as the screen, not very high and has its upper-left
+        // corner a bit above the screen's upper-left cornet, it's a topmenu
+        if( x == 0 && y < 0 && y > -10 && height < 100 && int(width) == geometry().width())
+            wt = NET::TopMenu;
+    }
     return wt;
 }
 
@@ -2955,7 +2968,8 @@ bool Client::wantsInput() const
 bool Client::isMovable() const
 {
     return may_move &&
-        ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Toolbar ) &&
+        ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Toolbar
+            || windowType() == NET::Menu ) &&
         ( !isMaximized() || ( options->moveResizeMaximizedWindows || max_mode != MaximizeFull ) );
 }
 
@@ -2969,9 +2983,9 @@ bool Client::isDock() const
     return windowType() == NET::Dock;
 }
 
-bool Client::isMenu() const
+bool Client::isTopMenu() const
 {
-    return windowType() == NET::Menu;
+    return windowType() == NET::TopMenu;
 }
 
 
