@@ -27,23 +27,26 @@ DEALINGS IN THE SOFTWARE.
 #include <kconfig.h>
 #include <qpalette.h>
 #include <qapplication.h>
+#include <assert.h>
 
 KDecorationOptionsPrivate::KDecorationOptionsPrivate()
-{
+    {
     for(int i=0; i < NUM_COLORS*2; ++i)
         cg[i] = NULL;
-}
+    }
 
 KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
-{
+    {
     int i;
-    for(i=0; i < NUM_COLORS*2; ++i){
-        if(cg[i]){
+    for(i=0; i < NUM_COLORS*2; ++i)
+        {
+        if(cg[i])
+            {
             delete cg[i];
             cg[i] = NULL;
+            }
         }
     }
-}
 
 void KDecorationOptionsPrivate::defaultKWinSettings()
     {
@@ -52,11 +55,12 @@ void KDecorationOptionsPrivate::defaultKWinSettings()
     custom_button_positions = false;
     show_tooltips = true;
     border_size = BorderNormal;
+    cached_border_size = BordersCount; // invalid
     move_resize_maximized_windows = true;
     }
 
 unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
-{
+    {
     unsigned long changed = 0;
     QString old_group = config->group();
     config->setGroup( "WM" );
@@ -161,14 +165,16 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QString old_title_buttons_right = title_buttons_right;
     bool old_custom_button_positions = custom_button_positions;
     custom_button_positions = config->readBoolEntry("CustomButtonPositions", false);
-    if (custom_button_positions) {
+    if (custom_button_positions)
+        {
         title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
         title_buttons_right = config->readEntry("ButtonsOnRight", "HIAX");
-    }
-    else {
+        }
+    else
+        {
         title_buttons_left  = "MS";
         title_buttons_right = "HIAX";
-    }
+        }
     if( old_custom_button_positions != custom_button_positions
         || ( custom_button_positions &&
                 ( old_title_buttons_left != title_buttons_left
@@ -185,12 +191,13 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
     BorderSize old_border_size = border_size;
     int border_size_num = config->readNumEntry( "BorderSize", BorderNormal );
-    if( border_size_num >= BorderTiny && border_size_num <= BorderOversized )
+    if( border_size_num >= 0 && border_size_num < BordersCount )
         border_size = static_cast< BorderSize >( border_size_num );
     else
         border_size = BorderNormal;
     if( old_border_size != border_size )
         changed |= SettingBorder;
+    cached_border_size = BordersCount; // invalid
 
     config->setGroup( "Windows" );
     bool old_move_resize_maximized_windows = move_resize_maximized_windows;
@@ -200,14 +207,27 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
 // destroy cached values
     int i;
-    for(i=0; i < NUM_COLORS*2; ++i){
-        if(cg[i]){
+    for(i=0; i < NUM_COLORS*2; ++i)
+        {
+        if(cg[i])
+            {
             delete cg[i];
             cg[i] = NULL;
+            }
         }
-    }
 
     config->setGroup( old_group );
 
     return changed;
-}
+    }
+
+KDecorationDefines::BorderSize KDecorationOptionsPrivate::findPreferredBorderSize( BorderSize size,
+    QValueList< BorderSize > sizes ) const
+    {
+    for( QValueList< BorderSize >::ConstIterator it = sizes.begin();
+         it != sizes.end();
+         ++it )
+        if( size <= *it ) // size is either a supported size, or *it is the closest larger supported
+            return *it;
+    return sizes.last(); // size is larger than all supported ones, return largest
+    }

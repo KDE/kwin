@@ -62,6 +62,15 @@ class KDecorationFactory
 	 * Note that true should be returned only when really necessary.
 	 */
         virtual bool reset( unsigned long changed ); // returns true if the decoration needs to be recreated
+
+        /**
+         * Reimplement this function if your decoration supports more border sizes than
+         * the default one (BorderNormal). The returned list must contain all supported
+         * sizes, ordered from the smallest to the largest one. By default, only
+         * BorderNormal is returned.
+         */        
+        virtual QValueList< BorderSize > borderSizes() const;
+
         virtual bool supports( Ability ability );
 	/**
 	 * Returns the KDecorationOptions object, which is used to access

@@ -29,6 +29,7 @@
 
 */
 
+#include <assert.h>
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qlayout.h>
@@ -39,6 +40,7 @@
 #include <qvbox.h>
 #include <qlabel.h>
 #include <qfile.h>
+#include <qslider.h>
 
 #include <kapplication.h>
 #include <kcombobox.h>
@@ -55,6 +57,7 @@
 #include "kwindecoration.h"
 #include "preview.h"
 #include <kdecoration_plugins_p.h>
+#include <kdecorationfactory.h>
 
 // KCModule plugin interface
 // =========================
@@ -121,6 +124,13 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 			i18n(  "Enabling this checkbox will show window button tooltips. "
 				   "If this checkbox is off, no window button tooltips will be shown."));
 
+        lBorder = new QLabel( buttonPage );
+        slBorder = new QSlider( Horizontal, buttonPage );
+        QWhatsThis::add( slBorder, i18n( "This slider shows all border sizes supported by this decoration." ));
+        lBorder->setBuddy( slBorder );
+        lBorder->hide();
+        slBorder->hide();
+        
 	cbUseCustomButtonPositions = new QCheckBox(
 			i18n("Use custom titlebar button &positions"), buttonPage );
 	QWhatsThis::add( cbUseCustomButtonPositions,
@@ -159,6 +169,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	connect( cbUseCustomButtonPositions, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), buttonBox, SLOT(setEnabled(bool)));
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
+        connect( slBorder, SIGNAL( valueChanged( int )), SLOT( slotBorderChanged( int )));
 //	connect( cbUseMiniWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 
 	// Allow kwin dcop signal to update our selection list
@@ -239,6 +250,52 @@ void KWinDecorationModule::slotSelectionChanged()
 	setChanged(true);
 }
 
+static const char* const border_names[ KDecorationDefines::BordersCount ] =
+    {
+    I18N_NOOP( "Border size: Tiny" ),
+    I18N_NOOP( "Border size: Normal" ),
+    I18N_NOOP( "Border size: Large" ),
+    I18N_NOOP( "Border size: Very Large" ),
+    I18N_NOOP( "Border size: Huge" ),
+    I18N_NOOP( "Border size: Very Huge" ),
+    I18N_NOOP( "Border size: Oversized" )
+    };
+
+int KWinDecorationModule::borderSizeToIndex( BorderSize size, QValueList< BorderSize > sizes )
+{
+        int pos = 0;
+        for( QValueList< BorderSize >::ConstIterator it = sizes.begin();
+             it != sizes.end();
+             ++it, ++pos )
+            if( size <= *it )
+                break;
+        return pos;
+}
+
+KDecorationDefines::BorderSize KWinDecorationModule::indexToBorderSize( int index,
+    QValueList< BorderSize > sizes )
+{
+        QValueList< BorderSize >::ConstIterator it = sizes.begin();
+        for(;
+             it != sizes.end();
+             ++it, --index )
+            if( index == 0 )
+                break;
+        return *it;
+}
+
+void KWinDecorationModule::slotBorderChanged( int size )
+{
+        if( lBorder->isHidden())
+            return;
+        setChanged( true );
+        QValueList< BorderSize > sizes;
+        if( plugins->factory() != NULL )
+            sizes = plugins->factory()->borderSizes();
+        assert( sizes.count() >= 2 );
+        border_size = indexToBorderSize( size, sizes );
+        lBorder->setText( i18n( border_names[ border_size ] ));
+}
 
 QString KWinDecorationModule::decorationName( QString& libName )
 {
@@ -298,7 +355,9 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
         else
             preview->disablePreview();
         plugins->destroyPreviousPlugin();
-                
+
+        checkSupportedBorderSizes();
+
 	currentName = styleToConfigLib( currentName );
 
 	// Delete old plugin widget if it exists
@@ -392,6 +451,13 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	for(i = 0; i < dropSite->buttonsRight.length(); i++)
 		buttonSource->hideButton( dropSite->buttonsRight[i].latin1() );
 
+        int bsize = conf->readNumEntry( "BorderSize", BorderNormal );
+        if( bsize >= BorderTiny && bsize < BordersCount )
+            border_size = static_cast< BorderSize >( bsize );
+        else
+            border_size = BorderNormal;
+        checkSupportedBorderSizes();
+
 	setChanged(false);
 }
 
@@ -414,6 +480,7 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 	// Button settings
 	conf->writeEntry("ButtonsOnLeft", dropSite->buttonsLeft );
 	conf->writeEntry("ButtonsOnRight", dropSite->buttonsRight );
+        conf->writeEntry("BorderSize", border_size );
 
 	oldLibraryName = currentLibraryName;
 	currentLibraryName = libName;
@@ -484,9 +551,29 @@ void KWinDecorationModule::defaults()
 	buttonSource->hideButton('I');
 	buttonSource->hideButton('A');
 	buttonSource->hideButton('X');
+        
+        border_size = BorderNormal;
+        checkSupportedBorderSizes();
 
 	// Set plugin defaults
 	emit pluginDefaults();
+}
+
+void KWinDecorationModule::checkSupportedBorderSizes()
+{
+        QValueList< BorderSize > sizes;
+        slBorder->hide();
+        lBorder->hide();
+        if( plugins->factory() != NULL )
+            sizes = plugins->factory()->borderSizes();
+        if( sizes.count() < 2 )
+            return;
+        slBorder->setRange( 0, sizes.count() - 1 );
+        int pos = borderSizeToIndex( border_size, sizes );
+        lBorder->show();
+        slBorder->show();
+        slBorder->setValue( pos );
+        slotBorderChanged( pos );
 }
 
 QString KWinDecorationModule::styleToConfigLib( QString& styleLib )

@@ -45,6 +45,11 @@ bool KDecorationFactory::supports( Ability )
     return false;
     }
 
+QValueList< KDecorationDefines::BorderSize > KDecorationFactory::borderSizes() const
+    {
+    return QValueList< BorderSize >() << BorderNormal;
+    }
+    
 void KDecorationFactory::addDecoration( KDecoration* deco )
     {
     _decorations.append( deco );

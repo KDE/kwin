@@ -64,16 +64,16 @@ Decoration::MousePosition Decoration::mousePosition( const QPoint& p ) const
     
 void Decoration::borders( int& left, int& right, int& top, int& bottom ) const
     {
-    if( options()->preferredBorderSize() == BorderTiny )
+    if( options()->preferredBorderSize( factory()) == BorderTiny )
         {
         left = right = bottom = 1;
         top = 5;
         }
     else
         {
-        left = right = options()->preferredBorderSize() * 5;
-        top = options()->preferredBorderSize() * 10;
-        bottom = options()->preferredBorderSize() * 2;
+        left = right = options()->preferredBorderSize( factory()) * 5;
+        top = options()->preferredBorderSize( factory()) * 10;
+        bottom = options()->preferredBorderSize( factory()) * 2;
         }
     if( isShade())
         bottom = 0;

@@ -120,6 +120,7 @@ namespace Web
       virtual ~WebFactory() {};
       virtual KDecoration* createDecoration( KDecorationBridge* );
       virtual bool reset( unsigned long changed );
+      virtual QValueList< BorderSize > borderSizes() const;
   };
 }
 

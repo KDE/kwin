@@ -31,6 +31,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "kdecoration.h"
 #include <qwidget.h>
+#include <qvaluelist.h>
 
 class KConfig;
 
@@ -41,6 +42,7 @@ class KDecorationOptionsPrivate : public KDecorationDefines
         virtual ~KDecorationOptionsPrivate();
         void defaultKWinSettings(); // shared implementation
         unsigned long updateKWinSettings( KConfig* ); // shared implementation
+        BorderSize findPreferredBorderSize( BorderSize size, QValueList< BorderSize > ) const; // shared implementation
 
         QColor colors[NUM_COLORS*2];
         QColorGroup *cg[NUM_COLORS*2];
@@ -49,7 +51,7 @@ class KDecorationOptionsPrivate : public KDecorationDefines
         QString title_buttons_right;
         bool custom_button_positions;
         bool show_tooltips;
-        BorderSize border_size;
+        BorderSize border_size, cached_border_size;
         bool move_resize_maximized_windows;
     };
 

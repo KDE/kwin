@@ -38,6 +38,8 @@
 #include <kconfig.h>
 #include <klibloader.h>
 
+#include <kdecoration.h>
+
 #include "kwindecorationIface.h"
 
 class KComboBox;
@@ -45,6 +47,7 @@ class QCheckBox;
 class QLabel;
 class QTabWidget;
 class QVBox;
+class QSlider;
 
 class KDecorationPlugins;
 class KDecorationPreview;
@@ -57,7 +60,7 @@ struct DecorationInfo
 };
 
 
-class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
+class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface, public KDecorationDefines
 {
 	Q_OBJECT
 
@@ -83,6 +86,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		// Allows us to turn "save" on
 		void slotSelectionChanged();
 		void slotChangeDecoration( const QString &  );
+                void slotBorderChanged( int );
 
 	private:
 		void readConfig( KConfig* conf );
@@ -95,6 +99,9 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
                 static QString styleToConfigLib( QString& styleLib );
 		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString::null );
 		void resetKWin();
+                void checkSupportedBorderSizes();
+                static int borderSizeToIndex( BorderSize size, QValueList< BorderSize > sizes );
+                static BorderSize indexToBorderSize( int index, QValueList< BorderSize > sizes );
 
 		QTabWidget* tabWidget;
 
@@ -109,6 +116,9 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		QCheckBox* cbUseCustomButtonPositions;
 	//	QCheckBox* cbUseMiniWindows;
 		QCheckBox* cbShowToolTips;
+                QLabel*    lBorder;
+                QSlider*   slBorder;
+                BorderSize border_size;
 
 		QObject* pluginObject;
 		QLabel*  pluginSettingsLbl;

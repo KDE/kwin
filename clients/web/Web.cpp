@@ -69,7 +69,7 @@ WebClient::init()
   QFontMetrics fm(options()->font(isActive(), isTool()));
 
   // border size
-  switch(options()->preferredBorderSize()) {
+  switch(options()->preferredBorderSize( factory())) {
     case BorderLarge:
       borderSize_ = 8;
       break;
@@ -85,7 +85,6 @@ WebClient::init()
     case BorderOversized:
       borderSize_ = 40;
       break;
-    case BorderTiny:
     case BorderNormal:
     default:
       borderSize_ = 4;
@@ -603,6 +602,12 @@ bool WebFactory::reset(unsigned long changed)
     resetDecorations(changed);
     return false;
   }
+}
+
+QValueList< WebFactory::BorderSize > WebFactory::borderSizes() const
+{ // the list must be sorted
+  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+      BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
 }

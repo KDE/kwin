@@ -122,7 +122,8 @@ public:
         BorderVeryLarge, ///< Very large borders
         BorderHuge,      ///< Huge borders
         BorderVeryHuge,  ///< Very huge borders
-        BorderOversized  ///< Oversized borders
+        BorderOversized, ///< Oversized borders
+        BordersCount     ///< @internal
         };
 };    
 
@@ -208,9 +209,13 @@ public:
      * The preferred border size selected by the user, e.g. for accessibility
      * reasons, or when using high resolution displays. It's up to the decoration
      * to decide which borders or if any borders at all will obey this setting.
+     * It is guaranteed that the returned value will be one of those
+     * returned by KDecorationFactory::borderSizes(), so if that one hasn't been
+     * reimplemented, BorderNormal is always returned.
      * The changed flags for this setting is SettingBorder.
+     * @param factory the decoration factory used
      */
-    BorderSize preferredBorderSize() const;
+    BorderSize preferredBorderSize( KDecorationFactory* factory ) const;
 
     /*
      * When this functions returns false, moving and resizing of maximized windows

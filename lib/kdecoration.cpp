@@ -370,9 +370,13 @@ bool KDecorationOptions::showTooltips() const
     return d->show_tooltips;
 }
 
-KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize() const
+KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize( KDecorationFactory* factory ) const
 {
-    return d->border_size;
+    assert( factory != NULL );
+    if( d->cached_border_size == BordersCount ) // invalid
+        d->cached_border_size = d->findPreferredBorderSize( d->border_size,
+            factory->borderSizes());
+    return d->cached_border_size;
 }
 
 bool KDecorationOptions::moveResizeMaximizedWindows() const
