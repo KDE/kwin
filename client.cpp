@@ -3058,7 +3058,8 @@ QCString Client::staticWmClientMachine(WId w)
         result = "localhost";
     } else {
         // special name for the local machine (localhost)
-        char hostnamebuf[80];
+        char hostnamebuf[256];
+	hostnamebuf[0] = '\0';
         if (gethostname (hostnamebuf, sizeof hostnamebuf) >= 0) {
             hostnamebuf[sizeof(hostnamebuf)-1] = 0;
             if (result == hostnamebuf)
