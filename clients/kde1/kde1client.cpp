@@ -289,9 +289,6 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
         button[0]->setIconSet( miniIcon() );
 
     connect( button[0], SIGNAL( pressed() ), this, SLOT( menuButtonPressed() ) );
-    button[0]->setPopupDelay( 0 );
-    button[0]->setPopup( workspace()->clientPopup( this ) );
-
     button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
                           isActive() ? *pinup_pix : *dis_pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
@@ -439,11 +436,17 @@ void StdClient::menuButtonPressed()
 	t = new QTime;
 
     if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
-	button[0]->setPopup( workspace()->clientPopup( this ) );
-    else {
-	button[0]->setPopup( 0 );
+    {
+        QPoint menupoint ( button[0]->rect().bottomLeft().x()-1,
+                           button[0]->rect().bottomLeft().y()+2 );
+        workspace()->clientPopup(this)->popup(
+                           button[0]->mapToGlobal( menupoint ));
+
+        // Animate the click when the menu button is pressed
+        button[0]->animateClick();
+    } else
 	closeWindow();
-    }
+
     t->start();
     tc = this;
 }
