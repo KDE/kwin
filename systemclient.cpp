@@ -211,7 +211,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     g->addLayout( hb, 0, 1 );
     hb->addSpacing(2);
     hb->addWidget( button[0] );
-    titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
+    titlebar = new QSpacerItem(10, 14, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
     hb->addItem(titlebar);
     hb->addSpacing(2);
