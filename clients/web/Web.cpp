@@ -70,16 +70,12 @@ extern "C"
 }
 
 Web::Web(Workspace * ws, WId w, bool tool, QWidget * parent, const char * name)
-  : Client(ws, w, parent, name, WResizeNoErase),
-    tool_(tool),
-    mainLayout_(0),
-    titleSpacer_(0)
+  : Client        (ws, w, parent, name, WResizeNoErase),
+    tool_         (tool),
+    mainLayout_   (0),
+    titleSpacer_  (0)
 {
   setBackgroundMode(NoBackground);
-
-  KConfig c(locate("config", "kwinwebrc"));
-  c.setGroup("General");
-  shape_ = c.readBoolEntry("Shape", true);
 
   _resetLayout();
 
@@ -166,7 +162,9 @@ Web::paintEvent(QPaintEvent * pe)
   }
 
   p.setFont(options->font(isActive(), tool_));
+
   p.setPen(options->color(Options::Font, isActive()));
+
   p.drawText(titleSpacer_->geometry(), AlignCenter, caption());
 }
 
@@ -420,6 +418,10 @@ Web::_createButtons()
   void
 Web::_resetLayout()
 {
+  KConfig c(locate("config", "kwinwebrc"));
+  c.setGroup("General");
+  shape_ = c.readBoolEntry("Shape", true);
+
   //  ____________________________________
   // |  |                              |  |
   // |Xo|     titleSpacer              |v^| <--- topLayout
@@ -444,26 +446,18 @@ Web::_resetLayout()
   if (0 != titleHeight % 2)
     titleHeight += 1;
 
-  if (0 == titleSpacer_)
-  {
-    titleSpacer_ =
-      new QSpacerItem
-      (
-       0,
-       titleHeight,
-       QSizePolicy::Expanding,
-       QSizePolicy::Fixed
-      );
-  }
-
   delete mainLayout_;
-  mainLayout_ = 0;
-
-  // -------------------------------------------------------------------
 
   mainLayout_  = new QVBoxLayout(this, 0, 0);
 
-  // -------------------------------------------------------------------
+  titleSpacer_ =
+    new QSpacerItem
+    (
+     0,
+     titleHeight,
+     QSizePolicy::Expanding,
+     QSizePolicy::Fixed
+    );
 
   QHBoxLayout * topLayout   = new QHBoxLayout(mainLayout_, 0, 0);
 
