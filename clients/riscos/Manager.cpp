@@ -393,7 +393,7 @@ Manager::slotHelp()
   void
 Manager::animateIconifyOrDeiconify(bool iconify)
 {
-//  animate(iconify, Static::instance()->animationStyle());
+  animate(iconify, Static::instance()->animationStyle());
 }
 
 void Manager::animate(bool iconify, int style)
@@ -548,10 +548,12 @@ void Manager::animate(bool iconify, int style)
 
         p.setRasterOp(Qt::NotROP);
 
+#if 0
         if (iconify)
           p.setClipRegion(
               QRegion(workspace()->desktopWidget()->rect()) - wingeom
           );
+#endif
 
         XGrabServer(qt_xdisplay());
 
