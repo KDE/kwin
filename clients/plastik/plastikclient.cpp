@@ -318,37 +318,37 @@ void PlastikClient::paintEvent(QPaintEvent*)
         }
     }
 
-        // leftSpacer
-        if(Rleft.width() > 0 && Rleft.height() > 0)
-        {
-            painter.setPen(windowContour );
-            painter.drawLine(Rleft.left(), Rleft.top(),
-                             Rleft.left(), Rleft.bottom() );
-            painter.setPen(highlightLeft );
-            painter.drawLine(Rleft.left()+1, Rleft.top(),
-                             Rleft.left()+1, Rleft.bottom() );
-            if(Rleft.width() > 2) {
-                tempRect.setCoords(Rleft.left()+2, Rleft.top(),
-                                Rleft.right(), Rleft.bottom() );
-                painter.fillRect(tempRect, border );
-            }
+    // leftSpacer
+    if(Rleft.width() > 0 && Rleft.height() > 0)
+    {
+        painter.setPen(windowContour );
+        painter.drawLine(Rleft.left(), Rleft.top(),
+                            Rleft.left(), Rleft.bottom() );
+        painter.setPen(highlightLeft );
+        painter.drawLine(Rleft.left()+1, Rleft.top(),
+                            Rleft.left()+1, Rleft.bottom() );
+        if(Rleft.width() > 2) {
+            tempRect.setCoords(Rleft.left()+2, Rleft.top(),
+                            Rleft.right(), Rleft.bottom() );
+            painter.fillRect(tempRect, border );
         }
+    }
 
-        // rightSpacer
-        if(Rright.width() > 0 && Rright.height() > 0)
-        {
-            painter.setPen(windowContour );
-            painter.drawLine(Rright.right(), Rright.top(),
-                             Rright.right(), Rright.bottom() );
-            painter.setPen(highlightRight );
-            painter.drawLine(Rright.right()-1, Rright.top(),
-                             Rright.right()-1, Rright.bottom() );
-            if(Rright.width() > 2) {
-                tempRect.setCoords(Rright.left(), Rright.top(),
-                                Rright.right()-2, Rright.bottom() );
-                painter.fillRect(tempRect, border );
-            }
+    // rightSpacer
+    if(Rright.width() > 0 && Rright.height() > 0)
+    {
+        painter.setPen(windowContour );
+        painter.drawLine(Rright.right(), Rright.top(),
+                            Rright.right(), Rright.bottom() );
+        painter.setPen(highlightRight );
+        painter.drawLine(Rright.right()-1, Rright.top(),
+                            Rright.right()-1, Rright.bottom() );
+        if(Rright.width() > 2) {
+            tempRect.setCoords(Rright.left(), Rright.top(),
+                            Rright.right()-2, Rright.bottom() );
+            painter.fillRect(tempRect, border );
         }
+    }
 
     // bottomSpacer
     if(Rbottom.height() > 0)
