@@ -5,6 +5,7 @@
  */
 
 #include "geometrytip.h"
+#include <X11/Xlib.h>
 
 using namespace KWinInternal;
 
@@ -13,6 +14,15 @@ GeometryTip::GeometryTip( const Client* client, const XSizeHints* xSizeHints ):
     QLabel(NULL, "kwingeometry", WStyle_Customize | WStyle_StaysOnTop |
 		    		 WStyle_NoBorder  | WX11BypassWM )
 {
+    // Enable SaveUnder so that we don't get those nasty unpainted 
+    // areas when moving/resizing the window in non-opaque modes.
+    // For this to work properly have 'Option "backingstore"' set in the Screen
+    // section of your XF86Config. (some drivers may not support saveunder, 
+    // oh well, we tried.)
+    XSetWindowAttributes wsa;
+    wsa.save_under = True;
+    XChangeWindowAttributes( qt_xdisplay(), winId(), CWSaveUnder, &wsa );
+
     c = client;
     setMargin(1);
     setIndent(0);
