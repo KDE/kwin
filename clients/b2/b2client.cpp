@@ -4,7 +4,8 @@
  * B-II KWin Client
  *
  * Changes:
- * 	Customizable button positions by Karol Szwed <gallium@kde.org>
+ *   Customizable button positions by Karol Szwed <gallium@kde.org>
+ *   Thin frame in fixed size windows by Luciano Montanaro <mikelima@virgilio.it>
  */ 
 
 #include "b2client.h"
@@ -400,7 +401,10 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     g->setColStretch(2, 1);
     g->setRowStretch(1, 1);
     g->addColSpacing(3, 4);
-    g->addRowSpacing(2, 8);
+    // Bottom border height
+    spacer = new QSpacerItem(10, isResizable() ? 8 : 4, 
+	    QSizePolicy::Expanding, QSizePolicy::Minimum);
+    g->addItem(spacer, 2, 1);
     // titlebar
     g->addRowSpacing(0, 20);
 
@@ -579,15 +583,18 @@ void B2Client::captionChange( const QString &)
 void B2Client::paintEvent( QPaintEvent* e)
 {
     QPainter p( this );
-
+    
+    // distance from the bottom border - it is different if window is resizable
+    int bb = isResizable() ? 0 : 4;
+    
     QRect t = titlebar->geometry();
 
     // inner window rect
-    p.drawRect(3, t.bottom(), width()-6, height()-t.height()-6);
+    p.drawRect(3, t.bottom(), width()-6, height()-t.height()-6+bb);
     p.drawLine(4, t.bottom()+1, width()-5, t.bottom()+1);
 
     // outer frame rect
-    p.drawRect(0, t.bottom()-3, width(), height()-t.height());
+    p.drawRect(0, t.bottom()-3, width(), height()-t.height()+bb);
 
     // draw frame interior
     if (colored_frame)
@@ -595,38 +602,40 @@ void B2Client::paintEvent( QPaintEvent* e)
     else
         p.setPen(options->color(Options::Frame, isActive()));
     
-    p.drawRect(2, t.bottom()-1, width()-4, height()-t.height()-4);
+    p.drawRect(2, t.bottom()-1, width()-4, height()-t.height()-4+bb);
     p.setPen(Qt::black);
     
     // frame shade panel
    if (colored_frame)
-       qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
+       qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2+bb,
                    options->colorGroup(Options::TitleBar, isActive()), false);
    else
-       qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
+       qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2+bb,
                     options->colorGroup(Options::Frame, isActive()), false);
    
     //bottom handle rect
-    int hx = width()-40;
-    int hw = 40;
+    if ( isResizable() ) {
+	int hx = width()-40;
+	int hw = 40;
 
-    p.drawLine(width()-1, height()-8, width()-1, height()-1);
-    p.drawLine(hx, height()-1, width()-1, height()-1);
-    p.drawLine(hx, height()-4, hx, height()-1);
+	p.drawLine(width()-1, height()-8, width()-1, height()-1);
+	p.drawLine(hx, height()-1, width()-1, height()-1);
+	p.drawLine(hx, height()-4, hx, height()-1);
 
-    p.fillRect(hx+1, height()-7, hw-2, 6, 
-        options->color(colored_frame ? Options::TitleBar:Options::Frame,
-	               isActive()));
+	p.fillRect(hx+1, height()-7, hw-2, 6, 
+	    options->color(colored_frame ? Options::TitleBar:Options::Frame,
+			   isActive()));
 
-    p.setPen(options->colorGroup(colored_frame ? Options::TitleBar:Options::Frame,
-                                 isActive()).dark());				 
-    p.drawLine(width()-2, height()-8, width()-2, height()-2);
-    p.drawLine(hx+1, height()-2, width()-2, height()-2);
+	p.setPen(options->colorGroup(colored_frame ? Options::TitleBar:Options::Frame,
+				     isActive()).dark());				 
+	p.drawLine(width()-2, height()-8, width()-2, height()-2);
+	p.drawLine(hx+1, height()-2, width()-2, height()-2);
 
-    p.setPen(options->colorGroup(colored_frame ? Options::TitleBar:Options::Frame,
-                                 isActive()).light());
-    p.drawLine(hx+1, height()-6, hx+1, height()-3);
-    p.drawLine(hx+1, height()-7, width()-3, height()-7);
+	p.setPen(options->colorGroup(colored_frame ? Options::TitleBar:Options::Frame,
+				     isActive()).light());
+	p.drawLine(hx+1, height()-6, hx+1, height()-3);
+	p.drawLine(hx+1, height()-7, width()-3, height()-7);
+    } 
 
     /* OK, we got a paint event, which means parts of us are now visible
        which were not before. We try the titlebar if it is currently fully
@@ -662,10 +671,15 @@ void B2Client::doShape()
         mask -= QRect(t.right()+1, 0, width()-t.right()-1, t.height()-4);
     }
     mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
-    mask -= QRect(0, height()-5, 1, 1); // bottom left point
-    mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
-    mask -= QRect(width()-40, height()-1, 1, 1); // handle left point
-    mask -= QRect(0, height()-4, width()-40, 4); // bottom left
+    if (isResizable()) {
+	mask -= QRect(0, height()-5, 1, 1); // bottom left point
+	mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
+	mask -= QRect(width()-40, height()-1, 1, 1); // handle left point
+	mask -= QRect(0, height()-4, width()-40, 4); // bottom left
+    } else {
+	mask -= QRect(0, height()-1, 1, 1); // bottom left point
+    }
+    
 
     setMask(mask);
 }
@@ -692,6 +706,7 @@ Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
     t.setHeight(20-border);
     int ly = t.bottom();
     int lx = t.right();
+    int bb = isResizable() ? 0 : 5;
 
     if ( p.x() > t.right() ) {
         if ( p.y() <= ly + range && p.x() >= width()-range)
@@ -719,7 +734,7 @@ Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
         }
     }
 
-    if (p.y() >= height() - 8) {
+    if (p.y() >= height() - 8 + bb) {
         /* the normal Client:: only wants border of 4 pixels */
 	if (p.x() <= range) return BottomLeft;
 	if (p.x() >= width()-range) return BottomRight;
@@ -765,6 +780,13 @@ void B2Client::maximizeChange(bool m)
         button[BtnMax]->repaint();
         button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
     }
+    spacer->changeSize(10, isResizable() ? 8 : 4, 
+	    QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    g->activate();
+    //setGeometry(x(), y(), width(), height() + (m ? -5 : +5) );
+    doShape();
+    repaint(false);
 }
 
 void B2Client::activeChange(bool on)

@@ -120,6 +120,7 @@ private:
         BtnHelp, BtnCount};
     B2Button* button[BtnCount];
     QGridLayout *g;
+    QSpacerItem *spacer; // Bottom border spacer
     int bar_x_ofs;
     B2Titlebar *titlebar;
     int in_unobs;
