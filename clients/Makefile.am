@@ -1,1 +1,1 @@
-SUBDIRS=kstep system b2 laptop riscos
+SUBDIRS=kstep system b2 laptop riscos mwm
