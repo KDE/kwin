@@ -238,11 +238,14 @@ void Options::reload()
     // custom button positions
     config->setGroup("Style");
     d->custom_button_positions = config->readBoolEntry("CustomButtonPositions", false);
-    if (d->custom_button_positions)
-	{
+    if (d->custom_button_positions) {
 	d->title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
 	d->title_buttons_right = config->readEntry("ButtonsOnRight", "HIAX");
-        }
+    }
+    else {
+	d->title_buttons_left  = "MS";
+	d->title_buttons_right = "HIAX";
+    }
         
     emit resetPlugin();
     emit resetClients();
@@ -294,19 +297,19 @@ Options::MouseCommand Options::mouseCommand(const QString &name)
 }
 
 QString Options::titleButtonsLeft()
-    {
+{
     return d->title_buttons_left;
-    }
+}
     
 QString Options::titleButtonsRight()
-    {
+{
     return d->title_buttons_right;
-    }
+}
     
 bool Options::customButtonPositions()
-    {
+{
     return d->custom_button_positions;
-    }
+}
     
 #include "options.moc"
 
