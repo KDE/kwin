@@ -997,10 +997,12 @@ void Workspace::activateClient( Client* c, bool force )
 void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 {
     if ( c->isIconified() || c->isShade() ) {
+	bool exclude_menu = !c->isIconified();
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	    if ( (*it)->transientFor() == c->window()
 		 && !(*it)->isIconified()
-		 && !(*it)->isShade() ) {
+		 && !(*it)->isShade() 
+		 && ( !exclude_menu || !(*it)->isMenu() ) ) {
 		(*it)->setMappingState( XIconicState );
 		(*it)->hide();
 		iconifyOrDeiconifyTransientsOf( (*it) );
@@ -1799,7 +1801,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     Client* old_active_client = active_client;
     active_client = 0;
     block_focus = TRUE;
-    
+
     ClientList mapList;
     ClientList unmapList;
 

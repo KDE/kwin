@@ -875,7 +875,6 @@ bool Client::unmapNotify( XUnmapEvent& e )
     case NormalState:
   	if ( !windowWrapper()->isVisibleTo( 0 ) && !e.send_event )
   	    return TRUE; // this event was produced by us as well
-	qDebug("UnmapNotify for %s.", caption().latin1() );
 
 	// maybe we will be destroyed soon. Check this first.
 	XEvent ev;
@@ -971,13 +970,13 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	// the location to the current location but miscalculate the
 	// frame size due to kwin being a double-reparenting window
 	// manager
-	if ( ox == 0 && oy == 0 && 
-	     nx == x() + windowWrapper()->x() && 
+	if ( ox == 0 && oy == 0 &&
+	     nx == x() + windowWrapper()->x() &&
 	     ny == y() + windowWrapper()->y() ) {
 	    nx = x();
 	    ny = y();
 	}
-	    
+	
 	
 	QPoint np( nx-ox, ny-oy);
 #if 0	
