@@ -215,7 +215,8 @@ int kdemain( int argc, char * argv[] )
             break;
         }
     }
-
+    
+    QCString envir;
     if (! restored) {
         // we only do the multihead fork if we are not restored by the session
 	// manager, since the session manager will register multiple kwins,
@@ -240,7 +241,6 @@ int kdemain( int argc, char * argv[] )
 	    if ((pos = display_name.findRev('.')) != -1 )
 		display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
 
-	    QCString envir;
 	    if (number_of_screens != 1) {
 		for (int i = 0; i < number_of_screens; i++ ) {
 		    // if execution doesn't pass by here, then kwin
