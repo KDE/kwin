@@ -595,6 +595,8 @@ void KDEClient::updateActiveBuffer( bool force )
 
     if( !force && lastWidth == titlebar->geometry().width())
         return;
+    if ( titlebar->geometry().width() <= 0 || titlebar->geometry().height() <= 0 )
+	return;
     lastWidth = titlebar->geometry().width();
 
     activeBuffer.resize(titlebar->geometry().width(),
