@@ -128,6 +128,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
         lBorder = new QLabel( buttonPage );
         slBorder = new QSlider( Horizontal, buttonPage );
+        slBorder->setPageStep(1);
         QWhatsThis::add( slBorder, i18n( "This slider shows all border sizes supported by this decoration." ));
         lBorder->setBuddy( slBorder );
         lBorder->hide();
