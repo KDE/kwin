@@ -404,6 +404,11 @@ bool Workspace::workspaceEvent( XEvent * e )
 	XUngrabKeyboard( qt_xdisplay(), kwin_time );
     }
 
+    if ( e->type == PropertyNotify || e->type == ClientMessage ) {
+	if ( netCheck( e ) )
+	    return TRUE;
+    }
+    
     Client * c = findClient( e->xany.window );
     if ( c )
 	return c->windowEvent( e );
@@ -528,10 +533,6 @@ bool Workspace::workspaceEvent( XEvent * e )
     case FocusIn:
 	break;
     case FocusOut:
-	break;
-    case PropertyNotify:
-    case ClientMessage:
-	return netCheck( e );
 	break;
     default:
 	if  ( e->type == Shape::shapeEvent() ) {
@@ -1949,7 +1950,7 @@ bool Workspace::netCheck( XEvent* e )
     if ( dirty & NET::DesktopNames )
 	saveDesktopSettings();
 
-    return FALSE;
+    return dirty != 0;
 }
 
 /*!
