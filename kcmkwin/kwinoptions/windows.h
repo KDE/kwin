@@ -135,17 +135,19 @@ private:
   bool getMinimizeAnim( void );
   int getMinimizeAnimSpeed( void );
   int getResizeOpaque ( void );
+  bool getGeometryTip( void ); //KS
   int getPlacement( void ); //CT
 
   void setMove(int);
   void setResizeOpaque(int);
+  void setGeometryTip(bool); //KS
   void setPlacement(int); //CT
   void setMoveResizeMaximized(bool);
 
   QButtonGroup *windowsBox;
   QCheckBox *opaque;
-
   QCheckBox *resizeOpaqueOn;
+  QCheckBox *geometryTipOn;
   QCheckBox* minimizeAnimOn;
   QSlider *minimizeAnimSlider;
   QLabel *minimizeAnimSlowLabel, *minimizeAnimFastLabel;

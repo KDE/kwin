@@ -254,6 +254,12 @@ public:
     static MouseCommand mouseCommand(const QString &name);
 
     /**
+    * @returns true if the Geometry Tip should be shown during a window move/resize.
+    * @since 3.2
+    */
+    bool showGeometryTip();
+
+    /**
     * @returns true if the style should use custom button positions
     * @see #titleButtonsLeft
     * @see #titleButtonsRight

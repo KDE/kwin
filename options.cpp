@@ -31,6 +31,7 @@ public:
     bool animate_tooltips;
     int electric_borders;
     int electric_border_delay;
+    bool show_geometry_tip;
 };
 };
 
@@ -170,7 +171,7 @@ void Options::reload()
     moveMode = config->readEntry("MoveMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
     resizeMode = config->readEntry("ResizeMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
     moveResizeMaximizedWindows = config->readBoolEntry("MoveResizeMaximizedWindows", true );
-
+    d->show_geometry_tip = config->readBoolEntry("GeometryTip", false);
 
     QString val;
 
@@ -323,6 +324,11 @@ Options::MouseCommand Options::mouseCommand(const QString &name)
     if (lowerName == "shade") return MouseShade;
     if (lowerName == "nothing") return MouseNothing;
     return MouseNothing;
+}
+
+bool Options::showGeometryTip()
+{
+    return d->show_geometry_tip;
 }
 
 QString Options::titleButtonsLeft()

@@ -1668,14 +1668,16 @@ void Client::mousePressEvent( QMouseEvent * e)
  */
 void Client::mouseReleaseEvent( QMouseEvent * e)
 {
+    // Do this here just in case.
+    if (geometryTip) {
+	geometryTip->hide();
+	delete geometryTip;
+	geometryTip = NULL;
+    }
+
     if ( (e->stateAfter() & MouseButtonMask) == 0 ) {
         buttonDown = FALSE;
         if ( moveResizeMode ) {
-	    if (geometryTip) {
-		geometryTip->hide();
-		delete geometryTip;
-		geometryTip = NULL;
-	    }
             clearbound();
             stopMoveResize();
             setGeometry( geom );
@@ -1797,17 +1799,18 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             drawbound( geom );
         }
 
-#if 0
 	// Position and Size display
-	if (!geometryTip)
-	    geometryTip = new GeometryTip( this, &xSizeHint );
+	if (options->showGeometryTip())
+	{
+	    if (!geometryTip)
+		geometryTip = new GeometryTip( this, &xSizeHint );
 
-	geometryTip->setGeometry( geom );
-	if (!geometryTip->isVisible()) {
-	    geometryTip->show();
-	    geometryTip->raise();
+	    geometryTip->setGeometry( geom );
+	    if (!geometryTip->isVisible()) {
+		geometryTip->show();
+		geometryTip->raise();
+	    }
 	}
-#endif
     }
     else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
         geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
@@ -1829,17 +1832,18 @@ void Client::mouseMoveEvent( QMouseEvent * e)
             break;
         }
 
-#if 0
-	// Position and Size display
-	if (!geometryTip)
-	    geometryTip = new GeometryTip( this, &xSizeHint );
+	if (options->showGeometryTip())
+	{
+	    // Position and Size display
+	    if (!geometryTip)
+		geometryTip = new GeometryTip( this, &xSizeHint );
 
-	geometryTip->setGeometry( geom );
-	if (!geometryTip->isVisible()) {
-	    geometryTip->show();
-	    geometryTip->raise();
+	    geometryTip->setGeometry( geom );
+	    if (!geometryTip->isVisible()) {
+		geometryTip->show();
+		geometryTip->raise();
+	    }
 	}
-#endif
     }
 
     if ( isMove() )

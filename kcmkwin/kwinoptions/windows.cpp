@@ -54,6 +54,7 @@
 #define KWIN_MINIMIZE_ANIM         "AnimateMinimize"
 #define KWIN_MINIMIZE_ANIM_SPEED   "AnimateMinimizeSpeed"
 #define KWIN_RESIZE_OPAQUE         "ResizeMode"
+#define KWIN_GEOMETRY		   "GeometryTip"
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
 #define KWIN_AUTORAISE             "AutoRaise"
 #define KWIN_CLICKRAISE            "ClickRaise"
@@ -699,6 +700,13 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
                                           " while resizing it, instead of just showing a window 'skeleton'. The result may not be satisfying"
                                           " on slow machines.") );
 
+    geometryTipOn = new QCheckBox(i18n("Display window geometry when moving or resizing"), windowsBox);
+    bLay->addWidget(geometryTipOn);
+    QWhatsThis::add(geometryTipOn, i18n("Enable this option if you want a window's geometry to be displayed"
+			    		" while it is being moved or resized. The window position relative"
+					" to the top-left corner of the screen is displayed together with"
+					" its size."));
+
     QGridLayout *rLay = new QGridLayout(2,3);
     bLay->addLayout(rLay);
     rLay->setColStretch(0,0);
@@ -824,6 +832,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
     // Any changes goes to slotChanged()
     connect( opaque, SIGNAL(clicked()), SLOT(changed()));
     connect( resizeOpaqueOn, SIGNAL(clicked()), SLOT(changed()));
+    connect( geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
     connect( minimizeAnimOn, SIGNAL(clicked() ), SLOT(changed()));
     connect( minimizeAnimSlider, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect( moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
@@ -841,6 +850,16 @@ int KMovingConfig::getMove()
 void KMovingConfig::setMove(int trans)
 {
     opaque->setChecked(trans == OPAQUE);
+}
+
+void KMovingConfig::setGeometryTip(bool showGeometryTip)
+{
+    geometryTipOn->setChecked(showGeometryTip);
+}
+
+bool KMovingConfig::getGeometryTip()
+{
+    return geometryTipOn->isChecked();
 }
 
 // placement policy --- CT 31jan98 ---
@@ -918,6 +937,10 @@ void KMovingConfig::load( void )
     else if ( key == "Transparent")
         setResizeOpaque(RESIZE_TRANSPARENT);
 
+    //KS 10Jan2003 - Geometry Tip during window move/resize
+    bool showGeomTip = config->readBoolEntry(KWIN_GEOMETRY, false);
+    setGeometryTip( showGeomTip );
+
     // placement policy --- CT 19jan98 ---
     key = config->readEntry(KWIN_PLACEMENT);
     //CT 13mar98 interactive placement
@@ -981,6 +1004,7 @@ void KMovingConfig::save( void )
     else
         config->writeEntry(KWIN_MOVE,"Opaque");
 
+    config->writeEntry(KWIN_GEOMETRY, getGeometryTip());
 
     // placement policy --- CT 31jan98 ---
     v =getPlacement();
@@ -1031,6 +1055,7 @@ void KMovingConfig::defaults()
 {
     setMove(OPAQUE);
     setResizeOpaque(RESIZE_TRANSPARENT);
+    setGeometryTip(false);
     setPlacement(SMART_PLACEMENT);
     setMoveResizeMaximized(true);
 
