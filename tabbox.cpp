@@ -12,12 +12,14 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #undef Bool // f**king X11
 #include <kglobal.h>
 #include <kconfig.h>
+#include <klocale.h>
 
 const bool options_traverse_all = FALSE; // TODO
 
 TabBox::TabBox( Workspace *ws, const char *name )
     : QWidget( 0, name, WStyle_Customize | WStyle_NoBorder )
 {
+    no_tasks = i18n("*** No Tasks ***");
     wspace = ws;
     reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
@@ -58,7 +60,7 @@ void TabBox::reset()
 	Client* c = workspace()->nextClient( client );
 	Client* stop = c;
 	QFontMetrics fm( fontMetrics() );
-	int cw = 0;
+	int cw = fm.width(no_tasks)+20;
 	while ( c ) {
 	    if ( (options_traverse_all ||c->isOnDesktop(workspace()->currentDesktop()))
 		 && (!c->isIconified() || c->mainClient() == c ) ) {
@@ -94,15 +96,23 @@ void TabBox::reset()
 void TabBox::nextPrev( bool next)
 {
     if ( mode() == WindowsMode ) {
-	Client* sign = client;
+	Client* firstClient = 0;
 	do {
-	    if (client != sign && !sign)
-		sign = client;
 	    if ( next )
 		client = workspace()->nextClient(client);
 	    else
 		client = workspace()->previousClient(client);
-	} while (client != sign && client &&
+	    if (!firstClient) {
+		// When we see our first client for the second time, 
+		// it's time to stop.
+	        firstClient = client;
+	    }
+	    else if (client == firstClient) {
+		// No candidates found.
+		client = 0;
+	        break;
+            }
+	} while (client &&
 		 (( !options_traverse_all &&
                     !client->isOnDesktop(workspace()->currentDesktop()) ) ||
 		  ( client->isIconified()  && client->mainClient() != client ))
@@ -112,7 +122,6 @@ void TabBox::nextPrev( bool next)
 	if (!options_traverse_all && client
 	    && !client->isOnDesktop(workspace()->currentDesktop()))
 	    client = 0;
-
     }
     else { // DesktopMode
 	if ( next ) {
@@ -223,7 +232,7 @@ void TabBox::paintContents()
 	}
 	else {
 	    r.setBottom( r.bottom() + 20 );
-	    p.drawText( r, AlignCenter, "*** No Tasks ***" );
+	    p.drawText( r, AlignCenter, no_tasks);
 	}
 
 	int x = (width() - clients.count() * 20 )/2;

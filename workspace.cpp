@@ -966,32 +966,26 @@ void Workspace::requestFocus( Client* c)
  */
 void Workspace::clientHidden( Client* c )
 {
-	if ( c == active_client || ( !active_client && c == should_get_focus ) )
+    if ( c == active_client || ( !active_client && c == should_get_focus ) )
+    {
+	active_client = 0;
+	should_get_focus = 0;
+        if (!block_focus &&
+            options->focusPolicyIsReasonable() &&
+	    !focus_chain.isEmpty()
+	   )
 	{
-		active_client = 0;
-		should_get_focus = 0;
-		if ( clients.contains( c ) ) {
-		    focus_chain.remove( c );
-		    focus_chain.prepend( c );
-		}
-		if (
-		!block_focus &&
-		options->focusPolicyIsReasonable() &&
-		!focus_chain.isEmpty()
-		)
-		{
-
-			ClientList::ConstIterator it = focus_chain.fromLast();
-	
-			do {
-				if ((*it)->isVisible()) {
-					requestFocus(*it);
-					break;
-				}
-				it--;
-			} while (it != focus_chain.begin());
-		}
-	}
+	    for (ClientList::ConstIterator it = focus_chain.fromLast();
+	         it != focus_chain.end();
+	         --it)
+	    {
+	        if ((*it)->isVisible()) {
+	            requestFocus(*it);
+	            break;
+	        }
+ 	    }
+        }	
+    }
 }
 
 
@@ -1543,24 +1537,25 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     if (new_desktop < 1 || new_desktop > number_of_desktops )
 	return;
 
+    active_client = 0;
     block_focus = TRUE;
 
     if (new_desktop != current_desktop) {
-        /*
-           optimized Desktop switching: unmapping done from back to front
-           mapping done from front to back => less exposure events
-         */
+       /*
+          optimized Desktop switching: unmapping done from back to front
+          mapping done from front to back => less exposure events
+        */
 
-        for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
-            if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
-	        (*it)->hide();
-	    }
-        }
-        for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-	    if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
-	        (*it)->show();
-	    }
-        }
+       for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
+          if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
+             (*it)->hide();
+	  }
+       }
+       for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+          if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
+             (*it)->show();
+          }
+       }
     }
     current_desktop = new_desktop;
 
@@ -1571,31 +1566,35 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
     // restore the focus on this desktop
     block_focus = FALSE;
-    Client* c = active_client;
+    Client* c = 0;
 
-    if ( !c || !c->isVisible() || c->passiveFocus()) {
-        c = nextClient(0);
-        Client* stop = c;
-        while ( c && (!c->isVisible() || c->passiveFocus()) ) {
-            c = nextClient( c );
-            if ( c == stop )
-                break;
-        }
+    if ( options->focusPolicyIsReasonable()) {
+       if (options->focusPolicy == Options::FocusFollowsMouse) {
+          // Search in focus chain
+          for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
+             if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
+	        c = *it;
+                break;	
+	     }
+          }
+       }
+   
+
+       if (!c) {
+          // Search top-most visible window
+          for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+	     if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
+	        c = *it;
+	        break;
+	     }
+          }
+       }
     }
 
-    if ( !c || !c->isVisible() || c->passiveFocus()) {
-	// there's no suitable client in the focus chain. Try to find any other client then.
-	for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
-	    if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
-		c = *it;
-		break;
-	    }
-	}
-    }
-    if ( c && c->isVisible() && !c->passiveFocus())
-	requestFocus( c );
+    if ( c )
+       requestFocus( c );
     else
-        focusToNull();
+       focusToNull();
 
     QApplication::syncX();
     KWM::switchToDesktop( current_desktop ); // ### compatibility

@@ -50,6 +50,7 @@ private:
     QLabel* icon;
     int wmax;
     QTimer delayedShowTimer;
+    QString no_tasks;
 };
 
 

@@ -350,6 +350,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     active = FALSE;
     shaded = FALSE;
     transient_for = None;
+    passive_focus = FALSE;
     is_shape = FALSE;
     is_sticky = FALSE;
     may_move = TRUE;
@@ -1428,7 +1429,9 @@ void Client::gravitate( bool invert )
 bool Client::x11Event( XEvent * e)
 {
     if ( e->type == EnterNotify ) {
-	if ( options->focusPolicy != Options::ClickToFocus )
+	if (( options->focusPolicy != Options::ClickToFocus ) &&
+	    (( options->focusPolicy != Options::FocusFollowsMouse) ||
+               !passiveFocus()))
 	    workspace()->requestFocus( this );
 	return TRUE;
     }
