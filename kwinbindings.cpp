@@ -32,6 +32,7 @@
  keys->insertItem(i18n("Window resize"),"Window resize", "");
  keys->insertItem(i18n("Window raise"),"Window raise", "");
  keys->insertItem(i18n("Window lower"),"Window lower", "");
+ keys->insertItem(i18n("Window raise-or-lower"), "Toggle raise and lower", "");
  
  keys->insertItem(i18n("Walk through desktops"),"Walk through desktops", "CTRL+Tab");
  keys->insertItem(i18n("Walk back through desktops"),"Walk back through desktops", "SHIFT+CTRL+Tab");
@@ -43,3 +44,4 @@
  keys->insertItem(i18n("Logout"),"Logout", "CTRL+ALT+Delete");
 
  keys->insertItem(i18n("Kill Window"),"Kill Window", "CTRL+ALT+Escape");
+  

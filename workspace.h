@@ -130,6 +130,7 @@ public:
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
     void lowerClient( Client* c );
+    void raiseOrLowerClient( Client * );
 
     void clientHidden( Client*  );
 
@@ -227,6 +228,7 @@ public slots:
     void slotWindowShade();
     void slotWindowRaise();
     void slotWindowLower();
+    void slotWindowRaiseOrLower();
 
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();

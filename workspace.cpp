@@ -1904,6 +1904,20 @@ void Workspace::raiseClient( Client* c )
 
 }
 
+void Workspace::raiseOrLowerClient( Client *c)
+{
+    if (!c) return;
+
+    if (c == most_recently_raised)
+    {
+        lowerClient(c);
+    }
+    else
+    {
+        raiseClient(c);
+    }
+}
+
 
 /*!
   Private auxiliary function used in raiseClient()
@@ -2282,6 +2296,7 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window resize", this, SLOT( slotWindowResize() ) );
     keys->connectItem( "Window raise", this, SLOT( slotWindowRaise() ) );
     keys->connectItem( "Window lower", this, SLOT( slotWindowLower() ) );
+    keys->connectItem( "Toggle raise and lower", this, SLOT( slotWindowRaiseOrLower() ) );
 
     keys->connectItem( "Walk through desktops", this, SLOT( slotWalkThroughDesktops()));
     keys->connectItem( "Walk back through desktops", this, SLOT( slotWalkBackThroughDesktops()));
@@ -2451,6 +2466,15 @@ void Workspace::slotWindowLower()
 {
     if ( popup_client )
         lowerClient( popup_client );
+}
+
+/*!
+  Does a toggle-raise-and-lower on the popup client;
+  */
+void Workspace::slotWindowRaiseOrLower()
+{
+    if  ( popup_client )
+        raiseOrLowerClient( popup_client );
 }
 
 
