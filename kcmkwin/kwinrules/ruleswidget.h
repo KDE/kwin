@@ -38,6 +38,7 @@ class RulesWidget
         RulesWidget( QWidget* parent = NULL, const char* name = NULL );
         void setRules( Rules* r );
         Rules* rules() const;
+        bool finalCheck();
     signals:
         void changed( bool state );
     protected slots:

@@ -29,6 +29,7 @@
 #include <qregexp.h>
 #include <qwhatsthis.h>
 #include <assert.h>
+#include <kmessagebox.h>
 
 #include "../../rules.h"
 
@@ -415,7 +416,7 @@ Rules* RulesWidget::rules() const
     rules->types = 0;
     bool all_types = true;
     for( int i = 0;
-         i <= 9;
+         i < types->count();
          ++i )
         if( !types->isSelected( i ))
             all_types = false;
@@ -513,6 +514,26 @@ void RulesWidget::detected( bool ok )
     detect_dlg = NULL;
     }
 
+bool RulesWidget::finalCheck()
+    {
+    bool all_types = true;
+    for( int i = 0;
+         i < types->count();
+         ++i )
+        if( !types->isSelected( i ))
+            all_types = false;
+    if( wmclass_match->currentItem() == Rules::UnimportantMatch && all_types )
+        {
+        if( KMessageBox::warningContinueCancel( topLevelWidget(),
+            i18n( "You have specified the window class as unimportant.\n"
+                  "This means the settings will possibly apply to windows from all applications. "
+                  "If you really want to create a generic setting, it is recommended you at least "
+                  "limit the window types to avoid special window types." )) != KMessageBox::Continue )
+            return false;
+        }
+    return true;
+    }
+
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
 : KDialogBase( parent, name, true, "", Ok | Cancel )
     {
@@ -530,8 +551,10 @@ Rules* RulesDialog::edit( Rules* r )
 
 void RulesDialog::accept()
     {
-    KDialogBase::accept();
+    if( !widget->finalCheck())
+        return;
     rules = widget->rules();
+    KDialogBase::accept();
     }
 
 } // namespace
