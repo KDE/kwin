@@ -220,7 +220,9 @@ public:
     MouseRaise, MouseLower, MouseOperationsMenu, MouseToggleRaiseAndLower,
     MouseActivateAndRaise, MouseActivateAndLower, MouseActivate,
     MouseActivateRaiseAndPassClick, MouseActivateAndPassClick,
-    MouseMove, MouseResize, MouseNothing
+    MouseMove, MouseResize, 
+    MouseShade,
+    MouseNothing
     };
 
     MouseCommand commandActiveTitlebar1() { return CmdActiveTitlebar1; }

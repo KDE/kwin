@@ -2407,6 +2407,9 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
     case Options::MouseLower:
 	workspace()->lowerClient( this );
 	break;
+    case Options::MouseShade :
+    	setShade(!isShade());
+	break;
     case Options::MouseOperationsMenu:
 	if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
 	    autoRaise();

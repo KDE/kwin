@@ -256,6 +256,7 @@ Options::MouseCommand Options::mouseCommand(const QString &name)
     if (name == "Activate and pass click") return MouseActivateAndPassClick;
     if (name == "Move") return MouseMove;
     if (name == "Resize") return MouseResize;
+    if (name == "Shade") return MouseShade;
     if (name == "Nothing") return MouseNothing;
     return MouseNothing;
 }
