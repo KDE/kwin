@@ -1837,7 +1837,8 @@ bool Client::x11Event( XEvent * e)
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
-	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled() ) {
+	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled() 
+	     && workspace()->topClientOnDesktop() != this ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = new QTimer( this );
 	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
@@ -2684,7 +2685,7 @@ void Client::autoRaise()
     autoRaiseTimer = 0;
 }
 
-/*!  
+/*!
   Clones settings from other client. Used in
   Workspace::slotResetAllClients()
  */
@@ -2703,7 +2704,7 @@ NETWinInfo * Client::netWinInfo()
   return static_cast<NETWinInfo *>(info);
 }
 
-/*!  
+/*!
   The transient_for window may be embedded in another application,
   so kwin cannot see it. Try to find the managed client for the
   window and fix the transient_for property if possible.
@@ -2715,8 +2716,8 @@ void Client::verifyTransientFor()
     if ( transient_for == 0 || transient_for == win )
 	return;
     WId old_transient_for = transient_for;
-    while ( transient_for && 
-	    transient_for != workspace()->rootWin() && 
+    while ( transient_for &&
+	    transient_for != workspace()->rootWin() &&
 	    !workspace()->findClient( transient_for ) ) {
 	wins = 0;
 	int r = XQueryTree(qt_xdisplay(), transient_for, &root_return, &parent_return,  &wins, &nwins);
