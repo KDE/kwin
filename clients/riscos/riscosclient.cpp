@@ -332,7 +332,7 @@ TitleBar::mousePressEvent(QMouseEvent * e)
 }
 
   void
-TitleBar::mouseReleaseEvent(QMouseEvent * e)
+TitleBar::mouseReleaseEvent(QMouseEvent *)
 {
 }
 
@@ -351,7 +351,7 @@ TitleBar::mouseMoveEvent(QMouseEvent * e)
 }
 
   void
-TitleBar::mouseDoubleClickEvent(QMouseEvent * e)
+TitleBar::mouseDoubleClickEvent(QMouseEvent *)
 {
   client_->setShade(!client_->isShade());
 }
@@ -601,7 +601,7 @@ Manager::captionChange(const QString &)
 }
 
   void
-Manager::activeChange(bool b)
+Manager::activeChange(bool)
 {
   title_->update();
   lower_->update();
@@ -645,7 +645,7 @@ Manager::resize(int w, int h)
 }
 
   void
-Manager::setShade(bool b)
+Manager::setShade(bool)
 {
 #if 0
   // Hmm. This does screwy things to the layout.

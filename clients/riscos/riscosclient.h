@@ -32,32 +32,6 @@ class QPixmap;
 
 namespace RiscOS {
 
-static QPixmap * px_button_base_up;
-static QPixmap * px_button_base_down;
-static QPixmap * px_button_base_up_active;
-static QPixmap * px_button_base_down_active;
-static QPixmap * px_button_iconify_;
-static QPixmap * px_button_close_;
-static QPixmap * px_button_lower_;
-static QPixmap * px_button_max_;
-static QPixmap * px_button_unmax_;
-static QPixmap * px_button_iconify_active;
-static QPixmap * px_button_close_active;
-static QPixmap * px_button_lower_active;
-static QPixmap * px_button_max_active;
-static QPixmap * px_button_unmax_active;
-static QPixmap * px_title_inactive_left_;
-static QPixmap * px_title_inactive_;
-static QPixmap * px_title_inactive_right_;
-static QPixmap * px_title_active_left_;
-static QPixmap * px_title_active_;
-static QPixmap * px_title_active_right_;
-static QPixmap * px_resize_left_;
-static QPixmap * px_resize_mid_;
-static QPixmap * px_resize_right_;
-
-// --------------------------------------------------------------------------
-
 class Manager;
 
 class Button : public QButton

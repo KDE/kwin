@@ -1,4 +1,3 @@
-
 INCLUDES = $(all_includes) 
 
 lib_LTLIBRARIES = libkwinriscos.la
