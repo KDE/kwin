@@ -162,7 +162,7 @@ static const char description[] = I18N_NOOP( "The KDE window manager." );
 static KCmdLineOptions args[] =
     {
         { "lock", I18N_NOOP("Disable configuration options"), 0 },
-        { "replace", I18N_NOOP("Replace already running ICCCM2.0 compliant window manager."), 0 },
+        { "replace", I18N_NOOP("Replace already running ICCCM2.0 compliant window manager"), 0 },
         KCmdLineLastOption
     };
 
