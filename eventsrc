@@ -157,7 +157,7 @@ Comment[tr]=Sanal masaüstü bir seçili
 Comment[uk]=Вибрано віртуальну стільницю Один
 Comment[uz]=Биринчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面一被选中
-default_sound=KDE_Desktop1.wav
+default_sound=KDE_Desktop_1.ogg
 default_presentation=0
 
 [desktop2]
@@ -249,7 +249,7 @@ Comment[tr]=Sanal masaüstü iki seçili
 Comment[uk]=Вибрано віртуальну стільницю Два
 Comment[uz]=Иккинчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面二被选中
-default_sound=KDE_Desktop2.wav
+default_sound=KDE_Desktop_2.ogg
 default_presentation=0
 
 [desktop3]
@@ -341,7 +341,7 @@ Comment[tr]=Sanal masaüstü üç seçili
 Comment[uk]=Вибрано віртуальну стільницю Три
 Comment[uz]=Учинчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面三被选中
-default_sound=KDE_Desktop3.wav 
+default_sound=KDE_Desktop_3.ogg 
 default_presentation=0
 
 [desktop4]
@@ -433,7 +433,7 @@ Comment[tr]=Sanal masaüstü dört seçili
 Comment[uk]=Вибрано віртуальну стільницю Чотири
 Comment[uz]=Тўртинчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面四被选中
-default_sound=KDE_Desktop4.wav 
+default_sound=KDE_Desktop_4.ogg 
 default_presentation=0
 
 [desktop5]
@@ -525,7 +525,7 @@ Comment[tr]=Sanal masaüstü beş seçili
 Comment[uk]=Вибрано віртуальну стільницю П'ять
 Comment[uz]=Бешинчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面五被选中
-default_sound=KDE_Desktop5.wav 
+default_sound=KDE_Desktop_5.ogg 
 default_presentation=0
 
 [desktop6]
@@ -617,7 +617,7 @@ Comment[tr]=Sanal masaüstü altı seçili
 Comment[uk]=Вибрано віртуальну стільницю Шість
 Comment[uz]=Олтинчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面六被选中
-default_sound=KDE_Desktop6.wav 
+default_sound=KDE_Desktop_6.ogg 
 default_presentation=0
 
 [desktop7]
@@ -709,7 +709,7 @@ Comment[tr]=Sanal masaüstü yedi seçili
 Comment[uk]=Вибрано віртуальну стільницю Сім
 Comment[uz]=Еттинчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面七被选中
-default_sound=KDE_Desktop7.wav 
+default_sound=KDE_Desktop_7.ogg 
 default_presentation=0
 
 [desktop8]
@@ -801,7 +801,7 @@ Comment[tr]=Sanal masaüstü sekiz seçili
 Comment[uk]=Вибрано віртуальну стільницю Вісім
 Comment[uz]=Саккизинчи виртуал иш столи танланган
 Comment[zh_CN]=虚拟桌面八被选中
-default_sound=KDE_Desktop8.wav 
+default_sound=KDE_Desktop_8.ogg 
 default_presentation=0
 
 [activate]
@@ -986,7 +986,7 @@ Comment[tr]=Yeni pencere
 Comment[uk]=Відкрите нове вікно
 Comment[uz]=Янги ойна
 Comment[zh_CN]=新建窗口
-default_sound=KDE_Window_Open.wav
+default_sound=KDE_Window_Open.ogg
 default_presentation=0
 
 [delete]
@@ -1169,7 +1169,7 @@ Comment[tr]=Bir pencere kapatıldı
 Comment[uk]=Вікно закривається
 Comment[uz]=Ойна ёпилмоқда
 Comment[zh_CN]=关闭一个窗口
-default_sound=KDE_Window_Close.wav
+default_sound=KDE_Window_Close.ogg
 default_presentation=0
 
 [shadeup]
@@ -1257,7 +1257,7 @@ Comment[sv]=Ett fönster rullas upp
 Comment[tr]=Pencere yukarı gizlendi
 Comment[uk]=Вікно згорнуто
 Comment[zh_CN]=窗口被卷起
-default_sound=KDE_Window_Shade_Up.wav
+default_sound=KDE_Window_Shade_Up.ogg
 default_presentation=0
 
 [shadedown]
@@ -1345,7 +1345,7 @@ Comment[sv]=Ett fönster rullas ner
 Comment[tr]=Pencere aşağı gizlendi
 Comment[uk]=Вікно розгорнуто
 Comment[zh_CN]=窗口放下
-default_sound=KDE_Window_Shade_Down.wav
+default_sound=KDE_Window_Shade_Down.ogg
 default_presentation=0
 
 [minimize]
@@ -1423,7 +1423,7 @@ Comment[tr]=Bir pencere simge haline getirildi
 Comment[uk]=Вікно мінімізовано
 Comment[uz]=Ойна йиғилган
 Comment[zh_CN]=窗口被最小化
-default_sound=KDE_Window_Iconify.wav
+default_sound=KDE_Window_Iconify.ogg
 default_presentation=0
 
 [unminimize]
@@ -1495,7 +1495,7 @@ Comment[tr]=Bir pencere eski boyutuna getirildi
 Comment[uk]=Вікно відновлено
 Comment[uz]=Ойна тикланган
 Comment[zh_CN]=窗口恢复大小
-default_sound=KDE_Window_DeIconify.wav   
+default_sound=KDE_Window_DeIconify.ogg   
 default_presentation=0
 
 [maximize]
@@ -1589,7 +1589,7 @@ Comment[tr]=Bir pencere büyütüldü
 Comment[uk]=Вікно максимізовано
 Comment[uz]=Ойна ёйилган
 Comment[zh_CN]=窗口被最大化
-default_sound=KDE_Window_Maximize.wav   
+default_sound=KDE_Window_UnHide.ogg   
 default_presentation=0
 
 [unmaximize]
@@ -1678,7 +1678,7 @@ Comment[sv]=Ett fönster förlorar maximering
 Comment[tr]=Bir pencere büyümesini kaybetti
 Comment[uk]=Вікно втрачає максимізацію
 Comment[zh_CN]=窗口恢复大小
-default_sound=KDE_Window_UnMaximize.wav
+default_sound=KDE_Window_Hide.ogg
 default_presentation=0
 
 [on_all_desktops]
@@ -1753,7 +1753,7 @@ Comment[tr]=Bir pencere tüm masaüstlerinde görünür hale getirildi
 Comment[uk]=Вікно зроблено видимим на всіх стільницях
 Comment[uz]=Ойна ҳамма иш столларида кўринадиган қилинди
 Comment[zh_CN]=窗口已放在全部桌面上
-default_sound=KDE_Window_Sticky.wav
+default_sound=KDE_Window_Sticky.ogg
 default_presentation=0
 
 [not_on_all_desktops]
@@ -1827,7 +1827,7 @@ Comment[uk]=Вікно більше не є видимим на всіх сті�
 Comment[uz]=Ойна ҳамма иш столларида кўринмайдиган қилинди
 Comment[zh_CN]=窗口不再放在全部桌面上
 default_presentation=1
-default_sound=KDE_Window_UnSticky.wav
+default_sound=KDE_Window_UnSticky.ogg
 
 [transnew]
 Name=New Dialog
@@ -1917,7 +1917,7 @@ Comment[tr]=Bir iletişim kutusu belirdi
 Comment[uk]=З'являється тимчасове вікно (діалог)
 Comment[uz]=Мулоқат ойнаси пайдо бўлди
 Comment[zh_CN]=暂态窗口(对话框)出现
-default_sound=KDE_Dialog_Appear.wav
+default_sound=KDE_Dialog_Appear.ogg
 default_presentation=0
 
 [transdelete]
@@ -2007,7 +2007,7 @@ Comment[tr]=Bir iletişim kutusu kaldırıldı
 Comment[uk]=Зникає тимчасове вікно (діалог)
 Comment[uz]=Мулоқат ойнаси ёпилди
 Comment[zh_CN]=暂态窗口(对话框)删除
-default_sound=KDE_Dialog_Disappear.wav
+default_sound=KDE_Dialog_Disappear.ogg
 default_presentation=0
 
 [movestart]
