@@ -175,17 +175,17 @@ unsigned long Options::updateSettings()
     translucentActiveWindows = config->readBoolEntry("TranslucentActiveWindows", false);
     activeWindowOpacity = uint((config->readNumEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config->readBoolEntry("TranslucentInactiveWindows", false);
-    inactiveWindowOpacity = uint((config->readNumEntry("InactiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
+    inactiveWindowOpacity = uint((config->readNumEntry("InactiveWindowOpacity", 75)/100.0)*0xFFFFFFFF);
     translucentMovingWindows = config->readBoolEntry("TranslucentMovingWindows", false);
-    movingWindowOpacity = uint((config->readNumEntry("MovingWindowOpacity", 100)/100.0)*0xFFFFFFFF);
+    movingWindowOpacity = uint((config->readNumEntry("MovingWindowOpacity", 50)/100.0)*0xFFFFFFFF);
     translucentDocks = config->readBoolEntry("TranslucentDocks", false);
-    dockOpacity = uint((config->readNumEntry("DockOpacity", 100)/100.0)*0xFFFFFFFF);
+    dockOpacity = uint((config->readNumEntry("DockOpacity", 80)/100.0)*0xFFFFFFFF);
     keepAboveAsActive = config->readBoolEntry("TreatKeepAboveAsActive", true);
     //TODO: remove this variable
     useTitleMenuSlider = true;
-    activeWindowShadowSize = config->readNumEntry("ActiveWindowShadowSize", 100);
+    activeWindowShadowSize = config->readNumEntry("ActiveWindowShadowSize", 200);
     inactiveWindowShadowSize = config->readNumEntry("InactiveWindowShadowSize", 100);
-    dockShadowSize = config->readNumEntry("DockShadowSize", 100);
+    dockShadowSize = config->readNumEntry("DockShadowSize", 80);
     removeShadowsOnMove = config->readBoolEntry("RemoveShadowsOnMove", true);
     removeShadowsOnResize = config->readBoolEntry("RemoveShadowsOnResize", true);
     if (resetKompmgr = config->readBoolEntry("ResetKompmgr", false))

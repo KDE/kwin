@@ -266,6 +266,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         XReparentWindow( qt_xdisplay(), decoration->widget()->winId(), frameId(), 0, 0 );
         decoration->widget()->lower();
         decoration->borders( border_left, border_right, border_top, border_bottom );
+        setXTitleHeightProperty(border_top);
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( false ));
@@ -322,6 +323,8 @@ void Client::checkBorderSizes()
     move( calculateGravitation( true ));
     border_left = new_left;
     border_right = new_right;
+    if (border_top != new_top)
+        setXTitleHeightProperty(new_top);
     border_top = new_top;
     border_bottom = new_bottom;
     move( calculateGravitation( false ));
@@ -2011,6 +2014,12 @@ bool Client::touches(const Client* c)
         return TRUE;
     return FALSE;
     }
+    
+void Client::setXTitleHeightProperty(int titleHeight)
+{
+    long data = titleHeight;
+    XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_titleheight, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
+}
     
 #ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Client* cl )

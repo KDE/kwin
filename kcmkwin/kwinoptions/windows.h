@@ -253,6 +253,7 @@ private:
   QCheckBox *removeShadowsOnResize;
   QCheckBox *removeShadowsOnMove;
   QGroupBox *sGroup;
+  QComboBox *transMode;
 //   QPushButton *xcompmgrButton;
   KIntNumInput *activeWindowOpacity;
   KIntNumInput *inactiveWindowOpacity;

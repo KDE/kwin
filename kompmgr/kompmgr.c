@@ -80,6 +80,8 @@ typedef struct _win {
     Picture		alphaPict;
     Picture		shadowPict;
     XserverRegion	borderSize;
+    XserverRegion	titleSize;
+    XserverRegion	contentSize;
     XserverRegion	extents;
     unsigned int	preShadeOpacity;
     Picture		shadow;
@@ -92,7 +94,7 @@ typedef struct _win {
     Atom                windowType;
     unsigned long	damage_sequence;    /* sequence when damage was created */
     Bool                shapable; /* this will allow window managers to exclude windows if just the deco is shaped*/
-    /*Bool                fadesBlocked;*/
+    int                 titleHeight;
 
     /* for drawing translucent windows */
     XserverRegion	borderClip;
@@ -148,6 +150,7 @@ Atom		opacityAtom;
 Atom		shadowAtom;
 Atom		shadeAtom;
 Atom		shapableAtom;
+Atom            titleHeightAtom;
 Atom            winTypeAtom;
 Atom            winDesktopAtom;
 Atom            winDockAtom;
@@ -163,6 +166,7 @@ Atom            winNormalAtom;
 #define SHADOW_PROP	"_KDE_WM_WINDOW_SHADOW"
 #define SHADE_PROP	"_KDE_WM_WINDOW_SHADE"
 #define SHAPABLE_PROP	"_KDE_WM_WINDOW_SHAPABLE"
+#define TITLEHEIGHT_PROP "_KDE_WM_WINDOW_TITLEHEIGHT"
 
 #define TRANSLUCENT	0xe0000000
 #define OPAQUE		0xffffffff
@@ -188,6 +192,12 @@ typedef enum _compMode {
     CompClientShadows,	/* use window extents for shadow, blurred */
 } CompMode;
 
+typedef enum _transMode {
+    Title,  /*only the titlebar is drawn translucent*/
+    Content, /*only the content is drawn translucent*/
+    All     /*all window is drawn translucent*/
+} TransMode;
+
 static void
 determine_mode(Display *dpy, win *w);
     
@@ -198,6 +208,7 @@ static XserverRegion
 win_extents (Display *dpy, win *w);
 
 CompMode    compMode = CompSimple;
+TransMode   transMode = All;
 
 int	    shadowRadius = 12;
 int         shadowOffsetX = 0;
@@ -946,6 +957,56 @@ border_size (Display *dpy, win *w)
     return border;
 }
 
+static XserverRegion
+title_size (Display *dpy, win *w)
+{
+    XserverRegion   title;
+    XRectangle	    r; /*titlebounding rect*/
+    /*
+    * if window doesn't exist anymore,  this will generate an error
+    * as well as not generate a region.  Perhaps a better XFixes
+    * architecture would be to have a request that copies instead
+    * of creates, that way you'd just end up with an empty region
+    * instead of an invalid XID.
+    */
+    r.x = w->a.x - w->a.border_width;
+    r.y = w->a.y - w->a.border_width;
+    r.width = w->a.width + w->a.border_width * 2;
+    r.height = w->titleHeight + w->a.border_width;
+    set_ignore (dpy, NextRequest (dpy));
+    title = XFixesCreateRegion (dpy, &r, 1);
+    if (!w->borderSize)
+        w->borderSize = border_size (dpy, w);
+    set_ignore (dpy, NextRequest (dpy));
+    XFixesIntersectRegion(dpy, title, w->borderSize, title);
+    return title;
+}
+
+static XserverRegion
+content_size (Display *dpy, win *w)
+{
+    XserverRegion   content;
+    XRectangle	    r; /*contentbounding rect*/
+    /*
+    * if window doesn't exist anymore,  this will generate an error
+    * as well as not generate a region.  Perhaps a better XFixes
+    * architecture would be to have a request that copies instead
+    * of creates, that way you'd just end up with an empty region
+    * instead of an invalid XID.
+    */
+    r.x = w->a.x - w->a.border_width;
+    r.y = w->a.y - w->a.border_width + w->titleHeight;
+    r.width = w->a.width + w->a.border_width * 2;
+    r.height = w->a.height + w->a.border_width - w->titleHeight;
+    set_ignore (dpy, NextRequest (dpy));
+    content = XFixesCreateRegion (dpy, &r, 1);
+    if (!w->borderSize)
+        w->borderSize = border_size (dpy, w);
+    set_ignore (dpy, NextRequest (dpy));
+    XFixesIntersectRegion(dpy, content, w->borderSize, content);
+    return content;
+}
+
 static void
 paint_all (Display *dpy, XserverRegion region)
 {
@@ -1027,6 +1088,18 @@ paint_all (Display *dpy, XserverRegion region)
 		XFixesDestroyRegion (dpy, w->borderSize);
 		w->borderSize = None;
 	    }
+            if (w->titleSize)
+            {
+                set_ignore (dpy, NextRequest (dpy));
+                XFixesDestroyRegion (dpy, w->titleSize);
+                w->titleSize = None;
+            }
+            if (w->contentSize)
+            {
+                set_ignore (dpy, NextRequest (dpy));
+                XFixesDestroyRegion (dpy, w->contentSize);
+                w->contentSize = None;
+            }
 	    if (w->extents)
 	    {
 		XFixesDestroyRegion (dpy, w->extents);
@@ -1040,9 +1113,9 @@ paint_all (Display *dpy, XserverRegion region)
 	}
 	if (!w->borderSize)
 	    w->borderSize = border_size (dpy, w);
-	if (!w->extents)
+        if (!w->extents)
 	    w->extents = win_extents (dpy, w);
-	if (w->mode == WINDOW_SOLID)
+        if ((w->mode == WINDOW_SOLID) || ((w->mode == WINDOW_TRANS) && (transMode < All) && w->titleHeight))
 	{
 	    int	x, y, wid, hei;
 #if HAS_NAME_WINDOW_PIXMAP
@@ -1058,11 +1131,40 @@ paint_all (Display *dpy, XserverRegion region)
 #endif
 	    XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, region);
 	    set_ignore (dpy, NextRequest (dpy));
-	    XFixesSubtractRegion (dpy, region, region, w->borderSize);
-	    set_ignore (dpy, NextRequest (dpy));
-	    XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
-			      0, 0, 0, 0, 
-			      x, y, wid, hei);
+	    /*XFixesSubtractRegion (dpy, region, region, w->borderSize);
+            set_ignore (dpy, NextRequest (dpy));*/
+            if (w->mode == WINDOW_SOLID)
+            {
+                XFixesSubtractRegion (dpy, region, region, w->borderSize);
+                set_ignore (dpy, NextRequest (dpy));
+                XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
+                                  0, 0, 0, 0, x, y, wid, hei);
+            }
+            else
+                switch (transMode) {
+                case Title:
+                {
+                    if (!w->contentSize)
+                        w->contentSize = content_size (dpy, w);
+                    XFixesSubtractRegion (dpy, region, region, w->contentSize);
+                    set_ignore (dpy, NextRequest (dpy));
+                    /*solid part*/
+                    XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
+                                      0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
+                    break;
+                }
+                case Content:
+                {
+                    if (!w->titleSize)
+                        w->titleSize = title_size (dpy, w);
+                    XFixesSubtractRegion (dpy, region, region, w->titleSize);
+                    set_ignore (dpy, NextRequest (dpy));
+                    /*solid part*/
+                    XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
+                                      0, 0, 0, 0, x, y, wid, w->titleHeight);
+                    break;
+                }
+            }
 	}
 	if (!w->borderClip)
 	{
@@ -1114,12 +1216,12 @@ paint_all (Display *dpy, XserverRegion region)
 				  w->shadow_width, w->shadow_height);
 	    }
 	    break;
-	}
         }
+	}
 	if (w->opacity != OPAQUE && !w->alphaPict)
 	    w->alphaPict = solid_picture (dpy, False, 
 					  (double) w->opacity / OPAQUE, shadowColor.red, shadowColor.green, shadowColor.blue);
-	if (w->mode == WINDOW_TRANS)
+        if (w->mode == WINDOW_TRANS)
 	{
 	    int	x, y, wid, hei;
             XFixesIntersectRegion (dpy, w->borderClip, w->borderClip, w->borderSize);
@@ -1136,9 +1238,25 @@ paint_all (Display *dpy, XserverRegion region)
 	    hei = w->a.height;
 #endif
 	    set_ignore (dpy, NextRequest (dpy));
-	    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-			      0, 0, 0, 0, 
-			      x, y, wid, hei);
+	    if (!w->titleHeight)
+                XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+                                  0, 0, 0, 0, x, y, wid, hei);
+            else
+            switch (transMode) {
+                case All:
+                    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+                                      0, 0, 0, 0, x, y, wid, hei);
+                    break;
+                /*trans part*/
+                case Title:
+                    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+                                      0, 0, 0, 0, x, y, wid, w->titleHeight);
+                    break;
+                case Content:
+                    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+                                      0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
+                    break;
+            }
 	}
 	else if (w->mode == WINDOW_ARGB)
 	{
@@ -1425,6 +1543,27 @@ get_shapable_prop(Display *dpy, win *w)
     return True; /*in general, the window should be shapable*/
 }
 
+static unsigned int
+get_titleHeight_prop(Display *dpy, win *w)
+{
+    Atom actual;
+    int format;
+    unsigned long n, left;
+
+    unsigned char *data = NULL;
+    int result = XGetWindowProperty(dpy, w->id, titleHeightAtom, 0L, 1L, False, 
+                                    XA_CARDINAL, &actual, &format, 
+                                    &n, &left, &data);
+    if (result == Success && data != NULL)
+    {
+        unsigned int i;
+        memcpy (&i, data, sizeof (unsigned int));
+        XFree( (void *) data);
+        return i;
+    }
+    return 0; /*no titlebar*/
+}
+
 /* Get the opacity property from the window in a percent format
    not found: default
    otherwise: the value
@@ -1608,6 +1747,7 @@ add_win (Display *dpy, Window id, Window prev)
     new->shadow_height = 0;
     new->opacity = OPAQUE;
     new->shadowSize = 100;
+    new->titleHeight = 0;
 
     new->borderClip = None;
     new->prev_trans = 0;
@@ -1618,6 +1758,7 @@ add_win (Display *dpy, Window id, Window prev)
     new->opacity = get_opacity_prop (dpy, new, OPAQUE);
     new->shadowSize = get_shadow_prop (dpy, new);
     new->shapable = get_shapable_prop(dpy, new);
+    new->titleHeight = get_titleHeight_prop(dpy, new);
     new->windowType = determine_wintype (dpy, new->id);
     determine_mode (dpy, new);
     
@@ -2022,6 +2163,7 @@ typedef enum _option{
     FadeInStep,
     FadeDelta,
     DisableARGB,
+    TransMode_,
     NUMBEROFOPTIONS
 } Option;
 
@@ -2043,6 +2185,7 @@ options[NUMBEROFOPTIONS] = {
     "FadeInStep",           /*13*/
     "FadeDelta",            /*14*/
     "DisableARGB",          /*15*/
+    "TransMode",          /*16*/
     /*put your thingy in here...*/    
 };
 
@@ -2104,6 +2247,17 @@ setValue(Option option, char *value ){
             }
             else{
                 compMode = CompSimple; /*default*/
+            }
+            break;
+        case TransMode_:
+            if( strcasecmp(value, "Title") == 0 ){
+                transMode = Title;
+            }
+            else if( strcasecmp(value, "Content") == 0 ){
+                transMode = Content;
+            }
+            else{
+                transMode = All; /*default*/
             }
             break;
         case Display_:
@@ -2363,6 +2517,7 @@ main (int argc, char **argv)
     opacityAtom = XInternAtom (dpy, OPACITY_PROP, False);
     shadeAtom = XInternAtom (dpy, SHADE_PROP, False);
     shapableAtom = XInternAtom (dpy, SHAPABLE_PROP, False);
+    titleHeightAtom = XInternAtom (dpy, TITLEHEIGHT_PROP, False);
     winTypeAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
     winDesktopAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
     winDockAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
@@ -2545,6 +2700,18 @@ main (int argc, char **argv)
 			else
 			    printf("arrrg, window not found\n");
                     }
+                else if (ev.xproperty.atom == titleHeightAtom)
+                    {
+                        printf("titleheight changed\n");
+                        win * w = find_win(dpy, ev.xproperty.window);
+                        if (w)
+                        {
+                            printf("titleheight window found\n");
+                            w->titleHeight = get_titleHeight_prop(dpy, w);
+                        }
+                        else
+                            printf("arrrg, window not found\n");
+                    }
                 /* check if Trans or Shadow property was changed */    
                 else if (ev.xproperty.atom == opacityAtom || ev.xproperty.atom == shadowAtom)
 		{
@@ -2614,13 +2781,11 @@ main (int argc, char **argv)
                         /*this is hardly efficient, but a current workaraound 
                         shaping support isn't that good so far (e.g. we lack shaped shadows)
                         IDEA: use XRender to scale/shift a copy of the window and then blurr it*/
-                        /*w->fadesBlocked = True;*/
                         if (w->picture)
                         {
                         clipChanged = True;
                         repair_win (dpy, w);
                         }
-                        /*w->fadesBlocked = False;*/
                     }
                 }
 		break;

@@ -41,6 +41,7 @@ class Atoms
         Atom net_wm_window_shadow;
         Atom net_wm_window_shade;
         Atom net_wm_window_shapable;
+        Atom net_wm_window_titleheight;
         Atom xdnd_aware;
         Atom xdnd_position;
     };
