@@ -1,3 +1,15 @@
 [Desktop Entry]
 Name=Web
+Name[af]=WEB
+Name[az]=Veb
+Name[da]=Net
+Name[eo]=TTT
+Name[is]=Vefur
+Name[ko]=웹
+Name[no_NY]=Vev
+Name[pl]=Sieć
+Name[sl]=Splet
+Name[sv]=Webb
+Name[ta]=Å¨Ä
+Name[uk]=Тенета
 X-KDE-Library=libkwinweb
