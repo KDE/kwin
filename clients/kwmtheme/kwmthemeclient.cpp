@@ -10,11 +10,8 @@
 #include <klocale.h>
 #include <qbitmap.h>
 #include <qstyle.h>
-#include "../../workspace.h"
-#include "../../options.h"
-
-
-using namespace KWinInternal;
+#include <qlabel.h>
+#include <qtooltip.h>
 
 namespace KWMTheme {
 
@@ -60,6 +57,7 @@ namespace KWMTheme {
 } */
 
 
+inline const KDecorationOptions* options() { return KDecoration::options(); }
 
 enum FramePixmap{FrameTop=0, FrameBottom, FrameLeft, FrameRight, FrameTopLeft,
    FrameTopRight, FrameBottomLeft, FrameBottomRight};
@@ -91,8 +89,8 @@ static void create_pixmaps()
 
     for(int i=0; i < 8; ++i)
     {
-        framePixmaps[i] = new QPixmap(locate("appdata",
-                                      "pics/"+config->readEntry(keys[i], " ")));
+        framePixmaps[i] = new QPixmap(locate("data",
+                                      "kwin/pics/"+config->readEntry(keys[i], " ")));
         if(framePixmaps[i]->isNull())
             kdWarning() << "Unable to load frame pixmap for " << keys[i] << endl;
     }
@@ -112,34 +110,34 @@ static void create_pixmaps()
 
     maxExtent++;
 
-    menuPix = new QPixmap(locate("appdata",
-                                 "pics/"+config->readEntry("menu", " ")));
-    iconifyPix = new QPixmap(locate("appdata",
-                                    "pics/"+config->readEntry("iconify", " ")));
+    menuPix = new QPixmap(locate("data",
+                                 "kwin/pics/"+config->readEntry("menu", " ")));
+    iconifyPix = new QPixmap(locate("data",
+                                    "kwin/pics/"+config->readEntry("iconify", " ")));
     maxPix = new QPixmap(locate("appdata",
                                 "pics/"+config->readEntry("maximize", " ")));
-    minmaxPix = new QPixmap(locate("appdata",
-                                   "pics/"+config->readEntry("maximizedown", " ")));
-    closePix = new QPixmap(locate("appdata",
-                                  "pics/"+config->readEntry("close", " ")));
-    pinupPix = new QPixmap(locate("appdata",
-                                  "pics/"+config->readEntry("pinup", " ")));
-    pindownPix = new QPixmap(locate("appdata",
-                                    "pics/"+config->readEntry("pindown", " ")));
+    minmaxPix = new QPixmap(locate("data",
+                                   "kwin/pics/"+config->readEntry("maximizedown", " ")));
+    closePix = new QPixmap(locate("data",
+                                  "kwin/pics/"+config->readEntry("close", " ")));
+    pinupPix = new QPixmap(locate("data",
+                                  "kwin/pics/"+config->readEntry("pinup", " ")));
+    pindownPix = new QPixmap(locate("data",
+                                    "kwin/pics/"+config->readEntry("pindown", " ")));
     if(menuPix->isNull())                           
-        menuPix->load(locate("appdata", "pics/menu.png"));
+        menuPix->load(locate("data", "kwin/pics/menu.png"));
     if(iconifyPix->isNull())
-        iconifyPix->load(locate("appdata", "pics/iconify.png"));
+        iconifyPix->load(locate("data", "kwin/pics/iconify.png"));
     if(maxPix->isNull())
-        maxPix->load(locate("appdata", "pics/maximize.png"));
+        maxPix->load(locate("data", "kwin/pics/maximize.png"));
     if(minmaxPix->isNull())
-        minmaxPix->load(locate("appdata", "pics/maximizedown.png"));
+        minmaxPix->load(locate("data", "kwin/pics/maximizedown.png"));
     if(closePix->isNull())
-        closePix->load(locate("appdata", "pics/close.png"));
+        closePix->load(locate("data", "kwin/pics/close.png"));
     if(pinupPix->isNull())
-        pinupPix->load(locate("appdata", "pics/pinup.png"));
+        pinupPix->load(locate("data", "kwin/pics/pinup.png"));
     if(pindownPix->isNull())
-        pindownPix->load(locate("appdata", "pics/pindown.png"));
+        pindownPix->load(locate("data", "kwin/pics/pindown.png"));
     
     tmpStr = config->readEntry("TitleAlignment");
     if(tmpStr == "right")
@@ -157,14 +155,14 @@ static void create_pixmaps()
         aTitlePix = new KPixmap;
         aTitlePix->resize(32, 20);
         KPixmapEffect::gradient(*aTitlePix,
-                                options->color(Options::TitleBar, true),
-                                options->color(Options::TitleBlend, true),
+                                options()->color(KDecorationOptions::ColorTitleBar, true),
+                                options()->color(KDecorationOptions::ColorTitleBlend, true),
                                 KPixmapEffect::VerticalGradient);
         iTitlePix = new KPixmap;
         iTitlePix->resize(32, 20);
         KPixmapEffect::gradient(*iTitlePix,
-                                options->color(Options::TitleBar, false),
-                                options->color(Options::TitleBlend, false),
+                                options()->color(KDecorationOptions::ColorTitleBar, false),
+                                options()->color(KDecorationOptions::ColorTitleBlend, false),
                                 KPixmapEffect::VerticalGradient);
         titleGradient = false; // we can just tile this
 
@@ -188,14 +186,14 @@ static void create_pixmaps()
         tmpStr = config->readEntry("TitlebarPixmapActive", "");
         if(!tmpStr.isEmpty()){
             aTitlePix = new KPixmap;
-            aTitlePix->load(locate("appdata", "pics/" + tmpStr));
+            aTitlePix->load(locate("data", "kwin/pics/" + tmpStr));
         }
         else
             aTitlePix = NULL;
         tmpStr = config->readEntry("TitlebarPixmapInactive", "");
         if(!tmpStr.isEmpty()){
             iTitlePix = new KPixmap;
-            iTitlePix->load(locate("appdata", "pics/" + tmpStr));
+            iTitlePix->load(locate("data", "kwin/pics/" + tmpStr));
         }
         else
             iTitlePix = NULL;
@@ -238,12 +236,18 @@ void MyButton::drawButtonLabel(QPainter *p)
     }
 }
 
-KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
-                            const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents )
+KWMThemeClient::KWMThemeClient( KDecorationBridge* b, KDecorationFactory* f )
+    : KDecoration( b, f )
 {
+}
+
+void KWMThemeClient::init()
+{
+    createMainWidget( WResizeNoErase | WStaticContents );
+    widget()->installEventFilter( this );
+
     stickyBtn = maxBtn = mnuBtn = 0;
-    layout = new QGridLayout(this);
+    layout = new QGridLayout(widget());
     layout->addColSpacing(0, maxExtent);
     layout->addColSpacing(2, maxExtent);
 
@@ -252,7 +256,11 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
     layout->addItem(new QSpacerItem(1, 1, QSizePolicy::Fixed,
                                     QSizePolicy::Expanding));
 
-    layout->addWidget(windowWrapper(), 2, 1);
+    if( isPreview())
+        layout->addWidget( new QLabel( i18n( "<center><b>KWMTheme</b></center>" ), widget()), 2, 1);
+    else
+        layout->addItem( new QSpacerItem( 0, 0 ), 2, 1);
+
     // Without the next line, shading flickers
     layout->addItem( new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding) );
     layout->addRowSpacing(3, maxExtent);
@@ -280,7 +288,8 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         key += QChar(keyOffsets[i]);
         val = config->readEntry(key, defaultButtons[i]);
         if(val == "Menu"){
-            mnuBtn = new MyButton(this, "menu", i18n("Menu"));
+            mnuBtn = new MyButton(widget(), "menu");
+            QToolTip::add( mnuBtn, i18n("Menu"));
             iconChange();
             hb->addWidget(mnuBtn);
             mnuBtn->setFixedSize(20, 20);
@@ -288,31 +297,35 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
                     SLOT(menuButtonPressed()));
         }
         else if(val == "Sticky"){
-            stickyBtn = new MyButton(this, "sticky", i18n("Sticky"));
-            if (isSticky())
+            stickyBtn = new MyButton(widget(), "sticky");
+            QToolTip::add( stickyBtn, i18n("Sticky"));
+            if (isOnAllDesktops())
                 stickyBtn->setPixmap(*pindownPix);
             else
                 stickyBtn->setPixmap(*pinupPix);
-            connect(stickyBtn, SIGNAL( clicked() ), this, SLOT(toggleSticky()));
+            connect(stickyBtn, SIGNAL( clicked() ), this, SLOT(toggleOnAllDesktops()));
             hb->addWidget(stickyBtn);
             stickyBtn->setFixedSize(20, 20);
         }
         else if((val == "Iconify") && isMinimizable()){
-            btn = new MyButton(this, "iconify", i18n("Minimize"));
+            btn = new MyButton(widget(), "iconify");
+            QToolTip::add( btn, i18n("Minimize"));
             btn->setPixmap(*iconifyPix);
-            connect(btn, SIGNAL(clicked()), this, SLOT(iconify()));
+            connect(btn, SIGNAL(clicked()), this, SLOT(minimize()));
             hb->addWidget(btn);
             btn->setFixedSize(20, 20);
         }
         else if((val == "Maximize") && isMaximizable()){
-            maxBtn = new MyButton(this, "max", i18n("Maximize"));
+            maxBtn = new MyButton(widget(), "max");
+            QToolTip::add( maxBtn, i18n("Maximize"));
             maxBtn->setPixmap(*maxPix);
             connect(maxBtn, SIGNAL(clicked()), this, SLOT(maximize()));
             hb->addWidget(maxBtn);
             maxBtn->setFixedSize(20, 20);
         }
         else if((val == "Close") && isCloseable()){
-            btn = new MyButton(this, "close", i18n("Close"));
+            btn = new MyButton(widget(), "close");
+            QToolTip::add( btn, i18n("Close"));
             btn->setPixmap(*closePix);
             connect(btn, SIGNAL(clicked()), this, SLOT(closeWindow()));
             hb->addWidget(btn);
@@ -334,7 +347,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         aGradient = 0;
         iGradient = 0;
     }
-    setBackgroundMode(NoBackground);
+    widget()->setBackgroundMode(NoBackground);
 }
 
 void KWMThemeClient::drawTitle(QPainter &dest)
@@ -351,7 +364,7 @@ void KWMThemeClient::drawTitle(QPainter &dest)
     p.begin(&buffer);
 
     if(titleSunken){
-        qDrawShadeRect(&p, r, options->colorGroup(Options::Frame, isActive()),
+        qDrawShadeRect(&p, r, options()->colorGroup(KDecorationOptions::ColorFrame, isActive()),
                        true, 1, 0);
         r.setRect(r.x()+1, r.y()+1, r.width()-2, r.height()-2);
     }
@@ -364,18 +377,18 @@ void KWMThemeClient::drawTitle(QPainter &dest)
         if(fill->width() != r.width()){
             fill->resize(r.width(), 20);
             KPixmapEffect::gradient(*fill,
-                                    options->color(Options::TitleBar, isActive()),
-                                    options->color(Options::TitleBlend, isActive()),
+                                    options()->color(KDecorationOptions::ColorTitleBar, isActive()),
+                                    options()->color(KDecorationOptions::ColorTitleBlend, isActive()),
                                     grType);
         }
         p.drawTiledPixmap(r, *fill);
     }
     else{
-        p.fillRect(r, options->colorGroup(Options::TitleBar, isActive()).
+        p.fillRect(r, options()->colorGroup(KDecorationOptions::ColorTitleBar, isActive()).
                    brush(QColorGroup::Button));
     }
-    p.setFont(options->font(isActive()));
-    p.setPen(options->color(Options::Font, isActive()));
+    p.setFont(options()->font(isActive()));
+    p.setPen(options()->color(KDecorationOptions::ColorFont, isActive()));
     // Add left & right margin
     r.setLeft(r.left()+5);
     r.setRight(r.right()-5);
@@ -386,22 +399,21 @@ void KWMThemeClient::drawTitle(QPainter &dest)
 }
 
 
-void KWMThemeClient::resizeEvent( QResizeEvent* e)
+void KWMThemeClient::resizeEvent( QResizeEvent* )
 {
-    Client::resizeEvent( e );
     doShape();
-    repaint();
+    widget()->repaint();
 }
 
-void KWMThemeClient::captionChange( const QString& )
+void KWMThemeClient::captionChange()
 {
-    repaint( titlebar->geometry(), false );
+    widget()->repaint( titlebar->geometry(), false );
 }
 
 void KWMThemeClient::paintEvent( QPaintEvent *)
 {
     QPainter p;
-    p.begin(this);
+    p.begin(widget());
     int x,y;
     // first the corners
     int w1 = framePixmaps[FrameTopLeft]->width();
@@ -545,7 +557,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
     }
     drawTitle(p);
 
-    QColor c = colorGroup().background();
+    QColor c = widget()->colorGroup().background();
 
     // KWM evidently had a 1 pixel border around the client window. We
     // emulate it here, but should be removed at some point in order to
@@ -724,68 +736,76 @@ void KWMThemeClient::doShape()
 }
 
 
-void KWMThemeClient::showEvent(QShowEvent *ev)
+void KWMThemeClient::showEvent(QShowEvent *)
 {
-    Client::showEvent(ev);
     doShape();
-    repaint(false);
+    widget()->repaint(false);
 }
-
-void KWMThemeClient::windowWrapperShowEvent( QShowEvent* )
-{
-    doShape();
-}                                                                               
 
 void KWMThemeClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
-        setShade( !isShade() );
+        titlebarDblClickOperation();
 }
 
-void KWMThemeClient::stickyChange(bool on)
+void KWMThemeClient::desktopChange()
 {
     if (stickyBtn) {
+       bool on = isOnAllDesktops();
        stickyBtn->setPixmap(on ? *pindownPix : *pinupPix);
-       stickyBtn->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky") );
+       QToolTip::remove( stickyBtn );
+       QToolTip::add( stickyBtn, on ? i18n("Un-Sticky") : i18n("Sticky") );
     }
 }
 
-void KWMThemeClient::maximizeChange(bool m)
+void KWMThemeClient::maximizeChange()
 {
     if (maxBtn) {
+       bool m = maximizeMode() == MaximizeFull;
        maxBtn->setPixmap(m ? *minmaxPix : *maxPix);
-       maxBtn->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+       QToolTip::remove( maxBtn );
+       QToolTip::add( maxBtn, m ? i18n("Restore") : i18n("Maximize"));
     }
 }
 
-Client::MousePosition KWMThemeClient::mousePosition(const QPoint &p) const
+void KWMThemeClient::slotMaximize()
 {
-    MousePosition m = Client::mousePosition(p);
+    maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+}
+
+void KWMThemeClient::activeChange()
+{
+    widget()->update();
+}
+
+KDecoration::Position KWMThemeClient::mousePosition(const QPoint &p) const
+{
+    Position m = KDecoration::mousePosition(p);
     // corners
     if(p.y() < framePixmaps[FrameTop]->height() &&
        p.x() < framePixmaps[FrameLeft]->width()){
-        m = TopLeft;
+        m = PositionTopLeft;
     }
     else if(p.y() < framePixmaps[FrameTop]->height() &&
             p.x() > width()-framePixmaps[FrameRight]->width()){
-        m = TopRight;
+        m = PositionTopRight;
     }
     else if(p.y() > height()-framePixmaps[FrameBottom]->height() &&
             p.x() < framePixmaps[FrameLeft]->width()){
-        m = BottomLeft;
+        m = PositionBottomLeft;
     }
     else if(p.y() > height()-framePixmaps[FrameBottom]->height() &&
             p.x() > width()-framePixmaps[FrameRight]->width()){
-        m = BottomRight;
+        m = PositionBottomRight;
     } // edges
     else if(p.y() < framePixmaps[FrameTop]->height())
-        m = Top;
+        m = PositionTop;
     else if(p.y() > height()-framePixmaps[FrameBottom]->height())
-        m = Bottom;
+        m = PositionBottom;
     else if(p.x()  < framePixmaps[FrameLeft]->width())
-        m = Left;
+        m = PositionLeft;
     else if(p.x() > width()-framePixmaps[FrameRight]->width())
-        m = Right;
+        m = PositionRight;
     return(m);
 }
 
@@ -793,50 +813,116 @@ void KWMThemeClient::menuButtonPressed()
 {
     mnuBtn->setDown(false); // will stay down if I don't do this
     QPoint pos = mnuBtn->mapToGlobal(mnuBtn->rect().bottomLeft());
-    workspace()->showWindowMenu( pos.x(), pos.y(), this );
+    showWindowMenu( pos );
 }
 
 void KWMThemeClient::iconChange()
 {
     if(mnuBtn){
-        if(miniIcon().isNull()){
+        if( icon().pixmap( QIconSet::Small, QIconSet::Normal ).isNull()){
             mnuBtn->setPixmap(*menuPix);
         }
         else{
-            mnuBtn->setPixmap(miniIcon());
+            mnuBtn->setPixmap(icon().pixmap( QIconSet::Small, QIconSet::Normal ));
         }
     }
 }
 
-
-
-void KWMThemeClient::init()
+bool KWMThemeClient::eventFilter( QObject* o, QEvent* e )
 {
-    //
+	if ( o != widget() )
+		return false;
+
+	switch ( e->type() )
+	{
+		case QEvent::Resize:
+			resizeEvent( static_cast< QResizeEvent* >( e ) );
+			return true;
+
+		case QEvent::Paint:
+			paintEvent( static_cast< QPaintEvent* >( e ) );
+			return true;
+
+		case QEvent::MouseButtonDblClick:
+			mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ) );
+			return true;
+
+		case QEvent::MouseButtonPress:
+			processMousePressEvent( static_cast< QMouseEvent* >( e ) );
+			return true;
+
+		case QEvent::Show:
+			showEvent( static_cast< QShowEvent* >( e ) );
+			return true;
+
+		default:
+	    		return false;
+	}
+}
+
+QSize KWMThemeClient::minimumSize() const
+{
+    return widget()->minimumSize().expandedTo( QSize( 100, 50 ));
+}
+
+void KWMThemeClient::resize( const QSize& s )
+{
+    widget()->resize( s );
+}
+
+void KWMThemeClient::borders( int& left, int& right, int& top, int& bottom ) const
+{
+    left =
+    right =
+    top =
+    bottom =
+    
+TODO
+}
+
+KWMThemeFactory::KWMThemeFactory()
+{
+    create_pixmaps();
+}
+
+KWMThemeFactory::~KWMThemeFactory()
+{
+    delete_pixmaps();
+}
+
+KDecoration* KWMThemeFactory::createDecoration( KDecorationBridge* b )
+{
+    return new KWMThemeClient( b, this );
+}
+
+bool KWMThemeFactory::reset( unsigned long mask )
+{
+    bool needHardReset = false;
+
+TODO
+
+    // doesn't obey the Border size setting
+    if( mask & ( SettingFont | SettingButtons ))
+        needHardReset = true;
+
+    if( mask & ( SettingFont | SettingColors )) {
+        KWMTheme::delete_pixmaps();
+        KWMTheme::create_pixmaps();
+    }
+    
+    if( !needHardReset )
+        resetDecorations( mask );
+    return needHardReset;
 }
 
 }
 
 extern "C"
 {
-    Client *allocate(Workspace *ws, WId w)
-    {
-        return(new KWMTheme::KWMThemeClient(ws, w));
-    }
-    void init()
-    {
-       KWMTheme::create_pixmaps();
-    }
-    void reset()
-    {
-       KWMTheme::delete_pixmaps();
-       KWMTheme::create_pixmaps();
-       Workspace::self()->slotResetAllClientsDelayed();
-    }
-    void deinit()
-    {
-       KWMTheme::delete_pixmaps();
-    }
+	KDecorationFactory *create_factory()
+	{
+                return new KWMTheme::KWMThemeFactory();
+	}
 }
 
 #include "kwmthemeclient.moc"
