@@ -123,7 +123,7 @@ public:
 
     virtual bool workspaceEvent( XEvent * );
 
-    bool hasClient(Client *);
+    bool hasClient(Client *); // ### make const in KDE 4
 
     Client* findClient( WId w ) const;
 
@@ -206,7 +206,7 @@ public:
     int numberOfDesktops() const;
     void setNumberOfDesktops( int n );
 
-    QWidget* desktopWidget();
+    QWidget* desktopWidget();   // ### make const in KDE 4
 
     Client* nextClient(Client*) const;
     Client* previousClient(Client*) const;
@@ -244,7 +244,7 @@ public:
     void iconifyOrDeiconifyTransientsOf( Client* );
     void setStickyTransientsOf( Client*, bool sticky );
 
-    bool hasCaption( const QString& caption );
+    bool hasCaption( const QString& caption );   // ### make const in KDE 4
 
     void performWindowOperation( Client* c, Options::WindowOperation op );
 
@@ -266,10 +266,10 @@ public:
     void previousDesktop();
     void circulateDesktopApplications();
 
-    QString desktopName( int desk );
+    QString desktopName( int desk );   // ### make const in KDE 4
     void setDesktopLayout(int o, int x, int y);
 
-    bool isNotManaged( const QString& title );
+    bool isNotManaged( const QString& title );  // ### setter or getter ?
 
 public slots:
     void refresh();
@@ -400,7 +400,7 @@ private:
     void calcDesktopLayout(int &x, int &y);
 
     QPopupMenu* clientPopup();
-    
+
     void updateClientArea( bool force );
 
     SystemTrayWindowList systemTrayWins;
