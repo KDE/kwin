@@ -92,7 +92,7 @@ typedef struct _win {
     Atom                windowType;
     unsigned long	damage_sequence;    /* sequence when damage was created */
     Bool                shapable; /* this will allow window managers to exclude windows if just the deco is shaped*/
-    Bool                fadesBlocked;
+    /*Bool                fadesBlocked;*/
 
     /* for drawing translucent windows */
     XserverRegion	borderClip;
@@ -391,8 +391,8 @@ run_fades (Display *dpy)
 		dequeue_fade (dpy, f);
 	    }
 	}
-        if (w->fadesBlocked)
-            clipChanged = False;
+        /*if (w->fadesBlocked)
+        clipChanged = False;*/
 	determine_mode (dpy, w);
 	if (w->shadow)
 	{
@@ -2632,10 +2632,13 @@ main (int argc, char **argv)
                         /*this is hardly efficient, but a current workaraound 
                         shaping support isn't that good so far (e.g. we lack shaped shadows)
                         IDEA: use XRender to scale/shift a copy of the window and then blurr it*/
-                        w->fadesBlocked = True;
+                        /*w->fadesBlocked = True;*/
+                        if (w->picture)
+                        {
                         clipChanged = True;
                         repair_win (dpy, w);
-                        w->fadesBlocked = False;
+                        }
+                        /*w->fadesBlocked = False;*/
                     }
                 }
 		break;
