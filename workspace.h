@@ -160,6 +160,9 @@ private:
     void smartPlacement(Client* c);
     void cascadePlacement(Client* c, bool re_init = false);
 
+    enum CleanupType { Cascade, Unclutter };
+    void deskCleanup(CleanupType);
+
     void focusToNull();
     Client* desktop_client;
     int current_desktop;
@@ -188,6 +191,7 @@ private:
 
     QValueList<CascadingInfo> cci;
     // -cascading
+    Atom kwm_command;
 };
 
 inline WId Workspace::rootWin() const

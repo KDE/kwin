@@ -11,6 +11,7 @@ public:
     Atom wm_take_focus;
     Atom wm_change_state;
     Atom kwm_win_icon; // compatibility
+    Atom kwm_command;  // compatibility
     Atom kwm_running;
 
     Atom net_number_of_desktops;
@@ -21,6 +22,7 @@ public:
     Atom net_wm_context_help;
 
     Atom net_kde_docking_windows;
+
 };
 
 

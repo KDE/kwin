@@ -1201,6 +1201,32 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
     cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
 }
 
+void Workspace::deskCleanup(CleanupType ct)
+{
+  QValueList<Client *>::Iterator it(clients.fromLast());
+  for (; it != clients.begin(); --it) {
+    QString s;
+    char *name = 0;
+    if ( XFetchName( qt_xdisplay(), (*it)->window(), &name ) && name ) {
+	s = QString::fromLatin1( name );
+	XFree( name );
+    }
+    if (s == "Kicker" ||
+	s == "THE DESKTOP")
+      continue;
+    if((!(*it)->isOnDesktop(currentDesktop())) ||
+       ((*it)->isIconified())                  ||
+       ((*it)->isSticky()) )
+      continue;
+
+    else {
+      if (ct == Cascade)
+	cascadePlacement(*it);
+      else if (ct == Unclutter)
+	smartPlacement(*it);
+    }
+  }
+}
 
 /*!
   Raises the client \a c taking layers, transient windows and window
@@ -1422,6 +1448,21 @@ bool Workspace::clientMessage( XClientMessageEvent msg )
     if ( msg.message_type == atoms->net_current_desktop ) {
 	setCurrentDesktop( msg.data.l[0] );
 	return TRUE;
+    }
+
+    if (msg.message_type == atoms->kwm_command) {
+      char c[21];
+      int i;
+      for (i=0;i<20;i++)
+	c[i] = msg.data.b[i];
+      c[i] = '\0';
+      QString com = c;
+      if (com == "deskUnclutter") {
+      	deskCleanup(Unclutter);
+      } else if (com == "deskCascade") {
+	deskCleanup(Cascade);
+      }
+      return TRUE;
     }
 
     return FALSE;

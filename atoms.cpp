@@ -11,45 +11,48 @@ Atoms::Atoms()
     int n = 0;
 
     atoms[n] = &wm_protocols;
-    names[n++] = "WM_PROTOCOLS";
+    names[n++] = (char *) "WM_PROTOCOLS";
 
     atoms[n] = &wm_delete_window;
-    names[n++] = "WM_DELETE_WINDOW";
+    names[n++] = (char *) "WM_DELETE_WINDOW";
 
     atoms[n] = &wm_take_focus;
-    names[n++] = "WM_TAKE_FOCUS";
+    names[n++] = (char *) "WM_TAKE_FOCUS";
 
     atoms[n] = &wm_change_state;
-    names[n++] = "WM_CHANGE_STATE";
+    names[n++] = (char *) "WM_CHANGE_STATE";
 
      // compatibility
     atoms[n] = &kwm_win_icon;
-    names[n++] = "KWM_WIN_ICON";
+    names[n++] = (char *) "KWM_WIN_ICON";
 
      // compatibility
     atoms[n] = &kwm_running;
-    names[n++] = "KWM_RUNNING";
+    names[n++] = (char *) "KWM_RUNNING";
+
+    atoms[n] = &kwm_command;
+    names[n++] = (char *) "KWM_COMMAND";
 
     atoms[n] = &net_number_of_desktops;
-    names[n++] = "_NET_NUMBER_OF_DESKTOPS";
+    names[n++] = (char *) "_NET_NUMBER_OF_DESKTOPS";
 
     atoms[n] = &net_current_desktop;
-    names[n++] = "_NET_CURRENT_DESKTOP";
+    names[n++] = (char *) "_NET_CURRENT_DESKTOP";
 
     atoms[n] = &net_active_window;
-    names[n++] = "_NET_ACTIVE_WINDOW";
+    names[n++] = (char *) "_NET_ACTIVE_WINDOW";
 
     atoms[n] = &net_wm_context_help;
-    names[n++] = "_NET_WM_CONTEXT_HELP";
+    names[n++] = (char *) "_NET_WM_CONTEXT_HELP";
     
     atoms[n] = &net_client_list;
-    names[n++] = "_NET_CLIENT_LIST";
+    names[n++] = (char *) "_NET_CLIENT_LIST";
 
     atoms[n] = &net_client_list_stacking;
-    names[n++] = "_NET_CLIENT_LIST_STACKING";
+    names[n++] = (char *) "_NET_CLIENT_LIST_STACKING";
 
     atoms[n] = &net_kde_docking_windows;
-    names[n++] = "_NET_KDE_DOCKING_WINDOWS";
+    names[n++] = (char *) "_NET_KDE_DOCKING_WINDOWS";
 
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
