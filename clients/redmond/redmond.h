@@ -40,7 +40,7 @@ class RedmondButton : public QButton
 public:
    	RedmondButton(RedmondDeco *parent=0, const char *name=0, 
 	              const unsigned char *bitmap=NULL,
-	              bool menuButton=false, bool isMini=false,
+	              bool menuButton=false, bool isMini=false, int size = 16,
 	              const QString& tip=NULL);
 	void setBitmap(const unsigned char *bitmap);
 	void setPixmap(const QPixmap &p);
@@ -60,6 +60,7 @@ protected:
 	bool     menuBtn;
 	bool     miniBtn;
 	RedmondDeco *client;
+	int      size;
 };
 
 
@@ -120,6 +121,9 @@ public:
 	virtual ~RedmondDecoFactory();
 	virtual KDecoration *createDecoration(KDecorationBridge *);
 	virtual bool reset(unsigned long);
+	virtual QValueList< BorderSize > borderSizes() const;
+private:
+	void readConfig();
 };
 
 }

@@ -95,6 +95,10 @@ static QPixmap *defaultMenuPix;
 static QColor  *btnForeground;
 static bool    pixmaps_created = false;
 
+static int toolTitleHeight;
+static int normalTitleHeight;
+static int borderWidth;
+
 static inline const KDecorationOptions *options()
 {
    return KDecoration::options();
@@ -129,7 +133,7 @@ static void drawButtonFrame( KPixmap *pix, const QColorGroup &g, bool sunken )
 }
 
 
-static void create_pixmaps( )
+static void create_pixmaps ()
 {
     if (pixmaps_created)
         return;
@@ -151,15 +155,15 @@ static void create_pixmaps( )
     // buttons (active/inactive, sunken/unsunken)
 	QColorGroup g = options()->colorGroup(KDecoration::ColorButtonBg, true);
     QColor c = g.background();
-    btnPix1->resize(16, 14);
-    btnDownPix1->resize(16, 14);
-    iBtnPix1->resize(16, 14);
-    iBtnDownPix1->resize(16, 14);
+    btnPix1->resize(normalTitleHeight, normalTitleHeight-2);
+    btnDownPix1->resize(normalTitleHeight, normalTitleHeight-2);
+    iBtnPix1->resize(normalTitleHeight, normalTitleHeight-2);
+    iBtnDownPix1->resize(normalTitleHeight, normalTitleHeight-2);
 
-    miniBtnPix1->resize(12, 12);
-    miniBtnDownPix1->resize(12, 12);
-    iMiniBtnPix1->resize(12, 12);
-    iMiniBtnDownPix1->resize(12, 12);
+    miniBtnPix1->resize(toolTitleHeight, toolTitleHeight);
+    miniBtnDownPix1->resize(toolTitleHeight, toolTitleHeight);
+    iMiniBtnPix1->resize(toolTitleHeight, toolTitleHeight);
+    iMiniBtnDownPix1->resize(toolTitleHeight, toolTitleHeight);
 
     if (highcolor && false) {
         KPixmapEffect::gradient(*btnPix1, c.light(130), c.dark(130),
@@ -232,7 +236,7 @@ void delete_pixmaps()
 
 
 RedmondButton::RedmondButton(RedmondDeco *parent, const char *name,
-      const unsigned char *bitmap, bool menuButton, bool isMini, const QString& tip)
+      const unsigned char *bitmap, bool menuButton, bool isMini, int size, const QString& tip)
     : QButton(parent->widget(), name)
 {
 	// Eliminate background flicker
@@ -242,19 +246,15 @@ RedmondButton::RedmondButton(RedmondDeco *parent, const char *name,
 	menuBtn = menuButton;
 	miniBtn = isMini;
 	client  = parent;
+	this->size = size;
 
 	// Use larger button for the menu, or mini-buttons for toolwindows.
-	if ( isMini ) {
-		setFixedSize(12, 12);
-		resize(12, 12);
+	if ( isMini || menuButton ) {
+		setFixedSize(size, size);
+		resize(size, size);
 	} else {
-		if ( menuButton ) {
-			setFixedSize(16, 16);
-			resize(16, 16);
-		} else {
-			setFixedSize(16, 14);
-			resize(16, 14);
-		}
+		setFixedSize(size, size-2);
+		resize(size, size-2);
 	}
 
 	if ( bitmap ) {
@@ -267,13 +267,10 @@ RedmondButton::RedmondButton(RedmondDeco *parent, const char *name,
 
 QSize RedmondButton::sizeHint() const
 {
-	if ( miniBtn )
-		return( QSize(12, 12) );
-
-	if ( menuBtn )
-		return( QSize(16, 16) );
+	if ( miniBtn || menuBtn )
+		return( QSize(size, size) );
 	else
-		return( QSize(16, 14) );
+		return( QSize(size, size-2) );
 }
 
 
@@ -297,12 +294,10 @@ void RedmondButton::setPixmap( const QPixmap &p )
 	deco.resize(0, 0);
 	pix = p;
 
-	if (miniBtn)
-    	setMask(QRect(0, 0, 12, 12));
-	else if (menuBtn)
-		setMask(QRect(0, 0, 16, 16));
+	if (miniBtn || menuBtn)
+		setMask(QRect(0, 0, size, size));
 	else
-		setMask(QRect(0, 0, 16, 14));
+		setMask(QRect(0, 0, size, size-2));
 
 	repaint(false);
 }
@@ -349,15 +344,19 @@ void RedmondButton::drawButton(QPainter *p)
 	  p->fillRect(0, 0, width(), height(),
 			options()->color(KDecoration::ColorTitleBar, client->isActive()));
 
-	  if ( menuBtn && miniBtn ) {
+	  if ( menuBtn && size < 16) {
 		 QPixmap tmpPix; 
 
 		 // Smooth scale the menu button pixmap
-		 tmpPix.convertFromImage( pix.convertToImage().smoothScale(12, 12));
+		 tmpPix.convertFromImage(
+		 pix.convertToImage().smoothScale(size, size));
 
 		 p->drawPixmap( 0, 0, tmpPix );            
-	  } else
-		 p->drawPixmap( 0, 0, pix );
+	  } else {
+		 int xOff = (width() -pix.width() )/2;
+		 int yOff = (height()-pix.height())/2;
+		 p->drawPixmap(xOff, yOff, pix );
+	  }
    }
 }
 
@@ -377,10 +376,10 @@ void RedmondDeco::init()
 
 //	Finally, toolwindows look small
 //	if ( isTool() ) {
-//		titleHeight = 14;
+//		titleHeight = toolTitleHeight+2;
 //		smallButtons = true;
 //	} else {
-		titleHeight = 18;
+		titleHeight = normalTitleHeight+2;
 		smallButtons = false;
 //	}
 
@@ -394,19 +393,19 @@ void RedmondDeco::init()
 		g->addWidget(new QWidget(widget()), 3, 1);
 	}
 
-	g->addRowSpacing(0, 4);       // Top grab bar 
+	g->addRowSpacing(0, borderWidth);       // Top grab bar 
 	// without the next line, unshade flickers
 	g->addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
 	g->setRowStretch(3, 10);      // Wrapped window
-	g->addRowSpacing(4, 4);       // bottom handles
+	g->addRowSpacing(4, borderWidth);       // bottom handles
 	g->addRowSpacing(2, 1);       // Line below title bar
-	g->addColSpacing(0, 4);
-	g->addColSpacing(2, 4);
+	g->addColSpacing(0, borderWidth);
+	g->addColSpacing(2, borderWidth);
 
-	button[BtnMenu] = new RedmondButton(this, "menu", NULL, true, smallButtons, i18n("Menu"));
-	button[BtnClose] = new RedmondButton(this, "close", close_bits, false, smallButtons, i18n("Close"));
-	button[BtnMin] = new RedmondButton(this, "iconify", iconify_bits, false, smallButtons, i18n("Minimize"));
-	button[BtnMax] = new RedmondButton(this, "maximize", maximize_bits, false, smallButtons, i18n("Maximize"));
+	button[BtnMenu] = new RedmondButton(this, "menu", NULL, true, smallButtons, titleHeight-2, i18n("Menu"));
+	button[BtnClose] = new RedmondButton(this, "close", close_bits, false, smallButtons, titleHeight-2, i18n("Close"));
+	button[BtnMin] = new RedmondButton(this, "iconify", iconify_bits, false, smallButtons, titleHeight-2, i18n("Minimize"));
+	button[BtnMax] = new RedmondButton(this, "maximize", maximize_bits, false, smallButtons, titleHeight-2, i18n("Maximize"));
 
 	// Connect required stuff together
 	connect(button[BtnMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
@@ -421,10 +420,10 @@ void RedmondDeco::init()
 	hb->addWidget(button[BtnMenu]);  
 	titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
 	hb->addItem(titlebar);
-	hb->addSpacing(2);
+	hb->addSpacing(borderWidth/2);
 
 	if ( providesContextHelp() ) {
-		button[BtnHelp] = new RedmondButton(this, "help", question_bits, false, smallButtons, i18n("Help"));
+		button[BtnHelp] = new RedmondButton(this, "help", question_bits, false, smallButtons, titleHeight-2, i18n("Help"));
 		connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
 		hb->addWidget( button[BtnHelp] );
 	} else {
@@ -433,7 +432,7 @@ void RedmondDeco::init()
 
 	hb->addWidget(button[BtnMin]);
 	hb->addWidget(button[BtnMax]);
-	hb->addSpacing(2);
+	hb->addSpacing(borderWidth/2);
 	hb->addWidget(button[BtnClose]);
 	hb->addSpacing(2);
 
@@ -555,22 +554,26 @@ void RedmondDeco::paintEvent( QPaintEvent* )
     p.drawLine( x, y, x, y2-1 );
  
     // Draw line under title bar
-    p.drawLine( x+4, y+titleHeight+4, x2-4, y+titleHeight+4 );
+    p.drawLine( x+borderWidth, y+titleHeight+borderWidth, x2-borderWidth, y+titleHeight+borderWidth );
     // Draw a hidden line that appears during shading
-    p.drawLine( x+4, y2-4, x2-4, y2-4 );
+    p.drawLine( x+borderWidth, y2-borderWidth, x2-borderWidth, y2-borderWidth );
 
     // Fill out the border edges
-    p.drawRect( x+2, y+2, w-4, h-4 );
-    p.drawRect( x+3, y+3, w-6, h-6 );
+    for (int i = 1; i < borderWidth; i++)
+        p.drawRect( x+i, y+i, w-2*i, h-2*i );
 
     // Draw highlights and lowlights
     p.setPen(g.light());
-    p.drawLine( x+1, y+1, x2-2, y+1);
-    p.drawLine( x+1, y+1, x+1, y2-2);
+    for (int i = 1; i <= borderWidth/3; i++) {
+        p.drawLine( x+i, y+i, x2-i-1, y+i);
+        p.drawLine( x+i, y+i, x+i, y2-i-1);
+    }
 
     p.setPen(g.mid().dark(135));
-    p.drawLine( x2-1, y+1, x2-1, y2-1);
-    p.drawLine( x+1, y2-1, x2-1, y2-1);
+    for (int i = 1; i <= borderWidth/3; i++) {
+        p.drawLine( x2-i, y+i+1, x2-i, y2-i);
+        p.drawLine( x+i+1, y2-i, x2-i, y2-i);
+    }
 
     // Draw black edges
     p.setPen( g.dark().dark(155) );
@@ -593,7 +596,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
         // Create a disposable pixmap buffer for the title blend
         KPixmap* titleBuffer = new KPixmap;
-        titleBuffer->resize(w-8, titleHeight);
+        titleBuffer->resize(w-2*borderWidth, titleHeight);
 
         if (titleBuffer->depth() > 16) {
             KPixmapEffect::gradient(*titleBuffer, c1, c2,
@@ -625,14 +628,14 @@ void RedmondDeco::paintEvent( QPaintEvent* )
                      AlignLeft | AlignVCenter, caption() );
         p2.end();
 
-        p.drawPixmap( 4, 4, *titleBuffer );
+        p.drawPixmap( borderWidth, borderWidth, *titleBuffer );
 
         delete titleBuffer; 
 
     } else {  
        // Assume lower ended hardware, so don't use buffers.
        // Don't draw a gradient either.
-       p.fillRect( 4, 4, w-8, titleHeight, c1 );
+       p.fillRect( borderWidth, borderWidth, w-2*borderWidth, titleHeight, c1 );
     
        // Draw the title text.
        QFont fnt = options()->font(true);
@@ -672,7 +675,7 @@ void RedmondDeco::maximizeChange(bool m)
 void RedmondDeco::calcHiddenButtons()
 {
    // order of hiding is help, maximize, minimize, close, then menu;
-   int minWidth = 32 + 16*4 + (providesContextHelp() ? 16*2 : 16 );
+   int minWidth = (2 + 4 + (providesContextHelp() ? 2 : 1 )) * normalTitleHeight;
 
    if (lastButtonWidth > width()) { // Shrinking
 	  lastButtonWidth = width();
@@ -694,7 +697,7 @@ void RedmondDeco::calcHiddenButtons()
    } else {
 	  if ( hiddenItems ) { // Expanding
 		 lastButtonWidth = width();
-		 int totalSize = 16*3;
+		 int totalSize = normalTitleHeight*3;
 
 		 for (int i = RedmondDeco::BtnMenu; i >= RedmondDeco::BtnHelp; i--) {
 			if (button[i]) {
@@ -718,18 +721,42 @@ void RedmondDeco::calcHiddenButtons()
 
 RedmondDeco::MousePosition RedmondDeco::mousePosition(const QPoint &p) const
 {
-//	MousePosition m = KDecoration::mousePosition(p);
-//	return m;
-	return KDecoration::mousePosition(p);
+	MousePosition m = Nowhere;
+
+    const int range = 14 + 3*borderWidth/2;
+
+    if ( ( p.x() > borderWidth && p.x() < width() - borderWidth )
+         && ( p.y() > borderWidth && p.y() < height() - borderWidth ) )
+        m = Center;
+    else if ( p.y() <= range && p.x() <= range)
+        m = TopLeft2;
+    else if ( p.y() >= height()-range && p.x() >= width()-range)
+        m = BottomRight2;
+    else if ( p.y() >= height()-range && p.x() <= range)
+        m = BottomLeft2;
+    else if ( p.y() <= range && p.x() >= width()-range)
+        m = TopRight2;
+    else if ( p.y() <= borderWidth )
+        m = Top;
+    else if ( p.y() >= height()-borderWidth )
+        m = Bottom;
+    else if ( p.x() <= borderWidth )
+        m = Left;
+    else if ( p.x() >= width()-borderWidth )
+        m = Right;
+    else
+        m = Center;
+
+	return m;
 }
 
 void RedmondDeco::borders(int &l, int &r, int &t, int &b) const
 {
 //	bool reverse = QApplication::reverseLayout();
-	l = 4;
-	r = 4;
-	t = titlebar->geometry().height() + 5;
-	b = 4;
+	l = borderWidth;
+	r = borderWidth;
+	t = borderWidth + titlebar->geometry().height() + 1;
+	b = borderWidth;
 }
 
 void RedmondDeco::resize(const QSize &s)
@@ -831,8 +858,47 @@ bool RedmondDeco::eventFilter(QObject *o, QEvent *e)
 	return false;
 }
 
+void RedmondDecoFactory::readConfig() {
+	normalTitleHeight = QFontMetrics(options()->font(true)).height();
+	toolTitleHeight = QFontMetrics(options()->font(true, true)).height();
+	switch(options()->preferredBorderSize(this)) {
+	case BorderLarge:
+		borderWidth = 8;
+		if (normalTitleHeight < 20) normalTitleHeight = 20;
+		if (toolTitleHeight < 20) toolTitleHeight = 20;
+		break;
+	case BorderVeryLarge:
+		borderWidth = 12;
+		if (normalTitleHeight < 24) normalTitleHeight = 24;
+		if (toolTitleHeight < 24) toolTitleHeight = 24;
+		break;
+	case BorderHuge:
+		borderWidth = 18;
+		if (normalTitleHeight < 28) normalTitleHeight = 28;
+		if (toolTitleHeight < 28) toolTitleHeight = 28;
+		break;
+	case BorderVeryHuge:
+		borderWidth = 27;
+		if (normalTitleHeight < 33) normalTitleHeight = 33;
+		if (toolTitleHeight < 33) toolTitleHeight = 33;
+		break;
+	case BorderOversized:
+		borderWidth = 40;
+		if (normalTitleHeight < 40) normalTitleHeight = 40;
+		if (toolTitleHeight < 40) toolTitleHeight = 40;
+		break;
+	case BorderTiny:
+	case BorderNormal:
+	default:
+		borderWidth = 4;
+		if (normalTitleHeight < 16) normalTitleHeight = 16;
+		if (toolTitleHeight < 16) toolTitleHeight = 16;
+	}
+}
+
 RedmondDecoFactory::RedmondDecoFactory()
 {
+	readConfig();
 	create_pixmaps();
 }
 
@@ -848,12 +914,22 @@ KDecoration *RedmondDecoFactory::createDecoration( KDecorationBridge *b )
 
 bool RedmondDecoFactory::reset( unsigned long changed )
 {
-	if ( changed && false ) {
+	if ( changed & ( SettingFont | SettingBorder ) ) {
+		delete_pixmaps();
+		readConfig();
+		create_pixmaps();
+		resetDecorations(changed);
 		return true;
 	} else {
 		resetDecorations(changed);
 		return false;
 	}
+}
+
+QValueList< RedmondDecoFactory::BorderSize > RedmondDecoFactory::borderSizes() const
+{ // the list must be sorted
+  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+      BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
 }
