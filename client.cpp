@@ -651,6 +651,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     // constructor has already set a value for us
     if ( session  ) {
 	desk = session->desktop;
+	if ( desk <= 0 )
+	    desk = workspace()->currentDesktop();
     } else if ( desk <= 0 ) {
 	// if this window is transient, ensure that it is opened on the
 	// same window as its parent.  this is necessary when an application
