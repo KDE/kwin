@@ -518,6 +518,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     getWMHints();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
+    getWmClientLeader();
     fetchName();
 
     if ( mainClient()->isSticky() )
@@ -1150,6 +1151,8 @@ bool Client::propertyNotify( XPropertyEvent& e )
     default:
 	if ( e.atom == atoms->wm_protocols )
 	    getWindowProtocols();
+        else if (e.atom == atoms->wm_client_leader )
+            getWmClientLeader();
 	break;
     }
     return TRUE;
@@ -2603,79 +2606,172 @@ void Client::keyPressEvent( QKeyEvent * e )
     QCursor::setPos( pos );
 }
 
+static QCString getStringProperty(WId w, Atom prop, char separator=0)
+{
+    Atom type;
+    int format;
+    unsigned long nitems = 0;
+    unsigned long extra = 0;
+    unsigned char *data = 0;
+    QCString result = "";
+    if ( XGetWindowProperty( qt_xdisplay(), w, prop, 0, 10000,
+			     FALSE, XA_STRING, &type, &format,
+			     &nitems, &extra, &data ) == Success ) {
+        if (data && separator) {
+            for (int i=0; i<(int)nitems; i++)
+                if (!data[i] && i+1<(int)nitems)
+                    data[i] = separator;
+        }
+        if (data)
+          result = (const char*) data;
+        XFree(data);
+    }
+    return result;
+}
 
+/*!
+  Returns WINDOW_ROLE property for a given window.
+ */
+QCString Client::staticWindowRole(WId w)
+{
+    return getStringProperty(w, qt_window_role);
+}
+
+/*!
+  Returns SM_CLIENT_ID property for a given window.
+ */
+QCString Client::staticSessionId(WId w)
+{
+    return getStringProperty(w, qt_sm_client_id);
+}
+
+/*!
+  Returns WM_COMMAND property for a given window.
+ */
+QCString Client::staticWmCommand(WId w)
+{
+    return getStringProperty(w, XA_WM_COMMAND, ' ');
+}
+
+/*!
+  Returns WM_CLIENT_MACHINE property for a given window.
+  Local machine is always returned as "localhost".
+ */
+QCString Client::staticWmClientMachine(WId w)
+{
+    QCString result = getStringProperty(w, XA_WM_CLIENT_MACHINE);
+    if (result.isEmpty()) {
+        result = "localhost";
+    } else {
+        // special name for the local machine (localhost)
+        char hostnamebuf[80];
+        if (gethostname (hostnamebuf, sizeof hostnamebuf) >= 0) {
+            hostnamebuf[sizeof(hostnamebuf)-1] = 0;
+            if (result == hostnamebuf)
+                result = "localhost";
+            char *dot = strchr(hostnamebuf, '.');
+            if (dot && !(*dot = 0) && result == hostnamebuf) 
+                result = "localhost";
+        }
+    }
+    return result;
+}
+
+/*!
+  Returns WM_CLIENT_LEADER property for a given window.
+ */
+Window Client::staticWmClientLeader(WId w)
+{
+    Atom type;
+    int format;
+    unsigned long nitems = 0;
+    unsigned long extra = 0;
+    unsigned char *data = 0;
+    Window result = w;
+    if ( XGetWindowProperty( qt_xdisplay(), w, atoms->wm_client_leader, 0, 10000,
+			     FALSE, XA_WINDOW, &type, &format,
+			     &nitems, &extra, &data ) == Success ) {
+        if (data && nitems > 0)
+            result = *((Window*) data);
+        XFree(data);
+    }
+    return result;
+}
+
+void Client::getWmClientLeader()
+{
+    wmClientLeaderWin = staticWmClientLeader(win);
+}
+
+/*!
+  Returns WINDOW_ROLE for this client
+ */
 QCString Client::windowRole()
 {
-    Atom type;
-    int format;
-    unsigned long length, after;
-    unsigned char *data;
-    QCString result;
-    if ( XGetWindowProperty( qt_xdisplay(), win, qt_window_role, 0, 1024,
-			     FALSE, XA_STRING, &type, &format,
-			     &length, &after, &data ) == Success ) {
-	if ( data )
-	    result = (const char*) data;
-	XFree( data );
-    }
-    return result;
+    return staticWindowRole(win);
 }
 
+/*!
+  Returns sessionId for this client, 
+  taken either from its window or from the leader window.
+ */
 QCString Client::sessionId()
 {
-    Atom type;
-    int format;
-    unsigned long length, after;
-    unsigned char *data;
-    QCString result;
-    if ( XGetWindowProperty( qt_xdisplay(), win, qt_sm_client_id, 0, 1024,
-			     FALSE, XA_STRING, &type, &format,
-			     &length, &after, &data ) == Success ) {
-	if ( data )
-	    result = (const char*) data;
-	XFree( data );
-    }
+    QCString result = staticSessionId(win);
+    if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=win)
+        result = staticSessionId(wmClientLeaderWin);
     return result;
 }
 
-
-static int getprop(Window w, Atom a, Atom type, long len, unsigned char **p)
-{
-    Atom real_type;
-    int format;
-    unsigned long n, extra;
-    int status;
-
-    status = XGetWindowProperty(qt_xdisplay(), w, a, 0L, len, False, type, &real_type, &format, &n, &extra, p);
-    if (status != Success || *p == 0)
-	return -1;
-    if (n == 0)
-	XFree((void*) *p);
-    return n;
-}
-
-QCString Client::wmCommand()
-{
-  QCString result;
-  char *p;
-  int i,n;
-  if ((n = getprop(win, XA_WM_COMMAND, XA_STRING, 100L, (unsigned char **)&p)) > 0){
-    result = p;
-    for ( i = 0; (i += strlen(p+i)+1) < n; result.append(p+i) )
-	result.append(" ");
-    XFree((char *) p);
-  }
-  return result;
-}
-
+/*!
+  Returns the classhint resource name for this client, 
+ */
 QCString Client::resourceName()
 {
     return resource_name;
 }
 
+/*!
+  Returns the classhint resource class for this client, 
+ */
 QCString Client::resourceClass()
 {
     return resource_class;
+}
+
+/*!
+  Returns command property for this client, 
+  taken either from its window or from the leader window.
+ */
+QCString Client::wmCommand()
+{
+    QCString result = staticWmCommand(win);
+    if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=win)
+        result = staticWmCommand(wmClientLeaderWin);
+    return result;
+}
+
+/*!
+  Returns client machine for this client, 
+  taken either from its window or from the leader window.
+*/
+QCString Client::wmClientMachine()
+{
+    QCString result = staticWmClientMachine(win);
+    if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=win)
+        result = staticWmClientMachine(wmClientLeaderWin);
+    return result;
+}
+
+/*! 
+  Returns client leader window for this client.
+  Returns the client window itself if no leader window is defined.
+*/
+Window Client::wmClientLeader()
+{
+    if (wmClientLeaderWin)
+        return wmClientLeaderWin;
+    return win;
 }
 
 

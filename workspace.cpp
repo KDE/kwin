@@ -3,7 +3,10 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
+
 //#define QT_CLEAN_NAMESPACE
+#define select kwin_hide_select
+
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
@@ -41,6 +44,15 @@ const int XIconicState = IconicState;
 
 #include <kwin.h>
 #include <kdebug.h>
+
+// Possible protoypes for select() were hidden as `kwin_hide_select.
+// Undo the hiding definition and defines an acceptable prototype.
+// This is how QT does this. It should work where QT works.
+#ifdef HAVE_SYS_SELECT_H 
+#include <sys/select.h>
+#endif
+#undef select
+extern "C" int select(int,void*,void*,void*,struct timeval*);
 
 namespace KWinInternal {
 
@@ -280,15 +292,8 @@ Workspace::Workspace( bool restore )
 
     init();
 
-    if ( restore ) { // pseudo session management with wmCommand
-        for (SessionInfo* info = session.first(); info; info = session.next() ) {
-            if ( info->sessionId.isEmpty() && !info->wmCommand.isEmpty() ) {
-                KShellProcess proc;
-                proc << QString::fromLatin1( info->wmCommand );
-                proc.start(KShellProcess::DontCare);
-            }
-        }
-    }
+    if ( restore ) 
+        restoreLegacySession(kapp->sessionConfig());
 }
 
 void Workspace::init()
@@ -2924,6 +2929,180 @@ void Workspace::slotResetAllClients()
         requestFocus( active );
 }
 
+
+/* 
+ * Legacy session management
+ */
+
+#ifndef NO_LEGACY_SESSION_MANAGEMENT
+
+#define WM_SAVE_YOURSELF_TIMEOUT 2000 
+
+enum WinState { W_INVALID, W_VALID, W_SAVE_YOURSELF, W_SAVE_YOURSELF_OK };
+typedef QMap<WId,WinState> WinMap;
+
+static WinMap *winsPtr = 0;
+
+static int winsErrorHandler(Display *, XErrorEvent *ev)
+{
+    if (winsPtr) {
+        WinMap::Iterator it = winsPtr->find(ev->resourceid);
+        if (it != winsPtr->end())
+            it.data() = W_INVALID;
+    }
+    return 0;
+}
+
+/*!
+  Stores legacy session management data
+*/
+void Workspace::storeLegacySession( KConfig* config )
+{
+    // Compute set of leader windows that 
+    // might require legacy session management
+    WinMap wins;
+    for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
+        Client* c = (*it);
+        WId leader = c->wmClientLeader();
+        if (!wins.contains(leader) && c->sessionId().isEmpty())
+            wins.insert(leader, W_VALID);
+    }
+    
+    // Open a new display for safely doing the WM_SAVE_YOURSELF protocol
+    XSync(qt_xdisplay(), False);
+    Display *newdisplay = XOpenDisplay(DisplayString(qt_xdisplay()));
+    if (!newdisplay) return;
+    WId root = DefaultRootWindow(newdisplay);
+    XGrabKeyboard(newdisplay, root, False, 
+                  GrabModeAsync, GrabModeAsync, CurrentTime);
+    XGrabPointer(newdisplay, root, False, Button1Mask|Button2Mask|Button3Mask,
+                 GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
+    winsPtr = &wins;
+    XErrorHandler oldHandler = XSetErrorHandler(winsErrorHandler);
+    
+    // Send WM_SAVE_YOURSELF messages to relevant windows
+    XEvent ev;
+    int awaiting_replies = 0;
+    for (WinMap::Iterator it = wins.begin(); it != wins.end(); ++it) {
+        if ( atoms->wm_protocols == None || atoms->wm_save_yourself == None)
+            break;
+        if ( it.data() == W_VALID ) {
+            WId w = it.key();
+            Atom *protocols = 0;
+            int nprotocols = 0;
+            XGetWMProtocols(newdisplay, w, &protocols, &nprotocols);
+            for (int i=0; i<nprotocols; i++)
+              if (protocols[i] == atoms->wm_save_yourself) {
+                it.data() = W_SAVE_YOURSELF;
+                break;
+              }
+            XFree((void*) protocols);
+        }
+        if ( it.data() == W_SAVE_YOURSELF ) {
+            WId w = it.key();
+            awaiting_replies += 1;
+            memset(&ev, 0, sizeof(ev));
+            ev.xclient.type = ClientMessage;
+            ev.xclient.window = w;
+            ev.xclient.message_type = atoms->wm_protocols;
+            ev.xclient.format = 32;
+            ev.xclient.data.l[0] = atoms->wm_save_yourself;
+            ev.xclient.data.l[1] = CurrentTime;
+            XSelectInput(newdisplay, w, PropertyChangeMask|StructureNotifyMask);
+            XSendEvent(newdisplay, w, False, 0, &ev);
+        }
+    }
+    
+    // Wait for change in WM_COMMAND (with timeout)
+    XFlush(newdisplay);
+    QTime start = QTime::currentTime();
+    while (awaiting_replies > 0) {
+        if (XPending(newdisplay)) {
+            /* Process pending event */
+            XNextEvent(newdisplay, &ev);
+            WinMap::Iterator it = wins.find( ev.xany.window );
+            if (it == wins.end() || it.data() == W_SAVE_YOURSELF_OK)
+                continue;
+            if ( ev.type == UnmapNotify ||
+                 ( ev.xany.type == PropertyNotify 
+                   && ev.xproperty.atom == XA_WM_COMMAND ) ) {
+                awaiting_replies -= 1;
+                it.data() = W_SAVE_YOURSELF_OK;
+            }
+        } else {
+            /* Check timeout */
+            int msecs = start.elapsed();
+            if (msecs >= WM_SAVE_YOURSELF_TIMEOUT)
+                break;
+            /* Wait for more events */
+            struct timeval tmwait;
+            int fd = ConnectionNumber(newdisplay);
+            fd_set fds;
+            FD_ZERO(&fds);
+            FD_SET(fd, &fds);
+            tmwait.tv_sec = (WM_SAVE_YOURSELF_TIMEOUT - msecs) / 1000;
+            tmwait.tv_usec = ((WM_SAVE_YOURSELF_TIMEOUT - msecs) % 1000) * 1000;
+            ::select(fd+1, &fds, NULL, &fds, &tmwait);
+        }
+    }
+
+    // Terminate work in new display
+    XAllowEvents(newdisplay, ReplayPointer, CurrentTime);
+    XAllowEvents(newdisplay, ReplayKeyboard, CurrentTime);
+    XSync(newdisplay, False);
+    XCloseDisplay(newdisplay);
+    
+    // Write LegacySession data
+    config->setGroup("LegacySession" );
+    int count = 0;
+    for (WinMap::Iterator it = wins.begin(); it != wins.end(); ++it) {
+      if (it.data() != W_INVALID) {
+        WId w = it.key();
+        QCString wmCommand = Client::staticWmCommand(w);
+        QCString wmClientMachine = Client::staticWmClientMachine(w);
+        if ( !wmCommand.isEmpty() && !wmClientMachine.isEmpty() ) {
+          count++;
+          QString n = QString::number(count);
+          config->writeEntry( QString("command")+n, wmCommand.data() );
+          config->writeEntry( QString("clientMachine")+n, wmClientMachine.data() );
+        }
+      }
+    }
+    config->writeEntry( "count", count );
+    
+    // Restore old error handler
+    XSync(qt_xdisplay(), False);
+    XSetErrorHandler(oldHandler);
+    
+    // Process a few events to update the client list.
+    // All events should be there because of the XSync above.
+    kapp->processEvents(10);
+}
+#endif
+
+/*!
+  Restores legacy session management data (i.e. restart applications)
+*/
+void Workspace::restoreLegacySession( KConfig* config )
+{
+    if (config) {
+        config->setGroup("LegacySession" );
+        int count =  config->readNumEntry( "count" );
+        for ( int i = 1; i <= count; i++ ) {
+            QString n = QString::number(i);
+            QCString wmCommand = config->readEntry( QString("command")+n ).latin1();
+            QCString wmClientMachine = config->readEntry( QString("clientMachine")+n ).latin1();
+            if ( !wmCommand.isEmpty() && !wmClientMachine.isEmpty() ) {
+                KShellProcess proc;
+                if ( wmClientMachine != "localhost" )
+                    proc << "xon" << wmClientMachine;
+                proc << QString::fromLatin1( wmCommand );
+                proc.start(KShellProcess::DontCare);
+            }
+        }
+    }
+}
+
 /*!
   Stores the current session in the config file
 
@@ -2931,29 +3110,40 @@ void Workspace::slotResetAllClients()
  */
 void Workspace::storeSession( KConfig* config )
 {
+#ifndef NO_LEGACY_SESSION_MANAGEMENT
+    storeLegacySession(config);
+#endif
     config->setGroup("Session" );
     int count =  0;
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
         Client* c = (*it);
         QCString sessionId = c->sessionId();
-        QCString windowRole = c->windowRole();
         QCString wmCommand = c->wmCommand();
-        if ( !sessionId.isEmpty() || !wmCommand.isEmpty() ) {
-            count++;
-            QString n = QString::number(count);
-            config->writeEntry( QString("sessionId")+n, sessionId.data() );
-            config->writeEntry( QString("windowRole")+n, windowRole.data() );
-            config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
-            config->writeEntry( QString("geometry")+n,  QRect( c->pos(), c->windowWrapper()->size() ) );
-            config->writeEntry( QString("restore")+n, c->geometryRestore() );
-            config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
-            config->writeEntry( QString("desktop")+n, c->desktop() );
-            config->writeEntry( QString("iconified")+n, c->isIconified() );
-            config->writeEntry( QString("sticky")+n, c->isSticky() );
-            config->writeEntry( QString("shaded")+n, c->isShade() );
-            config->writeEntry( QString("staysOnTop")+n, c->staysOnTop() );
- 	    config->writeEntry( QString("skipTaskbar")+n, c->skipTaskbar() );
-        }
+        if ( sessionId.isEmpty() )
+#ifndef NO_LEGACY_SESSION_MANAGEMENT
+            // This is the only connection between the determination of legacy
+            // session managed applications (storeLegacySession) and the
+            // recollection of the window geometries (this function).
+            if ( wmCommand.isEmpty() )
+#endif 
+                continue;
+        count++;
+        QString n = QString::number(count);
+        config->writeEntry( QString("sessionId")+n, sessionId.data() );
+        config->writeEntry( QString("windowRole")+n, c->windowRole().data() );
+        config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
+        config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine().data() );
+        config->writeEntry( QString("resourceName")+n, c->resourceName().data() );
+        config->writeEntry( QString("resourceClass")+n, c->resourceClass().data() );
+        config->writeEntry( QString("geometry")+n,  QRect( c->pos(), c->windowWrapper()->size() ) );
+        config->writeEntry( QString("restore")+n, c->geometryRestore() );
+        config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
+        config->writeEntry( QString("desktop")+n, c->desktop() );
+        config->writeEntry( QString("iconified")+n, c->isIconified() );
+        config->writeEntry( QString("sticky")+n, c->isSticky() );
+        config->writeEntry( QString("shaded")+n, c->isShade() );
+        config->writeEntry( QString("staysOnTop")+n, c->staysOnTop() );
+        config->writeEntry( QString("skipTaskbar")+n, c->skipTaskbar() );
     }
     config->writeEntry( "count", count );
 }
@@ -2977,6 +3167,9 @@ void Workspace::loadSessionInfo()
         info->sessionId = config->readEntry( QString("sessionId")+n ).latin1();
         info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
         info->wmCommand = config->readEntry( QString("wmCommand")+n ).latin1();
+        info->wmClientMachine = config->readEntry( QString("wmClientMachine")+n ).latin1();
+        info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
+        info->resourceClass = config->readEntry( QString("resourceClass")+n ).latin1();
         info->geometry = config->readRectEntry( QString("geometry")+n );
         info->restore = config->readRectEntry( QString("restore")+n );
         info->maximize = config->readNumEntry( QString("maximize")+n, 0 );
@@ -3001,6 +3194,7 @@ void Workspace::loadFakeSessionInfo()
         fakeSession.append( info );
         info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
         info->resourceClass = config->readEntry( QString("resourceClass")+n ).latin1();
+        info->wmClientMachine = config->readEntry( QString("clientMachine")+n ).latin1();
         info->geometry = config->readRectEntry( QString("geometry")+n );
         info->restore = config->readRectEntry( QString("restore")+n );
         info->maximize = config->readNumEntry( QString("maximize")+n, 0 );
@@ -3021,6 +3215,7 @@ void Workspace::storeFakeSessionInfo( Client* c )
     fakeSession.append( info );
     info->resourceName = c->resourceName();
     info->resourceClass = c->resourceClass();
+    info->wmClientMachine = c->wmClientMachine();
     info->geometry = QRect( c->pos(), c->windowWrapper()->size() ) ;
     info->restore = c->geometryRestore();
     info->maximize = (int)c->maximizeMode();
@@ -3042,6 +3237,7 @@ void Workspace::writeFakeSessionInfo()
         QString n = QString::number(count);
         config->writeEntry( QString("resourceName")+n, info->resourceName.data() );
         config->writeEntry( QString("resourceClass")+n, info->resourceClass.data() );
+        config->writeEntry( QString("clientMachine")+n, info->wmClientMachine.data() );
         config->writeEntry( QString("geometry")+n,  info->geometry );
         config->writeEntry( QString("restore")+n, info->restore );
         config->writeEntry( QString("maximize")+n, info->maximize );
@@ -3056,47 +3252,68 @@ void Workspace::writeFakeSessionInfo()
 }
 
 /*!
-  Returns the SessionInfo for client \a c. The returned session
+  Returns a SessionInfo for client \a c. The returned session
   info is removed from the storage. It's up to the caller to delete it.
+
+  This function is called when a new window is mapped and must be managed.
+  We try to find a matching entry in the session.  We also try to find
+  a matching entry in the fakeSession to see if the user had seclected the
+  ``store settings'' menu entry.  
 
   May return 0 if there's no session info for the client.
  */
 SessionInfo* Workspace::takeSessionInfo( Client* c )
 {
-
-    if ( !session.isEmpty() ) {
-        QCString sessionId = c->sessionId();
-        QCString windowRole = c->windowRole();
-        QCString wmCommand = c->wmCommand();
-
-        for (SessionInfo* info = session.first(); info; info = session.next() ) {
-
-            // a real session managed client
-            if ( info->sessionId == sessionId &&
-                 ( ( info->windowRole.isEmpty() && windowRole.isEmpty() )
-                   || (info->windowRole == windowRole ) ) )
-                return session.take();
-
-            // pseudo session management
-            if ( info->sessionId.isEmpty() && !info->wmCommand.isEmpty() &&
-                 info->wmCommand == wmCommand &&
-                 ( ( info->windowRole.isEmpty() && windowRole.isEmpty() )
-                   || (info->windowRole == windowRole ) ) )
-                return session.take();
-        }
-    }
-
-     // fakeSession, the "Store Settings" option in the window operation popup menu
-    if ( !fakeSession.isEmpty() ) {
-        QCString resourceName = c->resourceName();
-        QCString resourceClass = c->resourceClass();
-        for (SessionInfo* info = fakeSession.first(); info; info = fakeSession.next() ) {
-            if (  info->resourceName == resourceName && info->resourceClass == resourceClass ) {
-                c->setStoreSettings( TRUE );
-                return fakeSession.take();
+    SessionInfo *realInfo = 0;
+    SessionInfo *fakeInfo = 0;
+    QCString sessionId = c->sessionId();
+    QCString windowRole = c->windowRole();
+    QCString wmCommand = c->wmCommand();
+    QCString wmClientMachine = c->wmClientMachine();
+    QCString resourceName = c->resourceName();
+    QCString resourceClass = c->resourceClass();
+    
+    // First search ``session''
+    if (! sessionId.isEmpty() ) {
+        // look for a real session managed client (algorithm suggested by ICCCM)
+        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() ) 
+            if ( info->sessionId == sessionId ) {
+                if ( ! windowRole.isEmpty() ) {
+                    if ( info->windowRole == windowRole )
+                        realInfo = session.take();
+                } else {
+                    if ( info->windowRole.isEmpty() && 
+                         info->resourceName == resourceName && 
+                         info->resourceClass == resourceClass )
+                        realInfo = session.take();
+                }
             }
-        }
+    } else {
+        // look for a sessioninfo with matching features.
+        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() ) 
+            if ( info->resourceName == resourceName && 
+                 info->resourceClass == resourceClass &&
+                 info->wmClientMachine == wmClientMachine )
+                if ( wmCommand.isEmpty() || info->wmCommand == wmCommand )
+                    realInfo = session.take();
     }
+    
+    // Now search ``fakeSession''
+    for (SessionInfo* info = fakeSession.first(); info && !fakeInfo; info = fakeSession.next() )
+        if ( info->resourceName == resourceName && 
+             info->resourceClass == resourceClass &&
+             info->wmClientMachine == wmClientMachine ) 
+            fakeInfo = fakeSession.take();
+    
+    // Reconciliate
+    if (fakeInfo)
+        c->setStoreSettings( TRUE );
+    if (fakeInfo && realInfo)
+        delete fakeInfo;
+    if (realInfo)
+        return realInfo;
+    if (fakeInfo)
+        return fakeInfo;
     return 0;
 }
 

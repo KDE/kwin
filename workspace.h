@@ -56,10 +56,9 @@ struct SessionInfo
 {
     QCString sessionId;
     QCString windowRole;
-
-    QCString wmCommand; // compatibility
-
-    QCString resourceName; // for faked session info
+    QCString wmCommand;
+    QCString wmClientMachine;
+    QCString resourceName;
     QCString resourceClass;
 
     QRect geometry;
@@ -180,6 +179,8 @@ public:
 
     void performWindowOperation( Client* c, Options::WindowOperation op );
 
+    void restoreLegacySession( KConfig* config );
+    void storeLegacySession( KConfig* config );
     void storeSession( KConfig* config );
 
     SessionInfo* takeSessionInfo( Client* );

@@ -30,6 +30,12 @@ Atoms::Atoms()
     atoms[n] = &wm_change_state;
     names[n++] = (char *) "WM_CHANGE_STATE";
 
+    atoms[n] = &wm_client_leader;
+    names[n++] = (char *) "WM_CLIENT_LEADER";
+
+    atoms[n] = &wm_save_yourself;
+    names[n++] = (char *) "WM_SAVE_YOURSELF";
+
     atoms[n] = &motif_wm_hints;
     names[n++] = (char *) "_MOTIF_WM_HINTS";
 

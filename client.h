@@ -181,9 +181,11 @@ public:
 
     QCString windowRole();
     QCString sessionId();
-    QCString wmCommand();
     QCString resourceName();
     QCString resourceClass();
+    QCString wmCommand();
+    QCString wmClientMachine();
+    Window   wmClientLeader();
 
     QRect adjustedClientArea( const QRect& area ) const;
 
@@ -317,6 +319,16 @@ private:
     void verifyTransientFor();
     friend class WindowWrapper;
     QString cap;
+    WId wmClientLeaderWin;
+    void getWmClientLeader();
+
+ public:
+    static QCString staticWindowRole(WId);
+    static QCString staticSessionId(WId);
+    static QCString staticWmCommand(WId);
+    static QCString staticWmClientMachine(WId);
+    static Window   staticWmClientLeader(WId);
+    
 };
 
 inline WId Client::window() const

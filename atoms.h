@@ -17,6 +17,8 @@ public:
     Atom wm_delete_window;
     Atom wm_take_focus;
     Atom wm_change_state;
+    Atom wm_client_leader;
+    Atom wm_save_yourself;
 
     Atom motif_wm_hints;
     Atom net_wm_context_help;
