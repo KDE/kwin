@@ -2242,6 +2242,10 @@ bool Client::x11Event( XEvent * e)
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
         // (i.e. the LeaveNotify event comes before leaving the rect and no LeaveNotify event
         // comes after leaving the rect) - so lets check if the pointer is really outside the window
+        
+        // TODO this still sucks if a window appears above this one - it should lose the mouse
+        // if this window is another client, but not if it's a popup ... maybe after KDE3.1 :(
+        // (repeat after me 'AARGHL!')
         if ( !lostMouse && e->xcrossing.detail != NotifyInferior ) {
             int d1, d2, d3, d4;
             unsigned int d5;
