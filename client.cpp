@@ -1531,7 +1531,7 @@ void Client::iconify()
 {
     if ( !isMinimizable() )
 	return;
-    
+
     if ( isShade() )
 	setShade( FALSE );
     if ( workspace()->iconifyMeansWithdraw( this ) ) {
@@ -2076,10 +2076,13 @@ Client* Client::mainClient()
     if  ( !isTransient() && transientFor() != 0 )
 	return this;
     ClientList saveset;
-    Client* c = this;
+    Client *n, *c = this;
     do {
 	saveset.append( c );
-	c = workspace()->findClient( c->transientFor() );
+	n = workspace()->findClient( c->transientFor() );
+	if ( !n )
+	    break;
+	c = n;
     } while ( c && c->isTransient() && !saveset.contains( c ) );
 
     return c?c:this;
