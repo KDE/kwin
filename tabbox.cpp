@@ -19,6 +19,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qdesktopwidget.h>
 #include <qcursor.h>
 #include <kstringhandler.h>
+#include <kglobalsettings.h>
 
 // specify externals before namespace
 
@@ -94,19 +95,7 @@ void TabBox::reset()
 	desk = workspace()->currentDesktop();
     }
 
-    QDesktopWidget* desktop = qApp->desktop();
-    QRect r;
-    KConfig gc("kdeglobals", false, false);
-    gc.setGroup("Windows");
-
-    if (QApplication::desktop()->isVirtualDesktop() &&
-        gc.readBoolEntry("XineramaEnabled", true) &&
-        gc.readBoolEntry("XineramaPlacementEnabled", true)) {
-        int screen =  desktop->screenNumber( QCursor::pos() );
-        r = desktop->screenGeometry(screen);
-    } else {
-        r = desktop->geometry();
-    }
+    QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
 
     int w = QMIN( QMAX( wmax + 20, r.width()/3 ), r.width() );
     setGeometry( (r.width()-w)/2 + r.x(),

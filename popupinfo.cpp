@@ -21,6 +21,7 @@ Copyright (C) 2002 Alexander Kellett <lypanov@kde.org>
 #include <qdesktopwidget.h>
 #include <qcursor.h>
 #include <kstringhandler.h>
+#include <kglobalsettings.h>
 
 // specify externals before namespace
 
@@ -51,18 +52,7 @@ PopupInfo::~PopupInfo()
  */
 void PopupInfo::reset()
 {
-    QDesktopWidget* desktop = qApp->desktop();
-    KConfig gc("kdeglobals", false, false);
-    gc.setGroup("Windows");
-    QRect r;
-    if (QApplication::desktop()->isVirtualDesktop() &&
-        gc.readBoolEntry("XineramaEnabled", true) &&
-        gc.readBoolEntry("XineramaPlacementEnabled", true)) {
-        int screen = desktop->screenNumber( QCursor::pos() );
-        r = desktop->screenGeometry(screen);
-    } else {
-        r = desktop->geometry();
-    }
+    QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
 
     int w = fontMetrics().width( m_infoString ) + 30;
 
