@@ -905,7 +905,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 		XGrabServer( qt_xdisplay() );
 	
 	    if ( isMove() && options->moveMode == Options::HalfTransparent ) {
-		imgClient = new QImage( QPixmap::grabWidget( this ).convertToImage() );
+		imgClient = 0; //new QImage( QPixmap::grabWidget( this ).convertToImage() );
 		// TODO SLOW!!!
 		pmBackground = new QPixmap( QPixmap::grabWindow( qt_xrootwin() ));
 		imgBackground = new QImage( pmBackground->convertToImage() );

@@ -22,9 +22,13 @@ static Client* clientFactory( Workspace *ws, WId w )
 	s = QString::fromLatin1( name );
 	XFree( name );
     }
-    if ( s == "desktop") {
+    if ( s == "desktop" ) {
 	Client * c = new NoBorderClient( ws, w);
 	ws->setDesktopClient( c );
+	return c;
+    }
+    if ( s == "Kicker" ) {
+	Client * c = new NoBorderClient( ws, w);
 	return c;
     }
 
