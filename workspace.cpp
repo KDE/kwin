@@ -844,11 +844,20 @@ void Workspace::saveDesktopSettings()
         }
     }
 
-void Workspace::configureWM()
+QStringList Workspace::configModules(bool controlCenter)
     {
     QStringList args;
-    args <<  "kwindecoration" << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced";
-    KApplication::kdeinitExec( "kcmshell", args );
+    args <<  "kde-kwindecoration.desktop";
+    if (controlCenter)
+        args << "kde-kwinoptions.desktop";
+    else if (kapp->authorizeControlModule("kde-kwinoptions.desktop"))
+        args  << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced";
+    return args;
+    }
+
+void Workspace::configureWM()
+    {
+    KApplication::kdeinitExec( "kcmshell", configModules(false) );
     }
 
 /*!

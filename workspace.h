@@ -238,6 +238,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         int packPositionUp( const Client* cl, int oldy, bool top_edge ) const;
         int packPositionDown( const Client* cl, int oldy, bool bottom_edge ) const;
 
+        static QStringList configModules(bool controlCenter);
+
     public slots:
         void refresh();
     // keybindings
