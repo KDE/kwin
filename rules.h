@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_RULES_H
 
 #include <qstring.h>
+#include <netwm_def.h>
 
 class KConfig;
 
@@ -23,8 +24,8 @@ class Client;
 enum SettingRule
     {
     DontCareRule,
-    ApplyRule,
     ForceRule,
+    ApplyRule,
     RememberRule,
     LastRule = RememberRule
     };
@@ -40,9 +41,13 @@ class WindowRules
         int checkDesktop( int desktop, bool init = false ) const;
         bool checkKeepAbove( bool above, bool init = false ) const;
         bool checkKeepBelow( bool above, bool init = false ) const;
+        NET::WindowType checkType( NET::WindowType type ) const;
     private:
         static SettingRule readRule( KConfig&, const QString& key );
+        static SettingRule readForceRule( KConfig&, const QString& key );
+        static NET::WindowType readType( KConfig&, const QString& key );
         static bool checkRule( SettingRule rule, bool init );
+        static bool checkForceRule( SettingRule rule );
         QCString wmclass;
         bool wmclassregexp;
         bool wmclasscomplete;
@@ -54,9 +59,10 @@ class WindowRules
         bool extraroleregexp;
         QCString clientmachine;
         bool clientmachineregexp;
-        // TODO window type? both to which it applies and to which value to force it
         int desktop;
         SettingRule desktoprule;
+        NET::WindowType type;
+        SettingRule typerule;
         bool above;
         SettingRule aboverule;
         bool below;
@@ -72,6 +78,12 @@ bool WindowRules::checkRule( SettingRule rule, bool init )
             return true;
         }
     return false;
+    }
+
+inline
+bool WindowRules::checkForceRule( SettingRule rule )
+    {
+    return rule == ForceRule;
     }
 
 } // namespace

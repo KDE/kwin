@@ -1198,17 +1198,24 @@ void Client::showContextHelp()
   Fetches the window's caption (WM_NAME property). It will be
   stored in the client's caption().
  */
-KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
-
 void Client::fetchName()
     {
-    QString s;
+    setCaption( readName());
+    }
 
+QString Client::readName() const
+    {
     if ( info->name() && info->name()[ 0 ] != '\0' ) 
-        s = QString::fromUtf8( info->name() );
+        return QString::fromUtf8( info->name() );
     else 
-        s = KWin::readNameProperty( window(), XA_WM_NAME );
-    if ( s != cap_normal ) 
+        return KWin::readNameProperty( window(), XA_WM_NAME );
+    }
+    
+KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
+
+void Client::setCaption( const QString& s, bool force )
+    {
+    if ( s != cap_normal || force ) 
         {
         bool reset_name = cap_normal.isEmpty();
         for( unsigned int i = 0;
@@ -1564,6 +1571,12 @@ bool Client::isSpecialWindow() const
 NET::WindowType Client::windowType( bool strict, int supported_types ) const
     {
     NET::WindowType wt = info->windowType( supported_types );
+    NET::WindowType wt2 = rules()->checkType( wt );
+    if( wt != wt2 )
+        {
+        wt = wt2;
+        info->setWindowType( wt ); // force hint change
+        }
     // TODO is this 'strict' really needed (and used?)
     if( !strict )
         { // hacks here

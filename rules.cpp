@@ -29,6 +29,7 @@ WindowRules::WindowRules()
     , extraroleregexp( false )
     , clientmachineregexp( false )
     , desktoprule( DontCareRule )
+    , typerule( DontCareRule )
     , aboverule( DontCareRule )
     , belowrule( DontCareRule )
     {
@@ -49,6 +50,8 @@ WindowRules::WindowRules( KConfig& cfg )
     clientmachineregexp = cfg.readBoolEntry( "clientmachineregexp" );
     desktop = cfg.readNumEntry( "desktop" );
     desktoprule = readRule( cfg, "desktoprule" );
+    type = readType( cfg, "type" );
+    typerule = type != NET::Unknown ? readForceRule( cfg, "typerule" ) : DontCareRule;
     above = cfg.readBoolEntry( "above" );
     aboverule = readRule( cfg, "aboverule" );
     below = cfg.readBoolEntry( "below" );
@@ -91,6 +94,7 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( extrarole, (const char*) );
     WRITE_MATCH_STRING( clientmachine, (const char*) );
     WRITE_SET_RULE( desktop );
+    WRITE_SET_RULE( type );
     WRITE_SET_RULE( above );
     WRITE_SET_RULE( below );
     }
@@ -106,15 +110,20 @@ SettingRule WindowRules::readRule( KConfig& cfg, const QString& key )
     return DontCareRule;
     }
 
-void WindowRules::update( Client* c )
+SettingRule WindowRules::readForceRule( KConfig& cfg, const QString& key )
     {
-    // TODO check this setting is for this client ?
-    if( desktoprule == RememberRule )
-        desktop = c->desktop();
-    if( aboverule == RememberRule )
-        above = c->keepAbove();
-    if( belowrule == RememberRule )
-        below = c->keepBelow();
+    int v = cfg.readNumEntry( key );
+    if( v == DontCareRule || v == ForceRule )
+        return static_cast< SettingRule >( v );
+    return DontCareRule;
+    }
+
+NET::WindowType WindowRules::readType( KConfig& cfg, const QString& key )
+    {
+    int v = cfg.readNumEntry( key );
+    if( v >= NET::Normal && v <= NET::Splash )
+        return static_cast< NET::WindowType >( v );
+    return NET::Unknown;
     }
 
 bool WindowRules::match( const Client* c ) const
@@ -158,6 +167,17 @@ bool WindowRules::match( const Client* c ) const
     return true;
     }
 
+void WindowRules::update( Client* c )
+    {
+    // TODO check this setting is for this client ?
+    if( desktoprule == RememberRule )
+        desktop = c->desktop();
+    if( aboverule == RememberRule )
+        above = c->keepAbove();
+    if( belowrule == RememberRule )
+        below = c->keepBelow();
+    }
+
 int WindowRules::checkDesktop( int req_desktop, bool init ) const
     {
     // TODO chaining?
@@ -173,12 +193,20 @@ bool WindowRules::checkKeepBelow( bool req_below, bool init ) const
     {
     return checkRule( belowrule, init ) ? below : req_below;
     }
+    
+NET::WindowType WindowRules::checkType( NET::WindowType req_type ) const
+    {
+    return checkForceRule( typerule ) ? type : req_type;
+    }
 
 // Client
 
 void Client::initWindowRules()
     {
     client_rules = workspace()->findWindowRules( this );
+    // check only after getting the rules, because there may be a rule forcing window type
+    if( isTopMenu()) // TODO cannot have restrictions
+        client_rules = &dummyRules;
     }
 
 void Client::updateWindowRules()
@@ -190,8 +218,6 @@ void Client::updateWindowRules()
 
 WindowRules* Workspace::findWindowRules( const Client* c ) const
     {
-    if( c->isTopMenu()) // TODO cannot have restrictions
-        return &dummyRules;
     for( QValueList< WindowRules* >::ConstIterator it = windowRules.begin();
          it != windowRules.end();
          ++it )

@@ -104,11 +104,15 @@ bool Client::manage( Window w, bool isMapped )
         XFree( classHint.res_name );
         XFree( classHint.res_class );
         }
-    ignore_focus_stealing = options->checkIgnoreFocusStealing( this );
+    ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
 
-    fetchName();
     window_role = getStringProperty( w, qt_window_role );
+    // first only read the caption text, so that initWindowRules() can use it for matching,
+    // and only then really set the caption using setCaption(), which checks for duplicates etc.
+    // and also relies on rules already existing
+    cap_normal = readName();
     initWindowRules();
+    setCaption( cap_normal, true );
 
     detectNoBorder();
     fetchIconicName();

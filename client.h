@@ -340,6 +340,8 @@ private slots:
         void getWmClientLeader();
         void fetchName();
         void fetchIconicName();
+        QString readName() const;
+        void setCaption( const QString& s, bool force = false );
         bool hasTransientInternal( const Client* c, bool indirect, ConstClientList& set ) const;
         void initWindowRules();
         void updateWindowRules();
