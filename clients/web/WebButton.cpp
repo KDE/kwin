@@ -61,6 +61,7 @@ WebButton::mousePressEvent(QMouseEvent * e)
   mouseDown_ = true;
   repaint();
   QButton::mousePressEvent(e);
+  e->accept();
 }
 
   void
@@ -77,6 +78,7 @@ WebButton::mouseReleaseEvent(QMouseEvent * e)
   if( !f->exists( deco_ )) // decoration was destroyed
     return;
   QButton::mouseReleaseEvent(e);
+  e->accept();
 }
 
   void
