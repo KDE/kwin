@@ -171,7 +171,7 @@ void B2Button::drawButton(QPainter *p)
     }
     else{
         if(client->isActive()){
-            if(isOn() || isDown())
+            if (isDown())
                 p->drawPixmap((width()-pDown->width())/2,
                               (height()-pDown->height())/2, *pDown);
             else
@@ -179,7 +179,7 @@ void B2Button::drawButton(QPainter *p)
                               (height()-pNorm->height())/2, *pNorm);
         }
         else{
-            if(isOn() || isDown())
+            if (isDown())
                 p->drawPixmap((width()-pDown->width())/2,
                               (height()-pDown->height())/2, *iDown);
             else
@@ -209,16 +209,12 @@ void B2Button::setPixmaps(int button_id)
 void B2Button::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
-                     LeftButton, e->state() );
-    QButton::mousePressEvent(&me);
+    QButton::mousePressEvent(e);
 }
 
 void B2Button::mouseReleaseEvent( QMouseEvent* e )
 {
-    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
-                     LeftButton, e->state() );
-    QButton::mouseReleaseEvent(&me);
+    QButton::mouseReleaseEvent(e);
 }
 
 // =====================================
@@ -775,7 +771,7 @@ void B2Client::titleMoveRel(int xdiff)
 void B2Client::desktopChange()
 {
     bool on = isOnAllDesktops();
-    if (B2Button * b = button[BtnSticky]) {
+    if (B2Button *b = button[BtnSticky]) {
         b->setDown(on);
 	QToolTip::remove(b);
 	QToolTip::add(b, on ? i18n("Not On All Desktops") : i18n("On All Desktops"));
