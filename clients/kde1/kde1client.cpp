@@ -234,7 +234,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 	if ( !button[i] )
 	    continue;
 	button[i]->setBackgroundMode( PaletteBackground );
-	button[i]->setMouseTracking( TRUE );
+	button[i]->setMouseTracking( FALSE );
 	button[i]->setAutoRaise( TRUE );
 	button[i]->setFocusPolicy( NoFocus );
 	button[i]->setFixedSize( 20, 20 );
