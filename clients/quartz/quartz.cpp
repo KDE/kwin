@@ -308,21 +308,14 @@ void QuartzHandler::createPixmaps()
 
 void QuartzHandler::freePixmaps()
 {
-	// Title images
-	if (titleBlocks)
-		delete titleBlocks;
-	if (ititleBlocks)
-		delete ititleBlocks;
+    delete titleBlocks;
+    delete ititleBlocks;
 
-	// On all desktops pin images
-	if (pinUpPix)
-		delete pinUpPix;
-	if (ipinUpPix)
-		delete ipinUpPix;
-	if (pinDownPix)
-		delete pinDownPix;
-	if (ipinDownPix)
-		delete ipinDownPix;
+    // On all desktops pin images
+    delete pinUpPix;
+    delete ipinUpPix;
+    delete pinDownPix;
+    delete ipinDownPix;
 }
 
 
@@ -365,8 +358,7 @@ QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeBut
 
 QuartzButton::~QuartzButton()
 {
-	if (deco)
-		delete deco;
+    delete deco;
 }
 
 
@@ -381,8 +373,7 @@ QSize QuartzButton::sizeHint() const
 
 void QuartzButton::setBitmap(const unsigned char *bitmap)
 {
-	if (deco)
-		delete deco;
+    delete deco;
 
     deco = new QBitmap(10, 10, bitmap, true);
     deco->setMask( *deco );
