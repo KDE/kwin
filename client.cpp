@@ -635,10 +635,10 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     }
 
     if ( isDesktop() ) {
-	// desktops are treated slightly special
-	geom = workspace()->geometry();
-	may_move = FALSE;
-	isMapped = TRUE;
+        // desktops are treated slightly special
+        geom = workspace()->geometry();
+        may_move = FALSE;
+        isMapped = TRUE;
     }
 
     if ( isMapped  || session || isTransient() ) {
@@ -849,7 +849,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             Client* ac = workspace()->activeClient();
 
             if ( !isTransient() && !session && ac && !ac->isDesktop() &&
-		 ac->userTime() > userTime() ) {
+                 ac->userTime() > userTime() ) {
                 workspace()->stackClientUnderActive( this );
                 show();
             } else {
@@ -1137,9 +1137,9 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
         return TRUE; // we have better things to do right now
 
     if ( isDesktop() ) {
-	setGeometry( workspace()->geometry() );
+        setGeometry( workspace()->geometry() );
         sendSyntheticConfigureNotify();
-	return TRUE;
+        return TRUE;
     }
 
     if ( isShade() )
@@ -1851,11 +1851,11 @@ void Client::releaseWindow( bool withdraw )
 {
     if ( win ) {
         move(gravitate(TRUE));
-	if ( withdraw )
-	    XUnmapWindow( qt_xdisplay(), win );
+        if ( withdraw )
+            XUnmapWindow( qt_xdisplay(), win );
         windowWrapper()->releaseWindow();
-	if ( withdraw )
-	    setMappingState( WithdrawnState );
+        if ( withdraw )
+            setMappingState( WithdrawnState );
         win = 0;
     }
 }
@@ -2182,7 +2182,7 @@ bool Client::x11Event( XEvent * e)
             autoRaiseTimer = 0;
             delete shadeHoverTimer;
             shadeHoverTimer = 0;
-            if ( hover_unshade )
+            if ( hover_unshade && !isMove())
                setShade( TRUE, 1 );
         }
         if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
