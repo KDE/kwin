@@ -16,6 +16,9 @@
         <string>Keramik</string>
     </property>
     <vbox>
+        <property name="margin">
+            <cstring>0</cstring>
+        </property>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
