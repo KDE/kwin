@@ -105,7 +105,6 @@ bool showMenuButtonIcon   	= false;	// Draw a mini icon over the menu pixmap.
 bool customButtonPositions 	= false;	// Let the theme dictate the btn pos.
 bool titleBarCentered 	  	= true;
 
-#define TITLE_TEXT_SIZE_POLICY QSizePolicy::Preferred
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -725,7 +724,7 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 	titleSpacerP = addPixmapSpacer( titleP );
 
 	titlebar = new QSpacerItem( titleTextWidth(caption()), titleBarHeight, 
-								TITLE_TEXT_SIZE_POLICY, QSizePolicy::Fixed );
+								QSizePolicy::Preferred, QSizePolicy::Fixed );
 	hb->addItem(titlebar);
 
 	titleSpacerM = addPixmapSpacer( titleM );
@@ -1092,7 +1091,7 @@ void IceWMClient::paintEvent( QPaintEvent* )
 	p2.drawText(rx, 0, rw, titleBarHeight, AlignLeft|AlignVCenter, caption());
 	p2.end();
 
-	bitBlt( this, hb->geometry().topLeft(), titleBuffer );
+	bitBlt( this, borderSizeX, hb->geometry().y(), titleBuffer );
 	
 	delete titleBuffer;
 }
@@ -1103,7 +1102,7 @@ void IceWMClient::showEvent(QShowEvent *ev)
 	calcHiddenButtons();
 
 	titlebar->changeSize( titleTextWidth(caption()), titleBarHeight, 
-						  TITLE_TEXT_SIZE_POLICY, QSizePolicy::Fixed );
+						  QSizePolicy::Preferred, QSizePolicy::Fixed );
 	grid->activate();
 	show();
 	Client::showEvent(ev);
@@ -1112,7 +1111,12 @@ void IceWMClient::showEvent(QShowEvent *ev)
 
 void IceWMClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
-	QRect r( borderSizeX, borderSizeY, geometry().width()-(2*borderSizeX), titleBarHeight);
+	QRect r;
+
+	if (titleBarOnTop)
+		r.setRect( borderSizeX, borderSizeY, width()-(2*borderSizeX), titleBarHeight);
+	else
+		r.setRect( borderSizeX, height()-borderSizeY-titleBarHeight, width()-(2*borderSizeX), titleBarHeight);
 
 	if ( r.contains( e->pos() ) )
 		workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
@@ -1141,7 +1145,7 @@ void IceWMClient::captionChange( const QString& s )
 	QRect r( 0, borderSizeY, geometry().width(), titleBarHeight);
 
 	titlebar->changeSize( titleTextWidth( s ), titleBarHeight, 
-						  TITLE_TEXT_SIZE_POLICY, QSizePolicy::Fixed );
+						  QSizePolicy::Preferred, QSizePolicy::Fixed );
 	titlebar->invalidate();
     grid->activate();
     repaint( r, false );
