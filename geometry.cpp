@@ -1306,8 +1306,19 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
         case MaximizeRestore:
             {
-            QRect restore = geom_restore;
-            if( !geom_restore.isValid())
+            QRect restore = geometry();
+	// when only partially maximized, geom_restore may not have the other dimension remembered
+            if( old_mode & MaximizeVertical )
+                {
+                restore.setTop( geom_restore.top());
+                restore.setBottom( geom_restore.bottom());
+                }
+            if( old_mode & MaximizeHorizontal )
+                {
+                restore.setLeft( geom_restore.left());
+                restore.setRight( geom_restore.right());
+                }
+            if( !restore.isValid())
                 {
                 QSize s = QSize( clientArea.width()*2/3, clientArea.height()*2/3 );
                 if( geom_restore.width() > 0 )
@@ -1321,17 +1332,6 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                     restore.moveLeft( geom_restore.x());
                 if( geom_restore.height() > 0 )
                     restore.moveTop( geom_restore.y());
-                }
-	// when only partially maximized, geom_restore may not have the other dimension remembered
-            if(( old_mode & MaximizeHorizontal ) == 0 && restore.width() <= 0 )
-                {
-                restore.setLeft( x());
-                restore.setWidth( width());
-                }
-            if(( old_mode & MaximizeVertical ) == 0 && restore.height() <= 0 )
-                {
-                restore.setTop( y());
-                restore.setHeight( height());
                 }
             setGeometry( restore );
             info->setState( 0, NET::Max );
