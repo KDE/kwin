@@ -810,6 +810,18 @@ void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 }
 
 
+
+/*!
+  Sets the client \a c's transient windows' sticky property to \a sticky.
+ */
+void Workspace::setStickyTransientsOf( Client* c, bool sticky )
+{
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it)->transientFor() == c->window() && (*it)->isSticky() != sticky )
+	    (*it)->setSticky( sticky );
+    }
+}
+
 /*!
   Returns whether a client with the specified \a caption exists, or not.
  */

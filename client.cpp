@@ -1418,6 +1418,7 @@ void Client::setSticky( bool b )
     is_sticky = b;
     if ( !is_sticky )
 	setDesktop( workspace()->currentDesktop() );
+    workspace()->setStickyTransientsOf( this, b );
     stickyChange( is_sticky );
 }
 

@@ -98,6 +98,7 @@ public:
 
     bool iconifyMeansWithdraw( Client* );
     void iconifyOrDeiconifyTransientsOf( Client* );
+    void setStickyTransientsOf( Client*, bool sticky );
 
     bool hasCaption( const QString& caption );
 
