@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <kdebug.h>
 #include <qapplication.h>
+#include <kglobal.h>
 #include <assert.h>
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY
 #include <X11/Xlib.h>
@@ -310,30 +311,32 @@ void KDecoration::ungrabXServer()
 KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
-    const int border = 4;
+    int bleft, bright, btop, bbottom;
+    borders( bleft, bright, btop, bbottom );
+    btop = KMIN( btop, 4 ); // otherwise whole titlebar would have resize cursor
 
     Position m = PositionCenter;
 
-
-    if ( ( p.x() > border && p.x() < widget()->width() - border )
-         && ( p.y() > border && p.y() < widget()->height() - border ) )
+    if ( ( p.x() > bleft && p.x() < widget()->width() - bright )
+         && ( p.y() > btop && p.y() < widget()->height() - bbottom ) )
         return PositionCenter;
 
-    if ( p.y() <= range && p.x() <= range)
+    if ( p.y() <= KMAX( range, btop ) && p.x() <= KMAX( range, bleft ))
         m = PositionTopLeft;
-    else if ( p.y() >= widget()->height()-range && p.x() >= widget()->width()-range)
+    else if ( p.y() >= widget()->height()- KMAX( range, bbottom )
+        && p.x() >= widget()->width()- KMAX( range, bright ))
         m = PositionBottomRight;
-    else if ( p.y() >= widget()->height()-range && p.x() <= range)
+    else if ( p.y() >= widget()->height()- KMAX( range, bbottom ) && p.x() <= KMAX( range, bleft ))
         m = PositionBottomLeft;
-    else if ( p.y() <= range && p.x() >= widget()->width()-range)
+    else if ( p.y() <= KMAX( range, btop ) && p.x() >= widget()->width()- KMAX( range, bright ))
         m = PositionTopRight;
-    else if ( p.y() <= border )
+    else if ( p.y() <= btop )
         m = PositionTop;
-    else if ( p.y() >= widget()->height()-border )
+    else if ( p.y() >= widget()->height()-bbottom )
         m = PositionBottom;
-    else if ( p.x() <= border )
+    else if ( p.x() <= bleft )
         m = PositionLeft;
-    else if ( p.x() >= widget()->width()-border )
+    else if ( p.x() >= widget()->width()-bright )
         m = PositionRight;
     else
         m = PositionCenter;
