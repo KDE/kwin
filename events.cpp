@@ -1320,6 +1320,9 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
         if( newmode != mode )
             setCursor( newmode );
         mode = newmode;
+        // reset the timestamp for the optimization, otherwise with long passivity
+        // the option in waitingMotionEvent() may be always true
+        next_motion_time = CurrentTime;
         return false;
         }
     if( w == moveResizeGrabWindow())
