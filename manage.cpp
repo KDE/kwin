@@ -188,9 +188,9 @@ bool Client::manage( Window w, bool isMapped )
         }
     if ( desk == 0 ) // assume window wants to be visible on the current desktop
         desk = workspace()->currentDesktop();
+    desk = rules()->checkDesktop( desk, !isMapped );
     if( desk != NET::OnAllDesktops ) // do range check
         desk = KMAX( 1, KMIN( workspace()->numberOfDesktops(), desk ));
-    desk = rules()->checkDesktop( desk, !isMapped );
     info->setDesktop( desk );
     workspace()->updateOnAllDesktopsOfTransients( this ); // SELI
 //    onAllDesktopsChange(); decoration doesn't exist here yet
