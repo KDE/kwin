@@ -31,33 +31,6 @@ static QPixmap* dis_menu_pix = 0;
 
 static QPixmap* question_mark_pix = 0;
 
-/* XPM */
-static const char *question_mark[] = {
-/* width height ncolors chars_per_pixel */
-"16 16 2 1",
-/* colors */
-"  c #000000",
-"X c None",
-/* pixels */
-"XXXXXXXXXXXXXXXX",
-"XXXXX        XXX",
-"XXXX  XXXXX   XX",
-"XXX  XXXXXXX  XX",
-"XXX  XXXXXXX  XX",
-"XXXXXXXXXXX   XX",
-"XXXXXXXXXX   XXX",
-"XXXXXXXXX   XXXX",
-"XXXXXXXX  XXXXXX",
-"XXXXXXX  XXXXXXX",
-"XXXXXXX  XXXXXXX",
-"XXXXXXXXXXXXXXXX",
-"XXXXXXXXXXXXXXXX",
-"XXXXXXX  XXXXXXX",
-"XXXXXXX  XXXXXXX",
-"XXXXXXXXXXXXXXXX"
-};
-
-
 static bool pixmaps_created = FALSE;
 
 static void create_pixmaps();
@@ -153,8 +126,12 @@ static void create_pixmaps()
     pindown_pix->setMask(QBitmap(16, 16, pindown_mask_bits, true));
     dis_pindown_pix->setMask(*pindown_pix->mask());
 
-    question_mark_pix = new QPixmap(question_mark );
-
+    question_mark_pix = new QPixmap(16, 16);
+    aPainter.begin(question_mark_pix);
+    kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, help_light_bits,
+                  NULL, NULL, help_dark_bits, NULL, NULL);
+    aPainter.end();
+    question_mark_pix->setMask(QBitmap(16, 16, help_mask_bits, true));
 }
 
 
