@@ -19,7 +19,7 @@ data_DATA = kwinoptions.desktop
 datadir = $(kde_appsdir)/Settings/LookNFeel
 
 install-data-local: uninstall.desktop
-	$(mkinstalldirs) $(kde_appsdir)/Settings/LookNFeel/Windows
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(kde_appsdir)/Settings/LookNFeel/Windows/actions.desktop
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(kde_appsdir)/Settings/LookNFeel/Windows/kwinmouse.desktop
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(kde_appsdir)/Settings/LookNFeel/Windows/mouse.desktop
+	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows
+	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows/actions.desktop
+	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows/kwinmouse.desktop
+	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows/mouse.desktop
