@@ -137,7 +137,7 @@ public:
 
     bool skipTaskbar() const;
     void setSkipTaskbar( bool );
-    
+
     bool storeSettings() const;
     void setStoreSettings( bool );
 
@@ -283,7 +283,7 @@ private:
     QPoint invertedMoveOffset;
     QSize clientSize;
     XSizeHints  xSizeHint;
-    void sendSynteticConfigureNotify();
+    void sendSyntheticConfigureNotify();
     int state;
     QRect original_geometry;
     QRect geom; //### TODO
@@ -328,7 +328,7 @@ private:
     static QCString staticWmCommand(WId);
     static QCString staticWmClientMachine(WId);
     static Window   staticWmClientLeader(WId);
-    
+
 };
 
 inline WId Client::window() const

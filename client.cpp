@@ -290,7 +290,7 @@ void WindowWrapper::deferredResize()
 {
     XMoveResizeWindow( qt_xdisplay(), win,
 		       0, 0, width(), height() );
-    ((Client*)parentWidget())->sendSynteticConfigureNotify();
+    ((Client*)parentWidget())->sendSyntheticConfigureNotify();
     if ( ((Client*)parentWidget())->shape() )
 	((Client*)parentWidget())->updateShape();
     QApplication::syncX(); // process our own configure events synchronously.
@@ -602,8 +602,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
 	     (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
-	    if ( resource_name == "AWTapp" )
-		geom.moveTopLeft( QPoint(xSizeHint.x, xSizeHint.y) );
 	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
 		int tx = geom.x();
 		int ty = geom.y();
@@ -1007,7 +1005,8 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
     if ( isShade() )
 	setShade( FALSE );
 
-      // compress configure requests
+     /*    
+    // compress configure requests
     XEvent otherEvent;
     while (XCheckTypedWindowEvent (qt_xdisplay(), win,
 				   ConfigureRequest, &otherEvent) ) {
@@ -1018,10 +1017,11 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    break;
 	}
     }
+    */
 
     bool stacking = e.value_mask & CWStackMode;
     int stack_mode = e.detail;
-
+    
     if ( e.value_mask & CWBorderWidth ) {
 	// first, get rid of a window border
 	XWindowChanges wc;
@@ -1082,7 +1082,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	if ( isMaximized() ) {
 	  geom_restore.moveTopLeft( np );
 	} else {
-	  move( np );
+	    move( np );
 	}
     }
 
@@ -1125,7 +1125,8 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	}
     }
 
-    sendSynteticConfigureNotify();
+    if ( e.value_mask & (CWX | CWY  | CWWidth | CWHeight ) )
+	sendSyntheticConfigureNotify();
     return TRUE;
 }
 
@@ -1203,7 +1204,7 @@ bool Client::clientMessage( XClientMessageEvent& e )
   configuration.
 
  */
-void Client::sendSynteticConfigureNotify()
+void Client::sendSyntheticConfigureNotify()
 {
     XConfigureEvent c;
     c.type = ConfigureNotify;
@@ -1214,6 +1215,8 @@ void Client::sendSynteticConfigureNotify()
     c.width = windowWrapper()->width();
     c.height = windowWrapper()->height();
     c.border_width = 0;
+    c.above = None;
+    c.override_redirect = 0;
     XSendEvent( qt_xdisplay(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
 }
 
@@ -1571,8 +1574,8 @@ void Client::leaveEvent( QEvent * )
 void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
-    if ( !isResize() && !isMove() )
-	sendSynteticConfigureNotify();
+    if ( !isResize() && !isMove() && isVisible() )
+	sendSyntheticConfigureNotify();
 }
 
 /*!
@@ -1581,8 +1584,8 @@ void Client::setGeometry( int x, int y, int w, int h )
 void Client::move( int x, int y )
 {
     QWidget::move( x, y );
-    if ( !isMove() )
-	sendSynteticConfigureNotify();
+    if ( !isMove() && isVisible() )
+	sendSyntheticConfigureNotify();
 }
 
 
