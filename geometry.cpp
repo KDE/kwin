@@ -1404,7 +1404,8 @@ bool Client::isFullScreenable( bool fullscreen_hack ) const
 
 bool Client::userCanSetFullScreen() const
     {
-    return isNormalWindow() && fullscreen_mode != FullScreenHack && isMaximizable();
+    return isNormalWindow() && fullscreen_mode != FullScreenHack
+        && ( isMaximizable() || isFullScreen()); // isMaximizable() is false for isFullScreen()
     }
 
 void Client::setFullScreen( bool set, bool user )
