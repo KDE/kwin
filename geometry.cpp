@@ -1394,14 +1394,15 @@ void Client::resetMaximize()
 
 bool Client::isFullScreenable( bool fullscreen_hack ) const
     {
-    return isFullScreen() // necessary, because for fullscreen windows isMaximizable() returns false
-        || (( isNormalWindow() || isOverride())
-            && ( isMaximizable() || fullscreen_hack ));
+    if( fullscreen_hack )
+        return isNormalWindow() || isOverride();
+    else // don't check size constrains - some apps request fullscreen despite requesting fixed size
+        return !isSpecialWindow(); // also better disallow only weird types to go fullscreen
     }
 
 bool Client::userCanSetFullScreen() const
     {
-    return isFullScreenable() && isNormalWindow() && fullscreen_mode != FullScreenHack;
+    return isNormalWindow() && fullscreen_mode != FullScreenHack && isMaximizable();
     }
 
 void Client::setFullScreen( bool set, bool user )
