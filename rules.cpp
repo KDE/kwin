@@ -606,7 +606,7 @@ void WindowRules::discardTemporary()
          it != rules.end();
          )
         {
-        if( (*it)->discardTemporary( false ))
+        if( (*it)->discardTemporary( true ))
             ++it;
         else
             {
