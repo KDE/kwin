@@ -318,7 +318,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 //            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return TRUE;
-                c = createClient( e->xmaprequest.window, false, options->xineramaPlacementEnabled );
+                c = createClient( e->xmaprequest.window, false );
                 if ( c != NULL && root != qt_xrootwin() ) 
                     { // TODO what is this?
                     // TODO may use QWidget::create

@@ -33,7 +33,7 @@ namespace KWinInternal
   reparenting, initial geometry, initial state, placement, etc.
   Returns false if KWin is not going to manage this window.
  */
-bool Client::manage( Window w, bool isMapped, bool useCursorPos )
+bool Client::manage( Window w, bool isMapped )
     {
     XWindowAttributes attr;
     if( !XGetWindowAttributes(qt_xdisplay(), w, &attr))
@@ -181,7 +181,11 @@ bool Client::manage( Window w, bool isMapped, bool useCursorPos )
     if ( session )
         geom = session->geometry;
 
-    QRect area = workspace()->clientArea( PlacementArea, useCursorPos ? QCursor::pos() : geom.center(), desktop());
+    QRect area;
+    if( !isMapped && options->xineramaPlacementEnabled )
+        area = workspace()->clientArea( PlacementArea, QCursor::pos(), desktop());
+    else
+        area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
 
     // if it's noborder window, and has size of one screen or the whole desktop geometry, it's fullscreen hack
     if( ( geom.size() == workspace()->clientArea( FullArea, geom.center(), desktop()).size()
