@@ -31,6 +31,8 @@
 #include "CloseButton.h"
 #include "IconifyButton.h"
 #include "MaximiseButton.h"
+#include "StickyButton.h"
+#include "HelpButton.h"
 
 extern "C"
 {
@@ -59,11 +61,18 @@ Manager::Manager(
 
   lower_      = new LowerButton     (this);
   close_      = new CloseButton     (this);
+  sticky_     = new StickyButton    (this);
   iconify_    = new IconifyButton   (this);
   maximise_   = new MaximiseButton  (this);
+  help_       = new HelpButton      (this);
+
+  if (!providesContextHelp())
+    help_->hide();
 
   lower_    ->setAlignment(Button::Left);
   close_    ->setAlignment(Button::Left);
+  sticky_   ->setAlignment(Button::Left);
+  help_     ->setAlignment(Button::Right);
   iconify_  ->setAlignment(Button::Right);
   maximise_ ->setAlignment(Button::Right);
 
@@ -73,8 +82,10 @@ Manager::Manager(
 
   titleLayout->addWidget(lower_);
   titleLayout->addWidget(close_);
+  titleLayout->addWidget(sticky_);
   titleSpacer_ = new QSpacerItem(0, 20);
   titleLayout->addItem(titleSpacer_);
+  titleLayout->addWidget(help_);
   titleLayout->addWidget(iconify_);
   titleLayout->addWidget(maximise_);
 
@@ -85,13 +96,23 @@ Manager::Manager(
 
   l->addSpacing(10);
 
-  connect(lower_,     SIGNAL(lowerClient()),          this,     SLOT(lower()));
-  connect(close_,     SIGNAL(closeClient()),          this,     SLOT(closeWindow()));
-  connect(iconify_,   SIGNAL(iconifyClient()),        this,     SLOT(iconify()));
-  connect(maximise_,  SIGNAL(maximiseClient()),       this,     SLOT(maximize()));
-  connect(maximise_,  SIGNAL(vMaxClient()),           this,     SLOT(vMax()));
-  connect(maximise_,  SIGNAL(raiseClient()),          this,     SLOT(raise()));
-  connect(this,       SIGNAL(maximiseChanged(bool)),  maximise_,SLOT(setOn(bool)));
+  connect(lower_,     SIGNAL(lowerClient()),          SLOT(lower()));
+  connect(close_,     SIGNAL(closeClient()),          SLOT(closeWindow()));
+  connect(iconify_,   SIGNAL(iconifyClient()),        SLOT(iconify()));
+  connect(sticky_,    SIGNAL(stickClient()),          SLOT(stick()));
+  connect(sticky_,    SIGNAL(unstickClient()),        SLOT(unstick()));
+  connect(maximise_,  SIGNAL(maximiseClient()),       SLOT(maximize()));
+  connect(maximise_,  SIGNAL(vMaxClient()),           SLOT(vMax()));
+  connect(maximise_,  SIGNAL(raiseClient()),          SLOT(raise()));
+  connect(help_,      SIGNAL(help()),                 SLOT(help()));
+
+  connect(
+      this,       SIGNAL(maximiseChanged(bool)),
+      maximise_,  SLOT(setOn(bool)));
+
+  connect(
+      this,       SIGNAL(stickyChanged(bool)),
+      sticky_,    SLOT(setOn(bool)));
 }
 
 Manager::~Manager()
@@ -119,8 +140,15 @@ Manager::paletteChange(const QPalette &)
 }
 
   void
-Manager::activeChange(bool)
+Manager::activeChange(bool b)
 {
+  lower_      ->setActive(b);
+  close_      ->setActive(b);
+  sticky_     ->setActive(b);
+  iconify_    ->setActive(b);
+  maximise_   ->setActive(b);
+  help_       ->setActive(b);
+
   repaint();
 }
 
@@ -128,6 +156,12 @@ Manager::activeChange(bool)
 Manager::maximizeChange(bool b)
 {
   emit(maximiseChanged(b));
+}
+
+  void
+Manager::stickyChange(bool b)
+{
+  emit(stickyChanged(b));
 }
 
   void
@@ -203,6 +237,24 @@ Manager::vMax()
 }
 
   void
+Manager::stick()
+{
+  setSticky(true);
+}
+
+  void
+Manager::unstick()
+{
+  setSticky(false);
+}
+
+  void
+Manager::help()
+{
+  contextHelp();
+}
+
+  void
 Manager::resizeEvent(QResizeEvent *)
 {
   int sizeProblem = 0;
@@ -215,6 +267,8 @@ Manager::resizeEvent(QResizeEvent *)
 
     case 1:
       lower_    ->hide();
+      sticky_   ->hide();
+      help_     ->hide();
       iconify_  ->show();
       maximise_ ->hide();
       close_    ->show();
@@ -222,6 +276,8 @@ Manager::resizeEvent(QResizeEvent *)
 
     case 2:
       lower_    ->hide();
+      sticky_   ->hide();
+      help_     ->hide();
       iconify_  ->hide();
       maximise_ ->hide();
       close_    ->show();
@@ -229,6 +285,8 @@ Manager::resizeEvent(QResizeEvent *)
 
     case 3:
       lower_    ->hide();
+      sticky_   ->hide();
+      help_     ->hide();
       iconify_  ->hide();
       maximise_ ->hide();
       close_    ->hide();
@@ -237,6 +295,9 @@ Manager::resizeEvent(QResizeEvent *)
     case 0:
     default:
       lower_    ->show();
+      sticky_   ->show();
+      if (providesContextHelp())
+        help_->show();
       iconify_  ->show();
       maximise_ ->show();
       close_    ->show();

@@ -26,6 +26,25 @@ namespace RiscOS
 {
 
 /* XPM */
+static const char * const unsticky_xpm[] = {
+"12 12 3 1",
+" 	c None",
+".	c #000000",
+"+	c #FFFFFF",
+"    ...     ",
+"   . + .    ",
+"   .+ +.    ",
+"   . + .    ",
+"   .+ +.    ",
+"  .+ + +.   ",
+" .+ + + +.  ",
+".+ + + + +. ",
+"........... ",
+"     .      ",
+"     .      ",
+"     .      "};
+
+/* XPM */
 static const char * const sticky_xpm[] = {
 "12 12 3 1",
 " 	c None",
@@ -44,6 +63,7 @@ static const char * const sticky_xpm[] = {
 " .     .    ",
 ".           "};
 
+
 StickyButton::StickyButton(QWidget * parent)
   : Button(parent),
     on_(false)
@@ -55,6 +75,11 @@ StickyButton::StickyButton(QWidget * parent)
 StickyButton::setOn(bool on)
 {
   on_ = on;
+  setPixmap(
+      on_ ?
+      QPixmap((const char **)unsticky_xpm) :
+      QPixmap((const char **)sticky_xpm)
+  );
   repaint();
 }
 
@@ -69,6 +94,10 @@ StickyButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     default:
+      if (on_)
+        emit(unstickClient());
+      else
+        emit(stickClient());
       break;
   }
 }

@@ -31,18 +31,18 @@ static const char * const maximise_xpm[] = {
 " 	c None",
 ".	c #000000",
 "+	c #FFFFFF",
-" .......... ",
-".+ + + + + .",
-". + + + + +.",
-".+ + + + + .",
-". + + + + +.",
-".+ + + + + .",
-". + + + + +.",
-".+ + + + + .",
-". + + + + +.",
-".+ + + + + .",
-". + + + + +.",
-" .......... "};
+"            ",
+"  ........  ",
+" .+ + + + . ",
+" . + + + +. ",
+" .+ + + + . ",
+" . + + + +. ",
+" .+ + + + . ",
+" . + + + +. ",
+" .+ + + + . ",
+" . + + + +. ",
+"  ........  ",
+"            "};
 
 /* XPM */
 static const char * const unmaximise_xpm[] = {
@@ -74,6 +74,11 @@ MaximiseButton::MaximiseButton(QWidget * parent)
 MaximiseButton::setOn(bool on)
 {
   on_ = on;
+  setPixmap(
+      on_ ?
+      QPixmap((const char **)unmaximise_xpm) :
+      QPixmap((const char **)maximise_xpm)
+  );
   repaint();
 }
 

@@ -311,7 +311,6 @@ Static::update()
   down_ = false;
 
   transx = 0.0;
-  palette_ = aBut;
 
   palette_ = aBut;
   _drawButtonBorder(aButtonUp_);

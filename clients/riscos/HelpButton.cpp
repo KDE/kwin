@@ -20,38 +20,38 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include "LowerButton.h"
+#include "HelpButton.h"
 
 namespace RiscOS
 {
 
 /* XPM */
-static const char * const lower_xpm[] = {
+static const char * const help_xpm[] = {
 "12 12 3 1",
 " 	c None",
-".	c #000000",
-"+	c #FFFFFF",
-"            ",
-" .....      ",
-".+ +++.     ",
-".+++ +.     ",
-".+ +++..... ",
-".+++ .+ + +.",
-".+ ++. + + .",
-" .....+ + +.",
-"     . + + .",
-"     .+ + +.",
-"      ..... ",
-"            "};
+".	c #FFFFFF",
+"+	c #000000",
+" .  ++++  . ",
+"  .+. . +.  ",
+"  +. . . +  ",
+"..+ . . .+..",
+"  +. . . +  ",
+"  + . . .+  ",
+"  .+ . .+.  ",
+" .  ++ +  . ",
+"    + ++    ",
+"    ++ +    ",
+"    + ++    ",
+"     ++     "};
 
-LowerButton::LowerButton(QWidget * parent)
+HelpButton::HelpButton(QWidget * parent)
   : Button(parent)
 {
-  setPixmap(QPixmap((const char **)lower_xpm));
+  setPixmap(QPixmap((const char **)help_xpm));
 }
 
   void
-LowerButton::mouseReleaseEvent(QMouseEvent * e)
+HelpButton::mouseReleaseEvent(QMouseEvent * e)
 {
   Button::mouseReleaseEvent(e);
 
@@ -61,7 +61,7 @@ LowerButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     default:
-      emit(lowerClient());
+      emit(help());
       break;
   }
 
@@ -69,4 +69,4 @@ LowerButton::mouseReleaseEvent(QMouseEvent * e)
 } // End namespace;
 
 // vim:ts=2:sw=2:tw=78
-#include "LowerButton.moc"
+#include "HelpButton.moc"

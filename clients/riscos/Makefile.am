@@ -9,6 +9,8 @@ IconifyButton.cpp \
 LowerButton.cpp \
 Manager.cpp \
 MaximiseButton.cpp \
+StickyButton.cpp \
+HelpButton.cpp \
 Static.cpp
 libkwinriscos_la_LIBADD = ../../kwin.la
 libkwinriscos_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
@@ -21,6 +23,7 @@ IconifyButton.h \
 LowerButton.h \
 MaximiseButton.h \
 StickyButton.h \
+HelpButton.h \
 Manager.h \
 Static.h
 

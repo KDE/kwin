@@ -20,53 +20,33 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include "LowerButton.h"
+#ifndef RISC_OS_HELP_BUTTON_H
+#define RISC_OS_HELP_BUTTON_H
+
+#include "Button.h"
 
 namespace RiscOS
 {
 
-/* XPM */
-static const char * const lower_xpm[] = {
-"12 12 3 1",
-" 	c None",
-".	c #000000",
-"+	c #FFFFFF",
-"            ",
-" .....      ",
-".+ +++.     ",
-".+++ +.     ",
-".+ +++..... ",
-".+++ .+ + +.",
-".+ ++. + + .",
-" .....+ + +.",
-"     . + + .",
-"     .+ + +.",
-"      ..... ",
-"            "};
-
-LowerButton::LowerButton(QWidget * parent)
-  : Button(parent)
+class HelpButton : public Button
 {
-  setPixmap(QPixmap((const char **)lower_xpm));
-}
+  Q_OBJECT
 
-  void
-LowerButton::mouseReleaseEvent(QMouseEvent * e)
-{
-  Button::mouseReleaseEvent(e);
+  public:
 
-  if (!rect().contains(e->pos()))
-    return;
+    HelpButton(QWidget * parent);
 
-  switch (e->button())
-  {
-    default:
-      emit(lowerClient());
-      break;
-  }
+  signals:
 
-}
+    void help();
+
+  protected:
+
+    void mouseReleaseEvent(QMouseEvent *);
+};
+
 } // End namespace;
 
+#endif
+
 // vim:ts=2:sw=2:tw=78
-#include "LowerButton.moc"

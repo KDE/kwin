@@ -34,6 +34,8 @@ class LowerButton;
 class CloseButton;
 class IconifyButton;
 class MaximiseButton;
+class StickyButton;
+class HelpButton;
 
 class Manager : public Client
 {
@@ -47,12 +49,16 @@ class Manager : public Client
   signals:
 
     void maximiseChanged(bool);
+    void stickyChanged(bool);
 
   public slots:
 
+    void help();
     void lower();
     void raise();
     void vMax();
+    void stick();
+    void unstick();
 
   protected:
 
@@ -60,6 +66,7 @@ class Manager : public Client
     void paletteChange(const QPalette &);
     void activeChange(bool);
     void maximizeChange(bool);
+    void stickyChange(bool);
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
     void mouseDoubleClickEvent(QMouseEvent *);
@@ -71,13 +78,14 @@ class Manager : public Client
 
   private:
 
-    LowerButton * lower_;
-    CloseButton * close_;
+    LowerButton     * lower_;
+    CloseButton     * close_;
+    IconifyButton   * iconify_;
+    MaximiseButton  * maximise_;
+    StickyButton    * sticky_;
+    HelpButton      * help_;
 
-    IconifyButton * iconify_;
-    MaximiseButton * maximise_;
-
-    QSpacerItem * titleSpacer_;
+    QSpacerItem     * titleSpacer_;
 };
 
 } // End namespace
