@@ -23,6 +23,8 @@ class GeometryTip: public QLabel
     private:
 	const XSizeHints* sizeHints;
 	const Client* c;
+	int framewidth;
+	int frameheight;
 };
 
 }

@@ -39,6 +39,10 @@ GeometryTip::GeometryTip( const Client* client, const XSizeHints* xSizeHints, bo
     setFrameStyle( QFrame::Raised | QFrame::StyledPanel );
     setAlignment( AlignCenter | AlignTop );
     sizeHints = xSizeHints;
+
+    QWidget* wrap = c->windowWrapper();
+    framewidth  = client->width()  - wrap->width();
+    frameheight = client->height() - wrap->height(); 
 }
 
 GeometryTip::~GeometryTip()
@@ -49,10 +53,9 @@ void GeometryTip::setGeometry( const QRect& geom )
 {
     int w, h;
     int bw, bh;
-    QWidget* wrap = c->windowWrapper();
 
-    w = wrap->width();
-    h = wrap->height();
+    w = geom.width() - framewidth;
+    h = geom.height() - frameheight;
 
     if (sizeHints) {
 	if (!(sizeHints->flags & PBaseSize)) {
