@@ -26,7 +26,7 @@ extern "C"
 
 static unsigned char iconify_bits[] = {
     0xff, 0xff, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18};
-    
+
 static unsigned char close_bits[] = {
     0x42, 0xe7, 0x7e, 0x3c, 0x3c, 0x7e, 0xe7, 0x42};
 
@@ -46,7 +46,7 @@ static unsigned char sticky_bits[] = {
 
 static unsigned char question_bits[] = {
     0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
-    
+
 static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
@@ -105,7 +105,7 @@ static void create_pixmaps()
     titlePix = new QPixmap(33, 12);
     QBitmap mask(33, 12);
     mask.fill(Qt::color0);
-    
+
     p.begin(titlePix);
     maskPainter.begin(&mask);
     maskPainter.setPen(Qt::color1);
@@ -206,7 +206,7 @@ static void create_pixmaps()
     if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
         btnForeground = Qt::black;
     else
-        btnForeground = Qt::white;      
+        btnForeground = Qt::white;
 }
 
 
@@ -304,13 +304,13 @@ void KDEClient::slotReset()
 
 KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase )
+    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity )
 {
     create_pixmaps();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
-    
+
     QGridLayout* g = new QGridLayout(this, 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 3);
@@ -320,7 +320,7 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     g->addRowSpacing(4, 8); // bottom handles
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
-    
+
     button[BtnClose] = new SystemButton(28, titleHeight, this, "close", close_bits);
     button[BtnSticky] = new SystemButton(18, titleHeight, this, "sticky");
     if(isSticky())
@@ -369,14 +369,15 @@ void KDEClient::resizeEvent( QResizeEvent* e)
 
     doShape();
     calcHiddenButtons();
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
-        QPainter p( this );
-	QRect t = titlebar->geometry();
-	t.setTop( 0 );
-	QRegion r = rect();
-	r = r.subtract( t );
-	p.setClipRegion( r );
-	p.eraseRect( rect() );
+    if ( isVisibleToTLW() ) {
+	int dx = 16 + QABS( e->oldSize().width() -  width() );
+	int dy = 16 + QABS( e->oldSize().height() -  height() );
+ 	update( 0, height() - dy + 1, width(), dy );
+ 	update( width() - dx + 1, 0, dx, height() );
+ 	update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
+ 	update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+	// titlebar needs no background
+  	QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
     }
 }
 
@@ -481,7 +482,7 @@ void KDEClient::showEvent(QShowEvent *ev)
 void KDEClient::windowWrapperShowEvent( QShowEvent* )
 {
     doShape();
-}                                                                               
+}
 
 void KDEClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
