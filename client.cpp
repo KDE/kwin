@@ -2625,6 +2625,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         workspace()->lowerClient( this );
         break;
     case Options::MouseActivate:
+        // We might already be active, in which case we want to pass the click on
+        replay = isActive();
         workspace()->requestFocus( this );
         break;
     case Options::MouseActivateRaiseAndPassClick:
