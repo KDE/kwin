@@ -138,6 +138,10 @@ Name[zh_CN]=切换到桌面一
 Name[zh_TW]=切換到桌面一
 Name[zu]=Shintshela kwi-Desktop 1
 Comment=Virtual desktop one is selected
+Comment[be]=Выбраны першы віртуальны працоўны cтол
+Comment[et]=Esimene virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual um é seleccionado
+Comment[pt_BR]=O ecrã virtual um é seleccionado
 default_sound=KDE_Desktop1.wav
 default_presentation=0
 
@@ -211,6 +215,10 @@ Name[zh_CN]=切换到桌面二
 Name[zh_TW]=切換到桌面二
 Name[zu]=Shintshela kwi-Desktop 2
 Comment=Virtual desktop two is selected
+Comment[be]=Выбраны другі віртуальны працоўны cтол
+Comment[et]=Teine virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual dois é seleccionado
+Comment[pt_BR]=O ecrã virtual dois é seleccionado
 default_sound=KDE_Desktop2.wav
 default_presentation=0
 
@@ -284,6 +292,10 @@ Name[zh_CN]=切换到桌面三
 Name[zh_TW]=切換到桌面三
 Name[zu]=Shintshela kwi-Desktop 3
 Comment=Virtual desktop three is selected
+Comment[be]=Выбраны трэці віртуальны працоўны cтол
+Comment[et]=Kolmas virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual três é seleccionado
+Comment[pt_BR]=O ecrã virtual três é seleccionado
 default_sound=KDE_Desktop3.wav 
 default_presentation=0
 
@@ -357,6 +369,10 @@ Name[zh_CN]=切换到桌面四
 Name[zh_TW]=切換到桌面四
 Name[zu]=Shintshela kwi-Desktop 4
 Comment=Virtual desktop four is selected
+Comment[be]=Выбраны чацьверты віртуальны працоўны cтол
+Comment[et]=Neljas virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual quatro é seleccionado
+Comment[pt_BR]=O ecrã virtual quatro é seleccionado
 default_sound=KDE_Desktop4.wav 
 default_presentation=0
 
@@ -430,6 +446,10 @@ Name[zh_CN]=切换到桌面五
 Name[zh_TW]=切換到桌面五
 Name[zu]=Shintshela kwi-Desktop 5
 Comment=Virtual desktop five is selected
+Comment[be]=Выбраны пяты віртуальны працоўны cтол
+Comment[et]=Viies virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual cinco é seleccionado
+Comment[pt_BR]=O ecrã virtual cinco é seleccionado
 default_sound=KDE_Desktop5.wav 
 default_presentation=0
 
@@ -503,6 +523,10 @@ Name[zh_CN]=切换到桌面六
 Name[zh_TW]=切換到桌面六
 Name[zu]=Shintshela kwi-Desktop 6
 Comment=Virtual desktop six is selected
+Comment[be]=Выбраны шосты віртуальны працоўны cтол
+Comment[et]=Kuues virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual seis é seleccionado
+Comment[pt_BR]=O ecrã virtual seis é seleccionado
 default_sound=KDE_Desktop6.wav 
 default_presentation=0
 
@@ -576,6 +600,10 @@ Name[zh_CN]=切换到桌面七
 Name[zh_TW]=切換到桌面七
 Name[zu]=Shintshela kwi-Desktop 7
 Comment=Virtual desktop seven is selected
+Comment[be]=Выбраны сёмы віртуальны працоўны cтол
+Comment[et]=Seitsmes virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual sete é seleccionado
+Comment[pt_BR]=O ecrã virtual sete é seleccionado
 default_sound=KDE_Desktop7.wav 
 default_presentation=0
 
@@ -649,6 +677,10 @@ Name[zh_CN]=切换到桌面八
 Name[zh_TW]=切換到桌面八
 Name[zu]=Shintshela kwi-Desktop 8
 Comment=Virtual desktop eight is selected
+Comment[be]=Выбраны восьмы віртуальны працоўны cтол
+Comment[et]=Kaheksas virtuaalne töölaud on valitud
+Comment[pt]=O ecrã virtual oito é seleccionado
+Comment[pt_BR]=O ecrã virtual oito é seleccionado
 default_sound=KDE_Desktop8.wav 
 default_presentation=0
 
@@ -723,6 +755,10 @@ Name[zh_CN]=激活窗口
 Name[zh_TW]=作用中視窗
 Name[zu]=Nyakazisa I-window
 Comment=Another window is activated
+Comment[be]=Актывізаванае іншае акно
+Comment[et]=Teine aken on aktiveeritud
+Comment[pt]=Outra janela é activada
+Comment[pt_BR]=Outra janela é activada
 default_presentation=0
 
 [new]
@@ -796,6 +832,10 @@ Name[zh_CN]=新建窗口
 Name[zh_TW]=新視窗
 Name[zu]=I-window Entsha
 Comment=New window
+Comment[be]=Новае акно
+Comment[et]=Uus aken
+Comment[pt]=Nova janela
+Comment[pt_BR]=Nova janela
 default_sound=KDE_Window_Open.wav
 default_presentation=0
 
@@ -868,6 +908,10 @@ Name[zh_CN]=删除窗口
 Name[zh_TW]=刪除視窗
 Name[zu]=Cisha I-window
 Comment=Delete window
+Comment[be]=Акно выдаляецца
+Comment[et]=Akna kustutamine
+Comment[pt]=Apagar a janela
+Comment[pt_BR]=Apagar a janela
 default_presentation=0
 [close]
 Name=Window Close
@@ -940,6 +984,10 @@ Name[zh_CN]=关闭窗口
 Name[zh_TW]=關閉視窗
 Name[zu]=Ukuvaleka Kwe-window
 Comment=A window closes
+Comment[be]=Акно зачыняецца
+Comment[et]=Aken sulgub
+Comment[pt]=Uma janela é fechada
+Comment[pt_BR]=Uma janela é fechada
 default_sound=KDE_Window_Close.wav
 default_presentation=0
 
@@ -1011,6 +1059,9 @@ Name[zh_CN]=窗口卷起
 Name[zh_TW]=收起視窗
 Name[zu]=Umthunzi we-Window Uphezulu
 Comment=A window is shaded up
+Comment[et]=Aken rullitakse kokku
+Comment[pt]=Uma janela é enrolada
+Comment[pt_BR]=Uma janela é enrolada
 default_sound=KDE_Window_Shade_Up.wav
 default_presentation=0
 
@@ -1082,6 +1133,9 @@ Name[zh_CN]=窗口放下
 Name[zh_TW]=展開視窗
 Name[zu]=Umthunzi we-Window Uphansi
 Comment=A window is shaded down
+Comment[et]=Aken rullitakse lahti
+Comment[pt]=Uma janela é desenrolada
+Comment[pt_BR]=Uma janela é desenrolada
 default_sound=KDE_Window_Shade_Down.wav
 default_presentation=0
 
@@ -1141,6 +1195,11 @@ Name[xx]=xxWindow Minimizexx
 Name[zh_CN]=窗口最小化
 Name[zh_TW]=最小化視窗
 Comment=A window is minimized
+Comment[be]=Акно мінімалізаванае
+Comment[en_GB]=A window is minimised
+Comment[et]=Aken on minimeeritud
+Comment[pt]=Uma janela é minimizada
+Comment[pt_BR]=Uma janela é minimizada
 default_sound=KDE_Window_Iconify.wav
 default_presentation=0
 
@@ -1195,6 +1254,9 @@ Name[xx]=xxWindow Unminimizexx
 Name[zh_CN]=取消窗口最小化
 Name[zh_TW]=取消最小化視窗
 Comment=A Window is restored
+Comment[et]=Aken on taastatud
+Comment[pt]=Uma janela é restaurada
+Comment[pt_BR]=Uma janela é restaurada
 default_sound=KDE_Window_DeIconify.wav   
 default_presentation=0
 
@@ -1269,6 +1331,11 @@ Name[zh_CN]=窗口最小化
 Name[zh_TW]=最大化視窗
 Name[zu]=Khulisa I-window
 Comment=A window is maximized
+Comment[be]=Акно максымалізаванае
+Comment[en_GB]=A window is maximised
+Comment[et]=Aken on maksimeeritud
+Comment[pt]=Uma janela é maximizada
+Comment[pt_BR]=Uma janela é maximizada
 default_sound=KDE_Window_Maximize.wav   
 default_presentation=0
 
@@ -1340,6 +1407,10 @@ Name[zh_CN]=取消窗口最大化
 Name[zh_TW]=取消最大化視窗
 Name[zu]=Nciphisa i-Window
 Comment=A window loses maximization
+Comment[en_GB]=A window loses maximisation
+Comment[et]=Aken kaotab maksimaalse suuruse
+Comment[pt]=Uma janela deixa de estar maximizada
+Comment[pt_BR]=Uma janela deixa de estar maximizada
 default_sound=KDE_Window_UnMaximize.wav
 default_presentation=0
 
@@ -1397,6 +1468,9 @@ Name[xx]=xxWindow On All Desktopsxx
 Name[zh_CN]=位于全部桌面的窗口
 Name[zh_TW]=視窗在所有桌面
 Comment=A window is made visible on all desktops
+Comment[et]=Aken on muudetud nähtavaks kõigil töölaudadel
+Comment[pt]=Uma janela passa a aparecer em todos os ecrãs
+Comment[pt_BR]=Uma janela passa a aparecer em todos os ecrãs
 default_sound=KDE_Window_Sticky.wav
 default_presentation=0
 
@@ -1453,6 +1527,9 @@ Name[xx]=xxWindow Not On All Desktopsxx
 Name[zh_CN]=并非位于全部桌面的窗口
 Name[zh_TW]=視窗不在所有桌面
 Comment=A Window is no longer visible on all desktops
+Comment[et]=Aken ei ole enam nähtav kõigil töölaudadel
+Comment[pt]=Uma janela deixa de aparecer em todos os ecrãs
+Comment[pt_BR]=Uma janela deixa de aparecer em todos os ecrãs
 default_presentation=1
 default_sound=KDE_Window_UnSticky.wav
 
@@ -1525,6 +1602,10 @@ Name[zh_CN]=新建对话框
 Name[zh_TW]=新對話盒
 Name[zu]=Ingxoxo Entsha
 Comment=Transient window (a dialog) appears
+Comment[en_GB]=Transient window (a dialogue) appears
+Comment[et]=Ajutine aken (dialoog) ilmub
+Comment[pt]=Uma janela transitória (uma janela de diálogo) aparece
+Comment[pt_BR]=Uma janela transitória (uma janela de diálogo) aparece
 default_sound=KDE_Dialog_Appear.wav
 default_presentation=0
 
@@ -1596,6 +1677,10 @@ Name[zh_CN]=删除对话框
 Name[zh_TW]=刪除對話盒
 Name[zu]=Cisha Ingxoxo
 Comment=Transient window (a dialog) is removed
+Comment[en_GB]=Transient window (a dialogue) is removed
+Comment[et]=Ajutine aken (dialoog) on eemaldatud
+Comment[pt]=Uma janela transitória (uma janela de diálogo) desaparece
+Comment[pt_BR]=Uma janela transitória (uma janela de diálogo) desaparece
 default_sound=KDE_Dialog_Disappear.wav
 default_presentation=0
 
@@ -1667,6 +1752,9 @@ Name[zh_CN]=开始移动窗口
 Name[zh_TW]=開始移動視窗
 Name[zu]=Ukuqala komnyakazo we-Window
 Comment=A window has begun moving
+Comment[et]=Aken on hakanud liikuma
+Comment[pt]=Uma janela começou a movimentar-se
+Comment[pt_BR]=Uma janela começou a movimentar-se
 default_presentation=0
 
 [moveend]
@@ -1737,6 +1825,9 @@ Name[zh_CN]=移动窗口完毕
 Name[zh_TW]=完成移動視窗
 Name[zu]=Ukuphela komnyakazo we-Window
 Comment=A window has completed its moving
+Comment[et]=Aken on lõpetanud liikumise
+Comment[pt]=Uma janela acabou de movimentar-se
+Comment[pt_BR]=Uma janela acabou de movimentar-se
 default_presentation=0
 
 [resizestart]
@@ -1807,6 +1898,9 @@ Name[zh_CN]=开始改变窗口大小
 Name[zh_TW]=開始改變視窗大小
 Name[zu]=Ukuqala Kokushintsha usayizi we-Window
 Comment=A window has begun resizing
+Comment[et]=Akna suurus on hakanud muutuma
+Comment[pt]=Uma janela começou a mudar de tamanho
+Comment[pt_BR]=Uma janela começou a mudar de tamanho
 default_presentation=0
 
 [resizeend]
@@ -1877,4 +1971,7 @@ Name[zh_CN]=改变窗口大小完毕
 Name[zh_TW]=完成改變視窗大小
 Name[zu]=Ukuphela ngokushintsha usayizi we-Window
 Comment=A window has finished resizing
+Comment[et]=Aken on suuruse muutmise lõpetanud
+Comment[pt]=Uma janela acabou de mudar de tamanho
+Comment[pt_BR]=Uma janela acabou de mudar de tamanho
 default_presentation=0
