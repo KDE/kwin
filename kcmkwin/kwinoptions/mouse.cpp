@@ -95,11 +95,11 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   new QLabel(grid); // dummy
 
-  strMouseButton1 = i18n("Left Button:");
+  strMouseButton1 = i18n("Left button:");
   txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
      " the titlebar or the frame.");
 
-  strMouseButton3 = i18n("Right Button:");
+  strMouseButton3 = i18n("Right button:");
   txtButton3 = i18n("In this row you can customize right click behavior when clicking into"
      " the titlebar or the frame." );
 
@@ -112,7 +112,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   label = new QLabel(strMouseButton1, grid);
   QWhatsThis::add( label, txtButton1);
 
-  label = new QLabel(i18n("Middle Button:"), grid);
+  label = new QLabel(i18n("Middle button:"), grid);
   QWhatsThis::add( label, i18n("In this row you can customize middle click behavior when clicking into"
     " the titlebar or the frame.") );
 
@@ -149,8 +149,8 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   items << i18n("Raise")
         << i18n("Lower")
-        << i18n("Operations menu")
-        << i18n("Toggle raise and lower")
+        << i18n("Operations Menu")
+        << i18n("Toggle Raise and Lower")
         << i18n("Nothing")
         << i18n("Shade");
 
@@ -182,8 +182,8 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
                                " or the frame of an inactive window.") );
 
   items.clear();
-  items  << i18n("Activate and raise")
-         << i18n("Activate and lower")
+  items  << i18n("Activate and Raise")
+         << i18n("Activate and Lower")
          << i18n("Activate")
          << i18n("Shade");
 
@@ -216,11 +216,11 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   grid = new QGrid(3, Qt::Vertical, box);
 
-  strMouseButton1 = i18n("Left Button:");
+  strMouseButton1 = i18n("Left button:");
   txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
      " the titlebar or the frame.");
 
-  strMouseButton3 = i18n("Right Button:");
+  strMouseButton3 = i18n("Right button:");
   txtButton3 = i18n("In this row you can customize right click behavior when clicking into"
      " the titlebar or the frame." );
 
@@ -242,7 +242,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   label = new QLabel(strMouseButton1, grid);
   QWhatsThis::add( label, strWin1 );
 
-  label = new QLabel(i18n("Middle Button:"), grid);
+  label = new QLabel(i18n("Middle button:"), grid);
   strWin2 = i18n("In this row you can customize middle click behavior when clicking into"
      " an inactive inner window ('inner' means: not titlebar, not frame).");
   QWhatsThis::add( label, strWin2 );
@@ -251,10 +251,10 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   QWhatsThis::add( label, strWin3 );
 
   items.clear();
-  items   << i18n("Activate, raise and pass click")
-          << i18n("Activate and pass click")
+  items   << i18n("Activate, Raise and Pass Click")
+          << i18n("Activate and Pass Click")
           << i18n("Activate")
-          << i18n("Activate and raise");
+          << i18n("Activate and Raise");
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
@@ -287,18 +287,18 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   grid = new QGrid(4, Qt::Vertical, box);
 
   // Labels
-  label = new QLabel(i18n("Modifier Key:"), grid);
+  label = new QLabel(i18n("Modifier key:"), grid);
 
   strAllKey = i18n("Here you select whether holding the Meta key or Alt key "
     "will allow you to perform the following actions.");
   QWhatsThis::add( label, strAllKey );
 
 
-  strMouseButton1 = i18n("Modifier Key + Left Button:");
+  strMouseButton1 = i18n("Modifier key + left button:");
   strAll1 = i18n("In this row you can customize left click behavior when clicking into"
                  " the titlebar or the frame.");
 
-  strMouseButton3 = i18n("Modifier Key + Right Button:");
+  strMouseButton3 = i18n("Modifier key + right button:");
   strAll3 = i18n("In this row you can customize right click behavior when clicking into"
                  " the titlebar or the frame." );
 
@@ -311,7 +311,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   label = new QLabel(strMouseButton1, grid);
   QWhatsThis::add( label, strAll1);
 
-  label = new QLabel(i18n("Modifier Key + Middle Button:"), grid);
+  label = new QLabel(i18n("Modifier key + middle button:"), grid);
   strAll2 = i18n("Here you can customize KDE's behavior when middle clicking into a window"
                  " while pressing the modifier key.");
   QWhatsThis::add( label, strAll2 );
@@ -329,7 +329,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   items.clear();
   items << i18n("Move")
-        << i18n("Toggle raise and lower")
+        << i18n("Toggle Raise and Lower")
         << i18n("Resize")
         << i18n("Raise")
         << i18n("Lower")
@@ -386,8 +386,8 @@ const char*  KActionsConfig::functionTiAc(int i)
   switch (i){
   case 0: return "Raise"; break;
   case 1: return "Lower"; break;
-  case 2: return "Operations menu"; break;
-  case 3: return "Toggle raise and lower"; break;
+  case 2: return "Operations Menu"; break;
+  case 3: return "Toggle Raise and Lower"; break;
   case 4: return "Nothing"; break;
   case 5: return "Shade"; break;
   }

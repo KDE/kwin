@@ -57,10 +57,10 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	}
 
 	// Allow titlebar height customization
-	gbSlider = new QGroupBox( 1, Qt::Horizontal, i18n("TitleBar Height"), gb );
+	gbSlider = new QGroupBox( 1, Qt::Horizontal, i18n("Titlebar Height"), gb );
 	titleBarSizeSlider = new QSlider(0, 2, 1, 0, QSlider::Horizontal, gbSlider);
-	QWhatsThis::add( titleBarSizeSlider, 
-		i18n("By adjusting this slider, you can modify " 
+	QWhatsThis::add( titleBarSizeSlider,
+		i18n("By adjusting this slider, you can modify "
 		"the height of the titlebar to make room for larger fonts."));
 
 	hbox = new QHBox(gbSlider);
