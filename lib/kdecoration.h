@@ -576,6 +576,11 @@ class KDecoration
 	 * @see workspaceWidget(), geometry() and helperShowHide().
 	 */
         virtual bool animateMinimize( bool minimize );
+        /**
+         * @internal Reserved.
+         */
+        // TODO position will need also values for top+left+bottom etc. docking ?
+        virtual bool windowDocked( Position side );
 	/**
 	 * This function is called to reset the decoration on settings changes.
 	 * It is usually invoked by calling KDecorationFactory::resetDecorations().
