@@ -1092,16 +1092,25 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
 	int barLeft = geom.left() + bar_x_ofs;
 	int barRight = barLeft + t.width() - 1;
 	if (barRight > geom.right()) barRight = geom.right();
+        // line width is 5 pixels, so compensate for the 2 outer pixels (#88657)
+        QRect g = geom;
+        g.setLeft( g.left() + 2 );
+        g.setTop( g.top() + 2 );
+        g.setRight( g.right() - 2 );
+        g.setBottom( g.bottom() - 2 );
+        frameTop += 2;
+        barLeft += 2;
+        barRight -= 2;
 
 	bound_shape.putPoints(0, 8,
-		geom.left(), frameTop,
+		g.left(), frameTop,
 		barLeft, frameTop,
-		barLeft, geom.top(),
-		barRight, geom.top(),
+		barLeft, g.top(),
+		barRight, g.top(),
 		barRight, frameTop,
-		geom.right(), frameTop,
-		geom.right(), geom.bottom(),
-		geom.left(), geom.bottom());
+		g.right(), frameTop,
+		g.right(), g.bottom(),
+		g.left(), g.bottom());
     } else {
 	*visible_bound = geom;
     }

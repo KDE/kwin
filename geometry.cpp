@@ -1978,7 +1978,20 @@ void Client::doDrawbound( const QRect& geom, bool clear )
     QPainter p ( workspace()->desktopWidget() );
     p.setPen( QPen( Qt::white, 5 ) );
     p.setRasterOp( Qt::XorROP );
-    p.drawRect( geom );
+    // the line is 5 pixel thick, so compensate for the extra two pixels
+    // on outside (#88657)
+    QRect g = geom;
+    if( g.width() > 5 )
+        {
+        g.setLeft( g.left() + 2 );
+        g.setRight( g.right() - 2 );
+        }
+    if( g.height() > 5 )
+        {
+        g.setTop( g.top() + 2 );
+        g.setBottom( g.bottom() - 2 );
+        }
+    p.drawRect( g );
     }
 
 void Client::positionGeometryTip()

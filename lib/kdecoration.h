@@ -601,6 +601,9 @@ class KDecoration
 	 * This function may be reimplemented to provide custom bound drawing
 	 * for transparent moving or resizing of the window.
 	 * @a False should be returned if the default implementation should be used.
+         * Note that if you e.g. paint the outline using a 5 pixels wide line,
+         * you should compensate for the 2 pixels that would make the window
+         * look larger.
 	 *
 	 * @param geom  The geometry at this the bound should be drawn
 	 * @param clear @a true if the bound should be cleared
