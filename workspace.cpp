@@ -323,6 +323,7 @@ Workspace::Workspace( bool restore )
     DCOPObject        ("KWinInterface"),
     current_desktop   (0),
     number_of_desktops(0),
+    popup_client      (0),
     desktop_widget    (0),
     active_client     (0),
     last_active_client     (0),
