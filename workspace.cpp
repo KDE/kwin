@@ -828,7 +828,7 @@ bool Workspace::destroyClient( Client* c)
         most_recently_raised = 0;
     if ( c == should_get_focus )
         should_get_focus = 0;
-    assert( c != active_client );
+    Q_ASSERT( c != active_client );
     if ( c == last_active_client )
         last_active_client = 0;
     delete c;
