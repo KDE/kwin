@@ -2325,7 +2325,7 @@ void Workspace::startKompmgr()
         KProcess proc;
         proc << "kdialog" << "--error"
             << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
-            << "--title" << "Composite Manager failure";
+            << "--title" << "Composite Manager Failure";
         proc.start(KProcess::DontCare);
         }
     else
@@ -2382,7 +2382,7 @@ void Workspace::restartKompmgr()
         KProcess proc;
         proc << "kdialog" << "--error"
             << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
-            << "--title" << i18n("Composite Manager failure");
+            << "--title" << i18n("Composite Manager Failure");
         proc.start(KProcess::DontCare);
         }
     else
@@ -2420,7 +2420,7 @@ void Workspace::handleKompmgrOutput( KProcess* , char *buffer, int buflen)
         KProcess proc;
         proc << "kdialog" << "--error"
             << message
-            << "--title" << i18n("Composite Manager failure");
+            << "--title" << i18n("Composite Manager Failure");
         proc.start(KProcess::DontCare);
         }
 }
