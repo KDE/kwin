@@ -203,7 +203,9 @@ bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool a
     else if( c1->pid() != c2->pid()
         || c1->wmClientMachine() != c2->wmClientMachine())
         ; // different processes
-    else if( c1->wmClientLeader() != c2->wmClientLeader())
+    else if( c1->wmClientLeader() != c2->wmClientLeader()
+        && c1->wmClientLeader() != c1->window() // if WM_CLIENT_LEADER is not set, it returns window(),
+        && c2->wmClientLeader() != c2->window()) // don't use in this test then
         ; // different client leader
     else if( !resourceMatch( c1, c2 ))
         ; // different apps
