@@ -789,11 +789,16 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     // initial desktop placement - note we don't clobber desk if it is
     // set to some value, in case the initial desktop code in the
     // constructor has already set a value for us
+    
     if ( session  ) {
         desk = session->desktop;
         if ( desk <= 0 )
             desk = workspace()->currentDesktop();
-    } else if ( desk <= 0 ) {
+        if( session->sticky )
+            setSticky( true );
+        else
+            info->setDesktop( desk );
+    } else if ( desk <= 0 && !isSticky()) {
         // if this window is transient, ensure that it is opened on the
         // same window as its parent.  this is necessary when an application
         // starts up on a different desktop than is currently displayed
@@ -810,11 +815,16 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             //somewhere else. This happens for example with "save data?"
             //dialogs on shutdown. Switch to the respective desktop in
             //that case.
+            // TODO check what is this supposed to do, looks like unnecessary
+            // focus stealing to me
             workspace()->setCurrentDesktop( desk );
         }
-    }
-
-    info->setDesktop( desk );
+        info->setDesktop( desk );
+    } else if( isSticky()) {
+        info->setDesktop( NETWinInfo::OnAllDesktops );
+    } else
+        info->setDesktop( desk );
+    
 
     if (isInitial) {
         setMappingState( init_state );
@@ -825,7 +835,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     // other settings from the previous session
     if ( session ) {
-        setSticky( session->sticky );
         setStaysOnTop( session->staysOnTop );
         setSkipTaskbar( session->skipTaskbar );
         setSkipPager( session->skipPager );
