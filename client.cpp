@@ -1698,7 +1698,7 @@ void Client::leaveEvent( QEvent * )
 void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
-    if ( !isResize() && !isMove() && isVisible() )
+    if ( !isResize() && isVisible() )
         sendSyntheticConfigureNotify();
 }
 
@@ -1708,7 +1708,7 @@ void Client::setGeometry( int x, int y, int w, int h )
 void Client::move( int x, int y )
 {
     QWidget::move( x, y );
-    if ( !isResize() && !isMove() && isVisible() )
+    if ( !isResize() && isVisible() )
         sendSyntheticConfigureNotify();
 }
 
