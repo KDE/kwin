@@ -123,6 +123,11 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	c->setSticky( TRUE );
 	return c;
     }
+    if ( s == "MAC MENU [menu]" ) {
+	Client * c = new NoBorderClient( ws, w);
+	c->setSticky( TRUE );
+	return c;
+    }
     if ( ( s.right(6) == "[menu]" ) || ( s.right(7) == "[tools]" ) ) {
 	Client * c = new NoBorderClient( ws, w);
 	return c;
