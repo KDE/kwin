@@ -174,10 +174,11 @@ static void create_pixmaps()
 }
 
 B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
-                   KPixmap *iPixDown, Client *parent, const char *name)
+                   KPixmap *iPixDown, Client *_client, QWidget *parent,
+		   const char *name)
     : QButton(parent, name)
 {
-    client = parent;
+    client = _client;
     pNorm = pix;
     pDown = pixDown;
     iNorm = iPix;
@@ -236,12 +237,124 @@ void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
     repaint(false);
 }
 
+B2Titlebar::B2Titlebar(B2Client *parent)
+    : QWidget(parent)
+{
+    set_x11mask = false;
+    isfullyobscured = false;
+    shift_move = false;
+    client = parent;
+}
+
+bool B2Titlebar::x11Event(XEvent *e)
+{
+    if (!set_x11mask) {
+	set_x11mask = true;
+	XSelectInput(qt_xdisplay(), winId(),
+	    KeyPressMask | KeyReleaseMask |
+	    ButtonPressMask | ButtonReleaseMask |
+	    KeymapStateMask |
+	    ButtonMotionMask |
+	    EnterWindowMask | LeaveWindowMask |
+	    FocusChangeMask |
+	    ExposureMask |
+	    PropertyChangeMask |
+	    StructureNotifyMask | SubstructureRedirectMask |
+	    VisibilityChangeMask);
+    }
+    switch( e->type ) {
+    case VisibilityNotify:
+	isfullyobscured = false;
+	if (e->xvisibility.state == VisibilityFullyObscured) {
+	    isfullyobscured = true;
+	    client->unobscureTitlebar();
+	}
+	break;
+    default:
+	break;
+    }
+    return QWidget::x11Event(e);
+}
+
+void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
+{
+    QPainter p(this);
+    QRect t=rect();
+    bool active = client->isActive();
+
+    // black titlebar frame
+    p.setPen(Qt::black);
+    p.drawLine(0, 0, 0, t.bottom() );
+    p.drawLine(0, 0, t.right(), 0);
+    p.drawLine(t.right(), 0, t.right(), t.bottom());
+
+    // titlebar fill
+    qDrawShadeRect(&p, 1, 1, t.right()-1, t.height()-1,
+                   options->colorGroup(Options::TitleBar, active),
+                   false, 1, 0,
+                   &options->colorGroup(Options::TitleBar, active).
+                   brush(QColorGroup::Button));
+
+    // and the caption
+    p.setPen(options->color(Options::Font, active));
+    p.setFont(options->font(active));
+
+    t.setX(client->providesContextHelp() ?
+           client->button[B2Client::BtnHelp]->x()+17 :
+           client->button[B2Client::BtnSticky]->x()+17);
+    t.setRight(client->button[B2Client::BtnIconify]->x()-1);
+    p.drawText(t, AlignLeft | AlignVCenter, client->caption());
+}
+
+void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
+{
+    client->setShade( !client->isShade() );
+    client->workspace()->requestFocus( client );
+}
+
+void B2Titlebar::mousePressEvent( QMouseEvent * e )
+{
+    shift_move = e->state() & ShiftButton;
+    if (shift_move ) {
+        moveOffset = e->globalPos();
+    }
+    QMouseEvent _e(QEvent::MouseButtonPress, mapToParent(e->pos()),
+        e->globalPos(), e->button(), e->state());
+    //QWidget::mousePressEvent( e );
+    client->mousePressEvent( &_e);
+}
+
+void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
+{
+    shift_move = false;
+    QMouseEvent _e(QEvent::MouseButtonRelease, mapToParent(e->pos()),
+        e->globalPos(), e->button(), e->state());
+    //QWidget::mouseReleaseEvent( e );
+    client->mouseReleaseEvent( &_e);
+}
+
+void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
+{
+    if (shift_move) {
+	int oldx = mapFromGlobal(moveOffset).x();
+        int xdiff = e->globalPos().x() - moveOffset.x();
+        moveOffset = e->globalPos();
+	if (oldx >= 0 && oldx <= rect().right()) {
+            client->titleMoveRel(xdiff);
+	}
+    } else {
+	QMouseEvent _e(QEvent::MouseMove, mapToParent(e->pos()),
+	    e->globalPos(), e->button(), e->state());
+	client->mouseMoveEvent( &_e);
+    }
+}
+
 B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     bar_x_ofs = 0;
-    shift_move = FALSE;
+    in_unobs = 0;
 
     create_pixmaps();
     g = new QGridLayout( this, 0, 0);
@@ -260,9 +373,10 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     // titlebar
     g->addRowSpacing(0, 20);
 
+    titlebar = new B2Titlebar(this);
     int i;
     for(i=0; i < 6; ++i){
-        button[i] = new B2Button(this);
+        button[i] = new B2Button(this, titlebar/*this*/);
         button[i]->setFixedSize(16, 16);
     }
 
@@ -293,6 +407,7 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
+    titlebar->setBackgroundColor(c);
     for(i=0; i < 6; ++i)
         button[i]->setBg(c);
 
@@ -310,35 +425,38 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 void B2Client::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
+    /* may be the resize cuted off some space occupied by titlebar, which
+       was moved, so instead of reducing it, we first try to move it */
+    titleMoveAbs(bar_x_ofs);
     positionButtons();
     doShape();
+    /*
+    What does this? (MM)
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
         QPainter p( this );
-        QRect t = g->cellGeometry(0, 1);
-        t.setRight(button[BtnClose]->x()+17);
-        t.setHeight(20);
+        QRect t = titlebar->geometry();
 	QRegion r = rect();
 	r = r.subtract( t );
 	p.setClipRegion( r );
 	p.eraseRect( rect() );
     }
+    */
+    repaint(); //there is some strange wrong repaint of the frame without
 }
 
 void B2Client::captionChange( const QString &)
 {
     positionButtons();
     doShape();
-    repaint();
+    //repaint();
+    titlebar->repaint();
 }
 
-void B2Client::paintEvent( QPaintEvent* )
+void B2Client::paintEvent( QPaintEvent* e)
 {
-
     QPainter p( this );
 
-    QRect t = g->cellGeometry(0, 1);
-    t.setRight(button[BtnClose]->x()+17);
-    t.setHeight(20);
+    QRect t = titlebar->geometry();
 
     // inner window rect
     p.drawRect(3, t.bottom(), width()-6, height()-t.height()-6);
@@ -346,24 +464,11 @@ void B2Client::paintEvent( QPaintEvent* )
     // outer frame rect
     p.drawRect(0, t.bottom()-3, width(), height()-t.height());
 
-
     // frame shade panel
     qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
                     options->colorGroup(Options::Frame, isActive()),
                     false);
 
-    // black titlebar frame
-    p.setPen(Qt::black);
-    p.drawLine(bar_x_ofs, 0, bar_x_ofs, t.bottom() );
-    p.drawLine(bar_x_ofs, 0, t.right()+4, 0);
-    p.drawLine(t.right()+4, 0, t.right()+4, t.bottom());
-
-    // titlebar fill
-    qDrawShadeRect(&p, 1+bar_x_ofs, 1, t.width()+6-bar_x_ofs, t.height()-1,
-                   options->colorGroup(Options::TitleBar, isActive()),
-                   false, 1, 0,
-                   &options->colorGroup(Options::TitleBar, isActive()).
-                   brush(QColorGroup::Button));
     //bottom handle rect
     int hx = width()-40;
     int hw = 40;
@@ -383,32 +488,39 @@ void B2Client::paintEvent( QPaintEvent* )
     p.setPen(options->colorGroup(Options::Frame, isActive()).light());
     p.drawLine(hx+1, height()-6, hx+1, height()-3);
     p.drawLine(hx+1, height()-7, width()-3, height()-7);
-    
-    p.setPen(options->color(Options::Font, isActive()));
-    p.setFont(options->font(isActive()));
 
-    t.setX(providesContextHelp() ? button[BtnHelp]->x()+17 :
-           button[BtnSticky]->x()+17);
-    t.setRight(button[BtnIconify]->x()-1);
-    p.drawText(t, AlignLeft | AlignVCenter, caption());
+    /* OK, we got a paint event, which means parts of us are now visible
+       which were not before. We try the titlebar if it is currently fully
+       obscured, and if yes, try to unobscure it, in the hope that some
+       of the parts which we just painted were in the titlebar area.
+       It can happen, that the titlebar, as it got the FullyObscured event
+       had no chance of becoming partly visible. The problem is, that
+       we now might have the space available, but the titlebar gets no
+       visibilitinotify events until its state changes, so we just try
+     */
+    if (titlebar->isFullyObscured()) {
+        /* We first see, if our repaint contained the titlebar area */
+	QRegion reg(QRect(0,0,width(),20));
+	reg = reg.intersect(e->region());
+	if (!reg.isEmpty())
+	    unobscureTitlebar();
+    }
 }
 
 #define QCOORDARRLEN(x) sizeof(x)/(sizeof(QCOORD)*2)
 
 void B2Client::doShape()
 {
-    QRect t = g->cellGeometry(0, 1);
-    t.setRight(button[BtnClose]->x()+17);
-    t.setHeight(20);
-    QRegion mask(QRect(0, 0, width(), height()));
+    QRect t = titlebar->geometry();
+    QRegion mask(rect());
     // top to the tilebar right
     if (bar_x_ofs) {
         mask -= QRect(0, 0, bar_x_ofs, t.height()-4); //left from bar
 	mask -= QRect(0, t.height()-4, 1, 1);         //top left point
     }
-    if (t.right() < width() - 5) {
+    if (t.right() < width()-1) {
         mask -= QRect(width()-1, t.height()-4, 1, 1); // top right point 
-        mask -= QRect(t.width()+8, 0, width()-t.width()-7, t.height()-4);
+        mask -= QRect(t.right()+1, 0, width()-t.right()-1, t.height()-4);
     }
     mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
     mask -= QRect(0, height()-5, 1, 1); // bottom left point
@@ -424,6 +536,7 @@ void B2Client::showEvent(QShowEvent *ev)
     Client::showEvent(ev);
     doShape();
     repaint();
+    titlebar->repaint();
 }
 
 void B2Client::windowWrapperShowEvent( QShowEvent* )
@@ -431,19 +544,14 @@ void B2Client::windowWrapperShowEvent( QShowEvent* )
     doShape();
 }                                                                               
 
-void B2Client::mouseDoubleClickEvent( QMouseEvent * e )
-{
-    if (e->pos().y() < 19)
-        setShade( !isShade() );
-    workspace()->requestFocus( this );
-}
-
 Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
     const int border = 4;
-    QRect t = g->cellGeometry(0, 1);
+    /*QRect t = g->cellGeometry(0, 1);
     t.setRight(button[BtnClose]->x()+17);
+    */
+    QRect t = titlebar->geometry();
     t.setHeight(20-border); 
     int ly = t.bottom();
     int lx = t.right();
@@ -473,51 +581,36 @@ Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
             else return Right;
         }
     }
+    
+    if (p.y() >= height() - 8) {
+        /* the normal Client:: only wants border of 4 pixels */
+	if (p.x() <= range) return BottomLeft;
+	if (p.x() >= width()-range) return BottomRight;
+	return Bottom;
+    }
  
     return Client::mousePosition( p );
 }
 
 
-void B2Client::mousePressEvent( QMouseEvent * e )
+void B2Client::titleMoveAbs(int new_ofs)
 {
-    shift_move = e->state() & ShiftButton;
-    if (shift_move ) {
-        moveOffset = e->pos();
-        if (moveOffset.y() >= 19) shift_move=FALSE;
+    if (new_ofs < 0) new_ofs = 0;
+    if (new_ofs + titlebar->width() > width()) {
+        new_ofs = width() - titlebar->width();
     }
-    Client::mousePressEvent( e );
+    if (bar_x_ofs != new_ofs) {
+        bar_x_ofs = new_ofs;
+	positionButtons();
+	doShape();
+	repaint( 0, 0, width(), 20, false );
+	titlebar->repaint(false);
+    }
 }
 
-void B2Client::mouseReleaseEvent( QMouseEvent * e )
+void B2Client::titleMoveRel(int xdiff)
 {
-    Client::mouseReleaseEvent( e );
-    shift_move = FALSE;
-}
-                                                                               
-void B2Client::mouseMoveEvent( QMouseEvent * e)
-{
-    int x = e->pos().x();
-    if (shift_move) {
-        int old_ofs = bar_x_ofs;
-        int oldx = moveOffset.x();
-        int xdiff = x - oldx;
-        moveOffset = e->pos();
-	QRect t = g->cellGeometry(0, 1);
-	t.setRight(button[BtnClose]->x()+17);
-	t.setHeight(20);
-	if (oldx >= bar_x_ofs && oldx <= t.right()) {
-            bar_x_ofs += xdiff;
-            if (bar_x_ofs < 0) bar_x_ofs = 0;
-            if ( t.right() + xdiff >= width()-4)
-                bar_x_ofs = old_ofs;
-	    if (bar_x_ofs != old_ofs) {
-	        positionButtons();
-                doShape();
-                repaint( 0, 0, width(), t.height(), true );
-	    }
-	}
-    } else
-        Client::mouseMoveEvent(e);
+    titleMoveAbs(bar_x_ofs + xdiff);
 }
 
 void B2Client::stickyChange(bool on)
@@ -543,6 +636,7 @@ void B2Client::activeChange(bool on)
 {
     int i;
     repaint(false);
+    titlebar->repaint(false);
     QColor c = options->colorGroup(Options::TitleBar, on).
         color(QColorGroup::Button);
     for(i=0; i < 6; ++i){
@@ -574,6 +668,45 @@ void B2Client::slotReset()
         button[i]->repaint(false);
     }
     repaint();
+    titlebar->repaint();
+}
+
+void B2Client::unobscureTitlebar()
+{
+    /* we just noticed, that we got obscured by other windows
+       so we look at all windows above us (stacking_order) merging their
+       masks, intersecting it with our titlebar area, and see if we can
+       find a place not covered by any window */
+    if (in_unobs) {
+	return;
+    }
+    in_unobs = 1;
+    QRegion reg(QRect(0,0,width(),20));
+    ClientList::ConstIterator it = workspace()->stackingOrder().find(this);
+    ++it;
+    while (it != workspace()->stackingOrder().end()) {
+        /* the clients all have their mask-regions in local coords
+	   so we have to translate them to a shared coord system
+	   we choose ours */
+	int dx = (*it)->x() - x();
+	int dy = (*it)->y() - y();
+	QRegion creg = (*it)->getMask();
+	creg.translate(dx, dy);
+	reg -= creg;
+	if (reg.isEmpty()) {
+	    // early out, we are completely obscured
+	    break;
+	}
+	++it;
+    }
+    if (!reg.isEmpty()) {
+        // there is at least _one_ pixel from our title area, which is not
+	// obscured, we use the first rect we find
+	// for a first test, we use boundingRect(), later we may refine
+	// to rect(), and search for the nearest, or biggest, or smthg.
+	titleMoveAbs(reg.boundingRect().x());
+    }
+    in_unobs = 0;
 }
 
 static void redraw_pixmaps()
@@ -715,7 +848,8 @@ void B2Client::positionButtons()
     QFontMetrics fm(options->font(isActive()));
     
     int textLen = fm.width(caption());
-    int xpos = bar_x_ofs+4;
+    //int xpos = bar_x_ofs+4;
+    int xpos = 4;
     button[BtnMenu]->move(xpos, 2);
     xpos+=17;
     button[BtnSticky]->move(xpos, 2);
@@ -735,6 +869,8 @@ void B2Client::positionButtons()
     button[BtnMax]->move(xpos, 2);
     xpos+=17;
     button[BtnClose]->move(xpos, 2);
+    titlebar->setFixedSize(xpos+17+4,20);
+    titlebar->move(bar_x_ofs, 0);
 }
 
 #include "b2client.moc"

@@ -118,6 +118,7 @@ public:
     Client* previousClient(Client*) const;
     Client* nextStaticClient(Client*) const;
     Client* previousStaticClient(Client*) const;
+    const ClientList& stackingOrder() const;
 
     //#### TODO right layers as default
     Client* topClientOnDesktop( int fromLayer = 0, int toLayer = 0) const;
@@ -274,4 +275,12 @@ inline int Workspace::numberOfDesktops() const
     return number_of_desktops;
 }
 
+/*!
+  Returns the list of clients sorted in stacking order, with topmost client
+  at the last position
+ */
+inline const ClientList& Workspace::stackingOrder() const
+{
+    return stacking_order;
+}
 #endif

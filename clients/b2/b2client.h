@@ -13,10 +13,10 @@ class QGridLayout;
 class B2Button : public QButton
 {
 public:
-    B2Button(Client *parent=0, const char *name=0)
-        : QButton(parent, name){useMiniIcon = false; client = parent;}
+    B2Button(Client *_client=0, QWidget *parent=0, const char *name=0)
+        : QButton(parent, name){useMiniIcon = false; client = _client;}
     B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix, KPixmap *iPixDown,
-             Client *parent=0, const char *name=0);
+             Client *_client=0, QWidget *parent=0, const char *name=0);
     void setBg(const QColor &c){bg = c;}
     void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
                     KPixmap *iPixDown);
@@ -34,21 +34,44 @@ protected:
     Client *client;
 };
 
-class B2Client : public Client
+class B2Client;
+class B2Titlebar : public QWidget
 {
     Q_OBJECT
 public:
+    B2Titlebar(B2Client *parent);
+    ~B2Titlebar(){;}
+    bool isFullyObscured() const {return isfullyobscured;}
+protected:
+    void paintEvent( QPaintEvent* );
+    bool x11Event(XEvent *e);
+    void mouseDoubleClickEvent( QMouseEvent * );
+    void mousePressEvent( QMouseEvent * );
+    void mouseReleaseEvent( QMouseEvent * );
+    void mouseMoveEvent(QMouseEvent *);
+    void init();
+    bool set_x11mask;
+    bool isfullyobscured;
+    bool shift_move;
+    QPoint moveOffset;
+    B2Client *client;
+};
+
+class B2Client : public Client
+{
+    Q_OBJECT
+    friend class B2Titlebar;
+public:
     B2Client( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~B2Client(){;}
+    void unobscureTitlebar();
+    void titleMoveAbs(int new_ofs);
+    void titleMoveRel(int xdiff);
 protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
     void showEvent( QShowEvent* );
     void windowWrapperShowEvent( QShowEvent* );
-    void mouseDoubleClickEvent( QMouseEvent * );
-    void mousePressEvent( QMouseEvent * );
-    void mouseReleaseEvent( QMouseEvent * );
-    void mouseMoveEvent(QMouseEvent *);
     void init();
     void captionChange( const QString& name );
     void stickyChange(bool on);
@@ -69,9 +92,9 @@ private:
     //QHBoxLayout *tLayout;
     QGridLayout *g;
     int bar_x_ofs;
-    bool shift_move;
-    QPoint moveOffset;
-};                      
+    B2Titlebar *titlebar;
+    int in_unobs;
+};
 
 
 

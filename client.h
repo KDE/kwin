@@ -117,6 +117,7 @@ public:
     void takeFocus();
 
     void setMask( const QRegion & );
+    const QRegion& getMask() const;
 
     // transparent stuff
     virtual void drawbound( const QRect& geom );
@@ -329,6 +330,11 @@ inline bool Client::isSticky() const
 inline bool Client::shape() const
 {
     return is_shape;
+}
+
+inline const QRegion& Client::getMask() const
+{
+    return mask;
 }
 
 class NoBorderClient : public Client
