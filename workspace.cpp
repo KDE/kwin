@@ -258,10 +258,9 @@ Workspace::Workspace( bool restore )
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
     createKeybindings();
-
-    init();
-
     tab_box = new TabBox( this );
+    
+    init();
 }
 
 void Workspace::init()
@@ -349,6 +348,10 @@ void Workspace::init()
     }
 
     updateClientArea();
+    
+    // initialize stacking
+    if ( stacking_order.last() )
+ 	raiseClient( stacking_order.last() );
 }
 
 Workspace::~Workspace()

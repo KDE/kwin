@@ -450,7 +450,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
 
     // window wants to stay on top?
-    stays_on_top = info->state() & NET::StaysOnTop;
+    stays_on_top = ( info->state() & NET::StaysOnTop) != 0;
 
 
 
@@ -1879,7 +1879,7 @@ void Client::takeFocus()
 {
     if ( isMenu() )
 	return; // menus don't take focus
-    
+
     if ( input )
 	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
     if ( Ptakefocus )
