@@ -41,8 +41,10 @@ protected:
     void stickyChange(bool on);
     void maximizeChange(bool m);
     void doShape();
+protected slots:
+    void slotContextHelp();
 private:
-    SystemButton* button[4];
+    SystemButton* button[5];
     QSpacerItem* titlebar;
 };                      
 
