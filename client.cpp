@@ -233,7 +233,8 @@ static void ungrabButton( WId winId, int modifier )
 void WindowWrapper::setActive( bool active )
 {
     if ( active ) {
-	ungrabButton( winId(),  None );
+	if ( options->focusPolicy == Options::ClickToFocus ||  !options->clickRaise )
+	    ungrabButton( winId(),  None );
 	ungrabButton( winId(),  ShiftMask );
 	ungrabButton( winId(),  ControlMask );
 	ungrabButton( winId(),  ControlMask | ShiftMask );
@@ -319,6 +320,12 @@ bool WindowWrapper::x11Event( XEvent * e)
     switch ( e->type ) {
     case ButtonPress:
 	{
+	    if ( ((Client*)parentWidget())->isActive()
+		 && ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) ) {
+		((Client*)parentWidget())->workspace()->raiseClient( (Client*) parentWidget() );
+		ungrabButton( winId(),  None );
+	    }
+	
 	    bool mod1 = (e->xbutton.state & Mod1Mask) == Mod1Mask;
 	    Options::MouseCommand com = Options::MouseNothing;
 	    if ( mod1){
@@ -381,6 +388,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 {
     wspace = ws;
     win = w;
+    autoRaiseTimer = 0;
 
     unsigned long properties =
 	NET::WMDesktop |
@@ -437,14 +445,14 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     // should we open this window on a certain desktop?
     if ( info->desktop() == NETWinInfo::OnAllDesktops )
 	setSticky( TRUE );
-    else if ( info->desktop() ) 
+    else if ( info->desktop() )
 	desk= info->desktop(); // window had the initial desktop property!
 
-    
+
     // window wants to stay on top?
     stays_on_top = info->state() & NET::StaysOnTop;
-    
-    
+
+
 
 
     // if this window is transient, ensure that it is opened on the
@@ -1591,6 +1599,13 @@ bool Client::x11Event( XEvent * e)
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
+	if ( options->autoRaise ) {
+	    delete autoRaiseTimer;
+	    autoRaiseTimer = new QTimer( this );
+	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
+	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
+	}
+	
 	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse   && ( isDesktop() || isDock() ) )
 	    return TRUE;
 	
@@ -1598,6 +1613,8 @@ bool Client::x11Event( XEvent * e)
 	return TRUE;
     }
     if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
+	delete autoRaiseTimer;
+	autoRaiseTimer = 0;
 	if ( !buttonDown )
 	    setCursor( arrowCursor );
 	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
@@ -1693,7 +1710,7 @@ void Client::setShade( bool s )
 
     shaded = s;
 
-    int as = options->animateShade()? options->animSteps() : 1;
+    int as = options->animateShade? options->animSteps : 1;
 
     if (shaded ) {
 	int h = height();
@@ -1760,6 +1777,10 @@ void Client::setActive( bool act)
     if ( active == act )
 	return;
     active = act;
+    if ( !active && autoRaiseTimer ) {
+	delete autoRaiseTimer;
+	autoRaiseTimer = 0;
+    }
     activeChange( active );
 }
 
@@ -1789,7 +1810,7 @@ void Client::setSticky( bool b )
 
 /*!
   Let the window stay on top or not, depending on \a b
-  
+
   \sa Workspace::setClientOnTop()
  */
 void Client::setStaysOnTop( bool b )
@@ -2299,6 +2320,10 @@ void Client::animateIconifyOrDeiconify( bool iconify)
     XUngrabServer( qt_xdisplay() );
 }
 
+
+/*!
+  The pixmap shown during iconify/deiconify animation
+ */
 QPixmap Client::animationPixmap( int w )
 {
     QFont font = options->font(isActive());
@@ -2310,6 +2335,15 @@ QPixmap Client::animationPixmap( int w )
     p.setFont(options->font(isActive()));
     p.drawText( pm.rect(), AlignLeft|AlignVCenter|SingleLine, caption() );
     return pm;
+}
+
+
+
+void Client::autoRaise()
+{
+    workspace()->raiseClient( this );
+    delete autoRaiseTimer;
+    autoRaiseTimer = 0;
 }
 
 

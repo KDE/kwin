@@ -57,6 +57,22 @@ public:
 
 
     /**
+       Whether clicking on a window raises it in FocusFollowsMouse
+       mode or not.
+     */
+    bool clickRaise;
+
+    /**
+       whether autoraise is enabled FocusFollowsMouse mode or not.
+     */
+    bool autoRaise;
+    
+    /**
+       autoraise interval
+     */
+    int autoRaiseInterval;
+
+    /**
        Different Alt-Tab-Styles:
        <ul>
 
@@ -118,22 +134,26 @@ public:
      * Return the active or inactive decoration font.
      */
     const QFont& font(bool active=true);
+
     /**
-     * Return whether we animate the shading of windows to titlebar or not
+     * whether we animate the shading of windows to titlebar or not
      */
-    const bool animateShade() { return animate_shade; };
+    bool animateShade;
+
     /**
-     * Return the number of animation steps (would this be general?)
+     * the number of animation steps (would this be general?)
      */
-    const int animSteps() { return anim_steps; };
+    int animSteps;
+
     /**
-     * Return the size of the zone that triggers snapping on desktop borders
+     * the size of the zone that triggers snapping on desktop borders
      */
-    const int borderSnapZone() { return border_snap_zone; };
+    int borderSnapZone;
+
     /**
-     * Return the number of animation steps (would this be general?)
+     * the number of animation steps (would this be general?)
      */
-    const int windowSnapZone() { return window_snap_zone; };
+    int windowSnapZone;
 
 
 
@@ -192,9 +212,7 @@ protected:
     QColorGroup *cg[KWINCOLORS*2];
 
 private:
-    bool animate_shade;
-    int anim_steps;
-    int border_snap_zone, window_snap_zone;
+
 
 
     WindowOperation OpTitlebarDblClick;

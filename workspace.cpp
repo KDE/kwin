@@ -1034,7 +1034,7 @@ void Workspace::clientHidden( Client* c )
 {
     if ( c != active_client && ( active_client ||  c != should_get_focus ) )
 	return;
-    
+
     active_client = 0;
     should_get_focus = 0;
     if (!block_focus &&
@@ -2155,7 +2155,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 {
   //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
   //CT adapted for kwin on 25Nov1999
-  if (options->windowSnapZone() || options->borderSnapZone()) {
+  if (options->windowSnapZone || options->borderSnapZone ) {
 
     int snap;        //snap trigger
 
@@ -2177,7 +2177,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
     ry = cy + (ch = c->height());
 
     // border snap
-    snap = options->borderSnapZone();
+    snap = options->borderSnapZone;
     if (snap) {
       if ( QABS(cx-xmin) < snap ){
 	deltaX = QABS(cx - xmin);
@@ -2199,7 +2199,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
     }
 
     // windows snap
-    snap = options->windowSnapZone();
+    snap = options->windowSnapZone;
     if (snap) {
       QValueList<Client *>::ConstIterator l;
       for (l = clients.begin();l != clients.end();++l ) {

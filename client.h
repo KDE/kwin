@@ -165,6 +165,9 @@ public slots:
     void toggleSticky();
     void contextHelp();
 
+private slots:
+    void autoRaise();
+    
 protected:
     void paintEvent( QPaintEvent * );
     void mousePressEvent( QMouseEvent * );
@@ -260,6 +263,7 @@ private:
     QRect geom_restore;
     QRegion mask;
     WinInfo* info;
+    QTimer* autoRaiseTimer;
 
 };
 

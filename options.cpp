@@ -153,12 +153,19 @@ void Options::reload()
     else if (val == "Random") placement = Random;
     else if (val == "Cascade") placement = Cascade;
 
-    animate_shade = config->readBoolEntry("AnimateShade", TRUE );
+    animateShade = config->readBoolEntry("AnimateShade", TRUE );
 
-    anim_steps = config->readNumEntry("AnimSteps", 10);
+    animSteps = config->readNumEntry("AnimSteps", 10);
 
-    border_snap_zone = config->readNumEntry("BorderSnapZone", 10);
-    window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
+
+    autoRaise = config->readBoolEntry("AutoRaise", FALSE );
+    autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
+
+    // important: autoRaise implies ClickRaise
+    clickRaise = autoRaise || config->readBoolEntry("ClickRaise", FALSE );
+
+    borderSnapZone = config->readNumEntry("BorderSnapZone", 10);
+    windowSnapZone = config->readNumEntry("WindowSnapZone", 10);
 
 
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade") );
