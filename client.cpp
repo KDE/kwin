@@ -1232,7 +1232,7 @@ void Client::setCaption( const QString& s, bool force )
     {
     if ( s != cap_normal || force ) 
         {
-        bool reset_name = cap_normal.isEmpty();
+        bool reset_name = force;
         for( unsigned int i = 0;
              i < s.length();
              ++i )
@@ -1269,16 +1269,21 @@ void Client::setCaption( const QString& s, bool force )
 void Client::fetchIconicName()
     {
     QString s;
-
     if ( info->iconName() && info->iconName()[ 0 ] != '\0' ) 
         s = QString::fromUtf8( info->iconName() );
     else 
         s = KWin::readNameProperty( window(), XA_WM_ICON_NAME );
     if ( s != cap_iconic ) 
         {
+	bool was_set = !cap_iconic.isEmpty();
         cap_iconic = s;
-        if( !cap_suffix.isEmpty() && !cap_iconic.isEmpty()) // keep the same suffix in iconic name if it's set
-            info->setVisibleIconName( ( s + cap_suffix ).utf8() );
+        if( !cap_suffix.isEmpty())
+	    {
+	    if( !cap_iconic.isEmpty()) // keep the same suffix in iconic name if it's set
+        	info->setVisibleIconName( ( s + cap_suffix ).utf8() );
+	    else if( was_set )
+		info->setVisibleIconName( "" ); //remove
+	    }
         }
     }
 
