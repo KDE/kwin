@@ -757,7 +757,7 @@ void KDEClient::paintEvent( QPaintEvent* )
         p.setFont(options->font(true));
         p.setPen(options->color(Options::Font, true));
         p.drawText(r.x(), r.y(), r.width(), r.height()-1,
-                   AlignLeft, caption() );
+                   AlignLeft|AlignVCenter, caption() );
         p.drawTiledPixmap(r.x()+fm.width(caption()), 2,
                           r.width()-fm.width(caption())-2,
                           r.height(), *titlePix);
@@ -778,7 +778,7 @@ void KDEClient::paintEvent( QPaintEvent* )
         p.setFont(options->font(true));
         p.setPen(options->color(Options::Font, false));
         p.drawText(r.x(), r.y(), r.width(), r.height()-1,
-                   AlignLeft, caption() );
+                   AlignLeft|AlignVCenter, caption() );
     }
 }
 
@@ -930,7 +930,7 @@ void KDEClient::updateActiveBuffer( )
     p.setFont(options->font(true));
     p.setPen(options->color(Options::Font, true));
     p.drawText(r.x(), r.y(), r.width(), r.height()-1,
-               AlignLeft, caption() );
+               AlignLeft|AlignVCenter, caption() );
     p.drawTiledPixmap(r.x()+fm.width(caption()), 2,
                       r.width()-fm.width(caption())-2,
                       r.height(), *titlePix);
