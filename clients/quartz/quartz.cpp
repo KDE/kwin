@@ -88,13 +88,13 @@ static unsigned char question_bits[] = {
 // no way to free dynamic images. If they're not dynamic, the freeing of
 // memory is made when the library in unloaded.
 
-static KPixmap btnPix1; 
-static KPixmap iBtnPix1;
-static KPixmap btnDownPix1;
-static KPixmap iBtnDownPix1;
-static QPixmap defaultMenuPix( kdelogo );
-static KPixmap titleBlocks;
-static KPixmap ititleBlocks;
+static KPixmap *btnPix1; 
+static KPixmap *iBtnPix1;
+static KPixmap *btnDownPix1;
+static KPixmap *iBtnDownPix1;
+static KPixmap *titleBlocks;
+static KPixmap *ititleBlocks;
+static QPixmap *defaultMenuPix;
 static bool    pixmaps_created = false;
 
 
@@ -145,40 +145,58 @@ static void create_pixmaps()
 
     pixmaps_created = true;
 
+    btnPix1 = new KPixmap;
+    iBtnPix1 = new KPixmap;
+    btnDownPix1 = new KPixmap;
+    iBtnDownPix1 = new KPixmap;
+    titleBlocks = new KPixmap;
+    ititleBlocks = new KPixmap;
+    defaultMenuPix = new QPixmap( kdelogo );
+
     // It does not matter that we don't resize thesei for mini-buttons
-    btnPix1.resize(16, 16);
-    btnDownPix1.resize(16, 16);
-    iBtnPix1.resize(16, 16);
-    iBtnDownPix1.resize(16, 16);
+    btnPix1->resize(16, 16);
+    btnDownPix1->resize(16, 16);
+    iBtnPix1->resize(16, 16);
+    iBtnDownPix1->resize(16, 16);
 
     // Fill the buttons with colour
     QColorGroup g = options->colorGroup(Options::TitleBlend, true );
     QColor c = g.background();
-    btnPix1.fill(c.rgb());
-    btnDownPix1.fill(c.rgb());
+    btnPix1->fill(c.rgb());
+    btnDownPix1->fill(c.rgb());
 
     g = options->colorGroup(Options::TitleBlend, false);
     c = g.background();
-    iBtnPix1.fill(c.rgb());
-    iBtnDownPix1.fill(c.rgb());
+    iBtnPix1->fill(c.rgb());
+    iBtnDownPix1->fill(c.rgb());
 
     // Obtain titlebar blend colours, and create the block stuff on pixmaps.
     QColorGroup g2 = options->colorGroup(Options::TitleBlend, true);
     QColor c2 = g2.background();
     g = options->colorGroup(Options::TitleBar, true );
     c = g.background().light(130);
-    titleBlocks.resize( 25, 18 );
-    drawBlocks( &titleBlocks, titleBlocks, c, c2 );
+    titleBlocks->resize( 25, 18 );
+    drawBlocks( titleBlocks, *titleBlocks, c, c2 );
 
     g2 = options->colorGroup(Options::TitleBlend, false);
     c2 = g2.background();
     g = options->colorGroup(Options::TitleBar, false );
     c = g.background().light(130);
-    ititleBlocks.resize( 25, 18 );
-    drawBlocks( &ititleBlocks, ititleBlocks, c, c2 );
+    ititleBlocks->resize( 25, 18 );
+    drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
 }
 
-
+void delete_pixmaps()
+{
+    btnPix1 = new KPixmap;
+    iBtnPix1 = new KPixmap;
+    btnDownPix1 = new KPixmap;
+    iBtnDownPix1 = new KPixmap;
+    titleBlocks = new KPixmap;
+    ititleBlocks = new KPixmap;
+    defaultMenuPix = new QPixmap( kdelogo );
+    pixmaps_created = false;
+}
 
 QuartzButton::QuartzButton(Client *parent, const char *name, bool largeButton,
                            const unsigned char *bitmap)
@@ -248,15 +266,15 @@ void QuartzButton::drawButton(QPainter *p)
        if(client->isActive())
        {
           if(isDown())
-             p->drawPixmap(0, 0, btnDownPix1);
+             p->drawPixmap(0, 0, *btnDownPix1);
           else
-             p->drawPixmap(0, 0, btnPix1);
+             p->drawPixmap(0, 0, *btnPix1);
        } else
            {
               if(isDown())
-                 p->drawPixmap(0, 0, iBtnDownPix1);
+                 p->drawPixmap(0, 0, *iBtnDownPix1);
               else
-                  p->drawPixmap(0, 0, iBtnPix1);
+                  p->drawPixmap(0, 0, *iBtnPix1);
            }
 
         int xOff = (width()-10)/2;
@@ -377,7 +395,7 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
 
 void QuartzClient::slotReset()
 {
-    pixmaps_created = false;
+    delete_pixmaps();
     create_pixmaps();
 
     // ( 4 buttons - Help, Max, Iconify, Close )
@@ -396,7 +414,7 @@ void QuartzClient::iconChange()
     if(!miniIcon().isNull())
        button[BtnMenu]->setPixmap(miniIcon());
     else
-       button[BtnMenu]->setPixmap(defaultMenuPix);
+       button[BtnMenu]->setPixmap(*defaultMenuPix);
 
     if (button[BtnMenu]->isVisible())
        button[BtnMenu]->repaint(false);
@@ -514,9 +532,9 @@ void QuartzClient::paintEvent( QPaintEvent* )
 
     // 8 bit displays will be a bit dithered, but they still look ok.
     if ( isActive() )
-        p2.drawPixmap( r.width()-10, 0, titleBlocks );
+        p2.drawPixmap( r.width()-10, 0, *titleBlocks );
     else
-        p2.drawPixmap( r.width()-10, 0, ititleBlocks );
+        p2.drawPixmap( r.width()-10, 0, *ititleBlocks );
 
     // Draw the title text on the pixmap, and with a smaller font
     // for toolwindows than the default.
