@@ -9,6 +9,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 //#define QT_CLEAN_NAMESPACE
 #include <kconfig.h>
+#include <ksimpleconfig.h>
 #include "main.h"
 #include "options.h"
 #include "atoms.h"
@@ -38,6 +39,7 @@ Options* options;
 Atoms* atoms;
 
 Time kwin_time = CurrentTime;
+int kwin_screen_number = -1;
 
 static bool initting = FALSE;
 static DCOPClient * client = 0;
@@ -102,6 +104,9 @@ void kwin_updateTime()
 Application::Application( )
 : KApplication( )
 {
+    if (kwin_screen_number == -1)
+        kwin_screen_number = DefaultScreen(qt_xdisplay());
+
     initting = TRUE; // startup....
 
     // install X11 error handler
@@ -197,44 +202,68 @@ extern "C" { int kdemain(int, char *[]); }
 
 int kdemain( int argc, char * argv[] )
 {
-    /*
-    Display* dpy = XOpenDisplay( NULL );
-    if ( !dpy ) {
-	fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
-		argv[0], XDisplayName(NULL ) );
-	exit (1);
+    bool restored = false;
+    for (int arg = 1; arg < argc; arg++) {
+        if (! qstrcmp(argv[arg], "-session")) {
+            restored = true;
+            break;
+        }
     }
-    int number_of_screens = ScreenCount( dpy );
-    int screen_number= DefaultScreen( dpy );
-    int pos; // temporarily needed to reconstruct DISPLAY var if multi-head
-    QCString display_name = XDisplayString( dpy );
-    XCloseDisplay( dpy );
-    if ((pos = display_name.findRev('.')) != -1 )
-	display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
-    QCString envir;
-    if (number_of_screens != 1) {
-	for (int i = 0; i < number_of_screens; i++ ) {
-	    // if execution doesn't pass by here, then kwin
-	    // acts exactly as previously
-	    if ( i != screen_number && fork() == 0 ) {
-		screen_number = i;
+
+    if (! restored) {
+        // we only do the multihead fork if we are not restored by the session
+	// manager, since the session manager will register multiple kwins,
+        // one for each screen...
+	KInstance inst("kwin-multihead");
+	KConfig config("kdeglobals", true);
+	config.setGroup("X11");
+	if (config.readBoolEntry("enableMultihead")) {
+	    Display* dpy = XOpenDisplay( NULL );
+	    if ( !dpy ) {
+		fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
+			argv[0], XDisplayName(NULL ) );
+		exit (1);
+	    }
+
+	    int number_of_screens = ScreenCount( dpy );
+	    kwin_screen_number = DefaultScreen( dpy );
+	    int pos; // temporarily needed to reconstruct DISPLAY var if multi-head
+	    QCString display_name = XDisplayString( dpy );
+	    XCloseDisplay( dpy );
+	    dpy = 0;
+
+	    if ((pos = display_name.findRev('.')) != -1 )
+		display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
+
+	    QCString envir;
+	    if (number_of_screens != 1) {
+		for (int i = 0; i < number_of_screens; i++ ) {
+		    // if execution doesn't pass by here, then kwin
+		    // acts exactly as previously
+		    if ( i != kwin_screen_number && fork() == 0 ) {
+			kwin_screen_number = i;
+			// break here because we are the child process, we don't
+			// want to fork() anymore
+			break;
+		    }
+		}
+		// in the next statement, display_name shouldn't contain a screen
+		//   number. If it had it, it was removed at the "pos" check
+		envir.sprintf("DISPLAY=%s.%d", display_name.data(), kwin_screen_number);
+
+		if (putenv(envir.data())) {
+		    fprintf(stderr,
+			    "%s: WARNING: unable to set DISPLAY environment variable\n",
+			    argv[0]);
+		    perror("putenv()");
+		}
 	    }
 	}
-	// in the next statement, display_name shouldn't contain a screen
-	//   number. If it had it, it was removed at the "pos" check
-	envir.sprintf("DISPLAY=%s.%d", display_name.data(), screen_number);
-	if (putenv(envir.data())) {
-	    fprintf(stderr,
-		    "%s: WARNING: unable to set DISPLAY environment variable\n",
-		    argv[0]);
-	    perror("putenv()");
-	}
     }
-    */
 
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
-       version, description, KAboutData::License_BSD,
-       "(c) 1999-2000, The KDE Developers");
+			  version, description, KAboutData::License_BSD,
+			  "(c) 1999-2000, The KDE Developers");
     aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
 
@@ -251,11 +280,16 @@ int kdemain( int argc, char * argv[] )
     KCrash::setCrashHandler(crashHandler); // Try to restart on crash
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
+    QCString appname;
+    if (kwin_screen_number == 0)
+	appname = "kwin";
+    else
+	appname.sprintf("kwin-screen-%d", kwin_screen_number);
+
     client = a.dcopClient();
     client->attach();
-    client->registerAs("kwin", false);
+    client->registerAs( appname.data(), false);
     client->setDefaultObject( "KWinInterface" );
 
     return a.exec();
-
 }

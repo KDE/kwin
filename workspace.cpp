@@ -43,6 +43,9 @@ const int XIconicState = IconicState;
 #include <kapp.h>
 
 
+extern int kwin_screen_number;
+
+
 // NET WM Protocol handler class
 class RootInfo : public NETRootInfo
 {
@@ -3034,7 +3037,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 	    if (  info->resourceName == resourceName && info->resourceClass == resourceClass ) {
 		c->setStoreSettings( TRUE );
 		return fakeSession.take();
-	    }	
+	    }
 	}
     }
     return 0;
@@ -3094,13 +3097,20 @@ QRect Workspace::clientArea()
 void Workspace::loadDesktopSettings()
 {
     KConfig c("kdeglobals");
-    c.setGroup("Desktops");
+
+    QCString groupname;
+    if (kwin_screen_number == 0)
+	groupname = "Desktops";
+    else
+	groupname.sprintf("Desktops-screen-%d", kwin_screen_number);
+    c.setGroup(groupname);
+
     int n = c.readNumEntry("Number", 4);
     number_of_desktops = n;
     rootInfo->setNumberOfDesktops( number_of_desktops );
     for(int i = 1; i <= n; i++) {
 	QString s = c.readEntry(QString("Name_%1").arg(i),
-				      i18n("Desktop %1").arg(i));
+				i18n("Desktop %1").arg(i));
 	rootInfo->setDesktopName( i, s.utf8().data() );
     }
 }
@@ -3108,7 +3118,14 @@ void Workspace::loadDesktopSettings()
 void Workspace::saveDesktopSettings()
 {
     KConfig c("kdeglobals");
-    c.setGroup("Desktops");
+
+    QCString groupname;
+    if (kwin_screen_number == 0)
+	groupname = "Desktops";
+    else
+	groupname.sprintf("Desktops-screen-%d", kwin_screen_number);
+    c.setGroup(groupname);
+
     c.writeEntry("Number", number_of_desktops );
     for(int i = 1; i <= number_of_desktops; i++) {
 	QString s = desktopName( i );
