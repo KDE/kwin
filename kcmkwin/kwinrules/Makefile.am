@@ -1,5 +1,6 @@
 METASOURCES = AUTO
 AM_CPPFLAGS = $(all_includes) -DKCMRULES
+INCLUDES = -I$(top_srcdir)/kwin/lib
 
 kde_module_LTLIBRARIES = kcm_kwinrules.la 
 
