@@ -284,7 +284,6 @@ Workspace::Workspace( bool restore )
     _self = this;
     d = new WorkspacePrivate;
     mgr = new PluginMgr;
-    connect(options, SIGNAL(resetPlugin()), mgr, SLOT(resetPlugin()));
     root = qt_xrootwin();
     default_colormap = DefaultColormap(qt_xdisplay(), qt_xscreen() );
     installed_colormap = default_colormap;

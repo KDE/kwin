@@ -320,8 +320,6 @@ public:
     */
     int electricBorderDelay();
 
-signals:
-    void resetPlugin();
 
 public slots:
     void reload();
