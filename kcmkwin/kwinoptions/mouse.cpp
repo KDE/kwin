@@ -294,11 +294,6 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
     "will allow you to perform the following actions.");
   QWhatsThis::add( label, strAllKey );
 
-  label = new QLabel(i18n("Modifier Key + Middle Button:"), grid);
-  strAll2 = i18n("Here you can customize KDE's behavior when middle clicking into a window"
-                 " while pressing the modifier key.");
-  QWhatsThis::add( label, strAll2 );
-
 
   strMouseButton1 = i18n("Modifier Key + Left Button:");
   strAll1 = i18n("In this row you can customize left click behavior when clicking into"
@@ -316,6 +311,11 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   label = new QLabel(strMouseButton1, grid);
   QWhatsThis::add( label, strAll1);
+
+  label = new QLabel(i18n("Modifier Key + Middle Button:"), grid);
+  strAll2 = i18n("Here you can customize KDE's behavior when middle clicking into a window"
+                 " while pressing the modifier key.");
+  QWhatsThis::add( label, strAll2 );
 
   label = new QLabel(strMouseButton3, grid);
   QWhatsThis::add( label, strAll3);
