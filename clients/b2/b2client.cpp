@@ -374,76 +374,78 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 
     for (unsigned int i = 0; i < s.length(); i++) {
         switch (s[i].latin1()) {
-            case 'M':  // Menu button
-                if (!button[BtnMenu]) {
-                    button[BtnMenu] = new B2Button(this, tb, tips[BtnMenu], LeftButton|RightButton);
-                    button[BtnMenu]->setPixmaps(P_MENU);
-                    button[BtnMenu]->setUseMiniIcon();
-                    connect(button[BtnMenu], SIGNAL(clicked()),
-                            this, SLOT(menuButtonPressed()));
-                    titleLayout->addWidget(button[BtnMenu]);
-                }
-                break;
-            case 'S':  // Sticky button
-                if (!button[BtnSticky]) {
-                    button[BtnSticky] = new B2Button(this, tb, tips[BtnSticky]);
-                    button[BtnSticky]->setPixmaps(P_PINUP);
-                    button[BtnSticky]->setToggle();
-                    button[BtnSticky]->setDown(isOnAllDesktops());
-                    connect(button[BtnSticky], SIGNAL(clicked()),
-                            this, SLOT(toggleOnAllDesktops()));
-                    titleLayout->addWidget(button[BtnSticky]);
-                }
-                break;
-            case 'H':  // Help button
-                if (providesContextHelp() && (!button[BtnHelp])) {
-                    button[BtnHelp] = new B2Button(this, tb, tips[BtnHelp]);
-                    button[BtnHelp]->setPixmaps(P_HELP);
-                    connect(button[BtnHelp], SIGNAL(clicked()),
-                            this, SLOT(showContextHelp()));
-                    titleLayout->addWidget(button[BtnHelp]);
-                }
-                break;
-            case 'I':  // Minimize button
-                if (isMinimizable() && (!button[BtnIconify])) {
-                    button[BtnIconify]= new B2Button(this, tb,tips[BtnIconify]);
-                    button[BtnIconify]->setPixmaps(P_ICONIFY);
-                    connect(button[BtnIconify], SIGNAL(clicked()),
-                            this, SLOT(minimize()));
-                    titleLayout->addWidget(button[BtnIconify]);
-                }
-                break;
-            case 'A':  // Maximize button
-                if (isMaximizable() && (!button[BtnMax])) {
-                    button[BtnMax]= new B2Button(this, tb, tips[BtnMax], LeftButton|MidButton|RightButton);
-                    button[BtnMax]->setPixmaps(maximizeMode() == MaximizeFull ?
-			    P_NORMALIZE : P_MAX);
-                    connect(button[BtnMax], SIGNAL(clicked()),
-                            this, SLOT(maxButtonClicked()));
-                    titleLayout->addWidget(button[BtnMax]);
-                }
-                break;
-            case 'X':  // Close button
-                if (isCloseable() && !button[BtnClose]) {
-                    button[BtnClose]= new B2Button(this, tb, tips[BtnClose]);
-                    button[BtnClose]->setPixmaps(P_CLOSE);
-                    connect(button[BtnClose], SIGNAL(clicked()),
-                            this, SLOT(closeWindow()));
-                    titleLayout->addWidget(button[BtnClose]);
-                }
-		break;
-	    case 'L': // Shade button
-		if (isShadeable() && !button[BtnShade]) {
-                    button[BtnShade]= new B2Button(this, tb, tips[BtnShade]);
-                    button[BtnShade]->setPixmaps(P_SHADE);
-                    connect(button[BtnShade], SIGNAL(clicked()),
-                            this, SLOT(shadeButtonClicked()));
-                    titleLayout->addWidget(button[BtnShade]);
-		}
-		break;
-	    case '_': // Additional spacing
-		titleLayout->addSpacing(4);
-		break;
+	case 'M':  // Menu button
+	    if (!button[BtnMenu]) {
+		button[BtnMenu] = new B2Button(this, tb, tips[BtnMenu], 
+			LeftButton | RightButton);
+		button[BtnMenu]->setPixmaps(P_MENU);
+		button[BtnMenu]->setUseMiniIcon();
+		connect(button[BtnMenu], SIGNAL(clicked()),
+			this, SLOT(menuButtonPressed()));
+		titleLayout->addWidget(button[BtnMenu]);
+	    }
+	    break;
+	case 'S':  // Sticky button
+	    if (!button[BtnSticky]) {
+		button[BtnSticky] = new B2Button(this, tb, tips[BtnSticky]);
+		button[BtnSticky]->setPixmaps(P_PINUP);
+		button[BtnSticky]->setToggle();
+		button[BtnSticky]->setDown(isOnAllDesktops());
+		connect(button[BtnSticky], SIGNAL(clicked()),
+			this, SLOT(toggleOnAllDesktops()));
+		titleLayout->addWidget(button[BtnSticky]);
+	    }
+	    break;
+	case 'H':  // Help button
+	    if (providesContextHelp() && (!button[BtnHelp])) {
+		button[BtnHelp] = new B2Button(this, tb, tips[BtnHelp]);
+		button[BtnHelp]->setPixmaps(P_HELP);
+		connect(button[BtnHelp], SIGNAL(clicked()),
+			this, SLOT(showContextHelp()));
+		titleLayout->addWidget(button[BtnHelp]);
+	    }
+	    break;
+	case 'I':  // Minimize button
+	    if (isMinimizable() && (!button[BtnIconify])) {
+		button[BtnIconify]= new B2Button(this, tb,tips[BtnIconify]);
+		button[BtnIconify]->setPixmaps(P_ICONIFY);
+		connect(button[BtnIconify], SIGNAL(clicked()),
+			this, SLOT(minimize()));
+		titleLayout->addWidget(button[BtnIconify]);
+	    }
+	    break;
+	case 'A':  // Maximize button
+	    if (isMaximizable() && (!button[BtnMax])) {
+		button[BtnMax]= new B2Button(this, tb, tips[BtnMax], 
+			LeftButton | MidButton | RightButton);
+		button[BtnMax]->setPixmaps(maximizeMode() == MaximizeFull ?
+			P_NORMALIZE : P_MAX);
+		connect(button[BtnMax], SIGNAL(clicked()),
+			this, SLOT(maxButtonClicked()));
+		titleLayout->addWidget(button[BtnMax]);
+	    }
+	    break;
+	case 'X':  // Close button
+	    if (isCloseable() && !button[BtnClose]) {
+		button[BtnClose]= new B2Button(this, tb, tips[BtnClose]);
+		button[BtnClose]->setPixmaps(P_CLOSE);
+		connect(button[BtnClose], SIGNAL(clicked()),
+			this, SLOT(closeWindow()));
+		titleLayout->addWidget(button[BtnClose]);
+	    }
+	    break;
+	case 'L': // Shade button
+	    if (isShadeable() && !button[BtnShade]) {
+		button[BtnShade]= new B2Button(this, tb, tips[BtnShade]);
+		button[BtnShade]->setPixmaps(P_SHADE);
+		connect(button[BtnShade], SIGNAL(clicked()),
+			this, SLOT(shadeButtonClicked()));
+		titleLayout->addWidget(button[BtnShade]);
+	    }
+	    break;
+	case '_': // Additional spacing
+	    titleLayout->addSpacing(4);
+	    break;
 	}
     }
 }
@@ -460,7 +462,7 @@ void B2Client::iconChange()
 void B2Client::calcHiddenButtons()
 {
     // Hide buttons in this order:
-    // Sticky, Help, Maximize, Minimize, Close, Menu
+    // Shade, Sticky, Help, Maximize, Minimize, Close, Menu
     B2Button* btnArray[] = { 
 	button[BtnShade], button[BtnSticky], button[BtnHelp], 
 	button[BtnMax], button[BtnIconify], button[BtnClose], button[BtnMenu] 
@@ -958,11 +960,11 @@ void B2Client::positionButtons()
     QString cap = caption();
     if (cap.length() < 5) // make sure the titlebar has sufficiently wide
         cap = "XXXXX";    // area for dragging the window
-    int textLen = fm.width( cap );
+    int textLen = fm.width(cap);
 
     QRect t = titlebar->captionSpacer->geometry();
-    int titleWidth = titlebar->width() - t.width() + textLen+2;
-    if (titleWidth > width()) titleWidth=width();
+    int titleWidth = titlebar->width() - t.width() + textLen + 2;
+    if (titleWidth > width()) titleWidth = width();
 
     titlebar->resize(titleWidth, buttonSize + 4);
     titlebar->move(bar_x_ofs, 0);
