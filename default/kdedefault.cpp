@@ -359,6 +359,12 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     hb->addWidget( button[BtnSticky]);
     hb->addWidget( button[BtnIconify]);
     hb->addWidget( button[BtnMax]);
+    
+    if ( isTransient() ) {
+	button[BtnSticky]->hide();
+	button[BtnIconify]->hide();
+	button[BtnMax]->hide();
+    }
 
     hiddenItems = false;
 }
@@ -532,7 +538,7 @@ void KDEClient::calcHiddenButtons()
             int i;
             for(i=0; i<5; ++i){
                 if(button[i]){
-                    if(button[i]->isVisible()){
+                    if( !button[i]->isHidden() ) {
                         button[i]->hide();
                     }
                     minWidth-=button[i]->sizeHint().width();
@@ -550,7 +556,7 @@ void KDEClient::calcHiddenButtons()
             if(button[i]){
                 if(button[i]->sizeHint().width() + totalSize <= width()){
                     totalSize+=button[i]->sizeHint().width();
-                    if(!button[i]->isVisible()){
+                    if(button[i]->isHidden() && ( !isTransient() || ( i != BtnIconify && i != BtnSticky && i != BtnMax ) ) ){
                         button[i]->resize(button[i]->sizeHint());
                         button[i]->show();
                     }
