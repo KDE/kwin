@@ -584,6 +584,11 @@ QSize Client::sizeForClientSize( const QSize& wsize, bool ignore_height) const
     if( decoration != NULL )
         {
         QSize decominsize = decoration->minimumSize();
+        QSize border_size( border_left + border_right, border_top + border_bottom );
+        if( border_size.width() > decominsize.width()) // just in case
+            decominsize.setWidth( border_size.width());
+        if( border_size.height() > decominsize.height())
+            decominsize.setHeight( border_size.height());
         if( decominsize.width() > min_size.width())
                 min_size.setWidth( decominsize.width());
         if( decominsize.height() > min_size.height())
