@@ -29,7 +29,7 @@
 
 #include "misc.h"
 
-QColor hsvRelative(QColor& baseColor, int relativeH, int relativeS, int relativeV)
+QColor hsvRelative(const QColor& baseColor, int relativeH, int relativeS, int relativeV)
 {
     int h, s, v;
     baseColor.hsv(&h, &s, &v);

@@ -252,7 +252,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
 
     // colors...
     const QColor windowContour = Handler()->getColor(WindowContour, active);
-    const QColor deco = Handler()->getColor(TitleGradientTo, active);
+    const QColor deco = Handler()->getColor(TitleGradient3, active);
     const QColor border = Handler()->getColor(Border, active);
     const QColor highlightTop = Handler()->getColor(TitleHighlightTop, active);
     const QColor highlightTitleLeft = alphaBlendColors(deco,

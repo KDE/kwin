@@ -190,16 +190,14 @@ QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
     switch (type) {
         case WindowContour:
             return KDecoration::options()->color(ColorTitleBar, active).dark(190);
-        case TitleGradientFrom:
+        case TitleGradient1:
+            return hsvRelative(KDecoration::options()->color(ColorTitleBar, active), 0,-10,+10);
+            break;
+        case TitleGradient2:
+            return hsvRelative(KDecoration::options()->color(ColorTitleBar, active), 0,0,-25);
+            break;
+        case TitleGradient3:
             return KDecoration::options()->color(ColorTitleBar, active);
-            break;
-        case TitleGradientTo:
-            return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
-                    Qt::white, active?210:220);
-            break;
-        case TitleGradientToTop:
-            return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
-                    Qt::white, active?180:190);
             break;
         case TitleHighlightTop:
         case SideHighlightLeft:
@@ -227,40 +225,45 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
 
     switch (type) {
         case TitleBarTileTop:
-        {
-            int h = 4-2; // TODO: don't hardcode the height...
-
-            KPixmap tempPixmap;
-            tempPixmap.resize(1, h);
-            KPixmapEffect::gradient(tempPixmap,
-                                    getColor(TitleGradientToTop, active),
-                                    getColor(TitleGradientFrom, active),
-                                    KPixmapEffect::VerticalGradient);
-            QPixmap *pixmap = new QPixmap(1, h);
-            QPainter painter(pixmap);
-            painter.drawPixmap(0, 0, tempPixmap);
-            painter.end();
-
-            m_pixmaps[toolWindow][active][type] = pixmap;
-            return *pixmap;
-
-            break;
-        }
-
         case TitleBarTile:
         {
-            int h = toolWindow ? m_titleHeightTool : m_titleHeight;
+            const int topHeight = 2;
+            const int topGradientHeight = 4;
+
+            int h = (toolWindow ? m_titleHeightTool : m_titleHeight) + topHeight;
+
+            QPixmap gradient(1, h); // TODO: test width of 5 or so for performance
+
+            QPainter painter(&gradient);
 
             KPixmap tempPixmap;
-            tempPixmap.resize(5, h);
+            tempPixmap.resize(1, topGradientHeight);
             KPixmapEffect::gradient(tempPixmap,
-                                    PlastikHandler::getColor(TitleGradientFrom, active),
-                                    PlastikHandler::getColor(TitleGradientTo, active),
+                                    getColor(TitleGradient1, active),
+                                    getColor(TitleGradient2, active),
                                     KPixmapEffect::VerticalGradient);
-            QPixmap *pixmap = new QPixmap(5, h);
-            QPainter painter(pixmap);
-            painter.drawPixmap(0, 0, tempPixmap);
+            painter.drawPixmap(0,0, tempPixmap);
+
+            tempPixmap.resize(1, h-topGradientHeight);
+            KPixmapEffect::gradient(tempPixmap,
+                                    getColor(TitleGradient2, active),
+                                    getColor(TitleGradient3, active),
+                                    KPixmapEffect::VerticalGradient);
+            painter.drawPixmap(0,topGradientHeight, tempPixmap);
             painter.end();
+
+            QPixmap *pixmap;
+            if (type == TitleBarTileTop) {
+                pixmap = new QPixmap(1, topHeight);
+                painter.begin(pixmap);
+                painter.drawPixmap(0, 0, gradient);
+                painter.end();
+            } else {
+                pixmap = new QPixmap(1, h-topHeight);
+                painter.begin(pixmap);
+                painter.drawPixmap(0, 0, gradient, 0,topHeight);
+                painter.end();
+            }
 
             m_pixmaps[toolWindow][active][type] = pixmap;
             return *pixmap;
@@ -298,7 +301,7 @@ const QPixmap &PlastikHandler::buttonPixmap(ButtonPixmaps type, const QSize &siz
     delete m_pixmaps[toolWindow][active][typeIndex];
     m_pixmaps[toolWindow][active][typeIndex] = 0;
 
-    QColor iconColor = alphaBlendColors(getColor(TitleGradientTo, active), pressed ? Qt::white : Qt::black, 50);
+    QColor iconColor = alphaBlendColors(getColor(TitleGradient3, active), pressed ? Qt::white : Qt::black, 50);
 
     QImage img;
 

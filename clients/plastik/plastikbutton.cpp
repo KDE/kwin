@@ -178,13 +178,13 @@ void PlastikButton::drawButton(QPainter *painter)
         highlightColor = Qt::white;
     }
 
-    QColor contourTop = alphaBlendColors(Handler()->getColor(TitleGradientFrom, active),
+    QColor contourTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
             Qt::black, 220);
-    QColor contourBottom = alphaBlendColors(Handler()->getColor(TitleGradientTo, active),
+    QColor contourBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
             Qt::black, 220);
-    QColor sourfaceTop = alphaBlendColors(Handler()->getColor(TitleGradientFrom, active),
+    QColor sourfaceTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
             Qt::white, 220);
-    QColor sourfaceBottom = alphaBlendColors(Handler()->getColor(TitleGradientTo, active),
+    QColor sourfaceBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
             Qt::white, 220);
 
     int highlightAlpha = static_cast<int>(255-((60/static_cast<double>(ANIMATIONSTEPS))*
@@ -227,13 +227,13 @@ void PlastikButton::drawButton(QPainter *painter)
         bP.drawPixmap(r.x(), r.y()+2, tempKPixmap);
         bP.drawPixmap(r.right(), r.y()+2, tempKPixmap);
         // sort of anti-alias for the contour
-        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradientFrom, active),
+        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradient2, active),
                 contourTop, 150) );
         bP.drawPoint(r.x()+1, r.y());
         bP.drawPoint(r.right()-1, r.y());
         bP.drawPoint(r.x(), r.y()+1);
         bP.drawPoint(r.right(), r.y()+1);
-        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradientTo, active),
+        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradient3, active),
                 contourBottom, 150) );
         bP.drawPoint(r.x()+1, r.bottom());
         bP.drawPoint(r.right()-1, r.bottom());

@@ -32,9 +32,9 @@ namespace KWinPlastik {
 
 enum ColorType {
     WindowContour=0,
-    TitleGradientFrom,
-    TitleGradientTo,
-    TitleGradientToTop,
+    TitleGradient1, // top
+    TitleGradient2,
+    TitleGradient3, // bottom
     TitleHighlightTop,
     SideHighlightLeft,
     SideHighlightRight,
