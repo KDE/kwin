@@ -323,7 +323,7 @@ class Client : public QObject, public KDecorationDefines
         void fetchName();
         void fetchIconicName();
 
-        void updateWorkareaDiffs( const QRect& area = QRect());
+        void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
         static int computeWorkareaDiff( int left, int right, int a_left, int a_right );
         void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity = 0 );

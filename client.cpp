@@ -1534,7 +1534,7 @@ NET::WindowType Client::windowType( bool strict, int supported_types ) const
             // if it's as wide as the screen, not very high and has its upper-left
             // corner a bit above the screen's upper-left cornet, it's a topmenu
             if( x() == 0 && y() < 0 && y() > -10 && height() < 100
-                && abs( width() - workspace()->geometry().width()) < 10 )
+                && abs( width() - workspace()->clientArea( FullArea, this ).width()) < 10 )
                 wt = NET::TopMenu;
             }
         if( wt == NET::Unknown )

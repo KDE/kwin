@@ -75,6 +75,18 @@ enum allowed_t { Allowed };
 // some enums to have more readable code, instead of using bools
 enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
 
+// Areas, mostly related to Xinerama
+enum clientAreaOption
+    {
+    PlacementArea,         // geometry where a window will be initially placed after being mapped
+    MovementArea,          // ???  window movement snapping area?
+    MaximizeArea,          // geometry to which a window will be maximized
+    MaximizeFullArea,      // like MaximizeArea, but ignore struts - used e.g. for fullscreening
+    WorkArea,              // whole workarea (all screens together)
+    FullArea,              // whole area (all screens together), ignore struts
+    ScreenArea             // one whole screen, ignore struts
+    };
+
 class Shape 
     {
     public:

@@ -199,22 +199,22 @@ bool Client::manage( Window w, bool isMapped )
     if ( session )
         geom = session->geometry;
 
-    QRect area = workspace()->clientArea( geom.center(), desktop());
+    QRect area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
 
-
-    if (( geom.size() == workspace()->geometry().size()) // XINERAMA TODO check also size of the screen
+    // if it's noborder window, and has size of one screen or the whole desktop geometry, it's fullscreen hack
+    if( ( geom.size() == workspace()->clientArea( FullArea, geom.center(), desktop()).size()
+            || geom.size() == workspace()->clientArea( ScreenArea, geom.center(), desktop()).size())
         && noBorder() && !isUserNoBorder() && isFullScreenable()) 
         {
         fullscreen_mode = FullScreenHack;
-        // TODO XINERAMA show fullscreen on only one xinerama screen
-        geom.moveTopLeft( QPoint( 0, 0 )); // in case they try to make it fullscreen, but misplace (#55290)
+        geom = workspace()->clientArea( MaximizeFullArea, geom.center(), desktop());
         placementDone = true;
         }
 
     if ( isDesktop() ) 
         {
         // desktops are treated slightly special
-        geom = workspace()->geometry();
+        geom = workspace()->clientArea( FullArea, geom.center(), desktop());
         placementDone = true;
         }
 
@@ -484,7 +484,7 @@ bool Client::manage( Window w, bool isMapped )
             user_time = qt_x_time - 1000000 + 10;
         }
 
-    updateWorkareaDiffs( area );
+    updateWorkareaDiffs();
 
 //    sendSyntheticConfigureNotify(); done when setting mapping state
 

@@ -37,28 +37,6 @@ namespace KWinInternal
 //********************************************
 
 /*!
-  Returns the workspace's geometry
-
-  \sa clientArea()
- */
-QRect Workspace::geometry() const
-    {
-    if ( root == qt_xrootwin() )
-        return QRect( QPoint(0, 0), QApplication::desktop()->size() );
-    else 
-        {
-        // todo caching, keep track of configure notify etc.
-        QRect r;
-        XWindowAttributes attr;
-        if (XGetWindowAttributes(qt_xdisplay(), root, &attr))
-            {
-            r.setRect(0, 0, attr.width, attr.height );
-            }
-        return r;
-        }
-    }
-
-/*!
   Resizes the workspace after an XRANDR screen size change
  */
 void Workspace::desktopResized()
@@ -147,9 +125,9 @@ void Workspace::updateClientArea()
 
   \sa geometry()
  */
-QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop ) const
+QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const
     {
-    if( desktop == NETWinInfo::OnAllDesktops )
+    if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
     QRect rect = QApplication::desktop()->geometry();
     QDesktopWidget *desktopwidget = KApplication::desktop();
@@ -157,6 +135,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop )
     switch (opt) 
         {
         case MaximizeArea:
+        case MaximizeFullArea:
             if (options->xineramaMaximizeEnabled)
                 rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
             break;
@@ -168,44 +147,23 @@ QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop )
             if (options->xineramaMovementEnabled)
                 rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
             break;
+        case WorkArea:
+        case FullArea:
+            break; // nothing
+        case ScreenArea:
+            rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
+            break;
         }
 
-    if (workarea[ desktop ].isNull())
+    if( workarea[ desktop ].isNull() || opt == FullArea || opt == MaximizeFullArea || opt == ScreenArea )
         return rect;
 
     return workarea[ desktop ].intersect(rect);
     }
 
-QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p) const
+QRect Workspace::clientArea( clientAreaOption opt, const Client* c ) const
     {
-    return clientArea( opt, p, currentDesktop());
-    }
-
-QRect Workspace::clientArea(const QPoint& p, int desktop) const
-    {
-    if( desktop == NETWinInfo::OnAllDesktops )
-        desktop = currentDesktop();
-
-    QRect rect;
-    if (options->xineramaPlacementEnabled) 
-        {
-        int screenNum = QApplication::desktop()->screenNumber(p);
-        rect = QApplication::desktop()->screenGeometry(screenNum);
-        }
-    else 
-        {
-        rect = QApplication::desktop()->geometry();
-        }
-
-    if (workarea[ desktop ].isNull())
-        return rect;
-
-    return workarea[ desktop ].intersect(rect);
-    }
-
-QRect Workspace::clientArea(const QPoint& p) const
-    {
-    return clientArea( p, currentDesktop());
+    return clientArea( opt, c->geometry().center(), c->desktop());
     }
 
 /*!
@@ -407,12 +365,9 @@ QRect Client::adjustedClientArea( const QRect& area ) const
 
 
 // updates differences to workarea edges for all directions
-// area_ is workarea for this Client (optimization - given only if already known)
-void Client::updateWorkareaDiffs( const QRect& area_ )
+void Client::updateWorkareaDiffs()
     {
-    QRect area = area_;
-    if( !area.isValid()) // default arg
-        area = workspace()->clientArea( geometry().center(), desktop());
+    QRect area = workspace()->clientArea( WorkArea, this );
     QRect geom = geometry();
     workarea_diff_x = computeWorkareaDiff( geom.left(), geom.right(), area.left(), area.right());
     workarea_diff_y = computeWorkareaDiff( geom.top(), geom.bottom(), area.top(), area.bottom());
@@ -452,8 +407,7 @@ void Client::checkWorkspacePosition()
 
     if( isFullScreen())
         {
-        QRect area = workspace()->geometry();
-        // TODO XINERAMA only one xinerama screen
+        QRect area = workspace()->clientArea( MaximizeFullArea, this );
         if( geometry() != area )
             setGeometry( area );
         return;
@@ -465,16 +419,16 @@ void Client::checkWorkspacePosition()
     if( isTopMenu())
         {
         if( workspace()->managingTopMenus())
-            { // XINERAMA
+            {
             QRect area;
-        ClientList mainclients = mainClients();
-        if( mainclients.count() == 1 )
-            area = kapp->desktop()->screenGeometry( mainclients.first()->geometry().center());
-        else
-            area = kapp->desktop()->geometry(); // desktop menu ?
-        area.setHeight( workspace()->topMenuHeight());
+            ClientList mainclients = mainClients();
+            if( mainclients.count() == 1 )
+                area = workspace()->clientArea( MaximizeFullArea, mainclients.first());
+            else
+                area = workspace()->clientArea( MaximizeFullArea, QPoint( 0, 0 ), desktop());
+            area.setHeight( workspace()->topMenuHeight());
 //            kdDebug() << "TOPMENU size adjust: " << area << ":" << this << endl;
-        setGeometry( area );
+            setGeometry( area );
             }
         NETStrut strut = info->strut();
         int top = workspace()->managingTopMenus() ? workspace()->topMenuHeight() : 0;
@@ -493,10 +447,9 @@ void Client::checkWorkspacePosition()
 
     if( !isShade()) // TODO
         {
-        QRect area = workspace()->clientArea( geometry().center(), desktop());
         int old_diff_x = workarea_diff_x;
         int old_diff_y = workarea_diff_y;
-        updateWorkareaDiffs( area );
+        updateWorkareaDiffs();
 
         // this can be true only if this window was mapped before KWin
         // was started - in such case, don't adjust position to workarea,
@@ -506,6 +459,7 @@ void Client::checkWorkspacePosition()
         if( workspace()->initializing())
             return;
 
+        QRect area = workspace()->clientArea( WorkArea, this );
         QRect new_geom = geometry();
         QRect tmp_rect_x( new_geom.left(), 0, new_geom.width(), 0 );
         QRect tmp_area_x( area.left(), 0, area.width(), 0 );
@@ -525,7 +479,7 @@ void Client::checkWorkspacePosition()
             }
         if( final_geom != geometry() )
             setGeometry( final_geom );
-        //    updateWorkareaDiffs( area ); done already by setGeometry()
+        //    updateWorkareaDiffs(); done already by setGeometry()
         }
     }
 
@@ -920,7 +874,7 @@ void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
     {
     int newx = x();
     int newy = y();
-    QRect area = workspace()->clientArea( geometry().center(), desktop());
+    QRect area = workspace()->clientArea( WorkArea, this );
     // don't allow growing larger than workarea
     if( w > area.width())
         w = area.width();
@@ -1200,7 +1154,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     if( decoration != NULL ) // decorations may turn off some borders when maximized
         decoration->borders( border_left, border_right, border_top, border_bottom );
 
-    QRect clientArea = workspace()->clientArea(geometry().center());
+    QRect clientArea = workspace()->clientArea( MaximizeArea, this );
 
     switch (max_mode) 
         {
@@ -1342,8 +1296,7 @@ void Client::setFullScreen( bool set, bool user )
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false, true ); // delayed deletion of decoration
     if( isFullScreen())
-        setGeometry( workspace()->geometry());
-        // XINERAMA only on one screen
+        setGeometry( workspace()->clientArea( MaximizeFullArea, this ));
     else
         {
         if( maximizeMode() != MaximizeRestore )
@@ -1353,7 +1306,7 @@ void Client::setFullScreen( bool set, bool user )
         // TODO isShaded() ?
         else
             { // does this ever happen?
-            setGeometry( workspace()->clientArea( Workspace::MaximizeArea, geometry().center(), desktop()));
+            setGeometry( workspace()->clientArea( MaximizeArea, this ));
             }
         }
     }
@@ -1507,7 +1460,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         setShade( ShadeNone );
 
     QPoint globalPos( x_root, y_root );
-    QRect desktopArea = workspace()->clientArea( globalPos );
+    QRect desktopArea = workspace()->clientArea( WorkArea, globalPos, desktop());
 
     QPoint p = globalPos + invertedMoveOffset;
 

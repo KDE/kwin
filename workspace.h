@@ -84,18 +84,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void addGroup( Group* group, allowed_t );
         void removeGroup( Group* group, allowed_t );
 
-        QRect geometry() const;
-
-        enum clientAreaOption { PlacementArea, MovementArea, MaximizeArea };
-
-
-    // default is MaximizeArea
-        QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
-        QRect clientArea(const QPoint& p, int desktop) const;
-    // KDE4 remove the following 3 methods
-        inline QRect clientArea(clientAreaOption opt) const { return clientArea(opt, QCursor::pos()); }
-        QRect clientArea(clientAreaOption, const QPoint& p) const;
-        QRect clientArea(const QPoint& p) const;
+        QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
+        QRect clientArea( clientAreaOption, const Client* c ) const;
 
         /**
          * @internal

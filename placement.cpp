@@ -71,7 +71,7 @@ void Placement::placeAtRandom(Client* c)
     static int py = 2 * step;
     int tx,ty;
 
-    const QRect maxRect = m_WorkspacePtr->clientArea(Workspace::PlacementArea); // TODO use desktop number
+    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
 
     if (px < maxRect.x())
         px = maxRect.x();
@@ -129,7 +129,7 @@ void Placement::placeSmart(Client* c)
     int basket;                 //temp holder
 
     // get the maximum allowed windows space
-    const QRect maxRect = m_WorkspacePtr->clientArea(Workspace::PlacementArea);
+    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
     int x = maxRect.left(), y = maxRect.top();
     x_optimal = x; y_optimal = y;
 
@@ -293,7 +293,7 @@ void Placement::placeCascaded (Client* c, bool re_init)
 
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
-    QRect maxRect = m_WorkspacePtr->clientArea(Workspace::PlacementArea);
+    QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
 
     // initialize often used vars: width and height of c; we gain speed
     const int ch = c->height();
@@ -369,7 +369,7 @@ void Placement::placeCentered (Client* c)
 
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
-    const QRect maxRect = m_WorkspacePtr->clientArea(Workspace::PlacementArea);
+    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
 
     const int xp = maxRect.left() + (maxRect.width() -  c->width())  / 2;
     const int yp = maxRect.top()  + (maxRect.height() - c->height()) / 2;
@@ -385,7 +385,7 @@ void Placement::placeZeroCornered(Client* c)
     {
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
-    const QRect maxRect = m_WorkspacePtr->clientArea(Workspace::PlacementArea);
+    const QRect maxRect = m_WorkspacePtr->clientArea( PlacementArea, c );
 
     // place the window
     c->move(QPoint(maxRect.left(), maxRect.top()));
@@ -503,7 +503,9 @@ void Client::growHorizontal()
     if( geometry().size() == adjsize && geom.size() != adjsize && xSizeHint.width_inc > 1 ) // take care of size increments
         {
         int newright = workspace()->packPositionRight( this, geom.right() + xSizeHint.width_inc - 1, true );
-        if( workspace()->clientArea( Workspace::MovementArea, geometry().center(), desktop()).right() >= newright )
+        // check that it hasn't grown outside of the area, due to size increments
+        if( workspace()->clientArea( MovementArea,
+            QPoint(( x() + newright ) / 2, geometry().center().y()), desktop()).right() >= newright )
             geom.setRight( newright );
         }
     geom.setSize( adjustedSize( geom.size()));
@@ -541,7 +543,9 @@ void Client::growVertical()
     if( geometry().size() == adjsize && geom.size() != adjsize && xSizeHint.height_inc > 1 ) // take care of size increments
         {
         int newbottom = workspace()->packPositionDown( this, geom.bottom() + xSizeHint.height_inc - 1, true );
-        if( workspace()->clientArea( Workspace::MovementArea, geometry().center(), desktop()).bottom() >= newbottom )
+        // check that it hasn't grown outside of the area, due to size increments
+        if( workspace()->clientArea( MovementArea,
+            QPoint( geometry().center().x(), ( y() + newbottom ) / 2 ), desktop()).bottom() >= newbottom )
             geom.setBottom( newbottom );
         }
     geom.setSize( adjustedSize( geom.size()));
@@ -568,8 +572,11 @@ void Client::shrinkVertical()
 
 int Workspace::packPositionLeft( const Client* cl, int oldx, bool left_edge ) const
     {
-    int newx = clientArea( MovementArea, cl->geometry().center(), cl->desktop()).left();
-    if( oldx < newx )
+    int newx = clientArea( MovementArea, cl ).left();
+    if( oldx <= newx ) // try another Xinerama screen
+        newx = clientArea( MovementArea,
+            QPoint( cl->geometry().left() - 1, cl->geometry().center().y()), cl->desktop()).left();
+    if( oldx <= newx )
         return oldx;
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
@@ -588,8 +595,11 @@ int Workspace::packPositionLeft( const Client* cl, int oldx, bool left_edge ) co
 
 int Workspace::packPositionRight( const Client* cl, int oldx, bool right_edge ) const
     {
-    int newx = clientArea( MovementArea, cl->geometry().center(), cl->desktop()).right();
-    if( oldx > newx )
+    int newx = clientArea( MovementArea, cl ).right();
+    if( oldx >= newx ) // try another Xinerama screen
+        newx = clientArea( MovementArea,
+            QPoint( cl->geometry().right() + 1, cl->geometry().center().y()), cl->desktop()).right();
+    if( oldx >= newx )
         return oldx;
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
@@ -608,8 +618,11 @@ int Workspace::packPositionRight( const Client* cl, int oldx, bool right_edge ) 
 
 int Workspace::packPositionUp( const Client* cl, int oldy, bool top_edge ) const
     {
-    int newy = clientArea( MovementArea, cl->geometry().center(), cl->desktop()).top();
-    if( oldy < newy )
+    int newy = clientArea( MovementArea, cl ).top();
+    if( oldy <= newy ) // try another Xinerama screen
+        newy = clientArea( MovementArea,
+            QPoint( cl->geometry().center().x(), cl->geometry().top() - 1 ), cl->desktop()).top();
+    if( oldy <= newy )
         return oldy;
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
@@ -628,8 +641,11 @@ int Workspace::packPositionUp( const Client* cl, int oldy, bool top_edge ) const
 
 int Workspace::packPositionDown( const Client* cl, int oldy, bool bottom_edge ) const
     {
-    int newy = clientArea( MovementArea, cl->geometry().center(), cl->desktop()).bottom();
-    if( oldy > newy )
+    int newy = clientArea( MovementArea, cl ).bottom();
+    if( oldy >= newy ) // try another Xinerama screen
+        newy = clientArea( MovementArea,
+            QPoint( cl->geometry().center().x(), cl->geometry().bottom() + 1 ), cl->desktop()).bottom();
+    if( oldy >= newy )
         return oldy;
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
