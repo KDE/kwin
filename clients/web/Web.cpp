@@ -519,7 +519,10 @@ WebClient::_resetLayout()
   QHBoxLayout * midLayout   = new QHBoxLayout(mainLayout_, 0, 0);
 
   midLayout->addSpacing(sideMargin);
-  midLayout->addWidget(new QLabel( i18n( "<center><b>Web</b></center>" ), widget())); // fake window
+  if( isPreview())
+    midLayout->addWidget(new QLabel( i18n( "<center><b>Web</b></center>" ), widget()));
+  else
+    midLayout->addItem( new QSpacerItem( 0, 0 )); // no widget in the middle
   midLayout->addSpacing(sideMargin);
 
   // -------------------------------------------------------------------

@@ -520,7 +520,11 @@ void QuartzClient::init()
     QGridLayout* g = new QGridLayout(widget(), 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, borderSize-1);       // Top grab bar
-	g->addWidget(new QLabel( i18n( "<center><b>Quartz</b></center>" ), widget()), 3, 1); // fake window
+    if( isPreview())
+	g->addWidget(new QLabel( i18n( "<center><b>Quartz</b></center>" ), widget()), 3, 1);
+    else
+	g->addItem(new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
+
 	// without the next line, unshade flickers
 	g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,
 				QSizePolicy::Expanding ) );

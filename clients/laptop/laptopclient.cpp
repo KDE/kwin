@@ -353,7 +353,7 @@ void LaptopClient::init()
 	g->addWidget(new QLabel(i18n("<center><b></b>Laptop preview</center>"), 
 		    widget()), 3, 1);
     else
-        g->addWidget(new QWidget(widget()), 3, 1 );
+	g->addItem( new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
 
     g->setRowStretch(3, 10);
     spacer = new QSpacerItem(10, isResizable() ? handleSize : 4, 

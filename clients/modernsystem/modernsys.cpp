@@ -368,7 +368,7 @@ void ModernSys::init()
     if( isPreview())
         g->addWidget( new QLabel( i18n( "<center><b>ModernSys preview</b></center>" ), widget()), 1, 1 );
     else
-        g->addWidget( new QWidget( widget()), 1, 1 );
+        g->addItem( new QSpacerItem( 0, 0 ), 1, 1 ); // no widget in the middle
     g->setRowStretch(1, 10);
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 

@@ -290,7 +290,7 @@ void B2Client::init()
 		    widget()), 
 		1, 1, 1, 2);
     } else {
-	g->addMultiCellWidget(new QWidget(widget()), 1, 1, 1, 2);
+	g->addMultiCell( new QSpacerItem( 0, 0 ), 1, 1, 1, 2);
     }
 
     // Left and right border width

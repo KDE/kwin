@@ -737,8 +737,7 @@ void KDEDefaultClient::init()
     if( isPreview())
         g->addWidget( new QLabel( i18n( "<b><center>KDE2 preview</center></b>" ), widget()), 3, 1);
     else
-        g->addWidget( new QWidget( widget()), 3, 1);
-    
+        g->addItem( new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
 
 	// without the next line, unshade flickers
 	g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,

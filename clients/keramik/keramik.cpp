@@ -872,7 +872,10 @@ void KeramikClient::createLayout()
 	titleLayout->addSpacing( buttonMargin - 1 );  // Right button margin
 
 	windowLayout->addSpacing( leftBorderWidth );                // Left border
-	windowLayout->addWidget( new QLabel( i18n( "<center><b>Keramik</b></center>" ), widget()));   // Window wrapper FRAME
+        if( isPreview())
+	    windowLayout->addWidget( new QLabel( i18n( "<center><b>Keramik</b></center>" ), widget()));
+        else
+            windowLayout->addItem( new QSpacerItem( 0, 0 )); //no widget in the middle
 	windowLayout->addSpacing( rightBorderWidth );                // Right border
 }
 

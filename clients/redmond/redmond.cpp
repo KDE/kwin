@@ -390,7 +390,7 @@ void RedmondDeco::init()
 	if (isPreview()) {
 		g->addWidget(new QLabel(i18n("<center><b>Redmond preview</b></center>"), widget()), 3, 1);
 	} else {
-		g->addWidget(new QWidget(widget()), 3, 1);
+		g->addItem(new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
 	}
 
 	g->addRowSpacing(0, borderWidth);       // Top grab bar 
