@@ -28,6 +28,10 @@
 */
 
 #include <qpainter.h>
+#include <qlabel.h>
+#include <qlayout.h>
+
+#include <kdialog.h>
 #include <klocale.h>
 #include <kglobalsettings.h>
 #include "buttons.h"
@@ -619,5 +623,57 @@ void ButtonDropSite::drawContents( QPainter* p )
 	drawButtonString( p, buttonsRight, offset );
 }
 
+ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
+    : QWidget(parent,name)
+{
+	QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint() );
+
+	QLabel* label = new QLabel( this );
+	dropSite = new ButtonDropSite( this );
+	label->setAlignment( int( QLabel::WordBreak ) );
+	label->setText( i18n( "To add or remove titlebar buttons, simply <i>drag</i> items "
+		"between the available item list and the titlebar preview. Similarly, "
+		"drag items within the titlebar preview to re-position them.") );
+	buttonSource = new ButtonSource( this );
+
+	layout->addWidget(label);
+	layout->addWidget(dropSite);
+	layout->addWidget(buttonSource);
+
+	connect( dropSite, SIGNAL(buttonAdded(char)), buttonSource, SLOT(hideButton(char)) );
+	connect( dropSite, SIGNAL(buttonRemoved(char)), buttonSource, SLOT(showButton(char)) );
+	connect( buttonSource, SIGNAL(buttonDropped()), dropSite, SLOT(removeClickedButton()) );
+
+	connect( dropSite, SIGNAL(changed()), SIGNAL(changed()) );
+	connect( buttonSource, SIGNAL(selectionChanged()), SIGNAL(changed()) );
+}
+
+ButtonPositionWidget::~ButtonPositionWidget()
+{
+}
+
+QString ButtonPositionWidget::buttonsLeft() const
+{
+	return dropSite->buttonsLeft;
+}
+
+QString ButtonPositionWidget::buttonsRight() const
+{
+	return dropSite->buttonsRight;
+}
+
+void ButtonPositionWidget::setButtonsLeft(const QString &buttons)
+{
+	dropSite->buttonsLeft = buttons;
+	dropSite->repaint(false);
+}
+	
+void ButtonPositionWidget::setButtonsRight(const QString &buttons)
+{
+	dropSite->buttonsRight = buttons;
+	dropSite->repaint(false);
+}
+
 #include "buttons.moc"
 // vim: ts=4
+// kate: space-indent off; tab-width 4;

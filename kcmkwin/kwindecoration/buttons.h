@@ -123,6 +123,28 @@ class ButtonDropSite: public QFrame
 		QPoint mouseClickPoint;
 };
 
+class ButtonPositionWidget : public QWidget
+{
+	Q_OBJECT
+
+	public:
+		ButtonPositionWidget(QWidget *parent = 0, const char* name = 0);
+		~ButtonPositionWidget();
+
+		QString buttonsLeft() const;
+		QString buttonsRight() const;
+		void setButtonsLeft(const QString &buttons);
+		void setButtonsRight(const QString &buttons);
+
+	signals:
+		void changed();
+
+	public: // TODO: make private
+		ButtonDropSite* dropSite;
+		ButtonSource* buttonSource;
+};
+
 
 #endif
 // vim: ts=4
+// kate: space-indent off; tab-width 4;

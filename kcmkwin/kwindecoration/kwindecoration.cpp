@@ -132,24 +132,14 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 			i18n(  "The appropriate settings can be found in the \"Buttons\" Tab; "
 				   "please note that this option is not available on all styles yet." ) );
 
-	buttonBox = new QVBox( buttonPage );
-	buttonBox->setSpacing( KDialog::spacingHint() );
-
 	buttonLayout->addWidget( cbShowToolTips );
 	buttonLayout->addWidget( cbUseCustomButtonPositions );
 
 	// Add nifty dnd button modification widgets
-	QLabel* label = new QLabel( buttonBox );
-	dropSite = new ButtonDropSite( buttonBox );
-	label->setAlignment( int( QLabel::WordBreak ) );
-	label->setText( i18n( "To add or remove titlebar buttons, simply <i>drag</i> items "
-		"between the available item list and the titlebar preview. Similarly, "
-		"drag items within the titlebar preview to re-position them.") );
-	buttonSource = new ButtonSource( buttonBox );
-
+	buttonPositionWidget = new ButtonPositionWidget(buttonPage, "button_position_widget");
 	QHBoxLayout* buttonControlLayout = new QHBoxLayout(buttonLayout);
 	buttonControlLayout->addSpacing(20);
-	buttonControlLayout->addWidget(buttonBox);
+	buttonControlLayout->addWidget(buttonPositionWidget);
 // 	buttonLayout->addStretch();
 
 	// preview
@@ -172,17 +162,13 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	tabWidget->insertTab( pluginPage, i18n("&Window Decoration") );
 	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
 
-	connect( dropSite, SIGNAL(buttonAdded(char)), buttonSource, SLOT(hideButton(char)) );
-	connect( dropSite, SIGNAL(buttonRemoved(char)), buttonSource, SLOT(showButton(char)) );
-	connect( buttonSource, SIGNAL(buttonDropped()), dropSite, SLOT(removeClickedButton()) );
-	connect( dropSite, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );
-	connect( dropSite, SIGNAL(changed()), this, SLOT(slotButtonsChanged()) );
-	connect( buttonSource, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()) );
+	connect( buttonPositionWidget, SIGNAL(changed()), this, SLOT(slotButtonsChanged()) ); // update preview etc.
+	connect( buttonPositionWidget, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) ); // emit changed()...
 	connect( decorationList, SIGNAL(activated(const QString&)), SLOT(slotSelectionChanged()) );
 	connect( decorationList, SIGNAL(activated(const QString&)),
 								SLOT(slotChangeDecoration(const QString&)) );
 	connect( cbUseCustomButtonPositions, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
-	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), buttonBox, SLOT(setEnabled(bool)));
+	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), buttonPositionWidget, SLOT(setEnabled(bool)));
 	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), this, SLOT(slotButtonsChanged()) );
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 	connect( cBorder, SIGNAL( activated( int )), SLOT( slotBorderChanged( int )));
@@ -326,7 +312,7 @@ void KWinDecorationModule::slotBorderChanged( int size )
 void KWinDecorationModule::slotButtonsChanged()
 {
 	// update preview
-	preview->setTempButtons(plugins, cbUseCustomButtonPositions->isChecked(), dropSite->buttonsLeft, dropSite->buttonsRight );
+	preview->setTempButtons(plugins, cbUseCustomButtonPositions->isChecked(), buttonPositionWidget->buttonsLeft(), buttonPositionWidget->buttonsRight() );
 }
 
 QString KWinDecorationModule::decorationName( QString& libName )
@@ -462,21 +448,20 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	// ============
 	bool customPositions = conf->readBoolEntry("CustomButtonPositions", false);
 	cbUseCustomButtonPositions->setChecked( customPositions );
-	buttonBox->setEnabled( customPositions );
+	buttonPositionWidget->setEnabled( customPositions );
 	// Menu and onAllDesktops buttons are default on LHS
-	dropSite->buttonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
+	buttonPositionWidget->setButtonsLeft( conf->readEntry("ButtonsOnLeft", "MS") );
 	// Help, Minimize, Maximize and Close are default on RHS
-	dropSite->buttonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
-	dropSite->repaint(false);
+	buttonPositionWidget->setButtonsRight( conf->readEntry("ButtonsOnRight", "HIAX") );
 
-	buttonSource->showAllButtons();
+	buttonPositionWidget->buttonSource->showAllButtons();
 
 	// Step through the button lists, and hide the dnd button source items
 	unsigned int i;
-	for(i = 0; i < dropSite->buttonsLeft.length(); i++)
-		buttonSource->hideButton( dropSite->buttonsLeft[i].latin1() );
-	for(i = 0; i < dropSite->buttonsRight.length(); i++)
-		buttonSource->hideButton( dropSite->buttonsRight[i].latin1() );
+	for(i = 0; i < buttonPositionWidget->buttonsLeft().length(); i++)
+		buttonPositionWidget->buttonSource->hideButton( buttonPositionWidget->buttonsLeft()[i].latin1() );
+	for(i = 0; i < buttonPositionWidget->buttonsRight().length(); i++)
+		buttonPositionWidget->buttonSource->hideButton( buttonPositionWidget->buttonsRight()[i].latin1() );
 
         int bsize = conf->readNumEntry( "BorderSize", BorderNormal );
         if( bsize >= BorderTiny && bsize < BordersCount )
@@ -505,8 +490,8 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 //	conf->writeEntry("MiniWindowBorders", cbUseMiniWindows->isChecked());
 
 	// Button settings
-	conf->writeEntry("ButtonsOnLeft", dropSite->buttonsLeft );
-	conf->writeEntry("ButtonsOnRight", dropSite->buttonsRight );
+	conf->writeEntry("ButtonsOnLeft", buttonPositionWidget->buttonsLeft() );
+	conf->writeEntry("ButtonsOnRight", buttonPositionWidget->buttonsRight() );
         conf->writeEntry("BorderSize", border_size );
 
 	oldLibraryName = currentLibraryName;
@@ -559,24 +544,24 @@ void KWinDecorationModule::defaults()
 {
 	// Set the KDE defaults
 	cbUseCustomButtonPositions->setChecked( false );
-	buttonBox->setEnabled( false );
+	buttonPositionWidget->setEnabled( false );
 	cbShowToolTips->setChecked( true );
 //	cbUseMiniWindows->setChecked( false);
 // Don't set default for now
 //	decorationList->setSelected(
 //		decorationList->findItem( i18n("KDE 2") ), true );  // KDE classic client
 
-	dropSite->buttonsLeft = "MS";
-	dropSite->buttonsRight= "HIAX";
-	dropSite->repaint(false);
+	buttonPositionWidget->setButtonsLeft("MS");
+	buttonPositionWidget->setButtonsRight("HIAX");
 
-	buttonSource->showAllButtons();
-	buttonSource->hideButton('M');
-	buttonSource->hideButton('S');
-	buttonSource->hideButton('H');
-	buttonSource->hideButton('I');
-	buttonSource->hideButton('A');
-	buttonSource->hideButton('X');
+	// TODO: move this stuff into ButtonPositionWidget...
+	buttonPositionWidget->buttonSource->showAllButtons();
+	buttonPositionWidget->buttonSource->hideButton('M');
+	buttonPositionWidget->buttonSource->hideButton('S');
+	buttonPositionWidget->buttonSource->hideButton('H');
+	buttonPositionWidget->buttonSource->hideButton('I');
+	buttonPositionWidget->buttonSource->hideButton('A');
+	buttonPositionWidget->buttonSource->hideButton('X');
 
         border_size = BorderNormal;
         checkSupportedBorderSizes();

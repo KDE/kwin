@@ -125,12 +125,11 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		QObject* (*allocatePlugin)( KConfig* conf, QWidget* parent );
 
 		// Page 2
-		ButtonDropSite* dropSite;
-		ButtonSource* buttonSource;
-		QVBox* buttonBox;
+		ButtonPositionWidget *buttonPositionWidget;
 		QVBox*	 buttonPage;
 };
 
 
 #endif
 // vim: ts=4
+// kate: space-indent off; tab-width 4;
