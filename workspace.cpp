@@ -1379,14 +1379,19 @@ void Workspace::setActiveClient( Client* c )
 
     // show the new menu bar first...
     Client* menubar = 0;
+    bool has_full_screen = false;
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
         if ( (*it)->isMenu() && (*it)->mainClient() == main ) {
             menubar = *it;
-            break;
+        }
+        if ( (*it)->isVisible() && (*it)->isFullScreen() &&
+            !(*it)->isDesktop() && (*it)->staysOnTop() ) {
+            has_full_screen = true;
         }
     }
-    if ( !menubar )
+    if ( !menubar && !has_full_screen)
     {
+        // Find the menubar of the desktop
         if ( desktops.isEmpty() ) {
             for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
                 if ( (*it)->isMenu() && (*it)->mainClient() == (*it) ) {
