@@ -93,6 +93,10 @@
 	DEF( I18N_NOOP("Window to Desktop 14"),                0, 0, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Desktop 15"),                0, 0, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Desktop 16"),                0, 0, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 17"),                0, 0, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 18"),                0, 0, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 19"),                0, 0, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 20"),                0, 0, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Next Desktop"),              0, 0, slotWindowToNextDesktop() );
 	DEF( I18N_NOOP("Window to Previous Desktop"),          0, 0, slotWindowToPreviousDesktop() );
 
@@ -113,6 +117,10 @@
 	DEF( I18N_NOOP("Switch to Desktop 14"),  CTRL+SHIFT+Qt::Key_F2, 0, slotSwitchToDesktop(int) );
 	DEF( I18N_NOOP("Switch to Desktop 15"),  CTRL+SHIFT+Qt::Key_F3, 0, slotSwitchToDesktop(int) );
 	DEF( I18N_NOOP("Switch to Desktop 16"),  CTRL+SHIFT+Qt::Key_F4, 0, slotSwitchToDesktop(int) );
+	DEF( I18N_NOOP("Switch to Desktop 17"),  CTRL+SHIFT+Qt::Key_F5, 0, slotSwitchToDesktop(int) );
+	DEF( I18N_NOOP("Switch to Desktop 18"),  CTRL+SHIFT+Qt::Key_F6, 0, slotSwitchToDesktop(int) );
+	DEF( I18N_NOOP("Switch to Desktop 19"),  CTRL+SHIFT+Qt::Key_F7, 0, slotSwitchToDesktop(int) );
+	DEF( I18N_NOOP("Switch to Desktop 20"),  CTRL+SHIFT+Qt::Key_F8, 0, slotSwitchToDesktop(int) );
 	DEF( I18N_NOOP("Switch to Next Desktop"),              0, 0, slotSwitchDesktopNext() );
 	DEF( I18N_NOOP("Switch to Previous Desktop"),          0, 0, slotSwitchDesktopPrevious() );
 	DEF( I18N_NOOP("Switch One Desktop to the Right"),     0, 0, slotSwitchDesktopRight() );
