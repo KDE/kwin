@@ -63,7 +63,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
 	 || e->request_code == X_GrabKey
 	 )
 	&& (e->error_code == BadAccess)) {
-	fprintf(stderr, i18n("kwin: it looks like there's already a window manager running. kwin not started").local8Bit());
+	fprintf(stderr, i18n("kwin: it looks like there's already a window manager running. kwin not started.\n").local8Bit());
 	exit(1);
     }
 
