@@ -605,44 +605,71 @@ QSize Client::sizeForClientSize( const QSize& wsize, bool ignore_height) const
     int baseh_inc = xSizeHint.min_height;
     w = int(( w - basew_inc ) / width_inc ) * width_inc + basew_inc;
     h = int(( h - baseh_inc ) / height_inc ) * height_inc + baseh_inc;
-
-  // The algorithm for aspect ratios in based on the one used in Metacity, which says:
-  /* This is partially borrowed from GTK (LGPL), which in turn 
-   * partially borrowed from fvwm,
-   *
-   * Copyright 1993, Robert Nation
-   *     You may use this code for any purpose, as long as the original
-   *     copyright remains in the source code and all documentation
-   *
-   * which in turn borrows parts of the algorithm from uwm
-   */
-    float min_wh = float( xSizeHint.min_aspect.x ) / xSizeHint.min_aspect.y;
-    float max_wh = float( xSizeHint.max_aspect.x ) / xSizeHint.max_aspect.y;
-    int aspect_w = w - xSizeHint.base_width;
-    int aspect_h = h - xSizeHint.base_height;
-    if( min_wh > float( aspect_w ) / aspect_h )
+// code for aspect ratios based on code from FVWM, actually it's more or less a copy
+    /*
+     * The math looks like this:
+     *
+     * minAspectX    dwidth     maxAspectX
+     * ---------- <= ------- <= ----------
+     * minAspectY    dheight    maxAspectY
+     *
+     * If that is multiplied out, then the width and height are
+     * invalid in the following situations:
+     *
+     * minAspectX * dheight > minAspectY * dwidth
+     * maxAspectX * dheight < maxAspectY * dwidth
+     *
+     */
+    if( xSizeHint.flags & PAspect )
         {
-        int delta = int(( aspect_h - aspect_w / min_wh ) / height_inc ) * height_inc;
-        if( h - delta >= min_size.height())
-            h -= delta;
-        else
+        double min_aspect_w = xSizeHint.min_aspect.x; // use doubles, because the values can be MAX_INT
+        double min_aspect_h = xSizeHint.min_aspect.y; // and multiplying would go wrong otherwise
+        double max_aspect_w = xSizeHint.max_aspect.x;
+        double max_aspect_h = xSizeHint.max_aspect.y;
+        w -= xSizeHint.base_width;
+        h -= xSizeHint.base_height;
+        int max_width = max_size.width() - xSizeHint.base_width;
+        int min_width = min_size.width() - xSizeHint.base_width;
+        int max_height = max_size.height() - xSizeHint.base_height;
+        int min_height = min_size.height() - xSizeHint.base_height;
+        if( min_aspect_w * h > min_aspect_h * w )
             {
-            delta = int(( aspect_h * min_wh - aspect_w ) / width_inc ) * width_inc;
-            if( w + delta <= max_size.width())
-                w -= delta;
+            int delta = int( min_aspect_w * h / min_aspect_h - w ) / width_inc * width_inc;
+            if( w + delta <= max_width )
+                w += delta;
             }
-        }
-    if( max_wh < float( aspect_w ) / aspect_h )
-        {
-        int delta = int(( aspect_w - aspect_h * max_wh ) / width_inc ) * width_inc;
-        if( w - delta >= min_size.width())
-            w -= delta;
-        else
+        if( min_aspect_w * h > min_aspect_h * w )
             {
-            delta = int(( aspect_w / max_wh - aspect_h ) / height_inc ) * height_inc;
-            if( h + delta <= max_size.height())
+            int delta = int( h - w * min_aspect_h / min_aspect_w ) / height_inc * height_inc;
+            if( h - delta >= min_height )
+                h -= delta;
+            else
+                {
+                int delta = int( min_aspect_w * h / min_aspect_h - w ) / width_inc * width_inc;
+                if( w + delta <= max_width )
+                    w += delta;
+                }
+            }
+        if( max_aspect_w * h < max_aspect_h * w )
+            {
+            int delta = int( w * max_aspect_h / max_aspect_w - h ) / height_inc * height_inc;
+            if( h + delta <= max_height )
                 h += delta;
             }
+        if( max_aspect_w * h < max_aspect_h * w )
+            {
+            int delta = int( w - max_aspect_w * h / max_aspect_h ) / width_inc * width_inc;
+            if( w - delta >= min_width )
+                w -= delta;
+            else
+                {
+                int delta = int( w * max_aspect_h / max_aspect_w - h ) / height_inc * height_inc;
+                if( h + delta <= max_height )
+                    h += delta;
+                }
+            }
+        w += xSizeHint.base_width;
+        h += xSizeHint.base_height;
         }
 
     if ( ignore_height && wsize.height() == 0 )
