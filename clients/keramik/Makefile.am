@@ -4,6 +4,8 @@ SUBDIRS                   = . config
 
 noinst_PROGRAMS           = embedtool
 
+noinst_HEADERS            = tiles.h
+
 embedtool_SOURCES         = embedtool.cpp
 embedtool_LDADD           = $(LIB_QT)
 embedtool_LDFLAGS         = $(all_libraries) $(KDE_RPATH)
@@ -12,6 +14,7 @@ kde_module_LTLIBRARIES    = kwin_keramik.la
 
 kwin_keramik_la_SOURCES   = keramik.cpp
 kwin_keramik_la_LIBADD    = ../../kwin.la
+kwin_keramik_la_COMPILE_FIRST = tiles.h
 kwin_keramik_la_LDFLAGS   = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES               = AUTO
