@@ -76,7 +76,7 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 
 	urlLabel = new KURLLabel( parent );
 	urlLabel->setText( 
-				i18n("Open Konqueror Window at KDE's IceWM theme directory") );
+				i18n("Open Konqueror window at KDE's IceWM theme directory") );
 
 	gb2 = new QGroupBox( 1, Qt::Horizontal, 
 				i18n("IceWM Decoration Settings"), parent );
