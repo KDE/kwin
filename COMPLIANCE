@@ -73,7 +73,6 @@ _NET_DESKTOP_GEOMETRY		root window property + message	COMPLETE
         | KWin doesn't implement large desktops, so it ignores           |
         | the message, and only sets the property to the screen size     |
 	+----------------------------------------------------------------+
-        CHECKME : check its setting
 _NET_DESKTOP_VIEWPORT		root window property + message	COMPLETE
 	+----------------------------------------------------------------+
         | KWin doesn't implement viewports, so it correctly sets         |
@@ -81,17 +80,7 @@ _NET_DESKTOP_VIEWPORT		root window property + message	COMPLETE
 	+----------------------------------------------------------------+
 _NET_CURRENT_DESKTOP		root window property + message	COMPLETE
 _NET_DESKTOP_NAMES		root window property		COMPLETE
-        CHECKME : when changing the number of desktops, some names may
-        be lost (permanently), because of Workspace::saveDesktopSettings()
-        in Workspace::setNumberOfDesktops() - maybe the kcontrol module
-        should otherwise change the properties directly before changing
-        the number of desktops, so the save is correct?
-        CHECKME : don't save the names to kdeglobals
-        CHECKME : should be ok now
 _NET_ACTIVE_WINDOW		root window property + message	COMPLETE
-        CHECKME : both when switching to a completely empty desktop or
-        when closing the last client on the desktop (kill kdesktop)
-        CHECKME : should be ok now
 _NET_WORKAREA			root window property		COMPLETE
 	+----------------------------------------------------------------+
 	| Work Area takes into account the _NET_WM_STRUT property set on |
@@ -99,9 +88,6 @@ _NET_WORKAREA			root window property		COMPLETE
 	| was 3, but _NET_WORKAREA had only two geometries set.          |
 	| I need to investigate this -- Karol                            |
 	+----------------------------------------------------------------+
-        CHECKME : most probably fixed in Workspace::setNumberOfDesktops()
-        CHECKME : actually, we don't have desktop-specific workareas!!
-        CHECKME : should be ok now
 _NET_SUPPORTING_WM_CHECK	root window property		COMPLETE
 _NET_VIRTUAL_ROOTS		root window property		COMPLETE
 	+----------------------------------------------------------------+
@@ -157,7 +143,6 @@ _NET_WM_WINDOW_TYPE		window property			PARTIAL
 	+----------------------------------------------------------------+
   _NET_WM_WINDOW_TYPE_DESKTOP	property value (atom)		COMPLETE
   _NET_WM_WINDOW_TYPE_DOCK	property value (atom)		COMPLETE
-        CHECKME : check that Kicker etc. set that they're on all desktops
   _NET_WM_WINDOW_TYPE_TOOLBAR	property value (atom)		
   _NET_WM_WINDOW_TYPE_MENU	property value (atom)		PARTIAL
 	+----------------------------------------------------------------+
@@ -275,8 +260,6 @@ _NET_WM_WINDOW_TYPE additions:
 
 
 Inter-Client Communication Conventions Manual (ICCCM) specs (for completeness):
-
-CHECKME : we should also check all sections for compliance
 
 Property Name		Type				Contents / Format
 ==========================================================================
