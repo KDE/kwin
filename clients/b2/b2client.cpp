@@ -224,7 +224,7 @@ KDecoration *B2ClientFactory::createDecoration(KDecorationBridge *b)
 
 bool B2ClientFactory::reset(unsigned long changed)
 {
-    bool needsReset = SettingColor ? true : false;
+    bool needsReset = SettingColors ? true : false;
     // TODO Do not recreate decorations if it is not needed. Look at
     // ModernSystem for how to do that
     read_config(this);
