@@ -112,16 +112,10 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage, KDialog::marginHint(), KDialog::spacingHint());
 
-	pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
-	pluginSettingsGrp->setColumnLayout( 0, Vertical );
-	pluginSettingsGrp->setFlat( true );
-	pluginSettingsGrp->layout()->setMargin( 0 );
-	pluginSettingsGrp->layout()->setSpacing( KDialog::spacingHint() );
-	pluginLayout->addWidget( pluginSettingsGrp );
-	pluginLayout->addStretch();
+	pluginConfigWidget = new QVBox(pluginPage);
 
-	pluginConfigWidget = new QVBox(pluginSettingsGrp);
-	pluginSettingsGrp->layout()->add( pluginConfigWidget );
+	pluginLayout->addWidget( pluginConfigWidget );
+	pluginLayout->addStretch();
 
 	// Page 2 (Button Selector)
 	QVBox* buttonPage = new QVBox( tabWidget );
@@ -424,12 +418,12 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 			connect( this, SIGNAL(pluginLoad(KConfig*)), pluginObject, SLOT(load(KConfig*)) );
 			connect( this, SIGNAL(pluginSave(KConfig*)), pluginObject, SLOT(save(KConfig*)) );
 			connect( this, SIGNAL(pluginDefaults()), pluginObject, SLOT(defaults()) );
-			pluginSettingsGrp->show();
+			pluginConfigWidget->show();
 			return;
 		}
 	}
 
-	pluginSettingsGrp->hide();
+	pluginConfigWidget->hide();
 }
 
 

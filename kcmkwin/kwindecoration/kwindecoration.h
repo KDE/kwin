@@ -119,7 +119,6 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		BorderSize border_size;
 
 		QObject* pluginObject;
-		QGroupBox* pluginSettingsGrp;
 		QWidget* pluginConfigWidget;
 		QString  currentLibraryName;
 		QString  oldLibraryName;
