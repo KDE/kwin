@@ -742,9 +742,8 @@ bool Workspace::workspaceEvent( XEvent * e )
         return keyRelease(e->xkey);
         break;
     case FocusIn:
-        break;
     case FocusOut:
-        break;
+        return true; // always eat these, they would tell Qt that KWin is the active app
     default:
         if  ( e->type == Shape::shapeEvent() ) {
             c = findClient( ((XShapeEvent *)e)->window );
