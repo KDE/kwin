@@ -515,21 +515,7 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
 	th -= 2;
 
     button[BtnMenu] = new KDEDefaultClientButton(this, "menu");
-    if(!miniIcon().isNull()){
-        lightIcon = miniIcon();
-        lightIcon.detach();
-        lightIcon = KPixmapEffect::intensity(lightIcon, 1.0);
-        if(miniIcon().mask())
-            lightIcon.setMask(*miniIcon().mask());
-        button[BtnMenu]->setPixmap(miniIcon(), lightIcon);
-    }
-    else{
-        lightIcon = *defaultMenuPix;
-        lightIcon.detach();
-        lightIcon = KPixmapEffect::intensity(lightIcon, .50);
-        lightIcon.setMask(*defaultMenuPix->mask());
-        button[BtnMenu]->setPixmap(*defaultMenuPix, lightIcon);
-    }
+    iconChange();
     connect(button[BtnMenu], SIGNAL(pressed()), this,
             SLOT(menuButtonPressed()));
     button[BtnClose] = new KDEDefaultClientButton(this, "close", close_bits);
@@ -593,6 +579,27 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
 
     hiddenItems = false;
     bufferDirty = true;
+}
+
+void KDEClient::iconChange()
+{
+    if(!miniIcon().isNull()){
+        lightIcon = miniIcon();
+        lightIcon.detach();
+        lightIcon = KPixmapEffect::intensity(lightIcon, 1.0);
+        if(miniIcon().mask())
+            lightIcon.setMask(*miniIcon().mask());
+        button[BtnMenu]->setPixmap(miniIcon(), lightIcon);
+    }
+    else{
+        lightIcon = *defaultMenuPix;
+        lightIcon.detach();
+        lightIcon = KPixmapEffect::intensity(lightIcon, .50);
+        lightIcon.setMask(*defaultMenuPix->mask());
+        button[BtnMenu]->setPixmap(*defaultMenuPix, lightIcon);
+    }
+    if (button[BtnMenu]->isVisible())
+       button[BtnMenu]->repaint(false);
 }
 
 void KDEClient::slotMaximize()

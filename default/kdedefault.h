@@ -62,6 +62,7 @@ protected:
     void captionChange( const QString& name );
     void stickyChange(bool on);
     void maximizeChange(bool m);
+    void iconChange();
     void doShape();
     void activeChange(bool);
 
