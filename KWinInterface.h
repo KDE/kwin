@@ -1,13 +1,15 @@
-#ifndef __kwin_interface_h__
-#define __kwin_interface_h__
+#ifndef KWIN_INTERFACE_H
+#define KWIN_INTERFACE_H
 
 #include <dcopobject.h>
 
 class KWinInterface : virtual public DCOPObject
 {
   K_DCOP
-public:
 
+  k_dcop:
+
+    virtual void updateClientArea() = 0;
 };
 
 #endif

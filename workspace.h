@@ -283,4 +283,29 @@ private:
     QRect clientArea_;
 };
 
+inline WId Workspace::rootWin() const
+{
+    return root;
+}
+
+inline Client* Workspace::activeClient() const
+{
+    return active_client;
+}
+
+inline int Workspace::currentDesktop() const
+{
+    return current_desktop;
+}
+
+inline int Workspace::numberOfDesktops() const
+{
+    return number_of_desktops;
+}
+
+inline const ClientList& Workspace::stackingOrder() const
+{
+    return stacking_order;
+}
+
 #endif

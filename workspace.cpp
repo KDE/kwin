@@ -2296,28 +2296,3 @@ Workspace::updateClientArea()
   qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
 }
 
-WId Workspace::rootWin() const
-{
-    return root;
-}
-
-Client* Workspace::activeClient() const
-{
-    return active_client;
-}
-
-int Workspace::currentDesktop() const
-{
-    return current_desktop;
-}
-
-int Workspace::numberOfDesktops() const
-{
-    return number_of_desktops;
-}
-
-const ClientList& Workspace::stackingOrder() const
-{
-    return stacking_order;
-}
-
