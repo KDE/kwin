@@ -5,12 +5,15 @@
  */
 
 #include "geometrytip.h"
+#include "options.h"
 #include <X11/Xlib.h>
 
 using namespace KWinInternal;
 
+extern Options* options;
 
-GeometryTip::GeometryTip( const Client* client, const XSizeHints* xSizeHints ):
+
+GeometryTip::GeometryTip( const Client* client, const XSizeHints* xSizeHints, bool resizing ):
     QLabel(NULL, "kwingeometry", WStyle_Customize | WStyle_StaysOnTop |
 		    		 WStyle_NoBorder  | WX11BypassWM )
 {
@@ -19,9 +22,15 @@ GeometryTip::GeometryTip( const Client* client, const XSizeHints* xSizeHints ):
     // For this to work properly have 'Option "backingstore"' set in the Screen
     // section of your XF86Config. (some drivers may not support saveunder, 
     // oh well, we tried.)
-    XSetWindowAttributes wsa;
-    wsa.save_under = True;
-    XChangeWindowAttributes( qt_xdisplay(), winId(), CWSaveUnder, &wsa );
+
+    // Only do this in transparent mode, as it slows down opaque mode...
+    if ( (resizing  && options->resizeMode == Options::Transparent) ||
+	 (!resizing && options->moveMode == Options::Transparent) )
+    {
+	XSetWindowAttributes wsa;
+	wsa.save_under = True;
+	XChangeWindowAttributes( qt_xdisplay(), winId(), CWSaveUnder, &wsa );
+    }
 
     c = client;
     setMargin(1);

@@ -1851,7 +1851,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	if (options->showGeometryTip())
 	{
 	    if (!geometryTip)
-		geometryTip = new GeometryTip( this, &xSizeHint );
+		geometryTip = new GeometryTip( this, &xSizeHint, isResize() );
 
 	    geometryTip->setGeometry( geom );
 	    if (!geometryTip->isVisible()) {
@@ -1884,7 +1884,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	{
 	    // Position and Size display
 	    if (!geometryTip)
-		geometryTip = new GeometryTip( this, &xSizeHint );
+		geometryTip = new GeometryTip( this, &xSizeHint, isResize() );
 
 	    geometryTip->setGeometry( geom );
 	    if (!geometryTip->isVisible()) {
