@@ -156,8 +156,9 @@ void Workspace::init()
     desk_popup = 0;
     popup_client = 0;
     KConfig* config = KGlobal::config();
+    config->setGroup("Desktops");
     if (!config->hasKey("NumberOfDesktops"))
-      config->writeEntry("NumberOfDesktops", 4); 
+      config->writeEntry("NumberOfDesktops", 4);
     int number_of_desktops = config->readNumEntry("NumberOfDesktops");
     setNumberOfDesktops( number_of_desktops );
     setCurrentDesktop( 1 );
@@ -225,6 +226,7 @@ Workspace::~Workspace()
     delete keys;
     if ( root == qt_xrootwin() )
 	XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running);
+    KGlobal::config()->sync();
 }
 
 
