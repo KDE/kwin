@@ -9,6 +9,10 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include <kdesktopfile.h>
 #include <ksimpleconfig.h>
 #include <klocale.h>
+
+// X11/Qt conflict
+#undef Unsorted
+
 #include <qdir.h>
 #include <qfile.h>
 

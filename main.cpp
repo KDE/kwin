@@ -3,6 +3,10 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
+
+// X11/Qt conflict
+#undef Bool
+
 #include <kconfig.h>
 #include "main.h"
 #include "options.h"
