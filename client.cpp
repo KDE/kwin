@@ -877,6 +877,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	}
     }
     else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
+	geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
 	switch ( options->moveMode ) {
 	case Options::Opaque:
 	    move( geom.topLeft() );

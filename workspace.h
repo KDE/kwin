@@ -69,6 +69,7 @@ public:
     void requestFocus( Client* c);
 
     void doPlacement( Client* c );
+    QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
 
     void clientHidden( Client*  );
@@ -91,7 +92,7 @@ public:
 
 
     QPopupMenu* clientPopup( Client* );
-    
+
     void setDesktopClient( Client* );
 
     void makeFullScreen( Client* );
@@ -109,11 +110,11 @@ public slots:
     void slotSwitchDesktop6();
     void slotSwitchDesktop7();
     void slotSwitchDesktop8();
-    
+
     void slotWindowOperations();
     void slotWindowClose();
 
-    
+
 private slots:
     void setDecorationStyle( int );
     void desktopPopupAboutToShow();

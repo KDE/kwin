@@ -112,9 +112,9 @@ Workspace::Workspace()
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
     createKeybindings();
-    
+
     init();
-    
+
     control_grab = FALSE;
     tab_grab = FALSE;
     tab_box = new TabBox( this );
@@ -806,7 +806,7 @@ void Workspace::clientHidden( Client* c )
 }
 
 
-QPopupMenu* Workspace::clientPopup( Client* c ) 
+QPopupMenu* Workspace::clientPopup( Client* c )
 {
     popup_client = c;
     if ( !popup ) {
@@ -861,7 +861,7 @@ void Workspace::clientPopupActivated( int id )
 	popup_client->iconify();
     else if ( id == popupIdFullscreen )
 	popup_client->fullScreen();
-    else if ( id == popupIdShade ) 
+    else if ( id == popupIdShade )
 	popup_client->setShade( !popup_client->isShade() );
 }
 
@@ -1255,7 +1255,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 		    atoms->net_current_desktop, XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *)&current_desktop, 1);
 
-    
+
     // try to restore the focus on this desktop
     Client* c = active_client?active_client:previousClient(0);
     Client* stop = c;
@@ -1264,7 +1264,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	if ( c == stop )
 	    break;
     }
-    
+
     if ( !c || !c->isVisible() ) {
 	// there's no suitable client in the focus chain. Try to find any other client then.
 	for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
@@ -1452,7 +1452,7 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchDesktop6() ));
     keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchDesktop7() ));
     keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchDesktop8() ));
-    
+
     keys->connectItem( "Pop-up window operations menu", this, SLOT( slotWindowOperations() ) );
     keys->connectItem( "Window close", this, SLOT( slotWindowClose() ) );
 
@@ -1486,7 +1486,7 @@ void Workspace::slotSwitchDesktop8(){
 
 void Workspace::desktopPopupAboutToShow()
 {
-    if ( !desk_popup ) 
+    if ( !desk_popup )
 	return;
     desk_popup->clear();
     desk_popup->insertItem( i18n("&All desktops"), 0 );
@@ -1516,13 +1516,13 @@ void Workspace::sendToDesktop( int desk )
 	popup_client->setSticky( !popup_client->isSticky() );
 	return;
     }
-    
+
     if ( popup_client->isSticky() )
 	popup_client->setSticky( FALSE );
-    
+
     if ( popup_client->isOnDesktop( desk ) )
 	return;
-    
+
     popup_client->setDesktop( desk );
     popup_client->hide();
 }
@@ -1540,4 +1540,15 @@ void Workspace::slotWindowClose()
     if ( !popup_client )
 	return;
     popup_client->closeWindow();
+}
+
+
+/*
+  Client \a c is moved around to position \a pos. This gives the
+  workspace the opportunity to interveniate and to implement
+  snap-to-windows functionality.
+ */
+QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
+{
+    return pos;
 }
