@@ -1,7 +1,7 @@
 [!Global!]
 IconName=kwin
 Comment=The KDE Window Manager
-Comment[af]=die kde venster bestuurder
+Comment[af]=Die Kde Venster Bestuurder
 Comment[ar]=مدير نوافذ KDE
 Comment[az]=KDE Pəncərə İdarəcisi
 Comment[be]=Мэнэджэр вокнаў KDE
@@ -61,7 +61,7 @@ Comment[zu]=Umphathi Windi le KDE
 
 [desktop1]
 Name=Change to Desktop 1
-Name[af]=verander na werkskerm 1
+Name[af]=Verander na Werkskerm 1
 Name[ar]=التغيير الى سطح المكتب 1
 Name[az]=1. Masa Üstünə Get
 Name[bg]=Отиди на работно място 1
@@ -117,7 +117,7 @@ Name[zh_CN]=切换到桌面一
 Name[zh_TW]=切換到桌面一
 Name[zu]=Shintshela kwi Desktop 1
 Comment=Virtual Desktop One is Selected
-Comment[af]=virtuele werkskerm een is gekose
+Comment[af]=Virtuele Werkskerm Een is Gekose
 Comment[ar]=سطح المكتب رقم 1 مختار
 Comment[az]=1. Masa üstü Seçildi
 Comment[bg]=Избрано е първото виртуално работно място
@@ -177,7 +177,7 @@ default_presentation=0
 
 [desktop2]
 Name=Change to Desktop 2
-Name[af]=verander na werkskerm 2
+Name[af]=Verander na Werkskerm 2
 Name[ar]=التغيير الى سطح المكتب 2
 Name[az]=2. Masa Üstünə Get
 Name[bg]=Отиди на работно място 2
@@ -233,7 +233,7 @@ Name[zh_CN]=切换到桌面二
 Name[zh_TW]=切換到桌面二
 Name[zu]=Shintshela kwi Desktop 2
 Comment=Virtual Desktop Two is Selected
-Comment[af]=virtuele werkskerm twee is gekose
+Comment[af]=Virtuele Werkskerm Twee is Gekose
 Comment[ar]=سطح المكتب رقم 2 مختار
 Comment[az]=2. Masa üstü Seçildi
 Comment[bg]=Избрано е второто виртуално работно място
@@ -293,7 +293,7 @@ default_presentation=0
 
 [desktop3]
 Name=Change to Desktop 3
-Name[af]=verander na werkskerm 3
+Name[af]=Verander na Werkskerm 3
 Name[ar]=التغيير الى سطح المكتب 3
 Name[az]=3. Masa Üstünə Get
 Name[bg]=Отиди на работно място 3
@@ -349,7 +349,7 @@ Name[zh_CN]=切换到桌面三
 Name[zh_TW]=切換到桌面三
 Name[zu]=Shintshela kwi Desktop 3
 Comment=Virtual Desktop Three is Selected
-Comment[af]=virtuele werkskerm drie is gekose
+Comment[af]=Virtuele Werkskerm Drie is Gekose
 Comment[ar]=سطح المكتب رقم 3 مختار
 Comment[az]=3. Masa üstü Seçildi
 Comment[bg]=Избрано е третото виртуално работно място
@@ -409,7 +409,7 @@ default_presentation=0
 
 [desktop4]
 Name=Change to Desktop 4
-Name[af]=verander na werkskerm 4
+Name[af]=Verander na Werkskerm 4
 Name[ar]=التغيير الى سطح المكتب 4
 Name[az]=4. Masa Üstünə Get
 Name[bg]=Отиди на работно място 4
@@ -465,7 +465,7 @@ Name[zh_CN]=切换到桌面四
 Name[zh_TW]=切換到桌面四
 Name[zu]=Shintshela kwi Desktop 4
 Comment=Virtual Desktop Four is Selected
-Comment[af]=virtuele werkskerm vier is gekose
+Comment[af]=Virtuele Werkskerm Vier is Gekose
 Comment[ar]=سطح المكتب رقم 4 مختار
 Comment[az]=4. Masasüstü Seçildi
 Comment[bg]=Избрано е четвъртото виртуално работно място
@@ -525,7 +525,7 @@ default_presentation=0
 
 [desktop5]
 Name=Change to Desktop 5
-Name[af]=verander na werkskerm 5
+Name[af]=Verander na Werkskerm 5
 Name[ar]=التغيير الى سطح المكتب 5
 Name[az]=5. Masa Üstünə Get
 Name[bg]=Отиди на работно място 5
@@ -581,7 +581,7 @@ Name[zh_CN]=切换到桌面五
 Name[zh_TW]=切換到桌面五
 Name[zu]=Shintshela kwi Desktop 5
 Comment=Virtual Desktop Five is Selected
-Comment[af]=virtuele werkskerm vyf is gekose
+Comment[af]=Virtuele Werkskerm Vyf is Gekose
 Comment[ar]=سطح المكتب رقم 5 مختار
 Comment[az]=5. Masa üstü Seçildi
 Comment[bg]=Избрано е петото виртуално работно място
@@ -641,7 +641,7 @@ default_presentation=0
 
 [desktop6]
 Name=Change to Desktop 6
-Name[af]=verander na werkskerm 6
+Name[af]=Verander na Werkskerm 6
 Name[ar]=التغيير الى سطح المكتب 6
 Name[az]=6. Masa Üstünə Get
 Name[bg]=Отиди на работно място 6
@@ -697,7 +697,7 @@ Name[zh_CN]=切换到桌面六
 Name[zh_TW]=切換到桌面六
 Name[zu]=Shintshela kwi Desktop 6
 Comment=Virtual Desktop Six is Selected
-Comment[af]=virtuele werkskerm ses is gekose
+Comment[af]=Virtuele Werkskerm Ses is Gekose
 Comment[ar]=سطح المكتب رقم 6 مختار
 Comment[az]=6. Masa üstü Seçildi
 Comment[bg]=Избрано е шестото виртуално работно място
@@ -757,7 +757,7 @@ default_presentation=0
 
 [desktop7]
 Name=Change to Desktop 7
-Name[af]=verander na werkskerm 7
+Name[af]=Verander na Werkskerm 7
 Name[ar]=التغيير الى سطح المكتب 7
 Name[az]=7. Masa Üstünə Get
 Name[bg]=Отиди на работно място 7
@@ -813,7 +813,7 @@ Name[zh_CN]=切换到桌面七
 Name[zh_TW]=切換到桌面七
 Name[zu]=Shintshela kwi Desktop 7
 Comment=Virtual Desktop Seven is Selected
-Comment[af]=virtuele werkskerm sewe is gekose
+Comment[af]=Virtuele Werkskerm Sewe is Gekose
 Comment[ar]=سطح المكتب رقم 7 مختار
 Comment[az]=7. Masa üstü Seçildi
 Comment[bg]=Избрано е седмото виртуално работно място
@@ -873,7 +873,7 @@ default_presentation=0
 
 [desktop8]
 Name=Change to Desktop 8
-Name[af]=verander na werkskerm 8
+Name[af]=Verander na Werkskerm 8
 Name[ar]=التغيير الى سطح المكتب 8
 Name[az]=8. Masa Üstünə Get
 Name[bg]=Отиди на работно място 8
@@ -929,7 +929,7 @@ Name[zh_CN]=切换到桌面八
 Name[zh_TW]=切換到桌面八
 Name[zu]=Shintshela kwi Desktop 8
 Comment=Virtual Desktop Eight is Selected
-Comment[af]=virtuele werkskerm agt is gekose
+Comment[af]=Virtuele Werkskerm Agt is Gekose
 Comment[ar]=سطح المكتب رقم 8 مختار
 Comment[az]=8. Masa üstü Seçildi
 Comment[bg]=Избрано е осмото виртуално работно място
@@ -989,7 +989,7 @@ default_presentation=0
 
 [activate]
 Name=Activate Window
-Name[af]=aktiveer venster
+Name[af]=Aktiveer Venster
 Name[ar]=تنشيط النافذة
 Name[az]=Pəncərəni Fəallaşdır
 Name[bg]=Активира прозореца
@@ -1045,7 +1045,7 @@ Name[zh_CN]=激活窗口
 Name[zh_TW]=作用中視窗
 Name[zu]=Nyakazisa Iwindi
 Comment=Another Window is Activated
-Comment[af]=nog 'n venster is geaktiveer
+Comment[af]=Nog 'n Venster is Geaktiveer
 Comment[ar]=تم تنشيط نافذة أخرى
 Comment[az]=Başqa Bir Pəncərə Fəallaşdırdı
 Comment[bg]=Друг прозорец е активиран
@@ -1104,7 +1104,7 @@ default_presentation=0
 
 [new]
 Name=New Window
-Name[af]=nuwe venster
+Name[af]=Nuwe Venster
 Name[ar]=نافذة جديدة
 Name[az]=Yeni Pəncərə
 Name[be]=Новае акно
@@ -1161,7 +1161,7 @@ Name[zh_CN]=新建窗口
 Name[zh_TW]=新視窗
 Name[zu]=Elisha Iwindi 
 Comment=New Window
-Comment[af]=nuwe venster
+Comment[af]=Nuwe Venster
 Comment[ar]=نافذة جديدة
 Comment[az]=Yeni Pəncərə
 Comment[be]=Новае акно
@@ -1223,7 +1223,7 @@ default_presentation=0
 
 [delete]
 Name=Delete Window
-Name[af]=uitvee venster
+Name[af]=Uitvee Venster
 Name[ar]=الغاء النافذة
 Name[az]=Pəncərəni Sil
 Name[be]=Выдаліць акно
@@ -1278,7 +1278,7 @@ Name[zh_CN]=删除窗口
 Name[zh_TW]=刪除視窗
 Name[zu]=Cisha Iwindi
 Comment=Delete Window
-Comment[af]=uitvee venster
+Comment[af]=Uitvee Venster
 Comment[ar]=الغاء نافذة
 Comment[az]=Pəncərəni Sil
 Comment[be]=Выдаліць акно
@@ -1338,7 +1338,7 @@ Comment[zu]=Cisha Iwindi
 default_presentation=0
 [close]
 Name=Window Close
-Name[af]=venster maak toe
+Name[af]=Venster Maak toe
 Name[ar]=اغلاق نافذة
 Name[az]=Pəncərəni Qapat
 Name[bg]=Затвори прозорец
@@ -1395,7 +1395,7 @@ Name[zh_CN]=关闭窗口
 Name[zh_TW]=關閉視窗
 Name[zu]=Ukuvaleka Kwewindi
 Comment=A Window Closes
-Comment[af]='n venster gaan toe
+Comment[af]='n Venster Gaan toe
 Comment[ar]=نافذة تغلق
 Comment[az]=Bir Pəncərə Qapadıldı
 Comment[be]=Акно зачыняецца
@@ -1457,7 +1457,7 @@ default_presentation=0
 
 [shadeup]
 Name=Window Shade Up
-Name[af]=venster skadu begin
+Name[af]=Venster Skadu Begin
 Name[ar]=تظليل نافذة الى أعلى
 Name[az]=Pəncərə Yuxarı
 Name[bg]=Свий прозореца на горе
@@ -1513,7 +1513,7 @@ Name[zh_CN]=窗口卷起
 Name[zh_TW]=收起視窗
 Name[zu]=Ukugcwalisela Phezulu Kwamawindi
 Comment=A Window is Shaded Up
-Comment[af]='n venster is gedeel begin
+Comment[af]='n Venster is Gedeel Begin
 Comment[ar]=تم تظليل نافذة الى أعلى
 Comment[az]=Pəncərə Göstərildi
 Comment[bg]=Прозрец сгънат на горе
@@ -1573,7 +1573,7 @@ default_presentation=0
 
 [shadedown]
 Name=Window Shade Down
-Name[af]=venster skadu ondertoe
+Name[af]=Venster Skadu Ondertoe
 Name[ar]=تظليل نافذة الى الأسفل
 Name[az]=Pəncərəni Aşağı Sal
 Name[bg]=Разтвори прозореца на долу
@@ -1629,7 +1629,7 @@ Name[zh_CN]=窗口放下
 Name[zh_TW]=展開視窗
 Name[zu]=Ukugcwalisela Phansi Kwewindi
 Comment=A Window is Shaded Down
-Comment[af]='n venster is gedeel ondertoe
+Comment[af]='n Venster is Gedeel Ondertoe
 Comment[ar]=تم تظليل نافذة الى أسفل
 Comment[az]=Pəncərə Aşağı Salındı
 Comment[bg]=Прозрез сгънат на долу
@@ -1689,7 +1689,7 @@ default_presentation=0
 
 [iconify]
 Name=Window Iconify
-Name[af]=venster ikoonifiseer
+Name[af]=Venster Ikoonifiseer
 Name[ar]=تصغير النافذة
 Name[az]=Pəncərəni Timsallaşdır
 Name[bg]=Иконизирай прозореца
@@ -1745,7 +1745,7 @@ Name[zh_CN]=最小化窗口
 Name[zh_TW]=最小化視窗
 Name[zu]=Faka Icon Ewindini
 Comment=A Window is Iconified
-Comment[af]='n venster is geïkonifiseer
+Comment[af]='n Venster is Geïkonifiseer
 Comment[ar]=نافذة صغّرت
 Comment[az]=Bir Pəncərə Timsal Halına Gətirildi
 Comment[bg]=Прозорец в икона
@@ -1805,7 +1805,7 @@ default_presentation=0
 
 [deiconify]
 Name=Window Deiconify
-Name[af]=venster deïkoonifiseer
+Name[af]=Venster Deïkoonifiseer
 Name[ar]=تكبير النافذة
 Name[az]=Pəncərəni Göstər
 Name[bg]=Разтвори прозореца
@@ -1861,7 +1861,7 @@ Name[zh_CN]=恢复窗口
 Name[zh_TW]=恢復視窗
 Name[zu]=Ungafaki Icon Ewindini
 Comment=A Window is Restored
-Comment[af]='n venster is gerestoreer
+Comment[af]='n Venster is Gerestoreer
 Comment[ar]=نافذة استرجعت
 Comment[az]=Bir Pəncərə Köhnə Böyüklüyünə Gətirildi
 Comment[bg]=Размера на прозореца е възстановен
@@ -1921,7 +1921,7 @@ default_presentation=0
 
 [maximize]
 Name=Window Maximize
-Name[af]=venster maksimeer
+Name[af]=Venster Maksimeer
 Name[ar]=تكبير النافذة
 Name[az]=Pəncərəni Sər
 Name[bg]=Максимизира прозорец
@@ -1978,7 +1978,7 @@ Name[zh_CN]=最大化窗口
 Name[zh_TW]=最大化視窗
 Name[zu]=Khulisa Iwindi
 Comment=A Window is Maximized
-Comment[af]='n venster is maksimeerd
+Comment[af]='n Venster is Maksimeerd
 Comment[ar]=نافذة كبّرت
 Comment[az]=Bir Pəncərə Böyüdüldü
 Comment[bg]=Прозреца е максимизиран
@@ -2039,7 +2039,7 @@ default_presentation=0
 
 [unmaximize]
 Name=Window Unmaximize
-Name[af]=venster on-maksimeer
+Name[af]=Venster On-maksimeer
 Name[ar]=اعادة النافذة
 Name[az]=Pəncərəni Kiçilt
 Name[bg]=Демаксимизира прозорец
@@ -2096,7 +2096,7 @@ Name[zh_CN]=恢复窗口
 Name[zh_TW]=取消最大化視窗
 Name[zu]=Ukungakhuliswa Kwewindi
 Comment=A Window Loses Maximization
-Comment[af]='n venster verloor maksimisering
+Comment[af]='n Venster Verloor Maksimisering
 Comment[ar]=نافذة فقدت التكبير
 Comment[az]=Bir Pəncərə Böyüdülməsini İtirdi
 Comment[bg]=Прозореца повече не може да се максимизира
@@ -2157,7 +2157,7 @@ default_presentation=0
 
 [sticky]
 Name=Window Sticky
-Name[af]=venster taaierig
+Name[af]=Venster Taaierig
 Name[ar]=الصاق النافذة
 Name[az]=Yapışqan Pəncərə
 Name[bg]=Прилепи прозорец
@@ -2213,7 +2213,7 @@ Name[zh_CN]=粘附窗口
 Name[zh_TW]=黏附視窗
 Name[zu]=Ukunamfuka Kwewindi
 Comment=A Window is Made Sticky
-Comment[af]='n venster is gemaak taaierig
+Comment[af]='n Venster is Gemaak Taaierig
 Comment[ar]=تم الصاق نافذ
 Comment[az]=Bir Pəncərə Yapışqan Hala Gətirildi
 Comment[bg]=Прозореца е прилепен
@@ -2273,7 +2273,7 @@ default_presentation=0
 
 [unsticky]
 Name=Window Unsticky
-Name[af]=venster nie plakkerig
+Name[af]=Venster Nie plakkerig
 Name[ar]=عدم الصاق النافذة
 Name[az]=Sərbəst Pəncərə
 Name[bg]=Отлепи прозорец
@@ -2329,7 +2329,7 @@ Name[zh_CN]=取消粘附
 Name[zh_TW]=取消黏附視窗
 Name[zu]=Ukunganamfuki Kwewindi
 Comment=A Window is Made Unsticky
-Comment[af]='n venster is gemaak nie plakkerig
+Comment[af]='n Venster is Gemaak Nie plakkerig
 Comment[ar]=تم عدم الصاق النافذة
 Comment[az]=Bir Pəncərə Sərbəst Hala Gətirildi
 Comment[bg]=Прозореца е отлепен
@@ -2389,11 +2389,12 @@ default_sound=KDE_Window_UnSticky.wav
 
 [transnew]
 Name=New Dialog
-Name[af]=nuwe dialoog
+Name[af]=Nuwe Dialoog
 Name[ar]=مربع حوار جديد
 Name[az]=Yeni Pəncərə
 Name[bg]=Нов диалог
 Name[bs]=Novi dijalog
+Name[ca]=Nou diàleg
 Name[cs]=Nové dialogové okno
 Name[da]=Ny dialog
 Name[de]=Neuer Dialog
@@ -2443,7 +2444,7 @@ Name[zh_CN]=新建对话
 Name[zh_TW]=新對話盒
 Name[zu]=Ingxoxo Entsha
 Comment=Transient Window (a dialog) Appears
-Comment[af]=oorgang venster ('n dialoog) verskyn
+Comment[af]=Oorgang Venster ('n dialoog) Verskyn
 Comment[ar]=تم ظهور مربع جوار
 Comment[az]=Bir Rabitə Qutusu Göründü
 Comment[bg]=Извеждане на временен прозорец (диалог)
@@ -2504,11 +2505,12 @@ default_presentation=0
 
 [transdelete]
 Name=Delete Dialog
-Name[af]=uitvee dialoog
+Name[af]=Uitvee Dialoog
 Name[ar]=الغاء مربع الحوار
 Name[az]=Dialoqu Sil
 Name[bg]=Изтрий диалог
 Name[bs]=Briši dijalog
+Name[ca]=Esborra el diàleg
 Name[cs]=Zrušení dialogového okna
 Name[da]=Slet dialog
 Name[de]=Dialog löschen
@@ -2558,7 +2560,7 @@ Name[zh_CN]=删除对话
 Name[zh_TW]=刪除對話盒
 Name[zu]=Cisha Ingxoxo
 Comment=Transient Window (a dialog) is Removed
-Comment[af]=oorgang venster ('n dialoog) is verwyder
+Comment[af]=Oorgang Venster ('n dialoog) is Verwyder
 Comment[ar]=تم ازالة مربع حوار
 Comment[az]=Bir Rabitə Qutusu Silindi
 Comment[bg]=Временният прозорец (диалог) е изтрит
@@ -2619,7 +2621,7 @@ default_presentation=0
 
 [movestart]
 Name=Window Move Start
-Name[af]=venster beweeg begin
+Name[af]=Venster Beweeg Begin
 Name[ar]=بداية تحريك النافذة
 Name[az]=Pəncərə Daşıma Başlanğıcı
 Name[bg]=Начало на преместване на прозорец
@@ -2675,11 +2677,12 @@ Name[zh_CN]=开始移动窗口
 Name[zh_TW]=開始移動視窗
 Name[zu]=Ukunyakazisela Iwindi Ekuqaleni
 Comment=A Window has Begun Moving
-Comment[af]='n venster het begin beweeg
+Comment[af]='n Venster het Begin Beweeg
 Comment[ar]=بدأت نافذة في التحرك
 Comment[az]=Bir Pəncərə Hərəkət Etməyə Başladı
 Comment[bg]=Прозореца се премества
 Comment[bs]=Prozor se počeo pomjerati
+Comment[ca]=S'ha començat a moure una finestra
 Comment[cs]=Okno započalo přesun
 Comment[da]=Et vindue er begyndt at flyttes
 Comment[de]=Die Verschiebung eines Fensters hat begonnen
@@ -2728,7 +2731,7 @@ default_presentation=0
 
 [moveend]
 Name=Window Move End
-Name[af]=venster beweeg einde
+Name[af]=Venster Beweeg Einde
 Name[ar]=نهاية تحريك النافذة
 Name[az]=Pəncərə Daşıma Bitişi
 Name[bg]=Край на преместване на прозорец
@@ -2784,7 +2787,7 @@ Name[zh_CN]=移动窗口完毕
 Name[zh_TW]=完成移動視窗
 Name[zu]=Nyakazisela Iwindi Ekugcineni
 Comment=A Window has Completed its Moving
-Comment[af]='n venster het klaar sy beweeg
+Comment[af]='n Venster het Klaar sy Beweeg
 Comment[ar]=انتهت نافذة من التحرك
 Comment[az]=Bir Pəncərə Hərəkətini Tamamladı
 Comment[bg]=Прозореца е преместен
@@ -2843,7 +2846,7 @@ default_presentation=0
 
 [resizestart]
 Name=Window Resize Start
-Name[af]=venster hervergroot begin
+Name[af]=Venster Hervergroot Begin
 Name[ar]=بداية تحجيم النافذة
 Name[az]=Pəncərə Böyüklüyü Dəyişdirmə Başlanğıcı
 Name[bg]=Стартира промяна размера на прозорец
@@ -2899,11 +2902,12 @@ Name[zh_CN]=开始改变窗口大小
 Name[zh_TW]=開始改變視窗大小
 Name[zu]=Ukuqala Kokushintsha usayizi we Windi
 Comment=A Window has Begun Resizing
-Comment[af]='n venster het begin hervergrooting
+Comment[af]='n Venster het Begin Hervergrooting
 Comment[ar]=بدأت النافذة في التحجيم
 Comment[az]=Bir Pəncərənin Böyüklüyü Dəyişdirilməyə Başlandı
 Comment[bg]=Променя се размера на прозорец
 Comment[bs]=Prozor je je počeo mijenjati veličinu
+Comment[ca]=S'ha començat a canviar la mida d'una finestra
 Comment[cs]=Okno započalo změnu velikosti
 Comment[da]=Et vindue er begyndt at ændre størrelse
 Comment[de]=Die Größenänderung eines Fensters hat begonnen
@@ -2952,7 +2956,7 @@ default_presentation=0
 
 [resizeend]
 Name=Window Resize End
-Name[af]=venster hervergroot einde
+Name[af]=Venster Hervergroot Einde
 Name[ar]=نهاية تحجيم النافذة
 Name[az]=Pəncərə Böyüklüyü Dəyişdirmə Bitişi
 Name[bg]=Размера на прозореца се промени
@@ -3007,11 +3011,12 @@ Name[zh_CN]=改变窗口大小完毕
 Name[zh_TW]=完成改變視窗大小
 Name[zu]=Isiphetho Sokushintsha usayizi we Windi
 Comment=A Window has Finished Resizing
-Comment[af]='n venster het klaar gemaak hervergrooting
+Comment[af]='n Venster het Klaar gemaak Hervergrooting
 Comment[ar]=انتهت نافذة من التحجيم
 Comment[az]=Bir Pəncərənin Böyüklüyünü Dəyişdirmə Əməliyyatı Qurtardı
 Comment[bg]=Размера на прозореца е променен
 Comment[bs]=Prozor je gotov s mijenjanjem veličine
+Comment[ca]=S'ha canviat la mida d'una finestra
 Comment[cs]=Okno dokončilo změnu velikosti
 Comment[da]=Et vindue er færdigt med at ændre størrelse
 Comment[de]=Die Größenänderung eines Fensters ist abgeschlossen
