@@ -22,6 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "notifications.h"
 
+extern Time qt_x_time;
 extern Atom qt_window_role;
 
 namespace KWinInternal
@@ -92,9 +93,6 @@ bool Client::manage( Window w, bool isMapped )
         0;
 
     info = new WinInfo( this, qt_xdisplay(), client, qt_xrootwin(), properties, 2 );
-
-    if( info->userTime() != -1U )
-        user_time = info->userTime();
 
     cmap = attr.colormap;
 
@@ -412,6 +410,8 @@ bool Client::manage( Window w, bool isMapped )
     // - keep it?
     XLowerWindow( qt_xdisplay(), frameId());
 
+    user_time = readUserTimeMapTimestamp( asn_valid ? &asn_data : NULL, session );
+
     if ( isShown() && !doNotShow )
         {
         if( isDialog())
@@ -434,8 +434,7 @@ bool Client::manage( Window w, bool isMapped )
                 }
             else
                 {
-                Time time = readUserTimeMapTimestamp( asn_valid ? &asn_data : NULL, session );
-                if( workspace()->allowClientActivation( this, time, false, session && session->active ))
+                if( workspace()->allowClientActivation( this, user_time, false, session && session->active ))
                     {
                     workspace()->raiseClient( this );
                     rawShow();
@@ -480,6 +479,9 @@ bool Client::manage( Window w, bool isMapped )
         workspace()->updateClientArea();
         area = workspace()->clientArea( geometry().center() );
         }
+
+    if( user_time == CurrentTime ) // no known user time, set something old
+        user_time = qt_x_time - 1000000;
 
     updateWorkareaDiffs( area );
 
