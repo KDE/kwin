@@ -724,7 +724,7 @@ void Workspace::setActiveClient( Client* c )
 void Workspace::activateClient( Client* c)
 {
     if (!c->isOnDesktop(currentDesktop()) ) {
-	// TODO switch desktop
+	setCurrentDesktop( c->desktop() );
     }
     raiseClient( c );
     c->show();
