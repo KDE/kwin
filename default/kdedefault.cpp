@@ -41,9 +41,9 @@ static unsigned char question_bits[] = {
 
 static unsigned char unsticky_bits[] = {
    0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
- 
+
 static unsigned char sticky_bits[] = {
-   0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c}; 
+   0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
 
 static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
@@ -404,6 +404,8 @@ void KDEClient::resizeEvent( QResizeEvent* e)
 
 void KDEClient::captionChange( const QString& )
 {
+    if ( isActive() )
+	updateActiveBuffer( true );
     repaint( titlebar->geometry(), false );
 }
 
@@ -587,11 +589,11 @@ void KDEClient::calcHiddenButtons()
         lastWidth = width();
 }
 
-void KDEClient::updateActiveBuffer()
+void KDEClient::updateActiveBuffer( bool force )
 {
     static int lastWidth = 0;
 
-    if(lastWidth == titlebar->geometry().width())
+    if( !force && lastWidth == titlebar->geometry().width())
         return;
     lastWidth = titlebar->geometry().width();
 

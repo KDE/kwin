@@ -623,6 +623,7 @@ void Client::getWmNormalHints()
     long msize;
     if (XGetWMNormalHints(qt_xdisplay(), win, &xSizeHint, &msize) == 0 )
 	xSizeHint.flags = 0;
+    
 }
 
 /*!
@@ -1220,7 +1221,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    moveResizeMode = TRUE;
 	    if ( isMaximized() ) {
 		// in case we were maximized, reset state
-		geom_restore = QRect(); 
+		geom_restore = QRect();
 		maximizeChange(FALSE );
 	    }
 	    workspace()->setFocusChangeEnabled(false);
@@ -1492,8 +1493,8 @@ void Client::invalidateWindow()
  */
 void Client::iconify()
 {
-    if (!isMovable())
-       return;
+    if ( windowType() != NET::Normal && windowType() != NET::Toolbar ) // desktop and dock cannot be minimized
+	return;
 
     if ( isShade() )
 	setShade( FALSE );
@@ -2119,7 +2120,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	moveResizeMode = TRUE;
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
-	    geom_restore = QRect(); 
+	    geom_restore = QRect();
 	    maximizeChange(FALSE );
 	}
 	workspace()->setFocusChangeEnabled(false);
@@ -2137,7 +2138,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	moveResizeMode = TRUE;
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
-	    geom_restore = QRect(); 
+	    geom_restore = QRect();
 	    maximizeChange(FALSE );
 	}
 	workspace()->setFocusChangeEnabled(false);
@@ -2348,7 +2349,7 @@ bool Client::wantsTabFocus() const
  */
 bool Client::isMovable() const
 {
-    return may_move && 
+    return may_move &&
 	( windowType() == NET::Normal || windowType() == NET::Toolbar ) &&
 	( !isMaximized() || max_mode != MaximizeFull );
 }

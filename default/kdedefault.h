@@ -20,7 +20,7 @@ public:
     void reset();
     QSize sizeHint() const;
     int last_button;
-    
+
 protected:
     void mousePressEvent( QMouseEvent* e )
     {
@@ -62,7 +62,7 @@ protected:
     void activeChange(bool);
 
     void calcHiddenButtons();
-    void updateActiveBuffer();
+    void updateActiveBuffer( bool force = false );
 protected slots:
     void slotReset();
     void slotMaximize();
