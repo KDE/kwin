@@ -498,3 +498,4 @@ void SystemClient::activeChange(bool)
 }
 
 
+#include "systemclient.moc"

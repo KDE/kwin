@@ -350,3 +350,4 @@ void NextClient::activeChange(bool)
     button[2]->reset();
 }
 
+#include "nextclient.moc"

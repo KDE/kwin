@@ -500,3 +500,4 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
     }
     return m;
 }
+#include "modernsys.moc"

@@ -68,3 +68,4 @@ Button::setActive(bool b)
 } // End namespace
 
 // vim:ts=2:sw=2:tw=78
+#include "Button.moc"

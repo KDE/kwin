@@ -473,3 +473,4 @@ void KWMThemeClient::init()
 }
 
 
+#include "kwmthemeclient.moc"

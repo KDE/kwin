@@ -58,3 +58,4 @@ CloseButton::mouseReleaseEvent(QMouseEvent * e)
 } // End namespace;
 
 // vim:ts=2:sw=2:tw=78
+#include "CloseButton.moc"

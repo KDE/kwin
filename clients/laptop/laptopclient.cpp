@@ -524,3 +524,4 @@ void LaptopClient::activeChange(bool)
 }
 
 
+#include "laptopclient.moc"

@@ -319,3 +319,4 @@ void MwmClient::init()
 }
 
 
+#include "mwmclient.moc"
