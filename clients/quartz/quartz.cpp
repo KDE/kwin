@@ -176,6 +176,27 @@ bool QuartzHandler::reset(unsigned long changed)
 }
 
 
+bool QuartzHandler::supports( Ability ability )
+{
+    switch( ability )
+    {
+        case AbilityAnnounceButtons:
+        case AbilityButtonMenu:
+        case AbilityButtonOnAllDesktops:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+        case AbilityButtonAboveOthers:
+        case AbilityButtonBelowOthers:
+        case AbilityButtonShade:
+            return true;
+        default:
+            return false;
+    };
+}
+
+
 void QuartzHandler::readConfig()
 {
 	KConfig conf("kwinquartzrc");

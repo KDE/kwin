@@ -710,6 +710,28 @@ bool KeramikHandler::reset( unsigned long changed )
 }
 
 
+bool KeramikHandler::supports( Ability ability )
+{
+    switch( ability )
+    {
+        case AbilityAnnounceButtons:
+        case AbilityButtonMenu:
+        case AbilityButtonOnAllDesktops:
+        case AbilityButtonSpacer:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+        case AbilityButtonAboveOthers:
+        case AbilityButtonBelowOthers:
+        case AbilityButtonShade:
+            return true;
+        default:
+            return false;
+    };
+}
+
+
 const QPixmap *KeramikHandler::tile( TilePixmap tilePix, bool active ) const
 {
 	return ( active ? activeTiles[ tilePix ] : inactiveTiles[ tilePix ] );

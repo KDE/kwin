@@ -122,6 +122,7 @@ public:
 	virtual ~RedmondDecoFactory();
 	virtual KDecoration *createDecoration(KDecorationBridge *);
 	virtual bool reset(unsigned long);
+	virtual bool supports( Ability ability );
 	virtual QValueList< BorderSize > borderSizes() const;
 private:
 	void readConfig();

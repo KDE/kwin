@@ -37,6 +37,7 @@ class QuartzHandler: public QObject, public KDecorationFactory
 
 		virtual KDecoration* createDecoration( KDecorationBridge* );
 		virtual bool reset(unsigned long changed);
+		virtual bool supports( Ability ability );
 		virtual QValueList< BorderSize > borderSizes() const;
 
 	private:

@@ -116,6 +116,27 @@ KDecoration* PlastikHandler::createDecoration( KDecorationBridge* bridge )
         return new PlastikClient( bridge, this );
 }
 
+bool PlastikHandler::supports( Ability ability )
+{
+    switch( ability )
+    {
+        case AbilityAnnounceButtons:
+        case AbilityButtonMenu:
+        case AbilityButtonOnAllDesktops:
+        case AbilityButtonSpacer:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+        case AbilityButtonAboveOthers:
+        case AbilityButtonBelowOthers:
+        case AbilityButtonShade:
+            return true;
+        default:
+            return false;
+    };
+}
+
 void PlastikHandler::readConfig()
 {
     // create a config object

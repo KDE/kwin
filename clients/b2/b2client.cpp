@@ -291,6 +291,28 @@ bool B2ClientFactory::reset(unsigned long changed)
     return needsReset;
 }
 
+bool B2ClientFactory::supports( Ability ability )
+{
+    switch( ability )
+    {
+        case AbilityAnnounceButtons:
+        case AbilityButtonMenu:
+        case AbilityButtonOnAllDesktops:
+        case AbilityButtonSpacer:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+        case AbilityButtonAboveOthers:
+        case AbilityButtonBelowOthers:
+        case AbilityButtonShade:
+        case AbilityButtonResize:
+            return true;
+        default:
+            return false;
+    };
+}
+
 QValueList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
 {
     // the list must be sorted

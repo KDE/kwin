@@ -930,6 +930,22 @@ bool RedmondDecoFactory::reset( unsigned long changed )
 	}
 }
 
+bool RedmondDecoFactory::supports( Ability ability )
+{
+    switch( ability )
+    {
+        case AbilityAnnounceButtons:
+        case AbilityButtonMenu:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+            return true;
+        default:
+            return false;
+    };
+}
+
 QValueList< RedmondDecoFactory::BorderSize > RedmondDecoFactory::borderSizes() const
 { // the list must be sorted
   return QValueList< BorderSize >() << BorderNormal << BorderLarge <<

@@ -598,6 +598,22 @@ bool WebFactory::reset(unsigned long changed)
   }
 }
 
+bool WebFactory::supports( Ability ability )
+{
+    switch( ability )
+    {
+        case AbilityAnnounceButtons:
+        case AbilityButtonOnAllDesktops:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+            return true;
+        default:
+            return false;
+    };
+}
+
 QValueList< WebFactory::BorderSize > WebFactory::borderSizes() const
 { // the list must be sorted
   return QValueList< BorderSize >() << BorderNormal << BorderLarge <<

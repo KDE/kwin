@@ -63,6 +63,7 @@ namespace Keramik {
 			virtual QValueList< BorderSize > borderSizes() const;
 			virtual bool reset( unsigned long changed );
                         virtual KDecoration* createDecoration( KDecorationBridge* );
+			virtual bool supports( Ability ability );
 
 			bool showAppIcons() const        { return showIcons; }
 			bool useShadowedText() const     { return shadowedText; }

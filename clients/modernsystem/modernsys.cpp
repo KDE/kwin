@@ -887,6 +887,26 @@ bool ModernSysFactory::reset( unsigned long changed )
     }
 }
 
+bool ModernSysFactory::supports( Ability ability )
+{
+    switch( ability )
+    {
+        case AbilityAnnounceButtons:
+        case AbilityButtonOnAllDesktops:
+        case AbilityButtonSpacer:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+        case AbilityButtonAboveOthers:
+        case AbilityButtonBelowOthers:
+        case AbilityButtonShade:
+            return true;
+        default:
+            return false;
+    };
+}
+
 }
 
 // KWin extended plugin interface

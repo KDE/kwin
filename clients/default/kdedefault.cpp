@@ -533,6 +533,26 @@ QValueList< KDEDefaultHandler::BorderSize > KDEDefaultHandler::borderSizes() con
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
+bool KDEDefaultHandler::supports( Ability ability )
+{
+    switch( ability )
+        {
+        case AbilityAnnounceButtons:
+        case AbilityButtonMenu:
+        case AbilityButtonOnAllDesktops:
+        case AbilityButtonSpacer:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+        case AbilityButtonAboveOthers:
+        case AbilityButtonBelowOthers:
+        case AbilityButtonShade:
+            return true;
+        default:
+            return false;
+        };
+}
 
 // ===========================================================================
 

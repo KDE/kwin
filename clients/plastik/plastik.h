@@ -65,6 +65,7 @@ public:
     virtual bool reset( unsigned long changed );
 
     virtual KDecoration* createDecoration( KDecorationBridge* );
+    virtual bool supports( Ability ability );
 
     static bool initialized() { return m_initialized; }
 
