@@ -489,7 +489,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	geom.setRect( session->x, session->y, session->width, session->height );
 
     QRect area = workspace()->clientArea();
-    
+
     if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
 	if ( geom == workspace()->geometry() )
@@ -528,7 +528,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
-    
+
     if ( !placementDone ) {
 	workspace()->doPlacement( this );
 	placementDone = TRUE;
@@ -1059,6 +1059,13 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 	    w = xSizeHint.base_width;
 	if (h < xSizeHint.base_height)
 	    h = xSizeHint.base_height;
+    } else if ( xSizeHint.flags & PMinSize ) {
+	bw = xSizeHint.min_width;
+	bh = xSizeHint.min_height;
+	if (w < xSizeHint.min_width)
+	    w = xSizeHint.min_width;
+	if (h < xSizeHint.min_height)
+	    h = xSizeHint.min_height;
     }
 
     if (xSizeHint.flags & PResizeInc) {
