@@ -1999,6 +1999,7 @@ void Workspace::slotReconfigure()
 
     readShortcuts();
 
+
     mgr->updatePlugin();
     // NO need whatsoever to call slotResetAllClientsDelayed here,
     // updatePlugin resets all clients if necessary anyway.
@@ -2007,6 +2008,7 @@ void Workspace::slotReconfigure()
        createBorderWindows();
     else
        destroyBorderWindows();
+
 }
 
 /*!
@@ -3474,6 +3476,11 @@ void Workspace::slotResetAllClientsDelayed()
  */
 void Workspace::slotResetAllClients()
 {
+    QWidget curtain( 0, 0, WX11BypassWM );
+    curtain.setBackgroundMode( NoBackground );
+    curtain.setGeometry( QApplication::desktop()->geometry() );
+    curtain.show();
+
     resetTimer.stop();
     ClientList stack = stacking_order;
     Client* active = activeClient();
@@ -3482,9 +3489,9 @@ void Workspace::slotResetAllClients()
     for (ClientList::Iterator it = stack.fromLast(); it != stack.end(); --it) {
         Client *oldClient = (*it);
         Client::MaximizeMode oldMaxMode = oldClient->maximizeMode();
-        oldClient->hide();
+	oldClient->hide();
         WId w = oldClient->window();
-        XUnmapWindow( qt_xdisplay(), w );
+	XUnmapWindow( qt_xdisplay(), w );
         oldClient->releaseWindow();
         // Replace oldClient with newClient in all lists
         Client *newClient = clientFactory (w);
@@ -3499,17 +3506,17 @@ void Workspace::slotResetAllClients()
         newClient->cloneMode(oldClient);
         delete oldClient;
         bool showIt = newClient->manage( TRUE, TRUE, FALSE );
-        if ( prev ) {
-            Window stack[2];
-            stack[0] = prev->winId();;
-            stack[1] = newClient->winId();
-            XRestackWindows(  qt_xdisplay(), stack, 2 );
-        }
+	Window stack[2];
+	stack[0] = prev ? prev->winId() : curtain.winId();
+	stack[1] = newClient->winId();
+ 	XRestackWindows(  qt_xdisplay(), stack, 2 );
         if ( showIt )
             newClient->show();
-        if( oldMaxMode != Client::MaximizeRestore )
+
+        if( oldMaxMode != Client::MaximizeRestore ) {
             newClient->maximize(Client::MaximizeRestore); // needed
-        newClient->maximize(oldMaxMode);
+	    newClient->maximize(oldMaxMode);
+	}
         prev = newClient;
     }
     block_focus = FALSE;

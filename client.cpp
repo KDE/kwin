@@ -479,7 +479,7 @@ bool WindowWrapper::x11Event( XEvent * e)
   Creates a client on workspace \a ws for window \a w.
  */
 Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags f )
-    : QWidget( parent, name, f | WStyle_Customize | WStyle_NoBorder )
+    : QWidget( parent, name, f | WX11BypassWM )
 {
     d = new ClientPrivate;
     wspace = ws;
