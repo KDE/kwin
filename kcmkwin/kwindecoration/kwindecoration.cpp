@@ -184,7 +184,7 @@ void KWinDecorationModule::createDecorationList()
 	QValueList<DecorationInfo>::ConstIterator it;
 
 	// Sync with kwin hardcoded KDE2 style which has no desktop item
-	decorationListBox->insertItem( i18n("KDE Default") ); 
+	decorationListBox->insertItem( i18n("KDE Classic") ); 
 
 	for (it = decorations.begin(); it != decorations.end(); ++it)
 	{
@@ -253,12 +253,7 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 		}
 
 	if (libName.isEmpty())
-	{
-		if (QPixmap::defaultDepth() > 8)
-			libName = "kwin_keramik";
-		else
-			libName = "kwin_quartz";
-	}
+		libName = "kwin_default";	// KDE Classic
 
 	return libName;
 }
@@ -339,7 +334,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 
 	// If we are using the "default" kde client, use the "default" entry.
 	if (decoName.isEmpty())
-		decorationListBox->setSelected( decorationListBox->findItem( i18n("KDE Default") ), true );
+		decorationListBox->setSelected( decorationListBox->findItem( i18n("KDE Classic") ), true );
 	else
 		// Update the decoration listbox
 		decorationListBox->setSelected( decorationListBox->findItem( decoName ), true);
@@ -439,7 +434,7 @@ void KWinDecorationModule::defaults()
 //	cbUseMiniWindows->setChecked( false);
 // Don't set default for now
 //	decorationListBox->setSelected( 
-//		decorationListBox->findItem( i18n("KDE Default") ), true );  // KDE default client
+//		decorationListBox->findItem( i18n("KDE Classic") ), true );  // KDE classic client
 
 	dropSite->buttonsLeft = "MS";
 	dropSite->buttonsRight= "HIAX";
