@@ -115,7 +115,6 @@ Group* Workspace::findGroup( Window leader )
     return NULL;
     }
 
-
 void Workspace::updateMinimizedOfTransients( Client* c )
     {
     // if mainwindow is minimized or shaded, minimize transients too
@@ -149,7 +148,6 @@ void Workspace::updateMinimizedOfTransients( Client* c )
             }
         }
     }
-
 
 
 /*!
@@ -349,8 +347,6 @@ void Client::setTransient( Window new_transient_for_id )
             {
             transient_for = workspace()->findClient( WindowMatchPredicate( transient_for_id ));
             assert( transient_for != NULL ); // verifyTransient() had to check this
-            if( transient_for->groupTransient())
-                removeTransient( transient_for );
             transient_for->addTransient( this );
             }
         checkGroup();
@@ -444,28 +440,32 @@ void Client::cleanGrouping()
 // Make sure that no group transient is considered transient
 // for a window that is (directly or indirectly) transient for it.
 // Group transients not being transient for each other is already
-// handled before calling addTransient().
+// handled before calling addTransient(). Non-group transients
+// not causing loops are checked in verifyTransientFor().
 void Client::checkGroupTransients()
     {
     for( ClientList::ConstIterator it1 = group()->members().begin();
          it1 != group()->members().end();
          ++it1 )
         {
-        if( !(*it1)->groupTransient())
-            continue;
-        for( ClientList::Iterator it2 = (*it1)->transients_list.begin();
-             it2 != (*it1)->transients_list.end();
-             )
-            {
-            Client* cl = (*it2)->transientFor();
-            if( cl != NULL )
-                cl = cl->transientFor();
-            if( cl == *it1 )
-                {
-                it2 = (*it1)->transients_list.remove( it2 );
+        if( !(*it1)->groupTransient()) // check all group transients in the group
+            continue;                  // TODO optimize to check only the changed ones?
+        for( ClientList::ConstIterator it2 = group()->members().begin();
+             it2 != group()->members().end();
+             ++it2 ) // group transients can be transient only for others in the group,
+            {        // so don't make them transient for the ones that are transient for it
+            if( *it1 == *it2 )
                 continue;
+            for( Client* cl = (*it2)->transientFor();
+                 cl != NULL;
+                 cl = cl->transientFor())
+                {
+                if( cl == *it1 )
+                    {
+                    (*it2)->transients_list.remove( *it1 );
+                    continue;
+                    }
                 }
-            ++it2;
             }
         }
     }
@@ -549,7 +549,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
 void Client::addTransient( Client* cl )
     {
     assert( !transients_list.contains( cl ));
-    assert( !cl->transients_list.contains( this ));
+//    assert( !cl->hasTransient( this, true )); will be fixed in checkGroupTransients()
     assert( cl != this );
     transients_list.append( cl );
 //    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
