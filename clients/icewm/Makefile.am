@@ -2,11 +2,11 @@ INCLUDES = $(all_includes)
 
 SUBDIRS = . config icewm-themes
 
-kde_module_LTLIBRARIES = libkwinicewm.la
+kde_module_LTLIBRARIES = kwin_icewm.la
 
-libkwinicewm_la_SOURCES = icewm.cpp 
-libkwinicewm_la_LIBADD = ../../kwin.la
-libkwinicewm_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_icewm_la_SOURCES = icewm.cpp 
+kwin_icewm_la_LIBADD = ../../kwin.la
+kwin_icewm_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = icewm.h

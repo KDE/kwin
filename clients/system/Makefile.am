@@ -1,11 +1,11 @@
 
 INCLUDES = $(all_includes)
 
-kde_module_LTLIBRARIES = libkwinsystem.la
+kde_module_LTLIBRARIES = kwin_system.la
 
-libkwinsystem_la_SOURCES = systemclient.cpp
-libkwinsystem_la_LIBADD = ../../kwin.la
-libkwinsystem_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_system_la_SOURCES = systemclient.cpp
+kwin_system_la_LIBADD = ../../kwin.la
+kwin_system_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = systemclient.h

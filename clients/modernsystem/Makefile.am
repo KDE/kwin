@@ -4,11 +4,11 @@ INCLUDES = $(all_includes)
 
 SUBDIRS = config
 
-kde_module_LTLIBRARIES = libkwinmodernsys.la
+kde_module_LTLIBRARIES = kwin_modernsys.la
 
-libkwinmodernsys_la_SOURCES = modernsys.cpp
-libkwinmodernsys_la_LIBADD = ../../kwin.la
-libkwinmodernsys_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_modernsys_la_SOURCES = modernsys.cpp
+kwin_modernsys_la_LIBADD = ../../kwin.la
+kwin_modernsys_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = modernsys.h

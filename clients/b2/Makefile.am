@@ -3,11 +3,11 @@ INCLUDES = $(all_includes)
 
 SUBDIRS = . config
 
-kde_module_LTLIBRARIES = libkwinb2.la
+kde_module_LTLIBRARIES = kwin_b2.la
 
-libkwinb2_la_SOURCES = b2client.cpp
-libkwinb2_la_LIBADD = ../../kwin.la
-libkwinb2_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_b2_la_SOURCES = b2client.cpp
+kwin_b2_la_LIBADD = ../../kwin.la
+kwin_b2_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = b2client.h

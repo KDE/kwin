@@ -2,11 +2,11 @@
 
 INCLUDES = $(all_includes)
 
-kde_module_LTLIBRARIES = libkwinmodernsys_config.la
+kde_module_LTLIBRARIES = kwin_modernsys_config.la
 
-libkwinmodernsys_config_la_SOURCES = config.cpp
-libkwinmodernsys_config_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
-libkwinmodernsys_config_la_LIBADD = $(LIB_KDEUI)
+kwin_modernsys_config_la_SOURCES = config.cpp
+kwin_modernsys_config_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+kwin_modernsys_config_la_LIBADD = $(LIB_KDEUI)
 
 METASOURCES = AUTO
 noinst_HEADERS = config.h
@@ -14,4 +14,4 @@ noinst_HEADERS = config.h
 lnkdir = $(kde_datadir)/kwin/
 
 messages:
-	$(XGETTEXT) *.cpp -o $(podir)/libkwinmodernsys_config.pot
+	$(XGETTEXT) *.cpp -o $(podir)/kwinmodernsys_config.pot

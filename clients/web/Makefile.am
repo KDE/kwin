@@ -1,7 +1,7 @@
 INCLUDES                  = -I$(top_srcdir) $(all_includes)
-kde_module_LTLIBRARIES    = libkwinweb.la
+kde_module_LTLIBRARIES    = kwin_web.la
 
-libkwinweb_la_SOURCES     = \
+kwin_web_la_SOURCES     = \
   Web.cpp \
   WebButton.cpp \
   WebButtonClose.cpp \
@@ -21,8 +21,8 @@ noinst_HEADERS            = \
   WebButtonMaximize.h \
   WebButtonSticky.h
 
-libkwinweb_la_LIBADD      = ../../kwin.la
-libkwinweb_la_LDFLAGS     = $(all_libraries) $(KDE_PLUGIN)
+kwin_web_la_LIBADD      = ../../kwin.la
+kwin_web_la_LDFLAGS     = $(all_libraries) $(KDE_PLUGIN) -module
 METASOURCES               = AUTO
 
 linkdir                   = $(kde_datadir)/kwin/

@@ -33,4 +33,4 @@ Name[xx]=xx
 Name[zh_CN]=膝上计算机
 Name[zh_TW]=膝上型的電腦
 Name[zu]=Ikhomputha elucezu
-X-KDE-Library=libkwinlaptop
+X-KDE-Library=kwin_laptop

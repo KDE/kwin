@@ -5,4 +5,4 @@ Name[af]=icewm
 Name[xh]=UmkhenkceWM
 Name[xx]=xx
 Name[zu]=Iqhwa leWM
-X-KDE-Library=libkwinicewm
+X-KDE-Library=kwin_icewm

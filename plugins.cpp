@@ -25,7 +25,7 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 
 using namespace KWinInternal;
 
-const char* defaultPlugin = "libkwindefault";
+const char* defaultPlugin = "kwin_default";
 
 
 PluginMgr::PluginMgr()

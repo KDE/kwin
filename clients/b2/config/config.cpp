@@ -1,5 +1,5 @@
 /* 	
- * $Id:$
+ * $Id$
  *
  *	This file contains the B2 configuration widget
  *
@@ -35,7 +35,7 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
 	b2Config = new KConfig("kwinb2rc");
-	KGlobal::locale()->insertCatalogue("libkwinquartz_config");
+	KGlobal::locale()->insertCatalogue("kwinquartz_config");
 	gb = new QGroupBox( 1, Qt::Horizontal, 
 						i18n("Decoration Settings"), parent );
 	cbColorBorder = new QCheckBox( 

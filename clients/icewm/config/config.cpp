@@ -57,7 +57,7 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
 	icewmConfig = new KConfig("kwinicewmrc");
-	KGlobal::locale()->insertCatalogue("libkwinicewm_config");
+	KGlobal::locale()->insertCatalogue("kwin_icewm_config");
 
 	gb1 = new QGroupBox( 1, Qt::Horizontal, 
 				i18n("IceWM Theme Selector"), parent );

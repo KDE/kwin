@@ -1,11 +1,11 @@
 
 INCLUDES = $(all_includes)
 
-kde_module_LTLIBRARIES = libkwinredmond.la
+kde_module_LTLIBRARIES = kwin_redmond.la
 
-libkwinredmond_la_SOURCES = redmond.cpp
-libkwinredmond_la_LIBADD = ../../kwin.la
-libkwinredmond_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_redmond_la_SOURCES = redmond.cpp
+kwin_redmond_la_LIBADD = ../../kwin.la
+kwin_redmond_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = redmond.h

@@ -31,7 +31,7 @@ extern "C"
 KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
-	KGlobal::locale()->insertCatalogue("libkwindefault_config");
+	KGlobal::locale()->insertCatalogue("kwin_default_config");
 	highcolor = QPixmap::defaultDepth() > 8;
 	gb = new QGroupBox( 1, Qt::Horizontal, 
 		i18n("Decoration Settings"), parent );

@@ -1,11 +1,11 @@
 
 INCLUDES = $(all_includes) 
 
-kde_module_LTLIBRARIES = libkwinkstep.la
+kde_module_LTLIBRARIES = kwin_kstep.la
 
-libkwinkstep_la_SOURCES = nextclient.cpp
-libkwinkstep_la_LIBADD = ../../kwin.la
-libkwinkstep_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_kstep_la_SOURCES = nextclient.cpp
+kwin_kstep_la_LIBADD = ../../kwin.la
+kwin_kstep_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = nextclient.h

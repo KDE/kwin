@@ -4,11 +4,11 @@
 METASOURCES = AUTO
 INCLUDES = $(all_includes)
 
-kde_module_LTLIBRARIES = libkcm_kwinoptions.la 
+kde_module_LTLIBRARIES = kcm_kwinoptions.la 
 
-libkcm_kwinoptions_la_SOURCES = windows.cpp mouse.cpp main.cpp
-libkcm_kwinoptions_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
-libkcm_kwinoptions_la_LIBADD = $(LIB_KDEUI)
+kcm_kwinoptions_la_SOURCES = windows.cpp mouse.cpp main.cpp
+kcm_kwinoptions_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
+kcm_kwinoptions_la_LIBADD = $(LIB_KDEUI)
 
 noinst_HEADERS = windows.h mouse.h main.h
 

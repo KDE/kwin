@@ -1,4 +1,4 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=ModSystem 
-X-KDE-Library=libkwinmodernsys
+X-KDE-Library=kwin_modernsys

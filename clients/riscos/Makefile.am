@@ -1,8 +1,8 @@
 INCLUDES = $(all_includes) 
 
-kde_module_LTLIBRARIES = libkwinriscos.la
+kde_module_LTLIBRARIES = kwin_riscos.la
 
-libkwinriscos_la_SOURCES = \
+kwin_riscos_la_SOURCES = \
 Button.cpp \
 CloseButton.cpp \
 IconifyButton.cpp \
@@ -12,8 +12,8 @@ MaximiseButton.cpp \
 StickyButton.cpp \
 HelpButton.cpp \
 Static.cpp
-libkwinriscos_la_LIBADD = ../../kwin.la
-libkwinriscos_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_riscos_la_LIBADD = ../../kwin.la
+kwin_riscos_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = \

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=RISC OS
 Name[af]=risc os
+Name[be]=RISC АС
 Name[cs]=Risc OS
 Name[da]=Risc OS
 Name[de]=RISC-OS
@@ -13,4 +14,4 @@ Name[uk]=RISC ОС
 Name[xh]=i RISC OS
 Name[xx]=xx
 Name[zu]=IRISC OS
-X-KDE-Library=libkwinriscos
+X-KDE-Library=kwin_riscos

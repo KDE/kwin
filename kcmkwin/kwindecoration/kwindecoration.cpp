@@ -246,7 +246,7 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 		}
 
 	if (libName.isEmpty())
-		libName = "libkwindefault";
+		libName = "kwin_default";
 
 	return libName;
 }
@@ -256,8 +256,8 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 // pluginPage, allowing for dynamic configuration of decorations
 void KWinDecorationModule::resetPlugin( KConfig* conf, const QString* currentDecoName )
 {
-	// Config names are "libkwinicewm_config"
-	// for "libkwinicewm" kwin client
+	// Config names are "kwin_icewm_config"
+	// for "kwin_icewm" kwin client
 
 	QString oldName = oldLibraryName;
 	oldName += "_config";
@@ -330,7 +330,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	// the current plugin library name
 
 	oldLibraryName = currentLibraryName;
-	currentLibraryName = conf->readEntry("PluginLib", "libkwindefault");
+	currentLibraryName = conf->readEntry("PluginLib", "kwin_default");
 	QString decoName = decorationName( currentLibraryName );
 
 	// If we are using the "default" kde client, use the "default" entry.

@@ -1,14 +1,14 @@
 INCLUDES = $(all_includes)
 
-kde_module_LTLIBRARIES = libkcm_kwindecoration.la
+kde_module_LTLIBRARIES = kcm_kwindecoration.la
 
-libkcm_kwindecoration_la_SOURCES = kwindecoration.cpp buttons.cpp kwindecorationIface.skel
+kcm_kwindecoration_la_SOURCES = kwindecoration.cpp buttons.cpp kwindecorationIface.skel
 noinst_HEADERS = kwindecoration.h kwindecorationIface.h buttons.h
 
-libkcm_kwindecoration_la_LDFLAGS = \
+kcm_kwindecoration_la_LDFLAGS = \
   -module -avoid-version $(all_libraries) -no-undefined
 
-libkcm_kwindecoration_la_LIBADD = $(LIB_KDEUI)
+kcm_kwindecoration_la_LIBADD = $(LIB_KDEUI)
 
 METASOURCES = AUTO
 

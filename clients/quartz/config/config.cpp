@@ -35,7 +35,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
 	quartzConfig = new KConfig("kwinquartzrc");
-	KGlobal::locale()->insertCatalogue("libkwinquartz_config");
+	KGlobal::locale()->insertCatalogue("kwin_quartz_config");
 	gb = new QGroupBox( 1, Qt::Horizontal, 
 						i18n("Decoration Settings"), parent );
 	cbColorBorder = new QCheckBox( 

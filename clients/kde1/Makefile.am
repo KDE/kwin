@@ -1,11 +1,11 @@
 
 INCLUDES = $(all_includes) 
 
-kde_module_LTLIBRARIES = libkwinkde1.la
+kde_module_LTLIBRARIES = kwin_kde1.la
 
-libkwinkde1_la_SOURCES = kde1client.cpp
-libkwinkde1_la_LIBADD = ../../kwin.la
-libkwinkde1_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+kwin_kde1_la_SOURCES = kde1client.cpp
+kwin_kde1_la_LIBADD = ../../kwin.la
+kwin_kde1_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 
 METASOURCES = AUTO
 noinst_HEADERS = kde1client.h
