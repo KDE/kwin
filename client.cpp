@@ -540,6 +540,7 @@ bool Client::unmapNotify( XUnmapEvent& e )
 void Client::withdraw()
 {
     setMappingState( WithdrawnState );
+    KWM::moveToDesktop( win, -1 ); // compatibility
     releaseWindow();
     workspace()->destroyClient( this );
 }

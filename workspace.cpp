@@ -413,7 +413,6 @@ bool Workspace::destroyClient( Client* c)
 {
     if ( !c )
 	return FALSE;
-    qDebug("Workspace:.destroyClient");
     clients.remove( c );
     stacking_order.remove( c );
     focus_chain.remove( c );
