@@ -7,6 +7,22 @@
 	Karol Szwed <gallium@kde.org>
 	http://gallium.n3.net/
 
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; see the file COPYING.  If not, write to
+  the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+  Boston, MA 02111-1307, USA.
+
+  -----------------------------------------------------------------------------
   This client loads most icewm 1.0.X pixmap themes, without taking into account
   specific font settings for clients, or coloured mouse cursors. Titlebar
   fonts can be changed via the kde control center. Bi-colour mouse cursors
@@ -21,6 +37,7 @@
 
   At a later date, frame shaping may be added if really requested, and an 
   update to support the latest icewm 1.1.X theme format may be made.
+
 */
 
 #include <kconfig.h>
@@ -357,6 +374,9 @@ void ThemeHandler::initTheme()
 		borderSizeX = 0;
 	if (borderSizeY < 0)
 		borderSizeY = 0;
+	// ...and titleBarHeight as well
+	if (titleBarHeight < 0)
+		titleBarHeight = 0;
 
 	// This is a work-around for some themes
 	if (!titleT[Active])
@@ -1084,69 +1104,72 @@ void IceWMClient::paintEvent( QPaintEvent* )
 						x+w-borderSizeX-1, y+borderSizeY);
 	}
 
-	// Draw the title elements, which are visible
-	QPixmap* titleBuffer = new QPixmap( width()-(2*borderSizeX), titleBarHeight );
-	QPainter p2( titleBuffer, this );
-	titleBuffer->fill( act ? *colorActiveTitleBar : *colorInActiveTitleBar );
-
-	r = titleSpacerJ->geometry();
-	if (!r.isEmpty() && titleJ[ act ])
-		p2.drawPixmap( r.x()-borderSizeX, 0, *titleJ[ act ]);
-
-	r = titleSpacerL->geometry();
-	if (!r.isEmpty() && titleL[ act ])
-		p2.drawPixmap( r.x()-borderSizeX, 0, *titleL[ act ]);
-
-	r = titleSpacerS->geometry();
-	if (!r.isEmpty() && titleS[ act ])
-		p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleS[ act ]);
-
-	r = titleSpacerP->geometry();
-	if (!r.isEmpty() && titleP[ act ])
-		p2.drawPixmap( r.x()-borderSizeX, 0, *titleP[ act ]);
-
-	r = titlebar->geometry();
-	if (!r.isEmpty() && titleT[ act ] )
-		p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleT[ act ]);
-
-	r = titleSpacerM->geometry();
-	if (!r.isEmpty() && titleM[ act ])
-		p2.drawPixmap( r.x()-borderSizeX, 0, *titleM[ act ], 0, 0, r.width(), r.height());
-
-	r = titleSpacerB->geometry();
-	if (!r.isEmpty() && titleB[ act ])
-		p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleB[ act ]);
-
-	r = titleSpacerR->geometry();
-	if (!r.isEmpty() && titleR[ act ])
-		p2.drawPixmap( r.x()-borderSizeX, 0, *titleR[ act ], 0, 0, r.width(), r.height());
-
-	r = titleSpacerQ->geometry();
-	if (!r.isEmpty() && titleQ[ act ])
-		p2.drawPixmap( r.x()-borderSizeX, 0, *titleQ[ act ], 0, 0, r.width(), r.height());
-
-	p2.setFont( options->font(true) );
-
-	// Pre-compute as much as possible
-	r = titlebar->geometry();
-	rx = r.x() - borderSizeX;
-	rw = width()-(2*borderSizeX)-r.x();
-
-	// Paint a title text shadow if requested
-	if ( useShadow )
+	// Draw the title elements, if we need to draw a titlebar.
+	if (titleBarHeight > 0)
 	{
-		p2.setPen( colorTitleShadow );
-		p2.drawText(rx+1, 1, rw, titleBarHeight, AlignLeft|AlignVCenter, caption());
-	} 
-	
-	// Draw the title text
-	p2.setPen( colorTitle );
-	p2.drawText(rx, 0, rw, titleBarHeight, AlignLeft|AlignVCenter, caption());
-	p2.end();
+		QPixmap* titleBuffer = new QPixmap( width()-(2*borderSizeX), titleBarHeight );
+		QPainter p2( titleBuffer, this );
+		titleBuffer->fill( act ? *colorActiveTitleBar : *colorInActiveTitleBar );
 
-	bitBlt( this, borderSizeX, hb->geometry().y(), titleBuffer );
+		r = titleSpacerJ->geometry();
+		if (!r.isEmpty() && titleJ[ act ])
+			p2.drawPixmap( r.x()-borderSizeX, 0, *titleJ[ act ]);
+
+		r = titleSpacerL->geometry();
+		if (!r.isEmpty() && titleL[ act ])
+			p2.drawPixmap( r.x()-borderSizeX, 0, *titleL[ act ]);
+
+		r = titleSpacerS->geometry();
+		if (!r.isEmpty() && titleS[ act ])
+			p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleS[ act ]);
+
+		r = titleSpacerP->geometry();
+		if (!r.isEmpty() && titleP[ act ])
+			p2.drawPixmap( r.x()-borderSizeX, 0, *titleP[ act ]);
+
+		r = titlebar->geometry();
+		if (!r.isEmpty() && titleT[ act ] )
+			p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleT[ act ]);
+
+		r = titleSpacerM->geometry();
+		if (!r.isEmpty() && titleM[ act ])
+			p2.drawPixmap( r.x()-borderSizeX, 0, *titleM[ act ], 0, 0, r.width(), r.height());
+
+		r = titleSpacerB->geometry();
+		if (!r.isEmpty() && titleB[ act ])
+			p2.drawTiledPixmap( r.x()-borderSizeX, 0, r.width(), titleBarHeight, *titleB[ act ]);
+
+		r = titleSpacerR->geometry();
+		if (!r.isEmpty() && titleR[ act ])
+			p2.drawPixmap( r.x()-borderSizeX, 0, *titleR[ act ], 0, 0, r.width(), r.height());
+
+		r = titleSpacerQ->geometry();
+		if (!r.isEmpty() && titleQ[ act ])
+			p2.drawPixmap( r.x()-borderSizeX, 0, *titleQ[ act ], 0, 0, r.width(), r.height());
+
+		p2.setFont( options->font(true) );
+
+		// Pre-compute as much as possible
+		r = titlebar->geometry();
+		rx = r.x() - borderSizeX;
+		rw = width()-(2*borderSizeX)-r.x();
+
+		// Paint a title text shadow if requested
+		if ( useShadow )
+		{
+			p2.setPen( colorTitleShadow );
+			p2.drawText(rx+1, 1, rw, titleBarHeight, AlignLeft|AlignVCenter, caption());
+		} 
 	
-	delete titleBuffer;
+		// Draw the title text
+		p2.setPen( colorTitle );
+		p2.drawText(rx, 0, rw, titleBarHeight, AlignLeft|AlignVCenter, caption());
+		p2.end();
+
+		bitBlt( this, borderSizeX, hb->geometry().y(), titleBuffer );
+	
+		delete titleBuffer;
+	}
 }
 
 
