@@ -176,6 +176,7 @@ void Client::releaseWindow( bool on_shutdown )
         {
         workspace()->clientHidden( this );
         XUnmapWindow( qt_xdisplay(), window()); // destroying decoration would cause ugly visual effect
+        XUnmapWindow( qt_xdisplay(), wrapperId());
         }
     destroyDecoration();
     cleanGrouping();
