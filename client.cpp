@@ -2930,22 +2930,16 @@ void Client::activateLayout()
         layout()->activate();
 }
 
-
 NET::WindowType Client::windowType() const
 {
     NET::WindowType wt = info->windowType();
     if ( wt == NET::Unknown )
         wt = NET::Normal;
     if ( wt == NET::Menu ) {
-        Window dummy1;
-        int x, y;
-        unsigned int width, height, dummy2, dummy3;
-        XGetGeometry( qt_xdisplay(), window(), &dummy1, &x, &y, &width, &height,
-            &dummy2, &dummy3 );
         // ugly hack to support the times when NET::Menu meant NET::TopMenu
         // if it's as wide as the screen, not very high and has its upper-left
         // corner a bit above the screen's upper-left cornet, it's a topmenu
-        if( x == 0 && y < 0 && y > -10 && height < 100 && int(width) == geometry().width())
+        if( x() == 0 && y() < 0 && y() > -10 && height() < 100 && width() == workspace()->geometry().width())
             wt = NET::TopMenu;
     }
     return wt;
