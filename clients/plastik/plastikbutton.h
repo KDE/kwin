@@ -27,27 +27,23 @@
 #include <qimage.h>
 #include "plastik.h"
 
+#include <kcommondecoration.h>
+
 class QTimer;
 
 namespace KWinPlastik {
 
 class PlastikClient;
 
-class PlastikButton : public QButton
+class PlastikButton : public KCommonDecorationButton
 {
     Q_OBJECT
 public:
-    PlastikButton(PlastikClient *parent, const char *name, const QString &tip, ButtonType type, int size, bool toggle = false, int btns = LeftButton);
+    PlastikButton(ButtonType type, PlastikClient *parent, const char *name);
     ~PlastikButton();
 
-    QSize sizeHint() const; ///< Return size hint.
-    ButtonState lastMousePress() const { return m_lastMouse; }
-    void reset() { repaint(false); }
+    void reset();
     PlastikClient * client() { return m_client; }
-    virtual void setOn(bool on);
-    void setDeco();
-    void setTipText(const QString &tip);
-    void setSize(const int s);
 
 protected slots:
     void animate();
@@ -55,18 +51,10 @@ protected slots:
 private:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
     void drawButton(QPainter *painter);
 
 private:
     PlastikClient *m_client;
-    ButtonState m_lastMouse;
-    int m_realizeButtons;
-
-    int m_size;
-
-    ButtonType m_type;
     QImage m_aDecoLight,m_iDecoLight,m_aDecoDark,m_iDecoDark;
     bool hover;
 

@@ -23,74 +23,41 @@
 #ifndef KNIFTYCLIENT_H
 #define KNIFTYCLIENT_H
 
-#include <kdecoration.h>
-#include "plastik.h"
+#include <kcommondecoration.h>
 
-class QSpacerItem;
-class QVBoxLayout;
-class QBoxLayout;
+#include "plastik.h"
 
 namespace KWinPlastik {
 
 class PlastikButton;
 
-class PlastikClient : public KDecoration
+class PlastikClient : public KCommonDecoration
 {
-    Q_OBJECT
 public:
     PlastikClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     ~PlastikClient();
 
-    virtual void init();
+    virtual QString visibleName() const;
+    virtual QString defaultButtonsLeft() const;
+    virtual QString defaultButtonsRight() const;
+    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+    virtual QRegion cornerShape(WindowCorner corner);
+    virtual KCommonDecorationButton *createButton(ButtonType type);
 
-    virtual void borders( int& left, int& right, int& top, int& bottom ) const;
-    virtual void resize(const QSize&);
-    virtual QSize minimumSize() const;
-    virtual void show();
-    virtual bool eventFilter( QObject* o, QEvent* e );
+    virtual void init();
+    virtual void reset( unsigned long changed );
+
+    virtual void paintEvent(QPaintEvent *e);
+    virtual void updateCaption();
 
     QPixmap getTitleBarTile(bool active) const
     {
         return active ? *aTitleBarTile : *iTitleBarTile;
     }
-protected:
-    virtual void resizeEvent();
-    virtual void paintEvent(QPaintEvent *e);
-    virtual void mouseDoubleClickEvent(QMouseEvent *e);
 
-    virtual void maximizeChange();
-    virtual void desktopChange();
-    virtual void shadeChange();
-    virtual void doShape();
-
-    virtual void reset( unsigned long changed );
-
-    virtual void captionChange();
-    virtual void iconChange();
-    virtual void activeChange();
-    virtual Position mousePosition(const QPoint &point) const;
-
-private slots:
-    void keepAboveChange(bool above);
-    void keepBelowChange(bool below);
-    void slotMaximize();
-    void slotShade();
-    void slotKeepAbove();
-    void slotKeepBelow();
-    void menuButtonPressed();
-    void menuButtonReleased();
-    bool isTool();
 private:
-    void _resetLayout();
-    void addButtons(QBoxLayout* layout, const QString& buttons, int buttonSize = 18);
-
-    QVBoxLayout *mainLayout_;
-    QSpacerItem *topSpacer_,
-                *titleSpacer_,
-                *leftTitleSpacer_, *rightTitleSpacer_,
-                *decoSpacer_,
-                *leftSpacer_, *rightSpacer_,
-                *bottomSpacer_;
+    QRect captionRect() const;
 
     QPixmap *aCaptionBuffer, *iCaptionBuffer;
     void update_captionBuffer();
@@ -100,14 +67,11 @@ private:
     void create_pixmaps();
     void delete_pixmaps();
 
-    PlastikButton *m_button[NumButtons];
-
+    QRect m_captionRect;
+    QString oldCaption;
     bool captionBufferDirty;
 
-    bool closing;
-
     // settings...
-    int   s_titleHeight;
     QFont s_titleFont;
 };
 

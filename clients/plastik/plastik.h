@@ -30,19 +30,6 @@ namespace KWinPlastik {
 
 #include <qfont.h>
 
-enum ButtonType {
-    HelpButton=0,
-    MaxButton,
-    MinButton,
-    CloseButton,
-    MenuButton,
-    OnAllDesktopsButton,
-    AboveButton,
-    BelowButton,
-    ShadeButton,
-    NumButtons
-};
-
 enum ColorType {
     WindowContour=0,
     TitleGradientFrom,

@@ -59,31 +59,16 @@ namespace KWinPlastik
 static const uint TIMERINTERVAL = 50; // msec
 static const uint ANIMATIONSTEPS = 4;
 
-PlastikButton::PlastikButton(PlastikClient *parent, const char *name,
-                             const QString& tip, ButtonType type,
-                             int size, bool toggle, int btns)
-    : QButton(parent->widget(), name),
+PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent, const char *name)
+    : KCommonDecorationButton(type, parent, name),
     m_client(parent),
-    m_lastMouse(NoButton),
-    m_realizeButtons(btns),
-    m_size(size),
-    m_type(type),
     m_aDecoLight(QImage() ), m_iDecoLight(QImage() ),
     m_aDecoDark(QImage() ), m_iDecoDark(QImage() ),
     hover(false)
 {
-    QToolTip::add( this, tip );
-    setCursor(ArrowCursor);
-
     setBackgroundMode(NoBackground);
 
-    setToggleButton(toggle);
-
-    if(m_size < 10) { m_size = 10; }
-
-    setFixedSize(m_size, m_size);
-
-    setDeco();
+    reset();
 
     animTmr = new QTimer(this);
     connect(animTmr, SIGNAL(timeout() ), this, SLOT(animate() ) );
@@ -94,26 +79,7 @@ PlastikButton::~PlastikButton()
 {
 }
 
-QSize PlastikButton::sizeHint() const
-{
-    return QSize(m_size, m_size);
-}
-
-void PlastikButton::setSize(int s)
-{
-    m_size = s;
-    if(m_size < 10) { m_size = 10; }
-    setFixedSize(m_size, m_size);
-    setDeco();
-}
-
-void PlastikButton::setOn(bool on)
-{
-    QButton::setOn(on);
-    setDeco();
-}
-
-void PlastikButton::setDeco()
+void PlastikButton::reset()
 {
     QColor aDecoFgDark = alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, true),
             Qt::black, 50);
@@ -136,7 +102,7 @@ void PlastikButton::setDeco()
         reduceH = 4;
 
     QImage img;
-    switch (m_type) {
+    switch (type() ) {
         case CloseButton:
             img = QImage(close_xpm);
             break;
@@ -194,11 +160,6 @@ void PlastikButton::setDeco()
     this->update();
 }
 
-void PlastikButton::setTipText(const QString &tip) {
-    QToolTip::remove(this );
-    QToolTip::add(this, tip );
-}
-
 void PlastikButton::animate()
 {
     animTmr->stop();
@@ -244,31 +205,8 @@ void PlastikButton::leaveEvent(QEvent *e)
 //     repaint(false);
 }
 
-void PlastikButton::mousePressEvent(QMouseEvent* e)
-{
-    m_lastMouse = e->button();
-    // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
-
-    QButton::mousePressEvent(&me);
-}
-
-void PlastikButton::mouseReleaseEvent(QMouseEvent* e)
-{
-    m_lastMouse = e->button();
-    // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                    (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
-
-    QButton::mouseReleaseEvent(&me);
-}
-
 void PlastikButton::drawButton(QPainter *painter)
 {
-    if (!PlastikHandler::initialized())
-        return;
-
     QRect r(0,0,width(),height());
 
     bool active = m_client->isActive();
@@ -276,7 +214,7 @@ void PlastikButton::drawButton(QPainter *painter)
     KPixmap tempKPixmap;
 
     QColor highlightColor;
-    if(m_type == CloseButton) {
+    if(type() == CloseButton) {
         highlightColor = QColor(255,64,0);
     } else {
         highlightColor = Qt::white;
@@ -312,7 +250,7 @@ void PlastikButton::drawButton(QPainter *painter)
     // fill with the titlebar background
     bP.drawTiledPixmap(0, 0, width(), width(), backgroundTile);
 
-    if (m_type != MenuButton || hover || animProgress != 0) {
+    if (type() != MenuButton || hover || animProgress != 0) {
         // contour
         bP.setPen(contourTop);
         bP.drawLine(r.x()+2, r.y(), r.right()-2, r.y() );
@@ -358,7 +296,7 @@ void PlastikButton::drawButton(QPainter *painter)
         bP.drawTiledPixmap(r.x()+1, r.y()+2, r.width()-2, r.height()-4, tempKPixmap);
     }
 
-    if (m_type == MenuButton)
+    if (type() == MenuButton)
     {
         QPixmap menuIcon(m_client->icon().pixmap( QIconSet::Small, QIconSet::Normal));
         if (width() < menuIcon.width() || height() < menuIcon.height() ) {
