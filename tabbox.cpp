@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								
+
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 //#define QT_CLEAN_NAMESPACE
@@ -270,7 +270,6 @@ void TabBox::paintContents()
 	int y = height() - 26;
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	    if ( workspace()->hasClient( *it ) ) { // safety
-		p.save();
 		if ( !(*it)->miniIcon().isNull() )
 		    p.drawPixmap( x, y, (*it)->miniIcon() );
 		else if ( menu_pix )
@@ -303,7 +302,7 @@ void TabBox::paintContents()
 	    p.setPen( colorGroup().text() );
 	    p.drawText( x, y, 16, 16, AlignCenter, QString::number(iDesktop) );
 	    x += 20;
-	    
+
 	    if( mode() == DesktopMode )
 	        iDesktop = workspace()->nextDesktop( iDesktop );
 	    else
