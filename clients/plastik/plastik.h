@@ -49,21 +49,21 @@ enum Pixmaps {
     NumPixmaps
 };
 
-enum ButtonPixmaps {
-    BtnHelp = 0,
-    BtnMax,
-    BtnMaxRestore,
-    BtnMin,
-    BtnClose,
-    BtnOnAllDesktops,
-    BtnNotOnAllDesktops,
-    BtnAbove,
-    BtnNotAbove,
-    BtnBelow,
-    BtnNotBelow,
-    BtnShade,
-    BtnShadeRestore,
-    NumButtonPixmaps
+enum ButtonIcon {
+    CloseIcon = 0,
+    MaxIcon,
+    MaxRestoreIcon,
+    MinIcon,
+    HelpIcon,
+    OnAllDesktopsIcon,
+    NotOnAllDesktopsIcon,
+    KeepAboveIcon,
+    NoKeepAboveIcon,
+    KeepBelowIcon,
+    NoKeepBelowIcon,
+    ShadeIcon,
+    UnShadeIcon,
+    NumButtonIcons
 };
 
 class PlastikHandler: public QObject, public KDecorationFactory
@@ -78,7 +78,7 @@ public:
     virtual bool supports( Ability ability );
 
     const QPixmap &pixmap(Pixmaps type, bool active, bool toolWindow);
-    const QPixmap &buttonPixmap(ButtonPixmaps type, const QSize &size, bool pressed, bool active, bool toolWindow);
+    const QBitmap &buttonBitmap(ButtonIcon type, const QSize &size, bool toolWindow);
 
     int  titleHeight() { return m_titleHeight; }
     int  titleHeightTool() { return m_titleHeightTool; }
@@ -109,7 +109,8 @@ private:
     Qt::AlignmentFlags m_titleAlign;
 
     // pixmap cache
-    QPixmap *m_pixmaps[2][2][NumPixmaps+NumButtonPixmaps*2]; // button pixmaps have normal+pressed state...
+    QPixmap *m_pixmaps[2][2][NumPixmaps]; // button pixmaps have normal+pressed state...
+    QBitmap *m_bitmaps[2][NumButtonIcons];
 };
 
 PlastikHandler* Handler();

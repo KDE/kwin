@@ -47,7 +47,7 @@ static const uint ANIMATIONSTEPS = 4;
 PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent, const char *name)
     : KCommonDecorationButton(type, parent, name),
     m_client(parent),
-    m_pixmapType(BtnClose),
+    m_iconType(NumButtonIcons),
     hover(false)
 {
     setBackgroundMode(NoBackground);
@@ -68,51 +68,51 @@ void PlastikButton::reset(unsigned long changed)
     if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
         switch (type() ) {
             case CloseButton:
-                m_pixmapType = BtnClose;
+                m_iconType = CloseIcon;
                 break;
             case HelpButton:
-                m_pixmapType = BtnHelp;
+                m_iconType = HelpIcon;
                 break;
             case MinButton:
-                m_pixmapType = BtnMin;
+                m_iconType = MinIcon;
                 break;
             case MaxButton:
                 if (isOn()) {
-                    m_pixmapType = BtnMaxRestore;
+                    m_iconType = MaxRestoreIcon;
                 } else {
-                    m_pixmapType = BtnMax;
+                    m_iconType = MaxIcon;
                 }
                 break;
             case OnAllDesktopsButton:
                 if (isOn()) {
-                    m_pixmapType = BtnNotOnAllDesktops;
+                    m_iconType = NotOnAllDesktopsIcon;
                 } else {
-                    m_pixmapType = BtnOnAllDesktops;
+                    m_iconType = OnAllDesktopsIcon;
                 }
                 break;
             case ShadeButton:
                 if (isOn()) {
-                    m_pixmapType = BtnShadeRestore;
+                    m_iconType = UnShadeIcon;
                 } else {
-                    m_pixmapType = BtnShade;
+                    m_iconType = ShadeIcon;
                 }
                 break;
             case AboveButton:
                 if (isOn()) {
-                    m_pixmapType = BtnNotAbove;
+                    m_iconType = NoKeepAboveIcon;
                 } else {
-                    m_pixmapType = BtnAbove;
+                    m_iconType = KeepAboveIcon;
                 }
                 break;
             case BelowButton:
                 if (isOn()) {
-                    m_pixmapType = BtnNotBelow;
+                    m_iconType = NoKeepBelowIcon;
                 } else {
-                    m_pixmapType = BtnBelow;
+                    m_iconType = KeepBelowIcon;
                 }
                 break;
             default:
-                m_pixmapType = NumButtonPixmaps; // invalid...
+                m_iconType = NumButtonIcons; // empty...
                 break;
         }
 
@@ -179,13 +179,13 @@ void PlastikButton::drawButton(QPainter *painter)
     }
 
     QColor contourTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
-            Qt::black, 220);
+            Qt::white, 215);
     QColor contourBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
-            Qt::black, 220);
+            Qt::white, 215);
     QColor sourfaceTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
-            Qt::white, 220);
+            Qt::black, 225);
     QColor sourfaceBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
-            Qt::white, 220);
+            Qt::black, 225);
 
     int highlightAlpha = static_cast<int>(255-((60/static_cast<double>(ANIMATIONSTEPS))*
                                           static_cast<double>(animProgress) ) );
@@ -265,17 +265,392 @@ void PlastikButton::drawButton(QPainter *painter)
     else
     {
         int dX,dY;
-        const QPixmap &icon = Handler()->buttonPixmap(m_pixmapType, size(), isDown(), active, decoration()->isToolWindow() );
+        const QBitmap &icon = Handler()->buttonBitmap(m_iconType, size(), decoration()->isToolWindow() );
         dX = r.x()+(r.width()-icon.width())/2;
         dY = r.y()+(r.height()-icon.height())/2;
         if (isDown() ) {
             dY++;
         }
+
+        if(!isDown() && Handler()->titleShadow() ) {
+            QColor shadowColor;
+            if (qGray(Handler()->getColor(TitleFont,active).rgb()) < 100)
+                shadowColor = QColor(255, 255, 255);
+            else
+                shadowColor = QColor(0,0,0);
+            bP.setPen(alphaBlendColors(sourfaceTop, shadowColor, 180) );
+            bP.drawPixmap(dX+1, dY+1, icon);
+        }
+
+        bP.setPen(Handler()->getColor(TitleFont,active) );
         bP.drawPixmap(dX, dY, icon);
     }
 
     bP.end();
     painter->drawPixmap(0, 0, buffer);
+}
+
+QBitmap IconEngine::icon(ButtonIcon icon, int size)
+{
+    if (size%2 == 0)
+        --size;
+
+    QBitmap bitmap(size,size);
+    bitmap.fill(Qt::color0);
+    QPainter p(&bitmap);
+
+    p.setPen(Qt::color1);
+
+    QRect r = bitmap.rect();
+
+    // line widths
+    int lwTitleBar = 1;
+    if (r.width() > 16) {
+        lwTitleBar = 4;
+    } else if (r.width() > 4) {
+        lwTitleBar = 2;
+    }
+    int lwArrow = 1;
+    if (r.width() > 16) {
+        lwArrow = 4;
+    } else if (r.width() > 7) {
+        lwArrow = 2;
+    }
+
+    switch(icon) {
+        case CloseIcon:
+        {
+            int lineWidth = 1;
+            if (r.width() > 16) {
+                lineWidth = 3;
+            } else if (r.width() > 4) {
+                lineWidth = 2;
+            }
+
+            drawObject(p, DiagonalLine, r.x(), r.y(), r.width(), lineWidth);
+            drawObject(p, CrossDiagonalLine, r.x(), r.bottom(), r.width(), lineWidth);
+
+            break;
+        }
+
+        case MaxIcon:
+        {
+            int lineWidth2 = 1; // frame
+            if (r.width() > 16) {
+                lineWidth2 = 2;
+            } else if (r.width() > 4) {
+                lineWidth2 = 1;
+            }
+
+            drawObject(p, HorizontalLine, r.x(), r.top(), r.width(), lwTitleBar);
+            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lineWidth2-1), r.width(), lineWidth2);
+            drawObject(p, VerticalLine, r.x(), r.top(), r.height(), lineWidth2);
+            drawObject(p, VerticalLine, r.right()-(lineWidth2-1), r.top(), r.height(), lineWidth2);
+
+            break;
+        }
+
+        case MaxRestoreIcon:
+        {
+            int lineWidth2 = 1; // frame
+            if (r.width() > 16) {
+                lineWidth2 = 2;
+            } else if (r.width() > 4) {
+                lineWidth2 = 1;
+            }
+
+            int margin1, margin2;
+            margin1 = margin2 = lineWidth2*2;
+            if (r.width() < 8)
+                margin1 = 1;
+
+            // background window
+            drawObject(p, HorizontalLine, r.x()+margin1, r.top(), r.width()-margin1, lineWidth2);
+            drawObject(p, HorizontalLine, r.right()-margin2, r.bottom()-(lineWidth2-1)-margin1, margin2, lineWidth2);
+            drawObject(p, VerticalLine, r.x()+margin1, r.top(), margin2, lineWidth2);
+            drawObject(p, VerticalLine, r.right()-(lineWidth2-1), r.top(), r.height()-margin1, lineWidth2);
+
+            // foreground window
+            drawObject(p, HorizontalLine, r.x(), r.top()+margin2, r.width()-margin2, lwTitleBar);
+            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lineWidth2-1), r.width()-margin2, lineWidth2);
+            drawObject(p, VerticalLine, r.x(), r.top()+margin2, r.height(), lineWidth2);
+            drawObject(p, VerticalLine, r.right()-(lineWidth2-1)-margin2, r.top()+margin2, r.height(), lineWidth2);
+
+            break;
+        }
+
+        case MinIcon:
+        {
+            drawObject(p, HorizontalLine, r.x(), r.bottom()-(lwTitleBar-1), r.width(), lwTitleBar);
+
+            break;
+        }
+
+        case HelpIcon:
+        {
+            int center = r.x()+r.width()/2 -1;
+            int side = r.width()/4;
+
+            // paint a question mark... code is quite messy, to be cleaned up later...! :o
+
+            if (r.width() > 16) {
+                int lineWidth = 3;
+
+                // top bar
+                drawObject(p, HorizontalLine, center-side+3, r.y(), 2*side-3-1, lineWidth);
+                // top bar rounding
+                drawObject(p, CrossDiagonalLine, center-side-1, r.y()+5, 6, lineWidth);
+                drawObject(p, DiagonalLine, center+side-3, r.y(), 5, lineWidth);
+                // right bar
+                drawObject(p, VerticalLine, center+side+2-lineWidth, r.y()+3, r.height()-(2*lineWidth+side+2+1), lineWidth);
+                // bottom bar
+                drawObject(p, CrossDiagonalLine, center, r.bottom()-2*lineWidth, side+2, lineWidth);
+                drawObject(p, HorizontalLine, center, r.bottom()-3*lineWidth+2, lineWidth, lineWidth);
+                // the dot
+                drawObject(p, HorizontalLine, center, r.bottom()-(lineWidth-1), lineWidth, lineWidth);
+            } else if (r.width() > 8) {
+                int lineWidth = 2;
+
+                // top bar
+                drawObject(p, HorizontalLine, center-(side-1), r.y(), 2*side-1, lineWidth);
+                // top bar rounding
+                if (r.width() > 9) {
+                    drawObject(p, CrossDiagonalLine, center-side-1, r.y()+3, 3, lineWidth);
+                } else {
+                    drawObject(p, CrossDiagonalLine, center-side-1, r.y()+2, 3, lineWidth);
+                }
+                drawObject(p, DiagonalLine, center+side-1, r.y(), 3, lineWidth);
+                // right bar
+                drawObject(p, VerticalLine, center+side+2-lineWidth, r.y()+2, r.height()-(2*lineWidth+side+1), lineWidth);
+                // bottom bar
+                drawObject(p, CrossDiagonalLine, center, r.bottom()-2*lineWidth+1, side+2, lineWidth);
+                // the dot
+                drawObject(p, HorizontalLine, center, r.bottom()-(lineWidth-1), lineWidth, lineWidth);
+            } else {
+                int lineWidth = 1;
+
+                // top bar
+                drawObject(p, HorizontalLine, center-(side-1), r.y(), 2*side, lineWidth);
+                // top bar rounding
+                drawObject(p, CrossDiagonalLine, center-side-1, r.y()+1, 2, lineWidth);
+                // right bar
+                drawObject(p, VerticalLine, center+side+1, r.y(), r.height()-(side+2+1), lineWidth);
+                // bottom bar
+                drawObject(p, CrossDiagonalLine, center, r.bottom()-2, side+2, lineWidth);
+                // the dot
+                drawObject(p, HorizontalLine, center, r.bottom(), 1, 1);
+            }
+
+            break;
+        }
+
+        case NotOnAllDesktopsIcon:
+        {
+            int lwMark = 1;
+            if (r.width() > 16) {
+                lwMark = 3;
+            } else if (r.width() > 7) {
+                lwMark = 2;
+            }
+
+            int l = r.width()/3;
+            if (l < 1)
+                l = 1;
+
+            drawObject(p, DiagonalLine, r.x()+l, r.y()+l, r.width()-2*l, lwMark);
+            drawObject(p, CrossDiagonalLine, r.x()+l, r.bottom()-l, r.width()-2*l, lwMark);
+
+            // Fall through to OnAllDesktopsIcon intended!
+        }
+        case OnAllDesktopsIcon:
+        {
+            int circleLineWidth = 1;
+            if (r.width() > 16) {
+                circleLineWidth = 4;
+            } else if (r.width() > 7) {
+                circleLineWidth = 2;
+            }
+
+            int l = r.width()/4;
+            if (l < 1)
+                l = 1;
+            int l2 = r.width()/3;
+            if (l2 < 1)
+                l = 1;
+
+            // horizontal bars
+            drawObject(p, HorizontalLine, r.x()+l, r.y(), r.width()-2*l, circleLineWidth);
+            drawObject(p, HorizontalLine, r.x()+l, r.bottom()-(circleLineWidth-1), r.width()-2*l, circleLineWidth);
+            // vertical bars
+            drawObject(p, VerticalLine, r.x(), r.y()+l, r.height()-2*l, circleLineWidth);
+            drawObject(p, VerticalLine, r.right()-(circleLineWidth-1), r.y()+l, r.height()-2*l, circleLineWidth);
+
+
+            break;
+        }
+
+        case NoKeepAboveIcon:
+        {
+            int center = r.x()+r.width()/2;
+
+            // arrow
+            drawObject(p, CrossDiagonalLine, r.x(), center+2*lwArrow, center-r.x(), lwArrow);
+            drawObject(p, DiagonalLine, r.x()+center, r.y()+1+2*lwArrow, center-r.x(), lwArrow);
+            if (lwArrow>1)
+                drawObject(p, HorizontalLine, center-(lwArrow-2), r.y()+2*lwArrow, (lwArrow-2)*2, lwArrow);
+
+            // Fall through to KeepAboveIcon intended!
+        }
+        case KeepAboveIcon:
+        {
+            int center = r.x()+r.width()/2;
+
+            // arrow
+            drawObject(p, CrossDiagonalLine, r.x(), center, center-r.x(), lwArrow);
+            drawObject(p, DiagonalLine, r.x()+center, r.y()+1, center-r.x(), lwArrow);
+            if (lwArrow>1)
+                drawObject(p, HorizontalLine, center-(lwArrow-2), r.y(), (lwArrow-2)*2, lwArrow);
+
+            break;
+        }
+
+        case NoKeepBelowIcon:
+        {
+            int center = r.x()+r.width()/2;
+
+            // arrow
+            drawObject(p, DiagonalLine, r.x(), center-2*lwArrow, center-r.x(), lwArrow);
+            drawObject(p, CrossDiagonalLine, r.x()+center, r.bottom()-1-2*lwArrow, center-r.x(), lwArrow);
+            if (lwArrow>1)
+                drawObject(p, HorizontalLine, center-(lwArrow-2), r.bottom()-(lwArrow-1)-2*lwArrow, (lwArrow-2)*2, lwArrow);
+
+            // Fall through to KeepBelowIcon intended!
+        }
+        case KeepBelowIcon:
+        {
+            int center = r.x()+r.width()/2;
+
+            // arrow
+            drawObject(p, DiagonalLine, r.x(), center, center-r.x(), lwArrow);
+            drawObject(p, CrossDiagonalLine, r.x()+center, r.bottom()-1, center-r.x(), lwArrow);
+            if (lwArrow>1)
+                drawObject(p, HorizontalLine, center-(lwArrow-2), r.bottom()-(lwArrow-1), (lwArrow-2)*2, lwArrow);
+
+            break;
+        }
+
+        case ShadeIcon:
+        {
+            drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lwTitleBar);
+
+            break;
+        }
+
+        case UnShadeIcon:
+        {
+            int lw1 = 1;
+            int lw2 = 1;
+            if (r.width() > 16) {
+                lw1 = 4;
+                lw2 = 2;
+            } else if (r.width() > 7) {
+                lw1 = 2;
+                lw2 = 1;
+            }
+
+            int h = QMAX( (r.width()/2), (lw1+2*lw2) );
+
+            // horizontal bars
+            drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lw1);
+            drawObject(p, HorizontalLine, r.x(), r.x()+h-(lw2-1), r.width(), lw2);
+            // vertical bars
+            drawObject(p, VerticalLine, r.x(), r.y(), h, lw2);
+            drawObject(p, VerticalLine, r.right()-(lw2-1), r.y(), h, lw2);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    p.end();
+
+    bitmap.setMask(bitmap);
+
+    return bitmap;
+}
+
+void IconEngine::drawObject(QPainter &p, Object object, int x, int y, int length, int lineWidth)
+{
+    switch(object) {
+        case DiagonalLine:
+            if (lineWidth <= 1) {
+                for (int i = 0; i < length; ++i) {
+                    p.drawPoint(x+i,y+i);
+                }
+            } else if (lineWidth <= 2) {
+                for (int i = 0; i < length; ++i) {
+                    p.drawPoint(x+i,y+i);
+                }
+                for (int i = 0; i < (length-1); ++i) {
+                    p.drawPoint(x+1+i,y+i);
+                    p.drawPoint(x+i,y+1+i);
+                }
+            } else {
+                for (int i = 1; i < (length-1); ++i) {
+                    p.drawPoint(x+i,y+i);
+                }
+                for (int i = 0; i < (length-1); ++i) {
+                    p.drawPoint(x+1+i,y+i);
+                    p.drawPoint(x+i,y+1+i);
+                }
+                for (int i = 0; i < (length-2); ++i) {
+                    p.drawPoint(x+2+i,y+i);
+                    p.drawPoint(x+i,y+2+i);
+                }
+            }
+            break;
+        case CrossDiagonalLine:
+            if (lineWidth <= 1) {
+                for (int i = 0; i < length; ++i) {
+                    p.drawPoint(x+i,y-i);
+                }
+            } else if (lineWidth <= 2) {
+                for (int i = 0; i < length; ++i) {
+                    p.drawPoint(x+i,y-i);
+                }
+                for (int i = 0; i < (length-1); ++i) {
+                    p.drawPoint(x+1+i,y-i);
+                    p.drawPoint(x+i,y-1-i);
+                }
+            } else {
+                for (int i = 1; i < (length-1); ++i) {
+                    p.drawPoint(x+i,y-i);
+                }
+                for (int i = 0; i < (length-1); ++i) {
+                    p.drawPoint(x+1+i,y-i);
+                    p.drawPoint(x+i,y-1-i);
+                }
+                for (int i = 0; i < (length-2); ++i) {
+                    p.drawPoint(x+2+i,y-i);
+                    p.drawPoint(x+i,y-2-i);
+                }
+            }
+            break;
+        case HorizontalLine:
+            for (int i = 0; i < lineWidth; ++i) {
+                p.drawLine(x,y+i, x+length-1, y+i);
+            }
+            break;
+        case VerticalLine:
+            for (int i = 0; i < lineWidth; ++i) {
+                p.drawLine(x+i,y, x+i, y+length-1);
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 } // KWinPlastik

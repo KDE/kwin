@@ -55,11 +55,34 @@ private:
 
 private:
     PlastikClient *m_client;
-    ButtonPixmaps m_pixmapType;
+    ButtonIcon m_iconType;
     bool hover;
 
     QTimer *animTmr;
     uint animProgress;
+};
+
+/**
+ * This class creates bitmaps which can be used as icons on buttons. The icons
+ * are "hardcoded".
+ * Over the previous "Gimp->xpm->QImage->recolor->SmoothScale->QPixmap" solution
+ * it has the important advantage that icons are more scalable and at the same
+ * time sharp and not blurred.
+ */
+class IconEngine
+{
+    public:
+        static QBitmap icon(ButtonIcon icon, int size);
+
+    private:
+        enum Object {
+            HorizontalLine,
+            VerticalLine,
+            DiagonalLine,
+            CrossDiagonalLine
+        };
+
+        static void drawObject(QPainter &p, Object object, int x, int y, int length, int lineWidth);
 };
 
 } // namespace KWinPlastik

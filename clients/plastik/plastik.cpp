@@ -20,6 +20,7 @@
   Boston, MA 02111-1307, USA.
  */
 
+#include <qbitmap.h>
 #include <qpainter.h>
 #include <qimage.h>
 
@@ -27,32 +28,19 @@
 #include <kpixmap.h>
 #include <kpixmapeffect.h>
 
-#include "xpm/close.xpm"
-#include "xpm/minimize.xpm"
-#include "xpm/maximize.xpm"
-#include "xpm/restore.xpm"
-#include "xpm/help.xpm"
-#include "xpm/sticky.xpm"
-#include "xpm/unsticky.xpm"
-#include "xpm/shade.xpm"
-#include "xpm/unshade.xpm"
-#include "xpm/keepabove.xpm"
-#include "xpm/notkeepabove.xpm"
-#include "xpm/keepbelow.xpm"
-#include "xpm/notkeepbelow.xpm"
-#include "xpm/empty.xpm"
-
 #include "misc.h"
 #include "plastik.h"
 #include "plastik.moc"
 #include "plastikclient.h"
+#include "plastikbutton.h"
 
 namespace KWinPlastik
 {
 
 PlastikHandler::PlastikHandler()
 {
-    memset(m_pixmaps, 0, sizeof(QPixmap*)*(NumPixmaps+NumButtonPixmaps*2)*2*2); // set elements to 0
+    memset(m_pixmaps, 0, sizeof(QPixmap*)*NumPixmaps*2*2); // set elements to 0
+    memset(m_bitmaps, 0, sizeof(QBitmap*)*NumButtonIcons*2);
 
     reset(0);
 }
@@ -61,8 +49,11 @@ PlastikHandler::~PlastikHandler()
 {
     for (int t=0; t < 2; ++t)
         for (int a=0; a < 2; ++a)
-            for (int i=0; i < NumPixmaps+NumButtonPixmaps*2; ++i)
+            for (int i=0; i < NumPixmaps; ++i)
                 delete m_pixmaps[t][a][i];
+    for (int t=0; t < 2; ++t)
+        for (int i=0; i < NumButtonIcons; ++i)
+            delete m_bitmaps[t][i];
 }
 
 bool PlastikHandler::reset(unsigned long changed)
@@ -105,11 +96,19 @@ bool PlastikHandler::reset(unsigned long changed)
     // pixmaps probably need to be updated, so delete the cache.
     for (int t=0; t < 2; ++t) {
         for (int a=0; a < 2; ++a) {
-            for (int i=0; i < NumPixmaps+NumButtonPixmaps*2; i++) {
+            for (int i=0; i < NumPixmaps; i++) {
                 if (m_pixmaps[t][a][i]) {
                     delete m_pixmaps[t][a][i];
                     m_pixmaps[t][a][i] = 0;
                 }
+            }
+        }
+    }
+    for (int t=0; t < 2; ++t) {
+        for (int i=0; i < NumButtonIcons; i++) {
+            if (m_bitmaps[t][i]) {
+                delete m_bitmaps[t][i];
+                m_bitmaps[t][i] = 0;
             }
         }
     }
@@ -170,11 +169,17 @@ void PlastikHandler::readConfig()
     int titleHeightMin = config.readNumEntry("MinTitleHeight", 16);
     // The title should strech with bigger font sizes!
     m_titleHeight = QMAX(titleHeightMin, fm.height() + 4); // 4 px for the shadow etc.
+    // have an even title/button size so the button icons are fully centered...
+    if ( m_titleHeight%2 == 0)
+        m_titleHeight++;
 
     fm = QFontMetrics(m_titleFontTool);  // active font = inactive font
     int titleHeightToolMin = config.readNumEntry("MinTitleHeightTool", 13);
     // The title should strech with bigger font sizes!
     m_titleHeightTool = QMAX(titleHeightToolMin, fm.height() ); // don't care about the shadow etc.
+    // have an even title/button size so the button icons are fully centered...
+    if ( m_titleHeightTool%2 == 0)
+        m_titleHeightTool++;
 
     QString value = config.readEntry("TitleAlignment", "AlignHCenter");
     if (value == "AlignLeft")         m_titleAlign = Qt::AlignLeft;
@@ -189,7 +194,7 @@ QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
 {
     switch (type) {
         case WindowContour:
-            return KDecoration::options()->color(ColorTitleBar, active).dark(190);
+            return KDecoration::options()->color(ColorTitleBar, active).dark(200);
         case TitleGradient1:
             return hsvRelative(KDecoration::options()->color(ColorTitleBar, active), 0,-10,+10);
             break;
@@ -274,9 +279,9 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
     }
 }
 
-const QPixmap &PlastikHandler::buttonPixmap(ButtonPixmaps type, const QSize &size, bool pressed, bool active, bool toolWindow)
+const QBitmap &PlastikHandler::buttonBitmap(ButtonIcon type, const QSize &size, bool toolWindow)
 {
-    int typeIndex = NumPixmaps+(pressed?type*2:type);
+    int typeIndex = NumPixmaps+type;
 
     // btn icon size...
     int reduceW = 0, reduceH = 0;
@@ -293,67 +298,18 @@ const QPixmap &PlastikHandler::buttonPixmap(ButtonPixmaps type, const QSize &siz
     int w = size.width() - reduceW;
     int h = size.height() - reduceH;
 
-    if (m_pixmaps[toolWindow][active][typeIndex] && m_pixmaps[toolWindow][active][typeIndex]->size()==QSize(w,h) )
-        return *m_pixmaps[toolWindow][active][typeIndex];
+    if (m_bitmaps[toolWindow][typeIndex] && m_bitmaps[toolWindow][typeIndex]->size()==QSize(w,h) )
+        return *m_bitmaps[toolWindow][typeIndex];
 
     // no matching pixmap found, create a new one...
 
-    delete m_pixmaps[toolWindow][active][typeIndex];
-    m_pixmaps[toolWindow][active][typeIndex] = 0;
+    delete m_bitmaps[toolWindow][typeIndex];
+    m_bitmaps[toolWindow][typeIndex] = 0;
 
-    QColor iconColor = alphaBlendColors(getColor(TitleGradient3, active), pressed ? Qt::white : Qt::black, 50);
-
-    QImage img;
-
-    switch (type) {
-        case BtnHelp:
-            img = QImage(help_xpm);
-            break;
-        case BtnMax:
-            img = QImage(maximize_xpm);
-            break;
-        case BtnMaxRestore:
-            img = QImage(restore_xpm);
-            break;
-        case BtnMin:
-            img = QImage(minimize_xpm);
-            break;
-        case BtnClose:
-            img = QImage(close_xpm);
-            break;
-        case BtnOnAllDesktops:
-            img = QImage(sticky_xpm);
-            break;
-        case BtnNotOnAllDesktops:
-            img = QImage(unsticky_xpm);
-            break;
-        case BtnAbove:
-            img = QImage(keepabove_xpm);
-            break;
-        case BtnNotAbove:
-            img = QImage(notkeepabove_xpm);
-            break;
-        case BtnBelow:
-            img = QImage(keepbelow_xpm);
-        case BtnNotBelow:
-            img = QImage(notkeepbelow_xpm);
-            break;
-        case BtnShade:
-            img = QImage(shade_xpm);
-            break;
-        case BtnShadeRestore:
-            img = QImage(unshade_xpm);
-            break;
-
-        default:
-            img = QImage(empty_xpm);
-            break;
-    }
-
-    QPixmap *pixmap = new QPixmap(recolorImage(&img, iconColor).smoothScale(w,h) );
-    m_pixmaps[toolWindow][active][typeIndex] = pixmap;
-    return *pixmap;
-
+    QBitmap bmp = IconEngine::icon(type /*icon*/, QMIN(w,h) );
+    QBitmap *bitmap = new QBitmap(bmp);
+    m_bitmaps[toolWindow][typeIndex] = bitmap;
+    return *bitmap;
 }
 
 QValueList< PlastikHandler::BorderSize >
