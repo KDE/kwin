@@ -111,8 +111,7 @@ private:
   KIntNumInput *delayFocus;
 
   QButtonGroup *kbdBox;
-  QRadioButton *kdeMode;
-  QRadioButton *cdeMode;
+  QCheckBox    *altTabPopup;
   QCheckBox    *traverseAll;
   QCheckBox    *rollOverDesktops;
   QCheckBox    *showPopupinfo;

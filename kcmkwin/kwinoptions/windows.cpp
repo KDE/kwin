@@ -54,7 +54,7 @@
 #define KWIN_MINIMIZE_ANIM         "AnimateMinimize"
 #define KWIN_MINIMIZE_ANIM_SPEED   "AnimateMinimizeSpeed"
 #define KWIN_RESIZE_OPAQUE         "ResizeMode"
-#define KWIN_GEOMETRY		   "GeometryTip"
+#define KWIN_GEOMETRY              "GeometryTip"
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
 #define KWIN_AUTORAISE             "AutoRaise"
 #define KWIN_DELAYFOCUS_INTERVAL   "DelayFocusInterval"
@@ -206,42 +206,38 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
 
     kbdBox = new QButtonGroup(i18n("Navigation"), this);
     kbdBox->setColumnLayout( 0, Qt::Horizontal );
-    QGridLayout *kLay = new QGridLayout(kbdBox->layout(), 4, 4,
-                                        KDialog::spacingHint());
-    QLabel *altTabLabel = new QLabel( i18n("Walk through windows mode:"), kbdBox);
-    kLay->addWidget(altTabLabel, 1, 0);
-    kdeMode = new QRadioButton(i18n("&KDE"), kbdBox);
-    kLay->addWidget(kdeMode, 1, 1);
-    cdeMode = new QRadioButton(i18n("CD&E"), kbdBox);
-    kLay->addWidget(cdeMode, 1, 2);
+    QVBoxLayout *kLay = new QVBoxLayout(kbdBox->layout(), KDialog::spacingHint());
+
+    altTabPopup = new QCheckBox( i18n("Show window list while switching windows"), kbdBox );
+    kLay->addWidget( altTabPopup );
 
     wtstr = i18n("Hold down the Alt key and press the Tab key repeatedly to walk"
                  " through the windows on the current desktop (the Alt+Tab"
-                 " combination can be reconfigured). The two different modes mean:<ul>"
-                 "<li><b>KDE</b>: a nice widget is shown, displaying the icons of all windows to"
-                 " walk through and the title of the currently selected one;"
-                 "<li><b>CDE</b>: the focus is passed to a new window each time Tab is pressed."
-                 " No fancy widget.</li></ul>");
-    QWhatsThis::add( altTabLabel, wtstr );
-    QWhatsThis::add( kdeMode, wtstr );
-    QWhatsThis::add( cdeMode, wtstr );
+                 " combination can be reconfigured).\n\n"
+                 "If this checkbox is checked"
+                 " a popup widget is shown, displaying the icons of all windows to"
+                 " walk through and the title of the currently selected one.\n\n"
+                 "Otherwise, the focus is passed to a new window each time Tab"
+                 " is pressed, with no popup widget.  In addition, the previously"
+                 " activated window will be sent to the back in this mode.");
+    QWhatsThis::add( altTabPopup, wtstr );
 
     traverseAll = new QCheckBox( i18n( "&Traverse windows on all desktops" ), kbdBox );
-    kLay->addMultiCellWidget( traverseAll, 2, 2, 0, 2 );
+    kLay->addWidget( traverseAll );
 
     wtstr = i18n( "Leave this option disabled if you want to limit walking through"
                   " windows to the current desktop." );
     QWhatsThis::add( traverseAll, wtstr );
 
     rollOverDesktops = new QCheckBox( i18n("Desktop navi&gation wraps around"), kbdBox );
-    kLay->addMultiCellWidget(rollOverDesktops, 3, 3, 0, 2);
+    kLay->addWidget(rollOverDesktops);
 
     wtstr = i18n( "Enable this option if you want keyboard or active desktop border navigation beyond"
                   " the edge of a desktop to take you to the opposite edge of the new desktop." );
     QWhatsThis::add( rollOverDesktops, wtstr );
 
     showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop &switch"), kbdBox );
-    kLay->addMultiCellWidget(showPopupinfo, 4, 4, 0, 2);
+    kLay->addWidget(showPopupinfo);
 
     wtstr = i18n( "Enable this option if you wish to see the current desktop"
                   " name popup whenever the current desktop is changed." );
@@ -256,8 +252,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     connect(fcsBox, SIGNAL(clicked(int)), SLOT(changed()));
     connect(autoRaise, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(delayFocus, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(kdeMode, SIGNAL(clicked()), SLOT(changed()));
-    connect(cdeMode, SIGNAL(clicked()), SLOT(changed()));
+    connect(altTabPopup, SIGNAL(clicked()), SLOT(changed()));
     connect(traverseAll, SIGNAL(clicked()), SLOT(changed()));
     connect(rollOverDesktops, SIGNAL(clicked()), SLOT(changed()));
     connect(showPopupinfo, SIGNAL(clicked()), SLOT(changed()));
@@ -357,8 +352,7 @@ void KFocusConfig::clickRaiseOnTog(bool ) {
 }
 
 void KFocusConfig::setAltTabMode(bool a) {
-    kdeMode->setChecked(a);
-    cdeMode->setChecked(!a);
+    altTabPopup->setChecked(a);
 }
 
 void KFocusConfig::setTraverseAll(bool a) {
@@ -458,7 +452,7 @@ void KFocusConfig::save( void )
     else
         config->writeEntry(KWIN_CLICKRAISE, "off");
 
-    if (kdeMode->isChecked())
+    if (altTabPopup->isChecked())
         config->writeEntry(KWIN_ALTTABMODE, "KDE");
     else
         config->writeEntry(KWIN_ALTTABMODE, "CDE");
@@ -774,9 +768,9 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
     geometryTipOn = new QCheckBox(i18n("Display window &geometry when moving or resizing"), windowsBox);
     bLay->addWidget(geometryTipOn);
     QWhatsThis::add(geometryTipOn, i18n("Enable this option if you want a window's geometry to be displayed"
-			    		" while it is being moved or resized. The window position relative"
-					" to the top-left corner of the screen is displayed together with"
-					" its size."));
+                                        " while it is being moved or resized. The window position relative"
+                                        " to the top-left corner of the screen is displayed together with"
+                                        " its size."));
 
     QGridLayout *rLay = new QGridLayout(2,3);
     bLay->addLayout(rLay);
