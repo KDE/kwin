@@ -1,9 +1,13 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=KStep
-Name[af]=KSTEP
+Name[af]=kstep
 Name[eo]=Step
 Name[fr]=kStep
 Name[mi]=KHïkoi
-Name[no]=KSteg
+Name[nb]=KSteg
 Name[sv]=Kstep
+Name[xh]=Inqwanqwa le K
+Name[xx]=xx
+Name[zu]=Izinga le K
 X-KDE-Library=libkwinkstep

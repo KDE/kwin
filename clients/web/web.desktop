@@ -1,15 +1,21 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Web
-Name[af]=WEB
+Name[af]=web
 Name[az]=Veb
 Name[da]=Net
 Name[eo]=TTT
 Name[is]=Vefur
 Name[ko]=웹
-Name[no_NY]=Vev
+Name[nb]=Nett
+Name[nn]=Vev
 Name[pl]=Sieć
+Name[pt_BR]=Árvore Web
 Name[sl]=Splet
 Name[sv]=Webb
 Name[ta]=Å¨Ä
 Name[uk]=Тенета
+Name[xh]=iWeb
+Name[xx]=xx
+Name[zu]=I Web
 X-KDE-Library=libkwinweb

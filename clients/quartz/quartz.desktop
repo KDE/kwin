@@ -1,16 +1,23 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=Quartz
-Name[af]=QUARTZ
+Name[af]=quartz
 Name[az]=Kvars
 Name[bg]=Кварц
 Name[eo]=Kvarco
 Name[es]=Cuarzo
+Name[eu]=Kristala
 Name[ko]=수정
 Name[lv]=Kvarcs
 Name[mt]=Kwartz
 Name[pl]=Kwarc
+Name[pt_BR]=Quartzo
 Name[ru]=Кварц
 Name[tr]=Kuartz
 Name[uk]=Кварц
-Name[zh_CN.GB2312]=水晶
+Name[xh]=Iminerali enikezwe banzi equlathe isilika
+Name[xx]=xx
+Name[zh_CN]=水晶
+Name[zh_TW]=石英
+Name[zu]=Iminerali embiwa emayini ephethe isilika
 X-KDE-Library=libkwinquartz

@@ -1,5 +1,7 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=System++
+Name[af]=stelsel++
 Name[br]=Reizhiad++
 Name[ca]=Sistema++
 Name[cs]=Systém++
@@ -18,5 +20,7 @@ Name[nl]=Systeem++
 Name[oc]=Sistemo++
 Name[sl]=Sistem++
 Name[tr]=Sistem++
-Name[zh_TW.Big5]=系統++
+Name[xh]=Indlela esetyenziswayo++
+Name[xx]=xx
+Name[zu]=Indlela esetshenziswayo++
 X-KDE-Library=libkwinsystem

@@ -1,4 +1,8 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=IceWM
-Name[af]=ICEWM
+Name[af]=icewm
+Name[xh]=UmkhenkceWM
+Name[xx]=xx
+Name[zu]=Iqhwa leWM
 X-KDE-Library=libkwinicewm

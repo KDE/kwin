@@ -1,12 +1,16 @@
 [Desktop Entry]
+Encoding=UTF-8
 Name=RISC OS
+Name[af]=risc os
 Name[cs]=Risc OS
-Name[da]=Risc os
+Name[da]=Risc OS
 Name[de]=RISC-OS
 Name[eo]=Risc-OS
 Name[ko]=리스크 OS
 Name[mt]=OS RISC
 Name[sl]=OS RISC
 Name[uk]=RISC ОС
-Name[zh_TW.Big5]=RISC 作業系統
+Name[xh]=i RISC OS
+Name[xx]=xx
+Name[zu]=IRISC OS
 X-KDE-Library=libkwinriscos
