@@ -663,13 +663,14 @@ Layer Client::belongsToLayer() const
         return DockLayer;
     if( isTopMenu())
         return DockLayer;
-    if( isDialog() && workspace()->activeClient() == this
-        && ( options->focusPolicy == Options::ClickToFocus || options->autoRaise ))
+    bool raise_special_active_windows = ( options->focusPolicy == Options::ClickToFocus || options->autoRaise );
+    if( isDialog() && workspace()->activeClient() == this && raise_special_active_windows )
         return ActiveLayer;
     if( keepAbove())
         return AboveLayer;
     if( isFullScreen() && workspace()->activeClient() != NULL
-        && ( workspace()->activeClient() == this || this->hasTransient( workspace()->activeClient(), true )))
+        && ( workspace()->activeClient() == this || this->hasTransient( workspace()->activeClient(), true ))
+        && raise_special_active_windows )
         return ActiveLayer;
     return NormalLayer;
     }
