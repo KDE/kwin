@@ -27,6 +27,7 @@
 #include <qpainter.h>
 #include <qimage.h>
 #include <qlayout.h>
+#include <qvariant.h>
 
 #include <kapp.h>
 
