@@ -108,8 +108,13 @@ class KDEDefaultClient : public KDecoration
 
 	protected slots:
 		void slotMaximize();
+                void slotAbove();
+                void slotBelow();
+                void slotShade();
 		void menuButtonPressed();
-	    void menuButtonReleased();
+	        void menuButtonReleased();
+                void keepAboveChange( bool );
+                void keepBelowChange( bool );
 
 	private:
 		void doShape();
@@ -118,7 +123,7 @@ class KDEDefaultClient : public KDecoration
                 bool isTool() const;
 
 		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
-					  BtnMenu, BtnSticky, BtnCount };
+			BtnMenu, BtnSticky, BtnAbove, BtnBelow, BtnShade, BtnCount };
 		KDEDefaultButton* button[ KDEDefaultClient::BtnCount ];
 		int           lastButtonWidth;
 		int           titleHeight;

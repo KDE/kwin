@@ -50,6 +50,30 @@ static const unsigned char question_bits[] = {
   0x00, 0x00, 0x78, 0x00, 0xcc, 0x00, 0xc0, 0x00, 0x60, 0x00, 0x30, 0x00,
   0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00};
 
+static const unsigned char above_on_bits[] = {
+   0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0x30, 0x00, 0xfc, 0x00, 0x78, 0x00,
+   0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+static const unsigned char above_off_bits[] = {
+   0x30, 0x00, 0x78, 0x00, 0xfc, 0x00, 0x30, 0x00, 0xfe, 0x01, 0xfe, 0x01,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+static const unsigned char below_on_bits[] = {
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x78, 0x00, 0xfc, 0x00,
+   0x30, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0x00, 0x00 };
+
+static const unsigned char below_off_bits[] = {
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01,
+   0x30, 0x00, 0xfc, 0x00, 0x78, 0x00, 0x30, 0x00 };
+
+static const unsigned char shade_on_bits[] = {
+   0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01, 0x02, 0x01, 0x02, 0x01,
+   0x02, 0x01, 0x02, 0x01, 0xfe, 0x01, 0x00, 0x00 };
+
+static const unsigned char shade_off_bits[] = {
+   0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
 static const unsigned char pindown_white_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0x80, 0x1f, 0xa0, 0x03,
   0xb0, 0x01, 0x30, 0x01, 0xf0, 0x00, 0x70, 0x00, 0x20, 0x00, 0x00, 0x00,
@@ -710,6 +734,9 @@ KDEDefaultClient::KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f 
 
 void KDEDefaultClient::init()
 {
+    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
+    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
+
     createMainWidget( WResizeNoErase | WStaticContents | WRepaintNoErase );
     widget()->installEventFilter( this );
 
@@ -854,6 +881,48 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				}
 				break;
 
+			// Above button
+			case 'F':
+				if ( (!button[BtnAbove]))
+				{
+				    button[BtnAbove]  = new KDEDefaultButton(this, "above",
+							largeButtons, isLeft, true,
+                                                        keepAbove() ? above_on_bits : above_off_bits,
+							i18n("Keep Above Others"));
+				    connect( button[BtnAbove], SIGNAL( clicked()),
+							this, SLOT(slotAbove()) );
+					hb->addWidget( button[BtnAbove] );
+				}
+				break;
+
+			// Below button
+			case 'B':
+				if ( (!button[BtnBelow]))
+				{
+				    button[BtnBelow]  = new KDEDefaultButton(this, "below",
+							largeButtons, isLeft, true,
+                                                        keepBelow() ? below_on_bits : below_off_bits,
+							i18n("Keep Below Others"));
+				    connect( button[BtnBelow], SIGNAL( clicked()),
+							this, SLOT(slotBelow()) );
+					hb->addWidget( button[BtnBelow] );
+				}
+				break;
+
+			// Shade button
+			case 'L':
+				if ( (!button[BtnShade]) && isShadeable())
+				{
+				    button[BtnShade]  = new KDEDefaultButton(this, "shade",
+							largeButtons, isLeft, true,
+                                                        isSetShade() ? shade_on_bits : shade_off_bits,
+							isSetShade() ? i18n( "Unshade" ) : i18n("Shade"));
+				    connect( button[BtnShade], SIGNAL( clicked()),
+							this, SLOT(slotShade()) );
+					hb->addWidget( button[BtnShade] );
+				}
+				break;
+
 			// Spacer item (only for non-tool windows)
 			case '_':
     			if ( !isTool() )
@@ -884,6 +953,22 @@ void KDEDefaultClient::desktopChange()
 	}
 }
 
+void KDEDefaultClient::keepAboveChange( bool above )
+{
+	if (button[BtnAbove]) {
+		button[BtnAbove]->setBitmap( above ? above_on_bits : above_off_bits );
+		button[BtnAbove]->repaint(false);
+	}
+}
+
+void KDEDefaultClient::keepBelowChange( bool below )
+{
+	if (button[BtnBelow]) {
+		button[BtnBelow]->setBitmap( below ? below_on_bits : below_off_bits );
+		button[BtnBelow]->repaint(false);
+	}
+}
+
 void KDEDefaultClient::slotMaximize()
 {
     if ( button[BtnMax]->last_button == MidButton )
@@ -894,6 +979,26 @@ void KDEDefaultClient::slotMaximize()
 	   maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
 }
 
+void KDEDefaultClient::slotAbove()
+{
+    setKeepAbove( !keepAbove());
+    button[BtnAbove]->turnOn(keepAbove());
+    button[BtnAbove]->repaint(true);
+}
+
+void KDEDefaultClient::slotBelow()
+{
+    setKeepBelow( !keepBelow());
+    button[BtnBelow]->turnOn(keepBelow());
+    button[BtnBelow]->repaint(true);
+}
+
+void KDEDefaultClient::slotShade()
+{
+    setShade( !isSetShade());
+    button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
+    button[BtnShade]->repaint(true);
+}
 
 void KDEDefaultClient::resizeEvent( QResizeEvent* e)
 {
@@ -1154,6 +1259,13 @@ void KDEDefaultClient::activeChange()
 
 void KDEDefaultClient::shadeChange()
 {
+	if (button[BtnShade]) {
+                bool on = isShade();
+		button[BtnShade]->turnOn(on);
+		button[BtnShade]->repaint(false);
+                QToolTip::remove( button[BtnShade] );
+		QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));
+	}
 }
 
 QSize KDEDefaultClient::minimumSize() const
@@ -1178,10 +1290,12 @@ void KDEDefaultClient::borders( int& left, int& right, int& top, int& bottom ) c
 void KDEDefaultClient::calcHiddenButtons()
 {
 	// Hide buttons in this order:
-	// Sticky, Help, Maximize, Minimize, Close, Menu.
-	KDEDefaultButton* btnArray[] = { button[BtnSticky], button[BtnHelp],
+	// Shade, Below, Above, Sticky, Help, Maximize, Minimize, Close, Menu.
+	KDEDefaultButton* btnArray[] = { button[ BtnShade ], button[ BtnBelow ],
+                        button[ BtnAbove ], button[BtnSticky], button[BtnHelp],
 			button[BtnMax], button[BtnIconify], button[BtnClose],
 			button[BtnMenu] };
+        const int buttons_cnt = sizeof( btnArray ) / sizeof( btnArray[ 0 ] );
 
 	int minwidth  = largeButtons ? 10 * normalTitleHeight : 10 * toolTitleHeight; // Start hiding at this width
 	int btn_width = largeButtons ? normalTitleHeight : toolTitleHeight;
@@ -1197,7 +1311,7 @@ void KDEDefaultClient::calcHiddenButtons()
 	}
 
 	// Bound the number of buttons to hide
-	if (count > 6) count = 6;
+	if (count > buttons_cnt) count = buttons_cnt;
 
 	// Hide the required buttons...
 	for(i = 0; i < count; i++)
@@ -1207,7 +1321,7 @@ void KDEDefaultClient::calcHiddenButtons()
 	}
 
 	// Show the rest of the buttons...
-	for(i = count; i < 6; i++)
+	for(i = count; i < buttons_cnt; i++)
 	{
 		if (btnArray[i] && (!btnArray[i]->isVisible()) )
 			btnArray[i]->show();
