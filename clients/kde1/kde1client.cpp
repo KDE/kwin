@@ -49,13 +49,6 @@ static QPixmap* question_mark_pix = 0;
 
 static bool pixmaps_created = FALSE;
 
-static void create_pixmaps();
-QPixmap* kwin_get_menu_pix_hack()
-{
-    create_pixmaps();
-    return menu_pix;
-}
-
 static void create_pixmaps()
 {
     if ( pixmaps_created )
