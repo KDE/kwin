@@ -213,6 +213,10 @@ private:
   QRadioButton *active_move;
   QRadioButton *active_always;
   KIntNumInput *delays;
+  
+  void setFocusStealing( int );
+
+  QComboBox* focusStealing;
 };
 
 #endif

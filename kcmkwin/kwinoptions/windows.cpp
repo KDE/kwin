@@ -39,6 +39,7 @@
 #include <kapplication.h>
 #include <kdialog.h>
 #include <dcopclient.h>
+#include <kglobal.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -66,6 +67,7 @@
 #define KWIN_ROLL_OVER_DESKTOPS    "RollOverDesktops"
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
+#define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
 
 // kwm config keywords
 #define KWM_ELECTRIC_BORDER                  "ElectricBorders"
@@ -511,6 +513,38 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
 
     lay->addWidget(electricBox);
 
+    QHBoxLayout* focusStealingLayout = new QHBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint());
+    QLabel* focusStealingLabel = new QLabel( i18n( "Focus Stealing Prevention Level:" ), this );
+    focusStealing = new QComboBox( this );
+    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "None" ));
+    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "Low" ));
+    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "Normal" ));
+    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "High" ));
+    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "Extreme" ));
+    focusStealingLabel->setBuddy( focusStealing );
+    focusStealingLayout->addWidget( focusStealingLabel );
+    focusStealingLayout->addWidget( focusStealing, AlignLeft );
+    wtstr = i18n( "This option specifies how much will KWin try to prevent unwanted focus stealing "
+                  "caused by unexpected activation of new windows.<ul>"
+                  "<li><em>None:</em> The standard old behaviour - prevention is turned off "
+                  "and new windows get always activated.</li>"
+                  "<li><em>Low:</em> Prevention is enabled; when some window doesn't have support "
+                  "for the underlying mechanism and KWin cannot reliably decide whether to "
+                  "activate the window or not, it will be activated. This setting may have both"
+                  "worse and better results than normal level depending on the applications.</li>"
+                  "<li><em>Normal:</em> Prevention is enabled; the default setting.</li>"
+                  "<li><em>High:</em> New windows get activated only if no window is currently active "
+                  "or if they belong to the currently active application. This setting is probably "
+                  "not really usable when noting using mouse focus policy.</li>"
+                  "<li><em>Extreme:</em> All windows must be explicitly activated by the user.</li>"
+                  "</ul>" );
+    QWhatsThis::add( focusStealing, wtstr );
+    QWhatsThis::add( focusStealingLabel, wtstr );
+
+    connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
+    
+    lay->addLayout( focusStealingLayout );
+
     lay->addStretch();
     load();
 
@@ -538,6 +572,11 @@ void KAdvancedConfig::setAnimateShade(bool a) {
     animateShade->setChecked(a);
 }
 
+void KAdvancedConfig::setFocusStealing(int l) {
+    l = KMAX( 0, KMIN( 4, l ));
+    focusStealing->setCurrentItem(l);
+}
+
 void KAdvancedConfig::load( void )
 {
     config->setGroup( "Windows" );
@@ -548,6 +587,9 @@ void KAdvancedConfig::load( void )
 
     setElectricBorders(config->readNumEntry(KWM_ELECTRIC_BORDER, false));
     setElectricBorderDelay(config->readNumEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
+
+    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 2 ));
+
     setChanged(false);
 }
 
@@ -568,6 +610,8 @@ void KAdvancedConfig::save( void )
 
     config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
+    
+    config->writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentItem());
 
     if (standAlone)
     {
@@ -586,6 +630,7 @@ void KAdvancedConfig::defaults()
     setShadeHoverInterval(250);
     setElectricBorders(0);
     setElectricBorderDelay(150);
+    setFocusStealing(2);
     setChanged(true);
 }
 

@@ -180,6 +180,9 @@ class Options : public KDecorationOptions
          */
         bool rollOverDesktops;
 
+        // 0 - 4 , see Workspace::allowClientActivation()
+        int focusStealingPreventionLevel;
+
         /**
          * List of window classes to ignore PPosition size hint
          */

@@ -411,8 +411,19 @@ void Workspace::gotFocusIn( const Client* c )
 // session_active -> the window was active when saving session
 bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in, bool session_active )
     {
-    if( session_saving )
+    // options->focusStealingPreventionLevel :
+    // 0 - none    - old KWin behaviour, new windows always get focus
+    // 1 - low     - focus stealing prevention is applied normally, when unsure, activation is allowed
+    // 2 - normal  - focus stealing prevention is applied normally, when unsure, activation is not allowed,
+    //              this is the default
+    // 3 - high    - new window gets focus only if it belongs to the active application,
+    //              or when no window is currently active
+    // 4 - extreme - no window gets focus without user intervention
+    if( session_saving
+        && options->focusStealingPreventionLevel <= 3 ) // <= normal
+        {
         return true;
+        }
     Client* ac = activeClient();
     if( focus_in )
         {
@@ -422,6 +433,10 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         // got FocusOut, and therefore got deactivated.
         ac = last_active_client;
         }
+    if( options->focusStealingPreventionLevel == 0 ) // none
+        return true;
+    if( options->focusStealingPreventionLevel == 5 ) // extreme
+        return false;
     if( ac == NULL || ac->isDesktop())
         {
         kdDebug( 1212 ) << "Activation: No client active, allowing" << endl;
@@ -435,17 +450,22 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         kdDebug( 1212 ) << "Activation: Belongs to active application" << endl;
         return true;
         }
+    if( options->focusStealingPreventionLevel == 4 ) // high
+        return false;
     if( time == -1U )  // no time known
         if( session_active )
             return !was_user_interaction; // see Client::readUserTimeMapTimestamp()
         else
         {
         kdDebug() << "Activation: No timestamp at all" << endl;
-            // no timestamp at all, don't activate - because there's also creation timestamp
-            // done on CreateNotify, this case should happen only in case application
-            // maps again already used window, i.e. this won't happen after app startup
+        if( options->focusStealingPreventionLevel == 1 ) // low
+            return true;
+        // no timestamp at all, don't activate - because there's also creation timestamp
+        // done on CreateNotify, this case should happen only in case application
+        // maps again already used window, i.e. this won't happen after app startup
         return false; 
         }
+    // options->focusStealingPreventionLevel == 2 // normal
     Time user_time = ac->userTime();
     kdDebug( 1212 ) << "Activation, compared:" << time << ":" << user_time
         << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
