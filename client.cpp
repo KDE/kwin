@@ -375,7 +375,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 		 && ( options->focusPolicy != Options::ClickToFocus
 		 &&  options->clickRaise && !mod1 ) ) {
 		((Client*)parentWidget())->autoRaise();
-		ungrabButton( winId(),	None );
+		ungrabButton( winId(), None );
 	    }
 
 	    Options::MouseCommand com = Options::MouseNothing;
@@ -869,6 +869,8 @@ bool Client::windowEvent( XEvent * e)
 	    break; // we neither
 	if ( e->xfocus.detail != NotifyNonlinear )
 	    return TRUE; // hack for motif apps like netscape
+	if ( QApplication::activePopupWidget() )
+	    break;
 	setActive( FALSE );
 	break;
     case ReparentNotify:
@@ -2301,7 +2303,6 @@ void Client::takeFocus( bool force )
 	setActive( TRUE );
 	// Qt may delay the mapping which may cause XSetInputFocus to fail, force show window
 	QApplication::sendPostedEvents( windowWrapper(), QEvent::ShowWindowRequest );
-
 	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
     }
     if ( Ptakefocus )
@@ -2385,7 +2386,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
     case Options::MouseOperationsMenu:
 	if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
 	    autoRaise();
-	workspace()->clientPopup( this )->popup( globalPos );
+	workspace()->clientPopup( this )->exec( globalPos );
+	workspace()->requestFocus( this );
 	break;
     case Options::MouseToggleRaiseAndLower:
 	if ( workspace()->topClientOnDesktop() == this )

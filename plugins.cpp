@@ -97,7 +97,7 @@ void PluginMenu::slotActivated(int id)
     QString newPlugin;
     if (id > 0)
         newPlugin = fileList[id-1];
-     
+
     KConfig *config = KGlobal::config();
     config->setGroup("Style");
     config->writeEntry("PluginLib", newPlugin);
@@ -121,14 +121,17 @@ PluginMgr::~PluginMgr()
         lt_dlclose(handle);
 }
 
-void
+bool
 PluginMgr::updatePlugin()
 {
     KConfig *config = KGlobal::config();
     config->setGroup("Style");
     QString newPlugin = config->readEntry("PluginLib", "default");
-    if (newPlugin != pluginStr)
+    if (newPlugin != pluginStr) {
        loadPlugin(newPlugin);
+       return true;
+    }
+    return false;
 }
 
 Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)

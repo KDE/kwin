@@ -223,7 +223,7 @@ Workspace::Workspace( bool restore )
 
     if ( restore )
       loadSessionInfo();
-    
+
     loadFakeSessionInfo();
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
@@ -324,7 +324,7 @@ void Workspace::init()
     XWindowAttributes attr;
 
     connect(&resetTimer, SIGNAL(timeout()), this,
-	    SLOT(slotResetAllClients()));            
+	    SLOT(slotResetAllClients()));
 
     connect(&mgr, SIGNAL(resetAllClients()), this,
 	    SLOT(slotResetAllClients()));
@@ -1102,7 +1102,7 @@ bool Workspace::hasCaption( const QString& caption )
  */
 void Workspace::requestFocus( Client* c, bool force )
 {
-    if (!focusChangeEnabled())
+    if (!focusChangeEnabled() && ( c != active_client) )
 	return;
 
     //TODO will be different for non-root clients. (subclassing?)
@@ -1228,8 +1228,11 @@ void Workspace::showWindowMenuAt( unsigned long id, int x, int y )
     if (!target)
 	return;
 
+    Client* c = active_client;
     QPopupMenu* p = clientPopup( target );
-    p->popup( QPoint( x, y ) );
+    p->exec( QPoint( x, y ) );
+    if ( hasClient( c ) )
+	requestFocus( c );
 }
 
 void Workspace::performWindowOperation( Client* c, Options::WindowOperation op ) {
@@ -1597,9 +1600,9 @@ void Workspace::unclutterDesktop()
  */
 void Workspace::reconfigure()
 {
-    slotResetAllClientsDelayed();
     KGlobal::config()->reparseConfiguration();
-    mgr.updatePlugin();
+    if ( mgr.updatePlugin() )
+	slotResetAllClientsDelayed();
     options->reload();
     keys->readSettings();
     grabControlTab(options->useControlTab);
@@ -2456,7 +2459,10 @@ void Workspace::slotWindowOperations()
 	return;
 
     QPopupMenu* p = clientPopup( active_client );
-    p->popup( active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() ) );
+    Client* c = active_client;
+    p->exec( active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() ) );
+    if ( hasClient( c ) )
+	requestFocus( c );
 }
 
 
