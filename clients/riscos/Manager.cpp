@@ -29,7 +29,7 @@
 #include <qlayout.h>
 #include <qvariant.h>
 
-#include <kapp.h>
+#include <kapplication.h>
 
 #include "../../options.h"
 #include "../../workspace.h"

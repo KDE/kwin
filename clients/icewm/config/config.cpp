@@ -30,9 +30,9 @@
 #include <qwhatsthis.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kdirwatch.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 
 extern "C"

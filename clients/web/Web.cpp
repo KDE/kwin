@@ -30,9 +30,9 @@
 #undef Bool
 
 #include <kconfig.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <kwin/options.h>
 
 #include "Web.h"

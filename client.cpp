@@ -5,7 +5,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 //#define QT_CLEAN_NAMESPACE
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kdebug.h>
 #include <kshortcut.h>
 #include <dcopclient.h>

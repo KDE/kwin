@@ -7,7 +7,7 @@
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <kglobal.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include <qbitmap.h>
 #include "../../workspace.h"

@@ -6,7 +6,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "options.h"
 #include <qpalette.h>
 #include <qpixmap.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>

@@ -22,7 +22,7 @@
 
 #include <qpainter.h>
 #include <qstyle.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 #include "ResizeMid.h"
 #include "Manager.h"

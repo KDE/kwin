@@ -5,7 +5,7 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 ******************************************************************/
 #include <kglobal.h>
 #include <kconfig.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kdesktopfile.h>
 #include <ksimpleconfig.h>
 #include <klocale.h>

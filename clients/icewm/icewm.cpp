@@ -41,7 +41,7 @@
 */
 
 #include <kconfig.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdrawutil.h>

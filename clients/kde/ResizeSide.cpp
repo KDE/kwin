@@ -22,7 +22,7 @@
 
 #include <qpixmap.h>
 #include <qstyle.h>
-#include <kapp.h>
+#include <kapplication.h>
 
 #include "ResizeSide.h"
 #include "Manager.h"

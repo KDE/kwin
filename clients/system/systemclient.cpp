@@ -5,7 +5,7 @@
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
