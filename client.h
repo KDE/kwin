@@ -292,6 +292,7 @@ class Client : public QObject, public KDecorationDefines
         bool isBMP();
         void setBMP(bool b);
         bool touches(const Client* c);
+        void setShapable(bool b);
 
     private slots:
         void autoRaise();

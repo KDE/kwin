@@ -264,6 +264,7 @@ class Options : public KDecorationOptions
         uint inactiveWindowOpacity;
         bool translucentMovingWindows;
         uint movingWindowOpacity;
+        bool removeShadowsOnResize;
         bool translucentDocks;
         uint dockOpacity;
         bool keepAboveAsActive;

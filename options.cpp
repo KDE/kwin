@@ -186,6 +186,7 @@ unsigned long Options::updateSettings()
     activeWindowShadowSize = config->readNumEntry("ActiveWindowShadowSize", 100);
     inactiveWindowShadowSize = config->readNumEntry("InactiveWindowShadowSize", 100);
     dockShadowSize = config->readNumEntry("DockShadowSize", 100);
+    removeShadowsOnResize = config->readBoolEntry("RemoveShadowsOnResize", true);
     if (resetKompmgr = config->readBoolEntry("ResetKompmgr", false))
         config->writeEntry("ResetKompmgr",FALSE);
     

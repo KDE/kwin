@@ -358,6 +358,7 @@ void Client::detectNoBorder()
         default:
             assert( false );
         }
+        setShapable(FALSE);
     }
 
 void Client::updateFrameStrut()
@@ -419,12 +420,18 @@ void Client::setUserNoBorder( bool set )
 void Client::updateShape()
     {
     if ( shape() )
+    {
         XShapeCombineShape(qt_xdisplay(), frameId(), ShapeBounding,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSet);
+        setShapable(TRUE);
+    }
     else
+    {
         XShapeCombineMask( qt_xdisplay(), frameId(), ShapeBounding, 0, 0,
                            None, ShapeSet);
+        setShapable(TRUE);
+    }
     // workaround for #19644 - shaped windows shouldn't have decoration
     if( shape() && !noBorder()) 
         {
@@ -466,6 +473,12 @@ QRegion Client::mask() const
     if( _mask.isEmpty())
         return QRegion( 0, 0, width(), height());
     return _mask;
+    }
+    
+void Client::setShapable(bool b)
+    {
+    uint tmp = b?1:0;
+    XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shapable, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &tmp, 1L);
     }
 
 void Client::hideClient( bool hide )

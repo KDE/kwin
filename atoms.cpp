@@ -75,6 +75,9 @@ Atoms::Atoms()
 
     atoms[n] = &net_wm_window_shade;
     names[n++] = (char*) "_KDE_WM_WINDOW_SHADE";
+    
+    atoms[n] = &net_wm_window_shapable;
+    names[n++] = (char*) "_KDE_WM_WINDOW_SHAPABLE";
         
     Atom fake;
     atoms[n] = &fake;
