@@ -436,7 +436,8 @@ void Workspace::init()
             Client* c = clientFactory( wins[i] );
             addClient( c );
             c->manage( TRUE );
-
+	    if ( !c->wantsTabFocus() )
+		focus_chain.remove( c );
             if ( root != qt_xrootwin() ) {
                 // TODO may use QWidget:.create
                 XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
@@ -595,7 +596,10 @@ bool Workspace::workspaceEvent( XEvent * e )
             }
         }
         if ( c ) {
-            return c->windowEvent( e );
+            bool b =  c->windowEvent( e );
+	    if ( !c->wantsTabFocus() )
+		focus_chain.remove( c );
+	    return b;
         }
         break;
     case EnterNotify:
