@@ -20,6 +20,10 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 #include <X11/Xlib.h>
 #ifdef HAVE_XINERAMA
+#  ifndef Bool
+// if Bool isn't defined, then the Xinerama header will have problems...
+#    define Bool int
+#  endif
 extern "C" {
 #include <X11/extensions/Xinerama.h>
 };
