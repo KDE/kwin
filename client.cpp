@@ -756,7 +756,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     delete session;
 
     sendSyntheticConfigureNotify();
-    
+
     if ( showMe && !doNotShow ) {
 	Events::raise( isTransient() ? Events::TransNew : Events::New );
 	if ( isMapped ) {
@@ -1007,8 +1007,6 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
     if ( isShade() )
 	setShade( FALSE );
 
-    qDebug("configureRequest %s: %d %d %d %d", caption().latin1(), e.x, e.y, e.width, e.height );
-     /*    
     // compress configure requests
     XEvent otherEvent;
     while (XCheckTypedWindowEvent (qt_xdisplay(), win,
@@ -1020,11 +1018,10 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    break;
 	}
     }
-    */
 
     bool stacking = e.value_mask & CWStackMode;
     int stack_mode = e.detail;
-    
+
     if ( e.value_mask & CWBorderWidth ) {
 	// first, get rid of a window border
 	XWindowChanges wc;

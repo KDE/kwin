@@ -44,6 +44,10 @@ Atoms::Atoms()
 
     atoms[n] = &kde_wm_change_state;
     names[n++] = (char *) "_KDE_WM_CHANGE_STATE";
+
+    Atom fake;
+    atoms[n] = &fake;
+    names[n++] = (char *) "DT_SM_WINDOW_INFO";
     
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
