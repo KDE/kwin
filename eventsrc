@@ -1105,6 +1105,66 @@ Comment[zh_CN]=选择了虚拟桌面 8
 default_sound=KDE_Desktop_8.ogg 
 default_presentation=0
 
+[desktop9]
+Name=Change to Desktop 9
+Comment=Virtual desktop nine is selected
+default_presentation=0
+
+[desktop10]
+Name=Change to Desktop 10
+Comment=Virtual desktop ten is selected
+default_presentation=0
+
+[desktop11]
+Name=Change to Desktop 11
+Comment=Virtual desktop evelen is selected
+default_presentation=0
+
+[desktop12]
+Name=Change to Desktop 12
+Comment=Virtual desktop twelve is selected
+default_presentation=0
+
+[desktop13]
+Name=Change to Desktop 13
+Comment=Virtual desktop thirteen is selected
+default_presentation=0
+
+[desktop14]
+Name=Change to Desktop 14
+Comment=Virtual desktop fourteen is selected
+default_presentation=0
+
+[desktop15]
+Name=Change to Desktop 15
+Comment=Virtual desktop fifteen is selected
+default_presentation=0
+
+[desktop16]
+Name=Change to Desktop 16
+Comment=Virtual desktop sixteen is selected
+default_presentation=0
+
+[desktop17]
+Name=Change to Desktop 17
+Comment=Virtual desktop seventeen is selected
+default_presentation=0
+
+[desktop18]
+Name=Change to Desktop 18
+Comment=Virtual desktop eighteen is selected
+default_presentation=0
+
+[desktop19]
+Name=Change to Desktop 19
+Comment=Virtual desktop nineteen is selected
+default_presentation=0
+
+[desktop20]
+Name=Change to Desktop 20
+Comment=Virtual desktop twenty is selected
+default_presentation=0
+
 [activate]
 Name=Activate Window
 Name[af]=Aktiveer Venster

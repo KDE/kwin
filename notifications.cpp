@@ -79,7 +79,7 @@ void Notify::raise( Event e )
             event = "resizeend";
             break;
         default:
-            if ((e > DesktopChange) && (e <= DesktopChange+16))
+            if ((e > DesktopChange) && (e <= DesktopChange+20))
             {
             event = QString("desktop%1").arg(e-DesktopChange);
             }
