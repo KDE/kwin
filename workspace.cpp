@@ -264,7 +264,6 @@ Client* Workspace::clientFactory( WId w )
     case NET::Dock:
         {
             Client * c = new NoBorderClient( this, w );
-            c->setSticky( TRUE );
             return c;
         }
 
