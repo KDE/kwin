@@ -7,15 +7,71 @@ Currently supported options in the kwinrc:
 
 [Windows]
 
-MoveMode=Opaque|Transparent
-ResizeMode=Opaque|Transparent
-Placement=Smart|Random|Cascade
+MoveMode=Opaque |Transparent
+ResizeMode=Opaque |Transparent
+Placement=Smart | Random | Cascade
 AnimateShade=true|false
 AnimSteps=<integer=20>
 BorderSnapZone=<integer=10>
 WindowSnapZone=<integer=10>
-TitlebarDoubleClickCommand=Move|Resize|
-        Maximize|Iconify|Close|Sticky|Shade|Operations
+TitlebarDoubleClickCommand=Move | Resize |
+        Maximize | Iconify | Close | Sticky | Shade | Operations
+
+
+    /*!
+      Different focus policies:
+      <ul>
+
+      <li>ClickToFocus - Clicking into a window activates it. This is
+      also the default.
+
+      <li>FocusFollowsMouse - Moving the mouse pointer actively onto a
+      normal window activates it. For convenience, the desktop and
+      windows on the dock are excluded. They require clicking.
+
+      <li>FocusUnderMouse - The window that happens to be under the
+      mouse pointer becomes active. The invariant is: no window can
+      have focus that is not under the mouse. This also means that
+      Alt-Tab won't work properly and popup dialogs are usually
+      unsable with the keyboard. Note that the desktop and windows on
+      the dock are excluded for convenience. They get focus only when
+      clicking on it.
+
+      <li>FocusStrictlyUnderMouse - this is even worse than
+      FocusUnderMouse. Only the window under the mouse pointer is
+      active. If the mouse points nowhere, nothing has the focus. If
+      the mouse points onto the desktop, the desktop has focus. The
+      same holds for windows on the dock.
+
+      Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
+      particulary useful. They are only provided for old-fashined
+      die-hard UNIX people ;-)
+
+      </ul>
+     */
+FocusPolicy=ClickToFocus | FocusFollowsMouse | FocusUnderMouse | FocusStrictlyUnderMouse
+
+
+    /**
+       Different Alt-Tab-Styles:
+       <ul>
+       
+       <li> KDE - the recommended KDE style. Alt-Tab opens a nice icon
+       box that makes it easy to select the window you want to tab
+       to. The order automatically adjusts to the most recently used
+       windows. Note that KDE style does not work with the
+       FocusUnderMouse and FocusStrictlyUnderMouse focus
+       policies. Choose ClickToFocus or FocusFollowsMouse instead.
+       
+       <li> CDE - the old-fashion CDE style. Alt-Tab cycles between
+       the windows in static order. The current window gets raised,
+       the previous window gets lowered.
+       
+       </ul>
+     */
+AltTabStyle=KDE | CDE
+    
+
 
 [MouseBindings]
 

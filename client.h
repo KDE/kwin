@@ -11,6 +11,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qvbox.h>
 #include <qpixmap.h>
 #include <qtimer.h>
+#include <netwm_def.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -69,6 +70,7 @@ public:
     WId transientFor() const;
     bool isTransient() const;
     Client* mainClient();
+    NET::WindowType windowType() const;
 
     virtual bool windowEvent( XEvent * );
 
@@ -115,15 +117,12 @@ public:
     bool isSticky() const;
     void setSticky( bool );
 
-    bool mayMove() const { return may_move; }
-    void setMayMove( bool m) { may_move = m; }
-
-    /**
-     * A window with passive focus will only get focus when
-     * the user explicitly selects the window.
-     **/
-    bool passiveFocus() const { return passive_focus; }
-    void setPassiveFocus( bool p) { passive_focus = p; }
+    
+    // auxiliary functions, depend on the windowType
+    bool wantsTabFocus() const;
+    bool isMovable() const;
+    bool isDesktop() const;
+    bool isDock() const;
 
     void takeFocus();
 
@@ -147,7 +146,6 @@ public:
     { move( p.x(), p.y() ); }
 
 
-    virtual bool wantsTabFocus() const { return TRUE;} //### just for now
 
     bool providesContextHelp() const;
 
@@ -155,7 +153,7 @@ public:
 
     QCString windowRole();
     QCString sessionId();
-    
+
     QRect adjustedClientArea( const QRect& area ) const;
 
 public slots:
@@ -235,22 +233,22 @@ private:
     XSizeHints  xSizeHint;
     void sendSynteticConfigureNotify();
     int state;
-    bool active;
     QRect original_geometry;
     QRect geom; //### TODO
-    bool shaded;
     WId transient_for;
-    bool is_sticky;
-    bool is_shape;
-    bool may_move;
-    bool passive_focus;
-    void getWMHints();
-    void getWindowProtocols();
+    uint shaded :1;
+    uint active :1;
+    uint is_sticky :1;
+    uint is_shape :1;
+    uint may_move :1;
+    uint passive_focus :1;
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
     uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?
     uint input :1; // does the window want input in its wm_hints
     uint mapped :1; // keeps track of our visiblity within the asynchronous event flow
+    void getWMHints();
+    void getWindowProtocols();
     QPixmap icon_pix;
     QPixmap miniicon_pix;
     QRect geom_restore;
@@ -348,6 +346,7 @@ inline bool Client::shape() const
     return is_shape;
 }
 
+
 inline const QRegion& Client::getMask() const
 {
     return mask;
@@ -360,7 +359,6 @@ public:
     NoBorderClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~NoBorderClient();
 
-    bool wantsTabFocus() const { return FALSE;} //### just for now
 };
 
 #endif

@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+								
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #ifndef OPTIONS_H
@@ -29,15 +29,22 @@ public:
       also the default.
 
       <li>FocusFollowsMouse - Moving the mouse pointer actively onto a
-      window activates it.
+      normal window activates it. For convenience, the desktop and
+      windows on the dock are excluded. They require clicking.
 
       <li>FocusUnderMouse - The window that happens to be under the
-      mouse pointer becomes active.
+      mouse pointer becomes active. The invariant is: no window can
+      have focus that is not under the mouse. This also means that
+      Alt-Tab won't work properly and popup dialogs are usually
+      unsable with the keyboard. Note that the desktop and windows on
+      the dock are excluded for convenience. They get focus only when
+      clicking on it.
 
-      <li>FocusStrictlyUnderMouse - Only the window under the mouse
-      pointer is active. If the mouse points nowhere, nothing has the
-      focus. In practice, this is the same as FocusUnderMouse, since
-      kdesktop can take the focus.
+      <li>FocusStrictlyUnderMouse - this is even worse than
+      FocusUnderMouse. Only the window under the mouse pointer is
+      active. If the mouse points nowhere, nothing has the focus. If
+      the mouse points onto the desktop, the desktop has focus. The
+      same holds for windows on the dock.
 
       Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
       particulary useful. They are only provided for old-fashined
@@ -48,15 +55,32 @@ public:
     enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStrictlyUnderMouse };
     FocusPolicy focusPolicy;
 
-    enum MoveResizeMode { Transparent, Opaque };
-
+    
     /**
-     * Basic color types that should be recognized by all decoration styles.
-     * Not all styles have to implement all the colors, but for the ones that
-     * are implemented you should retrieve them here.
+       Different Alt-Tab-Styles:
+       <ul>
+       
+       <li> KDE - the recommended KDE style. Alt-Tab opens a nice icon
+       box that makes it easy to select the window you want to tab
+       to. The order automatically adjusts to the most recently used
+       windows. Note that KDE style does not work with the
+       FocusUnderMouse and FocusStrictlyUnderMouse focus
+       policies. Choose ClickToFocus or FocusFollowsMouse instead.
+       
+       <li> CDE - the old-fashion CDE style. Alt-Tab cycles between
+       the windows in static order. The current window gets raised,
+       the previous window gets lowered.
+       
+       </ul>
      */
-    // increment KWINCOLORS if you add something (mosfet)
-    enum ColorType{TitleBar=0, TitleBlend, Font, ButtonBg, Frame, Handle};
+    enum AltTabStyle { KDE, CDE };
+    AltTabStyle altTabStyle;
+    
+    
+    /**
+       MoveResizeMode, either Tranparent or Opaque.
+     */
+    enum MoveResizeMode { Transparent, Opaque };
 
     MoveResizeMode resizeMode;
     MoveResizeMode moveMode;
@@ -73,6 +97,14 @@ public:
     bool focusPolicyIsReasonable() {
         return focusPolicy == ClickToFocus || focusPolicy == FocusFollowsMouse;
     }
+
+    /**
+     * Basic color types that should be recognized by all decoration styles.
+     * Not all styles have to implement all the colors, but for the ones that
+     * are implemented you should retrieve them here.
+     */
+    // increment KWINCOLORS if you add something (mosfet)
+    enum ColorType{TitleBar=0, TitleBlend, Font, ButtonBg, Frame, Handle};
 
     /**
      * Return the color for the given decoration.

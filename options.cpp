@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+								
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #include "options.h"
@@ -134,11 +134,19 @@ void Options::reload()
 
     QString val;
 
-    val = config->readEntry ("focusPolicy", "ClickToFocus");
-    if (val == "ClickToFocus")
-	focusPolicy = ClickToFocus;
-    else
+    val = config->readEntry ("FocusPolicy", "ClickToFocus");
+    focusPolicy = ClickToFocus; // what a default :-)
+    if ( val == "FocusFollowsMouse" )
 	focusPolicy = FocusFollowsMouse;
+    else if ( val == "FocusUnderMouse" )
+	focusPolicy = FocusUnderMouse;
+    else if ( val == "FocusStrictlyUnderMouse" )
+	focusPolicy = FocusStrictlyUnderMouse;
+
+    val = config->readEntry ("AltTabStyle", "KDE");
+    altTabStyle = KDE; // what a default :-)
+    if ( val == "CDE" )
+	altTabStyle = CDE;
 
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;

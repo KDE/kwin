@@ -92,12 +92,6 @@ public:
 
     QRect geometry() const;
 
-    /**
-     * @return the area available for clients. This is the desktop
-     * geometry adjusted for edge-anchored windows.
-     * Placement algorithms should refer to this rather than geometry().
-     * @sa geometry()
-     */
     QRect clientArea();
 
     bool destroyClient( Client* );
@@ -152,8 +146,7 @@ public:
      */
     const ClientList& stackingOrder() const;
 
-    //#### TODO right layers as default
-    Client* topClientOnDesktop( int fromLayer = 0, int toLayer = 0) const;
+    Client* topClientOnDesktop() const;
 
 
     QPopupMenu* clientPopup( Client* );
@@ -172,11 +165,6 @@ public:
 
     SessionInfo* takeSessionInfo( Client* );
 
-    /**
-     * When the area that is available for clients (that which is not
-     * taken by windows like panels, the top-of-screen menu etc) may
-     * have changed, this will recalculate the available space.
-     */
     virtual void updateClientArea();
 
 

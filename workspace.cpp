@@ -174,25 +174,14 @@ Client* Workspace::clientFactory( WId w )
 	XLowerWindow( qt_xdisplay(), w );
 	Client * c = new NoBorderClient( this, w);
 	c->setSticky( TRUE );
-	c->setMayMove( FALSE );
 	setDesktopClient( c );
-	c->setPassiveFocus( TRUE );
 	return c;
     }
 
+    case NET::Menu:
     case NET::Dock: {
 	Client * c = new NoBorderClient( this, w);
 	c->setSticky( TRUE );
-	c->setMayMove( FALSE );
-	c->setPassiveFocus( TRUE );
-	return c;
-    }
-
-    case NET::Menu: {
-	Client * c = new NoBorderClient( this, w);
-	c->setSticky( TRUE );
-	c->setMayMove( FALSE );
-	c->setPassiveFocus( TRUE );
 	return c;
     }
 
@@ -665,8 +654,6 @@ bool Workspace::keyPress(XKeyEvent key)
     int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
     int km = key.state & (ControlMask | Mod1Mask | ShiftMask);
 
-    const bool options_alt_tab_mode_is_CDE_style = FALSE; // TODO
-
     if (!control_grab){
 
 	if( (kc == XK_Tab)  &&
@@ -674,7 +661,7 @@ bool Workspace::keyPress(XKeyEvent key)
 	      || km == (Mod1Mask)
 	      )){
 	    if (!tab_grab){
-		if (options_alt_tab_mode_is_CDE_style ){
+		if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ){
 		    // CDE style raise / lower
 		    Client* c = topClientOnDesktop();
 		    Client* nc = c;
@@ -683,7 +670,7 @@ bool Workspace::keyPress(XKeyEvent key)
 			    nc = previousStaticClient(nc);
 			} while (nc && nc != c &&
 				 (!nc->isOnDesktop(currentDesktop()) ||
-				  nc->isIconified()));
+				  nc->isIconified() || !nc->wantsTabFocus() ) );
 
 		    }
 		    else
@@ -691,11 +678,15 @@ bool Workspace::keyPress(XKeyEvent key)
 			    nc = nextStaticClient(nc);
 			} while (nc && nc != c &&
 				 (!nc->isOnDesktop(currentDesktop()) ||
-				  nc->isIconified()));
+				  nc->isIconified() || !nc->wantsTabFocus() ) );
 		    if (c && c != nc)
-			;//TODO lowerClient(c);
-		    if (nc)
-			activateClient( nc );
+			lowerClient( c, false  );
+		    if (nc) {
+			if ( options->focusPolicyIsReasonable() )
+			    activateClient( nc );
+			else
+			    raiseClient( nc );
+		    }
 		    freeKeyboard(FALSE);
 		    return TRUE;
 		}
@@ -725,10 +716,6 @@ bool Workspace::keyPress(XKeyEvent key)
 	    ( km == (ControlMask | ShiftMask)
 	      || km == (ControlMask)
 	      )){
-//TODO 	    if (!options.ControlTab){
-// 		freeKeyboard(TRUE);
-// 		return TRUE;
-// 	    }
 	    if (!control_grab){
 	        XGrabPointer( qt_xdisplay(), root, TRUE,
 			      (uint)(ButtonPressMask | ButtonReleaseMask |
@@ -872,14 +859,16 @@ Client* Workspace::previousStaticClient( Client* c ) const
 }
 
 
-/*!
-  Returns topmost visible client within the specified layer range on
-  the current desktop, or 0 if no clients are visible. \a fromLayer has to
-  be smaller than \a toLayer.
+/*!  
+  Returns topmost visible client. Windows on the dock and the
+  desktop are excluded.
  */
-Client* Workspace::topClientOnDesktop( int fromLayer, int toLayer) const
+Client* Workspace::topClientOnDesktop() const
 {
-    fromLayer = toLayer = 0;
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+	if ( !(*it)->isDesktop() && !(*it)->isDock() )
+	    return *it;
+    }
     return 0;
 }
 
@@ -1439,7 +1428,7 @@ void Workspace::cascadeDesktop()
     if((!(*it)->isOnDesktop(currentDesktop())) ||
        ((*it)->isIconified())                  ||
        ((*it)->isSticky())                     ||
-       (!(*it)->mayMove()) )
+       (!(*it)->isMovable()) )
       continue;
     cascadePlacement(*it);
   }
@@ -1456,7 +1445,7 @@ void Workspace::unclutterDesktop()
     if((!(*it)->isOnDesktop(currentDesktop())) ||
        ((*it)->isIconified())                  ||
        ((*it)->isSticky())                     ||
-       (!(*it)->mayMove()) )
+       (!(*it)->isMovable()) )
       continue;
     smartPlacement(*it);
   }
@@ -1684,7 +1673,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	if (options->focusPolicy == Options::FocusFollowsMouse) {
 	    // Search in focus chain
 	    for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
-		if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
+		if ( (*it)->isVisible() ) {
 		    c = *it;
 		    break;	
 		}
@@ -1695,7 +1684,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	if (!c) {
 	    // Search top-most visible window
 	    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-		if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
+		if ( (*it)->isVisible() ) {
 		    c = *it;
 		    break;
 		}
@@ -2072,7 +2061,7 @@ void Workspace::slotWindowOperations()
 {
     if ( !active_client )
 	return;
-    if ( !active_client->mayMove())
+    if ( !active_client->isMovable())
         return;
 
     QPopupMenu* p = clientPopup( active_client );
@@ -2512,6 +2501,10 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
   Updates the current client area according to the current clients.
   
   If the area changes, the new area is propagate to the world.
+
+  The client area is the area that is available for clients (that
+  which is not taken by windows like panels, the top-of-screen menu
+  etc).
   
   \sa clientArea()
  */
@@ -2537,8 +2530,12 @@ void Workspace::updateClientArea()
 }
 
 
-/*!
-  Returns the current client area
+/*! 
+  returns the area available for clients. This is the desktop
+  geometry minus windows on the dock.  Placement algorithms should
+  refer to this rather than geometry().  
+  
+  \sa geometry()
  */
 QRect Workspace::clientArea()
 {

@@ -1052,7 +1052,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	return;
     }
 
-    if ( !mayMove()) return;
+    if ( !isMovable()) return;
 
     if ( !moveResizeMode )
     {
@@ -1326,7 +1326,7 @@ void Client::invalidateWindow()
 
 void Client::iconify()
 {
-    if (!mayMove())
+    if (!isMovable())
        return;
 
     if ( isShade() )
@@ -1371,7 +1371,7 @@ void Client::killWindow()
 
 void Client::maximize( MaximizeMode m)
 {
-    if (!mayMove())
+    if (!isMovable())
        return;
 
     QRect clientArea = workspace()->clientArea();
@@ -1423,9 +1423,6 @@ void Client::maximize( MaximizeMode m)
 
 void Client::toggleSticky()
 {
-    if (!mayMove())
-       return;
-
     setSticky( !isSticky() );
 }
 
@@ -1514,23 +1511,28 @@ void Client::gravitate( bool invert )
 
 /*!
   Reimplement to handle crossing events (qt should provide xroot, yroot)
+  
+  Crossing events are necessary for the focus-follows-mouse focus
+  policies, to do proper activation and deactivation.
 */
 bool Client::x11Event( XEvent * e)
 {
-    if ( e->type == EnterNotify ) {
-	if (( options->focusPolicy != Options::ClickToFocus ) &&
-	    (( options->focusPolicy != Options::FocusFollowsMouse) ||
-               !passiveFocus()))
-	    workspace()->requestFocus( this );
+    if ( e->type == EnterNotify && e->xcrossing.mode == NotifyNormal ) {
+	if ( options->focusPolicy == Options::ClickToFocus ) 
+	    return TRUE;
+	
+	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse   && ( isDesktop() || isDock() ) )
+	    return TRUE;
+	
+	workspace()->requestFocus( this );
 	return TRUE;
     }
-    if ( e->type == LeaveNotify ) {
+    if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
 	if ( !buttonDown )
 	    setCursor( arrowCursor );
-	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse ) {
+	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
 	    if ( isActive() && !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) ) )
 		workspace()->requestFocus( 0 ) ;
-	}
 	return TRUE;
     }
     return FALSE;
@@ -1613,7 +1615,7 @@ bool Client::isShade() const
 
 void Client::setShade( bool s )
 {
-    if (!mayMove())
+    if (!isMovable())
        return;
 
     if ( shaded == s )
@@ -1864,7 +1866,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	replay = TRUE;
 	break;
     case Options::MouseMove:
-        if (!mayMove())
+        if (!isMovable())
            break;
 	mode = Center;
 	moveResizeMode = TRUE;
@@ -1878,7 +1880,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    XGrabServer( qt_xdisplay() );
 	break;
     case Options::MouseResize:
-        if (!mayMove())
+        if (!isMovable())
            break;
 	moveResizeMode = TRUE;
         workspace()->setEnableFocusChange(false);
@@ -2067,6 +2069,35 @@ void Client::activateLayout()
 {
     if ( layout() )
 	layout()->activate();
+}
+
+
+NET::WindowType Client::windowType() const
+{
+    NET::WindowType wt = info->windowType();
+    if ( wt == NET::Unknown )
+	wt = NET::Normal;
+    return wt;
+}
+
+bool Client::wantsTabFocus() const
+{
+    return windowType() == NET::Normal;
+}
+
+bool Client::isMovable() const
+{
+    return windowType() == NET::Normal || windowType() == NET::Toolbar;
+}
+
+bool Client::isDesktop() const
+{
+    return windowType() == NET::Desktop;
+}
+
+bool Client::isDock() const
+{
+    return windowType() == NET::Dock;
 }
 
 
