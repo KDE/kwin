@@ -99,10 +99,6 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
          i <= module.numberOfDesktops();
          ++i )
         desktop->insertItem( QString::number( i ).rightJustify( 2 ) + ":" + module.desktopName( i ));
-    for(;
-         i <= 16;
-         ++i )
-        desktop->insertItem( QString::number( i ).rightJustify( 2 ));
     desktop->insertItem( i18n( "All Desktops" ));
     }
 
@@ -204,16 +200,16 @@ static QSize strToSize( const QString& str )
     }
 
 
-static int desktopToCombo( int desktop )
+int RulesWidget::desktopToCombo( int d ) const
     {
-    if( desktop >= 1 && desktop <= 16 )
-        return desktop - 1;
-    return 16; // on all desktops
+    if( d >= 1 && d < desktop->count())
+        return d - 1;
+    return desktop->count() - 1; // on all desktops
     }
 
-static int comboToDesktop( int val )
+int RulesWidget::comboToDesktop( int val ) const
     {
-    if( val == 16 )
+    if( val == desktop->count() - 1 )
         return NET::OnAllDesktops;
     return val + 1;
     }

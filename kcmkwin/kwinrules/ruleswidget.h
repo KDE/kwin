@@ -78,6 +78,8 @@ class RulesWidget
         // internal
         void detected( bool );
     private:
+        int desktopToCombo( int d ) const;
+        int comboToDesktop( int val ) const;
         DetectDialog* detect_dlg;
         bool detect_dlg_ok;
     };
