@@ -2635,8 +2635,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
     case Options::MouseOperationsMenu:
         if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
             autoRaise();
-        workspace()->clientPopup( this )->exec( globalPos );
-        workspace()->requestFocus( this );
+        workspace()->showWindowMenu( globalPos, this );
         break;
     case Options::MouseToggleRaiseAndLower:
         if ( workspace()->topClientOnDesktop() == this )

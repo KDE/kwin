@@ -1670,8 +1670,12 @@ void Workspace::clientHidden( Client* c )
 
 
 // KDE4 - remove the unused argument
-QPopupMenu* Workspace::clientPopup( Client* )
+QPopupMenu* Workspace::clientPopup( Client* cl )
 {
+    if( cl != active_client ) {
+        kdWarning( 1212 ) << "Using Workspace::clientPopup() with an argument is deprecated" << endl;
+        activateClient( cl );
+    }
     return clientPopup();
 }
 
