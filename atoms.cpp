@@ -65,6 +65,10 @@ Atoms::Atoms()
     Atom fake;
     atoms[n] = &fake;
     names[n++] = (char *) "_DT_SM_WINDOW_INFO";
+    
+    Atom dummy;
+    atoms[n] = &dummy;
+    names[n++] = (char *) "_ICEWM_WINOPTHINT";
 
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
