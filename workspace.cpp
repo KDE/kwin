@@ -18,6 +18,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <kapp.h>
+#include <kipc.h>
 #include <dcopclient.h>
 #include <kprocess.h>
 #include <kiconloader.h>
@@ -2357,6 +2358,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
         }
     }
     current_desktop = new_desktop;
+    KIPC::sendMessageAll(KIPC::BackgroundChanged, current_desktop);
 
     rootInfo->setCurrentDesktop( current_desktop );
 
