@@ -2339,6 +2339,8 @@ void Workspace::startKompmgr()
 
 void Workspace::stopKompmgr()
 {
+    if(!kompmgr)
+        return;
     kompmgr->disconnect(this, SLOT(restartKompmgr()));
     options->useTranslucency = FALSE;
     if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
