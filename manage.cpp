@@ -238,6 +238,8 @@ bool Client::manage( Window w, bool isMapped )
              (xSizeHint.flags & USPosition) ) 
             {
             placementDone = TRUE;
+            // disobey xinerama placement option for now (#70943)
+            area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
             }
         if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) 
             {
