@@ -33,7 +33,7 @@ using namespace KWinInternal;
 class GalliumButton : public KWinButton
 {
 	public:
-    	GalliumButton(Client *parent=0, const char *name=0, 
+		GalliumButton(Client *parent=0, const char *name=0, 
 					  const unsigned char *bitmap=NULL,
 					  bool menuButton=false, bool isMini=false,
 					  const QString& tip=NULL);
@@ -82,6 +82,7 @@ class GalliumClient : public Client
 		void slotReset();
 		void slotMaximize();
 		void menuButtonPressed();
+		void menuButtonReleased();
 
 	private:
 		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
@@ -94,6 +95,7 @@ class GalliumClient : public Client
 		bool           hiddenItems;
 		QBoxLayout*    hb;
 		bool           smallButtons;
+		bool           closing;
 };
 
 };

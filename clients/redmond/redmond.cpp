@@ -408,6 +408,7 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     
     // Connect required stuff together
     connect( button[BtnMenu],    SIGNAL(pressed()),      this, SLOT( menuButtonPressed() ));
+    connect( button[BtnMenu],    SIGNAL(released()),     this, SLOT( menuButtonReleased() ));
     connect( button[BtnClose],   SIGNAL( clicked() ),    this, SLOT( closeWindow() ));
     connect( button[BtnIconify], SIGNAL( clicked() ),    this, SLOT( iconify() ));
     connect( button[BtnMax],     SIGNAL( clicked() ),    this, SLOT( slotMaximize() ));
@@ -449,6 +450,7 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
         button[BtnClose]->hide();
 
     hiddenItems = false;
+    closing = false;
 
     // Make sure that the menu button uses the correct mini-icon
     iconChange();
@@ -772,6 +774,13 @@ void GalliumClient::menuButtonPressed()
 	    button[BtnMenu]->setDown(false);
     }
     else
+	closing = true;
+}
+
+
+void GalliumClient::menuButtonReleased()
+{
+    if ( closing )
 	closeWindow();
 }
 
