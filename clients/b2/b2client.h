@@ -2,6 +2,7 @@
 #define __B2CLIENT_H
 
 #include <qtoolbutton.h>
+#include <qvariant.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
