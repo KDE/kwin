@@ -1590,7 +1590,7 @@ void KeramikClient::resize( const QSize& s )
 
 void KeramikClient::borders( int& left, int& right, int& top, int& bottom ) const
 {
-	int titleBarHeight     = clientHandler->titleBarHeight( largeTitlebar );
+	int titleBarHeight     = clientHandler->titleBarHeight( clientHandler->largeCaptionBubbles() );
 	int grabBarHeight      = clientHandler->grabBarHeight();
 	int leftBorderWidth    = clientHandler->tile( BorderLeft, isActive() )->width();
 	int rightBorderWidth   = clientHandler->tile( BorderRight, isActive() )->width();
@@ -1602,8 +1602,12 @@ void KeramikClient::borders( int& left, int& right, int& top, int& bottom ) cons
 
 	if ( ( maximizeMode() & MaximizeHorizontal ) && !options()->moveResizeMaximizedWindows())
 		left = right = 0;
-	if( ( maximizeMode() & MaximizeVertical ) && !options()->moveResizeMaximizedWindows())
-		bottom = 0;
+	if( maximizeMode() & MaximizeVertical)
+	{
+		top = clientHandler->titleBarHeight( false );
+		if( !options()->moveResizeMaximizedWindows())
+			bottom = 0;
+	}
 }
 
 
