@@ -623,8 +623,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	    maximize( Client::MaximizeHorizontal );
 	
 	
-	if ( isMaximizable() && !isMaximized() && width() >= area.width() && height() >= area.height() 
-	     && ( geom.topLeft() == area.topLeft() || 
+	if ( isMaximizable() && !isMaximized() && width() >= area.width() && height() >= area.height()
+	     && ( geom.topLeft() == area.topLeft() ||
 		  geom.topLeft() == workspace()->geometry().topLeft() ) ) {
 	    maximize( Client::MaximizeFull );
 	}
@@ -1792,7 +1792,7 @@ void Client::gravitate( bool invert )
 */
 bool Client::x11Event( XEvent * e)
 {
-    if ( e->type == EnterNotify && e->xcrossing.mode == NotifyNormal ) {
+    if ( e->type == EnterNotify && ( e->xcrossing.mode == NotifyNormal || e->xcrossing.mode == NotifyUngrab ) ) {
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
