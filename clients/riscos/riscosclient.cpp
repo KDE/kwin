@@ -355,7 +355,7 @@ RiscOSResizeMid::paintEvent(QPaintEvent * e)
 RiscOSResizeMid::mouseMoveEvent(QMouseEvent * e)
 {
   QRect g = client_->geometry();
-  g.setHeight(e->globalPos().y());
+  g.setBottom(e->globalPos().y());
 
   QSize adjustedSize = client_->adjustedSize(g.size());
 
