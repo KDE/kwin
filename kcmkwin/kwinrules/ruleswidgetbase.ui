@@ -39,7 +39,7 @@
                             <cstring>textLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>Description</string>
+                            <string>Description:</string>
                         </property>
                     </widget>
                     <widget class="KLineEdit">
@@ -52,7 +52,7 @@
                             <cstring>textLabel2</cstring>
                         </property>
                         <property name="text">
-                            <string>Window class (application type)</string>
+                            <string>Window class (application type):</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget">
@@ -155,7 +155,7 @@
                             <cstring>textLabel3</cstring>
                         </property>
                         <property name="text">
-                            <string>Window role</string>
+                            <string>Window role:</string>
                         </property>
                     </widget>
                     <widget class="KLineEdit">
@@ -242,7 +242,7 @@
                                     <cstring>groupBox1</cstring>
                                 </property>
                                 <property name="title">
-                                    <string>Detect window properties</string>
+                                    <string>Detect Window Properties</string>
                                 </property>
                                 <vbox>
                                     <property name="name">
@@ -328,7 +328,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Window extra</string>
+                    <string>Window Extra</string>
                 </attribute>
                 <vbox>
                     <property name="name">
@@ -339,23 +339,23 @@
                             <cstring>textLabel4</cstring>
                         </property>
                         <property name="text">
-                            <string>Window types</string>
+                            <string>Window types:</string>
                         </property>
                     </widget>
                     <widget class="KListBox">
                         <item>
                             <property name="text">
-                                <string>Normal window</string>
+                                <string>Normal Window</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Dialog window</string>
+                                <string>Dialog Window</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Utility window</string>
+                                <string>Utility Window</string>
                             </property>
                         </item>
                         <item>
@@ -370,7 +370,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Torn off menu</string>
+                                <string>Torn Off Menu</string>
                             </property>
                         </item>
                         <item>
@@ -385,12 +385,12 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Override type</string>
+                                <string>Override Type</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Standalone menubar</string>
+                                <string>Standalone Menubar</string>
                             </property>
                         </item>
                         <property name="name">
@@ -405,7 +405,7 @@
                             <cstring>textLabel5</cstring>
                         </property>
                         <property name="text">
-                            <string>Window title</string>
+                            <string>Window title:</string>
                         </property>
                     </widget>
                     <widget class="KLineEdit">
@@ -487,7 +487,7 @@
                             <cstring>textLabel6</cstring>
                         </property>
                         <property name="text">
-                            <string>Extra role</string>
+                            <string>Extra role:</string>
                         </property>
                     </widget>
                     <widget class="KLineEdit">
@@ -569,7 +569,7 @@
                             <cstring>textLabel7</cstring>
                         </property>
                         <property name="text">
-                            <string>Machine (hostname)</string>
+                            <string>Machine (hostname):</string>
                         </property>
                     </widget>
                     <widget class="KLineEdit">
@@ -664,18 +664,18 @@
                             <cstring>label_size</cstring>
                         </property>
                         <property name="text">
-                            <string>Size</string>
+                            <string>Size:</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="1" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -746,18 +746,18 @@
                             <cstring>label_desktop</cstring>
                         </property>
                         <property name="text">
-                            <string>Desktop</string>
+                            <string>Desktop:</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="2" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -788,12 +788,12 @@
                     <widget class="KComboBox" row="0" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -816,12 +816,12 @@
                     <widget class="KComboBox" row="5" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -844,12 +844,12 @@
                     <widget class="KComboBox" row="4" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -880,12 +880,12 @@
                     <widget class="KComboBox" row="7" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -932,12 +932,12 @@
                     <widget class="KComboBox" row="6" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -968,12 +968,12 @@
                     <widget class="KComboBox" row="3" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -998,7 +998,7 @@
                             <cstring>label_position</cstring>
                         </property>
                         <property name="text">
-                            <string>Position</string>
+                            <string>Position:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="7" column="2">
@@ -1049,7 +1049,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>No placement</string>
+                                <string>No Placement</string>
                             </property>
                         </item>
                         <item>
@@ -1074,17 +1074,17 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Top-left corner</string>
+                                <string>Top-Left Corner</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Under mouse</string>
+                                <string>Under Mouse</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>On main window</string>
+                                <string>On Main Window</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1099,7 +1099,7 @@
                             <cstring>label_placement</cstring>
                         </property>
                         <property name="text">
-                            <string>Placement</string>
+                            <string>Placement:</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="8" column="0">
@@ -1113,7 +1113,7 @@
                     <widget class="KComboBox" row="8" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -1300,7 +1300,7 @@
                     <widget class="KComboBox" row="6" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -1318,7 +1318,7 @@
                     <widget class="KComboBox" row="5" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -1336,12 +1336,12 @@
                     <widget class="KComboBox" row="4" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -1364,12 +1364,12 @@
                     <widget class="KComboBox" row="3" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -1392,12 +1392,12 @@
                     <widget class="KComboBox" row="2" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -1420,12 +1420,12 @@
                     <widget class="KComboBox" row="1" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -1448,12 +1448,12 @@
                     <widget class="KComboBox" row="0" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Apply initially</string>
+                                <string>Apply Initially</string>
                             </property>
                         </item>
                         <item>
@@ -1740,13 +1740,13 @@
                             <cstring>label_fsplevel</cstring>
                         </property>
                         <property name="text">
-                            <string>Focus stealing prevention</string>
+                            <string>Focus stealing prevention:</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="2" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -1764,17 +1764,17 @@
                     <widget class="KComboBox" row="2" column="3">
                         <item>
                             <property name="text">
-                                <string>Normal window</string>
+                                <string>Normal Window</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Dialog window</string>
+                                <string>Dialog Window</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Utility window</string>
+                                <string>Utility Window</string>
                             </property>
                         </item>
                         <item>
@@ -1789,7 +1789,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Torn off menu</string>
+                                <string>Torn Off Menu</string>
                             </property>
                         </item>
                         <item>
@@ -1804,12 +1804,12 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Override type</string>
+                                <string>Override Type</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Standalone menubar</string>
+                                <string>Standalone Menubar</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1850,7 +1850,7 @@
                             <cstring>label_type</cstring>
                         </property>
                         <property name="text">
-                            <string>Window type</string>
+                            <string>Window type:</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="1" column="0">
@@ -1866,13 +1866,13 @@
                             <cstring>label_moveresizemode</cstring>
                         </property>
                         <property name="text">
-                            <string>Moving/resizing</string>
+                            <string>Moving/resizing:</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="0" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -1890,7 +1890,7 @@
                     <widget class="KComboBox" row="1" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -1954,7 +1954,7 @@
                             <cstring>label_maxsize</cstring>
                         </property>
                         <property name="text">
-                            <string>Maximum size</string>
+                            <string>Maximum size:</string>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="3" column="3">
@@ -1979,7 +1979,7 @@
                     <widget class="KComboBox" row="3" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -2005,7 +2005,7 @@
                     <widget class="KComboBox" row="4" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>
@@ -2052,13 +2052,13 @@
                             <cstring>label_minsize</cstring>
                         </property>
                         <property name="text">
-                            <string>Minimum size</string>
+                            <string>Minimum size:</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="5" column="1">
                         <item>
                             <property name="text">
-                                <string>Don't affect</string>
+                                <string>Do Not Affect</string>
                             </property>
                         </item>
                         <item>

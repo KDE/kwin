@@ -83,7 +83,7 @@ QString KCMRules::quickHelp() const
 const KAboutData* KCMRules::aboutData() const
     {
     KAboutData *about = new KAboutData(I18N_NOOP( "kcmkwinrules" ),
-        I18N_NOOP( "Window-specific Settings Configuration Module" ),
+        I18N_NOOP( "Window-Specific Settings Configuration Module" ),
         0, 0, KAboutData::License_GPL, I18N_NOOP( "(c) 2004 KWin and KControl Authors" ));
     about->addAuthor("Lubos Lunak",0,"l.lunak@kde.org");
     return about;

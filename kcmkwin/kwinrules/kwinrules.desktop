@@ -9,7 +9,7 @@ X-KDE-ModuleType=Library
 X-KDE-Library=kwinrules
 X-KDE-FactoryName=kwinrules
 
-Name=Window-specific Settings
+Name=Window-Specific Settings
 
 Comment=Configure settings specifically for a window
 

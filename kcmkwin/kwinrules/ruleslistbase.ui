@@ -78,7 +78,7 @@
                                 <cstring>moveup_button</cstring>
                             </property>
                             <property name="text">
-                                <string>Move &amp;up</string>
+                                <string>Move &amp;Up</string>
                             </property>
                             <property name="accel">
                                 <string>Alt+U</string>
@@ -89,7 +89,7 @@
                                 <cstring>movedown_button</cstring>
                             </property>
                             <property name="text">
-                                <string>Move &amp;down</string>
+                                <string>Move &amp;Down</string>
                             </property>
                             <property name="accel">
                                 <string>Alt+D</string>
