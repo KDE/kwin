@@ -133,6 +133,7 @@ Comment[tr]=1. Masaüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл Один
 Comment[zh_CN.GB2312]=虚拟桌面一被选中
 Comment[zh_TW.Big5]=虛擬桌面一被選擇
+soundfile=KDE_Desktop1.wav
 default_presentation=0
 
 [desktop2]
@@ -223,6 +224,7 @@ Comment[tr]=2. Masaüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл Два
 Comment[zh_CN.GB2312]=虚拟桌面二被选中
 Comment[zh_TW.Big5]=虛擬桌面二被選擇
+soundfile=KDE_Desktop2.wav
 default_presentation=0
 
 [desktop3]
@@ -313,6 +315,7 @@ Comment[tr]=3. Masaüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл Три
 Comment[zh_CN.GB2312]=虚拟桌面三被选中
 Comment[zh_TW.Big5]=虛擬桌面三被選擇
+soundfile=KDE_Desktop3.wav 
 default_presentation=0
 
 [desktop4]
@@ -403,6 +406,7 @@ Comment[tr]=4. Masasüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл Чотири
 Comment[zh_CN.GB2312]=虚拟桌面四被选中
 Comment[zh_TW.Big5]=虛擬桌面四被選擇
+soundfile=KDE_Desktop4.wav 
 default_presentation=0
 
 [desktop5]
@@ -493,6 +497,7 @@ Comment[tr]=5. Masaüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл П'ять
 Comment[zh_CN.GB2312]=虚拟桌面五被选中
 Comment[zh_TW.Big5]=虛擬桌面五被選擇
+soundfile=KDE_Desktop5.wav 
 default_presentation=0
 
 [desktop6]
@@ -583,6 +588,7 @@ Comment[tr]=6. Masaüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл Шість
 Comment[zh_CN.GB2312]=虚拟桌面六被选中
 Comment[zh_TW.Big5]=虛擬桌面六被選擇
+soundfile=KDE_Desktop6.wav 
 default_presentation=0
 
 [desktop7]
@@ -673,6 +679,7 @@ Comment[tr]=7. Masaüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл Сім
 Comment[zh_CN.GB2312]=虚拟桌面七被选中
 Comment[zh_TW.Big5]=虛擬桌面七被選擇
+soundfile=KDE_Desktop7.wav 
 default_presentation=0
 
 [desktop8]
@@ -763,6 +770,7 @@ Comment[tr]=8. Masaüstü Seçildi
 Comment[uk]=Вибрано віртуальний робочий стіл Вісім
 Comment[zh_CN.GB2312]=虚拟桌面八被选中
 Comment[zh_TW.Big5]=虛擬桌面八被選擇
+soundfile=KDE_Desktop8.wav 
 default_presentation=0
 
 [activate]
@@ -942,6 +950,7 @@ Comment[tr]=Yeni Pencere
 Comment[uk]=Нове вікно
 Comment[zh_CN.GB2312]=新建窗口
 Comment[zh_TW.Big5]=新增視窗
+soundfile=KDE_Window_Open.wav
 default_presentation=0
 
 [delete]
@@ -1119,6 +1128,7 @@ Comment[tr]=Bir Pencere Kapatıldı
 Comment[uk]=Вікно закривається
 Comment[zh_CN.GB2312]=关闭一个窗口
 Comment[zh_TW.Big5]=視窗關閉
+soundfile=KDE_Window_Close.wav
 default_presentation=0
 
 [shadeup]
@@ -1205,6 +1215,7 @@ Comment[tr]=Pencere Yukarı
 Comment[uk]=Вікно згорнуте
 Comment[zh_CN.GB2312]=窗口被卷起
 Comment[zh_TW.Big5]=視窗陰影向上
+soundfile=KDE_Window_Shade_Up.wav
 default_presentation=0
 
 [shadedown]
@@ -1291,6 +1302,7 @@ Comment[tr]=Pencere Aşağı
 Comment[uk]=Вікно розгорнуте
 Comment[zh_CN.GB2312]=窗口放下
 Comment[zh_TW.Big5]=視窗陰影向下
+soundfile=KDE_Window_Shade_Down.wav
 default_presentation=0
 
 [iconify]
@@ -1381,6 +1393,7 @@ Comment[tr]=Bir Pencere Simge Haline Getirildi
 Comment[uk]=Вікно мінімізоване
 Comment[zh_CN.GB2312]=窗口被最小化
 Comment[zh_TW.Big5]=視窗圖示化
+soundfile=KDE_Window_Iconify.wav
 default_presentation=0
 
 [deiconify]
@@ -1469,6 +1482,7 @@ Comment[tr]=Bir Pencere Eski Boyutuna Getirildi
 Comment[uk]=Вікно відновлене
 Comment[zh_CN.GB2312]=窗口恢复大小
 Comment[zh_TW.Big5]=視窗還原
+soundfile=KDE_Window_DeIconify.wav   
 default_presentation=0
 
 [maximize]
@@ -1561,6 +1575,7 @@ Comment[tr]=Bir Pencere Büyütüldü
 Comment[uk]=Вікно максимізоване
 Comment[zh_CN.GB2312]=窗口被最大化
 Comment[zh_TW.Big5]=視窗最大化
+soundfile=KDE_Window_Maximize.wav   
 default_presentation=0
 
 [unmaximize]
@@ -1652,6 +1667,7 @@ Comment[tr]=Bir Pencere Büyümesini Kaybetti
 Comment[uk]=Вікно втрачає максимізацію
 Comment[zh_CN.GB2312]=窗口恢复大小
 Comment[zh_TW.Big5]=視窗不是最大化
+soundfile=KDE_Window_UnMaximize.wav
 default_presentation=0
 
 [sticky]
@@ -1741,6 +1757,7 @@ Comment[tr]=Bir Pencere Yapışkan Hale Getirildi
 Comment[uk]=Вікно прікріплене
 Comment[zh_CN.GB2312]=窗口已粘附
 Comment[zh_TW.Big5]=視窗黏貼上
+soundfile=KDE_Window_Sticky.wav
 default_presentation=0
 
 [unsticky]
@@ -1831,7 +1848,7 @@ Comment[uk]=Вікно звільнене
 Comment[zh_CN.GB2312]=窗口已取消粘附
 Comment[zh_TW.Big5]=視窗不黏貼
 default_presentation=1
-soundfile=pop.wav
+soundfile=KDE_Window_UnSticky.wav
 
 [transnew]
 Name=New Dialog
@@ -1914,6 +1931,7 @@ Comment[tr]=Bir İletişim Kutusu Belirdi
 Comment[uk]=Тимчасове вікно (діалог) з'являється
 Comment[zh_CN.GB2312]=暂态窗口(对话)出现
 Comment[zh_TW.Big5]=短暫視窗(對話框)出現
+soundfile=KDE_Dialog_Appear.wav
 default_presentation=0
 
 [transdelete]
@@ -1997,6 +2015,7 @@ Comment[tr]=Bir İletişim Kutusu Silindi
 Comment[uk]=Тимчасове вікно (діалог) зникає
 Comment[zh_CN.GB2312]=暂态窗口(对话)删除
 Comment[zh_TW.Big5]=短暫視窗(對話框)移除
+soundfile=KDE_Dialog_Disappear.wav
 default_presentation=0
 
 [movestart]
