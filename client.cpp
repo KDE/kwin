@@ -2730,6 +2730,8 @@ void Client::verifyTransientFor()
     }
     if ( old_transient_for != transient_for && workspace()->findClient( transient_for ) )
 	XSetTransientForHint( qt_xdisplay(), win, transient_for );
+    else
+	transient_for = old_transient_for; // nice try
 }
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
