@@ -40,12 +40,11 @@ class KDEDefaultConfig: public QObject
 		void slotSelectionChanged(int);	// Internal use
 
 	private:
-		QWidget *dummyWidget;
-
 		QCheckBox* cbShowStipple;
 		QCheckBox* cbShowGrabBar;
 		QCheckBox* cbUseGradients;
 		QSlider*   titleBarSizeSlider;
+		QGroupBox* gb;
 		bool 	   highcolor;
 		QLabel*	   label1;
 		QLabel*	   label2;
