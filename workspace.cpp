@@ -403,11 +403,11 @@ Workspace::~Workspace()
     _self = 0;
     }
 
-Client* Workspace::createClient( Window w, bool is_mapped )
+Client* Workspace::createClient( Window w, bool is_mapped, bool use_cursor_pos )
     {
     StackingUpdatesBlocker blocker( this );
     Client* c = new Client( this );
-    if( !c->manage( w, is_mapped ))
+    if( !c->manage( w, is_mapped, use_cursor_pos ))
         {
         Client::deleteClient( c, Allowed );
         return NULL;

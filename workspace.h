@@ -346,7 +346,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void updateToolWindows( bool also_hide );
 
     // this is the right way to create a new client
-        Client* createClient( Window w, bool is_mapped );
+        Client* createClient( Window w, bool is_mapped, bool use_cursor_pos = false );
         void addClient( Client* c, allowed_t );
 
         Window findSpecialEventWindow( XEvent* e );

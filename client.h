@@ -80,7 +80,7 @@ class Client : public QObject, public KDecorationDefines
         void windowEvent( XEvent* e );
         virtual bool eventFilter( QObject* o, QEvent* e );
 
-        bool manage( Window w, bool isMapped );
+        bool manage( Window w, bool isMapped, bool useCursorPos );
 
         void releaseWindow( bool on_shutdown = false );
 
