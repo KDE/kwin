@@ -1667,7 +1667,7 @@ void Workspace::raiseClient( Client* c )
 	for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	    if ( (*it) ==  c )
 		break;
-	    if ( (*it)->isVisible() && (*it)->isFullScreen() && 
+	    if ( (*it)->isVisible() && (*it)->isFullScreen() &&
 		 !(*it)->isDesktop() && (*it)->staysOnTop() ) {
 		has_full_screen = true;
 		break;
@@ -2295,7 +2295,11 @@ void Workspace::sendClientToDesktop( Client* c, int desk )
 	return;
 
     c->setDesktop( desk );
-    c->hide();
+    
+    if ( c->isOnDesktop( currentDesktop() ) )
+	c->show();
+    else
+	c->hide();
 
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	if ( (*it)->transientFor() == c->window() ) {
