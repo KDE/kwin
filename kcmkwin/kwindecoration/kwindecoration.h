@@ -91,7 +91,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		ButtonSource* buttonSource;
 
 		// Page 3
-		QWidget* pluginObject;
+		QObject* pluginObject;
 		QLabel* noPluginSettings;
 		QString  currentLibraryName;
 		QString  oldLibraryName;

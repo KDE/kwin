@@ -291,7 +291,7 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 		if (alloc_ptr != NULL)
 		{
 			allocatePlugin = (QObject* (*)(KConfig* conf, QWidget* parent))alloc_ptr;
-			pluginObject = static_cast<QWidget*>(allocatePlugin( conf, pluginConfigWidget ));
+			pluginObject = (QObject*)(allocatePlugin( conf, pluginConfigWidget ));
 
 			// connect required signals and slots together...
 			connect( pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );
