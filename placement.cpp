@@ -171,8 +171,8 @@ void Placement::placeSmart(Client* c, const QRect& area )
                         yt = QMAX(cyt, yt); yb = QMIN(cyb, yb);
                         if((*l)->keepAbove())
                             overlap += 16 * (xr - xl) * (yb - yt);
-                        else if((*l)->keepBelow())
-                            overlap += ((xr - xl) * (yb - yt))/4;
+                        else if((*l)->keepBelow() && !(*l)->isDock()) // ignore KeepBelow windows
+                            overlap += 0; // for placement (see Client::belongsToLayer() for Dock)
                         else
                             overlap += (xr - xl) * (yb - yt);
                         }
