@@ -139,7 +139,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
                                       " that was under the mouse has focus. </li>"
                                       " <li><em>Focus strictly under mouse:</em> This is even worse than"
                                       " 'Focus under mouse'. Only the window under the mouse pointer is"
-                                      " active. If the mouse points nowhere, nothing has focus. "
+                                      " active. If the mouse points nowhere, nothing has focus."
                                       " </ul>"
                                       " Note that 'Focus under mouse' and 'Focus strictly under mouse' are not"
                                       " particularly useful. They are only provided for old-fashioned"
