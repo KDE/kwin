@@ -1,17 +1,19 @@
-// $Id$
 /*
-  Gallium-Quartz KWin client
-
-  Copyright 2001
-    Karol Szwed <karlmail@usa.net>
-    http://gallium.n3.net/
-
-  Based upon the Win2K kwin client, which is based on the
-  KDE default client.
-
-  Includes mini titlebars for ToolWindow Support.
-  Button positions are now customizable.
-*/
+ * $Id$
+ *
+ * Gallium-Quartz KWin client
+ *
+ * Copyright 2001
+ *   Karol Szwed <karlmail@usa.net>
+ *   http://gallium.n3.net/
+ *
+ * Based upon the Win2K kwin client, which is based on the
+ * KDE default client.
+ *
+ * Includes mini titlebars for ToolWindow Support.
+ * Button positions are now customizable.
+ *
+ */
 
 #ifndef __KDEGALLIUM_QUARTZ_H
 #define __KDEGALLIUM_QUARTZ_H
@@ -49,7 +51,8 @@ class QuartzButton : public QButton
 {
 	public:
 		QuartzButton(Client *parent=0, const char *name=0, bool largeButton=true,
-					 bool isLeftButton=true, bool isStickyButton=false, const unsigned char *bitmap=NULL);
+					 bool isLeftButton=true, bool isStickyButton=false,
+					 const unsigned char *bitmap=NULL);
 		~QuartzButton();
 		void setBitmap(const unsigned char *bitmap);
 		QSize sizeHint() const;
@@ -75,7 +78,8 @@ class QuartzClient : public KWinInternal::Client
 	Q_OBJECT
 
 	public:
-		QuartzClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
+		QuartzClient( Workspace *ws, WId w, QWidget *parent=0, 
+					  const char *name=0 );
 		~QuartzClient() {;}
 
 	protected:
@@ -87,6 +91,7 @@ class QuartzClient : public KWinInternal::Client
 		void maximizeChange(bool m);
 		void activeChange(bool);
 		void iconChange();
+		void stickyChange(bool on);
 
 	protected slots:
 		void slotMaximize();
@@ -96,7 +101,8 @@ class QuartzClient : public KWinInternal::Client
 		void calcHiddenButtons();
 		void addClientButtons( const QString& s, bool isLeft=true );
 
-		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, BtnMenu, BtnSticky, BtnCount };
+		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, 
+					  BtnMenu, BtnSticky, BtnCount };
 		QuartzButton* button[ QuartzClient::BtnCount ];
 		int           lastButtonWidth;
 		int 		  titleHeight;

@@ -1,17 +1,19 @@
-// $Id$
 /*
-  Gallium-Quartz KWin client
-
-  Copyright 2001
-    Karol Szwed <karlmail@usa.net>
-    http://gallium.n3.net/
-
-  Based upon the Win2K kwin client, which is based on the
-  KDE default client.
-
-  Includes mini titlebars for ToolWindow Support.
-  Button positions are now customizable.
-*/
+ * $Id$
+ *
+ * Gallium-Quartz KWin client
+ *
+ * Copyright 2001
+ *   Karol Szwed <karlmail@usa.net>
+ *   http://gallium.n3.net/
+ *
+ * Based upon the Win2K kwin client, which is based on the
+ * KDE default client.
+ *
+ * Includes mini titlebars for ToolWindow Support.
+ * Button positions are now customizable.
+ *
+ */
 
 #include <kconfig.h>
 #include <kglobal.h>
@@ -129,9 +131,9 @@ void QuartzHandler::slotReset()
 
 void QuartzHandler::readConfig()
 {
-	KConfig* conf = KGlobal::config();
-	conf->setGroup("Quartz");
-	coloredFrame = conf->readBoolEntry( "UseTitleBarBorderColors", true );
+	KConfig conf("kwinquartzrc");
+	conf.setGroup("General");
+	coloredFrame = conf.readBoolEntry( "UseTitleBarBorderColors", true );
 
 	// A small hack to make the sticky button look nicer
 	stickyButtonOnLeft = (bool)options->titleButtonsLeft().contains( 'S' );
@@ -543,6 +545,16 @@ void QuartzClient::iconChange()
 }
 
 
+void QuartzClient::stickyChange(bool on)
+{
+	if (button[BtnSticky])
+	{
+		button[BtnSticky]->turnOn(on);
+		button[BtnSticky]->repaint(false);		
+	}
+}
+
+
 void QuartzClient::slotMaximize()
 {
     if ( button[BtnMax]->last_button == MidButton )
@@ -638,6 +650,9 @@ void QuartzClient::paintEvent( QPaintEvent* )
     // Draw a frame around the wrapped widget.
     p.setPen( g.background() );
     p.drawRect( x+3, y + titleHeight + 3, w-6, h-titleHeight-6 );
+
+    // Drawing this extra line removes non-drawn areas when shaded
+    p.drawLine( x+4, y2-4, x2-4, y2-4); 
 
     // Highlight top corner
     p.setPen( g.light().light(160) );

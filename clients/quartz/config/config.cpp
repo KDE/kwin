@@ -1,17 +1,18 @@
 /* 	
-	This file contains the quartz configuration widget...
-
-	Copyright (c) 2001
-		Karol Szwed (gallium) <karlmail@usa.net>
-		http://gallium.n3.net/
-*/
+ * $Id$
+ *
+ *	This file contains the quartz configuration widget
+ *
+ *	Copyright (c) 2001
+ *		Karol Szwed <gallium@kde.org>
+ *		http://gallium.n3.net/
+ */
 
 #include "config.h"
 #include <qwhatsthis.h>
 #include <klocale.h>
 
 
-// KWin client config plugin interface
 extern "C"
 {
 	QObject* allocate_config( KConfig* conf, QWidget* parent )
@@ -21,22 +22,26 @@ extern "C"
 }
 
 
-// NOTE: 
-// 'conf' 	is a pointer to the kwindecoration modules open kwin config,
-//			and is by default set to the "Style" group.
-//
-// 'parent'	is the parent of the QObject, which is a VBox inside the
-//			Configure tab in kwindecoration
+/* NOTE: 
+ * 'conf' 	is a pointer to the kwindecoration modules open kwin config,
+ *			and is by default set to the "Style" group.
+ *
+ * 'parent'	is the parent of the QObject, which is a VBox inside the
+ *			Configure tab in kwindecoration
+ */
 
 QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
-	gb = new QGroupBox( 1, Qt::Horizontal, i18n("Quartz Decoration Settings"), parent );
-
-	cbColorBorder = new QCheckBox( i18n("Draw window frames using &titlebar colors"), gb );
-	QWhatsThis::add( cbColorBorder, i18n("When selected, the window decoration borders "
-										 "are drawn using the titlebar colors. Otherwise, they are "
-										 "drawn using normal border colors instead.") );
+	quartzConfig = new KConfig("kwinquartzrc");
+	gb = new QGroupBox( 1, Qt::Horizontal, 
+						i18n("Quartz Decoration Settings"), parent );
+	cbColorBorder = new QCheckBox( 
+						i18n("Draw window frames using &titlebar colors"), gb );
+	QWhatsThis::add( cbColorBorder, 
+						i18n("When selected, the window decoration borders "
+						"are drawn using the titlebar colors. Otherwise, they are "
+						"drawn using normal border colors instead.") );
 	// Load configuration options
 	load( conf );
 
@@ -52,6 +57,7 @@ QuartzConfig::~QuartzConfig()
 {
 	delete cbColorBorder;
 	delete gb;
+	delete quartzConfig;
 }
 
 
@@ -65,8 +71,8 @@ void QuartzConfig::slotSelectionChanged()
 // It is passed the open config from kwindecoration to improve efficiency
 void QuartzConfig::load( KConfig* conf )
 {
-	conf->setGroup("Quartz");
-	bool override = conf->readBoolEntry( "UseTitleBarBorderColors", true );
+	quartzConfig->setGroup("General");
+	bool override = quartzConfig->readBoolEntry( "UseTitleBarBorderColors", true );
 	cbColorBorder->setChecked( override );
 }
 
@@ -74,8 +80,10 @@ void QuartzConfig::load( KConfig* conf )
 // Saves the configurable options to the kwinrc config file
 void QuartzConfig::save( KConfig* conf )
 {
-	conf->setGroup("Quartz");
-	conf->writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
+	quartzConfig->setGroup("General");
+	quartzConfig->writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
+	// Ensure others trying to read this config get updated
+	quartzConfig->sync();
 }
 
 
@@ -86,5 +94,4 @@ void QuartzConfig::defaults()
 }
 
 #include "config.moc"
-
 // vim: ts=4
