@@ -1177,15 +1177,15 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   resetKompmgr_ = FALSE;
   QVBoxLayout *lay = new QVBoxLayout (this);
   if (!kompmgrAvailable()){
-  KActiveLabel *label = new KActiveLabel(i18n("<qt><b>It seems as if alpha channel support is not available!</b><br><br>"
-                                 "Please make sure, you have "
-                                 "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>"
-                                 " and installed the kompmgr that came with kwin<br>"
-                                 "Also make sure you have the following entries in your XConfig (e.g. /etc/XF86Config):<br><br>"
+  KActiveLabel *label = new KActiveLabel(i18n("<qt><b>It seems that alpha channel support is not available.</b><br><br>"
+                                 "Please make sure you have "
+                                 "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>,"
+                                 " and installed the kompmgr that came with kwin.<br>"
+                                 "Also, make sure you have the following entries in your XConfig (e.g. /etc/XF86Config):<br><br>"
                                  "<i>Section \"Extensions\"<br>"
                                  "Option \"Composite\" \"Enable\"<br>"
                                  "EndSection</i><br><br>"
-                                 "And if your GPU provides hardware accelerated Xrender support (mainly nVidia cards):<br><br>"
+                                 "And if your GPU provides hardware-accelerated Xrender support (mainly nVidia cards):<br><br>"
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
                                  "In <i>Section \"Device\"</i></qt>"), this);
   lay->addWidget(label);
