@@ -145,6 +145,10 @@ bool Client::manage( Window w, bool isMapped )
             setUserNoBorder( true );
         }
 
+    init_minimize = rules()->checkMinimize( init_minimize, !isMapped );
+    if( rules()->checkNoBorder( false, !isMapped ))
+        setUserNoBorder( true );
+
     // initial desktop placement
     if ( info->desktop() )
         desk = info->desktop(); // window had the initial desktop property!
@@ -269,9 +273,9 @@ bool Client::manage( Window w, bool isMapped )
 
     updateDecoration( false ); // also gravitates
     // TODO is CentralGravity right here, when resizing is done after gravitating?
-    plainResize( rules()->checkSize( sizeForClientSize( geom.size()), true ));
+    plainResize( rules()->checkSize( sizeForClientSize( geom.size()), !isMapped ));
 
-    QPoint forced_pos = rules()->checkPosition( invalidPoint, true );
+    QPoint forced_pos = rules()->checkPosition( invalidPoint, !isMapped );
     if( forced_pos != invalidPoint )
         {
         move( forced_pos );
@@ -370,31 +374,27 @@ bool Client::manage( Window w, bool isMapped )
         // done after checking that the window isn't larger than the workarea, so that
         // the restore geometry from the checks above takes precedence, and window
         // isn't restored larger than the workarea
-        if ( (info->state() & NET::Max) == NET::Max )
-            maximize( Client::MaximizeFull );
-        else if ( info->state() & NET::MaxVert )
-            maximize( Client::MaximizeVertical );
-        else if ( info->state() & NET::MaxHoriz )
-            maximize( Client::MaximizeHorizontal );
+        MaximizeMode maxmode = static_cast< MaximizeMode >
+            ((( info->state() & NET::MaxVert ) ? MaximizeVertical : 0 )
+            | (( info->state() & NET::MaxHoriz ) ? MaximizeHorizontal : 0 ));
+        MaximizeMode forced_maxmode = rules()->checkMaximize( maxmode, !isMapped );
+        // either hints were set to maximize, or is forced to maximize,
+        // or is forced to non-maximize and hints were set to maximize
+        if( forced_maxmode != MaximizeRestore || maxmode != MaximizeRestore )
+            maximize( forced_maxmode );
 
         // read other initial states
-        if( info->state() & NET::Shaded )
-            setShade( ShadeNormal );
+        setShade( rules()->checkShade( info->state() & NET::Shaded ? ShadeNormal : ShadeNone, !isMapped ));
         setKeepAbove( rules()->checkKeepAbove( info->state() & NET::KeepAbove, !isMapped ));
         setKeepBelow( rules()->checkKeepBelow( info->state() & NET::KeepBelow, !isMapped ));
-        if( info->state() & NET::SkipTaskbar )
-            setSkipTaskbar( true, true );
-        if( info->state() & NET::SkipPager )
-            setSkipPager( true );
+        setSkipTaskbar( rules()->checkSkipTaskbar( info->state() & NET::SkipTaskbar, !isMapped ), true );
+        setSkipPager( rules()->checkSkipPager( info->state() & NET::SkipPager, !isMapped ));
         if( info->state() & NET::DemandsAttention )
             demandAttention();
         if( info->state() & NET::Modal )
             setModal( true );
-        if( fullscreen_mode != FullScreenHack )
-            {
-            if(( info->state() & NET::FullScreen ) != 0 && isFullScreenable())
-                setFullScreen( true, false );
-            }
+        if( fullscreen_mode != FullScreenHack && isFullScreenable())
+            setFullScreen( rules()->checkFullScreen( info->state() & NET::FullScreen, !isMapped ), false );
         }
 
     updateAllowedActions( true );

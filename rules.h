@@ -16,6 +16,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qrect.h>
 
 #include "placement.h"
+#include "lib/kdecoration.h"
+#include "client.h"
 
 class KConfig;
 
@@ -34,6 +36,7 @@ enum SettingRule
     };
 
 class WindowRules
+    : public KDecorationDefines
     {
     public:
         WindowRules();
@@ -50,8 +53,15 @@ class WindowRules
         QSize checkMaxSize( const QSize& s ) const;
         int checkDesktop( int desktop, bool init = false ) const;
         NET::WindowType checkType( NET::WindowType type ) const;
+        MaximizeMode checkMaximize( MaximizeMode mode, bool init = false ) const;
+        bool checkMinimize( bool minimized, bool init = false ) const;
+        Client::ShadeMode checkShade( Client::ShadeMode shade, bool init = false ) const;
+        bool checkSkipTaskbar( bool skip, bool init = false ) const;
+        bool checkSkipPager( bool skip, bool init = false ) const;
         bool checkKeepAbove( bool above, bool init = false ) const;
-        bool checkKeepBelow( bool above, bool init = false ) const;
+        bool checkKeepBelow( bool below, bool init = false ) const;
+        bool checkFullScreen( bool fs, bool init = false ) const;
+        bool checkNoBorder( bool noborder, bool init = false ) const;
     private:
         static SettingRule readRule( KConfig&, const QString& key );
         static SettingRule readForceRule( KConfig&, const QString& key );
@@ -84,10 +94,26 @@ class WindowRules
         SettingRule desktoprule;
         NET::WindowType type; // type for setting
         SettingRule typerule;
+        bool maximizevert;
+        SettingRule maximizevertrule;
+        bool maximizehoriz;
+        SettingRule maximizehorizrule;
+        bool minimize;
+        SettingRule minimizerule;
+        bool shade;
+        SettingRule shaderule;
+        bool skiptaskbar;
+        SettingRule skiptaskbarrule;
+        bool skippager;
+        SettingRule skippagerrule;
         bool above;
         SettingRule aboverule;
         bool below;
         SettingRule belowrule;
+        bool fullscreen;
+        SettingRule fullscreenrule;
+        bool noborder;
+        SettingRule noborderrule;
     };
 
 inline

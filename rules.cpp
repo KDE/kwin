@@ -36,8 +36,16 @@ WindowRules::WindowRules()
     , maxsizerule( DontCareRule )
     , desktoprule( DontCareRule )
     , typerule( DontCareRule )
+    , maximizevertrule( DontCareRule )
+    , maximizehorizrule( DontCareRule )
+    , minimizerule( DontCareRule )
+    , shaderule( DontCareRule )
+    , skiptaskbarrule( DontCareRule )
+    , skippagerrule( DontCareRule )
     , aboverule( DontCareRule )
     , belowrule( DontCareRule )
+    , fullscreenrule( DontCareRule )
+    , noborderrule( DontCareRule )
     {
     }
 
@@ -77,8 +85,16 @@ WindowRules::WindowRules( KConfig& cfg )
     READ_SET_RULE( desktop, Num, );
     type = readType( cfg, "type" );
     typerule = type != NET::Unknown ? readForceRule( cfg, "typerule" ) : DontCareRule;
+    READ_SET_RULE( maximizevert, Bool, );
+    READ_SET_RULE( maximizehoriz, Bool, );
+    READ_SET_RULE( minimize, Bool, );
+    READ_SET_RULE( shade, Bool, );
+    READ_SET_RULE( skiptaskbar, Bool, );
+    READ_SET_RULE( skippager, Bool, );
     READ_SET_RULE( above, Bool, );
     READ_SET_RULE( below, Bool, );
+    READ_SET_RULE( fullscreen, Bool, );
+    READ_SET_RULE( noborder, Bool, );
     kdDebug() << "READ RULE:" << wmclass << endl;
     }
 
@@ -135,8 +151,16 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_SET_RULE( maxsize, );
     WRITE_SET_RULE( desktop, );
     WRITE_SET_RULE( type, );
+    WRITE_SET_RULE( maximizevert, );
+    WRITE_SET_RULE( maximizehoriz, );
+    WRITE_SET_RULE( minimize, );
+    WRITE_SET_RULE( shade, );
+    WRITE_SET_RULE( skiptaskbar, );
+    WRITE_SET_RULE( skippager, );
     WRITE_SET_RULE( above, );
     WRITE_SET_RULE( below, );
+    WRITE_SET_RULE( fullscreen, );
+    WRITE_SET_RULE( noborder, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -222,10 +246,26 @@ void WindowRules::update( Client* c )
         size = c->size();
     if( desktoprule == RememberRule )
         desktop = c->desktop();
+    if( maximizevertrule == RememberRule )
+        maximizevert = c->maximizeMode() & MaximizeVertical;
+    if( maximizehorizrule == RememberRule )
+        maximizehoriz = c->maximizeMode() & MaximizeHorizontal;
+    if( minimizerule == RememberRule )
+        minimize = c->isMinimized();
+    if( shaderule == RememberRule )
+        shade = c->shadeMode() != Client::ShadeNone;
+    if( skiptaskbarrule == RememberRule )
+        skiptaskbar = c->skipTaskbar();
+    if( skippagerrule == RememberRule )
+        skippager = c->skipPager();
     if( aboverule == RememberRule )
         above = c->keepAbove();
     if( belowrule == RememberRule )
         below = c->keepBelow();
+    if( fullscreenrule == RememberRule )
+        fullscreen = c->isFullScreen();
+    if( noborderrule == RememberRule )
+        noborder = c->isUserNoBorder();
     }
 
 Placement::Policy WindowRules::checkPlacement( Placement::Policy placement ) const
@@ -266,20 +306,65 @@ int WindowRules::checkDesktop( int req_desktop, bool init ) const
     return checkRule( desktoprule, init ) ? this->desktop : req_desktop;
     }
 
-bool WindowRules::checkKeepAbove( bool req_above, bool init ) const
-    {
-    return checkRule( aboverule, init ) ? this->above : req_above;
-    }
-
-bool WindowRules::checkKeepBelow( bool req_below, bool init ) const
-    {
-    return checkRule( belowrule, init ) ? this->below : req_below;
-    }
-    
 NET::WindowType WindowRules::checkType( NET::WindowType req_type ) const
     {
     return checkForceRule( typerule ) ? this->type : req_type;
     }
+
+KDecorationDefines::MaximizeMode WindowRules::checkMaximize( MaximizeMode mode, bool init ) const
+    {
+    bool vert = checkRule( maximizevertrule, init ) ? this->maximizevert : bool( mode & MaximizeVertical );
+    bool horiz = checkRule( maximizehorizrule, init ) ? this->maximizehoriz : bool( mode & MaximizeHorizontal );
+    return static_cast< MaximizeMode >(( vert ? MaximizeVertical : 0 ) | ( horiz ? MaximizeHorizontal : 0 ));
+    }
+
+bool WindowRules::checkMinimize( bool minimize, bool init ) const
+    {
+    return checkRule( minimizerule, init ) ? this->minimize : minimize;
+    }
+
+Client::ShadeMode WindowRules::checkShade( Client::ShadeMode shade, bool init ) const
+    {
+    if( checkRule( shaderule, init ))
+        {
+        if( !this->shade )
+            return Client::ShadeNone;
+        if( this->shade && shade == Client::ShadeNone )
+            return Client::ShadeNormal;
+        }
+    return shade;
+    }
+
+bool WindowRules::checkSkipTaskbar( bool skip, bool init ) const
+    {
+    return checkRule( skiptaskbarrule, init ) ? this->skiptaskbar : skip;
+    }
+
+bool WindowRules::checkSkipPager( bool skip, bool init ) const
+    {
+    return checkRule( skippagerrule, init ) ? this->skippager : skip;
+    }
+
+bool WindowRules::checkKeepAbove( bool above, bool init ) const
+    {
+    return checkRule( aboverule, init ) ? this->above : above;
+    }
+
+bool WindowRules::checkKeepBelow( bool below, bool init ) const
+    {
+    return checkRule( belowrule, init ) ? this->below : below;
+    }
+
+bool WindowRules::checkFullScreen( bool fs, bool init ) const
+    {
+    return checkRule( fullscreenrule, init ) ? this->fullscreen : fs;
+    }
+
+bool WindowRules::checkNoBorder( bool noborder, bool init ) const
+    {
+    return checkRule( noborderrule, init ) ? this->noborder : noborder;
+    }
+
 
 // Client
 

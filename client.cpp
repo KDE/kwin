@@ -400,6 +400,7 @@ void Client::setUserNoBorder( bool set )
     {
     if( !userCanSetNoBorder())
         return;
+    set = rules()->checkNoBorder( set );
     if( user_noborder == set )
         return;
     user_noborder = set;
@@ -687,6 +688,7 @@ void Client::setShade( ShadeMode mode )
     {
     if( !isShadeable())
         return;
+    mode = rules()->checkShade( mode );
     if( shade_mode == mode )
         return;
     bool was_shade = isShade();
@@ -1053,7 +1055,10 @@ void Client::processKillerExited()
 void Client::setSkipTaskbar( bool b, bool from_outside )
     {
     if( from_outside )
+        {
+        b = rules()->checkSkipTaskbar( b );
         original_skip_taskbar = b;
+        }
     if ( b == skipTaskbar() )
         return;
     skip_taskbar = b;
@@ -1062,6 +1067,7 @@ void Client::setSkipTaskbar( bool b, bool from_outside )
 
 void Client::setSkipPager( bool b )
     {
+    b = rules()->checkSkipPager( b );
     if ( b == skipPager() )
         return;
     skip_pager = b;

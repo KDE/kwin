@@ -1665,8 +1665,6 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     if( !isMaximizable())
         return;
 
-    ++block_geometry; // TODO GeometryBlocker class?
-
     if( isShade()) // SELI SHADE
         setShade( ShadeNone );
 
@@ -1679,6 +1677,12 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
         if( horizontal )
             max_mode = MaximizeMode( max_mode ^ MaximizeHorizontal );
         }
+        
+    max_mode = rules()->checkMaximize( max_mode );
+    if( !adjust && max_mode == old_mode )
+        return;
+
+    ++block_geometry; // TODO GeometryBlocker class?
 
     // maximing one way and unmaximizing the other way shouldn't happen
     Q_ASSERT( !( vertical && horizontal )
@@ -1846,6 +1850,7 @@ void Client::setFullScreen( bool set, bool user )
         return;
     if( user && !userCanSetFullScreen())
         return;
+    set = rules()->checkFullScreen( set );
     setShade( ShadeNone );
     bool was_fs = isFullScreen();
     if( !was_fs )
