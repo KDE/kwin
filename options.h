@@ -9,6 +9,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qobject.h>
 #include <qfont.h>
 #include <qpalette.h>
+#include <qstringlist.h>
 
 // increment this when you add a color type (mosfet)
 #define KWINCOLORS 6
@@ -166,6 +167,11 @@ public:
     */
     int animateMinimizeSpeed;
 
+
+    /**
+     * List of window classes to ignore PPosition size hint
+     */
+    QStringList ignorePositionClasses;
 
     // mouse bindings
 

@@ -538,7 +538,18 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
     }  else {
-	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
+
+	bool ignorePPosition = false;
+	XClassHint classHint;
+	if ( XGetClassHint(qt_xdisplay(), win, &classHint) != 0 ) {
+	    if ( classHint.res_class )
+	        ignorePPosition = ( options->ignorePositionClasses.find(QString::fromLatin1(classHint.res_class)) != options->ignorePositionClasses.end() );
+	XFree(classHint.res_name);
+	XFree(classHint.res_class);
+	}
+
+	if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
+	     (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
 	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
 		int tx = geom.x();

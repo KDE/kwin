@@ -184,6 +184,8 @@ void Options::reload()
 
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade") );
 
+    ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
+
     // Mouse bindings
     config->setGroup( "MouseBindings");
     CmdActiveTitlebar1 = mouseCommand(config->readEntry("CommandActiveTitlebar1","Raise"));
