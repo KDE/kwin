@@ -1925,14 +1925,15 @@ void Client::setShade( bool s )
 void Client::setActive( bool act)
 {
     windowWrapper()->setActive( act );
-    if ( act ) {
+    if ( act )
 	workspace()->setActiveClient( this );
-	Events::raise( Events::Activate );
-    }
 
     if ( active == act )
 	return;
     active = act;
+    if ( active )
+	Events::raise( Events::Activate );
+	
     if ( !active && autoRaiseTimer ) {
 	delete autoRaiseTimer;
 	autoRaiseTimer = 0;
