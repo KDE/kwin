@@ -827,10 +827,10 @@ void Client::fetchName()
 	int count;
 	if ( XGetTextProperty( qt_xdisplay(), win, &tp, XA_WM_NAME) != 0 && tp.value != NULL ) {
 	    if ( tp.encoding == XA_STRING )
-		s = QString::fromLocal8Bit( (const char*) tp.value );
+		s = QString::fromUtf8( (const char*) tp.value );
 	    else if ( XmbTextPropertyToTextList( qt_xdisplay(), &tp, &text, &count) == Success &&
 		      text != NULL && count > 0 ) {
-		s = QString::fromLocal8Bit( text[0] );
+		s = QString::fromUtf8( text[0] );
 		XFreeStringList( text );
 	    }
 	    XFree( tp.value );
