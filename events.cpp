@@ -103,7 +103,7 @@ void RootInfo::changeCurrentDesktop(int d)
     workspace->setCurrentDesktop( d );
     }
 
-void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timestamp )
+void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timestamp, Window active_window )
     {
     if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
         {
@@ -113,7 +113,13 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
             workspace->activateClient( c );
         else // NET::FromApplication
             {
+            Client* c2;
             if( workspace->allowClientActivation( c, timestamp ))
+                workspace->activateClient( c );
+            // if activation of the requestor's window would be allowed, allow activation too
+            else if( active_window != None
+                && ( c2 = workspace->findClient( WindowMatchPredicate( active_window ))) != NULL
+                && workspace->allowClientActivation( c2, timestamp ))
                 workspace->activateClient( c );
             else
                 c->demandAttention();
