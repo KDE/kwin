@@ -426,16 +426,20 @@ bool Workspace::workspaceEvent( XEvent * e )
                 return FALSE;
             break;
         case FocusIn:
-            if( e->xfocus.window == rootWin() && e->xfocus.detail == NotifyDetailNone )
+            if( e->xfocus.window == rootWin()
+                && ( e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot ))
                 {
                 updateXTime(); // focusToNull() uses qt_x_time, which is old now (FocusIn has no timestamp)
                 Window focus;
                 int revert;
                 XGetInputFocus( qt_xdisplay(), &focus, &revert );
-                if( focus == None )
+                if( focus == None || focus == PointerRoot )
                     {
-                    kdWarning( 1212 ) << "X focus set to None, reseting focus" << endl;
-                    focusToNull();
+                    kdWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
+                    if( mostRecentlyActivatedClient() != NULL )
+                        requestFocus( mostRecentlyActivatedClient(), true );
+                    else
+                        focusToNull();
                     }
                 }
             // fall through
