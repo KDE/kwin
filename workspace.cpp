@@ -574,14 +574,11 @@ bool Workspace::workspaceEvent( XEvent * e )
     }
 
 
-    Client * c = findClient( e->xany.window );
-    if ( c )
-        return c->windowEvent( e );
-
     switch (e->type) {
     case ButtonPress:
         if ( tab_grab || control_grab ) {
             XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+            XAllowEvents( qt_xdisplay(), AsyncPointer, qt_x_time );
             tab_box->hide();
             keys->setEnabled( true );
             tab_grab = control_grab = false;
@@ -589,7 +586,18 @@ bool Workspace::workspaceEvent( XEvent * e )
         }
     case ButtonRelease:
     case MotionNotify:
+        if ( tab_grab || control_grab ) {
+            XAllowEvents( qt_xdisplay(), AsyncPointer, qt_x_time );
+            return TRUE;
+        }
         break;
+    };
+    
+    Client * c = findClient( e->xany.window );
+    if ( c )
+        return c->windowEvent( e );
+
+    switch (e->type) {
 
     case CreateNotify:
         if ( e->xcreatewindow.parent == root &&
