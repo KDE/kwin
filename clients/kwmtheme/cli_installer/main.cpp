@@ -42,14 +42,15 @@ int main(int argc, char **argv)
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app(argc, argv);
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    QString srcStr = QString(QFile::decodeName(args->arg(0)));
-    QFile f(srcStr);
-    QString tmpStr;
-
     if(!args->count()){
         qWarning("You need to specify the path to a theme config file!");
         return(1);
     }
+
+    QString srcStr = QString(QFile::decodeName(args->arg(0)));
+    QFile f(srcStr);
+    QString tmpStr;
+
     if(!f.exists()){
         qWarning("Specified theme config file doesn't exist!");
         return(2);
