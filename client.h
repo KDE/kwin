@@ -202,7 +202,7 @@ class Client : public QObject, public KDecorationDefines
         // plainResize() simply resizes
         void plainResize( int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void plainResize( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
-        void keepInArea( const QRect& area );
+        void keepInArea( QRect area, bool partial = false );
 
         void growHorizontal();
         void shrinkHorizontal();
