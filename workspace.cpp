@@ -538,9 +538,7 @@ void Workspace::updateCurrentTopMenu()
             menu_client = menu_client->transientFor();
             }
         }
-    if( !options->desktopTopMenu())
-        block_desktop_menubar = true;
-    if( !menubar && !block_desktop_menubar )
+    if( !menubar && !block_desktop_menubar && options->desktopTopMenu())
         {
         // Find the menubar of the desktop
         Client* desktop = findDesktop( true, currentDesktop());
@@ -579,7 +577,7 @@ void Workspace::updateCurrentTopMenu()
         menubar->hideClient( false );
         topmenu_space->hide();
         }
-    else
+    else if( !block_desktop_menubar )
         { // no topmenu active - show the space window, so that there's not empty space
         topmenu_space->show();
         }
