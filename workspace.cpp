@@ -2150,6 +2150,7 @@ void Workspace::clientPopupAboutToShow()
     if ( !popup_client || !popup )
 	return;
     popup->setItemEnabled( Options::ResizeOp, popup_client->isResizable() );
+    popup->setItemEnabled( Options::MoveOp, popup_client->isMovable() );
     popup->setItemEnabled( Options::MaximizeOp, popup_client->isResizable()  && !popup_client->isTransient() );
     popup->setItemChecked( Options::MaximizeOp, popup_client->isMaximized() );
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );

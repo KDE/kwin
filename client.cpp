@@ -482,10 +482,12 @@ bool Client::manage( bool isMapped, bool doNotShow )
     if ( session )
 	geom.setRect( session->x, session->y, session->width, session->height );
 
-
-    if ( isMapped  || session || isTransient() )
+    if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
-    else {
+	if ( geom == QApplication::desktop()->geometry() )
+	    may_move = FALSE; // don't let fullscreen windows be moved around
+    }  else {
+	qDebug("2");
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
 	    if ( (xSizeHint.flags & USPosition) == 0 ) {
 		QRect area = workspace()->clientArea();
@@ -1057,6 +1059,9 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
  */
 bool Client::isResizable() const
 {
+    if ( !isMovable() )
+	return FALSE;
+    
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
 	return TRUE;
     return ( xSizeHint.min_width != xSizeHint.max_width  ) ||
@@ -2253,9 +2258,13 @@ bool Client::wantsTabFocus() const
     return windowType() == NET::Normal && input;
 }
 
+/*!  
+  Returns whether the window is moveable or has a fixed
+  position. !isMovable implies !isResizable.
+ */
 bool Client::isMovable() const
 {
-    return windowType() == NET::Normal || windowType() == NET::Toolbar;
+    return may_move && ( windowType() == NET::Normal || windowType() == NET::Toolbar );
 }
 
 bool Client::isDesktop() const
