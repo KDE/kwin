@@ -96,9 +96,20 @@ void TabBox::reset()
                  && (!c->isMinimized() || !c->isTransient() || c->isUtility()) ) 
                 {
                 if ( client == c )
+                    {
+                    clients.remove( c );
                     clients.prepend( c );
+                    }
                 else
-                    clients += c;
+                    { // don't add windows that have modal dialogs
+                    Client* modal = c->findModal();
+                    if( modal == NULL || modal == c )
+                        clients += c;
+                    else if( !clients.contains( modal ))
+                        clients += modal;
+                    else
+                        ; // nothing
+                    }
                 cw = fm.width( c->caption() ) + 40;
                 if ( cw > wmax )
                     wmax = cw;
@@ -151,16 +162,7 @@ void TabBox::nextPrev( bool next)
                 client = 0;
                 break;
                 }
-            } while (client &&
-                    (( !options_traverse_all &&
-                       !client->isOnDesktop(workspace()->currentDesktop()) ) ||
-                     ( client->isMinimized() && client->isTransient() && !client->isUtility()))
-        );
-
-
-        if (!options_traverse_all && client
-           && !client->isOnDesktop(workspace()->currentDesktop()))
-           client = 0;
+            } while ( client && !clients.contains( client ));
         }
     else if( mode() == DesktopMode ) 
         {
