@@ -107,14 +107,14 @@ TitleBar::TitleBar(Manager * client)
       question_,  SIGNAL(contextHelp()),
       client,     SLOT(contextHelp())
     );
-  
+
   if ( client->isTransient() ) {
       // lighter decoration for transient windows
       sticky_->hide();
       iconify_->hide();
       maximise_->hide();
   }
-  
+
 }
 
   void
@@ -147,7 +147,7 @@ TitleBar::resizeEvent(QResizeEvent *)
   if (width() < 120) sizeProblem = 3;
   else if (width() < 160) sizeProblem = 2;
   else if (width() < 200) sizeProblem = 1;
-  
+
   bool transient = ( (Client*) parentWidget() )->isTransient();
 
   switch (sizeProblem) {
@@ -235,6 +235,30 @@ TitleBar::paintEvent(QPaintEvent * e)
       p.drawLine(width() - 1, r.top(), width() - 1, r.bottom());
   }
 }
+
+
+
+  void
+TitleBar::mousePressEvent(QMouseEvent * e)
+{
+  text_->client()->fakeMouseEvent(e, this);
+  QWidget::mousePressEvent(e);
+}
+
+  void
+TitleBar::mouseReleaseEvent(QMouseEvent * e)
+{
+  text_->client()->fakeMouseEvent(e, this);
+  QWidget::mouseReleaseEvent(e);
+}
+
+  void
+TitleBar::mouseMoveEvent(QMouseEvent * e)
+{
+  text_->client()->fakeMouseEvent(e, this);
+  QWidget::mouseMoveEvent(e);
+}
+
 
 } // End namespace
 

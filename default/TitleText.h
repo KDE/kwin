@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -41,9 +41,10 @@ class TitleText : public DBWidget
     virtual ~TitleText();
 
     void setActive(bool);
+    Manager * client() { return client_; }
 
   protected:
-    
+
     void updatePixmap();
 
     void mousePressEvent(QMouseEvent *);

@@ -1,6 +1,6 @@
 /*
   Default KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -53,6 +53,10 @@ class TitleBar : public QWidget
 
     void resizeEvent(QResizeEvent *);
     void paintEvent(QPaintEvent *);
+
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
 
   private:
 
