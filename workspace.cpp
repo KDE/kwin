@@ -1291,6 +1291,8 @@ void Workspace::propagateSystemTrayWins()
 
 void Workspace::killWindowId( Window window_to_kill )
     {
+    if( window_to_kill == None )
+        return;
     Window window = window_to_kill;
     Client* client = NULL;
     for(;;) 
