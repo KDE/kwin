@@ -23,6 +23,7 @@
 #include <qpainter.h>
 #include <qimage.h>
 #include <qlayout.h>
+
 #include "../../options.h"
 #include "../../workspace.h"
 
@@ -57,6 +58,9 @@ Manager::Manager(
 {
   setBackgroundMode(NoBackground);
 
+  QStringList leftButtons = Static::instance()->leftButtons();
+  QStringList rightButtons = Static::instance()->rightButtons();
+
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
   QVBoxLayout * l = new QVBoxLayout(this, 0, 0);
@@ -71,25 +75,35 @@ Manager::Manager(
   if (!providesContextHelp())
     help_->hide();
 
-  lower_    ->setAlignment(Button::Left);
-  close_    ->setAlignment(Button::Left);
-  sticky_   ->setAlignment(Button::Left);
-  help_     ->setAlignment(Button::Right);
-  iconify_  ->setAlignment(Button::Right);
-  maximise_ ->setAlignment(Button::Right);
+  buttonDict_.insert("Lower",    lower_);
+  buttonDict_.insert("Close",    close_);
+  buttonDict_.insert("Sticky",   sticky_);
+  buttonDict_.insert("Iconify",  iconify_);
+  buttonDict_.insert("Maximize", maximise_);
+  buttonDict_.insert("Help",     help_);
 
-  // Lower | Close | Text | Iconify | Maximise
+  QStringList::ConstIterator it;
+
+  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
+    if (buttonDict_[*it])
+      buttonDict_[*it]->setAlignment(Button::Left);
+
+  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
+    if (buttonDict_[*it])
+      buttonDict_[*it]->setAlignment(Button::Left);
 
   QHBoxLayout * titleLayout = new QHBoxLayout(l);
 
-  titleLayout->addWidget(lower_);
-  titleLayout->addWidget(close_);
-  titleLayout->addWidget(sticky_);
+  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
+    if (buttonDict_[*it])
+      titleLayout->addWidget(buttonDict_[*it]);
+
   titleSpacer_ = new QSpacerItem(0, 20);
   titleLayout->addItem(titleSpacer_);
-  titleLayout->addWidget(help_);
-  titleLayout->addWidget(iconify_);
-  titleLayout->addWidget(maximise_);
+
+  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
+    if (buttonDict_[*it])
+      titleLayout->addWidget(buttonDict_[*it]);
 
   QHBoxLayout * midLayout = new QHBoxLayout(l);
   midLayout->addSpacing(1);

@@ -26,7 +26,7 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qpainter.h>
-
+#include <qstringlist.h>
 
 #include "Palette.h"
 
@@ -37,7 +37,6 @@ enum SymbolType { Lower, Close, Iconify, Max, Unmax };
 
 class Static
 {
-
   public:
 
     Static()
@@ -87,6 +86,12 @@ class Static
     const Palette & standardPalette() const
     { return standardPal_; }
 
+    const QStringList & leftButtons() const
+    { return leftButtons_; }
+
+    const QStringList & rightButtons() const
+    { return rightButtons_; }
+
   private:
 
     void _drawButtonBorder (QPixmap &);
@@ -114,6 +119,8 @@ class Static
     bool down_;
     Palette palette_;
     double transx, transy;
+
+    QStringList leftButtons_, rightButtons_;
 };
 
 } // End namespace

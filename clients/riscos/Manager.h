@@ -23,6 +23,8 @@
 #ifndef RISC_OS_MANAGER_H
 #define RISC_OS_MANAGER_H
 
+#include <qdict.h>
+
 #include "../../client.h"
 
 class QSpacerItem;
@@ -36,6 +38,7 @@ class IconifyButton;
 class MaximiseButton;
 class StickyButton;
 class HelpButton;
+class Button;
 
 class Manager : public Client
 {
@@ -86,6 +89,8 @@ class Manager : public Client
     HelpButton      * help_;
 
     QSpacerItem     * titleSpacer_;
+
+    QDict<Button>   buttonDict_;
 };
 
 } // End namespace

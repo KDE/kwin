@@ -24,6 +24,8 @@
 #include <qpixmap.h>
 #include <qpainter.h>
 
+#include <ksimpleconfig.h>
+
 #include "../../options.h"
 
 #include "Static.h"
@@ -413,6 +415,29 @@ Static::update()
     painter_.drawPixmap(3, 3, iTexture, 0, 0, 24, 4);
     painter_.end();
   }
+
+  // ------------------------------------------------------------------------
+  // Button order
+  // ------------------------------------------------------------------------
+
+  KConfig * c = new KConfig("kwinriscosrc", true, true);
+  c->setGroup("WM");
+
+  leftButtons_.clear();
+  rightButtons_.clear();
+
+  if (c->hasKey("LeftButtons"))
+    leftButtons_ = c->readListEntry("LeftButtons");
+  else
+    leftButtons_ << "Lower" << "Close" << "Sticky";
+
+  if (c->hasKey("RightButtons"))
+    rightButtons_ = c->readListEntry("RightButtons");
+  else
+    rightButtons_ << "Help" << "Iconify" << "Maximize";
+
+  delete c;
+  c = 0;
 }
 
   const QPixmap &
