@@ -1411,7 +1411,7 @@ void Workspace::setActiveClient( Client* c )
 {
     if ( active_client == c )
         return;
-    if( popup && static_cast< Client* >( popup_client ) != c ) {
+    if( popup && popup_client != c ) {
         popup->close();
         popup_client = 0;
     }
@@ -1781,7 +1781,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 
 void Workspace::clientPopupActivated( int id )
 {
-    performWindowOperation( popup_client ? static_cast< Client* >( popup_client ) : active_client, (Options::WindowOperation) id );
+    performWindowOperation( popup_client ? popup_client : active_client, (Options::WindowOperation) id );
 }
 
 /*!
