@@ -170,8 +170,8 @@ void Options::reload()
     animateShade = config->readBoolEntry("AnimateShade", TRUE );
 
     animateMinimize = config->readBoolEntry("AnimateMinimize", TRUE );
-    animateMinimizeSpeed = config->readNumEntry("AnimateMinimizeSpeed", 1 );
-    
+    animateMinimizeSpeed = config->readNumEntry("AnimateMinimizeSpeed", 5 );
+
     autoRaise = config->readBoolEntry("AutoRaise", FALSE );
     autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
 
