@@ -1,6 +1,6 @@
-INCLUDES = -I$(top_srcdir)/kwin/default $(all_includes)
+INCLUDES = $(all_includes)
 
-SUBDIRS = . pics clients
+SUBDIRS = . kcmkwin pics clients
 
 bin_PROGRAMS = kwin
 lib_LTLIBRARIES = kwin.la
