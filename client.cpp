@@ -171,9 +171,12 @@ void Client::releaseWindow( bool on_shutdown )
     if (moveResizeMode)
        leaveMoveResize();
     setModal( false ); // otherwise its mainwindow wouldn't get focus
-    hidden = true; // so that it's not considered visible anymore
+    hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
+        {
         workspace()->clientHidden( this );
+        XUnmapWindow( qt_xdisplay(), window()); // destroying decoration would cause ugly visual effect
+        }
     destroyDecoration();
     cleanGrouping();
     if( !on_shutdown )
