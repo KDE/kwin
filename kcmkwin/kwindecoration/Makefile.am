@@ -15,7 +15,4 @@ METASOURCES = AUTO
 messages:
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkwindecoration.pot
 
-lnf_DATA = kwindecoration.desktop
-lnfdir = $(kde_appsdir)/Settings/LookNFeel
-
-EXTRA_DIST = $(lnf_DATA)
+xdg_apps_DATA = kwindecoration.desktop
