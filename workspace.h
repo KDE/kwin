@@ -9,7 +9,6 @@
 
 class Client;
 class TabBox;
-class Minicli;
 
 class KGlobalAccel;
 
@@ -79,7 +78,6 @@ protected:
 	
 private:
     KGlobalAccel *keys;
-    Minicli *minicli;
     void init();
     WId root;
     ClientList clients;

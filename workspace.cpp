@@ -5,7 +5,6 @@
 #include "systemclient.h"
 #include "tabbox.h"
 #include "atoms.h"
-#include "minicli.h"
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -70,10 +69,7 @@ Workspace::Workspace()
 
 void Workspace::slotExecuteCommand()
 {
-  if (!minicli){
-    minicli = new Minicli(this, 0, 0, Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WStyle_Tool);
-  }
-  while (!minicli->do_grabbing());
+
 }
 
 Workspace::Workspace( WId rootwin )
@@ -102,7 +98,6 @@ Workspace::Workspace( WId rootwin )
 
 void Workspace::init()
 {
-    minicli = 0;
     tab_box = 0;
     active_client = 0;
     should_get_focus = 0;
