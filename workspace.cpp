@@ -1106,19 +1106,22 @@ void Workspace::clientHidden( Client* c )
 
     active_client = 0;
     should_get_focus = 0;
-    if (!block_focus &&
-	options->focusPolicyIsReasonable() &&
-	!focus_chain.isEmpty()
-	) {
-	for (ClientList::ConstIterator it = focus_chain.fromLast();
-	     it != focus_chain.end();
-	     --it) {
-	    if ((*it)->isVisible()) {
-		requestFocus(*it);
-		return;
+    if (!block_focus ) {
+	if ( c->wantsTabFocus() && focus_chain.contains( c ) ) {
+	    focus_chain.remove( c );
+	    focus_chain.prepend( c );
+	}
+	if ( options->focusPolicyIsReasonable() && !focus_chain.isEmpty() ) {
+	    for (ClientList::ConstIterator it = focus_chain.fromLast();
+		 it != focus_chain.end();
+		 --it) {
+		if ((*it)->isVisible()) {
+		    requestFocus(*it);
+		    return;
+		}
 	    }
 	}
-    }	
+    }
     if ( desktop_client )
 	requestFocus( desktop_client );
     else
@@ -1763,6 +1766,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     if (new_desktop < 1 || new_desktop > number_of_desktops )
 	return;
 
+    Client* old_active_client = active_client;
     active_client = 0;
     block_focus = TRUE;
 
@@ -1796,10 +1800,18 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
     if ( options->focusPolicyIsReasonable()) {
 	// Search in focus chain
-	for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
-	    if ( (*it)->isVisible() && !(*it)->wantsTabFocus() ) {
-		c = *it;
-		break;	
+	
+	if ( focus_chain.contains( old_active_client ) && old_active_client->isVisible() ) {
+	    c = old_active_client;
+	    active_client = c; // the requestFocus below will fail, as the client is already active
+	}
+	
+	if ( !c ) {
+	    for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
+		if ( (*it)->isVisible() && !(*it)->isSticky() ) {
+		    c = *it;
+		    break;	
+		}
 	    }
 	}
 	
@@ -2158,7 +2170,7 @@ void Workspace::slotMouseEmulation()
 void Workspace::slotLogout()
 {
   Events::raise(Events::ExitKDE);
-  
+
   kapp->requestShutDown();
 }
 
