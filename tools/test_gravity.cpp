@@ -1,7 +1,5 @@
 // tests for window gravity
 
-#define INITIAL_POSITION_TEST
-
 #include <iostream>
 #include <stdlib.h>
 #include <X11/Xlib.h>
@@ -41,7 +39,7 @@ int get_gravity( const char* name )
     exit( 1 );
     }
 
-void initial_position_test( const char* gravity )
+void test( const char* gravity )
     {
     XSetWindowAttributes attrs;
     XSizeHints hints;
@@ -50,7 +48,7 @@ void initial_position_test( const char* gravity )
     Window w = XCreateWindow( dpy, DefaultRootWindow( dpy ), 100, 100, 200, 100, 0, CopyFromParent, CopyFromParent,
         CopyFromParent, 0, &attrs );
     XSetWMNormalHints( dpy, w, &hints );
-    XSelectInput( dpy, w, StructureNotifyMask );
+    XSelectInput( dpy, w, StructureNotifyMask | ButtonPressMask );
     XMapWindow( dpy, w );
     for(;;)
         {
@@ -67,19 +65,35 @@ void initial_position_test( const char* gravity )
             XTranslateCoordinates( dpy, w, root, 0, 0, &x, &y, &child );
             cout << "GEOMETRY:" << x << ":" << y << ":" << width << ":" << height << ":(" << x_local << ":" << y_local << ")" << endl;
             }
+        else if( ev.type == ButtonPress )
+            {
+            if( ev.xbutton.button == Button1 ) // move
+                {
+                cout << "MOVE" << endl;
+                XMoveWindow( dpy, w, 100, 100 );
+                }
+            else if( ev.xbutton.button == Button2 ) // resize
+                {
+                cout << "RESIZE" << endl;
+                XResizeWindow( dpy, w, 200, 100 );
+                }
+            else if( ev.xbutton.button == Button3 ) // move and resize
+                {
+                cout << "MOVERESIZE" << endl;
+                XMoveResizeWindow( dpy, w, 100, 100, 200, 100 );
+                }
+            }
         }
     }
 
 int main( int argc, char* argv[] )
     {
     dpy = XOpenDisplay( NULL );
-#ifdef INITIAL_POSITION_TEST
     if( argc != 2 )
         {
         cerr << "specify gravity" << endl;
         exit( 1 );
         }
-    initial_position_test( argv[ 1 ] );
-#endif
+    test( argv[ 1 ] );
     XCloseDisplay( dpy );
     }

@@ -747,7 +747,7 @@ void Client::getWmNormalHints()
         { // update to match restrictions
         QSize new_size = adjustedSize( size());
         if( new_size != size())
-            resize( new_size );
+            resize( new_size, UseGravity );
         }
     updateAllowedActions(); // affects isResizeable()
     }
@@ -786,6 +786,7 @@ const QPoint Client::calculateGravitation( bool invert, int gravity ) const
     switch (gravity) 
         {
         case NorthWestGravity: // move down right
+        default:
             dx = border_left;
             dy = border_top;
             break;
@@ -849,24 +850,13 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if ( isShade()) // SELI SHADE
             setShade( ShadeNone );
 
-        int ox = 0;
-        int oy = 0;
-        // GRAVITATE
-        if ( gravity == StaticGravity ) 
-            { // only with StaticGravity according to ICCCM 4.1.5
-            ox = clientPos().x();
-            oy = clientPos().y();
-            }
-
-        int nx = x() + ox;
-        int ny = y() + oy;
-
+        QPoint new_pos = calculateGravitation( true, gravity ); // undo gravitation
         if ( value_mask & CWX )
-            nx = rx;
+            new_pos.setX( rx );
         if ( value_mask & CWY )
-            ny = ry;
+            new_pos.setY( ry );
 
-
+#if 0 /* let's see how well things will work without trying to be clever */
         // clever workaround for applications like xv that want to set
         // the location to the current location but miscalculate the
         // frame size due to kwin being a double-reparenting window
@@ -878,33 +868,31 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             nx = x();
             ny = y();
             }
-
-
-        QPoint np( nx-ox, ny-oy);
-#if 0
-        if ( windowType() == NET::Normal && isMovable()) 
-            {
-            // crap for broken netscape
-            QRect area = workspace()->clientArea();
-            if ( !area.contains( np ) && width() < area.width()  &&
-                 height() < area.height() ) 
-                {
-                if ( np.x() < area.x() )
-                    np.rx() = area.x();
-                if ( np.y() < area.y() )
-                    np.ry() = area.y();
-                }
-            }
 #endif
 
-        if ( maximizeMode() != MaximizeFull )
+        int nw = clientSize().width();
+        int nh = clientSize().height();
+        if ( value_mask & CWWidth )
+            nw = rw;
+        if ( value_mask & CWHeight )
+            nh = rh;
+        QSize ns = sizeForClientSize( QSize( nw, nh ) );
+        
+        // TODO what to do with maximized windows?
+        if ( maximizeMode() != MaximizeFull
+            || ns != size())
             {
             resetMaximize();
-            move( np );
+            ++block_geometry;
+            move( new_pos );
+            resize( ns, IgnoreGravity ); // TODO must(?) resize before gravitating?
+            --block_geometry;
+            setGeometry( QRect( calculateGravitation( false, gravity ), size()), ForceGeometrySet );
             }
         }
 
-    if ( value_mask & (CWWidth | CWHeight ) ) 
+    if ( value_mask & (CWWidth | CWHeight )
+        && ! ( value_mask & ( CWX | CWY )) )  // pure resize
         {
         int nw = clientSize().width();
         int nh = clientSize().height();
@@ -913,25 +901,65 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if ( value_mask & CWHeight )
             nh = rh;
         QSize ns = sizeForClientSize( QSize( nw, nh ) );
-
-        //QRect area = workspace()->clientArea();
-        if ( maximizeMode() != MaximizeRestore ) 
-            {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
-            if( ns != size()) 
-                { // don't restore if some app sets its own size again
-                resetMaximize();
-                resize( ns );
-                }
-            }
-        else 
+        
+        if( ns != size())  // don't restore if some app sets its own size again
             {
-            if ( ns == size() )
-                return; // broken xemacs stuff (ediff)
-            resize( ns );
+            resetMaximize();
+            int save_gravity = xSizeHint.win_gravity;
+            xSizeHint.win_gravity = gravity;
+            resize( ns, UseGravity );
+            xSizeHint.win_gravity = save_gravity;
             }
         }
+    // No need to send synthetic configure notify event here, either it's sent together
+    // with geometry change, or there's no need to send it.
+    // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
     }
 
+void Client::resizeWithGravity( int w, int h, ForceGeometry_t force )
+    {
+    int newx = x();
+    int newy = y();
+    switch( xSizeHint.win_gravity )
+        {
+        case NorthWestGravity: // top left corner doesn't move
+        default:
+            break;
+        case NorthGravity: // middle of top border doesn't move
+            newx = ( newx + width() / 2 ) - ( w / 2 );
+            break;
+        case NorthEastGravity: // top right corner doesn't move
+            newx = newx + width() - w;
+            break;
+        case WestGravity: // middle of left border doesn't move
+            newy = ( newy + height() / 2 ) - ( h / 2 );
+            break;
+        case CenterGravity: // middle point doesn't move
+            newx = ( newx + width() / 2 ) - ( w / 2 );
+            newy = ( newy + height() / 2 ) - ( h / 2 );
+            break;
+        case StaticGravity: // top left corner of _client_ window doesn't move
+            // since decoration doesn't change, equal to NorthWestGravity
+            break;
+        case EastGravity: // // middle of right border doesn't move
+            newx = newx + width() - w;
+            newy = ( newy + height() / 2 ) - ( h / 2 );
+            break;
+        case SouthWestGravity: // bottom left corner doesn't move
+            newy = newy + height() - h;
+            break;
+        case SouthGravity: // middle of bottom border doesn't move
+            newx = ( newx + width() / 2 ) - ( w / 2 );
+            newy = newy + height() - h;
+            break;
+        case SouthEastGravity: // bottom right corner doesn't move
+            newx = newx + width() - w;
+            newy = newy + height() - h;
+            break;
+        }
+    setGeometry( newx, newy, w, h, force );
+    }
+    
 // _NET_MOVERESIZE_WINDOW
 void Client::NETMoveResizeWindow( int flags, int x, int y, int width, int height )
     {
@@ -980,9 +1008,9 @@ bool Client::isMaximizable() const
 /*!
   Reimplemented to inform the client about the new window position.
  */
-void Client::setGeometry( int x, int y, int w, int h, bool force )
+void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     {
-    if( !force && frame_geometry == QRect( x, y, w, h ))
+    if( force == NormalGeometrySet && frame_geometry == QRect( x, y, w, h ))
         return;
     frame_geometry = QRect( x, y, w, h );
     if( !isShade())
@@ -1019,10 +1047,15 @@ void Client::setGeometry( int x, int y, int w, int h, bool force )
         }
     }
 
-void Client::resize( int w, int h, bool force )
+void Client::resize( int w, int h, UseGravity_t use_gravity, ForceGeometry_t force )
     { // TODO make this deffered with isResize() ? old kwin did
-    if( !force && frame_geometry.size() == QSize( w, h ))
+    if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
         return;
+    if( use_gravity == UseGravity )
+        {
+        resizeWithGravity( w, h, force );
+        return;
+        }
     frame_geometry.setSize( QSize( w, h ));
     if( !isShade())
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
@@ -1056,9 +1089,9 @@ void Client::resize( int w, int h, bool force )
 /*!
   Reimplemented to inform the client about the new window position.
  */
-void Client::move( int x, int y, bool force )
+void Client::move( int x, int y, ForceGeometry_t force )
     {
-    if( !force && frame_geometry.topLeft() == QPoint( x, y ))
+    if( force == NormalGeometrySet && frame_geometry.topLeft() == QPoint( x, y ))
         return;
     frame_geometry.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
@@ -1148,7 +1181,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.width() == 0 )
                     { // needs placement
-                    resize( adjustedSize(QSize(width(), clientArea.height())));
+                    resize( adjustedSize(QSize(width(), clientArea.height())), IgnoreGravity );
                     workspace()->placeSmart( this );
                     }
                 else
@@ -1168,7 +1201,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.height() == 0 )
                     { // needs placement
-                    resize( adjustedSize(QSize(clientArea.width(), height())));
+                    resize( adjustedSize(QSize(clientArea.width(), height())), IgnoreGravity );
                     workspace()->placeSmart( this );
                     }
                 else
@@ -1192,7 +1225,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                     s.setWidth( geom_restore.width());
                 if( geom_restore.height() > 0 )
                     s.setHeight( geom_restore.height());
-                resize( adjustedSize( s ));
+                resize( adjustedSize( s ), IgnoreGravity );
                 workspace()->placeSmart( this );
                 restore = geometry();
                 if( geom_restore.width() > 0 )
@@ -1229,7 +1262,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
         }
 
     --block_geometry;
-    setGeometry( geometry(), true );
+    setGeometry( geometry(), ForceGeometrySet );
 
     updateAllowedActions();
     if( decoration != NULL )
@@ -1238,6 +1271,8 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
 void Client::resetMaximize()
     {
+    if( max_mode == MaximizeRestore )
+        return;
     max_mode = MaximizeRestore;
     Notify::raise( Notify::UnMaximize );
     info->setState( 0, NET::Max );

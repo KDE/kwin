@@ -72,6 +72,10 @@ inline void operator++( Layer& lay )
 // as an argument to any function, make sure you really know what you're doing.
 enum allowed_t { Allowed };
 
+// some enums to have more readable code, instead of using bools
+enum UseGravity_t { IgnoreGravity, UseGravity };
+enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
+
 class Shape 
     {
     public:

@@ -246,9 +246,9 @@ void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_
         int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( false ));
         if( !isShade())
-            resize( sizeForClientSize( clientSize()), true );
+            resize( sizeForClientSize( clientSize()), IgnoreGravity, ForceGeometrySet );
         else
-            resize( sizeForClientSize( QSize( clientSize().width(), 0 ), true ), true );
+            resize( sizeForClientSize( QSize( clientSize().width(), 0 ), true ), IgnoreGravity, ForceGeometrySet );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         do_show = true;
@@ -258,7 +258,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_
     if( check_workspace_pos )
         checkWorkspacePosition();
     --block_geometry;
-    setGeometry( geometry(), true );
+    setGeometry( geometry(), ForceGeometrySet );
     if( do_show )
         decoration->widget()->show();
     updateFrameStrut();
@@ -283,9 +283,9 @@ void Client::destroyDecoration( bool delay_delete )
         int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( true ));
         if( !isShade())
-            resize( clientSize(), true );
+            resize( clientSize(), IgnoreGravity, ForceGeometrySet );
         else
-            resize( QSize( clientSize().width(), 0 ), true );
+            resize( QSize( clientSize().width(), 0 ), IgnoreGravity, ForceGeometrySet );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         }
@@ -307,10 +307,10 @@ void Client::checkBorderSizes()
     border_top = new_top;
     border_bottom = new_bottom;
     move( calculateGravitation( false ));
-    resize( sizeForClientSize( clientSize()), true );
+    resize( sizeForClientSize( clientSize()), IgnoreGravity, ForceGeometrySet );
     checkWorkspacePosition();
     --block_geometry;
-    setGeometry( geometry(), true );
+    setGeometry( geometry(), ForceGeometrySet );
     }
 
 void Client::detectNoBorder()
@@ -734,7 +734,7 @@ void Client::setShade( ShadeMode mode )
 //        if ( !wasStaticContents )
 //            clearWFlags( WStaticContents );
         shade_geometry_change = false;
-        resize( s );
+        resize( s, IgnoreGravity );
         if( isActive())
             workspace()->focusToNull();
         }
@@ -759,7 +759,7 @@ void Client::setShade( ShadeMode mode )
 //        if ( !wasStaticContents )
 //            clearWFlags( WStaticContents );
         shade_geometry_change = false;
-        resize( s );
+        resize( s, IgnoreGravity );
         if( shade_mode == ShadeHover || shade_mode == ShadeActivated )
             setActive( TRUE );
         XMapWindow( qt_xdisplay(), wrapperId());
@@ -768,7 +768,7 @@ void Client::setShade( ShadeMode mode )
             workspace()->requestFocus( this );
         }
     --block_geometry;
-    setGeometry( geometry(), true );
+    setGeometry( geometry(), ForceGeometrySet );
     info->setState( isShade() ? NET::Shaded : 0, NET::Shaded );
     info->setState( isShown() ? 0 : NET::Hidden, NET::Hidden );
     setMappingState( isShown() && isOnCurrentDesktop() ? NormalState : IconicState );
@@ -837,7 +837,7 @@ void Client::setMappingState(int s)
         {
         assert( block_geometry == 1 );
         --block_geometry;
-        setGeometry( frame_geometry, true );
+        setGeometry( frame_geometry, ForceGeometrySet );
         }
     }
 
