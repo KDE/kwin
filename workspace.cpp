@@ -693,10 +693,12 @@ void Workspace::slotReconfigure()
 
     if( mgr->reset( changed ))
         { // decorations need to be recreated
+#if 0 // This actually seems to make things worse now
         QWidget curtain( 0, 0, WX11BypassWM );
         curtain.setBackgroundMode( NoBackground );
         curtain.setGeometry( QApplication::desktop()->geometry() );
         curtain.show();
+#endif
         for( ClientList::ConstIterator it = clients.begin();
                 it != clients.end();
                 ++it )
