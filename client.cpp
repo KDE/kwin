@@ -829,11 +829,22 @@ void Client::leaveEvent( QEvent * )
 }
 
 
+
 /*!
   Reimplemented to inform the client about the new window position.
  */
-void Client::moveEvent( QMoveEvent * )
+void Client::setGeometry( int x, int y, int w, int h )
 {
+    QWidget::setGeometry(x, y, w, h);
+    sendSynteticConfigureNotify();
+}
+
+/*!
+  Reimplemented to inform the client about the new window position.
+ */
+void Client::move( int x, int y )
+{
+    QWidget::move( x, y );
     sendSynteticConfigureNotify();
 }
 

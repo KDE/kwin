@@ -124,6 +124,13 @@ public:
     bool shape() const;
     void updateShape();
 
+    void setGeometry( int x, int y, int w, int h );
+    void  setGeometry( const QRect &r )
+    { setGeometry( r.left(), r.top(), r.width(), r.height() ); }
+    void move( int x, int y );
+    void move( const QPoint & p )
+    { move( p.x(), p.y() ); }
+
 public slots:
     void iconify();
     void closeWindow();
@@ -139,7 +146,6 @@ protected:
     void mouseMoveEvent( QMouseEvent * );
     void enterEvent( QEvent * );
     void leaveEvent( QEvent * );
-    void moveEvent( QMoveEvent * );
     void showEvent( QShowEvent* );
     void hideEvent( QHideEvent* );
     bool x11Event( XEvent * );		// X11 event
