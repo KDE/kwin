@@ -1,5 +1,5 @@
 /* Plastik KWin window decoration
-  Copyright (C) 2003 Sandro Giessl <ceebx@users.sourceforge.net>
+  Copyright (C) 2003-2005 Sandro Giessl <sandro@giessl.com>
 
   based on the window decoration "Web":
   Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
@@ -119,6 +119,9 @@ bool PlastikHandler::reset(unsigned long changed)
     //       without a hard reset. I will do this later...
     if (changed & SettingColors || changed & SettingFont)
     {
+        needHardReset = false;
+    } else if (changed & SettingButtons) {
+        // handled by KCommonDecoration
         needHardReset = false;
     }
 
