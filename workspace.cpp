@@ -1537,13 +1537,13 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         popup->insertItem( i18n("Mi&nimize"), Options::IconifyOp );
         popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
         popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
-        popup->insertItem( SmallIconSet( "attach" ), i18n("Always &On Top"), Options::StaysOnTopOp );
+        popup->insertItem( SmallIconSet( "attach" ), i18n("Always &on Top"), Options::StaysOnTopOp );
         popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Settings"), Options::ToggleStoreSettingsOp );
 
         popup->insertSeparator();
 
         popup->insertItem(SmallIconSet( "configure" ), i18n("&Configure..."), this, SLOT( configureWM() ));
-        popup->insertItem(i18n("&To desktop"), desk_popup );
+        popup->insertItem(i18n("&To Desktop"), desk_popup );
 
         popup->insertSeparator();
 
@@ -3029,7 +3029,7 @@ void Workspace::desktopPopupAboutToShow()
     if ( !desk_popup )
         return;
     desk_popup->clear();
-    desk_popup->insertItem( i18n("&All desktops"), 0 );
+    desk_popup->insertItem( i18n("&All Desktops"), 0 );
     if ( popup_client->isSticky() )
         desk_popup->setItemChecked( 0, TRUE );
     desk_popup->insertSeparator( -1 );
