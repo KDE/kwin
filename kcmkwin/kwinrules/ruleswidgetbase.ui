@@ -622,7 +622,7 @@
                             <cstring>textLabel7</cstring>
                         </property>
                         <property name="text">
-                            <string>Machine (hostname):</string>
+                            <string>Machine (host name):</string>
                         </property>
                     </widget>
                     <widget class="KLineEdit">
