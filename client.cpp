@@ -1242,13 +1242,16 @@ void Client::setCaption( const QString& s, bool force )
                 s[ i ] = ' ';
         cap_normal = s;
         bool was_suffix = ( !cap_suffix.isEmpty());
-        cap_suffix = QString::null;
+        QString machine_suffix;
+        if( !isLocalMachine( wmClientMachine( false )))
+            machine_suffix = " <" + wmClientMachine( true ) + ">";
+        cap_suffix = machine_suffix;
         if ( ( !isSpecialWindow() || isToolbar()) && workspace()->findClient( FetchNameInternalPredicate( this ))) 
             {
             int i = 2;
             do 
                 {
-                cap_suffix = " <" + QString::number(i) + ">";
+                cap_suffix = machine_suffix + " <" + QString::number(i) + ">";
                 i++;
                 } while ( workspace()->findClient( FetchNameInternalPredicate( this )));
             info->setVisibleName( caption().utf8() );
