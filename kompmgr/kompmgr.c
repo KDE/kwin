@@ -1361,6 +1361,9 @@ repair_win (Display *dpy, win *w)
 	w->damaged = 1;
 }
 
+static unsigned int
+get_opacity_prop(Display *dpy, win *w, unsigned int def);
+
 	static void
 map_win (Display *dpy, Window id, unsigned long sequence, Bool fade)
 {
@@ -1369,7 +1372,6 @@ map_win (Display *dpy, Window id, unsigned long sequence, Bool fade)
 
 	if (!w)
 		return;
-
 	w->a.map_state = IsViewable;
 
 	/* This needs to be here or else we lose transparency messages */
@@ -1382,7 +1384,7 @@ map_win (Display *dpy, Window id, unsigned long sequence, Bool fade)
 	w->damaged = 0;
 
 	if (fade && fadeWindows)
-		set_fade (dpy, w, 0, get_opacity_percent (dpy, w, 1.0), fade_in_step, 0, False, True, True, True);
+		set_fade (dpy, w, 0, get_opacity_prop(dpy, w, OPAQUE)*1.0/OPAQUE, fade_in_step, 0, False, True, True, True);
 }
 
 	static void
