@@ -224,6 +224,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     hb->addWidget( button[5] );
 
     for ( int i = 0; i < 6; i++) {
+	button[i]->setBackgroundMode( PaletteBackground );
 	button[i]->setMouseTracking( TRUE );
 	button[i]->setFixedSize( 20, 20 );
     }
@@ -262,7 +263,7 @@ void StdClient::resizeEvent( QResizeEvent* e)
 	QPainter p( this );
 	r = rr.subtract( t );
 	p.setClipRegion( r );
-	p.eraseRect( rect() );
+	p.fillRect( rect(), colorGroup().brush( QColorGroup::Background ) );
     }
 }
 
@@ -293,20 +294,18 @@ void StdClient::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
     QRect t = titlebar->geometry();
-    t.setTop( 0 );
     QRegion r = rect();
     r = r.subtract( t );
     p.setClipRegion( r );
-    qDrawWinPanel( &p, rect(), options->colorGroup(Options::Frame, isActive()));
-    p.setClipping( FALSE );
+    qDrawWinPanel( &p, rect(), colorGroup() );
+    t.setTop( 1 );
+    p.setClipRegion( t );
+    t.setTop( 0 );
     p.fillRect( t, options->color(Options::TitleBar, isActive()));
-    QBrush b( options->color( Options::TitleBar, isActive() ) ); 
     qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
-                     options->colorGroup(Options::Frame, isActive()), true, 1, &b );
-
+                     colorGroup(), true, 1 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
-
     p.setPen(options->color(Options::Font, isActive()));
     p.setFont(options->font(isActive()));
     p.drawText( t, AlignLeft|AlignVCenter, caption() );
