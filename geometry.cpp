@@ -27,6 +27,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "geometrytip.h"
 
+extern Time qt_x_time;
+
 namespace KWinInternal
 {
 
@@ -1235,6 +1237,140 @@ void Client::leaveMoveResize()
     moveResizeMode = false;
     delete eater;
     eater = 0;
+    }
+
+void Client::handleMoveResize( int x, int y, int x_root, int y_root )
+    {
+    if(( mode == Center && !isMovable())
+        || ( mode != Center && ( isShade() || !isResizable())))
+        return;
+
+    if ( !moveResizeMode ) 
+        {
+        QPoint p( QPoint( x, y ) - moveOffset );
+        if (p.manhattanLength() >= 6)
+            startMoveResize();
+        else
+            return;
+        }
+
+    // ShadeHover or ShadeActive, ShadeNormal was already avoided above
+    if ( mode != Center && shade_mode != ShadeNone )
+        setShade( ShadeNone );
+
+    QPoint globalPos( x_root, y_root );
+    QRect desktopArea = workspace()->clientArea( globalPos );
+
+    QPoint p = globalPos + invertedMoveOffset;
+
+    QPoint pp = globalPos - moveOffset;
+
+    if( !unrestrictedMoveResize )
+        { // TODO this is broken
+        int left_overlap = width() - border_left - 100;
+        int right_overlap = width() - border_right - 100;
+        int bottom_overlap = - border_top;
+        p.setX( QMIN( desktopArea.right() + right_overlap, QMAX( desktopArea.left() - left_overlap, p.x())));
+        p.setY( QMIN( desktopArea.bottom() + bottom_overlap, QMAX( desktopArea.top(), p.y())));
+        pp.setX( QMIN( desktopArea.right() + right_overlap, QMAX( desktopArea.left() - left_overlap, pp.x())));
+        pp.setY( QMIN( desktopArea.bottom() + bottom_overlap, QMAX( desktopArea.top(), pp.y())));
+        }
+
+    QSize mpsize( geometry().right() - pp.x() + 1, geometry().bottom() - pp.y() + 1 );
+    mpsize = adjustedSize( mpsize );
+    QPoint mp( geometry().right() - mpsize.width() + 1,
+               geometry().bottom() - mpsize.height() + 1 );
+
+    QRect previousMoveResizeGeom = moveResizeGeom;
+    switch ( mode ) 
+        {
+        case TopLeft2:
+            moveResizeGeom =  QRect( mp, geometry().bottomRight() ) ;
+            break;
+        case BottomRight2:
+            moveResizeGeom =  QRect( geometry().topLeft(), p ) ;
+            break;
+        case BottomLeft2:
+            moveResizeGeom =  QRect( QPoint(mp.x(), geometry().y() ), QPoint( geometry().right(), p.y()) ) ;
+            break;
+        case TopRight2:
+            moveResizeGeom =  QRect( QPoint(geometry().x(), mp.y() ), QPoint( p.x(), geometry().bottom()) ) ;
+            break;
+        case Top:
+            moveResizeGeom =  QRect( QPoint( geometry().left(), mp.y() ), geometry().bottomRight() ) ;
+            break;
+        case Bottom:
+            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( geometry().right(), p.y() ) ) ;
+            break;
+        case Left:
+            moveResizeGeom =  QRect( QPoint( mp.x(), geometry().top() ), geometry().bottomRight() ) ;
+            break;
+        case Right:
+            moveResizeGeom =  QRect( geometry().topLeft(), QPoint( p.x(), geometry().bottom() ) ) ;
+            break;
+        case Center:
+            moveResizeGeom.moveTopLeft( pp );
+            break;
+        default:
+            assert( false );
+            break;
+        }
+
+    const int marge = 5;
+
+    // TODO move whole group when moving its leader or when the leader is not mapped?
+
+    if ( isResize() && moveResizeGeom.size() != previousMoveResizeGeom.size() ) 
+        {
+        if (moveResizeGeom.bottom() < desktopArea.top()+marge)
+            moveResizeGeom.setBottom(desktopArea.top()+marge);
+        if (moveResizeGeom.top() > desktopArea.bottom()-marge)
+            moveResizeGeom.setTop(desktopArea.bottom()-marge);
+        if (moveResizeGeom.right() < desktopArea.left()+marge)
+            moveResizeGeom.setRight(desktopArea.left()+marge);
+        if (moveResizeGeom.left() > desktopArea.right()-marge)
+            moveResizeGeom.setLeft(desktopArea.right()-marge);
+
+        moveResizeGeom.setSize( adjustedSize( moveResizeGeom.size() ) );
+        if  (options->resizeMode == Options::Opaque ) 
+            {
+            setGeometry( moveResizeGeom );
+            positionGeometryTip();
+            }
+        else if ( options->resizeMode == Options::Transparent ) 
+            {
+            clearbound();  // it's necessary to move the geometry tip when there's no outline
+            positionGeometryTip(); // shown, otherwise it would cause repaint problems in case
+            drawbound( moveResizeGeom ); // they overlap; the paint event will come after this,
+            }                               // so the geometry tip will be painted above the outline
+        }
+    else if ( isMove() && moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft() ) 
+        {
+        moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
+        if (moveResizeGeom.bottom() < desktopArea.top()+marge)
+            moveResizeGeom.moveBottomLeft( QPoint( moveResizeGeom.left(), desktopArea.top()+marge));
+        if (moveResizeGeom.top() > desktopArea.bottom()-marge)
+            moveResizeGeom.moveTopLeft( QPoint( moveResizeGeom.left(), desktopArea.bottom()-marge));
+        if (moveResizeGeom.right() < desktopArea.left()+marge)
+            moveResizeGeom.moveTopRight( QPoint( desktopArea.left()+marge, moveResizeGeom.top()));
+        if (moveResizeGeom.left() > desktopArea.right()-marge)
+            moveResizeGeom.moveTopLeft( QPoint( desktopArea.right()-marge, moveResizeGeom.top()));
+        switch ( options->moveMode ) 
+            {
+            case Options::Opaque:
+                move( moveResizeGeom.topLeft() );
+                positionGeometryTip();
+                break;
+            case Options::Transparent:
+                clearbound();
+                positionGeometryTip();
+                drawbound( moveResizeGeom );
+                break;
+            }
+        }
+
+    if ( isMove() )
+      workspace()->clientMoved(globalPos, qt_x_time);
     }
 
 
