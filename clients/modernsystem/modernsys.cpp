@@ -56,7 +56,7 @@ static QPixmap *iButtonPixDown=0;
 static QColor buttonFg;
 static bool pixmaps_created = false;
 
-static void make_button_fx(const QColor &btnColor, QPixmap *pix)
+static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
 {
     static QBitmap bDark1(14, 15, bmap_6a696a_bits, true);
     static QBitmap bDark2(14, 15, bmap_949194_bits, true);
@@ -69,16 +69,31 @@ static void make_button_fx(const QColor &btnColor, QPixmap *pix)
         bDark3.setMask(bDark3);
         bLight1.setMask(bLight1);
     }
-    pix->fill(btnColor);
+    
+    pix->fill(g.background());
     QPainter p(pix);
-    p.setPen(btnColor.dark(120));
-    p.drawPixmap(0, 0, bDark3);
-    p.setPen(btnColor.dark(140));
-    p.drawPixmap(0, 0, bDark2);
-    p.setPen(btnColor.dark(150));
-    p.drawPixmap(0, 0, bDark1);
-    p.setPen(btnColor.light(130));
-    p.drawPixmap(0, 0, bLight1);
+    if(QPixmap::defaultDepth() > 8){
+        QColor btnColor = g.background();
+        if(light)
+            btnColor = btnColor.light(120);
+        p.setPen(btnColor.dark(120));
+        p.drawPixmap(0, 0, bDark3);
+        p.setPen(btnColor.dark(140));
+        p.drawPixmap(0, 0, bDark2);
+        p.setPen(btnColor.dark(150));
+        p.drawPixmap(0, 0, bDark1);
+        p.setPen(btnColor.light(130));
+        p.drawPixmap(0, 0, bLight1);
+    }
+    else{
+        p.setPen(g.dark());
+        p.drawPixmap(0, 0, bDark2);
+        p.drawPixmap(0, 0, bDark1);
+        p.setPen(g.mid());
+        p.drawPixmap(0, 0, bDark3);
+        p.setPen(g.light());
+        p.drawPixmap(0, 0, bLight1);
+    }
     p.end();
 }
     
@@ -89,33 +104,35 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
-    aUpperGradient = new KPixmap;
-    aUpperGradient->resize(32, 18);
-    iUpperGradient = new KPixmap;
-    iUpperGradient->resize(32, 18);
-    KPixmapEffect::gradient(*aUpperGradient,
-                            options->color(Options::TitleBar, true).light(130),
-                            options->color(Options::TitleBlend, true),
-                            KPixmapEffect::VerticalGradient);
-    KPixmapEffect::gradient(*iUpperGradient,
-                            options->color(Options::TitleBar, false).light(130),
-                            options->color(Options::TitleBlend, false),
-                            KPixmapEffect::VerticalGradient);
+    if(QPixmap::defaultDepth() > 8){
+        aUpperGradient = new KPixmap;
+        aUpperGradient->resize(32, 18);
+        iUpperGradient = new KPixmap;
+        iUpperGradient->resize(32, 18);
+        KPixmapEffect::gradient(*aUpperGradient,
+                                options->color(Options::TitleBar, true).light(130),
+                                options->color(Options::TitleBlend, true),
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(*iUpperGradient,
+                                options->color(Options::TitleBar, false).light(130),
+                                options->color(Options::TitleBlend, false),
+                                KPixmapEffect::VerticalGradient);
+    }
     // buttons
-    QColor btnColor(options->color(Options::ButtonBg, true));
+    QColorGroup btnColor(options->colorGroup(Options::ButtonBg, true));
     buttonPix = new QPixmap(14, 15);
     make_button_fx(btnColor, buttonPix);
     buttonPixDown = new QPixmap(14, 15);
-    make_button_fx(btnColor.light(120), buttonPixDown);
+    make_button_fx(btnColor, buttonPixDown, true);
 
-    btnColor = options->color(Options::ButtonBg, false);
+    btnColor = options->colorGroup(Options::ButtonBg, false);
     iButtonPix = new QPixmap(14, 15);
     make_button_fx(btnColor, iButtonPix);
     iButtonPixDown = new QPixmap(14, 15);
-    make_button_fx(btnColor.light(120), iButtonPixDown);
+    make_button_fx(btnColor, iButtonPixDown, true);
 
     
-    if(qGray(btnColor.rgb()) < 100)
+    if(qGray(btnColor.background().rgb()) < 150)
         buttonFg = Qt::white;
     else
         buttonFg = Qt::black;
@@ -172,11 +189,12 @@ void ModernSys::slotReset()
     if(aUpperGradient){
         delete aUpperGradient;
         delete iUpperGradient;
-        delete buttonPix;
-        delete buttonPixDown;
-        delete iButtonPix;
-        delete iButtonPixDown;
     }
+    delete buttonPix;
+    delete buttonPixDown;
+    delete iButtonPix;
+    delete iButtonPixDown;
+
     pixmaps_created = false;
     create_pixmaps();
     titleBuffer.resize(0, 0);
