@@ -348,6 +348,7 @@ class Client : public QObject, public KDecorationDefines
         bool startMoveResize();
         void finishMoveResize( bool cancel );
         void leaveMoveResize();
+        void checkUnrestrictedMoveResize();
         void handleMoveResize( int x, int y, int x_root, int y_root );
         void positionGeometryTip();
         void updateMouseGrab();

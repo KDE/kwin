@@ -1531,6 +1531,7 @@ bool Client::startMoveResize()
     moveResizeMode = true;
     workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
+    checkUnrestrictedMoveResize();
     if ( ( isMove() && options->moveMode != Options::Opaque )
       || ( isResize() && options->resizeMode != Options::Opaque ) )
         {
@@ -1582,6 +1583,51 @@ void Client::leaveMoveResize()
     eater = 0;
     }
 
+// This function checks if it actually makes sense to perform a restricted move/resize.
+// If e.g. the titlebar is already outside of the workarea, there's no point in performing
+// a restricted move resize, because then e.g. resize would also move the window (#74555).
+// NOTE: Most of it is duplicated from handleMoveResize().
+void Client::checkUnrestrictedMoveResize()
+    {
+    if( unrestrictedMoveResize )
+        return;
+    QRect desktopArea = workspace()->clientArea( WorkArea, moveResizeGeom.center(), desktop());
+    int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
+    // restricted move/resize - keep at least part of the titlebar always visible 
+    // how much must remain visible when moved away in that direction
+    left_marge = 100 + border_right;
+    right_marge = 100 + border_left;
+    // width/height change with opaque resizing, use the initial ones
+    titlebar_marge = initialMoveResizeGeom.height();
+    top_marge = border_bottom;
+    bottom_marge = border_top;
+    if( isResize())
+        {
+        if( moveResizeGeom.bottom() < desktopArea.top() + top_marge )
+            unrestrictedMoveResize = true;
+        if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
+            unrestrictedMoveResize = true;
+        if( moveResizeGeom.right() < desktopArea.left() + left_marge )
+            unrestrictedMoveResize = true;
+        if( moveResizeGeom.left() > desktopArea.right() - right_marge )
+            unrestrictedMoveResize = true;
+        if( !unrestrictedMoveResize && moveResizeGeom.top() < desktopArea.top() ) // titlebar mustn't go out
+            unrestrictedMoveResize = true;
+        }
+    if( isMove())
+        {
+        if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1 ) // titlebar mustn't go out
+            unrestrictedMoveResize = true;
+        // no need to check top_marge, titlebar_marge already handles it
+        if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
+            unrestrictedMoveResize = true;
+        if( moveResizeGeom.right() < desktopArea.left() + left_marge )
+            unrestrictedMoveResize = true;
+        if( moveResizeGeom.left() > desktopArea.right() - right_marge )
+            unrestrictedMoveResize = true;
+        }
+    }
+
 void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     {
     if(( mode == PositionCenter && !isMovable())
@@ -1617,6 +1663,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
     // compute bounds
+    // NOTE: This is duped in checkUnrestrictedMoveResize().
     QRect desktopArea = workspace()->clientArea( WorkArea, globalPos, desktop());
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
     if( unrestrictedMoveResize ) // unrestricted, just don't let it go out completely
@@ -1674,6 +1721,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                 break;
             }
         // TODO snap
+        // NOTE: This is duped in checkUnrestrictedMoveResize().
         if( moveResizeGeom.bottom() < desktopArea.top() + top_marge )
             moveResizeGeom.setBottom( desktopArea.top() + top_marge );
         if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
@@ -1733,7 +1781,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         // first move, then snap, then check bounds
         moveResizeGeom.moveTopLeft( topleft );
         moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
-        if( moveResizeGeom.bottom() <= desktopArea.top() + titlebar_marge ) // titlebar mustn't go out
+        // NOTE: This is duped in checkUnrestrictedMoveResize().
+        if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1 ) // titlebar mustn't go out
             moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge - 1 );
         // no need to check top_marge, titlebar_marge already handles it
         if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
