@@ -26,9 +26,6 @@
             <property name="text">
                 <string>Display the window &amp;icon in the caption bubble</string>
             </property>
-            <property name="accel">
-                <string>Alt+I</string>
-            </property>
             <property name="whatsThis" stdset="0">
                 <string>Check this option if you want the window icon to be displayed in the caption bubble next to the titlebar text.</string>
             </property>
@@ -51,9 +48,6 @@
             <property name="text">
                 <string>Draw g&amp;rab bars below windows</string>
             </property>
-            <property name="accel">
-                <string>Alt+R</string>
-            </property>
             <property name="whatsThis" stdset="0">
                 <string>Check this option if you want a grab bar to be drawn below windows. When this option is not selected only a thin border will be drawn in its place.</string>
             </property>
@@ -64,9 +58,6 @@
             </property>
             <property name="text">
                 <string>Use shadowed &amp;text</string>
-            </property>
-            <property name="accel">
-                <string>Alt+T</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
