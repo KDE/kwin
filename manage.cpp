@@ -252,9 +252,11 @@ bool Client::manage( Window w, bool isMapped )
         }
 
     if (xSizeHint.flags & PMaxSize)
-        geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
+        geom.setSize( geom.size().boundedTo(
+            rules()->checkMaxSize( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) ) );
     if (xSizeHint.flags & PMinSize)
-        geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
+        geom.setSize( geom.size().expandedTo(
+            rules()->checkMinSize( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) ) );
 
     if( isMovable())
         {

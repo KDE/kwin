@@ -27,6 +27,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "placement.h"
 #include "notifications.h"
 #include "geometrytip.h"
+#include "rules.h"
 
 extern Time qt_x_time;
 
@@ -818,8 +819,8 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode ) const
 
     // basesize, minsize, maxsize, paspect and resizeinc have all values defined,
     // even if they're not set in flags - see getWmNormalHints()
-    QSize min_size( xSizeHint.min_width, xSizeHint.min_height );
-    QSize max_size( xSizeHint.max_width, xSizeHint.max_height );
+    QSize min_size = minSize();
+    QSize max_size = maxSize();
     if( decoration != NULL )
         {
         QSize decominsize = decoration->minimumSize();
@@ -1022,6 +1023,16 @@ void Client::getWmNormalHints()
             resizeWithChecks( new_size );
         }
     updateAllowedActions(); // affects isResizeable()
+    }
+
+QSize Client::minSize() const
+    {
+    return rules()->checkMinSize( QSize( xSizeHint.min_width, xSizeHint.min_height ));
+    }
+
+QSize Client::maxSize() const
+    {
+    return rules()->checkMaxSize( QSize( xSizeHint.max_width, xSizeHint.max_height ));
     }
 
 /*!
@@ -1287,10 +1298,9 @@ bool Client::isResizable() const
     if ( !isMovable() || !motif_may_resize || isSplash())
         return FALSE;
 
-    if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
-        return TRUE;
-    return ( xSizeHint.min_width < xSizeHint.max_width  ) ||
-          ( xSizeHint.min_height < xSizeHint.max_height  );
+    QSize min = minSize();
+    QSize max = maxSize();
+    return min.width() < max.width() || min.height() < max.height();
     }
 
 /*
@@ -1302,7 +1312,8 @@ bool Client::isMaximizable() const
         return TRUE;
     if( !isResizable() || isToolbar()) // SELI isToolbar() ?
         return false;
-    if( xSizeHint.max_height < 32767 || xSizeHint.max_width < 32767 ) // sizes are 16bit with X
+    QSize max = maxSize();
+    if( max.width() < 32767 || max.height() < 32767 ) // sizes are 16bit with X
         return false;
     return true;
     }

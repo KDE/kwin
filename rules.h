@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <qstring.h>
 #include <netwm_def.h>
+#include <qrect.h>
 
 #include "placement.h"
 
@@ -41,6 +42,8 @@ class WindowRules
         void update( Client* );
         bool match( const Client* c ) const;
         Placement::Policy checkPlacement( Placement::Policy placement ) const;
+        QSize checkMinSize( const QSize& s ) const;
+        QSize checkMaxSize( const QSize& s ) const;
         int checkDesktop( int desktop, bool init = false ) const;
         NET::WindowType checkType( NET::WindowType type ) const;
         bool checkKeepAbove( bool above, bool init = false ) const;
@@ -65,6 +68,10 @@ class WindowRules
         unsigned long types; // types for matching
         Placement::Policy placement;
         SettingRule placementrule;
+        QSize minsize;
+        SettingRule minsizerule;
+        QSize maxsize;
+        SettingRule maxsizerule;
         int desktop;
         SettingRule desktoprule;
         NET::WindowType type; // type for setting

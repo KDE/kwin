@@ -30,6 +30,8 @@ WindowRules::WindowRules()
     , clientmachineregexp( false )
     , types( NET::AllTypesMask )
     , placementrule( DontCareRule )
+    , minsizerule( DontCareRule )
+    , maxsizerule( DontCareRule )
     , desktoprule( DontCareRule )
     , typerule( DontCareRule )
     , aboverule( DontCareRule )
@@ -53,6 +55,10 @@ WindowRules::WindowRules( KConfig& cfg )
     types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
     placement = Placement::policyFromString( cfg.readEntry( "placement" ), false );
     placementrule = readRule( cfg, "placementrule" );
+    minsize = cfg.readSizeEntry( "minsize" );
+    minsizerule = readRule( cfg, "minsizerule" );
+    maxsize = cfg.readSizeEntry( "maxsize" );
+    maxsizerule = readRule( cfg, "maxsizerule" );
     desktop = cfg.readNumEntry( "desktop" );
     desktoprule = readRule( cfg, "desktoprule" );
     type = readType( cfg, "type" );
@@ -107,6 +113,8 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( clientmachine, (const char*) );
     WRITE_WITH_DEFAULT( types, NET::AllTypesMask );
     WRITE_SET_RULE( placement, Placement::policyToString );
+    WRITE_SET_RULE( minsize, );
+    WRITE_SET_RULE( maxsize, );
     WRITE_SET_RULE( desktop, );
     WRITE_SET_RULE( type, );
     WRITE_SET_RULE( above, );
@@ -201,6 +209,16 @@ void WindowRules::update( Client* c )
 Placement::Policy WindowRules::checkPlacement( Placement::Policy placement ) const
     {
     return checkForceRule( placementrule ) ? this->placement : placement;
+    }
+
+QSize WindowRules::checkMinSize( const QSize& s ) const
+    {
+    return checkForceRule( minsizerule ) ? this->minsize : s;
+    }
+
+QSize WindowRules::checkMaxSize( const QSize& s ) const
+    {
+    return checkForceRule( maxsizerule ) ? this->maxsize : s;
     }
 
 int WindowRules::checkDesktop( int req_desktop, bool init ) const

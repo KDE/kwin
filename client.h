@@ -72,6 +72,7 @@ class Client : public QObject, public KDecorationDefines
         QRect geometry() const;
         QSize size() const;
         QSize minSize() const;
+        QSize maxSize() const;
         QPoint pos() const;
         QRect rect() const;
         int x() const;
@@ -751,11 +752,6 @@ inline QRect Client::geometry() const
 inline QSize Client::size() const
     {
     return frame_geometry.size();
-    }
-
-inline QSize Client::minSize() const
-    {
-    return QSize( xSizeHint.min_width, xSizeHint.min_height );
     }
 
 inline QPoint Client::pos() const
