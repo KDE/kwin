@@ -838,17 +838,10 @@ void B2Client::menuButtonPressed()
     time.start();
     if (!dbl) {
 	KDecorationFactory* f = factory();
-#if 0
-	QPoint menutop = button[BtnMenu]->mapToGlobal(
-		button[BtnMenu]->rect().topLeft());
-	QPoint menubottom = button[BtnMenu]->mapToGlobal(
-		button[BtnMenu]->rect().bottomRight());
+	QRect menuRect =button[BtnMenu]->rect();
+	QPoint menutop = button[BtnMenu]->mapToGlobal(menuRect.topLeft());
+	QPoint menubottom = button[BtnMenu]->mapToGlobal(menuRect.bottomRight());
 	showWindowMenu(QRect(menutop, menubottom));
-#else
-	QPoint menupoint = button[BtnMenu]->mapToGlobal(
-		button[BtnMenu]->rect().bottomLeft());
-	showWindowMenu(menupoint);
-#endif
 	if (!f->exists(this)) // 'this' was destroyed
 	    return;
 	button[BtnMenu]->setDown(false);
