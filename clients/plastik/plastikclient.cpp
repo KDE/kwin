@@ -86,7 +86,7 @@ void PlastikClient::init()
             PlastikHandler::titleFontTool()
             : PlastikHandler::titleFont();
 
-    createMainWidget();
+    createMainWidget(WNoAutoErase);
 
     widget()->installEventFilter( this );
 
@@ -100,7 +100,7 @@ void PlastikClient::init()
     aCaptionBuffer = new QPixmap();
     iCaptionBuffer = new QPixmap();
     captionBufferDirty = true;
-    widget()->repaint(titleSpacer_->geometry(), false);
+    widget()->update(titleSpacer_->geometry());
 }
 
 bool PlastikClient::isTool()
@@ -113,7 +113,7 @@ bool PlastikClient::isTool()
 void PlastikClient::resizeEvent()
 {
     doShape();
-    widget()->repaint();
+    widget()->update();
 }
 
 void PlastikClient::paintEvent(QPaintEvent*)
@@ -407,14 +407,14 @@ void PlastikClient::paintEvent(QPaintEvent*)
 void PlastikClient::showEvent(QShowEvent *)
 {
     doShape();
-    widget()->repaint();
+    widget()->update();
 }
 
 
 void PlastikClient::windowWrapperShowEvent(QShowEvent *)
 {
     doShape();
-    widget()->repaint();
+    widget()->update();
 }
 
 void PlastikClient::mouseDoubleClickEvent(QMouseEvent *e)
@@ -604,7 +604,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
 void PlastikClient::captionChange()
 {
     captionBufferDirty = true;
-    widget()->repaint(titleSpacer_->geometry(), false);
+    widget()->update(titleSpacer_->geometry());
 }
 
 void PlastikClient::reset( unsigned long changed )
@@ -615,7 +615,10 @@ void PlastikClient::reset( unsigned long changed )
         delete_pixmaps();
         create_pixmaps();
         captionBufferDirty = true;
-        widget()->repaint(false);
+        widget()->update();
+        for (int n=0; n<NumButtons; n++) {
+            if (m_button[n]) m_button[n]->update();
+        }
     } else if (changed & SettingFont) {
         // font has changed -- update title height and font
         s_titleHeight = isTool() ?
@@ -635,7 +638,7 @@ void PlastikClient::reset( unsigned long changed )
         delete_pixmaps();
         create_pixmaps();
         captionBufferDirty = true;
-        widget()->repaint(false);
+        widget()->update();
     }
 }
 
@@ -699,15 +702,15 @@ void PlastikClient::iconChange()
 {
     if (m_button[MenuButton])
     {
-        m_button[MenuButton]->repaint(false);
+        m_button[MenuButton]->update();
     }
 }
 
 void PlastikClient::activeChange()
 {
     for (int n=0; n<NumButtons; n++)
-        if (m_button[n]) m_button[n]->repaint(false);
-    widget()->repaint(false);
+        if (m_button[n]) m_button[n]->update();
+    widget()->update();
 }
 
 void PlastikClient::maximizeChange()

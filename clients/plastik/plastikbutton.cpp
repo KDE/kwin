@@ -156,7 +156,7 @@ void PlastikButton::setDeco()
     m_aDecoLight = recolorImage(&img, aDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
     m_iDecoLight = recolorImage(&img, iDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
 
-    this->repaint();
+    this->update();
 }
 
 void PlastikButton::setTipText(const QString &tip) {
