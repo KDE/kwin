@@ -278,7 +278,8 @@ QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
 
 ModernButton::ModernButton(ModernSys *parent, const char *name,
                            const unsigned char *bitmap, const QString& tip, const int realizeBtns)
-    : QButton(parent->widget(), name)
+    : QButton(parent->widget(), name),
+      last_button( NoButton ) 
 {
     setBackgroundMode( NoBackground );
     setCursor( arrowCursor );
@@ -443,16 +444,8 @@ void ModernSys::init()
 
 void ModernSys::maxButtonClicked( )
 {
-    switch ( button[BtnMaximize]->last_button ) {
-    case MidButton:
-       maximize( maximizeMode() ^ MaximizeVertical );
-       break;
-    case RightButton:
-       maximize( maximizeMode() ^ MaximizeHorizontal );
-       break;
-    default: //LeftButton:
-       maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
-       break;
+    if (button[BtnMaximize]) {
+        maximize(button[BtnMaximize]->last_button);
     }
 }
 

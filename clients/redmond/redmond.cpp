@@ -236,7 +236,8 @@ void delete_pixmaps()
 
 RedmondButton::RedmondButton(RedmondDeco *parent, const char *name,
       const unsigned char *bitmap, bool menuButton, bool isMini, int size, const QString& tip, const int realizeBtns)
-    : QButton(parent->widget(), name)
+    : QButton(parent->widget(), name),
+      last_button( NoButton ) 
 {
 	// Eliminate background flicker
 	setBackgroundMode( NoBackground );
@@ -484,12 +485,9 @@ void RedmondDeco::iconChange()
 
 void RedmondDeco::slotMaximize()
 {
-    if ( button[BtnMax]->last_button == MidButton )
-       maximize( maximizeMode() ^ MaximizeVertical );
-    else if ( button[BtnMax]->last_button == RightButton )
-       maximize( maximizeMode() ^ MaximizeHorizontal );
-    else
-       maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+    if (button[BtnMax]) {
+        maximize(button[BtnMax]->last_button);
+    }
 }
 
 

@@ -36,7 +36,7 @@ protected:
 
     int realizeButtons;
 public:
-    int last_button;
+    ButtonState last_button;
 };
 
 class ModernSys : public KDecoration
