@@ -857,7 +857,9 @@ void Workspace::requestFocus( Client* c)
     if ( c->isVisible() && !c->isShade() ) {
 	c->takeFocus();
 	should_get_focus = c;
-	setActiveClient( c );
+	focus_chain.remove( c );
+	if ( c->wantsTabFocus() )
+	    focus_chain.append( c );
     } else if ( c->isShade() ) {
 	// client cannot accept focus, but at least the window should be active (window menu, et. al. )
 	focusToNull();
