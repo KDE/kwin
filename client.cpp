@@ -66,7 +66,7 @@ public:
 	if ( state & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
-	if ( state & NET::Max ) {
+	if ( mask & NET::Max ) {
 	    if ( (state & NET::Max) == NET::Max )
 		m_client->maximize( Client::MaximizeFull );
 	    else if ( state & NET::MaxVert )
