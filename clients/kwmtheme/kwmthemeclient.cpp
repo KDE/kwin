@@ -17,6 +17,7 @@
 #include "../../workspace.h"
 #include "../../options.h"
 
+
 using namespace KWinInternal;
 
 extern "C"
@@ -26,6 +27,47 @@ extern "C"
         return(new KWMThemeClient(ws, w));
     }
 }
+
+static QPixmap stretchPixmap(QPixmap& src, bool stretchVert){
+  QPixmap dest;
+  QBitmap *srcMask, *destMask;
+  int w, h, w2, h2;
+  QPainter p;
+
+  if (src.isNull()) return src;
+
+  w = src.width();
+  h = src.height();
+
+  if (stretchVert){
+    w2 = w;
+    for (h2=h; h2<100; h2=h2<<1)
+      ;
+  }
+  else{
+    h2 = h;
+    for (w2=w; w2<100; w2=w2<<1)
+      ;
+  }
+  if (w2==w && h2==h) return src;
+
+  dest = src;
+  dest.resize(w2, h2);
+
+  p.begin(&dest);
+  p.drawTiledPixmap(0, 0, w2, h2, src);
+  p.end();
+
+  srcMask = (QBitmap*)src.mask();
+  if (srcMask){
+    destMask = (QBitmap*)dest.mask();
+    p.begin(destMask);
+    p.drawTiledPixmap(0, 0, w2, h2, *srcMask);
+    p.end();
+  }
+  return dest;
+}
+
 
 
 enum FramePixmap{FrameTop=0, FrameBottom, FrameLeft, FrameRight, FrameTopLeft,
@@ -65,6 +107,12 @@ static void init_theme()
         if(framePixmaps[i]->isNull())
             qWarning("Unable to load frame pixmap for %s", keys[i]);
     }
+
+    *framePixmaps[FrameTop] = stretchPixmap(*framePixmaps[FrameTop], false);
+    *framePixmaps[FrameBottom] = stretchPixmap(*framePixmaps[FrameBottom], false);
+    *framePixmaps[FrameLeft] = stretchPixmap(*framePixmaps[FrameLeft], true);
+    *framePixmaps[FrameRight] = stretchPixmap(*framePixmaps[FrameRight], true);
+
     maxExtent = framePixmaps[FrameTop]->height();
     if(framePixmaps[FrameBottom]->height() > maxExtent)
         maxExtent = framePixmaps[FrameBottom]->height();
@@ -110,7 +158,7 @@ static void init_theme()
     else
         titleAlign = Qt::AlignLeft | Qt::AlignVCenter;
     titleSunken = config->readBoolEntry("TitleFrameShaded", true);
-    titleSunken = true; // FIXME
+    // titleSunken = true; // is this fixed?
     titleTransparent = config->readBoolEntry("PixmapUnderTitleText", true);
 
     tmpStr = config->readEntry("TitlebarLook");
@@ -203,7 +251,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity)
 {
-    stickyBtn = maxBtn = 0;
+    stickyBtn = maxBtn = mnuBtn = 0;
     init_theme();
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset())); 
     QGridLayout *layout = new QGridLayout(this);
@@ -241,10 +289,12 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         key += QChar(keyOffsets[i]);
         val = config->readEntry(key, defaultButtons[i]);
         if(val == "Menu"){
-            btn = new MyButton(this, "menu");
-            btn->setPixmap(*menuPix);
-            hb->addWidget(btn);
-            btn->setFixedSize(20, 20);
+            mnuBtn = new MyButton(this, "menu");
+            iconChange();
+            hb->addWidget(mnuBtn);
+            mnuBtn->setFixedSize(20, 20);
+            connect(mnuBtn, SIGNAL(pressed()), this,
+                    SLOT(menuButtonPressed()));
         }
         else if(val == "Sticky"){
             stickyBtn = new MyButton(this, "sticky");
@@ -287,7 +337,6 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         aGradient = 0;
         iGradient = 0;
     }
-        
     setBackgroundMode(NoBackground);
 }
 
@@ -345,13 +394,7 @@ void KWMThemeClient::resizeEvent( QResizeEvent* e)
     Client::resizeEvent( e );
     doShape();
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
-        QPainter p( this );
-	QRect t = titlebar->geometry();
-        t.setTop( 0 );
-        QRegion r = rect();
-	r = r.subtract( t );
-        p.setClipRegion( r );
-        p.eraseRect( rect() );
+        repaint();  // ugh! Not even this works...
     }
 }
 
@@ -360,118 +403,298 @@ void KWMThemeClient::captionChange( const QString& )
     repaint( titlebar->geometry(), false );
 }
 
-void KWMThemeClient::paintEvent( QPaintEvent*e )
+void KWMThemeClient::paintEvent( QPaintEvent *)
 {
     QPainter p;
     p.begin(this);
-
+    int x,y;
     // first the corners
     int w1 = framePixmaps[FrameTopLeft]->width();
     int h1 = framePixmaps[FrameTopLeft]->height();
     if (w1 > width()/2) w1 = width()/2;
     if (h1 > height()/2) h1 = height()/2;
-    bitBlt(this, 0,0, framePixmaps[FrameTopLeft],
-           0,0, w1, h1);
-
+    p.drawPixmap(0,0,*framePixmaps[FrameTopLeft],
+		 0,0,w1, h1);
     int w2 = framePixmaps[FrameTopRight]->width();
     int h2 = framePixmaps[FrameTopRight]->height();
     if (w2 > width()/2) w2 = width()/2;
     if (h2 > height()/2) h2 = height()/2;
-    bitBlt(this, width()-w2,0, framePixmaps[FrameTopRight],
-           framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
+    p.drawPixmap(width()-w2,0,*framePixmaps[FrameTopRight],
+		 framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
 
     int w3 = framePixmaps[FrameBottomLeft]->width();
     int h3 = framePixmaps[FrameBottomLeft]->height();
     if (w3 > width()/2) w3 = width()/2;
     if (h3 > height()/2) h3 = height()/2;
-    bitBlt(this, 0,height()-h3, framePixmaps[FrameBottomLeft],
-           0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
+    p.drawPixmap(0,height()-h3,*framePixmaps[FrameBottomLeft],
+		 0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
 
     int w4 = framePixmaps[FrameBottomRight]->width();
     int h4 = framePixmaps[FrameBottomRight]->height();
     if (w4 > width()/2) w4 = width()/2;
     if (h4 > height()/2) h4 = height()/2;
-    bitBlt(this, width()-w4,height()-h4, framePixmaps[FrameBottomRight],
-           framePixmaps[FrameBottomRight]->width()-w4,
-           framePixmaps[FrameBottomRight]->height()-h4,
-           w4, h4);
+    p.drawPixmap(width()-w4,height()-h4,*(framePixmaps[FrameBottomRight]),
+		 framePixmaps[FrameBottomRight]->width()-w4,
+		 framePixmaps[FrameBottomRight]->height()-h4,
+		 w4, h4);
 
-    QPixmap *curPix = framePixmaps[FrameTop];
-    p.drawTiledPixmap(w1, maxExtent-curPix->height(), width()-w2-w1,
-                      curPix->height(), *curPix);
-    curPix = framePixmaps[FrameBottom];
-    p.drawTiledPixmap(w3, height()-maxExtent, width()-w3-w4,
-                      curPix->height(), *curPix);
-    curPix = framePixmaps[FrameLeft];
-    p.drawTiledPixmap(maxExtent-curPix->width(), h1, curPix->width(),
-                      height()-h1-h3, *curPix);
+    QPixmap pm;
+    QWMatrix m;
+    int n,s,w;
+    //top
+    pm = *framePixmaps[FrameTop];
 
-    curPix = framePixmaps[FrameRight];
-    p.drawTiledPixmap(width()-maxExtent, h2, curPix->width(),
-                      height()-h2-h4, *curPix);
+    s = width()-w2-w1;
+    n = s/pm.width();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(w/(float)pm.width(), 1);
+    pm = pm.xForm(m);
+
+    x = w1;
+    while (1){
+      if (pm.width() < width()-w2-x){
+	p.drawPixmap(x,maxExtent-pm.height()-1,
+		     pm);
+	x += pm.width();
+      }
+      else {
+	p.drawPixmap(x,maxExtent-pm.height()-1,
+		     pm,
+		     0,0,width()-w2-x,pm.height());
+	break;
+      }
+    }
+
+    //bottom
+    pm = *framePixmaps[FrameBottom];
+
+    s = width()-w4-w3;
+    n = s/pm.width();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(w/(float)pm.width(), 1);
+    pm = pm.xForm(m);
+
+    x = w3;
+    while (1){
+      if (pm.width() < width()-w4-x){
+	p.drawPixmap(x,height()-maxExtent+1,pm);
+	x += pm.width();
+      }
+      else {
+	p.drawPixmap(x,height()-maxExtent+1,pm,
+		     0,0,width()-w4-x,pm.height());
+	break;
+      }
+    }
+
+    //left
+    pm = *framePixmaps[FrameLeft];
+
+    s = height()-h3-h1;
+    n = s/pm.height();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(1, w/(float)pm.height());
+    pm = pm.xForm(m);
+
+    y = h1;
+    while (1){
+      if (pm.height() < height()-h3-y){
+	p.drawPixmap(maxExtent-pm.width()-1, y,
+		     pm);
+	y += pm.height();
+      }
+      else {
+	p.drawPixmap(maxExtent-pm.width()-1, y,
+		     pm,
+		     0,0, pm.width(),
+		     height()-h3-y);
+	break;
+      }
+    }
+
+    //right
+    pm = *framePixmaps[FrameRight];
+
+    s = height()-h4-h2;
+    n = s/pm.height();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(1, w/(float)pm.height());
+    pm = pm.xForm(m);
+
+    y = h2;
+    while (1){
+      if (pm.height() < height()-h4-y){
+	p.drawPixmap(width()-maxExtent+1, y,
+		     pm);
+	y += pm.height();
+      }
+      else {
+	p.drawPixmap(width()-maxExtent+1, y,
+		     pm,
+		     0,0, pm.width(),
+		     height()-h4-y);
+	break;
+      }
+    }
     drawTitle(p);
+    // KWM evidently had a 1 pixel border around the client window. We
+    // emulate it here, but should be removed at some point in order to
+    // seamlessly mesh widget themes
+    p.setPen(colorGroup().background());
+    p.drawRect(maxExtent-1, maxExtent-1, width()-(maxExtent-1)*2,
+               height()-(maxExtent-1)*2);
+
     p.end();
 }
 
 void KWMThemeClient::doShape()
 {
-    QBitmap mask(width(), height());
-    mask.fill(color0);
-    QPainter p;
 
+    QBitmap shapemask(width(), height());
+    shapemask.fill(color0);
+    QPainter p;
+    p.begin(&shapemask);
+    p.setBrush(color1);
+    p.setPen(color1);
+    int x,y;
     // first the corners
     int w1 = framePixmaps[FrameTopLeft]->width();
     int h1 = framePixmaps[FrameTopLeft]->height();
     if (w1 > width()/2) w1 = width()/2;
     if (h1 > height()/2) h1 = height()/2;
-    bitBlt(&mask, 0,0,framePixmaps[FrameTopLeft]->mask(),
-           0,0,w1, h1);
+    p.drawPixmap(0,0,*framePixmaps[FrameTopLeft]->mask(),
+		 0,0,w1, h1);
     int w2 = framePixmaps[FrameTopRight]->width();
     int h2 = framePixmaps[FrameTopRight]->height();
     if (w2 > width()/2) w2 = width()/2;
     if (h2 > height()/2) h2 = height()/2;
-    bitBlt(&mask, width()-w2,0,framePixmaps[FrameTopRight]->mask(),
-           framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
+    p.drawPixmap(width()-w2,0,*framePixmaps[FrameTopRight]->mask(),
+		 framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
 
     int w3 = framePixmaps[FrameBottomLeft]->width();
     int h3 = framePixmaps[FrameBottomLeft]->height();
     if (w3 > width()/2) w3 = width()/2;
     if (h3 > height()/2) h3 = height()/2;
-    bitBlt(&mask, 0,height()-h3,framePixmaps[FrameBottomLeft]->mask(),
-           0, framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
+    p.drawPixmap(0,height()-h3,*framePixmaps[FrameBottomLeft]->mask(),
+		 0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
 
     int w4 = framePixmaps[FrameBottomRight]->width();
     int h4 = framePixmaps[FrameBottomRight]->height();
     if (w4 > width()/2) w4 = width()/2;
     if (h4 > height()/2) h4 = height()/2;
-    bitBlt(&mask, width()-w4,height()-h4,framePixmaps[FrameBottomRight]->mask(),
-           framePixmaps[FrameBottomRight]->width()-w4,
-           framePixmaps[FrameBottomRight]->height()-h4,
-           w4, h4);
+    p.drawPixmap(width()-w4,height()-h4,*framePixmaps[FrameBottomRight]->mask(),
+		 framePixmaps[FrameBottomRight]->width()-w4,
+		 framePixmaps[FrameBottomRight]->height()-h4,
+		 w4, h4);
 
-    p.begin(&mask);
-    const QBitmap *curPix = framePixmaps[FrameTop]->mask();
-    if (curPix)
-       p.drawTiledPixmap(w1, maxExtent-curPix->height(), width()-w2-w1,
-                         curPix->height(), *curPix);
-    curPix = framePixmaps[FrameBottom]->mask();
-    if (curPix)
-       p.drawTiledPixmap(w3, height()-maxExtent, width()-w3-w4,
-                      curPix->height(), *curPix);
-    curPix = framePixmaps[FrameLeft]->mask();
-    if (curPix)
-       p.drawTiledPixmap(maxExtent-curPix->width(), h1, curPix->width(),
-                      height()-h1-h3, *curPix);
-    curPix = framePixmaps[FrameRight]->mask();
-    if (curPix)
-       p.drawTiledPixmap(width()-maxExtent, h2, curPix->width(),
-                      height()-h2-h4, *curPix);
-    p.setBrush(color1);
-    p.setPen(color1);
-    p.fillRect(maxExtent, maxExtent, width()-2*maxExtent,
-               height()-2*maxExtent, color1);
-    p.end();
-    setMask(mask);
+    QPixmap pm;
+    QWMatrix m;
+    int n,s,w;
+    //top
+    pm = *framePixmaps[FrameTop]->mask();
+
+    s = width()-w2-w1;
+    n = s/pm.width();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(w/(float)pm.width(), 1);
+    pm = pm.xForm(m);
+
+    x = w1;
+    while (1){
+      if (pm.width() < width()-w2-x){
+	p.drawPixmap(x,maxExtent-pm.height()-1,
+		     pm);
+	x += pm.width();
+      }
+      else {
+	p.drawPixmap(x,maxExtent-pm.height()-1,
+		     pm,
+		     0,0,width()-w2-x,pm.height());
+	break;
+      }
+    }
+
+    //bottom
+    pm = *framePixmaps[FrameBottom]->mask();
+
+    s = width()-w4-w3;
+    n = s/pm.width();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(w/(float)pm.width(), 1);
+    pm = pm.xForm(m);
+
+    x = w3;
+    while (1){
+      if (pm.width() < width()-w4-x){
+	p.drawPixmap(x,height()-maxExtent+1,pm);
+	x += pm.width();
+      }
+      else {
+	p.drawPixmap(x,height()-maxExtent+1,pm,
+		     0,0,width()-w4-x,pm.height());
+	break;
+      }
+    }
+
+    //left
+    pm = *framePixmaps[FrameLeft]->mask();
+
+    s = height()-h3-h1;
+    n = s/pm.height();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(1, w/(float)pm.height());
+    pm = pm.xForm(m);
+
+    y = h1;
+    while (1){
+      if (pm.height() < height()-h3-y){
+	p.drawPixmap(maxExtent-pm.width()-1, y,
+		     pm);
+	y += pm.height();
+      }
+      else {
+	p.drawPixmap(maxExtent-pm.width()-1, y,
+		     pm,
+		     0,0, pm.width(),
+		     height()-h3-y);
+	break;
+      }
+    }
+
+    //right
+    pm = *framePixmaps[FrameRight]->mask();
+
+    s = height()-h4-h2;
+    n = s/pm.height();
+    w = n>0?s/n:s;
+    m.reset();
+    m.scale(1, w/(float)pm.height());
+    pm = pm.xForm(m);
+
+    y = h2;
+    while (1){
+      if (pm.height() < height()-h4-y){
+	p.drawPixmap(width()-maxExtent+1, y,
+		     pm);
+	y += pm.height();
+      }
+      else {
+	p.drawPixmap(width()-maxExtent+1, y,
+		     pm,
+		     0,0, pm.width(),
+		     height()-h4-y);
+	break;
+      }
+    }
+    p.fillRect(maxExtent-1, maxExtent-1, width()-2*maxExtent+2, height()-2*maxExtent+2, color1);
+    setMask(shapemask);
 }
 
 
@@ -537,10 +760,45 @@ Client::MousePosition KWMThemeClient::mousePosition(const QPoint &p) const
     return(m);
 }
 
+void KWMThemeClient::menuButtonPressed()
+{
+    static QTime* t = 0;
+    static KWMThemeClient* tc = 0;
+    if ( !t )
+        t = new QTime;
+
+    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() ){
+        mnuBtn->setDown(false); // will stay down if I don't do this
+        workspace()->clientPopup(this)->
+            popup(mnuBtn->mapToGlobal(mnuBtn->rect().bottomLeft()));
+    }
+    else {
+        mnuBtn->setPopup( 0 );
+        closeWindow();
+    }
+    t->start();
+    tc = this;
+}
+
+void KWMThemeClient::iconChange()
+{
+    if(mnuBtn){
+        if(miniIcon().isNull()){
+            mnuBtn->setPixmap(*menuPix);
+        }
+        else{
+            mnuBtn->setPixmap(miniIcon());
+        }
+    }
+}
+
+
+
 void KWMThemeClient::init()
 {
     //
 }
+
 
 
 #include "kwmthemeclient.moc"

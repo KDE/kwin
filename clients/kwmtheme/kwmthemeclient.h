@@ -8,7 +8,7 @@
 class QLabel;
 class QSpacerItem;
 
-namespace KWinInternal {
+namespace KWinInternal{
 
 // QToolButton uses a 1 pixel border :P
 class MyButton : public QToolButton
@@ -38,13 +38,15 @@ protected:
     void captionChange( const QString& name );
     void stickyChange(bool on);
     void maximizeChange(bool m);
+    void iconChange();
     MousePosition mousePosition(const QPoint &) const;
 protected slots:
     void slotReset();
+    void menuButtonPressed();
 private:
     QPixmap buffer;
     KPixmap *aGradient, *iGradient;
-    MyButton *maxBtn, *stickyBtn;
+    MyButton *maxBtn, *stickyBtn, *mnuBtn;
     QSpacerItem *titlebar;
 };
 
