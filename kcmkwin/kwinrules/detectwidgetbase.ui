@@ -12,9 +12,6 @@
             <height>325</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>Form3</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -210,9 +207,6 @@
                     </property>
                     <property name="text">
                         <string>Match also window &amp;title</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+T</string>
                     </property>
                 </widget>
             </vbox>
