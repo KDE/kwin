@@ -2562,6 +2562,8 @@ void Workspace::createKeybindings(){
 
     keys->connectItem( "Walk through desktops", this, SLOT( slotWalkThroughDesktops()));
     keys->connectItem( "Walk back through desktops", this, SLOT( slotWalkBackThroughDesktops()));
+    keys->connectItem( "Walk through desktop list", this, SLOT( slotWalkThroughDesktopList()));
+    keys->connectItem( "Walk back through desktop list", this, SLOT( slotWalkBackThroughDesktopList()));
     keys->connectItem( "Walk through windows",this, SLOT( slotWalkThroughWindows()));
     keys->connectItem( "Walk back through windows",this, SLOT( slotWalkBackThroughWindows()));
 
@@ -2571,6 +2573,8 @@ void Workspace::createKeybindings(){
     keys->readSettings();
     walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
     walkBackThroughDesktopsKeycode = keys->currentKey( "Walk back through desktops" );
+    walkThroughDesktopListKeycode = keys->currentKey( "Walk through desktop list" );
+    walkBackThroughDesktopListKeycode = keys->currentKey( "Walk back through desktop list" );
     walkThroughWindowsKeycode = keys->currentKey( "Walk through windows" );
     walkBackThroughWindowsKeycode = keys->currentKey( "Walk back through windows" );
 }
