@@ -611,7 +611,7 @@ void B2Client::doShape()
     setMask(mask);
 }
 
-void B2Client::showEvent(QShowEvent *ev)
+void B2Client::showEvent(QShowEvent *)
 {
     calcHiddenButtons();
     doShape();

@@ -65,7 +65,7 @@ WebClient::init()
   widget()->setBackgroundMode(NoBackground);
 
   // title height
-  const uint textVMargin   = 2;
+  const int textVMargin   = 2;
   QFontMetrics fm(options()->font(isActive(), isTool()));
 
   // border size
