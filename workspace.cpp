@@ -2816,7 +2816,9 @@ void Workspace::slotSwitchToDesktop( int i )
 
 void Workspace::slotWindowToDesktop( int i )
 {
-        if( i >= 1 && i <= numberOfDesktops() && popup_client )
+        if( i >= 1 && i <= numberOfDesktops() && popup_client
+            && ( popup_client->windowType() == NET::Normal
+                || popup_client->windowType() == NET::Dialog ))
                 sendClientToDesktop( popup_client, i );
 }
 
