@@ -124,8 +124,8 @@ class WindowRules
         SettingRule fullscreenrule;
         bool noborder;
         SettingRule noborderrule;
-        int fspleveladjust;
-        SettingRule fspleveladjustrule;
+        int fsplevel;
+        SettingRule fsplevelrule;
         bool acceptfocus;
         SettingRule acceptfocusrule;
         Options::MoveResizeMode moveresizemode;

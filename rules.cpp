@@ -50,7 +50,7 @@ WindowRules::WindowRules()
     , belowrule( DontCareRule )
     , fullscreenrule( DontCareRule )
     , noborderrule( DontCareRule )
-    , fspleveladjustrule( DontCareRule )
+    , fsplevelrule( DontCareRule )
     , acceptfocusrule( DontCareRule )
     , moveresizemoderule( DontCareRule )
     , closeablerule( DontCareRule )
@@ -95,6 +95,8 @@ WindowRules::WindowRules( KConfig& cfg )
     readFromCfg( cfg );
     }
 
+static int limit0to4( int i ) { return QMAX( 0, QMIN( 4, i )); }
+
 void WindowRules::readFromCfg( KConfig& cfg )
     {
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
@@ -129,7 +131,7 @@ void WindowRules::readFromCfg( KConfig& cfg )
     READ_SET_RULE( below, Bool, );
     READ_SET_RULE( fullscreen, Bool, );
     READ_SET_RULE( noborder, Bool, );
-    READ_FORCE_RULE( fspleveladjust, Num, );
+    READ_FORCE_RULE( fsplevel, Num, limit0to4 ); // fsp is 0-4
     READ_FORCE_RULE( acceptfocus, Bool, );
     READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
     READ_FORCE_RULE( closeable, Bool, );
@@ -200,7 +202,7 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_SET_RULE( below, );
     WRITE_SET_RULE( fullscreen, );
     WRITE_SET_RULE( noborder, );
-    WRITE_SET_RULE( fspleveladjust, );
+    WRITE_SET_RULE( fsplevel, );
     WRITE_SET_RULE( acceptfocus, );
     WRITE_SET_RULE( moveresizemode, Options::moveResizeModeToString );
     WRITE_SET_RULE( closeable, );
@@ -412,9 +414,7 @@ bool WindowRules::checkNoBorder( bool noborder, bool init ) const
 
 int WindowRules::checkFSP( int fsp ) const
     {
-    if( !checkForceRule( fspleveladjustrule ))
-        return fsp;
-    return QMIN( 4, QMAX( 0, fsp + fspleveladjust ));
+    return checkForceRule( fsplevelrule ) ? this->fsplevel : fsp;
     }
 
 bool WindowRules::checkAcceptFocus( bool focus ) const
