@@ -6,9 +6,6 @@
    keys->insert( name, i18n(name), QString::null, key3, key4 )
 #endif
 
-#define SHIFT Qt::SHIFT
-#define CTRL Qt::CTRL
-#define ALT Qt::ALT
 #define WIN KKey::QtWIN
 
 	keys->insert( "Program:kwin", i18n("System") );
@@ -24,11 +21,11 @@
 	keys->insert( "Group:Windows", i18n("Windows") );
 	DEF( I18N_NOOP("Window Operations Menu"),              ALT+Qt::Key_F3, ALT+Qt::Key_Menu, slotWindowOperations() );
 	DEF( I18N_NOOP("Window Close"),                        ALT+Qt::Key_F4, "Alt+Escape;Alt+F4", slotWindowClose() );
-	DEF( I18N_NOOP("Window Maximize"),                     0, "Win+Plus", slotWindowMaximize() );
-	DEF( I18N_NOOP("Window Maximize Vertical"),            0, "Win+Bar", slotWindowMaximizeVertical() );
-	DEF( I18N_NOOP("Window Maximize Horizontal"),          0, "Win+Equal", slotWindowMaximizeHorizontal() );
-	DEF( I18N_NOOP("Window Iconify"),                      0, "Win+Minus", slotWindowIconify() );
-	DEF( I18N_NOOP("Window Shade"),                        0, "Win+Underscore", slotWindowShade() );
+	DEF( I18N_NOOP("Window Maximize"),                     0, WIN+Qt::Key_Plus, slotWindowMaximize() );
+	DEF( I18N_NOOP("Window Maximize Vertical"),            0, WIN+Qt::Key_Bar, slotWindowMaximizeVertical() );
+	DEF( I18N_NOOP("Window Maximize Horizontal"),          0, WIN+Qt::Key_Equal, slotWindowMaximizeHorizontal() );
+	DEF( I18N_NOOP("Window Iconify"),                      0, WIN+Qt::Key_Minus, slotWindowIconify() );
+	DEF( I18N_NOOP("Window Shade"),                        0, WIN+Qt::Key_Underscore, slotWindowShade() );
 	DEF( I18N_NOOP("Window Move"),                         0, 0, slotWindowMove() );
 	DEF( I18N_NOOP("Window Resize"),                       0, 0, slotWindowResize() );
 	DEF( I18N_NOOP("Window Raise"),                        0, 0, slotWindowRaise() );
@@ -36,16 +33,16 @@
 	DEF( I18N_NOOP("Toggle Window Raise/Lower"),           0, 0, slotWindowRaiseOrLower() );
 
 	keys->insert( "Group:Window Desktop", i18n("Window & Desktop") );
-	DEF( I18N_NOOP("Window to Desktop 1"),                 0, "Win+Alt+F1", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 2"),                 0, "Win+Alt+F2", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 3"),                 0, "Win+Alt+F3", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 4"),                 0, "Win+Alt+F4", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 5"),                 0, "Win+Alt+F5", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 6"),                 0, "Win+Alt+F6", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 7"),                 0, "Win+Alt+F7", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 8"),                 0, "Win+Alt+F8", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 9"),                 0, "Win+Alt+F9", slotWindowToDesktop(int) );
-	DEF( I18N_NOOP("Window to Desktop 10"),                0, "Win+Alt+F10", slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 1"),                 0, WIN+ALT+Qt::Key_F1, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 2"),                 0, WIN+ALT+Qt::Key_F2, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 3"),                 0, WIN+ALT+Qt::Key_F3, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 4"),                 0, WIN+ALT+Qt::Key_F4, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 5"),                 0, WIN+ALT+Qt::Key_F5, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 6"),                 0, WIN+ALT+Qt::Key_F6, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 7"),                 0, WIN+ALT+Qt::Key_F7, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 8"),                 0, WIN+ALT+Qt::Key_F8, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 9"),                 0, WIN+ALT+Qt::Key_F9, slotWindowToDesktop(int) );
+	DEF( I18N_NOOP("Window to Desktop 10"),                0, WIN+ALT+Qt::Key_F10, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Desktop 11"),                0, 0, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Desktop 12"),                0, 0, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Desktop 13"),                0, 0, slotWindowToDesktop(int) );
@@ -81,38 +78,35 @@
 
 	keys->insert( "Group:Miscellaneous", i18n("Miscellaneous") );
 	DEF( I18N_NOOP("Mouse Emulation"),                     ALT+Qt::Key_F12, 0, slotMouseEmulation() );
-	DEF( I18N_NOOP("Kill Window"),                         ALT+CTRL+Qt::Key_Escape, "Win+Ctrl+Delete", slotKillWindow() );
+	DEF( I18N_NOOP("Kill Window"),                         ALT+CTRL+Qt::Key_Escape, WIN+CTRL+Qt::Key_Delete, slotKillWindow() );
 	DEF( I18N_NOOP("Window Screenshot"),                   ALT+Qt::Key_Print, ALT+Qt::Key_Print, slotGrabWindow() );
-	DEF( I18N_NOOP("Desktop Screenshot"),                  CTRL+Qt::Key_Print, "Win+Print", slotGrabDesktop() );
+	DEF( I18N_NOOP("Desktop Screenshot"),                  CTRL+Qt::Key_Print, WIN+Qt::Key_Print, slotGrabDesktop() );
 
 /*This belongs in taskbar rather than here, so it'll have to wait until after 2.2 is done.
   -- ellis
-DEF( I18N_NOOP("Switch to Window 1", "Win+1"));
-DEF( I18N_NOOP("Switch to Window 2", "Win+2"));
-DEF( I18N_NOOP("Switch to Window 3", "Win+3"));
-DEF( I18N_NOOP("Switch to Window 4", "Win+4"));
-DEF( I18N_NOOP("Switch to Window 5", "Win+5"));
-DEF( I18N_NOOP("Switch to Window 6", "Win+6"));
-DEF( I18N_NOOP("Switch to Window 7", "Win+7"));
-DEF( I18N_NOOP("Switch to Window 8", "Win+8"));
-DEF( I18N_NOOP("Switch to Window 9", "Win+9"));
+DEF( I18N_NOOP("Switch to Window 1", WIN+Qt::Key_1"));
+DEF( I18N_NOOP("Switch to Window 2", WIN+Qt::Key_2"));
+DEF( I18N_NOOP("Switch to Window 3", WIN+Qt::Key_3"));
+DEF( I18N_NOOP("Switch to Window 4", WIN+Qt::Key_4"));
+DEF( I18N_NOOP("Switch to Window 5", WIN+Qt::Key_5"));
+DEF( I18N_NOOP("Switch to Window 6", WIN+Qt::Key_6"));
+DEF( I18N_NOOP("Switch to Window 7", WIN+Qt::Key_7"));
+DEF( I18N_NOOP("Switch to Window 8", WIN+Qt::Key_8"));
+DEF( I18N_NOOP("Switch to Window 9", WIN+Qt::Key_9"));
 
 #ifdef WITH_LABELS
 DEF( I18N_NOOP("Window & Taskbar"Group:Window Desktop", 0);
 #endif
-DEF( I18N_NOOP("Window to Taskbar Position 1", "Win+Alt+1"));
-DEF( I18N_NOOP("Window to Taskbar Position 2", "Win+Alt+2"));
-DEF( I18N_NOOP("Window to Taskbar Position 3", "Win+Alt+3"));
-DEF( I18N_NOOP("Window to Taskbar Position 4", "Win+Alt+4"));
-DEF( I18N_NOOP("Window to Taskbar Position 5", "Win+Alt+5"));
-DEF( I18N_NOOP("Window to Taskbar Position 6", "Win+Alt+6"));
-DEF( I18N_NOOP("Window to Taskbar Position 7", "Win+Alt+7"));
-DEF( I18N_NOOP("Window to Taskbar Position 8", "Win+Alt+8"));
-DEF( I18N_NOOP("Window to Taskbar Position 9", "Win+Alt+9"));
+DEF( I18N_NOOP("Window to Taskbar Position 1", WIN+Qt::Key_Alt+1"));
+DEF( I18N_NOOP("Window to Taskbar Position 2", WIN+Qt::Key_Alt+2"));
+DEF( I18N_NOOP("Window to Taskbar Position 3", WIN+Qt::Key_Alt+3"));
+DEF( I18N_NOOP("Window to Taskbar Position 4", WIN+Qt::Key_Alt+4"));
+DEF( I18N_NOOP("Window to Taskbar Position 5", WIN+Qt::Key_Alt+5"));
+DEF( I18N_NOOP("Window to Taskbar Position 6", WIN+Qt::Key_Alt+6"));
+DEF( I18N_NOOP("Window to Taskbar Position 7", WIN+Qt::Key_Alt+7"));
+DEF( I18N_NOOP("Window to Taskbar Position 8", WIN+Qt::Key_Alt+8"));
+DEF( I18N_NOOP("Window to Taskbar Position 9", WIN+Qt::Key_Alt+9"));
 */
 
 #undef DEF
-#undef SHIFT
-#undef CTRL
-#undef ALT
 #undef WIN
