@@ -1,3 +1,6 @@
+#include <kconfig.h>
+#include <kglobal.h>
+
 #include "workspace.h"
 #include "client.h"
 #include "stdclient.h"
@@ -11,7 +14,6 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
-
 
 
 static Client* clientFactory( Workspace *ws, WId w )
@@ -36,7 +38,16 @@ static Client* clientFactory( Workspace *ws, WId w )
 	return c;
     }
 
-    return new StdClient( ws, w );
+    KConfig *config = KGlobal::config();
+    config->setGroup("style");
+    // well, it will be soon ;-)
+    QString tmpStr = config->readEntry("Plugin", "standard");
+    if(tmpStr == "standard")
+        return new StdClient( ws, w );
+    else if(tmpStr == "system")
+        return new SystemClient( ws, w );
+    else if(tmpStr == "be")
+        return new BeClient( ws, w );
 }
 
 Workspace::Workspace()
@@ -716,15 +727,19 @@ void Workspace::showPopup( const QPoint& pos, Client* c)
     popup_client = c;
     // TODO customize popup for the client
     int ret = popup->exec( pos );
-
+    KConfig *config = KGlobal::config();
+    config->setGroup("style");
     switch( ret ) {
     case 100:
+        config->writeEntry("Plugin", "standard");
 	setDecoration( 0 );
 	break;
     case 101:
+        config->writeEntry("Plugin", "be");
 	setDecoration( 1 );
 	break;
     case 102:
+        config->writeEntry("Plugin", "system");
 	setDecoration( 2 );
 	break;
     default:
