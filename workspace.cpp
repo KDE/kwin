@@ -521,6 +521,8 @@ void Workspace::removeClient( Client* c, allowed_t )
         last_active_client = 0;
     if( c == pending_take_activity )
         pending_take_activity = NULL;
+    if( c == delayfocus_client )
+        cancelDelayFocus();
 
     updateStackingOrder( true );
 
