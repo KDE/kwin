@@ -27,6 +27,9 @@ datadir = $(kde_datadir)/kwin
 
 data_DATA= eventsrc
 
+sounddir= $(kde_sounddir)
+sound_DATA = pop.wav
+
 dummy.cpp:
 	echo > dummy.cpp
 

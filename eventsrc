@@ -100,12 +100,14 @@ default_presentation=0
 [sticky]
 Name=Window Sticky
 Comment=A Window is Made Sticky
-default_presentation=0
+default_presentation=1
+soundfile=pop.wav
 
 [unsticky]
 Name=Window Unsticky
 Comment=A Window is Made Unsticky
-default_presentation=0
+default_presentation=1
+soundfile=pop.wav
 
 [transnew]
 Name=Window Trans New
