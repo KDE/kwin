@@ -960,7 +960,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         {
         // Search in focus chain
 
-        if ( focus_chain.contains( active_client ) && active_client->isShown()
+        if ( focus_chain.contains( active_client ) && active_client->isShown( true )
             && active_client->isOnCurrentDesktop())
             {
             c = active_client; // the requestFocus below will fail, as the client is already active
@@ -970,7 +970,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
             {
             for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) 
                 {
-                if ( (*it)->isShown() && !(*it)->isOnAllDesktops() && (*it)->isOnCurrentDesktop()) 
+                if ( (*it)->isShown( false ) && !(*it)->isOnAllDesktops() && (*it)->isOnCurrentDesktop()) 
                     {
                     c = *it;
                     break;
@@ -982,7 +982,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
             {
             for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) 
                 {
-                if ( (*it)->isShown() && (*it)->isOnCurrentDesktop()) 
+                if ( (*it)->isShown( false ) && (*it)->isOnCurrentDesktop()) 
                     {
                     c = *it;
                     break;
@@ -994,7 +994,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     //if "unreasonable focus policy"
     // and active_client is on_all_desktops and under mouse (hence == old_active_client),
     // conserve focus (thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
-    else if( active_client && active_client->isShown() && active_client->isOnCurrentDesktop())
+    else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop())
       c= active_client;
 
     if( c != active_client )

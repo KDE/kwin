@@ -157,7 +157,7 @@ void Placement::placeSmart(Client* c)
             for(l = m_WorkspacePtr->stackingOrder().begin(); l != m_WorkspacePtr->stackingOrder().end() ; ++l) 
                 {
                 if((*l)->isOnDesktop(desktop) &&
-                   (*l)->isShown() && (*l) != c) 
+                   (*l)->isShown( false ) && (*l) != c) 
                     {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -214,7 +214,7 @@ void Placement::placeSmart(Client* c)
                 {
 
                 if ((*l)->isOnDesktop(desktop) &&
-                     (*l)->isShown() &&  (*l) != c) 
+                     (*l)->isShown( false ) &&  (*l) != c) 
                     {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -248,7 +248,7 @@ void Placement::placeSmart(Client* c)
             for(l = m_WorkspacePtr->stackingOrder().begin(); l != m_WorkspacePtr->stackingOrder().end() ; ++l) 
                 {
                 if((*l)->isOnDesktop(desktop) &&
-                    (*l) != c   &&  c->isShown()) 
+                    (*l) != c   &&  c->isShown( false )) 
                     {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -582,7 +582,7 @@ int Workspace::packPositionLeft( const Client* cl, int oldx, bool left_edge ) co
          it != clients.end();
          ++it)
         {
-        if( !(*it)->isShown() || !(*it)->isOnDesktop( active_client->desktop()))
+        if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( active_client->desktop()))
             continue;
         int x = left_edge ? (*it)->geometry().right() + 1 : (*it)->geometry().left() - 1;
         if( x > newx && x < oldx
@@ -605,7 +605,7 @@ int Workspace::packPositionRight( const Client* cl, int oldx, bool right_edge ) 
          it != clients.end();
          ++it)
         {
-        if( !(*it)->isShown() || !(*it)->isOnDesktop( cl->desktop()))
+        if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( cl->desktop()))
             continue;
         int x = right_edge ? (*it)->geometry().left() - 1 : (*it)->geometry().right() + 1;
         if( x < newx && x > oldx
@@ -628,7 +628,7 @@ int Workspace::packPositionUp( const Client* cl, int oldy, bool top_edge ) const
          it != clients.end();
          ++it)
         {
-        if( !(*it)->isShown() || !(*it)->isOnDesktop( cl->desktop()))
+        if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( cl->desktop()))
             continue;
         int y = top_edge ? (*it)->geometry().bottom() + 1 : (*it)->geometry().top() - 1;
         if( y > newy && y < oldy
@@ -651,7 +651,7 @@ int Workspace::packPositionDown( const Client* cl, int oldy, bool bottom_edge ) 
          it != clients.end();
          ++it)
         {
-        if( !(*it)->isShown() || !(*it)->isOnDesktop( cl->desktop()))
+        if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( cl->desktop()))
             continue;
         int y = bottom_edge ? (*it)->geometry().top() - 1 : (*it)->geometry().bottom() + 1;
         if( y < newy && y > oldy

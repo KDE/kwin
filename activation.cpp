@@ -316,7 +316,7 @@ void Workspace::requestFocus( Client* c, bool force )
         requestFocus( modal, force );
         return;
         }
-    if ( c->isShown() ) 
+    if ( c->isShown( false ) ) 
         {
         c->takeFocus( force, Allowed );
         should_get_focus.append( c );
@@ -368,7 +368,7 @@ void Workspace::clientHidden( Client* c )
                  it != focus_chain.end();
                  --it )
                 {
-                if( !(*it)->isShown() || !(*it)->isOnCurrentDesktop())
+                if( !(*it)->isShown( false ) || !(*it)->isOnCurrentDesktop())
                     continue;
                 if( mainwindows.contains( *it ))
                     {

@@ -98,9 +98,8 @@ class Client : public QObject, public KDecorationDefines
         bool isOnAllDesktops() const;
         void setOnAllDesktops( bool set );
 
-    // !isShade() && !isMinimized() && not hidden, i.e. normally visible on some virtual desktop
-    // SELI this may possibly clash with QWidget::isShown(), as long as Client is a QWidget
-        bool isShown() const;
+    // !isMinimized() && not hidden, i.e. normally visible on some virtual desktop
+        bool isShown( bool shaded_is_shown ) const;
 
         enum ShadeMode
             {
@@ -594,9 +593,9 @@ inline bool Client::isOnDesktop( int d ) const
     }
 
 inline
-bool Client::isShown() const
+bool Client::isShown( bool shaded_is_shown ) const
     {
-    return !isMinimized() && !isShade() && !hidden;
+    return !isMinimized() && ( !isShade() || shaded_is_shown ) && !hidden;
     }
 
 inline

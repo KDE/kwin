@@ -190,7 +190,7 @@ Client* Workspace::topClientOnDesktop( int desktop ) const
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) 
         {
         if ( (*it)->isOnDesktop( desktop ) && !(*it)->isSpecialWindow()
-            && (*it)->isShown() && (*it)->wantsTabFocus())
+            && (*it)->isShown( false ) && (*it)->wantsTabFocus())
             return *it;
         }
     return 0;
@@ -204,7 +204,7 @@ Client* Workspace::findDesktop( bool topmost, int desktop ) const
         for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
             {
             if ( (*it)->isOnDesktop( desktop ) && (*it)->isDesktop()
-                && (*it)->isShown())
+                && (*it)->isShown( true ))
                 return *it;
             }
         }
@@ -213,7 +213,7 @@ Client* Workspace::findDesktop( bool topmost, int desktop ) const
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
             {
             if ( (*it)->isOnDesktop( desktop ) && (*it)->isDesktop()
-                && (*it)->isShown())
+                && (*it)->isShown( true ))
                 return *it;
             }
         }
@@ -226,7 +226,7 @@ void Workspace::raiseOrLowerClient( Client *c)
     Client* topmost = NULL;
     Q_ASSERT( block_stacking_updates == 0 );
     if ( most_recently_raised && stacking_order.contains( most_recently_raised ) &&
-         most_recently_raised->isShown() && c->isOnCurrentDesktop())
+         most_recently_raised->isShown( true ) && c->isOnCurrentDesktop())
         topmost = most_recently_raised;
     else
         topmost = topClientOnDesktop( c->isOnAllDesktops() ? currentDesktop() : c->desktop());

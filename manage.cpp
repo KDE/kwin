@@ -323,7 +323,7 @@ bool Client::manage( Window w, bool isMapped )
         for( ClientList::ConstIterator it = mainclients.begin();
              it != mainclients.end();
              ++it )
-            if( (*it)->isShown())
+            if( (*it)->isShown( true ))
                 init_minimize = false; // SELI even e.g. for NET::Utility?
         }
 
@@ -430,7 +430,7 @@ bool Client::manage( Window w, bool isMapped )
 
     user_time = readUserTimeMapTimestamp( asn_valid ? &asn_data : NULL, session );
 
-    if ( isShown() && !doNotShow )
+    if ( isShown( true ) && !doNotShow )
         {
         if( isDialog())
             Notify::raise( Notify::TransNew );

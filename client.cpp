@@ -486,7 +486,7 @@ void Client::hideClient( bool hide )
         setSkipTaskbar( original_skip_taskbar, false );
         if( isOnCurrentDesktop())
             {
-            if( isShown())
+            if( isShown( false ))
                 setMappingState( NormalState );
             rawShow(); // is either visible or shaded
             }
@@ -507,7 +507,7 @@ bool Client::isMinimizable() const
         for( ClientList::ConstIterator it = mainclients.begin();
              it != mainclients.end();
              ++it )
-            if( (*it)->isShown())
+            if( (*it)->isShown( true ))
                 return false;
         }
     return true;
@@ -548,7 +548,7 @@ void Client::unminimize()
         {
         if( mainClients().isEmpty())
             animateMinimizeOrUnminimize( FALSE );
-        if( isShown())
+        if( isShown( false ))
             setMappingState( NormalState );
         rawShow(); // is either visible or shaded
         }
@@ -697,12 +697,12 @@ void Client::setShade( ShadeMode mode )
 
     if( shade_mode == ShadeNormal )
         {
-        if ( isShown() && isOnCurrentDesktop())
+        if ( isShown( true ) && isOnCurrentDesktop())
                 Notify::raise( Notify::ShadeUp );
         }
     else if( shade_mode == ShadeNone )
         {
-        if( isShown() && isOnCurrentDesktop())
+        if( isShown( true ) && isOnCurrentDesktop())
                 Notify::raise( Notify::ShadeDown );
         }
 
@@ -772,8 +772,8 @@ void Client::setShade( ShadeMode mode )
     --block_geometry;
     setGeometry( geometry(), ForceGeometrySet );
     info->setState( isShade() ? NET::Shaded : 0, NET::Shaded );
-    info->setState( isShown() ? 0 : NET::Hidden, NET::Hidden );
-    setMappingState( isShown() && isOnCurrentDesktop() ? NormalState : IconicState );
+    info->setState( isShown( false ) ? 0 : NET::Hidden, NET::Hidden );
+    setMappingState( isShown( false ) && isOnCurrentDesktop() ? NormalState : IconicState );
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     decoration->shadeChange();
@@ -1083,7 +1083,7 @@ void Client::setDesktop( int desktop )
     info->setDesktop( desktop );
     if(( was_desk == NET::OnAllDesktops ) != ( desktop == NET::OnAllDesktops ))
         { // onAllDesktops changed
-        if ( isShown())
+        if ( isShown( true ))
             Notify::raise( isOnAllDesktops() ? Notify::OnAllDesktops : Notify::NotOnAllDesktops );
         workspace()->updateOnAllDesktopsOfTransients( this );
         }
