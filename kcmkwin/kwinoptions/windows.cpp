@@ -143,6 +143,9 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
                                       " <li><em>Focus strictly under mouse:</em> Only the window under the mouse pointer is"
                                       " active. If the mouse points nowhere, nothing has focus."
                                       " </ul>"
+                                      "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent certain"
+                                      " features such as the Alt+Tab walk through windows dialog in the KDE mode"
+                                      " from working properly."
                          );
     QWhatsThis::add( focusCombo, wtstr);
     QWhatsThis::add(fLabel, wtstr);
