@@ -2379,8 +2379,6 @@ void Client::setShade( bool s, int hus )
         if ( !wasStaticContents )
             clearWFlags( WStaticContents );
         resize (s );
-        if (hus)
-            workspace()->requestFocus( NULL );
     } else {
         int h = height();
         QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
