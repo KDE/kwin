@@ -383,7 +383,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             c->minimize();
             break;
         case Options::ShadeOp:
-            c->toggleShade();
+            c->performMouseCommand( Options::MouseShade, QCursor::pos());
             break;
         case Options::OnAllDesktopsOp:
             c->setOnAllDesktops( !c->isOnAllDesktops() );
@@ -429,6 +429,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             workspace()->lowerClient( this );
             break;
         case Options::MouseShade :
+            delete shadeHoverTimer;
+            shadeHoverTimer = 0;
             toggleShade();
             break;
         case Options::MouseOperationsMenu:
