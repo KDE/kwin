@@ -842,7 +842,7 @@ bool Client::windowEvent( XEvent * e)
 	fetchName();
     if ( ( dirty & NET::WMStrut ) != 0 )
 	workspace()->updateClientArea();
-    if ( ( dirty & NET::WMIcon) != 0 ) 
+    if ( ( dirty & NET::WMIcon) != 0 )
 	getWMHints();
 
     switch (e->type) {
@@ -858,21 +858,21 @@ bool Client::windowEvent( XEvent * e)
     case ButtonRelease:
 	break;
     case FocusIn:
-	if ( e->xfocus.mode == NotifyUngrab )
-	    break; // we don't care
-	if ( e->xfocus.detail == NotifyPointer )
-	    break;  // we don't care
+ 	if ( e->xfocus.mode == NotifyUngrab )
+ 	    break; // we don't care
+ 	if ( e->xfocus.detail == NotifyPointer )
+ 	    break;  // we don't care
 	setActive( TRUE );
 	break;
     case FocusOut:
-	if ( e->xfocus.mode == NotifyGrab )
-	    break; // we don't care
+ 	if ( e->xfocus.mode == NotifyGrab )
+ 	    break; // we don't care
 	if ( isShade() )
 	    break; // we neither
-	if ( e->xfocus.detail != NotifyNonlinear )
-	    return TRUE; // hack for motif apps like netscape
-	if ( QApplication::activePopupWidget() )
-	    break;
+ 	if ( e->xfocus.detail != NotifyNonlinear )
+ 	    return TRUE; // hack for motif apps like netscape
+ 	if ( QApplication::activePopupWidget() )
+ 	    break;
 	setActive( FALSE );
 	break;
     case ReparentNotify:
@@ -1976,7 +1976,7 @@ bool Client::x11Event( XEvent * e)
 	    autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
 	}
 
-	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse	 && ( isDesktop() || isDock() || isMenu() ) )
+	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isMenu() ) )
 	    return TRUE;
 
 	workspace()->requestFocus( this );

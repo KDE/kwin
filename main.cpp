@@ -155,6 +155,9 @@ bool Application::x11EventFilter( XEvent *e )
     case PropertyNotify:
 	kwin_time = e->xproperty.time;
 	break;
+    case EnterNotify:
+    case LeaveNotify:
+	kwin_time = e->xcrossing.time;
     default:
 	break;
     }
