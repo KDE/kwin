@@ -384,9 +384,9 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
 
         const QRect maxRect = clientArea(MovementArea, c->rect().center(), c->desktop());
         const int xmin = maxRect.left();
-        const int xmax = maxRect.right()+1;               //desk size
+        const int xmax = maxRect.right();               //desk size
         const int ymin = maxRect.top();
-        const int ymax = maxRect.bottom()+1;
+        const int ymax = maxRect.bottom();
 
         const int cx(moveResizeGeom.left());
         const int cy(moveResizeGeom.top());
@@ -485,10 +485,10 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
                    !(*l)->isMinimized()
                     && (*l) != c )
                     {
-                    lx = (*l)->x();
-                    ly = (*l)->y();
-                    lrx = lx + (*l)->width();
-                    lry = ly + (*l)->height();
+                    lx = (*l)->x()-1;
+                    ly = (*l)->y()-1;
+                    lrx =(*l)->x() + (*l)->width();
+                    lry =(*l)->y() + (*l)->height();
 
 #define WITHIN_HEIGHT ((( newcy <= lry ) && ( newcy  >= ly  ))  || \
                          (( newry >= ly  ) && ( newry  <= lry ))  || \
