@@ -16,7 +16,10 @@ messages:
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkwm.pot
 
 data_DATA = kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  
-datadir = $(kde_appsdir)/Settings/Windows
+datadir = $(kde_appsdir)/.hidden
+
+data2_DATA = kwinoptions.desktop
+data2dir = $(kde_appsdir)/Settings/Desktop
 
 install-data-local: uninstall.desktop
 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows
