@@ -41,10 +41,12 @@ namespace Keramik {
 	                   BorderLeft, BorderRight, NumTiles };
 
 	enum Button      { MenuButton=0, OnAllDesktopsButton, HelpButton, MinButton,
-	                   MaxButton, CloseButton, NumButtons };
+	                   MaxButton, CloseButton, AboveButton, BelowButton, ShadeButton,
+	                   NumButtons };
 
 	enum ButtonDeco  { Menu=0, OnAllDesktops, NotOnAllDesktops, Help, Minimize, Maximize,
-	                   Restore, Close, NumButtonDecos };
+	                   Restore, Close, AboveOn, AboveOff, BelowOn, BelowOff, ShadeOn, ShadeOff,
+                           NumButtonDecos };
 
 	struct SettingsCache
 	{
@@ -152,7 +154,7 @@ namespace Keramik {
 			virtual void captionChange();
                         virtual void maximizeChange();
                         virtual void desktopChange();
-                        virtual void shadeChange() {};
+                        virtual void shadeChange();
 
 		private:
 			void createLayout();
@@ -175,6 +177,11 @@ namespace Keramik {
 		private slots:
 			void menuButtonPressed();
 			void slotMaximize();
+			void slotAbove();
+			void slotBelow();
+			void slotShade();
+			void keepAboveChange( bool );
+			void keepBelowChange( bool );
 
 		private:
 			QSpacerItem   *topSpacer, *titlebar;

@@ -111,6 +111,47 @@ namespace Keramik
 	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	   0x00, 0x00, 0x00};
 
+	const unsigned char above_on_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x80, 0x01, 0x00, 0xe0, 0x07, 0x00, 0xc0, 0x03, 0x00, 0x80, 0x01, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00 };
+
+	const unsigned char above_off_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x01, 0x00, 0xc0, 0x03, 0x00,
+	   0xe0, 0x07, 0x00, 0x80, 0x01, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00 };
+
+	const unsigned char below_on_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x01, 0x00, 0xc0, 0x03, 0x00,
+	   0xe0, 0x07, 0x00, 0x80, 0x01, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00 };
+
+	const unsigned char below_off_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x80, 0x01, 0x00, 0xe0, 0x07, 0x00, 0xc0, 0x03, 0x00, 0x80, 0x01, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00 };
+
+	const unsigned char shade_on_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x10, 0x08, 0x00, 0x10, 0x08, 0x00, 0x10, 0x08, 0x00, 0x10, 0x08, 0x00,
+	   0x10, 0x08, 0x00, 0x10, 0x08, 0x00, 0x10, 0x08, 0x00, 0xf0, 0x0f, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00 };
+
+	const unsigned char shade_off_bits[] = {
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x0f, 0x00, 0xf0, 0x0f, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	   0x00, 0x00, 0x00 };
 
 	KeramikHandler *clientHandler = NULL;
 	bool keramik_initialized = false;
@@ -141,6 +182,12 @@ KeramikHandler::KeramikHandler()
 	buttonDecos[ Maximize ]         = new QBitmap( 17, 17, maximize_bits,   true );
 	buttonDecos[ Restore ]          = new QBitmap( 17, 17, restore_bits,    true );
 	buttonDecos[ Close ]            = new QBitmap( 17, 17, close_bits,      true );
+	buttonDecos[ AboveOn ]          = new QBitmap( 17, 17, above_on_bits,   true );
+	buttonDecos[ AboveOff ]         = new QBitmap( 17, 17, above_off_bits,  true );
+	buttonDecos[ BelowOn ]          = new QBitmap( 17, 17, below_on_bits,   true );
+	buttonDecos[ BelowOff ]         = new QBitmap( 17, 17, below_off_bits,  true );
+	buttonDecos[ ShadeOn ]          = new QBitmap( 17, 17, shade_on_bits,   true );
+	buttonDecos[ ShadeOff ]         = new QBitmap( 17, 17, shade_off_bits,  true );
 
 	// Selfmask the bitmaps
 	for ( int i = 0; i < NumButtonDecos; i++ )
@@ -776,7 +823,7 @@ void KeramikButton::drawButton( QPainter *p )
 			break;
 
 		case OnAllDesktopsButton:
-			deco = clientHandler->buttonDeco( isOn() ? NotOnAllDesktops : OnAllDesktops );
+			deco = clientHandler->buttonDeco( client->isOnAllDesktops() ? NotOnAllDesktops : OnAllDesktops );
 			break;
 
 		case HelpButton:
@@ -798,6 +845,18 @@ void KeramikButton::drawButton( QPainter *p )
 
 		case CloseButton:
 			deco = clientHandler->buttonDeco( Close );
+			break;
+
+		case AboveButton:
+			deco = clientHandler->buttonDeco( client->keepAbove() ? AboveOn : AboveOff );
+			break;
+
+		case BelowButton:
+			deco = clientHandler->buttonDeco( client->keepBelow() ? BelowOn : BelowOff );
+			break;
+
+		case ShadeButton:
+			deco = clientHandler->buttonDeco( client->isSetShade() ? ShadeOn : ShadeOff );
 			break;
 
 		default:
@@ -822,6 +881,9 @@ KeramikClient::KeramikClient( KDecorationBridge* bridge, KDecorationFactory* fac
 
 void KeramikClient::init()
 {
+	connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
+	connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
+
         createMainWidget( WStaticContents | WResizeNoErase | WRepaintNoErase );
 	widget()->installEventFilter( this );
 
@@ -997,6 +1059,34 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 					button[CloseButton] = new KeramikButton( this, "close", CloseButton, i18n("Close") );
 					connect( button[CloseButton], SIGNAL( clicked() ), SLOT( closeWindow() ) );
 					layout->addWidget( button[CloseButton] );
+				}
+				break;
+
+			// Above button
+			case 'F' :
+				if ( !button[AboveButton]) {
+					button[AboveButton] = new KeramikButton( this, "above", AboveButton, i18n("Keep Above Others") );
+					connect( button[AboveButton], SIGNAL( clicked() ), SLOT( slotAbove() ) );
+					layout->addWidget( button[AboveButton] );
+				}
+				break;
+
+			// Below button
+			case 'B' :
+				if ( !button[BelowButton]) {
+					button[BelowButton] = new KeramikButton( this, "below", BelowButton, i18n("Keep Below Others") );
+					connect( button[BelowButton], SIGNAL( clicked() ), SLOT( slotBelow() ) );
+					layout->addWidget( button[BelowButton] );
+				}
+				break;
+
+			// Shade button
+			case 'L' :
+				if ( !button[ShadeButton] && isShadeable() ) {
+					button[ShadeButton] = new KeramikButton( this, "shade", ShadeButton,
+                                            isSetShade() ? i18n("Unshade") : i18n( "Shade" ));
+					connect( button[ShadeButton], SIGNAL( clicked() ), SLOT( slotShade() ) );
+					layout->addWidget( button[ShadeButton] );
 				}
 				break;
 
@@ -1308,9 +1398,35 @@ void KeramikClient::desktopChange()
 {
 	if ( button[ OnAllDesktopsButton ] )
 		{
+                button[ OnAllDesktopsButton ]->repaint( true );
 		QToolTip::remove( button[ OnAllDesktopsButton ] );
 		QToolTip::add( button[ OnAllDesktopsButton ], isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops") );
 		}
+}
+
+
+void KeramikClient::shadeChange()
+{
+	if ( button[ ShadeButton ] )
+		{
+                button[ ShadeButton ]->repaint( true );
+		QToolTip::remove( button[ ShadeButton ] );
+		QToolTip::add( button[ ShadeButton ], isSetShade() ? i18n("Unshade") : i18n("Shade") );
+		}
+}
+
+
+void KeramikClient::keepAboveChange( bool )
+{
+	if ( button[ AboveButton ] )
+                button[ AboveButton ]->repaint( true );
+}
+
+
+void KeramikClient::keepBelowChange( bool )
+{
+	if ( button[ BelowButton ] )
+                button[ BelowButton ]->repaint( true );
 }
 
 
@@ -1345,6 +1461,27 @@ void KeramikClient::slotMaximize()
 			maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
 			break;
 	}
+}
+
+
+void KeramikClient::slotAbove()
+{
+    setKeepAbove( !keepAbove());
+    button[ AboveButton ]->repaint( true );
+}
+
+
+void KeramikClient::slotBelow()
+{
+    setKeepBelow( !keepBelow());
+    button[ BelowButton ]->repaint( true );
+}
+
+
+void KeramikClient::slotShade()
+{
+    setShade( !isSetShade());
+    button[ ShadeButton ]->repaint( true );
 }
 
 
