@@ -80,7 +80,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
     fprintf(stderr, "kwin: %s(0x%lx): %s\n", req, e->resourceid, msg);
 
     if (initting) {
-        fprintf(stderr, i18n("kwin: failure during initialisation; aborting").local8Bit());
+        fprintf(stderr, i18n("kwin: failure during initialization; aborting").local8Bit());
         exit(1);
     }
     return 0;
