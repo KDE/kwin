@@ -286,7 +286,7 @@ void Workspace::init()
 	NET::WMIconGeometry |
 	NET::WMIcon |
 	NET::WMPid |
-	NET::WMKDEDockWinFor
+	NET::WMKDESystemTrayWinFor
 	;
 	
     rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
@@ -315,7 +315,7 @@ void Workspace::init()
 	if (attr.override_redirect )
 	    continue;
 	if (attr.map_state != IsUnmapped) {
-	    if ( addDockwin( wins[i] ) )
+	    if ( addSystemTrayWin( wins[i] ) )
 		continue;
 	    Client* c = clientFactory( wins[i] );
 	    if ( c != desktop_client ) {
@@ -403,8 +403,8 @@ bool Workspace::workspaceEvent( XEvent * e )
 	if ( c )
 	    return c->windowEvent( e );
 
-	// check for dock windows
- 	if ( removeDockwin( e->xunmap.window ) )
+	// check for system tray windows
+ 	if ( removeSystemTrayWin( e->xunmap.window ) )
  	    return TRUE;
 
 	if ( e->xunmap.event == root ) {
@@ -434,7 +434,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	//window manager who does the reparenting.
 	return TRUE;
     case DestroyNotify:
-	if ( removeDockwin( e->xdestroywindow.window ) )
+	if ( removeSystemTrayWin( e->xdestroywindow.window ) )
 	    return TRUE;
 	return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
@@ -442,7 +442,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	c = findClient( e->xmaprequest.window );
 	if ( !c ) {
 	    if ( e->xmaprequest.parent == root ) {
-		if ( addDockwin( e->xmaprequest.window ) )
+		if ( addSystemTrayWin( e->xmaprequest.window ) )
 		    return TRUE;
 		c = clientFactory( e->xmaprequest.window );
 		if ( root != qt_xrootwin() ) {
@@ -1764,37 +1764,37 @@ void Workspace::propagateClients( bool onlyStacking )
 
 
 /*!
-  Check whether \a w is a dock window. If so, add it to the respective
+  Check whether \a w is a system tray window. If so, add it to the respective
   datastructures and propagate it to the world.
  */
-bool Workspace::addDockwin( WId w )
+bool Workspace::addSystemTrayWin( WId w )
 {
-    if ( dockwins.contains( w ) )
+    if ( systemTrayWins.contains( w ) )
 	return TRUE;
 
-    NETWinInfo ni( qt_xdisplay(), w, root, NET::WMKDEDockWinFor );
-    WId dockFor = ni.kdeDockWinFor();
-    if ( !dockFor )
+    NETWinInfo ni( qt_xdisplay(), w, root, NET::WMKDESystemTrayWinFor );
+    WId trayWinFor = ni.kdeSystemTrayWinFor();
+    if ( !trayWinFor )
  	return FALSE;
-    dockwins.append( DockWindow( w, dockFor ) );
+    systemTrayWins.append( SystemTrayWindow( w, trayWinFor ) );
     XSelectInput( qt_xdisplay(), w,
 		  StructureNotifyMask
 		  );
     XAddToSaveSet( qt_xdisplay(), w );
-    propagateDockwins();
+    propagateSystemTrayWins();
     return TRUE;
 }
 
-/*!
-  Check whether \a w is a dock window. If so, remove it from the
-  respective datastructures and propagate this to the world.
+/*!  
+  Check whether \a w is a system tray window. If so, remove it from
+  the respective datastructures and propagate this to the world.
  */
-bool Workspace::removeDockwin( WId w )
+bool Workspace::removeSystemTrayWin( WId w )
 {
-    if ( !dockwins.contains( w ) )
+    if ( !systemTrayWins.contains( w ) )
 	return FALSE;
-    dockwins.remove( w );
-    propagateDockwins();
+    systemTrayWins.remove( w );
+    propagateSystemTrayWins();
     return TRUE;
 }
 
@@ -1806,25 +1806,25 @@ bool Workspace::removeDockwin( WId w )
  */
 bool Workspace::iconifyMeansWithdraw( Client* c)
 {
-    for ( DockWindowList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
-	if ( (*it).dockFor == c->window() )
+    for ( SystemTrayWindowList::ConstIterator it = systemTrayWins.begin(); it != systemTrayWins.end(); ++it ) {
+	if ( (*it).winFor == c->window() )
 	    return TRUE;
     }
     return FALSE;
 }
 
 /*!
-  Propagates the dockwins to the world
+  Propagates the systemTrayWins to the world
  */
-void Workspace::propagateDockwins()
+void Workspace::propagateSystemTrayWins()
 {
-    WId* cl = new WId[ dockwins.count()];
+    WId* cl = new WId[ systemTrayWins.count()];
     int i = 0;
-    for ( DockWindowList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
-	cl[i++] =  (*it).dockWin;
+    for ( SystemTrayWindowList::ConstIterator it = systemTrayWins.begin(); it != systemTrayWins.end(); ++it ) {
+	cl[i++] =  (*it).win;
     }
 
-    rootInfo->setKDEDockingWindows( (Window*) cl, i );
+    rootInfo->setKDESystemTrayWindows( (Window*) cl, i );
     delete [] cl;
 }
 

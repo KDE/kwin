@@ -28,26 +28,26 @@ class RootInfo;
 
 typedef QValueList<Client*> ClientList;
 
-class DockWindow
+class SystemTrayWindow
 {
 public:
-    DockWindow()
-	: dockWin(0),dockFor(0)
+    SystemTrayWindow()
+	: win(0),winFor(0)
     {}
-    DockWindow( WId w )
-	: dockWin(w),dockFor(0)
+    SystemTrayWindow( WId w )
+	: win(w),winFor(0)
     {}
-    DockWindow( WId w, WId wf  )
-	: dockWin(w),dockFor(wf)
+    SystemTrayWindow( WId w, WId wf  )
+	: win(w),winFor(wf)
     {}
 
-    bool operator==( const DockWindow& other )
-    { return dockWin == other.dockWin; }
-    WId dockWin;
-    WId dockFor;
+    bool operator==( const SystemTrayWindow& other )
+    { return win == other.win; }
+    WId win;
+    WId winFor;
 };
 
-typedef QValueList<DockWindow> DockWindowList;
+typedef QValueList<SystemTrayWindow> SystemTrayWindowList;
 
 
 struct SessionInfo
@@ -174,7 +174,7 @@ public:
     void cascadeDesktop();
     void unclutterDesktop();
     void reconfigure();
-    
+
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -238,10 +238,10 @@ private:
 
     void propagateClients( bool onlyStacking = FALSE);
 
-    bool addDockwin( WId w );
-    bool removeDockwin( WId w );
-    void propagateDockwins();
-    DockWindow findDockwin( WId w );
+    bool addSystemTrayWin( WId w );
+    bool removeSystemTrayWin( WId w );
+    void propagateSystemTrayWins();
+    SystemTrayWindow findSystemTrayWin( WId w );
 
     //CT needed for cascading+
     struct CascadingInfo {
@@ -257,7 +257,7 @@ private:
 
     // ------------------
 
-    DockWindowList dockwins;
+    SystemTrayWindowList systemTrayWins;
 
     int current_desktop;
     int number_of_desktops;
