@@ -40,9 +40,9 @@ const QColor& Options::color(ColorType type, bool active)
 const QFont& Options::font(bool active, bool small)
 {
     if ( small )
-	return(active ? activeFontSmall : inactiveFontSmall);
+        return(active ? activeFontSmall : inactiveFontSmall);
     else
-	return(active ? activeFont : inactiveFont);
+        return(active ? activeFont : inactiveFont);
 }
 
 const QColorGroup& Options::colorGroup(ColorType type, bool active)
@@ -151,16 +151,16 @@ void Options::reload()
     val = config->readEntry ("FocusPolicy", "ClickToFocus");
     focusPolicy = ClickToFocus; // what a default :-)
     if ( val == "FocusFollowsMouse" )
-	focusPolicy = FocusFollowsMouse;
+        focusPolicy = FocusFollowsMouse;
     else if ( val == "FocusUnderMouse" )
-	focusPolicy = FocusUnderMouse;
+        focusPolicy = FocusUnderMouse;
     else if ( val == "FocusStrictlyUnderMouse" )
-	focusPolicy = FocusStrictlyUnderMouse;
+        focusPolicy = FocusStrictlyUnderMouse;
 
     val = config->readEntry ("AltTabStyle", "KDE");
     altTabStyle = KDE; // what a default :-)
     if ( val == "CDE" )
-	altTabStyle = CDE;
+        altTabStyle = CDE;
 
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;
@@ -175,7 +175,7 @@ void Options::reload()
     autoRaise = config->readBoolEntry("AutoRaise", FALSE );
     autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
 
-    shadeHover = config->readBoolEntry("ShadeHover", TRUE );
+    shadeHover = config->readBoolEntry("ShadeHover", FALSE );
     shadeHoverInterval = config->readNumEntry("ShadeHoverInterval", 250 );
 
     // important: autoRaise implies ClickRaise
@@ -190,15 +190,15 @@ void Options::reload()
 
     ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
 
-    
+
     // desktop settings
-    
+
     config->setGroup("Desktops");
     // Enable the grab of control-TAB?
     useControlTab = config->readBoolEntry ("ControlTab", TRUE);
     desktopRows = config->readNumEntry( "DesktopRows", 2 );
     if ( desktopRows < 1 )
-	desktopRows = 1;
+        desktopRows = 1;
 
     // Mouse bindings
     config->setGroup( "MouseBindings");
@@ -221,21 +221,21 @@ void Options::reload()
 
 Options::WindowOperation Options::windowOperation(const QString &name){
     if (name == "Move")
-	return MoveOp;
+        return MoveOp;
     else if (name == "Resize")
-	return ResizeOp;
+        return ResizeOp;
     else if (name == "Maximize")
-	return MaximizeOp;
+        return MaximizeOp;
     else if (name == "Iconify")
-	return IconifyOp;
+        return IconifyOp;
     else if (name == "Close")
-	return CloseOp;
+        return CloseOp;
     else if (name == "Sticky")
-	return StickyOp;
+        return StickyOp;
     else if (name == "Shade")
-	return ShadeOp;
+        return ShadeOp;
     else if (name == "Operations")
-	return OperationsOp;
+        return OperationsOp;
     return NoOp;
 }
 
