@@ -43,6 +43,7 @@ Options* options;
 
 Atoms* atoms;
 
+extern Time qt_x_time; // workaround for Qt < 2.3.2
 Time kwin_time = CurrentTime;
 int kwin_screen_number = -1;
 
@@ -103,6 +104,7 @@ void kwin_updateTime()
     XEvent ev;
     XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
     kwin_time = ev.xproperty.time;
+    qt_x_time = kwin_time;
 }
 
 
@@ -147,20 +149,25 @@ bool Application::x11EventFilter( XEvent *e )
     case ButtonPress:
     case ButtonRelease:
 	kwin_time = e->xbutton.time;
+	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
 	break;
     case MotionNotify:
 	kwin_time = e->xmotion.time;
+	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
 	break;
     case KeyPress:
     case KeyRelease:
 	kwin_time = e->xkey.time;
+	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
 	break;
     case PropertyNotify:
 	kwin_time = e->xproperty.time;
+	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
 	break;
     case EnterNotify:
     case LeaveNotify:
 	kwin_time = e->xcrossing.time;
+	qt_x_time = kwin_time; // workaround for Qt < 2.3.2
     default:
 	break;
     }
@@ -221,7 +228,7 @@ int kdemain( int argc, char * argv[] )
         // one for each screen...
         QCString multiHead = getenv("KDE_MULTIHEAD");
         if (multiHead.lower() == "true") {
-	    
+	
 	    Display* dpy = XOpenDisplay( NULL );
 	    if ( !dpy ) {
 		fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
