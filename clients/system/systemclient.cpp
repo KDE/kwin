@@ -71,7 +71,6 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
-    QPainter p;
     if(QPixmap::defaultDepth() > 8){
         // titlebar
         aUpperGradient = new KPixmap;
