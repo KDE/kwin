@@ -52,7 +52,7 @@ static bool pixmaps_created = false;
 
 static void drawButtonFrame(KPixmap *pix, const QColorGroup &g)
 {
-    QPainter p(pix);
+    QPainter p;
     p.begin(pix);
     p.setPen(g.mid());
     p.drawLine(0, 0, 13, 0);
@@ -73,7 +73,6 @@ static void create_pixmaps()
 
     QPainter p;
     if(QPixmap::defaultDepth() > 8){
-        warning("Creating pixmaps");
         // titlebar
         aUpperGradient = new KPixmap;
         aUpperGradient->resize(32, 18);
@@ -125,12 +124,12 @@ static void create_pixmaps()
         btnPix = new KPixmap;
         btnPix->resize(14, 14);
         bitBlt(btnPix, 2, 2, &aPix, 0, 0, 10, 10, Qt::CopyROP, true);
-        drawButtonFrame(btnPix, options->colorGroup(Options::ButtonBg, true));
+        drawButtonFrame(btnPix, options->colorGroup(Options::Frame, true));
 
         iBtnPix = new KPixmap;
         iBtnPix->resize(14, 14);
         bitBlt(iBtnPix, 2, 2, &iPix, 0, 0, 10, 10, Qt::CopyROP, true);
-        drawButtonFrame(iBtnPix, options->colorGroup(Options::ButtonBg, false));
+        drawButtonFrame(iBtnPix, options->colorGroup(Options::Frame, false));
 
         
         // pressed buttons
@@ -159,20 +158,19 @@ static void create_pixmaps()
         btnPixDown = new KPixmap;
         btnPixDown->resize(14, 14);
         bitBlt(btnPixDown, 2, 2, &aPix, 0, 0, 10, 10, Qt::CopyROP, true);
-        drawButtonFrame(btnPixDown, options->colorGroup(Options::ButtonBg,
+        drawButtonFrame(btnPixDown, options->colorGroup(Options::Frame,
                                                         true));
 
         iBtnPixDown = new KPixmap;
         iBtnPixDown->resize(14, 14);
         bitBlt(iBtnPixDown, 2, 2, &iPix, 0, 0, 10, 10, Qt::CopyROP, true);
-        drawButtonFrame(iBtnPixDown, options->colorGroup(Options::ButtonBg,
+        drawButtonFrame(iBtnPixDown, options->colorGroup(Options::Frame,
                                                          false));
     }
     if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
         btnForeground = Qt::black;
     else
         btnForeground = Qt::white;
-        warning("Done creating pixmaps");
 }   
 
 
@@ -194,7 +192,7 @@ QSize SystemButton::sizeHint() const
 
 void SystemButton::reset()
 {
-    repaint();
+    repaint(false);
 }
 
 void SystemButton::setBitmap(const unsigned char *bitmap)
@@ -213,9 +211,8 @@ void SystemButton::drawButton(QPainter *p)
             p->drawPixmap(0, 0, isDown() ? *iBtnPixDown : *iBtnPix);
     }
     else{
-        QColorGroup g = options->colorGroup(Options::ButtonBg,
+        QColorGroup g = options->colorGroup(Options::Frame,
                                             client->isActive());
-        p->fillRect(0, 0, width(), height(), g.background());
         int x2 = width()-1;
         int y2 = height()-1;
         // outer frame
@@ -228,6 +225,8 @@ void SystemButton::drawButton(QPainter *p)
         p->setPen(g.dark());
         p->drawRect(1, 1, width()-2, height()-2);
         // inner frame
+        g = options->colorGroup(Options::ButtonBg, client->isActive());
+        p->fillRect(3, 3, width()-6, height()-6, g.background());
         p->setPen(isDown() ? g.mid() : g.light());
         p->drawLine(2, 2, x2-2, 2);
         p->drawLine(2, 2, 2, y2-2);
@@ -484,6 +483,17 @@ void SystemClient::maximizeChange(bool m)
 void SystemClient::init()
 {
     //
+}
+
+void SystemClient::activeChange(bool)
+{
+    repaint(false);
+    button[0]->reset();
+    button[1]->reset();
+    button[2]->reset();
+    button[3]->reset();
+    if(button[4])
+        button[4]->reset();
 }
 
 

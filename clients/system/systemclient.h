@@ -44,6 +44,7 @@ protected:
     void maximizeChange(bool m);
     void doShape();
     void recalcTitleBuffer();
+    void activeChange(bool);
 protected slots:
     void slotReset();
 private:
