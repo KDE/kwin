@@ -1636,8 +1636,13 @@ void Client::keyPressEvent( QKeyEvent * e )
     case Key_Left:
 	pos.rx() -= delta;
 	if ( pos.x() <= workspace()->geometry().left() ) {
-	    moveOffset.rx() += delta;
-	    invertedMoveOffset.rx() += delta;
+	    if ( mode == TopLeft || mode == BottomLeft ) {
+		moveOffset.rx() += delta;
+		invertedMoveOffset.rx() += delta;
+	    } else {
+		moveOffset.rx() -= delta;
+		invertedMoveOffset.rx() -= delta;
+	    }
 	}
 	if ( isResize() && !resizeHorizontalDirectionFixed ) {
 	    resizeHorizontalDirectionFixed = TRUE;
@@ -1652,8 +1657,13 @@ void Client::keyPressEvent( QKeyEvent * e )
     case Key_Right:
 	pos.rx() += delta;
 	if ( pos.x() >= workspace()->geometry().right() ) {
-	    moveOffset.rx() -= delta;
-	    invertedMoveOffset.rx() -= delta;
+	    if ( mode == TopRight || mode == BottomRight ) {
+		moveOffset.rx() += delta;
+		invertedMoveOffset.rx() += delta;
+	    } else {
+		moveOffset.rx() -= delta;
+		invertedMoveOffset.rx() -= delta;
+	    }
 	}
 	if ( isResize() && !resizeHorizontalDirectionFixed ) {
 	    resizeHorizontalDirectionFixed = TRUE;
@@ -1668,8 +1678,13 @@ void Client::keyPressEvent( QKeyEvent * e )
     case Key_Up:
 	pos.ry() -= delta;
 	if ( pos.y() <= workspace()->geometry().top() ) {
-	    moveOffset.ry() += delta;
-	    invertedMoveOffset.ry() += delta;
+	    if ( mode == TopLeft || mode == TopRight ) {
+		moveOffset.ry() += delta;
+		invertedMoveOffset.ry() += delta;
+	    } else {
+		moveOffset.ry() -= delta;
+		invertedMoveOffset.ry() -= delta;
+	    }
 	}
 	if ( isResize() && !resizeVerticalDirectionFixed ) {
 	    resizeVerticalDirectionFixed = TRUE;
@@ -1684,8 +1699,13 @@ void Client::keyPressEvent( QKeyEvent * e )
     case Key_Down:
 	pos.ry() += delta;
 	if ( pos.y() >= workspace()->geometry().bottom() ) {
-	    moveOffset.ry() -= delta;
-	    invertedMoveOffset.ry() -= delta;
+	    if ( mode == BottomLeft || mode == BottomRight ) {
+		moveOffset.ry() += delta;
+		invertedMoveOffset.ry() += delta;
+	    } else {
+		moveOffset.ry() -= delta;
+		invertedMoveOffset.ry() -= delta;
+	    }
 	}
 	if ( isResize() && !resizeVerticalDirectionFixed ) {
 	    resizeVerticalDirectionFixed = TRUE;
