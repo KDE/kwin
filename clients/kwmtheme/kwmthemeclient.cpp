@@ -9,6 +9,8 @@
 #include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
+#include <kstddirs.h>
+#include <kglobal.h>
 #include <klocale.h>
 #include <qbitmap.h>
 #include <qtooltip.h>
@@ -56,16 +58,17 @@ static void init_theme()
 
     int i;
 
-    QString baseDir="/usr/local/kde2/share/apps/kwin/";
-    QString localBaseDir="/home/mosfet/.kde/share/apps/kwin/";
+    QStringList appDirs = KGlobal::dirs()->findDirs("data", "kwin");
+    QString baseDir=*(appDirs.begin());
+    QString localBaseDir=*(appDirs.end());
     
     for(i=0; i < 8; ++i){
         framePixmaps[i] = new QPixmap(localBaseDir + "/kwmtheme/themepics/" +
                                       config->readEntry(keys[i], " "));
         if(framePixmaps[i]->isNull())
-            warning("Unable to load frame pixmap for %s", keys[i]);
+            qWarning("Unable to load frame pixmap for %s", keys[i]);
         else
-            warning("Loaded pixmap %d", i+1);
+            qWarning("Loaded pixmap %d", i+1);
     }
     maxExtent = framePixmaps[FrameTop]->height();
     if(framePixmaps[FrameBottom]->height() > maxExtent)
@@ -254,7 +257,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         }
         else{
             if(val != "Off")
-                warning("KWin: Unrecognized button value: %s", val.latin1());
+                qWarning("KWin: Unrecognized button value: %s", val.latin1());
         }
     }
     if(titleGradient){
@@ -274,13 +277,13 @@ void KWMThemeClient::drawTitle(QPainter &p)
     QRect r = titlebar->geometry();
 
     if(titleSunken){
-        warning("Title is sunken");
+        qWarning("Title is sunken");
         qDrawShadeRect(&p, r, options->colorGroup(Options::Frame, isActive()),
                        true, 1, 0);
         r.setRect(r.x()+1, r.y()+1, r.width()-2, r.height()-2);
     }
     else
-        warning("Title is not sunken");
+        qWarning("Title is not sunken");
     
     KPixmap *fill = isActive() ? aTitlePix : iTitlePix;
     if(fill)
@@ -364,18 +367,18 @@ void KWMThemeClient::paintEvent( QPaintEvent* )
            w4, h4);
 
     QPixmap *curPix = framePixmaps[FrameTop];
-    tileHoriz(this, curPix, w1, maxExtent-curPix->height()-1, width()-w2-w1);
-
-    
+    p.drawTiledPixmap(w1, maxExtent-curPix->height()-1, width()-w2-w1,
+                      curPix->height(), *curPix);
     curPix = framePixmaps[FrameBottom];
-    tileHoriz(this, curPix, w3, height()-maxExtent+1, width()-w3-w4);
-
+    p.drawTiledPixmap(w3, height()-maxExtent+1, width()-w3-w4,
+                      curPix->height(), *curPix);
     curPix = framePixmaps[FrameLeft];
-    tileVert(this, curPix, maxExtent-curPix->width()-1, h1, height()-h1-h3);
-    
-    curPix = framePixmaps[FrameRight];
-    tileVert(this, curPix, width()-maxExtent+1, h2, height()-h2-h4);
+    p.drawTiledPixmap(maxExtent-curPix->width()-1, h1, curPix->width(),
+                      height()-h1-h3, *curPix);
 
+    curPix = framePixmaps[FrameRight];
+    p.drawTiledPixmap(width()-maxExtent+1, h2, curPix->width(),
+                      height()-h2-h4, *curPix);
     drawTitle(p);
     p.end();
 }
@@ -416,19 +419,19 @@ void KWMThemeClient::doShape()
            framePixmaps[FrameBottomRight]->height()-h4,
            w4, h4);
 
-    const QBitmap *curPix = framePixmaps[FrameTop]->mask();
-    tileHoriz(&mask, curPix, w1, maxExtent-curPix->height()-1, width()-w2-w1);
-    
-    curPix = framePixmaps[FrameBottom]->mask();
-    tileHoriz(&mask, curPix, w3, height()-maxExtent+1, width()-w3-w4);
-
-    curPix = framePixmaps[FrameLeft]->mask();
-    tileVert(&mask, curPix, maxExtent-curPix->width()-1, h1, height()-h1-h3);
-    
-    curPix = framePixmaps[FrameRight]->mask();
-    tileVert(&mask, curPix, width()-maxExtent+1, h2, height()-h2-h4);
-
     p.begin(&mask);
+    const QBitmap *curPix = framePixmaps[FrameTop]->mask();
+    p.drawTiledPixmap(w1, maxExtent-curPix->height()-1, width()-w2-w1,
+                      curPix->height(), *curPix);
+    curPix = framePixmaps[FrameBottom]->mask();
+    p.drawTiledPixmap(w3, height()-maxExtent+1, width()-w3-w4,
+                      curPix->height(), *curPix);
+    curPix = framePixmaps[FrameLeft]->mask();
+    p.drawTiledPixmap(maxExtent-curPix->width()-1, h1, curPix->width(),
+                      height()-h1-h3, *curPix);
+    curPix = framePixmaps[FrameRight]->mask();
+    p.drawTiledPixmap(width()-maxExtent+1, h2, curPix->width(),
+                      height()-h2-h4, *curPix);
     p.setBrush(color1);
     p.setPen(color1);
     p.fillRect(maxExtent-1, maxExtent-1, width()-2*maxExtent+2,
