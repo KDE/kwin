@@ -79,5 +79,5 @@ void Events::raise( Event e )
     if ( !event )
 	return;
 
-    forgetIt= !KNotifyClient::event( event );
+    forgetIt= !KNotifyClient::event( event, event );
 }
