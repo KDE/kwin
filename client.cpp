@@ -819,8 +819,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         }
     }
 
-    delete session;
-
     bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
 
     sendSyntheticConfigureNotify();
@@ -838,10 +836,11 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	    // NET_KDE_USER_TIME of the currently active client is
 	    // defined and more recent than the one of the new client
 	    // (which we set ourselves in CreateNotify in
-	    // workspace.cpp)
+	    // workspace.cpp).  Of course we only do that magic if the
+	    // window does not stem from a restored session.
 	    Client* ac = workspace()->activeClient();
 	    
-	    if ( ac && ac->userTime() > userTime() 
+	    if ( !session && ac && ac->userTime() > userTime() 
 		 && ( !isTransient() || mainClient() != ac ) ) {
 		workspace()->stackClientUnderActive( this );
 		show();
@@ -857,6 +856,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     if ( !doNotShow )
       workspace()->updateClientArea();
 
+    delete session;
     return showMe;
 }
 
