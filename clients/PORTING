@@ -20,7 +20,7 @@ porting:
     - iconify -> minimize
     - ther's no signal resetClients(), use KDecorationFactory::reset(), KDecorationFactory::resetDecorations(), KDecoration::reset()
     - often this -> widget() , or prepend widget()-> , sometimes it may be handy to create wrapper functions for e.g. width()
-    - layout is created in ctor, so call createLayout() directly there
+    - layout is created in init(), so call createLayout() directly there (if it's implemented)
     - options -> options()
     - no calls to Client::XYZ()
     - titlebarDblClickOperation() for doubleclick on titlebar
@@ -33,7 +33,6 @@ porting:
     - borders()
     - contextHelp() -> showContextHelp()
     - color setting values - prepend Color
-    - buttons may need setCursor( arrowCursor )
     - windowWrapperShowEvent() is gone
     - animateIconifyOrDeiconify() -> animateMinimize() - just drop it if it's empty
-    - option settings for colors need Color prefixed
+    - pay special attention to SLOT() names and cases where you need to use 'widget()' instead of 'this'
