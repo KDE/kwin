@@ -1809,6 +1809,7 @@ default_presentation=0
 
 [minimize]
 Name=Window Minimize
+Name[ca]=Minimitza finestra
 Name[cs]=Minimalizace okna
 Name[da]=Minimér vindue
 Name[es]=Minimizar ventana
@@ -1821,6 +1822,7 @@ Name[sv]=Fönster minimeras
 Name[tr]=Pencereyi Simge Haline Getir
 Comment=A Window is Minimized
 Comment[be]=Акно мінімалізаванае
+Comment[ca]=Es minimitza una finestra
 Comment[cs]=Okno je manimalizováno
 Comment[da]=Et vindue minimeres
 Comment[es]=Se minimiza una ventana
@@ -1836,6 +1838,7 @@ default_presentation=0
 
 [unminimize]
 Name=Window Unminimize
+Name[ca]=Desminimitza finestra
 Name[da]=Afminimér vindue
 Name[es]=Deminimizar ventana
 Name[et]=Akna suuruse taastamine
@@ -2160,6 +2163,7 @@ default_presentation=0
 
 [on_all_desktops]
 Name=Window On All Desktops
+Name[ca]=Finestra a tots els escriptoris
 Name[cs]=Okno na všech plochách
 Name[da]=Vindue på alle desktoppe
 Name[es]=Ventana en todos los escritorios
@@ -2171,6 +2175,7 @@ Name[sr]=Прозор на свим радним површинама
 Name[sv]=Fönster på alla skrivbord
 Name[tr]=Pencere Tüm Masaüstlerinde
 Comment=A Window is made Visible on All Desktops
+Comment[ca]=Una finestra es fa visible a tots els escriptoris
 Comment[cs]=Okno je viditelné na všech plochách
 Comment[da]=Et vindue gøres synligt på alle desktoppe
 Comment[es]=Una ventana se hace visible en todos los escritorios
@@ -2185,6 +2190,7 @@ default_presentation=0
 
 [not_on_all_desktops]
 Name=Window Not On All Desktops
+Name[ca]=Finestra no a tots els escriptoris
 Name[cs]=Okno není na všech plochách
 Name[da]=Vindue ikke på alle desktoppe
 Name[es]=Ventana no en todos los escritorios
@@ -2196,6 +2202,7 @@ Name[sr]=Прозор није на свим радним површинама
 Name[sv]=Fönster inte på alla skrivbord
 Name[tr]=Pencere Tüm Masaüstlerinde Değil
 Comment=A Window is no more Visible on All Desktops
+Comment[ca]=Una finestra es fa no visible a tots els escriptoris
 Comment[cs]=Okno již není viditelné na všech plochách
 Comment[da]=Et vindue er ikke længere synligt på alle desktoppe
 Comment[es]=Una ventana ya no es visible en todos los escritorios
