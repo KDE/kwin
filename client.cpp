@@ -562,6 +562,7 @@ void Client::manage( bool isMapped )
     setMappingState( state );
     if ( state == NormalState && isOnDesktop( workspace()->currentDesktop() ) ) {
 	Events::raise( isTransient() ? Events::TransNew : Events::New );
+	workspace()->raiseClient( this ); // ensure constrains
 	show();
 	if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
 	    workspace()->requestFocus( this );
