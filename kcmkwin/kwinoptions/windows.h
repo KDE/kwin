@@ -50,15 +50,17 @@ class KIntNumInput;
 #define RESIZE_TRANSPARENT  0
 #define RESIZE_OPAQUE       1
 
-#define SMART_PLACEMENT       0
-#define CASCADE_PLACEMENT     1
-#define RANDOM_PLACEMENT      2
-#define INTERACTIVE_PLACEMENT 3
-#define MANUAL_PLACEMENT      4
+#define SMART_PLACEMENT        0
+#define CASCADE_PLACEMENT      1
+#define RANDOM_PLACEMENT       2
+#define CENTERED_PLACEMENT     3
+#define ZEROCORNERED_PLACEMENT 4
+#define INTERACTIVE_PLACEMENT  5
+#define MANUAL_PLACEMENT       6
 
-#define  CLICK_TO_FOCUS                0
-#define  FOCUS_FOLLOWS_MOUSE           1
-#define  FOCUS_UNDER_MOUSE   2
+#define  CLICK_TO_FOCUS               0
+#define  FOCUS_FOLLOWS_MOUSE          1
+#define  FOCUS_UNDER_MOUSE            2
 #define  FOCUS_STRICTLY_UNDER_MOUSE   3
 
 class QSpinBox;

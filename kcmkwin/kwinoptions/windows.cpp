@@ -749,6 +749,8 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *)
     placementCombo->insertItem(i18n("Smart"), SMART_PLACEMENT);
     placementCombo->insertItem(i18n("Cascade"), CASCADE_PLACEMENT);
     placementCombo->insertItem(i18n("Random"), RANDOM_PLACEMENT);
+    placementCombo->insertItem(i18n("Centered"), CENTERED_PLACEMENT);
+    placementCombo->insertItem(i18n("ZeroCornered"), ZEROCORNERED_PLACEMENT);
     // CT: disabling is needed as long as functionality misses in kwin
     //placementCombo->insertItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
     //placementCombo->insertItem(i18n("Manual"), MANUAL_PLACEMENT);
@@ -942,6 +944,10 @@ void KMovingConfig::load( void )
     //CT 31mar98 manual placement
     else if( key == "manual")
         setPlacement(MANUAL_PLACEMENT);
+    else if( key == "Centered")
+        setPlacement(CENTERED_PLACEMENT);
+    else if( key == "ZeroCornered")
+        setPlacement(ZEROCORNERED_PLACEMENT);
 
     else
         setPlacement(SMART_PLACEMENT);
@@ -983,6 +989,10 @@ void KMovingConfig::save( void )
         config->writeEntry(KWIN_PLACEMENT, "Random");
     else if (v == CASCADE_PLACEMENT)
         config->writeEntry(KWIN_PLACEMENT, "Cascade");
+    else if (v == CENTERED_PLACEMENT)
+        config->writeEntry(KWIN_PLACEMENT, "Centered");
+    else if (v == ZEROCORNERED_PLACEMENT)
+        config->writeEntry(KWIN_PLACEMENT, "ZeroCornered");
 //CT 13mar98 manual and interactive placement
 //   else if (v == MANUAL_PLACEMENT)
 //     config->writeEntry(KWIN_PLACEMENT, "Manual");
@@ -1008,6 +1018,11 @@ void KMovingConfig::save( void )
     config->writeEntry(KWM_BRDR_SNAP_ZONE,getBorderSnapZone());
     config->writeEntry(KWM_WNDW_SNAP_ZONE,getWindowSnapZone());
     config->writeEntry("SnapOnlyWhenOverlapping",OverlapSnap->isChecked());
+
+    config->sync();
+    if ( !kapp->dcopClient()->isAttached() )
+        kapp->dcopClient()->attach();
+    kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
 }
 
 void KMovingConfig::defaults()
