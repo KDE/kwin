@@ -165,7 +165,7 @@ KeramikHandler::KeramikHandler()
 	// Flip the bitmaps horizontally in right-to-left mode
 	if ( QApplication::reverseLayout() ) {
 		for ( int i = 0; i < NumButtonDecos; i++ )
-			flip( static_cast<QPixmap*&>(buttonDecos[i]) );
+			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
 	}
 
 	readConfig();
