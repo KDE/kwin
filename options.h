@@ -51,6 +51,15 @@ public:
     MoveResizeMode resizeMode;
     MoveResizeMode moveMode;
 
+    /**
+     * Placement policies. How workspace decides the way windows get positioned
+     * on the screen. The better the policy, the heavier the resource use.
+     * Normally you don't have to worry. What the WM adds to the startup time
+     * is nil compared to the creation of the window itself in the memory
+     */
+    enum PlacementPolicy { Random, Smart };
+    PlacementPolicy placement;
+
     bool focusPolicyIsReasonable() {
         return focusPolicy == ClickToFocus || focusPolicy == FocusFollowsMouse;
     }

@@ -133,6 +133,7 @@ private:
 
     void raiseTransientsOf( ClientList& safeset, Client* c );
     void randomPlacement(Client* c);
+    void smartPlacement(Client* c);
 
     void focusToNull();
     Client* desktop_client;

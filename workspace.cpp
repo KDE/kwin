@@ -838,7 +838,10 @@ void Workspace::showPopup( const QPoint& pos, Client* c)
  */
 void Workspace::doPlacement( Client* c )
 {
+  if (options->placement == Options::Random)
     randomPlacement( c );
+  else if (options->placement == Options::Smart)
+    smartPlacement( c );
 }
 
 /*!
@@ -881,6 +884,134 @@ void Workspace::randomPlacement(Client* c){
   c->move( tx, ty );
 }
 
+/*!
+  Place the client \a c according to a really smart placement algorithm :-)
+*/
+void Workspace::smartPlacement(Client* c){
+  /*
+   * SmartPlacement by Cristian Tibirna (tibirna@kde.org)
+   * adapted for kwm (16-19jan98) and for kwin (16Nov1999) using (with
+   * permission) ideas from fvwm, authored by
+   * Anthony Martin (amartin@engr.csulb.edu).
+   */
+
+  const int none = 0, least = -1, wrong = -2; // overlap types
+  int overlap, min_overlap;
+  int x_optimal, y_optimal;
+  int possible;
+
+  int cxl, cxr, cyt, cyb;     //temp coords
+  int  xl,  xr,  yt,  yb;     //temp coords
+
+  // get the maximum allowed windows space
+  QRect maxRect = clientArea();
+  int x = maxRect.left(), y = maxRect.top();
+  
+  //client gabarit
+  int ch = c->height(), cw = c->width();
+
+  //loop over possible positions
+  do {
+
+    //test if enough room in x and y directions
+    if ( y + ch > maxRect.bottom() )
+      overlap = -1;
+    else if( x + cw > maxRect.right() ) 
+      overlap = -2;
+    else {
+      overlap = none; //initialize
+      
+      cxl = x; cxr = x + cw;
+      cyt = y; cyb = y + ch;
+      QValueList<Client*>::ConstIterator l;
+      for(l = clients.begin(); l != clients.end() ; ++l ) {
+	if((*l)->isOnDesktop(currentDesktop()) ||
+	   !(*l)->isIconified() || !((*l) == c) ) {
+	  
+	  xl = (*l)->x();           yt = (*l)->y();
+	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
+	  
+	  //if windows overlap, calc the overlapping
+	  if((cxl < xr) && (cxr > xl) &&
+	     (cyt < yb) && (cyb > yt)) {
+	    xl = QMAX(cxl, xl); xr = QMIN(cxr, xr);
+	    yt = QMAX(cyt, yt); yb = QMIN(cyb, yb);
+	    overlap += (xr - xl) * (yb - yt);
+	  }
+	}
+      }
+    }
+    
+    // really need to loop? test if there's any overlap
+    if ( overlap > none ) {
+      
+      possible = maxRect.right();
+      if ( possible - cw > x) possible -= cw;
+      
+      // compare to the position of each client on the current desk
+      QValueList<Client*>::ConstIterator l;
+      for(l = clients.begin(); l != clients.end() ; ++l) {
+	
+	if ( (*l)->isOnDesktop(currentDesktop()) ||
+	     !(*l)->isIconified() || !((*l) == c) ) {
+
+	  xl = (*l)->x();           yt = (*l)->y();
+	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
+	  
+	  // if not enough room above or under the current tested client
+	  // determine the first non-overlapped x position
+	  if( y < yb  && yt < ch + y ) {
+	    
+	    if( yb > x ) 
+	      possible = possible < yb ? possible : yb;
+	    
+	    if( xl - cw > x ) 
+	      possible = possible < xl - cw ? possible : xl - cw;
+	  }
+	}
+	x = possible;
+      }
+    }
+    
+    // ... else => not enough x dimension (overlap was -2)
+    else if (overlap == wrong) {
+      x = maxRect.left();
+      
+      possible = maxRect.bottom();
+      
+      if(possible - ch > y) possible -= ch;
+      
+      //test the position of each window on current desk
+      //07mar98. fixed bug which made iconified windows avoided as if visible
+      QValueList<Client*>::ConstIterator l;
+      for(l = clients.begin(); l != clients.end() ; ++l) {
+	if( (*l)->isOnDesktop( currentDesktop() ) ||
+	    !((*l) == c)  ||  !c->isIconified() ) {
+	  
+	  xl = (*l)->x();           yt = (*l)->y();
+	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
+	  
+	  if( yb > y) 
+	    possible = possible < yb ? possible : yb;
+	  
+	  if( yt - ch > y ) 
+	    possible = possible < yt - ch ? possible : yt - ch;
+	}
+	y = possible;
+      }
+    }
+
+    min_overlap = overlap;
+    x_optimal = x;
+    y_optimal = y;
+
+  }
+  while((overlap != none) && (overlap != least));
+  
+  // place the window
+  c->move( x_optimal, y_optimal );	
+
+}
 
 
 /*!
@@ -931,7 +1062,6 @@ void Workspace::raiseClient( Client* c )
 
     propagateClients( TRUE );
 }
-
 
 
 /*!

@@ -11,6 +11,9 @@ Options::Options()
     for(i=0; i < KWINCOLORS*2; ++i)
         cg[i] = NULL;
     reload();
+
+    //CT 
+    placement = Random; //ACHTUNG!! for the moment *only*
 }
 
 Options::~Options(){
