@@ -353,9 +353,9 @@ void B2Client::init()
 
     // Left and right border width
     leftSpacer = new QSpacerItem(thickness, 16,
-	    QSizePolicy::Minimum, QSizePolicy::Expanding);
+	    QSizePolicy::Fixed, QSizePolicy::Expanding);
     rightSpacer = new QSpacerItem(thickness, 16,
-	    QSizePolicy::Minimum, QSizePolicy::Expanding);
+	    QSizePolicy::Fixed, QSizePolicy::Expanding);
 
     g->addItem(leftSpacer, 1, 0);
     g->addColSpacing(1, 16);
@@ -365,7 +365,7 @@ void B2Client::init()
 
     // Bottom border height
     spacer = new QSpacerItem(10, thickness + (mustDrawHandle() ? 4 : 0),
-	    QSizePolicy::Expanding, QSizePolicy::Minimum);
+	    QSizePolicy::Expanding, QSizePolicy::Fixed);
     g->addItem(spacer, 3, 1);
 
     // titlebar
@@ -557,8 +557,8 @@ void B2Client::resizeEvent(QResizeEvent * /*e*/)
     /* may be the resize cut off some space occupied by titlebar, which
        was moved, so instead of reducing it, we first try to move it */
     titleMoveAbs(bar_x_ofs);
-    doShape();
 
+    doShape();
     widget()->repaint(); // the frame is misrendered without this
 }
 
@@ -670,8 +670,6 @@ void B2Client::paintEvent(QPaintEvent* e)
     }
 }
 
-#define QCOORDARRLEN(x) sizeof(x) / (sizeof(QCOORD) * 2)
-
 void B2Client::doShape()
 {
     QRect t = titlebar->geometry();
@@ -690,12 +688,10 @@ void B2Client::doShape()
     mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
     if (mustDrawHandle()) {
 	mask -= QRect(0, height() - 5, 1, 1); //bottom left point
-	mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
 	mask -= QRect(width() - 40, height() - 1, 1, 1); //handle left point
 	mask -= QRect(0, height() - 4, width() - 40, 4); //bottom left
     } else {
 	mask -= QRect(0, height() - 1, 1, 1); // bottom left point
-	mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
     }
 
     setMask(mask);
@@ -706,8 +702,6 @@ void B2Client::showEvent(QShowEvent *)
     calcHiddenButtons();
     positionButtons();
     doShape();
-    widget()->repaint();
-    titlebar->repaint(false);
 }
 
 KDecoration::Position B2Client::mousePosition(const QPoint& p) const
