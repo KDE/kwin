@@ -1232,7 +1232,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
         popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
         popup->insertItem( i18n("Always &On Top"), Options::StaysOnTopOp );
-        popup->insertItem( i18n("S&tore Settings"), Options::ToggleStoreSettingsOp );
+        popup->insertItem( i18n("Sto&re Settings"), Options::ToggleStoreSettingsOp );
 
         popup->insertSeparator();
 
