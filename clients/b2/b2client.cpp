@@ -322,7 +322,6 @@ B2Client::B2Client(KDecorationBridge *b, KDecorationFactory *f)
 
 void B2Client::init()
 {
-    draw_handle = do_draw_handle;
     const QString tips[] = {
 	i18n("Menu"), 
 	isOnAllDesktops() ? 
