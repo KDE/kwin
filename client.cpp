@@ -276,12 +276,13 @@ void Client::destroyDecoration( bool delay_delete )
             decoration->deleteLater();
         else
             delete decoration;
+        QPoint grav = calculateGravitation( true );
         border_left = border_right = border_top = border_bottom = 0;
         decoration = NULL;
         setMask( QRegion()); // reset shape mask
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
-        move( calculateGravitation( true ));
+        move( grav );
         if( !isShade())
             resize( clientSize(), IgnoreGravity, ForceGeometrySet );
         else

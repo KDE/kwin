@@ -832,8 +832,8 @@ const QPoint Client::calculateGravitation( bool invert, int gravity ) const
         }
     else
         { // center of the frame will be at the same position client center without frame would be
-        dx = - ( width() - clientSize().width()) / 2;
-        dy = - ( height() - clientSize().height()) / 2;
+        dx = - ( border_left + border_right ) / 2;
+        dy = - ( border_top + border_bottom ) / 2;
         }
     if( !invert )
         return QPoint( x() + dx, y() + dy );
