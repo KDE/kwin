@@ -9,7 +9,7 @@ kde_module_LTLIBRARIES = kcm_kwinrules.la
 noinst_LTLIBRARIES = libkwinrules.la
 
 libkwinrules_la_SOURCES = ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp \
-        ruleswidgetbase.ui ruleslistbase.ui detectwidgetbase.ui
+        ruleswidgetbase.ui ruleslistbase.ui detectwidgetbase.ui editshortcutbase.ui
 libkwinrules_la_LDFLAGS = $(all_libraries) -no-undefined
 libkwinrules_la_LIBADD = $(LIB_KDEUI)
 

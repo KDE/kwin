@@ -959,9 +959,9 @@ void Client::setShortcut( const QString& _cut )
     if( cut.isEmpty())
         return setShortcutInternal( KShortcut());
 // Format:
-// *base+[abcdef]|base+[abcdef]
-// E.g. Alt+Ctrl+[ABCDEF]|Win+X,Win+[ABCDEF]
-    if( cut[ 0 ] != '*' )
+// base+(abcdef)<space>base+(abcdef)
+// E.g. Alt+Ctrl+(ABCDEF) Win+X,Win+(ABCDEF)
+    if( !cut.contains( '(' ) && !cut.contains( ')' ) && !cut.contains( ' ' ))
         {
         if( workspace()->shortcutAvailable( KShortcut( cut )))
             setShortcutInternal( KShortcut( cut ));
@@ -970,12 +970,12 @@ void Client::setShortcut( const QString& _cut )
         return;
         }
     QValueList< KShortcut > keys;
-    QStringList groups = QStringList::split( '|', cut.mid( 1 ));
+    QStringList groups = QStringList::split( ' ', cut );
     for( QStringList::ConstIterator it = groups.begin();
          it != groups.end();
          ++it )
         {
-        QRegExp reg( "(.*\\+)\\[(.*)\\]" );
+        QRegExp reg( "(.*\\+)\\((.*)\\)" );
         if( reg.search( *it ) > -1 )
             {
             QString base = reg.cap( 1 );

@@ -653,11 +653,14 @@ void RulesWidget::prepareWindowSpecific( WId window )
 
 void RulesWidget::shortcutEditClicked()
     {
-// TODO
+    EditShortcutDialog dlg( topLevelWidget());
+    dlg.setShortcut( shortcut->text());
+    if( dlg.exec() == QDialog::Accepted )
+        shortcut->setText( dlg.shortcut());
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
-: KDialogBase( parent, name, true, "", Ok | Cancel )
+: KDialogBase( parent, name, true, i18n( "Edit window-specific settings" ), Ok | Cancel )
     {
     widget = new RulesWidget( this );
     setMainWidget( widget );
@@ -681,6 +684,76 @@ void RulesDialog::accept()
         return;
     rules = widget->rules();
     KDialogBase::accept();
+    }
+
+EditShortcut::EditShortcut( QWidget* parent, const char* name )
+: EditShortcutBase( parent, name )
+    {
+    }
+
+void EditShortcut::editShortcut()
+    {
+    ShortcutDialog dlg( KShortcut( shortcut->text()), topLevelWidget());
+    if( dlg.exec() == QDialog::Accepted )
+        shortcut->setText( dlg.shortcut().toString());
+    }
+
+void EditShortcut::clearShortcut()
+    {
+    shortcut->setText( "" );
+    }
+
+EditShortcutDialog::EditShortcutDialog( QWidget* parent, const char* name )
+: KDialogBase( parent, name, true, i18n( "Edit Shortcut" ), Ok | Cancel )
+    {
+    widget = new EditShortcut( this );
+    setMainWidget( widget );
+    }
+
+void EditShortcutDialog::setShortcut( const QString& cut )
+    {
+    widget->shortcut->setText( cut );
+    }
+
+QString EditShortcutDialog::shortcut() const
+    {
+    return widget->shortcut->text();
+    }
+
+ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent, const char* name )
+    : KShortcutDialog( cut, false /*TODO???*/, parent, name )
+    {
+    }
+
+void ShortcutDialog::accept()
+    {
+    for( int i = 0;
+         ;
+         ++i )
+        {
+        KKeySequence seq = shortcut().seq( i );
+        if( seq.isNull())
+            break;
+        if( seq.key( 0 ) == Key_Escape )
+            {
+            reject();
+            return;
+            }
+        if( seq.key( 0 ) == Key_Space )
+            { // clear
+            setShortcut( KShortcut());
+            KShortcutDialog::accept();
+            return;
+            }
+        if( seq.key( 0 ).modFlags() == 0 )
+            { // no shortcuts without modifiers
+            KShortcut cut = shortcut();
+            cut.setSeq( i, KKeySequence());
+            setShortcut( cut );
+            return;
+            }
+        }
+    KShortcutDialog::accept();
     }
 
 } // namespace

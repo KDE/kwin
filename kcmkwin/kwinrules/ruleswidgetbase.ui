@@ -1746,7 +1746,7 @@
                             <cstring>shortcut_edit</cstring>
                         </property>
                         <property name="text">
-                            <string>Edit</string>
+                            <string>Edit...</string>
                         </property>
                     </widget>
                     <widget class="KRestrictedLine" row="9" column="2" rowspan="1" colspan="3">

@@ -530,7 +530,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         KGlobalAccel *keys;
         KGlobalAccel *client_keys;
-        KShortcutDialog* client_keys_dialog;
+        ShortcutDialog* client_keys_dialog;
         Client* client_keys_client;
 
         WId root;

@@ -22,8 +22,10 @@
 
 #include <kdialogbase.h>
 #include <kwin.h>
+#include <kshortcutdialog.h>
 
 #include "ruleswidgetbase.h"
+#include "editshortcutbase.h"
 
 namespace KWinInternal
 {
@@ -103,6 +105,39 @@ class RulesDialog
     private:
         RulesWidget* widget;
         Rules* rules;
+    };
+
+class EditShortcut
+    : public EditShortcutBase
+    {
+    Q_OBJECT
+    public:
+        EditShortcut( QWidget* parent = NULL, const char* name = NULL );
+    protected:
+        void editShortcut();
+        void clearShortcut();
+    };
+
+class EditShortcutDialog
+    : public KDialogBase
+    {
+    Q_OBJECT
+    public:
+        EditShortcutDialog( QWidget* parent = NULL, const char* name = NULL );
+        void setShortcut( const QString& cut );
+        QString shortcut() const;
+    private:
+        EditShortcut* widget;
+    };
+
+// slightly duped from utils.cpp
+class ShortcutDialog
+    : public KShortcutDialog
+    {
+    Q_OBJECT
+    public:
+        ShortcutDialog( const KShortcut& cut, QWidget* parent = NULL, const char* name = NULL );
+        virtual void accept();
     };
 
 } // namespace
