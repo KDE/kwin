@@ -513,10 +513,10 @@ void Workspace::updateCurrentTopMenu()
                  it != menu_client->transients().end();
                  ++it )
                 if( (*it)->isTopMenu())
-                {
-                menubar = *it;
-                break;
-                }
+                    {
+                    menubar = *it;
+                    break;
+                    }
             if( menubar != NULL || !menu_client->isTransient())
                 break;
             if( menu_client->isModal() || menu_client->transientFor() == NULL )
@@ -547,7 +547,7 @@ void Workspace::updateCurrentTopMenu()
             }
         }
 
-//    kdDebug() << "CURRENT TOPMENU:" << menubar << endl;
+//    kdDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client << endl;
     if ( menubar )
         menubar->hideClient( false );
 
