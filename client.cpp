@@ -63,12 +63,14 @@ public:
 	    m_client->setShade( state & NET::Shaded );
 
 	if ( mask & NET::Max ) {
-	    if ( state & NET::Max == NET::Max )
+	    if ( (state & NET::Max) == NET::Max )
 		m_client->maximize( Client::MaximizeFull );
 	    else if ( state & NET::MaxVert )
 		m_client->maximize( Client::MaximizeVertical );
 	    else if ( state & NET::MaxHoriz )
 		m_client->maximize( Client::MaximizeHorizontal );
+	    else
+		m_client->maximize( Client::MaximizeRestore );
 	} 
     }
 private:
@@ -1397,45 +1399,51 @@ void Client::maximize( MaximizeMode m)
     if (isShade())
 	setShade( FALSE );
 
-    if (geom_restore.isNull()) {
-
+    if ( !geom_restore.isNull() )
+	m = MaximizeRestore;
+    
+    if ( m != MaximizeRestore ) {
 	Events::raise( Events::Maximize );
 	geom_restore = geometry();
+    }
 
-	switch (m) {
+    switch (m) {
 
-	case MaximizeVertical:
-	    setGeometry(
-			QRect(QPoint(x(), clientArea.top()),
-			      adjustedSize(QSize(width(), clientArea.height())))
-			);
-	    break;
+    case MaximizeVertical:
+	setGeometry(
+		    QRect(QPoint(x(), clientArea.top()),
+			  adjustedSize(QSize(width(), clientArea.height())))
+		    );
+	info->setState( NET::MaxVert, NET::MaxVert );
+	break;
 
-	case MaximizeHorizontal:
+    case MaximizeHorizontal:
 
-	    setGeometry(
-			QRect(
-			      QPoint(clientArea.left(), y()),
-			      adjustedSize(QSize(clientArea.width(), height())))
-			);
-	    break;
-
-	default:
-
-	    setGeometry(
-			QRect(clientArea.topLeft(), adjustedSize(clientArea.size()))
-			);
-	}
-
-	maximizeChange(true);
-
-    } else {
+	setGeometry(
+		    QRect(
+			  QPoint(clientArea.left(), y()),
+			  adjustedSize(QSize(clientArea.width(), height())))
+		    );
+	info->setState( NET::MaxHoriz, NET::MaxHoriz );
+	break;
+	    
+    case MaximizeRestore: {
 	Events::raise( Events::UnMaximize );
 	setGeometry(geom_restore);
 	QRect invalid;
 	geom_restore = invalid;
-	maximizeChange(false);
+	info->setState( 0, NET::Max );
+	} break;
+
+    case MaximizeFull:
+
+	setGeometry(
+		    QRect(clientArea.topLeft(), adjustedSize(clientArea.size()))
+		    );
+	info->setState( NET::Max, NET::Max );
     }
+
+    maximizeChange( m != MaximizeRestore );
 }
 
 

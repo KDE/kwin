@@ -112,7 +112,7 @@ public:
     virtual void setShade( bool );
 
     bool isMaximized() const;
-    enum MaximizeMode { MaximizeVertical, MaximizeHorizontal, MaximizeFull };
+    enum MaximizeMode { MaximizeVertical, MaximizeHorizontal, MaximizeFull, MaximizeRestore };
 
     bool isSticky() const;
     void setSticky( bool );
