@@ -454,15 +454,6 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	// Help, Minimize, Maximize and Close are default on RHS
 	buttonPositionWidget->setButtonsRight( conf->readEntry("ButtonsOnRight", "HIAX") );
 
-	buttonPositionWidget->buttonSource->showAllButtons();
-
-	// Step through the button lists, and hide the dnd button source items
-	unsigned int i;
-	for(i = 0; i < buttonPositionWidget->buttonsLeft().length(); i++)
-		buttonPositionWidget->buttonSource->hideButton( buttonPositionWidget->buttonsLeft()[i].latin1() );
-	for(i = 0; i < buttonPositionWidget->buttonsRight().length(); i++)
-		buttonPositionWidget->buttonSource->hideButton( buttonPositionWidget->buttonsRight()[i].latin1() );
-
         int bsize = conf->readNumEntry( "BorderSize", BorderNormal );
         if( bsize >= BorderTiny && bsize < BordersCount )
             border_size = static_cast< BorderSize >( bsize );
@@ -553,15 +544,6 @@ void KWinDecorationModule::defaults()
 
 	buttonPositionWidget->setButtonsLeft("MS");
 	buttonPositionWidget->setButtonsRight("HIAX");
-
-	// TODO: move this stuff into ButtonPositionWidget...
-	buttonPositionWidget->buttonSource->showAllButtons();
-	buttonPositionWidget->buttonSource->hideButton('M');
-	buttonPositionWidget->buttonSource->hideButton('S');
-	buttonPositionWidget->buttonSource->hideButton('H');
-	buttonPositionWidget->buttonSource->hideButton('I');
-	buttonPositionWidget->buttonSource->hideButton('A');
-	buttonPositionWidget->buttonSource->hideButton('X');
 
         border_size = BorderNormal;
         checkSupportedBorderSizes();

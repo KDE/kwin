@@ -1,6 +1,7 @@
 /*
 	This is the new kwindecoration kcontrol module
 
+	Copyright (c) 2004, Sandro Giessl
 	Copyright (c) 2001
 		Karol Szwed <gallium@kde.org>
 		http://gallium.n3.net/
@@ -34,57 +35,103 @@
 #include <qdragobject.h>
 #include <qlistbox.h>
 
+#include <klistview.h>
 
-/////////////////////////////////////////////////////////////////////////
-
-class ButtonDrag: public QStoredDrag
+/**
+ * This class holds the button data.
+ */
+class Button
 {
 	public:
-		ButtonDrag( char btn, QWidget* parent, const char* name=0 );
-		~ButtonDrag() {};
+		Button();
+		Button(const QString& name, const QPixmap& icon, QChar type, bool duplicate, bool supported);
+		virtual ~Button();
 
-		static bool canDecode( QDragMoveEvent* e );
-		static bool decode( QDropEvent* e, char& btn );
+		QString name;
+		QPixmap icon;
+		QChar type;
+		bool duplicate;
+		bool supported;
 };
 
+class ButtonDrag : public QStoredDrag
+{
+	public:
+		ButtonDrag( Button btn, QWidget* parent, const char* name=0 );
+		~ButtonDrag() {};
 
-/////////////////////////////////////////////////////////////////////////
+		static bool canDecode( QDropEvent* e );
+		static bool decode( QDropEvent* e, Button& btn );
+};
 
-class ButtonSource: public QListBox
+/**
+ * This is plugged into ButtonDropSite
+ */
+class ButtonDropSiteItem
+{
+	public:
+		ButtonDropSiteItem(const Button& btn);
+		~ButtonDropSiteItem();
+	
+		Button button();
+
+		QRect rect;
+		int width();
+		int height();
+
+		void draw(QPainter *p, QRect rect);
+
+	private:
+		Button m_button;
+};
+
+/**
+ * This is plugged into ButtonSource
+ */
+class ButtonSourceItem : public QListViewItem
+{
+	public:
+		ButtonSourceItem(QListView * parent, const Button& btn);
+		virtual ~ButtonSourceItem();
+
+		void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int align);
+
+		void setButton(const Button& btn);
+		Button button() const;
+	private:
+		Button m_button;
+};
+
+/**
+ * Implements the button drag source list view
+ */
+class ButtonSource : public KListView
 {
 	Q_OBJECT
 
 	public:
-		ButtonSource( QWidget* parent=0, const char* name=0 );
-		~ButtonSource();
+		ButtonSource(QWidget *parent = 0, const char* name = 0);
+		virtual ~ButtonSource();
+
+		QSize sizeHint() const;
 
 		void hideAllButtons();
 		void showAllButtons();
 
-	signals:
-		void buttonDropped();
-
 	public slots:
-		void hideButton( char btn );
-		void showButton( char btn );
+		void hideButton(QChar btn);
+		void showButton(QChar btn);
 
 	protected:
-		void dragEnterEvent( QDragEnterEvent* e );
-		void dragMoveEvent( QDragMoveEvent* e );
-		void dragLeaveEvent( QDragLeaveEvent* e );
-		void dropEvent( QDropEvent* e );
-		void mousePressEvent( QMouseEvent* e );
-
-	private:
-		char convertToChar( QString s );
-		QString convertToString( char btn );
-
-		int spacerCount;
+		bool acceptDrag(QDropEvent* e) const;
+		virtual QDragObject *dragObject();
 };
 
+typedef QValueList<ButtonDropSiteItem*> ButtonList;
 
-/////////////////////////////////////////////////////////////////////////
-
+/**
+ * This class renders and handles the demo titlebar dropsite
+ */
 class ButtonDropSite: public QFrame
 {
 	Q_OBJECT
@@ -95,32 +142,44 @@ class ButtonDropSite: public QFrame
 
 		// Allow external classes access our buttons - ensure buttons are
 		// not duplicated however.
-		QString buttonsLeft;
-		QString buttonsRight;
+		ButtonList buttonsLeft;
+		ButtonList buttonsRight;
+		void clearLeft();
+		void clearRight();
 
 	signals:
-		void buttonAdded( char c );
-		void buttonRemoved( char c );
+		void buttonAdded(QChar btn);
+		void buttonRemoved(QChar btn);
 		void changed();
 
 	public slots:
-		void removeClickedButton();
+		bool removeSelectedButton(); ///< This slot is called after we drop on the item listbox...
+		void recalcItemGeometry(); ///< Call this whenever the item list changes... updates the items' rect property
 
 	protected:
+		void resizeEvent(QResizeEvent*);
 		void dragEnterEvent( QDragEnterEvent* e );
 		void dragMoveEvent( QDragMoveEvent* e );
 		void dragLeaveEvent( QDragLeaveEvent* e );
 		void dropEvent( QDropEvent* e );
-		void mousePressEvent( QMouseEvent* e );
+		void mousePressEvent( QMouseEvent* e ); ///< Starts dragging a button...
 
 		void drawContents( QPainter* p );
-		int  buttonWidth( char btn );
-		int  calcButtonStringWidth( const QString& s );
-		char removeButtonAtPoint( QPoint p );
-		void buttonInsertedAtPoint( QPoint p, bool& isleft, int& strPos );
-		void drawButtonString( QPainter* p, QString& s, int offset );
+		ButtonDropSiteItem *buttonAt(QPoint p);
+		bool removeButton(ButtonDropSiteItem *item);
+		int calcButtonListWidth(const ButtonList& buttons); ///< Computes the total space the buttons will take in the titlebar
+		void drawButtonList(QPainter *p, const ButtonList& buttons, int offset);
 
-		QPoint mouseClickPoint;
+		QRect leftDropArea();
+		QRect rightDropArea();
+
+	private:
+		/**
+		 * Try to find the item. If found, set its list and iterator and return true, else return false
+		 */
+		bool getItemIterator(ButtonDropSiteItem *item, ButtonList* &list, ButtonList::iterator &iterator);
+
+		ButtonDropSiteItem *m_selected;
 };
 
 class ButtonPositionWidget : public QWidget
@@ -139,9 +198,12 @@ class ButtonPositionWidget : public QWidget
 	signals:
 		void changed();
 
-	public: // TODO: make private
-		ButtonDropSite* dropSite;
-		ButtonSource* buttonSource;
+	private:
+		void clearButtonList(const ButtonList& btns);
+		Button getButton(QChar type, bool& success);
+
+		ButtonDropSite* m_dropSite;
+		ButtonSource *m_buttonSource;
 };
 
 
