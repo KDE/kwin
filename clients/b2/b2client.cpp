@@ -6,7 +6,7 @@
  *
  *   Thin frame in fixed size windows, titlebar gradient support and
  *   accessibility improvements are
- *   Copyright (c) 2003 Luciano Montanaro <mikelima@virgilio.it>
+ *   Copyright (c) 2003,2004 Luciano Montanaro <mikelima@cirulla.net>
  */
 
 #include "b2client.h"

@@ -2,7 +2,7 @@
  * Laptop KWin Decoration
  *
  * Port of this decoration to KDE 3.2, accessibility enhancement are
- * Copyright (c) 2003 Luciano Montanaro <mikelima@virgilio.it>
+ * Copyright (c) 2003 Luciano Montanaro <mikelima@cirulla.net>
  */
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P

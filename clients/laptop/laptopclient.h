@@ -1,7 +1,7 @@
 /*
  * Laptop KWin Client
  *
- * Ported to the kde3.2 API by Luciano Montanaro <mikelima@virgilio.it>
+ * Ported to the kde3.2 API by Luciano Montanaro <mikelima@cirulla.net>
  */
 #ifndef __KDECLIENT_H
 #define __KDECLIENT_H

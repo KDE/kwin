@@ -3,7 +3,7 @@
  *
  * Changes:
  * 	Customizable button positions by Karol Szwed <gallium@kde.org>
- * 	Ported to the kde3.2 API by Luciano Montanaro <mikelima@virgilio.it>
+ * 	Ported to the kde3.2 API by Luciano Montanaro <mikelima@cirulla.net>
  */
 
 #ifndef __B2CLIENT_H
