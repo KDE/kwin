@@ -1453,6 +1453,7 @@ void Workspace::setDecorationStyle( int deco )
 	c = new StdClient( this, w );
 	config->writeEntry("Plugin", "standard");
     }
+	config->sync();
     clients.append( c );
     stacking_order.append( c );
     c->manage( mapped );
