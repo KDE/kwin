@@ -458,10 +458,15 @@ unsigned long KDecorationPreviewOptions::updateSettings()
         d->border_size = customBorderSize;
     if (customButtonsChanged)
         d->custom_button_positions = customButtons;
-    if (!customTitleButtonsLeft.isNull() )
-        d->title_buttons_left = customTitleButtonsLeft;
-    if (!customTitleButtonsRight.isNull() )
-        d->title_buttons_right = customTitleButtonsRight;
+    if (customButtons) {
+        if (!customTitleButtonsLeft.isNull() )
+            d->title_buttons_left = customTitleButtonsLeft;
+        if (!customTitleButtonsRight.isNull() )
+            d->title_buttons_right = customTitleButtonsRight;
+    } else {
+        d->title_buttons_left = "MS";
+        d->title_buttons_right = "HIAX";
+    }
 
     return changed;
     }
