@@ -309,7 +309,6 @@ void WindowWrapper::releaseWindow()
 	}
 
 	XRemoveFromSaveSet(qt_xdisplay(), win );
-	qWarning("release window, give up select");
 	XSelectInput( qt_xdisplay(), win, NoEventMask );
 	invalidateWindow();
     }
@@ -842,9 +841,6 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
  */
 bool Client::unmapNotify( XUnmapEvent& e )
 {
-
-  qWarning("unmapNotify for window %ld", e.window);
-
     if ( e.event != windowWrapper()->winId() && !e.send_event )
       return TRUE;
 
@@ -855,12 +851,10 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	    withdraw();
 	break;
     case NormalState:
-      qWarning("in normal state: %s", caption().latin1() );
   	if ( ( !mapped || !windowWrapper()->isVisibleTo( this )) && !e.send_event )
   	    return TRUE; // this event was produced by us as well
 
 	// maybe we will be destroyed soon. Check this first.
-	qWarning("do something");
 	XEvent ev;
 	if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
 				     DestroyNotify, &ev) ){
@@ -870,12 +864,9 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	if ( XCheckTypedWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
 				     ReparentNotify, &ev) ){
 	  if ( ev.xreparent.window == windowWrapper()->window() &&
-	       ev.xreparent.parent != windowWrapper()->winId() ) {
-	    qWarning("will miss window");
+	       ev.xreparent.parent != windowWrapper()->winId() )
 	    invalidateWindow();
-	  }
 	}
-	qWarning("do withdraw");
 	// fall through
     case WithdrawnState: // however that has been possible....
 	withdraw();
@@ -964,10 +955,11 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	}
 #endif	
 	
-	if ( isMaximized() && maximizeMode() == MaximizeFull )
-	    np = workspace()->clientArea().topLeft();
-	
-	move( np );
+	if ( isMaximized() ) {
+	  geom_restore.moveTopLeft( np );
+	} else {
+	  move( np );
+	}
     }
 
     if ( e.value_mask & (CWWidth | CWHeight ) ) {
@@ -978,11 +970,28 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	if ( e.value_mask & CWHeight )
 	    nh = e.height;
 	QSize ns = sizeForWindowSize( QSize( nw, nh ) );
-	if ( isMaximized() && maximizeMode() == MaximizeFull )
-	    ns = workspace()->clientArea().size();
-	if ( ns == size() )
+
+	QRect area = workspace()->clientArea();
+	if ( isMaximizable() && !isMaximized() 
+	     && ( ns.width() >= area.width() || ns.height() >= area.height() ) ) {
+	  // window is too large for the screen, maximize in the
+	  // directions necessary 
+	  if ( ns.width() >= area.width() && ns.height() >= area.height() ) {
+	    maximize( Client::MaximizeFull );
+	  } else if ( ns.width() >= area.width() ) {
+	    maximize( Client::MaximizeHorizontal );
+	  } else if ( ns.height() >= area.height() ) {
+	    maximize( Client::MaximizeVertical );
+	  }
+	} else if ( isMaximizable() && isMaximized()
+	    && ( ns.width() < area.width() || ns.height() < area.height() ) ) {
+	  geom_restore.setSize( ns );
+	  maximize( Client::MaximizeRestore );
+	} else {
+	  if ( ns == size() )
 	    return TRUE; // broken xemacs stuff (ediff)
-	resize( ns );
+	  resize( ns );
+	}
     }
 
 
