@@ -209,12 +209,16 @@ void B2Button::setPixmaps(int button_id)
 void B2Button::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
-    QButton::mousePressEvent(e);
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
+                    LeftButton, e->state());
+    QButton::mousePressEvent(&me);
 }
 
 void B2Button::mouseReleaseEvent( QMouseEvent* e )
 {
-    QButton::mouseReleaseEvent(e);
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
+                   LeftButton, e->state());
+    QButton::mouseReleaseEvent(&me);
 }
 
 // =====================================
@@ -315,27 +319,23 @@ void B2Titlebar::paintEvent(QPaintEvent *)
 void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
 {
     client->titlebarDblClickOperation();
-    // ?? client->workspace()->requestFocus( client );
 }
 
-#if 0 // TODO JUMPYTITLEBAR
+#if 0
 void B2Titlebar::mousePressEvent( QMouseEvent * e )
 {
     shift_move = e->state() & ShiftButton;
     if (shift_move) {
         moveOffset = e->globalPos();
+    } else {
+	client->processMousePressEvent(e);
+   	// client->performWindowOperation(KDecoration::MoveOp); 
     }
-    QMouseEvent _e(QEvent::MouseButtonPress, mapToParent(e->pos()),
-        e->globalPos(), e->button(), e->state());
-    client->processMousePressEvent(&_e);
 }
 
 void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
 {
     shift_move = false;
-    QMouseEvent _e(QEvent::MouseButtonRelease, mapToParent(e->pos()),
-        e->globalPos(), e->button(), e->state());
-    //client->widget()->mouseReleaseEvent(&_e);
 }
 
 void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
@@ -347,12 +347,9 @@ void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
 	if (oldx >= 0 && oldx <= rect().right()) {
             client->titleMoveRel(xdiff);
 	}
-    } else {
-	QMouseEvent _e(QEvent::MouseMove, mapToParent(e->pos()),
-	    e->globalPos(), e->button(), e->state());
-	//client->widget()->mouseMoveEvent( &_e);
-    }
+    } 
 }
+
 #endif
 
 // =====================================
@@ -442,6 +439,7 @@ void B2Client::init()
             button[i]->setBg(c);
 
     titlebar->recalcBuffer();
+    titlebar->installEventFilter(this);
     positionButtons();
 
     //connect(options(), SIGNAL(resetClients()), this, SLOT(slotReset()));

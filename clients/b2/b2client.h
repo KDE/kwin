@@ -70,7 +70,7 @@ protected:
     void paintEvent( QPaintEvent* );
     bool x11Event(XEvent *e);
     void mouseDoubleClickEvent( QMouseEvent * );
-#if 0 // TODO JUMPYTITLEBAR
+#if 0
     void mousePressEvent( QMouseEvent * );
     void mouseReleaseEvent( QMouseEvent * );
     void mouseMoveEvent(QMouseEvent *);
