@@ -118,7 +118,7 @@ QString KWinOptions::quickHelp() const
 const KAboutData* KWinOptions::aboutData() const
 {
     KAboutData *about =
-    new KAboutData(I18N_NOOP("kcmkwinoptions"), I18N_NOOP("Window Behaviour Configuration Module"),
+    new KAboutData(I18N_NOOP("kcmkwinoptions"), I18N_NOOP("Window Behavior Configuration Module"),
                   0, 0, KAboutData::License_GPL,
                   I18N_NOOP("(c) 1997 - 2002 KWin and KControl Authors"));
 
