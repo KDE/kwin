@@ -13,6 +13,7 @@ class TabBox;
 class KGlobalAccel;
 
 typedef QValueList<Client*> ClientList;
+typedef QValueList<WId> WIdList;
 
 class Workspace : public QObject
 {
@@ -104,6 +105,11 @@ private:
     void setDecoration( int deco );
 
     void propagateClients( bool onlyStacking = FALSE);
+    
+    WIdList dockwins;
+    bool addDockwin( WId w );
+    bool removeDockwin( WId w );
+    void propagateDockwins();
 };
 
 inline WId Workspace::rootWin() const

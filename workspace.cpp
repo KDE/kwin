@@ -111,6 +111,8 @@ void Workspace::init()
 	if (attr.override_redirect )
 	    continue;
 	if (attr.map_state != IsUnmapped) {
+	    if ( addDockwin( wins[i] ) )
+		continue;
 	    Client* c = clientFactory( this, wins[i] );
 	    if ( c != desktop_client ) {
 		clients.append( c );
@@ -172,6 +174,10 @@ bool Workspace::workspaceEvent( XEvent * e )
 	
 	if ( c )
 	    return c->windowEvent( e );
+
+	// check for dock windows
+	if ( removeDockwin( e->xunmap.window ) )
+	    return TRUE;
 	
 	if ( e->xunmap.event != e->xunmap.window ) // hide wm typical event from Qt
 	    return TRUE;
@@ -183,11 +189,15 @@ bool Workspace::workspaceEvent( XEvent * e )
 	//window manager who does the reparenting.
 	return TRUE;
     case DestroyNotify:
+	if ( removeDockwin( e->xdestroywindow.window ) )
+	    return TRUE;
 	return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
 	if ( e->xmaprequest.parent == root ) {
 	    c = findClient( e->xmaprequest.window );
 	    if ( !c ) {
+		if ( addDockwin( e->xmaprequest.window ) )
+		    return TRUE;
 		c = clientFactory( this, e->xmaprequest.window );
 		if ( root != qt_xrootwin() ) {
 		    // TODO may use QWidget:.create
@@ -974,7 +984,7 @@ void Workspace::propagateClients( bool onlyStacking )
     WId* cl;
     int i;
     if ( !onlyStacking ) {
-	WId* cl = new WId[ clients.count()];
+	cl = new WId[ clients.count()];
 	i = 0;
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it ) {
 	    cl[i++] =  (*it)->window();
@@ -993,5 +1003,45 @@ void Workspace::propagateClients( bool onlyStacking )
     XChangeProperty(qt_xdisplay(), qt_xrootwin(),
 		    atoms->net_client_list_stacking, XA_WINDOW, 32,
 		    PropModeReplace, (unsigned char *)cl, stacking_order.count());
+    delete [] cl;
+}
+
+
+bool Workspace::addDockwin( WId w )
+{
+    if ( !KWM::isDockWindow( w ) )
+	return FALSE;
+    dockwins.append( w );
+    XSelectInput( qt_xdisplay(), w,
+// 		  FocusChangeMask |
+// 		  PropertyChangeMask |
+		  StructureNotifyMask
+		  );
+    propagateDockwins();
+    return TRUE;
+}
+
+bool Workspace::removeDockwin( WId w )
+{
+    if ( !dockwins.contains( w ) )
+	return FALSE;
+    dockwins.remove( w );
+    propagateDockwins();
+    return TRUE;
+}
+
+/*!
+  Propagates the dockwins to the world
+ */
+void Workspace::propagateDockwins()
+{
+    WId* cl = new WId[ dockwins.count()];
+    int i = 0;
+    for ( WIdList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
+	cl[i++] =  (*it);
+    }
+    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
+		    atoms->net_kde_docking_windows, XA_WINDOW, 32,
+		    PropModeReplace, (unsigned char *)cl, dockwins.count());
     delete [] cl;
 }
