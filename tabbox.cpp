@@ -210,7 +210,8 @@ void TabBox::reset()
 
     // height, width for the popup
     h += 2 * frameWidth();
-    w = QMIN( QMAX( 5 + (showMiniIcon ? 16 : 32) + 8 +wmax, r.width()/3 ), r.width() );  // 5=space, ()=icon, 8=space between icon+text
+    w = 2*frameWidth() + 5*2 + ( showMiniIcon ? 16 : 32 ) + 8 + wmax; // 5*2=margins, ()=icon, 8=space between icon+text
+    w = kClamp( w, r.width()/3 , r.width() );
 
     setGeometry( (r.width()-w)/2 + r.x(),
                  (r.height()-h)/2+ r.y(),
