@@ -407,7 +407,7 @@ void KDEClient::resizeEvent( QResizeEvent* e)
     }
 }
 
-void KDEClient::captionChange( const QString&str )
+void KDEClient::captionChange( const QString& )
 {
     bufferDirty = true;
     repaint( titlebar->geometry(), false );
@@ -649,5 +649,24 @@ void KDEClient::updateActiveBuffer( )
     p.end();
 }
 
+  Client::MousePosition
+KDEClient::mousePosition( const QPoint& p ) const
+{
+  MousePosition m = Nowhere;
+
+  if (p.y() < (height() - 7))
+    m = Client::mousePosition(p);
+
+  else {
+    if (p.x() >= (width() - 20))
+      m = BottomRight;
+    else if (p.x() <= 20)
+      m = BottomLeft;
+    else
+      m = Bottom;
+  }
+
+  return m;
+}
 
 #include "kdedefault.moc"

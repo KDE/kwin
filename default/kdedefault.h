@@ -63,6 +63,9 @@ protected:
 
     void calcHiddenButtons();
     void updateActiveBuffer();
+
+    MousePosition mousePosition(const QPoint &) const;
+
 protected slots:
     void slotReset();
     void slotMaximize();
