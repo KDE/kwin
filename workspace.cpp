@@ -295,6 +295,8 @@ Client* Workspace::clientFactory( WId w )
             }
         break;
         }
+    case NET::Splash:
+        return new NoBorderClient( this, w );
     case NET::Tool:
         break;
     default:
@@ -442,7 +444,7 @@ void Workspace::init()
         NET::OverrideMask |
         NET::TopMenuMask |
 //        NET::UtilityMask |  TODO
-//        NET::SplashMask | TODO
+        NET::SplashMask |
         0
         ,
 //        NET::Modal | TODO

@@ -165,6 +165,7 @@ public:
     bool isMenu() const;
     bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
     bool isDialog() const;
+    bool isSplash() const;
 
     bool isResizable() const;
     bool isCloseable() const; // may have a close button

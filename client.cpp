@@ -2741,7 +2741,7 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus( bool force )
 {
-    if ( !force && ( isTopMenu() || isDock() ) )
+    if ( !force && ( isTopMenu() || isDock() || isSplash() ) )
         return; // toplevel menus and dock windows don't take focus if not forced
 
     if ( input ) {
@@ -3238,6 +3238,11 @@ bool Client::isTopMenu() const
 bool Client::isMenu() const
 {
     return windowType() == NET::Menu;
+}
+
+bool Client::isSplash() const
+{
+    return windowType() == NET::Splash;
 }
 
 bool Client::isToolbar() const
