@@ -223,6 +223,8 @@ Workspace::Workspace( bool restore )
 
     if ( restore )
       loadSessionInfo();
+    
+    loadFakeSessionInfo();
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
 
