@@ -115,17 +115,20 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	XLowerWindow( qt_xdisplay(), w );
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
+        c->setMayMove( FALSE );
 	ws->setDesktopClient( c );
 	return c;
     }
     if ( s == "Kicker" ) {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
+        c->setMayMove( FALSE );
 	return c;
     }
     if ( s == "MAC MENU [menu]" ) {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
+        c->setMayMove( FALSE );
 	return c;
     }
     if ( ( s.right(6) == "[menu]" ) || ( s.right(7) == "[tools]" ) ) {
@@ -1296,21 +1299,16 @@ void Workspace::deskCleanup(CleanupType ct)
 {
   QValueList<Client *>::Iterator it(clients.fromLast());
   for (; it != clients.begin(); --it) {
-    QString s = KWM::title( (*it)->window() );
-    if (s == "Kicker" ||
-	s == "THE DESKTOP")
-      continue;
     if((!(*it)->isOnDesktop(currentDesktop())) ||
        ((*it)->isIconified())                  ||
-       ((*it)->isSticky()) )
+       ((*it)->isSticky())                     ||
+       (!(*it)->mayMove()) )
       continue;
 
-    else {
-      if (ct == Cascade)
-	cascadePlacement(*it);
-      else if (ct == Unclutter)
-	smartPlacement(*it);
-    }
+    if (ct == Cascade)
+       cascadePlacement(*it);
+    else if (ct == Unclutter)
+       smartPlacement(*it);
   }
 }
 

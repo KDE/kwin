@@ -348,6 +348,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     transient_for = None;
     is_shape = FALSE;
     is_sticky = FALSE;
+    may_move = TRUE;
 
     getWMHints();
     getWindowProtocols();
@@ -990,6 +991,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	setMouseCursor( mode );
 	return;
     }
+
+    if ( !mayMove()) return;
 
     if ( !moveResizeMode )
     {
@@ -1725,6 +1728,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	replay = TRUE;
 	break;
     case Options::MouseMove:
+        if (!mayMove())
+           break;
 	mode = Center;
 	moveResizeMode = TRUE;
 	buttonDown = TRUE;
@@ -1736,6 +1741,8 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    XGrabServer( qt_xdisplay() );
 	break;
     case Options::MouseResize:
+        if (!mayMove())
+           break;
 	moveResizeMode = TRUE;
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );

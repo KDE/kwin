@@ -111,6 +111,9 @@ public:
     bool isSticky() const;
     void setSticky( bool );
 
+    bool mayMove() const { return may_move; }
+    void setMayMove( bool m) { may_move = m; }
+
     void takeFocus();
 
     void setMask( const QRegion & );
@@ -222,6 +225,7 @@ private:
     WId transient_for;
     bool is_sticky;
     bool is_shape;
+    bool may_move;
     void getWMHints();
     void getWindowProtocols();
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
