@@ -474,8 +474,12 @@ bool Client::manage( Window w, bool isMapped )
     if( isTopMenu())
         hideClient( true );
 
-    if( user_time == CurrentTime ) // no known user time, set something old
+    if( user_time == CurrentTime || user_time == -1U ) // no known user time, set something old
+        {
         user_time = qt_x_time - 1000000;
+        if( user_time == CurrentTime || user_time == -1U ) // let's be paranoid
+            user_time = qt_x_time - 1000000 + 10;
+        }
 
     updateWorkareaDiffs( area );
 
