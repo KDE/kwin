@@ -33,6 +33,12 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/Xatom.h>
 #include <X11/extensions/shape.h>
 
+// Needed for --enable-final
+// XIconincState is defined in workspace.cpp
+#ifndef IconicState
+#define IconicState XIconicState
+#endif
+
 namespace KWinInternal {
 
 // NET WM Protocol handler class

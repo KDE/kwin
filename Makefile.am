@@ -5,7 +5,8 @@ SUBDIRS = default . pics clients
 bin_PROGRAMS = kwin
 lib_LTLIBRARIES = kwin.la
 
-kwin_la_SOURCES = atoms.cpp  client.cpp main.cpp workspace.cpp \
+# workspace.cpp has to be first in order not to break --enable-final
+kwin_la_SOURCES = workspace.cpp atoms.cpp  client.cpp main.cpp \
 	tabbox.cpp options.cpp plugins.cpp events.cpp KWinInterface.skel \
 	killwindow.cpp 
 kwin_la_LIBADD = $(LIB_KDEUI) $(top_builddir)/kwin/default/libkwindefault.la
