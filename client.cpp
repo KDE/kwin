@@ -681,6 +681,9 @@ bool Client::windowEvent( XEvent * e)
 
     if ( ( dirty & NET::WMName ) != 0 )
 	fetchName();
+    if ( ( dirty & NET::WMStrut ) != 0 )
+	workspace()->updateClientArea();
+    
 
     switch (e->type) {
     case UnmapNotify:
@@ -1060,7 +1063,7 @@ bool Client::isResizable() const
 {
     if ( !isMovable() )
 	return FALSE;
-    
+
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
 	return TRUE;
     return ( xSizeHint.min_width != xSizeHint.max_width  ) ||
@@ -2257,7 +2260,7 @@ bool Client::wantsTabFocus() const
     return windowType() == NET::Normal && input;
 }
 
-/*!  
+/*!
   Returns whether the window is moveable or has a fixed
   position. !isMovable implies !isResizable.
  */
