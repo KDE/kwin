@@ -2681,7 +2681,7 @@ void Client::keyPressEvent( uint key_code )
 {
     if ( !isMove() && !isResize() )
         return;
-    bool is_control = key_code & KKeyNative::modX(KKey::CTRL);
+    bool is_control = key_code & Qt::CTRL;
     key_code = key_code & 0xffff;
     int delta = is_control?1:8;
     QPoint pos = QCursor::pos();
@@ -2725,6 +2725,7 @@ void Client::keyPressEvent( uint key_code )
     case Key_Space:
     case Key_Return:
     case Key_Enter:
+    case Key_Escape:
         clearbound();
         stopMoveResize();
         setGeometry( geom );
