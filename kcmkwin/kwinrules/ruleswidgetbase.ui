@@ -8,13 +8,19 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>700</width>
-            <height>500</height>
+            <width>600</width>
+            <height>503</height>
         </rect>
     </property>
-    <hbox>
+    <property name="caption">
+        <string>Form2</string>
+    </property>
+    <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
         </property>
         <widget class="QTabWidget">
             <property name="name">
@@ -27,11 +33,11 @@
                 <attribute name="title">
                     <string>&amp;Window</string>
                 </attribute>
-                <vbox>
+                <grid>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QLabel">
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="5">
                         <property name="name">
                             <cstring>textLabel1</cstring>
                         </property>
@@ -42,12 +48,12 @@
                             <cstring>description</cstring>
                         </property>
                     </widget>
-                    <widget class="KLineEdit">
+                    <widget class="KLineEdit" row="1" column="0" rowspan="1" colspan="5">
                         <property name="name">
                             <cstring>description</cstring>
                         </property>
                     </widget>
-                    <widget class="QLabel">
+                    <widget class="QLabel" row="2" column="0" rowspan="1" colspan="5">
                         <property name="name">
                             <cstring>textLabel2</cstring>
                         </property>
@@ -58,113 +64,7 @@
                             <cstring>wmclass</cstring>
                         </property>
                     </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout3</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KLineEdit">
-                                <property name="name">
-                                    <cstring>wmclass</cstring>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>whole_wmclass</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Match w&amp;hole window class</string>
-                                </property>
-                            </widget>
-                        </hbox>
-                    </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout22</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KComboBox">
-                                <item>
-                                    <property name="text">
-                                        <string>Unimportant</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Exact Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Substring Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Regular Expression</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>wmclass_match</cstring>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer2</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                            <widget class="KPushButton">
-                                <property name="name">
-                                    <cstring>edit_reg_wmclass</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Edit</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer5</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </hbox>
-                    </widget>
-                    <widget class="QLabel">
+                    <widget class="QLabel" row="5" column="0" rowspan="1" colspan="5">
                         <property name="name">
                             <cstring>textLabel3</cstring>
                         </property>
@@ -175,167 +75,12 @@
                             <cstring>role</cstring>
                         </property>
                     </widget>
-                    <widget class="KLineEdit">
+                    <widget class="KLineEdit" row="6" column="0" rowspan="1" colspan="5">
                         <property name="name">
                             <cstring>role</cstring>
                         </property>
                     </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout23</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KComboBox">
-                                <item>
-                                    <property name="text">
-                                        <string>Unimportant</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Exact Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Substring Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Regular Expression</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>role_match</cstring>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer1</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                            <widget class="KPushButton">
-                                <property name="name">
-                                    <cstring>edit_reg_role</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Edit</string>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer4</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </hbox>
-                    </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout10</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QGroupBox">
-                                <property name="name">
-                                    <cstring>groupBox1</cstring>
-                                </property>
-                                <property name="title">
-                                    <string>Detect Window Properties</string>
-                                </property>
-                                <vbox>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <widget class="QLayoutWidget">
-                                        <property name="name">
-                                            <cstring>layout9</cstring>
-                                        </property>
-                                        <hbox>
-                                            <property name="name">
-                                                <cstring>unnamed</cstring>
-                                            </property>
-                                            <spacer>
-                                                <property name="name">
-                                                    <cstring>spacer27</cstring>
-                                                </property>
-                                                <property name="orientation">
-                                                    <enum>Horizontal</enum>
-                                                </property>
-                                                <property name="sizeType">
-                                                    <enum>Expanding</enum>
-                                                </property>
-                                                <property name="sizeHint">
-                                                    <size>
-                                                        <width>40</width>
-                                                        <height>20</height>
-                                                    </size>
-                                                </property>
-                                            </spacer>
-                                            <widget class="KPushButton">
-                                                <property name="name">
-                                                    <cstring>detect1</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>&amp;Detect</string>
-                                                </property>
-                                            </widget>
-                                            <spacer>
-                                                <property name="name">
-                                                    <cstring>spacer28</cstring>
-                                                </property>
-                                                <property name="orientation">
-                                                    <enum>Horizontal</enum>
-                                                </property>
-                                                <property name="sizeType">
-                                                    <enum>Expanding</enum>
-                                                </property>
-                                                <property name="sizeHint">
-                                                    <size>
-                                                        <width>40</width>
-                                                        <height>20</height>
-                                                    </size>
-                                                </property>
-                                            </spacer>
-                                        </hbox>
-                                    </widget>
-                                </vbox>
-                            </widget>
-                        </hbox>
-                    </widget>
-                    <spacer>
+                    <spacer row="9" column="1">
                         <property name="name">
                             <cstring>spacer29</cstring>
                         </property>
@@ -352,7 +97,218 @@
                             </size>
                         </property>
                     </spacer>
-                </vbox>
+                    <widget class="KComboBox" row="7" column="0">
+                        <item>
+                            <property name="text">
+                                <string>Unimportant</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Exact Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Substring Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Regular Expression</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>role_match</cstring>
+                        </property>
+                    </widget>
+                    <spacer row="7" column="1">
+                        <property name="name">
+                            <cstring>spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>212</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KPushButton" row="7" column="2">
+                        <property name="name">
+                            <cstring>edit_reg_role</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string>Edit</string>
+                        </property>
+                    </widget>
+                    <spacer row="7" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>211</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KComboBox" row="4" column="0">
+                        <item>
+                            <property name="text">
+                                <string>Unimportant</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Exact Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Substring Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Regular Expression</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>wmclass_match</cstring>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="1">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>212</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KPushButton" row="4" column="2">
+                        <property name="name">
+                            <cstring>edit_reg_wmclass</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string>Edit</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>211</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KLineEdit" row="3" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>wmclass</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="4">
+                        <property name="name">
+                            <cstring>whole_wmclass</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Match w&amp;hole window class</string>
+                        </property>
+                    </widget>
+                    <widget class="QGroupBox" row="8" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>groupBox1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Detect Window Properties</string>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer27</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>270</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="KPushButton">
+                                <property name="name">
+                                    <cstring>detect1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Detect</string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer28</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>269</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                </grid>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -361,11 +317,11 @@
                 <attribute name="title">
                     <string>Window &amp;Extra</string>
                 </attribute>
-                <vbox>
+                <grid>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QLabel">
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>textLabel4</cstring>
                         </property>
@@ -376,7 +332,7 @@
                             <cstring>types</cstring>
                         </property>
                     </widget>
-                    <widget class="KListBox">
+                    <widget class="KListBox" row="1" column="0" rowspan="1" colspan="4">
                         <item>
                             <property name="text">
                                 <string>Normal Window</string>
@@ -434,7 +390,7 @@
                             <enum>Multi</enum>
                         </property>
                     </widget>
-                    <widget class="QLabel">
+                    <widget class="QLabel" row="2" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>textLabel5</cstring>
                         </property>
@@ -445,95 +401,12 @@
                             <cstring>title</cstring>
                         </property>
                     </widget>
-                    <widget class="KLineEdit">
+                    <widget class="KLineEdit" row="3" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>title</cstring>
                         </property>
                     </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout24</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KComboBox">
-                                <item>
-                                    <property name="text">
-                                        <string>Unimportant</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Exact Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Substring Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Regular Expression</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>title_match</cstring>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer2_2</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                            <widget class="KPushButton">
-                                <property name="name">
-                                    <cstring>edit_reg_title</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Edit</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer5_2</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </hbox>
-                    </widget>
-                    <widget class="QLabel">
+                    <widget class="QLabel" row="5" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>textLabel6</cstring>
                         </property>
@@ -544,95 +417,12 @@
                             <cstring>extra</cstring>
                         </property>
                     </widget>
-                    <widget class="KLineEdit">
+                    <widget class="KLineEdit" row="6" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>extra</cstring>
                         </property>
                     </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout25</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KComboBox">
-                                <item>
-                                    <property name="text">
-                                        <string>Unimportant</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Exact Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Substring Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Regular Expression</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>extra_match</cstring>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer2_2_2</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                            <widget class="KPushButton">
-                                <property name="name">
-                                    <cstring>edit_reg_extra</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Edit</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer5_2_2</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </hbox>
-                    </widget>
-                    <widget class="QLabel">
+                    <widget class="QLabel" row="8" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>textLabel7</cstring>
                         </property>
@@ -643,95 +433,231 @@
                             <cstring>machine</cstring>
                         </property>
                     </widget>
-                    <widget class="KLineEdit">
+                    <widget class="KLineEdit" row="9" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>machine</cstring>
                         </property>
                     </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout26</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
+                    <widget class="KComboBox" row="4" column="0">
+                        <item>
+                            <property name="text">
+                                <string>Unimportant</string>
                             </property>
-                            <widget class="KComboBox">
-                                <item>
-                                    <property name="text">
-                                        <string>Unimportant</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Exact Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Substring Match</string>
-                                    </property>
-                                </item>
-                                <item>
-                                    <property name="text">
-                                        <string>Regular Expression</string>
-                                    </property>
-                                </item>
-                                <property name="name">
-                                    <cstring>machine_match</cstring>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer2_2_3</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                            <widget class="KPushButton">
-                                <property name="name">
-                                    <cstring>edit_reg_machine</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Edit</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
-                                </property>
-                            </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>spacer5_2_3</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Horizontal</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </hbox>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Exact Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Substring Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Regular Expression</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>title_match</cstring>
+                        </property>
                     </widget>
-                </vbox>
+                    <spacer row="4" column="1">
+                        <property name="name">
+                            <cstring>spacer2_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>199</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KPushButton" row="4" column="2">
+                        <property name="name">
+                            <cstring>edit_reg_title</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string>Edit</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="3">
+                        <property name="name">
+                            <cstring>spacer5_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>199</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KComboBox" row="7" column="0">
+                        <item>
+                            <property name="text">
+                                <string>Unimportant</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Exact Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Substring Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Regular Expression</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>extra_match</cstring>
+                        </property>
+                    </widget>
+                    <spacer row="7" column="1">
+                        <property name="name">
+                            <cstring>spacer2_2_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>199</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KPushButton" row="7" column="2">
+                        <property name="name">
+                            <cstring>edit_reg_extra</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string>Edit</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <spacer row="7" column="3">
+                        <property name="name">
+                            <cstring>spacer5_2_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>199</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KComboBox" row="10" column="0">
+                        <item>
+                            <property name="text">
+                                <string>Unimportant</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Exact Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Substring Match</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Regular Expression</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>machine_match</cstring>
+                        </property>
+                    </widget>
+                    <spacer row="10" column="1">
+                        <property name="name">
+                            <cstring>spacer2_2_3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>199</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KPushButton" row="10" column="2">
+                        <property name="name">
+                            <cstring>edit_reg_machine</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string>Edit</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <spacer row="10" column="3">
+                        <property name="name">
+                            <cstring>spacer5_2_3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>199</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -772,7 +698,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="KRestrictedLine" row="1" column="3">
+                    <widget class="KRestrictedLine" row="1" column="2">
                         <property name="name">
                             <cstring>size</cstring>
                         </property>
@@ -799,7 +725,7 @@
                             <string>&amp;Position</string>
                         </property>
                     </widget>
-                    <widget class="KRestrictedLine" row="0" column="3">
+                    <widget class="KRestrictedLine" row="0" column="2">
                         <property name="name">
                             <cstring>position</cstring>
                         </property>
@@ -838,24 +764,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <spacer row="9" column="2">
-                        <property name="name">
-                            <cstring>spacer31</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>40</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="3" column="3">
+                    <widget class="QCheckBox" row="3" column="2">
                         <property name="name">
                             <cstring>maximizevert</cstring>
                         </property>
@@ -894,7 +803,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="4" column="3">
+                    <widget class="QCheckBox" row="4" column="2">
                         <property name="name">
                             <cstring>fullscreen</cstring>
                         </property>
@@ -913,7 +822,7 @@
                             <string>Maximized &amp;horizontally</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="2" column="3">
+                    <widget class="QCheckBox" row="2" column="2">
                         <property name="name">
                             <cstring>maximizehoriz</cstring>
                         </property>
@@ -1024,7 +933,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="KComboBox" row="5" column="3">
+                    <widget class="KComboBox" row="5" column="2">
                         <property name="name">
                             <cstring>desktop</cstring>
                         </property>
@@ -1048,35 +957,7 @@
                             <string>Sh&amp;aded</string>
                         </property>
                     </widget>
-                    <widget class="KComboBox" row="7" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Do Not Affect</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Apply Initially</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Remember</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Force</string>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>rule_shade</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="7" column="3">
+                    <widget class="QCheckBox" row="7" column="2">
                         <property name="name">
                             <cstring>shade</cstring>
                         </property>
@@ -1115,7 +996,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="6" column="3">
+                    <widget class="QCheckBox" row="6" column="2">
                         <property name="name">
                             <cstring>minimize</cstring>
                         </property>
@@ -1152,7 +1033,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="KComboBox" row="8" column="3">
+                    <widget class="KComboBox" row="8" column="2">
                         <item>
                             <property name="text">
                                 <string>Default</string>
@@ -1211,6 +1092,51 @@
                         </property>
                         <property name="text">
                             <string>P&amp;lacement</string>
+                        </property>
+                    </widget>
+                    <spacer row="9" column="1">
+                        <property name="name">
+                            <cstring>spacer31</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="KComboBox" row="7" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_shade</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
                         </property>
                     </widget>
                 </grid>
@@ -2002,10 +1928,8 @@
                 </grid>
             </widget>
         </widget>
-    </hbox>
+    </vbox>
 </widget>
-<customwidgets>
-</customwidgets>
 <connections>
     <connection>
         <sender>detect1</sender>
@@ -2142,49 +2066,4 @@
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
-<includehints>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>klistbox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-</includehints>
 </UI>
