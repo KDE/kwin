@@ -94,12 +94,12 @@ static void create_pixmaps()
         if(framePixmaps[i]->isNull())
             qWarning("Unable to load frame pixmap for %s", keys[i]);
     }
-
+/*
     *framePixmaps[FrameTop] = stretchPixmap(*framePixmaps[FrameTop], false);
     *framePixmaps[FrameBottom] = stretchPixmap(*framePixmaps[FrameBottom], false);
     *framePixmaps[FrameLeft] = stretchPixmap(*framePixmaps[FrameLeft], true);
     *framePixmaps[FrameRight] = stretchPixmap(*framePixmaps[FrameRight], true);
-
+*/
     maxExtent = framePixmaps[FrameTop]->height();
     if(framePixmaps[FrameBottom]->height() > maxExtent)
         maxExtent = framePixmaps[FrameBottom]->height();
@@ -107,6 +107,8 @@ static void create_pixmaps()
         maxExtent = framePixmaps[FrameLeft]->width();
     if(framePixmaps[FrameRight]->width() > maxExtent)
         maxExtent = framePixmaps[FrameRight]->width();
+
+    maxExtent++;
 
     menuPix = new QPixmap(locate("appdata",
                                  "pics/"+config->readEntry("menu", " ")));
@@ -247,7 +249,7 @@ void MyButton::drawButtonLabel(QPainter *p)
 
 KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity)
+    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents )
 {
     stickyBtn = maxBtn = mnuBtn = 0;
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset())); 
@@ -732,7 +734,6 @@ void KWMThemeClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
         setShade( !isShade() );
-    workspace()->requestFocus( this );
 }
 
 void KWMThemeClient::stickyChange(bool on)
