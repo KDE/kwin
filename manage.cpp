@@ -44,7 +44,7 @@ bool Client::manage( Window w, bool isMapped )
     // from this place on, manage() mustn't return false
     block_geometry = 1;
 
-    embedClient( w );
+    embedClient( w, attr );
 
     // SELI order all these things in some sane manner
 
@@ -494,7 +494,7 @@ bool Client::manage( Window w, bool isMapped )
     }
 
 // called only from manage()
-void Client::embedClient( Window w )
+void Client::embedClient( Window w, const XWindowAttributes &attr )
     {
     assert( client == None );
     assert( frame == None );
@@ -507,8 +507,19 @@ void Client::embedClient( Window w )
     XWindowChanges wc;     // set the border width to 0
     wc.border_width = 0; // TODO possibly save this, and also use it for initial configuring of the window
     XConfigureWindow( qt_xdisplay(), client, CWBorderWidth, &wc );
-    frame = XCreateSimpleWindow( qt_xdisplay(), qt_xrootwin(), 0, 0, 1, 1, 0, 0, 0 );
-    wrapper = XCreateSimpleWindow( qt_xdisplay(), frame, 0, 0, 1, 1, 0, 0, 0 );
+
+    XSetWindowAttributes swa;
+    swa.colormap = attr.colormap;
+    swa.background_pixmap = None;
+    swa.border_pixel = 0;
+
+    frame = XCreateWindow( qt_xdisplay(), qt_xrootwin(), 0, 0, 1, 1, 0,
+		    attr.depth, InputOutput, attr.visual,
+		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
+    wrapper = XCreateWindow( qt_xdisplay(), frame, 0, 0, 1, 1, 0,
+		    attr.depth, InputOutput, attr.visual,
+		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
+
     XDefineCursor( qt_xdisplay(), frame, arrowCursor.handle());
     // some apps are stupid and don't define their own cursor - set the arrow one for them
     XDefineCursor( qt_xdisplay(), wrapper, arrowCursor.handle());
@@ -533,8 +544,6 @@ void Client::embedClient( Window w )
                   EnterWindowMask | LeaveWindowMask |
                   KeyPressMask | KeyReleaseMask
                   );
-    XSetWindowBackgroundPixmap( qt_xdisplay(), frameId(), None );
-    XSetWindowBackgroundPixmap( qt_xdisplay(), wrapperId(), None );
     updateMouseGrab();
     }
 

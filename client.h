@@ -357,7 +357,7 @@ class Client : public QObject, public KDecorationDefines
         void killProcess( bool ask, Time timestamp = CurrentTime );
         void updateUrgency();
 
-        void embedClient( Window w );    
+        void embedClient( Window w, const XWindowAttributes &attr );    
         void detectNoBorder();
         void destroyDecoration();
         void updateFrameStrut();
