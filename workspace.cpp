@@ -161,8 +161,8 @@ void Workspace::init()
     config->setGroup("Desktops");
     if (!config->hasKey("NumberOfDesktops"))
       config->writeEntry("NumberOfDesktops", 4);
-    int number_of_desktops = config->readNumEntry("NumberOfDesktops");
-    setNumberOfDesktops( number_of_desktops );
+    int n = config->readNumEntry("NumberOfDesktops");
+    setNumberOfDesktops( n );
     setCurrentDesktop( 1 );
 
     unsigned int i, nwins;
