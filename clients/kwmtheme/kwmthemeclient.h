@@ -40,6 +40,7 @@ protected:
 protected slots:
     void slotReset();
 private:
+    QPixmap buffer;
     KPixmap *aGradient, *iGradient;
     MyButton *maxBtn, *stickyBtn;
     QSpacerItem *titlebar;

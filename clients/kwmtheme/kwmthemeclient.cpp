@@ -290,9 +290,18 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
     setBackgroundMode(NoBackground);
 }
 
-void KWMThemeClient::drawTitle(QPainter &p)
+void KWMThemeClient::drawTitle(QPainter &dest)
 {
-    QRect r = titlebar->geometry();
+    QRect titleRect = titlebar->geometry();
+    QRect r(0, 0, titleRect.width(), titleRect.height());
+    QPixmap buffer;
+
+    if(buffer.width() == r.width())
+        return;
+
+    buffer.resize(r.size());
+    QPainter p;
+    p.begin(&buffer);
 
     if(titleSunken){
         qDrawShadeRect(&p, r, options->colorGroup(Options::Frame, isActive()),
@@ -324,7 +333,11 @@ void KWMThemeClient::drawTitle(QPainter &p)
     r.setLeft(r.left()+5);
     r.setRight(r.right()-5);
     p.drawText(r, titleAlign, caption());
+    p.end();
+
+    dest.drawPixmap(titleRect.x(), titleRect.y(), buffer);
 }
+
 
 void KWMThemeClient::resizeEvent( QResizeEvent* e)
 {
