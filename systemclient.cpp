@@ -258,16 +258,23 @@ void SystemClient::paintEvent( QPaintEvent* )
     t.setTop( 1 );
 
     // if we have a pixmapped bg use that, otherwise use color settings
-    if(colorGroup().brush(QColorGroup::Background).pixmap())
+
+    if(colorGroup().brush(QColorGroup::Background).pixmap()){
         qDrawShadePanel(&p, rect(), colorGroup(), false, 1,
                         &colorGroup().brush(QColorGroup::Background));
-    else
+
+    }
+    else{
         qDrawShadePanel(&p, rect(),
                         options->colorGroup(Options::Frame, isActive()), false, 1,
                         &options->colorGroup(Options::Frame, isActive()).
                         brush(QColorGroup::Button));
-
-
+    }
+    p.setPen(Qt::black);
+    p.drawRect(rect());
+    p.setPen(colorGroup().light());
+    p.drawLine(1, 1, width()-2, 1);
+    
     t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
