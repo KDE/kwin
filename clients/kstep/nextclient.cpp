@@ -234,10 +234,7 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
 
     button[0] = new NextButton(this, "close", close_bits, 10, 10);
     button[1] = new NextButton(this, "sticky");
-    if(isSticky())
-        button[1]->setBitmap(unsticky_bits, 10, 10);
-    else
-        button[1]->setBitmap(sticky_bits, 10, 10);
+    stickyChange(isSticky());
     button[2] = new NextButton(this, "iconify", iconify_bits, 10, 10);
 
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
@@ -331,9 +328,9 @@ void NextClient::mouseDoubleClickEvent( QMouseEvent * e )
 void NextClient::stickyChange(bool on)
 {
     if(on)
-        button[1]->setBitmap(unsticky_bits, 8, 8);
+        button[1]->setBitmap(unsticky_bits, 10, 10);
     else
-        button[1]->setBitmap(sticky_bits, 8, 8);
+        button[1]->setBitmap(sticky_bits, 10, 10);
 }
 
 
