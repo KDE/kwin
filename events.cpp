@@ -473,8 +473,8 @@ void Client::windowEvent( XEvent* e )
                 e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
             return;
         case MotionNotify:
-            motionNotifyEvent( e->xbutton.window, e->xbutton.state,
-                e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
+            motionNotifyEvent( e->xmotion.window, e->xmotion.state,
+                e->xmotion.x, e->xmotion.y, e->xmotion.x_root, e->xmotion.y_root );
             return;
         case EnterNotify:
             enterNotifyEvent( &e->xcrossing );
