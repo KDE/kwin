@@ -35,3 +35,6 @@ data_DATA= eventsrc
 sounddir= $(kde_sounddir)
 sound_DATA = pop.wav
 
+update_DATA = kwin.upd pluginlibFix.pl
+updatedir = $(kde_datadir)/kconf_update
+

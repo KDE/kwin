@@ -1,0 +1,4 @@
+Id=kde3.0r1
+File=kwinrc
+Options=overwrite
+Script=pluginlibFix.pl,perl
