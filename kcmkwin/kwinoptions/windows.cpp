@@ -294,15 +294,17 @@ void KFocusConfig::setAutoRaiseEnabled()
 }
 
 
-//CT 23Oct1998 make AutoRaise toggling much clear
 void KFocusConfig::autoRaiseOnTog(bool a) {
     autoRaise->setEnabled(a);
     clickRaiseOn->setEnabled( !a );
     if ( a )
+    {
         clickRaiseOn->setChecked( TRUE );
+        if(getAutoRaiseInterval() == 0)
+            setAutoRaiseInterval(750);
+    }
 
 }
-//CT
 
 void KFocusConfig::clickRaiseOnTog(bool ) {
 }
