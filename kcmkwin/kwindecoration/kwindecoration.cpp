@@ -273,8 +273,7 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 	currentName += "_config";
 
 	// Delete old plugin widget if it exists
-	if (pluginObject)
-		delete pluginObject;
+	delete pluginObject;
 
 	// Use klibloader for library manipulation
 	KLibLoader* loader = KLibLoader::self();
