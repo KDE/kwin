@@ -43,11 +43,16 @@ namespace KWinInternal
 extern QPixmap* kwin_get_menu_pix_hack();
 
 TabBox::TabBox( Workspace *ws, const char *name )
-    : QWidget( 0, name )
+    : QFrame( 0, name, Qt::WNoAutoErase ), client(0), wspace(ws)
     {
+    setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
+    setLineWidth(2);
+    setMargin(2);
+
+    showMiniIcon = false;
+
     no_tasks = i18n("*** No Tasks ***");
     m = DesktopMode; // init variables
-    wspace = ws;
     reconfigure();
     reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
@@ -70,69 +75,146 @@ void TabBox::setMode( Mode mode )
 
 
 /*!
+  Create list of clients on specified desktop, starting with client c
+*/
+void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client *c, bool chain)
+    {
+    ClientList::size_type idx = 0;
+
+    list.clear();
+
+    Client* start = c;
+
+    if ( chain )
+        c = workspace()->nextFocusChainClient(c);
+    else
+        c = workspace()->stackingOrder().first();
+
+    Client* stop = c;
+
+    while ( c )
+        {
+        if ( ((desktop == -1) || c->isOnDesktop(desktop))
+             && (!c->isMinimized() || !c->isTransient() || c->isUtility()) && c->wantsTabFocus() )
+            {
+            if ( start == c )
+                {
+                list.remove( c );
+                list.prepend( c );
+                }
+            else
+                { // don't add windows that have modal dialogs
+                Client* modal = c->findModal();
+                if( modal == NULL || modal == c )
+                    list += c;
+                else if( !list.contains( modal ))
+                    list += modal;
+                else
+                    ; // nothing
+                }
+            }
+
+        if ( chain )
+          c = workspace()->nextFocusChainClient( c );
+        else
+          {
+          if ( idx >= (workspace()->stackingOrder().size()-1) )
+            c = 0;
+          else
+            c = workspace()->stackingOrder()[++idx];
+          }
+
+        if ( c == stop )
+            break;
+        }
+    }
+
+
+/*!
   Resets the tab box to display the active client in WindowsMode, or the
   current desktop in DesktopListMode
  */
 void TabBox::reset()
     {
-    QFont f = font();
-    f.setBold( TRUE );
-    f.setPointSize( 14 );
-    setFont( f );
-
-    wmax = 0;
-
-    if ( mode() == WindowsMode ) 
-        {
-        client = workspace()->activeClient();
-        clients.clear();
-        Client* c = workspace()->nextFocusChainClient( client );
-        Client* stop = c;
-        QFontMetrics fm( fontMetrics() );
-        int cw = fm.width(no_tasks)+20;
-        while ( c ) 
-            {
-            if ( (options_traverse_all ||c->isOnDesktop(workspace()->currentDesktop()))
-                 && (!c->isMinimized() || !c->isTransient() || c->isUtility()) ) 
-                {
-                if ( client == c )
-                    {
-                    clients.remove( c );
-                    clients.prepend( c );
-                    }
-                else
-                    { // don't add windows that have modal dialogs
-                    Client* modal = c->findModal();
-                    if( modal == NULL || modal == c )
-                        clients += c;
-                    else if( !clients.contains( modal ))
-                        clients += modal;
-                    else
-                        ; // nothing
-                    }
-                cw = fm.width( c->caption() ) + 40;
-                if ( cw > wmax )
-                    wmax = cw;
-                }
-            c = workspace()->nextFocusChainClient( c );
-            if ( c == stop )
-                break;
-            }
-        wmax = QMAX( wmax, int(clients.count())*20 );
-        }
-    else 
-        { // DesktopListMode
-        desk = workspace()->currentDesktop();
-        }
+    int w, h, cw = 0, wmax = 0;
 
     QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
 
-    int w = QMIN( QMAX( wmax + 20, r.width()/3 ), r.width() );
-    setGeometry( (r.width()-w)/2 + r.x(),
-                 r.height()/2-fontMetrics().height()*2-10 + r.y(),
-                 w, fontMetrics().height()*4 + 20 );
+    // calculate height of 1 line
+    // fontheight + 1 pixel above + 1 pixel below, or 32x32 icon + 2 pixel above + below
+    lineHeight = QMAX(fontMetrics().height() + 2, 32 + 4);
 
-    wmax = QMIN( wmax, width() - 12 );
+    if ( mode() == WindowsMode )
+        {
+        client = workspace()->activeClient();
+
+        // get all clients to show
+        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), client, true);
+
+        // calculate maximum caption width
+        cw = fontMetrics().width(no_tasks)+20;
+        for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+          {
+          cw = fontMetrics().width( (*it)->caption() );
+          if ( cw > wmax ) wmax = cw;
+          }
+
+        // calculate height for the popup
+        if ( clients.count() == 0 )  // height for the "not tasks" text
+          {
+          QFont f = font();
+          f.setBold( TRUE );
+          f.setPointSize( 14 );
+
+          h = QFontMetrics(f).height()*4;
+          }
+        else
+          {
+          showMiniIcon = false;
+          h = clients.count() * lineHeight;
+
+          if ( h > (r.height()-(2*frameWidth())) )  // if too high, use mini icons
+            {
+            showMiniIcon = true;
+            // fontheight + 1 pixel above + 1 pixel below, or 16x16 icon + 1 pixel above + below
+            lineHeight = QMAX(fontMetrics().height() + 2, 16 + 2);
+
+            h = clients.count() * lineHeight;
+
+            if ( h > (r.height()-(2*frameWidth())) ) // if still too high, remove some clients
+              {
+                // how many clients to remove
+                int howMany = (h - (r.height()-(2*frameWidth())))/lineHeight;
+                for (; howMany; howMany--)
+                  clients.remove(clients.last());
+
+                h = clients.count() * lineHeight;
+              }
+            }
+          }
+        }
+    else
+        { // DesktopListMode
+        showMiniIcon = false;
+        desk = workspace()->currentDesktop();
+
+        for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ )
+          {
+          cw = fontMetrics().width( workspace()->desktopName(i) );
+          if ( cw > wmax ) wmax = cw;
+          }
+
+        // calculate height for the popup (max. 16 desktops always fit in a 800x600 screen)
+        h = workspace()->numberOfDesktops() * lineHeight;
+        }
+
+    // height, width for the popup
+    h += 2 * frameWidth();
+    w = QMIN( QMAX( 5 + (showMiniIcon ? 16 : 32) + 8 +wmax, r.width()/3 ), r.width() );  // 5=space, ()=icon, 8=space between icon+text
+
+    setGeometry( (r.width()-w)/2 + r.x(),
+                 (r.height()-h)/2+ r.y(),
+                 w, h );
     }
 
 
@@ -187,7 +269,7 @@ void TabBox::nextPrev( bool next)
             }
         }
 
-    paintContents();
+    update();
     }
 
 
@@ -235,125 +317,159 @@ void TabBox::hideEvent( QHideEvent* )
     {
     }
 
-
 /*!
   Paints the tab box
  */
-void TabBox::paintEvent( QPaintEvent* )
+void TabBox::drawContents( QPainter * )
     {
-        {
-        QPainter p( this );
-        style().drawPrimitive( QStyle::PE_Panel, &p, QRect( 0, 0, width(), height() ),
-                               colorGroup(), QStyle::Style_Default );
-        style().drawPrimitive( QStyle::PE_Panel, &p, QRect( 4, 4, width()-8, height()-8 ),
-                               colorGroup(), QStyle::Style_Sunken );
-        }
-    paintContents();
-    }
+    QRect r(contentsRect());
+    QPixmap pix(r.size());  // do double buffering to avoid flickers
+    pix.fill(this, 0, 0);
 
+    QPainter p;
+    p.begin(&pix, this);
 
-/*!
-  Paints the contents of the tab box. Used in paintEvent() and
-  whenever the contents changes.
- */
-void TabBox::paintContents()
-    {
     QPixmap* menu_pix = kwin_get_menu_pix_hack();
-    QPainter p( this );
-    QRect r( 6, 6, width()-12, height()-32 );
-    p.fillRect( r, colorGroup().brush( QColorGroup::Background ) );
+
+    int iconWidth = showMiniIcon ? 16 : 32;
+    int x = 0;
+    int y = 0;
+
     if ( mode () == WindowsMode ) 
         {
-        if ( currentClient() ) 
+        if ( !currentClient() )
             {
-            int textw, maxlen = client->caption().length();
-            int icon = client->icon().isNull() ? 0 : 42;
-            QString s;
-            do 
-                {
-                s = QString();
-                if (!client->isOnDesktop(workspace()->currentDesktop()))
-                    {
-                    s.append(": ");
-                    }
+            QFont f = font();
+            f.setBold( TRUE );
+            f.setPointSize( 14 );
 
-                if (client->isMinimized())
-                    s += QString("(")+KStringHandler::csqueeze(client->caption(), maxlen)+")";
-                else
-                    s += KStringHandler::csqueeze(client->caption(), maxlen);
-                textw = fontMetrics().width( s );
-                maxlen--;
-                } while (textw > r.width() - icon);
-            r.setLeft( r.left() + (r.width() - textw)/2);
-
-            if ( icon ) 
-                {
-                int py = r.center().y() - 16;
-                r.setLeft( r.left() + 20 );
-                if( client->icon().mask() != NULL )
-                    p.fillRect( r.left()-42, py, client->icon().width(), client->icon().height(),
-                        colorGroup().brush( QColorGroup::Background ));
-                p.drawPixmap( r.left()-42, py, client->icon() );
-                }
-
-            p.drawText( r, AlignVCenter, s );
-
-            }
-        else 
-            {
-            r.setBottom( r.bottom() + 20 );
+            p.setFont(f);
             p.drawText( r, AlignCenter, no_tasks);
             }
-
-        int x = (width() - clients.count() * 20 )/2;
-        int y = height() - 26;
-        for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
+        else
             {
-            if ( workspace()->hasClient( *it ) ) 
-                { // safety
-                if ( !(*it)->miniIcon().isNull() )
+            for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
+              {
+              if ( workspace()->hasClient( *it ) )  // safety
+                  {
+                  // draw highlight background
+                  if ( (*it) == currentClient() )
+                    p.fillRect(x, y, r.width(), lineHeight, colorGroup().highlight());
+
+                  // draw icon
+                  if ( showMiniIcon )
                     {
-                    if( (*it)->miniIcon().mask() != NULL )
-                        p.fillRect( x, y, 16, 16, colorGroup().brush( QColorGroup::Background ));
-                    p.drawPixmap( x, y, (*it)->miniIcon() );
+                    if ( !(*it)->miniIcon().isNull() )
+                      p.drawPixmap( x+5, y + (lineHeight - iconWidth)/2, (*it)->miniIcon() );
                     }
-                else if ( menu_pix )
-                    {
-                    if( menu_pix->mask() != NULL )
-                        p.fillRect( x, y, 16, 16, colorGroup().brush( QColorGroup::Background ));
-                    p.drawPixmap( x, y, *menu_pix );
-                    }
-                p.setPen( (*it)==currentClient()?
-                           colorGroup().highlight():colorGroup().background() );
-                p.drawRect( x-2, y-2, 20, 20 );
-                p.setPen( colorGroup().foreground() );
-                x += 20;
-                }
+                  else
+                    if ( !(*it)->icon().isNull() )
+                      p.drawPixmap( x+5, y + (lineHeight - iconWidth)/2, (*it)->icon() );
+                    else if ( menu_pix )
+                      p.drawPixmap( x, y + (lineHeight - iconWidth)/2, *menu_pix );
+
+                  // generate text to display
+                  QString s;
+
+                  if ( !(*it)->isOnDesktop(workspace()->currentDesktop()) )
+                    s = workspace()->desktopName((*it)->desktop()) + ": ";
+
+                  if ( (*it)->isMinimized() )
+                    s += QString("(") + (*it)->caption() + ")";
+                  else
+                    s += (*it)->caption();
+
+                  s = KStringHandler::cPixelSqueeze(s, fontMetrics(), r.width() - 5 - iconWidth - 8);
+
+                  // draw text
+                  if ( (*it) == currentClient() )
+                    p.setPen(colorGroup().highlightedText());
+                  else
+                    p.setPen(colorGroup().text());
+
+                  p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
+                              Qt::AlignLeft | Qt::AlignVCenter | Qt::SingleLine, s);
+
+                  y += lineHeight;
+                  }
+              if ( y >= r.height() ) break;
+              }
             }
         }
     else 
         { // DesktopMode || DesktopListMode
-        p.drawText( r, AlignCenter, workspace()->desktopName(desk) );
-        int x = (width() - workspace()->numberOfDesktops() * 20 )/2;
-        int y = height() - 26;
-        QFont f( font() );
-        f.setPointSize( 12 );
-        f.setBold( FALSE );
-        p.setFont(f );
+        int iconHeight = iconWidth;
 
-	// In DesktopMode, start at the current desktop
-	// In DesktopListMode, start at desktop #1
+        // get widest desktop name/number
+        QFont f(font());
+        f.setBold(true);
+        f.setPixelSize(iconHeight - 4);  // pixel, not point because I need to know the pixels
+        QFontMetrics fm(f);
+
+        int wmax = 0;
+        for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ ) 
+            {
+            wmax = QMAX(wmax, fontMetrics().width(workspace()->desktopName(i)));
+
+            // calculate max width of desktop-number text
+            QString num = QString::number(i);
+            iconWidth = QMAX(iconWidth - 4, fm.boundingRect(num).width()) + 4;
+            }
+
+        // In DesktopMode, start at the current desktop
+        // In DesktopListMode, start at desktop #1
         int iDesktop = (mode() == DesktopMode) ? workspace()->currentDesktop() : 1;
         for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ ) 
             {
-            p.setPen( iDesktop == desk?
-                      colorGroup().highlight():colorGroup().background() );
-            p.drawRect( x-2, y-2, 20, 20 );
-            qDrawWinPanel( &p, QRect( x, y, 16, 16), colorGroup(), FALSE,
-                            &colorGroup().brush(QColorGroup::Base ) );
-            p.setPen( colorGroup().text() );
-            p.drawText( x, y, 16, 16, AlignCenter, QString::number(iDesktop) );
-            x += 20;
+            // draw highlight background
+            if ( iDesktop == desk )  // current desktop
+              p.fillRect(x, y, r.width(), lineHeight, colorGroup().highlight());
+
+            p.save();
+
+            // draw "icon" (here: number of desktop)
+            p.fillRect(x+5, y+2, iconWidth, iconHeight, colorGroup().base());
+            p.setPen(colorGroup().text());
+            p.drawRect(x+5, y+2, iconWidth, iconHeight);
+
+            // draw desktop-number
+            p.setFont(f);
+            QString num = QString::number(iDesktop);
+            p.drawText(x+5, y+2, iconWidth, iconHeight, Qt::AlignCenter, num);
+
+            p.restore();
+
+            // draw desktop name text
+            if ( iDesktop == desk )
+              p.setPen(colorGroup().highlightedText());
+            else
+              p.setPen(colorGroup().text());
+
+            p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
+                       Qt::AlignLeft | Qt::AlignVCenter | Qt::SingleLine,
+                       workspace()->desktopName(iDesktop));
+
+            // show mini icons from that desktop aligned to each other
+            int x1 = x + 5 + iconWidth + 8 + wmax + 5;
+
+            ClientList list;
+            createClientList(list, iDesktop, 0, false);
+            // clients are in reversed stacking order
+            for (ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it)
+              {
+              if ( !(*it)->miniIcon().isNull() )
+                {
+                if ( x1+18 >= x+r.width() )  // only show full icons
+                  break;
+
+                p.drawPixmap( x1, y + (lineHeight - 16)/2, (*it)->miniIcon() );
+                x1 += 18;
+                }
+              }
+
+            // next desktop
+            y += lineHeight;
+            if ( y >= r.height() ) break;
 
             if( mode() == DesktopMode )
                 iDesktop = workspace()->nextDesktopFocusChain( iDesktop );
@@ -361,6 +477,8 @@ void TabBox::paintContents()
                 iDesktop++;
             }
         }
+    p.end();
+    bitBlt(this, r.x(), r.y(), &pix);
     }
 
 void TabBox::hide()
@@ -426,49 +544,42 @@ void TabBox::handleMouseEvent( XEvent* e )
         return;
     pos.rx() -= x(); // pos is now inside tabbox
     pos.ry() -= y();
+    int num = (pos.y()-frameWidth()) / lineHeight;
+
     if( mode() == WindowsMode )
         {
-        int x = (width() - clients.count() * 20 )/2;
-        int y = height() - 26;
-        if( pos.x() < x || pos.y() < y - 2 || pos.y() > y - 2 + 20 )
-            return;
         for( ClientList::ConstIterator it = clients.begin();
              it != clients.end();
              ++it)
             {
-            if( workspace()->hasClient( *it ) // safety
-                && pos.x() < x + 20 )
+            if( workspace()->hasClient( *it ) && (num == 0) ) // safety
                 {
                 client = *it;
                 break;
                 }
-            x += 20;
+            num--;
             }
         }
     else
         {
-        int x = (width() - workspace()->numberOfDesktops() * 20 )/2;
-        int y = height() - 26;
-        if( pos.x() < x || pos.y() < y - 2 || pos.y() > y - 2 + 20 )
-            return;
         int iDesktop = (mode() == DesktopMode) ? workspace()->currentDesktop() : 1;
         for( int i = 1;
              i <= workspace()->numberOfDesktops();
              ++i )
             {
-            if( pos.x() < x + 20 )
+            if( num == 0 )
                 {
                 desk = iDesktop;
                 break;
                 }
-            x += 20;
+            num--;
             if( mode() == DesktopMode )
                 iDesktop = workspace()->nextDesktopFocusChain( iDesktop );
             else
                 iDesktop++;
             }
         }
-    paintContents();
+    update();
     }
 
 //*******************************

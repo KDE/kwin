@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_TABBOX_H
 #define KWIN_TABBOX_H
 
-#include <qwidget.h>
+#include <qframe.h>
 #include <qtimer.h>
 #include <qvaluelist.h>
 #include "utils.h"
@@ -25,7 +25,7 @@ namespace KWinInternal
 class Workspace;
 class Client;
 
-class TabBox : public QWidget
+class TabBox : public QFrame
     {
     Q_OBJECT
     public:
@@ -55,10 +55,12 @@ class TabBox : public QWidget
         void reconfigure();
 
     protected:
-        void paintEvent( QPaintEvent* );
         void showEvent( QShowEvent* );
         void hideEvent( QHideEvent* );
-        void paintContents();
+        void drawContents( QPainter * );
+
+    private:
+        void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
 
     private:
         Client* client;
@@ -66,8 +68,8 @@ class TabBox : public QWidget
         Workspace* wspace;
         ClientList clients;
         int desk;
-        QLabel* icon;
-        int wmax;
+        int lineHeight;
+        bool showMiniIcon;
         QTimer delayedShowTimer;
         QString no_tasks;
         bool options_traverse_all;
