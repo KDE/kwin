@@ -4168,8 +4168,14 @@ QRect Workspace::clientArea(const QPoint& p, int desktop)
 {
     if( desktop == NETWinInfo::OnAllDesktops )
         desktop = currentDesktop();
-    int screenNum = QApplication::desktop()->screenNumber(p);
-    QRect rect = QApplication::desktop()->screenGeometry(screenNum);
+
+    QRect rect;
+    if (options->xineramaPlacementEnabled) {
+        int screenNum = QApplication::desktop()->screenNumber(p);
+        rect = QApplication::desktop()->screenGeometry(screenNum);
+    } else {
+        rect = QApplication::desktop()->geometry();
+    }
 
     if (d->workarea[ desktop ].isNull())
         return rect;
