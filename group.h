@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "utils.h"
 #include <X11/X.h>
+#include <netwm.h>
 
 namespace KWinInternal
 {
@@ -25,6 +26,7 @@ class Group
     {
     public:
         Group( Window leader, Workspace* workspace );
+        ~Group();
         Window leader() const;
         const Client* leaderClient() const;
         Client* leaderClient();
@@ -36,11 +38,17 @@ class Group
         void gotLeader( Client* leader );
         void lostLeader();
         Workspace* workspace();
+        bool groupEvent( XEvent* e );
+        Time userTime() const;
     private:
+        void getIcons();
+        void startupIdChanged();
         ClientList _members;
         Client* leader_client;
         Window leader_wid;
-        Workspace* workspace_;
+        Workspace* _workspace;
+        NETWinInfo* leader_info;
+        Time user_time;
     };
 
 inline Window Group::leader() const
@@ -65,7 +73,12 @@ inline const ClientList& Group::members() const
 
 inline Workspace* Group::workspace()
     {
-    return workspace_;
+    return _workspace;
+    }
+
+inline Time Group::userTime() const
+    {
+    return user_time;
     }
 
 } // namespace

@@ -128,7 +128,7 @@ bool Client::manage( Window w, bool isMapped )
         keep_above = keep_below = false;
 
     KStartupInfoData asn_data;
-    bool asn_valid = workspace()->checkStartupNotification( this, asn_data );
+    bool asn_valid = workspace()->checkStartupNotification( window(), asn_data );
 
     workspace()->updateClientLayer( this );
 

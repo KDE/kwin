@@ -219,7 +219,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
     // only called from Client::destroyClient() or Client::releaseWindow()
         void removeClient( Client*, allowed_t );
 
-        bool checkStartupNotification( const Client* c, KStartupInfoData& data );
+        bool checkStartupNotification( Window w, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
         

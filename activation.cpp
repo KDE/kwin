@@ -25,6 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "notifications.h"
 #include "atoms.h"
+#include "group.h"
 
 extern Time qt_x_time;
 
@@ -636,6 +637,10 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
             || ( asn_data->timestamp() != -1U
                 && timestampCompare( asn_data->timestamp(), time ) > 0 )))
         time = asn_data->timestamp();
+    if( time == -1U
+         || ( group()->userTime() != -1U
+                 && timestampCompare( time, group()->userTime()) > 0 ))
+        time = group()->userTime();
     kdDebug( 1212 ) << "User timestamp, ASN:" << time << endl;
     if( time == -1U )
         { // The window doesn't have any timestamp.
@@ -734,7 +739,7 @@ void Client::setActive( bool act)
 void Client::startupIdChanged()
     {
     KStartupInfoData asn_data;
-    bool asn_valid = workspace()->checkStartupNotification( this, asn_data );
+    bool asn_valid = workspace()->checkStartupNotification( window(), asn_data );
     if( !asn_valid )
         return;
     if( asn_data.desktop() != 0 )
@@ -756,5 +761,20 @@ void Client::updateUrgency()
     if( urgency )
         demandAttention();
     }
+
+//****************************************
+// Group
+//****************************************
     
+void Group::startupIdChanged()
+    {
+    KStartupInfoData asn_data;
+    bool asn_valid = workspace()->checkStartupNotification( leader_wid, asn_data );
+    if( !asn_valid )
+        return;
+    if( asn_data.timestamp() != -1U && user_time != -1U
+        &&timestampCompare( asn_data.timestamp(), user_time ) > 0 )
+        user_time = asn_data.timestamp();
+    }
+
 } // namespace

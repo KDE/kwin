@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "atoms.h"
 #include "tabbox.h"
+#include "group.h"
 
 #include <qwhatsthis.h>
 #include <kkeynative.h>
@@ -1461,6 +1462,21 @@ void Client::keyPressEvent( uint key_code )
             return;
         }
     QCursor::setPos( pos );
+    }
+
+// ****************************************
+// Group
+// ****************************************
+
+bool Group::groupEvent( XEvent* e )
+    {
+    unsigned long dirty[ 2 ];
+    leader_info->event( e, dirty, 2 ); // pass through the NET stuff
+    if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMIcon) != 0 )
+        getIcons();
+    if(( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId ) != 0 )
+        startupIdChanged();
+    return false;
     }
 
 

@@ -21,7 +21,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "workspace.h"
 #include "client.h"
+
 #include <assert.h>
+#include <kstartupinfo.h>
+
 
 /*
  TODO
@@ -37,11 +40,25 @@ namespace KWinInternal
 //********************************************
 
 Group::Group( Window leader_P, Workspace* workspace_P )
-    :   leader_client( workspace_P->findClient( WindowMatchPredicate( leader_P ))),
+    :   leader_client( NULL ),
         leader_wid( leader_P ),
-        workspace_( workspace_P )
+        _workspace( workspace_P ),
+        leader_info( NULL ),
+        user_time( -1U )
     {
+    if( leader_P != None )
+        {
+        leader_client = workspace_P->findClient( WindowMatchPredicate( leader_P ));
+        unsigned long properties[ 2 ] = { 0, NET::WM2StartupId };
+        leader_info = new NETWinInfo( qt_xdisplay(), leader_P, workspace()->rootWin(),
+            properties, 2 );
+        }
     workspace()->addGroup( this, Allowed );
+    }
+
+Group::~Group()
+    {
+    delete leader_info;
     }
 
 QPixmap Group::icon() const
@@ -107,6 +124,10 @@ void Group::lostLeader()
         }
     }
 
+void Group::getIcons()
+    {
+    // TODO - also needs adding the flag to NETWinInfo
+    }
 
 //***************************************
 // Workspace
