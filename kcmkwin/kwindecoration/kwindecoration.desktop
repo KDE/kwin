@@ -154,4 +154,4 @@ Keywords[xx]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,ha
 Keywords[zh_CN]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,窗口,管理器,边界,风格,主题,观感,部局,按钮,边缘,装饰
 Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,視窗,管理員,邊框,風格,佈景主題,外觀,感覺,佈局,按鈕,邊緣,裝飾
 Keywords[zu]=kwin,i-window,imenenja,umngcele,isitayela,bona,izwa, isendlalelo,inkinobho,isibambo,unqenqema,kwm,umhlobiso
-Categories=Qt;KDE;Settings;X-KDE-settings-looknfeel
+Categories=Qt;KDE;X-KDE-settings-looknfeel
