@@ -1,10 +1,12 @@
-/* 	
-	This file contains the icewm configuration widget...
-
-	Copyright (c) 2001
-		Karol Szwed (gallium) <karlmail@usa.net>
-		http://gallium.n3.net/
-*/
+/*
+ *	$Id$ 	
+ *
+ *	This file contains the IceWM configuration widget
+ *
+ *	Copyright (c) 2001
+ *		Karol Szwed <gallium@kde.org>
+ *		http://gallium.n3.net/
+ */
 
 #include "config.h"
 #include <qdir.h>
@@ -15,7 +17,6 @@
 #include <kapp.h>
 
 
-// KWin client config plugin interface
 extern "C"
 {
 	QObject* allocate_config( KConfig* conf, QWidget* parent )
@@ -37,38 +38,72 @@ extern "C"
 IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
-	gb1 = new QGroupBox( 1, Qt::Horizontal, i18n("IceWM Theme Selector"), parent );
+	icewmConfig = new KConfig("kwinicewmrc");
+
+	gb1 = new QGroupBox( 1, Qt::Horizontal, 
+				i18n("IceWM Theme Selector"), parent );
+
 	themeListBox = new QListBox( gb1 );
-	QWhatsThis::add( themeListBox, i18n("Make your IceWM selection by clicking on a theme here. ") );
+	QWhatsThis::add( themeListBox, 
+				i18n("Make your IceWM selection by clicking on a theme here. ") );
 
-	themeLabel = new QLabel( i18n("To manage your IceWM themes, simply click on the link below to open a Konqueror window. "
-							"Once shown, you will be able to add or remove native IceWM themes, by uncompressing <b>http://icewm.themes.org/</b> "
-							"theme files into this directory, or creating directory symlinks to existing IceWM themes on your system."), parent );
+	themeLabel = new QLabel( 
+				i18n("To manage your IceWM themes, simply click on the "
+				"link below to open a Konqueror window. Once shown, you "
+				"will be able to add or remove native IceWM themes, by "
+				"uncompressing <b>http://icewm.themes.org/</b> theme files "
+				"into this directory, or creating directory symlinks to "
+				"existing IceWM themes on your system."), parent );
+
 	urlLabel = new KURLLabel( parent );
-	urlLabel->setText( i18n("Open Konqueror Window at KDE's IceWM theme directory") );
+	urlLabel->setText( 
+				i18n("Open Konqueror Window at KDE's IceWM theme directory") );
 
-	gb2 = new QGroupBox( 1, Qt::Horizontal, i18n("IceWM Decoration Settings"), parent );
-	cbThemeTitleTextColors = new QCheckBox( i18n("Use theme &title text colors"), gb2 );
-	QWhatsThis::add( cbThemeTitleTextColors, i18n("When selected, titlebar colors will follow those set in the IceWM theme. "
-						"If not selected, the current KDE titlebar colors will be used instead.") );
+	gb2 = new QGroupBox( 1, Qt::Horizontal, 
+				i18n("IceWM Decoration Settings"), parent );
 
-	cbTitleBarOnTop 	   = new QCheckBox( i18n("&Show title bar on top of windows"), gb2 );
-	QWhatsThis::add( cbTitleBarOnTop, i18n("When selected, all window titlebars will be shown at the top of each window, "
-										"otherwise they will be shown at the bottom.") );
+	cbThemeTitleTextColors = new QCheckBox( 
+				i18n("Use theme &title text colors"), gb2 );
 
-	cbShowMenuButtonIcon   = new QCheckBox( i18n("&Menu button always shows application mini icon"), gb2 );
-	QWhatsThis::add( cbShowMenuButtonIcon, i18n("When selected, all titlebar menu buttons will have the application icon shown. "
-						"If not selected, the current theme's defaults are used instead.") );
+	QWhatsThis::add( cbThemeTitleTextColors, 
+				i18n("When selected, titlebar colors will follow those set "
+				"in the IceWM theme. If not selected, the current KDE "
+				"titlebar colors will be used instead.") );
+
+	cbTitleBarOnTop = new QCheckBox( 
+				i18n("&Show title bar on top of windows"), gb2 );
+
+	QWhatsThis::add( cbTitleBarOnTop, 
+				i18n("When selected, all window titlebars will be shown "
+				"at the top of each window, otherwise they will be "
+				"shown at the bottom.") );
+
+	cbShowMenuButtonIcon = new QCheckBox( 
+				i18n("&Menu button always shows application mini icon"), gb2 );
+
+	QWhatsThis::add( cbShowMenuButtonIcon, 
+				i18n("When selected, all titlebar menu buttons will have "
+				"the application icon shown. If not selected, the current "
+				"theme's defaults are used instead.") );
 
 	// Load configuration options
 	load( conf );
 
 	// Ensure we track user changes properly
-	connect( themeListBox, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()) );
-	connect( urlLabel, SIGNAL(leftClickedURL(const QString&)), this, SLOT(callURL(const QString&)));
-	connect( cbThemeTitleTextColors, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
-	connect( cbTitleBarOnTop, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
-	connect( cbShowMenuButtonIcon, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
+	connect( themeListBox, SIGNAL(selectionChanged()), 
+			 this, SLOT(slotSelectionChanged()) );
+
+	connect( urlLabel, SIGNAL(leftClickedURL(const QString&)),
+			 this, SLOT(callURL(const QString&)));
+
+	connect( cbThemeTitleTextColors, SIGNAL(clicked()),
+			 this, SLOT(slotSelectionChanged()) );
+
+	connect( cbTitleBarOnTop, SIGNAL(clicked()), 
+			 this, SLOT(slotSelectionChanged()) );
+
+	connect( cbShowMenuButtonIcon, SIGNAL(clicked()),
+			 this, SLOT(slotSelectionChanged()) );
 
 	// Create the theme directory (if not found) ... and obtain the path as we do so.
 	QString localThemeString = KGlobal::dirs()->saveLocation("data", "kwin");
@@ -96,6 +131,7 @@ IceWMConfig::~IceWMConfig()
 	delete urlLabel;
 	delete themeLabel;
 	delete gb1;
+	delete icewmConfig;
 }
 
 
@@ -154,23 +190,23 @@ void IceWMConfig::slotSelectionChanged()
 }
 
 
-// Loads the configurable options from the kwinrc config file
+// Loads the configurable options from the kwinicewmrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void IceWMConfig::load( KConfig* conf )
+void IceWMConfig::load( KConfig* )
 {
-	conf->setGroup("IceWM");
+	icewmConfig->setGroup("General");
 
-	bool override = conf->readBoolEntry( "ThemeTitleTextColors", true );
+	bool override = icewmConfig->readBoolEntry( "ThemeTitleTextColors", true );
 	cbThemeTitleTextColors->setChecked( override );
 
-	override = conf->readBoolEntry( "TitleBarOnTop", true );
+	override = icewmConfig->readBoolEntry( "TitleBarOnTop", true );
 	cbTitleBarOnTop->setChecked( override );
 
-	override = conf->readBoolEntry( "ShowMenuButtonIcon", false );
+	override = icewmConfig->readBoolEntry( "ShowMenuButtonIcon", false );
 	cbShowMenuButtonIcon->setChecked( override );
 
 	findIceWMThemes();
-	QString themeName = conf->readEntry("CurrentTheme", "");
+	QString themeName = icewmConfig->readEntry("CurrentTheme", "");
 
 	// Provide a theme alias
 	if (themeName == "default")
@@ -185,18 +221,20 @@ void IceWMConfig::load( KConfig* conf )
 }
 
 
-// Saves the configurable options to the kwinrc config file
-void IceWMConfig::save( KConfig* conf )
+// Saves the configurable options to the kwinicewmrc config file
+void IceWMConfig::save( KConfig* )
 {
-	conf->setGroup("IceWM");
-	conf->writeEntry( "ThemeTitleTextColors", cbThemeTitleTextColors->isChecked() );
-	conf->writeEntry( "TitleBarOnTop", cbTitleBarOnTop->isChecked() );
-	conf->writeEntry( "ShowMenuButtonIcon", cbShowMenuButtonIcon->isChecked() );
+	icewmConfig->setGroup("General");
+	icewmConfig->writeEntry( "ThemeTitleTextColors", cbThemeTitleTextColors->isChecked() );
+	icewmConfig->writeEntry( "TitleBarOnTop", cbTitleBarOnTop->isChecked() );
+	icewmConfig->writeEntry( "ShowMenuButtonIcon", cbShowMenuButtonIcon->isChecked() );
 
 	if (themeListBox->currentText() == i18n("Infadel #2 (default)"))
-		conf->writeEntry("CurrentTheme", "default");
+		icewmConfig->writeEntry("CurrentTheme", "default");
 	else
-		conf->writeEntry("CurrentTheme", themeListBox->currentText() );
+		icewmConfig->writeEntry("CurrentTheme", themeListBox->currentText() );
+
+	icewmConfig->sync();
 }
 
 
@@ -210,3 +248,4 @@ void IceWMConfig::defaults()
 }
 
 #include "config.moc"
+// vim: ts=4

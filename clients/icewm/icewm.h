@@ -1,8 +1,10 @@
 /*
+  $Id$
+
   Gallium-IceWM themeable KWin client
 
   Copyright 2001
-	Karol Szwed (gallium) <karlmail@usa.net>
+	Karol Szwed <gallium@kde.org>
 	http://gallium.n3.net/
 
   This client loads most icewm 1.0.X pixmap themes, without taking into account
@@ -63,8 +65,10 @@ class ThemeHandler: public QObject
 		void initTheme();
 		void freePixmaps();
 		void freePixmapGroup( QPixmap* p[] );
-		void setPixmap( QPixmap* p[], QString s1, QString s2, bool stretch=false, bool stretchHoriz=true );
-		QPixmap* stretchPixmap( QPixmap* src, bool stretchHoriz=true, int stretchSize=-1);
+		void setPixmap( QPixmap* p[], QString s1, QString s2, bool 
+						stretch=false, bool stretchHoriz=true );
+		QPixmap* stretchPixmap( QPixmap* src, bool stretchHoriz=true,
+								int stretchSize=-1);
 		QPixmap* duplicateValidPixmap( bool act, int size = -1 );
 		void convertButtons( QString& s );
 		QString reverseString( QString s );
@@ -79,7 +83,6 @@ class IceWMButton : public QButton
 		void  usePixmap( QPixmap* (*p)[2] );
 		QSize sizeHint() const;
 		void  turnOn( bool isOn );
-
 		int   last_button;
 
 	protected:
@@ -90,7 +93,7 @@ class IceWMButton : public QButton
 		void drawButtonLabel( QPainter * ) {;}
 
 	private:
-		QPixmap* (*pix)[2];   // Points to active/inactive pixmap array
+		QPixmap* (*pix)[2]; // Points to active/inactive pixmap array
 		Client*  client;
 };
 
@@ -110,10 +113,11 @@ class IceWMClient : public KWinInternal::Client
 	    void captionChange( const QString& name );
 	    void maximizeChange(bool m);
 	    void activeChange(bool);
-	//	void shadeChange(bool);        /* KWin Client class doesn't provide this yet */
+	//	void shadeChange(bool);     /* KWin Client class doesn't provide this yet */
 	    MousePosition mousePosition( const QPoint& ) const;
 		void renderMenuIcons();
 		void iconChange();
+		void stickyChange(bool on);
  
 	protected slots:
 	    void slotMaximize();
@@ -121,14 +125,15 @@ class IceWMClient : public KWinInternal::Client
 
 	private:
 	    // These are all the icewm button types :)
-	    enum Buttons{ BtnSysMenu=0, BtnClose, BtnMaximize, BtnMinimize, BtnHide, BtnRollup, BtnDepth, BtnCount };
+	    enum Buttons{ BtnSysMenu=0, BtnClose, BtnMaximize, BtnMinimize,
+					  BtnHide, BtnRollup, BtnDepth, BtnCount };
 
 		QString shortenCaption( const QString* s );
 		void calcHiddenButtons();
 	    int  titleTextWidth( const QString& s );
 		void addClientButtons( const QString& s );
-		QSpacerItem* addPixmapSpacer( QPixmap* p[], QSizePolicy::SizeType = QSizePolicy::Maximum,
-									  int hsize = -1 );
+		QSpacerItem* addPixmapSpacer( QPixmap* p[], 
+			QSizePolicy::SizeType = QSizePolicy::Maximum, int hsize = -1 );
 
 	    IceWMButton* button[ IceWMClient::BtnCount ];
 	    QPixmap*     menuButtonWithIconPix[2]; 
@@ -148,3 +153,5 @@ class IceWMClient : public KWinInternal::Client
 };
 
 #endif
+
+// vim: ts=4

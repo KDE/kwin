@@ -1,8 +1,10 @@
 /*
+  $Id$
+  
   Gallium-IceWM themeable KWin client
 
   Copyright 2001
-	Karol Szwed (gallium) <karlmail@usa.net>
+	Karol Szwed <gallium@kde.org>
 	http://gallium.n3.net/
 
   This client loads most icewm 1.0.X pixmap themes, without taking into account
@@ -98,8 +100,10 @@ bool validframe  			= false;
 bool useActiveShadow 		= false;
 bool useInActiveShadow 		= false;
 
-// KControl Settings - Read from kwinrc config file or icewm theme
-bool themeTitleTextColors 	= true;		// Allow theme to set colors. kcontrol will have no effect
+// KControl Settings - Read from kwinicewmrc config file or icewm theme
+bool themeTitleTextColors 	= true;		// Allow theme to set colors. 
+										// kcontrol will have no effect
+
 bool titleBarOnTop 		  	= true;		// Titlebars can be below windows too :)
 bool showMenuButtonIcon   	= false;	// Draw a mini icon over the menu pixmap.
 bool customButtonPositions 	= false;	// Let the theme dictate the btn pos.
@@ -202,15 +206,15 @@ QString ThemeHandler::reverseString( QString s )
 }
 
 
-// This function reads the kwinrc config file
+// This function reads the kwinicewmrc config file
 void ThemeHandler::readConfig()
 {
-	KConfig* conf = KGlobal::config();
-	conf->setGroup("IceWM");
-	themeName = conf->readEntry("CurrentTheme", "");
-	themeTitleTextColors = conf->readBoolEntry("ThemeTitleTextColors", true);
-	showMenuButtonIcon = conf->readBoolEntry("ShowMenuButtonIcon", false);
-	titleBarOnTop = conf->readBoolEntry("TitleBarOnTop", true);
+	KConfig conf("kwinicewmrc");
+	conf.setGroup("General");
+	themeName = conf.readEntry("CurrentTheme", "");
+	themeTitleTextColors = conf.readBoolEntry("ThemeTitleTextColors", true);
+	showMenuButtonIcon = conf.readBoolEntry("ShowMenuButtonIcon", false);
+	titleBarOnTop = conf.readBoolEntry("TitleBarOnTop", true);
 
 	customButtonPositions = options->customButtonPositions();
 	if (customButtonPositions)
@@ -239,7 +243,8 @@ void ThemeHandler::initTheme()
 
 	// We use kconfig to read icewm config files...
 	// this is easy since icewm uses key=value pairs!
-	KConfig config( locate("appdata", QString("icewm-themes/") + themeName + QString("default.theme")) );
+	KConfig config( locate("appdata", QString("icewm-themes/") +
+					themeName + QString("default.theme")) );
 
 	// Load specifics, or use IceWM defaults instead.
 	borderSizeX = config.readNumEntry("BorderSizeX", 6);
@@ -256,7 +261,8 @@ void ThemeHandler::initTheme()
 	if (!customButtonPositions)
 	{
 		// Read in the button configuration, stripping any quotes
-		// Ignore sticky 'd' on the left buttons (some themes look bad with it on by default)
+		// Ignore sticky 'd' on the left buttons 
+		// (some themes look bad with it on by default)
 		*titleButtonsLeft = config.readEntry("TitleButtonsLeft", "s");
 		*titleButtonsLeft = titleButtonsLeft->replace( QRegExp(QString("\"")), "");
 		*titleButtonsRight = config.readEntry("TitleButtonsRight", "xmi");
@@ -520,15 +526,18 @@ QPixmap* ThemeHandler::stretchPixmap( QPixmap* src, bool stretchHoriz, int stret
 // Loads the specified Active/InActive files into the specific pixmaps, and
 // can perform horizontal / vertical stretching if required for speed.
 // Tries to implement some icewm specific pixmap handling for some dodgy themes
-void ThemeHandler::setPixmap( QPixmap* p[], QString s1, QString s2, bool stretch, bool stretchHoriz )
+void ThemeHandler::setPixmap( QPixmap* p[], QString s1, QString s2,
+							  bool stretch, bool stretchHoriz )
 {
 	if ( p[Active] )
 		qWarning("kwin-icewm: setPixmap - should be null (1)\n"); 
 	if ( p[InActive] )
 		qWarning("kwin-icewm: setPixmap - should be null (2)\n"); 
 
-	p[Active]   = new QPixmap( locate("appdata", QString("icewm-themes/") + themeName + s1 + "A" + s2) );
-	p[InActive] = new QPixmap( locate("appdata", QString("icewm-themes/") + themeName + s1 + "I" + s2) );
+	p[Active]   = new QPixmap( locate("appdata", QString("icewm-themes/") 
+								+ themeName + s1 + "A" + s2) );
+	p[InActive] = new QPixmap( locate("appdata", QString("icewm-themes/") 
+								+ themeName + s1 + "I" + s2) );
 
 	// Stretch the pixmap if requested.
 	if ( stretch )
@@ -695,10 +704,16 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 	grid->addRowSpacing(0, borderSizeY);	// Top grab bar
 
 	// Do something IceWM can't do :)
-	if (titleBarOnTop)
-		grid->addWidget(windowWrapper(), 2, 1);
-	else
+	if (titleBarOnTop) {
+		grid->addWidget(windowWrapper(), 2, 1); 
+		// no shade flicker
+    	grid->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,									   QSizePolicy::Expanding ) );    
+    }
+	else {
+		// no shade flicker
+    	grid->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,									   QSizePolicy::Expanding ) );    
 		grid->addWidget(windowWrapper(), 1, 1);
+    }
 
 	grid->setRowStretch(1, 10);
 	grid->setRowStretch(2, 10);
@@ -822,7 +837,7 @@ void IceWMClient::addClientButtons( const QString& s )
 					break; 	*/
 
 				case 'd':
-					// Depth == sticky
+					// Make depth == sticky
 					if ( validPixmaps(depthPix) && !button[BtnDepth] )
 					{
 						button[BtnDepth] = new IceWMButton(this, "sticky", &depthPix, true );
@@ -970,8 +985,10 @@ void IceWMClient::paintEvent( QPaintEvent* )
 		p.drawPixmap(0, 0, *frameTL[ act ], 0, 0, borderSizeX, cornerSizeY); 
 
 		// Top right corner
-		p.drawPixmap(w-cornerSizeX, 0, *frameTR[ act ], frameTR[act]->width()-cornerSizeX, 0, cornerSizeX, borderSizeY);
-		p.drawPixmap(w-borderSizeX, 0, *frameTR[ act ], frameTR[act]->width()-borderSizeX, 0, borderSizeX, cornerSizeY);
+		p.drawPixmap(w-cornerSizeX, 0, *frameTR[ act ], 
+					 frameTR[act]->width()-cornerSizeX, 0, cornerSizeX, borderSizeY);
+		p.drawPixmap(w-borderSizeX, 0, *frameTR[ act ], 
+					 frameTR[act]->width()-borderSizeX, 0, borderSizeX, cornerSizeY);
 
 		// Top bar
 		p.drawTiledPixmap( cornerSizeX, 0, w-(2*cornerSizeX), borderSizeY, *frameT[ act ] );
@@ -980,20 +997,36 @@ void IceWMClient::paintEvent( QPaintEvent* )
 		p.drawTiledPixmap( 0, cornerSizeY, borderSizeX, h-(2*cornerSizeY), *frameL[ act ] );
 
 		// Right bar
-		p.drawTiledPixmap( w-borderSizeX, cornerSizeY, borderSizeX, h-(2*cornerSizeY), *frameR[ act ],
-		 				   frameR[act]->width()-borderSizeX );
+		p.drawTiledPixmap( w-borderSizeX, cornerSizeY, borderSizeX, h-(2*cornerSizeY), 
+						   *frameR[ act ],frameR[act]->width()-borderSizeX );
       
 		// Bottom left corner
-		p.drawPixmap(0, h-borderSizeY, *frameBL[ act ], 0, frameBL[act]->height()-borderSizeY, cornerSizeX, borderSizeY);
-		p.drawPixmap(0, h-cornerSizeY, *frameBL[ act ], 0, frameBL[act]->height()-cornerSizeY, borderSizeX, cornerSizeY);
+		p.drawPixmap(0, h-borderSizeY, *frameBL[ act ], 
+					 0, frameBL[act]->height()-borderSizeY, cornerSizeX, borderSizeY);
+		p.drawPixmap(0, h-cornerSizeY, *frameBL[ act ], 
+					 0, frameBL[act]->height()-cornerSizeY, borderSizeX, cornerSizeY);
 
 		// Bottom right corner
-		p.drawPixmap(w-cornerSizeX, h-borderSizeY, *frameBR[ act ], frameBR[act]->width()-cornerSizeX, frameBR[act]->height()-borderSizeY, cornerSizeX, borderSizeY);
-		p.drawPixmap(w-borderSizeX, h-cornerSizeY, *frameBR[ act ], frameBR[act]->width()-borderSizeX, frameBR[act]->height()-cornerSizeY, borderSizeX, cornerSizeY);
+		p.drawPixmap(w-cornerSizeX, h-borderSizeY, *frameBR[ act ], 
+					 frameBR[act]->width()-cornerSizeX, frameBR[act]->height()-borderSizeY,
+					 cornerSizeX, borderSizeY);
+
+		p.drawPixmap(w-borderSizeX, h-cornerSizeY, *frameBR[ act ],
+					 frameBR[act]->width()-borderSizeX, frameBR[act]->height()-cornerSizeY,
+					 borderSizeX, cornerSizeY);
 
 		// Bottom bar
-		p.drawTiledPixmap(cornerSizeX, h-borderSizeY, w-(2*cornerSizeX), borderSizeY, *frameB[ act ], 
-						 0, frameB[ act ]->height()-borderSizeY );
+		p.drawTiledPixmap(cornerSizeX, h-borderSizeY, w-(2*cornerSizeX), borderSizeY, 
+						  *frameB[ act ], 0, frameB[ act ]->height()-borderSizeY );
+
+		// Ensure uncovered areas during shading are painted with something
+		p.setPen( *colorInActiveBorder );
+		if (titleBarOnTop)
+	        p.drawLine( x+borderSizeX, y+h-borderSizeY-1, 
+						x+w-borderSizeX-1, y+h-borderSizeY-1);
+		else
+	        p.drawLine( x+borderSizeX, y+borderSizeY, 
+						x+w-borderSizeX-1, y+borderSizeY);
 
 	} else
 	{
@@ -1028,6 +1061,15 @@ void IceWMClient::paintEvent( QPaintEvent* )
 			p.fillRect( x+borderSizeX, y+2, fillWidth, borderSizeY-2, c1);
 			p.fillRect( x+borderSizeX, h-borderSizeY, fillWidth, borderSizeY-2, c1);
 		}
+
+		// Ensure uncovered areas during shading are painted with something
+		p.setPen( *colorInActiveBorder );
+		if (titleBarOnTop)
+	        p.drawLine( x+borderSizeX, y+h-borderSizeY-1, 
+						x+w-borderSizeX-1, y+h-borderSizeY-1);
+		else
+	        p.drawLine( x+borderSizeX, y+borderSizeY, 
+						x+w-borderSizeX-1, y+borderSizeY);
 	}
 
 	// Draw the title elements, which are visible
@@ -1115,7 +1157,8 @@ void IceWMClient::mouseDoubleClickEvent( QMouseEvent * e )
 	if (titleBarOnTop)
 		r.setRect( borderSizeX, borderSizeY, width()-(2*borderSizeX), titleBarHeight);
 	else
-		r.setRect( borderSizeX, height()-borderSizeY-titleBarHeight, width()-(2*borderSizeX), titleBarHeight);
+		r.setRect( borderSizeX, height()-borderSizeY-titleBarHeight, 
+				   width()-(2*borderSizeX), titleBarHeight);
 
 	if ( r.contains( e->pos() ) )
 		workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
@@ -1137,6 +1180,16 @@ void IceWMClient::iconChange()
 				button[BtnSysMenu]->repaint(false);
 		}
 	} 
+}
+
+
+void IceWMClient::stickyChange(bool on)
+{
+	if (button[BtnDepth])
+	{
+		button[BtnDepth]->turnOn(on);
+		button[BtnDepth]->repaint(false);
+	}
 }
 
 

@@ -1,10 +1,12 @@
-/* 	
-	This file contains the icewm configuration widget...
-
-	Copyright (c) 2001
-		Karol Szwed (gallium) <karlmail@usa.net>
-		http://gallium.n3.net/
-*/
+/*
+ *	$Id$ 	
+ *
+ *	This file contains the IceWM configuration widget
+ *
+ *	Copyright (c) 2001
+ *		Karol Szwed <gallium@kde.org>
+ *		http://gallium.n3.net/
+ */
 
 #ifndef __KDEGALLIUM_ICEWMCONFIG_H
 #define __KDEGALLIUM_ICEWMCONFIG_H
@@ -41,6 +43,7 @@ class IceWMConfig: public QObject
 	private:
 		void findIceWMThemes();
 
+		KConfig*   icewmConfig;
 		QCheckBox* cbThemeButtonPositions;
 		QCheckBox* cbThemeTitleTextColors;
 		QCheckBox* cbTitleBarOnTop;
@@ -54,3 +57,4 @@ class IceWMConfig: public QObject
 
 
 #endif
+// vim: ts=4
