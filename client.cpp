@@ -63,10 +63,10 @@ public:
 
 	state &= mask; // for safety, clear all other bits
 	
-	if ( mask & NET::Shaded )
+	if ( state & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
-	if ( mask & NET::Max ) {
+	if ( state & NET::Max ) {
 	    if ( (state & NET::Max) == NET::Max )
 		m_client->maximize( Client::MaximizeFull );
 	    else if ( state & NET::MaxVert )
@@ -77,7 +77,7 @@ public:
 		m_client->maximize( Client::MaximizeRestore );
 	}
 	
-	if ( mask & NET::StaysOnTop ) {
+	if ( state & NET::StaysOnTop ) {
 	    m_client->setStaysOnTop( state & NET::StaysOnTop  );
 	    m_client->workspace()->raiseClient( m_client );
 	}
@@ -453,13 +453,11 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     // window does not want a taskbar entry?
     skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
 
-
     // should we open this window on a certain desktop?
     if ( info->desktop() == NETWinInfo::OnAllDesktops )
 	setSticky( TRUE );
     else if ( info->desktop() )
 	desk = info->desktop(); // window had the initial desktop property!
-
 }
 
 /*!
@@ -500,7 +498,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     QRect area = workspace()->clientArea();
 
-    if ( geom == workspace()->geometry() ) {
+    if ( geom == workspace()->geometry() && inherits( "NoBorderClient" ) ) {
 	is_fullscreen = TRUE;
 	may_move = FALSE; // don't let fullscreen windows be moved around
     }
@@ -537,7 +535,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     activateLayout();
     resize ( sizeForWindowSize( geom.size() ) );
     activateLayout();
-
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
@@ -609,6 +606,32 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     if ( workspace()->isNotManaged( caption() ) )
 	doNotShow = TRUE;
 
+    // other settings from the previous session
+    if ( session ) {
+	setSticky( session->sticky );
+	setShade( session->shaded );
+	setStaysOnTop( session->staysOnTop );
+	maximize( (MaximizeMode) session->maximize );
+	geom_restore = session->restore;
+    } else {
+	// window may want to be maximized
+	if ( (info->state() & NET::Max) == NET::Max )
+	    maximize( Client::MaximizeFull );
+	else if ( info->state() & NET::MaxVert )
+	    maximize( Client::MaximizeVertical );
+	else if ( info->state() & NET::MaxHoriz )
+	    maximize( Client::MaximizeHorizontal );
+	
+	
+	if ( isMaximizable() && !isMaximized() && width() >= area.width() && height() >= area.height() 
+	     && ( geom.topLeft() == area.topLeft() || 
+		  geom.topLeft() == workspace()->geometry().topLeft() ) ) {
+	    maximize( Client::MaximizeFull );
+	}
+    }
+
+    delete session;
+
     if ( showMe && !doNotShow ) {
 	Events::raise( isTransient() ? Events::TransNew : Events::New );
 	if ( isMapped ) {
@@ -620,17 +643,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 		workspace()->requestFocus( this );
 	}
     }
-
-    // other settings from the previous session
-    if ( session ) {
-	setSticky( session->sticky );
-	setShade( session->shaded );
-	setStaysOnTop( session->staysOnTop );
-	maximize( (MaximizeMode) session->maximize );
-	geom_restore = session->restore;
-    }
-
-    delete session;
 
     if ( !doNotShow )
 	workspace()->updateClientArea();
@@ -901,6 +913,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	if ( e.value_mask & CWY )
 	    ny = e.y;
 	QPoint np( nx-ox, ny-oy);
+#if 0	
 	if ( windowType() == NET::Normal && may_move ) {
 	    // crap for broken netscape
 	    QRect area = workspace()->clientArea();
@@ -912,6 +925,11 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 		    np.ry() = area.y();
 	    }
 	}
+#endif	
+	
+	if ( isMaximized() && maximizeMode() == MaximizeFull )
+	    np = workspace()->clientArea().topLeft();
+	
 	move( np );
     }
 
@@ -923,6 +941,8 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	if ( e.value_mask & CWHeight )
 	    nh = e.height;
 	QSize ns = sizeForWindowSize( QSize( nw, nh ) );
+	if ( isMaximized() && maximizeMode() == MaximizeFull )
+	    ns = workspace()->clientArea().size();
 	if ( ns == size() )
 	    return TRUE; // broken xemacs stuff (ediff)
 	resize( ns );
@@ -2059,8 +2079,12 @@ void Client::takeFocus( bool force )
     if ( !force && ( isMenu() || isDock() ) )
 	return; // menus and dock windows don't take focus if not forced
 
-    if ( input )
+    if ( input ) {
+	// Qt may delay the mapping which may cause XSetInputFocus to fail, force show window
+	QApplication::sendPostedEvents( windowWrapper(), QEvent::ShowWindowRequest );
+	
 	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, kwin_time );
+    }
     if ( Ptakefocus )
 	sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
 }
