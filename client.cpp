@@ -1608,7 +1608,7 @@ NET::WindowType Client::windowType( bool direct, int supported_types ) const
  */
 void Client::setCursor( Position m )
     {
-    if ( !isResizable() || isShade() || noBorder())
+    if( !isResizable() || isShade())
         {
         m = PositionCenter;
         }
