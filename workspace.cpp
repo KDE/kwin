@@ -854,15 +854,32 @@ void Workspace::raiseClient( Client* c )
     if ( c == desktop_client )
 	return; // deny
 
-    Window* new_stack = new Window[ stacking_order.count()+1];
-
     stacking_order.remove( c );
     stacking_order.append( c );
 
     ClientList saveset;
+    if ( c->transientFor() ) {
+	saveset.append( c );
+	Client* t = findClient( c->transientFor() );
+	Client* tmp;
+	while ( t && !saveset.contains( t ) && t->transientFor() ) {
+	    tmp = findClient( t->transientFor() );
+	    if ( !tmp )
+		break;
+	    saveset.append( t );
+	    t = tmp;
+	}
+	if ( t && !saveset.contains( t ) && t != desktop_client ) {
+	    raiseClient( t );
+	    return;
+	}
+    }
+
+    saveset.clear();
     saveset.append( c );
     raiseTransientsOf(saveset, c );
 
+    Window* new_stack = new Window[ stacking_order.count()+1];
     int i = 0;
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	new_stack[i++] = (*it)->winId();
@@ -871,21 +888,7 @@ void Workspace::raiseClient( Client* c )
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
-    if ( c->transientFor() ) {
-	Client* t = findClient( c->transientFor() );
-	Client* t2;
-	while (t && t->transientFor() ) {
-	    t2 = findClient( t->transientFor() );
-	    if ( t2 == c )
-		goto end;
-	    if ( t2 == t )
-		break;
-	    t = t2;
-	}
-	raiseClient( t );
-    }
     
- end:	
     propagateClients( TRUE );
 }
 
