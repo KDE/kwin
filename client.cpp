@@ -766,6 +766,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
             if (hints && (hints->flags & StateHint)) {
                 init_state = hints->initial_state;
+                if ( init_state == WithdrawnState )
+                    info->setState( NET::SkipTaskbar, NET::SkipTaskbar );
                 //CT extra check for stupid jdk 1.3.1. But should make sense in general
                 // if client has initial state set to Iconic and is transient with a parent
                 // window that is not Iconic, set init_state to Normal

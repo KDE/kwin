@@ -629,6 +629,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
         kwin_updateTime();
+
         checkStartOnDesktop( e->xmaprequest.window );
         c = findClient( e->xmaprequest.window );
         if ( !c ) {
@@ -645,7 +646,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         }
         if ( c ) {
             bool b =  c->windowEvent( e );
-            if ( !c->wantsTabFocus() )
+            if ( !c->wantsTabFocus() || c->isWithdrawn() )
                 focus_chain.remove( c );
             return b;
         }
@@ -1088,14 +1089,14 @@ void Workspace::CDEWalkThroughWindows( bool forward )
             nc = previousStaticClient(nc);
         } while (nc && nc != c &&
                  (!nc->isOnDesktop(currentDesktop()) ||
-                  nc->isIconified() || !nc->wantsTabFocus() ) );
+                  !nc->isNormal() || !nc->wantsTabFocus() ) );
     }
     else
         do {
             nc = nextStaticClient(nc);
         } while (nc && nc != c &&
                  (!nc->isOnDesktop(currentDesktop()) ||
-                  nc->isIconified() || !nc->wantsTabFocus() ) );
+                  !nc->isNormal() || !nc->wantsTabFocus() ) );
     if (c && c != nc)
         lowerClient( c );
     if (nc) {
@@ -2250,8 +2251,6 @@ void Workspace::setCurrentDesktop( int new_desktop ){
         popup->close();
     block_focus = TRUE;
 
-//    ClientList mapList;
-//    ClientList unmapList;
 
     if (new_desktop != current_desktop) {
         /*
@@ -2271,16 +2270,14 @@ void Workspace::setCurrentDesktop( int new_desktop ){
             if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
                 obs_wins.create( *it );
                 (*it)->hide();
-//                unmapList += (*it);
             }
         }
         current_desktop = new_desktop;
         rootInfo->setCurrentDesktop( current_desktop ); // propagate befor the shows below
 
         for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-            if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
+            if ( (*it)->isOnDesktop( new_desktop ) && (*it)->isNormal() ) {
                 (*it)->show();
-//                mapList += (*it);
             }
         }
 
