@@ -204,8 +204,8 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
         KConfig *config = KGlobal::config();
         config->setGroup("Laptop");
         titleHeight = config->readNumEntry("TitleHeight", 14);
-        if(titleHeight < 14)
-            titleHeight = 14;
+        if(titleHeight < 15)
+            titleHeight = 15;
         if(titleHeight > 32)
             titleHeight = 32;
     }
@@ -333,11 +333,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     if(titlePix && isActive())
         p.drawTiledPixmap(r.x(), r.y(), r.width(), r.height()-1, *titlePix);
     
-    if(grPix){ // needs to happen after the above
-        p.setPen(options->color(Options::TitleBar, isActive()));
-        p.drawRect(r.x(), r.y(), r.width(), r.height()-1);
-    }
-    
+
     QButton *rBtn = providesContextHelp() ? button[4] : button[1];
     int x2 = button[3]->x()+button[3]->width();
 
@@ -359,7 +355,6 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawLine(x2, rBtn->y()-1, x2, rBtn->y()+h);
     p.drawLine(rBtn->x()-1, rBtn->y()+h, x2, rBtn->y()+h);
 
-    p.setPen(options->color(Options::Font, isActive()));
     p.setFont(options->font(isActive()));
     QFontMetrics fm(options->font(true));
     g = options->colorGroup(Options::TitleBar, isActive());
@@ -370,9 +365,21 @@ void LaptopClient::paintEvent( QPaintEvent* )
                               *grPix);
         else
             p.fillRect(r.x()+((r.width()-fm.width(caption()))/2)-4, r.y(),
-                       fm.width(caption())+8, r.height(),
+                       fm.width(caption())+8, r.height()-1,
                        g.brush(QColorGroup::Background));
     }
+    /*
+    qDrawShadePanel(&p, r.x(), r.y(), r.width(), r.height()-1,
+                    options->colorGroup(Options::TitleBar, isActive()),
+                    true, 1);
+                    */
+    p.setPen(g.mid());
+    p.drawLine(r.x(), r.y(), r.right(), r.y());
+    p.drawLine(r.x(), r.y(), r.x(), r.bottom()-1);
+    p.setPen(g.button());
+    p.drawLine(r.right(), r.y(), r.right(), r.bottom()-1);
+    p.drawLine(r.x(), r.bottom()-1, r.right(), r.bottom()-1);
+    p.setPen(options->color(Options::Font, isActive()));
     p.drawText(r.x(), r.y(), r.width(), r.height()-1,
                AlignCenter, caption() );
 }
