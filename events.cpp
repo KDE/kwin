@@ -372,15 +372,17 @@ bool Workspace::workspaceEvent( XEvent * e )
             break;
             }
         case EnterNotify:
-            if ( QWhatsThis::inWhatsThisMode() )
             {
-            QWidget* w = QWidget::find( e->xcrossing.window );
-            if ( w )
-                QWhatsThis::leaveWhatsThisMode();
-            }
-
+            if ( QWhatsThis::inWhatsThisMode() )
+                {
+                QWidget* w = QWidget::find( e->xcrossing.window );
+                if ( w )
+                    QWhatsThis::leaveWhatsThisMode();
+                }
             if( electricBorder(e))
                 return true;
+            break;
+            }
         case LeaveNotify:
             {
             if ( !QWhatsThis::inWhatsThisMode() )
