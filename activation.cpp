@@ -472,6 +472,46 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
     return timestampCompare( time, user_time ) >= 0; // time >= user_time
     }
 
+// basically the same like allowClientActivation(), this time allowing
+// a window to be fully raised upon its own request (XRaiseWindow),
+// if refused, it will be raised only on top of windows belonging
+// to the same application
+bool Workspace::allowFullClientRaising( const Client* c )
+    {
+    if( session_saving
+        && options->focusStealingPreventionLevel <= 3 ) // <= normal
+        {
+        return true;
+        }
+    Client* ac = activeClient();
+    if( options->focusStealingPreventionLevel == 0 ) // none
+        return true;
+    if( options->focusStealingPreventionLevel == 5 ) // extreme
+        return false;
+    if( ac == NULL || ac->isDesktop())
+        {
+        kdDebug( 1212 ) << "Raising: No client active, allowing" << endl;
+        return true; // no active client -> always allow
+        }
+    // TODO window urgency  -> return true?
+    if( Client::belongToSameApplication( c, ac, true ))
+        {
+        kdDebug( 1212 ) << "Raising: Belongs to active application" << endl;
+        return true;
+        }
+    if( options->focusStealingPreventionLevel == 4 ) // high
+        return false;
+    if( !c->hasUserTimeSupport())
+        {
+        kdDebug() << "Raising: No support" << endl;
+        if( options->focusStealingPreventionLevel == 1 ) // low
+            return true;
+        }
+    // options->focusStealingPreventionLevel == 2 // normal
+    kdDebug() << "Raising: Refusing" << endl;
+    return false;
+    }
+
 // called from Client after FocusIn that wasn't initiated by KWin and the client
 // wasn't allowed to activate
 void Workspace::restoreFocus()

@@ -168,6 +168,8 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
         QPoint adjustClientPosition( Client* c, QPoint pos );
         void raiseClient( Client* c );
         void lowerClient( Client* c );
+        void raiseClientRequest( Client* c );
+        void lowerClientRequest( Client* c );
         void restackClientUnderActive( Client* );
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client * );
@@ -370,6 +372,9 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
         void updateStackingOrder( bool propagate_new_clients = false );
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
         ClientList constrainedStackingOrder();
+        void raiseClientWithinApplication( Client* c );
+        void lowerClientWithinApplication( Client* c );
+        bool allowFullClientRaising( const Client* c );
         bool keepTransientAbove( const Client* mainwindow, const Client* transient );
         void blockStackingUpdates( bool block );
         void updateCurrentTopMenu();
@@ -564,6 +569,7 @@ class RootInfo : public NETRootInfo2
         virtual void closeWindow(Window w);
         virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction);
         virtual void gotPing(Window w, Time timestamp);
+        virtual void restackWindow(Window w, Window above, int detail);
     private:
         Workspace* workspace;
     };

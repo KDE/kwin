@@ -261,6 +261,30 @@ void Workspace::lowerClient( Client* c )
         most_recently_raised = 0;
     }
 
+void Workspace::lowerClientWithinApplication( Client* c )
+    {
+    if ( !c )
+        return;
+
+    StackingUpdatesBlocker blocker( this );
+
+    unconstrained_stacking_order.remove( c );
+    bool lowered = false;
+    // first try to put it below the bottom-most window of the application
+    for( ClientList::Iterator it = unconstrained_stacking_order.begin();
+         it != unconstrained_stacking_order.end();
+         ++it )
+        if( Client::belongToSameApplication( *it, c ))
+            {
+            unconstrained_stacking_order.insert( it, c );
+            lowered = true;
+            break;
+            }
+    if( !lowered )
+        unconstrained_stacking_order.prepend( c );
+    // ignore mainwindows
+    }
+
 void Workspace::raiseClient( Client* c )
     {
     if ( !c )
@@ -282,6 +306,54 @@ void Workspace::raiseClient( Client* c )
 
     if( !c->isSpecialWindow())
         most_recently_raised = c;
+    }
+
+void Workspace::raiseClientWithinApplication( Client* c )
+    {
+    if ( !c )
+        return;
+
+    StackingUpdatesBlocker blocker( this );
+    // ignore mainwindows
+    
+    unconstrained_stacking_order.remove( c );
+    bool raised = false;
+    // first try to put it above the top-most window of the application
+    for( ClientList::Iterator it = unconstrained_stacking_order.fromLast();
+         it != unconstrained_stacking_order.end();
+         --it )
+        if( Client::belongToSameApplication( *it, c ))
+            {
+            ++it; // insert after the found one
+            unconstrained_stacking_order.insert( it, c );
+            raised = true;
+            break;
+            }
+    if( !raised )
+        restackClientUnderActive( c );
+    }
+
+void Workspace::raiseClientRequest( Client* c )
+    {
+    if( allowFullClientRaising( c ))
+        raiseClient( c );
+    else
+        {
+        raiseClientWithinApplication( c );
+        c->demandAttention();
+        }
+    }
+
+void Workspace::lowerClientRequest( Client* c )
+    {
+    // If the client has support for all this focus stealing prevention stuff,
+    // do only lowering within the application, as that's the more logical
+    // variant of lowering when application requests it.
+    // No demanding of attention here of course.
+    if( c->hasUserTimeSupport())
+        lowerClientWithinApplication( c );
+    else
+        lowerClient( c );
     }
 
 void Workspace::restackClientUnderActive( Client* c )
@@ -485,6 +557,32 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
 // Client
 //*******************************
 
+void Client::restackWindow( Window /*above TODO */, int detail, NET::RequestSource source, bool send_event )
+    {
+    switch ( detail )
+        {
+        case Above:
+        case TopIf:
+            if( source == NET::FromTool )
+                workspace()->raiseClient( this );
+            else
+                workspace()->raiseClientRequest( this );
+            break;
+        case Below:
+        case BottomIf:
+            if( source == NET::FromTool )
+                workspace()->lowerClient( this );
+            else
+                workspace()->lowerClientRequest( this );
+            break;
+        case Opposite:
+        default:
+            break;
+        }
+    if( send_event )
+        sendSyntheticConfigureNotify();
+    }
+    
 void Client::setKeepAbove( bool b )
     {
     if ( b == keepAbove() )

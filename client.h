@@ -228,7 +228,8 @@ class Client : public QObject, public KDecorationDefines
         const QPoint calculateGravitation( bool invert ) const; // FRAME public?
 
         void NETMoveResize( int x_root, int y_root, NET::Direction direction );
-
+        void restackWindow( Window above, int detail, NET::RequestSource source, bool send_event = false );
+        
         void gotPing( Time timestamp );
 
         static QCString staticWindowRole(WId);
@@ -240,6 +241,7 @@ class Client : public QObject, public KDecorationDefines
         void checkWorkspacePosition();
         void updateUserTime( Time time = CurrentTime );
         Time userTime() const;
+        bool hasUserTimeSupport() const;
 
     // does 'delete c;'
         static void deleteClient( Client* c, allowed_t );
@@ -768,6 +770,11 @@ inline void Client::resize( const QSize& s, bool force )
     resize( s.width(), s.height(), force );
     }
 
+inline bool Client::hasUserTimeSupport() const
+    {
+    return info->userTime() != -1U;
+    }
+    
 #ifdef NDEBUG
 kndbgstream& operator<<( kndbgstream& stream, const Client* );
 #else

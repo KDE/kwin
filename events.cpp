@@ -143,6 +143,11 @@ void RootInfo::gotPing( Window w, Time timestamp )
         c->gotPing( timestamp );
     }
 
+void RootInfo::restackWindow( Window w, Window above, int detail )
+    {
+    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
+        c->restackWindow( above, detail, NET::FromTool, true );
+    }
 
 // ****************************************
 // Workspace
@@ -684,9 +689,6 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
             }
         }
 
-    bool stacking = e->value_mask & CWStackMode;
-    int stack_mode = e->detail;
-
     if ( e->value_mask & CWBorderWidth ) 
         {
         // first, get rid of a window border
@@ -785,27 +787,8 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
             }
         }
 
-
-    if ( stacking )
-        {
-        switch (stack_mode)
-            {
-            case Above:
-            case TopIf:
-                if( workspace()->allowClientActivation( this )) // not really activation,
-                    workspace()->raiseClient( this );           // but it's the same, showing
-                else                                            // unwanted window on top
-                    workspace()->restackClientUnderActive( this ); // would be obtrusive
-                break;
-            case Below:
-            case BottomIf:
-                workspace()->lowerClient( this );
-                break;
-            case Opposite:
-            default:
-                break;
-            }
-        }
+    if ( e->value_mask & CWStackMode )
+        restackWindow( e->above, e->detail, NET::FromApplication );
 
     // TODO sending a synthetic configure notify always is fine, even in cases where
     // the ICCCM doesn't require this - it can be though of as 'the WM decided to move
