@@ -13,8 +13,8 @@
 
 using namespace KWinInternal;
 
-const int s_frameWidth = 5;
-const int s_buttonSize = 19;
+static const int s_frameWidth = 5;
+static const int s_buttonSize = 19;
 
 
 MwmButton::MwmButton( MwmClient* parent, const char* name, int btnType )
@@ -137,9 +137,12 @@ void MwmClient::menuButtonPressed()
 	t = new QTime;
 
     if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
+    {
 	workspace()->clientPopup( this )->popup(
 	    button[BtnMenu]->mapToGlobal(
 		button[BtnMenu]->rect().bottomLeft() ) );
+	button[BtnMenu]->animateClick();
+    }
     else
 	closeWindow();
 
@@ -397,7 +400,7 @@ void MwmClient::paintEvent( QPaintEvent* )
     p.setPen( options->color( Options::Font, isActive() ) );
     p.drawText(
 	trect.x() + 3,
-	trect.y() - 1,
+	trect.y(),
 	trect.width() - 6,
 	trect.height(),
 	AlignHCenter | AlignVCenter, caption() );

@@ -20,9 +20,10 @@ class MwmButton : public QButton
 public:
     MwmButton( MwmClient* parent=0, const char* name=0, int btnType=0 );
     void reset();
+
 protected:
-    virtual void drawButton(QPainter *p);
-    void drawButtonLabel(QPainter *){;}
+    virtual void drawButton( QPainter *p );
+
 private:
     MwmClient* m_parent;
     int m_btnType;
