@@ -481,7 +481,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     QRect geom( original_geometry );
     bool placementDone = FALSE;
-
+    
     SessionInfo* session = workspace()->takeSessionInfo( this );
     if ( session )
 	geom.setRect( session->x, session->y, session->width, session->height );
@@ -494,14 +494,14 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	QRect area = workspace()->clientArea();
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
-	    if ( !area.contains( geom.topLeft() ) ) {
+	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) ) {
 		int tx = geom.x();
 		int ty = geom.y();
 		if ( tx >= 0 && tx < area.x() )
 			tx = area.x();
 		if ( ty >= 0 && ty < area.y() )
 		    ty = area.y();
-		if ( tx > area.right() || ty > area.right() )
+		if ( tx > area.right() || ty > area.bottom() )
 		    placementDone = FALSE; // weird, do not trust.
 		else
 		    geom.moveTopLeft( QPoint( tx, ty ) );
@@ -867,7 +867,18 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    nx = e.x;
 	if ( e.value_mask & CWY )
 	    ny = e.y;
-	move( nx - ox, ny - oy );
+	QPoint np( nx-ox, ny-oy);
+	if ( windowType() == NET::Normal ) {
+	    // crap for broken netscape
+	    QRect area = workspace()->clientArea();
+	    if ( !area.contains( np ) ){
+		if ( np.x() < area.x() )
+		    np.rx() = area.x();
+		if ( np.y() < area.y() )
+		    np.ry() = area.y();
+	    }
+	}
+	move( np );
     }
 
     if ( e.value_mask & (CWWidth | CWHeight ) ) {
