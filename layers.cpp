@@ -145,11 +145,11 @@ void Workspace::propagateClients( bool propagate_new_clients )
          --it )
         {
         new_stack[ pos++ ] = (*it)->frameId();
-        if( (*it)->isTopMenu())
+        if( (*it)->belongsToLayer() >= DockLayer )
             topmenu_space_pos = pos;
         }
     if( topmenu_space != NULL )
-        { // make sure the topmenu space is below all topmenus, if there are any
+        { // make sure the topmenu space is below all topmenus, fullscreens, etc.
         for( int i = pos;
              i > topmenu_space_pos;
              --i )
