@@ -1593,6 +1593,7 @@ void Workspace::unclutterDesktop()
 void Workspace::reconfigure()
 {
     KGlobal::config()->reparseConfiguration();
+    mgr.updatePlugin();
     options->reload();
     keys->readSettings();
     grabControlTab(options->useControlTab);

@@ -94,10 +94,15 @@ void PluginMenu::parseDesktop(QFileInfo *fi)
 
 void PluginMenu::slotActivated(int id)
 {
-    if(id == 0)
-        mgr->loadPlugin(QString::null);
-    else
-        mgr->loadPlugin(fileList[id-1]);
+    QString newPlugin;
+    if (id > 0)
+        newPlugin = fileList[id-1];
+     
+    KConfig *config = KGlobal::config();
+    config->setGroup("Style");
+    config->writeEntry("PluginLib", newPlugin);
+    config->sync();
+    mgr->loadPlugin(newPlugin);
 }
 
 PluginMgr::PluginMgr()
@@ -105,20 +110,25 @@ PluginMgr::PluginMgr()
 {
     alloc_ptr = NULL;
     handle = 0;
+    pluginStr = "standard";
 
-    KConfig *config = KGlobal::config();
-    config->setGroup("Style");
-    pluginStr = config->readEntry("PluginLib", "default");
-    if(pluginStr.isEmpty() || pluginStr == "standard")
-        pluginStr = "standard";
-    else
-        loadPlugin(pluginStr);
+    updatePlugin();
 }
 
 PluginMgr::~PluginMgr()
 {
     if(handle)
         lt_dlclose(handle);
+}
+
+void
+PluginMgr::updatePlugin()
+{
+    KConfig *config = KGlobal::config();
+    config->setGroup("Style");
+    QString newPlugin = config->readEntry("PluginLib", "default");
+    if (newPlugin != pluginStr)
+       loadPlugin(newPlugin);
 }
 
 Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
@@ -176,10 +186,6 @@ void PluginMgr::loadPlugin(QString nameStr)
             }
         }
     }
-    KConfig *config = KGlobal::config();
-    config->setGroup("Style");
-    config->writeEntry("PluginLib", pluginStr);
-    config->sync();
     emit resetAllClients();
     if(oldHandle)
         lt_dlclose(oldHandle);
