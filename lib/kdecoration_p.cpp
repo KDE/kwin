@@ -185,7 +185,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
     BorderSize old_border_size = border_size;
     int border_size_num = config->readNumEntry( "BorderSize", BorderNormal );
-    if( border_size_num >= BorderTiny && border_size_num <= BorderHuge )
+    if( border_size_num >= BorderTiny && border_size_num <= BorderOversized )
         border_size = static_cast< BorderSize >( border_size_num );
     else
         border_size = BorderNormal;

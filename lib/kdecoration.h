@@ -120,7 +120,9 @@ public:
         BorderNormal,    ///< Standard size borders, the default setting
         BorderLarge,     ///< Larger borders
         BorderVeryLarge, ///< Very large borders
-        BorderHuge       ///< Huge borders
+        BorderHuge,      ///< Huge borders
+        BorderVeryHuge,  ///< Very huge borders
+        BorderOversized  ///< Oversized borders
         };
 };    
 
