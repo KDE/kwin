@@ -6,6 +6,7 @@
 #include <qpainter.h>
 #include <kpixmapeffect.h>
 #include <kstandarddirs.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <qbitmap.h>
 #include <qstyle.h>
@@ -91,7 +92,7 @@ static void create_pixmaps()
         framePixmaps[i] = new QPixmap(locate("appdata",
                                       "pics/"+config->readEntry(keys[i], " ")));
         if(framePixmaps[i]->isNull())
-            qWarning("Unable to load frame pixmap for %s", keys[i]);
+            kdWarning() << "Unable to load frame pixmap for " << keys[i] << endl;
     }
 /*
     *framePixmaps[FrameTop] = stretchPixmap(*framePixmaps[FrameTop], false);
@@ -331,7 +332,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
             if((val != "Off") && 
                ((val == "Iconify") && !isMinimizable()) &&
                ((val == "Maximize") && !isMaximizable()))
-                qWarning("KWin: Unrecognized button value: %s", val.latin1());
+                kdWarning() << "KWin: Unrecognized button value: " << val << endl;
 
         }
     }

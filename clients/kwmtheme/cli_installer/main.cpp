@@ -3,6 +3,7 @@
 #include <kapplication.h>
 #include <ksimpleconfig.h>
 #include <kglobal.h>
+#include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
@@ -21,11 +22,11 @@ void copy(const QString &src, const QString &dest)
     QFile copyInput(src);
     QFile copyOutput(dest);
     if(!copyInput.open(IO_ReadOnly)){
-        qWarning("Couldn't open %s", src.latin1());
+        kdWarning() << "Couldn't open " << src << endl;
         return;
     }
     if(!copyOutput.open(IO_WriteOnly)){
-        qWarning("Couldn't open %s", dest.latin1());
+        kdWarning() << "Couldn't open " << dest << endl;
         copyInput.close();
         return;
     }
@@ -43,7 +44,7 @@ int main(int argc, char **argv)
     KApplication app(argc, argv);
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if(!args->count()){
-        qWarning("You need to specify the path to a theme config file!");
+        kdWarning() << "You need to specify the path to a theme config file!" << endl;
         return(1);
     }
 
@@ -52,7 +53,7 @@ int main(int argc, char **argv)
     QString tmpStr;
 
     if(!f.exists()){
-        qWarning("Specified theme config file doesn't exist!");
+        kdWarning() << "Specified theme config file doesn't exist!" << endl;
         return(2);
     }
 

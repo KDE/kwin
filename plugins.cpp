@@ -7,6 +7,7 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kdesktopfile.h>
+#include <kdebug.h>
 #include <ksimpleconfig.h>
 #include <klocale.h>
 #include <klibloader.h>
@@ -113,7 +114,7 @@ void PluginMgr::loadPlugin(QString nameStr)
     if(alloc_func) {
         alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
     } else {
-        qWarning("KWin: The library %s is not a KWin plugin.", path.latin1());
+        kdWarning() << "KWin: The library " << path << " is not a KWin plugin." << endl;
         library->unload();
         exit(1);
     }
