@@ -86,9 +86,9 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 			i18n( "&Reverse the window title in BIDI desktops"), checkGroup );
 	QWhatsThis::add( cbReverseBIDIWindows,
 			i18n("In BIDI enabled desktops, when you choose this option "
-				"it will reverse the window client accodring to the language. "
-				"If you prefear it to be showed the same as "
-				"in non-BIDI desktops leave it off."));
+				"it will reverse the window client according to the language. "
+				"If you prefer it to be shown the same as "
+				"in non-BIDI desktops, leave it off."));
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
