@@ -67,7 +67,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	decorationListBox = new QListBox( btnGroup );
 
 	QGroupBox* checkGroup = new QGroupBox( 1, Qt::Horizontal, 
-			i18n("General options (if available)"), page1 );
+			i18n("General Options (if available)"), page1 );
 	cbUseCustomButtonPositions = new QCheckBox( 
 			i18n("Use custom titlebar button &positions"), checkGroup );
 	QWhatsThis::add( cbUseCustomButtonPositions, 
