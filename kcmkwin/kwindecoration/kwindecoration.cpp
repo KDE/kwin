@@ -109,7 +109,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	findDecorations();
 	createDecorationList();
 	readConfig( &kwinConfig );
-	resetPlugin( &kwinConfig );
 
 	tabWidget->insertTab( page1, i18n("&General") );
 	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
@@ -117,6 +116,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 						  decorationListBox->currentText() + i18n("]") );
 
 	tabWidget->setTabEnabled( buttonPage, cbUseCustomButtonPositions->isChecked() );
+	tabWidget->setTabEnabled( pluginPage, pluginObject ? true : false );
 
 	connect( dropSite, SIGNAL(buttonAdded(char)), buttonSource, SLOT(hideButton(char)) );
 	connect( dropSite, SIGNAL(buttonRemoved(char)), buttonSource, SLOT(showButton(char)) );
@@ -198,6 +198,8 @@ void KWinDecorationModule::slotDecorationHighlighted( const QString& s )
 
 	// Let the user see config options for the currently selected decoration
 	resetPlugin( &kwinConfig, &s );
+
+	tabWidget->setTabEnabled( pluginPage, pluginObject ? true : false );
 	tabWidget->changeTab( pluginPage, i18n("&Configure [%1]").arg( decorationListBox->currentText() ) );
 }
 
@@ -301,16 +303,7 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString* currentDec
 		} 
 	}
 
-	// Display a message telling the user that the current decoration
-	// does not have any configurable options (extended plugin interface not found)
-	QWidget* plugin = new QGroupBox( 1, Qt::Horizontal, "", pluginPage );
-	(void) new QLabel( 
-		i18n("<H3>No Configurable Options Available</H3>"
-	        "No configurable options are available for the "
-			"currently selected decoration."), plugin );
-
-	plugin->show();
-	pluginObject = plugin;
+	pluginObject = NULL;
 }
 
 
