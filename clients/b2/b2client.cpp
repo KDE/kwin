@@ -307,7 +307,7 @@ void B2Client::shadeButtonClicked()
     setShade(!isShade());
 }
 
-void B2Client::resizeButtonClicked()
+void B2Client::resizeButtonPressed()
 {
     performWindowOperation(ResizeOp);
 }
@@ -484,8 +484,8 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 	    if (isResizable() && !button[BtnResize]) {
 		button[BtnResize] = new B2Button(this, tb, tips[BtnResize]);
 		button[BtnResize]->setPixmaps(P_RESIZE);
-		connect(button[BtnResize], SIGNAL(clicked()),
-			this, SLOT(resizeButtonClicked()));
+		connect(button[BtnResize], SIGNAL(pressed()),
+			this, SLOT(resizeButtonPressed()));
 		titleLayout->addWidget(button[BtnResize]);
 	    }
 	    break;

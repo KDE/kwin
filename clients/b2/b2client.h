@@ -125,7 +125,7 @@ private slots:
     //void slotReset();
     void maxButtonClicked();
     void shadeButtonClicked();
-    void resizeButtonClicked();
+    void resizeButtonPressed();
 private:
     void addButtons(const QString& s, const QString tips[],
                     B2Titlebar* tb, QBoxLayout* titleLayout);
