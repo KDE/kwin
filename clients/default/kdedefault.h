@@ -38,7 +38,7 @@ class KDEDefaultHandler: public KDecorationFactory
 		bool reset( unsigned long changed );
 
 	private:
-		void readConfig();
+		unsigned long readConfig( bool update );
 		void createPixmaps();
 		void freePixmaps();
 		void drawButtonBackground(KPixmap *pix,
@@ -88,6 +88,7 @@ class KDEDefaultClient : public KDecoration
                 void borders( int&, int&, int&, int& ) const;
                 void resize( const QSize& );
                 QSize minimumSize() const;
+                void reset( unsigned long changed );
 
 	protected:
                 bool eventFilter( QObject*, QEvent* );

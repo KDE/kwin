@@ -119,6 +119,7 @@ bool useGradients;
 bool showGrabBar;
 bool showTitleBarStipple;
 bool largeToolButtons;
+int      titleBarSize;
 int	 toolTitleHeight;
 int	 normalTitleHeight;
 
@@ -128,7 +129,7 @@ int	 normalTitleHeight;
 KDEDefaultHandler::KDEDefaultHandler()
 {
         clientHandler = this;
-	readConfig();
+	readConfig( false );
 	createPixmaps();
 	KDEDefault_initialized = true;
 }
@@ -148,33 +149,54 @@ KDecoration* KDEDefaultHandler::createDecoration( KDecorationBridge* b )
 
 bool KDEDefaultHandler::reset( unsigned long changed )
 {
-	Q_UNUSED( changed )
-// FRAME
 	KDEDefault_initialized = false;
-	freePixmaps();
-	readConfig();
-	createPixmaps();
+        changed |= readConfig( true );
+        if( changed & SettingColors )
+        { // pixmaps need to be recreated
+	        freePixmaps();
+                createPixmaps();
+        }
 	KDEDefault_initialized = true;
-        return true;
+        bool need_recreate = ( changed & ( SettingFont | SettingButtons | SettingBorder )) != 0;
+        if( need_recreate )  // something else than colors changed
+            return true;
+        resetDecorations( changed );
+        return false;
 }
 
 
-void KDEDefaultHandler::readConfig()
+unsigned long KDEDefaultHandler::readConfig( bool update )
 {
+        unsigned long changed = 0;
 	KConfig* conf = KGlobal::config();
 	conf->setGroup("KDEDefault");
 
-	showGrabBar 		= conf->readBoolEntry("ShowGrabBar", true);
-	showTitleBarStipple = conf->readBoolEntry("ShowTitleBarStipple", true);
-	useGradients 		= conf->readBoolEntry("UseGradients", true);
-	int size 			= conf->readNumEntry("TitleBarSize", 0);
+        bool new_showGrabBar 		= conf->readBoolEntry("ShowGrabBar", true);
+	bool new_showTitleBarStipple = conf->readBoolEntry("ShowTitleBarStipple", true);
+	bool new_useGradients 		= conf->readBoolEntry("UseGradients", true);
+	int new_titleBarSize 			= conf->readNumEntry("TitleBarSize", 0);
 
-	if (size < 0) size = 0;
-	if (size > 2) size = 2;
+	if (new_titleBarSize < 0) new_titleBarSize = 0;
+	if (new_titleBarSize > 2) new_titleBarSize = 2;
 
-	normalTitleHeight 	= 16 + (4*size);
+        if( update )
+        {
+                if( new_showGrabBar != showGrabBar
+                    || new_titleBarSize != titleBarSize )
+                        changed |= SettingDecoration; // need recreating the decoration
+                if( new_showTitleBarStipple != showTitleBarStipple
+                    || new_useGradients != useGradients )
+                        changed |= SettingColors; // just recreate the pixmaps and repaint
+        }
+            
+        showGrabBar             = new_showGrabBar;
+        showTitleBarStipple     = new_showTitleBarStipple;
+        useGradients            = new_useGradients;
+        titleBarSize            = new_titleBarSize;
+	normalTitleHeight 	= 16 + (4*titleBarSize);
 	toolTitleHeight 	= normalTitleHeight - 4;
 	largeToolButtons 	= (toolTitleHeight >= 16) ? true : false;
+        return changed;
 }
 
 
@@ -764,6 +786,10 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 	}
 }
 
+void KDEDefaultClient::reset( unsigned long )
+{
+    widget()->repaint();
+}
 
 void KDEDefaultClient::iconChange()
 {
