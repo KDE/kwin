@@ -1641,8 +1641,14 @@ bool Client::isMaximizable() const
  */
 bool Client::isMinimizable() const
 {
-    return ( !isTransient() || !workspace()->findClient( transientFor() ) )
-        && wantsTabFocus() && may_minimize;
+    if( isTransient())
+    {
+	Client* trans = workspace()->findClient( transientFor());
+	// TODO should it be allowed to have WM_TRANSIENT_FOR pointing to itself?
+	if( trans != NULL && trans != this )
+	    return false;
+    }
+    return wantsTabFocus() && may_minimize;
 }
 
 /*
