@@ -2539,7 +2539,7 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus( bool force )
 {
-    if ( !force && ( isTopMenu() || isDock() ) )
+    if ( !force && ( isTopMenu() || ( isDock() && staysOnTop() ) ) )
         return; // toplevel menus and dock windows don't take focus if not forced
 
     if ( input ) {
