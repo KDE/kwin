@@ -16,7 +16,19 @@
 #undef INT8
 #undef INT32
 
-#define i18n(x) (x)
+#include <kcmdlineargs.h>
+#include <kaboutdata.h>
+#include <klocale.h>
+
+static const char *version = "0.9";
+
+static const char *description = I18N_NOOP( "KDE Window Manager." );
+
+static KCmdLineOptions cmdOptions[]  =
+{
+  { "+[workspace]", I18N_NOOP("A cryptic command line option"), 0 },
+  { 0, 0, 0 }
+};
 
 Options* options;
 Atoms* atoms;
@@ -54,8 +66,8 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
     return 0;
 }
 
-Application::Application( int &argc, char *argv[] )
-: KApplication( argc, argv, "kwin" )
+Application::Application( )
+: KApplication( )
 {
     initting = TRUE;
     options = new Options;
@@ -67,11 +79,14 @@ Application::Application( int &argc, char *argv[] )
     // create a workspace.
     workspaces += new Workspace();
     initting = FALSE;
-    if ( argc > 1 ) {
-	QString s = argv[1];
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if ( args->count() ) {
+	QString s = args->arg(0);
 	int i = s.toInt();
 	workspaces += new Workspace( (WId ) i );
     }
+    args->clear();
 
     syncX();
     initting = FALSE;
@@ -119,7 +134,12 @@ static void sighandler(int) {
     QApplication::exit();
 }
 
-int main( int argc, char * argv[] ) {
+int main( int argc, char * argv[] ) 
+{
+    KAboutData aboutData( "kwin", I18N_NOOP("KWin"), version, description);
+
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions( cmdOptions );
 
     if (signal(SIGTERM, sighandler) == SIG_IGN)
 	signal(SIGTERM, SIG_IGN);
@@ -128,7 +148,7 @@ int main( int argc, char * argv[] ) {
     if (signal(SIGHUP, sighandler) == SIG_IGN)
 	signal(SIGHUP, SIG_IGN);
 
-    Application a( argc, argv );
+    Application a;
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
     return a.exec();

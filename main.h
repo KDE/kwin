@@ -8,7 +8,7 @@ typedef QValueList<Workspace*> WorkspaceList;
 class Application : public  KApplication
 {
 public:
-    Application( int &argc, char **argv );
+    Application();
     ~Application();
 
 protected:
