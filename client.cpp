@@ -610,6 +610,16 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     activateLayout();
     resize ( sizeForWindowSize( geom.size() ) );
     activateLayout();
+    
+    // inform clients about the frame geometry
+    NETStrut strut;
+    QRect wr = windowWrapper()->geometry();
+    QRect mr = rect();
+    strut.left = wr.left();
+    strut.right = mr.right() - wr.right();
+    strut.top = wr.top();
+    strut.bottom = mr.bottom() - wr.bottom();
+    info->setKDEFrameStrut( strut );
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
@@ -1189,16 +1199,6 @@ void Client::sendSynteticConfigureNotify()
     c.height = windowWrapper()->height();
     c.border_width = 0;
     XSendEvent( qt_xdisplay(), c.event, TRUE, NoEventMask, (XEvent*)&c );
-
-    // inform clients about the frame geometry
-    NETStrut strut;
-    QRect wr = windowWrapper()->geometry();
-    QRect mr = rect();
-    strut.left = wr.left();
-    strut.right = mr.right() - wr.right();
-    strut.top = wr.top();
-    strut.bottom = mr.bottom() - wr.bottom();
-    info->setKDEFrameStrut( strut );
 }
 
 
