@@ -161,6 +161,8 @@ Client* TabBox::currentClient()
 {
     if ( mode() != WindowsMode )
 	return 0;
+    if (!workspace()->hasClient( client ))
+        return 0;
     return client;
 }
 

@@ -736,6 +736,7 @@ bool Workspace::destroyClient( Client* c)
         return FALSE;
 
     storeFakeSessionInfo( c );
+
     if (clients.contains(c))
 	removeClient(c);
 
@@ -752,6 +753,10 @@ bool Workspace::destroyClient( Client* c)
     if ( c == last_active_client )
         last_active_client = 0;
     delete c;
+
+    if (tab_grab)
+       tab_box->repaint();
+
     updateClientArea();
     return TRUE;
 }
