@@ -421,6 +421,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     is_sticky = FALSE;
     stays_on_top = FALSE;
     may_move = TRUE;
+    skip_taskbar = FALSE;
 
     getWMHints();
     getWindowProtocols();
@@ -438,6 +439,9 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     // window wants to stay on top?
     stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || transient_for == workspace()->rootWin();
+    
+    // window does not want a taskbar entry?
+    skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
 
 
     // should we open this window on a certain desktop?
@@ -488,17 +492,15 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	    may_move = FALSE; // don't let fullscreen windows be moved around
     }  else {
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
-	    if ( (xSizeHint.flags & USPosition) == 0 ) {
-		QRect area = workspace()->clientArea();
-		if ( !area.contains( geom.topLeft() ) ) {
-		    int tx = geom.x();
-		    int ty = geom.y();
-		    if ( tx >= 0 && tx < area.x() )
+	    QRect area = workspace()->clientArea();
+	    if ( !area.contains( geom.topLeft() ) ) {
+		int tx = geom.x();
+		int ty = geom.y();
+		if ( tx >= 0 && tx < area.x() )
 			tx = area.x();
-		    if ( ty >= 0 && ty < area.y() )
-			ty = area.y();
-		    geom.moveTopLeft( QPoint( tx, ty ) );
-		}
+		if ( ty >= 0 && ty < area.y() )
+		    ty = area.y();
+		geom.moveTopLeft( QPoint( tx, ty ) );
 	    }
 	    placementDone = TRUE;
 	}
@@ -1456,7 +1458,7 @@ void Client::iconify()
     Events::raise( Events::Iconify );
     setMappingState( IconicState );
 
-    if ( !isTransient() )
+    if ( !isTransient() && isVisible() )
 	animateIconifyOrDeiconify( TRUE );
     hide();
 
@@ -2257,7 +2259,7 @@ NET::WindowType Client::windowType() const
 
 bool Client::wantsTabFocus() const
 {
-    return windowType() == NET::Normal && ( input || Ptakefocus );
+    return windowType() == NET::Normal && ( input || Ptakefocus ) && !skip_taskbar;
 }
 
 /*!

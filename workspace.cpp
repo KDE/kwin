@@ -1581,9 +1581,6 @@ void Workspace::raiseClient( Client* c )
     if ( !c )
 	return;
 
-    if ( tab_box->isVisible() )
-	return;
-
     ClientList saveset;
 
     if ( c == desktop_client ) {
@@ -1629,6 +1626,9 @@ void Workspace::raiseClient( Client* c )
 
 
     propagateClients( TRUE );
+    
+    if ( tab_box->isVisible() )
+	tab_box->raise();
 }
 
 
@@ -2073,6 +2073,13 @@ void Workspace::slotWindowLower()
  */
 void Workspace::slotMouseEmulation()
 {
+    
+    if ( mouse_emulation ) {
+	XUngrabKeyboard(qt_xdisplay(), kwin_time);
+	mouse_emulation = FALSE;
+	return;
+    } 
+    
     if ( XGrabKeyboard(qt_xdisplay(),
 		       root, FALSE,
 		       GrabModeAsync, GrabModeAsync,
