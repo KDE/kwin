@@ -2,8 +2,6 @@ METASOURCES = AUTO
 AM_CPPFLAGS = $(all_includes) -DKCMRULES
 INCLUDES = -I$(top_srcdir)/kwin/lib
 
-KDE_OPTIONS = nofinal
-
 bin_PROGRAMS =
 lib_LTLIBRARIES =
 kdeinit_LTLIBRARIES = kwin_rules_dialog.la
