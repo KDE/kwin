@@ -2146,7 +2146,7 @@ loadConfig(char *filename){
         wasNull = True;
         const char *home = getenv("HOME");
         const char *configfile = "/.xcompmgrrc"; 
-                        filename = (char*)malloc((strlen(home)+strlen(configfile))*sizeof(char));
+        filename = (char*)malloc((strlen(home)+strlen(configfile)+1)*sizeof(char));
         
         strcat(filename, home);
         strcat(filename, configfile);
