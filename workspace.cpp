@@ -30,6 +30,7 @@ static Client* clientFactory( Workspace *ws, WId w )
     }
     if ( s == "Kicker" ) {
 	Client * c = new NoBorderClient( ws, w);
+	c->setSticky( TRUE );
 	return c;
     }
 
@@ -61,6 +62,7 @@ Workspace::Workspace()
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
 
+
 }
 
 Workspace::Workspace( WId rootwin )
@@ -85,7 +87,6 @@ Workspace::Workspace( WId rootwin )
     grabKey(XK_Tab, Mod1Mask | ShiftMask);
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
-
 }
 
 void Workspace::init()
@@ -94,7 +95,10 @@ void Workspace::init()
     active_client = 0;
     should_get_focus = 0;
     desktop_client = 0;
-    current_desktop = 1;
+    current_desktop = 0;
+    number_of_desktops = 0;
+    setNumberOfDesktops( 4 ); // TODO options
+    setCurrentDesktop( 1 );
 
     unsigned int i, nwins;
     Window dw1, dw2, *wins;
@@ -126,6 +130,7 @@ void Workspace::init()
     XFree((void *) wins);
     XUngrabServer( qt_xdisplay() );
     popup = 0;
+    propagateClients();
 }
 
 Workspace::~Workspace()
@@ -184,6 +189,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 		clients.append( c );
 		if ( c != desktop_client )
 		    stacking_order.append( c );
+		propagateClients();
 	    }
 	    bool result = c->windowEvent( e );
 	    if ( c == desktop_client )
@@ -238,6 +244,9 @@ bool Workspace::workspaceEvent( XEvent * e )
 	break;
     case FocusOut:
 	break;
+    case ClientMessage:
+	return clientMessage(e->xclient);
+	break;
     default:
 	break;
     }
@@ -288,6 +297,7 @@ bool Workspace::destroyClient( Client* c)
     c->invalidateWindow();
     delete c;
     clientHidden( c );
+    propagateClients();
     return TRUE;
 }
 
@@ -432,7 +442,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 		tab_box->hide();
 		control_grab = False;
 		if ( tab_box->currentDesktop() != -1 )
-		    switchDesktop( tab_box->currentDesktop() );
+		    setCurrentDesktop( tab_box->currentDesktop() );
 	    }
     }
     return FALSE;
@@ -556,7 +566,9 @@ void Workspace::grabKey(KeySym keysym, unsigned int mod){
   Informs the workspace about the active client, i.e. the client that
   has the focus (or None if no client has the focus). This functions
   is called by the client itself that gets focus. It has no other
-  effect than fixing the focus chain and the return value of activeClient()
+  effect than fixing the focus chain and the return value of
+  activeClient(). And of course, to propagate the active client to the
+  world.
  */
 void Workspace::setActiveClient( Client* c )
 {
@@ -569,6 +581,11 @@ void Workspace::setActiveClient( Client* c )
 	focus_chain.remove( c );
 	focus_chain.append( c );
     }
+    WId w = active_client? active_client->window() : 0;
+    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
+		    atoms->net_active_window, XA_WINDOW, 32,
+		    PropModeReplace, (unsigned char *)&w, 1);
+
 }
 
 
@@ -767,6 +784,8 @@ void Workspace::raiseClient( Client* c )
 
     if ( c->transientFor() )
 	raiseClient( findClient( c->transientFor() ) );
+
+    propagateClients( TRUE );
 }
 
 
@@ -814,8 +833,15 @@ void Workspace::setDesktopClient( Client* c)
     }
 }
 
-void Workspace::switchDesktop( int new_desktop ){
-    if (new_desktop == current_desktop )
+
+/*!
+  Sets the current desktop to \a new_desktop
+
+  Shows/Hides windows according to the stacking order and finally
+  propages the new desktop to the world
+ */
+void Workspace::setCurrentDesktop( int new_desktop ){
+    if (new_desktop == current_desktop || new_desktop < 1 || new_desktop > number_of_desktops )
 	return;
 
     /*
@@ -837,6 +863,11 @@ void Workspace::switchDesktop( int new_desktop ){
     }
 
     current_desktop = new_desktop;
+
+    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
+		    atoms->net_current_desktop, XA_CARDINAL, 32,
+		    PropModeReplace, (unsigned char *)&current_desktop, 1);
+    KWM::switchToDesktop( current_desktop ); // ### compatibility
 }
 
 
@@ -879,4 +910,66 @@ void Workspace::setDecoration( int deco )
 QWidget* Workspace::desktopWidget()
 {
     return desktop_widget;
+}
+
+/*!
+  Sets the number of virtual desktops to \a n
+ */
+void Workspace::setNumberOfDesktops( int n )
+{
+    if ( n == number_of_desktops )
+	return;
+    number_of_desktops = n;
+    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
+		    atoms->net_number_of_desktops, XA_CARDINAL, 32,
+		    PropModeReplace, (unsigned char *)&number_of_desktops, 1);
+}
+
+/*!
+  Handles client messages sent to the workspace
+ */
+bool Workspace::clientMessage( XClientMessageEvent msg )
+{
+    if ( msg.message_type == atoms->net_active_window ) {
+	Client * c = findClient( msg.data.l[0] );
+	if ( c ) {
+	    activateClient( c );
+	    return TRUE;
+	}
+    } else if ( msg.message_type == atoms->net_current_desktop ) {
+	setCurrentDesktop( msg.data.l[0] );
+	return TRUE;
+    }
+
+    return FALSE;
+}
+
+/*!
+  Propagates the managed clients to the world
+ */
+void Workspace::propagateClients( bool onlyStacking )
+{
+    WId* cl;
+    int i;
+    if ( !onlyStacking ) {
+	WId* cl = new WId[ clients.count()];
+	i = 0;
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it ) {
+	    cl[i++] =  (*it)->window();
+	}
+	XChangeProperty(qt_xdisplay(), qt_xrootwin(),
+			atoms->net_client_list, XA_WINDOW, 32,
+			PropModeReplace, (unsigned char *)cl, clients.count());
+	delete [] cl;
+    }
+
+    cl = new WId[ stacking_order.count()];
+    i = 0;
+    for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
+	cl[i++] =  (*it)->window();
+    }
+    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
+		    atoms->net_client_list_stacking, XA_WINDOW, 32,
+		    PropModeReplace, (unsigned char *)cl, stacking_order.count());
+    delete [] cl;
 }

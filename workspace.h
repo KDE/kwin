@@ -41,8 +41,10 @@ public:
     void clientHidden( Client*  );
 
     int currentDesktop() const;
+    void setCurrentDesktop( int new_desktop );
     int numberOfDesktops() const;
-    
+    void setNumberOfDesktops( int n );
+
     QWidget* desktopWidget();
 
     void grabKey(KeySym keysym, unsigned int mod);
@@ -59,13 +61,13 @@ public:
     void showPopup( const QPoint&, Client* );
 
     void setDesktopClient( Client* );
-    void switchDesktop( int new_desktop );
 
     void makeFullScreen( Client* );
 
 protected:
     bool keyPress( XKeyEvent key );
     bool keyRelease( XKeyEvent key );
+    bool clientMessage( XClientMessageEvent msg );
 	
 private:
     void init();
@@ -87,12 +89,15 @@ private:
     void focusToNull();
     Client* desktop_client;
     int current_desktop;
+    int number_of_desktops;
 
     Client* popup_client;
     QWidget* desktop_widget;
 
     //experimental
     void setDecoration( int deco );
+    
+    void propagateClients( bool onlyStacking = FALSE);
 };
 
 inline WId Workspace::rootWin() const

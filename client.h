@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include "options.h"
+#include <kwm.h>
 #include <qframe.h>
 #include <qvbox.h>
 #include <qpixmap.h>
@@ -11,13 +12,6 @@
 
 class Workspace;
 class Client;
-
-class KWM
-{
-public:
-    static QPixmap miniIcon(Window w, int width=0, int height=0);
-    static QPixmap icon(Window w, int width=0, int height=0);
-};
 
 class WindowWrapper : public QWidget
 {

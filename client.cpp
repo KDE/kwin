@@ -58,173 +58,6 @@ static void sendClientMessage(Window w, Atom a, long x){
 }
 
 
-static int _getprop(Window w, Atom a, Atom type, long len, unsigned char **p){
-  Atom real_type;
-  int format;
-  unsigned long n, extra;
-  int status;
-
-  status = XGetWindowProperty(qt_xdisplay(), w, a, 0L, len, False, type, &real_type, &format, &n, &extra, p);
-  if (status != Success || *p == 0)
-    return -1;
-  if (n == 0)
-    XFree((char*) *p);
-  /* could check real_type, format, extra here... */
-  return n;
-}
-static bool getDoubleProperty(Window w, Atom a, long &result1, long &result2){
-  long *p = 0;
-
-  if (_getprop(w, a, a, 2L, (unsigned char**)&p) <= 0){
-    return FALSE;
-  }
-
-  result1 = p[0];
-  result2 = p[1];
-  XFree((char *) p);
-  return TRUE;
-}
-QPixmap KWM::miniIcon(Window w, int width, int height){
-  QPixmap result;
-  Pixmap p = None;
-  Pixmap p_mask = None;
-
-  long tmp[2] = {None, None};
-  if (!getDoubleProperty(w, atoms->kwm_win_icon, tmp[0], tmp[1])){
-    XWMHints *hints = XGetWMHints(qt_xdisplay(), w);
-    if (hints && (hints->flags & IconPixmapHint)){
-      p = hints->icon_pixmap;
-    }
-    if (hints && (hints->flags & IconMaskHint)){
-      p_mask = hints->icon_mask;
-    }
-    if (hints)
-      XFree((char*)hints);
-  }
-  else {
-    p = (Pixmap) tmp[0];
-    p_mask = (Pixmap) tmp[1];
-  }
-
-  if (p != None){
-    Window root;
-    int x, y;
-    unsigned int w = 0;
-    unsigned int h = 0;
-    unsigned int border_w, depth;
-    XGetGeometry(qt_xdisplay(), p,
-		 &root,
-		 &x, &y, &w, &h, &border_w, &depth);
-    if (w > 0 && h > 0){
-      QPixmap pm(w, h, depth);
-      XCopyArea(qt_xdisplay(), p, pm.handle(),
-		qt_xget_temp_gc(depth==1),
-		0, 0, w, h, 0, 0);
-      if (p_mask != None){
-	QBitmap bm(w, h);
-	XCopyArea(qt_xdisplay(), p_mask, bm.handle(),
-		  qt_xget_temp_gc(TRUE),
-		  0, 0, w, h, 0, 0);
-	pm.setMask(bm);
-      }
-      if (width > 0 && height > 0 && (w > (unsigned int)width
-				      || h > (unsigned int) height)){
-	// scale
-	QWMatrix m;
-	m.scale(width/(float)w, height/(float)h);
-	result = pm.xForm(m);
-      }
-      else
-	result = pm;
-    }
-  }
-  else {
-    XWMHints *hints = XGetWMHints(qt_xdisplay(),  w);
-    if (hints &&
-	(hints->flags & WindowGroupHint)
-	&& hints->window_group != None
-	&& hints->window_group != w){
-	Window wg = hints->window_group;
-	XFree((char*)hints);
-	return miniIcon(wg, width, height);
-    }
-    if (hints)
-      XFree((char*)hints);
-    Window trans = None;
-    if (XGetTransientForHint(qt_xdisplay(), w, &trans)){
-      if (trans != w)
-	return miniIcon(trans, width, height);
-    }
-  }
-  return result;
-}
-
-QPixmap KWM::icon(Window w, int width, int height){
-  QPixmap result;
-  Pixmap p = None;
-  Pixmap p_mask = None;
-
-  XWMHints *hints = XGetWMHints(qt_xdisplay(), w);
-  if (hints && (hints->flags & IconPixmapHint)){
-    p = hints->icon_pixmap;
-  }
-  if (hints && (hints->flags & IconMaskHint)){
-    p_mask = hints->icon_mask;
-  }
-  if (hints)
-    XFree((char*)hints);
-
-  if (p != None){
-    Window root;
-    int x, y;
-    unsigned int w = 0;
-    unsigned int h = 0;
-    unsigned int border_w, depth;
-    XGetGeometry(qt_xdisplay(), p,
-		 &root,
-		 &x, &y, &w, &h, &border_w, &depth);
-    if (w > 0 && h > 0){
-      QPixmap pm(w, h, depth);
-      XCopyArea(qt_xdisplay(), p, pm.handle(),
-		qt_xget_temp_gc(depth==1),
-		0, 0, w, h, 0, 0);
-      if (p_mask != None){
-	QBitmap bm(w, h);
-	XCopyArea(qt_xdisplay(), p_mask, bm.handle(),
-		  qt_xget_temp_gc(TRUE),
-		  0, 0, w, h, 0, 0);
-	pm.setMask(bm);
-      }
-      if (width > 0 && height > 0 && (w > (unsigned int)width
-				      || h > (unsigned int) height)){
-	// scale
-	QWMatrix m;
-	m.scale(width/(float)w, height/(float)h);
-	result = pm.xForm(m);
-      }
-      else
-	result = pm;
-    }
-  }
-  else {
-    XWMHints *hints = XGetWMHints(qt_xdisplay(),  w);
-    if (hints &&
-	(hints->flags & WindowGroupHint)
-	&& hints->window_group != None
-	&& hints->window_group != w){
-      XFree((char*)hints);
-      return icon(hints->window_group, width, height);
-    }
-    if (hints)
-      XFree((char*)hints);
-    Window trans = None;
-    if (XGetTransientForHint(qt_xdisplay(), w, &trans)){
-      if (trans != w)
-	return icon(trans, width, height);
-    }
-  }
-  return result;
-}
 
 /*!
   \class WindowWrapper client.h
@@ -493,10 +326,11 @@ void Client::manage( bool isMapped )
 
     // ### TODO check XGetWMHints() for initial mapping state, icon, etc. pp.
     // assume window wants to be visible on the current desktop
-    desk = workspace()->currentDesktop();
+    desk = KWM::desktop( win ); //workspace()->currentDesktop();
     setMappingState( NormalState );
-    desk = workspace()->currentDesktop();
-    show();
+    if ( isOnDesktop( workspace()->currentDesktop() ) ) {
+	show();
+    } 
 
     if ( options->focusPolicyIsReasonable() )
 	workspace()->requestFocus( this );
@@ -639,7 +473,7 @@ bool Client::unmapNotify( XUnmapEvent& e )
 	// maybe we will be destroyed soon. Check this first.
 	XEvent ev;
 	QApplication::syncX();
-	if  ( XCheckTypedWindowEvent (qt_xdisplay(), win, 
+	if  ( XCheckTypedWindowEvent (qt_xdisplay(), win,
 				      DestroyNotify, &ev) ){
 	    workspace()->destroyClient( this );
 	    return TRUE;
@@ -1451,8 +1285,10 @@ void Client::setSticky( bool b )
     if ( is_sticky == b )
 	return;
     is_sticky = b;
-    if ( !is_sticky )
+    if ( !is_sticky ) {
 	desk = workspace()->currentDesktop();
+	KWM::moveToDesktop( win, desk );//##### compatibility
+    }
     stickyChange( is_sticky );
 }
 

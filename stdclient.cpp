@@ -136,7 +136,7 @@ static const char * pinup_xpm[] = {
 "                ",
 "                ",
 "                ",
-"                "};    
+"                "};
 
 static const char * pindown_xpm[] = {
 /* width height num_colors chars_per_pixel */
@@ -162,7 +162,7 @@ static const char * pindown_xpm[] = {
 "     ......     ",
 "                ",
 "                ",
-"                "};        
+"                "};
 
 static QPixmap* close_pix = 0;
 static QPixmap* maximize_pix = 0;
@@ -183,7 +183,7 @@ static void create_pixmaps()
     normalize_pix = new QPixmap(  normalize_xpm );
     pinup_pix = new QPixmap(  pinup_xpm );
     pindown_pix = new QPixmap(  pindown_xpm );
-    
+
 }
 
 
@@ -232,7 +232,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[1]->setIconSet( isSticky()?*pindown_pix:*pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
     button[2]->hide();
-
+    
     button[3]->setIconSet( *minimize_pix );
     connect( button[3], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
     button[4]->setIconSet( *maximize_pix  );

@@ -57,20 +57,24 @@ void Options::reload()
     // normal colors
     colors[Frame] = Qt::lightGray;
     colors[Frame] = config->readColorEntry("frame", &colors[Frame]);
-    colors[Handle] = config->readColorEntry("handle", &colors[Frame]);
+    colors[Handle] = QColor( 140, 140, 140 );
+    colors[Handle] = config->readColorEntry("handle", &colors[Handle]);
+    colors[ButtonBg] = QColor(163,163,163 );
     colors[ButtonBg] = config->readColorEntry("buttonBackgroundDown",
                                               &colors[Frame]);
+    colors[ButtonBlend] = QColor(0,0,0);
     colors[ButtonBlend] = config->readColorEntry("buttonBlendDown",
-                                                 &colors[ButtonBg]);
+                                                 &colors[ButtonBlend]);
     colors[TitleBar] = Qt::darkBlue;
     colors[TitleBar] = config->readColorEntry("activeBackground",
                                               &colors[TitleBar]);
+    colors[TitleBlend] = colors[ TitleBar ];
     colors[TitleBlend] = config->readColorEntry("activeBlend",
-                                                &colors[TitleBar]);
+                                                &colors[TitleBlend]);
 
     colors[Font] = Qt::white;
     colors[Font] = config->readColorEntry("activeForeground", &colors[Font]);
-    colors[ButtonFg] = Qt::lightGray;
+    colors[ButtonFg] = QColor(144,170,191);
     colors[ButtonFg] = config->readColorEntry("buttonForegroundDown",
                                               &colors[ButtonFg]);
 
@@ -82,6 +86,7 @@ void Options::reload()
         readColorEntry("inactiveBackground", &colors[TitleBar+KWINCOLORS]);
     colors[TitleBlend+KWINCOLORS] =
         config->readColorEntry("inactiveBlend", &colors[TitleBar+KWINCOLORS]);
+    colors[ButtonBg+KWINCOLORS] = QColor(163,163,163);
     colors[ButtonBg+KWINCOLORS] =
         config->readColorEntry("buttonBackground",
                                &colors[ButtonBg]);

@@ -154,7 +154,7 @@ void TabBox::paintContents()
 	if ( currentClient() ) {
 	    QString s;
 	    if (!client->isOnDesktop(workspace()->currentDesktop())){
-		//TODO s = KWM::desktopName(client->desktop);
+		s = KWM::desktopName(client->desktop());
 		s.append(": ");
 	    }
 		
