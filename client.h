@@ -346,6 +346,7 @@ class Client : public QObject, public KDecorationDefines
 
         void pingWindow();
         void killProcess( bool ask, Time timestamp = CurrentTime );
+        void updateUrgency();
 
         void embedClient( Window w );    
         void detectNoBorder();
@@ -424,6 +425,7 @@ class Client : public QObject, public KDecorationDefines
         uint noborder : 1;
         uint user_noborder : 1;
         uint not_obscured : 1;
+        uint urgency : 1; // XWMHints, UrgencyHint
         void getWMHints();
         void readIcons();
         void getWindowProtocols();

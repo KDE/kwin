@@ -727,6 +727,7 @@ void Client::setActive( bool act)
     if( decoration != NULL )
         decoration->activeChange();
     updateMouseGrab();
+    updateUrgency(); // demand attention again if it's still urgent
     }
 
 void Client::startupIdChanged()
@@ -749,5 +750,10 @@ void Client::startupIdChanged()
         }
     }
 
-
+void Client::updateUrgency()
+    {
+    if( urgency )
+        demandAttention();
+    }
+    
 } // namespace

@@ -132,6 +132,10 @@ class KWinSelectionOwner
 QCString getStringProperty(WId w, Atom prop, char separator=0);
 void kwin_updateTime();
 
+// the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
+#ifndef UrgencyHint
+#define UrgencyHint XUrgencyHint
+#endif
 
 // for STL-like algo's
 #define KWIN_CHECK_PREDICATE( name, check ) \

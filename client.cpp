@@ -123,6 +123,7 @@ Client::Client( Workspace *ws )
     noborder = false;
     user_noborder = false;
     not_obscured = false;
+    urgency = false;
 
     Pdeletewindow = 0;
     Ptakefocus = 0;
@@ -1224,15 +1225,18 @@ void Client::getWMHints()
     XWMHints *hints = XGetWMHints(qt_xdisplay(), window() );
     input = true;
     window_group = None;
+    urgency = false;
     if ( hints )
         {
-        if ( hints->flags & InputHint )
+        if( hints->flags & InputHint )
             input = hints->input;
         if( hints->flags & WindowGroupHint )
             window_group = hints->window_group;
-        XFree((char*)hints);
+        urgency = ( hints->flags & UrgencyHint ) ? true : false; // true/false needed, it's uint bitfield
+        XFree( (char*)hints );
         }
     checkGroup();
+    updateUrgency();
     updateAllowedActions(); // group affects isMinimizable()
     }
 
