@@ -1962,8 +1962,8 @@ void Workspace::clientMoved(const QPoint &pos, Time now)
        return;
 
     Time treshold_set = options->electricBorderDelay(); // set timeout
-    Time treshold_reset = 250; // reset timeout
-    int distance_reset = 10; // Mouse should not move more than this many pixels
+    Time treshold_reset = 1000; // reset timeout
+    int distance_reset = 30; // Mouse should not move more than this many pixels
 
     int border = 0;
     if (pos.x() == electricLeft)
