@@ -139,7 +139,10 @@ public:
 
     QWidget* desktopWidget();
 
-    void grabKey(KeySym keysym, unsigned int mod);
+    void   grabKey(KeySym keysym, unsigned int mod);
+    void ungrabKey(KeySym keysym, unsigned int mod);
+
+    void grabControlTab(bool grab);
 
     Client* nextClient(Client*) const;
     Client* previousClient(Client*) const;
