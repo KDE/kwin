@@ -4308,30 +4308,39 @@ void Workspace::clientMoved(const QPoint &pos, unsigned long now)
         QRect r = QApplication::desktop()->geometry();
         int offset;
 
+        int desk_before = currentDesktop();
         switch(border)
         {
           case 1:
-           offset = r.width() / 3;
-           QCursor::setPos(r.width() - offset, pos.y());
            slotSwitchDesktopLeft();
+           if (currentDesktop() != desk_before) {
+               offset = r.width() / 5;
+               QCursor::setPos(r.width() - offset, pos.y());
+           }
            break;
 
           case 2:
-           offset = r.width() / 3;
-           QCursor::setPos(offset, pos.y());
            slotSwitchDesktopRight();
+           if (currentDesktop() != desk_before) {
+               offset = r.width() / 5;
+               QCursor::setPos(offset, pos.y());
+           }
            break;
 
           case 3:
-           offset = r.height() / 3;
-           QCursor::setPos(pos.x(), r.height() - offset);
            slotSwitchDesktopUp();
+           if (currentDesktop() != desk_before) {
+             offset = r.height() / 5;
+             QCursor::setPos(pos.x(), r.height() - offset);
+           }
            break;
 
           case 4:
-           offset = r.height() / 3;
-           QCursor::setPos(pos.x(), offset);
            slotSwitchDesktopDown();
+           if (currentDesktop() != desk_before) {
+             offset = r.height() / 5;
+             QCursor::setPos(pos.x(), offset);
+           }
            break;
         }
         return;
