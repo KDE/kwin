@@ -383,7 +383,8 @@ Client::~Client()
 void Client::manage( bool isMapped )
 {
 
-    layout()->setResizeMode( QLayout::Minimum );
+    if (layout())
+      layout()->setResizeMode( QLayout::Minimum );
     QRect geom( original_geometry );
     bool placementDone = FALSE;
 
@@ -414,9 +415,11 @@ void Client::manage( bool isMapped )
 
     windowWrapper()->resize( geom.size() );
     // the clever activate() trick is necessary
-    layout()->activate();
+    if (layout())
+      layout()->activate();
     resize ( sizeForWindowSize( geom.size() ) );
-    layout()->activate();
+    if (layout())
+      layout()->activate();
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
@@ -1500,7 +1503,8 @@ void Client::setShade( bool s )
 	clearWFlags( WNorthWestGravity );
 	resize ( s );
 	windowWrapper()->show();
-	layout()->activate();
+  if (layout())
+    layout()->activate();
 	repaint();
 	if ( isActive() )
 	    workspace()->requestFocus( this );
