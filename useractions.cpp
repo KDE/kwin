@@ -372,7 +372,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         case Options::MouseResize:
         case Options::MouseUnrestrictedResize:
             {
-            if (!isResizable() || isShade()) // SHADE
+            if (!isResizable() || isShade())
                 break;
             if( moveResizeMode )
                 finishMoveResize( false );

@@ -1230,7 +1230,7 @@ void Client::getWmNormalHints()
     if( isManaged())
         { // update to match restrictions
         QSize new_size = adjustedSize( size());
-        if( new_size != size() && !isShade() && !isFullScreen()) // SHADE
+        if( new_size != size() && !isFullScreen())
             resizeWithChecks( new_size );
         }
     updateAllowedActions(); // affects isResizeable()
@@ -1395,9 +1395,6 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
     if ( value_mask & (CWWidth | CWHeight )
         && ! ( value_mask & ( CWX | CWY )) )  // pure resize
         {
-        if ( isShade()) // SELI SHADE
-            setShade( ShadeNone );
-
         int nw = clientSize().width();
         int nh = clientSize().height();
         if ( value_mask & CWWidth )
@@ -1586,19 +1583,12 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     {
     if( force == NormalGeometrySet && frame_geometry == QRect( x, y, w, h ))
         return;
+    h = checkShadeGeometry( w, h );
     frame_geometry = QRect( x, y, w, h );
     if( !isShade())
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
     else
-        {
-        // check that the frame is not resized to full size when it should be shaded
-        if( !shade_geometry_change && h != border_top + border_bottom )
-            {
-            kdDebug() << "h:" << h << ":t:" << border_top << ":b:" << border_bottom << endl;
-            assert( false );
-            }
         client_size = QSize( w - border_left - border_right, client_size.height());
-        }
     updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
@@ -1631,23 +1621,15 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
         return;
+    h = checkShadeGeometry( w, h );
     frame_geometry.setSize( QSize( w, h ));
     if( !isShade())
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
     else
-        {
-        // check that the frame is not resized to full size when it should be shaded
-        if( !shade_geometry_change && h != border_top + border_bottom )
-            {
-            kdDebug() << "h:" << h << ":t:" << border_top << ":b:" << border_bottom << endl;
-            assert( false );
-            }
         client_size = QSize( w - border_left - border_right, client_size.height());
-        }
     updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
-        // FRAME tady poradi tak, at neni flicker
         XResizeWindow( qt_xdisplay(), frameId(), w, h );
         resizeDecoration( QSize( w, h ));
         if( !isShade())
@@ -1664,6 +1646,24 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         updateWindowRules();
         checkMaximizeGeometry();
         }
+    }
+
+// There may be cases when an application requests resizing while shaded,
+// and even KWin itself may do so somewhere (too many places to check :-/ ).
+// If the requested geometry doesn't fit shaded geometry, adjust the height
+// of the requested geometry and return it.
+int Client::checkShadeGeometry( int w, int h )
+    {
+    // check that the frame is not resized to full size when it should be shaded
+    if( isShade() && !shade_geometry_change && h != border_top + border_bottom )
+        {
+        kdDebug() << "Fixing shaded geometry:" << this << endl;
+        // adjust the client size to match the newly requested geometry
+        client_size = adjustedSize( QSize( w, h ));
+//        checkMaximizeGeometry(); // doesn't work, actual setting of geometry changes this again
+        h = border_top + border_bottom;
+        }
+    return h;
     }
 
 /*!
@@ -1719,9 +1719,6 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     max_mode = rules()->checkMaximize( max_mode );
     if( !adjust && max_mode == old_mode )
         return;
-
-    if( isShade()) // SELI SHADE
-        setShade( ShadeNone );
 
     ++block_geometry; // TODO GeometryBlocker class?
 
@@ -2225,7 +2222,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         }
 
     // ShadeHover or ShadeActive, ShadeNormal was already avoided above
-    if ( mode != PositionCenter && shade_mode != ShadeNone ) // SHADE
+    if ( mode != PositionCenter && shade_mode != ShadeNone )
         setShade( ShadeNone );
 
     QPoint globalPos( x_root, y_root );

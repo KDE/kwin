@@ -356,6 +356,7 @@ class Client : public QObject, public KDecorationDefines
         void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
         NETExtendedStrut strut() const;
         bool hasStrut() const;
+        int checkShadeGeometry( int w, int h );
 
         bool startMoveResize();
         void finishMoveResize( bool cancel );

@@ -177,6 +177,7 @@ void Client::releaseWindow( bool on_shutdown )
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
+    ++block_geometry;
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
@@ -215,6 +216,7 @@ void Client::releaseWindow( bool on_shutdown )
     wrapper = None;
     XDestroyWindow( qt_xdisplay(), frame );
     frame = None;
+    --block_geometry;
     deleteClient( this, Allowed );
     }
 
