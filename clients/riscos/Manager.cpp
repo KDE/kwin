@@ -393,6 +393,8 @@ Manager::slotHelp()
   void
 Manager::animateIconifyOrDeiconify(bool iconify)
 {
+	if (!options->animateMinimize)
+		return;
   animate(iconify, Static::instance()->animationStyle());
 }
 
