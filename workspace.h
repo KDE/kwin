@@ -168,7 +168,6 @@ public:
 
     void setDesktopClient( Client* );
 
-    bool iconifyMeansWithdraw( Client* );
     void iconifyOrDeiconifyTransientsOf( Client* );
     void setStickyTransientsOf( Client*, bool sticky );
 

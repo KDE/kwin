@@ -610,7 +610,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     activateLayout();
     resize ( sizeForWindowSize( geom.size() ) );
     activateLayout();
-    
+
     // inform clients about the frame geometry
     NETStrut strut;
     QRect wr = windowWrapper()->geometry();
@@ -1708,12 +1708,7 @@ void Client::iconify()
 
     if ( isShade() )
 	setShade( FALSE );
-    if ( workspace()->iconifyMeansWithdraw( this ) ) {
-	Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
-	setMappingState( WithdrawnState );
-	hide();
-	return;
-    }
+    
     setMappingState( IconicState );
     Events::raise( Events::Iconify );
 

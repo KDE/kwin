@@ -2068,20 +2068,6 @@ bool Workspace::removeSystemTrayWin( WId w )
 
 
 /*!
-  Returns whether iconify means actually withdraw for client \a. This
-  is TRUE for clients that have a docking window. In that case the
-  docking window will serve as icon replacement.
- */
-bool Workspace::iconifyMeansWithdraw( Client* c)
-{
-    for ( SystemTrayWindowList::ConstIterator it = systemTrayWins.begin(); it != systemTrayWins.end(); ++it ) {
-	if ( (*it).winFor == c->window() )
-	    return TRUE;
-    }
-    return FALSE;
-}
-
-/*!
   Propagates the systemTrayWins to the world
  */
 void Workspace::propagateSystemTrayWins()
