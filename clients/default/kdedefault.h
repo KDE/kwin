@@ -119,6 +119,7 @@ class KDEDefaultClient : public KDecoration
 	private:
 		void doShape();
 		void calcHiddenButtons();
+		bool mustDrawHandle() const;
 		void addClientButtons( const QString& s, bool isLeft=true );
                 bool isTool() const;
 

@@ -774,7 +774,7 @@ void KDEDefaultClient::init()
 
 	// Determine the size of the lower grab bar
     spacer = new QSpacerItem(10,
-			showGrabBar && isResizable() ? grabBorderWidth : borderWidth,
+			mustDrawHandle() ? grabBorderWidth : borderWidth,
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->addItem(spacer, 4, 1);
 
@@ -934,6 +934,16 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 void KDEDefaultClient::reset( unsigned long )
 {
     widget()->repaint();
+}
+
+bool KDEDefaultClient::mustDrawHandle() const 
+{ 
+    bool drawSmallBorders = !options()->moveResizeMaximizedWindows();
+    if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
+		return false;
+    } else {
+		return showGrabBar && isResizable();
+    }
 }
 
 void KDEDefaultClient::iconChange()
@@ -1118,7 +1128,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	           options()->color(ColorFrame, isActive() ));
 
 	// Draw the bottom handle if required
-	if (showGrabBar && isResizable())
+	if (mustDrawHandle())
 	{
 		if(w > 50)
 		{
@@ -1238,7 +1248,7 @@ void KDEDefaultClient::maximizeChange()
                 QToolTip::remove( button[ BtnMax ] );
                 QToolTip::add( button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
 	}
-	spacer->changeSize(10, showGrabBar && isResizable() ? 8 : 4,
+	spacer->changeSize(10, mustDrawHandle() ? 8 : 4,
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
 	g->activate();
 }
@@ -1278,7 +1288,7 @@ void KDEDefaultClient::borders( int& left, int& right, int& top, int& bottom ) c
     left = right = borderWidth;
 //    , y+titleHeight+3, w-6, h-titleHeight-offset-6 );
     top = titleHeight + 4;
-	bottom = (showGrabBar && isResizable()) ? grabBorderWidth : borderWidth;
+	bottom = mustDrawHandle() ? grabBorderWidth : borderWidth;
 }
 
 // The hiding button while shrinking, show button while expanding magic
@@ -1328,7 +1338,7 @@ KDecoration::Position KDEDefaultClient::mousePosition( const QPoint& p ) const
 {
 	Position m = PositionCenter;
 
-	int bottomSize  = (showGrabBar && isResizable()) ? grabBorderWidth : borderWidth;
+	int bottomSize = mustDrawHandle() ? grabBorderWidth : borderWidth;
 
     const int range = 14 + 3*borderWidth/2;
 
@@ -1355,7 +1365,7 @@ KDecoration::Position KDEDefaultClient::mousePosition( const QPoint& p ) const
         m = PositionCenter;
 
 	// Modify the mouse position if we are using a grab bar.
-	if (showGrabBar && isResizable())
+	if (mustDrawHandle())
 		if (p.y() >= (height() - grabBorderWidth))
 		{
 			if (p.x() >= (width() - 2*borderWidth - 12))
