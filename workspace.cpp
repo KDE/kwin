@@ -86,7 +86,12 @@ public:
             c->closeWindow();
         }
     }
-    void moveResize(Window, int, int, unsigned long) { }
+    void moveResize(Window w, int x_root, int y_root, unsigned long direction) {
+        KWinInternal::Client* c = workspace->findClient( (WId) w );
+        if ( c ) {
+            c->NETMoveResize( x_root, y_root, (Direction)direction);
+        }
+    }
 
 private:
     KWinInternal::Workspace* workspace;
@@ -379,6 +384,7 @@ void Workspace::init()
         NET::WMIconGeometry |
         NET::WMIcon |
         NET::WMPid |
+        NET::WMMoveResize |
         NET::WMKDESystemTrayWinFor |
         NET::WMKDEFrameStrut
         ;
@@ -1671,9 +1677,10 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     if ( !c )
         return;
 
-    if (op == Options::MoveOp || op == Options::ResizeOp) {
+    if (op == Options::MoveOp)
         QCursor::setPos( c->geometry().center() );
-    }
+    if (op == Options::ResizeOp)
+        QCursor::setPos( c->geometry().bottomRight());
     switch ( op ) {
     case Options::MoveOp:
         c->performMouseCommand( Options::MouseMove, QCursor::pos() );

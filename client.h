@@ -212,7 +212,9 @@ public:
 
     void updateUserTime();
 
-  const QPoint gravitate( bool invert ) const;
+    const QPoint gravitate( bool invert ) const;
+    
+    void NETMoveResize( int x_root, int y_root, NET::Direction direction );
 
 public slots:
     void iconify();

@@ -114,8 +114,6 @@ static int nullErrorHandler(Display *, XErrorEvent *)
 
 using namespace KWinInternal;
 
-static bool resizeHorizontalDirectionFixed = FALSE;
-static bool resizeVerticalDirectionFixed = FALSE;
 static bool blockAnimation = FALSE;
 
 static QRect* visible_bound = 0;
@@ -1571,8 +1569,10 @@ void Client::resizeEvent( QResizeEvent * e)
 void Client::mouseMoveEvent( QMouseEvent * e)
 {
     if ( !buttonDown ) {
-        mode = mousePosition( e->pos() );
-        setMouseCursor( mode );
+        MousePosition newmode = mousePosition( e->pos() );
+        if( newmode != mode )
+            setMouseCursor( newmode );
+        mode = newmode;
         geom = geometry();
         return;
     }
@@ -1600,7 +1600,6 @@ void Client::mouseMoveEvent( QMouseEvent * e)
         setShade(false);
 
     QPoint globalPos = e->globalPos(); // pos() + geometry().topLeft();
-
 
     QPoint p = globalPos + invertedMoveOffset;
 
@@ -2643,6 +2642,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         buttonDown = TRUE;
         moveOffset = mapFromGlobal( globalPos );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
+        setMouseCursor( mode );
         startMoveResize();
         break;
     case Options::MouseResize: {
@@ -2672,8 +2672,6 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         setMouseCursor( mode );
         startMoveResize();
-        resizeHorizontalDirectionFixed = FALSE;
-        resizeVerticalDirectionFixed = FALSE;
         } break;
     case Options::MouseNothing:
         // fall through
@@ -2684,6 +2682,32 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
     return replay;
 }
 
+// performs _NET_WM_MOVERESIZE
+void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
+{
+    if( direction == NET::Move )
+        performMouseCommand( Options::MouseMove, QPoint( x_root, y_root ));
+    else if( direction >= NET::TopLeft && direction <= NET::Left ) {
+        static const MousePosition convert[] = { TopLeft, Top, TopRight, Right, BottomRight, Bottom,
+            BottomLeft, Left };
+        if (!isMovable())
+            return;
+        geom=geometry();
+        if ( isMaximized() ) {
+            // in case we were maximized, reset state
+            max_mode = MaximizeRestore;
+            maximizeChange(FALSE );
+            Events::raise( Events::UnMaximize );
+            info->setState( 0, NET::Max );
+        }
+        buttonDown = TRUE;
+        moveOffset = mapFromGlobal( QPoint( x_root, y_root ));
+        invertedMoveOffset = rect().bottomRight() - moveOffset;
+        mode = convert[ direction ];
+        setMouseCursor( mode );
+        startMoveResize();
+    }
+}
 
 void Client::keyPressEvent( uint key_code )
 {
@@ -2696,39 +2720,15 @@ void Client::keyPressEvent( uint key_code )
     switch ( key_code ) {
     case Key_Left:
         pos.rx() -= delta;
-        if ( isResize() && !resizeHorizontalDirectionFixed ) {
-            resizeHorizontalDirectionFixed = TRUE;
-            resizeVerticalDirectionFixed = FALSE;
-            mode = Right;
-            setMouseCursor( mode );
-        }
         break;
     case Key_Right:
         pos.rx() += delta;
-        if ( isResize() && !resizeHorizontalDirectionFixed ) {
-            resizeHorizontalDirectionFixed = TRUE;
-            resizeVerticalDirectionFixed = FALSE;
-            mode = Right;
-            setMouseCursor( mode );
-        }
         break;
     case Key_Up:
         pos.ry() -= delta;
-        if ( isResize() && !resizeVerticalDirectionFixed ) {
-            resizeVerticalDirectionFixed = TRUE;
-            resizeHorizontalDirectionFixed = FALSE;
-            mode = Bottom;
-            setMouseCursor( mode );
-        }
         break;
     case Key_Down:
         pos.ry() += delta;
-        if ( isResize() && !resizeVerticalDirectionFixed ) {
-            resizeVerticalDirectionFixed = TRUE;
-            resizeHorizontalDirectionFixed = FALSE;
-            mode = Bottom;
-            setMouseCursor( mode );
-        }
         break;
     case Key_Space:
     case Key_Return:
