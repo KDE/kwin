@@ -181,11 +181,11 @@ public:
      */
     virtual void updateClientArea();
 
-    
+
     // dcop interface
     void cascadeDesktop();
     void unclutterDesktop();
-    
+
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -258,6 +258,11 @@ private:
       int col;
       int row;
     };
+    
+    // mouse emulation
+    WId getMouseEmulationWindow();
+    enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
+    unsigned int sendFakedMouseEvent( QPoint pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
 
     // ------------------
 
@@ -286,6 +291,8 @@ private:
     bool control_grab;
     bool tab_grab;
     bool mouse_emulation;
+    unsigned int mouse_emulation_state;
+    WId mouse_emulation_window;
     bool focus_change;
 
     TabBox* tab_box;
@@ -297,7 +304,7 @@ private:
     WId root;
 
     PluginMgr mgr;
-    
+
     RootInfo *rootInfo;
     QWidget* supportWindow;
 

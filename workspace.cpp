@@ -58,19 +58,19 @@ public:
 
     void changeNumberOfDesktops(Q_UINT32 n) { workspace->setNumberOfDesktops( n ); }
     void changeCurrentDesktop(Q_UINT32 d) { workspace->setCurrentDesktop( d ); }
-    void changeActiveWindow(Window w) { 
+    void changeActiveWindow(Window w) {
 	::Client* c = workspace->findClient( (WId) w );
 	if ( c )
 	    workspace->activateClient( c );
     }
-    void closeWindow(Window w) { 
+    void closeWindow(Window w) {
 	::Client* c = workspace->findClient( (WId) w );
 	if ( c ) {
 	    c->closeWindow();
 	}
     }
     void moveResize(Window, int, int, unsigned long) { }
-    
+
 private:
     Workspace* workspace;
 };
@@ -169,7 +169,7 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	c->setPassiveFocus( TRUE );
 	return c;
     }
-    
+
     case NET::Dock: {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
@@ -177,7 +177,7 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	c->setPassiveFocus( TRUE );
 	return c;
     }
-    
+
     case NET::Menu: {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
@@ -185,12 +185,12 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	c->setPassiveFocus( TRUE );
 	return c;
     }
-    
+
     case NET::Toolbar: {
 	Client * c = new NoBorderClient( ws, w);
 	return c;
     }
-    
+
     default:
 	break;
     }
@@ -280,8 +280,8 @@ Workspace::Workspace( bool restore )
 void Workspace::init()
 {
     supportWindow = new QWidget;
-    
-    unsigned long protocols = 
+
+    unsigned long protocols =
 	NET::Supported |
 	NET::SupportingWMCheck |
 	NET::ClientList |
@@ -304,7 +304,7 @@ void Workspace::init()
 	;
 	
     rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
-	       
+	
     KConfig* config = KGlobal::config();
     config->setGroup("Desktops");
     if (!config->hasKey("NumberOfDesktops"))
@@ -381,7 +381,7 @@ Workspace::~Workspace()
     if ( root == qt_xrootwin() )
 	XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwin_running);
     KGlobal::config()->sync();
-    
+
     delete rootInfo;
     delete supportWindow;
 }
@@ -439,7 +439,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
     case ReparentNotify:
 	c = findClient( e->xreparent.window );
-	if ( c ) 
+	if ( c )
 	    (void) c->windowEvent( e );
 	
 	//do not confuse Qt with these events. After all, _we_ are the
@@ -923,7 +923,7 @@ void Workspace::setActiveClient( Client* c )
 	if ( c->wantsTabFocus() )
 	    focus_chain.append( c );
     }
-    
+
     rootInfo->setActiveWindow( active_client? active_client->window() : 0 );
 }
 
@@ -1708,9 +1708,9 @@ void Workspace::setNumberOfDesktops( int n )
 bool Workspace::netCheck( XEvent* e )
 {
     unsigned int dirty = rootInfo->event( e );
-    
+
     dirty = 0; // shut up, compiler
-    
+
     return FALSE;
 }
 
@@ -1750,7 +1750,7 @@ bool Workspace::addDockwin( WId w )
 {
     if ( dockwins.contains( w ) )
 	return TRUE;
-    
+
     NETWinInfo ni( qt_xdisplay(), w, root, NET::WMKDEDockWinFor );
     WId dockFor = ni.kdeDockWinFor();
     if ( !dockFor )
@@ -1802,7 +1802,7 @@ void Workspace::propagateDockwins()
     for ( DockWindowList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
 	cl[i++] =  (*it).dockWin;
     }
-    
+
     rootInfo->setKDEDockingWindows( (Window*) cl, i );
     delete [] cl;
 }
@@ -1925,6 +1925,8 @@ void Workspace::slotMouseEmulation()
 		       GrabModeAsync, GrabModeAsync,
 		       kwin_time) == GrabSuccess ) {
 	mouse_emulation = TRUE;
+	mouse_emulation_state = 0;
+	mouse_emulation_window = 0;
     }
 }
 
@@ -2175,6 +2177,105 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 }
 
 
+
+/*!
+  Returns the child window under the mouse and activates the
+  respective client if necessary.
+
+  Auxiliary function for the mouse emulation system.
+ */
+WId Workspace::getMouseEmulationWindow()
+{
+    Window root;
+    Window child = qt_xrootwin();
+    int root_x, root_y, lx, ly;
+    uint state;
+    Window w;
+    Client * c = 0;
+    do {
+	w = child;
+	if (!c)
+	    c = findClientWidthId( w );
+	XQueryPointer( qt_xdisplay(), w, &root, &child,
+		       &root_x, &root_y, &lx, &ly, &state );
+    } while  ( child != None && child != w );
+
+    if ( c && !c->isActive() )
+	activateClient( c );
+    return (WId) w;
+}
+
+/*!
+  Sends a faked mouse event to the specified window. Returns the new button state.
+ */
+unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation type, int button, unsigned int state )
+{
+    if ( !w )
+	return state;
+    QWidget* widget = QWidget::find( w );
+    if ( (!widget ||  widget->inherits("QToolButton") ) && !findClient( w ) ) {
+	int x, y;
+	Window xw;
+	XTranslateCoordinates( qt_xdisplay(), qt_xrootwin(), w, pos.x(), pos.y(), &x, &y, &xw );
+	if ( type == EmuMove ) { // motion notify events
+	    XMotionEvent e;
+	    e.type = MotionNotify;
+	    e.window = w;
+	    e.root = qt_xrootwin();
+	    e.subwindow = w;
+	    e.time = kwin_time;
+	    e.x = x;
+	    e.y = y;
+	    e.x_root = pos.x();
+	    e.y_root = pos.y();
+	    e.state = state;
+	    e.is_hint = NotifyNormal;
+	    XSendEvent( qt_xdisplay(), w, TRUE, ButtonMotionMask, (XEvent*)&e );
+	} else {
+	    XButtonEvent e;
+	    e.type = type == EmuRelease ? ButtonRelease : ButtonPress;
+	    e.window = w;
+	    e.root = qt_xrootwin();
+	    e.subwindow = w;
+	    e.time = kwin_time;
+	    e.x = x;
+	    e.y = y;
+	    e.x_root = pos.x();
+	    e.y_root = pos.y();
+	    e.state = state;
+	    e.button = button;
+	    XSendEvent( qt_xdisplay(), w, TRUE, ButtonPressMask, (XEvent*)&e );
+	
+	    if ( type == EmuPress ) {
+		switch ( button ) {
+		case 2:
+		    state |= Button2Mask;
+		    break;
+		case 3:
+		    state |= Button3Mask;
+		    break;
+		default: // 1
+		    state |= Button1Mask;
+		    break;
+		}
+	    } else {
+		switch ( button ) {
+		case 2:
+		    state &= ~Button2Mask;
+		    break;
+		case 3:
+		    state &= ~Button3Mask;
+		    break;
+		default: // 1
+		    state &= ~Button1Mask;
+		    break;
+		}
+	    }
+	}
+    }
+    return state;
+}
+
 /*!
   Handles keypress event during mouse emulation
  */
@@ -2187,6 +2288,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 
     bool is_control = km & ControlMask;
     bool is_alt = km & Mod1Mask;
+    bool is_shift = km & ShiftMask;
     int delta = is_control?1:is_alt?32:8;
     QPoint pos = QCursor::pos();
 
@@ -2207,46 +2309,47 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
     case XK_KP_Down:
 	pos.ry() += delta;
 	break;
+    case XK_F1:
+	if ( !mouse_emulation_state )
+	    mouse_emulation_window = getMouseEmulationWindow();
+	if ( (mouse_emulation_state & Button1Mask) == 0 )
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );		
+	if ( !is_shift )
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );		
+	break;
+    case XK_F2:
+	if ( !mouse_emulation_state )
+	    mouse_emulation_window = getMouseEmulationWindow();
+	if ( (mouse_emulation_state & Button2Mask) == 0 )
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button2, mouse_emulation_state );		
+	if ( !is_shift )
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button2, mouse_emulation_state );		
+	break;
+    case XK_F3:
+	if ( !mouse_emulation_state )
+	    mouse_emulation_window = getMouseEmulationWindow();
+	if ( (mouse_emulation_state & Button3Mask) == 0 )
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button3, mouse_emulation_state );		
+	if ( !is_shift )
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button3, mouse_emulation_state );		
+	break;
     case XK_Return:
     case XK_space:
     case XK_KP_Enter:
     case XK_KP_Space:
 	{
-	    Window root;
-	    Window child = qt_xrootwin();
-	    int root_x, root_y, lx, ly;
-	    uint state;
-	    Window w;
-	    Client * c = 0;
-	    do {
-		w = child;
-		if (!c)
-		    c = findClientWidthId( w );
-		XQueryPointer( qt_xdisplay(), w, &root, &child,
-			       &root_x, &root_y, &lx, &ly, &state );
-	    } while  ( child != None && child != w );
-
-	    if ( c && !c->isActive() )
-		activateClient( c );
-
-	    QWidget* widget = QWidget::find( w );
-	    if ( (!widget ||  widget->inherits("QToolButton") ) && !findClient( w ) ) {
-		XButtonEvent e;
-		e.type = ButtonPress;
-		e.window = w;
-		e.root = qt_xrootwin();
-		e.subwindow = w;
-		e.time = kwin_time;
-		e.x = lx;
-		e.y = ly;
-		e.x_root = root_x;
-		e.y_root = root_y;
-		e.state = key.state;
-		e.button = Button1;
-		XSendEvent( qt_xdisplay(), w, TRUE, ButtonPressMask, (XEvent*)&e );
-		e.type = ButtonRelease;
-		e.state = key.state & Button1Mask;
-		XSendEvent( qt_xdisplay(), w, TRUE, ButtonReleaseMask,  (XEvent*)&e );
+	    if ( !mouse_emulation_state ) {
+		// nothing was pressed, fake a LMB click
+		mouse_emulation_window = getMouseEmulationWindow();
+		mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );		
+		mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );		
+	    } else { // release all
+		if ( mouse_emulation_state & Button1Mask )
+		    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );
+		if ( mouse_emulation_state & Button2Mask )
+		    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button2, mouse_emulation_state );
+		if ( mouse_emulation_state & Button3Mask )
+		    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button3, mouse_emulation_state );
 	    }
 	}
 	// fall through
@@ -2259,6 +2362,8 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
     }
 
     QCursor::setPos( pos );
+    if ( mouse_emulation_state )
+	mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0,  mouse_emulation_state );		
     return TRUE;
 
 }
@@ -2363,7 +2468,7 @@ void Workspace::updateClientArea()
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	a = a.intersect( (*it)->adjustedClientArea( all ) );
     }
-    
+
     if ( area != a ) {
 	area = a;
 	NETRect r;
