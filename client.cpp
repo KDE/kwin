@@ -173,11 +173,8 @@ void Client::releaseWindow( bool on_shutdown )
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
-        {
         workspace()->clientHidden( this );
-        XUnmapWindow( qt_xdisplay(), window()); // destroying decoration would cause ugly visual effect
-        XUnmapWindow( qt_xdisplay(), wrapperId());
-        }
+    XUnmapWindow( qt_xdisplay(), frameId()); // destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
     if( !on_shutdown )
@@ -201,7 +198,7 @@ void Client::releaseWindow( bool on_shutdown )
         }
     else
         {
-        // Make sure it's not unmapped if the app unmapped it (#65279). The app
+        // Make sure it's not mapped if the app unmapped it (#65279). The app
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
         XUnmapWindow( qt_xdisplay(), client ); 
         }
@@ -287,11 +284,11 @@ void Client::destroyDecoration()
         setMask( QRegion()); // reset shape mask
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
-        move( grav );
         if( !isShade())
             plainResize( clientSize(), ForceGeometrySet );
         else
             plainResize( QSize( clientSize().width(), 0 ), ForceGeometrySet );
+        move( grav );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         }
