@@ -1137,6 +1137,8 @@ int Client::maximumHeight() const
 
 void Client::iconify()
 {
+    if ( isShade() )
+	setShade( FALSE );
     if ( workspace()->iconifyMeansWithdraw( this ) ) {
 	setMappingState( WithdrawnState );
 	hide();
@@ -1431,6 +1433,8 @@ void Client::setShade( bool s )
 	if ( isActive() )
 	    workspace()->requestFocus( this );
     }
+    
+    workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
 

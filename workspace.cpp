@@ -754,9 +754,11 @@ void Workspace::activateClient( Client* c)
 
 void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 {
-    if ( c->isIconified() ) {
+    if ( c->isIconified() || c->isShade() ) {
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-	    if ( (*it)->transientFor() == c->window() && !(*it)->isIconified() ) {
+	    if ( (*it)->transientFor() == c->window() 
+		 && !(*it)->isIconified() 
+		 && !(*it)->isShade() ) {
 		(*it)->setMappingState( IconicState );
 		(*it)->hide();
 		iconifyOrDeiconifyTransientsOf( (*it) );
