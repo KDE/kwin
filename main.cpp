@@ -25,7 +25,7 @@ Time kwin_time = CurrentTime;
 static bool initting = FALSE;
 int x11ErrorHandler(Display *d, XErrorEvent *e){
     char msg[80], req[80], number[80];
-    bool ignore_badwindow = FALSE; //maybe temporary
+    bool ignore_badwindow = TRUE; //maybe temporary
 
     if (initting &&
 	(

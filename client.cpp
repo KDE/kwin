@@ -134,7 +134,8 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 
      // install a passive grab to catch mouse button events
      XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
-		 ButtonPressMask, GrabModeSync, GrabModeAsync,
+		 ButtonPressMask,
+		 GrabModeSync, GrabModeAsync,
 		 None, None );
 }
 
@@ -1175,8 +1176,6 @@ bool Client::eventFilter( QObject *o, QEvent * e)
     if ( o != wwrap )
 	return FALSE;
     switch ( e->type() ) {
-    case QEvent::MouseButtonRelease:
-	break;
     case QEvent::Show:
 	windowWrapperShowEvent( (QShowEvent*)e );
 	break;
