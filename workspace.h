@@ -28,6 +28,7 @@ namespace KWinInternal {
 
 class Client;
 class TabBox;
+class PopupInfo;
 class RootInfo;
 class PluginMgr;
 
@@ -403,6 +404,7 @@ private:
     bool focus_change;
 
     TabBox* tab_box;
+    PopupInfo* popupinfo;
 
     QPopupMenu *popup;
     QPopupMenu *desk_popup;
