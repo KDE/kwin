@@ -1452,6 +1452,15 @@ void Workspace::unclutterDesktop()
 }
 
 
+/*!
+  Reread settings
+ */
+void Workspace::reconfigure()
+{
+    KGlobal::config()->reparseConfiguration();
+    options->reload();
+}
+
 
 /*!
   Lowers the client \a c taking layers, transient windows and window

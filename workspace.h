@@ -171,6 +171,7 @@ public:
     // dcop interface
     void cascadeDesktop();
     void unclutterDesktop();
+    void reconfigure();
 
 
 public slots:

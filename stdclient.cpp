@@ -141,7 +141,6 @@ static void create_pixmaps()
 
 void StdClient::slotReset()
 {
-    warning("In slotReset");
     delete close_pix;
     delete maximize_pix;
     delete minimize_pix;
