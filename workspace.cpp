@@ -247,6 +247,7 @@ void Workspace::init()
       inf.row = 0;
       cci.append(inf);
     }
+    updateClientArea();
 }
 
 Workspace::~Workspace()
@@ -339,6 +340,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 		if ( addDockwin( e->xmaprequest.window ) )
 		    return TRUE;
 		c = clientFactory( this, e->xmaprequest.window );
+    updateClientArea();
 		if ( root != qt_xrootwin() ) {
 		    // TODO may use QWidget:.create
 		    XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
@@ -500,7 +502,7 @@ QRect Workspace::geometry() const
  */
 QRect Workspace::clientArea() const
 {
-    return geometry(); // for now
+  return clientArea_;
 }
 
 
@@ -1313,6 +1315,54 @@ void Workspace::deskCleanup(CleanupType ct)
 }
 
 /*!
+  Lowers the client \a c taking layers, transient windows and window
+  groups into account.
+ */
+void Workspace::lowerClient( Client* c )
+{
+  if ( !c )
+    return;
+
+  if ( c == desktop_client )
+    return; // deny
+
+  stacking_order.remove( c );
+  stacking_order.prepend( c );
+
+  // Not sure what this is doing. Disable for now.
+#if 0
+  ClientList saveset;
+
+  if ( c->transientFor() ) {
+
+    saveset.append( c );
+    Client* t = findClient( c->transientFor() );
+    Client* tmp;
+    while ( t && !saveset.contains( t ) && t->transientFor() ) {
+      tmp = findClient( t->transientFor() );
+      if ( !tmp )
+        break;
+      saveset.append( t );
+      t = tmp;
+    }
+    if ( t && !saveset.contains( t ) && t != desktop_client ) {
+      raiseClient( t );
+      return;
+    }
+  }
+
+  saveset.clear();
+  saveset.append( c );
+  raiseTransientsOf(saveset, c );
+#endif
+
+  XLowerWindow(qt_xdisplay(), c->winId());
+
+  propagateClients( TRUE );
+}
+
+
+/*!
   Raises the client \a c taking layers, transient windows and window
   groups into account.
  */
@@ -2047,6 +2097,7 @@ void Workspace::slotResetAllClients()
         delete oldClient;
         newClient->manage( TRUE );
     }
+  updateClientArea();
 }
 
 /*!
@@ -2117,3 +2168,39 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 
     return 0;
 }
+
+  void
+Workspace::updateClientArea()
+{
+  clientArea_ = geometry();
+
+  for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it)
+  {
+    if ((*it)->avoid()) {
+
+      switch (AnchorEdge((*it)->anchorEdge())) {
+
+        case AnchorNorth:
+          clientArea_
+            .setTop(QMAX(clientArea_.top(), (*it)->geometry().bottom()));
+          break;
+
+        case AnchorSouth:
+          clientArea_
+            .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top()));
+          break;
+        
+        case AnchorEast:
+          clientArea_
+            .setRight(QMIN(clientArea_.right(), (*it)->geometry().left()));
+          break;
+        
+        case AnchorWest:
+          clientArea_
+            .setLeft(QMAX(clientArea_.left(), (*it)->geometry().right()));
+          break;
+      }
+    }
+  }
+}
+

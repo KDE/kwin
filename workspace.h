@@ -23,6 +23,8 @@ class KGlobalAccel;
 
 typedef QValueList<Client*> ClientList;
 
+enum AnchorEdge { AnchorNorth, AnchorSouth, AnchorEast, AnchorWest };
+
 class DockWindow
 {
 public:
@@ -100,6 +102,7 @@ public:
     void doPlacement( Client* c );
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
+    void lowerClient( Client* c );
 
     void clientHidden( Client*  );
 
@@ -234,6 +237,9 @@ private:
     Atom kwm_command;
 
     PluginMgr mgr;
+
+    void updateClientArea();
+    QRect clientArea_;
 };
 
 inline WId Workspace::rootWin() const

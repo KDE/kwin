@@ -320,9 +320,10 @@ bool WindowWrapper::x11Event( XEvent * e)
   Creates a client on workspace \a ws for window \a w.
  */
 Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags f )
-    : QWidget( parent, name, f | WStyle_Customize | WStyle_NoBorder )
+    : QWidget( parent, name, f | WStyle_Customize | WStyle_NoBorder ),
+      avoid_(false),
+      anchorEdge_(AnchorNorth)
 {
-
     wspace = ws;
     win = w;
     XWindowAttributes attr;
@@ -359,6 +360,56 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
 
+    // Find out if we should be avoided.
+
+    // If this atom isn't set, set it now.
+    Atom avoidAtom = XInternAtom(qt_xdisplay(), "_NET_AVOID_SPEC", False);
+
+    XTextProperty avoidProp;
+
+    Status avoidStatus =
+        XGetTextProperty(qt_xdisplay(), w, &avoidProp, avoidAtom);
+
+    if (0 != avoidStatus) {
+
+        char ** avoidList;
+        int avoidListCount;
+
+        Status convertStatus =
+          XTextPropertyToStringList(&avoidProp, &avoidList, &avoidListCount);
+
+        if (0 != convertStatus) {
+
+          avoid_ = true;
+
+          if (avoidListCount != 1) {
+//            qDebug("Extra values in avoidance list. Ignoring.");
+          }
+
+          char * itemZero = avoidList[0];
+
+          switch (*itemZero) {
+
+            case 'N':
+              anchorEdge_ = AnchorNorth;
+              break;
+            case 'S':
+              anchorEdge_ = AnchorSouth;
+              break;
+            case 'E':
+              anchorEdge_ = AnchorEast;
+              break;
+            case 'W':
+              anchorEdge_ = AnchorWest;
+              break;
+            default:
+              anchorEdge_ = AnchorNorth;
+              break;
+          }
+
+          XFreeStringList(avoidList);
+        }
+    }
 }
 
 /*!
@@ -1847,7 +1898,6 @@ QCString Client::sessionId()
     }
     return result;
 }
-
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name )

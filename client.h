@@ -63,6 +63,9 @@ public:
     bool isTransient() const;
     Client* mainClient();
 
+    bool avoid() const { return avoid_; }
+    int anchorEdge() const { return anchorEdge_; }
+
     virtual bool windowEvent( XEvent * );
 
     void manage( bool isMapped = FALSE );
@@ -230,6 +233,9 @@ private:
     QPixmap miniicon_pix;
     QRect geom_restore;
     QRegion mask;
+
+    bool avoid_;
+    int anchorEdge_;
 };
 
 inline WId Client::window() const
