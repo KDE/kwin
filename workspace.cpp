@@ -815,7 +815,7 @@ bool Workspace::startKDEWalkThroughWindows()
                   GrabModeAsync, GrabModeAsync,
                   kwin_time);
     tab_grab        = TRUE;
-    keys->setEnabled( FALSE );
+    keys->setKeyEventsEnabled( FALSE );
     tab_box->setMode( TabBox::WindowsMode );
     tab_box->reset();
     return TRUE;
@@ -837,7 +837,7 @@ bool Workspace::startWalkThroughDesktops()
                   GrabModeAsync, GrabModeAsync,
                   kwin_time);
     control_grab = TRUE;
-    keys->setEnabled( FALSE );
+    keys->setKeyEventsEnabled( FALSE );
     tab_box->setMode( TabBox::DesktopMode );
     tab_box->reset();
     return TRUE;
@@ -912,7 +912,6 @@ bool Workspace::keyPress(XKeyEvent key)
     unsigned int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
     unsigned int km = key.state & XMODMASK;
     if (!control_grab){
-
         if( ( kc == keyToXSym( walkThroughWindowsKeycode )
               && km == keyToXMod( walkThroughWindowsKeycode ))
            || ( kc == keyToXSym( walkBackThroughWindowsKeycode )
@@ -946,7 +945,7 @@ bool Workspace::keyPress(XKeyEvent key)
             XUngrabKeyboard(qt_xdisplay(), kwin_time);
             XUngrabPointer( qt_xdisplay(), kwin_time);
             tab_box->hide();
-            keys->setEnabled( TRUE );
+            keys->setKeyEventsEnabled( TRUE );
             tab_grab = FALSE;
             control_grab = FALSE;
             return TRUE;
@@ -998,7 +997,7 @@ bool Workspace::keyRelease(XKeyEvent key)
                 XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 XUngrabPointer( qt_xdisplay(), kwin_time);
                 tab_box->hide();
-                keys->setEnabled( TRUE );
+                keys->setKeyEventsEnabled( TRUE );
                 tab_grab = false;
                 if ( tab_box->currentClient() ){
                     activateClient( tab_box->currentClient() );
@@ -1008,7 +1007,7 @@ bool Workspace::keyRelease(XKeyEvent key)
                 XUngrabPointer( qt_xdisplay(), kwin_time);
                 XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 tab_box->hide();
-                keys->setEnabled( TRUE );
+                keys->setKeyEventsEnabled( TRUE );
                 control_grab = False;
                 if ( tab_box->currentDesktop() != -1 )
                     setCurrentDesktop( tab_box->currentDesktop() );
