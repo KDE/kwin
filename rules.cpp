@@ -17,8 +17,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <ksimpleconfig.h>
 #include <qfile.h>
 
+#ifndef KCMRULES
 #include "client.h"
 #include "workspace.h"
+#endif
 
 namespace KWinInternal
 {
@@ -70,6 +72,8 @@ Rules::Rules( const QString& str, bool temporary )
     file.close();
     KSimpleConfig cfg( file.name());
     readFromCfg( cfg );
+    if( description.isEmpty())
+        description = "temporary";
     file.unlink();
     }
 
@@ -108,6 +112,7 @@ static int limit0to4( int i ) { return QMAX( 0, QMIN( 4, i )); }
 
 void Rules::readFromCfg( KConfig& cfg )
     {
+    description = cfg.readEntry( "description" );
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
     wmclassregexp = cfg.readBoolEntry( "wmclassregexp" );
     wmclasscomplete = cfg.readBoolEntry( "wmclasscomplete" );
@@ -199,6 +204,7 @@ void Rules::readFromCfg( KConfig& cfg )
 
 void Rules::write( KConfig& cfg ) const
     {
+    cfg.writeEntry( "description", description );
     // always write wmclass
     cfg.writeEntry( "wmclass", ( const char* )wmclass );
     cfg.writeEntry( "wmclassregexp", wmclassregexp );
@@ -261,6 +267,7 @@ NET::WindowType Rules::readType( KConfig& cfg, const QString& key )
     return NET::Unknown;
     }
 
+#ifndef KCMRULES
 bool Rules::match( const Client* c ) const
     {
     if( types != NET::AllTypesMask )
@@ -496,14 +503,16 @@ bool Rules::discardTemporary( bool force )
         }
     return false;
     }
+#endif
 
 #ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Rules* r )
     {
-    return stream << "[" << r->wmclass << "/" << r->windowrole << "/" << r->title << "]";
+    return stream << "[" << r->description << "]";
     }
 #endif
 
+#ifndef KCMRULES
 void WindowRules::discardTemporary()
     {
     QValueVector< Rules* >::Iterator it2 = rules.begin();
@@ -658,7 +667,8 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
 
 void Workspace::editWindowRules( Client* c )
     {
-    // TODO
+    // TODO this should try to select or create a rule specific for the window
+    KApplication::kdeinitExec( "kcmshell", "kwinrules" );
     }
 
 void Workspace::loadWindowRules()
@@ -739,5 +749,7 @@ void Workspace::rulesUpdated()
     {
     rulesUpdatedTimer.start( 1000, true );
     }
+
+#endif
 
 } // namespace

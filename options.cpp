@@ -11,6 +11,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "options.h"
 
+#ifndef KCMRULES
+
 #include <qpalette.h>
 #include <qpixmap.h>
 #include <kapplication.h>
@@ -21,8 +23,12 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "client.h"
 
+#endif
+
 namespace KWinInternal
 {
+
+#ifndef KCMRULES
 
 Options::Options()
     :   electric_borders( 0 ),
@@ -251,6 +257,7 @@ bool Options::checkIgnoreFocusStealing( const Client* c )
     {
     return ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass()));
     }
+#endif
 
 Options::MoveResizeMode Options::stringToMoveResizeMode( const QString& s )
     {

@@ -10,16 +10,22 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include <qrect.h>
+#include "placement.h"
 
+#include <qrect.h>
+#include <assert.h>
+
+#ifndef KCMRULES
 #include "workspace.h"
 #include "client.h"
 #include "options.h"
-#include "placement.h"
 #include "rules.h"
+#endif
 
 namespace KWinInternal
 {
+
+#ifndef KCMRULES
 
 Placement::Placement(Workspace* w)
     {
@@ -480,6 +486,9 @@ QRect Placement::checkArea( const Client* c, const QRect& area )
     return area;
     }
 
+#endif
+
+
 Placement::Policy Placement::policyFromString( const QString& policy, bool no_special )
     {
     if( policy == "NoPlacement" )
@@ -511,6 +520,8 @@ const char* Placement::policyToString( Policy policy )
     return policies[ policy ];
     }
 
+
+#ifndef KCMRULES
 
 // ********************
 // Workspace
@@ -742,5 +753,7 @@ void Workspace::placeSmart(Client* c, const QRect& area)
     {
     initPositioning->placeSmart( c, area );
     }
+
+#endif
 
 } // namespace

@@ -58,7 +58,7 @@ QPopupMenu* Workspace::clientPopup()
         advanced_popup->insertItem( SmallIconSet( "down" ), i18n("Keep &Below Others"), Options::KeepBelowOp );
         advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ), i18n("&Fullscreen"), Options::FullScreenOp );
         advanced_popup->insertItem( i18n("&No Border"), Options::NoBorderOp );
-        advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("&Special Window Rules"), Options::WindowRulesOp );
+        advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
 
         popup->insertItem(i18n("Ad&vanced"), advanced_popup );
         desk_popup_index = popup->count();

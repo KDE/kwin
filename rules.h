@@ -30,6 +30,8 @@ namespace KWinInternal
 class Client;
 class Rules;
 
+#ifndef KCMRULES // only for kwin core
+
 class WindowRules
     : public KDecorationDefines
     {
@@ -66,6 +68,7 @@ class WindowRules
         MaximizeMode checkMaximizeHoriz( MaximizeMode mode, bool init ) const;
         QValueVector< Rules* > rules;
     };
+#endif
 
 class Rules
     : public KDecorationDefines
@@ -75,6 +78,7 @@ class Rules
         Rules( KConfig& );
         Rules( const QString&, bool temporary );
         void write( KConfig& ) const;
+#ifndef KCMRULES
         bool update( Client* );
         bool isTemporary() const;
         bool match( const Client* c ) const;
@@ -104,6 +108,7 @@ class Rules
         bool applyMoveResizeMode( Options::MoveResizeMode& mode ) const;
         bool applyCloseable( bool& closeable ) const;
     private:
+#endif
         enum // values are saved to the cfg file
             {
             Unused = 0,
@@ -126,11 +131,14 @@ class Rules
         static SetRule readSetRule( KConfig&, const QString& key );
         static ForceRule readForceRule( KConfig&, const QString& key );
         static NET::WindowType readType( KConfig&, const QString& key );
+#ifndef KCMRULES
         static bool checkSetRule( SetRule rule, bool init );
         static bool checkForceRule( ForceRule rule );
         static bool checkSetStop( SetRule rule );
         static bool checkForceStop( ForceRule rule );
+#endif
         int temporary_state; // e.g. for kstart
+        QString description;
         QCString wmclass;
         bool wmclassregexp;
         bool wmclasscomplete;
@@ -190,6 +198,7 @@ class Rules
         friend kdbgstream& operator<<( kdbgstream& stream, const Rules* );
     };
 
+#ifndef KCMRULES
 inline
 bool Rules::checkSetRule( SetRule rule, bool init )
     {
@@ -229,6 +238,7 @@ inline
 WindowRules::WindowRules()
     {
     }
+#endif
 
 #ifdef NDEBUG
 inline

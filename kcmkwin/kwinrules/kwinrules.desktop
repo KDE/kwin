@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=kcmkwm
+Type=Application
+Exec=kcmshell kwinrules
+DocPath=kcontrol/windowmanagement/index.html
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kwinrules
+X-KDE-FactoryName=kwinrules
+
+Name=Window-specific Settings
+
+Comment=Configure settings specifically for a window
+
+Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
+Categories=Qt;KDE;X-KDE-settings-desktop

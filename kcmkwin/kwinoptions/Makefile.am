@@ -1,5 +1,3 @@
-# kdebase/kcontrol/kwm
-
 METASOURCES = AUTO
 INCLUDES = $(all_includes)
 

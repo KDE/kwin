@@ -1,0 +1,2261 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>KWinInternal::RulesWidgetBase</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>737</width>
+            <height>477</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget">
+            <property name="name">
+                <cstring>tabWidget2</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Window</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Description</string>
+                        </property>
+                    </widget>
+                    <widget class="KLineEdit">
+                        <property name="name">
+                            <cstring>description</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Window class (application type)</string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout3</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="KLineEdit">
+                                <property name="name">
+                                    <cstring>wmclass</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>whole_wmclass</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Match whole window class</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout1</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>reg_wmclass</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Regular expression</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="KPushButton">
+                                <property name="name">
+                                    <cstring>edit_reg_wmclass</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Edit</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer5</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Window role</string>
+                        </property>
+                    </widget>
+                    <widget class="KLineEdit">
+                        <property name="name">
+                            <cstring>role</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout2</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>reg_role</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Regular expression</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer1</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="KPushButton">
+                                <property name="name">
+                                    <cstring>edit_reg_role</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Edit</string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer4</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout10</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QGroupBox">
+                                <property name="name">
+                                    <cstring>groupBox1</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>Detect window properties</string>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout9</cstring>
+                                        </property>
+                                        <hbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <spacer>
+                                                <property name="name">
+                                                    <cstring>spacer27</cstring>
+                                                </property>
+                                                <property name="orientation">
+                                                    <enum>Horizontal</enum>
+                                                </property>
+                                                <property name="sizeType">
+                                                    <enum>Expanding</enum>
+                                                </property>
+                                                <property name="sizeHint">
+                                                    <size>
+                                                        <width>40</width>
+                                                        <height>20</height>
+                                                    </size>
+                                                </property>
+                                            </spacer>
+                                            <widget class="KPushButton">
+                                                <property name="name">
+                                                    <cstring>detect1</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Detect (bad luck, this one doesn't work yet)</string>
+                                                </property>
+                                            </widget>
+                                            <spacer>
+                                                <property name="name">
+                                                    <cstring>spacer28</cstring>
+                                                </property>
+                                                <property name="orientation">
+                                                    <enum>Horizontal</enum>
+                                                </property>
+                                                <property name="sizeType">
+                                                    <enum>Expanding</enum>
+                                                </property>
+                                                <property name="sizeHint">
+                                                    <size>
+                                                        <width>40</width>
+                                                        <height>20</height>
+                                                    </size>
+                                                </property>
+                                            </spacer>
+                                        </hbox>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer29</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Window extra</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Window types</string>
+                        </property>
+                    </widget>
+                    <widget class="KListBox">
+                        <item>
+                            <property name="text">
+                                <string>Normal window</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Dialog window</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Utility window</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Dock (panel)</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Toolbar</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Torn off menu</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Splashscreen</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Desktop</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Override type</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Standalone menubar</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>types</cstring>
+                        </property>
+                        <property name="selectionMode">
+                            <enum>Multi</enum>
+                        </property>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel5</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Window title</string>
+                        </property>
+                    </widget>
+                    <widget class="KLineEdit">
+                        <property name="name">
+                            <cstring>title</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout1_2</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>reg_title</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Regular expression</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer2_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="KPushButton">
+                                <property name="name">
+                                    <cstring>edit_reg_title</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Edit</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer5_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel6</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Extra role</string>
+                        </property>
+                    </widget>
+                    <widget class="KLineEdit">
+                        <property name="name">
+                            <cstring>extra</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout1_2_2</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>reg_extra</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Regular expression</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer2_2_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="KPushButton">
+                                <property name="name">
+                                    <cstring>edit_reg_extra</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Edit</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer5_2_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel7</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Machine (hostname)</string>
+                        </property>
+                    </widget>
+                    <widget class="KLineEdit">
+                        <property name="name">
+                            <cstring>machine</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout1_2_3</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>reg_machine</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Regular expression</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer2_2_3</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="KPushButton">
+                                <property name="name">
+                                    <cstring>edit_reg_machine</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Edit</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer5_2_3</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Geometry</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="1" column="2">
+                        <property name="name">
+                            <cstring>label_size</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Size</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="1" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_size</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="1" column="3">
+                        <property name="name">
+                            <cstring>size</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="validChars">
+                            <string>0123456789-+,xX:</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>enable_size</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>enable_position</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="0" column="3">
+                        <property name="name">
+                            <cstring>position</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="validChars">
+                            <string>0123456789-+,xX:</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="2" column="3">
+                        <property name="name">
+                            <cstring>desktop</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="2">
+                        <property name="name">
+                            <cstring>label_desktop</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Desktop</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="2" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_desktop</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0">
+                        <property name="name">
+                            <cstring>enable_desktop</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="0" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_position</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="5" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_minimize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="4" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_maximizevert</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="0">
+                        <property name="name">
+                            <cstring>enable_maximizehoriz</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="7" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_fullscreen</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="7" column="0">
+                        <property name="name">
+                            <cstring>enable_fullscreen</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="0">
+                        <property name="name">
+                            <cstring>enable_shade</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="5" column="0">
+                        <property name="name">
+                            <cstring>enable_minimize</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="6" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_shade</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="0">
+                        <property name="name">
+                            <cstring>enable_maximizevert</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="3" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_maximizehoriz</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="2">
+                        <property name="name">
+                            <cstring>label_position</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Position</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="7" column="2">
+                        <property name="name">
+                            <cstring>label_fullscreen</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Fullscreen</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="6" column="2">
+                        <property name="name">
+                            <cstring>label_shade</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Shaded</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="2">
+                        <property name="name">
+                            <cstring>label_minimize</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Minimized</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="2">
+                        <property name="name">
+                            <cstring>label_maximizevert</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Maximized vertically</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="2">
+                        <property name="name">
+                            <cstring>label_maximizehoriz</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Maximized horizontally</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="8" column="3">
+                        <item>
+                            <property name="text">
+                                <string>Default</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>No placement</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Smart</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Cascade</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Centered</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Random</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Top-left corner</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Under mouse</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>On main window</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>placement</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="8" column="2">
+                        <property name="name">
+                            <cstring>label_placement</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Placement</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="8" column="0">
+                        <property name="name">
+                            <cstring>enable_placement</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="8" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_placement</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <spacer row="9" column="2">
+                        <property name="name">
+                            <cstring>spacer31</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>140</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="3" column="3">
+                        <property name="name">
+                            <cstring>maximizehoriz</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="3">
+                        <property name="name">
+                            <cstring>maximizevert</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="5" column="3">
+                        <property name="name">
+                            <cstring>minimize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="3">
+                        <property name="name">
+                            <cstring>shade</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="7" column="3">
+                        <property name="name">
+                            <cstring>fullscreen</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Preferences</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox" row="1" column="4">
+                        <property name="name">
+                            <cstring>below</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <spacer row="7" column="3">
+                        <property name="name">
+                            <cstring>spacer33</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>70</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>enable_above</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>enable_below</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="0">
+                        <property name="name">
+                            <cstring>enable_skippager</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="0">
+                        <property name="name">
+                            <cstring>enable_skiptaskbar</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0">
+                        <property name="name">
+                            <cstring>enable_noborder</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="5" column="0">
+                        <property name="name">
+                            <cstring>enable_acceptfocus</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="0">
+                        <property name="name">
+                            <cstring>enable_closeable</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="6" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_closeable</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="5" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_acceptfocus</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="4" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_skippager</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="3" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_skiptaskbar</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="2" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_noborder</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="1" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_below</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="0" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply initially</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Remember</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_above</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="2">
+                        <property name="name">
+                            <cstring>label_above</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Keep above</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="2">
+                        <property name="name">
+                            <cstring>label_below</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Keep below</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="2">
+                        <property name="name">
+                            <cstring>label_noborder</cstring>
+                        </property>
+                        <property name="text">
+                            <string>No border</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="2">
+                        <property name="name">
+                            <cstring>label_skiptaskbar</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Skip taskbar</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="2">
+                        <property name="name">
+                            <cstring>label_skippager</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Skip pager</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="2">
+                        <property name="name">
+                            <cstring>label_acceptfocus</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Accept focus</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="6" column="2">
+                        <property name="name">
+                            <cstring>label_closeable</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Closeable</string>
+                        </property>
+                    </widget>
+                    <spacer row="0" column="5">
+                        <property name="name">
+                            <cstring>spacer36</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="1" column="5">
+                        <property name="name">
+                            <cstring>spacer36_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="2" column="5">
+                        <property name="name">
+                            <cstring>spacer36_3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="3" column="5">
+                        <property name="name">
+                            <cstring>spacer36_4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="4" column="5">
+                        <property name="name">
+                            <cstring>spacer36_5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="5" column="5">
+                        <property name="name">
+                            <cstring>spacer36_6</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="6" column="5">
+                        <property name="name">
+                            <cstring>spacer36_7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="0" column="4">
+                        <property name="name">
+                            <cstring>above</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="4">
+                        <property name="name">
+                            <cstring>noborder</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="4">
+                        <property name="name">
+                            <cstring>skiptaskbar</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="4">
+                        <property name="name">
+                            <cstring>skippager</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="4">
+                        <property name="name">
+                            <cstring>closeable</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="5" column="4">
+                        <property name="name">
+                            <cstring>acceptfocus</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>TabPage</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Workarounds</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>enable_fsplevel</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="2">
+                        <property name="name">
+                            <cstring>label_fsplevel</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Focus stealing prevention</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="2" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_type</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="2" column="3">
+                        <item>
+                            <property name="text">
+                                <string>Normal window</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Dialog window</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Utility window</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Dock (panel)</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Toolbar</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Torn off menu</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Splashscreen</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Desktop</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Override type</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Standalone menubar</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>type</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="1" column="3">
+                        <item>
+                            <property name="text">
+                                <string>Opaque</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Transparent</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>moveresizemode</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0">
+                        <property name="name">
+                            <cstring>enable_type</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="2">
+                        <property name="name">
+                            <cstring>label_type</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Window type</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>enable_moveresizemode</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="2">
+                        <property name="name">
+                            <cstring>label_moveresizemode</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Moving/resizing</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="0" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_fsplevel</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="1" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_moveresizemode</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="0" column="3">
+                        <item>
+                            <property name="text">
+                                <string>None</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Low</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Normal</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>High</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Extreme</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fsplevel</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="5" column="3">
+                        <property name="name">
+                            <cstring>maxsize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="validChars">
+                            <string>0123456789-+,xX:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="2">
+                        <property name="name">
+                            <cstring>label_maxsize</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Maximum size</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="3">
+                        <property name="name">
+                            <cstring>ignoreposition</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="0">
+                        <property name="name">
+                            <cstring>enable_ignoreposition</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="3" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_ignoreposition</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="0">
+                        <property name="name">
+                            <cstring>enable_minsize</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="4" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_minsize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="5" column="0">
+                        <property name="name">
+                            <cstring>enable_maxsize</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KRestrictedLine" row="4" column="3">
+                        <property name="name">
+                            <cstring>minsize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="validChars">
+                            <string>0123456789-+,xX:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="2">
+                        <property name="name">
+                            <cstring>label_ignoreposition</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Ignore requested position</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="2">
+                        <property name="name">
+                            <cstring>label_minsize</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Minimum size</string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="5" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Don't affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_maxsize</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <spacer row="6" column="2">
+                        <property name="name">
+                            <cstring>spacer35</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>250</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+        </widget>
+    </vbox>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>reg_role</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>edit_reg_role</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>reg_title</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>edit_reg_title</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>reg_extra</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>edit_reg_extra</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>reg_machine</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>edit_reg_machine</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>reg_wmclass</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>edit_reg_wmclass</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>tabWidget2</tabstop>
+    <tabstop>description</tabstop>
+    <tabstop>wmclass</tabstop>
+    <tabstop>whole_wmclass</tabstop>
+    <tabstop>reg_wmclass</tabstop>
+    <tabstop>edit_reg_wmclass</tabstop>
+    <tabstop>role</tabstop>
+    <tabstop>reg_role</tabstop>
+    <tabstop>edit_reg_role</tabstop>
+    <tabstop>detect1</tabstop>
+    <tabstop>title</tabstop>
+    <tabstop>reg_title</tabstop>
+    <tabstop>edit_reg_title</tabstop>
+    <tabstop>extra</tabstop>
+    <tabstop>reg_extra</tabstop>
+    <tabstop>edit_reg_extra</tabstop>
+    <tabstop>machine</tabstop>
+    <tabstop>reg_machine</tabstop>
+    <tabstop>edit_reg_machine</tabstop>
+    <tabstop>enable_position</tabstop>
+    <tabstop>rule_position</tabstop>
+    <tabstop>position</tabstop>
+    <tabstop>enable_size</tabstop>
+    <tabstop>rule_size</tabstop>
+    <tabstop>size</tabstop>
+    <tabstop>enable_desktop</tabstop>
+    <tabstop>rule_desktop</tabstop>
+    <tabstop>desktop</tabstop>
+    <tabstop>enable_maximizehoriz</tabstop>
+    <tabstop>rule_maximizehoriz</tabstop>
+    <tabstop>maximizehoriz</tabstop>
+    <tabstop>enable_maximizevert</tabstop>
+    <tabstop>rule_maximizevert</tabstop>
+    <tabstop>maximizevert</tabstop>
+    <tabstop>enable_minimize</tabstop>
+    <tabstop>rule_minimize</tabstop>
+    <tabstop>minimize</tabstop>
+    <tabstop>enable_shade</tabstop>
+    <tabstop>rule_shade</tabstop>
+    <tabstop>shade</tabstop>
+    <tabstop>enable_fullscreen</tabstop>
+    <tabstop>rule_fullscreen</tabstop>
+    <tabstop>fullscreen</tabstop>
+    <tabstop>enable_placement</tabstop>
+    <tabstop>rule_placement</tabstop>
+    <tabstop>placement</tabstop>
+    <tabstop>enable_above</tabstop>
+    <tabstop>rule_above</tabstop>
+    <tabstop>above</tabstop>
+    <tabstop>enable_below</tabstop>
+    <tabstop>rule_below</tabstop>
+    <tabstop>below</tabstop>
+    <tabstop>enable_noborder</tabstop>
+    <tabstop>rule_noborder</tabstop>
+    <tabstop>noborder</tabstop>
+    <tabstop>enable_skiptaskbar</tabstop>
+    <tabstop>rule_skiptaskbar</tabstop>
+    <tabstop>skiptaskbar</tabstop>
+    <tabstop>enable_skippager</tabstop>
+    <tabstop>rule_skippager</tabstop>
+    <tabstop>skippager</tabstop>
+    <tabstop>enable_acceptfocus</tabstop>
+    <tabstop>rule_acceptfocus</tabstop>
+    <tabstop>acceptfocus</tabstop>
+    <tabstop>enable_closeable</tabstop>
+    <tabstop>rule_closeable</tabstop>
+    <tabstop>closeable</tabstop>
+    <tabstop>enable_fsplevel</tabstop>
+    <tabstop>rule_fsplevel</tabstop>
+    <tabstop>fsplevel</tabstop>
+    <tabstop>enable_moveresizemode</tabstop>
+    <tabstop>rule_moveresizemode</tabstop>
+    <tabstop>moveresizemode</tabstop>
+    <tabstop>enable_type</tabstop>
+    <tabstop>rule_type</tabstop>
+    <tabstop>type</tabstop>
+    <tabstop>enable_ignoreposition</tabstop>
+    <tabstop>rule_ignoreposition</tabstop>
+    <tabstop>ignoreposition</tabstop>
+    <tabstop>enable_minsize</tabstop>
+    <tabstop>rule_minsize</tabstop>
+    <tabstop>minsize</tabstop>
+    <tabstop>enable_maxsize</tabstop>
+    <tabstop>rule_maxsize</tabstop>
+    <tabstop>maxsize</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>klistbox.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>krestrictedline.h</includehint>
+    <includehint>krestrictedline.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>krestrictedline.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>krestrictedline.h</includehint>
+    <includehint>kcombobox.h</includehint>
+</includehints>
+</UI>
