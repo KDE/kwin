@@ -684,7 +684,7 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
                         button[BtnAbove]  = new QuartzButton(this, "above",
                                 largeButtons, isLeft, true,
                                 keepAbove() ? above_on_bits : above_off_bits,
-                                i18n("Keep Above Others"));
+                                i18n("Keep above others"));
                         connect( button[BtnAbove], SIGNAL( clicked()),
                                  this, SLOT(slotAbove()) );
                         hb->addWidget( button[BtnAbove] );
@@ -698,7 +698,7 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
                         button[BtnBelow]  = new QuartzButton(this, "below",
                                 largeButtons, isLeft, true,
                                 keepBelow() ? below_on_bits : below_off_bits,
-                                i18n("Keep Below Others"));
+                                i18n("Keep below others"));
                         connect( button[BtnBelow], SIGNAL( clicked()),
                                  this, SLOT(slotBelow()) );
                         hb->addWidget( button[BtnBelow] );
