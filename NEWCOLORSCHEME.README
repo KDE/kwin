@@ -13,12 +13,12 @@ activeBlend, inactiveBlend : Titlebar blend.
 
 activeForeground, inactiveForeground : Tilebar text.
 
-buttonBackground, buttonBackgroundDown : Button background color for up and 
+activeTitleBtnBg, inactiveTitleButtonBg : Button background color for up and 
 down states.
 
-buttonBlend, buttonBlendDown : Button blend.
+activeTitleBtnBlend, inactiveTitleBtnBlend : Button blend.
 
-buttonForeground, buttonForegroundDown : Button foreground color.
+activeTitleBtnFg, activeTitleBtnFg : Button foreground color.
 
 Daniel M. Duley
 mosfet@kde.org

@@ -1,30 +1,10 @@
 If you tried the system window manager style you probably noticed it's not
-too nice looking using the standard KDE color schemes. This is because this
+too nice looking using the standard KDE color scheme. This is because this
 is the first style to use a kwin extended color configuration and needs some
 additional entries in order to look decent.
 
-To try it out with the extended color configuration I am using open:
-
-~/.kde/share/config/kdeglobals
-
-And replace the [WM] section with these entries:
-
-activeBackground=192,192,192
-activeBlend=0,0,0
-activeForeground=0,0,0
-handle=140,140,140
-inactiveHandle=140,140,140
-inactiveBackground=192,192,192
-inactiveBlend=192,192,192
-inactiveForeground=128,128,128
-buttonForegroundDown=144,170,191
-buttonBackgroundDown=163,163,163
-buttonBlendDown=0,0,0
-buttonBackground=163,163,163
-buttonBlend=0,0,0 
-
-Once a kwin color scheme selection kcmmodule is done this will no longer be a 
-problem ;-)
+Try using the "System" color scheme in kcmdisplay to make it look rather cool.
+You'll need to restart kwin because it doesn't handle this dynamically yet.
 
 Daniel M. Duley
 mosfet@kde.org
