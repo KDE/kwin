@@ -2227,6 +2227,17 @@ bool Client::x11Event( XEvent * e)
             setCursor( arrowCursor );
         }
         bool lostMouse = !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) );
+        // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
+        // (i.e. the LeaveNotify event comes before leaving the rect and no LeaveNotify event
+        // comes after leaving the rect) - so lets check if the pointer is really outside the window
+        if ( !lostMouse && e->xcrossing.detail != NotifyInferior ) {
+            int d1, d2, d3, d4;
+            unsigned int d5;
+            Window w, child;
+            if( XQueryPointer( qt_xdisplay(), winId(), &w, &child, &d1, &d2, &d3, &d4, &d5 ) == False
+                || child == None )
+                lostMouse = true; // really lost the mouse
+        }
         if ( lostMouse ) {
             delete autoRaiseTimer;
             autoRaiseTimer = 0;
