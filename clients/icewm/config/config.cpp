@@ -39,7 +39,7 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 	gb1 = new QGroupBox( 1, Qt::Horizontal, i18n("IceWM Theme Selector"), parent );
 	themeListBox = new QListBox( gb1 );
 	themeLabel = new QLabel( i18n("To manage your IceWM themes, simply click on the link below to open a Konqueror window. "
-							"Once shown, you will be able to add or remove natice IceWM themes, by uncompressing <b>http://icewm.themes.org/</b> "
+							"Once shown, you will be able to add or remove native IceWM themes, by uncompressing <b>http://icewm.themes.org/</b> "
 							"theme files into this directory, or creating directory symlinks to existing IceWM themes on your system."), parent );
 	urlLabel = new KURLLabel( parent );
 	urlLabel->setText( i18n("Open Konqueror Window at KDE's IceWM theme directory") );
@@ -61,13 +61,8 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 	connect( cbTitleBarOnTop, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
 	connect( cbShowMenuButtonIcon, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
 
-	// Make sure the local user's theme directory actually exists...
-	QStringList dirList = KGlobal::dirs()->findDirs("data", "kwin");
-	QString localThemeString = *(dirList.begin());
-
-	// Create the directory if not found...
-	if (localThemeString.isEmpty())
-		localThemeString = KGlobal::dirs()->saveLocation("data", "kwin");
+	// Create the theme directory (if not found) ... and obtain the path as we do so.
+	QString localThemeString = KGlobal::dirs()->saveLocation("data", "kwin");
 
 	localThemeString += "/icewm-themes";
 	if (!QFile::exists(localThemeString))
