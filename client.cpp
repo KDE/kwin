@@ -874,7 +874,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
 
-    sendSyntheticConfigureNotify();
     workspace()->clientReady( this ); // will call Workspace::propagateClients()
 
     if ( showMe && !doNotShow ) {
@@ -913,6 +912,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     if ( !doNotShow )
       workspace()->updateClientArea();
+
+    sendSyntheticConfigureNotify();
 
     delete session;
     return showMe;
