@@ -65,10 +65,10 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 
 	hbox = new QHBox(gbSlider);
 	hbox->setSpacing(6);
-	label1 = new QLabel( i18n("Normal"), hbox );
-	label2 = new QLabel( i18n("Large"), hbox );
+	label1 = new QLabel( i18n("titlebar height","Normal"), hbox );
+	label2 = new QLabel( i18n("titlebar height","Large"), hbox );
 	label2->setAlignment( AlignHCenter );
-	label3 = new QLabel( i18n("Huge"), hbox );
+	label3 = new QLabel( i18n("titlebar height","Huge"), hbox );
 	label3->setAlignment( AlignRight );
 	
 	// Load configuration options
