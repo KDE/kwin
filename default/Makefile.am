@@ -7,6 +7,7 @@ Button.cpp \
 CloseButton.cpp \
 DBWidget.cpp \
 IconifyButton.cpp \
+QuestionButton.cpp \
 StickyButton.cpp \
 Manager.cpp \
 MaximiseButton.cpp \
@@ -26,6 +27,7 @@ Button.h \
 CloseButton.h \
 DBWidget.h \
 IconifyButton.h \
+QuestionButton.h \
 StickyButton.h \
 Manager.h \
 MaximiseButton.h \

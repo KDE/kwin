@@ -272,7 +272,7 @@ Static::update()
   QPixmap
 Static::button(SymbolType t, bool active, bool down)
 {
-  bool buttonSize2 = (t == Sticky || t == Unsticky);
+  bool buttonSize2 = (t == Sticky || t == Unsticky || t == Question);
   QPixmap px = buttonPixmap(!buttonSize2, active, down);
 
   QBitmap b = glyph(t);
@@ -284,6 +284,12 @@ Static::button(SymbolType t, bool active, bool down)
 
   return px;
 }
+
+//static unsigned char unsticky_bits[] = {
+//   0x38, 0x38, 0x38, 0x38, 0x7c, 0x10, 0x10, 0x10};
+//
+//static unsigned char sticky_bits[] = {
+//   0x20, 0x70, 0xfa, 0x7c, 0x38, 0x14, 0x22, 0x01};
 
 static unsigned char iconify_bits[] = {
     0xff, 0xff, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18};
@@ -315,6 +321,7 @@ Static::_loadGlyphs()
   glyphSticky_      = QBitmap(8, 8, sticky_bits);
   glyphUnsticky_    = QBitmap(8, 8, unsticky_bits);
   glyphIconify_     = QBitmap(8, 8, iconify_bits);
+  glyphQuestion_    = QBitmap(8, 8, question_bits);
 }
 
 } // End namespace

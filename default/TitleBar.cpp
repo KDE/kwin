@@ -27,6 +27,7 @@
 #include "TitleText.h"
 #include "CloseButton.h"
 #include "IconifyButton.h"
+#include "QuestionButton.h"
 #include "StickyButton.h"
 #include "MaximiseButton.h"
 
@@ -41,8 +42,9 @@ TitleBar::TitleBar(Manager * client)
   iconify_    = new IconifyButton   (this);
   maximise_   = new MaximiseButton  (this);
   sticky_     = new StickyButton    (this);
+  question_   = new QuestionButton  (this);
 
-  // Close | Text | Sticky | Iconify | Maximise
+  // Close | Text | Question | Sticky | Iconify | Maximise
 
   QHBoxLayout * layout = new QHBoxLayout(this);
   layout->setMargin(3);
@@ -51,6 +53,7 @@ TitleBar::TitleBar(Manager * client)
   layout->addSpacing(2);
   layout->addWidget(text_, 1);
   layout->addSpacing(2);
+  layout->addWidget(question_);
   layout->addWidget(sticky_);
   layout->addWidget(iconify_);
   layout->addWidget(maximise_);
@@ -94,6 +97,11 @@ TitleBar::TitleBar(Manager * client)
     client,     SIGNAL(maximiseChanged(bool)),
     maximise_,  SLOT(setOn(bool))
   );
+
+  connect(
+    question_,  SIGNAL(contextHelp()),
+    client,     SLOT(contextHelp())
+  );
 }
  
   void
@@ -101,11 +109,12 @@ TitleBar::updateDisplay()
 {
   close_    ->updateDisplay();
   sticky_   ->updateDisplay();
+  question_ ->updateDisplay();
   text_     ->updateDisplay();
   iconify_  ->updateDisplay();
   maximise_ ->updateDisplay();
 }
-  
+
   void
 TitleBar::updateText()
 {
@@ -131,11 +140,13 @@ TitleBar::resizeEvent(QResizeEvent *)
       close_    ->show();
       sticky_   ->hide();
       iconify_  ->show();
+      question_ ->hide();
       maximise_ ->hide();
       break;
 
     case 2:
       close_    ->show();
+      question_ ->hide();
       sticky_   ->hide();
       iconify_  ->hide();
       maximise_ ->hide();
@@ -143,6 +154,7 @@ TitleBar::resizeEvent(QResizeEvent *)
 
     case 3:
       close_    ->hide();
+      question_ ->hide();
       sticky_   ->hide();
       iconify_  ->hide();
       maximise_ ->hide();
@@ -151,7 +163,8 @@ TitleBar::resizeEvent(QResizeEvent *)
     case 0:
     default:
       close_    ->show();
-      sticky_    ->show();
+      question_ ->show();
+      sticky_   ->show();
       iconify_  ->show();
       maximise_ ->show();
       break;
@@ -166,6 +179,7 @@ TitleBar::setActive(bool b)
   text_->setActive(b);
   iconify_->setActive(b);
   maximise_->setActive(b);
+  question_->setActive(b);
 }
 
   void

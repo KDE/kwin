@@ -33,7 +33,7 @@ Button::Button(QWidget * parent, SymbolType t)
     down_     (false),
     active_   (false)
 {
-  if (type_ == Sticky)
+  if (type_ == Sticky || type_ == Question)
     setFixedWidth(Static::instance()->buttonWidth2());
   else
     setFixedWidth(Static::instance()->buttonWidth1());

@@ -35,7 +35,7 @@
 namespace Default
 {
 
-enum SymbolType { Sticky, Unsticky, Close, Iconify, Max, Unmax };
+enum SymbolType { Sticky, Unsticky, Close, Iconify, Max, Unmax, Question };
 
 class Static
 {
@@ -98,6 +98,7 @@ class Static
         case Iconify:   return glyphIconify_;
         case Max:       return glyphMaximise_;
         case Unmax:     return glyphUnmaximise_;
+        case Question:  return glyphQuestion_;
         default:        return glyphClose_;
       }
     }
@@ -154,7 +155,8 @@ class Static
       glyphUnsticky_,
       glyphIconify_,
       glyphMaximise_,
-      glyphUnmaximise_;
+      glyphUnmaximise_,
+      glyphQuestion_;
 
     KPixmap aTitle_, iTitle_;
     KPixmap aTitleLeft_, iTitleLeft_;

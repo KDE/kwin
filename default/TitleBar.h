@@ -29,6 +29,7 @@ namespace Default
 {
 
 class Manager;
+class QuestionButton;
 class StickyButton;
 class CloseButton;
 class TitleText;
@@ -59,6 +60,7 @@ class TitleBar : public QWidget
 
     TitleText * text_;
 
+    QuestionButton * question_;
     StickyButton * sticky_;
     IconifyButton * iconify_;
     MaximiseButton * maximise_;
