@@ -405,6 +405,7 @@ void KCommonDecoration::maximizeChange()
         m_button[MaxButton]->setTipText( (maximizeMode()!=MaximizeFull) ?
                 i18n("Maximize")
             : i18n("Restore"));
+        m_button[MaxButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
@@ -415,6 +416,7 @@ void KCommonDecoration::desktopChange()
         m_button[OnAllDesktopsButton]->setTipText( isOnAllDesktops() ?
                 i18n("Not on all desktops")
             : i18n("On all desktops"));
+        m_button[OnAllDesktopsButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
@@ -426,6 +428,7 @@ void KCommonDecoration::shadeChange()
         m_button[ShadeButton]->setTipText( shaded ?
                 i18n("Unshade")
             : i18n("Shade"));
+        m_button[ShadeButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
@@ -434,6 +437,7 @@ void KCommonDecoration::iconChange()
     if (m_button[MenuButton])
     {
         m_button[MenuButton]->update();
+        m_button[MenuButton]->reset(KCommonDecorationButton::IconChange);
     }
 }
 
@@ -454,12 +458,14 @@ void KCommonDecoration::keepAboveChange(bool above)
     {
         m_button[AboveButton]->setOn(above);
         m_button[AboveButton]->setTipText( above?i18n("Do not keep above others"):i18n("Keep above others") );
+        m_button[AboveButton]->reset(KCommonDecorationButton::StateChange);
     }
 
     if (m_button[BelowButton] && m_button[BelowButton]->isOn())
     {
         m_button[BelowButton]->setOn(false);
         m_button[BelowButton]->setTipText( i18n("Keep below others") );
+        m_button[BelowButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
@@ -469,12 +475,14 @@ void KCommonDecoration::keepBelowChange(bool below)
     {
         m_button[BelowButton]->setOn(below);
         m_button[BelowButton]->setTipText( below?i18n("Do not keep below others"):i18n("Keep below others") );
+        m_button[BelowButton]->reset(KCommonDecorationButton::StateChange);
     }
 
     if (m_button[AboveButton] && m_button[AboveButton]->isOn())
     {
         m_button[AboveButton]->setOn(false);
         m_button[AboveButton]->setTipText( i18n("Keep above others") );
+        m_button[AboveButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
