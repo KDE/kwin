@@ -262,7 +262,14 @@ Web::mousePosition(const QPoint & p) const
 
   if (y < titleSpacer_->geometry().height())
   {
-    return Client::Center;
+    if ((y < 4 && x < 20) || x < 4)
+      return Client::TopLeft;
+    else if ((y < 4 && x > width() - 20) || x > width() - 4)
+      return Client::TopRight;
+    else if (y < 4)
+      return Client::Top;
+    else
+      return Client::Center;
   }
   else if (y < height() - 20)
   {
