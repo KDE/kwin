@@ -2,7 +2,7 @@ Just a checklist for now, maybe a full HOWTO later.
 
 porting:
     - note that decorations are ported from HEAD, not from the branch - HEAD may have fixes that are not in the branch
-    - Makefile.am - LDFLAGS, LIBADD, kwin_ -> kwin3_, INCLUDES pro libkwin
+    - Makefile.am - LDFLAGS, LIBADD, kwin_ -> kwin3_, if in kdebase, add INCLUDES for libkdecorations before $(all_includes)
     - .desktop - kwin_ -> kwin3_
     - KWinButton -> QButton + QToolTip
     - #include qbutton.h, kdecoration.h, kdecorationfactory.h

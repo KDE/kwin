@@ -13,7 +13,7 @@ kwin_la_SOURCES = workspace.cpp client.cpp placement.cpp atoms.cpp \
 	manage.cpp notifications.cpp activation.cpp useractions.cpp \
 	geometry.cpp
 
-kwin_la_LIBADD = $(LIB_KDEUI) lib/libkwin.la
+kwin_la_LIBADD = $(LIB_KDEUI) lib/libkdecorations.la
 kwin_la_LDFLAGS = $(all_libraries) -module -avoid-version
 
 include_HEADERS = KWinInterface.h

@@ -8,7 +8,7 @@ noinst_HEADERS = kwindecoration.h kwindecorationIface.h buttons.h preview.h
 kcm_kwindecoration_la_LDFLAGS = \
   -module -avoid-version $(all_libraries) -no-undefined
 
-kcm_kwindecoration_la_LIBADD = $(LIB_KDEUI) ../../lib/libkwin.la
+kcm_kwindecoration_la_LIBADD = $(LIB_KDEUI) ../../lib/libkdecorations.la
 
 METASOURCES = AUTO
 

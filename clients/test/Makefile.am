@@ -4,7 +4,7 @@ kde_module_LTLIBRARIES    = kwin3_test.la
 
 kwin3_test_la_SOURCES   = test.cpp
 kwin3_test_la_LDFLAGS   = $(all_libraries) $(KDE_PLUGIN) -module
-kwin3_test_la_LIBADD    = $(LIB_KDEUI) ../../lib/libkwin.la
+kwin3_test_la_LIBADD    = $(LIB_KDEUI) ../../lib/libkdecorations.la
 #kwin_keramik_la_LDFLAGS   = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
 
 METASOURCES               = AUTO
