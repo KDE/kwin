@@ -412,8 +412,9 @@ void Client::manage( bool isMapped )
 
 	// KDE 1.x compatibility
 	desk = KWM::desktop( win );
-	KWM::moveToDesktop( win, desk ); // compatibility
     }
+
+    KWM::moveToDesktop( win, desk ); // KDE 1.x compatibility
 
 
     setMappingState( state );
