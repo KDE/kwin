@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
+#include <qtooltip.h>
 
 namespace KWinInternal
 {
@@ -153,6 +154,8 @@ unsigned long Options::updateSettings()
     desktop_topmenu = kdesktopcfg.readBoolEntry( "ShowMenubar", false );
     if( desktop_topmenu )
         topmenus = true;
+        
+    QToolTip::setGloballyEnabled( d->show_tooltips );
 
     return changed;
     }
