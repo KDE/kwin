@@ -81,16 +81,12 @@ QPixmap* titleB[] = {NULL, NULL};
 QPixmap* titleR[] = {NULL, NULL};
 QPixmap* titleQ[] = {NULL, NULL};
 
-bool initialized = false;
-bool validframe  = false;
-
 int  cornerSizeX;
 int  cornerSizeY;
 int  titleBarHeight;
 int  borderSizeX;
 int  borderSizeY;
 
-// Yes, we can change button positions :-)
 QString titleButtonsLeft;
 QString titleButtonsRight;
 QString themeName;
@@ -102,16 +98,16 @@ QColor colorInActiveTitleBarText;
 QColor colorActiveTitleBar;
 QColor colorInActiveTitleBar;
 
-Workspace* workspace_internal = NULL;
-Options* options_internal = NULL;
 ThemeHandler theme_handler;
+Workspace* workspace_internal = NULL;	// We really shouldn't need this
+
+bool initialized = false;
+bool validframe  = false;
 
 // KControl Settings - Read from kwinrc config file or icewm theme
 bool themeTitleTextColors = true;	// Allow theme to set colors. kcontrol will have no effect
 bool titleBarOnTop 		  = true;	// Titlebars can be below windows too :)
 bool showMenuButtonIcon   = false;	// Draw a mini icon over the menu pixmap.
-
-// make these work...
 bool themeButtonPositions = true; 	// Let the theme dictate the btn pos.
 bool titleBarCentered 	  = true;
 
@@ -602,13 +598,6 @@ void IceWMButton::mouseReleaseEvent( QMouseEvent* e )
 IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity | WRepaintNoErase )
 {
-	// The ThemeHandler must also see the options class
-	// which it null upon initially loading kwin
-//	if (!options_internal)
-//	{
-//		options_internal = options;
-//		connect( options, SIGNAL(resetClients()), &theme_handler, SLOT(slotReset()) );
-//	}
 	workspace_internal = ws;
 
 	// Set button pointers to null so we can track things
