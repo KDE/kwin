@@ -417,10 +417,10 @@ run_fades (Display *dpy)
 			XRenderFreePicture (dpy, w->shadow);
 			w->shadow = None;
 			w->extents = win_extents(dpy, w);
-			/* Must do this last as it might destroy f->w in callbacks */
-			if (need_dequeue)
-				dequeue_fade (dpy, f);
 		}
+                /* Must do this last as it might destroy f->w in callbacks */
+                if (need_dequeue)
+                    dequeue_fade (dpy, f);
 		determine_mode (dpy, w);
 	}
 	fade_time = now + fade_delta;
@@ -1467,7 +1467,7 @@ unmap_win (Display *dpy, Window id, Bool fade)
 	w->a.map_state = IsUnmapped;
 #if HAS_NAME_WINDOW_PIXMAP
 	if (w->pixmap && fade && fadeWindows)
-		set_fade (dpy, w, w->opacity*1.0/OPAQUE, 0.0, fade_out_step, unmap_callback, False, False, True, True);
+                    set_fade (dpy, w, w->opacity*1.0/OPAQUE, 0.0, fade_out_step, unmap_callback, False, False, True, True);
 	else
 #endif
 		finish_unmap_win (dpy, w);
@@ -1660,7 +1660,7 @@ determine_mode(Display *dpy, win *w)
 		format = XRenderFindVisualFormat (dpy, w->a.visual);
 	}
 
-	if (!disable_argb && format && format->type == PictTypeDirect && format->direct.alphaMask)
+        if (!disable_argb && format && format->type == PictTypeDirect && format->direct.alphaMask)
 	{
 		mode = WINDOW_ARGB;
 	}
@@ -1777,12 +1777,12 @@ add_win (Display *dpy, Window id, Window prev)
 	XShapeSelectInput( dpy, id, ShapeNotifyMask );
 
 	/* moved mode setting to one place */
-	new->opacity = get_opacity_prop (dpy, new, OPAQUE);
+        new->opacity = get_opacity_prop (dpy, new, OPAQUE);
 	new->shadowSize = get_shadow_prop (dpy, new);
 	new->shapable = get_shapable_prop(dpy, new);
 	new->titleHeight = get_titleHeight_prop(dpy, new);
 	new->windowType = determine_wintype (dpy, new->id);
-	determine_mode (dpy, new);
+        determine_mode (dpy, new);
 
 	new->next = *p;
 	*p = new;
@@ -2534,7 +2534,7 @@ main (int argc, char **argv)
 		exit (1);
 	}
 
-	fprintf(stderr, "Started");
+	fprintf(stderr, "Started\n");
 	/* get atoms */
 	shadowAtom = XInternAtom (dpy, SHADOW_PROP, False);
 	opacityAtom = XInternAtom (dpy, OPACITY_PROP, False);
@@ -2740,10 +2740,10 @@ main (int argc, char **argv)
 					{
 						/* reset mode and redraw window */
 						win * w = find_win(dpy, ev.xproperty.window);
-						unsigned int oldShadowSize = w->shadowSize;
-						unsigned int tmp;
 						if (w)
 						{
+                                                    unsigned int tmp;
+                                                    unsigned int oldShadowSize = w->shadowSize;
 							if (ev.xproperty.atom == opacityAtom)
 							{
 								tmp = get_opacity_prop(dpy, w, OPAQUE);
@@ -2751,8 +2751,7 @@ main (int argc, char **argv)
 									break; /*skip if opacity does not change*/
 								if (fadeTrans)
 								{
-									set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE,
-                                            fade_out_step, 0, False, True, True, False);
+								    set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE, fade_out_step, 0, False, False, True, False);
                                     break;
                                     }
                                 else
@@ -2764,6 +2763,8 @@ main (int argc, char **argv)
                                 if (tmp == w->shadowSize)
                                     break; /*skip if shadow does not change*/
                                 w->shadowSize = tmp;
+/*                                if (w->isInFade)
+                                    break;*/
                                 }
                             if (w->shadow)
                             {
@@ -2785,7 +2786,10 @@ main (int argc, char **argv)
                 break;
 	    default:
 		if (ev.type == damage_event + XDamageNotify)
+                {
+                    /*                     printf("damaging win: %u\n",ev.xany.window);*/
 		    damage_win (dpy, (XDamageNotifyEvent *) &ev);
+                }
                 else if (ev.type == shapeEvent)
                 {
                     win * w = find_win(dpy, ev.xany.window);
