@@ -1,0 +1,67 @@
+This theme emulates the look and feel of the RISC OS 'window manager'.
+Actually, RISC OS doesn't have a window manager in the same way X
+does, but if you imagine it does, this is an emulation of that ;)
+
+I've optimised it for speed, so you should find it quite nippy.
+Particularly the fact that the left and right borders are single-pixel
+gives a large speedup on my Matrox card when dragging windows.
+
+I've requested save-under in the window decorations for that extra
+speed kick, plus double-buffered the title bar and resize bar.
+
+Functions that will be implemented but are currently missing:
+  Transparent resize.
+  Shading.
+  Backward-resize.
+  NOTE: Backward-resize is an interesting feature and quite useful.
+        If you resize a window such that you hit the screen edge
+        in the process, the window resizes 'backwards' (i.e.
+        moves in the opposite direction to your drag and at the
+        same time continues increasing in size). So instead
+        of having to let go of the resize handle, move the window
+        and resize again, it just does what you want it to do.
+
+Button functions: (Missing functionality is marked with TODO)
+
+Button One:
+
+  Left button: TODO
+               Lower window and drop focus. This is currently unimplemented
+               in kwin itself.
+
+Button Two:
+
+  Left button: Close window.
+
+  Right button: TODO, if I can be bothered.
+                Close window.
+                If window is filer window, open another filer window
+                in parent dir.
+                If window is document window, open a filer window in
+                dir containing document.
+                If you hold Shift, the window doesn't close.
+                NOTE:
+                This requires app support.
+                If I were to implement this, I would do it in konqy
+                and probably not bother for other apps.
+
+Button Three:
+
+  Left button: Iconify window.
+
+Button Four:
+
+  Left button: Maximise or restore window plus raise and focus.
+
+  Middle button: Maximise vertically or restore window plus raise and focus.
+
+  Right button: Maximise or restore window.
+
+The lower bar is used for resizing. It works in the NeXT style.
+This doesn't exist on RISC OS. In RISC OS, there is a 'resize handle'
+in the lower right corner of the window (actually inside the window).
+
+To emulate this would mean covering part of the window with the decorations,
+which is not acceptable. RISC OS gets away with it by making sure that
+there is a vertical scrollbar visible at all times, which is just stupid.
+

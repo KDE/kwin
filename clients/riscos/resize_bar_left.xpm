@@ -1,0 +1,15 @@
+/* XPM */
+static char * resize_bar_left_xpm[] = {
+"2 7 5 1",
+" 	c None",
+".	c #FFFFFF",
+"+	c #DDDDDD",
+"@	c #BBBBBB",
+"#	c #777777",
+"..",
+".+",
+".+",
+".+",
+".+",
+".@",
+"@#"};
