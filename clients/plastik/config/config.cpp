@@ -110,7 +110,7 @@ void PlastikConfig::defaults()
 
 extern "C"
 {
-    QObject* KDE_EXPORT allocate_config(KConfig* config, QWidget* parent) {
+    KDE_EXPORT QObject* allocate_config(KConfig* config, QWidget* parent) {
         return (new PlastikConfig(config, parent));
     }
 }

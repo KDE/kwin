@@ -12,7 +12,7 @@
 
 extern "C"
 {
-	QObject* KDE_EXPORT allocate_config(KConfig* conf, QWidget* parent)
+	KDE_EXPORT QObject* allocate_config(KConfig* conf, QWidget* parent)
 	{
 		return(new ModernSysConfig(conf, parent));
 	}
