@@ -120,9 +120,9 @@ TitleBar::resizeEvent(QResizeEvent *)
 {
   int sizeProblem = 0;
 
-  if (width() < 80) sizeProblem = 3;
-  else if (width() < 100) sizeProblem = 2;
-  else if (width() < 120) sizeProblem = 1;
+  if (width() < 120) sizeProblem = 3;
+  else if (width() < 160) sizeProblem = 2;
+  else if (width() < 200) sizeProblem = 1;
 
   switch (sizeProblem) {
 
