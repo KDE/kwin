@@ -87,7 +87,7 @@ static Client* clientFactory( Workspace *ws, WId w )
 	return new SystemClient( ws, w );
     else if(tmpStr == "next")
 	return new NextClient( ws, w );
-    else if(tmpStr == "be")
+    else if(tmpStr == "Be")
 	return new BeClient( ws, w );
     else
 	return new StdClient( ws, w );
@@ -1436,6 +1436,7 @@ void Workspace::setDecorationStyle( int deco )
     c->releaseWindow();
     KWM::moveToDesktop( w, c->desktop() );
     KConfig* config = KGlobal::config();
+    config->setGroup("Style");
     switch ( deco ) {
     case 2:
 	c = new BeClient( this, w);
