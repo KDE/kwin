@@ -20,6 +20,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <dcopclient.h>
 #include <kprocess.h>
 #include <kiconloader.h>
+#include <kstartupinfo.h>
 
 #include <netwm.h>
 
@@ -90,6 +91,8 @@ class WorkspacePrivate
 {
 public:
     WorkspacePrivate() {};
+    ~WorkspacePrivate() {};
+    KStartupInfo* startup;
 };
 
 };
@@ -282,6 +285,9 @@ Workspace::Workspace( bool restore )
         "desktop_widget",
         Qt::WType_Desktop | Qt::WPaintUnclipped
     );
+
+    // call this before XSelectInput() on the root window
+    d->startup = new KStartupInfo( false, this );
 
     // select windowmanager privileges
     XSelectInput(qt_xdisplay(), root,
@@ -512,6 +518,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
         kwin_updateTime();
+        checkStartOnDesktop( e->xmaprequest.window );
         c = findClient( e->xmaprequest.window );
         if ( !c ) {
             if ( e->xmaprequest.parent ) { // == root ) { //###TODO store rpeviously destroyed client ids
@@ -3731,5 +3738,14 @@ void Workspace::configureWM()
     KApplication::kdeinitExec( "kcmshell", args );
 }
 
-
+void Workspace::checkStartOnDesktop( WId w )
+{
+    KStartupInfoData data;
+    if( d->startup->checkStartup( w, data ) != KStartupInfo::Match || data.desktop() == 0 )
+        return;
+    NETWinInfo info( qt_xdisplay(),  w, qt_xrootwin(), NET::WMDesktop );
+    if( info.desktop() == 0 )
+        info.setDesktop( data.desktop());
+}
+    
 #include "workspace.moc"

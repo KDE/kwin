@@ -281,6 +281,7 @@ protected:
     bool keyRelease( XKeyEvent key );
     bool keyPressMouseEmulation( XKeyEvent key );
     bool netCheck( XEvent* e );
+    void checkStartOnDesktop( WId w );
 
 private:
     void init();
