@@ -1,4 +1,6 @@
 
+AM_CPPFLAGS = -DQT_NO_ASCII_CAST
+
 INCLUDES = $(all_includes)
 
 SUBDIRS = . pics clients
