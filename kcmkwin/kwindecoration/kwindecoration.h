@@ -84,6 +84,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		void slotSelectionChanged();
 		void slotChangeDecoration( const QString &  );
 		void slotBorderChanged( int );
+		void slotButtonsChanged();
 
 	private:
 		void readConfig( KConfig* conf );

@@ -71,37 +71,46 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	kwinConfig.setGroup("Style");
         plugins = new KDecorationPreviewPlugins( &kwinConfig );
 
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	tabWidget = new QTabWidget( this );
-	layout->addWidget( tabWidget );
+	QVBoxLayout* layout = new QVBoxLayout(this, 0, KDialog::spacingHint()); 
 
-	// Page 1 (General Options)
-	QWidget *pluginPage = new QWidget( tabWidget );
+	QHBoxLayout *listLayout = new QHBoxLayout(layout);
 
-	QHBox *hbox = new QHBox(pluginPage);
-	hbox->setSpacing(KDialog::spacingHint());
-//	QLabel *lbl = new QLabel( i18n("&Decoration:"), hbox );
-	decorationList = new KComboBox( hbox );
-//	lbl->setBuddy(decorationList);
+	QLabel *lbl = new QLabel( i18n("&Decoration:"), this );
+	decorationList = new KComboBox( this );
+	lbl->setBuddy(decorationList);
 	QString whatsThis = i18n("Select the window decoration. This is the look and feel of both "
                              "the window borders and the window handle.");
-//	QWhatsThis::add(lbl, whatsThis);
+	QWhatsThis::add(lbl, whatsThis);
 	QWhatsThis::add(decorationList, whatsThis);
 
-	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage, KDialog::marginHint(), KDialog::spacingHint());
-	pluginLayout->addWidget(hbox);
+	listLayout->addWidget(lbl);
+	listLayout->addWidget(decorationList);
+	listLayout->addStretch();
 
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
 
-	QFrame* preview_frame = new QFrame( pluginPage );
+	QVBoxLayout* previewLayout = new QVBoxLayout(layout, KDialog::spacingHint());
+
+	QFrame* preview_frame = new QFrame( this );
 	preview_frame->setFrameShape( QFrame::NoFrame );
 	QVBoxLayout* preview_layout = new QVBoxLayout( preview_frame, 0 );
 	preview = new KDecorationPreview( preview_frame );
 	preview_layout->addWidget( preview );
-	pluginLayout->addWidget( preview_frame );
-	pluginLayout->setStretchFactor( preview_frame, 10 );
+	previewLayout->addWidget( preview_frame );
+	previewLayout->setStretchFactor( preview_frame, 10 );
+
+	tabWidget = new QTabWidget( this );
+	layout->addWidget( tabWidget );
+
+	preview_frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	tabWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+
+	// Page 1 (General Options)
+	QWidget *pluginPage = new QWidget( tabWidget );
+
+	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage, KDialog::marginHint(), KDialog::spacingHint());
 
 	pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
 	pluginSettingsGrp->setColumnLayout( 0, Vertical );
@@ -109,6 +118,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	pluginSettingsGrp->layout()->setMargin( 0 );
 	pluginSettingsGrp->layout()->setSpacing( KDialog::spacingHint() );
 	pluginLayout->addWidget( pluginSettingsGrp );
+	pluginLayout->addStretch();
 
 	pluginConfigWidget = new QVBox(pluginSettingsGrp);
 	pluginSettingsGrp->layout()->add( pluginConfigWidget );
@@ -171,12 +181,14 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	connect( dropSite, SIGNAL(buttonRemoved(char)), buttonSource, SLOT(showButton(char)) );
 	connect( buttonSource, SIGNAL(buttonDropped()), dropSite, SLOT(removeClickedButton()) );
 	connect( dropSite, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );
+	connect( dropSite, SIGNAL(changed()), this, SLOT(slotButtonsChanged()) );
 	connect( buttonSource, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()) );
 	connect( decorationList, SIGNAL(activated(const QString&)), SLOT(slotSelectionChanged()) );
 	connect( decorationList, SIGNAL(activated(const QString&)),
 								SLOT(slotChangeDecoration(const QString&)) );
 	connect( cbUseCustomButtonPositions, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), buttonBox, SLOT(setEnabled(bool)));
+	connect(cbUseCustomButtonPositions, SIGNAL(toggled(bool)), this, SLOT(slotButtonsChanged()) );
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
         connect( slBorder, SIGNAL( valueChanged( int )), SLOT( slotBorderChanged( int )));
 //	connect( cbUseMiniWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
@@ -312,6 +324,15 @@ void KWinDecorationModule::slotBorderChanged( int size )
         assert( sizes.count() >= 2 );
         border_size = indexToBorderSize( size, sizes );
         lBorder->setText( i18n( border_names[ border_size ] ));
+
+	// update preview
+	preview->setTempBorderSize(plugins, border_size);
+}
+
+void KWinDecorationModule::slotButtonsChanged()
+{
+	// update preview
+	preview->setTempButtons(plugins, cbUseCustomButtonPositions->isChecked(), dropSite->buttonsLeft, dropSite->buttonsRight );
 }
 
 QString KWinDecorationModule::decorationName( QString& libName )

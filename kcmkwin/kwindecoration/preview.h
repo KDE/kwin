@@ -48,7 +48,7 @@ class KDecorationPreview
         QRegion unobscuredRegion( bool, const QRegion& ) const;
         QRect windowGeometry( bool ) const;
         void setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size);
-        void setTempButtons(KDecorationPlugins* plugin, const QString &left, const QString &right);
+        void setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right);
     protected:
         virtual void resizeEvent( QResizeEvent* );
     private:
@@ -121,10 +121,13 @@ class KDecorationPreviewOptions
         virtual unsigned long updateSettings();
 
         void setCustomBorderSize(BorderSize size);
+        void setCustomTitleButtonsEnabled(bool enabled);
         void setCustomTitleButtons(const QString &left, const QString &right);
 
     private:
         BorderSize customBorderSize;
+        bool customButtonsChanged;
+        bool customButtons;
         QString customTitleButtonsLeft;
         QString customTitleButtonsRight;
     };

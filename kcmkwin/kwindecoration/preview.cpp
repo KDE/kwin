@@ -190,8 +190,9 @@ void KDecorationPreview::setTempBorderSize(KDecorationPlugins* plugin, KDecorati
         }
     }
 
-void KDecorationPreview::setTempButtons(KDecorationPlugins* plugin, const QString &left, const QString &right)
+void KDecorationPreview::setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right)
     {
+    options->setCustomTitleButtonsEnabled(customEnabled);
     options->setCustomTitleButtons(left, right);
     if (plugin->factory()->reset(KDecorationDefines::SettingButtons) )
         {
@@ -426,6 +427,8 @@ void KDecorationPreviewBridge::grabXServer( bool )
 KDecorationPreviewOptions::KDecorationPreviewOptions()
     {
     customBorderSize = BordersCount; // invalid
+    customButtonsChanged = false; // invalid
+    customButtons = true;
     customTitleButtonsLeft = QString::null; // invalid
     customTitleButtonsRight = QString::null; // invalid
 
@@ -448,6 +451,8 @@ unsigned long KDecorationPreviewOptions::updateSettings()
     // set custom border size/buttons
     if (customBorderSize != BordersCount)
         d->border_size = customBorderSize;
+    if (customButtonsChanged)
+        d->custom_button_positions = customButtons;
     if (!customTitleButtonsLeft.isNull() )
         d->title_buttons_left = customTitleButtonsLeft;
     if (!customTitleButtonsRight.isNull() )
@@ -462,6 +467,14 @@ void KDecorationPreviewOptions::setCustomBorderSize(BorderSize size)
 
     updateSettings();
     }
+
+void KDecorationPreviewOptions::setCustomTitleButtonsEnabled(bool enabled)
+{
+    customButtonsChanged = true;
+    customButtons = enabled;
+
+    updateSettings();
+}
 
 void KDecorationPreviewOptions::setCustomTitleButtons(const QString &left, const QString &right)
     {
