@@ -2885,10 +2885,10 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
          for (l = clients.begin();l != clients.end();++l )
          {
             if ((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
-               !(*l)->isIconified() 
-#if 0		
-		&& (*l)->transientFor() == None 
-#endif		
+               !(*l)->isIconified()
+#if 0
+		&& (*l)->transientFor() == None
+#endif
 		&& (*l) != c )
             {
                lx = (*l)->x();
@@ -3643,6 +3643,11 @@ QRect Workspace::clientArea(clientAreaOption opt)
     return area.intersect(rect);
 }
 
+// ### KDE3: remove me!
+QRect Workspace::clientArea()
+{
+    return clientArea( MaximizeArea );
+}
 
 void Workspace::loadDesktopSettings()
 {
@@ -3730,5 +3735,5 @@ void Workspace::checkStartOnDesktop( WId w )
     if( info.desktop() == 0 )
         info.setDesktop( data.desktop());
 }
-    
+
 #include "workspace.moc"

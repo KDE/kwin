@@ -115,7 +115,10 @@ public:
 
     enum clientAreaOption { PlacementArea, MovementArea, MaximizeArea };
 
-    QRect clientArea(clientAreaOption opt = MaximizeArea);
+
+    // default is MaximizeArea
+    QRect clientArea();  // ### KDE3: remove me!
+    QRect clientArea(clientAreaOption);
 
     void removeClient( Client* );
 
