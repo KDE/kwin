@@ -563,6 +563,12 @@ ClientList Workspace::ensureStackingOrder( const ClientList& list ) const
 // there may be some special cases where this rule shouldn't be enfored
 bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* transient )
     {
+    // When topmenu's mainwindow becomes active, topmenu is raised and shown.
+    // They also belong to the Dock layer. This makes them to be very high.
+    // Therefore don't keep group transients above them, otherwise this would move
+    // group transients way too high.
+    if( mainwindow->isTopMenu() && transient->groupTransient())
+        return false;
     return true;
     // #63223 - don't keep transients above docks, because the dock is kept high,
     // and e.g. dialogs for them would be too high too
