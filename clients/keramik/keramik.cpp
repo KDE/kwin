@@ -213,7 +213,7 @@ void KeramikHandler::createPixmaps()
 	int fontHeight = QFontMetrics(options()->font(true)).height();
 	if (fontHeight > heightOffset + 20)
 		heightOffset = fontHeight - 20;
-	
+
 	QString size = (heightOffset < 8) ? "" : (heightOffset < 20) ? "-large" : "-huge";
 
 	QColor titleColor, captionColor, buttonColor;
@@ -364,7 +364,7 @@ void KeramikHandler::createPixmaps()
 	pretile( inactiveTiles[ GrabBarCenter ], 128, Qt::Horizontal );
 	pretile( inactiveTiles[ BorderLeft ], 128, Qt::Vertical );
 	pretile( inactiveTiles[ BorderRight ], 128, Qt::Vertical );
-	
+
 	if (heightOffset > 0) {
 		addHeight (heightOffset, activeTiles[TitleLeft]);
 		addHeight (heightOffset, activeTiles[TitleCenter]);
@@ -375,7 +375,7 @@ void KeramikHandler::createPixmaps()
 		addHeight (heightOffset, activeTiles[CaptionLargeLeft]);
 		addHeight (heightOffset, activeTiles[CaptionLargeCenter]);
 		addHeight (heightOffset, activeTiles[CaptionLargeRight]);
-	
+
 		addHeight (heightOffset, inactiveTiles[TitleLeft]);
 		addHeight (heightOffset, inactiveTiles[TitleCenter]);
 		addHeight (heightOffset, inactiveTiles[TitleRight]);
@@ -383,16 +383,16 @@ void KeramikHandler::createPixmaps()
 		addHeight (heightOffset, inactiveTiles[CaptionSmallCenter]);
 		addHeight (heightOffset, inactiveTiles[CaptionSmallRight]);
 	}
-	
+
 	if (widthOffset > 0) {
 		addWidth (widthOffset, activeTiles[BorderLeft], true, activeTiles[GrabBarCenter]);
 		addWidth (widthOffset, activeTiles[BorderRight], false, activeTiles[GrabBarCenter]);
 		addWidth (widthOffset, inactiveTiles[BorderLeft], true, inactiveTiles[GrabBarCenter]);
 		addWidth (widthOffset, inactiveTiles[BorderRight], false, inactiveTiles[GrabBarCenter]);
-		
+
 		if (largeGrabBars)
 			widthOffset = widthOffset*3/2;
-		
+
 		addHeight (widthOffset, activeTiles[GrabBarLeft]);
 		addHeight (widthOffset, activeTiles[GrabBarCenter]);
 		addHeight (widthOffset, activeTiles[GrabBarRight]);
@@ -426,15 +426,15 @@ void KeramikHandler::addWidth (int width, QPixmap *&pix, bool left, QPixmap *bot
 	tmp->fill ();
 	QPainter p;
 	p.begin (tmp);
-	
+
 	for (int i = 0; i < h; i++)
 		p.drawPixmap (0, i, *bottomPix, i%2, 0, w,1);
-	
+
 	if (left)
 		p.drawPixmap(0, 0, *pix);
 	else
 		p.drawPixmap(width, 0, *pix);
-	
+
 	p.end();
 
 	delete pix;
@@ -1599,9 +1599,6 @@ void KeramikClient::borders( int& left, int& right, int& top, int& bottom ) cons
 	right  = rightBorderWidth;
 	top    = titleBarHeight;
 	bottom = grabBarHeight;
-
-	if ( isShade())
-		bottom = 0;
 
 	if ( ( maximizeMode() & MaximizeHorizontal ) && !options()->moveResizeMaximizedWindows())
 		left = right = 0;
