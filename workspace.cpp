@@ -2114,7 +2114,7 @@ void Workspace::desktopPopupAboutToShow()
     desk_popup->insertSeparator( -1 );
     int id;
     for ( int i = 1; i <= numberOfDesktops(); i++ ) {
-	id = desk_popup->insertItem( QString("&%1  %2").arg(i).arg( desktopName(i) ) );
+	id = desk_popup->insertItem( QString("&%1  %2").arg(i).arg( desktopName(i) ), i );
 	if ( popup_client && !popup_client->isSticky() && popup_client->desktop()  == i )
 	    desk_popup->setItemChecked( id, TRUE );
     }
@@ -2522,7 +2522,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
  */
 void Workspace::slotResetAllClients()
 {
- 
+
     ClientList stack = stacking_order;
     Client* active = activeClient();
     block_focus = TRUE;
