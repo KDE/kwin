@@ -534,7 +534,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
 void Client::addTransient( Client* cl )
     {
     assert( !transients_list.contains( cl ));
-    assert( cl != this );
+    Q_ASSERT( cl != this );
     transients_list.append( cl );
 //    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
 //    kdDebug() << kdBacktrace() << endl;
