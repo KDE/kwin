@@ -756,6 +756,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     delete session;
 
     sendSyntheticConfigureNotify();
+    workspace()->clientReady( this ); // will call Workspace::propagateClients()
 
     if ( showMe && !doNotShow ) {
 	Events::raise( isTransient() ? Events::TransNew : Events::New );

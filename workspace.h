@@ -133,6 +133,8 @@ public:
     void raiseOrLowerClient( Client * );
 
     void clientHidden( Client*  );
+    
+    void clientReady( Client* );
 
     /**
      * Returns the current virtual desktop of this workspace

@@ -495,7 +495,6 @@ bool Workspace::workspaceEvent( XEvent * e )
             }
         }
         if ( c ) {
-            propagateClients();
             bool result = c->windowEvent( e );
             if ( c == desktop_client )
                 setDesktopClient( c );
@@ -2171,6 +2170,14 @@ bool Workspace::netCheck( XEvent* e )
         saveDesktopSettings();
 
     return dirty != 0;
+}
+
+/*!
+  Called when a newly mapped client is ready ( has properties set correctly )
+ */
+void Workspace::clientReady( Client* )
+{
+    propagateClients();
 }
 
 /*!
