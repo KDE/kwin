@@ -56,7 +56,6 @@ public:
 protected:
     virtual void resizeEvent();
     virtual void paintEvent(QPaintEvent *e);
-    virtual void showEvent(QShowEvent *);
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
 
     virtual void maximizeChange();
