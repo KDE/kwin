@@ -279,7 +279,7 @@ Workspace::Workspace( bool restore )
 	    if ( info->sessionId.isEmpty() && !info->wmCommand.isEmpty() ) {
 		KShellProcess proc;
 		proc << QString::fromLatin1( info->wmCommand );
-		proc.start(KShellProcess::DontCare);	
+		proc.start(KShellProcess::DontCare);
 	    }
 	}
     }
@@ -300,7 +300,7 @@ void Workspace::init()
 	NET::WorkArea |
 	NET::CloseWindow |
 	NET::DesktopNames |
-	
+
 	NET::WMName |
 	NET::WMDesktop |
 	NET::WMWindowType |
@@ -311,7 +311,7 @@ void Workspace::init()
 	NET::WMPid |
 	NET::WMKDESystemTrayWinFor
 	;
-	
+
     rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
 
     loadDesktopSettings();
@@ -432,16 +432,16 @@ bool Workspace::workspaceEvent( XEvent * e )
  	    return TRUE;
 
 	return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
-	
+
     case MapNotify:
 
 	return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
-	
+
     case ReparentNotify:
 	c = findClient( e->xreparent.window );
 	if ( c )
 	    (void) c->windowEvent( e );
-	
+
 	//do not confuse Qt with these events. After all, _we_ are the
 	//window manager who does the reparenting.
 	return TRUE;
@@ -1337,7 +1337,10 @@ void Workspace::smartPlacement(Client* c){
 		       (cyt < yb) && (cyb > yt)) {
 			xl = QMAX(cxl, xl); xr = QMIN(cxr, xr);
 			yt = QMAX(cyt, yt); yb = QMIN(cyb, yb);
-			overlap += (xr - xl) * (yb - yt);
+                        if((*l)->staysOnTop())
+                            overlap += 16 * (xr - xl) * (yb - yt);
+                        else
+                            overlap += (xr - xl) * (yb - yt);
 		    }
 		}
 	    }
@@ -1842,7 +1845,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 	}
 	current_desktop = new_desktop;
 	rootInfo->setCurrentDesktop( current_desktop ); // propagate befor the shows below
-	
+
 	for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	    if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
 		(*it)->show();
@@ -1860,26 +1863,26 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
     if ( options->focusPolicyIsReasonable()) {
 	// Search in focus chain
-	
+
 	if ( focus_chain.contains( old_active_client ) && old_active_client->isVisible() ) {
 	    c = old_active_client;
 	    active_client = c; // the requestFocus below will fail, as the client is already active
 	}
-	
+
 	if ( !c ) {
 	    for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
 		if ( (*it)->isVisible() && !(*it)->isSticky() ) {
 		    c = *it;
-		    break;	
+		    break;
 		}
 	    }
 	}
-	
+
 	if ( !c ) {
 	    for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
 		if ( (*it)->isVisible() ) {
 		    c = *it;
-		    break;	
+		    break;
 		}
 	    }
 	}
@@ -2593,7 +2596,7 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
 	    e.state = state;
 	    e.button = button;
 	    XSendEvent( qt_xdisplay(), w, TRUE, ButtonPressMask, (XEvent*)&e );
-	
+
 	    if ( type == EmuPress ) {
 		switch ( button ) {
 		case 2:
@@ -2661,25 +2664,25 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 	if ( !mouse_emulation_state )
 	    mouse_emulation_window = getMouseEmulationWindow();
 	if ( (mouse_emulation_state & Button1Mask) == 0 )
-	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );		
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );
 	if ( !is_shift )
-	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );		
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );
 	break;
     case XK_F2:
 	if ( !mouse_emulation_state )
 	    mouse_emulation_window = getMouseEmulationWindow();
 	if ( (mouse_emulation_state & Button2Mask) == 0 )
-	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button2, mouse_emulation_state );		
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button2, mouse_emulation_state );
 	if ( !is_shift )
-	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button2, mouse_emulation_state );		
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button2, mouse_emulation_state );
 	break;
     case XK_F3:
 	if ( !mouse_emulation_state )
 	    mouse_emulation_window = getMouseEmulationWindow();
 	if ( (mouse_emulation_state & Button3Mask) == 0 )
-	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button3, mouse_emulation_state );		
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button3, mouse_emulation_state );
 	if ( !is_shift )
-	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button3, mouse_emulation_state );		
+	    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button3, mouse_emulation_state );
 	break;
     case XK_Return:
     case XK_space:
@@ -2689,8 +2692,8 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 	    if ( !mouse_emulation_state ) {
 		// nothing was pressed, fake a LMB click
 		mouse_emulation_window = getMouseEmulationWindow();
-		mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );		
-		mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );		
+		mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );
+		mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );
 	    } else { // release all
 		if ( mouse_emulation_state & Button1Mask )
 		    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );
@@ -2711,7 +2714,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 
     QCursor::setPos( pos );
     if ( mouse_emulation_state )
-	mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0,  mouse_emulation_state );		
+	mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0,  mouse_emulation_state );
     return TRUE;
 
 }
@@ -2842,13 +2845,13 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     QCString wmCommand = c->wmCommand();
 
      for (SessionInfo* info = session.first(); info; info = session.next() ) {
-	
+
 	 // a real session managed client
 	if ( info->sessionId == sessionId &&
 	     ( ( info->windowRole.isEmpty() && windowRole.isEmpty() )
 	       || (info->windowRole == windowRole ) ) )
 	    return session.take();
-	
+
 	// pseudo session management
 	if ( info->sessionId.isEmpty() && !info->wmCommand.isEmpty() &&
 	     info->wmCommand == wmCommand &&
@@ -2889,7 +2892,7 @@ void Workspace::updateClientArea()
 	r.size.height = area.height();
 	for( int i = 1; i <= numberOfDesktops(); i++)
 	    rootInfo->setWorkArea( i, r );
-	
+
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	    if ( (*it)->isMaximized() )
 		(*it)->maximize( Client::MaximizeAdjust );
@@ -2937,7 +2940,7 @@ void Workspace::saveDesktopSettings()
 	    s = defaultvalue;
 	    rootInfo->setDesktopName( i, s.utf8().data() );
 	}
-	
+
 	if (s != defaultvalue) {
    	    c.writeEntry( QString("Name_%1").arg(i), s );
 	} else {
