@@ -12,7 +12,9 @@
 #include <kglobal.h>
 #include <qwhatsthis.h>
 #include <klocale.h>
+#include <qlayout.h>
 #include <qpixmap.h>
+#include <kdialog.h>
 
 extern "C"
 {
@@ -33,43 +35,55 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalogue("kwin_default_config");
 	highcolor = QPixmap::defaultDepth() > 8;
-	gb = new QGroupBox( 1, Qt::Horizontal, 
-		i18n("Decoration Settings"), parent );
 
-	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), gb );
+	dummyWidget = new QWidget( parent );
+	QVBoxLayout *layout = new QVBoxLayout( dummyWidget );
+	layout->setSpacing(KDialog::spacingHint());
+
+	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), dummyWidget );
 	QWhatsThis::add( cbShowStipple, 
 		i18n("When selected, active titlebars are drawn "
 		 "with a stipple (dotted) effect. Otherwise, they are "
 		 "drawn without the stipple."));
-
-	cbShowGrabBar = new QCheckBox( i18n("Draw g&rab bar below windows"), gb );
+	layout->addWidget( cbShowStipple );
+	
+	cbShowGrabBar = new QCheckBox( i18n("Draw g&rab bar below windows"), dummyWidget );
 	QWhatsThis::add( cbShowGrabBar, 
 		i18n("When selected, decorations are drawn with a \"grab bar\" "
 		"below windows. Otherwise, no grab bar is drawn."));
+	layout->addWidget( cbShowGrabBar );
 
 	// Only show the gradient checkbox for highcolor displays
 	if (highcolor)
 	{
-		cbUseGradients = new QCheckBox( i18n("Draw gr&adients"), gb );
+		cbUseGradients = new QCheckBox( i18n("Draw gr&adients"), dummyWidget );
 		QWhatsThis::add( cbUseGradients, 
 			i18n("When selected, decorations are drawn with gradients "
 			"for highcolor displays, otherwise no gradients are drawn.") );
+		layout->addWidget(cbUseGradients);
+	}
+	else
+	{
+		cbUseGradients = 0L;
 	}
 
 	// Allow titlebar height customization
-	gbSlider = new QGroupBox( 1, Qt::Horizontal, i18n("TitleBar Height"), gb );
+	gbSlider = new QGroupBox( 1, Qt::Horizontal, i18n("TitleBar Height"), dummyWidget );
 	titleBarSizeSlider = new QSlider(0, 2, 1, 0, QSlider::Horizontal, gbSlider);
 	QWhatsThis::add( titleBarSizeSlider, 
 		i18n("By adjusting this slider, you can modify " 
 		"the height of the titlebar to make room for larger fonts."));
 
 	hbox = new QHBox(gbSlider);
-	hbox->setSpacing(6);
+	hbox->setSpacing(KDialog::spacingHint());
 	label1 = new QLabel( i18n("Normal"), hbox );
 	label2 = new QLabel( i18n("Large"), hbox );
 	label2->setAlignment( AlignHCenter );
 	label3 = new QLabel( i18n("Huge"), hbox );
 	label3->setAlignment( AlignRight );
+
+	layout->addWidget(gbSlider);
+	layout->addStretch();
 	
 	// Load configuration options
 	load( conf );
@@ -84,15 +98,12 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	if (highcolor)
 		connect( cbUseGradients, SIGNAL(clicked()), 
 				 this, SLOT(slotSelectionChanged()) );
-
-	// Make the widgets visible in kwindecoration
-	gb->show();
 }
 
 
 KDEDefaultConfig::~KDEDefaultConfig()
 {
-	delete gb;
+	delete dummyWidget;
 }
 
 
