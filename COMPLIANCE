@@ -131,12 +131,7 @@ _NET_WM_VISIBLE_ICON_NAME	window property			PARTIAL
         | set by the WM only if it uses different one than               |
         | _NET_WM_ICON_NAME. Since KWin doesn't use it at all, it's ok.  |
 	+----------------------------------------------------------------+
-_NET_WM_DESKTOP			window property + message	PARTIAL
-	+----------------------------------------------------------------+
-        | After the WM_Sn (ICCCM) manager selection is implemented, it   |
-        | should be checked that the property is removed on withdrawal,  |
-        | but not on shutdown.                                           |
-	+----------------------------------------------------------------+
+_NET_WM_DESKTOP			window property + message	COMPLETE
 _NET_WM_WINDOW_TYPE		window property			PARTIAL
 	+----------------------------------------------------------------+
         | Set by clients, and the handling of _NET_WM_WINDOW_TYPE itself |
@@ -145,6 +140,11 @@ _NET_WM_WINDOW_TYPE		window property			PARTIAL
   _NET_WM_WINDOW_TYPE_DESKTOP	property value (atom)		COMPLETE
   _NET_WM_WINDOW_TYPE_DOCK	property value (atom)		COMPLETE
   _NET_WM_WINDOW_TYPE_TOOLBAR	property value (atom)		
+	+----------------------------------------------------------------+
+        | KWin knows this type, but in most places treats it as          |
+        | Utility (="tool" windows, hence the obsolete TOOL)             |
+        | Should we show the border for toolbars?                        |
+	+----------------------------------------------------------------+
   _NET_WM_WINDOW_TYPE_MENU	property value (atom)		PARTIAL
 	+----------------------------------------------------------------+
         | Qt doesn't support this type yet.                              |
@@ -164,11 +164,6 @@ _NET_WM_WINDOW_TYPE		window property			PARTIAL
   _NET_WM_WINDOW_TYPE_DIALOG	property value (atom)
   _NET_WM_WINDOW_TYPE_NORMAL	property value (atom)		
 _NET_WM_STATE			window property + message			
-	+----------------------------------------------------------------+
-        | After the WM_Sn (ICCCM) manager selection is implemented, it   |
-        | should be checked that the property is removed on withdrawal,  |
-        | but not on shutdown.                                           |
-	+----------------------------------------------------------------+
   _NET_WM_STATE_MODAL		property value (atom)		
   _NET_WM_STATE_STICKY		property value (atom)		COMPLETE
 	+----------------------------------------------------------------+
@@ -178,8 +173,13 @@ _NET_WM_STATE			window property + message
   _NET_WM_STATE_MAXIMIZED_VERT	property value (atom)		COMPLETE
   _NET_WM_STATE_MAXIMIZED_HORZ	property value (atom)		COMPLETE
   _NET_WM_STATE_SHADED		property value (atom)		
-  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)		
-  _NET_WM_STATE_SKIP_PAGER	property value (atom)		
+  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+        | Support of this state itself is correct, but it's misused      |
+        | for working around(?) some problems with the ICCCM             |
+        | non-compliant handling of WM_STATE (at least I think).         |
+	+----------------------------------------------------------------+
+  _NET_WM_STATE_SKIP_PAGER	property value (atom)		COMPLETE
   _NET_WM_STATE_HIDDEN		property value (atom)		PARTIAL
 	+----------------------------------------------------------------+
 	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
