@@ -59,7 +59,8 @@ Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 Name[zu]=Umhlobiso Wewindi
 
-Comment=Window Border Theme
+Comment=Configure the look and feel of window titles
+Comment[bs]=Tema ruba prozora
 Comment[cs]=Motiv okraje oken
 Comment[de]=Fensterrand-Design
 Comment[es]=Tema de borde de ventana
@@ -67,6 +68,7 @@ Comment[he]=שינוי ערכת הנושא של גבולות החלונות
 Comment[hu]=ablakszegély-változat
 Comment[mt]=Tema tal-bordura tal-windows
 Comment[nb]=Tema for vindusrammer
+Comment[nl]=Vensterrandthema
 Comment[pt_BR]= Tema da Borda da Janela
 Comment[sv]=Tema för fönsterkanter
 
