@@ -135,6 +135,9 @@ public:
     bool staysOnTop() const;
     void setStaysOnTop( bool );
 
+    bool skipTaskbar() const;
+    void setSkipTaskbar( bool );
+    
     bool storeSettings() const;
     void setStoreSettings( bool );
 
@@ -411,6 +414,11 @@ inline Client::MaximizeMode Client::maximizeMode() const
 inline bool Client::staysOnTop() const
 {
     return stays_on_top;
+}
+
+inline bool Client::skipTaskbar() const
+{
+    return skip_taskbar;
 }
 
 inline bool Client::storeSettings() const

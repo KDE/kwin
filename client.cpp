@@ -72,6 +72,8 @@ public:
 	    if ( m_client->staysOnTop() )
 		m_client->workspace()->raiseClient( m_client );
 	}
+        if( mask & NET::SkipTaskbar )
+            m_client->setSkipTaskbar( ( state & NET::SkipTaskbar ) != 0 );
     }
 private:
     KWinInternal::Client * m_client;
@@ -710,6 +712,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	setSticky( session->sticky );
 	setShade( session->shaded );
 	setStaysOnTop( session->staysOnTop );
+	setSkipTaskbar( session->skipTaskbar );
 	maximize( (MaximizeMode) session->maximize );
 	geom_restore = session->restore;
     } else {
@@ -2232,6 +2235,15 @@ void Client::setStaysOnTop( bool b )
 	return;
     stays_on_top = b;
     info->setState( b?NET::StaysOnTop:0, NET::StaysOnTop );
+}
+
+
+void Client::setSkipTaskbar( bool b )
+{
+    if ( b == skipTaskbar() )
+	return;
+    skip_taskbar = b;
+    info->setState( b?NET::SkipTaskbar:0, NET::SkipTaskbar );
 }
 
 

@@ -2917,6 +2917,7 @@ void Workspace::storeSession( KConfig* config )
             config->writeEntry( QString("sticky")+n, c->isSticky() );
             config->writeEntry( QString("shaded")+n, c->isShade() );
             config->writeEntry( QString("staysOnTop")+n, c->staysOnTop() );
+ 	    config->writeEntry( QString("skipTaskbar")+n, c->skipTaskbar() );
         }
     }
     config->writeEntry( "count", count );
@@ -2949,6 +2950,7 @@ void Workspace::loadSessionInfo()
         info->sticky = config->readBoolEntry( QString("sticky")+n, FALSE );
         info->shaded = config->readBoolEntry( QString("shaded")+n, FALSE );
         info->staysOnTop = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
+ 	info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
     }
 }
 
@@ -2972,6 +2974,7 @@ void Workspace::loadFakeSessionInfo()
         info->sticky = config->readBoolEntry( QString("sticky")+n, FALSE );
         info->shaded = config->readBoolEntry( QString("shaded")+n, FALSE );
         info->staysOnTop = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
+ 	info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
     }
 }
 
@@ -2991,6 +2994,7 @@ void Workspace::storeFakeSessionInfo( Client* c )
     info->sticky = c->isSticky();
     info->shaded = c->isShade();
     info->staysOnTop = c->staysOnTop();
+    info->skipTaskbar = c->skipTaskbar();
 }
 
 void Workspace::writeFakeSessionInfo()
@@ -3011,6 +3015,7 @@ void Workspace::writeFakeSessionInfo()
         config->writeEntry( QString("sticky")+n, info->sticky );
         config->writeEntry( QString("shaded")+n, info->shaded );
         config->writeEntry( QString("staysOnTop")+n, info->staysOnTop );
+ 	config->writeEntry( QString("skipTaskbar")+n, info->skipTaskbar );
     }
     config->writeEntry( "count", count );
 }

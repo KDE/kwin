@@ -70,6 +70,7 @@ struct SessionInfo
     bool sticky;
     bool shaded;
     bool staysOnTop;
+    bool skipTaskbar;
 };
 
 
