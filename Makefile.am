@@ -13,7 +13,7 @@ kwin_la_LDFLAGS = $(all_libraries) -module -avoid-version
 
 include_HEADERS = KWinInterface.h
 
-kwin_SOURCES = dummy.cpp
+kwin_SOURCES = kwin_main.cpp
 kwin_LDADD = kwin.la
 kwin_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
@@ -30,7 +30,4 @@ data_DATA= eventsrc
 
 sounddir= $(kde_sounddir)
 sound_DATA = pop.wav
-
-dummy.cpp:
-	echo 'extern "C" { int kdemain(int, char *[]);} int main(int c, char *v[]) { return kdemain(c,v); }' > dummy.cpp
 
