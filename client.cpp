@@ -1187,7 +1187,9 @@ bool Client::windowEvent( XEvent * e)
             break; // we don't care
         if ( isShade() )
             break; // we neither
-        if ( e->xfocus.detail != NotifyNonlinear )
+        if ( e->xfocus.detail != NotifyNonlinear
+            && e->xfocus.detail != NotifyNonlinearVirtual )
+            // SELI check all this
             return TRUE; // hack for motif apps like netscape
         if ( QApplication::activePopupWidget() )
             break;
