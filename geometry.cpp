@@ -69,7 +69,7 @@ void Workspace::updateClientArea( bool force )
          i <= numberOfDesktops();
          ++i )
          new_areas[ i ] = all;
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
         {
         QRect r = (*it)->adjustedClientArea( all );
         if( r == all )
@@ -89,7 +89,7 @@ void Workspace::updateClientArea( bool force )
          ++i )
         if( workarea[ i ] != new_areas[ i ] )
             changed = true;
-    if ( changed ) 
+    if ( changed )
         {
         delete[] workarea;
         workarea = new_areas;
@@ -108,7 +108,7 @@ void Workspace::updateClientArea( bool force )
              it != clients.end();
              ++it)
             (*it)->checkWorkspacePosition();
-        }    
+        }
     delete[] new_areas;
     }
 
@@ -132,7 +132,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     QRect rect = QApplication::desktop()->geometry();
     QDesktopWidget *desktopwidget = KApplication::desktop();
 
-    switch (opt) 
+    switch (opt)
         {
         case MaximizeArea:
         case MaximizeFullArea:
@@ -304,7 +304,7 @@ void Workspace::cascadeDesktop()
     Q_ASSERT( block_stacking_updates == 0 );
     ClientList::ConstIterator it(stackingOrder().begin());
     bool re_init_cascade_at_first_client = true;
-    for (; it != stackingOrder().end(); ++it) 
+    for (; it != stackingOrder().end(); ++it)
         {
         if((!(*it)->isOnDesktop(currentDesktop())) ||
            ((*it)->isMinimized())                  ||
@@ -325,7 +325,7 @@ void Workspace::cascadeDesktop()
 void Workspace::unclutterDesktop()
     {
     ClientList::Iterator it(clients.fromLast());
-    for (; it != clients.end(); --it) 
+    for (; it != clients.end(); --it)
         {
         if((!(*it)->isOnDesktop(currentDesktop())) ||
            ((*it)->isMinimized())                  ||
@@ -596,7 +596,7 @@ QSize Client::sizeForClientSize( const QSize& wsize, bool ignore_height) const
         }
     w = QMIN( max_size.width(), w );
     h = QMIN( max_size.height(), h );
-    w = QMAX( min_size.width(), w );    
+    w = QMAX( min_size.width(), w );
     h = QMAX( min_size.height(), h );
 
     int width_inc = xSizeHint.width_inc;
@@ -764,12 +764,12 @@ const QPoint Client::calculateGravitation( bool invert, int gravity ) const
     {
     int dx, dy;
     dx = dy = 0;
-    
+
     if( gravity == 0 ) // default (nonsense) value for the argument
         gravity = xSizeHint.win_gravity;
 
 // dx, dy specify how the client window moves to make space for the frame
-    switch (gravity) 
+    switch (gravity)
         {
         case NorthWestGravity: // move down right
         default:
@@ -831,7 +831,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
     {
     if( gravity == 0 ) // default (nonsense) value for the argument
         gravity = xSizeHint.win_gravity;
-    if( value_mask & ( CWX | CWY )) 
+    if( value_mask & ( CWX | CWY ))
         {
         QPoint new_pos = calculateGravitation( true, gravity ); // undo gravitation
         if ( value_mask & CWX )
@@ -846,7 +846,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         // manager
         if ( ox == 0 && oy == 0 &&
              nx == x() + clientPos().x() &&
-             ny == y() + clientPos().y() ) 
+             ny == y() + clientPos().y() )
             {
             nx = x();
             ny = y();
@@ -860,7 +860,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if ( value_mask & CWHeight )
             nh = rh;
         QSize ns = sizeForClientSize( QSize( nw, nh ) );
-        
+
         // TODO what to do with maximized windows?
         if ( maximizeMode() != MaximizeFull
             || ns != size())
@@ -887,7 +887,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if ( value_mask & CWHeight )
             nh = rh;
         QSize ns = sizeForClientSize( QSize( nw, nh ) );
-        
+
         if( ns != size())  // don't restore if some app sets its own size again
             {
             resetMaximize();
@@ -972,7 +972,7 @@ void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
         }
     setGeometry( newx, newy, w, h, force );
     }
-    
+
 // _NET_MOVERESIZE_WINDOW
 void Client::NETMoveResizeWindow( int flags, int x, int y, int width, int height )
     {
@@ -988,7 +988,7 @@ void Client::NETMoveResizeWindow( int flags, int x, int y, int width, int height
         value_mask |= CWHeight;
     configureRequest( value_mask, x, y, width, height, gravity );
     }
-    
+
 /*!
   Returns whether the window is resizable or has a fixed size.
  */
@@ -1181,7 +1181,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
     QRect clientArea = workspace()->clientArea( MaximizeArea, this );
 
-    switch (max_mode) 
+    switch (max_mode)
         {
 
         case MaximizeVertical:
@@ -1258,7 +1258,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
             break;
             }
 
-        case MaximizeFull: 
+        case MaximizeFull:
             {
             QSize adjSize = adjustedSize(clientArea.size());
             QRect r = QRect(clientArea.topLeft(), adjSize);
@@ -1286,6 +1286,9 @@ void Client::resetMaximize()
     Notify::raise( Notify::UnMaximize );
     info->setState( 0, NET::Max );
     updateAllowedActions();
+    if( decoration != NULL )
+        decoration->borders( border_left, border_right, border_top, border_bottom );
+    setGeometry( geometry(), ForceGeometrySet );
     if( decoration != NULL )
         decoration->maximizeChange();
     }
@@ -1437,7 +1440,7 @@ void Client::finishMoveResize( bool cancel )
     leaveMoveResize();
     if( cancel )
         setGeometry( initialMoveResizeGeom );
-    else    
+    else
         setGeometry( moveResizeGeom );
 // FRAME    update();
     Notify::raise( isResize() ? Notify::ResizeEnd : Notify::MoveEnd );
@@ -1471,7 +1474,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         || ( mode != Center && ( isShade() || !isResizable())))
         return;
 
-    if ( !moveResizeMode ) 
+    if ( !moveResizeMode )
         {
         QPoint p( QPoint( x, y ) - moveOffset );
         if (p.manhattanLength() >= 6)
@@ -1494,7 +1497,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     if( !unrestrictedMoveResize )
         {
         // width/height change with opaque resizing, use the initial ones
-        int init_width = initialMoveResizeGeom.width(); 
+        int init_width = initialMoveResizeGeom.width();
         int init_height = initialMoveResizeGeom.height();
         // how much must remain visible when moved away in that direction
         const int left_limit = 100 + border_right;
@@ -1528,7 +1531,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                geometry().bottom() - mpsize.height() + 1 );
 
     QRect previousMoveResizeGeom = moveResizeGeom;
-    switch ( mode ) 
+    switch ( mode )
         {
         case TopLeft2:
             moveResizeGeom =  QRect( mp, geometry().bottomRight() ) ;
@@ -1566,7 +1569,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
-    if ( isResize() && moveResizeGeom.size() != previousMoveResizeGeom.size() ) 
+    if ( isResize() && moveResizeGeom.size() != previousMoveResizeGeom.size() )
         {
         if (moveResizeGeom.bottom() < desktopArea.top()+marge)
             moveResizeGeom.setBottom(desktopArea.top()+marge);
@@ -1578,19 +1581,19 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             moveResizeGeom.setLeft(desktopArea.right()-marge);
 
         moveResizeGeom.setSize( adjustedSize( moveResizeGeom.size() ) );
-        if  (options->resizeMode == Options::Opaque ) 
+        if  (options->resizeMode == Options::Opaque )
             {
             setGeometry( moveResizeGeom );
             positionGeometryTip();
             }
-        else if ( options->resizeMode == Options::Transparent ) 
+        else if ( options->resizeMode == Options::Transparent )
             {
             clearbound();  // it's necessary to move the geometry tip when there's no outline
             positionGeometryTip(); // shown, otherwise it would cause repaint problems in case
             drawbound( moveResizeGeom ); // they overlap; the paint event will come after this,
             }                               // so the geometry tip will be painted above the outline
         }
-    else if ( isMove() && moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft() ) 
+    else if ( isMove() && moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft() )
         {
         moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
         if (moveResizeGeom.bottom() < desktopArea.top()+marge)
@@ -1601,7 +1604,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             moveResizeGeom.moveTopRight( QPoint( desktopArea.left()+marge, moveResizeGeom.top()));
         if (moveResizeGeom.left() > desktopArea.right()-marge)
             moveResizeGeom.moveTopLeft( QPoint( desktopArea.right()-marge, moveResizeGeom.top()));
-        switch ( options->moveMode ) 
+        switch ( options->moveMode )
             {
             case Options::Opaque:
                 move( moveResizeGeom.topLeft() );
