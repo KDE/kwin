@@ -94,7 +94,7 @@ void Options::reload()
         colors[ButtonFg] =  Qt::black;
     else
         colors[ButtonFg] = Qt::white;
-    colors[ButtonFg] = config->readColorEntry("activeTitleBtnFullFg",
+    colors[ButtonFg] = config->readColorEntry("activeTitleBtnFg",
                                               &colors[ButtonFg]);
 
     // single color button configuration
@@ -158,7 +158,7 @@ void Options::reload()
                                &colors[ButtonBlend+KWINCOLORS]);
 
     colors[ButtonFg+KWINCOLORS] = config->
-        readColorEntry("inactiveTitleBtnFullFg", &colors[ButtonFg]);
+        readColorEntry("inactiveTitleBtnFg", &colors[ButtonFg]);
 
     // single color
     colors[ButtonSingleColor+KWINCOLORS] = config->
