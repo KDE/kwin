@@ -195,7 +195,16 @@ public:
 
 
 
+    /**
+     * The Client* argument is ignored, the popup is always returned
+     * for the active client
+     */
     QPopupMenu* clientPopup( Client* );
+
+    /**
+     * @deprecated Use slotWindowOperations() instead.
+     */
+    // KDE4 remove me - and it's also in the DCOP interface :(
     void showWindowMenuAt( unsigned long id, int x, int y );
 
     void iconifyOrDeiconifyTransientsOf( Client* );
@@ -361,7 +370,8 @@ private:
     int number_of_desktops;
     QMemArray<int> desktop_focus_chain;
 
-    QGuardedPtr<Client> popup_client;
+    // KDE4 remove me - unused
+    QGuardedPtr<Client> popup_client__;
 
     void loadSessionInfo();
 
