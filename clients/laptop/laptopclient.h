@@ -13,11 +13,11 @@ class QSpacerItem;
 class SystemButton : public QButton
 {
 public:
-    SystemButton(QWidget *parent=0, const char *name=0,
+    SystemButton(int w, int h, QWidget *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
-    QSize sizeHint() const;
+    //QSize sizeHint() const;
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}

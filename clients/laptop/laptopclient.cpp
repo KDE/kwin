@@ -99,27 +99,31 @@ static void create_pixmaps()
 }
 
 
-SystemButton::SystemButton(QWidget *parent, const char *name,
+SystemButton::SystemButton(int w, int h, QWidget *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
 {
-    aBackground.resize(16, 12);
-    iBackground.resize(16, 12);
+    setFixedSize(w, h);
+    aBackground.resize(w, h);
+    iBackground.resize(w, h);
     reset();
-    resize(16, 12);
+    //resize(22, 12);
 
     if(bitmap)
         setBitmap(bitmap);
 }
 
+/*
 QSize SystemButton::sizeHint() const
 {
-    return(QSize(16, 12));
-}
+    return(QSize(22, 12));
+}*/
 
 void SystemButton::reset()
 {
     QPainter p;
+    int w = width();
+    int h = height();
     QColor hColor(options->color(Options::ButtonBg, true));
     QColor lColor(options->color(Options::ButtonBlend, true));
 
@@ -127,11 +131,11 @@ void SystemButton::reset()
                             KPixmapEffect::DiagonalGradient);
     p.begin(&aBackground);
     p.setPen(options->colorGroup(Options::ButtonBg, false).dark());
-    p.drawLine(0, 0, 15, 0);
-    p.drawLine(0, 0, 0, 11);
+    p.drawLine(0, 0, w-1, 0);
+    p.drawLine(0, 0, 0, w-1);
     p.setPen(options->colorGroup(Options::ButtonBg, false).light());
-    p.drawLine(15, 0, 15, 11);
-    p.drawLine(0, 11, 15, 11);
+    p.drawLine(w-1, 0, w-1, h-1);
+    p.drawLine(0, h-1, w-1, h-1);
     p.end();
 
     hColor = (options->color(Options::ButtonBg, false));
@@ -140,11 +144,11 @@ void SystemButton::reset()
                             KPixmapEffect::DiagonalGradient);
     p.begin(&iBackground);
     p.setPen(options->colorGroup(Options::ButtonBg, false).light());
-    p.drawLine(0, 0, 15, 0);
-    p.drawLine(0, 0, 0, 11);
+    p.drawLine(0, 0, w-1, 0);
+    p.drawLine(0, 0, 0, h-1);
     p.setPen(options->colorGroup(Options::ButtonBg, false).dark());
-    p.drawLine(15, 0, 15, 11);
-    p.drawLine(0, 11, 15, 11);
+    p.drawLine(w-1, 0, w-1, h-1);
+    p.drawLine(0, h-1, w-1, h-1);
     p.end();
 
 
@@ -165,7 +169,9 @@ void SystemButton::drawButton(QPainter *p)
         p->drawPixmap(0, 0, iBackground);
 
     p->setPen(options->color(Options::ButtonFg, isDown()));
-    p->drawPixmap(isDown() ? 5 : 4, isDown() ? 3 : 2, deco);
+    int xOff = (width()-8)/2;
+    int yOff = (height()-8)/2;
+    p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
 }
 
 void LaptopClient::slotReset()
@@ -204,16 +210,16 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(2, 4);
     g->addColSpacing(2, 12);
     
-    button[0] = new SystemButton(this, "close", close_bits);
-    button[1] = new SystemButton(this, "sticky");
+    button[0] = new SystemButton(24, 12, this, "close", close_bits);
+    button[1] = new SystemButton(16, 12, this, "sticky");
     if(isSticky())
         button[1]->setBitmap(unsticky_bits);
     else
         button[1]->setBitmap(sticky_bits);
-    button[2] = new SystemButton(this, "iconify", iconify_bits);
-    button[3] = new SystemButton(this, "maximize", maximize_bits);
+    button[2] = new SystemButton(24, 12, this, "iconify", iconify_bits);
+    button[3] = new SystemButton(24, 12, this, "maximize", maximize_bits);
     if(help){
-        button[4] = new SystemButton(this, "help", question_bits);
+        button[4] = new SystemButton(16, 12, this, "help", question_bits);
         connect( button[4], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
     else
@@ -240,9 +246,10 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     hb->addWidget( button[2]);
     hb->addWidget( button[3]);
 
+    /*
     for ( int i = 0; i < (help ? 5 : 4); i++) {
-        button[i]->setFixedSize(16, 12);
-    }
+        button[i]->setFixedSize(22, 12);
+    }*/
 }
 
 void LaptopClient::resizeEvent( QResizeEvent* e)
@@ -323,7 +330,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawLine(rBtn->x()-1, rBtn->y()+12, x2, rBtn->y()+12);
 
     rBtn = button[0];
-    x2 = button[0]->x()+16;
+    x2 = button[0]->x()+24;
     p.setPen(g.dark());
     p.drawLine(rBtn->x()-1, rBtn->y()-1, x2, rBtn->y()-1);
     p.drawLine(rBtn->x()-1, rBtn->y()-1, rBtn->x()-1, rBtn->y()+12);
