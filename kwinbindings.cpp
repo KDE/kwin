@@ -75,7 +75,7 @@
             0, 0, slotWindowShrinkVertical() );
 
 	keys->insert( "Group:Window Desktop", i18n("Window & Desktop") );
-        DEF2( "Window On All Desktops", I18N_NOOP("Keep Window On All Desktops"),
+        DEF2( "Window On All Desktops", I18N_NOOP("Keep Window on All Desktops"),
             0, 0, slotWindowOnAllDesktops() );
 	DEF( I18N_NOOP("Window to Desktop 1"),                 0, WIN+ALT+Qt::Key_F1, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Desktop 2"),                 0, WIN+ALT+Qt::Key_F2, slotWindowToDesktop(int) );
