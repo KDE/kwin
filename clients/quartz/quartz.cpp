@@ -2,6 +2,7 @@
  *
  * Gallium-Quartz KWin client
  *
+ * Copyright (C) 2005 Sandro Giessl <sandro@giessl.com>
  * Copyright 2001
  *   Karol Szwed <gallium@kde.org>
  *   http://gallium.n3.net/
