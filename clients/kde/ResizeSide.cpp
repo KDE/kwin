@@ -21,7 +21,7 @@
 */
 
 #include <qpixmap.h>
-#include <kstyle.h>
+#include <qstyle.h>
 #include <kapp.h>
 
 #include "ResizeSide.h"
