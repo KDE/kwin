@@ -11,6 +11,7 @@ X-KDE-FactoryName=kwindecoration
 
 Name=Window Decorations
 Name[af]=Venster Versierings
+Name[ar]=ديكور النافذة
 Name[bg]=Декорация на Прозорец
 Name[bs]=Ukrasi prozora
 Name[ca]=Ornaments de la finestra
@@ -52,6 +53,7 @@ Name[zu]=Imihlobiso ye-window
 
 Comment=Configure the look and feel of window titles
 Comment[af]=Konfigureer die kyk en gevoel van venster titels
+Comment[ar]=تعريف شكل و ملمس قائمة العنوان للنافذة
 Comment[bg]=Външен вид заглавия на прозорец
 Comment[bs]=Ovdje možete podesiti izgled i ponašanje naslova prozora
 Comment[ca]=Configura l'aspecte i efecte dels títols de la finestra

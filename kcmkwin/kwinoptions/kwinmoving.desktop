@@ -11,6 +11,7 @@ X-KDE-FactoryName=kwinmoving
 
 Name=Moving
 Name[af]=Beweeg
+Name[ar]=تحريك
 Name[bg]=Преместване
 Name[bs]=Pomjeranje
 Name[ca]=Movent
@@ -52,6 +53,7 @@ Name[zu]=Iyanyakaza
 
 Comment=Configure the way that windows are moved
 Comment[af]=Konfigureer die weg wat vensters word verskuif
+Comment[ar]=تعريف الطريقة التي تتحرك فيها النوافذ
 Comment[bg]=Конфигуриране преместване на прозорец
 Comment[bs]=Podesite način pomjeranja prozora
 Comment[ca]=Aquí podeu configurar els valors per quan es moguin les finestres
