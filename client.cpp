@@ -497,14 +497,15 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
     QRect area = workspace()->clientArea();
 
+    if ( geom == workspace()->geometry() )
+	may_move = FALSE; // don't let fullscreen windows be moved around
+    
     if ( isMapped  || session || isTransient() ) {
 	placementDone = TRUE;
-	if ( geom == workspace()->geometry() )
-	    may_move = FALSE; // don't let fullscreen windows be moved around
     }  else {
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
 	    placementDone = TRUE;
-	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) ) {
+	    if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) { 
 		int tx = geom.x();
 		int ty = geom.y();
 		if ( tx >= 0 && tx < area.x() )
