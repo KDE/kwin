@@ -2601,7 +2601,7 @@ main (int argc, char **argv)
                     win * w = find_win(dpy, ev.xany.window);
                     if (w && w->shapable) 
                     {
-#if 1
+#if 0
 			if (w->shadowSize != 0)
 			{
 			    w->shadowSize = 0;
