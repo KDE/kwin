@@ -151,7 +151,8 @@ public:
      */
     void setClientIsMoving( Client *c );
 
-    void doPlacement( Client* c );
+    void place(Client *c);
+
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
     void lowerClient( Client* c );
@@ -335,13 +336,6 @@ private:
     void propagateSystemTrayWins();
     SystemTrayWindow findSystemTrayWin( WId w );
 
-    //CT needed for cascading+
-    struct CascadingInfo {
-      QPoint pos;
-      int col;
-      int row;
-    };
-
     // desktop names and number of desktops
     void loadDesktopSettings();
     void saveDesktopSettings();
@@ -354,7 +348,7 @@ private:
     // electric borders
     void createBorderWindows();
     void destroyBorderWindows();
-    void electricBorder(XEvent * e); 
+    void electricBorder(XEvent * e);
     void raiseElectricBorders();
 
     // ------------------
@@ -379,7 +373,6 @@ private:
     void loadFakeSessionInfo();
     void storeFakeSessionInfo( Client* c );
     void writeFakeSessionInfo();
-    QValueList<CascadingInfo> cci;
 
     Client* active_client;
     Client* last_active_client;

@@ -135,7 +135,7 @@ public:
      * Normally you don't have to worry. What the WM adds to the startup time
      * is nil compared to the creation of the window itself in the memory
      */
-    enum PlacementPolicy { Random, Smart, Cascade };
+    enum PlacementPolicy { Random, Smart, Cascade, StupidlyCentered, StupidlyZeroCornered };
     PlacementPolicy placement;
 
     bool focusPolicyIsReasonable() {
@@ -325,7 +325,7 @@ public:
 signals:
     /**
      * Emitted when KWin is asked to reconfigure itself.
-     * 
+     *
      * Please note that this signal is obsolete, and provided only for
      * backwards compatibility. It is advisable to use the reset() cdecl.
      * in the style plugin interface instead of connecting to this signal.

@@ -201,9 +201,11 @@ void Options::reload()
     }
 
     val = config->readEntry("Placement","Smart");
-    if (val == "Smart") placement = Smart;
-    else if (val == "Random") placement = Random;
-    else if (val == "Cascade") placement = Cascade;
+    if (val == "Smart")                     placement = Smart;
+    else if (val == "Random")               placement = Random;
+    else if (val == "Cascade")              placement = Cascade;
+    else if (val == "StupidlyCentered")     placement = StupidlyCentered;
+    else if (val == "StupidlyZeroCornered") placement = StupidlyZeroCornered;
 
     animateShade = config->readBoolEntry("AnimateShade", TRUE );
 

@@ -718,7 +718,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     move(gravitate( FALSE ) ); // take the decoration size into account
 
     if ( !placementDone ) {
-        workspace()->doPlacement( this );
+        workspace()->place( this );
         placementDone = TRUE;
     } else if ( windowType() == NET::Normal ) {
         if ( geometry().right() > area.right() && width() < area.width() )
@@ -857,7 +857,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             // window does not stem from a restored session.
             Client* ac = workspace()->activeClient();
 
-            unsigned long usertime = 0;	    
+            unsigned long usertime = 0;
             if ( !isTransient() && !session && ac && !ac->isDesktop() &&
                    ac->resourceClass() != resourceClass() &&
                    ( usertime = userTime() ) > 0 && ac->userTime() > usertime ) {
