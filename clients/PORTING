@@ -1,0 +1,39 @@
+Just a checklist for now, maybe a full HOWTO later.
+
+porting:
+    - note that decorations are ported from HEAD, not from the branch - HEAD may have fixes that are not in the branch
+    - Makefile.am - LDFLAGS, LIBADD, kwin_ -> kwin3_, INCLUDES pro libkwin
+    - .desktop - kwin_ -> kwin3_
+    - KWinButton -> QButton + QToolTip
+    - #include qbutton.h, kdecoration.h, kdecorationfactory.h
+    - Client* -> MyClient* in button class, pass parent->widget() to QButton
+    - inherit from KDecoration instead of Client
+    - no internal kwin #include, no namespace KWinInternal
+    - ctor takes KDecorationBridge* and KDecorationFactory*
+    - WResizeNoErase atd -> pass to createMainWidget()
+    - ctor is empty, all initialization done in init()
+    - createMainWidget() as the fist thing in init(), and widget()->installEventFilter( this )
+    - implement eventFilter()
+    - maximize changes - to flip a value, use maximize( maximizeMode() ^ XYZ ), for full maximize flip
+        use maximizeMode() == MaximizeFull ? maximize( MaximizeRestore ) : maximize( MaximizeFull )
+    - Sticky -> OnAllDesktops
+    - iconify -> minimize
+    - ther's no signal resetClients(), use KDecorationFactory::reset(), KDecorationFactory::resetDecorations(), KDecoration::reset()
+    - often this -> widget() , or prepend widget()-> , sometimes it may be handy to create wrapper functions for e.g. width()
+    - layout is created in ctor, so call createLayout() directly there
+    - options -> options()
+    - no calls to Client::XYZ()
+    - titlebarDblClickOperation() for doubleclick on titlebar
+    - use extern "C" create_factory() returning your KDecorationFactory
+    - init(), deinit(), reset(), create()/allocate() -> KDecorationFactory
+    - reset() - instead of resetAllClients() return true, use argument for change detection, use resetDecorations()
+        for reseting decorations if not requesting recreating of decoration by returning true
+    - activeChange(bool) -> activeChange() + isActive(), etc.
+    - minimumSize()
+    - borders()
+    - contextHelp() -> showContextHelp()
+    - color setting values - prepend Color
+    - buttons may need setCursor( arrowCursor )
+    - windowWrapperShowEvent() is gone
+    - animateIconifyOrDeiconify() -> animateMinimize() - just drop it if it's empty
+    - option settings for colors need Color prefixed

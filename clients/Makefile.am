@@ -1,2 +1,3 @@
-SUBDIRS = default redmond quartz web b2 \
-	modernsystem laptop kwmtheme keramik
+SUBDIRS = test keramik modernsystem default
+#SUBDIRS = default kde1 riscos redmond quartz icewm web b2 \
+#	modernsystem laptop system kwmtheme kstep keramik
