@@ -97,6 +97,10 @@ void DetectDialog::executeDialog()
     widget->class_label->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ")" );
     widget->role_label->setText( role );
     widget->use_role->setEnabled( !role.isEmpty());
+    if( widget->use_role->isEnabled())
+        widget->use_role->setChecked( true );
+    else
+        widget->use_whole_class->setChecked( true );
     if( type == NET::Unknown )
         widget->type_label->setText( i18n( "Unknown - will be treated as Normal Window" ));
     else
