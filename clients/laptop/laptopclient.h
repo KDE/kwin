@@ -21,10 +21,10 @@ namespace Laptop {
 
 class LaptopClient;
 
-class LaptopClientButton : public QButton
+class LaptopButton : public QButton
 {
 public:
-    LaptopClientButton(int w, int h, LaptopClient *parent=0, const char *name=0,
+    LaptopButton(int w, int h, LaptopClient *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL, const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
@@ -85,7 +85,7 @@ private:
 protected slots:
     void slotMaximize();
 private:
-    LaptopClientButton* button[5];
+    LaptopButton* button[5];
     QGridLayout *g;
     QBoxLayout* hb;
     QSpacerItem* titlebar;
