@@ -103,7 +103,7 @@ bool Client::manage( Window w, bool isMapped )
     detectNoBorder();
     fetchName();
     fetchIconicName();
-    getWMHints();
+    getWMHints(); // needs to be done before readTransient() because of reading the group
     readTransient();
     getIcons();
     getWindowProtocols();

@@ -23,6 +23,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include <assert.h>
 
+/*
+ TODO
+ Rename as many uses of 'transient' as possible (hasTransient->hasSubwindow,etc.),
+ or I'll get it backwards in half of the cases again.
+*/
+
 namespace KWinInternal
 {
 
@@ -724,12 +730,31 @@ void Client::checkGroup()
         for( ClientList::Iterator it = transients_list.begin();
              it != transients_list.end();
              )
-            { // it's no longer transient for group transients in the old group
+            { // group transients in the old group are no longer transient for it
             if( (*it)->groupTransient() && (*it)->group() != group())
                 it = transients_list.remove( it );
             else
                 ++it;
             }
+#if 0 // TODO
+        if( groupTransient())
+            {
+            if( workspace()->findGroup( old_group )) // if it still exists
+                { // it's no longer transient for windows in the old group
+                for( ClientList::ConstIterator it = old_group->members().begin();
+                     it != old_group->members().end();
+                     ++it )
+                    (*it)->removeTransient( this );
+                }
+            // and it's transiet for all windows in the new group (this one is the most recent
+            // in the group, so it is transient only for all previous windows)
+            // loops are checked in checkGroupTransients()
+            for( ClientList::ConstIterator it = group()->members().begin();
+                 it != group()->members().end();
+                 ++it )
+                (*it)->addTransient( this );
+            }
+#endif
 #if 0 // this would make group transients transient for window that were mapped later
         for( ClientList::ConstIterator it = group()->members().begin();
              it != group()->members().end();
