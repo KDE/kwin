@@ -30,6 +30,7 @@ static QPixmap* normalize_pix = 0;
 static QPixmap* pinup_pix = 0;
 static QPixmap* pindown_pix = 0;
 static QPixmap* menu_pix = 0;
+static QPixmap* question_mark_pix = 0;
 
 static QPixmap* dis_close_pix = 0;
 static QPixmap* dis_maximize_pix = 0;
@@ -38,8 +39,8 @@ static QPixmap* dis_normalize_pix = 0;
 static QPixmap* dis_pinup_pix = 0;
 static QPixmap* dis_pindown_pix = 0;
 static QPixmap* dis_menu_pix = 0;
+static QPixmap* dis_question_mark_pix = 0;
 
-static QPixmap* question_mark_pix = 0;
 
 static bool pixmaps_created = FALSE;
 
@@ -130,11 +131,15 @@ static void create_pixmaps()
     dis_pindown_pix->setMask(*pindown_pix->mask());
 
     question_mark_pix = new QPixmap(16, 16);
-    aPainter.begin(question_mark_pix);
+    dis_question_mark_pix = new QPixmap(16, 16);
+    aPainter.begin(question_mark_pix); iPainter.begin(dis_question_mark_pix);
     kColorBitmaps(&aPainter, aGrp, 0, 0, 16, 16, true, help_light_bits,
                   NULL, NULL, help_dark_bits, NULL, NULL);
-    aPainter.end();
+    kColorBitmaps(&iPainter, iGrp, 0, 0, 16, 16, true, help_light_bits,
+                  NULL, NULL, help_dark_bits, NULL, NULL);
+    aPainter.end(); iPainter.end();
     question_mark_pix->setMask(QBitmap(16, 16, help_mask_bits, true));
+    dis_question_mark_pix->setMask(*question_mark_pix->mask());
 }
 
 static void delete_pixmaps()
@@ -146,6 +151,7 @@ static void delete_pixmaps()
     delete pinup_pix;
     delete pindown_pix;
     delete menu_pix;
+    delete question_mark_pix;
     delete dis_close_pix;
     delete dis_maximize_pix;
     delete dis_minimize_pix;
@@ -153,7 +159,7 @@ static void delete_pixmaps()
     delete dis_pinup_pix;
     delete dis_pindown_pix;
     delete dis_menu_pix;
-    delete question_mark_pix;
+    delete dis_question_mark_pix;
     pixmaps_created = false;
 }
 
@@ -213,9 +219,9 @@ void StdClient::slotReset()
     button[4]->setIconSet(isActive() ? *maximize_pix : *dis_maximize_pix);
     button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
     if (button[6])
-        button[6]->setIconSet( *question_mark_pix );
+        button[6]->setIconSet(isActive() ? *question_mark_pix : *dis_question_mark_pix);
 
-    setFont(options->font(isActive() ));
+    setFont(options->font(true));
 }
 
 
@@ -260,7 +266,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 	button[6] = new KWinToolButton( this, 0, i18n("Help") );
 	hb->addWidget( button[6] ); // help  button
 	hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
-	button[6]->setIconSet( *question_mark_pix );
+	button[6]->setIconSet( isActive() ? *question_mark_pix : *dis_question_mark_pix);
 	connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
 
@@ -320,6 +326,8 @@ void StdClient::activeChange(bool on)
     button[3]->setIconSet(on ? *minimize_pix : *dis_minimize_pix);
     button[4]->setIconSet(on ? *maximize_pix : *dis_maximize_pix);
     button[5]->setIconSet(on ? *close_pix : *dis_close_pix);
+    if (button[6])
+	button[6]->setIconSet(on ? *question_mark_pix : *dis_question_mark_pix);
     Client::activeChange(on);
 }
 
