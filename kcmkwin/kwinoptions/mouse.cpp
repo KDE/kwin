@@ -41,8 +41,8 @@
 #include "mouse.moc"
 
 
-KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *name)
-  : KCModule(parent, name), config(_config)
+KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *)
+  : KCModule(parent, "kcmkwm"), config(_config)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
   QVBoxLayout *layout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
