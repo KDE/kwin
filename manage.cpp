@@ -416,11 +416,15 @@ bool Client::manage( Window w, bool isMapped )
         if( isNormalWindow())
             Notify::raise( Notify::New );
 
-        bool allow = workspace()->allowClientActivation( this, userTime(), false, session && session->active );
+        bool allow;
+        if( session )
+            allow = session->active && !workspace()->wasUserInteraction();
+        else
+            allow = workspace()->allowClientActivation( this, userTime(), false );
 
         // if session saving, force showing new windows (i.e. "save file?" dialogs etc.)
         // also force if activation is allowed
-        if( !isOnCurrentDesktop() && !isMapped && ( allow || workspace()->sessionSaving()))
+        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving()))
             workspace()->setCurrentDesktop( desktop());
 
         if( isOnCurrentDesktop())

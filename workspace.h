@@ -111,8 +111,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void requestFocus( Client* c, bool force = FALSE );
         void takeActivity( Client* c, int flags, bool handled ); // flags are ActivityFlags
         void handleTakeActivity( Client* c, Time timestamp, int flags ); // flags are ActivityFlags
-        bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false,
-            bool session_active = false );
+        bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false );
         void restoreFocus();
         void gotFocusIn( const Client* );
         void setShouldGetFocus( Client* );
@@ -240,6 +239,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void sessionSaveStarted();
         void sessionSaveDone();
         void setWasUserInteraction();
+        bool wasUserInteraction() const;
         bool sessionSaving() const;
 
         bool managingTopMenus() const;
@@ -647,6 +647,12 @@ inline
 void Workspace::setWasUserInteraction()
     {
     was_user_interaction = true;
+    }
+
+inline
+bool Workspace::wasUserInteraction() const
+    {
+    return was_user_interaction;
     }
 
 inline

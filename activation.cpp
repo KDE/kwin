@@ -454,7 +454,7 @@ void Workspace::setShouldGetFocus( Client* c )
 
 // focus_in -> the window got FocusIn event
 // session_active -> the window was active when saving session
-bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in, bool session_active )
+bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in )
     {
     // options->focusStealingPreventionLevel :
     // 0 - none    - old KWin behaviour, new windows always get focus
@@ -502,9 +502,6 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
     if( level == 3 ) // high
         return false;
     if( time == -1U )  // no time known
-        if( session_active )
-            return !was_user_interaction; // see Client::readUserTimeMapTimestamp()
-        else
         {
         kdDebug( 1212 ) << "Activation: No timestamp at all" << endl;
         if( level == 1 ) // low
@@ -731,7 +728,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
         // it's better not to activate the new one.
         // Unless it was the active window at the time
         // of session saving and there was no user interaction yet,
-        // this check will be done in Workspace::allowClientActiovationTimestamp().
+        // this check will be done in manage().
         if( session )
             return -1U;
         if( ignoreFocusStealing() && act != NULL )
