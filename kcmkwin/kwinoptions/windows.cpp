@@ -575,9 +575,7 @@ void KAdvancedConfig::setXinerama(bool on) {
     xineramaPlacementEnable->setEnabled(on);
     xineramaMaximizeEnable->setEnabled(on);
 #else
-    // Silly way to work around unused variable
-    if (on == on)
-	return;
+    Q_UNUSED(on);
 #endif
 }
 
