@@ -640,13 +640,13 @@ bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
     return bAll;
     }
 
-static
-bool areModKeysDepressed( const KShortcut& cut )
+static bool areModKeysDepressed( const KKeySequence& seq )
     {
-
     uint rgKeySyms[10];
     int nKeySyms = 0;
-    int mod = cut.seq(0).key(0).modFlags();
+    if( seq.isNull())
+	return false;
+    int mod = seq.key(seq.count()-1).modFlags();
 
     if ( mod & KKey::SHIFT )
         {
@@ -677,6 +677,18 @@ bool areModKeysDepressed( const KShortcut& cut )
     return areKeySymXsDepressed( false, nKeySyms,
         rgKeySyms[0], rgKeySyms[1], rgKeySyms[2], rgKeySyms[3],
         rgKeySyms[4], rgKeySyms[5], rgKeySyms[6], rgKeySyms[7] );
+    }
+
+static bool areModKeysDepressed( const KShortcut& cut )
+    {
+    for( int i = 0;
+	 i < cut.count();
+	 ++i )
+	{
+	if( areModKeysDepressed( cut.seq( i )))
+	    return true;
+	}
+    return false;
     }
 
 void Workspace::slotWalkThroughWindows()
