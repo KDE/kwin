@@ -38,7 +38,6 @@
 #include "plastikclient.h"
 #include "plastikbutton.h"
 #include "misc.h"
-#include "shadow.h"
 
 namespace KWinPlastik
 {
@@ -328,20 +327,12 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     if(titleEdgeTop > 0)
     {
         painter.setPen(highlightTop );
-        painter.drawLine(r_x+3, r_y+1, r_x2-3, r_y+1 );
-        // a bit anti-aliasing for the window contour...
-        painter.setPen(alphaBlendColors(highlightTop, windowContour, 150) );
-        painter.drawPoint(r_x+2, r_y+1);
-        painter.drawPoint(r_x2-2, r_y+1);
-        painter.setPen(alphaBlendColors(highlightTitleLeft, windowContour, 150) );
-        painter.drawPoint(r_x+1, r_y+2);
-        painter.setPen(alphaBlendColors(highlightTitleRight, windowContour, 150) );
-        painter.drawPoint(r_x2-1, r_y+2);
+        painter.drawLine(r_x+2, r_y+1, r_x2-2, r_y+1 );
         // highlight...
         painter.setPen(highlightTitleLeft);
-        painter.drawLine(r_x+1, r_y+3, r_x+1, titleEdgeTopBottom );
+        painter.drawLine(r_x+1, r_y+2, r_x+1, titleEdgeTopBottom );
         painter.setPen(highlightTitleRight);
-        painter.drawLine(r_x2-1, r_y+3, r_x2-1, titleEdgeTopBottom );
+        painter.drawLine(r_x2-1, r_y+2, r_x2-1, titleEdgeTopBottom );
 
         tempRect.setRect(r_x+2, r_y+2, r_w-2*2, titleEdgeTop-2 );
         if (tempRect.isValid() && region.contains(tempRect) ) {
@@ -612,23 +603,15 @@ const QPixmap &PlastikClient::captionPixmap() const
     QPainter painter;
 
     const int thickness = 2;
-    QPixmap textPixmap(captionWidth+2*thickness, captionHeight+2*thickness);
-    if(Handler()->titleShadow()) {
-        textPixmap.fill(QColor(0,0,0) );
-
-        painter.begin(&textPixmap);
-        painter.setFont(s_titleFont);
-        painter.setPen(Qt::white);
-        painter.drawText(textPixmap.rect(), AlignCenter, c );
-
-        painter.end();
-    }
 
     QPixmap *captionPixmap = new QPixmap(captionWidth+2*thickness, th);
 
     painter.begin(captionPixmap);
     painter.drawTiledPixmap(captionPixmap->rect(),
                             Handler()->pixmap(TitleBarTile, active, isToolWindow()) );
+
+    painter.setFont(s_titleFont);
+    QPoint tp(1, captionHeight-1);
     if(Handler()->titleShadow())
     {
         QColor shadowColor;
@@ -636,11 +619,16 @@ const QPixmap &PlastikClient::captionPixmap() const
             shadowColor = QColor(255, 255, 255);
         else
             shadowColor = QColor(0,0,0);
-        paintShadow(&painter, textPixmap, 0,1, thickness, shadowColor);
+
+        painter.setPen(alphaBlendColors(options()->color(ColorTitleBar, active), shadowColor, 205) );
+        painter.drawText(tp+QPoint(1,2), c);
+        painter.setPen(alphaBlendColors(options()->color(ColorTitleBar, active), shadowColor, 225) );
+        painter.drawText(tp+QPoint(2,2), c);
+        painter.setPen(alphaBlendColors(options()->color(ColorTitleBar, active), shadowColor, 165) );
+        painter.drawText(tp+QPoint(1,1), c);
     }
-    painter.setFont(s_titleFont);
     painter.setPen(Handler()->getColor(TitleFont,active) );
-    painter.drawText(captionPixmap->rect(), AlignCenter, c );
+    painter.drawText(tp, c );
     painter.end();
 
     m_captionPixmaps[active] = captionPixmap;
