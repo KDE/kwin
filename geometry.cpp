@@ -122,15 +122,17 @@ void Workspace::updateClientArea( bool force )
                         }
                 }
         }
+#if 0
     for( int i = 1;
             i <= numberOfDesktops();
             ++i )
         {
             for( int iS = 0;
                     iS < nscreens;
-                    iS ++ );
-//                kdDebug () << "new_sarea: " << new_sareas[ i ][ iS ] << endl;
+                    iS ++ )
+                kdDebug () << "new_sarea: " << new_sareas[ i ][ iS ] << endl;
         }
+#endif
     // TODO topmenu update for screenarea changes?
     if( topmenu_space != NULL )
         {
