@@ -520,12 +520,12 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     focusStealingLayout->addWidget( focusStealingLabel );
     focusStealingLayout->addWidget( focusStealing, AlignLeft );
     wtstr = i18n( "This option specifies how much KWin will try to prevent unwanted focus stealing "
-                  "caused by unexpected activation of new windows. (Note: This feature doesn't "
+                  "caused by unexpected activation of new windows. (Note: This feature does not "
                   "work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)"
                   "<ul>"
                   "<li><em>None:</em> The standard old behavior - prevention is turned off "
                   "and new windows always become activated.</li>"
-                  "<li><em>Low:</em> Prevention is enabled; when some window doesn't have support "
+                  "<li><em>Low:</em> Prevention is enabled; when some window does not have support "
                   "for the underlying mechanism and KWin cannot reliably decide whether to "
                   "activate the window or not, it will be activated. This setting may have both "
                   "worse and better results than normal level, depending on the applications.</li>"
@@ -821,7 +821,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
 
     OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
     QWhatsThis::add( OverlapSnap, i18n("Here you can set that windows will be only"
-                                       " snapped if you try to overlap them, i.e. they won't be snapped if the windows"
+                                       " snapped if you try to overlap them, i.e. they will not be snapped if the windows"
                                        " comes only near another window or border.") );
 
     lay->addWidget(MagicBox);

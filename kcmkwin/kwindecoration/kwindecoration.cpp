@@ -135,8 +135,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	cbUseCustomButtonPositions = new QCheckBox(
 			i18n("Use custom titlebar button &positions"), buttonPage );
 	QWhatsThis::add( cbUseCustomButtonPositions,
-			i18n(  "The appropriate settings can be found in the \"Buttons\" Tab. "
-				   "Please note that this option is not available on all styles yet!" ) );
+			i18n(  "The appropriate settings can be found in the \"Buttons\" Tab; "
+				   "please note that this option is not available on all styles yet." ) );
 
 	buttonBox = new QGroupBox( 1, Qt::Horizontal,
 			i18n("Titlebar Button Positions"), buttonPage );

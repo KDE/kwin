@@ -151,7 +151,7 @@ QString KWinOptions::quickHelp() const
   return i18n("<h1>Window Behavior</h1> Here you can customize the way windows behave when being"
     " moved, resized or clicked on. You can also specify a focus policy as well as a placement"
     " policy for new windows."
-    " <p>Please note that this configuration will not take effect if you don't use"
+    " <p>Please note that this configuration will not take effect if you do not use"
     " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
     " for how to customize window behavior.");
 }
