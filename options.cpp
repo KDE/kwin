@@ -64,19 +64,19 @@ void Options::reload()
     colors[ButtonBg] = colors[Frame];
     colors[ButtonBg] = config->readColorEntry("activeTitleBtnBg",
                                               &colors[Frame]);
-    if(QPixmap::defaultDepth() < 15)
+    if(QPixmap::defaultDepth() < 9)
         colors[ButtonBlend] = colors[ ButtonBg ];
     else
-        colors[ButtonBlend] = colors[ ButtonBg ].dark(150);
+        colors[ButtonBlend] = colors[ ButtonBg ].dark(110);
     colors[ButtonBlend] = config->readColorEntry("activeTitleBtnBlend",
                                                  &colors[ButtonBlend]);
     colors[TitleBar] = pal.normal().highlight();
     colors[TitleBar] = config->readColorEntry("activeBackground",
                                               &colors[TitleBar]);
-    if(QPixmap::defaultDepth() < 15)
+    if(QPixmap::defaultDepth() < 9)
         colors[TitleBlend] = colors[ TitleBar ];
     else
-        colors[TitleBlend] = colors[ TitleBar ].dark(150);
+        colors[TitleBlend] = colors[ TitleBar ].dark(110);
     colors[TitleBlend] = config->readColorEntry("activeBlend",
                                                 &colors[TitleBlend]);
 
@@ -93,10 +93,10 @@ void Options::reload()
     colors[TitleBar+KWINCOLORS] = config->
         readColorEntry("inactiveBackground", &colors[TitleBar+KWINCOLORS]);
 
-    if(QPixmap::defaultDepth() < 15)
+    if(QPixmap::defaultDepth() < 9)
         colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ];
     else
-        colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ].dark(150);
+        colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ].dark(110);
     colors[TitleBlend+KWINCOLORS] =
         config->readColorEntry("inactiveBlend", &colors[TitleBlend+KWINCOLORS]);
 
@@ -105,10 +105,10 @@ void Options::reload()
         config->readColorEntry("inactiveTitleBtnBg",
                                &colors[ButtonBg]);
 
-    if(QPixmap::defaultDepth() < 15)
+    if(QPixmap::defaultDepth() < 9)
         colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ];
     else
-        colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ].dark(150);
+        colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ].dark(110);
     colors[ButtonBlend+KWINCOLORS] =
         config->readColorEntry("inactiveTitleBtnBlend",
                                &colors[ButtonBlend+KWINCOLORS]);

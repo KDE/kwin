@@ -10,6 +10,7 @@
 #include "stdclient.h"
 #include "beclient.h"
 #include "systemclient.h"
+#include "nextclient.h"
 #include "tabbox.h"
 #include "atoms.h"
 #include <X11/X.h>
@@ -84,6 +85,8 @@ static Client* clientFactory( Workspace *ws, WId w )
     QString tmpStr = config->readEntry("Plugin", "standard");
     if(tmpStr == "system")
 	return new SystemClient( ws, w );
+    else if(tmpStr == "next")
+	return new NextClient( ws, w );
     else if(tmpStr == "be")
 	return new BeClient( ws, w );
     else
@@ -910,6 +913,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	deco->insertItem( i18n( "KDE Classic" ), 1 );
 	deco->insertItem( i18n( "Be-like style" ),  2);
 	deco->insertItem( i18n( "System style" ), 3 );
+	deco->insertItem( i18n( "Next-like style" ), 4 );
 
 	
 	desk_popup = new QPopupMenu( popup );
@@ -1440,6 +1444,10 @@ void Workspace::setDecorationStyle( int deco )
     case 3:
 	c = new SystemClient(this, w);
 	config->writeEntry("Plugin", "system");
+	break;
+    case 4:
+	c = new NextClient(this, w);
+	config->writeEntry("Plugin", "next");
 	break;
     default:
 	c = new StdClient( this, w );
