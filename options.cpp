@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								
+
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #include "options.h"
@@ -41,7 +41,7 @@ const QFont& Options::font(bool active, bool small)
 {
     if ( small )
 	return(active ? activeFontSmall : inactiveFontSmall);
-    else	
+    else
 	return(active ? activeFont : inactiveFont);
 }
 
@@ -125,7 +125,7 @@ void Options::reload()
     activeFontGuess.setPixelSize(12);
 
     activeFont = config->readFontEntry("activeFont", &activeFontGuess);
-    inactiveFont = config->readFontEntry("inactiveFont", &activeFontGuess);
+    inactiveFont = config->readFontEntry("inactiveFont", &activeFont);
 
     activeFontSmall = activeFont;
     activeFontSmall.setPointSize(activeFont.pointSize() - 2);
