@@ -81,7 +81,6 @@ static void sendClientMessage(Window w, Atom a, long x){
 WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     : QWidget( parent, name )
 {
-    setBackgroundColor( red );
     win = w;
     setMouseTracking( TRUE );
 
