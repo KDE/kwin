@@ -711,27 +711,26 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	else if ( info->state() & NET::MaxHoriz )
 	    maximize( Client::MaximizeHorizontal );
 
-        /*
-        if ( isMaximizable() && !isMaximized()
+	if ( isMaximizable() && !isMaximized()
 	     && ( width() >= area.width() || height() >= area.height() ) ) {
-	  // window is too large for the screen, maximize in the
-	  // directions necessary and generate a suitable restore
-	  // geometry.
-	  QSize s = adjustedSize( QSize( width()*2/3, height()*2/3 ) );
-	  if ( width() >= area.width() && height() >= area.height() ) {
-	    maximize( Client::MaximizeFull );
-	    geom_restore.setSize( s );
-	    geom_restore.moveCenter( geometry().center() );
-	  } else if ( width() >= area.width() ) {
-	    maximize( Client::MaximizeHorizontal );
-	    geom_restore.setWidth( s.width() );
-	    geom_restore.moveCenter( geometry().center() );
-	  } else if ( height() >= area.height() ) {
-	    maximize( Client::MaximizeVertical );
-	    geom_restore.setHeight( s.height() );
-	    geom_restore.moveCenter( geometry().center() );
-	  }
-	}*/
+	    // window is too large for the screen, maximize in the
+	    // directions necessary and generate a suitable restore
+	    // geometry.
+	    QSize s = adjustedSize( QSize( area.width()*2/3, area.height()*2/3 ) );
+	    if ( width() >= area.width() && height() >= area.height() ) {
+		maximize( Client::MaximizeFull );
+		geom_restore.setSize( s );
+		geom_restore.moveCenter( geometry().center() );
+	    } else if ( width() >= area.width() ) {
+		maximize( Client::MaximizeHorizontal );
+		geom_restore.setWidth( s.width() );
+		geom_restore.moveCenter( geometry().center() );
+	    } else if ( height() >= area.height() ) {
+		maximize( Client::MaximizeVertical );
+		geom_restore.setHeight( s.height() );
+		geom_restore.moveCenter( geometry().center() );
+	    }
+	}
     }
 
     delete session;
@@ -1072,15 +1071,14 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    nh = e.height;
 	QSize ns = sizeForWindowSize( QSize( nw, nh ) );
 
-	QRect area = workspace()->clientArea();
-        if ( isMaximizable() && isMaximized()
-	    && ( ns.width() < area.width() || ns.height() < area.height() ) ) {
-            geom_restore.setSize( ns );
-	  maximize( Client::MaximizeRestore );
+	//QRect area = workspace()->clientArea();
+	if ( isMaximizable() && isMaximized() ) {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
+	    geom_restore.setSize( ns );
+	    maximize( Client::MaximizeRestore );
 	} else if ( !isMaximized() ) {
-	  if ( ns == size() )
-	    return TRUE; // broken xemacs stuff (ediff)
-	  resize( ns );
+	    if ( ns == size() )
+		return TRUE; // broken xemacs stuff (ediff)
+	    resize( ns );
 	}
     }
 
