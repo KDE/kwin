@@ -708,7 +708,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
     }
 
-    if ( ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Unknown
+    if ( placementDone && ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Unknown
             || windowType() == NET::Menu )
         && !area.contains( geom.topLeft() ) && may_move ) {
         int tx = geom.x();
