@@ -437,16 +437,20 @@ void KWMThemeClient::doShape()
 
     p.begin(&mask);
     const QBitmap *curPix = framePixmaps[FrameTop]->mask();
-    p.drawTiledPixmap(w1, maxExtent-curPix->height()-1, width()-w2-w1,
-                      curPix->height(), *curPix);
+    if (curPix)
+       p.drawTiledPixmap(w1, maxExtent-curPix->height()-1, width()-w2-w1,
+                         curPix->height(), *curPix);
     curPix = framePixmaps[FrameBottom]->mask();
-    p.drawTiledPixmap(w3, height()-maxExtent+1, width()-w3-w4,
+    if (curPix)
+       p.drawTiledPixmap(w3, height()-maxExtent+1, width()-w3-w4,
                       curPix->height(), *curPix);
     curPix = framePixmaps[FrameLeft]->mask();
-    p.drawTiledPixmap(maxExtent-curPix->width()-1, h1, curPix->width(),
+    if (curPix)
+       p.drawTiledPixmap(maxExtent-curPix->width()-1, h1, curPix->width(),
                       height()-h1-h3, *curPix);
     curPix = framePixmaps[FrameRight]->mask();
-    p.drawTiledPixmap(width()-maxExtent+1, h2, curPix->width(),
+    if (curPix)
+       p.drawTiledPixmap(width()-maxExtent+1, h2, curPix->width(),
                       height()-h2-h4, *curPix);
     p.setBrush(color1);
     p.setPen(color1);
