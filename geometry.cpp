@@ -1540,8 +1540,16 @@ bool Client::isMaximizable() const
     if( !isMovable() || !isResizable() || isToolbar()) // SELI isToolbar() ?
         return false;
     QSize max = maxSize();
+#if 0
     if( max.width() < 32767 || max.height() < 32767 ) // sizes are 16bit with X
         return false;
+#else
+    // apparently there are enough apps which specify some arbitrary value
+    // for their maximum size just for the fun of it
+    QSize areasize = workspace()->clientArea( MaximizeArea, this ).size();
+    if( max.width() < areasize.width() || max.height() < areasize.height())
+        return false;
+#endif
     return true;
     }
 
