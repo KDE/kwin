@@ -15,7 +15,7 @@ Sources:
 - Use QToolTip instead of KWinToolTip.
 - Use QButton instead of KWinButton, QToolButton instead of KWinToolButton and QWidget
   instead of KWinWidgetButton.
-- For tooltips, use simply QToolTip:add().
+- For tooltips, use simply QToolTip::add().
 - Change Client* to MyClient* (or whatever is your main client class) in your MyButton.
 - Pass parent->widget() to QButton constructor in your MyButton constructor.
 - Make your MyClient class inherit from KDecoration instead of Client.
@@ -75,7 +75,7 @@ inline const KDecorationOptions* options() { return KDecoration::options(); }
 =====
 - Options for colors need 'Color' prepended (e.g. 'ColorButtonBg').
 - Replace miniIcon() with getting the right pixmap from icon() (usually
-    'icon().pixmap( QIconset::Small, QIconSet::Normal )' ).
+    'icon().pixmap( QIconSet::Small, QIconSet::Normal )' ).
 - Replace stickyChange() with desktopChange(), and test isOnAllDesktops().
 - Replace Sticky with OnAllDestops.
 - Replace iconify with minimize.
@@ -86,7 +86,7 @@ inline const KDecorationOptions* options() { return KDecoration::options(); }
 - Change 'animateIconifyOrDeiconify()' to 'animateMinize()', if it's empty, simply remove it.
   Make sure it doesn't reenter the event loop (no kapp->processEvents()).
 - Buttons should use explicit setCursor() if they don't want cursor set by mousePosition().
-  I.e. usually call setCursor( arrowCursor ) in your MyButton.
+  I.e. usually call setCursor( ArrowCursor ) in your MyButton.
 - In the part where you insert windowWrapper() into the layout, i.e. something like
 =====
     layout->addWidget( windowWrapper());
