@@ -140,18 +140,35 @@ static int edit( Window wid )
     {
     QValueList< Rules* > rules;
     loadRules( rules );
-    Rules* rule = findRule( rules, wid );
+    Rules* orig_rule = findRule( rules, wid );
     RulesDialog dlg;
-    rule = dlg.edit( rule, wid );
-    if( rule == NULL ) // cancelled
+    // dlg.edit() creates new Rules instance
+    Rules* edited_rule = dlg.edit( orig_rule, wid );
+    if( edited_rule == NULL ) // cancelled
         return 0;
-    if( rule->isEmpty())
+    if( edited_rule->isEmpty())
         {
-        delete rule;
-        return 0;
+        if( orig_rule == NULL )
+            { // new, without any settings
+            delete edited_rule;
+            return 0;
+            }
+        else
+            { // removed all settings from already existing
+            rules.remove( orig_rule );
+            delete orig_rule;
+            delete edited_rule;
+            }
         }
-    if( !rules.contains( rule ))
-        rules.prepend( rule );
+    else // not empty
+        {
+        QValueList< Rules* >::Iterator pos = rules.find( orig_rule );
+        if( pos != rules.end())
+            *pos = edited_rule;
+        else
+            rules.prepend( edited_rule );
+        delete orig_rule;
+        }
     saveRules( rules );
     if( !kapp->dcopClient()->isAttached())
         kapp->dcopClient()->attach();
