@@ -109,12 +109,12 @@ default_presentation=0
 
 [transnew]
 Name=Window Trans New
-Comment=Who knows what this does :)
+Comment=Transient Window (a dialog) Appears
 default_presentation=0
 
 [transdelete]
 Name=Window Trans Delete
-Comment=Eh?
+Comment=Transient Window (a dialog) is Removed
 default_presentation=0
 
 [movestart]
