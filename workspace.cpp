@@ -495,8 +495,8 @@ bool Workspace::workspaceEvent( XEvent * e )
             }
         }
         if ( c ) {
-            bool result = c->windowEvent( e );
             propagateClients();
+            bool result = c->windowEvent( e );
             if ( c == desktop_client )
                 setDesktopClient( c );
             return result;
