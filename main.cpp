@@ -99,6 +99,9 @@ Application::Application( )
         ::exit(1);
         }
     connect( &owner, SIGNAL( lostOwnership()), SLOT( lostSelection()));
+    
+    // if there was already kwin running, it saved its configuration after loosing the selection -> reread
+    config()->reparseConfiguration();
 
     initting = TRUE; // startup....
 
