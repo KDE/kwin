@@ -519,6 +519,20 @@ class KWIN_EXPORT KDecoration
 	 * allow painting the minimize animation or the transparent move bound on it.
 	 */
         QWidget* workspaceWidget() const;
+        /**
+         * Returns the handle of the window that is being decorated. It is possible
+         * the returned value will be 0.
+         * IMPORTANT: This function is meant for special purposes, and it
+         * usually should not be used. The main purpose is finding out additional
+         * information about the window's state. Also note that different kinds
+         * of windows are decorated: Toplevel windows managed by the window manager,
+         * test window in the window manager decoration module, and possibly also
+         * other cases.
+         * Careless abuse of this function will usually sooner or later lead
+         * to problems.
+         * @since 3.4
+         */
+        WId windowId() const;
 	/**
 	 * Convenience function that returns the width of the decoration.
 	 */

@@ -103,6 +103,11 @@ QWidget* Bridge::workspaceWidget() const
     return c->workspace()->desktopWidget();
     }
 
+WId Bridge::windowId() const
+    {
+    return c->window();
+    }
+
 void Bridge::titlebarDblClickOperation()
     {
     c->workspace()->performWindowOperation( c, options->operationTitlebarDblClick());

@@ -375,6 +375,11 @@ QWidget* KDecorationPreviewBridge::workspaceWidget() const
     return preview;
     }
         
+WId KDecorationPreviewBridge::windowId() const
+    {
+    return 0; // no decorated window
+    }
+
 void KDecorationPreviewBridge::closeWindow()
     {
     }

@@ -226,6 +226,11 @@ QWidget* KDecoration::workspaceWidget() const
     return bridge_->workspaceWidget();
     }
         
+WId KDecoration::windowId() const
+    {
+    return bridge_->windowId();
+    }
+        
 void KDecoration::closeWindow()
     {
     bridge_->closeWindow();
