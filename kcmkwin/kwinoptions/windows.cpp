@@ -18,7 +18,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id$
  *
  */
 
@@ -114,7 +113,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     fcsBox = new QButtonGroup(i18n("Focus"),this);
     fcsBox->setColumnLayout( 0, Qt::Horizontal );
 
-    QBoxLayout *fLay = new QVBoxLayout(fcsBox->layout(), 
+    QBoxLayout *fLay = new QVBoxLayout(fcsBox->layout(),
         KDialog::spacingHint());
 
     QBoxLayout *cLay = new QHBoxLayout(fLay);
@@ -422,6 +421,7 @@ void KFocusConfig::save( void )
 
 void KFocusConfig::defaults()
 {
+    setAutoRaiseInterval(0);
     setFocus(CLICK_TO_FOCUS);
     setAutoRaise(false);
     setClickRaise(true);
@@ -542,7 +542,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     QWhatsThis::add( focusStealingLabel, wtstr );
 
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
-    
+
     lay->addLayout( focusStealingLayout );
 
     lay->addStretch();
@@ -610,7 +610,7 @@ void KAdvancedConfig::save( void )
 
     config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
-    
+
     config->writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentItem());
 
     if (standAlone)
