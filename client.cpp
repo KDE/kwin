@@ -1244,7 +1244,7 @@ void Client::setCaption( const QString& s, bool force )
         bool was_suffix = ( !cap_suffix.isEmpty());
         QString machine_suffix;
         if( !isLocalMachine( wmClientMachine( false )))
-            machine_suffix = " <" + wmClientMachine( true ) + ">";
+            machine_suffix = "@" + wmClientMachine( true );
         cap_suffix = machine_suffix;
         if ( ( !isSpecialWindow() || isToolbar()) && workspace()->findClient( FetchNameInternalPredicate( this ))) 
             {
