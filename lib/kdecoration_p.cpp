@@ -123,7 +123,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
         config->readColorEntry("inactiveTitleBtnBg",
                                &colors[ColorButtonBg]);
 
-    colors[ColorHandle+NUM_COLORS] = colors[ColorFrame];
+    colors[ColorHandle+NUM_COLORS] =
         config->readColorEntry("inactiveHandle", &colors[ColorHandle]);
 
     colors[ColorFont+NUM_COLORS] = colors[ColorFrame].dark();
