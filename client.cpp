@@ -585,7 +585,7 @@ void Client::startMoveResize()
 {
     moveResizeMode = true;
     workspace()->setClientIsMoving(this);
-    grabMouse(); 
+    grabMouse( cursor() );
     grabKeyboard();
     if ( ( isMove() && options->moveMode != Options::Opaque )
       || ( isResize() && options->resizeMode != Options::Opaque ) )
@@ -1453,8 +1453,10 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	buttonDown = FALSE;
 	if ( moveResizeMode ) {
 	    clearbound();
-            stopMoveResize();
+	    stopMoveResize();
 	    setGeometry( geom );
+	    mode = mousePosition( e->pos() );
+	    setMouseCursor( mode );
 	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
 	}
     }
@@ -1501,7 +1503,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 		Events::raise( Events::UnMaximize );
 		info->setState( 0, NET::Max );
 	    }
-            startMoveResize();
+	    startMoveResize();
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
 	} else {
 	    return;
@@ -2534,7 +2536,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
-        startMoveResize();
+	startMoveResize();
 	break;
     case Options::MouseResize: {
 	if (!isMovable())
@@ -2562,7 +2564,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    mode = (x < width() / 2) ? Left : Right;
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
 	setMouseCursor( mode );
-        startMoveResize();
+	startMoveResize();
 	resizeHorizontalDirectionFixed = FALSE;
 	resizeVerticalDirectionFixed = FALSE;
 	} break;
