@@ -6,8 +6,8 @@ SUBDIRS = . config
 kde_module_LTLIBRARIES = kwin_quartz.la
 
 kwin_quartz_la_SOURCES = quartz.cpp
-kwin_quartz_la_LIBADD = ../../kwin.la
-kwin_quartz_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+#kwin_quartz_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+kwin_quartz_la_LDFLAGS = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
 
 METASOURCES = AUTO
 noinst_HEADERS = quartz.h

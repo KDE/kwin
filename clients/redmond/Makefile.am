@@ -4,8 +4,8 @@ INCLUDES = $(all_includes)
 kde_module_LTLIBRARIES = kwin_redmond.la
 
 kwin_redmond_la_SOURCES = redmond.cpp
-kwin_redmond_la_LIBADD = ../../kwin.la
-kwin_redmond_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+#kwin_redmond_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+kwin_redmond_la_LDFLAGS = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
 
 METASOURCES = AUTO
 noinst_HEADERS = redmond.h

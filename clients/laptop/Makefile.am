@@ -4,8 +4,8 @@ INCLUDES = $(all_includes)
 kde_module_LTLIBRARIES = kwin_laptop.la
 
 kwin_laptop_la_SOURCES = laptopclient.cpp
-kwin_laptop_la_LIBADD = ../../kwin.la
-kwin_laptop_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+#kwin_laptop_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+kwin_laptop_la_LDFLAGS = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
 
 METASOURCES = AUTO
 noinst_HEADERS = laptopclient.h

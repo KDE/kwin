@@ -21,8 +21,8 @@ noinst_HEADERS            = \
   WebButtonMaximize.h \
   WebButtonSticky.h
 
-kwin_web_la_LIBADD      = ../../kwin.la
-kwin_web_la_LDFLAGS     = $(all_libraries) $(KDE_PLUGIN) -module
+#kwin_web_la_LDFLAGS     = $(all_libraries) $(KDE_PLUGIN) -module
+kwin_web_la_LDFLAGS     = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
 METASOURCES               = AUTO
 
 linkdir                   = $(kde_datadir)/kwin/

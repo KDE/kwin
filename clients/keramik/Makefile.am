@@ -13,9 +13,11 @@ embedtool_LDFLAGS         = $(all_libraries) $(KDE_RPATH)
 kde_module_LTLIBRARIES    = kwin_keramik.la
 
 kwin_keramik_la_SOURCES   = keramik.cpp
-kwin_keramik_la_LIBADD    = ../../kwin.la
 kwin_keramik_la_COMPILE_FIRST = tiles.h
-kwin_keramik_la_LDFLAGS   = $(all_libraries) $(KDE_PLUGIN) -module
+# as long as it can't link with -no-undefined    
+# kwin_keramik_la_LDFLAGS   = $(all_libraries) $(KDE_PLUGIN) -module
+# kwin_keramik_la_LIBADD    = $(LIB_KDEUI)
+kwin_keramik_la_LDFLAGS   = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
 
 METASOURCES               = AUTO
 noinst_headers        	  = keramik.h tiles.h
