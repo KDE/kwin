@@ -992,10 +992,7 @@ bool Client::eventFilter( QObject* o, QEvent* e )
         // These events only seem to be delayed events from initial resizing before show() was called
         // on the decoration widget.
         if( ev->size() != size())
-            {
-            kdDebug( 1212 ) << "Filtering out decoration resize event:" << size() << ":" << ev->size() << ":" << ev->oldSize() << endl;
             return true;
-            }
         }
     return false;
     }
