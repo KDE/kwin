@@ -94,11 +94,18 @@ void TabBox::reset()
 	desk = workspace()->currentDesktop();
     }
 
-
     QDesktopWidget* desktop = qApp->desktop();
-    int screen =  desktop->screenNumber( QCursor::pos() );
-    QRect r = desktop->screenGeometry(screen);
+    QRect r;
+    KConfig gc("kdeglobals", false, false);
+    gc.setGroup("Windows");
 
+    if (gc.readBoolEntry("XineramaEnabled", true) &&
+        gc.readBoolEntry("XineramaPlacementEnabled", true)) {
+        int screen =  desktop->screenNumber( QCursor::pos() );
+        r = desktop->screenGeometry(screen);
+    } else {
+        r = desktop->geometry();
+    }
 
     int w = QMIN( QMAX( wmax + 20, r.width()/3 ), r.width() );
     setGeometry( (r.width()-w)/2 + r.x(),

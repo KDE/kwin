@@ -52,8 +52,16 @@ PopupInfo::~PopupInfo()
 void PopupInfo::reset()
 {
     QDesktopWidget* desktop = qApp->desktop();
-    int screen =  desktop->screenNumber( QCursor::pos() );
-    QRect r = desktop->screenGeometry(screen);
+    KConfig gc("kdeglobals", false, false);
+    gc.setGroup("Windows");
+    QRect r;
+    if (gc.readBoolEntry("XineramaEnabled", true) &&
+        gc.readBoolEntry("XineramaPlacementEnabled", true)) {
+        int screen = desktop->screenNumber( QCursor::pos() );
+        r = desktop->screenGeometry(screen);
+    } else {
+        r = desktop->geometry();
+    }
 
     int w = fontMetrics().width( m_infoString ) + 30;
 
