@@ -1,0 +1,173 @@
+<HTML
+><HEAD
+><TITLE
+>Window Manager Protocols</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.52"><LINK
+REL="HOME"
+TITLE="Extended Window Manager Hints"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Application Window Properties"
+HREF="x137.html"><LINK
+REL="NEXT"
+TITLE="Implementation notes"
+HREF="x216.html"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Extended Window Manager Hints</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x137.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x216.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN207"
+>Window Manager Protocols</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN209"
+>_NET_WM_PING</A
+></H2
+><P
+>This protocol allows the Window Manager to determine if the Client is still
+processing X events.  This can be used by the Window Manager to determine if a
+window which fails to close after being sent WM_DELETE_WINDOW has stopped
+responding, or has stalled for some other reason, such as waiting for user
+confirmation.  A Client SHOULD indicate that it is willing to participate in
+this protocol by listing _NET_WM_PING in the WM_PROTOCOLS property of the
+client window.
+		</P
+><P
+>A Window Manager can use this protocol at any time by sending a client message
+as follows:
+		</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>type = ClientMessage
+window = &#60;client window&#62;
+message_type = WM_PROTOCOLS
+format = 32
+data.l[0] = _NET_WM_PING
+data.l[1] = &#60;timestamp&#62;</PRE
+></TD
+></TR
+></TABLE
+><P
+>A participating Client receiving this message MUST send it back to the root
+window immediately, by setting window = root, and calling XSendEvent.  The
+Client MUST NOT alter the timestamp, as this can be used by the Window Manager
+to uniquely identify the ping.
+		</P
+><P
+>The Window Manager MAY kill the Client (using _NET_WM_PID) if it fails to
+respond to this protocol within a reasonable time.
+		</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x137.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x216.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Application Window Properties</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Implementation notes</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

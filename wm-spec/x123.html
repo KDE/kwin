@@ -1,0 +1,207 @@
+<HTML
+><HEAD
+><TITLE
+>Other Root Window Messages</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.52"><LINK
+REL="HOME"
+TITLE="Extended Window Manager Hints"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Root Window Properties (+Related Messages)"
+HREF="x71.html"><LINK
+REL="NEXT"
+TITLE="Application Window Properties"
+HREF="x137.html"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Extended Window Manager Hints</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x71.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x137.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN123"
+>Other Root Window Messages</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN125"
+>_NET_CLOSE_WINDOW</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CLOSE_WINDOW</PRE
+></TD
+></TR
+></TABLE
+><P
+>	Pagers wanting to close a window MUST send a _NET_CLOSE_WINDOW client message request to the root window (type _NET_ACTIVE_WINDOW, format 32, l[0]=0 /*may be used later*/, window should be set to the window to close).  The Window Manager MUST then attempt to close the window specified.
+	</P
+><P
+>	Rationale: A window manager might be more clever than the usual method (send WM_DELETE message if the protocol is selected, XKillClient otherwise).  It might introduce a timeout, for example.  Instead of duplicating the code, the Window Manager can easily do the job.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN130"
+>_NET_WM_MOVERESIZE</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_MOVERESIZE
+  window = target app window
+  message_type = _NET_WM_MOVERESIZE
+  format = 16
+  data.s[0] = x_root 
+  data.s[1] = y_root
+  data.s[2] = direction</PRE
+></TD
+></TR
+></TABLE
+><P
+>	This message allows an application to initiate window movement or resizing.  This allows the application to define its own move and size "grips", whilst letting the window manager control the actual move/resize.  This means that all moves / resizes can happen in a consistent manner as defined by the WM.
+	</P
+><P
+>	When sending this message, x_root and y_root SHOULD indicate the position of the mouse click [[PDW: with respect to what?]] and direction MUST indicate whether this is a move or resize event, and if it is a resize event, which edges of the window the size grip applies to.
+	</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>#define _NET_WM_MOVERESIZE_SIZE_TOPLEFT      0
+#define _NET_WM_MOVERESIZE_SIZE_TOP          1
+#define _NET_WM_MOVERESIZE_SIZE_TOPRIGHT     2
+#define _NET_WM_MOVERESIZE_SIZE_RIGHT        3
+#define _NET_WM_MOVERESIZE_SIZE_BOTTOMRIGHT  4
+#define _NET_WM_MOVERESIZE_SIZE_BOTTOM       5
+#define _NET_WM_MOVERESIZE_SIZE_BOTTOMLEFT   6
+#define _NET_WM_MOVERESIZE_SIZE_LEFT         7
+#define _NET_WM_MOVERESIZE_MOVE              8   /* Movement only */</PRE
+></TD
+></TR
+></TABLE
+><P
+>	[[PDW: Why do we need to indicate the direction?  The WM could guess this from the click position - some WMs (eg. sawmill) have code for doing something similar when you hold eg. Meta + click in the client area... ]]
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x71.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x137.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Root Window Properties (+Related Messages)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Application Window Properties</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

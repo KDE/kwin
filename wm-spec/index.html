@@ -1,0 +1,310 @@
+<HTML
+><HEAD
+><TITLE
+>Extended Window Manager Hints</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.52"><LINK
+REL="NEXT"
+TITLE="Root Window Properties (+Related Messages)"
+HREF="x71.html"></HEAD
+><BODY
+CLASS="ARTICLE"
+><DIV
+CLASS="ARTICLE"
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+>Extended Window Manager Hints</A
+></H1
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="index.html#AEN5"
+>Introduction</A
+></DT
+><DT
+><A
+HREF="x71.html"
+>Root Window Properties (+Related Messages)</A
+></DT
+><DT
+><A
+HREF="x123.html"
+>Other Root Window Messages</A
+></DT
+><DT
+><A
+HREF="x137.html"
+>Application Window Properties</A
+></DT
+><DT
+><A
+HREF="x207.html"
+>Window Manager Protocols</A
+></DT
+><DT
+><A
+HREF="x216.html"
+>Implementation notes</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN5"
+>Introduction</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN7"
+>What is this spec?</A
+></H2
+><P
+>This spec defines interactions between window managers, applications and the utilities that form part of a desktop environment.  It builds on the ICCCM, which defines wm/client interactions at a lower level.  It was born out of a need to replace the original Gnome WM specification, although this specification has been designed to be independent of any one desktop environment.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN10"
+>Language used in this specification</A
+></H2
+><P
+>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be
+interpreted as described in RFC 2119.  
+		</P
+><P
+>The key words "Window Manager" refer to a window manager which is adopting this
+specification.  "Pager" refers to desktop utility applications, including
+pagers and taskbars.  "Application" refers to other clients.  "Clients" refers
+to Pagers + Applications ie. all X clients, except for the Window Manager.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN14"
+>Changes since 1.9d</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Added _NET_VIRTUAL_ROOTS
+			</P
+></LI
+><LI
+><P
+>Added note about ICCCM compliant window moves.
+			</P
+></LI
+><LI
+><P
+>Added _NET_WM_HANDLED_ICONS
+			</P
+></LI
+><LI
+><P
+>Added _NET_SUPPORTING_WM_CHECK
+			</P
+></LI
+><LI
+><P
+>Removed degrees of activation
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN27"
+>Changes since 1.9c</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Removed packaging of hints into 2 X properties.  Jim Gettys points out that the
+performance gains of fewer round trips can be better achieved using Xlib
+routines.
+				</P
+></LI
+><LI
+><P
+>Clarified that _NET_DESKTOP_VIEWPORT is in pixels
+				</P
+></LI
+><LI
+><P
+>_NET_DESKTOP_VIEWPORT is now an array, one for each desktop, to allow for
+different active viewports on different desktops
+				</P
+></LI
+><LI
+><P
+>_NET_WM_STRUT now only applies on desktops on which the client is visible
+				</P
+></LI
+><LI
+><P
+>Introduced RFC 2119 language, and attempted to clarify the roles of the Window
+Manager, Pagers and Applications
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_NAME
+				</P
+></LI
+><LI
+><P
+>_NET_DESKTOP_NAMES now in UTF8
+				</P
+></LI
+><LI
+><P
+>Desktops now start from 0
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_PID
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_PING protocol
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_STATE_SKIP_TASKBAR
+				</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN52"
+>Changes since 1.9b</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Removed _NET_NUMBER_OF_DESKTOPS client message, as it overlaps unnecessarily with _NET_{INSERT/DELETE}_DESKTOP.</P
+></LI
+><LI
+><P
+>Replaced _NET_WM_LAYER and _NET_WM_HINTS with _NET_WM_WINDOW_TYPE functional hint.</P
+></LI
+><LI
+><P
+>Changed _NET_WM_STATE to a list of atoms, for extensibility.</P
+></LI
+><LI
+><P
+>Expanded description of _NET_WORKAREA and _NET_WM_STRUT.</P
+></LI
+><LI
+><P
+>Removed _NET_WM_SIZEMOVE_NOTIFY protocol. </P
+></LI
+><LI
+><P
+>Added degrees of activation to _NET_ACTIVE_WINDOW client message</P
+></LI
+><LI
+><P
+>Added _NET_WM_ICON</P
+></LI
+><LI
+><P
+>My comments are in [[ ]].  Comments from Marko's draft are in [[MM: ]]</P
+></LI
+></UL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x71.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Root Window Properties (+Related Messages)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

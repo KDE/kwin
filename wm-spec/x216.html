@@ -1,0 +1,231 @@
+<HTML
+><HEAD
+><TITLE
+>Implementation notes</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.52"><LINK
+REL="HOME"
+TITLE="Extended Window Manager Hints"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Window Manager Protocols"
+HREF="x207.html"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Extended Window Manager Hints</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x207.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN216"
+>Implementation notes</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN218"
+>Desktop/workspace model</A
+></H2
+><P
+>This spec assumes a desktop model that consists of one or more completely
+independent desktops which may or may not be larger than the screen area.
+When a desktop is larger than the screen it is left to the window manager if
+it will implement scrolling or paging.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN221"
+>File Manager desktop</A
+></H2
+><P
+>This spec suggests implementing the file manager desktop by mapping a
+desktop-sized window (no shape) to all desktops, with
+_NET_WM_WINDOW_TYPE_DESKTOP.  This makes the desktop focusable and greatly
+simplifies implementation of the file manager.  It is also faster than
+managing lots of small shaped windows. The file manager draws the background
+on this window.  There should be a root property with a window handle for use
+in applications that want to draw the background (xearth).
+		</P
+><P
+>Several GNOME file manager developers have accepted this model
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN225"
+>Implementing enhanced support for application transient windows</A
+></H2
+><P
+>If the WM_TRANSIENT_FOR property is set to None or Root window, the window
+should be treated as a transient for all other windows in the same group.  It
+has been noted that this is a slight ICCCM violation, but as this behaviour is
+pretty standard for many toolkits and window managers, and is extremely
+unlikely to break anything, it seems reasonable to document it as standard.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="URGENCY"
+>Urgency</A
+></H2
+><P
+>	Dialog boxes should indicate their urgency level (information or warning) using the urgency bit in the WM_HINTS.flags property, as defined in the ICCCM.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NORESIZE"
+>Fixed size windows</A
+></H2
+><P
+>	Windows can indicate that they are non-resizable by setting minheight = maxheight and minwidth = maxwidth in the ICCCM WM_NORMAL_HINTS property.  The Window Manager MAY decorate such windows differently.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN234"
+>Pagers and Taskbars</A
+></H2
+><P
+>	This specification attempts to make reasonable provisions for WM independant pagers and taskbars.  Window Managers that require / desire additional functionality beyond what can be acheived using the mechanisms set out in this specification may choose to implement their own pagers, which communicates with the Window Manager using further, WM-specific hints, or some other means.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN237"
+>Window Movement</A
+></H2
+><P
+>According to the ICCCM, applications should not see unnecessary differences
+between running with or without a window manager. Therefore window movements
+for already mapped windows, such as ones requested by XMoveWindow(Display,
+Window, X, Y) have to move the window Window to the coordinates (X, Y) and not
+cause the window's window manager frame window to end up at (X, Y).  
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN240"
+>Window-in-Window MDI</A
+></H2
+><P
+>	The authors of this specification acknowledge that there is no standard method to allow the Window Manager to manage windows that a part of a Window-in-Window MDI application.  Application authors are advised to use some other form of MDI, or to propose a mechanism to be included in the next revision of this specification.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x207.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Window Manager Protocols</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

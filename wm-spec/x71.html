@@ -1,0 +1,429 @@
+<HTML
+><HEAD
+><TITLE
+>Root Window Properties (+Related Messages)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.52"><LINK
+REL="HOME"
+TITLE="Extended Window Manager Hints"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Extended Window Manager Hints"
+HREF="index.html"><LINK
+REL="NEXT"
+TITLE="Other Root Window Messages"
+HREF="x123.html"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Extended Window Manager Hints</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x123.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN71"
+>Root Window Properties (+Related Messages)</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN73"
+>_NET_SUPPORTED</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_SUPPORTED, ATOM[]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>This property MUST be set by the Window Manager to indicate which hints it
+supports.  This assumes that backwards incompatible changes will not be made
+to the hints (without being renamed).  
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN77"
+>_NET_CLIENT_LIST</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CLIENT_LIST, XA_WINDOW[]/32
+_NET_CLIENT_LIST_STACKING, XA_WINDOW[]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>An array of all X Windows managed by the Window Manager.  _NET_CLIENT_LIST has
+mapping order. _NET_CLIENT_LIST_STACKING has stacking order.  This property
+SHOULD be set and updated by the Window Manager.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN81"
+>_NET_NUMBER_OF_DESKTOPS</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_NUMBER_OF_DESKTOPS, CARDINAL/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>This property SHOULD be set and updated by the Window Manager to indicate the
+number of virtual desktops.  
+	</P
+><P
+>A Pager can insert or delete a certain desktop by sending a
+_NET_{INSERT/DELETE}_DESKTOP client message to the root window.  
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN86"
+>_NET_DESKTOP_GEOMETRY</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_GEOMETRY width,height, CARDINAL[2]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>Array of two cardinals that defines the width and height of each desktop in
+pixels.  This property SHOULD be set by the Window Manager. 
+		</P
+><P
+>A Pager can change the desktop geometry by sending a _NET_DESKTOP_GEOMETRY client
+message to the root window 
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN91"
+>_NET_DESKTOP_VIEWPORT</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_VIEWPORT x,y, CARDINAL[][2]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>Array of two cardinals that define the top left corner of the current view in
+pixel, for each desktop.  For window managers that don't support paged
+desktops, this MUST always be set to (0,0).  
+	</P
+><P
+>A Pager can change the viewport for the current desktop by sending a
+_NET_DESKTOP_VIEWPORT client message to the root window 
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN96"
+>_NET_CURRENT_DESKTOP</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CURRENT_DESKTOP &#60;desktop&#62;, CARDINAL[1]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>The index of the current desktop, starts with desktop 0.  This MUST be set and
+updated by the Window Manager  If a Pager wants to switch to another virtual
+desktop, it MUST send a _NET_CURRENT_DESKTOP client message to the root window
+(type _NET_CURRENT_DESKTOP, format 32, l[0]=&#60;new index&#62;)
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN100"
+>_NET_DESKTOP_NAMES</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_NAMES</PRE
+></TD
+></TR
+></TABLE
+><P
+>The names of all virtual desktops in UTF8 encoding. This property MAY be
+changed by a Pager or the Window Mangaer at any time.  When a desktop is added
+or removed, the Window Manager MUST update this list.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN104"
+>_NET_ACTIVE_WINDOW</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_ACTIVE_WINDOW, WINDOW/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>The window handle of the currently active window.  This is a read-only
+property set by the Window Manager.  This is a read-only property set by the
+window manager.  If a client (for example, a taskbar) wants to activate
+another window, it MUST send a _NET_ACTIVE_WINDOW client message to the root
+window  (type _NET_ACTIVE_WINDOW, format 32, l[0]=0
+/* may be used later */, window is the respective client window) 
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN108"
+>_NET_WORKAREA</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WORKAREA, CARDINAL[][4]/32
+	</PRE
+></TD
+></TR
+></TABLE
+><P
+>	This property MUST be set by WM upon calculating the work area for each desktop (the first quadruple = desktop 1).  Contains the left, right, top, bottom co-ordinates for each desktop.  Work area SHOULD be used by desktop applications to place desktop icons apropriately.
+	</P
+><P
+>	The window manager SHOULD calculate this space by taking the current page minus space occupied by dock and panel windows, as indicated by the <A
+HREF="x137.html#NETWMSTRUT"
+>_NET_WM_STRUT</A
+> property set on client windows.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN114"
+>_NET_SUPPORTING_WM_CHECK</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_SUPPORTING_WM_CHECK, XA_WINDOW/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>The Window Manager MUST set this property on the root window to be the ID of a child window created by the WM, to indicate that a compliant WM is active.  The child window MUST also have the _NET_SUPPORTING_WM_CHECK property set with the same value.  The child window MUST also have the _NET_WM_NAME property set to the name of the Window Manager.
+	</P
+><P
+>Rationale:  The child window is used to guard against stale properties being left on the root window by a crashed WM.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN119"
+>_NET_VIRTUAL_ROOTS</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_VIRTUAL_ROOTS, XA_WINDOW[]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>The Window Manager MUST set this to a list of IDs for windows that are acting as virtual root windows.  To implement virtual desktops, some window managers reparent client windows to a child of the root window.  The property is present so that Pagers can determine which windows to watch for substructure notifies.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x123.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Extended Window Manager Hints</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Other Root Window Messages</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

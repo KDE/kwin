@@ -1,0 +1,562 @@
+<HTML
+><HEAD
+><TITLE
+>Application Window Properties</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.52"><LINK
+REL="HOME"
+TITLE="Extended Window Manager Hints"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Other Root Window Messages"
+HREF="x123.html"><LINK
+REL="NEXT"
+TITLE="Window Manager Protocols"
+HREF="x207.html"></HEAD
+><BODY
+CLASS="SECT1"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Extended Window Manager Hints</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x123.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x207.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN137"
+>Application Window Properties</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN139"
+>_NET_PROPERTIES</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_PROPERTIES, ATOM[]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>Enables only use of listed properties on this windows.  If this property is
+set, the Window Manager MUST only handle (XGetWindowProperty) properties
+listed here.  This property MUST be set by the Client before any other _NET
+hints can be used.  If this property is set, it MUST also include any ICCCM
+client-only (not WM_STATE) hints that are set by the client.  If WM_PROTOCOLS
+is not listed here, the Window Manager SHOULD assume that it contains exactly
+WM_DELETE_WINDOW.
+	</P
+><P
+>This is a performance optimization.  [[MM: I still have to do a benchmark.]]
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN144"
+>_NET_WM_NAME</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_NAME</PRE
+></TD
+></TR
+></TABLE
+><P
+>The Client SHOULD set this to the title of the window in UTF8 encoding.  If
+set, the Window Manager should use this in preference to WM_NAME.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN148"
+>_NET_WM_DESKTOP</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_DESKTOP &#60;desktop&#62;, CARDINAL/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>Cardinal to determine the desktop the window is in (or wants to be) starting
+with 0 for the first desktop.  A Client MAY choose not to set this property,
+in which case the Window Manager SHOULD place as it wishes.  0xFFFFFFFF
+indicates that the window SHOULD appear on all desktops/workspaces.  
+	</P
+><P
+>The Window Manager should honor _NET_WM_DESKTOP whenever a withdrawn window
+requests to be mapped.  
+	</P
+><P
+>A Client can request a change of desktop for a non-withdrawn window by sending
+a _NET_WM_DESKTOP client message to the root window (window is the respective
+window, type _NET_WM_DESKTOP, format 32, l[0]=&#60;desktop&#62;)
+	</P
+><P
+>	The Window Manager MUST keep this property updated on all windows.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN155"
+>_NET_WM_WINDOW_TYPE</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_WINDOW_TYPE, ATOM[]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>This MUST be set by the Client before mapping, to a list of atoms indicating
+the functional type of the window.  This property SHOULD be used by the window
+manager in determining the decoration, stacking position and other behaviour
+of the window.  The Client SHOULD specify window types in order of preference
+(the first being most preferable), but MUST include at least one of the basic
+window type atoms from the list below.  This is to allow for extension of the
+list of types, whilst providing default behaviour for window managers that do
+not recognise the extensions.  
+	</P
+><P
+>Rationale:  This hint is intend to replace the MOTIF hints.  One of the
+objections to the MOTIF hints is that they are a purely visual description of
+the window decoration.  By describing the function of the window, the window
+manager can apply consistent decoration and behaviour to windows of the same
+type.  Possible examples of behaviour include keeping dock/panels on top or
+allowing pinnable menus / toolbars to only be hidden when another window has
+focus (NextStep style).  
+	</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_WINDOW_TYPE_DESKTOP, ATOM
+_NET_WM_WINDOW_TYPE_DOCK, ATOM
+_NET_WM_WINDOW_TYPE_TOOLBAR, ATOM
+_NET_WM_WINDOW_TYPE_MENU, ATOM
+_NET_WM_WINDOW_TYPE_DIALOG, ATOM
+_NET_WM_WINDOW_TYPE_NORMAL, ATOM</PRE
+></TD
+></TR
+></TABLE
+><P
+>_NET_WM_WINDOW_TYPE_DESKTOP indicates a desktop feature.  This can include a
+single window containing desktop icons with the same dimensions as the screen,
+allowing the desktop environment to have full control of the desktop, without
+the need for proxying root window clicks.  
+	</P
+><P
+>_NET_WM_WINDOW_TYPE_DOCK indicates a dock or panel feature.  Typically a
+window manager would keep such windows on top of all other windows.  
+	</P
+><P
+>_NET_WM_WINDOW_TYPE_TOOLBAR and _NET_WM_WINDOW_TYPE_MENU indicate toolbar and
+pinnable menu windows, respectively. 
+	</P
+><P
+>_NET_WM_WINDOW_TYPE_DIALOG indicates that this is a dialog window.  If
+_NET_WM_WINDOW_TYPE is not set, then windows with WM_TRANSIENT_FOR set MUST
+be taken as this type.  
+	</P
+><P
+>_NET_WM_WINDOW_TYPE_NORMAL indicates that this is a normal, top-level window.
+Windows with neither _NET_WM_WINDOW_TYPE nor WM_TRANSIENT_FOR are set MUST
+be taken as this type.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN166"
+>_NET_WM_STATE</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_STATE, ATOM[]</PRE
+></TD
+></TR
+></TABLE
+><P
+>A list of hints describing the state window.  The Window Manager SHOULD honor
+_NET_WM_STATE whenever a withdrawn window requests to be mapped.  A Client
+wishing to change the state of a window MUST send a _NET_WM_STATE client
+message to the root window (see below).  The Window Manager MUST keep this
+property updated to reflect the current state of the window.
+		</P
+><P
+>Possible atoms are:
+		</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_STATE_MODAL, ATOM
+_NET_WM_STATE_STICKY, ATOM
+_NET_WM_STATE_MAXIMIZED_VERT, ATOM
+_NET_WM_STATE_MAXIMIZED_HORZ, ATOM
+_NET_WM_STATE_SHADED, ATOM
+_NET_WM_STATE_SKIP_TASKBAR, ATOM</PRE
+></TD
+></TR
+></TABLE
+><P
+>_NET_WM_STATE_MODAL indicates that this is a modal dialog box.  The
+WM_TRANSIENT_FOR hint MUST be set to indicate which window the dialog is a
+modal for, or set to the root window if the dialog is a modal for its window
+group.
+	</P
+><P
+>_NET_WM_STATE_STICKY indicates that the Window Manager SHOULD keep the
+window's position fixed on the screen, even when the virtual desktop scrolls.
+	</P
+><P
+>_NET_WM_STATE_MAXIMIZED_{VERT,HORZ} indicates that the window is
+{vertically,horizontally} maximised.
+	</P
+><P
+>_NET_WM_STATE_SHADED indicates that the window is shaded.
+	</P
+><P
+>_NET_WM_SKIP_TASKBAR indicates that a window should not be included on a
+taskbar.
+	</P
+><P
+>To change the state of a mapped window, a Client MUST send a _NET_WM_STATE
+client message to the root window  (window is the respective window, type
+_NET_WM_STATE, format 32, l[0]=&#60;the action, as listed below&#62;,
+l[1]=&#60;First property to alter&#62;, l[2]=&#60;Second property to alter&#62;).
+This message allows two properties to be changed simultaneously, specifically
+to allow both horizontal and vertical maximisation to be altered together.
+l[2] MUST be set to zero if only one property is to be changed. l[0], the
+action, MUST be one of:
+	</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_STATE_REMOVE        0    /* remove/unset property */
+_NET_WM_STATE_ADD           1    /* add/set property */
+_NET_WM_STATE_TOGGLE        2    /* toggle property  */</PRE
+></TD
+></TR
+></TABLE
+><P
+>	See also the implementation notes on <A
+HREF="x216.html#URGENCY"
+>urgency</A
+> and <A
+HREF="x216.html#NORESIZE"
+>fixed size windows</A
+>.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN182"
+>_NET_WM_STRUT</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_STRUT, CARDINAL[4]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>This property MUST be set by the Client if the window is to reserve space at
+the edge of the screen.  The property is a 4-tupel of cardinals, one for each
+border of the screen.  The order of the borders is left, right, top, bottom.
+The client MAY change this property anytime, therefore the Window Manager MUST
+watch out for property notify events.  
+	</P
+><P
+>The purpose of struts is to reserve space at the borders of the desktop.  This
+is very useful for a docking area, a taskbar or a panel, for instance.  The
+window manager should know about this reserved space in order to be able to
+preserve the space. Also maximized windows should not cover that reserved
+space.
+	</P
+><P
+>Rationale: A simple "do not cover" hint is not enough for dealing with e.g.
+auto-hide panels. 
+	</P
+><P
+>Notes: An auto-hide panel SHOULD set the strut to be its minimum, hidden size.
+A "corner" panel that does not extend for the full length of a screen border
+SHOULD only set one strut.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN189"
+>_NET_WM_ICON_GEOMETRY</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_ICON_GEOMETRY, CARDINAL[4]</PRE
+></TD
+></TR
+></TABLE
+><P
+>An array of x,y,w,h of type CARDINAL, format 32.  This optional property MAY
+be set by standalone tools like a taskbar or an iconbox.  It specifies the
+geometry of a possible icon in case the window is iconified.
+	</P
+><P
+>Rationale: This makes it possible for a window manager to display a nice
+animation like morphing the window into its icon.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN194"
+>_NET_WM_ICON</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_ICON CARDINAL[][2+n]/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>This is an array of possible icons for the client.  This specification does
+not stipulate what size these icons should be, but individual desktop
+environments or toolkits may do so.  The Window Manager MAY scale any of these
+icons to an appropriate size.
+		</P
+><P
+>This is an array of 32bit packed CARDINAL ARGB with high byte being A, low
+byte being B.  First two bytes are width, height.  Data is in rows, left to
+right and top to bottom.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN199"
+>_NET_WM_PID</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_PID CARDINAL/32</PRE
+></TD
+></TR
+></TABLE
+><P
+>If set, this property MUST contain the process ID of the client owning this
+window.  This MAY be used by the Window Manager to kill windows which do not
+respond to the _NET_WM_PING protocol.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN203"
+>_NET_WM_HANDLED_ICONS</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_HANDLED_ICONS</PRE
+></TD
+></TR
+></TABLE
+><P
+>This property can be set by clients to indicate that the Window Manager need
+not provide icons for iconified windows, for example if the client is a taskbar
+and provides buttons for iconified windows.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x123.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x207.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Other Root Window Messages</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Window Manager Protocols</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
