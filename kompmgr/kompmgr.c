@@ -2727,8 +2727,8 @@ main (int argc, char **argv)
 					}
 					else if (ev.xproperty.atom == titleHeightAtom)
 					{
-						printf("titleheight changed\n");
 						win * w = find_win(dpy, ev.xproperty.window);
+						printf("titleheight changed\n");
 						if (w)
 						{
 							printf("titleheight window found\n");
