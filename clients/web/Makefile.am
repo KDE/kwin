@@ -1,4 +1,4 @@
-INCLUDES                  = $(all_includes) -I$(topdir)/kwin
+INCLUDES                  = $(all_includes) -I$(top_srcdir)
 kde_module_LTLIBRARIES    = libkwinweb.la
 
 libkwinweb_la_SOURCES     = \
