@@ -1535,10 +1535,10 @@ bool Client::isResizable() const
  */
 bool Client::isMaximizable() const
     {
-    if ( maximizeMode() != MaximizeRestore )
-        return TRUE;
     if( !isMovable() || !isResizable() || isToolbar()) // SELI isToolbar() ?
         return false;
+    if ( maximizeMode() != MaximizeRestore )
+        return TRUE;
     QSize max = maxSize();
 #if 0
     if( max.width() < 32767 || max.height() < 32767 ) // sizes are 16bit with X
