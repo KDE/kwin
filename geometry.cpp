@@ -69,7 +69,7 @@ void Workspace::updateClientArea( bool force )
 //    kdDebug () << "screens: " << nscreens << endl;
     QRect* new_wareas = new QRect[ numberOfDesktops() + 1 ];
     QRect** new_sareas = new QRect*[ numberOfDesktops() + 1];
-    QRect screens [ nscreens ];
+    QRect* screens = new QRect [ nscreens ];
     QRect desktopArea = desktopwidget -> geometry ();
     for( int iS = 0;
             iS < nscreens;
@@ -186,6 +186,7 @@ void Workspace::updateClientArea( bool force )
              ++it)
             (*it)->checkWorkspacePosition();
         }
+    delete[] screens;
     delete[] new_sareas;
     delete[] new_wareas;
     }
