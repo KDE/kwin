@@ -30,7 +30,6 @@
 #include "workspace.h"
 
 // This is a hack to ensure that we use Qt fade and scroll effects
-#warning: Using extracts from qeffects_p.h for kwinbutton tooltip fade and scroll effects
 
 // This code is copied directly from qeffects_p.h
 struct QEffects
