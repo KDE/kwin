@@ -55,9 +55,9 @@ class Client : public QObject, public KDecorationDefines
         Client* transientFor();
         bool isTransient() const;
         bool groupTransient() const;
-        ClientList mainClients() const; // call once before loop
+        ClientList mainClients() const; // call once before loop , is not indirect
         bool hasTransient( const Client* c, bool indirect ) const;
-        const ClientList& transients() const;
+        const ClientList& transients() const; // is not indirect
         void checkTransient( Window w );
         Client* findModal();
         const Group* group() const;

@@ -656,7 +656,7 @@ ClientList Client::mainClients() const
     for( ClientList::ConstIterator it = group()->members().begin();
          it != group()->members().end();
          ++it )
-        if( !(*it)->groupTransient() && (*it)->hasTransient( this, false ))
+        if((*it)->hasTransient( this, false ))
             result.append( *it );
     return result;
     }
