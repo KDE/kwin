@@ -2398,7 +2398,7 @@ NET::WindowType Client::windowType() const
 
 bool Client::wantsTabFocus() const
 {
-    return windowType() == NET::Normal && ( input || Ptakefocus ) && !skip_taskbar;
+    return (windowType() == NET::Normal || windowType() == NET::Override ) && ( input || Ptakefocus ) && !skip_taskbar;
 }
 
 /*!
