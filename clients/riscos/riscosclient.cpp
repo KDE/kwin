@@ -207,7 +207,7 @@ TitleBar::_updatePixmap()
     p.drawPixmap(0, 0, *px_title_active_left);
     p.drawTiledPixmap(2, 0, width() - 4, 18, *px_title_active);
     p.drawPixmap(width() - 2, 0, *px_title_active_right);
-    p.setPen(Qt::white);
+    p.setPen(Qt::black);
     p.setFont(options->font());
     p.drawText(3, 0, width() - 6, 18, AlignCenter, client_->caption());
 

@@ -5,7 +5,7 @@ static char * title_inactive_left_xpm[] = {
 ".	c #FFFFFF",
 "+	c #DCDCDC",
 "@	c #C3C3C3",
-"#	c #808080",
+"#	c #A0A0A0",
 "..",
 ".+",
 ".+",
@@ -23,4 +23,4 @@ static char * title_inactive_left_xpm[] = {
 ".+",
 ".+",
 ".@",
-"@#"};
+"+#"};
