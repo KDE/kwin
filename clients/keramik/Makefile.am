@@ -24,8 +24,8 @@ keramik.lo: tiles.h
 
 .PHONY: make-embed
 
-make-embed: $(PICS)
-	PICS=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\
+make-embed: 
+	pics=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\
 	$(QEMBED) --images $$pics | \
 	sed -e 's,static QDict<QImage> dict;,,' | \
 	sed -e 's,dict\.find,imageDict.find,' > $(srcdir)/tiles.h
