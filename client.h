@@ -225,9 +225,10 @@ class Client : public QObject, public KDecorationDefines
 
         void keyPressEvent( uint key_code ); // FRAME ??
 
-        const QPoint calculateGravitation( bool invert ) const; // FRAME public?
+        const QPoint calculateGravitation( bool invert, int gravity = 0 ) const; // FRAME public?
 
         void NETMoveResize( int x_root, int y_root, NET::Direction direction );
+        void NETMoveResizeWindow( int flags, int x, int y, int width, int height );
         void restackWindow( Window above, int detail, NET::RequestSource source, bool send_event = false );
         
         void gotPing( Time timestamp );
@@ -323,6 +324,7 @@ class Client : public QObject, public KDecorationDefines
         void updateWorkareaDiffs( const QRect& area = QRect());
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
         static int computeWorkareaDiff( int left, int right, int a_left, int a_right );
+        void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity = 0 );
 
         bool startMoveResize();
         void finishMoveResize( bool cancel );

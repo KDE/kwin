@@ -233,6 +233,7 @@ void Workspace::init()
         NET::WM2StartupId |
         NET::WM2AllowedActions |
         NET::WM2RestackWindow |
+        NET::WM2MoveResizeWindow |
         0
         ,
         NET::ActionMove |

@@ -137,6 +137,13 @@ void RootInfo::moveResize(Window w, int x_root, int y_root, unsigned long direct
         }
     }
 
+void RootInfo::moveResizeWindow(Window w, int flags, int x, int y, int width, int height )
+    {
+    Client* c = workspace->findClient( WindowMatchPredicate( w ));
+    if ( c )
+        c->NETMoveResizeWindow( flags, x, y, width, height );
+    }
+
 void RootInfo::gotPing( Window w, Time timestamp )
     {
     if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
@@ -672,9 +679,6 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
         return;
         }
 
-    if ( isShade() ) // SELI SHADE
-        setShade( ShadeNone );
-
     if ( e->value_mask & CWBorderWidth ) 
         {
         // first, get rid of a window border
@@ -686,92 +690,8 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
         XConfigureWindow( qt_xdisplay(), window(), value_mask, & wc );
         }
 
-    if ( e->value_mask & (CWX | CWY ) ) 
-        {
-        int ox = 0;
-        int oy = 0;
-        // GRAVITATE
-        int gravity = NorthWestGravity;
-        if ( xSizeHint.flags & PWinGravity)
-            gravity = xSizeHint.win_gravity;
-        if ( gravity == StaticGravity ) 
-            { // only with StaticGravity according to ICCCM 4.1.5
-            ox = clientPos().x();
-            oy = clientPos().y();
-            }
-
-        int nx = x() + ox;
-        int ny = y() + oy;
-
-        if ( e->value_mask & CWX )
-            nx = e->x;
-        if ( e->value_mask & CWY )
-            ny = e->y;
-
-
-        // clever workaround for applications like xv that want to set
-        // the location to the current location but miscalculate the
-        // frame size due to kwin being a double-reparenting window
-        // manager
-        if ( ox == 0 && oy == 0 &&
-             nx == x() + clientPos().x() &&
-             ny == y() + clientPos().y() ) 
-            {
-            nx = x();
-            ny = y();
-            }
-
-
-        QPoint np( nx-ox, ny-oy);
-#if 0
-        if ( windowType() == NET::Normal && isMovable()) 
-            {
-            // crap for broken netscape
-            QRect area = workspace()->clientArea();
-            if ( !area.contains( np ) && width() < area.width()  &&
-                 height() < area.height() ) 
-                {
-                if ( np.x() < area.x() )
-                    np.rx() = area.x();
-                if ( np.y() < area.y() )
-                    np.ry() = area.y();
-                }
-            }
-#endif
-
-        if ( maximizeMode() != MaximizeFull )
-            {
-            resetMaximize();
-            move( np );
-            }
-        }
-
-    if ( e->value_mask & (CWWidth | CWHeight ) ) 
-        {
-        int nw = clientSize().width();
-        int nh = clientSize().height();
-        if ( e->value_mask & CWWidth )
-            nw = e->width;
-        if ( e->value_mask & CWHeight )
-            nh = e->height;
-        QSize ns = sizeForClientSize( QSize( nw, nh ) );
-
-        //QRect area = workspace()->clientArea();
-        if ( maximizeMode() != MaximizeRestore ) 
-            {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
-            if( ns != size()) 
-                { // don't restore if some app sets its own size again
-                resetMaximize();
-                resize( ns );
-                }
-            }
-        else 
-            {
-            if ( ns == size() )
-                return; // broken xemacs stuff (ediff)
-            resize( ns );
-            }
-        }
+    if( e->value_mask & ( CWX | CWY | CWHeight | CWWidth ))
+        configureRequest( e->value_mask, e->x, e->y, e->width, e->height );
 
     if ( e->value_mask & CWStackMode )
         restackWindow( e->above, e->detail, NET::FromApplication );

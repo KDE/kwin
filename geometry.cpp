@@ -741,6 +741,8 @@ void Client::getWmNormalHints()
         xSizeHint.max_aspect.x = INT_MAX;
         xSizeHint.max_aspect.y = 1;
         }
+    if( !xSizeHint.flags & PWinGravity )
+        xSizeHint.win_gravity = NorthWestGravity;
     if( isManaged())
         { // update to match restrictions
         QSize new_size = adjustedSize( size());
@@ -772,6 +774,180 @@ void Client::sendSyntheticConfigureNotify()
     XSendEvent( qt_xdisplay(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
     }
 
+const QPoint Client::calculateGravitation( bool invert, int gravity ) const
+    {
+    int dx, dy;
+    dx = dy = 0;
+    
+    if( gravity == 0 ) // default (nonsense) value for the argument
+        gravity = xSizeHint.win_gravity;
+
+// dx, dy specify how the client window moves to make space for the frame
+    switch (gravity) 
+        {
+        case NorthWestGravity: // move down right
+            dx = border_left;
+            dy = border_top;
+            break;
+        case NorthGravity: // move right
+            dx = 0;
+            dy = border_top;
+            break;
+        case NorthEastGravity: // move down left
+            dx = -border_right;
+            dy = border_top;
+            break;
+        case WestGravity: // move right
+            dx = border_left;
+            dy = 0;
+            break;
+        case CenterGravity:
+            break; // will be handled specially
+        case StaticGravity: // don't move
+            dx = 0;
+            dy = 0;
+            break;
+        case EastGravity: // move left
+            dx = -border_right;
+            dy = 0;
+            break;
+        case SouthWestGravity: // move up right
+            dx = border_left ;
+            dy = -border_bottom;
+            break;
+        case SouthGravity: // move up
+            dx = 0;
+            dy = -border_bottom;
+            break;
+        case SouthEastGravity: // move up left
+            dx = -border_right;
+            dy = -border_bottom;
+            break;
+        }
+    if( gravity != CenterGravity )
+        { // translate from client movement to frame movement
+        dx -= border_left;
+        dy -= border_top;
+        }
+    else
+        { // center of the frame will be at the same position client center without frame would be
+        dx = - ( width() - clientSize().width()) / 2;
+        dy = - ( height() - clientSize().height()) / 2;
+        }
+    if( !invert )
+        return QPoint( x() + dx, y() + dy );
+    else
+        return QPoint( x() - dx, y() - dy );
+    }
+
+void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity )
+    {
+    if( gravity == 0 ) // default (nonsense) value for the argument
+        gravity = xSizeHint.win_gravity;
+    if( value_mask & ( CWX | CWY )) 
+        {
+        if ( isShade()) // SELI SHADE
+            setShade( ShadeNone );
+
+        int ox = 0;
+        int oy = 0;
+        // GRAVITATE
+        if ( gravity == StaticGravity ) 
+            { // only with StaticGravity according to ICCCM 4.1.5
+            ox = clientPos().x();
+            oy = clientPos().y();
+            }
+
+        int nx = x() + ox;
+        int ny = y() + oy;
+
+        if ( value_mask & CWX )
+            nx = rx;
+        if ( value_mask & CWY )
+            ny = ry;
+
+
+        // clever workaround for applications like xv that want to set
+        // the location to the current location but miscalculate the
+        // frame size due to kwin being a double-reparenting window
+        // manager
+        if ( ox == 0 && oy == 0 &&
+             nx == x() + clientPos().x() &&
+             ny == y() + clientPos().y() ) 
+            {
+            nx = x();
+            ny = y();
+            }
+
+
+        QPoint np( nx-ox, ny-oy);
+#if 0
+        if ( windowType() == NET::Normal && isMovable()) 
+            {
+            // crap for broken netscape
+            QRect area = workspace()->clientArea();
+            if ( !area.contains( np ) && width() < area.width()  &&
+                 height() < area.height() ) 
+                {
+                if ( np.x() < area.x() )
+                    np.rx() = area.x();
+                if ( np.y() < area.y() )
+                    np.ry() = area.y();
+                }
+            }
+#endif
+
+        if ( maximizeMode() != MaximizeFull )
+            {
+            resetMaximize();
+            move( np );
+            }
+        }
+
+    if ( value_mask & (CWWidth | CWHeight ) ) 
+        {
+        int nw = clientSize().width();
+        int nh = clientSize().height();
+        if ( value_mask & CWWidth )
+            nw = rw;
+        if ( value_mask & CWHeight )
+            nh = rh;
+        QSize ns = sizeForClientSize( QSize( nw, nh ) );
+
+        //QRect area = workspace()->clientArea();
+        if ( maximizeMode() != MaximizeRestore ) 
+            {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
+            if( ns != size()) 
+                { // don't restore if some app sets its own size again
+                resetMaximize();
+                resize( ns );
+                }
+            }
+        else 
+            {
+            if ( ns == size() )
+                return; // broken xemacs stuff (ediff)
+            resize( ns );
+            }
+        }
+    }
+
+// _NET_MOVERESIZE_WINDOW
+void Client::NETMoveResizeWindow( int flags, int x, int y, int width, int height )
+    {
+    int gravity = flags & 0xff;
+    int value_mask = 0;
+    if( flags & ( 1 << 8 ))
+        value_mask |= CWX;
+    if( flags & ( 1 << 9 ))
+        value_mask |= CWY;
+    if( flags & ( 1 << 10 ))
+        value_mask |= CWWidth;
+    if( flags & ( 1 << 11 ))
+        value_mask |= CWHeight;
+    configureRequest( value_mask, x, y, width, height, gravity );
+    }
+    
 /*!
   Returns whether the window is resizable or has a fixed size.
  */
