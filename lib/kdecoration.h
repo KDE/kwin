@@ -260,6 +260,11 @@ public:
     /**
      * @internal
      */
+    WindowOperation operationMaxButtonClick( Qt::ButtonState button ) const;
+
+    /**
+     * @internal
+     */
     virtual unsigned long updateSettings() = 0; // returns SettingXYZ mask
 
 protected:

@@ -22,11 +22,31 @@
 #ifndef __KKWMMOUSECONFIG_H__
 #define __KKWMMOUSECONFIG_H__
 
-class QComboBox;
 class KConfig;
 
 #include <qwidget.h>
 #include <kcmodule.h>
+#include <qcombobox.h>
+#include <qtooltip.h>
+
+
+class ToolTipComboBox: public QComboBox
+{
+  Q_OBJECT
+    
+public:
+  ToolTipComboBox(QWidget * owner, char const * const * toolTips_)
+    : QComboBox(owner)
+    , toolTips(toolTips_) {}
+
+public slots:
+  void changed() {QToolTip::add( this, i18n(toolTips[currentItem()]) );}
+
+protected:
+  char const * const * toolTips;
+};
+
+
 
 class KActionsConfig : public KCModule
 {
@@ -54,6 +74,8 @@ private:
   QComboBox* coTiInAct2;
   QComboBox* coTiInAct3;
 
+  ToolTipComboBox * coMax[3];
+
   QComboBox* coWin1;
   QComboBox* coWin2;
   QComboBox* coWin3;
@@ -72,9 +94,13 @@ private:
   const char* functionWin(int);
   const char* functionAllKey(int);
   const char* functionAll(int);
+  const char* functionMax(int);
 
   void setComboText(QComboBox* combo, const char* text);
   const char* fixup( const char* s );
+
+private slots:
+  void paletteChanged();
 
 };
 

@@ -133,6 +133,9 @@ unsigned long Options::updateSettings()
     electric_border_delay = config->readNumEntry("ElectricBorderDelay", 150);
 
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade"), true );
+    d->OpMaxButtonLeftClick = windowOperation( config->readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true );
+    d->OpMaxButtonMiddleClick = windowOperation( config->readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true );
+    d->OpMaxButtonRightClick = windowOperation( config->readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true );
 
     ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
     ignoreFocusStealingClasses = config->readListEntry("IgnoreFocusStealingClasses");

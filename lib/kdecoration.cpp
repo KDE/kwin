@@ -233,13 +233,7 @@ void KDecoration::closeWindow()
 
 void KDecoration::maximize( ButtonState button )
     {
-    // This can be made configurable if needed.
-    if( button == MidButton )
-        maximize( maximizeMode() ^ MaximizeVertical );
-    else if ( button == RightButton )
-        maximize( maximizeMode() ^ MaximizeHorizontal );
-    else
-        maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+    performWindowOperation( options()->operationMaxButtonClick( button ));
     }
 
 void KDecoration::maximize( MaximizeMode mode )
@@ -429,5 +423,12 @@ bool KDecorationOptions::moveResizeMaximizedWindows() const
 {
     return d->move_resize_maximized_windows;
 }
+
+KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick( Qt::ButtonState button ) const
+    {
+    return button == Qt::RightButton? d->OpMaxButtonRightClick : 
+           button == Qt::MidButton?   d->OpMaxButtonMiddleClick :
+                                      d->OpMaxButtonLeftClick;
+    }
 
 #include "kdecoration.moc"

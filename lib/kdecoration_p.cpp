@@ -58,6 +58,9 @@ void KDecorationOptionsPrivate::defaultKWinSettings()
     border_size = BorderNormal;
     cached_border_size = BordersCount; // invalid
     move_resize_maximized_windows = true;
+    OpMaxButtonRightClick = MaximizeOp;
+    OpMaxButtonMiddleClick = VMaximizeOp;
+    OpMaxButtonLeftClick = HMaximizeOp;
     }
 
 unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )

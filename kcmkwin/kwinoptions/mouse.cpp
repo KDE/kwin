@@ -24,6 +24,9 @@
 #include <qvgroupbox.h>
 #include <qgrid.h>
 #include <qsizepolicy.h>
+#include <qbitmap.h>
+#include <qhgroupbox.h>
+#include <qtooltip.h>
 
 #include <dcopclient.h>
 #include <klocale.h>
@@ -42,6 +45,92 @@
 #include "mouse.h"
 #include "mouse.moc"
 
+
+namespace {
+
+char const * const cnf_Max[] = {
+  "MaximizeButtonLeftClickCommand",
+  "MaximizeButtonMiddleClickCommand",
+  "MaximizeButtonRightClickCommand",
+};
+
+char const * const tbl_Max[] = {
+  "Maximize",
+  "Maximize (vertical only)",
+  "Maximize (horizontal only)",
+  "" };
+
+QPixmap maxButtonPixmaps[3];
+
+void createMaxButtonPixmaps()
+{
+  char const * maxButtonXpms[][3 + 13] = {
+    {0, 0, 0,
+    "...............",
+    ".......#.......",
+    "......###......",
+    ".....#####.....",
+    "..#....#....#..",
+    ".##....#....##.",
+    "###############",
+    ".##....#....##.",
+    "..#....#....#..",
+    ".....#####.....",
+    "......###......",
+    ".......#.......",
+    "..............."},
+    {0, 0, 0,
+    "...............",
+    ".......#.......",
+    "......###......",
+    ".....#####.....",
+    ".......#.......",
+    ".......#.......",
+    ".......#.......",
+    ".......#.......",
+    ".......#.......",
+    ".....#####.....",
+    "......###......",
+    ".......#.......",
+    "..............."},
+    {0, 0, 0,
+    "...............",
+    "...............",
+    "...............",
+    "...............",
+    "..#.........#..",
+    ".##.........##.",
+    "###############",
+    ".##.........##.",
+    "..#.........#..",
+    "...............",
+    "...............",
+    "...............",
+    "..............."},
+  };
+
+  QString baseColor(". c " + KGlobalSettings::baseColor().name());
+  QString textColor("# c " + KGlobalSettings::textColor().name());
+  for (int t = 0; t < 3; ++t)
+  {
+    maxButtonXpms[t][0] = "15 13 2 1";
+    maxButtonXpms[t][1] = baseColor.ascii();
+    maxButtonXpms[t][2] = textColor.ascii();
+    maxButtonPixmaps[t] = QPixmap(maxButtonXpms[t]);
+    maxButtonPixmaps[t].setMask(maxButtonPixmaps[t].createHeuristicMask());
+  }
+}
+
+} // namespace
+
+void KActionsConfig::paletteChanged()
+{
+  createMaxButtonPixmaps();
+  for (int b = 0; b < 3; ++b)
+    for (int t = 0; t < 3; ++t)
+      coMax[b]->changeItem(maxButtonPixmaps[t], t);
+
+}
 
 KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
   : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
@@ -211,6 +300,50 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
   coTiInAct3 = combo;
   QWhatsThis::add(combo, txtButton3);
 
+/**  Maximize Button ******************/
+
+  box = new QHGroupBox(i18n("Maximize Button"), this, "Maximize Button");
+  box->layout()->setMargin(KDialog::marginHint());
+  box->layout()->setSpacing(KDialog::spacingHint());
+  layout->addWidget(box);
+  QWhatsThis::add( box,
+    i18n("Here you can customize behavior when clicking on the maximize button.") );
+
+  QString strMouseButton[] = {
+    i18n("Left button:"),
+    i18n("Middle button:"),
+    i18n("Right button:")};
+
+  QString txtButton[] = {
+    i18n("Behavior on <em>left</em> click onto the maximize button." ),
+    i18n("Behavior on <em>middle</em> click onto the maximize button." ),
+    i18n("Behavior on <em>right</em> click onto the maximize button." )};
+
+  if ( leftHandedMouse ) // Be nice to lefties
+  {
+     qSwap(strMouseButton[0], strMouseButton[2]);
+     qSwap(txtButton[0], txtButton[2]);
+  }
+
+  createMaxButtonPixmaps();
+  for (int b = 0; b < 3; ++b)
+  {
+    if (b != 0) new QWidget(box); // Spacer
+
+    QLabel * label = new QLabel(strMouseButton[b], box);
+    QWhatsThis::add( label,    txtButton[b] );
+    label   ->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
+
+    coMax[b] = new ToolTipComboBox(box, tbl_Max);
+    for (int t = 0; t < 3; ++t) coMax[b]->insertItem(maxButtonPixmaps[t]);
+    connect(coMax[b], SIGNAL(activated(int)), SLOT(changed()));
+    connect(coMax[b], SIGNAL(activated(int)), coMax[b], SLOT(changed()));
+    QWhatsThis::add( coMax[b], txtButton[b] );
+    coMax[b]->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
+  }
+
+  connect(kapp, SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
+
 /**  Inactive inner window ******************/
 
   box = new QVGroupBox(i18n("Inactive Inner Window"), this, "Inactive Inner Window");
@@ -375,7 +508,7 @@ KActionsConfig::~KActionsConfig()
 // do NOT change the texts below, they are written to config file
 // and are not shown in the GUI
 // they have to match the order of items in GUI elements though
-const char* tbl_TiDbl[] = {
+const char* const tbl_TiDbl[] = {
     "Maximize",
     "Maximize (vertical only)",
     "Maximize (horizontal only)",
@@ -386,7 +519,7 @@ const char* tbl_TiDbl[] = {
     "Nothing",
     "" };
 
-const char* tbl_TiAc[] = {
+const char* const tbl_TiAc[] = {
     "Raise",
     "Lower",
     "Operations menu",
@@ -395,7 +528,7 @@ const char* tbl_TiAc[] = {
     "Shade",
     "" };
 
-const char* tbl_TiInAc[] = {
+const char* const tbl_TiInAc[] = {
     "Activate and raise",
     "Activate and lower",
     "Activate",
@@ -406,19 +539,19 @@ const char* tbl_TiInAc[] = {
     "Nothing",
     "" };
 
-const char* tbl_Win[] = {
+const char* const tbl_Win[] = {
     "Activate, raise and pass click",
     "Activate and pass click",
     "Activate",
     "Activate and raise",
     "" };
 
-const char* tbl_AllKey[] = {
+const char* const tbl_AllKey[] = {
     "Meta",
     "Alt",
     "" };
 
-const char* tbl_All[] = {
+const char* const tbl_All[] = {
     "Move",
     "Activate, raise and move",
     "Toggle raise and lower",
@@ -429,7 +562,7 @@ const char* tbl_All[] = {
     "Nothing",
     "" };
 
-static const char* tbl_num_lookup( const char* arr[], int pos )
+static const char* tbl_num_lookup( const char* const arr[], int pos )
 {
     for( int i = 0;
          arr[ i ][ 0 ] != '\0' && pos >= 0;
@@ -442,7 +575,7 @@ static const char* tbl_num_lookup( const char* arr[], int pos )
     abort(); // should never happen this way
 }
 
-static int tbl_txt_lookup( const char* arr[], const char* txt )
+static int tbl_txt_lookup( const char* const arr[], const char* txt )
 {
     int pos = 0;
     for( int i = 0;
@@ -470,6 +603,11 @@ void KActionsConfig::setComboText( QComboBox* combo, const char*txt )
         combo->setCurrentItem( tbl_txt_lookup( tbl_AllKey, txt ));
     else if( combo == coAll1 || combo == coAll2 || combo == coAll3 )
         combo->setCurrentItem( tbl_txt_lookup( tbl_All, txt ));
+    else if( combo == coMax[0] || combo == coMax[1] || combo == coMax[2] )
+    {
+        combo->setCurrentItem( tbl_txt_lookup( tbl_Max, txt ));
+        static_cast<ToolTipComboBox *>(combo)->changed();
+    }
     else
         abort();
 }
@@ -504,10 +642,17 @@ const char* KActionsConfig::functionAll( int i )
     return tbl_num_lookup( tbl_All, i );
 }
 
+const char* KActionsConfig::functionMax( int i )
+{
+    return tbl_num_lookup( tbl_Max, i );
+}
+
 void KActionsConfig::load()
 {
   config->setGroup("Windows");
   setComboText(coTiDbl, config->readEntry("TitlebarDoubleClickCommand","Shade").ascii());
+  for (int t = 0; t < 3; ++t)
+    setComboText(coMax[t],config->readEntry(cnf_Max[t], tbl_Max[t]).ascii());
 
   config->setGroup( "MouseBindings");
   setComboText(coTiAct1,config->readEntry("CommandActiveTitlebar1","Raise").ascii());
@@ -529,6 +674,8 @@ void KActionsConfig::save()
 {
   config->setGroup("Windows");
   config->writeEntry("TitlebarDoubleClickCommand", functionTiDbl( coTiDbl->currentItem() ) );
+  for (int t = 0; t < 3; ++t)
+    config->writeEntry(cnf_Max[t], functionMax(coMax[t]->currentItem()));
 
   config->setGroup("MouseBindings");
   config->writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentItem()));
@@ -570,4 +717,6 @@ void KActionsConfig::defaults()
   setComboText (coAll1,"Move");
   setComboText(coAll2,"Toggle raise and lower");
   setComboText(coAll3,"Resize");
+  for (int t = 0; t < 3; ++t)
+    setComboText(coMax[t], tbl_Max[t]);
 }

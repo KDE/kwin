@@ -53,6 +53,9 @@ class KDecorationOptionsPrivate : public KDecorationDefines
         bool show_tooltips;
         BorderSize border_size, cached_border_size;
         bool move_resize_maximized_windows;
+        WindowOperation OpMaxButtonRightClick;
+        WindowOperation OpMaxButtonMiddleClick;
+        WindowOperation OpMaxButtonLeftClick;
     };
 
 class KDecorationBridge : public KDecorationDefines
