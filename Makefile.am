@@ -1,17 +1,17 @@
 
 AM_CPPFLAGS = -DQT_NO_ASCII_CAST
 
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I$(top_srcdir)/kwin/default
 
-SUBDIRS = . pics clients
+SUBDIRS = default . pics clients
 
 bin_PROGRAMS = kwin
 lib_LTLIBRARIES = kwin.la
 
-kwin_la_SOURCES = atoms.cpp  client.cpp main.cpp stdclient.cpp workspace.cpp \
+kwin_la_SOURCES = atoms.cpp  client.cpp main.cpp workspace.cpp \
 	tabbox.cpp options.cpp plugins.cpp events.cpp KWinInterface.skel \
 	killwindow.cpp 
-kwin_la_LIBADD = $(LIB_KDEUI)
+kwin_la_LIBADD = $(LIB_KDEUI) $(top_builddir)/kwin/default/libkwindefault.la
 kwin_la_LDFLAGS = $(all_libraries) -module -avoid-version
 
 include_HEADERS = KWinInterface.h

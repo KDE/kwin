@@ -1,1 +1,1 @@
-SUBDIRS= kde kstep system b2 laptop riscos modernsystem
+SUBDIRS = kde1 kstep system b2 laptop riscos modernsystem

@@ -1,0 +1,7 @@
+#ifndef DEFAULT_DEFINES_H
+#define DEFAULT_DEFINES_H
+
+#define RESIZE_SIDE_WIDTH 30
+#define RESIZE_BAR_HEIGHT 6
+
+#endif

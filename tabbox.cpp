@@ -285,19 +285,34 @@ void TabBox::hide()
 
 /*!
   Rikkus: please document!   (Matthias)
+
+  Ok, here's the docs :)
+
+  You call delayedShow() instead of show() directly.
+
+  If the 'ShowDelay' setting is false, show() is simply called.
+
+  Otherwise, we start a timer for the delay given in the settings and only
+  do a show() when it times out.
+
+  This means that you can alt-tab between windows and you don't see the
+  tab box immediately. Not only does this make alt-tabbing faster, it gives
+  less 'flicker' to the eyes. You don't need to see the tab box if you're
+  just quickly switching between 2 or 3 windows. It seems to work quite
+  nicely.
  */
 void TabBox::delayedShow()
 {
     KConfig * c(KGlobal::config());
     c->setGroup("TabBox");
-    bool delay = c->readNumEntry("ShowDelay", false);
+    bool delay = c->readNumEntry("ShowDelay", true);
 
     if (!delay) {
 	show();
 	return;
     }
 
-    int delayTime = c->readNumEntry("DelayTime", 400);
+    int delayTime = c->readNumEntry("DelayTime", 75);
     delayedShowTimer.start(delayTime, true);
 }
 

@@ -17,7 +17,7 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include <qfile.h>
 
 #include "plugins.h"
-#include "stdclient.h"
+#include "Manager.h"
 
 PluginMenu::PluginMenu(PluginMgr *manager, QWidget *parent, const char *name)
     : QPopupMenu(parent, name)
@@ -31,7 +31,7 @@ void PluginMenu::slotAboutToShow()
 {
     clear();
     fileList.clear();
-    insertItem(i18n("KDE 1"), 0);
+    insertItem(i18n("KDE 2"), 0);
     idCount = 1;
 
     QDir dir;
@@ -104,7 +104,7 @@ PluginMgr::PluginMgr()
     QString pluginStr;
     KConfig *config = KGlobal::config();
     config->setGroup("Style");
-    pluginStr = config->readEntry("PluginLib", "standard");
+    pluginStr = config->readEntry("PluginLib", "default");
     if(pluginStr.isEmpty() || pluginStr == "standard")
         return;
     else
@@ -122,7 +122,7 @@ Client* PluginMgr::allocateClient(Workspace *ws, WId w)
     if(alloc_ptr)
         return(alloc_ptr(ws, w));
     else
-        return(new StdClient(ws, w));
+        return(new Default::Manager(ws, w));
 }
 
 void PluginMgr::loadPlugin(QString nameStr)
@@ -135,44 +135,42 @@ void PluginMgr::loadPlugin(QString nameStr)
     config->writeEntry("PluginLib", nameStr);
     oldHandle = handle;
 
-    if(nameStr.isNull()){
+    // Rikkus: temporary change in semantics.
+
+    if (!nameStr)
+      nameStr = "default";
+
+    if(!dlregistered){
+        dlregistered = true;
+        lt_dlinit();
+    }
+    nameStr += ".la";
+    nameStr = KGlobal::dirs()->findResource("lib", nameStr);
+
+    if(!nameStr){
+        warning("KWin: cannot find client plugin.");
         handle = 0;
         alloc_ptr = NULL;
         config->writeEntry("PluginLib", "standard");
     }
     else{
-        if(!dlregistered){
-            dlregistered = true;
-            lt_dlinit();
-        }
-        nameStr += ".la";
-        nameStr = KGlobal::dirs()->findResource("lib", nameStr);
-
-        if(!nameStr){
-            warning("KWin: cannot find client plugin.");
+        handle = lt_dlopen(nameStr.latin1());
+        if(!handle){
+            warning("KWin: cannot load client plugin %s.", nameStr.latin1());
             handle = 0;
             alloc_ptr = NULL;
             config->writeEntry("PluginLib", "standard");
         }
         else{
-            handle = lt_dlopen(nameStr.latin1());
-            if(!handle){
-                warning("KWin: cannot load client plugin %s.", nameStr.latin1());
+            lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
+            if(alloc_func)
+                alloc_ptr = (Client* (*)(Workspace *ws, WId w))alloc_func;
+            else{
+                warning("KWin: %s is not a KWin plugin.", nameStr.latin1());
+                lt_dlclose(handle);
                 handle = 0;
                 alloc_ptr = NULL;
                 config->writeEntry("PluginLib", "standard");
-            }
-            else{
-                lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
-                if(alloc_func)
-                    alloc_ptr = (Client* (*)(Workspace *ws, WId w))alloc_func;
-                else{
-                    warning("KWin: %s is not a KWin plugin.", nameStr.latin1());
-                    lt_dlclose(handle);
-                    handle = 0;
-                    alloc_ptr = NULL;
-                    config->writeEntry("PluginLib", "standard");
-                }
             }
         }
     }

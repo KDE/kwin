@@ -2408,5 +2408,12 @@ NoBorderClient::~NoBorderClient()
 {
 }
 
+QPixmap * kwin_get_menu_pix_hack()
+{
+  static QPixmap p;
+  return &p;
+}
+
+
 #include "client.moc"
 
