@@ -266,9 +266,9 @@ find_fade (win *w)
 void
 dequeue_fade (Display *dpy, fade *f)
 {
+    fade    **prev;
     f->w->isInFade = False;
     f->w->titleHeight = f->titleHeight;
-    fade    **prev;
 
     for (prev = &fades; *prev; prev = &(*prev)->next)
 	if (*prev == f)
@@ -2320,9 +2320,9 @@ loadConfig(char *filename){
 	Bool            section = False;
 
 	if( filename == NULL ){
-		wasNull = True;
 		const char *home = getenv("HOME");
 		const char *configfile = "/.xcompmgrrc"; 
+        wasNull = True;
 		filename = (char*)malloc((strlen(home)+strlen(configfile)+1)*sizeof(char));
 
 		strcat(filename, home);
@@ -2414,6 +2414,7 @@ main (int argc, char **argv)
 	int		    composite_major, composite_minor;
 
 	int		    o;
+    char **res = NULL;
 
 	shadowColor.red = 0;
 	shadowColor.green = 0;
@@ -2421,7 +2422,6 @@ main (int argc, char **argv)
 
 	loadConfig(NULL); /*we do that before cmdline-parsing, so config-values can be overridden*/
 	/*used for shadow colors*/
-	char **res = NULL;
 	while ((o = getopt (argc, argv, "D:I:O:d:r:o:l:t:scnfFCaSx:vh")) != -1)
 	{
 		switch (o) {
@@ -2577,6 +2577,7 @@ main (int argc, char **argv)
 		XCompositeRedirectSubwindows (dpy, root, CompositeRedirectAutomatic);
 	else
 	{
+        int dummy;
 		XCompositeRedirectSubwindows (dpy, root, CompositeRedirectManual);
 		XSelectInput (dpy, root, 
 				SubstructureNotifyMask|
@@ -2586,7 +2587,6 @@ main (int argc, char **argv)
 				VisibilityChangeMask);
 
 		/*shaping stuff*/
-		int dummy;
 		XShapeQueryExtension(dpy, &shapeEvent, &dummy);
 
 		XQueryTree (dpy, root, &root_return, &parent_return, &children, &nchildren);
