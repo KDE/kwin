@@ -392,8 +392,11 @@ void Workspace::restackClientUnderActive( Client* c )
         {
         if( Client::belongToSameApplication( active_client, *it ))
             {
-            unconstrained_stacking_order.remove( c );
-            unconstrained_stacking_order.insert( it, c );
+            if( *it != c )
+                {
+                unconstrained_stacking_order.remove( c );
+                unconstrained_stacking_order.insert( it, c );
+                }
             break;
             }
         }
