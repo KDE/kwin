@@ -224,7 +224,7 @@ void Client::destroyClient()
     deleteClient( this, Allowed );
     }
 
-void Client::updateDecoration( bool check_workspace_pos, bool force )
+void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_delete )
     {
     if( !force && (( decoration == NULL && noBorder())
                     || ( decoration != NULL && !noBorder())))
@@ -232,7 +232,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     bool do_show = false;
     ++block_geometry;
     if( force )
-        destroyDecoration();
+        destroyDecoration( delay_delete );
     if( !noBorder())
         {
         decoration = workspace()->createDecoration( bridge );
@@ -254,7 +254,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         do_show = true;
         }
     else
-        destroyDecoration();
+        destroyDecoration( delay_delete );
     if( check_workspace_pos )
         checkWorkspacePosition();
     --block_geometry;
@@ -264,11 +264,18 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     updateFrameStrut();
     }
 
-void Client::destroyDecoration()
+void Client::destroyDecoration( bool delay_delete )
     {
     if( decoration != NULL )
         {
-        delete decoration;
+        // When selecting the noborder operation from the popup menu after clicking on the menu
+        // button, the decoration should be deleted. But after closing the popup, the flow
+        // of control is still in the decoration, and the decorations usually do
+        // "button->setDown( false )". Therefore, delay the actual deleting.
+        if( delay_delete )
+            decoration->deleteLater();
+        else
+            delete decoration;
         border_left = border_right = border_top = border_bottom = 0;
         decoration = NULL;
         setMask( QRegion()); // reset shape mask
@@ -452,7 +459,7 @@ void Client::setUserNoBorder( bool set )
     if( user_noborder == set )
         return;
     user_noborder = set;
-    updateDecoration( true );
+    updateDecoration( true, false, true ); // delayed deletion of decoration
     }
 
 bool Client::grabInput()

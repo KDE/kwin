@@ -1098,7 +1098,7 @@ void Client::setFullScreen( bool set, bool user )
     StackingUpdatesBlocker blocker( workspace());
     workspace()->updateClientLayer( this ); // active fullscreens get different layer
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
-    updateDecoration( false );
+    updateDecoration( false, false, true ); // delayed deletion of decoration
     if( isFullScreen())
         setGeometry( workspace()->geometry());
         // XINERAMA only on one screen
