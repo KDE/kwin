@@ -345,12 +345,9 @@ void Client::manage( bool isMapped )
 		geom.setRect( geom.x(), xSizeHint.y, geom.width(), geom.height() );
 	    placementDone = TRUE;
 	}
-	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
-	    if ( xSizeHint.width != 0 )
-		geom.setWidth( xSizeHint.width );
-	    if ( xSizeHint.height != 0 )
-		geom.setHeight( xSizeHint.height );
-	}
+ 	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
+	    // keep in mind that we now actually have a size :-)
+ 	}
   	if (xSizeHint.flags & PMaxSize)
   	    geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
   	if (xSizeHint.flags & PMinSize)
@@ -360,8 +357,6 @@ void Client::manage( bool isMapped )
     windowWrapper()->resize( geom.size() );
     // the clever activate() trick is necessary
     layout()->activate();
-//     resize( geom.width() + width() - windowWrapper()->width(),
-// 	    geom.height() + height() - windowWrapper()->height() );
     resize ( sizeForWindowSize( geom.size() ) );
     layout()->activate();
 
