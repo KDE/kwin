@@ -53,8 +53,9 @@ public:
 
 //-----------------------------------------------------------------------------
 
-class GlowClientGlobals
+class GlowClientGlobals : public QObject
 {
+	Q_OBJECT
 public:
 	enum PixmapType { StickyOn, StickyOff, Help, Iconify, MaximizeOn,
 		MaximizeOff, Close };
@@ -63,7 +64,13 @@ public:
 
 	static GlowClientGlobals *instance();
 
+	~GlowClientGlobals();
+
 	QPixmap *getPixmap(int type, bool isActive, bool isLeft, bool isSmall);
+	vector<int> getPixmapTypes();
+	vector<int> getPixmapModifiers();
+
+	void reset();
 
 	GlowClientConfig *config;
 	GlowButtonFactory *buttonFactory;
@@ -75,6 +82,7 @@ private:
 
 	void readConfig();
 	void createPixmaps();
+	void deletePixmaps();
 	QPixmap *createPixmap(int type, int modifiers);
 
 	map< int, map< int, QPixmap* > > m_pixmapMap;

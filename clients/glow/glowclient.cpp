@@ -41,7 +41,6 @@ GlowClientConfig::GlowClientConfig()
 
 void GlowClientConfig::load()
 {
-// cerr << "GlowClientConfig " << "load " << endl;
 	KConfig conf("kwinglowrc");
 	conf.setGroup("General");
 
@@ -111,6 +110,12 @@ GlowClientGlobals *GlowClientGlobals::instance()
 	return m_instance;
 }
 
+GlowClientGlobals::~GlowClientGlobals()
+{
+	deletePixmaps();
+	m_instance = 0;
+}
+
 QPixmap *GlowClientGlobals::getPixmap(
 	int type, bool isActive, bool isLeft, bool isSmall)
 {
@@ -122,6 +127,7 @@ QPixmap *GlowClientGlobals::getPixmap(
 }
 
 GlowClientGlobals::GlowClientGlobals()
+	: QObject()
 {
 // cerr << "GlowClientGlobals " << "GlowClientGlobals " << endl;
 	buttonFactory = new GlowButtonFactory();
@@ -135,25 +141,69 @@ void GlowClientGlobals::readConfig()
 	config->load();
 }
 
+vector<int> GlowClientGlobals::getPixmapTypes()
+{
+	vector<int> pixmapTypes;
+	pixmapTypes.push_back(StickyOn);
+	pixmapTypes.push_back(StickyOff);
+	pixmapTypes.push_back(Help);
+	pixmapTypes.push_back(Iconify);
+	pixmapTypes.push_back(MaximizeOn);
+	pixmapTypes.push_back(MaximizeOff);
+	pixmapTypes.push_back(Close);
+
+	return pixmapTypes;
+}
+
+vector<int> GlowClientGlobals::getPixmapModifiers()
+{
+	vector<int> pixmapModifiers;
+	pixmapModifiers.push_back(Active | PosLeft | SizeSmall);
+	pixmapModifiers.push_back(Active | PosLeft | SizeNormal);
+	pixmapModifiers.push_back(Active | PosRight | SizeSmall);
+	pixmapModifiers.push_back(Active | PosRight | SizeNormal);
+	pixmapModifiers.push_back(NotActive | PosLeft | SizeSmall);
+	pixmapModifiers.push_back(NotActive | PosLeft | SizeNormal);
+	pixmapModifiers.push_back(NotActive | PosRight | SizeSmall);
+	pixmapModifiers.push_back(NotActive | PosRight | SizeNormal);
+
+	return pixmapModifiers;
+}
+
+void GlowClientGlobals::reset()
+{
+// cerr << "GlowClientGlobals " << "reset " << endl;
+	deletePixmaps();
+	delete config;
+	readConfig();
+	createPixmaps();
+}
+
 void GlowClientGlobals::createPixmaps()
 {
 // cerr << "GlowClientGlobals " << "createPixmaps " << endl;
-	int types[] = { StickyOn, StickyOff, Help, Iconify, MaximizeOn,
-		MaximizeOff, Close };
-	for( int i=0; i<7; i++ )
+	vector<int> types = getPixmapTypes();
+	for( int i=0; i<types.size(); i++ )
 	{
-		int modifiers[] = {
-			Active | PosLeft | SizeSmall,
-			Active | PosLeft | SizeNormal,
-			Active | PosRight | SizeSmall,
-			Active | PosRight | SizeNormal,
-			NotActive | PosLeft | SizeSmall,
-			NotActive | PosLeft | SizeNormal,
-			NotActive | PosRight | SizeSmall,
-			NotActive | PosRight | SizeNormal };
-		for( int j=0; j<8; j++ )
+		vector<int> modifiers = getPixmapModifiers();
+		for( int j=0; j<modifiers.size(); j++ )
 			m_pixmapMap[types[i]][modifiers[j]] =
 				createPixmap(types[i],modifiers[j]);
+	}
+}
+
+void GlowClientGlobals::deletePixmaps()
+{
+	vector<int> types = getPixmapTypes();
+	for( int i=0; i<types.size(); i++ )
+	{
+		if( m_pixmapMap.find(types[i]) == m_pixmapMap.end() )
+			continue;
+		vector<int> modifiers = getPixmapModifiers();
+		map<int, QPixmap*> modifierMap = m_pixmapMap[types[i]];
+		for( int j=0; j<modifiers.size(); j++ )
+			if( modifierMap.find(modifiers[j]) == modifierMap.end() )
+				delete modifierMap[modifiers[j]];
 	}
 }
 
@@ -261,7 +311,7 @@ GlowClient::GlowClient(KWinInternal::Workspace *ws, WId w,
 		m_maximizeButton(0), m_closeButton(0),
 		m_mainLayout(0)
 {
-cerr << "GlowClient " << "GlowClient " << endl;
+// cerr << "GlowClient " << "GlowClient " << endl;
 	createButtons();
 	resetLayout();
 	repaint();
@@ -272,6 +322,7 @@ cerr << "GlowClient " << "GlowClient " << endl;
 
 GlowClient::~GlowClient()
 {
+// cerr << "GlowClient " << "~GlowClient " << endl;
 }
 
 void GlowClient::resizeEvent( QResizeEvent *e )
@@ -283,7 +334,7 @@ void GlowClient::resizeEvent( QResizeEvent *e )
 
 void GlowClient::paintEvent( QPaintEvent *e )
 {
-cerr << "GlowClient " << "paintEvent " << endl;
+// cerr << "GlowClient " << "paintEvent " << endl;
 	Client::paintEvent(e);
 
 	QRect r_this = rect();
@@ -392,7 +443,7 @@ Client::MousePosition GlowClient::mousePosition(const QPoint &pos) const
 
 void GlowClient::createButtons()
 {
-cerr << "GlowClient " << "createButtons " << endl;
+// cerr << "GlowClient " << "createButtons " << endl;
 	GlowClientGlobals *globals = GlowClientGlobals::instance();
 	GlowButtonFactory *factory = globals->buttonFactory;
 	int s = isTool() ? SMALL_BITMAP_SIZE : DEFAULT_BITMAP_SIZE;
@@ -436,7 +487,7 @@ cerr << "GlowClient " << "createButtons " << endl;
 
 void GlowClient::resetLayout()
 {
-cerr << "GlowClient " << "resetLayout " << endl;
+// cerr << "GlowClient " << "resetLayout " << endl;
 	const unsigned int sideMargin = 2;
 	const unsigned int bottomMargin = 2;
 	const unsigned int titleVMargin = 2;
@@ -481,7 +532,7 @@ cerr << "GlowClient " << "resetLayout " << endl;
 
 void GlowClient::updateButtonPositions()
 {
-cerr << "GlowClient " << "updateButtonPositions " << endl;
+// cerr << "GlowClient " << "updateButtonPositions " << endl;
 	QString buttons = options->titleButtonsLeft() + "|"
 		+ options->titleButtonsRight();
 	vector<GlowButton*> *buttonList = &m_leftButtonList;
@@ -520,7 +571,7 @@ cerr << "GlowClient " << "updateButtonPositions " << endl;
 
 void GlowClient::updateButtonPixmaps()
 {
-cerr << "GlowClient " << "updateButtonPixmaps " << endl;
+// cerr << "GlowClient " << "updateButtonPixmaps " << endl;
 	GlowClientGlobals *globals = GlowClientGlobals::instance();
 
 	if( isSticky() )
@@ -600,22 +651,28 @@ extern "C"
 {
 	Client * allocate(Workspace * ws, WId w)
 	{
+// cerr << "#### allocate " << endl;
 		return new GlowClient(ws, w);
 	}
 
 	void init()
 	{
+// cerr << "#### init " << endl;
+		GlowClientGlobals::instance();
 	}
 
 	void reset()
 	{
+// cerr << "#### reset " << endl;
+		GlowClientGlobals::instance()->reset();
 		Workspace::self()->slotResetAllClientsDelayed();
 	}
 
 	void deinit()
 	{
+// cerr << "#### deinit " << endl;
+		delete GlowClientGlobals::instance();
 	}
 }
 
 #include "glowclient.moc"
-
