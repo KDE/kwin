@@ -14,7 +14,6 @@ namespace KWinInternal {
 	
 class GeometryTip: public QLabel
 {
-    Q_OBJECT
     public:
 	GeometryTip( const Client* client, const XSizeHints* xSizeHints, bool resizing );
 	~GeometryTip();

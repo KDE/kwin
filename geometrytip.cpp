@@ -83,5 +83,3 @@ void GeometryTip::setGeometry( const QRect& geom )
     move( geom.x() + ((geom.width()  - width())  / 2),
 	  geom.y() + ((geom.height() - height()) / 2) );
 }
-
-#include "geometrytip.moc"
