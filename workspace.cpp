@@ -878,6 +878,8 @@ void Workspace::raiseClient( Client* c )
 	    t2 = findClient( t->transientFor() );
 	    if ( t2 == c )
 		goto end;
+	    if ( t2 == t )
+		break;
 	    t = t2;
 	}
 	raiseClient( t );
