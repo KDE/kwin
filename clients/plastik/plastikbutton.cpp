@@ -278,7 +278,7 @@ void PlastikButton::drawButton(QPainter *painter)
     // fill with the titlebar background
     bP.drawTiledPixmap(0, 0, width(), width(), backgroundTile);
 
-    if (! (m_type == MenuButton && !hover) ) {
+    if (m_type != MenuButton || hover || animProgress != 0) {
         // contour
         bP.setPen(contourTop);
         bP.drawLine(r.x()+2, r.y(), r.right()-2, r.y() );
