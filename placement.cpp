@@ -130,7 +130,7 @@ void Placement::placeSmart(Client* c)
     long int overlap, min_overlap = 0;
     int x_optimal, y_optimal;
     int possible;
-    int desktop = c->desktop() < 0 || c->isSticky() ? d->m_WorkspacePtr->currentDesktop() : c->desktop();
+    int desktop = c->desktop() == 0 || c->isSticky() ? d->m_WorkspacePtr->currentDesktop() : c->desktop();
 
     int cxl, cxr, cyt, cyb;     //temp coords
     int  xl,  xr,  yt,  yb;     //temp coords
@@ -280,7 +280,7 @@ void Placement::placeCascaded (Client* c, bool re_init)
     const int delta_x = 24;
     const int delta_y = 24;
 
-    const int dn = c->desktop() < 0 || c->isSticky() ? (d->m_WorkspacePtr->currentDesktop() - 1) : (c->desktop() - 1);
+    const int dn = c->desktop() == 0 || c->isSticky() ? (d->m_WorkspacePtr->currentDesktop() - 1) : (c->desktop() - 1);
 
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
