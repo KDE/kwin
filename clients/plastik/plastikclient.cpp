@@ -834,14 +834,14 @@ void PlastikClient::update_captionBuffer()
     if (!PlastikHandler::initialized()) return;
 
     const uint maxCaptionLength = 300; // truncate captions longer than this!
-    QString caption(caption() );
-    if (caption.length() > maxCaptionLength) {
-        caption.truncate(maxCaptionLength);
-        caption.append(" [...]");
+    QString c(caption() );
+    if (c.length() > maxCaptionLength) {
+        c.truncate(maxCaptionLength);
+        c.append(" [...]");
     }
 
     QFontMetrics fm(s_titleFont);
-    int captionWidth  = fm.width(caption);
+    int captionWidth  = fm.width(c);
 
     QPixmap textPixmap;
     QPainter painter;
@@ -854,7 +854,7 @@ void PlastikClient::update_captionBuffer()
         painter.begin(&textPixmap);
         painter.setFont(s_titleFont);
         painter.setPen(white);
-        painter.drawText(textPixmap.rect(), AlignCenter, caption );
+        painter.drawText(textPixmap.rect(), AlignCenter, c );
         painter.end();
     }
 
@@ -872,7 +872,7 @@ void PlastikClient::update_captionBuffer()
     }
     painter.setFont(s_titleFont);
     painter.setPen(PlastikHandler::getColor(TitleFont,true));
-    painter.drawText(aCaptionBuffer->rect(), AlignCenter, caption );
+    painter.drawText(aCaptionBuffer->rect(), AlignCenter, c );
     painter.end();
 
 
@@ -886,7 +886,7 @@ void PlastikClient::update_captionBuffer()
     }
     painter.setFont(s_titleFont);
     painter.setPen(PlastikHandler::getColor(TitleFont,false));
-    painter.drawText(iCaptionBuffer->rect(), AlignCenter, caption );
+    painter.drawText(iCaptionBuffer->rect(), AlignCenter, c );
     painter.end();
 
     captionBufferDirty = false;

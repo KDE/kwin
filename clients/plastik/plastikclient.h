@@ -79,7 +79,7 @@ private:
     QPixmap *aCaptionBuffer, *iCaptionBuffer;
     void update_captionBuffer();
 
-    QPixmap *aTitleBarTile, *iTitleBarTile, *aTitleBarTopTile, *iTitleBarTopTile;;
+    QPixmap *aTitleBarTile, *iTitleBarTile, *aTitleBarTopTile, *iTitleBarTopTile;
     bool pixmaps_created;
     void create_pixmaps();
     void delete_pixmaps();
