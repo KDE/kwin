@@ -315,10 +315,10 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, (Window*) &transient_for ) )
 	transient_for = None;
-    
+
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
-    
+
 }
 
 /*!
@@ -370,10 +370,10 @@ void Client::manage( bool isMapped )
     move( geom.x(), geom.y() );
     gravitate( FALSE );
 
-    if ( !placementDone && transient_for ) {
-	// transient_for workaround for broken qt snapshot, #####
-	placementDone = TRUE;
-    }
+//     if ( !placementDone && transient_for ) {
+// 	// transient_for workaround for broken qt snapshot, #####
+// 	placementDone = TRUE;
+//     }
 	
 
     if ( !placementDone ) {

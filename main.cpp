@@ -116,7 +116,7 @@ bool kwiniface::process(const QCString &fun, const QByteArray &, QCString& reply
 		logout();
 		return TRUE;
 	}
-     	else 
+     	else
 	{
 		return FALSE;
  	}
@@ -140,6 +140,12 @@ bool Application::x11EventFilter( XEvent *e )
     case PropertyNotify:
 	kwin_time = e->xproperty.time;
 	break;
+    case ConfigureNotify:			
+	{
+	    if ( e->xconfigure.window != e->xconfigure.event )
+		return TRUE;
+	}
+	break;
     default:
 	break;
     }
@@ -157,7 +163,7 @@ static void sighandler(int) {
     QApplication::exit();
 }
 
-int main( int argc, char * argv[] ) 
+int main( int argc, char * argv[] )
 {
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"), version, description);
 

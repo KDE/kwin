@@ -48,6 +48,19 @@ int Shape::shapeEvent()
 }
 
 
+static void updateTime()
+{
+    static QWidget* w = 0;
+    if ( !w )
+	w = new QWidget;
+    long data = 1;
+    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwm_running, atoms->kwm_running, 32,
+		    PropModeAppend, (unsigned char*) &data, 1);
+    XEvent ev;
+    XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
+    kwin_time = ev.xproperty.time;
+}
+
 Client* Workspace::clientFactory( Workspace *ws, WId w )
 {
     // hack TODO hints
@@ -285,6 +298,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    return TRUE;
 	return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
+	updateTime();
 	c = findClient( e->xmaprequest.window );
 	if ( !c ) {
 	    if ( e->xmaprequest.parent == root ) {
