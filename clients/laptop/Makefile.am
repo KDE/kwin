@@ -1,21 +1,17 @@
 
-INCLUDES = $(all_includes)
+INCLUDES = -I$(srcdir)/../../lib $(all_includes)
 
-kde_module_LTLIBRARIES = kwin_laptop.la
+kde_module_LTLIBRARIES = kwin3_laptop.la
 
-kwin_laptop_la_SOURCES = laptopclient.cpp
-#kwin_laptop_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
-kwin_laptop_la_LDFLAGS = $(all_libraries) -avoid-version -module $(KDE_RPATH) $(KDE_MT_LDFLAGS)
+kwin3_laptop_la_SOURCES = laptopclient.cpp
+kwin3_laptop_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module 
+kwin3_laptop_la_LIBADD  = ../../lib/libkwin.la
 
 METASOURCES = AUTO
 noinst_HEADERS = laptopclient.h
 
-lnkdir = $(kde_datadir)/kwin/
+lnkdir = $(kde_datadir)/kwin
 lnk_DATA = laptop.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-
-###KMAKE-start (don't edit or delete this block)
-
-###KMAKE-end

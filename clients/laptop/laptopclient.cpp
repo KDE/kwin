@@ -1,3 +1,5 @@
+// Port to KDE 3.2: Luciano Montanaro <mikelima@virgilio.it>
+//
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
@@ -9,11 +11,8 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <qbitmap.h>
-#include "../../workspace.h"
-#include "../../options.h"
-
-
-using namespace KWinInternal;
+#include <qtooltip.h>
+#include <qlabel.h>
 
 namespace Laptop {
 
@@ -54,10 +53,14 @@ static QColor btnForeground;
 
 static bool pixmaps_created = false;
 
-static int titleHeight = 14; // configurable title height not implemented yet
+static int titleHeight = 14; 
 static int btnWidth1 = 17;
 static int btnWidth2 = 27;
 
+static inline const KDecorationOptions* options()
+{
+    return KDecoration::options();
+}
 
 static void drawButtonFrame(KPixmap *pix, const QColorGroup &g, bool sunken)
 {
@@ -89,6 +92,10 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
+    titleHeight = QFontMetrics(options()->font(true)).height() + 2;
+    titleHeight &= ~1; // Make title height even
+    if (titleHeight < 14) titleHeight = 14;
+    
     // titlebar
     QPainter p;
     QPainter maskPainter;
@@ -102,10 +109,10 @@ static void create_pixmaps()
     maskPainter.setPen(Qt::color1);
     for(i=0, y=2; i < 3; ++i, y+=4){
         for(x=1; x <= 33; x+=3){
-            p.setPen(options->color(Options::TitleBar, true).light(150));
+            p.setPen(options()->color(KDecoration::ColorTitleBar, true).light(150));
             p.drawPoint(x, y);
             maskPainter.drawPoint(x, y);
-            p.setPen(options->color(Options::TitleBar, true).dark(150));
+            p.setPen(options()->color(KDecoration::ColorTitleBar, true).dark(150));
             p.drawPoint(x+1, y+1);
             maskPainter.drawPoint(x+1, y+1);
         }
@@ -119,19 +126,19 @@ static void create_pixmaps()
         aUpperGradient->resize(32, titleHeight+2);
         iUpperGradient = new KPixmap;
         iUpperGradient->resize(32, titleHeight+2);
-        QColor bgColor = options->color(Options::TitleBar, true);
+        QColor bgColor = options()->color(KDecoration::ColorTitleBar, true);
         KPixmapEffect::gradient(*aUpperGradient,
                                 bgColor.light(120),
                                 bgColor.dark(120),
                                 KPixmapEffect::VerticalGradient);
-        bgColor = options->color(Options::TitleBar, false);
+        bgColor = options()->color(KDecoration::ColorTitleBar, false);
         KPixmapEffect::gradient(*iUpperGradient,
                                 bgColor.light(120),
                                 bgColor.dark(120),
                                 KPixmapEffect::VerticalGradient);
     }
     // buttons (active/inactive, sunken/unsunken, 2 sizes each)
-    QColorGroup g = options->colorGroup(Options::ButtonBg, true);
+    QColorGroup g = options()->colorGroup(KDecoration::ColorButtonBg, true);
     QColor c = g.background();
     btnPix1 = new KPixmap;
     btnPix1->resize(btnWidth1, titleHeight);
@@ -158,7 +165,7 @@ static void create_pixmaps()
                                 KPixmapEffect::DiagonalGradient);
         KPixmapEffect::gradient(*btnDownPix2, c.dark(130), c.light(120),
                                 KPixmapEffect::DiagonalGradient);
-        g = options->colorGroup(Options::ButtonBg, false);
+        g = options()->colorGroup(KDecoration::ColorButtonBg, false);
         c = g.background();
         KPixmapEffect::gradient(*iBtnPix1, c.light(120), c.dark(130),
                                 KPixmapEffect::DiagonalGradient);
@@ -174,27 +181,27 @@ static void create_pixmaps()
         btnDownPix1->fill(c.rgb());
         btnPix2->fill(c.rgb());
         btnDownPix2->fill(c.rgb());
-        g = options->colorGroup(Options::ButtonBg, false);
+        g = options()->colorGroup(KDecoration::ColorButtonBg, false);
         c = g.background();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
         iBtnPix2->fill(c.rgb());
         iBtnDownPix2->fill(c.rgb());
     }
-    g = options->colorGroup(Options::ButtonBg, true);
+    g = options()->colorGroup(KDecoration::ColorButtonBg, true);
     c = g.background();
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(btnPix2, g, false);
     drawButtonFrame(btnDownPix2, g, true);
-    g = options->colorGroup(Options::ButtonBg, false);
+    g = options()->colorGroup(KDecoration::ColorButtonBg, false);
     c = g.background();
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
     drawButtonFrame(iBtnPix2, g, false);
     drawButtonFrame(iBtnDownPix2, g, true);
 
-    if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
+    if(qGray(options()->color(KDecoration::ColorButtonBg, true).rgb()) > 128)
         btnForeground = Qt::black;
     else
         btnForeground = Qt::white;
@@ -218,19 +225,22 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
+// =====================================
 
-LaptopClientButton::LaptopClientButton(int w, int h, Client *parent, 
+LaptopClientButton::LaptopClientButton(int w, int h, LaptopClient *parent, 
         const char *name, const unsigned char *bitmap, 
         const QString& tip)
-    : KWinButton(parent, name, tip)
+    : QButton(parent->widget(), name), client(parent)
 {
-    client = parent;
     defaultSize = QSize(w, h);
     setFixedHeight(h);
     resize(defaultSize);
     if(bitmap)
         setBitmap(bitmap);
+
     //setBackgroundMode(QWidget::NoBackground);
+
+    QToolTip::add(this, tip);
 }
 
 QSize LaptopClientButton::sizeHint() const
@@ -268,7 +278,7 @@ void LaptopClientButton::drawButton(QPainter *p)
         }
     }
     else{
-        QColorGroup g = options->colorGroup(Options::ButtonBg,
+        QColorGroup g = options()->colorGroup(KDecoration::ColorButtonBg,
                                             client->isActive());
         int w = width();
         int h = height();
@@ -287,34 +297,49 @@ void LaptopClientButton::drawButton(QPainter *p)
     p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
 }
 
-void LaptopClient::slotReset()
+// =====================================
+
+void LaptopClient::reset(unsigned long)
 {
-    int i;
-    for(i=0; i < 5; ++i){
-        if(button[i])
+    for (int i = 0; i < 5; ++i) {
+        if (button[i])
             button[i]->reset();
     }
-    repaint();
+    widget()->repaint();
 }
 
-LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
-                            const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents )
+LaptopClient::LaptopClient(KDecorationBridge *b, KDecorationFactory *f)
+    : KDecoration(b, f) 
 {
+}
+
+void LaptopClient::init()
+{
+    createMainWidget(WResizeNoErase | WStaticContents);
+    widget()->installEventFilter(this);
+    
     lastButtonWidth = 0;
     lastBufferWidth = 0;
 
-    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
+    // XXX Check how to do this...
+    // connect(options(), SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
-
-    QGridLayout* g = new QGridLayout(this, 0, 0, 0);
+    g = new QGridLayout(widget(), 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 3);
     g->addRowSpacing(2, 1);
-    g->addWidget(windowWrapper(), 3, 1);
+    if (isPreview())
+	g->addWidget(new QLabel(i18n("<center><b></b>Laptop preview</center>"), 
+		    widget()), 3, 1);
+    else
+        g->addWidget(new QWidget(widget()), 3, 1 );
+
     g->setRowStretch(3, 10);
-    g->addRowSpacing(4, 8); // bottom handles
+    spacer = new QSpacerItem(10, isResizable() && (!isTool()) ? 8 : 4, 
+			QSizePolicy::Expanding, QSizePolicy::Minimum);
+    g->addItem(spacer, 4, 1);
+    //g->addRowSpacing(4, 8); // bottom handles
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
@@ -326,7 +351,7 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
                                  close_bits, i18n("Close"));
     button[BtnSticky] = new LaptopClientButton(17, th, this, "sticky",
                                  NULL, i18n("Sticky"));
-    if(isSticky())
+    if(isOnAllDesktops())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
         button[BtnSticky]->setBitmap(sticky_bits);
@@ -378,21 +403,25 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
 
 void LaptopClient::slotMaximize()
 {
-    if ( button[BtnMax]->last_button == MidButton )
-	maximize( MaximizeVertical );
-    else if ( button[BtnMax]->last_button == RightButton )
-	maximize( MaximizeHorizontal );
-    else
-	maximize();
+    switch (button[BtnMax]->last_button) {
+    case MidButton:
+       maximize( maximizeMode() ^ MaximizeVertical );
+       break;
+    case RightButton:
+       maximize( maximizeMode() ^ MaximizeHorizontal );
+       break;
+    case LeftButton:
+    default: 
+       maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull);
+       break;
+    }
 }
 
-void LaptopClient::resizeEvent( QResizeEvent* e)
+void LaptopClient::resizeEvent(QResizeEvent* e)
 {
-    Client::resizeEvent( e );
-
     doShape();
     calcHiddenButtons();
-    if ( isVisibleToTLW() ) {
+    if ( widget()->isVisibleToTLW() ) {
 	int dx = 0;
 	int dy = 0;
 	if ( e->oldSize().width() != width() )
@@ -400,29 +429,29 @@ void LaptopClient::resizeEvent( QResizeEvent* e)
 	if ( e->oldSize().height() != height() )
 	    dy = 8 + QABS( e->oldSize().height() -  height() );
 	if ( dy )
-	    update( 0, height() - dy + 1, width(), dy );
+	    widget()->update( 0, height() - dy + 1, width(), dy );
 	if ( dx ) {
-	    update( width() - dx + 1, 0, dx, height() );
-	    update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
-	    update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+	    widget()->update( width() - dx + 1, 0, dx, height() );
+	    widget()->update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
+	    widget()->update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
 	    // titlebar needs no background
 	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
 	}
     }
 }
 
-void LaptopClient::captionChange( const QString& )
+void LaptopClient::captionChange()
 {
     bufferDirty = true;
-    repaint( titlebar->geometry(), false );
+    widget()->repaint(titlebar->geometry(), false);
 }
 
 void LaptopClient::paintEvent( QPaintEvent* )
 {
-    QPainter p(this);
-    QColorGroup g = options->colorGroup(Options::Frame, isActive());
+    QPainter p(widget());
+    QColorGroup g = options()->colorGroup(KDecoration::ColorFrame, isActive());
 
-    QRect r(rect());
+    QRect r(widget()->rect());
     p.setPen(Qt::black);
     p.drawRect(r);
     // outer frame
@@ -434,14 +463,18 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawLine(r.x()+1, r.bottom()-1, r.right()-1, r.bottom()-1);
 
     int th = titleHeight;
+    int bb = 10; // Bottom border
+    if (!isResizable() || isTool()) 
+	bb -= 4;
     if ( isTool() )
 	th -= 2;
 
     // inner rect
     p.drawRect(r.x()+3, r.y()+th+3, r.width()-6,
-               r.height()-th-10);
+               r.height()-th-bb);
     // handles
-    if(r.width() > 44){
+    if (!isResizable() || isTool()) {
+    } else if (r.width() > 44) {
         qDrawShadePanel(&p, r.x()+1, r.bottom()-6, 20,
                         6, g, false, 1, &g.brush(QColorGroup::Mid));
         qDrawShadePanel(&p, r.x()+21, r.bottom()-6, r.width()-42, 6,
@@ -470,11 +503,11 @@ void LaptopClient::paintEvent( QPaintEvent* )
                               *iUpperGradient);
         else
             p.fillRect(r.x(), r.y(), r.width(), r.height()-1,
-                       options->color(Options::TitleBar, false));
+                       options()->color(KDecoration::ColorTitleBar, false));
 
-        p.setFont(options->font(false, isTool() ));
-        QFontMetrics fm(options->font(false));
-        g = options->colorGroup(Options::TitleBar, false);
+        p.setFont(options()->font(false, isTool() ));
+        QFontMetrics fm(options()->font(false));
+        g = options()->colorGroup(KDecoration::ColorTitleBar, false);
         if(iUpperGradient)
             p.drawTiledPixmap(r.x()+((r.width()-fm.width(caption()))/2)-4,
                               r.y(), fm.width(caption())+8, r.height()-1,
@@ -489,10 +522,10 @@ void LaptopClient::paintEvent( QPaintEvent* )
         p.setPen(g.button());
         p.drawLine(r.right(), r.y(), r.right(), r.bottom());
         p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
-        p.setPen(options->color(Options::Font, false));
+        p.setPen(options()->color(KDecoration::ColorFont, false));
         p.drawText(r.x(), r.y(), r.width(), r.height()-1,
                    AlignCenter, caption() );
-        g = options->colorGroup(Options::Frame, true);
+        g = options()->colorGroup(KDecoration::ColorFrame, true);
         p.setPen(g.background());
         p.drawPoint(r.x(), r.y());
         p.drawPoint(r.right(), r.y());
@@ -513,44 +546,46 @@ void LaptopClient::doShape()
     setMask(mask);
 }
 
-void LaptopClient::showEvent(QShowEvent *ev)
-{
-    Client::showEvent(ev);
-    doShape();
-    repaint();
-}
-
-void LaptopClient::windowWrapperShowEvent( QShowEvent* )
+void LaptopClient::showEvent(QShowEvent *)
 {
     doShape();
+    widget()->repaint();
 }
 
 void LaptopClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
-	workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+        titlebarDblClickOperation();
 }
 
-void LaptopClient::stickyChange(bool on)
+void LaptopClient::iconChange()
 {
+    // There is no icon support in this theme
+}
+
+void LaptopClient::desktopChange()
+{
+    bool on = isOnAllDesktops();
     button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
-    button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
+    QToolTip::remove(button[BtnSticky]);
+    QToolTip::add(button[BtnSticky], 
+	    on ? i18n("Not On All Desktops") : i18n("On All Desktops"));
 }
 
-void LaptopClient::maximizeChange(bool m)
+void LaptopClient::maximizeChange()
 {
+    bool m = (maximizeMode() == MaximizeFull);
     button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
-    button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+    QToolTip::remove(button[BtnMax]);
+    QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
+    spacer->changeSize(10, isResizable() ? 8 : 4,
+			QSizePolicy::Expanding, QSizePolicy::Minimum);
+    g->activate();
 }
 
-void LaptopClient::init()
+void LaptopClient::activeChange()
 {
-    //
-}
-
-void LaptopClient::activeChange(bool)
-{
-    repaint(false);
+    widget()->repaint(false);
     int i;
     for(i=0; i < 5; ++i){
         if(button[i])
@@ -592,7 +627,7 @@ void LaptopClient::calcHiddenButtons()
                 if(button[i]->sizeHint().width() + totalSize <= width()){
                     totalSize+=button[i]->sizeHint().width();
                     if(button[i]->isHidden() &&
-		       ( !isTransient() || !isTransient() || i != BtnSticky ) &&
+		       ( !isTransient() || i != BtnSticky ) &&
 		       ( isMinimizable() || i != BtnIconify ) &&
 		       ( isMaximizable() || ( i != BtnIconify && i != BtnSticky && i != BtnMax ) )
 		
@@ -630,14 +665,14 @@ void LaptopClient::updateActiveBuffer( )
         p.drawTiledPixmap(r, *aUpperGradient);
     }
     else{
-        p.fillRect(r, options->color(Options::TitleBar, true));
+        p.fillRect(r, options()->color(KDecoration::ColorTitleBar, true));
     }
     if(titlePix)
         p.drawTiledPixmap(r, *titlePix);
 
-    p.setFont(options->font(true, isTool() ));
-    QFontMetrics fm(options->font(true));
-    QColorGroup g = options->colorGroup(Options::TitleBar, true);
+    p.setFont(options()->font(true, isTool() ));
+    QFontMetrics fm(options()->font(true));
+    QColorGroup g = options()->colorGroup(KDecoration::ColorTitleBar, true);
     if(aUpperGradient)
         p.drawTiledPixmap(r.x()+((r.width()-fm.width(caption()))/2)-4,
                           r.y(), fm.width(caption())+8, r.height()-1,
@@ -652,10 +687,10 @@ void LaptopClient::updateActiveBuffer( )
     p.setPen(g.button());
     p.drawLine(r.right(), r.y(), r.right(), r.bottom());
     p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
-    p.setPen(options->color(Options::Font, true));
+    p.setPen(options()->color(KDecoration::ColorFont, true));
     p.drawText(r.x(), r.y(), r.width(), r.height()-1,
                AlignCenter, caption() );
-    g = options->colorGroup(Options::Frame, true);
+    g = options()->colorGroup(KDecoration::ColorFrame, true);
     p.setPen(g.background());
     p.drawPoint(r.x(), r.y());
     p.drawPoint(r.right(), r.y());
@@ -663,49 +698,122 @@ void LaptopClient::updateActiveBuffer( )
     p.end();
 }
 
-  Client::MousePosition
-LaptopClient::mousePosition( const QPoint& p ) const
+LaptopClient::MousePosition LaptopClient::mousePosition(const QPoint & p) const
 {
   MousePosition m = Nowhere;
 
   if (p.y() < (height() - 7))
-    m = Client::mousePosition(p);
+    m = KDecoration::mousePosition(p);
 
   else {
     if (p.x() >= (width() - 20))
-      m = BottomRight;
+      m = BottomRight2;
     else if (p.x() <= 20)
-      m = BottomLeft;
+      m = BottomLeft2;
     else
       m = Bottom;
   }
 
   return m;
 }
-
+void LaptopClient::borders(int &left, int &right, int &top, int &bottom) const
+{
+    left = right = 4;
+    top = 2 + 2 + titlebar->geometry().height(); // FRAME is this ok?
+    top = titleHeight + 4;
+    bottom = isResizable() ? 8 : 4;
 }
 
-extern "C"
+void LaptopClient::shadeChange()
 {
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new Laptop::LaptopClient(ws, w));
+}
+
+QSize LaptopClient::minimumSize() const
+{
+    return QSize(100, 50); // FRAME
+}
+
+void LaptopClient::resize(const QSize& s)
+{
+    widget()->resize(s);
+}
+static const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | 
+    NET::DesktopMask | NET::DockMask | NET::ToolbarMask | NET::MenuMask | 
+    NET::DialogMask | NET::OverrideMask | NET::TopMenuMask | 
+    NET::UtilityMask | NET::SplashMask;
+    
+bool LaptopClient::isTransient() const
+{
+    NET::WindowType type = windowType(SUPPORTED_WINDOW_TYPES_MASK);
+    return type == NET::Dialog;
+}
+
+bool LaptopClient::isTool() const
+{
+    NET::WindowType type = windowType(SUPPORTED_WINDOW_TYPES_MASK);
+    return type == NET::Toolbar || type == NET::Utility || type == NET::Menu;
+}
+
+bool LaptopClient::eventFilter(QObject *o, QEvent *e)
+{
+    if (o != widget())
+	return false;
+    switch (e->type()) {
+    case QEvent::Resize:
+	resizeEvent(static_cast< QResizeEvent* >( e ));
+	return true;
+    case QEvent::Paint:
+	paintEvent(static_cast< QPaintEvent* >( e ));
+	return true;
+    case QEvent::MouseButtonDblClick:
+	mouseDoubleClickEvent(static_cast< QMouseEvent* >( e ));
+	return true;
+    case QEvent::MouseButtonPress:
+	processMousePressEvent(static_cast< QMouseEvent* >( e ));
+	return true;
+    case QEvent::Show:
+	showEvent(static_cast< QShowEvent* >( e ));
+	return true;
+    default:
+	break;
     }
-    void init()
-    {
-       Laptop::create_pixmaps();
-    }
-    void reset()
-    {
-       Laptop::delete_pixmaps();
-       Laptop::create_pixmaps();
-       // Ensure change in tooltip state gets applied
-       Workspace::self()->slotResetAllClientsDelayed();
-    }
-    void deinit()
-    {
-       Laptop::delete_pixmaps();
-    }
+    return false;
+}
+
+// =====================================
+
+LaptopClientFactory::LaptopClientFactory()
+{
+    create_pixmaps();
+}
+
+LaptopClientFactory::~LaptopClientFactory()
+{
+    delete_pixmaps();
+}
+
+KDecoration *LaptopClientFactory::createDecoration(KDecorationBridge *b)
+{
+    return new Laptop::LaptopClient(b, this);
+}
+
+bool LaptopClientFactory::reset(unsigned long /*changed*/)
+{
+    // TODO Do not recreate decorations if it is not needed. Look at
+    // ModernSystem for how to do that
+    Laptop::delete_pixmaps();
+    Laptop::create_pixmaps();
+    // For now just return true.
+    return true;
+}
+
+} // Laptop namespace
+
+extern "C" KDecorationFactory* create_factory()
+{
+    return new Laptop::LaptopClientFactory();
 }
 
 #include "laptopclient.moc"
+
+// vim: sw=4

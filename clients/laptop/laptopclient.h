@@ -1,22 +1,25 @@
 #ifndef __KDECLIENT_H
 #define __KDECLIENT_H
 
+#include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
-#include "../../client.h"
-#include "../../kwinbutton.h"
+#include <kdecoration.h>
+#include <kdecorationfactory.h>
+
 class QLabel;
 class QSpacerItem;
 class QBoxLayout;
+class QGridLayout;
 
 namespace Laptop {
 
-using namespace KWinInternal;
+class LaptopClient;
 
-class LaptopClientButton : public KWinButton
+class LaptopClientButton : public QButton
 {
 public:
-    LaptopClientButton(int w, int h, Client *parent=0, const char *name=0,
+    LaptopClientButton(int w, int h, LaptopClient *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL, const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
@@ -28,58 +31,75 @@ protected:
     {
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-	KWinButton::mousePressEvent( &me );
+	QButton::mousePressEvent( &me );
     }
     void mouseReleaseEvent( QMouseEvent* e )
     {
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-	KWinButton::mouseReleaseEvent( &me );
+	QButton::mouseReleaseEvent( &me );
     }
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *) {}
+    LaptopClient *client;
     QSize defaultSize;
     QBitmap deco;
-    Client *client;
 };
 
-class LaptopClient : public KWinInternal::Client
+class LaptopClient : public KDecoration
 {
     Q_OBJECT
 public:
     enum Buttons{BtnHelp=0, BtnSticky, BtnMax, BtnIconify, BtnClose};
-    LaptopClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
+    LaptopClient( KDecorationBridge* b, KDecorationFactory* f );
     ~LaptopClient() {}
+    void init();
 protected:
+    bool eventFilter( QObject* o, QEvent* e );
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
     void showEvent( QShowEvent* );
-    void windowWrapperShowEvent( QShowEvent* );
     void mouseDoubleClickEvent( QMouseEvent* );
-    void init();
-    void captionChange( const QString& name );
-    void stickyChange(bool on);
-    void maximizeChange(bool m);
+    void captionChange();
+    void maximizeChange();
     void doShape();
-    void activeChange(bool);
-
+    void activeChange();
+    MousePosition mousePosition(const QPoint &) const;
+    void desktopChange();
+    void shadeChange();
+    void iconChange();
+    QSize minimumSize() const;
+    void resize( const QSize& );
+    void borders( int&, int&, int&, int& ) const;
+    void reset( unsigned long );
     void calcHiddenButtons();
     void updateActiveBuffer();
-
-    MousePosition mousePosition(const QPoint &) const;
-
+private:
+    bool isTool() const;
+    bool isTransient() const;
 protected slots:
-    void slotReset();
     void slotMaximize();
 private:
     LaptopClientButton* button[5];
-    int lastButtonWidth;
-    QSpacerItem* titlebar;
-    bool hiddenItems;
+    QGridLayout *g;
     QBoxLayout* hb;
+    QSpacerItem* titlebar;
+    QSpacerItem* spacer;
     KPixmap activeBuffer;
-    bool bufferDirty;
+    int lastButtonWidth;
     int lastBufferWidth;
+    bool hiddenItems;
+    bool bufferDirty;
+};
+
+class LaptopClientFactory : public QObject, public KDecorationFactory
+{
+Q_OBJECT
+public:
+    LaptopClientFactory();
+    virtual ~LaptopClientFactory();
+    virtual KDecoration* createDecoration( KDecorationBridge* );
+    virtual bool reset( unsigned long changed );
 };
 
 }
