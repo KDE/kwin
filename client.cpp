@@ -77,9 +77,10 @@ public:
 		m_client->maximize( Client::MaximizeRestore );
 	}
 	
-	if ( ( mask & NET::StaysOnTop) != 0 && (state & NET::StaysOnTop) != 0  ) {
-	    m_client->setStaysOnTop( state & NET::StaysOnTop  );
-	    m_client->workspace()->raiseClient( m_client );
+	if ( mask & NET::StaysOnTop) {
+	    m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
+	    if ( m_client->staysOnTop() )
+		m_client->workspace()->raiseClient( m_client );
 	}
     }
 private:
