@@ -1492,6 +1492,28 @@ void Workspace::reconfigure()
 
 
 /*!
+  avoids managing a window with title \a title
+ */
+void Workspace::doNotManage( QString title )
+{
+    doNotManageList.append( title );
+}
+
+/*!
+  Hack for java applets
+ */
+bool Workspace::isNotManaged( const QString& title )
+{
+    for ( QStringList::Iterator it = doNotManageList.begin(); it != doNotManageList.end(); ++it ) {
+	if ( (*it) == title ) {
+	    doNotManageList.remove( it );
+	    return TRUE;
+	}
+    }
+    return FALSE;
+}
+
+/*!
   Lowers the client \a c taking stays-on-top flags, layers,
   transient windows and window groups into account.
  */
@@ -2696,6 +2718,7 @@ void Workspace::saveDesktopSettings()
 	c.writeEntry( QString("Name_%1").arg(i), s );
     }
 }
+
 
 
 #include "workspace.moc"

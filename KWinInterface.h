@@ -12,6 +12,7 @@ class KWinInterface : virtual public DCOPObject
   virtual ASYNC cascadeDesktop() = 0;
   virtual ASYNC unclutterDesktop() = 0;
   virtual ASYNC reconfigure() = 0;
+  virtual void doNotManage(QString)= 0;
 
 };
 

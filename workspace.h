@@ -174,8 +174,11 @@ public:
     void cascadeDesktop();
     void unclutterDesktop();
     void reconfigure();
+    void doNotManage(QString);
     
     QString desktopName( int desk );
+    
+    bool isNotManaged( const QString& title );
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -309,6 +312,9 @@ private:
     QWidget* supportWindow;
 
     QRect area;
+    
+    // swallowing
+    QStringList doNotManageList;
 };
 
 inline WId Workspace::rootWin() const

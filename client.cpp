@@ -480,7 +480,7 @@ Client::~Client()
   Manages the clients. This means handling the very first maprequest:
   reparenting, initial geometry, initial state, placement, etc.
  */
-bool Client::manage( bool isMapped, bool isReset )
+bool Client::manage( bool isMapped, bool doNotShow )
 {
 
     if (layout())
@@ -564,13 +564,16 @@ bool Client::manage( bool isMapped, bool isReset )
     }
 
     info->setDesktop( desk );
-    
+
 
     setMappingState( state );
-    
+
     bool showMe = state == NormalState && isOnDesktop( workspace()->currentDesktop() );
     
-    if ( showMe && !isReset ) {
+    if ( workspace()->isNotManaged( caption() ) )
+	doNotShow = TRUE;
+
+    if ( showMe && !doNotShow ) {
 	Events::raise( isTransient() ? Events::TransNew : Events::New );
 	if ( isMapped ) {
 	    show();
@@ -588,10 +591,10 @@ bool Client::manage( bool isMapped, bool isReset )
     }
 
     delete session;
-    
-    if ( !isReset )
+
+    if ( !doNotShow )
 	workspace()->updateClientArea();
-    
+
     return showMe;
 }
 
