@@ -440,6 +440,9 @@ void Workspace::init()
 
     updateClientArea();
     raiseElectricBorders();
+    
+    // NETWM spec says we have to set it to (0,0) if we don't support it
+    rootInfo->setDesktopViewport( 1, NETPoint());
 }
 
 Workspace::~Workspace()
