@@ -189,7 +189,7 @@ int kdemain( int argc, char * argv[] )
         // one for each screen...
         QCString multiHead = getenv("KDE_MULTIHEAD");
         if (multiHead.lower() == "true") {
-	
+
 	    Display* dpy = XOpenDisplay( NULL );
 	    if ( !dpy ) {
 		fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
@@ -235,8 +235,9 @@ int kdemain( int argc, char * argv[] )
 
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
 			  version, description, KAboutData::License_BSD,
-			  I18N_NOOP("(c) 1999-2001, The KDE Developers"));
+			  I18N_NOOP("(c) 1999-2002, The KDE Developers"));
     aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
+    aboutData.addAuthor("Cristian Tibirna",0, "tibirna@kde.org");
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
