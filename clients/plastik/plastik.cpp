@@ -126,12 +126,12 @@ void PlastikHandler::readConfig()
     m_titleShadow    = config.readBoolEntry("TitleShadow", true);
 
     QFontMetrics fm(m_titleFont);  // active font = inactive font
-    int titleHeightMin = config.readNumEntry("TitleHeightMin", 19);
+    int titleHeightMin = 16;
     // The title should strech with bigger font sizes!
     m_titleHeight = QMAX(titleHeightMin, fm.height() + 4); // 4 px for the shadow etc.
 
     fm = QFontMetrics(m_titleFontTool);  // active font = inactive font
-    int titleHeightToolMin = config.readNumEntry("TitleHeightToolMin", 13);
+    int titleHeightToolMin = 13;
     // The title should strech with bigger font sizes!
     m_titleHeightTool = QMAX(titleHeightToolMin, fm.height() ); // don't care about the shadow etc.
 
@@ -179,12 +179,12 @@ QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
     }
 }
 
-QValueList< PlastikHandler::BorderSize > 
+QValueList< PlastikHandler::BorderSize >
 PlastikHandler::borderSizes() const
-{ 
+{
     // the list must be sorted
-    return QValueList< BorderSize >() << BorderTiny << BorderNormal << 
-	BorderLarge << BorderVeryLarge <<  BorderHuge << 
+    return QValueList< BorderSize >() << BorderTiny << BorderNormal <<
+	BorderLarge << BorderVeryLarge <<  BorderHuge <<
 	BorderVeryHuge << BorderOversized;
 }
 

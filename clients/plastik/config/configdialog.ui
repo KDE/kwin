@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>541</width>
-            <height>214</height>
+            <height>167</height>
         </rect>
     </property>
     <property name="caption">
@@ -59,95 +59,6 @@
                 </widget>
             </hbox>
         </widget>
-        <spacer row="5" column="2">
-            <property name="name">
-                <cstring>spacer5_2</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>270</width>
-                    <height>20</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QSlider" row="4" column="1" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>titlebarHeight</cstring>
-            </property>
-            <property name="minValue">
-                <number>1</number>
-            </property>
-            <property name="maxValue">
-                <number>6</number>
-            </property>
-            <property name="pageStep">
-                <number>1</number>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="tickmarks">
-                <enum>NoMarks</enum>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>By adjusting this slider, you can modify the height of the title bar.
-Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
-            </property>
-        </widget>
-        <widget class="QLabel" row="5" column="1">
-            <property name="name">
-                <cstring>textLabel2</cstring>
-            </property>
-            <property name="text">
-                <string>Small</string>
-            </property>
-        </widget>
-        <widget class="QLabel" row="4" column="0">
-            <property name="name">
-                <cstring>textLabel1_2</cstring>
-            </property>
-            <property name="text">
-                <string>Tit&amp;le bar height:</string>
-            </property>
-            <property name="buddy" stdset="0">
-                <cstring>titlebarHeight</cstring>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>By adjusting this slider, you can modify the height of the title bar.
-Note: This setting gets overwritten if the caption font is bigger than the title bar.</string>
-            </property>
-        </widget>
-        <spacer row="5" column="0">
-            <property name="name">
-                <cstring>spacer7</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>161</width>
-                    <height>20</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="QLabel" row="5" column="3">
-            <property name="name">
-                <cstring>textLabel4</cstring>
-            </property>
-            <property name="text">
-                <string>Large</string>
-            </property>
-        </widget>
         <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="4">
             <property name="name">
                 <cstring>titleShadow</cstring>
@@ -192,7 +103,6 @@ Note: This setting gets overwritten if the caption font is bigger than the title
     <tabstop>AlignRight</tabstop>
     <tabstop>animateButtons</tabstop>
     <tabstop>titleShadow</tabstop>
-    <tabstop>titlebarHeight</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

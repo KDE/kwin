@@ -57,8 +57,6 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
             this, SIGNAL(changed()));
     connect(m_dialog->titleShadow, SIGNAL(toggled(bool)),
             this, SIGNAL(changed()));
-    connect(m_dialog->titlebarHeight, SIGNAL(valueChanged(int)),
-            this, SIGNAL(changed()));
 
 }
 
@@ -82,31 +80,6 @@ void PlastikConfig::load(KConfig*)
     m_dialog->menuClose->setChecked(menuClose);
     bool titleShadow = m_config->readBoolEntry("TitleShadow", true);
     m_dialog->titleShadow->setChecked(titleShadow);
-    int titlebarHeight = m_config->readNumEntry("TitleHeightMin", 19);
-    if(titlebarHeight <= 16)
-    {
-        m_dialog->titlebarHeight->setValue(1);
-    }
-    else if(titlebarHeight <= 19)
-    {
-        m_dialog->titlebarHeight->setValue(2);
-    }
-    else if(titlebarHeight <= 23)
-    {
-        m_dialog->titlebarHeight->setValue(3);
-    }
-    else if(titlebarHeight <= 27)
-    {
-        m_dialog->titlebarHeight->setValue(4);
-    }
-    else if(titlebarHeight <= 31)
-    {
-        m_dialog->titlebarHeight->setValue(5);
-    }
-    else
-    {
-        m_dialog->titlebarHeight->setValue(6);
-    }
 }
 
 void PlastikConfig::save(KConfig*)
@@ -118,27 +91,6 @@ void PlastikConfig::save(KConfig*)
     m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
     m_config->writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
     m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
-    switch(m_dialog->titlebarHeight->value())
-    {
-        case 2:
-            m_config->writeEntry("TitleHeightMin", 19 );
-            break;
-        case 3:
-            m_config->writeEntry("TitleHeightMin", 23 );
-            break;
-        case 4:
-            m_config->writeEntry("TitleHeightMin", 27 );
-            break;
-        case 5:
-            m_config->writeEntry("TitleHeightMin", 31 );
-            break;
-        case 6:
-            m_config->writeEntry("TitleHeightMin", 35 );
-            break;
-        case 1:
-        default:
-            m_config->writeEntry("TitleHeightMin", 16 );
-    }
     m_config->sync();
 }
 
@@ -150,7 +102,6 @@ void PlastikConfig::defaults()
     m_dialog->animateButtons->setChecked(true);
     m_dialog->menuClose->setChecked(false);
     m_dialog->titleShadow->setChecked(true);
-    m_dialog->titlebarHeight->setValue(2);
 }
 
 //////////////////////////////////////////////////////////////////////////////
