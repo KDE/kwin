@@ -843,19 +843,21 @@ void Client::checkGroup( Group* set_group, bool force )
                 (*it)->addTransient( this );
             }
 #endif
-#if 0 // this would make group transients transient for window that were mapped later
+        // group transient splashscreens should be transient even for windows
+        // in group mapped later
         for( ClientList::ConstIterator it = group()->members().begin();
              it != group()->members().end();
              ++it )
             {
-            if( !(*it)->groupTransient())  // and group transients in the new group are transient for it
+            if( !(*it)->isSplash())
                 continue;
-            if( *it == this )
+            if( !(*it)->groupTransient())
+                continue;
+            if( *it == this || hasTransient( *it, true )) // TODO indirect?
                 continue;
             addTransient( *it );
 	    }
         checkGroupTransients();
-#endif
         }
     checkGroupTransients();
     workspace()->updateClientLayer( this );
