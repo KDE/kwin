@@ -47,10 +47,10 @@ public:
       m_client = c;
     }
 
-    virtual void changeDesktop(CARD32 desktop) {
+    virtual void changeDesktop(Q_UINT32 desktop) {
       m_client->setDesktop( desktop );
     }
-    virtual void changeState(CARD32 state, CARD32 /* mask */) {
+    virtual void changeState(Q_UINT32 state, Q_UINT32 /* mask */) {
       // What's the mask ?
       // Warning: this code was written by David who has no clue about window managers :/
 

@@ -56,8 +56,8 @@ public:
     }
     ~RootInfo() {}
 
-    void changeNumberOfDesktops(CARD32 n) { workspace->setNumberOfDesktops( n ); }
-    void changeCurrentDesktop(CARD32 d) { workspace->setCurrentDesktop( d ); }
+    void changeNumberOfDesktops(Q_UINT32 n) { workspace->setNumberOfDesktops( n ); }
+    void changeCurrentDesktop(Q_UINT32 d) { workspace->setCurrentDesktop( d ); }
     void changeActiveWindow(Window w) { 
 	::Client* c = workspace->findClient( (WId) w );
 	if ( c )
