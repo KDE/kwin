@@ -955,7 +955,7 @@ void Workspace::setActiveClient( Client* c )
 
     if ( menubar ) {
 	menubar->show();
-	raiseClient( menubar );
+	menubar->raise(); // better for FocusFollowsMouse than raiseClient(menubar)
     }
 
     // ... then hide the other ones. Avoids flickers.
@@ -1002,7 +1002,7 @@ void Workspace::iconifyOrDeiconifyTransientsOf( Client* c )
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	    if ( (*it)->transientFor() == c->window()
 		 && !(*it)->isIconified()
-		 && !(*it)->isShade() 
+		 && !(*it)->isShade()
 		 && ( !exclude_menu || !(*it)->isMenu() ) ) {
 		(*it)->setMappingState( XIconicState );
 		(*it)->hide();

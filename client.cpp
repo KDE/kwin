@@ -77,7 +77,7 @@ public:
 		m_client->maximize( Client::MaximizeRestore );
 	}
 	
-	if ( state & NET::StaysOnTop ) {
+	if ( ( mask & NET::StaysOnTop) != 0 && (state & NET::StaysOnTop) != 0  ) {
 	    m_client->setStaysOnTop( state & NET::StaysOnTop  );
 	    m_client->workspace()->raiseClient( m_client );
 	}
@@ -1049,6 +1049,8 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	switch (stack_mode){
 	case Above:
 	case TopIf:
+	    if ( isMenu() && mainClient() != this )
+		break; // in this case, we already do the raise
 	    workspace()->raiseClient( this );
 	    break;
 	case Below:
