@@ -48,8 +48,10 @@ QPixmap* 		miniSpacer;
 
 //==============================================================
 
+#define BUTTONDRAGMIMETYPE "application/x-kde_kwindecoration_buttons"
+
 ButtonDrag::ButtonDrag( char btn, QWidget* parent, const char* name)
-	: QStoredDrag( "kcontrol/kwindecoration_buttons", parent, name)
+	: QStoredDrag( BUTTONDRAGMIMETYPE, parent, name)
 {
 	QByteArray payload(1);
 	payload[0] = btn;
@@ -59,13 +61,13 @@ ButtonDrag::ButtonDrag( char btn, QWidget* parent, const char* name)
 
 bool ButtonDrag::canDecode( QDragMoveEvent* e )
 {
-	return e->provides( "kcontrol/kwindecoration_buttons" );
+	return e->provides( BUTTONDRAGMIMETYPE );
 }
 
 
 bool ButtonDrag::decode( QDropEvent* e, char& btn )
 {
-	QByteArray payload = e->data( "kcontrol/kwindecoration_buttons" );
+	QByteArray payload = e->data( BUTTONDRAGMIMETYPE );
 	if ( payload.size() )
 	{
 		e->accept();
