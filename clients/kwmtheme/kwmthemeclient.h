@@ -37,6 +37,8 @@ protected:
     void stickyChange(bool on);
     void maximizeChange(bool m);
     MousePosition mousePosition(const QPoint &) const;
+protected slots:
+    void slotReset();
 private:
     KPixmap *aGradient, *iGradient;
     MyButton *maxBtn, *stickyBtn;

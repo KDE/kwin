@@ -33,8 +33,8 @@ enum FramePixmap{FrameTop=0, FrameBottom, FrameLeft, FrameRight, FrameTopLeft,
 static QPixmap *framePixmaps[8];
 static QPixmap *menuPix, *iconifyPix, *closePix, *maxPix, *minmaxPix,
     *pinupPix, *pindownPix;
-static KPixmap *aTitlePix = NULL;
-static KPixmap *iTitlePix = NULL;
+static KPixmap *aTitlePix = 0;
+static KPixmap *iTitlePix = 0;
 static KPixmapEffect::GradientType grType;
 static int maxExtent, titleAlign;
 static bool titleGradient = true;
@@ -57,8 +57,7 @@ static void init_theme()
     config->setGroup("General");
     QString tmpStr;
 
-    int i;
-    for(i=0; i < 8; ++i){
+    for(int i=0; i < 8; ++i){
         framePixmaps[i] = new QPixmap(locate("appdata",
                                       "pics/"+config->readEntry(keys[i], " ")));
 		if(framePixmaps[i]->isNull())
@@ -164,6 +163,34 @@ static void init_theme()
     }
 }
 
+void
+KWMThemeClient::slotReset()
+{
+   if (!pixmaps_created) return;
+   pixmaps_created = false;
+
+    for(int i=0; i < 8; ++i)
+        delete framePixmaps[i];
+
+   delete menuPix;
+   delete iconifyPix;
+   delete closePix;
+   delete maxPix;
+   delete minmaxPix;
+   delete pinupPix;
+   delete pindownPix;
+   delete aTitlePix;
+   aTitlePix = 0;
+   delete iTitlePix;
+   iTitlePix = 0;
+
+   titleGradient = true;
+   pixmaps_created = false;
+   titleSunken = false;
+
+   init_theme();   
+}
+
 void MyButton::drawButtonLabel(QPainter *p)
 {
     if(pixmap()){
@@ -177,7 +204,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity)
 {
     init_theme();
-
+    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset())); 
     QGridLayout *layout = new QGridLayout(this);
     layout->addColSpacing(0, maxExtent);
     layout->addColSpacing(2, maxExtent);
@@ -256,8 +283,8 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         iGradient = new KPixmap;
     }
     else{
-        aGradient = NULL;
-        iGradient = NULL;
+        aGradient = 0;
+        iGradient = 0;
     }
         
     setBackgroundMode(NoBackground);
