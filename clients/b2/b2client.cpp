@@ -131,7 +131,7 @@ static void delete_pixmaps()
 }
 
 
-B2Button::B2Button(Client *_client=0, QWidget *parent=0, const QString& tip=NULL)
+B2Button::B2Button(Client *_client, QWidget *parent, const QString& tip)
    : KWinButton(parent, 0, tip) 
 { 
     setBackgroundMode(NoBackground);
