@@ -254,7 +254,7 @@ void StdClient::resizeEvent( QResizeEvent* e)
     QRegion rr = rect();
     QRect t = titlebar->geometry();
     t.setTop( 0 );
-    QRegion r = rr.subtract( QRect( t.x(), 0, t.width(), 1 ) );
+    QRegion r = rr.subtract( QRect( t.x()+1, 0, t.width()-2, 1 ) );
     setMask( r );
     
     if ( isVisibleToTLW() ) {
