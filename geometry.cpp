@@ -2124,7 +2124,7 @@ bool Client::startMoveResize()
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
     // rule out non opaque windows from useless translucency settings, maybe resizes?
-    if (isResize() && options->removeShadowsOnResize)
+    if ((isResize() && options->removeShadowsOnResize) || (isMove() && options->removeShadowsOnMove))
         setShadowSize(0);
     if (rules()->checkMoveResizeMode( options->moveMode ) == Options::Opaque){
         savedOpacity_ = opacity_;
@@ -2164,7 +2164,7 @@ void Client::leaveMoveResize()
     // rule out non opaque windows from useless translucency settings, maybe resizes?
     if (rules()->checkMoveResizeMode( options->moveMode ) == Options::Opaque)
         setOpacity(true, savedOpacity_);
-    if (isResize() && options->removeShadowsOnResize)
+    if ((isResize() && options->removeShadowsOnResize) || (isMove() && options->removeShadowsOnMove))
         updateShadowSize();
     clearbound();
     if (geometryTip)

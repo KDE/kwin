@@ -309,7 +309,9 @@ bool Client::manage( Window w, bool isMapped )
         {
         updateShape();
         }
-
+//    else
+//	setShapable(FALSE);
+	
     //CT extra check for stupid jdk 1.3.1. But should make sense in general
     // if client has initial state set to Iconic and is transient with a parent
     // window that is not Iconic, set init_state to Normal

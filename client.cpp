@@ -354,11 +354,11 @@ void Client::detectNoBorder()
         case NET::Dialog :
         case NET::Utility :
             noborder = false;
+            setShapable(FALSE);
           break;
         default:
             assert( false );
         }
-        setShapable(FALSE);
     }
 
 void Client::updateFrameStrut()
@@ -419,18 +419,17 @@ void Client::setUserNoBorder( bool set )
 
 void Client::updateShape()
     {
+    setShapable(TRUE);
     if ( shape() )
     {
         XShapeCombineShape(qt_xdisplay(), frameId(), ShapeBounding,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSet);
-        setShapable(TRUE);
     }
     else
     {
         XShapeCombineMask( qt_xdisplay(), frameId(), ShapeBounding, 0, 0,
                            None, ShapeSet);
-        setShapable(TRUE);
     }
     // workaround for #19644 - shaped windows shouldn't have decoration
     if( shape() && !noBorder()) 
