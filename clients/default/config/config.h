@@ -14,7 +14,6 @@
 #include <qcheckbox.h>
 #include <qgroupbox.h>
 #include <kconfig.h>
-#include <qslider.h>
 #include <qhbox.h>
 #include <qlabel.h>
 #include <qvbox.h>
@@ -38,19 +37,13 @@ class KDEDefaultConfig: public QObject
 
 	protected slots:
 		void slotSelectionChanged();	// Internal use
-		void slotSelectionChanged(int);	// Internal use
 
 	private:
 		QCheckBox* cbShowStipple;
 		QCheckBox* cbShowGrabBar;
 		QCheckBox* cbUseGradients;
-		QSlider*   titleBarSizeSlider;
 		QVBox* gb;
 		bool 	   highcolor;
-		QLabel*	   label1;
-		QLabel*	   label2;
-		QLabel*	   label3;
-		QHBox* 	   hbox;
 };
 
 #endif

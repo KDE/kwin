@@ -58,26 +58,6 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 			"for highcolor displays, otherwise no gradients are drawn.") );
 	}
 
-	// Allow titlebar height customization
-        QHBox *hbSlider = new QHBox( gb );
-        hbSlider->setSpacing( KDialog::spacingHint() );
-        QLabel *titlebarLbl = new QLabel(i18n("&Titlebar height:"), hbSlider );
-        titlebarLbl->setAlignment( Qt::AlignTop );
-	QVBox *gbSlider = new QVBox( hbSlider );
-	titleBarSizeSlider = new QSlider(0, 2, 1, 0, QSlider::Horizontal, gbSlider);
-        titlebarLbl->setBuddy( titleBarSizeSlider );
-	QWhatsThis::add( titleBarSizeSlider,
-		i18n("By adjusting this slider, you can modify "
-		"the height of the titlebar to make room for larger fonts."));
-
-	hbox = new QHBox(gbSlider);
-	hbox->setSpacing(6);
-	label1 = new QLabel( i18n("titlebar height","Normal"), hbox );
-	label2 = new QLabel( i18n("titlebar height","Large"), hbox );
-	label2->setAlignment( AlignHCenter );
-	label3 = new QLabel( i18n("titlebar height","Huge"), hbox );
-	label3->setAlignment( AlignRight );
-	
 	// Load configuration options
 	load( conf );
 
@@ -86,8 +66,6 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 			 this, SLOT(slotSelectionChanged()) );
 	connect( cbShowGrabBar, SIGNAL(clicked()), 
 			 this, SLOT(slotSelectionChanged()) );
-	connect( titleBarSizeSlider, SIGNAL(valueChanged(int)), 
-			 this, SLOT(slotSelectionChanged(int)) );
 	if (highcolor)
 		connect( cbUseGradients, SIGNAL(clicked()), 
 				 this, SLOT(slotSelectionChanged()) );
@@ -109,12 +87,6 @@ void KDEDefaultConfig::slotSelectionChanged()
 }
 
 
-void KDEDefaultConfig::slotSelectionChanged(int)
-{
-	emit changed();
-}
-
-
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
 void KDEDefaultConfig::load( KConfig* conf )
@@ -130,12 +102,6 @@ void KDEDefaultConfig::load( KConfig* conf )
 		override = conf->readBoolEntry( "UseGradients", true );
 		cbUseGradients->setChecked( override );
 	}
-
-	int size = conf->readNumEntry( "TitleBarSize", 0 );
-	if (size < 0) size = 0;
-	if (size > 2) size = 2;
-
-	titleBarSizeSlider->setValue(size);
 }
 
 
@@ -148,8 +114,6 @@ void KDEDefaultConfig::save( KConfig* conf )
 
 	if (highcolor)
 		conf->writeEntry( "UseGradients", cbUseGradients->isChecked() );
-
-	conf->writeEntry( "TitleBarSize", titleBarSizeSlider->value() );
 	// No need to conf->sync() - kwindecoration will do it for us
 }
 
@@ -162,8 +126,6 @@ void KDEDefaultConfig::defaults()
 
 	if (highcolor)
 		cbUseGradients->setChecked( true );
-
-	titleBarSizeSlider->setValue(0);
 }
 
 #include "config.moc"

@@ -103,25 +103,25 @@ static KPixmap* pinUpPix;
 static KPixmap* ipinDownPix;
 static KPixmap* ipinUpPix;
 
-static KPixmap* rightBtnUpPix;
-static KPixmap* rightBtnDownPix;
-static KPixmap* irightBtnUpPix;
-static KPixmap* irightBtnDownPix;
+static KPixmap* rightBtnUpPix[2];
+static KPixmap* rightBtnDownPix[2];
+static KPixmap* irightBtnUpPix[2];
+static KPixmap* irightBtnDownPix[2];
 
-static KPixmap* leftBtnUpPix;
-static KPixmap* leftBtnDownPix;
-static KPixmap* ileftBtnUpPix;
-static KPixmap* ileftBtnDownPix;
+static KPixmap* leftBtnUpPix[2];
+static KPixmap* leftBtnDownPix[2];
+static KPixmap* ileftBtnUpPix[2];
+static KPixmap* ileftBtnDownPix[2];
 
 static KDEDefaultHandler* clientHandler;
-static int  titleBarSize;
 static int	toolTitleHeight;
 static int	normalTitleHeight;
+static int borderWidth;
+static int grabBorderWidth;
 static bool KDEDefault_initialized = false;
 static bool useGradients;
 static bool showGrabBar;
 static bool showTitleBarStipple;
-static bool largeToolButtons;
 
 
 // ===========================================================================
@@ -174,28 +174,58 @@ unsigned long KDEDefaultHandler::readConfig( bool update )
         bool new_showGrabBar 		= conf->readBoolEntry("ShowGrabBar", true);
 	bool new_showTitleBarStipple = conf->readBoolEntry("ShowTitleBarStipple", true);
 	bool new_useGradients 		= conf->readBoolEntry("UseGradients", true);
-	int new_titleBarSize 			= conf->readNumEntry("TitleBarSize", 0);
+	int  new_titleHeight 		= QFontMetrics(options()->font(true)).height();
+	int  new_toolTitleHeight 	= QFontMetrics(options()->font(true, true)).height()-2;
 
-	if (new_titleBarSize < 0) new_titleBarSize = 0;
-	if (new_titleBarSize > 2) new_titleBarSize = 2;
+	int new_borderWidth;
+	switch(options()->preferredBorderSize(this)) {
+	case BorderLarge:
+		new_borderWidth = 8;
+		break;
+	case BorderVeryLarge:
+		new_borderWidth = 12;
+		break;
+	case BorderHuge:
+		new_borderWidth = 18;
+		break;
+	case BorderVeryHuge:
+		new_borderWidth = 27;
+		break;
+	case BorderOversized:
+		new_borderWidth = 40;
+		break;
+	case BorderTiny:
+	case BorderNormal:
+	default:
+		new_borderWidth = 4;
+	}
 
+	if (new_titleHeight < 16)              new_titleHeight = 16;
+	if (new_titleHeight < new_borderWidth) new_titleHeight = new_borderWidth;
+	if (new_toolTitleHeight < 12)              new_toolTitleHeight = 12;
+	if (new_toolTitleHeight < new_borderWidth) new_toolTitleHeight = new_borderWidth;
+	
         if( update )
         {
                 if( new_showGrabBar != showGrabBar
-                    || new_titleBarSize != titleBarSize )
+                    || new_titleHeight != normalTitleHeight
+                    || new_toolTitleHeight != toolTitleHeight
+                    || new_borderWidth != borderWidth )
                         changed |= SettingDecoration; // need recreating the decoration
                 if( new_showTitleBarStipple != showTitleBarStipple
-                    || new_useGradients != useGradients )
+                    || new_useGradients != useGradients
+                    || new_titleHeight != normalTitleHeight
+                    || new_toolTitleHeight != toolTitleHeight )
                         changed |= SettingColors; // just recreate the pixmaps and repaint
         }
             
         showGrabBar             = new_showGrabBar;
         showTitleBarStipple     = new_showTitleBarStipple;
         useGradients            = new_useGradients;
-        titleBarSize            = new_titleBarSize;
-	normalTitleHeight 	= 16 + (4*titleBarSize);
-	toolTitleHeight 	= normalTitleHeight - 4;
-	largeToolButtons 	= (toolTitleHeight >= 16) ? true : false;
+        normalTitleHeight       = new_titleHeight;
+        toolTitleHeight         = new_toolTitleHeight;
+        borderWidth             = new_borderWidth;
+        grabBorderWidth         = (borderWidth > 15) ? borderWidth + 15 : 2*borderWidth;
         return changed;
 }
 
@@ -218,7 +248,7 @@ void KDEDefaultHandler::createPixmaps()
 		p.begin(titlePix);
 		maskPainter.begin(&mask);
 		maskPainter.setPen(Qt::color1);
-		for(i=0, y=2; i < 6; ++i, y+=4)
+		for(i=0, y=2; i < 9; ++i, y+=4)
 			for(x=1; x <= 132; x+=3)
 			{
 				p.setPen(options()->color(ColorTitleBar, true).light(150));
@@ -275,7 +305,7 @@ void KDEDefaultHandler::createPixmaps()
 
 	// Active pins
 	g = options()->colorGroup( ColorButtonBg, true );
-	pinUpPix = new KPixmap();
+	pinUpPix  = new KPixmap();
 	pinUpPix->resize(16, 16);
 	p.begin( pinUpPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
@@ -313,63 +343,107 @@ void KDEDefaultHandler::createPixmaps()
 	titleBuffer = new KPixmap();
 
 	// Cache all possible button states
-	leftBtnUpPix 	= new KPixmap();
-	leftBtnUpPix->resize(16, 16);
-	leftBtnDownPix	= new KPixmap();
-	leftBtnDownPix->resize(16, 16);
-	ileftBtnUpPix	= new KPixmap();
-	ileftBtnUpPix->resize(16, 16);
-	ileftBtnDownPix	= new KPixmap();
-	ileftBtnDownPix->resize(16, 16);
+	leftBtnUpPix[true] 	= new KPixmap();
+	leftBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	leftBtnDownPix[true]	= new KPixmap();
+	leftBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	ileftBtnUpPix[true]	= new KPixmap();
+	ileftBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	ileftBtnDownPix[true]	= new KPixmap();
+	ileftBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
 
-	rightBtnUpPix 	= new KPixmap();
-	rightBtnUpPix->resize(16, 16);
-	rightBtnDownPix = new KPixmap();
-	rightBtnDownPix->resize(16, 16);
-	irightBtnUpPix 	= new KPixmap();
-	irightBtnUpPix->resize(16, 16);
-	irightBtnDownPix = new KPixmap();
-	irightBtnDownPix->resize(16, 16);
+	rightBtnUpPix[true] 	= new KPixmap();
+	rightBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	rightBtnDownPix[true] = new KPixmap();
+	rightBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	irightBtnUpPix[true] 	= new KPixmap();
+	irightBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	irightBtnDownPix[true] = new KPixmap();
+	irightBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
+
+	leftBtnUpPix[false] 	= new KPixmap();
+	leftBtnUpPix[false]->resize(toolTitleHeight, normalTitleHeight);
+	leftBtnDownPix[false]	= new KPixmap();
+	leftBtnDownPix[false]->resize(toolTitleHeight, normalTitleHeight);
+	ileftBtnUpPix[false]	= new KPixmap();
+	ileftBtnUpPix[false]->resize(normalTitleHeight, normalTitleHeight);
+	ileftBtnDownPix[false]	= new KPixmap();
+	ileftBtnDownPix[false]->resize(normalTitleHeight, normalTitleHeight);
+
+	rightBtnUpPix[false] 	= new KPixmap();
+	rightBtnUpPix[false]->resize(toolTitleHeight, toolTitleHeight);
+	rightBtnDownPix[false] = new KPixmap();
+	rightBtnDownPix[false]->resize(toolTitleHeight, toolTitleHeight);
+	irightBtnUpPix[false] 	= new KPixmap();
+	irightBtnUpPix[false]->resize(toolTitleHeight, toolTitleHeight);
+	irightBtnDownPix[false] = new KPixmap();
+	irightBtnDownPix[false]->resize(toolTitleHeight, toolTitleHeight);
 
 	// Draw the button state pixmaps
 	g = options()->colorGroup( ColorTitleBar, true );
-	drawButtonBackground( leftBtnUpPix, g, false );
-	drawButtonBackground( leftBtnDownPix, g, true );
+	drawButtonBackground( leftBtnUpPix[true], g, false );
+	drawButtonBackground( leftBtnDownPix[true], g, true );
+	drawButtonBackground( leftBtnUpPix[false], g, false );
+	drawButtonBackground( leftBtnDownPix[false], g, true );
 
 	g = options()->colorGroup( ColorButtonBg, true );
-	drawButtonBackground( rightBtnUpPix, g, false );
-	drawButtonBackground( rightBtnDownPix, g, true );
+	drawButtonBackground( rightBtnUpPix[true], g, false );
+	drawButtonBackground( rightBtnDownPix[true], g, true );
+	drawButtonBackground( rightBtnUpPix[false], g, false );
+	drawButtonBackground( rightBtnDownPix[false], g, true );
 
 	g = options()->colorGroup( ColorTitleBar, false );
-	drawButtonBackground( ileftBtnUpPix, g, false );
-	drawButtonBackground( ileftBtnDownPix, g, true );
+	drawButtonBackground( ileftBtnUpPix[true], g, false );
+	drawButtonBackground( ileftBtnDownPix[true], g, true );
+	drawButtonBackground( ileftBtnUpPix[false], g, false );
+	drawButtonBackground( ileftBtnDownPix[false], g, true );
 
 	g = options()->colorGroup( ColorButtonBg, false );
-	drawButtonBackground( irightBtnUpPix, g, false );
-	drawButtonBackground( irightBtnDownPix, g, true );
+	drawButtonBackground( irightBtnUpPix[true], g, false );
+	drawButtonBackground( irightBtnDownPix[true], g, true );
+	drawButtonBackground( irightBtnUpPix[false], g, false );
+	drawButtonBackground( irightBtnDownPix[false], g, true );
 }
 
 
 void KDEDefaultHandler::freePixmaps()
 {
 	// Free button pixmaps
-	if (rightBtnUpPix)
-		delete rightBtnUpPix;
-	if(rightBtnDownPix)
-		delete rightBtnDownPix;
-	if (irightBtnUpPix)
-		delete irightBtnUpPix;
-	if (irightBtnDownPix)
-		delete irightBtnDownPix;
+	if (rightBtnUpPix[true])
+		delete rightBtnUpPix[true];
+	if(rightBtnDownPix[true])
+		delete rightBtnDownPix[true];
+	if (irightBtnUpPix[true])
+		delete irightBtnUpPix[true];
+	if (irightBtnDownPix[true])
+		delete irightBtnDownPix[true];
 
-	if (leftBtnUpPix)
-		delete leftBtnUpPix;
-	if(leftBtnDownPix)
-		delete leftBtnDownPix;
-	if (ileftBtnUpPix)
-		delete ileftBtnUpPix;
-	if (ileftBtnDownPix)
-		delete ileftBtnDownPix;
+	if (leftBtnUpPix[true])
+		delete leftBtnUpPix[true];
+	if(leftBtnDownPix[true])
+		delete leftBtnDownPix[true];
+	if (ileftBtnUpPix[true])
+		delete ileftBtnUpPix[true];
+	if (ileftBtnDownPix[true])
+		delete ileftBtnDownPix[true];
+
+	if (rightBtnUpPix[false])
+		delete rightBtnUpPix[false];
+	if(rightBtnDownPix[false])
+		delete rightBtnDownPix[false];
+	if (irightBtnUpPix[false])
+		delete irightBtnUpPix[false];
+	if (irightBtnDownPix[false])
+		delete irightBtnDownPix[false];
+
+	if (leftBtnUpPix[false])
+		delete leftBtnUpPix[false];
+	if(leftBtnDownPix[false])
+		delete leftBtnDownPix[false];
+	if (ileftBtnUpPix[false])
+		delete ileftBtnUpPix[false];
+	if (ileftBtnDownPix[false])
+		delete ileftBtnDownPix[false];
 
 	// Title images
 	if (titleBuffer)
@@ -430,6 +504,12 @@ void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
     p.drawLine(2, x2-2, y2-2, x2-2);
 }
 
+QValueList< KDEDefaultHandler::BorderSize > KDEDefaultHandler::borderSizes() const
+{ // the list must be sorted
+  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+      BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
+}
+
 
 // ===========================================================================
 
@@ -451,9 +531,9 @@ KDEDefaultButton::KDEDefaultButton(KDEDefaultClient *parent, const char *name,
 	client 		= parent;
 
     if (large)
-       setFixedSize(16, 16);
+       setFixedSize(normalTitleHeight, normalTitleHeight);
     else
-       setFixedSize(12, 12);
+       setFixedSize(toolTitleHeight, toolTitleHeight);
 
     if (bitmap)
         setBitmap(bitmap);
@@ -470,9 +550,9 @@ KDEDefaultButton::~KDEDefaultButton()
 QSize KDEDefaultButton::sizeHint() const
 {
    if ( large )
-      return( QSize(16,16) );
+      return( QSize(normalTitleHeight, normalTitleHeight) );
    else
-      return( QSize(12,12) );
+      return( QSize(toolTitleHeight, toolTitleHeight) );
 }
 
 
@@ -499,24 +579,17 @@ void KDEDefaultButton::drawButton(QPainter *p)
 		if (isLeft)	{
 			if (isDown())
 				btnbg = client->isActive() ?
-							*leftBtnDownPix : *ileftBtnDownPix;
+							*leftBtnDownPix[large] : *ileftBtnDownPix[large];
 			else
 				btnbg = client->isActive() ?
-							*leftBtnUpPix : *ileftBtnUpPix;
+							*leftBtnUpPix[large] : *ileftBtnUpPix[large];
 		} else {
 			if (isDown())
 				btnbg = client->isActive() ?
-							*rightBtnDownPix : *irightBtnDownPix;
+							*rightBtnDownPix[large] : *irightBtnDownPix[large];
 			else
 				btnbg = client->isActive() ?
-							*rightBtnUpPix : *irightBtnUpPix;
-		}
-
-		// Scale the background image if required
-		// This is slow, but we assume this isn't done too often
-		if ( !large ) {
-			btnbg.detach();
-			btnbg.convertFromImage(btnbg.convertToImage().smoothScale(12, 12));
+							*rightBtnUpPix[large] : *irightBtnUpPix[large];
 		}
 
 		p->drawPixmap( 0, 0, btnbg );
@@ -530,8 +603,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 			QColor c = KDecoration::options()->color(ColorTitleBar, client->isActive());
 			p->fillRect(0, 0, width(), height(), c );
 		} else
-		 	p->drawPixmap( 0, 0, *grad, 0,((normalTitleHeight-height())/2)+1,
-						   16, 16 );
+		 	p->drawPixmap( 0, 0, *grad, 0,1, width(), height() );
 
 	} else {
 		// Draw a plain background for menus or sticky buttons on RHS
@@ -575,10 +647,12 @@ void KDEDefaultButton::drawButton(QPainter *p)
 
 		// Smooth scale the pixmap for small titlebars
 		// This is slow, but we assume this isn't done too often
-		if ( !large )
+		if ( width() < 16 ) {
 			btnpix.convertFromImage(btnpix.convertToImage().smoothScale(12, 12));
-
-		p->drawPixmap( 0, 0, btnpix );
+			p->drawPixmap( 0, 0, btnpix );
+		}
+		else
+			p->drawPixmap( width()/2-8, height()/2-8, btnpix );
 	}
 }
 
@@ -648,7 +722,7 @@ void KDEDefaultClient::init()
     // Finally, toolWindows look small
     if ( isTool() ) {
 		titleHeight  = toolTitleHeight;
-		largeButtons = largeToolButtons;
+		largeButtons = false;
 	}
 	else {
 		titleHeight  = normalTitleHeight;
@@ -673,12 +747,12 @@ void KDEDefaultClient::init()
 
 	// Determine the size of the lower grab bar
     spacer = new QSpacerItem(10, 
-			showGrabBar && isResizable() ? 8 : 4, 
+			showGrabBar && isResizable() ? grabBorderWidth : borderWidth, 
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->addItem(spacer, 4, 1);
 
-    g->addColSpacing(0, 4);
-    g->addColSpacing(2, 4);
+    g->addColSpacing(0, borderWidth);
+    g->addColSpacing(2, borderWidth);
 
     // Pack the titlebar HBox with items
     hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0 );
@@ -782,7 +856,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 			// Spacer item (only for non-tool windows)
 			case '_':
     			if ( !isTool() )
-	   				hb->addSpacing(2);
+	   				hb->addSpacing(borderWidth/2);
 		}
 	}
 }
@@ -904,59 +978,73 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	g = options()->colorGroup(ColorTitleBar, isActive());
 	p.setPen(g.light());
 	p.drawLine(x+1, y+1, rightOffset-1, y+1);
-	p.drawLine(x+1, y+1, x+1, leftFrameStart);
+	p.drawLine(x+1, y+1, x+1, leftFrameStart+borderWidth-4);
 
 	// Draw titlebar colour separator line
 	p.setPen(g.dark());
 	p.drawLine(rightOffset-1, y+1, rightOffset-1, titleHeight+2);
 
+	p.fillRect(x+2, y+titleHeight+3,
+	           borderWidth-4, leftFrameStart+borderWidth-y-titleHeight-8,
+	           options()->color(ColorTitleBar, isActive() ));
+
 	// Finish drawing the titlebar extension
 	p.setPen(Qt::black);
-	p.drawLine(x+1, leftFrameStart, x+2, leftFrameStart-1);
+	p.drawLine(x+1, leftFrameStart+borderWidth-4, x+borderWidth-2, leftFrameStart-1);
 	p.setPen(g.mid());
-	p.drawLine(x+2, y+titleHeight+3, x+2, leftFrameStart-2);
+	p.drawLine(x+borderWidth-2, y+titleHeight+3, x+borderWidth-2, leftFrameStart-2);
 
     // Fill out the border edges
     g = options()->colorGroup(ColorFrame, isActive());
     p.setPen(g.light());
     p.drawLine(rightOffset, y+1, x2-1, y+1);
-    p.drawLine(x+1, leftFrameStart+1, x+1, y2-1);
+    p.drawLine(x+1, leftFrameStart+borderWidth-3, x+1, y2-1);
     p.setPen(g.dark());
     p.drawLine(x2-1, y+1, x2-1, y2-1);
     p.drawLine(x+1, y2-1, x2-1, y2-1);
 
 	p.setPen(options()->color(ColorFrame, isActive()));
-	p.drawLine(x+2, leftFrameStart, x+2, y2-2 );
-	p.drawLine(x2-2, y+titleHeight+3, x2-2, y2-2);
+	QPointArray a;
+	QBrush brush( options()->color(ColorFrame, isActive()), Qt::SolidPattern );
+	p.setBrush( brush );                       // use solid, yellow brush
+    a.setPoints( 4, x+2,             leftFrameStart+borderWidth-4,
+	                x+borderWidth-2, leftFrameStart,
+	                x+borderWidth-2, y2-2,
+	                x+2,             y2-2);
+    p.drawPolygon( a );
+	p.fillRect(x2-borderWidth+2, y+titleHeight+3,
+	           borderWidth-3, y2-y-titleHeight-4,
+	           options()->color(ColorFrame, isActive() ));
 
 	// Draw the bottom handle if required
 	if (showGrabBar && isResizable())
 	{
 		if(w > 50)
 		{
-			qDrawShadePanel(&p, x+1, y2-6, 20, 6,
+			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+2, 2*borderWidth+12, grabBorderWidth-2,
 							g, false, 1, &g.brush(QColorGroup::Mid));
-			qDrawShadePanel(&p, x+21, y2-6, w-42, 6,
+			qDrawShadePanel(&p, x+2*borderWidth+13, y2-grabBorderWidth+2, w-4*borderWidth-26, grabBorderWidth-2,
 							g, false, 1, isActive() ?
 							&g.brush(QColorGroup::Background) :
 							&g.brush(QColorGroup::Mid));
-			qDrawShadePanel(&p, x2-20, y2-6, 20, 6,
+			qDrawShadePanel(&p, x2-2*borderWidth-12, y2-grabBorderWidth+2, 2*borderWidth+12, grabBorderWidth-2,
 							g, false, 1, &g.brush(QColorGroup::Mid));
 		} else
-			qDrawShadePanel(&p, x+1, y2-6, w-2, 6,
+			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+2, w-2, grabBorderWidth-2,
 							g, false, 1, isActive() ?
 							&g.brush(QColorGroup::Background) :
 							&g.brush(QColorGroup::Mid));
-		offset = 4;
+		offset = grabBorderWidth;
 	} else
 		{
-			p.drawLine(x+2, y2-2, x2-2, y2-2);
-			offset = 0;
+			p.fillRect(x+2, y2-borderWidth+2, w-4, borderWidth-3,
+			           options()->color(ColorFrame, isActive() ));
+			offset = borderWidth;
 		}
 
     // Draw a frame around the wrapped widget.
     p.setPen( g.dark() );
-    p.drawRect( x+3, y+titleHeight+3, w-6, h-titleHeight-offset-6 );
+    p.drawRect( x+borderWidth-1, y+titleHeight+3, w-2*borderWidth+2, h-titleHeight-offset-2 );
 
     // Draw the title bar.
 	r = titlebar->geometry();
@@ -1011,7 +1099,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	// Is this still needed? 
 #if 1
 	p.setPen(c2);
-    p.drawLine(x+4, y+titleHeight+4, x2-4, y+titleHeight+4);
+    p.drawLine(x+borderWidth, y+titleHeight+4, x2-borderWidth, y+titleHeight+4);
 #endif
 }
 
@@ -1079,10 +1167,10 @@ void KDEDefaultClient::resize( const QSize& s )
 
 void KDEDefaultClient::borders( int& left, int& right, int& top, int& bottom ) const
 { // FRAME
-    left = right = 4;
+    left = right = borderWidth;
 //    , y+titleHeight+3, w-6, h-titleHeight-offset-6 );
     top = titleHeight + 4;
-	bottom = isResizable() ? 8 : 4;
+	bottom = (showGrabBar && isResizable()) ? grabBorderWidth : borderWidth;
 }
 
 // The hiding button while shrinking, show button while expanding magic
@@ -1094,8 +1182,8 @@ void KDEDefaultClient::calcHiddenButtons()
 			button[BtnMax], button[BtnIconify], button[BtnClose],
 			button[BtnMenu] };
 
-	int minwidth  = largeButtons ? 160 : 120; // Start hiding at this width
-	int btn_width = largeButtons ? 16 : 12;
+	int minwidth  = largeButtons ? 10 * normalTitleHeight : 10 * toolTitleHeight; // Start hiding at this width
+	int btn_width = largeButtons ? normalTitleHeight : toolTitleHeight;
 	int current_width = width();
 	int count = 0;
 	int i;
@@ -1130,21 +1218,43 @@ KDecoration::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) co
 {
 	MousePosition m = Nowhere;
 
+	int bottomSize  = (showGrabBar && isResizable()) ? grabBorderWidth : borderWidth;
+	    
+    const int range = 14 + 3*borderWidth/2;
+
+    if ( ( p.x() > borderWidth && p.x() < width() - borderWidth )
+         && ( p.y() > 4 && p.y() < height() - bottomSize ) )
+        m = Center;
+    else if ( p.y() <= range && p.x() <= range)
+        m = TopLeft2;
+    else if ( p.y() >= height()-range && p.x() >= width()-range)
+        m = BottomRight2;
+    else if ( p.y() >= height()-range && p.x() <= range)
+        m = BottomLeft2;
+    else if ( p.y() <= range && p.x() >= width()-range)
+        m = TopRight2;
+    else if ( p.y() <= 4 )
+        m = Top;
+    else if ( p.y() >= height()-bottomSize )
+        m = Bottom;
+    else if ( p.x() <= borderWidth )
+        m = Left;
+    else if ( p.x() >= width()-borderWidth )
+        m = Right;
+    else
+        m = Center;
+
 	// Modify the mouse position if we are using a grab bar.
 	if (showGrabBar && isResizable())
-		if (p.y() < (height() - 8))
-			m = KDecoration::mousePosition(p);
-		else
+		if (p.y() >= (height() - grabBorderWidth))
 		{
-			if (p.x() >= (width() - 20))
+			if (p.x() >= (width() - 2*borderWidth - 12))
 				m = BottomRight2;
-			else if (p.x() <= 20)
+			else if (p.x() <= 2*borderWidth + 12)
 				m = BottomLeft2;
 			else
 			m = Bottom;
 		}
-	else
-		m = KDecoration::mousePosition(p);
 
 	return m;
 }

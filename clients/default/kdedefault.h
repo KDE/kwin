@@ -36,6 +36,7 @@ class KDEDefaultHandler: public KDecorationFactory
 		~KDEDefaultHandler();
                 KDecoration* createDecoration( KDecorationBridge* b );
 		bool reset( unsigned long changed );
+		virtual QValueList< BorderSize > borderSizes() const;
 
 	private:
 		unsigned long readConfig( bool update );
