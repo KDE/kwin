@@ -391,8 +391,8 @@ void WindowWrapper::releaseWindow()
                              parentWidget()->x(),
                              parentWidget()->y() );
         }
-
-        XRemoveFromSaveSet(qt_xdisplay(), win );
+	XDeleteProperty( qt_xdisplay(),  win, atoms->kde_net_user_time);
+        XRemoveFromSaveSet( qt_xdisplay(), win );
         XSelectInput( qt_xdisplay(), win, NoEventMask );
         invalidateWindow();
     }
