@@ -29,10 +29,11 @@
 #include <qlayout.h>
 
 #include <kapp.h>
-#include <netwm.h>
 
 #include "../../options.h"
 #include "../../workspace.h"
+
+#include <netwm.h>
 
 #include "Manager.h"
 #include "Static.h"

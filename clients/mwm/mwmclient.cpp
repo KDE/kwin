@@ -2,6 +2,7 @@
 #include <qlayout.h>
 #include <qbutton.h>
 #include <qdrawutil.h>
+#include <qpainter.h>
 #include <klocale.h>
 #include "../../workspace.h"
 #include "../../options.h"

@@ -50,6 +50,7 @@
 #include <qdatetime.h>
 #include <qbitmap.h>
 #include <qstring.h>
+#include <qregexp.h>
 #include "../../workspace.h"
 #include "../../options.h"
 #include "icewm.h"

@@ -25,8 +25,8 @@
 #include <qlayout.h>
 #include <qpainter.h>
 
-#include <netwm.h>
 #include <kwin/workspace.h>
+#include <netwm.h>
 #undef Bool
 
 #include <kconfig.h>

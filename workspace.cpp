@@ -24,8 +24,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kstartupinfo.h>
 #include <kdesktopwidget.h>
 
-#include <netwm.h>
-
 #include "workspace.h"
 #include "client.h"
 #include "tabbox.h"
@@ -33,6 +31,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "plugins.h"
 #include "events.h"
 #include "killwindow.h"
+#include <netwm.h>
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -3901,7 +3900,11 @@ void Workspace::updateClientArea()
 QRect Workspace::clientArea(clientAreaOption opt)
 {
     QRect rect = QApplication::desktop()->geometry();
+#if QT_VERSION < 300
     KDesktopWidget *desktop = KApplication::desktop();
+#else
+    QDesktopWidget *desktop = KApplication::desktop();
+#endif
 
     switch (opt) {
 	case MaximizeArea:

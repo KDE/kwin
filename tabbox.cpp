@@ -10,6 +10,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qpainter.h>
 #include <qlabel.h>
 #include <qdrawutil.h>
+#include <qstyle.h>
 #undef Bool // f**king X11
 #include <kglobal.h>
 #include <kconfig.h>
@@ -201,8 +202,15 @@ void TabBox::paintEvent( QPaintEvent* )
 {
     {
 	QPainter p( this );
+#if QT_VERSION < 300
 	style().drawPanel( &p, 0, 0, width(), height(), colorGroup(), FALSE );
 	style().drawPanel( &p, 4, 4, width()-8, height()-8, colorGroup(), TRUE );
+#else
+	style().drawPrimitive( QStyle::PE_Panel, &p, QRect( 0, 0, width(), height() ),
+                               colorGroup(), QStyle::Style_Default );
+	style().drawPrimitive( QStyle::PE_Panel, &p, QRect( 4, 4, width()-8, height()-8 ),
+                               colorGroup(), QStyle::Style_Sunken );
+#endif
     }
     paintContents();
 }

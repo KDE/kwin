@@ -3,11 +3,13 @@
 #include <kglobal.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
+#include <qpainter.h>
 #include <kpixmapeffect.h>
 #include <kstddirs.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <qbitmap.h>
+#include <qstyle.h>
 #include "../../workspace.h"
 #include "../../options.h"
 
@@ -231,9 +233,15 @@ void MyButton::drawButtonLabel(QPainter *p)
 	// some visual notification of button presses. i.e. for MGBriezh
 	int offset = (isDown() && ((pixmap()->width() >= width()) || 
                          (pixmap()->height() >= height()))) ? 1 : 0;
+#if QT_VERSION < 300
         style().drawItem(p, offset, offset, width(), height(), 
                          AlignCenter, colorGroup(),
                          true, pixmap(), QString::null);
+#else
+        style().drawItem(p, QRect( offset, offset, width(), height() ), 
+                         AlignCenter, colorGroup(),
+                         true, pixmap(), QString::null);
+#endif
     }
 }
 

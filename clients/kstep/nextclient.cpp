@@ -2,6 +2,7 @@
 #include <qabstractlayout.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
+#include <qpainter.h>
 #include <kpixmapeffect.h>
 #include <klocale.h>
 #include <qbitmap.h>

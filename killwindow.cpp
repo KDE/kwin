@@ -8,6 +8,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 //#define QT_CLEAN_NAMESPACE
 //#endif
 #include "killwindow.h"
+#include <qcursor.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>

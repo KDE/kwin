@@ -7,6 +7,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #define TABBOX_H
 #include <qwidget.h>
 #include <qtimer.h>
+#include <qvaluelist.h>
 
 class QLabel;
 
