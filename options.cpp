@@ -18,7 +18,7 @@ Options::Options()
     animate_shade = false;
     anim_steps = 20;
     border_snap_zone = window_snap_zone = 10;
-    
+
     connect( kapp, SIGNAL( appearanceChanged() ), this, SLOT(reload() ) );
 }
 
@@ -161,6 +161,6 @@ void Options::reload()
 
 }
 
-#include "options.moc" 
+#include "options.moc.cpp"
 
 
