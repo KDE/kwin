@@ -4,6 +4,7 @@
 
 #include <kconfig.h>
 #include <kglobal.h>
+#include <klocale.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
@@ -66,7 +67,6 @@ static QString *button_pattern = NULL;
 static bool show_handle;
 static int handle_size;
 static int handle_width;
-static bool config_changed;
 
 static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
 {
@@ -218,8 +218,8 @@ static bool read_config()
 }
 
 ModernButton::ModernButton(Client *parent, const char *name,
-                           const unsigned char *bitmap)
-    : QButton(parent, name)
+                           const unsigned char *bitmap, const QString& tip)
+    : KWinButton(parent, name, tip)
 {
     setBackgroundMode( NoBackground );
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
@@ -229,8 +229,8 @@ ModernButton::ModernButton(Client *parent, const char *name,
     if(bitmap)
         setBitmap(bitmap);
     setMask(mask);
-    client = parent;
     hide();
+	client = parent;
 }
 
 QSize ModernButton::sizeHint() const
@@ -270,22 +270,19 @@ void ModernButton::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    QButton::mousePressEvent( &me );
+    KWinButton::mousePressEvent( &me );
 }
 
 void ModernButton::mouseReleaseEvent( QMouseEvent* e )
 {
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    QButton::mouseReleaseEvent( &me );
+    KWinButton::mouseReleaseEvent( &me );
 }
 
 
 void ModernSys::slotReset()
 {
-    if (config_changed) {
-        workspace()->slotResetAllClientsDelayed();
-        config_changed = false;
-    }
+    workspace()->slotResetAllClientsDelayed();
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
     for (int i = 0; i < 5; button[i++]->reset());
@@ -314,17 +311,17 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
 
-    button[BtnClose] = new ModernButton(this, "close", close_bits);
-    button[BtnSticky] = new ModernButton(this, "sticky");
-    button[BtnMinimize] = new ModernButton(this, "iconify", iconify_bits);
-    button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits);
-    button[BtnHelp] = new ModernButton(this, "help", question_bits);
+    button[BtnClose] = new ModernButton(this, "close", close_bits, i18n("Close"));
+    button[BtnSticky] = new ModernButton(this, "sticky", NULL, i18n("Sticky"));
+    button[BtnMinimize] = new ModernButton(this, "iconify", iconify_bits, i18n("Minimize"));
+    button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits, i18n("Maximize"));
+    button[BtnHelp] = new ModernButton(this, "help", question_bits, i18n("Help"));
 
-    connect( button[BtnClose], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
-    connect( button[BtnSticky], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    connect( button[BtnMinimize], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    connect( button[BtnMaximize], SIGNAL( clicked() ), this, ( SLOT( maxButtonClicked() ) ) );
-    connect( button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
+    connect( button[BtnClose], SIGNAL(clicked()), this, SLOT( closeWindow() ) );
+    connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT( toggleSticky() ) );
+    connect( button[BtnMinimize], SIGNAL(clicked()), this, SLOT( iconify() ) );
+    connect( button[BtnMaximize], SIGNAL(clicked()), this, SLOT( maxButtonClicked() ) );
+    connect( button[BtnHelp], SIGNAL(clicked()), this, SLOT( contextHelp() ) );
 
     for (int i = 0; i < (int)button_pattern->length();) {
         QChar c = (*button_pattern)[i++];
@@ -575,11 +572,13 @@ void ModernSys::mouseDoubleClickEvent( QMouseEvent * e )
 void ModernSys::stickyChange(bool on)
 {
     button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
+    button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
 }
 
 void ModernSys::maximizeChange(bool m)
 {
     button[BtnMaximize]->setBitmap(m ? minmax_bits : maximize_bits);
+    button[BtnMaximize]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
 
 void ModernSys::init()
@@ -626,12 +625,10 @@ extern "C"
         button_pattern = new QString;
         create_pixmaps();
         read_config();
-        config_changed = true;
     }
     void reset()
     {
-        if (read_config())
-            config_changed = true;
+        read_config();
 		delete_pixmaps();
 		create_pixmaps();
     }

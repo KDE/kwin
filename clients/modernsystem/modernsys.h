@@ -6,18 +6,19 @@
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
 
 namespace KWinInternal {
 
-// get rid of autohide :P
-class ModernButton : public QButton
+class ModernButton : public KWinInternal::KWinButton
 {
     Q_OBJECT
 public:
     ModernButton(Client *parent=0, const char *name=0,
-                 const unsigned char *bitmap=NULL);
+                 const unsigned char *bitmap=NULL,
+                 const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
@@ -28,7 +29,7 @@ protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     QBitmap deco;
-    Client *client;
+    Client* client;
 public:
     int last_button;
 };

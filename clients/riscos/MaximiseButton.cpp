@@ -64,7 +64,7 @@ static const char * const unmaximise_xpm[] = {
 "            "};
 
 MaximiseButton::MaximiseButton(QWidget * parent)
-  : Button(parent),
+  : Button(parent, i18n("Maximize")),
     on_(false)
 {
   setPixmap(QPixmap((const char **)maximise_xpm));
@@ -84,6 +84,11 @@ MaximiseButton::setOn(bool on)
       QPixmap((const char **)maximise_xpm)
   );
   repaint();
+  setTipText( 
+      on_ ? 
+      i18n("Restore") :
+      i18n("Maximize") 
+  );
 }
 
   void

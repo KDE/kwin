@@ -4,8 +4,6 @@ kwin - the KDE window manager
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #include "kde1client.h"
-#include <qapplication.h>
-#include <qcursor.h>
 #include <qabstractlayout.h>
 #include <qlayout.h>
 #include <qtoolbutton.h>
@@ -13,6 +11,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qdrawutil.h>
 #include <qbitmap.h>
 #include <kdrawutil.h>
+#include <klocale.h>
 #include <qdatetime.h>
 #include <qimage.h>
 #include "../../workspace.h"
@@ -190,18 +189,19 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     g->addRowSpacing(2, 2);
 
 
-    button[0] = new QToolButton( this );
-    button[1] = new QToolButton( this );
-    button[2] = new QToolButton( this );
-    button[3] = new QToolButton( this );
-    button[4] = new ThreeButtonButton( this );
-    button[5] = new QToolButton( this );
+    button[0] = new KWinToolButton( this, 0, i18n("Menu") );
+    button[1] = new KWinToolButton( this, 0, i18n("Sticky")  );
+//    button[2] = new KWinToolButton( this, 0, i18n("?") );
+    button[2] = NULL;
+    button[3] = new KWinToolButton( this, 0, i18n("Minimize") );
+    button[4] = new ThreeButtonButton( this, 0, i18n("Maximize") );
+    button[5] = new KWinToolButton( this, 0, i18n("Close") );
 
     QHBoxLayout* hb = new QHBoxLayout;
     g->addLayout( hb, 0, 1 );
     hb->addWidget( button[0] );
     hb->addWidget( button[1] );
-    hb->addWidget( button[2] );
+//    hb->addWidget( button[2] );
 
     int fh = fontMetrics().lineSpacing();
 
@@ -211,7 +211,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 
     button[6] = 0;
     if ( providesContextHelp() ) {
-	button[6] = new QToolButton( this );
+	button[6] = new KWinToolButton( this, 0, i18n("Help") );
 	hb->addWidget( button[6] ); // help  button
 	hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 	button[6]->setIconSet( *question_mark_pix );
@@ -243,7 +243,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
                           isActive() ? *pinup_pix : *dis_pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
-    button[2]->hide();
+//    button[2]->hide();
 
     button[3]->setIconSet(isActive() ? *minimize_pix : *dis_minimize_pix);
     connect( button[3], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
@@ -259,7 +259,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     if ( isTransient() ) {
 	// lighter decoration for transient windows
 	button[1]->hide();
-	button[2]->hide();
+//	button[2]->hide();
 	button[3]->hide();
 	button[4]->hide();
     }
@@ -312,6 +312,7 @@ void StdClient::captionChange( const QString& )
 void StdClient::maximizeChange( bool m )
 {
     button[4]->setIconSet( m?*normalize_pix:*maximize_pix  );
+    button[4]->setTipText( m ? i18n("Restore") : i18n("Maximize") );
 }
 
 
@@ -320,6 +321,7 @@ void StdClient::maximizeChange( bool m )
 void StdClient::stickyChange( bool s)
 {
     button[1]->setIconSet( s?*pindown_pix:*pinup_pix );
+    button[1]->setTipText( s ? i18n("Un-Sticky") : i18n("Sticky") );
 }
 
 void StdClient::paintEvent( QPaintEvent* )
@@ -424,7 +426,7 @@ StdToolClient::StdToolClient( Workspace *ws, WId w, QWidget *parent, const char 
     g->addColSpacing(2, 1);
     g->addRowSpacing(2, 2);
 
-    closeBtn = new QToolButton( this );
+    closeBtn = new KWinToolButton( this, 0, i18n("Close") );
     connect( closeBtn, SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     closeBtn->setFixedSize( 13, 13);
     slotReset();
@@ -523,6 +525,8 @@ extern "C"
   {
      delete_pixmaps();
      create_pixmaps();
+     // Ensure change in tooltip state gets applied
+     Workspace::self()->slotResetAllClientsDelayed();
   }
   void deinit()
   {

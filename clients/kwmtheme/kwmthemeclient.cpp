@@ -280,7 +280,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
         key += QChar(keyOffsets[i]);
         val = config->readEntry(key, defaultButtons[i]);
         if(val == "Menu"){
-            mnuBtn = new MyButton(this, "menu");
+            mnuBtn = new MyButton(this, "menu", i18n("Menu"));
             iconChange();
             hb->addWidget(mnuBtn);
             mnuBtn->setFixedSize(20, 20);
@@ -288,7 +288,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
                     SLOT(menuButtonPressed()));
         }
         else if(val == "Sticky"){
-            stickyBtn = new MyButton(this, "sticky");
+            stickyBtn = new MyButton(this, "sticky", i18n("Sticky"));
             if (isSticky())
                 stickyBtn->setPixmap(*pindownPix);
             else
@@ -298,21 +298,21 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
             stickyBtn->setFixedSize(20, 20);
         }
         else if((val == "Iconify") && isMinimizable()){
-            btn = new MyButton(this, "iconify");
+            btn = new MyButton(this, "iconify", i18n("Minimize"));
             btn->setPixmap(*iconifyPix);
             connect(btn, SIGNAL(clicked()), this, SLOT(iconify()));
             hb->addWidget(btn);
             btn->setFixedSize(20, 20);
         }
         else if((val == "Maximize") && isMaximizable()){
-            maxBtn = new MyButton(this, "max");
+            maxBtn = new MyButton(this, "max", i18n("Maximize"));
             maxBtn->setPixmap(*maxPix);
             connect(maxBtn, SIGNAL(clicked()), this, SLOT(maximize()));
             hb->addWidget(maxBtn);
             maxBtn->setFixedSize(20, 20);
         }
         else if(val == "Close"){
-            btn = new MyButton(this, "close");
+            btn = new MyButton(this, "close", i18n("Close"));
             btn->setPixmap(*closePix);
             connect(btn, SIGNAL(clicked()), this, SLOT(closeWindow()));
             hb->addWidget(btn);
@@ -729,14 +729,18 @@ void KWMThemeClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void KWMThemeClient::stickyChange(bool on)
 {
-    if (stickyBtn)
+    if (stickyBtn) {
        stickyBtn->setPixmap(on ? *pindownPix : *pinupPix);
+       stickyBtn->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky") );
+    }
 }
 
 void KWMThemeClient::maximizeChange(bool m)
 {
-    if (maxBtn)
+    if (maxBtn) {
        maxBtn->setPixmap(m ? *minmaxPix : *maxPix);
+       maxBtn->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+    }
 }
 
 Client::MousePosition KWMThemeClient::mousePosition(const QPoint &p) const

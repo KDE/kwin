@@ -34,7 +34,7 @@ static unsigned char unsticky_bits[] =
 };
 
 WebButtonSticky::WebButtonSticky(bool sticky, QWidget * parent)
-  : WebButton(parent)
+  : WebButton(parent, i18n("Sticky"))
 {
   QBitmap b(8, 8, sticky ? unsticky_bits : sticky_bits, true /* isXBitmap */);
   b.setMask(b);
@@ -47,6 +47,7 @@ WebButtonSticky::slotStickyChange(bool sticky)
   QBitmap b(8, 8, sticky ? unsticky_bits : sticky_bits, true /* isXBitmap */);
   b.setMask(b);
   setBitmap(b);
+  setTipText(sticky ? i18n("Un-Sticky") : i18n("Sticky"));
 }
 
   void

@@ -45,7 +45,7 @@ static const char * const help_xpm[] = {
 "     ++     "};
 
 HelpButton::HelpButton(QWidget * parent)
-  : Button(parent)
+  : Button(parent, i18n("Help"))
 {
   setPixmap(QPixmap((const char **)help_xpm));
   connect(this, SIGNAL(help()), parent, SLOT(slotHelp()));

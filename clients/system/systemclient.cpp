@@ -1,13 +1,10 @@
 #include "systemclient.h"
-#include <qapplication.h>
-#include <qcursor.h>
 #include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qtoolbutton.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
+#include <klocale.h>
 #include <kapp.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
@@ -183,8 +180,8 @@ static void delete_pixmaps()
 }
 
 SystemButton::SystemButton(Client *parent, const char *name,
-                           const unsigned char *bitmap)
-    : QToolButton(parent, name)
+             const unsigned char *bitmap, const QString& tip)
+    : KWinButton(parent, name, tip)
 {
     setBackgroundMode( NoBackground );
     resize(14, 14);
@@ -249,21 +246,19 @@ void SystemButton::drawButton(QPainter *p)
         p->setPen(*btnForeground);
         p->drawPixmap(isDown() ? 4 : 3, isDown() ? 4 : 3, deco);
     }
-
-    
 }
 
 void SystemButton::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    QToolButton::mousePressEvent( &me );
+    KWinButton::mousePressEvent( &me );
 }
 
 void SystemButton::mouseReleaseEvent( QMouseEvent* e )
 {
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    QToolButton::mouseReleaseEvent( &me );
+    KWinButton::mouseReleaseEvent( &me );
 }
 
 void SystemButton::handleClicked()
@@ -316,16 +311,17 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(2, 2);
     g->addRowSpacing(2, 6);
 
-    button[0] = new SystemButton(this, "close"/*, close_bits*/);
-    button[1] = new SystemButton(this, "sticky");
+    button[0] = new SystemButton(this, "close", NULL, i18n("Close"));
+    button[1] = new SystemButton(this, "sticky", NULL, i18n("Sticky"));
     if(isSticky())
         button[1]->setBitmap(unsticky_bits);
     else
         button[1]->setBitmap(sticky_bits);
-    button[2] = new SystemButton(this, "iconify", iconify_bits);
-    button[3] = new SystemButton(this, "maximize", maximize_bits);
+
+    button[2] = new SystemButton(this, "iconify", iconify_bits, i18n("Minimize"));
+    button[3] = new SystemButton(this, "maximize", maximize_bits, i18n("Maximize"));
     if(help){
-        button[4] = new SystemButton(this, "help", question_bits);
+        button[4] = new SystemButton(this, "help", question_bits, i18n("Help"));
         connect( button[4], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
     else
@@ -352,10 +348,18 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     }
     hb->addWidget( button[1]);
     hb->addSpacing(1);
-    hb->addWidget( button[2]);
-    hb->addSpacing(1);
-    hb->addWidget( button[3]);
-    hb->addSpacing(3);
+
+    if (isMinimizable()) {
+         hb->addWidget(button[2]);
+         hb->addSpacing(1);
+    } else
+         button[2]->hide();
+
+    if (isMaximizable()) {
+         hb->addWidget(button[3]);
+         hb->addSpacing(3);
+    } else
+         button[3]->hide();
 
     setBackgroundMode(NoBackground);
     recalcTitleBuffer();
@@ -508,11 +512,13 @@ void SystemClient::mouseDoubleClickEvent( QMouseEvent * e )
 void SystemClient::stickyChange(bool on)
 {
     button[1]->setBitmap(on ? unsticky_bits : sticky_bits);
+    button[1]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
 }
 
 void SystemClient::maximizeChange(bool m)
 {
     button[3]->setBitmap(m ? minmax_bits : maximize_bits);
+    button[3]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
 
 void SystemClient::init()
@@ -545,6 +551,8 @@ extern "C"
     {
        delete_pixmaps();
        create_pixmaps();
+       // Ensure changes in tooltip state get applied
+       Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {

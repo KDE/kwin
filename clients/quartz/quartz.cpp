@@ -19,6 +19,7 @@
 #include <kglobal.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
+#include <klocale.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <qbitmap.h>
@@ -268,20 +269,19 @@ void QuartzHandler::freePixmaps()
 
 
 QuartzButton::QuartzButton(Client *parent, const char *name, bool largeButton,
-                           bool isLeftButton, bool isStickyButton, const unsigned char *bitmap )
-    : QButton(parent, name, WStyle_Customize | WRepaintNoErase |
-                            WResizeNoErase | WStyle_NoBorder )
+		bool isLeftButton, bool isStickyButton, const unsigned char *bitmap,
+		const QString& tip)
+    : KWinButton(parent, name, tip)
 {
     // Eliminate any possible background flicker
     setBackgroundMode( QWidget::NoBackground ); 
 	setToggleButton( isStickyButton );
 
-    client = parent;
-	deco = NULL;
-
-    large = largeButton;
-	isLeft = isLeftButton;
+	deco 	 = NULL;
+    large 	 = largeButton;
+	isLeft 	 = isLeftButton;
 	isSticky = isStickyButton;
+	client   = parent;
 
     if ( large )
        setFixedSize(16, 16);
@@ -392,7 +392,7 @@ void QuartzButton::mousePressEvent( QMouseEvent* e )
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
 					LeftButton, e->state() );
-	QButton::mousePressEvent( &me );
+	KWinButton::mousePressEvent( &me );
 }
 
 
@@ -401,7 +401,7 @@ void QuartzButton::mouseReleaseEvent( QMouseEvent* e )
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
 					LeftButton, e->state() );
-	QButton::mouseReleaseEvent( &me );
+	KWinButton::mouseReleaseEvent( &me );
 }
 
 
@@ -471,8 +471,9 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					if (!button[BtnMenu])
 					{
     					button[BtnMenu] = new QuartzButton(this, "menu", 
-											largeButtons, isLeft, false, NULL);
-    					connect( button[BtnMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()) );
+								 largeButtons, isLeft, false, NULL, i18n("Menu"));
+    					connect( button[BtnMenu], SIGNAL(pressed()), 
+								 this, SLOT(menuButtonPressed()) );
 						hb->addWidget( button[BtnMenu] );
 					}
 					break;
@@ -481,10 +482,11 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 				case 'S':
 					if (!button[BtnSticky])
 					{
-    					button[BtnSticky] = new QuartzButton(this, "menu", 
-											largeButtons, isLeft, true, NULL);
+    					button[BtnSticky] = new QuartzButton(this, "sticky", 
+								 largeButtons, isLeft, true, NULL, i18n("Sticky"));
 						button[BtnSticky]->turnOn( isSticky() );
-    					connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT(toggleSticky()) );
+    					connect( button[BtnSticky], SIGNAL(clicked()),
+								 this, SLOT(toggleSticky()) );
     					hb->addSpacing(1);
 						hb->addWidget( button[BtnSticky] );
     					hb->addSpacing(1);
@@ -496,8 +498,9 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
     				if( providesContextHelp() && (!button[BtnHelp]) )
 					{
 						button[BtnHelp] = new QuartzButton(this, "help", 
-											largeButtons, isLeft, true, question_bits);
-						connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT(contextHelp()));
+								 largeButtons, isLeft, true, question_bits, i18n("Help"));
+						connect( button[BtnHelp], SIGNAL( clicked() ), 
+								 this, SLOT(contextHelp()));
 						hb->addWidget( button[BtnHelp] );
 					}
 					break;
@@ -507,8 +510,9 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					if ( (!button[BtnIconify]) && isMinimizable())
 					{
 					    button[BtnIconify] = new QuartzButton(this, "iconify",
-											 largeButtons, isLeft, true, iconify_bits);
-					    connect( button[BtnIconify], SIGNAL( clicked()), this, SLOT(iconify()) );
+								 largeButtons, isLeft, true, iconify_bits, i18n("Minimize"));
+					    connect( button[BtnIconify], SIGNAL( clicked()), 
+								 this, SLOT(iconify()) );
 						hb->addWidget( button[BtnIconify] );
 					}
 					break;
@@ -518,8 +522,9 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					if ( (!button[BtnMax]) && isMaximizable())
 					{
 					    button[BtnMax]  = new QuartzButton(this, "maximize", 
-											largeButtons, isLeft, true, maximize_bits);
-					    connect( button[BtnMax], SIGNAL( clicked()), this, SLOT(slotMaximize()) );
+ 								 largeButtons, isLeft, true, maximize_bits, i18n("Maximize"));
+					    connect( button[BtnMax], SIGNAL( clicked()), 
+								 this, SLOT(slotMaximize()) );
 						hb->addWidget( button[BtnMax] );
 					}
 					break;
@@ -529,8 +534,9 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					if (!button[BtnClose])
 					{
 		    			button[BtnClose] = new QuartzButton(this, "close",
-											 largeButtons, isLeft, true, close_bits);
-					    connect( button[BtnClose], SIGNAL( clicked()), this, SLOT(closeWindow()) );
+								 largeButtons, isLeft, true, close_bits, i18n("Close"));
+					    connect( button[BtnClose], SIGNAL( clicked()), 
+								 this, SLOT(closeWindow()) );
 						hb->addWidget( button[BtnClose] );
 					}
 			}
@@ -551,6 +557,7 @@ void QuartzClient::stickyChange(bool on)
 	{
 		button[BtnSticky]->turnOn(on);
 		button[BtnSticky]->repaint(false);		
+		button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
 	}
 }
 
@@ -725,8 +732,10 @@ void QuartzClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void QuartzClient::maximizeChange(bool m)
 {
-	if (button[BtnMax])
+	if (button[BtnMax]) {
 	    button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
+		button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+	}
 }
 
 

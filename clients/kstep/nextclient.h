@@ -1,21 +1,21 @@
 #ifndef __NEXTCLIENT_H
 #define __NEXTCLIENT_H
 
-#include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
 
 namespace KWinInternal {
 
-// get rid of autohide :P
-class NextButton : public QButton
+class NextButton : public KWinInternal::KWinButton
 {
 public:
     NextButton(Client *parent=0, const char *name=0,
-               const unsigned char *bitmap=NULL, int bw=0, int bh=0);
+               const unsigned char *bitmap=NULL, int bw=0, int bh=0,
+               const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap, int bw, int bh);
     void reset();
 protected:

@@ -34,7 +34,7 @@ static unsigned char unmaximize_bits[] =
 };
 
 WebButtonMaximize::WebButtonMaximize(bool max, QWidget * parent)
-  : WebButton(parent)
+  : WebButton(parent, i18n("Maximize"))
 {
   QBitmap b(8, 8, max ? unmaximize_bits : maximize_bits, true /* isXBitmap */);
   b.setMask(b);
@@ -47,6 +47,7 @@ WebButtonMaximize::slotMaximizeChange(bool max)
   QBitmap b(8, 8, max ? unmaximize_bits : maximize_bits, true /* isXBitmap */);
   b.setMask(b);
   setBitmap(b);
+  setTipText(max ? i18n("Restore") : i18n("Maximize"));
 }
 
   void

@@ -1,12 +1,10 @@
 #ifndef __SYSTEMCLIENT_H
 #define __SYSTEMCLIENT_H
 
-#include <qbutton.h>
-#include <qtoolbutton.h>
-
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 
 
 class QLabel;
@@ -14,12 +12,12 @@ class QSpacerItem;
 
 namespace KWinInternal {
 
-class SystemButton : public QToolButton
+class SystemButton : public KWinInternal::KWinButton
 {
     Q_OBJECT
 public:
     SystemButton(Client *parent=0, const char *name=0,
-                 const unsigned char *bitmap=NULL);
+                 const unsigned char *bitmap=NULL, const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
@@ -29,7 +27,6 @@ protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     QBitmap deco;
-    Client *client;
 
     void mousePressEvent( QMouseEvent* e );
     void mouseReleaseEvent( QMouseEvent* e );
@@ -39,7 +36,7 @@ private slots:
 
 private:
     int last_button;
-    
+    Client* client;
 };
 
 class SystemClient : public KWinInternal::Client

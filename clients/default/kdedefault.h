@@ -18,12 +18,13 @@
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
+
 
 class QSpacerItem;
 class QHBoxLayout;
 
 namespace KWinInternal {
-
 
 class KDEDefaultHandler: public QObject
 {
@@ -36,36 +37,39 @@ class KDEDefaultHandler: public QObject
 		void readConfig();
 		void createPixmaps();
 		void freePixmaps();
-		void drawButtonBackground(KPixmap *pix, const QColorGroup &g, bool sunken);
+		void drawButtonBackground(KPixmap *pix, 
+				const QColorGroup &g, bool sunken);
 };
 
 
-class KDEDefaultButton : public QButton
+class KDEDefaultButton : public KWinInternal::KWinButton
 {
 	public:
-		KDEDefaultButton(Client *parent=0, const char *name=0, bool largeButton=true,
-					 bool isLeftButton=true, bool isStickyButton=false,
-					 const unsigned char *bitmap=NULL);
-		~KDEDefaultButton();
+		KDEDefaultButton(Client *parent=0, const char *name=0, 
+			 bool largeButton=true, bool isLeftButton=true,
+			 bool isStickyButton=false, const unsigned char *bitmap=NULL,
+			 const QString& tip=NULL);
+		~KDEDefaultButton(); 
+
+		int last_button;
+		void turnOn( bool isOn );
 		void setBitmap(const unsigned char *bitmap);
 		QSize sizeHint() const;
-		int   last_button;
-		void turnOn( bool isOn );
 
 	protected:
-		void enterEvent(QEvent *){ isMouseOver=true; repaint(false); }
-		void leaveEvent(QEvent *){ isMouseOver=false; repaint(false); }
+		void enterEvent(QEvent *);
+		void leaveEvent(QEvent *);
 		void mousePressEvent( QMouseEvent* e );
 		void mouseReleaseEvent( QMouseEvent* e );
 		void drawButton(QPainter *p);
 		void drawButtonLabel(QPainter*) {;}
 
-        Client* client;
 		QBitmap* deco;
 		bool    large;
 		bool    isLeft;
 		bool    isSticky;
 		bool	isMouseOver;
+		Client* client;
 };
 
 

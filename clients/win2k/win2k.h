@@ -20,19 +20,21 @@
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
 class QHBoxLayout;
 
 namespace KWinInternal {
 
-class GalliumButton : public QButton
+class GalliumButton : public KWinInternal::KWinButton
 {
 
 public:
     GalliumButton(Client *parent=0, const char *name=0, 
                   const unsigned char *bitmap=NULL,
-                  bool menuButton=false, bool isMini=false );
+                  bool menuButton=false, bool isMini=false,
+                  const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap);
     void setPixmap(const QPixmap &p);
     void reset();
@@ -46,7 +48,7 @@ protected:
        last_button = e->button();
        QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
                         LeftButton, e->state() );
-       QButton::mousePressEvent( &me );
+       KWinButton::mousePressEvent( &me );
     }
 
     void mouseReleaseEvent( QMouseEvent* e )
@@ -54,7 +56,7 @@ protected:
        last_button = e->button();
        QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
                         LeftButton, e->state() );
-       QButton::mouseReleaseEvent( &me );
+       KWinButton::mouseReleaseEvent( &me );
     }
 
     virtual void drawButton(QPainter *p);
@@ -62,9 +64,9 @@ protected:
 
     QBitmap  deco;
     QPixmap  pix;
-    Client*  client;
     bool     menuBtn;
     bool     miniBtn;
+    Client*  client;
 };
 
 

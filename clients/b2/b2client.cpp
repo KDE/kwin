@@ -1,6 +1,4 @@
 #include "b2client.h"
-#include <qapplication.h>
-#include <qcursor.h>
 #include <qabstractlayout.h>
 #include <qlayout.h>
 #include <qtoolbutton.h>
@@ -8,6 +6,7 @@
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
+#include <klocale.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
@@ -116,17 +115,17 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
-B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
+/*B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
                    KPixmap *iPixDown, Client *_client, QWidget *parent,
-		   const char *name)
-    : QButton(parent, name),
+		   const char *name, const QString& tip)
+    : KWinButton(parent, name, tip),
       pNorm(pix), pDown(pixDown), iNorm(iPix), iDown(iPixDown),
       client(_client)
 {
     setFixedSize(16, 16);
     setFocusPolicy(NoFocus);
     resize(16, 16);
-}
+}*/
 
 QSize B2Button::sizeHint() const
 {
@@ -188,13 +187,13 @@ void B2Button::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    QButton::mousePressEvent( &me );
+    KWinButton::mousePressEvent( &me );
 }
 
 void B2Button::mouseReleaseEvent( QMouseEvent* e )
 {
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    QButton::mouseReleaseEvent( &me );
+    KWinButton::mouseReleaseEvent( &me );
 }
 
 B2Titlebar::B2Titlebar(B2Client *parent)
@@ -377,6 +376,10 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase ),
       bar_x_ofs(0), in_unobs(0)
 {
+    const QString tips[] = { QString(i18n("Menu")), QString(i18n("Sticky")), 
+                             QString(i18n("Minimize")), QString(i18n("Maximize")),
+                             QString(i18n("Close")), QString(i18n("Help")) };
+
     g = new QGridLayout( this, 0, 0);
     g->addMultiCellWidget(windowWrapper(), 1, 1, 1, 2);
 
@@ -399,7 +402,7 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 
     int i;
     for(i=0; i < 6; ++i){
-        button[i] = new B2Button(this, titlebar/*this*/);
+        button[i] = new B2Button(this, titlebar, tips[i]);
         button[i]->setFixedSize(16, 16);
     }
     
@@ -704,6 +707,7 @@ void B2Client::titleMoveRel(int xdiff)
 void B2Client::stickyChange(bool on)
 {
     button[BtnSticky]->setDown(on);
+    button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
 }
 
 void B2Client::maximizeChange(bool m)
@@ -715,8 +719,8 @@ void B2Client::maximizeChange(bool m)
         button[BtnMax]->setPixmaps(P_MAX);
     }
     button[BtnMax]->repaint();
+    button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
-
 
 void B2Client::activeChange(bool on)
 {
@@ -902,6 +906,8 @@ extern "C"
     void reset()
     {
        redraw_pixmaps();
+       // Ensure change in tooltip state gets applied
+       Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {

@@ -29,7 +29,7 @@ static unsigned char close_bits[] =
 };
 
 WebButtonClose::WebButtonClose(QWidget * parent)
-  : WebButton(parent)
+  : WebButton(parent, i18n("Close"))
 {
   QBitmap b(8, 8, close_bits, true /* isXBitmap */);
   b.setMask(b);

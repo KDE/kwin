@@ -1,17 +1,14 @@
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
-#include <qapplication.h>
-#include <qcursor.h>
 #include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qtoolbutton.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <kglobal.h>
 #include <kapp.h>
+#include <klocale.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
@@ -222,9 +219,10 @@ static void delete_pixmaps()
 }
 
 
-LaptopClientButton::LaptopClientButton(int w, int h, Client *parent, const char *name,
-                           const unsigned char *bitmap)
-    : QButton(parent, name)
+LaptopClientButton::LaptopClientButton(int w, int h, Client *parent, 
+        const char *name, const unsigned char *bitmap, 
+        const QString& tip)
+    : KWinButton(parent, name, tip)
 {
     client = parent;
     defaultSize = QSize(w, h);
@@ -324,19 +322,21 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     if ( isTool() )
 	th -= 2;
 
-    button[BtnClose] = new LaptopClientButton(27, th, this, "close", close_bits);
-    button[BtnSticky] = new LaptopClientButton(17, th, this, "sticky");
+    button[BtnClose] = new LaptopClientButton(27, th, this, "close", 
+                                 close_bits, i18n("Close"));
+    button[BtnSticky] = new LaptopClientButton(17, th, this, "sticky",
+                                 NULL, i18n("Sticky"));
     if(isSticky())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
         button[BtnSticky]->setBitmap(sticky_bits);
     button[BtnIconify] = new LaptopClientButton(27, th, this, "iconify",
-                                          iconify_bits);
+                                          iconify_bits, i18n("Minimize"));
     button[BtnMax] = new LaptopClientButton(27, th, this, "maximize",
-                                      maximize_bits);
+                                      maximize_bits, i18n("Maximize"));
     if(help){
         button[BtnHelp] = new LaptopClientButton(17, th, this, "help",
-                                     question_bits);
+                                     question_bits, i18n("Help"));
         connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
     else
@@ -533,11 +533,13 @@ void LaptopClient::mouseDoubleClickEvent( QMouseEvent * e )
 void LaptopClient::stickyChange(bool on)
 {
     button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
+    button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
 }
 
 void LaptopClient::maximizeChange(bool m)
 {
     button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
+    button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
 
 void LaptopClient::init()
@@ -694,6 +696,8 @@ extern "C"
     {
        delete_pixmaps();
        create_pixmaps();
+       // Ensure change in tooltip state gets applied
+       Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {

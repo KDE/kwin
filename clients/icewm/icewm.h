@@ -30,6 +30,7 @@
 #include <qlayout.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
 class QHBoxLayout;
@@ -75,11 +76,12 @@ class ThemeHandler: public QObject
 };
 
 
-class IceWMButton : public QButton
+class IceWMButton : public KWinInternal::KWinButton
 {
 	public:
 		IceWMButton( Client *parent=0, const char *name=0, 
-					 QPixmap* (*p)[2]=0L, bool isToggle=false );
+					 QPixmap* (*p)[2]=0L, bool isToggle=false,
+					 const QString& tip=NULL );
 		void  usePixmap( QPixmap* (*p)[2] );
 		QSize sizeHint() const;
 		void  turnOn( bool isOn );
@@ -93,8 +95,8 @@ class IceWMButton : public QButton
 		void drawButtonLabel( QPainter * ) {;}
 
 	private:
+		Client* client;
 		QPixmap* (*pix)[2]; // Points to active/inactive pixmap array
-		Client*  client;
 };
 
 

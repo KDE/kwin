@@ -29,8 +29,8 @@ using namespace KWinInternal;
 namespace RiscOS
 {
 
-Button::Button(QWidget * parent)
-  : QWidget   (parent, "Button"),
+Button::Button(QWidget * parent, const QString& tip)
+  : KWinWidgetButton   (parent, "Button", 0, tip),
     alignment_(Left),
     down_     (false),
     active_   (false)
@@ -72,17 +72,19 @@ Button::alignment() const
 }
 
   void
-Button::mousePressEvent(QMouseEvent *)
+Button::mousePressEvent(QMouseEvent *e)
 {
   down_ = true;
   repaint();
+  KWinWidgetButton::mousePressEvent(e);
 }
 
   void
-Button::mouseReleaseEvent(QMouseEvent *)
+Button::mouseReleaseEvent(QMouseEvent *e)
 {
   down_ = false;
   repaint();
+  KWinWidgetButton::mouseReleaseEvent(e);
 }
 
   void

@@ -60,6 +60,7 @@ extern "C"
 
   void reset()
   {
+    Workspace::self()->slotResetAllClientsDelayed();
     // Empty.
   }
 

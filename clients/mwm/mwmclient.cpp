@@ -1,15 +1,12 @@
-#include <qapplication.h>
 #include <qdatetime.h>
-
 #include <qlayout.h>
 #include <qbutton.h>
 #include <qdrawutil.h>
+#include <klocale.h>
 #include "../../workspace.h"
 #include "../../options.h"
 
 #include "mwmclient.h"
-
-#include <kdebug.h>
 
 using namespace KWinInternal;
 
@@ -41,13 +38,13 @@ static void fixColorGroup(QColorGroup & colorGroup)
     }
 }
 
-MwmButton::MwmButton( MwmClient* parent, const char* name, int btnType )
-    : QButton( parent, name , WStyle_Customize | WStyle_NoBorder
-	| WRepaintNoErase | WResizeNoErase ), m_parent(parent), m_btnType(btnType)
+MwmButton::MwmButton( MwmClient* parent, const char* name, int btnType, const QString& tip )
+    : KWinButton( parent, name, tip ), m_btnType(btnType)
 {
     setBackgroundMode( QWidget::NoBackground );
     setFixedSize( s_buttonSize, s_buttonSize );
     resize( s_buttonSize, s_buttonSize );
+    m_parent = parent;
 }
 
 void MwmButton::reset()
@@ -102,9 +99,9 @@ MwmClient::MwmClient( Workspace* ws, WId w, QWidget* parent, const char* name )
     windowLayout->addWidget( windowWrapper(), 1 );
     windowLayout->addSpacing( s_frameWidth+1 );
 
-    button[BtnMenu]    = new MwmButton( this, "menu", BtnMenu );
-    button[BtnIconify] = new MwmButton( this, "iconify", BtnIconify );
-    button[BtnMax]     = new MwmButton( this, "maximize", BtnMax );
+    button[BtnMenu]    = new MwmButton( this, "menu", BtnMenu, i18n("Menu") );
+    button[BtnIconify] = new MwmButton( this, "iconify", BtnIconify, i18n("Minimize") );
+    button[BtnMax]     = new MwmButton( this, "maximize", BtnMax, i18n("Maximize") );
 
     connect( button[BtnMenu], SIGNAL( pressed() ),
 	this, ( SLOT( menuButtonPressed() ) ) );
@@ -153,6 +150,11 @@ void MwmClient::slotReset()
 void MwmClient::slotMaximize()
 {
     maximize();
+}
+
+void MwmClient::maximizeChange(bool m)
+{
+    button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
 
 void MwmClient::menuButtonPressed()
@@ -502,6 +504,8 @@ extern "C"
     }
     void reset()
     {
+        // Ensure changes in tooltip state get applied
+        Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {

@@ -288,6 +288,10 @@ public:
     */
     QString titleButtonsRight();
 
+    /**
+    * @returns true if the style should use tooltips for window buttons
+    */
+    bool showToolTips();
 
 public slots:
     void reload();

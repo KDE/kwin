@@ -22,6 +22,7 @@
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 
 class QSpacerItem;
 class QHBoxLayout;
@@ -47,12 +48,12 @@ class QuartzHandler: public QObject
 };
 
 
-class QuartzButton : public QButton
+class QuartzButton : public KWinInternal::KWinButton
 {
 	public:
 		QuartzButton(Client *parent=0, const char *name=0, bool largeButton=true,
 					 bool isLeftButton=true, bool isStickyButton=false,
-					 const unsigned char *bitmap=NULL);
+					 const unsigned char *bitmap=NULL, const QString& tip=NULL);
 		~QuartzButton();
 		void setBitmap(const unsigned char *bitmap);
 		QSize sizeHint() const;
@@ -65,11 +66,11 @@ class QuartzButton : public QButton
 		void drawButton(QPainter *p);
 		void drawButtonLabel(QPainter*) {;}
 
-		Client*  client;
 		QBitmap* deco;
 		bool     large;
 		bool	 isLeft;
 		bool 	 isSticky;
+		Client*  client;
 };
 
 

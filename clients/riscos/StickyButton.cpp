@@ -65,7 +65,7 @@ static const char * const sticky_xpm[] = {
 
 
 StickyButton::StickyButton(QWidget * parent)
-  : Button(parent),
+  : Button(parent, i18n("Sticky")),
     on_(false)
 {
   setPixmap(QPixmap((const char **)sticky_xpm));
@@ -83,6 +83,11 @@ StickyButton::setOn(bool on)
       QPixmap((const char **)sticky_xpm)
   );
   repaint();
+  setTipText(
+      on_ ?
+      i18n("Un-Sticky") :
+      i18n("Sticky")
+  );
 }
 
   void

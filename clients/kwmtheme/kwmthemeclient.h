@@ -5,18 +5,18 @@
 #include <qtoolbutton.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
 class QGridLayout;
 
 namespace KWinInternal{
 
-// QToolButton uses a 1 pixel border :P
-class MyButton : public QToolButton
+class MyButton : public KWinInternal::KWinToolButton
 {
 public:
-    MyButton(QWidget *parent=0, const char *name=0)
-        : QToolButton(parent, name){setAutoRaise(true);}
+    MyButton(QWidget *parent=0, const char *name=0, const QString& tip=NULL)
+        : KWinToolButton(parent, name, tip){setAutoRaise(true);}
 protected:
     void drawButtonLabel(QPainter *p);
 };

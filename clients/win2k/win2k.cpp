@@ -19,6 +19,7 @@
 #include <qdatetime.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
+#include <klocale.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
@@ -227,17 +228,15 @@ void delete_pixmaps()
 
 
 GalliumButton::GalliumButton(Client *parent, const char *name,
-                           const unsigned char *bitmap, bool menuButton, bool isMini)
-    : QButton(parent, name, WStyle_Customize | WRepaintNoErase |
-                            WResizeNoErase | WStyle_NoBorder )
+      const unsigned char *bitmap, bool menuButton, bool isMini, const QString& tip)
+    : KWinButton(parent, name, tip)
 {
     // Eliminate background flicker
     setBackgroundMode( QWidget::NoBackground ); 
 
-    client = parent;
-
     menuBtn = menuButton;
     miniBtn = isMini;
+    client  = parent;
 
     // Use larger button for the menu, or mini-buttons for toolwindows.
     if ( isMini ) 
@@ -378,10 +377,14 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
-    button[BtnMenu]    = new GalliumButton(this, "menu", NULL, true, smallButtons);
-    button[BtnClose]   = new GalliumButton(this, "close", close_bits, false, smallButtons);
-    button[BtnIconify] = new GalliumButton(this, "iconify", iconify_bits, false, smallButtons);
-    button[BtnMax]     = new GalliumButton(this, "maximize", maximize_bits, false, smallButtons);
+    button[BtnMenu]    = new GalliumButton(this, "menu", NULL, true, smallButtons, 
+                                           i18n("Menu"));
+    button[BtnClose]   = new GalliumButton(this, "close", close_bits, false, smallButtons,
+                                           i18n("Close"));
+    button[BtnIconify] = new GalliumButton(this, "iconify", iconify_bits, false, smallButtons,
+                                           i18n("Minimize"));
+    button[BtnMax]     = new GalliumButton(this, "maximize", maximize_bits, false, smallButtons,
+                                           i18n("Maximize"));
     
     // Connect required stuff together
     connect( button[BtnMenu],    SIGNAL(pressed()),      this, SLOT( menuButtonPressed() ));
@@ -402,7 +405,8 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
 
     if( providesContextHelp() )
     {
-        button[BtnHelp] = new GalliumButton(this, "help", question_bits, false, smallButtons);
+        button[BtnHelp] = new GalliumButton(this, "help", question_bits, false, smallButtons,
+                                            i18n("Help"));
         connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
         hb->addWidget( button[BtnHelp] );
     }
@@ -637,6 +641,7 @@ void GalliumClient::mouseDoubleClickEvent( QMouseEvent * e )
 void GalliumClient::maximizeChange(bool m)
 {
     button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
+    button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 }
 
 
@@ -755,6 +760,7 @@ extern "C"
     {
        delete_pixmaps();
        create_pixmaps();
+       Workspace::self()->slotResetAllClientsDelayed();
     }
 
     void deinit()

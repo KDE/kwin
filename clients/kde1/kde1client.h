@@ -6,7 +6,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #ifndef STDCLIENT_H
 #define STDCLIENT_H
 #include "../../client.h"
-#include <qtoolbutton.h>
+#include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
 
@@ -36,7 +36,7 @@ private slots:
     void slotReset();
 
 private:
-    QToolButton* button[7];
+    KWinToolButton* button[7];
     QSpacerItem* titlebar;
 };
 
@@ -58,7 +58,7 @@ protected:
 private slots:
     void slotReset();
 private:
-    QToolButton* closeBtn;
+    KWinToolButton* closeBtn;
     QSpacerItem* titlebar;
 };
 
@@ -68,17 +68,17 @@ private:
   Like QToolButton, but provides a clicked(int) signals that
   has the last pressed mouse button as argument
  */
-class ThreeButtonButton: public QToolButton
+class ThreeButtonButton: public KWinInternal:: KWinToolButton
 {
     Q_OBJECT
 public:
-  ThreeButtonButton ( QWidget *parent = 0, const char* name = 0)
-      : QToolButton( parent, name )
+  ThreeButtonButton ( QWidget *parent = 0, const char* name = 0, 
+		      const QString& tip = 0 )
+      : KWinToolButton( parent, name, tip )
     {
 	connect( this, SIGNAL( clicked() ), this, SLOT( handleClicked() ) );
     }
-  ~ThreeButtonButton ()
-    {}
+    ~ThreeButtonButton () {}
 
 signals:
     void clicked( int );
@@ -88,13 +88,13 @@ protected:
     {
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-	QToolButton::mousePressEvent( &me );
+	KWinToolButton::mousePressEvent( &me );
     }
 
     void mouseReleaseEvent( QMouseEvent* e )
     {
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-	QToolButton::mouseReleaseEvent( &me );
+	KWinToolButton::mouseReleaseEvent( &me );
     }
 
 private slots:

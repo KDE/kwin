@@ -1,22 +1,21 @@
 #ifndef __KDECLIENT_H
 #define __KDECLIENT_H
 
-#include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
 class QHBoxLayout;
 
 namespace KWinInternal {
 
-// get rid of autohide :P
-class LaptopClientButton : public QButton
+class LaptopClientButton : public KWinInternal::KWinButton
 {
 public:
     LaptopClientButton(int w, int h, Client *parent=0, const char *name=0,
-                 const unsigned char *bitmap=NULL);
+                 const unsigned char *bitmap=NULL, const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
     QSize sizeHint() const;
@@ -27,13 +26,13 @@ protected:
     {
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-	QButton::mousePressEvent( &me );
+	KWinButton::mousePressEvent( &me );
     }
     void mouseReleaseEvent( QMouseEvent* e )
     {
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-	QButton::mouseReleaseEvent( &me );
+	KWinButton::mouseReleaseEvent( &me );
     }
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *) {}

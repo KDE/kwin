@@ -45,7 +45,7 @@ static const char * const close_xpm[] = {
 "  .      .  "};
 
 CloseButton::CloseButton(QWidget * parent)
-  : Button(parent)
+  : Button(parent, i18n("Close"))
 {
   setPixmap(QPixmap((const char **)close_xpm));
   connect(this, SIGNAL(closeWindow()), parent, SLOT(closeWindow()));

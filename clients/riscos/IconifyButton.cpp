@@ -45,7 +45,7 @@ static const char * const iconify_xpm[] = {
 "            "};
 
 IconifyButton::IconifyButton(QWidget * parent)
-  : Button(parent)
+  : Button(parent, i18n("Minimize"))
 {
   setPixmap(QPixmap((const char **)iconify_xpm));
   connect(this, SIGNAL(iconify()), parent, SLOT(iconify()));

@@ -27,10 +27,10 @@
 #include <kstddirs.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kdrawutil.h>
 #include <qlabel.h>
 #include <qdrawutil.h>
 #include <qdatetime.h>
-#include <kdrawutil.h>
 #include <qbitmap.h>
 #include <qstring.h>
 #include "../../workspace.h"
@@ -594,9 +594,9 @@ void ThemeHandler::slotReset()
 // IceWM button class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-IceWMButton::IceWMButton(Client *parent, const char *name, QPixmap* (*p)[2], bool isToggle )
-    : QButton(parent, name, WStyle_Customize | WRepaintNoErase |
-                            WResizeNoErase | WStyle_NoBorder)
+IceWMButton::IceWMButton(Client *parent, const char *name, QPixmap* (*p)[2], 
+	  bool isToggle, const QString& tip )
+    : KWinButton(parent, name, tip)
 {
 	// Eliminate any possible background flicker
 	setBackgroundMode( QWidget::NoBackground );
@@ -621,15 +621,12 @@ QSize IceWMButton::sizeHint() const
 
 void IceWMButton::usePixmap( QPixmap* (*p)[2] )
 {
-	if ( validPixmaps( *p ) )
-	{ 
+	if (validPixmaps( *p )) {  
 		pix = p;
 		setFixedSize( (*pix)[Active]->width(), titleBarHeight );
 		repaint( false );
 	} else
-		{
-			pix = NULL;
-		}
+		pix = NULL;
 }
 
 
@@ -666,7 +663,7 @@ void IceWMButton::mousePressEvent( QMouseEvent* e )
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
 					 LeftButton, e->state() );
-	QButton::mousePressEvent( &me );
+	KWinButton::mousePressEvent( &me );
 }
 
 
@@ -675,7 +672,7 @@ void IceWMButton::mouseReleaseEvent( QMouseEvent* e )
 	last_button = e->button();
 	QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
 					 LeftButton, e->state() );
-	QButton::mouseReleaseEvent( &me );
+	KWinButton::mouseReleaseEvent( &me );
 }
 
 
@@ -782,12 +779,15 @@ void IceWMClient::addClientButtons( const QString& s )
 					{
 						if (showMenuButtonIcon) {
 							renderMenuIcons();
-							button[BtnSysMenu] = new IceWMButton(this, "menu", &menuButtonWithIconPix); 
+							button[BtnSysMenu] = new IceWMButton(this, "menu", 
+								&menuButtonWithIconPix, false, i18n("Menu")); 
 						}
 						else
-							button[BtnSysMenu] = new IceWMButton(this, "menu", &menuButtonPix); 
+							button[BtnSysMenu] = new IceWMButton(this, "menu", 
+								&menuButtonPix, false, i18n("Menu")); 
 	
-						connect( button[BtnSysMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
+						connect( button[BtnSysMenu], SIGNAL(pressed()), 
+								 this, SLOT(menuButtonPressed()));
 						hb->addWidget( button[BtnSysMenu] );
 					}
 					break;
@@ -795,27 +795,34 @@ void IceWMClient::addClientButtons( const QString& s )
 				case 'x':
 					if ( validPixmaps(closePix) && !button[BtnClose] )
 					{
-						button[BtnClose] = new IceWMButton(this, "close", &closePix);
+						button[BtnClose] = new IceWMButton(this, "close", 
+								&closePix, false, i18n("Close"));
 						hb->addWidget( button[BtnClose] );
-						connect( button[BtnClose], SIGNAL(clicked()), this, SLOT(closeWindow()));
+						connect( button[BtnClose], SIGNAL(clicked()), 
+								 this, SLOT(closeWindow()));
 					}
 					break;
 
 				case 'm':
 					if ( validPixmaps(maximizePix) && !button[BtnMaximize] && isMaximizable() )
 					{
-						button[BtnMaximize] = new IceWMButton(this, "maximize", &maximizePix);
+						button[BtnMaximize] = new IceWMButton(this, "maximize", 
+								&maximizePix, false, i18n("Maximize"));
 						hb->addWidget( button[BtnMaximize] );
-						connect( button[BtnMaximize], SIGNAL(clicked()), this, SLOT(slotMaximize()));
+						connect( button[BtnMaximize], SIGNAL(clicked()), 
+								 this, SLOT(slotMaximize()));
 					}
 					break;
 
 				case 'i':
-					if ( validPixmaps(minimizePix) && !button[BtnMinimize] && isMinimizable() )
+					if ( validPixmaps(minimizePix) && !button[BtnMinimize] && 
+						 isMinimizable() )
 					{
-						button[BtnMinimize] = new IceWMButton(this, "minimize", &minimizePix);
+						button[BtnMinimize] = new IceWMButton(this, "minimize", 
+								&minimizePix, false, i18n("Minimize"));
 						hb->addWidget( button[BtnMinimize] );
-						connect( button[BtnMinimize], SIGNAL(clicked()), this, SLOT(iconify()));
+						connect( button[BtnMinimize], SIGNAL(clicked()), 
+								 this, SLOT(iconify()));
 					}
 					break;
 
@@ -825,13 +832,16 @@ void IceWMClient::addClientButtons( const QString& s )
 						hb->addWidget( button[BtnHide] );
 					break; */
 
-				/* Re-enable this when kwin has void shadeChange(bool s) in clients.cpp
+				/* Re-enable this when kwin has void shadeChange(bool s)
+				   in clients.cpp
 				case 'r':
 					// NOTE: kwin doesn't have toggleShade() in clients.h !
 				    if ( validPixmaps(rollupPix) && !button[BtnRollup] )
 				    {
-						button[BtnRollup] = new IceWMButton(this, "shade", isShade() ? &rolldownPix : &rollupPix);
-						connect( button[BtnRollup], SIGNAL(clicked()), this, SLOT(toggleShade()) );
+						button[BtnRollup] = new IceWMButton(this, "shade",
+							isShade() ? &rolldownPix : &rollupPix);
+						connect( button[BtnRollup], SIGNAL(clicked()), 
+								 this, SLOT(toggleShade()) );
 						hb->addWidget( button[BtnRollup] );
 					}
 					break; 	*/
@@ -840,10 +850,12 @@ void IceWMClient::addClientButtons( const QString& s )
 					// Make depth == sticky
 					if ( validPixmaps(depthPix) && !button[BtnDepth] )
 					{
-						button[BtnDepth] = new IceWMButton(this, "sticky", &depthPix, true );
+						button[BtnDepth] = new IceWMButton(this, "sticky", 
+								&depthPix, true, i18n("Sticky"));
 						button[BtnDepth]->turnOn( isSticky() );
 						hb->addWidget( button[BtnDepth] );
-						connect( button[BtnDepth], SIGNAL(clicked()), this, SLOT(toggleSticky()));
+						connect( button[BtnDepth], SIGNAL(clicked()), 
+								 this, SLOT(toggleSticky()));
 					}
 					break;
 			}
@@ -1189,6 +1201,7 @@ void IceWMClient::stickyChange(bool on)
 	{
 		button[BtnDepth]->turnOn(on);
 		button[BtnDepth]->repaint(false);
+		button[BtnDepth]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
 	}
 }
 
@@ -1210,7 +1223,10 @@ void IceWMClient::maximizeChange(bool m)
 {
 	// Change the button pixmap to restore if required
 	if (button[BtnMaximize] && validPixmaps(restorePix))
+	{
 		button[BtnMaximize]->usePixmap( m ? &restorePix : &maximizePix );
+		button[BtnMaximize]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+	}
 }
 
 

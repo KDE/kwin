@@ -25,11 +25,13 @@
 
 #include <qpixmap.h>
 #include <qwidget.h>
+#include <klocale.h>
+#include "../../kwinbutton.h"
 
 namespace RiscOS
 {
 
-class Button : public QWidget
+class Button : public KWinInternal::KWinWidgetButton
 {
   Q_OBJECT
 
@@ -39,7 +41,7 @@ class Button : public QWidget
 
     enum Alignment { Left, Right };
 
-    Button(QWidget * parent);
+    Button(QWidget * parent, const QString& tip);
     virtual ~Button();
 
     void setAlignment(Alignment);

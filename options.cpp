@@ -26,6 +26,7 @@ public:
     QString title_buttons_left;
     QString title_buttons_right;
     bool custom_button_positions;
+    bool show_tooltips;
 };
 };
 
@@ -257,6 +258,9 @@ void Options::reload()
 	d->title_buttons_right = "HIAX";
     }
 
+    // button tooltips
+    d->show_tooltips = config->readBoolEntry("ShowToolTips", true);
+
     emit resetPlugin();
     emit resetClients();
 }
@@ -319,6 +323,11 @@ QString Options::titleButtonsRight()
 bool Options::customButtonPositions()
 {
     return d->custom_button_positions;
+}
+
+bool Options::showToolTips()
+{
+    return d->show_tooltips;
 }
 
 #include "options.moc"

@@ -1,12 +1,9 @@
 #include "nextclient.h"
-#include <qapplication.h>
-#include <qcursor.h>
 #include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qtoolbutton.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
+#include <klocale.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
@@ -178,8 +175,9 @@ void NextClient::slotReset()
 }
 
 NextButton::NextButton(Client *parent, const char *name,
-                       const unsigned char *bitmap, int bw, int bh)
-    : QButton(parent, name)
+                       const unsigned char *bitmap, int bw, int bh,
+                       const QString& tip)
+    : KWinButton(parent, name, tip)
 {
     setBackgroundMode( NoBackground );
     client = parent;
@@ -232,10 +230,10 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
     windowLayout->addSpacing(1);
 
 
-    button[0] = new NextButton(this, "close", close_bits, 10, 10);
-    button[1] = new NextButton(this, "sticky");
+    button[0] = new NextButton(this, "close", close_bits, 10, 10, i18n("Close"));
+    button[1] = new NextButton(this, "sticky", NULL, 0, 0, i18n("Sticky"));
     stickyChange(isSticky());
-    button[2] = new NextButton(this, "iconify", iconify_bits, 10, 10);
+    button[2] = new NextButton(this, "iconify", iconify_bits, 10, 10, i18n("Minimize"));
 
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
@@ -292,14 +290,14 @@ void NextClient::paintEvent( QPaintEvent* )
     p.setClipRegion( r );
     p.setClipping( FALSE );
 
-    t.setTop( 2 );
-    t.setHeight(t.height()-4);
+    t.setTop( 1 );
+    t.setHeight(t.height()-2);
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
 
     p.setPen(options->color(Options::Font, isActive()));
     p.setFont(options->font(isActive()));
-    p.drawText( t, AlignCenter, caption() );
+    p.drawText( t, AlignCenter | AlignVCenter, caption() );
 
 
     qDrawShadePanel(&p, rect().x()+1, rect().bottom()-6, 24, 6,
@@ -327,10 +325,8 @@ void NextClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void NextClient::stickyChange(bool on)
 {
-    if(on)
-        button[1]->setBitmap(unsticky_bits, 10, 10);
-    else
-        button[1]->setBitmap(sticky_bits, 10, 10);
+    button[1]->setBitmap( on ? unsticky_bits : sticky_bits, 10, 10);
+    button[1]->setTipText( on ? i18n("Un-Sticky") : i18n("Sticky") );
 }
 
 
@@ -381,6 +377,8 @@ extern "C"
     {
        delete_pixmaps();
        create_pixmaps();
+       // Ensure change in tooltip state gets applied
+       Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {

@@ -15,6 +15,7 @@
 #include <kglobal.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
+#include <klocale.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <qbitmap.h>
@@ -148,10 +149,11 @@ void KDEDefaultHandler::readConfig()
 	KConfig* conf = KGlobal::config();
 	conf->setGroup("KDEDefault");
 
-	showGrabBar = conf->readBoolEntry("ShowGrabBar", true);
+	showGrabBar 		= conf->readBoolEntry("ShowGrabBar", true);
 	showTitleBarStipple = conf->readBoolEntry("ShowTitleBarStipple", true);
-	useGradients = conf->readBoolEntry("UseGradients", true);
-	int size = conf->readNumEntry("TitleBarSize", 0);
+	useGradients 		= conf->readBoolEntry("UseGradients", true);
+	int size 			= conf->readNumEntry("TitleBarSize", 0);
+
 	if (size < 0) size = 0;
 	if (size > 2) size = 2;
 
@@ -386,28 +388,25 @@ void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
 
 KDEDefaultButton::KDEDefaultButton(Client *parent, const char *name, 
            bool largeButton, bool isLeftButton, bool isStickyButton,
-           const unsigned char *bitmap )
-    : QButton(parent, name, WStyle_Customize | WRepaintNoErase |
-                            WResizeNoErase | WStyle_NoBorder )
+           const unsigned char *bitmap, const QString& tip )
+    : KWinButton(parent, name, tip)
 {
-    // Eliminate any possible background flicker
     setBackgroundMode( QWidget::NoBackground );
 	setToggleButton( isStickyButton );
 
 	isMouseOver = false;
-    client = parent;
-	deco = NULL;
+	deco 		= NULL;
+    large 		= largeButton;
+	isLeft 		= isLeftButton;
+	isSticky 	= isStickyButton;
+	client 		= parent;
 
-    large = largeButton;
-	isLeft = isLeftButton;
-	isSticky = isStickyButton;
-
-    if ( large )
+    if (large)
        setFixedSize(16, 16);
     else
        setFixedSize(12, 12);
 
-    if(bitmap)
+    if (bitmap)
         setBitmap(bitmap);
 }
 
@@ -546,12 +545,28 @@ void KDEDefaultButton::turnOn( bool isOn )
 }
 
 
+void KDEDefaultButton::enterEvent(QEvent *e) 
+{ 
+	isMouseOver=true;
+	repaint(false); 
+	KWinButton::enterEvent(e);
+}
+
+
+void KDEDefaultButton::leaveEvent(QEvent *e)
+{ 
+	isMouseOver=false;
+	repaint(false); 
+	KWinButton::leaveEvent(e);
+}
+
+
 void KDEDefaultButton::mousePressEvent( QMouseEvent* e )
 {
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
 					LeftButton, e->state() );
-	QButton::mousePressEvent( &me );
+	KWinButton::mousePressEvent( &me );
 }
 
 
@@ -560,7 +575,7 @@ void KDEDefaultButton::mouseReleaseEvent( QMouseEvent* e )
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
 					LeftButton, e->state() );
-	QButton::mouseReleaseEvent( &me );
+	KWinButton::mouseReleaseEvent( &me );
 }
 
 
@@ -634,7 +649,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				if (!button[BtnMenu])
 				{
    					button[BtnMenu] = new KDEDefaultButton(this, "menu",
-							largeButtons, isLeft, false, NULL);
+							largeButtons, isLeft, false, NULL, i18n("Menu"));
    					connect( button[BtnMenu], SIGNAL(pressed()),
 							this, SLOT(menuButtonPressed()) );
 					hb->addWidget( button[BtnMenu] );
@@ -646,7 +661,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				if (!button[BtnSticky])
 				{
    					button[BtnSticky] = new KDEDefaultButton(this, "sticky", 
-							largeButtons, isLeft, true, NULL);
+							largeButtons, isLeft, true, NULL, i18n("Sticky"));
 					button[BtnSticky]->turnOn( isSticky() );
    					connect( button[BtnSticky], SIGNAL(clicked()), 
 							this, SLOT(toggleSticky()) );
@@ -659,7 +674,8 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
    				if( providesContextHelp() && (!button[BtnHelp]) )
 				{
 					button[BtnHelp] = new KDEDefaultButton(this, "help",
-							largeButtons, isLeft, true, question_bits);
+							largeButtons, isLeft, true, question_bits,
+							i18n("Help"));
 					connect( button[BtnHelp], SIGNAL( clicked() ),
 							this, SLOT( contextHelp() ));
 					hb->addWidget( button[BtnHelp] );
@@ -671,7 +687,8 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				if ( (!button[BtnIconify]) && isMinimizable())
 				{
 				    button[BtnIconify] = new KDEDefaultButton(this, "iconify",
-							largeButtons, isLeft, true, iconify_bits);
+							largeButtons, isLeft, true, iconify_bits,
+							i18n("Minimize"));
 				    connect( button[BtnIconify], SIGNAL( clicked()),
 							this, SLOT(iconify()) );
 					hb->addWidget( button[BtnIconify] );
@@ -683,7 +700,8 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				if ( (!button[BtnMax]) && isMaximizable())
 				{
 				    button[BtnMax]  = new KDEDefaultButton(this, "maximize",
-							largeButtons, isLeft, true, maximize_bits);
+							largeButtons, isLeft, true, maximize_bits,
+							i18n("Maximize"));
 				    connect( button[BtnMax], SIGNAL( clicked()),
 							this, SLOT(slotMaximize()) );
 					hb->addWidget( button[BtnMax] );
@@ -695,7 +713,8 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				if (!button[BtnClose])
 				{
     				button[BtnClose] = new KDEDefaultButton(this, "close",
-							largeButtons, isLeft, true, close_bits);
+							largeButtons, isLeft, true, close_bits,
+							i18n("Close"));
 				    connect( button[BtnClose], SIGNAL( clicked()),
 							this, SLOT(closeWindow()) );
 					hb->addWidget( button[BtnClose] );
@@ -722,6 +741,7 @@ void KDEDefaultClient::stickyChange(bool on)
 	if (button[BtnSticky]) {
 		button[BtnSticky]->turnOn(on);
 		button[BtnSticky]->repaint(false);
+		button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
 	}
 }
 
@@ -957,8 +977,10 @@ void KDEDefaultClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void KDEDefaultClient::maximizeChange(bool m)
 {
-	if (button[BtnMax])
+	if (button[BtnMax]) {
 		button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
+		button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+	}
 }
 
 

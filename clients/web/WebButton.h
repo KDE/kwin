@@ -24,10 +24,12 @@
 
 #include <qwidget.h>
 #include <qbitmap.h>
+#include <klocale.h>
+#include "../../kwinbutton.h"
 
 namespace KWinInternal
 {
-  class WebButton : public QWidget
+  class WebButton : public KWinInternal::KWinWidgetButton
   {
     Q_OBJECT
 
@@ -38,7 +40,7 @@ namespace KWinInternal
         Left, Mid, Right
       };
 
-      WebButton(QWidget * parent);
+      WebButton(QWidget * parent, const QString& tip);
 
       virtual ~WebButton();
 

@@ -25,8 +25,8 @@
 
 using namespace KWinInternal;
 
-WebButton::WebButton(QWidget * parent)
-  : QWidget     (parent),
+WebButton::WebButton(QWidget * parent, const QString& tip)
+  : KWinWidgetButton (parent, 0, 0, tip),
     mouseOver_  (false),
     mouseDown_  (false),
     position_   (Mid),
@@ -49,10 +49,11 @@ WebButton::setShape(bool b)
 }
 
   void
-WebButton::mousePressEvent(QMouseEvent *)
+WebButton::mousePressEvent(QMouseEvent * e)
 {
   mouseDown_ = true;
   repaint();
+  KWinWidgetButton::mousePressEvent(e);
 }
 
   void
@@ -65,20 +66,23 @@ WebButton::mouseReleaseEvent(QMouseEvent * e)
   {
     clickEvent(e->button());
   }
+  KWinWidgetButton::mouseReleaseEvent(e);
 }
 
   void
-WebButton::enterEvent(QEvent *)
+WebButton::enterEvent(QEvent * e)
 {
   mouseOver_ = true;
   repaint();
+  KWinWidgetButton::enterEvent(e);
 }
 
   void
-WebButton::leaveEvent(QEvent *)
+WebButton::leaveEvent(QEvent * e)
 {
   mouseOver_ = false;
   repaint();
+  KWinWidgetButton::leaveEvent(e);
 }
 
   void

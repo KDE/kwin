@@ -5,6 +5,7 @@
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
+#include "../../kwinbutton.h"
 class QLabel;
 //class QSpacerItem;
 //class QHBoxLayout;
@@ -12,14 +13,16 @@ class QGridLayout;
 
 namespace KWinInternal {
 
-class B2Button : public QButton
+class B2Button : public KWinInternal::KWinButton
 {
     Q_OBJECT
 public:
-    B2Button(Client *_client=0, QWidget *parent=0, const char *name=0)
-        : QButton(parent, name){useMiniIcon = false; client = _client;}
-    B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix, KPixmap *iPixDown,
-             Client *_client=0, QWidget *parent=0, const char *name=0);
+    B2Button(Client *_client=0, QWidget *parent=0, const QString& tip=NULL)
+        : KWinButton(parent, 0, tip) {client = _client; useMiniIcon = false;}
+
+//    B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix, KPixmap *iPixDown,
+//             Client *_client=0, QWidget *parent=0, const char *name=0, const QString& tip=NULL);
+
     void setBg(const QColor &c){bg = c;}
     void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
                     KPixmap *iPixDown);
@@ -36,13 +39,13 @@ protected:
     bool useMiniIcon;
     KPixmap *pNorm, *pDown, *iNorm, *iDown;
     QColor bg; //only use one color (the rest is pixmap) so forget QPalette ;)
-    Client *client;
     
     void mousePressEvent( QMouseEvent* e );
     void mouseReleaseEvent( QMouseEvent* e );
 
 public:
     int last_button;    
+    Client* client;
 };
 
 class B2Client;

@@ -45,7 +45,7 @@ static const char * const lower_xpm[] = {
 "            "};
 
 LowerButton::LowerButton(QWidget * parent)
-  : Button(parent)
+  : Button(parent, i18n("Lower"))
 {
   setPixmap(QPixmap((const char **)lower_xpm));
   connect(this, SIGNAL(lower()), parent, SLOT(lower()));
