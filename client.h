@@ -63,6 +63,7 @@ class Client : public QObject, public KDecorationDefines
         Client* findModal();
         const Group* group() const;
         Group* group();
+        void checkGroup( Group* gr = NULL );
     // prefer isXXX() instead
         NET::WindowType windowType( bool strict = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
 
@@ -474,7 +475,6 @@ private slots:
         QString cap_normal, cap_iconic, cap_suffix;
         WId wmClientLeaderWin;
         QCString window_role;
-        void checkGroup();
         Group* in_group;
         Window window_group;
         Layer in_layer;

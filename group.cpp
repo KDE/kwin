@@ -148,6 +148,7 @@ Group* Workspace::findGroup( Window leader ) const
 // group with windows with the same client leader.
 Group* Workspace::findClientLeaderGroup( const Client* c ) const
     {
+    Group* ret = NULL;
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
          ++it )
@@ -155,9 +156,28 @@ Group* Workspace::findClientLeaderGroup( const Client* c ) const
         if( *it == c )
             continue;
         if( (*it)->wmClientLeader() == c->wmClientLeader())
-            return (*it)->group();
+            {
+            if( ret == NULL || ret == (*it)->group())
+                ret = (*it)->group();
+            else
+                {
+                // There are already two groups with the same client leader.
+                // This most probably means the app uses group transients without
+                // setting group for its windows. Merging the two groups is a bad
+                // hack, but there's no really good solution for this case.
+                Group* old_group = (*it)->group();
+                // old_group autodeletes when being empty
+                for( int cnt = old_group->members().count();
+                     cnt > 0;
+                     --cnt )
+                    {
+                    Client* tmp = old_group->members().first();
+                    tmp->checkGroup( ret ); // change group
+                    }
+                }
+            }
         }
-    return NULL;
+    return ret;
     }
 
 void Workspace::updateMinimizedOfTransients( Client* c )
@@ -398,19 +418,7 @@ void Client::setTransient( Window new_transient_for_id )
             assert( transient_for != NULL ); // verifyTransient() had to check this
             transient_for->addTransient( this );
             }
-        checkGroup(); // first check group
-        if( groupTransient())
-            { // and make transient for all in the group
-            for( ClientList::ConstIterator it = group()->members().begin();
-                 it != group()->members().end();
-                 ++it )
-                {
-                if( *it == this )
-                    break; // this means the window is only transient for windows mapped before it
-                (*it)->addTransient( this );
-                }
-            }
-        checkGroupTransients();
+        checkGroup();
         workspace()->updateClientLayer( this );
         }
     }
@@ -720,10 +728,21 @@ Client* Client::findModal()
 
 // Client::window_group only holds the contents of the hint,
 // but it should be used only to find the group, not for anything else
-void Client::checkGroup()
+// Argument is only when some specific group needs to be set.
+void Client::checkGroup( Group* set_group )
     {
     Group* old_group = in_group;
-    if( window_group != None )
+    if( set_group != NULL )
+        {
+        if( set_group != in_group )
+            {
+            if( in_group != NULL )
+                in_group->removeMember( this );
+            in_group = set_group;
+            in_group->addMember( this );
+            }
+        }
+    else if( window_group != None )
         {
         Group* new_group = workspace()->findGroup( window_group );
         if( transientFor() != NULL && transientFor()->group() != new_group )
@@ -794,6 +813,17 @@ void Client::checkGroup()
             else
                 ++it;
             }
+        if( groupTransient())
+            { // and make transient for all in the group
+            for( ClientList::ConstIterator it = group()->members().begin();
+                 it != group()->members().end();
+                 ++it )
+                {
+                if( *it == this )
+                    break; // this means the window is only transient for windows mapped before it
+                (*it)->addTransient( this );
+                }
+            }
 #if 0 // TODO
         if( groupTransient())
             {
@@ -827,6 +857,8 @@ void Client::checkGroup()
         checkGroupTransients();
 #endif
         }
+    checkGroupTransients();
+    workspace()->updateClientLayer( this );
     }
 
 
