@@ -1,8 +1,10 @@
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qbitmap.h>
+#include <qimage.h>
 #include <qwmatrix.h>
 #include <qlayout.h>
+#include <qpainter.h>
 #include "workspace.h"
 #include "client.h"
 #include "atoms.h"
@@ -13,6 +15,32 @@
 #include <X11/Xatom.h>
 
 extern Atom qt_wm_state;
+
+static QImage* imgClient = 0;
+static QPixmap* pmBackground = 0;
+static QImage* imgBackground = 0;
+
+static QRect* visible_bound = 0;
+
+void Client::drawbound( const QRect& geom )
+{
+    if ( visible_bound )
+	*visible_bound = geom;
+    else
+	visible_bound = new QRect( geom );
+    QPainter p ( workspace()->desktopWidget() );
+    p.setPen( QPen( Qt::white, 5 ) );
+    p.setRasterOp( Qt::XorROP );
+    p.drawRect( geom );
+}
+void Client::clearbound()
+{
+    if ( !visible_bound )
+	return;
+    drawbound( *visible_bound );
+    delete visible_bound;
+    visible_bound = 0;
+}
 
 
 static void sendClientMessage(Window w, Atom a, long x){
@@ -361,6 +389,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 }
 
 
+
 /*!
   \class Client client.h
 
@@ -392,6 +421,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     mode = Nowhere;
     buttonDown = FALSE;
+    moveResizeMode = FALSE;
     setMouseTracking( TRUE );
 
     active = FALSE;
@@ -400,7 +430,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     is_sticky = FALSE;
 
     ignore_unmap = 0;
-    
+
     getIcons();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
@@ -824,6 +854,30 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 {
     if ( e->button() == LeftButton ) {
 	buttonDown = FALSE;
+	if ( moveResizeMode ) {
+	    clearbound();
+	    if ( isMove() && options->moveMode == Options::HalfTransparent ) {
+		QPainter p ( workspace()->desktopWidget() );
+		if ( !mask.isNull() ) {
+		    QRegion r( mask );
+		    r.translate( x(), y() );
+		    p.setClipRegion( r );
+		}
+		p.drawImage( x(), y(), *imgClient);
+	    }
+	    delete imgClient;
+	    imgClient = 0;
+	    delete imgBackground;
+	    imgBackground = 0;
+	    delete pmBackground;
+	    pmBackground = 0;
+	    if ( ( isMove() && options->moveMode != Options::Opaque )
+		 || ( isResize() && options->resizeMode != Options::Opaque ) )
+		XUngrabServer( qt_xdisplay() );
+	    setGeometry( geom );
+	    moveResizeMode = FALSE;
+	    releaseMouse();
+	}
     }
 }
 
@@ -838,6 +892,39 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	return;
     }
 
+    QRect oldGeom( geom );
+
+    if ( !moveResizeMode )
+    {
+	QPoint p( e->pos() - moveOffset );
+	if ( QABS( p.x() >= 4) || QABS( p.y() ) >= 4 ) {
+	    moveResizeMode = TRUE;
+	    grabMouse( cursor() ); // to keep the right cursor
+	    if ( ( isMove() && options->moveMode != Options::Opaque )
+		 || ( isResize() && options->resizeMode != Options::Opaque ) )
+		XGrabServer( qt_xdisplay() );
+	
+	    if ( isMove() && options->moveMode == Options::HalfTransparent ) {
+		imgClient = new QImage( QPixmap::grabWidget( this ).convertToImage() );
+		// TODO SLOW!!!
+		pmBackground = new QPixmap( QPixmap::grabWindow( qt_xrootwin() ));
+		imgBackground = new QImage( pmBackground->convertToImage() );
+		QRect ww( windowWrapper()->geometry() );
+		ww.moveBy( x(), y() );
+		ww = ww.intersect( workspace()->geometry() );
+		ww.moveBy( -x(), -y() );
+		bitBlt( imgClient,
+			ww.x(),
+			ww.y(),
+			imgBackground,
+			x()+ww.x(), y()+ww.y(), ww.width(), ww.height() );
+		oldGeom.setRect(0,0,0,0);
+	    }
+	}
+	else
+	    return;
+    }
+
     if ( mode !=  Center && shaded ) {
 	wwrap->show();
 	workspace()->requestFocus( this );
@@ -846,22 +933,6 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 
     QPoint globalPos = e->pos() + geometry().topLeft();
 
-    // TODO for MDI this has to be based on the parent window!
-//     QPoint p = parentWidget()->mapFromGlobal( e->globalPos() );
-
-//     if ( !parentWidget()->rect().contains(p) ) {
-// 	if ( p.x() < 0 )
-// 	    p.rx() = 0;
-// 	if ( p.y() < 0 )
-// 	    p.ry() = 0;
-// 	if ( p.x() > parentWidget()->width() )
-// 	    p.rx() = parentWidget()->width();
-// 	if ( p.y() > parentWidget()->height() )
-// 	    p.ry() = parentWidget()->height();
-//     }
-
-//     if ( testWState(WState_ConfigPending) )
-// 	return;
 
     QPoint p = globalPos + invertedMoveOffset;
 
@@ -872,7 +943,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     QPoint mp( geometry().right() - mpsize.width() + 1,
 	       geometry().bottom() - mpsize.height() + 1 );
 
-    QRect geom = geometry();
+    geom = geometry();
     switch ( mode ) {
     case TopLeft:
 	geom =  QRect( mp, geometry().bottomRight() ) ;
@@ -905,12 +976,74 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	break;
     }
 
-    if ( geom.size() != size() ) {
-	geom.setSize( adjustedSize( geom.size() ) );
-	setGeometry( geom );
+    if ( isResize() && geom.size() != size() ) {
+	if  (options->resizeMode == Options::Opaque ) {
+	    geom.setSize( adjustedSize( geom.size() ) );
+	    setGeometry( geom );
+	} else if ( options->resizeMode == Options::Transparent ) {
+	    clearbound();
+	    drawbound( geom );
+	}
     }
-    else if ( geom.topLeft() != geometry().topLeft() )
-	move( geom.topLeft() );
+    else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
+	switch ( options->moveMode ) {
+	case Options::Opaque:
+	    move( geom.topLeft() );
+	    break;
+	case Options::Transparent:
+	    clearbound();
+	    drawbound( geom );
+	    break;
+	case Options::HalfTransparent:
+	    {
+		QPainter p ( workspace()->desktopWidget() );
+		QRegion now( geom );
+		if ( !mask.isNull() ) {
+		    QRegion r( mask );
+		    r.translate( geom.x(), geom.y() );
+		    now = r;
+		}
+		if ( !oldGeom.isEmpty() ) {
+		    QRegion r( oldGeom );
+		    r = r.subtract( now );
+		    p.setClipRegion( r );
+		    p.drawPixmap( oldGeom.x(), oldGeom.y(),
+				  *pmBackground,
+				  oldGeom.x(), oldGeom.y(),
+				  oldGeom.width(), oldGeom.height() );
+		}
+		p.setClipRegion( now );
+		QImage img ( *imgClient );
+		img.detach();
+		QRect visibleRect = QRect( 0, 0,
+			   workspace()->geometry().width(),
+			   workspace()->geometry().height() ).intersect( geom );
+		for ( int i=visibleRect.top(); i<=visibleRect.bottom(); i++ ) {
+		    uint *p = (uint *)imgBackground->scanLine(i);
+		    uint *end = p + visibleRect.right();
+		    p += visibleRect.left();
+		    uint *pimg = (uint *)img.scanLine(i - geom.top() );
+		    pimg += visibleRect.left() - geom.left();
+		    while ( p <= end ) {
+			int r = (*p&0x00ff0000) >> 16;
+			int r2 = (*pimg&0x00ff0000) >> 16;
+			int g = (*p&0x0000ff00) >> 8;
+			int g2 = (*pimg&0x0000ff00) >> 8;
+			int b = (*p&0x000000ff );
+			int b2 = (*pimg&0x000000ff );
+			*pimg = ( ( (r+2*r2)/3  ) << 16 )
+				+ ( ( (g+2*g2)/3  ) << 8 )
+				+ ( (b+2*b2)/3 );
+			p++;
+			pimg++;
+		    }
+		}
+		
+		p.drawImage( geom.x(), geom.y(), img );
+	    }
+	    break;
+	}
+    }
 
 }
 
@@ -1448,6 +1581,15 @@ void Client::takeFocus()
 	XSetInputFocus( qt_xdisplay(), win, RevertToPointerRoot, CurrentTime );
     else
 	sendClientMessage(win, atoms->wm_protocols, atoms->wm_take_focus);
+}
+
+
+/*!\reimp
+ */
+void Client::setMask( const QRegion & reg)
+{
+    mask = reg;
+    QWidget::setMask( reg );
 }
 
 

@@ -36,6 +36,7 @@ Workspace::Workspace()
     root = qt_xrootwin(); // no MDI for now
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
+    desktop_widget = new QWidget(0, "desktop_widget", Qt::WType_Desktop | Qt::WPaintUnclipped );
 
     // select windowmanager privileges
     XSelectInput(qt_xdisplay(), root,
@@ -162,9 +163,12 @@ bool Workspace::workspaceEvent( XEvent * e )
     case DestroyNotify:
 	return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
+	qDebug("map request");
 	if ( e->xmaprequest.parent == root ) {
+	    qDebug("map request on root window");
 	    c = findClient( e->xmaprequest.window );
 	    if ( !c ) {
+		qDebug("didn't find a client, make a new one");
 		c = clientFactory( this, e->xmaprequest.window );
 		if ( root != qt_xrootwin() ) {
 		    // TODO may use QWidget:.create
@@ -640,33 +644,33 @@ void Workspace::clientHidden( Client* c )
 
 void Workspace::showPopup( const QPoint& pos, Client* c)
 {
-    // experimental!!! 
-    
+    // experimental!!!
+
     if ( !popup ) {
 	popup = new QPopupMenu;
 	
-	// I wish I could use qt-2.1 features here..... grmblll 
+	// I wish I could use qt-2.1 features here..... grmblll
 	QPopupMenu* deco = new QPopupMenu( popup );
 	deco->insertItem("KDE Classic", 100 );
 	deco->insertItem("Be-like style", 101 );
-			 
+			
 	popup->insertItem("Decoration", deco );
     }
     popup_client = c;
     // TODO customize popup for the client
     int ret = popup->exec( pos );
-    
+
     switch( ret ) {
     case 100:
 	setDecoration( 0 );
 	break;
     case 101:
 	setDecoration( 1 );
-	break; 
+	break;
     default:
 	break;
     }
-    
+
     popup_client = 0;
     ret = 0;
 }
@@ -803,7 +807,7 @@ void Workspace::switchDesktop( int new_desktop ){
     if (new_desktop == current_desktop )
 	return;
 
-    /* 
+    /*
        optimized Desktop switching: unmapping done from back to front
        mapping done from front to back => less exposure events
     */
@@ -857,3 +861,8 @@ void Workspace::setDecoration( int deco )
     activateClient( c );
 }
 
+
+QWidget* Workspace::desktopWidget()
+{
+    return desktop_widget;
+}

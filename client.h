@@ -119,6 +119,12 @@ public:
 
     void takeFocus();
 
+    void setMask( const QRegion & );
+    
+    // transparent stuff
+    virtual void drawbound( const QRect& geom );
+    virtual void clearbound();
+
 public slots:
     void iconify();
     void closeWindow();
@@ -175,6 +181,13 @@ private:
     Workspace* wspace;
     int desk;
     bool buttonDown;
+    bool moveResizeMode;
+    bool isMove() const {
+	return moveResizeMode && mode == Center;
+    }
+    bool isResize() const {
+	return !isMove();
+    }
     MousePosition mode;
     QPoint moveOffset;
     QPoint invertedMoveOffset;
@@ -185,6 +198,7 @@ private:
     bool active;
     int ignore_unmap;
     QRect original_geometry;
+    QRect geom; //### TODO
     bool shaded;
     WId transient_for;
     bool is_sticky;
@@ -195,6 +209,7 @@ private:
     QPixmap icon_pix;
     QPixmap miniicon_pix;
     QRect geom_restore;
+    QRegion mask;
 };
 
 inline WId Client::window() const

@@ -42,6 +42,8 @@ public:
 
     int currentDesktop() const;
     int numberOfDesktops() const;
+    
+    QWidget* desktopWidget();
 
     void grabKey(KeySym keysym, unsigned int mod);
 
@@ -87,7 +89,8 @@ private:
     int current_desktop;
 
     Client* popup_client;
-    
+    QWidget* desktop_widget;
+
     //experimental
     void setDecoration( int deco );
 };

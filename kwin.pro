@@ -12,6 +12,7 @@ SOURCES		= atoms.cpp \
 		  beclient.cpp \
 		  client.cpp \
 		  main.cpp \
+		  options.cpp \
 		  stdclient.cpp \
 		  tabbox.cpp \
 		  workspace.cpp
