@@ -1304,7 +1304,7 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
     QPoint mp( geometry().right() - mpsize.width() + 1,
                geometry().bottom() - mpsize.height() + 1 );
 
-    moveResizeGeom = geometry();
+    QRect previousMoveResizeGeom = moveResizeGeom;
     switch ( mode ) 
         {
         case TopLeft2:
@@ -1335,7 +1335,7 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
             moveResizeGeom.moveTopLeft( pp );
             break;
         default:
-//fprintf(stderr, "KWin::mouseMoveEvent with mode = %d\n", mode);
+            assert( false );
             break;
         }
 
@@ -1343,7 +1343,7 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
-    if ( isResize() && moveResizeGeom.size() != size() ) 
+    if ( isResize() && moveResizeGeom.size() != previousMoveResizeGeom.size() ) 
         {
         if (moveResizeGeom.bottom() < desktopArea.top()+marge)
             moveResizeGeom.setBottom(desktopArea.top()+marge);
@@ -1367,7 +1367,7 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
             drawbound( moveResizeGeom ); // they overlap; the paint event will come after this,
             }                               // so the geometry tip will be painted above the outline
         }
-    else if ( isMove() && moveResizeGeom.topLeft() != geometry().topLeft() ) 
+    else if ( isMove() && moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft() ) 
         {
         moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
         if (moveResizeGeom.bottom() < desktopArea.top()+marge)
