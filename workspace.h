@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 class QPopupMenu;
 class KConfig;
 class KGlobalAccel;
+class KShortcutDialog;
 class KStartupInfo;
 class KStartupInfoId;
 class KStartupInfoData;
@@ -236,6 +237,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void focusToNull(); // SELI public?
         
         bool forcedGlobalMouseGrab() const;
+        void clientShortcutUpdated( Client* c );
 
         void sessionSaveStarted();
         void sessionSaveDone();
@@ -325,6 +327,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void slotGrabWindow();
         void slotGrabDesktop();
 
+        void slotSetupWindowShortcut();
+        void setupWindowShortcutDone( bool );
+
         void updateClientArea();
 
     private slots:
@@ -351,6 +356,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void initShortcuts();
         void readShortcuts();
         void initDesktopPopup();
+        void setupWindowShortcut( Client* c );
 
         bool startKDEWalkThroughWindows();
         bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
@@ -425,6 +431,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void calcDesktopLayout(int &x, int &y) const;
 
         QPopupMenu* clientPopup();
+        void closeActivePopup();
 
         void updateClientArea( bool force );
 
@@ -434,7 +441,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         int number_of_desktops;
         QMemArray<int> desktop_focus_chain;
 
-        Client* popup_client;
+        QWidget* active_popup;
+        Client* active_popup_client;
 
         QWidget* desktop_widget;
 
@@ -498,6 +506,10 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         int desk_popup_index;
 
         KGlobalAccel *keys;
+        KGlobalAccel *client_keys;
+        KShortcutDialog* client_keys_dialog;
+        Client* client_keys_client;
+
         WId root;
 
         PluginMgr *mgr;

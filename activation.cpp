@@ -215,11 +215,8 @@ void Workspace::setActiveClient( Client* c, allowed_t )
     {
     if ( active_client == c )
         return;
-    if( popup && popup_client != c && set_active_client_recursion == 0 ) 
-        {
-        popup->close();
-        popup_client = 0;
-        }
+    if( active_popup && active_popup_client != c && set_active_client_recursion == 0 ) 
+        closeActivePopup();
     StackingUpdatesBlocker blocker( this );
     ++set_active_client_recursion;
     if( active_client != NULL )
@@ -391,8 +388,7 @@ bool Workspace::activateNextClient( Client* c )
     if( !( c == active_client
             || ( should_get_focus.count() > 0 && c == should_get_focus.last())))
         return false;
-    if( popup )
-        popup->close();
+    closeActivePopup();
     if( c != NULL )
         {
         if( c == active_client )
@@ -834,6 +830,11 @@ void Client::updateUrgency()
     {
     if( urgency )
         demandAttention();
+    }
+
+void Client::shortcutActivated()
+    {
+    workspace()->activateClient( this, true ); // force
     }
 
 //****************************************

@@ -97,7 +97,8 @@ public:
         LowerOp,
         FullScreenOp,
         NoBorderOp,
-        NoOp
+        NoOp,
+        SetupWindowShortcutOp
         };
     /**
      * Basic color types that should be recognized by all decoration styles.

@@ -64,7 +64,8 @@ Workspace::Workspace( bool restore )
     QObject           (0, "workspace"),
     current_desktop   (0),
     number_of_desktops(0),
-    popup_client      (0),
+    active_popup( NULL ),
+    active_popup_client( NULL ),
     desktop_widget    (0),
     temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false ),
     active_client     (0),
@@ -86,6 +87,9 @@ Workspace::Workspace( bool restore )
     desk_popup        (0),
     desk_popup_index  (0),
     keys              (0),
+    client_keys       ( NULL ),
+    client_keys_dialog ( NULL ),
+    client_keys_client ( NULL ),
     root              (0),
     workspaceInit     (true),
     startup(0), electric_have_borders(false),
@@ -171,6 +175,7 @@ Workspace::Workspace( bool restore )
       1
     );
 
+    client_keys = new KGlobalAccel( this );
     initShortcuts();
     tab_box = new TabBox( this );
     popupinfo = new PopupInfo( );
@@ -425,6 +430,7 @@ Workspace::~Workspace()
     delete topmenu_watcher;
     delete topmenu_selection;
     delete topmenu_space;
+    delete client_keys_dialog;
     while( !rules.isEmpty())
         {
         delete rules.front();
@@ -493,10 +499,13 @@ void Workspace::addClient( Client* c, allowed_t )
  */
 void Workspace::removeClient( Client* c, allowed_t )
     {
-    if (c == active_client && popup)
-        popup->close();
-    if( c == popup_client )
-        popup_client = 0;
+    if (c == active_popup_client)
+        closeActivePopup();
+
+    if( client_keys_client == c )
+        setupWindowShortcutDone( false );
+    if( !c->shortcut().isNull())
+        c->setShortcut( KShortcut()); // remove from client_keys
 
     if( c->isDialog())
         Notify::raise( Notify::TransDelete );
@@ -1013,8 +1022,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     if (new_desktop < 1 || new_desktop > number_of_desktops )
         return false;
 
-    if( popup )
-        popup->close();
+    closeActivePopup();
     ++block_focus;
 // TODO    Q_ASSERT( block_stacking_updates == 0 ); // make sure stacking_order is up to date
     StackingUpdatesBlocker blocker( this );

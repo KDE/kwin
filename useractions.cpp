@@ -61,6 +61,8 @@ QPopupMenu* Workspace::clientPopup()
         advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ),
             i18n("&Fullscreen")+'\t'+keys->shortcut("Window Fullscreen").seq(0).toString(), Options::FullScreenOp );
         advanced_popup->insertItem( i18n("&No Border")+'\t'+keys->shortcut("Window No Border").seq(0).toString(), Options::NoBorderOp );
+        advanced_popup->insertItem( SmallIconSet("key_bindings"),
+            i18n("Window &Shortcut...")+'\t'+keys->shortcut("Setup Window Shortcut").seq(0).toString(), Options::SetupWindowShortcutOp );
         advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
 
         popup->insertItem(i18n("Ad&vanced"), advanced_popup );
@@ -92,7 +94,7 @@ QPopupMenu* Workspace::clientPopup()
  */
 void Workspace::clientPopupAboutToShow()
     {
-    if ( !popup_client || !popup )
+    if ( !active_popup_client || !popup )
         return;
 
     if ( numberOfDesktops() == 1 )
@@ -105,21 +107,21 @@ void Workspace::clientPopupAboutToShow()
         initDesktopPopup();
         }
 
-    popup->setItemEnabled( Options::ResizeOp, popup_client->isResizable() );
-    popup->setItemEnabled( Options::MoveOp, popup_client->isMovable() );
-    popup->setItemEnabled( Options::MaximizeOp, popup_client->isMaximizable() );
-    popup->setItemChecked( Options::MaximizeOp, popup_client->maximizeMode() == Client::MaximizeFull );
+    popup->setItemEnabled( Options::ResizeOp, active_popup_client->isResizable() );
+    popup->setItemEnabled( Options::MoveOp, active_popup_client->isMovable() );
+    popup->setItemEnabled( Options::MaximizeOp, active_popup_client->isMaximizable() );
+    popup->setItemChecked( Options::MaximizeOp, active_popup_client->maximizeMode() == Client::MaximizeFull );
     // This should be checked also when hover unshaded
-    popup->setItemChecked( Options::ShadeOp, popup_client->shadeMode() != ShadeNone );
-    popup->setItemEnabled( Options::ShadeOp, popup_client->isShadeable());
-    advanced_popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
-    advanced_popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );
-    advanced_popup->setItemChecked( Options::FullScreenOp, popup_client->isFullScreen() );
-    advanced_popup->setItemEnabled( Options::FullScreenOp, popup_client->userCanSetFullScreen() );
-    advanced_popup->setItemChecked( Options::NoBorderOp, popup_client->noBorder() );
-    advanced_popup->setItemEnabled( Options::NoBorderOp, popup_client->userCanSetNoBorder() );
-    popup->setItemEnabled( Options::MinimizeOp, popup_client->isMinimizable() );
-    popup->setItemEnabled( Options::CloseOp, popup_client->isCloseable() );
+    popup->setItemChecked( Options::ShadeOp, active_popup_client->shadeMode() != ShadeNone );
+    popup->setItemEnabled( Options::ShadeOp, active_popup_client->isShadeable());
+    advanced_popup->setItemChecked( Options::KeepAboveOp, active_popup_client->keepAbove() );
+    advanced_popup->setItemChecked( Options::KeepBelowOp, active_popup_client->keepBelow() );
+    advanced_popup->setItemChecked( Options::FullScreenOp, active_popup_client->isFullScreen() );
+    advanced_popup->setItemEnabled( Options::FullScreenOp, active_popup_client->userCanSetFullScreen() );
+    advanced_popup->setItemChecked( Options::NoBorderOp, active_popup_client->noBorder() );
+    advanced_popup->setItemEnabled( Options::NoBorderOp, active_popup_client->userCanSetNoBorder() );
+    popup->setItemEnabled( Options::MinimizeOp, active_popup_client->isMinimizable() );
+    popup->setItemEnabled( Options::CloseOp, active_popup_client->isCloseable() );
     }
 
 
@@ -173,7 +175,15 @@ void Workspace::desktopPopupAboutToShow()
         }
     }
 
-
+void Workspace::closeActivePopup()
+    {
+    if( active_popup )
+        {
+        active_popup->close();
+        active_popup = NULL;
+        active_popup_client = NULL;
+        }
+    }
 
 /*!
   Create the global accel object \c keys.
@@ -204,10 +214,59 @@ void Workspace::readShortcuts()
     }
 
 
+void Workspace::setupWindowShortcut( Client* c )
+    {
+    assert( client_keys_dialog == NULL );
+    keys->setEnabled( false );
+    client_keys->setEnabled( false );
+    client_keys_dialog = new ShortcutDialog( c->shortcut());
+    client_keys_client = c;
+    connect( client_keys_dialog, SIGNAL( dialogDone( bool )), SLOT( setupWindowShortcutDone( bool )));
+    QRect r = clientArea( ScreenArea, c );
+    QSize size = client_keys_dialog->sizeHint();
+    QPoint pos = c->pos() + c->clientPos();
+    if( pos.x() + size.width() >= r.right())
+        pos.setX( r.right() - size.width());
+    if( pos.y() + size.height() >= r.bottom())
+        pos.setY( r.bottom() - size.height());
+    client_keys_dialog->move( pos );
+    client_keys_dialog->show();
+    active_popup = client_keys_dialog;
+    active_popup_client = c;
+    }
+
+void Workspace::setupWindowShortcutDone( bool ok )
+    {
+    keys->setEnabled( true );
+    client_keys->setEnabled( true );
+    if( ok )
+        {
+        client_keys_client->setShortcut( client_keys_dialog->shortcut());
+        }
+    closeActivePopup();
+    delete client_keys_dialog;
+    client_keys_dialog = NULL;
+    client_keys_client = NULL;
+    }
+
+void Workspace::clientShortcutUpdated( Client* c )
+    {
+    QString key = QString::number( c->window());
+    client_keys->remove( key );
+    if( !c->shortcut().isNull())
+        {
+        client_keys->insert( key, key );
+        client_keys->setShortcut( key, c->shortcut());
+        client_keys->setSlot( key, c, SLOT( shortcutActivated()));
+        client_keys->setActionEnabled( key, true );
+        }
+    client_keys->updateConnections();
+    }
+
 void Workspace::clientPopupActivated( int id )
     {
     WindowOperation op = static_cast< WindowOperation >( id );
-    Client* c = popup_client ? popup_client : active_client;
+    Client* c = active_popup_client ? active_popup_client : active_client;
     QString type;
     switch( op )
         {
@@ -287,6 +346,9 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             break;
         case Options::WindowRulesOp:
             editWindowRules( c );
+            break;
+        case Options::SetupWindowShortcutOp:
+            setupWindowShortcut( c );
             break;
         case Options::LowerOp:
             lowerClient(c);
@@ -607,6 +669,11 @@ void Workspace::slotWindowBelow()
     if( active_client )
         performWindowOperation( active_client, Options::KeepBelowOp );
     }
+void Workspace::slotSetupWindowShortcut()
+    {
+    if( active_client )
+        performWindowOperation( active_client, Options::SetupWindowShortcutOp );
+    }
 
 /*!
   Move window to next desktop
@@ -721,15 +788,15 @@ void Workspace::slotKillWindow()
  */
 void Workspace::slotSendToDesktop( int desk )
     {
-    if ( !popup_client )
+    if ( !active_popup_client )
         return;
     if ( desk == 0 ) 
         { // the 'on_all_desktops' menu entry
-        popup_client->setOnAllDesktops( !popup_client->isOnAllDesktops());
+        active_popup_client->setOnAllDesktops( !active_popup_client->isOnAllDesktops());
         return;
         }
 
-    sendClientToDesktop( popup_client, desk, false );
+    sendClientToDesktop( active_popup_client, desk, false );
 
     }
 
@@ -750,29 +817,30 @@ void Workspace::showWindowMenu( const QRect &pos, Client* cl )
         return;
     if( !cl )
         return;
-    if( popup_client != NULL ) // recursion
+    if( active_popup_client != NULL ) // recursion
         return;
     if ( cl->isDesktop()
         || cl->isDock()
         || cl->isTopMenu())
         return;
 
-    popup_client = cl;
+    active_popup_client = cl;
     QPopupMenu* p = clientPopup();
+    active_popup = p;
     int x = pos.left();
     int y = pos.bottom();
-    if (y == pos.top()) {
+    if (y == pos.top())
 	p->exec( QPoint( x, y ) );
-    } else {
+    else
+        {
 	QRect area = clientArea(ScreenArea, QPoint(x, y), currentDesktop());
 	int popupHeight = p->sizeHint().height();
-	if (y + popupHeight < area.height()) {
+	if (y + popupHeight < area.height())
 	    p->exec( QPoint( x, y ) );
-	} else {
+	else
 	    p->exec( QPoint( x, pos.top() - popupHeight ) );
-	}
-    }
-    popup_client = 0;
+        }
+    closeActivePopup();
     }
 
 /*!
