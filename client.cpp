@@ -153,6 +153,39 @@ WindowWrapper::~WindowWrapper()
     releaseWindow();
 }
 
+
+
+
+static void ungrabButton( WId winId, int modifier )
+{
+    XUngrabButton( qt_xdisplay(), AnyButton, modifier, winId );
+    XUngrabButton( qt_xdisplay(), AnyButton, modifier | LockMask, winId );
+}
+
+/*!  
+  Called by the client to notify the window wrapper when activation
+  state changes.
+  
+  Releases the passive grab for some modifier combinations when a
+  window becomes active. This helps broken X programs that
+  missinterpret LeaveNotify events in grab mode to work properly
+  (Motif, AWT, Tk, ...)
+ */
+void WindowWrapper::setActive( bool active )
+{
+    if ( active ) {
+	ungrabButton( winId(),  None );
+	ungrabButton( winId(),  ShiftMask );
+	ungrabButton( winId(),  ControlMask );
+	ungrabButton( winId(),  ControlMask | ShiftMask );
+    } else {
+	XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, winId(), FALSE,
+		    ButtonPressMask,
+		    GrabModeSync, GrabModeAsync,
+		    None, None );
+    }
+}
+
 QSize WindowWrapper::sizeHint() const
 {
     return size();
@@ -1429,6 +1462,7 @@ void Client::setShade( bool s )
  */
 void Client::setActive( bool act)
 {
+    windowWrapper()->setActive( act );
     if ( act )
 	workspace()->setActiveClient( this );
 

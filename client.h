@@ -26,6 +26,8 @@ public:
     QSize sizeHint() const;
     QSizePolicy sizePolicy() const;
 
+    void setActive( bool );
+
 protected:
     void resizeEvent( QResizeEvent * );
     void showEvent( QShowEvent* );
@@ -132,7 +134,7 @@ public:
     bool providesContextHelp() const;
 
     bool performMouseCommand( Options::MouseCommand, QPoint globalPos );
-    
+
     QCString windowRole();
     QCString sessionId();
 
