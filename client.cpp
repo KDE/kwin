@@ -748,7 +748,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
                 // if client has initial state set to Iconic and is transient with a parent
                 // window that is not Iconic, set init_state to Normal
                 if ((init_state == IconicState) && isTransient() && transientFor() != 0) {
-                  if(!workspace()->findClient(transientFor())->isIconified()) {
+		  Client* client = workspace()->findClient(transientFor());
+                  if(client == 0 || !client->isIconified()) {
                     init_state = NormalState;
                   }
                 }
