@@ -68,7 +68,7 @@ int main( int argc, char* argv[] )
 	return 1;
         }
     QString question = i18n(
-	"<qt>Window with title \"<b>%2</b>\" doesn't respond. "
+	"<qt>Window with title \"<b>%2</b>\" is not responding. "
 	"This window belongs to application <b>%1</b> (PID=%3, hostname=%4).<p>"
 	"Do you wish to terminate this application? (All unsaved data in this application will be lost.)</qt>" )
 	.arg( appname ).arg( caption ).arg( pid ).arg( hostname );
