@@ -16,6 +16,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <stdlib.h>
 #include <qwhatsthis.h>
 #include <qdatastream.h>
+#include <qpainter.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <kapplication.h>
@@ -2998,6 +2999,40 @@ void Workspace::slotGrabWindow()
 {
     if ( active_client ) {
         QPixmap p = QPixmap::grabWindow( active_client->winId() );
+
+	//No XShape - no work.
+	if (kwin_has_shape) {
+	    //As the first step, get the mask from XShape.
+	    int count, order;
+	    XRectangle* rects = XShapeGetRectangles( qt_xdisplay(), active_client->winId(),
+	                                             ShapeBounding, &count, &order);
+	    //The ShapeBounding region is the outermost shape of the window;
+	    //ShapeBounding - ShapeClipping is defined to be the border.
+	    //Since the border area is part of the window, we use bounding
+	    // to limit our work region
+	    if (rects) {
+		//Create a QRegion from the rectangles describing the bounding mask.
+		QRegion contents;
+		for (int pos = 0; pos < count; pos++)
+		    contents += QRegion(rects[pos].x, rects[pos].y,
+		                        rects[pos].width, rects[pos].height);
+		XFree(rects);
+
+		//Create the bounding box.
+		QRegion bbox(0, 0, p.width(), p.height());
+
+		//Get the masked away area.
+		QRegion maskedAway = bbox - contents;
+		QMemArray<QRect> maskedAwayRects = maskedAway.rects();
+
+		//Fill the masked away area with black.
+		QPainter p(&p);
+		for (uint pos = 0; pos < maskedAwayRects.count(); pos++)
+		    p.fillRect(maskedAwayRects[pos], Qt::black);
+		p.end();
+	    }
+	}
+
         QClipboard *cb = QApplication::clipboard();
         cb->setPixmap( p );
     }
