@@ -21,7 +21,7 @@ TitlebarDoubleClickCommand=Move|Resize|
 
 	CommandActiveTitlebar1 |
 	CommandActiveTitlebar2 |
-	CommandActiveTitlebar3 | 
+	CommandActiveTitlebar3 |
 	CommandInactiveTitlebar1 |
 	CommandInactiveTitlebar2 |
 	CommandInactiveTitlebar3 |
@@ -30,7 +30,7 @@ TitlebarDoubleClickCommand=Move|Resize|
 	CommandWindow3 |
 	CommandAll1 |
 	CommandAll2 |
-	CommandAll3 
+	CommandAll3
     =
 	Raise |
 	Lower |
@@ -43,9 +43,28 @@ TitlebarDoubleClickCommand=Move|Resize|
 	Activate and pass click |
 	Move |
 	Resize |
-	Nothing 
+	Nothing
 
 
+
+Kwin raises the following sound events via KNotifyClient:
+	 "Window Close"
+	 "Window Iconify"
+                  "Window DeIconify"
+                  "Window Maximize"
+                  "Window UnMaximize"
+                  "Window Sticky"
+                  "Window UnSticky"
+                  "Window New"
+                  "Window Delete"
+                  "Window Trans New"
+                  "Window Trans Delete"
+                  "Window Shade Up"
+                  "Window Shade Down"
+                  "Window Move Start"
+                  "Window Move End"
+                  "Window Resize Start"
+                  "Window Resize End"
 
 
 Have fun,

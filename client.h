@@ -1,3 +1,8 @@
+/*****************************************************************
+kwin - the KDE window manager
+
+Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+******************************************************************/
 #ifndef CLIENT_H
 #define CLIENT_H
 

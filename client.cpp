@@ -16,6 +16,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qwhatsthis.h>
 #include "workspace.h"
 #include "client.h"
+#include "events.h"
 #include "atoms.h"
 #include <X11/X.h>
 #include <X11/Xos.h>
@@ -164,10 +165,10 @@ static void ungrabButton( WId winId, int modifier )
     XUngrabButton( qt_xdisplay(), AnyButton, modifier | LockMask, winId );
 }
 
-/*!  
+/*!
   Called by the client to notify the window wrapper when activation
   state changes.
-  
+
   Releases the passive grab for some modifier combinations when a
   window becomes active. This helps broken X programs that
   missinterpret LeaveNotify events in grab mode to work properly
@@ -457,8 +458,9 @@ void Client::manage( bool isMapped )
 
     setMappingState( state );
     if ( state == NormalState && isOnDesktop( workspace()->currentDesktop() ) ) {
+	Events::raise( isTransient() ? Events::TransNew : Events::New );
 	show();
-	if ( options->focusPolicyIsReasonable() )
+	if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
 	    workspace()->requestFocus( this );
     }
 
@@ -663,6 +665,7 @@ bool Client::unmapNotify( XUnmapEvent& e )
  */
 void Client::withdraw()
 {
+    Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
     setMappingState( WithdrawnState );
     KWM::moveToDesktop( win, -1 ); // compatibility
     releaseWindow();
@@ -910,6 +913,7 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 		 || ( isResize() && options->resizeMode != Options::Opaque ) )
 		XUngrabServer( qt_xdisplay() );
 	    setGeometry( geom );
+	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
 	    moveResizeMode = FALSE;
 	    releaseMouse();
 	    releaseKeyboard();
@@ -944,6 +948,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	QPoint p( e->pos() - moveOffset );
 	if ( (QABS( p.x()) >= 4) || (QABS( p.y() ) >= 4 )) {
 	    moveResizeMode = TRUE;
+	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
 	    grabMouse( cursor() ); // to keep the right cursor
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
 		 || ( isResize() && options->resizeMode != Options::Opaque ) )
@@ -1190,10 +1195,12 @@ void Client::iconify()
     if ( isShade() )
 	setShade( FALSE );
     if ( workspace()->iconifyMeansWithdraw( this ) ) {
+	Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
 	setMappingState( WithdrawnState );
 	hide();
 	return;
     }
+    Events::raise( Events::Iconify );
     setMappingState( IconicState );
     hide();
     // TODO animation (virtual function)
@@ -1202,67 +1209,65 @@ void Client::iconify()
 
 void Client::closeWindow()
 {
-  if ( Pdeletewindow ){
-      sendClientMessage( win, atoms->wm_protocols, atoms->wm_delete_window);
-  }
-  else {
-    // client will not react on wm_delete_window. We have not choice
-    // but destroy his connection to the XServer.
-      XKillClient(qt_xdisplay(), win );
-      workspace()->destroyClient( this );
-  }
+    Events::raise( Events::Close );
+    if ( Pdeletewindow ){
+	sendClientMessage( win, atoms->wm_protocols, atoms->wm_delete_window);
+    }
+    else {
+	// client will not react on wm_delete_window. We have not choice
+	// but destroy his connection to the XServer.
+	XKillClient(qt_xdisplay(), win );
+	workspace()->destroyClient( this );
+    }
 }
 
 void Client::maximize( MaximizeMode m)
 {
-  QRect clientArea = workspace()->clientArea();
+    QRect clientArea = workspace()->clientArea();
 
-//  qDebug("Client::maximise() - area: l: %d r: %d t: %d b: %d",
-//    clientArea.left(), clientArea.right(),
-//    clientArea.top(), clientArea.bottom());
+    if (isShade())
+	setShade( FALSE );
 
-  if (isShade())
-    setShade(false);
+  
+    if (geom_restore.isNull()) {
 
-  if (geom_restore.isNull()) {
+	Events::raise( Events::Maximize );
+	geom_restore = geometry();
 
-    geom_restore = geometry();
+	switch (m) {
 
-    switch (m) {
+	case MaximizeVertical:
+	    setGeometry(
+			QRect(QPoint(x(), clientArea.top()),
+			      adjustedSize(QSize(width(), clientArea.height())))
+			);
+	    break;
 
-      case MaximizeVertical:
+	case MaximizeHorizontal:
 
-        setGeometry(
-          QRect(QPoint(x(), clientArea.top()),
-          adjustedSize(QSize(width(), clientArea.height())))
-        );
-        break;
+	    setGeometry(
+			QRect(
+			      QPoint(clientArea.left(), y()),
+			      adjustedSize(QSize(clientArea.width(), height())))
+			);
+	    break;
 
-      case MaximizeHorizontal:
+	default:
 
-        setGeometry(
-          QRect(
-            QPoint(clientArea.left(), y()),
-            adjustedSize(QSize(clientArea.width(), height())))
-          );
-        break;
+	    setGeometry(
+			QRect(clientArea.topLeft(), adjustedSize(clientArea.size()))
+			);
+	}
 
-      default:
+	maximizeChange(true);
 
-        setGeometry(
-          QRect(clientArea.topLeft(), adjustedSize(clientArea.size()))
-        );
+    } else {
+	Events::raise( Events::UnMaximize );
+	setGeometry(geom_restore);
+	QRect invalid;
+	geom_restore = invalid;
+	maximizeChange(false);
     }
-
-    maximizeChange(true);
-
-  } else {
-
-    setGeometry(geom_restore);
-    QRect invalid;
-    geom_restore = invalid;
-    maximizeChange(false);
-  }
 }
 
 
@@ -1537,6 +1542,10 @@ void Client::setSticky( bool b )
     if ( is_sticky == b )
 	return;
     is_sticky = b;
+    if ( is_sticky )
+	Events::raise( Events::Sticky );
+    else
+	Events::raise( Events::UnSticky );
     if ( !is_sticky )
 	setDesktop( workspace()->currentDesktop() );
     workspace()->setStickyTransientsOf( this, b );

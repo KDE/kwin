@@ -19,6 +19,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "tabbox.h"
 #include "atoms.h"
 #include "plugins.h"
+#include "events.h"
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -862,6 +863,8 @@ void Workspace::activateClient( Client* c)
 	setCurrentDesktop( c->desktop() );
     }
     raiseClient( c );
+    if ( c->isIconified() )
+	Events::raise( Events::DeIconify );
     c->show();
     iconifyOrDeiconifyTransientsOf( c );
     if ( options->focusPolicyIsReasonable() )
