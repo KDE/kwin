@@ -520,6 +520,7 @@ void KActionsConfig::save()
 
 void KActionsConfig::defaults()
 {
+    setComboText(coTiDbl, "Shade");
   setComboText(coTiAct1,"Raise");
   setComboText(coTiAct2,"Lower");
   setComboText(coTiAct3,"Operations menu");
