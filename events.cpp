@@ -239,6 +239,13 @@ bool Workspace::workspaceEvent( XEvent * e )
 
     case UnmapNotify:
             {
+            // get also synthetic UnmapNotify from XWithdrawWindow(),
+            // xunmap.window is different from xany.window
+            if( Client* c = findClient( WindowMatchPredicate( e->xunmap.window )))
+                {
+                c->windowEvent( e );
+                return true;
+                }
         // check for system tray windows
             if ( removeSystemTrayWin( e->xunmap.window ) ) 
                 {
@@ -285,6 +292,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             {
             updateXTime();
 
+            // e->xmaprequest.window is different from e->xany.window
             Client* c = findClient( WindowMatchPredicate( e->xmaprequest.window ));
             if ( !c ) 
                 {
@@ -323,20 +331,21 @@ bool Workspace::workspaceEvent( XEvent * e )
                 QWhatsThis::leaveWhatsThisMode();
             }
 
-        if (electric_have_borders &&
-           (e->xcrossing.window == electric_top_border ||
-            e->xcrossing.window == electric_left_border ||
-            e->xcrossing.window == electric_bottom_border ||
-            e->xcrossing.window == electric_right_border))
-            {
-            // the user entered an electric border
-            electricBorder(e);
-            }
-        break;
-    case LeaveNotify:
+            if (electric_have_borders &&
+               (e->xcrossing.window == electric_top_border ||
+                e->xcrossing.window == electric_left_border ||
+                e->xcrossing.window == electric_bottom_border ||
+                e->xcrossing.window == electric_right_border))
+                {
+                // the user entered an electric border
+                electricBorder(e);
+                }
+            break;
+        case LeaveNotify:
             {
             if ( !QWhatsThis::inWhatsThisMode() )
                 break;
+            // TODO is this cliente ever found, given that client events are searched above?
             Client* c = findClient( FrameIdMatchPredicate( e->xcrossing.window ));
             if ( c && e->xcrossing.detail != NotifyInferior )
                 QWhatsThis::leaveWhatsThisMode();
@@ -375,12 +384,12 @@ bool Workspace::workspaceEvent( XEvent * e )
             return true; // always eat these, they would tell Qt that KWin is the active app
         default:
             if  ( e->type == Shape::shapeEvent() ) 
-            {
-            Client* c = findClient( WindowMatchPredicate( ((XShapeEvent *)e)->window ));
-            if ( c )
-                c->updateShape();
-            }
-        break;
+                {
+                Client* c = findClient( WindowMatchPredicate( ((XShapeEvent *)e)->window ));
+                if ( c )
+                    c->updateShape();
+                }
+            break;
         }
     return FALSE;
     }
