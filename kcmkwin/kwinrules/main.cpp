@@ -76,7 +76,7 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
     NET::WindowType type = info.windowType( NET::NormalMask | NET::DesktopMask | NET::DockMask
         | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
         | NET::UtilityMask | NET::SplashMask );
-    QString title = info.name().lower();
+    QString title = info.name();
 //    QCString extrarole = ""; // TODO
     QCString machine = info.clientMachine().lower();
     Rules* best_match = NULL;
