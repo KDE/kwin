@@ -822,7 +822,7 @@ bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
 bool areModKeysDepressed( const KShortcut& cut )
 {
 
-    uint rgKeySyms[8];
+    uint rgKeySyms[10];
     int nKeySyms = 0;
     int mod = cut.seq(0).key(0).modFlags();
 
@@ -839,6 +839,10 @@ bool areModKeysDepressed( const KShortcut& cut )
         rgKeySyms[nKeySyms++] = XK_Alt_R;
     }
     if( mod & KKey::WIN ) {
+        // HACK: it would take a lot of code to determine whether the Win key 
+        //  is associated with Super or Meta, so check for both
+        rgKeySyms[nKeySyms++] = XK_Super_L;
+        rgKeySyms[nKeySyms++] = XK_Super_R;
         rgKeySyms[nKeySyms++] = XK_Meta_L;
         rgKeySyms[nKeySyms++] = XK_Meta_R;
     }
