@@ -61,6 +61,8 @@ public:
         // state : kwin.h says: possible values are or'ed combinations of NET::Modal,
         // NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar, NET::SkipPager
 
+        mask &= ~NET::Sticky; // KWin doesn't support large desktops, ignore
+        mask &= ~NET::Hidden; // clients are not allowed to change this directly
         state &= mask; // for safety, clear all other bits
 
         if ( (mask & NET::Max) == NET::Max ) {
