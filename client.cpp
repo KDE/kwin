@@ -896,7 +896,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	if ( e.value_mask & CWY )
 	    ny = e.y;
 	QPoint np( nx-ox, ny-oy);
-	if ( windowType() == NET::Normal ) {
+	if ( windowType() == NET::Normal && may_move ) {
 	    // crap for broken netscape
 	    QRect area = workspace()->clientArea();
 	    if ( !area.contains( np ) ){

@@ -100,6 +100,8 @@ public:
 
     void killWindowAtPosition(int x, int y);
 
+    void killWindow() { slotKillWindow(); }
+
     WId rootWin() const;
 
     /**
