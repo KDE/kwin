@@ -31,8 +31,6 @@
 
 #include "tiles.h"
 
-#include <X11/Xlib.h>
-
 class QSpacerItem;
 
 namespace Keramik {
@@ -54,10 +52,8 @@ namespace Keramik {
 		bool largeGrabBars:1;
 	};
 
-	class KeramikHandler : public QObject, public KDecorationFactory {
-
-		Q_OBJECT
-
+	class KeramikHandler : public KDecorationFactory
+	{
 		public:
 			KeramikHandler();
 			~KeramikHandler();
@@ -84,9 +80,6 @@ namespace Keramik {
 
 			inline const QPixmap *tile( TilePixmap tilePix, bool active ) const;
 
-		signals:
-			void softReset();
-
 		private:
 			void readConfig();
 			void createPixmaps();
@@ -99,7 +92,6 @@ namespace Keramik {
 			QImage  *loadImage( const QString &, const QColor & );
 			QPixmap *loadPixmap( const QString &, const QColor & );
 
-		private:
 			bool showIcons:1, shadowedText:1,
 				smallCaptionBubbles:1, largeGrabBars:1;
 			SettingsCache *settings_cache;
@@ -139,13 +131,14 @@ namespace Keramik {
 
 	class KeramikClient : public KDecoration
 	{
-			Q_OBJECT
+		Q_OBJECT
 
 		public:
 
 			KeramikClient( KDecorationBridge* bridge, KDecorationFactory* factory );
 			~KeramikClient();
                         virtual void init();
+			virtual void reset( unsigned long changed );
 			virtual MousePosition mousePosition( const QPoint& p ) const;
 		    	virtual void borders( int& left, int& right, int& top, int& bottom ) const;
 			virtual void resize( const QSize& s );
@@ -175,14 +168,9 @@ namespace Keramik {
 				return ( maximizeMode() & MaximizeVertical );
 			}
 
-			inline void setRectangle( QRegion& r, int x, int y, int w, int h ) {
-				r |= QRegion( x, y, w, h );
-			}
-
 		private slots:
 			void menuButtonPressed();
 			void slotMaximize();
-			void reset();
 
 		private:
 			QSpacerItem   *topSpacer, *titlebar;

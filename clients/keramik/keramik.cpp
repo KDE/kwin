@@ -21,9 +21,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-
-#include <config.h>
-
 #include <kconfig.h>
 #include <klocale.h>
 #include <kiconeffect.h>
@@ -36,12 +33,12 @@
 #include <qwidget.h>
 #include <qlabel.h>
 
-#include "keramik.h"
-
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
+#include "keramik.h"
 #include "keramik.moc"
+
+
 
 // -------------------------------------------------------------------------------------------
 
@@ -127,7 +124,6 @@ namespace Keramik
 
 
 KeramikHandler::KeramikHandler()
-	: QObject( NULL, NULL )
 {
 	for ( int i = 0; i < NumTiles; i++ ) {
 		activeTiles[i]   = NULL;
@@ -139,14 +135,14 @@ KeramikHandler::KeramikHandler()
 	imageDb = KeramikImageDb::instance();
 
 	// Create the button deco bitmaps
-	buttonDecos[ Menu ]     = new QBitmap( 17, 17, menu_bits,       true );
+	buttonDecos[ Menu ]             = new QBitmap( 17, 17, menu_bits,       true );
 	buttonDecos[ OnAllDesktops ]    = new QBitmap( 17, 17, on_all_desktops_bits,  true );
 	buttonDecos[ NotOnAllDesktops ] = new QBitmap( 17, 17, not_on_all_desktops_bits, true );
-	buttonDecos[ Help ]     = new QBitmap( 17, 17, help_bits,       true );
-	buttonDecos[ Minimize ] = new QBitmap( 17, 17, minimize_bits,   true );
-	buttonDecos[ Maximize ] = new QBitmap( 17, 17, maximize_bits,   true );
-	buttonDecos[ Restore ]  = new QBitmap( 17, 17, restore_bits,    true );
-	buttonDecos[ Close ]    = new QBitmap( 17, 17, close_bits,      true );
+	buttonDecos[ Help ]             = new QBitmap( 17, 17, help_bits,       true );
+	buttonDecos[ Minimize ]         = new QBitmap( 17, 17, minimize_bits,   true );
+	buttonDecos[ Maximize ]         = new QBitmap( 17, 17, maximize_bits,   true );
+	buttonDecos[ Restore ]          = new QBitmap( 17, 17, restore_bits,    true );
+	buttonDecos[ Close ]            = new QBitmap( 17, 17, close_bits,      true );
 
 	// Selfmask the bitmaps
 	for ( int i = 0; i < NumButtonDecos; i++ )
@@ -176,8 +172,7 @@ KeramikHandler::~KeramikHandler()
 	for ( int i = 0; i < NumButtonDecos; i++ )
 		delete buttonDecos[i];
 
-	if ( settings_cache )
-		delete settings_cache;
+	delete settings_cache;
 
 	KeramikImageDb::release();
 	imageDb = NULL;
@@ -342,15 +337,10 @@ void KeramikHandler::createPixmaps()
 void KeramikHandler::destroyPixmaps()
 {
 	for ( int i = 0; i < NumTiles; i++ ) {
-		if ( activeTiles[i] ) {
-			delete activeTiles[i];
-			activeTiles[i] = NULL;
-		}
-
-		if ( inactiveTiles[i] ) {
-			delete inactiveTiles[i];
-			inactiveTiles[i] = NULL;
-		}
+		delete activeTiles[i];
+		delete inactiveTiles[i];
+		activeTiles[i] = NULL;
+		inactiveTiles[i] = NULL;
 	}
 
 	delete titleButtonRound;
@@ -532,7 +522,7 @@ bool KeramikHandler::reset( unsigned long changed )
 
 	// Do we need to "hit the wooden hammer" ?
 	if ( !needHardReset )
-		emit softReset();
+		resetDecorations( changed );
         return needHardReset;
 }
 
@@ -685,12 +675,14 @@ KeramikClient::KeramikClient( KDecorationBridge* bridge, KDecorationFactory* fac
 void KeramikClient::init()
 {
         createMainWidget( WStaticContents | WResizeNoErase | WRepaintNoErase );
-	// Minimize flicker
 	widget()->installEventFilter( this );
+
+	// Minimize flicker
 	widget()->setBackgroundMode( NoBackground );
 
 	for ( int i=0; i < NumButtons; i++ )
 		button[i] = NULL;
+
 	createLayout();
 }
 
@@ -733,24 +725,19 @@ void KeramikClient::createLayout()
 	windowLayout->addSpacing( 3 );                // Left border
 	windowLayout->addWidget( new QLabel( i18n( "<center><b>Keramik</b></center>" ), widget()));   // Window wrapper FRAME
 	windowLayout->addSpacing( 4 );                // Right border
-
-	connect( clientHandler, SIGNAL(softReset()), SLOT(reset()) );
 }
 
 
 KeramikClient::~KeramikClient()
 {
-	if ( activeIcon )
-		delete activeIcon;
-
-	if ( inactiveIcon )
-		delete inactiveIcon;
+	delete activeIcon;
+	delete inactiveIcon;
 
 	activeIcon = inactiveIcon = NULL;
 }
 
 
-void KeramikClient::reset()
+void KeramikClient::reset( unsigned long )
 {
 	if ( clientHandler->largeCaptionBubbles() && !largeTitlebar )
 	{
@@ -815,7 +802,8 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// OnAllDesktops button
 			case 'S' :
 				if ( !button[OnAllDesktopsButton] ) {
-					button[OnAllDesktopsButton] = new KeramikButton( this, "on_all_desktops", OnAllDesktopsButton, i18n("On All Desktops") );
+					button[OnAllDesktopsButton] = new KeramikButton( this, "on_all_desktops",
+							OnAllDesktopsButton, i18n("On All Desktops") );
 					connect( button[OnAllDesktopsButton], SIGNAL( clicked() ), SLOT( toggleOnAllDesktops() ) );
 					layout->addWidget( button[OnAllDesktopsButton] );
 				}
@@ -876,7 +864,7 @@ void KeramikClient::updateMask()
 	// pixmap, paint the mask on it and then have the X server iterate
 	// over the pixels to compute the bounding rects from it.
 
-	QRegion rect;
+	QRegion r;
 	register int w, y = 0;
 	int nrects;
 
@@ -886,9 +874,9 @@ void KeramikClient::updateMask()
 		if ( largeCaption && captionRect.width() >= 25 ) {
 			register int x = captionRect.left();
 			w = captionRect.width();
-			setRectangle( rect, x + 11, y++, w - 19, 1 );
-			setRectangle( rect, x + 9,  y++, w - 15, 1 );
-			setRectangle( rect, x + 7,  y++, w - 12, 1 );
+			r += QRegion( x + 11, y++, w - 19, 1 );
+			r += QRegion( x + 9,  y++, w - 15, 1 );
+			r += QRegion( x + 7,  y++, w - 12, 1 );
 		} else {
 			nrects = 8;
 
@@ -902,13 +890,13 @@ void KeramikClient::updateMask()
 		w = width(); // FRAME
 
 		// The rounded titlebar corners
-		setRectangle( rect, 9, y++, w - 17, 1 );
-		setRectangle( rect, 7, y++, w - 13, 1 );
-		setRectangle( rect, 5, y++, w - 9,  1 );
-		setRectangle( rect, 4, y++, w - 7,  1 );
-		setRectangle( rect, 3, y++, w - 5,  1 );
-		setRectangle( rect, 2, y++, w - 4,  1 );
-		setRectangle( rect, 1, y++, w - 2,  2 );
+		r += QRegion( 9, y++, w - 17, 1 );
+		r += QRegion( 7, y++, w - 13, 1 );
+		r += QRegion( 5, y++, w - 9,  1 );
+		r += QRegion( 4, y++, w - 7,  1 );
+		r += QRegion( 3, y++, w - 5,  1 );
+		r += QRegion( 2, y++, w - 4,  1 );
+		r += QRegion( 1, y++, w - 2,  2 );
 	} else {
 
 		// If the caption bubble is visible and extends above the titlebar
@@ -916,9 +904,9 @@ void KeramikClient::updateMask()
 			nrects = 11;
 			register int x = captionRect.left();
 			w = captionRect.width();
-			setRectangle( rect, x + 8, y++, w - 19, 1 );
-			setRectangle( rect, x + 6, y++, w - 15, 1 );
-			setRectangle( rect, x + 5, y++, w - 12, 1 );
+			r += QRegion( x + 8, y++, w - 19, 1 );
+			r += QRegion( x + 6, y++, w - 15, 1 );
+			r += QRegion( x + 5, y++, w - 12, 1 );
 		} else {
 			nrects = 8;
 
@@ -932,21 +920,21 @@ void KeramikClient::updateMask()
 		w = width(); // FRAME
 
 		// The rounded titlebar corners
-		setRectangle( rect, 8, y++, w - 17, 1 );
-		setRectangle( rect, 6, y++, w - 13, 1 );
-		setRectangle( rect, 4, y++, w - 9,  1 );
-		setRectangle( rect, 3, y++, w - 7,  1 );
-		setRectangle( rect, 2, y++, w - 5,  1 );
-		setRectangle( rect, 2, y++, w - 4,  1 );
-		setRectangle( rect, 1, y++, w - 2,  2 );
+		r += QRegion( 8, y++, w - 17, 1 );
+		r += QRegion( 6, y++, w - 13, 1 );
+		r += QRegion( 4, y++, w - 9,  1 );
+		r += QRegion( 3, y++, w - 7,  1 );
+		r += QRegion( 2, y++, w - 5,  1 );
+		r += QRegion( 2, y++, w - 4,  1 );
+		r += QRegion( 1, y++, w - 2,  2 );
 	}
 
 	y++;
 
 	// The part of the window below the titlebar
-	setRectangle( rect, 0, y, w, height() - y );
+	r += QRegion( 0, y, w, height() - y );
 
-        setMask( rect, YXBanded );
+        setMask( r, YXBanded );
 
 	maskDirty = false;
 }
@@ -962,6 +950,9 @@ void KeramikClient::updateCaptionBuffer()
 
 	if ( captionBuffer.size() != captionRect.size() )
 		captionBuffer.resize( captionRect.size() );
+
+	if ( captionBuffer.isNull() )
+		return;
 
 	QPainter p( &captionBuffer );
 
@@ -1181,14 +1172,20 @@ void KeramikClient::menuButtonPressed()
 
 void KeramikClient::slotMaximize()
 {
-	if ( button[ MaxButton ]->lastButton() == MidButton )
-		maximize( maximizeMode() ^ MaximizeVertical );
+	switch ( button[ MaxButton ]->lastButton() )
+	{
+		case MidButton:
+			maximize( maximizeMode() ^ MaximizeVertical );
+			break;
 
-	else if ( button[ MaxButton ]->lastButton() == RightButton )
-		maximize( maximizeMode() ^ MaximizeHorizontal );
+		case RightButton:
+			maximize( maximizeMode() ^ MaximizeHorizontal );
+			break;
 
-	else
-		maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+		case LeftButton:
+			maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+			break;
+	}
 }
 
 
@@ -1428,57 +1425,67 @@ KeramikClient::MousePosition KeramikClient::mousePosition( const QPoint &p ) con
 	return Nowhere;
 }
 
+
 void KeramikClient::resize( const QSize& s )
 {
-    widget()->resize( s );
+	widget()->resize( s );
 }
+
 
 void KeramikClient::borders( int& left, int& right, int& top, int& bottom ) const
 {
-    bool active = isActive();
-    int titleBarHeight     = clientHandler->titleBarHeight( largeTitlebar );
-    int grabBarHeight      = clientHandler->grabBarHeight();
-    int leftBorderWidth    = clientHandler->tile( BorderLeft, active )->width();
-    int rightBorderWidth   = clientHandler->tile( BorderRight, active )->width();
-    left = leftBorderWidth;
-    right = rightBorderWidth;
-    top = titleBarHeight;
-    bottom = grabBarHeight;
-    if( isShade())
-        bottom = 0;
-    if( ( maximizeMode() & MaximizeHorizontal ) && !options()->moveResizeMaximizedWindows())
-        left = right = 0;
-    if( ( maximizeMode() & MaximizeVertical ) && !options()->moveResizeMaximizedWindows())
-        bottom = 0;
+	int titleBarHeight     = clientHandler->titleBarHeight( largeTitlebar );
+	int grabBarHeight      = clientHandler->grabBarHeight();
+	int leftBorderWidth    = clientHandler->tile( BorderLeft, isActive() )->width();
+	int rightBorderWidth   = clientHandler->tile( BorderRight, isActive() )->width();
+
+	left   = leftBorderWidth;
+	right  = rightBorderWidth;
+	top    = titleBarHeight;
+	bottom = grabBarHeight;
+
+	if ( isShade())
+		bottom = 0;
+
+	if ( ( maximizeMode() & MaximizeHorizontal ) && !options()->moveResizeMaximizedWindows())
+		left = right = 0;
+	if( ( maximizeMode() & MaximizeVertical ) && !options()->moveResizeMaximizedWindows())
+		bottom = 0;
 }
+
 
 QSize KeramikClient::minimumSize() const
 {
-    return QSize( 200, 50 ); // FRAME
+	return widget()->minimumSize();
 }
+
 
 bool KeramikClient::eventFilter( QObject* o, QEvent* e )
 {
-    if( o != widget())
-	return false;
-    switch( e->type())
+	if ( o != widget() )
+		return false;
+
+	switch ( e->type() )
 	{
-	case QEvent::Resize:
-	    resizeEvent( static_cast< QResizeEvent* >( e ));
-	    return true;
-	case QEvent::Paint:
-	    paintEvent( static_cast< QPaintEvent* >( e ));
-	    return true;
-	case QEvent::MouseButtonDblClick:
-	    mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ));
-	    return true;
-	case QEvent::MouseButtonPress:
-	    processMousePressEvent( static_cast< QMouseEvent* >( e ));
-	    return true;
-	default:
-	    break;
+		case QEvent::Resize:
+			resizeEvent( static_cast< QResizeEvent* >( e ) );
+			return true;
+
+		case QEvent::Paint:
+			paintEvent( static_cast< QPaintEvent* >( e ) );
+			return true;
+
+		case QEvent::MouseButtonDblClick:
+			mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ) );
+			return true;
+
+		case QEvent::MouseButtonPress:
+			processMousePressEvent( static_cast< QMouseEvent* >( e ) );
+			return true;
+
+		default:
+	    		return false;
 	}
-    return false;
 }
 
 } // namespace Keramik
