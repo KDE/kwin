@@ -767,7 +767,10 @@ void PlastikClient::menuButtonPressed()
     t->start();
     if (!dbl || !PlastikHandler::menuClose()) {
         QPoint pos = m_button[MenuButton]->mapToGlobal(m_button[MenuButton]->rect().bottomLeft() );
+        KDecorationFactory* f = factory();
         showWindowMenu( pos );
+        if( !f->exists( this )) // 'this' was deleted
+            return;
         m_button[MenuButton]->setDown(false);
     }
     else
