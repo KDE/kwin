@@ -23,7 +23,11 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kprocess.h>
 #include <kiconloader.h>
 #include <kstartupinfo.h>
-
+#if QT_VERSION < 300
+#include <kdesktopwidget.h>
+#else
+#include <qdesktopwidget.h>
+#endif
 #include "workspace.h"
 #include "client.h"
 #include "tabbox.h"
