@@ -1874,6 +1874,8 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchDesktop6() ));
     keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchDesktop7() ));
     keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchDesktop8() ));
+    keys->connectItem( "Switch desktop left", this, SLOT( slotSwitchDesktopLeft() ));
+    keys->connectItem( "Switch desktop right", this, SLOT( slotSwitchDesktopRight() ));
 
     keys->connectItem( "Pop-up window operations menu", this, SLOT( slotWindowOperations() ) );
     keys->connectItem( "Window close", this, SLOT( slotWindowClose() ) );
@@ -1917,8 +1919,18 @@ void Workspace::slotSwitchDesktop7(){
 void Workspace::slotSwitchDesktop8(){
     setCurrentDesktop(8);
 }
-
-
+void Workspace::slotSwitchDesktopRight(){
+  int d = currentDesktop() + 1;
+  if ( d > number_of_desktops )
+    d = 1;
+  setCurrentDesktop(d);
+}
+void Workspace::slotSwitchDesktopLeft(){
+  int d = currentDesktop() - 1;
+  if ( d <= 0 )
+    d = number_of_desktops;
+  setCurrentDesktop(d);
+}
 
 /*!
   Maximizes the popup client

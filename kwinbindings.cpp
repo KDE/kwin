@@ -6,7 +6,8 @@
  keys->insertItem(i18n("Switch to desktop 6"),  "Switch to desktop 6"   ,"CTRL+F6");
  keys->insertItem(i18n("Switch to desktop 7"),  "Switch to desktop 7"   ,"CTRL+F7");
  keys->insertItem(i18n("Switch to desktop 8"),  "Switch to desktop 8"   ,"CTRL+F8");
-
+ keys->insertItem(i18n("Switch one desktop to the left"),  "Switch desktop left"   ,"");
+ keys->insertItem(i18n("Switch one desktop to the right"),  "Switch desktop right"   ,"");
 
  keys->insertItem(i18n("Window operations menu"),  "Pop-up window operations menu"   ,"ALT+F3");
  keys->insertItem(i18n("Window close"),"Window close", "ALT+F4");
