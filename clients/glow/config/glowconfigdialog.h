@@ -59,7 +59,7 @@ protected slots:
 
 private:
 	KConfig *m_glowConfig;
-	map<QString, ButtonConfig> m_buttonConfigMap;
+	std::map<QString, ButtonConfig> m_buttonConfigMap;
 
 	QGroupBox *m_mainGroupBox;
 
@@ -68,13 +68,13 @@ private:
 	QPushButton *m_iconifyButton;
 	QPushButton *m_maximizeButton;
 	QPushButton *m_closeButton;
-	vector<QPushButton*> m_titleButtonList;
+	std::vector<QPushButton*> m_titleButtonList;
 	QSignalMapper *m_titleButtonMapper;
 
 	QRadioButton *m_titleBarColorButton;
 	QRadioButton *m_titleBlendColorButton;
 	QRadioButton *m_customColorButton;
-	vector<QRadioButton*> m_colorRadioButtonList;
+	std::vector<QRadioButton*> m_colorRadioButtonList;
 	QSignalMapper *m_colorRadioButtonMapper;
 	KColorButton *m_colorButton;
 

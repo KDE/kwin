@@ -110,7 +110,7 @@ class DrawUtils
 public:
 	static QPixmap fadePixmaps(
 		const QPixmap& bgPixmap, const QPixmap& glowPixmap,
-		const vector< vector<float> >& intensityField, float intensity );
+		const std::vector< std::vector<float> >& intensityField, float intensity );
 	static QPixmap drawSimpleRoundButton(
 		const QSize& size, const QColorGroup& group);
 	static QBitmap drawSimpleRoundButtonMask(const QSize& size);

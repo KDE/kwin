@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <vector>
+#include <math.h>
 #include <qpixmap.h>
 #include <qbitmap.h>
 #include <qpainter.h>
@@ -175,7 +176,7 @@ QPixmap* GlowButtonFactory::createGlowButtonPixmap(
 	int w = size.width();
 	int h = size.height();
 
-	vector< vector<float> > intensityField;
+	std::vector< std::vector<float> > intensityField;
 	intensityField.resize(h);
 	for( int i=0; i<h; i++ )
 	{
@@ -247,7 +248,7 @@ GlowButton* GlowButtonFactory::createGlowButton(
 
 QPixmap DrawUtils::fadePixmaps(
 	const QPixmap& bgPixmap, const QPixmap& fgPixmap,
-	const vector< vector<float> >& intensityField, float intensity )
+	const std::vector< std::vector<float> >& intensityField, float intensity )
 {
 // cerr << "DrawUtils " << "fadePixmaps " << endl;
 	QImage bgImg = bgPixmap.convertToImage();
@@ -293,7 +294,7 @@ QPixmap DrawUtils::drawSimpleRoundButton(
 
 	QPainter p;
 
-	vector< vector<float> > intensityField;
+	std::vector< std::vector<float> > intensityField;
 	intensityField.resize(h);
 	for( int i=0; i<h; i++ )
 	{

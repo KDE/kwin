@@ -141,9 +141,9 @@ void GlowClientGlobals::readConfig()
 	config->load();
 }
 
-vector<int> GlowClientGlobals::getPixmapTypes()
+std::vector<int> GlowClientGlobals::getPixmapTypes()
 {
-	vector<int> pixmapTypes;
+	std::vector<int> pixmapTypes;
 	pixmapTypes.push_back(StickyOn);
 	pixmapTypes.push_back(StickyOff);
 	pixmapTypes.push_back(Help);
@@ -155,9 +155,9 @@ vector<int> GlowClientGlobals::getPixmapTypes()
 	return pixmapTypes;
 }
 
-vector<int> GlowClientGlobals::getPixmapModifiers()
+std::vector<int> GlowClientGlobals::getPixmapModifiers()
 {
-	vector<int> pixmapModifiers;
+	std::vector<int> pixmapModifiers;
 	pixmapModifiers.push_back(Active | PosLeft | SizeSmall);
 	pixmapModifiers.push_back(Active | PosLeft | SizeNormal);
 	pixmapModifiers.push_back(Active | PosRight | SizeSmall);
@@ -182,10 +182,10 @@ void GlowClientGlobals::reset()
 void GlowClientGlobals::createPixmaps()
 {
 // cerr << "GlowClientGlobals " << "createPixmaps " << endl;
-	vector<int> types = getPixmapTypes();
+	std::vector<int> types = getPixmapTypes();
 	for( int i=0; i<types.size(); i++ )
 	{
-		vector<int> modifiers = getPixmapModifiers();
+		std::vector<int> modifiers = getPixmapModifiers();
 		for( int j=0; j<modifiers.size(); j++ )
 			m_pixmapMap[types[i]][modifiers[j]] =
 				createPixmap(types[i],modifiers[j]);
@@ -194,13 +194,13 @@ void GlowClientGlobals::createPixmaps()
 
 void GlowClientGlobals::deletePixmaps()
 {
-	vector<int> types = getPixmapTypes();
+	std::vector<int> types = getPixmapTypes();
 	for( int i=0; i<types.size(); i++ )
 	{
 		if( m_pixmapMap.find(types[i]) == m_pixmapMap.end() )
 			continue;
-		vector<int> modifiers = getPixmapModifiers();
-		map<int, QPixmap*> modifierMap = m_pixmapMap[types[i]];
+		std::vector<int> modifiers = getPixmapModifiers();
+		std::map<int, QPixmap*> modifierMap = m_pixmapMap[types[i]];
 		for( int j=0; j<modifiers.size(); j++ )
 			if( modifierMap.find(modifiers[j]) == modifierMap.end() )
 				delete modifierMap[modifiers[j]];
@@ -535,7 +535,7 @@ void GlowClient::updateButtonPositions()
 // cerr << "GlowClient " << "updateButtonPositions " << endl;
 	QString buttons = options->titleButtonsLeft() + "|"
 		+ options->titleButtonsRight();
-	vector<GlowButton*> *buttonList = &m_leftButtonList;
+	std::vector<GlowButton*> *buttonList = &m_leftButtonList;
 
 	// hide all buttons
 	for( unsigned int i=0; i<m_buttonList.size(); i++ )

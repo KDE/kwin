@@ -67,8 +67,8 @@ public:
 	~GlowClientGlobals();
 
 	QPixmap *getPixmap(int type, bool isActive, bool isLeft, bool isSmall);
-	vector<int> getPixmapTypes();
-	vector<int> getPixmapModifiers();
+	std::vector<int> getPixmapTypes();
+	std::vector<int> getPixmapModifiers();
 
 	void reset();
 
@@ -85,7 +85,7 @@ private:
 	void deletePixmaps();
 	QPixmap *createPixmap(int type, int modifiers);
 
-	map< int, map< int, QPixmap* > > m_pixmapMap;
+	std::map< int, std::map< int, QPixmap* > > m_pixmapMap;
 };
 
 //-----------------------------------------------------------------------------
@@ -111,9 +111,9 @@ protected:
 	virtual MousePosition mousePosition(const QPoint &) const;
 
 private:
-	vector<GlowButton*> m_buttonList;
-	vector<GlowButton*> m_leftButtonList;
-	vector<GlowButton*> m_rightButtonList;
+	std::vector<GlowButton*> m_buttonList;
+	std::vector<GlowButton*> m_leftButtonList;
+	std::vector<GlowButton*> m_rightButtonList;
 	GlowButton *m_stickyButton;
 	GlowButton *m_helpButton;
 	GlowButton *m_minimizeButton;
