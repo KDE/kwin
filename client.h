@@ -94,7 +94,7 @@ class Client : public QObject, public KDecorationDefines
 
         int desktop() const;
         void setDesktop( int );
-        bool isOnDesktop( int d ) const;
+        bool isOnDesktop( int d ) const; // for d == NET::OnAllDesktop returns always true
         bool isOnCurrentDesktop() const;
         bool isOnAllDesktops() const;
         void setOnAllDesktops( bool set );
@@ -592,7 +592,7 @@ inline bool Client::isOnAllDesktops() const
  */
 inline bool Client::isOnDesktop( int d ) const
     {
-    return desk == d || /*desk == 0 ||*/ isOnAllDesktops();
+    return desk == d || /*desk == 0 ||*/ isOnAllDesktops() || d == NET::OnAllDesktops;
     }
 
 inline
