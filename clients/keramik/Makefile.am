@@ -34,7 +34,7 @@ tiles.h: pics/caption-large-left.png pics/caption-small-right.png pics/titlebar-
 	pics/titlebutton-round.png pics/bottom-left.png pics/bottom-right.png \
 	pics/bottom-center.png \
 	pics/titlebutton-square-large.png pics/titlebutton-square-huge.png \
-	pics/titlebutton-round-large.png pics/titlebutton-round-huge.png \
+	pics/titlebutton-round-large.png pics/titlebutton-round-huge.png
 
 tiles.h: embedtool
 	pics=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\
