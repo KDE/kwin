@@ -1904,70 +1904,61 @@ QCString Client::sessionId()
 
 void Client::activateLayout()
 {
-  if (layout())
-    layout()->activate();
+	if (layout())
+		layout()->activate();
 }
 
 void Client::updateAvoidPolicy()
 {
-//  qDebug("kwin: Client::updateAvoidPolicy() - win id == %x", (int)win);
-    // Find out if we should be avoided.
+	avoid_ = false;
 
-  // If this atom isn't set, set it now.
-    XTextProperty avoidProp;
+	// Find out if we should be avoided.
 
-    Status avoidStatus = XGetTextProperty(qt_xdisplay(), win, &avoidProp, atoms->net_avoid_spec );
+	XTextProperty avoidProp;
 
-    if (avoidStatus) {
+	Status avoidStatus =
+		XGetTextProperty(
+			qt_xdisplay(),
+			win,
+			&avoidProp,
+			atoms->net_avoid_spec
+		);
 
-	//    qDebug("XGetTextProperty worked for atom _NET_AVOID_SPEC");
+	if (0 == avoidStatus)
+		return;
 
 	char ** avoidList;
 	int avoidListCount;
 
-	Status convertStatus = XTextPropertyToStringList(&avoidProp, &avoidList, &avoidListCount);
+	Status convertStatus =
+		XTextPropertyToStringList(
+			&avoidProp, &avoidList, &avoidListCount);
 
-	if (convertStatus) {
+	if (0 == convertStatus) {
+		qDebug("kwin: Client::updateAvoidPolicy: "
+			"XTextPropertyToStringList failed");
+		return;
+	}
 
-	    //      qDebug("XTextPropertyToStringList succeded");
+	// Must be one value only in string list.
 
-	    avoid_ = true;
-
-	    if (avoidListCount != 1) {
+	if (1 != avoidListCount) {
 		qDebug( "kwin: Client::updateAvoidPolicy(): "
-			"Extra values in avoidance list. Ignoring.");
-	    }
+			"Avoid list value count incorrect");
+		return;
+	}
 
-	    char * itemZero = avoidList[0];
+	// Which border is the client anchored to ?
 
-	    //      qDebug("Anchoring to border %s", itemZero);
+	switch (avoidList[0][0]) {
+		case 'N': anchorEdge_ = AnchorNorth;	avoid_ = true;	break;
+		case 'S': anchorEdge_ = AnchorSouth;	avoid_ = true;	break;
+		case 'E': anchorEdge_ = AnchorEast;	avoid_ = true;	break;
+		case 'W': anchorEdge_ = AnchorWest;	avoid_ = true;	break;
+		default:						break;
+	}
 
-	    switch (*itemZero) {
-
-	    case 'N':
-		anchorEdge_ = AnchorNorth;
-		break;
-	    case 'S':
-		anchorEdge_ = AnchorSouth;
-		break;
-	    case 'E':
-		anchorEdge_ = AnchorEast;
-		break;
-	    case 'W':
-		anchorEdge_ = AnchorWest;
-		break;
-	    default:
-		avoid_ = false;
-		break;
-	    }
-
-	    XFreeStringList(avoidList);
-
-	} else
-	    qDebug( "kwin: Client::updateAvoidPolicy(): "
-		    "XTextPropertyToStringList failed");
-
-    }
+	XFreeStringList(avoidList);
 }
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
