@@ -115,7 +115,8 @@ class Rules
         bool matchRole( const QCString& match_role ) const;
         bool matchTitle( const QString& match_title ) const;
         bool matchClientMachine( const QCString& match_machine ) const;
-        enum // values are saved to the cfg file
+        // All these values are saved to the cfg file, and are also used in kstart!
+        enum
             {
             Unused = 0,
             DontAffect, // use the default value
