@@ -384,21 +384,24 @@ void Workspace::clientHidden( Client* c )
     activateNextClient( c );
     }
 
-// deactivates 'c' and activates next client    
-void Workspace::activateNextClient( Client* c )
+// deactivates 'c' and activates next client
+bool Workspace::activateNextClient( Client* c )
     {
     // if 'c' is not the active or the to-become active one, do nothing
     if( !( c == active_client
             || ( should_get_focus.count() > 0 && c == should_get_focus.last())))
-        return;
+        return false;
     if( popup )
         popup->close();
-    if( c == active_client )
-        setActiveClient( NULL, Allowed );
-    should_get_focus.remove( c );
+    if( c != NULL )
+        {
+        if( c == active_client )
+            setActiveClient( NULL, Allowed );
+        should_get_focus.remove( c );
+        }
     if( focusChangeEnabled())
         {
-        if ( c->wantsTabFocus() && focus_chain.contains( c ) )
+        if ( c != NULL && c->wantsTabFocus() && focus_chain.contains( c ) )
             {
             focus_chain.remove( c );
             focus_chain.prepend( c );
@@ -407,7 +410,7 @@ void Workspace::activateNextClient( Client* c )
             { // search the focus_chain for a client to transfer focus to
           // if 'c' is transient, transfer focus to the first suitable mainwindow
             Client* get_focus = NULL;
-            const ClientList mainwindows = c->mainClients();
+            const ClientList mainwindows = ( c != NULL ? c->mainClients() : ClientList());
             for( ClientList::ConstIterator it = focus_chain.fromLast();
                  it != focus_chain.end();
                  --it )
@@ -429,11 +432,14 @@ void Workspace::activateNextClient( Client* c )
             else
                 focusToNull();
             }
+            else
+                return false;
         }
     else
         // if blocking focus, move focus to the desktop later if needed
         // in order to avoid flickering
         focusToNull();
+    return true;
     }
 
 

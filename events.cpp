@@ -429,8 +429,11 @@ bool Workspace::workspaceEvent( XEvent * e )
                 if( focus == None || focus == PointerRoot )
                     {
                     //kdWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
-                    if( mostRecentlyActivatedClient() != NULL )
-                        requestFocus( mostRecentlyActivatedClient(), true );
+                    Client *c = mostRecentlyActivatedClient();
+                    if( c != NULL )
+                        requestFocus( c, true );
+                    else if( activateNextClient( NULL ))
+                        ; // ok, activated
                     else
                         focusToNull();
                     }

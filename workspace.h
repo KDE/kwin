@@ -118,7 +118,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void setShouldGetFocus( Client* );
         bool fakeRequestedActivity( Client* c );
         void unfakeActivity( Client* c );
-        void activateNextClient( Client* c );
+        bool activateNextClient( Client* c );
         bool focusChangeEnabled() { return block_focus == 0; }
 
         void updateColormap();
