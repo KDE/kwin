@@ -1433,8 +1433,7 @@ void Client::mousePressEvent( QMouseEvent * e)
         if ( !wantsInput() ) // we cannot be active, use it anyway
             active = TRUE;
 
-        if (active &&
-            (e->button() == LeftButton  && options->commandActiveTitlebar1() != Options::MouseOperationsMenu) ||
+        if ((e->button() == LeftButton  && options->commandActiveTitlebar1() != Options::MouseOperationsMenu) ||
             (e->button() == MidButton   && options->commandActiveTitlebar2() != Options::MouseOperationsMenu) ||
             (e->button() == RightButton && options->commandActiveTitlebar3() != Options::MouseOperationsMenu) ) {
           mouseMoveEvent( e );
@@ -2098,8 +2097,8 @@ bool Client::x11Event( XEvent * e)
             autoRaiseTimer = 0;
             delete shadeHoverTimer;
             shadeHoverTimer = 0;
-        if ( hover_unshade )
-            setShade( TRUE, 1 );
+            if ( hover_unshade )
+               setShade( TRUE, 1 );
         }
         if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
             if ( isActive() && lostMouse )
