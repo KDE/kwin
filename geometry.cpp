@@ -1149,13 +1149,12 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
                 cs.width(), cs.height());
     	    // FRAME tady poradi tak, at neni flicker
             XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
-            // no need for real configure notify, XMoveResizeWindow() already causes real one
-            // sendSyntheticConfigureNotify(); 
             }
         if( shape())
             updateShape();
         // SELI TODO won't this be too expensive?
         updateWorkareaDiffs();
+        sendSyntheticConfigureNotify();
         }
     }
 
@@ -1188,12 +1187,11 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
             XMoveResizeWindow( qt_xdisplay(), wrapperId(), clientPos().x(), clientPos().y(),
                 cs.width(), cs.height());
             XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
-            // no need for real configure notify, XMoveResizeWindow() already causes real one
-            // sendSyntheticConfigureNotify(); 
             }
         if( shape())
             updateShape();
         updateWorkareaDiffs();
+        sendSyntheticConfigureNotify();
         }
     }
 
