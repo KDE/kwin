@@ -1330,7 +1330,9 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-        popup->insertItem(i18n("&Decoration"), deco );
+	// danimo: Tackat says: use kcontrol!
+	// Will remove the stuff behind later
+        // popup->insertItem(i18n("&Decoration"), deco );
         popup->insertItem(i18n("&To desktop"), desk_popup );
 
         popup->insertSeparator();
