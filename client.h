@@ -284,6 +284,7 @@ class Client : public QObject, public KDecorationDefines
     // handlers for X11 events
         void mapRequestEvent( XMapRequestEvent* e );
         void unmapNotifyEvent( XUnmapEvent*e );
+        void destroyNotifyEvent( XDestroyWindowEvent*e );
         void configureRequestEvent( XConfigureRequestEvent* e );
         void propertyNotifyEvent( XPropertyEvent* e );
         void clientMessageEvent( XClientMessageEvent* e );

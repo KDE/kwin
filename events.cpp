@@ -239,17 +239,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 
     case UnmapNotify:
             {
-        // this is special due to
-        // SubstructureNotifyMask. e->xany.window is the window the
-        // event is reported to. Take care not to confuse Qt.
-            Client* c = findClient( WindowMatchPredicate( e->xunmap.window ));
-
-            if ( c )
-                {
-                c->windowEvent( e );
-                return true;
-                }
-
         // check for system tray windows
             if ( removeSystemTrayWin( e->xunmap.window ) ) 
                 {
@@ -282,10 +271,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 
         case ReparentNotify:
             {
-            Client* c = findClient( WindowMatchPredicate( e->xreparent.window ));
-            if ( c )
-                (void) c->windowEvent( e );
-
         //do not confuse Qt with these events. After all, _we_ are the
         //window manager who does the reparenting.
             return TRUE;
@@ -294,12 +279,6 @@ bool Workspace::workspaceEvent( XEvent * e )
             {
             if ( removeSystemTrayWin( e->xdestroywindow.window ) )
                 return TRUE;
-            Client* c = findClient( WindowMatchPredicate( e->xdestroywindow.window ));
-            if( c != NULL )
-                {
-                c->destroyClient();
-                return true;
-                }
             return false;
             }
         case MapRequest:
@@ -365,13 +344,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             }
         case ConfigureRequest:
             {
-            Client* c = findClient( WindowMatchPredicate( e->xconfigurerequest.window ));
-            if ( c )
-                {
-                c->windowEvent( e );
-                return true;
-                }
-            else if ( e->xconfigurerequest.parent == root ) 
+            if ( e->xconfigurerequest.parent == root ) 
                 {
                 XWindowChanges wc;
                 unsigned int value_mask = 0;
@@ -469,10 +442,12 @@ void Client::windowEvent( XEvent* e )
         {
         case UnmapNotify:
             return unmapNotifyEvent( &e->xunmap );
+        case DestroyNotify:
+            return destroyNotifyEvent( &e->xdestroywindow );
         case MapRequest:
-                return mapRequestEvent( &e->xmaprequest );
+            return mapRequestEvent( &e->xmaprequest );
         case ConfigureRequest:
-                return configureRequestEvent( &e->xconfigurerequest );
+            return configureRequestEvent( &e->xconfigurerequest );
         case PropertyNotify:
             return propertyNotifyEvent( &e->xproperty );
         case KeyPress:
@@ -616,6 +591,14 @@ void Client::unmapNotifyEvent( XUnmapEvent* e )
         }
     }
 
+void Client::destroyNotifyEvent( XDestroyWindowEvent* e )
+    {
+    if( e->window != window())
+        return;
+    destroyClient();
+    }
+    
+    
 bool         blockAnimation = FALSE;
 
 /*!
