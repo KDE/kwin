@@ -164,7 +164,7 @@ static void create_pixmaps()
     iMenuPix->setMask(menuMask);
     aMenuPixDown->setMask(menuMask);
     iMenuPixDown->setMask(menuMask);
-    
+
     QBitmap helpMask(16, 16, help_mask_bits, true);
     aHelpPix->setMask(helpMask);
     iHelpPix->setMask(helpMask);
@@ -308,7 +308,7 @@ void B2Titlebar::recalcBuffer()
     t.setRight(client->button[B2Client::BtnIconify]->x()-1);
     p.drawText(t, AlignLeft | AlignVCenter, client->caption());
     p.end();
-    
+
     oldTitle = caption();
 }
 
@@ -317,7 +317,7 @@ void B2Titlebar::resizeEvent(QResizeEvent *)
     recalcBuffer();
     repaint(false);
 }
-    
+
 
 void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
 {
@@ -354,7 +354,7 @@ void B2Titlebar::paintEvent(QPaintEvent * /*e*/)
 
 void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
 {
-    client->setShade( !client->isShade() );
+    client->workspace()->performWindowOperation( client, options->operationTitlebarDblClick() );
     client->workspace()->requestFocus( client );
 }
 
@@ -429,7 +429,7 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     button[BtnSticky]->setToggle();
     button[BtnSticky]->setDown(isSticky());
     button[BtnMenu]->setUseMiniIcon();
-    
+
     if(!providesContextHelp())
         button[5]->hide();
 
@@ -568,7 +568,7 @@ void B2Client::doShape()
 	mask -= QRect(0, t.height()-4, 1, 1);         //top left point
     }
     if (t.right() < width()-1) {
-        mask -= QRect(width()-1, t.height()-4, 1, 1); // top right point 
+        mask -= QRect(width()-1, t.height()-4, 1, 1); // top right point
         mask -= QRect(t.right()+1, 0, width()-t.right()-1, t.height()-4);
     }
     mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
@@ -576,7 +576,7 @@ void B2Client::doShape()
     mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
     mask -= QRect(width()-40, height()-1, 1, 1); // handle left point
     mask -= QRect(0, height()-4, width()-40, 4); // bottom left
-    
+
     setMask(mask);
 }
 
@@ -591,7 +591,7 @@ void B2Client::showEvent(QShowEvent *ev)
 void B2Client::windowWrapperShowEvent( QShowEvent* )
 {
     doShape();
-}                                                                               
+}
 
 Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
 {
@@ -601,7 +601,7 @@ Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
     t.setRight(button[BtnClose]->x()+17);
     */
     QRect t = titlebar->geometry();
-    t.setHeight(20-border); 
+    t.setHeight(20-border);
     int ly = t.bottom();
     int lx = t.right();
 
@@ -630,14 +630,14 @@ Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
             else return Right;
         }
     }
-    
+
     if (p.y() >= height() - 8) {
         /* the normal Client:: only wants border of 4 pixels */
 	if (p.x() <= range) return BottomLeft;
 	if (p.x() >= width()-range) return BottomRight;
 	return Bottom;
     }
- 
+
     return Client::mousePosition( p );
 }
 
@@ -794,7 +794,7 @@ static void redraw_pixmaps()
     bitBlt(aNormalizePix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
 
     bitBlt(aIconifyPix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-    
+
     drawB2Rect(&smallBox, aGrp.button(), true);
     drawB2Rect(&largeBox, aGrp.button(), true);
     aNormalizePixDown->fill(options->color(Options::TitleBar, true));
@@ -810,7 +810,7 @@ static void redraw_pixmaps()
     bitBlt(iNormalizePix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
 
     bitBlt(iIconifyPix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-    
+
     drawB2Rect(&smallBox, iGrp.button(), true);
     drawB2Rect(&largeBox, iGrp.button(), true);
     iNormalizePixDown->fill(options->color(Options::TitleBar, false));
@@ -896,7 +896,7 @@ static void redraw_pixmaps()
 void B2Client::positionButtons()
 {
     QFontMetrics fm(options->font(isActive()));
-    
+
     int textLen = fm.width(caption());
     //int xpos = bar_x_ofs+4;
     int xpos = 4;

@@ -1134,43 +1134,36 @@ bool Client::isMaximizable() const
  */
 void Client::mousePressEvent( QMouseEvent * e)
 {
-    if (buttonDown) return;
-    if (e->state() & AltButton)
-    {
-	Options::MouseCommand com = Options::MouseNothing;
+    if (buttonDown) 
+	return;
+    
+    Options::MouseCommand com = Options::MouseNothing;
+    
+    if (e->state() & AltButton) {
 	if ( e->button() == LeftButton ) {
 	    com = options->commandAll1();
-	}
-	else if (e->button() == MidButton) {
+	} else if (e->button() == MidButton) {
 	    com = options->commandAll2();
-	}
-	else if (e->button() == RightButton) {
+	} else if (e->button() == RightButton) {
 	    com = options->commandAll3();
 	}
-	else {
-	    return;
-	}
-	performMouseCommand( com, e->globalPos());
     }
     else {
         if ( e->button() == LeftButton ) {
-	    if ( options->focusPolicyIsReasonable() )
-	        workspace()->requestFocus( this );
-	    workspace()->raiseClient( this );
 	    mouseMoveEvent( e );
 	    buttonDown = TRUE;
 	    moveOffset = e->pos();
 	    invertedMoveOffset = rect().bottomRight() - e->pos();
+	    com = isActive() ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
         }
         else if ( e->button() == MidButton ) {
-            workspace()->lowerClient( this );
+	    com = isActive() ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
         }
         else if ( e->button() == RightButton ) {
-	    if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
-		autoRaise();
-	    workspace()->clientPopup( this )->popup( e->globalPos() );
+	    com = isActive() ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
         }
     }
+    performMouseCommand( com, e->globalPos());
 }
 
 /*!
@@ -1220,14 +1213,13 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     if ( !buttonDown ) {
 	mode = mousePosition( e->pos() );
 	setMouseCursor( mode );
-        geom = geometry();
+	geom = geometry();
 	return;
     }
 
     if ( !isMovable()) return;
 
-    if ( !moveResizeMode )
-    {
+    if ( !moveResizeMode ) {
 	QPoint p( e->pos() - moveOffset );
 	if (p.manhattanLength() >= 6) {
 	    moveResizeMode = TRUE;
@@ -1242,9 +1234,9 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
 		 || ( isResize() && options->resizeMode != Options::Opaque ) )
 		XGrabServer( qt_xdisplay() );
-	}
-	else
+	} else {
 	    return;
+	}
     }
 
     if ( mode !=  Center && shaded )
@@ -1845,9 +1837,6 @@ bool Client::isShade() const
 
 void Client::setShade( bool s )
 {
-    if (!isMovable())
-       return;
-
     if ( shaded == s )
 	return;
 
@@ -2098,6 +2087,9 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	workspace()->lowerClient( this );
 	break;
     case Options::MouseOperationsMenu:
+	if ( isActive() & ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) )
+	    autoRaise();
+	workspace()->clientPopup( this )->popup( globalPos );
 	break;
     case Options::MouseToggleRaiseAndLower:
 	if ( workspace()->topClientOnDesktop() == this )
