@@ -55,32 +55,6 @@ void DetectDialog::detect( WId window )
         readWindow( window );
     }
 
-static QCString getStringProperty(WId w, Atom prop, char separator=0)
-    {
-    Atom type;
-    int format, status;
-    unsigned long nitems = 0;
-    unsigned long extra = 0;
-    unsigned char *data = 0;
-    QCString result = "";
-    status = XGetWindowProperty( qt_xdisplay(), w, prop, 0, 10000,
-                                 FALSE, XA_STRING, &type, &format,
-                                 &nitems, &extra, &data );
-    if ( status == Success)
-        {
-        if (data && separator)
-            {
-            for (int i=0; i<(int)nitems; i++)
-                if (!data[i] && i+1<(int)nitems)
-                    data[i] = separator;
-            }
-        if (data)
-            result = (const char*) data;
-        XFree(data);
-        }
-    return result;
-    }
-
 void DetectDialog::readWindow( WId w )
     {
     if( w == 0 )
@@ -89,24 +63,23 @@ void DetectDialog::readWindow( WId w )
         return;
         }
     KXErrorHandler err;
-    XClassHint hint;
-    XGetClassHint( qt_xdisplay(), w, &hint );
-    Atom wm_role = XInternAtom( qt_xdisplay(), "WM_WINDOW_ROLE", False );
-    KWin::WindowInfo info = KWin::windowInfo( w );
+    KWin::WindowInfo info = KWin::windowInfo( w,
+        NET::WMName | NET::WMWindowType,
+        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine );
     if( !info.valid())
         {
         emit detectionDone( false );
         return;
         }
-    wmclass_class = hint.res_class;
-    wmclass_name = hint.res_name;
-    role = getStringProperty( w, wm_role );
+    wmclass_class = info.windowClassClass();
+    wmclass_name = info.windowClassName();
+    role = info.windowRole();
     type = info.windowType( NET::NormalMask | NET::DesktopMask | NET::DockMask
         | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
         | NET::UtilityMask | NET::SplashMask );
     title = info.name();
     extrarole = ""; // TODO
-    machine = getStringProperty( w, XA_WM_CLIENT_MACHINE );
+    machine = info.clientMachine();
     if( err.error( true ))
         {
         emit detectionDone( false );
