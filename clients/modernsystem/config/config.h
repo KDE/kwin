@@ -4,34 +4,47 @@
 
 #include <qcheckbox.h>
 #include <qgroupbox.h>
-#include <kconfig.h>
+#include <qlayout.h>
+#include <qvbox.h>
+#include <qslider.h>
+#include <qlabel.h>
 
 class ModernSysConfig : public QObject
 {
 	Q_OBJECT
 
 	public:
-		ModernSysConfig( KConfig* conf, QWidget* parent );
+		ModernSysConfig(KConfig* conf, QWidget* parent);
 		~ModernSysConfig();
 
 	// These public signals/slots work similar to KCM modules
 	signals:
-		void changed();
+		void		changed();
 
 	public slots:
-		void load( KConfig* conf );	
-		void save( KConfig* conf );
-		void defaults();
+		void		load(KConfig* conf);	
+		void		save(KConfig* conf);
+		void		defaults();
 
 	protected slots:
-		void slotSelectionChanged();	// Internal use
+		void		slotSelectionChanged();	// Internal use
 
 	private:
-		KConfig   *clientrc;
-		QGroupBox *gb;
-		QCheckBox *cbShowHandle;
-		unsigned  handle_width;
-		unsigned  handle_size;
+		KConfig   	*clientrc;
+		QWidget		*mainw;
+		QVBoxLayout	*vbox;
+		QGroupBox 	*handleBox;
+		QCheckBox 	*cbShowHandle;
+		QVBox		*sliderBox;
+		QSlider		*handleSizeSlider;
+		QHBox		*hbox;
+		QLabel		*label1;
+		QLabel		*label2;
+		QLabel		*label3;
+		
+		unsigned  	handleWidth;
+		unsigned  	handleSize;
+
 };
 
 
