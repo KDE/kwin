@@ -511,17 +511,17 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     moveResizeMode = FALSE;
     setMouseTracking( TRUE );
 
-    
+
     shaded = FALSE;
     hover_unshade = FALSE;
-    active = FALSE; 
+    active = FALSE;
     is_sticky = FALSE;
     stays_on_top = FALSE;
     is_shape = FALSE;
     may_move = TRUE;
     is_fullscreen = FALSE;
     skip_taskbar = FALSE;
-    
+
     Pdeletewindow = 0;
     Ptakefocus = 0;
     Pcontexthelp = 0;
@@ -533,7 +533,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     transient_for_defined = FALSE;
 
     max_mode = MaximizeRestore;
-  
+
     cmap = None;
 
     Window ww;
@@ -856,8 +856,10 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             // window does not stem from a restored session.
             Client* ac = workspace()->activeClient();
 
+            unsigned long usertime = 0;	    
             if ( !isTransient() && !session && ac && !ac->isDesktop() &&
-                 ac->userTime() > userTime() ) {
+                   ac->resourceClass() != resourceClass() &&
+                   ( usertime = userTime() ) > 0 && ac->userTime() > usertime ) {
                 workspace()->stackClientUnderActive( this );
                 show();
             } else {
