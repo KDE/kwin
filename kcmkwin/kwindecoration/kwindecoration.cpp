@@ -97,21 +97,23 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
 
-        QFrame* preview_frame = new QFrame( pluginPage );
-        preview_frame->setFrameShape( QFrame::NoFrame );
-        QVBoxLayout* preview_layout = new QVBoxLayout( preview_frame, 0, KDialog::spacingHint());
-        preview = new KDecorationPreview( preview_frame );
-        preview_layout->addWidget( preview );
-        pluginLayout->addWidget( preview_frame );
-        pluginLayout->setStretchFactor( preview_frame, 10 );
+	QFrame* preview_frame = new QFrame( pluginPage );
+	preview_frame->setFrameShape( QFrame::NoFrame );
+	QVBoxLayout* preview_layout = new QVBoxLayout( preview_frame, 0 );
+	preview = new KDecorationPreview( preview_frame );
+	preview_layout->addWidget( preview );
+	pluginLayout->addWidget( preview_frame );
+	pluginLayout->setStretchFactor( preview_frame, 10 );
 
-	pluginSettingsLbl = new QLabel( i18n("Decoration Options"), pluginPage );
-	pluginSettingsLine = new QFrame( pluginPage );
-	pluginSettingsLine ->setFrameStyle( QFrame::HLine | QFrame::Plain );
-	pluginConfigWidget = new QVBox(pluginPage);
-	pluginLayout->addWidget(pluginSettingsLbl );
-	pluginLayout->addWidget(pluginSettingsLine);
-	pluginLayout->addWidget(pluginConfigWidget);
+	pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
+	pluginSettingsGrp->setColumnLayout( 0, Vertical );
+	pluginSettingsGrp->setFlat( true );
+	pluginSettingsGrp->layout()->setMargin( 0 );
+	pluginSettingsGrp->layout()->setSpacing( KDialog::spacingHint() );
+	pluginLayout->addWidget( pluginSettingsGrp );
+
+	pluginConfigWidget = new QVBox(pluginSettingsGrp);
+	pluginSettingsGrp->layout()->add( pluginConfigWidget );
 
 	// Page 2 (Button Selector)
 	QVBox* buttonPage = new QVBox( tabWidget );
@@ -130,7 +132,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
         lBorder->setBuddy( slBorder );
         lBorder->hide();
         slBorder->hide();
-        
+
 	cbUseCustomButtonPositions = new QCheckBox(
 			i18n("Use custom titlebar button &positions"), buttonPage );
 	QWhatsThis::add( cbUseCustomButtonPositions,
@@ -387,18 +389,13 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 			connect( this, SIGNAL(pluginLoad(KConfig*)), pluginObject, SLOT(load(KConfig*)) );
 			connect( this, SIGNAL(pluginSave(KConfig*)), pluginObject, SLOT(save(KConfig*)) );
 			connect( this, SIGNAL(pluginDefaults()), pluginObject, SLOT(defaults()) );
-			pluginSettingsLbl->show();
-			pluginSettingsLine->show();
-			pluginConfigWidget->show();
+			pluginSettingsGrp->show();
 			return;
 		}
 	}
 
-	pluginSettingsLbl->hide();
-	pluginSettingsLine->hide();
-	pluginConfigWidget->hide();
+	pluginSettingsGrp->hide();
 }
-
 
 
 // Reads the kwin config settings, and sets all UI controls to those settings
@@ -552,7 +549,7 @@ void KWinDecorationModule::defaults()
 	buttonSource->hideButton('I');
 	buttonSource->hideButton('A');
 	buttonSource->hideButton('X');
-        
+
         border_size = BorderNormal;
         checkSupportedBorderSizes();
 

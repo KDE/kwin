@@ -86,7 +86,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		// Allows us to turn "save" on
 		void slotSelectionChanged();
 		void slotChangeDecoration( const QString &  );
-                void slotBorderChanged( int );
+		void slotBorderChanged( int );
 
 	private:
 		void readConfig( KConfig* conf );
@@ -96,12 +96,12 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		void updateSelection();
 		QString decorationLibName( const QString& name );
 		QString decorationName ( QString& libName );
-                static QString styleToConfigLib( QString& styleLib );
+		static QString styleToConfigLib( QString& styleLib );
 		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString::null );
 		void resetKWin();
-                void checkSupportedBorderSizes();
-                static int borderSizeToIndex( BorderSize size, QValueList< BorderSize > sizes );
-                static BorderSize indexToBorderSize( int index, QValueList< BorderSize > sizes );
+		void checkSupportedBorderSizes();
+		static int borderSizeToIndex( BorderSize size, QValueList< BorderSize > sizes );
+		static BorderSize indexToBorderSize( int index, QValueList< BorderSize > sizes );
 
 		QTabWidget* tabWidget;
 
@@ -109,20 +109,19 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		KComboBox* decorationList;
 		QValueList<DecorationInfo> decorations;
 
-                KDecorationPreview* preview;
-                KDecorationPlugins* plugins;
-                KConfig kwinConfig;
+		KDecorationPreview* preview;
+		KDecorationPlugins* plugins;
+		KConfig kwinConfig;
 
 		QCheckBox* cbUseCustomButtonPositions;
 	//	QCheckBox* cbUseMiniWindows;
 		QCheckBox* cbShowToolTips;
-                QLabel*    lBorder;
-                QSlider*   slBorder;
-                BorderSize border_size;
+		QLabel*    lBorder;
+		QSlider*   slBorder;
+		BorderSize border_size;
 
 		QObject* pluginObject;
-		QLabel*  pluginSettingsLbl;
-		QFrame*  pluginSettingsLine;
+		QGroupBox* pluginSettingsGrp;
 		QWidget* pluginConfigWidget;
 		QString  currentLibraryName;
 		QString  oldLibraryName;
