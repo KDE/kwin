@@ -160,10 +160,6 @@ bool Workspace::workspaceEvent( XEvent * e )
     if ( c )
 	return c->windowEvent( e );
 
-    if (!tab_grab && ! control_grab) { // don't process accelerators in tab or control mode
-	return true;
-    }
-
     switch (e->type) {
     case ButtonPress:
     case ButtonRelease:
