@@ -266,7 +266,6 @@ class Client : public QObject, public KDecorationDefines
         static bool belongToSameApplication( const Client* c1, const Client* c2, bool active_hack = false );
         static void readIcons( Window win, QPixmap* icon, QPixmap* miniicon );
 
-    public slots: // FRAME these probably don't need to be slots anymore
         void minimize();
         void unminimize();
         void closeWindow();
