@@ -104,7 +104,7 @@ public:
 
 extern Atom qt_wm_state;
 extern Time qt_x_time;
-extern Atom qt_window_role;
+extern Atom qt_wm_window_role;
 extern Atom qt_sm_client_id;
 
 static int nullErrorHandler(Display *, XErrorEvent *)
@@ -1412,6 +1412,7 @@ void Client::sendSyntheticConfigureNotify()
     c.border_width = 0;
     c.above = None;
     c.override_redirect = 0;
+    qDebug("sending width: %d, %d", c.width, c.height);
     XSendEvent( qt_xdisplay(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
 }
 
@@ -2857,7 +2858,7 @@ static QCString getStringProperty(WId w, Atom prop, char separator=0)
  */
 QCString Client::staticWindowRole(WId w)
 {
-    return getStringProperty(w, qt_window_role);
+    return getStringProperty(w, qt_wm_window_role);
 }
 
 /*!
