@@ -423,10 +423,10 @@ Workspace::~Workspace()
     delete topmenu_watcher;
     delete topmenu_selection;
     delete topmenu_space;
-    while( !windowRules.isEmpty())
+    while( !rules.isEmpty())
         {
-        delete windowRules.front();
-        windowRules.pop_front();
+        delete rules.front();
+        rules.pop_front();
         }
     XDestroyWindow( qt_xdisplay(), null_focus_window );
 // TODO    ungrabXServer();

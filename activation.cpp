@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "workspace.h"
 
+#include <fixx11h.h>
 #include <qpopupmenu.h>
 #include <kxerrorhandler.h>
 #include <kstartupinfo.h>

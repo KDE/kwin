@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "workspace.h"
 
+#include <fixx11h.h>
 #include <qpopupmenu.h>
 #include <kglobalsettings.h>
 #include <kiconloader.h>
@@ -106,7 +107,7 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemEnabled( Options::MaximizeOp, popup_client->isMaximizable() );
     popup->setItemChecked( Options::MaximizeOp, popup_client->maximizeMode() == Client::MaximizeFull );
     // This should be checked also when hover unshaded
-    popup->setItemChecked( Options::ShadeOp, popup_client->shadeMode() != Client::ShadeNone );
+    popup->setItemChecked( Options::ShadeOp, popup_client->shadeMode() != ShadeNone );
     popup->setItemEnabled( Options::ShadeOp, popup_client->isShadeable());
     advanced_popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
     advanced_popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );

@@ -41,6 +41,7 @@ class PopupInfo;
 class RootInfo;
 class PluginMgr;
 class Placement;
+class Rules;
 class WindowRules;
 
 class SystemTrayWindow
@@ -202,7 +203,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void storeSession( KConfig* config, SMSavePhase phase );
 
         SessionInfo* takeSessionInfo( Client* );
-        WindowRules* findWindowRules( const Client*, bool );
+        WindowRules findWindowRules( const Client*, bool );
         void rulesUpdated();
 
     // dcop interface
@@ -434,7 +435,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void editWindowRules( Client* );
 
         QPtrList<SessionInfo> session;
-        QValueList<WindowRules*> windowRules;
+        QValueList<Rules*> rules;
         KXMessages temporaryRulesMessages;
         QTimer rulesUpdatedTimer;
         static const char* windowTypeToTxt( NET::WindowType type );

@@ -99,6 +99,14 @@ enum clientAreaOption
     ScreenArea             // one whole screen, ignore struts
     };
 
+enum ShadeMode
+    {
+    ShadeNone, // not shaded
+    ShadeNormal, // normally shaded - isShade() is true only here
+    ShadeHover, // "shaded", but visible due to hover unshade
+    ShadeActivated // "shaded", but visible due to alt+tab to the window
+    };
+
 class Shape 
     {
     public:

@@ -879,7 +879,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
             {
             activateClient( nc );
             if( nc->isShade())
-                nc->setShade( Client::ShadeActivated );
+                nc->setShade( ShadeActivated );
             }
         else
             {
@@ -899,7 +899,7 @@ void Workspace::KDEOneStepThroughWindows( bool forward )
         {
         activateClient( c );
         if( c->isShade())
-            c->setShade( Client::ShadeActivated );
+            c->setShade( ShadeActivated );
         }
     }
 
@@ -1019,7 +1019,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
             {
             activateClient( c );
             if( c->isShade())
-                c->setShade( Client::ShadeActivated );
+                c->setShade( ShadeActivated );
             }
         }
     if (control_grab)

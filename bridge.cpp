@@ -64,7 +64,7 @@ QIconSet Bridge::icon() const
 
 bool Bridge::isSetShade() const
     {
-    return c->shadeMode() != Client::ShadeNone;
+    return c->shadeMode() != ShadeNone;
     }
 
 void Bridge::showWindowMenu( QPoint p )
@@ -110,7 +110,7 @@ void Bridge::titlebarDblClickOperation()
 
 void Bridge::setShade( bool set )
     {
-    c->setShade( set ? Client::ShadeNormal : Client::ShadeNone );
+    c->setShade( set ? ShadeNormal : ShadeNone );
     }
 
 int Bridge::currentDesktop() const

@@ -79,7 +79,6 @@ Client::Client( Workspace *ws )
         transient_for( NULL ),
         transient_for_id( None ),
         original_transient_for_id( None ),
-        client_rules( NULL ),
         in_group( NULL ),
         window_group( None ),
         in_layer( UnknownLayer ),
@@ -1699,11 +1698,7 @@ void Client::cancelAutoRaise()
     autoRaiseTimer = 0;
     }
 
-#ifdef NDEBUG
-kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }
-kndbgstream& operator<<( kndbgstream& stream, const ClientList&  ) { return stream; }
-kndbgstream& operator<<( kndbgstream& stream, const ConstClientList& ) { return stream; }
-#else
+#ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Client* cl )
     {
     if( cl == NULL )

@@ -490,8 +490,7 @@ bool Client::manage( Window w, bool isMapped )
 
     ungrabXServer();
     
-    if( client_rules->discardTemporary( true ))
-        setupWindowRules( true );
+    client_rules.discardTemporary();
 
     return true;
     }

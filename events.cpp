@@ -66,7 +66,7 @@ void WinInfo::changeState( unsigned long state, unsigned long mask )
         m_client->setMaximize( m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxHoriz );
 
     if ( mask & NET::Shaded )
-        m_client->setShade( state & NET::Shaded ? Client::ShadeNormal : Client::ShadeNone );
+        m_client->setShade( state & NET::Shaded ? ShadeNormal : ShadeNone );
     if ( mask & NET::KeepAbove)
         m_client->setKeepAbove( (state & NET::KeepAbove) != 0 );
     if ( mask & NET::KeepBelow)

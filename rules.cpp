@@ -10,6 +10,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "rules.h"
 
+#include <fixx11h.h>
 #include <kconfig.h>
 #include <qregexp.h>
 #include <ktempfile.h>
@@ -22,9 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-static WindowRules dummyRules; // dummy used to avoid NULL checks
-
-WindowRules::WindowRules()
+Rules::Rules()
     : temporary_state( 0 )
     , wmclassregexp( false )
     , wmclasscomplete( false )
@@ -33,31 +32,31 @@ WindowRules::WindowRules()
     , extraroleregexp( false )
     , clientmachineregexp( false )
     , types( NET::AllTypesMask )
-    , placementrule( DontCareRule )
-    , positionrule( DontCareRule )
-    , sizerule( DontCareRule )
-    , minsizerule( DontCareRule )
-    , maxsizerule( DontCareRule )
-    , desktoprule( DontCareRule )
-    , typerule( DontCareRule )
-    , maximizevertrule( DontCareRule )
-    , maximizehorizrule( DontCareRule )
-    , minimizerule( DontCareRule )
-    , shaderule( DontCareRule )
-    , skiptaskbarrule( DontCareRule )
-    , skippagerrule( DontCareRule )
-    , aboverule( DontCareRule )
-    , belowrule( DontCareRule )
-    , fullscreenrule( DontCareRule )
-    , noborderrule( DontCareRule )
-    , fsplevelrule( DontCareRule )
-    , acceptfocusrule( DontCareRule )
-    , moveresizemoderule( DontCareRule )
-    , closeablerule( DontCareRule )
+    , placementrule( UnusedForceRule )
+    , positionrule( UnusedSetRule )
+    , sizerule( UnusedSetRule )
+    , minsizerule( UnusedForceRule )
+    , maxsizerule( UnusedForceRule )
+    , desktoprule( UnusedSetRule )
+    , typerule( UnusedForceRule )
+    , maximizevertrule( UnusedSetRule )
+    , maximizehorizrule( UnusedSetRule )
+    , minimizerule( UnusedSetRule )
+    , shaderule( UnusedSetRule )
+    , skiptaskbarrule( UnusedSetRule )
+    , skippagerrule( UnusedSetRule )
+    , aboverule( UnusedSetRule )
+    , belowrule( UnusedSetRule )
+    , fullscreenrule( UnusedSetRule )
+    , noborderrule( UnusedSetRule )
+    , fsplevelrule( UnusedForceRule )
+    , acceptfocusrule( UnusedForceRule )
+    , moveresizemoderule( UnusedForceRule )
+    , closeablerule( UnusedForceRule )
     {
     }
 
-WindowRules::WindowRules( const QString& str, bool temporary )
+Rules::Rules( const QString& str, bool temporary )
     : temporary_state( temporary ? 2 : 0 )
     {
     KTempFile file;
@@ -79,21 +78,26 @@ WindowRules::WindowRules( const QString& str, bool temporary )
     
 #define READ_SET_RULE( var, type, func ) \
     var = func ( cfg.read##type##Entry( #var )); \
-    var##rule = readRule( cfg, #var "rule" );
+    var##rule = readSetRule( cfg, #var "rule" );
     
 #define READ_SET_RULE_DEF( var, type, func, def ) \
     var = func ( cfg.read##type##Entry( #var, def )); \
-    var##rule = readRule( cfg, #var "rule" );
+    var##rule = readSetRule( cfg, #var "rule" );
     
 #define READ_SET_RULE_2( var, type, func, funcarg ) \
     var = func ( cfg.read##type##Entry( #var ), funcarg ); \
-    var##rule = readRule( cfg, #var "rule" );
+    var##rule = readSetRule( cfg, #var "rule" );
 
 #define READ_FORCE_RULE( var, type, func ) \
     var = func ( cfg.read##type##Entry( #var )); \
     var##rule = readForceRule( cfg, #var "rule" );
 
-WindowRules::WindowRules( KConfig& cfg )
+#define READ_FORCE_RULE_2( var, type, func, funcarg ) \
+    var = func ( cfg.read##type##Entry( #var ), funcarg ); \
+    var##rule = readForceRule( cfg, #var "rule" );
+
+
+Rules::Rules( KConfig& cfg )
     : temporary_state( 0 )
     {
     readFromCfg( cfg );
@@ -101,7 +105,7 @@ WindowRules::WindowRules( KConfig& cfg )
 
 static int limit0to4( int i ) { return QMAX( 0, QMIN( 4, i )); }
 
-void WindowRules::readFromCfg( KConfig& cfg )
+void Rules::readFromCfg( KConfig& cfg )
     {
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
     wmclassregexp = cfg.readBoolEntry( "wmclassregexp" );
@@ -111,20 +115,20 @@ void WindowRules::readFromCfg( KConfig& cfg )
     READ_MATCH_STRING( extrarole, .lower().latin1() );
     READ_MATCH_STRING( clientmachine, .lower().latin1() );
     types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
-    READ_SET_RULE_2( placement,, Placement::policyFromString, false );
+    READ_FORCE_RULE_2( placement,, Placement::policyFromString, false );
     READ_SET_RULE_DEF( position, Point,, &invalidPoint );
     READ_SET_RULE( size, Size, );
-    if( size.isEmpty() && sizerule != RememberRule )
-        sizerule = DontCareRule;
-    READ_SET_RULE( minsize, Size, );
+    if( size.isEmpty() && sizerule != static_cast< SetRule >( Remember ))
+        sizerule = UnusedSetRule;
+    READ_FORCE_RULE( minsize, Size, );
     if( !minsize.isValid())
-        minsizerule = DontCareRule;
-    READ_SET_RULE( maxsize, Size, );
+        minsizerule = UnusedForceRule;
+    READ_FORCE_RULE( maxsize, Size, );
     if( maxsize.isEmpty())
-        maxsizerule = DontCareRule;
+        maxsizerule = UnusedForceRule;
     READ_SET_RULE( desktop, Num, );
     type = readType( cfg, "type" );
-    typerule = type != NET::Unknown ? readForceRule( cfg, "typerule" ) : DontCareRule;
+    typerule = type != NET::Unknown ? readForceRule( cfg, "typerule" ) : UnusedForceRule;
     READ_SET_RULE( maximizevert, Bool, );
     READ_SET_RULE( maximizehoriz, Bool, );
     READ_SET_RULE( minimize, Bool, );
@@ -139,13 +143,14 @@ void WindowRules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE( acceptfocus, Bool, );
     READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
     READ_FORCE_RULE( closeable, Bool, );
-    kdDebug() << "READ RULE:" << wmclass << "/" << title << endl;
+    kdDebug() << "READ RULE:" << this << endl;
     }
 
 #undef READ_MATCH_STRING
 #undef READ_SET_RULE
 #undef READ_SET_RULE_2
 #undef READ_FORCE_RULE
+#undef READ_FORCE_RULE_2
 
 #define WRITE_MATCH_STRING( var, cast ) \
     if( !var.isEmpty()) \
@@ -160,7 +165,19 @@ void WindowRules::readFromCfg( KConfig& cfg )
         }
 
 #define WRITE_SET_RULE( var, func ) \
-    if( var##rule != DontCareRule ) \
+    if( var##rule != UnusedSetRule ) \
+        { \
+        cfg.writeEntry( #var, func ( var )); \
+        cfg.writeEntry( #var "rule", var##rule ); \
+        } \
+    else \
+        { \
+        cfg.deleteEntry( #var ); \
+        cfg.deleteEntry( #var "rule" ); \
+        }
+
+#define WRITE_FORCE_RULE( var, func ) \
+    if( var##rule != UnusedForceRule ) \
         { \
         cfg.writeEntry( #var, func ( var )); \
         cfg.writeEntry( #var "rule", var##rule ); \
@@ -178,7 +195,7 @@ void WindowRules::readFromCfg( KConfig& cfg )
         cfg.deleteEntry( #var );
 
 
-void WindowRules::write( KConfig& cfg ) const
+void Rules::write( KConfig& cfg ) const
     {
     // always write wmclass
     cfg.writeEntry( "wmclass", ( const char* )wmclass );
@@ -189,13 +206,13 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( extrarole, (const char*) );
     WRITE_MATCH_STRING( clientmachine, (const char*) );
     WRITE_WITH_DEFAULT( types, NET::AllTypesMask );
-    WRITE_SET_RULE( placement, Placement::policyToString );
+    WRITE_FORCE_RULE( placement, Placement::policyToString );
     WRITE_SET_RULE( position, );
     WRITE_SET_RULE( size, );
-    WRITE_SET_RULE( minsize, );
-    WRITE_SET_RULE( maxsize, );
+    WRITE_FORCE_RULE( minsize, );
+    WRITE_FORCE_RULE( maxsize, );
     WRITE_SET_RULE( desktop, );
-    WRITE_SET_RULE( type, );
+    WRITE_FORCE_RULE( type, );
     WRITE_SET_RULE( maximizevert, );
     WRITE_SET_RULE( maximizehoriz, );
     WRITE_SET_RULE( minimize, );
@@ -206,33 +223,34 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_SET_RULE( below, );
     WRITE_SET_RULE( fullscreen, );
     WRITE_SET_RULE( noborder, );
-    WRITE_SET_RULE( fsplevel, );
-    WRITE_SET_RULE( acceptfocus, );
-    WRITE_SET_RULE( moveresizemode, Options::moveResizeModeToString );
-    WRITE_SET_RULE( closeable, );
+    WRITE_FORCE_RULE( fsplevel, );
+    WRITE_FORCE_RULE( acceptfocus, );
+    WRITE_FORCE_RULE( moveresizemode, Options::moveResizeModeToString );
+    WRITE_FORCE_RULE( closeable, );
     }
     
 #undef WRITE_MATCH_STRING
 #undef WRITE_SET_RULE
+#undef WRITE_FORCE_RULE
 #undef WRITE_WITH_DEFAULT
 
-SettingRule WindowRules::readRule( KConfig& cfg, const QString& key )
+Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
     {
     int v = cfg.readNumEntry( key );
-    if( v >= DontCareRule && v <= LastRule )
-        return static_cast< SettingRule >( v );
-    return DontCareRule;
+    if( v >= DontAffect && v <= Remember )
+        return static_cast< SetRule >( v );
+    return UnusedSetRule;
     }
 
-SettingRule WindowRules::readForceRule( KConfig& cfg, const QString& key )
+Rules::ForceRule Rules::readForceRule( KConfig& cfg, const QString& key )
     {
     int v = cfg.readNumEntry( key );
-    if( v == DontCareRule || v == ForceRule )
-        return static_cast< SettingRule >( v );
-    return DontCareRule;
+    if( v == DontAffect || v == Force )
+        return static_cast< ForceRule >( v );
+    return UnusedForceRule;
     }
 
-NET::WindowType WindowRules::readType( KConfig& cfg, const QString& key )
+NET::WindowType Rules::readType( KConfig& cfg, const QString& key )
     {
     int v = cfg.readNumEntry( key );
     if( v >= NET::Normal && v <= NET::Splash )
@@ -240,7 +258,7 @@ NET::WindowType WindowRules::readType( KConfig& cfg, const QString& key )
     return NET::Unknown;
     }
 
-bool WindowRules::match( const Client* c ) const
+bool Rules::match( const Client* c ) const
     {
     if( types != NET::AllTypesMask )
         {
@@ -288,215 +306,299 @@ bool WindowRules::match( const Client* c ) const
     return true;
     }
 
-void WindowRules::update( Client* c )
+bool Rules::update( Client* c )
     {
     // TODO check this setting is for this client ?
     bool updated = false;
-    if( positionrule == RememberRule )
+    if( positionrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || position != c->pos();
         position = c->pos();
         }
-    if( sizerule == RememberRule )
+    if( sizerule == static_cast< SetRule >( Remember ))
         {
         updated = updated || size != c->size();
         size = c->size();
         }
-    if( desktoprule == RememberRule )
+    if( desktoprule == static_cast< SetRule >( Remember ))
         {
         updated = updated || desktop != c->desktop();
         desktop = c->desktop();
         }
-    if( maximizevertrule == RememberRule )
+    if( maximizevertrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || maximizevert != bool( c->maximizeMode() & MaximizeVertical );
         maximizevert = c->maximizeMode() & MaximizeVertical;
         }
-    if( maximizehorizrule == RememberRule )
+    if( maximizehorizrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || maximizehoriz != bool( c->maximizeMode() & MaximizeHorizontal );
         maximizehoriz = c->maximizeMode() & MaximizeHorizontal;
         }
-    if( minimizerule == RememberRule )
+    if( minimizerule == static_cast< SetRule >( Remember ))
         {
         updated = updated || minimize != c->isMinimized();
         minimize = c->isMinimized();
         }
-    if( shaderule == RememberRule )
+    if( shaderule == static_cast< SetRule >( Remember ))
         {
-        updated = updated || ( shade != ( c->shadeMode() != Client::ShadeNone ));
-        shade = c->shadeMode() != Client::ShadeNone;
+        updated = updated || ( shade != ( c->shadeMode() != ShadeNone ));
+        shade = c->shadeMode() != ShadeNone;
         }
-    if( skiptaskbarrule == RememberRule )
+    if( skiptaskbarrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || skiptaskbar != c->skipTaskbar();
         skiptaskbar = c->skipTaskbar();
         }
-    if( skippagerrule == RememberRule )
+    if( skippagerrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || skippager != c->skipPager();
         skippager = c->skipPager();
         }
-    if( aboverule == RememberRule )
+    if( aboverule == static_cast< SetRule >( Remember ))
         {
         updated = updated || above != c->keepAbove();
         above = c->keepAbove();
         }
-    if( belowrule == RememberRule )
+    if( belowrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || below != c->keepBelow();
         below = c->keepBelow();
         }
-    if( fullscreenrule == RememberRule )
+    if( fullscreenrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || fullscreen != c->isFullScreen();
         fullscreen = c->isFullScreen();
         }
-    if( noborderrule == RememberRule )
+    if( noborderrule == static_cast< SetRule >( Remember ))
         {
         updated = updated || noborder != c->isUserNoBorder();
         noborder = c->isUserNoBorder();
         }
-    if( updated )
-        Workspace::self()->rulesUpdated();
+    return updated;
     }
 
-Placement::Policy WindowRules::checkPlacement( Placement::Policy placement ) const
-    {
-    return checkForceRule( placementrule ) ? this->placement : placement;
+#define APPLY_RULE( var, name, type ) \
+bool Rules::apply##name( type& arg, bool init ) const \
+    { \
+    if( checkSetRule( var##rule, init )) \
+        arg = this->var; \
+    return checkSetStop( var##rule ); \
     }
 
-// TODO at to porad jeste kontroluje min/max size , + udelat override pro min/max?
-QRect WindowRules::checkGeometry( const QRect& rect, bool init ) const
-    {
-    return QRect( checkRule( positionrule, init ) && this->position != invalidPoint
-        ? this->position : rect.topLeft(),
-        checkRule( sizerule, init ) && this->size.isValid() ? this->size : rect.size());
+#define APPLY_FORCE_RULE( var, name, type ) \
+bool Rules::apply##name( type& arg ) const \
+    { \
+    if( checkForceRule( var##rule )) \
+        arg = this->var; \
+    return checkForceStop( var##rule ); \
     }
 
-QPoint WindowRules::checkPosition( const QPoint& pos, bool init ) const
+APPLY_FORCE_RULE( placement, Placement, Placement::Policy )
+
+bool Rules::applyGeometry( QRect& rect, bool init ) const
     {
-    return checkRule( positionrule, init ) && this->position != invalidPoint
-        ? this->position : pos;
+    QPoint p = rect.topLeft();
+    QSize s = rect.size();
+    bool ret = false; // no short-circuiting
+    if( applyPosition( p, init ))
+        {
+        rect.moveTopLeft( p );
+        ret = true;
+        }
+    if( applySize( s, init ))
+        {
+        rect.setSize( s );
+        ret = true;
+        }
+    return ret;
     }
 
-QSize WindowRules::checkSize( const QSize& s, bool init ) const
+bool Rules::applyPosition( QPoint& pos, bool init ) const
     {
-    return checkRule( sizerule, init ) && this->size.isValid() ? this->size : s;
+    if( pos != invalidPoint && checkSetRule( positionrule, init ))
+        pos = this->position;
+    return checkSetStop( positionrule );
     }
 
-QSize WindowRules::checkMinSize( const QSize& s ) const
+bool Rules::applySize( QSize& s, bool init ) const
     {
-    return checkForceRule( minsizerule ) ? this->minsize : s;
+    if( size.isValid() && checkSetRule( sizerule, init ))
+        s = this->size;
+    return checkSetStop( sizerule );
     }
 
-QSize WindowRules::checkMaxSize( const QSize& s ) const
+APPLY_FORCE_RULE( minsize, MinSize, QSize )
+APPLY_FORCE_RULE( maxsize, MaxSize, QSize )
+APPLY_RULE( desktop, Desktop, int )
+APPLY_FORCE_RULE( type, Type, NET::WindowType )
+
+bool Rules::applyMaximizeHoriz( MaximizeMode& mode, bool init ) const
     {
-    return checkForceRule( maxsizerule ) ? this->maxsize : s;
+    if( checkSetRule( maximizehorizrule, init ))
+        mode = static_cast< MaximizeMode >(( maximizehoriz ? MaximizeHorizontal : 0 ) | ( mode & MaximizeVertical ));
+    return checkSetStop( maximizehorizrule );
     }
 
-int WindowRules::checkDesktop( int req_desktop, bool init ) const
+bool Rules::applyMaximizeVert( MaximizeMode& mode, bool init ) const
     {
-    // TODO chaining?
-    return checkRule( desktoprule, init ) ? this->desktop : req_desktop;
+    if( checkSetRule( maximizevertrule, init ))
+        mode = static_cast< MaximizeMode >(( maximizevert ? MaximizeVertical : 0 ) | ( mode & MaximizeHorizontal ));
+    return checkSetStop( maximizevertrule );
     }
 
-NET::WindowType WindowRules::checkType( NET::WindowType req_type ) const
-    {
-    return checkForceRule( typerule ) ? this->type : req_type;
-    }
+APPLY_RULE( minimize, Minimize, bool )
 
-KDecorationDefines::MaximizeMode WindowRules::checkMaximize( MaximizeMode mode, bool init ) const
+bool Rules::applyShade( ShadeMode& sh, bool init ) const
     {
-    bool vert = checkRule( maximizevertrule, init ) ? this->maximizevert : bool( mode & MaximizeVertical );
-    bool horiz = checkRule( maximizehorizrule, init ) ? this->maximizehoriz : bool( mode & MaximizeHorizontal );
-    return static_cast< MaximizeMode >(( vert ? MaximizeVertical : 0 ) | ( horiz ? MaximizeHorizontal : 0 ));
-    }
-
-bool WindowRules::checkMinimize( bool minimize, bool init ) const
-    {
-    return checkRule( minimizerule, init ) ? this->minimize : minimize;
-    }
-
-Client::ShadeMode WindowRules::checkShade( Client::ShadeMode shade, bool init ) const
-    {
-    if( checkRule( shaderule, init ))
+    if( checkSetRule( shaderule, init ))
         {
         if( !this->shade )
-            return Client::ShadeNone;
-        if( this->shade && shade == Client::ShadeNone )
-            return Client::ShadeNormal;
+            sh = ShadeNone;
+        if( this->shade && sh == ShadeNone )
+            sh = ShadeNormal;
         }
-    return shade;
+    return checkSetStop( shaderule );
     }
 
-bool WindowRules::checkSkipTaskbar( bool skip, bool init ) const
-    {
-    return checkRule( skiptaskbarrule, init ) ? this->skiptaskbar : skip;
-    }
+APPLY_RULE( skiptaskbar, SkipTaskbar, bool )
+APPLY_RULE( skippager, SkipPager, bool )
+APPLY_RULE( above, KeepAbove, bool )
+APPLY_RULE( below, KeepBelow, bool )
+APPLY_RULE( fullscreen, FullScreen, bool )
+APPLY_RULE( noborder, NoBorder, bool )
+APPLY_FORCE_RULE( fsplevel, FSP, int )
+APPLY_FORCE_RULE( acceptfocus, AcceptFocus, bool )
+APPLY_FORCE_RULE( moveresizemode, MoveResizeMode, Options::MoveResizeMode )
+APPLY_FORCE_RULE( closeable, Closeable, bool )
 
-bool WindowRules::checkSkipPager( bool skip, bool init ) const
-    {
-    return checkRule( skippagerrule, init ) ? this->skippager : skip;
-    }
+#undef APPLY_RULE
+#undef APPLY_FORCE_RULE
 
-bool WindowRules::checkKeepAbove( bool above, bool init ) const
-    {
-    return checkRule( aboverule, init ) ? this->above : above;
-    }
-
-bool WindowRules::checkKeepBelow( bool below, bool init ) const
-    {
-    return checkRule( belowrule, init ) ? this->below : below;
-    }
-
-bool WindowRules::checkFullScreen( bool fs, bool init ) const
-    {
-    return checkRule( fullscreenrule, init ) ? this->fullscreen : fs;
-    }
-
-bool WindowRules::checkNoBorder( bool noborder, bool init ) const
-    {
-    return checkRule( noborderrule, init ) ? this->noborder : noborder;
-    }
-
-int WindowRules::checkFSP( int fsp ) const
-    {
-    return checkForceRule( fsplevelrule ) ? this->fsplevel : fsp;
-    }
-
-bool WindowRules::checkAcceptFocus( bool focus ) const
-    {
-    return checkForceRule( acceptfocusrule ) ? this->acceptfocus : focus;
-    }
-
-Options::MoveResizeMode WindowRules::checkMoveResizeMode( Options::MoveResizeMode mode ) const
-    {
-    return checkForceRule( moveresizemoderule ) ? this->moveresizemode : mode;
-    }
-
-bool WindowRules::checkCloseable( bool closeable ) const
-    {
-    return checkForceRule( closeablerule ) ? this->closeable : closeable;
-    }
-
-bool WindowRules::isTemporary() const
+bool Rules::isTemporary() const
     {
     return temporary_state > 0;
     }
 
-bool WindowRules::discardTemporary( bool force )
+bool Rules::discardTemporary( bool force )
     {
     if( temporary_state == 0 ) // not temporary
         return false;
     if( force || --temporary_state == 0 ) // too old
         {
-        kdDebug() << "DISCARD:" << wmclass << "/" << title << endl;
+        kdDebug() << "DISCARD:" << this << endl;
         delete this;
         return true;
         }
     return false;
     }
+
+#ifndef NDEBUG
+kdbgstream& operator<<( kdbgstream& stream, const Rules* r )
+    {
+    return stream << "[" << r->wmclass << "/" << r->windowrole << "/" << r->title << "]";
+    }
+#endif
+
+void WindowRules::discardTemporary()
+    {
+    QValueVector< Rules* >::Iterator it2 = rules.begin();
+    for( QValueVector< Rules* >::Iterator it = rules.begin();
+         it != rules.end();
+         )
+        {
+        if( (*it)->discardTemporary( false ))
+            ++it;
+        else
+            {
+            *it2++ = *it++;
+            }
+        }
+    rules.erase( it2, rules.end());
+    }
+
+void WindowRules::update( Client* c )
+    {
+    bool updated = false;
+    for( QValueVector< Rules* >::ConstIterator it = rules.begin();
+         it != rules.end();
+         ++it )
+        if( (*it)->update( c )) // no short-circuiting here
+            updated = true;
+    if( updated )
+        Workspace::self()->rulesUpdated();
+    }
+
+#define CHECK_RULE( rule, type ) \
+type WindowRules::check##rule( type arg, bool init ) const \
+    { \
+    if( rules.count() == 0 ) \
+        return arg; \
+    type ret = arg; \
+    for( QValueVector< Rules* >::ConstIterator it = rules.begin(); \
+         it != rules.end(); \
+         ++it ) \
+        { \
+        if( (*it)->apply##rule( ret, init )) \
+            break; \
+        } \
+    return ret; \
+    }
+
+#define CHECK_FORCE_RULE( rule, type ) \
+type WindowRules::check##rule( type arg ) const \
+    { \
+    if( rules.count() == 0 ) \
+        return arg; \
+    type ret = arg; \
+    for( QValueVector< Rules* >::ConstIterator it = rules.begin(); \
+         it != rules.end(); \
+         ++it ) \
+        { \
+        if( (*it)->apply##rule( ret )) \
+            break; \
+        } \
+    return ret; \
+    }
+
+CHECK_FORCE_RULE( Placement, Placement::Policy )
+
+QRect WindowRules::checkGeometry( QRect rect, bool init ) const
+    {
+    return QRect( checkPosition( rect.topLeft(), init ), checkSize( rect.size(), init ));
+    }
+
+CHECK_RULE( Position, QPoint )
+CHECK_RULE( Size, QSize )
+CHECK_FORCE_RULE( MinSize, QSize )
+CHECK_FORCE_RULE( MaxSize, QSize )
+CHECK_RULE( Desktop, int )
+CHECK_FORCE_RULE( Type, NET::WindowType )
+CHECK_RULE( MaximizeVert, KDecorationDefines::MaximizeMode )
+CHECK_RULE( MaximizeHoriz, KDecorationDefines::MaximizeMode )
+
+KDecorationDefines::MaximizeMode WindowRules::checkMaximize( MaximizeMode mode, bool init ) const
+    {
+    bool vert = checkMaximizeVert( mode, init ) & MaximizeVertical;
+    bool horiz = checkMaximizeHoriz( mode, init ) & MaximizeHorizontal;
+    return static_cast< MaximizeMode >(( vert ? MaximizeVertical : 0 ) | ( horiz ? MaximizeHorizontal : 0 ));
+    }
+
+CHECK_RULE( Minimize, bool )
+CHECK_RULE( Shade, ShadeMode )
+CHECK_RULE( SkipTaskbar, bool )
+CHECK_RULE( SkipPager, bool )
+CHECK_RULE( KeepAbove, bool )
+CHECK_RULE( KeepBelow, bool )
+CHECK_RULE( FullScreen, bool )
+CHECK_RULE( NoBorder, bool )
+CHECK_FORCE_RULE( FSP, int )
+CHECK_FORCE_RULE( AcceptFocus, bool )
+CHECK_FORCE_RULE( MoveResizeMode, Options::MoveResizeMode )
+CHECK_FORCE_RULE( Closeable, bool )
+
+#undef CHECK_RULE
+#undef CHECK_FORCE_RULE
 
 // Client
 
@@ -505,42 +607,48 @@ void Client::setupWindowRules( bool ignore_temporary )
     client_rules = workspace()->findWindowRules( this, ignore_temporary );
     // check only after getting the rules, because there may be a rule forcing window type
     if( isTopMenu()) // TODO cannot have restrictions
-        client_rules = &dummyRules;
+        client_rules = WindowRules();
     }
 
 void Client::updateWindowRules()
     {
-    client_rules->update( this );
+    client_rules.update( this );
     }
 
 void Client::finishWindowRules()
     {
     updateWindowRules();
-    client_rules = &dummyRules;
+    client_rules = WindowRules();
     }
 
 // Workspace
 
-WindowRules* Workspace::findWindowRules( const Client* c, bool ignore_temporary )
+WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
     {
-    for( QValueList< WindowRules* >::ConstIterator it = windowRules.begin();
-         it != windowRules.end();
-         ++it )
+    QValueVector< Rules* > ret;
+    for( QValueList< Rules* >::Iterator it = rules.begin();
+         it != rules.end();
+         )
         {
         if( ignore_temporary && (*it)->isTemporary())
+            {
+            ++it;
             continue;
-        // TODO chaining for wildcard matches
+            }
         if( (*it)->match( c ))
             {
-            kdDebug() << "RULE FOUND:" << c << endl;
-            WindowRules* ret = *it;
-            if( ret->isTemporary())
-                windowRules.remove( *it );
-            return ret;
+            Rules* rule = *it;
+            kdDebug() << "RULE FOUND:" << rule << ":" << c << endl;
+            if( rule->isTemporary())
+                it = rules.remove( it );
+            else
+                ++it;
+            ret.append( rule );
+            continue;
             }
+        ++it;
         }
-    kdDebug() << "RULE DUMMY:" << c << endl;
-    return &dummyRules;
+    return WindowRules( ret );
     }
 
 void Workspace::editWindowRules( Client* c )
@@ -550,10 +658,10 @@ void Workspace::editWindowRules( Client* c )
 
 void Workspace::loadWindowRules()
     {
-    while( !windowRules.isEmpty())
+    while( !rules.isEmpty())
         {
-        delete windowRules.front();
-        windowRules.pop_front();
+        delete rules.front();
+        rules.pop_front();
         }
     KConfig cfg( "kwinrulesrc", true );
     cfg.setGroup( "General" );
@@ -564,8 +672,8 @@ void Workspace::loadWindowRules()
          ++i )
         {
         cfg.setGroup( QString::number( i ));
-        WindowRules* setting = new WindowRules( cfg );
-        windowRules.append( setting );
+        Rules* rule = new Rules( cfg );
+        rules.append( rule );
         }
     }
 
@@ -573,10 +681,10 @@ void Workspace::writeWindowRules()
     {
     KConfig cfg( "kwinrulesrc" );
     cfg.setGroup( "General" );
-    cfg.writeEntry( "count", windowRules.count());
+    cfg.writeEntry( "count", rules.count());
     int i = 1;
-    for( QValueList< WindowRules* >::ConstIterator it = windowRules.begin();
-         it != windowRules.end();
+    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+         it != rules.end();
          ++it )
         {
         if( (*it)->isTemporary())
@@ -590,13 +698,13 @@ void Workspace::writeWindowRules()
 void Workspace::gotTemporaryRulesMessage( const QString& message )
     {
     bool was_temporary = false;
-    for( QValueList< WindowRules* >::ConstIterator it = windowRules.begin();
-         it != windowRules.end();
+    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+         it != rules.end();
          ++it )
         if( (*it)->isTemporary())
             was_temporary = true;
-    WindowRules* rule = new WindowRules( message, true );
-    windowRules.prepend( rule ); // highest priority first
+    Rules* rule = new Rules( message, true );
+    rules.prepend( rule ); // highest priority first
     if( !was_temporary )
         QTimer::singleShot( 60000, this, SLOT( cleanupTemporaryRules()));
     }
@@ -605,12 +713,12 @@ void Workspace::cleanupTemporaryRules()
     {
     kdDebug() << "CLEANUP" << endl;
     bool has_temporary = false;
-    for( QValueList< WindowRules* >::Iterator it = windowRules.begin();
-         it != windowRules.end();
+    for( QValueList< Rules* >::Iterator it = rules.begin();
+         it != rules.end();
          )
         {
         if( (*it)->discardTemporary( false ))
-            it = windowRules.remove( it );
+            it = rules.remove( it );
         else
             {
             if( (*it)->isTemporary())

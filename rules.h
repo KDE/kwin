@@ -14,11 +14,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qstring.h>
 #include <netwm_def.h>
 #include <qrect.h>
+#include <qvaluevector.h>
+#include <kdebug.h>
 
 #include "placement.h"
 #include "lib/kdecoration.h"
-#include "client.h"
 #include "options.h"
+#include "utils.h"
 
 class KConfig;
 
@@ -26,40 +28,28 @@ namespace KWinInternal
 {
 
 class Client;
-
-enum SettingRule
-    {
-    DontCareRule,
-    ForceRule,
-    ApplyRule,
-    RememberRule,
-    LastRule = RememberRule
-    };
+class Rules;
 
 class WindowRules
     : public KDecorationDefines
     {
     public:
+        WindowRules( const QValueVector< Rules* >& rules );
         WindowRules();
-        WindowRules( KConfig& );
-        WindowRules( const QString&, bool temporary );
-        void write( KConfig& ) const;
         void update( Client* );
-        bool isTemporary() const;
-        bool discardTemporary( bool force ); // removes if temporary and forced or too old
-        bool match( const Client* c ) const;
+        void discardTemporary();
         Placement::Policy checkPlacement( Placement::Policy placement ) const;
-        QRect checkGeometry( const QRect& rect, bool init = false ) const;
+        QRect checkGeometry( QRect rect, bool init = false ) const;
         // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
-        QPoint checkPosition( const QPoint& pos, bool init = false ) const;
-        QSize checkSize( const QSize& s, bool init = false ) const;
-        QSize checkMinSize( const QSize& s ) const;
-        QSize checkMaxSize( const QSize& s ) const;
+        QPoint checkPosition( QPoint pos, bool init = false ) const;
+        QSize checkSize( QSize s, bool init = false ) const;
+        QSize checkMinSize( QSize s ) const;
+        QSize checkMaxSize( QSize s ) const;
         int checkDesktop( int desktop, bool init = false ) const;
         NET::WindowType checkType( NET::WindowType type ) const;
         MaximizeMode checkMaximize( MaximizeMode mode, bool init = false ) const;
         bool checkMinimize( bool minimized, bool init = false ) const;
-        Client::ShadeMode checkShade( Client::ShadeMode shade, bool init = false ) const;
+        ShadeMode checkShade( ShadeMode shade, bool init = false ) const;
         bool checkSkipTaskbar( bool skip, bool init = false ) const;
         bool checkSkipPager( bool skip, bool init = false ) const;
         bool checkKeepAbove( bool above, bool init = false ) const;
@@ -71,12 +61,73 @@ class WindowRules
         Options::MoveResizeMode checkMoveResizeMode( Options::MoveResizeMode mode ) const;
         bool checkCloseable( bool closeable ) const;
     private:
+        MaximizeMode checkMaximizeVert( MaximizeMode mode, bool init ) const;
+        MaximizeMode checkMaximizeHoriz( MaximizeMode mode, bool init ) const;
+        QValueVector< Rules* > rules;
+    };
+
+class Rules
+    : public KDecorationDefines
+    {
+    public:
+        Rules();
+        Rules( KConfig& );
+        Rules( const QString&, bool temporary );
+        void write( KConfig& ) const;
+        bool update( Client* );
+        bool isTemporary() const;
+        bool match( const Client* c ) const;
+        bool discardTemporary( bool force ); // removes if temporary and forced or too old
+        bool applyPlacement( Placement::Policy& placement ) const;
+        bool applyGeometry( QRect& rect, bool init ) const;
+        // use 'invalidPoint' with applyPosition, unlike QSize() and QRect(), QPoint() is a valid point
+        bool applyPosition( QPoint& pos, bool init ) const;
+        bool applySize( QSize& s, bool init ) const;
+        bool applyMinSize( QSize& s ) const;
+        bool applyMaxSize( QSize& s ) const;
+        bool applyDesktop( int& desktop, bool init ) const;
+        bool applyType( NET::WindowType& type ) const;
+        bool applyMaximizeVert( MaximizeMode& mode, bool init ) const;
+        bool applyMaximizeHoriz( MaximizeMode& mode, bool init ) const;
+        bool applyMinimize( bool& minimized, bool init ) const;
+        bool applyShade( ShadeMode& shade, bool init ) const;
+        bool applySkipTaskbar( bool& skip, bool init ) const;
+        bool applySkipPager( bool& skip, bool init ) const;
+        bool applyKeepAbove( bool& above, bool init ) const;
+        bool applyKeepBelow( bool& below, bool init ) const;
+        bool applyFullScreen( bool& fs, bool init ) const;
+        bool applyNoBorder( bool& noborder, bool init ) const;
+        bool applyFSP( int& fsp ) const;
+        bool applyAcceptFocus( bool& focus ) const;
+        bool applyMoveResizeMode( Options::MoveResizeMode& mode ) const;
+        bool applyCloseable( bool& closeable ) const;
+    private:
+        enum // values are saved to the cfg file
+            {
+            Unused = 0,
+            DontAffect, // use the default value
+            Force,      // force the given value
+            Apply,      // apply only after initial mapping
+            Remember   // like apply, and remember the value when the window is withdrawn
+            };
+        enum SetRule
+            {
+            UnusedSetRule = Unused,
+            SetRuleDummy = 256   // so that it's at least short int
+            };
+        enum ForceRule
+            {
+            UnusedForceRule = Unused,
+            ForceRuleDummy = 256   // so that it's at least short int
+            };
         void readFromCfg( KConfig& cfg );
-        static SettingRule readRule( KConfig&, const QString& key );
-        static SettingRule readForceRule( KConfig&, const QString& key );
+        static SetRule readSetRule( KConfig&, const QString& key );
+        static ForceRule readForceRule( KConfig&, const QString& key );
         static NET::WindowType readType( KConfig&, const QString& key );
-        static bool checkRule( SettingRule rule, bool init );
-        static bool checkForceRule( SettingRule rule );
+        static bool checkSetRule( SetRule rule, bool init );
+        static bool checkForceRule( ForceRule rule );
+        static bool checkSetStop( SetRule rule );
+        static bool checkForceStop( ForceRule rule );
         int temporary_state; // e.g. for kstart
         QCString wmclass;
         bool wmclassregexp;
@@ -91,65 +142,96 @@ class WindowRules
         bool clientmachineregexp;
         unsigned long types; // types for matching
         Placement::Policy placement;
-        SettingRule placementrule;
+        ForceRule placementrule;
         QPoint position;
-        SettingRule positionrule;
+        SetRule positionrule;
         QSize size;
-        SettingRule sizerule;
+        SetRule sizerule;
         QSize minsize;
-        SettingRule minsizerule;
+        ForceRule minsizerule;
         QSize maxsize;
-        SettingRule maxsizerule;
+        ForceRule maxsizerule;
         int desktop;
-        SettingRule desktoprule;
+        SetRule desktoprule;
         NET::WindowType type; // type for setting
-        SettingRule typerule;
+        ForceRule typerule;
         bool maximizevert;
-        SettingRule maximizevertrule;
+        SetRule maximizevertrule;
         bool maximizehoriz;
-        SettingRule maximizehorizrule;
+        SetRule maximizehorizrule;
         bool minimize;
-        SettingRule minimizerule;
+        SetRule minimizerule;
         bool shade;
-        SettingRule shaderule;
+        SetRule shaderule;
         bool skiptaskbar;
-        SettingRule skiptaskbarrule;
+        SetRule skiptaskbarrule;
         bool skippager;
-        SettingRule skippagerrule;
+        SetRule skippagerrule;
         bool above;
-        SettingRule aboverule;
+        SetRule aboverule;
         bool below;
-        SettingRule belowrule;
+        SetRule belowrule;
         bool fullscreen;
-        SettingRule fullscreenrule;
+        SetRule fullscreenrule;
         bool noborder;
-        SettingRule noborderrule;
+        SetRule noborderrule;
         int fsplevel;
-        SettingRule fsplevelrule;
+        ForceRule fsplevelrule;
         bool acceptfocus;
-        SettingRule acceptfocusrule;
+        ForceRule acceptfocusrule;
         Options::MoveResizeMode moveresizemode;
-        SettingRule moveresizemoderule;
+        ForceRule moveresizemoderule;
         bool closeable;
-        SettingRule closeablerule;
+        ForceRule closeablerule;
+        friend kdbgstream& operator<<( kdbgstream& stream, const Rules* );
     };
 
 inline
-bool WindowRules::checkRule( SettingRule rule, bool init )
+bool Rules::checkSetRule( SetRule rule, bool init )
     {
-    if( rule != DontCareRule )
+    if( rule > static_cast< SetRule >( DontAffect )) // Unused or DontAffect
         {
-        if( rule == ForceRule || init )
+        if( rule == static_cast< SetRule >( Force ) || init )
             return true;
         }
     return false;
     }
 
 inline
-bool WindowRules::checkForceRule( SettingRule rule )
+bool Rules::checkForceRule( ForceRule rule )
     {
-    return rule == ForceRule;
+    return rule == static_cast< ForceRule >( Force );
     }
+
+inline
+bool Rules::checkSetStop( SetRule rule )
+    {
+    return rule != UnusedSetRule;
+    }
+    
+inline
+bool Rules::checkForceStop( ForceRule rule )
+    {
+    return rule != UnusedForceRule;
+    }
+
+inline
+WindowRules::WindowRules( const QValueVector< Rules* >& r )
+    : rules( r )
+    {
+    }
+
+inline
+WindowRules::WindowRules()
+    {
+    }
+
+#ifdef NDEBUG
+inline
+kndbgstream& operator<<( kndbgstream& stream, const Rules* ) { return stream; }
+#else
+kdbgstream& operator<<( kdbgstream& stream, const Rules* );
+#endif
 
 } // namespace
 

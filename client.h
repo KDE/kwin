@@ -12,10 +12,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_CLIENT_H
 #define KWIN_CLIENT_H
 
-#include "utils.h"
-#include "options.h"
-#include "workspace.h"
-#include "kdecoration.h"
 #include <qframe.h>
 #include <qvbox.h>
 #include <qpixmap.h>
@@ -26,6 +22,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <fixx11h.h>
+
+#include "utils.h"
+#include "options.h"
+#include "workspace.h"
+#include "kdecoration.h"
+#include "rules.h"
 
 class QTimer;
 class KProcess;
@@ -39,7 +41,6 @@ class Client;
 class WinInfo;
 class SessionInfo;
 class Bridge;
-class WindowRules;
 
 class Client : public QObject, public KDecorationDefines
     {
@@ -115,13 +116,6 @@ class Client : public QObject, public KDecorationDefines
     // !isMinimized() && not hidden, i.e. normally visible on some virtual desktop
         bool isShown( bool shaded_is_shown ) const;
 
-        enum ShadeMode
-            {
-            ShadeNone, // not shaded
-            ShadeNormal, // normally shaded - isShade() is true only here
-            ShadeHover, // "shaded", but visible due to hover unshade
-            ShadeActivated // "shaded", but visible due to alt+tab to the window
-            };
         bool isShade() const; // true only for ShadeNormal
         ShadeMode shadeMode() const; // prefer isShade()
         void setShade( ShadeMode mode );
@@ -456,7 +450,7 @@ private slots:
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint check_active_modal : 1; // see Client::addTransient()
-        WindowRules* client_rules;
+        WindowRules client_rules;
         void getWMHints();
         void readIcons();
         void getWindowProtocols();
@@ -645,7 +639,7 @@ bool Client::isShade() const
     }
 
 inline
-Client::ShadeMode Client::shadeMode() const
+ShadeMode Client::shadeMode() const
     {
     return shade_mode;
     }
@@ -828,7 +822,7 @@ inline bool Client::ignoreFocusStealing() const
 
 inline const WindowRules* Client::rules() const
     {
-    return client_rules;
+    return &client_rules;
     }
 
 KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing( cl ));
@@ -839,9 +833,12 @@ inline Window Client::moveResizeGrabWindow() const
     }
 
 #ifdef NDEBUG
-kndbgstream& operator<<( kndbgstream& stream, const Client* );
-kndbgstream& operator<<( kndbgstream& stream, const ClientList& );
-kndbgstream& operator<<( kndbgstream& stream, const ConstClientList& );
+inline
+kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }
+inline
+kndbgstream& operator<<( kndbgstream& stream, const ClientList& ) { return stream; }
+inline
+kndbgstream& operator<<( kndbgstream& stream, const ConstClientList& ) { return stream; }
 #else
 kdbgstream& operator<<( kdbgstream& stream, const Client* );
 kdbgstream& operator<<( kdbgstream& stream, const ClientList& );
