@@ -1,4 +1,4 @@
-#!/usr/bin/perl 
+#!/usr/bin/perl
 foreach (<>) {
     if(/^PluginLib=kwin_(.*)$/) {
         print "PluginLib=kwin3_$1\n"; 
