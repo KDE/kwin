@@ -32,5 +32,5 @@ sounddir= $(kde_sounddir)
 sound_DATA = pop.wav
 
 dummy.cpp:
-	echo > dummy.cpp
+	echo 'extern "C" { int kdemain(int, char *[]);} int main(int c, char *v[]) { return kdemain(c,v); }' > dummy.cpp
 

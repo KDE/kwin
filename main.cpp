@@ -192,7 +192,9 @@ static void sighandler(int) {
 static const char *version = "0.5";
 static const char *description = I18N_NOOP( "The KDE window manager." );
 
-int main( int argc, char * argv[] )
+extern "C" { int kdemain(int, char *[]); }
+
+int kdemain( int argc, char * argv[] )
 {
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
        version, description, KAboutData::License_BSD,
