@@ -1,1 +1,1 @@
-SUBDIRS = default kde1 riscos win2k quartz icewm web mwm
+SUBDIRS = default b2 kde1 riscos win2k quartz icewm web mwm
