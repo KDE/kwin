@@ -215,7 +215,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     kLay->addMultiCellWidget(rollOverDesktops, 3, 3, 0, 2);
 
     wtstr = i18n( "Enable this option if you want keyboard or active desktop border navigation beyond"
-                  " an edge desktop to bring you to the desktop at the opposite edge." );
+                  " the edge of a desktop to take you to the opposite edge of the new desktop." );
     QWhatsThis::add( rollOverDesktops, wtstr );
 
     showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop &switch"), kbdBox );
@@ -524,18 +524,18 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     focusStealingLabel->setBuddy( focusStealing );
     focusStealingLayout->addWidget( focusStealingLabel );
     focusStealingLayout->addWidget( focusStealing, AlignLeft );
-    wtstr = i18n( "This option specifies how much will KWin try to prevent unwanted focus stealing "
+    wtstr = i18n( "This option specifies how much KWin will try to prevent unwanted focus stealing "
                   "caused by unexpected activation of new windows.<ul>"
-                  "<li><em>None:</em> The standard old behaviour - prevention is turned off "
-                  "and new windows get always activated.</li>"
+                  "<li><em>None:</em> The standard old behavior - prevention is turned off "
+                  "and new windows always become activated.</li>"
                   "<li><em>Low:</em> Prevention is enabled; when some window doesn't have support "
                   "for the underlying mechanism and KWin cannot reliably decide whether to "
                   "activate the window or not, it will be activated. This setting may have both"
-                  "worse and better results than normal level depending on the applications.</li>"
+                  "worse and better results than normal level, depending on the applications.</li>"
                   "<li><em>Normal:</em> Prevention is enabled; the default setting.</li>"
                   "<li><em>High:</em> New windows get activated only if no window is currently active "
                   "or if they belong to the currently active application. This setting is probably "
-                  "not really usable when noting using mouse focus policy.</li>"
+                  "not really usable when not using mouse focus policy.</li>"
                   "<li><em>Extreme:</em> All windows must be explicitly activated by the user.</li>"
                   "</ul>" );
     QWhatsThis::add( focusStealing, wtstr );
