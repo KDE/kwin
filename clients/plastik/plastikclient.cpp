@@ -533,7 +533,10 @@ void PlastikClient::_resetLayout()
     //Mid
     QHBoxLayout * midLayout   = new QHBoxLayout(mainLayout_, 0, 0);
     midLayout->addItem(PlastikHandler::reverseLayout()?rightSpacer_:leftSpacer_);
-    midLayout->addWidget(new QLabel( i18n( "<center><b>Plastik</b></center>" ), widget()) );
+    if( isPreview())
+        midLayout->addWidget(new QLabel( i18n( "<center><b>Plastik</b></center>" ), widget()) );
+    else
+        midLayout->addItem( new QSpacerItem( 0, 0 ));
     midLayout->addItem(PlastikHandler::reverseLayout()?leftSpacer_:rightSpacer_);
 
     //Bottom
