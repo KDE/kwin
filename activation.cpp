@@ -617,7 +617,7 @@ KWIN_COMPARE_PREDICATE( SameApplicationActiveHackPredicate, const Client*,
     // ignore already existing splashes, toolbars, utilities, menus and topmenus,
     // as the app may show those before the main window
     !cl->isSplash() && !cl->isToolbar() && !cl->isTopMenu() && !cl->isUtility() && !cl->isMenu()
-    && Client::belongToSameApplication( cl, value, true ));
+    && Client::belongToSameApplication( cl, value, true ) && cl != value);
 
 Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
     const SessionInfo* session ) const
