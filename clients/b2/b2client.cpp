@@ -216,6 +216,7 @@ void B2Button::mousePressEvent( QMouseEvent* e )
 
 void B2Button::mouseReleaseEvent( QMouseEvent* e )
 {
+    last_button = e->button();
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
                    LeftButton, e->state());
     QButton::mouseReleaseEvent(&me);
@@ -365,7 +366,7 @@ void B2Client::maxButtonClicked( )
 	break;
     case LeftButton:
     default: 
-	maximize(maximizeMode() ^ MaximizeFull);
+	maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull);
 	break;
     }
 }
