@@ -32,6 +32,11 @@
  keys->insertItem(i18n("Window resize"),"Window resize", "");
  keys->insertItem(i18n("Window raise"),"Window raise", "");
  keys->insertItem(i18n("Window lower"),"Window lower", "");
+ 
+ keys->insertItem(i18n("Walk through desktops"),"Walk through desktops", "CTRL+Tab");
+ keys->insertItem(i18n("Walk back through desktops"),"Walk back through desktops", "SHIFT+CTRL+Tab");
+ keys->insertItem(i18n("Walk through windows"),"Walk through windows", "ALT+Tab");
+ keys->insertItem(i18n("Walk back through windows"),"Walk back through windows", "SHIFT+ALT+Tab");
 
  keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "ALT+F12");
 

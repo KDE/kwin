@@ -105,11 +105,6 @@ public:
 
 
     /**
-       Control-TAB shortcut to switch virtual desktop.
-    */
-    bool useControlTab;
-
-    /**
       Number of desktop rowsd
      */
     int desktopRows;

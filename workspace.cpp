@@ -281,12 +281,6 @@ Workspace::Workspace( bool restore )
       1
     );
 
-    grabKey(XK_Tab, Mod1Mask);
-    grabKey(XK_Tab, Mod1Mask | ShiftMask);
-
-    // Do this unless the user disabled it...
-    grabControlTab(options->useControlTab);
-
     createKeybindings();
     tab_box = new TabBox( this );
 
@@ -682,103 +676,226 @@ void Workspace::freeKeyboard(bool pass){
     QApplication::syncX();
 }
 
+#if 0 // 4 mods
+#define XMODMASK ( ShiftMask | ControlMask | Mod1Mask | Mod4Mask )
+#else
+#define XMODMASK ( ShiftMask | ControlMask | Mod1Mask )
+#endif
 /*!
   Handles alt-tab / control-tab
+ */
+ 
+ 
+void Workspace::slotWalkThroughWindows()
+{
+    if ( root != qt_xrootwin() )
+        return;
+    if( tab_grab || control_grab )
+        return;
+    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
+        // CDE style raise / lower
+        CDEWalkThroughWindows( true );
+    else {
+        if(( keyToXMod( walkThroughWindowsKeycode ) & XMODMASK ) != 0 ) {
+            startKDEWalkThroughWindows();
+            KDEWalkThroughWindows( true );
+        }
+        else
+            // if the shortcut has no modifiers, don't show the tabbox, but
+            // simply go to the next window; if the shortcut has no modifiers,
+            // the only sane thing to do is to release the key immediately
+            // anyway, so the tabbox wouldn't appear anyway
+            // it's done this way without grabbing because with grabbing
+            // the keyboard wasn't ungrabbed and I really have no idea why
+            // <l.lunak@kde.org>
+            KDEOneStepThroughWindows( true );
+    }
+}
+
+void Workspace::slotWalkBackThroughWindows()
+{ 
+    if ( root != qt_xrootwin() )
+        return;
+    if( tab_grab || control_grab )
+        return;
+    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
+        // CDE style raise / lower
+        CDEWalkThroughWindows( true );
+    else {
+        if(( keyToXMod( walkBackThroughWindowsKeycode ) & XMODMASK ) != 0 ) {
+            startKDEWalkThroughWindows();
+            KDEWalkThroughWindows( false );
+        }
+        else
+            KDEOneStepThroughWindows( false );
+    }
+}
+
+void Workspace::slotWalkThroughDesktops()
+{ 
+    if ( root != qt_xrootwin() )
+        return;
+    if( tab_grab || control_grab )
+        return;
+    if(( keyToXMod( walkThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
+        startWalkThroughDesktops();
+        walkThroughDesktops( true );
+    }
+    else
+        oneStepThroughDesktops( true );
+}
+
+void Workspace::slotWalkBackThroughDesktops()
+{ 
+    if ( root != qt_xrootwin() )
+        return;
+    if( tab_grab || control_grab )
+        return;
+    if(( keyToXMod( walkBackThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
+        startWalkThroughDesktops();
+        walkThroughDesktops( false );
+    }
+    else
+        oneStepThroughDesktops( false );
+}
+
+void Workspace::startKDEWalkThroughWindows()
+{
+    if ( XGrabPointer( qt_xdisplay(), root, TRUE,
+          (uint)(ButtonPressMask | ButtonReleaseMask |
+              ButtonMotionMask | EnterWindowMask |
+              LeaveWindowMask | PointerMotionMask),
+          GrabModeSync, GrabModeAsync,
+          None, None, kwin_time ) != GrabSuccess ) {
+        freeKeyboard(FALSE);
+        return;
+    }
+    XGrabKeyboard(qt_xdisplay(),
+                  root, FALSE,
+                  GrabModeAsync, GrabModeAsync,
+                  kwin_time);
+    tab_grab        = TRUE;
+    keys->setEnabled( FALSE );
+    tab_box->setMode( TabBox::WindowsMode );
+    tab_box->reset();
+}
+
+void Workspace::startWalkThroughDesktops()
+{
+    if ( XGrabPointer( qt_xdisplay(), root, TRUE,
+          (uint)(ButtonPressMask | ButtonReleaseMask |
+                 ButtonMotionMask | EnterWindowMask |
+                 LeaveWindowMask | PointerMotionMask),
+              GrabModeSync, GrabModeAsync,
+              None, None, kwin_time ) != GrabSuccess ) {
+        freeKeyboard(FALSE);
+        return;
+    }
+    XGrabKeyboard(qt_xdisplay(),
+                  root, FALSE,
+                  GrabModeAsync, GrabModeAsync,
+                  kwin_time);
+    control_grab = TRUE;
+    keys->setEnabled( FALSE );
+    tab_box->setMode( TabBox::DesktopMode );
+    tab_box->reset();
+}
+
+void Workspace::KDEWalkThroughWindows( bool forward )
+{
+    tab_box->nextPrev( forward );
+    tab_box->delayedShow();
+}
+
+void Workspace::walkThroughDesktops( bool forward )
+{
+    tab_box->nextPrev( forward );
+    tab_box->delayedShow();
+}
+
+void Workspace::CDEWalkThroughWindows( bool forward )
+    {
+    Client* c = topClientOnDesktop();
+    Client* nc = c;
+    if ( !forward ){
+        do {
+            nc = previousStaticClient(nc);
+        } while (nc && nc != c &&
+                 (!nc->isOnDesktop(currentDesktop()) ||
+                  nc->isIconified() || !nc->wantsTabFocus() ) );
+    }
+    else
+        do {
+            nc = nextStaticClient(nc);
+        } while (nc && nc != c &&
+                 (!nc->isOnDesktop(currentDesktop()) ||
+                  nc->isIconified() || !nc->wantsTabFocus() ) );
+    if (c && c != nc)
+        lowerClient( c );
+    if (nc) {
+        if ( options->focusPolicyIsReasonable() )
+            activateClient( nc );
+        else
+            raiseClient( nc );
+    }
+    freeKeyboard(FALSE);
+    }
+ 
+void Workspace::KDEOneStepThroughWindows( bool forward )
+{
+    tab_box->setMode( TabBox::WindowsMode );
+    tab_box->reset();
+    tab_box->nextPrev( forward );
+    if ( tab_box->currentClient() ){
+        activateClient( tab_box->currentClient() );
+    }
+}
+
+void Workspace::oneStepThroughDesktops( bool forward )
+{
+    tab_box->setMode( TabBox::DesktopMode );
+    tab_box->reset();
+    tab_box->nextPrev( forward );
+    if ( tab_box->currentDesktop() != -1 )
+        setCurrentDesktop( tab_box->currentDesktop() );
+}
+
+/*!
+  Handles holding alt-tab / control-tab
  */
 bool Workspace::keyPress(XKeyEvent key)
 {
     if ( root != qt_xrootwin() )
         return FALSE;
-    int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
-    int km = key.state & (ControlMask | Mod1Mask | ShiftMask);
-
+    unsigned int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
+    unsigned int km = key.state & XMODMASK;
     if (!control_grab){
-
-        if( (kc == XK_Tab)  &&
-            ( km == (Mod1Mask | ShiftMask)
-              || km == (Mod1Mask)
-              )){
-            if (!tab_grab){
-                if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ){
-                    // CDE style raise / lower
-                    Client* c = topClientOnDesktop();
-                    Client* nc = c;
-                    if (km & ShiftMask){
-                        do {
-                            nc = previousStaticClient(nc);
-                        } while (nc && nc != c &&
-                                 (!nc->isOnDesktop(currentDesktop()) ||
-                                  nc->isIconified() || !nc->wantsTabFocus() ) );
-
-                    }
-                    else
-                        do {
-                            nc = nextStaticClient(nc);
-                        } while (nc && nc != c &&
-                                 (!nc->isOnDesktop(currentDesktop()) ||
-                                  nc->isIconified() || !nc->wantsTabFocus() ) );
-                    if (c && c != nc)
-                        lowerClient( c );
-                    if (nc) {
-                        if ( options->focusPolicyIsReasonable() )
-                            activateClient( nc );
-                        else
-                            raiseClient( nc );
-                    }
-                    freeKeyboard(FALSE);
-                    return TRUE;
-                }
-                if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-                              (uint)(ButtonPressMask | ButtonReleaseMask |
-                                     ButtonMotionMask | EnterWindowMask |
-                                     LeaveWindowMask | PointerMotionMask),
-                              GrabModeSync, GrabModeAsync,
-                                   None, None, kwin_time ) != GrabSuccess ) {
-                    freeKeyboard(FALSE);
-                    return TRUE;
-                }
-                XGrabKeyboard(qt_xdisplay(),
-                              root, FALSE,
-                              GrabModeAsync, GrabModeAsync,
-                              kwin_time);
-                tab_grab        = TRUE;
-                tab_box->setMode( TabBox::WindowsMode );
-                tab_box->reset();
+    
+        if( ( kc == keyToXSym( walkThroughWindowsKeycode )
+              && km == keyToXMod( walkThroughWindowsKeycode ))
+           || ( kc == keyToXSym( walkBackThroughWindowsKeycode )
+              && km == keyToXMod( walkBackThroughWindowsKeycode ))) {
+            if (!tab_grab) {
+                freeKeyboard(FALSE);
+                return FALSE;
             }
-            tab_box->nextPrev( (km & ShiftMask) == 0 );
-            keys->setEnabled( FALSE );
-            tab_box->delayedShow();
+            KDEWalkThroughWindows( ( kc == keyToXSym( walkThroughWindowsKeycode )
+              && km == keyToXMod( walkThroughWindowsKeycode )));
         }
     }
 
-    if (!tab_grab && options->useControlTab){
+    if (!tab_grab){
 
-
-        if( (kc == XK_Tab)  &&
-            ( km == (ControlMask | ShiftMask)
-              || km == (ControlMask)
-              )){
-            if (!control_grab){
-                if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-                              (uint)(ButtonPressMask | ButtonReleaseMask |
-                                     ButtonMotionMask | EnterWindowMask |
-                                     LeaveWindowMask | PointerMotionMask),
-                              GrabModeSync, GrabModeAsync,
-                                   None, None, kwin_time ) != GrabSuccess ) {
-                    freeKeyboard(FALSE);
-                    return TRUE;
-                }
-                XGrabKeyboard(qt_xdisplay(),
-                              root, FALSE,
-                              GrabModeAsync, GrabModeAsync,
-                              kwin_time);
-                control_grab = TRUE;
-                tab_box->setMode( TabBox::DesktopMode );
-                tab_box->reset();
+        if( ( kc == keyToXSym( walkThroughDesktopsKeycode )
+              && km == keyToXMod( walkThroughDesktopsKeycode ))
+           || ( kc == keyToXSym( walkBackThroughDesktopsKeycode )
+              && km == keyToXMod( walkBackThroughDesktopsKeycode ))) {
+            if (!control_grab) {
+                freeKeyboard(FALSE);
+                return FALSE;
             }
-            tab_box->nextPrev( (km & ShiftMask) == 0 );
-            keys->setEnabled( FALSE );
-            tab_box->delayedShow();
+            walkThroughDesktops( ( kc == keyToXSym( walkThroughDesktopsKeycode )
+              && km == keyToXMod( walkThroughDesktopsKeycode )));
         }
     }
 
@@ -800,35 +917,52 @@ bool Workspace::keyPress(XKeyEvent key)
 }
 
 /*!
-  Handles alt-tab / control-tab
+  Handles alt-tab / control-tab releasing
  */
 bool Workspace::keyRelease(XKeyEvent key)
 {
     if ( root != qt_xrootwin() )
         return FALSE;
-    int i;
-    if (tab_grab){
+    if( !tab_grab && !control_grab )
+        return FALSE;
+    unsigned int mk = key.state & XMODMASK;
+    // key.state is state before the key release, so just checking mk being 0 isn't enough
+    // using XQueryPointer() also doesn't seem to work well, so the check that all
+    // modifiers are released is : only one modifier is active and the currently released
+    // key is this modifier - if yes, release the grab
+    int mod_index = -1;
+    for( int i = ShiftMapIndex;
+         i <= Mod5MapIndex;
+         ++i )
+        if(( mk & ( 1 << i )) != 0 ) {
+            if( mod_index >= 0 )
+                return FALSE;
+            mod_index = i;
+        }
+    bool release = false;
+    if( mod_index == -1 )
+        release = true;
+    else {
         XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
-        for (i=0; i<xmk->max_keypermod; i++)
-            if (xmk->modifiermap[xmk->max_keypermod * Mod1MapIndex + i]
-                == key.keycode){
+        for (int i=0; i<xmk->max_keypermod; i++)
+            if (xmk->modifiermap[xmk->max_keypermod * mod_index + i]
+                == key.keycode)
+                release = true;
+        XFreeModifiermap(xmk);
+    }
+    if( !release )
+         return FALSE;
+    if (tab_grab){
                 XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 XUngrabPointer( qt_xdisplay(), kwin_time);
                 tab_box->hide();
                 keys->setEnabled( TRUE );
                 tab_grab = false;
                 if ( tab_box->currentClient() ){
-
                     activateClient( tab_box->currentClient() );
                 }
-            }
-        XFreeModifiermap(xmk);
     }
-    if (control_grab && options->useControlTab){
-        XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
-        for (i=0; i<xmk->max_keypermod; i++)
-            if (xmk->modifiermap[xmk->max_keypermod * ControlMapIndex + i]
-                == key.keycode){
+    if (control_grab){
                 XUngrabPointer( qt_xdisplay(), kwin_time);
                 XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 tab_box->hide();
@@ -836,11 +970,11 @@ bool Workspace::keyRelease(XKeyEvent key)
                 control_grab = False;
                 if ( tab_box->currentDesktop() != -1 )
                     setCurrentDesktop( tab_box->currentDesktop() );
-            }
-        XFreeModifiermap(xmk);
     }
     return FALSE;
 }
+
+#undef XMODMASK
 
 /*!
   auxiliary functions to travers all clients according the focus
@@ -927,73 +1061,6 @@ Client* Workspace::topClientOnDesktop() const
     return 0;
 }
 
-/*
-  Grabs the keysymbol \a keysym with the given modifiers \a mod
-  plus all possibile combinations of Lock and NumLock
- */
-void Workspace::grabKey(KeySym keysym, unsigned int mod){
-  static int NumLockMask = 0;
-  if (!keysym||!XKeysymToKeycode(qt_xdisplay(), keysym)) return;
-  if (!NumLockMask){
-    XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
-    int i;
-    for (i=0; i<8; i++){
-      if (xmk->modifiermap[xmk->max_keypermod * i] ==
-          XKeysymToKeycode(qt_xdisplay(), XK_Num_Lock))
-        NumLockMask = (1<<i);
-    }
-    XFreeModifiermap(xmk);
-  }
-  XGrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod,
-           qt_xrootwin(), FALSE,
-           GrabModeAsync, GrabModeSync);
-  XGrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask,
-           qt_xrootwin(), FALSE,
-           GrabModeAsync, GrabModeSync);
-  XGrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod | NumLockMask,
-           qt_xrootwin(), FALSE,
-           GrabModeAsync, GrabModeSync);
-  XGrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask | NumLockMask,
-           qt_xrootwin(), FALSE,
-           GrabModeAsync, GrabModeSync);
-
-}
-
-/*
-  Ungrabs the keysymbol \a keysym with the given modifiers \a mod
-  plus all possibile combinations of Lock and NumLock
- */
-void Workspace::ungrabKey(KeySym keysym, unsigned int mod){
-  static int NumLockMask = 0;
-  if (!keysym||!XKeysymToKeycode(qt_xdisplay(), keysym)) return;
-  if (!NumLockMask){
-    XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
-    int i;
-    for (i=0; i<8; i++){
-      if (xmk->modifiermap[xmk->max_keypermod * i] ==
-          XKeysymToKeycode(qt_xdisplay(), XK_Num_Lock))
-        NumLockMask = (1<<i);
-    }
-    XFreeModifiermap(xmk);
-  }
-  XUngrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod,
-           qt_xrootwin());
-  XUngrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask,
-           qt_xrootwin());
-  XUngrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod | NumLockMask,
-           qt_xrootwin());
-  XUngrabKey(qt_xdisplay(),
-           XKeysymToKeycode(qt_xdisplay(), keysym), mod | LockMask | NumLockMask,
-           qt_xrootwin());
-
-}
 
 /*!
   Informs the workspace about the active client, i.e. the client that
@@ -1654,27 +1721,15 @@ void Workspace::reconfigure()
     KGlobal::config()->reparseConfiguration();
     options->reload();
     keys->readSettings();
-    grabControlTab(options->useControlTab);
+    tab_box->reconfigure();
+    walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
+    walkBackThroughDesktopsKeycode = keys->currentKey( "Walk back through desktops" );
+    walkThroughWindowsKeycode = keys->currentKey( "Walk through windows" );
+    walkBackThroughWindowsKeycode = keys->currentKey( "Walk back through windows" );
     mgr->updatePlugin();
     // NO need whatsoever to call slotResetAllClientsDelayed here,
     // updatePlugin resets all clients if necessary anyway.
 }
-
-/*!
-  Grab/Ungrab the Control key dynamically
- */
-void Workspace::grabControlTab(bool grab)
-{
-    if (grab) {
-        grabKey(XK_Tab, ControlMask);
-        grabKey(XK_Tab, ControlMask | ShiftMask);
-    }
-    else {
-        ungrabKey(XK_Tab,ControlMask);
-        ungrabKey(XK_Tab, ControlMask | ShiftMask);
-    }
-}
-
 
 /*!
   avoids managing a window with title \a title
@@ -2215,12 +2270,21 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window raise", this, SLOT( slotWindowRaise() ) );
     keys->connectItem( "Window lower", this, SLOT( slotWindowLower() ) );
 
+    keys->connectItem( "Walk through desktops", this, SLOT( slotWalkThroughDesktops()));
+    keys->connectItem( "Walk back through desktops", this, SLOT( slotWalkBackThroughDesktops()));
+    keys->connectItem( "Walk through windows",this, SLOT( slotWalkThroughWindows()));
+    keys->connectItem( "Walk back through windows",this, SLOT( slotWalkBackThroughWindows()));
+    
     keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
 
     keys->connectItem( "Logout", this, SLOT( slotLogout() ) );
 
     keys->connectItem( "Kill Window", this, SLOT( slotKillWindow() ) );
     keys->readSettings();
+    walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
+    walkBackThroughDesktopsKeycode = keys->currentKey( "Walk back through desktops" );
+    walkThroughWindowsKeycode = keys->currentKey( "Walk through windows" );
+    walkBackThroughWindowsKeycode = keys->currentKey( "Walk back through windows" );
 }
 
 void Workspace::slotSwitchDesktop1(){

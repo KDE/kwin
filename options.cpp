@@ -194,8 +194,6 @@ void Options::reload()
     // desktop settings
 
     config->setGroup("Desktops");
-    // Enable the grab of control-TAB?
-    useControlTab = config->readBoolEntry ("ControlTab", TRUE);
     desktopRows = config->readNumEntry( "DesktopRows", 2 );
     if ( desktopRows < 1 )
         desktopRows = 1;

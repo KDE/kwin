@@ -146,11 +146,6 @@ public:
 
     QWidget* desktopWidget();
 
-    void   grabKey(KeySym keysym, unsigned int mod);
-    void ungrabKey(KeySym keysym, unsigned int mod);
-
-    void grabControlTab(bool grab);
-
     Client* nextClient(Client*) const;
     Client* previousClient(Client*) const;
     Client* nextStaticClient(Client*) const;
@@ -233,6 +228,11 @@ public slots:
     void slotWindowRaise();
     void slotWindowLower();
 
+    void slotWalkThroughDesktops();
+    void slotWalkBackThroughDesktops();
+    void slotWalkThroughWindows();
+    void slotWalkBackThroughWindows();
+
     void slotWindowOperations();
     void slotWindowClose();
     void slotWindowMove();
@@ -264,6 +264,14 @@ private:
     void init();
     void createKeybindings();
     void freeKeyboard(bool pass);
+    
+    void startKDEWalkThroughWindows();
+    void startWalkThroughDesktops();
+    void KDEWalkThroughWindows( bool forward );
+    void CDEWalkThroughWindows( bool forward );
+    void walkThroughDesktops( bool forward );
+    void KDEOneStepThroughWindows( bool forward );
+    void oneStepThroughDesktops( bool forward );
 
     ClientList constrainedStackingOrder( const ClientList& list );
 
@@ -334,6 +342,8 @@ private:
 
     bool control_grab;
     bool tab_grab;
+    unsigned int walkThroughDesktopsKeycode,walkBackThroughDesktopsKeycode;
+    unsigned int walkThroughWindowsKeycode,walkBackThroughWindowsKeycode;
     bool mouse_emulation;
     unsigned int mouse_emulation_state;
     WId mouse_emulation_window;

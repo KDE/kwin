@@ -21,13 +21,12 @@ extern QPixmap* kwin_get_menu_pix_hack();
 
 using namespace KWinInternal;
 
-const bool options_traverse_all = FALSE; // TODO
-
 TabBox::TabBox( Workspace *ws, const char *name )
     : QWidget( 0, name, WStyle_Customize | WStyle_NoBorder )
 {
     no_tasks = i18n("*** No Tasks ***");
     wspace = ws;
+    reconfigure();
     reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
 }
@@ -287,6 +286,13 @@ void TabBox::hide()
 	;
 }
 
+
+void TabBox::reconfigure()
+{
+    KConfig * c(KGlobal::config());
+    c->setGroup("TabBox");
+    options_traverse_all = c->readNumEntry("TraverseAll", false );
+}
 
 /*!
   Rikkus: please document!   (Matthias)

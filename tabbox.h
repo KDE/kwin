@@ -37,6 +37,8 @@ public:
     void hide();
 
     Workspace* workspace() const;
+    
+    void reconfigure();
 
 protected:
     void paintEvent( QPaintEvent* );
@@ -54,6 +56,7 @@ private:
     int wmax;
     QTimer delayedShowTimer;
     QString no_tasks;
+    bool options_traverse_all;
 };
 
 
