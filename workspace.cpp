@@ -18,7 +18,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qdatastream.h>
 #include <qregexp.h>
 #include <qclipboard.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <dcopclient.h>
 #include <kprocess.h>
 #include <kiconloader.h>
@@ -420,6 +420,8 @@ void Workspace::init()
             SLOT(slotResetAllClients()));
     connect(kapp, SIGNAL(appearanceChanged()), this,
             SLOT(slotResetAllClientsDelayed()));
+    connect(kapp, SIGNAL(settingsChanged(int)), this,
+            SLOT(slotSettingsChanged(int)));
 
     connect(&focusEnsuranceTimer, SIGNAL(timeout()), this,
             SLOT(focusEnsurance()));
@@ -1080,33 +1082,30 @@ bool Workspace::keyPress(XKeyEvent key)
         return FALSE;
 
     uint keyCombQt = KKeyX11::keyEventXToKeyQt( (XEvent*)&key );
+    kdDebug() << "Workspace::keyPress( " << KKeySequence(keyCombQt).toString() << " )" << endl;
     if (d->movingClient)
     {
         d->movingClient->keyPressEvent(keyCombQt);
         return TRUE;
     }
 
-    if (!control_grab){
+    if (tab_grab){
         if( keyCombQt == walkThroughWindowsKeycode
            || keyCombQt == walkBackThroughWindowsKeycode ) {
-            if (!tab_grab)
-                return FALSE;
+	    kdDebug() << "== " << KKeySequence(walkThroughWindowsKeycode).toString()
+	    	<< " or " << KKeySequence(walkBackThroughWindowsKeycode).toString() << endl;
             KDEWalkThroughWindows( keyCombQt == walkThroughWindowsKeycode );
         }
     }
 
-    if (!tab_grab){
+    if (control_grab){
 
         if( keyCombQt == walkThroughDesktopsKeycode
            || keyCombQt == walkBackThroughDesktopsKeycode ) {
-            if (!control_grab)
-                return FALSE;
             walkThroughDesktops( keyCombQt == walkThroughDesktopsKeycode );
         }
         else if( keyCombQt == walkThroughDesktopListKeycode
            || keyCombQt == walkBackThroughDesktopListKeycode ) {
-            if (!control_grab)
-                return FALSE;
             walkThroughDesktops( keyCombQt == walkThroughDesktopListKeycode );
         }
     }
@@ -2716,6 +2715,8 @@ void Workspace::createKeybindings(){
     //keys->setItemRawModeEnabled( "Walk back through windows", TRUE  );
 }
 
+// Remove these -- ellis
+/*
 void Workspace::slotSwitchDesktop1(){
     setCurrentDesktop(1);
 }
@@ -2764,6 +2765,7 @@ void Workspace::slotSwitchDesktop15(){
 void Workspace::slotSwitchDesktop16(){
     setCurrentDesktop(16);
 }
+*/
 
 void Workspace::slotSwitchDesktopNext(){
     int d = currentDesktop() + 1;
@@ -3612,6 +3614,14 @@ void Workspace::slotResetAllClients()
     kapp->dcopClient()->emitDCOPSignal("dcopResetAllClients()", QByteArray() );
 }
 
+void Workspace::slotSettingsChanged(int category)
+{
+    kdDebug(1212) << "Workspace::slotSettingsChanged()" << endl;
+    if( category == (int) KApplication::SETTINGS_SHORTCUTS ) {
+        keys->readSettings();
+        keys->updateConnections();
+    }
+}
 
 /*
  * Legacy session management

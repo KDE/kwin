@@ -232,7 +232,7 @@ public:
 public slots:
     void refresh();
     // keybindings
-    void slotSwitchDesktop1();
+    /*void slotSwitchDesktop1(); // remove these -- ellis
     void slotSwitchDesktop2();
     void slotSwitchDesktop3();
     void slotSwitchDesktop4();
@@ -247,7 +247,7 @@ public slots:
     void slotSwitchDesktop13();
     void slotSwitchDesktop14();
     void slotSwitchDesktop15();
-    void slotSwitchDesktop16();
+    void slotSwitchDesktop16();*/
     void slotSwitchDesktopNext();
     void slotSwitchDesktopPrevious();
     void slotSwitchDesktopRight();
@@ -290,6 +290,7 @@ public slots:
 
     void slotResetAllClientsDelayed();
     void slotResetAllClients();
+    void slotSettingsChanged( int category );
 
     void slotReconfigure();
 
