@@ -87,6 +87,8 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
     SETUP( skippager, set );
     SETUP( acceptfocus, force );
     SETUP( closeable, force );
+    SETUP( opacityactive, force );
+    SETUP( opacityinactive, force );
     // workarounds tab
     SETUP( fsplevel, force );
     SETUP( moveresizemode, force );
@@ -94,8 +96,6 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
     SETUP( ignoreposition, force );
     SETUP( minsize, force );
     SETUP( maxsize, force );
-    SETUP( opacityactive, force );
-    SETUP( opacityinactive, force );
     KWinModule module;
     int i;
     for( i = 1;
@@ -132,6 +132,8 @@ UPDATE_ENABLE_SLOT( skiptaskbar )
 UPDATE_ENABLE_SLOT( skippager )
 UPDATE_ENABLE_SLOT( acceptfocus )
 UPDATE_ENABLE_SLOT( closeable )
+UPDATE_ENABLE_SLOT( opacityactive )
+UPDATE_ENABLE_SLOT( opacityinactive )
 // workarounds tab
 UPDATE_ENABLE_SLOT( fsplevel )
 UPDATE_ENABLE_SLOT( moveresizemode )
@@ -139,8 +141,6 @@ UPDATE_ENABLE_SLOT( type )
 UPDATE_ENABLE_SLOT( ignoreposition )
 UPDATE_ENABLE_SLOT( minsize )
 UPDATE_ENABLE_SLOT( maxsize )
-UPDATE_ENABLE_SLOT( opacityactive )
-UPDATE_ENABLE_SLOT( opacityinactive )
 
 #undef UPDATE_ENABLE_SLOT
 
@@ -387,14 +387,14 @@ void RulesWidget::setRules( Rules* rules )
     CHECKBOX_SET_RULE( skippager, );
     CHECKBOX_FORCE_RULE( acceptfocus, );
     CHECKBOX_FORCE_RULE( closeable, );
+    LINEEDIT_FORCE_RULE( opacityactive, intToStr );
+    LINEEDIT_FORCE_RULE( opacityinactive, intToStr );
     COMBOBOX_FORCE_RULE( fsplevel, );
     COMBOBOX_FORCE_RULE( moveresizemode, moveresizeToCombo );
     COMBOBOX_FORCE_RULE( type, typeToCombo );
     CHECKBOX_FORCE_RULE( ignoreposition, );
     LINEEDIT_FORCE_RULE( minsize, sizeToStr );
     LINEEDIT_FORCE_RULE( maxsize, sizeToStr );
-    LINEEDIT_FORCE_RULE( opacityactive, intToStr );
-    LINEEDIT_FORCE_RULE( opacityinactive, intToStr );
     }
 
 #undef GENERIC_RULE
@@ -474,14 +474,14 @@ Rules* RulesWidget::rules() const
     CHECKBOX_SET_RULE( skippager, );
     CHECKBOX_FORCE_RULE( acceptfocus, );
     CHECKBOX_FORCE_RULE( closeable, );
+    LINEEDIT_FORCE_RULE( opacityactive, strToInt );
+    LINEEDIT_FORCE_RULE( opacityinactive, strToInt );
     COMBOBOX_FORCE_RULE( fsplevel, );
     COMBOBOX_FORCE_RULE( moveresizemode, comboToMoveResize );
     COMBOBOX_FORCE_RULE( type, comboToType );
     CHECKBOX_FORCE_RULE( ignoreposition, );
     LINEEDIT_FORCE_RULE( minsize, strToSize );
     LINEEDIT_FORCE_RULE( maxsize, strToSize );
-    LINEEDIT_FORCE_RULE( opacityactive, strToInt );
-    LINEEDIT_FORCE_RULE( opacityinactive, strToInt );
     return rules;
     }
 
@@ -588,14 +588,14 @@ void RulesWidget::prefillUnusedValues( const KWin::WindowInfo& info )
     CHECKBOX_PREFILL( skippager,, info.state() & NET::SkipPager );
     //CHECKBOX_PREFILL( acceptfocus, );
     //CHECKBOX_PREFILL( closeable, );
+    LINEEDIT_PREFILL( opacityactive, intToStr, 100 /*get the actual opacity somehow*/);
+    LINEEDIT_PREFILL( opacityinactive, intToStr, 100 /*get the actual opacity somehow*/);
     //COMBOBOX_PREFILL( fsplevel, );
     //COMBOBOX_PREFILL( moveresizemode, moveresizeToCombo );
     COMBOBOX_PREFILL( type, typeToCombo, info.windowType( SUPPORTED_WINDOW_TYPES_MASK ) );
     //CHECKBOX_PREFILL( ignoreposition, );
     LINEEDIT_PREFILL( minsize, sizeToStr, info.frameGeometry().size() );
     LINEEDIT_PREFILL( maxsize, sizeToStr, info.frameGeometry().size() );
-    LINEEDIT_PREFILL( opacityactive, intToStr, 100 /*get the actual opacity somehow*/);
-    LINEEDIT_PREFILL( opacityinactive, intToStr, 100 /*get the actual opacity somehow*/);
     }
 
 #undef GENERIC_PREFILL

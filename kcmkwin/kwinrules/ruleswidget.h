@@ -69,6 +69,8 @@ class RulesWidget
         void updateEnableskippager();
         void updateEnableacceptfocus();
         void updateEnablecloseable();
+        void updateEnableopacityactive();
+        void updateEnableopacityinactive();
         // workarounds tab
         void updateEnablefsplevel();
         void updateEnablemoveresizemode();
@@ -76,8 +78,6 @@ class RulesWidget
         void updateEnableignoreposition();
         void updateEnableminsize();
         void updateEnablemaxsize();
-        void updateEnableopacityactive();
-        void updateEnableopacityinactive();
         // internal
         void detected( bool );
     private:
