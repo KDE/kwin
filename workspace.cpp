@@ -20,7 +20,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 #include "workspace.h"
 #include "client.h"
-#include "Manager.h"
 #include "tabbox.h"
 #include "atoms.h"
 #include "plugins.h"
@@ -167,7 +166,7 @@ Client* Workspace::clientFactory( WId w )
 	}
 
     case NET::Toolbar:
-	return new Default::ToolManager( this, w); // TODO use mgr.allocateClient...
+	return (mgr.allocateClient(this,w) ); // TODO use mgr.allocateClient in toolbar mode
 
     case NET::Menu:
     case NET::Dock:

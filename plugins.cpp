@@ -17,7 +17,7 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include <qfile.h>
 
 #include "plugins.h"
-#include "Manager.h"
+#include "kdedefault.h"
 
 PluginMenu::PluginMenu(PluginMgr *manager, QWidget *parent, const char *name)
     : QPopupMenu(parent, name)
@@ -122,7 +122,7 @@ Client* PluginMgr::allocateClient(Workspace *ws, WId w)
     if(alloc_ptr)
         return(alloc_ptr(ws, w));
     else
-        return(new Default::Manager(ws, w));
+        return(new KDEClient(ws, w));
 }
 
 void PluginMgr::loadPlugin(QString nameStr)
