@@ -11,6 +11,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qframe.h>
 #include <qvbox.h>
 #include <qpixmap.h>
+#include <qtimer.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -39,10 +40,14 @@ protected:
     void hideEvent( QHideEvent* );
     bool x11Event( XEvent * );		// X11 event
 
+private slots:
+    void doResize();
+    
 private:
     WId win;
     Time lastMouseEventTime;
     bool reparented;
+    QTimer* timer;
 };
 
 inline WId WindowWrapper::window() const

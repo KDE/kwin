@@ -14,6 +14,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qwhatsthis.h>
+#include <qtimer.h>
 #include "workspace.h"
 #include "client.h"
 #include "events.h"
@@ -107,6 +108,7 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     : QWidget( parent, name )
 {
     win = w;
+    timer = 0;
     setMouseTracking( TRUE );
 
     setBackgroundColor( colorGroup().background() );
@@ -203,12 +205,28 @@ QSizePolicy WindowWrapper::sizePolicy() const
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win && reparented ) {
-	XMoveResizeWindow( qt_xdisplay(), win,
-			   0, 0, width(), height() );
+	if ( isVisible() ) {
+	    delete timer;
+	    timer = new QTimer( this );
+	    connect( timer, SIGNAL( timeout() ), this, SLOT( doResize() ) );
+	    timer->start( 5, TRUE );
+	} else {
+	    XMoveResizeWindow( qt_xdisplay(), win,
+			       0, 0, width(), height() );
+	}
 	if ( ((Client*)parentWidget())->shape() )
 	    ((Client*)parentWidget())->updateShape();
     }
 }
+
+void WindowWrapper::doResize()
+{
+    delete timer;
+    timer = 0;
+    XMoveResizeWindow( qt_xdisplay(), win,
+		       0, 0, width(), height() );
+}
+
 
 void WindowWrapper::showEvent( QShowEvent* )
 {
@@ -1058,7 +1076,8 @@ void Client::leaveEvent( QEvent * )
 void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
-    sendSynteticConfigureNotify();
+    if ( !isResize() )
+	sendSynteticConfigureNotify();
 }
 
 /*!
@@ -1228,7 +1247,7 @@ void Client::maximize( MaximizeMode m)
     if (isShade())
 	setShade( FALSE );
 
-  
+
     if (geom_restore.isNull()) {
 
 	Events::raise( Events::Maximize );
