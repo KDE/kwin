@@ -73,12 +73,19 @@ void KillWindow::start() {
 		    escape_pressed = TRUE;
 		    break;
 		}
-		workspace->killWindowAtPosition(ev.xbutton.x_root, ev.xbutton.y_root);
+		workspace->killWindowId(ev.xbutton.subwindow);
 	    }
 	    continue;
 	}
-	if (return_pressed)
-	    workspace->killWindowAtPosition(QCursor::pos().x(), QCursor::pos().y());
+	if (return_pressed) {
+            Window root, child;
+            int dummy1, dummy2, dummy3, dummy4;
+            unsigned int dummy5;
+            if( XQueryPointer( qt_xdisplay(), qt_xrootwin(), &root, &child,
+                &dummy1, &dummy2, &dummy3, &dummy4, &dummy5 ) == true
+                && child != None )
+                workspace->killWindowId( child );
+        }
 
 	XUngrabServer(qt_xdisplay());
 

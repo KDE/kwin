@@ -143,7 +143,15 @@ public:
 
     bool destroyClient( Client* );
 
+    /**
+     * @internal
+     * @obsolete
+     */
     void killWindowAtPosition(int x, int y);
+    /**
+     * @internal
+     */
+    void killWindowId( Window window);
 
     void killWindow() { slotKillWindow(); }
 
@@ -359,7 +367,7 @@ private:
 
     void focusToNull();
 
-    Client* findClientWidthId( WId w ) const;
+    Client* findClientWithId( WId w ) const;
 
     void propagateClients( bool onlyStacking = FALSE);
 

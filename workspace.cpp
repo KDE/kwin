@@ -673,7 +673,7 @@ bool Workspace::workspaceEvent( XEvent * e )
     case LeaveNotify:
         if ( !QWhatsThis::inWhatsThisMode() )
             break;
-        c = findClientWidthId( e->xcrossing.window );
+        c = findClientWithId( e->xcrossing.window );
         if ( c && e->xcrossing.detail != NotifyInferior )
             QWhatsThis::leaveWhatsThisMode();
         break;
@@ -750,9 +750,13 @@ Client* Workspace::findClient( WId w ) const
 /*!
   Finds the client with window id \a w
  */
-Client* Workspace::findClientWidthId( WId w ) const
+Client* Workspace::findClientWithId( WId w ) const
 {
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+        if ( (*it)->winId() == w )
+            return *it;
+    }
+    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it) {
         if ( (*it)->winId() == w )
             return *it;
     }
@@ -2875,20 +2879,36 @@ void Workspace::slotKillWindow()
 /*!
   Kills the window at position \a x,  \a y
  */
-void Workspace::killWindowAtPosition(int x, int y)
+void Workspace::killWindowAtPosition(int, int)
 {
-    ClientList::ConstIterator it(stacking_order.fromLast());
-    for ( ; it != stacking_order.end(); --it) {
-        Client *client = (*it);
-        if ( client->frameGeometry().contains(QPoint(x, y)) &&
-             client->isOnDesktop( currentDesktop() ) &&
-             !client->isTopMenu() && !client->isDesktop() &&
-             !client->isIconified() ) {
-            client->killWindow();
-            return;
-        }
-    }
+    kdWarning() << "Obsolete Workspace::killWindowAtPosition() called" << endl;
 }
+
+void Workspace::killWindowId( Window window_to_kill )
+{
+    Window window = window_to_kill;
+    Client* client = NULL;
+    for(;;) {
+        client = findClientWithId( window );
+        if( client != NULL ) // found the client
+            break;
+        Window parent, root;
+        Window* children;
+        unsigned int children_count;
+        XQueryTree( qt_xdisplay(), window, &root, &parent, &children, &children_count );
+        if( children != NULL )
+            XFree( children );
+        if( window == root ) // we didn't find the client, probably an override-redirect window
+            break;
+        window = parent; // go up
+    }
+    if( client != NULL )
+        client->killWindow();
+    else
+        XKillClient( qt_xdisplay(), window_to_kill );
+}
+
+
 
 /*!
   Takes a screenshot of the current window and puts it in the clipboard.
@@ -3230,7 +3250,7 @@ WId Workspace::getMouseEmulationWindow()
     do {
         w = child;
         if (!c)
-            c = findClientWidthId( w );
+            c = findClientWithId( w );
         XQueryPointer( qt_xdisplay(), w, &root, &child,
                        &root_x, &root_y, &lx, &ly, &state );
     } while  ( child != None && child != w );
