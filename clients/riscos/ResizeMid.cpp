@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,22 +20,20 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include <qpainter.h>
-#include <kstyle.h>
-#include <kapp.h>
+#include <qpixmap.h>
 
 #include "ResizeMid.h"
 #include "Manager.h"
 #include "Static.h"
 
-namespace Default
+namespace RiscOS
 {
 
 ResizeMid::ResizeMid(QWidget * parent, Manager * client)
   : DBWidget(parent, "ResizeMid"),
     client_(client)
 {
-  setFixedHeight(RESIZE_BAR_HEIGHT);
+  setFixedHeight(10);
   setCursor(Qt::sizeVerCursor);
 }
 
@@ -49,20 +47,9 @@ ResizeMid::updatePixmap()
 {
   QPainter p(&buf());
 
-  QColorGroup g(
-      client_->isActive() ?
-      palette().active() :
-      palette().inactive()
-  );
-
-  QBrush b(g.button());
-
-  QStyle * style = kapp->kstyle();
-
-  if (0 != style)
-    style->drawPanel(&p, 0, 0, width(), height(), g, false, 2, &b);
-  else
-    kapp->style().drawPanel(&p, 0, 0, width(), height(), g, false, 2, &b);
+  p.drawPixmap(0, 0, Static::instance()->resizeMidLeft(client_->isActive()));
+  p.drawPixmap(width() - 2, 0, Static::instance()->resizeMidRight(client_->isActive()));
+  p.drawTiledPixmap(2, 0, width() - 4, 10, Static::instance()->resizeMidMid(client_->isActive()));
 }
 
   void

@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -22,12 +22,11 @@
 
 #include "DBWidget.h"
 
-namespace Default
+namespace RiscOS
 {
 
 DBWidget::DBWidget(QWidget * parent, const char * name)
-  : QWidget(parent, name, WResizeNoErase | WRepaintNoErase | WPaintUnclipped |
-WNorthWestGravity)
+  : QWidget(parent, name, WResizeNoErase | WRepaintNoErase | WPaintUnclipped)
 {
   buf_.resize(20, 20);
   setBackgroundMode(NoBackground);

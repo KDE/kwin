@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,16 +20,16 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef DEFAULT_TITLE_BAR_H
-#define DEFAULT_TITLE_BAR_H
+#ifndef RISC_OS_TITLE_BAR_H
+#define RISC_OS_TITLE_BAR_H
 
 #include <qwidget.h>
 
-namespace Default
+namespace RiscOS
 {
 
 class Manager;
-class StickyButton;
+class LowerButton;
 class CloseButton;
 class TitleText;
 class IconifyButton;
@@ -51,15 +51,14 @@ class TitleBar : public QWidget
   protected:
 
     void resizeEvent(QResizeEvent *);
-    void paintEvent(QPaintEvent *);
 
   private:
 
+    LowerButton * lower_;
     CloseButton * close_;
 
     TitleText * text_;
 
-    StickyButton * sticky_;
     IconifyButton * iconify_;
     MaximiseButton * maximise_;
 };

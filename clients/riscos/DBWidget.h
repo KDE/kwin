@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,13 +20,13 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef DEFAULT_DOUBLE_BUFFERED_WIDGET_H
-#define DEFAULT_DOUBLE_BUFFERED_WIDGET_H
+#ifndef RISC_OS_DOUBLE_BUFFERED_WIDGET_H
+#define RISC_OS_DOUBLE_BUFFERED_WIDGET_H
 
 #include <qwidget.h>
 #include <qpixmap.h>
 
-namespace Default
+namespace RiscOS
 {
 
 class DBWidget : public QWidget

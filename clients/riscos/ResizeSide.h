@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,12 +20,12 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef DEFAULT_RESIZE_SIDE_H
-#define DEFAULT_RESIZE_SIDE_H
+#ifndef RISC_OS_RESIZE_SIDE_H
+#define RISC_OS_RESIZE_SIDE_H
 
 #include <qwidget.h>
 
-namespace Default
+namespace RiscOS
 {
 
 class Manager;

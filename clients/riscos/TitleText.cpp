@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -28,7 +28,7 @@
 #include "Manager.h"
 #include "Static.h"
 
-namespace Default
+namespace RiscOS
 {
 
 TitleText::TitleText(QWidget * parent, Manager * client)
@@ -55,22 +55,13 @@ TitleText::updatePixmap()
   QPainter p(&buf());
 
   Static * s = Static::instance();
-  
-  p.drawPixmap(0, 0, s->titleLeft(active_));
-  p.drawPixmap(width() - 2, 0, s->titleRight(active_));
-  p.drawTiledPixmap(2, 0, width() - 2, height(), s->title(active_));
 
-  QFontMetrics fm(options->font());
-  unsigned int w = fm.width(client_->caption());
-  p.drawTiledPixmap(
-    width() / 2 - w / 2, 0,
-    w, height(),
-    s->titleText(active_)
-  );
-
+  p.drawPixmap(0, 0, s->titleTextLeft(active_));
+  p.drawPixmap(width() - 3, 0, s->titleTextRight(active_));
+  p.drawTiledPixmap(3, 0, width() - 6, 20, s->titleTextMid(active_));
   p.setPen(options->color(Options::Font, active_));
   p.setFont(options->font());
-  p.drawText(4, 0, width() - 8, height(), AlignCenter, client_->caption());
+  p.drawText(4, 0, width() - 8, 18, AlignCenter, client_->caption());
 }
 
   void

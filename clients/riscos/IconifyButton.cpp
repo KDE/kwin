@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -22,7 +22,7 @@
 
 #include "IconifyButton.h"
 
-namespace Default
+namespace RiscOS
 {
 
 IconifyButton::IconifyButton(QWidget * parent)

@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,12 +20,12 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef DEFAULT_CLOSE_BUTTON_H
-#define DEFAULT_CLOSE_BUTTON_H
+#ifndef RISC_OS_CLOSE_BUTTON_H
+#define RISC_OS_CLOSE_BUTTON_H
 
 #include "Button.h"
 
-namespace Default
+namespace RiscOS
 {
 
 class CloseButton : public Button

@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -21,14 +21,12 @@
 */
 
 #include <qpixmap.h>
-#include <kstyle.h>
-#include <kapp.h>
 
 #include "ResizeSide.h"
 #include "Manager.h"
 #include "Static.h"
 
-namespace Default
+namespace RiscOS
 {
 
 ResizeSide::ResizeSide(QWidget * parent, Manager * client, Side s)
@@ -37,7 +35,7 @@ ResizeSide::ResizeSide(QWidget * parent, Manager * client, Side s)
     side_   (s)
 {
   setCursor(side_ == Left ? Qt::sizeBDiagCursor : Qt::sizeFDiagCursor);
-  setFixedSize(RESIZE_SIDE_WIDTH, RESIZE_BAR_HEIGHT);
+  setFixedSize(30, 10);
   updateDisplay();
 }
 
@@ -69,25 +67,7 @@ ResizeSide::mouseMoveEvent(QMouseEvent * e)
   void
 ResizeSide::updateDisplay()
 {
-  QPixmap pix(size());
-  QPainter p(&pix);
-
-  QColorGroup g(
-      client_->isActive() ?
-      palette().active() :
-      palette().inactive()
-  );
-
-  QBrush b(g.button());
-
-  QStyle * style = kapp->kstyle();
-
-  if (0 != style)
-    style->drawPanel(&p, 0, 0, width(), height(), g, false, 2, &b);
-  else
-    kapp->style().drawPanel(&p, 0, 0, width(), height(), g, false, 2, &b);
-
-  setBackgroundPixmap(pix);
+  setBackgroundPixmap(Static::instance()->resize(client_->isActive()));
 }
 
   void

@@ -1,5 +1,5 @@
 /*
-  Default KWin client
+  RISC OS KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,12 +20,12 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef DEFAULT_MAXIMISE_BUTTON_H
-#define DEFAULT_MAXIMISE_BUTTON_H
+#ifndef RISC_OS_MAXIMISE_BUTTON_H
+#define RISC_OS_MAXIMISE_BUTTON_H
 
 #include "Button.h"
 
-namespace Default
+namespace RiscOS
 {
 
 class MaximiseButton : public Button
