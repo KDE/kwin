@@ -59,60 +59,106 @@ void Options::reload()
     colors[Frame] = config->readColorEntry("frame", &colors[Frame]);
     colors[Handle] = QColor( 140, 140, 140 );
     colors[Handle] = config->readColorEntry("handle", &colors[Handle]);
-    colors[ButtonBg] = colors[Frame];
+
+    colors[Groove] = colors[Frame];
+    colors[Groove] = config->readColorEntry("activeGroove",
+                                            &colors[Groove]);
+
+    if(qGray(colors[Frame].rgb()) > 150)
+        colors[GrooveText] =  Qt::black;
+    else
+        colors[GrooveText] = Qt::white;
+    colors[GrooveText] = config->readColorEntry("activeGrooveText",
+                                                &colors[GrooveText]);
+
+    // full button configuration (background, blend, and foreground
+    if(QPixmap::defaultDepth() > 8)
+        colors[ButtonBg] = colors[Frame].light(130);
+    else
+        colors[ButtonBg] = colors[Frame];
     colors[ButtonBg] = config->readColorEntry("activeTitleBtnBg",
                                               &colors[Frame]);
-    if(QPixmap::defaultDepth() < 9)
-        colors[ButtonBlend] = colors[ ButtonBg ];
+    if(QPixmap::defaultDepth() > 8)
+        colors[ButtonBlend] = colors[Frame].dark(130);
     else
-        colors[ButtonBlend] = colors[ ButtonBg ].dark(110);
+        colors[ButtonBlend] = colors[Frame];
     colors[ButtonBlend] = config->readColorEntry("activeTitleBtnBlend",
                                                  &colors[ButtonBlend]);
+    if(qGray(colors[ButtonBg].rgb()) > 150 ||
+       qGray(colors[ButtonBlend].rgb()) > 150)
+        colors[ButtonFg] =  Qt::black;
+    else
+        colors[ButtonFg] = Qt::white;
+    colors[ButtonFg] = config->readColorEntry("activeTitleBtnFullFg",
+                                              &colors[ButtonFg]);
+
+    // single color button configuration
+    colors[ButtonSingleColor] = Qt::darkGray;
+    colors[ButtonSingleColor] =
+        config->readColorEntry("activeTitleBtnFg", &colors[ButtonSingleColor]);
+
     colors[TitleBar] = pal.normal().highlight();
     colors[TitleBar] = config->readColorEntry("activeBackground",
                                               &colors[TitleBar]);
-    if(QPixmap::defaultDepth() < 9)
-        colors[TitleBlend] = colors[ TitleBar ];
-    else
+    if(QPixmap::defaultDepth() > 8)
         colors[TitleBlend] = colors[ TitleBar ].dark(110);
+    else
+        colors[TitleBlend] = colors[ TitleBar ];
     colors[TitleBlend] = config->readColorEntry("activeBlend",
                                                 &colors[TitleBlend]);
 
     colors[Font] = pal.normal().highlightedText();
     colors[Font] = config->readColorEntry("activeForeground", &colors[Font]);
-    colors[ButtonFg] = Qt::darkGray;
-    colors[ButtonFg] = config->readColorEntry("activeTitleBtnFg",
-                                              &colors[ButtonFg]);
 
     // inactive
     colors[Frame+KWINCOLORS] = config->readColorEntry("inactiveFrame",
                                                       &colors[Frame]);
+    colors[Groove+KWINCOLORS] =
+        config->readColorEntry("inactiveGroove", &colors[Frame+KWINCOLORS]);
+
+    if(qGray(colors[Frame+KWINCOLORS].rgb()) > 150)
+        colors[GrooveText+KWINCOLORS] =  Qt::darkGray;
+    else
+        colors[GrooveText+KWINCOLORS] = Qt::lightGray;
+    colors[GrooveText+KWINCOLORS] =
+        config->readColorEntry("inactiveGrooveText",
+                               &colors[GrooveText+KWINCOLORS]);
+
     colors[TitleBar+KWINCOLORS] = colors[Frame];
     colors[TitleBar+KWINCOLORS] = config->
         readColorEntry("inactiveBackground", &colors[TitleBar+KWINCOLORS]);
 
-    if(QPixmap::defaultDepth() < 9)
-        colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ];
-    else
+    if(QPixmap::defaultDepth() > 8)
         colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ].dark(110);
+    else
+        colors[TitleBlend+KWINCOLORS] = colors[ TitleBar+KWINCOLORS ];
     colors[TitleBlend+KWINCOLORS] =
         config->readColorEntry("inactiveBlend", &colors[TitleBlend+KWINCOLORS]);
 
-    colors[ButtonBg+KWINCOLORS] = colors[Frame+KWINCOLORS];
+    // full button configuration
+    if(QPixmap::defaultDepth() > 8)
+        colors[ButtonBg+KWINCOLORS] = colors[Frame+KWINCOLORS].light(130);
+    else
+        colors[ButtonBg+KWINCOLORS] = colors[Frame+KWINCOLORS];
     colors[ButtonBg+KWINCOLORS] =
         config->readColorEntry("inactiveTitleBtnBg",
                                &colors[ButtonBg]);
 
-    if(QPixmap::defaultDepth() < 9)
-        colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ];
+    if(QPixmap::defaultDepth() > 8)
+        colors[ButtonBlend+KWINCOLORS] = colors[ Frame+KWINCOLORS ].dark(130);
     else
-        colors[ButtonBlend+KWINCOLORS] = colors[ ButtonBg+KWINCOLORS ].dark(110);
+        colors[ButtonBlend+KWINCOLORS] = colors[ Frame+KWINCOLORS ];
     colors[ButtonBlend+KWINCOLORS] =
         config->readColorEntry("inactiveTitleBtnBlend",
                                &colors[ButtonBlend+KWINCOLORS]);
 
     colors[ButtonFg+KWINCOLORS] = config->
-        readColorEntry("inactiveTitleBtnFg", &colors[ButtonFg]);
+        readColorEntry("inactiveTitleBtnFullFg", &colors[ButtonFg]);
+
+    // single color
+    colors[ButtonSingleColor+KWINCOLORS] = config->
+        readColorEntry("inactiveTitleBtnFg", &colors[ButtonSingleColor]);
+
 
     colors[Handle+KWINCOLORS] = colors[Frame];
         config->readColorEntry("inactiveHandle", &colors[Handle]);
@@ -175,7 +221,8 @@ void Options::reload()
     CmdAll1 = mouseCommand(config->readEntry("CommandAll1","Move"));
     CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"));
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"));
-							
+
+    emit resetClients();
 }
 
 

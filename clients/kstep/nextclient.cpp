@@ -89,7 +89,21 @@ static void create_pixmaps()
                             options->color(Options::Handle, false).light(150),
                             options->color(Options::Handle, false).dark(120),
                             KPixmapEffect::VerticalGradient);
+}
 
+void NextClient::slotReset()
+{
+    delete aTitlePix;
+    delete iTitlePix;
+    delete aFramePix;
+    delete iFramePix;
+    delete aHandlePix;
+    delete iHandlePix;
+    pixmaps_created = false;
+    create_pixmaps();
+    button[0]->reset();
+    button[1]->reset();
+    button[2]->reset();
 }
 
 NextButton::NextButton(QWidget *parent, const char *name,
@@ -100,6 +114,16 @@ NextButton::NextButton(QWidget *parent, const char *name,
 
     aBackground.resize(18, 18);
     iBackground.resize(18, 18);
+    reset();
+    resize(18, 18);
+
+    if(bitmap)
+        setBitmap(bitmap, bw, bh);
+}
+
+void NextButton::reset()
+{
+    QPainter p;
 
     QColor hColor(options->color(Options::ButtonBg, true));
     QColor lColor(options->color(Options::ButtonBlend, true));
@@ -144,11 +168,6 @@ NextButton::NextButton(QWidget *parent, const char *name,
     p.setPen(Qt::black);
     p.drawRect(0, 0, 18, 18);
     p.end();
-
-    resize(18, 18);
-
-    if(bitmap)
-        setBitmap(bitmap, bw, bh);
 }
 
 void NextButton::setBitmap(const unsigned char *bitmap, int w, int h)
@@ -174,6 +193,8 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     create_pixmaps();
+    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
+    
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QHBoxLayout *titleLayout = new QHBoxLayout();
     QHBoxLayout *windowLayout = new QHBoxLayout();

@@ -6,7 +6,7 @@
 #include <qpalette.h>
 
 // increment this when you add a color type (mosfet)
-#define KWINCOLORS 8
+#define KWINCOLORS 11
 
 class Options : public QObject {
     Q_OBJECT
@@ -52,7 +52,7 @@ public:
      */
     // increment KWINCOLORS if you add something (mosfet)
     enum ColorType{TitleBar=0, TitleBlend, Font, ButtonFg, ButtonBg,
-    ButtonBlend, Frame, Handle};
+    ButtonBlend, Frame, Handle, ButtonSingleColor, Groove, GrooveText};
 
     MoveResizeMode resizeMode;
     MoveResizeMode moveMode;
@@ -146,6 +146,9 @@ public:
 public slots:
     void reload();
 
+signals:
+    void resetClients();
+    
 protected:
     QFont activeFont, inactiveFont;
     QColor colors[KWINCOLORS*2];

@@ -16,6 +16,7 @@ public:
     NextButton(QWidget *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL, int bw=0, int bh=0);
     void setBitmap(const unsigned char *bitmap, int bw, int bh);
+    void reset();
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
@@ -37,6 +38,8 @@ protected:
     void init();
     void captionChange( const QString& name );
     void stickyChange(bool on);
+protected slots:
+    void slotReset();
 private:
     NextButton* button[3];
     QSpacerItem* titlebar;

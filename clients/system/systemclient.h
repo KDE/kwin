@@ -16,6 +16,7 @@ public:
     SystemButton(QWidget *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL);
     void setBitmap(const unsigned char *bitmap);
+    void reset();
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
@@ -41,6 +42,8 @@ protected:
     void stickyChange(bool on);
     void maximizeChange(bool m);
     void doShape();
+protected slots:
+    void slotReset();
 private:
     SystemButton* button[5];
     QSpacerItem* titlebar;

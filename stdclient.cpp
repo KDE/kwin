@@ -45,8 +45,8 @@ static void create_pixmaps()
     if ( pixmaps_created )
         return;
     pixmaps_created = true;
-    QColorGroup aGrp = options->colorGroup(Options::ButtonFg, true);
-    QColorGroup iGrp = options->colorGroup(Options::ButtonFg, false);
+    QColorGroup aGrp = options->colorGroup(Options::ButtonSingleColor, true);
+    QColorGroup iGrp = options->colorGroup(Options::ButtonSingleColor, false);
 
     QPainter aPainter, iPainter;
     close_pix = new QPixmap(16, 16);
@@ -134,12 +134,45 @@ static void create_pixmaps()
     question_mark_pix->setMask(QBitmap(16, 16, help_mask_bits, true));
 }
 
+void StdClient::slotReset()
+{
+    warning("In slotReset");
+    delete close_pix;
+    delete maximize_pix;
+    delete minimize_pix;
+    delete normalize_pix;
+    delete pinup_pix;
+    delete pindown_pix;
+    delete menu_pix;
+    delete dis_close_pix;
+    delete dis_maximize_pix;
+    delete dis_minimize_pix;
+    delete dis_normalize_pix;
+    delete dis_pinup_pix;
+    delete dis_pindown_pix;
+    delete dis_menu_pix;
+    delete question_mark_pix;
+    pixmaps_created = false;
+    create_pixmaps();
+
+    if(miniIcon().isNull())
+        button[0]->setIconSet(isActive() ? *menu_pix : *dis_menu_pix);
+    button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
+                          isActive() ? *pinup_pix : *dis_pinup_pix );
+    button[3]->setIconSet(isActive() ? *minimize_pix : *dis_minimize_pix);
+    button[4]->setIconSet(isActive() ? *maximize_pix : *dis_maximize_pix);
+    button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
+    if (button[6])
+        button[6]->setIconSet( *question_mark_pix );
+}
+    
 
 StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     create_pixmaps();
-
+    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
+    
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
     g->setRowStretch( 1, 10 );
     g->addWidget( windowWrapper(), 1, 1 );

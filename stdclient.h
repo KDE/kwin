@@ -26,6 +26,7 @@ protected:
 private slots:
     void menuButtonPressed();
     void maxButtonClicked( int );
+    void slotReset();
 
 private:
     QToolButton* button[7];

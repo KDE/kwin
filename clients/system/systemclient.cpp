@@ -66,10 +66,10 @@ static void create_pixmaps()
     maskPainter.begin(&mask);
     maskPainter.setPen(Qt::color1);
     for(i=0, y=2; i < 4; ++i, y+=3){
-        p.setPen(options->color(Options::TitleBar, true).light(150));
+        p.setPen(options->color(Options::Groove, true).light(150));
         p.drawLine(0, y, 31, y);
         maskPainter.drawLine(0, y, 31, y);
-        p.setPen(options->color(Options::TitleBar, true).dark(120));
+        p.setPen(options->color(Options::Groove, true).dark(120));
         p.drawLine(0, y+1, 31, y+1);
         maskPainter.drawLine(0, y+1, 31, y+1);
     }
@@ -100,29 +100,29 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
 {
-    QPainter p;
-
     aBackground.resize(14, 14);
     iBackground.resize(14, 14);
+    reset();
+    resize(14, 14);
 
+    if(bitmap)
+        setBitmap(bitmap);
+}
+
+void SystemButton::reset()
+{
+    QPainter p;
     QColor hColor(options->color(Options::ButtonBg, true));
     QColor lColor(options->color(Options::ButtonBlend, true));
-    // only do this if we can dim/brighten equally
-    if(hColor.red() < 226 && hColor.green() < 226 && hColor.blue() < 226)
-        hColor.setRgb(hColor.red()+30, hColor.green()+30, hColor.blue()+30);
-    if(lColor.red() > 29 && lColor.green() > 29 && lColor.blue() > 29)
-        lColor.setRgb(lColor.red()-30, lColor.green()-30, lColor.blue()-30);
-    KPixmapEffect::gradient(iBackground, hColor, lColor,
+
+    KPixmapEffect::gradient(aBackground, hColor.light(150), lColor.dark(150),
                             KPixmapEffect::DiagonalGradient);
 
-    hColor = options->color(Options::ButtonBlend, false);
-    lColor = options->color(Options::ButtonBg, false);
-    if(hColor.red() > 29 && hColor.green() > 29 && hColor.blue() > 29)
-        hColor.setRgb(hColor.red()-30, hColor.green()-30, hColor.blue()-30);
-    if(lColor.red() < 226 && lColor.green() < 226 && lColor.blue() < 226)
-        lColor.setRgb(lColor.red()+30, lColor.green()+30, lColor.blue()+30);
-    KPixmapEffect::gradient(aBackground, hColor, lColor,
+    hColor = (options->color(Options::ButtonBg, false));
+    lColor = (options->color(Options::ButtonBlend, false));
+    KPixmapEffect::gradient(iBackground, hColor.light(150), lColor.dark(150),
                             KPixmapEffect::DiagonalGradient);
+    
 
     KPixmap aInternal;
     aInternal.resize(10, 10);
@@ -139,10 +139,10 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
 
     p.begin(&iBackground);
     p.drawPixmap(2, 2, iInternal);
-    p.setPen(options->color(Options::ButtonBg, false));
+    p.setPen(options->color(Options::ButtonBg, false).light(120));
     p.drawLine(0, 13, 13, 13);
     p.drawLine(13, 0, 13, 13);
-    p.setPen(options->color(Options::ButtonBlend, false));
+    p.setPen(options->color(Options::ButtonBlend, false).dark(120));
     p.drawLine(0, 0, 12, 0);
     p.drawLine(0, 0, 0, 12);
     p.end();
@@ -153,11 +153,6 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
     p.drawRect(0, 0, 14, 14);
     
     p.end();
-
-    resize(14, 14);
-
-    if(bitmap)
-        setBitmap(bitmap);
 }
 
 void SystemButton::setBitmap(const unsigned char *bitmap)
@@ -178,11 +173,29 @@ void SystemButton::drawButton(QPainter *p)
     p->drawPixmap(isDown() ? 4 : 3, isDown() ? 4 : 3, deco);
 }
 
+void SystemClient::slotReset()
+{
+    delete titlePix;
+    if(aUpperGradient){
+        delete aUpperGradient;
+        delete iUpperGradient;
+    }
+    pixmaps_created = false;
+    create_pixmaps();
+    button[0]->reset();
+    button[1]->reset();
+    button[2]->reset();
+    button[3]->reset();
+    if(button[4])
+        button[4]->reset();
+}
+
 SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
     create_pixmaps();
+    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
     QGridLayout* g = new QGridLayout(this, 0, 0, 2);
@@ -206,6 +219,8 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
         button[4] = new SystemButton(this, "help", question_bits);
         connect( button[4], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
+    else
+        button[4] = NULL;
 
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
@@ -262,34 +277,6 @@ void SystemClient::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
     kDrawRoundButton(&p, x, y, w, h,
                      options->colorGroup(Options::Frame, isActive()), false);
 
-    /*
-    int x2=x+w-1, y2=y+h-1;
-    QPointArray hPntArray, lPntArray;
-    hPntArray.putPoints(0, 12, x+4,y+1, x+5,y+1, // top left
-                        x+3,y+2, x+2,y+3, x+1,y+4, x+1,y+5,
-                        x+1,y2-5, x+1,y2-4, x+2,y2-3, // half corners
-                        x2-5,y+1, x2-4,y+1, x2-3,y+2);
-
-    lPntArray.putPoints(0, 17, x2-5,y2-1, x2-4,y2-1, // btm right
-                        x2-3,y2-2, x2-2,y2-3, x2-1,y2-5, x2-1,y2-4,
- 
-                        x+3,y2-2, x+4,y2-1, x+5,y2-1, //half corners
-                        x2-2,y+3, x2-1,y+4, x2-1,y+5,
-
-                        x2-5,y2-2, x2-4,y2-2, // testing
-                        x2-3,y2-3,
-                        x2-2,y2-5, x2-2,y2-4);
-
-    p.setPen(options->colorGroup(Options::Frame, isActive()).light());
-    p.drawLine(x+6, y, x2-6, y);
-    p.drawLine(0, y+6, 0, y2-6);
-    p.drawPoints(hPntArray);
-    p.setPen(options->colorGroup(Options::Frame, isActive()).dark());
-    p.drawLine(x+6, y2, x2-6, y2);
-    p.drawLine(x+6, y2-1, x2-6, y2-1);
-    p.drawLine(x2, y+6, x2, y2-6);
-    p.drawLine(x2-1, y+6, x2-1, y2-6);
-    p.drawPoints(lPntArray); */
 }
 
 void SystemClient::paintEvent( QPaintEvent* )
@@ -325,7 +312,7 @@ void SystemClient::paintEvent( QPaintEvent* )
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
 
-    p.setPen(options->color(Options::Font, isActive()));
+    p.setPen(options->color(Options::GrooveText, isActive()));
     p.setFont(options->font(isActive()));
     if(isActive()){
         QFontMetrics fm(options->font(true));
