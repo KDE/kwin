@@ -2631,8 +2631,9 @@ void Workspace::slotResetAllClients()
 	(*jt) = newClient;
 	jt = focus_chain.find (oldClient);
 	(*jt) = newClient;
+        newClient->cloneMode(oldClient);
 	delete oldClient;
-	bool showIt = newClient->manage( TRUE, TRUE );
+	bool showIt = newClient->manage( TRUE, TRUE, FALSE );
 	if ( prev ) {
 	    Window stack[2];
 	    stack[0] = prev->winId();;

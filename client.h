@@ -74,7 +74,7 @@ public:
 
     virtual bool windowEvent( XEvent * );
 
-    bool manage( bool isMapped = FALSE, bool doNotShow = FALSE );
+    bool manage( bool isMapped = FALSE, bool doNotShow = FALSE, bool isInitial = TRUE );
 
     void setMappingState( int s );
     int mappingState() const;
@@ -165,6 +165,11 @@ public:
     QRect adjustedClientArea( const QRect& area ) const;
 
     Colormap colormap() const;
+
+    /**
+     * Clone settings from other client.
+     */
+    void cloneMode(Client *);
 
 public slots:
     void iconify();

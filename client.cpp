@@ -476,7 +476,7 @@ Client::~Client()
   Manages the clients. This means handling the very first maprequest:
   reparenting, initial geometry, initial state, placement, etc.
  */
-bool Client::manage( bool isMapped, bool doNotShow )
+bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 {
 
     if (layout())
@@ -551,17 +551,20 @@ bool Client::manage( bool isMapped, bool doNotShow )
     }
 
     // initial state
-    int state = NormalState;
-    if ( session ) {
-	if ( session->iconified )
-	    state = IconicState;
-    } else {
-	// find out the initial state. Several possibilities exist
-	XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
-	if (hints && (hints->flags & StateHint))
-	    state = hints->initial_state;
-	if (hints)
-	    XFree(hints);
+    int init_state = NormalState;
+    if ( isInitial)
+    {
+        if ( session ) {
+            if ( session->iconified )
+	        init_state = IconicState;
+        } else {
+            // find out the initial state. Several possibilities exist
+            XWMHints * hints = XGetWMHints(qt_xdisplay(), win );
+            if (hints && (hints->flags & StateHint))
+	        init_state = hints->initial_state;
+            if (hints)
+                XFree(hints);
+        }
     }
 
     // initial desktop placement - note we don't clobber desk if it is
@@ -591,10 +594,12 @@ bool Client::manage( bool isMapped, bool doNotShow )
 
     info->setDesktop( desk );
 
+    if (isInitial)
+    {
+       setMappingState( init_state );
+    }
 
-    setMappingState( state );
-
-    bool showMe = state == NormalState && isOnDesktop( workspace()->currentDesktop() );
+    bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
 
     if ( workspace()->isNotManaged( caption() ) )
 	doNotShow = TRUE;
@@ -2559,6 +2564,16 @@ void Client::autoRaise()
     workspace()->raiseClient( this );
     delete autoRaiseTimer;
     autoRaiseTimer = 0;
+}
+
+void Client::cloneMode(Client *client)
+{
+    shaded = client->shaded;
+    geom_restore = client->geom_restore;
+    max_mode = client->max_mode;
+//    cmap = client->cmap;
+    state = client->state;
+    setCaption(client->caption());
 }
 
 
