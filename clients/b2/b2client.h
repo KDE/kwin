@@ -115,11 +115,10 @@ protected:
     void resize(const QSize&);
     void borders(int &, int &, int &, int &) const;
     QSize minimumSize() const;
-    void reset(unsigned long);
     bool eventFilter(QObject *, QEvent *);
 private slots:
     void menuButtonPressed();
-    void slotReset();
+    //void slotReset();
     void maxButtonClicked();
 private:
     void addButtons(const QString& s, const QString tips[], 

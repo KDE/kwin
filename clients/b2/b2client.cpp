@@ -49,6 +49,7 @@ static KPixmap *pixmap[NUM_PIXMAPS];
 KPixmap* titleGradient[2] = {0, 0};
 
 static int thickness = 4; // Frame thickness
+static int buttonSize = 16;
 
 static bool pixmaps_created = false;
 static bool colored_frame = false;
@@ -69,6 +70,11 @@ static inline const KDecorationOptions *options()
 
 static void read_config(B2ClientFactory *f)
 {
+    // Force button size to be in a reasonable range.
+    // If the frame width is large, the button size must be large too.
+    buttonSize = (QFontMetrics(options()->font(true)).height() + 1) & 0x3e;
+    if (buttonSize < 16) buttonSize = 16;
+
     KConfig conf("kwinb2rc");
     conf.setGroup("General");
     colored_frame = conf.readBoolEntry( "UseTitleBarBorderColors", false );
@@ -292,11 +298,11 @@ void B2Client::init()
     g->addItem(spacer, 3, 1);
 
     // titlebar
-    g->addRowSpacing(0, 20);
+    g->addRowSpacing(0, buttonSize + 4);
 
     titlebar = new B2Titlebar(this);
     titlebar->setMinimumWidth(16);
-    titlebar->setFixedHeight(20);
+    titlebar->setFixedHeight(buttonSize + 4);
 
     QBoxLayout *titleLayout = new QBoxLayout(titlebar, QBoxLayout::LeftToRight, 0, 1, 0);
     titleLayout->addSpacing(3);
@@ -399,11 +405,6 @@ void B2Client::addButtons(const QString& s, const QString tips[],
     } 
 }
 
-void B2Client::reset(unsigned long)
-{
-    widget()->repaint();
-}
-
 void B2Client::iconChange()
 {
     if (button[BtnMenu])
@@ -427,7 +428,7 @@ void B2Client::calcHiddenButtons()
 
     // Determine how many buttons we need to hide
     while (currentWidth < minWidth) {
-        currentWidth += 17;  // Allow for spacer (extra 1pix)
+        currentWidth += buttonSize + 1; // Allow for spacer (extra 1pix)
         count++;
     }
     // Bound the number of buttons to hide
@@ -559,7 +560,7 @@ void B2Client::paintEvent( QPaintEvent* e)
      */
     if (titlebar->isFullyObscured()) {
         /* We first see, if our repaint contained the titlebar area */
-	QRegion reg(QRect(0,0,width(),20));
+	QRegion reg(QRect(0, 0, width(), buttonSize + 4));
 	reg = reg.intersect(e->region());
 	if (!reg.isEmpty())
 	    unobscureTitlebar();
@@ -608,7 +609,7 @@ KDecoration::MousePosition B2Client::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
     QRect t = titlebar->geometry();
-    t.setHeight(20 - thickness);
+    t.setHeight(buttonSize + 4 - thickness);
     int ly = t.bottom();
     int lx = t.right();
     int bb = isResizable() ? 0 : 5;
@@ -661,7 +662,7 @@ void B2Client::titleMoveAbs(int new_ofs)
         bar_x_ofs = new_ofs;
 	positionButtons();
 	doShape();
-	widget()->repaint( 0, 0, width(), 20, false );
+	widget()->repaint( 0, 0, width(), buttonSize + 4, false );
 	titlebar->repaint(false);
     }
 }
@@ -735,7 +736,7 @@ void B2Client::resize(const QSize& s)
 void B2Client::borders(int &left, int &right, int &top, int &bottom) const
 { 
     left = right = thickness + 1;
-    top = 20;
+    top = buttonSize + 4;
     bottom = thickness + (isResizable() ? 4 : 0);
 }
 
@@ -747,6 +748,7 @@ void B2Client::menuButtonPressed()
     button[BtnMenu]->setDown(false);
 }
 
+#if 0
 void B2Client::slotReset()
 {
     redraw_pixmaps();
@@ -763,6 +765,7 @@ void B2Client::slotReset()
     titlebar->recalcBuffer();
     titlebar->repaint(false);
 }
+#endif
 
 void B2Client::unobscureTitlebar()
 {
@@ -775,7 +778,7 @@ void B2Client::unobscureTitlebar()
 	return;
     }
     in_unobs = 1;
-    QRegion reg(QRect(0,0,width(),20));
+    QRegion reg(QRect(0,0,width(), buttonSize + 4));
     ClientList::ConstIterator it = workspace()->stackingOrder().find(this);
     ++it;
     while (it != workspace()->stackingOrder().end()) {
@@ -897,8 +900,8 @@ static void redraw_pixmaps()
 	    if (titleColor[2 * i] != titleColor[2 * i + 1]) {
 		if (!titleGradient[i]) {
 		    titleGradient[i] = new KPixmap;
-		    titleGradient[i]->resize(64, 19);
 		}
+		titleGradient[i]->resize(64, buttonSize + 3);
 		KPixmapEffect::gradient(*titleGradient[i], 
 			titleColor[2 * i], titleColor[2 * i + 1],
 			KPixmapEffect::VerticalGradient);
@@ -922,7 +925,7 @@ void B2Client::positionButtons()
     int titleWidth = titlebar->width() - t.width() + textLen+2;
     if (titleWidth > width()) titleWidth=width();
 
-    titlebar->resize(titleWidth, 20);
+    titlebar->resize(titleWidth, buttonSize + 4);
     titlebar->move(bar_x_ofs, 0);
 }
 
@@ -1003,14 +1006,14 @@ B2Button::B2Button(B2Client *_client, QWidget *parent, const QString& tip)
     setBackgroundMode(NoBackground);
     client = _client;
     useMiniIcon = false;
-    setFixedSize(16,16); 
+    setFixedSize(buttonSize, buttonSize); 
     QToolTip::add(this, tip);
 }
 
 
 QSize B2Button::sizeHint() const
 {
-    return QSize(16, 16);
+    return QSize(buttonSize, buttonSize);
 }
 
 QSizePolicy B2Button::sizePolicy() const
@@ -1022,7 +1025,7 @@ void B2Button::drawButton(QPainter *p)
 {
     KPixmap* gradient = titleGradient[client->isActive() ? 0 : 1];
     if (gradient) { 
-	p->drawTiledPixmap(0, 0, 16, 16, *gradient, 0, 2);
+	p->drawTiledPixmap(0, 0, buttonSize, buttonSize, *gradient, 0, 2);
     } else { 
 	p->fillRect(rect(), bg);
     }
@@ -1093,8 +1096,8 @@ B2Titlebar::B2Titlebar(B2Client *parent)
       set_x11mask(false), isfullyobscured(false), shift_move(false)
 {
     setBackgroundMode(NoBackground);
-    captionSpacer = new QSpacerItem(10, 20, QSizePolicy::Expanding,
-                                            QSizePolicy::Fixed);
+    captionSpacer = new QSpacerItem(10, buttonSize + 4, 
+	    QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
 
 // TODO JUMPYTITLEBAR This is not useful until titlebar revealing can be reenabled
