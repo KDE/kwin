@@ -751,7 +751,6 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	switch (stack_mode){
 	case Above:
 	case TopIf:
-	    qDebug("raise client %s", caption().latin1());
 	    workspace()->raiseClient( this );
 	    break;
 	case Below:
