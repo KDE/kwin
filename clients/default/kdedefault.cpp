@@ -14,6 +14,7 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kpixmapeffect.h>
+#include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
 #include <qlayout.h>
@@ -532,11 +533,14 @@ void KDEDefaultButton::drawButton(QPainter *p)
 
 		// Intensify the image if required
 		if (isMouseOver) {
-			const QBitmap* mask = btnpix.mask();
-			if( mask != 0 ) {
-				btnpix.detach();
-				btnpix = KPixmapEffect::intensity(btnpix, 0.8);
-				btnpix.setMask( *mask );
+			if( btnpix.mask() != 0 ) {
+                                QBitmap save_mask = *btnpix.mask();
+                                QImage image = btnpix.convertToImage();
+                                KImageEffect::intensity(image, 0.8);
+                            // fix Qt problem, when QPixmap has alpha channel, mask is ignored
+                                image.setAlphaBuffer( false );
+                                btnpix.convertFromImage(image);
+				btnpix.setMask( save_mask );
 			}
 		}
 
