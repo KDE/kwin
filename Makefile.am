@@ -2,7 +2,7 @@
 INCLUDES = $(all_includes)
 LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-SUBDIRS = pics images
+SUBDIRS = pics
 
 bin_PROGRAMS = kwin
 
