@@ -1,76 +1,86 @@
 /*****************************************************************
-kwin - the KDE window manager
-								  
+ KWin - the KDE window manager
+ This file is part of the KDE project.
+
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+
+You can Freely distribute this program under the GNU General Public
+License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
+
 #ifndef KWIN_TABBOX_H
 #define KWIN_TABBOX_H
+
 #include <qwidget.h>
 #include <qtimer.h>
 #include <qvaluelist.h>
+#include "utils.h"
 
 class QLabel;
 
-namespace KWinInternal {
+namespace KWinInternal
+{
 
 class Workspace;
 class Client;
-typedef QValueList<Client*> ClientList;
 
 class TabBox : public QWidget
-{
+    {
     Q_OBJECT
-public:
-    TabBox( Workspace *ws, const char *name=0 );
-    ~TabBox();
+    public:
+        TabBox( Workspace *ws, const char *name=0 );
+        ~TabBox();
 
-    Client* currentClient();
-    int currentDesktop();
+        Client* currentClient();
+        int currentDesktop();
 
     // DesktopMode and WindowsMode are based on the order in which the desktop
     //  or window were viewed.
     // DesktopListMode lists them in the order created.
-    enum Mode { DesktopMode, DesktopListMode, WindowsMode };
-    void setMode( Mode mode );
-    Mode mode() const;
+        enum Mode { DesktopMode, DesktopListMode, WindowsMode };
+        void setMode( Mode mode );
+        Mode mode() const;
 
-    void reset();
-    void nextPrev( bool next = TRUE);
+        void reset();
+        void nextPrev( bool next = TRUE);
 
-    void delayedShow();
-    void hide();
+        void delayedShow();
+        void hide();
 
-    Workspace* workspace() const;
+        void handleMouseEvent( XEvent* );
 
-    void reconfigure();
+        Workspace* workspace() const;
 
-protected:
-    void paintEvent( QPaintEvent* );
-    void showEvent( QShowEvent* );
-    void hideEvent( QHideEvent* );
-    void paintContents();
+        void reconfigure();
 
-private:
-    Client* client;
-    Mode m;
-    Workspace* wspace;
-    ClientList clients;
-    int desk;
-    QLabel* icon;
-    int wmax;
-    QTimer delayedShowTimer;
-    QString no_tasks;
-    bool options_traverse_all;
-};
+    protected:
+        void paintEvent( QPaintEvent* );
+        void showEvent( QShowEvent* );
+        void hideEvent( QHideEvent* );
+        void paintContents();
+
+    private:
+        Client* client;
+        Mode m;
+        Workspace* wspace;
+        ClientList clients;
+        int desk;
+        QLabel* icon;
+        int wmax;
+        QTimer delayedShowTimer;
+        QString no_tasks;
+        bool options_traverse_all;
+    };
 
 
 /*!
   Returns the tab box' workspace
  */
 inline Workspace* TabBox::workspace() const
-{
+    {
     return wspace;
-}
+    }
 
 /*!
   Returns the current mode, either DesktopListMode or WindowsMode
@@ -78,10 +88,10 @@ inline Workspace* TabBox::workspace() const
   \sa setMode()
  */
 inline TabBox::Mode TabBox::mode() const
-{
+    {
     return m;
-}
+    }
 
-}
+} // namespace
 
 #endif

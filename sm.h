@@ -9,29 +9,41 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef KWIN_SM_H
+#define KWIN_SM_H
 
+#include <X11/SM/SMlib.h>
 #include <kapplication.h>
-#include "workspace.h"
-#include "utils.h"
+
+class QSocketNotifier;
 
 namespace KWinInternal
 {
 
-class Application : public  KApplication
+class SessionSaveDoneHelper
+    : public QObject
     {
     Q_OBJECT
     public:
-        Application();
-        ~Application();
-
-    protected:
-        bool x11EventFilter( XEvent * );
+        SessionSaveDoneHelper();
+        virtual ~SessionSaveDoneHelper();
+        SmcConn connection() const { return conn; }
+        void saveDone();
+        void close();
     private slots:
-        void lostSelection();
+        void processData();
     private:
-        KWinSelectionOwner owner;
+        QSocketNotifier* notifier;
+        SmcConn conn;
+    };
+
+
+class SessionManaged
+    : public KSessionManaged
+    {
+    public:
+        virtual bool saveState( QSessionManager& sm );
+        virtual bool commitData( QSessionManager& sm );
     };
 
 } // namespace

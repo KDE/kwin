@@ -29,220 +29,204 @@ If you have any questions regarding the specification, feel free to ask on the K
 mailing list <kwin@kde.org>, or on the Window Manager Spec list <wm-spec-list@gnome.org>.
   -- Karol <kszwed@kde.org>
 
+(
+ compliance :
+    - = none,
+    / = partial,
+    + = complete,
+    * = KWin is compliant, but something else needs checking (e.g. Qt)
+    ? = unknown
+)
+  
 
-Property Name			Type				Compliance
-==========================================================================
+NETWM spec compliance (whole document):
+version 1.2
+======================
 
-Root Window Properties (and Related Messages):
-
-_NET_SUPPORTED			root window property		COMPLETE
-	+----------------------------------------------------------------+
-	| Please add all other supported _NET properties here            |
-	| after they are implemented. This property is complete in the   |
-	| sence that all implemented properties are listed here.	 |
-	+----------------------------------------------------------------+
++ 1.
++ 2.3. Feature not implemented.
++ 2.4. Feature not implemented.
++ 2.5.
++ 2. (rest of the section)
++ 3.1.
+	This property is complete in the sence that all implemented properties
+        are listed here.
         CHECKME : check it's complete
-_NET_CLIENT_LIST		root window property		PARTIAL
-	+----------------------------------------------------------------+
-	| With xprop it seems only one WinID is stored, whereas an array |
-	| of all managed windows should be stored instead!               |
-        | This is caused by xprop printing only first element of WINDOW  |
-        | type properties, xprop has to be patched to see them all.      |
-        | The spec requires this list contains the windows in their      |
-        | initial mapping order, which is not true for NET::Desktop      |
-        | windows.                                                       |
-	+----------------------------------------------------------------+
-_NET_CLIENT_LIST_STACKING	root window property		COMPLETE
-	+----------------------------------------------------------------+
-	| With xprop it seems only one WinID is stored, whereas an array |
-	| of all managed windows should be stored instead!               |
-        | This is caused by xprop printing only first element of WINDOW  |
-        | type properties, xprop has to be patched to see them all.      |
-	+----------------------------------------------------------------+
-_NET_NUMBER_OF_DESKTOPS		root window property + message	COMPLETE
-	+----------------------------------------------------------------+
-	| _NET_VIRTUAL_ROOTS MUST be set to the new number of desktop    |
-	| virtual root window IDs. Currently this property is NOT set,   |
-	| but a WM SHOULD set this property and respond to the message.  |
-	| We have NETRootInfo::setVirtualRoots() but we don't use it!!   |
-        | This is because KWin doesn't use the virtual root windows      |
-        | technique for creating virtual desktops, so it doesn't have    |
-        | to set this property.                                          |
-	+----------------------------------------------------------------+
-_NET_DESKTOP_GEOMETRY		root window property + message	COMPLETE
-	+----------------------------------------------------------------+
-        | KWin doesn't implement large desktops, so it ignores           |
-        | the message, and only sets the property to the screen size     |
-	+----------------------------------------------------------------+
-_NET_DESKTOP_VIEWPORT		root window property + message	COMPLETE
-	+----------------------------------------------------------------+
-        | KWin doesn't implement viewports, so it correctly sets         |
-        | the property to (0,0) pairs and ignores the message            |
-	+----------------------------------------------------------------+
-_NET_CURRENT_DESKTOP		root window property + message	COMPLETE
-_NET_DESKTOP_NAMES		root window property		COMPLETE
-_NET_ACTIVE_WINDOW		root window property + message	COMPLETE
-_NET_WORKAREA			root window property		COMPLETE
-	+----------------------------------------------------------------+
-	| Work Area takes into account the _NET_WM_STRUT property set on |
-	| client windows. I had a problem where _NET_NUMBER_OF_DESKTOPS  |
-	| was 3, but _NET_WORKAREA had only two geometries set.          |
-	| I need to investigate this -- Karol                            |
-	+----------------------------------------------------------------+
-_NET_SUPPORTING_WM_CHECK	root window property		COMPLETE
-_NET_VIRTUAL_ROOTS		root window property		COMPLETE
-	+----------------------------------------------------------------+
-        | The spec requires this property to be set only for WMs using   |
-        | the virtual roots technique for creating virtual desktops.     |
-        | KWin doesn't use it, so it doesn't set the property.           |
-	+----------------------------------------------------------------+
-_NET_DESKTOP_LAYOUT (pager)	root window property		NIL
-_NET_SHOWING_DESKTOP		root window property + message	NIL
+/ 3.2.
+        The spec requires that _NET_CLIENT_LIST contains the windows in their
+        initial mapping order, which is currently not true for NET::Desktop
+        windows.
+        Note that xprop lists only first element in WINDOW type properties.
++ 3.3.
+        Note that KWin does not use the virtual root windows technique,
+        so it doesn't set _NET_VIRTUAL_ROOTS at all.
++ 3.4.
+        KWin doesn't implement large desktops, so it ignores
+        the message, and only sets the property to the screen size.
++ 3.5.  
+        KWin doesn't implement viewports, so it correctly sets
+        the property to (0,0) pairs and ignores the message.
++ 3.6.
++ 3.7.
++ 3.8.
+        KWin currently extends the message a bit, with data.l[0] being 1 or 2,
+        meaning 'from application'/'from pager', and data.l[1] contains
+        timestamp. This is used for focus stealing prevention purposes, and
+        will be proposed for next version of the spec.
++ 3.9.
++ 3.10.
++ 3.11.
+        KWin doesn't use the virtual roots technique for creating virtual
+        desktops, so it doesn't set the property.
+- 3.12.
+- 3.13.
++ 4.1.
+- 4.2.
++ 4.3.
+        Due to implementation details KWin actually allows moving or resizing
+        by keyboard when requested to be done by mouse, and vice versa.
++ 5.1.
++ 5.2.
++ 5.3.
++ 5.4.
++ 5.5.
+/ 5.6.  The handling of _NET_WM_WINDOW_TYPE itself is correct and complete.
+        Supported window types: DESKTOP, DOCK, TOOLBAR, MENU, UTILITY,
+        SPLASH, DIALOG, NORMAL.
+        UTILITY should get better placement.
+        TOOLBAR - many parts in KDE still treat this as "tool" window.
+            - should the decoration be shown for the toolbars?
+        KDE extensions:
+            _KDE_NET_WM_WINDOW_TYPE_TOPMENU - this is used for implementing
+                standalone menubars for applications. Only the menubar
+                that is transient for the currently active window will be shown.
+                See KMenuBar class in libkdeui for details.
+            _KDE_NET_WM_WINDOW_TYPE_OVERRIDE - this seems to mean "this window
+            should be borderless", but it's actually used also for other
+            things, like fullscreen windows. The plan is to get rid of this
+            flawed thing as soon as possible.
+/ 5.7.
+        The handling of _NET_WM_STATE itself is correct and complete.
+        Supported states: MODAL, MAXIMIZED_VERT, MAXIMIZED_HORZ, SHADED,
+            SKIP_TASKBAR, SKIP_PAGER, HIDDEN, ABOVE, BELOW.
+        STICKY is not supported, because KWin doesn't implement viewports.
+        FULLSCREEN needs to be implemented.
+        HIDDEN still needs checking in Kicker etc.
+        BELOW - in order to make 'allow windows to cover the panel' feature
+            in Kicker work KWin interprets this state a bit differently
+            for DOCK windows. While normal DOCK windows are in their
+            extra layer above normal windows, making them BELOW doesn't
+            move them below normal windows, but only to the same layer, so
+            that windows can hide Kicker, but Kicker can be also raised
+            above the windows. A bit hacky, but it's not really against
+            the spec, and I have no better idea.
+        KDE extensions:
+            _NET_WM_STATE_STAYS_ON_TOP - has the same meaning like ABOVE,
+                and is deprecated in favour of it; it lacks the _KDE prefix
+* 5.8.
+        The handling of _NET_WM_ALLOWED_ACTIONS itself is correct and complete.
+        Supported actions: MOVE, RESIZE, MINIMIZE, SHADE, MAXIMIZE_HORZ,
+            MAXIMIZE_VERT, CHANGE_DESKTOP, CLOSE
+        STICK is not supported, because KWin does not implement viewports.
+        FULLSCREEN needs to be implemented.
+        Kicker etc. need to be updated.
++ 5.9.
+* 5.10.
+        Property is not used in KWin.
+        Kicker needs to be checked.
+* 5.11.
+        KWin's handling of the property is correct.
+        Qt should be checked.
++ 5.12.
+- 5.13.
+        Property is not used in KWin, KWin never provides icons for iconified windows.
+        Kicker or its taskbar don't set it either. However, the property is flawed,
+        and should be replaced by manager selection or similar mechanism.
++ 6.1.
++ 6. (rest)
+- 7.4.
+        KWin currently has no support for urgent windows.
+* 7.5.
+        Qt often sets maximum size smaller than minimum size. This seems to be caused
+        by delayed layout calculations.
+* 7.6.
+        Kicker should be checked.
+? 7.7.
++ 7. (rest of the section)
 
-Other Root Window Messages:
+ICCCM spec compliance (whole document):
+version 2.0
+======================
 
-_NET_CLOSE_WINDOW		root window message		COMPLETE
-	+----------------------------------------------------------------+
-        | KWin should use _NET_WM_PING and offer killing the client.     |
-	+----------------------------------------------------------------+
-_NET_MOVERESIZE_WINDOW		root window message		NIL
-_NET_WM_MOVERESIZE		root window message		PARTIAL
-	+----------------------------------------------------------------+
-        | Lacks keyboard modes and button support.                       |
-	| Direction::KeyboardSize + KeyboardMove are in kdecore.         |
-	+----------------------------------------------------------------+
-
-Application Window Properties:
-
-_NET_WM_NAME			window property			COMPLETE
-	+----------------------------------------------------------------+
-        | Set by clients                                                 |
-	+----------------------------------------------------------------+
-_NET_WM_VISIBLE_NAME		window property                 COMPLETE
-_NET_WM_ICON_NAME		window property			PARTIAL
-	+----------------------------------------------------------------+
-        | Doesn't seem to be used at all, not even as a fallback         |
-        | in KWin::icon(). Seems to be obsoleted by _NET_WM_ICON anyway? |
-        | The code in netwm.cpp itself seems to be correct.              |
-	+----------------------------------------------------------------+
-_NET_WM_VISIBLE_ICON_NAME	window property			PARTIAL
-	+----------------------------------------------------------------+
-        | The same like _NET_WM_ICON_NAME, but this property should be   |
-        | set by the WM only if it uses different one than               |
-        | _NET_WM_ICON_NAME. Since KWin doesn't use it at all, it's ok.  |
-	+----------------------------------------------------------------+
-_NET_WM_DESKTOP			window property + message	COMPLETE
-_NET_WM_WINDOW_TYPE		window property			PARTIAL
-	+----------------------------------------------------------------+
-        | Set by clients, and the handling of _NET_WM_WINDOW_TYPE itself |
-        | is compliant.                                                  |
-	+----------------------------------------------------------------+
-  _NET_WM_WINDOW_TYPE_DESKTOP	property value (atom)		COMPLETE
-  _NET_WM_WINDOW_TYPE_DOCK	property value (atom)		COMPLETE
-  _NET_WM_WINDOW_TYPE_TOOLBAR	property value (atom)		
-	+----------------------------------------------------------------+
-        | KWin knows this type, but in most places treats it as          |
-        | Utility (="tool" windows, hence the obsolete TOOL)             |
-        | Should we show the border for toolbars?                        |
-	+----------------------------------------------------------------+
-  _NET_WM_WINDOW_TYPE_MENU	property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-        | Qt doesn't support this type yet.                              |
-        | Up to KDE3.0, this window type was incorrectly used            |
-        | for the toplevel menubar, and not for torn-off menus. This was |
-        | fixed in KDE3.1 by introducing _KDE_NET_WM_WINDOW_TYPE_TOPMENU |
-        | and KWin tries to detect old KDE apps using the old type.      |
-	+----------------------------------------------------------------+
-  _NET_WM_WINDOW_TYPE_UTILITY	property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-	| Support is only in kdecore.                                    |
-	+----------------------------------------------------------------+
-  _NET_WM_WINDOW_TYPE_SPLASH	property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-	| Support is only in kdecore.                                    |
-	+----------------------------------------------------------------+
-  _NET_WM_WINDOW_TYPE_DIALOG	property value (atom)
-  _NET_WM_WINDOW_TYPE_NORMAL	property value (atom)		
-_NET_WM_STATE			window property + message			
-  _NET_WM_STATE_MODAL		property value (atom)		
-  _NET_WM_STATE_STICKY		property value (atom)		COMPLETE
-	+----------------------------------------------------------------+
-        | KWin doesn't implement large desktops, so this state is        |
-        | ignored. Note that 'sticky' here is not 'on all desktops'.     |
-	+----------------------------------------------------------------+
-  _NET_WM_STATE_MAXIMIZED_VERT	property value (atom)		COMPLETE
-  _NET_WM_STATE_MAXIMIZED_HORZ	property value (atom)		COMPLETE
-  _NET_WM_STATE_SHADED		property value (atom)		
-  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-        | Support of this state itself is correct, but it's misused      |
-        | for working around(?) some problems with the ICCCM             |
-        | non-compliant handling of WM_STATE (at least I think).         |
-	+----------------------------------------------------------------+
-  _NET_WM_STATE_SKIP_PAGER	property value (atom)		COMPLETE
-  _NET_WM_STATE_HIDDEN		property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
-	+----------------------------------------------------------------+
-  _NET_WM_STATE_FULLSCREEN	property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
-	+----------------------------------------------------------------+
-  _NET_WM_STATE_ABOVE		property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
-	| Possibly a simple replace with STAYS_ON_TOP, but we need       |
-	| proper layering.                                               |
-	+----------------------------------------------------------------+
-  _NET_WM_STATE_BELOW		property value (atom)		PARTIAL
-	+----------------------------------------------------------------+
-	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
-	+----------------------------------------------------------------+
-  _NET_WM_STATE_STAYS_ON_TOP	property value (atom)	
-	+----------------------------------------------------------------+
-	| This seems to be deprecated by _NET_WM_STATE_ABOVE and its use |
-	| is non-standard as far as the current spec goes (although it   |
-	| was 'pending' around July 2002). Should we leave this for      |
-	| backwards compatibility (we have had it since Sept. 2000) or   |
-	| replace it with STATE_ABOVE?                                   |
-	| I suggest we deprecate it as we're using the _NET_WM namespace |
-	| 'illegally' - Karol                                            |
-	+----------------------------------------------------------------+
-_NET_WM_ALLOWED_ACTIONS		window property			NIL
-  _NET_WM_ACTION_MOVE		property value (atom)		
-  _NET_WM_ACTION_RESIZE		property value (atom)		
-  _NET_WM_ACTION_MINIMIZE	property value (atom)		
-  _NET_WM_ACTION_MAXIMIZE_VERT	property value (atom)		
-  _NET_WM_ACTION_MAXIMIZE_HORZ	property value (atom)		
-  _NET_WM_ACTION_SHADE		property value (atom)		
-  _NET_WM_ACTION_STICK		property value (atom)		
-  _NET_WM_ACTION_FULLSCREEN	property value (atom)		
-  _NET_WM_ACTION_CHANGE_DESKTOP	property value (atom)		
-  _NET_WM_ACTION_CLOSE		property value (atom)		
-_NET_WM_STRUT			window property			
-_NET_WM_ICON_GEOMETRY		window property
-_NET_WM_ICON			window property
-        CHECKME : the code in netwm.cpp is incorrect on 64bit platforms?
-_NET_WM_PID			window property			
-	+----------------------------------------------------------------+
-	| The ICCCM specified property WM_CLIENT_MACHINE must be set to  |
-	| a fully qualified domain name of client's host to allow the WM |
-	| to kill windows that do not respond to a _NET_WM_PING.         |
-        | Note that due to gethostname(2) not returning FQDN on some     |
-        | systems WM_CLIENT_MACHINE may not be actually FQDN.            |
-	+----------------------------------------------------------------+
-_NET_WM_HANDLED_ICONS		window property                 COMPLETE
-	+----------------------------------------------------------------+
-        | This property should be set by a taskbar, so it has nothing to |
-        | do with KWin. But this property is broken anyway and should be |
-        | replaced by a manager selection in future NETWM versions.      |
-	+----------------------------------------------------------------+
-
-
-Window Manager Protocols:
-
-_NET_WM_PING			window property + message	NIL
-===========================================================================
+/ 1.2.3.
+        KWin uses KWIN_RUNNING atom that's missing the leading underscore.
+        Some parts of KDE perhaps may be missing the leading underscore.
+/ 1.2.6.
+        Should be checked.
++ 1. (rest of the section)
++ 2.8. kmanagerselection.* in kdecore
++ 2. (rest of the section)
+        Not a KWin thing.
+*   - patch sent to TT to make QClipboard sufficiently compliant
++ 3.
+        Feature not supported, obsolete.
++ 4.1.1
++ 4.1.2 (intro)
++ 4.1.2.1
+        Used as a fallback for _NET_WM_NAME.
++ 4.1.2.2
+        Used as a fallback for _NET_WM_ICON_NAME.
+? 4.1.2.3
+?    - PSize, PPosition, USize, UPosition
+?	- clients - Qt simply sets both
+/    - PWinGravity - gravity should be handled correctly when adding/removing decorations,
+        i.e. in all cases except for ConfigureRequests (which probably nobody really uses
+        anyway, given how many WMs can't do that); also, window geometry constaints have
+        higher priority that gravity
++    - (the rest)
+/ 4.1.2.4
++    - input - see 4.1.7
++    - initial_state
++    - icon - feature not supported
++    - window_group
+-    - urgency - not supported, but could be
+/ 4.1.2.5 - it should be checked it's used correctly in Kicker etc.
+/ 4.1.2.6 - should be checked
+        NETWM section 7.3. is supported too, even though it's a slight ICCCM violation.
++ 4.1.2.7
+- 4.1.2.8
+        See 4.1.8.
++ 4.1.2.9 - handled by Xlib call
++ 4.1.3.1
++ 4.1.3.2
+        Feature not supported (4.1.2.4 - icons)
+* 4.1.4 it should be checked Qt/KDE clients handle this properly
+/ 4.1.5
+        This needs fixing.
++ 4.1.6
++ 4.1.7
+- 4.1.8
+        KWin only installs colormap required by the active window.
+- 4.1.9
+        Feature not supported, except for WM_ICON_NAME as a fallback for _NET_WM_ICON_NAME.
++ 4.1.10
++ 4.1.11
+        Window groups are only used for supporting NETWM section 7.3.
++ 4.2.5
+/ 4.2.7
+        Qt doesn't set revert-to to Parent.
++ 4.2.8.1 frozen clients may be XKill-ed upon a user request though
++ 4.3
+? 4.4
++ 4. (rest of the section)
++ 5.3. not KWin related
++ 5. (rest of the section )
+? 6.1. clients thing
+? 6.2. clients thing - Qt perhaps should force rule 2.
++ 6.3.
+? 6. (rest of the section)
++ 7. - no idea what it is, but it doesn't seem to be KWin related
++ 8.
 
 
 KDE-specific extensions (for completeness):
@@ -253,104 +237,16 @@ _KDE_WM_CHANGE_STATE			root window message
 _KDE_NET_SYSTEM_TRAY_WINDOWS		root window property
 _KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR	window property
 _KDE_NET_WM_FRAME_STRUT			window property
+_NET_WM_CONTEXT_HELP
+    - Qt extension
+    - has no vendor prefix even though it's not part of the spec
+_NET_WM_STATE_STAYS_ON_TOP
+    - KDE extension
+    - has no vendor prefix even though it's not part of the spec
+    - deprecated in favor of _NET_WM_STATE_KEEP_ABOVE
+_KDE_NET_WM_WINDOW_TYPE_OVERRIDE
+    - window type, makes the window borderless
+    - unclear semantics, used also for fullscreen windows
+    - deprecated in favor of other window types
 
-_NET_WM_WINDOW_TYPE additions:
-  _KDE_NET_WM_WINDOW_TYPE_OVERRIDE	property value (atom)
-  _KDE_NET_WM_WINDOW_TYPE_TOPMENU	property value (atom)
 ==========================================================================
-
-
-Inter-Client Communication Conventions Manual (ICCCM) specs (for completeness):
-
-Property Name		Type				Contents / Format
-==========================================================================
-
-Client properties:
-
-WM_NAME			window property			String / 8
-WM_ICON_NAME		window property			Text
-WM_NORMAL_HINTS		window property			Window / 32
-WM_HINTS		window property			WM_HINTS / 32
-WM_CLASS		window property			Text
-WM_TRANSIENT_FOR	window property			WM_ICON_SIZE / 32
-WM_PROTOCOLS		window property			Atom / 32
-WM_COLORMAP_WINDOWS	top-level window property	WM_STATE / 32
-WM_CLIENT_MACHINE	window property			Window / 32
-WM_STATE				
-WM_CLIENT_LEADER	window property			Window / 32
-WM_CLIENT_ROLE		window property			String / 8
-
-Window manager properties:
-
-WM_STATE		window property			WM_STATE / 8?
-WM_ICON_SIZE		window property			WM_ICON_SIZE / 8?
-==========================================================================
-
-
-
-NETWM spec compliance (whole document):
-version 1.2
-======================
-
-1. COMPLETE
-2.3. COMPLETE - FEATURE NOT IMPLEMENTED
-2.4. COMPLETE - FEATURE NOT IMPLEMENTED
-2.5. PARTIAL - minimized windows are not in IconicState - see _NET_WM_STATE_HIDDEN
-2. (rest of the section) COMPLETE
-3.1.
-3.2. COMPLETE
-3.3. COMPLETE
-3.4. COMPLETE - FEATURE NOT IMPLEMENTED
-3.5. COMPLETE - FEATURE NOT IMPLEMENTED
-3.6. COMPLETE
-3.7. COMPLETE
-3.8. COMPLETE
-3.9. COMPLETE
-3.10. COMPLETE
-3.11. COMPLETE - NOT USED
-3.12.
-3.13.
-4.1. COMPLETE
-4.2.
-4.3. PARTIAL
-5.1. COMPLETE
-5.2. COMPLETE
-5.3.
-5.4.
-5.5. PARTIAL
-5.6. PARTIAL
-5.7. PARTIAL
-5.8. NIL
-5.9.
-5.10.
-5.11.
-5.12.
-5.13. COMPLETE
-6.1. NIL
-7.3.
-7.4.
-7.6.
-7.7.
-7.9.
-7.10.
-7. (rest of the section) COMPLETE
-
-ICCCM spec compliance (whole document):
-version 2.0
-======================
-
-1.2.3. ?
-1.2.6. ?
-1. (rest of the section) COMPLETE
-2.8.
-2. (rest of the section) COMPLETE (selections, not a KWin thing)
-3. COMPLETE - NOT SUPPORTED, OBSOLETE
-4.
-5. PARTIAL - patch sent to TT to make it COMPLETE (not KWin thing anyway)
-5.3. COMPLETE - not KWin related
-6.1. clients thing
-6.2. clients thing
-6.3. COMPLETE
-6. (rest of the section) ?
-7. COMPLETE - no idea what it is, but it doesn't seem to be KWin related
-8. COMPLETE

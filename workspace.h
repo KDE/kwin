@@ -1,66 +1,67 @@
 /*****************************************************************
-kwin - the KDE window manager
+ KWin - the KDE window manager
+ This file is part of the KDE project.
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+
+You can Freely distribute this program under the GNU General Public
+License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
+
 #ifndef KWIN_WORKSPACE_H
 #define KWIN_WORKSPACE_H
 
-#include <qwidget.h>
-#include <qapplication.h>
-#include <qpopupmenu.h>
-#include <qguardedptr.h>
-#include <qvaluelist.h>
-#include <qptrlist.h>
 #include <qtimer.h>
-#include "options.h"
-#include "KWinInterface.h"
 #include <kshortcut.h>
 #include <qcursor.h>
-#include <netwm_def.h>
+#include <netwm.h>
+
+#include "KWinInterface.h"
+#include "utils.h"
+#include "kdecoration.h"
 
 #include <X11/Xlib.h>
 
+class QPopupMenu;
 class KConfig;
 class KGlobalAccel;
+class KStartupInfo;
+class KStartupInfoData;
 
-namespace KWinInternal {
-
-const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
-    | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
-    | NET::SplashMask;
+namespace KWinInternal
+{
 
 class Client;
 class TabBox;
 class PopupInfo;
 class RootInfo;
 class PluginMgr;
-
-typedef QValueList<Client*> ClientList;
+class Placement;
 
 class SystemTrayWindow
-{
-public:
-    SystemTrayWindow()
-	: win(0),winFor(0)
-    {}
-    SystemTrayWindow( WId w )
-	: win(w),winFor(0)
-    {}
-    SystemTrayWindow( WId w, WId wf  )
-	: win(w),winFor(wf)
-    {}
+    {
+    public:
+        SystemTrayWindow()
+            : win(0),winFor(0)
+            {}
+        SystemTrayWindow( WId w )
+            : win(w),winFor(0)
+            {}
+        SystemTrayWindow( WId w, WId wf  )
+            : win(w),winFor(wf)
+            {}
 
-    bool operator==( const SystemTrayWindow& other )
-    { return win == other.win; }
-    WId win;
-    WId winFor;
-};
+        bool operator==( const SystemTrayWindow& other )
+            { return win == other.win; }
+        WId win;
+        WId winFor;
+    };
 
 typedef QValueList<SystemTrayWindow> SystemTrayWindowList;
 
 struct SessionInfo
-{
+    {
     QCString sessionId;
     QCString windowRole;
     QCString wmCommand;
@@ -70,459 +71,610 @@ struct SessionInfo
 
     QRect geometry;
     QRect restore;
-    int maximize;
+    QRect fsrestore;
+    int maximized;
+    int fullscreen;
     int desktop;
-    bool iconified;
-    bool sticky;
+    bool minimized;
+    bool onAllDesktops;
     bool shaded;
-    bool staysOnTop;
+    bool keepAbove;
+    bool keepBelow;
     bool skipTaskbar;
     bool skipPager;
+    bool userNoBorder;
     NET::WindowType windowType;
-};
-
-
-class Shape {
-public:
-    static bool hasShape( WId w);
-    static int shapeEvent();
-};
-
-class Motif {
-public:
-    static bool noBorder( WId w );
-    static bool funcFlags( WId w, bool& resize, bool& move, bool& minimize,
-        bool& maximize, bool& close );
-    struct MwmHints {
-        ulong flags;
-        ulong functions;
-        ulong decorations;
-        long input_mode;
-        ulong status;
+    bool active; // means 'was active in the saved session', not used otherwise
     };
-    enum {  MWM_HINTS_FUNCTIONS = (1L << 0),
-            MWM_HINTS_DECORATIONS =  (1L << 1),
 
-            MWM_FUNC_ALL = (1L << 0),
-            MWM_FUNC_RESIZE = (1L << 1),
-            MWM_FUNC_MOVE = (1L << 2),
-            MWM_FUNC_MINIMIZE = (1L << 3),
-            MWM_FUNC_MAXIMIZE = (1L << 4),
-            MWM_FUNC_CLOSE = (1L << 5)
-        };
-};
 
-class WorkspacePrivate;
-// NOTE: this class has to keep binary compatibility, just like other
-// KWin classes accessible from the plugins
-
-class Workspace : public QObject, virtual public KWinInterface
-{
+class Workspace : public QObject, virtual public KWinInterface, public KDecorationDefines
+    {
     Q_OBJECT
-public:
-    Workspace( bool restore = FALSE );
-    virtual ~Workspace();
+    public:
+        Workspace( bool restore = FALSE );
+        virtual ~Workspace();
 
-    static Workspace * self() { return _self; }
+        static Workspace * self() { return _self; }
 
-    virtual bool workspaceEvent( XEvent * );
+        virtual bool workspaceEvent( XEvent * );
 
-    bool hasClient(Client *); // ### make const in KDE 4
+        KDecoration* createDecoration( KDecorationBridge* bridge );
 
-    Client* findClient( WId w ) const;
+        bool hasClient( const Client * );
 
-    QRect geometry() const;
+        template< typename T > Client* findClient( T predicate );
+        template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
+        template< typename T > void forEachClient( T procedure );
 
-    enum clientAreaOption { PlacementArea, MovementArea, MaximizeArea };
+        Group* findGroup( Window leader );
+        void addGroup( Group* group, allowed_t );
+        void removeGroup( Group* group, allowed_t );
+
+        QRect geometry() const;
+
+        enum clientAreaOption { PlacementArea, MovementArea, MaximizeArea };
 
 
     // default is MaximizeArea
-    QRect clientArea(clientAreaOption, const QPoint& p, int desktop);
-    QRect clientArea(const QPoint& p, int desktop);
+        QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
+        QRect clientArea(const QPoint& p, int desktop) const;
     // KDE4 remove the following 3 methods
-    inline QRect clientArea(clientAreaOption opt) { return clientArea(opt, QCursor::pos()); }
-    QRect clientArea(clientAreaOption, const QPoint& p);
-    QRect clientArea(const QPoint& p);
+        inline QRect clientArea(clientAreaOption opt) const { return clientArea(opt, QCursor::pos()); }
+        QRect clientArea(clientAreaOption, const QPoint& p) const;
+        QRect clientArea(const QPoint& p) const;
 
-    void removeClient( Client* );
+        /**
+         * @internal
+         */
+        void killWindowId( Window window);
 
-    bool destroyClient( Client* );
+        void killWindow() { slotKillWindow(); }
 
-    /**
-     * @internal
-     * @obsolete
-     */
-    void killWindowAtPosition(int x, int y);
-    /**
-     * @internal
-     */
-    void killWindowId( Window window);
+        WId rootWin() const;
 
-    void killWindow() { slotKillWindow(); }
+        bool initializing() const;
 
-    WId rootWin() const;
+        /**
+         * Returns the active client, i.e. the client that has the focus (or None
+         * if no client has the focus)
+         */
+        Client* activeClient() const;
 
-    /**
-     * Returns the active client, i.e. the client that has the focus (or None
-     * if no client has the focus)
-     */
-    Client* activeClient() const;
+        void setActiveClient( Client*, allowed_t );
+        void activateClient( Client*, bool force = FALSE  );
+        void requestFocus( Client* c, bool force = FALSE );
+        bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false,
+            bool session_active = false );
+        void restoreFocus();
+        void gotFocusIn( const Client* );
+        bool fakeRequestedActivity( Client* c );
+        void unfakeActivity( Client* c );
 
-    void setActiveClient( Client* );
-    void activateClient( Client*, bool force = FALSE  );
-    void requestFocus( Client* c, bool force = FALSE );
+        void updateColormap();
 
-    void updateColormap();
+        void setFocusChangeEnabled(bool b) { focus_change = b; }  // KDE 3.0: No longer used
+        bool focusChangeEnabled() { return focus_change; }  // KDE 3.0: No longer used
 
-    void setFocusChangeEnabled(bool b) { focus_change = b; }  // KDE 3.0: No longer used
-    bool focusChangeEnabled() { return focus_change; }  // KDE 3.0: No longer used
+        /**
+         * Indicates that the client c is being moved around by the user.
+         */
+        void setClientIsMoving( Client *c );
 
-    /**
-     * Indicates that the client c is being moved around by the user.
-     */
-    void setClientIsMoving( Client *c );
+        void place(Client *c);
+        void placeSmart( Client* c );
 
-    void place(Client *c);
-    void doPlacement(Client* c ); // obsolete KDE4 remove
+        QPoint adjustClientPosition( Client* c, QPoint pos );
+        void raiseClient( Client* c );
+        void lowerClient( Client* c );
+        void restackClientUnderActive( Client* );
+        void updateClientLayer( Client* c );
+        void raiseOrLowerClient( Client * );
+        void reconfigure();
 
-    QPoint adjustClientPosition( Client* c, QPoint pos );
-    void raiseClient( Client* c );
-    void lowerClient( Client* c );
-    void stackClientUnderActive( Client* );
-    void raiseOrLowerClient( Client * );
-    void reconfigure();
+        void clientHidden( Client*  );
+        void clientAttentionChanged( Client* c, bool set );
 
-    void clientHidden( Client*  );
+        void clientMoved(const QPoint &pos, unsigned long time);
 
-    void clientReady( Client* );
-    void clientMoved(const QPoint &pos, unsigned long time);
+        /**
+         * Returns the current virtual desktop of this workspace
+         */
+        int currentDesktop() const;
+        /**
+         * Returns the number of virtual desktops of this workspace
+         */
+        int numberOfDesktops() const;
+        void setNumberOfDesktops( int n );
 
-    /**
-     * Returns the current virtual desktop of this workspace
-     */
-    int currentDesktop() const;
-    int nextDesktop( int iDesktop ) const;
-    int previousDesktop( int iDesktop ) const;
+        QWidget* desktopWidget();
 
-    /**
-     * Returns the number of virtual desktops of this workspace
-     */
-    int numberOfDesktops() const;
-    void setNumberOfDesktops( int n );
+    // for TabBox
+        Client* nextFocusChainClient(Client*) const;
+        Client* previousFocusChainClient(Client*) const;
+        Client* nextStaticClient(Client*) const;
+        Client* previousStaticClient(Client*) const;
+        int nextDesktopFocusChain( int iDesktop ) const;
+        int previousDesktopFocusChain( int iDesktop ) const;
 
-    QWidget* desktopWidget();   // ### make const in KDE 4
+         /**
+         * Returns the list of clients sorted in stacking order, with topmost client
+         * at the last position
+         */
+        const ClientList& stackingOrder() const;
 
-    Client* nextClient(Client*) const;
-    Client* previousClient(Client*) const;
-    Client* nextStaticClient(Client*) const;
-    Client* previousStaticClient(Client*) const;
+        ClientList ensureStackingOrder( const ClientList& clients ) const;
 
-     /**
-     * Returns the list of clients sorted in stacking order, with topmost client
-     * at the last position
-     */
-    const ClientList& stackingOrder() const;
+        Client* topClientOnDesktop( int desktop ) const;
+        Client* findDesktop( bool topmost, int desktop ) const;
+        void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
 
-    Client* topClientOnDesktop() const;
-    void sendClientToDesktop( Client* c, int desktop );
-
-
-
-    /**
-     * @deprecated Use showWindowMenu()
-     */
-    QPopupMenu* clientPopup( Client* );
-    /**
-     * @deprecated Use showWindowMenu()
-     */
     // KDE4 remove me - and it's also in the DCOP interface :(
-    void showWindowMenuAt( unsigned long id, int x, int y );
+        void showWindowMenuAt( unsigned long id, int x, int y );
 
-    /**
-     * Shows the menu operations menu for the client
-     * and makes it active if it's not already.
-     */
-    void showWindowMenu( int x, int y, Client* cl );
-    void showWindowMenu( QPoint pos, Client* cl );
+        /**
+         * Shows the menu operations menu for the client
+         * and makes it active if it's not already.
+         */
+        void showWindowMenu( int x, int y, Client* cl );
+        void showWindowMenu( QPoint pos, Client* cl );
 
-    void iconifyOrDeiconifyTransientsOf( Client* );
-    void setStickyTransientsOf( Client*, bool sticky );
+        void updateMinimizedOfTransients( Client* );
+        void updateOnAllDesktopsOfTransients( Client* );
+        void checkTransients( Window w );
 
-    bool hasCaption( const QString& caption );   // ### make const in KDE 4
+        void performWindowOperation( Client* c, WindowOperation op );
 
-    void performWindowOperation( Client* c, Options::WindowOperation op );
+        void storeSession( KConfig* config );
 
-#define NO_LEGACY_SESSION_MANAGEMENT // moved to ksmserver
-#ifndef NO_LEGACY_SESSION_MANAGEMENT
-    void restoreLegacySession( KConfig* config );
-    void storeLegacySession( KConfig* config );
-#endif
-    void storeSession( KConfig* config );
-
-    SessionInfo* takeSessionInfo( Client* );
-
-    virtual void updateClientArea();
+        SessionInfo* takeSessionInfo( Client* );
 
 
     // dcop interface
-    void cascadeDesktop();
-    void unclutterDesktop();
-    void doNotManage(QString);
-    void setCurrentDesktop( int new_desktop );
-    void nextDesktop();
-    void previousDesktop();
-    void circulateDesktopApplications();
+        void cascadeDesktop();
+        void unclutterDesktop();
+        void doNotManage(QString);
+        bool setCurrentDesktop( int new_desktop );
+        void nextDesktop();
+        void previousDesktop();
+        void circulateDesktopApplications();
 
-    QString desktopName( int desk );   // ### make const in KDE 4
-    void setDesktopLayout(int o, int x, int y);
+        QString desktopName( int desk ) const;
+        void setDesktopLayout(int o, int x, int y);
 
-    bool isNotManaged( const QString& title );  // ### setter or getter ?
+        bool isNotManaged( const QString& title );  // ### setter or getter ?
 
-public slots:
-    void refresh();
+        void sendPingToWindow( Window w, Time timestamp ); // called from Client::pingWindow()
+
+    // only called from Client::destroyClient() or Client::releaseWindow()
+        void removeClient( Client*, allowed_t );
+
+        bool checkStartupNotification( const Client* c, KStartupInfoData& data );
+
+        void focusToNull(); // SELI public?
+
+        void sessionSaveStarted();
+        void sessionSaveDone();
+        void setWasUserInteraction();
+        bool sessionSaving() const;
+
+        bool managingTopMenus() const;
+        int topMenuHeight() const;
+
+        int packPositionLeft( const Client* cl, int oldx, bool left_edge ) const;
+        int packPositionRight( const Client* cl, int oldx, bool right_edge ) const;
+        int packPositionUp( const Client* cl, int oldy, bool top_edge ) const;
+        int packPositionDown( const Client* cl, int oldy, bool bottom_edge ) const;
+
+    public slots:
+        void refresh();
     // keybindings
-    void slotSwitchDesktopNext();
-    void slotSwitchDesktopPrevious();
-    void slotSwitchDesktopRight();
-    void slotSwitchDesktopLeft();
-    void slotSwitchDesktopUp();
-    void slotSwitchDesktopDown();
+        void slotSwitchDesktopNext();
+        void slotSwitchDesktopPrevious();
+        void slotSwitchDesktopRight();
+        void slotSwitchDesktopLeft();
+        void slotSwitchDesktopUp();
+        void slotSwitchDesktopDown();
 
-    void slotSwitchToDesktop( int );
+        void slotSwitchToDesktop( int );
     //void slotSwitchToWindow( int );
-    void slotWindowToDesktop( int );
+        void slotWindowToDesktop( int );
     //void slotWindowToListPosition( int );
 
-    void slotWindowMaximize();
-    void slotWindowMaximizeVertical();
-    void slotWindowMaximizeHorizontal();
-    void slotWindowIconify();
-    void slotWindowIconifyAll();
-    void slotWindowShade();
-    void slotWindowRaise();
-    void slotWindowLower();
-    void slotWindowRaiseOrLower();
+        void slotWindowMaximize();
+        void slotWindowMaximizeVertical();
+        void slotWindowMaximizeHorizontal();
+        void slotWindowMinimize();
+        void slotWindowShade();
+        void slotWindowRaise();
+        void slotWindowLower();
+        void slotWindowRaiseOrLower();
+        void slotActivateAttentionWindow();
+        void slotWindowPackLeft();
+        void slotWindowPackRight();
+        void slotWindowPackUp();
+        void slotWindowPackDown();
+        void slotWindowGrowHorizontal();
+        void slotWindowGrowVertical();
+        void slotWindowShrinkHorizontal();
+        void slotWindowShrinkVertical();
 
-    void slotWalkThroughDesktops();
-    void slotWalkBackThroughDesktops();
-    void slotWalkThroughDesktopList();
-    void slotWalkBackThroughDesktopList();
-    void slotWalkThroughWindows();
-    void slotWalkBackThroughWindows();
+        void slotWalkThroughDesktops();
+        void slotWalkBackThroughDesktops();
+        void slotWalkThroughDesktopList();
+        void slotWalkBackThroughDesktopList();
+        void slotWalkThroughWindows();
+        void slotWalkBackThroughWindows();
 
-    void slotWindowOperations();
-    void slotWindowClose();
-    void slotWindowMove();
-    void slotWindowResize();
-    void slotWindowStaysOnTop();
-    void slotWindowSticky();
+        void slotWindowOperations();
+        void slotWindowClose();
+        void slotWindowMove();
+        void slotWindowResize();
+        void slotWindowAbove();
+        void slotWindowBelow();
+        void slotWindowOnAllDesktops();
+        void slotWindowFullScreen();
 
-    void slotWindowToNextDesktop();
-    void slotWindowToPreviousDesktop();
+        void slotWindowToNextDesktop();
+        void slotWindowToPreviousDesktop();
 
-    void slotMouseEmulation();
+        void slotMouseEmulation();
 
-    void slotResetAllClientsDelayed();
-    void slotResetAllClients();
-    void slotSettingsChanged( int category );
+        void slotSettingsChanged( int category );
 
-    void slotReconfigure();
+        void slotReconfigure();
 
-    void slotKillWindow();
+        void slotKillWindow();
 
-    void slotGrabWindow();
-    void slotGrabDesktop();
+        void slotGrabWindow();
+        void slotGrabDesktop();
 
-    void desktopResized();
+        void updateClientArea();
 
-private slots:
-    void desktopPopupAboutToShow();
-    void clientPopupAboutToShow();
-    void sendToDesktop( int );
-    void clientPopupActivated( int );
-    void configureWM();
+    private slots:
+        void desktopPopupAboutToShow();
+        void clientPopupAboutToShow();
+        void sendToDesktop( int );
+        void clientPopupActivated( int );
+        void configureWM();
+        void desktopResized();
+        void slotUpdateToolWindows();
+        void lostTopMenuSelection();
+        void lostTopMenuOwner();
 
-protected:
-    bool keyPress( XKeyEvent& ev );
-    bool keyRelease( XKeyEvent& ev );
-    bool keyPressMouseEmulation( XKeyEvent& ev );
-    bool netCheck( XEvent* e );
-    void checkStartOnDesktop( WId w );
+    protected:
+        bool keyPressMouseEmulation( XKeyEvent& ev );
+        bool netCheck( XEvent* e );
 
-private:
-    void init();
-    void initShortcuts();
-    void readShortcuts();
-    void initDesktopPopup();
+    private:
+        void init();
+        void initShortcuts();
+        void readShortcuts();
+        void initDesktopPopup();
+        void updateXTime();
 
-    bool startKDEWalkThroughWindows();
-    bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
-    bool startWalkThroughDesktops();
-    bool startWalkThroughDesktopList();
-    void KDEWalkThroughWindows( bool forward );
-    void CDEWalkThroughWindows( bool forward );
-    void walkThroughDesktops( bool forward );
-    void KDEOneStepThroughWindows( bool forward );
-    void oneStepThroughDesktops( bool forward, int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
-    void oneStepThroughDesktops( bool forward );
-    void oneStepThroughDesktopList( bool forward );
+        bool startKDEWalkThroughWindows();
+        bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
+        bool startWalkThroughDesktops();
+        bool startWalkThroughDesktopList();
+        void KDEWalkThroughWindows( bool forward );
+        void CDEWalkThroughWindows( bool forward );
+        void walkThroughDesktops( bool forward );
+        void KDEOneStepThroughWindows( bool forward );
+        void oneStepThroughDesktops( bool forward, int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
+        void oneStepThroughDesktops( bool forward );
+        void oneStepThroughDesktopList( bool forward );
 
-    ClientList constrainedStackingOrder( const ClientList& list );
+        void updateStackingOrder( bool propagate_new_clients = false );
+        void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
+        ClientList constrainedStackingOrder();
+        void blockStackingUpdates( bool block );
+        void updateCurrentTopMenu();
+        void updateToolWindows( bool also_hide );
 
-    Client* clientFactory(WId w);
+    // this is the right way to create a new client
+        Client* createClient( Window w, bool is_mapped );
+        void addClient( Client* c, allowed_t );
 
-    void raiseTransientsOf( ClientList& safeset, Client* c );
-    void lowerTransientsOf( ClientList& safeset, Client* c );
-    void randomPlacement(Client* c);
-    void smartPlacement(Client* c);
-    void cascadePlacement(Client* c, bool re_init = false);
+        void randomPlacement(Client* c);
+        void smartPlacement(Client* c);
+        void cascadePlacement(Client* c, bool re_init = false);
 
-    void focusToNull();
-
-    Client* findClientWithId( WId w ) const;
-
-    void propagateClients( bool onlyStacking, bool alsoXRestack );
-
-    bool addSystemTrayWin( WId w );
-    bool removeSystemTrayWin( WId w );
-    void propagateSystemTrayWins();
-    SystemTrayWindow findSystemTrayWin( WId w );
+        bool addSystemTrayWin( WId w );
+        bool removeSystemTrayWin( WId w );
+        void propagateSystemTrayWins();
+        SystemTrayWindow findSystemTrayWin( WId w );
 
     // desktop names and number of desktops
-    void loadDesktopSettings();
-    void saveDesktopSettings();
+        void loadDesktopSettings();
+        void saveDesktopSettings();
 
     // mouse emulation
-    WId getMouseEmulationWindow();
-    enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
-    unsigned int sendFakedMouseEvent( QPoint pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
+        WId getMouseEmulationWindow();
+        enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
+        unsigned int sendFakedMouseEvent( QPoint pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
+
+        void tabBoxKeyPress( const KKeyNative& keyX );
+        void tabBoxKeyRelease( const XKeyEvent& ev );
 
     // electric borders
-    void createBorderWindows();
-    void destroyBorderWindows();
-    void electricBorder(XEvent * e);
-    void raiseElectricBorders();
+        void createBorderWindows();
+        void destroyBorderWindows();
+        void electricBorder(XEvent * e);
+        void raiseElectricBorders();
 
     // ------------------
 
-    void calcDesktopLayout(int &x, int &y);
+        void calcDesktopLayout(int &x, int &y);
 
-    QPopupMenu* clientPopup();
+        QPopupMenu* clientPopup();
 
-    void updateClientArea( bool force );
+        void updateClientArea( bool force );
 
-    SystemTrayWindowList systemTrayWins;
+        SystemTrayWindowList systemTrayWins;
 
-    int current_desktop;
-    int number_of_desktops;
-    QMemArray<int> desktop_focus_chain;
+        int current_desktop;
+        int number_of_desktops;
+        QMemArray<int> desktop_focus_chain;
 
-    Client* popup_client;
+        Client* popup_client;
 
-    void loadSessionInfo();
+        void loadSessionInfo();
 
-    QWidget* desktop_widget;
+        QWidget* desktop_widget;
 
-    QPtrList<SessionInfo> session;
-    QPtrList<SessionInfo> fakeSession;
-    void loadFakeSessionInfo();
-    void storeFakeSessionInfo( Client* c );
-    void writeFakeSessionInfo();
-    static const char* windowTypeToTxt( NET::WindowType type );
-    static NET::WindowType txtToWindowType( const char* txt );
-    static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
+        QPtrList<SessionInfo> session;
+        QPtrList<SessionInfo> fakeSession;
+        void loadFakeSessionInfo();
+        void storeFakeSessionInfo( Client* c );
+        void writeFakeSessionInfo();
+        static const char* windowTypeToTxt( NET::WindowType type );
+        static NET::WindowType txtToWindowType( const char* txt );
+        static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
 
-    Client* active_client;
-    Client* last_active_client;
-    Client* should_get_focus;
-    Client* most_recently_raised;
+        Client* active_client;
+        Client* last_active_client;
+        Client* most_recently_raised; // used _only_ by raiseOrLowerClient()
+        Client* movingClient;
 
-    ClientList clients;
-    ClientList desktops;
-    ClientList stacking_order;
-    ClientList focus_chain;
+        ClientList clients;
+        ClientList desktops;
 
-    bool control_grab;
-    bool tab_grab;
+        ClientList unconstrained_stacking_order;
+        ClientList stacking_order;
+        ClientList focus_chain;
+        ClientList should_get_focus; // last is most recent
+        ClientList attention_chain;
+
+        GroupList groups;
+
+        bool was_user_interaction;
+        bool session_saving;
+
+        bool control_grab;
+        bool tab_grab;
     //KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
     //KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
     //KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
-    KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
-    KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
-    KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
-    bool mouse_emulation;
-    unsigned int mouse_emulation_state;
-    WId mouse_emulation_window;
-    bool focus_change;
+        KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
+        KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
+        KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
+        bool mouse_emulation;
+        unsigned int mouse_emulation_state;
+        WId mouse_emulation_window;
+        bool focus_change;
 
-    TabBox* tab_box;
-    PopupInfo* popupinfo;
+        TabBox* tab_box;
+        PopupInfo* popupinfo;
 
-    QPopupMenu *popup;
-    QPopupMenu *desk_popup;
+        QPopupMenu *popup;
+        QPopupMenu *desk_popup;
+        int desk_popup_index;
 
-    KGlobalAccel *keys;
-    WId root;
+        KGlobalAccel *keys;
+        WId root;
 
-    PluginMgr *mgr;
+        PluginMgr *mgr;
 
-    RootInfo *rootInfo;
-    QWidget* supportWindow;
-
-    QRect area_; // KDE4 remove me, unused
+        RootInfo *rootInfo;
+        QWidget* supportWindow;
 
     // swallowing
-    QStringList doNotManageList;
+        QStringList doNotManageList;
 
     // colormap handling
-    Colormap default_colormap;
-    Colormap installed_colormap;
-
-    // Timer to collect requests for 'ResetAllClients'
-    QTimer resetTimer;
+        Colormap default_colormap;
+        Colormap installed_colormap;
 
     // Timer to collect requests for 'reconfigure'
-    QTimer reconfigureTimer;
+        QTimer reconfigureTimer;
 
-    QTimer focusEnsuranceTimer; // unused
+        QTimer updateToolWindowsTimer;
 
-    WorkspacePrivate* d;
-    static Workspace *_self;
+        static Workspace *_self;
 
-    void addClient( Client* c );
-};
+        bool workspaceInit;
+
+        KStartupInfo* startup;
+
+        bool electric_have_borders;
+        int electric_current_border;
+        WId electric_top_border;
+        WId electric_bottom_border;
+        WId electric_left_border;
+        WId electric_right_border;
+        int electricLeft;
+        int electricRight;
+        int electricTop;
+        int electricBottom;
+        Time electric_time_first;
+        Time electric_time_last;
+        QPoint electric_push_point;
+
+        Qt::Orientation layoutOrientation;
+        int layoutX;
+        int layoutY;
+
+        Placement *initPositioning;
+
+        QRect* workarea; //  array of workareas for virtual desktops
+
+        bool managing_topmenus;
+        KSelectionOwner* topmenu_selection;
+        KSelectionWatcher* topmenu_watcher;
+        ClientList topmenus; // doesn't own them
+        mutable int topmenu_height;
+
+        int set_active_client_recursion;
+        int block_stacking_updates; // when >0, stacking updates are temporarily disabled
+        bool blocked_propagating_new_clients; // propagate also new clients after enabling stacking updates?
+        friend class StackingUpdatesBlocker;
+    };
+
+// helper for Workspace::blockStackingUpdates() being called in pairs (true/false)
+class StackingUpdatesBlocker
+    {
+    public:
+        StackingUpdatesBlocker( Workspace* w )
+            : ws( w ) { ws->blockStackingUpdates( true ); }
+        ~StackingUpdatesBlocker()
+            { ws->blockStackingUpdates( false ); }
+    private:
+        Workspace* ws;
+    };
+
+// NET WM Protocol handler class
+class RootInfo : public NETRootInfo2
+    {
+    private:
+        typedef KWinInternal::Client Client;  // because of NET::Client
+    public:
+        RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr= -1);
+    protected:
+        virtual void changeNumberOfDesktops(int n);
+        virtual void changeCurrentDesktop(int d);
+//    virtual void changeActiveWindow(Window w); the extended version is used
+        virtual void changeActiveWindow(Window w,NET::RequestSource src, Time timestamp);
+        virtual void closeWindow(Window w);
+        virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction);
+        virtual void gotPing(Window w, Time timestamp);
+    private:
+        Workspace* workspace;
+    };
+
 
 inline WId Workspace::rootWin() const
-{
+    {
     return root;
-}
+    }
+
+inline bool Workspace::initializing() const
+    {
+    return workspaceInit;
+    }
 
 inline Client* Workspace::activeClient() const
-{
+    {
     return active_client;
-}
+    }
 
 inline int Workspace::currentDesktop() const
-{
+    {
     return current_desktop;
-}
+    }
 
 inline int Workspace::numberOfDesktops() const
-{
+    {
     return number_of_desktops;
-}
+    }
+
+inline void Workspace::addGroup( Group* group, allowed_t )
+    {
+    groups.append( group );
+    }
+
+inline void Workspace::removeGroup( Group* group, allowed_t )
+    {
+    groups.remove( group );
+    }
 
 inline const ClientList& Workspace::stackingOrder() const
-{
+    {
+// TODO    Q_ASSERT( block_stacking_updates == 0 );
     return stacking_order;
-}
+    }
 
 inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
-{
+    {
     showWindowMenu(pos.x(), pos.y(), cl);
-}
+    }
 
+inline
+void Workspace::setWasUserInteraction()
+    {
+    was_user_interaction = true;
+    }
 
-}
+inline
+bool Workspace::managingTopMenus() const
+    {
+    return managing_topmenus;
+    }
+
+inline void Workspace::sessionSaveStarted()
+    {
+    session_saving = true;
+    }
+
+inline void Workspace::sessionSaveDone()
+    {
+    session_saving = false;
+    }
+
+inline bool Workspace::sessionSaving() const
+    {
+    return session_saving;
+    }
+
+template< typename T >
+inline Client* Workspace::findClient( T predicate )
+    {
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
+        {
+        if ( predicate( const_cast< const Client* >( *it)))
+            return *it;
+        }
+    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it) 
+        {
+        if ( predicate( const_cast< const Client* >( *it)))
+            return *it;
+        }
+    return NULL;
+    }
+
+template< typename T1, typename T2 >
+inline void Workspace::forEachClient( T1 procedure, T2 predicate )
+    {
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+        if ( predicate( const_cast< const Client* >( *it)))
+            procedure( *it );
+    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it)
+        if ( predicate( const_cast< const Client* >( *it)))
+            procedure( *it );
+    }
+
+template< typename T >
+inline void Workspace::forEachClient( T procedure )
+    {
+    return forEachClient( procedure, TruePredicate());
+    }
+
+KWIN_COMPARE_PREDICATE( ClientMatchPredicate, const Client*, cl == value );
+inline bool Workspace::hasClient( const Client* c )
+    {
+    return findClient( ClientMatchPredicate( c ));
+    }
+
+} // namespace
 
 #endif

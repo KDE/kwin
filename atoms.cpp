@@ -1,13 +1,22 @@
 /*****************************************************************
-kwin - the KDE window manager
+ KWin - the KDE window manager
+ This file is part of the KDE project.
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+
+You can Freely distribute this program under the GNU General Public
+License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
+
 #include <qapplication.h>
 #include "atoms.h"
 
-Atoms::Atoms()
+namespace KWinInternal
 {
+
+Atoms::Atoms()
+    {
 
     const int max = 20;
     Atom* atoms[max];
@@ -33,20 +42,22 @@ Atoms::Atoms()
     atoms[n] = &wm_client_leader;
     names[n++] = (char *) "WM_CLIENT_LEADER";
 
-    atoms[n] = &wm_save_yourself;
-    names[n++] = (char *) "WM_SAVE_YOURSELF";
-
     atoms[n] = &motif_wm_hints;
     names[n++] = (char *) "_MOTIF_WM_HINTS";
 
     atoms[n] = &net_wm_context_help;
     names[n++] = (char *) "_NET_WM_CONTEXT_HELP";
 
+    atoms[n] = &net_wm_ping;
+    names[n++] = (char *) "_NET_WM_PING";
+
     atoms[n] = &kde_wm_change_state;
     names[n++] = (char *) "_KDE_WM_CHANGE_STATE";
 
-    atoms[n] = &kde_net_user_time;
-    names[n++] = (char *) "_KDE_NET_USER_TIME";
+    atoms[n] = &net_wm_user_time;
+    names[n++] = (char *) "_NET_WM_USER_TIME";
+    atoms[n] = &kde_net_wm_user_creation_time;
+    names[n++] = (char *) "_KDE_NET_WM_USER_CREATION_TIME";
 
     Atom fake;
     atoms[n] = &fake;
@@ -54,7 +65,7 @@ Atoms::Atoms()
 
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
-	*atoms[i] = atoms_return[i];
+        *atoms[i] = atoms_return[i];
+    }
 
-
-}
+} // namespace

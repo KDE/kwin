@@ -1,22 +1,5 @@
 This is KWin, kwm next generation.
 
-Currently supported options in the kwinrc:
-
-[WM]
-... general color stuff, usually in kdeglobals  ...
-
-[Windows]
-
-MoveMode=Opaque |Transparent
-ResizeMode=Opaque |Transparent
-Placement=Smart | Random | Cascade
-AnimateShade=true|false
-AnimSteps=<integer=20>
-BorderSnapZone=<integer=10>
-WindowSnapZone=<integer=10>
-TitlebarDoubleClickCommand=Move | Resize |
-        Maximize | Iconify | Close | Sticky | Shade | Operations
-
 
     /*!
       Different focus policies:
@@ -71,57 +54,6 @@ FocusPolicy=ClickToFocus | FocusFollowsMouse | FocusUnderMouse | FocusStrictlyUn
      */
 AltTabStyle=KDE | CDE
     
-
-
-[MouseBindings]
-
-	CommandActiveTitlebar1 |
-	CommandActiveTitlebar2 |
-	CommandActiveTitlebar3 |
-	CommandInactiveTitlebar1 |
-	CommandInactiveTitlebar2 |
-	CommandInactiveTitlebar3 |
-	CommandWindow1 |
-	CommandWindow2 |
-	CommandWindow3 |
-	CommandAll1 |
-	CommandAll2 |
-	CommandAll3
-    =
-	Raise |
-	Lower |
-	Operations Menu |
-	Toggle raise and  lower |
-	Activate and raise |
-	Activate and lower |
-	Activate |
-	Activate, raise and pass click |
-	Activate and pass click |
-	Move |
-	Resize |
-	Nothing
-
-
-
-KWin raises the following sound events via KNotifyClient:
-                  "Window Close"
-                  "Window Iconify"
-                  "Window DeIconify"
-                  "Window Maximize"
-                  "Window UnMaximize"
-                  "Window Sticky"
-                  "Window UnSticky"
-                  "Window New"
-                  "Window Delete"
-                  "Window Trans New"
-                  "Window Trans Delete"
-                  "Window Shade Up"
-                  "Window Shade Down"
-                  "Window Move Start"
-                  "Window Move End"
-                  "Window Resize Start"
-                  "Window Resize End"
-
 
 Have fun,
 

@@ -1,8 +1,12 @@
-/*
- *  $Id$
- *  Window Geometry Display
- *  Copyright (c) 2003, Karol Szwed <kszwed@kde.org>
- */
+/*****************************************************************
+ KWin - the KDE window manager
+ This file is part of the KDE project.
+
+Copyright (c) 2003, Karol Szwed <kszwed@kde.org>
+
+You can Freely distribute this program under the GNU General Public
+License. See the file "COPYING" for the exact licensing terms.
+******************************************************************/
 
 #ifndef KWIN_GEOMETRY_TIP_H
 #define KWIN_GEOMETRY_TIP_H
@@ -10,23 +14,21 @@
 #include <qlabel.h>
 #include "client.h"
 
-namespace KWinInternal {
-	
-class GeometryTip: public QLabel
+namespace KWinInternal
 {
+
+class GeometryTip: public QLabel
+    {
     Q_OBJECT
     public:
-	GeometryTip( const Client* client, const XSizeHints* xSizeHints, bool resizing );
-	~GeometryTip();
-   	void setGeometry( const QRect& geom );
-	
-    private:
-	const XSizeHints* sizeHints;
-	const Client* c;
-	int framewidth;
-	int frameheight;
-};
+        GeometryTip( const XSizeHints* xSizeHints, bool save_under );
+        ~GeometryTip();
+        void setGeometry( const QRect& geom );
 
-}
+    private:
+        const XSizeHints* sizeHints;
+    };
+
+} // namespace
 
 #endif
