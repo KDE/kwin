@@ -321,13 +321,15 @@ bool WindowWrapper::x11Event( XEvent * e)
     switch ( e->type ) {
     case ButtonPress:
 	{
+	    bool mod1 = (e->xbutton.state & Mod1Mask) == Mod1Mask;
+
 	    if ( ((Client*)parentWidget())->isActive()
-		 && ( options->focusPolicy != Options::ClickToFocus &&  options->clickRaise ) ) {
+		 && ( options->focusPolicy != Options::ClickToFocus 
+		 &&  options->clickRaise && !mod1 ) ) {
 		((Client*)parentWidget())->autoRaise();
 		ungrabButton( winId(),  None );
 	    }
 	
-	    bool mod1 = (e->xbutton.state & Mod1Mask) == Mod1Mask;
 	    Options::MouseCommand com = Options::MouseNothing;
 	    if ( mod1){
 		switch (e->xbutton.button) {
