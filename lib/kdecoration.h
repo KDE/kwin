@@ -1,0 +1,665 @@
+/*****************************************************************
+This file is part of the KDE project.
+
+Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+******************************************************************/
+
+#ifndef KDECORATION_H
+#define KDECORATION_H
+
+#include <qcolor.h>
+#include <qfont.h>
+#include <qobject.h>
+#include <qiconset.h>
+#include <netwm_def.h>
+
+class KDecorationOptionsPrivate;
+class KDecorationBridge;
+class KDecorationPrivate;
+class KDecorationFactory;
+
+/**
+ * This class provides a namespace for all decoration related classes.
+ * All shared types are defined here.
+ */
+class KDecorationDefines
+{
+public:
+    enum MousePosition { // FRAME nejake lepsi pojmenovani
+    	    Nowhere, TopLeft2 , BottomRight2, BottomLeft2, TopRight2, Top, Bottom, Left, Right, Center
+	};
+    /**
+     * Maximize mode. These values specify how a window is maximized.
+     */
+    // these values are written to session files, don't change the order
+    enum MaximizeMode {
+	    MaximizeRestore    = 0, ///< The window is not maximized in any direction.
+	    MaximizeVertical   = 1, ///< The window is maximized vertically.
+	    MaximizeHorizontal = 2, ///< The window is maximized horizontally.
+	    /// Equal to @p MaximizeVertical | @p MaximizeHorizontal
+	    MaximizeFull = MaximizeVertical | MaximizeHorizontal 
+    };
+
+    enum WindowOperation{
+        MaximizeOp = 5000,
+        RestoreOp,
+        MinimizeOp,
+        MoveOp,
+        UnrestrictedMoveOp,
+        ResizeOp,
+        UnrestrictedResizeOp,
+        CloseOp,
+        OnAllDesktopsOp,
+        ShadeOp,
+        KeepAboveOp,
+        KeepBelowOp,
+        OperationsOp,
+        ToggleStoreSettingsOp,
+        HMaximizeOp,
+        VMaximizeOp,
+        LowerOp,
+        FullScreenOp,
+        NoBorderOp,
+        NoOp
+    };
+    /**
+     * Basic color types that should be recognized by all decoration styles.
+     * Decorations are not required to implement all the colors, but for the ones that
+     * are implemented the color setting for them should be obeyed.
+     */
+    enum ColorType
+	{
+	ColorTitleBar,   ///< The color for the titlebar
+	ColorTitleBlend, ///< The blend color for the titlebar
+	ColorFont,       ///< The titlebar text color
+	ColorButtonBg,   ///< The color to use for the titlebar buttons
+	ColorFrame,      ///< The color for the window frame (border)
+	ColorHandle,     ///< The color for the resize handle
+	NUM_COLORS
+	};
+    
+    /**
+     * These flags specify which settings changed when rereading settings.
+     * Each setting in class KDecorationOptions specifies its matching flag.
+     */
+    enum
+        {
+        SettingDecoration = 1 << 0, ///< The decoration was changed
+        SettingColors     = 1 << 1, ///< The color palette was changed
+        SettingFont       = 1 << 2, ///< The titlebar font was changed
+        SettingButtons    = 1 << 3, ///< The button layout was changed
+        SettingTooltips   = 1 << 4, ///< The tooltip setting was changed
+        SettingBorder     = 1 << 5  ///< The border size setting was changed
+        };
+        
+    /**
+     * Border size. KDecorationOptions::preferredBorderSize() returns
+     * one of these values.
+     */
+    enum BorderSize
+        {
+        BorderTiny,      ///< Minimal borders
+        BorderNormal,    ///< Standard size borders, the default setting
+        BorderLarge,     ///< Larger borders
+        BorderVeryLarge, ///< Very large borders
+        BorderHuge       ///< Huge borders
+        };
+};    
+
+/**
+ * This class holds various configuration settings for the decoration.
+ * It is accessible from the decorations either as KDecoration::options()
+ * or KDecorationFactory::options().
+ */
+class KDecorationOptions : public KDecorationDefines
+    {
+public:
+    KDecorationOptions();
+    virtual ~KDecorationOptions();
+    /**
+     * Returns the color that should be used for the given part of the decoration.
+     * The changed flags for this setting is SettingColors.
+     *
+     * @param type   The requested color type.
+     * @param active Whether the color should be for active or inactive windows.
+     */
+    const QColor& color(ColorType type, bool active=true) const;
+    /**
+     * Returns a colorgroup using the given decoration color as the background.
+     * The changed flags for this setting is SettingColors.
+     *
+     * @param type   The requested color type.
+     * @param active Whether to return the color for active or inactive windows.
+     */
+    const QColorGroup& colorGroup(ColorType type, bool active=true) const;
+    /**
+     * Returns the active or inactive decoration font.
+     * The changed flags for this setting is SettingFont.
+     *
+     * @param active Whether to return the color for active or inactive windows.
+     * @param small  If @a true, returns a font that's suitable for tool windows.
+     */
+    const QFont& font(bool active=true, bool small = false) const;
+    /**
+    * @Returns @a true if the style should use custom button positions
+    * The changed flags for this setting is SettingButtons.
+    *
+    * @see titleButtonsLeft
+    * @see titleButtonsRight
+    */
+    bool customButtonPositions() const;
+    /**
+    * If customButtonPositions() returns true, titleButtonsLeft
+    * returns which buttons should be on the left side of the titlebar from left
+    * to right. Characters in the returned string have this meaning :
+    * @li 'M' menu button
+    * @li 'S' on_all_desktops button
+    * @li 'H' quickhelp button
+    * @li 'I' minimize ( iconify ) button
+    * @li 'A' maximize button
+    * @li 'X' close button
+    * @li '_' spacer
+    *
+    * The default ( which is also returned if customButtonPositions returns false )
+    * is "MS".
+    * The changed flags for this setting is SettingButtons.
+    */
+    // FRAME vice druhu tlacitek
+    QString titleButtonsLeft() const;
+    /**
+    * If customButtonPositions() returns true, titleButtonsRight
+    * returns which buttons should be on the right side of the titlebar from left
+    * to right. Characters in the return string have the same meaning like
+    * in titleButtonsLeft().
+    *
+    * The default ( which is also returned if customButtonPositions returns false )
+    * is "HIAX".
+    * The changed flags for this setting is SettingButtons.
+    */
+    QString titleButtonsRight() const;
+
+    /**
+    * @returns true if the style should use tooltips for window buttons
+    * The changed flags for this setting is SettingTooltips.
+    */
+    bool showTooltips() const;
+    
+    /**
+     * The preferred border size selected by the user, e.g. for accessibility
+     * reasons, or when using high resolution displays. It's up to the decoration
+     * to decide which borders or if any borders at all will obey this setting.
+     * The changed flags for this setting is SettingBorder.
+     */
+    BorderSize preferredBorderSize() const;
+
+    /*
+     * When this functions returns false, moving and resizing of maximized windows
+     * is not allowed, and therefore the decoration is allowed to turn off (some of)
+     * its borders.
+     * The changed flags for this setting is SettingButtons.
+     */
+    bool moveResizeMaximizedWindows() const;
+
+    /**
+     * @internal
+     */
+    virtual unsigned long updateSettings() = 0; // returns SettingXYZ mask
+
+protected:
+    /**
+     * @internal
+     */
+    KDecorationOptionsPrivate* d;
+    };
+
+
+/**
+ * This is the base class for a decoration object. It provides functions
+ * that give various information about the decorated window, and also
+ * provides pure virtual functions for controlling the decoration that
+ * every decoration should implement.
+ */
+class KDecoration
+    : public QObject, public KDecorationDefines
+    {
+    Q_OBJECT
+    public:
+	/**
+	 * Constructs a KDecoration object. Both the arguments are passed from
+	 * KDecorationFactory. Note that the initialization code of the decoration
+	 * should be done in the init() method.
+	 */
+	KDecoration( KDecorationBridge* bridge, KDecorationFactory* factory );
+	/**
+	 * Destroys the KDecoration.
+	 */
+	virtual ~KDecoration();
+	
+	// requests from decoration
+	
+	/**
+	 * Returns the KDecorationOptions object, which is used to access
+	 * configuration settings for the decoration.
+	 */
+        static const KDecorationOptions* options();
+	/**
+	 * Returns @a true if the decorated window is currently active.
+	 */
+	bool isActive() const;
+	/**
+	 * Returns @a true if the decoration window can be closed by the user.
+	 */
+	bool isCloseable() const;
+	/**
+	 * Returns @a true if the decorated window can be maximized.
+	 */
+	bool isMaximizable() const;
+	/**
+	 * Returns the current maximization mode of the decorated window.
+	 * Note that only fully maximized windows should be treated
+	 * as "maximized" (e.g. if the maximize button has only two states).
+	 */
+	MaximizeMode maximizeMode() const;
+	/**
+	 * Returns @a true if the decorated window can be minimized by the user.
+	 */
+	bool isMinimizable() const;
+	/**
+	 * Return @a true if the decorated window can show context help
+	 * (i.e. the decoration should provide the context help button).
+	 */
+        bool providesContextHelp() const;
+	/**
+	 * Returns the number of the virtual desktop the decorated window
+	 * is currently on (including NET::OnAllDesktops for being on all
+	 * desktops).
+	 */
+        int desktop() const;
+	/**
+	 * Convenience function that returns @a true if the window is on all
+	 * virtual desktops.
+	 */
+        bool isOnAllDesktops() const; // convenience
+	/**
+	 * Returns @a true if the decoration window is modal (usually a modal dialog).
+	 */
+        bool isModal() const;
+	/**
+	 * Returns @a true if the decorated window can be shaded.
+	 */
+        bool isShadeable() const;
+	/**
+	 * Returns @a true if the decorated window is currently shaded.
+	 */
+        bool isShade() const;
+	/**
+	 * Returns @a true if the decorated window should be kept above other windows.
+	 */
+        bool keepAbove() const;
+	/**
+	 * Returns @a true if the decorated window should be kept below other windows.
+	 */
+        bool keepBelow() const;
+	/**
+	 * Returns @a true if the decorated window can be moved by the user.
+	 */
+        bool isMovable() const;
+	/**
+	 * Returns @a true if the decorated window can be resized by the user.
+	 */
+        bool isResizable() const;
+	/**
+	 * This function returns the window type of the decorated window.
+	 * The argument to this function is a mask of all window types
+	 * the decoration knows about (as the list of valid window types
+	 * is extended over time, and fallback types are specified in order
+	 * to support older code). For a description of all window types,
+	 * see the definition of the NET::WindowType type. Note that
+	 * some window types never have decorated windows.
+	 * 
+	 * An example of usage:
+	 * @code
+	 * const unsigned long supported_types = NET::NormalMask | NET::DesktopMask
+	 * 	| NET::DockMask | NET::ToolbarMask | NET::MenuMask | NET::DialogMask
+	 * 	| NET::OverrideMask | NET::TopMenuMask | NET::UtilityMask | NET::SplashMask;
+	 *
+	 * NET::WindowType type = windowType( supported_types );
+	 *
+	 * if( type == NET::Utility || type == NET::Menu || type == NET::Toolbar )
+	 *    // ... use smaller decorations for tool window types
+	 * else
+	 *    // ... use normal decorations
+	 * @endcode
+	 */
+        NET::WindowType windowType( unsigned long supported_types ) const;
+	/**
+	 * Returns an icon set with the decorated window's icon.
+	 */
+	QIconSet icon() const;
+	/**
+	 * Returns the decorated window's caption that should be shown in the titlebar.
+	 */
+	QString caption() const;
+	/**
+	 * This function invokes the window operations menu.
+	 */
+	void showWindowMenu( QPoint pos );
+	void performWindowOperation( WindowOperation op );
+	/**
+	 * If the decoration is non-rectangular, this function needs to be called
+	 * to set the shape of the decoration.
+	 *
+	 * @param reg  The shape of the decoration.
+	 * @param mode The X11 values Unsorted, YSorted, YXSorted and YXBanded that specify
+	 *             the sorting of the rectangles, default value is Unsorted.
+	 */
+        void setMask( const QRegion& reg, int mode = 0 );
+	/**
+	 * This convenience function resets the shape mask.
+	 */
+        void clearMask(); // convenience
+	/**
+	 * If this function returns @a true, the decorated window is used as a preview
+	 * e.g. in the configuration module. In such case, the decoration can e.g.
+	 * show some information in the window area.
+	 */
+        bool isPreview() const;
+	/**
+	 * Returns the geometry of the decoration.
+	 */
+        QRect geometry() const;
+	/**
+	 * Returns the icon geometry for the window, i.e. the geometry of the taskbar
+	 * entry. This is used mainly for window minimize animations. Note that
+	 * the geometry may be null.
+	 */
+        QRect iconGeometry() const;
+	/**
+	 * Returns the main workspace widget. The main purpose of this function is to
+	 * allow painting the minimize animation or the transparent move bound on it.
+	 */
+        QWidget* workspaceWidget() const;
+	/**
+	 * Convenience function that returns the width of the decoration.
+	 */
+        int width() const; // convenience
+	/**
+	 * Convenience function that returns the height of the decoration.
+	 */
+        int height() const;  // convenience
+	/**
+	 * This function is the default handler for mouse events. All mouse events
+	 * that are not handled by the decoration itself should be passed to it
+	 * in order to make work operations like window resizing by dragging borders etc.
+	 */
+	void processMousePressEvent( QMouseEvent* e );
+
+	// requests to decoration
+
+	/**
+	 * This function is called immediately after the decoration object is created.
+	 * Due to some technical reasons, initialization should be done here
+	 * instead of in the constructor.
+	 */
+        virtual void init() = 0; // called once right after created
+	
+	virtual MousePosition mousePosition( const QPoint& p ) const = 0;
+	/**
+	 * This function should return the distance from each window side to the inner
+	 * window. The sizes may depend on the state of the decorated window, such as
+	 * whether it's shaded. Decorations often turn off their bottom border when the
+	 * window is shaded, and turn off their left/right/bottom borders when
+	 * the window is maximized and moving and resizing of maximized windows is disabled.
+	 * This function mustn't do any repaints or resizes. Also, if the sizes returned
+	 * by this function don't match the real values, this may result in drawing errors
+	 * or other problems.
+	 *
+	 * @see KDecorationOptions::moveResizeMaximizedWindows()
+	 */
+        // mustn't do any repaints, resizes or anything like that
+	virtual void borders( int& left, int& right, int& top, int& bottom ) const = 0;
+	/**
+	 * This method is called by kwin when the style should resize the decoration window.
+	 * The usual implementation is to resize the main widget of the decoration to the
+	 * given size.
+	 *
+	 * @param s Specifies the new size of the decoration window.
+	 */
+	virtual void resize( const QSize& s ) = 0;
+	/**
+	 * This function should return the minimum required size for the decoration.
+	 * Note that the returned size shouldn't be too large, because it will be
+	 * used to keep the decorated window at least as large.
+	 */
+	virtual QSize minimumSize() const = 0;
+	/**
+	 * This function is called whenever the window either becomes or stops being active.
+	 * Use isActive() to find out the current state.
+	 */
+        virtual void activeChange() = 0;
+	/**
+	 * This function is called whenever the caption changes. Use caption() to get it.
+	 */
+        virtual void captionChange() = 0;
+	/**
+	 * This function is called whenever the window icon changes. Use icon() to get it.
+	 */
+        virtual void iconChange() = 0;
+	/**
+	 * This function is called whenever the maximalization state of the window changes.
+	 * Use maximizeMode() to get the current state.
+	 */
+        virtual void maximizeChange() = 0;
+	/**
+	 * This function is called whenever the desktop for the window changes. Use
+	 * desktop() or isOnAllDesktops() to find out the current desktop
+	 * on which the window is.
+	 */
+        virtual void desktopChange() = 0;
+	/**
+	 * This function is called whenever the window is shaded or unshaded. Use
+	 * isShade() to get the current state.
+	 */
+        virtual void shadeChange() = 0;
+	/**
+	 * This function may be reimplemented to provide custom bound drawing
+	 * for transparent moving or resizing of the window.
+	 * @a False should be returned if the default implementation should be used.
+	 *
+	 * @param geom  The geometry at this the bound should be drawn
+	 * @param clear @a true if the bound should be cleared
+	 *
+	 * @see workspaceWidget() and geometry().
+	 */
+        virtual bool drawbound( const QRect& geom, bool clear );
+	/**
+	 * This function may be reimplemented to provide custom minimize/restore animations
+	 * The reimplementation is allowed to perform X server grabs if necessary, but no
+	 * futher event processing is allowed (i.e. no kapp->processEvents()).
+	 * @a False should be returned if the default implementation should be used.
+	 * Note that you should not use this function to force disabling of the animation.
+	 *
+	 * @see workspaceWidget(), geometry() and helperShowHide().
+	 */
+        virtual bool animateMinimize( bool minimize );
+	/**
+	 * This function is called to reset the decoration on settings changes.
+	 * It is usually invoked by calling KDecorationFactory::resetDecorations().
+	 * 
+	 * @param changed Specifies which settings were changed, given by the SettingXXX masks
+	 */
+        virtual void reset( unsigned long changed );
+
+	// special
+
+	/**
+	 * This should be the first function called in init() to specify
+	 * the main widget of the decoration. The widget should be created
+	 * with parent specified by initialParentWidget() and flags
+	 * specified by initialWFlags().
+	 */	
+        void setMainWidget( QWidget* );
+	/**
+	 * Convenience functions that creates and sets a main widget as necessary.
+	 * In such case, it's usually needed to install an event filter
+	 * on the main widget to receive important events on it.
+	 *
+	 * @param flags Additional widget flags for the main widget. Note that only
+	 *              flags that affect widget drawing are allowed. Window type flags
+	 *              like WX11BypassWM or WStyle_NoBorder are forbidden.
+	 */
+        void createMainWidget( WFlags flags = 0 );
+	/**
+	 * The parent widget that should be used for the main widget.
+	 */
+        QWidget* initialParentWidget() const;
+	/**
+	 * The flags that should be used when creating the main widget.
+	 * It is possible to add more flags when creating the main widget, but only flags
+	 * that affect widget drawing are allowed. Window type flags like WX11BypassWM
+	 * or WStyle_NoBorder are forbidden.
+	 */
+        WFlags initialWFlags() const;
+	/**
+	 * This function is only allowed to be called once from animateMinimize().
+	 * It can be used if the window should be shown or hidden at a specific
+	 * time during the animation. It is forbidden to use this function
+	 * for other purposes.
+	 */
+        void helperShowHide( bool show );
+	/**
+	 * Returns the main widget for the decoration.
+	 */
+	QWidget* widget();
+	/**
+	 * Returns the main widget for the decoration.
+	 */
+	const QWidget* widget() const;
+	/**
+	 * Returns the factory that created this decoration.
+	 */
+        KDecorationFactory* factory() const;
+    public slots:
+	// requests from decoration
+
+	/**
+	 * This function can be called by the decoration to request 
+	 * closing of the decorated window. Note that closing the window
+	 * also involves destroying the decoration.
+	 */
+	void closeWindow();
+	/**
+	 * Set the maximize mode of the decorated window.
+	 * @param mode The maximization mode to be set.
+	 */
+	void maximize( MaximizeMode mode );
+	/**
+	 * Minimize the decorated window.
+	 */
+	void minimize();
+	/**
+	 * Start showing context help in the window (i.e. the mouse will enter
+	 * the what's this mode).
+	 */
+        void showContextHelp();
+        void setDesktop( int desktop );
+	/**
+	 * This function toggles the on-all-desktops state of the decorated window.
+	 */
+        void toggleOnAllDesktops(); // convenience
+	/**
+	 * This function performs the operation configured as titlebar double click
+	 * operation.
+	 */
+        void titlebarDblClickOperation();
+	/**
+	 * Shades or unshades the decorated window.
+	 * @param set Whether the window should be shaded
+	 */
+        void setShade( bool set );
+	/**
+	 * Sets or reset keeping this window above others.
+	 * @param set Whether to keep the window above others
+	 */
+        void setKeepAbove( bool set );
+	/**
+	 * Sets or reset keeping this window below others.
+	 * @param set Whether to keep the window below others
+	 */
+        void setKeepBelow( bool set );
+    private:
+	KDecorationBridge* bridge_;
+	QWidget* w_;
+        KDecorationFactory* factory_;
+        friend class KDecorationOptions; // for options_
+        static KDecorationOptions* options_;
+        KDecorationPrivate* d;
+    };
+
+inline
+KDecorationDefines::MaximizeMode operator^( KDecorationDefines::MaximizeMode m1, KDecorationDefines::MaximizeMode m2 )
+    {
+    return KDecorationDefines::MaximizeMode( int(m1) ^ int(m2) );
+    }
+
+inline
+KDecorationDefines::MaximizeMode operator&( KDecorationDefines::MaximizeMode m1, KDecorationDefines::MaximizeMode m2 )
+    {
+    return KDecorationDefines::MaximizeMode( int(m1) & int(m2) );
+    }
+
+inline
+KDecorationDefines::MaximizeMode operator|( KDecorationDefines::MaximizeMode m1, KDecorationDefines::MaximizeMode m2 )
+    {
+    return KDecorationDefines::MaximizeMode( int(m1) | int(m2) );
+    }
+
+inline QWidget* KDecoration::widget()
+    {
+    return w_;
+    }
+
+inline const QWidget* KDecoration::widget() const
+    {
+    return w_;
+    }
+
+inline KDecorationFactory* KDecoration::factory() const
+    {
+    return factory_;
+    }
+
+inline bool KDecoration::isOnAllDesktops() const
+    {
+    return desktop() == NET::OnAllDesktops;
+    }
+
+inline int KDecoration::width() const
+    {
+    return geometry().width();
+    }
+    
+inline int KDecoration::height() const
+    {
+    return geometry().height();
+    }
+    
+#endif
