@@ -754,22 +754,11 @@ void GalliumClient::calcHiddenButtons()
 
 void GalliumClient::menuButtonPressed()
 {
-    static GalliumClient* tc = 0;
- 
-    if ( tc == this )
-    {
-        workspace()->clientPopup(this)->hide();
-        tc = 0;
-    }
-    else
-    {
-        // KS - move the menu left by 3 pixels, and down 2 pixels.
-        QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-3, 
-                           button[BtnMenu]->rect().bottomLeft().y()+2 );
-        workspace()->clientPopup(this)->popup(
-           button[BtnMenu]->mapToGlobal( menupoint ));
-        tc = this;
-    }
+    // KS - move the menu left by 3 pixels, and down 2 pixels.
+    QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-3, 
+                       button[BtnMenu]->rect().bottomLeft().y()+2 );
+    QPoint pos = button[BtnMenu]->mapToGlobal( menupoint );
+    workspace()->showWindowMenu( pos.x(), pos.y(), this );
 }
 
 extern "C"

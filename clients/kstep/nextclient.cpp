@@ -415,22 +415,12 @@ void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
 // (Note: this was almost straight copy and paste from KDEDefaultClient.)
 void NextClient::menuButtonPressed()
 {
-    static NextClient* tc = 0;
-
-    if ( tc == this )
-    {
-        workspace()->clientPopup(this)->hide();
-        tc = 0;
-    } else {
-        // Probably don't need this null check, but we might as well.
-        if (button[MENU_IDX]) {
-            QPoint menupoint ( button[MENU_IDX]->rect().bottomLeft().x()-1,
-                               button[MENU_IDX]->rect().bottomLeft().y()+2 );
-            workspace()->clientPopup(this)->popup(
-                button[MENU_IDX]->mapToGlobal( menupoint ));
-        }
-    
-        tc = this;
+    // Probably don't need this null check, but we might as well.
+    if (button[MENU_IDX]) {
+        QPoint menupoint ( button[MENU_IDX]->rect().bottomLeft().x()-1,
+                           button[MENU_IDX]->rect().bottomLeft().y()+2 );
+        QPoint pos = button[MENU_IDX]->mapToGlobal( menupoint );
+        workspace()->showWindowMenu( pos.x(), pos.y(), this );
     }
 }
 

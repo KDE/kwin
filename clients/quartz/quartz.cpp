@@ -790,20 +790,10 @@ void QuartzClient::calcHiddenButtons()
 // Make sure the menu button follows double click conventions set in kcontrol
 void QuartzClient::menuButtonPressed()
 {
-    static QuartzClient* tc = 0;
- 
-    if ( tc == this )
-    {
-        workspace()->clientPopup(this)->hide();
-        tc = 0;
-    }
-    else
-    {
-        QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1, 
-                           button[BtnMenu]->rect().bottomLeft().y()+2 );
-        workspace()->clientPopup(this)->popup(button[BtnMenu]->mapToGlobal( menupoint ));
-        tc = this;           
-    }
+    QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1, 
+                       button[BtnMenu]->rect().bottomLeft().y()+2 );
+    QPoint pos = button[BtnMenu]->mapToGlobal( menupoint );
+    workspace()->showWindowMenu( pos.x(), pos.y(), this );
 }
 
 

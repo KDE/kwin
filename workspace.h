@@ -196,16 +196,20 @@ public:
 
 
     /**
-     * The Client* argument is ignored, the popup is always returned
-     * for the active client
+     * @deprecated Use showWindowMenu()
      */
     QPopupMenu* clientPopup( Client* );
-
     /**
-     * @deprecated Use slotWindowOperations() instead.
+     * @deprecated Use showWindowMenu()
      */
     // KDE4 remove me - and it's also in the DCOP interface :(
     void showWindowMenuAt( unsigned long id, int x, int y );
+
+    /**
+     * Shows the menu operations menu for the client
+     * and makes it active if it's not already.
+     */
+    void showWindowMenu( int x, int y, Client* cl );
 
     void iconifyOrDeiconifyTransientsOf( Client* );
     void setStickyTransientsOf( Client*, bool sticky );
@@ -363,6 +367,7 @@ private:
 
     void calcDesktopLayout(int &x, int &y);
 
+    QPopupMenu* clientPopup();
 
     SystemTrayWindowList systemTrayWins;
 

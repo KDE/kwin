@@ -778,17 +778,9 @@ void B2Client::activeChange(bool on)
 
 void B2Client::menuButtonPressed()
 {
-    static B2Client *tc = 0;
-    if (tc == this) {
-        workspace()->clientPopup(this)->hide();
-        tc = 0;
-    }
-    else {
-        workspace()->clientPopup(this)->
-            popup(button[BtnMenu]->mapToGlobal(button[BtnMenu]->
-                                           rect().bottomLeft()));
-        tc = this;
-    }
+    QPoint pos = button[BtnMenu]->mapToGlobal(button[BtnMenu]->
+                                           rect().bottomLeft());
+    workspace()->showWindowMenu( pos.x(), pos.y(), this );
 }
 
 void B2Client::slotReset()

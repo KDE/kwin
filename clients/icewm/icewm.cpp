@@ -1354,27 +1354,14 @@ Client::MousePosition IceWMClient::mousePosition( const QPoint& p ) const
 // Make sure the menu button follows double click conventions set in kcontrol
 void IceWMClient::menuButtonPressed()
 {
-	static IceWMClient* tc = 0;
- 
-	if ( tc == this )
-    {
-        workspace()->clientPopup(this)->hide();
-        tc = 0;
-    }
-    else
-	{
-		QPoint menuPoint ( button[BtnSysMenu]->rect().bottomLeft() );
-
-		// Move to right if menu on rhs, otherwise on left
-		// and make this depend on windowWrapper(), not button.
-		workspace()->clientPopup(this)->popup( button[BtnSysMenu]->mapToGlobal( menuPoint ));
-
-		// Animate the menu button when pressed
-		if (button[BtnSysMenu])
-			button[BtnSysMenu]->animateClick();
-    
-    	tc = this;           
-    }
+    // Animate the menu button when pressed
+    if (button[BtnSysMenu])
+	button[BtnSysMenu]->animateClick();
+    QPoint menuPoint ( button[BtnSysMenu]->rect().bottomLeft() );
+    // Move to right if menu on rhs, otherwise on left
+    // and make this depend on windowWrapper(), not button.
+    QPoint pos = button[BtnSysMenu]->mapToGlobal( menuPoint );
+    workspace()->showWindowMenu( pos.x(), pos.y(), this );
 }
 
 

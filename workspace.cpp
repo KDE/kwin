@@ -112,7 +112,8 @@ public:
        movingClient(0),
        layoutOrientation(Qt::Vertical),
        layoutX(-1),
-       layoutY(2)
+       layoutY(2),
+       popup_client(NULL)
     { };
     ~WorkspacePrivate() {};
     KStartupInfo* startup;
@@ -134,6 +135,7 @@ public:
     int layoutX;
     int layoutY;
     Placement *initPositioning;
+    Client* popup_client;
 };
 
 };
@@ -769,6 +771,8 @@ bool Workspace::destroyClient( Client* c)
 
     if (c == active_client && popup)
         popup->close();
+    if( c == d->popup_client )
+        d->popup_client = NULL;
 
     storeFakeSessionInfo( c );
 
@@ -1382,8 +1386,9 @@ void Workspace::setActiveClient( Client* c )
 {
     if ( active_client == c )
         return;
-    if( popup )
+    if( popup && d->popup_client != c )
         popup->close();
+    d->popup_client = NULL;
     if ( active_client ) {
         active_client->setActive( FALSE );
         if ( active_client->isFullScreen() && active_client->staysOnTop()
@@ -1640,6 +1645,11 @@ void Workspace::clientHidden( Client* c )
 
 // KDE4 - remove the unused argument
 QPopupMenu* Workspace::clientPopup( Client* )
+{
+    return clientPopup();
+}
+
+QPopupMenu* Workspace::clientPopup()
 {
     if ( !popup ) {
         popup = new QPopupMenu;
@@ -3011,18 +3021,29 @@ void Workspace::slotWindowOperations()
 {
     if ( !active_client )
         return;
-    if ( active_client->isDesktop()
-        || active_client->isDock()
-        || active_client->isTopMenu())
-        return;
+    QPoint pos = active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() );
+    showWindowMenu( pos.x(), pos.y(), active_client );
+}
 
-    QPopupMenu* p = clientPopup( active_client );
+void Workspace::showWindowMenu( int x, int y, Client* cl )
+{
+    if( !cl )
+        return;
+    if ( cl->isDesktop()
+        || cl->isDock()
+        || cl->isTopMenu())
+        return;
+    if( cl != active_client ) {
+        activateClient( cl );
+        d->popup_client = cl; // don't close the popup when the client becomes active
+    }
+        
+    QPopupMenu* p = clientPopup();
 //    Client* c = active_client;
-    p->exec( active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() ) );
+    p->exec( QPoint( x, y ));
 //    if ( hasClient( c ) )
 //        requestFocus( c );
 }
-
 
 /*!
   Closes the popup client

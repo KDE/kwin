@@ -445,25 +445,12 @@ void StdClient::iconChange()
  */
 void StdClient::menuButtonPressed()
 {
-    static StdClient* tc = 0;
-
-    if ( tc == this )
-    {
-        workspace()->clientPopup(this)->hide();
-        tc = 0;
-    }
-    else
-    {
-        QPoint menupoint ( button[0]->rect().bottomLeft().x()-1,
-                           button[0]->rect().bottomLeft().y()+2 );
-        workspace()->clientPopup(this)->popup(
-                           button[0]->mapToGlobal( menupoint ));
-
-        // Animate the click when the menu button is pressed
-        button[0]->animateClick();
-    
-        tc = this;
-    }
+    // Animate the click when the menu button is pressed
+    button[0]->animateClick();
+    QPoint menupoint ( button[0]->rect().bottomLeft().x()-1,
+                       button[0]->rect().bottomLeft().y()+2 );
+    QPoint pos = button[0]->mapToGlobal( menupoint );
+    workspace()->showWindowMenu( pos.x(), pos.y(), this );
 }
 
 
