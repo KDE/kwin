@@ -2,6 +2,8 @@ INCLUDES = $(all_includes)
 
 SUBDIRS = . kcmkwin pics clients
 
+bin_PROGRAMS = 
+lib_LTLIBRARIES = 
 kdeinit_LTLIBRARIES = kwin.la
 
 # workspace.cpp has to be first in order not to break --enable-final
