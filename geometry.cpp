@@ -1182,7 +1182,7 @@ void Client::getWmNormalHints()
             {
             xSizeHint.flags |= PMinSize;
             xSizeHint.min_width = xSizeHint.base_width;
-                xSizeHint.min_height = xSizeHint.base_height;
+            xSizeHint.min_height = xSizeHint.base_height;
             }
         }
     else
@@ -1191,6 +1191,11 @@ void Client::getWmNormalHints()
         xSizeHint.min_width = xSizeHint.min_height = 0;
     if( ! ( xSizeHint.flags & PMaxSize ))
         xSizeHint.max_width = xSizeHint.max_height = INT_MAX;
+    else
+        {
+        xSizeHint.max_width = QMAX( xSizeHint.max_width, 1 );
+        xSizeHint.max_height = QMAX( xSizeHint.max_height, 1 );
+        }
     if( xSizeHint.flags & PResizeInc )
         {
         xSizeHint.width_inc = kMax( xSizeHint.width_inc, 1 );
