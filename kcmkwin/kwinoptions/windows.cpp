@@ -750,7 +750,7 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *)
     placementCombo->insertItem(i18n("Cascade"), CASCADE_PLACEMENT);
     placementCombo->insertItem(i18n("Random"), RANDOM_PLACEMENT);
     placementCombo->insertItem(i18n("Centered"), CENTERED_PLACEMENT);
-    placementCombo->insertItem(i18n("ZeroCornered"), ZEROCORNERED_PLACEMENT);
+    placementCombo->insertItem(i18n("Zero-Cornered"), ZEROCORNERED_PLACEMENT);
     // CT: disabling is needed as long as functionality misses in kwin
     //placementCombo->insertItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
     //placementCombo->insertItem(i18n("Manual"), MANUAL_PLACEMENT);
