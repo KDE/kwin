@@ -320,6 +320,15 @@ public:
     */
     int electricBorderDelay();
 
+signals:
+    /**
+     * Emitted when KWin is asked to reconfigure itself.
+     * 
+     * Please note that this signal is obsolete, and provided only for
+     * backwards compatibility. It is advisable to use the reset() cdecl.
+     * in the style plugin interface instead of connecting to this signal.
+     */
+    void resetClients();
 
 public slots:
     void reload();
