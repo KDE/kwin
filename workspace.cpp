@@ -297,8 +297,11 @@ void Workspace::init()
         NET::WorkArea |
         NET::CloseWindow |
         NET::DesktopNames |
+	NET::KDESystemTrayWindows |
+	NET::CloseWindow |
 
         NET::WMName |
+	NET::WMVisibleName |
         NET::WMDesktop |
         NET::WMWindowType |
         NET::WMState |
@@ -306,7 +309,8 @@ void Workspace::init()
         NET::WMIconGeometry |
         NET::WMIcon |
         NET::WMPid |
-        NET::WMKDESystemTrayWinFor
+        NET::WMKDESystemTrayWinFor |
+	NET::WMKDEFrameStrut
         ;
 
     rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
