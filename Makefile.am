@@ -18,7 +18,7 @@ kwinincludedir = $(includedir)/kwin
 kwininclude_HEADERS = options.h client.h workspace.h
 
 kwin_SOURCES = kwin_main.cpp
-kwin_LDADD = kwin.la
+kwin_LDADD = kwin.la $(LIBXINERAMA)
 kwin_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 KDE_ICON = kwin

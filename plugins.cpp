@@ -168,10 +168,10 @@ void PluginMgr::loadPlugin(QString nameStr)
 
 	if( !path.isEmpty() ) {
 	    if ( (handle = lt_dlopen(path.latin1() ) ) ) {
-		lt_ptr init_func = lt_dlsym(handle, "init");
+		lt_ptr_t init_func = lt_dlsym(handle, "init");
 		if (init_func)
 		    ((void (*)())init_func)();
-		lt_ptr alloc_func = lt_dlsym(handle, "allocate");
+		lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
 		if(alloc_func) {
 		    alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
 		} else{
@@ -189,7 +189,7 @@ void PluginMgr::loadPlugin(QString nameStr)
 
     emit resetAllClients();
     if(oldHandle) {
-	lt_ptr deinit_func = lt_dlsym(oldHandle, "deinit");
+	lt_ptr_t deinit_func = lt_dlsym(oldHandle, "deinit");
 	if (deinit_func)
 	    ((void (*)())deinit_func)();
         lt_dlclose(oldHandle);
@@ -198,7 +198,7 @@ void PluginMgr::loadPlugin(QString nameStr)
 
 void PluginMgr::resetPlugin()
 {
-    lt_ptr reset_func = lt_dlsym(handle, "reset");
+    lt_ptr_t reset_func = lt_dlsym(handle, "reset");
     if (reset_func)
        ((void (*)())reset_func)();
 }

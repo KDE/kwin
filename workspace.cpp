@@ -252,6 +252,22 @@ Workspace::Workspace( bool restore )
     installed_colormap = default_colormap;
     session.setAutoDelete( TRUE );
 
+#ifdef HAVE_XINERAMA
+    if (XineramaIsActive(qt_xdisplay())) {
+	xineramaInfo = XineramaQueryScreens(qt_xdisplay(), &numHeads);
+    } else {
+    	xineramaInfo = &dummy_xineramaInfo;
+	QRect rect = QApplication::desktop()->geometry();
+
+	dummy_xineramaInfo.screen_number = 0;
+	dummy_xineramaInfo.x_org = rect.x();
+	dummy_xineramaInfo.y_org = rect.y();
+	dummy_xineramaInfo.width = rect.width();
+	dummy_xineramaInfo.height = rect.height();
+
+	numHeads = 1;
+    }
+#endif
 
     if ( restore )
       loadSessionInfo();
@@ -425,6 +441,11 @@ Workspace::~Workspace()
     delete mgr;
     delete d;
     _self = 0;
+
+#ifdef HAVE_XINERAMA
+    if (xineramaInfo != &dummy_xineramaInfo)
+    	XFree(xineramaInfo);
+#endif
 }
 
 
@@ -1476,6 +1497,8 @@ void Workspace::smartPlacement(Client* c){
      * adapted for kwm (16-19jan98) and for kwin (16Nov1999) using (with
      * permission) ideas from fvwm, authored by
      * Anthony Martin (amartin@engr.csulb.edu).
+     * Xinerama supported added by Balaji Ramani (balaji@yablibli.com)
+     * with ideas from xfce.
      */
 
     const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
@@ -3592,9 +3615,33 @@ void Workspace::updateClientArea()
  */
 QRect Workspace::clientArea()
 {
-    if (area.isNull())
-	return QApplication::desktop()->geometry();
+    QRect rect = QApplication::desktop()->geometry();
+
+#ifdef HAVE_XINERAMA
+    QPoint pos = QCursor::pos();
+
+    for (int head = 0; head < numHeads; head++) {
+	if ((xineramaInfo[head].x_org <= pos.x()) &&
+	    (xineramaInfo[head].x_org + xineramaInfo[head].width > pos.x()) && 
+	    (xineramaInfo[head].y_org <= pos.y()) &&
+	    (xineramaInfo[head].y_org + xineramaInfo[head].height > pos.y())) {
+	    rect.setRect(xineramaInfo[head].x_org,
+		    	 xineramaInfo[head].y_org,
+			 xineramaInfo[head].width,
+			 xineramaInfo[head].height);
+	}
+
+    }
+#endif
+    if (area.isNull()) {
+	return rect;
+    }
+#ifdef HAVE_XINERAMA
+#warning hello
+    return area.intersect(rect);
+#else
     return area;
+#endif
 }
 
 
