@@ -212,6 +212,7 @@ public slots:
     void maximize( MaximizeMode m );
     void maximize();
     void toggleSticky();
+    void toggleShade();
     void contextHelp();
     void autoRaise();
     void shadeHover();
@@ -240,6 +241,7 @@ protected:
     virtual void activeChange( bool );
     virtual void maximizeChange( bool );
     virtual void stickyChange( bool );
+    virtual void shadeChange( bool );
 
 
     enum MousePosition {

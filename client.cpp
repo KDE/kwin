@@ -1696,6 +1696,16 @@ void Client::stickyChange( bool )
 {
 }
 
+/*!\fn shadeChange( bool shaded )
+
+  Indicates that the window was shaded or unshaded. \a shaded is
+  set respectively. Subclasses may want to indicate the new state
+  graphically, for example with a different icon.
+ */
+void Client::shadeChange( bool )
+{
+}
+
 
 
 /*!
@@ -1902,6 +1912,11 @@ void Client::maximize( MaximizeMode m)
 void Client::toggleSticky()
 {
     setSticky( !isSticky() );
+}
+
+void Client::toggleShade()
+{
+    setShade( !isShade() );
 }
 
 void Client::maximize()
@@ -2201,6 +2216,7 @@ void Client::setShade( bool s, int hus )
         info->setState( shaded?NET::Shaded:0, NET::Shaded );
 
     workspace()->iconifyOrDeiconifyTransientsOf( this );
+    shadeChange( shaded );
 }
 
 
