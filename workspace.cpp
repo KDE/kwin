@@ -524,7 +524,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 }
                 if ( c != desktop_client ) {
                     if ( c->wantsTabFocus() )
-                        focus_chain.prepend( c );
+                        focus_chain.append( c );
                     clients.append( c );
                     stacking_order.append( c );
                 }
@@ -2736,10 +2736,19 @@ void Workspace::sendClientToDesktop( Client* c, int desk )
 
     c->setDesktop( desk );
 
-    if ( c->isOnDesktop( currentDesktop() ) )
+    if ( c->isOnDesktop( currentDesktop() ) ) {
         c->show();
-    else
+        if ( c->wantsTabFocus() && options->focusPolicyIsReasonable() ) {
+            requestFocus( c );
+        }
+    }
+    else {
         c->hide();
+        raiseClient( c );
+        focus_chain.remove( c );
+        if ( c->wantsTabFocus() )
+            focus_chain.append( c );
+    }
 
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
         if ( (*it)->transientFor() == c->window() ) {
