@@ -889,7 +889,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 
             unsigned long usertime = 0;
             if ( !isTransient() && !session && ac && !ac->isDesktop() &&
-                   ac->resourceClass() != resourceClass() &&
+                   !resourceMatch( ac, this ) &&
                    ( usertime = userTime() ) > 0 && ac->userTime() > usertime ) {
                 workspace()->stackClientUnderActive( this );
                 show();
@@ -948,6 +948,13 @@ unsigned long Client::userTime()
         XFree(data);
     }
     return result;
+}
+
+bool Client::resourceMatch( Client* c1, Client* c2 )
+{
+    if( qstrncmp( c1->resourceClass(), "XV", 2 ) == 0 && c1->resourceName() == "xv" ) // xv :(
+        return qstrncmp( c2->resourceClass(), "XV", 2 ) == 0 && c2->resourceName() == "xv";
+    return c1->resourceClass() == c2->resourceClass();
 }
 
 /*!
