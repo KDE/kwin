@@ -1524,6 +1524,9 @@ bool Client::isResizable() const
         return false;
     if(( isSpecialWindow() || isSplash() || isToolbar()) && !isOverride())
         return false;
+#if KDE_IS_VERSION( 3, 3, 90 )
+#warning Rename the moveresize maximize option.
+#endif
 //    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
 //        return false;
     if( rules()->checkSize( QSize()).isValid()) // forced size
