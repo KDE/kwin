@@ -1626,6 +1626,7 @@ Name[pt_BR]=Apagar janela
 Name[ro]=Şterge dialog
 Name[ru]=Удалить диалог
 Name[sv]=Ta bort dialog
+Name[zh_CN.GB2312]=删除对话
 Comment=Transient Window (a dialog) is Removed
 Comment[ca]=S'elimina una finestra transitòria (un diàleg)
 Comment[cs]=Dialogové okno bylo zavřeno
