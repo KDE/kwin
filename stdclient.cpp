@@ -304,7 +304,6 @@ void StdClient::paintEvent( QPaintEvent* )
     qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
                      options->colorGroup(Options::Frame, isActive()), true, 1, &b );
 
-    t.setTop( 2 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
 
