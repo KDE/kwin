@@ -191,18 +191,19 @@ void Options::reload()
 
     rollOverDesktops = config->readBoolEntry("RollOverDesktops", TRUE);
 
-    KConfig *gc = KGlobal::config();
+    KConfig *gc = new KConfig("kdeglobals", false, false);
     bool isVirtual = KApplication::desktop()->isVirtualDesktop();
     gc->setGroup("Windows");
     xineramaEnabled = gc->readBoolEntry ("XineramaEnabled", isVirtual ) &&
                       isVirtual;
     if (xineramaEnabled) {
-        xineramaPlacementEnabled = config->readBoolEntry ("XineramaPlacementEnabled", FALSE);
-        xineramaMovementEnabled = config->readBoolEntry ("XineramaMovementEnabled", FALSE);
-        xineramaMaximizeEnabled = config->readBoolEntry ("XineramaMaximizeEnabled", FALSE);
+        xineramaPlacementEnabled = gc->readBoolEntry ("XineramaPlacementEnabled", FALSE);
+        xineramaMovementEnabled = gc->readBoolEntry ("XineramaMovementEnabled", FALSE);
+        xineramaMaximizeEnabled = gc->readBoolEntry ("XineramaMaximizeEnabled", FALSE);
     } else {
          xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = false;
     }
+    delete gc;
 
     val = config->readEntry("Placement","Smart");
     if (val == "Smart")                     placement = Smart;
