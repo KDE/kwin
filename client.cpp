@@ -66,13 +66,13 @@ public:
 	if ( mask & NET::Shaded )
 	    m_client->setShade( state & NET::Shaded );
 
-	if ( (mask & NET::Max) == NET::Max )
+	if ( (mask & NET::Max) == NET::Max ) {
 	    m_client->maximizeRaw( state & NET::MaxVert, state & NET::MaxHoriz );
-	else if ( mask & NET::MaxVert )
+	} else if ( mask & NET::MaxVert ) {
 	    m_client->maximizeRaw( state & NET::MaxVert, m_client->maximizeMode() & Client::MaximizeHorizontal );
-	else if ( mask & NET::MaxHoriz )
+	} else if ( mask & NET::MaxHoriz ) {
 	    m_client->maximizeRaw( m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxHoriz );
-	
+	}
 	if ( mask & NET::StaysOnTop) {
 	    m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
 	    if ( m_client->staysOnTop() )
@@ -1731,8 +1731,6 @@ void Client::maximizeRaw( bool vertically, bool horizontally )
 	maximize ( MaximizeRestore );
     } else {
 	QRect geom = geometry();
-	if ( isMaximized() )
-	    geom = geom_restore;
 	MaximizeMode m = MaximizeRestore;
 	if ( vertically && horizontally )
 	    m = MaximizeFull;
@@ -1741,9 +1739,9 @@ void Client::maximizeRaw( bool vertically, bool horizontally )
 	else if (horizontally )
 	    m = MaximizeHorizontal;
 	if ( m != max_mode ) {
-	    max_mode = MaximizeRestore;
+	    if ( isMaximized() )
+		max_mode = MaximizeAdjust;
 	    maximize( m );
-	    geom_restore = geom;
 	}
     }
 }
@@ -1774,7 +1772,7 @@ void Client::maximize( MaximizeMode m)
 	if ( m == max_mode )
 	    return; // nothing to do
 
-	if ( m != MaximizeRestore ) {
+	if ( m != MaximizeRestore && max_mode != MaximizeAdjust ) {
 	    if ( max_mode == MaximizeRestore )
 		geom_restore = geometry();
 	    else if ( m != MaximizeFull)
@@ -1791,7 +1789,7 @@ void Client::maximize( MaximizeMode m)
 		    QRect(QPoint(geom_restore.x(), clientArea.top()),
 			  adjustedSize(QSize(geom_restore.width(), clientArea.height())))
 		    );
-	info->setState( NET::MaxVert, NET::MaxVert );
+	info->setState( NET::MaxVert, NET::Max );
 	break;
 
     case MaximizeHorizontal:
@@ -1801,7 +1799,7 @@ void Client::maximize( MaximizeMode m)
 			  QPoint(clientArea.left(), geom_restore.y()),
 			  adjustedSize(QSize(clientArea.width(), geom_restore.height())))
 		    );
-	info->setState( NET::MaxHoriz, NET::MaxHoriz );
+	info->setState( NET::MaxHoriz, NET::Max );
 	break;
 	
     case MaximizeRestore: {
@@ -2371,7 +2369,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	if (!isMovable())
 	    break;
 	moveResizeMode = TRUE;
-        geom=geometry();
+	geom=geometry();
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
 	    max_mode = MaximizeRestore;
