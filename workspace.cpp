@@ -2002,6 +2002,10 @@ void Workspace::setupTopMenuHandling()
     disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     managing_topmenus = true;
     topmenu_space = new QWidget;
+    Window stack[ 2 ];
+    stack[ 0 ] = supportWindow->winId();
+    stack[ 1 ] = topmenu_space->winId();
+    XRestackWindows(qt_xdisplay(), stack, 2);
     updateTopMenuGeometry();
     topmenu_space->show();
     updateClientArea();
