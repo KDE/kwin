@@ -41,7 +41,6 @@ class KCMRules
         virtual void save();
         virtual void defaults();
         virtual QString quickHelp() const;
-        virtual const KAboutData* aboutData() const;
     protected slots:
         void moduleChanged( bool state );
     private:

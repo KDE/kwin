@@ -176,6 +176,14 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	// Allow kwin dcop signal to update our selection list
 	connectDCOPSignal("kwin", 0, "dcopResetAllClients()", "dcopUpdateClientList()", false);
+	
+	KAboutData *about =
+		new KAboutData(I18N_NOOP("kcmkwindecoration"),
+				I18N_NOOP("Window Decoration Control Module"),
+				0, 0, KAboutData::License_GPL,
+				I18N_NOOP("(c) 2001 Karol Szwed"));
+	about->addAuthor("Karol Szwed", 0, "gallium@kde.org");
+	setAboutData(about);
 }
 
 
@@ -590,18 +598,6 @@ QString KWinDecorationModule::quickHelp() const
 		"<p>You can configure each theme in the \"Configure [...]\" tab. There are different options specific for each theme.</p>"
 		"<p>In \"General Options (if available)\" you can activate the \"Buttons\" tab by checking the \"Use custom titlebar button positions\" box."
 		" In the \"Buttons\" tab you can change the positions of the buttons to your liking.</p>" );
-}
-
-
-const KAboutData* KWinDecorationModule::aboutData() const
-{
-	KAboutData* about =
-		new KAboutData(I18N_NOOP("kcmkwindecoration"),
-				I18N_NOOP("Window Decoration Control Module"),
-				0, 0, KAboutData::License_GPL,
-				I18N_NOOP("(c) 2001 Karol Szwed"));
-	about->addAuthor("Karol Szwed", 0, "gallium@kde.org");
-	return about;
 }
 
 

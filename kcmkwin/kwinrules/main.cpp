@@ -46,6 +46,11 @@ KCMRules::KCMRules( QWidget *parent, const char *name )
     widget = new KCMRulesList( this );
     layout->addWidget( widget );
     connect( widget, SIGNAL( changed( bool )), SLOT( moduleChanged( bool )));
+    KAboutData *about = new KAboutData(I18N_NOOP( "kcmkwinrules" ),
+        I18N_NOOP( "Window-Specific Settings Configuration Module" ),
+        0, 0, KAboutData::License_GPL, I18N_NOOP( "(c) 2004 KWin and KControl Authors" ));
+    about->addAuthor("Lubos Lunak",0,"l.lunak@kde.org");
+    setAboutData(about);
     }
 
 void KCMRules::load()
@@ -78,15 +83,6 @@ QString KCMRules::quickHelp() const
         " <p>Please note that this configuration will not take effect if you do not use"
         " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
         " for how to customize window behavior.");
-    }
-
-const KAboutData* KCMRules::aboutData() const
-    {
-    KAboutData *about = new KAboutData(I18N_NOOP( "kcmkwinrules" ),
-        I18N_NOOP( "Window-Specific Settings Configuration Module" ),
-        0, 0, KAboutData::License_GPL, I18N_NOOP( "(c) 2004 KWin and KControl Authors" ));
-    about->addAuthor("Lubos Lunak",0,"l.lunak@kde.org");
-    return about;
     }
 
 void KCMRules::moduleChanged( bool state )
