@@ -22,7 +22,7 @@
 
 
 class QSpacerItem;
-class QHBoxLayout;
+class QBoxLayout;
 
 namespace KWinInternal {
 
@@ -109,7 +109,7 @@ class KDEDefaultClient : public KWinInternal::Client
 		int           lastButtonWidth;
 		int           titleHeight;
 		bool          largeButtons;
-		QHBoxLayout*  hb;
+		QBoxLayout*   hb;
 		QSpacerItem*  titlebar;
 };
 

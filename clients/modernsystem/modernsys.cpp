@@ -294,6 +294,8 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
+	bool reverse = QApplication::reverseLayout();
+
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
@@ -302,12 +304,12 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     g->setRowStretch(1, 10);
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 
-    g->addColSpacing(0, 2);
-    g->addColSpacing(2, 2 + handle_width);
+    g->addColSpacing(0, 2 + (reverse ? handle_width : 0));
+    g->addColSpacing(2, 2 + (reverse ? 0 : handle_width));
 
     g->addRowSpacing(2, 2 + handle_width);
 
-    QHBoxLayout* hb = new QHBoxLayout(0);
+	QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     hb->setResizeMode(QLayout::FreeResize);
     titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
@@ -325,12 +327,7 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     connect( button[BtnHelp], SIGNAL(clicked()), this, SLOT( contextHelp() ) );
 
     for (int i = 0; i < (int)button_pattern->length();) {
-        QChar c;
-	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
-		c = (*button_pattern)[button_pattern->length()-i++];
-	else
-		c = (*button_pattern)[i++];
-
+        QChar c = (*button_pattern)[i++];
         if (c == '_')
             c = '3';
 

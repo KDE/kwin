@@ -455,16 +455,10 @@ Web::_resetLayout()
 
   mainLayout_  = new QVBoxLayout(this, 0, 0);
 
-  titleSpacer_ =
-    new QSpacerItem
-    (
-     0,
-     titleHeight,
-     QSizePolicy::Expanding,
-     QSizePolicy::Fixed
-    );
+  titleSpacer_ = new QSpacerItem ( 0, titleHeight, QSizePolicy::Expanding,
+      QSizePolicy::Fixed);
 
-  QHBoxLayout * topLayout   = new QHBoxLayout(mainLayout_, 0, 0);
+  QBoxLayout * topLayout = new QBoxLayout(mainLayout_, QBoxLayout::LeftToRight, 0, 0);
 
   _createButtons();
 

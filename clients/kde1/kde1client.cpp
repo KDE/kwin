@@ -257,46 +257,30 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[4] = new ThreeButtonButton( this, 0, i18n("Maximize") );
     button[5] = new KWinToolButton( this, 0, i18n("Close") );
 
-    QHBoxLayout* hb = new QHBoxLayout;
+    QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     g->addLayout( hb, 0, 1 );
+    hb->addWidget( button[0] );
+    hb->addWidget( button[1] );
+//    hb->addWidget( button[2] );
+
     int fh = fontMetrics().lineSpacing();
+
     titlebar = new QSpacerItem(10, fh, QSizePolicy::Expanding,
 			       QSizePolicy::Minimum );
+    hb->addItem( titlebar );
 
-    if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
-	hb->addWidget( button[5] );
-	hb->addWidget( button[4] );
-	hb->addWidget( button[3] );
-	if ( providesContextHelp() ) {
-		button[6] = new KWinToolButton( this, 0, i18n("Help") );
-		hb->addWidget( button[6] ); // help  button
-		hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
-		button[6]->setIconSet( isActive() ? *question_mark_pix : *dis_question_mark_pix);
-		connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
-	}
-	button[6] = 0;
-	hb->addItem( titlebar );
-	//    hb->addWidget( button[2] );
-	hb->addWidget( button[1] );
-	hb->addWidget( button[0] );
+    button[6] = 0;
+    if ( providesContextHelp() ) {
+	button[6] = new KWinToolButton( this, 0, i18n("Help") );
+	hb->addWidget( button[6] ); // help  button
+	hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+	button[6]->setIconSet( isActive() ? *question_mark_pix : *dis_question_mark_pix);
+	connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
-    else{
-	hb->addWidget( button[0] );
-	hb->addWidget( button[1] );
-	//    hb->addWidget( button[2] );
-	hb->addItem( titlebar );
-	button[6] = 0;
-	if ( providesContextHelp() ) {
-		button[6] = new KWinToolButton( this, 0, i18n("Help") );
-		hb->addWidget( button[6] ); // help  button
-		hb->addItem( new QSpacerItem( 5, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
-		button[6]->setIconSet( isActive() ? *question_mark_pix : *dis_question_mark_pix);
-		connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
-	}
-	hb->addWidget( button[3] );
-	hb->addWidget( button[4] );
-	hb->addWidget( button[5] );
-    }
+
+    hb->addWidget( button[3] );
+    hb->addWidget( button[4] );
+    hb->addWidget( button[5] );
 
     for ( int i = 0; i < 7; i++) {
 	if ( !button[i] )
@@ -325,8 +309,8 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
     connect( button[5], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
 
-//    if ( button[6] ) {
-//  }
+    if ( button[6] ) {
+    }
 
 
     if ( isTransient() ) {
@@ -461,12 +445,10 @@ void StdClient::iconChange()
  */
 void StdClient::menuButtonPressed()
 {
-    // Animate the click when the menu button is pressed
-    button[0]->animateClick();
     QPoint menupoint ( button[0]->rect().bottomLeft().x()-1,
                        button[0]->rect().bottomLeft().y()+2 );
-    QPoint pos = button[0]->mapToGlobal( menupoint );
-    workspace()->showWindowMenu( pos.x(), pos.y(), this );
+    workspace()->showWindowMenu( button[0]->mapToGlobal( menupoint ), this );
+    button[0]->setDown(false);
 }
 
 

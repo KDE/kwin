@@ -24,7 +24,7 @@
 #include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
-class QHBoxLayout;
+class QBoxLayout;
 
 namespace KWinInternal {
 
@@ -90,7 +90,7 @@ class GalliumClient : public KWinInternal::Client
 		int            titleHeight;
 		QSpacerItem*   titlebar;
 		bool           hiddenItems;
-		QHBoxLayout*   hb;
+		QBoxLayout*    hb;
 		bool           smallButtons;
 };
 

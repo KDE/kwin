@@ -82,13 +82,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 			i18n(  "Enabling this checkbox will show window button tooltips. "
 				   "If this checkbox is off, no window button tooltips will be shown."));
 
-	cbReverseBIDIWindows = new QCheckBox(
-			i18n( "&Reverse the window title in BIDI desktops"), checkGroup );
-	QWhatsThis::add( cbReverseBIDIWindows,
-			i18n("In BIDI enabled desktops, when you choose this option "
-				"it will reverse the window client according to the language. "
-				"If you prefer it to be shown the same as "
-				"in non-BIDI desktops, leave it off."));
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
@@ -124,7 +117,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	tabWidget->insertTab( page1, i18n("&General") );
 	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
-	tabWidget->insertTab( pluginPage, i18n("&Configure [") +
+	tabWidget->insertTab( pluginPage, i18n("&Configure [") + 
 						  decorationListBox->currentText() + i18n("]") );
 
 	tabWidget->setTabEnabled( buttonPage, cbUseCustomButtonPositions->isChecked() );
@@ -136,13 +129,12 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	connect( dropSite, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );
 	connect( buttonSource, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()) );
 	connect( decorationListBox, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()) );
-	connect( decorationListBox, SIGNAL(highlighted(const QString&)),
+	connect( decorationListBox, SIGNAL(highlighted(const QString&)), 
 								SLOT(slotDecorationHighlighted(const QString&)) );
 	connect( cbUseCustomButtonPositions, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 	connect( cbUseCustomButtonPositions, SIGNAL(toggled(bool)), SLOT(slotEnableButtonTab(bool)) );
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 //	connect( cbUseMiniWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
-	connect( cbReverseBIDIWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 
 	// Allow kwin dcop signal to update our selection list
 	connectDCOPSignal("kwin", 0, "dcopResetAllClients()", "dcopUpdateClientList()", false);
@@ -331,7 +323,6 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	tabWidget->setTabEnabled( buttonPage, cbUseCustomButtonPositions->isChecked() );
 	cbShowToolTips->setChecked( conf->readBoolEntry("ShowToolTips", true ));
 //	cbUseMiniWindows->setChecked( conf->readBoolEntry("MiniWindowBorders", false));
-	cbReverseBIDIWindows->setChecked( conf->readBoolEntry("ReverseBIDIWindows", true) );
 
 	// Find the corresponding decoration name to that of
 	// the current plugin library name
@@ -381,7 +372,6 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 	conf->writeEntry("PluginLib", libName);
 	conf->writeEntry("CustomButtonPositions", cbUseCustomButtonPositions->isChecked());
 	conf->writeEntry("ShowToolTips", cbShowToolTips->isChecked());
-	conf->writeEntry("ReverseBIDIWindows",cbReverseBIDIWindows->isChecked());
 //	conf->writeEntry("MiniWindowBorders", cbUseMiniWindows->isChecked());
 
 	// Button settings

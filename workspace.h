@@ -210,6 +210,7 @@ public:
      * and makes it active if it's not already.
      */
     void showWindowMenu( int x, int y, Client* cl );
+    void showWindowMenu( QPoint pos, Client* cl );
 
     void iconifyOrDeiconifyTransientsOf( Client* );
     void setStickyTransientsOf( Client*, bool sticky );
@@ -472,6 +473,12 @@ inline const ClientList& Workspace::stackingOrder() const
 {
     return stacking_order;
 }
+
+inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
+{
+    showWindowMenu(pos.x(), pos.y(), cl);
+}
+
 
 };
 

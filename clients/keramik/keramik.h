@@ -30,16 +30,17 @@
 #include "../../client.h"
 #include "../../kwinbutton.h"
 
-static QDict< QImage > imageDict;
-
-#include "tiles.h"
-
-
 class QSpacerItem;
 
 using namespace KWinInternal;
 
 namespace Keramik {
+
+	typedef QDict<QImage> ImageDict;
+	static ImageDict* imageDict = 0;
+
+	#include "tiles.h"
+
 
 	enum TilePixmap  { TitleLeft=0, TitleCenter, TitleRight,
 	                   CaptionSmallLeft, CaptionSmallCenter, CaptionSmallRight,
@@ -62,7 +63,6 @@ namespace Keramik {
 		QColor  buttonColor;
 		QString buttonsLeft;
 		QString buttonsRight;
-		bool    reverseBIDIWindows;
 	};
 					   
 	class KeramikHandler : public QObject {
@@ -152,7 +152,7 @@ namespace Keramik {
 			~KeramikClient();
 		
 		private:
-			void addButtons( QHBoxLayout*, const QString & );
+			void addButtons( QBoxLayout*, const QString & );
 			void updateMask();
 			void updateCaptionBuffer();
 			void captionChange( const QString& );

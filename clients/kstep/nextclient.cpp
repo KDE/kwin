@@ -273,7 +273,7 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    QHBoxLayout *titleLayout = new QHBoxLayout();
+    QBoxLayout  *titleLayout = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     QHBoxLayout *windowLayout = new QHBoxLayout();
 
     mainLayout->addLayout(titleLayout);
@@ -298,7 +298,7 @@ NextClient::NextClient( Workspace *ws, WId w, QWidget *parent,
          button is selected in the current button scheme, or (2) null
          otherwise.
  */
-void NextClient::initializeButtonsAndTitlebar(QHBoxLayout* titleLayout)
+void NextClient::initializeButtonsAndTitlebar(QBoxLayout* titleLayout)
 {
     // Null the buttons to begin with (they are not guaranteed to be null).
     for (int i=0; i<MAX_NUM_BUTTONS; i++) {
@@ -336,16 +336,10 @@ void NextClient::initializeButtonsAndTitlebar(QHBoxLayout* titleLayout)
 /** Adds the buttons for one side of the title bar, based on the spec
  * string; see the KWinInternal::Options class, methods
  * titleButtonsLeft and titleBUttonsRight. */
-void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
+void NextClient::addButtons(QBoxLayout* titleLayout, const QString& spec)
 {
-    int str_len = spec.length();
-    if (str_len <= 0)
-	return;
-
     for (unsigned int i=0; i<spec.length(); i++) {
-        //switch (spec[i].latin1()) {
-	switch( (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))?
-		spec[str_len-i-1].latin1():spec[i].latin1()){
+        switch (spec[i].latin1()) {
         case 'A':
             if (isMaximizable()) {
                 button[MAXIMIZE_IDX] =
@@ -376,7 +370,7 @@ void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
                          this, SLOT(iconify()) );
             }
             break;
-
+            
         case 'M':
             button[MENU_IDX] =
                 new NextButton(this, "menu", NULL, 10, 10, i18n("Menu"));
@@ -417,16 +411,14 @@ void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
     }
 }
 
-// Make sure the menu button follows double click conventions set in kcontrol
-// (Note: this was almost straight copy and paste from KDEDefaultClient.)
 void NextClient::menuButtonPressed()
 {
     // Probably don't need this null check, but we might as well.
     if (button[MENU_IDX]) {
         QPoint menupoint ( button[MENU_IDX]->rect().bottomLeft().x()-1,
                            button[MENU_IDX]->rect().bottomLeft().y()+2 );
-        QPoint pos = button[MENU_IDX]->mapToGlobal( menupoint );
-        workspace()->showWindowMenu( pos.x(), pos.y(), this );
+        workspace()->showWindowMenu(button[MENU_IDX]->mapToGlobal(menupoint), this);
+	button[MENU_IDX]->setDown(false);
     }
 }
 

@@ -3037,7 +3037,7 @@ void Workspace::showWindowMenu( int x, int y, Client* cl )
         activateClient( cl );
         d->popup_client = cl; // don't close the popup when the client becomes active
     }
-        
+    
     QPopupMenu* p = clientPopup();
 //    Client* c = active_client;
     p->exec( QPoint( x, y ));

@@ -443,22 +443,16 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(2, 4);
 
     // Pack the titlebar HBox with items
-    hb = new QHBoxLayout();
+    hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     hb->setResizeMode( QLayout::FreeResize );
     g->addLayout ( hb, 1, 1 );
 
-    if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
-	addClientButtons( options->titleButtonsRight() );
-    else
 	addClientButtons( options->titleButtonsLeft() );
 
     titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum );
     hb->addItem(titlebar);
     hb->addSpacing(2);
 
-    if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
-	addClientButtons( options->titleButtonsLeft(), false );
-    else
 	addClientButtons( options->titleButtonsRight(), false );
 
     hb->addSpacing(2);
@@ -467,20 +461,18 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
 
 void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 {
-	int str_len = s.length();
-	if (str_len > 0)
+	if (s.length() > 0)
 		for(unsigned int i = 0; i < s.length(); i++)
 		{
-			switch( QApplication::reverseLayout() && (!options->reverseBIDIWindows())?
-				s[str_len-i-1].latin1():s[i].latin1())
+			switch( s[i].latin1() )
 			{
 				// Menu button
 				case 'M':
 					if (!button[BtnMenu])
 					{
-    					button[BtnMenu] = new QuartzButton(this, "menu",
+    					button[BtnMenu] = new QuartzButton(this, "menu", 
 								 largeButtons, isLeft, false, NULL, i18n("Menu"));
-    					connect( button[BtnMenu], SIGNAL(pressed()),
+    					connect( button[BtnMenu], SIGNAL(pressed()), 
 								 this, SLOT(menuButtonPressed()) );
 						hb->addWidget( button[BtnMenu] );
 					}
@@ -519,7 +511,7 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					{
 					    button[BtnIconify] = new QuartzButton(this, "iconify",
 								 largeButtons, isLeft, true, iconify_bits, i18n("Minimize"));
-					    connect( button[BtnIconify], SIGNAL( clicked()),
+					    connect( button[BtnIconify], SIGNAL( clicked()), 
 								 this, SLOT(iconify()) );
 						hb->addWidget( button[BtnIconify] );
 					}
@@ -543,7 +535,7 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 					{
 		    			button[BtnClose] = new QuartzButton(this, "close",
 								 largeButtons, isLeft, true, close_bits, i18n("Close"));
-					    connect( button[BtnClose], SIGNAL( clicked()),
+					    connect( button[BtnClose], SIGNAL( clicked()), 
 								 this, SLOT(closeWindow()) );
 						hb->addWidget( button[BtnClose] );
 					}
@@ -645,7 +637,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
     	g = options->colorGroup(Options::TitleBar, isActive());
 	else
 		g = options->colorGroup(Options::Frame, isActive());
-
+ 
     // Draw outer highlights and lowlights
     p.setPen( g.light().light(120) );
     p.drawLine( x, y, x2-1, y );
@@ -667,7 +659,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
     p.drawRect( x+3, y + titleHeight + 3, w-6, h-titleHeight-6 );
 
     // Drawing this extra line removes non-drawn areas when shaded
-    p.drawLine( x+4, y2-4, x2-4, y2-4);
+    p.drawLine( x+4, y2-4, x2-4, y2-4); 
 
     // Highlight top corner
     p.setPen( g.light().light(160) );
@@ -684,16 +676,14 @@ void QuartzClient::paintEvent( QPaintEvent* )
     QColor c1 = options->color(Options::TitleBar, isActive() ).light(130);
     QColor c2 = options->color(Options::TitleBlend, isActive() );
 
-    // Create a disposable pixmap buffer for the titlebar
+    // Create a disposable pixmap buffer for the titlebar 
     KPixmap* titleBuffer = new KPixmap;
-    titleBuffer->resize( w-6, titleHeight );
+    titleBuffer->resize( w-6, titleHeight );  
 
     QPainter p2( titleBuffer, this );
 
-    int rightoffset = r.x()+r.width()-25-4;	// subtract titleBlocks pixmap width and some
-    /*if (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
-    	rightoffset = 0;
-*/
+	int rightoffset = r.x()+r.width()-25-4;	// subtract titleBlocks pixmap width and some
+
     p2.fillRect( 0, 0, w, r.height(), c1 );
     p2.fillRect( rightoffset, 0, w-rightoffset-6, r.height(), c2 );
 
@@ -707,8 +697,8 @@ void QuartzClient::paintEvent( QPaintEvent* )
     // for toolwindows than the default.
     QFont fnt = options->font(true);
     if ( !largeButtons )
-    {
-       fnt.setPointSize( fnt.pointSize() - 3 );  // Shrink font by 3pt
+    { 
+       fnt.setPointSize( fnt.pointSize() - 3 );  // Shrink font by 3pt 
        fnt.setWeight( QFont::Normal );           // and disable bold
     }
     p2.setFont( fnt );
@@ -802,8 +792,8 @@ void QuartzClient::menuButtonPressed()
 {
     QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1, 
                        button[BtnMenu]->rect().bottomLeft().y()+2 );
-    QPoint pos = button[BtnMenu]->mapToGlobal( menupoint );
-    workspace()->showWindowMenu( pos.x(), pos.y(), this );
+    workspace()->showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ), this );
+	button[BtnMenu]->setDown(false);
 }
 
 

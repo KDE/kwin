@@ -29,7 +29,7 @@
 
 class QSpacerItem;
 class QVBoxLayout;
-class QHBoxLayout;
+class QBoxLayout;
 
 namespace RiscOS
 {
@@ -101,7 +101,7 @@ class Manager : public KWinInternal::Client
   private:
 
     QVBoxLayout     * topLayout_;
-    QHBoxLayout     * titleLayout_;
+    QBoxLayout      * titleLayout_;
     QSpacerItem     * titleSpacer_;
 
     QPixmap         titleBuf_;

@@ -58,8 +58,8 @@ protected slots:
     void maximizeButtonClicked();
 
 private:
-    void initializeButtonsAndTitlebar(QHBoxLayout* titleLayout);
-    void addButtons(QHBoxLayout* titleLayout, const QString& buttons);
+    void initializeButtonsAndTitlebar(QBoxLayout* titleLayout);
+    void addButtons(QBoxLayout* titleLayout, const QString& buttons);
 
     QSpacerItem* titlebar;
 

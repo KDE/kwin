@@ -616,12 +616,12 @@ static struct EmbedImage {
     { 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-static const QImage& qembed_findImage( const QString& name )
+const QImage* qembed_findImage( const QString& name )
 {
-    
-    QImage* img = imageDict.find(name);
-    if ( !img ) {
-        for (int i=0; embed_image_vec[i].data; i++) {
+    QImage* img = imageDict->find(name);
+    if ( !img ) 
+    {
+        for (int i=0; embed_image_vec[i].data; i++)
 	if ( 0==strcmp(embed_image_vec[i].name, name) ) {
 	    img = new QImage((uchar*)embed_image_vec[i].data,
 			embed_image_vec[i].width,
@@ -635,13 +635,8 @@ static const QImage& qembed_findImage( const QString& name )
 	        img->setAlphaBuffer(TRUE);
 	    break;
 	}
-        }
-        if ( !img ) {
-            static QImage dummy;
-            return dummy;
-        }
     }
-    return *img;
+    return img;
 }
 
 #endif

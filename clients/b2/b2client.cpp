@@ -405,37 +405,22 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     titlebar->setMinimumWidth(16);
     titlebar->setFixedHeight(20);
 
-    QHBoxLayout *titleLayout = new QHBoxLayout(titlebar);
-    titleLayout->setSpacing(1);
+    QBoxLayout *titleLayout = new QBoxLayout(titlebar, QBoxLayout::LeftToRight, 0, 1, 0);
     titleLayout->addSpacing(3);
 
     if (options->customButtonPositions())
     {
-	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
-		addButtons( options->titleButtonsRight(), tips, titlebar, titleLayout );
-		titleLayout->addItem(titlebar->captionSpacer);
-		addButtons( options->titleButtonsLeft(), tips, titlebar, titleLayout );
-	}
-	else{
-		addButtons( options->titleButtonsLeft(), tips, titlebar, titleLayout );
-		titleLayout->addItem(titlebar->captionSpacer);
-		addButtons( options->titleButtonsRight(), tips, titlebar, titleLayout );
-	}
+        addButtons( options->titleButtonsLeft(), tips, titlebar, titleLayout );
+        titleLayout->addItem(titlebar->captionSpacer);
+        addButtons( options->titleButtonsRight(), tips, titlebar, titleLayout );
     } else {
-    	if (QApplication::reverseLayout() && (!options->reverseBIDIWindows())){
-		addButtons( "IAX", tips, titlebar, titleLayout );
-		titleLayout->addItem(titlebar->captionSpacer);
-		addButtons( "MSH", tips, titlebar, titleLayout );
-	}
-	else{
-		addButtons( "MSH", tips, titlebar, titleLayout );
-		titleLayout->addItem(titlebar->captionSpacer);
-		addButtons( "IAX", tips, titlebar, titleLayout );
-	}
+        addButtons( "MSH", tips, titlebar, titleLayout );
+        titleLayout->addItem(titlebar->captionSpacer);
+        addButtons( "IAX", tips, titlebar, titleLayout );
     }
 
     titleLayout->addSpacing(3);
-
+ 
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
 
@@ -450,15 +435,13 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
 }
 
 void B2Client::addButtons(const QString& s, const QString tips[],
-                          B2Titlebar* tb, QHBoxLayout* titleLayout)
+                          B2Titlebar* tb, QBoxLayout* titleLayout)
 {
-    int str_len = s.length();
-    if (str_len <= 0)
+    if (s.length() <= 0)
 	return;
 
     for(unsigned int i = 0; i < s.length(); i++) {
-        switch( (QApplication::reverseLayout() && (!options->reverseBIDIWindows()))
-		? s[str_len-i-1].latin1():s[i].latin1()) {
+        switch(s[i].latin1()) {
             case 'M':  // Menu button
                 if (!button[BtnMenu]) {
                     button[BtnMenu] = new B2Button(this, tb, tips[BtnMenu]);
@@ -794,9 +777,10 @@ void B2Client::activeChange(bool on)
 
 void B2Client::menuButtonPressed()
 {
-    QPoint pos = button[BtnMenu]->mapToGlobal(button[BtnMenu]->
-                                           rect().bottomLeft());
-    workspace()->showWindowMenu( pos.x(), pos.y(), this );
+    QPoint menupoint = button[BtnMenu]->mapToGlobal(button[BtnMenu]->
+		              rect().bottomLeft());
+    workspace()->showWindowMenu( menupoint, this );
+    button[BtnMenu]->setDown(false);
 }
 
 void B2Client::slotReset()

@@ -17,7 +17,7 @@
 #include "../../kwinbutton.h"
 
 class QSpacerItem;
-class QHBoxLayout;
+class QBoxLayout;
 class QGridLayout;
 
 namespace KWinInternal {
@@ -111,7 +111,7 @@ private slots:
     void maxButtonClicked();
 private:
     void addButtons(const QString& s, const QString tips[], 
-                    B2Titlebar* tb, QHBoxLayout* titleLayout);
+                    B2Titlebar* tb, QBoxLayout* titleLayout);
     void positionButtons();
     void calcHiddenButtons();
     enum ButtonType{BtnMenu=0, BtnSticky, BtnIconify, BtnMax, BtnClose,

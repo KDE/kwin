@@ -49,7 +49,7 @@
 #include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
-class QHBoxLayout;
+class QBoxLayout;
 class QGridLayout;
 
 namespace KWinInternal {
@@ -164,7 +164,7 @@ class IceWMClient : public KWinInternal::Client
 	    QSpacerItem* titleSpacerB;
     	QSpacerItem* titleSpacerR;
 	    QSpacerItem* titleSpacerQ;
-	    QHBoxLayout* hb;
+	    QBoxLayout*  hb;
 	    QGridLayout* grid;
 };
 

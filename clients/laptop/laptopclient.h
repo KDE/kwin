@@ -7,7 +7,7 @@
 #include "../../kwinbutton.h"
 class QLabel;
 class QSpacerItem;
-class QHBoxLayout;
+class QBoxLayout;
 
 namespace KWinInternal {
 
@@ -74,7 +74,7 @@ private:
     int lastButtonWidth;
     QSpacerItem* titlebar;
     bool hiddenItems;
-    QHBoxLayout* hb;
+    QBoxLayout* hb;
     KPixmap activeBuffer;
     bool bufferDirty;
     int lastBufferWidth;

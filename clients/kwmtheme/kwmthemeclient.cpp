@@ -263,7 +263,7 @@ KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
     layout->setRowStretch(2, 10);
     layout->setColStretch(1, 10);
     
-    QHBoxLayout* hb = new QHBoxLayout;
+    QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     layout->addLayout( hb, 1, 1 );
 
     KConfig *config = KGlobal::config();
