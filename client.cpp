@@ -1706,9 +1706,6 @@ void Client::iconify()
     if ( !isMinimizable() )
 	return;
 
-    if ( isShade() )
-	setShade( FALSE );
-
     setMappingState( IconicState );
     Events::raise( Events::Iconify );
 
