@@ -598,7 +598,7 @@ Comment[zh_CN.GB2312]=另外一个窗口被激活
 default_presentation=0
 
 [new]
-New=New Window
+Name=New Window
 Comment=New Window
 Comment[cs]=Nové okno
 Comment[da]=Nyt vindue
@@ -632,7 +632,7 @@ Comment[zh_CN.GB2312]=新窗口
 default_presentation=0
 
 [delete]
-New=Delete Window
+Name=Delete Window
 Comment=Delete Window
 Comment[cs]=Výmaz okna
 Comment[da]=Slet vindue
