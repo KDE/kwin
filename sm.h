@@ -20,6 +20,13 @@ class QSocketNotifier;
 namespace KWinInternal
 {
 
+enum SMSavePhase
+    {
+    SMSavePhase0,     // saving global state in "phase 0"
+    SMSavePhase2,     // saving window state in phase 2
+    SMSavePhase2Full  // complete saving in phase2, there was no phase 0
+    };
+    
 class SessionSaveDoneHelper
     : public QObject
     {
