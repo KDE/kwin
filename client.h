@@ -246,6 +246,7 @@ private:
     QRect original_geometry;
     QRect geom; //### TODO
     WId transient_for;
+    uint transient_for_defined;
     uint shaded :1;
     uint active :1;
     uint is_sticky :1;
@@ -291,7 +292,7 @@ inline WId Client::transientFor() const
 
 inline bool Client::isTransient() const
 {
-    return transient_for != 0;
+    return transient_for != 0 || transient_for_defined;
 }
 
 

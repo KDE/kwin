@@ -417,6 +417,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     active = FALSE;
     shaded = FALSE;
     transient_for = None;
+    transient_for_defined = FALSE;
     is_shape = FALSE;
     is_sticky = FALSE;
     stays_on_top = FALSE;
@@ -431,14 +432,16 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     Window ww;
     if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
 	transient_for = None;
-    else
+    else {
     	transient_for = (WId) ww;
+	transient_for_defined = TRUE;
+    }
 
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
 
     // window wants to stay on top?
-    stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || transient_for == workspace()->rootWin();
+    stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || ( transient_for == None && transient_for_defined );
 
     // window does not want a taskbar entry?
     skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
@@ -929,10 +932,13 @@ bool Client::propertyNotify( XPropertyEvent& e )
 	break;
     case XA_WM_TRANSIENT_FOR:
     	Window ww;
-	if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
+	if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) ) {
 	    transient_for = None;
-	else
+	    transient_for_defined = FALSE;
+	} else {
 	    transient_for = (WId) ww;
+	    transient_for_defined = TRUE;
+	}
 	break;
     case XA_WM_HINTS:
 	getWMHints();
@@ -1985,7 +1991,7 @@ void Client::setMask( const QRegion & reg)
  */
 Client* Client::mainClient()
 {
-    if  ( !isTransient() )
+    if  ( !isTransient() && transientFor() != 0 )
 	return this;
     ClientList saveset;
     Client* c = this;
