@@ -147,6 +147,8 @@ public:
     const ClientList& stackingOrder() const;
 
     Client* topClientOnDesktop() const;
+    void sendClientToDesktop( Client* c, int desktop );
+
 
 
     QPopupMenu* clientPopup( Client* );
@@ -172,7 +174,7 @@ public:
     void cascadeDesktop();
     void unclutterDesktop();
     void reconfigure();
-
+    
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -223,7 +225,7 @@ private:
     void freeKeyboard(bool pass);
 
     Client* clientFactory(WId w);
-    
+
     void raiseTransientsOf( ClientList& safeset, Client* c );
     void lowerTransientsOf( ClientList& safeset, Client* c );
     void randomPlacement(Client* c);

@@ -2014,7 +2014,32 @@ void Workspace::clientPopupAboutToShow()
 
 
 /*!
-  Sends the activeClient() to desktop \a desk
+  Sends client \a c to desktop \a desk.
+  
+  Takes care of transients as well.
+ */
+void Workspace::sendClientToDesktop( Client* c, int desk )
+{
+    if ( c->isSticky() )
+	c->setSticky( FALSE );
+
+    if ( c->isOnDesktop( desk ) )
+	return;
+
+    c->setDesktop( desk );
+    c->hide();
+
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it)->transientFor() == c->window() ) {
+	    sendClientToDesktop( *it, desk );
+	}
+    }
+}
+
+/*!
+  Sends the popup client to desktop \a desk
+  
+  Internal slot for the window operation menu
  */
 void Workspace::sendToDesktop( int desk )
 {
@@ -2024,24 +2049,9 @@ void Workspace::sendToDesktop( int desk )
 	popup_client->setSticky( !popup_client->isSticky() );
 	return;
     }
+    
+    sendClientToDesktop( popup_client, desk );
 
-    if ( popup_client->isSticky() )
-	popup_client->setSticky( FALSE );
-
-    if ( popup_client->isOnDesktop( desk ) )
-	return;
-
-    popup_client->setDesktop( desk );
-    popup_client->hide();
-
-    Client* old = popup_client;
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-	if ( (*it)->transientFor() == popup_client->window() ) {
-	    popup_client = *it;
-	    sendToDesktop( desk );
-	    popup_client = old;
-	}
-    }
 }
 
 
