@@ -1518,7 +1518,7 @@ bool Client::isResizable() const
     {
     if( !motif_may_resize || isFullScreen())
         return false;
-    if( isSpecialWindow() || isSplash() || isToolbar())
+    if(( isSpecialWindow() || isSplash() || isToolbar()) && !isOverride())
         return false;
     if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
         return false;
