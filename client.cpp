@@ -405,6 +405,11 @@ bool WindowWrapper::x11Event( XEvent * e)
 	    bool replay = ( (Client*)parentWidget() )->performMouseCommand( com,
 			    QPoint( e->xbutton.x_root, e->xbutton.y_root) );
 
+	    if ( ((Client*)parentWidget())->windowType() != NET::Normal &&
+		 ((Client*)parentWidget())->windowType() != NET::Dialog &&
+		 ((Client*)parentWidget())->windowType() != NET::Override )
+		replay = TRUE;
+		
 	    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, kwin_time);
 	    return TRUE;
 	}
