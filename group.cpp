@@ -340,7 +340,7 @@ void Client::setTransient( Window new_transient_for_id )
             for( ClientList::ConstIterator it = group()->members().begin();
                  it != group()->members().end();
                  ++it )
-                if( !(*it)->groupTransient())
+                if( *it != this )
                     (*it)->addTransient( this );
             }
         else if( transient_for_id != None )
@@ -713,6 +713,8 @@ void Client::checkGroup()
              ++it )
             {
             if( !(*it)->groupTransient())  // and its transient for group transients in the new group
+                continue;
+            if( *it == this )
                 continue;
             addTransient( *it );
 	    }
