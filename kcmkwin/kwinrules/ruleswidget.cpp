@@ -322,7 +322,10 @@ void RulesWidget::setRules( Rules* rules )
     {
     Rules tmp;
     if( rules == NULL )
+        {
+        tmp.description = i18n( "New Entry" );
         rules = &tmp; // empty
+        }
     description->setText( rules->description );
     wmclass->setText( rules->wmclass );
     whole_wmclass->setChecked( rules->wmclasscomplete );
