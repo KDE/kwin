@@ -28,6 +28,7 @@ namespace KWinInternal
 {
 
 class Rules;
+class DetectDialog;
 
 class RulesWidget
     : public RulesWidgetBase
@@ -39,6 +40,8 @@ class RulesWidget
         Rules* rules() const;
     signals:
         void changed( bool state );
+    protected slots:
+        virtual void detectClicked();
     private slots:
         // geometry tab
         void updateEnableposition();
@@ -65,6 +68,10 @@ class RulesWidget
         void updateEnableignoreposition();
         void updateEnableminsize();
         void updateEnablemaxsize();
+        // internal
+        void detected( bool );
+    private:
+        DetectDialog* detect_dlg;
     };
 
 class RulesDialog

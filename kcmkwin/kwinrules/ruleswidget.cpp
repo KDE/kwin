@@ -28,8 +28,11 @@
 #include <klocale.h>
 #include <qregexp.h>
 #include <qwhatsthis.h>
+#include <assert.h>
 
 #include "../../rules.h"
+
+#include "detectwidget.h"
 
 namespace KWinInternal
 {
@@ -43,6 +46,7 @@ namespace KWinInternal
 
 RulesWidget::RulesWidget( QWidget* parent, const char* name )
 : RulesWidgetBase( parent, name )
+, detect_dlg( NULL )
     {
     QString enableDesc =
         i18n( "Enable this checkbox to alter this window property for the specified window(s)." );
@@ -458,6 +462,20 @@ Rules* RulesWidget::rules() const
 #undef CHECKBOX_FORCE_RULE
 #undef LINEEDIT_FORCE_RULE
 #undef COMBOBOX_FORCE_RULE
+
+void RulesWidget::detectClicked()
+    {
+    assert( detect_dlg == NULL );
+    detect_dlg = new DetectDialog;
+    connect( detect_dlg, SIGNAL( detectionDone( bool )), this, SLOT( detected( bool )));
+    detect_dlg->detect( 0 );
+    }
+
+void RulesWidget::detected( bool ok )
+    {
+    delete detect_dlg;
+    detect_dlg = NULL;
+    }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
 : KDialogBase( parent, name, true, "", Ok | Cancel )

@@ -12,6 +12,9 @@
             <height>477</height>
         </rect>
     </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -275,7 +278,10 @@
                                                     <cstring>detect1</cstring>
                                                 </property>
                                                 <property name="text">
-                                                    <string>Detect (bad luck, this one doesn't work yet)</string>
+                                                    <string>&amp;Detect</string>
+                                                </property>
+                                                <property name="accel">
+                                                    <string>Alt+D</string>
                                                 </property>
                                             </widget>
                                             <spacer>
@@ -2125,6 +2131,12 @@
         <receiver>edit_reg_wmclass</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
+    <connection>
+        <sender>detect1</sender>
+        <signal>clicked()</signal>
+        <receiver>Form2</receiver>
+        <slot>detectClicked()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>tabWidget2</tabstop>
@@ -2213,6 +2225,9 @@
     <tabstop>rule_maxsize</tabstop>
     <tabstop>maxsize</tabstop>
 </tabstops>
+<slots>
+    <slot access="protected">detectClicked()</slot>
+</slots>
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
 <includehints>
