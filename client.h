@@ -274,10 +274,12 @@ class Client : public QObject, public KDecorationDefines
         void toggleOnAllDesktops();
         void toggleShade();
         void showContextHelp();
-        void autoRaise();
         void cancelAutoRaise();
-        void shadeHover();
         void destroyClient();
+
+private slots:
+        void autoRaise();
+        void shadeHover();
 
     private:
         friend class Bridge; // FRAME
