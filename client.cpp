@@ -846,8 +846,6 @@ void Client::setShade( ShadeMode mode )
     info->setState( isShade() ? NET::Shaded : 0, NET::Shaded );
     info->setState( isShown() ? 0 : NET::Hidden, NET::Hidden );
     setMappingState( isShown() && isOnCurrentDesktop() ? NormalState : IconicState );
-    if( cap_normal != cap_iconic )
-        decoration->captionChange();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     decoration->shadeChange();
@@ -1274,13 +1272,9 @@ void Client::fetchName()
     QString s;
 
     if ( info->name() && info->name()[ 0 ] != '\0' ) 
-        {
         s = QString::fromUtf8( info->name() );
-        }
     else 
-        {
         s = KWin::readNameProperty( window(), XA_WM_NAME );
-        }
     if ( s != cap_normal ) 
         {
         cap_normal = "";
@@ -1302,6 +1296,8 @@ void Client::fetchName()
             info->setVisibleName( "" ); // remove
             info->setVisibleIconName( "" ); // remove
             }
+        else if( !cap_suffix.isEmpty() && !cap_iconic.isEmpty()) // keep the same suffix in iconic name if it's set
+            info->setVisibleIconName( ( cap_iconic + cap_suffix ).utf8() );
 
         if( isManaged() && decoration != NULL )
                 decoration->captionChange();
@@ -1313,21 +1309,14 @@ void Client::fetchIconicName()
     QString s;
 
     if ( info->iconName() && info->iconName()[ 0 ] != '\0' ) 
-        {
         s = QString::fromUtf8( info->iconName() );
-        }
     else 
-        {
         s = KWin::readNameProperty( window(), XA_WM_ICON_NAME );
-        }
     if ( s != cap_iconic ) 
         {
         cap_iconic = s;
-        if( !cap_suffix.isEmpty()) // keep the same suffix in iconic name if it's set
+        if( !cap_suffix.isEmpty() && !cap_iconic.isEmpty()) // keep the same suffix in iconic name if it's set
             info->setVisibleIconName( ( s + cap_suffix ).utf8() );
-
-        if( isManaged() && decoration != NULL )
-                decoration->captionChange();
         }
     }
 
@@ -1335,7 +1324,7 @@ void Client::fetchIconicName()
  */
 QString Client::caption() const
     {
-    return ( isShade() && !cap_iconic.isEmpty() ? cap_iconic : cap_normal ) + cap_suffix;
+    return cap_normal + cap_suffix;
     }
 
 void Client::getWMHints()
