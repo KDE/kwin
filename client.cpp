@@ -1519,14 +1519,14 @@ void Client::move( int x, int y )
 
 /*!
   Reimplemented to set the mapping state and to map the managed
-  window in the window wrapper. Alo takes care of deiconification of
+  window in the window wrapper. Also takes care of deiconification of
   transients.
  */
 void Client::show()
 {
-    QWidget::show();
     if ( isIconified() && !isTransient() )
 	animateIconifyOrDeiconify( FALSE );
+    QWidget::show();
     setMappingState( NormalState );
     windowWrapper()->map();
 }
