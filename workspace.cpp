@@ -493,7 +493,9 @@ void Workspace::init()
     raiseElectricBorders();
 
     // NETWM spec says we have to set it to (0,0) if we don't support it
-    rootInfo->setDesktopViewport( 1, NETPoint());
+    NETPoint* viewports = new NETPoint[ number_of_desktops ];
+    rootInfo->setDesktopViewport( number_of_desktops, *viewports );
+    delete[] viewports;
 }
 
 Workspace::~Workspace()
@@ -2412,8 +2414,23 @@ void Workspace::setNumberOfDesktops( int n )
     int old_number_of_desktops = number_of_desktops;
     number_of_desktops = n;
 
-    rootInfo->setNumberOfDesktops( number_of_desktops );
-    saveDesktopSettings();
+    // if increasing the number, do the resizing now,
+    // otherwise after the moving of window to still existing desktops
+    if( old_number_of_desktops < number_of_desktops ) {
+        NETPoint* viewports = new NETPoint[ number_of_desktops ];
+        rootInfo->setDesktopViewport( number_of_desktops, *viewports );
+        delete[] viewports;
+        NETRect r;
+        r.pos.x = area.x();
+        r.pos.y = area.y();
+        r.size.width = area.width();
+        r.size.height = area.height();
+        for( int i = 1; i <= number_of_desktops; i++)
+        {
+            rootInfo->setWorkArea( i, r );
+        }
+        rootInfo->setNumberOfDesktops( number_of_desktops );
+    }
 
     // if the number of desktops decreased, move all
     // windows that would be hidden to the last visible desktop
@@ -2427,6 +2444,24 @@ void Workspace::setNumberOfDesktops( int n )
     }
     if( currentDesktop() > numberOfDesktops())
         setCurrentDesktop( numberOfDesktops());
+
+    if( old_number_of_desktops > number_of_desktops ) {
+        rootInfo->setNumberOfDesktops( number_of_desktops );
+        NETPoint* viewports = new NETPoint[ number_of_desktops ];
+        rootInfo->setDesktopViewport( number_of_desktops, *viewports );
+        delete[] viewports;
+        NETRect r;
+        r.pos.x = area.x();
+        r.pos.y = area.y();
+        r.size.width = area.width();
+        r.size.height = area.height();
+        for( int i = 1; i <= number_of_desktops; i++)
+        {
+            rootInfo->setWorkArea( i, r );
+        }
+    }
+
+    saveDesktopSettings();
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize( n );
@@ -4047,7 +4082,7 @@ QRect Workspace::clientArea(const QPoint& p)
 
 void Workspace::loadDesktopSettings()
 {
-    KConfig c("kdeglobals");
+    KConfig c("kwinrc");
 
     QCString groupname;
     if (kwin_screen_number == 0)
@@ -4070,7 +4105,7 @@ void Workspace::loadDesktopSettings()
 
 void Workspace::saveDesktopSettings()
 {
-    KConfig c("kdeglobals");
+    KConfig c("kwinrc");
 
     QCString groupname;
     if (kwin_screen_number == 0)
