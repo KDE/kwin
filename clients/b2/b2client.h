@@ -26,13 +26,8 @@ class B2Button : public KWinInternal::KWinButton
 {
     Q_OBJECT
 public:
-    B2Button(Client *_client=0, QWidget *parent=0, const QString& tip=NULL)
-        : KWinButton(parent, 0, tip) 
-    { 
-        client = _client;
-        useMiniIcon = false;
-        setFixedSize(16,16); 
-    };
+    B2Button(Client *_client=0, QWidget *parent=0, const QString& tip=NULL);
+    ~B2Button() {};
 
     void setBg(const QColor &c){bg = c;}
     void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,

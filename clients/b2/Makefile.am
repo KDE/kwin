@@ -1,6 +1,8 @@
 
 INCLUDES = $(all_includes) 
 
+SUBDIRS = . config
+
 kde_module_LTLIBRARIES = libkwinb2.la
 
 libkwinb2_la_SOURCES = b2client.cpp

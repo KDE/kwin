@@ -13,6 +13,7 @@
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
+#include <kconfig.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
@@ -41,6 +42,14 @@ static KPixmap *pixmap[NUM_PIXMAPS];
 #define PIXMAP_ID(i) (pixmap[(i)*4 +3])
 
 static bool pixmaps_created = false;
+static bool colored_frame = false;
+
+static void read_config()
+{
+    KConfig conf("kwinb2rc");
+    conf.setGroup("General");
+    colored_frame = conf.readBoolEntry( "UseTitleBarBorderColors", false );
+}
 
 static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
 {
@@ -122,6 +131,16 @@ static void delete_pixmaps()
 }
 
 
+B2Button::B2Button(Client *_client=0, QWidget *parent=0, const QString& tip=NULL)
+   : KWinButton(parent, 0, tip) 
+{ 
+    setBackgroundMode(NoBackground);
+    client = _client;
+    useMiniIcon = false;
+    setFixedSize(16,16); 
+};
+
+
 QSize B2Button::sizeHint() const
 {
     return(QSize(16, 16));
@@ -197,6 +216,7 @@ B2Titlebar::B2Titlebar(B2Client *parent)
       set_x11mask(false), isfullyobscured(false), shift_move(false),
       client(parent)
 {
+    setBackgroundMode(NoBackground);
     captionSpacer = new QSpacerItem(10, 20, QSizePolicy::Expanding,
                                             QSizePolicy::Fixed);
 }
@@ -357,12 +377,14 @@ void B2Client::maxButtonClicked( )
 
 B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase ),
+    : Client( ws, w, parent, name, WResizeNoErase | WRepaintNoErase ),
       bar_x_ofs(0), in_unobs(0)
 {
     const QString tips[]= {QString(i18n("Menu")), QString(i18n("Sticky")), 
                            QString(i18n("Minimize")), QString(i18n("Maximize")),
                            QString(i18n("Close")), QString(i18n("Help")) };
+
+    setBackgroundMode(NoBackground);
 
     // Set button pointers to NULL so we know what has been created
     for(int i = 0; i < BtnCount; i++)
@@ -557,15 +579,28 @@ void B2Client::paintEvent( QPaintEvent* e)
 
     // inner window rect
     p.drawRect(3, t.bottom(), width()-6, height()-t.height()-6);
+    p.drawLine(4, t.bottom()-1, width()-8, t.bottom()-1);
 
     // outer frame rect
     p.drawRect(0, t.bottom()-3, width(), height()-t.height());
 
+    // draw frame interior
+    if (colored_frame)
+        p.setPen(options->color(Options::TitleBar, isActive()));
+    else
+        p.setPen(options->color(Options::Frame, isActive()));
+    
+    p.drawRect(2, t.bottom()-1, width()-4, height()-t.height()-4);
+    p.setPen(Qt::black);
+    
     // frame shade panel
+   if (colored_frame)
+       qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
+                   options->colorGroup(Options::TitleBar, isActive()), false);
+   else
     qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2,
-                    options->colorGroup(Options::Frame, isActive()),
-                    false);
-
+                    options->colorGroup(Options::Frame, isActive()), false);
+   
     //bottom handle rect
     int hx = width()-40;
     int hw = 40;
@@ -574,14 +609,17 @@ void B2Client::paintEvent( QPaintEvent* e)
     p.drawLine(hx, height()-1, width()-1, height()-1);
     p.drawLine(hx, height()-4, hx, height()-1);
 
-    p.fillRect(hx+1, height()-7, hw-2, 6,
-               options->colorGroup(Options::Frame, isActive())
-               .brush(QColorGroup::Button));
+    p.fillRect(hx+1, height()-7, hw-2, 6, 
+        options->color(colored_frame ? Options::TitleBar:Options::Frame,
+	               isActive()));
 
-    p.setPen(options->colorGroup(Options::Frame, isActive()).dark());
+    p.setPen(options->colorGroup(colored_frame ? Options::TitleBar:Options::Frame,
+                                 isActive()).dark());				 
     p.drawLine(width()-2, height()-8, width()-2, height()-2);
     p.drawLine(hx+1, height()-2, width()-2, height()-2);
-    p.setPen(options->colorGroup(Options::Frame, isActive()).light());
+
+    p.setPen(options->colorGroup(colored_frame ? Options::TitleBar:Options::Frame,
+                                 isActive()).light());
     p.drawLine(hx+1, height()-6, hx+1, height()-3);
     p.drawLine(hx+1, height()-7, width()-3, height()-7);
 
@@ -897,10 +935,12 @@ extern "C"
     }
     void init()
     {
+       read_config();
        create_pixmaps();
     }
     void reset()
     {
+       read_config();
        redraw_pixmaps();
        // Ensure change in tooltip state gets applied
        Workspace::self()->slotResetAllClientsDelayed();
