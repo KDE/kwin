@@ -2130,9 +2130,8 @@ setParameter(char *line){
 void
 loadConfig(char *filename){
     FILE           *file = NULL;
-    char           *line = NULL;
+    char            line[ 1024 ];
     size_t          length = 0;
-    int             ret = -1;
     Bool            wasNull = False;
     Bool            section = False;
     
@@ -2158,12 +2157,13 @@ loadConfig(char *filename){
     }
 
     /*find section*/
-    while( !section && getline(&line, &length, file) != -1 ){
+    while( !section && fgets(line, 1023, file) != -1 ){
         if( strcmp(line, "[xcompmgr]\n") == 0 )
             section = True;
     }
     /*read and set values*/
-    while( section && (ret = getline(&line, &length, file)) != -1 ){
+    while( section && fgets(line, 1023, file) != NULL ){
+        int ret = strlen( line );
         if( ret > 1 ){
             if( *line == '[' )/*found new section - maybe check for '\n'?*/
                 break;
@@ -2177,8 +2177,6 @@ loadConfig(char *filename){
         free(filename);
         filename = NULL;
     }
-    free(line);
-    line = NULL;
 }
 
 void
