@@ -675,20 +675,6 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
     if ( isShade() ) // SELI SHADE
         setShade( ShadeNone );
 
-    // compress configure requests
-    XEvent otherEvent;
-    while (XCheckTypedWindowEvent (qt_xdisplay(), window(),
-                                   ConfigureRequest, &otherEvent) ) 
-        {
-        if (otherEvent.xconfigurerequest.value_mask == e->value_mask)
-            *e = otherEvent.xconfigurerequest;
-        else 
-            {
-            XPutBackEvent(qt_xdisplay(), &otherEvent);
-            break;
-            }
-        }
-
     if ( e->value_mask & CWBorderWidth ) 
         {
         // first, get rid of a window border
