@@ -81,8 +81,8 @@ static unsigned char pinup_dgray_bits[] = {
 ///////////////////////////////////////////////////////////////////////////
 
 // Titlebar button positions
-QString quartzButtonsLeft;
-QString quartzButtonsRight;
+QString* quartzButtonsLeft;
+QString* quartzButtonsRight;
 bool stickyButtonOnLeft = true;
 
 KPixmap* titleBlocks 	= NULL;
@@ -99,6 +99,9 @@ QuartzHandler* clientHandler;
 
 QuartzHandler::QuartzHandler()
 {
+	quartzButtonsLeft = new QString();
+	quartzButtonsRight = new QString();
+
 	readConfig();
 	createPixmaps();
 	connect( options, SIGNAL(resetClients()), this, SLOT(slotReset()) );
@@ -107,6 +110,9 @@ QuartzHandler::QuartzHandler()
 
 QuartzHandler::~QuartzHandler()
 {
+	delete quartzButtonsLeft;
+	delete quartzButtonsRight;
+
 	freePixmaps();
 }
 
@@ -131,17 +137,17 @@ void QuartzHandler::readConfig()
 	if( conf->readBoolEntry("CustomButtonPositions", false) )
 	{
 		// Read the positions from the config file...
-		quartzButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
-		quartzButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
+		*quartzButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
+		*quartzButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
 	} else
 		{
 			// Use defaults
-			quartzButtonsLeft = "MS";
-			quartzButtonsRight = "HIAX";
+			*quartzButtonsLeft = "MS";
+			*quartzButtonsRight = "HIAX";
 		}
 
 	// A small hack to make the sticky button look nicer
-	stickyButtonOnLeft = (bool)quartzButtonsLeft.contains( 'S' );
+	stickyButtonOnLeft = (bool)quartzButtonsLeft->contains( 'S' );
 }
 
 
@@ -453,13 +459,13 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
     hb->setResizeMode( QLayout::FreeResize );
     g->addLayout ( hb, 1, 1 );
 
-	addClientButtons( quartzButtonsLeft );
+	addClientButtons( *quartzButtonsLeft );
 
     titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum );
     hb->addItem(titlebar);
     hb->addSpacing(2);
 
-	addClientButtons( quartzButtonsRight, false );
+	addClientButtons( *quartzButtonsRight, false );
 
     hb->addSpacing(2);
 }
