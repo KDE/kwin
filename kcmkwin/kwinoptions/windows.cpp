@@ -297,13 +297,6 @@ void KFocusConfig::setAutoRaiseEnabled()
 void KFocusConfig::autoRaiseOnTog(bool a) {
     autoRaise->setEnabled(a);
     clickRaiseOn->setEnabled( !a );
-    if ( a )
-    {
-        clickRaiseOn->setChecked( TRUE );
-        if(getAutoRaiseInterval() == 0)
-            setAutoRaiseInterval(750);
-    }
-
 }
 
 void KFocusConfig::clickRaiseOnTog(bool ) {
@@ -342,7 +335,7 @@ void KFocusConfig::load( void )
     else if(key == "FocusStrictlyUnderMouse")
         setFocus(FOCUS_STRICTLY_UNDER_MOUSE);
 
-    int k = config->readNumEntry(KWIN_AUTORAISE_INTERVAL,0);
+    int k = config->readNumEntry(KWIN_AUTORAISE_INTERVAL,750);
     setAutoRaiseInterval(k);
 
     key = config->readEntry(KWIN_AUTORAISE);
