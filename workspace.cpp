@@ -105,6 +105,7 @@ extern void kwin_updateTime();
 static int kwin_has_shape = 0;
 static int kwin_shape_event = 0;
 static bool block_focus = FALSE;
+static Window null_focus_window = 0;
 // does the window w  need a shape combine mask around it?
 bool Shape::hasShape( WId w){
     int xws, yws, xbs, ybs;
@@ -1282,9 +1283,12 @@ void Workspace::clientHidden( Client* c )
                 }
             }
         }
-    }
     if ( desktop_client )
         requestFocus( desktop_client );
+    else
+        focusToNull();
+    } // if blocking focus, move focus to desktop_client later if needed
+      // in order to avoid flickering
     else
         focusToNull();
 }
@@ -1959,19 +1963,19 @@ ClientList Workspace::constrainedStackingOrder( const ClientList& list )
 
 /*!
   Puts the focus on a dummy window
+  Just using XSetInputFocus() with None would block keyboard input
  */
 void Workspace::focusToNull(){
-  static Window w = 0;
   int mask;
   XSetWindowAttributes attr;
-  if (w == 0) {
+  if (null_focus_window == 0) {
     mask = CWOverrideRedirect;
     attr.override_redirect = 1;
-    w = XCreateWindow(qt_xdisplay(), qt_xrootwin(), -1,-1, 1, 1, 0, CopyFromParent,
+    null_focus_window = XCreateWindow(qt_xdisplay(), qt_xrootwin(), -1,-1, 1, 1, 0, CopyFromParent,
                       InputOnly, CopyFromParent, mask, &attr);
-    XMapWindow(qt_xdisplay(), w);
+    XMapWindow(qt_xdisplay(), null_focus_window);
   }
-  XSetInputFocus(qt_xdisplay(), w, RevertToPointerRoot, kwin_time );
+  XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, kwin_time );
   updateColormap();
 }
 
@@ -2108,6 +2112,13 @@ void Workspace::setCurrentDesktop( int new_desktop ){
             raiseClient( c );
     } else {
         focusToNull();
+    }
+    if( desktop_client ) {
+        Window w_tmp;
+        int i_tmp;
+        XGetInputFocus( qt_xdisplay(), &w_tmp, &i_tmp );
+        if( w_tmp == null_focus_window )
+            requestFocus( desktop_client );
     }
 }
 
@@ -2993,6 +3004,10 @@ void Workspace::slotResetAllClients()
     block_focus = FALSE;
     if ( active )
         requestFocus( active );
+    else if( desktop_client )
+        requestFocus( desktop_client );
+    else
+        focusToNull();
 
     // Add a dcop signal to allow other apps to know when the kwin client
     // has been changed by via the titlebar decoration selection.
