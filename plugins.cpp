@@ -123,6 +123,7 @@ bool PluginMgr::loadPlugin(QString nameStr)
             ((void (*)())init_func)();
     }
 
+    create_ptr = old_create_ptr = NULL;
     if( library->hasSymbol("create")) {
         void* create_func = library->symbol("create");
         if(create_func) {
