@@ -548,6 +548,7 @@ KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, co
 {
 	QToolTip::add( this, tip ); // FRAME
 	setBackgroundMode( NoBackground );
+        setCursor( arrowCursor );
 	setFixedSize( 17, 17 );
 
 	setToggleButton( (button == OnAllDesktopsButton) );

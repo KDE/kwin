@@ -21,6 +21,7 @@ void Decoration::init()
 	{
         button = new QPushButton( widget());
         button->show();
+        button->setCursor( arrowCursor );
 	button->move( 0, 0 );
         connect( button, SIGNAL( clicked()), SLOT( closeWindow()));
 	QToolTip::add( button, "Zelva Mana" );

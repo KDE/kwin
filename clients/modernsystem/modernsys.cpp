@@ -228,6 +228,7 @@ ModernButton::ModernButton(ModernSys *parent, const char *name,
     : QButton(parent->widget(), name)
 {
     setBackgroundMode( NoBackground );
+    setCursor( arrowCursor );
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
                  btnhighcolor_mask_bits : lowcolor_mask_bits, true);
     resize(14, 15);

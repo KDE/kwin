@@ -263,6 +263,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         decoration = workspace()->createDecoration( bridge );
         // TODO check decoration's minimum size?
         decoration->init();
+        decoration->widget()->installEventFilter( this );
         XReparentWindow( qt_xdisplay(), decoration->widget()->winId(), frameId(), 0, 0 );
         decoration->widget()->lower();
         decoration->borders( border_left, border_right, border_top, border_bottom );

@@ -64,6 +64,7 @@ void KDecoration::setMainWidget( QWidget* w )
     {
     assert( w_ == NULL );
     w_ = w;
+    w->setMouseTracking( true );
     widget()->resize( geometry().size());
     }
 

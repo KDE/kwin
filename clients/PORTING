@@ -36,3 +36,4 @@ porting:
     - windowWrapperShowEvent() is gone
     - animateIconifyOrDeiconify() -> animateMinimize() - just drop it if it's empty
     - pay special attention to SLOT() names and cases where you need to use 'widget()' instead of 'this'
+    - buttons should use setCursor() if they don't want cursor set by mousePosition()

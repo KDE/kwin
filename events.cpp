@@ -222,11 +222,6 @@ bool Workspace::workspaceEvent( XEvent * e )
         c->windowEvent( e );
         return true;
         }
-    if( Client* c = findClient( DecorationIdMatchPredicate( e->xany.window )))
-        {
-        if( c->decorationEvent( e ))
-            return true;
-        }
 
     switch (e->type) 
         {
@@ -487,7 +482,8 @@ void Client::windowEvent( XEvent* e )
         case ButtonPress:
             updateUserTime();
             workspace()->setWasUserInteraction();
-            buttonPressEvent( &e->xbutton );
+            buttonPressEvent( e->xbutton.window, e->xbutton.button, e->xbutton.state,
+                e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
             return;
         case KeyRelease:
     // don't update user time on releases
@@ -498,17 +494,26 @@ void Client::windowEvent( XEvent* e )
     // don't update user time on releases
     // e.g. if the user presses Alt+F2, the Alt release
     // would appear as user input to the currently active window
-            buttonReleaseEvent( &e->xbutton );
+            buttonReleaseEvent( e->xbutton.window, e->xbutton.button, e->xbutton.state,
+                e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
             return;
         case MotionNotify:
-            motionNotifyEvent( &e->xmotion );
+            motionNotifyEvent( e->xbutton.window, e->xbutton.state,
+                e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root );
             return;
         case EnterNotify:
             enterNotifyEvent( &e->xcrossing );
-            convertCrossingToMotionEvent( &e->xcrossing );
+            // MotionNotify is guaranteed to be generated only if the mouse
+            // move start and ends in the window; for cases when it only
+            // starts or only ends there, Enter/LeaveNotify are generated.
+            // Fake a MotionEvent in such cases to make handle of mouse
+            // events simpler (Qt does that too).
+            motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
+                e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
             return;
         case LeaveNotify:
-            convertCrossingToMotionEvent( &e->xcrossing );
+            motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
+                e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
             return leaveNotifyEvent( &e->xcrossing );
         case FocusIn:
             return focusInEvent( &e->xfocus );
@@ -538,35 +543,6 @@ void Client::windowEvent( XEvent* e )
                 }
             }
         break;
-        }
-    }
-
-// MotionNotify is guaranteed to be generated only if the mouse
-// move start and ends in the window; for cases when it only
-// starts or only ends there, Enter/LeaveNotify are generated.
-// Fake a MotionEvent in such cases to make handle of mouse
-// events simpler (Qt does that too).
-void Client::convertCrossingToMotionEvent( XCrossingEvent* e )
-    {
-    if( e->mode == NotifyNormal )
-        {
-        XMotionEvent ev2;
-        ev2.type = MotionNotify;
-        ev2.serial = e->serial;
-        ev2.send_event = e->send_event;
-        ev2.display = e->display;
-        ev2.window = e->window;
-        ev2.root = e->root;
-            ev2.subwindow = e->subwindow;
-            ev2.time = e->time;
-            ev2.x = e->x;
-        ev2.y = e->y;
-        ev2.x_root = e->x_root;
-        ev2.y_root = e->y_root;
-        ev2.state = e->state;
-        ev2.is_hint = False;
-        ev2.same_screen = e->same_screen;
-        motionNotifyEvent( &ev2 );
         }
     }
 
@@ -1032,39 +1008,99 @@ void Client::updateMouseGrab()
             None, None );
     }
 
-bool Client::buttonPressEvent( XButtonEvent* e )
+int qtToX11Button( Qt::ButtonState button )
+    {
+    if( button == Qt::LeftButton )
+        return Button1;
+    else if( button == Qt::MidButton )
+        return Button2;
+    else if( button == Qt::RightButton )
+        return Button3;
+    return AnyButton;
+    }
+    
+int qtToX11State( Qt::ButtonState state )
+    {
+    int ret = 0;
+    if( state & Qt::LeftButton )
+        ret |= Button1Mask;
+    if( state & Qt::MidButton )
+        ret |= Button2Mask;
+    if( state & Qt::RightButton )
+        ret |= Button3Mask;
+    if( state & Qt::ShiftButton )
+        ret |= ShiftMask;
+    if( state & Qt::ControlButton )
+        ret |= ControlMask;
+    if( state & Qt::AltButton )
+        ret |= KKeyNative::modX(KKey::ALT);
+    if( state & Qt::MetaButton )
+        ret |= KKeyNative::modX(KKey::WIN);
+    return ret;
+    }
+
+// Qt propagates mouse events up the widget hierachy, which means events
+// for the decoration window cannot be (easily) intercepted as X11 events
+bool Client::eventFilter( QObject* o, QEvent* e )
+    {
+    if( decoration == NULL
+        || o != decoration->widget())
+        return false;
+    if( e->type() == QEvent::MouseButtonPress )
+        {
+        QMouseEvent* ev = static_cast< QMouseEvent* >( e );
+        return buttonPressEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->state()),
+            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
+        }
+    if( e->type() == QEvent::MouseButtonRelease )
+        {
+        QMouseEvent* ev = static_cast< QMouseEvent* >( e );
+        return buttonReleaseEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->state()),
+            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
+        }
+    if( e->type() == QEvent::MouseMove ) // FRAME i fake z enter/leave?
+        {
+        QMouseEvent* ev = static_cast< QMouseEvent* >( e );
+        return motionNotifyEvent( decorationId(), qtToX11State( ev->state()),
+            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
+        }
+    return false;
+    }
+
+// return value matters only when filtering events before decoration gets them
+bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root )
     {
     if (buttonDown)
         {
-        kdDebug( 1212 ) << "Double button press:" << ( e->window == decorationId())
-            << ":" << ( e->window == frameId()) << ":" << ( e->window == wrapperId()) << endl;
-        if( e->window == wrapperId())
+        kdDebug( 1212 ) << "Double button press:" << ( w == decorationId())
+            << ":" << ( w == frameId()) << ":" << ( w == wrapperId()) << endl;
+        if( w == wrapperId())
             XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         return true;
         }
 
-    if( e->window == wrapperId() || e->window == frameId() || e->window == decorationId())
+    if( w == wrapperId() || w == frameId() || w == decorationId())
         { // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
         updateUserTime();
         workspace()->setWasUserInteraction();
         uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
             KKeyNative::modX(KKey::WIN) :
             KKeyNative::modX(KKey::ALT);
-        bool bModKeyHeld = ( e->state & KKeyNative::accelModMaskX()) == keyModX;
+        bool bModKeyHeld = ( state & KKeyNative::accelModMaskX()) == keyModX;
 
         if( isSplash()
-            && e->button == Button1 && !bModKeyHeld )
+            && button == Button1 && !bModKeyHeld )
             { // hide splashwindow if the user clicks on it
             hideClient( true );
-            if( e->window == wrapperId())
+            if( w == wrapperId())
                     XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
             return true;
             }
 
-        if ( isActive() && e->window == wrapperId()
+        if ( isActive() && w == wrapperId()
              && ( options->clickRaise && !bModKeyHeld ) ) 
             {
-            if ( e->button < 4 ) // exclude wheel
+            if ( button < 4 ) // exclude wheel
                 autoRaise();
             }
 
@@ -1073,7 +1109,7 @@ bool Client::buttonPressEvent( XButtonEvent* e )
         if ( bModKeyHeld )
             {
             was_action = true;
-            switch (e->button) 
+            switch (button) 
                 {
                 case Button1:
                     com = options->commandAll1();
@@ -1088,10 +1124,10 @@ bool Client::buttonPressEvent( XButtonEvent* e )
             }
         else
             { // inactive inner window
-            if( !isActive() && e->window == wrapperId())
+            if( !isActive() && w == wrapperId())
                 {
                 was_action = true;
-                switch (e->button) 
+                switch (button) 
                     {
                     case Button1:
                         com = options->commandWindow1();
@@ -1109,30 +1145,32 @@ bool Client::buttonPressEvent( XButtonEvent* e )
             }
         if( was_action )
             {
-            bool replay = performMouseCommand( com, QPoint( e->x_root, e->y_root) );
+            bool replay = performMouseCommand( com, QPoint( x_root, y_root) );
 
             if ( isSpecialWindow() && !isOverride())
                 replay = TRUE;
 
-                if( e->window == wrapperId()) // these can come only from a grab
+                if( w == wrapperId()) // these can come only from a grab
                     XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //qt_x_time);
             return true;
             }
         }
 
-    if( e->window == wrapperId()) // these can come only from a grab
+    if( w == wrapperId()) // these can come only from a grab
         {
         XAllowEvents(qt_xdisplay(), ReplayPointer, CurrentTime ); //qt_x_time);
         return true;
         }
-    if( e->window == decorationId())
+    if( w == decorationId())
         return false; // don't eat decoration events
-    if( e->window == frameId())
-        processDecorationButtonPress( e->button, e->state, e->x, e->y, e->x_root, e->y_root );
+    if( w == frameId())
+        processDecorationButtonPress( button, state, x, y, x_root, y_root );
     return true;
     }
 
 
+// this function processes button press events only after decoration decides not to handle them,
+// unlike buttonPressEvent(), which (when the window is decoration) filters events before decoration gets them
 void Client::processDecorationButtonPress( int button, int /*state*/, int x, int y, int x_root, int y_root )
     {
     Options::MouseCommand com = Options::MouseNothing;
@@ -1146,9 +1184,10 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
     else if ( button == Button3 )
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-    if( com != Options::MouseOperationsMenu )
+    if( com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
+        && com != Options::MouseMinimize )  // mouse release event
         {
-// FRAME      mouseMoveEvent( e );
+// FRAME      mouseMoveEvent( e ); shouldn't be necessary
         buttonDown = TRUE;
         moveOffset = QPoint( x, y );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
@@ -1157,26 +1196,53 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
     performMouseCommand( com, QPoint( x_root, y_root ));
     }
 
-bool Client::buttonReleaseEvent( XButtonEvent* e )
+// called from decoration
+void Client::processMousePressEvent( QMouseEvent* e )
     {
-    if( e->window == decorationId() && !buttonDown)
+    if( e->type() != QEvent::MouseButtonPress )
+        {
+        kdWarning() << "processMousePressEvent()" << endl;
+        return;
+        }
+    int button;
+    switch( e->button())
+        {
+        case LeftButton:
+            button = Button1;
+          break;
+        case MidButton:
+            button = Button2;
+          break;
+        case RightButton:
+            button = Button3;
+          break;
+        default:
+            return;
+        }
+    processDecorationButtonPress( button, e->state(), e->x(), e->y(), e->globalX(), e->globalY());
+    }
+
+// return value matters only when filtering events before decoration gets them
+bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int y, int x_root, int y_root )
+    {
+    if( w == decorationId() && !buttonDown)
         return false;
-    if( e->window == wrapperId())
+    if( w == wrapperId())
         {
         XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         return true;
         }
-    if( e->window != frameId() && e->window != decorationId())
+    if( w != frameId() && w != decorationId())
         return true;
 
-    if ( (e->state & ( Button1Mask & Button2Mask & Button3Mask )) == 0 ) 
+    if ( (state & ( Button1Mask & Button2Mask & Button3Mask )) == 0 )
         {
         buttonDown = FALSE;
         if ( moveResizeMode ) 
             {
             finishMoveResize( false );
             // mouse position is still relative to old Client position, adjust it
-            QPoint mousepos( e->x_root - x(), e->y_root - y());
+            QPoint mousepos( x_root - x, y_root - y );
                 mode = mousePosition( mousepos );
                 setCursor( mode );
             }
@@ -1184,20 +1250,19 @@ bool Client::buttonReleaseEvent( XButtonEvent* e )
     return true;
     }
 
-bool Client::motionNotifyEvent( XMotionEvent* e )
+// return value matters only when filtering events before decoration gets them
+bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_root, int y_root )
     {
-    if( e->window != frameId() && e->window != decorationId())
+    if( w != frameId() && w != decorationId())
         return true; // care only about the whole frame
     if ( !buttonDown ) 
         {
-        MousePosition newmode = mousePosition( QPoint( e->x, e->y ));
+        MousePosition newmode = mousePosition( QPoint( x, y ));
         if( newmode != mode )
             setCursor( newmode );
         mode = newmode;
-        return true;
-        }
-    if( e->window == decorationId() && !buttonDown)
         return false;
+        }
 
     if(( mode == Center && !isMovable())
         || ( mode != Center && ( isShade() || !isResizable())))
@@ -1205,7 +1270,7 @@ bool Client::motionNotifyEvent( XMotionEvent* e )
 
     if ( !moveResizeMode ) 
         {
-        QPoint p( QPoint( e->x, e->y ) - moveOffset );
+        QPoint p( QPoint( x, y ) - moveOffset );
         if (p.manhattanLength() >= 6)
             startMoveResize();
         else
@@ -1216,7 +1281,7 @@ bool Client::motionNotifyEvent( XMotionEvent* e )
     if ( mode != Center && shade_mode != ShadeNone )
         setShade( ShadeNone );
 
-    QPoint globalPos( e->x_root, e->y_root );
+    QPoint globalPos( x_root, y_root );
     QRect desktopArea = workspace()->clientArea( globalPos );
 
     QPoint p = globalPos + invertedMoveOffset;
@@ -1415,43 +1480,6 @@ void Client::focusOutEvent( XFocusOutEvent* e )
         return;
     if( !check_follows_focusin( this ))
         setActive( FALSE );
-    }
-
-bool Client::decorationEvent( XEvent* e )
-    {
-    if( e->type == ButtonPress )
-        return buttonPressEvent( &e->xbutton );
-    if( e->type == ButtonRelease )
-        return buttonReleaseEvent( &e->xbutton );
-    if( e->type == MotionNotify )
-        return motionNotifyEvent( &e->xmotion ); // FRAME i fake z enter/leave?
-    return false;
-    }
-
-// called from decoration
-void Client::processMousePressEvent( QMouseEvent* e )
-    {
-    if( e->type() != QEvent::MouseButtonPress )
-        {
-        kdWarning() << "processMousePressEvent()" << endl;
-        return;
-        }
-    int button;
-    switch( e->button())
-        {
-        case LeftButton:
-            button = Button1;
-          break;
-        case MidButton:
-            button = Button2;
-          break;
-        case RightButton:
-            button = Button3;
-          break;
-        default:
-            return;
-        }
-    processDecorationButtonPress( button, e->state(), e->x(), e->y(), e->globalX(), e->globalY());
     }
 
 void Client::visibilityNotifyEvent( XVisibilityEvent * e)

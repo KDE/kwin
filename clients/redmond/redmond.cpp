@@ -237,6 +237,7 @@ RedmondButton::RedmondButton(RedmondDeco *parent, const char *name,
 {
 	// Eliminate background flicker
 	setBackgroundMode( NoBackground ); 
+        setCursor( arrowCursor );
 
 	menuBtn = menuButton;
 	miniBtn = isMini;

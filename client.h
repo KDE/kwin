@@ -78,7 +78,7 @@ class Client : public QObject, public KDecorationDefines
         QSize clientSize() const;
 
         void windowEvent( XEvent* e );
-        bool decorationEvent( XEvent* e );
+        virtual bool eventFilter( QObject* o, QEvent* e );
 
         bool manage( Window w, bool isMapped );
 
@@ -287,13 +287,12 @@ class Client : public QObject, public KDecorationDefines
         void configureRequestEvent( XConfigureRequestEvent* e );
         void propertyNotifyEvent( XPropertyEvent* e );
         void clientMessageEvent( XClientMessageEvent* e );
-        bool buttonPressEvent( XButtonEvent* e );
-        bool buttonReleaseEvent( XButtonEvent* e );
-        bool motionNotifyEvent( XMotionEvent* e );
+        bool buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
+        bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
+        bool motionNotifyEvent( Window w, int state, int x, int y, int x_root, int y_root );
         void enterNotifyEvent( XCrossingEvent* e );
         void leaveNotifyEvent( XCrossingEvent* e );
         void visibilityNotifyEvent( XVisibilityEvent* e );
-        void convertCrossingToMotionEvent( XCrossingEvent* e );
         void focusInEvent( XFocusInEvent* e );
         void focusOutEvent( XFocusOutEvent* e );
 
@@ -781,7 +780,6 @@ kdbgstream& operator<<( kdbgstream& stream, const Client* );
 KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Window, cl->window() == value );
 KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Window, cl->frameId() == value );
 KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Window, cl->wrapperId() == value );
-KWIN_COMPARE_PREDICATE( DecorationIdMatchPredicate, Window, cl->decorationId() == value );
 
 } // namespace
 

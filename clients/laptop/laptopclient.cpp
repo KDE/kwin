@@ -232,6 +232,7 @@ LaptopClientButton::LaptopClientButton(int w, int h, LaptopClient *parent,
         const QString& tip)
     : QButton(parent->widget(), name), client(parent)
 {
+    setCursor( arrowCursor );
     defaultSize = QSize(w, h);
     setFixedHeight(h);
     resize(defaultSize);

@@ -439,6 +439,7 @@ KDEDefaultButton::KDEDefaultButton(KDEDefaultClient *parent, const char *name,
     : QButton(parent->widget(), name)
 {
     QToolTip::add( this, tip );
+    setCursor( arrowCursor );
     setBackgroundMode( QWidget::NoBackground );
 	setToggleButton( isStickyButton );
 
