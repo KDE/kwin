@@ -13,6 +13,10 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/keysymdef.h>
 #include <X11/cursorfont.h>
 
+#ifndef None
+#define None 0L
+#endif
+
 KillWindow::KillWindow( Workspace* ws )
     : workspace( ws ) {}
 
@@ -80,3 +84,4 @@ void KillWindow::start() {
     }
 }
 
+#undef None
