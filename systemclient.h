@@ -13,8 +13,9 @@ class QSpacerItem;
 class SystemButton : public QButton
 {
 public:
-    SystemButton(const unsigned char *bitmap, QWidget *parent=0,
-                 const char *name=0);
+    SystemButton(QWidget *parent=0, const char *name=0,
+                 const unsigned char *bitmap=NULL);
+    void setBitmap(const unsigned char *bitmap);
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
@@ -35,8 +36,9 @@ protected:
     void mouseDoubleClickEvent( QMouseEvent * );
     void init();
     void captionChange( const QString& name );
+    void stickyChange(bool on);
 private:
-    SystemButton* button[3];
+    SystemButton* button[4];
     QSpacerItem* titlebar;
 };                      
 

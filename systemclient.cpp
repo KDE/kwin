@@ -20,6 +20,12 @@ static unsigned char close_bits[] = {
 static unsigned char maximize_bits[] = {
     0x3f, 0x9f, 0xcf, 0x67, 0x33, 0x19, 0x0c, 0x06 };
 
+static unsigned char sticky_bits[] = {
+    0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
+
+static unsigned char unsticky_bits[] = {
+    0x00, 0x00, 0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00};
+    
 static QPixmap *titlePix=0;
 static KPixmap *aFramePix=0;
 static KPixmap *iFramePix=0;
@@ -79,8 +85,8 @@ static void create_pixmaps()
 
 }
 
-SystemButton::SystemButton(const unsigned char *bitmap, QWidget *parent,
-                           const char *name)
+SystemButton::SystemButton(QWidget *parent, const char *name,
+                           const unsigned char *bitmap)
     : QButton(parent, name)
 {
     QPainter p;
@@ -132,8 +138,6 @@ SystemButton::SystemButton(const unsigned char *bitmap, QWidget *parent,
     p.drawRect(0, 0, 16, 16);
     p.end();
     
-    deco = QBitmap(8, 8, bitmap);
-    deco.setMask(deco);
     resize(16, 16);
     
     QBitmap mask;
@@ -147,7 +151,16 @@ SystemButton::SystemButton(const unsigned char *bitmap, QWidget *parent,
     p.drawPoint(15, 15);
     p.end();
     setMask(mask);
-    
+
+    if(bitmap)
+        setBitmap(bitmap);
+}
+
+void SystemButton::setBitmap(const unsigned char *bitmap)
+{
+    deco = QBitmap(8, 8, bitmap);
+    deco.setMask(deco);
+    repaint();
 }
 
 void SystemButton::drawButton(QPainter *p)
@@ -172,12 +185,19 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     g->addWidget(windowWrapper(), 1, 1 );
     g->addRowSpacing(2, 6);
 
-    button[0] = new SystemButton(close_bits, this );
-    button[1] = new SystemButton(iconify_bits, this );
-    button[2] = new SystemButton(maximize_bits, this );
+    button[0] = new SystemButton(this, "close", close_bits);
+    button[1] = new SystemButton(this, "sticky");
+    if(isSticky())
+        button[1]->setBitmap(unsticky_bits);
+    else
+        button[1]->setBitmap(sticky_bits);
+    button[2] = new SystemButton(this, "iconify", iconify_bits);
+    button[3] = new SystemButton(this, "maximize", maximize_bits);
+    
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
-    connect( button[1], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    connect( button[2], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
+    connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
+    connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
+    connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
 
     QHBoxLayout* hb = new QHBoxLayout();
     g->addLayout( hb, 0, 1 );
@@ -189,9 +209,10 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     hb->addSpacing(2);
     hb->addWidget( button[1] );
     hb->addWidget( button[2] );
+    hb->addWidget( button[3] );
     hb->addSpacing(2);
 
-    for ( int i = 0; i < 3; i++) {
+    for ( int i = 0; i < 4; i++) {
         button[i]->setMouseTracking( TRUE );
         button[i]->setFixedSize( 16, 16 );
     }
@@ -277,6 +298,14 @@ void SystemClient::mouseDoubleClickEvent( QMouseEvent * e )
     if (titlebar->geometry().contains( e->pos() ) )
         setShade( !isShade() );
     workspace()->requestFocus( this );
+}
+
+void SystemClient::stickyChange(bool on)
+{
+    if(on)
+        button[1]->setBitmap(unsticky_bits);
+    else
+        button[1]->setBitmap(sticky_bits);
 }
 
 
