@@ -556,7 +556,7 @@ void KAdvancedConfig::shadeHoverChanged(bool a) {
     shadeHover->setEnabled(a);
 }
 
-void KAdvancedConfig::setXinerama(bool /*on*/) {
+void KAdvancedConfig::setXinerama(bool on) {
 #ifdef HAVE_XINERAMA
     if (KApplication::desktop()->isVirtualDesktop())
         xineramaEnable->setChecked(on);
