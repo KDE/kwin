@@ -22,7 +22,7 @@
 #ifndef __KWINDOWCONFIG_H__
 #define __KWINDOWCONFIG_H__
 
-#include <kcmodule.h>
+#include <qwidget.h>
 #include <config.h>
 
 class QRadioButton;
@@ -62,7 +62,7 @@ class KIntNumInput;
 
 class QSpinBox;
 
-class KFocusConfig : public KCModule
+class KFocusConfig : public QWidget
 {
   Q_OBJECT
 public:
@@ -72,6 +72,9 @@ public:
   void load();
   void save();
   void defaults();
+
+signals:
+  void changed( bool state );
 
 private slots:
   void setAutoRaiseEnabled();
@@ -107,7 +110,7 @@ private:
   KConfig *config;
 };
 
-class KMovingConfig : public KCModule
+class KMovingConfig : public QWidget
 {
   Q_OBJECT
 public:
@@ -117,6 +120,9 @@ public:
   void load();
   void save();
   void defaults();
+
+signals:
+  void changed( bool state );
 
 private slots:
   void slotChanged();
@@ -159,7 +165,7 @@ private:
 
 };
 
-class KAdvancedConfig : public KCModule
+class KAdvancedConfig : public QWidget
 {
   Q_OBJECT
 public:
@@ -169,6 +175,9 @@ public:
   void load();
   void save();
   void defaults();
+
+signals:
+  void changed( bool state );
 
 private slots:
   void slotChanged();

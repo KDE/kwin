@@ -46,7 +46,7 @@ extern "C" {
 }
 */
 KWinOptions::KWinOptions(QWidget *parent, const char *name, const QStringList &)
-  : KCModule(parent, name)
+  : KCModule(KWinOptFactory::instance(), parent, name)
 {
   mConfig = new KConfig("kwinrc", false, true);
 
@@ -71,6 +71,10 @@ KWinOptions::KWinOptions(QWidget *parent, const char *name, const QStringList &)
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 }
 
+KWinOptions::~KWinOptions()
+{
+  delete mConfig;
+}
 
 void KWinOptions::load()
 {

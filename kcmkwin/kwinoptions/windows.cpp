@@ -89,7 +89,7 @@ KFocusConfig::~KFocusConfig ()
 
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
 KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name)
-    : KCModule (parent, name), config(_config)
+    : QWidget (parent, name), config(_config)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
@@ -401,7 +401,7 @@ KAdvancedConfig::~KAdvancedConfig ()
 }
 
 KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char *name)
-    : KCModule (parent, name), config(_config)
+    : QWidget (parent, name), config(_config)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
@@ -653,7 +653,7 @@ KMovingConfig::~KMovingConfig ()
 }
 
 KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *name)
-    : KCModule (parent, name), config(_config)
+    : QWidget (parent, name), config(_config)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),

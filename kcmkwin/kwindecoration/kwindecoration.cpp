@@ -46,7 +46,7 @@ typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
 K_EXPORT_COMPONENT_FACTORY( libkcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") );
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, const QStringList &)
-	: KCModule(parent, name), DCOPObject("KWinClientDecoration")
+	: KCModule(KWinDecoFactory::instance(), parent, name), DCOPObject("KWinClientDecoration")
 {
 	KConfig kwinConfig("kwinrc");
 	kwinConfig.setGroup("Style");
