@@ -885,9 +885,6 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 void Client::mousePressEvent( QMouseEvent * e)
 {
     if ( e->button() == LeftButton ) {
-	if ( options->focusPolicyIsReasonable() )
-	    workspace()->requestFocus( this );
-	workspace()->raiseClient( this );
 	mouseMoveEvent( e );
 	buttonDown = TRUE;
 	moveOffset = e->pos();
@@ -907,6 +904,11 @@ void Client::mousePressEvent( QMouseEvent * e)
 void Client::mouseReleaseEvent( QMouseEvent * e)
 {
     if ( (e->stateAfter() & MouseButtonMask) == 0 ) {
+	if (buttonDown && !moveResizeMode) {
+            if ( options->focusPolicyIsReasonable() )
+	        workspace()->requestFocus( this );
+	    workspace()->raiseClient( this );
+        }
 	buttonDown = FALSE;
 	if ( moveResizeMode ) {
 	    clearbound();
