@@ -109,7 +109,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     //lay->addWidget(plcBox);
 
     // focus policy
-    fcsBox = new QButtonGroup(i18n("Focus policy"),this);
+    fcsBox = new QButtonGroup(i18n("Focus Policy"),this);
 
     QGridLayout *fLay = new QGridLayout(fcsBox,5,3,
                                         KDialog::marginHint(),
@@ -151,11 +151,11 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
 
     // autoraise delay
 
-    autoRaiseOn = new QCheckBox(i18n("Auto Raise"), fcsBox);
+    autoRaiseOn = new QCheckBox(i18n("Auto raise"), fcsBox);
     fLay->addWidget(autoRaiseOn,2,0);
     connect(autoRaiseOn,SIGNAL(toggled(bool)), this, SLOT(autoRaiseOnTog(bool)));
 
-    clickRaiseOn = new QCheckBox(i18n("Click Raise"), fcsBox);
+    clickRaiseOn = new QCheckBox(i18n("Click raise"), fcsBox);
     fLay->addWidget(clickRaiseOn,4,0);
 
     connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
@@ -172,7 +172,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     fLay->addColSpacing(0,QMAX(autoRaiseOn->sizeHint().width(),
                                clickRaiseOn->sizeHint().width()) + 15);
 
-    QWhatsThis::add( autoRaiseOn, i18n("If Auto Raise is enabled, a window in the background will automatically"
+    QWhatsThis::add( autoRaiseOn, i18n("When this option is enabled, a window in the background will automatically"
                                        " come to the front when the mouse pointer has been over it for some time.") );
     wtstr = i18n("This is the delay after which the window that the mouse pointer is over will automatically"
                  " come to the front.");
@@ -432,7 +432,7 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
                                        " as well as the expansion of a shaded window") );
     shLay->addWidget(animateShade, 1, 0);
 
-    shadeHoverOn = new QCheckBox(i18n("Enable Hover"), shBox);
+    shadeHoverOn = new QCheckBox(i18n("Enable hover"), shBox);
     shLay->addWidget(shadeHoverOn, 2, 0);
 
     connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
@@ -686,7 +686,7 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     rLay->setColStretch(0,0);
     rLay->setColStretch(1,1);
 
-    minimizeAnimOn = new QCheckBox(i18n("Animate Minimize and Restore"),
+    minimizeAnimOn = new QCheckBox(i18n("Animate minimize and restore"),
                                    windowsBox);
     QWhatsThis::add( minimizeAnimOn, i18n("Enable this option if you want an animation shown when"
                                           " windows are minimized or restored." ) );
@@ -716,7 +716,7 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     QWhatsThis::add( minimizeAnimSlowLabel, wtstr );
     QWhatsThis::add( minimizeAnimFastLabel, wtstr );
 
-    moveResizeMaximized = new QCheckBox( i18n("Allow Moving and Resizing of maximized windows"), windowsBox);
+    moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing of maximized windows"), windowsBox);
     bLay->addWidget(moveResizeMaximized);
     QWhatsThis::add(moveResizeMaximized, i18n("When enabled, this feature activates the border of maximized windows"
                                               " and allows you to move or resize them,"

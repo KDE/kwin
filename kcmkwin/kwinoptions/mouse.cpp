@@ -83,7 +83,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
 /** Titlebar and frame  **************/
 
-  box = new QVGroupBox( i18n("Titlebar and frame"), this, "Titlebar and frame");
+  box = new QVGroupBox( i18n("Titlebar and Frame"), this, "Titlebar and Frame");
   box->layout()->setMargin(KDialog::marginHint());
   box->layout()->setSpacing(KDialog::spacingHint());
   layout->addWidget(box);
@@ -207,7 +207,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
 /**  Inactive inner window ******************/
 
-  box = new QVGroupBox(i18n("Inactive inner window"), this, "Inactive inner window");
+  box = new QVGroupBox(i18n("Inactive Inner Window"), this, "Inactive Inner Window");
   box->layout()->setMargin(KDialog::marginHint());
   box->layout()->setSpacing(KDialog::spacingHint());
   layout->addWidget(box);
@@ -277,7 +277,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
 /** Inner window, titlebar and frame **************/
 
-  box = new QVGroupBox(i18n("Inner window, titlebar and frame"), this, "Inner window, titlebar and frame");
+  box = new QVGroupBox(i18n("Inner Window, Titlebar and Frame"), this, "Inner Window, Titlebar and Frame");
   box->layout()->setMargin(KDialog::marginHint());
   box->layout()->setSpacing(KDialog::spacingHint());
   layout->addWidget(box);
