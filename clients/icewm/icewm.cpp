@@ -1129,11 +1129,13 @@ void IceWMClient::iconChange()
 {
 	if (validPixmaps(menuButtonPix) && showMenuButtonIcon)
 	{
-		renderMenuIcons();
-		button[BtnSysMenu]->usePixmap( &menuButtonWithIconPix );
-
-		if (button[BtnSysMenu]->isVisible())
-			button[BtnSysMenu]->repaint(false);
+		if (button[BtnSysMenu])
+		{
+			renderMenuIcons();
+			button[BtnSysMenu]->usePixmap( &menuButtonWithIconPix );
+			if (button[BtnSysMenu]->isVisible())
+				button[BtnSysMenu]->repaint(false);
+		}
 	} 
 }
 
@@ -1310,3 +1312,5 @@ extern "C"
 
 
 #include "icewm.moc"
+
+// vim: ts=4
