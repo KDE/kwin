@@ -449,7 +449,7 @@ class NoBorderClient : public Client
 public:
     NoBorderClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~NoBorderClient();
-
+    void setShade( bool , int ){}
 };
 
 #endif
