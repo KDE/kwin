@@ -618,6 +618,8 @@ void Client::addTransient( Client* cl )
 //    assert( !cl->hasTransient( this, true )); will be fixed in checkGroupTransients()
     assert( cl != this );
     transients_list.append( cl );
+    if( workspace()->mostRecentlyActivatedClient() == this && cl->isModal())
+        workspace()->activateClient( findModal());
 //    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
 //    kdDebug() << kdBacktrace() << endl;
 //    for( ClientList::ConstIterator it = transients_list.begin();
