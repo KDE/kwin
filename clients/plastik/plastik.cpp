@@ -126,12 +126,12 @@ void PlastikHandler::readConfig()
     m_titleShadow    = config.readBoolEntry("TitleShadow", true);
 
     QFontMetrics fm(m_titleFont);  // active font = inactive font
-    int titleHeightMin = 16;
+    int titleHeightMin = config.readNumEntry("MinTitleHeight", 16);
     // The title should strech with bigger font sizes!
     m_titleHeight = QMAX(titleHeightMin, fm.height() + 4); // 4 px for the shadow etc.
 
     fm = QFontMetrics(m_titleFontTool);  // active font = inactive font
-    int titleHeightToolMin = 13;
+    int titleHeightToolMin = config.readNumEntry("MinTitleHeightTool", 13);
     // The title should strech with bigger font sizes!
     m_titleHeightTool = QMAX(titleHeightToolMin, fm.height() ); // don't care about the shadow etc.
 
