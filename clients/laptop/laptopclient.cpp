@@ -57,6 +57,8 @@ static int titleHeight = 14;
 static int btnWidth1 = 17;
 static int btnWidth2 = 27;
 
+static int handleSize = 8;	// the resize handle size in pixels
+
 static inline const KDecorationOptions* options()
 {
     return KDecoration::options();
@@ -337,10 +339,9 @@ void LaptopClient::init()
         g->addWidget(new QWidget(widget()), 3, 1 );
 
     g->setRowStretch(3, 10);
-    spacer = new QSpacerItem(10, isResizable() && (!isTool()) ? 8 : 4, 
+    spacer = new QSpacerItem(10, isResizable() ? handleSize : 4, 
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->addItem(spacer, 4, 1);
-    //g->addRowSpacing(4, 8); // bottom handles
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
@@ -428,7 +429,8 @@ void LaptopClient::resizeEvent(QResizeEvent* e)
 	if ( e->oldSize().width() != width() )
 	    dx = 32 + QABS( e->oldSize().width() -  width() );
 	if ( e->oldSize().height() != height() )
-	    dy = 8 + QABS( e->oldSize().height() -  height() );
+	    dy = isResizable() ? handleSize : 4 + 
+		QABS( e->oldSize().height() -  height() );
 	if ( dy )
 	    widget()->update( 0, height() - dy + 1, width(), dy );
 	if ( dx ) {
@@ -465,8 +467,8 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawLine(r.x()+1, r.bottom()-1, r.right()-1, r.bottom()-1);
 
     int th = titleHeight;
-    int bb = 10; // Bottom border
-    if (!isResizable() || isTool()) 
+    int bb = handleSize + 2; // Bottom border
+    if (!isResizable()) 
 	bb -= 4;
     if ( isTool() )
 	th -= 2;
@@ -475,22 +477,22 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawRect(r.x()+3, r.y()+th+3, r.width()-6,
                r.height()-th-bb);
     // handles
-    if (!isResizable() || isTool()) {
+    if (!isResizable()) {
     } else if (r.width() > 44) {
-        qDrawShadePanel(&p, r.x()+1, r.bottom()-6, 20,
-                        6, g, false, 1, &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.x()+21, r.bottom()-6, r.width()-42, 6,
-                        g, false, 1, isActive() ?
-                        &g.brush(QColorGroup::Background) :
-                        &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.right()-20, r.bottom()-6, 20, 6,
-                        g, false, 1, &g.brush(QColorGroup::Mid));
+        qDrawShadePanel(&p, r.x() + 1, r.bottom() - handleSize + 2, 20,
+                        handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
+        qDrawShadePanel(&p, r.x() + 21, r.bottom() - handleSize + 2, 
+		r.width() - 42, handleSize - 2, g, false, 1, 
+		isActive() ? &g.brush(QColorGroup::Background) : 
+			     &g.brush(QColorGroup::Mid));
+        qDrawShadePanel(&p, r.right() - 20, r.bottom() - handleSize + 2, 
+		20, handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
     }
     else
-        qDrawShadePanel(&p, r.x()+1, r.bottom()-6, r.width()-2, 6, g,
-                        false, 1, isActive() ?
-                        &g.brush(QColorGroup::Background) :
-                        &g.brush(QColorGroup::Mid));
+        qDrawShadePanel(&p, r.x() + 1, r.bottom() - handleSize + 2, 
+		r.width() - 2, handleSize - 2, g, false, 1, 
+		isActive() ?  &g.brush(QColorGroup::Background) : 
+		              &g.brush(QColorGroup::Mid));
 
     r = titlebar->geometry();
     r.setRight(r.right()-1);
@@ -580,7 +582,7 @@ void LaptopClient::maximizeChange()
     button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
     QToolTip::remove(button[BtnMax]);
     QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
-    spacer->changeSize(10, isResizable() ? 8 : 4,
+    spacer->changeSize(10, isResizable() ? handleSize : 4,
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
 }
@@ -704,7 +706,7 @@ LaptopClient::MousePosition LaptopClient::mousePosition(const QPoint & p) const
 {
   MousePosition m = Nowhere;
 
-  if (p.y() < (height() - 7))
+  if (p.y() < (height() - handleSize + 1))
     m = KDecoration::mousePosition(p);
 
   else {
@@ -723,7 +725,7 @@ void LaptopClient::borders(int &left, int &right, int &top, int &bottom) const
     left = right = 4;
     top = 2 + 2 + titlebar->geometry().height(); // FRAME is this ok?
     top = titleHeight + 4;
-    bottom = isResizable() ? 8 : 4;
+    bottom = isResizable() ? handleSize : 4;
 }
 
 void LaptopClient::shadeChange()
@@ -732,13 +734,15 @@ void LaptopClient::shadeChange()
 
 QSize LaptopClient::minimumSize() const
 {
-    return QSize(100, 50); // FRAME
+    return QSize(100, titleHeight + handleSize + 2); 
 }
 
 void LaptopClient::resize(const QSize& s)
 {
     widget()->resize(s);
+    widget()->repaint(); //there is some strange wrong repaint of the frame without
 }
+
 static const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | 
     NET::DesktopMask | NET::DockMask | NET::ToolbarMask | NET::MenuMask | 
     NET::DialogMask | NET::OverrideMask | NET::TopMenuMask | 
@@ -796,17 +800,53 @@ LaptopClientFactory::~LaptopClientFactory()
 
 KDecoration *LaptopClientFactory::createDecoration(KDecorationBridge *b)
 {
+    findPreferredHandleSize();
     return new Laptop::LaptopClient(b, this);
 }
 
 bool LaptopClientFactory::reset(unsigned long /*changed*/)
-{
+{ 
+    findPreferredHandleSize();
+
     // TODO Do not recreate decorations if it is not needed. Look at
     // ModernSystem for how to do that
     Laptop::delete_pixmaps();
     Laptop::create_pixmaps();
     // For now just return true.
     return true;
+}
+
+QValueList< LaptopClientFactory::BorderSize > 
+LaptopClientFactory::borderSizes() const
+{ 
+    // the list must be sorted
+    return QValueList< BorderSize >() << BorderNormal << BorderLarge << 
+	BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
+}
+
+void LaptopClientFactory::findPreferredHandleSize()
+{
+    switch (options()->preferredBorderSize(this)) {
+    case KDecoration::BorderLarge:
+	handleSize = 11;
+	break;
+    case KDecoration::BorderVeryLarge:
+	handleSize = 16;
+	break;
+    case KDecoration::BorderHuge:
+	handleSize = 24;
+	break;
+    case KDecoration::BorderVeryHuge:
+	handleSize = 32;
+	break;
+    case KDecoration::BorderOversized:
+	handleSize = 40;
+	break;
+    case KDecoration::BorderTiny:
+    case KDecoration::BorderNormal:
+    default:
+	handleSize = 8;
+    }
 }
 
 } // Laptop namespace

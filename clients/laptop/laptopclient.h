@@ -100,6 +100,9 @@ public:
     virtual ~LaptopClientFactory();
     virtual KDecoration* createDecoration( KDecorationBridge* );
     virtual bool reset( unsigned long changed );
+    virtual QValueList< BorderSize > borderSizes() const;
+private:
+    void findPreferredHandleSize();
 };
 
 }
