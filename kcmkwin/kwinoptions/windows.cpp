@@ -1021,6 +1021,9 @@ void KMovingConfig::defaults()
     setWindowSnapZone(KWM_WNDW_SNAP_ZONE_DEFAULT);
     setBorderSnapZone(KWM_BRDR_SNAP_ZONE_DEFAULT);
     OverlapSnap->setChecked(false);
+
+    setMinimizeAnim( true );
+    setMinimizeAnimSpeed( 5 );
 }
 
 int KMovingConfig::getBorderSnapZone() {
