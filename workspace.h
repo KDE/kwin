@@ -48,7 +48,6 @@ class Workspace : public QObject
     Q_OBJECT
 public:
     Workspace();
-    Workspace( WId rootwin );
     virtual ~Workspace();
 
     virtual bool workspaceEvent( XEvent * );
@@ -144,7 +143,7 @@ protected:
     bool keyRelease( XKeyEvent key );
     bool keyPressMouseEmulation( XKeyEvent key );
     bool clientMessage( XClientMessageEvent msg );
-	
+
 private:
     void init();
     KGlobalAccel *keys;

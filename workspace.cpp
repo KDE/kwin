@@ -93,7 +93,7 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 
 Workspace::Workspace()
 {
-    root = qt_xrootwin(); // no MDI for now
+    root = qt_xrootwin();
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
     desktop_widget = new QWidget(0, "desktop_widget", Qt::WType_Desktop | Qt::WPaintUnclipped );
@@ -128,27 +128,6 @@ Workspace::Workspace()
     tab_grab = FALSE;
     mouse_emulation = FALSE;
     tab_box = new TabBox( this );
-}
-
-Workspace::Workspace( WId rootwin )
-{
-    qDebug("create MDI workspace for %d", rootwin );
-    root = rootwin;
-
-    // select windowmanager privileges
-    XSelectInput(qt_xdisplay(), root,
-		 KeyPressMask |
-		 PropertyChangeMask |
-		 ColormapChangeMask |
-		 SubstructureRedirectMask |
-		 SubstructureNotifyMask
-		 );
-
-    control_grab = FALSE;
-    tab_grab = FALSE;
-    tab_box = 0;
-    keys = 0;
-    init();
 }
 
 void Workspace::init()

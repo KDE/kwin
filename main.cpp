@@ -22,12 +22,6 @@
 #include <klocale.h>
 
 
-static KCmdLineOptions cmdOptions[]  =
-{
-  { "+[workspace]", I18N_NOOP("A cryptic command line option"), 0 },
-  { 0, 0, 0 }
-};
-
 Options* options;
 Atoms* atoms;
 
@@ -67,27 +61,24 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
 Application::Application( )
 : KApplication( )
 {
-    initting = TRUE;
-    options = new Options;
-    atoms = new Atoms;
+    initting = TRUE; // startup....
 
     // install X11 error handler
     XSetErrorHandler( x11ErrorHandler );
 
+    // check  whether another windowmanager is running
+    XSelectInput(qt_xdisplay(), qt_xrootwin(), SubstructureRedirectMask  );
+    syncX(); // trigger error now
+
+    options = new Options;
+    atoms = new Atoms;
+
     // create a workspace.
     workspaces += new Workspace();
-    initting = FALSE;
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if ( args->count() ) {
-	QString s = args->arg(0);
-	int i = s.toInt();
-	workspaces += new Workspace( (WId ) i );
-    }
-    args->clear();
-
-    syncX();
-    initting = FALSE;
+ 
+    syncX(); // trigger possible errors, there's still a chance to abort
+    
+    initting = FALSE; // startup done, we are up and running now.
 }
 
 
@@ -172,7 +163,6 @@ int main( int argc, char * argv[] )
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
-    KCmdLineArgs::addCmdLineOptions( cmdOptions );
 
     if (signal(SIGTERM, sighandler) == SIG_IGN)
 	signal(SIGTERM, SIG_IGN);
