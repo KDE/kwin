@@ -568,7 +568,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 		cBorder->clear();
 		for (QValueList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
 			BorderSize size = *it;
-			cBorder->insertItem(border_names[size], borderSizeToIndex(size,sizes) );
+			cBorder->insertItem(i18n(border_names[size]), borderSizeToIndex(size,sizes) );
 		}
 		int pos = borderSizeToIndex( border_size, sizes );
 		lBorder->show();
