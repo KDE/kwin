@@ -422,7 +422,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
     if( time == -1U )
         time = c->userTime();
     if( session_saving
-        && options->focusStealingPreventionLevel <= 3 ) // <= normal
+        && options->focusStealingPreventionLevel <= 2 ) // <= normal
         {
         return true;
         }
@@ -437,7 +437,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         }
     if( options->focusStealingPreventionLevel == 0 ) // none
         return true;
-    if( options->focusStealingPreventionLevel == 5 ) // extreme
+    if( options->focusStealingPreventionLevel == 4 ) // extreme
         return false;
     if( ac == NULL || ac->isDesktop())
         {
@@ -454,7 +454,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         kdDebug( 1212 ) << "Activation: Belongs to active application" << endl;
         return true;
         }
-    if( options->focusStealingPreventionLevel == 4 ) // high
+    if( options->focusStealingPreventionLevel == 3 ) // high
         return false;
     if( time == -1U )  // no time known
         if( session_active )
@@ -483,14 +483,14 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
 bool Workspace::allowFullClientRaising( const Client* c )
     {
     if( session_saving
-        && options->focusStealingPreventionLevel <= 3 ) // <= normal
+        && options->focusStealingPreventionLevel <= 2 ) // <= normal
         {
         return true;
         }
     Client* ac = mostRecentlyActivatedClient();
     if( options->focusStealingPreventionLevel == 0 ) // none
         return true;
-    if( options->focusStealingPreventionLevel == 5 ) // extreme
+    if( options->focusStealingPreventionLevel == 4 ) // extreme
         return false;
     if( ac == NULL || ac->isDesktop())
         {
@@ -505,7 +505,7 @@ bool Workspace::allowFullClientRaising( const Client* c )
         kdDebug( 1212 ) << "Raising: Belongs to active application" << endl;
         return true;
         }
-    if( options->focusStealingPreventionLevel == 4 ) // high
+    if( options->focusStealingPreventionLevel == 3 ) // high
         return false;
     if( !c->hasUserTimeSupport())
         {
