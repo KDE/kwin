@@ -25,6 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qapplication.h>
 
 #include <X11/extensions/shape.h>
+#include <X11/Xatom.h>
 
 extern Time qt_x_time;
 extern Atom qt_window_role;
@@ -1174,6 +1175,54 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
     return true;
     }
 
+static bool was_motion = false;
+static bool motion_done = false;
+// check whole incoming X queue for MotionNotify events
+// checking whole queue is done by always returning False in the predicate
+// if there's another motion event in the queue, and there's no other relevant
+// event before it, the current motion event may be safely discarded
+// this helps avoiding being overloaded by being flooded from many events
+// from the XServer
+static Bool motion_predicate( Display*, XEvent* ev, XPointer )
+{
+    if( motion_done )
+	return False;
+    if( ev->type == MotionNotify )
+    {
+	was_motion = true;
+	motion_done = true;
+    }
+    else if( ev->type == ConfigureNotify  // irrelevant often occuring events
+        || ev->type == Expose )
+        ; // ignore
+    else if( ev->type == PropertyNotify )
+        {
+        if( ev->xproperty.atom == XA_WM_NORMAL_HINTS
+            && QWidget::find( ev->xproperty.window ))
+            ; // ignore - Qt is causing this in QWidget::internalSetGeometry()
+        else
+            {
+            was_motion = false;
+            motion_done = true;
+            }
+        }
+    else
+        {                  
+        was_motion = false;
+        motion_done = true;
+        }
+    return False;
+}
+
+static bool waitingMotionEvent()
+    {
+    was_motion = false;
+    motion_done = false;
+    XEvent dummy;
+    XCheckIfEvent( qt_xdisplay(), &dummy, motion_predicate, NULL );
+    return was_motion;
+    }
+
 // return value matters only when filtering events before decoration gets them
 bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_root, int y_root )
     {
@@ -1188,7 +1237,8 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
         return false;
         }
 
-    handleMoveResize( x, y, x_root, y_root );
+    if( !waitingMotionEvent())
+        handleMoveResize( x, y, x_root, y_root );
     return true;
     }
     
