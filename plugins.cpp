@@ -23,7 +23,7 @@ PluginMgr::PluginMgr()
     : KDecorationPlugins( KGlobal::config())
     {
     defaultPlugin = (QPixmap::defaultDepth() > 8) ?
-            "kwin3_keramik" : "kwin3_quartz";
+            "kwin3_plastik" : "kwin3_quartz";
     loadPlugin( "" ); // load the plugin specified in cfg file
     }
 
