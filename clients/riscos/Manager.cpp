@@ -20,9 +20,13 @@
   Boston, MA 02111-1307, USA.
 */
 
+#include <unistd.h> // for usleep
+
 #include <qpainter.h>
 #include <qimage.h>
 #include <qlayout.h>
+
+#include <netwm.h>
 
 #include "../../options.h"
 #include "../../workspace.h"
@@ -317,6 +321,48 @@ Manager::slotSetSticky(bool b)
 Manager::slotHelp()
 {
   contextHelp();
+}
+
+  void
+Manager::animateIconifyOrDeiconify(bool iconify)
+{
+  NETRect r = netWinInfo()->iconGeometry();
+
+  QRect icongeom(r.pos.x, r.pos.y, r.size.width, r.size.height);
+
+  if (!icongeom.isValid())
+    return;
+
+  QRect wingeom(x(), y(), width(), height());
+
+  XGrabServer(qt_xdisplay());
+
+  QPainter p(workspace()->desktopWidget());
+
+  p.setRasterOp(Qt::NotROP);
+
+  if (iconify)
+    p.setClipRegion(QRegion(workspace()->desktopWidget()->rect()) - wingeom);
+
+  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
+  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
+  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
+  p.drawLine(wingeom.topRight(), icongeom.topRight());
+
+  p.flush();
+
+  XSync( qt_xdisplay(), FALSE );
+
+  usleep(30000);
+
+  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
+  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
+  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
+  p.drawLine(wingeom.topRight(), icongeom.topRight());
+
+  p.end();
+
+  XUngrabServer( qt_xdisplay() );
 }
 
 

@@ -73,6 +73,7 @@ class Manager : public Client
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
     void mouseDoubleClickEvent(QMouseEvent *);
+    void animateIconifyOrDeiconify(bool);
 
   protected slots:
 
