@@ -840,7 +840,7 @@ root_tile (Display *dpy)
 					&actual_type, &actual_format, &nitems, &bytes_after, &prop) == Success &&
 				actual_type == XInternAtom (dpy, "PIXMAP", False) && actual_format == 32 && nitems == 1)
 		{
-			memcpy (&pixmap, prop, 4);
+			pixmap = *(long*)prop;
 			XFree (prop);
 			fill = False;
 			break;
@@ -1492,10 +1492,10 @@ get_opacity_prop(Display *dpy, win *w, unsigned int def)
 	int result = XGetWindowProperty(dpy, w->id, opacityAtom, 0L, 1L, False, 
 			XA_CARDINAL, &actual, &format, 
 			&n, &left, &data);
-	if (result == Success && data != NULL)
+	if (result == Success && data != NULL && format == 32 )
 	{
 		unsigned int i;
-		memcpy (&i, data, sizeof (unsigned int));
+		i = *(long*)data;
 		XFree( (void *) data);
 		return i;
 	}
@@ -1513,10 +1513,10 @@ get_shadow_prop(Display *dpy, win *w)
 	int result = XGetWindowProperty(dpy, w->id, shadowAtom, 0L, 1L, False, 
 			XA_CARDINAL, &actual, &format, 
 			&n, &left, &data);
-	if (result == Success && data != NULL)
+	if (result == Success && data != NULL && format == 32 )
 	{
 		unsigned int i;
-		memcpy (&i, data, sizeof (unsigned int));
+		i = *(long*)data;
 		XFree( (void *) data);
 		/*i added this for security reaons but limiting a value to 200% is somewhat indiscriminate
 		  if (i > 200)
@@ -1538,10 +1538,10 @@ get_shade_prop(Display *dpy, win *w)
 	int result = XGetWindowProperty(dpy, w->id, shadeAtom, 0L, 1L, False, 
 			XA_CARDINAL, &actual, &format, 
 			&n, &left, &data);
-	if (result == Success && data != NULL)
+	if (result == Success && data != NULL && format == 32 )
 	{
 		unsigned int i;
-		memcpy (&i, data, sizeof (unsigned int));
+		i = *(long*)data;
 		XFree( (void *) data);
 		return i;
 	}
@@ -1559,10 +1559,10 @@ get_shapable_prop(Display *dpy, win *w)
 	int result = XGetWindowProperty(dpy, w->id, shapableAtom, 0L, 1L, False, 
 			XA_CARDINAL, &actual, &format, 
 			&n, &left, &data);
-	if (result == Success && data != NULL)
+	if (result == Success && data != NULL && format == 32 )
 	{
 		unsigned int i;
-		memcpy (&i, data, sizeof (unsigned int));
+		i = *(long*)data;
 		XFree( (void *) data);
 		return i==1;
 	}
@@ -1580,10 +1580,10 @@ get_titleHeight_prop(Display *dpy, win *w)
 	int result = XGetWindowProperty(dpy, w->id, titleHeightAtom, 0L, 1L, False, 
 			XA_CARDINAL, &actual, &format, 
 			&n, &left, &data);
-	if (result == Success && data != NULL)
+	if (result == Success && data != NULL && format == 32 )
 	{
 		unsigned int i;
-		memcpy (&i, data, sizeof (unsigned int));
+		i = *(long*)data;
 		XFree( (void *) data);
 		return i;
 	}
@@ -1625,10 +1625,10 @@ get_wintype_prop(Display * dpy, Window w)
 			XA_ATOM, &actual, &format,
 			&n, &left, &data);
 
-	if (result == Success && data != None)
+	if (result == Success && data != None && format == 32 )
 	{
 		Atom a;
-		memcpy (&a, data, sizeof (Atom));
+		a = *(long*)data;
 		XFree ( (void *) data);
 		return a;
 	}

@@ -1976,9 +1976,9 @@ bool Client::getWindowOpacity() //query translucency settings from X, returns tr
     int format, result;
     unsigned long n, left;
     result = XGetWindowProperty(qt_xdisplay(), window(), atoms->net_wm_window_opacity, 0L, 1L, False, XA_CARDINAL, &actual, &format, &n, &left, /*(unsigned char **)*/ &data);
-    if (result == Success && data != None)
+    if (result == Success && data != None && format == 32 )
         {
-        memcpy (&opacity_, data, sizeof (unsigned int));
+        opacity_ = *reinterpret_cast< long* >( data );
         custom_opacity = true;
 //         setOpacity(opacity_ < 0xFFFFFFFF, opacity_);
         return TRUE;
