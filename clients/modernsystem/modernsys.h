@@ -12,6 +12,7 @@ class QSpacerItem;
 // get rid of autohide :P
 class ModernButton : public QButton
 {
+    Q_OBJECT
 public:
     ModernButton(Client *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL);
@@ -19,10 +20,15 @@ public:
     void reset();
     QSize sizeHint() const;
 protected:
+    void mousePressEvent( QMouseEvent* e );
+    void mouseReleaseEvent( QMouseEvent* e );
+
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     QBitmap deco;
     Client *client;
+public:
+    int last_button;
 };
 
 class ModernSys : public Client
@@ -48,6 +54,7 @@ protected:
     MousePosition mousePosition( const QPoint& ) const;
 protected slots:
     void slotReset();
+    void maxButtonClicked();
 private:
     ModernButton* button[5];
     QSpacerItem* titlebar;

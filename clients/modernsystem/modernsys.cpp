@@ -202,6 +202,20 @@ void ModernButton::drawButton(QPainter *p)
     }
 }
 
+void ModernButton::mousePressEvent( QMouseEvent* e )
+{
+    last_button = e->button();
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QButton::mousePressEvent( &me );
+}
+
+void ModernButton::mouseReleaseEvent( QMouseEvent* e )
+{
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QButton::mouseReleaseEvent( &me );
+}
+
+
 void ModernSys::slotReset()
 {
     if(aUpperGradient){
@@ -262,7 +276,7 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
     connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
-    connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
+    connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maxButtonClicked() ) ) );
 
     QHBoxLayout* hb = new QHBoxLayout(0);
     hb->setResizeMode(QLayout::FreeResize);
@@ -289,6 +303,23 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     recalcTitleBuffer();
 
 }
+
+void ModernSys::maxButtonClicked( )
+{
+    switch ( button[3]->last_button ) {
+    case MidButton:
+       maximize( MaximizeVertical );
+       break;
+    case RightButton:
+       maximize( MaximizeHorizontal );
+       break;
+    default: //LeftButton:
+       maximize( MaximizeFull );
+       break;
+    }
+}
+
+
 
 void ModernSys::resizeEvent( QResizeEvent* )
 {

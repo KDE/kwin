@@ -237,6 +237,19 @@ void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
     repaint(false);
 }
 
+void B2Button::mousePressEvent( QMouseEvent* e )
+{
+    last_button = e->button();
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QButton::mousePressEvent( &me );
+}
+
+void B2Button::mouseReleaseEvent( QMouseEvent* e )
+{
+    QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+    QButton::mouseReleaseEvent( &me );
+}
+
 B2Titlebar::B2Titlebar(B2Client *parent)
     : QWidget(parent)
 {
@@ -399,6 +412,21 @@ void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
     }
 }
 
+void B2Client::maxButtonClicked( )
+{
+    switch ( button[BtnMax]->last_button ) {
+    case MidButton:
+	maximize( MaximizeVertical );
+	break;
+    case RightButton:
+	maximize( MaximizeHorizontal );
+	break;
+    default: //LeftButton:
+	maximize( MaximizeFull );
+	break;
+    }
+}
+
 B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
@@ -482,12 +510,13 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     connect(button[BtnMenu], SIGNAL(clicked()), this, SLOT(menuButtonPressed()));
     connect(button[BtnSticky], SIGNAL(clicked()), this, SLOT(toggleSticky()));
     connect(button[BtnIconify], SIGNAL(clicked()), this, SLOT(iconify()));
-    connect(button[BtnMax], SIGNAL(clicked()), this, SLOT(maximize()));
+    connect(button[BtnMax], SIGNAL( clicked() ), this, SLOT( maxButtonClicked()));
     connect(button[BtnClose], SIGNAL(clicked()), this, SLOT(closeWindow()));
     connect(button[BtnHelp], SIGNAL(clicked()), this, SLOT(contextHelp()));
 
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
+
 
 void B2Client::resizeEvent( QResizeEvent* e)
 {

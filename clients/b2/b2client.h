@@ -12,6 +12,7 @@ class QGridLayout;
 
 class B2Button : public QButton
 {
+    Q_OBJECT
 public:
     B2Button(Client *_client=0, QWidget *parent=0, const char *name=0)
         : QButton(parent, name){useMiniIcon = false; client = _client;}
@@ -28,13 +29,21 @@ public:
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
+    
     bool useMiniIcon;
     KPixmap *pNorm, *pDown, *iNorm, *iDown;
     QColor bg; //only use one color (the rest is pixmap) so forget QPalette ;)
     Client *client;
+    
+    void mousePressEvent( QMouseEvent* e );
+    void mouseReleaseEvent( QMouseEvent* e );
+
+public:
+    int last_button;    
 };
 
 class B2Client;
+
 class B2Titlebar : public QWidget
 {
     Q_OBJECT
@@ -87,6 +96,7 @@ protected:
 private slots:
     void menuButtonPressed();
     void slotReset();
+    void maxButtonClicked();
 private:
     void positionButtons();
     enum ButtonType{BtnMenu=0, BtnSticky, BtnIconify, BtnMax, BtnClose,
@@ -99,6 +109,7 @@ private:
     int bar_x_ofs;
     B2Titlebar *titlebar;
     int in_unobs;
+    
 };
 
 
