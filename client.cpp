@@ -1761,7 +1761,9 @@ void Client::mouseMoveEvent( QMouseEvent * e)
         return;
     }
 
-    if ( !isMovable() || (isShade() && mode != Center)) return;
+    if(( mode == Center && !isMovable())
+        || ( mode != Center && ( isShade() || !isResizable())))
+        return;
 
     if ( !moveResizeMode ) {
         QPoint p( e->pos() - moveOffset );
@@ -2897,7 +2899,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         startMoveResize();
         break;
     case Options::MouseResize: {
-        if (!isMovable())
+        if (!isResizable() || isShade())
             break;
         geom=geometry();
         if ( isMaximized() ) {
@@ -2941,7 +2943,7 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
     else if( direction >= NET::TopLeft && direction <= NET::Left ) {
         static const MousePosition convert[] = { TopLeft, Top, TopRight, Right, BottomRight, Bottom,
             BottomLeft, Left };
-        if (!isMovable())
+        if(!isResizable() || isShade())
             return;
         geom=geometry();
         if ( isMaximized() ) {
