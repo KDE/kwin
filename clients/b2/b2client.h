@@ -23,6 +23,7 @@ public:
     void setBg(const QColor &c){bg = c;}
     void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
                     KPixmap *iPixDown);
+    void setPixmaps(int button_id);
     void setToggle(){setToggleType(Toggle);}
     void setActive(bool on){setOn(on);}
     void setUseMiniIcon(){useMiniIcon = true;}

@@ -15,22 +15,25 @@
 
 using namespace KWinInternal;
 
+#define P_CLOSE 0
+#define P_MAX 1
+#define P_NORMALIZE 2
+#define P_ICONIFY 3
+#define P_PINUP 4
+#define P_MENU 5
+#define P_HELP 6
+#define NUM_PIXMAPS ((P_HELP + 1) * 4)
 
-// TODO: stick all these in an array
-static KPixmap *aClosePix, *aClosePixDown;
-static KPixmap *iClosePix, *iClosePixDown;
-static KPixmap *aMaxPix, *aMaxPixDown;
-static KPixmap *iMaxPix, *iMaxPixDown;
-static KPixmap *aNormalizePix, *aNormalizePixDown;
-static KPixmap *iNormalizePix, *iNormalizePixDown;
-static KPixmap *aIconifyPix, *aIconifyPixDown;
-static KPixmap *iIconifyPix, *iIconifyPixDown;
-static KPixmap *aPinupPix, *aPinupPixDown;
-static KPixmap *iPinupPix, *iPinupPixDown;
-static KPixmap *aMenuPix, *aMenuPixDown;
-static KPixmap *iMenuPix, *iMenuPixDown;
-static KPixmap *aHelpPix, *aHelpPixDown;
-static KPixmap *iHelpPix, *iHelpPixDown;
+static KPixmap *pixmap[NUM_PIXMAPS];
+
+//active
+#define PIXMAP_A(i)  (pixmap[(i)*4])
+//active, down
+#define PIXMAP_AD(i) (pixmap[(i)*4 +1])
+//inactive
+#define PIXMAP_I(i)  (pixmap[(i)*4 +2])
+//inactive, down
+#define PIXMAP_ID(i) (pixmap[(i)*4 +3])
 
 static bool pixmaps_created = false;
 
@@ -70,7 +73,7 @@ static void redraw_pixmaps();
 QPixmap* kwin_get_menu_pix_hack()
 {
     //return menu_pix;  FIXME
-    return aMenuPix;
+    return PIXMAP_A(P_MENU);
 }
 
 static void create_pixmaps()
@@ -79,138 +82,47 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
-    // TODO: Stick all these in an array
-    aClosePix = new KPixmap;
-    aClosePix->resize(16, 16);
-    aClosePixDown = new KPixmap;
-    aClosePixDown->resize(16, 16);
-
-    iClosePix = new KPixmap;
-    iClosePix->resize(16, 16);
-    iClosePixDown = new KPixmap;
-    iClosePixDown->resize(16, 16);
-
-    aMaxPix = new KPixmap;
-    aMaxPixDown = new KPixmap;
-    iMaxPix = new KPixmap;
-    iMaxPixDown = new KPixmap;
-
-    aNormalizePix = new KPixmap();
-    aNormalizePix->resize(16, 16);
-    aNormalizePixDown = new KPixmap();
-    aNormalizePixDown->resize(16, 16);
-
-    aIconifyPix = new KPixmap;
-    aIconifyPix->resize(10, 10);
-    aIconifyPixDown = new KPixmap;
-    aIconifyPixDown->resize(10, 10);
-
-    iNormalizePix = new KPixmap();
-    iNormalizePix->resize(16, 16);
-    iNormalizePixDown = new KPixmap();
-    iNormalizePixDown->resize(16, 16);
-
-    iIconifyPix = new KPixmap;
-    iIconifyPix->resize(10, 10);
-    iIconifyPixDown = new KPixmap;
-    iIconifyPixDown->resize(10, 10);
-
-    aPinupPix = new KPixmap;
-    aPinupPix->resize(16, 16);
-    aPinupPixDown = new KPixmap;
-    aPinupPixDown->resize(16, 16);
-
-    iPinupPix = new KPixmap;
-    iPinupPix->resize(16, 16);
-    iPinupPixDown = new KPixmap;
-    iPinupPixDown->resize(16, 16);
-
-    aMenuPix = new KPixmap;
-    aMenuPix->resize(16, 16);
-    aMenuPixDown = new KPixmap;
-    aMenuPixDown->resize(16, 16);
-
-    iMenuPix = new KPixmap;
-    iMenuPix->resize(16, 16);
-    iMenuPixDown = new KPixmap;
-    iMenuPixDown->resize(16, 16);
-
-    aHelpPix = new KPixmap;
-    aHelpPix->resize(16, 16);
-    aHelpPixDown = new KPixmap;
-    aHelpPixDown->resize(16, 16);
-    iHelpPix = new KPixmap;
-    iHelpPix->resize(16, 16);
-    iHelpPixDown = new KPixmap;
-    iHelpPixDown->resize(16, 16);
+    int i;
+    for (i = 0; i < NUM_PIXMAPS; i++) {
+        pixmap[i] = new KPixmap;
+	switch (i / 4) {
+  	    case P_MAX : break;  // will be initialized by copying P_CLOSE
+  	    case P_ICONIFY : pixmap[i]->resize(10,10); break;
+  	    default : pixmap[i]->resize(16, 16); break;
+	}
+    }
 
     // there seems to be no way to load X bitmaps from data properly, so
     // we need to create new ones for each mask :P
     QBitmap pinupMask(16, 16, pinup_mask_bits, true);
-    aPinupPix->setMask(pinupMask);
-    iPinupPix->setMask(pinupMask);
+    PIXMAP_A(P_PINUP)->setMask(pinupMask);
+    PIXMAP_I(P_PINUP)->setMask(pinupMask);
     QBitmap pindownMask(16, 16, pindown_mask_bits, true);
-    aPinupPixDown->setMask(pindownMask);
-    iPinupPixDown->setMask(pindownMask);
+    PIXMAP_AD(P_PINUP)->setMask(pindownMask);
+    PIXMAP_ID(P_PINUP)->setMask(pindownMask);
 
     QBitmap menuMask(16, 16, menu_mask_bits, true);
-    aMenuPix->setMask(menuMask);
-    iMenuPix->setMask(menuMask);
-    aMenuPixDown->setMask(menuMask);
-    iMenuPixDown->setMask(menuMask);
+    for (i = 0; i < 4; i++) pixmap[P_MENU * 4 + i]->setMask(menuMask);
 
     QBitmap helpMask(16, 16, help_mask_bits, true);
-    aHelpPix->setMask(helpMask);
-    iHelpPix->setMask(helpMask);
-    aHelpPixDown->setMask(helpMask);
-    iHelpPixDown->setMask(helpMask);
+    for (i = 0; i < 4; i++) pixmap[P_HELP * 4 + i]->setMask(helpMask);
     redraw_pixmaps();
 }
 
 static void delete_pixmaps()
 {
-    delete aClosePix;
-    delete aClosePixDown;
-    delete iClosePix;
-    delete iClosePixDown;
-    delete aMaxPix;
-    delete aMaxPixDown;
-    delete iMaxPix;
-    delete iMaxPixDown;
-    delete aNormalizePix;
-    delete aNormalizePixDown;
-    delete iNormalizePix;
-    delete iNormalizePixDown;
-    delete aIconifyPix;
-    delete aIconifyPixDown;
-    delete iIconifyPix;
-    delete iIconifyPixDown;
-    delete aPinupPix;
-    delete aPinupPixDown;
-    delete iPinupPix;
-    delete iPinupPixDown;
-    delete aMenuPix;
-    delete aMenuPixDown;
-    delete iMenuPix;
-    delete iMenuPixDown;
-    delete aHelpPix;
-    delete aHelpPixDown;
-    delete iHelpPix;
-    delete iHelpPixDown;
-
+    for (int i = 0; i < NUM_PIXMAPS; i++)
+      delete pixmap[i];
     pixmaps_created = false;
 }
 
 B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
                    KPixmap *iPixDown, Client *_client, QWidget *parent,
 		   const char *name)
-    : QButton(parent, name)
+    : QButton(parent, name),
+      pNorm(pix), pDown(pixDown), iNorm(iPix), iDown(iPixDown),
+      client(_client)
 {
-    client = _client;
-    pNorm = pix;
-    pDown = pixDown;
-    iNorm = iPix;
-    iDown = iPixDown;
     setFixedSize(16, 16);
     setFocusPolicy(NoFocus);
     resize(16, 16);
@@ -265,6 +177,13 @@ void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
     repaint(false);
 }
 
+void B2Button::setPixmaps(int button_id)
+{
+  button_id *= 4;
+  setPixmaps(::pixmap[button_id], ::pixmap[button_id+1],
+             ::pixmap[button_id+2], ::pixmap[button_id+3]);
+}
+
 void B2Button::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
@@ -279,12 +198,10 @@ void B2Button::mouseReleaseEvent( QMouseEvent* e )
 }
 
 B2Titlebar::B2Titlebar(B2Client *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      set_x11mask(false), isfullyobscured(false), shift_move(false),
+      client(parent)
 {
-    set_x11mask = false;
-    isfullyobscured = false;
-    shift_move = false;
-    client = parent;
 }
 
 bool B2Titlebar::x11Event(XEvent *e)
@@ -457,11 +374,9 @@ void B2Client::maxButtonClicked( )
 
 B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase )
+    : Client( ws, w, parent, name, WResizeNoErase ),
+      bar_x_ofs(0), in_unobs(0)
 {
-    bar_x_ofs = 0;
-    in_unobs = 0;
-
     g = new QGridLayout( this, 0, 0);
     g->addMultiCellWidget(windowWrapper(), 1, 1, 1, 2);
 
@@ -482,7 +397,7 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     titlebar->setMinimumWidth(16);
     titlebar->setFixedHeight(20);
 
-   int i;
+    int i;
     for(i=0; i < 6; ++i){
         button[i] = new B2Button(this, titlebar/*this*/);
         button[i]->setFixedSize(16, 16);
@@ -508,23 +423,16 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     if(!providesContextHelp())
         button[BtnHelp]->hide();
 
-    button[BtnMenu]->setPixmaps(aMenuPix, aMenuPixDown, iMenuPix,
-                                iMenuPixDown);
-    button[BtnSticky]->setPixmaps(aPinupPix, aPinupPixDown, iPinupPix,
-                                  iPinupPixDown);
-    button[BtnIconify]->setPixmaps(aIconifyPix, aIconifyPixDown,
-                                   iIconifyPix, iIconifyPixDown);
-    button[BtnClose]->setPixmaps(aClosePix, aClosePixDown, iClosePix,
-                                 iClosePixDown);
-    button[BtnHelp]->setPixmaps(aHelpPix, aHelpPixDown, iHelpPix,
-                                iHelpPixDown);
+    button[BtnMenu]->setPixmaps(P_MENU);
+    button[BtnSticky]->setPixmaps(P_PINUP);
+    button[BtnIconify]->setPixmaps(P_ICONIFY);
+    button[BtnClose]->setPixmaps(P_CLOSE);
+    button[BtnHelp]->setPixmaps(P_HELP);
 
     if(isMaximized())
-        button[BtnMax]->setPixmaps(aNormalizePix, aNormalizePixDown,
-                                   iNormalizePix, iNormalizePixDown);
+        button[BtnMax]->setPixmaps(P_NORMALIZE);
     else
-        button[BtnMax]->setPixmaps(aMaxPix, aMaxPixDown, iMaxPix,
-                                   iMaxPixDown);
+        button[BtnMax]->setPixmaps(P_MAX);
 
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
@@ -795,18 +703,16 @@ void B2Client::titleMoveRel(int xdiff)
 
 void B2Client::stickyChange(bool on)
 {
-    button[1]->setDown(on);
+    button[BtnSticky]->setDown(on);
 }
 
 void B2Client::maximizeChange(bool m)
 {
     if(m){
-        button[BtnMax]->setPixmaps(aNormalizePix, aNormalizePixDown,
-                                   iNormalizePix, iNormalizePixDown);
+        button[BtnMax]->setPixmaps(P_NORMALIZE);
     }
     else{
-        button[BtnMax]->setPixmaps(aMaxPix, aMaxPixDown, iMaxPix,
-                                   iMaxPixDown);
+        button[BtnMax]->setPixmaps(P_MAX);
     }
     button[BtnMax]->repaint();
 }
@@ -896,132 +802,73 @@ static void redraw_pixmaps()
     QColorGroup iGrp = options->colorGroup(Options::ButtonBg, false);
 
     // close
-    drawB2Rect(aClosePix, aGrp.button(), false);
-    drawB2Rect(aClosePixDown, aGrp.button(), true);
+    drawB2Rect(PIXMAP_A(P_CLOSE), aGrp.button(), false);
+    drawB2Rect(PIXMAP_AD(P_CLOSE), aGrp.button(), true);
 
-    drawB2Rect(iClosePix, iGrp.button(), false);
-    drawB2Rect(iClosePixDown, iGrp.button(), true);
+    drawB2Rect(PIXMAP_I(P_CLOSE), iGrp.button(), false);
+    drawB2Rect(PIXMAP_ID(P_CLOSE), iGrp.button(), true);
 
     // maximize
-    *aMaxPix = *aClosePix;
-    aMaxPix->detach();
-    *aMaxPixDown = *aClosePixDown;
-    aMaxPixDown->detach();
-    *iMaxPix = *iClosePix;
-    iMaxPix->detach();
-    *iMaxPixDown = *iClosePixDown;
-    iMaxPixDown->detach();
+    int i;
+    for (i = 0; i < 4; i++) {
+	*pixmap[P_MAX*4 + i] = *pixmap[P_CLOSE*4 + i];
+	pixmap[P_MAX*4 + i]->detach();
+    }
 
-    // normalize
+    // normalize + iconify
     KPixmap smallBox;
     smallBox.resize(10, 10);
     KPixmap largeBox;
     largeBox.resize(12, 12);
 
-    drawB2Rect(&smallBox, aGrp.button(), false);
-    drawB2Rect(&largeBox, aGrp.button(), false);
-    aNormalizePix->fill(options->color(Options::TitleBar, true));
-    bitBlt(aNormalizePix, 3, 3, &largeBox, 0, 0, 12, 12, Qt::CopyROP, true);
-    bitBlt(aNormalizePix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
+    for (i = 0; i < 4; i++) {
+	bool is_act = (i < 2);
+	bool is_down = ((i & 1) == 1);
+	KPixmap *pix = pixmap[P_NORMALIZE*4 + i];
+	drawB2Rect(&smallBox, aGrp.button(), is_down);
+	drawB2Rect(&largeBox, aGrp.button(), is_down);
+	pix->fill(options->color(Options::TitleBar, is_act));
+	bitBlt(pix, 3, 3, &largeBox, 0, 0, 12, 12, Qt::CopyROP, true);
+	bitBlt(pix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
 
-    bitBlt(aIconifyPix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-
-    drawB2Rect(&smallBox, aGrp.button(), true);
-    drawB2Rect(&largeBox, aGrp.button(), true);
-    aNormalizePixDown->fill(options->color(Options::TitleBar, true));
-    bitBlt(aNormalizePixDown, 3, 3, &largeBox, 0, 0, 12, 12, Qt::CopyROP, true);
-    bitBlt(aNormalizePixDown, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-
-    bitBlt(aIconifyPixDown, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-
-    drawB2Rect(&smallBox, iGrp.button(), false);
-    drawB2Rect(&largeBox, iGrp.button(), false);
-    iNormalizePix->fill(options->color(Options::TitleBar, false));
-    bitBlt(iNormalizePix, 3, 3, &largeBox, 0, 0, 12, 12, Qt::CopyROP, true);
-    bitBlt(iNormalizePix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-
-    bitBlt(iIconifyPix, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-
-    drawB2Rect(&smallBox, iGrp.button(), true);
-    drawB2Rect(&largeBox, iGrp.button(), true);
-    iNormalizePixDown->fill(options->color(Options::TitleBar, false));
-    bitBlt(iNormalizePixDown, 3, 3, &largeBox, 0, 0, 12, 12, Qt::CopyROP, true);
-    bitBlt(iNormalizePixDown, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
-
-    bitBlt(iIconifyPixDown, 0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
+	bitBlt(pixmap[P_ICONIFY*4 + i],
+	       0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
+    }
 
     QPainter p;
-    // x for close
-    p.begin(aClosePix);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, close_white_bits,
-                  NULL, NULL, close_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(aClosePixDown);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, close_white_bits,
-                  NULL, NULL, close_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(iClosePix);
-    kColorBitmaps(&p, iGrp, 0, 0, 16, 16, true, close_white_bits,
-                  NULL, NULL, close_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(iClosePixDown);
-    kColorBitmaps(&p, iGrp, 0, 0, 16, 16, true, close_white_bits,
-                  NULL, NULL, close_dgray_bits, NULL, NULL);
-    p.end();
+    // x for close + menu + help
+    for (int j = 0; j < 3; j++) {
+        int pix;
+        unsigned char *light, *dark;
+        switch (j) {
+          case 0 :
+            pix = P_CLOSE; light = close_white_bits; dark = close_dgray_bits;
+            break;
+          case 1 :
+            pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits;
+            break;
+          case 2 :
+            pix = P_HELP; light = help_light_bits; dark = help_dark_bits;
+            break;
+        }
+        for (i = 0; i < 4; i++) {
+            p.begin(pixmap[pix*4 + i]);
+            kColorBitmaps(&p, (i<2)?aGrp:iGrp, 0, 0, 16, 16, true,
+                          light, NULL, NULL, dark, NULL, NULL);
+            p.end();
+        }
+    }
 
     // pin
-    p.begin(aPinupPix);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, pinup_white_bits,
-                  pinup_gray_bits, NULL, pinup_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(aPinupPixDown);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, pindown_white_bits,
-                  pindown_gray_bits, NULL, pindown_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(iPinupPix);
-    kColorBitmaps(&p, iGrp, 0, 0, 16, 16, true, pinup_white_bits,
-                  pinup_gray_bits, NULL, pinup_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(iPinupPixDown);
-    kColorBitmaps(&p, iGrp, 0, 0, 16, 16, true, pindown_white_bits,
-                  pindown_gray_bits, NULL, pindown_dgray_bits, NULL, NULL);
-    p.end();
-
-    // menu
-    p.begin(aMenuPix);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, menu_white_bits,
-                  NULL, NULL, menu_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(aMenuPixDown);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, menu_white_bits,
-                  NULL, NULL, menu_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(iMenuPix);
-    kColorBitmaps(&p, iGrp, 0, 0, 16, 16, true, menu_white_bits,
-                  NULL, NULL, menu_dgray_bits, NULL, NULL);
-    p.end();
-    p.begin(iMenuPixDown);
-    kColorBitmaps(&p, iGrp, 0, 0, 16, 16, true, menu_white_bits,
-                  NULL, NULL, menu_dgray_bits, NULL, NULL);
-    p.end();
-
-    // help
-    p.begin(aHelpPix);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, help_light_bits,
-                  NULL, NULL, help_dark_bits, NULL, NULL);
-    p.end();
-    p.begin(aHelpPixDown);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, help_light_bits,
-                  NULL, NULL, help_dark_bits, NULL, NULL);
-    p.end();
-    p.begin(iHelpPix);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, help_light_bits,
-                  NULL, NULL, help_dark_bits, NULL, NULL);
-    p.end();
-    p.begin(iHelpPixDown);
-    kColorBitmaps(&p, aGrp, 0, 0, 16, 16, true, help_light_bits,
-                  NULL, NULL, help_dark_bits, NULL, NULL);
-    p.end();
+    for (i = 0; i < 4; i++) {
+        unsigned char *white = (i&1) ? pindown_white_bits : pinup_white_bits;
+        unsigned char *gray = (i&1) ? pindown_gray_bits : pinup_gray_bits;
+        unsigned char *dgray = (i&1) ? pindown_dgray_bits : pinup_dgray_bits;
+        p.begin(pixmap[P_PINUP*4 + i]);
+        kColorBitmaps(&p, (i<2)?aGrp:iGrp, 0, 0, 16, 16, true, white,
+                      gray, NULL, dgray, NULL, NULL);
+        p.end();
+    }
 }
 
 void B2Client::positionButtons()
