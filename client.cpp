@@ -497,12 +497,6 @@ void Client::manage( bool isMapped )
 	placementDone = TRUE;
     else {
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
-	    // support for obsolete hints
-	    if ( xSizeHint.x != 0 && geom.x() == 0 )
-		geom.setRect( xSizeHint.x, geom.y(), geom.width(), geom.height() );
-	    if ( xSizeHint.y != 0 && geom.y() == 0 )
-		geom.setRect( geom.x(), xSizeHint.y, geom.width(), geom.height() );
-
 	    if ( (xSizeHint.flags & USPosition) == 0 ) {
 		QRect area = workspace()->clientArea();
 		if ( !area.contains( geom.topLeft() ) ) {
@@ -515,7 +509,6 @@ void Client::manage( bool isMapped )
 		    geom.moveTopLeft( QPoint( tx, ty ) );
 		}
 	    }
-	    
 	    placementDone = TRUE;
 	}
  	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
