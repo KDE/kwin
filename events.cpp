@@ -1090,7 +1090,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
         uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
             KKeyNative::modX(KKey::WIN) :
             KKeyNative::modX(KKey::ALT);
-        bool bModKeyHeld = ( state & KKeyNative::accelModMaskX()) == keyModX;
+        bool bModKeyHeld = keyModX != 0 && ( state & KKeyNative::accelModMaskX()) == keyModX;
 
         if( isSplash()
             && button == Button1 && !bModKeyHeld )
