@@ -2537,10 +2537,24 @@ void Workspace::setNumberOfDesktops( int n )
 {
     if ( n == number_of_desktops )
         return;
+    int old_number_of_desktops = number_of_desktops;
     number_of_desktops = n;
 
     rootInfo->setNumberOfDesktops( number_of_desktops );
     saveDesktopSettings();
+    
+    // if the number of desktops decreased, move all
+    // windows that would be hidden to the last visible desktop
+    if( old_number_of_desktops > number_of_desktops ) {
+	for( ClientList::ConstIterator it = clients.begin();
+	      it != clients.end();
+	      ++it) {
+    	    if( !(*it)->isSticky() && (*it)->desktop() > numberOfDesktops())
+		sendClientToDesktop( *it, numberOfDesktops());
+	}
+    }
+    if( currentDesktop() > numberOfDesktops())
+	setCurrentDesktop( numberOfDesktops());
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize( n );
