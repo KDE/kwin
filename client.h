@@ -84,7 +84,15 @@ class Client : public QObject, public KDecorationDefines
 
         void releaseWindow( bool on_shutdown = false );
 
-        QSize adjustedSize( const QSize& ) const;
+        enum Sizemode // how to resize the window in order to obey constains (mainly aspect ratios)
+            {
+            SizemodeAny,
+            SizemodeFixedW, // try not to affect width
+            SizemodeFixedH, // try not to affect height
+            SizemodeMax, // try not to make it larger in either direction
+            SizemodeShaded // shaded - height == 0
+            };
+        QSize adjustedSize( const QSize&, Sizemode mode = SizemodeAny ) const;
 
         QPixmap icon() const;
         QPixmap miniIcon() const;
@@ -316,7 +324,7 @@ class Client : public QObject, public KDecorationDefines
         bool isNormalState() const;
         bool isManaged() const; // returns false if this client is not yet managed
         void updateAllowedActions( bool force = false );
-        QSize sizeForClientSize( const QSize&, bool ignore_height = FALSE ) const;
+        QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny ) const;
         void changeMaximize( bool horizontal, bool vertical, bool adjust );
         void getWmNormalHints();
         void getIcons();

@@ -588,14 +588,14 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
 /*!
   Adjust the frame size \a frame according to he window's size hints.
  */
-QSize Client::adjustedSize( const QSize& frame) const
+QSize Client::adjustedSize( const QSize& frame, Sizemode mode ) const
     {
     // first, get the window size for the given frame size s
 
     QSize wsize( frame.width() - ( border_left + border_right ),
              frame.height() - ( border_top + border_bottom ));
 
-    return sizeForClientSize( wsize );
+    return sizeForClientSize( wsize, mode );
     }
 
 /*!
@@ -606,7 +606,7 @@ QSize Client::adjustedSize( const QSize& frame) const
   maximum and incremental size changes).
 
  */
-QSize Client::sizeForClientSize( const QSize& wsize, bool ignore_height) const
+QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode ) const
     {
     int w = wsize.width();
     int h = wsize.height();
@@ -641,7 +641,7 @@ QSize Client::sizeForClientSize( const QSize& wsize, bool ignore_height) const
     int baseh_inc = xSizeHint.min_height;
     w = int(( w - basew_inc ) / width_inc ) * width_inc + basew_inc;
     h = int(( h - baseh_inc ) / height_inc ) * height_inc + baseh_inc;
-// code for aspect ratios based on code from FVWM, actually it's more or less a copy
+// code for aspect ratios based on code from FVWM
     /*
      * The math looks like this:
      *
@@ -668,47 +668,94 @@ QSize Client::sizeForClientSize( const QSize& wsize, bool ignore_height) const
         int min_width = min_size.width() - xSizeHint.base_width;
         int max_height = max_size.height() - xSizeHint.base_height;
         int min_height = min_size.height() - xSizeHint.base_height;
-        if( min_aspect_w * h > min_aspect_h * w )
-            {
-            int delta = int( min_aspect_w * h / min_aspect_h - w ) / width_inc * width_inc;
-            if( w + delta <= max_width )
-                w += delta;
+#define ASPECT_CHECK_GROW_W \
+        if( min_aspect_w * h > min_aspect_h * w ) \
+            { \
+            int delta = int( min_aspect_w * h / min_aspect_h - w ) / width_inc * width_inc; \
+            if( w + delta <= max_width ) \
+                w += delta; \
             }
-        if( min_aspect_w * h > min_aspect_h * w )
+#define ASPECT_CHECK_SHRINK_H_GROW_W \
+        if( min_aspect_w * h > min_aspect_h * w ) \
+            { \
+            int delta = int( h - w * min_aspect_h / min_aspect_w ) / height_inc * height_inc; \
+            if( h - delta >= min_height ) \
+                h -= delta; \
+            else \
+                { \
+                int delta = int( min_aspect_w * h / min_aspect_h - w ) / width_inc * width_inc; \
+                if( w + delta <= max_width ) \
+                    w += delta; \
+                } \
+            }
+#define ASPECT_CHECK_GROW_H \
+        if( max_aspect_w * h < max_aspect_h * w ) \
+            { \
+            int delta = int( w * max_aspect_h / max_aspect_w - h ) / height_inc * height_inc; \
+            if( h + delta <= max_height ) \
+                h += delta; \
+            }
+#define ASPECT_CHECK_SHRINK_W_GROW_H \
+        if( max_aspect_w * h < max_aspect_h * w ) \
+            { \
+            int delta = int( w - max_aspect_w * h / max_aspect_h ) / width_inc * width_inc; \
+            if( w - delta >= min_width ) \
+                w -= delta; \
+            else \
+                { \
+                int delta = int( w * max_aspect_h / max_aspect_w - h ) / height_inc * height_inc; \
+                if( h + delta <= max_height ) \
+                    h += delta; \
+                } \
+            }
+        switch( mode )
             {
-            int delta = int( h - w * min_aspect_h / min_aspect_w ) / height_inc * height_inc;
-            if( h - delta >= min_height )
-                h -= delta;
-            else
+            case SizemodeAny:
                 {
-                int delta = int( min_aspect_w * h / min_aspect_h - w ) / width_inc * width_inc;
-                if( w + delta <= max_width )
-                    w += delta;
+                ASPECT_CHECK_SHRINK_H_GROW_W
+                ASPECT_CHECK_SHRINK_W_GROW_H
+                ASPECT_CHECK_GROW_H
+                ASPECT_CHECK_GROW_W
+                break;
                 }
-            }
-        if( max_aspect_w * h < max_aspect_h * w )
-            {
-            int delta = int( w * max_aspect_h / max_aspect_w - h ) / height_inc * height_inc;
-            if( h + delta <= max_height )
-                h += delta;
-            }
-        if( max_aspect_w * h < max_aspect_h * w )
-            {
-            int delta = int( w - max_aspect_w * h / max_aspect_h ) / width_inc * width_inc;
-            if( w - delta >= min_width )
-                w -= delta;
-            else
+            case SizemodeFixedW:
                 {
-                int delta = int( w * max_aspect_h / max_aspect_w - h ) / height_inc * height_inc;
-                if( h + delta <= max_height )
-                    h += delta;
+                // the checks are order so that attempts to modify height are first
+                ASPECT_CHECK_GROW_H
+                ASPECT_CHECK_SHRINK_H_GROW_W
+                ASPECT_CHECK_SHRINK_W_GROW_H
+                ASPECT_CHECK_GROW_W
+                break;
                 }
+            case SizemodeFixedH:
+                {
+                ASPECT_CHECK_GROW_W
+                ASPECT_CHECK_SHRINK_W_GROW_H
+                ASPECT_CHECK_SHRINK_H_GROW_W
+                ASPECT_CHECK_GROW_H
+                break;
+                }
+            case SizemodeMax:
+                {
+                // first checks that try to shrink
+                ASPECT_CHECK_SHRINK_H_GROW_W
+                ASPECT_CHECK_SHRINK_W_GROW_H
+                ASPECT_CHECK_GROW_W
+                ASPECT_CHECK_GROW_H
+                break;
+                }
+            case SizemodeShaded:
+                break;
             }
+#undef ASPECT_CHECK_SHRINK_H_GROW_W
+#undef ASPECT_CHECK_SHRINK_W_GROW_H
+#undef ASPECT_CHECK_GROW_W
+#undef ASPECT_CHECK_GROW_H
         w += xSizeHint.base_width;
         h += xSizeHint.base_height;
         }
 
-    if ( ignore_height && wsize.height() == 0 )
+    if ( mode == SizemodeShaded && wsize.height() == 0 )
         h = 0;
     return QSize( w + border_left + border_right, h + border_top + border_bottom );
     }
@@ -1226,16 +1273,16 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.width() == 0 )
                     { // needs placement
-                    plainResize( adjustedSize(QSize(width(), clientArea.height())));
+                    plainResize( adjustedSize(QSize(width(), clientArea.height()), SizemodeFixedH ));
                     workspace()->placeSmart( this );
                     }
                 else
                     setGeometry( QRect(QPoint( geom_restore.x(), clientArea.top()),
-                              adjustedSize(QSize( geom_restore.width(), clientArea.height()))));
+                              adjustedSize(QSize( geom_restore.width(), clientArea.height()), SizemodeFixedH )));
                 }
             else
                 setGeometry( QRect(QPoint(x(), clientArea.top()),
-                              adjustedSize(QSize(width(), clientArea.height()))));
+                              adjustedSize(QSize(width(), clientArea.height()), SizemodeFixedH )));
             info->setState( NET::MaxVert, NET::Max );
             break;
             }
@@ -1246,16 +1293,16 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.height() == 0 )
                     { // needs placement
-                    plainResize( adjustedSize(QSize(clientArea.width(), height())));
+                    plainResize( adjustedSize(QSize(clientArea.width(), height()), SizemodeFixedW ));
                     workspace()->placeSmart( this );
                     }
                 else
                     setGeometry( QRect( QPoint(clientArea.left(), geom_restore.y()),
-                              adjustedSize(QSize(clientArea.width(), geom_restore.height()))));
+                              adjustedSize(QSize(clientArea.width(), geom_restore.height()), SizemodeFixedW )));
                 }
             else
                 setGeometry( QRect( QPoint(clientArea.left(), y()),
-                              adjustedSize(QSize(clientArea.width(), height()))));
+                              adjustedSize(QSize(clientArea.width(), height()), SizemodeFixedW )));
             info->setState( NET::MaxHoriz, NET::Max );
             break;
             }
@@ -1296,7 +1343,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
         case MaximizeFull:
             {
-            QSize adjSize = adjustedSize(clientArea.size());
+            QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax );
             QRect r = QRect(clientArea.topLeft(), adjSize);
             setGeometry( r );
             info->setState( NET::Max, NET::Max );

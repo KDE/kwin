@@ -256,7 +256,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         if( !isShade())
             plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         else
-            plainResize( sizeForClientSize( QSize( clientSize().width(), 0 ), true ), ForceGeometrySet );
+            plainResize( sizeForClientSize( QSize( clientSize().width(), 0 ), SizemodeShaded ), ForceGeometrySet );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         do_show = true;
@@ -698,7 +698,7 @@ void Client::setShade( ShadeMode mode )
         { // shade_mode == ShadeNormal
         int h = height();
         shade_geometry_change = true;
-        QSize s( sizeForClientSize( QSize( clientSize().width(), 0), TRUE ) );
+        QSize s( sizeForClientSize( QSize( clientSize().width(), 0), SizemodeShaded ) );
         XSelectInput( qt_xdisplay(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
         XUnmapWindow( qt_xdisplay(), client );
         XUnmapWindow( qt_xdisplay(), wrapper );
@@ -725,7 +725,7 @@ void Client::setShade( ShadeMode mode )
         {
         int h = height();
         shade_geometry_change = true;
-        QSize s( sizeForClientSize( clientSize(), TRUE ) );
+        QSize s( sizeForClientSize( clientSize(), SizemodeShaded ));
 // FRAME       bool wasStaticContents = testWFlags( WStaticContents );
 //        setWFlags( WStaticContents );
         int step = QMAX( 4, QABS( h - s.height() ) / as )+1;

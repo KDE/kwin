@@ -499,7 +499,7 @@ void Client::growHorizontal()
     {
     QRect geom = geometry();
     geom.setRight( workspace()->packPositionRight( this, geom.right(), true ));
-    QSize adjsize = adjustedSize( geom.size());
+    QSize adjsize = adjustedSize( geom.size(), SizemodeFixedW );
     if( geometry().size() == adjsize && geom.size() != adjsize && xSizeHint.width_inc > 1 ) // take care of size increments
         {
         int newright = workspace()->packPositionRight( this, geom.right() + xSizeHint.width_inc - 1, true );
@@ -509,7 +509,7 @@ void Client::growHorizontal()
             QPoint(( x() + newright ) / 2, geometry().center().y()), desktop()).right() >= newright )
             geom.setRight( newright );
         }
-    geom.setSize( adjustedSize( geom.size()));
+    geom.setSize( adjustedSize( geom.size(), SizemodeFixedW ));
     setGeometry( geom );
     }
 
@@ -525,7 +525,7 @@ void Client::shrinkHorizontal()
     geom.setRight( workspace()->packPositionLeft( this, geom.right(), false ));
     if( geom.width() <= 1 )
         return;
-    geom.setSize( adjustedSize( geom.size()));
+    geom.setSize( adjustedSize( geom.size(), SizemodeFixedW ));
     if( geom.width() > 20 )
         setGeometry( geom );
     }
@@ -540,7 +540,7 @@ void Client::growVertical()
     {
     QRect geom = geometry();
     geom.setBottom( workspace()->packPositionDown( this, geom.bottom(), true ));
-    QSize adjsize = adjustedSize( geom.size());
+    QSize adjsize = adjustedSize( geom.size(), SizemodeFixedH );
     if( geometry().size() == adjsize && geom.size() != adjsize && xSizeHint.height_inc > 1 ) // take care of size increments
         {
         int newbottom = workspace()->packPositionDown( this, geom.bottom() + xSizeHint.height_inc - 1, true );
@@ -549,7 +549,7 @@ void Client::growVertical()
             QPoint( geometry().center().x(), ( y() + newbottom ) / 2 ), desktop()).bottom() >= newbottom )
             geom.setBottom( newbottom );
         }
-    geom.setSize( adjustedSize( geom.size()));
+    geom.setSize( adjustedSize( geom.size(), SizemodeFixedH ));
     setGeometry( geom );
     }
 
@@ -566,7 +566,7 @@ void Client::shrinkVertical()
     geom.setBottom( workspace()->packPositionUp( this, geom.bottom(), false ));
     if( geom.height() <= 1 )
         return;
-    geom.setSize( adjustedSize( geom.size()));
+    geom.setSize( adjustedSize( geom.size(), SizemodeFixedH ));
     if( geom.height() > 20 )
         setGeometry( geom );
     }
