@@ -43,12 +43,16 @@ protected:
     void showEvent( QShowEvent* );
     void windowWrapperShowEvent( QShowEvent* );
     void mouseDoubleClickEvent( QMouseEvent * );
+    void mousePressEvent( QMouseEvent * );
+    void mouseReleaseEvent( QMouseEvent * );
+    void mouseMoveEvent(QMouseEvent *);
     void init();
     void captionChange( const QString& name );
     void stickyChange(bool on);
     void activeChange(bool on);
     void maximizeChange(bool m);
     void doShape();
+    MousePosition mousePosition( const QPoint& p ) const;
 private slots:
     void menuButtonPressed();
     void slotReset();
@@ -61,6 +65,9 @@ private:
     //QSpacerItem* titlebar;
     //QHBoxLayout *tLayout;
     QGridLayout *g;
+    int bar_x_ofs;
+    bool shift_move;
+    QPoint moveOffset;
 };                      
 
 

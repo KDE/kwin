@@ -225,7 +225,9 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
 {
-    
+    bar_x_ofs = 0;
+    shift_move = FALSE;
+
     create_pixmaps();
     g = new QGridLayout( this, 0, 0);
     g->addMultiCellWidget(windowWrapper(), 1, 1, 1, 2);
@@ -343,12 +345,12 @@ void B2Client::paintEvent( QPaintEvent* )
 
     // black titlebar frame
     p.setPen(Qt::black);
-    p.drawLine(0, 0, 0, height()-5);
-    p.drawLine(0, 0, t.right()+4, 0);
+    p.drawLine(bar_x_ofs, 0, bar_x_ofs, t.bottom() );
+    p.drawLine(bar_x_ofs, 0, t.right()+4, 0);
     p.drawLine(t.right()+4, 0, t.right()+4, t.bottom());
 
     // titlebar fill
-    qDrawShadeRect(&p, 1, 1, t.width()+6, t.height()-1,
+    qDrawShadeRect(&p, 1+bar_x_ofs, 1, t.width()+6-bar_x_ofs, t.height()-1,
                    options->colorGroup(Options::TitleBar, isActive()),
                    false, 1, 0,
                    &options->colorGroup(Options::TitleBar, isActive()).
@@ -391,8 +393,14 @@ void B2Client::doShape()
     t.setHeight(20);
     QRegion mask(QRect(0, 0, width(), height()));
     // top to the tilebar right
-    mask -= QRect(t.width()+8, 0, width()-t.width()-8, t.height()-4);
-    mask -= QRect(width()-1, t.height()-4, 1, 1); // top right point
+    if (bar_x_ofs) {
+        mask -= QRect(0, 0, bar_x_ofs, t.height()-4); //left from bar
+	mask -= QRect(0, t.height()-4, 1, 1);         //top left point
+    }
+    if (t.right() < width() - 5) {
+        mask -= QRect(width()-1, t.height()-4, 1, 1); // top right point 
+        mask -= QRect(t.width()+8, 0, width()-t.width()-7, t.height()-4);
+    }
     mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
     mask -= QRect(0, height()-5, 1, 1); // bottom left point
     mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
@@ -419,6 +427,88 @@ void B2Client::mouseDoubleClickEvent( QMouseEvent * e )
     if (e->pos().y() < 19)
         setShade( !isShade() );
     workspace()->requestFocus( this );
+}
+
+Client::MousePosition B2Client::mousePosition( const QPoint& p ) const
+{
+    const int range = 16;
+    const int border = 4;
+    QRect t = g->cellGeometry(0, 1);
+    t.setRight(button[BtnClose]->x()+17);
+    t.setHeight(20-border); 
+    int ly = t.bottom();
+    int lx = t.right();
+
+    if ( p.x() > t.right() ) {
+        if ( p.y() <= ly + range && p.x() >= width()-range)
+            return TopRight;
+        else if ( p.y() <= ly + border )
+            return Top;
+    } else if ( p.x() < bar_x_ofs ) {
+        if ( p.y() <= ly + range && p.x() <= range )
+            return TopLeft;
+        else if ( p.y() <= ly+border )
+            return Top;
+    } else if ( p.y() < ly ) {
+        if ( p.x() > bar_x_ofs+border && p.x() < lx-border && p.y() > border )
+            return Client::mousePosition( p );
+        if ( p.x() > bar_x_ofs+range && p.x() < lx - range)
+            return Top;
+        if ( p.y() <= range ) {
+            if ( p.x() <= bar_x_ofs+range )
+                return TopLeft;
+            else return TopRight;
+        } else {
+            if ( p.x() <= bar_x_ofs+range )
+                return Left;
+            else return Right;
+        }
+    }
+ 
+    return Client::mousePosition( p );
+}
+
+
+void B2Client::mousePressEvent( QMouseEvent * e )
+{
+    shift_move = e->state() & ShiftButton;
+    if (shift_move ) {
+        moveOffset = e->pos();
+        if (moveOffset.y() >= 19) shift_move=FALSE;
+    }
+    Client::mousePressEvent( e );
+}
+
+void B2Client::mouseReleaseEvent( QMouseEvent * e )
+{
+    Client::mouseReleaseEvent( e );
+    shift_move = FALSE;
+}
+                                                                               
+void B2Client::mouseMoveEvent( QMouseEvent * e)
+{
+    int x = e->pos().x();
+    if (shift_move) {
+        int old_ofs = bar_x_ofs;
+        int oldx = moveOffset.x();
+        int xdiff = x - oldx;
+        moveOffset = e->pos();
+	QRect t = g->cellGeometry(0, 1);
+	t.setRight(button[BtnClose]->x()+17);
+	t.setHeight(20);
+	if (oldx >= bar_x_ofs && oldx <= t.right()) {
+            bar_x_ofs += xdiff;
+            if (bar_x_ofs < 0) bar_x_ofs = 0;
+            if ( t.right() + xdiff >= width()-4)
+                bar_x_ofs = old_ofs;
+	    if (bar_x_ofs != old_ofs) {
+	        positionButtons();
+                doShape();
+                repaint( 0, 0, width(), t.height(), true );
+	    }
+	}
+    } else
+        Client::mouseMoveEvent(e);
 }
 
 void B2Client::stickyChange(bool on)
@@ -642,7 +732,7 @@ void B2Client::positionButtons()
     QFontMetrics fm(options->font(isActive()));
     
     int textLen = fm.width(caption());
-    int xpos = 4;
+    int xpos = bar_x_ofs+4;
     button[BtnMenu]->move(xpos, 2);
     xpos+=17;
     button[BtnSticky]->move(xpos, 2);
@@ -652,10 +742,10 @@ void B2Client::positionButtons()
         xpos+=17;
     }
 
-    if(xpos + textLen+52 < width()-8)
+    if(xpos + textLen+52 < width()-3)
         xpos += textLen+1;
     else
-        xpos = width()-8-52;
+        xpos = width()-3-52;
 
     button[BtnIconify]->move(xpos, 2);
     xpos+=17;
