@@ -161,7 +161,7 @@ class KWinSelectionOwner
     };
 
 
-static QCString getStringProperty(WId w, Atom prop, char separator=0);
+QCString getStringProperty(WId w, Atom prop, char separator=0);
 void updateXTime();
 void grabXServer();
 void ungrabXServer();
