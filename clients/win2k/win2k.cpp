@@ -3,27 +3,22 @@
 
   Copyright 2001
     Karol Szwed <karlmail@usa.net>
-    http://gallium.home.dhs.org/
+    http://gallium.n3.net/
 
   Based on the default KWin client.
+
+  Major code cleanups, bug fixes and updates to support toolwindows 3/2001 - KS
 */
 
-#include <kconfig.h> 
 #include "win2k.h"  
-#include <qapplication.h>
-#include <qcursor.h>
-#include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
+#include <qdatetime.h>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
-#include <kglobal.h>
-#include <kapp.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
-#include <stdio.h>
 
 using namespace KWinInternal;
 
@@ -80,23 +75,26 @@ static unsigned char minmax_bits[] = {
   0x21, 0x00, 0x21, 0x00, 0x3f, 0x00, 0x00, 0x00};
 
 static unsigned char question_bits[] = {
-  0x00, 0x00, 0x78, 0x00, 0xcc, 0x00, 0xc0, 0x00, 0x60, 0x00, 0x30, 0x00,
-  0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00};
+  0x00, 0x00, 0x3c, 0x00, 0x66, 0x00, 0x60, 0x00, 0x30, 0x00, 0x18, 0x00,
+  0x00, 0x00, 0x18, 0x00, 0x18, 0x00, 0x00, 0x00};
 
 
 // Up / Down titlebar button images
-static KPixmap *btnPix1=0; 
-static KPixmap *iBtnPix1=0;
-static KPixmap *btnDownPix1=0;
-static KPixmap *iBtnDownPix1=0;
+// Since we have no idea when this client will be unloaded from kwin, there is
+// no way to free dynamic memory. Hence, these pixmaps must be static.
+static KPixmap btnPix1; 
+static KPixmap iBtnPix1;
+static KPixmap btnDownPix1;
+static KPixmap iBtnDownPix1;
 
-static QColor btnForeground;
-static QPixmap *defaultMenuPix=0;
+static KPixmap miniBtnPix1; 
+static KPixmap iMiniBtnPix1;
+static KPixmap miniBtnDownPix1;
+static KPixmap iMiniBtnDownPix1;
 
-static bool pixmaps_created = false;
-
-// Configurable titlebar height not yet implemented.
-static int titleHeight = 18; 
+static QPixmap defaultMenuPix(kdelogo);
+static QColor  btnForeground;
+static bool    pixmaps_created = false;
 
 
 static void drawButtonFrame( KPixmap *pix, const QColorGroup &g, bool sunken )
@@ -128,7 +126,7 @@ static void drawButtonFrame( KPixmap *pix, const QColorGroup &g, bool sunken )
 }
 
 
-static void create_pixmaps()
+static void create_pixmaps( )
 {
     if(pixmaps_created)
         return;
@@ -140,61 +138,77 @@ static void create_pixmaps()
     // buttons (active/inactive, sunken/unsunken)
     QColorGroup g = options->colorGroup(Options::ButtonBg, true);
     QColor c = g.background();
-    btnPix1 = new KPixmap;
-    btnPix1->resize(16, 14);
-    btnDownPix1 = new KPixmap;
-    btnDownPix1->resize(16, 14);
-    iBtnPix1 = new KPixmap;
-    iBtnPix1->resize(16, 14);
-    iBtnDownPix1 = new KPixmap;
-    iBtnDownPix1->resize(16, 14);
+    btnPix1.resize(16, 14);
+    btnDownPix1.resize(16, 14);
+    iBtnPix1.resize(16, 14);
+    iBtnDownPix1.resize(16, 14);
+
+    miniBtnPix1.resize(12, 12);
+    miniBtnDownPix1.resize(12, 12);
+    iMiniBtnPix1.resize(12, 12);
+    iMiniBtnDownPix1.resize(12, 12);
 
     // Give Win2k what it never had ;)
     if(highcolor)
     {
-        KPixmapEffect::gradient(*btnPix1, c.light(130), c.dark(130),
+        KPixmapEffect::gradient(btnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*btnDownPix1, c.dark(130), c.light(130),
+        KPixmapEffect::gradient(btnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
+
+        KPixmapEffect::gradient(miniBtnPix1, c.light(130), c.dark(130),
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(miniBtnDownPix1, c.dark(130), c.light(130),
+                                KPixmapEffect::VerticalGradient);
+
         g = options->colorGroup(Options::ButtonBg, false);
         c = g.background();
-        KPixmapEffect::gradient(*iBtnPix1, c.light(130), c.dark(130),
+        KPixmapEffect::gradient(iBtnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*iBtnDownPix1, c.dark(130), c.light(130),
+        KPixmapEffect::gradient(iBtnDownPix1, c.dark(130), c.light(130),
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(iMiniBtnPix1, c.light(130), c.dark(130),
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(iMiniBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
     }
     else
     {
-        btnPix1->fill(c.rgb());
-        btnDownPix1->fill(c.rgb());
+        btnPix1.fill(c.rgb());
+        btnDownPix1.fill(c.rgb());
+        miniBtnPix1.fill(c.rgb());
+        miniBtnDownPix1.fill(c.rgb());
+
         g = options->colorGroup(Options::ButtonBg, false);
         c = g.background();
-        iBtnPix1->fill(c.rgb());
-        iBtnDownPix1->fill(c.rgb());
+        iBtnPix1.fill(c.rgb());
+        iBtnDownPix1.fill(c.rgb());
+        iMiniBtnPix1.fill(c.rgb());
+        iMiniBtnDownPix1.fill(c.rgb());
     }
 
     g = options->colorGroup(Options::ButtonBg, true);   
-    drawButtonFrame(btnPix1, g, false);
-    drawButtonFrame(btnDownPix1, g, true);
+    drawButtonFrame(&btnPix1, g, false);
+    drawButtonFrame(&btnDownPix1, g, true);
+    drawButtonFrame(&miniBtnPix1, g, false);
+    drawButtonFrame(&miniBtnDownPix1, g, true);
 
     g = options->colorGroup(Options::ButtonBg, false);   
-    drawButtonFrame(iBtnPix1, g, false);
-    drawButtonFrame(iBtnDownPix1, g, true);
+    drawButtonFrame(&iBtnPix1, g, false);
+    drawButtonFrame(&iBtnDownPix1, g, true);
+    drawButtonFrame(&iMiniBtnPix1, g, false);
+    drawButtonFrame(&iMiniBtnDownPix1, g, true);
 
     // Make sure button pixmaps contrast with the current colour scheme.
     if(qGray(options->color(Options::ButtonBg, true).rgb()) > 127)
-    {
         btnForeground = Qt::black;
-    }
     else
-    {
         btnForeground = Qt::white;
-    }
 }
 
 
 GalliumButton::GalliumButton(Client *parent, const char *name,
-                           const unsigned char *bitmap, bool large)
+                           const unsigned char *bitmap, bool menuButton, bool isMini)
     : QButton(parent, name, WStyle_Customize | WRepaintNoErase |
                             WResizeNoErase | WStyle_NoBorder )
 {
@@ -203,19 +217,25 @@ GalliumButton::GalliumButton(Client *parent, const char *name,
 
     client = parent;
 
-    // Use larger button for the menu.
-    if (large)
+    menuBtn = menuButton;
+    miniBtn = isMini;
+
+    // Use larger button for the menu, or mini-buttons for toolwindows.
+    if ( isMini ) 
     {
-       largeBtn = true;
-       setFixedSize(16, 16);
-       resize(16, 16);
-    }
-    else
-    {
-       largeBtn = false;
-       setFixedSize(16, 14);
-       resize(16, 14);
-    }
+       setFixedSize(12, 12);
+       resize(12, 12);
+    } else
+       if ( menuButton ) 
+       {
+          setFixedSize(16, 16);
+          resize(16, 16);
+       }
+       else 
+       {
+          setFixedSize(16, 14);
+          resize(16, 14);
+       }
 
     if(bitmap)
         setBitmap(bitmap);
@@ -224,7 +244,10 @@ GalliumButton::GalliumButton(Client *parent, const char *name,
 
 QSize GalliumButton::sizeHint() const
 {
-   if (largeBtn)
+   if ( miniBtn )
+      return(QSize(12, 12));
+
+   if ( menuBtn )
       return(QSize(16, 16));
    else
       return(QSize(16, 14));
@@ -251,7 +274,9 @@ void GalliumButton::setPixmap( const QPixmap &p )
     deco.resize(0, 0);
     pix = p;
 
-    if (largeBtn)
+    if (miniBtn)
+       setMask(QRect(0, 0, 12, 12));
+    else if (menuBtn)
        setMask(QRect(0, 0, 16, 16));
     else
        setMask(QRect(0, 0, 16, 14));
@@ -264,40 +289,20 @@ void GalliumButton::drawButton(QPainter *p)
 {
     if(pix.isNull())
     {
-
-        if(btnPix1)
+        if(client->isActive())
         {
-            if(client->isActive())
-            {
-                if(isDown())
-                    p->drawPixmap(0, 0, *btnDownPix1);
-                else
-                    p->drawPixmap(0, 0, *btnPix1);
-            }
-            else
-            {
-                if(isDown())
-                    p->drawPixmap(0, 0, *iBtnDownPix1);
-                else
-                    p->drawPixmap(0, 0, *iBtnPix1);
-            }
-        }
-        else
-        {
-            // 8 bit - draw button frame
-
-            QColorGroup g = options->colorGroup(Options::ButtonBg,
-                                                client->isActive());
-            int w = width();
-            int h = height();
-            p->fillRect(1, 1, w-2, h-2, isDown() ? g.mid() : g.button());
-            p->setPen(isDown() ? g.dark() : g.light());
-            p->drawLine(0, 0, w-1, 0);
-            p->drawLine(0, 0, 0, w-1);
-            p->setPen(isDown() ? g.light() : g.dark());
-            p->drawLine(w-1, 0, w-1, h-1);
-            p->drawLine(0, h-1, w-1, h-1);
-        }
+           if(isDown())
+               p->drawPixmap(0, 0, miniBtn ? miniBtnDownPix1 : btnDownPix1);
+           else
+               p->drawPixmap(0, 0, miniBtn ? miniBtnPix1 : btnPix1);
+         }
+         else
+           {
+              if(isDown())
+                  p->drawPixmap(0, 0, miniBtn ? iMiniBtnDownPix1 : iBtnDownPix1);
+              else
+                  p->drawPixmap(0, 0, miniBtn ? iMiniBtnPix1 : iBtnPix1);
+           }
 
         p->setPen( btnForeground );
         int xOff = (width()-10)/2;
@@ -307,33 +312,19 @@ void GalliumButton::drawButton(QPainter *p)
     else
     {
         p->fillRect(0, 0, width(), height(),
-            options->color(Options::TitleBar, client->isActive()));
-        p->drawPixmap(0, 0, pix);
+                    options->color(Options::TitleBar, client->isActive()));
+
+        if ( menuBtn && miniBtn )
+        {
+           QPixmap tmpPix; 
+
+           // Smooth scale the menu button pixmap
+           tmpPix.convertFromImage( pix.convertToImage().smoothScale(12, 12));
+
+           p->drawPixmap( 0, 0, tmpPix );            
+        } else
+            p->drawPixmap( 0, 0, pix );
     }
-}
-
-
-void GalliumClient::slotReset()
-{
-    if(btnPix1)
-    {
-        delete btnPix1;
-        delete btnDownPix1;
-        delete iBtnPix1;
-        delete iBtnDownPix1;
-    }
-
-    pixmaps_created = false;
-    create_pixmaps();
-
-            // 0 to 3   ( 4 buttons - Help, Max, Iconify, Close )
-    for(int i = GalliumClient::BtnHelp; i <= GalliumClient::BtnClose; i++)
-        if(button[i])
-            button[i]->reset();
-
-    // Reset the Menu?
-
-    repaint( false );  
 }
 
 
@@ -344,14 +335,18 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
 {
     setBackgroundMode( QWidget::NoBackground );
 
-    if(!defaultMenuPix)
-        defaultMenuPix = new QPixmap(kdelogo);
+    // Finally, toolwindows look small
+    if ( isTool() ) {
+       titleHeight = 14;
+       smallButtons = true;
+    } else {
+       titleHeight = 18;
+       smallButtons = false;
+    }
 
     lastButtonWidth = 0;
 
     create_pixmaps();
-    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
-    bool help = providesContextHelp();
 
     QGridLayout* g = new QGridLayout(this, 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
@@ -363,43 +358,36 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
-    button[BtnMenu] = new GalliumButton(this, "menu", NULL, true);
-    iconChange();
+    button[BtnMenu]    = new GalliumButton(this, "menu", NULL, true, smallButtons);
+    button[BtnClose]   = new GalliumButton(this, "close", close_bits, false, smallButtons);
+    button[BtnIconify] = new GalliumButton(this, "iconify", iconify_bits, false, smallButtons);
+    button[BtnMax]     = new GalliumButton(this, "maximize", maximize_bits, false, smallButtons);
     
-    connect(button[BtnMenu], SIGNAL(pressed()), this,
-            SLOT(menuButtonPressed()));
+    // Connect required stuff together
+    connect( button[BtnMenu],    SIGNAL(pressed()),      this, SLOT( menuButtonPressed() ));
+    connect( button[BtnClose],   SIGNAL( clicked() ),    this, SLOT( closeWindow() ));
+    connect( button[BtnIconify], SIGNAL( clicked() ),    this, SLOT( iconify() ));
+    connect( button[BtnMax],     SIGNAL( clicked() ),    this, SLOT( slotMaximize() ));
+    connect( options,            SIGNAL(resetClients()), this, SLOT( slotReset() ));
 
-    button[BtnClose] = new GalliumButton(this, "close", close_bits);
-
-    button[BtnIconify] = new GalliumButton(this, "iconify",
-                                           iconify_bits);
-    button[BtnMax] = new GalliumButton(this, "maximize",
-                                       maximize_bits);
-
-    if(help)
-    {
-        button[BtnHelp] = new GalliumButton(this, "help", question_bits);
-        connect(button[BtnHelp], SIGNAL( clicked() ), this, (SLOT( contextHelp() )));
-    }
-    else
-        button[BtnHelp] = NULL;
-
-    connect( button[BtnClose],   SIGNAL( clicked() ), this, ( SLOT( closeWindow() )));
-    connect( button[BtnIconify], SIGNAL( clicked() ), this, ( SLOT( iconify() )));
-    connect( button[BtnMax],     SIGNAL( clicked() ), this, ( SLOT( slotMaximize() )));
-
+    // Pack the titleBar hbox with items
     hb = new QHBoxLayout();
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 1, 1 );
     hb->addSpacing(2);
     hb->addWidget( button[BtnMenu] );  
-    titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding,
-                               QSizePolicy::Minimum);
+    titlebar = new QSpacerItem(10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum);
     hb->addItem(titlebar);
     hb->addSpacing(2);
 
-    if(help)
+    if( providesContextHelp() )
+    {
+        button[BtnHelp] = new GalliumButton(this, "help", question_bits, false, smallButtons);
+        connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
         hb->addWidget( button[BtnHelp] );
+    }
+    else
+        button[BtnHelp] = NULL;
 
     hb->addWidget( button[BtnIconify] );
     hb->addWidget( button[BtnMax] );
@@ -407,33 +395,56 @@ GalliumClient::GalliumClient( Workspace *ws, WId w, QWidget *parent,
     hb->addWidget( button[BtnClose] );
     hb->addSpacing(2);
 
+    // Hide buttons which are not required
+    // We can un-hide them if required later
     if ( !isMinimizable() )
-	button[BtnIconify]->hide();
+        button[BtnIconify]->hide();
     if ( !isMaximizable() )
-	button[BtnMax]->hide();
+        button[BtnMax]->hide();
 
     hiddenItems = false;
+
+    // Make sure that the menu button uses the correct mini-icon
+    iconChange();
 }
+
+
+void GalliumClient::slotReset()
+{
+    pixmaps_created = false;
+    create_pixmaps();
+
+    // 0 to 3   ( 4 buttons - Help, Max, Iconify, Close )
+    for(int i = GalliumClient::BtnHelp; i <= GalliumClient::BtnClose; i++)
+        if(button[i])
+            button[i]->reset();
+
+    // The menu is reset by iconChange()
+
+    repaint( false );  
+}
+
 
 void GalliumClient::iconChange()
 {
     if(!miniIcon().isNull())
         button[BtnMenu]->setPixmap(miniIcon());
     else
-        button[BtnMenu]->setPixmap(*defaultMenuPix);
+        button[BtnMenu]->setPixmap(defaultMenuPix);
 
     if (button[BtnMenu]->isVisible())
        button[BtnMenu]->repaint(false);
 }
 
+
 void GalliumClient::slotMaximize()
 {
     if ( button[BtnMax]->last_button == MidButton )
-	maximize( MaximizeVertical );
+       maximize( MaximizeVertical );
     else if ( button[BtnMax]->last_button == RightButton )
-	maximize( MaximizeHorizontal );
+       maximize( MaximizeHorizontal );
     else
-	maximize();
+       maximize();
 }
 
 
@@ -447,21 +458,25 @@ void GalliumClient::resizeEvent( QResizeEvent* e)
     {
         update(rect());
         int dx = 0;
-	int dy = 0;
-	if ( e->oldSize().width() != width() )
-	    dx = 32 + QABS( e->oldSize().width() -  width() );
-	if ( e->oldSize().height() != height() )
-	    dy = 8 + QABS( e->oldSize().height() -  height() );
-	if ( dy )
-	    update( 0, height() - dy + 1, width(), dy );
-        if ( dx ) {
-	    update( width() - dx + 1, 0, dx, height() );
-	    update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
-	    update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+        int dy = 0;
 
-            // titlebar needs no background
-	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
-	}
+	    if ( e->oldSize().width() != width() )
+	       dx = 32 + QABS( e->oldSize().width() -  width() );
+
+	    if ( e->oldSize().height() != height() )
+	       dy = 8 + QABS( e->oldSize().height() -  height() );
+
+	    if ( dy )
+	       update( 0, height() - dy + 1, width(), dy );
+
+        if ( dx ) 
+        {
+	       update( width() - dx + 1, 0, dx, height() );
+	       update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
+	       update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+           // Titlebar needs no paint event
+	       QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+	    }
     } 
 }
 
@@ -475,6 +490,7 @@ void GalliumClient::captionChange( const QString& )
 void GalliumClient::paintEvent( QPaintEvent* )
 {
     bool hicolor = QPixmap::defaultDepth() > 8;
+    int fontoffset = 1;
 
     QPainter p(this);
 
@@ -541,10 +557,19 @@ void GalliumClient::paintEvent( QPaintEvent* )
 
         // Since drawing the gradient is (relatively) slow, it is best 
         // to draw the title text on the pixmap.
-        p2.setFont(options->font(true));
+
+        // Reduce the font size and weight for toolwindows.
+        QFont fnt = options->font(true);
+        if ( smallButtons )
+        {
+           fnt.setPointSize( fnt.pointSize() - 2 ); // Shrink font by 2 pt.
+           fnt.setWeight( QFont::Normal ); 
+           fontoffset = 0;
+        }
+        p2.setFont( fnt );
         p2.setPen( options->color(Options::Font, isActive() ));
-        p2.drawText(r.x(), 1, r.width()-3, r.height()-1,
-                   AlignLeft | AlignVCenter, caption() );
+        p2.drawText( r.x(), fontoffset, r.width()-3, r.height()-1,
+                     AlignLeft | AlignVCenter, caption() );
         p2.end();
 
         p.drawPixmap( 4, 4, *titleBuffer );
@@ -558,9 +583,16 @@ void GalliumClient::paintEvent( QPaintEvent* )
        p.fillRect( 4, 4, w-8, titleHeight, c1 );
     
        // Draw the title text.
-       p.setFont(options->font(true));
+       QFont fnt = options->font(true);
+       if ( smallButtons )
+       {
+          fnt.setPointSize( fnt.pointSize() - 2 ); // Shrink font by 2 pt.
+          fnt.setWeight( QFont::Normal ); 
+          fontoffset = 0;
+       }
+       p.setFont( fnt );
        p.setPen(options->color(Options::Font, isActive() ));
-       p.drawText(r.x()+4, r.y()+1, r.width()-3, r.height()-1,
+       p.drawText(r.x()+4, r.y()+fontoffset, r.width()-3, r.height()-1,
                   AlignLeft | AlignVCenter, caption() );
    }
 

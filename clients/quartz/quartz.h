@@ -1,17 +1,18 @@
 /*
-  Gallium-Win2k KWin client
-  
+  Gallium-Quartz KWin client
+
   Copyright 2001
     Karol Szwed <karlmail@usa.net>
     http://gallium.n3.net/
 
-  Based on the default KWin client.
+  Based upon the Win2K kwin client, which is based on the
+  KDE default client.
 
-  Major code cleanups, bug fixes and updates to support toolwindows 3/2001 - KS
+  Includes mini titlebars for ToolWindow Support.
 */
 
-#ifndef __KDEGALLIUM_WIN2K_H
-#define __KDEGALLIUM_WIN2K_H
+#ifndef __KDEGALLIUM_QUARTZ_H
+#define __KDEGALLIUM_QUARTZ_H
 
 #include <qbutton.h>
 #include <qbitmap.h>
@@ -23,12 +24,12 @@ class QHBoxLayout;
 
 namespace KWinInternal {
 
-class GalliumButton : public QButton
+class QuartzButton : public QButton
 {
 
 public:
-    GalliumButton(Client *parent=0, const char *name=0, const unsigned char *bitmap=NULL,
-                  bool menuButton=false, bool isMini=false );
+    QuartzButton(Client *parent=0, const char *name=0, bool largeButton=true,
+                 const unsigned char *bitmap=NULL );
     void setBitmap(const unsigned char *bitmap);
     void setPixmap(const QPixmap &p);
     void reset();
@@ -39,7 +40,7 @@ public:
 protected:
     void mousePressEvent( QMouseEvent* e )
     {
-	   last_button = e->button();
+       last_button = e->button();
        QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
                         LeftButton, e->state() );
 	   QButton::mousePressEvent( &me );
@@ -47,8 +48,8 @@ protected:
 
     void mouseReleaseEvent( QMouseEvent* e )
     {
-	   last_button = e->button();
-	   QMouseEvent me ( e->type(), e->pos(), e->globalPos(), 
+       last_button = e->button();
+	   QMouseEvent me ( e->type(), e->pos(), e->globalPos(),
                         LeftButton, e->state() );
 	   QButton::mouseReleaseEvent( &me );
     }
@@ -59,19 +60,18 @@ protected:
     QBitmap  deco;
     QPixmap  pix;
     Client*  client;
-    bool     menuBtn;
-    bool     miniBtn;
+    bool     large;
 };
 
 
-class GalliumClient : public KWinInternal::Client
+class QuartzClient : public KWinInternal::Client
 {
     Q_OBJECT
 
 public:
     enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, BtnMenu, BtnCount };
-    GalliumClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
-    ~GalliumClient() {;}
+    QuartzClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
+    ~QuartzClient() {;}
     int titleHeight;
 
 protected:
@@ -92,12 +92,12 @@ protected slots:
     void menuButtonPressed();
 
 private:
-    GalliumButton* button[ GalliumClient::BtnCount ];
-    int            lastButtonWidth;
-    QSpacerItem*   titlebar;
-    bool           hiddenItems;
-    QHBoxLayout*   hb;
-    bool           smallButtons;
+    QuartzButton* button[ QuartzClient::BtnCount ];
+    int           lastButtonWidth;
+    QSpacerItem*  titlebar;
+    bool          hiddenItems;
+    QHBoxLayout*  hb;
+    bool          largeButtons;
 };
 
 };
