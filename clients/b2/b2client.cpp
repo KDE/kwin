@@ -322,7 +322,7 @@ void B2Titlebar::paintEvent(QPaintEvent *)
 void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
 {
     client->workspace()->performWindowOperation( client, options->operationTitlebarDblClick() );
-    client->workspace()->requestFocus( client );
+    // ?? client->workspace()->requestFocus( client );
 }
 
 void B2Titlebar::mousePressEvent( QMouseEvent * e )
@@ -429,7 +429,6 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
         if (button[i])
             button[i]->setBg(c);
 
-    titlebar->setBackgroundColor(c);
     titlebar->recalcBuffer();
     positionButtons();
 
