@@ -426,14 +426,14 @@ bool Rules::applyGeometry( QRect& rect, bool init ) const
 
 bool Rules::applyPosition( QPoint& pos, bool init ) const
     {
-    if( pos != invalidPoint && checkSetRule( positionrule, init ))
+    if( this->position != invalidPoint && checkSetRule( positionrule, init ))
         pos = this->position;
     return checkSetStop( positionrule );
     }
 
 bool Rules::applySize( QSize& s, bool init ) const
     {
-    if( size.isValid() && checkSetRule( sizerule, init ))
+    if( this->size.isValid() && checkSetRule( sizerule, init ))
         s = this->size;
     return checkSetStop( sizerule );
     }
