@@ -65,6 +65,11 @@ Atoms::Atoms()
     atoms[n] = &net_avoid_spec;
     names[n++] = (char *) "_NET_AVOID_SPEC";
 
+     // FIXME: standardize?  KWIN_ prefix is deliberate so this isn't missed
+     //        set by kdelibs/kio/kmapnotify.c
+    atoms[n] = &kwin_initial_desktop;
+    names[n++] = (char *) "KWIN_INITIAL_DESKTOP"; // _NET_INITIAL_DESKTOP?
+
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
 	*atoms[i] = atoms_return[i];

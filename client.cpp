@@ -328,7 +328,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 {
     avoid = false;
     anchor = AnchorNorth;
-	    
+
     wspace = ws;
     win = w;
     XWindowAttributes attr;
@@ -368,6 +368,33 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 	setSticky( TRUE );
 
     updateAvoidPolicy();
+
+    // should we open this window on a certain desktop?
+    Atom type;
+    int format;
+    unsigned long nitems, bytes;
+    long *data = 0L;
+
+    int status=XGetWindowProperty(qt_xdisplay(), w, atoms->kwin_initial_desktop, 0, 1L, 
+        False, atoms->kwin_initial_desktop, &type, &format, &nitems, &bytes, 
+        (unsigned char **)&data);
+
+    if (status==Success) {
+        if (nitems>0)
+            desk=data[0]; // window had the initial desktop property!
+
+        XFree((char *)data);
+    }
+
+    // if this window is transient, ensure that it is opened on the
+    // same window as its parent.  this is necessary when an application
+    // starts up on a different desktop than is currently displayed
+    //
+    // are there any other cases we need to check?
+    //
+    if (transient_for != None)
+        desk=KWM::desktop(transient_for);
+
 }
 
 /*!
@@ -450,10 +477,13 @@ void Client::manage( bool isMapped )
 	    XFree(hints);
     }
 
-    // initial desktop placement
+    // initial desktop placement - note we don't clobber desk if it is
+    // set to some value, in case the initial desktop code in the
+    // constructor has already set a value for us
     if ( info ) {
 	desk = info->desktop;
-    } else {
+    } else if (desk<=0) {
+        
 	// assume window wants to be visible on the current desktop
 	desk =  workspace()->currentDesktop();
 
@@ -461,8 +491,8 @@ void Client::manage( bool isMapped )
 	desk = KWM::desktop( win );
     }
 
+    // initial desktop code needs this now 
     KWM::moveToDesktop( win, desk ); // KDE 1.x compatibility
-
 
     setMappingState( state );
     if ( state == NormalState && isOnDesktop( workspace()->currentDesktop() ) ) {
@@ -605,7 +635,9 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
 	show();
 	break;
     case NormalState:
-	show(); // for safety
+	// only show window if we're on current desktop
+	if (desk == KWM::currentDesktop())
+		show(); // for safety
 	break;
     }
 

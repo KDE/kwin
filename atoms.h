@@ -31,6 +31,8 @@ public:
     Atom net_kde_docking_windows;
     Atom net_avoid_spec;
 
+    Atom kwin_initial_desktop;
+
 };
 
 
