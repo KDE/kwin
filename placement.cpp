@@ -441,7 +441,7 @@ void Placement::placeOnMainWindow(Client* c)
         }
     if( place_on == NULL )
         {
-        if( mainwindows.count() != 2 )
+        if( mainwindows.count() != 1 )
             {
             placeCentered( c );
             return;
