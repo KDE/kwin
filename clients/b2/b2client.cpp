@@ -619,7 +619,7 @@ void B2Client::showEvent(QShowEvent *)
     titlebar->repaint(false);
 }
 
-KDecoration::MousePosition B2Client::mousePosition( const QPoint& p ) const
+KDecoration::Position B2Client::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
     QRect t = titlebar->geometry();
@@ -630,36 +630,36 @@ KDecoration::MousePosition B2Client::mousePosition( const QPoint& p ) const
 
     if ( p.x() > t.right() ) {
         if ( p.y() <= ly + range && p.x() >= width()-range)
-            return TopRight2;
+            return PositionTopRight;
         else if ( p.y() <= ly + thickness )
-            return Top;
+            return PositionTop;
     } else if ( p.x() < bar_x_ofs ) {
         if ( p.y() <= ly + range && p.x() <= range )
-            return TopLeft2;
+            return PositionTopLeft;
         else if ( p.y() <= ly + thickness )
-            return Top;
+            return PositionTop;
     } else if ( p.y() < ly ) {
         if (p.x() > bar_x_ofs + thickness &&
 		p.x() < lx - thickness && p.y() > thickness)
             return KDecoration::mousePosition(p);
         if (p.x() > bar_x_ofs + range && p.x() < lx - range)
-            return Top;
+            return PositionTop;
         if ( p.y() <= range ) {
             if ( p.x() <= bar_x_ofs + range )
-                return TopLeft2;
-            else return TopRight2;
+                return PositionTopLeft;
+            else return PositionTopRight;
         } else {
             if ( p.x() <= bar_x_ofs + range )
-                return Left;
-            else return Right;
+                return PositionLeft;
+            else return PositionRight;
         }
     }
 
     if (p.y() >= height() - 8 + bb) {
         /* the normal Client:: only wants border of 4 pixels */
-	if (p.x() <= range) return BottomLeft2;
-	if (p.x() >= width() - range) return BottomRight2;
-	return Bottom;
+	if (p.x() <= range) return PositionBottomLeft;
+	if (p.x() >= width() - range) return PositionBottomRight;
+	return PositionBottom;
     }
 
     return KDecoration::mousePosition(p);

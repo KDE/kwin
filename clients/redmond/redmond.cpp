@@ -720,33 +720,33 @@ void RedmondDeco::calcHiddenButtons()
    }
 }
 
-RedmondDeco::MousePosition RedmondDeco::mousePosition(const QPoint &p) const
+RedmondDeco::Position RedmondDeco::mousePosition(const QPoint &p) const
 {
-	MousePosition m = Nowhere;
+	Position m = PositionCenter;
 
     const int range = 14 + 3*borderWidth/2;
 
     if ( ( p.x() > borderWidth && p.x() < width() - borderWidth )
          && ( p.y() > borderWidth && p.y() < height() - borderWidth ) )
-        m = Center;
+        m = PositionCenter;
     else if ( p.y() <= range && p.x() <= range)
-        m = TopLeft2;
+        m = PositionTopLeft;
     else if ( p.y() >= height()-range && p.x() >= width()-range)
-        m = BottomRight2;
+        m = PositionBottomRight;
     else if ( p.y() >= height()-range && p.x() <= range)
-        m = BottomLeft2;
+        m = PositionBottomLeft;
     else if ( p.y() <= range && p.x() >= width()-range)
-        m = TopRight2;
+        m = PositionTopRight;
     else if ( p.y() <= borderWidth )
-        m = Top;
+        m = PositionTop;
     else if ( p.y() >= height()-borderWidth )
-        m = Bottom;
+        m = PositionBottom;
     else if ( p.x() <= borderWidth )
-        m = Left;
+        m = PositionLeft;
     else if ( p.x() >= width()-borderWidth )
-        m = Right;
+        m = PositionRight;
     else
-        m = Center;
+        m = PositionCenter;
 
 	return m;
 }

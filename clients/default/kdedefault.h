@@ -105,7 +105,7 @@ class KDEDefaultClient : public KDecoration
 		void iconChange();
 		void desktopChange();
                 void shadeChange();
-		MousePosition mousePosition(const QPoint &) const;
+		Position mousePosition(const QPoint &) const;
 
 	protected slots:
 		void slotMaximize();

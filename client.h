@@ -284,8 +284,8 @@ class Client : public QObject, public KDecorationDefines
     // use Workspace::createClient()
         virtual ~Client(); // use destroyClient() or releaseWindow()
 
-        MousePosition mousePosition( const QPoint& ) const;
-        void setCursor( MousePosition m );
+        Position mousePosition( const QPoint& ) const;
+        void setCursor( Position m );
         void setCursor( const QCursor& c );
 
         void  animateMinimizeOrUnminimize( bool minimize );
@@ -384,14 +384,14 @@ class Client : public QObject, public KDecorationDefines
         bool unrestrictedMoveResize;
         bool isMove() const 
             {
-            return moveResizeMode && mode == Center;
+            return moveResizeMode && mode == PositionCenter;
             }
         bool isResize() const 
             {
-            return moveResizeMode && !isMove();
+            return moveResizeMode && mode != PositionCenter;
             }
 
-        MousePosition mode;
+        Position mode;
         QPoint moveOffset;
         QPoint invertedMoveOffset;
         QRect moveResizeGeom;

@@ -727,9 +727,9 @@ void LaptopClient::updateActiveBuffer( )
     p.end();
 }
 
-LaptopClient::MousePosition LaptopClient::mousePosition(const QPoint & p) const
+LaptopClient::Position LaptopClient::mousePosition(const QPoint & p) const
 {
-  MousePosition m = Nowhere;
+  Position m = PositionCenter;
   int range = 8 + 3*handleSize/2;
 
   if (p.y() < (height() - handleSize + 1))
@@ -737,11 +737,11 @@ LaptopClient::MousePosition LaptopClient::mousePosition(const QPoint & p) const
 
   else {
     if (p.x() >= (width() - range))
-      m = BottomRight2;
+      m = PositionBottomRight;
     else if (p.x() <= range)
-      m = BottomLeft2;
+      m = PositionBottomLeft;
     else
-      m = Bottom;
+      m = PositionBottom;
   }
 
   return m;

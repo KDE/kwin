@@ -294,7 +294,7 @@ WebClient::activeChange()
   widget()->repaint();
 }
 
-  WebClient::MousePosition
+  WebClient::Position
 WebClient::mousePosition(const QPoint & p) const
 {
   int x = p.x();
@@ -314,27 +314,27 @@ WebClient::mousePosition(const QPoint & p) const
       return Client::Top;
     else
 #endif
-      return KDecoration::Center;
+      return KDecoration::PositionCenter;
   }
   else if (y < height() - borderSize_)
   {
     if (x < borderSize_)
-      return KDecoration::Left;
+      return KDecoration::PositionLeft;
     else
       if (x > width() - borderSize_)
-        return KDecoration::Right;
+        return KDecoration::PositionRight;
       else
-        return KDecoration::Center;
+        return KDecoration::PositionCenter;
   }
   else
   {
     if (x < 12 + corner)
-      return KDecoration::BottomLeft2;
+      return KDecoration::PositionBottomLeft;
     else
       if (x > width() - corner)
-        return KDecoration::BottomRight2;
+        return KDecoration::PositionBottomRight;
       else
-        return KDecoration::Bottom;
+        return KDecoration::PositionBottom;
   }
 
   return KDecoration::mousePosition(p);

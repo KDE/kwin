@@ -43,22 +43,36 @@ class KDecorationFactory;
 class KDecorationDefines
 {
 public:
-    enum MousePosition { // FRAME nejake lepsi pojmenovani
-    	    Nowhere, TopLeft2 , BottomRight2, BottomLeft2, TopRight2, Top, Bottom, Left, Right, Center
-	};
+    /**
+     * These values represent positions inside an area
+     */
+    enum Position
+        { // without prefix, they'd conflict with Qt::TopLeft etc. :(
+        PositionCenter         = 0x00,
+        PositionLeft           = 0x01,
+        PositionRight          = 0x02,
+        PositionTop            = 0x04,
+        PositionBottom         = 0x08,
+        PositionTopLeft        = PositionLeft | PositionTop,
+        PositionTopRight       = PositionRight | PositionTop,
+        PositionBottomLeft     = PositionLeft | PositionBottom,
+        PositionBottomRight    = PositionRight | PositionBottom
+        };
     /**
      * Maximize mode. These values specify how a window is maximized.
      */
     // these values are written to session files, don't change the order
-    enum MaximizeMode {
-	    MaximizeRestore    = 0, ///< The window is not maximized in any direction.
-	    MaximizeVertical   = 1, ///< The window is maximized vertically.
-	    MaximizeHorizontal = 2, ///< The window is maximized horizontally.
-	    /// Equal to @p MaximizeVertical | @p MaximizeHorizontal
-	    MaximizeFull = MaximizeVertical | MaximizeHorizontal 
-    };
+    enum MaximizeMode
+        {
+	MaximizeRestore    = 0, ///< The window is not maximized in any direction.
+	MaximizeVertical   = 1, ///< The window is maximized vertically.
+	MaximizeHorizontal = 2, ///< The window is maximized horizontally.
+	/// Equal to @p MaximizeVertical | @p MaximizeHorizontal
+	MaximizeFull = MaximizeVertical | MaximizeHorizontal 
+        };
 
-    enum WindowOperation{
+    enum WindowOperation
+        {
         MaximizeOp = 5000,
         RestoreOp,
         MinimizeOp,
@@ -79,7 +93,7 @@ public:
         FullScreenOp,
         NoBorderOp,
         NoOp
-    };
+        };
     /**
      * Basic color types that should be recognized by all decoration styles.
      * Decorations are not required to implement all the colors, but for the ones that
@@ -476,7 +490,13 @@ class KDecoration
 	 */
         virtual void init() = 0; // called once right after created
 	
-	virtual MousePosition mousePosition( const QPoint& p ) const = 0;
+        /**
+         * This function should return mouse cursor position in the decoration.
+         * Positions at the edge will result in window resizing with mouse button
+         * pressed, center position will result in moving.
+         */
+	virtual Position mousePosition( const QPoint& p ) const = 0;
+
 	/**
 	 * This function should return the distance from each window side to the inner
 	 * window. The sizes may depend on the state of the decorated window, such as

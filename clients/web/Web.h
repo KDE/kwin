@@ -65,7 +65,7 @@ namespace Web
       virtual void activeChange();
       virtual void iconChange();
       virtual void doShape();
-      virtual MousePosition mousePosition(const QPoint &) const;
+      virtual Position mousePosition(const QPoint &) const;
       virtual void borders(int&, int&, int&, int&) const;
       virtual QSize minimumSize() const;
 

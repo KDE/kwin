@@ -99,7 +99,7 @@ Client::Client( Workspace *ws )
     mapping_state = WithdrawnState;
     desk = 0; // no desktop yet
 
-    mode = Nowhere;
+    mode = PositionCenter;
     buttonDown = FALSE;
     moveResizeMode = FALSE;
 
@@ -1538,7 +1538,7 @@ NET::WindowType Client::windowType( bool strict, int supported_types ) const
   Sets an appropriate cursor shape for the logical mouse position \a m
 
  */
-void Client::setCursor( MousePosition m )
+void Client::setCursor( Position m )
     {
     if ( !isResizable() || isShade() || noBorder())
         {
@@ -1547,20 +1547,20 @@ void Client::setCursor( MousePosition m )
         }
     switch ( m ) 
         {
-        case TopLeft2:
-        case BottomRight2:
+        case PositionTopLeft:
+        case PositionBottomRight:
             setCursor( sizeFDiagCursor );
             break;
-        case BottomLeft2:
-        case TopRight2:
+        case PositionBottomLeft:
+        case PositionTopRight:
             setCursor( sizeBDiagCursor );
             break;
-        case Top:
-        case Bottom:
+        case PositionTop:
+        case PositionBottom:
             setCursor( sizeVerCursor );
             break;
-        case Left:
-        case Right:
+        case PositionLeft:
+        case PositionRight:
             setCursor( sizeHorCursor );
             break;
         default:
@@ -1580,11 +1580,11 @@ void Client::setCursor( const QCursor& c )
     XDefineCursor( qt_xdisplay(), frameId(), cursor.handle());
     }
 
-Client::MousePosition Client::mousePosition( const QPoint& p ) const
+Client::Position Client::mousePosition( const QPoint& p ) const
     {
     if( decoration != NULL )
         return decoration->mousePosition( p );
-    return Center;
+    return PositionCenter;
     }
 
 void Client::updateAllowedActions( bool force )

@@ -102,7 +102,7 @@ class QuartzClient : public KDecoration
 		virtual void activeChange();
 		virtual void iconChange();
 		virtual void desktopChange();
-		virtual QuartzClient::MousePosition mousePosition(const QPoint &point) const;
+		virtual QuartzClient::Position mousePosition(const QPoint &point) const;
 		virtual void borders(int&, int&, int&, int&) const;
 		virtual QSize minimumSize() const;
 

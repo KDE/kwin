@@ -1507,7 +1507,7 @@ void KeramikClient::mouseDoubleClickEvent( QMouseEvent *e )
 }
 
 
-KeramikClient::MousePosition KeramikClient::mousePosition( const QPoint &p ) const
+KeramikClient::Position KeramikClient::mousePosition( const QPoint &p ) const
 {
 	int titleBaseY = (largeTitlebar ? 3 : 0);
 
@@ -1523,7 +1523,7 @@ KeramikClient::MousePosition KeramikClient::mousePosition( const QPoint &p ) con
 			if ( (p.y() < titleBaseY + 3 && p.x() < leftBorder + 11) ||
 					(p.y() < titleBaseY + 6 && p.x() < leftBorder + 6) ||
 					(p.y() < titleBaseY + 11 && p.x() < leftBorder + 3) )
-				return TopLeft2;
+				return PositionTopLeft;
 		}
 
 		// Test for the top right corner
@@ -1531,16 +1531,16 @@ KeramikClient::MousePosition KeramikClient::mousePosition( const QPoint &p ) con
 			if ( (p.y() < titleBaseY + 3 && p.x() > rightBorder - 11) ||
 					(p.y() < titleBaseY + 6 && p.x() > rightBorder - 6) ||
 					(p.y() < titleBaseY + 11 && p.x() > rightBorder - 3) )
-				return TopRight2;
+				return PositionTopRight;
 		}
 
 		// Test for the top border
 		if ( p.y() <= 3 || (p.y() <= titleBaseY+3 &&
 					(p.x() < captionRect.left() || p.x() > captionRect.right()) ) )
-			return Top;
+			return PositionTop;
 
 		// The cursor must be over the center of the titlebar.
-		return Center;
+		return PositionCenter;
 	}
 
 	// Test the sides
@@ -1548,39 +1548,39 @@ KeramikClient::MousePosition KeramikClient::mousePosition( const QPoint &p ) con
 		// Test for the left side
 		if ( p.x() < leftBorder ) {
 			if ( p.y() < height() - bottomCornerSize )
-				return Left;
+				return PositionLeft;
 			else
-				return BottomLeft2;
+				return PositionBottomLeft;
 		}
 
 		// Test for the right side
 		else if ( p.x() > rightBorder ) {
 			if ( p.y() < height() - bottomCornerSize )
-				return Right;
+				return PositionRight;
 			else
-				return BottomRight2;
+				return PositionBottomRight;
 		}
 
 		// The cursor must be over the center of the window
-		return Center;
+		return PositionCenter;
 	}
 
 	// Test the grab bar / bottom border
 	else {
 		// Test for the bottom left corner
 		if ( p.x() < bottomCornerSize )
-			return BottomLeft2;
+			return PositionBottomLeft;
 
 		// Test for the bottom right corner
 		else if ( p.x() > width() - bottomCornerSize - 1 )
-			return BottomRight2;
+			return PositionBottomRight;
 
 		// The cursor must be over the bottom border
-		return Bottom;
+		return PositionBottom;
 	}
 
 	// We should never get here
-	return Nowhere;
+	return PositionCenter;
 }
 
 

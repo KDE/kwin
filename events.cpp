@@ -825,7 +825,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
         {
         if ( !buttonDown ) 
             {
-            mode = Nowhere;
+            mode = PositionCenter;
             setCursor( arrowCursor );
             }
         bool lostMouse = !rect().contains( QPoint( e->x, e->y ) );
@@ -1230,7 +1230,7 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
         return true; // care only about the whole frame
     if ( !buttonDown ) 
         {
-        MousePosition newmode = mousePosition( QPoint( x, y ));
+        Position newmode = mousePosition( QPoint( x, y ));
         if( newmode != mode )
             setCursor( newmode );
         mode = newmode;
@@ -1344,16 +1344,16 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
         performMouseCommand( Options::MouseMove, QPoint( x_root, y_root ));
     else if( direction >= NET::TopLeft && direction <= NET::Left ) 
         {
-        static const MousePosition convert[] =
+        static const Position convert[] =
             {
-            TopLeft2,
-            Top,
-            TopRight2,
-            Right,
-            BottomRight2,
-            Bottom,
-            BottomLeft2,
-            Left
+            PositionTopLeft,
+            PositionTop,
+            PositionTopRight,
+            PositionRight,
+            PositionBottomRight,
+            PositionBottom,
+            PositionBottomLeft,
+            PositionLeft
             };
         if(!isResizable() || isShade())
             return;

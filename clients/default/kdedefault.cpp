@@ -1215,9 +1215,9 @@ void KDEDefaultClient::calcHiddenButtons()
 }
 
 
-KDecoration::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) const
+KDecoration::Position KDEDefaultClient::mousePosition( const QPoint& p ) const
 {
-	MousePosition m = Nowhere;
+	Position m = PositionCenter;
 
 	int bottomSize  = (showGrabBar && isResizable()) ? grabBorderWidth : borderWidth;
 
@@ -1225,36 +1225,36 @@ KDecoration::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) co
 
     if ( ( p.x() > borderWidth && p.x() < width() - borderWidth )
          && ( p.y() > 4 && p.y() < height() - bottomSize ) )
-        m = Center;
+        m = PositionCenter;
     else if ( p.y() <= range && p.x() <= range)
-        m = TopLeft2;
+        m = PositionTopLeft;
     else if ( p.y() >= height()-range && p.x() >= width()-range)
-        m = BottomRight2;
+        m = PositionBottomRight;
     else if ( p.y() >= height()-range && p.x() <= range)
-        m = BottomLeft2;
+        m = PositionBottomLeft;
     else if ( p.y() <= range && p.x() >= width()-range)
-        m = TopRight2;
+        m = PositionTopRight;
     else if ( p.y() <= 4 )
-        m = Top;
+        m = PositionTop;
     else if ( p.y() >= height()-bottomSize )
-        m = Bottom;
+        m = PositionBottom;
     else if ( p.x() <= borderWidth )
-        m = Left;
+        m = PositionLeft;
     else if ( p.x() >= width()-borderWidth )
-        m = Right;
+        m = PositionRight;
     else
-        m = Center;
+        m = PositionCenter;
 
 	// Modify the mouse position if we are using a grab bar.
 	if (showGrabBar && isResizable())
 		if (p.y() >= (height() - grabBorderWidth))
 		{
 			if (p.x() >= (width() - 2*borderWidth - 12))
-				m = BottomRight2;
+				m = PositionBottomRight;
 			else if (p.x() <= 2*borderWidth + 12)
-				m = BottomLeft2;
+				m = PositionBottomLeft;
 			else
-			m = Bottom;
+			m = PositionBottom;
 		}
 
 	return m;

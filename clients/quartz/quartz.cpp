@@ -872,29 +872,29 @@ void QuartzClient::activeChange()
 }
 
 
-QuartzClient::MousePosition QuartzClient::mousePosition(const QPoint &point) const
+QuartzClient::Position QuartzClient::mousePosition(const QPoint &point) const
 {
 	const int corner = 3*borderSize/2 + 18;
-	MousePosition pos = Center;
+	Position pos = PositionCenter;
 
 	QRect r(widget()->rect());
 
 	if(point.y() < (borderSize-1)) {
-		if(point.x() < corner)                   return TopLeft2;
-		else if(point.x() > (r.right()-corner))  return TopRight2;
-		else                                     return Top;
+		if(point.x() < corner)                   return PositionTopLeft;
+		else if(point.x() > (r.right()-corner))  return PositionTopRight;
+		else                                     return PositionTop;
 	} else if(point.y() > (r.bottom()-borderSize)) {
-		if(point.x() < corner)                   return BottomLeft2;
-		else if(point.x() > (r.right()-corner))  return BottomRight2;
-		else                                     return Bottom;
+		if(point.x() < corner)                   return PositionBottomLeft;
+		else if(point.x() > (r.right()-corner))  return PositionBottomRight;
+		else                                     return PositionBottom;
 	} else if(point.x() < borderSize) {
-		if(point.y() < corner)                   return TopLeft2;
-		else if(point.y() > (r.bottom()-corner)) return BottomLeft2;
-		else                                     return Left;
+		if(point.y() < corner)                   return PositionTopLeft;
+		else if(point.y() > (r.bottom()-corner)) return PositionBottomLeft;
+		else                                     return PositionLeft;
 	} else if(point.x() > (r.right()-borderSize)) {
-		if(point.y() < corner)                   return TopRight2;
-		else if(point.y() > (r.bottom()-corner)) return BottomRight2;
-		else                                     return Right;
+		if(point.y() < corner)                   return PositionTopRight;
+		else if(point.y() > (r.bottom()-corner)) return PositionBottomRight;
+		else                                     return PositionRight;
 	}
 
 	return pos;

@@ -300,36 +300,36 @@ void KDecoration::ungrabXServer()
     bridge_->grabXServer( false );
     }
     
-KDecoration::MousePosition KDecoration::mousePosition( const QPoint& p ) const
+KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
     const int border = 4;
 
-    MousePosition m = Nowhere;
+    Position m = PositionCenter;
 
 
     if ( ( p.x() > border && p.x() < widget()->width() - border )
          && ( p.y() > border && p.y() < widget()->height() - border ) )
-        return Center;
+        return PositionCenter;
 
     if ( p.y() <= range && p.x() <= range)
-        m = TopLeft2;
+        m = PositionTopLeft;
     else if ( p.y() >= widget()->height()-range && p.x() >= widget()->width()-range)
-        m = BottomRight2;
+        m = PositionBottomRight;
     else if ( p.y() >= widget()->height()-range && p.x() <= range)
-        m = BottomLeft2;
+        m = PositionBottomLeft;
     else if ( p.y() <= range && p.x() >= widget()->width()-range)
-        m = TopRight2;
+        m = PositionTopRight;
     else if ( p.y() <= border )
-        m = Top;
+        m = PositionTop;
     else if ( p.y() >= widget()->height()-border )
-        m = Bottom;
+        m = PositionBottom;
     else if ( p.x() <= border )
-        m = Left;
+        m = PositionLeft;
     else if ( p.x() >= widget()->width()-border )
-        m = Right;
+        m = PositionRight;
     else
-        m = Center;
+        m = PositionCenter;
     return m;
 }
 

@@ -144,7 +144,7 @@ namespace Keramik {
 			~KeramikClient();
                         virtual void init();
 			virtual void reset( unsigned long changed );
-			virtual MousePosition mousePosition( const QPoint& p ) const;
+			virtual Position mousePosition( const QPoint& p ) const;
 		    	virtual void borders( int& left, int& right, int& top, int& bottom ) const;
 			virtual void resize( const QSize& s );
 			virtual QSize minimumSize() const;

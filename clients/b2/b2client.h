@@ -110,7 +110,7 @@ protected:
     void maximizeChange();
     void iconChange();
     void doShape();
-    MousePosition mousePosition( const QPoint& p ) const;
+    Position mousePosition( const QPoint& p ) const;
     void resize(const QSize&);
     void borders(int &, int &, int &, int &) const;
     QSize minimumSize() const;

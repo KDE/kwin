@@ -87,7 +87,7 @@ protected:
 	void calcHiddenButtons();
 
 //	New stuff.
-	MousePosition mousePosition(const QPoint &) const;
+	Position mousePosition(const QPoint &) const;
 	void borders(int &, int &, int &, int &) const;
 	void resize(const QSize &);
 	QSize minimumSize() const;

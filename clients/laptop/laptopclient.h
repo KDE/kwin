@@ -70,7 +70,7 @@ protected:
     void maximizeChange();
     void doShape();
     void activeChange();
-    MousePosition mousePosition(const QPoint &) const;
+    Position mousePosition(const QPoint &) const;
     void desktopChange();
     void shadeChange();
     void iconChange();

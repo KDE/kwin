@@ -660,9 +660,9 @@ void ModernSys::activeChange()
 }
 
 
-ModernSys::MousePosition ModernSys::mousePosition( const QPoint& p) const
+ModernSys::Position ModernSys::mousePosition( const QPoint& p) const
 {
-    MousePosition m = KDecoration::mousePosition( p );
+    Position m = KDecoration::mousePosition( p );
 
     const int range = 14 + 3*border_width/2;
     const int border = show_handle ? handle_width + border_width : border_width;
@@ -671,25 +671,25 @@ ModernSys::MousePosition ModernSys::mousePosition( const QPoint& p) const
 
     if ( ( p.x() > border_width && p.x() < width() - border )
          && ( p.y() > 4 && p.y() < height() - border ) )
-        m = Center;
+        m = PositionCenter;
     else if ( p.y() <= range && p.x() <= range)
-        m = TopLeft2;
+        m = PositionTopLeft;
     else if ( p.y() >= height()-range2 && p.x() >= width()-range2)
-        m = BottomRight2;
+        m = PositionBottomRight;
     else if ( p.y() >= height()-range3 && p.x() <= range)
-        m = BottomLeft2;
+        m = PositionBottomLeft;
     else if ( p.y() <= range && p.x() >= width()-range3)
-        m = TopRight2;
+        m = PositionTopRight;
     else if ( p.y() <= 4 )
-        m = Top;
+        m = PositionTop;
     else if ( p.y() >= height()-border )
-        m = Bottom;
+        m = PositionBottom;
     else if ( p.x() <= border_width )
-        m = Left;
+        m = PositionLeft;
     else if ( p.x() >= width()-border )
-        m = Right;
+        m = PositionRight;
     else
-        m = Center;
+        m = PositionCenter;
 
     return m;
 }
