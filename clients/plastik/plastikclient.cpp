@@ -80,7 +80,7 @@ bool PlastikClient::decorationBehaviour(DecorationBehaviour behaviour) const
 {
     switch (behaviour) {
         case DB_MenuClose:
-            return PlastikHandler::menuClose();
+            return Handler()->menuClose();
 
         case DB_WindowMask:
             return true;
@@ -102,7 +102,7 @@ int PlastikClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const 
             if (respectWindowState && maximized) {
                 return 0;
             } else {
-                return PlastikHandler::borderSize();
+                return Handler()->borderSize();
             }
         }
 
@@ -143,9 +143,9 @@ int PlastikClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const 
         case LM_TitleHeight:
         {
             if (respectWindowState && isToolWindow()) {
-                return PlastikHandler::titleHeightTool();
+                return Handler()->titleHeightTool();
             } else {
-                return PlastikHandler::titleHeight();
+                return Handler()->titleHeight();
             }
         }
 
@@ -197,9 +197,7 @@ KCommonDecorationButton *PlastikClient::createButton(ButtonType type)
 
 void PlastikClient::init()
 {
-    s_titleFont = isToolWindow() ?
-            PlastikHandler::titleFontTool()
-    : PlastikHandler::titleFont();
+    s_titleFont = isToolWindow() ? Handler()->titleFontTool() : Handler()->titleFont();
 
 //     create_pixmaps();
 
@@ -264,20 +262,20 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     QRegion mask;
 
     // colors...
-    const QColor windowContour = PlastikHandler::getColor(WindowContour, active);
-    const QColor deco = PlastikHandler::getColor(TitleGradientTo, active);
-    const QColor border = PlastikHandler::getColor(Border, active);
-    const QColor highlightTop = PlastikHandler::getColor(TitleHighlightTop, active);
+    const QColor windowContour = Handler()->getColor(WindowContour, active);
+    const QColor deco = Handler()->getColor(TitleGradientTo, active);
+    const QColor border = Handler()->getColor(Border, active);
+    const QColor highlightTop = Handler()->getColor(TitleHighlightTop, active);
     const QColor highlightTitleLeft = alphaBlendColors(deco,
-            PlastikHandler::getColor(SideHighlightLeft, active), 150);
+            Handler()->getColor(SideHighlightLeft, active), 150);
     const QColor highlightTitleRight = alphaBlendColors(deco,
-            PlastikHandler::getColor(SideHighlightRight, active), 150);
+            Handler()->getColor(SideHighlightRight, active), 150);
     const QColor highlightLeft = alphaBlendColors(border,
-            PlastikHandler::getColor(SideHighlightLeft, active), 150);
+            Handler()->getColor(SideHighlightLeft, active), 150);
     const QColor highlightRight = alphaBlendColors(border,
-            PlastikHandler::getColor(SideHighlightRight, active), 150);
+            Handler()->getColor(SideHighlightRight, active), 150);
     const QColor highlightBottom = alphaBlendColors(border,
-            PlastikHandler::getColor(SideHighlightBottom, active), 150);
+            Handler()->getColor(SideHighlightBottom, active), 150);
     const QColor filledCorner = QColor(0,0,0);
 
 
@@ -535,7 +533,7 @@ QRect PlastikClient::captionRect() const
                 buttonsLeftWidth() - buttonsRightWidth() -
                 marginLeft - marginRight;
 
-        Qt::AlignmentFlags a = PlastikHandler::titleAlign();
+        Qt::AlignmentFlags a = Handler()->titleAlign();
 
         int tX, tW; // position/width of the title buffer
         if (titleBfrPtr->width() >  titleWidth) {
@@ -587,9 +585,7 @@ void PlastikClient::reset( unsigned long changed )
         updateButtons();
     } else if (changed & SettingFont) {
         // font has changed -- update title height and font
-        s_titleFont = isToolWindow() ?
-                PlastikHandler::titleFontTool()
-                : PlastikHandler::titleFont();
+        s_titleFont = isToolWindow() ? Handler()->titleFontTool() : Handler()->titleFont();
 
         updateLayout();
 
@@ -625,7 +621,7 @@ void PlastikClient::update_captionBuffer()
 
     QPixmap textPixmap;
     QPainter painter;
-    if(PlastikHandler::titleShadow())
+    if(Handler()->titleShadow())
     {
         // prepare the shadow
         textPixmap = QPixmap(captionWidth+2*2, th ); // 2*2 px shadow space
@@ -646,10 +642,10 @@ void PlastikClient::update_captionBuffer()
     painter.begin(aCaptionBuffer);
     painter.drawTiledPixmap(aCaptionBuffer->rect(),
                             Handler()->pixmap(isToolWindow()?KWinPlastik::atTitleBarTile:KWinPlastik::aTitleBarTile) );
-    if(PlastikHandler::titleShadow())
+    if(Handler()->titleShadow())
     {
         QColor shadowColor;
-        if (qGray(PlastikHandler::getColor(TitleFont,true).rgb()) < 100) 
+        if (qGray(Handler()->getColor(TitleFont,true).rgb()) < 100)
             shadowColor = QColor(255, 255, 255);
         else
             shadowColor = QColor(0,0,0);
@@ -657,7 +653,7 @@ void PlastikClient::update_captionBuffer()
         painter.drawImage(1, 1, shadow);
     }
     painter.setFont(s_titleFont);
-    painter.setPen(PlastikHandler::getColor(TitleFont,true));
+    painter.setPen(Handler()->getColor(TitleFont,true));
     painter.drawText(aCaptionBuffer->rect(), AlignCenter, c );
     painter.end();
 
@@ -667,12 +663,12 @@ void PlastikClient::update_captionBuffer()
     painter.begin(iCaptionBuffer);
     painter.drawTiledPixmap(iCaptionBuffer->rect(),
                             Handler()->pixmap(isToolWindow()?KWinPlastik::itTitleBarTile:KWinPlastik::iTitleBarTile) );
-    if(PlastikHandler::titleShadow())
+    if(Handler()->titleShadow())
     {
         painter.drawImage(1, 1, shadow);
     }
     painter.setFont(s_titleFont);
-    painter.setPen(PlastikHandler::getColor(TitleFont,false));
+    painter.setPen(Handler()->getColor(TitleFont,false));
     painter.drawText(iCaptionBuffer->rect(), AlignCenter, c );
     painter.end();
 

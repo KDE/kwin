@@ -67,38 +67,35 @@ public:
     virtual KDecoration* createDecoration( KDecorationBridge* );
     virtual bool supports( Ability ability );
 
-    static bool initialized() { return m_initialized; }
-
     const QPixmap &pixmap(Pixmaps pixmap);
 
-    static int  titleHeight() { return m_titleHeight; }
-    static int  titleHeightTool() { return m_titleHeightTool; }
-    static QFont titleFont() { return m_titleFont; }
-    static QFont titleFontTool() { return m_titleFontTool; }
-    static bool titleShadow() { return m_titleShadow; }
-    static int  borderSize() { return m_borderSize; }
-    static bool animateButtons() { return m_animateButtons; }
-    static bool menuClose() { return m_menuClose; }
-    static Qt::AlignmentFlags titleAlign() { return m_titleAlign; }
-    static bool reverseLayout() { return m_reverse; }
-    static QColor getColor(KWinPlastik::ColorType type, const bool active = true);
+    int  titleHeight() { return m_titleHeight; }
+    int  titleHeightTool() { return m_titleHeightTool; }
+    const QFont &titleFont() { return m_titleFont; }
+    const QFont &titleFontTool() { return m_titleFontTool; }
+    bool titleShadow() { return m_titleShadow; }
+    int  borderSize() { return m_borderSize; }
+    bool animateButtons() { return m_animateButtons; }
+    bool menuClose() { return m_menuClose; }
+    Qt::AlignmentFlags titleAlign() { return m_titleAlign; }
+    bool reverseLayout() { return m_reverse; }
+    QColor getColor(KWinPlastik::ColorType type, const bool active = true);
+
     QValueList< PlastikHandler::BorderSize >  borderSizes() const;
 private:
     void readConfig();
 
-    static bool m_titleShadow;
-    static bool m_shrinkBorders;
-    static bool m_animateButtons;
-    static bool m_menuClose;
-    static bool m_reverse;
-    static int  m_borderSize;
-    static int  m_titleHeight;
-    static int  m_titleHeightTool;
-    static QFont m_titleFont;
-    static QFont m_titleFontTool;
-    static Qt::AlignmentFlags m_titleAlign;
-
-    static bool m_initialized;
+    bool m_titleShadow;
+    bool m_shrinkBorders;
+    bool m_animateButtons;
+    bool m_menuClose;
+    bool m_reverse;
+    int  m_borderSize;
+    int  m_titleHeight;
+    int  m_titleHeightTool;
+    QFont m_titleFont;
+    QFont m_titleFontTool;
+    Qt::AlignmentFlags m_titleAlign;
 
     // pixmap cache
     QPixmap *m_pixmaps[NumPixmaps];

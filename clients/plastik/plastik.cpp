@@ -34,19 +34,6 @@
 namespace KWinPlastik
 {
 
-bool PlastikHandler::m_initialized    = false;
-bool PlastikHandler::m_animateButtons = true;
-bool PlastikHandler::m_titleShadow    = true;
-bool PlastikHandler::m_shrinkBorders  = true;
-bool PlastikHandler::m_menuClose      = false;
-bool PlastikHandler::m_reverse        = false;
-int  PlastikHandler::m_borderSize     = 4;
-int  PlastikHandler::m_titleHeight    = 19;
-int  PlastikHandler::m_titleHeightTool= 12;
-QFont PlastikHandler::m_titleFont = QFont();
-QFont PlastikHandler::m_titleFontTool = QFont();
-Qt::AlignmentFlags PlastikHandler::m_titleAlign = Qt::AlignHCenter;
-
 PlastikHandler::PlastikHandler()
 {
     memset(m_pixmaps, 0, sizeof(QPixmap *) * NumPixmaps); // set elements to 0
@@ -56,8 +43,6 @@ PlastikHandler::PlastikHandler()
 
 PlastikHandler::~PlastikHandler()
 {
-    m_initialized = false;
-
     for (int n=0; n<NumPixmaps; n++) {
         if (m_pixmaps[n]) delete m_pixmaps[n];
     }
@@ -107,8 +92,6 @@ bool PlastikHandler::reset(unsigned long changed)
             m_pixmaps[n] = 0;
         }
     }
-
-    m_initialized = true;
 
     // Do we need to "hit the wooden hammer" ?
     bool needHardReset = true;

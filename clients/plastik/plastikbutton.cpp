@@ -81,13 +81,13 @@ PlastikButton::~PlastikButton()
 
 void PlastikButton::reset()
 {
-    QColor aDecoFgDark = alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, true),
+    QColor aDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
             Qt::black, 50);
-    QColor aDecoFgLight = alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, true),
+    QColor aDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
             Qt::white, 50);
-    QColor iDecoFgDark = alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, false),
+    QColor iDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
             Qt::black, 50);
-    QColor iDecoFgLight = alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, false),
+    QColor iDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
             Qt::white, 50);
 
     int reduceW = 0, reduceH = 0;
@@ -166,7 +166,7 @@ void PlastikButton::animate()
 
     if(hover) {
         if(animProgress < ANIMATIONSTEPS) {
-            if (PlastikHandler::animateButtons() ) {
+            if (Handler()->animateButtons() ) {
                 animProgress++;
             } else {
                 animProgress = ANIMATIONSTEPS;
@@ -175,7 +175,7 @@ void PlastikButton::animate()
         }
     } else {
         if(animProgress > 0) {
-            if (PlastikHandler::animateButtons() ) {
+            if (Handler()->animateButtons() ) {
                 animProgress--;
             } else {
                 animProgress = 0;
@@ -220,13 +220,13 @@ void PlastikButton::drawButton(QPainter *painter)
         highlightColor = Qt::white;
     }
 
-    QColor contourTop = alphaBlendColors(PlastikHandler::getColor(TitleGradientFrom, active),
+    QColor contourTop = alphaBlendColors(Handler()->getColor(TitleGradientFrom, active),
             Qt::black, 220);
-    QColor contourBottom = alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, active),
+    QColor contourBottom = alphaBlendColors(Handler()->getColor(TitleGradientTo, active),
             Qt::black, 220);
-    QColor sourfaceTop = alphaBlendColors(PlastikHandler::getColor(TitleGradientFrom, active),
+    QColor sourfaceTop = alphaBlendColors(Handler()->getColor(TitleGradientFrom, active),
             Qt::white, 220);
-    QColor sourfaceBottom = alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, active),
+    QColor sourfaceBottom = alphaBlendColors(Handler()->getColor(TitleGradientTo, active),
             Qt::white, 220);
 
     int highlightAlpha = static_cast<int>(255-((60/static_cast<double>(ANIMATIONSTEPS))*
@@ -269,13 +269,13 @@ void PlastikButton::drawButton(QPainter *painter)
         bP.drawPixmap(r.x(), r.y()+2, tempKPixmap);
         bP.drawPixmap(r.right(), r.y()+2, tempKPixmap);
         // sort of anti-alias for the contour
-        bP.setPen(alphaBlendColors(PlastikHandler::getColor(TitleGradientFrom, active),
+        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradientFrom, active),
                 contourTop, 150) );
         bP.drawPoint(r.x()+1, r.y());
         bP.drawPoint(r.right()-1, r.y());
         bP.drawPoint(r.x(), r.y()+1);
         bP.drawPoint(r.right(), r.y()+1);
-        bP.setPen(alphaBlendColors(PlastikHandler::getColor(TitleGradientTo, active),
+        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradientTo, active),
                 contourBottom, 150) );
         bP.drawPoint(r.x()+1, r.bottom());
         bP.drawPoint(r.right()-1, r.bottom());
