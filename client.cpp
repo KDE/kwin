@@ -860,19 +860,20 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             // window is too large for the screen, maximize in the
             // directions necessary and generate a suitable restore
             // geometry.
-            QSize s = adjustedSize( QSize( area.width()*2/3, area.height()*2/3 ) );
+            QSize s = adjustedSize( area.size());
+            QPoint orig_pos( x(), y());
             if ( width() >= area.width() && height() >= area.height() ) {
                 maximize( Client::MaximizeFull );
                 geom_restore.setSize( s );
-                geom_restore.moveCenter( geometry().center() );
+                geom_restore.moveTopLeft( orig_pos );
             } else if ( width() >= area.width() ) {
                 maximize( Client::MaximizeHorizontal );
                 geom_restore.setWidth( s.width() );
-                geom_restore.moveCenter( geometry().center() );
+                geom_restore.moveTopLeft( orig_pos );
             } else if ( height() >= area.height() ) {
                 maximize( Client::MaximizeVertical );
                 geom_restore.setHeight( s.height() );
-                geom_restore.moveCenter( geometry().center() );
+                geom_restore.moveTopLeft( orig_pos );
             }
         }
     }
