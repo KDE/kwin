@@ -1,5 +1,6 @@
+// $Id$
 // Daniel M. DULEY <mosfet@kde.org>               original work
-// Melchior FRANZ  <a8603365@unet.univie.ac.at>   configuration options & modification 
+// Melchior FRANZ  <a8603365@unet.univie.ac.at>   configuration options
 
 #include <kconfig.h>
 #include <kglobal.h>
@@ -191,37 +192,37 @@ static void delete_pixmaps()
 
 static bool read_config()
 {
-    bool sh, changed = false;
-    int hs, hw;
-    QString bp;
+    bool showh;
+    int hsize, hwidth;
+    QString bpatt;
 
     KConfig* conf = KGlobal::config();
     conf->setGroup("ModernSystem");
-    sh = conf->readBoolEntry("ShowHandle", true);
+    showh = conf->readBoolEntry("ShowHandle", true);
 
-    hw = conf->readUnsignedNumEntry("HandleWidth", 6);
-    hs = conf->readUnsignedNumEntry("HandleSize", 30);
-    if (!(sh && hs && hw)) {
-        sh = false;
-        hw = hs = 0;
+    hwidth = conf->readUnsignedNumEntry("HandleWidth", 6);
+    hsize = conf->readUnsignedNumEntry("HandleSize", 30);
+    if (!(showh && hsize && hwidth)) {
+        showh = false;
+        hwidth = hsize = 0;
     }
 
     if (options->customButtonPositions()) {
-        bp = "2" + options->titleButtonsLeft() + "3t3"
+        bpatt = "2" + options->titleButtonsLeft() + "3t3"
                 + options->titleButtonsRight() + "2";
     }
     else
-        bp = "2X3t3HSIA2";
+        bpatt = "2X3t3HSIA2";
 
-    if (sh != show_handle || hw != handle_width || hs != handle_size
-            || bp != *button_pattern)
-        changed = true;
+    if (showh == show_handle && hwidth == handle_width && hsize == handle_size
+            && bpatt == *button_pattern)
+        return false;
     
-    show_handle = sh;
-    handle_width = hw;
-    handle_size = hs;
-    *button_pattern = bp;
-    return changed;
+    show_handle = showh;
+    handle_width = hwidth;
+    handle_size = hsize;
+    *button_pattern = bpatt;
+    return true;
 }
 
 ModernButton::ModernButton(Client *parent, const char *name,
@@ -554,9 +555,9 @@ void ModernSys::doShape()
         mask -= QRect(width()-2, height()-2, 1, 1);
         mask -= QRect(width()-2, height()-hs, 1, 1);
         mask -= QRect(width()-hs, height()-2, 1, 1);
-    } else {
+    } else
         mask -= QRect(width()-1, height()-1, 1, 1);
-    }
+
     setMask(mask);
 }
 
@@ -607,12 +608,15 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
 
     if ( show_handle && m == Center ) {
        int border = handle_width + 4;
-       if ( p.x() >= width()-border && p.y() >= height()-border )
+	   bool hx = (p.x() >= width() - border);
+	   bool hy = (p.y() >= height() - border);
+
+       if (hx && hy)
            m = BottomRight;
-       else if ( p.y() >= height()-border )
-           m =  Bottom;
-       else if ( p.x() >= width()-border )
+       else if (hx)
            m =  Right;
+       else if (hy)
+           m =  Bottom;
     }
     return m;
 }

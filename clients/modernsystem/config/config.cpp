@@ -1,3 +1,4 @@
+// $Id$
 // Melchior FRANZ  <a8603365@unet.univie.ac.at>	-- 2001-04-22
 
 #include "config.h"

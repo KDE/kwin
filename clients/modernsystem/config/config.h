@@ -1,3 +1,4 @@
+// $Id$
 #ifndef __KDE_MODSYSTEMCONFIG_H
 #define __KDE_MODSYSTEMCONFIG_H
 
