@@ -1520,6 +1520,10 @@ void Workspace::raiseClient( Client* c )
 {
     if ( !c )
 	return;
+
+    if ( tab_box->isVisible() )
+	return;
+    
     ClientList saveset;
 
     if ( c == desktop_client ) {
