@@ -2732,7 +2732,9 @@ void Workspace::storeSession( KConfig* config )
 	    config->writeEntry( QString("sessionId")+n, sessionId.data() );
 	    config->writeEntry( QString("windowRole")+n, windowRole.data() );
 	    config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
-	    config->writeEntry( QString("geometry")+n, c->geometry() );
+	    QPoint pos = c->geometry().topLeft();
+	    QSize size = c->windowWrapper()->geometry().size();
+	    config->writeEntry( QString("geometry")+n, QRect(pos, size) );
 	    config->writeEntry( QString("restore")+n, c->geometryRestore() );
 	    config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
 	    config->writeEntry( QString("desktop")+n, c->desktop() );
