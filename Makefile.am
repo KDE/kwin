@@ -8,6 +8,8 @@ kwin_SOURCES = atoms.cpp beclient.cpp client.cpp main.cpp stdclient.cpp workspac
 
 kwin_LDADD = $(LIB_KDECORE) $(LIB_KDEUI)
 
+KDE_ICON = kwin
+
 METASOURCES = AUTO
 
 messages:
