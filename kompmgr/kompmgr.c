@@ -226,7 +226,7 @@ XRenderPictFormat* sXRenderFindVisualFormat(Display *dpy, _Xconst Visual *visual
     if (format)
         return format;
     else
-        return XRenderFindStandardFormat (dpy, PictStandardNUM);
+        return XRenderFindStandardFormat (dpy, PictStandardRGB24);
 }
 
 int
