@@ -2,6 +2,7 @@
 #include <kglobal.h>
 #include <kglobalaccel.h>
 #include <klocale.h>
+#include <kwin.h>
 
 #include "workspace.h"
 #include "client.h"
@@ -64,7 +65,7 @@ static Client* clientFactory( Workspace *ws, WId w )
 	c->setSticky( TRUE );
 	return c;
     }
-    
+
     if ( Shape::hasShape( w ) ){
 	return new NoBorderClient( ws, w );
     }
@@ -99,12 +100,12 @@ Workspace::Workspace()
 
     int dummy;
     kwin_has_shape = XShapeQueryExtension(qt_xdisplay(), &kwin_shape_event, &dummy);
-    
+
     // compatibility
     long data = 1;
     XChangeProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running, atoms->kwm_running, 32,
 		    PropModeAppend, (unsigned char*) &data, 1);
-    
+
     init();
     control_grab = FALSE;
     tab_grab = FALSE;
@@ -284,7 +285,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    wc.stack_mode = Above;
 	    value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
 	    XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, & wc );
-	    
+	
 	    return TRUE;
 	}
 	break;
@@ -336,9 +337,10 @@ Client* Workspace::findClient( WId w ) const
     return 0;
 }
 
+
 /*!
   Returns the workspace's geometry
-  
+
   \sa clientArea()
  */
 QRect Workspace::geometry() const
@@ -357,14 +359,14 @@ QRect Workspace::geometry() const
 }
 
 /*!
-  Returns the workspace's client area. 
-  
+  Returns the workspace's client area.
+
   This is the area within the geometry() where clients can be placed,
   i.e. the full geometry minus space for desktop panels, taskbars,
   etc.
-  
+
   Placement algorithms should refer to clientArea.
-  
+
   \sa geometry()
  */
 QRect Workspace::clientArea() const
@@ -895,7 +897,7 @@ void Workspace::raiseClient( Client* c )
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
-    
+
     propagateClients( TRUE );
 }
 
@@ -1088,12 +1090,11 @@ void Workspace::propagateClients( bool onlyStacking )
 
 bool Workspace::addDockwin( WId w )
 {
-    if ( !KWM::isDockWindow( w ) )
+    WId dockFor = 0;
+    if ( !KWin::isDockWindow( w, &dockFor ) )
 	return FALSE;
-    dockwins.append( w );
+    dockwins.append( DockWindow( w, dockFor ) );
     XSelectInput( qt_xdisplay(), w,
-// 		  FocusChangeMask |
-// 		  PropertyChangeMask |
 		  StructureNotifyMask
 		  );
     propagateDockwins();
@@ -1109,6 +1110,15 @@ bool Workspace::removeDockwin( WId w )
     return TRUE;
 }
 
+bool Workspace::iconifyMeansWithdraw( Client* c)
+{
+    for ( DockWindowList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
+	if ( (*it).dockFor == c->window() )
+	    return TRUE;
+    }
+    return FALSE;
+}
+
 /*!
   Propagates the dockwins to the world
  */
@@ -1116,8 +1126,8 @@ void Workspace::propagateDockwins()
 {
     WId* cl = new WId[ dockwins.count()];
     int i = 0;
-    for ( WIdList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
-	cl[i++] =  (*it);
+    for ( DockWindowList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
+	cl[i++] =  (*it).dockWin;
     }
     XChangeProperty(qt_xdisplay(), qt_xrootwin(),
 		    atoms->net_kde_docking_windows, XA_WINDOW, 32,
@@ -1128,7 +1138,7 @@ void Workspace::propagateDockwins()
 
 void Workspace::createKeybindings(){
     keys = new KGlobalAccel();
-    
+
 #include "kwinbindings.cpp"
 
     keys->connectItem( "Switch to desktop 1", this, SLOT( slotSwitchDesktop1() ));

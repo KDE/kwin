@@ -43,11 +43,11 @@ void Client::clearbound()
 
 void Client::updateShape()
 {
-    if ( shape() ) 
+    if ( shape() )
 	XShapeCombineShape(qt_xdisplay(), winId(), ShapeBounding,
 			   windowWrapper()->x(), windowWrapper()->y(),
 			   window(), ShapeBounding, ShapeSet);
-    else 
+    else
 	XShapeCombineMask( qt_xdisplay(), winId(), ShapeBounding, 0, 0,
 			   None, ShapeSet);
 }
@@ -332,7 +332,7 @@ void Client::manage( bool isMapped )
 
     // the clever activate() trick is necessary
     layout()->activate();
-//     resize( geom.width() + width() - windowWrapper()->width(), 
+//     resize( geom.width() + width() - windowWrapper()->width(),
 // 	    geom.height() + height() - windowWrapper()->height() );
     resize ( sizeForWindowSize( geom.size() ) );
     layout()->activate();
@@ -348,7 +348,7 @@ void Client::manage( bool isMapped )
     if ( (is_shape = Shape::hasShape( win )) ) {
 	updateShape();
     }
-    
+
 
     // ### TODO check XGetWMHints() for initial mapping state, icon, etc. pp.
     // assume window wants to be visible on the current desktop
@@ -539,7 +539,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    break;
 	}
     }
-    
+
     if ( e.value_mask & CWBorderWidth ) {
 	// first, get rid of a window border
 	XWindowChanges wc;
@@ -1055,6 +1055,11 @@ int Client::maximumHeight() const
 
 void Client::iconify()
 {
+    if ( workspace()->iconifyMeansWithdraw( this ) ) {
+	setMappingState( WithdrawnState );
+	hide();
+	return;
+    }
     setMappingState( IconicState );
     hide();
     // TODO animation (virtual function)

@@ -118,8 +118,8 @@ public:
     // transparent stuff
     virtual void drawbound( const QRect& geom );
     virtual void clearbound();
-    
-    
+
+
     // shape extensions
     bool shape() const;
     void updateShape();
@@ -130,6 +130,8 @@ public:
     void move( int x, int y );
     void move( const QPoint & p )
     { move( p.x(), p.y() ); }
+    
+    
 
 public slots:
     void iconify();

@@ -13,7 +13,27 @@ class TabBox;
 class KGlobalAccel;
 
 typedef QValueList<Client*> ClientList;
-typedef QValueList<WId> WIdList;
+
+class DockWindow
+{
+public:
+    DockWindow()
+	: dockWin(0),dockFor(0)
+    {}
+    DockWindow( WId w )
+	: dockWin(w),dockFor(0)
+    {}
+    DockWindow( WId w, WId wf  )
+	: dockWin(w),dockFor(wf)
+    {}
+    
+    bool operator==( const DockWindow& other )
+    { return dockWin == other.dockWin; }
+    WId dockWin;
+    WId dockFor;
+};
+
+typedef QValueList<DockWindow> DockWindowList;
 
 class Shape {
 public:
@@ -76,8 +96,9 @@ public:
 
     void makeFullScreen( Client* );
 
-    
-public slots:  
+    bool iconifyMeansWithdraw( Client* );
+
+public slots:
     // keybindings
     void slotSwitchDesktop1();
     void slotSwitchDesktop2();
@@ -126,10 +147,11 @@ private:
 
     void propagateClients( bool onlyStacking = FALSE);
 
-    WIdList dockwins;
+    DockWindowList dockwins;
     bool addDockwin( WId w );
     bool removeDockwin( WId w );
     void propagateDockwins();
+    DockWindow findDockwin( WId w );
 };
 
 inline WId Workspace::rootWin() const
