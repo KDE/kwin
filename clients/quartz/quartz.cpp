@@ -408,7 +408,7 @@ void QuartzButton::mouseReleaseEvent( QMouseEvent* e )
 
 QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity | WRepaintNoErase )
+    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents | WRepaintNoErase )
 {
 	// No flicker thanks
     setBackgroundMode( QWidget::NoBackground );
