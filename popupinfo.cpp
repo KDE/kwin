@@ -55,7 +55,8 @@ void PopupInfo::reset()
     KConfig gc("kdeglobals", false, false);
     gc.setGroup("Windows");
     QRect r;
-    if (gc.readBoolEntry("XineramaEnabled", true) &&
+    if (QApplication::desktop()->isVirtualDesktop() &&
+        gc.readBoolEntry("XineramaEnabled", true) &&
         gc.readBoolEntry("XineramaPlacementEnabled", true)) {
         int screen = desktop->screenNumber( QCursor::pos() );
         r = desktop->screenGeometry(screen);
