@@ -1705,9 +1705,6 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     if( !isMaximizable())
         return;
 
-    if( isShade()) // SELI SHADE
-        setShade( ShadeNone );
-
     MaximizeMode old_mode = max_mode;
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if( !adjust )
@@ -1721,6 +1718,9 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     max_mode = rules()->checkMaximize( max_mode );
     if( !adjust && max_mode == old_mode )
         return;
+
+    if( isShade()) // SELI SHADE
+        setShade( ShadeNone );
 
     ++block_geometry; // TODO GeometryBlocker class?
 

@@ -702,13 +702,54 @@ CHECK_FORCE_RULE( Closeable, bool )
 
 // Client
 
+#define FORCE_RULE( rule, type, getf, setf ) \
+    { \
+    type val = client_rules.check##rule( getf()); \
+    if( val != getf()) \
+        setf( val ); \
+    }
+
 void Client::setupWindowRules( bool ignore_temporary )
     {
     client_rules = workspace()->findWindowRules( this, ignore_temporary );
     // check only after getting the rules, because there may be a rule forcing window type
     if( isTopMenu()) // TODO cannot have restrictions
         client_rules = WindowRules();
+    if( isManaged())
+        { // apply force rules
+        // Placement - does need explicit update, just like some others below
+        // Geometry : setGeometry() doesn't check rules
+        QRect geom = client_rules.checkGeometry( geometry());
+        if( geom != geometry())
+            setGeometry( geom );
+        // MinSize, MaxSize handled by Geometry
+        // IgnorePosition
+        setDesktop( desktop());
+        // Type
+        maximize( maximizeMode());
+        // Minimize : functions don't check, and there are two functions
+        if( client_rules.checkMinimize( isMinimized()))
+            minimize();
+        else
+            unminimize();
+        setShade( shadeMode());
+        setSkipTaskbar( skipTaskbar(), true );
+        setSkipPager( skipPager());
+        setKeepAbove( keepAbove());
+        setKeepBelow( keepBelow());
+        setFullScreen( isFullScreen(), true );
+        setUserNoBorder( isUserNoBorder());
+        // FSP
+        // AcceptFocus :
+        if( workspace()->mostRecentlyActivatedClient() == this
+            && !client_rules.checkAcceptFocus( true ))
+            workspace()->activateNextClient( this );
+        // MoveResizeMode
+        // Closeable
+        }
     }
+
+#undef FORCE_RULE
 
 void Client::updateWindowRules()
     {
