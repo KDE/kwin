@@ -1,6 +1,6 @@
 /*****************************************************************
 kwin - the KDE window manager
-								
+
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
 #ifndef OPTIONS_H
@@ -194,6 +194,10 @@ public:
     */
     int animateMinimizeSpeed;
 
+    /**
+     * whether or not we roll over to the other edge when switching desktops past the edge
+     */
+    bool rollOverDesktops;
 
     /**
      * List of window classes to ignore PPosition size hint
@@ -203,21 +207,21 @@ public:
     // mouse bindings
 
     enum WindowOperation{
-	MaximizeOp = 5000,
-	RestoreOp,
-	IconifyOp,
-	MoveOp,
-	ResizeOp,
-	CloseOp,
-	StickyOp,
-	ShadeOp,
-	StaysOnTopOp,
-	OperationsOp,
-	ToggleStoreSettingsOp,
-	HMaximizeOp,
-	VMaximizeOp,
-	LowerOp,
-	NoOp
+        MaximizeOp = 5000,
+        RestoreOp,
+        IconifyOp,
+        MoveOp,
+        ResizeOp,
+        CloseOp,
+        StickyOp,
+        ShadeOp,
+        StaysOnTopOp,
+        OperationsOp,
+        ToggleStoreSettingsOp,
+        HMaximizeOp,
+        VMaximizeOp,
+        LowerOp,
+        NoOp
     };
 
     WindowOperation operationTitlebarDblClick() { return OpTitlebarDblClick; }
@@ -248,7 +252,7 @@ public:
 
     static WindowOperation windowOperation(const QString &name );
     static MouseCommand mouseCommand(const QString &name);
-    
+
     /**
     * @returns true if the style should use custom button positions
     * @see #titleButtonsLeft

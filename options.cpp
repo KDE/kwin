@@ -191,14 +191,16 @@ void Options::reload()
     if ( val == "CDE" )
         altTabStyle = CDE;
 
+    rollOverDesktops = config->readBoolEntry("RollOverDesktops", TRUE);
+
     xineramaEnabled = config->readBoolEntry ("XineramaEnabled", FALSE ) &&
-		      KApplication::desktop()->isVirtualDesktop();
+                      KApplication::desktop()->isVirtualDesktop();
     if (xineramaEnabled) {
-	xineramaPlacementEnabled = config->readBoolEntry ("XineramaPlacementEnabled", FALSE);
- 	xineramaMovementEnabled = config->readBoolEntry ("XineramaMovementEnabled", FALSE);
- 	xineramaMaximizeEnabled = config->readBoolEntry ("XineramaMaximizeEnabled", FALSE);
+        xineramaPlacementEnabled = config->readBoolEntry ("XineramaPlacementEnabled", FALSE);
+        xineramaMovementEnabled = config->readBoolEntry ("XineramaMovementEnabled", FALSE);
+        xineramaMaximizeEnabled = config->readBoolEntry ("XineramaMaximizeEnabled", FALSE);
     } else {
-	 xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = false;
+         xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = false;
     }
 
     val = config->readEntry("Placement","Smart");
@@ -250,12 +252,12 @@ void Options::reload()
     config->setGroup("Style");
     d->custom_button_positions = config->readBoolEntry("CustomButtonPositions", false);
     if (d->custom_button_positions) {
-	d->title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
-	d->title_buttons_right = config->readEntry("ButtonsOnRight", "HIAX");
+        d->title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
+        d->title_buttons_right = config->readEntry("ButtonsOnRight", "HIAX");
     }
     else {
-	d->title_buttons_left  = "MS";
-	d->title_buttons_right = "HIAX";
+        d->title_buttons_left  = "MS";
+        d->title_buttons_right = "HIAX";
     }
 
     // button tooltips

@@ -2544,19 +2544,19 @@ void Workspace::setNumberOfDesktops( int n )
 
     rootInfo->setNumberOfDesktops( number_of_desktops );
     saveDesktopSettings();
-    
+
     // if the number of desktops decreased, move all
     // windows that would be hidden to the last visible desktop
     if( old_number_of_desktops > number_of_desktops ) {
-	for( ClientList::ConstIterator it = clients.begin();
-	      it != clients.end();
-	      ++it) {
-    	    if( !(*it)->isSticky() && (*it)->desktop() > numberOfDesktops())
-		sendClientToDesktop( *it, numberOfDesktops());
-	}
+        for( ClientList::ConstIterator it = clients.begin();
+              it != clients.end();
+              ++it) {
+            if( !(*it)->isSticky() && (*it)->desktop() > numberOfDesktops())
+                sendClientToDesktop( *it, numberOfDesktops());
+        }
     }
     if( currentDesktop() > numberOfDesktops())
-	setCurrentDesktop( numberOfDesktops());
+        setCurrentDesktop( numberOfDesktops());
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize( n );
@@ -2689,16 +2689,26 @@ void Workspace::readShortcuts(){
 }
 
 void Workspace::slotSwitchDesktopNext(){
-    int d = currentDesktop() + 1;
-    if ( d > numberOfDesktops() )
+   int d = currentDesktop() + 1;
+    if ( d > numberOfDesktops() ) {
+      if ( options->rollOverDesktops ) {
         d = 1;
+      }
+      else {
+        return;
+      }
+    }
     setCurrentDesktop(d);
 }
 
 void Workspace::slotSwitchDesktopPrevious(){
     int d = currentDesktop() - 1;
-    if ( d <= 0 )
+    if ( d <= 0 ) {
+      if ( options->rollOverDesktops )
         d = numberOfDesktops();
+    else
+        return;
+    }
     setCurrentDesktop(d);
 }
 
@@ -2732,14 +2742,22 @@ void Workspace::slotSwitchDesktopRight()
     if (d->layoutOrientation == Qt::Vertical)
     {
       dt += y;
-      if ( dt >= numberOfDesktops() )
-        dt -= numberOfDesktops();
+      if ( dt >= numberOfDesktops() ) {
+        if ( options->rollOverDesktops )
+          dt -= numberOfDesktops();
+        else
+          return;
+      }
     }
     else
     {
       int d = (dt % x) + 1;
-      if (d >= x)
-        d -= x;
+      if ( d >= x ) {
+        if ( options->rollOverDesktops )
+          d -= x;
+        else
+          return;
+      }
       dt = dt - (dt % x) + d;
     }
     setCurrentDesktop(dt+1);
@@ -2752,14 +2770,22 @@ void Workspace::slotSwitchDesktopLeft(){
     if (d->layoutOrientation == Qt::Vertical)
     {
       dt -= y;
-      if ( dt < 0 )
-        dt += numberOfDesktops();
+      if ( dt < 0 ) {
+        if ( options->rollOverDesktops )
+          dt += numberOfDesktops();
+        else
+          return;
+      }
     }
     else
     {
       int d = (dt % x) - 1;
-      if (d < 0)
-        d += x;
+      if ( d < 0 ) {
+        if ( options->rollOverDesktops )
+          d += x;
+        else
+          return;
+      }
       dt = dt - (dt % x) + d;
     }
     setCurrentDesktop(dt+1);
@@ -2772,14 +2798,22 @@ void Workspace::slotSwitchDesktopUp(){
     if (d->layoutOrientation == Qt::Horizontal)
     {
       dt -= x;
-      if ( dt < 0 )
-        dt += numberOfDesktops();
+      if ( dt < 0 ) {
+        if ( options->rollOverDesktops )
+          dt += numberOfDesktops();
+        else
+          return;
+      }
     }
     else
     {
       int d = (dt % y) - 1;
-      if (d < 0)
-        d += y;
+      if ( d < 0 ) {
+        if ( options->rollOverDesktops )
+          d += y;
+        else
+          return;
+      }
       dt = dt - (dt % y) + d;
     }
     setCurrentDesktop(dt+1);
@@ -2792,14 +2826,22 @@ void Workspace::slotSwitchDesktopDown(){
     if (d->layoutOrientation == Qt::Horizontal)
     {
       dt += x;
-      if ( dt >= numberOfDesktops() )
-        dt -= numberOfDesktops();
+      if ( dt >= numberOfDesktops() ) {
+        if ( options->rollOverDesktops )
+          dt -= numberOfDesktops();
+        else
+          return;
+      }
     }
     else
     {
       int d = (dt % y) + 1;
-      if (d >= y)
-        d -= y;
+      if ( d >= y ) {
+        if ( options->rollOverDesktops )
+          d -= y;
+        else
+          return;
+      }
       dt = dt - (dt % y) + d;
     }
     setCurrentDesktop(dt+1);
@@ -3075,7 +3117,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk )
 
     c->setDesktop( desk );
     if( desk == NETWinInfo::OnAllDesktops )
-	c->setSticky( true );
+        c->setSticky( true );
 
     if ( c->isOnDesktop( currentDesktop() ) ) {
         c->show();
@@ -3491,9 +3533,9 @@ void Workspace::slotResetAllClients()
     for (ClientList::Iterator it = stack.fromLast(); it != stack.end(); --it) {
         Client *oldClient = (*it);
         Client::MaximizeMode oldMaxMode = oldClient->maximizeMode();
-	oldClient->hide();
+        oldClient->hide();
         WId w = oldClient->window();
-	XUnmapWindow( qt_xdisplay(), w );
+        XUnmapWindow( qt_xdisplay(), w );
         oldClient->releaseWindow();
         // Replace oldClient with newClient in all lists
         Client *newClient = clientFactory (w);
@@ -3508,17 +3550,17 @@ void Workspace::slotResetAllClients()
         newClient->cloneMode(oldClient);
         delete oldClient;
         bool showIt = newClient->manage( TRUE, TRUE, FALSE );
-	Window stack[2];
-	stack[0] = prev ? prev->winId() : curtain.winId();
-	stack[1] = newClient->winId();
- 	XRestackWindows(  qt_xdisplay(), stack, 2 );
+        Window stack[2];
+        stack[0] = prev ? prev->winId() : curtain.winId();
+        stack[1] = newClient->winId();
+        XRestackWindows(  qt_xdisplay(), stack, 2 );
         if ( showIt )
             newClient->show();
 
         if( oldMaxMode != Client::MaximizeRestore ) {
             newClient->maximize(Client::MaximizeRestore); // needed
-	    newClient->maximize(oldMaxMode);
-	}
+            newClient->maximize(oldMaxMode);
+        }
         prev = newClient;
     }
     block_focus = FALSE;
