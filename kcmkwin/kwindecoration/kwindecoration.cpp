@@ -71,7 +71,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
           pluginObject(0)
 {
 	kwinConfig.setGroup("Style");
-        plugins = new KDecorationPlugins( &kwinConfig );
+        plugins = new KDecorationPreviewPlugins( &kwinConfig );
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	tabWidget = new QTabWidget( this );
