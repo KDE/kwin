@@ -1536,7 +1536,7 @@ void Client::move( int x, int y )
  */
 void Client::show()
 {
-    if ( isIconified() && !isTransient() )
+    if ( isIconified() && ( !isTransient() || mainClient() == this ) )
 	animateIconifyOrDeiconify( FALSE );
     QWidget::show();
     setMappingState( NormalState );
@@ -1676,7 +1676,7 @@ void Client::iconify()
     Events::raise( Events::Iconify );
     setMappingState( IconicState );
 
-    if ( !isTransient() && isVisible() )
+    if ( (!isTransient() || mainClient() == this ) && isVisible() )
 	animateIconifyOrDeiconify( TRUE );
     hide();
 
@@ -2632,6 +2632,8 @@ QRect Client::adjustedClientArea( const QRect& area ) const
 void Client::animateIconifyOrDeiconify( bool iconify)
 {
     if ( blockAnimation )
+	return;
+    if ( !options->animateMinimize )
 	return;
     // the function is a bit tricky since it will ensure that an
     // animation action needs always the same time regardless of the
