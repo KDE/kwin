@@ -2236,7 +2236,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
   void
 Workspace::updateClientArea()
 {
-  qDebug("KWin: Updating client area");
+//  qDebug("KWin: Updating client area");
 
   clientArea_ = geometry();
 
@@ -2249,31 +2249,31 @@ Workspace::updateClientArea()
       switch (AnchorEdge((*it)->anchorEdge())) {
 
         case AnchorNorth:
-          qDebug("KWin: Ignoring a client at edge N");
+//          qDebug("KWin: Ignoring a client at edge N");
           clientArea_
             .setTop(QMAX(clientArea_.top(), (*it)->geometry().bottom()));
           break;
 
         case AnchorSouth:
-          qDebug("KWin: Ignoring a client at edge S");
+//          qDebug("KWin: Ignoring a client at edge S");
           clientArea_
             .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top()));
           break;
         
         case AnchorEast:
-          qDebug("KWin: Ignoring a client at edge E");
+//          qDebug("KWin: Ignoring a client at edge E");
           clientArea_
             .setRight(QMIN(clientArea_.right(), (*it)->geometry().left()));
           break;
         
         case AnchorWest:
-          qDebug("KWin: Ignoring a client at edge W");
+//          qDebug("KWin: Ignoring a client at edge W");
           clientArea_
             .setLeft(QMAX(clientArea_.left(), (*it)->geometry().right()));
           break;
           
         default:
-          qDebug("KWin: Trying to ignore a client, but don't know which edge");
+//          qDebug("KWin: Trying to ignore a client, but don't know which edge");
           break;
       }
     }
@@ -2293,6 +2293,6 @@ Workspace::updateClientArea()
 
 // Useful when you want to see whether the client area has been
 // updated correctly...
-  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
+//  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
 }
 
