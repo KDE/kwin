@@ -48,7 +48,7 @@ static KPixmap *btnPix=0;
 static KPixmap *btnPixDown=0;
 static KPixmap *iBtnPix=0;
 static KPixmap *iBtnPixDown=0;
-static QColor btnForeground;
+static QColor *btnForeground;
 
 static bool pixmaps_created = false;
 
@@ -169,11 +169,25 @@ static void create_pixmaps()
                                                          false));
     }
     if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
-        btnForeground = Qt::black;
+        btnForeground = new QColor(Qt::black);
     else
-        btnForeground = Qt::white;
+        btnForeground = new QColor(Qt::white);
 }
 
+void delete_pixmaps()
+{
+    if(aUpperGradient){
+        delete aUpperGradient;
+        delete iUpperGradient;
+        delete btnPix;
+        delete btnPixDown;
+        delete iBtnPix;
+        delete iBtnPixDown;
+        aUpperGradient = 0;
+    }
+    delete btnForeground;
+    pixmaps_created = false;
+}
 
 SystemButton::SystemButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
@@ -239,7 +253,7 @@ void SystemButton::drawButton(QPainter *p)
     }
 
     if(!deco.isNull()){
-        p->setPen(btnForeground);
+        p->setPen(*btnForeground);
         p->drawPixmap(isDown() ? 4 : 3, isDown() ? 4 : 3, deco);
     }
 
@@ -267,15 +281,7 @@ void SystemButton::handleClicked()
 
 void SystemClient::slotReset()
 {
-    if(aUpperGradient){
-        delete aUpperGradient;
-        delete iUpperGradient;
-        delete btnPix;
-        delete btnPixDown;
-        delete iBtnPix;
-        delete iBtnPixDown;
-    }
-    pixmaps_created = false;
+    delete_pixmaps();
     create_pixmaps();
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
