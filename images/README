@@ -1,0 +1,14 @@
+To try out these (ugly) shaped window decorations, please copy all
+pixmaps (*.xpm) somewhere where kwm´s iconloader will find them (for
+example ~/.kde/share/apps/kwm/pics/). 
+
+Then add this to your kwmrc, group [General]
+
+ShapeMode=on
+
+Now restart kwm and please do not get a shock ;-)
+
+
+Enjoy,
+
+     Matthias

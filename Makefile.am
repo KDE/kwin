@@ -2,6 +2,8 @@
 INCLUDES = $(all_includes)
 LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
+SUBDIRS = pics images
+
 bin_PROGRAMS = kwin
 
 kwin_SOURCES = atoms.cpp beclient.cpp client.cpp main.cpp stdclient.cpp workspace.cpp tabbox.cpp options.cpp systemclient.cpp nextclient.cpp
