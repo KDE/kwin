@@ -66,7 +66,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
 	 || e->request_code == X_GrabKey
 	 )
 	&& (e->error_code == BadAccess)) {
-	fprintf(stderr, i18n("kwin: it looks like there's already a window manager running. kwin not started.\n").local8Bit());
+	fputs(i18n("kwin: it looks like there's already a window manager running. kwin not started.\n").local8Bit(), stderr);
 	exit(1);
     }
 
@@ -80,7 +80,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
     fprintf(stderr, "kwin: %s(0x%lx): %s\n", req, e->resourceid, msg);
 
     if (initting) {
-        fprintf(stderr, i18n("kwin: failure during initialization; aborting").local8Bit());
+        fputs(i18n("kwin: failure during initialization; aborting").local8Bit(), stderr);
         exit(1);
     }
     return 0;
