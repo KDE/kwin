@@ -1230,7 +1230,7 @@ void Client::getWmNormalHints()
     if( isManaged())
         { // update to match restrictions
         QSize new_size = adjustedSize( size());
-        if( new_size != size() && !isShade()) // SHADE
+        if( new_size != size() && !isShade() && !isFullScreen()) // SHADE
             resizeWithChecks( new_size );
         }
     updateAllowedActions(); // affects isResizeable()
@@ -1911,7 +1911,7 @@ void Client::setFullScreen( bool set, bool user )
         if( maximizeMode() != MaximizeRestore )
             changeMaximize( false, false, true ); // adjust size
         else if( !geom_fs_restore.isNull())
-            setGeometry( geom_fs_restore );
+            setGeometry( QRect( geom_fs_restore.topLeft(), adjustedSize( geom_fs_restore.size())));
         // TODO isShaded() ?
         else
             { // does this ever happen?
