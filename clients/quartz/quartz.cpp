@@ -973,13 +973,17 @@ void QuartzClient::calcHiddenButtons()
 // Make sure the menu button follows double click conventions set in kcontrol
 void QuartzClient::menuButtonPressed()
 {
-    QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1,
-                       button[BtnMenu]->rect().bottomLeft().y()+2 );
-	menupoint = button[BtnMenu]->mapToGlobal( menupoint );
-        KDecorationFactory* f = factory();
-        showWindowMenu(menupoint);
-        if( !f->exists( this )) // 'this' was destroyed
-            return;
+    QRect menuRect = button[BtnMenu]->rect();
+    QPoint menuTop ( menuRect.topLeft() );
+    QPoint menuBottom ( menuRect.bottomRight() );
+	menuTop += QPoint(-1, 2);
+	menuBottom += QPoint(1, 2);
+	menuTop = button[BtnMenu]->mapToGlobal( menuTop );
+	menuBottom = button[BtnMenu]->mapToGlobal( menuBottom );
+    KDecorationFactory* f = factory();
+    showWindowMenu(QRect(menuTop, menuBottom));
+    if( !f->exists( this )) // 'this' was destroyed
+        return;
 	button[BtnMenu]->setDown(false);
 }
 

@@ -1316,12 +1316,15 @@ void KeramikClient::desktopChange()
 
 void KeramikClient::menuButtonPressed()
 {
-	QPoint menuPoint ( button[MenuButton]->rect().bottomLeft().x() - 6,
-					   button[MenuButton]->rect().bottomLeft().y() + 3 );
-        KDecorationFactory* f = factory();
-	showWindowMenu( button[MenuButton]->mapToGlobal( menuPoint ));
-        if( !f->exists( this )) // 'this' was destroyed
-            return;
+	QPoint menuTop ( button[MenuButton]->rect().topLeft() );
+	QPoint menuBottom ( button[MenuButton]->rect().bottomRight() );
+	menuTop += QPoint(-6, -3);
+	menuBottom += QPoint(6, 3);
+	KDecorationFactory* f = factory();
+	showWindowMenu( QRect( button[MenuButton]->mapToGlobal( menuTop ), 
+				button[MenuButton]->mapToGlobal( menuBottom )) );
+	if( !f->exists( this )) // 'this' was destroyed
+		return;
 	button[MenuButton]->setDown(false);
 }
 
