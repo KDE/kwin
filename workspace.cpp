@@ -202,6 +202,7 @@ Workspace::Workspace( bool restore )
     desktop_widget    (0),
     desktop_client    (0),
     active_client     (0),
+    last_active_client     (0),
     should_get_focus  (0),
     most_recently_raised (0),
     control_grab      (false),
@@ -331,6 +332,9 @@ void Workspace::init()
     connect(kapp, SIGNAL(appearanceChanged()), this,
 	    SLOT(slotResetAllClientsDelayed()));
 
+    connect(&focusEnsuranceTimer, SIGNAL(timeout()), this,
+	    SLOT(focusEnsurance()));
+    
     XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
     for (i = 0; i < nwins; i++) {
 	XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
@@ -417,6 +421,12 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    return TRUE;
     }
 
+    
+    if ( e->type == FocusIn )
+	focusEnsuranceTimer.stop();
+    else if ( e->type == FocusOut )
+	focusEnsuranceTimer.start(50);
+    
     Client * c = findClient( e->xany.window );
     if ( c )
 	return c->windowEvent( e );
@@ -630,6 +640,8 @@ bool Workspace::destroyClient( Client* c)
 	should_get_focus = 0;
     if ( c == active_client )
 	active_client = 0;
+    if ( c == last_active_client )
+	last_active_client = 0;
     storeFakeSessionInfo( c );
     delete c;
     propagateClients();
@@ -696,12 +708,15 @@ bool Workspace::keyPress(XKeyEvent key)
 		    freeKeyboard(FALSE);
 		    return TRUE;
 		}
-		XGrabPointer( qt_xdisplay(), root, TRUE,
+		if ( XGrabPointer( qt_xdisplay(), root, TRUE,
 			      (uint)(ButtonPressMask | ButtonReleaseMask |
 				     ButtonMotionMask | EnterWindowMask |
 				     LeaveWindowMask | PointerMotionMask),
 			      GrabModeSync, GrabModeAsync,
-			      None, None, kwin_time );
+				   None, None, kwin_time ) != GrabSuccess ) {
+		    freeKeyboard(FALSE);
+		    return TRUE;
+		}
 		XGrabKeyboard(qt_xdisplay(),
 			      root, FALSE,
 			      GrabModeAsync, GrabModeAsync,
@@ -724,12 +739,15 @@ bool Workspace::keyPress(XKeyEvent key)
 	      || km == (ControlMask)
 	      )){
 	    if (!control_grab){
-		XGrabPointer( qt_xdisplay(), root, TRUE,
+		if ( XGrabPointer( qt_xdisplay(), root, TRUE,
 			      (uint)(ButtonPressMask | ButtonReleaseMask |
 				     ButtonMotionMask | EnterWindowMask |
 				     LeaveWindowMask | PointerMotionMask),
 			      GrabModeSync, GrabModeAsync,
-			      None, None, kwin_time );
+				   None, None, kwin_time ) != GrabSuccess ) {
+		    freeKeyboard(FALSE);
+		    return TRUE;
+		}
 		XGrabKeyboard(qt_xdisplay(),
 			      root, FALSE,
 			      GrabModeAsync, GrabModeAsync,
@@ -972,6 +990,7 @@ void Workspace::setActiveClient( Client* c )
     if ( active_client )
 	active_client->setActive( FALSE );
     active_client = c;
+    last_active_client = active_client;
     if ( active_client ) {
 	focus_chain.remove( c );
 	if ( c->wantsTabFocus() )
@@ -3109,6 +3128,24 @@ void Workspace::saveDesktopSettings()
     }
 }
 
+
+/*!
+  Checks whether focus is in nirvana, and activates a client instead.
+ */
+void Workspace::focusEnsurance()
+{
+    Window focus;
+    int revert;
+    XGetInputFocus( qt_xdisplay(), &focus, &revert );
+    if ( focus == None || focus == PointerRoot ) {
+	if ( !last_active_client )
+	    last_active_client = topClientOnDesktop();
+	if ( last_active_client && last_active_client->isVisible() ) {
+	    kwin_time = CurrentTime;
+	    requestFocus( last_active_client );
+	}
+    }
+}
 
 
 #include "workspace.moc"

@@ -246,7 +246,8 @@ private slots:
     void clientPopupAboutToShow();
     void sendToDesktop( int );
     void clientPopupActivated( int );
-
+    void focusEnsurance();
+    
 protected:
     bool keyPress( XKeyEvent key );
     bool keyRelease( XKeyEvent key );
@@ -317,6 +318,7 @@ private:
 
     Client* desktop_client;
     Client* active_client;
+    Client* last_active_client;
     Client* should_get_focus;
     Client* most_recently_raised;
 
@@ -352,9 +354,11 @@ private:
     // colormap handling
     Colormap default_colormap;
     Colormap installed_colormap;
-     
+
     // Timer to collect requests for 'ResetAllClients'
     QTimer resetTimer;
+    
+    QTimer focusEnsuranceTimer;
 };
 
 inline WId Workspace::rootWin() const
