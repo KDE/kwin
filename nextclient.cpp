@@ -84,7 +84,7 @@ static void create_pixmaps()
 }
 
 NextButton::NextButton(QWidget *parent, const char *name,
-                       const unsigned char *bitmap, int bw=0, int bh = 0)
+                       const unsigned char *bitmap, int bw, int bh)
     : QButton(parent, name)
 {
     QPainter p;
