@@ -228,13 +228,15 @@ Client* Workspace::clientFactory( WId w )
     case NET::Tool:
         return ( mgr->allocateClient( this, w, true ) );
 
-    case NET::Menu:
     case NET::Dock:
         {
             Client * c = new NoBorderClient( this, w );
             c->setSticky( TRUE );
             return c;
         }
+
+    case NET::Menu:
+        return new NoBorderClient( this, w );
 
     case NET::Override:
         return new NoBorderClient( this, w);
