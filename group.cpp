@@ -438,10 +438,9 @@ void Client::cleanGrouping()
     }
 
 // Make sure that no group transient is considered transient
-// for a window that is (directly or indirectly) transient for it.
-// Group transients not being transient for each other is already
-// handled before calling addTransient(). Non-group transients
-// not causing loops are checked in verifyTransientFor().
+// for a window that is (directly or indirectly) transient for it
+// (including another group transients).
+// Non-group transients not causing loops are checked in verifyTransientFor().
 void Client::checkGroupTransients()
     {
     for( ClientList::ConstIterator it1 = group()->members().begin();
@@ -461,11 +460,16 @@ void Client::checkGroupTransients()
                  cl = cl->transientFor())
                 {
                 if( cl == *it1 )
-                    {
+                    { // don't use removeTransient(), that would modify *it2 too
                     (*it2)->transients_list.remove( *it1 );
                     continue;
                     }
                 }
+            // if *it1 and *it2 are both group transients, and are transient for each other,
+            // make only *it2 transient for *it1 (i.e. subwindow), as *it2 came later,
+            // and should be therefore on top of *it1
+            if( (*it2)->groupTransient() && (*it1)->hasTransient( *it2, true ) && (*it2)->hasTransient( *it1, true ))
+                (*it2)->transients_list.remove( *it1 );
             }
         }
     }
@@ -554,6 +558,10 @@ void Client::addTransient( Client* cl )
     transients_list.append( cl );
 //    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
 //    kdDebug() << kdBacktrace() << endl;
+//    for( ClientList::ConstIterator it = transients_list.begin();
+//         it != transients_list.end();
+//         ++it )
+//        kdDebug() << "AT:" << (*it) << endl;
     }
 
 void Client::removeTransient( Client* cl )
@@ -706,9 +714,9 @@ void Client::checkGroup()
             {
             if( !(*it)->groupTransient())  // and its transient for group transients in the new group
                 continue;
-	    if( !transients_list.contains( *it )) // unless it's the other way around
-		addTransient( *it );
+            addTransient( *it );
 	    }
+        checkGroupTransients();
         }
     }
 
