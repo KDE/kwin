@@ -1065,6 +1065,8 @@ void Client::toggleOnAllDesktops()
 
 void Client::setDesktop( int desktop )
     {
+    if( desktop != NET::OnAllDesktops ) // do range check
+        desktop = KMAX( 1, KMIN( workspace()->numberOfDesktops(), desktop ));
     if( desk == desktop )
         return;
     int was_desk = desk;

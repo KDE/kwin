@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 
 #include <kstartupinfo.h>
+#include <kglobal.h>
 #include <X11/extensions/shape.h>
 
 #include "notifications.h"
@@ -181,6 +182,8 @@ bool Client::manage( Window w, bool isMapped )
         }
     if ( desk == 0 ) // assume window wants to be visible on the current desktop
         desk = workspace()->currentDesktop();
+    if( desk != NET::OnAllDesktops ) // do range check
+        desk = KMAX( 1, KMIN( workspace()->numberOfDesktops(), desk ));
     info->setDesktop( desk );
     workspace()->updateOnAllDesktopsOfTransients( this ); // SELI
 //    onAllDesktopsChange(); decoration doesn't exist here yet

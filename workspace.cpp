@@ -1166,6 +1166,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
 
     bool was_on_desktop = c->isOnDesktop( desk ) || c->isOnAllDesktops();
     c->setDesktop( desk );
+    desk = c->desktop(); // Client did range checking
 
     if ( c->isOnDesktop( currentDesktop() ) )
         {
