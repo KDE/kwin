@@ -650,10 +650,9 @@ void Client::restackWindow( Window /*above TODO */, int detail, NET::RequestSour
 void Client::setKeepAbove( bool b )
     {
     b = rules()->checkKeepAbove( b );
-    if( b )
+    if( b && !rules()->checkKeepBelow( false ))
         setKeepBelow( false );
-    if ( b == keepAbove()
-        || ( b && keepBelow())) // forced below
+    if ( b == keepAbove())
         { // force hint change if different
         if( bool( info->state() & NET::KeepAbove ) != keepAbove())
             info->setState( keepAbove() ? NET::KeepAbove : 0, NET::KeepAbove );
@@ -670,10 +669,9 @@ void Client::setKeepAbove( bool b )
 void Client::setKeepBelow( bool b )
     {
     b = rules()->checkKeepBelow( b );
-    if( b )
+    if( b && !rules()->checkKeepAbove( false ))
         setKeepAbove( false );
-    if ( b == keepBelow()
-        || ( b && keepAbove())) // forced above
+    if ( b == keepBelow())
         { // force hint change if different
         if( bool( info->state() & NET::KeepBelow ) != keepBelow())
             info->setState( keepBelow() ? NET::KeepBelow : 0, NET::KeepBelow );
