@@ -395,8 +395,7 @@ private:
     int number_of_desktops;
     QMemArray<int> desktop_focus_chain;
 
-    // KDE4 remove me - unused
-    QGuardedPtr<Client> popup_client__;
+    Client* popup_client;
 
     void loadSessionInfo();
 
