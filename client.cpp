@@ -421,7 +421,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     active = FALSE;
     shaded = FALSE;
     transient_for = None;
-    passive_focus = FALSE;
     is_shape = FALSE;
     is_sticky = FALSE;
     stays_on_top = FALSE;
@@ -2231,7 +2230,7 @@ NET::WindowType Client::windowType() const
 
 bool Client::wantsTabFocus() const
 {
-    return windowType() == NET::Normal;
+    return windowType() == NET::Normal && input;
 }
 
 bool Client::isMovable() const

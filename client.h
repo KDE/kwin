@@ -126,7 +126,7 @@ public:
     bool isDesktop() const;
     bool isDock() const;
     bool isMenu() const;
-    
+
     bool isResizable() const;
 
     void takeFocus();
@@ -251,7 +251,6 @@ private:
     uint stays_on_top : 1;
     uint is_shape :1;
     uint may_move :1;
-    uint passive_focus :1;
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
     uint Pcontexthelp : 1; // does the window understand the ContextHelp protocol?

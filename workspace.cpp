@@ -1536,7 +1536,7 @@ void Workspace::lowerClient( Client* c, bool dropFocus )
     delete [] new_stack;
 
     propagateClients( TRUE );
-    
+
     if (dropFocus ) {
 	Client* top = topClientOnDesktop();
 	if ( top )
