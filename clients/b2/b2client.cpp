@@ -517,6 +517,10 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
 
+void B2Client::iconChange()
+{
+    button[BtnMenu]->repaint( false );   
+}
 
 void B2Client::resizeEvent( QResizeEvent* e)
 {

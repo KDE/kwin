@@ -91,6 +91,7 @@ protected:
     void stickyChange(bool on);
     void activeChange(bool on);
     void maximizeChange(bool m);
+    void iconChange();
     void doShape();
     MousePosition mousePosition( const QPoint& p ) const;
 private slots:
