@@ -1313,8 +1313,8 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
 
 void Workspace::deskCleanup(CleanupType ct)
 {
-  QValueList<Client *>::Iterator it(clients.fromLast());
-  for (; it != clients.begin(); --it) {
+  ClientList::Iterator it(clients.fromLast());
+  for (; it != clients.end(); --it) {
     if((!(*it)->isOnDesktop(currentDesktop())) ||
        ((*it)->isIconified())                  ||
        ((*it)->isSticky())                     ||
@@ -1332,7 +1332,7 @@ void Workspace::deskCleanup(CleanupType ct)
   Lowers the client \a c taking layers, transient windows and window
   groups into account.
  */
-void Workspace::lowerClient( Client* c )
+void Workspace::lowerClient( Client* c, bool dropFocus )
 {
     if ( !c )
 	return;
@@ -1369,14 +1369,18 @@ void Workspace::lowerClient( Client* c )
 
     Window* new_stack = new Window[ stacking_order.count()+1];
     int i = 0;
+    Client *new_top = 0;
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	new_stack[i++] = (*it)->winId();
+	if (!new_top && (*it)->isVisible()) new_top = (*it);
     }
     XRaiseWindow(qt_xdisplay(), new_stack[0]);
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
-
     propagateClients( TRUE );
+    if (dropFocus && new_top) {
+        requestFocus(new_top);
+    }
 }
 
 
@@ -1453,17 +1457,15 @@ void Workspace::lowerTransientsOf( ClientList& safeset, Client* c )
 {
     ClientList local = stacking_order;
     ClientList::ConstIterator it = local.fromLast();
-    //why the hell is --begin() undefined (OK same, as ++end(), but end()
-    //isn't usable, while begin() is)
-    while (1) {
-	if ( (*it)->transientFor() == c->window() && !safeset.contains( *it ) ) {
+    /* QT docu says --begin() is undefined, actually it is ==end(),
+       so the usual for loops work: for(bla;it!=end()...) */
+    for (; it!=local.end(); --it) {
+	if ((*it)->transientFor() == c->window() && !safeset.contains(*it)) {
 	    safeset.append( *it );
 	    lowerTransientsOf( safeset, *it );
 	    stacking_order.remove( *it );
 	    stacking_order.prepend( *it );
 	}
-	if (it == local.begin()) break;
-	--it;
     }
 }
 

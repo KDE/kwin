@@ -102,7 +102,7 @@ public:
     void doPlacement( Client* c );
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
-    void lowerClient( Client* c );
+    void lowerClient( Client* c, bool dropFocus=true );
 
     void clientHidden( Client*  );
 
