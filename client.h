@@ -63,7 +63,7 @@ class Client : public QObject, public KDecorationDefines
         Client* findModal();
         const Group* group() const;
         Group* group();
-        void checkGroup( Group* gr = NULL );
+        void checkGroup( Group* gr = NULL, bool force = false );
     // prefer isXXX() instead
         NET::WindowType windowType( bool strict = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
 

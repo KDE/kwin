@@ -418,7 +418,7 @@ void Client::setTransient( Window new_transient_for_id )
             assert( transient_for != NULL ); // verifyTransient() had to check this
             transient_for->addTransient( this );
             }
-        checkGroup();
+        checkGroup( NULL, true ); // force, because transiency has changed
         workspace()->updateClientLayer( this );
         }
     }
@@ -729,7 +729,7 @@ Client* Client::findModal()
 // Client::window_group only holds the contents of the hint,
 // but it should be used only to find the group, not for anything else
 // Argument is only when some specific group needs to be set.
-void Client::checkGroup( Group* set_group )
+void Client::checkGroup( Group* set_group, bool force )
     {
     Group* old_group = in_group;
     if( set_group != NULL )
@@ -802,7 +802,7 @@ void Client::checkGroup( Group* set_group )
                 }
             }
         }
-    if( in_group != old_group )
+    if( in_group != old_group || force )
         {
         for( ClientList::Iterator it = transients_list.begin();
              it != transients_list.end();
