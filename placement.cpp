@@ -422,6 +422,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
     area = checkArea( c, area );
     ClientList mainwindows = c->mainClients();
     Client* place_on = NULL;
+    Client* place_on2 = NULL;
     int mains_count = 0;
     for( ClientList::ConstIterator it = mainwindows.begin();
          it != mainwindows.end();
@@ -430,6 +431,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
         if( (*it)->isSpecialWindow() && !(*it)->isOverride())
             continue; // don't consider toolbars etc when placing
         ++mains_count;
+        place_on2 = *it;
         if( (*it)->isOnCurrentDesktop())
             {
             if( place_on == NULL )
@@ -448,13 +450,14 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
             placeCentered( c, area );
             return;
             }
-        place_on = mainwindows.first();
+        place_on = place_on2; // use the only window filtered together with 'mains_count'
         }
     QRect geom = c->geometry();
     geom.moveCenter( place_on->geometry().center());
     c->move( geom.topLeft());
     // get area again, because the mainwindow may be on different xinerama screen
     area = checkArea( c, QRect()); 
+    c->keepInArea( area ); // make sure it's kept inside workarea
     }
 
 QRect Placement::checkArea( const Client* c, const QRect& area )
