@@ -1124,7 +1124,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     if ( c->desktop() == desk )
         return;
 
-    bool was_on_desktop = c->isOnDesktop( desk );
+    bool was_on_desktop = c->isOnDesktop( desk ) || c->isOnAllDesktops();
     c->setDesktop( desk );
 
     if ( c->isOnDesktop( currentDesktop() ) )
