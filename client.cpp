@@ -1139,15 +1139,7 @@ void Client::takeActivity( int flags, bool handled, allowed_t )
     previous_activity_timestamp = qt_x_time;
     previous_client = this;
 #endif
-    int flg = 0;
-    if( flags & ActivityFocus )
-        {
-        flg |= 1 << 0;
-        workspace()->setShouldGetFocus( this );
-        }
-    if( flags & ActivityRaise )
-        flg |= 1 << 1;
-    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_take_activity, flg );
+    workspace()->sendTakeActivity( this, qt_x_time, flags );
     }
 
 // performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS

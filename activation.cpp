@@ -235,6 +235,7 @@ void Workspace::setActiveClient( Client* c, allowed_t )
             focus_chain.append( c );
         active_client->demandAttention( false );
         }
+    pending_take_activity = NULL;
 
     updateCurrentTopMenu();
     updateToolWindows( false );
@@ -352,10 +353,15 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
     c->takeActivity( flags, handled, Allowed );
     }
 
-void Workspace::handleActivityRaise( Client* c, Time timestamp )
+void Workspace::handleTakeActivity( Client* c, /*Time timestamp*/, int flags )
     {
-    if( last_restack == CurrentTime || timestampCompare( timestamp, last_restack ) >= 0 )
+    if( pending_take_activity != c ) // pending_take_activity is reset when doing restack or activation
+        return;
+    if(( flags & ActivityRaise ) != 0 )
         raiseClient( c );
+    if(( flags & ActivityFocus ) != 0 && c->isShown( false ))
+        c->takeFocus( Allowed );
+    pending_take_activity = NULL;
     }
 
 /*!

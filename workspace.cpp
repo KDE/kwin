@@ -69,7 +69,7 @@ Workspace::Workspace( bool restore )
     last_active_client     (0),
     most_recently_raised (0),
     movingClient(0),
-    last_restack      (CurrentTime),
+    pending_take_activity ( NULL ),
     was_user_interaction (false),
     session_saving    (false),
     control_grab      (false),
@@ -505,6 +505,8 @@ void Workspace::removeClient( Client* c, allowed_t )
     Q_ASSERT( c != active_client );
     if ( c == last_active_client )
         last_active_client = 0;
+    if( c == pending_take_activity )
+        pending_take_activity = NULL;
 
     updateStackingOrder( true );
 
@@ -1327,6 +1329,12 @@ void Workspace::killWindowId( Window window_to_kill )
 void Workspace::sendPingToWindow( Window window, Time timestamp )
     {
     rootInfo->sendPing( window, timestamp );
+    }
+
+void Workspace::sendTakeActivity( Client* c, Time timestamp, long flags )
+    {
+    rootInfo->takeActivity( c->window(), timestamp, flags );
+    pending_take_activity = c;
     }
 
 

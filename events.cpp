@@ -110,7 +110,7 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
         {
         if( timestamp == CurrentTime )
             timestamp = c->userTime();
-        if( src != NET::FromApplication && src != NET::FromActivity && src != FromTool )
+        if( src != NET::FromApplication && src != FromTool )
             src = NET::FromTool;
         if( src == NET::FromTool )
             workspace->activateClient( c );
@@ -137,13 +137,16 @@ void RootInfo::restackWindow( Window w, RequestSource src, Window above, int det
         {
         if( timestamp == CurrentTime )
             timestamp = c->userTime();
-        if( src != NET::FromApplication && src != NET::FromActivity && src != FromTool )
+        if( src != NET::FromApplication && src != FromTool )
             src = NET::FromTool;
-        if( src == NET::FromActivity )
-            workspace->handleActivityRaise( c, timestamp );
-        else
-            c->restackWindow( above, detail, src, timestamp, true );
+        c->restackWindow( above, detail, src, timestamp, true );
         }
+    }
+
+void RootInfo::gotTakeActivity( Window w, Time timestamp, long flags )
+    {
+    if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
+        workspace->handleTakeActivity( c, timestamp, flags );
     }
 
 void RootInfo::closeWindow(Window w)

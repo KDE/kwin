@@ -341,7 +341,7 @@ void Workspace::raiseClient( Client* c )
     if( !c->isSpecialWindow())
         {
         most_recently_raised = c;
-        last_restack = qt_x_time;
+        pending_take_activity = NULL;
         }
     }
 

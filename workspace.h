@@ -107,7 +107,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void activateClient( Client*, bool force = FALSE  );
         void requestFocus( Client* c, bool force = FALSE );
         void takeActivity( Client* c, int flags, bool handled ); // flags are ActivityFlags
-        void handleActivityRaise( Client* c, Time timestamp );
+        void handleTakeActivity( Client* c, Time timestamp, int flags ); // flags are ActivityFlags
         bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false,
             bool session_active = false );
         void restoreFocus();
@@ -212,6 +212,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool isNotManaged( const QString& title );  // ### setter or getter ?
 
         void sendPingToWindow( Window w, Time timestamp ); // called from Client::pingWindow()
+        void sendTakeActivity( Client* c, Time timestamp, long flags ); // called from Client::takeActivity()
 
     // only called from Client::destroyClient() or Client::releaseWindow()
         void removeClient( Client*, allowed_t );
@@ -427,7 +428,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         Client* last_active_client;
         Client* most_recently_raised; // used _only_ by raiseOrLowerClient()
         Client* movingClient;
-        Time last_restack;
+        Client* pending_take_activity;
 
         ClientList clients;
         ClientList desktops;
@@ -559,6 +560,7 @@ class RootInfo : public NETRootInfo3
         virtual void moveResizeWindow(Window w, int flags, int x, int y, int width, int height );
         virtual void gotPing(Window w, Time timestamp);
         virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp);
+        virtual void gotTakeActivity(Window w, Time timestamp, long flags );
     private:
         Workspace* workspace;
     };
