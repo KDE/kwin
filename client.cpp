@@ -81,6 +81,7 @@ static void sendClientMessage(Window w, Atom a, long x){
 WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     : QWidget( parent, name )
 {
+    setBackgroundColor( red );
     win = w;
     setMouseTracking( TRUE );
 
@@ -142,9 +143,10 @@ QSizePolicy WindowWrapper::sizePolicy() const
 
 void WindowWrapper::resizeEvent( QResizeEvent * )
 {
-    if ( win )
+    if ( win ) {
 	XMoveResizeWindow( qt_xdisplay(), win,
 			   0, 0, width(), height() );
+}
 }
 
 void WindowWrapper::showEvent( QShowEvent* )
@@ -330,11 +332,10 @@ void Client::manage( bool isMapped )
     setMappingState( NormalState );
     if ( isOnDesktop( workspace()->currentDesktop() ) ) {
 	show();
-    } 
+    }
 
     if ( options->focusPolicyIsReasonable() )
 	workspace()->requestFocus( this );
-
 
 }
 
@@ -515,13 +516,13 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
     }
 
     if ( e.value_mask & (CWX | CWY ) ) {
-	int nx = x();
-	int ny = y();
+	int nx = x() + windowWrapper()->x();
+	int ny = y() + windowWrapper()->y();
 	if ( e.value_mask & CWX )
 	    nx = e.x;
 	if ( e.value_mask & CWY )
 	    ny = e.y;
-	move( nx, ny );
+	move( nx - windowWrapper()->x(), ny - windowWrapper()->y() );
     }
 
     if ( e.value_mask & (CWWidth | CWHeight ) ) {
@@ -1343,8 +1344,9 @@ void Client::setMask( const QRegion & reg)
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 )
     : Client( ws, w, parent, name )
 {
-    QGridLayout* g = new QGridLayout( this, 0, 0, 0 );
-    g->addWidget( windowWrapper(), 0, 0 );
+    setBackgroundColor( yellow );
+    QHBoxLayout* h = new QHBoxLayout( this );
+    h->addWidget( windowWrapper() );
 }
 
 NoBorderClient::~NoBorderClient()
