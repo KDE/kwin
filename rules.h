@@ -62,6 +62,7 @@ class WindowRules
         bool checkKeepBelow( bool below, bool init = false ) const;
         bool checkFullScreen( bool fs, bool init = false ) const;
         bool checkNoBorder( bool noborder, bool init = false ) const;
+        int checkFSP( int fsp ) const;
     private:
         static SettingRule readRule( KConfig&, const QString& key );
         static SettingRule readForceRule( KConfig&, const QString& key );
@@ -114,6 +115,8 @@ class WindowRules
         SettingRule fullscreenrule;
         bool noborder;
         SettingRule noborderrule;
+        int fspleveladjust;
+        SettingRule fspleveladjustrule;
     };
 
 inline

@@ -46,6 +46,7 @@ WindowRules::WindowRules()
     , belowrule( DontCareRule )
     , fullscreenrule( DontCareRule )
     , noborderrule( DontCareRule )
+    , fspleveladjustrule( DontCareRule )
     {
     }
 
@@ -60,7 +61,11 @@ WindowRules::WindowRules()
 #define READ_SET_RULE_2( var, type, func, funcarg ) \
     var = func ( cfg.read##type##Entry( #var ), funcarg ); \
     var##rule = readRule( cfg, #var "rule" );
-    
+
+#define READ_FORCE_RULE( var, type, func ) \
+    var = func ( cfg.read##type##Entry( #var )); \
+    var##rule = readForceRule( cfg, #var "rule" );
+
 WindowRules::WindowRules( KConfig& cfg )
     {
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
@@ -95,12 +100,14 @@ WindowRules::WindowRules( KConfig& cfg )
     READ_SET_RULE( below, Bool, );
     READ_SET_RULE( fullscreen, Bool, );
     READ_SET_RULE( noborder, Bool, );
+    READ_FORCE_RULE( fspleveladjust, Num, );
     kdDebug() << "READ RULE:" << wmclass << endl;
     }
 
 #undef READ_MATCH_STRING
 #undef READ_SET_RULE
 #undef READ_SET_RULE_2
+#undef READ_FORCE_RULE
 
 #define WRITE_MATCH_STRING( var, cast ) \
     if( !var.isEmpty()) \
@@ -161,6 +168,7 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_SET_RULE( below, );
     WRITE_SET_RULE( fullscreen, );
     WRITE_SET_RULE( noborder, );
+    WRITE_SET_RULE( fspleveladjust, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -365,6 +373,12 @@ bool WindowRules::checkNoBorder( bool noborder, bool init ) const
     return checkRule( noborderrule, init ) ? this->noborder : noborder;
     }
 
+int WindowRules::checkFSP( int fsp ) const
+    {
+    if( !checkForceRule( fspleveladjustrule ))
+        return fsp;
+    return QMIN( 4, QMAX( 0, fsp + fspleveladjust ));
+    }
 
 // Client
 

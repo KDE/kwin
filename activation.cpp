@@ -26,6 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "atoms.h"
 #include "group.h"
+#include "rules.h"
 
 extern Time qt_x_time;
 
@@ -465,8 +466,8 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
     // 4 - extreme - no window gets focus without user intervention
     if( time == -1U )
         time = c->userTime();
-    if( session_saving
-        && options->focusStealingPreventionLevel <= 2 ) // <= normal
+    int level = c->rules()->checkFSP( options->focusStealingPreventionLevel );
+    if( session_saving && level <= 2 ) // <= normal
         {
         return true;
         }
@@ -481,9 +482,9 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         }
     if( time == 0 ) // explicitly asked not to get focus
         return false;
-    if( options->focusStealingPreventionLevel == 0 ) // none
+    if( level == 0 ) // none
         return true;
-    if( options->focusStealingPreventionLevel == 4 ) // extreme
+    if( level == 4 ) // extreme
         return false;
     if( c->ignoreFocusStealing())
         return true;
@@ -498,7 +499,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         kdDebug( 1212 ) << "Activation: Belongs to active application" << endl;
         return true;
         }
-    if( options->focusStealingPreventionLevel == 3 ) // high
+    if( level == 3 ) // high
         return false;
     if( time == -1U )  // no time known
         if( session_active )
@@ -506,14 +507,14 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         else
         {
         kdDebug( 1212 ) << "Activation: No timestamp at all" << endl;
-        if( options->focusStealingPreventionLevel == 1 ) // low
+        if( level == 1 ) // low
             return true;
         // no timestamp at all, don't activate - because there's also creation timestamp
         // done on CreateNotify, this case should happen only in case application
         // maps again already used window, i.e. this won't happen after app startup
         return false; 
         }
-    // options->focusStealingPreventionLevel == 2 // normal
+    // level == 2 // normal
     Time user_time = ac->userTime();
     kdDebug( 1212 ) << "Activation, compared:" << c << ":" << time << ":" << user_time
         << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
@@ -526,15 +527,15 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
 // to the same application
 bool Workspace::allowFullClientRaising( const Client* c, Time time )
     {
-    if( session_saving
-        && options->focusStealingPreventionLevel <= 2 ) // <= normal
+    int level = c->rules()->checkFSP( options->focusStealingPreventionLevel );
+    if( session_saving && level <= 2 ) // <= normal
         {
         return true;
         }
     Client* ac = mostRecentlyActivatedClient();
-    if( options->focusStealingPreventionLevel == 0 ) // none
+    if( level == 0 ) // none
         return true;
-    if( options->focusStealingPreventionLevel == 4 ) // extreme
+    if( level == 4 ) // extreme
         return false;
     if( ac == NULL || ac->isDesktop())
         {
@@ -549,7 +550,7 @@ bool Workspace::allowFullClientRaising( const Client* c, Time time )
         kdDebug( 1212 ) << "Raising: Belongs to active application" << endl;
         return true;
         }
-    if( options->focusStealingPreventionLevel == 3 ) // high
+    if( level == 3 ) // high
         return false;
     Time user_time = ac->userTime();
     kdDebug( 1212 ) << "Raising, compared:" << time << ":" << user_time
