@@ -513,7 +513,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
 
     lay->addWidget(electricBox);
 
-    QHBoxLayout* focusStealingLayout = new QHBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint());
+    QHBoxLayout* focusStealingLayout = new QHBoxLayout( lay,KDialog::spacingHint());
     QLabel* focusStealingLabel = new QLabel( i18n( "Focus stealing prevention level:" ), this );
     focusStealing = new QComboBox( this );
     focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "None" ));
@@ -542,8 +542,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     QWhatsThis::add( focusStealingLabel, wtstr );
 
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
-
-    lay->addLayout( focusStealingLayout );
 
     lay->addStretch();
     load();
