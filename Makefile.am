@@ -9,3 +9,7 @@ kwin_SOURCES = atoms.cpp beclient.cpp client.cpp main.cpp stdclient.cpp workspac
 kwin_LDADD = $(LIB_KDECORE) $(LIB_KDEUI)
 
 METASOURCES = AUTO
+
+messages:
+	$(XGETTEXT) -C -ktranslate -kaliasLocal -ki18n -x $(includedir)/kde.pot *.h *.cpp && mv messages.po ../po/kwin.pot
+
