@@ -154,17 +154,13 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 // 	buttonLayout->addStretch();
 
 	// preview
-	QVBoxLayout* previewLayout = new QVBoxLayout(layout, KDialog::spacingHint());
+	QVBoxLayout* previewLayout = new QVBoxLayout(layout, KDialog::spacingHint() );
+	previewLayout->setMargin( KDialog::marginHint() );
 
-	QFrame* preview_frame = new QFrame( this );
-	preview_frame->setFrameShape( QFrame::NoFrame );
-	QVBoxLayout* preview_layout = new QVBoxLayout( preview_frame, 0 );
-	preview = new KDecorationPreview( preview_frame );
-	preview_layout->addWidget( preview );
-	previewLayout->addWidget( preview_frame );
-	previewLayout->setStretchFactor( preview_frame, 10 );
+	preview = new KDecorationPreview( this );
+	previewLayout->addWidget(preview);
 
-	preview_frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	preview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	tabWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
 	// Load all installed decorations into memory
