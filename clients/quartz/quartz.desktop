@@ -1,13 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Quartz
-Name[az]=Kvars
+Name[az]=Kvarts
 Name[be]=Кварц
 Name[bn]=কোয়ার্ট্‌জ
 Name[cy]=Cwarts
 Name[eo]=Kvarco
 Name[es]=Cuarzo
-Name[eu]=Kristala
+Name[eu]=Kuartzoa
 Name[fa]=کوارتز
 Name[hi]=क्वार्ट्ज
 Name[ko]=수정
@@ -25,6 +25,5 @@ Name[uk]=Кварц
 Name[uz]=Чақмоқтош
 Name[ven]=Musuku
 Name[xx]=xxQuartzxx
-Name[zh_CN]=水晶
 Name[zh_TW]=石英
 X-KDE-Library=kwin3_quartz
