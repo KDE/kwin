@@ -657,6 +657,7 @@ void Client::startMoveResize()
 
 void Client::stopMoveResize()
 {
+    clearbound();
     if ( ( isMove() && options->moveMode != Options::Opaque )
       || ( isResize() && options->resizeMode != Options::Opaque ) )
         XUngrabServer( qt_xdisplay() );
@@ -664,6 +665,7 @@ void Client::stopMoveResize()
     releaseMouse();
     workspace()->setClientIsMoving(0);
     moveResizeMode = false;
+    update();
 }
 
 /*!
@@ -1723,7 +1725,6 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
     if ( (e->stateAfter() & MouseButtonMask) == 0 ) {
         buttonDown = FALSE;
         if ( moveResizeMode ) {
-            clearbound();
             stopMoveResize();
             setGeometry( geom );
             mode = mousePosition( e->pos() );
@@ -2980,7 +2981,6 @@ void Client::keyPressEvent( uint key_code )
     case Key_Return:
     case Key_Enter:
     case Key_Escape:
-        clearbound();
         stopMoveResize();
         setGeometry( geom );
         buttonDown = FALSE;
