@@ -1364,6 +1364,11 @@ void Client::setShade( bool s )
 	} while ( h > s.height() + step );
 	clearWFlags( WNorthWestGravity );
 	resize (s );
+	XEvent tmpE;
+	do {
+	    XWindowEvent (qt_xdisplay(), windowWrapper()->winId(),
+			  SubstructureNotifyMask, &tmpE);
+	} while ( tmpE.type != UnmapNotify  || tmpE.xunmap.window != win );
     } else {
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
