@@ -2032,6 +2032,71 @@ void Workspace::refresh() {
    XFlush(qt_xdisplay());
 }
 
+/*!
+  During virt. desktop switching, desktop areas covered by windows that are
+  going to be hidden are first obscured by new windows with no background
+  ( i.e. transparent ) placed right below the windows. These invisible windows
+  are removed after the switch is complete.
+  Reduces desktop ( wallpaper ) repaints during desktop switching
+*/
+class ObscuringWindows
+{
+public:
+    ~ObscuringWindows();
+    void create( Client* c );
+private:
+    QValueList<Window> obscuring_windows;
+    static QValueList<Window>* cached;
+    static unsigned int max_cache_size;
+};
+
+QValueList<Window>* ObscuringWindows::cached = NULL;
+unsigned int ObscuringWindows::max_cache_size = 0;
+
+void ObscuringWindows::create( Client* c )
+{
+    if( cached == NULL )
+        cached = new QValueList<Window>;
+    Window obs_win;
+    XWindowChanges chngs;
+    int mask = CWSibling | CWStackMode;
+    if( cached->count() > 0 ) {
+        cached->remove( obs_win = cached->first());
+        chngs.x = c->x();
+        chngs.y = c->y();
+        chngs.width = c->width();
+        chngs.height = c->height();
+        mask |= CWX | CWY | CWWidth | CWHeight;
+    }
+    else {
+        XSetWindowAttributes a;
+        a.background_pixmap = None;
+        a.override_redirect = True;
+        obs_win = XCreateWindow( qt_xdisplay(), qt_xrootwin(), c->x(), c->y(),
+            c->width(), c->height(), 0, CopyFromParent, InputOutput,
+            CopyFromParent, CWBackPixmap | CWOverrideRedirect, &a );
+    }
+    chngs.sibling = c->winId();
+    chngs.stack_mode = Below;
+    XConfigureWindow( qt_xdisplay(), obs_win, mask, &chngs );
+    XMapWindow( qt_xdisplay(), obs_win );
+    obscuring_windows.append( obs_win );
+}
+
+ObscuringWindows::~ObscuringWindows()
+{
+    max_cache_size = QMAX( max_cache_size, obscuring_windows.count() + 4 ) - 1;
+    for( QValueList<Window>::ConstIterator it = obscuring_windows.begin();
+         it != obscuring_windows.end();
+         ++it ) {
+        XUnmapWindow( qt_xdisplay(), *it );
+        if( cached->count() < max_cache_size )
+            cached->prepend( *it );
+        else
+            XDestroyWindow( qt_xdisplay(), *it );
+    }
+}
+
 
 /*!
   Sets the current desktop to \a new_desktop
@@ -2056,9 +2121,12 @@ void Workspace::setCurrentDesktop( int new_desktop ){
           mapping done from front to back => less exposure events
         */
         Events::raise((Events::Event) (Events::DesktopChange+new_desktop));
-
+        
+        ObscuringWindows obs_wins;
+        
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
             if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
+                obs_wins.create( *it );
                 (*it)->hide();
                 unmapList += (*it);
             }
