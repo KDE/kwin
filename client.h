@@ -129,7 +129,7 @@ public:
 
 
     virtual bool wantsTabFocus() const { return TRUE;} //### just for now
-    
+
     bool providesContextHelp() const;
 
     bool performMouseCommand( Options::MouseCommand, QPoint globalPos );
@@ -147,6 +147,7 @@ protected:
     void mousePressEvent( QMouseEvent * );
     void mouseReleaseEvent( QMouseEvent * );
     void mouseMoveEvent( QMouseEvent * );
+    void keyPressEvent( QKeyEvent * );
     void resizeEvent( QResizeEvent * );
     virtual void windowWrapperShowEvent( QShowEvent* ){}
     virtual void windowWrapperHideEvent( QHideEvent* ){}

@@ -15,3 +15,7 @@
  keys->insertItem(i18n("Window maximize horizontal"),"Window maximize horizontal", "");
  keys->insertItem(i18n("Window iconify"),"Window iconify", "");
  keys->insertItem(i18n("Window shade"),"Window shade", "");
+ keys->insertItem(i18n("Window move"),"Window move", "");
+ keys->insertItem(i18n("Window resize"),"Window resize", "");
+
+ keys->insertItem(i18n("Mouse emulation"),"Mouse emulation", "F12");

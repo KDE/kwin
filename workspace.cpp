@@ -18,6 +18,7 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
+#include <X11/keysymdef.h>
 #include <X11/extensions/shape.h>
 
 extern Time kwin_time;
@@ -120,6 +121,7 @@ Workspace::Workspace()
 
     control_grab = FALSE;
     tab_grab = FALSE;
+    mouse_emulation = FALSE;
     tab_box = new TabBox( this );
 }
 
@@ -235,6 +237,11 @@ Workspace::~Workspace()
  */
 bool Workspace::workspaceEvent( XEvent * e )
 {
+    if ( mouse_emulation && e->type == ButtonPress || e->type == ButtonRelease ) {
+	mouse_emulation = FALSE;
+	XUngrabKeyboard( qt_xdisplay(), kwin_time );
+    }
+    
     Client * c = findClient( e->xany.window );
     if ( c )
 	return c->windowEvent( e );
@@ -349,9 +356,20 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
 	break;
     case KeyPress:
+	if ( QWidget::keyboardGrabber() ) {
+	    freeKeyboard( FALSE );
+	    break;
+	}
+	if ( mouse_emulation )
+	    return keyPressMouseEmulation( e->xkey );
 	return keyPress(e->xkey);
-	break;
     case KeyRelease:	
+	if ( QWidget::keyboardGrabber() ) {
+	    freeKeyboard( FALSE );
+	    break;
+	}
+	if ( mouse_emulation )
+	    return FALSE;
 	return keyRelease(e->xkey);
 	break;
     case FocusIn:
@@ -831,6 +849,8 @@ void Workspace::requestFocus( Client* c)
 
     if ( !popup || !popup->isVisible() )
 	popup_client = c;
+    
+    active_client = c;
 
     if ( c->isVisible() && !c->isShade() ) {
 	c->takeFocus();
@@ -916,6 +936,12 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 	return;
 
     switch ( op ) {
+    case Options::MoveOp:
+	c->performMouseCommand( Options::MouseMove, QCursor::pos() );
+	break;
+    case Options::ResizeOp:
+	c->performMouseCommand( Options::MouseResize, QCursor::pos() );
+	break;
     case Options::CloseOp:
 	c->closeWindow();
 	break;
@@ -935,8 +961,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 
 void Workspace::clientPopupActivated( int id )
 {
-    if ( popup_client )
-	performWindowOperation( popup_client, (Options::WindowOperation) id );
+    performWindowOperation( popup_client, (Options::WindowOperation) id );
 }
 
 /*!
@@ -1499,6 +1524,11 @@ void Workspace::propagateClients( bool onlyStacking )
 }
 
 
+
+/*!
+  Check whether \a w is a dock window. If so, add it to the respective
+  datastructures and propagate it to the world.
+ */
 bool Workspace::addDockwin( WId w )
 {
     WId dockFor = 0;
@@ -1512,6 +1542,10 @@ bool Workspace::addDockwin( WId w )
     return TRUE;
 }
 
+/*!
+  Check whether \a w is a dock window. If so, remove it from the
+  respective datastructures and propagate this to the world.
+ */
 bool Workspace::removeDockwin( WId w )
 {
     if ( !dockwins.contains( w ) )
@@ -1521,6 +1555,12 @@ bool Workspace::removeDockwin( WId w )
     return TRUE;
 }
 
+
+/*!
+  Returns whether iconify means actually withdraw for client \a. This
+  is TRUE for clients that have a docking window. In that case the
+  docking window will serve as icon replacement.
+ */
 bool Workspace::iconifyMeansWithdraw( Client* c)
 {
     for ( DockWindowList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
@@ -1547,6 +1587,9 @@ void Workspace::propagateDockwins()
 }
 
 
+/*!
+  Create the global accel object \c keys.
+ */
 void Workspace::createKeybindings(){
     keys = new KGlobalAccel();
 
@@ -1568,7 +1611,10 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window maximize vertical", this, SLOT( slotWindowMaximizeVertical() ) );
     keys->connectItem( "Window iconify", this, SLOT( slotWindowIconify() ) );
     keys->connectItem( "Window shade", this, SLOT( slotWindowShade() ) );
+    keys->connectItem( "Window move", this, SLOT( slotWindowMove() ) );
+    keys->connectItem( "Window resize", this, SLOT( slotWindowResize() ) );
 
+    keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
     keys->readSettings();
 }
 
@@ -1598,33 +1644,70 @@ void Workspace::slotSwitchDesktop8(){
 }
 
 
+
+/*!
+  Maximizes the popup client
+ */
 void Workspace::slotWindowMaximize()
 {
     if ( popup_client )
 	popup_client->maximize( Client::MaximizeFull );
 }
+
+/*!
+  Maximizes the popup client vertically
+ */
 void Workspace::slotWindowMaximizeVertical()
 {
     if ( popup_client )
 	popup_client->maximize( Client::MaximizeVertical );
 }
+
+/*!
+  Maximizes the popup client horiozontally
+ */
 void Workspace::slotWindowMaximizeHorizontal()
 {
     if ( popup_client )
 	popup_client->maximize( Client::MaximizeHorizontal );
 }
+
+
+/*!
+  Iconifies the popup client
+ */
 void Workspace::slotWindowIconify()
 {
-    if ( popup_client )
-	popup_client->iconify();
+    performWindowOperation( popup_client, Options::IconifyOp );
 }
 
+/*!
+  Shades/unshades the popup client respectively
+ */
 void Workspace::slotWindowShade()
 {
-    if ( popup_client )
-	popup_client->setShade( !popup_client->isShade() );
+    performWindowOperation( popup_client, Options::ShadeOp );
 }
 
+
+/*!
+  Invokes keyboard mouse emulation
+ */
+void Workspace::slotMouseEmulation()
+{
+    if ( XGrabKeyboard(qt_xdisplay(),
+		       root, FALSE,
+		       GrabModeAsync, GrabModeAsync,
+		       kwin_time) == GrabSuccess ) {
+	mouse_emulation = TRUE;
+    }
+}
+
+
+/*!
+  Adjusts the desktop popup to the current values and the location of
+  the popup client.
+ */
 void Workspace::desktopPopupAboutToShow()
 {
     if ( !desk_popup )
@@ -1641,6 +1724,12 @@ void Workspace::desktopPopupAboutToShow()
     }
 }
 
+
+/*!
+  The client popup menu will become visible soon.
+  
+  Adjust the items according to the respective popup client.
+ */
 void Workspace::clientPopupAboutToShow()
 {
     if ( !popup_client || !popup )
@@ -1649,6 +1738,10 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
 }
 
+
+/*!
+  Sends the activeClient() to desktop \a desk
+ */
 void Workspace::sendToDesktop( int desk )
 {
     if ( !popup_client )
@@ -1677,6 +1770,10 @@ void Workspace::sendToDesktop( int desk )
     }
 }
 
+
+/*!
+  Shows the window operations popup menu for the activeClient()
+ */
 void Workspace::slotWindowOperations()
 {
     if ( !active_client )
@@ -1685,14 +1782,34 @@ void Workspace::slotWindowOperations()
     p->popup( active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() ) );
 }
 
+
+/*!
+  Closes the popup client
+ */
 void Workspace::slotWindowClose()
 {
-    if ( popup_client )
-	popup_client->closeWindow();
+    performWindowOperation( popup_client, Options::CloseOp );
 }
 
 
-/*
+/*!
+  Starts keyboard move mode for the popup client
+ */
+void Workspace::slotWindowMove()
+{
+    performWindowOperation( popup_client, Options::MoveOp );
+}
+
+/*!
+  Starts keyboard resize mode for the popup client
+ */
+void Workspace::slotWindowResize()
+{
+    performWindowOperation( popup_client, Options::ResizeOp );
+}
+
+
+/*!
   Client \a c is moved around to position \a pos. This gives the
   workspace the opportunity to interveniate and to implement
   snap-to-windows functionality.
@@ -1793,3 +1910,93 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
   }
   return pos;
 }
+
+
+/*! 
+  Handles keypress event during mouse emulation
+ */
+bool Workspace::keyPressMouseEmulation( XKeyEvent key )
+{
+    if ( root != qt_xrootwin() )
+	return FALSE;
+    int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
+    int km = key.state & (ControlMask | Mod1Mask | ShiftMask);
+    
+    bool is_control = km & ControlMask;
+    bool is_alt = km & Mod1Mask;
+    int delta = is_control?1:is_alt?32:8;
+    QPoint pos = QCursor::pos();
+    
+    switch ( kc ) {
+    case XK_Left:
+    case XK_KP_Left:
+	pos.rx() -= delta;
+	break;
+    case XK_Right:
+    case XK_KP_Right:
+	pos.rx() += delta;
+	break;
+    case XK_Up:
+    case XK_KP_Up:
+	pos.ry() -= delta;
+	break;
+    case XK_Down:
+    case XK_KP_Down:
+	pos.ry() += delta;
+	break;
+    case XK_Return:
+    case XK_space:
+    case XK_KP_Enter:
+    case XK_KP_Space:
+	{
+	    Window root;
+	    Window child = qt_xrootwin();
+	    int root_x, root_y, lx, ly;
+	    uint state;
+	    Window w;
+	    Client * c = 0;
+	    do { 
+		w = child;
+		if (!c)
+		    c = findClientWidthId( w );
+		XQueryPointer( qt_xdisplay(), w, &root, &child,
+			       &root_x, &root_y, &lx, &ly, &state );
+	    } while  ( child != None && child != w );
+	
+	    if ( c && !c->isActive() )
+		activateClient( c );
+
+	    QWidget* widget = QWidget::find( w );
+	    if ( (!widget ||  widget->inherits("QToolButton") ) && !findClient( w ) ) {
+		XButtonEvent e;
+		e.type = ButtonPress;
+		e.window = w;
+		e.root = qt_xrootwin();
+		e.subwindow = w;
+		e.time = kwin_time;
+		e.x = lx;
+		e.y = ly;
+		e.x_root = root_x;
+		e.y_root = root_y;
+		e.state = key.state;
+		e.button = Button1;
+		XSendEvent( qt_xdisplay(), w, TRUE, ButtonPressMask, (XEvent*)&e );
+		e.type = ButtonRelease;
+		e.state = key.state & Button1Mask;
+		XSendEvent( qt_xdisplay(), w, TRUE, ButtonReleaseMask,  (XEvent*)&e );
+	    }
+	}
+	// fall through
+    case XK_Escape:
+	XUngrabKeyboard(qt_xdisplay(), kwin_time);
+	mouse_emulation = FALSE;
+	return TRUE;
+    default:
+	return FALSE;
+    }
+    
+    QCursor::setPos( pos );
+    return TRUE;
+
+}
+

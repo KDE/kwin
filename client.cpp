@@ -20,6 +20,8 @@
 extern Atom qt_wm_state;
 extern Time kwin_time;
 
+static bool resizeHorizontalDirectionFixed = FALSE;
+static bool resizeVerticalDirectionFixed = FALSE;
 
 static QRect* visible_bound = 0;
 
@@ -82,7 +84,7 @@ static void sendClientMessage(Window w, Atom a, long x){
 
   There's not much to know about this class, it's completley handled by
   the abstract class Client. You get access to the window wrapper with
-  Client:.windowWrapper(). The big advantage of WindowWrapper is,
+  Client::windowWrapper(). The big advantage of WindowWrapper is,
   that you can use just like a normal QWidget, although it encapsulates
   an X window that belongs to another application.
 
@@ -823,6 +825,7 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	    setGeometry( geom );
 	    moveResizeMode = FALSE;
 	    releaseMouse();
+	    releaseKeyboard();
 	}
     }
 }
@@ -1402,12 +1405,12 @@ void Client::setShade( bool s )
  */
 void Client::setActive( bool act)
 {
+    if ( act )
+	workspace()->setActiveClient( this );
+
     if ( active == act )
 	return;
-
     active = act;
-    if ( active )
-	workspace()->setActiveClient( this );
     activeChange( active );
 }
 
@@ -1517,7 +1520,7 @@ Client* Client::mainClient()
   Returns whether the window provides context help or not. If it does,
   you should show a help menu item or a help button lie '?' and call
   contextHelp() if this is invoked.
-  
+
   \sa contextHelp()
  */
 bool Client::providesContextHelp() const
@@ -1529,7 +1532,7 @@ bool Client::providesContextHelp() const
 /*!
   Invokes context help on the window. Only works if the window
   actually provides context help.
-  
+
   \sa providesContextHelp()
  */
 void Client::contextHelp()
@@ -1541,6 +1544,9 @@ void Client::contextHelp()
 }
 
 
+/*!
+  Performs a mouse command on this client (see options.h)
+ */
 bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos)
 {
     bool replay = FALSE;
@@ -1581,6 +1587,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
  	grabMouse( arrowCursor );
+	grabKeyboard();
 	if ( options->moveMode != Options::Opaque )
 	    XGrabServer( qt_xdisplay() );
 	break;
@@ -1602,6 +1609,9 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
 	setMouseCursor( mode );
 	grabMouse( cursor()  );
+	grabKeyboard();
+	resizeHorizontalDirectionFixed = FALSE;
+	resizeVerticalDirectionFixed = FALSE;
 	if ( options->resizeMode != Options::Opaque )
 	    XGrabServer( qt_xdisplay() );
 	break;
@@ -1612,6 +1622,98 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	break;
     }
     return replay;
+}
+
+
+void Client::keyPressEvent( QKeyEvent * e )
+{
+    if ( !isMove() && !isResize() )
+	return;
+    bool is_control = e->state() & ControlButton;
+    int delta = is_control?1:8;
+    QPoint pos = QCursor::pos();
+    switch ( e->key() ) {
+    case Key_Left:
+	pos.rx() -= delta;
+	if ( pos.x() <= workspace()->geometry().left() ) {
+	    moveOffset.rx() += delta;
+	    invertedMoveOffset.rx() += delta;
+	}
+	if ( isResize() && !resizeHorizontalDirectionFixed ) {
+	    resizeHorizontalDirectionFixed = TRUE;
+	    if ( mode == BottomRight )
+		mode = BottomLeft;
+	    else if ( mode == TopRight )
+		mode = TopLeft;
+	    setMouseCursor( mode );
+	    grabMouse( cursor() );
+	}
+	break;
+    case Key_Right:
+	pos.rx() += delta;
+	if ( pos.x() >= workspace()->geometry().right() ) {
+	    moveOffset.rx() -= delta;
+	    invertedMoveOffset.rx() -= delta;
+	}
+	if ( isResize() && !resizeHorizontalDirectionFixed ) {
+	    resizeHorizontalDirectionFixed = TRUE;
+	    if ( mode == BottomLeft )
+		mode = BottomRight;
+	    else if ( mode == TopLeft )
+		mode = TopRight;
+	    setMouseCursor( mode );
+	    grabMouse( cursor() );
+	}
+	break;
+    case Key_Up:
+	pos.ry() -= delta;
+	if ( pos.y() <= workspace()->geometry().top() ) {
+	    moveOffset.ry() += delta;
+	    invertedMoveOffset.ry() += delta;
+	}
+	if ( isResize() && !resizeVerticalDirectionFixed ) {
+	    resizeVerticalDirectionFixed = TRUE;
+	    if ( mode == BottomLeft )
+		mode = TopLeft;
+	    else if ( mode == BottomRight )
+		mode = TopRight;
+	    setMouseCursor( mode );
+	    grabMouse( cursor() );
+	}
+	break;
+    case Key_Down:
+	pos.ry() += delta;
+	if ( pos.y() >= workspace()->geometry().bottom() ) {
+	    moveOffset.ry() -= delta;
+	    invertedMoveOffset.ry() -= delta;
+	}
+	if ( isResize() && !resizeVerticalDirectionFixed ) {
+	    resizeVerticalDirectionFixed = TRUE;
+	    if ( mode == TopLeft )
+		mode = BottomLeft;
+	    else if ( mode == TopRight )
+		mode = BottomRight;
+	    setMouseCursor( mode );
+	    grabMouse( cursor() );
+	}
+	break;
+    case Key_Space:
+    case Key_Return:
+    case Key_Enter:
+	clearbound();
+	if ( ( isMove() && options->moveMode != Options::Opaque )
+	     || ( isResize() && options->resizeMode != Options::Opaque ) )
+	    XUngrabServer( qt_xdisplay() );
+	setGeometry( geom );
+	moveResizeMode = FALSE;
+	releaseMouse();
+	releaseKeyboard();
+	buttonDown = FALSE;
+	break;
+    default:
+	return;
+    }
+    QCursor::setPos( pos );
 }
 
 

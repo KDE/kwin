@@ -97,7 +97,7 @@ public:
 
     bool iconifyMeansWithdraw( Client* );
     void iconifyOrDeiconifyTransientsOf( Client* );
-    
+
     bool hasCaption( const QString& caption );
 
     void performWindowOperation( Client* c, Options::WindowOperation op );
@@ -123,7 +123,10 @@ public slots:
 
     void slotWindowOperations();
     void slotWindowClose();
-    
+    void slotWindowMove();
+    void slotWindowResize();
+
+    void slotMouseEmulation();
 
 private slots:
     void setDecorationStyle( int );
@@ -135,6 +138,7 @@ private slots:
 protected:
     bool keyPress( XKeyEvent key );
     bool keyRelease( XKeyEvent key );
+    bool keyPressMouseEmulation( XKeyEvent key );
     bool clientMessage( XClientMessageEvent msg );
 	
 private:
@@ -148,6 +152,7 @@ private:
     Client* active_client;
     bool control_grab;
     bool tab_grab;
+    bool mouse_emulation;
     TabBox* tab_box;
     void freeKeyboard(bool pass);
     QGuardedPtr<Client> popup_client;
@@ -181,7 +186,7 @@ private:
     bool removeDockwin( WId w );
     void propagateDockwins();
     DockWindow findDockwin( WId w );
-    
+
     //CT needed for cascading+
     struct CascadingInfo {
       QPoint pos;
