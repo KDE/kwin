@@ -1372,7 +1372,6 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             {
             QRect orig_geometry = geometry();
             ++block_geometry;
-            resetMaximize();
             move( new_pos );
             plainResize( ns );
             setGeometry( QRect( calculateGravitation( false, gravity ), size()));
@@ -1411,7 +1410,6 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             {
             QRect orig_geometry = geometry();
             ++block_geometry;
-            resetMaximize();
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
             resizeWithChecks( ns );
@@ -1620,6 +1618,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         updateWorkareaDiffs();
         sendSyntheticConfigureNotify();
         updateWindowRules();
+        checkMaximizeGeometry();
         }
     }
 
@@ -1663,6 +1662,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         updateWorkareaDiffs();
         sendSyntheticConfigureNotify();
         updateWindowRules();
+        checkMaximizeGeometry();
         }
     }
 
@@ -1680,6 +1680,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
         XMoveWindow( qt_xdisplay(), frameId(), x, y );
         sendSyntheticConfigureNotify();
         updateWindowRules();
+        checkMaximizeGeometry();
         }
     }
 
@@ -1728,33 +1729,31 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     Q_ASSERT( !( vertical && horizontal )
         || (( max_mode & MaximizeVertical != 0 ) == ( max_mode & MaximizeHorizontal != 0 )));
 
+    QRect clientArea = workspace()->clientArea( MaximizeArea, this );
+
     // save sizes for restoring, if maximalizing
-    bool maximalizing = false;
-    if( vertical && !(old_mode & MaximizeVertical ))
+    if( !( y() == clientArea.top() && height() == clientArea.height()))
         {
         geom_restore.setTop( y());
         geom_restore.setHeight( height());
-        maximalizing = true;
         }
-    if( horizontal && !( old_mode & MaximizeHorizontal ))
+    if( !( x() == clientArea.left() && width() == clientArea.width()))
         {
         geom_restore.setLeft( x());
         geom_restore.setWidth( width());
-        maximalizing = true;
         }
 
     if( !adjust )
         {
-        if( maximalizing )
-                Notify::raise( Notify::Maximize );
+        if(( vertical && !(old_mode & MaximizeVertical ))
+            || ( horizontal && !( old_mode & MaximizeHorizontal )))
+            Notify::raise( Notify::Maximize );
         else
             Notify::raise( Notify::UnMaximize );
         }
 
     if( decoration != NULL ) // decorations may turn off some borders when maximized
         decoration->borders( border_left, border_right, border_top, border_bottom );
-
-    QRect clientArea = workspace()->clientArea( MaximizeArea, this );
 
     switch (max_mode)
         {
@@ -1867,6 +1866,46 @@ void Client::resetMaximize()
     setGeometry( geometry(), ForceGeometrySet );
     if( decoration != NULL )
         decoration->maximizeChange();
+    }
+
+void Client::checkMaximizeGeometry()
+    {
+    // when adding new bail-out conditions here, checkMaximizeGeometry() needs to be called
+    // when after the condition is no longer true
+    if( isShade())
+        return;
+    if( isMove() || isResize()) // this is because of the option to disallow moving/resizing of max-ed windows
+        return;
+    // Just in case.
+    static int recursion_protection = 0;
+    if( recursion_protection > 3 )
+        {
+        kdWarning( 1212 ) << "Check maximize overflow - you loose!" << endl;
+        kdWarning( 1212 ) << kdBacktrace() << endl;
+        return;
+        }
+    ++recursion_protection;
+    QRect max_area = workspace()->clientArea( MaximizeArea, this );
+    if( geometry() == max_area )
+        {
+        if( max_mode != MaximizeFull )
+            maximize( MaximizeFull );
+        }
+    else if( x() == max_area.left() && width() == max_area.width())
+        {
+        if( max_mode != MaximizeHorizontal )
+            maximize( MaximizeHorizontal );
+        }
+    else if( y() == max_area.top() && height() == max_area.height())
+        {
+        if( max_mode != MaximizeVertical )
+            maximize( MaximizeVertical );
+        }
+    else if( max_mode != MaximizeRestore )
+        {
+        resetMaximize(); // not maximize( MaximizeRestore ), that'd change geometry - this is called from setGeometry()
+        }
+    --recursion_protection;
     }
 
 bool Client::isFullScreenable( bool fullscreen_hack ) const
@@ -2088,6 +2127,7 @@ void Client::finishMoveResize( bool cancel )
         setGeometry( initialMoveResizeGeom );
     else
         setGeometry( moveResizeGeom );
+    checkMaximizeGeometry();
 // FRAME    update();
     Notify::raise( isResize() ? Notify::ResizeEnd : Notify::MoveEnd );
     }

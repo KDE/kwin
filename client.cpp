@@ -781,6 +781,7 @@ void Client::setShade( ShadeMode mode )
         if ( isActive() )
             workspace()->requestFocus( this );
         }
+    checkMaximizeGeometry();
     --block_geometry;
     setGeometry( geometry(), ForceGeometrySet );
     info->setState( isShade() ? NET::Shaded : 0, NET::Shaded );
