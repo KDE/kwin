@@ -66,13 +66,13 @@ private:
     QSpacerItem* titlebar;
 
     // Helpful constants for buttons in array
-    static const int CLOSE_IDX    = 0;
-    static const int HELP_IDX     = 1;
-    static const int ICONIFY_IDX  = 2;
-    static const int MAXIMIZE_IDX = 3;
-    static const int MENU_IDX     = 4;
-    static const int STICKY_IDX   = 5;
-    static const int MAX_NUM_BUTTONS = STICKY_IDX + 1;
+    enum { CLOSE_IDX    = 0,
+           HELP_IDX     = 1,
+           ICONIFY_IDX  = 2,
+           MAXIMIZE_IDX = 3,
+           MENU_IDX     = 4,
+           STICKY_IDX   = 5,
+           MAX_NUM_BUTTONS = STICKY_IDX + 1 };
 
     // WARNING: button[i] may be null for any given i.  Make sure you
     // always check for null before doing button[i]->foo().
