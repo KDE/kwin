@@ -40,7 +40,7 @@ class DBWidget : public QWidget
 
   protected:
     
-    virtual void updatePixmap() = 0L;
+    virtual void updatePixmap() = 0;
 
     virtual void paintEvent(QPaintEvent * e);
     virtual void resizeEvent(QResizeEvent * e);
