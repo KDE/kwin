@@ -343,7 +343,7 @@ void StdClient::resizeEvent( QResizeEvent* e)
 //     QRegion r = rr.subtract( QRect( t.x()+1, 0, t.width()-2, 1 ) );
 //     setMask( r );
 
-    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
+    if ( isVisibleToTLW() && !testWFlags( WStaticContents )) {
 	// manual clearing without the titlebar (we selected WResizeNoErase )
 	QRect cr( 2, 2, width()-4, height()- 4 );
 	erase( QRegion( cr ).subtract( t ) );
