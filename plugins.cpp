@@ -119,7 +119,7 @@ bool PluginMgr::loadPlugin(QString nameStr)
 
     void* create_func = library->symbol("create");
     if(create_func) {
-        create_ptr = (Client* (*)(Workspace *ws, WId w, NET::WindowType, NET::WindowType))create_func;
+        create_ptr = (Client* (*)(Workspace *ws, WId w, NET::WindowType))create_func;
     }
     create_func = library->symbol("allocate");
     if(create_func) {

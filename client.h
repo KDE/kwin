@@ -155,7 +155,7 @@ public:
     bool isDesktop() const;
     bool isDock() const;
     bool isTool() const;
-    bool isMenu() const;
+    bool isTopMenu() const;
 
     bool isResizable() const;
 
