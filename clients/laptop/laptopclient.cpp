@@ -371,7 +371,7 @@ void LaptopClient::init()
     button[BtnClose] = new LaptopButton(btnWidth2, th, this, "close",
                                  close_bits, i18n("Close"));
     button[BtnSticky] = new LaptopButton(btnWidth1, th, this, "sticky",
-                                 NULL, i18n("Sticky"));
+                                 NULL, i18n("On All Desktops"));
     if(isOnAllDesktops())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
