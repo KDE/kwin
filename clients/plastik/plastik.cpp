@@ -179,6 +179,15 @@ QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
     }
 }
 
+QValueList< PlastikHandler::BorderSize > 
+PlastikHandler::borderSizes() const
+{ 
+    // the list must be sorted
+    return QValueList< BorderSize >() << BorderTiny << BorderNormal << 
+	BorderLarge << BorderVeryLarge <<  BorderHuge << 
+	BorderVeryHuge << BorderOversized;
+}
+
 } // KWinPlastik
 
 //////////////////////////////////////////////////////////////////////////////

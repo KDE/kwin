@@ -76,6 +76,7 @@ public:
     static Qt::AlignmentFlags titleAlign() { return m_titleAlign; }
     static bool reverseLayout() { return m_reverse; }
     static QColor getColor(KWinPlastik::ColorType type, const bool active = true);
+    QValueList< PlastikHandler::BorderSize >  borderSizes() const;
 private:
     void readConfig();
 
