@@ -65,6 +65,18 @@ Button Four:
 
   Right button: Maximise or restore window.
 
+Resize bar left/right:
+
+  Left button: Move that corner (resizes window) and raise
+
+  Other buttons: Same without raising
+
+Resize bar centre:
+
+  Left button: Move that edge (resizes window) and raise
+
+  Other buttons: Same without raising
+
 The lower bar is used for resizing. It works in the NeXT style.
 This doesn't exist on RISC OS. In RISC OS, there is a 'resize handle'
 in the lower right corner of the window (actually inside the window).
