@@ -927,6 +927,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	    break;
 	}
     }
+    
+    QApplication::syncX(); // process our own configure events synchronously. 
 }
 
 /*!
