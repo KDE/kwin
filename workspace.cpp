@@ -2427,13 +2427,13 @@ void Workspace::setNumberOfDesktops( int n )
         setCurrentDesktop( numberOfDesktops());
 
     // if increasing the number, do the resizing now,
-    // otherwise after the moving of window to still existing desktops
+    // otherwise after the moving of windows to still existing desktops
     if( old_number_of_desktops < number_of_desktops ) {
+        rootInfo->setNumberOfDesktops( number_of_desktops );
         NETPoint* viewports = new NETPoint[ number_of_desktops ];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
         updateClientArea( true );
-        rootInfo->setNumberOfDesktops( number_of_desktops );
     }
 
     // if the number of desktops decreased, move all

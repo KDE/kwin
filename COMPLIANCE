@@ -69,7 +69,6 @@ _NET_NUMBER_OF_DESKTOPS		root window property + message	COMPLETE
         | technique for creating virtual desktops, so it doesn't have    |
         | to set this property.                                          |
 	+----------------------------------------------------------------+
-        CHECKME : check updating of properties
 _NET_DESKTOP_GEOMETRY		root window property + message	COMPLETE
 	+----------------------------------------------------------------+
         | KWin doesn't implement large desktops, so it ignores           |
