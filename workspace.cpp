@@ -28,6 +28,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "workspace.h"
 #include "client.h"
 #include "tabbox.h"
+#include "popupinfo.h"
 #include "atoms.h"
 #include "plugins.h"
 #include "events.h"
@@ -272,6 +273,7 @@ Workspace::Workspace( bool restore )
     mouse_emulation   (false),
     focus_change      (true),
     tab_box           (0),
+    popupinfo         (0),
     popup             (0),
     desk_popup        (0),
     keys              (0),
@@ -331,6 +333,7 @@ Workspace::Workspace( bool restore )
 
     initShortcuts();
     tab_box = new TabBox( this );
+    popupinfo = new PopupInfo( );
 
     init();
 
@@ -456,6 +459,7 @@ Workspace::~Workspace()
     }
     delete desktop_widget;
     delete tab_box;
+    delete popupinfo;
     delete popup;
     if ( root == qt_xrootwin() )
         XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwin_running);
@@ -1182,8 +1186,10 @@ bool Workspace::keyRelease(XKeyEvent& ev)
                 tab_box->hide();
                 keys->setEnabled( true );
                 control_grab = False;
-                if ( tab_box->currentDesktop() != -1 )
+                if ( tab_box->currentDesktop() != -1 ) {
                     setCurrentDesktop( tab_box->currentDesktop() );
+                    // popupinfo->showInfo( desktopName(currentDesktop()) ); // AK - not sure
+                }
     }
     return FALSE;
 }
@@ -1432,6 +1438,7 @@ void Workspace::activateClient( Client* c, bool force )
 
     if (!c->isOnDesktop(currentDesktop()) ) {
         setCurrentDesktop( c->desktop() );
+        // popupinfo->showInfo( desktopName(currentDesktop()) ); // AK - not sure
     }
     c->updateUserTime();
 
@@ -2039,6 +2046,7 @@ void Workspace::slotReconfigure()
     KGlobal::config()->reparseConfiguration();
     options->reload();
     tab_box->reconfigure();
+    popupinfo->reconfigure();
     readShortcuts();
 
     mgr->updatePlugin();
@@ -2210,6 +2218,9 @@ void Workspace::raiseClient( Client* c )
 
     if ( tab_box->isVisible() )
         tab_box->raise();
+
+    if ( popupinfo->isVisible() )
+        popupinfo->raise();
 
     raiseElectricBorders();
 }
@@ -2544,12 +2555,14 @@ void Workspace::nextDesktop()
 {
     int desktop = currentDesktop() + 1;
     setCurrentDesktop(desktop > numberOfDesktops() ? 1 : desktop);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 void Workspace::previousDesktop()
 {
     int desktop = currentDesktop() - 1;
     setCurrentDesktop(desktop ? desktop : numberOfDesktops());
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 /*!
@@ -2729,6 +2742,7 @@ void Workspace::slotSwitchDesktopNext(){
       }
     }
     setCurrentDesktop(d);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 void Workspace::slotSwitchDesktopPrevious(){
@@ -2740,6 +2754,7 @@ void Workspace::slotSwitchDesktopPrevious(){
         return;
     }
     setCurrentDesktop(d);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 void Workspace::setDesktopLayout(int o, int x, int y)
@@ -2791,6 +2806,7 @@ void Workspace::slotSwitchDesktopRight()
       dt = dt - (dt % x) + d;
     }
     setCurrentDesktop(dt+1);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 void Workspace::slotSwitchDesktopLeft(){
@@ -2819,6 +2835,7 @@ void Workspace::slotSwitchDesktopLeft(){
       dt = dt - (dt % x) + d;
     }
     setCurrentDesktop(dt+1);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 void Workspace::slotSwitchDesktopUp(){
@@ -2847,6 +2864,7 @@ void Workspace::slotSwitchDesktopUp(){
       dt = dt - (dt % y) + d;
     }
     setCurrentDesktop(dt+1);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 void Workspace::slotSwitchDesktopDown(){
@@ -2875,11 +2893,13 @@ void Workspace::slotSwitchDesktopDown(){
       dt = dt - (dt % y) + d;
     }
     setCurrentDesktop(dt+1);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 void Workspace::slotSwitchToDesktop( int i )
 {
     setCurrentDesktop( i );
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 
@@ -2983,6 +3003,7 @@ void Workspace::slotWindowToNextDesktop(){
     if (popup_client)
       sendClientToDesktop(popup_client,d);
     setCurrentDesktop(d);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 /*!
@@ -2995,6 +3016,7 @@ void Workspace::slotWindowToPreviousDesktop(){
     if (popup_client)
       sendClientToDesktop(popup_client,d);
     setCurrentDesktop(d);
+    popupinfo->showInfo( desktopName(currentDesktop()) );
 }
 
 /*!
@@ -3199,7 +3221,7 @@ void Workspace::slotWindowOperations()
  */
 void Workspace::slotWindowClose()
 {
-    if ( tab_box->isVisible() )
+    if ( tab_box->isVisible() || popupinfo->isVisible() )
         return;
     performWindowOperation( popup_client, Options::CloseOp );
 }
