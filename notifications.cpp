@@ -89,7 +89,7 @@ void Notify::raise( Event e )
     if ( !event )
         return;
 
-    forgetIt= !KNotifyClient::event( event, event );
+    forgetIt= !KNotifyClient::event( 0, event, event );
     }
 
 } // namespace
