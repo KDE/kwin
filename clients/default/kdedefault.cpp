@@ -157,7 +157,7 @@ bool KDEDefaultHandler::reset( unsigned long changed )
                 createPixmaps();
         }
 	KDEDefault_initialized = true;
-        bool need_recreate = ( changed & ( SettingFont | SettingButtons | SettingBorder )) != 0;
+        bool need_recreate = ( changed & ( SettingDecoration | SettingFont | SettingButtons | SettingBorder )) != 0;
         if( need_recreate )  // something else than colors changed
             return true;
         resetDecorations( changed );
