@@ -183,6 +183,16 @@ Manager::activateLayout()
   _updateLayout();
 }
 
+  void
+Manager::fakeMouseEvent(QMouseEvent * e, QWidget * w)
+{
+  QPoint adjustedPos = w->pos() + e->pos();
+
+  QMouseEvent fake(e->type(), adjustedPos, e->button(), e->state());
+
+  Client::event(&fake);
+}
+
 } // End namespace
 
 // vim:ts=2:sw=2:tw=78

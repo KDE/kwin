@@ -42,6 +42,10 @@ class ResizeBar : public QWidget
     ResizeBar(QWidget * parent, Manager * client);
     void updateDisplay();
 
+  protected:
+
+    void resizeEvent(QResizeEvent *);
+
   private:
 
     Manager * client_;

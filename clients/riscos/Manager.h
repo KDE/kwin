@@ -35,14 +35,14 @@ class Manager : public Client
 {
   Q_OBJECT
 
-  friend class TitleText;
-
   public:
 
     Manager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
     ~Manager();
 
     void setShade(bool);
+
+    void fakeMouseEvent(QMouseEvent *, QWidget *);
 
   signals:
 

@@ -20,8 +20,6 @@
   Boston, MA 02111-1307, USA.
 */
 
-#include <qlayout.h>
-
 #include "ResizeBar.h"
 #include "ResizeMid.h"
 #include "ResizeSide.h"
@@ -41,11 +39,7 @@ ResizeBar::ResizeBar(QWidget * parent, Manager * client)
   mid_    = new ResizeMid(this, client_);
   right_  = new ResizeSide(this, client_, ResizeSide::Right);
   
-  QHBoxLayout * layout = new QHBoxLayout(this);
-
-  layout->addWidget(left_);
-  layout->addWidget(mid_, 1);
-  layout->addWidget(right_);
+  mid_->move(30, 0);
 }
   
   void
@@ -54,6 +48,13 @@ ResizeBar::updateDisplay()
   left_ ->updateDisplay();
   mid_  ->updateDisplay();
   right_->updateDisplay();
+}
+
+  void
+ResizeBar::resizeEvent(QResizeEvent *)
+{
+  mid_->resize(width() - 60, 10);
+  right_->move(width() - 30, 0);
 }
 
 } // End namespace

@@ -23,7 +23,6 @@
 #include <qpainter.h>
 
 #include "../../options.h"
-#include "../../workspace.h"
 
 #include "TitleText.h"
 #include "Manager.h"
@@ -68,25 +67,25 @@ TitleText::updatePixmap()
   void
 TitleText::mousePressEvent(QMouseEvent * e)
 {
-  client_->mousePressEvent(e);
+  client_->fakeMouseEvent(e, this);
 }
 
   void
 TitleText::mouseReleaseEvent(QMouseEvent * e)
 {
-  client_->mouseReleaseEvent(e);
+  client_->fakeMouseEvent(e, this);
 }
 
   void
 TitleText::mouseMoveEvent(QMouseEvent * e)
 {
-  client_->mouseMoveEvent(e);
+  client_->fakeMouseEvent(e, this);
 }
 
   void
 TitleText::mouseDoubleClickEvent(QMouseEvent * e)
 {
-  client_->mouseDoubleClickEvent(e);
+  client_->fakeMouseEvent(e, this);
 }
 
 } // End namespace
