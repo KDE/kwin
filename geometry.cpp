@@ -1364,17 +1364,18 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             || ns != size())
             {
             QRect orig_geometry = geometry();
-            resetMaximize();
             ++block_geometry;
+            resetMaximize();
             move( new_pos );
-            plainResize( ns ); // TODO must(?) resize before gravitating?
+            plainResize( ns );
+            setGeometry( QRect( calculateGravitation( false, gravity ), size()));
             updateFullScreenHack( QRect( new_pos, QSize( nw, nh )));
             QRect area = workspace()->clientArea( WorkArea, this );
             if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
                 && area.contains( orig_geometry ))
                 keepInArea( area );
             --block_geometry;
-            setGeometry( QRect( calculateGravitation( false, gravity ), size()), ForceGeometrySet );
+            setGeometry( geometry(), ForceGeometrySet );
 
             // this is part of the kicker-xinerama-hack... it should be
             // safe to remove when kicker gets proper ExtendedStrut support;
@@ -1402,6 +1403,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if( ns != size())  // don't restore if some app sets its own size again
             {
             QRect orig_geometry = geometry();
+            ++block_geometry;
             resetMaximize();
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
@@ -1412,6 +1414,8 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
                 && area.contains( orig_geometry ))
                 keepInArea( area );
+            --block_geometry;
+            setGeometry( geometry(), ForceGeometrySet );
             }
         }
     // No need to send synthetic configure notify event here, either it's sent together

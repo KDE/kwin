@@ -785,8 +785,12 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
     if ( isResize() || isMove())
         return; // we have better things to do right now
 
-    if( isFullScreen() // refuse resizing of fullscreen windows
-        || isSplash() // no manipulations with splashscreens either
+    if( fullscreen_mode == FullScreenNormal ) // refuse resizing of fullscreen windows
+        { // but allow resizing fullscreen hacks in order to let them cancel fullscreen mode
+        sendSyntheticConfigureNotify();
+        return;
+        }
+    if( isSplash() // no manipulations with splashscreens either
         || isTopMenu()) // topmenus neither
         {
         sendSyntheticConfigureNotify();
