@@ -188,6 +188,8 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
     g->setRowStretch( 1, 10 );
     g->addWidget( windowWrapper(), 1, 1 );
+    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
+    
     g->addColSpacing(0, 2);
     g->addColSpacing(2, 2);
     g->addRowSpacing(2, 2);
@@ -197,7 +199,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[1] = new QToolButton( this );
     button[2] = new QToolButton( this );
     button[3] = new QToolButton( this );
-    button[4] = new QToolButton( this );
+    button[4] = new ThreeButtonButton( this );
     button[5] = new QToolButton( this );
 
     QHBoxLayout* hb = new QHBoxLayout;
@@ -225,6 +227,11 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
         button[0]->setIconSet(isActive() ? *menu_pix : *dis_menu_pix);
     else
         button[0]->setIconSet( miniIcon() );
+    
+    connect( button[0], SIGNAL( pressed() ), this, SLOT( menuButtonPressed() ) );
+    button[0]->setPopupDelay( 0 );
+    button[0]->setPopup( workspace()->clientPopup( this ) );
+    
     button[1]->setIconSet(isSticky() ? isActive() ? *pindown_pix : *dis_pindown_pix :
                           isActive() ? *pinup_pix : *dis_pinup_pix );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
@@ -234,7 +241,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[3]->setIconSet(isActive() ? *minimize_pix : *dis_minimize_pix);
     connect( button[3], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
     button[4]->setIconSet(isActive() ? *maximize_pix : *dis_maximize_pix);
-    connect( button[4], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
+    connect( button[4], SIGNAL( clicked(int) ), this, ( SLOT( maxButtonClicked(int) ) ) );
     button[5]->setIconSet(isActive() ? *close_pix : *dis_close_pix);
     connect( button[5], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
 
@@ -267,7 +274,7 @@ void StdClient::resizeEvent( QResizeEvent* e)
     QRegion r = rr.subtract( QRect( t.x()+1, 0, t.width()-2, 1 ) );
     setMask( r );
 
-    if ( isVisibleToTLW() ) {
+    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
 	// manual clearing without the titlebar (we selected WResizeNoErase )
 	QPainter p( this );
 	r = rr.subtract( t );
@@ -347,3 +354,27 @@ void StdClient::iconChange()
     button[0]->repaint( FALSE );
 }
 
+
+/*!
+  Indicates that the menu button has been clicked
+ */
+void StdClient::menuButtonPressed()
+{
+    (void ) workspace()->clientPopup( this ); //trigger the popup menu
+}
+
+
+void StdClient::maxButtonClicked( int button )
+{
+    switch ( button  ){
+    case MidButton:
+	maximize( MaximizeVertical );
+	break;
+    case RightButton:
+	maximize( MaximizeHorizontal );
+	break;
+    default: //LeftButton:
+	maximize( MaximizeFull );
+	break;
+    }
+}

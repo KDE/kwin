@@ -96,6 +96,8 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
     win = w;
     setMouseTracking( TRUE );
 
+    setBackgroundColor( colorGroup().background() );
+    
     // we don't want the window to be destroyed when we are destroyed
     XAddToSaveSet(qt_xdisplay(), win );
 
@@ -710,7 +712,7 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
     int wh = 0;;
     if ( !wwrap->testWState( WState_ForceHide ) )
 	wh = wwrap->height();
-    
+
     return QSize( QMIN( QMAX( width() - ww + w, minimumWidth() ),
 			maximumWidth() ),
 		  ignore_height? height()-wh : (QMIN( QMAX( height() - wh + h, minimumHeight() ),
@@ -733,7 +735,7 @@ void Client::mousePressEvent( QMouseEvent * e)
 	invertedMoveOffset = rect().bottomRight() - e->pos();
     }
     else if ( e->button() == RightButton ) {
-	workspace()->showPopup( e->globalPos(), this );
+	workspace()->clientPopup( this ) ->popup( e->globalPos() );
     }
 }
 
@@ -1112,11 +1114,25 @@ void Client::closeWindow()
   }
 }
 
-void Client::maximize( MaximizeMode /*m*/)
+void Client::maximize( MaximizeMode m)
 {
+    if ( isShade() )
+	setShade( FALSE );
+    
     if ( geom_restore.isNull() ) {
 	geom_restore = geometry();
-	setGeometry( workspace()->geometry() );
+	switch ( m ) {
+	case MaximizeVertical:
+	    setGeometry( QRect( QPoint( x(), workspace()->geometry().top() ), 
+			 adjustedSize( QSize( width(), workspace()->geometry().height()) ) ) );
+	    break;
+	case MaximizeHorizontal:
+	    setGeometry( QRect( QPoint( workspace()->geometry().left(), y() ), 
+			 adjustedSize( QSize( workspace()->geometry().width(), height() ) ) ) );
+	    break;
+	default:
+	    setGeometry( QRect( workspace()->geometry().topLeft(), adjustedSize(workspace()->geometry().size()) ) );
+	}
 	maximizeChange( TRUE );
     }
     else {
@@ -1160,6 +1176,12 @@ bool Client::eventFilter( QObject *o, QEvent * e)
 	workspace()->raiseClient( this );
 	break;
     case QEvent::MouseButtonRelease:
+	break;
+    case QEvent::Show:
+	windowWrapperShowEvent( (QShowEvent*)e );
+	break;
+    case QEvent::Hide:
+	windowWrapperHideEvent( (QHideEvent*)e );
 	break;
     default:
 	break;
@@ -1326,12 +1348,34 @@ void Client::setShade( bool s )
     shaded = s;
 
     if (shaded ) {
+	int h = height();
 	QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
 	windowWrapper()->hide();
+	repaint( FALSE ); // force direct repaint
+	setWFlags( WNorthWestGravity );
+	int step = QMAX( 15, QABS( h - s.height() ) / 20 )+1;
+	while ( h > s.height() + step ) {
+	    h -= step;
+	    resize ( s.width(), h );
+	    QApplication::syncX();
+	}
+	clearWFlags( WNorthWestGravity );
 	resize (s );
     } else {
+	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size() )  );
-	resize (  s );
+	setWFlags( WNorthWestGravity );
+	int step = QMAX( 15, QABS( h - s.height() ) / 30 )+1;
+	while ( h < s.height() - step ) {
+	    h += step;
+	    resize ( s.width(), h );
+	    // assume a border
+	    // we do not have time to wait for X to send us paint events
+  	    repaint( 0, h - step-5, width(), step+5, TRUE);
+	    QApplication::syncX();
+	}
+	clearWFlags( WNorthWestGravity );
+	resize ( s );
 	windowWrapper()->show();
 	layout()->activate();
 	repaint();
@@ -1372,13 +1416,19 @@ void Client::setSticky( bool b )
     if ( is_sticky == b )
 	return;
     is_sticky = b;
-    if ( !is_sticky ) {
-	desk = workspace()->currentDesktop();
-	KWM::moveToDesktop( win, desk );//##### compatibility
-    }
+    if ( !is_sticky )
+	setDesktop( workspace()->currentDesktop() );
     stickyChange( is_sticky );
 }
 
+
+void Client::setDesktop( int desktop)
+{
+    if ( isOnDesktop( desktop ) )
+	return;
+    desk = desktop;
+    KWM::moveToDesktop( win, desk );//##### compatibility
+}
 
 void Client::getIcons()
 {
@@ -1427,10 +1477,10 @@ void Client::setMask( const QRegion & reg)
 }
 
 
+
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 )
     : Client( ws, w, parent, name )
 {
-    setBackgroundColor( yellow );
     QHBoxLayout* h = new QHBoxLayout( this );
     h->addWidget( windowWrapper() );
 }

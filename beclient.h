@@ -14,6 +14,7 @@ public:
     ~BeClient();
 protected:
     void resizeEvent( QResizeEvent* );
+    void windowWrapperShowEvent( QShowEvent* );
     void paintEvent( QPaintEvent* );
     void mousePressEvent( QMouseEvent * );
     void mouseReleaseEvent( QMouseEvent * );

@@ -4,6 +4,7 @@
 #include <qwidget.h>
 #include <qapplication.h>
 #include <qpopupmenu.h>
+#include <qguardedptr.h>
 #include <qvaluelist.h>
 #include <X11/Xlib.h>
 
@@ -73,7 +74,6 @@ public:
     void clientHidden( Client*  );
 
     int currentDesktop() const;
-    void setCurrentDesktop( int new_desktop );
     int numberOfDesktops() const;
     void setNumberOfDesktops( int n );
 
@@ -90,8 +90,8 @@ public:
     Client* topClientOnDesktop( int fromLayer = 0, int toLayer = 0) const;
 
 
-    void showPopup( const QPoint&, Client* );
-
+    QPopupMenu* clientPopup( Client* );
+    
     void setDesktopClient( Client* );
 
     void makeFullScreen( Client* );
@@ -99,6 +99,7 @@ public:
     bool iconifyMeansWithdraw( Client* );
 
 public slots:
+    void setCurrentDesktop( int new_desktop );
     // keybindings
     void slotSwitchDesktop1();
     void slotSwitchDesktop2();
@@ -108,7 +109,17 @@ public slots:
     void slotSwitchDesktop6();
     void slotSwitchDesktop7();
     void slotSwitchDesktop8();
+    
+    void slotWindowOperations();
+    void slotWindowClose();
 
+    
+private slots:
+    void setDecorationStyle( int );
+    void desktopPopupAboutToShow();
+    void clientPopupAboutToShow();
+    void sendToDesktop( int );
+    void clientPopupActivated( int );
 
 protected:
     bool keyPress( XKeyEvent key );
@@ -128,7 +139,11 @@ private:
     bool tab_grab;
     TabBox* tab_box;
     void freeKeyboard(bool pass);
+    QGuardedPtr<Client> popup_client;
     QPopupMenu *popup;
+    int popupIdMove, popupIdSize, popupIdMinimize,popupIdMaximize,
+    popupIdShade, popupIdFullscreen,popupIdClose;
+    QPopupMenu *desk_popup;
     Client* should_get_focus;
 
     void raiseTransientsOf( ClientList& safeset, Client* c );
@@ -142,7 +157,6 @@ private:
     int number_of_desktops;
     Client* findClientWidthId( WId w ) const;
 
-    Client* popup_client;
     QWidget* desktop_widget;
 
     //experimental
@@ -164,7 +178,7 @@ private:
     };
 
     QValueList<CascadingInfo> cci;
-    // -cascading 
+    // -cascading
 };
 
 inline WId Workspace::rootWin() const

@@ -25,7 +25,7 @@ public:
     void invalidateWindow();
     QSize sizeHint() const;
     QSizePolicy sizePolicy() const;
-    
+
     void pseudoShow();
 
 protected:
@@ -102,6 +102,7 @@ public:
     void setActive( bool );
 
     int desktop() const;
+    void setDesktop( int );
     bool isOnDesktop( int d ) const;
 
     bool isShade() const;
@@ -133,7 +134,7 @@ public:
     void move( const QPoint & p )
     { move( p.x(), p.y() ); }
 
-    
+
     virtual bool wantsTabFocus() const { return TRUE;} //### just for now
 
 
@@ -151,6 +152,8 @@ protected:
     void mouseReleaseEvent( QMouseEvent * );
     void mouseMoveEvent( QMouseEvent * );
     void resizeEvent( QResizeEvent * );
+    virtual void windowWrapperShowEvent( QShowEvent* ){}
+    virtual void windowWrapperHideEvent( QHideEvent* ){}
     void enterEvent( QEvent * );
     void leaveEvent( QEvent * );
     void showEvent( QShowEvent* );
@@ -218,7 +221,7 @@ private:
     void getWindowProtocols();
     uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
     uint Ptakefocus :1;// does the window understand the TakeFocus protocol?
-    uint mapped :1; // keeps track of our visiblity within the asynchronous event flow 
+    uint mapped :1; // keeps track of our visiblity within the asynchronous event flow
     QPixmap icon_pix;
     QPixmap miniicon_pix;
     QRect geom_restore;

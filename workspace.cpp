@@ -106,17 +106,18 @@ Workspace::Workspace()
     XChangeProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running, atoms->kwm_running, 32,
 		    PropModeAppend, (unsigned char*) &data, 1);
 
-    init();
-    control_grab = FALSE;
-    tab_grab = FALSE;
-    tab_box = new TabBox( this );
     keys = 0;
     grabKey(XK_Tab, Mod1Mask);
     grabKey(XK_Tab, Mod1Mask | ShiftMask);
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
     createKeybindings();
-
+    
+    init();
+    
+    control_grab = FALSE;
+    tab_grab = FALSE;
+    tab_box = new TabBox( this );
 }
 
 Workspace::Workspace( WId rootwin )
@@ -148,6 +149,9 @@ void Workspace::init()
     desktop_client = 0;
     current_desktop = 0;
     number_of_desktops = 0;
+    popup = 0;
+    desk_popup = 0;
+    popup_client = 0;
     setNumberOfDesktops( 4 ); // TODO options
     setCurrentDesktop( 1 );
 
@@ -184,7 +188,6 @@ void Workspace::init()
     }
     XFree((void *) wins);
     XUngrabServer( qt_xdisplay() );
-    popup = 0;
     propagateClients();
 
     //CT initialize the cascading info
@@ -803,48 +806,64 @@ void Workspace::clientHidden( Client* c )
 }
 
 
-void Workspace::showPopup( const QPoint& pos, Client* c)
+QPopupMenu* Workspace::clientPopup( Client* c ) 
 {
-    // experimental!!!
-
+    popup_client = c;
     if ( !popup ) {
 	popup = new QPopupMenu;
+	popup->setCheckable( TRUE );
+	connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
+	connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
 	
-	// I wish I could use qt-2.1 features here..... grmblll
+	
 	QPopupMenu* deco = new QPopupMenu( popup );
-	deco->insertItem("KDE Classic", 100 );
-	deco->insertItem("Be-like style", 101 );
-	deco->insertItem("System style", 102 );
-			
-	popup->insertItem("Decoration", deco );
-    }
-    popup_client = c;
-    // TODO customize popup for the client
-    int ret = popup->exec( pos );
-    KConfig *config = KGlobal::config();
-    config->setGroup("style");
-    switch( ret ) {
-    case 100:
-        config->writeEntry("Plugin", "standard");
-	setDecoration( 0 );
-	break;
-    case 101:
-        config->writeEntry("Plugin", "be");
-	setDecoration( 1 );
-	break;
-    case 102:
-        config->writeEntry("Plugin", "system");
-	setDecoration( 2 );
-	break;
-    default:
-	break;
-    }
-    config->sync();
+	connect( deco, SIGNAL( activated(int) ), this, SLOT( setDecorationStyle(int) ) );
+	deco->insertItem( i18n( "KDE Classic" ), 1 );
+	deco->insertItem( i18n( "Be-like style" ),  2);
+	deco->insertItem( i18n( "System style" ), 3 );
 
-    popup_client = 0;
-    ret = 0;
+	
+	desk_popup = new QPopupMenu( popup );
+	desk_popup->setCheckable( TRUE );
+	connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
+	connect( desk_popup, SIGNAL( aboutToShow() ), this, SLOT( desktopPopupAboutToShow() ) );
+
+	popupIdMove = popup->insertItem( i18n("&Move") );
+	popupIdSize = popup->insertItem( i18n("&Size") );
+	popupIdMinimize = popup->insertItem( i18n("&Mi&nimize") );
+	popupIdMaximize = popup->insertItem( i18n("Ma&ximize") );
+// 	popupIdFullscreen = popup->insertItem( i18n("&Fullscreen") );
+	popupIdFullscreen = 0;
+	popupIdShade = popup->insertItem( i18n("Sh&ade") );
+	
+	popup->insertSeparator();
+	
+    	popup->insertItem(i18n("&Decoration"), deco );
+    	popup->insertItem(i18n("&To desktop"), desk_popup );
+	
+	popup->insertSeparator();
+	
+	QString k = KAccel::keyToString( keys->currentKey( "Window close" ), true );
+	popupIdClose = popup->insertItem(i18n("&Close")+'\t'+k );
+    }
+    return popup;
 }
 
+void Workspace::clientPopupActivated( int id )
+{
+    if ( !popup_client )
+	return;
+    if ( id == popupIdClose )
+	popup_client->closeWindow();
+    else if ( id == popupIdMaximize )
+	popup_client->maximize();
+    else if ( id == popupIdMinimize )
+	popup_client->iconify();
+    else if ( id == popupIdFullscreen )
+	popup_client->fullScreen();
+    else if ( id == popupIdShade ) 
+	popup_client->setShade( !popup_client->isShade() );
+}
 
 /*!
   Places the client \a c according to the workspace's layout policy
@@ -878,166 +897,166 @@ void Workspace::randomPlacement(Client* c){
     px += step;
     py += 2*step;
 
-  if (px > maxRect.width()/2)
-    px =  maxRect.x() + step;
-  if (py > maxRect.height()/2)
-    py =  maxRect.y() + step;
-  tx = px;
-  ty = py;
-  if (tx + c->width() > maxRect.right()){
-    tx = maxRect.right() - c->width();
-    if (tx < 0)
-      tx = 0;
-    px =  maxRect.x();
-  }
-  if (ty + c->height() > maxRect.bottom()){
-    ty = maxRect.bottom() - c->height();
-    if (ty < 0)
-      ty = 0;
-    py =  maxRect.y();
-  }
-  c->move( tx, ty );
+    if (px > maxRect.width()/2)
+	px =  maxRect.x() + step;
+    if (py > maxRect.height()/2)
+	py =  maxRect.y() + step;
+    tx = px;
+    ty = py;
+    if (tx + c->width() > maxRect.right()){
+	tx = maxRect.right() - c->width();
+	if (tx < 0)
+	    tx = 0;
+	px =  maxRect.x();
+    }
+    if (ty + c->height() > maxRect.bottom()){
+	ty = maxRect.bottom() - c->height();
+	if (ty < 0)
+	    ty = 0;
+	py =  maxRect.y();
+    }
+    c->move( tx, ty );
 }
 
 /*!
   Place the client \a c according to a really smart placement algorithm :-)
 */
 void Workspace::smartPlacement(Client* c){
-  /*
-   * SmartPlacement by Cristian Tibirna (tibirna@kde.org)
-   * adapted for kwm (16-19jan98) and for kwin (16Nov1999) using (with
-   * permission) ideas from fvwm, authored by
-   * Anthony Martin (amartin@engr.csulb.edu).
-   */
+    /*
+     * SmartPlacement by Cristian Tibirna (tibirna@kde.org)
+     * adapted for kwm (16-19jan98) and for kwin (16Nov1999) using (with
+     * permission) ideas from fvwm, authored by
+     * Anthony Martin (amartin@engr.csulb.edu).
+     */
 
-  const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
-  long int overlap, min_overlap;
-  int x_optimal, y_optimal;
-  int possible;
+    const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
+    long int overlap, min_overlap;
+    int x_optimal, y_optimal;
+    int possible;
 
-  int cxl, cxr, cyt, cyb;     //temp coords
-  int  xl,  xr,  yt,  yb;     //temp coords
+    int cxl, cxr, cyt, cyb;     //temp coords
+    int  xl,  xr,  yt,  yb;     //temp coords
 
-  // get the maximum allowed windows space
-  QRect maxRect = clientArea();
-  int x = maxRect.left(), y = maxRect.top();
-  x_optimal = x; y_optimal = y;
+    // get the maximum allowed windows space
+    QRect maxRect = clientArea();
+    int x = maxRect.left(), y = maxRect.top();
+    x_optimal = x; y_optimal = y;
 
-  //client gabarit
-  int ch = c->height(), cw = c->width();
+    //client gabarit
+    int ch = c->height(), cw = c->width();
 
-  bool first_pass = true; //CT lame flag. Don't like it. What else would do?
+    bool first_pass = true; //CT lame flag. Don't like it. What else would do?
 
-  //loop over possible positions
-  do {
-    //test if enough room in x and y directions
-    if ( y + ch > maxRect.bottom() )
-      overlap = h_wrong; // this throws the algorithm to an exit
-    else if( x + cw > maxRect.right() )
-      overlap = w_wrong;
-    else {
-      overlap = none; //initialize
+    //loop over possible positions
+    do {
+	//test if enough room in x and y directions
+	if ( y + ch > maxRect.bottom() )
+	    overlap = h_wrong; // this throws the algorithm to an exit
+	else if( x + cw > maxRect.right() )
+	    overlap = w_wrong;
+	else {
+	    overlap = none; //initialize
 
-      cxl = x; cxr = x + cw;
-      cyt = y; cyb = y + ch;
-      QValueList<Client*>::ConstIterator l;
-      for(l = clients.begin(); l != clients.end() ; ++l ) {
-	if((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
-	   !(*l)->isIconified() && (*l) != c ) {
+	    cxl = x; cxr = x + cw;
+	    cyt = y; cyb = y + ch;
+	    QValueList<Client*>::ConstIterator l;
+	    for(l = clients.begin(); l != clients.end() ; ++l ) {
+		if((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
+		   !(*l)->isIconified() && (*l) != c ) {
 	
-	  xl = (*l)->x();           yt = (*l)->y();
-	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
+		    xl = (*l)->x();           yt = (*l)->y();
+		    xr = xl + (*l)->height(); yb = yt + (*l)->width();
 	
-	  //if windows overlap, calc the overall overlapping
-	  if((cxl < xr) && (cxr > xl) &&
-	     (cyt < yb) && (cyb > yt)) {
-	    xl = QMAX(cxl, xl); xr = QMIN(cxr, xr);
-	    yt = QMAX(cyt, yt); yb = QMIN(cyb, yb);
-	    overlap += (xr - xl) * (yb - yt);
-	  }
+		    //if windows overlap, calc the overall overlapping
+		    if((cxl < xr) && (cxr > xl) &&
+		       (cyt < yb) && (cyb > yt)) {
+			xl = QMAX(cxl, xl); xr = QMIN(cxr, xr);
+			yt = QMAX(cyt, yt); yb = QMIN(cyb, yb);
+			overlap += (xr - xl) * (yb - yt);
+		    }
+		}
+	    }
 	}
-      }
-    }
 
-    //CT first time we get no overlap we stop.
-    if (overlap == none) {
-      x_optimal = x;
-      y_optimal = y;
-      break;
-    }
-
-    if (first_pass) {
-      first_pass = false;
-      min_overlap = overlap;
-    }
-    //CT save the best position and the minimum overlap up to now
-    else if ( overlap >= none && overlap < min_overlap) {
-      min_overlap = overlap;
-      x_optimal = x;
-      y_optimal = y;
-    }
-
-    // really need to loop? test if there's any overlap
-    if ( overlap > none ) {
-
-      possible = maxRect.right();
-      if ( possible - cw > x) possible -= cw;
-
-      // compare to the position of each client on the current desk
-      QValueList<Client*>::ConstIterator l;
-      for(l = clients.begin(); l != clients.end() ; ++l) {
-	
-	if ( (*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
-	     !(*l)->isIconified() &&  (*l) != c ) {
-
-	  xl = (*l)->x();           yt = (*l)->y();
-	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
-	
-	  // if not enough room above or under the current tested client
-	  // determine the first non-overlapped x position
-	  if( y < yb  && yt < ch + y ) {
-	
-	    if( yb > x )
-	      possible = possible < yb ? possible : yb;
-	
-	    if( xl - cw > x )
-	      possible = possible < xl - cw ? possible : xl - cw;
-	  }
+	//CT first time we get no overlap we stop.
+	if (overlap == none) {
+	    x_optimal = x;
+	    y_optimal = y;
+	    break;
 	}
-	x = possible;
-      }
-    }
 
-    // ... else ==> not enough x dimension (overlap was wrong on horizontal)
-    else if ( overlap == w_wrong ) {
-      x = maxRect.left();
-      possible = maxRect.bottom();
-
-      if ( possible - ch > y ) possible -= ch;
-
-      //test the position of each window on current desk
-      QValueList<Client*>::ConstIterator l;
-      for( l = clients.begin(); l != clients.end() ; ++l ) {
-	if( (*l)->isOnDesktop( currentDesktop() ) && (*l) != desktop_client &&
-	     (*l) != c   &&  !c->isIconified() ) {
-	
-	  xl = (*l)->x();           yt = (*l)->y();
-	  xr = xl + (*l)->height(); yb = yt + (*l)->width();
-	
-	  if( yb > y)
-	    possible = possible < yb ? possible : yb;
-	
-	  if( yt - ch > y )
-	    possible = possible < yt - ch ? possible : yt - ch;
+	if (first_pass) {
+	    first_pass = false;
+	    min_overlap = overlap;
 	}
-	y = possible;
-      }
-    }
-  }
-  while( overlap != none && overlap != h_wrong );
+	//CT save the best position and the minimum overlap up to now
+	else if ( overlap >= none && overlap < min_overlap) {
+	    min_overlap = overlap;
+	    x_optimal = x;
+	    y_optimal = y;
+	}
 
-  // place the window
-  c->move( x_optimal, y_optimal );	
+	// really need to loop? test if there's any overlap
+	if ( overlap > none ) {
+
+	    possible = maxRect.right();
+	    if ( possible - cw > x) possible -= cw;
+
+	    // compare to the position of each client on the current desk
+	    QValueList<Client*>::ConstIterator l;
+	    for(l = clients.begin(); l != clients.end() ; ++l) {
+	
+		if ( (*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
+		     !(*l)->isIconified() &&  (*l) != c ) {
+
+		    xl = (*l)->x();           yt = (*l)->y();
+		    xr = xl + (*l)->height(); yb = yt + (*l)->width();
+	
+		    // if not enough room above or under the current tested client
+		    // determine the first non-overlapped x position
+		    if( y < yb  && yt < ch + y ) {
+	
+			if( yb > x )
+			    possible = possible < yb ? possible : yb;
+	
+			if( xl - cw > x )
+			    possible = possible < xl - cw ? possible : xl - cw;
+		    }
+		}
+		x = possible;
+	    }
+	}
+
+	// ... else ==> not enough x dimension (overlap was wrong on horizontal)
+	else if ( overlap == w_wrong ) {
+	    x = maxRect.left();
+	    possible = maxRect.bottom();
+
+	    if ( possible - ch > y ) possible -= ch;
+
+	    //test the position of each window on current desk
+	    QValueList<Client*>::ConstIterator l;
+	    for( l = clients.begin(); l != clients.end() ; ++l ) {
+		if( (*l)->isOnDesktop( currentDesktop() ) && (*l) != desktop_client &&
+		    (*l) != c   &&  !c->isIconified() ) {
+	
+		    xl = (*l)->x();           yt = (*l)->y();
+		    xr = xl + (*l)->height(); yb = yt + (*l)->width();
+	
+		    if( yb > y)
+			possible = possible < yb ? possible : yb;
+	
+		    if( yt - ch > y )
+			possible = possible < yt - ch ? possible : yt - ch;
+		}
+		y = possible;
+	    }
+	}
+    }
+    while( overlap != none && overlap != h_wrong );
+
+    // place the window
+    c->move( x_optimal, y_optimal );	
 
 }
 
@@ -1045,67 +1064,67 @@ void Workspace::smartPlacement(Client* c){
   Place windows in a cascading order, remembering positions for each desktop
 */
 void Workspace::cascadePlacement (Client* c, bool re_init) {
-/* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
+    /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
  */
 
   // work coords
-  int xp, yp;
+    int xp, yp;
 
-  //CT how do I get from the 'Client' class the size that NW squarish "handle"
-  int delta_x = 24;
-  int delta_y = 24;
+    //CT how do I get from the 'Client' class the size that NW squarish "handle"
+    int delta_x = 24;
+    int delta_y = 24;
 
-  int d = currentDesktop() - 1;
+    int d = currentDesktop() - 1;
 
-  // get the maximum allowed windows space and desk's origin
-  //    (CT 20Nov1999 - is this common to all desktops?)
-  QRect maxRect = clientArea();
+    // get the maximum allowed windows space and desk's origin
+    //    (CT 20Nov1999 - is this common to all desktops?)
+    QRect maxRect = clientArea();
 
   // initialize often used vars: width and height of c; we gain speed
-  int ch = c->height();
-  int cw = c->width();
-  int H = maxRect.bottom();
-  int W = maxRect.right();
-  int X = maxRect.left();
-  int Y = maxRect.top();
+    int ch = c->height();
+    int cw = c->width();
+    int H = maxRect.bottom();
+    int W = maxRect.right();
+    int X = maxRect.left();
+    int Y = maxRect.top();
 
   //initialize if needed
-  if (re_init) {
-    cci[d].pos = QPoint(X, Y);
-    cci[d].col = cci[d].row = 0;
-  }
-
-
-  xp = cci[d].pos.x();
-  yp = cci[d].pos.y();
-
-  //here to touch in case people vote for resize on placement
-  if ((yp + ch ) > H) yp = Y;
-
-  if ((xp + cw ) > W)
-    if (!yp) {
-      smartPlacement(c);
-      return;
+    if (re_init) {
+	cci[d].pos = QPoint(X, Y);
+	cci[d].col = cci[d].row = 0;
     }
-    else xp = X;
+
+
+    xp = cci[d].pos.x();
+    yp = cci[d].pos.y();
+
+    //here to touch in case people vote for resize on placement
+    if ((yp + ch ) > H) yp = Y;
+
+    if ((xp + cw ) > W)
+	if (!yp) {
+	    smartPlacement(c);
+	    return;
+	}
+	else xp = X;
 
   //if this isn't the first window
-  if ( cci[d].pos.x() != X && cci[d].pos.y() != Y ) {
-    if ( xp != X && yp == Y ) xp = delta_x * (++(cci[d].col));
-    if ( yp != Y && xp == X ) yp = delta_y * (++(cci[d].row));
+    if ( cci[d].pos.x() != X && cci[d].pos.y() != Y ) {
+	if ( xp != X && yp == Y ) xp = delta_x * (++(cci[d].col));
+	if ( yp != Y && xp == X ) yp = delta_y * (++(cci[d].row));
 
-    // last resort: if still doesn't fit, smart place it
-    if ( ((xp + cw) > W - X) || ((yp + ch) > H - Y) ) {
-      smartPlacement(c);
-      return;
+	// last resort: if still doesn't fit, smart place it
+	if ( ((xp + cw) > W - X) || ((yp + ch) > H - Y) ) {
+	    smartPlacement(c);
+	    return;
+	}
     }
-  }
 
-  // place the window
-  c->move( QPoint( xp, yp ) );
+    // place the window
+    c->move( QPoint( xp, yp ) );
 
-  // new position
-  cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
+    // new position
+    cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
 }
 
 
@@ -1270,7 +1289,7 @@ void Workspace::makeFullScreen( Client*  )
 
 
 // experimental
-void Workspace::setDecoration( int deco )
+void Workspace::setDecorationStyle( int deco )
 {
     if ( !popup_client )
 	return;
@@ -1283,15 +1302,19 @@ void Workspace::setDecoration( int deco )
     c->hide();
     c->releaseWindow();
     KWM::moveToDesktop( w, c->desktop() );
+    KConfig* config = KGlobal::config();
     switch ( deco ) {
-    case 1:
-	c = new BeClient( this, w);
-        break;
     case 2:
-        c = new SystemClient(this, w);
-        break;
+	c = new BeClient( this, w);
+	config->writeEntry("Plugin", "Be");
+	break;
+    case 3:
+	c = new SystemClient(this, w);
+	config->writeEntry("Plugin", "system");
+	break;
     default:
 	c = new StdClient( this, w );
+	config->writeEntry("Plugin", "standard");
     }
     clients.append( c );
     stacking_order.append( c );
@@ -1429,6 +1452,9 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchDesktop6() ));
     keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchDesktop7() ));
     keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchDesktop8() ));
+    
+    keys->connectItem( "Pop-up window operations menu", this, SLOT( slotWindowOperations() ) );
+    keys->connectItem( "Window close", this, SLOT( slotWindowClose() ) );
 
     keys->readSettings();
 }
@@ -1456,4 +1482,51 @@ void Workspace::slotSwitchDesktop7(){
 }
 void Workspace::slotSwitchDesktop8(){
     setCurrentDesktop(8);
+}
+
+void Workspace::desktopPopupAboutToShow()
+{
+    if ( !desk_popup ) 
+	return;
+    desk_popup->clear();
+    int id;
+    for ( int i = 1; i <= numberOfDesktops(); i++ ) {
+	id = desk_popup->insertItem( QString("&")+QString::number(i ), i );
+	if ( popup_client && popup_client->desktop()  == i )
+	    desk_popup->setItemChecked( id, TRUE );
+    }
+}
+
+void Workspace::clientPopupAboutToShow()
+{
+    if ( !popup_client || !popup )
+	return;
+    popup->setItemChecked( popupIdMaximize, popup_client->isMaximized() );
+    popup->setItemChecked( popupIdShade, popup_client->isShade() );
+}
+
+void Workspace::sendToDesktop( int desk )
+{
+    if ( !popup_client )
+	return;
+    if ( popup_client->isOnDesktop( desk ) )
+	return;
+    
+    popup_client->setDesktop( desk );
+    popup_client->hide();
+}
+
+void Workspace::slotWindowOperations()
+{
+    if ( !active_client )
+	return;
+    QPopupMenu* p = clientPopup( active_client );
+    p->popup( active_client->mapToGlobal( active_client->windowWrapper()->geometry().topLeft() ) );
+}
+
+void Workspace::slotWindowClose()
+{
+    if ( !popup_client )
+	return;
+    popup_client->closeWindow();
 }

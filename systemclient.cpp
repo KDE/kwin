@@ -13,10 +13,10 @@
 
 static unsigned char iconify_bits[] = {
     0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00 };
- 
+
 static unsigned char close_bits[] = {
     0xc3, 0x66, 0x3c, 0x18, 0x3c, 0x66, 0xc3, 0x00 };
- 
+
 static unsigned char maximize_bits[] = {
     0x3f, 0x9f, 0xcf, 0x67, 0x33, 0x19, 0x0c, 0x06 };
 
@@ -25,7 +25,7 @@ static unsigned char unsticky_bits[] = {
 
 static unsigned char sticky_bits[] = {
     0x00, 0x00, 0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00};
-    
+
 static QPixmap *titlePix=0;
 static KPixmap *aFramePix=0;
 static KPixmap *iFramePix=0;
@@ -137,9 +137,9 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
     p.setPen(Qt::black);
     p.drawRect(0, 0, 16, 16);
     p.end();
-    
+
     resize(16, 16);
-    
+
     QBitmap mask;
     mask.resize(16, 16);
     mask.fill(color1);
@@ -173,7 +173,7 @@ void SystemButton::drawButton(QPainter *p)
     p->setPen(options->color(Options::ButtonFg, isDown()));
     p->drawPixmap(isDown() ? 5 : 4, isDown() ? 5 : 4, deco);
 }
-    
+
 SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase )
@@ -183,6 +183,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     QGridLayout* g = new QGridLayout(this, 0, 0, 2);
     g->setRowStretch(1, 10);
     g->addWidget(windowWrapper(), 1, 1 );
+    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
     g->addRowSpacing(2, 6);
 
     button[0] = new SystemButton(this, "close", close_bits);
@@ -193,7 +194,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
         button[1]->setBitmap(sticky_bits);
     button[2] = new SystemButton(this, "iconify", iconify_bits);
     button[3] = new SystemButton(this, "maximize", maximize_bits);
-    
+
     connect( button[0], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
     connect( button[1], SIGNAL( clicked() ), this, ( SLOT( toggleSticky() ) ) );
     connect( button[2], SIGNAL( clicked() ), this, ( SLOT( iconify() ) ) );
@@ -224,7 +225,7 @@ void SystemClient::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
 
-    if ( isVisibleToTLW() ) {
+    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
         QPainter p( this );
 	QRect t = titlebar->geometry();
 	t.setTop( 0 );

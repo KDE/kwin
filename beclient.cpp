@@ -54,6 +54,7 @@ BeClient::BeClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     g->addRowSpacing(1, 2);
     g->setRowStretch( 2, 10 );
     g->addWidget( windowWrapper(), 2, 1 );
+    g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
     g->addColSpacing(0, 2);
     g->addColSpacing(2, 2);
     g->addRowSpacing(3, 2);
@@ -80,7 +81,7 @@ void BeClient::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
     doShape();
-    if ( isVisibleToTLW() ) {
+    if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity ) ) {
 	// manual clearing without the titlebar (we selected WResizeNoErase )
 	QPainter p( this );
 	QRect t = titlebar->geometry();
@@ -208,3 +209,8 @@ void BeClient::mouseDoubleClickEvent( QMouseEvent * e )
     workspace()->requestFocus( this );
 }
 
+
+void BeClient::windowWrapperShowEvent( QShowEvent* )
+{
+    doShape();
+}
