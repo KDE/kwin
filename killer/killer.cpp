@@ -82,7 +82,7 @@ int main( int argc, char* argv[] )
     	    proc.start( KProcess::DontCare );
 	    }
 	else
-	    ::kill( pid, SIGTERM );
+	    ::kill( pid, SIGKILL );
 	XKillClient( qt_xdisplay(), id );
         }
     }
