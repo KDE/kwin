@@ -1372,33 +1372,35 @@ void Client::setShade( bool s )
 
     shaded = s;
 
+    int as = options->animateShade()? options->animSteps() : 1;
+
     if (shaded ) {
 	int h = height();
 	QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
 	windowWrapper()->hide();
 	repaint( FALSE ); // force direct repaint
 	setWFlags( WNorthWestGravity );
-	int step = QMAX( 15, QABS( h - s.height() ) / 20 )+1;
-	while ( h > s.height() + step ) {
+	int step = QMAX( 15, QABS( h - s.height() ) / as )+1;
+        do {
 	    h -= step;
 	    resize ( s.width(), h );
 	    QApplication::syncX();
-	}
+	} while ( h > s.height() + step );
 	clearWFlags( WNorthWestGravity );
 	resize (s );
     } else {
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
 	setWFlags( WNorthWestGravity );
-	int step = QMAX( 15, QABS( h - s.height() ) / 30 )+1;
-	while ( h < s.height() - step ) {
+	int step = QMAX( 15, QABS( h - s.height() ) / as )+1;
+        do {
 	    h += step;
 	    resize ( s.width(), h );
 	    // assume a border
 	    // we do not have time to wait for X to send us paint events
   	    repaint( 0, h - step-5, width(), step+5, TRUE);
 	    QApplication::syncX();
-	}
+	} while ( h < s.height() - step );
 	clearWFlags( WNorthWestGravity );
 	resize ( s );
 	windowWrapper()->show();
