@@ -12,6 +12,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qdatastream.h>
 #include <kapp.h>
 #include <dcopclient.h>
+#include <kdebug.h>
 
 #include "workspace.h"
 #include "client.h"
@@ -127,7 +128,7 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
 	ws->setDesktopClient( c );
 	return c;
     }
-    if ( s == "Kicker" ) {
+    if ( s.lower().right(6) == "kicker" ) {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
@@ -264,7 +265,6 @@ void Workspace::init()
 		setDesktopClient( c );
 	    if ( root != qt_xrootwin() ) {
 		// TODO may use QWidget:.create
-		qDebug(" create a mdi client");
 		XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
 		c->move(0,0);
 	    }
@@ -2336,7 +2336,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
   void
 Workspace::updateClientArea()
 {
-//  qDebug("KWin: Updating client area");
+  kdDebug() << "KWin: Updating client area" << endl;
 
   clientArea_ = QApplication::desktop()->geometry();
   edgeClientArea_ = QApplication::desktop()->geometry();
@@ -2345,38 +2345,40 @@ Workspace::updateClientArea()
   {
     (*it)->updateAvoidPolicy();
 
-    if ((*it)->avoid()) {
+    kdDebug() << "Looking at client " << (KWM::title((*it)->winId()))
+              << (*it)->winId() << endl;
+    kdDebug() << "Avoid policy is " << (*it)->avoid() << endl;
 
-//      qDebug("Looking at client " + (KWM::title((*it)->winId())));
+    if ((*it)->avoid()) {
 
       switch (AnchorEdge((*it)->anchorEdge())) {
 
         case AnchorNorth:
-//          qDebug("KWin: Ignoring at edge N");
+          kdDebug() <<"KWin: Ignoring at edge N" << endl;
           clientArea_
             .setTop(QMAX(clientArea_.top(), (*it)->geometry().bottom()));
           break;
 
         case AnchorSouth:
-//          qDebug("KWin: Ignoring at edge S");
+          kdDebug() <<"KWin: Ignoring at edge S" << endl;
           clientArea_
             .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top() - 1));
           break;
 
         case AnchorEast:
-//          qDebug("KWin: Ignoring at edge E");
+          kdDebug() <<"KWin: Ignoring at edge E" << endl;
           clientArea_
             .setRight(QMIN(clientArea_.right(), (*it)->geometry().left() - 1));
           break;
 
         case AnchorWest:
-//          qDebug("KWin: Ignoring at edge W");
+          kdDebug() <<"KWin: Ignoring at edge W" << endl;
           clientArea_
             .setLeft(QMAX(clientArea_.left(), (*it)->geometry().right()));
           break;
 
         default:
-//          qDebug("KWin: Not ignoring");
+          kdDebug() <<"KWin: Not ignoring" << endl;
           break;
       }
     }
@@ -2400,7 +2402,7 @@ Workspace::updateClientArea()
 
 // Useful when you want to see whether the client area has been
 // updated correctly...
-//  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
+  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
 }
 
 QRect Workspace::clientArea()
