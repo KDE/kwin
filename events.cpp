@@ -379,16 +379,8 @@ bool Workspace::workspaceEvent( XEvent * e )
                 QWhatsThis::leaveWhatsThisMode();
             }
 
-            if (electric_have_borders &&
-               (e->xcrossing.window == electric_top_border ||
-                e->xcrossing.window == electric_left_border ||
-                e->xcrossing.window == electric_bottom_border ||
-                e->xcrossing.window == electric_right_border))
-                {
-                // the user entered an electric border
-                electricBorder(e);
-                }
-            break;
+            if( electricBorder(e))
+                return true;
         case LeaveNotify:
             {
             if ( !QWhatsThis::inWhatsThisMode() )
@@ -446,6 +438,10 @@ bool Workspace::workspaceEvent( XEvent * e )
             // fall through
         case FocusOut:
             return true; // always eat these, they would tell Qt that KWin is the active app
+        case ClientMessage:
+            if( electricBorder( e ))
+                return true;
+            break;
         default:
             break;
         }

@@ -1910,6 +1910,16 @@ void Workspace::createBorderWindows()
                                   CopyFromParent,
                                   valuemask, &attributes);
     XMapWindow(qt_xdisplay(),  electric_right_border);
+    // Set XdndAware on the windows, so that DND enter events are received (#86998)
+    Atom version = 4; // XDND version
+    XChangeProperty( qt_xdisplay(), electric_top_border, atoms->xdnd_aware, XA_ATOM,
+        32, PropModeReplace, ( unsigned char* )&version, 1 );
+    XChangeProperty( qt_xdisplay(), electric_bottom_border, atoms->xdnd_aware, XA_ATOM,
+        32, PropModeReplace, ( unsigned char* )&version, 1 );
+    XChangeProperty( qt_xdisplay(), electric_left_border, atoms->xdnd_aware, XA_ATOM,
+        32, PropModeReplace, ( unsigned char* )&version, 1 );
+    XChangeProperty( qt_xdisplay(), electric_right_border, atoms->xdnd_aware, XA_ATOM,
+        32, PropModeReplace, ( unsigned char* )&version, 1 );
     }
 
 
@@ -2042,12 +2052,36 @@ void Workspace::clientMoved(const QPoint &pos, Time now)
 
 // this function is called when the user entered an electric border
 // with the mouse. It may switch to another virtual desktop
-void Workspace::electricBorder(XEvent *e)
+bool Workspace::electricBorder(XEvent *e)
     {
-    Time now = e->xcrossing.time;
-    QPoint p(e->xcrossing.x_root, e->xcrossing.y_root);
-
-    clientMoved(p, now);
+    if( !electric_have_borders )
+        return false;
+    if( e->type == EnterNotify )
+        {
+        if( e->xcrossing.window == electric_top_border ||
+            e->xcrossing.window == electric_left_border ||
+            e->xcrossing.window == electric_bottom_border ||
+            e->xcrossing.window == electric_right_border)
+            // the user entered an electric border
+            {
+            clientMoved( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ), e->xcrossing.time );
+            return true;
+            }
+        }
+    if( e->type == ClientMessage )
+        {
+        if( e->xclient.message_type == atoms->xdnd_position
+            && ( e->xclient.window == electric_top_border
+                 || e->xclient.window == electric_bottom_border
+                 || e->xclient.window == electric_left_border
+                 || e->xclient.window == electric_right_border ))
+            {
+            updateXTime();
+            clientMoved( QPoint( e->xclient.data.l[2]>>16, e->xclient.data.l[2]&0xffff), qt_x_time );
+            return true;
+            }
+        }
+    return false;
     }
 
 // electric borders (input only windows) have to be always on the

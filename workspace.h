@@ -415,7 +415,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void checkElectricBorders( bool force = false );
         void createBorderWindows();
         void destroyBorderWindows();
-        void electricBorder(XEvent * e);
+        bool electricBorder(XEvent * e);
         void raiseElectricBorders();
 
     // ------------------

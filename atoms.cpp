@@ -9,8 +9,10 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+
 #include <qapplication.h>
 #include "atoms.h"
+#include <assert.h>
 
 namespace KWinInternal
 {
@@ -68,6 +70,13 @@ Atoms::Atoms()
     Atom fake;
     atoms[n] = &fake;
     names[n++] = (char *) "_DT_SM_WINDOW_INFO";
+    
+    atoms[n] = &xdnd_aware;
+    names[n++] = (char*) "XdndAware";
+    atoms[n] = &xdnd_position;
+    names[n++] = (char*) "XdndPosition";
+    
+    assert( n <= max );
 
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
