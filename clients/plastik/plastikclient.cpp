@@ -669,87 +669,34 @@ void PlastikClient::maximizeChange(bool m)
 {
     if (!PlastikHandler::initialized()) return;
 
-// ifdef stuff doesn't seem to work.... whatever, this should now work great for all users
-// except the kde cvs users who play around with the resize&move max. windows setting! :-)
+    if( m && (maximizeMode() == MaximizeFull) && PlastikHandler::shrinkBorders() )
+    {
+        topSpacer_->changeSize(1, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        bottomSpacer_->changeSize(1, 3, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        leftSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
+        rightSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-//     #if defined(KDE_MAKE_VERSION)
-//     # if KDE_VERSION >= KDE_MAKE_VERSION(3,1,0)
-//         if( m && (maximizeMode() == MaximizeFull) && PlastikHandler::shrinkBorders() )
-//         {
-//             topSpacer_->changeSize(1, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-//             bottomSpacer_->changeSize(1, 3, QSizePolicy::Expanding, QSizePolicy::Fixed);
-//             leftSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-//             rightSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-//
-//             leftTitleSpacer_->changeSize(0, s_titleHeight,
-//                         QSizePolicy::Fixed, QSizePolicy::Fixed);
-//             rightTitleSpacer_->changeSize(0, s_titleHeight,
-//                         QSizePolicy::Fixed, QSizePolicy::Fixed);
-//         }
-//         else
-//         {
-//             topSpacer_->changeSize(1, TOPMARGIN, QSizePolicy::Expanding, QSizePolicy::Fixed);
-//             bottomSpacer_->changeSize(1, PlastikHandler::borderSize(),
-//                         QSizePolicy::Expanding, QSizePolicy::Fixed);
-//             leftSpacer_->changeSize(PlastikHandler::borderSize(), 1,
-//                         QSizePolicy::Fixed, QSizePolicy::Expanding);
-//             rightSpacer_->changeSize(PlastikHandler::borderSize(), 1,
-//                         QSizePolicy::Fixed, QSizePolicy::Expanding);
-//             leftTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
-//                         QSizePolicy::Fixed, QSizePolicy::Fixed);
-//             rightTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
-//                         QSizePolicy::Fixed, QSizePolicy::Fixed);
-//         }
-//         layout()->activate();
-//         repaint( false );
-//     # else
-    /* In KDE 3.1, KWIN cuts the side borders if the option "resize and move maximized
-     * windows" is disabled (this behaviour seems to be abolished for KDE CVS).
-     * When we addidtionally remove the borders by our selves, this results in cutting
-     * parts of the UI. Bad!
-     * Let's try to handle this strange behaviour...
-     */
-        if( m && (maximizeMode() == MaximizeFull) && PlastikHandler::shrinkBorders() )
-        {
-            topSpacer_->changeSize(1, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-            bottomSpacer_->changeSize(1, 3, QSizePolicy::Expanding, QSizePolicy::Fixed);
-            if (! options->moveResizeMaximizedWindows) {
-                // normal size! KWin then cuts these borders on its own
-                leftSpacer_->changeSize(PlastikHandler::borderSize(), 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-                rightSpacer_->changeSize(PlastikHandler::borderSize(), 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-
-                leftTitleSpacer_->changeSize(PlastikHandler::borderSize(), s_titleHeight,
-                            QSizePolicy::Fixed, QSizePolicy::Fixed);
-                rightTitleSpacer_->changeSize(PlastikHandler::borderSize(), s_titleHeight,
-                            QSizePolicy::Fixed, QSizePolicy::Fixed);
-            } else {
-                leftSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-                rightSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-
-                leftTitleSpacer_->changeSize(0, s_titleHeight,
-                            QSizePolicy::Fixed, QSizePolicy::Fixed);
-                rightTitleSpacer_->changeSize(0, s_titleHeight,
-                            QSizePolicy::Fixed, QSizePolicy::Fixed);
-            }
-        }
-        else
-        {
-            topSpacer_->changeSize(1, TOPMARGIN, QSizePolicy::Expanding, QSizePolicy::Fixed);
-            bottomSpacer_->changeSize(1, PlastikHandler::borderSize(),
-                        QSizePolicy::Expanding, QSizePolicy::Fixed);
-            leftSpacer_->changeSize(PlastikHandler::borderSize(), 1,
-                        QSizePolicy::Fixed, QSizePolicy::Expanding);
-            rightSpacer_->changeSize(PlastikHandler::borderSize(), 1,
-                        QSizePolicy::Fixed, QSizePolicy::Expanding);
-            leftTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
-                        QSizePolicy::Fixed, QSizePolicy::Fixed);
-            rightTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
-                        QSizePolicy::Fixed, QSizePolicy::Fixed);
-        }
-        layout()->activate();
-        repaint( false );
-//     # endif
-//     #endif
+        leftTitleSpacer_->changeSize(0, s_titleHeight,
+                    QSizePolicy::Fixed, QSizePolicy::Fixed);
+        rightTitleSpacer_->changeSize(0, s_titleHeight,
+                    QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
+    else
+    {
+        topSpacer_->changeSize(1, TOPMARGIN, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        bottomSpacer_->changeSize(1, PlastikHandler::borderSize(),
+                    QSizePolicy::Expanding, QSizePolicy::Fixed);
+        leftSpacer_->changeSize(PlastikHandler::borderSize(), 1,
+                    QSizePolicy::Fixed, QSizePolicy::Expanding);
+        rightSpacer_->changeSize(PlastikHandler::borderSize(), 1,
+                    QSizePolicy::Fixed, QSizePolicy::Expanding);
+        leftTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
+                    QSizePolicy::Fixed, QSizePolicy::Fixed);
+        rightTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
+                    QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
+    layout()->activate();
+    repaint( false );
 
     if (m_button[ButtonMax])
     {
