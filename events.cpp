@@ -1068,8 +1068,6 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
     {
     if (buttonDown)
         {
-        kdDebug( 1212 ) << "Double button press:" << ( w == decorationId())
-            << ":" << ( w == frameId()) << ":" << ( w == wrapperId()) << endl;
         if( w == wrapperId())
             XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         return true;
