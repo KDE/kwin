@@ -2137,9 +2137,16 @@ void Client::killWindow()
 
     // always kill this client at the server
     XKillClient(qt_xdisplay(), win );
-    workspace()->destroyClient( this );
+    // needs to be delayed, because this may be called from the client
+    // popup menu, and there may be possibly code still touching
+    // this instance after returning from killWindow()
+    QTimer::singleShot( 0, this, SLOT( destroyClient()));
 }
 
+void Client::destroyClient()
+{
+    workspace()->destroyClient( this );
+}
 
 
 /*!

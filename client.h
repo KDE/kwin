@@ -287,6 +287,9 @@ protected:
 
     NETWinInfo * netWinInfo();
 
+private slots:
+    void destroyClient();
+
 private:
     QSize sizeForWindowSize( const QSize&, bool ignore_height = FALSE ) const;
     void getWmNormalHints();
