@@ -1,6 +1,7 @@
 [!Global!]
 IconName=kwin
 Comment=The KDE Window Manager
+Comment[cs]=Správce oken KDE
 Comment[da]=KDE vindueshåndtering
 Comment[de]=Der KDE-Fenstermanager
 Comment[el]=Διαχειριστής Παραθύρων KDE
@@ -27,6 +28,7 @@ Comment[zh_CN.GB2312]=KDE 窗口管理器
 
 [desktop1]
 Name=Change to Desktop 1
+Name[cs]=Přepnutí na plochu 1
 Name[da]=Skift til skrivebord 1
 Name[de]=Wechsel zu Arbeitsfläche 1
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 1
@@ -79,6 +81,7 @@ default_presentation=0
 
 [desktop2]
 Name=Change to Desktop 2
+Name[cs]=Přepnutí na plochu 2
 Name[da]=Skift til skrivebord 2
 Name[de]=Wechsel zu Arbeitsfläche 2
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 2
@@ -131,6 +134,7 @@ default_presentation=0
 
 [desktop3]
 Name=Change to Desktop 3
+Name[cs]=Přepnutí na plochu 3
 Name[da]=Skift til skrivebord 3
 Name[de]=Wechsel Arbeitsfläche 3
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 3
@@ -183,6 +187,7 @@ default_presentation=0
 
 [desktop4]
 Name=Change to Desktop 4
+Name[cs]=Přepnutí na plochu 4
 Name[da]=Skift til skrivebord 4
 Name[de]=Wechsel zu Arbeitsfläche 4
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 4
@@ -235,6 +240,7 @@ default_presentation=0
 
 [desktop5]
 Name=Change to Desktop 5
+Name[cs]=Přepnutí na plochu 5
 Name[da]=Skift til skrivebord 5
 Name[de]=Wechsel zu Arbeitsfläche 5
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 5
@@ -287,6 +293,7 @@ default_presentation=0
 
 [desktop6]
 Name=Change to Desktop 6
+Name[cs]=Přepnutí na plochu 6
 Name[da]=Skift til skrivebord 6
 Name[de]=Wechsel zu Arbeitsfläche 6
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 6
@@ -339,6 +346,7 @@ default_presentation=0
 
 [desktop7]
 Name=Change to Desktop 7
+Name[cs]=Přepnutí na plochu 7
 Name[da]=Skift til skrivebord 7
 Name[de]=Wechsel zu Arbeitsfläche 7
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 7
@@ -391,6 +399,7 @@ default_presentation=0
 
 [desktop8]
 Name=Change to Desktop 8
+Name[cs]=Přepnutí na plochu 8
 Name[da]=Skift til skrivebord 8
 Name[de]=Wechsel zu Arbeitsfläche 8
 Name[el]=Αλλαγή στην Επιφ. Εργασίας 8
@@ -443,6 +452,7 @@ default_presentation=0
 
 [activate]
 Name=Activate Window
+Name[cs]=Aktivace okna
 Name[da]=Aktivér vindue
 Name[de]=Fenster aktivieren
 Name[el]=Ενεργοποίηση Παραθύρου
@@ -468,6 +478,7 @@ Name[sv]=Aktivera fönster
 Name[uk]=Активізувати вікно
 Name[zh_CN.GB2312]=激活窗口
 Comment=Another Window is Activated
+Comment[cs]=Je aktivováno jiné okno
 Comment[da]=Et andet vindue er aktiveret
 Comment[de]=Ein anderes Fenster ist aktiviert
 Comment[el]=Ενεργοποιείται Ένα Άλλο Παράθυρο
@@ -496,6 +507,7 @@ default_presentation=0
 [new]
 New=New Window
 Comment=New Window
+Comment[cs]=Nové okno
 Comment[da]=Nyt vindue
 Comment[de]=Neues Fenster
 Comment[el]=Νέο Παράθυρο
@@ -524,6 +536,7 @@ default_presentation=0
 [delete]
 New=Delete Window
 Comment=Delete Window
+Comment[cs]=Výmaz okna
 Comment[da]=Slet vindue
 Comment[de]=Fenster löschen
 Comment[el]=Σβήσιμο Παραθύρου
@@ -551,6 +564,7 @@ default_presentation=0
 
 [open]
 Name=Open New Window
+Name[cs]=Otevření nového okna
 Name[da]=Åbn nyt vindue
 Name[de]=Neues Fenster öffnen
 Name[el]=Άνοιγμα Νέου Παραθύρου
@@ -603,6 +617,7 @@ default_presentation=0
 
 [close]
 Name=Window Close
+Name[cs]=Zavření okna
 Name[da]=Luk vindue
 Name[de]=Fenster schließen
 Name[el]=Κλείσιμο Παραθύρου
@@ -655,6 +670,7 @@ default_presentation=0
 
 [shadeup]
 Name=Window Shade Up
+Name[cs]=Zarolování okna
 Name[da]=Skyg vindue op
 Name[de]=Fensterheber nach oben
 Name[el]=Παράθυρο - Σκίαση Πάνω
@@ -702,6 +718,7 @@ default_presentation=0
 
 [shadedown]
 Name=Window Shade Down
+Name[cs]=Vyrolování okna
 Name[da]=Skyf vindue ned
 Name[de]=Fensterheber nach unten
 Name[el]=Παράθυρο - Σκίαση Κάτω
@@ -749,6 +766,7 @@ default_presentation=0
 
 [iconify]
 Name=Window Iconify
+Name[cs]=Minimalizace okna
 Name[da]=Minimér vindue
 Name[de]=Fenster als Symbol
 Name[el]=Εικονιδιοποίηση Παραθύρου
@@ -801,6 +819,7 @@ default_presentation=0
 
 [deiconify]
 Name=Window Deiconify
+Name[cs]=Obnovení okna po minimalizaci
 Name[da]=Reetablér vindue
 Name[de]=Fenster auf Ursprungsgröße
 Name[el]=Αποεικονιδιοποίηση Παραθύρου
@@ -853,6 +872,7 @@ default_presentation=0
 
 [maximize]
 Name=Window Maximize
+Name[cs]=Maximalizace okna
 Name[da]=Maximér vindue
 Name[de]=Fenster maximieren
 Name[el]=Μεγιστοποίηση Παραθύρου
@@ -905,6 +925,7 @@ default_presentation=0
 
 [unmaximize]
 Name=Window Unmaximize
+Name[cs]=Obnovení okna po maximalizaci
 Name[da]=Afmaximér vindue
 Name[de]=Fenster nicht auf Maximalgröße
 Name[el]=Απομεγιστοποίηση Παραθύρου
@@ -1150,6 +1171,7 @@ default_presentation=0
 
 [movestart]
 Name=Window Move Start
+Name[cs]=Začátek přesunu okna
 Name[da]=Vindue flyt begynd
 Name[de]=Fenster verschieben: Start
 Name[el]=Αρχή μετακίνησης Παραθύρου
@@ -1201,6 +1223,7 @@ default_presentation=0
 
 [moveend]
 Name=Window Move End
+Name[cs]=Konec přesunu okna
 Name[da]=Vindue flyt slut
 Name[de]=Fenster verschieben: Ende
 Name[el]=Τέλος Μετακίνησης Παραθύρου
@@ -1252,6 +1275,7 @@ default_presentation=0
 
 [resizestart]
 Name=Window Resize Start
+Name[cs]=Začátek změny velikosti okna
 Name[da]=Vindue ændr størrelse begynd
 Name[de]=Fenstergröße verstellen: Start
 Name[el]=Αρχή Αλλαγής Μεγέθους Παραθύρου
@@ -1303,6 +1327,7 @@ default_presentation=0
 
 [resizeend]
 Name=Window Resize End
+Name[cs]=Konec změny velikosti okna
 Name[da]=Vindue ændr størrelse slut
 Name[de]=Fenstergröße verstellen: Ende
 Name[el]=Τέλος Αλλαγής Μεγέθους Παραθύρου
