@@ -212,7 +212,7 @@ int            Gsize = -1;
 unsigned char *shadowCorner = NULL;
 unsigned char *shadowTop = NULL;
 
-sXRenderFindVisualFormat(Display *dpy, _Xconst Visual *visual)
+XRenderPictFormat* sXRenderFindVisualFormat(Display *dpy, _Xconst Visual *visual)
 {
     XRenderPictFormat* format = XRenderFindVisualFormat(dpy,visual);
     if (format)
