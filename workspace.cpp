@@ -232,6 +232,7 @@ void Workspace::init()
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2AllowedActions |
+        NET::WM2RestackWindow |
         0
         ,
         NET::ActionMove |
