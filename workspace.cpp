@@ -310,7 +310,7 @@ void Workspace::init()
     connect(kapp, SIGNAL(appearanceChanged()), this,
             SLOT(slotResetAllClients()));
 
-    XGrabServer( qt_xdisplay() );
+//     XGrabServer( qt_xdisplay() );
     XQueryTree(qt_xdisplay(), root, &dw1, &dw2, &wins, &nwins);
     for (i = 0; i < nwins; i++) {
 	XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
@@ -337,7 +337,7 @@ void Workspace::init()
 	}
     }
     XFree((void *) wins);
-    XUngrabServer( qt_xdisplay() );
+//     XUngrabServer( qt_xdisplay() );
     propagateClients();
 
     //CT initialize the cascading info
