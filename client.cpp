@@ -2002,15 +2002,13 @@ void Client::updateAvoidPolicy()
 
     if ( XTextPropertyToStringList( 
 	  &avoidProp, &avoidList, &avoidListCount) == 0 ) {
-	qDebug("kwin: Client::updateAvoidPolicy: "
-	       "XTextPropertyToStringList failed");
+	kdDebug() << "kwin: Client::updateAvoidPolicy: " << endl;
 	return;
     }
 
     // Must be one value only in string list.
     if (avoidListCount != 1) {
-	qDebug( "kwin: Client::updateAvoidPolicy(): "
-		"Avoid list value count incorrect");
+	kdDebug() << "kwin: Client::updateAvoidPolicy(): " << endl;
 	return;
     }
 
