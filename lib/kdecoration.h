@@ -211,6 +211,7 @@ public:
     * @li 'F' keep_above_others button
     * @li 'B' keep_below_others button
     * @li 'L' shade button
+    * @li 'R' resize button
     * @li '_' spacer
     *
     * The default ( which is also returned if customButtonPositions returns false )
