@@ -850,9 +850,19 @@ void Workspace::raiseClient( Client* c )
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
-    if ( c->transientFor() )
-	raiseClient( findClient( c->transientFor() ) );
-
+    if ( c->transientFor() ) {
+	Client* t = findClient( c->transientFor() );
+	Client* t2;
+	while (t && t->transientFor() ) {
+	    t2 = findClient( t->transientFor() );
+	    if ( t2 == c )
+		goto end;
+	    t = t2;
+	}
+	raiseClient( t );
+    }
+    
+ end:	
     propagateClients( TRUE );
 }
 
