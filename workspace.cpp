@@ -1614,14 +1614,6 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         // PluginMenu *deco = new PluginMenu(mgr, popup);
         // deco->setFont(KGlobalSettings::menuFont());
 
-        desk_popup = new QPopupMenu( popup );
-        desk_popup->setCheckable( TRUE );
-        desk_popup->setFont(KGlobalSettings::menuFont());
-        connect( desk_popup, SIGNAL( activated(int) ),
-                 this, SLOT( sendToDesktop(int) ) );
-        connect( desk_popup, SIGNAL( aboutToShow() ),
-                 this, SLOT( desktopPopupAboutToShow() ) );
-
         popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").toString(), Options::MoveOp );
         popup->insertItem( i18n("&Size")+'\t'+keys->shortcut("Window Resize").toString(), Options::ResizeOp );
         popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").toString(), Options::IconifyOp );
@@ -1633,13 +1625,28 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         popup->insertSeparator();
 
         popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e..."), this, SLOT( configureWM() ));
-        popup->insertItem(i18n("&To Desktop"), desk_popup );
 
         popup->insertSeparator();
 
         popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").toString(), Options::CloseOp );
     }
     return popup;
+}
+
+void Workspace::initDesktopPopup()
+{
+    if (desk_popup)
+        return;
+
+    desk_popup = new QPopupMenu( popup );
+    desk_popup->setCheckable( TRUE );
+    desk_popup->setFont(KGlobalSettings::menuFont());
+    connect( desk_popup, SIGNAL( activated(int) ), 
+             this, SLOT( sendToDesktop(int) ) );
+    connect( desk_popup, SIGNAL( aboutToShow() ), 
+             this, SLOT( desktopPopupAboutToShow() ) );
+
+    popup->insertItem(i18n("To &Desktop"), desk_popup, -1, 8 );
 }
 
 void Workspace::showWindowMenuAt( unsigned long id, int x, int y )
@@ -3121,6 +3128,7 @@ void Workspace::desktopPopupAboutToShow()
 {
     if ( !desk_popup )
         return;
+
     desk_popup->clear();
     desk_popup->insertItem( i18n("&All Desktops"), 0 );
     if ( popup_client && popup_client->isSticky() )
@@ -3155,6 +3163,17 @@ void Workspace::clientPopupAboutToShow()
 {
     if ( !popup_client || !popup )
         return;
+    
+    if ( numberOfDesktops() == 1 )
+    {
+        delete desk_popup;
+        desk_popup = 0;
+    }
+    else
+    {
+        initDesktopPopup();
+    }
+
     popup->setItemEnabled( Options::ResizeOp, popup_client->isResizable() );
     popup->setItemEnabled( Options::MoveOp, popup_client->isMovable() );
     popup->setItemEnabled( Options::MaximizeOp, popup_client->isMaximizable() );

@@ -300,6 +300,7 @@ private:
     void init();
     void initShortcuts();
     void readShortcuts();
+    void initDesktopPopup();
 
     bool startKDEWalkThroughWindows();
     bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
