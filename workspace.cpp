@@ -1388,11 +1388,23 @@ void Workspace::setActiveClient( Client* c )
             break;
         }
     }
-    if ( !menubar && !desktops.isEmpty() ) {
-        for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-            if ( (*it)->isMenu() && (*it)->mainClient()->isDesktop() ) {
-                menubar = *it;
-                break;
+    if ( !menubar )
+    {
+        if ( desktops.isEmpty() ) {
+            for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+                if ( (*it)->isMenu() && (*it)->mainClient() == (*it) ) {
+                    menubar = *it;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+                if ( (*it)->isMenu() && (*it)->mainClient()->isDesktop() ) {
+                    menubar = *it;
+                    break;
+                }
             }
         }
     }
