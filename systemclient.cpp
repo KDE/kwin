@@ -254,22 +254,20 @@ void SystemClient::captionChange( const QString& )
 void SystemClient::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
-    p.setPen(Qt::black);
-    p.drawRect(rect());
     QRect t = titlebar->geometry();
     t.setTop( 1 );
 
     // if we have a pixmapped bg use that, otherwise use color settings
     if(colorGroup().brush(QColorGroup::Background).pixmap())
-        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-                        rect().height()-2, colorGroup(), false, 1,
+        qDrawShadePanel(&p, rect(), colorGroup(), false, 1,
                         &colorGroup().brush(QColorGroup::Background));
     else
-        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
-                        rect().height()-2,
+        qDrawShadePanel(&p, rect(),
                         options->colorGroup(Options::Frame, isActive()), false, 1,
                         &options->colorGroup(Options::Frame, isActive()).
                         brush(QColorGroup::Button));
+
+
     t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
