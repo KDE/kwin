@@ -109,6 +109,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	findDecorations();
 	createDecorationList();
 	readConfig( &kwinConfig );
+	resetPlugin( &kwinConfig );
 
 	tabWidget->insertTab( page1, i18n("&General") );
 	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
