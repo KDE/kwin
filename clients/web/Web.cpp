@@ -26,13 +26,13 @@
 #include <qpainter.h>
 
 #include <netwm.h>
+#include <kwin/workspace.h>
 #undef Bool
 
 #include <kconfig.h>
 #include <kstddirs.h>
 
 #include <kapp.h>
-#include <kwin/workspace.h>
 #include <kwin/options.h>
 
 #include "Web.h"
