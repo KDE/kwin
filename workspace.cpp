@@ -12,8 +12,6 @@
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 
-#include <kglobalaccel.h>
-#include <klocale.h>
 
 
 static Client* clientFactory( Workspace *ws, WId w )
@@ -65,11 +63,6 @@ Workspace::Workspace()
     grabKey(XK_Tab, Mod1Mask | ShiftMask);
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
-}
-
-void Workspace::slotExecuteCommand()
-{
-
 }
 
 Workspace::Workspace( WId rootwin )
@@ -139,11 +132,6 @@ void Workspace::init()
     XUngrabServer( qt_xdisplay() );
     popup = 0;
     propagateClients();
-
-    // KURT: Not sure where to put these..
-    keys = new KGlobalAccel();
-    keys->insertItem(i18n("Execute command"),  "Execute command", "ALT+F2");
-    keys->connectItem("Execute command", this, SLOT(slotExecuteCommand()));
 }
 
 Workspace::~Workspace()
@@ -173,8 +161,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	return c->windowEvent( e );
 
     if (!tab_grab && ! control_grab) { // don't process accelerators in tab or control mode
-        if (keys->x11EventFilter(e))
-            return true;
+	return true;
     }
 
     switch (e->type) {
@@ -334,6 +321,8 @@ bool Workspace::destroyClient( Client* c)
     c->invalidateWindow();
     delete c;
     clientHidden( c );
+    if ( c == desktop_client )
+	desktop_client = 0;
     propagateClients();
     return TRUE;
 }

@@ -68,8 +68,6 @@ public:
 
     void makeFullScreen( Client* );
 
-protected slots:
-    void slotExecuteCommand();
 
 protected:
     bool keyPress( XKeyEvent key );
@@ -104,7 +102,7 @@ private:
 
     //experimental
     void setDecoration( int deco );
-    
+
     void propagateClients( bool onlyStacking = FALSE);
 };
 
