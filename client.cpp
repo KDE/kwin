@@ -2848,7 +2848,9 @@ void Client::cloneMode(Client *client)
     geom_restore = client->geom_restore;
     max_mode = client->max_mode;
     state = client->state;
-    setCaption(client->caption());
+    QString caption = client->caption();
+    setCaption(caption);
+    info->setVisibleName( caption.utf8() );
 }
 
 NETWinInfo * Client::netWinInfo()
