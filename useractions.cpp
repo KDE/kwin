@@ -457,129 +457,37 @@ void Workspace::slotSwitchDesktopPrevious()
 
 void Workspace::slotSwitchDesktopRight()
     {
-    int x,y;
-    calcDesktopLayout(x,y);
-    int dt = currentDesktop()-1;
-    if (layoutOrientation == Qt::Vertical)
-        {
-        dt += y;
-        if ( dt >= numberOfDesktops() ) 
-            {
-            if ( options->rollOverDesktops )
-              dt -= numberOfDesktops();
-            else
-              return;
-            }
-        }
-    else
-        {
-        int d = (dt % x) + 1;
-        if ( d >= x ) 
-            {
-            if ( options->rollOverDesktops )
-              d -= x;
-            else
-              return;
-            }
-        dt = dt - (dt % x) + d;
-        }
-    setCurrentDesktop(dt+1);
+    int desktop = desktopToRight( currentDesktop());
+    if( desktop == currentDesktop())
+        return;
+    setCurrentDesktop( desktop );
     popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopLeft()
     {
-    int x,y;
-    calcDesktopLayout(x,y);
-    int dt = currentDesktop()-1;
-    if (layoutOrientation == Qt::Vertical)
-        {
-        dt -= y;
-        if ( dt < 0 ) 
-            {
-            if ( options->rollOverDesktops )
-              dt += numberOfDesktops();
-            else
-              return;
-            }
-        }
-    else
-        {
-        int d = (dt % x) - 1;
-        if ( d < 0 ) 
-            {
-            if ( options->rollOverDesktops )
-              d += x;
-            else
-              return;
-            }
-        dt = dt - (dt % x) + d;
-        }
-    setCurrentDesktop(dt+1);
+    int desktop = desktopToLeft( currentDesktop());
+    if( desktop == currentDesktop())
+        return;
+    setCurrentDesktop( desktop );
     popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopUp()
     {
-    int x,y;
-    calcDesktopLayout(x,y);
-    int dt = currentDesktop()-1;
-    if (layoutOrientation == Qt::Horizontal)
-        {
-        dt -= x;
-        if ( dt < 0 ) 
-            {
-            if ( options->rollOverDesktops )
-              dt += numberOfDesktops();
-            else
-              return;
-            }
-        }
-    else
-        {
-        int d = (dt % y) - 1;
-        if ( d < 0 ) 
-            {
-            if ( options->rollOverDesktops )
-              d += y;
-            else
-              return;
-            }
-        dt = dt - (dt % y) + d;
-        }
-    setCurrentDesktop(dt+1);
+    int desktop = desktopUp( currentDesktop());
+    if( desktop == currentDesktop())
+        return;
+    setCurrentDesktop( desktop );
     popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopDown()
     {
-    int x,y;
-    calcDesktopLayout(x,y);
-    int dt = currentDesktop()-1;
-    if (layoutOrientation == Qt::Horizontal)
-        {
-        dt += x;
-        if ( dt >= numberOfDesktops() ) 
-            {
-            if ( options->rollOverDesktops )
-              dt -= numberOfDesktops();
-            else
-              return;
-            }
-        }
-    else
-        {
-        int d = (dt % y) + 1;
-        if ( d >= y ) 
-            {
-            if ( options->rollOverDesktops )
-              d -= y;
-            else
-              return;
-            }
-        dt = dt - (dt % y) + d;
-        }
-    setCurrentDesktop(dt+1);
+    int desktop = desktopDown( currentDesktop());
+    if( desktop == currentDesktop())
+        return;
+    setCurrentDesktop( desktop );
     popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
@@ -735,6 +643,67 @@ void Workspace::slotWindowToPreviousDesktop()
         popupinfo->showInfo( desktopName(currentDesktop()) );
         }
     }
+
+void Workspace::slotWindowToDesktopRight()
+    {
+    int d = desktopToRight( currentDesktop());
+    if( d == currentDesktop())
+        return;
+    if (active_client && !active_client->isDesktop()
+        && !active_client->isDock() && !active_client->isTopMenu())
+        {
+        setClientIsMoving( active_client );
+        setCurrentDesktop( d );
+        setClientIsMoving( NULL );
+        popupinfo->showInfo( desktopName(currentDesktop()) );
+        }
+    }
+
+void Workspace::slotWindowToDesktopLeft()
+    {
+    int d = desktopToLeft( currentDesktop());
+    if( d == currentDesktop())
+        return;
+    if (active_client && !active_client->isDesktop()
+        && !active_client->isDock() && !active_client->isTopMenu())
+        {
+        setClientIsMoving( active_client );
+        setCurrentDesktop( d );
+        setClientIsMoving( NULL );
+        popupinfo->showInfo( desktopName(currentDesktop()) );
+        }
+    }
+
+void Workspace::slotWindowToDesktopUp()
+    {
+    int d = desktopUp( currentDesktop());
+    if( d == currentDesktop())
+        return;
+    if (active_client && !active_client->isDesktop()
+        && !active_client->isDock() && !active_client->isTopMenu())
+        {
+        setClientIsMoving( active_client );
+        setCurrentDesktop( d );
+        setClientIsMoving( NULL );
+        popupinfo->showInfo( desktopName(currentDesktop()) );
+        }
+    }
+
+void Workspace::slotWindowToDesktopDown()
+    {
+    int d = desktopDown( currentDesktop());
+    if( d == currentDesktop())
+        return;
+    if (active_client && !active_client->isDesktop()
+        && !active_client->isDock() && !active_client->isTopMenu())
+        {
+        setClientIsMoving( active_client );
+        setCurrentDesktop( d );
+        setClientIsMoving( NULL );
+        popupinfo->showInfo( desktopName(currentDesktop()) );
+        }
+    }
+
 
 /*!
   Kill Window feature, similar to xkill

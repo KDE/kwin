@@ -99,6 +99,10 @@
 	DEF( I18N_NOOP("Window to Desktop 20"),                0, 0, slotWindowToDesktop(int) );
 	DEF( I18N_NOOP("Window to Next Desktop"),              0, 0, slotWindowToNextDesktop() );
 	DEF( I18N_NOOP("Window to Previous Desktop"),          0, 0, slotWindowToPreviousDesktop() );
+	DEF( I18N_NOOP("Window One Desktop to the Right"),     0, 0, slotWindowToDesktopRight() );
+	DEF( I18N_NOOP("Window One Desktop to the Left"),      0, 0, slotWindowToDesktopLeft() );
+	DEF( I18N_NOOP("Window One Desktop Up"),               0, 0, slotWindowToDesktopUp() );
+	DEF( I18N_NOOP("Window One Desktop Down"),             0, 0, slotWindowToDesktopDown() );
 
 	keys->insert( "Group:Desktop Switching", i18n("Desktop Switching") );
 	DEF( I18N_NOOP("Switch to Desktop 1"),  CTRL+Qt::Key_F1, WIN+Qt::Key_F1, slotSwitchToDesktop(int) );

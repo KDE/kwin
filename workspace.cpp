@@ -1129,6 +1129,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     return true;
     }
 
+// called only from DCOP
 void Workspace::nextDesktop()
     {
     int desktop = currentDesktop() + 1;
@@ -1136,12 +1137,138 @@ void Workspace::nextDesktop()
     popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
+// called only from DCOP
 void Workspace::previousDesktop()
     {
     int desktop = currentDesktop() - 1;
     setCurrentDesktop(desktop > 0 ? desktop : numberOfDesktops());
     popupinfo->showInfo( desktopName(currentDesktop()) );
     }
+
+int Workspace::desktopToRight( int desktop ) const
+    {
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = desktop-1;
+    if (layoutOrientation == Qt::Vertical)
+        {
+        dt += y;
+        if ( dt >= numberOfDesktops() ) 
+            {
+            if ( options->rollOverDesktops )
+              dt -= numberOfDesktops();
+            else
+              return desktop;
+            }
+        }
+    else
+        {
+        int d = (dt % x) + 1;
+        if ( d >= x ) 
+            {
+            if ( options->rollOverDesktops )
+              d -= x;
+            else
+              return desktop;
+            }
+        dt = dt - (dt % x) + d;
+        }
+    return dt+1;
+    }
+
+int Workspace::desktopToLeft( int desktop ) const
+    {
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = desktop-1;
+    if (layoutOrientation == Qt::Vertical)
+        {
+        dt -= y;
+        if ( dt < 0 ) 
+            {
+            if ( options->rollOverDesktops )
+              dt += numberOfDesktops();
+            else
+              return desktop;
+            }
+        }
+    else
+        {
+        int d = (dt % x) - 1;
+        if ( d < 0 ) 
+            {
+            if ( options->rollOverDesktops )
+              d += x;
+            else
+              return desktop;
+            }
+        dt = dt - (dt % x) + d;
+        }
+    return dt+1;
+    }
+
+int Workspace::desktopUp( int desktop ) const
+    {
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = desktop-1;
+    if (layoutOrientation == Qt::Horizontal)
+        {
+        dt -= x;
+        if ( dt < 0 ) 
+            {
+            if ( options->rollOverDesktops )
+              dt += numberOfDesktops();
+            else
+              return desktop;
+            }
+        }
+    else
+        {
+        int d = (dt % y) - 1;
+        if ( d < 0 ) 
+            {
+            if ( options->rollOverDesktops )
+              d += y;
+            else
+              return desktop;
+            }
+        dt = dt - (dt % y) + d;
+        }
+    return dt+1;
+    }
+
+int Workspace::desktopDown( int desktop ) const
+    {
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = desktop-1;
+    if (layoutOrientation == Qt::Horizontal)
+        {
+        dt += x;
+        if ( dt >= numberOfDesktops() ) 
+            {
+            if ( options->rollOverDesktops )
+              dt -= numberOfDesktops();
+            else
+              return desktop;
+            }
+        }
+    else
+        {
+        int d = (dt % y) + 1;
+        if ( d >= y ) 
+            {
+            if ( options->rollOverDesktops )
+              d -= y;
+            else
+              return desktop;
+            }
+        dt = dt - (dt % y) + d;
+        }
+    return dt+1;
+    }
+
 
 /*!
   Sets the number of virtual desktops to \a n
@@ -1241,7 +1368,7 @@ void Workspace::setDesktopLayout(int o, int x, int y)
     layoutY = y;
     }
 
-void Workspace::calcDesktopLayout(int &x, int &y)
+void Workspace::calcDesktopLayout(int &x, int &y) const
     {
     x = layoutX;
     y = layoutY;

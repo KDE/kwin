@@ -309,6 +309,10 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         void slotWindowToNextDesktop();
         void slotWindowToPreviousDesktop();
+        void slotWindowToDesktopRight();
+        void slotWindowToDesktopLeft();
+        void slotWindowToDesktopUp();
+        void slotWindowToDesktopDown();
 
         void slotMouseEmulation();
 
@@ -361,6 +365,10 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void oneStepThroughDesktopList( bool forward );
         bool establishTabBoxGrab();
         void removeTabBoxGrab();
+        int desktopToRight( int desktop ) const;
+        int desktopToLeft( int desktop ) const;
+        int desktopUp( int desktop ) const;
+        int desktopDown( int desktop ) const;
 
         void updateStackingOrder( bool propagate_new_clients = false );
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
@@ -414,7 +422,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
     
         void helperDialog( const QString& message, const Client* c );
 
-        void calcDesktopLayout(int &x, int &y);
+        void calcDesktopLayout(int &x, int &y) const;
 
         QPopupMenu* clientPopup();
 
