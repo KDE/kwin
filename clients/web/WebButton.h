@@ -27,9 +27,11 @@
 #include <klocale.h>
 #include "../../kwinbutton.h"
 
-namespace KWinInternal
+namespace Web
 {
-  class WebButton : public KWinInternal::KWinWidgetButton
+  using namespace KWinInternal;
+
+  class WebButton : public KWinWidgetButton
   {
     Q_OBJECT
 

@@ -24,8 +24,9 @@
 
 #include "WebButton.h"
 
-namespace KWinInternal
+namespace Web
 {
+  using namespace KWinInternal;
 
   class WebButtonMaximize : public WebButton
   {

@@ -21,6 +21,8 @@
 
 #include "WebButtonIconify.h"
 
+namespace Web {
+
 using namespace KWinInternal;
 
 static unsigned char iconify_bits[] =
@@ -41,6 +43,8 @@ WebButtonIconify::clickEvent(int /* button */)
 {
   emit(iconify());
 }
+
+};
 
 #include "WebButtonIconify.moc"
 // vim:ts=2:sw=2:tw=78:set et:

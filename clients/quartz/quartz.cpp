@@ -27,8 +27,10 @@
 #include "quartz.h"
 #include <qimage.h>
 
+
 using namespace KWinInternal;
 
+namespace Quartz {
 
 static unsigned char iconify_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7e, 0x00,
@@ -796,6 +798,7 @@ void QuartzClient::menuButtonPressed()
 	button[BtnMenu]->setDown(false);
 }
 
+};
 
 // Extended KWin plugin interface
 /////////////////////////////////
@@ -803,12 +806,12 @@ extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
-        return(new QuartzClient(ws, w));
+        return(new Quartz::QuartzClient(ws, w));
     }
 
 	void init()
 	{
-		clientHandler = new QuartzHandler();
+        Quartz::clientHandler = new Quartz::QuartzHandler();
 	}
 
 	void reset()
@@ -818,7 +821,7 @@ extern "C"
 
 	void deinit()
 	{
-		delete clientHandler;
+		delete Quartz::clientHandler;
 	}
 }
 

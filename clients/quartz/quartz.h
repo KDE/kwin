@@ -26,8 +26,9 @@
 class QSpacerItem;
 class QBoxLayout;
 
-namespace KWinInternal {
+namespace Quartz {
 
+using namespace KWinInternal;
 
 class QuartzHandler: public QObject
 {
@@ -47,7 +48,7 @@ class QuartzHandler: public QObject
 };
 
 
-class QuartzButton : public KWinInternal::KWinButton
+class QuartzButton : public KWinButton
 {
 	public:
 		QuartzButton(Client *parent=0, const char *name=0, bool largeButton=true,
@@ -73,7 +74,7 @@ class QuartzButton : public KWinInternal::KWinButton
 };
 
 
-class QuartzClient : public KWinInternal::Client
+class QuartzClient : public Client
 {
 	Q_OBJECT
 

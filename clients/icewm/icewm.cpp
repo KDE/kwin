@@ -57,6 +57,7 @@
 
 using namespace KWinInternal;
 
+namespace IceWM {
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Here's the global pixmap stuff - as memory efficient as it can be :)
@@ -1362,17 +1363,18 @@ void IceWMClient::menuButtonPressed()
 	button[BtnSysMenu]->setDown(false);
 }
 
+};
 
 extern "C"
 {
 	Client* allocate(Workspace *ws, WId w, int)
     {
-        return(new IceWMClient(ws, w));
+        return(new IceWM::IceWMClient(ws, w));
     }
 
 	void init()
 	{
-		clientHandler = new ThemeHandler;
+        IceWM::clientHandler = new IceWM::ThemeHandler;
 	}
 	
 	void reset()
@@ -1382,7 +1384,7 @@ extern "C"
 
 	void deinit()
 	{
-		delete clientHandler;
+		delete IceWM::clientHandler;
 	}
 }
 

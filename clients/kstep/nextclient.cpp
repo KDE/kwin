@@ -14,6 +14,7 @@
 using namespace KWinInternal;
 
 
+namespace KStep {
 
 static unsigned char close_bits[] = {
   0x03, 0x03, 0x87, 0x03, 0xce, 0x01, 0xfc, 0x00, 0x78, 0x00, 0x78, 0x00,
@@ -560,26 +561,28 @@ NextClient::mousePosition( const QPoint& p ) const
   return m;
 }
 
+};
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int )
     {
-        return(new NextClient(ws, w));
+        return(new KStep::NextClient(ws, w));
     }
     void init()
     {
-       create_pixmaps();
+       KStep::create_pixmaps();
     }
     void reset()
     {
-       delete_pixmaps();
-       create_pixmaps();
+       KStep::delete_pixmaps();
+       KStep::create_pixmaps();
        // Ensure change in tooltip state gets applied
        Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {
-       delete_pixmaps();
+       KStep::delete_pixmaps();
     }
 }
 

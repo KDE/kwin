@@ -24,8 +24,10 @@
 
 #include "WebButton.h"
 
-namespace KWinInternal
+namespace Web
 {
+  using namespace KWinInternal;
+
   class WebButtonSticky : public WebButton
   {
     Q_OBJECT

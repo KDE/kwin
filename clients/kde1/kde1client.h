@@ -11,9 +11,11 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 class QLabel;
 class QSpacerItem;
 
-namespace KWinInternal {
+namespace KDE1 {
 
-class StdClient : public KWinInternal::Client
+using namespace KWinInternal;
+
+class StdClient : public Client
 {
     Q_OBJECT
 public:
@@ -69,7 +71,7 @@ private:
   Like QToolButton, but provides a clicked(int) signals that
   has the last pressed mouse button as argument
  */
-class ThreeButtonButton: public KWinInternal:: KWinToolButton
+class ThreeButtonButton: public KWinToolButton
 {
     Q_OBJECT
 public:

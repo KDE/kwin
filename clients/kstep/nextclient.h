@@ -10,9 +10,11 @@
 class QLabel;
 class QSpacerItem;
 
-namespace KWinInternal {
+namespace KStep {
 
-class NextButton : public KWinInternal::KWinButton
+using namespace KWinInternal;
+
+class NextButton : public KWinButton
 {
 public:
     NextButton(Client *parent=0, const char *name=0,
@@ -34,7 +36,7 @@ protected:
     ButtonState last_button;
 };
 
-class NextClient : public KWinInternal::Client
+class NextClient : public Client
 {
     Q_OBJECT
 public:

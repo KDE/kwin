@@ -9,9 +9,11 @@ class QLabel;
 class QSpacerItem;
 class QBoxLayout;
 
-namespace KWinInternal {
+namespace Laptop {
 
-class LaptopClientButton : public KWinInternal::KWinButton
+using namespace KWinInternal;
+
+class LaptopClientButton : public KWinButton
 {
 public:
     LaptopClientButton(int w, int h, Client *parent=0, const char *name=0,

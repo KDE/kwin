@@ -16,6 +16,8 @@
 
 using namespace KWinInternal;
 
+namespace KWMTheme {
+
 
 /* static QPixmap stretchPixmap(QPixmap& src, bool stretchVert){
   QPixmap dest;
@@ -803,25 +805,27 @@ void KWMThemeClient::init()
     //
 }
 
+};
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w)
     {
-        return(new KWMThemeClient(ws, w));
+        return(new KWMTheme::KWMThemeClient(ws, w));
     }
     void init()
     {
-       create_pixmaps();
+       KWMTheme::create_pixmaps();
     }
     void reset()
     {
-       delete_pixmaps();
-       create_pixmaps();
+       KWMTheme::delete_pixmaps();
+       KWMTheme::create_pixmaps();
        Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {
-       delete_pixmaps();
+       KWMTheme::delete_pixmaps();
     }
 }
 

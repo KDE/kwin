@@ -17,9 +17,12 @@
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
-#include "bitmaps.h"
 
 using namespace KWinInternal;
+
+namespace B2 {
+
+#include "bitmaps.h"
 
 #define P_CLOSE 0
 #define P_MAX 1
@@ -192,8 +195,8 @@ void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
 void B2Button::setPixmaps(int button_id)
 {
   button_id *= 4;
-  setPixmaps(::pixmap[button_id], ::pixmap[button_id+1],
-             ::pixmap[button_id+2], ::pixmap[button_id+3]);
+  setPixmaps(B2::pixmap[button_id], B2::pixmap[button_id+1],
+	     B2::pixmap[button_id+2], B2::pixmap[button_id+3]);
 }
 
 void B2Button::mousePressEvent( QMouseEvent* e )
@@ -926,27 +929,29 @@ void B2Client::positionButtons()
     titlebar->move(bar_x_ofs, 0);
 }
 
+};
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
-       return(new B2Client(ws, w));
+       return(new B2::B2Client(ws, w));
     }
     void init()
     {
-       read_config();
-       create_pixmaps();
+       B2::read_config();
+       B2::create_pixmaps();
     }
     void reset()
     {
-       read_config();
-       redraw_pixmaps();
+       B2::read_config();
+       B2::redraw_pixmaps();
        // Ensure change in tooltip state gets applied
-       Workspace::self()->slotResetAllClientsDelayed();
+       KWinInternal::Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {
-       delete_pixmaps();
+       B2::delete_pixmaps();
     }
 }
 

@@ -28,6 +28,7 @@
 
 using namespace KWinInternal;
 
+namespace Redmond {
 
 static const char *kdelogo[] = {
 /* columns rows colors chars-per-pixel */
@@ -760,28 +761,30 @@ void GalliumClient::menuButtonPressed()
 	button[BtnMenu]->setDown(false);
 }
 
+};
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
-        return(new GalliumClient(ws, w));
+        return(new Redmond::GalliumClient(ws, w));
     }
 
     void init()
     {
-       create_pixmaps();
+        Redmond::create_pixmaps();
     }
 
     void reset()
     {
-       delete_pixmaps();
-       create_pixmaps();
+       Redmond::delete_pixmaps();
+       Redmond::create_pixmaps();
        Workspace::self()->slotResetAllClientsDelayed();
     }
 
     void deinit()
     {
-       delete_pixmaps();
+       Redmond::delete_pixmaps();
     }
 }
 

@@ -11,9 +11,11 @@
 class QLabel;
 class QSpacerItem;
 
-namespace KWinInternal {
+namespace System {
 
-class SystemButton : public KWinInternal::KWinButton
+using namespace KWinInternal;
+
+class SystemButton : public KWinButton
 {
     Q_OBJECT
 public:
@@ -40,7 +42,7 @@ private:
     Client* client;
 };
 
-class SystemClient : public KWinInternal::Client
+class SystemClient : public Client
 {
     Q_OBJECT
 public:

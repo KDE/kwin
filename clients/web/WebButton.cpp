@@ -23,6 +23,8 @@
 
 #include "WebButton.h"
 
+namespace Web {
+
 using namespace KWinInternal;
 
 WebButton::WebButton(QWidget * parent, const QString& tip)
@@ -249,6 +251,8 @@ WebButton::resizeEvent(QResizeEvent *)
 {
   repaint();
 }
+
+};
 
 #include "WebButton.moc"
 // vim:ts=2:sw=2:tw=78:set et:

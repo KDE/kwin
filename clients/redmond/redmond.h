@@ -26,9 +26,11 @@ class QLabel;
 class QSpacerItem;
 class QBoxLayout;
 
-namespace KWinInternal {
+namespace Redmond {
 
-class GalliumButton : public KWinInternal::KWinButton
+using namespace KWinInternal;
+
+class GalliumButton : public KWinButton
 {
 	public:
     	GalliumButton(Client *parent=0, const char *name=0, 
@@ -56,7 +58,7 @@ class GalliumButton : public KWinInternal::KWinButton
 };
 
 
-class GalliumClient : public KWinInternal::Client
+class GalliumClient : public Client
 {
 	Q_OBJECT
 

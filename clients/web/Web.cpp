@@ -50,7 +50,7 @@ extern "C"
 {
   Client * allocate(Workspace * ws, WId w, int tool)
   {
-    return new Web(ws, w, tool != 0);
+    return new Web::WebClient(ws, w, tool != 0);
   }
 
   void init()
@@ -70,7 +70,9 @@ extern "C"
   }
 }
 
-Web::Web(Workspace * ws, WId w, bool tool, QWidget * parent, const char * name)
+namespace Web {
+  
+WebClient::WebClient(Workspace * ws, WId w, bool tool, QWidget * parent, const char * name)
   : Client        (ws, w, parent, name, WResizeNoErase),
     tool_         (tool),
     mainLayout_   (0),
@@ -86,13 +88,13 @@ Web::Web(Workspace * ws, WId w, bool tool, QWidget * parent, const char * name)
   connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
 
-Web::~Web()
+WebClient::~WebClient()
 {
   // Empty.
 }
 
   void
-Web::resizeEvent(QResizeEvent * e)
+WebClient::resizeEvent(QResizeEvent * e)
 {
   Client::resizeEvent(e);
   doShape();
@@ -100,13 +102,13 @@ Web::resizeEvent(QResizeEvent * e)
 }
 
   void
-Web::captionChange(const QString &)
+WebClient::captionChange(const QString &)
 {
   repaint();
 }
 
   void
-Web::paintEvent(QPaintEvent * pe)
+WebClient::paintEvent(QPaintEvent * pe)
 {
   QRect titleRect(titleSpacer_->geometry());
   titleRect.setTop(1);
@@ -170,7 +172,7 @@ Web::paintEvent(QPaintEvent * pe)
 }
 
   void
-Web::doShape()
+WebClient::doShape()
 {
   if (!shape_)
     return;
@@ -212,21 +214,21 @@ Web::doShape()
 }
 
   void
-Web::showEvent(QShowEvent *)
+WebClient::showEvent(QShowEvent *)
 {
   doShape();
   repaint();
 }
 
   void
-Web::windowWrapperShowEvent(QShowEvent *)
+WebClient::windowWrapperShowEvent(QShowEvent *)
 {
   doShape();
   repaint();
 }
 
   void
-Web::mouseDoubleClickEvent(QMouseEvent * e)
+WebClient::mouseDoubleClickEvent(QMouseEvent * e)
 {
   if (titleSpacer_->geometry().contains(e->pos()))
   {
@@ -236,25 +238,25 @@ Web::mouseDoubleClickEvent(QMouseEvent * e)
 }
 
   void
-Web::stickyChange(bool b)
+WebClient::stickyChange(bool b)
 {
   emit(stkyChange(b));
 }
 
   void
-Web::maximizeChange(bool b)
+WebClient::maximizeChange(bool b)
 {
   emit(maxChange(b));
 }
 
   void
-Web::activeChange(bool)
+WebClient::activeChange(bool)
 {
   repaint();
 }
 
   Client::MousePosition
-Web::mousePosition(const QPoint & p) const
+WebClient::mousePosition(const QPoint & p) const
 {
   int x = p.x();
   int y = p.y();
@@ -296,14 +298,14 @@ Web::mousePosition(const QPoint & p) const
 }
 
   void
-Web::slotReset()
+WebClient::slotReset()
 {
   _resetLayout();
   repaint();
 }
 
   void
-Web::slotMaximize(int button)
+WebClient::slotMaximize(int button)
 {
   switch (button)
   {
@@ -322,7 +324,7 @@ Web::slotMaximize(int button)
 }
 
   WebButton *
-Web::_createButton(const QString & s, QWidget * parent)
+WebClient::_createButton(const QString & s, QWidget * parent)
 {
   WebButton * b = 0;
 
@@ -373,7 +375,7 @@ Web::_createButton(const QString & s, QWidget * parent)
 }
 
   void
-Web::_createButtons()
+WebClient::_createButtons()
 {
   leftButtonList_   .clear();
   rightButtonList_  .clear();
@@ -421,7 +423,7 @@ Web::_createButtons()
 }
 
   void
-Web::_resetLayout()
+WebClient::_resetLayout()
 {
   KConfig c(locate("config", "kwinwebrc"));
   c.setGroup("General");
@@ -501,10 +503,12 @@ Web::_resetLayout()
 }
 
   void
-Web::animateIconifyOrDeiconify(bool /* iconify */)
+WebClient::animateIconifyOrDeiconify(bool /* iconify */)
 {
   // Nice and simple ;)
 }
+
+};
 
 #include "Web.moc"
 // vim:ts=2:sw=2:tw=78:set et:

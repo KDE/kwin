@@ -22,7 +22,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 using namespace KWinInternal;
 
-namespace
+namespace KDE1
 {
 
 QPixmap* close_pix = 0;
@@ -215,7 +215,6 @@ void drawGradient
   }
 }
 
-} // anyonmous namespace
 
 void StdClient::slotReset()
 {
@@ -566,28 +565,30 @@ void StdToolClient::slotReset()
     setFont(options->font(isActive(), true ));
 }
 
+};
+
 extern "C"
 {
   Client * allocate(Workspace * workSpace, WId winId, int tool )
   {
       if ( tool )
-	  return new StdToolClient( workSpace, winId );
-      return new StdClient(workSpace, winId);
+	  return new KDE1::StdToolClient( workSpace, winId );
+      return new KDE1::StdClient(workSpace, winId);
   }
   void init()
   {
-     create_pixmaps();
+     KDE1::create_pixmaps();
   }
   void reset()
   {
-     delete_pixmaps();
-     create_pixmaps();
+     KDE1::delete_pixmaps();
+     KDE1::create_pixmaps();
      // Ensure change in tooltip state gets applied
      Workspace::self()->slotResetAllClientsDelayed();
   }
   void deinit()
   {
-     delete_pixmaps();
+     KDE1::delete_pixmaps();
   }
 }
 

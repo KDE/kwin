@@ -48,7 +48,7 @@
 
 #include "keramik.moc"
 
-using namespace Keramik;
+using namespace KWinInternal;
 
 
 
@@ -127,8 +127,6 @@ namespace Keramik
 
 	KeramikHandler *clientHandler = NULL;
 	bool keramik_initialized = false;
-
-} // namespace Keramik 
 
 
 
@@ -1428,7 +1426,7 @@ Client::MousePosition KeramikClient::mousePosition( const QPoint &p ) const
 	return Center;
 }
 
-
+}; // namespace Keramik
 
 // -------------------------------------------------------------------------------------------
 
@@ -1438,22 +1436,22 @@ extern "C"
 {
 	Client *allocate( Workspace *ws, WId w )
 	{
-		return new KeramikClient( ws, w );
+		return new Keramik::KeramikClient( ws, w );
 	}
 	
 	void init()
 	{
-		clientHandler = new KeramikHandler();
+		Keramik::clientHandler = new Keramik::KeramikHandler();
 	}
 	
 	void reset()
 	{
-		clientHandler->reset();
+		Keramik::clientHandler->reset();
 	}
 	
 	void deinit()
 	{
-		delete clientHandler;
+		delete Keramik::clientHandler;
 	}
 }
 

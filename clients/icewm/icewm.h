@@ -52,7 +52,9 @@ class QSpacerItem;
 class QBoxLayout;
 class QGridLayout;
 
-namespace KWinInternal {
+namespace IceWM {
+
+using namespace KWinInternal;
 
 // Pixmap group
 enum { InActive=0, Active };
@@ -73,7 +75,7 @@ class ThemeHandler: public QObject
 		void slotReset();
 
 	private:
-		bool	initialized;
+		bool initialized;
 		QString themeName;
 
 		void readConfig();
@@ -92,7 +94,7 @@ class ThemeHandler: public QObject
 };
 
 
-class IceWMButton : public KWinInternal::KWinButton
+class IceWMButton : public KWinButton
 {
 	public:
 		IceWMButton( Client *parent=0, const char *name=0, 
@@ -116,7 +118,7 @@ class IceWMButton : public KWinInternal::KWinButton
 };
 
 
-class IceWMClient : public KWinInternal::Client
+class IceWMClient : public Client
 {
     Q_OBJECT
 	public:

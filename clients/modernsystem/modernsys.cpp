@@ -20,6 +20,7 @@
 
 using namespace KWinInternal;
 
+namespace ModernSystem {
 
 static unsigned char iconify_bits[] = {
     0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
@@ -614,30 +615,31 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
     return m;
 }
 
+};
 
 // KWin extended plugin interface
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
-        return(new ModernSys(ws, w));
+        return(new ModernSystem::ModernSys(ws, w));
     }
     void init()
     {
-        button_pattern = new QString;
-        create_pixmaps();
-        read_config();
+        ModernSystem::button_pattern = new QString;
+        ModernSystem::create_pixmaps();
+        ModernSystem::read_config();
     }
     void reset()
     {
-        read_config();
-		delete_pixmaps();
-		create_pixmaps();
+        ModernSystem::read_config();
+        ModernSystem::delete_pixmaps();
+        ModernSystem::create_pixmaps();
     }
     void deinit()
     {
-        delete_pixmaps();
-        delete button_pattern;
+        ModernSystem::delete_pixmaps();
+        delete ModernSystem::button_pattern;
     }
 }
 

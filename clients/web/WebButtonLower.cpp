@@ -21,6 +21,8 @@
 
 #include "WebButtonLower.h"
 
+namespace Web {
+
 using namespace KWinInternal;
 
 static unsigned char lower_bits[] =
@@ -41,6 +43,8 @@ WebButtonLower::clickEvent(int /* button */)
 {
   emit(lowerWindow());
 }
+
+};
 
 #include "WebButtonLower.moc"
 // vim:ts=2:sw=2:tw=78:set et:

@@ -10,9 +10,11 @@ class QLabel;
 class QSpacerItem;
 class QGridLayout;
 
-namespace KWinInternal{
+namespace KWMTheme {
 
-class MyButton : public KWinInternal::KWinToolButton
+using namespace KWinInternal;
+
+class MyButton : public KWinToolButton
 {
 public:
     MyButton(QWidget *parent=0, const char *name=0, const QString& tip=NULL)
@@ -21,7 +23,7 @@ protected:
     void drawButtonLabel(QPainter *p);
 };
 
-class KWMThemeClient : public KWinInternal::Client
+class KWMThemeClient : public Client
 {
     Q_OBJECT
 public:

@@ -30,17 +30,19 @@ class QLabel;
 class QSpacerItem;
 class QBoxLayout;
 
-namespace KWinInternal
+namespace Web
 {
+  using namespace KWinInternal;
+
   class WebButton;
 
-  class Web : public KWinInternal::Client
+  class WebClient : public Client
   {
     Q_OBJECT
 
     public:
 
-      Web
+      WebClient
         (
          Workspace *,
          WId,
@@ -49,7 +51,7 @@ namespace KWinInternal
          const char * name = 0
         );
 
-      ~Web();
+      ~WebClient();
 
     protected:
 

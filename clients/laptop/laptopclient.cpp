@@ -13,9 +13,10 @@
 #include "../../workspace.h"
 #include "../../options.h"
 
+
 using namespace KWinInternal;
 
-
+namespace Laptop {
 
 static unsigned char iconify_bits[] = {
     0xff, 0xff, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18};
@@ -681,26 +682,28 @@ LaptopClient::mousePosition( const QPoint& p ) const
   return m;
 }
 
+};
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
-        return(new LaptopClient(ws, w));
+        return(new Laptop::LaptopClient(ws, w));
     }
     void init()
     {
-       create_pixmaps();
+       Laptop::create_pixmaps();
     }
     void reset()
     {
-       delete_pixmaps();
-       create_pixmaps();
+       Laptop::delete_pixmaps();
+       Laptop::create_pixmaps();
        // Ensure change in tooltip state gets applied
        Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {
-       delete_pixmaps();
+       Laptop::delete_pixmaps();
     }
 }
 

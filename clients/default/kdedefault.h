@@ -24,7 +24,9 @@
 class QSpacerItem;
 class QBoxLayout;
 
-namespace KWinInternal {
+namespace Default {
+
+using namespace KWinInternal;
 
 class KDEDefaultHandler: public QObject
 {
@@ -42,7 +44,7 @@ class KDEDefaultHandler: public QObject
 };
 
 
-class KDEDefaultButton : public KWinInternal::KWinButton
+class KDEDefaultButton : public KWinButton
 {
 	public:
 		KDEDefaultButton(Client *parent=0, const char *name=0, 
@@ -73,7 +75,7 @@ class KDEDefaultButton : public KWinInternal::KWinButton
 };
 
 
-class KDEDefaultClient : public KWinInternal::Client
+class KDEDefaultClient : public Client
 {
 	Q_OBJECT
 

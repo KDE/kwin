@@ -12,6 +12,7 @@
 
 using namespace KWinInternal;
 
+namespace System {
 
 static unsigned char iconify_bits[] = {
     0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
@@ -536,26 +537,28 @@ void SystemClient::activeChange(bool)
         button[4]->reset();
 }
 
+};
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
-        return(new SystemClient(ws, w));
+        return(new System::SystemClient(ws, w));
     }
     void init()
     {
-       create_pixmaps();
+       System::create_pixmaps();
     }
     void reset()
     {
-       delete_pixmaps();
-       create_pixmaps();
+       System::delete_pixmaps();
+       System::create_pixmaps();
        // Ensure changes in tooltip state get applied
        Workspace::self()->slotResetAllClientsDelayed();
     }
     void deinit()
     {
-       delete_pixmaps();
+       System::delete_pixmaps();
     }
 }
 

@@ -20,9 +20,11 @@ class QSpacerItem;
 class QBoxLayout;
 class QGridLayout;
 
-namespace KWinInternal {
+namespace B2 {
 
-class B2Button : public KWinInternal::KWinButton
+using namespace KWinInternal;
+
+class B2Button : public KWinButton
 {
     Q_OBJECT
 public:
@@ -83,7 +85,7 @@ protected:
     B2Client *client;
 };
 
-class B2Client : public KWinInternal::Client
+class B2Client : public Client
 {
     Q_OBJECT
     friend class B2Titlebar;

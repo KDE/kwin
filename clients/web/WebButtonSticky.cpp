@@ -21,6 +21,8 @@
 
 #include "WebButtonSticky.h"
 
+namespace Web {
+  
 using namespace KWinInternal;
 
 static unsigned char sticky_bits[] =
@@ -55,6 +57,8 @@ WebButtonSticky::clickEvent(int /* button */)
 {
   emit(toggleSticky());
 }
+
+};
 
 #include "WebButtonSticky.moc"
 // vim:ts=2:sw=2:tw=78:set et:

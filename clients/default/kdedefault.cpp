@@ -27,7 +27,7 @@
 
 using namespace KWinInternal;
 
-namespace
+namespace Default
 {
 
 static unsigned char iconify_bits[] = {
@@ -121,7 +121,6 @@ bool largeToolButtons;
 int	 toolTitleHeight;
 int	 normalTitleHeight;
 
-}
 
 // ===========================================================================
 
@@ -1080,28 +1079,29 @@ void KDEDefaultClient::menuButtonPressed()
 	button[BtnMenu]->setDown(false);
 }
 
+};
 
 // Extended KWin plugin interface
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
-        return(new KDEDefaultClient(ws, w));
+        return(new Default::KDEDefaultClient(ws, w));
     }
 
 	void init()
 	{
-		clientHandler = new KDEDefaultHandler();
+		Default::clientHandler = new Default::KDEDefaultHandler();
 	}
 
 	void reset()
 	{
-		clientHandler->reset();
+		Default::clientHandler->reset();
 	}
 
 	void deinit()
 	{
-		delete clientHandler;
+		delete Default::clientHandler;
 	}
 }
 

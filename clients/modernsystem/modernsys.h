@@ -10,9 +10,11 @@
 class QLabel;
 class QSpacerItem;
 
-namespace KWinInternal {
+namespace ModernSystem {
 
-class ModernButton : public KWinInternal::KWinButton
+using namespace KWinInternal;
+
+class ModernButton : public KWinButton
 {
     Q_OBJECT
 public:
@@ -34,7 +36,7 @@ public:
     int last_button;
 };
 
-class ModernSys : public KWinInternal::Client
+class ModernSys : public Client
 {
     Q_OBJECT
 public:

@@ -21,6 +21,8 @@
 
 #include "WebButtonClose.h"
 
+namespace Web {
+
 using namespace KWinInternal;
 
 static unsigned char close_bits[] =
@@ -41,6 +43,8 @@ WebButtonClose::clickEvent(int /* button */)
 {
   emit(closeWindow());
 }
+
+};
 
 #include "WebButtonClose.moc"
 // vim:ts=2:sw=2:tw=78:set et:
