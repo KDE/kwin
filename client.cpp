@@ -490,7 +490,7 @@ bool Client::isMinimizable() const
     {
     if( isSpecialWindow() && !isOverride())
         return false;
-    if( isTransient() && !wantsTabFocus())
+    if( isTransient())
         { // #66868 - let other xmms windows be minimized when the mainwindow is minimized
         bool shown_mainwindow = false;
         ClientList mainclients = mainClients();
