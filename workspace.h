@@ -395,7 +395,7 @@ private:
     int number_of_desktops;
     QMemArray<int> desktop_focus_chain;
 
-    Client* popup_client;
+    QGuardedPtr<Client> popup_client;
 
     void loadSessionInfo();
 
