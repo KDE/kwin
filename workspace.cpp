@@ -1485,8 +1485,9 @@ void Workspace::setActiveClient( Client* c )
     if ( menubar ) {
         menubar->show();
 	// do not cover a client that wants to stay on top with the desktop menu
-	if ( menubar->mainClient() == active_client->mainClient()
-	     || !active_client->staysOnTop())
+	if ( active_client != NULL
+            && ( menubar->mainClient() == active_client->mainClient()
+	         || !active_client->staysOnTop()))
 	    menubar->raise(); // better for FocusFollowsMouse than raiseClient(menubar)
 
         raiseElectricBorders();
