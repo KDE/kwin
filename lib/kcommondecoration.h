@@ -56,7 +56,7 @@ class KCommonDecorationPrivate;
  * which are error prone and common for most decorations.
  * It takes care of the window layout, button/action handling, and window mask creation.
  */
-class KCommonDecoration : public KDecoration
+class KWIN_EXPORT KCommonDecoration : public KDecoration
 {
     Q_OBJECT
 
@@ -268,7 +268,7 @@ class KCommonDecoration : public KDecoration
 /**
  * Title bar buttons of KCommonDecoration need to inherit this class.
  */
-class KCommonDecorationButton : public QButton
+class KWIN_EXPORT KCommonDecorationButton : public QButton
 {
     friend class KCommonDecoration;
 
