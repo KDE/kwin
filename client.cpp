@@ -2251,6 +2251,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    break;
 	mode = Center;
 	moveResizeMode = TRUE;
+        geom=geometry();
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
 	    max_mode = MaximizeRestore;
@@ -2271,6 +2272,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	if (!isMovable())
 	    break;
 	moveResizeMode = TRUE;
+        geom=geometry();
 	if ( isMaximized() ) {
 	    // in case we were maximized, reset state
 	    max_mode = MaximizeRestore;
