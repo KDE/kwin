@@ -1,5 +1,5 @@
 /*
-  RISC OS KWin client
+  Default KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -23,7 +23,7 @@
 #include "Button.h"
 #include "Static.h"
 
-namespace RiscOS
+namespace Default
 {
 
 Button::Button(QWidget * parent, SymbolType t)
@@ -33,7 +33,10 @@ Button::Button(QWidget * parent, SymbolType t)
     down_     (false),
     active_   (false)
 {
-  setFixedSize(19, 20);
+  if (type_ == Sticky)
+    setFixedWidth(Static::instance()->buttonWidth2());
+  else
+    setFixedWidth(Static::instance()->buttonWidth1());
 }
 
 Button::~Button()
@@ -44,10 +47,7 @@ Button::~Button()
   void
 Button::updateDisplay()
 {
-  setBackgroundPixmap(
-    Static::instance()->button(type_, active_, down_)
-  );
-
+  setBackgroundPixmap(Static::instance()->button(type_, active_, down_));
   repaint(true);
 }
 

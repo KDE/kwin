@@ -1,13 +1,13 @@
 INCLUDES = $(all_includes) 
 
-lib_LTLIBRARIES = libkwinriscos.la
+lib_LTLIBRARIES = libkwindefault.la
 
-libkwinriscos_la_SOURCES = \
+libkwindefault_la_SOURCES = \
 Button.cpp \
 CloseButton.cpp \
 DBWidget.cpp \
 IconifyButton.cpp \
-LowerButton.cpp \
+StickyButton.cpp \
 Manager.cpp \
 MaximiseButton.cpp \
 ResizeBar.cpp \
@@ -16,8 +16,8 @@ ResizeSide.cpp \
 TitleBar.cpp \
 TitleText.cpp \
 Static.cpp
-libkwinriscos_la_LIBADD = ../../kwin.la
-libkwinriscos_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
+libkwindefault_la_LIBADD = ../../kwin.la
+libkwindefault_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 METASOURCES = AUTO
 noinst_HEADERS = \
@@ -25,7 +25,7 @@ Button.h \
 CloseButton.h \
 DBWidget.h \
 IconifyButton.h \
-LowerButton.h \
+StickyButton.h \
 Manager.h \
 MaximiseButton.h \
 ResizeBar.h \
@@ -36,7 +36,7 @@ TitleText.h \
 Static.h
 
 lnkdir = $(kde_datadir)/kwin/
-lnk_DATA = riscos.desktop
+lnk_DATA = default.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 

@@ -1,5 +1,5 @@
 /*
-  RISC OS KWin client
+  Default KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -22,7 +22,7 @@
 
 #include "MaximiseButton.h"
 
-namespace RiscOS
+namespace Default
 {
 
 MaximiseButton::MaximiseButton(QWidget * parent)

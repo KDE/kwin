@@ -1,5 +1,5 @@
 /*
-  RISC OS KWin client
+  Default KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,12 +20,12 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef RISC_OS_MANAGER_H
-#define RISC_OS_MANAGER_H
+#ifndef DEFAULT_MANAGER_H
+#define DEFAULT_MANAGER_H
 
 #include "../../client.h"
 
-namespace RiscOS
+namespace Default
 {
 
 class TitleBar;
@@ -47,10 +47,11 @@ class Manager : public Client
   signals:
 
     void maximiseChanged(bool);
+    void stickyStatusChanged(bool);
 
   public slots:
 
-    void lower();
+    void toggleSticky();
     void raise();
     void vMax();
 
@@ -67,6 +68,7 @@ class Manager : public Client
   protected slots:
 
     void captionChange(const QString &);
+    void stickyChange(bool);
     void slotReset();
 
   private:

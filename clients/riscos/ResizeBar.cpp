@@ -1,5 +1,5 @@
 /*
-  RISC OS KWin client
+  Default KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -26,7 +26,7 @@
 
 #include <X11/Xlib.h>
 
-namespace RiscOS
+namespace Default
 {
 
 ResizeBar::ResizeBar(QWidget * parent, Manager * client)
@@ -53,7 +53,7 @@ ResizeBar::updateDisplay()
   void
 ResizeBar::resizeEvent(QResizeEvent *)
 {
-  mid_->resize(width() - 60, 10);
+  mid_->resize(width() - 60, mid_->height());
   right_->move(width() - 30, 0);
 }
 

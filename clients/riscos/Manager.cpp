@@ -1,5 +1,5 @@
 /*
-  RISC OS KWin client
+  Default KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -35,11 +35,11 @@ extern "C"
 {
   Client * allocate(Workspace * workSpace, WId winId)
   {
-    return new RiscOS::Manager(workSpace, winId);
+    return new Default::Manager(workSpace, winId);
   }
 }
 
-namespace RiscOS
+namespace Default
 {
 
 Manager::Manager(
@@ -75,6 +75,12 @@ Manager::slotReset()
 Manager::captionChange(const QString &)
 {
   titleBar_->updateText();
+}
+
+  void
+Manager::stickyChange(bool b)
+{
+  emit(stickyStatusChanged(b));
 }
 
   void
@@ -143,9 +149,9 @@ Manager::mousePosition(const QPoint & p) const
 }
 
   void
-Manager::lower()
+Manager::toggleSticky()
 {
-  workspace()->lowerClient(this);
+  setSticky(!isSticky());
 }
 
   void
@@ -170,10 +176,27 @@ Manager::resizeEvent(QResizeEvent * e)
   void
 Manager::_updateLayout()
 {
-  titleBar_       ->  setGeometry(0, 0, width(), 20);
-  windowWrapper() ->  setGeometry(1, 20, width() - 2, height() - 30);
-  resizeBar_      ->  setGeometry(0, height() - 10, width(), 10);
-  
+  titleBar_       ->  setGeometry(
+    0,
+    0,
+    width(),
+    Static::instance()->titleHeight()
+  );
+
+  windowWrapper() ->  setGeometry(
+    1,
+    Static::instance()->titleHeight(),
+    width() - 2,
+    height() - Static::instance()->titleHeight() - RESIZE_BAR_HEIGHT
+  );
+
+  resizeBar_      ->  setGeometry(
+    0,
+    height() - RESIZE_BAR_HEIGHT,
+    width(),
+    RESIZE_BAR_HEIGHT
+  );
+
   _updateDisplay();
 }
 

@@ -1,5 +1,5 @@
 /*
-  RISC OS KWin client
+  Default KWin client
   
   Copyright 2000
     Rik Hemsley <rik@kde.org>
@@ -20,15 +20,15 @@
   Boston, MA 02111-1307, USA.
 */
 
-#ifndef RISC_OS_TITLE_TEXT_H
-#define RISC_OS_TITLE_TEXT_H
+#ifndef DEFAULT_TITLE_TEXT_H
+#define DEFAULT_TITLE_TEXT_H
 
 #include <qwidget.h>
 #include <qpoint.h>
 
 #include "DBWidget.h"
 
-namespace RiscOS
+namespace Default
 {
 
 class Manager;
