@@ -9,6 +9,7 @@
 #include "config.h"
 #include <qdir.h>
 #include <qregexp.h>
+#include <qwhatsthis.h>
 #include <klocale.h>
 #include <kstddirs.h>
 #include <kapp.h>
@@ -38,6 +39,8 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 {
 	gb1 = new QGroupBox( 1, Qt::Horizontal, i18n("IceWM Theme Selector"), parent );
 	themeListBox = new QListBox( gb1 );
+	QWhatsThis::add( themeListBox, i18n("Make your IceWM selection by clicking on a theme here. ") );
+
 	themeLabel = new QLabel( i18n("To manage your IceWM themes, simply click on the link below to open a Konqueror window. "
 							"Once shown, you will be able to add or remove native IceWM themes, by uncompressing <b>http://icewm.themes.org/</b> "
 							"theme files into this directory, or creating directory symlinks to existing IceWM themes on your system."), parent );
@@ -46,8 +49,16 @@ IceWMConfig::IceWMConfig( KConfig* conf, QWidget* parent )
 
 	gb2 = new QGroupBox( 1, Qt::Horizontal, i18n("IceWM Decoration Settings"), parent );
 	cbThemeTitleTextColors = new QCheckBox( i18n("Use theme &title text colors"), gb2 );
+	QWhatsThis::add( cbThemeTitleTextColors, i18n("When selected, titlebar colors will follow those set in the IceWM theme. "
+						"If not selected, the current KDE titlebar colors will be used instead.") );
+
 	cbTitleBarOnTop 	   = new QCheckBox( i18n("&Show title bar on top of windows"), gb2 );
+	QWhatsThis::add( cbTitleBarOnTop, i18n("When selected, all window titlebars will be shown at the top of each window, "
+										"otherwise they will be shown at the bottom.") );
+
 	cbShowMenuButtonIcon   = new QCheckBox( i18n("&Menu button always shows application mini icon"), gb2 );
+	QWhatsThis::add( cbShowMenuButtonIcon, i18n("When selected, all titlebar menu buttons will have the application icon shown. "
+						"If not selected, the current theme's defaults are used instead.") );
 
 	// Load configuration options
 	load( conf );
