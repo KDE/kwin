@@ -8,6 +8,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 void Events::raise( Event e )
 {
+return; // seems like knotify is unusable
     static bool forgetIt = FALSE;
     if ( forgetIt )
 	return; // no connection was possible, don't try each time
