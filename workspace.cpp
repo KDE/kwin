@@ -672,7 +672,12 @@ bool Workspace::workspaceEvent( XEvent * e )
         checkStartOnDesktop( e->xmaprequest.window );
         c = findClient( e->xmaprequest.window );
         if ( !c ) {
-            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
+// don't check for the parent being the root window, this breaks when some app unmaps
+// a window, changes something and immediately maps it back, without giving KWin
+// a chance to reparent it back to root
+// since KWin can get MapRequest only for root window children and
+// children of WindowWrapper (=clients), the check is AFAIK useless anyway
+//            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return TRUE;
                 c = clientFactory( e->xmaprequest.window );
@@ -681,7 +686,6 @@ bool Workspace::workspaceEvent( XEvent * e )
                     XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
                 }
                 addClient( c );
-            }
         }
         if ( c ) {
             bool b =  c->windowEvent( e );
