@@ -137,17 +137,13 @@ bool Client::manage( Window w, bool isMapped )
         setUserNoBorder( true );
 
     // initial desktop placement
-    if ( info->desktop() )
-        desk = info->desktop(); // window had the initial desktop property!
-    else if( asn_valid && asn_data.desktop() != 0 )
-        desk = asn_data.desktop();
     if ( session ) 
         {
         desk = session->desktop;
         if( session->onAllDesktops )
             desk = NET::OnAllDesktops;
         }
-    else if ( desk == 0 ) 
+    else
         {
         // if this window is transient, ensure that it is opened on the
         // same window as its parent.  this is necessary when an application
@@ -173,6 +169,10 @@ bool Client::manage( Window w, bool isMapped )
             else if( maincl != NULL )
                 desk = maincl->desktop();
             }
+        if ( info->desktop() )
+            desk = info->desktop(); // window had the initial desktop property, force it
+        if( desktop() == 0 && asn_valid && asn_data.desktop() != 0 )
+            desk = asn_data.desktop();
         }
     if ( desk == 0 ) // assume window wants to be visible on the current desktop
         desk = workspace()->currentDesktop();
