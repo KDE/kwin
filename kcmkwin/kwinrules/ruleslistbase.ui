@@ -12,9 +12,6 @@
             <height>480</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>Form1</string>
-    </property>
     <hbox>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -47,9 +44,6 @@
                             <property name="text">
                                 <string>&amp;New...</string>
                             </property>
-                            <property name="accel">
-                                <string>Alt+N</string>
-                            </property>
                         </widget>
                         <widget class="KPushButton">
                             <property name="name">
@@ -57,9 +51,6 @@
                             </property>
                             <property name="text">
                                 <string>&amp;Modify...</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+M</string>
                             </property>
                         </widget>
                         <widget class="KPushButton">
@@ -80,9 +71,6 @@
                             <property name="text">
                                 <string>Move &amp;Up</string>
                             </property>
-                            <property name="accel">
-                                <string>Alt+U</string>
-                            </property>
                         </widget>
                         <widget class="KPushButton">
                             <property name="name">
@@ -90,9 +78,6 @@
                             </property>
                             <property name="text">
                                 <string>Move &amp;Down</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+D</string>
                             </property>
                         </widget>
                         <spacer>
