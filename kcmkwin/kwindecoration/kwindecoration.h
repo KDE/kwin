@@ -10,7 +10,7 @@
 	Supports new kwin configuration plugins, and titlebar button position
 	modification via dnd interface.
 
-	Based on original "kwintheme" (Window Borders)
+	Based on original "kwintheme" (Window Borders) 
 	Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 */
 
@@ -19,7 +19,7 @@
 
 #include <kcmodule.h>
 #include <dcopobject.h>
-#include "buttons.h"
+#include <buttons.h>
 #include <kconfig.h>
 #include <klibloader.h>
 
@@ -30,6 +30,9 @@ class QCheckBox;
 class QLabel;
 class QTabWidget;
 class QVBox;
+
+class KDecorationPlugins;
+class KDecorationPreview;
 
 // Stores themeName and its corresponding library Name
 struct DecorationInfo
@@ -74,6 +77,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		void updateSelection();
 		QString decorationLibName( const QString& name );
 		QString decorationName ( QString& libName );
+                static QString styleToConfigLib( QString& styleLib );
 		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString::null );
 		void resetKWin();
 
@@ -82,23 +86,28 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		// Page 1
 		KComboBox* decorationList;
 		QValueList<DecorationInfo> decorations;
+
+                KDecorationPreview* preview;
+                KDecorationPlugins* plugins;
+                KConfig kwinConfig;
+
 		QCheckBox* cbUseCustomButtonPositions;
 	//	QCheckBox* cbUseMiniWindows;
 		QCheckBox* cbShowToolTips;
 
+		QObject* pluginObject;
+		QLabel*  pluginSettingsLbl;
+		QFrame*  pluginSettingsLine;
+		QWidget* pluginConfigWidget;
+		QString  currentLibraryName;
+		QString  oldLibraryName;
+		QObject* (*allocatePlugin)( KConfig* conf, QWidget* parent );
+
 		// Page 2
 		ButtonDropSite* dropSite;
 		ButtonSource* buttonSource;
-
-		// Page 3
-		QObject* pluginObject;
-		QLabel* noPluginSettings;
-		QString  currentLibraryName;
-		QString  oldLibraryName;
-		QWidget* pluginConfigWidget;
-		QVBox*	 buttonPage;
-		QObject* (*allocatePlugin)( KConfig* conf, QWidget* parent );
 		QGroupBox* buttonBox;
+		QVBox*	 buttonPage;
 };
 
 

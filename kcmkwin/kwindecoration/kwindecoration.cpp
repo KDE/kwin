@@ -38,7 +38,8 @@
 #include <dcopclient.h>
 
 #include "kwindecoration.h"
-
+#include "preview.h"
+#include <kdecoration_plugins_p.h>
 
 // KCModule plugin interface
 // =========================
@@ -46,11 +47,13 @@ typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") )
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, const QStringList &)
-       : DCOPObject("KWinClientDecoration"), KCModule(KWinDecoFactory::instance(), parent, name),
-         pluginObject(0)
+	: DCOPObject("KWinClientDecoration"),
+	  KCModule(KWinDecoFactory::instance(), parent, name),
+          kwinConfig("kwinrc"),
+          pluginObject(0)
 {
-	KConfig kwinConfig("kwinrc");
 	kwinConfig.setGroup("Style");
+        plugins = new KDecorationPlugins( &kwinConfig );
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	tabWidget = new QTabWidget( this );
@@ -63,34 +66,37 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	hbox->setSpacing(KDialog::spacingHint());
 //	QLabel *lbl = new QLabel( i18n("&Decoration:"), hbox );
 	decorationList = new KComboBox( hbox );
-	hbox->setStretchFactor(decorationList, 10);
 //	lbl->setBuddy(decorationList);
 	QString whatsThis = i18n("Select the window decoration. This is the look and feel of both "
                              "the window borders and the window handle.");
 //	QWhatsThis::add(lbl, whatsThis);
 	QWhatsThis::add(decorationList, whatsThis);
 
-	QLabel *lbl = new QLabel( i18n("Decoration Options"), pluginPage );
-	QFrame* line = new QFrame( pluginPage );
-	line->setFrameStyle( QFrame::HLine | QFrame::Plain );
-	pluginConfigWidget = new QVBox(pluginPage);
 	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage, KDialog::marginHint(), KDialog::spacingHint());
 	pluginLayout->addWidget(hbox);
-	pluginLayout->addSpacing(KDialog::spacingHint());
-	pluginLayout->addWidget(lbl);
-	pluginLayout->addWidget(line);
-	pluginLayout->addWidget(pluginConfigWidget);
-	pluginLayout->addStretch(10);
-
-	noPluginSettings = new QLabel( pluginConfigWidget);
-	noPluginSettings->hide();
 
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
 
+        QFrame* preview_frame = new QFrame( pluginPage );
+        preview_frame->setFrameShape( QFrame::NoFrame );
+        QVBoxLayout* preview_layout = new QVBoxLayout( preview_frame, 0, KDialog::spacingHint());
+        preview = new KDecorationPreview( preview_frame );
+        preview_layout->addWidget( preview );
+        pluginLayout->addWidget( preview_frame );
+        pluginLayout->setStretchFactor( preview_frame, 10 );
+
+	pluginSettingsLbl = new QLabel( i18n("Decoration Options"), pluginPage );
+	pluginSettingsLine = new QFrame( pluginPage );
+	pluginSettingsLine ->setFrameStyle( QFrame::HLine | QFrame::Plain );
+	pluginConfigWidget = new QVBox(pluginPage);
+	pluginLayout->addWidget(pluginSettingsLbl );
+	pluginLayout->addWidget(pluginSettingsLine);
+	pluginLayout->addWidget(pluginConfigWidget);
+
 	// Page 2 (Button Selector)
-	buttonPage = new QVBox( tabWidget );
+	QVBox* buttonPage = new QVBox( tabWidget );
 	buttonPage->setSpacing( KDialog::spacingHint() );
 	buttonPage->setMargin( KDialog::marginHint() );
 
@@ -147,6 +153,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 KWinDecorationModule::~KWinDecorationModule()
 {
+        delete preview; // needs to be destroyed before plugins
+        delete plugins;
 }
 
 
@@ -169,7 +177,7 @@ void KWinDecorationModule::findDecorations()
 					KDesktopFile desktopFile(filename);
 					QString libName = desktopFile.readEntry("X-KDE-Library");
 
-					if (!libName.isEmpty())
+					if (!libName.isEmpty() && libName.startsWith( "kwin3_" ))
 					{
 						DecorationInfo di;
 						di.name = desktopFile.readName();
@@ -213,7 +221,7 @@ void KWinDecorationModule::slotChangeDecoration( const QString & text)
 // This is the selection handler setting
 void KWinDecorationModule::slotSelectionChanged()
 {
-	emit changed(true);
+	setChanged(true);
 }
 
 
@@ -259,10 +267,9 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDecoName )
 {
 	// Config names are "kwin_icewm_config"
-	// for "kwin_icewm" kwin client
+	// for "kwin3_icewm" kwin client
 
-	QString oldName = oldLibraryName;
-	oldName += "_config";
+	QString oldName = styleToConfigLib( oldLibraryName );
 
 	QString currentName;
 	if (!currentDecoName.isEmpty())
@@ -270,7 +277,14 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 	else
 		currentName = currentLibraryName; // Use what was read from readConfig()
 
-	currentName += "_config";
+        if( plugins->loadPlugin( currentName )
+            && preview->recreateDecoration( plugins ))
+            preview->enablePreview();
+        else
+            preview->disablePreview();
+        plugins->destroyPreviousPlugin();
+                
+	currentName = styleToConfigLib( currentName );
 
 	// Delete old plugin widget if it exists
 	delete pluginObject;
@@ -298,13 +312,16 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 			connect( this, SIGNAL(pluginLoad(KConfig*)), pluginObject, SLOT(load(KConfig*)) );
 			connect( this, SIGNAL(pluginSave(KConfig*)), pluginObject, SLOT(save(KConfig*)) );
 			connect( this, SIGNAL(pluginDefaults()), pluginObject, SLOT(defaults()) );
-			noPluginSettings->hide();
+			pluginSettingsLbl->show();
+			pluginSettingsLine->show();
+			pluginConfigWidget->show();
 			return;
 		}
 	}
 
-	noPluginSettings->setText(i18n("There are no special options available for the <strong>%1</strong> window decoration.").arg(currentDecoName));
-	noPluginSettings->show();
+	pluginSettingsLbl->hide();
+	pluginSettingsLine->hide();
+	pluginConfigWidget->hide();
 }
 
 
@@ -345,7 +362,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	bool customPositions = conf->readBoolEntry("CustomButtonPositions", false);
 	cbUseCustomButtonPositions->setChecked( customPositions );
 	buttonBox->setEnabled( customPositions );
-	// Menu and sticky buttons are default on LHS
+	// Menu and onAllDesktops buttons are default on LHS
 	dropSite->buttonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
 	// Help, Minimize, Maximize and Close are default on RHS
 	dropSite->buttonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
@@ -360,7 +377,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	for(i = 0; i < dropSite->buttonsRight.length(); i++)
 		buttonSource->hideButton( dropSite->buttonsRight[i].latin1() );
 
-	emit changed(false);
+	setChanged(false);
 }
 
 
@@ -387,7 +404,7 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 	currentLibraryName = libName;
 
 	// We saved, so tell kcmodule that there have been  no new user changes made.
-	emit changed(false);
+	setChanged(false);
 }
 
 
@@ -457,12 +474,19 @@ void KWinDecorationModule::defaults()
 	emit pluginDefaults();
 }
 
+QString KWinDecorationModule::styleToConfigLib( QString& styleLib )
+{
+        if( styleLib.startsWith( "kwin3_" ))
+            return "kwin_" + styleLib.mid( 6 ) + "_config";
+        else
+            return styleLib + "_config";
+}
 
 QString KWinDecorationModule::quickHelp() const
 {
-	return i18n( "<h1>Window Decorations</h1>"
-                 "<p>This module allows you to choose the window border decorations, "
-                "as well as titlebar button positions and custom decoration options.</p>"
+	return i18n( "<h1>Window Manager Decoration</h1>"
+		"<p>This module allows you to choose the window border decorations, "
+		"as well as titlebar button positions and custom decoration options.</p>"
 		"To choose a theme for your window decoration click on its name and apply your choice by clicking the \"Apply\" button below."
 		" If you don't want to apply your choice you can click the \"Reset\" button to discard your changes."
 		"<p>You can configure each theme in the \"Configure [...]\" tab. There are different options specific for each theme.</p>"

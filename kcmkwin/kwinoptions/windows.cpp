@@ -16,7 +16,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  * $Id$
  *
@@ -161,7 +161,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     autoRaise->setSuffix(i18n(" msec"));
     fLay->addWidget(autoRaise);
 
-    clickRaiseOn = new QCheckBox(i18n("C&lick raise"), fcsBox);
+    clickRaiseOn = new QCheckBox(i18n("C&lick raise active window"), fcsBox);
     connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
     fLay->addWidget(clickRaiseOn);
 
@@ -174,8 +174,10 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
                  " come to the front.");
     QWhatsThis::add( autoRaise, wtstr );
 
-    QWhatsThis::add( clickRaiseOn, i18n("When this option is enabled, your windows will be brought to the"
-                                        " front when you click somewhere into the window contents.") );
+    QWhatsThis::add( clickRaiseOn, i18n("When this option is enabled, the active window will be brought to the"
+                                        " front when you click somewhere into the window contents. To change"
+                                        " it for inactive windows, you need to change the settings"
+                                        " in the Actions tab.") );
 
     lay->addWidget(fcsBox);
 
@@ -203,7 +205,6 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
 
     traverseAll = new QCheckBox( i18n( "&Traverse windows on all desktops" ), kbdBox );
     kLay->addMultiCellWidget( traverseAll, 2, 2, 0, 2 );
-    connect( cdeMode, SIGNAL( toggled( bool )), traverseAll, SLOT( setDisabled( bool )));
 
     wtstr = i18n( "Leave this option disabled if you want to limit walking through"
                   " windows to the current desktop." );
@@ -279,8 +280,6 @@ void KFocusConfig::setAutoRaiseEnabled()
     // the auto raise related widgets are: autoRaise
     if ( focusCombo->currentItem() != CLICK_TO_FOCUS )
     {
-        clickRaiseOn->setEnabled(true);
-        clickRaiseOnTog(clickRaiseOn->isChecked());
         autoRaiseOn->setEnabled(true);
         autoRaiseOnTog(autoRaiseOn->isChecked());
     }
@@ -288,8 +287,6 @@ void KFocusConfig::setAutoRaiseEnabled()
     {
         autoRaiseOn->setEnabled(false);
         autoRaiseOnTog(false);
-        clickRaiseOn->setEnabled(true);
-        clickRaiseOnTog(true);
     }
 }
 
@@ -423,7 +420,7 @@ void KFocusConfig::defaults()
 {
     setFocus(CLICK_TO_FOCUS);
     setAutoRaise(false);
-    setClickRaise(false);
+    setClickRaise(true);
     setAltTabMode(true);
     setTraverseAll( false );
     setRollOverDesktops(true);

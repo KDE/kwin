@@ -226,7 +226,7 @@ const char * button_minimize_xpm[] = {
 
 
 /* XPM */
-const char * button_sticky_xpm[] = {
+const char * button_on_all_desktops_xpm[] = {
 "20 20 17 1",
 " 	c None",
 ".	c #F3F3F3",

@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
 #include <qlabel.h>
@@ -69,8 +69,11 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
   combo->insertItem(i18n("Maximize"));
   combo->insertItem(i18n("Maximize (vertical only)"));
   combo->insertItem(i18n("Maximize (horizontal only)"));
+  combo->insertItem(i18n("Minimize"));
   combo->insertItem(i18n("Shade"));
   combo->insertItem(i18n("Lower"));
+  combo->insertItem(i18n("On All Desktops"));
+  combo->insertItem(i18n("Nothing"));
   combo->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   hlayout->addWidget(combo);
@@ -129,6 +132,7 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
   combo->insertItem(i18n("Lower"));
   combo->insertItem(i18n("Operations Menu"));
   combo->insertItem(i18n("Toggle Raise & Lower"));
+  combo->insertItem(i18n("Nothing"));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct1 = combo;
 
@@ -183,7 +187,11 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
   items  << i18n("Activate & Raise")
          << i18n("Activate & Lower")
          << i18n("Activate")
-         << i18n("Shade");
+         << i18n("Shade")
+         << i18n("Operations Menu")
+         << i18n("Raise")
+         << i18n("Lower")
+         << i18n("Nothing");
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
@@ -327,10 +335,12 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
 
   items.clear();
   items << i18n("Move")
+        << i18n("Activate, Raise and Move")
         << i18n("Toggle Raise & Lower")
         << i18n("Resize")
         << i18n("Raise")
         << i18n("Lower")
+        << i18n("Minimize")
         << i18n("Nothing");
 
   combo = new QComboBox(grid);
@@ -369,8 +379,11 @@ const char* tbl_TiDbl[] = {
     "Maximize",
     "Maximize (vertical only)",
     "Maximize (horizontal only)",
+    "Minimize",
     "Shade",
     "Lower",
+    "OnAllDesktops",
+    "Nothing",
     "" };
 
 const char* tbl_TiAc[] = {
@@ -387,6 +400,10 @@ const char* tbl_TiInAc[] = {
     "Activate and lower",
     "Activate",
     "Shade",
+    "Operations menu",
+    "Raise",
+    "Lower",
+    "Nothing",
     "" };
 
 const char* tbl_Win[] = {
@@ -403,10 +420,12 @@ const char* tbl_AllKey[] = {
 
 const char* tbl_All[] = {
     "Move",
+    "Activate, raise and move",
     "Toggle raise and lower",
     "Resize",
     "Raise",
     "Lower",
+    "Minimize",
     "Nothing",
     "" };
 
@@ -496,7 +515,7 @@ void KActionsConfig::load()
   setComboText(coTiAct3,config->readEntry("CommandActiveTitlebar3","Operations menu").ascii());
   setComboText(coTiInAct1,config->readEntry("CommandInactiveTitlebar1","Activate and raise").ascii());
   setComboText(coTiInAct2,config->readEntry("CommandInactiveTitlebar2","Activate and lower").ascii());
-  setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Activate").ascii());
+  setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Operations menu").ascii());
   setComboText(coWin1,config->readEntry("CommandWindow1","Activate, raise and pass click").ascii());
   setComboText(coWin2,config->readEntry("CommandWindow2","Activate and pass click").ascii());
   setComboText(coWin3,config->readEntry("CommandWindow3","Activate and pass click").ascii());
@@ -543,7 +562,7 @@ void KActionsConfig::defaults()
   setComboText(coTiAct3,"Operations menu");
   setComboText(coTiInAct1,"Activate and raise");
   setComboText(coTiInAct2,"Activate and lower");
-  setComboText(coTiInAct3,"Activate");
+  setComboText(coTiInAct3,"Operations menu");
   setComboText(coWin1,"Activate, raise and pass click");
   setComboText(coWin2,"Activate and pass click");
   setComboText(coWin3,"Activate and pass click");

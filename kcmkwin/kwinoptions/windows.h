@@ -16,7 +16,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
 #ifndef __KWINDOWCONFIG_H__
@@ -80,7 +80,7 @@ private slots:
   void setAutoRaiseEnabled();
   void autoRaiseOnTog(bool);//CT 23Oct1998
   void clickRaiseOnTog(bool);
-	void changed() { emit KCModule::changed(true); }
+	void changed() { setChanged(true); }
 
 
 private:
@@ -128,7 +128,7 @@ public:
 private slots:
   void setMinimizeAnim( bool );
   void setMinimizeAnimSpeed( int );
-	void changed() { emit KCModule::changed(true); }
+	void changed() { setChanged(true); }
 
 private:
   int getMove( void );
@@ -186,7 +186,7 @@ private slots:
   //copied from kcontrol/konq/kwindesktop, aleXXX
   void setEBorders();
 
-  void changed() { emit KCModule::changed(true); }
+  void changed() { setChanged(true); }
 
 private:
 

@@ -10,7 +10,7 @@
 	Supports new kwin configuration plugins, and titlebar button position
 	modification via dnd interface.
 
-	Based on original "kwintheme" (Window Borders) 
+	Based on original "kwintheme" (Window Borders)
 	Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 */
 
@@ -24,7 +24,7 @@
 // General purpose button globals (I know I shouldn't use them :)
 //===============================================================
 
-enum Buttons{ BtnMenu=0, BtnSticky, BtnSpacer, BtnHelp,
+enum Buttons{ BtnMenu=0, BtnOnAllDesktops, BtnSpacer, BtnHelp,
 			  BtnMinimize, BtnMaximize, BtnClose, BtnCount };
 QListBoxPixmap* buttons[ BtnCount ];
 QPixmap*	 	pixmaps[ BtnCount ];
@@ -75,7 +75,7 @@ static int btnIndex( char btn )
 			return BtnMenu;
 			break;
 		case 'S':
-			return BtnSticky;
+			return BtnOnAllDesktops;
 			break;
 		case '_':
 			return BtnSpacer;
@@ -118,7 +118,7 @@ ButtonSource::ButtonSource( QWidget* parent, const char* name )
 {
 	// Create the listbox pixmaps
 	pixmaps[ BtnMenu ]		= new QPixmap( button_menu_xpm );
-	pixmaps[ BtnSticky ]	= new QPixmap( button_sticky_xpm );
+	pixmaps[ BtnOnAllDesktops ]	= new QPixmap( button_on_all_desktops_xpm );
 	pixmaps[ BtnSpacer ] 	= new QPixmap( button_spacer_xpm );
 	pixmaps[ BtnHelp ] 		= new QPixmap( button_help_xpm );
 	pixmaps[ BtnMinimize ] 	= new QPixmap( button_minimize_xpm );
@@ -128,7 +128,7 @@ ButtonSource::ButtonSource( QWidget* parent, const char* name )
 
 	// Add all possible button/spacer types to the list box.
 	buttons[ BtnMenu ]	 	= new QListBoxPixmap( this, *pixmaps[BtnMenu], i18n("Menu") );
-	buttons[ BtnSticky] 	= new QListBoxPixmap( this, *pixmaps[BtnSticky], i18n("Sticky") );
+	buttons[ BtnOnAllDesktops] 	= new QListBoxPixmap( this, *pixmaps[BtnOnAllDesktops], i18n("On All Desktops") );
 	buttons[ BtnSpacer ] 	= new QListBoxPixmap( this, *pixmaps[BtnSpacer], i18n("Spacer") );
 	buttons[ BtnHelp ]		= new QListBoxPixmap( this, *pixmaps[BtnHelp], i18n("Help") );
 	buttons[ BtnMinimize ]	= new QListBoxPixmap( this, *pixmaps[BtnMinimize], i18n("Minimize") );
@@ -156,8 +156,8 @@ void ButtonSource::hideAllButtons()
 	// Hide all listbox items which are visible
 	if (index( buttons[BtnMenu] ) != -1)
 		takeItem( buttons[BtnMenu] );
-	if (index( buttons[BtnSticky] )!= -1)
-		takeItem( buttons[BtnSticky] );
+	if (index( buttons[BtnOnAllDesktops] )!= -1)
+		takeItem( buttons[BtnOnAllDesktops] );
 	if (index( buttons[BtnHelp] ) != -1)
 		takeItem( buttons[BtnHelp] );
 	if (index( buttons[BtnMinimize] ) != -1)
@@ -177,8 +177,8 @@ void ButtonSource::showAllButtons()
 	// Hide all listbox items which are visible
 	if (index( buttons[BtnMenu] ) == -1)
 		insertItem( buttons[BtnMenu] );
-	if (index( buttons[BtnSticky] )== -1)
-		insertItem( buttons[BtnSticky] );
+	if (index( buttons[BtnOnAllDesktops] )== -1)
+		insertItem( buttons[BtnOnAllDesktops] );
 	if (index( buttons[BtnHelp] ) == -1)
 		insertItem( buttons[BtnHelp] );
 	if (index( buttons[BtnMinimize] ) == -1)
@@ -243,7 +243,7 @@ char ButtonSource::convertToChar( QString s )
 	// Convert the item to its character representation
 	if (s == i18n("Menu"))
 		return 'M';
-	else if (s == i18n("Sticky"))
+	else if (s == i18n("On All Desktops"))
 		return 'S';
 	else if (s == i18n("Spacer"))
 		return '_';
@@ -373,7 +373,7 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 				buttonsRight.insert( strPos, btn );
 
 			repaint(false);
-		
+
 			// Allow listbox to update itself
 			emit buttonAdded( btn );
 			emit changed();
@@ -386,7 +386,7 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 void ButtonDropSite::mousePressEvent( QMouseEvent* e )
 {
 	mouseClickPoint = e->pos();
-	
+
 	ButtonDrag* bd = new ButtonDrag( '*', this );
 	bd->dragCopy();
 }
@@ -457,7 +457,7 @@ void ButtonDropSite::buttonInsertedAtPoint( QPoint p, bool& isleft, int& strPos 
 		{
 			strPos = i;
 			break;
-		}	
+		}
 		ch = s[i];
 		offset += buttonWidth( ch.latin1() );
 	}
@@ -514,7 +514,7 @@ char ButtonDropSite::removeButtonAtPoint( QPoint p )
 				return ch.latin1();
 			}
 		}
-	} 
+	}
 
 	return '?';
 }

@@ -1,0 +1,99 @@
+#ifndef KWINDECORATION_PREVIEW_H
+#define KWINDECORATION_PREVIEW_H
+
+// FRAME license
+
+#include <qwidget.h>
+#include <kdecoration_p.h>
+
+class QLabel;
+
+class KDecorationPreviewBridge;
+class KDecorationPlugins;
+class KDecorationOptions;
+
+class KDecorationPreview
+    : public QWidget
+    {
+    Q_OBJECT
+    public:
+        // Note: Windows can't be added or removed without making changes to
+        //       the code, since parts of it assume there's just an active
+        //       and an inactive window.
+        enum Windows { Inactive = 0, Active, NumWindows };
+
+        KDecorationPreview( QWidget* parent = NULL, const char* name = NULL );
+        virtual ~KDecorationPreview();
+        bool recreateDecoration( KDecorationPlugins* plugin );
+        void enablePreview();
+        void disablePreview();
+        void setPreviewMask( const QRegion&, int, bool );
+        QRect windowGeometry( bool ) const;
+    protected:
+        virtual void resizeEvent( QResizeEvent* );
+    private:
+        void positionPreviews();
+        KDecorationOptions* options;
+        KDecorationPreviewBridge* bridge[NumWindows];
+        KDecoration* deco[NumWindows];
+        QLabel* no_preview;
+    };
+
+class KDecorationPreviewBridge
+    : public KDecorationBridge
+    {
+    public:
+        KDecorationPreviewBridge( KDecorationPreview* preview, bool active );
+    	virtual bool isActive() const;
+	virtual bool isCloseable() const;
+	virtual bool isMaximizable() const;
+	virtual MaximizeMode maximizeMode() const;
+	virtual bool isMinimizable() const;
+        virtual bool providesContextHelp() const;
+        virtual int desktop() const;
+        virtual bool isModal() const;
+        virtual bool isShadeable() const;
+        virtual bool isShade() const;
+        virtual bool keepAbove() const;
+        virtual bool keepBelow() const;
+        virtual bool isMovable() const;
+        virtual bool isResizable() const;
+        virtual NET::WindowType windowType( unsigned long supported_types ) const;
+	virtual QIconSet icon() const;
+	virtual QString caption() const;
+	virtual void processMousePressEvent( QMouseEvent* );
+	virtual void showWindowMenu( QPoint );
+	virtual void performWindowOperation( WindowOperation );
+        virtual void setMask( const QRegion&, int );
+        virtual bool isPreview() const;
+        virtual QRect geometry() const;
+        virtual QRect iconGeometry() const;
+        virtual QWidget* workspaceWidget() const;
+	virtual void closeWindow();
+	virtual void maximize( MaximizeMode mode );
+	virtual void minimize();
+        virtual void showContextHelp();
+        virtual void setDesktop( int desktop );
+        virtual void titlebarDblClickOperation();
+        virtual void setShade( bool set );
+        virtual void setKeepAbove( bool );
+        virtual void setKeepBelow( bool );
+        virtual int currentDesktop() const;
+        virtual QWidget* initialParentWidget() const;
+        virtual Qt::WFlags initialWFlags() const;
+        virtual void helperShowHide( bool show );
+    private:
+        KDecorationPreview* preview;
+        bool active;
+    };
+
+class KDecorationPreviewOptions
+    : public KDecorationOptions
+    {
+    public:
+        KDecorationPreviewOptions();
+        virtual ~KDecorationPreviewOptions();
+        virtual unsigned long updateSettings();
+    };
+        
+#endif
