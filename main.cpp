@@ -136,6 +136,10 @@ Application::Application( )
     Workspace* ws = new Workspace( isSessionRestored() );
 
     syncX(); // trigger possible errors, there's still a chance to abort
+    
+#ifdef XRANDR_SUPPORT
+    connect( desktop(), SIGNAL( resized( int )), ws, SLOT( desktopResized()));
+#endif
 
     initting = FALSE; // startup done, we are up and running now.
     dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));

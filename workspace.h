@@ -329,6 +329,8 @@ public slots:
     void slotGrabWindow();
     void slotGrabDesktop();
 
+    void desktopResized();
+
 private slots:
     void desktopPopupAboutToShow();
     void clientPopupAboutToShow();

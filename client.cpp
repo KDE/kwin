@@ -581,6 +581,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     may_close = TRUE;
     is_fullscreen = FALSE;
     skip_taskbar = FALSE;
+    is_fully_inside_workarea = FALSE;
 
     Pdeletewindow = 0;
     Ptakefocus = 0;
@@ -920,6 +921,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	doNotShow = true;
 	
     bool showMe = (state == NormalState) && isOnDesktop( workspace()->currentDesktop() );
+    
+    is_fully_inside_workarea = area.contains( geom ); // SELI TODO
 
     workspace()->clientReady( this ); // will call Workspace::propagateClients()
 
@@ -966,7 +969,61 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     return showMe;
 }
 
-
+void Client::checkWorkspacePosition()
+{
+    QRect area = workspace()->clientArea( geom.center());
+    bool now_inside_workarea = area.contains( geom ); // SELI desktop # ?
+    QRect new_geom = geom;
+    // Try to be smart about keeping the clients visible.
+    // If the client was fully inside the workspace before, possibly
+    // moving it or making it smaller if possible.
+    // On the other hand, it it was partially moved outside of the workspace,
+    // don't do anything if it's still at least partially visible. If it's
+    // not visible anymore at all, make sure it's visible at least partially
+    // again (not fully, as that could(?) be potentionally annoying) by
+    // moving it slightly inside the workarea (those '+ area.width() / 10').
+    if( is_fully_inside_workarea && !now_inside_workarea )
+    { // was fully inside workarea - try to make it fully visible again
+	if( may_resize )
+	{
+	    QSize new_size = new_geom.size();
+	    if( new_size.width() > area.width())
+		new_size.setWidth( area.width());
+	    if( new_size.height() > area.height())
+		new_size.setHeight( area.height());
+	    if( new_size != new_geom.size())
+		new_geom.setSize( adjustedSize( new_size ));
+	}
+	if( may_move )
+	{
+	    if( new_geom.left() < area.left())
+	        new_geom.moveLeft( area.left());
+	    if( new_geom.right() > area.right())
+    	        new_geom.moveRight( area.right());
+	    if( new_geom.top() < area.top())
+	        new_geom.moveTop( area.top());
+    	    if( new_geom.bottom() > area.bottom())
+		new_geom.moveBottom( area.bottom());
+	}
+    }
+    else if( !area.intersects( new_geom ))
+    { // not visible at all - try to make it at least partially visible
+	if( may_move )
+	{
+	    if( new_geom.left() < area.left())
+	        new_geom.moveRight( area.left() + area.width() / 10 );
+	    if( new_geom.right() > area.right())
+    	        new_geom.moveLeft( area.right() - area.width() / 10 );
+	    if( new_geom.top() < area.top())
+	        new_geom.moveBottom( area.top() + area.height() / 10 );
+    	    if( new_geom.bottom() > area.bottom())
+		new_geom.moveTop( area.bottom() - area.height() / 10 );
+	}
+    }
+    if( new_geom != geom )
+	setGeometry( new_geom );
+    is_fully_inside_workarea = area.contains( geom );
+}
 
 /*!
   Updates the user time on the client window. This is called inside
@@ -1253,12 +1310,6 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
     if ( isResize() )
         return TRUE; // we have better things to do right now
 
-    if ( isDesktop() ) {
-        setGeometry( workspace()->geometry() );
-        sendSyntheticConfigureNotify();
-        return TRUE;
-    }
-
     if ( isShade() )
         setShade( FALSE );
 
@@ -1386,6 +1437,9 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 
     if ( e.value_mask & (CWX | CWY  | CWWidth | CWHeight ) )
         sendSyntheticConfigureNotify();
+	
+    // SELI TODO accept configure requests for isDesktop windows (because kdesktop
+    // may get XRANDR resize event before kwin), but check it's still at the bottom?
     return TRUE;
 }
 
@@ -1862,6 +1916,7 @@ void Client::leaveEvent( QEvent * )
 void Client::setGeometry( int x, int y, int w, int h )
 {
     QWidget::setGeometry(x, y, w, h);
+    is_fully_inside_workarea = workspace()->clientArea( geom.center()).contains( geom );
     if ( !isResize() && isVisible() )
         sendSyntheticConfigureNotify();
 }

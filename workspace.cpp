@@ -400,13 +400,6 @@ Workspace::Workspace( bool restore )
 
 void Workspace::init()
 {
-    QRect r = QApplication::desktop()->geometry();
-    d->electricTop = r.top();
-    d->electricBottom = r.bottom();
-    d->electricLeft = r.left();
-    d->electricRight = r.right();
-    d->electric_current_border = 0;
-
     if (options->electricBorders() == Options::ElectricAlways)
        createBorderWindows();
 
@@ -3092,6 +3085,40 @@ void Workspace::desktopPopupAboutToShow()
     }
 }
 
+/*!
+  Resizes the workspace after an XRANDR screen size change
+ */
+void Workspace::desktopResized()
+{
+    updateClientArea();
+
+    // Reposition clients
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+        Client* c = *it;
+        if (c->isFullScreen())
+	    ; // nothing
+        else if( c->isMaximized())
+            ; // done in updateClientArea()
+	else if( c->isDock())
+	    ; // nothing
+	else if( c->isToolbar() || c->isMenu())
+	    c->checkWorkspacePosition();
+	else if( c->isTopMenu())
+	    ; // nothing
+	else if( c->windowType() == NET::Override )
+	    ; // SELI I wish I knew what to do here :(
+        else { // NET::Utility, NET::Unknown, NET::Dialog, NET::Normal
+	    c->checkWorkspacePosition();
+        }
+    }    
+    // NET::Desktop - nothing
+	
+    if (options->electricBorders() == Options::ElectricAlways)
+    { // update electric borders
+	destroyBorderWindows();
+	createBorderWindows();
+    }
+}
 
 /*!
   The client popup menu will become visible soon.
@@ -4313,6 +4340,10 @@ void Workspace::createBorderWindows()
     d->electric_current_border = 0;
 
     QRect r = QApplication::desktop()->geometry();
+    d->electricTop = r.top();
+    d->electricBottom = r.bottom();
+    d->electricLeft = r.left();
+    d->electricRight = r.right();
 
     XSetWindowAttributes attributes;
     unsigned long valuemask;

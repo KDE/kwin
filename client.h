@@ -225,6 +225,8 @@ public:
     const QPoint gravitate( bool invert ) const;
     
     void NETMoveResize( int x_root, int y_root, NET::Direction direction );
+    
+    void checkWorkspacePosition();
 
 public slots:
     void iconify();
@@ -339,6 +341,7 @@ private:
     uint may_maximize : 1;
     uint may_minimize : 1;
     uint may_close : 1;
+    uint is_fully_inside_workarea : 1;
     void getWMHints();
     void getWindowProtocols();
     QPixmap icon_pix;
