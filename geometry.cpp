@@ -1508,8 +1508,8 @@ bool Client::isMovable() const
         return false;
     if( isSpecialWindow() && !isOverride() && !isSplash() && !isToolbar()) // allow moving of splashscreens :)
         return false;
-    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
-        return false;
+//    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
+//        return false;
     if( rules()->checkPosition( invalidPoint ) != invalidPoint ) // forced position
         return false;
     return true;
@@ -1524,8 +1524,8 @@ bool Client::isResizable() const
         return false;
     if(( isSpecialWindow() || isSplash() || isToolbar()) && !isOverride())
         return false;
-    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
-        return false;
+//    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
+//        return false;
     if( rules()->checkSize( QSize()).isValid()) // forced size
         return false;
 
