@@ -304,6 +304,8 @@ public slots:
     void slotWindowClose();
     void slotWindowMove();
     void slotWindowResize();
+    void slotWindowStaysOnTop();
+    void slotWindowSticky();
 
     void slotWindowToNextDesktop();
     void slotWindowToPreviousDesktop();

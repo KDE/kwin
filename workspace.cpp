@@ -2823,6 +2823,18 @@ void Workspace::slotWindowRaiseOrLower()
         raiseOrLowerClient( active_client );
 }
 
+void Workspace::slotWindowSticky()
+{
+    if( active_client )
+        active_client->toggleSticky();
+}
+
+void Workspace::slotWindowStaysOnTop()
+{
+    if( active_client )
+        performWindowOperation( active_client, Options::StaysOnTopOp );
+}
+
 /*!
   Move window to next desktop
  */

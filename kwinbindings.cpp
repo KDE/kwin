@@ -30,6 +30,8 @@
 	DEF( I18N_NOOP("Window Resize"),                       0, 0, slotWindowResize() );
 	DEF( I18N_NOOP("Window Raise"),                        0, 0, slotWindowRaise() );
 	DEF( I18N_NOOP("Window Lower"),                        0, 0, slotWindowLower() );
+        DEF( I18N_NOOP("Window Sticky"),                       0, 0, slotWindowSticky() );
+        DEF( I18N_NOOP("Window Stays On Top"),                 0, 0, slotWindowStaysOnTop() );
 	DEF( I18N_NOOP("Toggle Window Raise/Lower"),           0, 0, slotWindowRaiseOrLower() );
 
 	keys->insert( "Group:Window Desktop", i18n("Window & Desktop") );
