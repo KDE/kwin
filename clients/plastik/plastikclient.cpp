@@ -23,6 +23,7 @@
 #include <klocale.h>
 #include <kpixmap.h>
 #include <kpixmapeffect.h>
+#include <kapplication.h>
 
 #include <qbitmap.h>
 #include <qdatetime.h>
@@ -32,6 +33,7 @@
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qpixmap.h>
+#include <qdesktopwidget.h>
 
 #include "plastikclient.h"
 #include "plastikclient.moc"
@@ -153,6 +155,7 @@ void PlastikClient::paintEvent(QPaintEvent*)
             PlastikHandler::getColor(SideHighlightRight, active), 150);
     const QColor highlightBottom = alphaBlendColors(border,
             PlastikHandler::getColor(SideHighlightBottom, active), 150);
+    const QColor filledCorner = QColor(0,0,0);
 
     QRect Rtop(topSpacer_->geometry());
     QRect Rtitle(titleSpacer_->geometry());
@@ -192,6 +195,12 @@ void PlastikClient::paintEvent(QPaintEvent*)
         painter.drawTiledPixmap(Rtop.left()+2, Rtop.top()+2,
                                 Rtop.width()-2*2, Rtop.height()-2,
                                 active ? *aTitleBarTopTile : *iTitleBarTopTile );
+        // outside the region normally masked by doShape
+        painter.setPen(filledCorner);
+        painter.drawLine(Rtop.left(), Rtop.top(), Rtop.left()+1, Rtop.top() );
+        painter.drawPoint(Rtop.left(), Rtop.top()+1);
+        painter.drawLine(Rtop.right(), Rtop.top(), Rtop.right()-1, Rtop.top() );
+        painter.drawPoint(Rtop.right(), Rtop.top()+1);
     }
 
     // leftTitleSpacer
@@ -379,6 +388,10 @@ void PlastikClient::paintEvent(QPaintEvent*)
             painter.setPen(alphaBlendColors(border, windowContour, 110) );
             painter.drawPoint(Rbottom.right()-1, Rbottom.bottom()-1);
         }
+        // outside the region normally masked by doShape
+        painter.setPen(filledCorner);
+        painter.drawPoint(Rbottom.left(), Rbottom.bottom());
+        painter.drawPoint(Rbottom.right(), Rbottom.bottom());
 
         int l;
         if(Rleft.width() != 0)
@@ -412,34 +425,54 @@ void PlastikClient::doShape()
     int h = widget()->height();
     int r(w);
     int b(h);
-
+    bool tl=true,tr=true,bl=true,br=true; // is there a transparent rounded corner in top-left? etc
+    
     QRegion mask(0, 0, w, h);
+    
+    QDesktopWidget *desktop=KApplication::desktop();
 
-    if(topSpacer_->geometry().height() > 0)
+    // no transparent rounded corners if the spacers are zero size
+    if(topSpacer_->geometry().height() == 0)       tl = tr = false;
+    if(leftTitleSpacer_->geometry().width() == 0)  tl = false;
+    if(rightTitleSpacer_->geometry().width() == 0) tr = false;
+    if(bottomSpacer_->geometry().height() == 0)    bl = br = false;
+    
+    // no transparent rounded corners if this window corner lines up with a screen corner
+    for(int screen=desktop->numScreens()-1;screen>=0;--screen)
     {
-        // Remove top-left corner.
-        if(leftTitleSpacer_->geometry().width() > 0)
-        {
-            mask -= QRegion(0, 0, 1, 2);
-            mask -= QRegion(1, 0, 1, 1);
-        }
-        // Remove top-right corner.
-        if(rightTitleSpacer_->geometry().width() > 0)
-        {
-            mask -= QRegion(r-1, 0, 1, 2);
-            mask -= QRegion(r-2, 0, 1, 1);
-        }
+        QRect fullscreen(desktop->screenGeometry(screen));
+        QRect wcfullscreen(widget()->mapFromGlobal(fullscreen.topLeft()),
+                           widget()->mapFromGlobal(fullscreen.bottomRight()+QPoint(1,1)));
+                        
+        if(wcfullscreen.topLeft()    ==QPoint(0,0)) tl = false;                        
+        if(wcfullscreen.topRight()   ==QPoint(w,0)) tr = false;
+        if(wcfullscreen.bottomLeft() ==QPoint(0,h)) bl = false;
+        if(wcfullscreen.bottomRight()==QPoint(w,h)) br = false;
     }
 
-    // Remove bottom-left corner and bottom-right corner.
-    if(bottomSpacer_->geometry().height() > 0)
+    if(tl) // remove top-left corner
+    {
+        mask -= QRegion(0, 0, 1, 2);
+        mask -= QRegion(1, 0, 1, 1);
+    }
+    
+    if(tr) // remove top-right corner
+    {
+        mask -= QRegion(r-1, 0, 1, 2);
+        mask -= QRegion(r-2, 0, 1, 1);
+    }
+    
+    if(bl)  // remove bottom-left corner
     {
         mask -= QRegion(0, b-1, 1, 1);
+    }
+    
+    if(br) // remove bottom-right corner
+    {
         mask -= QRegion(r-1, b-1, 1, 1);
     }
 
     setMask( mask );
-//     widget()->setMask(mask);
 }
 
 void PlastikClient::_resetLayout()
