@@ -416,13 +416,6 @@ void PlastikClient::showEvent(QShowEvent *)
     widget()->update();
 }
 
-
-void PlastikClient::windowWrapperShowEvent(QShowEvent *)
-{
-    doShape();
-    widget()->update();
-}
-
 void PlastikClient::mouseDoubleClickEvent(QMouseEvent *e)
 {
     if (titleSpacer_->geometry().contains(e->pos()))

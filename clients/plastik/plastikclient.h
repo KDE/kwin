@@ -58,7 +58,6 @@ protected:
     virtual void paintEvent(QPaintEvent *e);
     virtual void showEvent(QShowEvent *);
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
-    virtual void windowWrapperShowEvent(QShowEvent *);
 
     virtual void maximizeChange();
     virtual void desktopChange();
