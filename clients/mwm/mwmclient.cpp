@@ -449,7 +449,7 @@ void MwmClient::paintEvent( QPaintEvent* )
 Client::MousePosition MwmClient::mousePosition( const QPoint& p ) const
 {
     const int range = s_frameWidth + s_buttonSize;
-    const int border = s_frameWidth;
+    const int border = s_frameWidth + 1;
 
     MousePosition m = Nowhere;
 
