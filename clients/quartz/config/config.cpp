@@ -40,7 +40,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 						i18n("Draw window frames using &titlebar colors"), gb );
 	QWhatsThis::add( cbColorBorder, 
 						i18n("When selected, the window decoration borders "
-						"are drawn using the titlebar colors. Otherwise, they are "
+						"are drawn using the titlebar colors; otherwise, they are "
 						"drawn using normal border colors instead.") );
 	// Load configuration options
 	load( conf );

@@ -40,13 +40,13 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), gb );
 	QWhatsThis::add( cbShowStipple, 
 		i18n("When selected, active titlebars are drawn "
-		 "with a stipple (dotted) effect. Otherwise, they are "
+		 "with a stipple (dotted) effect; otherwise, they are "
 		 "drawn without the stipple."));
 
 	cbShowGrabBar = new QCheckBox( i18n("Draw g&rab bar below windows"), gb );
 	QWhatsThis::add( cbShowGrabBar, 
 		i18n("When selected, decorations are drawn with a \"grab bar\" "
-		"below windows. Otherwise, no grab bar is drawn."));
+		"below windows; otherwise, no grab bar is drawn."));
 
 	// Only show the gradient checkbox for highcolor displays
 	if (highcolor)
@@ -54,7 +54,7 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 		cbUseGradients = new QCheckBox( i18n("Draw &gradients"), gb );
 		QWhatsThis::add( cbUseGradients, 
 			i18n("When selected, decorations are drawn with gradients "
-			"for highcolor displays, otherwise no gradients are drawn.") );
+			"for high-color displays; otherwise, no gradients are drawn.") );
 	}
 
 	// Load configuration options
