@@ -1599,7 +1599,7 @@ bool Client::x11Event( XEvent * e)
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
-	if ( options->autoRaise ) {
+	if ( options->autoRaise && !isDesktop() && !isDock() ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = new QTimer( this );
 	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
@@ -1613,14 +1613,15 @@ bool Client::x11Event( XEvent * e)
 	return TRUE;
     }
     if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
-	if ( e->xcrossing.detail == NotifyInferior )
-	    return FALSE;
-	delete autoRaiseTimer;
-	autoRaiseTimer = 0;
 	if ( !buttonDown )
 	    setCursor( arrowCursor );
+	bool lostMouse = !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) );
+	if ( lostMouse ) {
+	    delete autoRaiseTimer;
+	    autoRaiseTimer = 0;
+	    }
 	if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
-	    if ( isActive() && !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) ) )
+	    if ( isActive() && lostMouse )
 		workspace()->requestFocus( 0 ) ;
 	return TRUE;
     }
@@ -1780,7 +1781,6 @@ void Client::setActive( bool act)
 	return;
     active = act;
     if ( !active && autoRaiseTimer ) {
-	qDebug("delete autoraise setActive %s", caption().latin1());
 	delete autoRaiseTimer;
 	autoRaiseTimer = 0;
     }
@@ -2344,7 +2344,6 @@ QPixmap Client::animationPixmap( int w )
 
 void Client::autoRaise()
 {
-    qDebug("autoRaise %s", caption().latin1());
     workspace()->raiseClient( this );
     delete autoRaiseTimer;
     autoRaiseTimer = 0;
