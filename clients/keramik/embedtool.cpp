@@ -102,7 +102,7 @@ void KeramikEmbedder::embed( const char *name )
 	QString     codename( basename );
 	QImage      image( name );
 	
-	codename = codename.replace( QRegExp("[-,\\s]"), "_" );
+	codename = codename.replace( QRegExp("[^a-zA-Z0-9]"), "_" );
 	
 	stream << "\tstatic const QRgb " << codename << "_data[] = {" << endl << "\t\t";
 	stream.setf( QTextStream::hex | QTextStream::right );
