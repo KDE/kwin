@@ -226,22 +226,6 @@ class Options : public KDecorationOptions
         */
         bool showGeometryTip();
 
-        /**
-        * @returns true if window button tooltips should use a fade-in effect
-        * @see #animateTooltips
-        * @see #showTooltips
-        */
-        bool fadeTooltips(); // FRAME tohle asi muze jit
-
-        /**
-        * @returns true if window button tooltips should use an animated effect.
-        * When this is true, tooltips should use a animated scroll effect. If
-        * fadeToolTips is also true, tooltips should be faded-in instead.
-        * @see #fadeTooltips
-        * @see #showTooltips
-        */
-        bool animateTooltips();
-
         enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
         /**
         * @returns true if electric borders are enabled. With electric borders
@@ -276,8 +260,6 @@ class Options : public KDecorationOptions
         MouseCommand CmdAll3;
         uint CmdAllModKey;
 
-        bool fade_tooltips;
-        bool animate_tooltips;
         int electric_borders;
         int electric_border_delay;
         bool show_geometry_tip;

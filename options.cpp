@@ -148,8 +148,6 @@ unsigned long Options::updateSettings()
     // "EffectNoTooltip" setting from kdeglobals.
     KConfig globalConfig("kdeglobals");
     globalConfig.setGroup("KDE");
-    fade_tooltips = globalConfig.readBoolEntry("EffectFadeTooltip", false);
-    animate_tooltips = globalConfig.readBoolEntry("EffectAnimateTooltip", false);
     topmenus = globalConfig.readBoolEntry( "macStyle", false );
 
     KConfig kdesktopcfg( "kdesktoprc", true );
@@ -220,16 +218,6 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
 bool Options::showGeometryTip()
     {
     return show_geometry_tip;
-    }
-
-bool Options::fadeTooltips()
-    {
-    return fade_tooltips;
-    }
-
-bool Options::animateTooltips()
-    {
-    return animate_tooltips;
     }
 
 int Options::electricBorders()
