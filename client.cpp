@@ -357,7 +357,7 @@ void Client::manage( bool isMapped )
 	placementDone = TRUE;
     }
 	
-    
+
     if ( !placementDone ) {
 	workspace()->doPlacement( this );
 	placementDone = TRUE;
@@ -378,6 +378,7 @@ void Client::manage( bool isMapped )
     // ### TODO check XGetWMHints() for initial mapping state, icon, etc. pp.
     // assume window wants to be visible on the current desktop
     desk = KWM::desktop( win ); //workspace()->currentDesktop();
+    KWM::moveToDesktop( win, desk ); // compatibility
     setMappingState( state );
     if ( state == NormalState && isOnDesktop( workspace()->currentDesktop() ) ) {
 	show();
@@ -560,7 +561,7 @@ void Client::withdraw()
 bool Client::configureRequest( XConfigureRequestEvent& e )
 {
     if ( isResize() )
-	return TRUE; // we have better things to do right now 
+	return TRUE; // we have better things to do right now
 
     if ( isShade() )
 	setShade( FALSE );

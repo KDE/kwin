@@ -31,6 +31,12 @@ static QPixmap* dis_menu_pix = 0;
 
 static bool pixmaps_created = FALSE;
 
+static void create_pixmaps();
+QPixmap* kwin_get_menu_pix_hack() 
+{
+    create_pixmaps();
+    return menu_pix;
+}
 
 /**
  * Pixmap creation routine that creates full pixmaps out of bitmaps

@@ -4,7 +4,7 @@
 
 class Workspace;
 class Client;
-
+class QLabel;
 typedef QValueList<Client*> ClientList;
 
 class TabBox : public QWidget
@@ -29,6 +29,7 @@ public:
 protected:
     void paintEvent( QPaintEvent* );
     void showEvent( QShowEvent* );
+    void hideEvent( QHideEvent* );
     void paintContents();
 
 private:
@@ -37,7 +38,8 @@ private:
     Workspace* wspace;
     ClientList clients;
     int desk;
-//     QValueList <QLabel*> labels;
+    QLabel* icon;
+    int wmax;
 
 };
 

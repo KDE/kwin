@@ -2,6 +2,8 @@
 #include "workspace.h"
 #include "client.h"
 #include <qpainter.h>
+#include <qlabel.h>
+#include <qdrawutil.h>
 
 const bool options_traverse_all = FALSE; // TODO
 
@@ -39,20 +41,41 @@ void TabBox::reset()
     f.setPointSize( 14 );
     setFont( f );
 
-
-    // TODO icons etc.
-    setGeometry( qApp->desktop()->width()/4,
-		 qApp->desktop()->height()/2-fontMetrics().height()*2,
-		 qApp->desktop()->width()/2, fontMetrics().height()*4 );
+    wmax = 0;
 
     if ( mode() == WindowsMode ) {
 	client = workspace()->activeClient();
-	// todo build window list, consider options_traverse_all
+	clients.clear();
+	Client* c = workspace()->nextClient( client );
+	Client* stop = c;
+	QFontMetrics fm( fontMetrics() );
+	int cw = 0;
+	while ( c ) {
+	    // TODO consider options_traverse_all
+	    if ( options_traverse_all ||c->isOnDesktop(workspace()->currentDesktop()) ) {
+		if ( client == c )
+		    clients.prepend( c );
+		else
+		    clients += c;
+		cw = fm.width( c->caption() ) + 40;
+		if ( cw > wmax )
+		    wmax = cw;
+	    }
+	    c = workspace()->nextClient( c );
+	    if ( c == stop )
+		break;
+	}
+	wmax = QMAX( wmax, int(clients.count())*20 );
     }
     else { // DesktopMode
-	desk = wspace->currentDesktop();
+	desk = workspace()->currentDesktop();
     }
 
+    int w = QMAX( wmax + 20, qApp->desktop()->width()/3 );
+    setGeometry( (qApp->desktop()->width()-w)/2,
+		 qApp->desktop()->height()/2-fontMetrics().height()*2-10,
+		 w, fontMetrics().height()*4 + 20 );
+    wmax = QMIN( wmax, width() - 12 );
 }
 
 
@@ -77,16 +100,17 @@ void TabBox::nextPrev( bool next)
 	if (!options_traverse_all && client
 	    && !client->isOnDesktop(workspace()->currentDesktop()))
 	    client = 0;
+	
     }
     else { // DesktopMode
 	if ( next ) {
 	    desk++;
-	    if ( desk > wspace->numberOfDesktops() )
+	    if ( desk > workspace()->numberOfDesktops() )
 		desk = 1;
 	} else {
 	    desk--;
 	    if ( desk < 1 )
-		desk = wspace->numberOfDesktops();
+		desk = workspace()->numberOfDesktops();
 	}
     }
 
@@ -129,6 +153,14 @@ void TabBox::showEvent( QShowEvent* )
 
 
 /*!
+  hide the icon box if necessary
+ */
+void TabBox::hideEvent( QHideEvent* )
+{
+}
+
+
+/*!
   Paints the tab box
  */
 void TabBox::paintEvent( QPaintEvent* )
@@ -141,14 +173,17 @@ void TabBox::paintEvent( QPaintEvent* )
     paintContents();
 }
 
+
 /*!
   Paints the contents of the tab box. Used in paintEvent() and
   whenever the contents changes.
  */
 void TabBox::paintContents()
 {
+    extern QPixmap* kwin_get_menu_pix_hack();
+    QPixmap* menu_pix = kwin_get_menu_pix_hack();
     QPainter p( this );
-    QRect r(6, 6, width()-12, height()-12 );
+    QRect r( 6, 6, width()-12, height()-32 );
     p.fillRect( r, colorGroup().brush( QColorGroup::Background ) );
     if ( mode () == WindowsMode ) {
 	if ( currentClient() ) {
@@ -162,18 +197,54 @@ void TabBox::paintContents()
 		s += QString("(")+client->caption()+")";
 	    else
 		s += client->caption();
-	    if ( p.fontMetrics().width( s ) > r.width() )
-		p.drawText( r, AlignLeft, s );
-	    else
-		p.drawText( r, AlignCenter, s );
+	    int textw = fontMetrics().width( s );
+	    r.setLeft( r.left() + (r.width() - textw)/2);
+	
+	    if ( !client->icon().isNull() ) {
+		int py = r.center().y() - 16;
+		r.setLeft( r.left() + 20 );
+		p.drawPixmap( r.left()-42, py, client->icon() );
+	    }
+	
+	    p.drawText( r, AlignVCenter, s );
 		
 	}
 	else {
-		    p.drawText( r, AlignCenter, "*** No Tasks ***" );
+	    r.setBottom( r.bottom() + 20 );
+	    p.drawText( r, AlignCenter, "*** No Tasks ***" );
+	}
+	
+	int x = (width() - clients.count() * 20 )/2;
+	int y = height() - 26;
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	    if ( workspace()->hasClient( *it ) ) { // safety
+		if ( !(*it)->miniIcon().isNull() )
+		    p.drawPixmap( x, y, (*it)->miniIcon() );
+		else if ( menu_pix )
+		    p.drawPixmap( x, y, *menu_pix );
+		p.setPen( (*it)==currentClient()?
+			   colorGroup().highlight():colorGroup().background() );
+		p.drawRect( x-2, y-2, 20, 20 );
+		x += 20;
+	    }
 	}
     } else { // DesktopMode
-	QString s;
-	s.setNum( desk );
-	p.drawText( r, AlignCenter, s );
+	p.drawText( r, AlignCenter, QString::number( desk ) );
+	int x = (width() - workspace()->numberOfDesktops() * 20 )/2;
+	int y = height() - 26;
+	QFont f( font() );
+	f.setPointSize( 12 );
+	f.setBold( FALSE );
+	p.setFont(f );
+	for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ ) {
+	    p.setPen( i == desk?
+		      colorGroup().highlight():colorGroup().background() );
+	    p.drawRect( x-2, y-2, 20, 20 );
+	    qDrawWinPanel( &p, QRect( x, y, 16, 16), colorGroup(), FALSE,
+			     &colorGroup().brush(QColorGroup::Base ) );
+	    p.setPen( colorGroup().text() );
+	    p.drawText( x, y, 16, 16, AlignCenter, QString::number(i) );
+	    x += 20;
+	}
     }
 }
