@@ -812,6 +812,7 @@ void B2Client::shadeChange()
     spacer->changeSize(10, isResizable() ? 8 : 4, 
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
+    doShape();
 }
 
 QSize B2Client::minimumSize() const
