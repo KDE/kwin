@@ -49,12 +49,12 @@ int kwin_screen_number = -1;
 static bool initting = FALSE;
 static DCOPClient * client = 0;
 
-static void crashHandler(int)
+/*static void crashHandler(int)
 {
    KCrash::setCrashHandler(0); // Exit on next crash.
    client->detach();  // Unregister with dcop.
    system("kwin&"); // Try to restart
-}
+}*/
 
 int x11ErrorHandler(Display *d, XErrorEvent *e){
     char msg[80], req[80], number[80];
