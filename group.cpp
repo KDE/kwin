@@ -196,7 +196,9 @@ bool Client::resourceMatch( const Client* c1, const Client* c2 )
 bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool active_hack )
     {
     bool same_app = false;
-    if( c1->isTransient() && c2->hasTransient( c1, true ))
+    if( c1 == c2 )
+        same_app = true;
+    else if( c1->isTransient() && c2->hasTransient( c1, true ))
         same_app = true; // c1 has c2 as mainwindow
     else if( c2->isTransient() && c1->hasTransient( c2, true ))
         same_app = true; // c2 has c1 as mainwindow
