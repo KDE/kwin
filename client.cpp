@@ -1624,8 +1624,8 @@ bool Client::isResizable() const
 
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
         return TRUE;
-    return ( xSizeHint.min_width != xSizeHint.max_width  ) ||
-          ( xSizeHint.min_height != xSizeHint.max_height  );
+    return ( xSizeHint.min_width < xSizeHint.max_width  ) ||
+          ( xSizeHint.min_height < xSizeHint.max_height  );
 }
 
 /*
