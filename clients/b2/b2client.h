@@ -133,6 +133,8 @@ private:
     B2Button* button[BtnCount];
     QGridLayout *g;
     QSpacerItem *spacer; // Bottom border spacer
+    QSpacerItem *leftSpacer;
+    QSpacerItem *rightSpacer;
     B2Titlebar *titlebar;
     int bar_x_ofs;
     int in_unobs;
@@ -146,6 +148,7 @@ public:
     virtual ~B2ClientFactory();
     virtual KDecoration *createDecoration(KDecorationBridge *);
     virtual bool reset(unsigned long changed);
+    QValueList< B2ClientFactory::BorderSize > borderSizes() const;
 };
 
 }

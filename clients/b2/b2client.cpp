@@ -4,7 +4,8 @@
  * Changes:
  *   Customizable button positions by Karol Szwed <gallium@kde.org>
  *   
- *   Thin frame in fixed size windows and titlebar gradient support are 
+ *   Thin frame in fixed size windows, titlebar gradient support and 
+ *   accessibility improvements are
  *   Copyright (c) 2003 Luciano Montanaro <mikelima@virgilio.it>
  */ 
 
@@ -47,19 +48,48 @@ static KPixmap *pixmap[NUM_PIXMAPS];
 
 KPixmap* titleGradient[2] = {0, 0};
 
+static int thickness = 4; // Frame thickness
+
 static bool pixmaps_created = false;
 static bool colored_frame = false;
+
+// =====================================
+
+extern "C" KDecorationFactory* create_factory()
+{
+    return new B2::B2ClientFactory();
+}
+
+// =====================================
 
 static inline const KDecorationOptions *options()
 {
     return KDecoration::options();
 }
 
-static void read_config()
+static void read_config(B2ClientFactory *f)
 {
     KConfig conf("kwinb2rc");
     conf.setGroup("General");
     colored_frame = conf.readBoolEntry( "UseTitleBarBorderColors", false );
+
+    switch (options()->preferredBorderSize(f)) {
+    case KDecoration::BorderTiny:
+	thickness = 2;
+	break;
+    case KDecoration::BorderLarge:
+	thickness = 5;
+	break;
+    case KDecoration::BorderVeryLarge:
+	thickness = 8;
+	break;
+    case KDecoration::BorderHuge:
+    case KDecoration::BorderVeryHuge:
+    case KDecoration::BorderOversized:
+    case KDecoration::BorderNormal:
+    default:
+	thickness = 4;
+    }
 }
 
 static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
@@ -410,7 +440,7 @@ B2Client::B2Client(KDecorationBridge *b, KDecorationFactory *f)
 
 void B2Client::init()
 {
-    const QString tips[]= {i18n("Menu"), i18n("Sticky"), 
+    const QString tips[]= {i18n("Menu"), i18n("On All desktops"), 
                            i18n("Minimize"), i18n("Maximize"),
                            i18n("Close"), i18n("Help") };
 
@@ -432,15 +462,24 @@ void B2Client::init()
     } else {
 	g->addMultiCellWidget(new QWidget(widget()), 1, 1, 1, 2);
     }
-    g->addColSpacing(0, 4);
+
+    // Left and right border width
+    leftSpacer = new QSpacerItem(thickness, 16, 
+	    QSizePolicy::Minimum, QSizePolicy::Expanding);
+    rightSpacer = new QSpacerItem(thickness, 16, 
+	    QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+    g->addItem(leftSpacer, 1, 0);
     g->addColSpacing(1, 16);
     g->setColStretch(2, 1);
     g->setRowStretch(1, 1);
-    g->addColSpacing(3, 4);
+    g->addItem(rightSpacer, 1, 3);
+
     // Bottom border height
-    spacer = new QSpacerItem(10, isResizable() ? 8 : 4, 
+    spacer = new QSpacerItem(10, thickness + (isResizable() ? 4 : 0), 
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
-    g->addItem(spacer, 4, 1);
+    g->addItem(spacer, 3, 1);
+
     // titlebar
     g->addRowSpacing(0, 20);
 
@@ -622,52 +661,80 @@ void B2Client::paintEvent( QPaintEvent* e)
 {
     QPainter p(widget());
     
-    // distance from the bottom border - it is different if window is resizable
-    int bb = isResizable() ? 0 : 4;
     KDecoration::ColorType frameColorGroup = colored_frame ?  
 	KDecoration::ColorTitleBar : KDecoration::ColorFrame;
     
     QRect t = titlebar->geometry();
 
-    // inner window rect
-    p.drawRect(3, t.bottom(), width()-6, height()-t.height()-6+bb);
-    //p.drawLine(4, t.bottom()+1, width()-5, t.bottom()+1);
+    // Frame height, this is used a lot of times
+    int fHeight = height() - t.height();
+
+    // distance from the bottom border - it is different if window is resizable
+    int bb = isResizable() ? 4 : 0;
+    int bDepth = thickness + bb;
+
+    QColorGroup fillColor = options()->colorGroup(frameColorGroup, isActive());
+    QBrush fillBrush(options()->color(frameColorGroup, isActive()));
 
     // outer frame rect
-    p.drawRect(0, t.bottom()-3, width(), height()-t.height()+bb);
+    p.drawRect(0, t.bottom() - thickness + 1, width(), fHeight - bb + thickness);
 
-    // draw frame interior
-    if (colored_frame)
-        p.setPen(options()->color(KDecoration::ColorTitleBar, isActive()));
-    else
-        p.setPen(options()->color(KDecoration::ColorFrame, isActive()));
-    
-    p.drawRect(2, t.bottom()-1, width()-4, height()-t.height()-4+bb);
-    p.setPen(Qt::black);
-    
-    // frame shade panel 
-    qDrawShadePanel(&p, 1, t.bottom()-2, width()-2, height()-t.height()-2+bb, 
-	    options()->colorGroup(frameColorGroup, isActive()), false);
-    
-    //bottom handle rect
-    if ( isResizable() ) {
-	int hx = width()-40;
-	int hw = 40;
+    if (thickness >= 2) {
+	// inner window rect
+	p.drawRect(thickness - 1, t.bottom(), width() - 2 * (thickness - 1), 
+		fHeight - bDepth + 2);
 	
-	p.drawLine(width()-1, height()-8, width()-1, height()-1);
-	p.drawLine(hx, height()-1, width()-1, height()-1);
-	p.drawLine(hx, height()-4, hx, height()-1);
+	if (thickness >= 3) {
+	    // frame shade panel
+	    qDrawShadePanel(&p, 1, t.bottom() - thickness + 2, 
+	    	width() - 2, fHeight - 2 - bb + thickness, fillColor, false);
+	    if (thickness == 4) {
+		p.setPen(fillColor.background());
+		p.drawRect(thickness - 2, t.bottom() - 1, 
+			width() - 2 * (thickness - 2), fHeight + 4 - bDepth);
+	    } else if (thickness > 4) {
+		qDrawShadePanel(&p, thickness - 2, 
+	    	    t.bottom() - 1, width() - 2 * (thickness - 2), 
+	    	    fHeight + 4 - bDepth, fillColor, true);
+		if (thickness >= 5) {
+		    // draw frame interior
+		    p.fillRect(2, t.bottom() - thickness + 3, 
+		    	width() - 4, thickness - 4, fillBrush);
+		    p.fillRect(2, height() - bDepth + 2, 
+		    	width() - 4, thickness - 4, fillBrush);
+		    p.fillRect(2, t.bottom() - 1, 
+		    	thickness - 4, fHeight - bDepth + 4, fillBrush);
+		    p.fillRect(width() - thickness + 2, t.bottom() - 1,
+		    	thickness - 4, fHeight - bDepth + 4, fillBrush);
+		}
+	    }
+	}
+    }
 
-	p.fillRect(hx+1, height()-7, hw-2, 6, 
-	    options()->color(frameColorGroup, isActive()));
+    // bottom handle rect
+    if (isResizable()) {
+        p.setPen(Qt::black);
+	int hx = width() - 40;
+	int hw = 40;
 
-	p.setPen(options()->colorGroup(frameColorGroup, isActive()).dark());				 
-	p.drawLine(width()-2, height()-8, width()-2, height()-2);
-	p.drawLine(hx+1, height()-2, width()-2, height()-2);
+	p.drawLine(width() - 1, height() - thickness - 4, 
+		width() - 1, height() - 1);
+	p.drawLine(hx, height() - 1, width() - 1, height() - 1);
+	p.drawLine(hx, height() - 4, hx, height() - 1);
 
-	p.setPen(options()->colorGroup(frameColorGroup, isActive()).light());
-	p.drawLine(hx+1, height()-6, hx+1, height()-3);
-	p.drawLine(hx+1, height()-7, width()-3, height()-7);
+	p.fillRect(hx + 1, height() - thickness - 3, 
+		hw - 2, thickness + 2, fillBrush);
+
+	p.setPen(fillColor.dark()); 
+	p.drawLine(width() - 2, height() - thickness - 4, 
+		width() - 2, height() - 2);
+	p.drawLine(hx + 1, height() - 2, width() - 2, height() - 2);
+
+	p.setPen(fillColor.light());
+	p.drawLine(hx + 1, height() - thickness - 2, 
+		hx + 1, height() - 3);
+	p.drawLine(hx + 1, height() - thickness - 3, 
+		width() - 3, height() - thickness - 3);
     } 
 
     /* OK, we got a paint event, which means parts of us are now visible
@@ -696,23 +763,24 @@ void B2Client::doShape()
     QRegion mask(widget()->rect());
     // top to the tilebar right
     if (bar_x_ofs) {
-        mask -= QRect(0, 0, bar_x_ofs, t.height()-4); //left from bar
-	mask -= QRect(0, t.height()-4, 1, 1);         //top left point
+	mask -= QRect(0, 0, bar_x_ofs, t.height() - thickness); //left from bar
+	mask -= QRect(0, t.height() - thickness, 1, 1); //top left point
     }
-    if (t.right() < width()-1) {
-        mask -= QRect(width()-1, t.height()-4, 1, 1); // top right point
-        mask -= QRect(t.right()+1, 0, width()-t.right()-1, t.height()-4);
+    if (t.right() < width() - 1) {
+	mask -= QRect(width() - 1, 
+		t.height() - thickness, 1, 1); //top right point
+	mask -= QRect(t.right() + 1, 0, 
+		width() - t.right() - 1, t.height() - thickness);
     }
-    mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
+    mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
     if (isResizable()) {
-	mask -= QRect(0, height()-5, 1, 1); // bottom left point
-	mask -= QRect(width()-1, height()-1, 1, 1); // bottom right point
-	mask -= QRect(width()-40, height()-1, 1, 1); // handle left point
-	mask -= QRect(0, height()-4, width()-40, 4); // bottom left
+	mask -= QRect(0, height() - 5, 1, 1); //bottom left point
+	mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
+	mask -= QRect(width() - 40, height() - 1, 1, 1); //handle left point
+	mask -= QRect(0, height() - 4, width() - 40, 4); //bottom left
     } else {
-	mask -= QRect(0, height()-1, 1, 1); // bottom left point
+	mask -= QRect(0, height() - 1, 1, 1); // bottom left point
     }
-    
 
     setMask(mask);
 }
@@ -728,9 +796,8 @@ void B2Client::showEvent(QShowEvent *ev)
 KDecoration::MousePosition B2Client::mousePosition( const QPoint& p ) const
 {
     const int range = 16;
-    const int border = 4;
     QRect t = titlebar->geometry();
-    t.setHeight(20-border);
+    t.setHeight(20 - thickness);
     int ly = t.bottom();
     int lx = t.right();
     int bb = isResizable() ? 0 : 5;
@@ -738,24 +805,25 @@ KDecoration::MousePosition B2Client::mousePosition( const QPoint& p ) const
     if ( p.x() > t.right() ) {
         if ( p.y() <= ly + range && p.x() >= width()-range)
             return TopRight2;
-        else if ( p.y() <= ly + border )
+        else if ( p.y() <= ly + thickness )
             return Top;
     } else if ( p.x() < bar_x_ofs ) {
         if ( p.y() <= ly + range && p.x() <= range )
             return TopLeft2;
-        else if ( p.y() <= ly+border )
+        else if ( p.y() <= ly + thickness )
             return Top;
     } else if ( p.y() < ly ) {
-        if ( p.x() > bar_x_ofs+border && p.x() < lx-border && p.y() > border )
+        if (p.x() > bar_x_ofs + thickness && 
+		p.x() < lx - thickness && p.y() > thickness)
             return KDecoration::mousePosition(p);
-        if ( p.x() > bar_x_ofs+range && p.x() < lx - range)
+        if (p.x() > bar_x_ofs + range && p.x() < lx - range)
             return Top;
         if ( p.y() <= range ) {
-            if ( p.x() <= bar_x_ofs+range )
+            if ( p.x() <= bar_x_ofs + range )
                 return TopLeft2;
             else return TopRight2;
         } else {
-            if ( p.x() <= bar_x_ofs+range )
+            if ( p.x() <= bar_x_ofs + range )
                 return Left;
             else return Right;
         }
@@ -764,7 +832,7 @@ KDecoration::MousePosition B2Client::mousePosition( const QPoint& p ) const
     if (p.y() >= height() - 8 + bb) {
         /* the normal Client:: only wants border of 4 pixels */
 	if (p.x() <= range) return BottomLeft2;
-	if (p.x() >= width()-range) return BottomRight2;
+	if (p.x() >= width() - range) return BottomRight2;
 	return Bottom;
     }
 
@@ -812,11 +880,10 @@ void B2Client::maximizeChange()
 	QToolTip::add(button[BtnMax], 
 		m ? i18n("Restore") : i18n("Maximize"));
     }
-    spacer->changeSize(10, isResizable() ? 8 : 4, 
+    spacer->changeSize(10, thickness + (isResizable() ? 4 : 0), 
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     g->activate();
-    //setGeometry(x(), y(), width(), height() + (m ? -5 : +5) );
     doShape();
     widget()->repaint(false);
 }
@@ -838,7 +905,7 @@ void B2Client::activeChange()
 
 void B2Client::shadeChange()
 {
-    spacer->changeSize(10, isResizable() ? 8 : 4, 
+    spacer->changeSize(10, thickness + (isResizable() ? 4 : 0), 
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
     doShape();
@@ -856,9 +923,9 @@ void B2Client::resize(const QSize& s)
 
 void B2Client::borders(int &left, int &right, int &top, int &bottom) const
 { 
-    left = right = 4;
+    left = right = thickness + 1;
     top = 20;
-    bottom = isResizable() ? 8 : 4;
+    bottom = thickness + (isResizable() ? 4 : 0);
 }
 
 void B2Client::menuButtonPressed()
@@ -1121,7 +1188,7 @@ bool B2Client::eventFilter(QObject *o, QEvent *e)
 
 B2ClientFactory::B2ClientFactory()
 {
-    read_config();
+    read_config(this);
     create_pixmaps();
 }
 
@@ -1139,17 +1206,19 @@ bool B2ClientFactory::reset(unsigned long /*changed*/)
 {
     // TODO Do not recreate decorations if it is not needed. Look at
     // ModernSystem for how to do that
-    read_config();
+    read_config(this);
     redraw_pixmaps();
     // For now just return true.
     return true;
 }
 
+QValueList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
+{ 
+    // the list must be sorted
+    return QValueList< BorderSize >() << BorderTiny << BorderNormal << 
+	BorderLarge << BorderVeryLarge;
 }
 
-extern "C" KDecorationFactory* create_factory()
-{
-    return new B2::B2ClientFactory();
 }
 
 #include "b2client.moc"
