@@ -1712,8 +1712,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         // first move, then snap, then check bounds
         moveResizeGeom.moveTopLeft( topleft );
         moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
-        if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge ) // titlebar mustn't go out
-            moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge );
+        if( moveResizeGeom.bottom() <= desktopArea.top() + titlebar_marge ) // titlebar mustn't go out
+            moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge - 1 );
         // no need to check top_marge, titlebar_marge already handles it
         if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
             moveResizeGeom.moveTop( desktopArea.bottom() - bottom_marge );
