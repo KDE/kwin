@@ -54,10 +54,13 @@ QPopupMenu* Workspace::clientPopup()
         advanced_popup->setCheckable( TRUE );
         advanced_popup->setFont(KGlobalSettings::menuFont());
         connect( advanced_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-        advanced_popup->insertItem( SmallIconSet( "up" ), i18n("Keep &Above Others"), Options::KeepAboveOp );
-        advanced_popup->insertItem( SmallIconSet( "down" ), i18n("Keep &Below Others"), Options::KeepBelowOp );
-        advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ), i18n("&Fullscreen"), Options::FullScreenOp );
-        advanced_popup->insertItem( i18n("&No Border"), Options::NoBorderOp );
+        advanced_popup->insertItem( SmallIconSet( "up" ),
+            i18n("Keep &Above Others")+'\t'+keys->shortcut("Window Above Other Windows").seq(0).toString(), Options::KeepAboveOp );
+        advanced_popup->insertItem( SmallIconSet( "down" ),
+            i18n("Keep &Below Others")+'\t'+keys->shortcut("Window Below Other Windows").seq(0).toString(), Options::KeepBelowOp );
+        advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ),
+            i18n("&Fullscreen")+'\t'+keys->shortcut("Window Fullscreen").seq(0).toString(), Options::FullScreenOp );
+        advanced_popup->insertItem( i18n("&No Border")+'\t'+keys->shortcut("Window No Border").seq(0).toString(), Options::NoBorderOp );
         advanced_popup->insertItem( SmallIconSet( "filesave" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
 
         popup->insertItem(i18n("Ad&vanced"), advanced_popup );
@@ -194,6 +197,9 @@ void Workspace::readShortcuts()
     cutWalkThroughWindowsReverse = keys->shortcut("Walk Through Windows (Reverse)");
 
     keys->updateConnections();
+    
+    delete popup;
+    popup = NULL; // so that it's recreated next time
     }
 
 
