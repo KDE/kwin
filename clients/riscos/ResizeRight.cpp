@@ -25,7 +25,6 @@
 #include "ResizeRight.h"
 #include "Manager.h"
 #include "Static.h"
-#include "Utils.h"
 
 namespace RiscOS
 {

@@ -28,7 +28,6 @@
 #include "TitleText.h"
 #include "Manager.h"
 #include "Static.h"
-#include "Utils.h"
 
 namespace RiscOS
 {
@@ -38,7 +37,6 @@ TitleText::TitleText(QWidget * parent, Manager * client)
     client_(client)
 {
   setFixedHeight(20);
-  updatePixmap();
 }
 
 TitleText::~TitleText()

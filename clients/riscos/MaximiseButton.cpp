@@ -35,10 +35,8 @@ MaximiseButton::MaximiseButton(QWidget * parent, Manager * client)
   void
 MaximiseButton::setOn(bool on)
 {
-  if (on)
-    setType(Unmax);
-  else
-    setType(Max);
+  setType(on ? Unmax: Max);
+  updateDisplay();
 }
 
   void

@@ -1,5 +1,3 @@
-KDE_CXXFLAGS = -O0 -g3 -W -Wall
-
 INCLUDES = $(all_includes) 
 
 lib_LTLIBRARIES = libkwinriscos.la
@@ -17,7 +15,6 @@ ResizeMid.cpp \
 ResizeSide.cpp \
 TitleBar.cpp \
 TitleText.cpp \
-Utils.cpp \
 Static.cpp
 
 METASOURCES = AUTO
@@ -34,7 +31,6 @@ ResizeMid.h \
 ResizeSide.h \
 TitleBar.h \
 TitleText.h \
-Utils.h \
 Static.h
 
 lnkdir = $(kde_datadir)/kwin/
@@ -42,6 +38,5 @@ lnk_DATA = riscos.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-libkwinriscos_la_LIBADD = ../../kwin.la -lqt -lX11
-libkwinriscos_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic -no-undefined
+libkwinriscos_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -rdynamic
 

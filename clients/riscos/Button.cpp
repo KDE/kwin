@@ -33,7 +33,7 @@ namespace RiscOS
 {
 
 Button::Button(QWidget * parent, Manager * client, SymbolType t)
-  : QWidget   (parent, "Button"),
+  : QWidget   (parent, "Button", WRepaintNoErase | WPaintUnclipped),
     client_   (client),
     type_     (t),
     align_    (Left),
@@ -51,6 +51,7 @@ Button::~Button()
 Button::updateDisplay()
 {
   setBackgroundPixmap(Static::instance()->button(type_, client_->isActive(), down_));
+  repaint(true);
 }
   
 } // End namespace

@@ -48,9 +48,9 @@ Manager::Manager(
   QWidget * parent,
   const char * name
 )
-  : Client(workSpace, id, parent, name, WResizeNoErase | WRepaintNoErase | WPaintUnclipped)
+  : Client(workSpace, id, parent, name)
 {
-  Static::instance()->update();
+  Static::instance();
 
   setBackgroundMode(NoBackground);
 
@@ -59,24 +59,21 @@ Manager::Manager(
   titleBar_   = new TitleBar(this, this);
   resizeBar_  = new ResizeBar(this, this);
 
-  // Layout
-
-  // Border
-  // Window
-  // Border
+  // Border Window Border
   QHBoxLayout * windowLayout  = new QHBoxLayout(0, "windowLayout");
   windowLayout->addSpacing(1);
   windowLayout->addWidget(windowWrapper(), 1);
   windowLayout->addSpacing(1);
   
-  // Border
-  // Titlebar
-  // Window layout
-  // Resize bar
+  // Titlebar (has own single pixel border)
+  // Window
+  // Resize bar (has own single pixel border)
   QVBoxLayout * mainLayout = new QVBoxLayout(this, 0, 0, "mainLayout");
   mainLayout->addWidget(titleBar_);
   mainLayout->addLayout(windowLayout, 1);
   mainLayout->addWidget(resizeBar_);
+
+  updateDisplay();
 }
 
 Manager::~Manager()

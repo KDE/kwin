@@ -88,14 +88,15 @@ class Static
 
   private:
 
-    void _drawButtonBorder(QPixmap &);
-    void _drawBorder(QPixmap &, int w, int h);
+    void _drawButtonBorder (QPixmap &);
+    void _drawBorder       (QPixmap &, int, int);
+    void _drawCloseSymbol  (QPixmap &);
+    void _drawIconifySymbol(QPixmap &);
+    void _drawLowerSymbol  (QPixmap &);
+    void _drawMaxSymbol    (QPixmap &);
+    void _drawUnmaxSymbol  (QPixmap &);
+
     void _init();
-    void _drawCloseSymbol(QPixmap & pixmap);
-    void _drawIconifySymbol(QPixmap & pixmap);
-    void _drawLowerSymbol(QPixmap & pixmap);
-    void _drawMaxSymbol(QPixmap & pixmap);
-    void _drawUnmaxSymbol(QPixmap & pixmap);
 
     static Static * instance_;
 
@@ -125,5 +126,5 @@ class Static
 } // End namespace
 
 #endif
-
+ 
 // vim:ts=2:sw=2:tw=78

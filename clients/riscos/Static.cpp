@@ -27,7 +27,6 @@
 #include "../../options.h"
 
 #include "Static.h"
-#include "Utils.h"
 
 namespace RiscOS
 {
@@ -99,35 +98,6 @@ Static::_drawBorder(QPixmap & pix, int w, int h)
   painter_.end();
 }
 
-  QPixmap
-recolour(const QImage & inputImage, const Palette & newPalette)
-{
-  QImage image(inputImage);
-  Palette & standard = Static::instance()->standardPalette();
-
-  int ncols = image.numColors();
-
-  QRgb r;
-  
-  for (int i = 0; i < ncols; i++) {
-
-    r = image.color(i);
-
-    for (int c = 0; c < 8; c++) {
-
-      if (r == standard[c])
-      {
-        image.setColor(i, newPalette[c]);
-        continue;
-      }
-    }
-  }
-  
-  QPixmap output;
-  output.convertFromImage(image);
-  return output;
-}
-
   void
 Static::_drawCloseSymbol(QPixmap & pixmap)
 {
@@ -191,7 +161,7 @@ Static::_drawLowerSymbol(QPixmap & pixmap)
   painter_.translate(transx, transy);
 
   painter_.fillRect(1, 1, 6, 6, QColor(palette_[6]));
-  painter_.fillRect(5, 5, 6, 6, QColor(palette_[6]));
+  painter_.fillRect(5, 5, 6, 6, QColor(palette_[3]));
 
   painter_.setPen(QColor(palette_[1]));
   painter_.drawRect(0, 0, 8, 8);
@@ -247,7 +217,7 @@ Static::_drawUnmaxSymbol(QPixmap & pixmap)
   painter_.translate(transx, transy);
 
   painter_.setPen(QColor(palette_[1]));
-  painter_.drawRect(0, 0, 11, 11);
+  painter_.drawRect(0, 0, 12, 12);
 
   painter_.setPen(QColor(palette_[3]));
   painter_.drawPoint(0, 0);
@@ -263,10 +233,17 @@ Static::_drawUnmaxSymbol(QPixmap & pixmap)
   void
 setPalette(Palette & pal, QColor c)
 {
+  pal[3] = c.rgb();
+
+  int h, s, v;
+  c.hsv(&h, &s, &v);
+
+  if (v < 72)
+    c.setHsv(h, s, 72);
+
   pal[0] = c.light(200).rgb();
   pal[1] = c.light(166).rgb();
   pal[2] = c.light(125).rgb();
-  pal[3] = c.rgb();
   pal[4] = c.dark(133).rgb();
   pal[5] = c.dark(166).rgb();
   pal[6] = c.dark(200).rgb();
@@ -276,10 +253,17 @@ setPalette(Palette & pal, QColor c)
   void
 setInversePalette(Palette & pal, QColor c)
 {
+  pal[4] = c.rgb();
+
+  int h, s, v;
+  c.hsv(&h, &s, &v);
+
+  if (v < 72)
+    c.setHsv(h, s, 72);
+
   pal[7] = c.light(200).rgb();
   pal[6] = c.light(166).rgb();
   pal[5] = c.light(125).rgb();
-  pal[4] = c.rgb();
   pal[3] = c.dark(133).rgb();
   pal[2] = c.dark(166).rgb();
   pal[1] = c.dark(200).rgb();
@@ -326,34 +310,51 @@ Static::_init()
   aResize_.fill(Qt::black);
   iResize_.fill(Qt::black);
 
-  aTitleTextLeft_.resize(3, 20);
-  aTitleTextRight_.resize(3, 20);
-  aTitleTextLeft_.fill(Qt::black);
-  aTitleTextRight_.fill(Qt::black);
-  
-  iTitleTextLeft_.resize(3, 20);
-  iTitleTextRight_.resize(3, 20);
-  iTitleTextLeft_.fill(Qt::black);
-  iTitleTextRight_.fill(Qt::black);
-  
-  aTitleTextMid_.resize(128, 20);
-  iTitleTextMid_.resize(128, 20);
-  aTitleTextMid_.fill(Qt::black);
-  iTitleTextMid_.fill(Qt::black);
-  
-  aResizeMidLeft_.resize(3, 12);
-  aResizeMidRight_.resize(3, 12);
-  aResizeMidLeft_.fill(Qt::black);
-  aResizeMidRight_.fill(Qt::black);
-  iResizeMidLeft_.resize(3, 12);
-  iResizeMidRight_.resize(3, 12);
-  iResizeMidLeft_.fill(Qt::black);
-  iResizeMidRight_.fill(Qt::black);
+  aTitleTextLeft_   .setOptimization(QPixmap::BestOptim);
+  aTitleTextRight_  .setOptimization(QPixmap::BestOptim);
+  aTitleTextMid_    .setOptimization(QPixmap::BestOptim);
 
-  aResizeMid_.resize(128, 10);
-  iResizeMid_.resize(128, 10);
-  aResizeMid_.fill(Qt::black);
-  iResizeMid_.fill(Qt::black);
+  iTitleTextLeft_   .setOptimization(QPixmap::BestOptim);
+  iTitleTextRight_  .setOptimization(QPixmap::BestOptim);
+  iTitleTextMid_    .setOptimization(QPixmap::BestOptim);
+
+  aResizeMidLeft_   .setOptimization(QPixmap::BestOptim);
+  aResizeMidRight_  .setOptimization(QPixmap::BestOptim);
+  aResizeMid_       .setOptimization(QPixmap::BestOptim);
+
+  iResizeMidLeft_   .setOptimization(QPixmap::BestOptim);
+  iResizeMidRight_  .setOptimization(QPixmap::BestOptim);
+  iResizeMid_       .setOptimization(QPixmap::BestOptim);
+
+  aTitleTextLeft_   .resize(3, 20);
+  aTitleTextRight_  .resize(3, 20);
+  aTitleTextLeft_   .fill(Qt::black);
+  aTitleTextRight_  .fill(Qt::black);
+  
+  iTitleTextLeft_   .resize(3, 20);
+  iTitleTextRight_  .resize(3, 20);
+  iTitleTextLeft_   .fill(Qt::black);
+  iTitleTextRight_  .fill(Qt::black);
+  
+  aTitleTextMid_    .resize(128, 20);
+  iTitleTextMid_    .resize(128, 20);
+  aTitleTextMid_    .fill(Qt::black);
+  iTitleTextMid_    .fill(Qt::black);
+  
+  aResizeMidLeft_   .resize(3, 12);
+  aResizeMidRight_  .resize(3, 12);
+  aResizeMidLeft_   .fill(Qt::black);
+  aResizeMidRight_  .fill(Qt::black);
+
+  iResizeMidLeft_   .resize(3, 12);
+  iResizeMidRight_  .resize(3, 12);
+  iResizeMidLeft_   .fill(Qt::black);
+  iResizeMidRight_  .fill(Qt::black);
+
+  aResizeMid_       .resize(128, 10);
+  iResizeMid_       .resize(128, 10);
+  aResizeMid_       .fill(Qt::black);
+  iResizeMid_       .fill(Qt::black);
 
   update();
 }

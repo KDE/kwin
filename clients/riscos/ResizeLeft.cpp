@@ -25,13 +25,12 @@
 #include "ResizeSide.h"
 #include "Manager.h"
 #include "Static.h"
-#include "Utils.h"
 
 namespace RiscOS
 {
 
 ResizeSide::ResizeSide(QWidget * parent, Manager * client, Side s)
-  : QWidget (parent, "ResizeSide"),
+  : QWidget (parent, "ResizeSide", WRepaintNoErase | WPaintUnclipped)
     client_ (client),
     side_   (s)
 {
