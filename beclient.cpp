@@ -123,7 +123,7 @@ void BeClient::paintEvent( QPaintEvent* )
 
     p.drawPixmap( t.right() - 20, t.center().y()-8, *size_pix );
     p.drawPixmap( t.left() +4, t.center().y()-miniIcon().height()/2, miniIcon() );
-    t.setLeft( t.left() + 20 +10);
+    t.setLeft( t.left() + 20 + 5 );
     p.setPen(options->color(Options::Font, isActive()));
     p.setFont(options->font(isActive()));
     p.drawText( t, AlignLeft|AlignVCenter, caption() );
@@ -190,7 +190,7 @@ Client::MousePosition BeClient::mousePosition( const QPoint& p ) const
 
 void BeClient::mousePressEvent( QMouseEvent * e )
 {
-    
+
     Client::mousePressEvent( e );
 }
 

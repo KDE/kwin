@@ -88,7 +88,7 @@ void Options::reload()
     // inactive
     colors[Frame+KWINCOLORS] = config->readColorEntry("inactiveFrame",
                                                       &colors[Frame]);
-    colors[TitleBar+KWINCOLORS] = colors[Frame];
+    colors[TitleBar+KWINCOLORS] = colors[Frame].dark();
     colors[TitleBar+KWINCOLORS] = config->
         readColorEntry("inactiveBackground", &colors[TitleBar+KWINCOLORS]);
 
@@ -114,7 +114,7 @@ void Options::reload()
     colors[ButtonFg+KWINCOLORS] = config->
         readColorEntry("buttonForeground", &colors[ButtonFg]);
 
-    colors[Handle+KWINCOLORS] =
+    colors[Handle+KWINCOLORS] = colors[Frame];
         config->readColorEntry("inactiveHandle", &colors[Handle]);
 
     colors[Font+KWINCOLORS] = Qt::darkGray;
