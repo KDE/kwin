@@ -912,7 +912,7 @@ void Workspace::setActiveClient( Client* c )
 	if ( c->wantsTabFocus() )
 	    focus_chain.append( c );
     }
-    
+
     // toplevel menubar handling
     Client* main = 0;
     if ( active_client )
@@ -934,12 +934,12 @@ void Workspace::setActiveClient( Client* c )
 	    }
 	}
     }
-    
+
     if ( menubar ) {
 	menubar->show();
 	menubar->raise();
     }
-    
+
     // ... then hide the other ones. Avoids flickers.
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	if ( (*it)->isMenu() && (*it) != menubar )
@@ -1556,7 +1556,7 @@ void Workspace::raiseClient( Client* c )
 
     if ( tab_box->isVisible() )
 	return;
-    
+
     ClientList saveset;
 
     if ( c == desktop_client ) {
@@ -1708,9 +1708,9 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
     if (new_desktop != current_desktop) {
 	/*
-          optimized Desktop switching: unmapping done from back to front
-          mapping done from front to back => less exposure events
-        */
+	  optimized Desktop switching: unmapping done from back to front
+	  mapping done from front to back => less exposure events
+	*/
 
 	for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
 	    if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
@@ -1735,8 +1735,15 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     Client* c = 0;
 
     if ( options->focusPolicyIsReasonable()) {
-	if (options->focusPolicy == Options::FocusFollowsMouse) {
-	    // Search in focus chain
+	// Search in focus chain
+	for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
+	    if ( (*it)->isVisible() && !(*it)->wantsTabFocus() ) {
+		c = *it;
+		break;	
+	    }
+	}
+	
+	if ( !c ) {
 	    for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
 		if ( (*it)->isVisible() ) {
 		    c = *it;
@@ -1744,7 +1751,6 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 		}
 	    }
 	}
-
 
 	if (!c) {
 	    // Search top-most visible window
