@@ -496,6 +496,7 @@ private slots:
         QRegion _mask;
         friend struct FetchNameInternalPredicate;
         friend struct CheckIgnoreFocusStealingProcedure;
+        friend struct ResetupRulesProcedure;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
     };

@@ -405,6 +405,7 @@ void Client::setUserNoBorder( bool set )
         return;
     user_noborder = set;
     updateDecoration( true, false );
+    updateWindowRules();
     }
 
 void Client::updateShape()
@@ -535,6 +536,7 @@ void Client::minimize( bool avoid_animation )
     rawHide();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
+    updateWindowRules();
     }
 
 void Client::unminimize( bool avoid_animation )
@@ -555,6 +557,7 @@ void Client::unminimize( bool avoid_animation )
         }
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
+    updateWindowRules();
     }
 
 extern bool         blockAnimation;
@@ -784,6 +787,7 @@ void Client::setShade( ShadeMode mode )
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     decoration->shadeChange();
+    updateWindowRules();
     }
 
 void Client::shadeHover()
@@ -1065,6 +1069,7 @@ void Client::setSkipTaskbar( bool b, bool from_outside )
         return;
     skip_taskbar = b;
     info->setState( b?NET::SkipTaskbar:0, NET::SkipTaskbar );
+    updateWindowRules();
     }
 
 void Client::setSkipPager( bool b )
@@ -1074,6 +1079,7 @@ void Client::setSkipPager( bool b )
         return;
     skip_pager = b;
     info->setState( b?NET::SkipPager:0, NET::SkipPager );
+    updateWindowRules();
     }
 
 void Client::setModal( bool m )
@@ -1106,6 +1112,7 @@ void Client::setDesktop( int desktop )
     if( decoration != NULL )
         decoration->desktopChange();
     virtualDesktopChange(); // hide/show if needed
+    updateWindowRules();
     }
 
 void Client::setOnAllDesktops( bool b )

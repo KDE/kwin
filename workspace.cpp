@@ -112,6 +112,7 @@ Workspace::Workspace( bool restore )
 
     connect( &temporaryRulesMessages, SIGNAL( gotMessage( const QString& )),
         this, SLOT( gotTemporaryRulesMessage( const QString& )));
+    connect( &rulesUpdatedTimer, SIGNAL( timeout()), this, SLOT( writeWindowRules()));
 
     updateXTime(); // needed for proper initialization of user_time in Client ctor
 
@@ -753,6 +754,7 @@ void Workspace::slotSettingsChanged(int category)
   Reread settings
  */
 KWIN_PROCEDURE( CheckBorderSizesProcedure, cl->checkBorderSizes() );
+KWIN_PROCEDURE( ResetupRulesProcedure, cl->setupWindowRules( true ) );
 
 void Workspace::slotReconfigure()
     {
@@ -807,6 +809,9 @@ void Workspace::slotReconfigure()
         updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
+
+    loadWindowRules();
+    forEachClient( ResetupRulesProcedure());
     }
 
 void Workspace::loadDesktopSettings()

@@ -287,32 +287,74 @@ bool WindowRules::match( const Client* c ) const
 void WindowRules::update( Client* c )
     {
     // TODO check this setting is for this client ?
+    bool updated = false;
     if( positionrule == RememberRule )
+        {
+        updated = updated || position != c->pos();
         position = c->pos();
+        }
     if( sizerule == RememberRule )
+        {
+        updated = updated || size != c->size();
         size = c->size();
+        }
     if( desktoprule == RememberRule )
+        {
+        updated = updated || desktop != c->desktop();
         desktop = c->desktop();
+        }
     if( maximizevertrule == RememberRule )
+        {
+        updated = updated || maximizevert != bool( c->maximizeMode() & MaximizeVertical );
         maximizevert = c->maximizeMode() & MaximizeVertical;
+        }
     if( maximizehorizrule == RememberRule )
+        {
+        updated = updated || maximizehoriz != bool( c->maximizeMode() & MaximizeHorizontal );
         maximizehoriz = c->maximizeMode() & MaximizeHorizontal;
+        }
     if( minimizerule == RememberRule )
+        {
+        updated = updated || minimize != c->isMinimized();
         minimize = c->isMinimized();
+        }
     if( shaderule == RememberRule )
+        {
+        updated = updated || ( shade != ( c->shadeMode() != Client::ShadeNone ));
         shade = c->shadeMode() != Client::ShadeNone;
+        }
     if( skiptaskbarrule == RememberRule )
+        {
+        updated = updated || skiptaskbar != c->skipTaskbar();
         skiptaskbar = c->skipTaskbar();
+        }
     if( skippagerrule == RememberRule )
+        {
+        updated = updated || skippager != c->skipPager();
         skippager = c->skipPager();
+        }
     if( aboverule == RememberRule )
+        {
+        updated = updated || above != c->keepAbove();
         above = c->keepAbove();
+        }
     if( belowrule == RememberRule )
+        {
+        updated = updated || below != c->keepBelow();
         below = c->keepBelow();
+        }
     if( fullscreenrule == RememberRule )
+        {
+        updated = updated || fullscreen != c->isFullScreen();
         fullscreen = c->isFullScreen();
+        }
     if( noborderrule == RememberRule )
+        {
+        updated = updated || noborder != c->isUserNoBorder();
         noborder = c->isUserNoBorder();
+        }
+    if( updated )
+        Workspace::self()->rulesUpdated();
     }
 
 Placement::Policy WindowRules::checkPlacement( Placement::Policy placement ) const
@@ -572,6 +614,11 @@ void Workspace::cleanupTemporaryRules()
         }
     if( has_temporary )
         QTimer::singleShot( 60000, this, SLOT( cleanupTemporaryRules()));
+    }
+
+void Workspace::rulesUpdated()
+    {
+    rulesUpdatedTimer.start( 1000, true );
     }
 
 } // namespace

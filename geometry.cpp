@@ -1816,6 +1816,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     updateAllowedActions();
     if( decoration != NULL )
         decoration->maximizeChange();
+    updateWindowRules();
     }
 
 void Client::resetMaximize()
@@ -1881,6 +1882,7 @@ void Client::setFullScreen( bool set, bool user )
             setGeometry( workspace()->clientArea( MaximizeArea, this ));
             }
         }
+    updateWindowRules();
     }
 
 

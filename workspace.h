@@ -204,6 +204,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         SessionInfo* takeSessionInfo( Client* );
         WindowRules* findWindowRules( const Client*, bool );
+        void rulesUpdated();
 
     // dcop interface
         void cascadeDesktop();
@@ -333,6 +334,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void delayFocus();
         void gotTemporaryRulesMessage( const QString& );
         void cleanupTemporaryRules();
+        void writeWindowRules();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -429,12 +431,12 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         void loadSessionInfo();
         void loadWindowRules();
-        void writeWindowRules();
         void editWindowRules( Client* );
 
         QPtrList<SessionInfo> session;
         QValueList<WindowRules*> windowRules;
         KXMessages temporaryRulesMessages;
+        QTimer rulesUpdatedTimer;
         static const char* windowTypeToTxt( NET::WindowType type );
         static NET::WindowType txtToWindowType( const char* txt );
         static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
