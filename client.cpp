@@ -20,6 +20,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qtimer.h>
 #include <kwin.h>
 #include <netwm.h>
+#include <kiconloader.h>
 #include "workspace.h"
 #include "client.h"
 #include "events.h"
@@ -2530,6 +2531,8 @@ NoBorderClient::~NoBorderClient()
 QPixmap * kwin_get_menu_pix_hack()
 {
   static QPixmap p;
+  if ( p.isNull() )
+      p = SmallIcon( "bx2" );
   return &p;
 }
 
