@@ -161,13 +161,14 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
 
     connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
 
-    alabel = new QLabel(i18n("Delay (ms)"), fcsBox);
+    alabel = new QLabel(i18n("Delay:"), fcsBox);
     alabel->setAlignment(AlignVCenter|AlignHCenter);
     fLay->addWidget(alabel,3,0,AlignLeft);
 
     autoRaise = new KIntNumInput(500, fcsBox);
     autoRaise->setRange(0, 3000, 100, true);
     autoRaise->setSteps(100,100);
+    autoRaise->setSuffix(i18n(" msec"));
     fLay->addMultiCellWidget(autoRaise,3,3,1,2);
 
     fLay->addColSpacing(0,QMAX(autoRaiseOn->sizeHint().width(),
@@ -440,29 +441,32 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
     //lay->addWidget(plcBox);
 
     shBox = new QButtonGroup(i18n("Shading"), this);
-    QGridLayout *shLay = new QGridLayout(shBox, 3, 3,
+    QGridLayout *shLay = new QGridLayout(shBox, 3, 2,
                                          KDialog::marginHint(),
                                          KDialog::spacingHint());
+    shLay->setColStretch(1, 1);
 
     shLay->addRowSpacing(0,fontMetrics().lineSpacing());
-    animateShade = new QCheckBox(i18n("Animate"), shBox);
+    animateShade = new QCheckBox(i18n("A&nimate"), shBox);
     QWhatsThis::add(animateShade, i18n("Animate the action of reducing the window to its titlebar (shading)"
                                        " as well as the expansion of a shaded window") );
     shLay->addWidget(animateShade, 1, 0);
 
-    shadeHoverOn = new QCheckBox(i18n("Enable hover"), shBox);
+    shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
     shLay->addWidget(shadeHoverOn, 2, 0);
 
     connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
 
-    shlabel = new QLabel(i18n("Delay (ms)"), shBox);
+    shlabel = new QLabel(i18n("Dela&y:"), shBox);
     shlabel->setAlignment(AlignVCenter | AlignHCenter);
     shLay->addWidget(shlabel, 3, 0, AlignLeft);
 
     shadeHover = new KIntNumInput(500, shBox);
     shadeHover->setRange(0, 3000, 100, true);
     shadeHover->setSteps(100, 100);
-    shLay->addMultiCellWidget(shadeHover, 3, 3, 1, 2);
+    shadeHover->setSuffix(i18n(" msec"));
+    shLay->addWidget(shadeHover, 3, 1);
+    shlabel->setBuddy(shadeHover);
 
     QWhatsThis::add(shadeHoverOn, i18n("If Shade Hover is enabled, a shaded window will un-shade automatically "
                                        "when the mouse pointer has been over the title bar for some time."));
@@ -501,13 +505,13 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
     QWhatsThis::add( electricBox, i18n("If this option is enabled, moving the mouse to a screen border"
        " will change your desktop. This is e.g. useful if you want to drag windows from one desktop"
        " to the other.") );
-    active_disable = new QRadioButton(i18n("&Disabled"), electricBox);
+    active_disable = new QRadioButton(i18n("D&isabled"), electricBox);
     active_move    = new QRadioButton(i18n("Only when &moving windows"), electricBox);
-    active_always  = new QRadioButton(i18n("&Always enabled"), electricBox);
+    active_always  = new QRadioButton(i18n("A&lways enabled"), electricBox);
 
     delays = new KIntNumInput(10, electricBox);
     delays->setRange(0, MAX_EDGE_RES, 50, true);
-    delays->setSuffix(i18n("ms."));
+    delays->setSuffix(i18n(" msec"));
     delays->setLabel(i18n("Desktop &switch delay:"));
     QWhatsThis::add( delays, i18n("Here you can set a delay for switching desktops using the active"
        " borders feature. Desktops will be switched after the mouse has been pushed against a screen border"
