@@ -146,14 +146,16 @@ void KWinToolTip::hideTip()
 void KWinToolTip::positionTip()
 {
 	QPoint p = btn->mapToGlobal(btn->rect().bottomLeft()) + QPoint(0, 16);
+    int screen = QApplication::desktop()->screenNumber(btn->mapToGlobal(btn->rect().center()));
+	QRect screenGeom = QApplication::desktop()->screenGeometry(screen);
 
 	// Ensure the tooltip is displayed within the current desktop
-	if ( p.x() + width() > Workspace::self()->desktopWidget()->width() )
-		p.setX( Workspace::self()->desktopWidget()->width() - width());
-	if ( p.y() + height() > Workspace::self()->desktopWidget()->height() )
-		p.setY( Workspace::self()->desktopWidget()->height() - height() );
-	if (p.x() < 0) p.setX(0);
-	if (p.y() < 0) p.setY(0); 
+	if ( screenGeom.right() < p.x() + width() )
+		p.setX( screenGeom.right() - width());
+	if ( screenGeom.bottom() < p.y() + height() )
+		p.setY( screenGeom.bottom() - height() );
+	if (p.x() < screenGeom.x()) p.setX(screenGeom.x());
+	if (p.y() < screenGeom.y()) p.setY(screenGeom.y()); 
 	move(p); 
 
 	// Ensure we don't get enter/leave event race conditions when a
