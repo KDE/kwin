@@ -56,8 +56,8 @@ enum Layer
     DesktopLayer = FirstLayer,
     BelowLayer,
     NormalLayer,
-    DockLayer,
     AboveLayer,
+    DockLayer,
     ActiveLayer, // active fullscreen, or active dialog
     NumLayers // number of layers, must be last
     };
