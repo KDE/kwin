@@ -53,8 +53,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 const int XIconicState = IconicState;
 #undef IconicState
-const int XAbove = Above;
-#undef Above
 
 #include <kwin.h>
 #include <kdebug.h>
@@ -457,12 +455,12 @@ void Workspace::init()
         NET::MaxHoriz |
         NET::Shaded |
         NET::SkipTaskbar |
-        NET::Above |
-//        NET::StaysOnTop |  the same like Above
+        NET::KeepAbove |
+//        NET::StaysOnTop |  the same like KeepAbove
         NET::SkipPager |
 //        NET::Hidden |  TODO
 //        NET::FullScreen | TODO
-//        NET::Below | TODO
+//        NET::KeepBelow | TODO
         0
         };
         
@@ -728,7 +726,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             wc.width = e->xconfigurerequest.width;
             wc.height = e->xconfigurerequest.height;
             wc.sibling = None;
-            wc.stack_mode = XAbove;
+            wc.stack_mode = Above;
             value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
             XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, & wc );
 
@@ -877,6 +875,7 @@ bool Workspace::destroyClient( Client* c)
 
 #include <stdarg.h>
 
+static
 bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
 {
         va_list args;
@@ -917,6 +916,7 @@ bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
         return bAll;
 }
 
+static
 bool areModKeysDepressed( const KShortcut& cut )
 {
 
