@@ -1,0 +1,99 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>KeramikConfigUI</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>KeramikConfigUI</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>470</width>
+            <height>333</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Keramik</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>decorationBox</cstring>
+            </property>
+            <property name="title">
+                <string>Decoration Settings</string>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout4</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>showAppIcons</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Display the window &amp;icon in the caption bubble</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Check this option if you want the window icon to be displayed in the caption bubble next to the titlebar text.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>smallCaptions</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Draw &amp;small caption bubbles on active windows</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Check this option if you want the caption bubble to have the same size on active windows that it has on inactive ones. This option is useful for laptops or low resolution displays where you want maximize the amount of space available to the window contents.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>useShadowedText</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Use shadowed &amp;text</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
