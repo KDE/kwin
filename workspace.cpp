@@ -582,7 +582,6 @@ bool Workspace::workspaceEvent( XEvent * e )
     case ButtonPress:
         if ( tab_grab || control_grab ) {
             XUngrabKeyboard(qt_xdisplay(), qt_x_time);
-            XUngrabPointer( qt_xdisplay(), qt_x_time);
             tab_box->hide();
             keys->setEnabled( true );
             tab_grab = control_grab = false;
@@ -1047,19 +1046,10 @@ void Workspace::slotWalkBackThroughDesktopList()
 
 bool Workspace::startKDEWalkThroughWindows()
 {
-    if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-                       (uint)(ButtonPressMask | ButtonReleaseMask |
-                              ButtonMotionMask | EnterWindowMask |
-                              LeaveWindowMask | PointerMotionMask),
-                       GrabModeAsync, GrabModeAsync,
-                       None, None, qt_x_time ) != GrabSuccess ) {
-        return FALSE;
-    }
     if ( XGrabKeyboard(qt_xdisplay(),
                        root, FALSE,
                        GrabModeAsync, GrabModeAsync,
                        qt_x_time) != GrabSuccess ) {
-        XUngrabPointer( qt_xdisplay(), qt_x_time);
         return FALSE;
     }
     tab_grab        = TRUE;
@@ -1071,19 +1061,10 @@ bool Workspace::startKDEWalkThroughWindows()
 
 bool Workspace::startWalkThroughDesktops( int mode )
 {
-    if ( XGrabPointer( qt_xdisplay(), root, TRUE,
-                       (uint)(ButtonPressMask | ButtonReleaseMask |
-                              ButtonMotionMask | EnterWindowMask |
-                              LeaveWindowMask | PointerMotionMask),
-                       GrabModeAsync, GrabModeAsync,
-                       None, None, qt_x_time ) != GrabSuccess ) {
-        return FALSE;
-    }
     if ( XGrabKeyboard(qt_xdisplay(),
                        root, FALSE,
                        GrabModeAsync, GrabModeAsync,
                        qt_x_time) != GrabSuccess ) {
-        XUngrabPointer( qt_xdisplay(), qt_x_time);
         return FALSE;
     }
     control_grab = TRUE;
@@ -1210,7 +1191,6 @@ bool Workspace::keyPress(XKeyEvent& ev)
     if (control_grab || tab_grab){
         if ((keyQt & 0xffff) == Qt::Key_Escape){
             XUngrabKeyboard(qt_xdisplay(), qt_x_time);
-            XUngrabPointer( qt_xdisplay(), qt_x_time);
             tab_box->hide();
             keys->setEnabled( true );
             tab_grab = FALSE;
@@ -1263,7 +1243,6 @@ bool Workspace::keyRelease(XKeyEvent& ev)
     if( !release )
          return FALSE;
     if (tab_grab){
-                XUngrabPointer( qt_xdisplay(), qt_x_time);
                 XUngrabKeyboard(qt_xdisplay(), qt_x_time);
                 tab_box->hide();
                 keys->setEnabled( true );
@@ -1273,7 +1252,6 @@ bool Workspace::keyRelease(XKeyEvent& ev)
                 }
     }
     if (control_grab){
-                XUngrabPointer( qt_xdisplay(), qt_x_time);
                 XUngrabKeyboard(qt_xdisplay(), qt_x_time);
                 tab_box->hide();
                 keys->setEnabled( true );
