@@ -70,7 +70,7 @@
                 <string></string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>Check this option if you the window border should be painted in the titlebar color. Otherwise it will be painted in the background color.</string>
+                <string>Check this option if the window border should be painted in the titlebar color. Otherwise it will be painted in the background color.</string>
             </property>
         </widget>
         <widget class="QCheckBox">
