@@ -212,7 +212,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     rollOverDesktops = new QCheckBox( i18n("Desktop navi&gation wraps around"), kbdBox );
     kLay->addMultiCellWidget(rollOverDesktops, 3, 3, 0, 2);
 
-    wtstr = i18n( "Enable this option if you want keyboard or electric border navigation beyond"
+    wtstr = i18n( "Enable this option if you want keyboard or active desktop border navigation beyond"
                   " an edge desktop to bring you to the desktop at the opposite edge." );
     QWhatsThis::add( rollOverDesktops, wtstr );
 
