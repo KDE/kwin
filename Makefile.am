@@ -1,6 +1,6 @@
 INCLUDES = -I$(srcdir)/lib $(all_includes)
 
-SUBDIRS = lib . killer kcmkwin pics clients oldheaders
+SUBDIRS = lib . killer kcmkwin pics clients oldheaders data
 
 bin_PROGRAMS = 
 lib_LTLIBRARIES =
@@ -30,13 +30,5 @@ kwin_datadir = $(kde_datadir)/kwin
 kwin_data_DATA= eventsrc
 
 kde_kcfg_DATA = kwin.kcfg
-
-sounddir= $(kde_sounddir)
-sound_DATA = pop.wav
-
-update_DATA = kwin.upd kwinsticky.upd kwiniconify.upd kwin3_plugin.upd kwin_focus1.upd
-update_SCRIPTS = pluginlibFix.pl kwin3_plugin.pl kwin_focus1.sh
-
-updatedir = $(kde_datadir)/kconf_update
 
 include ../admin/Doxyfile.am
