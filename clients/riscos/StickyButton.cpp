@@ -42,7 +42,7 @@ static const char * const unsticky_xpm[] = {
 ".....+..... ",
 "    .+.     ",
 "    .+.     ",
-"     +      "};
+"     .      "};
 
 /* XPM */
 static const char * const sticky_xpm[] = {
