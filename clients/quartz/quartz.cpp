@@ -9,49 +9,23 @@
   KDE default client.
 
   Includes mini titlebars for ToolWindow Support.
+  Button positions are now customizable.
 */
 
-#include "quartz.h"
+#include <kconfig.h>
+#include <kglobal.h>
+#include <kpixmapeffect.h>
+#include <kdrawutil.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qdrawutil.h>
-#include <qdatetime.h>
-#include <kpixmapeffect.h>
-#include <kdrawutil.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
+#include "quartz.h"
 
 using namespace KWinInternal;
 
-
-static const char *kdelogo[] = {
-/* columns rows colors chars-per-pixel */
-"16 16 8 1",
-" 	c None",
-".	c #000000",
-"+	c #A0A0A4",
-"@	c #FFFFFF",
-"#	c #585858",
-"$	c #C0C0C0",
-"%	c #808080",
-"&	c #DCDCDC",
-"                ",
-"     ..    ..   ",
-"    .+@.  .@#.  ",
-"   .@@@. .@@@#  ",
-"   .@@@..$@@$.  ",
-"   .@@@.@@@$.   ",
-"   .@@@%@@$.    ",
-"   .@@@&@@.     ",
-"   .@@@@@@.     ",
-"   .@@@$@@&.    ",
-"   .@@@.@@@.    ",
-"   .@@@.+@@@.   ",
-"   .@@@..$@@&.  ",
-"   .@@%. .@@@.  ",
-"   ....   ...   ",
-"                "};
 
 static unsigned char iconify_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7e, 0x00,
@@ -73,135 +47,247 @@ static unsigned char question_bits[] = {
   0x00, 0x00, 0x3c, 0x00, 0x66, 0x00, 0x60, 0x00, 0x30, 0x00, 0x18, 0x00,
   0x00, 0x00, 0x18, 0x00, 0x18, 0x00, 0x00, 0x00};
 
+static unsigned char pindown_white_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0x80, 0x1f, 0xa0, 0x03,
+  0xb0, 0x01, 0x30, 0x01, 0xf0, 0x00, 0x70, 0x00, 0x20, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-// Up / Down titlebar button images
-// =================================
-// We don't make them dynamic, as we want this memory freed upon unloading
-// this library from kwin. We get no notice upon being unloaded, so there's
-// no way to free dynamic images. If they're not dynamic, the freeing of
-// memory is made when the library in unloaded.
+static unsigned char pindown_gray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1c,
+  0x00, 0x0e, 0x00, 0x06, 0x00, 0x00, 0x80, 0x07, 0xc0, 0x03, 0xe0, 0x01,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-static KPixmap *btnPix1; 
-static KPixmap *iBtnPix1;
-static KPixmap *btnDownPix1;
-static KPixmap *iBtnDownPix1;
-static KPixmap *titleBlocks;
-static KPixmap *ititleBlocks;
-static QPixmap *defaultMenuPix;
-static bool    pixmaps_created = false;
+static unsigned char pindown_dgray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0xc0, 0x10, 0x70, 0x20, 0x50, 0x20,
+  0x48, 0x30, 0xc8, 0x38, 0x08, 0x1f, 0x08, 0x18, 0x10, 0x1c, 0x10, 0x0e,
+  0xe0, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pinup_white_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x11,
+  0x3f, 0x15, 0x00, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pinup_gray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x80, 0x0a, 0xbf, 0x0a, 0x80, 0x15, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pinup_dgray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x20, 0x40, 0x31, 0x40, 0x2e,
+  0x40, 0x20, 0x40, 0x20, 0x7f, 0x2a, 0x40, 0x3f, 0xc0, 0x31, 0xc0, 0x20,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 
-// This does the colour transition magic. (You say "Oh, is that it?")
-// In future, we may make this customisable, so we can have gears, blocks or
-// any other eye candy via an alphapainter to perserve custom colour settings. 
-static void drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const QColor &c2 )
+///////////////////////////////////////////////////////////////////////////
+
+// Titlebar button positions
+QString quartzButtonsLeft;
+QString quartzButtonsRight;
+bool stickyButtonOnLeft = true;
+
+KPixmap* titleBlocks 	= NULL;
+KPixmap* ititleBlocks 	= NULL;
+KPixmap* pinDownPix		= NULL;
+KPixmap* pinUpPix		= NULL;
+KPixmap* ipinDownPix	= NULL;
+KPixmap* ipinUpPix		= NULL;
+
+QuartzHandler* clientHandler;
+
+///////////////////////////////////////////////////////////////////////////
+
+
+QuartzHandler::QuartzHandler()
 {
-   QPainter px;
-
-   px.begin( pi );
-
-   // Draw a background gradient first
-   KPixmapEffect::gradient(p, c1, c2, KPixmapEffect::HorizontalGradient);
-
-   px.fillRect( 2, 1, 3, 3, c1.light(120) );
-   px.fillRect( 2, 5, 3, 3, c1 );
-   px.fillRect( 2, 9, 3, 3, c1.light(110) );
-   px.fillRect( 2, 13, 3, 3, c1 );
-
-   px.fillRect( 6, 1, 3, 3, c1.light(110) );
-   px.fillRect( 6, 5, 3, 3, c2.light(110) );
-   px.fillRect( 6, 9, 3, 3, c1.light(120) );
-   px.fillRect( 6, 13, 3, 3, c2.light(130) );
-
-   px.fillRect( 10, 5, 3, 3, c1.light(110) );
-   px.fillRect( 10, 9, 3, 3, c2.light(120) );
-   px.fillRect( 10, 13, 3, 3, c2.light(150) );
-
-   px.fillRect( 14, 1, 3, 3, c1.dark(110) );
-   px.fillRect( 14, 9, 3, 3, c2.light(120) );
-   px.fillRect( 14, 13, 3, 3, c1.dark(120) );
-
-   px.fillRect( 18, 5, 3, 3, c1.light(110) );
-   px.fillRect( 18, 13, 3, 3, c1.dark(110) );
-
-   px.fillRect( 22, 9, 3, 3, c2.light(120));
-   px.fillRect( 22, 13, 3, 3, c2.light(110) );
+	readConfig();
+	createPixmaps();
+	connect( options, SIGNAL(resetClients()), this, SLOT(slotReset()) );
 }
 
 
+QuartzHandler::~QuartzHandler()
+{
+	freePixmaps();
+}
+
+
+void QuartzHandler::slotReset()
+{
+	freePixmaps();
+	readConfig();
+	createPixmaps();
+
+	// Make kwin create new clients for each window
+	Workspace::self()->slotResetAllClientsDelayed();
+}
+
+
+void QuartzHandler::readConfig()
+{
+	KConfig* conf = KGlobal::config();
+	conf->setGroup("Style");
+	
+	// Do we want to use custom button positions?
+	if( conf->readBoolEntry("CustomButtonPositions", false) )
+	{
+		// Read the positions from the config file...
+		quartzButtonsLeft  = conf->readEntry("ButtonsOnLeft", "MS");
+		quartzButtonsRight = conf->readEntry("ButtonsOnRight", "HIAX");
+	} else
+		{
+			// Use defaults
+			quartzButtonsLeft = "MS";
+			quartzButtonsRight = "HIAX";
+		}
+
+	// A small hack to make the sticky button look nicer
+	stickyButtonOnLeft = (bool)quartzButtonsLeft.contains( 'S' );
+}
+
+
+// This does the colour transition magic. (You say "Oh, is that it?")
+// This may be made configurable at a later stage
+void QuartzHandler::drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const QColor &c2 )
+{
+	QPainter px;
+
+	px.begin( pi );
+
+	// Draw a background gradient first
+	KPixmapEffect::gradient(p, c1, c2, KPixmapEffect::HorizontalGradient);
+
+	px.fillRect( 2, 1, 3, 3, c1.light(120) );
+	px.fillRect( 2, 5, 3, 3, c1 );
+	px.fillRect( 2, 9, 3, 3, c1.light(110) );
+	px.fillRect( 2, 13, 3, 3, c1 );
+
+	px.fillRect( 6, 1, 3, 3, c1.light(110) );
+	px.fillRect( 6, 5, 3, 3, c2.light(110) );
+	px.fillRect( 6, 9, 3, 3, c1.light(120) );
+	px.fillRect( 6, 13, 3, 3, c2.light(130) );
+
+	px.fillRect( 10, 5, 3, 3, c1.light(110) );
+	px.fillRect( 10, 9, 3, 3, c2.light(120) );
+	px.fillRect( 10, 13, 3, 3, c2.light(150) );
+
+	px.fillRect( 14, 1, 3, 3, c1.dark(110) );
+	px.fillRect( 14, 9, 3, 3, c2.light(120) );
+	px.fillRect( 14, 13, 3, 3, c1.dark(120) );
+
+	px.fillRect( 18, 5, 3, 3, c1.light(110) );
+	px.fillRect( 18, 13, 3, 3, c1.dark(110) );
+
+	px.fillRect( 22, 9, 3, 3, c2.light(120));
+	px.fillRect( 22, 13, 3, 3, c2.light(110) );
+}
+
 
 // This paints the button pixmaps upon loading the style.
-static void create_pixmaps()
+void QuartzHandler::createPixmaps()
 {
-    if(pixmaps_created)
-        return;
-
-    pixmaps_created = true;
-
-    btnPix1 = new KPixmap;
-    iBtnPix1 = new KPixmap;
-    btnDownPix1 = new KPixmap;
-    iBtnDownPix1 = new KPixmap;
-    titleBlocks = new KPixmap;
-    ititleBlocks = new KPixmap;
-    defaultMenuPix = new QPixmap( kdelogo );
-
-    // It does not matter that we don't resize thesei for mini-buttons
-    btnPix1->resize(16, 16);
-    btnDownPix1->resize(16, 16);
-    iBtnPix1->resize(16, 16);
-    iBtnDownPix1->resize(16, 16);
-
-    // Fill the buttons with colour
-    QColorGroup g = options->colorGroup(Options::TitleBlend, true );
-    QColor c = g.background();
-    btnPix1->fill(c.rgb());
-    btnDownPix1->fill(c.rgb());
-
-    g = options->colorGroup(Options::TitleBlend, false);
-    c = g.background();
-    iBtnPix1->fill(c.rgb());
-    iBtnDownPix1->fill(c.rgb());
-
     // Obtain titlebar blend colours, and create the block stuff on pixmaps.
     QColorGroup g2 = options->colorGroup(Options::TitleBlend, true);
     QColor c2 = g2.background();
-    g = options->colorGroup(Options::TitleBar, true );
-    c = g.background().light(130);
+    g2 = options->colorGroup(Options::TitleBar, true );
+    QColor c = g2.background().light(130);
+
+	titleBlocks = new KPixmap();
     titleBlocks->resize( 25, 18 );
     drawBlocks( titleBlocks, *titleBlocks, c, c2 );
 
     g2 = options->colorGroup(Options::TitleBlend, false);
     c2 = g2.background();
-    g = options->colorGroup(Options::TitleBar, false );
-    c = g.background().light(130);
+    g2 = options->colorGroup(Options::TitleBar, false );
+    c = g2.background().light(130);
+
+	ititleBlocks = new KPixmap();
     ititleBlocks->resize( 25, 18 );
     drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
+
+	// Set the sticky pin pixmaps;
+	QPainter p;
+	
+	g2 = options->colorGroup( stickyButtonOnLeft ? Options::TitleBar : Options::TitleBlend, true );
+	if ( stickyButtonOnLeft )
+		c = g2.background().light(130);
+	else
+		c = g2.background();
+	pinUpPix = new KPixmap();
+	pinUpPix->resize(16, 16);
+	p.begin( pinUpPix );
+	p.fillRect( 0, 0, 16, 16, c);
+	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pinup_white_bits, pinup_gray_bits, NULL,
+					pinup_dgray_bits, NULL, NULL );
+	p.end();
+
+	pinDownPix = new KPixmap();
+	pinDownPix->resize(16, 16);
+	p.begin( pinDownPix );
+	p.fillRect( 0, 0, 16, 16, c);
+	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pindown_white_bits, pindown_gray_bits, NULL,
+					pindown_dgray_bits, NULL, NULL );
+	p.end();
+
+
+	// Inactive pins
+	g2 = options->colorGroup( stickyButtonOnLeft ? Options::TitleBar : Options::TitleBlend, false );
+	if ( stickyButtonOnLeft )
+		c = g2.background().light(130);
+	else
+		c = g2.background();
+	ipinUpPix = new KPixmap();
+	ipinUpPix->resize(16, 16);
+	p.begin( ipinUpPix );
+	p.fillRect( 0, 0, 16, 16, c);
+	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pinup_white_bits, pinup_gray_bits, NULL,
+					pinup_dgray_bits, NULL, NULL );
+	p.end();
+
+	ipinDownPix = new KPixmap();
+	ipinDownPix->resize(16, 16);
+	p.begin( ipinDownPix );
+	p.fillRect( 0, 0, 16, 16, c);
+	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pindown_white_bits, pindown_gray_bits, NULL,
+					pindown_dgray_bits, NULL, NULL );
+	p.end();
 }
 
-static void delete_pixmaps()
+
+void QuartzHandler::freePixmaps()
 {
-    btnPix1 = new KPixmap;
-    iBtnPix1 = new KPixmap;
-    btnDownPix1 = new KPixmap;
-    iBtnDownPix1 = new KPixmap;
-    titleBlocks = new KPixmap;
-    ititleBlocks = new KPixmap;
-    defaultMenuPix = new QPixmap( kdelogo );
-    pixmaps_created = false;
+	// Title images
+	if (titleBlocks)
+		delete titleBlocks;
+	if (ititleBlocks)
+		delete ititleBlocks;
+
+	// Sticky pin images
+	if (pinUpPix)
+		delete pinUpPix;
+	if (ipinUpPix)
+		delete ipinUpPix;
+	if (pinDownPix)
+		delete pinDownPix;
+	if (ipinDownPix)
+		delete ipinDownPix;
 }
+
 
 QuartzButton::QuartzButton(Client *parent, const char *name, bool largeButton,
-                           const unsigned char *bitmap)
+                           bool isLeftButton, bool isStickyButton, const unsigned char *bitmap )
     : QButton(parent, name, WStyle_Customize | WRepaintNoErase |
                             WResizeNoErase | WStyle_NoBorder )
 {
     // Eliminate any possible background flicker
     setBackgroundMode( QWidget::NoBackground ); 
+	setToggleButton( isStickyButton );
 
     client = parent;
+	deco = NULL;
 
     large = largeButton;
+	isLeft = isLeftButton;
+	isSticky = isStickyButton;
 
     if ( large )
        setFixedSize(16, 16);
@@ -210,6 +296,13 @@ QuartzButton::QuartzButton(Client *parent, const char *name, bool largeButton,
 
     if(bitmap)
         setBitmap(bitmap);
+}
+
+
+QuartzButton::~QuartzButton()
+{
+	if (deco)
+		delete deco;
 }
 
 
@@ -222,104 +315,127 @@ QSize QuartzButton::sizeHint() const
 }
 
 
-void QuartzButton::reset()
-{
-    repaint(false);
-}
-
-
 void QuartzButton::setBitmap(const unsigned char *bitmap)
 {
-    pix.resize(0, 0);
-    deco = QBitmap(10, 10, bitmap, true);
-    deco.setMask(deco);
-    repaint( false );   
-}
+	if (deco)
+		delete deco;
 
-
-void QuartzButton::setPixmap( const QPixmap &p )
-{
-    deco.resize(0, 0);
-    pix = p;
-
-    if ( large ) 
-       setMask( QRect(0, 0, 16, 16) );
-    else
-       setMask( QRect(0, 0, 10, 10) );
-
+    deco = new QBitmap(10, 10, bitmap, true);
+    deco->setMask( *deco );
     repaint( false );   
 }
 
 
 void QuartzButton::drawButton(QPainter *p)
 {
-    // Draw a button bg for bitmaps only
-    if(pix.isNull())
-    {
-       if(client->isActive())
-       {
-          if(isDown())
-             p->drawPixmap(0, 0, *btnDownPix1);
-          else
-             p->drawPixmap(0, 0, *btnPix1);
-       } else
-           {
-              if(isDown())
-                 p->drawPixmap(0, 0, *iBtnDownPix1);
-              else
-                  p->drawPixmap(0, 0, *iBtnPix1);
-           }
+	QColor c;
 
-        int xOff = (width()-10)/2;
-        int yOff = (height()-10)/2;
-        p->setPen( Qt::black );
-        p->drawPixmap(isDown() ? xOff+2: xOff+1, isDown() ? yOff+2 : yOff+1, deco);
-        p->setPen( options->color(Options::ButtonBg, client->isActive()).light(150) );
-        p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
+	if (isLeft)
+		c = options->color(Options::TitleBar, client->isActive()).light(130);
+	else
+		c = options->color(Options::TitleBlend, client->isActive());
 
-    }
-    else
-    {
-        // This is the menu button, which has a pixmap.
-        p->fillRect(0, 0, width(), height(),
-            options->color(Options::TitleBar, client->isActive()).light(130) );
-         
-        // Shrink the miniIcon for tiny titlebars.
-        if ( !large )
-        {
-           QPixmap tmpPix;
+	// Fill the button background with an appropriate color
+	p->fillRect(0, 0, width(), height(), c );
 
-           // Smooth scale the image
-           tmpPix.convertFromImage( pix.convertToImage().smoothScale(10, 10));
-       
-           p->drawPixmap( 0, 0, tmpPix );
-        }
-        else
-           p->drawPixmap( 0, 0, pix );
-          
-    }
+	// If we have a decoration bitmap, then draw that
+	// otherwise we paint a menu button (with mini icon), or a sticky button.
+	if( deco )
+	{
+		int xOff = (width()-10)/2;
+		int yOff = (height()-10)/2;
+		p->setPen( Qt::black );
+		p->drawPixmap(isDown() ? xOff+2: xOff+1, isDown() ? yOff+2 : yOff+1, *deco);
+		p->setPen( options->color(Options::ButtonBg, client->isActive()).light(150) );
+		p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, *deco);
+	} else 
+		{
+			QPixmap btnpix;
+			int Offset = 0;
+
+			if (isSticky)
+			{
+				if (isDown())
+					Offset = 1;
+
+				// Select the right sticky button to paint
+				if (client->isActive())
+				{
+					if (isOn())
+						btnpix = *pinDownPix;
+					else
+						btnpix = *pinUpPix;
+				} else {
+					if (isOn())
+						btnpix = *ipinDownPix;
+					else
+						btnpix = *ipinUpPix;
+				}
+			} else
+				btnpix = client->miniIcon();
+
+			// Shrink the miniIcon for tiny titlebars.
+			if ( !large )
+			{
+				QPixmap tmpPix;
+
+				// Smooth scale the image
+				tmpPix.convertFromImage( btnpix.convertToImage().smoothScale(10, 10));
+				p->drawPixmap( 0, 0, tmpPix );
+			} else
+				p->drawPixmap( Offset, Offset, btnpix );       
+	}
 }
 
+
+// Make the protected member public
+void QuartzButton::turnOn( bool isOn )
+{
+	if ( isToggleButton() )
+		setOn( isOn );
+}
+
+
+void QuartzButton::mousePressEvent( QMouseEvent* e )
+{
+	last_button = e->button();
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
+					LeftButton, e->state() );
+	QButton::mousePressEvent( &me );
+}
+
+
+void QuartzButton::mouseReleaseEvent( QMouseEvent* e )
+{
+	last_button = e->button();
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
+					LeftButton, e->state() );
+	QButton::mouseReleaseEvent( &me );
+}
+
+
+///////////////////////////////////////////////////////////////////////////
 
 QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity | WRepaintNoErase )
 {
+	// No flicker thanks
     setBackgroundMode( QWidget::NoBackground );
 
-    // Finally, toolWindows look small
-    if ( isTool() )
-    {
-       titleHeight  = 12; 
-       largeButtons = false;
-    }
-    else
-       {
-          titleHeight = 18;    
-          largeButtons = true;
-       }
+	// Set button pointers to NULL so we can track things
+	for(int i=0; i < QuartzClient::BtnCount; i++)
+		button[i] = NULL;
 
-    lastButtonWidth = 0;
+    // Finally, toolWindows look small
+    if ( isTool() ) {
+		titleHeight  = 12; 
+		largeButtons = false;
+	} 
+	else {
+		titleHeight = 18;    
+		largeButtons = true;
+    }
 
     // Pack the windowWrapper() window within a grid
     QGridLayout* g = new QGridLayout(this, 0, 0, 0);
@@ -332,79 +448,100 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
-    // Create the required buttons
-    button[BtnMenu]    = new QuartzButton(this, "menu", largeButtons, NULL);
-    button[BtnClose]   = new QuartzButton(this, "close", largeButtons, close_bits);
-    button[BtnIconify] = new QuartzButton(this, "iconify", largeButtons, iconify_bits);
-    button[BtnMax]     = new QuartzButton(this, "maximize", largeButtons, maximize_bits);
-
-    // Connect required stuff together
-    connect( button[BtnMenu],    SIGNAL( pressed() ),    this, SLOT( menuButtonPressed() ));
-    connect( button[BtnClose],   SIGNAL( clicked() ),    this, SLOT( closeWindow() ));
-    connect( button[BtnIconify], SIGNAL( clicked() ),    this, SLOT( iconify() ));
-    connect( button[BtnMax],     SIGNAL( clicked() ),    this, SLOT( slotMaximize() ));
-    connect( options,            SIGNAL(resetClients()), this, SLOT( slotReset() ));
-
     // Pack the titlebar HBox with items
     hb = new QHBoxLayout();
     hb->setResizeMode( QLayout::FreeResize );
     g->addLayout ( hb, 1, 1 );
-    hb->addWidget( button[BtnMenu] );  
-    titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding,
-                                QSizePolicy::Minimum );
+
+	addClientButtons( quartzButtonsLeft );
+
+    titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding, QSizePolicy::Minimum );
     hb->addItem(titlebar);
     hb->addSpacing(2);
 
-    // Add a help button if required
-    if( providesContextHelp() )
-    {
-        button[BtnHelp] = new QuartzButton(this, "help", largeButtons, question_bits);
-        connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
-        hb->addWidget( button[BtnHelp] );
-    } else
-        button[BtnHelp] = NULL;
+	addClientButtons( quartzButtonsRight, false );
 
-    hb->addWidget( button[BtnIconify] );
-    hb->addWidget( button[BtnMax] );
-    hb->addWidget( button[BtnClose] );
     hb->addSpacing(2);
-
-    // Hide buttons which are not required
-    // We can un-hide them if required later
-    if ( !isMinimizable() )
-	   button[BtnIconify]->hide();
-    if ( !isMaximizable() )
-	   button[BtnMax]->hide();
-
-    hiddenItems = false;
-
-    // Make sure that the menu button uses the correct mini-icon
-    iconChange();
 }
 
 
-void QuartzClient::slotReset()
+void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 {
-    // ( 4 buttons - Help, Max, Iconify, Close )
-    for(int i = QuartzClient::BtnHelp; i <= QuartzClient::BtnClose; i++)
-        if(button[i])
-            button[i]->reset();
+	if (s.length() > 0)
+		for(unsigned int i = 0; i < s.length(); i++)
+		{
+			switch( s[i].latin1() )
+			{
+				// Menu button
+				case 'M':
+					if (!button[BtnMenu])
+					{
+    					button[BtnMenu] = new QuartzButton(this, "menu", largeButtons, isLeft, false, NULL);
+    					connect( button[BtnMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()) );
+						hb->addWidget( button[BtnMenu] );
+					}
+					break;
 
-    // iconChange() resets the menu button so we don't have to do this here.
+				// Sticky button
+				case 'S':
+					if (!button[BtnSticky])
+					{
+    					button[BtnSticky] = new QuartzButton(this, "menu", largeButtons, isLeft, true, NULL);
+						button[BtnSticky]->turnOn( isSticky() );
+    					connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT(toggleSticky()) );
+    					hb->addSpacing(1);
+						hb->addWidget( button[BtnSticky] );
+    					hb->addSpacing(1);
+					}
+					break;
 
-    repaint( false );  
+				// Help button
+				case 'H':
+    				if( providesContextHelp() && (!button[BtnHelp]) )
+					{
+						button[BtnHelp] = new QuartzButton(this, "help", largeButtons, isLeft, true, question_bits);
+						connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
+						hb->addWidget( button[BtnHelp] );
+					}
+					break;
+
+				// Minimize button
+				case 'I':
+					if ( (!button[BtnIconify]) && isMinimizable())
+					{
+					    button[BtnIconify] = new QuartzButton(this, "iconify", largeButtons, isLeft, true, iconify_bits);
+					    connect( button[BtnIconify], SIGNAL( clicked()), this, SLOT(iconify()) );
+						hb->addWidget( button[BtnIconify] );
+					}
+					break;
+
+				// Maximize button
+				case 'A':
+					if ( (!button[BtnMax]) && isMaximizable())
+					{
+					    button[BtnMax]  = new QuartzButton(this, "maximize", largeButtons, isLeft, true, maximize_bits);
+					    connect( button[BtnMax], SIGNAL( clicked()), this, SLOT(slotMaximize()) );
+						hb->addWidget( button[BtnMax] );
+					}
+					break;
+
+				// Close button
+				case 'X':
+					if (!button[BtnClose])
+					{
+		    			button[BtnClose] = new QuartzButton(this, "close", largeButtons, isLeft, true, close_bits);
+					    connect( button[BtnClose], SIGNAL( clicked()), this, SLOT(closeWindow()) );
+						hb->addWidget( button[BtnClose] );
+					}
+			}
+		}
 }
 
 
 void QuartzClient::iconChange()
 {
-    if(!miniIcon().isNull())
-       button[BtnMenu]->setPixmap(miniIcon());
-    else
-       button[BtnMenu]->setPixmap(*defaultMenuPix);
-
-    if (button[BtnMenu]->isVisible())
-       button[BtnMenu]->repaint(false);
+	if (button[BtnMenu] && button[BtnMenu]->isVisible())
+		button[BtnMenu]->repaint(false);
 }
 
 
@@ -502,7 +639,6 @@ void QuartzClient::paintEvent( QPaintEvent* )
     // Draw the title bar.
     // ===================
     r = titlebar->geometry();
-    QFontMetrics fm(options->font(true));
 
     // Obtain titlebar blend colours
     QColor c1 = options->color(Options::TitleBar, isActive() ).light(130);
@@ -514,14 +650,16 @@ void QuartzClient::paintEvent( QPaintEvent* )
 
     QPainter p2( titleBuffer, this );
 
-    p2.fillRect( 0, 0, r.width(), r.height(), c1 );
-    p2.fillRect( r.width(), 0, w-r.width()-6, r.height(), c2 );
+	int rightoffset = r.x()+r.width()-25-4;	// subtract titleBlocks pixmap width and some
+
+    p2.fillRect( 0, 0, w, r.height(), c1 );
+    p2.fillRect( rightoffset, 0, w-rightoffset-6, r.height(), c2 );
 
     // 8 bit displays will be a bit dithered, but they still look ok.
     if ( isActive() )
-        p2.drawPixmap( r.width()-10, 0, *titleBlocks );
-    else
-        p2.drawPixmap( r.width()-10, 0, *ititleBlocks );
+		p2.drawPixmap( rightoffset, 0, *titleBlocks );
+	else
+		p2.drawPixmap( rightoffset, 0, *ititleBlocks );
 
     // Draw the title text on the pixmap, and with a smaller font
     // for toolwindows than the default.
@@ -562,76 +700,57 @@ void QuartzClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void QuartzClient::maximizeChange(bool m)
 {
-    button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
+	if (button[BtnMax])
+	    button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
 }
 
 
 void QuartzClient::activeChange(bool)
 {
-
-    if(!miniIcon().isNull())
-        button[BtnMenu]->setPixmap(miniIcon()); 
-    else
-        button[BtnMenu]->setPixmap(kdelogo);
-
-    for(int i=QuartzClient::BtnHelp; i < QuartzClient::BtnMenu; i++)
-    {
+    for(int i=QuartzClient::BtnHelp; i < QuartzClient::BtnCount; i++)
         if(button[i])
-            button[i]->reset();
-    }
+            button[i]->repaint(false);
 
     repaint(false);
 }
 
 
-
 // The hiding button while shrinking, show button while expanding magic
 void QuartzClient::calcHiddenButtons()
 {
-    // order of hiding is help, maximize, minimize, close, then menu;
-    int minWidth = 32 + 16*4 + (providesContextHelp() ? 16*2 : 16 );
+	//Hide buttons in this order - Sticky, Help, Maximize, Menu, Minimize, Close.
+	QuartzButton* btnArray[] = { button[BtnSticky], button[BtnHelp], button[BtnMax], 
+								 button[BtnMenu], button[BtnIconify], button[BtnClose] };
 
-    if(lastButtonWidth > width())   // Shrinking
-    { 
-        lastButtonWidth = width();
-        if(width() < minWidth)
-        {
-            hiddenItems = true;
+	int minwidth  = largeButtons ? 180 : 140;	// Start hiding buttons at this width
+	int btn_width = largeButtons ? 16 : 10;
+	int current_width = width();
+	int count = 0;
+	int i;
 
-            for(int i = QuartzClient::BtnHelp; i <= QuartzClient::BtnMenu; i++)
-               if(button[i])
-               {
-                  if( !button[i]->isHidden() ) 
-                      button[i]->hide();
+	// Find out how many buttons we have to hide.
+	while (current_width < minwidth)
+	{
+		current_width += btn_width;
+		count++;
+	}
 
-                   minWidth -= button[i]->sizeHint().width();
-                   if(width() >= minWidth)
-                       return;
-                }
-        }
-    } else 
-       if(hiddenItems) // Expanding
-       { 
-          lastButtonWidth = width();
-          int totalSize = 16*3;
+	// Bound the number of buttons to hide
+	if (count > 6) count = 6;
 
-          for(int i = QuartzClient::BtnMenu; i >= QuartzClient::BtnHelp; i--)
-            if(button[i])
-            {
-                if(button[i]->sizeHint().width() + totalSize <= width()) 
-                {
-                    totalSize += button[i]->sizeHint().width();
-                    button[i]->resize(button[i]->sizeHint());
-                    button[i]->show();
-                }
-                else return;
-            }
+	// Hide the required buttons...
+	for(i = 0; i < count; i++)
+	{
+		if (btnArray[i] && btnArray[i]->isVisible() )
+			btnArray[i]->hide();
+	}
 
-        // all items shown now
-        hiddenItems = false;
-      }
-      else
-          lastButtonWidth = width();
+	// Show the rest of the buttons...
+	for(i = count; i < 6; i++)
+	{
+		if (btnArray[i] && (!btnArray[i]->isVisible()) )
+			btnArray[i]->show();		
+	}
 }
 
 
@@ -655,25 +774,32 @@ void QuartzClient::menuButtonPressed()
     tc = this;           
 }
 
+
+// Extended KWin plugin interface
+/////////////////////////////////
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)
     {
         return(new QuartzClient(ws, w));
     }
-    void init()
-    {
-       create_pixmaps();
-    }
-    void reset()
-    {
-       delete_pixmaps();
-       create_pixmaps();
-    }
-    void deinit()
-    {
-       delete_pixmaps();
-    }
+
+	void init()
+	{
+		clientHandler = new QuartzHandler();
+	}
+
+	void reset()
+	{
+		// QuartzHandler takes care of this for us
+	}
+
+	void deinit()
+	{
+		delete clientHandler;
+	}
 }
+
+
 
 #include "quartz.moc"
