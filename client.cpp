@@ -607,15 +607,6 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
         may_close = mclose;
     }
 
-    Window ww;
-    if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) )
-        transient_for = None;
-    else {
-        transient_for = (WId) ww;
-        transient_for_defined = TRUE;
-        verifyTransientFor();
-    }
-
     XClassHint classHint;
     if ( XGetClassHint( qt_xdisplay(), win, &classHint ) ) {
         resource_name = classHint.res_name;
@@ -692,6 +683,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
     }
 
+    getTransient();
+    
     geom = original_geometry;
     bool placementDone = FALSE;
 
@@ -1409,15 +1402,7 @@ bool Client::propertyNotify( XPropertyEvent& e )
         fetchName();
         break;
     case XA_WM_TRANSIENT_FOR:
-        Window ww;
-        if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) ) {
-            transient_for = None;
-            transient_for_defined = FALSE;
-        } else {
-            transient_for = (WId) ww;
-            transient_for_defined = TRUE;
-            verifyTransientFor();
-        }
+        getTransient();
         break;
     case XA_WM_HINTS:
         getWMHints();
@@ -2715,7 +2700,7 @@ void Client::setMask( const QRegion & reg)
  */
 Client* Client::mainClient()
 {
-    if  ( !isTransient() && transientFor() != 0 )
+    if  ( !isTransient() || transientFor() == 0 )
         return this;
     ClientList saveset;
     Client *n, *c = this;
@@ -2730,6 +2715,18 @@ Client* Client::mainClient()
     return c?c:this;
 }
 
+void Client::getTransient()
+{
+    Window ww;
+    if ( !XGetTransientForHint( qt_xdisplay(), (Window) win, &ww ) ) {
+        transient_for = None;
+        transient_for_defined = FALSE;
+    } else {
+        transient_for = (WId) ww;
+        transient_for_defined = TRUE;
+        verifyTransientFor();
+    }
+}
 
 /*!
   Returns whether the window provides context help or not. If it does,

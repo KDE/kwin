@@ -289,6 +289,7 @@ private:
     QSize sizeForWindowSize( const QSize&, bool ignore_height = FALSE ) const;
     void getWmNormalHints();
     void fetchName();
+    void getTransient();
     static bool resourceMatch( Client* c1, Client* c2 );
 
     unsigned long userTime();
