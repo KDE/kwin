@@ -135,7 +135,7 @@ void Workspace::propagateClients( bool propagate_new_clients )
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
     new_stack[ pos++ ] = supportWindow->winId();
-    int topmenu_space_pos = 0;
+    int topmenu_space_pos = 1; // not 0, that's supportWindow !!!
     for( ClientList::ConstIterator it = stacking_order.fromLast();
          it != stacking_order.end();
          --it )
@@ -155,6 +155,7 @@ void Workspace::propagateClients( bool propagate_new_clients )
         }
     // TODO isn't it too inefficient to restart always all clients?
     // TODO don't restack not visible windows?
+    assert( new_stack[ 0 ] = supportWindow->winId());
     XRestackWindows(qt_xdisplay(), new_stack, pos);
     delete [] new_stack;
 
