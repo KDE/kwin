@@ -959,9 +959,12 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode ) const
         h += xSizeHint.base_height;
         }
 
+    w += border_left + border_right;
+    h += border_top + border_bottom;
+    QSize ret = rules()->checkSize( QSize( w, h ));
     if ( mode == SizemodeShaded && wsize.height() == 0 )
-        h = 0;
-    return QSize( w + border_left + border_right, h + border_top + border_bottom );
+        ret.setHeight( border_top + border_bottom );
+    return ret;
     }
 
 /*!
@@ -1291,12 +1294,35 @@ void Client::NETMoveResizeWindow( int flags, int x, int y, int width, int height
     }
 
 /*!
+  Returns whether the window is moveable or has a fixed
+  position.
+ */
+bool Client::isMovable() const
+    {
+    if( !motif_may_move || isFullScreen())
+        return false;
+    if( isSpecialWindow() && !isOverride() && !isSplash() && !isToolbar()) // allow moving of splashscreens :)
+        return false;
+    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
+        return false;
+    if( rules()->checkPosition( invalidPoint ) != invalidPoint ) // forced position
+        return false;
+    return true;
+    }
+
+/*!
   Returns whether the window is resizable or has a fixed size.
  */
 bool Client::isResizable() const
     {
-    if ( !isMovable() || !motif_may_resize || isSplash())
-        return FALSE;
+    if( !motif_may_resize || isFullScreen())
+        return false;
+    if( isSpecialWindow() || isSplash() || isToolbar())
+        return false;
+    if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
+        return false;
+    if( rules()->checkSize( QSize()).isValid()) // forced size
+        return false;
 
     QSize min = minSize();
     QSize max = maxSize();
@@ -1310,7 +1336,7 @@ bool Client::isMaximizable() const
     {
     if ( maximizeMode() != MaximizeRestore )
         return TRUE;
-    if( !isResizable() || isToolbar()) // SELI isToolbar() ?
+    if( !isMovable() || !isResizable() || isToolbar()) // SELI isToolbar() ?
         return false;
     QSize max = maxSize();
     if( max.width() < 32767 || max.height() < 32767 ) // sizes are 16bit with X
@@ -1357,11 +1383,17 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         // SELI TODO won't this be too expensive?
         updateWorkareaDiffs();
         sendSyntheticConfigureNotify();
+        updateWindowRules();
         }
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
-    { // TODO make this deffered with isResize() ? old kwin did
+    {
+    if( QSize( w, h ) != rules()->checkSize( QSize( w, h )))
+        {
+        kdDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
+        kdDebug() << kdBacktrace() << endl;
+        }
     if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
         return;
     frame_geometry.setSize( QSize( w, h ));
@@ -1394,6 +1426,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
             updateShape();
         updateWorkareaDiffs();
         sendSyntheticConfigureNotify();
+        updateWindowRules();
         }
     }
 
@@ -1410,6 +1443,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
         {
         XMoveWindow( qt_xdisplay(), frameId(), x, y );
         sendSyntheticConfigureNotify();
+        updateWindowRules();
         }
     }
 

@@ -175,7 +175,7 @@ void Client::releaseWindow( bool on_shutdown )
     {
     if (moveResizeMode)
        leaveMoveResize();
-    updateWindowRules();
+    finishWindowRules();
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
@@ -223,7 +223,7 @@ void Client::destroyClient()
     {
     if (moveResizeMode)
        leaveMoveResize();
-    updateWindowRules();
+    finishWindowRules();
     ++block_geometry;
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
@@ -292,9 +292,9 @@ void Client::destroyDecoration()
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
         if( !isShade())
-            plainResize( clientSize(), ForceGeometrySet );
+            plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         else
-            plainResize( QSize( clientSize().width(), 0 ), ForceGeometrySet );
+            plainResize( sizeForClientSize( QSize( clientSize().width(), 0 ), SizemodeShaded ), ForceGeometrySet );
         move( grav );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
@@ -1499,17 +1499,6 @@ bool Client::wantsInput() const
     return input || Ptakefocus;
     }
 
-/*!
-  Returns whether the window is moveable or has a fixed
-  position. !isMovable implies !isResizable.
- */
-bool Client::isMovable() const
-    {
-    return motif_may_move && !isFullScreen() &&
-        ( !isSpecialWindow() || isOverride() || isSplash() || isToolbar()) && // allow moving of splashscreens :)
-        ( maximizeMode() != MaximizeFull || options->moveResizeMaximizedWindows() );
-    }
-
 bool Client::isDesktop() const
     {
     return windowType() == NET::Desktop;
@@ -1628,7 +1617,7 @@ void Client::setCursor( Position m )
             setCursor( sizeHorCursor );
             break;
         default:
-            if( buttonDown )
+            if( buttonDown && isMovable())
                 setCursor( sizeAllCursor );
             else
                 setCursor( arrowCursor );

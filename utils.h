@@ -35,6 +35,8 @@ const long ClientWinMask = KeyPressMask | KeyReleaseMask |
                   StructureNotifyMask |
                   SubstructureRedirectMask;
 
+const QPoint invalidPoint( INT_MIN, INT_MIN );
+
 class Client;
 class Group;
 class Options;

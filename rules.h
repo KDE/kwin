@@ -42,6 +42,10 @@ class WindowRules
         void update( Client* );
         bool match( const Client* c ) const;
         Placement::Policy checkPlacement( Placement::Policy placement ) const;
+        QRect checkGeometry( const QRect& rect, bool init = false ) const;
+        // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
+        QPoint checkPosition( const QPoint& pos, bool init = false ) const;
+        QSize checkSize( const QSize& s, bool init = false ) const;
         QSize checkMinSize( const QSize& s ) const;
         QSize checkMaxSize( const QSize& s ) const;
         int checkDesktop( int desktop, bool init = false ) const;
@@ -68,6 +72,10 @@ class WindowRules
         unsigned long types; // types for matching
         Placement::Policy placement;
         SettingRule placementrule;
+        QPoint position;
+        SettingRule positionrule;
+        QSize size;
+        SettingRule sizerule;
         QSize minsize;
         SettingRule minsizerule;
         QSize maxsize;

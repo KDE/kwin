@@ -30,6 +30,8 @@ WindowRules::WindowRules()
     , clientmachineregexp( false )
     , types( NET::AllTypesMask )
     , placementrule( DontCareRule )
+    , positionrule( DontCareRule )
+    , sizerule( DontCareRule )
     , minsizerule( DontCareRule )
     , maxsizerule( DontCareRule )
     , desktoprule( DontCareRule )
@@ -55,10 +57,20 @@ WindowRules::WindowRules( KConfig& cfg )
     types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
     placement = Placement::policyFromString( cfg.readEntry( "placement" ), false );
     placementrule = readRule( cfg, "placementrule" );
+    position = cfg.readPointEntry( "position" );
+    positionrule = readRule( cfg, "positionrule" );
+    size = cfg.readSizeEntry( "size" );
+    sizerule = readRule( cfg, "sizerule" );
+    if( size.isEmpty())
+        sizerule = DontCareRule;
     minsize = cfg.readSizeEntry( "minsize" );
     minsizerule = readRule( cfg, "minsizerule" );
+    if( !minsize.isValid())
+        minsizerule = DontCareRule;
     maxsize = cfg.readSizeEntry( "maxsize" );
     maxsizerule = readRule( cfg, "maxsizerule" );
+    if( maxsize.isEmpty())
+        maxsizerule = DontCareRule;
     desktop = cfg.readNumEntry( "desktop" );
     desktoprule = readRule( cfg, "desktoprule" );
     type = readType( cfg, "type" );
@@ -113,6 +125,8 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( clientmachine, (const char*) );
     WRITE_WITH_DEFAULT( types, NET::AllTypesMask );
     WRITE_SET_RULE( placement, Placement::policyToString );
+    WRITE_SET_RULE( position, );
+    WRITE_SET_RULE( size, );
     WRITE_SET_RULE( minsize, );
     WRITE_SET_RULE( maxsize, );
     WRITE_SET_RULE( desktop, );
@@ -198,6 +212,10 @@ bool WindowRules::match( const Client* c ) const
 void WindowRules::update( Client* c )
     {
     // TODO check this setting is for this client ?
+    if( positionrule == RememberRule )
+        position = c->pos();
+    if( sizerule == RememberRule )
+        size = c->size();
     if( desktoprule == RememberRule )
         desktop = c->desktop();
     if( aboverule == RememberRule )
@@ -209,6 +227,23 @@ void WindowRules::update( Client* c )
 Placement::Policy WindowRules::checkPlacement( Placement::Policy placement ) const
     {
     return checkForceRule( placementrule ) ? this->placement : placement;
+    }
+
+// TODO at to porad jeste kontroluje min/max size , + udelat override pro min/max?
+QRect WindowRules::checkGeometry( const QRect& rect, bool init ) const
+    {
+    return QRect( checkRule( positionrule, init ) ? this->position : rect.topLeft(),
+        checkRule( sizerule, init ) ? this->size : rect.size());
+    }
+
+QPoint WindowRules::checkPosition( const QPoint& pos, bool init ) const
+    {
+    return checkRule( positionrule, init ) ? this->position : pos;
+    }
+
+QSize WindowRules::checkSize( const QSize& s, bool init ) const
+    {
+    return checkRule( sizerule, init ) ? this->size : s;
     }
 
 QSize WindowRules::checkMinSize( const QSize& s ) const
@@ -244,7 +279,7 @@ NET::WindowType WindowRules::checkType( NET::WindowType req_type ) const
 
 // Client
 
-void Client::initWindowRules()
+void Client::setupWindowRules()
     {
     client_rules = workspace()->findWindowRules( this );
     // check only after getting the rules, because there may be a rule forcing window type
@@ -255,6 +290,12 @@ void Client::initWindowRules()
 void Client::updateWindowRules()
     {
     client_rules->update( this );
+    }
+
+void Client::finishWindowRules()
+    {
+    updateWindowRules();
+    client_rules = &dummyRules;
     }
 
 // Workspace

@@ -107,11 +107,11 @@ bool Client::manage( Window w, bool isMapped )
     ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
 
     window_role = getStringProperty( w, qt_window_role );
-    // first only read the caption text, so that initWindowRules() can use it for matching,
+    // first only read the caption text, so that setupWindowRules() can use it for matching,
     // and only then really set the caption using setCaption(), which checks for duplicates etc.
     // and also relies on rules already existing
     cap_normal = readName();
-    initWindowRules();
+    setupWindowRules();
     setCaption( cap_normal, true );
 
     detectNoBorder();
@@ -269,8 +269,14 @@ bool Client::manage( Window w, bool isMapped )
 
     updateDecoration( false ); // also gravitates
     // TODO is CentralGravity right here, when resizing is done after gravitating?
-    plainResize( sizeForClientSize( geom.size()));
+    plainResize( rules()->checkSize( sizeForClientSize( geom.size()), true ));
 
+    QPoint forced_pos = rules()->checkPosition( invalidPoint, true );
+    if( forced_pos != invalidPoint )
+        {
+        move( forced_pos );
+        placementDone = true;
+        }
     if( !placementDone ) 
         { // placement needs to be after setting size
         workspace()->place( this, area );

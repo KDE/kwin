@@ -344,8 +344,9 @@ private slots:
         QString readName() const;
         void setCaption( const QString& s, bool force = false );
         bool hasTransientInternal( const Client* c, bool indirect, ConstClientList& set ) const;
-        void initWindowRules();
+        void setupWindowRules();
         void updateWindowRules();
+        void finishWindowRules();
 
         void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
