@@ -486,6 +486,13 @@ bool Workspace::workspaceEvent( XEvent * e )
 
     switch (e->type) {
     case ButtonPress:
+        if ( tab_grab || control_grab ) {
+            XUngrabKeyboard(qt_xdisplay(), kwin_time);
+            XUngrabPointer( qt_xdisplay(), kwin_time);
+            tab_box->hide();
+            keys->setKeyEventsEnabled( TRUE );
+            tab_grab = control_grab = false;
+        }
     case ButtonRelease:
     case MotionNotify:
         break;
