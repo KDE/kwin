@@ -187,7 +187,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
 {
     create_pixmaps();
 
-    QGridLayout* g = new QGridLayout(this, 0, 0, 1);
+    QGridLayout* g = new QGridLayout(this, 0, 0, 2);
     g->setRowStretch(1, 10);
     g->addWidget(windowWrapper(), 1, 1 );
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
@@ -272,9 +272,15 @@ void SystemClient::paintEvent( QPaintEvent* )
     }
     p.setPen(Qt::black);
     p.drawRect(rect());
-    p.setPen(colorGroup().light());
-    p.drawLine(1, 1, width()-2, 1);
-    
+
+
+    if(colorGroup().brush(QColorGroup::Background).pixmap())
+        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
+                        rect().height()-2, colorGroup(), false);
+    else
+        qDrawShadePanel(&p, rect().x()+1, rect().y()+1, rect().width()-2,
+                        rect().height()-2, colorGroup(), false);
+
     t.setTop( 2 );
     if(isActive())
         p.drawTiledPixmap(t, *titlePix);
