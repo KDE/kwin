@@ -1992,6 +1992,19 @@ void Workspace::lowerClient( Client* c )
     stacking_order.prepend(c);
 
     stacking_order = constrainedStackingOrder( stacking_order );
+    
+    if( c == active_client ) {
+        // don't lower toplevel menubar
+        for( ClientList::ConstIterator it = clients.fromLast();
+             it != clients.end();
+             --it )
+            if( (*it)->isTopMenu() && (*it)->mainClient() == c ) {
+                stacking_order.remove( *it );
+                stacking_order.append( *it );
+                break;
+            }
+    }
+            
     propagateClients( true, true );
 
     if ( c == most_recently_raised )
