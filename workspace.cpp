@@ -1708,7 +1708,8 @@ void Workspace::smartPlacement(Client* c){
     long int overlap, min_overlap = 0;
     int x_optimal, y_optimal;
     int possible;
-
+    int desktop = c->desktop() < 0 || c->isSticky() ? currentDesktop() : c->desktop();
+    
     int cxl, cxr, cyt, cyb;     //temp coords
     int  xl,  xr,  yt,  yb;     //temp coords
     int basket;                 //temp holder
@@ -1738,7 +1739,7 @@ void Workspace::smartPlacement(Client* c){
             cyt = y; cyb = y + ch;
             QValueList<Client*>::ConstIterator l;
             for(l = clients.begin(); l != clients.end() ; ++l ) {
-                if((*l)->isOnDesktop(c->desktop()) && (*l) != desktop_client &&
+                if((*l)->isOnDesktop(desktop) && (*l) != desktop_client &&
                    !(*l)->isIconified() && (*l) != c ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -1786,7 +1787,7 @@ void Workspace::smartPlacement(Client* c){
             QValueList<Client*>::ConstIterator l;
             for(l = clients.begin(); l != clients.end() ; ++l) {
 
-                if ( (*l)->isOnDesktop(c->desktop()) && (*l) != desktop_client &&
+                if ( (*l)->isOnDesktop(desktop) && (*l) != desktop_client &&
                      !(*l)->isIconified() &&  (*l) != c ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -1816,7 +1817,7 @@ void Workspace::smartPlacement(Client* c){
             //test the position of each window on the desk
             QValueList<Client*>::ConstIterator l;
             for( l = clients.begin(); l != clients.end() ; ++l ) {
-                if( (*l)->isOnDesktop(c->desktop() ) && (*l) != desktop_client &&
+                if( (*l)->isOnDesktop(desktop) && (*l) != desktop_client &&
                     (*l) != c   &&  !c->isIconified() ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -1856,7 +1857,7 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
     int delta_x = 24;
     int delta_y = 24;
 
-    int d = c->desktop() < 0 ? ( currentDesktop() - 1 ) : ( c->desktop() - 1 );
+    int d = c->desktop() < 0 || c->isSticky() ? ( currentDesktop() - 1 ) : ( c->desktop() - 1 );
 
     // get the maximum allowed windows space and desk's origin
     //    (CT 20Nov1999 - is this common to all desktops?)
