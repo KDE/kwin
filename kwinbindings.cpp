@@ -23,11 +23,11 @@
 
  keys->insertItem(i18n("Window operations menu"),  "Pop-up window operations menu"   ,"ALT+F3");
  keys->insertItem(i18n("Window close"),"Window close", "ALT+F4");
- keys->insertItem(i18n("Window maximize"),"Window maximize", "");
- keys->insertItem(i18n("Window maximize vertical"),"Window maximize vertical", "");
- keys->insertItem(i18n("Window maximize horizontal"),"Window maximize horizontal", "");
- keys->insertItem(i18n("Window iconify"),"Window iconify", "");
- keys->insertItem(i18n("Window shade"),"Window shade", "");
+ keys->insertItem(i18n("Window maximize"),"Window maximize", "Meta+Plus");
+ keys->insertItem(i18n("Window maximize vertical"),"Window maximize vertical", "Meta+Bar");
+ keys->insertItem(i18n("Window maximize horizontal"),"Window maximize horizontal", "Meta+Equal");
+ keys->insertItem(i18n("Window iconify"),"Window iconify", "Meta+Minus");
+ keys->insertItem(i18n("Window shade"),"Window shade", "Meta+Underscore");
  keys->insertItem(i18n("Window move"),"Window move", "");
  keys->insertItem(i18n("Window resize"),"Window resize", "");
  keys->insertItem(i18n("Window raise"),"Window raise", "");
@@ -35,7 +35,7 @@
  keys->insertItem(i18n("Window raise or lower"), "Toggle raise and lower", "");
  keys->insertItem(i18n("Window to next desktop"),"Window to next desktop", "");
  keys->insertItem(i18n("Window to previous desktop"),"Window to previous desktop", "");
- 
+
  keys->insertItem(i18n("Walk through desktops"),"Walk through desktops", "CTRL+Tab");
  keys->insertItem(i18n("Walk back through desktops"),"Walk back through desktops", "SHIFT+CTRL+Tab");
  keys->insertItem(i18n("Walk through windows"),"Walk through windows", "ALT+Tab");
