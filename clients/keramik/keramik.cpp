@@ -1,5 +1,4 @@
 /*
- * $Id$
  *
  * Keramik KWin client (version 0.8)
  *

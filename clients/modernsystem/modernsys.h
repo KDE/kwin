@@ -1,4 +1,3 @@
-// $Id$
 #ifndef __MODSYSTEMCLIENT_H
 #define __MODSYSTEMCLIENT_H
 

@@ -1,4 +1,3 @@
-# $Id$
 
 INCLUDES = -I$(srcdir)/../../lib $(all_includes)
 

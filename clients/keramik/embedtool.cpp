@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Keramik KWin embed tool (version 1.0)
  *
  * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>

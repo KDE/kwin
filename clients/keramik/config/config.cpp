@@ -1,5 +1,4 @@
 /*
- * $Id$
  * 
  * Keramik KWin client configuration module
  *

@@ -1,4 +1,3 @@
-// $Id$
 // Melchior FRANZ  <mfranz@kde.org>	-- 2001-04-22
 
 #include <kapplication.h>

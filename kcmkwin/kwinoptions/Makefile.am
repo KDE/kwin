@@ -1,4 +1,3 @@
-# $Id$
 # kdebase/kcontrol/kwm
 
 METASOURCES = AUTO

@@ -1,5 +1,4 @@
 /* 	
- * $Id$
  *
  *	This file contains the quartz configuration widget
  *

@@ -1,4 +1,3 @@
-# $Id$
 
 INCLUDES = $(all_includes)
 

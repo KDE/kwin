@@ -1,6 +1,4 @@
 /*
-	$Id$
-
 	This is the new kwindecoration kcontrol module
 
 	Copyright (c) 2001

@@ -1,5 +1,4 @@
 /*
- *	$Id$
  *
  *	KDE2 Default configuration widget
  *

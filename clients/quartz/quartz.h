@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Gallium-Quartz KWin client
  *
  * Copyright 2001

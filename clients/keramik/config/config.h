@@ -1,6 +1,4 @@
 /*
- * $Id$
- * 
  * Keramik KWin client configuration module
  *
  * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>

@@ -1,5 +1,4 @@
 /*
- * $Id$
  *
  * Redmond KWin client
  *
