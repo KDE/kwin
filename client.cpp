@@ -2301,7 +2301,6 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	break;
     case Options::MouseActivateAndPassClick:
 	workspace()->requestFocus( this );
-	workspace()->raiseClient( this );
 	replay = TRUE;
 	break;
     case Options::MouseMove:
