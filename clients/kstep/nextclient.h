@@ -40,6 +40,9 @@ protected:
     void captionChange( const QString& name );
     void stickyChange(bool on);
     void activeChange(bool);
+
+    MousePosition mousePosition(const QPoint &) const;
+
 protected slots:
     void slotReset();
 private:

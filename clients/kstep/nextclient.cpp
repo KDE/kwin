@@ -347,4 +347,25 @@ void NextClient::activeChange(bool)
     button[2]->reset();
 }
 
+  Client::MousePosition
+NextClient::mousePosition( const QPoint& p ) const
+{
+  MousePosition m = Nowhere;
+
+  if (p.y() < (height() - 6))
+    m = Client::mousePosition(p);
+
+  else {
+    if (p.x() >= (width() - 25))
+      m = BottomRight;
+    else if (p.x() <= 25)
+      m = BottomLeft;
+    else
+      m = Bottom;
+  }
+
+  return m;
+}
+
+
 #include "nextclient.moc"
