@@ -40,7 +40,7 @@
 static KCmdLineOptions options[] =
 {
 	{ "+decoration", "Decoration library to use, such as kwin3_plastik.", 0 },
-	{ "+tests", "Which test should be executed ('all', 'repaint', 'caption', 'resize')", 0 },
+	{ "+tests", "Which test should be executed ('all', 'repaint', 'caption', 'resize', 'recreation')", 0 },
 	{ "+repetitions", "Number of test repetitions.", 0 },
 	{ 0, 0, 0 }
 };
@@ -53,10 +53,17 @@ DecoBenchApplication::DecoBenchApplication(const QString &library, Tests tests, 
 	kwinConfig.setGroup("Style");
 
 	plugins = new KDecorationPreviewPlugins( &kwinConfig );
-	preview = new KDecorationPreview( 0 );
+	preview = new KDecorationPreview( plugins, 0 );
 
-	if (plugins->loadPlugin(library) && preview->recreateDecoration(plugins) )
-		kdDebug() << "decoration " << library << " created..." << endl;
+	if (plugins->loadPlugin(library) )
+		kdDebug() << "Decoration library " << library << " loaded..." << endl;
+	else
+		kdError() << "Error loading decoration library " << library << "!" << endl;
+
+	if (preview->recreateDecoration() )
+		kdDebug() << "Decoration created..." << endl;
+	else
+		kdError() << "Error creating decoration!" << endl;
 
 	preview->show();
 }
@@ -79,6 +86,8 @@ void DecoBenchApplication::executeTest()
 		preview->performCaptionTest(m_count);
 	if (m_tests == AllTests || m_tests == ResizeTest)
 		preview->performResizeTest(m_count);
+	if (m_tests == AllTests || m_tests == RecreationTest)
+		preview->performRecreationTest(m_count);
 
 	clock_t etime = clock();
 	ftime(&aend);
@@ -114,6 +123,8 @@ int main(int argc, char** argv)
 		test = CaptionTest;
 	else if (t == "resize")
 		test = ResizeTest;
+	else if (t == "recreation")
+		test = RecreationTest;
 	else
 		KCmdLineArgs::usage("Specify a valid test!");
 

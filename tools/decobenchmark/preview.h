@@ -33,14 +33,15 @@ class KDecorationPreview
     : public QWidget
     {
     public:
-        KDecorationPreview( QWidget* parent = NULL, const char* name = NULL );
+        KDecorationPreview( KDecorationPlugins* plugin, QWidget* parent = NULL, const char* name = NULL );
         virtual ~KDecorationPreview();
 
         void performRepaintTest(int n);
         void performCaptionTest(int n);
         void performResizeTest(int n);
+        void performRecreationTest(int n);
 
-        bool recreateDecoration( KDecorationPlugins* plugin );
+        bool recreateDecoration();
         void setPreviewMask( const QRegion&, int );
         QRegion unobscuredRegion( bool, const QRegion& ) const;
         QRect windowGeometry( bool ) const;
@@ -49,6 +50,7 @@ class KDecorationPreview
         KDecorationPreviewOptions* options;
         KDecorationPreviewBridge* bridge;
         KDecoration* deco;
+        KDecorationPlugins* m_plugin;
     };
 
 class KDecorationPreviewBridge

@@ -37,8 +37,9 @@
 
 // FRAME the preview doesn't update to reflect the changes done in the kcm
 
-KDecorationPreview::KDecorationPreview( QWidget* parent, const char* name )
-    :   QWidget( parent, name )
+KDecorationPreview::KDecorationPreview( KDecorationPlugins* plugin, QWidget* parent, const char* name )
+    :   QWidget( parent, name ),
+    m_plugin(plugin)
 {
     options = new KDecorationPreviewOptions;
 
@@ -94,10 +95,22 @@ void KDecorationPreview::performResizeTest(int n)
     }
 }
 
-bool KDecorationPreview::recreateDecoration( KDecorationPlugins* plugins )
+void KDecorationPreview::performRecreationTest(int n)
+{
+    kdDebug() << "start " << n << " resizes..." << endl;
+    bridge->setCaption("Deco Benchmark");
+    deco->captionChange();
+    positionPreviews(0);
+    for (int i = 0; i < n; ++i) {
+        recreateDecoration();
+        kapp->processEvents();
+    }
+}
+
+bool KDecorationPreview::recreateDecoration()
 {
     delete deco;
-    deco = plugins->createDecoration(bridge);
+    deco = m_plugin->createDecoration(bridge);
     deco->init();
 
     if (!deco)

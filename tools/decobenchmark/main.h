@@ -25,7 +25,8 @@ enum Tests {
 	AllTests,
 	RepaintTest,
 	CaptionTest,
-	ResizeTest
+	ResizeTest,
+	RecreationTest
 };
 
 class DecoBenchApplication : public KApplication
