@@ -274,6 +274,7 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 
 	// Delete old plugin widget if it exists
 	delete pluginObject;
+	pluginObject = 0;
 
 	// Use klibloader for library manipulation
 	KLibLoader* loader = KLibLoader::self();
@@ -302,7 +303,6 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 		}
 	}
 
-	pluginObject = 0;
 	noPluginSettings->setText(i18n("There are no special options available for the <strong>%1</strong> window decoration.").arg(currentDecoName));
 	noPluginSettings->show();
 }
