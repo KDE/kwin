@@ -49,8 +49,6 @@ namespace KWinInternal
 
 extern int screen_number;
 
-static Window null_focus_window = 0;
-
 Workspace *Workspace::_self = 0;
 
 // Rikkus: This class is too complex. It needs splitting further.
@@ -136,7 +134,8 @@ Workspace::Workspace( bool restore )
                  PropertyChangeMask |
                  ColormapChangeMask |
                  SubstructureRedirectMask |
-                 SubstructureNotifyMask
+                 SubstructureNotifyMask |
+                 FocusChangeMask // for NotifyDetailNone
                  );
 
     Shape::init();
@@ -174,6 +173,12 @@ void Workspace::init()
 
     supportWindow = new QWidget;
     XLowerWindow( qt_xdisplay(), supportWindow->winId()); // see usage in layers.cpp
+
+    XSetWindowAttributes attr;
+    attr.override_redirect = 1;
+    null_focus_window = XCreateWindow( qt_xdisplay(), qt_xrootwin(), -1,-1, 1, 1, 0, CopyFromParent,
+        InputOnly, CopyFromParent, CWOverrideRedirect, &attr );
+    XMapWindow(qt_xdisplay(), null_focus_window);
 
     unsigned long protocols[ 5 ] =
         {
@@ -271,10 +276,6 @@ void Workspace::init()
     // now we know how many desktops we'll, thus, we initialise the positioning object
     initPositioning = new Placement(this);
 
-    unsigned int i, nwins;
-    Window root_return, parent_return, *wins;
-    XWindowAttributes attr;
-
     connect(&reconfigureTimer, SIGNAL(timeout()), this,
             SLOT(slotReconfigure()));
     connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
@@ -308,9 +309,12 @@ void Workspace::init()
         else
             lostTopMenuSelection();
 
+        unsigned int i, nwins;
+        Window root_return, parent_return, *wins;
         XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
         for (i = 0; i < nwins; i++) 
             {
+            XWindowAttributes attr;
             XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
             if (attr.override_redirect )
                 continue;
@@ -406,6 +410,7 @@ Workspace::~Workspace()
     delete topmenu_watcher;
     delete topmenu_selection;
     delete topmenu_space;
+    XDestroyWindow( qt_xdisplay(), null_focus_window );
 // TODO    ungrabXServer();
     _self = 0;
     }
@@ -1936,16 +1941,6 @@ bool Workspace::checkStartupNotification( const Client* c, KStartupInfoData& dat
  */
 void Workspace::focusToNull()
     {
-    int mask;
-    XSetWindowAttributes attr;
-    if (null_focus_window == 0) 
-        {
-        mask = CWOverrideRedirect;
-        attr.override_redirect = 1;
-        null_focus_window = XCreateWindow(qt_xdisplay(), qt_xrootwin(), -1,-1, 1, 1, 0, CopyFromParent,
-                          InputOnly, CopyFromParent, mask, &attr);
-        XMapWindow(qt_xdisplay(), null_focus_window);
-        }
     XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, qt_x_time );
     }
 

@@ -511,6 +511,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         int set_active_client_recursion;
         int block_stacking_updates; // when >0, stacking updates are temporarily disabled
         bool blocked_propagating_new_clients; // propagate also new clients after enabling stacking updates?
+        Window null_focus_window;
         friend class StackingUpdatesBlocker;
     };
 

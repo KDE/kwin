@@ -404,6 +404,13 @@ bool Workspace::workspaceEvent( XEvent * e )
                 return FALSE;
             break;
         case FocusIn:
+            if( e->xfocus.window == rootWin() && e->xfocus.detail == NotifyDetailNone )
+                {
+                kdWarning( 1212 ) << "X focus set to None, reseting focus" << endl;
+                XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, CurrentTime );
+                // focusToNull() uses qt_x_time, which is old now (FocusIn has no timestamp)
+                }
+            // fall through
         case FocusOut:
             return true; // always eat these, they would tell Qt that KWin is the active app
         default:
