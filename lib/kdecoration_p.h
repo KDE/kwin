@@ -100,6 +100,7 @@ class KDecorationBridge : public KDecorationDefines
         virtual QWidget* initialParentWidget() const = 0;
         virtual Qt::WFlags initialWFlags() const = 0;
         virtual void helperShowHide( bool ) = 0;
+        virtual void grabXServer( bool grab ) = 0;
     };
 
 #endif

@@ -170,4 +170,12 @@ QRegion Bridge::unobscuredRegion( const QRegion& r ) const
     return reg;
     }
 
+void Bridge::grabXServer( bool grab )
+    {
+    if( grab )
+        KWinInternal::grabXServer();
+    else
+        KWinInternal::ungrabXServer();
+    }
+
 } // namespace

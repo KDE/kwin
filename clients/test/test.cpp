@@ -195,7 +195,7 @@ bool Decoration::animateMinimize(bool iconify)
           QPoint p3(int(cx + dw + dx), int(midy + dch));
           QPoint p4(int(cx - dx), p3.y());
 
-          XGrabServer(qt_xdisplay());
+          grabXServer();
 
           p.drawLine(p1, p2);
           p.drawLine(p2, p3);
@@ -211,7 +211,7 @@ bool Decoration::animateMinimize(bool iconify)
           p.drawLine(p3, p4);
           p.drawLine(p4, p1);
 
-          XUngrabServer(qt_xdisplay());
+          ungrabXServer();
 
 // FRAME          qApp->processEvents(); // FRAME ???
 
@@ -254,14 +254,14 @@ bool Decoration::animateMinimize(bool iconify)
           r.setWidth(r.width() - 2 * dx);
           r.setHeight(r.height() - 2 * dy);
 
-          XGrabServer(qt_xdisplay());
+          grabXServer();
 
           p.drawRect(r);
           p.flush();
           usleep(200);
           p.drawRect(r);
 
-          XUngrabServer(qt_xdisplay());
+          ungrabXServer();
 
 // FRAME          qApp->processEvents();
         }
@@ -289,7 +289,7 @@ bool Decoration::animateMinimize(bool iconify)
           );
 #endif
 
-        XGrabServer(qt_xdisplay());
+        grabXServer();
 
         p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
         p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
@@ -307,7 +307,7 @@ bool Decoration::animateMinimize(bool iconify)
         p.drawLine(wingeom.topLeft(), icongeom.topLeft());
         p.drawLine(wingeom.topRight(), icongeom.topRight());
 
-        XUngrabServer(qt_xdisplay());
+        ungrabXServer();
       }
       break;
   }

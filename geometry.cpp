@@ -1513,7 +1513,7 @@ bool Client::startMoveResize()
     if ( ( isMove() && options->moveMode != Options::Opaque )
       || ( isResize() && options->resizeMode != Options::Opaque ) )
         {
-        XGrabServer( qt_xdisplay() );
+        grabXServer();
         kapp->sendPostedEvents();
         // we have server grab -> nothing should cause paint events
         // unfortunately, that's not completely true, Qt may generate
@@ -1549,7 +1549,7 @@ void Client::leaveMoveResize()
         }
     if ( ( isMove() && options->moveMode != Options::Opaque )
       || ( isResize() && options->resizeMode != Options::Opaque ) )
-        XUngrabServer( qt_xdisplay() );
+        ungrabXServer();
     XUngrabKeyboard( qt_xdisplay(), qt_x_time );
     XUngrabPointer( qt_xdisplay(), qt_x_time );
     workspace()->setClientIsMoving(0);

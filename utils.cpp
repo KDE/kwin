@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "atoms.h"
 
 #include <kxerrorhandler.h>
+#include <assert.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
@@ -231,7 +232,20 @@ void updateXTime()
     qt_x_time = ev.xproperty.time;
     }
 
+static int server_grab_count = 0;
 
+void grabXServer()
+    {
+    if( ++server_grab_count == 1 )
+        XGrabServer( qt_xdisplay());
+    }
+
+void ungrabXServer()
+    {
+    assert( server_grab_count > 0 );
+    if( --server_grab_count == 0 )
+        XUngrabServer( qt_xdisplay());
+    }
 
 } // namespace
 

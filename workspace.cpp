@@ -298,6 +298,7 @@ void Workspace::init()
     topmenu_height = 0;
     managing_topmenus = false;
     topmenu_space = NULL;
+// TODO grabXServer(); - where exactly put this? topmenu selection claiming down belong must be before
 
         { // begin updates blocker block
         StackingUpdatesBlocker blocker( this );
@@ -366,11 +367,13 @@ void Workspace::init()
     // and maybe in rare cases also if the selected client doesn't
     // want focus
     workspaceInit = false;
+// TODO ungrabXServer()
     }
 
 Workspace::~Workspace()
     {
     blockStackingUpdates( true );
+// TODO    grabXServer();
     // use stacking_order, so that kwin --replace keeps stacking order
     for( ClientList::ConstIterator it = stacking_order.begin();
          it != stacking_order.end();
@@ -400,6 +403,7 @@ Workspace::~Workspace()
     delete topmenu_watcher;
     delete topmenu_selection;
     delete topmenu_space;
+// TODO    ungrabXServer();
     _self = 0;
     }
 

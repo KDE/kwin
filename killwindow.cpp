@@ -52,7 +52,7 @@ void KillWindow::start()
         int escape_pressed  = 0;
         int button_released = 0;
 
-        XGrabServer(qt_xdisplay());
+        grabXServer();
 
         while (!return_pressed && !escape_pressed && !button_released) 
             {
@@ -101,7 +101,7 @@ void KillWindow::start()
                 workspace->killWindowId( child );
             }
 
-        XUngrabServer(qt_xdisplay());
+        ungrabXServer();
 
         XUngrabKeyboard(qt_xdisplay(), CurrentTime);
         XUngrabPointer(qt_xdisplay(), CurrentTime);

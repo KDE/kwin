@@ -383,6 +383,10 @@ void KDecorationPreviewBridge::helperShowHide( bool )
     {
     }
 
+void KDecorationPreviewBridge::grabXServer( bool )
+    {
+    }
+
 KDecorationPreviewOptions::KDecorationPreviewOptions()
     {
     d = new KDecorationOptionsPrivate;

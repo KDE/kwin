@@ -289,6 +289,16 @@ void KDecoration::helperShowHide( bool show )
 void KDecoration::reset( unsigned long )
     {
     }
+
+void KDecoration::grabXServer()
+    {
+    bridge_->grabXServer( true );
+    }
+    
+void KDecoration::ungrabXServer()
+    {
+    bridge_->grabXServer( false );
+    }
     
 KDecoration::MousePosition KDecoration::mousePosition( const QPoint& p ) const
 {

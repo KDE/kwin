@@ -547,7 +547,8 @@ class KDecoration
         virtual bool drawbound( const QRect& geom, bool clear );
 	/**
 	 * This function may be reimplemented to provide custom minimize/restore animations
-	 * The reimplementation is allowed to perform X server grabs if necessary, but no
+	 * The reimplementation is allowed to perform X server grabs if necessary
+         * (only using the functions provided by this API, no direct Xlib calls), but no
 	 * futher event processing is allowed (i.e. no kapp->processEvents()).
 	 * @a False should be returned if the default implementation should be used.
 	 * Note that you should not use this function to force disabling of the animation.
@@ -612,6 +613,14 @@ class KDecoration
 	 * Returns the factory that created this decoration.
 	 */
         KDecorationFactory* factory() const;
+        /**
+         * Performs X server grab. It is safe to call it several times in a row.
+         */
+        void grabXServer();
+        /**
+         * Ungrabs X server (if the number of ungrab attempts matches the number of grab attempts).
+         */
+        void ungrabXServer();
     public slots:
 	// requests from decoration
 

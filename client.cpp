@@ -590,8 +590,7 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
     tf = (after.top() - before.top())/step;
     bf = (after.bottom() - before.bottom())/step;
 
-
-    XGrabServer( qt_xdisplay() );
+    grabXServer();
 
     QRect area = before;
     QRect area2;
@@ -642,7 +641,7 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
         p.drawPixmap( area2.x(), area2.y(), pm2 );
 
     p.end();
-    XUngrabServer( qt_xdisplay() );
+    ungrabXServer();
     }
 
 

@@ -39,7 +39,7 @@ bool Client::manage( Window w, bool isMapped )
     if( !XGetWindowAttributes(qt_xdisplay(), w, &attr))
         return false;
 
-//    XGrabServer( qt_xdisplay()); // FRAME
+    grabXServer();
 
     // from this place on, manage() mustn't return false
     block_geometry = 1;
@@ -488,7 +488,7 @@ bool Client::manage( Window w, bool isMapped )
 
     delete session;
 
-//    XUngrabServer( qt_xdisplay()); //FRAME
+    ungrabXServer();
 
     return true;
     }
