@@ -276,7 +276,8 @@ bool Client::manage( Window w, bool isMapped )
         placementDone = TRUE;
         }
 
-    if (( !isSpecialWindow() || isToolbar()) && isMovable())
+    if( !isMapped && !session // trust position from session or if already mapped
+        && ( !isSpecialWindow() || isToolbar()) && isMovable())
         keepInArea( area );
 
     XShapeSelectInput( qt_xdisplay(), window(), ShapeNotifyMask );
