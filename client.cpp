@@ -1276,7 +1276,7 @@ void Client::setCaption( const QString& s, bool force )
         cap_normal = s;
         bool was_suffix = ( !cap_suffix.isEmpty());
         QString machine_suffix;
-        if( !isLocalMachine( wmClientMachine( false )))
+        if( wmClientMachine( false ) != "localhost" && !isLocalMachine( wmClientMachine( false )))
             machine_suffix = " <@" + wmClientMachine( true ) + ">";
         cap_suffix = machine_suffix;
         if ( ( !isSpecialWindow() || isToolbar()) && workspace()->findClient( FetchNameInternalPredicate( this ))) 
@@ -1469,17 +1469,6 @@ QCString Client::staticWmCommand(WId w)
     }
 
 /*!
-  Returns WM_CLIENT_MACHINE property for a given window.
- */
-QCString Client::staticWmClientMachine(WId w)
-    {
-    QCString result = getStringProperty(w, XA_WM_CLIENT_MACHINE);
-    if (result.isEmpty()) 
-        result = "localhost";
-    return result;
-    }
-
-/*!
   Returns WM_CLIENT_LEADER property for a given window.
  */
 Window Client::staticWmClientLeader(WId w)
@@ -1534,15 +1523,22 @@ QCString Client::wmCommand()
     return result;
     }
 
+void Client::getWmClientMachine()
+    {
+    client_machine = getStringProperty(window(), XA_WM_CLIENT_MACHINE);
+    if( client_machine.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=window())
+        client_machine = getStringProperty(wmClientLeaderWin, XA_WM_CLIENT_MACHINE);
+    if( client_machine.isEmpty())
+        client_machine = "localhost";
+    }
+
 /*!
   Returns client machine for this client,
   taken either from its window or from the leader window.
 */
 QCString Client::wmClientMachine( bool use_localhost ) const
     {
-    QCString result = staticWmClientMachine(window());
-    if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=window())
-        result = staticWmClientMachine(wmClientLeaderWin);
+    QCString result = client_machine;
     if( use_localhost )
         { // special name for the local machine (localhost)
         if( result != "localhost" && isLocalMachine( result ))

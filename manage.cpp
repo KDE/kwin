@@ -93,6 +93,8 @@ bool Client::manage( Window w, bool isMapped )
     ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
 
     window_role = staticWindowRole( w );
+    getWmClientLeader();
+    getWmClientMachine();
     // first only read the caption text, so that setupWindowRules() can use it for matching,
     // and only then really set the caption using setCaption(), which checks for duplicates etc.
     // and also relies on rules already existing
@@ -103,7 +105,6 @@ bool Client::manage( Window w, bool isMapped )
     detectNoBorder();
     fetchIconicName();
     getWMHints(); // needs to be done before readTransient() because of reading the group
-    getWmClientLeader(); // needs to be done before readTransient() because of same app comparing
     modal = ( info->state() & NET::Modal ) != 0; // needs to be valid before handling groups
     readTransient();
     getIcons();

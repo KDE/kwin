@@ -358,6 +358,7 @@ class Client : public QObject, public KDecorationDefines
         void getMotifHints();
         void getIcons();
         void getWmClientLeader();
+        void getWmClientMachine();
         void fetchName();
         void fetchIconicName();
         QString readName() const;
@@ -498,6 +499,7 @@ class Client : public QObject, public KDecorationDefines
         Colormap cmap;
         QCString resource_name;
         QCString resource_class;
+        QCString client_machine;
         QString cap_normal, cap_iconic, cap_suffix;
         WId wmClientLeaderWin;
         QCString window_role;
