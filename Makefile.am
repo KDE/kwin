@@ -1,7 +1,7 @@
 
 INCLUDES = $(all_includes)
 
-SUBDIRS = pics clients
+SUBDIRS = . pics clients
 
 bin_PROGRAMS = kwin
 lib_LTLIBRARIES = kwin.la
