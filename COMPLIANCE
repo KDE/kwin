@@ -41,75 +41,145 @@ _NET_SUPPORTED			root window property		COMPLETE
 	| after they are implemented. This property is complete in the   |
 	| sence that all implemented properties are listed here.	 |
 	+----------------------------------------------------------------+
-_NET_CLIENT_LIST		root window property		PARTIAL
+        CHECKME : check it's complete
+_NET_CLIENT_LIST		root window property		COMPLETE
 	+----------------------------------------------------------------+
 	| With xprop it seems only one WinID is stored, whereas an array |
 	| of all managed windows should be stored instead!               |
+        | This is caused by xprop printing only first element of WINDOW  |
+        | type properties, xprop has to be patched to see them all.      |
 	+----------------------------------------------------------------+
-_NET_CLIENT_LIST_STACKING	root window property		PARTIAL
+        CHECKME : check that the list includes all windows
+_NET_CLIENT_LIST_STACKING	root window property		COMPLETE
 	+----------------------------------------------------------------+
 	| With xprop it seems only one WinID is stored, whereas an array |
 	| of all managed windows should be stored instead!               |
+        | This is caused by xprop printing only first element of WINDOW  |
+        | type properties, xprop has to be patched to see them all.      |
 	+----------------------------------------------------------------+
-_NET_NUMBER_OF_DESKTOPS		root window property + message	PARTIAL
+_NET_NUMBER_OF_DESKTOPS		root window property + message	COMPLETE
 	+----------------------------------------------------------------+
 	| _NET_VIRTUAL_ROOTS MUST be set to the new number of desktop    |
 	| virtual root window IDs. Currently this property is NOT set,   |
 	| but a WM SHOULD set this property and respond to the message.  |
 	| We have NETRootInfo::setVirtualRoots() but we don't use it!!   |
+        | This is because KWin doesn't use the virtual root windows      |
+        | technique for creating virtual desktops, so it doesn't have    |
+        | to set this property.                                          |
 	+----------------------------------------------------------------+
-_NET_DESKTOP_GEOMETRY		root window property + message	NIL
+        CHECKME : check updating of properties
+_NET_DESKTOP_GEOMETRY		root window property + message	COMPLETE
 	+----------------------------------------------------------------+
-	| Neither the message or property are implemented.               |
-	| The WM SHOULD implement the property and respond to the        |
-	| message, so not implementing this isn't violating the spec.    |
-	| We have NETRootInfo::setDesktopGeometry() but we don't use it! |
+        | KWin doesn't implement large desktops, so it ignores           |
+        | the message, and only sets the property to the screen size     |
 	+----------------------------------------------------------------+
+        CHECKME : check its setting
 _NET_DESKTOP_VIEWPORT		root window property + message	COMPLETE
+	+----------------------------------------------------------------+
+        | KWin doesn't implement viewports, so it correctly sets         |
+        | the property to (0,0) pairs and ignores the message            |
+	+----------------------------------------------------------------+
 _NET_CURRENT_DESKTOP		root window property + message	COMPLETE
 _NET_DESKTOP_NAMES		root window property		COMPLETE
+        CHECKME : when changing the number of desktops, some names may
+        be lost (permanently), because of Workspace::saveDesktopSettings()
+        in Workspace::setNumberOfDesktops() - maybe the kcontrol module
+        should otherwise change the properties directly before changing
+        the number of desktops, so the save is correct?
+        CHECKME : don't save the names to kdeglobals
+        CHECKME : should be ok now
 _NET_ACTIVE_WINDOW		root window property + message	COMPLETE
-_NET_WORKAREA			root window property		COMPLETE (seems buggy)
+        CHECKME : both when switching to a completely empty desktop or
+        when closing the last client on the desktop (kill kdesktop)
+        CHECKME : should be ok now
+_NET_WORKAREA			root window property		COMPLETE
 	+----------------------------------------------------------------+
 	| Work Area takes into account the _NET_WM_STRUT property set on |
 	| client windows. I had a problem where _NET_NUMBER_OF_DESKTOPS  |
 	| was 3, but _NET_WORKAREA had only two geometries set.          |
 	| I need to investigate this -- Karol                            |
 	+----------------------------------------------------------------+
+        CHECKME : most probably fixed in Workspace::setNumberOfDesktops()
+        CHECKME : actually, we don't have desktop-specific workareas!!
+        CHECKME : should be ok now
 _NET_SUPPORTING_WM_CHECK	root window property		COMPLETE
-_NET_VIRTUAL_ROOTS		root window property		NIL
+_NET_VIRTUAL_ROOTS		root window property		COMPLETE
 	+----------------------------------------------------------------+
-	| This property is currently NOT set.                            |
-	| We have NETRootInfo::setVirtualRoots() but we don't use it!!   |
+        | The spec requires this property to be set only for WMs using   |
+        | the virtual roots technique for creating virtual desktops.     |
+        | KWin doesn't use it, so it doesn't set the property.           |
 	+----------------------------------------------------------------+
 _NET_DESKTOP_LAYOUT (pager)	root window property		NIL
 _NET_SHOWING_DESKTOP		root window property + message	NIL
 
 Other Root Window Messages:
 
-_NET_CLOSE_WINDOW		root window message		
-_NET_MOVERESIZE_WINDOW		root window message		
-_NET_WM_MOVERESIZE		root window message		
+_NET_CLOSE_WINDOW		root window message		COMPLETE
+	+----------------------------------------------------------------+
+        | KWin should use _NET_WM_PING and offer killing the client.     |
+	+----------------------------------------------------------------+
+_NET_MOVERESIZE_WINDOW		root window message		NIL
+_NET_WM_MOVERESIZE		root window message		PARTIAL
+	+----------------------------------------------------------------+
+        | Lacks keyboard modes and button support.                       |
+	+----------------------------------------------------------------+
 
 Application Window Properties:
 
-_NET_WM_NAME			window property			
-_NET_WM_VISIBLE_NAME		window property			
-_NET_WM_ICON_NAME		window property			
-_NET_WM_VISIBLE_ICON_NAME	window property			
-_NET_WM_DESKTOP			window property + message	
-_NET_WM_WINDOW_TYPE		window property			
-  _NET_WM_WINDOW_TYPE_DESKTOP	property value (atom)		
-  _NET_WM_WINDOW_TYPE_DOCK	property value (atom)		
+_NET_WM_NAME			window property			COMPLETE
+	+----------------------------------------------------------------+
+        | Set by clients                                                 |
+	+----------------------------------------------------------------+
+_NET_WM_VISIBLE_NAME		window property                 COMPLETE
+_NET_WM_ICON_NAME		window property			PARTIAL
+	+----------------------------------------------------------------+
+        | Doesn't seem to be used at all, not even as a fallback         |
+        | in KWin::icon(). Seems to be obsoleted by _NET_WM_ICON anyway? |
+        | The code in netwm.cpp itself seems to be correct.              |
+	+----------------------------------------------------------------+
+_NET_WM_VISIBLE_ICON_NAME	window property			PARTIAL
+	+----------------------------------------------------------------+
+        | The same like _NET_WM_ICON_NAME, but this property should be   |
+        | set by the WM only if it uses different one than               |
+        | _NET_WM_ICON_NAME. Since KWin doesn't use it at all, it's ok.  |
+	+----------------------------------------------------------------+
+_NET_WM_DESKTOP			window property + message	PARTIAL
+	+----------------------------------------------------------------+
+        | After the WM_Sn (ICCCM) manager selection is implemented, it   |
+        | should be checked that the property is removed on withdrawal,  |
+        | but not on shutdown.                                           |
+        | Also, Client::is_sticky should be obsoleted (removed if it     |
+        | weren't BIC), and simply desktop == OnAllDesktops should be    |
+        | used.                                                          |
+	+----------------------------------------------------------------+
+_NET_WM_WINDOW_TYPE		window property			PARTIAL
+	+----------------------------------------------------------------+
+        | Set by clients, and the handling of _NET_WM_WINDOW_TYPE itself |
+        | is compliant.                                                  |
+	+----------------------------------------------------------------+
+  _NET_WM_WINDOW_TYPE_DESKTOP	property value (atom)		COMPLETE
+  _NET_WM_WINDOW_TYPE_DOCK	property value (atom)		COMPLETE
+        CHECKME : check that Kicker etc. set that they're on all desktops
   _NET_WM_WINDOW_TYPE_TOOLBAR	property value (atom)		
-  _NET_WM_WINDOW_TYPE_MENU	property value (atom)		
-  _NET_WM_WINDOW_TYPE_UTILITY	property value (atom)		nil
-  _NET_WM_WINDOW_TYPE_SPLASH	property value (atom)		nil
+  _NET_WM_WINDOW_TYPE_MENU	property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+        | Qt doesn't support this type yet.                              |
+        | Up to KDE3.0, this window type was incorrectly used            |
+        | for the toplevel menubar, and not for torn-off menus. This was |
+        | fixed in KDE3.1 by introducing _KDE_NET_WM_WINDOW_TYPE_TOPMENU |
+        | and KWin tries to detect old KDE apps using the old type.      |
+	+----------------------------------------------------------------+
+  _NET_WM_WINDOW_TYPE_UTILITY	property value (atom)		NIL
+  _NET_WM_WINDOW_TYPE_SPLASH	property value (atom)		NIL
   _NET_WM_WINDOW_TYPE_DIALOG	property value (atom)
   _NET_WM_WINDOW_TYPE_NORMAL	property value (atom)		
 _NET_WM_STATE			window property + message			
   _NET_WM_STATE_MODAL		property value (atom)		
-  _NET_WM_STATE_STICKY		property value (atom)		
+  _NET_WM_STATE_STICKY		property value (atom)		COMPLETE
+	+----------------------------------------------------------------+
+        | KWin doesn't implement large desktops, so this state is        |
+        | ignored. Note that 'sticky' here is not 'on all desktops'.     |
+	+----------------------------------------------------------------+
   _NET_WM_STATE_MAXIMIZED_VERT	property value (atom)		
   _NET_WM_STATE_MAXIMIZED_HORZ	property value (atom)		
   _NET_WM_STATE_SHADED		property value (atom)		
@@ -119,7 +189,7 @@ _NET_WM_STATE			window property + message
   _NET_WM_STATE_FULLSCREEN	property value (atom)		
   _NET_WM_STATE_ABOVE		property value (atom)		
   _NET_WM_STATE_BELOW		property value (atom)		
-_NET_WM_ALLOWED_ACTIONS		window property			
+_NET_WM_ALLOWED_ACTIONS		window property			NIL
   _NET_WM_ACTION_MOVE		property value (atom)		
   _NET_WM_ACTION_RESIZE		property value (atom)		
   _NET_WM_ACTION_MINIMIZE	property value (atom)		
@@ -132,18 +202,27 @@ _NET_WM_ALLOWED_ACTIONS		window property
   _NET_WM_ACTION_CLOSE		property value (atom)		
 _NET_WM_STRUT			window property			
 _NET_WM_ICON_GEOMETRY		window property
-_NET_WM_ICON			window property			
+_NET_WM_ICON			window property
+        CHECKME : the code in netwm.cpp is incorrect on 64bit platforms?
 _NET_WM_PID			window property			
 	+----------------------------------------------------------------+
 	| The ICCCM specified property WM_CLIENT_MACHINE must be set to  |
 	| a fully qualified domain name of client's host to allow the WM |
-	| to kill windows that do not respond to a _NET_WM_PING		 |
+	| to kill windows that do not respond to a _NET_WM_PING.         |
+        | Note that due to gethostname(2) not returning FQDN on some     |
+        | systems WM_CLIENT_MACHINE may not be actually FQDN.            |
 	+----------------------------------------------------------------+
-_NET_WM_HANDLED_ICONS		window property
+_NET_WM_HANDLED_ICONS		window property                 COMPLETE
+	+----------------------------------------------------------------+
+        | This property should be set by a taskbar, so it has nothing to |
+        | do with KWin. But this property is broken anyway and should be |
+        | replaced by a manager selection in future NETWM versions.      |
+	+----------------------------------------------------------------+
+
 
 Window Manager Protocols:
 
-_NET_WM_PING			window property + message	
+_NET_WM_PING			window property + message	NIL
 ===========================================================================
 
 
@@ -163,6 +242,8 @@ _NET_WM_WINDOW_TYPE additions:
 
 
 Inter-Client Communication Conventions Manual (ICCCM) specs (for completeness):
+
+CHECKME : we should also check all sections for compliance
 
 Property Name		Type				Contents / Format
 ==========================================================================
@@ -188,3 +269,34 @@ WM_STATE		window property			WM_STATE / 8?
 WM_ICON_SIZE		window property			WM_ICON_SIZE / 8?
 ==========================================================================
 
+
+
+NETWM spec compliance (whole document):
+======================
+
+1. COMPLETE
+2.3. COMPLETE - FEATURE NOT IMPLEMENTED
+2.4. COMPLETE - FEATURE NOT IMPLEMENTED
+2.5. PARTIAL - minimized windows are not in IconicState - see _NET_WM_STATE_HIDDEN
+2. (rest of the section) COMPLETE
+3.1.
+3.2. COMPLETE
+3.3. COMPLETE
+3.4. COMPLETE - FEATURE NOT IMPLEMENTED
+3.5. COMPLETE - FEATURE NOT IMPLEMENTED
+3.6. COMPLETE
+3.7. COMPLETE
+3.8. COMPLETE
+3.9. COMPLETE
+3.10. COMPLETE
+3.11. COMPLETE - NOT USED
+3.12.
+3.13.
+4.1. COMPLETE
+4.2.
+4.3. PARTIAL
+5.1. COMPLETE
+5.2. COMPLETE
+5.3.
+5.4.
+5.5. PARTIAL
