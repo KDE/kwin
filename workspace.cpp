@@ -1051,7 +1051,7 @@ void Workspace::walkThroughDesktops( bool forward )
 }
 
 void Workspace::CDEWalkThroughWindows( bool forward )
-    {
+{
     Client* c = topClientOnDesktop();
     Client* nc = c;
     if ( !forward ){
@@ -1075,7 +1075,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
         else
             raiseClient( nc );
     }
-    }
+}
 
 void Workspace::KDEOneStepThroughWindows( bool forward )
 {
@@ -1324,7 +1324,7 @@ Client* Workspace::previousClient( Client* c ) const
 */
 Client* Workspace::nextStaticClient( Client* c ) const
 {
-    if ( clients.isEmpty() )
+    if ( !c || clients.isEmpty() )
         return 0;
     ClientList::ConstIterator it = clients.find( c );
     if ( it == clients.end() )
@@ -1340,7 +1340,7 @@ Client* Workspace::nextStaticClient( Client* c ) const
 */
 Client* Workspace::previousStaticClient( Client* c ) const
 {
-    if ( clients.isEmpty() )
+    if ( !c || clients.isEmpty() )
         return 0;
     ClientList::ConstIterator it = clients.find( c );
     if ( it == clients.end() )
