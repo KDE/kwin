@@ -1,0 +1,19 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=kcmkwm
+Type=Application
+Exec=kcmshell kwintranslucency
+DocPath=kcontrol/windowmanagement/index.html#action-translucency
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kwinoptions
+X-KDE-FactoryName=kwintranslucency
+
+Name=Translucency
+Name[de]=Transparenz
+
+Comment=Configure window translucency and shadow management
+Comment[de]=Schatten und Transparenz einrichten
+
+Keywords=translucency,transparence,shadows
+Keywords[de]=Transparenz,Schatten
