@@ -453,44 +453,22 @@ QBitmap IconEngine::icon(ButtonIcon icon, int size)
 
         case NotOnAllDesktopsIcon:
         {
-            int lwMark = 1;
-            if (r.width() > 16) {
+            int lwMark = r.width()-lwTitleBar*2-2;
+            if (lwMark < 1)
                 lwMark = 3;
-            } else if (r.width() > 7) {
-                lwMark = 2;
-            }
 
-            int l = r.width()/3;
-            if (l < 1)
-                l = 1;
-
-            drawObject(p, DiagonalLine, r.x()+l, r.y()+l, r.width()-2*l, lwMark);
-            drawObject(p, CrossDiagonalLine, r.x()+l, r.bottom()-l, r.width()-2*l, lwMark);
+            drawObject(p, HorizontalLine, r.x()+(r.width()-lwMark)/2, r.y()+(r.height()-lwMark)/2, lwMark, lwMark);
 
             // Fall through to OnAllDesktopsIcon intended!
         }
         case OnAllDesktopsIcon:
         {
-            int circleLineWidth = 1;
-            if (r.width() > 16) {
-                circleLineWidth = 4;
-            } else if (r.width() > 7) {
-                circleLineWidth = 2;
-            }
-
-            int l = r.width()/4;
-            if (l < 1)
-                l = 1;
-            int l2 = r.width()/3;
-            if (l2 < 1)
-                l = 1;
-
             // horizontal bars
-            drawObject(p, HorizontalLine, r.x()+l, r.y(), r.width()-2*l, circleLineWidth);
-            drawObject(p, HorizontalLine, r.x()+l, r.bottom()-(circleLineWidth-1), r.width()-2*l, circleLineWidth);
+            drawObject(p, HorizontalLine, r.x()+lwTitleBar, r.y(), r.width()-2*lwTitleBar, lwTitleBar);
+            drawObject(p, HorizontalLine, r.x()+lwTitleBar, r.bottom()-(lwTitleBar-1), r.width()-2*lwTitleBar, lwTitleBar);
             // vertical bars
-            drawObject(p, VerticalLine, r.x(), r.y()+l, r.height()-2*l, circleLineWidth);
-            drawObject(p, VerticalLine, r.right()-(circleLineWidth-1), r.y()+l, r.height()-2*l, circleLineWidth);
+            drawObject(p, VerticalLine, r.x(), r.y()+lwTitleBar, r.height()-2*lwTitleBar, lwTitleBar);
+            drawObject(p, VerticalLine, r.right()-(lwTitleBar-1), r.y()+lwTitleBar, r.height()-2*lwTitleBar, lwTitleBar);
 
 
             break;
