@@ -34,8 +34,8 @@ extern "C"
 B2Config::B2Config( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
+	KGlobal::locale()->insertCatalogue("kwin_b2_config");
 	b2Config = new KConfig("kwinb2rc");
-	KGlobal::locale()->insertCatalogue("kwinquartz_config");
 	gb = new QGroupBox( 1, Qt::Horizontal, 
 						i18n("Decoration Settings"), parent );
 	cbColorBorder = new QCheckBox( 
