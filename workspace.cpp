@@ -23,8 +23,10 @@ static Client* clientFactory( Workspace *ws, WId w )
 	s = QString::fromLatin1( name );
 	XFree( name );
     }
-    if ( s == "desktop" ) {
+    if ( s == "THE DESKTOP" ) {
+	XLowerWindow( qt_xdisplay(), w );
 	Client * c = new NoBorderClient( ws, w);
+	c->setSticky( TRUE );
 	ws->setDesktopClient( c );
 	return c;
     }
@@ -112,9 +114,10 @@ void Workspace::init()
 	    continue;
 	if (attr.map_state != IsUnmapped) {
 	    Client* c = clientFactory( this, wins[i] );
-	    clients.append( c );
-	    if ( c != desktop_client )
+	    if ( c != desktop_client ) {
+		clients.append( c );
 		stacking_order.append( c );
+	    }
 	    focus_chain.append( c );
 	    c->manage( TRUE );
 	    if ( c == desktop_client )
@@ -135,6 +138,12 @@ void Workspace::init()
 
 Workspace::~Workspace()
 {
+    if ( desktop_client ) {
+	WId win = desktop_client->window();
+	delete desktop_client;
+	XMapWindow( qt_xdisplay(), win );
+	XLowerWindow( qt_xdisplay(), win );
+    }
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	WId win = (*it)->window();
 	delete (*it);
@@ -186,9 +195,10 @@ bool Workspace::workspaceEvent( XEvent * e )
 		    // TODO may use QWidget:.create
 		    XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
 		}
-		clients.append( c );
-		if ( c != desktop_client )
+		if ( c != desktop_client ) {
+		    clients.append( c );
 		    stacking_order.append( c );
+		}
 		propagateClients();
 	    }
 	    bool result = c->windowEvent( e );
@@ -262,6 +272,8 @@ Client* Workspace::findClient( WId w ) const
 	if ( (*it)->window() == w )
 	    return *it;
     }
+    if ( desktop_client && w == desktop_client->window() )
+	return desktop_client;
     return 0;
 }
 
