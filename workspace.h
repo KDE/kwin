@@ -154,7 +154,7 @@ public:
 
     /**
      * Indicates that the client c is being moved around by the user.
-     */ 
+     */
     void setClientIsMoving( Client *c );
 
     void doPlacement( Client* c );
@@ -237,22 +237,6 @@ public:
 public slots:
     void refresh();
     // keybindings
-    /*void slotSwitchDesktop1(); // remove these -- ellis
-    void slotSwitchDesktop2();
-    void slotSwitchDesktop3();
-    void slotSwitchDesktop4();
-    void slotSwitchDesktop5();
-    void slotSwitchDesktop6();
-    void slotSwitchDesktop7();
-    void slotSwitchDesktop8();
-    void slotSwitchDesktop9();
-    void slotSwitchDesktop10();
-    void slotSwitchDesktop11();
-    void slotSwitchDesktop12();
-    void slotSwitchDesktop13();
-    void slotSwitchDesktop14();
-    void slotSwitchDesktop15();
-    void slotSwitchDesktop16();*/
     void slotSwitchDesktopNext();
     void slotSwitchDesktopPrevious();
     void slotSwitchDesktopRight();
@@ -284,12 +268,11 @@ public slots:
 
     void slotWindowOperations();
     void slotWindowClose();
-    void slotWindowCloseAll();
     void slotWindowMove();
     void slotWindowResize();
 
-    void slotWindowNextDesktop();
-    void slotWindowPreviousDesktop();
+    void slotWindowToNextDesktop();
+    void slotWindowToPreviousDesktop();
 
     void slotMouseEmulation();
 
@@ -313,16 +296,16 @@ private slots:
     void focusEnsurance();
 
 protected:
-    bool keyPress( XKeyEvent key );
-    bool keyRelease( XKeyEvent key );
-    bool keyPressMouseEmulation( XKeyEvent key );
+    bool keyPress( XKeyEvent& ev );
+    bool keyRelease( XKeyEvent& ev );
+    bool keyPressMouseEmulation( XKeyEvent& ev );
     bool netCheck( XEvent* e );
     void checkStartOnDesktop( WId w );
 
 private:
     void init();
-    void createKeybindings();
-    void readKeybindings();
+    void initShortcuts();
+    void readShortcuts();
 
     bool startKDEWalkThroughWindows();
     bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
@@ -415,9 +398,12 @@ private:
 
     bool control_grab;
     bool tab_grab;
-    KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
-    KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
-    KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
+    //KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
+    //KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
+    //KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
+    KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
+    KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
+    KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
     bool mouse_emulation;
     unsigned int mouse_emulation_state;
     WId mouse_emulation_window;

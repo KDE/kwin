@@ -11,6 +11,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <kglobalaccel.h>
+#include <kkeynative.h>
 #include <klocale.h>
 #include <stdlib.h>
 #include <qwhatsthis.h>
@@ -350,7 +351,7 @@ Workspace::Workspace( bool restore )
       1
     );
 
-    createKeybindings();
+    initShortcuts();
     tab_box = new TabBox( this );
 
     init();
@@ -533,7 +534,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             XUngrabKeyboard(qt_xdisplay(), kwin_time);
             XUngrabPointer( qt_xdisplay(), kwin_time);
             tab_box->hide();
-            keys->setKeyEventsEnabled( TRUE );
+            keys->setEnabled( true );
             tab_grab = control_grab = false;
             return TRUE;
         }
@@ -815,47 +816,48 @@ bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
         return bAll;
 }
 
-bool areModKeysDepressed( const KKeyNative& key )
+bool areModKeysDepressed( const KShortcut& cut )
 {
-        uint rgKeySyms[8];
-        int nKeySyms = 0;
-        int mod = key.spec().modFlags();
 
-        if( mod & KKey::SHIFT ) {
-                rgKeySyms[nKeySyms++] = XK_Shift_L;
-                rgKeySyms[nKeySyms++] = XK_Shift_R;
-        }
-        if( mod & KKey::CTRL ) {
-                rgKeySyms[nKeySyms++] = XK_Control_L;
-                rgKeySyms[nKeySyms++] = XK_Control_R;
-        }
-        if( mod & KKey::ALT ) {
-                rgKeySyms[nKeySyms++] = XK_Alt_L;
-                rgKeySyms[nKeySyms++] = XK_Alt_R;
-        }
-        if( mod & KKey::WIN ) {
-                rgKeySyms[nKeySyms++] = XK_Meta_L;
-                rgKeySyms[nKeySyms++] = XK_Meta_R;
-        }
+    uint rgKeySyms[8];
+    int nKeySyms = 0;
+    int mod = cut.seq(0).key(0).modFlags();
 
-        // Is there a better way to push all 8 integer onto the stack?
-        return areKeySymXsDepressed( false, nKeySyms,
-                rgKeySyms[0], rgKeySyms[1], rgKeySyms[2], rgKeySyms[3],
-                rgKeySyms[4], rgKeySyms[5], rgKeySyms[6], rgKeySyms[7] );
+    if ( mod & KKey::SHIFT ) {
+        rgKeySyms[nKeySyms++] = XK_Shift_L;
+        rgKeySyms[nKeySyms++] = XK_Shift_R;
+    }
+    if ( mod & KKey::CTRL ) {
+        rgKeySyms[nKeySyms++] = XK_Control_L;
+        rgKeySyms[nKeySyms++] = XK_Control_R;
+    }
+    if( mod & KKey::ALT ) {
+        rgKeySyms[nKeySyms++] = XK_Alt_L;
+        rgKeySyms[nKeySyms++] = XK_Alt_R;
+    }
+    if( mod & KKey::WIN ) {
+        rgKeySyms[nKeySyms++] = XK_Meta_L;
+        rgKeySyms[nKeySyms++] = XK_Meta_R;
+    }
+
+    // Is there a better way to push all 8 integer onto the stack?
+    return areKeySymXsDepressed( false, nKeySyms,
+        rgKeySyms[0], rgKeySyms[1], rgKeySyms[2], rgKeySyms[3],
+        rgKeySyms[4], rgKeySyms[5], rgKeySyms[6], rgKeySyms[7] );
 }
 
 void Workspace::slotWalkThroughWindows()
 {
     if ( root != qt_xrootwin() )
         return;
-    if( tab_grab || control_grab )
+    if ( tab_grab || control_grab )
         return;
     if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) {
         //XUngrabKeyboard(qt_xdisplay(), kwin_time); // need that because of accelerator raw mode
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
     } else {
-        if( areModKeysDepressed( walkThroughWindowsKeycode ) ) {
+        if ( areModKeysDepressed( cutWalkThroughWindows ) ) {
             if ( startKDEWalkThroughWindows() )
                 KDEWalkThroughWindows( true );
         }
@@ -881,7 +883,7 @@ void Workspace::slotWalkBackThroughWindows()
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
     } else {
-        if ( areModKeysDepressed( walkBackThroughWindowsKeycode ) ) {
+        if ( areModKeysDepressed( cutWalkThroughWindowsReverse ) ) {
             if ( startKDEWalkThroughWindows() )
                 KDEWalkThroughWindows( false );
         } else {
@@ -896,7 +898,7 @@ void Workspace::slotWalkThroughDesktops()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( walkThroughDesktopsKeycode ) ) {
+    if ( areModKeysDepressed( cutWalkThroughDesktops ) ) {
         if ( startWalkThroughDesktops() )
             walkThroughDesktops( true );
     } else {
@@ -910,7 +912,7 @@ void Workspace::slotWalkBackThroughDesktops()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( walkBackThroughDesktopsKeycode ) ) {
+    if ( areModKeysDepressed( cutWalkThroughDesktopsReverse ) ) {
         if ( startWalkThroughDesktops() )
             walkThroughDesktops( false );
     } else {
@@ -924,7 +926,7 @@ void Workspace::slotWalkThroughDesktopList()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( walkThroughDesktopListKeycode ) ) {
+    if ( areModKeysDepressed( cutWalkThroughDesktopList ) ) {
         if ( startWalkThroughDesktopList() )
             walkThroughDesktops( true );
     } else {
@@ -938,7 +940,7 @@ void Workspace::slotWalkBackThroughDesktopList()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( areModKeysDepressed( walkBackThroughDesktopListKeycode ) ) {
+    if ( areModKeysDepressed( cutWalkThroughDesktopListReverse ) ) {
         if ( startWalkThroughDesktopList() )
             walkThroughDesktops( false );
     } else {
@@ -964,7 +966,7 @@ bool Workspace::startKDEWalkThroughWindows()
         return FALSE;
     }
     tab_grab        = TRUE;
-    keys->setKeyEventsEnabled( FALSE );
+    keys->setEnabled( false );
     tab_box->setMode( TabBox::WindowsMode );
     tab_box->reset();
     return TRUE;
@@ -988,7 +990,7 @@ bool Workspace::startWalkThroughDesktops( int mode )
         return FALSE;
     }
     control_grab = TRUE;
-    keys->setKeyEventsEnabled( FALSE );
+    keys->setEnabled( false );
     tab_box->setMode( (TabBox::Mode) mode );
     tab_box->reset();
     return TRUE;
@@ -1075,15 +1077,15 @@ void Workspace::oneStepThroughDesktopList( bool forward )
 /*!
   Handles holding alt-tab / control-tab
  */
-bool Workspace::keyPress(XKeyEvent key)
+bool Workspace::keyPress(XKeyEvent& ev)
 {
     if ( root != qt_xrootwin() )
         return FALSE;
 
-    KKeyNative keyX( (XEvent*)&key );
+    KKeyNative keyX( (XEvent*)&ev );
     uint keyQt = keyX.keyCodeQt();
 
-    kdDebug() << "Workspace::keyPress( " << keyX.spec().toString() << " )" << endl;
+    kdDebug(125) << "Workspace::keyPress( " << keyX.key().toString() << " )" << endl;
     if (d->movingClient)
     {
         d->movingClient->keyPressEvent(keyQt);
@@ -1091,19 +1093,19 @@ bool Workspace::keyPress(XKeyEvent key)
     }
 
     if (tab_grab){
-        bool forward = walkThroughWindowsKeycode == keyX;
-        bool backward = walkBackThroughWindowsKeycode == keyX;
+        bool forward = cutWalkThroughWindows.contains( keyX );
+        bool backward = cutWalkThroughWindowsReverse.contains( keyX );
         if (forward || backward){
-            kdDebug() << "== " << walkThroughWindowsKeycode.spec().toString()
-                << " or " << walkBackThroughWindowsKeycode.spec().toString() << endl;
+            kdDebug(125) << "== " << cutWalkThroughWindows.toString()
+                << " or " << cutWalkThroughWindowsReverse.toString() << endl;
             KDEWalkThroughWindows( forward );
         }
     }
     else if (control_grab){
-        bool forward = walkThroughDesktopsKeycode == keyX ||
-                       walkThroughDesktopListKeycode == keyX;
-        bool backward = walkBackThroughDesktopsKeycode == keyX ||
-                        walkBackThroughDesktopListKeycode == keyX;
+        bool forward = cutWalkThroughDesktops.contains( keyX ) ||
+                       cutWalkThroughDesktopList.contains( keyX );
+        bool backward = cutWalkThroughDesktopsReverse.contains( keyX ) ||
+                        cutWalkThroughDesktopListReverse.contains( keyX );
         if (forward || backward)
             walkThroughDesktops(forward);
     }
@@ -1113,7 +1115,7 @@ bool Workspace::keyPress(XKeyEvent key)
             XUngrabKeyboard(qt_xdisplay(), kwin_time);
             XUngrabPointer( qt_xdisplay(), kwin_time);
             tab_box->hide();
-            keys->setKeyEventsEnabled( TRUE );
+            keys->setEnabled( true );
             tab_grab = FALSE;
             control_grab = FALSE;
         }
@@ -1126,18 +1128,18 @@ bool Workspace::keyPress(XKeyEvent key)
 /*!
   Handles alt-tab / control-tab releasing
  */
-bool Workspace::keyRelease(XKeyEvent key)
+bool Workspace::keyRelease(XKeyEvent& ev)
 {
     if ( root != qt_xrootwin() )
         return FALSE;
     if( !tab_grab && !control_grab )
         return FALSE;
-    unsigned int mk = key.state &
+    unsigned int mk = ev.state &
         (KKeyNative::modX(KKey::SHIFT) |
          KKeyNative::modX(KKey::CTRL) |
          KKeyNative::modX(KKey::ALT) |
          KKeyNative::modX(KKey::WIN));
-    // key.state is state before the key release, so just checking mk being 0 isn't enough
+    // ev.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released: only one modifier is active and the currently released
     // key is this modifier - if yes, release the grab
@@ -1157,7 +1159,7 @@ bool Workspace::keyRelease(XKeyEvent key)
         XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
         for (int i=0; i<xmk->max_keypermod; i++)
             if (xmk->modifiermap[xmk->max_keypermod * mod_index + i]
-                == key.keycode)
+                == ev.keycode)
                 release = true;
         XFreeModifiermap(xmk);
     }
@@ -1167,7 +1169,7 @@ bool Workspace::keyRelease(XKeyEvent key)
                 XUngrabPointer( qt_xdisplay(), kwin_time);
                 XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 tab_box->hide();
-                keys->setKeyEventsEnabled( TRUE );
+                keys->setEnabled( true );
                 tab_grab = false;
                 if ( tab_box->currentClient() ){
                     activateClient( tab_box->currentClient() );
@@ -1177,7 +1179,7 @@ bool Workspace::keyRelease(XKeyEvent key)
                 XUngrabPointer( qt_xdisplay(), kwin_time);
                 XUngrabKeyboard(qt_xdisplay(), kwin_time);
                 tab_box->hide();
-                keys->setKeyEventsEnabled( TRUE );
+                keys->setEnabled( true );
                 control_grab = False;
                 if ( tab_box->currentDesktop() != -1 )
                     setCurrentDesktop( tab_box->currentDesktop() );
@@ -1994,7 +1996,7 @@ void Workspace::slotReconfigure()
     options->reload();
     tab_box->reconfigure();
 
-    readKeybindings();
+    readShortcuts();
 
     mgr->updatePlugin();
     // NO need whatsoever to call slotResetAllClientsDelayed here,
@@ -2650,21 +2652,27 @@ void Workspace::propagateSystemTrayWins()
 /*!
   Create the global accel object \c keys.
  */
-void Workspace::createKeybindings(){
+void Workspace::initShortcuts(){
     keys = new KGlobalAccel( this );
 #include "kwinbindings.cpp"
-    readKeybindings();
+    readShortcuts();
 }
 
-void Workspace::readKeybindings(){
+void Workspace::readShortcuts(){
     keys->readSettings();
 
-    walkThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops").keyPrimaryNative();
-    walkBackThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops (Reverse)").keyPrimaryNative();
-    walkThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List").keyPrimaryNative();
-    walkBackThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List (Reverse)").keyPrimaryNative();
-    walkThroughWindowsKeycode = keys->shortcut("Walk Through Windows").keyPrimaryNative();
-    walkBackThroughWindowsKeycode = keys->shortcut("Walk Through Windows (Reverse)").keyPrimaryNative();
+    /*walkThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops");
+    walkBackThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops (Reverse)");
+    walkThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List");
+    walkBackThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List (Reverse)");
+    walkThroughWindowsKeycode = keys->shortcut("Walk Through Windows");
+    walkBackThroughWindowsKeycode = keys->shortcut("Walk Through Windows (Reverse)");*/
+    cutWalkThroughDesktops = keys->shortcut("Walk Through Desktops");
+    cutWalkThroughDesktopsReverse = keys->shortcut("Walk Through Desktops (Reverse)");
+    cutWalkThroughDesktopList = keys->shortcut("Walk Through Desktop List");
+    cutWalkThroughDesktopListReverse = keys->shortcut("Walk Through Desktop List (Reverse)");
+    cutWalkThroughWindows = keys->shortcut("Walk Through Windows");
+    cutWalkThroughWindowsReverse = keys->shortcut("Walk Through Windows (Reverse)");
 
     keys->updateConnections();
 }
@@ -2896,7 +2904,7 @@ void Workspace::slotWindowRaiseOrLower()
 /*!
   Move window to next desktop
  */
-void Workspace::slotWindowNextDesktop(){
+void Workspace::slotWindowToNextDesktop(){
     int d = currentDesktop() + 1;
     if ( d > numberOfDesktops() )
         d = 1;
@@ -2908,7 +2916,7 @@ void Workspace::slotWindowNextDesktop(){
 /*!
   Move window to previous desktop
  */
-void Workspace::slotWindowPreviousDesktop(){
+void Workspace::slotWindowToPreviousDesktop(){
     int d = currentDesktop() - 1;
     if ( d <= 0 )
         d = numberOfDesktops();
@@ -3120,14 +3128,6 @@ void Workspace::slotWindowClose()
     if ( tab_box->isVisible() )
         return;
     performWindowOperation( popup_client, Options::CloseOp );
-}
-
-void Workspace::slotWindowCloseAll()
-{
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-        if( (*it)->isOnDesktop( currentDesktop() ) )
-            performWindowOperation( *it, Options::CloseOp );
-    }
 }
 
 /*!
@@ -3367,12 +3367,12 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
 /*!
   Handles keypress event during mouse emulation
  */
-bool Workspace::keyPressMouseEmulation( XKeyEvent key )
+bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
 {
     if ( root != qt_xrootwin() )
         return FALSE;
-    int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
-    int km = key.state & (ControlMask | Mod1Mask | ShiftMask);
+    int kc = XKeycodeToKeysym(qt_xdisplay(), ev.keycode, 0);
+    int km = ev.state & (ControlMask | Mod1Mask | ShiftMask);
 
     bool is_control = km & ControlMask;
     bool is_alt = km & Mod1Mask;
@@ -3521,7 +3521,7 @@ void Workspace::slotSettingsChanged(int category)
 {
     kdDebug(1212) << "Workspace::slotSettingsChanged()" << endl;
     if( category == (int) KApplication::SETTINGS_SHORTCUTS )
-        readKeybindings();
+        readShortcuts();
 }
 
 /*
