@@ -631,7 +631,7 @@ KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
 
 	// Determine the size of the lower grab bar
     spacer = new QSpacerItem(10, 
-			showGrabBar && isResizable() && (!isTool()) ? 8 : 4, 
+			showGrabBar && isResizable() ? 8 : 4, 
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->addItem(spacer, 4, 1);
 
@@ -881,7 +881,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawLine(x2-2, y+titleHeight+3, x2-2, y2-2);
 
 	// Draw the bottom handle if required
-	if (showGrabBar && isResizable() && (!isTool()) )
+	if (showGrabBar && isResizable())
 	{
 		if(w > 50)
 		{
@@ -996,7 +996,7 @@ void KDEDefaultClient::maximizeChange(bool m)
 		button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
 		button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
 	}
-	spacer->changeSize(10, showGrabBar && isResizable() && !isTool() ? 8 : 4,
+	spacer->changeSize(10, showGrabBar && isResizable() ? 8 : 4,
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
 	g->activate();
 }
@@ -1057,7 +1057,7 @@ Client::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) const
 	MousePosition m = Nowhere;
 
 	// Modify the mouse position if we are using a grab bar.
-	if (showGrabBar && isResizable() && (!isTool()) )
+	if (showGrabBar && isResizable())
 		if (p.y() < (height() - 8))
 			m = Client::mousePosition(p);
 		else
