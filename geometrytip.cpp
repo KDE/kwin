@@ -68,7 +68,7 @@ void GeometryTip::setGeometry( const QRect& geom )
 
     h = QMAX( h, 0 ); // in case of isShade() and PBaseSize
     QString pos;
-    pos.sprintf( "%+d,%+d&nbsp;(<b>%d&nbsp;x&nbsp;%d</b>)",
+    pos.sprintf( "%+d,%+d<br>(<b>%d&nbsp;x&nbsp;%d</b>)",
                      geom.x(), geom.y(), w, h );
     setText( pos );
     adjustSize();
