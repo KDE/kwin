@@ -1,5 +1,7 @@
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kglobalaccel.h>
+#include <klocale.h>
 
 #include "workspace.h"
 #include "client.h"
@@ -102,10 +104,13 @@ Workspace::Workspace()
     control_grab = FALSE;
     tab_grab = FALSE;
     tab_box = new TabBox( this );
+    keys = 0;
     grabKey(XK_Tab, Mod1Mask);
     grabKey(XK_Tab, Mod1Mask | ShiftMask);
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
+    createKeybindings();
+
 }
 
 Workspace::Workspace( WId rootwin )
@@ -122,14 +127,11 @@ Workspace::Workspace( WId rootwin )
 		 SubstructureNotifyMask
 		 );
 
-    init();
     control_grab = FALSE;
     tab_grab = FALSE;
-    tab_box = new TabBox( this );
-    grabKey(XK_Tab, Mod1Mask);
-    grabKey(XK_Tab, Mod1Mask | ShiftMask);
-    grabKey(XK_Tab, ControlMask);
-    grabKey(XK_Tab, ControlMask | ShiftMask);
+    tab_box = 0;
+    keys = 0;
+    init();
 }
 
 void Workspace::init()
@@ -194,6 +196,7 @@ Workspace::~Workspace()
     }
     delete tab_box;
     delete popup;
+    delete keys;
 }
 
 /*!
@@ -328,6 +331,8 @@ Client* Workspace::findClient( WId w ) const
 
 /*!
   Returns the workspace's geometry
+  
+  \sa clientArea()
  */
 QRect Workspace::geometry() const
 {
@@ -342,6 +347,22 @@ QRect Workspace::geometry() const
 	}
 	return r;
     }
+}
+
+/*!
+  Returns the workspace's client area. 
+  
+  This is the area within the geometry() where clients can be placed,
+  i.e. the full geometry minus space for desktop panels, taskbars,
+  etc.
+  
+  Placement algorithms should refer to clientArea.
+  
+  \sa geometry()
+ */
+QRect Workspace::clientArea() const
+{
+    return geometry(); // for now
 }
 
 
@@ -789,7 +810,7 @@ void Workspace::randomPlacement(Client* c){
     static int py = 2 * step;
     int tx,ty;
 
-    QRect maxRect = geometry(); // TODO
+    QRect maxRect = clientArea();
 
     if (px < maxRect.x())
 	px = maxRect.x();
@@ -1090,4 +1111,47 @@ void Workspace::propagateDockwins()
 		    atoms->net_kde_docking_windows, XA_WINDOW, 32,
 		    PropModeReplace, (unsigned char *)cl, dockwins.count());
     delete [] cl;
+}
+
+
+void Workspace::createKeybindings(){
+    keys = new KGlobalAccel();
+    
+#include "kwinbindings.cpp"
+
+    keys->connectItem( "Switch to desktop 1", this, SLOT( slotSwitchDesktop1() ));
+    keys->connectItem( "Switch to desktop 2", this, SLOT( slotSwitchDesktop2() ));
+    keys->connectItem( "Switch to desktop 3", this, SLOT( slotSwitchDesktop3() ));
+    keys->connectItem( "Switch to desktop 4", this, SLOT( slotSwitchDesktop4() ));
+    keys->connectItem( "Switch to desktop 5", this, SLOT( slotSwitchDesktop5() ));
+    keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchDesktop6() ));
+    keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchDesktop7() ));
+    keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchDesktop8() ));
+
+    keys->readSettings();
+}
+
+void Workspace::slotSwitchDesktop1(){
+    setCurrentDesktop(1);
+}
+void Workspace::slotSwitchDesktop2(){
+    setCurrentDesktop(2);
+}
+void Workspace::slotSwitchDesktop3(){
+    setCurrentDesktop(3);
+}
+void Workspace::slotSwitchDesktop4(){
+    setCurrentDesktop(4);
+}
+void Workspace::slotSwitchDesktop5(){
+    setCurrentDesktop(5);
+}
+void Workspace::slotSwitchDesktop6(){
+    setCurrentDesktop(6);
+}
+void Workspace::slotSwitchDesktop7(){
+    setCurrentDesktop(7);
+}
+void Workspace::slotSwitchDesktop8(){
+    setCurrentDesktop(8);
 }

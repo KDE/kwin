@@ -89,7 +89,7 @@ bool Application::x11EventFilter( XEvent *e )
 	 if ( (*it)->workspaceEvent( e ) )
 	     return TRUE;
      }
-     return FALSE;
+     return KApplication::x11EventFilter( e );
 }
 
 

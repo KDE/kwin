@@ -36,6 +36,7 @@ public:
     Client* findClient( WId w ) const;
 
     QRect geometry() const;
+    QRect clientArea() const;
 
     bool destroyClient( Client* );
 
@@ -75,6 +76,18 @@ public:
 
     void makeFullScreen( Client* );
 
+    
+public slots:  
+    // keybindings
+    void slotSwitchDesktop1();
+    void slotSwitchDesktop2();
+    void slotSwitchDesktop3();
+    void slotSwitchDesktop4();
+    void slotSwitchDesktop5();
+    void slotSwitchDesktop6();
+    void slotSwitchDesktop7();
+    void slotSwitchDesktop8();
+
 
 protected:
     bool keyPress( XKeyEvent key );
@@ -82,8 +95,9 @@ protected:
     bool clientMessage( XClientMessageEvent msg );
 	
 private:
-    KGlobalAccel *keys;
     void init();
+    KGlobalAccel *keys;
+    void createKeybindings();
     WId root;
     ClientList clients;
     ClientList stacking_order;
