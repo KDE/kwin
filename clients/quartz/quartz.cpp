@@ -95,6 +95,9 @@ KPixmap* pinDownPix		= NULL;
 KPixmap* pinUpPix		= NULL;
 KPixmap* ipinDownPix	= NULL;
 KPixmap* ipinUpPix		= NULL;
+static int normalTitleHeight;
+static int toolTitleHeight;
+static int borderWidth;
 
 bool quartz_initialized = false;
 QuartzHandler* clientHandler;
@@ -134,7 +137,7 @@ bool QuartzHandler::reset(unsigned long changed)
 
 	// Do we need to "hit the wooden hammer" ?
 	bool needHardReset = true;
-	if (changed & SettingColors || changed & SettingFont)
+	if (changed & SettingColors)
 	{
 		needHardReset = false;
 	}
@@ -157,6 +160,36 @@ void QuartzHandler::readConfig()
 
 	// A small hack to make the on all desktops button look nicer
 	onAllDesktopsButtonOnLeft = KDecoration::options()->titleButtonsLeft().contains( 'S' );
+	
+	switch(options()->preferredBorderSize(this)) {
+	case BorderLarge:
+		borderWidth = 8;
+		break;
+	case BorderVeryLarge:
+		borderWidth = 12;
+		break;
+	case BorderHuge:
+		borderWidth = 18;
+		break;
+	case BorderVeryHuge:
+		borderWidth = 27;
+		break;
+	case BorderOversized:
+		borderWidth = 40;
+		break;
+	case BorderTiny:
+	case BorderNormal:
+	default:
+		borderWidth = 4;
+	}
+
+	normalTitleHeight = QFontMetrics(options()->font(true)).height();
+	if (normalTitleHeight < 18) normalTitleHeight = 18;
+	if (normalTitleHeight < borderWidth) normalTitleHeight = borderWidth;
+	
+	toolTitleHeight = QFontMetrics(options()->font(true, true)).height();
+	if (toolTitleHeight < 12) toolTitleHeight = 12;
+	if (toolTitleHeight < borderWidth) toolTitleHeight = borderWidth;
 }
 
 
@@ -170,30 +203,36 @@ void QuartzHandler::drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const
 
 	// Draw a background gradient first
 	KPixmapEffect::gradient(p, c1, c2, KPixmapEffect::HorizontalGradient);
+	
+	int factor = (pi->height()-2)/4;
+	int square = factor - (factor+2)/4;
+	
+	int x = pi->width() - 5*factor - square;
+	int y = (pi->height() - 4*factor)/2;
 
-	px.fillRect( 2, 1, 3, 3, c1.light(120) );
-	px.fillRect( 2, 5, 3, 3, c1 );
-	px.fillRect( 2, 9, 3, 3, c1.light(110) );
-	px.fillRect( 2, 13, 3, 3, c1 );
+	px.fillRect( x, y,          square, square, c1.light(120) );
+	px.fillRect( x, y+factor,   square, square, c1 );
+	px.fillRect( x, y+2*factor, square, square, c1.light(110) );
+	px.fillRect( x, y+3*factor, square, square, c1 );
 
-	px.fillRect( 6, 1, 3, 3, c1.light(110) );
-	px.fillRect( 6, 5, 3, 3, c2.light(110) );
-	px.fillRect( 6, 9, 3, 3, c1.light(120) );
-	px.fillRect( 6, 13, 3, 3, c2.light(130) );
+	px.fillRect( x+factor, y,          square, square, c1.light(110) );
+	px.fillRect( x+factor, y+factor,   square, square, c2.light(110) );
+	px.fillRect( x+factor, y+2*factor, square, square, c1.light(120) );
+	px.fillRect( x+factor, y+3*factor, square, square, c2.light(130) );
 
-	px.fillRect( 10, 5, 3, 3, c1.light(110) );
-	px.fillRect( 10, 9, 3, 3, c2.light(120) );
-	px.fillRect( 10, 13, 3, 3, c2.light(150) );
+	px.fillRect( x+2*factor, y+factor,   square, square, c1.light(110) );
+	px.fillRect( x+2*factor, y+2*factor, square, square, c2.light(120) );
+	px.fillRect( x+2*factor, y+3*factor, square, square, c2.light(150) );
 
-	px.fillRect( 14, 1, 3, 3, c1.dark(110) );
-	px.fillRect( 14, 9, 3, 3, c2.light(120) );
-	px.fillRect( 14, 13, 3, 3, c1.dark(120) );
+	px.fillRect( x+3*factor, y,          square, square, c1.dark(110) );
+	px.fillRect( x+3*factor, y+2*factor, square, square, c2.light(120) );
+	px.fillRect( x+3*factor, y+3*factor, square, square, c1.dark(120) );
 
-	px.fillRect( 18, 5, 3, 3, c1.light(110) );
-	px.fillRect( 18, 13, 3, 3, c1.dark(110) );
+	px.fillRect( x+4*factor, y+factor,   square, square, c1.light(110) );
+	px.fillRect( x+4*factor, y+3*factor, square, square, c1.dark(110) );
 
-	px.fillRect( 22, 9, 3, 3, c2.light(120));
-	px.fillRect( 22, 13, 3, 3, c2.light(110) );
+	px.fillRect( x+5*factor, y+2*factor, square, square, c2.light(120));
+	px.fillRect( x+5*factor, y+3*factor, square, square, c2.light(110) );
 }
 
 
@@ -207,7 +246,7 @@ void QuartzHandler::createPixmaps()
     QColor c = g2.background().light(130);
 
 	titleBlocks = new KPixmap();
-    titleBlocks->resize( 25, 18 );
+    titleBlocks->resize( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( titleBlocks, *titleBlocks, c, c2 );
 
     g2 = options()->colorGroup(ColorTitleBlend, false);
@@ -216,7 +255,7 @@ void QuartzHandler::createPixmaps()
     c = g2.background().light(130);
 
 	ititleBlocks = new KPixmap();
-    ititleBlocks->resize( 25, 18 );
+    ititleBlocks->resize( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
 
 	// Set the on all desktops pin pixmaps;
@@ -287,6 +326,13 @@ void QuartzHandler::freePixmaps()
 }
 
 
+QValueList< QuartzHandler::BorderSize > QuartzHandler::borderSizes() const
+{ // the list must be sorted
+  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+      BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
+}
+
+
 QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeButton,
 		bool isLeftButton, bool isOnAllDesktopsButton, const unsigned char *bitmap,
 		const QString& tip)
@@ -306,9 +352,9 @@ QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeBut
 	client   = parent;
 
     if ( large )
-       setFixedSize(16, 16);
+       setFixedSize(normalTitleHeight-2, normalTitleHeight-2);
     else
-       setFixedSize(10, 10);
+       setFixedSize(toolTitleHeight-2, toolTitleHeight-2);
 
     if(bitmap)
         setBitmap(bitmap);
@@ -325,9 +371,9 @@ QuartzButton::~QuartzButton()
 QSize QuartzButton::sizeHint() const
 {
    if ( large )
-      return( QSize(16,16) );
+      return( QSize(normalTitleHeight-2, normalTitleHeight-2) );
    else
-      return( QSize(10,10) );
+      return( QSize(toolTitleHeight-2, toolTitleHeight-2) );
 }
 
 
@@ -396,15 +442,17 @@ void QuartzButton::drawButton(QPainter *p)
 				btnpix = client->icon().pixmap( QIconSet::Small, QIconSet::Normal);
 
 			// Shrink the miniIcon for tiny titlebars.
-			if ( !large )
+			if ( height() < 16)
 			{
 				QPixmap tmpPix;
 
 				// Smooth scale the image
-				tmpPix.convertFromImage( btnpix.convertToImage().smoothScale(10, 10));
+				tmpPix.convertFromImage( btnpix.convertToImage().smoothScale(height(), height()));
 				p->drawPixmap( 0, 0, tmpPix );
-			} else
+			} else {
+				Offset += (height() - 16)/2;
 				p->drawPixmap( Offset, Offset, btnpix );
+			}
 	}
 }
 
@@ -458,19 +506,15 @@ void QuartzClient::init()
 
 	// Finally, toolWindows look small
 	if ( isTool() ) {
-		titleHeight  = 12;
+		titleHeight  = toolTitleHeight;
 		largeButtons = false;
 	}
 	else {
-		titleHeight = 18;
+		titleHeight = normalTitleHeight;
 		largeButtons = true;
     }
 
-	// options()->preferredBorderSize() maybe would be better useability
-	// wise but IMHO this style is only good looking and really useable
-	// wtith the fixed border size of 4 pixel. so let's leave it this way
-	// (giessl)
-	borderSize = 4;
+    borderSize = borderWidth;
 
     // Pack the fake window window within a grid
     QGridLayout* g = new QGridLayout(widget(), 0, 0, 0);
@@ -760,7 +804,8 @@ void QuartzClient::paintEvent( QPaintEvent* )
 
     QPainter p2( titleBuffer, this );
 
-	int rightoffset = r.x()+r.width()-25-4;	// subtract titleBlocks pixmap width and some
+	// subtract titleBlocks pixmap width and some
+	int rightoffset = r.x()+r.width()-titleBlocks->width()-borderSize;
 
     p2.fillRect( 0, 0, w, r.height(), c1 );
     p2.fillRect( rightoffset, 0, maxFull?w-rightoffset:w-rightoffset-2*(borderSize-1), r.height(), c2 );
@@ -783,7 +828,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
     p2.setFont( fnt );
 
     p2.setPen( options()->color(ColorFont, isActive() ));
-    p2.drawText(r.x(), 0, r.width()-3, r.height(),
+    p2.drawText(r.x()+4-borderSize, 0, r.width()-3, r.height(),
                 AlignLeft | AlignVCenter, caption() );
     p2.end();
 
@@ -828,7 +873,7 @@ void QuartzClient::activeChange()
 
 QuartzClient::MousePosition QuartzClient::mousePosition(const QPoint &point) const
 {
-	const int corner = 24;
+	const int corner = 3*borderSize/2 + 18;
 	MousePosition pos = Center;
 
 	QRect r(widget()->rect());
