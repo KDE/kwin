@@ -275,7 +275,9 @@ dequeue_fade (Display *dpy, fade *f)
 	{
 	    *prev = f->next;
 	    if (f->callback)
+            {
 		(*f->callback) (dpy, f->w, f->gone);
+            }
 	    free (f);
 	    break;
 	}
@@ -418,10 +420,10 @@ run_fades (Display *dpy)
 			w->shadow = None;
 			w->extents = win_extents(dpy, w);
 		}
+                determine_mode (dpy, w);
                 /* Must do this last as it might destroy f->w in callbacks */
                 if (need_dequeue)
                     dequeue_fade (dpy, f);
-		determine_mode (dpy, w);
 	}
 	fade_time = now + fade_delta;
 }
@@ -2751,7 +2753,7 @@ main (int argc, char **argv)
 									break; /*skip if opacity does not change*/
 								if (fadeTrans)
 								{
-								    set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE, fade_out_step, 0, False, False, True, False);
+								    set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE, fade_out_step, 0, False, True, True, False);
                                     break;
                                     }
                                 else
