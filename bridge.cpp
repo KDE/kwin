@@ -136,6 +136,18 @@ QRegion Bridge::unobscuredRegion( const QRegion& r ) const
          it != stacking_order.end();
          ++it )
         {
+        if( !(*it)->isShown( true ))
+            continue; // these don't obscure the window
+        if( c->isOnAllDesktops())
+            {
+            if( !(*it)->isOnCurrentDesktop())
+                continue;
+            }
+        else
+            {
+            if( !(*it)->isOnDesktop( c->desktop()))
+                continue;
+            }
         /* the clients all have their mask-regions in local coords
 	   so we have to translate them to a shared coord system
 	   we choose ours */
