@@ -1,3 +1,9 @@
 [Desktop Entry]
 Name=RISC OS
+Name[cs]=Risc OS
+Name[da]=Risc os
+Name[de]=RISC-OS
+Name[eo]=Risc-OS
+Name[sl]=OS RISC
+Name[uk]=RISC ОС
 X-KDE-Library=libkwinriscos
