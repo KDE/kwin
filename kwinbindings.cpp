@@ -6,6 +6,14 @@
  keys->insertItem(i18n("Switch to desktop 6"),  "Switch to desktop 6"   ,"CTRL+F6");
  keys->insertItem(i18n("Switch to desktop 7"),  "Switch to desktop 7"   ,"CTRL+F7");
  keys->insertItem(i18n("Switch to desktop 8"),  "Switch to desktop 8"   ,"CTRL+F8");
+ keys->insertItem(i18n("Switch to desktop 9"),  "Switch to desktop 9"   ,"CTRL+F9");
+ keys->insertItem(i18n("Switch to desktop 10"),  "Switch to desktop 10"   ,"CTRL+F10");
+ keys->insertItem(i18n("Switch to desktop 11"),  "Switch to desktop 11"   ,"CTRL+F11");
+ keys->insertItem(i18n("Switch to desktop 12"),  "Switch to desktop 12"   ,"CTRL+F12");
+ keys->insertItem(i18n("Switch to desktop 13"),  "Switch to desktop 13"   ,"CTRL+SHIFT+F1");
+ keys->insertItem(i18n("Switch to desktop 14"),  "Switch to desktop 14"   ,"CTRL+SHIFT+F2");
+ keys->insertItem(i18n("Switch to desktop 15"),  "Switch to desktop 15"   ,"CTRL+SHIFT+F3");
+ keys->insertItem(i18n("Switch to desktop 16"),  "Switch to desktop 16"   ,"CTRL+SHIFT+F4");
  keys->insertItem(i18n("Switch one desktop to the left"),  "Switch desktop left"   ,"");
  keys->insertItem(i18n("Switch one desktop to the right"),  "Switch desktop right"   ,"");
 

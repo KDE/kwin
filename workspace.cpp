@@ -1945,6 +1945,14 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchDesktop6() ));
     keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchDesktop7() ));
     keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchDesktop8() ));
+    keys->connectItem( "Switch to desktop 9", this, SLOT( slotSwitchDesktop9() ));
+    keys->connectItem( "Switch to desktop 10", this, SLOT( slotSwitchDesktop10() ));
+    keys->connectItem( "Switch to desktop 11", this, SLOT( slotSwitchDesktop11() ));
+    keys->connectItem( "Switch to desktop 12", this, SLOT( slotSwitchDesktop12() ));
+    keys->connectItem( "Switch to desktop 13", this, SLOT( slotSwitchDesktop13() ));
+    keys->connectItem( "Switch to desktop 14", this, SLOT( slotSwitchDesktop14() ));
+    keys->connectItem( "Switch to desktop 15", this, SLOT( slotSwitchDesktop15() ));
+    keys->connectItem( "Switch to desktop 16", this, SLOT( slotSwitchDesktop16() ));
     keys->connectItem( "Switch desktop left", this, SLOT( slotSwitchDesktopLeft() ));
     keys->connectItem( "Switch desktop right", this, SLOT( slotSwitchDesktopRight() ));
 
@@ -1991,6 +1999,30 @@ void Workspace::slotSwitchDesktop7(){
 }
 void Workspace::slotSwitchDesktop8(){
     setCurrentDesktop(8);
+}
+void Workspace::slotSwitchDesktop9(){
+    setCurrentDesktop(9);
+}
+void Workspace::slotSwitchDesktop10(){
+    setCurrentDesktop(10);
+}
+void Workspace::slotSwitchDesktop11(){
+    setCurrentDesktop(11);
+}
+void Workspace::slotSwitchDesktop12(){
+    setCurrentDesktop(12);
+}
+void Workspace::slotSwitchDesktop13(){
+    setCurrentDesktop(13);
+}
+void Workspace::slotSwitchDesktop14(){
+    setCurrentDesktop(14);
+}
+void Workspace::slotSwitchDesktop15(){
+    setCurrentDesktop(15);
+}
+void Workspace::slotSwitchDesktop16(){
+    setCurrentDesktop(16);
 }
 void Workspace::slotSwitchDesktopRight(){
   int d = currentDesktop() + 1;

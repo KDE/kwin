@@ -191,6 +191,14 @@ public slots:
     void slotSwitchDesktop6();
     void slotSwitchDesktop7();
     void slotSwitchDesktop8();
+    void slotSwitchDesktop9();
+    void slotSwitchDesktop10();
+    void slotSwitchDesktop11();
+    void slotSwitchDesktop12();
+    void slotSwitchDesktop13();
+    void slotSwitchDesktop14();
+    void slotSwitchDesktop15();
+    void slotSwitchDesktop16();
     void slotSwitchDesktopRight();
     void slotSwitchDesktopLeft();
 
