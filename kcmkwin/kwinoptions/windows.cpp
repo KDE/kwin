@@ -1559,7 +1559,7 @@ bool KTranslucencyConfig::kompmgrAvailable()
 void KTranslucencyConfig::showWarning(bool alphaActivated)
 {
     if (alphaActivated)
-        KMessageBox::information(this, i18n("<qt>Translucency support is new and may cause problems<br> including crashes (sometimes the translucency engine, seldom even X)</qt>"), i18n("Warning"));
+        KMessageBox::information(this, i18n("<qt>Translucency support is new and may cause problems<br> including crashes (sometimes the translucency engine, seldom even X).</qt>"), i18n("Warning"));
 }
 
 #include "windows.moc"
