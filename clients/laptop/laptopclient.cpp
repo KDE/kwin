@@ -1,5 +1,9 @@
-// Port to KDE 3.2: Luciano Montanaro <mikelima@virgilio.it>
-//
+/* 
+ * Laptop KWin Decoration
+ * 
+ * Port of this decoration to KDE 3.2, accessibility enhancement are 
+ * Copyright (c) 2003 Luciano Montanaro <mikelima@virgilio.it>
+ */
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
@@ -51,13 +55,22 @@ static KPixmap *iBtnPix2;
 static KPixmap *iBtnDownPix2;
 static QColor btnForeground;
 
-static bool pixmaps_created = false;
-
 static int titleHeight = 14; 
 static int btnWidth1 = 17;
 static int btnWidth2 = 27;
 
 static int handleSize = 8;	// the resize handle size in pixels
+
+static bool pixmaps_created = false;
+
+// =====================================
+
+extern "C" KDecorationFactory* create_factory()
+{
+    return new Laptop::LaptopClientFactory();
+}
+
+// =====================================
 
 static inline const KDecorationOptions* options()
 {
@@ -95,6 +108,7 @@ static void create_pixmaps()
     pixmaps_created = true;
 
     titleHeight = QFontMetrics(options()->font(true)).height() + 2;
+    if (titleHeight < handleSize) titleHeight = handleSize;
     titleHeight &= ~1; // Make title height even
     if (titleHeight < 14) titleHeight = 14;
     
@@ -384,7 +398,7 @@ void LaptopClient::init()
     hb->addItem(titlebar);
     hb->addSpacing(1);
     if(help){
-        hb->addWidget( button[BtnHelp]);
+        hb->addWidget(button[BtnHelp]);
     }
     hb->addWidget( button[BtnSticky]);
     hb->addWidget( button[BtnIconify]);
@@ -468,29 +482,32 @@ void LaptopClient::paintEvent( QPaintEvent* )
 
     int th = titleHeight;
     int bb = handleSize + 2; // Bottom border
-    if (!isResizable()) 
-	bb -= 4;
+    int bs = handleSize - 2; // inner size of bottom border
+    if (!isResizable()) {
+	bb = 6;
+	bs = 0;
+    }
     if ( isTool() )
 	th -= 2;
 
     // inner rect
-    p.drawRect(r.x()+3, r.y()+th+3, r.width()-6,
-               r.height()-th-bb);
+    p.drawRect(r.x() + 3, r.y() + th + 3, r.width() - 6, r.height() - th - bb);
+    
     // handles
     if (!isResizable()) {
     } else if (r.width() > 44) {
-        qDrawShadePanel(&p, r.x() + 1, r.bottom() - handleSize + 2, 20,
+        qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, 20,
                         handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.x() + 21, r.bottom() - handleSize + 2, 
+        qDrawShadePanel(&p, r.x() + 21, r.bottom() - bs, 
 		r.width() - 42, handleSize - 2, g, false, 1, 
 		isActive() ? &g.brush(QColorGroup::Background) : 
 			     &g.brush(QColorGroup::Mid));
-        qDrawShadePanel(&p, r.right() - 20, r.bottom() - handleSize + 2, 
-		20, handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
+        qDrawShadePanel(&p, r.right() - 20, r.bottom() - bs, 
+		20, bs, g, false, 1, &g.brush(QColorGroup::Mid));
     }
     else
-        qDrawShadePanel(&p, r.x() + 1, r.bottom() - handleSize + 2, 
-		r.width() - 2, handleSize - 2, g, false, 1, 
+        qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, 
+		r.width() - 2, bs, g, false, 1, 
 		isActive() ?  &g.brush(QColorGroup::Background) : 
 		              &g.brush(QColorGroup::Mid));
 
@@ -582,9 +599,11 @@ void LaptopClient::maximizeChange()
     button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
     QToolTip::remove(button[BtnMax]);
     QToolTip::add(button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
-    spacer->changeSize(10, isResizable() ? handleSize : 4,
-			QSizePolicy::Expanding, QSizePolicy::Minimum);
+    spacer->changeSize(10, isResizable() ? handleSize : 4, 
+	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
+    doShape();
+    widget()->repaint(false);
 }
 
 void LaptopClient::activeChange()
@@ -723,7 +742,6 @@ LaptopClient::MousePosition LaptopClient::mousePosition(const QPoint & p) const
 void LaptopClient::borders(int &left, int &right, int &top, int &bottom) const
 {
     left = right = 4;
-    top = 2 + 2 + titlebar->geometry().height(); // FRAME is this ok?
     top = titleHeight + 4;
     bottom = isResizable() ? handleSize : 4;
 }
@@ -850,11 +868,6 @@ void LaptopClientFactory::findPreferredHandleSize()
 }
 
 } // Laptop namespace
-
-extern "C" KDecorationFactory* create_factory()
-{
-    return new Laptop::LaptopClientFactory();
-}
 
 #include "laptopclient.moc"
 
