@@ -56,12 +56,13 @@ public:
 private:
     QRect captionRect() const;
 
-    QPixmap *aCaptionBuffer, *iCaptionBuffer;
-    void update_captionBuffer();
+    const QPixmap &captionPixmap() const;
+    void clearCaptionPixmaps();
+
+    mutable QPixmap *m_captionPixmaps[2];
 
     QRect m_captionRect;
     QString oldCaption;
-    bool captionBufferDirty;
 
     // settings...
     QFont s_titleFont;

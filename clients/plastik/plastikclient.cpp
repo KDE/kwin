@@ -45,15 +45,14 @@ namespace KWinPlastik
 
 PlastikClient::PlastikClient(KDecorationBridge* bridge, KDecorationFactory* factory)
     : KCommonDecoration (bridge, factory),
-    aCaptionBuffer(0), iCaptionBuffer(0),
-    captionBufferDirty(true),
     s_titleFont(QFont() )
-{ }
+{
+    memset(m_captionPixmaps, 0, sizeof(QPixmap*)*2);
+}
 
 PlastikClient::~PlastikClient()
 {
-    delete aCaptionBuffer;
-    delete iCaptionBuffer;
+    clearCaptionPixmaps();
 }
 
 QString PlastikClient::visibleName() const
@@ -194,11 +193,7 @@ void PlastikClient::init()
 {
     s_titleFont = isToolWindow() ? Handler()->titleFontTool() : Handler()->titleFont();
 
-//     create_pixmaps();
-
-    aCaptionBuffer = new QPixmap();
-    iCaptionBuffer = new QPixmap();
-    captionBufferDirty = true;
+    clearCaptionPixmaps();
 
     KCommonDecoration::init();
 }
@@ -246,9 +241,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     PlastikHandler *handler = Handler();
 
     if (oldCaption != caption() )
-        captionBufferDirty = true;
-    if (captionBufferDirty)
-        update_captionBuffer();
+        clearCaptionPixmaps();
 
     bool active = isActive();
     bool toolWindow = isToolWindow();
@@ -386,13 +379,14 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     }
 
     // titleSpacer
-    QPixmap *titleBfrPtr = active ? aCaptionBuffer : iCaptionBuffer;
-    if(Rtitle.width() > 0 && titleBfrPtr != 0)
+    const QPixmap &caption = captionPixmap();
+//     QPixmap *titleBfrPtr = active ? aCaptionBuffer : iCaptionBuffer;
+    if(Rtitle.width() > 0)
     {
         m_captionRect = captionRect(); // also update m_captionRect!
         if (m_captionRect.isValid() && region.contains(m_captionRect) )
         {
-            painter.drawTiledPixmap(m_captionRect, *titleBfrPtr);
+            painter.drawTiledPixmap(m_captionRect, caption);
         }
 
         // left to the title
@@ -410,7 +404,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         }
 
     }
-    titleBfrPtr = 0;
+//     titleBfrPtr = 0;
 
     // decoSpacer
     if(titleEdgeBottom > 0)
@@ -513,45 +507,41 @@ void PlastikClient::paintEvent(QPaintEvent *e)
 
 QRect PlastikClient::captionRect() const
 {
-    QPixmap *titleBfrPtr = isActive() ? aCaptionBuffer : iCaptionBuffer;
-    if (titleBfrPtr) {
-        QRect r = widget()->rect();
+    const QPixmap &caption = captionPixmap();
+    QRect r = widget()->rect();
 
-        const int titleHeight = layoutMetric(LM_TitleHeight);
-        const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
-        const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
-        const int marginLeft = layoutMetric(LM_TitleBorderLeft);
-        const int marginRight = layoutMetric(LM_TitleBorderRight);
+    const int titleHeight = layoutMetric(LM_TitleHeight);
+    const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
+    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
+    const int marginLeft = layoutMetric(LM_TitleBorderLeft);
+    const int marginRight = layoutMetric(LM_TitleBorderRight);
 
-        const int titleLeft = r.left() + titleEdgeLeft + buttonsLeftWidth() + marginLeft;
-        const int titleWidth = r.width() -
-                titleEdgeLeft - layoutMetric(LM_TitleEdgeRight) -
-                buttonsLeftWidth() - buttonsRightWidth() -
-                marginLeft - marginRight;
+    const int titleLeft = r.left() + titleEdgeLeft + buttonsLeftWidth() + marginLeft;
+    const int titleWidth = r.width() -
+            titleEdgeLeft - layoutMetric(LM_TitleEdgeRight) -
+            buttonsLeftWidth() - buttonsRightWidth() -
+            marginLeft - marginRight;
 
-        Qt::AlignmentFlags a = Handler()->titleAlign();
+    Qt::AlignmentFlags a = Handler()->titleAlign();
 
-        int tX, tW; // position/width of the title buffer
-        if (titleBfrPtr->width() >  titleWidth) {
-            tW = titleWidth;
-        } else {
-            tW = titleBfrPtr->width();
-        }
-        if (a == Qt::AlignLeft || (titleBfrPtr->width() > titleWidth) ) {
-            // Align left
-            tX = titleLeft;
-        } else if (a == Qt::AlignHCenter) {
-            // Align center
-            tX = titleLeft+(titleWidth- titleBfrPtr->width() )/2;
-        } else {
-            // Align right
-            tX = titleLeft+titleWidth-titleBfrPtr->width();
-        }
-
-        return QRect(tX, r.top()+titleEdgeTop, tW, titleHeight);
+    int tX, tW; // position/width of the title buffer
+    if (caption.width() >  titleWidth) {
+        tW = titleWidth;
+    } else {
+        tW = caption.width();
+    }
+    if (a == Qt::AlignLeft || (caption.width() > titleWidth) ) {
+        // Align left
+        tX = titleLeft;
+    } else if (a == Qt::AlignHCenter) {
+        // Align center
+        tX = titleLeft+(titleWidth- caption.width() )/2;
+    } else {
+        // Align right
+        tX = titleLeft+titleWidth-caption.width();
     }
 
-    return QRect();
+    return QRect(tX, r.top()+titleEdgeTop, tW, titleHeight);
 }
 
 void PlastikClient::updateCaption()
@@ -559,9 +549,7 @@ void PlastikClient::updateCaption()
     QRect oldCaptionRect = m_captionRect;
 
     if (oldCaption != caption() )
-        captionBufferDirty = true;
-    if (captionBufferDirty)
-        update_captionBuffer();
+        clearCaptionPixmaps();
 
     m_captionRect = PlastikClient::captionRect();
 
@@ -576,7 +564,7 @@ void PlastikClient::reset( unsigned long changed )
     if (changed & SettingColors)
     {
         // repaint the whole thing
-        captionBufferDirty = true;
+        clearCaptionPixmaps();
         widget()->update();
         updateButtons();
     } else if (changed & SettingFont) {
@@ -586,7 +574,7 @@ void PlastikClient::reset( unsigned long changed )
         updateLayout();
 
         // then repaint
-        captionBufferDirty = true;
+        clearCaptionPixmaps();
         widget()->update();
     }
 
@@ -598,9 +586,15 @@ const QPixmap &PlastikClient::getTitleBarTile(bool active) const
     return Handler()->pixmap(TitleBarTile, active, isToolWindow() );
 }
 
-void PlastikClient::update_captionBuffer()
+const QPixmap &PlastikClient::captionPixmap() const
 {
-    oldCaption = caption();
+    bool active = isActive();
+
+    if (m_captionPixmaps[active]) {
+        return *m_captionPixmaps[active];
+    }
+
+    // not found, create new pixmap...
 
     const uint maxCaptionLength = 300; // truncate captions longer than this!
     QString c(caption() );
@@ -632,15 +626,15 @@ void PlastikClient::update_captionBuffer()
     QImage shadow;
     ShadowEngine se;
 
-    // active
-    aCaptionBuffer->resize(captionWidth+4, th ); // 4 px shadow
-    painter.begin(aCaptionBuffer);
-    painter.drawTiledPixmap(aCaptionBuffer->rect(),
-                            Handler()->pixmap(TitleBarTile, true, isToolWindow()) );
+    QPixmap *captionPixmap = new QPixmap(captionWidth+4, th);
+
+    painter.begin(captionPixmap);
+    painter.drawTiledPixmap(captionPixmap->rect(),
+                            Handler()->pixmap(TitleBarTile, active, isToolWindow()) );
     if(Handler()->titleShadow())
     {
         QColor shadowColor;
-        if (qGray(Handler()->getColor(TitleFont,true).rgb()) < 100)
+        if (qGray(Handler()->getColor(TitleFont,active).rgb()) < 100)
             shadowColor = QColor(255, 255, 255);
         else
             shadowColor = QColor(0,0,0);
@@ -648,26 +642,22 @@ void PlastikClient::update_captionBuffer()
         painter.drawImage(1, 1, shadow);
     }
     painter.setFont(s_titleFont);
-    painter.setPen(Handler()->getColor(TitleFont,true));
-    painter.drawText(aCaptionBuffer->rect(), AlignCenter, c );
+    painter.setPen(Handler()->getColor(TitleFont,active) );
+    painter.drawText(captionPixmap->rect(), AlignCenter, c );
     painter.end();
 
+    m_captionPixmaps[active] = captionPixmap;
+    return *captionPixmap;
+}
 
-    // inactive
-    iCaptionBuffer->resize(captionWidth+4, th );
-    painter.begin(iCaptionBuffer);
-    painter.drawTiledPixmap(iCaptionBuffer->rect(),
-                            Handler()->pixmap(TitleBarTile, false, isToolWindow()) );
-    if(Handler()->titleShadow())
-    {
-        painter.drawImage(1, 1, shadow);
+void PlastikClient::clearCaptionPixmaps()
+{
+    for (int i = 0; i < 2; ++i) {
+        delete m_captionPixmaps[i];
+        m_captionPixmaps[i] = 0;
     }
-    painter.setFont(s_titleFont);
-    painter.setPen(Handler()->getColor(TitleFont,false));
-    painter.drawText(iCaptionBuffer->rect(), AlignCenter, c );
-    painter.end();
 
-    captionBufferDirty = false;
+    oldCaption = caption();
 }
 
 } // KWinPlastik
