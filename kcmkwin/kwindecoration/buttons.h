@@ -1,7 +1,7 @@
 /*
 	This is the new kwindecoration kcontrol module
 
-	Copyright (c) 2004, Sandro Giessl
+	Copyright (c) 2004, Sandro Giessl <sandro@giessl.com>
 	Copyright (c) 2001
 		Karol Szwed <gallium@kde.org>
 		http://gallium.n3.net/
@@ -31,6 +31,7 @@
 #ifndef __BUTTONS_H_
 #define __BUTTONS_H_
 
+#include <qbitmap.h>
 #include <qevent.h>
 #include <qdragobject.h>
 #include <qlistbox.h>
@@ -44,11 +45,11 @@ class Button
 {
 	public:
 		Button();
-		Button(const QString& name, const QPixmap& icon, QChar type, bool duplicate, bool supported);
+		Button(const QString& name, const QBitmap& icon, QChar type, bool duplicate, bool supported);
 		virtual ~Button();
 
 		QString name;
-		QPixmap icon;
+		QBitmap icon;
 		QChar type;
 		bool duplicate;
 		bool supported;
@@ -79,7 +80,7 @@ class ButtonDropSiteItem
 		int width();
 		int height();
 
-		void draw(QPainter *p, QRect rect);
+		void draw(QPainter *p, const QColorGroup& cg, QRect rect);
 
 	private:
 		Button m_button;
@@ -100,6 +101,7 @@ class ButtonSourceItem : public QListViewItem
 		Button button() const;
 	private:
 		Button m_button;
+		bool m_dirty;
 };
 
 /**
