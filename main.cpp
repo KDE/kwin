@@ -149,31 +149,20 @@ bool Application::x11EventFilter( XEvent *e )
      return KApplication::x11EventFilter( e );
 }
 
-void Application::commitData( QSessionManager& /*sm*/ )
+class SessionManaged : public KSessionManaged
 {
-    // nothing to do, really
-}
-
-void Application::saveState( QSessionManager& sm )
-{
-    KApplication::saveState( sm );
-    static bool firstTime = true;
-    if ( firstTime ) {
-	firstTime = false;
-	return; // no need to save this state.
-    }
-
-    sm.release();
-
-    if ( !sm.isPhase2() ) {
-	sm.requestPhase2();
-	return;
-    }
-
-    Workspace::self()->storeSession( kapp->sessionConfig() );
-    kapp->sessionConfig()->sync();
-}
-
+    public:
+	bool saveState( QSessionManager& sm ) {
+	    sm.release();
+	    if ( !sm.isPhase2() ) {
+		sm.requestPhase2();
+		return true;
+	    }
+	    Workspace::self()->storeSession( kapp->sessionConfig() );
+	    kapp->sessionConfig()->sync();
+	    return true;
+	}
+} ;
 
 static void sighandler(int) {
     QApplication::exit();
@@ -260,6 +249,7 @@ int kdemain( int argc, char * argv[] )
 	signal(SIGHUP, SIG_IGN);
 
     Application a;
+    SessionManaged weAreIndeed;
 //     KCrash::setCrashHandler(crashHandler); // Try to restart on crash
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 

@@ -28,7 +28,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "workspace.h"
 #include "client.h"
 #include "tabbox.h"
-#include "popupinfo.h"
 #include "atoms.h"
 #include "plugins.h"
 #include "events.h"
@@ -273,7 +272,6 @@ Workspace::Workspace( bool restore )
     mouse_emulation   (false),
     focus_change      (true),
     tab_box           (0),
-    popupinfo         (0),
     popup             (0),
     desk_popup        (0),
     keys              (0),
@@ -333,7 +331,6 @@ Workspace::Workspace( bool restore )
 
     initShortcuts();
     tab_box = new TabBox( this );
-    popupinfo = new PopupInfo( this );
 
     init();
 
@@ -459,7 +456,6 @@ Workspace::~Workspace()
     }
     delete desktop_widget;
     delete tab_box;
-    delete popupinfo;
     delete popup;
     if ( root == qt_xrootwin() )
         XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwin_running);
@@ -535,8 +531,25 @@ bool Workspace::workspaceEvent( XEvent * e )
             return c->windowEvent( e );
 
         // check for system tray windows
-        if ( removeSystemTrayWin( e->xunmap.window ) )
-            return TRUE;
+        if ( removeSystemTrayWin( e->xunmap.window ) ) {
+	    // If the system tray gets destroyed, the system tray
+	    // icons automatically get unmapped, reparented and mapped
+	    // again to the closest non-client ancestor due to
+	    // QXEmbed's SaveSet feature. Unfortunatly with kicker
+	    // this closest ancestor is not the root window, but our
+	    // decoration, so we reparent explicitely back to the root
+	    // window.
+	    XEvent ev;
+	    WId w = e->xunmap.window;
+	    if ( XCheckTypedWindowEvent (qt_xdisplay(), w,
+					 ReparentNotify, &ev) ){
+		if ( ev.xreparent.parent != root ) {
+		    XReparentWindow( qt_xdisplay(), w, root, 0, 0 );
+		    addSystemTrayWin( w );
+		}
+	    }
+	    return TRUE;
+        }
 
         return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
 
@@ -561,7 +574,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         checkStartOnDesktop( e->xmaprequest.window );
         c = findClient( e->xmaprequest.window );
         if ( !c ) {
-            if ( e->xmaprequest.parent ) { // == root ) { //###TODO store previously destroyed client ids
+            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return TRUE;
                 c = clientFactory( e->xmaprequest.window );
@@ -2026,7 +2039,6 @@ void Workspace::slotReconfigure()
     KGlobal::config()->reparseConfiguration();
     options->reload();
     tab_box->reconfigure();
-    popupinfo->reconfigure();
     readShortcuts();
 
     mgr->updatePlugin();
@@ -2198,9 +2210,6 @@ void Workspace::raiseClient( Client* c )
 
     if ( tab_box->isVisible() )
         tab_box->raise();
-
-    if ( popupinfo->isVisible() )
-        popupinfo->raise();
 
     raiseElectricBorders();
 }
@@ -2870,7 +2879,6 @@ void Workspace::slotSwitchDesktopDown(){
 
 void Workspace::slotSwitchToDesktop( int i )
 {
-    popupinfo->showInfo();
     setCurrentDesktop( i );
 }
 
@@ -3191,7 +3199,7 @@ void Workspace::slotWindowOperations()
  */
 void Workspace::slotWindowClose()
 {
-    if ( tab_box->isVisible() || popupinfo->isVisible() )
+    if ( tab_box->isVisible() )
         return;
     performWindowOperation( popup_client, Options::CloseOp );
 }
