@@ -84,10 +84,11 @@ unsigned long Options::updateSettings()
         xineramaPlacementEnabled = gc->readBoolEntry ("XineramaPlacementEnabled", true);
         xineramaMovementEnabled = gc->readBoolEntry ("XineramaMovementEnabled", true);
         xineramaMaximizeEnabled = gc->readBoolEntry ("XineramaMaximizeEnabled", true);
+        xineramaFullscreenEnabled = gc->readBoolEntry ("XineramaFullscreenEnabled", true);
         }
     else 
         {
-        xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = false;
+        xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = xineramaFullscreenEnabled = false;
         }
     delete gc;
 

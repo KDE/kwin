@@ -226,6 +226,11 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
                 return desktopwidget->screenGeometry( screen );
             else
                 return desktopwidget->geometry();
+        case FullScreenArea:
+            if (options->xineramaFullscreenEnabled)
+                return desktopwidget->screenGeometry( screen );
+            else
+                return desktopwidget->geometry();
         case PlacementArea:
             if (options->xineramaPlacementEnabled)
                 return sarea;
@@ -654,7 +659,7 @@ void Client::checkWorkspacePosition()
 
     if( isFullScreen())
         {
-        QRect area = workspace()->clientArea( MaximizeFullArea, this );
+        QRect area = workspace()->clientArea( FullScreenArea, this );
         if( geometry() != area )
             setGeometry( area );
         return;
@@ -1612,7 +1617,7 @@ void Client::setFullScreen( bool set, bool user )
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false );
     if( isFullScreen())
-        setGeometry( workspace()->clientArea( MaximizeFullArea, this ));
+        setGeometry( workspace()->clientArea( FullScreenArea, this ));
     else
         {
         if( maximizeMode() != MaximizeRestore )

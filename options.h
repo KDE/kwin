@@ -120,6 +120,7 @@ class Options : public KDecorationOptions
         bool xineramaPlacementEnabled;
         bool xineramaMovementEnabled;
         bool xineramaMaximizeEnabled;
+        bool xineramaFullscreenEnabled;
 
         /**
            MoveResizeMode, either Tranparent or Opaque.

@@ -209,7 +209,7 @@ bool Client::manage( Window w, bool isMapped )
         && noBorder() && !isUserNoBorder() && isFullScreenable( true )) 
         {
         fullscreen_mode = FullScreenHack;
-        geom = workspace()->clientArea( MaximizeFullArea, geom.center(), desktop());
+        geom = workspace()->clientArea( FullScreenArea, geom.center(), desktop());
         placementDone = true;
         }
 
