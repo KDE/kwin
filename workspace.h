@@ -110,7 +110,7 @@ public:
     void activateClient( Client* );
     void requestFocus( Client* c);
 
-    void setEnableFocusChange(bool b) { focus_change = b; }
+    void setFocusChangeEnabled(bool b) { focus_change = b; }
     bool focusChangeEnabled() { return focus_change; }
 
     void doPlacement( Client* c );
@@ -139,7 +139,7 @@ public:
     Client* previousClient(Client*) const;
     Client* nextStaticClient(Client*) const;
     Client* previousStaticClient(Client*) const;
-    
+
      /**
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
@@ -225,7 +225,7 @@ private:
     void init();
     void createKeybindings();
     void freeKeyboard(bool pass);
-    
+
     ClientList constrainedStackingOrder( const ClientList& list );
 
     Client* clientFactory(WId w);

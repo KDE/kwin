@@ -471,7 +471,7 @@ Client::~Client()
 {
     releaseWindow();
     if (workspace()->activeClient() == this)
-       workspace()->setEnableFocusChange(true); // Safety
+       workspace()->setFocusChangeEnabled(true); // Safety
 
     delete info;
 }
@@ -1080,7 +1080,7 @@ void Client::mouseReleaseEvent( QMouseEvent * e)
 	    setGeometry( geom );
 	    Events::raise( isResize() ? Events::ResizeEnd : Events::MoveEnd );
 	    moveResizeMode = FALSE;
-            workspace()->setEnableFocusChange(true);
+            workspace()->setFocusChangeEnabled(true);
 	    releaseMouse();
 	    releaseKeyboard();
 	}
@@ -1115,7 +1115,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	QPoint p( e->pos() - moveOffset );
 	if (p.manhattanLength() >= 6) {
 	    moveResizeMode = TRUE;
-            workspace()->setEnableFocusChange(false);
+	    workspace()->setFocusChangeEnabled(false);
 	    Events::raise( isResize() ? Events::ResizeStart : Events::MoveStart );
 	    grabMouse( cursor() ); // to keep the right cursor
 	    if ( ( isMove() && options->moveMode != Options::Opaque )
@@ -1601,7 +1601,7 @@ bool Client::x11Event( XEvent * e)
 	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
-	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() ) {
+	if ( options->autoRaise && !isDesktop() && !isDock() && !isMenu() && workspace()->focusChangeEnabled() ) {
 	    delete autoRaiseTimer;
 	    autoRaiseTimer = new QTimer( this );
 	    connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
@@ -1991,7 +1991,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	    break;
 	mode = Center;
 	moveResizeMode = TRUE;
-	workspace()->setEnableFocusChange(false);
+	workspace()->setFocusChangeEnabled(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	invertedMoveOffset = rect().bottomRight() - moveOffset;
@@ -2004,7 +2004,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	if (!isMovable())
 	    break;
 	moveResizeMode = TRUE;
-	workspace()->setEnableFocusChange(false);
+	workspace()->setFocusChangeEnabled(false);
 	buttonDown = TRUE;
 	moveOffset = mapFromGlobal( globalPos );
 	int x = moveOffset.x(), y = moveOffset.y();
@@ -2138,7 +2138,7 @@ void Client::keyPressEvent( QKeyEvent * e )
 	    XUngrabServer( qt_xdisplay() );
 	setGeometry( geom );
 	moveResizeMode = FALSE;
-        workspace()->setEnableFocusChange(true);
+	workspace()->setFocusChangeEnabled(true);
 	releaseMouse();
 	releaseKeyboard();
 	buttonDown = FALSE;
