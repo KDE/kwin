@@ -31,7 +31,7 @@ GlowButton::GlowButton(QWidget *parent, const char *name,
 	const QString& tip, QPixmap *pixmap)
 	: KWinWidgetButton(parent, name, 0, tip), m_pixmap(pixmap)
 {
-	m_steps = 20;
+	m_steps = 0;
 	m_updateTime = 50;
 
 	m_timer = new QTimer();
@@ -52,10 +52,16 @@ QPixmap *GlowButton::getPixmap()
 void GlowButton::setPixmap(QPixmap *pixmap)
 {
 	m_pixmap = pixmap;
+
+	// set mask
 	QBitmap mask(width(), height());
 	mask.fill(Qt::color0);
 	bitBlt(&mask, 0, 0, pixmap->mask(), 0, 0, width(), height());
 	setMask(mask);
+
+	// set steps
+	m_steps = pixmap->height()/pixmap->width() - 1;
+
 	repaint(false);
 }
 
@@ -139,9 +145,16 @@ void GlowButton::slotTimeout()
 GlowButtonFactory::GlowButtonFactory()
 {
 	m_steps = 20;
-// cerr << "GlowButtonFactory " << "GlowButtonFactory " << m_steps << endl;
-	m_glowFactor = 1.0;
-	m_updateTime = 50;
+}
+
+int GlowButtonFactory::getSteps()
+{
+	return m_steps;
+}
+
+void GlowButtonFactory::setSteps(int steps)
+{
+	m_steps = steps;
 }
 
 QPixmap* GlowButtonFactory::createGlowButtonPixmap(
@@ -227,8 +240,6 @@ GlowButton* GlowButtonFactory::createGlowButton(
 {
 	GlowButton *glowButton = new GlowButton(
 		parent, name, tip, pixmap);
-	glowButton->m_steps = m_steps;
-	glowButton->m_updateTime = m_updateTime;
 	return glowButton;
 }
 
@@ -331,3 +342,4 @@ QBitmap DrawUtils::drawSimpleRoundButtonMask( const QSize& size )
 }
 
 #include "glowbutton.moc"
+

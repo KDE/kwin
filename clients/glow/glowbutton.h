@@ -18,6 +18,7 @@
 #ifndef GLOW_BUTTON_H
 #define GLOW_BUTTON_H
 
+#include <vector>
 #include <kwin/kwinbutton.h>
 
 class QPixmap;
@@ -27,24 +28,27 @@ class QTimer;
 namespace KWinInternal
 {
 
-class GlowButtonFactory;
-
 class GlowButton : public KWinWidgetButton
 {
 	Q_OBJECT
 
-	friend class GlowButtonFactory;
 public:
+	GlowButton(QWidget *parent, const char* name,
+		const QString& tip, QPixmap *bgPixmap=0);
 	~GlowButton();
 
 	QPixmap *getPixmap();
 
+	/**
+	 * Sets the background pixmap of the button.
+	 * The pixmap should consist of sub pixmaps of the size of the button which
+	 * are placed one below the other. Each sub pixmap is copied on the button
+	 * in succession to create the glow effect. The last sub pixmap is used
+	 * when the button is pressed.
+	 */
 	void setPixmap(QPixmap* pixmap);
 
 protected:
-	GlowButton(QWidget *parent, const char* name,
-		const QString& tip, QPixmap *bgPixmap=0);
-
 	virtual void paintEvent( QPaintEvent * );
 	virtual void enterEvent( QEvent * );
 	virtual void leaveEvent( QEvent * );
@@ -66,8 +70,6 @@ private:
 	TimerStatus m_timerStatus;
 
 signals:
-//	void pressed();
-//	void released();
 	void clicked();
 	void clicked(int button);
 };
@@ -78,6 +80,14 @@ class GlowButtonFactory
 {
 public:
 	GlowButtonFactory();
+
+	int getSteps();
+
+	/**
+	 * Sets the number of pixmaps used to create the glow effect of the
+	 * glow buttons.
+	 */
+	void setSteps(int steps);
 
 	QPixmap* createGlowButtonPixmap(
 		const QSize& size, const QColor& glowColor,
@@ -91,8 +101,6 @@ public:
 
 private:
 	int m_steps;
-	float m_glowFactor;
-	int m_updateTime;
 };
 
 //-----------------------------------------------------------------------------
