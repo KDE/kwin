@@ -56,7 +56,7 @@ private:
 
 public:
     B2Client* client;
-    int last_button;
+    ButtonState last_button;
     int realizeButtons;
     bool hover;
 };
