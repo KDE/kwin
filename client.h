@@ -332,6 +332,7 @@ class Client : public QObject, public KDecorationDefines
         void getWmClientLeader();
         void fetchName();
         void fetchIconicName();
+        bool hasTransientInternal( const Client* c, bool indirect, ConstClientList& set ) const;
 
         void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );

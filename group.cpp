@@ -468,6 +468,7 @@ void Client::checkGroupTransients()
             // if *it1 and *it2 are both group transients, and are transient for each other,
             // make only *it2 transient for *it1 (i.e. subwindow), as *it2 came later,
             // and should be therefore on top of *it1
+            // TODO This could possibly be optimized, it also requires hasTransient() to check for loops.
             if( (*it2)->groupTransient() && (*it1)->hasTransient( *it2, true ) && (*it2)->hasTransient( *it1, true ))
                 (*it2)->transients_list.remove( *it1 );
             }
@@ -593,13 +594,23 @@ void Client::checkTransient( Window w )
 // or recursively the transient_for window
 bool Client::hasTransient( const Client* cl, bool indirect ) const
     {
+    // checkGroupTransients() uses this to break loops, so hasTransient() must detect them
+    ConstClientList set;
+    return hasTransientInternal( cl, indirect, set );
+    }
+
+bool Client::hasTransientInternal( const Client* cl, bool indirect, ConstClientList& set ) const
+    {
+    if( set.contains( this ))
+        return false;
+    set.append( this );
     if( cl->transientFor() != NULL )
         {
         if( cl->transientFor() == this )
             return true;
         if( !indirect )
             return false;
-        return hasTransient( cl->transientFor(), indirect );
+        return hasTransientInternal( cl->transientFor(), indirect, set );
         }
     if( !cl->isTransient())
         return false;
@@ -613,7 +624,7 @@ bool Client::hasTransient( const Client* cl, bool indirect ) const
     for( ClientList::ConstIterator it = transients().begin();
          it != transients().end();
          ++it )
-        if( (*it)->hasTransient( cl, indirect ))
+        if( (*it)->hasTransientInternal( cl, indirect, set ))
             return true;
     return false;
     }
