@@ -273,27 +273,33 @@ void TabBox::paintContents()
     }
 }
 
-  void
-TabBox::hide()
+void TabBox::hide()
 {
-  delayedShowTimer.stop();
-  QWidget::hide();
+    delayedShowTimer.stop();
+    QWidget::hide();
+    QApplication::syncX();
+    XEvent otherEvent;
+    while (XCheckTypedEvent (qt_xdisplay(), EnterNotify, &otherEvent ) )
+	;
 }
 
-  void
-TabBox::delayedShow()
+
+/*!
+  Rikkus: please document!   (Matthias)
+ */
+void TabBox::delayedShow()
 {
-  KConfig * c(KGlobal::config());
-  c->setGroup("TabBox");
-  bool delay = c->readNumEntry("ShowDelay", false);
+    KConfig * c(KGlobal::config());
+    c->setGroup("TabBox");
+    bool delay = c->readNumEntry("ShowDelay", false);
+    
+    if (!delay) {
+	show();
+	return;
+    }
 
-  if (!delay) {
-    show();
-    return;
-  }
-
-  int delayTime = c->readNumEntry("DelayTime", 400);
-  delayedShowTimer.start(delayTime, true);
+    int delayTime = c->readNumEntry("DelayTime", 400);
+    delayedShowTimer.start(delayTime, true);
 }
 
 #include "tabbox.moc"
