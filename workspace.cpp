@@ -789,7 +789,8 @@ void Workspace::loadDesktopSettings()
     number_of_desktops = n;
     delete workarea;
     workarea = new QRect[ n + 1 ];
-    // XXX what about screenarea?
+    delete screenarea;
+    screenarea = NULL;
     rootInfo->setNumberOfDesktops( number_of_desktops );
     desktop_focus_chain.resize( n );
     for(int i = 1; i <= n; i++) 

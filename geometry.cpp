@@ -207,46 +207,39 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     {
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
-    QRect rect = QApplication::desktop()->geometry();
     QDesktopWidget *desktopwidget = KApplication::desktop();
-
-    if (! screenarea) {
-        if( workarea[ desktop ].isNull() || opt == FullArea || opt == MaximizeFullArea
-                || opt == ScreenArea || opt == MovementArea )
-            return rect;
-        return workarea[ desktop ];
-    }
-    switch (opt) // XXX needs checking after xinerama/paritalStrut changes
+    QRect sarea = screenarea // may be NULL during KWin initialization
+        ? screenarea[ desktop ][ desktopwidget->screenNumber( p ) ]
+        : desktopwidget->screenGeometry( desktopwidget->screenNumber( p ));
+    QRect warea = workarea[ desktop ].isNull()
+        ? QApplication::desktop()->geometry()
+        : workarea[ desktop ];
+    switch (opt)
         {
         case MaximizeArea:
         case MaximizeFullArea:
             if (options->xineramaMaximizeEnabled)
-                rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
-            else rect = workarea[ desktop ];
-                // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
-            break;
+                return sarea;
+            else
+                return warea;
         case PlacementArea:
             if (options->xineramaPlacementEnabled)
-                rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
-                // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
-            else rect = workarea[ desktop ];
-            break;
+                return sarea;
+            else
+                return warea;
         case MovementArea:
             if (options->xineramaMovementEnabled)
-                rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
-                // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
-            else rect = workarea[ desktop ];
-            break;
+                return sarea;
+            else
+                return warea;
         case WorkArea:
+            return warea;
         case FullArea:
-            break; // nothing
+            return QApplication::desktop()->geometry();
         case ScreenArea:
-            rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
-            // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
-            break;
+            return sarea;
         }
-
-    return rect; // workarea[ desktop ].intersect(rect);
+    assert( false );
     }
 
 QRect Workspace::clientArea( clientAreaOption opt, const Client* c ) const
