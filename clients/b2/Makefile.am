@@ -1,5 +1,5 @@
 
-INCLUDES = $(all_includes) 
+INCLUDES = -I$(srcdir)/../../lib $(all_includes) 
 
 SUBDIRS = . config
 
