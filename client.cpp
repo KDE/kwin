@@ -1613,6 +1613,8 @@ bool Client::x11Event( XEvent * e)
 	return TRUE;
     }
     if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
+	if ( e->xcrossing.detail == NotifyInferior )
+	    return FALSE;
 	delete autoRaiseTimer;
 	autoRaiseTimer = 0;
 	if ( !buttonDown )
@@ -1778,6 +1780,7 @@ void Client::setActive( bool act)
 	return;
     active = act;
     if ( !active && autoRaiseTimer ) {
+	qDebug("delete autoraise setActive %s", caption().latin1());
 	delete autoRaiseTimer;
 	autoRaiseTimer = 0;
     }
@@ -2341,6 +2344,7 @@ QPixmap Client::animationPixmap( int w )
 
 void Client::autoRaise()
 {
+    qDebug("autoRaise %s", caption().latin1());
     workspace()->raiseClient( this );
     delete autoRaiseTimer;
     autoRaiseTimer = 0;
