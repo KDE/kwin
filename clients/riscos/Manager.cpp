@@ -185,7 +185,6 @@ Manager::paintEvent(QPaintEvent * e)
   void
 Manager::resizeEvent(QResizeEvent * e)
 {
-  qDebug("resizeEvent(%d, %d)", e->size().width(), e->size().height());
   Client::resizeEvent(e);
 
   int sizeProblem = 0;
