@@ -295,7 +295,6 @@ void KWinWidgetButton::mousePressEvent(QMouseEvent* e)
     // Hide tooltips if a button is pressed
     if (buttonTip)
         buttonTip->leaveTip();
-	QWidget::mousePressEvent( e );
 }
 
 
