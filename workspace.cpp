@@ -570,7 +570,8 @@ bool Workspace::workspaceEvent( XEvent * e )
 
     case CreateNotify:
         if ( e->xcreatewindow.parent == root &&
-             !QWidget::find( e->xcreatewindow.window) ) {
+             !QWidget::find( e->xcreatewindow.window) &&
+             !e->xcreatewindow.override_redirect ) {
             timeval tv;
             gettimeofday( &tv, NULL );
             unsigned long now = tv.tv_sec * 10 + tv.tv_usec / 100000;
