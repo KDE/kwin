@@ -939,6 +939,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     if ( !buttonDown ) {
 	mode = mousePosition( e->pos() );
 	setMouseCursor( mode );
+        geom = geometry();
 	return;
     }
 
@@ -1007,11 +1008,24 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	geom.moveTopLeft( pp );
 	break;
     default:
+//fprintf(stderr, "KWin::mouseMoveEvent with mode = %d\n", mode); 
 	break;
     }
 
+    QRect desktopArea = workspace()->clientArea();
+    int marge = 5;
+
     if ( isResize() && geom.size() != size() ) {
-	geom.setSize( adjustedSize( geom.size() ) );
+        if (geom.bottom() < desktopArea.top()+marge)
+            geom.setBottom(desktopArea.top()+marge);
+        if (geom.top() > desktopArea.bottom()-marge)
+            geom.setTop(desktopArea.bottom()-marge);
+        if (geom.right() < desktopArea.left()+marge)
+            geom.setRight(desktopArea.left()+marge);
+        if (geom.left() > desktopArea.right()-marge)
+            geom.setLeft(desktopArea.right()-marge);
+
+        geom.setSize( adjustedSize( geom.size() ) );
 	if  (options->resizeMode == Options::Opaque ) {
 	    setGeometry( geom );
 	} else if ( options->resizeMode == Options::Transparent ) {
@@ -1021,15 +1035,23 @@ void Client::mouseMoveEvent( QMouseEvent * e)
     }
     else if ( isMove() && geom.topLeft() != geometry().topLeft() ) {
 	geom.moveTopLeft( workspace()->adjustClientPosition( this, geom.topLeft() ) );
-	switch ( options->moveMode ) {
-	case Options::Opaque:
-	    move( geom.topLeft() );
-	    break;
-	case Options::Transparent:
-	    clearbound();
-	    drawbound( geom );
-	    break;
-	}
+        if (geom.bottom() < desktopArea.top()+marge)
+            geom.moveBottomLeft( QPoint( geom.left(), desktopArea.top()+marge));
+        if (geom.top() > desktopArea.bottom()-marge)
+            geom.moveTopLeft( QPoint( geom.left(), desktopArea.bottom()-marge));
+        if (geom.right() < desktopArea.left()+marge)
+            geom.moveTopRight( QPoint( desktopArea.left()+marge, geom.top()));
+        if (geom.left() > desktopArea.right()-marge)
+            geom.moveTopLeft( QPoint( desktopArea.right()-marge, geom.top()));
+        switch ( options->moveMode ) {
+        case Options::Opaque:
+            move( geom.topLeft() );
+            break;
+        case Options::Transparent:
+            clearbound();
+            drawbound( geom );
+            break;
+        }
     }
 
     QApplication::syncX(); // process our own configure events synchronously.
