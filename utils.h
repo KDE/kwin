@@ -175,6 +175,17 @@ struct name \
 
 KWIN_CHECK_PREDICATE( TruePredicate, cl == cl /*true, avoid warning about 'cl' */ );
 
+template< typename T >
+Client* findClientInList( const ClientList& list, T predicate )
+    {
+    for ( ClientList::ConstIterator it = list.begin(); it != list.end(); ++it) 
+        {
+        if ( predicate( const_cast< const Client* >( *it)))
+            return *it;
+        }
+    return NULL;
+    }
+
 inline
 int timestampCompare( Time time1, Time time2 ) // like strcmp()
     {

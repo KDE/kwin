@@ -631,16 +631,10 @@ inline bool Workspace::sessionSaving() const
 template< typename T >
 inline Client* Workspace::findClient( T predicate )
     {
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
-        {
-        if ( predicate( const_cast< const Client* >( *it)))
-            return *it;
-        }
-    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it) 
-        {
-        if ( predicate( const_cast< const Client* >( *it)))
-            return *it;
-        }
+    if( Client* ret = findClientInList( clients, predicate ))
+        return ret;
+    if( Client* ret = findClientInList( desktops, predicate ))
+        return ret;
     return NULL;
     }
 

@@ -653,7 +653,8 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoData* asn_data,
                 if( act->hasTransient( this, true ))
                     ; // is transient for currently active window, even though it's not
                       // the same app (e.g. kcookiejar dialog) -> allow activation
-                else if( groupTransient() && mainClients().isEmpty())
+                else if( groupTransient() &&
+                    findClientInList( mainClients(), SameApplicationActiveHackPredicate( this )) == NULL )
                     ; // standalone transient
                 else
                     first_window = false;
