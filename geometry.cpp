@@ -155,7 +155,8 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
             break;
         }
 
-    if( workarea[ desktop ].isNull() || opt == FullArea || opt == MaximizeFullArea || opt == ScreenArea )
+    if( workarea[ desktop ].isNull() || opt == FullArea || opt == MaximizeFullArea
+        || opt == ScreenArea || opt == MovementArea )
         return rect;
 
     return workarea[ desktop ].intersect(rect);

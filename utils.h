@@ -79,7 +79,7 @@ enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
 enum clientAreaOption
     {
     PlacementArea,         // geometry where a window will be initially placed after being mapped
-    MovementArea,          // ???  window movement snapping area?
+    MovementArea,          // ???  window movement snapping area?  ignore struts
     MaximizeArea,          // geometry to which a window will be maximized
     MaximizeFullArea,      // like MaximizeArea, but ignore struts - used e.g. for fullscreening
     WorkArea,              // whole workarea (all screens together)

@@ -504,6 +504,7 @@ void Client::growHorizontal()
         {
         int newright = workspace()->packPositionRight( this, geom.right() + xSizeHint.width_inc - 1, true );
         // check that it hasn't grown outside of the area, due to size increments
+        // TODO this may be wrong?
         if( workspace()->clientArea( MovementArea,
             QPoint(( x() + newright ) / 2, geometry().center().y()), desktop()).right() >= newright )
             geom.setRight( newright );
