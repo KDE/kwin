@@ -205,7 +205,6 @@ Manager::activateLayout()
   void
 Manager::fakeMouseEvent(QMouseEvent * e, QWidget * w)
 {
-  qDebug("fakeMouseEvent %d", e->type());
   QPoint adjustedPos = w->pos() + e->pos();
 
   if (e->type() == QEvent::MouseButtonDblClick)
