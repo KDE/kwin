@@ -750,7 +750,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     if ( !placementDone ) {
         workspace()->place( this );
         placementDone = TRUE;
-    } else if ( windowType() == NET::Normal ) {
+    } else if ( ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Unknown
+            || windowType() == NET::Menu ) && may_move ) {
         if ( geometry().right() > area.right() && width() < area.width() )
             move( area.right() - width(), y() );
         if ( geometry().bottom() > area.bottom() && height() < area.height() )
