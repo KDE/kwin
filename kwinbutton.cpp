@@ -146,8 +146,13 @@ void KWinToolTip::hideTip()
 void KWinToolTip::positionTip()
 {
 	QPoint p = btn->mapToGlobal(btn->rect().bottomLeft()) + QPoint(0, 16);
-    int screen = QApplication::desktop()->screenNumber(btn->mapToGlobal(btn->rect().center()));
-	QRect screenGeom = QApplication::desktop()->screenGeometry(screen);
+	QRect screenGeom;
+    if (options->xineramaPlacementEnabled) {
+        int screen = QApplication::desktop()->screenNumber(btn->mapToGlobal(btn->rect().center()));
+        screenGeom = QApplication::desktop()->screenGeometry(screen);
+    } else {
+        screenGeom = QApplication::desktop()->geometry();
+    }
 
 	// Ensure the tooltip is displayed within the current desktop
 	if ( screenGeom.right() < p.x() + width() )

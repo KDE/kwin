@@ -197,9 +197,9 @@ void Options::reload()
     xineramaEnabled = gc->readBoolEntry ("XineramaEnabled", isVirtual ) &&
                       isVirtual;
     if (xineramaEnabled) {
-        xineramaPlacementEnabled = gc->readBoolEntry ("XineramaPlacementEnabled", FALSE);
-        xineramaMovementEnabled = gc->readBoolEntry ("XineramaMovementEnabled", FALSE);
-        xineramaMaximizeEnabled = gc->readBoolEntry ("XineramaMaximizeEnabled", FALSE);
+        xineramaPlacementEnabled = gc->readBoolEntry ("XineramaPlacementEnabled", true);
+        xineramaMovementEnabled = gc->readBoolEntry ("XineramaMovementEnabled", true);
+        xineramaMaximizeEnabled = gc->readBoolEntry ("XineramaMaximizeEnabled", true);
     } else {
          xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = false;
     }
