@@ -72,6 +72,7 @@ bool Client::manage( Window w, bool isMapped )
     properties[ WinInfo::PROTOCOLS2 ] =
         NET::WM2UserTime |
         NET::WM2StartupId |
+        NET::WM2ExtendedStrut |
         0;
 
     info = new WinInfo( this, qt_xdisplay(), client, qt_xrootwin(), properties, 2 );

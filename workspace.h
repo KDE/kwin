@@ -507,6 +507,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         Placement *initPositioning;
 
         QRect* workarea; //  array of workareas for virtual desktops
+        QRect** screenarea; // array of workareas per xinerama screen for all virtual desktops
 
         bool managing_topmenus;
         KSelectionOwner* topmenu_selection;

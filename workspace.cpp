@@ -94,6 +94,7 @@ Workspace::Workspace( bool restore )
     layoutX(-1),
     layoutY(2),
     workarea(NULL),
+    screenarea(NULL),
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
     forced_global_mouse_grab( false )
@@ -241,6 +242,7 @@ void Workspace::init()
         NET::WM2AllowedActions |
         NET::WM2RestackWindow |
         NET::WM2MoveResizeWindow |
+        NET::WM2ExtendedStrut |
         0
         ,
         NET::ActionMove |
@@ -406,6 +408,7 @@ Workspace::~Workspace()
     delete supportWindow;
     delete mgr;
     delete[] workarea;
+    delete[] screenarea;
     delete startup;
     delete initPositioning;
     delete topmenu_watcher;
@@ -786,6 +789,7 @@ void Workspace::loadDesktopSettings()
     number_of_desktops = n;
     delete workarea;
     workarea = new QRect[ n + 1 ];
+    // XXX what about screenarea?
     rootInfo->setNumberOfDesktops( number_of_desktops );
     desktop_focus_chain.resize( n );
     for(int i = 1; i <= n; i++) 

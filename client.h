@@ -226,7 +226,7 @@ class Client : public QObject, public KDecorationDefines
         Window   wmClientLeader() const;
         pid_t pid() const;
 
-        QRect adjustedClientArea( const QRect& area ) const;
+        QRect adjustedClientArea( const QRect& desktop, const QRect& area ) const;
 
         Colormap colormap() const;
 
@@ -346,6 +346,8 @@ class Client : public QObject, public KDecorationDefines
         // resizeWithChecks() resizes according to gravity, and checks workarea position
         void resizeWithChecks( int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
+        NETExtendedStrut strut() const;
+        bool hasStrut() const;
 
         bool startMoveResize();
         void finishMoveResize( bool cancel );

@@ -485,7 +485,8 @@ bool Client::windowEvent( XEvent* e )
             fetchName();
         if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMIconName ) != 0 )
             fetchIconicName();
-        if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMStrut ) != 0 )
+        if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMStrut ) != 0
+            || ( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2ExtendedStrut ) != 0 )
             {
             if( isTopMenu())  // the fallback mode of KMenuBar may alter the strut
                 checkWorkspacePosition();  // restore it

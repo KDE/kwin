@@ -64,46 +64,110 @@ void Workspace::desktopResized()
 
 void Workspace::updateClientArea( bool force )
     {
-    QRect* new_areas = new QRect[ numberOfDesktops() + 1 ];
-    QRect all = QApplication::desktop()->geometry();
+    QDesktopWidget *desktopwidget = KApplication::desktop();
+    int nscreens = desktopwidget -> numScreens ();
+//    kdDebug () << "screens: " << nscreens << endl;
+    QRect* new_wareas = new QRect[ numberOfDesktops() + 1 ];
+    QRect** new_sareas = new (QRect*)[ numberOfDesktops() + 1];
+    QRect screens [ nscreens ];
+    QRect desktopArea = desktopwidget -> geometry ();
+    for( int iS = 0;
+            iS < nscreens;
+            iS ++ )
+        {
+            screens [iS] = desktopwidget -> screenGeometry (iS);
+        }
     for( int i = 1;
-         i <= numberOfDesktops();
-         ++i )
-         new_areas[ i ] = all;
+            i <= numberOfDesktops();
+            ++i )
+        {
+            new_wareas[ i ] = desktopArea;
+            new_sareas[ i ] = new QRect [ nscreens ];
+            for( int iS = 0;
+                    iS < nscreens;
+                    iS ++ )
+                new_sareas[ i ][ iS ] = screens[ iS ];
+        }
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
         {
-        QRect r = (*it)->adjustedClientArea( all );
-        if( r == all )
-            continue;
-        if( (*it)->isOnAllDesktops())
-            for( int i = 1;
-                 i <= numberOfDesktops();
-                 ++i )
-                new_areas[ i ] = new_areas[ i ].intersect( r );
-        else
-            new_areas[ (*it)->desktop() ] = new_areas[ (*it)->desktop() ].intersect( r );
+            QRect r = (*it)->adjustedClientArea( desktopArea, desktopArea );
+            if( r == desktopArea ) // should be sufficient
+                continue;
+            if( (*it)->isOnAllDesktops())
+                for( int i = 1;
+                        i <= numberOfDesktops();
+                        ++i )
+                    {
+                        new_wareas[ i ] = new_wareas[ i ].intersect( r );
+                        for( int iS = 0;
+                                iS < nscreens;
+                                iS ++ )
+                            new_sareas[ i ][ iS ] =
+                                new_sareas[ i ][ iS ].intersect(
+                                        (*it)->adjustedClientArea( desktopArea, screens[ iS ] )
+                                    );
+                    }
+            else
+                {
+                    new_wareas[ (*it)->desktop() ] = new_wareas[ (*it)->desktop() ].intersect( r );
+                    for( int iS = 0;
+                            iS < nscreens;
+                            iS ++ )
+                        {
+//                            kdDebug () << "adjusting new_sarea: " << screens[ iS ] << endl;
+                            new_sareas[ (*it)->desktop() ][ iS ] =
+                                new_sareas[ (*it)->desktop() ][ iS ].intersect(
+                                        (*it)->adjustedClientArea( desktopArea, screens[ iS ] )
+                                        );
+                        }
+                }
         }
+    for( int i = 1;
+            i <= numberOfDesktops();
+            ++i )
+        {
+            for( int iS = 0;
+                    iS < nscreens;
+                    iS ++ )
+//                kdDebug () << "new_sarea: " << new_sareas[ i ][ iS ] << endl;
+        }
+    // TODO topmenu update for screenarea changes?
     if( topmenu_space != NULL )
         {
-        QRect topmenu_area = all;
+        QRect topmenu_area = desktopArea;
         topmenu_area.setTop( topMenuHeight());
         for( int i = 1;
              i <= numberOfDesktops();
              ++i )
-            new_areas[ i ] = new_areas[ i ].intersect( topmenu_area );
+            new_wareas[ i ] = new_wareas[ i ].intersect( topmenu_area );
         }
 
     bool changed = force;
+
+    if (! screenarea)
+        changed = true;
+
     for( int i = 1;
          !changed && i <= numberOfDesktops();
          ++i )
-        if( workarea[ i ] != new_areas[ i ] )
-            changed = true;
+        {
+            if( workarea[ i ] != new_wareas[ i ] )
+                changed = true;
+            for( int iS = 0;
+                    iS < nscreens;
+                    iS ++ )
+                if (new_sareas[ i ][ iS ] != screenarea [ i ][ iS ])
+                    changed = true;
+        }
+
     if ( changed )
         {
         delete[] workarea;
-        workarea = new_areas;
-        new_areas = NULL;
+        workarea = new_wareas;
+        new_wareas = NULL;
+        delete[] screenarea;
+        screenarea = new_sareas;
+        new_sareas = NULL;
         NETRect r;
         for( int i = 1; i <= numberOfDesktops(); i++)
             {
@@ -120,7 +184,8 @@ void Workspace::updateClientArea( bool force )
              ++it)
             (*it)->checkWorkspacePosition();
         }
-    delete[] new_areas;
+    delete[] new_sareas;
+    delete[] new_wareas;
     }
 
 void Workspace::updateClientArea()
@@ -143,34 +208,43 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     QRect rect = QApplication::desktop()->geometry();
     QDesktopWidget *desktopwidget = KApplication::desktop();
 
-    switch (opt)
+    if (! screenarea) {
+        if( workarea[ desktop ].isNull() || opt == FullArea || opt == MaximizeFullArea
+                || opt == ScreenArea || opt == MovementArea )
+            return rect;
+        return workarea[ desktop ];
+    }
+    switch (opt) // XXX needs checking after xinerama/paritalStrut changes
         {
         case MaximizeArea:
         case MaximizeFullArea:
             if (options->xineramaMaximizeEnabled)
-                rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
+                rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
+            else rect = workarea[ desktop ];
+                // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
             break;
         case PlacementArea:
             if (options->xineramaPlacementEnabled)
-                rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
+                rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
+                // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
+            else rect = workarea[ desktop ];
             break;
         case MovementArea:
             if (options->xineramaMovementEnabled)
-                rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
+                rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
+                // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
+            else rect = workarea[ desktop ];
             break;
         case WorkArea:
         case FullArea:
             break; // nothing
         case ScreenArea:
-            rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
+            rect = screenarea [ desktop ][ desktopwidget->screenNumber(p) ];
+            // rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
             break;
         }
 
-    if( workarea[ desktop ].isNull() || opt == FullArea || opt == MaximizeFullArea
-        || opt == ScreenArea || opt == MovementArea )
-        return rect;
-
-    return workarea[ desktop ].intersect(rect);
+    return rect; // workarea[ desktop ].intersect(rect);
     }
 
 QRect Workspace::clientArea( clientAreaOption opt, const Client* c ) const
@@ -412,24 +486,129 @@ void Client::keepInArea( const QRect& area )
   Used from Workspace in updateClientArea.
  */
 // TODO move to Workspace?
-QRect Client::adjustedClientArea( const QRect& area ) const
+
+QRect Client::adjustedClientArea( const QRect &desktopArea, const QRect& area ) const
     {
     QRect r = area;
     // topmenu area is reserved in updateClientArea()
     if( isTopMenu())
         return r;
-    NETStrut strut = info->strut();
-    if ( strut.left > 0 )
-        r.setLeft( r.left() + (int) strut.left );
-    if ( strut.top > 0 )
-        r.setTop( r.top() + (int) strut.top );
-    if ( strut.right > 0  )
-        r.setRight( r.right() - (int) strut.right );
-    if ( strut.bottom > 0  )
-        r.setBottom( r.bottom() - (int) strut.bottom );
+    NETExtendedStrut str = strut();
+    QRect stareaL = QRect(
+            0,
+            str . left_start,
+            str . left_width,
+            str . left_end - str . left_start + 1 );
+    QRect stareaR = QRect (
+            desktopArea . right () - str . right_width + 1,
+            str . right_start,
+            str . right_width,
+            str . right_end - str . right_start + 1 );
+    QRect stareaT = QRect (
+            str . top_start,
+            0,
+            str . top_end - str . top_start + 1,
+            str . top_width);
+    QRect stareaB = QRect (
+            str . bottom_start,
+            desktopArea . bottom () - str . bottom_width + 1,
+            str . bottom_end - str . bottom_start + 1,
+            str . bottom_width);
+
+    NETExtendedStrut ext = info->extendedStrut();
+    if( ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0
+        && ( str.left_width != 0 || str.right_width != 0 || str.top_width != 0 || str.bottom_width != 0 )) {
+
+        // hack, might cause problems... this tries to guess the start/end of a
+        // non-extended strut; only works on windows that have exact same
+        // geometry as their strut (ie, if the geometry fits the width
+        // exactly, we will adjust length of strut to match the geometry as well;
+        // otherwise we use the full-edge strut)
+
+        if (stareaT.top() == geometry().top() && stareaT.bottom() == geometry().bottom()) {
+            stareaT.setLeft(geometry().left());
+            stareaT.setRight(geometry().right());
+//            kdDebug () << "Trimming top-strut to geometry() to: " << stareaT << endl;
+        }
+        if (stareaB.top() == geometry().top() && stareaB.bottom() == geometry().bottom()) {
+            stareaB.setLeft(geometry().left());
+            stareaB.setRight(geometry().right());
+//            kdDebug () << "Trimming bottom-strut to geometry(): " << stareaB << endl;
+        }
+        if (stareaL.left() == geometry().left() && stareaL.right() == geometry().right()) {
+            stareaL.setTop(geometry().top());
+            stareaL.setBottom(geometry().bottom());
+//            kdDebug () << "Trimming left-strut to geometry(): " << stareaL << endl;
+        }
+        if (stareaR.left() == geometry().left() && stareaR.right() == geometry().right()) {
+            stareaR.setTop(geometry().top());
+            stareaR.setBottom(geometry().bottom());
+//            kdDebug () << "Trimming right-strut to geometry(): " << stareaR << endl;
+        }
+    }
+    if (stareaL . intersects (area)) {
+//        kdDebug () << "Moving left of: " << r << " to " << stareaL.right() + 1 << endl;
+        r . setLeft( stareaL . right() + 1 );
+    }
+    if (stareaR . intersects (area)) {
+//        kdDebug () << "Moving right of: " << r << " to " << stareaR.left() - 1 << endl;
+        r . setRight( stareaR . left() - 1 );
+    }
+    if (stareaT . intersects (area)) {
+//        kdDebug () << "Moving top of: " << r << " to " << stareaT.bottom() + 1 << endl;
+        r . setTop( stareaT . bottom() + 1 );
+    }
+    if (stareaB . intersects (area)) {
+//        kdDebug () << "Moving bottom of: " << r << " to " << stareaB.top() - 1 << endl;
+        r . setBottom( stareaB . top() - 1 );
+    }
     return r;
     }
 
+NETExtendedStrut Client::strut() const
+    {
+    NETExtendedStrut ext = info->extendedStrut();
+    NETStrut str = info->strut();
+    if( ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0
+        && ( str.left != 0 || str.right != 0 || str.top != 0 || str.bottom != 0 ))
+        {
+        // build extended from simple
+        if( str.left != 0 )
+            {
+            ext.left_width = str.left;
+            ext.left_start = 0;
+            ext.left_end = XDisplayHeight( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            }
+        if( str.right != 0 )
+            {
+            ext.right_width = str.right;
+            ext.right_start = 0;
+            ext.right_end = XDisplayHeight( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            }
+        if( str.top != 0 )
+            {
+            ext.top_width = str.top;
+            ext.top_start = 0;
+            ext.top_end = XDisplayWidth( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            }
+        if( str.bottom != 0 )
+            {
+            ext.bottom_width = str.bottom;
+            ext.bottom_start = 0;
+            ext.bottom_end = XDisplayWidth( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            }
+        }
+    return ext;
+    }
+bool Client::hasStrut() const
+    {
+    NETExtendedStrut ext = strut();
+    if( ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0 )
+        {
+            return false;
+        }
+    return true;
+    }
 
 
 // updates differences to workarea edges for all directions
@@ -970,6 +1149,13 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             plainResize( ns ); // TODO must(?) resize before gravitating?
             --block_geometry;
             setGeometry( QRect( calculateGravitation( false, gravity ), size()), ForceGeometrySet );
+
+            // this is part of the kicker-xinerama-hack... it should be
+            // safe to remove when kicker gets proper ExtendedStrut support;
+            // see Workspace::updateClientArea() and
+            // Client::adjustedClientArea()
+            if (hasStrut ())
+                workspace() -> updateClientArea ();
             }
         }
 
