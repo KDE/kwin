@@ -487,6 +487,8 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         return true;
     if( level == 4 ) // extreme
         return false;
+    if( !c->isOnCurrentDesktop())
+        return false; // allow only with level == 0
     if( c->ignoreFocusStealing())
         return true;
     if( ac == NULL || ac->isDesktop())
