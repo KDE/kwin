@@ -2379,8 +2379,8 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     active_client = 0;
     block_focus = TRUE;
 
-    ClientList mapList;
-    ClientList unmapList;
+//    ClientList mapList;
+//    ClientList unmapList;
 
     if (new_desktop != current_desktop) {
         /*
@@ -2400,7 +2400,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
             if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
                 obs_wins.create( *it );
                 (*it)->hide();
-                unmapList += (*it);
+//                unmapList += (*it);
             }
         }
         current_desktop = new_desktop;
@@ -2409,7 +2409,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
         for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
             if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
                 (*it)->show();
-                mapList += (*it);
+//                mapList += (*it);
             }
         }
 
@@ -2488,9 +2488,9 @@ void Workspace::setCurrentDesktop( int new_desktop ){
         desktop_focus_chain[i] = desktop_focus_chain[i-1];
     desktop_focus_chain[0] = current_desktop;
 
-    QString s = "desktop_focus_chain[] = { ";
-    for( uint i = 0; i < desktop_focus_chain.size(); i++ )
-        s += QString::number(desktop_focus_chain[i]) + ", ";
+//    QString s = "desktop_focus_chain[] = { ";
+//    for( uint i = 0; i < desktop_focus_chain.size(); i++ )
+//        s += QString::number(desktop_focus_chain[i]) + ", ";
 //    kdDebug(1212) << s << "}\n";
 }
 
