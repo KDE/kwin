@@ -3706,6 +3706,7 @@ void Workspace::storeSession( KConfig* config )
         config->writeEntry( QString("staysOnTop")+n, c->staysOnTop() );
         config->writeEntry( QString("skipTaskbar")+n, c->skipTaskbar() );
         config->writeEntry( QString("skipPager")+n, c->skipPager() );
+        config->writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
     }
     config->writeEntry( "count", count );
 }
@@ -3742,6 +3743,7 @@ void Workspace::loadSessionInfo()
         info->staysOnTop = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
         info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
         info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
+        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
     }
 }
 
@@ -3755,6 +3757,7 @@ void Workspace::loadFakeSessionInfo()
         QString n = QString::number(i);
         SessionInfo* info = new SessionInfo;
         fakeSession.append( info );
+        info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
         info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
         info->resourceClass = config->readEntry( QString("resourceClass")+n ).latin1();
         info->wmClientMachine = config->readEntry( QString("clientMachine")+n ).latin1();
@@ -3768,6 +3771,7 @@ void Workspace::loadFakeSessionInfo()
         info->staysOnTop = config->readBoolEntry( QString("staysOnTop")+n, FALSE  );
         info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
         info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
+        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
     }
 }
 
@@ -3777,6 +3781,7 @@ void Workspace::storeFakeSessionInfo( Client* c )
         return;
     SessionInfo* info = new SessionInfo;
     fakeSession.append( info );
+    info->windowRole = c->windowRole();
     info->resourceName = c->resourceName();
     info->resourceClass = c->resourceClass();
     info->wmClientMachine = c->wmClientMachine();
@@ -3790,6 +3795,7 @@ void Workspace::storeFakeSessionInfo( Client* c )
     info->staysOnTop = c->staysOnTop();
     info->skipTaskbar = c->skipTaskbar();
     info->skipPager = c->skipPager();
+    info->windowType = c->windowType();
 }
 
 void Workspace::writeFakeSessionInfo()
@@ -3800,6 +3806,7 @@ void Workspace::writeFakeSessionInfo()
     for ( SessionInfo* info = fakeSession.first(); info; info = fakeSession.next() ) {
         count++;
         QString n = QString::number(count);
+        config->writeEntry( QString("windowRole")+n, info->windowRole.data() );
         config->writeEntry( QString("resourceName")+n, info->resourceName.data() );
         config->writeEntry( QString("resourceClass")+n, info->resourceClass.data() );
         config->writeEntry( QString("clientMachine")+n, info->wmClientMachine.data() );
@@ -3813,6 +3820,7 @@ void Workspace::writeFakeSessionInfo()
         config->writeEntry( QString("staysOnTop")+n, info->staysOnTop );
         config->writeEntry( QString("skipTaskbar")+n, info->skipTaskbar );
         config->writeEntry( QString("skipPager")+n, info->skipPager );
+        config->writeEntry( QString("windowType")+n, windowTypeToTxt( info->windowType ));
     }
     config->writeEntry( "count", count );
 }
@@ -3843,7 +3851,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     if (! sessionId.isEmpty() ) {
         // look for a real session managed client (algorithm suggested by ICCCM)
         for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() )
-            if ( info->sessionId == sessionId ) {
+            if ( info->sessionId == sessionId && sessionInfoWindowTypeMatch( c, info )) {
                 if ( ! windowRole.isEmpty() ) {
                     if ( info->windowRole == windowRole )
                         realInfo = session.take();
@@ -3859,7 +3867,8 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
         for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() )
             if ( info->resourceName == resourceName &&
                  info->resourceClass == resourceClass &&
-                 info->wmClientMachine == wmClientMachine )
+                 info->wmClientMachine == wmClientMachine &&
+                 sessionInfoWindowTypeMatch( c, info ))
                 if ( wmCommand.isEmpty() || info->wmCommand == wmCommand )
                     realInfo = session.take();
     }
@@ -3868,7 +3877,8 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     for (SessionInfo* info = fakeSession.first(); info && !fakeInfo; info = fakeSession.next() )
         if ( info->resourceName == resourceName &&
              info->resourceClass == resourceClass &&
-             info->wmClientMachine == wmClientMachine )
+             ( windowRole.isEmpty() || windowRole == info->windowRole ) &&
+             sessionInfoWindowTypeMatch( c, info ))
             fakeInfo = fakeSession.take();
 
     // Reconciliate
@@ -3883,6 +3893,60 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     return 0;
 }
 
+bool Workspace::sessionInfoWindowTypeMatch( Client* c, SessionInfo* info )
+{
+    if( info->windowType == -2 ) { // undefined (not really part of NET::WindowType)
+        return c->windowType() == NET::Unknown || c->windowType() == NET::Normal
+            || c->windowType() == NET::Dialog || c->windowType() == NET::Override;
+    }
+    return info->windowType == c->windowType();
+}
+
+// maybe needed later
+#if 0
+// KMainWindow's without name() given have WM_WINDOW_ROLE in the form
+// of <appname>-mainwindow#<number>
+// when comparing them for fake session info, it's probably better to check
+// them without the trailing number
+bool Workspace::windowRoleMatch( const QCString& role1, const QCString& role2 )
+{
+    if( role1.isEmpty() && role2.isEmpty())
+        return true;
+    int pos1 = role1.find( '#' );
+    int pos2 = role2.find( '#' );
+    bool ret;
+    if( pos1 < 0 || pos2 < 0 || pos1 != pos2 )
+        ret = role1 == role2;
+    else
+        ret = qstrncmp( role1, role2, pos1 ) == 0;
+    kdDebug() << "WR:" << role1 << ":" << pos1 << ":" << role2 << ":" << pos2 << ":::" << ret << endl;
+    return ret;
+}
+#endif
+
+static const char* const window_type_names[] = {
+    "Unknown", "Normal" , "Desktop", "Dock", "Toolbar", "Menu", "Dialog",
+    "Override", "TopMenu" };
+
+const char* Workspace::windowTypeToTxt( NET::WindowType type )
+{
+    if( type >= NET::Unknown && type <= NET::TopMenu )
+        return window_type_names[ type + 1 ]; // +1 (unknown==-1)
+    if( type == -2 ) // undefined (not really part of NET::WindowType)
+        return "Undefined";
+    kdFatal() << "Unknown Window Type" << endl;
+    return NULL;
+}
+
+NET::WindowType Workspace::txtToWindowType( const char* txt )
+{
+    for( int i = NET::Unknown;
+         i <= NET::TopMenu;
+         ++i )
+        if( qstrcmp( txt, window_type_names[ i + 1 ] ) == 0 ) // +1
+            return static_cast< NET::WindowType >( i );
+    return static_cast< NET::WindowType >( -2 ); // undefined
+}
 
 /*!
   Updates the current client area according to the current clients.

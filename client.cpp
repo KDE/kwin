@@ -95,6 +95,7 @@ class ClientPrivate
 {
 public:
     ClientPrivate() {};
+    QCString windowRole;
 };
 
 };
@@ -117,6 +118,8 @@ using namespace KWinInternal;
 static bool blockAnimation = FALSE;
 
 static QRect* visible_bound = 0;
+
+static QCString getStringProperty(WId w, Atom prop, char separator=0);
 
 void Client::drawbound( const QRect& geom )
 {
@@ -570,6 +573,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     getWmNormalHints(); // get xSizeHint
     getWmClientLeader();
     fetchName();
+    d->windowRole = getStringProperty( w, qt_window_role );
 
     if ( mainClient()->isSticky() )
         setSticky( TRUE );
@@ -1368,6 +1372,8 @@ bool Client::propertyNotify( XPropertyEvent& e )
             getWindowProtocols();
         else if (e.atom == atoms->wm_client_leader )
             getWmClientLeader();
+        else if( e.atom == qt_window_role )
+            d->windowRole = getStringProperty( win, qt_window_role );
         break;
     }
     return TRUE;
@@ -2838,7 +2844,7 @@ void Client::keyPressEvent( uint key_code )
     QCursor::setPos( pos );
 }
 
-static QCString getStringProperty(WId w, Atom prop, char separator=0)
+static QCString getStringProperty(WId w, Atom prop, char separator)
 {
     Atom type;
     int format, status;
@@ -2947,7 +2953,7 @@ void Client::getWmClientLeader()
  */
 QCString Client::windowRole()
 {
-    return staticWindowRole(win);
+    return d->windowRole;
 }
 
 /*!

@@ -17,6 +17,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "KWinInterface.h"
 #include <kshortcut.h>
 #include <qcursor.h>
+#include <netwm_def.h>
 
 #include <X11/Xlib.h>
 
@@ -54,7 +55,6 @@ public:
 
 typedef QValueList<SystemTrayWindow> SystemTrayWindowList;
 
-struct SessionInfoPrivate;
 struct SessionInfo
 {
     QCString sessionId;
@@ -74,9 +74,7 @@ struct SessionInfo
     bool staysOnTop;
     bool skipTaskbar;
     bool skipPager;
-
-    private:
-    SessionInfoPrivate* d;
+    NET::WindowType windowType;
 };
 
 
@@ -415,6 +413,9 @@ private:
     void loadFakeSessionInfo();
     void storeFakeSessionInfo( Client* c );
     void writeFakeSessionInfo();
+    static const char* windowTypeToTxt( NET::WindowType type );
+    static NET::WindowType txtToWindowType( const char* txt );
+    static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
 
     Client* active_client;
     Client* last_active_client;
