@@ -1779,6 +1779,7 @@ Name[sv]=Ta bort dialog
 Name[tr]=Pencereyi Sil
 Name[uk]=Видалити вікно діалогу
 Name[zh_CN.GB2312]=删除对话
+Name[zh_TW.Big5]=刪除對話視窗
 Comment=Transient Window (a dialog) is Removed
 Comment[ca]=S'elimina una finestra transitòria (un diàleg)
 Comment[cs]=Dialogové okno bylo zavřeno
