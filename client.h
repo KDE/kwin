@@ -55,6 +55,7 @@ class Client : public QObject, public KDecorationDefines
         Client* transientFor();
         bool isTransient() const;
         bool groupTransient() const;
+        bool wasOriginallyGroupTransient() const;
         ClientList mainClients() const; // call once before loop , is not indirect
         bool hasTransient( const Client* c, bool indirect ) const;
         const ClientList& transients() const; // is not indirect
@@ -530,6 +531,13 @@ inline Client* Client::transientFor()
 inline bool Client::groupTransient() const
     {
     return transient_for_id == workspace()->rootWin();
+    }
+
+// needed because verifyTransientFor() may set transient_for_id to root window,
+// if the original value has a problem (window doesn't exist, etc.)
+inline bool Client::wasOriginallyGroupTransient() const
+    {
+    return original_transient_for_id == workspace()->rootWin();
     }
 
 inline bool Client::isTransient() const

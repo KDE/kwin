@@ -507,6 +507,8 @@ void Workspace::removeClient( Client* c, allowed_t )
 
 void Workspace::updateCurrentTopMenu()
     {
+    if( !managingTopMenus())
+        return;
     // toplevel menubar handling
     Client* menubar = 0;
     bool block_desktop_menubar = false;
@@ -558,11 +560,11 @@ void Workspace::updateCurrentTopMenu()
             for( ClientList::ConstIterator it = topmenus.begin();
                  it != topmenus.end();
                  ++it )
-                if( (*it)->groupTransient())
-                    {
-                    menubar = *it;
-                    break;
-                    }
+                if( (*it)->wasOriginallyGroupTransient()) // kdesktop's topmenu has WM_TRANSIENT_FOR
+                    {                                     // set pointing to the root window
+                    menubar = *it;                        // to recognize it here
+                    break;                                // Also, with the xroot hack in kdesktop,
+                    }                                     // there's no NET::Desktop window to be transient for
             }
         }
 
@@ -572,27 +574,19 @@ void Workspace::updateCurrentTopMenu()
         if( active_client && !menubar->isOnDesktop( active_client->desktop()))
             menubar->setDesktop( active_client->desktop());
         menubar->hideClient( false );
+        topmenu_space->hide();
+        }
+    else
+        { // no topmenu active - show the space window, so that there's not empty space
+        topmenu_space->show();
         }
 
     // ... then hide the other ones. Avoids flickers.
-#if 0
-    // Leave the desktop menubars always visible. Helps visually when the app doesn't show
-    // its menubar immediately.
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
-        {
-        if( (*it)->isTopMenu() && (*it) != menubar && !(*it)->mainClient()->isDesktop() )
-            (*it)->hideClient( true );
-        }
-#else
-    // There's a blank area where topmenus are placed, no need to keep
-    // the desktop one always visible
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) 
         {
         if( (*it)->isTopMenu() && (*it) != menubar )
             (*it)->hideClient( true );
         }
-#endif
-
     }
 
 
