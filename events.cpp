@@ -1142,7 +1142,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             if( isActive() && w == wrapperId()
                 && options->clickRaise && button < 4 ) // exclude wheel
                 {
-                com = Options::MouseActivateAndPassClick;
+                com = Options::MouseActivateRaiseAndPassClick;
                 was_action = true;
                 perform_handled = true;
                 }
