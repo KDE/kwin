@@ -2257,7 +2257,7 @@ NET::WindowType Client::windowType() const
 
 bool Client::wantsTabFocus() const
 {
-    return windowType() == NET::Normal && input;
+    return windowType() == NET::Normal && ( input || Ptakefocus );
 }
 
 /*!
