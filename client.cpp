@@ -1570,8 +1570,10 @@ void Client::resizeEvent( QResizeEvent * e)
 void Client::mouseMoveEvent( QMouseEvent * e)
 {
     if ( !buttonDown ) {
-        mode = mousePosition( e->pos() );
-        setMouseCursor( mode );
+        MousePosition newmode = mousePosition( e->pos() );
+        if( newmode != mode )
+            setMouseCursor( newmode );
+        mode = newmode;
         geom = geometry();
         return;
     }
@@ -1691,6 +1693,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 //     QApplication::syncX(); // process our own configure events synchronously.
 }
 
+// these two aren't called at all ... ?!
+
 /*!
   Reimplemented to provide move/resize
  */
@@ -1703,8 +1707,6 @@ void Client::enterEvent( QEvent * )
  */
 void Client::leaveEvent( QEvent * )
 {
-    if ( !buttonDown )
-        setCursor( arrowCursor );
 }
 
 
@@ -2180,8 +2182,10 @@ bool Client::x11Event( XEvent * e)
     }
 
     if ( e->type == LeaveNotify && e->xcrossing.mode == NotifyNormal ) {
-        if ( !buttonDown )
+        if ( !buttonDown ) {
+            mode = Nowhere;
             setCursor( arrowCursor );
+        }
         bool lostMouse = !rect().contains( QPoint( e->xcrossing.x, e->xcrossing.y ) );
         if ( lostMouse ) {
             delete autoRaiseTimer;
