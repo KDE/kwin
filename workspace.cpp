@@ -553,7 +553,11 @@ void Workspace::updateCurrentTopMenu()
 
 //    kdDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client << endl;
     if ( menubar )
+        {
+        if( active_client && !menubar->isOnDesktop( active_client->desktop()))
+            menubar->setDesktop( active_client->desktop());
         menubar->hideClient( false );
+        }
 
     // ... then hide the other ones. Avoids flickers.
 #if 0
