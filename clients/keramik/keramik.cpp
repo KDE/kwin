@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Keramik KWin client (version 0.7)
+ * Keramik KWin client (version 0.8)
  *
  * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>
  *
@@ -43,12 +43,12 @@
 #ifdef HAVE_X11_EXTENSIONS_SHAPE_H
 #include <X11/extensions/shape.h>
 #else
-#define XShapeCombineMask(a,b,c,d,e,f,g)
+#define XShapeCombineRectangles(a,b,c,d,e,f,g,h,i)
 #endif
 
 #include "keramik.moc"
 
-using namespace KWinInternal;
+using namespace Keramik;
 
 
 
@@ -56,7 +56,7 @@ using namespace KWinInternal;
 
 
 
-namespace
+namespace Keramik
 {
 
 	const int buttonMargin    = 9;
@@ -128,7 +128,7 @@ namespace
 	KeramikHandler *clientHandler = NULL;
 	bool keramik_initialized = false;
 
-} // anonymous namespace
+} // namespace Keramik 
 
 
 
@@ -145,7 +145,7 @@ KeramikHandler::KeramikHandler()
 	}
 
 	settings_cache = NULL;
-	
+
 	// Create the button deco bitmaps
 	buttonDecos[ Menu ]     = new QBitmap( 17, 17, menu_bits,       true );
 	buttonDecos[ Sticky ]   = new QBitmap( 17, 17, sticky_on_bits,  true );
@@ -200,88 +200,95 @@ void KeramikHandler::createPixmaps()
 	// -------------------------------------------------------------------------
 	captionColor = options->color( Options::TitleBar,   true );
 	titleColor   = options->color( Options::TitleBlend, true );
-		
+
 	// Load the titlebar corners.
 	activeTiles[ TitleLeft ]  = loadPixmap( "titlebar-left",  titleColor );
 	activeTiles[ TitleRight ] = loadPixmap( "titlebar-right", titleColor );
-	
+
 	// Load the titlebar center tile image (this will be used as
 	//     the background for the caption bubble tiles).
 	titleCenter = loadImage( "titlebar-center", titleColor );
-	
-	// Load the caption bubble corner & center images.
-	if ( smallCaptionBubbles ) {
-		captionLeft   = loadImage( "caption-small-left",   captionColor );
-		captionRight  = loadImage( "caption-small-right",  captionColor );
-		captionCenter = loadImage( "caption-small-center", captionColor );
-	} else {
-		captionLeft   = loadImage( "caption-large-left",   captionColor );
-		captionRight  = loadImage( "caption-large-right",  captionColor );
-		captionCenter = loadImage( "caption-large-center", captionColor );
-	}
-	
-	// Create the caption bubble tiles (by blending them onto the titlebar)
-	activeTiles[ CaptionLeft   ] = composite( captionLeft,   titleCenter );
-	activeTiles[ CaptionRight  ] = composite( captionRight,  titleCenter );
-	activeTiles[ CaptionCenter ] = composite( captionCenter, titleCenter );
-	
+
+	// Load the small version of the caption bubble corner & center images.
+	captionLeft   = loadImage( "caption-small-left",   captionColor );
+	captionRight  = loadImage( "caption-small-right",  captionColor );
+	captionCenter = loadImage( "caption-small-center", captionColor );
+
+	// Create the caption bubble tiles (by blending the images onto the titlebar)
+	activeTiles[ CaptionSmallLeft   ] = composite( captionLeft,   titleCenter );
+	activeTiles[ CaptionSmallRight  ] = composite( captionRight,  titleCenter );
+	activeTiles[ CaptionSmallCenter ] = composite( captionCenter, titleCenter );
+
 	delete captionLeft;
 	delete captionRight;
 	delete captionCenter;
-	
+
+	// Now do the same with the large version
+	captionLeft   = loadImage( "caption-large-left",   captionColor );
+	captionRight  = loadImage( "caption-large-right",  captionColor );
+	captionCenter = loadImage( "caption-large-center", captionColor );
+
+	activeTiles[ CaptionLargeLeft   ] = composite( captionLeft,   titleCenter );
+	activeTiles[ CaptionLargeRight  ] = composite( captionRight,  titleCenter );
+	activeTiles[ CaptionLargeCenter ] = composite( captionCenter, titleCenter );
+
+	delete captionLeft;
+	delete captionRight;
+	delete captionCenter;
+
 	// Create the titlebar center tile
 	activeTiles[ TitleCenter ] = new QPixmap( *titleCenter );
-	
+
 	delete titleCenter;
-	
+
 	// Load the left & right border pixmaps
 	activeTiles[ BorderLeft ]  = loadPixmap( "border-left",  titleColor );
 	activeTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
-	
+
 	// Load the bottom grabbar pixmaps
 	activeTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
 	activeTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
 	activeTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
-	
+
 
 	// Inactive tiles
 	// -------------------------------------------------------------------------
 	captionColor = options->color( Options::TitleBar,   false );
 	titleColor   = options->color( Options::TitleBlend, false );
-	
+
 	inactiveTiles[ TitleLeft ]  = loadPixmap( "titlebar-left",  titleColor );
 	inactiveTiles[ TitleRight ] = loadPixmap( "titlebar-right", titleColor );
-	
+
 	titleCenter = loadImage( "titlebar-center", titleColor );
-	
+
 	captionLeft   = loadImage( "caption-small-left",   captionColor );
 	captionRight  = loadImage( "caption-small-right",  captionColor );
 	captionCenter = loadImage( "caption-small-center", captionColor );
-		
-	inactiveTiles[ CaptionLeft  ]  = composite( captionLeft,   titleCenter );
-	inactiveTiles[ CaptionRight ]  = composite( captionRight,  titleCenter );
-	inactiveTiles[ CaptionCenter ] = composite( captionCenter, titleCenter );
-	
+
+	inactiveTiles[ CaptionSmallLeft  ]  = composite( captionLeft,   titleCenter );
+	inactiveTiles[ CaptionSmallRight ]  = composite( captionRight,  titleCenter );
+	inactiveTiles[ CaptionSmallCenter ] = composite( captionCenter, titleCenter );
+
 	delete captionLeft;
 	delete captionRight;
 	delete captionCenter;
-	
+
 	inactiveTiles[ TitleCenter ] = new QPixmap( *titleCenter );
-	
+
 	delete titleCenter;
-	
+
 	inactiveTiles[ BorderLeft ]  = loadPixmap( "border-left",  titleColor );
 	inactiveTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
-	
+
 	inactiveTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
 	inactiveTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
 	inactiveTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
-	
+
 
 	// Buttons
 	// -------------------------------------------------------------------------
 	buttonColor  = QColor(); //options->color( Options::ButtonBg, true );
-	
+
 	titleButtonRound  = loadPixmap( "titlebutton-round",  buttonColor );
 	titleButtonSquare = loadPixmap( "titlebutton-square", buttonColor );
 
@@ -289,32 +296,35 @@ void KeramikHandler::createPixmaps()
 	// Prepare the tiles for use
 	// -------------------------------------------------------------------------
 	if ( QApplication::reverseLayout() ) {
-		
+
 		// Fix lighting
-		flip( activeTiles[CaptionLeft], activeTiles[CaptionRight] );
-		flip( inactiveTiles[CaptionLeft], inactiveTiles[CaptionRight] );
+		flip( activeTiles[CaptionSmallLeft], activeTiles[CaptionSmallRight] );
+		flip( inactiveTiles[CaptionSmallLeft], inactiveTiles[CaptionSmallRight] );
+
+		flip( activeTiles[CaptionLargeLeft], activeTiles[CaptionLargeRight] );
 
 		flip( activeTiles[TitleLeft], activeTiles[TitleRight] );
 		flip( inactiveTiles[TitleLeft], inactiveTiles[TitleRight] );
-		
+
 		flip( activeTiles[BorderLeft], activeTiles[BorderRight] );
 		flip( inactiveTiles[BorderLeft], inactiveTiles[BorderRight] );
-		
+
 		flip( activeTiles[GrabBarLeft], activeTiles[GrabBarRight] );
 		flip( inactiveTiles[GrabBarLeft], inactiveTiles[GrabBarRight] );
-		
+
 		flip( titleButtonRound );
 		flip( titleButtonSquare );
 	}
 
 	// Pretile the center & border tiles for optimal performance
-	pretile( activeTiles[ CaptionCenter ], 64, Qt::Horizontal );
+	pretile( activeTiles[ CaptionSmallCenter ], 64, Qt::Horizontal );
+	pretile( activeTiles[ CaptionLargeCenter ], 64, Qt::Horizontal );
 	pretile( activeTiles[ TitleCenter ], 64, Qt::Horizontal );
 	pretile( activeTiles[ GrabBarCenter ], 128, Qt::Horizontal );
 	pretile( activeTiles[ BorderLeft ], 128, Qt::Vertical );
 	pretile( activeTiles[ BorderRight ], 128, Qt::Vertical );
-	
-	pretile( inactiveTiles[ CaptionCenter ], 64, Qt::Horizontal );
+
+	pretile( inactiveTiles[ CaptionSmallCenter ], 64, Qt::Horizontal );
 	pretile( inactiveTiles[ TitleCenter ], 64, Qt::Horizontal );
 	pretile( inactiveTiles[ GrabBarCenter ], 128, Qt::Horizontal );
 	pretile( inactiveTiles[ BorderLeft ], 128, Qt::Vertical );
@@ -368,12 +378,12 @@ void KeramikHandler::pretile( QPixmap *&pix, int size, Qt::Orientation dir )
 {
 	QPixmap *newpix;
 	QPainter p;
-	
+
 	if ( dir == Qt::Horizontal )
 		newpix = new QPixmap( size, pix->height() );
 	else
 		newpix = new QPixmap( pix->width(), size );
-	
+
 	p.begin( newpix );
 	p.drawTiledPixmap( newpix->rect(), *pix ) ;
 	p.end();
@@ -408,8 +418,6 @@ void KeramikHandler::readConfig()
 		settings_cache->iTitleColor = options->color( Options::TitleBar,   false );
 		settings_cache->iTitleBlend = options->color( Options::TitleBlend, false );
 		settings_cache->buttonColor = options->color( Options::ButtonBg,   true );
-		
-		settings_cache->smallCaptionBubbles = smallCaptionBubbles;
 	}
 
 	delete c;
@@ -523,12 +531,6 @@ void KeramikHandler::reset()
 		pixmapsInvalid = true;
 	}
 	
-	// Check if the caption bubble size has changed
-	if ( settings_cache->smallCaptionBubbles != smallCaptionBubbles ) {
-		pixmapsInvalid = true;
-		needHardReset  = true;
-	}
-
 	// Check if button positions have changed
 	if ( options->customButtonPositions() ) {
 		buttonsLeft  = options->titleButtonsLeft();
@@ -549,7 +551,6 @@ void KeramikHandler::reset()
 	settings_cache->iTitleColor         = options->color( Options::TitleBar,   false );
 	settings_cache->iTitleBlend         = options->color( Options::TitleBlend, false );
 	settings_cache->buttonColor         = options->color( Options::ButtonBg,   true  );
-	settings_cache->smallCaptionBubbles = smallCaptionBubbles;
 	settings_cache->buttonsLeft         = buttonsLeft;
 	settings_cache->buttonsRight        = buttonsRight;
 	
@@ -718,11 +719,15 @@ KeramikClient::KeramikClient( Workspace *ws, WId w, QWidget *parent, const char 
 	QHBoxLayout *titleLayout  = new QHBoxLayout();
 	QHBoxLayout *windowLayout = new QHBoxLayout();
 
-	// Button margin
-	int topMargin = clientHandler->titleBarHeight()
-		- clientHandler->titleBarBaseHeight() + 1;
-	mainLayout->addSpacing( topMargin );
+	largeTitlebar = ( !maximizedVertical() && clientHandler->largeCaptionBubbles() );
+	largeCaption = ( isActive() && largeTitlebar );
+	
+	int topSpacing = ( largeTitlebar ? 4 : 1 );
+	topSpacer = new QSpacerItem( 10, topSpacing,
+				QSizePolicy::Expanding, QSizePolicy::Minimum );
 
+	mainLayout->addItem( topSpacer );
+	
 	mainLayout->addLayout( titleLayout );         // Titlebar
 	mainLayout->addLayout( windowLayout, 1 );     // Left border + window + right border
 	mainLayout->addSpacing( 8 );                  // Bottom grab bar + shadow
@@ -733,8 +738,8 @@ KeramikClient::KeramikClient( Workspace *ws, WId w, QWidget *parent, const char 
 	addButtons( titleLayout, options->customButtonPositions() ?
 			options->titleButtonsLeft() : QString(default_left) );
 
-	titlebar = new QSpacerItem( 10, clientHandler->titleBarHeight() - topMargin,
-		QSizePolicy::Expanding, QSizePolicy::Minimum );
+	titlebar = new QSpacerItem( 10, clientHandler->titleBarHeight(largeTitlebar)
+			- topSpacing, QSizePolicy::Expanding, QSizePolicy::Minimum );
 	titleLayout->addItem( titlebar );
 
 	titleLayout->addSpacing( buttonSpacing );
@@ -764,10 +769,38 @@ KeramikClient::~KeramikClient()
 
 void KeramikClient::reset()
 {
+	if ( clientHandler->largeCaptionBubbles() && !largeTitlebar )
+	{
+		// We're switching from small caption bubbles to large
+		if ( !maximizedVertical() ) {
+			topSpacer->changeSize( 10, 4, QSizePolicy::Expanding, QSizePolicy::Minimum );
+			largeTitlebar = true;
+			largeCaption = isActive();
+		
+			layout()->activate();
+			
+			// Compensate for the titlebar size change
+			setGeometry( x(), y() - 3, width(), height() + 3 );
+		}
+	}
+	else if ( !clientHandler->largeCaptionBubbles() && largeTitlebar )
+	{
+		// We're switching from large caption bubbles to small
+		topSpacer->changeSize( 10, 1, QSizePolicy::Expanding, QSizePolicy::Minimum );
+		largeTitlebar = largeCaption = false;
+		
+		layout()->activate();
+		
+		// Compensate for the titlebar size change
+		setGeometry( x(), y() + 3, width(), height() - 3 );
+	}
+	
 	calculateCaptionRect();
 	
 	captionBufferDirty = maskDirty = true;
 
+	// Only repaint the window if it's visible 
+	// (i.e. not minimized and on the current desktop)
 	if ( isVisible() ) {
 		repaint( false );
 		
@@ -851,67 +884,90 @@ void KeramikClient::updateMask()
 	if ( !keramik_initialized )
 		return;
 
-	// This code is written in Xlib to work around a bug somewhere in the
-	// Qt masking/bitmap code.
+	// To maximize performance this code uses precalculated bounding rects
+	// to set the window mask. This saves us from having to allocate a 1bpp
+	// pixmap, paint the mask on it and then have the X server iterate
+	// over the pixels to compute the bounding rects from it.
 
-	Display *dpy = QPaintDevice::x11AppDisplay();
-	int screen   = QPaintDevice::x11Screen();
-	Pixmap pix   = XCreatePixmap( dpy, handle(), width(), height(), 1 );
+	// To elliminate any possible overhead introduced by Qt it uses Xlib
+	// calls directly, which also has the advantage that it allows us to
+	// optimize the sorting of the rectangles.
 
-	const QBitmap *tile;
+	XRectangle rects[11];
+	register XRectangle *rect = rects;
+	register int w, y = 0;
+	int nrects;
 
-	GC gc = XCreateGC( dpy, pix, 0, 0 );
-	XSetFillStyle( dpy, gc, FillSolid );
+	if ( QApplication::reverseLayout() ) {
 
-	// Clear the titlebar area
-	XSetForeground( dpy, gc, BlackPixel(dpy, screen) );
-	XFillRectangle( dpy, pix, gc, 0, 0, width(), clientHandler->titleBarHeight() );
+		// If the caption bubble is visible and extends above the titlebar
+		if ( largeCaption && captionRect.width() >= 25 ) {
+			nrects = 11;
+			register int x = captionRect.left();
+			w = captionRect.width();
+			setRectangle( rect++, x + 11, y++, w - 19, 1 );
+			setRectangle( rect++, x + 9,  y++, w - 15, 1 );
+			setRectangle( rect++, x + 7,  y++, w - 12, 1 );
+		} else {
+			nrects = 8;
+			
+			// Do we have a large titlebar with a retracted caption bubble?
+			// (i.e. the style is set to use large caption bubbles, we're
+			//       not maximized and not active)
+			if ( largeTitlebar )
+				y = 3;
+		}
+	
+		w = width();
 
-	int titleBaseY = clientHandler->titleBarHeight()
-		- clientHandler->titleBarBaseHeight();
+		// The rounded titlebar corners
+		setRectangle( rect++, 9, y++, w - 17, 1 );
+		setRectangle( rect++, 7, y++, w - 13, 1 );
+		setRectangle( rect++, 5, y++, w - 9,  1 );
+		setRectangle( rect++, 4, y++, w - 7,  1 );
+		setRectangle( rect++, 3, y++, w - 5,  1 );
+		setRectangle( rect++, 2, y++, w - 4,  1 );
+		setRectangle( rect++, 1, y++, w - 2,  2 );
+	} else {
 
-	// Set the background and foreground colors for XCopyArea()
-	XSetForeground( dpy, gc, WhitePixel(dpy, screen) );
-	XSetBackground( dpy, gc, BlackPixel(dpy, screen) );
+		// If the caption bubble is visible and extends above the titlebar
+		if ( largeCaption && captionRect.width() >= 25 ) {
+			nrects = 11;
+			register int x = captionRect.left();
+			w = captionRect.width();
+			setRectangle( rect++, x + 8, y++, w - 19, 1 );
+			setRectangle( rect++, x + 6, y++, w - 15, 1 );
+			setRectangle( rect++, x + 5, y++, w - 12, 1 );
+		} else {
+			nrects = 8;
 
-	// Top left corner
-	tile = clientHandler->tile( TitleLeft, isActive() )->mask();
-	XCopyArea( dpy, tile->handle(), pix, gc, 0, 0, tile->width(), tile->height(), 0, titleBaseY );
+			// Do we have a large titlebar with a retracted caption bubble?
+			// (i.e. the style is set to use large caption bubbles, we're
+			//       not maximized and not active)
+			if ( largeTitlebar )
+				y = 3;
+		}
 
-	// Space between top left & top right corners
-	XFillRectangle( dpy, pix, gc, 15, titleBaseY, width() - 30, clientHandler->titleBarBaseHeight() );
+		w = width();
 
-	// Caption bubble
-	if ( isActive() && titleBaseY && captionRect.width() >= 25 ) {
-		// Left caption corner
-		tile = clientHandler->tile( CaptionLeft, true )->mask();
-		XCopyArea( dpy, tile->handle(), pix, gc, 0, 0, tile->width(), tile->height(),
-				captionRect.left(), 0 );
-
-		// Caption center
-		XFillRectangle( dpy, pix, gc, captionRect.left() + 15, 0, captionRect.width() - 30,
-				clientHandler->titleBarHeight() );
-
-		// Right caption corner
-		tile = clientHandler->tile( CaptionRight, true )->mask();
-		XCopyArea( dpy, tile->handle(), pix, gc, 0, 0, tile->width(), tile->height(),
-				captionRect.left() + captionRect.width() - 15, 0 );
+		// The rounded titlebar corners
+		setRectangle( rect++, 8, y++, w - 17, 1 );
+		setRectangle( rect++, 6, y++, w - 13, 1 );
+		setRectangle( rect++, 4, y++, w - 9,  1 );
+		setRectangle( rect++, 3, y++, w - 7,  1 );
+		setRectangle( rect++, 2, y++, w - 5,  1 );
+		setRectangle( rect++, 2, y++, w - 4,  1 );
+		setRectangle( rect++, 1, y++, w - 2,  2 );
 	}
 
-	// Top right corner
-	tile = clientHandler->tile( TitleRight, true )->mask();
-	XCopyArea( dpy, tile->handle(), pix, gc, 0, 0, tile->width(), tile->height(),
-			width() - 15, titleBaseY );
+	y++;
 
-	// Bottom part of the window
-	XFillRectangle( dpy, pix, gc, 0, clientHandler->titleBarHeight(), width(),
-			height() - clientHandler->titleBarHeight() );
+	// The part of the window below the titlebar
+	setRectangle( rect++, 0, y, w, height() - y );
 
-	XFreeGC( dpy, gc );
-
-	// Set the mask
-	XShapeCombineMask( dpy, handle(), ShapeBounding, 0, 0, pix, ShapeSet );	
-	XFreePixmap( dpy, pix );
+	// Send the rects to the X server
+	XShapeCombineRectangles( x11AppDisplay(), handle(), ShapeBounding,
+		0, 0, rects, nrects, ShapeSet, YXBanded );
 
 	maskDirty = false;
 }
@@ -931,11 +987,18 @@ void KeramikClient::updateCaptionBuffer()
 	QPainter p( &captionBuffer );
 
 	// Draw the caption bubble
-	p.drawPixmap( 0, 0, *clientHandler->tile( CaptionLeft, active ) );
-	p.drawTiledPixmap( 15, 0, captionRect.width() - 30, clientHandler->titleBarHeight(),
-		*clientHandler->tile( CaptionCenter, active ) );
-	p.drawPixmap( captionRect.width() - 15, 0, *clientHandler->tile( CaptionRight, active ) );
-	
+	if ( active && largeCaption ) {
+		p.drawPixmap( 0, 0, *clientHandler->tile( CaptionLargeLeft, true ) );
+		p.drawTiledPixmap( 15, 0, captionRect.width() - 30, captionRect.height(),
+				*clientHandler->tile( CaptionLargeCenter, true ) );
+		p.drawPixmap( captionRect.width() - 15, 0, *clientHandler->tile( CaptionLargeRight, true ) );
+	} else {
+		p.drawPixmap( 0, 0, *clientHandler->tile( CaptionSmallLeft, active ) );
+		p.drawTiledPixmap( 15, 0, captionRect.width() - 30, captionRect.height(),
+				*clientHandler->tile( CaptionSmallCenter, active ) );
+		p.drawPixmap( captionRect.width() - 15, 0, *clientHandler->tile( CaptionSmallRight, active ) );
+	}
+		
 	if ( clientHandler->showAppIcons() )
 	{
 		if ( active ) {
@@ -1016,14 +1079,14 @@ void KeramikClient::calculateCaptionRect()
 {
 	QFontMetrics fm( options->font(isActive()) );
 	int cw = fm.width( caption() ) + 95;
-	int titleBaseY = clientHandler->titleBarHeight() - clientHandler->titleBarBaseHeight();
+	int titleBaseY = ( largeTitlebar ? 3 : 0 );
 
 	if ( clientHandler->showAppIcons() )
 		cw += 16 + 4; // icon width + space
 
 	cw = QMIN( cw, titlebar->geometry().width() );
-	captionRect = QStyle::visualRect( QRect(titlebar->geometry().x(), isActive() ? 0 : titleBaseY,
-				cw, clientHandler->titleBarHeight() - ( isActive() ? 0 : titleBaseY )),
+	captionRect = QStyle::visualRect( QRect(titlebar->geometry().x(), (largeCaption ? 0 : titleBaseY),
+				cw, clientHandler->titleBarHeight(largeCaption) ),
 				titlebar->geometry() );
 }
 
@@ -1061,12 +1124,13 @@ void KeramikClient::iconChange()
 }
 
 
-void KeramikClient::activeChange( bool )
+void KeramikClient::activeChange( bool active )
 {
 	// Note: It's assumed that the same font will always be used for both active
 	//       and inactive windows, since the fonts kcm hasn't supported setting
 	//       different fonts for different window states for some time.
-	if ( clientHandler->titleBarHeight() != clientHandler->titleBarBaseHeight() ) {
+	if ( largeTitlebar ) {
+		largeCaption = ( active && !maximizedVertical() );
 		calculateCaptionRect();
 		maskDirty = true;
 	}
@@ -1082,6 +1146,31 @@ void KeramikClient::activeChange( bool )
 
 void KeramikClient::maximizeChange( bool maximized )
 {
+	if ( clientHandler->largeCaptionBubbles() )
+	{
+		if ( maximized && maximizeMode() != MaximizeHorizontal ) {
+			// We've been maximized - shrink the titlebar by 3 pixels
+			topSpacer->changeSize( 10, 1, QSizePolicy::Expanding, QSizePolicy::Minimum );
+			largeCaption = largeTitlebar = false;
+
+			calculateCaptionRect();
+			captionBufferDirty = maskDirty = true;
+			
+			layout()->activate();
+			repaint( false );
+		} else if ( !maximized && !largeTitlebar ) {
+			// We've been restored - enlarge the titlebar by 3 pixels
+			topSpacer->changeSize( 10, 4, QSizePolicy::Expanding, QSizePolicy::Minimum );
+			largeCaption = largeTitlebar = true;
+			
+			calculateCaptionRect();
+			captionBufferDirty = maskDirty = true;
+			
+			layout()->activate();	
+			repaint( false );
+		}
+	}
+	
 	if ( button[ MaxButton ] ) {
 		button[ MaxButton ]->setTipText( maximized ? i18n("Restore") : i18n("Maximize") );
 		button[ MaxButton ]->repaint();
@@ -1144,29 +1233,33 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 	QPainter p( this );
 	QRect updateRect( e->rect() );
 	bool active = isActive();
-	int titleBaseY = clientHandler->titleBarHeight()
-		- clientHandler->titleBarBaseHeight();
 
+	int titleBaseY         = ( largeTitlebar ? 3 : 0 );
+	int titleBarHeight     = clientHandler->titleBarHeight( largeTitlebar );
+	
 	if ( maskDirty )
 		updateMask();
 	
 	// Titlebar
 	// -----------------------------------------------------------------------
-	if ( updateRect.y() < clientHandler->titleBarHeight() )
+	if ( updateRect.y() < titleBarHeight )
 	{
+		int titleBarBaseHeight = titleBarHeight - titleBaseY;
+		
 		if ( captionBufferDirty )
 			updateCaptionBuffer();
 		
 		// Top left corner
 		if ( updateRect.x() < 15 )
-			p.drawPixmap( 0, titleBaseY, *clientHandler->tile( TitleLeft, active ) );
+			p.drawPixmap( 0, titleBaseY,
+					*clientHandler->tile( TitleLeft, active ) );
 
 		// Space between the top left corner and the caption bubble
 		if ( updateRect.x() < captionRect.left() && updateRect.right() >= 15 ) {
 			int x1 = QMAX( 15, updateRect.x() );
 			int x2 = QMIN( captionRect.left(), updateRect.right() );
 		
-			p.drawTiledPixmap( x1, titleBaseY, x2 - x1 + 1, clientHandler->titleBarBaseHeight(),
+			p.drawTiledPixmap( x1, titleBaseY, x2 - x1 + 1, titleBarBaseHeight,
 					*clientHandler->tile( TitleCenter, active ) );
 		}
 
@@ -1176,8 +1269,7 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 				p.drawPixmap( captionRect.left(), active ? 0 : titleBaseY, captionBuffer );
 			else
 				p.drawTiledPixmap( captionRect.x(), titleBaseY, captionRect.width(),
-						clientHandler->titleBarBaseHeight(),
-						*clientHandler->tile( TitleCenter, active ) );
+						titleBarBaseHeight, *clientHandler->tile( TitleCenter, active ) );
 		}
 		
 		// Space between the caption bubble and the top right corner
@@ -1185,21 +1277,21 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 			int x1 = QMAX( captionRect.right() + 1, updateRect.x() );
 			int x2 = QMIN( width() - 15, updateRect.right() );
 			
-			p.drawTiledPixmap( x1, titleBaseY, x2 - x1 + 1, clientHandler->titleBarBaseHeight(),
+			p.drawTiledPixmap( x1, titleBaseY, x2 - x1 + 1, titleBarBaseHeight,
 					*clientHandler->tile( TitleCenter, active ) );
 		}
 
 		// Top right corner
 		if ( updateRect.right() >= width() - 15 )
-			p.drawPixmap( width() - 15, titleBaseY, *clientHandler->tile( TitleRight, active ) );
+			p.drawPixmap( width() - 15, titleBaseY,
+					*clientHandler->tile( TitleRight, active ) );
 	}
 
 	// Borders
 	// -----------------------------------------------------------------------
-	if ( updateRect.bottom() >= clientHandler->titleBarHeight()
-			&& updateRect.top() < height() - 8 )
+	if ( updateRect.bottom() >= titleBarHeight && updateRect.top() < height() - 8 )
 	{
-		int top    = QMAX( clientHandler->titleBarHeight(), updateRect.top() );
+		int top    = QMAX( titleBarHeight, updateRect.top() );
 		int bottom = QMIN( updateRect.bottom(), height() - 8 );
 		
 		// Left border
@@ -1221,7 +1313,8 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 	if ( updateRect.bottom() >= height() - 8 ) {
 		// Bottom left corner
 		if ( updateRect.x() < 9 )
-			p.drawPixmap( 0, height() - 8, *clientHandler->tile( GrabBarLeft, active ) );
+			p.drawPixmap( 0, height() - 8,
+					*clientHandler->tile( GrabBarLeft, active ) );
 
 		// Space between the left corner and the right corner
 		if ( updateRect.x() < width() - 9 ) {
@@ -1234,7 +1327,8 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 
 		// Bottom right corner
 		if ( updateRect.right() > width() - 9 )
-			p.drawPixmap( width()-9, height()-8, *clientHandler->tile( GrabBarRight, active ) );
+			p.drawPixmap( width()-9, height()-8,
+					*clientHandler->tile( GrabBarRight, active ) );
 	}
 }
 
@@ -1270,7 +1364,8 @@ void KeramikClient::resizeEvent( QResizeEvent *e )
 		{
 			update( width() - dx + 1, 0, dx, height() );
 			update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
-			update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+			update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4,
+							titlebar->geometry().bottom() ) ) );
 			// Titlebar needs no paint event
 			QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
 		}
@@ -1280,15 +1375,14 @@ void KeramikClient::resizeEvent( QResizeEvent *e )
 
 void KeramikClient::mouseDoubleClickEvent( QMouseEvent *e )
 {
-	if ( QRect( 0, 0, width(), clientHandler->titleBarHeight() ).contains( e->pos() ) )
+	if ( QRect( 0, 0, width(), clientHandler->titleBarHeight( largeTitlebar ) ).contains( e->pos() ) )
 		workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
 }
 
 
 Client::MousePosition KeramikClient::mousePosition( const QPoint &p ) const
 {
-	int titleBaseY = clientHandler->titleBarHeight()
-		- clientHandler->titleBarBaseHeight();
+	int titleBaseY = (largeTitlebar ? 3 : 0);
 
 	int leftBorder  = clientHandler->tile( BorderLeft, true )->width();
 	int rightBorder = width() - clientHandler->tile( BorderRight, true )->width() - 1;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  * 
- * Keramik KWin client (version 0.7)
+ * Keramik KWin client (version 0.8)
  *
  * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>
  *
@@ -37,12 +37,15 @@ static QDict< QImage > imageDict;
 
 class QSpacerItem;
 
-namespace KWinInternal {
+using namespace KWinInternal;
+
+namespace Keramik {
 
 	enum TilePixmap  { TitleLeft=0, TitleCenter, TitleRight,
-	                   CaptionLeft, CaptionCenter, CaptionRight, GrabBarLeft,
-	                   BorderLeft, BorderRight, GrabBarCenter, GrabBarRight,
-	                   NumTiles };
+	                   CaptionSmallLeft, CaptionSmallCenter, CaptionSmallRight,
+	                   CaptionLargeLeft, CaptionLargeCenter, CaptionLargeRight,
+					   GrabBarLeft, GrabBarCenter, GrabBarRight,
+	                   BorderLeft, BorderRight, NumTiles };
 
 	enum Button      { MenuButton=0, StickyButton, HelpButton, MinButton,
 	                   MaxButton, CloseButton, NumButtons };
@@ -59,7 +62,6 @@ namespace KWinInternal {
 		QColor  buttonColor;
 		QString buttonsLeft;
 		QString buttonsRight;
-		bool    smallCaptionBubbles:1;
 	};
 					   
 	class KeramikHandler : public QObject {
@@ -72,11 +74,15 @@ namespace KWinInternal {
 			
 			void reset();
 			
-			bool showAppIcons() const      { return showIcons; }
-			bool useShadowedText() const   { return shadowedText; }
-			int titleBarHeight() const     { return activeTiles[CaptionCenter]->height(); }
-			int titleBarBaseHeight() const { return activeTiles[TitleCenter]->height(); }
-
+			bool showAppIcons() const        { return showIcons; }
+			bool useShadowedText() const     { return shadowedText; }
+			bool largeCaptionBubbles() const { return !smallCaptionBubbles; }
+			
+			int titleBarHeight( bool large ) const {
+				return ( large ? activeTiles[CaptionLargeCenter]->height()
+						: activeTiles[CaptionSmallCenter]->height() );
+			}
+			
 			const QPixmap *roundButton() const  { return titleButtonRound; }
 			const QPixmap *squareButton() const { return titleButtonSquare; }
 			const QBitmap *buttonDeco( ButtonDeco deco ) const
@@ -100,7 +106,7 @@ namespace KWinInternal {
 			QPixmap *loadPixmap( const QString &, const QColor & );
 
 		private:
-			bool showIcons, shadowedText, smallCaptionBubbles;
+			bool showIcons:1, shadowedText:1, smallCaptionBubbles:1;
 			SettingsCache *settings_cache;
 			
 			QPixmap *activeTiles[ NumTiles ];
@@ -160,22 +166,33 @@ namespace KWinInternal {
 
 			void calculateCaptionRect();
 			
+			inline bool maximizedVertical() const { 
+				return (isMaximized() && maximizeMode() != MaximizeHorizontal);
+			}
+			
+			inline void setRectangle( XRectangle *r, int x, int y, int w, int h ) {
+				r->x      = x;
+				r->y      = y;
+				r->width  = w;
+				r->height = h;
+			}
+			
 		private slots:
 			void menuButtonPressed();	
 			void slotMaximize();
 			void reset();
 			
 		private:
-			QSpacerItem   *titlebar;
+			QSpacerItem   *topSpacer, *titlebar;
 			KeramikButton *button[ NumButtons ];
 			QRect          captionRect;
 			QPixmap        captionBuffer;
 			QPixmap       *activeIcon, *inactiveIcon;
-			bool           captionBufferDirty, maskDirty;
-			
+			bool           captionBufferDirty:1, maskDirty:1;
+			bool           largeCaption:1, largeTitlebar:1;	
 	}; // class KeramikClient
 
-} // namespace KWinInternal
+} // namespace Keramik
 
 #endif // ___KERAMIK_H
 
