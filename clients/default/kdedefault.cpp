@@ -971,12 +971,7 @@ void KDEDefaultClient::keepBelowChange( bool below )
 
 void KDEDefaultClient::slotMaximize()
 {
-    if ( button[BtnMax]->last_button == MidButton )
-	   maximize( maximizeMode() ^ MaximizeVertical );
-    else if ( button[BtnMax]->last_button == RightButton )
-       maximize( maximizeMode() ^ MaximizeHorizontal );
-    else
-	   maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+    maximize( button[BtnMax]->last_button );
 }
 
 void KDEDefaultClient::slotAbove()

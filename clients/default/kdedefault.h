@@ -55,7 +55,7 @@ class KDEDefaultButton : public QButton, public KDecorationDefines
 			 const QString& tip=NULL, const int realizeBtns = LeftButton);
 		~KDEDefaultButton();
 
-		int last_button;
+		ButtonState last_button;
 		void turnOn( bool isOn );
 		void setBitmap(const unsigned char *bitmap);
 		QSize sizeHint() const;

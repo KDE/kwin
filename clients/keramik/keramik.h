@@ -117,7 +117,7 @@ namespace Keramik {
 			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = LeftButton );
 			~KeramikButton();
 
-			int lastButton() const { return lastbutton; }
+			ButtonState lastButton() const { return lastbutton; }
 
 		private:
 			void enterEvent( QEvent * );
@@ -130,7 +130,7 @@ namespace Keramik {
 			KeramikClient *client;
 			Button button;
 			bool hover;
-			int lastbutton;
+			ButtonState lastbutton;
 			int realizeButtons;
 	}; // class KeramikButton
 

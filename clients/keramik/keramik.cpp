@@ -733,7 +733,7 @@ QValueList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
 
 KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, const QString &tip, const int realizeBtns )
 		: QButton( c->widget(), name ),
-		client( c ), button( btn ), hover( false ), lastbutton( 0 )
+		client( c ), button( btn ), hover( false ), lastbutton( NoButton )
 {
 	realizeButtons = realizeBtns;
 
@@ -1447,20 +1447,7 @@ void KeramikClient::menuButtonPressed()
 
 void KeramikClient::slotMaximize()
 {
-	switch ( button[ MaxButton ]->lastButton() )
-	{
-		case MidButton:
-			maximize( maximizeMode() ^ MaximizeVertical );
-			break;
-
-		case RightButton:
-			maximize( maximizeMode() ^ MaximizeHorizontal );
-			break;
-
-		case LeftButton:
-			maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
-			break;
-	}
+	maximize( button[ MaxButton ]->lastButton() );
 }
 
 
