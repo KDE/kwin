@@ -318,8 +318,9 @@ bool Client::manage( Window w, bool isMapped )
     // window that is not Iconic, set init_state to Normal
     if( init_minimize && isTransient())
         {
-        for( ClientList::ConstIterator it = mainClients().begin();
-             it != mainClients().end();
+        ClientList mainclients = mainClients();
+        for( ClientList::ConstIterator it = mainclients.begin();
+             it != mainclients.end();
              ++it )
             if( (*it)->isShown())
                 init_minimize = false; // SELI even e.g. for NET::Utility?
