@@ -71,7 +71,6 @@ public:
     static QFont titleFontTool() { return m_titleFontTool; }
     static bool titleShadow() { return m_titleShadow; }
     static int  borderSize() { return m_borderSize; }
-    static bool useHighContrastHoveredButtons() { return m_useHighContrastHoveredButtons; }
     static bool animateButtons() { return m_animateButtons; }
     static bool menuClose() { return m_menuClose; }
     static Qt::AlignmentFlags titleAlign() { return m_titleAlign; }
@@ -82,7 +81,6 @@ private:
 
     static bool m_titleShadow;
     static bool m_shrinkBorders;
-    static bool m_useHighContrastHoveredButtons;
     static bool m_animateButtons;
     static bool m_menuClose;
     static bool m_reverse;
