@@ -1,3 +1,3 @@
-SUBDIRS = test keramik modernsystem default laptop
+SUBDIRS = test keramik modernsystem default laptop redmond
 #SUBDIRS = default kde1 riscos redmond quartz icewm web b2 \
 #	modernsystem laptop system kwmtheme kstep keramik
