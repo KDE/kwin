@@ -1224,7 +1224,7 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
         XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
         return true;
         }
-    if( w != moveResizeGrabWindow())
+    if( w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
         return true;
     x = this->x(); // translate from grab window to local coords
     y = this->y();
