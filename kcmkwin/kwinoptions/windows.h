@@ -273,7 +273,6 @@ private:
 private slots:
   void resetKompmgr();
   void showWarning(bool alphaActivated);
-  void handleXCompMgrOutput( KProcess *proc, char *buffer, int buflen);
 
 };
 #endif

@@ -18,7 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <fixx11h.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <qmessagebox.h> 
+#include <kmessagebox.h> 
 #include <qpopupmenu.h>
 #include <klocale.h>
 #include <qregexp.h>
@@ -2322,13 +2322,10 @@ void Workspace::startKompmgr()
         return;
     if (!kompmgr->start(KProcess::OwnGroup, KProcess::Stderr))
         {
+        {
         options->useTranslucency = FALSE;
-        if (QMessageBox::warning(0, i18n("Failed to start kompmgr - KWin"), i18n("The Composite Manager could not be started.<br>Make sure you've got \"kompmgr\" in a $PATH directory"), "OK", "Don't try again") == 1)
-            {
-            KConfig *config = KGlobal::config();
-            config->setGroup( "Translucency" );
-            config->writeEntry("UseTranslucency",FALSE);
-            }
+        KMessageBox::information(desktop_widget, i18n("<qt>The Composite Manager could not be started.<br>Make sure you've got \"kompmgr\" in a $PATH directory</qt>"),0, "UseTranslucency");
+        }
         }
     else
         {
@@ -2359,7 +2356,7 @@ void Workspace::restartKompmgr()
     if (!allowKompmgrRestart) // uh-ohh
         {
         options->useTranslucency = FALSE;
-        QMessageBox::information(0, i18n("Composite Manager Failure - KWin"), i18n("The Composite Manager crashed twice within a minute and is therefore disabled for this session"), QMessageBox::Ok, 0);
+        KMessageBox::information(desktop_widget, i18n("The Composite Manager crashed twice within a minute and is therefore disabled for this session"), i18n("Composite Manager Failure"));
         return;
         }
     if (!kompmgr)
@@ -2375,7 +2372,7 @@ void Workspace::restartKompmgr()
     if (!kompmgr->start(KProcess::NotifyOnExit, KProcess::Stderr))
         {
         options->useTranslucency = FALSE;
-        QMessageBox::warning(0, i18n("Failed to start kompmgr - KWin"), i18n("The Composite Manager could not be started.<br>Make sure you've got \"kompmgr\" in a $PATH directory"), QMessageBox::Ok, 0);
+        KMessageBox::information(desktop_widget, i18n("<qt>The Composite Manager could not be started.<br>Make sure you've got \"kompmgr\" in a $PATH directory</qt>"));
         }
     else
         {
@@ -2388,18 +2385,18 @@ void Workspace::handleKompmgrOutput( KProcess *proc, char *buffer, int buflen)
 {
     if (QString(buffer).contains("Started",false)); // don't do anything, just pass to the connection release
     else if (QString(buffer).contains("Can't open display",false))
-        QMessageBox::critical(0, i18n("xCompMgr failure"), i18n("<b>Failed to open display</b><br>There's probably an invalid display entry in your ~/.xcompmgrrc"), QMessageBox::Ok, 0);
+        KMessageBox::sorry(desktop_widget, i18n("<qt><b>kompmgr failed to open the display</b><br>There's probably an invalid display entry in your ~/.xcompmgrrc</qt>"));
     else if (QString(buffer).contains("No render extension",false))
-        QMessageBox::critical(0, i18n("xCompMgr failure"), i18n("<b>Xrender extension not found</b><br>You're either using an outdated or a crippled version of XOrg.<br>Get XOrg &ge; 6.8 from www.freedesktop.org"), QMessageBox::Ok, 0);
+        KMessageBox::sorry(desktop_widget, i18n("<qt><b>kompmgr misses the Xrender extension</b><br>You're either using an outdated or a crippled version of XOrg.<br>Get XOrg &ge; 6.8 from www.freedesktop.org<br></qt>"));
     else if (QString(buffer).contains("No composite extension",false))
-        QMessageBox::critical(0,i18n("xCompMgr failure"), i18n("<b>Composite extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have this work<br>Additionally you need to add a new section to your X config file:<br>"
+        KMessageBox::sorry(desktop_widget, i18n("<qt><b>Composite extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have translucency/shadows work<br>Additionally you need to add a new section to your X config file:<br>"
         "<i>Section \"Extensions\"<br>"
         "Option \"Composite\" \"Enable\"<br>"
-        "EndSection</i>"), QMessageBox::Ok, 0);
+        "EndSection</i></qt>"));
     else if (QString(buffer).contains("No damage extension",false))
-        QMessageBox::critical(0,i18n("xCompMgr failure"), i18n("<b>Damage extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have this work"), QMessageBox::Ok,0);
+        KMessageBox::sorry(desktop_widget, i18n("<qt><b>Damage extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have translucency/shadows work</qt>"));
     else if (QString(buffer).contains("No XFixes extension",false))
-        QMessageBox::critical(0,i18n("xCompMgr failure"), i18n("<b>XFixes extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have this work"), QMessageBox::Ok,0);
+        KMessageBox::sorry(desktop_widget, i18n("<qt><b>XFixes extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have translucency/shadows work</qt>"));
     else return; //skip others
     // kompmgr startup failed or succeeded, release connection
     kompmgr->closeStderr();

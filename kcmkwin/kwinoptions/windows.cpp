@@ -32,7 +32,7 @@
 #include <qradiobutton.h>
 #include <qlabel.h>
 #include <qcombobox.h>
-#include <qmessagebox.h> 
+#include <kmessagebox.h> 
 
 #include <kactivelabel.h>
 #include <klocale.h>
@@ -1177,57 +1177,57 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   resetKompmgr_ = FALSE;
   QVBoxLayout *lay = new QVBoxLayout (this);
   if (!kompmgrAvailable()){
-  KActiveLabel *label = new KActiveLabel(i18n("<b>It seems as if alpha channel support is not available!</b><br>\n"
-                                 "Please make sure, you have these things available:<br><ul>"
-                                 "<li><a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a></li>"
-                                 "<li>A recent version of <a href=\"http://www.freedesktop.org/\">xcompmgr</a></li></ul>"
-                                 "Also make sure you have the following entries in your X Config<br>(e.g. /etc/XF86Config):<br><br>"
+  KActiveLabel *label = new KActiveLabel(i18n("<qt><b>It seems as if alpha channel support is not available!</b><br><br>"
+                                 "Please make sure, you have "
+                                 "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>"
+                                 " and installed the kompmgr that came with kwin<br>"
+                                 "Also make sure you have the following entries in your XConfig (e.g. /etc/XF86Config):<br><br>"
                                  "<i>Section \"Extensions\"<br>"
                                  "Option \"Composite\" \"Enable\"<br>"
                                  "EndSection</i><br><br>"
-                                 "And if you have a GPU that supports hardware accelerated Xrender support:<br><br>"
+                                 "And if your GPU provides hardware accelerated Xrender support (mainly nVidia cards):<br><br>"
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
-                                 "In <i>Section \"Device\"</i>"), this);
+                                 "In <i>Section \"Device\"</i></qt>"), this);
   lay->addWidget(label);
   }
   else
   {
   QTabWidget *tabW = new QTabWidget(this);
   QWidget *tGroup = new QWidget(tabW);
-  QVBoxLayout *vLay = new QVBoxLayout (tGroup,11,6);
+  QVBoxLayout *vLay = new QVBoxLayout (tGroup,KDialog::marginHint(), KDialog::spacingHint());
   vLay->addSpacing(11); // to get the proper gb top offset
-  QGridLayout *gLay = new QGridLayout(vLay,4,2);
+  QGridLayout *gLay = new QGridLayout(vLay,4,2,KDialog::spacingHint());
   gLay->setColStretch(1,1);
   
-  activeWindowTransparency = new QCheckBox(i18n("Active Windows"),tGroup);
+  activeWindowTransparency = new QCheckBox(i18n("Active windows"),tGroup);
   gLay->addWidget(activeWindowTransparency,0,0);
   activeWindowOpacity = new KIntNumInput(100, tGroup);
   activeWindowOpacity->setRange(0,100);
   activeWindowOpacity->setSuffix("%");
   gLay->addWidget(activeWindowOpacity,0,1);
   
-  inactiveWindowTransparency = new QCheckBox(i18n("Inactive Windows"),tGroup);
+  inactiveWindowTransparency = new QCheckBox(i18n("Inactive windows"),tGroup);
   gLay->addWidget(inactiveWindowTransparency,1,0);
   inactiveWindowOpacity = new KIntNumInput(100, tGroup);
   inactiveWindowOpacity->setRange(0,100);
   inactiveWindowOpacity->setSuffix("%");
   gLay->addWidget(inactiveWindowOpacity,1,1);
   
-  movingWindowTransparency = new QCheckBox(i18n("Moving Windows"),tGroup);
+  movingWindowTransparency = new QCheckBox(i18n("Moving windows"),tGroup);
   gLay->addWidget(movingWindowTransparency,2,0);
   movingWindowOpacity = new KIntNumInput(100, tGroup);
   movingWindowOpacity->setRange(0,100);
   movingWindowOpacity->setSuffix("%");
   gLay->addWidget(movingWindowOpacity,2,1);
   
-  dockWindowTransparency = new QCheckBox(i18n("Dock Windows"),tGroup);
+  dockWindowTransparency = new QCheckBox(i18n("Dock windows"),tGroup);
   gLay->addWidget(dockWindowTransparency,3,0);
   dockWindowOpacity = new KIntNumInput(100, tGroup);
   dockWindowOpacity->setRange(0,100);
   dockWindowOpacity->setSuffix("%");
   gLay->addWidget(dockWindowOpacity,3,1);
   
-  keepAboveAsActive = new QCheckBox(i18n("Treat 'Keep Above' Windows as active ones"),tGroup);
+  keepAboveAsActive = new QCheckBox(i18n("Treat 'keep above' windows as active ones"),tGroup);
   vLay->addWidget(keepAboveAsActive);
   vLay->addStretch();
   tabW->addTab(tGroup, i18n("Translucency"));
@@ -1236,48 +1236,48 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
 //   sGroup->setCheckable(TRUE);
   QVBoxLayout *vLay2 = new QVBoxLayout (sGroup,11,6);
   vLay2->addSpacing(11); // to get the proper gb top offset
-  useShadows = new QCheckBox(i18n("Use Shadows"),sGroup);
+  useShadows = new QCheckBox(i18n("Use shadows"),sGroup);
   vLay2->addWidget(useShadows);
   
   QGridLayout *gLay2 = new QGridLayout(vLay2,6,2);
   gLay2->setColStretch(1,1);
   
-  QLabel *label1 = new QLabel(i18n("Active Window Size"),sGroup);
+  QLabel *label1 = new QLabel(i18n("Active window size"),sGroup);
   gLay2->addWidget(label1,0,0);
   activeWindowShadowSize = new KIntNumInput(12,sGroup);
   activeWindowShadowSize->setRange(0,32);
 //   activeWindowShadowSize->setSuffix("px");
   gLay2->addWidget(activeWindowShadowSize,0,1);
   
-  QLabel *label2 = new QLabel(i18n("Inactive Window Size"),sGroup);
+  QLabel *label2 = new QLabel(i18n("Inactive window size"),sGroup);
   gLay2->addWidget(label2,1,0);
   inactiveWindowShadowSize = new KIntNumInput(6,sGroup);
   inactiveWindowShadowSize->setRange(0,32);
 //   inactiveWindowShadowSize->setSuffix("px");
   gLay2->addWidget(inactiveWindowShadowSize,1,1);
   
-  QLabel *label3 = new QLabel(i18n("Dock Window Size"),sGroup);
+  QLabel *label3 = new QLabel(i18n("Dock window size"),sGroup);
   gLay2->addWidget(label3,2,0);
   dockWindowShadowSize = new KIntNumInput(6,sGroup);
   dockWindowShadowSize->setRange(0,32);
 //   dockWindowShadowSize->setSuffix("px");
   gLay2->addWidget(dockWindowShadowSize,2,1);
   
-  QLabel *label4 = new QLabel(i18n("Vertical Offset"),sGroup);
+  QLabel *label4 = new QLabel(i18n("Vertical offset"),sGroup);
   gLay2->addWidget(label4,3,0);
   shadowTopOffset = new KIntNumInput(80,sGroup);
   shadowTopOffset->setSuffix("%");
   shadowTopOffset->setRange(-200,200);
   gLay2->addWidget(shadowTopOffset,3,1);
   
-  QLabel *label5 = new QLabel(i18n("Horizontal Offset"),sGroup);
+  QLabel *label5 = new QLabel(i18n("Horizontal offset"),sGroup);
   gLay2->addWidget(label5,4,0);
   shadowLeftOffset = new KIntNumInput(0,sGroup);
   shadowLeftOffset->setSuffix("%");
   shadowLeftOffset->setRange(-200,200);
   gLay2->addWidget(shadowLeftOffset,4,1);
   
-  QLabel *label6 = new QLabel(i18n("Shadow Color"),sGroup);
+  QLabel *label6 = new QLabel(i18n("Shadow color"),sGroup);
   gLay2->addWidget(label6,5,0);
   shadowColor = new KColorButton(Qt::black,sGroup);
   gLay2->addWidget(shadowColor,5,1);
@@ -1288,14 +1288,14 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   QWidget *eGroup = new QWidget(this);
   QVBoxLayout *vLay3 = new QVBoxLayout (eGroup,11,6);
 
-  fadeInWindows = new QCheckBox(i18n("Fade-In Windows (including Popups)"),eGroup);
+  fadeInWindows = new QCheckBox(i18n("Fade-in windows (including popups)"),eGroup);
   fadeOnOpacityChange = new QCheckBox(i18n("Fade between opacity changes"),eGroup);
   fadeInSpeed = new KIntNumInput(100, eGroup);
   fadeInSpeed->setRange(1,100);
-  fadeInSpeed->setLabel("Fade-In Speed");
+  fadeInSpeed->setLabel("Fade-in Speed");
   fadeOutSpeed = new KIntNumInput(100, eGroup);
   fadeOutSpeed->setRange(1,100);
-  fadeOutSpeed->setLabel("Fade-Out Speed");
+  fadeOutSpeed->setLabel("Fade-out Speed");
   vLay3->addWidget(fadeInWindows);
   vLay3->addWidget(fadeOnOpacityChange);
   vLay3->addWidget(fadeInSpeed);
@@ -1304,7 +1304,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   
   tabW->addTab(eGroup, i18n("Effects"));
     
-  useTranslucency = new QCheckBox(i18n("Use Translucency/Shadows"),this);
+  useTranslucency = new QCheckBox(i18n("Use translucency/shadows"),this);
   lay->addWidget(useTranslucency);
   lay->addWidget(tabW);
 
@@ -1373,9 +1373,10 @@ void KTranslucencyConfig::resetKompmgr()
 void KTranslucencyConfig::load( void )
 {
 
-  config->setGroup( "Translucency" );
-
+  config->setGroup( "Notification Messages" );
   useTranslucency->setChecked(config->readBoolEntry("UseTranslucency",false));
+  
+  config->setGroup( "Translucency" );
   activeWindowTransparency->setChecked(config->readBoolEntry("TranslucentActiveWindows",false));
   inactiveWindowTransparency->setChecked(config->readBoolEntry("TranslucentInactiveWindows",true));
   movingWindowTransparency->setChecked(config->readBoolEntry("TranslucentMovingWindows",false));
@@ -1428,9 +1429,11 @@ void KTranslucencyConfig::load( void )
 
 void KTranslucencyConfig::save( void )
 {
+  
+  config->setGroup( "Notification Messages" );
+  config->writeEntry("UseTranslucency",useTranslucency->isChecked());   
+  
   config->setGroup( "Translucency" );
-
-  config->writeEntry("UseTranslucency",useTranslucency->isChecked());
   config->writeEntry("TranslucentActiveWindows",activeWindowTransparency->isChecked());
   config->writeEntry("TranslucentInactiveWindows",inactiveWindowTransparency->isChecked());
   config->writeEntry("TranslucentMovingWindows",movingWindowTransparency->isChecked());
@@ -1524,29 +1527,10 @@ bool KTranslucencyConfig::kompmgrAvailable()
     return ret;
 }
 
-void KTranslucencyConfig::handleXCompMgrOutput( KProcess *proc, char *buffer, int buflen)
-{
-    if (QString(buffer).contains("Can't open display",false))
-        QMessageBox::critical(0, i18n("xCompMgr failure"), i18n("<b>Failed to open display</b><br>There's probably an invalid display entry in your ~/.xcompmgrrc"), QMessageBox::Ok, 0);
-    else if (QString(buffer).contains("No render extension",false))
-        QMessageBox::critical(0, i18n("xCompMgr failure"), i18n("<b>Xrender extension not found</b><br>You're either using an outdated or a crippled version of XOrg.<br>Get XOrg &ge; 6.8 from www.freedesktop.org"), QMessageBox::Ok, 0);
-    else if (QString(buffer).contains("No composite extension",false))
-        QMessageBox::critical(0,i18n("xCompMgr failure"), i18n("<b>Composite extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have this work<br>Additionally you need to add a new section to your X config file:<br>"
-        "<i>Section \"Extensions\"<br>"
-        "Option \"Composite\" \"Enable\"<br>"
-        "EndSection</i>"), QMessageBox::Ok, 0);
-    else if (QString(buffer).contains("No damage extension",false))
-        QMessageBox::critical(0,i18n("xCompMgr failure"), i18n("<b>Damage extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have this work"), QMessageBox::Ok,0);
-    else if (QString(buffer).contains("No XFixes extension",false))
-        QMessageBox::critical(0,i18n("xCompMgr failure"), i18n("<b>XFixes extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 to have this work"), QMessageBox::Ok,0);
-    else return;
-    kompmgr->detach();
-}
-
 void KTranslucencyConfig::showWarning(bool alphaActivated)
 {
     if (alphaActivated)
-        QMessageBox::information(0, i18n("Warning"), i18n("Translucency support is new and may cause problems,<br> including crashes (sometimes the Translucency Engine, seldom even X)"), QMessageBox::Ok, 0);
+        KMessageBox::information(this, i18n("<qt>Translucency support is new and may cause problems<br> including crashes (sometimes the translucency engine, seldom even X)</qt>"), i18n("Warning"));
 }
 
 #include "windows.moc"

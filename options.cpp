@@ -169,8 +169,9 @@ unsigned long Options::updateSettings()
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"), false );
 
     //translucency settings
-    config->setGroup( "Translucency");
+    config->setGroup( "Notification Messages" );
     useTranslucency = config->readBoolEntry("UseTranslucency", false);
+    config->setGroup( "Translucency");
     translucentActiveWindows = config->readBoolEntry("TranslucentActiveWindows", false);
     activeWindowOpacity = (config->readNumEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF;
     translucentInactiveWindows = config->readBoolEntry("TranslucentInactiveWindows", false);
