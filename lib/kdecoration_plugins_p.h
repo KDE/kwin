@@ -42,7 +42,7 @@ class KDecoration;
 class KDecorationBridge;
 class KDecorationFactory;
 
-class KDecorationPlugins
+class KWIN_EXPORT KDecorationPlugins
     : public KDecorationProvides
     {
     public:

@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 class KConfig;
 
-class KDecorationOptionsPrivate : public KDecorationDefines
+class KWIN_EXPORT KDecorationOptionsPrivate : public KDecorationDefines
     {
     public:
         KDecorationOptionsPrivate();

@@ -174,7 +174,7 @@ static KCmdLineOptions args[] =
     };
 
 extern "C"
-int kdemain( int argc, char * argv[] )
+KDE_EXPORT int kdemain( int argc, char * argv[] )
     {
     bool restored = false;
     for (int arg = 1; arg < argc; arg++) 

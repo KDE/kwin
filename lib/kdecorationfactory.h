@@ -31,7 +31,7 @@ class KDecoration;
 class KDecorationBridge;
 class KDecorationFactoryPrivate;
 
-class KDecorationFactory
+class KWIN_EXPORT KDecorationFactory
     : public KDecorationDefines
     {
     public:

@@ -233,7 +233,7 @@ static const KCmdLineOptions options[] =
     };
 
 extern "C"
-int kdemain( int argc, char* argv[] )
+KDE_EXPORT int kdemain( int argc, char* argv[] )
     {
     KLocale::setMainCatalogue( "kcmkwinrules" );
     KCmdLineArgs::init( argc, argv, "kwin_rules_dialog", I18N_NOOP( "KWin" ),

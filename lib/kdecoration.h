@@ -37,12 +37,14 @@ class KDecorationBridge;
 class KDecorationPrivate;
 class KDecorationFactory;
 
+#define KWIN_EXPORT KDE_EXPORT
+
 /**
  * This class provides a namespace for all decoration related classes.
  * All shared types are defined here.
  * @since 3.2
  */
-class KDecorationDefines
+class KWIN_EXPORT KDecorationDefines
 {
 public:
     /**
@@ -180,7 +182,7 @@ class KDecorationProvides
  * or KDecorationFactory::options().
  * @since 3.2
  */
-class KDecorationOptions : public KDecorationDefines
+class KWIN_EXPORT KDecorationOptions : public KDecorationDefines
     {
 public:
     KDecorationOptions();
@@ -303,7 +305,7 @@ protected:
  * every decoration should implement.
  * @since 3.2
  */
-class KDecoration
+class KWIN_EXPORT KDecoration
     : public QObject, public KDecorationDefines
     {
     Q_OBJECT
