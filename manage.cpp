@@ -336,9 +336,6 @@ bool Client::manage( Window w, bool isMapped )
     if ( workspace()->isNotManaged( caption() ) )
         doNotShow = TRUE;
 
-    if( isTopMenu())
-        doNotShow = true;
-
     // other settings from the previous session
     if ( session ) 
         {
@@ -430,6 +427,9 @@ bool Client::manage( Window w, bool isMapped )
 
     user_time = readUserTimeMapTimestamp( asn_valid ? &asn_data : NULL, session );
 
+    if( isTopMenu()) // they're shown in Workspace::addClient() if their mainwindow
+        hideClient( true ); // is the active one
+
     if ( isShown( true ) && !doNotShow )
         {
         if( isDialog())
@@ -484,13 +484,10 @@ bool Client::manage( Window w, bool isMapped )
         }
     else // doNotShow
         { // SELI HACK !!!
-        rawHide();
+        hideClient( true );
         setMappingState( IconicState );
         }
     assert( mappingState() != WithdrawnState );
-
-    if( isTopMenu())
-        hideClient( true );
 
     if( user_time == CurrentTime || user_time == -1U ) // no known user time, set something old
         {
