@@ -477,6 +477,8 @@ bool Client::manage( Window w, bool isMapped )
 
     delete session;
 
+    checkActiveModal();
+
     ungrabXServer();
     
     client_rules.discardTemporary();

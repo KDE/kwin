@@ -423,6 +423,7 @@ class Client : public QObject, public KDecorationDefines
         void cleanGrouping();
         void checkGroupTransients();
         void setTransient( Window new_transient_for_id );
+        void checkActiveModal();
         Client* transient_for;
         Window transient_for_id;
         Window original_transient_for_id;
@@ -453,7 +454,6 @@ class Client : public QObject, public KDecorationDefines
         uint not_obscured : 1;
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
-        uint check_active_modal : 1; // see Client::addTransient()
         WindowRules client_rules;
         void getWMHints();
         void readIcons();
@@ -492,6 +492,7 @@ class Client : public QObject, public KDecorationDefines
         bool shade_geometry_change;
         int border_left, border_right, border_top, border_bottom;
         QRegion _mask;
+        static bool check_active_modal; // see Client::checkActiveModal()
         friend struct FetchNameInternalPredicate;
         friend struct CheckIgnoreFocusStealingProcedure;
         friend struct ResetupRulesProcedure;
