@@ -15,9 +15,9 @@ noinst_HEADERS = windows.h mouse.h
 messages:
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkwm.pot
 
-data_DATA = kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  
-datadir = $(kde_appsdir)/.hidden
+kwin_kcmkwin_options_data_DATA = kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  
+kwin_kcmkwin_options_datadir = $(kde_appsdir)/.hidden
 
-data2_DATA = kwinoptions.desktop
-data2dir = $(kde_appsdir)/Settings/Desktop
+kwin_kcmkwin_options_data2_DATA = kwinoptions.desktop
+kwin_kcmkwin_options_data2dir = $(kde_appsdir)/Settings/Desktop
 

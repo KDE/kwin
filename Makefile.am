@@ -28,9 +28,9 @@ METASOURCES = AUTO
 messages:
 	$(XGETTEXT) -kaliasLocal *.h *.cpp -o $(podir)/kwin.pot
 
-datadir = $(kde_datadir)/kwin
+kwin_datadir = $(kde_datadir)/kwin
 
-data_DATA= eventsrc
+kwin_data_DATA= eventsrc
 
 sounddir= $(kde_sounddir)
 sound_DATA = pop.wav
