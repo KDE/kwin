@@ -33,7 +33,6 @@
 #include "plastikbutton.moc"
 #include "plastikclient.h"
 #include "misc.h"
-#include "shadow.h"
 
 namespace KWinPlastik
 {
