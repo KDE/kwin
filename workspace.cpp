@@ -202,6 +202,7 @@ Workspace::Workspace( bool restore )
     desktop_client    (0),
     active_client     (0),
     should_get_focus  (0),
+    most_recently_raised (0),
     control_grab      (false),
     tab_grab          (false),
     mouse_emulation   (false),
@@ -622,8 +623,13 @@ bool Workspace::destroyClient( Client* c)
     clientHidden( c );
     if ( c == desktop_client )
 	desktop_client = 0;
+    if ( c == most_recently_raised )
+	most_recently_raised = 0;
+    if ( c == should_get_focus )
+	should_get_focus = 0;
+    if ( c == active_client )
+	active_client = 0;
     delete c;
-    c = 0;
     propagateClients();
     updateClientArea();
     return TRUE;
@@ -678,7 +684,7 @@ bool Workspace::keyPress(XKeyEvent key)
 				 (!nc->isOnDesktop(currentDesktop()) ||
 				  nc->isIconified() || !nc->wantsTabFocus() ) );
 		    if (c && c != nc)
-			lowerClient( c, false  );
+			lowerClient( c );
 		    if (nc) {
 			if ( options->focusPolicyIsReasonable() )
 			    activateClient( nc );
@@ -870,6 +876,10 @@ Client* Workspace::previousStaticClient( Client* c ) const
  */
 Client* Workspace::topClientOnDesktop() const
 {
+    if ( most_recently_raised && stacking_order.contains( most_recently_raised ) && 
+	 most_recently_raised->isVisible() )
+	return most_recently_raised;
+    
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	if ( !(*it)->isDesktop() && (*it)->isVisible() && (*it)->wantsTabFocus() )
 	    return *it;
@@ -1561,7 +1571,7 @@ bool Workspace::isNotManaged( const QString& title )
   Lowers the client \a c taking stays-on-top flags, layers,
   transient windows and window groups into account.
  */
-void Workspace::lowerClient( Client* c, bool dropFocus )
+void Workspace::lowerClient( Client* c )
 {
     if ( !c )
 	return;
@@ -1607,12 +1617,10 @@ void Workspace::lowerClient( Client* c, bool dropFocus )
     delete [] new_stack;
 
     propagateClients( TRUE );
+    
+    if ( c == most_recently_raised )
+	most_recently_raised = 0;
 
-    if (dropFocus ) {
-	Client* top = topClientOnDesktop();
-	if ( top )
-	    requestFocus( top);
-    }
 }
 
 
@@ -1634,6 +1642,8 @@ void Workspace::raiseClient( Client* c )
 	return; // deny
     }
 
+    most_recently_raised = c;
+    
     stacking_order.remove( c );
     stacking_order.append( c );
 
@@ -1650,6 +1660,7 @@ void Workspace::raiseClient( Client* c )
 	}
 	if ( t && !saveset.contains( t ) && t != desktop_client ) {
 	    raiseClient( t );
+	    most_recently_raised = c;
 	    return;
 	}
     }
@@ -1697,6 +1708,7 @@ void Workspace::raiseClient( Client* c )
 
     if ( tab_box->isVisible() )
 	tab_box->raise();
+
 }
 
 

@@ -122,7 +122,7 @@ public:
     void doPlacement( Client* c );
     QPoint adjustClientPosition( Client* c, QPoint pos );
     void raiseClient( Client* c );
-    void lowerClient( Client* c, bool dropFocus=true );
+    void lowerClient( Client* c );
 
     void clientHidden( Client*  );
 
@@ -302,6 +302,7 @@ private:
     Client* desktop_client;
     Client* active_client;
     Client* should_get_focus;
+    Client* most_recently_raised;
 
     ClientList clients;
     ClientList stacking_order;

@@ -324,7 +324,7 @@ bool WindowWrapper::x11Event( XEvent * e)
 	    bool mod1 = (e->xbutton.state & Mod1Mask) == Mod1Mask;
 
 	    if ( ((Client*)parentWidget())->isActive()
-		 && ( options->focusPolicy != Options::ClickToFocus 
+		 && ( options->focusPolicy != Options::ClickToFocus
 		 &&  options->clickRaise && !mod1 ) ) {
 		((Client*)parentWidget())->autoRaise();
 		ungrabButton( winId(),  None );
@@ -2156,7 +2156,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 	break;
     case Options::MouseActivateAndLower:
 	workspace()->requestFocus( this );
-	workspace()->raiseClient( this );
+	workspace()->lowerClient( this );
 	break;
     case Options::MouseActivate:
 	workspace()->requestFocus( this );
