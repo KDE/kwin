@@ -109,6 +109,11 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
         setBitmap(bitmap);
 }
 
+QSize SystemButton::sizeHint() const
+{
+    return(QSize(14, 14));
+}
+
 void SystemButton::reset()
 {
     QPainter p;
@@ -228,33 +233,34 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     connect( button[3], SIGNAL( clicked() ), this, ( SLOT( maximize() ) ) );
 
     QHBoxLayout* hb = new QHBoxLayout();
+    hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 0, 1 );
     hb->addSpacing(2);
-    hb->addWidget( button[0] );
+    hb->addWidget( button[0]);
     titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
     hb->addItem(titlebar);
     hb->addSpacing(3);
     if(help){
-        hb->addWidget( button[4] );
+        hb->addWidget( button[4]);
         hb->addSpacing(1);
     }
-    hb->addWidget( button[1] );
+    hb->addWidget( button[1]);
     hb->addSpacing(1);
-    hb->addWidget( button[2] );
+    hb->addWidget( button[2]);
     hb->addSpacing(1);
-    hb->addWidget( button[3] );
+    hb->addWidget( button[3]);
     hb->addSpacing(3);
 
     for ( int i = 0; i < (help ? 5 : 4); i++) {
         button[i]->setMouseTracking( TRUE );
-        button[i]->setFixedSize( 14, 14 );
     }
 }
 
 void SystemClient::resizeEvent( QResizeEvent* e)
 {
     Client::resizeEvent( e );
+
     doShape();
     if ( isVisibleToTLW() && !testWFlags( WNorthWestGravity )) {
         QPainter p( this );

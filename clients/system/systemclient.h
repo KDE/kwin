@@ -17,6 +17,7 @@ public:
                  const unsigned char *bitmap=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
+    QSize sizeHint() const;
 protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
