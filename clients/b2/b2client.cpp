@@ -739,7 +739,9 @@ void B2Client::shadeChange()
 
 QSize B2Client::minimumSize() const
 {
-    return QSize(64, 48);
+    int left, right, top, bottom;
+    borders(left, right, top, bottom);
+    return QSize(left + right + 2 * buttonSize, top + bottom);
 }
 
 void B2Client::resize(const QSize& s)
