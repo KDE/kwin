@@ -858,9 +858,11 @@ void PlastikClient::menuButtonPressed()
     lastClient = this;
     t->start();
     if (!dbl || !PlastikHandler::menuClose()) {
-        QPoint pos = m_button[MenuButton]->mapToGlobal(m_button[MenuButton]->rect().bottomLeft() );
+        QRect menuRect = m_button[MenuButton]->rect();
+        QPoint menutop = m_button[MenuButton]->mapToGlobal(menuRect.topLeft());
+        QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight());
         KDecorationFactory* f = factory();
-        showWindowMenu( pos );
+        showWindowMenu(QRect(menutop, menubottom));
         if( !f->exists( this )) // 'this' was deleted
             return;
         m_button[MenuButton]->setDown(false);
