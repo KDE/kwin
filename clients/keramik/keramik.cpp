@@ -1233,10 +1233,12 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 	int titleBaseY         = ( largeTitlebar ? 3 : 0 );
 	int titleBarHeight     = clientHandler->titleBarHeight( largeTitlebar );
 	int grabBarHeight      = clientHandler->grabBarHeight();
-	
+	int leftBorderWidth    = clientHandler->tile( BorderLeft, active )->width();
+	int rightBorderWidth   = clientHandler->tile( BorderRight, active )->width();
+
 	if ( maskDirty )
 		updateMask();
-	
+
 	// Titlebar
 	// -----------------------------------------------------------------------
 	if ( updateRect.y() < titleBarHeight )
@@ -1293,17 +1295,14 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 		int bottom = QMIN( updateRect.bottom(), height() - grabBarHeight );
 		
 		// Left border
-		if ( updateRect.x() <= 4 ) {
-			const QPixmap *tile = clientHandler->tile( BorderLeft, active );
-			p.drawTiledPixmap( 0, top, tile->width(), bottom - top + 1, *tile );
-		}
+		if ( updateRect.x() < leftBorderWidth )
+			p.drawTiledPixmap( 0, top, leftBorderWidth, bottom - top + 1,
+					*clientHandler->tile( BorderLeft, active ) );
 
 		// Right border
-		if ( e->rect().right() >= width()-5 ) {
-			const QPixmap *tile = clientHandler->tile( BorderRight, active );
-			p.drawTiledPixmap( width() - tile->width(), top,
-					tile->width(), bottom - top + 1, *tile );
-		}
+		if ( e->rect().right() > width() - rightBorderWidth - 1 )
+			p.drawTiledPixmap( width() - rightBorderWidth, top, rightBorderWidth,
+					bottom - top + 1, *clientHandler->tile( BorderRight, active ) );
 	}
 	
 	// Bottom grab bar
@@ -1331,8 +1330,8 @@ void KeramikClient::paintEvent( QPaintEvent *e )
 
 	// Extra drawline for the 1 pixel empty space QLayout leaves when a window is shaded.
 	p.setPen( options->color( Options::TitleBlend, active ) );
-	p.drawLine( 3, height() - grabBarHeight - 1, 
-				width() - 4, height() - grabBarHeight - 1 );
+	p.drawLine( leftBorderWidth, height() - grabBarHeight - 1, 
+				width() - rightBorderWidth - 1, height() - grabBarHeight - 1 );
 }
 
 
