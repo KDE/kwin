@@ -750,7 +750,7 @@ Name[bg]=Èçòðèé Ïðîçîðåö
 Name[ca]=Esborra finestra
 Name[cs]=Srušit okno
 Name[da]=Slet vindue
-Name[de]=Fenster schlie�en
+Name[de]=Fenster löschen
 Name[el]=Σβήσιμο Παραθύρου
 Name[eo]=Forigu fenestron
 Name[es]=Eliminar Ventana
@@ -1444,11 +1444,11 @@ default_presentation=1
 soundfile=pop.wav
 
 [transnew]
-Name=New Dialog Window
+Name=New Dialog
 Name[ca]=Creació de finestra transitòria
 Name[cs]=Nové dialogové okno
 Name[da]=Vindue trans ny
-Name[de]=Neues Dialogfenster
+Name[de]=Neuer Dialog
 Name[eo]=Nova provizora fenestro
 Name[es]=Nueva Ventana Trans
 Name[et]=Uus ajutine aken
@@ -1510,11 +1510,11 @@ Comment[zh_CN.GB2312]=暂态窗口(对话)出现
 default_presentation=0
 
 [transdelete]
-Name=Close Dialog Window
+Name=Delete Dialog
 Name[ca]=Esborrat de finestra transitòria
 Name[cs]=Zavření dialogového okna
 Name[da]=Vindue trans slet
-Name[de]=Dialogfenster schlie�en
+Name[de]=Dialog löschen
 Name[eo]=Forigo de provizora fenestro
 Name[es]=Eliminar Ventana Trans
 Name[et]=Kustuta ajutine aken
