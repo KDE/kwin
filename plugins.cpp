@@ -104,7 +104,7 @@ void PluginMenu::slotActivated(int id)
     config->setGroup("Style");
     config->writeEntry("PluginLib", newPlugin);
     config->sync();
-    // We can't do this directly because we might destruct a client 
+    // We can't do this directly because we might destruct a client
     // underneath our own feet while doing so.
     QTimer::singleShot(0, mgr, SLOT(updatePlugin()));
 }
@@ -129,8 +129,9 @@ bool
 PluginMgr::updatePlugin()
 {
     KConfig *config = KGlobal::config();
+    config->reparseConfiguration();
     config->setGroup("Style");
-    QString newPlugin = config->readEntry("PluginLib", "default");
+    QString newPlugin = config->readEntry("PluginLib", "standard" );
     if (newPlugin != pluginStr) {
        loadPlugin(newPlugin);
        return true;
@@ -149,50 +150,36 @@ Client* PluginMgr::allocateClient(Workspace *ws, WId w, bool tool)
 void PluginMgr::loadPlugin(QString nameStr)
 {
     static bool dlregistered = false;
-    static lt_dlhandle oldHandle = 0;
+    lt_dlhandle oldHandle = handle;
+    pluginStr = "standard";
+    handle = 0;
+    alloc_ptr = 0;
 
-    pluginStr = nameStr;
+    if ( !nameStr.isEmpty() && nameStr != "standard" ) {
+	if(!dlregistered){
+	    dlregistered = true;
+	    lt_dlinit();
+	}
+	QString path = KLibLoader::findLibrary(nameStr.latin1());
 
-    oldHandle = handle;
-
-    // Rikkus: temporary change in semantics.
-
-    if (nameStr.isEmpty())
-      nameStr = "default";
-
-    if(!dlregistered){
-        dlregistered = true;
-        lt_dlinit();
+	if( !path.isEmpty() ) {
+	    if ( (handle = lt_dlopen(path.latin1() ) ) ) {
+		lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
+		if(alloc_func) {
+		    alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
+		} else{
+		    qWarning("KWin: %s is not a KWin plugin.", path.latin1());
+		    lt_dlclose(handle);
+		    handle = 0;
+		}
+	    } else {
+		qWarning("KWin: cannot load client plugin %s.", path.latin1());
+	    }
+	}
     }
-    nameStr = KLibLoader::findLibrary(nameStr.latin1());
+    if ( alloc_ptr )
+	pluginStr = nameStr;
 
-    if(nameStr.isNull()){
-        qWarning("KWin: cannot find client plugin.");
-        handle = 0;
-        alloc_ptr = NULL;
-        pluginStr = "standard";
-    }
-    else{
-        handle = lt_dlopen(nameStr.latin1());
-        if(!handle){
-            qWarning("KWin: cannot load client plugin %s.", nameStr.latin1());
-            handle = 0;
-            alloc_ptr = NULL;
-            pluginStr = "standard";
-        }
-        else{
-            lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
-            if(alloc_func)
-                alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
-            else{
-                qWarning("KWin: %s is not a KWin plugin.", nameStr.latin1());
-                lt_dlclose(handle);
-                handle = 0;
-                alloc_ptr = NULL;
-                pluginStr = "standard";
-            }
-        }
-    }
     emit resetAllClients();
     if(oldHandle)
         lt_dlclose(oldHandle);

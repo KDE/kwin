@@ -248,7 +248,7 @@ private slots:
     void sendToDesktop( int );
     void clientPopupActivated( int );
     void focusEnsurance();
-    
+
 protected:
     bool keyPress( XKeyEvent key );
     bool keyRelease( XKeyEvent key );
@@ -358,7 +358,7 @@ private:
 
     // Timer to collect requests for 'ResetAllClients'
     QTimer resetTimer;
-    
+
     QTimer focusEnsuranceTimer;
 };
 

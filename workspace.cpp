@@ -227,7 +227,6 @@ Workspace::Workspace( bool restore )
     installed_colormap = default_colormap;
     session.setAutoDelete( TRUE );
 
-    area = QRect( 0, 0, 0, 0 ); // bogus value so that updateClientArea does the right thing
 
     if ( restore )
       loadSessionInfo();
@@ -1630,11 +1629,12 @@ void Workspace::unclutterDesktop()
 void Workspace::reconfigure()
 {
     KGlobal::config()->reparseConfiguration();
-    if ( mgr->updatePlugin() )
-        slotResetAllClientsDelayed();
     options->reload();
     keys->readSettings();
     grabControlTab(options->useControlTab);
+    mgr->updatePlugin();
+    // NO need whatsoever to call slotResetAllClientsDelayed here,
+    // updatePlugin resets all clients if necessary anyway.
 }
 
 /*!
@@ -3099,7 +3099,9 @@ void Workspace::updateClientArea()
  */
 QRect Workspace::clientArea()
 {
-  return area;
+    if (area.isNull())
+	return QApplication::desktop()->geometry();
+    return area;
 }
 
 
