@@ -1174,7 +1174,6 @@ void Workspace::smartPlacement(Client* c){
 void Workspace::cascadePlacement (Client* c, bool re_init) {
     /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
  */
-
   // work coords
     int xp, yp;
 
@@ -1218,8 +1217,23 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
 
   //if this isn't the first window
     if ( cci[d].pos.x() != X && cci[d].pos.y() != Y ) {
-	if ( xp != X && yp == Y ) xp = delta_x * (++(cci[d].col));
-	if ( yp != Y && xp == X ) yp = delta_y * (++(cci[d].row));
+		/* The following statements cause an internal compiler error with
+		 * egcs-2.91.66 on SuSE Linux 6.3. The equivalent forms compile fine.
+		 * 22-Dec-1999 CS
+		 *
+		 * if ( xp != X && yp == Y ) xp = delta_x * (++(cci[d].col));
+		 * if ( yp != Y && xp == X ) yp = delta_y * (++(cci[d].row));
+		 */
+	if ( xp != X && yp == Y )
+	{
+		++(cci[d].col);
+		xp = delta_x * cci[d].col;
+	}
+	if ( yp != Y && xp == X )
+	{
+		++(cci[d].row);
+		yp = delta_y * cci[d].row;
+	}
 
 	// last resort: if still doesn't fit, smart place it
 	if ( ((xp + cw) > W - X) || ((yp + ch) > H - Y) ) {
