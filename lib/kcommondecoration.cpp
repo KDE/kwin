@@ -796,7 +796,7 @@ bool KCommonDecoration::isToolWindow() const
     return ((type==NET::Toolbar)||(type==NET::Utility)||(type==NET::Menu));
 }
 
-QRect KCommonDecoration::titleRect()
+QRect KCommonDecoration::titleRect() const
 {
     int r_x, r_y, r_x2, r_y2;
     widget()->rect().coords(&r_x, &r_y, &r_x2, &r_y2);
@@ -809,7 +809,7 @@ QRect KCommonDecoration::titleRect()
     const int ttlHeight = layoutMetric(LM_TitleHeight);
     const int titleEdgeBottomBottom = r_y+titleEdgeTop+ttlHeight+titleEdgeBottom-1;
     return QRect(r_x+titleEdgeLeft+buttonsLeftWidth()+titleBorderLeft, r_y+titleEdgeTop,
-              r_x2-titleEdgeRight-buttonsRightWidth()-(r_x+titleEdgeLeft+buttonsLeftWidth()+titleBorderLeft),
+              r_x2-titleEdgeRight-buttonsRightWidth()-titleBorderRight-(r_x+titleEdgeLeft+buttonsLeftWidth()+titleBorderLeft),
               titleEdgeBottomBottom-(r_y+titleEdgeTop) );
 }
 
