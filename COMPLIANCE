@@ -42,14 +42,16 @@ _NET_SUPPORTED			root window property		COMPLETE
 	| sence that all implemented properties are listed here.	 |
 	+----------------------------------------------------------------+
         CHECKME : check it's complete
-_NET_CLIENT_LIST		root window property		COMPLETE
+_NET_CLIENT_LIST		root window property		PARTIAL
 	+----------------------------------------------------------------+
 	| With xprop it seems only one WinID is stored, whereas an array |
 	| of all managed windows should be stored instead!               |
         | This is caused by xprop printing only first element of WINDOW  |
         | type properties, xprop has to be patched to see them all.      |
+        | The spec requires this list contains the windows in their      |
+        | initial mapping order, which is not true for NET::Desktop      |
+        | windows.                                                       |
 	+----------------------------------------------------------------+
-        CHECKME : check that the list includes all windows
 _NET_CLIENT_LIST_STACKING	root window property		COMPLETE
 	+----------------------------------------------------------------+
 	| With xprop it seems only one WinID is stored, whereas an array |

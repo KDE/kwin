@@ -797,9 +797,11 @@ QRect Workspace::geometry() const
 
 
 void Workspace::removeClient( Client* c) {
+    Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
     clients.remove( c );
     stacking_order.remove( c );
     focus_chain.remove( c );
+    desktops.remove( c );
     propagateClients();
 }
 
@@ -818,8 +820,7 @@ bool Workspace::destroyClient( Client* c)
 
     storeFakeSessionInfo( c );
 
-    if (clients.contains(c))
-        removeClient(c);
+    removeClient(c);
 
     c->invalidateWindow();
     clientHidden( c );
@@ -2492,16 +2493,20 @@ void Workspace::propagateClients( bool onlyStacking )
 
     int i;
     if ( !onlyStacking ) {
-        cl = new Window[ clients.count()];
+        cl = new Window[ desktops.count() + clients.count()];
         i = 0;
+        for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it )
+            cl[i++] =  (*it)->window();
         for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it )
             cl[i++] =  (*it)->window();
         rootInfo->setClientList( cl, i );
         delete [] cl;
     }
 
-    cl = new Window[ stacking_order.count()];
+    cl = new Window[ desktops.count() + stacking_order.count()];
     i = 0;
+    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it )
+        cl[i++] =  (*it)->window();
     for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
         cl[i++] =  (*it)->window();
     rootInfo->setClientListStacking( cl, i );
