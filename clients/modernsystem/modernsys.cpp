@@ -355,7 +355,8 @@ void ModernSys::paintEvent( QPaintEvent* )
                      brush(QColorGroup::Button));
 
     p.fillRect(1, 16, width()-2, height()-16, fillBrush);
-
+    p.fillRect(width()-6, 0, width()-1, height(), fillBrush);
+    
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
@@ -366,7 +367,7 @@ void ModernSys::paintEvent( QPaintEvent* )
     // titlebar
     QColorGroup g = options->colorGroup(Options::TitleBar, isActive());
     if(isActive()){
-        p.drawPixmap(1, 1, titleBuffer);
+        p.drawPixmap(1, 1, titleBuffer, 0, 0, w-2, 18);
     }
     else{
         if(iUpperGradient)
