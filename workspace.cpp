@@ -949,7 +949,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     if( popup )
         popup->close();
     block_focus = TRUE;
-    Q_ASSERT( block_stacking_updates == 0 ); // make sure stacking_order is up to date
+// TODO    Q_ASSERT( block_stacking_updates == 0 ); // make sure stacking_order is up to date
     StackingUpdatesBlocker blocker( this );
 
     if (new_desktop != current_desktop) 

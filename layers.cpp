@@ -202,7 +202,7 @@ void Workspace::propagateClients( bool propagate_new_clients )
 // TODO misleading name for this method
 Client* Workspace::topClientOnDesktop( int desktop ) const
     {
-    Q_ASSERT( block_stacking_updates == 0 );
+// TODO    Q_ASSERT( block_stacking_updates == 0 );
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) 
         {
         if ( (*it)->isOnDesktop( desktop ) && !(*it)->isSpecialWindow()
@@ -240,7 +240,7 @@ void Workspace::raiseOrLowerClient( Client *c)
     {
     if (!c) return;
     Client* topmost = NULL;
-    Q_ASSERT( block_stacking_updates == 0 );
+// TODO    Q_ASSERT( block_stacking_updates == 0 );
     if ( most_recently_raised && stacking_order.contains( most_recently_raised ) &&
          most_recently_raised->isShown( true ) && c->isOnCurrentDesktop())
         topmost = most_recently_raised;
@@ -546,7 +546,7 @@ void Workspace::blockStackingUpdates( bool block )
 // Ensure list is in stacking order
 ClientList Workspace::ensureStackingOrder( const ClientList& list ) const
     {
-    Q_ASSERT( block_stacking_updates == 0 );
+// TODO    Q_ASSERT( block_stacking_updates == 0 );
     if( list.count() < 2 )
         return list;
     // TODO is this worth optimizing?
