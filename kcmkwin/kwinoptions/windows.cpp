@@ -66,10 +66,6 @@
 #define KWIN_ROLL_OVER_DESKTOPS    "RollOverDesktops"
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
-#define KWIN_XINERAMA              "XineramaEnabled"
-#define KWIN_XINERAMA_MOVEMENT     "XineramaMovementEnabled"
-#define KWIN_XINERAMA_PLACEMENT    "XineramaPlacementEnabled"
-#define KWIN_XINERAMA_MAXIMIZE     "XineramaMaximizeEnabled"
 
 // kwm config keywords
 #define KWM_ELECTRIC_BORDER                  "ElectricBorders"
@@ -488,20 +484,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
 
-    xineramaBox = new QVButtonGroup(i18n("Multiple Monitor Support"), this);
-    xineramaBox->setEnabled(QApplication::desktop()->isVirtualDesktop());
-    xineramaEnable = new QCheckBox(i18n("Enable multiple monitor support"), xineramaBox);
-    QWhatsThis::add(xineramaEnable, i18n("Enable support for multiple monitors merged to form a single desktop."));
-    connect(xineramaEnable, SIGNAL(toggled(bool)), this, SLOT(setXinerama(bool)));
-    xineramaMovementEnable = new QCheckBox(i18n("Enable window resistance support"), xineramaBox);
-    QWhatsThis::add(xineramaMovementEnable, i18n("Turn on resistance when moving a window from one physical screen to the other."));
-    xineramaPlacementEnable = new QCheckBox(i18n("Enable window placement support"), xineramaBox);
-    QWhatsThis::add(xineramaPlacementEnable, i18n("This option opens new windows on the physical screen on which the cursor is present."));
-    xineramaMaximizeEnable = new QCheckBox(i18n("Enable window maximize support"), xineramaBox);
-    QWhatsThis::add(xineramaMaximizeEnable, i18n("When this option is turned on, windows will only maximize up to the physical screen size."));
-
-    lay->addWidget(xineramaBox);
-
     electricBox = new QVButtonGroup(i18n("Active Desktop Borders"), this);
     electricBox->setMargin(15);
 
@@ -531,12 +513,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     lay->addStretch();
     load();
 
-    connect( xineramaEnable, SIGNAL(clicked()), SLOT(changed()));
-    connect( xineramaMovementEnable, SIGNAL(clicked()), SLOT(changed()));
-    connect( xineramaPlacementEnable, SIGNAL(clicked()), SLOT(changed()));
-    connect( xineramaMaximizeEnable, SIGNAL(clicked()), SLOT(changed()));
-
-
 }
 
 void KAdvancedConfig::setShadeHover(bool on) {
@@ -557,17 +533,6 @@ void KAdvancedConfig::shadeHoverChanged(bool a) {
     shadeHover->setEnabled(a);
 }
 
-void KAdvancedConfig::setXinerama(bool on) {
-    if (KApplication::desktop()->isVirtualDesktop())
-        xineramaEnable->setChecked(on);
-    else
-        xineramaEnable->setEnabled(false);
-
-    xineramaMovementEnable->setEnabled(on);
-    xineramaPlacementEnable->setEnabled(on);
-    xineramaMaximizeEnable->setEnabled(on);
-}
-
 void KAdvancedConfig::setAnimateShade(bool a) {
     animateShade->setChecked(a);
 }
@@ -579,11 +544,6 @@ void KAdvancedConfig::load( void )
     setAnimateShade(config->readBoolEntry(KWIN_ANIMSHADE, true));
     setShadeHover(config->readBoolEntry(KWIN_SHADEHOVER, false));
     setShadeHoverInterval(config->readNumEntry(KWIN_SHADEHOVER_INTERVAL, 250));
-
-    setXinerama(config->readBoolEntry(KWIN_XINERAMA, false));
-    xineramaMovementEnable->setChecked( config->readBoolEntry(KWIN_XINERAMA_MOVEMENT, false));
-    xineramaPlacementEnable->setChecked(config->readBoolEntry(KWIN_XINERAMA_PLACEMENT, false));
-    xineramaMaximizeEnable->setChecked(config->readBoolEntry(KWIN_XINERAMA_MAXIMIZE, false));
 
     setElectricBorders(config->readNumEntry(KWM_ELECTRIC_BORDER, false));
     setElectricBorderDelay(config->readNumEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
@@ -604,11 +564,6 @@ void KAdvancedConfig::save( void )
     if (v<0) v = 0;
     config->writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
 
-    config->writeEntry(KWIN_XINERAMA, xineramaEnable->isChecked());
-    config->writeEntry(KWIN_XINERAMA_MOVEMENT, xineramaMovementEnable->isChecked());
-    config->writeEntry(KWIN_XINERAMA_PLACEMENT, xineramaPlacementEnable->isChecked());
-    config->writeEntry(KWIN_XINERAMA_MAXIMIZE, xineramaMaximizeEnable->isChecked());
-
     config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
 
@@ -626,7 +581,6 @@ void KAdvancedConfig::defaults()
     setAnimateShade(true);
     setShadeHover(false);
     setShadeHoverInterval(250);
-    setXinerama(false);
     setElectricBorders(0);
     setElectricBorderDelay(150);
 }

@@ -186,8 +186,7 @@ private slots:
   //copied from kcontrol/konq/kwindesktop, aleXXX
   void setEBorders();
 
-  void setXinerama(bool);
-	void changed() { emit KCModule::changed(true); }
+  void changed() { emit KCModule::changed(true); }
 
 private:
 
@@ -200,12 +199,6 @@ private:
   QButtonGroup *shBox;
   QCheckBox *shadeHoverOn;
   KIntNumInput *shadeHover;
-
-  QButtonGroup *xineramaBox;
-  QCheckBox *xineramaEnable;
-  QCheckBox *xineramaMovementEnable;
-  QCheckBox *xineramaPlacementEnable;
-  QCheckBox *xineramaMaximizeEnable;
 
   KConfig *config;
   bool     standAlone;

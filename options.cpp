@@ -191,8 +191,11 @@ void Options::reload()
 
     rollOverDesktops = config->readBoolEntry("RollOverDesktops", TRUE);
 
-    xineramaEnabled = config->readBoolEntry ("XineramaEnabled", FALSE ) &&
-                      KApplication::desktop()->isVirtualDesktop();
+    KConfig *gc = KGlobal::config();
+    bool isVirtual = KApplication::desktop()->isVirtualDesktop();
+    gc->setGroup("Windows");
+    xineramaEnabled = gc->readBoolEntry ("XineramaEnabled", isVirtual ) &&
+                      isVirtual;
     if (xineramaEnabled) {
         xineramaPlacementEnabled = config->readBoolEntry ("XineramaPlacementEnabled", FALSE);
         xineramaMovementEnabled = config->readBoolEntry ("XineramaMovementEnabled", FALSE);
