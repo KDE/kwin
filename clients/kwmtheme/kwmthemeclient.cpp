@@ -431,6 +431,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
     //top
     pm = *framePixmaps[FrameTop];
 
+    if (pm.width() > 0){
     s = width()-w2-w1;
     n = s/pm.width();
     w = n>0?s/n:s;
@@ -452,10 +453,12 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
 	break;
       }
     }
+    }
 
     //bottom
     pm = *framePixmaps[FrameBottom];
 
+    if (pm.width() > 0){
     s = width()-w4-w3;
     n = s/pm.width();
     w = n>0?s/n:s;
@@ -475,10 +478,12 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
 	break;
       }
     }
+    }
 
     //left
     pm = *framePixmaps[FrameLeft];
 
+    if (pm.height() > 0){
     s = height()-h3-h1;
     n = s/pm.height();
     w = n>0?s/n:s;
@@ -501,10 +506,12 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
 	break;
       }
     }
+    }
 
     //right
     pm = *framePixmaps[FrameRight];
 
+    if (pm.height() > 0){
     s = height()-h4-h2;
     n = s/pm.height();
     w = n>0?s/n:s;
@@ -526,6 +533,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
 		     height()-h4-y);
 	break;
       }
+    }
     }
     drawTitle(p);
     // KWM evidently had a 1 pixel border around the client window. We
