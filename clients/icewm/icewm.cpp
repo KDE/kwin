@@ -700,12 +700,6 @@ IceWMClient::IceWMClient( Workspace *ws, WId w, QWidget *parent, const char *nam
 		grid->addLayout ( hb, 1, 1 );
 	else
 		grid->addLayout ( hb, 2, 1 );
-
-	// Hide buttons which are not required
-	if ( !isMinimizable() && button[BtnMinimize] )
-		button[BtnMinimize]->hide();
-	if ( !isMaximizable() && button[BtnMaximize] )
-		button[BtnMaximize]->hide();
 }
 
 
@@ -755,7 +749,7 @@ void IceWMClient::addClientButtons( const QString& s )
 					break;
 
 				case 'm':
-					if ( validPixmaps(maximizePix) && !button[BtnMaximize] )
+					if ( validPixmaps(maximizePix) && !button[BtnMaximize] && isMaximizable() )
 					{
 						button[BtnMaximize] = new IceWMButton(this, "maximize", &maximizePix);
 						hb->addWidget( button[BtnMaximize] );
@@ -764,7 +758,7 @@ void IceWMClient::addClientButtons( const QString& s )
 					break;
 
 				case 'i':
-					if ( validPixmaps(minimizePix) && !button[BtnMinimize] )
+					if ( validPixmaps(minimizePix) && !button[BtnMinimize] && isMinimizable() )
 					{
 						button[BtnMinimize] = new IceWMButton(this, "minimize", &minimizePix);
 						hb->addWidget( button[BtnMinimize] );
@@ -772,13 +766,13 @@ void IceWMClient::addClientButtons( const QString& s )
 					}
 					break;
 
-	// Not yet implemented - how's hide useful anyway?
-	//			case 'h':
-	//				if ( button[BtnHide]  && !button[BtnHide] )
-	//					hb->addWidget( button[BtnHide] );
-	//				break;
+				/* Not yet implemented - how's hide useful anyway?
+				case 'h':
+					if ( button[BtnHide]  && !button[BtnHide] )
+						hb->addWidget( button[BtnHide] );
+					break; */
 
-/* Re-enable this when kwin has void shadeChange(bool s) in clients.cpp
+				/* Re-enable this when kwin has void shadeChange(bool s) in clients.cpp
 				case 'r':
 					// NOTE: kwin doesn't have toggleShade() in clients.h !
 				    if ( validPixmaps(rollupPix) && !button[BtnRollup] )
@@ -872,6 +866,7 @@ int IceWMClient::titleTextWidth( const QString& s )
 void IceWMClient::resizeEvent( QResizeEvent* e )
 {
 	Client::resizeEvent( e );
+	calcHiddenButtons();
 
 	if (isVisibleToTLW()) 
 	{
@@ -1098,6 +1093,7 @@ void IceWMClient::paintEvent( QPaintEvent* )
 
 void IceWMClient::showEvent(QShowEvent *ev)
 {
+	calcHiddenButtons();
 	titlebar->changeSize( titleTextWidth(caption()), titleBarHeight, 
 						  QSizePolicy::Preferred, QSizePolicy::Fixed );
 	grid->activate();
@@ -1134,7 +1130,7 @@ void IceWMClient::iconChange()
 // Please don't modify the following unless you want layout problems
 void IceWMClient::captionChange( const QString& s )
 {
-	QRect r( borderSizeX, borderSizeY, geometry().width()-(2*borderSizeX),
+	QRect r( 0, borderSizeY, geometry().width(),
 			 titleBarHeight);
 
 	titlebar->changeSize( titleTextWidth(s), titleBarHeight, 
@@ -1171,6 +1167,47 @@ void IceWMClient::activeChange(bool)
 			button[i]->repaint( false );
 
 	repaint(false);
+}
+
+
+// This does the showing / hiding button magic
+// for variable positioned buttons.
+void IceWMClient::calcHiddenButtons()
+{
+	const int minwidth = 220; // Minimum width where all buttons are shown
+	const int btn_width = 20; // Average width
+
+	// Show/Hide buttons in this order - Sticky, Maximize, Menu, Minimize, Close.
+	IceWMButton* btnArray[] = { button[BtnDepth], button[BtnMaximize], button[BtnSysMenu],
+								button[BtnMinimize], button[BtnClose] };
+
+	int current_width = width();
+	int count = 0;
+	int i;
+
+	// Find out how many buttons we have to hide.
+	while (current_width < minwidth)
+	{
+		current_width += btn_width;
+		count++;
+	}
+
+	// Bound the number of buttons to hide
+	if (count > 5) count = 5;
+
+	// Hide the required buttons...
+	for(i = 0; i < count; i++)
+	{
+		if (btnArray[i] && btnArray[i]->isVisible() )
+			btnArray[i]->hide();
+	}
+
+	// Show the rest of the buttons...
+	for(i = count; i < 5; i++)
+	{
+		if (btnArray[i] && (!btnArray[i]->isVisible()) )
+			btnArray[i]->show();		
+	}
 }
 
 

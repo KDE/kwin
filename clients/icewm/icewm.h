@@ -95,8 +95,6 @@ class IceWMClient : public KWinInternal::Client
 {
     Q_OBJECT
 	public:
-	    // These are all the icewm button types :)
-	    enum Buttons{ BtnSysMenu=0, BtnClose, BtnMaximize, BtnMinimize, BtnHide, BtnRollup, BtnDepth, BtnCount };
 	    IceWMClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
 	    ~IceWMClient(); 
 
@@ -118,6 +116,10 @@ class IceWMClient : public KWinInternal::Client
 	    void menuButtonPressed();
 
 	private:
+	    // These are all the icewm button types :)
+	    enum Buttons{ BtnSysMenu=0, BtnClose, BtnMaximize, BtnMinimize, BtnHide, BtnRollup, BtnDepth, BtnCount };
+
+		void calcHiddenButtons();
 	    int  titleTextWidth( const QString& s );
 		void addClientButtons( const QString& s );
 		QSpacerItem* addPixmapSpacer( QPixmap* p[], QSizePolicy::SizeType = QSizePolicy::Maximum,
