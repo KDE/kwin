@@ -317,10 +317,10 @@ bool Workspace::workspaceEvent( XEvent * e )
 //            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return TRUE;
-                c = createClient( e->xmaprequest.window, false, true );
+                c = createClient( e->xmaprequest.window, false, options->xineramaPlacementEnabled );
                 if ( c != NULL && root != qt_xrootwin() ) 
                     { // TODO what is this?
-                    // TODO may use QWidget:.create
+                    // TODO may use QWidget::create
                     XReparentWindow( qt_xdisplay(), c->frameId(), root, 0, 0 );
                     }
                 if( c == NULL ) // refused to manage, simply map it (most probably override redirect)
