@@ -556,7 +556,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     // window wants to stay on top?
     stays_on_top = ( info->state() & NET::StaysOnTop) != 0 || ( transient_for == None && transient_for_defined );
-
+    
     // window does not want a taskbar entry?
     skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
 
@@ -629,7 +629,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     QRect area = workspace()->clientArea();
 
     if ( geom == workspace()->geometry() && inherits( "KWinInternal::NoBorderClient" ) ) {
-	is_fullscreen = TRUE;
+	if ( !stays_on_top )
+	    is_fullscreen = TRUE;
 	may_move = FALSE; // don't let fullscreen windows be moved around
     }
 
