@@ -432,10 +432,11 @@ void LaptopClient::resizeEvent(QResizeEvent* e)
 	    widget()->update( 0, height() - dy + 1, width(), dy );
 	if ( dx ) {
 	    widget()->update( width() - dx + 1, 0, dx, height() );
-	    widget()->update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
-	    widget()->update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
-	    // titlebar needs no background
-	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+	    widget()->update( QRect( QPoint(4,4), 
+			titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
+	    widget()->update( QRect( titlebar->geometry().topRight(), 
+			QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+	    widget()->update(titlebar->geometry());
 	}
     }
 }
