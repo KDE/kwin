@@ -1809,7 +1809,9 @@ default_presentation=0
 
 [minimize]
 Name=Window Minimize
+Name[cs]=Minimalizace okna
 Name[da]=Minimér vindue
+Name[es]=Minimizar ventana
 Name[et]=Akna minimeerimine
 Name[hu]=Ablak minimalizálása
 Name[nl]=Venster minimaliseren
@@ -1819,7 +1821,9 @@ Name[sv]=Fönster minimeras
 Name[tr]=Pencereyi Simge Haline Getir
 Comment=A Window is Minimized
 Comment[be]=Акно мінімалізаванае
+Comment[cs]=Okno je manimalizováno
 Comment[da]=Et vindue minimeres
+Comment[es]=Se minimiza una ventana
 Comment[et]=Aken on minimeeritud
 Comment[hu]=Egy ablak minimalizálása
 Comment[nl]=Een venster is geminimaliseerd
@@ -1833,6 +1837,7 @@ default_presentation=0
 [unminimize]
 Name=Window Unminimize
 Name[da]=Afminimér vindue
+Name[es]=Deminimizar ventana
 Name[et]=Akna suuruse taastamine
 Name[hu]=Minimalizált ablak visszaállítása
 Name[nl]=Minimalisatie van venster ongedaan maken
@@ -2155,7 +2160,9 @@ default_presentation=0
 
 [on_all_desktops]
 Name=Window On All Desktops
+Name[cs]=Okno na všech plochách
 Name[da]=Vindue på alle desktoppe
+Name[es]=Ventana en todos los escritorios
 Name[et]=Aken kõigil töölaudadel
 Name[hu]=Ablak az összes munkaasztalra
 Name[nl]=Venster op alle bureaubladen
@@ -2164,7 +2171,9 @@ Name[sr]=Прозор на свим радним површинама
 Name[sv]=Fönster på alla skrivbord
 Name[tr]=Pencere Tüm Masaüstlerinde
 Comment=A Window is made Visible on All Desktops
+Comment[cs]=Okno je viditelné na všech plochách
 Comment[da]=Et vindue gøres synligt på alle desktoppe
+Comment[es]=Una ventana se hace visible en todos los escritorios
 Comment[et]=Aken on muudetud nähtavaks kõigil töölaudadel
 Comment[hu]=Egy ablak megjelent az összes munkaasztalon
 Comment[nl]=Een venster is zichtbaar op alle bureaubladen
@@ -2176,7 +2185,9 @@ default_presentation=0
 
 [not_on_all_desktops]
 Name=Window Not On All Desktops
+Name[cs]=Okno není na všech plochách
 Name[da]=Vindue ikke på alle desktoppe
+Name[es]=Ventana no en todos los escritorios
 Name[et]=Aken ei ole kõigil töölaudadel
 Name[hu]=Ablak nem az összes munkaasztalra
 Name[nl]=Venster niet op alle bureaubladen
@@ -2185,7 +2196,9 @@ Name[sr]=Прозор није на свим радним површинама
 Name[sv]=Fönster inte på alla skrivbord
 Name[tr]=Pencere Tüm Masaüstlerinde Değil
 Comment=A Window is no more Visible on All Desktops
+Comment[cs]=Okno již není viditelné na všech plochách
 Comment[da]=Et vindue er ikke længere synligt på alle desktoppe
+Comment[es]=Una ventana ya no es visible en todos los escritorios
 Comment[et]=Aken ei ole enam nähtav kõigil töölaudadel
 Comment[hu]=Egy ablak nem jelenik meg többé az összes munkaasztalon
 Comment[nl]=Een venster is niet langer zichtbaar op alle bureaubladen
