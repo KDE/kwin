@@ -388,10 +388,12 @@ void Workspace::restackClientUnderActive( Client* c )
         {
         if( Client::belongToSameApplication( active_client, *it ))
             {
+            unconstrained_stacking_order.remove( c );
             unconstrained_stacking_order.insert( it, c );
             break;
             }
         }
+    assert( unconstrained_stacking_order.contains( c ));
     if( c->wantsTabFocus() && focus_chain.contains( active_client ))
         {
         // also put in focus_chain after all windows belonging to the active application
