@@ -114,6 +114,7 @@ typedef struct _fade {
     double		step;
     void		(*callback) (Display *dpy, win *w, Bool gone);
     Display		*dpy;
+    int			titleHeight;
     Bool		gone;
 } fade;
 
@@ -266,6 +267,7 @@ void
 dequeue_fade (Display *dpy, fade *f)
 {
     f->w->isInFade = False;
+    f->w->titleHeight = f->titleHeight;
     fade    **prev;
 
     for (prev = &fades; *prev; prev = &(*prev)->next)
@@ -299,126 +301,129 @@ enqueue_fade (Display *dpy, fade *f)
 
 static void
 set_fade (Display *dpy, win *w, double start, double finish, double step,
-	  void (*callback) (Display *dpy, win *w, Bool gone),
-	  Bool gone, Bool exec_callback, Bool override)
+		void (*callback) (Display *dpy, win *w, Bool gone),
+		Bool gone, Bool exec_callback, Bool override, Bool wholeWin)
 {
-    fade    *f;
+	fade    *f;
 
-    f = find_fade (w);
-    if (!f)
-    {
-	f = malloc (sizeof (fade));
-	f->next = 0;
-	f->w = w;
-	f->cur = start;
-	enqueue_fade (dpy, f);
-    }
-    else if(!override)
-	return;
-    else
-    {
- 	if (exec_callback)
- 	    if (f->callback)
- 		(*f->callback)(dpy, f->w, f->gone);
-    }
-
-    if (finish < 0)
-	finish = 0;
-    if (finish > 1)
-	finish = 1;
-    f->finish = finish;
-    if (f->cur < finish)
-        f->step = step;
-    else if (f->cur > finish)
-	f->step = -step;
-    f->callback = callback;
-    f->gone = gone;
-    w->opacity = f->cur * OPAQUE;
-#if 0
-    printf ("set_fade start %g step %g\n", f->cur, f->step);
-#endif
-    determine_mode (dpy, w);
-    if (w->shadow)
-    {
-	XRenderFreePicture (dpy, w->shadow);
-	w->shadow = None;
-	w->extents = win_extents (dpy, w);
-    }
-}
-
-int
-fade_timeout (void)
-{
-    int now;
-    int	delta;
-    if (!fades)
-	return -1;
-    now = get_time_in_milliseconds();
-    delta = fade_time - now;
-    if (delta < 0)
-	delta = 0;
-/*    printf ("timeout %d\n", delta); */
-    return delta;
-}
-
-void
-run_fades (Display *dpy)
-{
-    int	    now = get_time_in_milliseconds();
-    fade    *f, *next;
-    int	    steps;
-    Bool    need_dequeue;
-
-#if 0
-    printf ("run fades\n");
-#endif
-    if (fade_time - now > 0)
-	return;
-    steps = 1 + (now - fade_time) / fade_delta;
-    for (next = fades; f = next; )
-    {
-        win *w = f->w;
-	next = f->next;
-	f->cur += f->step * steps;
-        if (f->cur >= 1)
-	    f->cur = 1;
-	else if (f->cur < 0)
-	    f->cur = 0;
-#if 0
-	printf ("opacity now %g -> %g\n", f->cur, f->finish);
-#endif
-	w->opacity = f->cur * OPAQUE;
-	need_dequeue = False;
-	if (f->step > 0)
+	f = find_fade (w);
+	if (!f)
 	{
-	    if (f->cur >= f->finish)
-	    {
-		w->opacity = f->finish*OPAQUE;
-                need_dequeue = True;
-                /*dequeue_fade (dpy, f);*/
-	    }
+		f = malloc (sizeof (fade));
+		f->next = 0;
+		f->w = w;
+		f->titleHeight = w->titleHeight;
+		f->cur = start;
+		enqueue_fade (dpy, f);
 	}
+	else if(!override)
+		return;
 	else
 	{
-	    if (f->cur <= f->finish)
-	    {
-		w->opacity = f->finish*OPAQUE;
-                need_dequeue = True;
-                /*dequeue_fade (dpy, f);*/
-	    }
+		if (exec_callback)
+			if (f->callback)
+				(*f->callback)(dpy, f->w, f->gone);
 	}
+
+	if (finish < 0)
+		finish = 0;
+	if (finish > 1)
+		finish = 1;
+	f->finish = finish;
+	if (f->cur < finish)
+		f->step = step;
+	else if (f->cur > finish)
+		f->step = -step;
+	f->callback = callback;
+	f->gone = gone;
+	w->opacity = f->cur * OPAQUE;
+	if (wholeWin)
+		w->titleHeight = 0;
+#if 0
+	printf ("set_fade start %g step %g\n", f->cur, f->step);
+#endif
+	determine_mode (dpy, w);
 	if (w->shadow)
 	{
-	    XRenderFreePicture (dpy, w->shadow);
-	    w->shadow = None;
-	    w->extents = win_extents(dpy, w);
-            /* Must do this last as it might destroy f->w in callbacks */
-            if (need_dequeue)
-                dequeue_fade (dpy, f);
+		XRenderFreePicture (dpy, w->shadow);
+		w->shadow = None;
+		w->extents = win_extents (dpy, w);
 	}
-        determine_mode (dpy, w);
-    }
-    fade_time = now + fade_delta;
+}
+
+	int
+fade_timeout (void)
+{
+	int now;
+	int	delta;
+	if (!fades)
+		return -1;
+	now = get_time_in_milliseconds();
+	delta = fade_time - now;
+	if (delta < 0)
+		delta = 0;
+	/*    printf ("timeout %d\n", delta); */
+	return delta;
+}
+
+	void
+run_fades (Display *dpy)
+{
+	int	    now = get_time_in_milliseconds();
+	fade    *f, *next;
+	int	    steps;
+	Bool    need_dequeue;
+
+#if 0
+	printf ("run fades\n");
+#endif
+	if (fade_time - now > 0)
+		return;
+	steps = 1 + (now - fade_time) / fade_delta;
+	for (next = fades; f = next; )
+	{
+		win *w = f->w;
+		next = f->next;
+		f->cur += f->step * steps;
+		if (f->cur >= 1)
+			f->cur = 1;
+		else if (f->cur < 0)
+			f->cur = 0;
+#if 0
+		printf ("opacity now %g -> %g\n", f->cur, f->finish);
+#endif
+		w->opacity = f->cur * OPAQUE;
+		need_dequeue = False;
+		if (f->step > 0)
+		{
+			if (f->cur >= f->finish)
+			{
+				w->opacity = f->finish*OPAQUE;
+				need_dequeue = True;
+				/*dequeue_fade (dpy, f);*/
+			}
+		}
+		else
+		{
+			if (f->cur <= f->finish)
+			{
+				w->opacity = f->finish*OPAQUE;
+				need_dequeue = True;
+				/*dequeue_fade (dpy, f);*/
+			}
+		}
+		if (w->shadow)
+		{
+			XRenderFreePicture (dpy, w->shadow);
+			w->shadow = None;
+			w->extents = win_extents(dpy, w);
+			/* Must do this last as it might destroy f->w in callbacks */
+			if (need_dequeue)
+				dequeue_fade (dpy, f);
+		}
+		determine_mode (dpy, w);
+	}
+	fade_time = now + fade_delta;
 }
 
 #define SHADOW_OFFSET_X	((-shadowRadius * 7 / 5) - shadowOffsetX * shadowRadius / 100) * w->shadowSize
@@ -426,42 +431,42 @@ run_fades (Display *dpy)
 /*#define SHADOW_OFFSET_X	(w->shadowSize * -shadowRadius * 7 / 500) - w->shadowSize * shadowOffsetX * shadowRadius / 10000
 #define SHADOW_OFFSET_Y	(w->shadowSize * -shadowRadius * 7 / 500) - w->shadowSize * shadowOffsetY * shadowRadius / 10000*/
 
-static double
+	static double
 gaussian (double r, double x, double y)
 {
-    return ((1 / (sqrt (2 * M_PI * r))) *
-	    exp ((- (x * x + y * y)) / (2 * r * r)));
+	return ((1 / (sqrt (2 * M_PI * r))) *
+			exp ((- (x * x + y * y)) / (2 * r * r)));
 }
 
 
-static conv *
+	static conv *
 make_gaussian_map (Display *dpy, double r)
 {
-    conv	    *c;
-    int		    size = ((int) ceil ((r * 3)) + 1) & ~1;
-    int		    center = size / 2;
-    int		    x, y;
-    double	    t;
-    double	    g;
-    
-    c = malloc (sizeof (conv) + size * size * sizeof (double));
-    c->size = size;
-    c->data = (double *) (c + 1);
-    t = 0.0;
-    for (y = 0; y < size; y++)
-	for (x = 0; x < size; x++)
-	{
-	    g = gaussian (r, (double) (x - center), (double) (y - center));
-	    t += g;
-	    c->data[y * size + x] = g;
-	}
-/*    printf ("gaussian total %f\n", t); */
-    for (y = 0; y < size; y++)
-	for (x = 0; x < size; x++)
-	{
-	    c->data[y*size + x] /= t;
-	}
-    return c;
+	conv	    *c;
+	int		    size = ((int) ceil ((r * 3)) + 1) & ~1;
+	int		    center = size / 2;
+	int		    x, y;
+	double	    t;
+	double	    g;
+
+	c = malloc (sizeof (conv) + size * size * sizeof (double));
+	c->size = size;
+	c->data = (double *) (c + 1);
+	t = 0.0;
+	for (y = 0; y < size; y++)
+		for (x = 0; x < size; x++)
+		{
+			g = gaussian (r, (double) (x - center), (double) (y - center));
+			t += g;
+			c->data[y * size + x] = g;
+		}
+	/*    printf ("gaussian total %f\n", t); */
+	for (y = 0; y < size; y++)
+		for (x = 0; x < size; x++)
+		{
+			c->data[y*size + x] /= t;
+		}
+	return c;
 }
 
 /*
@@ -480,2256 +485,2256 @@ make_gaussian_map (Display *dpy, double r)
  * height+  |     |                   |     |
  *  center  +-----+-------------------+-----+
  */
- 
-static unsigned char
+
+	static unsigned char
 sum_gaussian (conv *map, double opacity, int x, int y, int width, int height)
 {
-    int	    fx, fy;
-    double  *g_data;
-    double  *g_line = map->data;
-    int	    g_size = map->size;
-    int	    center = g_size / 2;
-    int	    fx_start, fx_end;
-    int	    fy_start, fy_end;
-    double  v;
-    
-    /*
-     * Compute set of filter values which are "in range",
-     * that's the set with:
-     *	0 <= x + (fx-center) && x + (fx-center) < width &&
-     *  0 <= y + (fy-center) && y + (fy-center) < height
-     *
-     *  0 <= x + (fx - center)	x + fx - center < width
-     *  center - x <= fx	fx < width + center - x
-     */
+	int	    fx, fy;
+	double  *g_data;
+	double  *g_line = map->data;
+	int	    g_size = map->size;
+	int	    center = g_size / 2;
+	int	    fx_start, fx_end;
+	int	    fy_start, fy_end;
+	double  v;
 
-    fx_start = center - x;
-    if (fx_start < 0)
-	fx_start = 0;
-    fx_end = width + center - x;
-    if (fx_end > g_size)
-	fx_end = g_size;
+	/*
+	 * Compute set of filter values which are "in range",
+	 * that's the set with:
+	 *	0 <= x + (fx-center) && x + (fx-center) < width &&
+	 *  0 <= y + (fy-center) && y + (fy-center) < height
+	 *
+	 *  0 <= x + (fx - center)	x + fx - center < width
+	 *  center - x <= fx	fx < width + center - x
+	 */
 
-    fy_start = center - y;
-    if (fy_start < 0)
-	fy_start = 0;
-    fy_end = height + center - y;
-    if (fy_end > g_size)
-	fy_end = g_size;
+	fx_start = center - x;
+	if (fx_start < 0)
+		fx_start = 0;
+	fx_end = width + center - x;
+	if (fx_end > g_size)
+		fx_end = g_size;
 
-    g_line = g_line + fy_start * g_size + fx_start;
-    
-    v = 0;
-    for (fy = fy_start; fy < fy_end; fy++)
-    {
-	g_data = g_line;
-	g_line += g_size;
-	
-	for (fx = fx_start; fx < fx_end; fx++)
-	    v += *g_data++;
-    }
-    if (v > 1)
-	v = 1;
-    
-    return ((unsigned char) (v * opacity * 255.0));
+	fy_start = center - y;
+	if (fy_start < 0)
+		fy_start = 0;
+	fy_end = height + center - y;
+	if (fy_end > g_size)
+		fy_end = g_size;
+
+	g_line = g_line + fy_start * g_size + fx_start;
+
+	v = 0;
+	for (fy = fy_start; fy < fy_end; fy++)
+	{
+		g_data = g_line;
+		g_line += g_size;
+
+		for (fx = fx_start; fx < fx_end; fx++)
+			v += *g_data++;
+	}
+	if (v > 1)
+		v = 1;
+
+	return ((unsigned char) (v * opacity * 255.0));
 }
 
 /* precompute shadow corners and sides to save time for large windows */
-static void
+	static void
 presum_gaussian (conv *map)
 {
-    int center = map->size/2;
-    int opacity, x, y;
+	int center = map->size/2;
+	int opacity, x, y;
 
-    Gsize = map->size;
+	Gsize = map->size;
 
-    if (shadowCorner)
-	free ((void *)shadowCorner);
-    if (shadowTop)
-	free ((void *)shadowTop);
+	if (shadowCorner)
+		free ((void *)shadowCorner);
+	if (shadowTop)
+		free ((void *)shadowTop);
 
-    shadowCorner = (unsigned char *)(malloc ((Gsize + 1) * (Gsize + 1) * 26));
-    shadowTop = (unsigned char *)(malloc ((Gsize + 1) * 26));
-    
-    for (x = 0; x <= Gsize; x++)
-    {
-	shadowTop[25 * (Gsize + 1) + x] = sum_gaussian (map, 1, x - center, center, Gsize * 2, Gsize * 2);
-	for(opacity = 0; opacity < 25; opacity++)
-	    shadowTop[opacity * (Gsize + 1) + x] = shadowTop[25 * (Gsize + 1) + x] * opacity / 25;
-	for(y = 0; y <= x; y++)
+	shadowCorner = (unsigned char *)(malloc ((Gsize + 1) * (Gsize + 1) * 26));
+	shadowTop = (unsigned char *)(malloc ((Gsize + 1) * 26));
+
+	for (x = 0; x <= Gsize; x++)
 	{
-	    shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x]
-		= sum_gaussian (map, 1, x - center, y - center, Gsize * 2, Gsize * 2);
-	    shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + x * (Gsize + 1) + y]
-		= shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x];
-	    for(opacity = 0; opacity < 25; opacity++)
-		shadowCorner[opacity * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x]
-		    = shadowCorner[opacity * (Gsize + 1) * (Gsize + 1) + x * (Gsize + 1) + y]
-		    = shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x] * opacity / 25;
+		shadowTop[25 * (Gsize + 1) + x] = sum_gaussian (map, 1, x - center, center, Gsize * 2, Gsize * 2);
+		for(opacity = 0; opacity < 25; opacity++)
+			shadowTop[opacity * (Gsize + 1) + x] = shadowTop[25 * (Gsize + 1) + x] * opacity / 25;
+		for(y = 0; y <= x; y++)
+		{
+			shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x]
+				= sum_gaussian (map, 1, x - center, y - center, Gsize * 2, Gsize * 2);
+			shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + x * (Gsize + 1) + y]
+				= shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x];
+			for(opacity = 0; opacity < 25; opacity++)
+				shadowCorner[opacity * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x]
+					= shadowCorner[opacity * (Gsize + 1) * (Gsize + 1) + x * (Gsize + 1) + y]
+					= shadowCorner[25 * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x] * opacity / 25;
+		}
 	}
-    }
 }
 
-static XImage *
+	static XImage *
 make_shadow (Display *dpy, double opacity, int width, int height)
 {
-    XImage	    *ximage;
-    unsigned char   *data;
-    int		    gsize = gaussianMap->size;
-    int		    ylimit, xlimit;
-    int		    swidth = width + gsize;
-    int		    sheight = height + gsize;
-    int		    center = gsize / 2;
-    int		    x, y;
-    unsigned char   d;
-    int		    x_diff;
-    int             opacity_int = (int)(opacity * 25);
-    data = malloc (swidth * sheight * sizeof (unsigned char));
-    if (!data)
-	return 0;
-    ximage = XCreateImage (dpy,
-			   DefaultVisual(dpy, DefaultScreen(dpy)),
-			   8,
-			   ZPixmap,
-			   0,
-			   (char *) data,
-			   swidth, sheight, 8, swidth * sizeof (unsigned char));
-    if (!ximage)
-    {
-	free (data);
-	return 0;
-    }
-    /*
-     * Build the gaussian in sections
-     */
+	XImage	    *ximage;
+	unsigned char   *data;
+	int		    gsize = gaussianMap->size;
+	int		    ylimit, xlimit;
+	int		    swidth = width + gsize;
+	int		    sheight = height + gsize;
+	int		    center = gsize / 2;
+	int		    x, y;
+	unsigned char   d;
+	int		    x_diff;
+	int             opacity_int = (int)(opacity * 25);
+	data = malloc (swidth * sheight * sizeof (unsigned char));
+	if (!data)
+		return 0;
+	ximage = XCreateImage (dpy,
+			DefaultVisual(dpy, DefaultScreen(dpy)),
+			8,
+			ZPixmap,
+			0,
+			(char *) data,
+			swidth, sheight, 8, swidth * sizeof (unsigned char));
+	if (!ximage)
+	{
+		free (data);
+		return 0;
+	}
+	/*
+	 * Build the gaussian in sections
+	 */
 
-    /*
-     * center (fill the complete data array)
-     */
-    if (Gsize > 0)
-	d = shadowTop[opacity_int * (Gsize + 1) + Gsize];
-    else
-	d = sum_gaussian (gaussianMap, opacity, center, center, width, height);
-    memset(data, d, sheight * swidth);
-    
-    /*
-     * corners
-     */
-    ylimit = gsize;
-    if (ylimit > sheight / 2)
-	ylimit = (sheight + 1) / 2;
-    xlimit = gsize;
-    if (xlimit > swidth / 2)
-	xlimit = (swidth + 1) / 2;
+	/*
+	 * center (fill the complete data array)
+	 */
+	if (Gsize > 0)
+		d = shadowTop[opacity_int * (Gsize + 1) + Gsize];
+	else
+		d = sum_gaussian (gaussianMap, opacity, center, center, width, height);
+	memset(data, d, sheight * swidth);
 
-    for (y = 0; y < ylimit; y++)
+	/*
+	 * corners
+	 */
+	ylimit = gsize;
+	if (ylimit > sheight / 2)
+		ylimit = (sheight + 1) / 2;
+	xlimit = gsize;
+	if (xlimit > swidth / 2)
+		xlimit = (swidth + 1) / 2;
+
+	for (y = 0; y < ylimit; y++)
+		for (x = 0; x < xlimit; x++)
+		{
+			if (xlimit == Gsize && ylimit == Gsize)
+				d = shadowCorner[opacity_int * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x];
+			else
+				d = sum_gaussian (gaussianMap, opacity, x - center, y - center, width, height);
+			data[y * swidth + x] = d;
+			data[(sheight - y - 1) * swidth + x] = d;
+			data[(sheight - y - 1) * swidth + (swidth - x - 1)] = d;
+			data[y * swidth + (swidth - x - 1)] = d;
+		}
+
+	/*
+	 * top/bottom
+	 */
+	x_diff = swidth - (gsize * 2);
+	if (x_diff > 0 && ylimit > 0)
+	{
+		for (y = 0; y < ylimit; y++)
+		{
+			if (ylimit == Gsize)
+				d = shadowTop[opacity_int * (Gsize + 1) + y];
+			else
+				d = sum_gaussian (gaussianMap, opacity, center, y - center, width, height);
+			memset (&data[y * swidth + gsize], d, x_diff);
+			memset (&data[(sheight - y - 1) * swidth + gsize], d, x_diff);
+		}
+	}
+
+	/*
+	 * sides
+	 */
+
 	for (x = 0; x < xlimit; x++)
 	{
-	    if (xlimit == Gsize && ylimit == Gsize)
-		d = shadowCorner[opacity_int * (Gsize + 1) * (Gsize + 1) + y * (Gsize + 1) + x];
-	    else
-		d = sum_gaussian (gaussianMap, opacity, x - center, y - center, width, height);
-	    data[y * swidth + x] = d;
-	    data[(sheight - y - 1) * swidth + x] = d;
-	    data[(sheight - y - 1) * swidth + (swidth - x - 1)] = d;
-	    data[y * swidth + (swidth - x - 1)] = d;
+		if (xlimit == Gsize)
+			d = shadowTop[opacity_int * (Gsize + 1) + x];
+		else
+			d = sum_gaussian (gaussianMap, opacity, x - center, center, width, height);
+		for (y = gsize; y < sheight - gsize; y++)
+		{
+			data[y * swidth + x] = d;
+			data[y * swidth + (swidth - x - 1)] = d;
+		}
 	}
 
-    /*
-     * top/bottom
-     */
-    x_diff = swidth - (gsize * 2);
-    if (x_diff > 0 && ylimit > 0)
-    {
-	for (y = 0; y < ylimit; y++)
-	{
-	    if (ylimit == Gsize)
-		d = shadowTop[opacity_int * (Gsize + 1) + y];
-	    else
-		d = sum_gaussian (gaussianMap, opacity, center, y - center, width, height);
-	    memset (&data[y * swidth + gsize], d, x_diff);
-	    memset (&data[(sheight - y - 1) * swidth + gsize], d, x_diff);
-	}
-    }
-
-    /*
-     * sides
-     */
-    
-    for (x = 0; x < xlimit; x++)
-    {
-	if (xlimit == Gsize)
-	    d = shadowTop[opacity_int * (Gsize + 1) + x];
-	else
-	    d = sum_gaussian (gaussianMap, opacity, x - center, center, width, height);
-	for (y = gsize; y < sheight - gsize; y++)
-	{
-	    data[y * swidth + x] = d;
-	    data[y * swidth + (swidth - x - 1)] = d;
-	}
-    }
-
-    return ximage;
+	return ximage;
 }
 
-static Picture
+	static Picture
 shadow_picture (Display *dpy, double opacity, Picture alpha_pict, int width, int height, int *wp, int *hp)
 {
-    XImage  *shadowImage;
-    Pixmap  shadowPixmap;
-    Pixmap  finalPixmap;
-    Picture shadowPicture;
-    Picture finalPicture;
-    GC	    gc;
-    
-    shadowImage = make_shadow (dpy, opacity, width, height);
-    if (!shadowImage)
-	return None;
-    shadowPixmap = XCreatePixmap (dpy, root, 
-				  shadowImage->width,
-				  shadowImage->height,
-				  8);
-    if (!shadowPixmap)
-    {
-	XDestroyImage (shadowImage);
-	return None;
-    }
+	XImage  *shadowImage;
+	Pixmap  shadowPixmap;
+	Pixmap  finalPixmap;
+	Picture shadowPicture;
+	Picture finalPicture;
+	GC	    gc;
 
-    shadowPicture = XRenderCreatePicture (dpy, shadowPixmap,
-					  XRenderFindStandardFormat (dpy, PictStandardA8),
-					  0, 0);
-    if (!shadowPicture)
-    {
+	shadowImage = make_shadow (dpy, opacity, width, height);
+	if (!shadowImage)
+		return None;
+	shadowPixmap = XCreatePixmap (dpy, root, 
+			shadowImage->width,
+			shadowImage->height,
+			8);
+	if (!shadowPixmap)
+	{
+		XDestroyImage (shadowImage);
+		return None;
+	}
+
+	shadowPicture = XRenderCreatePicture (dpy, shadowPixmap,
+			XRenderFindStandardFormat (dpy, PictStandardA8),
+			0, 0);
+	if (!shadowPicture)
+	{
+		XDestroyImage (shadowImage);
+		XFreePixmap (dpy, shadowPixmap);
+		return None;
+	}
+
+	gc = XCreateGC (dpy, shadowPixmap, 0, 0);
+	if (!gc)
+	{
+		XDestroyImage (shadowImage);
+		XFreePixmap (dpy, shadowPixmap);
+		XRenderFreePicture (dpy, shadowPicture);
+		return None;
+	}
+
+	XPutImage (dpy, shadowPixmap, gc, shadowImage, 0, 0, 0, 0, 
+			shadowImage->width,
+			shadowImage->height);
+	*wp = shadowImage->width;
+	*hp = shadowImage->height;
+	XFreeGC (dpy, gc);
 	XDestroyImage (shadowImage);
 	XFreePixmap (dpy, shadowPixmap);
-	return None;
-    }
-
-    gc = XCreateGC (dpy, shadowPixmap, 0, 0);
-    if (!gc)
-    {
-	XDestroyImage (shadowImage);
-	XFreePixmap (dpy, shadowPixmap);
-	XRenderFreePicture (dpy, shadowPicture);
-	return None;
-    }
-    
-    XPutImage (dpy, shadowPixmap, gc, shadowImage, 0, 0, 0, 0, 
-	       shadowImage->width,
-	       shadowImage->height);
-    *wp = shadowImage->width;
-    *hp = shadowImage->height;
-    XFreeGC (dpy, gc);
-    XDestroyImage (shadowImage);
-    XFreePixmap (dpy, shadowPixmap);
-    return shadowPicture;
+	return shadowPicture;
 }
 
-Picture
+	Picture
 solid_picture (Display *dpy, Bool argb, double a, double r, double g, double b)
 {
-    Pixmap			pixmap;
-    Picture			picture;
-    XRenderPictureAttributes	pa;
-    XRenderColor		c;
+	Pixmap			pixmap;
+	Picture			picture;
+	XRenderPictureAttributes	pa;
+	XRenderColor		c;
 
-    pixmap = XCreatePixmap (dpy, root, 1, 1, argb ? 32 : 8);
-    if (!pixmap)
-	return None;
+	pixmap = XCreatePixmap (dpy, root, 1, 1, argb ? 32 : 8);
+	if (!pixmap)
+		return None;
 
-    pa.repeat = True;
-    picture = XRenderCreatePicture (dpy, pixmap,
-				    XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8),
-				    CPRepeat,
-				    &pa);
-    if (!picture)
-    {
+	pa.repeat = True;
+	picture = XRenderCreatePicture (dpy, pixmap,
+			XRenderFindStandardFormat (dpy, argb ? PictStandardARGB32 : PictStandardA8),
+			CPRepeat,
+			&pa);
+	if (!picture)
+	{
+		XFreePixmap (dpy, pixmap);
+		return None;
+	}
+
+	c.alpha = a * 0xffff;
+	c.red = r * 0xffff;
+	c.green = g * 0xffff;
+	c.blue = b * 0xffff;
+	XRenderFillRectangle (dpy, PictOpSrc, picture, &c, 0, 0, 1, 1);
 	XFreePixmap (dpy, pixmap);
-	return None;
-    }
-
-    c.alpha = a * 0xffff;
-    c.red = r * 0xffff;
-    c.green = g * 0xffff;
-    c.blue = b * 0xffff;
-    XRenderFillRectangle (dpy, PictOpSrc, picture, &c, 0, 0, 1, 1);
-    XFreePixmap (dpy, pixmap);
-    return picture;
+	return picture;
 }
 
-void
+	void
 discard_ignore (Display *dpy, unsigned long sequence)
 {
-    while (ignore_head)
-    {
-	if ((long) (sequence - ignore_head->sequence) > 0)
+	while (ignore_head)
 	{
-	    ignore  *next = ignore_head->next;
-	    free (ignore_head);
-	    ignore_head = next;
-	    if (!ignore_head)
-		ignore_tail = &ignore_head;
+		if ((long) (sequence - ignore_head->sequence) > 0)
+		{
+			ignore  *next = ignore_head->next;
+			free (ignore_head);
+			ignore_head = next;
+			if (!ignore_head)
+				ignore_tail = &ignore_head;
+		}
+		else
+			break;
 	}
-	else
-	    break;
-    }
 }
 
-void
+	void
 set_ignore (Display *dpy, unsigned long sequence)
 {
-    ignore  *i = malloc (sizeof (ignore));
-    if (!i)
-	return;
-    i->sequence = sequence;
-    i->next = 0;
-    *ignore_tail = i;
-    ignore_tail = &i->next;
+	ignore  *i = malloc (sizeof (ignore));
+	if (!i)
+		return;
+	i->sequence = sequence;
+	i->next = 0;
+	*ignore_tail = i;
+	ignore_tail = &i->next;
 }
 
-int
+	int
 should_ignore (Display *dpy, unsigned long sequence)
 {
-    discard_ignore (dpy, sequence);
-    return ignore_head && ignore_head->sequence == sequence;
+	discard_ignore (dpy, sequence);
+	return ignore_head && ignore_head->sequence == sequence;
 }
 
-static win *
+	static win *
 find_win (Display *dpy, Window id)
 {
-    win	*w;
+	win	*w;
 
-    for (w = list; w; w = w->next)
-	if (w->id == id)
-	    return w;
-    return 0;
+	for (w = list; w; w = w->next)
+		if (w->id == id)
+			return w;
+	return 0;
 }
 
 static char *backgroundProps[] = {
-    "_XROOTPMAP_ID",
-    "_XSETROOT_ID",
-    0,
+	"_XROOTPMAP_ID",
+	"_XSETROOT_ID",
+	0,
 };
-    
-static Picture
+
+	static Picture
 root_tile (Display *dpy)
 {
-    Picture	    picture;
-    Atom	    actual_type;
-    Pixmap	    pixmap;
-    int		    actual_format;
-    unsigned long   nitems;
-    unsigned long   bytes_after;
-    unsigned char   *prop;
-    Bool	    fill;
-    XRenderPictureAttributes	pa;
-    int		    p;
+	Picture	    picture;
+	Atom	    actual_type;
+	Pixmap	    pixmap;
+	int		    actual_format;
+	unsigned long   nitems;
+	unsigned long   bytes_after;
+	unsigned char   *prop;
+	Bool	    fill;
+	XRenderPictureAttributes	pa;
+	int		    p;
 
-    pixmap = None;
-    for (p = 0; backgroundProps[p]; p++)
-    {
-	if (XGetWindowProperty (dpy, root, XInternAtom (dpy, backgroundProps[p], False),
-				0, 4, False, AnyPropertyType,
-				&actual_type, &actual_format, &nitems, &bytes_after, &prop) == Success &&
-	    actual_type == XInternAtom (dpy, "PIXMAP", False) && actual_format == 32 && nitems == 1)
+	pixmap = None;
+	for (p = 0; backgroundProps[p]; p++)
 	{
-	    memcpy (&pixmap, prop, 4);
-	    XFree (prop);
-	    fill = False;
-	    break;
+		if (XGetWindowProperty (dpy, root, XInternAtom (dpy, backgroundProps[p], False),
+					0, 4, False, AnyPropertyType,
+					&actual_type, &actual_format, &nitems, &bytes_after, &prop) == Success &&
+				actual_type == XInternAtom (dpy, "PIXMAP", False) && actual_format == 32 && nitems == 1)
+		{
+			memcpy (&pixmap, prop, 4);
+			XFree (prop);
+			fill = False;
+			break;
+		}
 	}
-    }
-    if (!pixmap)
-    {
-	pixmap = XCreatePixmap (dpy, root, 1, 1, DefaultDepth (dpy, scr));
-	fill = True;
-    }
-    pa.repeat = True;
-    picture = XRenderCreatePicture (dpy, pixmap,
-				    sXRenderFindVisualFormat (dpy,
-							     DefaultVisual (dpy, scr)),
-				    CPRepeat, &pa);
-    if (fill)
-    {
-	XRenderColor    c;
-	
-	c.red = c.green = c.blue = 0x8080;
-	c.alpha = 0xffff;
-	XRenderFillRectangle (dpy, PictOpSrc, picture, &c, 
-			      0, 0, 1, 1);
-    }
-    return picture;
+	if (!pixmap)
+	{
+		pixmap = XCreatePixmap (dpy, root, 1, 1, DefaultDepth (dpy, scr));
+		fill = True;
+	}
+	pa.repeat = True;
+	picture = XRenderCreatePicture (dpy, pixmap,
+			sXRenderFindVisualFormat (dpy,
+				DefaultVisual (dpy, scr)),
+			CPRepeat, &pa);
+	if (fill)
+	{
+		XRenderColor    c;
+
+		c.red = c.green = c.blue = 0x8080;
+		c.alpha = 0xffff;
+		XRenderFillRectangle (dpy, PictOpSrc, picture, &c, 
+				0, 0, 1, 1);
+	}
+	return picture;
 }
 
-static void
+	static void
 paint_root (Display *dpy)
 {
-    if (!rootTile)
-	rootTile = root_tile (dpy);
-    
-    XRenderComposite (dpy, PictOpSrc,
-		      rootTile, None, rootBuffer,
-		      0, 0, 0, 0, 0, 0, root_width, root_height);
+	if (!rootTile)
+		rootTile = root_tile (dpy);
+
+	XRenderComposite (dpy, PictOpSrc,
+			rootTile, None, rootBuffer,
+			0, 0, 0, 0, 0, 0, root_width, root_height);
 }
 
-static XserverRegion
+	static XserverRegion
 win_extents (Display *dpy, win *w)
 {
-    XRectangle	    r;
-    
-    r.x = w->a.x;
-    r.y = w->a.y;
-    r.width = w->a.width + w->a.border_width * 2;
-    r.height = w->a.height + w->a.border_width * 2;
-    if (compMode != CompSimple && w->shadowSize > 0 && !(w->windowType == winDockAtom && excludeDockShadows))
-    {
-	if (compMode == CompServerShadows || w->mode != WINDOW_ARGB)
-	{
-	    XRectangle  sr;
+	XRectangle	    r;
 
-	    if (compMode == CompServerShadows)
-	    {
-		w->shadow_dx = 2;
-		w->shadow_dy = 7;
-		w->shadow_width = w->a.width;
-		w->shadow_height = w->a.height;
-	    }
-	    else
-	    {
-		w->shadow_dx = SHADOW_OFFSET_X;
-                w->shadow_dx = w->shadow_dx / 100;
-		w->shadow_dy = SHADOW_OFFSET_Y;
-                w->shadow_dy = w->shadow_dy / 100;
-		if (!w->shadow)
+	r.x = w->a.x;
+	r.y = w->a.y;
+	r.width = w->a.width + w->a.border_width * 2;
+	r.height = w->a.height + w->a.border_width * 2;
+	if (compMode != CompSimple && w->shadowSize > 0 && !(w->windowType == winDockAtom && excludeDockShadows))
+	{
+		if (compMode == CompServerShadows || w->mode != WINDOW_ARGB)
 		{
-		    double	opacity = shadowOpacity;
-                    if (w->shadowSize > 100)
-                        opacity = opacity/(w->shadowSize*0.01);
-		    if (w->mode == WINDOW_TRANS)
-			opacity = opacity * ((double)w->opacity)/((double)OPAQUE);
-		    w->shadow = shadow_picture (dpy, opacity, w->alphaPict,
-						w->a.width + w->a.border_width * 2 - 2*(shadowRadius - (w->shadowSize*shadowRadius/100)) ,
-						w->a.height + w->a.border_width * 2 - 2*(shadowRadius - (w->shadowSize*shadowRadius/100)),
-						&w->shadow_width, &w->shadow_height);
+			XRectangle  sr;
+
+			if (compMode == CompServerShadows)
+			{
+				w->shadow_dx = 2;
+				w->shadow_dy = 7;
+				w->shadow_width = w->a.width;
+				w->shadow_height = w->a.height;
+			}
+			else
+			{
+				w->shadow_dx = SHADOW_OFFSET_X;
+				w->shadow_dx = w->shadow_dx / 100;
+				w->shadow_dy = SHADOW_OFFSET_Y;
+				w->shadow_dy = w->shadow_dy / 100;
+				if (!w->shadow)
+				{
+					double	opacity = shadowOpacity;
+					if (w->shadowSize > 100)
+						opacity = opacity/(w->shadowSize*0.01);
+					if (w->mode == WINDOW_TRANS)
+						opacity = opacity * ((double)w->opacity)/((double)OPAQUE);
+					w->shadow = shadow_picture (dpy, opacity, w->alphaPict,
+							w->a.width + w->a.border_width * 2 - 2*(shadowRadius - (w->shadowSize*shadowRadius/100)) ,
+							w->a.height + w->a.border_width * 2 - 2*(shadowRadius - (w->shadowSize*shadowRadius/100)),
+							&w->shadow_width, &w->shadow_height);
+				}
+			}
+			sr.x = w->a.x + w->shadow_dx;
+			sr.y = w->a.y + w->shadow_dy;
+			sr.width = w->shadow_width;
+			sr.height = w->shadow_height;
+			if (sr.x < r.x)
+			{
+				r.width = (r.x + r.width) - sr.x;
+				r.x = sr.x;
+			}
+			if (sr.y < r.y)
+			{
+				r.height = (r.y + r.height) - sr.y;
+				r.y = sr.y;
+			}
+			if (sr.x + sr.width > r.x + r.width)
+				r.width = sr.x + sr.width - r.x;
+			if (sr.y + sr.height > r.y + r.height)
+				r.height = sr.y + sr.height - r.y;
 		}
-	    }
-	    sr.x = w->a.x + w->shadow_dx;
-	    sr.y = w->a.y + w->shadow_dy;
-	    sr.width = w->shadow_width;
-	    sr.height = w->shadow_height;
-	    if (sr.x < r.x)
-	    {
-		r.width = (r.x + r.width) - sr.x;
-		r.x = sr.x;
-	    }
-	    if (sr.y < r.y)
-	    {
-		r.height = (r.y + r.height) - sr.y;
-		r.y = sr.y;
-	    }
-	    if (sr.x + sr.width > r.x + r.width)
-		r.width = sr.x + sr.width - r.x;
-	    if (sr.y + sr.height > r.y + r.height)
-		r.height = sr.y + sr.height - r.y;
 	}
-    }
-    return XFixesCreateRegion (dpy, &r, 1);
+	return XFixesCreateRegion (dpy, &r, 1);
 }
 
-static XserverRegion
+	static XserverRegion
 border_size (Display *dpy, win *w)
 {
-    XserverRegion   border;
-    /*
-     * if window doesn't exist anymore,  this will generate an error
-     * as well as not generate a region.  Perhaps a better XFixes
-     * architecture would be to have a request that copies instead
-     * of creates, that way you'd just end up with an empty region
-     * instead of an invalid XID.
-     */
-    set_ignore (dpy, NextRequest (dpy));
-    border = XFixesCreateRegionFromWindow (dpy, w->id, WindowRegionBounding);
-    /* translate this */
-    set_ignore (dpy, NextRequest (dpy));
-    XFixesTranslateRegion (dpy, border,
-			   w->a.x + w->a.border_width,
-			   w->a.y + w->a.border_width);
-    return border;
+	XserverRegion   border;
+	/*
+	 * if window doesn't exist anymore,  this will generate an error
+	 * as well as not generate a region.  Perhaps a better XFixes
+	 * architecture would be to have a request that copies instead
+	 * of creates, that way you'd just end up with an empty region
+	 * instead of an invalid XID.
+	 */
+	set_ignore (dpy, NextRequest (dpy));
+	border = XFixesCreateRegionFromWindow (dpy, w->id, WindowRegionBounding);
+	/* translate this */
+	set_ignore (dpy, NextRequest (dpy));
+	XFixesTranslateRegion (dpy, border,
+			w->a.x + w->a.border_width,
+			w->a.y + w->a.border_width);
+	return border;
 }
 
-static XserverRegion
+	static XserverRegion
 title_size (Display *dpy, win *w)
 {
-    XserverRegion   title;
-    XRectangle	    r; /*titlebounding rect*/
-    /*
-    * if window doesn't exist anymore,  this will generate an error
-    * as well as not generate a region.  Perhaps a better XFixes
-    * architecture would be to have a request that copies instead
-    * of creates, that way you'd just end up with an empty region
-    * instead of an invalid XID.
-    */
-    r.x = w->a.x - w->a.border_width;
-    r.y = w->a.y - w->a.border_width;
-    r.width = w->a.width + w->a.border_width * 2;
-    r.height = w->titleHeight + w->a.border_width;
-    set_ignore (dpy, NextRequest (dpy));
-    title = XFixesCreateRegion (dpy, &r, 1);
-    if (!w->borderSize)
-        w->borderSize = border_size (dpy, w);
-    set_ignore (dpy, NextRequest (dpy));
-    XFixesIntersectRegion(dpy, title, w->borderSize, title);
-    return title;
+	XserverRegion   title;
+	XRectangle	    r; /*titlebounding rect*/
+	/*
+	 * if window doesn't exist anymore,  this will generate an error
+	 * as well as not generate a region.  Perhaps a better XFixes
+	 * architecture would be to have a request that copies instead
+	 * of creates, that way you'd just end up with an empty region
+	 * instead of an invalid XID.
+	 */
+	r.x = w->a.x - w->a.border_width;
+	r.y = w->a.y - w->a.border_width;
+	r.width = w->a.width + w->a.border_width * 2;
+	r.height = w->titleHeight + w->a.border_width;
+	set_ignore (dpy, NextRequest (dpy));
+	title = XFixesCreateRegion (dpy, &r, 1);
+	if (!w->borderSize)
+		w->borderSize = border_size (dpy, w);
+	set_ignore (dpy, NextRequest (dpy));
+	XFixesIntersectRegion(dpy, title, w->borderSize, title);
+	return title;
 }
 
-static XserverRegion
+	static XserverRegion
 content_size (Display *dpy, win *w)
 {
-    XserverRegion   content;
-    XRectangle	    r; /*contentbounding rect*/
-    /*
-    * if window doesn't exist anymore,  this will generate an error
-    * as well as not generate a region.  Perhaps a better XFixes
-    * architecture would be to have a request that copies instead
-    * of creates, that way you'd just end up with an empty region
-    * instead of an invalid XID.
-    */
-    r.x = w->a.x - w->a.border_width;
-    r.y = w->a.y - w->a.border_width + w->titleHeight;
-    r.width = w->a.width + w->a.border_width * 2;
-    r.height = w->a.height + w->a.border_width - w->titleHeight;
-    set_ignore (dpy, NextRequest (dpy));
-    content = XFixesCreateRegion (dpy, &r, 1);
-    if (!w->borderSize)
-        w->borderSize = border_size (dpy, w);
-    set_ignore (dpy, NextRequest (dpy));
-    XFixesIntersectRegion(dpy, content, w->borderSize, content);
-    return content;
+	XserverRegion   content;
+	XRectangle	    r; /*contentbounding rect*/
+	/*
+	 * if window doesn't exist anymore,  this will generate an error
+	 * as well as not generate a region.  Perhaps a better XFixes
+	 * architecture would be to have a request that copies instead
+	 * of creates, that way you'd just end up with an empty region
+	 * instead of an invalid XID.
+	 */
+	r.x = w->a.x - w->a.border_width;
+	r.y = w->a.y - w->a.border_width + w->titleHeight;
+	r.width = w->a.width + w->a.border_width * 2;
+	r.height = w->a.height + w->a.border_width - w->titleHeight;
+	set_ignore (dpy, NextRequest (dpy));
+	content = XFixesCreateRegion (dpy, &r, 1);
+	if (!w->borderSize)
+		w->borderSize = border_size (dpy, w);
+	set_ignore (dpy, NextRequest (dpy));
+	XFixesIntersectRegion(dpy, content, w->borderSize, content);
+	return content;
 }
 
-static void
+	static void
 paint_all (Display *dpy, XserverRegion region)
 {
-    win	*w;
-    win	*t = 0;
-    
-    if (!region)
-    {
-	XRectangle  r;
-	r.x = 0;
-	r.y = 0;
-	r.width = root_width;
-	r.height = root_height;
-	region = XFixesCreateRegion (dpy, &r, 1);
-    }
+	win	*w;
+	win	*t = 0;
+
+	if (!region)
+	{
+		XRectangle  r;
+		r.x = 0;
+		r.y = 0;
+		r.width = root_width;
+		r.height = root_height;
+		region = XFixesCreateRegion (dpy, &r, 1);
+	}
 #if MONITOR_REPAINT
-    rootBuffer = rootPicture;
+	rootBuffer = rootPicture;
 #else
-    if (!rootBuffer)
-    {
-	Pixmap	rootPixmap = XCreatePixmap (dpy, root, root_width, root_height,
-					    DefaultDepth (dpy, scr));
-	rootBuffer = XRenderCreatePicture (dpy, rootPixmap,
-					   sXRenderFindVisualFormat (dpy,
-								    DefaultVisual (dpy, scr)),
-					   0, 0);
-	XFreePixmap (dpy, rootPixmap);
-    }
+	if (!rootBuffer)
+	{
+		Pixmap	rootPixmap = XCreatePixmap (dpy, root, root_width, root_height,
+				DefaultDepth (dpy, scr));
+		rootBuffer = XRenderCreatePicture (dpy, rootPixmap,
+				sXRenderFindVisualFormat (dpy,
+					DefaultVisual (dpy, scr)),
+				0, 0);
+		XFreePixmap (dpy, rootPixmap);
+	}
 #endif
-    XFixesSetPictureClipRegion (dpy, rootPicture, 0, 0, region);
+	XFixesSetPictureClipRegion (dpy, rootPicture, 0, 0, region);
 #if MONITOR_REPAINT
-    XRenderComposite (dpy, PictOpSrc, blackPicture, None, rootPicture,
-		      0, 0, 0, 0, 0, 0, root_width, root_height);
+	XRenderComposite (dpy, PictOpSrc, blackPicture, None, rootPicture,
+			0, 0, 0, 0, 0, 0, root_width, root_height);
 #endif
 #if DEBUG_REPAINT
-    printf ("paint:");
+	printf ("paint:");
 #endif
-    for (w = list; w; w = w->next)
-    {
-#if CAN_DO_USABLE
-	if (!w->usable)
-	    continue;
-#endif
-	/* never painted, ignore it */
-	if (!w->damaged)
-	    continue;
-            
-        /* skip invisible windows */
-        if (w->a.x + w->a.width < 1 || w->a.y + w->a.height < 1 || w->a.x >= root_width || w->a.y >= root_height)
-            continue;
-            
-	if (!w->picture)
+	for (w = list; w; w = w->next)
 	{
-	    XRenderPictureAttributes	pa;
-	    XRenderPictFormat		*format;
-	    Drawable			draw = w->id;
-	    
-#if HAS_NAME_WINDOW_PIXMAP
-	    if (hasNamePixmap && !w->pixmap)
-		w->pixmap = XCompositeNameWindowPixmap (dpy, w->id);
-	    if (w->pixmap)
-		draw = w->pixmap;
+#if CAN_DO_USABLE
+		if (!w->usable)
+			continue;
 #endif
-	    format = sXRenderFindVisualFormat (dpy, w->a.visual);
-	    pa.subwindow_mode = IncludeInferiors;
-	    w->picture = XRenderCreatePicture (dpy, draw,
-					       format,
-					       CPSubwindowMode,
-					       &pa);
+		/* never painted, ignore it */
+		if (!w->damaged)
+			continue;
+
+		/* skip invisible windows */
+		if (w->a.x + w->a.width < 1 || w->a.y + w->a.height < 1 || w->a.x >= root_width || w->a.y >= root_height)
+			continue;
+
+		if (!w->picture)
+		{
+			XRenderPictureAttributes	pa;
+			XRenderPictFormat		*format;
+			Drawable			draw = w->id;
+
+#if HAS_NAME_WINDOW_PIXMAP
+			if (hasNamePixmap && !w->pixmap)
+				w->pixmap = XCompositeNameWindowPixmap (dpy, w->id);
+			if (w->pixmap)
+				draw = w->pixmap;
+#endif
+			format = sXRenderFindVisualFormat (dpy, w->a.visual);
+			pa.subwindow_mode = IncludeInferiors;
+			w->picture = XRenderCreatePicture (dpy, draw,
+					format,
+					CPSubwindowMode,
+					&pa);
+		}
+#if DEBUG_REPAINT
+		printf (" 0x%x", w->id);
+#endif
+		if (clipChanged)
+		{
+			if (w->borderSize)
+			{
+				set_ignore (dpy, NextRequest (dpy));
+				XFixesDestroyRegion (dpy, w->borderSize);
+				w->borderSize = None;
+			}
+			if (w->titleSize)
+			{
+				set_ignore (dpy, NextRequest (dpy));
+				XFixesDestroyRegion (dpy, w->titleSize);
+				w->titleSize = None;
+			}
+			if (w->contentSize)
+			{
+				set_ignore (dpy, NextRequest (dpy));
+				XFixesDestroyRegion (dpy, w->contentSize);
+				w->contentSize = None;
+			}
+			if (w->extents)
+			{
+				XFixesDestroyRegion (dpy, w->extents);
+				w->extents = None;
+			}
+			if (w->borderClip)
+			{
+				XFixesDestroyRegion (dpy, w->borderClip);
+				w->borderClip = None;
+			}
+		}
+		if (!w->borderSize)
+			w->borderSize = border_size (dpy, w);
+		if (!w->extents)
+			w->extents = win_extents (dpy, w);
+		if ((w->mode == WINDOW_SOLID) || ((w->mode == WINDOW_TRANS) && (transMode < All) && w->titleHeight))
+		{
+			int	x, y, wid, hei;
+#if HAS_NAME_WINDOW_PIXMAP
+			x = w->a.x;
+			y = w->a.y;
+			wid = w->a.width + w->a.border_width * 2;
+			hei = w->a.height + w->a.border_width * 2;
+#else
+			x = w->a.x + w->a.border_width;
+			y = w->a.y + w->a.border_width;
+			wid = w->a.width;
+			hei = w->a.height;
+#endif
+			XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, region);
+			set_ignore (dpy, NextRequest (dpy));
+			/*XFixesSubtractRegion (dpy, region, region, w->borderSize);
+			  set_ignore (dpy, NextRequest (dpy));*/
+			if (w->mode == WINDOW_SOLID)
+			{
+				XFixesSubtractRegion (dpy, region, region, w->borderSize);
+				set_ignore (dpy, NextRequest (dpy));
+				XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
+						0, 0, 0, 0, x, y, wid, hei);
+			}
+			else
+				switch (transMode) {
+					case Title:
+						{
+							if (!w->contentSize)
+								w->contentSize = content_size (dpy, w);
+							XFixesSubtractRegion (dpy, region, region, w->contentSize);
+							set_ignore (dpy, NextRequest (dpy));
+							/*solid part*/
+							XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
+									0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
+							break;
+						}
+					case Content:
+						{
+							if (!w->titleSize)
+								w->titleSize = title_size (dpy, w);
+							XFixesSubtractRegion (dpy, region, region, w->titleSize);
+							set_ignore (dpy, NextRequest (dpy));
+							/*solid part*/
+							XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
+									0, 0, 0, 0, x, y, wid, w->titleHeight);
+							break;
+						}
+				}
+		}
+		if (!w->borderClip)
+		{
+			w->borderClip = XFixesCreateRegion (dpy, 0, 0);
+			XFixesCopyRegion (dpy, w->borderClip, region);
+		}
+		w->prev_trans = t;
+		t = w;
 	}
 #if DEBUG_REPAINT
-	printf (" 0x%x", w->id);
+	printf ("\n");
+	fflush (stdout);
 #endif
-	if (clipChanged)
+	XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, region);
+	paint_root (dpy);
+	for (w = t; w; w = w->prev_trans)
 	{
-	    if (w->borderSize)
-	    {
+		/*skip desktop */
+		if (w->windowType == winDesktopAtom)
+			continue;
+
+		if (w->shadowSize > 0){
+			switch (compMode) {
+				case CompSimple:
+					break;
+				case CompServerShadows:
+					XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
+					set_ignore (dpy, NextRequest (dpy));
+					if (w->opacity != OPAQUE && !w->shadowPict)
+						w->shadowPict = solid_picture (dpy, True,
+								(double) w->opacity / OPAQUE * 0.3,
+								0, 0, 0);
+					XRenderComposite (dpy, PictOpOver, 
+							w->shadowPict ? w->shadowPict : transBlackPicture,
+							w->picture, rootBuffer,
+							0, 0, 0, 0,
+							w->a.x + w->shadow_dx,
+							w->a.y + w->shadow_dy,
+							w->shadow_width, w->shadow_height);
+					break;
+				case CompClientShadows:
+					if (w->shadow && w->windowType != winDesktopAtom)
+					{
+						XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
+						XRenderComposite (dpy, PictOpOver, blackPicture, w->shadow, rootBuffer,
+								0, 0, 0, 0,
+								w->a.x + w->shadow_dx,
+								w->a.y + w->shadow_dy,
+								w->shadow_width, w->shadow_height);
+					}
+					break;
+			}
+		}
+		if (w->opacity != OPAQUE && !w->alphaPict)
+			w->alphaPict = solid_picture (dpy, False, 
+					(double) w->opacity / OPAQUE, shadowColor.red, shadowColor.green, shadowColor.blue);
+		if (w->mode == WINDOW_TRANS)
+		{
+			int	x, y, wid, hei;
+			XFixesIntersectRegion (dpy, w->borderClip, w->borderClip, w->borderSize);
+			XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
+#if HAS_NAME_WINDOW_PIXMAP
+			x = w->a.x;
+			y = w->a.y;
+			wid = w->a.width + w->a.border_width * 2;
+			hei = w->a.height + w->a.border_width * 2;
+#else
+			x = w->a.x + w->a.border_width;
+			y = w->a.y + w->a.border_width;
+			wid = w->a.width;
+			hei = w->a.height;
+#endif
+			set_ignore (dpy, NextRequest (dpy));
+			if (!w->titleHeight)
+				XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+						0, 0, 0, 0, x, y, wid, hei);
+			else
+				switch (transMode) {
+					case All:
+						XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+								0, 0, 0, 0, x, y, wid, hei);
+						break;
+						/*trans part*/
+					case Title:
+						XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+								0, 0, 0, 0, x, y, wid, w->titleHeight);
+						break;
+					case Content:
+						XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+								0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
+						break;
+				}
+		}
+		else if (w->mode == WINDOW_ARGB)
+		{
+			int	x, y, wid, hei;
+			XFixesIntersectRegion (dpy, w->borderClip, w->borderClip, w->borderSize);
+			XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
+#if HAS_NAME_WINDOW_PIXMAP
+			x = w->a.x;
+			y = w->a.y;
+			wid = w->a.width + w->a.border_width * 2;
+			hei = w->a.height + w->a.border_width * 2;
+#else
+			x = w->a.x + w->a.border_width;
+			y = w->a.y + w->a.border_width;
+			wid = w->a.width;
+			hei = w->a.height;
+#endif
+			set_ignore (dpy, NextRequest (dpy));
+			XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+					0, 0, 0, 0, 
+					x, y, wid, hei);
+		}
+		XFixesDestroyRegion (dpy, w->borderClip);
+		w->borderClip = None;
+	}
+	XFixesDestroyRegion (dpy, region);
+	if (rootBuffer != rootPicture)
+	{
+#if 0
+		XTransform	t;
+		t.matrix[0][0] = XDoubleToFixed (3.0 /*/ scale*/);
+		t.matrix[0][1] = 0.0;
+		t.matrix[0][2] = 0.0;
+
+		t.matrix[1][0] = 0.0;
+		t.matrix[1][1] = XDoubleToFixed (1.0 /*/ scale*/);
+		t.matrix[1][2] = 0.0;
+
+		t.matrix[2][0] = 0.0;
+		t.matrix[2][1] = 0.0;
+		t.matrix[2][2] = XDoubleToFixed (1.0);
+
+		XRenderSetPictureTransform (dpy, rootBuffer, &t);
+#endif
+		XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, None);
+		XRenderComposite (dpy, PictOpSrc, rootBuffer, None, rootPicture,
+				0, 0, 0, 0, 0, 0, root_width, root_height);
+	}
+}
+
+	static void
+add_damage (Display *dpy, XserverRegion damage)
+{
+	if (allDamage)
+	{
+		XFixesUnionRegion (dpy, allDamage, allDamage, damage);
+		XFixesDestroyRegion (dpy, damage);
+	}
+	else
+		allDamage = damage;
+}
+
+	static void
+repair_win (Display *dpy, win *w)
+{
+	XserverRegion   parts;
+
+	if (!w->damaged)
+	{
+		parts = win_extents (dpy, w);
+		set_ignore (dpy, NextRequest (dpy));
+		XDamageSubtract (dpy, w->damage, None, None);
+	}
+	else
+	{
+		XserverRegion	o;
+		parts = XFixesCreateRegion (dpy, 0, 0);
+		set_ignore (dpy, NextRequest (dpy));
+		XDamageSubtract (dpy, w->damage, None, parts);
+		XFixesTranslateRegion (dpy, parts,
+				w->a.x + w->a.border_width,
+				w->a.y + w->a.border_width);
+		if (compMode == CompServerShadows)
+		{
+			o = XFixesCreateRegion (dpy, 0, 0);
+			XFixesCopyRegion (dpy, o, parts);
+			XFixesTranslateRegion (dpy, o, w->shadow_dx, w->shadow_dy);
+			XFixesUnionRegion (dpy, parts, parts, o);
+			XFixesDestroyRegion (dpy, o);
+		}
+	}
+	add_damage (dpy, parts);
+	w->damaged = 1;
+}
+
+	static void
+map_win (Display *dpy, Window id, unsigned long sequence, Bool fade)
+{
+	win		*w = find_win (dpy, id);
+	Drawable	back;
+
+	if (!w)
+		return;
+
+	w->a.map_state = IsViewable;
+
+	/* This needs to be here or else we lose transparency messages */
+	XSelectInput (dpy, id, PropertyChangeMask);
+
+#if CAN_DO_USABLE
+	w->damage_bounds.x = w->damage_bounds.y = 0;
+	w->damage_bounds.width = w->damage_bounds.height = 0;
+#endif
+	w->damaged = 0;
+
+	if (fade && fadeWindows)
+		set_fade (dpy, w, 0, get_opacity_percent (dpy, w, 1.0), fade_in_step, 0, False, True, True, True);
+}
+
+	static void
+finish_unmap_win (Display *dpy, win *w)
+{
+	w->damaged = 0;
+#if CAN_DO_USABLE
+	w->usable = False;
+#endif
+	if (w->extents != None)
+	{
+		add_damage (dpy, w->extents);    /* destroys region */
+		w->extents = None;
+	}
+
+#if HAS_NAME_WINDOW_PIXMAP
+	if (w->pixmap)
+	{
+		XFreePixmap (dpy, w->pixmap);
+		w->pixmap = None;
+	}
+#endif
+
+	if (w->picture)
+	{
+		set_ignore (dpy, NextRequest (dpy));
+		XRenderFreePicture (dpy, w->picture);
+		w->picture = None;
+	}
+
+	/* don't care about properties anymore */
+	set_ignore (dpy, NextRequest (dpy));
+	XSelectInput(dpy, w->id, 0);
+
+	if (w->borderSize)
+	{
 		set_ignore (dpy, NextRequest (dpy));
 		XFixesDestroyRegion (dpy, w->borderSize);
 		w->borderSize = None;
-	    }
-            if (w->titleSize)
-            {
-                set_ignore (dpy, NextRequest (dpy));
-                XFixesDestroyRegion (dpy, w->titleSize);
-                w->titleSize = None;
-            }
-            if (w->contentSize)
-            {
-                set_ignore (dpy, NextRequest (dpy));
-                XFixesDestroyRegion (dpy, w->contentSize);
-                w->contentSize = None;
-            }
-	    if (w->extents)
-	    {
-		XFixesDestroyRegion (dpy, w->extents);
-		w->extents = None;
-	    }
-	    if (w->borderClip)
-	    {
+	}
+	if (w->shadow)
+	{
+		XRenderFreePicture (dpy, w->shadow);
+		w->shadow = None;
+	}
+	if (w->borderClip)
+	{
 		XFixesDestroyRegion (dpy, w->borderClip);
 		w->borderClip = None;
-	    }
 	}
-	if (!w->borderSize)
-	    w->borderSize = border_size (dpy, w);
-        if (!w->extents)
-	    w->extents = win_extents (dpy, w);
-        if ((w->mode == WINDOW_SOLID) || ((w->mode == WINDOW_TRANS) && (transMode < All) && w->titleHeight))
-	{
-	    int	x, y, wid, hei;
-#if HAS_NAME_WINDOW_PIXMAP
-	    x = w->a.x;
-	    y = w->a.y;
-	    wid = w->a.width + w->a.border_width * 2;
-	    hei = w->a.height + w->a.border_width * 2;
-#else
-	    x = w->a.x + w->a.border_width;
-	    y = w->a.y + w->a.border_width;
-	    wid = w->a.width;
-	    hei = w->a.height;
-#endif
-	    XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, region);
-	    set_ignore (dpy, NextRequest (dpy));
-	    /*XFixesSubtractRegion (dpy, region, region, w->borderSize);
-            set_ignore (dpy, NextRequest (dpy));*/
-            if (w->mode == WINDOW_SOLID)
-            {
-                XFixesSubtractRegion (dpy, region, region, w->borderSize);
-                set_ignore (dpy, NextRequest (dpy));
-                XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
-                                  0, 0, 0, 0, x, y, wid, hei);
-            }
-            else
-                switch (transMode) {
-                case Title:
-                {
-                    if (!w->contentSize)
-                        w->contentSize = content_size (dpy, w);
-                    XFixesSubtractRegion (dpy, region, region, w->contentSize);
-                    set_ignore (dpy, NextRequest (dpy));
-                    /*solid part*/
-                    XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
-                                      0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
-                    break;
-                }
-                case Content:
-                {
-                    if (!w->titleSize)
-                        w->titleSize = title_size (dpy, w);
-                    XFixesSubtractRegion (dpy, region, region, w->titleSize);
-                    set_ignore (dpy, NextRequest (dpy));
-                    /*solid part*/
-                    XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
-                                      0, 0, 0, 0, x, y, wid, w->titleHeight);
-                    break;
-                }
-            }
-	}
-	if (!w->borderClip)
-	{
-	    w->borderClip = XFixesCreateRegion (dpy, 0, 0);
-	    XFixesCopyRegion (dpy, w->borderClip, region);
-	}
-	w->prev_trans = t;
-	t = w;
-    }
-#if DEBUG_REPAINT
-    printf ("\n");
-    fflush (stdout);
-#endif
-    XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, region);
-    paint_root (dpy);
-    for (w = t; w; w = w->prev_trans)
-    {
-        /*skip desktop */
-        if (w->windowType == winDesktopAtom)
-            continue;
-            
-        if (w->shadowSize > 0){
-        switch (compMode) {
-	case CompSimple:
-	    break;
-	case CompServerShadows:
-            XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
-	    set_ignore (dpy, NextRequest (dpy));
-	    if (w->opacity != OPAQUE && !w->shadowPict)
-		w->shadowPict = solid_picture (dpy, True,
-					       (double) w->opacity / OPAQUE * 0.3,
-					       0, 0, 0);
-	    XRenderComposite (dpy, PictOpOver, 
-			      w->shadowPict ? w->shadowPict : transBlackPicture,
-			      w->picture, rootBuffer,
-			      0, 0, 0, 0,
-			      w->a.x + w->shadow_dx,
-			      w->a.y + w->shadow_dy,
-			      w->shadow_width, w->shadow_height);
-	    break;
-	case CompClientShadows:
-	    if (w->shadow && w->windowType != winDesktopAtom)
-	    {
-		XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
-                XRenderComposite (dpy, PictOpOver, blackPicture, w->shadow, rootBuffer,
-				  0, 0, 0, 0,
-				  w->a.x + w->shadow_dx,
-				  w->a.y + w->shadow_dy,
-				  w->shadow_width, w->shadow_height);
-	    }
-	    break;
-        }
-	}
-	if (w->opacity != OPAQUE && !w->alphaPict)
-	    w->alphaPict = solid_picture (dpy, False, 
-					  (double) w->opacity / OPAQUE, shadowColor.red, shadowColor.green, shadowColor.blue);
-        if (w->mode == WINDOW_TRANS)
-	{
-	    int	x, y, wid, hei;
-            XFixesIntersectRegion (dpy, w->borderClip, w->borderClip, w->borderSize);
-            XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
-#if HAS_NAME_WINDOW_PIXMAP
-	    x = w->a.x;
-	    y = w->a.y;
-	    wid = w->a.width + w->a.border_width * 2;
-	    hei = w->a.height + w->a.border_width * 2;
-#else
-	    x = w->a.x + w->a.border_width;
-	    y = w->a.y + w->a.border_width;
-	    wid = w->a.width;
-	    hei = w->a.height;
-#endif
-	    set_ignore (dpy, NextRequest (dpy));
-	    if (!w->titleHeight)
-                XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-                                  0, 0, 0, 0, x, y, wid, hei);
-            else
-            switch (transMode) {
-                case All:
-                    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-                                      0, 0, 0, 0, x, y, wid, hei);
-                    break;
-                /*trans part*/
-                case Title:
-                    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-                                      0, 0, 0, 0, x, y, wid, w->titleHeight);
-                    break;
-                case Content:
-                    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-                                      0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
-                    break;
-            }
-	}
-	else if (w->mode == WINDOW_ARGB)
-	{
-	    int	x, y, wid, hei;
-            XFixesIntersectRegion (dpy, w->borderClip, w->borderClip, w->borderSize);
-            XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, w->borderClip);
-#if HAS_NAME_WINDOW_PIXMAP
-	    x = w->a.x;
-	    y = w->a.y;
-	    wid = w->a.width + w->a.border_width * 2;
-	    hei = w->a.height + w->a.border_width * 2;
-#else
-	    x = w->a.x + w->a.border_width;
-	    y = w->a.y + w->a.border_width;
-	    wid = w->a.width;
-	    hei = w->a.height;
-#endif
-	    set_ignore (dpy, NextRequest (dpy));
-	    XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-			      0, 0, 0, 0, 
-			      x, y, wid, hei);
-	}
-	XFixesDestroyRegion (dpy, w->borderClip);
-	w->borderClip = None;
-    }
-    XFixesDestroyRegion (dpy, region);
-    if (rootBuffer != rootPicture)
-    {
-#if 0
-    XTransform	t;
-    t.matrix[0][0] = XDoubleToFixed (3.0 /*/ scale*/);
-    t.matrix[0][1] = 0.0;
-    t.matrix[0][2] = 0.0;
-    
-    t.matrix[1][0] = 0.0;
-    t.matrix[1][1] = XDoubleToFixed (1.0 /*/ scale*/);
-    t.matrix[1][2] = 0.0;
-    
-    t.matrix[2][0] = 0.0;
-    t.matrix[2][1] = 0.0;
-    t.matrix[2][2] = XDoubleToFixed (1.0);
-    
-    XRenderSetPictureTransform (dpy, rootBuffer, &t);
-#endif
-	XFixesSetPictureClipRegion (dpy, rootBuffer, 0, 0, None);
-	XRenderComposite (dpy, PictOpSrc, rootBuffer, None, rootPicture,
-			  0, 0, 0, 0, 0, 0, root_width, root_height);
-    }
-}
 
-static void
-add_damage (Display *dpy, XserverRegion damage)
-{
-    if (allDamage)
-    {
-	XFixesUnionRegion (dpy, allDamage, allDamage, damage);
-	XFixesDestroyRegion (dpy, damage);
-    }
-    else
-	allDamage = damage;
-}
-
-static void
-repair_win (Display *dpy, win *w)
-{
-    XserverRegion   parts;
-
-    if (!w->damaged)
-    {
-	parts = win_extents (dpy, w);
-	set_ignore (dpy, NextRequest (dpy));
-	XDamageSubtract (dpy, w->damage, None, None);
-    }
-    else
-    {
-	XserverRegion	o;
-	parts = XFixesCreateRegion (dpy, 0, 0);
-	set_ignore (dpy, NextRequest (dpy));
-	XDamageSubtract (dpy, w->damage, None, parts);
-	XFixesTranslateRegion (dpy, parts,
-			       w->a.x + w->a.border_width,
-			       w->a.y + w->a.border_width);
-	if (compMode == CompServerShadows)
-	{
-	    o = XFixesCreateRegion (dpy, 0, 0);
-	    XFixesCopyRegion (dpy, o, parts);
-	    XFixesTranslateRegion (dpy, o, w->shadow_dx, w->shadow_dy);
-	    XFixesUnionRegion (dpy, parts, parts, o);
-	    XFixesDestroyRegion (dpy, o);
-	}
-    }
-    add_damage (dpy, parts);
-    w->damaged = 1;
-}
-
-static void
-map_win (Display *dpy, Window id, unsigned long sequence, Bool fade)
-{
-    win		*w = find_win (dpy, id);
-    Drawable	back;
-
-    if (!w)
-	return;
-
-    w->a.map_state = IsViewable;
-    
-    /* This needs to be here or else we lose transparency messages */
-    XSelectInput (dpy, id, PropertyChangeMask);
-
-#if CAN_DO_USABLE
-    w->damage_bounds.x = w->damage_bounds.y = 0;
-    w->damage_bounds.width = w->damage_bounds.height = 0;
-#endif
-    w->damaged = 0;
-
-    if (fade && fadeWindows)
-	set_fade (dpy, w, 0, get_opacity_percent (dpy, w, 1.0), fade_in_step, 0, False, True, True);
-}
-
-static void
-finish_unmap_win (Display *dpy, win *w)
-{
-    w->damaged = 0;
-#if CAN_DO_USABLE
-    w->usable = False;
-#endif
-    if (w->extents != None)
-    {
-	add_damage (dpy, w->extents);    /* destroys region */
-	w->extents = None;
-    }
-    
-#if HAS_NAME_WINDOW_PIXMAP
-    if (w->pixmap)
-    {
-	XFreePixmap (dpy, w->pixmap);
-	w->pixmap = None;
-    }
-#endif
-
-    if (w->picture)
-    {
-	set_ignore (dpy, NextRequest (dpy));
-	XRenderFreePicture (dpy, w->picture);
-	w->picture = None;
-    }
-
-    /* don't care about properties anymore */
-    set_ignore (dpy, NextRequest (dpy));
-    XSelectInput(dpy, w->id, 0);
-
-    if (w->borderSize)
-    {
-	set_ignore (dpy, NextRequest (dpy));
-    	XFixesDestroyRegion (dpy, w->borderSize);
-    	w->borderSize = None;
-    }
-    if (w->shadow)
-    {
-	XRenderFreePicture (dpy, w->shadow);
-	w->shadow = None;
-    }
-    if (w->borderClip)
-    {
-	XFixesDestroyRegion (dpy, w->borderClip);
-	w->borderClip = None;
-    }
-
-    clipChanged = True;
+	clipChanged = True;
 }
 
 #if HAS_NAME_WINDOW_PIXMAP
-static void
+	static void
 unmap_callback (Display *dpy, win *w, Bool gone)
 {
-    finish_unmap_win (dpy, w);
+	finish_unmap_win (dpy, w);
 }
 #endif
 
-static void
+	static void
 unmap_win (Display *dpy, Window id, Bool fade)
 {
-    win *w = find_win (dpy, id);
-    if (!w)
-	return;
-    w->a.map_state = IsUnmapped;
+	win *w = find_win (dpy, id);
+	if (!w)
+		return;
+	w->a.map_state = IsUnmapped;
 #if HAS_NAME_WINDOW_PIXMAP
-    if (w->pixmap && fade && fadeWindows)
-	set_fade (dpy, w, w->opacity*1.0/OPAQUE, 0.0, fade_out_step, unmap_callback, False, False, True);
-    else
+	if (w->pixmap && fade && fadeWindows)
+		set_fade (dpy, w, w->opacity*1.0/OPAQUE, 0.0, fade_out_step, unmap_callback, False, False, True, True);
+	else
 #endif
-	finish_unmap_win (dpy, w);
+		finish_unmap_win (dpy, w);
 }
 
 /* Get the opacity prop from window
    not found: default
    otherwise the value
- */
-static unsigned int
+   */
+	static unsigned int
 get_opacity_prop(Display *dpy, win *w, unsigned int def)
 {
-    Atom actual;
-    int format;
-    unsigned long n, left;
+	Atom actual;
+	int format;
+	unsigned long n, left;
 
-    unsigned char *data;
-    int result = XGetWindowProperty(dpy, w->id, opacityAtom, 0L, 1L, False, 
-		       XA_CARDINAL, &actual, &format, 
-				    &n, &left, &data);
-    if (result == Success && data != NULL)
-    {
-	unsigned int i;
-	memcpy (&i, data, sizeof (unsigned int));
-	XFree( (void *) data);
-	return i;
-    }
-    return def;
+	unsigned char *data;
+	int result = XGetWindowProperty(dpy, w->id, opacityAtom, 0L, 1L, False, 
+			XA_CARDINAL, &actual, &format, 
+			&n, &left, &data);
+	if (result == Success && data != NULL)
+	{
+		unsigned int i;
+		memcpy (&i, data, sizeof (unsigned int));
+		XFree( (void *) data);
+		return i;
+	}
+	return def;
 }
 
-static unsigned int
+	static unsigned int
 get_shadow_prop(Display *dpy, win *w)
 {
-    Atom actual;
-    int format;
-    unsigned long n, left;
+	Atom actual;
+	int format;
+	unsigned long n, left;
 
-    unsigned char *data = NULL;
-    int result = XGetWindowProperty(dpy, w->id, shadowAtom, 0L, 1L, False, 
-		       XA_CARDINAL, &actual, &format, 
-				    &n, &left, &data);
-    if (result == Success && data != NULL)
-    {
-	unsigned int i;
-	memcpy (&i, data, sizeof (unsigned int));
-	XFree( (void *) data);
-/*i added this for security reaons but limiting a value to 200% is somewhat indiscriminate
-        if (i > 200)
-            return 200;
-        else*/
-            return i;
-    }
-    return 100;
+	unsigned char *data = NULL;
+	int result = XGetWindowProperty(dpy, w->id, shadowAtom, 0L, 1L, False, 
+			XA_CARDINAL, &actual, &format, 
+			&n, &left, &data);
+	if (result == Success && data != NULL)
+	{
+		unsigned int i;
+		memcpy (&i, data, sizeof (unsigned int));
+		XFree( (void *) data);
+		/*i added this for security reaons but limiting a value to 200% is somewhat indiscriminate
+		  if (i > 200)
+		  return 200;
+		  else*/
+		return i;
+	}
+	return 100;
 }
 
-static unsigned int
+	static unsigned int
 get_shade_prop(Display *dpy, win *w)
 {
-    Atom actual;
-    int format;
-    unsigned long n, left;
+	Atom actual;
+	int format;
+	unsigned long n, left;
 
-    unsigned char *data = NULL;
-    int result = XGetWindowProperty(dpy, w->id, shadeAtom, 0L, 1L, False, 
-		       XA_CARDINAL, &actual, &format, 
-				    &n, &left, &data);
-    if (result == Success && data != NULL)
-    {
-	unsigned int i;
-	memcpy (&i, data, sizeof (unsigned int));
-	XFree( (void *) data);
-            return i;
-    }
-    return 0;
+	unsigned char *data = NULL;
+	int result = XGetWindowProperty(dpy, w->id, shadeAtom, 0L, 1L, False, 
+			XA_CARDINAL, &actual, &format, 
+			&n, &left, &data);
+	if (result == Success && data != NULL)
+	{
+		unsigned int i;
+		memcpy (&i, data, sizeof (unsigned int));
+		XFree( (void *) data);
+		return i;
+	}
+	return 0;
 }
 
-static Bool
+	static Bool
 get_shapable_prop(Display *dpy, win *w)
 {
-    Atom actual;
-    int format;
-    unsigned long n, left;
+	Atom actual;
+	int format;
+	unsigned long n, left;
 
-    unsigned char *data = NULL;
-    int result = XGetWindowProperty(dpy, w->id, shapableAtom, 0L, 1L, False, 
-                                    XA_CARDINAL, &actual, &format, 
-                                    &n, &left, &data);
-    if (result == Success && data != NULL)
-    {
-        unsigned int i;
-        memcpy (&i, data, sizeof (unsigned int));
-        XFree( (void *) data);
-        return i==1;
-    }
-    return True; /*in general, the window should be shapable*/
+	unsigned char *data = NULL;
+	int result = XGetWindowProperty(dpy, w->id, shapableAtom, 0L, 1L, False, 
+			XA_CARDINAL, &actual, &format, 
+			&n, &left, &data);
+	if (result == Success && data != NULL)
+	{
+		unsigned int i;
+		memcpy (&i, data, sizeof (unsigned int));
+		XFree( (void *) data);
+		return i==1;
+	}
+	return True; /*in general, the window should be shapable*/
 }
 
-static unsigned int
+	static unsigned int
 get_titleHeight_prop(Display *dpy, win *w)
 {
-    Atom actual;
-    int format;
-    unsigned long n, left;
+	Atom actual;
+	int format;
+	unsigned long n, left;
 
-    unsigned char *data = NULL;
-    int result = XGetWindowProperty(dpy, w->id, titleHeightAtom, 0L, 1L, False, 
-                                    XA_CARDINAL, &actual, &format, 
-                                    &n, &left, &data);
-    if (result == Success && data != NULL)
-    {
-        unsigned int i;
-        memcpy (&i, data, sizeof (unsigned int));
-        XFree( (void *) data);
-        return i;
-    }
-    return 0; /*no titlebar*/
+	unsigned char *data = NULL;
+	int result = XGetWindowProperty(dpy, w->id, titleHeightAtom, 0L, 1L, False, 
+			XA_CARDINAL, &actual, &format, 
+			&n, &left, &data);
+	if (result == Success && data != NULL)
+	{
+		unsigned int i;
+		memcpy (&i, data, sizeof (unsigned int));
+		XFree( (void *) data);
+		return i;
+	}
+	return 0; /*no titlebar*/
 }
 
 /* Get the opacity property from the window in a percent format
    not found: default
-   otherwise: the value
+otherwise: the value
 */
-static double
+	static double
 get_opacity_percent(Display *dpy, win *w, double def)
 {
-    if (w && w->isInFade)
-        {
-        fade *f = find_fade(w);
-        return f->finish;
-        }
-    else
-        {
-        unsigned int opacity = get_opacity_prop (dpy, w, (unsigned int)(OPAQUE*def));
-        return opacity*1.0/OPAQUE;
-        }
+	if (w && w->isInFade)
+	{
+		fade *f = find_fade(w);
+		return f->finish;
+	}
+	else
+	{
+		unsigned int opacity = get_opacity_prop (dpy, w, (unsigned int)(OPAQUE*def));
+		return opacity*1.0/OPAQUE;
+	}
 }
 
 /* determine mode for window all in one place.
    Future might check for menu flag and other cool things
-*/
+   */
 
-static Atom
+	static Atom
 get_wintype_prop(Display * dpy, Window w)
 {
-    Atom actual;
-    int format;
-    unsigned long n, left;
+	Atom actual;
+	int format;
+	unsigned long n, left;
 
-    unsigned char *data;
-    int result = XGetWindowProperty (dpy, w, winTypeAtom, 0L, 1L, False,
-				     XA_ATOM, &actual, &format,
-				     &n, &left, &data);
+	unsigned char *data;
+	int result = XGetWindowProperty (dpy, w, winTypeAtom, 0L, 1L, False,
+			XA_ATOM, &actual, &format,
+			&n, &left, &data);
 
-    if (result == Success && data != None)
-    {
-	Atom a;
-	memcpy (&a, data, sizeof (Atom));
-	XFree ( (void *) data);
-	return a;
-    }
-    return winNormalAtom;
+	if (result == Success && data != None)
+	{
+		Atom a;
+		memcpy (&a, data, sizeof (Atom));
+		XFree ( (void *) data);
+		return a;
+	}
+	return winNormalAtom;
 }
 
-static void
+	static void
 determine_mode(Display *dpy, win *w)
 {
-    int mode;
-    XRenderPictFormat *format;
-    unsigned int default_opacity;
+	int mode;
+	XRenderPictFormat *format;
+	unsigned int default_opacity;
 
-    /* if trans prop == -1 fall back on  previous tests*/
+	/* if trans prop == -1 fall back on  previous tests*/
 
-    if (w->alphaPict)
-    {
-	XRenderFreePicture (dpy, w->alphaPict);
-	w->alphaPict = None;
-    }
-    if (w->shadowPict)
-    {
-	XRenderFreePicture (dpy, w->shadowPict);
-	w->shadowPict = None;
-    }
-
-    if (w->a.class == InputOnly)
-    {
-	format = 0;
-    }
-    else
-    {
-	format = XRenderFindVisualFormat (dpy, w->a.visual);
-    }
-
-    if (!disable_argb && format && format->type == PictTypeDirect && format->direct.alphaMask)
-    {
-	mode = WINDOW_ARGB;
-    }
-    else if (w->opacity != OPAQUE)
-    {
-	mode = WINDOW_TRANS;
-    }
-    else
-    {
-	mode = WINDOW_SOLID;
-    }
-    w->mode = mode;
-    if (w->extents)
-    {
-	XserverRegion damage;
-	damage = XFixesCreateRegion (dpy, 0, 0);
-	XFixesCopyRegion (dpy, damage, w->extents);
-	add_damage (dpy, damage);
-    }
-}
-
-static Atom
-determine_wintype (Display *dpy, Window w)
-{
-    Window       root_return, parent_return;
-    Window      *children = NULL;
-    unsigned int nchildren, i;
-    Atom         type;
-
-    type = get_wintype_prop (dpy, w);
-    if (type != winNormalAtom)
-	return type;
-
-    if (!XQueryTree (dpy, w, &root_return, &parent_return, &children,
-			    &nchildren))
-    {
-	/* XQueryTree failed. */
-	if (children)
-	    XFree ((void *)children);
-	return winNormalAtom;
-    }
-
-    for (i = 0;i < nchildren;i++)
-    {
-	type = determine_wintype (dpy, children[i]);
-	if (type != winNormalAtom)
-	    return type;
-    }
-
-    if (children)
-	XFree ((void *)children);
-
-    return winNormalAtom;
-}
-
-static void
-add_win (Display *dpy, Window id, Window prev)
-{
-    win				*new = malloc (sizeof (win));
-    win				**p;
-    
-    if (!new)
-	return;
-    if (prev)
-    {
-	for (p = &list; *p; p = &(*p)->next)
-	    if ((*p)->id == prev)
-		break;
-    }
-    else
-	p = &list;
-    new->id = id;
-    set_ignore (dpy, NextRequest (dpy));
-    if (!XGetWindowAttributes (dpy, id, &new->a))
-    {
-	free (new);
-	return;
-    }
-    new->damaged = 0;
-#if CAN_DO_USABLE
-    new->usable = False;
-#endif
-#if HAS_NAME_WINDOW_PIXMAP
-    new->pixmap = None;
-#endif
-    new->picture = None;
-    if (new->a.class == InputOnly)
-    {
-	new->damage_sequence = 0;
-	new->damage = None;
-    }
-    else
-    {
-	new->damage_sequence = NextRequest (dpy);
-	new->damage = XDamageCreate (dpy, id, XDamageReportNonEmpty);
-    }
-    new->isInFade = False;
-    new->alphaPict = None;
-    new->shadowPict = None;
-    new->borderSize = None;
-    new->extents = None;
-    new->shadow = None;
-    new->shadow_dx = 0;
-    new->shadow_dy = 0;
-    new->shadow_width = 0;
-    new->shadow_height = 0;
-    new->opacity = OPAQUE;
-    new->shadowSize = 100;
-    new->titleHeight = 0;
-
-    new->borderClip = None;
-    new->prev_trans = 0;
-    
-    XShapeSelectInput( dpy, id, ShapeNotifyMask );
-
-    /* moved mode setting to one place */
-    new->opacity = get_opacity_prop (dpy, new, OPAQUE);
-    new->shadowSize = get_shadow_prop (dpy, new);
-    new->shapable = get_shapable_prop(dpy, new);
-    new->titleHeight = get_titleHeight_prop(dpy, new);
-    new->windowType = determine_wintype (dpy, new->id);
-    determine_mode (dpy, new);
-    
-    new->next = *p;
-    *p = new;
-    if (new->a.map_state == IsViewable)
-	map_win (dpy, id, new->damage_sequence - 1, True);
-}
-
-void
-restack_win (Display *dpy, win *w, Window new_above)
-{
-    Window  old_above;
-    
-    if (w->next)
-	old_above = w->next->id;
-    else
-	old_above = None;
-    if (old_above != new_above)
-    {
-	win **prev;
-
-	/* unhook */
-	for (prev = &list; *prev; prev = &(*prev)->next)
-	    if ((*prev) == w)
-		break;
-	*prev = w->next;
-	
-	/* rehook */
-	for (prev = &list; *prev; prev = &(*prev)->next)
+	if (w->alphaPict)
 	{
-	    if ((*prev)->id == new_above)
-		break;
-	}
-	w->next = *prev;
-	*prev = w;
-    }
-}
-
-static void
-configure_win (Display *dpy, XConfigureEvent *ce)
-{
-    win		    *w = find_win (dpy, ce->window);
-    Window	    above;
-    XserverRegion   damage = None;
-    
-    if (!w)
-    {
-	if (ce->window == root)
-	{
-	    if (rootBuffer)
-	    {
-		XRenderFreePicture (dpy, rootBuffer);
-		rootBuffer = None;
-	    }
-	    root_width = ce->width;
-	    root_height = ce->height;
-	}
-	return;
-    }
-#if CAN_DO_USABLE
-    if (w->usable)
-#endif
-    {
-	damage = XFixesCreateRegion (dpy, 0, 0);
-	if (w->extents != None)	
-	    XFixesCopyRegion (dpy, damage, w->extents);
-    }
-    w->a.x = ce->x;
-    w->a.y = ce->y;
-    if (w->a.width != ce->width || w->a.height != ce->height)
-    {
-#if HAS_NAME_WINDOW_PIXMAP
-	if (w->pixmap)
-	{
-	    XFreePixmap (dpy, w->pixmap);
-	    w->pixmap = None;
-	    if (w->picture)
-	    {
-		XRenderFreePicture (dpy, w->picture);
-		w->picture = None;
-	    }
-	}
-#endif
-	if (w->shadow)
-	{
-	    XRenderFreePicture (dpy, w->shadow);
-	    w->shadow = None;
-	}
-    }
-    w->a.width = ce->width;
-    w->a.height = ce->height;
-    w->a.border_width = ce->border_width;
-    w->a.override_redirect = ce->override_redirect;
-    restack_win (dpy, w, ce->above);
-    if (damage)
-    {
-	XserverRegion	extents = win_extents (dpy, w);
-	XFixesUnionRegion (dpy, damage, damage, extents);
-	XFixesDestroyRegion (dpy, extents);
-	add_damage (dpy, damage);
-    }
-    clipChanged = True;
-}
-
-static void
-circulate_win (Display *dpy, XCirculateEvent *ce)
-{
-    win	    *w = find_win (dpy, ce->window);
-    Window  new_above;
-
-    if (!w)
-	return;
-
-    if (ce->place == PlaceOnTop)
-	new_above = list->id;
-    else
-	new_above = None;
-    restack_win (dpy, w, new_above);
-    clipChanged = True;
-}
-
-static void
-finish_destroy_win (Display *dpy, Window id, Bool gone)
-{
-    win	**prev, *w;
-
-    for (prev = &list; (w = *prev); prev = &w->next)
-	if (w->id == id)
-	{
-	    if (!gone)
-		finish_unmap_win (dpy, w);
-	    *prev = w->next;
-	    if (w->picture)
-	    {
-		set_ignore (dpy, NextRequest (dpy));
-		XRenderFreePicture (dpy, w->picture);
-		w->picture = None;
-	    }
-	    if (w->alphaPict)
-	    {
 		XRenderFreePicture (dpy, w->alphaPict);
 		w->alphaPict = None;
-	    }
-	    if (w->shadowPict)
-	    {
+	}
+	if (w->shadowPict)
+	{
 		XRenderFreePicture (dpy, w->shadowPict);
 		w->shadowPict = None;
-	    }
-	    if (w->damage != None)
-	    {
-		set_ignore (dpy, NextRequest (dpy));
-		XDamageDestroy (dpy, w->damage);
-		w->damage = None;
-	    }
-	    cleanup_fade (dpy, w);
-	    free (w);
-	    break;
 	}
-}
 
-#if HAS_NAME_WINDOW_PIXMAP
-static void
-destroy_callback (Display *dpy, win *w, Bool gone)
-{
-    finish_destroy_win (dpy, w->id, gone);
-}
-#endif
-
-static void
-destroy_win (Display *dpy, Window id, Bool gone, Bool fade)
-{
-    win *w = find_win (dpy, id);
-#if HAS_NAME_WINDOW_PIXMAP
-    if (w && w->pixmap && fade && fadeWindows)
-	set_fade (dpy, w, w->opacity*1.0/OPAQUE, 0.0, fade_out_step, destroy_callback, gone, False, True);
-    else
-#endif
-    {
-	finish_destroy_win (dpy, id, gone);
-    }
-}
-
-/*
-static void
-dump_win (win *w)
-{
-    printf ("\t%08lx: %d x %d + %d + %d (%d)\n", w->id,
-	    w->a.width, w->a.height, w->a.x, w->a.y, w->a.border_width);
-}
-
-
-static void
-dump_wins (void)
-{
-    win	*w;
-
-    printf ("windows:\n");
-    for (w = list; w; w = w->next)
-	dump_win (w);
-}
-*/
-
-static void
-damage_win (Display *dpy, XDamageNotifyEvent *de)
-{
-    win	*w = find_win (dpy, de->drawable);
-
-    if (!w)
-	return;
-#if CAN_DO_USABLE
-    if (!w->usable)
-    {
-	if (w->damage_bounds.width == 0 || w->damage_bounds.height == 0)
+	if (w->a.class == InputOnly)
 	{
-	    w->damage_bounds = de->area;
+		format = 0;
 	}
 	else
 	{
-	    if (de->area.x < w->damage_bounds.x)
-	    {
-		w->damage_bounds.width += (w->damage_bounds.x - de->area.x);
-		w->damage_bounds.x = de->area.x;
-	    }
-	    if (de->area.y < w->damage_bounds.y)
-	    {
-		w->damage_bounds.height += (w->damage_bounds.y - de->area.y);
-		w->damage_bounds.y = de->area.y;
-	    }
-	    if (de->area.x + de->area.width > w->damage_bounds.x + w->damage_bounds.width)
-		w->damage_bounds.width = de->area.x + de->area.width - w->damage_bounds.x;
-	    if (de->area.y + de->area.height > w->damage_bounds.y + w->damage_bounds.height)
-		w->damage_bounds.height = de->area.y + de->area.height - w->damage_bounds.y;
+		format = XRenderFindVisualFormat (dpy, w->a.visual);
 	}
-#if 0
-	printf ("unusable damage %d, %d: %d x %d bounds %d, %d: %d x %d\n",
-		de->area.x,
-		de->area.y,
-		de->area.width,
-		de->area.height,
-		w->damage_bounds.x,
-		w->damage_bounds.y,
-		w->damage_bounds.width,
-		w->damage_bounds.height);
-#endif
-	if (w->damage_bounds.x <= 0 && 
-	    w->damage_bounds.y <= 0 &&
-	    w->a.width <= w->damage_bounds.x + w->damage_bounds.width &&
-	    w->a.height <= w->damage_bounds.y + w->damage_bounds.height)
+
+	if (!disable_argb && format && format->type == PictTypeDirect && format->direct.alphaMask)
 	{
-	    clipChanged = True;
-	    if (fadeWindows)
-		set_fade (dpy, w, 0, get_opacity_percent (dpy, w, 1.0), fade_in_step, 0, False, True, True);
-	    w->usable = True;
+		mode = WINDOW_ARGB;
 	}
-    }
-    if (w->usable)
-#endif
-	repair_win (dpy, w);
+	else if (w->opacity != OPAQUE)
+	{
+		mode = WINDOW_TRANS;
+	}
+	else
+	{
+		mode = WINDOW_SOLID;
+	}
+	w->mode = mode;
+	if (w->extents)
+	{
+		XserverRegion damage;
+		damage = XFixesCreateRegion (dpy, 0, 0);
+		XFixesCopyRegion (dpy, damage, w->extents);
+		add_damage (dpy, damage);
+	}
 }
 
-static int
+	static Atom
+determine_wintype (Display *dpy, Window w)
+{
+	Window       root_return, parent_return;
+	Window      *children = NULL;
+	unsigned int nchildren, i;
+	Atom         type;
+
+	type = get_wintype_prop (dpy, w);
+	if (type != winNormalAtom)
+		return type;
+
+	if (!XQueryTree (dpy, w, &root_return, &parent_return, &children,
+				&nchildren))
+	{
+		/* XQueryTree failed. */
+		if (children)
+			XFree ((void *)children);
+		return winNormalAtom;
+	}
+
+	for (i = 0;i < nchildren;i++)
+	{
+		type = determine_wintype (dpy, children[i]);
+		if (type != winNormalAtom)
+			return type;
+	}
+
+	if (children)
+		XFree ((void *)children);
+
+	return winNormalAtom;
+}
+
+	static void
+add_win (Display *dpy, Window id, Window prev)
+{
+	win				*new = malloc (sizeof (win));
+	win				**p;
+
+	if (!new)
+		return;
+	if (prev)
+	{
+		for (p = &list; *p; p = &(*p)->next)
+			if ((*p)->id == prev)
+				break;
+	}
+	else
+		p = &list;
+	new->id = id;
+	set_ignore (dpy, NextRequest (dpy));
+	if (!XGetWindowAttributes (dpy, id, &new->a))
+	{
+		free (new);
+		return;
+	}
+	new->damaged = 0;
+#if CAN_DO_USABLE
+	new->usable = False;
+#endif
+#if HAS_NAME_WINDOW_PIXMAP
+	new->pixmap = None;
+#endif
+	new->picture = None;
+	if (new->a.class == InputOnly)
+	{
+		new->damage_sequence = 0;
+		new->damage = None;
+	}
+	else
+	{
+		new->damage_sequence = NextRequest (dpy);
+		new->damage = XDamageCreate (dpy, id, XDamageReportNonEmpty);
+	}
+	new->isInFade = False;
+	new->alphaPict = None;
+	new->shadowPict = None;
+	new->borderSize = None;
+	new->extents = None;
+	new->shadow = None;
+	new->shadow_dx = 0;
+	new->shadow_dy = 0;
+	new->shadow_width = 0;
+	new->shadow_height = 0;
+	new->opacity = OPAQUE;
+	new->shadowSize = 100;
+	new->titleHeight = 0;
+
+	new->borderClip = None;
+	new->prev_trans = 0;
+
+	XShapeSelectInput( dpy, id, ShapeNotifyMask );
+
+	/* moved mode setting to one place */
+	new->opacity = get_opacity_prop (dpy, new, OPAQUE);
+	new->shadowSize = get_shadow_prop (dpy, new);
+	new->shapable = get_shapable_prop(dpy, new);
+	new->titleHeight = get_titleHeight_prop(dpy, new);
+	new->windowType = determine_wintype (dpy, new->id);
+	determine_mode (dpy, new);
+
+	new->next = *p;
+	*p = new;
+	if (new->a.map_state == IsViewable)
+		map_win (dpy, id, new->damage_sequence - 1, True);
+}
+
+	void
+restack_win (Display *dpy, win *w, Window new_above)
+{
+	Window  old_above;
+
+	if (w->next)
+		old_above = w->next->id;
+	else
+		old_above = None;
+	if (old_above != new_above)
+	{
+		win **prev;
+
+		/* unhook */
+		for (prev = &list; *prev; prev = &(*prev)->next)
+			if ((*prev) == w)
+				break;
+		*prev = w->next;
+
+		/* rehook */
+		for (prev = &list; *prev; prev = &(*prev)->next)
+		{
+			if ((*prev)->id == new_above)
+				break;
+		}
+		w->next = *prev;
+		*prev = w;
+	}
+}
+
+	static void
+configure_win (Display *dpy, XConfigureEvent *ce)
+{
+	win		    *w = find_win (dpy, ce->window);
+	Window	    above;
+	XserverRegion   damage = None;
+
+	if (!w)
+	{
+		if (ce->window == root)
+		{
+			if (rootBuffer)
+			{
+				XRenderFreePicture (dpy, rootBuffer);
+				rootBuffer = None;
+			}
+			root_width = ce->width;
+			root_height = ce->height;
+		}
+		return;
+	}
+#if CAN_DO_USABLE
+	if (w->usable)
+#endif
+	{
+		damage = XFixesCreateRegion (dpy, 0, 0);
+		if (w->extents != None)	
+			XFixesCopyRegion (dpy, damage, w->extents);
+	}
+	w->a.x = ce->x;
+	w->a.y = ce->y;
+	if (w->a.width != ce->width || w->a.height != ce->height)
+	{
+#if HAS_NAME_WINDOW_PIXMAP
+		if (w->pixmap)
+		{
+			XFreePixmap (dpy, w->pixmap);
+			w->pixmap = None;
+			if (w->picture)
+			{
+				XRenderFreePicture (dpy, w->picture);
+				w->picture = None;
+			}
+		}
+#endif
+		if (w->shadow)
+		{
+			XRenderFreePicture (dpy, w->shadow);
+			w->shadow = None;
+		}
+	}
+	w->a.width = ce->width;
+	w->a.height = ce->height;
+	w->a.border_width = ce->border_width;
+	w->a.override_redirect = ce->override_redirect;
+	restack_win (dpy, w, ce->above);
+	if (damage)
+	{
+		XserverRegion	extents = win_extents (dpy, w);
+		XFixesUnionRegion (dpy, damage, damage, extents);
+		XFixesDestroyRegion (dpy, extents);
+		add_damage (dpy, damage);
+	}
+	clipChanged = True;
+}
+
+	static void
+circulate_win (Display *dpy, XCirculateEvent *ce)
+{
+	win	    *w = find_win (dpy, ce->window);
+	Window  new_above;
+
+	if (!w)
+		return;
+
+	if (ce->place == PlaceOnTop)
+		new_above = list->id;
+	else
+		new_above = None;
+	restack_win (dpy, w, new_above);
+	clipChanged = True;
+}
+
+	static void
+finish_destroy_win (Display *dpy, Window id, Bool gone)
+{
+	win	**prev, *w;
+
+	for (prev = &list; (w = *prev); prev = &w->next)
+		if (w->id == id)
+		{
+			if (!gone)
+				finish_unmap_win (dpy, w);
+			*prev = w->next;
+			if (w->picture)
+			{
+				set_ignore (dpy, NextRequest (dpy));
+				XRenderFreePicture (dpy, w->picture);
+				w->picture = None;
+			}
+			if (w->alphaPict)
+			{
+				XRenderFreePicture (dpy, w->alphaPict);
+				w->alphaPict = None;
+			}
+			if (w->shadowPict)
+			{
+				XRenderFreePicture (dpy, w->shadowPict);
+				w->shadowPict = None;
+			}
+			if (w->damage != None)
+			{
+				set_ignore (dpy, NextRequest (dpy));
+				XDamageDestroy (dpy, w->damage);
+				w->damage = None;
+			}
+			cleanup_fade (dpy, w);
+			free (w);
+			break;
+		}
+}
+
+#if HAS_NAME_WINDOW_PIXMAP
+	static void
+destroy_callback (Display *dpy, win *w, Bool gone)
+{
+	finish_destroy_win (dpy, w->id, gone);
+}
+#endif
+
+	static void
+destroy_win (Display *dpy, Window id, Bool gone, Bool fade)
+{
+	win *w = find_win (dpy, id);
+#if HAS_NAME_WINDOW_PIXMAP
+	if (w && w->pixmap && fade && fadeWindows)
+		set_fade (dpy, w, w->opacity*1.0/OPAQUE, 0.0, fade_out_step, destroy_callback, gone, False, True, True);
+	else
+#endif
+	{
+		finish_destroy_win (dpy, id, gone);
+	}
+}
+
+/*
+   static void
+   dump_win (win *w)
+   {
+   printf ("\t%08lx: %d x %d + %d + %d (%d)\n", w->id,
+   w->a.width, w->a.height, w->a.x, w->a.y, w->a.border_width);
+   }
+
+
+   static void
+   dump_wins (void)
+   {
+   win	*w;
+
+   printf ("windows:\n");
+   for (w = list; w; w = w->next)
+   dump_win (w);
+   }
+   */
+
+	static void
+damage_win (Display *dpy, XDamageNotifyEvent *de)
+{
+	win	*w = find_win (dpy, de->drawable);
+
+	if (!w)
+		return;
+#if CAN_DO_USABLE
+	if (!w->usable)
+	{
+		if (w->damage_bounds.width == 0 || w->damage_bounds.height == 0)
+		{
+			w->damage_bounds = de->area;
+		}
+		else
+		{
+			if (de->area.x < w->damage_bounds.x)
+			{
+				w->damage_bounds.width += (w->damage_bounds.x - de->area.x);
+				w->damage_bounds.x = de->area.x;
+			}
+			if (de->area.y < w->damage_bounds.y)
+			{
+				w->damage_bounds.height += (w->damage_bounds.y - de->area.y);
+				w->damage_bounds.y = de->area.y;
+			}
+			if (de->area.x + de->area.width > w->damage_bounds.x + w->damage_bounds.width)
+				w->damage_bounds.width = de->area.x + de->area.width - w->damage_bounds.x;
+			if (de->area.y + de->area.height > w->damage_bounds.y + w->damage_bounds.height)
+				w->damage_bounds.height = de->area.y + de->area.height - w->damage_bounds.y;
+		}
+#if 0
+		printf ("unusable damage %d, %d: %d x %d bounds %d, %d: %d x %d\n",
+				de->area.x,
+				de->area.y,
+				de->area.width,
+				de->area.height,
+				w->damage_bounds.x,
+				w->damage_bounds.y,
+				w->damage_bounds.width,
+				w->damage_bounds.height);
+#endif
+		if (w->damage_bounds.x <= 0 && 
+				w->damage_bounds.y <= 0 &&
+				w->a.width <= w->damage_bounds.x + w->damage_bounds.width &&
+				w->a.height <= w->damage_bounds.y + w->damage_bounds.height)
+		{
+			clipChanged = True;
+			if (fadeWindows)
+				set_fade (dpy, w, 0, get_opacity_percent (dpy, w, 1.0), fade_in_step, 0, False, True, True, False);
+			w->usable = True;
+		}
+	}
+	if (w->usable)
+#endif
+		repair_win (dpy, w);
+}
+
+	static int
 error (Display *dpy, XErrorEvent *ev)
 {
-    int	    o;
-    char    *name = 0;
-    
-    if (should_ignore (dpy, ev->serial))
-	return 0;
-    
-    if (ev->request_code == composite_opcode &&
-	ev->minor_code == X_CompositeRedirectSubwindows)
-    {
-	fprintf (stderr, "Another composite manager is already running\n");
-	exit (1);
-    }
-    
-    o = ev->error_code - xfixes_error;
-    switch (o) {
-    case BadRegion: name = "BadRegion";	break;
-    default: break;
-    }
-    o = ev->error_code - damage_error;
-    switch (o) {
-    case BadDamage: name = "BadDamage";	break;
-    default: break;
-    }
-    o = ev->error_code - render_error;
-    switch (o) {
-    case BadPictFormat: name ="BadPictFormat"; break;
-    case BadPicture: name ="BadPicture"; break;
-    case BadPictOp: name ="BadPictOp"; break;
-    case BadGlyphSet: name ="BadGlyphSet"; break;
-    case BadGlyph: name ="BadGlyph"; break;
-    default: break;
-    }
-	
-    printf ("error %d request %d minor %d serial %d\n",
-	    ev->error_code, ev->request_code, ev->minor_code, ev->serial);
+	int	    o;
+	char    *name = 0;
 
-/*    abort ();	    this is just annoying to most people */
-    return 0;
+	if (should_ignore (dpy, ev->serial))
+		return 0;
+
+	if (ev->request_code == composite_opcode &&
+			ev->minor_code == X_CompositeRedirectSubwindows)
+	{
+		fprintf (stderr, "Another composite manager is already running\n");
+		exit (1);
+	}
+
+	o = ev->error_code - xfixes_error;
+	switch (o) {
+		case BadRegion: name = "BadRegion";	break;
+		default: break;
+	}
+	o = ev->error_code - damage_error;
+	switch (o) {
+		case BadDamage: name = "BadDamage";	break;
+		default: break;
+	}
+	o = ev->error_code - render_error;
+	switch (o) {
+		case BadPictFormat: name ="BadPictFormat"; break;
+		case BadPicture: name ="BadPicture"; break;
+		case BadPictOp: name ="BadPictOp"; break;
+		case BadGlyphSet: name ="BadGlyphSet"; break;
+		case BadGlyph: name ="BadGlyph"; break;
+		default: break;
+	}
+
+	printf ("error %d request %d minor %d serial %d\n",
+			ev->error_code, ev->request_code, ev->minor_code, ev->serial);
+
+	/*    abort ();	    this is just annoying to most people */
+	return 0;
 }
 
-static void
+	static void
 expose_root (Display *dpy, Window root, XRectangle *rects, int nrects)
 {
-    XserverRegion  region = XFixesCreateRegion (dpy, rects, nrects);
-    
-    add_damage (dpy, region);
+	XserverRegion  region = XFixesCreateRegion (dpy, rects, nrects);
+
+	add_damage (dpy, region);
 }
 
 
-static int
+	static int
 ev_serial (XEvent *ev)
 {
-    if (ev->type & 0x7f != KeymapNotify)
-	return ev->xany.serial;
-    return NextRequest (ev->xany.display);
+	if (ev->type & 0x7f != KeymapNotify)
+		return ev->xany.serial;
+	return NextRequest (ev->xany.display);
 }
 
 
-static char *
+	static char *
 ev_name (XEvent *ev)
 {
-    static char	buf[128];
-    switch (ev->type & 0x7f) {
-    case Expose:
-	return "Expose";
-    case MapNotify:
-	return "Map";
-    case UnmapNotify:
-	return "Unmap";
-    case ReparentNotify:
-	return "Reparent";
-    case CirculateNotify:
-	return "Circulate";
-    default:
-    	if (ev->type == damage_event + XDamageNotify)
-	    return "Damage";
-	sprintf (buf, "Event %d", ev->type);
-	return buf;
-    }
+	static char	buf[128];
+	switch (ev->type & 0x7f) {
+		case Expose:
+			return "Expose";
+		case MapNotify:
+			return "Map";
+		case UnmapNotify:
+			return "Unmap";
+		case ReparentNotify:
+			return "Reparent";
+		case CirculateNotify:
+			return "Circulate";
+		default:
+			if (ev->type == damage_event + XDamageNotify)
+				return "Damage";
+			sprintf (buf, "Event %d", ev->type);
+			return buf;
+	}
 }
 
-static Window
+	static Window
 ev_window (XEvent *ev)
 {
-    switch (ev->type) {
-    case Expose:
-	return ev->xexpose.window;
-    case MapNotify:
-	return ev->xmap.window;
-    case UnmapNotify:
-	return ev->xunmap.window;
-    case ReparentNotify:
-	return ev->xreparent.window;
-    case CirculateNotify:
-	return ev->xcirculate.window;
-    default:
-    	if (ev->type == damage_event + XDamageNotify){
-	    fprintf(stderr, "%d", ev->type);
-            return ((XDamageNotifyEvent *) ev)->drawable;
-            }
-	return 0;
-    }
+	switch (ev->type) {
+		case Expose:
+			return ev->xexpose.window;
+		case MapNotify:
+			return ev->xmap.window;
+		case UnmapNotify:
+			return ev->xunmap.window;
+		case ReparentNotify:
+			return ev->xreparent.window;
+		case CirculateNotify:
+			return ev->xcirculate.window;
+		default:
+			if (ev->type == damage_event + XDamageNotify){
+				fprintf(stderr, "%d", ev->type);
+				return ((XDamageNotifyEvent *) ev)->drawable;
+			}
+			return 0;
+	}
 }
 
 void
 setShadowColor(char *value){  /*format nach #xxxxxx (html) ändern?*/
-    unsigned int tmp;
-    char **res = NULL;
-    tmp = strtoul(value, res, 16);
-    if( !value || strlen(value) < 6 || strlen(value) > 8 || (*(value+1) == 'x' && strlen(value) < 8) || res != NULL ){
-        shadowColor.red = 0;
-        shadowColor.green = 0;
-        shadowColor.blue = 0;
-        printf("wrong hexadecimal (use 0xXXXXXX or XXXXXX)! defaulting to black...\n");
-        return;
-    }
-    shadowColor.blue = tmp&0xff;
-    tmp >>= 8;
-    shadowColor.green = tmp&0xff;
-    tmp >>= 8;
-    shadowColor.red = tmp&0xff;
+	unsigned int tmp;
+	char **res = NULL;
+	tmp = strtoul(value, res, 16);
+	if( !value || strlen(value) < 6 || strlen(value) > 8 || (*(value+1) == 'x' && strlen(value) < 8) || res != NULL ){
+		shadowColor.red = 0;
+		shadowColor.green = 0;
+		shadowColor.blue = 0;
+		printf("wrong hexadecimal (use 0xXXXXXX or XXXXXX)! defaulting to black...\n");
+		return;
+	}
+	shadowColor.blue = tmp&0xff;
+	tmp >>= 8;
+	shadowColor.green = tmp&0xff;
+	tmp >>= 8;
+	shadowColor.red = tmp&0xff;
 }
 
 typedef enum _option{
-    Display_=0,
-    Compmode,
-    ExcludeDockShadows,
-    FadeWindows,
-    FadeTrans,
-    AutoRedirect,
-    Synchronize,
-    ShadowColor,
-    ShadowRadius,
-    ShadowOpacity,
-    ShadowOffsetX,
-    ShadowOffsetY,
-    FadeOutStep,
-    FadeInStep,
-    FadeDelta,
-    DisableARGB,
-    TransMode_,
-    NUMBEROFOPTIONS
+	Display_=0,
+	Compmode,
+	ExcludeDockShadows,
+	FadeWindows,
+	FadeTrans,
+	AutoRedirect,
+	Synchronize,
+	ShadowColor,
+	ShadowRadius,
+	ShadowOpacity,
+	ShadowOffsetX,
+	ShadowOffsetY,
+	FadeOutStep,
+	FadeInStep,
+	FadeDelta,
+	DisableARGB,
+	TransMode_,
+	NUMBEROFOPTIONS
 } Option;
 
 char *
 options[NUMBEROFOPTIONS] = {
-    "Display",              /*0*/
-    "Compmode",             /*1*/
-    "ExcludeDockShadows",   /*2*/
-    "FadeWindows",          /*3*/
-    "FadeTrans",            /*4*/
-    "AutoRedirect",         /*5*/
-    "Synchronize",          /*6*/
-    "ShadowColor",          /*7*/
-    "ShadowRadius",         /*8*/
-    "ShadowOpacity",        /*9*/
-    "ShadowOffsetX",        /*10*/
-    "ShadowOffsetY",        /*11*/
-    "FadeOutStep",          /*12*/
-    "FadeInStep",           /*13*/
-    "FadeDelta",            /*14*/
-    "DisableARGB",          /*15*/
-    "TransMode",          /*16*/
-    /*put your thingy in here...*/    
+	"Display",              /*0*/
+	"Compmode",             /*1*/
+	"ExcludeDockShadows",   /*2*/
+	"FadeWindows",          /*3*/
+	"FadeTrans",            /*4*/
+	"AutoRedirect",         /*5*/
+	"Synchronize",          /*6*/
+	"ShadowColor",          /*7*/
+	"ShadowRadius",         /*8*/
+	"ShadowOpacity",        /*9*/
+	"ShadowOffsetX",        /*10*/
+	"ShadowOffsetY",        /*11*/
+	"FadeOutStep",          /*12*/
+	"FadeInStep",           /*13*/
+	"FadeDelta",            /*14*/
+	"DisableARGB",          /*15*/
+	"TransMode",          /*16*/
+	/*put your thingy in here...*/    
 };
 
 void
 setValue(Option option, char *value ){
-    switch(option){ /*please keep that upside-down, because this way adding a new option is easier (all in one view)*/
-                
-        case FadeDelta:
-            fade_delta = atoi(value);
-            if (fade_delta < 1)
-                fade_delta = 10;
-            break;
-        case FadeInStep:
-            fade_in_step = atof(value);
-            if (fade_in_step <= 0)
-                fade_in_step = 0.01;
-            break;
-        case FadeOutStep:
-            fade_out_step = atof(value);
-            if (fade_out_step <= 0)
-                fade_out_step = 0.01;
-            break;
-        case ShadowOffsetY:
-            shadowOffsetY = atoi(value);
-            break;
-        case ShadowOffsetX:
-            shadowOffsetX = atoi(value);
-            break;
-        case ShadowOpacity:
-            shadowOpacity = atof(value);
-            break;
-        case ShadowRadius:
-            shadowRadius = atoi(value);
-            break;                    
-        case ShadowColor:
-            setShadowColor(value);
-            break;
-        case Synchronize:
-            synchronize = ( strcasecmp(value, "true") == 0 );
-            break;
-        case AutoRedirect:
-            autoRedirect = ( strcasecmp(value, "true") == 0 );
-            break;
-        case FadeTrans:
-            fadeTrans = ( strcasecmp(value, "true") == 0 );
-            break;
-        case FadeWindows:
-            fadeWindows = ( strcasecmp(value, "true") == 0 );
-            break;
-        case ExcludeDockShadows:
-            excludeDockShadows = ( strcasecmp(value, "true") == 0 );
-            break;
-        case Compmode:
-            if( strcasecmp(value, "CompClientShadows") == 0 ){
-                compMode = CompClientShadows;
-            }
-            else if( strcasecmp(value, "CompServerShadows") == 0 ){
-                compMode = CompServerShadows;
-            }
-            else{
-                compMode = CompSimple; /*default*/
-            }
-            break;
-        case TransMode_:
-            if( strcasecmp(value, "Title") == 0 ){
-                transMode = Title;
-            }
-            else if( strcasecmp(value, "Content") == 0 ){
-                transMode = Content;
-            }
-            else{
-                transMode = All; /*default*/
-            }
-            break;
-        case Display_:
-            display = strdup(value);
-            break;
-        case DisableARGB:
-            disable_argb = ( strcasecmp(value, "true") == 0 );
-            break;
-        default:
-            break;
-    }
+	switch(option){ /*please keep that upside-down, because this way adding a new option is easier (all in one view)*/
+
+		case FadeDelta:
+			fade_delta = atoi(value);
+			if (fade_delta < 1)
+				fade_delta = 10;
+			break;
+		case FadeInStep:
+			fade_in_step = atof(value);
+			if (fade_in_step <= 0)
+				fade_in_step = 0.01;
+			break;
+		case FadeOutStep:
+			fade_out_step = atof(value);
+			if (fade_out_step <= 0)
+				fade_out_step = 0.01;
+			break;
+		case ShadowOffsetY:
+			shadowOffsetY = atoi(value);
+			break;
+		case ShadowOffsetX:
+			shadowOffsetX = atoi(value);
+			break;
+		case ShadowOpacity:
+			shadowOpacity = atof(value);
+			break;
+		case ShadowRadius:
+			shadowRadius = atoi(value);
+			break;                    
+		case ShadowColor:
+			setShadowColor(value);
+			break;
+		case Synchronize:
+			synchronize = ( strcasecmp(value, "true") == 0 );
+			break;
+		case AutoRedirect:
+			autoRedirect = ( strcasecmp(value, "true") == 0 );
+			break;
+		case FadeTrans:
+			fadeTrans = ( strcasecmp(value, "true") == 0 );
+			break;
+		case FadeWindows:
+			fadeWindows = ( strcasecmp(value, "true") == 0 );
+			break;
+		case ExcludeDockShadows:
+			excludeDockShadows = ( strcasecmp(value, "true") == 0 );
+			break;
+		case Compmode:
+			if( strcasecmp(value, "CompClientShadows") == 0 ){
+				compMode = CompClientShadows;
+			}
+			else if( strcasecmp(value, "CompServerShadows") == 0 ){
+				compMode = CompServerShadows;
+			}
+			else{
+				compMode = CompSimple; /*default*/
+			}
+			break;
+		case TransMode_:
+			if( strcasecmp(value, "Title") == 0 ){
+				transMode = Title;
+			}
+			else if( strcasecmp(value, "Content") == 0 ){
+				transMode = Content;
+			}
+			else{
+				transMode = All; /*default*/
+			}
+			break;
+		case Display_:
+			display = strdup(value);
+			break;
+		case DisableARGB:
+			disable_argb = ( strcasecmp(value, "true") == 0 );
+			break;
+		default:
+			break;
+	}
 }
 
 int
 setParameter(char *line){
-    char *name = strtok(line, "=");
-    char *value = line+strlen(name)+1;
-    Option i;
-    for(i=Display_; i < NUMBEROFOPTIONS; i++){
-        if( strcasecmp(name, *(options+i) ) == 0 ){
-            setValue(i, value);
-            name = value = NULL;
-            return 1;
-        }
-    }
-    printf("ignored unknown option: <%s>\n", name);
-    name = value = NULL;
-    return 0;
+	char *name = strtok(line, "=");
+	char *value = line+strlen(name)+1;
+	Option i;
+	for(i=Display_; i < NUMBEROFOPTIONS; i++){
+		if( strcasecmp(name, *(options+i) ) == 0 ){
+			setValue(i, value);
+			name = value = NULL;
+			return 1;
+		}
+	}
+	printf("ignored unknown option: <%s>\n", name);
+	name = value = NULL;
+	return 0;
 }
 
 void
 loadConfig(char *filename){
-    FILE           *file = NULL;
-    char            line[ 1024 ];
-    size_t          length = 0;
-    Bool            wasNull = False;
-    Bool            section = False;
-    
-    if( filename == NULL ){
-        wasNull = True;
-        const char *home = getenv("HOME");
-        const char *configfile = "/.xcompmgrrc"; 
-        filename = (char*)malloc((strlen(home)+strlen(configfile)+1)*sizeof(char));
-        
-        strcat(filename, home);
-        strcat(filename, configfile);
-    }
-    
-    printf("trying '%s' as configfile\n\n", filename);
-     
-    if( (file = fopen(filename, "r")) == NULL ){
-        printf("failed to open config file. does it exist?\n");
-        if( wasNull ){
-            free(filename);
-            filename = NULL;
-        }
-        return;
-    }
+	FILE           *file = NULL;
+	char            line[ 1024 ];
+	size_t          length = 0;
+	Bool            wasNull = False;
+	Bool            section = False;
 
-    /*find section*/
-    while( !section && fgets(line, 1023, file) != -1 ){
-        if( strcmp(line, "[xcompmgr]\n") == 0 )
-            section = True;
-    }
-    /*read and set values*/
-    while( section && fgets(line, 1023, file) != NULL ){
-        int ret = strlen( line );
-        if( ret > 1 ){
-            if( *line == '[' )/*found new section - maybe check for '\n'?*/
-                break;
-            *(line+ret-1) = '\0';
-            setParameter(line);
-        }
-    }
-    printf("\nfinished parsing the config file\n");
-    fclose(file);
-    if( wasNull ){
-        free(filename);
-        filename = NULL;
-    }
+	if( filename == NULL ){
+		wasNull = True;
+		const char *home = getenv("HOME");
+		const char *configfile = "/.xcompmgrrc"; 
+		filename = (char*)malloc((strlen(home)+strlen(configfile)+1)*sizeof(char));
+
+		strcat(filename, home);
+		strcat(filename, configfile);
+	}
+
+	printf("trying '%s' as configfile\n\n", filename);
+
+	if( (file = fopen(filename, "r")) == NULL ){
+		printf("failed to open config file. does it exist?\n");
+		if( wasNull ){
+			free(filename);
+			filename = NULL;
+		}
+		return;
+	}
+
+	/*find section*/
+	while( !section && fgets(line, 1023, file) != -1 ){
+		if( strcmp(line, "[xcompmgr]\n") == 0 )
+			section = True;
+	}
+	/*read and set values*/
+	while( section && fgets(line, 1023, file) != NULL ){
+		int ret = strlen( line );
+		if( ret > 1 ){
+			if( *line == '[' )/*found new section - maybe check for '\n'?*/
+				break;
+			*(line+ret-1) = '\0';
+			setParameter(line);
+		}
+	}
+	printf("\nfinished parsing the config file\n");
+	fclose(file);
+	if( wasNull ){
+		free(filename);
+		filename = NULL;
+	}
 }
 
-void
+	void
 usage (char *program)
 {
-    fprintf (stderr, "%s v1.0\n", program);
-    fprintf (stderr, "usage: %s [options]\n", program);
-    fprintf (stderr, "Options\n");
-    fprintf (stderr, "   -d display\n      Specifies which display should be managed.\n");
-    fprintf (stderr, "   -r radius\n      Specifies the blur radius for client-side shadows. (default 12)\n");
-    fprintf (stderr, "   -o opacity\n      Specifies the translucency for client-side shadows. (default .75)\n");
-    fprintf (stderr, "   -l left-offset\n      Specifies the left offset for client-side shadows. (default -15)\n");
-    fprintf (stderr, "   -t top-offset\n      Specifies the top offset for clinet-side shadows. (default -15)\n");
-    fprintf (stderr, "   -I fade-in-step\n      Specifies the opacity change between steps while fading in. (default 0.028)\n");
-    fprintf (stderr, "   -O fade-out-step\n      Specifies the opacity change between steps while fading out. (default 0.03)\n");
-    fprintf (stderr, "   -D fade-delta-time\n      Specifies the time between steps in a fade in milliseconds. (default 10)\n");
-    fprintf (stderr, "   -a\n      Use automatic server-side compositing. Faster, but no special effects.\n");
-    fprintf (stderr, "   -c\n      Draw client-side shadows with fuzzy edges.\n");
-    fprintf (stderr, "   -C\n      Avoid drawing shadows on dock/panel windows.\n");
-    fprintf (stderr, "   -f\n      Fade windows in/out when opening/closing.\n");
-    fprintf (stderr, "   -F\n      Fade windows during opacity changes.\n");
-    fprintf (stderr, "   -n\n      Normal client-side compositing with transparency support\n");
-    fprintf (stderr, "   -s\n      Draw server-side shadows with sharp edges.\n");
-    fprintf (stderr, "   -S\n      Enable synchronous operation (for debugging).\n");
-    fprintf (stderr, "   -x [0x]XXXXXX\n      Choose Custom Color in hex format\n");
-    fprintf (stderr, "   -v\n      Print version Number and exit\n");
-    fprintf (stderr, "   -h\n      Print this help\n");
-    exit (1);
+	fprintf (stderr, "%s v1.0\n", program);
+	fprintf (stderr, "usage: %s [options]\n", program);
+	fprintf (stderr, "Options\n");
+	fprintf (stderr, "   -d display\n      Specifies which display should be managed.\n");
+	fprintf (stderr, "   -r radius\n      Specifies the blur radius for client-side shadows. (default 12)\n");
+	fprintf (stderr, "   -o opacity\n      Specifies the translucency for client-side shadows. (default .75)\n");
+	fprintf (stderr, "   -l left-offset\n      Specifies the left offset for client-side shadows. (default -15)\n");
+	fprintf (stderr, "   -t top-offset\n      Specifies the top offset for clinet-side shadows. (default -15)\n");
+	fprintf (stderr, "   -I fade-in-step\n      Specifies the opacity change between steps while fading in. (default 0.028)\n");
+	fprintf (stderr, "   -O fade-out-step\n      Specifies the opacity change between steps while fading out. (default 0.03)\n");
+	fprintf (stderr, "   -D fade-delta-time\n      Specifies the time between steps in a fade in milliseconds. (default 10)\n");
+	fprintf (stderr, "   -a\n      Use automatic server-side compositing. Faster, but no special effects.\n");
+	fprintf (stderr, "   -c\n      Draw client-side shadows with fuzzy edges.\n");
+	fprintf (stderr, "   -C\n      Avoid drawing shadows on dock/panel windows.\n");
+	fprintf (stderr, "   -f\n      Fade windows in/out when opening/closing.\n");
+	fprintf (stderr, "   -F\n      Fade windows during opacity changes.\n");
+	fprintf (stderr, "   -n\n      Normal client-side compositing with transparency support\n");
+	fprintf (stderr, "   -s\n      Draw server-side shadows with sharp edges.\n");
+	fprintf (stderr, "   -S\n      Enable synchronous operation (for debugging).\n");
+	fprintf (stderr, "   -x [0x]XXXXXX\n      Choose Custom Color in hex format\n");
+	fprintf (stderr, "   -v\n      Print version Number and exit\n");
+	fprintf (stderr, "   -h\n      Print this help\n");
+	exit (1);
 }
 
-int
+	int
 main (int argc, char **argv)
 {
-    XEvent	    ev;
-    Window	    root_return, parent_return;
-    Window	    *children;
-    Pixmap	    transPixmap;
-    Pixmap	    blackPixmap;
-    unsigned int    nchildren;
-    int		    i;
-    XRenderPictureAttributes	pa;
-    XRenderColor		c;
-    XRectangle	    *expose_rects = 0;
-    int		    size_expose = 0;
-    int		    n_expose = 0;
-    struct pollfd   ufd;
-    int		    n;
-    int		    last_update;
-    int		    now;
-    int		    p;
-    int		    composite_major, composite_minor;
-    
-    int		    o;
-    
-    shadowColor.red = 0;
-    shadowColor.green = 0;
-    shadowColor.blue = 0;
+	XEvent	    ev;
+	Window	    root_return, parent_return;
+	Window	    *children;
+	Pixmap	    transPixmap;
+	Pixmap	    blackPixmap;
+	unsigned int    nchildren;
+	int		    i;
+	XRenderPictureAttributes	pa;
+	XRenderColor		c;
+	XRectangle	    *expose_rects = 0;
+	int		    size_expose = 0;
+	int		    n_expose = 0;
+	struct pollfd   ufd;
+	int		    n;
+	int		    last_update;
+	int		    now;
+	int		    p;
+	int		    composite_major, composite_minor;
 
-    loadConfig(NULL); /*we do that before cmdline-parsing, so config-values can be overridden*/
-    /*used for shadow colors*/
-    char **res = NULL;
-    while ((o = getopt (argc, argv, "D:I:O:d:r:o:l:t:scnfFCaSx:vh")) != -1)
-    {
-	switch (o) {
-	case 'd':
-	    display = optarg;
-	    break;
-	case 'D':
-	    fade_delta = atoi (optarg);
-	    if (fade_delta < 1)
-		fade_delta = 10;
-	    break;
-	case 'I':
-	    fade_in_step = atof (optarg);
-	    if (fade_in_step <= 0)
-		fade_in_step = 0.01;
-	    break;
-	case 'O':
-	    fade_out_step = atof (optarg);
-	    if (fade_out_step <= 0)
-		fade_out_step = 0.01;
-	    break;
-	case 's':
-	    compMode = CompServerShadows;
-	    break;
-	case 'c':
-	    compMode = CompClientShadows;
-	    break;
-	case 'C':
-	    excludeDockShadows = True;
-	    break;
-	case 'n':
-	    compMode = CompSimple;
-	    break;
-	case 'f':
-	    fadeWindows = True;
-	    break;
-	case 'F':
-	    fadeTrans = True;
-	    break;
-	case 'a':
-	    autoRedirect = True;
-	    break;
-	case 'S':
-	    synchronize = True;
-	    break;
-	case 'r':
-	    shadowRadius = atoi (optarg);
-	    break;
-	case 'o':
-	    shadowOpacity = atof (optarg);
-	    break;
-	case 'l':
-	    shadowOffsetX = atoi (optarg);
-	    break;
-	case 't':
-	    shadowOffsetY = atoi (optarg);
-	    break;
-	case 'x':
-            if( compMode != CompClientShadows ){
-                fprintf(stderr, "sorry, but we need ClientShadows (-c) for coloring to work properly!\ndefaulting to black...\n");
-                break;
-            }
-            setShadowColor(optarg);
-            break;
-        case 'v': fprintf (stderr, "%s v%-3.2f\n", argv[0], _VERSION_); exit (0);
-        case 'h':
-        default:
-	    usage (argv[0]);
-	    break;
+	int		    o;
+
+	shadowColor.red = 0;
+	shadowColor.green = 0;
+	shadowColor.blue = 0;
+
+	loadConfig(NULL); /*we do that before cmdline-parsing, so config-values can be overridden*/
+	/*used for shadow colors*/
+	char **res = NULL;
+	while ((o = getopt (argc, argv, "D:I:O:d:r:o:l:t:scnfFCaSx:vh")) != -1)
+	{
+		switch (o) {
+			case 'd':
+				display = optarg;
+				break;
+			case 'D':
+				fade_delta = atoi (optarg);
+				if (fade_delta < 1)
+					fade_delta = 10;
+				break;
+			case 'I':
+				fade_in_step = atof (optarg);
+				if (fade_in_step <= 0)
+					fade_in_step = 0.01;
+				break;
+			case 'O':
+				fade_out_step = atof (optarg);
+				if (fade_out_step <= 0)
+					fade_out_step = 0.01;
+				break;
+			case 's':
+				compMode = CompServerShadows;
+				break;
+			case 'c':
+				compMode = CompClientShadows;
+				break;
+			case 'C':
+				excludeDockShadows = True;
+				break;
+			case 'n':
+				compMode = CompSimple;
+				break;
+			case 'f':
+				fadeWindows = True;
+				break;
+			case 'F':
+				fadeTrans = True;
+				break;
+			case 'a':
+				autoRedirect = True;
+				break;
+			case 'S':
+				synchronize = True;
+				break;
+			case 'r':
+				shadowRadius = atoi (optarg);
+				break;
+			case 'o':
+				shadowOpacity = atof (optarg);
+				break;
+			case 'l':
+				shadowOffsetX = atoi (optarg);
+				break;
+			case 't':
+				shadowOffsetY = atoi (optarg);
+				break;
+			case 'x':
+				if( compMode != CompClientShadows ){
+					fprintf(stderr, "sorry, but we need ClientShadows (-c) for coloring to work properly!\ndefaulting to black...\n");
+					break;
+				}
+				setShadowColor(optarg);
+				break;
+			case 'v': fprintf (stderr, "%s v%-3.2f\n", argv[0], _VERSION_); exit (0);
+			case 'h':
+			default:
+				  usage (argv[0]);
+				  break;
+		}
 	}
-    }
-    
-    dpy = XOpenDisplay (display);
-    if (!dpy)
-    {
-	fprintf (stderr, "Can't open display\n");
-	exit (1);
-    }
-    XSetErrorHandler (error);
-    if (synchronize)
-	XSynchronize (dpy, 1);
-    scr = DefaultScreen (dpy);
-    root = RootWindow (dpy, scr);
 
-    if (!XRenderQueryExtension (dpy, &render_event, &render_error))
-    {
-	fprintf (stderr, "No render extension\n");
-	exit (1);
-    }
-    if (!XQueryExtension (dpy, COMPOSITE_NAME, &composite_opcode,
-			  &composite_event, &composite_error))
-    {
-	fprintf (stderr, "No composite extension\n");
-	exit (1);
-    }
-    XCompositeQueryVersion (dpy, &composite_major, &composite_minor);
+	dpy = XOpenDisplay (display);
+	if (!dpy)
+	{
+		fprintf (stderr, "Can't open display\n");
+		exit (1);
+	}
+	XSetErrorHandler (error);
+	if (synchronize)
+		XSynchronize (dpy, 1);
+	scr = DefaultScreen (dpy);
+	root = RootWindow (dpy, scr);
+
+	if (!XRenderQueryExtension (dpy, &render_event, &render_error))
+	{
+		fprintf (stderr, "No render extension\n");
+		exit (1);
+	}
+	if (!XQueryExtension (dpy, COMPOSITE_NAME, &composite_opcode,
+				&composite_event, &composite_error))
+	{
+		fprintf (stderr, "No composite extension\n");
+		exit (1);
+	}
+	XCompositeQueryVersion (dpy, &composite_major, &composite_minor);
 #if HAS_NAME_WINDOW_PIXMAP
-    if (composite_major > 0 || composite_minor >= 2)
-	hasNamePixmap = True;
+	if (composite_major > 0 || composite_minor >= 2)
+		hasNamePixmap = True;
 #endif
 
-    if (!XDamageQueryExtension (dpy, &damage_event, &damage_error))
-    {
-	fprintf (stderr, "No damage extension\n");
-	exit (1);
-    }
-    if (!XFixesQueryExtension (dpy, &xfixes_event, &xfixes_error))
-    {
-	fprintf (stderr, "No XFixes extension\n");
-	exit (1);
-    }
-    
-    fprintf(stderr, "Started");
-    /* get atoms */
-    shadowAtom = XInternAtom (dpy, SHADOW_PROP, False);
-    opacityAtom = XInternAtom (dpy, OPACITY_PROP, False);
-    shadeAtom = XInternAtom (dpy, SHADE_PROP, False);
-    shapableAtom = XInternAtom (dpy, SHAPABLE_PROP, False);
-    titleHeightAtom = XInternAtom (dpy, TITLEHEIGHT_PROP, False);
-    winTypeAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
-    winDesktopAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
-    winDockAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
-    winToolbarAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_TOOLBAR", False);
-    winMenuAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_MENU", False);
-    winUtilAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_UTILITY", False);
-    winSplashAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_SPLASH", False);
-    winDialogAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
-    winNormalAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_NORMAL", False);
-    
-    pa.subwindow_mode = IncludeInferiors;
+	if (!XDamageQueryExtension (dpy, &damage_event, &damage_error))
+	{
+		fprintf (stderr, "No damage extension\n");
+		exit (1);
+	}
+	if (!XFixesQueryExtension (dpy, &xfixes_event, &xfixes_error))
+	{
+		fprintf (stderr, "No XFixes extension\n");
+		exit (1);
+	}
 
-    if (compMode == CompClientShadows)
-    {
-	gaussianMap = make_gaussian_map(dpy, shadowRadius);
-	presum_gaussian (gaussianMap);
-    }
+	fprintf(stderr, "Started");
+	/* get atoms */
+	shadowAtom = XInternAtom (dpy, SHADOW_PROP, False);
+	opacityAtom = XInternAtom (dpy, OPACITY_PROP, False);
+	shadeAtom = XInternAtom (dpy, SHADE_PROP, False);
+	shapableAtom = XInternAtom (dpy, SHAPABLE_PROP, False);
+	titleHeightAtom = XInternAtom (dpy, TITLEHEIGHT_PROP, False);
+	winTypeAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
+	winDesktopAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
+	winDockAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
+	winToolbarAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_TOOLBAR", False);
+	winMenuAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_MENU", False);
+	winUtilAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_UTILITY", False);
+	winSplashAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_SPLASH", False);
+	winDialogAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+	winNormalAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_NORMAL", False);
 
-    root_width = DisplayWidth (dpy, scr);
-    root_height = DisplayHeight (dpy, scr);
+	pa.subwindow_mode = IncludeInferiors;
 
-    rootPicture = XRenderCreatePicture (dpy, root, 
-					sXRenderFindVisualFormat (dpy,
-								 DefaultVisual (dpy, scr)),
-					CPSubwindowMode,
-					&pa);
-    blackPicture = solid_picture (dpy, True, 1, (double)(shadowColor.red)/0xff, (double)(shadowColor.green)/0xff, (double)(shadowColor.blue)/0xff);
-    if (compMode == CompServerShadows)
-	transBlackPicture = solid_picture (dpy, True, 0.3, 0, 0, 0);
-    allDamage = None;
-    clipChanged = True;
-    XGrabServer (dpy);
-    if (autoRedirect)
-	XCompositeRedirectSubwindows (dpy, root, CompositeRedirectAutomatic);
-    else
-    {
-	XCompositeRedirectSubwindows (dpy, root, CompositeRedirectManual);
-	XSelectInput (dpy, root, 
-		      SubstructureNotifyMask|
-		      ExposureMask|
-		      StructureNotifyMask|
-		      PropertyChangeMask |
-                      VisibilityChangeMask);
-        
-        /*shaping stuff*/
-        int dummy;
-        XShapeQueryExtension(dpy, &shapeEvent, &dummy);
-        
-	XQueryTree (dpy, root, &root_return, &parent_return, &children, &nchildren);
-	for (i = 0; i < nchildren; i++)
-	    add_win (dpy, children[i], i ? children[i-1] : None);
-	XFree (children);
-    }
-    XUngrabServer (dpy);
-    ufd.fd = ConnectionNumber (dpy);
-    ufd.events = POLLIN;
-    if (!autoRedirect)
-	paint_all (dpy, None);
-    for (;;)
-    {
-	/*	dump_wins (); */
-	do {
-	    if (autoRedirect)
-                XFlush (dpy);
-            if (!QLength (dpy))
-            {
-        	 if (poll (&ufd, 1, fade_timeout()) == 0)
-		 {
-		    run_fades (dpy);
-		    break;
-		 }
-	    }
+	if (compMode == CompClientShadows)
+	{
+		gaussianMap = make_gaussian_map(dpy, shadowRadius);
+		presum_gaussian (gaussianMap);
+	}
 
-	    XNextEvent (dpy, &ev);
-	    if (ev.type & 0x7f != KeymapNotify)
-		discard_ignore (dpy, ev.xany.serial);
+	root_width = DisplayWidth (dpy, scr);
+	root_height = DisplayHeight (dpy, scr);
+
+	rootPicture = XRenderCreatePicture (dpy, root, 
+			sXRenderFindVisualFormat (dpy,
+				DefaultVisual (dpy, scr)),
+			CPSubwindowMode,
+			&pa);
+	blackPicture = solid_picture (dpy, True, 1, (double)(shadowColor.red)/0xff, (double)(shadowColor.green)/0xff, (double)(shadowColor.blue)/0xff);
+	if (compMode == CompServerShadows)
+		transBlackPicture = solid_picture (dpy, True, 0.3, 0, 0, 0);
+	allDamage = None;
+	clipChanged = True;
+	XGrabServer (dpy);
+	if (autoRedirect)
+		XCompositeRedirectSubwindows (dpy, root, CompositeRedirectAutomatic);
+	else
+	{
+		XCompositeRedirectSubwindows (dpy, root, CompositeRedirectManual);
+		XSelectInput (dpy, root, 
+				SubstructureNotifyMask|
+				ExposureMask|
+				StructureNotifyMask|
+				PropertyChangeMask |
+				VisibilityChangeMask);
+
+		/*shaping stuff*/
+		int dummy;
+		XShapeQueryExtension(dpy, &shapeEvent, &dummy);
+
+		XQueryTree (dpy, root, &root_return, &parent_return, &children, &nchildren);
+		for (i = 0; i < nchildren; i++)
+			add_win (dpy, children[i], i ? children[i-1] : None);
+		XFree (children);
+	}
+	XUngrabServer (dpy);
+	ufd.fd = ConnectionNumber (dpy);
+	ufd.events = POLLIN;
+	if (!autoRedirect)
+		paint_all (dpy, None);
+	for (;;)
+	{
+		/*	dump_wins (); */
+		do {
+			if (autoRedirect)
+				XFlush (dpy);
+			if (!QLength (dpy))
+			{
+				if (poll (&ufd, 1, fade_timeout()) == 0)
+				{
+					run_fades (dpy);
+					break;
+				}
+			}
+
+			XNextEvent (dpy, &ev);
+			if (ev.type & 0x7f != KeymapNotify)
+				discard_ignore (dpy, ev.xany.serial);
 #if DEBUG_EVENTS
-	    printf ("event %10.10s serial 0x%08x window 0x%08x\n",
-		    ev_name(&ev), ev_serial (&ev), ev_window (&ev));
+			printf ("event %10.10s serial 0x%08x window 0x%08x\n",
+					ev_name(&ev), ev_serial (&ev), ev_window (&ev));
 #endif
-	    if (!autoRedirect) switch (ev.type) {
-	    case CreateNotify:
-		add_win (dpy, ev.xcreatewindow.window, 0);
-		break;
-	    case ConfigureNotify:
-		configure_win (dpy, &ev.xconfigure);
-		break;
-	    case DestroyNotify:
-		destroy_win (dpy, ev.xdestroywindow.window, True, True);
-		break;
-	    case MapNotify:
-                map_win (dpy, ev.xmap.window, ev.xmap.serial, True);
-		break;
-	    case UnmapNotify:
-		unmap_win (dpy, ev.xunmap.window, True);
-		break;
-	    case ReparentNotify:
-		if (ev.xreparent.parent == root)
-		    add_win (dpy, ev.xreparent.window, 0);
-		else
-		    destroy_win (dpy, ev.xreparent.window, False, True);
-		break;
-	    case CirculateNotify:
-		circulate_win (dpy, &ev.xcirculate);
-		break;
-	    case Expose:
-		if (ev.xexpose.window == root)
-		{
-		    int more = ev.xexpose.count + 1;
-		    if (n_expose == size_expose)
-		    {
-			if (expose_rects)
-			{
-			    expose_rects = realloc (expose_rects, 
-						    (size_expose + more) * 
-						    sizeof (XRectangle));
-			    size_expose += more;
-			}
-			else
-			{
-			    expose_rects = malloc (more * sizeof (XRectangle));
-			    size_expose = more;
-			}
-		    }
-		    expose_rects[n_expose].x = ev.xexpose.x;
-		    expose_rects[n_expose].y = ev.xexpose.y;
-		    expose_rects[n_expose].width = ev.xexpose.width;
-		    expose_rects[n_expose].height = ev.xexpose.height;
-		    n_expose++;
-		    if (ev.xexpose.count == 0)
-		    {
-			expose_root (dpy, root, expose_rects, n_expose);
-			n_expose = 0;
-		    }
-		}
-		break;
-	    case PropertyNotify:
-		for (p = 0; backgroundProps[p]; p++)
-		{
-		    if (ev.xproperty.atom == XInternAtom (dpy, backgroundProps[p], False))
-		    {
-			if (rootTile)
-			{
-			    XClearArea (dpy, root, 0, 0, 0, 0, True);
-			    XRenderFreePicture (dpy, rootTile);
-			    rootTile = None;
-			    break;
-			}
-		    }
-		}
-                /* Window set shade? */
-                if (ev.xproperty.atom == shadeAtom)
-                    {
-                    win * w = find_win(dpy, ev.xproperty.window);
-                    unsigned int tmp = get_shade_prop(dpy, w);
-                    if (tmp)
-                        {
-                        if (tmp == 1)
-                            {
-                            w->preShadeOpacity = w->opacity;
-                            w->opacity = w->opacity-1; /*assuming that no human being will ever be able to shade an invisable window ;) */
-                            determine_mode(dpy, w);
-                            }
-                        else if (tmp == 2)
-                            {
-                            w->opacity = w->preShadeOpacity;
-                            determine_mode(dpy, w);
-                            }                       
-                        }
-                    break;
-                    }
-                else if (ev.xproperty.atom == shapableAtom)
-                    {
-                        win * w = find_win(dpy, ev.xproperty.window);
-                        if (w)
-			{
-			w->shapable = get_shapable_prop(dpy, w);
-/*			printf("%u is %s shapable\n",w->id,w->shapable?"":"not");*/
-			}
-			else
-			    printf("arrrg, window not found\n");
-                    }
-                else if (ev.xproperty.atom == titleHeightAtom)
-                    {
-                        printf("titleheight changed\n");
-                        win * w = find_win(dpy, ev.xproperty.window);
-                        if (w)
-                        {
-                            printf("titleheight window found\n");
-                            w->titleHeight = get_titleHeight_prop(dpy, w);
-                        }
-                        else
-                            printf("arrrg, window not found\n");
-                    }
-                /* check if Trans or Shadow property was changed */    
-                else if (ev.xproperty.atom == opacityAtom || ev.xproperty.atom == shadowAtom)
-		{
-		    /* reset mode and redraw window */
-		    win * w = find_win(dpy, ev.xproperty.window);
-                    unsigned int oldShadowSize = w->shadowSize;
-                    unsigned int tmp;
-		    if (w)
-		    {
-                            if (ev.xproperty.atom == opacityAtom)
-                                {
-                                tmp = get_opacity_prop(dpy, w, OPAQUE);
-                                if (tmp == w->opacity)
-                                    break; /*skip if opacity does not change*/
-                                if (fadeTrans)
-                                    {
-                                    set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE,
-                                            fade_out_step, 0, False, True, True);
+			if (!autoRedirect) switch (ev.type) {
+				case CreateNotify:
+					add_win (dpy, ev.xcreatewindow.window, 0);
+					break;
+				case ConfigureNotify:
+					configure_win (dpy, &ev.xconfigure);
+					break;
+				case DestroyNotify:
+					destroy_win (dpy, ev.xdestroywindow.window, True, True);
+					break;
+				case MapNotify:
+					map_win (dpy, ev.xmap.window, ev.xmap.serial, True);
+					break;
+				case UnmapNotify:
+					unmap_win (dpy, ev.xunmap.window, True);
+					break;
+				case ReparentNotify:
+					if (ev.xreparent.parent == root)
+						add_win (dpy, ev.xreparent.window, 0);
+					else
+						destroy_win (dpy, ev.xreparent.window, False, True);
+					break;
+				case CirculateNotify:
+					circulate_win (dpy, &ev.xcirculate);
+					break;
+				case Expose:
+					if (ev.xexpose.window == root)
+					{
+						int more = ev.xexpose.count + 1;
+						if (n_expose == size_expose)
+						{
+							if (expose_rects)
+							{
+								expose_rects = realloc (expose_rects, 
+										(size_expose + more) * 
+										sizeof (XRectangle));
+								size_expose += more;
+							}
+							else
+							{
+								expose_rects = malloc (more * sizeof (XRectangle));
+								size_expose = more;
+							}
+						}
+						expose_rects[n_expose].x = ev.xexpose.x;
+						expose_rects[n_expose].y = ev.xexpose.y;
+						expose_rects[n_expose].width = ev.xexpose.width;
+						expose_rects[n_expose].height = ev.xexpose.height;
+						n_expose++;
+						if (ev.xexpose.count == 0)
+						{
+							expose_root (dpy, root, expose_rects, n_expose);
+							n_expose = 0;
+						}
+					}
+					break;
+				case PropertyNotify:
+					for (p = 0; backgroundProps[p]; p++)
+					{
+						if (ev.xproperty.atom == XInternAtom (dpy, backgroundProps[p], False))
+						{
+							if (rootTile)
+							{
+								XClearArea (dpy, root, 0, 0, 0, 0, True);
+								XRenderFreePicture (dpy, rootTile);
+								rootTile = None;
+								break;
+							}
+						}
+					}
+					/* Window set shade? */
+					if (ev.xproperty.atom == shadeAtom)
+					{
+						win * w = find_win(dpy, ev.xproperty.window);
+						unsigned int tmp = get_shade_prop(dpy, w);
+						if (tmp)
+						{
+							if (tmp == 1)
+							{
+								w->preShadeOpacity = w->opacity;
+								w->opacity = w->opacity-1; /*assuming that no human being will ever be able to shade an invisable window ;) */
+								determine_mode(dpy, w);
+							}
+							else if (tmp == 2)
+							{
+								w->opacity = w->preShadeOpacity;
+								determine_mode(dpy, w);
+							}                       
+						}
+						break;
+					}
+					else if (ev.xproperty.atom == shapableAtom)
+					{
+						win * w = find_win(dpy, ev.xproperty.window);
+						if (w)
+						{
+							w->shapable = get_shapable_prop(dpy, w);
+							/*			printf("%u is %s shapable\n",w->id,w->shapable?"":"not");*/
+						}
+						else
+							printf("arrrg, window not found\n");
+					}
+					else if (ev.xproperty.atom == titleHeightAtom)
+					{
+						printf("titleheight changed\n");
+						win * w = find_win(dpy, ev.xproperty.window);
+						if (w)
+						{
+							printf("titleheight window found\n");
+							w->titleHeight = get_titleHeight_prop(dpy, w);
+						}
+						else
+							printf("arrrg, window not found\n");
+					}
+					/* check if Trans or Shadow property was changed */    
+					else if (ev.xproperty.atom == opacityAtom || ev.xproperty.atom == shadowAtom)
+					{
+						/* reset mode and redraw window */
+						win * w = find_win(dpy, ev.xproperty.window);
+						unsigned int oldShadowSize = w->shadowSize;
+						unsigned int tmp;
+						if (w)
+						{
+							if (ev.xproperty.atom == opacityAtom)
+							{
+								tmp = get_opacity_prop(dpy, w, OPAQUE);
+								if (tmp == w->opacity)
+									break; /*skip if opacity does not change*/
+								if (fadeTrans)
+								{
+									set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE,
+                                            fade_out_step, 0, False, True, True, False);
                                     break;
                                     }
                                 else
