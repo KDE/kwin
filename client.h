@@ -117,7 +117,7 @@ public:
     bool isSticky() const;
     void setSticky( bool );
 
-    
+
     // auxiliary functions, depend on the windowType
     bool wantsTabFocus() const;
     bool isMovable() const;
@@ -145,8 +145,6 @@ public:
     void move( const QPoint & p )
     { move( p.x(), p.y() ); }
 
-
-
     bool providesContextHelp() const;
 
     bool performMouseCommand( Options::MouseCommand, QPoint globalPos );
@@ -155,7 +153,7 @@ public:
     QCString sessionId();
 
     QRect adjustedClientArea( const QRect& area ) const;
-
+    
 public slots:
     void iconify();
     void closeWindow();
@@ -199,6 +197,11 @@ protected:
 
     virtual MousePosition mousePosition( const QPoint& ) const;
     virtual void setMouseCursor( MousePosition m );
+
+    
+    virtual void  animateIconifyOrDeiconify( bool iconify );
+    virtual QPixmap animationPixmap( int w );
+
 
     // handlers for X11 events
     bool mapRequest( XMapRequestEvent& e );

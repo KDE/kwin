@@ -78,6 +78,7 @@ private:
 
 
 extern Time kwin_time;
+extern void kwin_updateTime();
 
 // used to store the return values of
 // XShapeQueryExtension.
@@ -136,31 +137,12 @@ bool Motif::noBorder( WId w )
 
 
 
+
 /*!
-  Updates kwin_time by receiving a current timestamp from the server.
-  
-  Use this function only when really necessary. Keep in mind that it's
-  a roundtrip to the X-Server.
- */
-static void updateTime()
-{
-    static QWidget* w = 0;
-    if ( !w )
-	w = new QWidget;
-    long data = 1;
-    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
-		    PropModeAppend, (unsigned char*) &data, 1);
-    XEvent ev;
-    XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
-    kwin_time = ev.xproperty.time;
-}
-
-
-/*!  
   Creates a new client for window \a w, depending on certain hints
   (like Motif hints and the NET_WM_TYPE.
-  
-  Shaped windows always get a NoBorderClient. 
+
+  Shaped windows always get a NoBorderClient.
  */
 Client* Workspace::clientFactory( WId w )
 {
@@ -454,7 +436,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    return TRUE;
 	return destroyClient( findClient( e->xdestroywindow.window ) );
     case MapRequest:
-	updateTime();
+	kwin_updateTime();
 	c = findClient( e->xmaprequest.window );
 	if ( !c ) {
 	    if ( e->xmaprequest.parent == root ) {
@@ -859,7 +841,7 @@ Client* Workspace::previousStaticClient( Client* c ) const
 }
 
 
-/*!  
+/*!
   Returns topmost visible client. Windows on the dock and the
   desktop are excluded.
  */
@@ -1434,7 +1416,7 @@ void Workspace::cascadeDesktop()
   }
 }
 
-/*!  
+/*!
   Unclutters the current desktop by smart-placing all clients
   again.
  */
@@ -1711,7 +1693,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
 
 
-/*!  
+/*!
   Returns the workspace's desktop widget. The desktop widget is
   sometimes required by clients to draw on it, for example outlines on
   moving or resizing.
@@ -2424,7 +2406,7 @@ void Workspace::slotResetAllClients()
 
 /*!
   Stores the current session in the config file
-  
+
   \sa loadSessionInfo()
  */
 void Workspace::storeSession( KConfig* config )
@@ -2455,7 +2437,7 @@ void Workspace::storeSession( KConfig* config )
 
 /*!
   Loads the session information from the config file.
-  
+
   \sa storeSession()
  */
 void Workspace::loadSessionInfo()
@@ -2481,10 +2463,10 @@ void Workspace::loadSessionInfo()
 }
 
 
-/*!  
+/*!
   Returns the SessionInfo for client \a c. The returned session
   info is removed from the storage. It's up to the caller to delete it.
-  
+
   May return 0 if there's no session info for the client.
  */
 SessionInfo* Workspace::takeSessionInfo( Client* c )
@@ -2508,13 +2490,13 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 
 /*!
   Updates the current client area according to the current clients.
-  
+
   If the area changes, the new area is propagate to the world.
 
   The client area is the area that is available for clients (that
   which is not taken by windows like panels, the top-of-screen menu
   etc).
-  
+
   \sa clientArea()
  */
 void Workspace::updateClientArea()
@@ -2539,11 +2521,11 @@ void Workspace::updateClientArea()
 }
 
 
-/*! 
+/*!
   returns the area available for clients. This is the desktop
   geometry minus windows on the dock.  Placement algorithms should
-  refer to this rather than geometry().  
-  
+  refer to this rather than geometry().
+
   \sa geometry()
  */
 QRect Workspace::clientArea()

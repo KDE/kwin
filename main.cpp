@@ -79,6 +79,26 @@ int x11ErrorHandler(Display *d, XErrorEvent *e){
     return 0;
 }
 
+/*!
+  Updates kwin_time by receiving a current timestamp from the server.
+
+  Use this function only when really necessary. Keep in mind that it's
+  a roundtrip to the X-Server.
+ */
+void kwin_updateTime()
+{
+    static QWidget* w = 0;
+    if ( !w )
+	w = new QWidget;
+    long data = 1;
+    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
+		    PropModeAppend, (unsigned char*) &data, 1);
+    XEvent ev;
+    XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
+    kwin_time = ev.xproperty.time;
+}
+
+
 Application::Application( )
 : KApplication( )
 {

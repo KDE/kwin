@@ -16,6 +16,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qwhatsthis.h>
+#include <qdatetime.h>
 #include <qtimer.h>
 #include <kwin.h>
 #include <netwm.h>
@@ -50,27 +51,25 @@ public:
     virtual void changeDesktop(Q_UINT32 desktop) {
       m_client->setDesktop( desktop );
     }
-    virtual void changeState(Q_UINT32 state, Q_UINT32 /* mask */) {
-      // What's the mask ?
-      // Warning: this code was written by David who has no clue about window managers :/
+    virtual void changeState(Q_UINT32 state, Q_UINT32 mask ) {
+	// state : kwin.h says: possible values are or'ed combinations of NET::Modal,
+	// NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar
 
-      // state : kwin.h says: possible values are or'ed combinations of NET::Modal,
-      // NET::Sticky, NET::MaxVert, NET::MaxHoriz, NET::Shaded, NET::SkipTaskbar
+	state &= mask; // for safety, clear all other bits
+	
+	if ( mask & NET::Sticky )
+	    m_client->setSticky( state & NET::Sticky );
+	if ( mask & NET::Shaded )
+	    m_client->setShade( state & NET::Shaded );
 
-      m_client->setSticky( state & NET::Sticky );
-      m_client->setShade( state & NET::Shaded );
-
-      if ( state & NET::MaxVert )
-        if ( state & NET::MaxHoriz )
-          m_client->maximize( Client::MaximizeFull );
-        else
-          m_client->maximize( Client::MaximizeVertical );
-      else if ( state & NET::MaxHoriz )
-          m_client->maximize( Client::MaximizeHorizontal );
-
-      // if ( state & NET::Modal ) ???
-      // if ( state & NET::SkipTaskbar ) ???
-
+	if ( mask & NET::Max ) {
+	    if ( state & NET::Max == NET::Max )
+		m_client->maximize( Client::MaximizeFull );
+	    else if ( state & NET::MaxVert )
+		m_client->maximize( Client::MaximizeVertical );
+	    else if ( state & NET::MaxHoriz )
+		m_client->maximize( Client::MaximizeHorizontal );
+	} 
     }
 private:
     ::Client * m_client;
@@ -376,7 +375,8 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 	NET::WMState |
 	NET::WMWindowType |
 	NET::WMStrut |
-	NET::WMName
+	NET::WMName |
+	NET::WMIconGeometry
 	;
 
     info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
@@ -1209,6 +1209,8 @@ void Client::move( int x, int y )
  */
 void Client::showEvent( QShowEvent* )
 {
+    if ( isIconified() && !isTransient() )
+	animateIconifyOrDeiconify( FALSE );
     setMappingState( NormalState );
  }
 
@@ -1324,6 +1326,10 @@ void Client::invalidateWindow()
 }
 
 
+
+/*!
+  Iconifies this client plus its transients
+ */
 void Client::iconify()
 {
     if (!isMovable())
@@ -1339,11 +1345,19 @@ void Client::iconify()
     }
     Events::raise( Events::Iconify );
     setMappingState( IconicState );
+    
+    if ( !isTransient() )
+	animateIconifyOrDeiconify( TRUE );
     hide();
-    // TODO animation (virtual function)
+    
     workspace()->iconifyOrDeiconifyTransientsOf( this );
 }
 
+
+/*!  
+  Closes the window by either sending a delete_window message or
+  using XKill.
+ */
 void Client::closeWindow()
 {
     Events::raise( Events::Close );
@@ -1358,6 +1372,10 @@ void Client::closeWindow()
     }
 }
 
+
+/*!
+  Kills the window via XKill
+ */
 void Client::killWindow()
 {
     // not sure if we need an Events::Kill or not.. until then, use
@@ -1511,14 +1529,14 @@ void Client::gravitate( bool invert )
 
 /*!
   Reimplement to handle crossing events (qt should provide xroot, yroot)
-  
+
   Crossing events are necessary for the focus-follows-mouse focus
   policies, to do proper activation and deactivation.
 */
 bool Client::x11Event( XEvent * e)
 {
     if ( e->type == EnterNotify && e->xcrossing.mode == NotifyNormal ) {
-	if ( options->focusPolicy == Options::ClickToFocus ) 
+	if ( options->focusPolicy == Options::ClickToFocus )
 	    return TRUE;
 	
 	if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse   && ( isDesktop() || isDock() ) )
@@ -2107,9 +2125,9 @@ bool Client::isDock() const
 }
 
 
-/*!  
+/*!
   Returns \a area with the client's strut taken into account.
-  
+
   Used from Workspace in updateClientArea.
  */
 QRect Client::adjustedClientArea( const QRect& area ) const
@@ -2125,6 +2143,103 @@ QRect Client::adjustedClientArea( const QRect& area ) const
     if ( strut.bottom > 0  )
 	r.setBottom( r.bottom() - (int) strut.bottom );
     return r;
+}
+
+
+void Client::animateIconifyOrDeiconify( bool iconify)
+{
+    // the function is a bit tricky since it will ensure that an
+    // animation action needs always the same time regardless of the
+    // performance of the machine or the X-Server.
+
+    float lf,rf,tf,bf,step;
+
+    int options_dot_ResizeAnimation = 1;
+
+    step = 40. * (11 - options_dot_ResizeAnimation);
+
+    NETRect r = info->iconGeometry();
+    QRect icongeom( r.pos.x, r.pos.y, r.size.width, r.size.height );
+    if ( !icongeom.isValid() )
+	return;
+
+    QPixmap pm = animationPixmap( iconify ? width() : icongeom.width() );
+
+    QRect before, after;
+    if ( iconify ) {
+	before = QRect( x(), y(), width(), pm.height() );
+	after = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
+    } else {
+	before = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
+	after = QRect( x(), y(), width(), pm.height() );
+    }
+    
+    lf = (after.left() - before.left())/step;
+    rf = (after.right() - before.right())/step; 
+    tf = (after.top() - before.top())/step; 
+    bf = (after.bottom() - before.bottom())/step;
+
+
+    XGrabServer( qt_xdisplay() );
+    
+    QRect area = before;
+    QRect area2;
+    QPixmap pm2;
+
+    QTime t;
+    t.start();
+    float diff;
+
+    QPainter p ( workspace()->desktopWidget() );
+    bool need_to_clear = FALSE;
+    QPixmap pm3;
+    do {
+	if (area2 != area){
+	    pm = animationPixmap( area.width() );
+	    pm2 = QPixmap::grabWindow( qt_xrootwin(), area.x(), area.y(), area.width(), area.height() );
+	    p.drawPixmap( area.x(), area.y(), pm );
+	    if ( need_to_clear ) {
+		p.drawPixmap( area2.x(), area2.y(), pm3 );
+		need_to_clear = FALSE;
+	    }
+	    area2 = area;
+	}
+	XFlush(qt_xdisplay());
+	XSync( qt_xdisplay(), FALSE );
+	diff = t.elapsed();
+ 	if (diff > step)
+ 	    diff = step;
+	area.setLeft(before.left() + int(diff*lf));
+	area.setRight(before.right() + int(diff*rf));
+	area.setTop(before.top() + int(diff*tf));
+	area.setBottom(before.bottom() + int(diff*bf));
+	if (area2 != area ) {
+	    if ( area2.intersects( area ) )
+		p.drawPixmap( area2.x(), area2.y(), pm2 );
+	    else { // no overlap, we can clear later to avoid flicker
+		pm3 = pm2;
+		need_to_clear = TRUE;
+	    }
+	}
+    } while ( t.elapsed() < step);
+    if (area2 == area || need_to_clear )
+	p.drawPixmap( area2.x(), area2.y(), pm2 );
+    
+    p.end();
+    XUngrabServer( qt_xdisplay() );
+}
+
+QPixmap Client::animationPixmap( int w )
+{
+    QFont font = options->font(isActive());
+    QFontMetrics fm( font );
+    QPixmap pm( w, fm.lineSpacing() );
+    pm.fill( options->color(Options::TitleBar, isActive() || isIconified() ) );
+    QPainter p( &pm );
+    p.setPen(options->color(Options::Font, isActive() || isIconified() ));
+    p.setFont(options->font(isActive()));
+    p.drawText( pm.rect(), AlignLeft|AlignVCenter|SingleLine, caption() );
+    return pm;
 }
 
 
