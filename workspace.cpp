@@ -1616,7 +1616,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-        popup->insertItem(SmallIconSet( "configure" ), i18n("&Configure..."), this, SLOT( configureWM() ));
+        popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e..."), this, SLOT( configureWM() ));
         popup->insertItem(i18n("&To Desktop"), desk_popup );
 
         popup->insertSeparator();
