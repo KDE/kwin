@@ -47,8 +47,8 @@ Atoms::Atoms()
 
     Atom fake;
     atoms[n] = &fake;
-    names[n++] = (char *) "DT_SM_WINDOW_INFO";
-    
+    names[n++] = (char *) "_DT_SM_WINDOW_INFO";
+
     XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
 	*atoms[i] = atoms_return[i];
