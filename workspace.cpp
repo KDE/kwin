@@ -2006,7 +2006,8 @@ void Workspace::focusToNull(){
     XMapWindow(qt_xdisplay(), null_focus_window);
   }
   XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, kwin_time );
-  updateColormap();
+  if( !block_focus )
+      setActiveClient( NULL );
 }
 
 
@@ -2192,7 +2193,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
             }
         }
 
-        if (!c) {
+/*        if (!c) { // this is useless - these windows don't accept focus
             // Search top-most visible window
             for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
                 if ( (*it)->isVisible() ) {
@@ -2200,7 +2201,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
                     break;
                 }
             }
-        }
+        }*/
     }
 
     if ( c ) {
