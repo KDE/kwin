@@ -848,13 +848,23 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
     }
 
     if ( e.value_mask & (CWX | CWY ) ) {
-	int nx = x() + windowWrapper()->x();
-	int ny = y() + windowWrapper()->y();
+	int ox = 0;
+	int oy = 0;
+	int gravity = NorthWestGravity;
+	if ( xSizeHint.flags & PWinGravity)
+	    gravity = xSizeHint.win_gravity;
+	if ( TRUE || gravity == StaticGravity ) {
+	    // the TRUE makes it work with real programs, but it's not ICCCM.
+	    ox = windowWrapper()->x();
+	    oy = windowWrapper()->y();
+	}
+	int nx = x() + ox;
+	int ny = y() + oy;
 	if ( e.value_mask & CWX )
 	    nx = e.x;
 	if ( e.value_mask & CWY )
 	    ny = e.y;
-	move( nx - windowWrapper()->x(), ny - windowWrapper()->y() );
+	move( nx - ox, ny - oy );
     }
 
     if ( e.value_mask & (CWWidth | CWHeight ) ) {
