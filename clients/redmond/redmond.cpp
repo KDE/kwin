@@ -757,10 +757,22 @@ void GalliumClient::calcHiddenButtons()
 
 void GalliumClient::menuButtonPressed()
 {
-    QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-3, 
-                       button[BtnMenu]->rect().bottomLeft().y()+2 );
-    workspace()->showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ), this );
-	button[BtnMenu]->setDown(false);
+    static QTime* t = NULL;
+    static GalliumClient* lastClient = NULL;
+    if( t == NULL )
+	t = new QTime;
+    bool dbl = ( lastClient == this && t->elapsed() <= QApplication::doubleClickInterval());
+    lastClient = this;
+    t->start();
+    if( !dbl )
+    {
+	QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-3, 
+	                   button[BtnMenu]->rect().bottomLeft().y()+2 );
+	workspace()->showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ), this );
+	    button[BtnMenu]->setDown(false);
+    }
+    else
+	closeWindow();
 }
 
 };
