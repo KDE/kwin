@@ -215,14 +215,14 @@ int kdemain( int argc, char * argv[] )
             break;
         }
     }
-    
+
     if (! restored) {
         // we only do the multihead fork if we are not restored by the session
 	// manager, since the session manager will register multiple kwins,
         // one for each screen...
         QCString multiHead = getenv("KDE_MULTIHEAD");
-        if (multiHead.lower() == "true")
-        {
+        if (multiHead.lower() == "true") {
+	    
 	    Display* dpy = XOpenDisplay( NULL );
 	    if ( !dpy ) {
 		fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
@@ -240,7 +240,7 @@ int kdemain( int argc, char * argv[] )
 	    if ((pos = display_name.findRev('.')) != -1 )
 		display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
 
-            QCString envir;
+	    QCString envir;
 	    if (number_of_screens != 1) {
 		for (int i = 0; i < number_of_screens; i++ ) {
 		    // if execution doesn't pass by here, then kwin
@@ -256,7 +256,7 @@ int kdemain( int argc, char * argv[] )
 		//   number. If it had it, it was removed at the "pos" check
 		envir.sprintf("DISPLAY=%s.%d", display_name.data(), kwin_screen_number);
 
-		if (putenv(strdup(envir.data()))) {
+		if (putenv( strdup(envir.data())) ) {
 		    fprintf(stderr,
 			    "%s: WARNING: unable to set DISPLAY environment variable\n",
 			    argv[0]);

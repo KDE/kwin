@@ -264,9 +264,9 @@ private:
     void init();
     void createKeybindings();
     void freeKeyboard(bool pass);
-    
-    void startKDEWalkThroughWindows();
-    void startWalkThroughDesktops();
+
+    bool startKDEWalkThroughWindows();
+    bool startWalkThroughDesktops();
     void KDEWalkThroughWindows( bool forward );
     void CDEWalkThroughWindows( bool forward );
     void walkThroughDesktops( bool forward );

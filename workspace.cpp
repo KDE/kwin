@@ -48,7 +48,7 @@ const int XIconicState = IconicState;
 // Possible protoypes for select() were hidden as `kwin_hide_select.
 // Undo the hiding definition and defines an acceptable prototype.
 // This is how QT does this. It should work where QT works.
-#ifdef HAVE_SYS_SELECT_H 
+#ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
 #undef select
@@ -286,7 +286,7 @@ Workspace::Workspace( bool restore )
 
     init();
 
-    if ( restore ) 
+    if ( restore )
         restoreLegacySession(kapp->sessionConfig());
 }
 
@@ -684,8 +684,8 @@ void Workspace::freeKeyboard(bool pass){
 /*!
   Handles alt-tab / control-tab
  */
- 
- 
+
+
 void Workspace::slotWalkThroughWindows()
 {
     if ( root != qt_xrootwin() )
@@ -697,8 +697,8 @@ void Workspace::slotWalkThroughWindows()
         CDEWalkThroughWindows( true );
     else {
         if(( keyToXMod( walkThroughWindowsKeycode ) & XMODMASK ) != 0 ) {
-            startKDEWalkThroughWindows();
-            KDEWalkThroughWindows( true );
+            if ( startKDEWalkThroughWindows() )
+		KDEWalkThroughWindows( true );
         }
         else
             // if the shortcut has no modifiers, don't show the tabbox, but
@@ -713,53 +713,53 @@ void Workspace::slotWalkThroughWindows()
 }
 
 void Workspace::slotWalkBackThroughWindows()
-{ 
+{
     if ( root != qt_xrootwin() )
-        return;
+	return;
     if( tab_grab || control_grab )
-        return;
-    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
-        // CDE style raise / lower
-        CDEWalkThroughWindows( true );
-    else {
-        if(( keyToXMod( walkBackThroughWindowsKeycode ) & XMODMASK ) != 0 ) {
-            startKDEWalkThroughWindows();
-            KDEWalkThroughWindows( false );
-        }
-        else
-            KDEOneStepThroughWindows( false );
+	return;
+    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) {
+	// CDE style raise / lower
+	CDEWalkThroughWindows( true );
+    } else {
+	if (( keyToXMod( walkBackThroughWindowsKeycode ) & XMODMASK ) != 0 ) {
+	    if ( startKDEWalkThroughWindows() )
+		KDEWalkThroughWindows( false );
+	} else {
+	    KDEOneStepThroughWindows( false );
+	}
     }
 }
 
 void Workspace::slotWalkThroughDesktops()
-{ 
+{
     if ( root != qt_xrootwin() )
-        return;
+	return;
     if( tab_grab || control_grab )
-        return;
-    if(( keyToXMod( walkThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
-        startWalkThroughDesktops();
-        walkThroughDesktops( true );
+	return;
+    if (( keyToXMod( walkThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
+	if ( startWalkThroughDesktops() )
+	    walkThroughDesktops( true );
+    } else {
+	oneStepThroughDesktops( true );
     }
-    else
-        oneStepThroughDesktops( true );
 }
 
 void Workspace::slotWalkBackThroughDesktops()
-{ 
+{
     if ( root != qt_xrootwin() )
         return;
     if( tab_grab || control_grab )
-        return;
-    if(( keyToXMod( walkBackThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
-        startWalkThroughDesktops();
-        walkThroughDesktops( false );
+	return;
+    if (( keyToXMod( walkBackThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
+	if ( startWalkThroughDesktops() )
+	    walkThroughDesktops( false );
+    } else {
+	oneStepThroughDesktops( false );
     }
-    else
-        oneStepThroughDesktops( false );
 }
 
-void Workspace::startKDEWalkThroughWindows()
+bool Workspace::startKDEWalkThroughWindows()
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
           (uint)(ButtonPressMask | ButtonReleaseMask |
@@ -768,7 +768,7 @@ void Workspace::startKDEWalkThroughWindows()
           GrabModeSync, GrabModeAsync,
           None, None, kwin_time ) != GrabSuccess ) {
         freeKeyboard(FALSE);
-        return;
+        return FALSE;
     }
     XGrabKeyboard(qt_xdisplay(),
                   root, FALSE,
@@ -778,9 +778,10 @@ void Workspace::startKDEWalkThroughWindows()
     keys->setEnabled( FALSE );
     tab_box->setMode( TabBox::WindowsMode );
     tab_box->reset();
+    return TRUE;
 }
 
-void Workspace::startWalkThroughDesktops()
+bool Workspace::startWalkThroughDesktops()
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
           (uint)(ButtonPressMask | ButtonReleaseMask |
@@ -789,7 +790,7 @@ void Workspace::startWalkThroughDesktops()
               GrabModeSync, GrabModeAsync,
               None, None, kwin_time ) != GrabSuccess ) {
         freeKeyboard(FALSE);
-        return;
+        return FALSE;
     }
     XGrabKeyboard(qt_xdisplay(),
                   root, FALSE,
@@ -799,6 +800,7 @@ void Workspace::startWalkThroughDesktops()
     keys->setEnabled( FALSE );
     tab_box->setMode( TabBox::DesktopMode );
     tab_box->reset();
+    return TRUE;
 }
 
 void Workspace::KDEWalkThroughWindows( bool forward )
@@ -840,7 +842,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
     }
     freeKeyboard(FALSE);
     }
- 
+
 void Workspace::KDEOneStepThroughWindows( bool forward )
 {
     tab_box->setMode( TabBox::WindowsMode );
@@ -870,7 +872,7 @@ bool Workspace::keyPress(XKeyEvent key)
     unsigned int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
     unsigned int km = key.state & XMODMASK;
     if (!control_grab){
-    
+
         if( ( kc == keyToXSym( walkThroughWindowsKeycode )
               && km == keyToXMod( walkThroughWindowsKeycode ))
            || ( kc == keyToXSym( walkBackThroughWindowsKeycode )
@@ -2274,7 +2276,7 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Walk back through desktops", this, SLOT( slotWalkBackThroughDesktops()));
     keys->connectItem( "Walk through windows",this, SLOT( slotWalkThroughWindows()));
     keys->connectItem( "Walk back through windows",this, SLOT( slotWalkBackThroughWindows()));
-    
+
     keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
 
     keys->connectItem( "Logout", this, SLOT( slotLogout() ) );
@@ -2998,12 +3000,12 @@ void Workspace::slotResetAllClients()
 }
 
 
-/* 
+/*
  * Legacy session management
  */
 
 #ifndef NO_LEGACY_SESSION_MANAGEMENT
-#define WM_SAVE_YOURSELF_TIMEOUT 4000 
+#define WM_SAVE_YOURSELF_TIMEOUT 4000
 
 typedef QMap<WId,int> WindowMap;
 #define HAS_ERROR          0
@@ -3055,7 +3057,7 @@ void Workspace::storeLegacySession( KConfig* config )
     Display *newdisplay = XOpenDisplay(DisplayString(qt_xdisplay()));
     if (!newdisplay) return;
     WId root = DefaultRootWindow(newdisplay);
-    XGrabKeyboard(newdisplay, root, False, 
+    XGrabKeyboard(newdisplay, root, False,
                   GrabModeAsync, GrabModeAsync, CurrentTime);
     XGrabPointer(newdisplay, root, False, Button1Mask|Button2Mask|Button3Mask,
                  GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
@@ -3185,7 +3187,7 @@ void Workspace::storeSession( KConfig* config )
             // session managed applications (storeLegacySession) and the
             // recollection of the window geometries (this function).
             if ( wmCommand.isEmpty() )
-#endif 
+#endif
                 continue;
         count++;
         QString n = QString::number(count);
@@ -3318,7 +3320,7 @@ void Workspace::writeFakeSessionInfo()
   This function is called when a new window is mapped and must be managed.
   We try to find a matching entry in the session.  We also try to find
   a matching entry in the fakeSession to see if the user had seclected the
-  ``store settings'' menu entry.  
+  ``store settings'' menu entry.
 
   May return 0 if there's no session info for the client.
  */
@@ -3332,39 +3334,39 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     QCString wmClientMachine = c->wmClientMachine();
     QCString resourceName = c->resourceName();
     QCString resourceClass = c->resourceClass();
-    
+
     // First search ``session''
     if (! sessionId.isEmpty() ) {
         // look for a real session managed client (algorithm suggested by ICCCM)
-        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() ) 
+        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() )
             if ( info->sessionId == sessionId ) {
                 if ( ! windowRole.isEmpty() ) {
                     if ( info->windowRole == windowRole )
                         realInfo = session.take();
                 } else {
-                    if ( info->windowRole.isEmpty() && 
-                         info->resourceName == resourceName && 
+                    if ( info->windowRole.isEmpty() &&
+                         info->resourceName == resourceName &&
                          info->resourceClass == resourceClass )
                         realInfo = session.take();
                 }
             }
     } else {
         // look for a sessioninfo with matching features.
-        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() ) 
-            if ( info->resourceName == resourceName && 
+        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() )
+            if ( info->resourceName == resourceName &&
                  info->resourceClass == resourceClass &&
                  info->wmClientMachine == wmClientMachine )
                 if ( wmCommand.isEmpty() || info->wmCommand == wmCommand )
                     realInfo = session.take();
     }
-    
+
     // Now search ``fakeSession''
     for (SessionInfo* info = fakeSession.first(); info && !fakeInfo; info = fakeSession.next() )
-        if ( info->resourceName == resourceName && 
+        if ( info->resourceName == resourceName &&
              info->resourceClass == resourceClass &&
-             info->wmClientMachine == wmClientMachine ) 
+             info->wmClientMachine == wmClientMachine )
             fakeInfo = fakeSession.take();
-    
+
     // Reconciliate
     if (fakeInfo)
         c->setStoreSettings( TRUE );

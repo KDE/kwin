@@ -1007,6 +1007,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
     if ( isShade() )
 	setShade( FALSE );
 
+    qDebug("configureRequest %s: %d %d %d %d", caption().latin1(), e.x, e.y, e.width, e.height );
      /*    
     // compress configure requests
     XEvent otherEvent;
