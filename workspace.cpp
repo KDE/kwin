@@ -40,7 +40,7 @@ const int XIconicState = IconicState;
 #undef IconicState
 
 #include <kwin.h>
-#include <kapp.h>
+#include <kdebug.h>
 
 
 extern int kwin_screen_number;
@@ -223,7 +223,7 @@ Workspace::Workspace( bool restore )
     installed_colormap = default_colormap;
     session.setAutoDelete( TRUE );
 
-    area = QApplication::desktop()->geometry();
+    area = QRect( 0, 0, 0, 0 ); // bogus value so that updateClientArea does the right thing
 
     if ( restore )
       loadSessionInfo();
@@ -337,7 +337,7 @@ void Workspace::init()
 
     connect(&focusEnsuranceTimer, SIGNAL(timeout()), this,
 	    SLOT(focusEnsurance()));
-    
+
     XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
     for (i = 0; i < nwins; i++) {
 	XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
@@ -424,12 +424,12 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    return TRUE;
     }
 
-    
+
     if ( e->type == FocusIn )
 	focusEnsuranceTimer.stop();
     else if ( e->type == FocusOut )
 	focusEnsuranceTimer.start(50);
-    
+
     Client * c = findClient( e->xany.window );
     if ( c )
 	return c->windowEvent( e );
@@ -3071,7 +3071,9 @@ void Workspace::updateClientArea()
 	r.size.width = area.width();
 	r.size.height = area.height();
 	for( int i = 1; i <= numberOfDesktops(); i++)
+        {
 	    rootInfo->setWorkArea( i, r );
+        }
 
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
 	    if ( (*it)->isMaximized() )
