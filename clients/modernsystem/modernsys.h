@@ -5,20 +5,22 @@
 #include <qbutton.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
-#include "../../client.h"
-#include "../../kwinbutton.h"
+#include <qbutton.h>
+#include <kdecoration.h>
+#include <kdecorationfactory.h>
+
 class QLabel;
 class QSpacerItem;
 
 namespace ModernSystem {
 
-using namespace KWinInternal;
+class ModernSys;
 
-class ModernButton : public KWinButton
+class ModernButton : public QButton
 {
     Q_OBJECT
 public:
-    ModernButton(Client *parent=0, const char *name=0,
+    ModernButton( ModernSys *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL,
                  const QString& tip=NULL);
     void setBitmap(const unsigned char *bitmap);
@@ -31,34 +33,39 @@ protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     QBitmap deco;
-    Client* client;
+    ModernSys* client;
 public:
     int last_button;
 };
 
-class ModernSys : public Client
+class ModernSys : public KDecoration
 {
     Q_OBJECT
 public:
-    ModernSys( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
+    ModernSys( KDecorationBridge* b, KDecorationFactory* f );
     ~ModernSys(){;}
+    void init();
 protected:
+    bool eventFilter( QObject* o, QEvent* e );
     void drawRoundFrame(QPainter &p, int x, int y, int w, int h);
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
     void showEvent( QShowEvent* );
-    void windowWrapperShowEvent( QShowEvent* );
     void mouseDoubleClickEvent( QMouseEvent * );
-    void init();
-    void captionChange( const QString& name );
-    void stickyChange(bool on);
-    void maximizeChange(bool m);
+    void captionChange();
+    void maximizeChange();
     void doShape();
     void recalcTitleBuffer();
-    void activeChange(bool);
+    void activeChange();
     MousePosition mousePosition( const QPoint& ) const;
+    void desktopChange();
+    void shadeChange();
+    void iconChange();
+    QSize minimumSize() const;
+    void resize( const QSize& );
+    void borders( int&, int&, int&, int& ) const;
+    void reset( unsigned long );
 protected slots:
-    void slotReset();
     void maxButtonClicked();
 private:
 	enum Buttons{ BtnClose = 0, BtnSticky, BtnMinimize, BtnMaximize, BtnHelp };
@@ -66,6 +73,16 @@ private:
     QSpacerItem* titlebar;
     QPixmap titleBuffer;
     QString oldTitle;
+};
+
+class ModernSysFactory : public QObject, public KDecorationFactory
+{
+Q_OBJECT
+public:
+    ModernSysFactory();
+    virtual ~ModernSysFactory();
+    virtual KDecoration* createDecoration( KDecorationBridge* );
+    virtual bool reset( unsigned long changed );
 };
 
 }

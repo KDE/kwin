@@ -10,15 +10,14 @@
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <qbitmap.h>
-#include "../../workspace.h"
-#include "../../options.h"
+#include <qtooltip.h>
+#include <qapplication.h>
+#include <qlabel.h>
 #include "modernsys.h"
 
 #include "buttondata.h"
 #include "btnhighcolor.h"
 #include <qimage.h>
-
-using namespace KWinInternal;
 
 namespace ModernSystem {
 
@@ -69,6 +68,11 @@ static QString *button_pattern = NULL;
 static bool show_handle;
 static int handle_size;
 static int handle_width;
+
+static inline const KDecorationOptions* options()
+{
+    return KDecoration::options();
+}
 
 static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
 {
@@ -134,22 +138,22 @@ static void create_pixmaps()
         iUpperGradient = new KPixmap;
         iUpperGradient->resize(32, 18);
         KPixmapEffect::gradient(*aUpperGradient,
-                                options->color(Options::TitleBar, true).light(130),
-                                options->color(Options::TitleBlend, true),
+                                options()->color(KDecoration::ColorTitleBar, true).light(130),
+                                options()->color(KDecoration::ColorTitleBlend, true),
                                 KPixmapEffect::VerticalGradient);
         KPixmapEffect::gradient(*iUpperGradient,
-                                options->color(Options::TitleBar, false).light(130),
-                                options->color(Options::TitleBlend, false),
+                                options()->color(KDecoration::ColorTitleBar, false).light(130),
+                                options()->color(KDecoration::ColorTitleBlend, false),
                                 KPixmapEffect::VerticalGradient);
     }
     // buttons
-    QColorGroup btnColor(options->colorGroup(Options::ButtonBg, true));
+    QColorGroup btnColor(options()->colorGroup(KDecoration::ColorButtonBg, true));
     buttonPix = new QPixmap(14, 15);
     make_button_fx(btnColor, buttonPix);
     buttonPixDown = new QPixmap(14, 15);
     make_button_fx(btnColor, buttonPixDown, true);
 
-    btnColor = options->colorGroup(Options::ButtonBg, false);
+    btnColor = options()->colorGroup(KDecoration::ColorButtonBg, false);
     iButtonPix = new QPixmap(14, 15);
     make_button_fx(btnColor, iButtonPix);
     iButtonPixDown = new QPixmap(14, 15);
@@ -201,9 +205,9 @@ static bool read_config()
         hwidth = hsize = 0;
     }
 
-    if (options->customButtonPositions()) {
-        bpatt = "2" + options->titleButtonsLeft() + "3t3"
-                + options->titleButtonsRight() + "2";
+    if (options()->customButtonPositions()) {
+        bpatt = "2" + options()->titleButtonsLeft() + "3t3"
+                + options()->titleButtonsRight() + "2";
     }
     else
         bpatt = "2X3t3HSIA2";
@@ -219,9 +223,9 @@ static bool read_config()
     return true;
 }
 
-ModernButton::ModernButton(Client *parent, const char *name,
+ModernButton::ModernButton(ModernSys *parent, const char *name,
                            const unsigned char *bitmap, const QString& tip)
-    : KWinButton(parent, name, tip)
+    : QButton(parent->widget(), name)
 {
     setBackgroundMode( NoBackground );
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
@@ -232,7 +236,9 @@ ModernButton::ModernButton(Client *parent, const char *name,
         setBitmap(bitmap);
     setMask(mask);
     hide();
-	client = parent;
+    client = parent;
+    QToolTip::add( this, tip );
+        
 }
 
 QSize ModernButton::sizeHint() const
@@ -272,36 +278,42 @@ void ModernButton::mousePressEvent( QMouseEvent* e )
 {
     last_button = e->button();
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    KWinButton::mousePressEvent( &me );
+    QButton::mousePressEvent( &me );
 }
 
 void ModernButton::mouseReleaseEvent( QMouseEvent* e )
 {
     QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
-    KWinButton::mouseReleaseEvent( &me );
+    QButton::mouseReleaseEvent( &me );
 }
 
 
-void ModernSys::slotReset()
+void ModernSys::reset( unsigned long )
 {
-    workspace()->slotResetAllClientsDelayed();
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
     for (int i = 0; i < 5; button[i++]->reset());
-    repaint();
+    widget()->repaint();
 }
 
-ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
-                            const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase )
+ModernSys::ModernSys( KDecorationBridge* b, KDecorationFactory* f )
+    : KDecoration( b, f )
 {
+}
+
+void ModernSys::init()
+{
+    createMainWidget( WResizeNoErase );
+    widget()->installEventFilter( this );
 	bool reverse = QApplication::reverseLayout();
 
-    connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
     bool help = providesContextHelp();
 
-    QGridLayout* g = new QGridLayout(this, 0, 0, 2);
-    g->addWidget(windowWrapper(), 1, 1 );
+    QGridLayout* g = new QGridLayout(widget(), 0, 0, 2);
+    if( isPreview())
+        g->addWidget( new QLabel( i18n( "<center><b>ModernSys preview</b></center>" ), widget()), 1, 1 );
+    else
+        g->addWidget( new QWidget( widget()), 1, 1 );
     g->setRowStretch(1, 10);
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 
@@ -322,10 +334,10 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     button[BtnHelp] = new ModernButton(this, "help", question_bits, i18n("Help"));
 
     connect( button[BtnClose], SIGNAL(clicked()), this, SLOT( closeWindow() ) );
-    connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT( toggleSticky() ) );
-    connect( button[BtnMinimize], SIGNAL(clicked()), this, SLOT( iconify() ) );
+    connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT( toggleOnAllDesktops() ) );
+    connect( button[BtnMinimize], SIGNAL(clicked()), this, SLOT( minimize() ) );
     connect( button[BtnMaximize], SIGNAL(clicked()), this, SLOT( maxButtonClicked() ) );
-    connect( button[BtnHelp], SIGNAL(clicked()), this, SLOT( contextHelp() ) );
+    connect( button[BtnHelp], SIGNAL(clicked()), this, SLOT( showContextHelp() ) );
 
     for (int i = 0; i < (int)button_pattern->length();) {
         QChar c = (*button_pattern)[i++];
@@ -341,7 +353,7 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
             button[BtnClose]->show();
         }
         else if (c == 'S') {
-            if(isSticky())
+            if(isOnAllDesktops())
                 button[BtnSticky]->setBitmap(unsticky_bits);
             else
                 button[BtnSticky]->setBitmap(sticky_bits);
@@ -368,8 +380,9 @@ ModernSys::ModernSys( Workspace *ws, WId w, QWidget *parent,
     }
 
     g->addLayout( hb, 0, 1 );
-    setBackgroundMode(NoBackground);
+    widget()->setBackgroundMode(NoBackground);
     recalcTitleBuffer();
+    widget()->layout()->activate();
 }
 
 
@@ -377,13 +390,13 @@ void ModernSys::maxButtonClicked( )
 {
     switch ( button[BtnMaximize]->last_button ) {
     case MidButton:
-       maximize( MaximizeVertical );
+       maximize( maximizeMode() ^ MaximizeVertical );
        break;
     case RightButton:
-       maximize( MaximizeHorizontal );
+       maximize( maximizeMode() ^ MaximizeHorizontal );
        break;
     default: //LeftButton:
-       maximize( MaximizeFull );
+       maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
        break;
     }
 }
@@ -398,7 +411,7 @@ void ModernSys::recalcTitleBuffer()
 {
     if(oldTitle == caption() && width() == titleBuffer.width())
         return;
-    QFontMetrics fm(options->font(true));
+    QFontMetrics fm(options()->font(true));
     titleBuffer.resize(width(), 18);
     QPainter p;
     p.begin(&titleBuffer);
@@ -406,7 +419,7 @@ void ModernSys::recalcTitleBuffer()
         p.drawTiledPixmap(0, 0, width(), 18, *aUpperGradient);
     else
         p.fillRect(0, 0, width(), 18,
-                   options->colorGroup(Options::TitleBar, true).
+                   options()->colorGroup(ColorTitleBar, true).
                    brush(QColorGroup::Button));
 
     QRect t = titlebar->geometry();
@@ -420,14 +433,14 @@ void ModernSys::recalcTitleBuffer()
     p.setClipRegion(r);
     int i, ly;
     for(i=0, ly=4; i < 4; ++i, ly+=3){
-        p.setPen(options->color(Options::TitleBar, true).light(150));
+        p.setPen(options()->color(ColorTitleBar, true).light(150));
         p.drawLine(0, ly, width()-1, ly);
-        p.setPen(options->color(Options::TitleBar, true).dark(120));
+        p.setPen(options()->color(ColorTitleBar, true).dark(120));
         p.drawLine(0, ly+1, width()-1, ly+1);
     }
     p.setClipRect(t);
-    p.setPen(options->color(Options::Font, true));
-    p.setFont(options->font(true));
+    p.setPen(options()->color(ColorFont, true));
+    p.setFont(options()->font(true));
 
     p.drawText(t.x()+((t.width()-fm.width(caption()))/2)-4,
                0, fm.width(caption())+8, 18, AlignCenter, caption());
@@ -436,16 +449,16 @@ void ModernSys::recalcTitleBuffer()
     oldTitle = caption();
 }
 
-void ModernSys::captionChange( const QString &)
+void ModernSys::captionChange()
 {
     recalcTitleBuffer();
-    repaint( titlebar->geometry(), false );
+    widget()->repaint( titlebar->geometry(), false );
 }
 
 void ModernSys::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
 {
     kDrawRoundButton(&p, x, y, w, h,
-                     options->colorGroup(Options::Frame, isActive()), false);
+                     options()->colorGroup(ColorFrame, isActive()), false);
 
 }
 
@@ -454,12 +467,12 @@ void ModernSys::paintEvent( QPaintEvent* )
     int hs = handle_size;
     int hw = handle_width;
 
-    QPainter p( this );
+    QPainter p( widget() );
     QRect t = titlebar->geometry();
 
-    QBrush fillBrush(colorGroup().brush(QColorGroup::Background).pixmap() ?
-                     colorGroup().brush(QColorGroup::Background) :
-                     options->colorGroup(Options::Frame, isActive()).
+    QBrush fillBrush(widget()->colorGroup().brush(QColorGroup::Background).pixmap() ?
+                     widget()->colorGroup().brush(QColorGroup::Background) :
+                     options()->colorGroup(ColorFrame, isActive()).
                      brush(QColorGroup::Button));
 
     p.fillRect(1, 16, width()-2, height()-16, fillBrush);
@@ -473,7 +486,7 @@ void ModernSys::paintEvent( QPaintEvent* )
     int h = height() - hw;
 
     // titlebar
-    QColorGroup g = options->colorGroup(Options::TitleBar, isActive());
+    QColorGroup g = options()->colorGroup(ColorTitleBar, isActive());
     if(isActive()){
         p.drawPixmap(1, 1, titleBuffer, 0, 0, w-2, 18);
     }
@@ -482,8 +495,8 @@ void ModernSys::paintEvent( QPaintEvent* )
             p.drawTiledPixmap(1, 1, w-2, 18, *iUpperGradient);
         else
             p.fillRect(1, 1, w-2, 18, fillBrush);
-        p.setPen(options->color(Options::Font, isActive()));
-        p.setFont(options->font(isActive()));
+        p.setPen(options()->color(ColorFont, isActive()));
+        p.setFont(options()->font(isActive()));
         p.drawText(t, AlignCenter, caption() );
     }
 
@@ -496,7 +509,7 @@ void ModernSys::paintEvent( QPaintEvent* )
     p.drawLine(0, 18, w-2, 18);
 
     // frame
-    g = options->colorGroup(Options::Frame, isActive());
+    g = options()->colorGroup(ColorFrame, isActive());
     p.setPen(g.light());
     p.drawLine(1, 19, 1, h-2);
     p.setPen(g.dark());
@@ -554,51 +567,44 @@ void ModernSys::doShape()
     setMask(mask);
 }
 
-void ModernSys::showEvent(QShowEvent *ev)
-{
-    Client::showEvent(ev);
-    doShape();
-    repaint();
-}
-
-void ModernSys::windowWrapperShowEvent( QShowEvent* )
+void ModernSys::showEvent(QShowEvent *)
 {
     doShape();
+    widget()->repaint();
 }
 
 void ModernSys::mouseDoubleClickEvent( QMouseEvent * e )
 {
     if (titlebar->geometry().contains( e->pos() ) )
-        workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+        titlebarDblClickOperation();
 }
 
-void ModernSys::stickyChange(bool on)
+void ModernSys::desktopChange()
 {
-    button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
-    button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
+    bool sticky_on = isOnAllDesktops();
+    button[BtnSticky]->setBitmap(sticky_on ? unsticky_bits : sticky_bits);
+    QToolTip::remove( button[BtnSticky] );
+    QToolTip::add( button[BtnSticky], sticky_on ? i18n("Un-Sticky") : i18n("Sticky"));
 }
 
-void ModernSys::maximizeChange(bool m)
+void ModernSys::maximizeChange()
 {
+    bool m = ( maximizeMode() == MaximizeFull );
     button[BtnMaximize]->setBitmap(m ? minmax_bits : maximize_bits);
-    button[BtnMaximize]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+    QToolTip::remove( button[BtnMaximize] );
+    QToolTip::add( button[BtnMaximize], m ? i18n("Restore") : i18n("Maximize"));
 }
 
-void ModernSys::init()
+void ModernSys::activeChange()
 {
-    //
-}
-
-void ModernSys::activeChange(bool)
-{
-    repaint(false);
+    widget()->repaint(false);
     for (int i = 0; i < 5; button[i++]->reset());
 }
 
 
-Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
+ModernSys::MousePosition ModernSys::mousePosition( const QPoint& p) const
 {
-    MousePosition m = Client::mousePosition( p );
+    MousePosition m = KDecoration::mousePosition( p );
 
     if ( show_handle && m == Center ) {
        int border = handle_width + 4;
@@ -606,7 +612,7 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
 	   bool hy = (p.y() >= height() - border);
 
        if (hx && hy)
-           m = BottomRight;
+           m = BottomRight2;
        else if (hx)
            m =  Right;
        else if (hy)
@@ -615,33 +621,111 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
     return m;
 }
 
+void ModernSys::resize( const QSize& s )
+{
+    widget()->resize( s );
+}
+
+void ModernSys::iconChange()
+{
+}
+
+void ModernSys::shadeChange()
+{
+}
+
+QSize ModernSys::minimumSize() const
+{
+    return QSize( 50, 50 ); // FRAME
+}
+
+void ModernSys::borders( int& left, int& right, int& top, int& bottom ) const
+{
+    bool reverse = QApplication::reverseLayout();
+    left = 2 + 2 + (reverse ? handle_width : 0);
+    right = 2 + 2 + (reverse ? 0 : handle_width);
+    top = 2 + 2 + titlebar->geometry().height(); // FRAME is this ok?
+    bottom = 2 + 2 + handle_width;
+// FRAME this below needs doShape() changes
+//    if( isShade())
+//        bottom = 0;
+//    if( ( maximizeMode() & MaximizeHorizontal ) && !options()->moveResizeMaximizedWindows())
+//        left = right = 0;
+//    if( ( maximizeMode() & MaximizeVertical ) && !options()->moveResizeMaximizedWindows())
+//        bottom = 0;
+}
+
+bool ModernSys::eventFilter( QObject* o, QEvent* e )
+{
+    if( o != widget())
+	return false;
+    switch( e->type())
+	{
+	case QEvent::Resize:
+	    resizeEvent( static_cast< QResizeEvent* >( e ));
+	    return true;
+	case QEvent::Paint:
+	    paintEvent( static_cast< QPaintEvent* >( e ));
+	    return true;
+	case QEvent::MouseButtonDblClick:
+	    mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ));
+	    return true;
+	case QEvent::MouseButtonPress:
+	    processMousePressEvent( static_cast< QMouseEvent* >( e ));
+	    return true;
+	case QEvent::Show:
+	    showEvent( static_cast< QShowEvent* >( e ));
+	    return true;
+	default:
+	    break;
+	}
+    return false;
+}
+
+ModernSysFactory::ModernSysFactory()
+{
+    button_pattern = new QString;
+    create_pixmaps();
+    read_config();
+}
+
+ModernSysFactory::~ModernSysFactory()
+{
+    ModernSystem::delete_pixmaps();
+    delete ModernSystem::button_pattern;
+}
+
+KDecoration* ModernSysFactory::createDecoration( KDecorationBridge* b )
+{
+    return(new ModernSys(b, this));
+}
+
+bool ModernSysFactory::reset( unsigned long changed )
+{
+    bool ret = read_config();
+    if( changed & SettingColors )
+    {
+        delete_pixmaps();
+        create_pixmaps();
+    }
+    if( ret )
+        return true;
+    else
+    {
+        resetDecorations( changed );
+        return false; // no recreating of decorations
+    }
+}
+
 }
 
 // KWin extended plugin interface
-extern "C"
+extern "C" KDecorationFactory* create_factory()
 {
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new ModernSystem::ModernSys(ws, w));
-    }
-    void init()
-    {
-        ModernSystem::button_pattern = new QString;
-        ModernSystem::create_pixmaps();
-        ModernSystem::read_config();
-    }
-    void reset()
-    {
-        ModernSystem::read_config();
-        ModernSystem::delete_pixmaps();
-        ModernSystem::create_pixmaps();
-    }
-    void deinit()
-    {
-        ModernSystem::delete_pixmaps();
-        delete ModernSystem::button_pattern;
-    }
+    return new ModernSystem::ModernSysFactory();
 }
+
+
 
 #include "modernsys.moc"
 // vim:ts=4:sw=4
