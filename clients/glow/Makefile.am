@@ -1,5 +1,7 @@
 
-INCLUDES = $(all_includes) 
+INCLUDES = $(all_includes)
+
+SUBDIRS = . config
 
 kde_module_LTLIBRARIES = libkwinglow.la
 
