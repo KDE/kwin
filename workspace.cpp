@@ -2676,12 +2676,6 @@ void Workspace::initShortcuts(){
 void Workspace::readShortcuts(){
     keys->readSettings();
 
-    /*walkThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops");
-    walkBackThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops (Reverse)");
-    walkThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List");
-    walkBackThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List (Reverse)");
-    walkThroughWindowsKeycode = keys->shortcut("Walk Through Windows");
-    walkBackThroughWindowsKeycode = keys->shortcut("Walk Through Windows (Reverse)");*/
     cutWalkThroughDesktops = keys->shortcut("Walk Through Desktops");
     cutWalkThroughDesktopsReverse = keys->shortcut("Walk Through Desktops (Reverse)");
     cutWalkThroughDesktopList = keys->shortcut("Walk Through Desktop List");
