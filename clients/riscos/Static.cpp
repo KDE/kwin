@@ -489,6 +489,8 @@ Static::update()
   else
     rightButtons_ << "Help" << "Iconify" << "Maximize";
 
+  animationStyle_ = c->readNumEntry("IconifyAnimationStyle", 0);
+
   delete c;
   c = 0;
 }
