@@ -27,6 +27,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kmenubar.h>
 #include <kprocess.h>
 #include <kglobalaccel.h>
+#include <kwin.h>
 
 #include "plugins.h"
 #include "client.h"
@@ -1831,7 +1832,10 @@ void Workspace::addTopMenu( Client* c )
         for( ClientList::ConstIterator it = topmenus.begin();
              it != topmenus.end();
              ++it )
+            {
+            KWin::setStrut( (*it)->window(), 0, 0, topmenu_height, 0 ); // so that kicker etc. know
             (*it)->checkWorkspacePosition();
+            }
         }
     c->checkWorkspacePosition();
 //        kdDebug() << "NEW TOPMENU:" << c << endl;
@@ -1856,6 +1860,7 @@ void Workspace::lostTopMenuSelection()
     disconnect( topmenu_selection, SIGNAL( lostOwnership()), this, SLOT( lostTopMenuSelection()));
     managing_topmenus = false;
     delete topmenu_space;
+    topmenu_space = NULL;
     updateClientArea();
     for( ClientList::ConstIterator it = topmenus.begin();
          it != topmenus.end();
