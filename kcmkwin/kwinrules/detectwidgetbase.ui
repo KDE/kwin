@@ -12,9 +12,6 @@
             <height>335</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>Form1</string>
-    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -165,9 +162,6 @@
                     <property name="text">
                         <string>Use window &amp;class (whole application)</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+C</string>
-                    </property>
                     <property name="checked">
                         <bool>true</bool>
                     </property>
@@ -182,9 +176,6 @@
                     <property name="text">
                         <string>Use window class and window &amp;role (specific window)</string>
                     </property>
-                    <property name="accel">
-                        <string>Alt+R</string>
-                    </property>
                     <property name="whatsThis" stdset="0">
                         <string>For selecting a specific window in an application, both window class and window role should be selected. Window class will determine the application and window role the specific window in the application. Many applications don't provide useful window roles though.</string>
                     </property>
@@ -195,9 +186,6 @@
                     </property>
                     <property name="text">
                         <string>Use &amp;whole window class (specific window)</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+W</string>
                     </property>
                     <property name="whatsThis" stdset="0">
                         <string>With some (non-KDE) applications whole window class can be sufficient for selecting a specific window in an application, as they set whole window class to contain both application and window role.</string>

@@ -12,9 +12,6 @@
             <height>477</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>Form1</string>
-    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -279,9 +276,6 @@
                                                 </property>
                                                 <property name="text">
                                                     <string>&amp;Detect</string>
-                                                </property>
-                                                <property name="accel">
-                                                    <string>Alt+D</string>
                                                 </property>
                                             </widget>
                                             <spacer>
