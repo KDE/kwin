@@ -76,6 +76,10 @@ private:
 };
 
 
+QString Workspace::desktopName( int desk )
+{
+    return QString::fromUtf8( rootInfo->desktopName( desk ) );
+}
 
 extern Time kwin_time;
 extern void kwin_updateTime();
@@ -1033,7 +1037,7 @@ void Workspace::requestFocus( Client* c)
 {
     if (!focusChangeEnabled())
 	return;
-    
+
     //TODO will be different for non-root clients. (subclassing?)
     if ( !c ) {
 	focusToNull();
@@ -2087,7 +2091,7 @@ void Workspace::desktopPopupAboutToShow()
     desk_popup->insertSeparator( -1 );
     int id;
     for ( int i = 1; i <= numberOfDesktops(); i++ ) {
-	id = desk_popup->insertItem( QString("&%1  %2").arg(i).arg(rootInfo->desktopName(i)), i );
+	id = desk_popup->insertItem( QString("&%1  %2").arg(i).arg( desktopName(i) ) );
 	if ( popup_client && !popup_client->isSticky() && popup_client->desktop()  == i )
 	    desk_popup->setItemChecked( id, TRUE );
     }
@@ -2662,7 +2666,7 @@ void Workspace::saveDesktopSettings()
     c.setGroup("Desktops");
     c.writeEntry("Number", number_of_desktops );
     for(int i = 1; i <= number_of_desktops; i++) {
-	QString s = QString::fromUtf8( rootInfo->desktopName( i ) );
+	QString s = desktopName( i );
 	if ( s.isEmpty() ) {
 	    s = i18n("Desktop %1").arg(i);
 	    rootInfo->setDesktopName( i, s.utf8().data() );

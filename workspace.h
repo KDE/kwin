@@ -174,7 +174,8 @@ public:
     void cascadeDesktop();
     void unclutterDesktop();
     void reconfigure();
-
+    
+    QString desktopName( int desk );
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -257,7 +258,7 @@ private:
     // desktop names and number of desktops
     void loadDesktopSettings();
     void saveDesktopSettings();
-    
+
     // mouse emulation
     WId getMouseEmulationWindow();
     enum MouseEmulation { EmuPress, EmuRelease, EmuMove };

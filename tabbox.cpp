@@ -211,7 +211,6 @@ void TabBox::paintContents()
 	if ( currentClient() ) {
 	    QString s;
 	    if (!client->isOnDesktop(workspace()->currentDesktop())){
-//### 		s = KWM::desktopName(client->desktop());
 		s.append(": ");
 	    }
 
@@ -253,7 +252,7 @@ void TabBox::paintContents()
 	    }
 	}
     } else { // DesktopMode
-	p.drawText( r, AlignCenter, QString::number( desk ) );
+	p.drawText( r, AlignCenter, workspace()->desktopName(desk) );
 	int x = (width() - workspace()->numberOfDesktops() * 20 )/2;
 	int y = height() - 26;
 	QFont f( font() );
@@ -292,7 +291,7 @@ void TabBox::delayedShow()
     KConfig * c(KGlobal::config());
     c->setGroup("TabBox");
     bool delay = c->readNumEntry("ShowDelay", false);
-    
+
     if (!delay) {
 	show();
 	return;
