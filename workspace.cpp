@@ -1488,6 +1488,7 @@ void Workspace::reconfigure()
 {
     KGlobal::config()->reparseConfiguration();
     options->reload();
+    keys->readSettings();
 }
 
 
