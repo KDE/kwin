@@ -43,9 +43,12 @@
 
 extern "C"
 {
-  Client * allocate(Workspace * workSpace, WId winId, int)
+  Client * allocate(Workspace * workSpace, WId winId, int tool)
   {
-    return new RiscOS::Manager(workSpace, winId);
+    if (tool)
+      return new RiscOS::ToolManager(workSpace, winId);
+    else
+      return new RiscOS::Manager(workSpace, winId);
   }
 }
 
@@ -93,7 +96,7 @@ Manager::Manager(
 
   for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
     if (buttonDict_[*it])
-      buttonDict_[*it]->setAlignment(Button::Left);
+      buttonDict_[*it]->setAlignment(Button::Right);
 
   QHBoxLayout * titleLayout = new QHBoxLayout(l);
 
@@ -366,6 +369,237 @@ Manager::animateIconifyOrDeiconify(bool iconify)
   XUngrabServer( qt_xdisplay() );
 }
 
+
+ToolManager::ToolManager(
+  Workspace * workSpace,
+  WId id,
+  QWidget * parent,
+  const char * name
+)
+  : Client(workSpace, id, parent, name)
+{
+  setBackgroundMode(NoBackground);
+
+  QStringList leftButtons = Static::instance()->leftButtons();
+  QStringList rightButtons = Static::instance()->rightButtons();
+
+  QVBoxLayout * l = new QVBoxLayout(this, 0, 0);
+
+  close_      = new CloseButton     (this);
+  help_       = new HelpButton      (this);
+
+  buttonDict_.insert("Close",    close_);
+  buttonDict_.insert("Help",     help_);
+
+  if (!providesContextHelp())
+    help_->hide();
+
+  QStringList::ConstIterator it;
+
+  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
+    if (buttonDict_[*it])
+      buttonDict_[*it]->setAlignment(Button::Left);
+
+  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
+    if (buttonDict_[*it])
+      buttonDict_[*it]->setAlignment(Button::Left);
+
+  QHBoxLayout * titleLayout = new QHBoxLayout(l);
+
+  for (it = leftButtons.begin(); it != leftButtons.end(); ++it)
+    if (buttonDict_[*it])
+      titleLayout->addWidget(buttonDict_[*it]);
+
+  titleSpacer_ = new QSpacerItem(0, 20);
+  titleLayout->addItem(titleSpacer_);
+
+  for (it = rightButtons.begin(); it != rightButtons.end(); ++it)
+    if (buttonDict_[*it])
+      titleLayout->addWidget(buttonDict_[*it]);
+
+  QHBoxLayout * midLayout = new QHBoxLayout(l);
+  midLayout->addSpacing(1);
+  midLayout->addWidget(windowWrapper());
+  midLayout->addSpacing(1);
+
+  l->addSpacing(10);
+
+  connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
+}
+
+ToolManager::~ToolManager()
+{
+}
+
+  void
+ToolManager::paintEvent(QPaintEvent * e)
+{
+  QPainter p(this);
+
+  QRect r(e->rect());
+
+  bool intersectsLeft =
+    r.intersects(QRect(0, 0, 1, height()));
+
+  bool intersectsRight =
+    r.intersects(QRect(width() - 1, 0, width(), height()));
+
+  if (intersectsLeft || intersectsRight) {
+
+    p.setPen(Qt::black);
+
+    if (intersectsLeft)
+      p.drawLine(0, r.top(), 0, r.bottom());
+
+    if (intersectsRight)
+      p.drawLine(width() - 1, r.top(), width() - 1, r.bottom());
+  }
+
+  Static * s = Static::instance();
+
+  bool active = isActive();
+
+  QRect tr = titleSpacer_->geometry();
+
+  // Title bar.
+  p.drawPixmap(tr.left(), 0, s->titleTextLeft(active));
+
+  p.drawTiledPixmap(tr.left() + 3, 0, tr.width() - 6, 20, s->titleTextMid(active));
+  p.setPen(options->color(Options::Font, active));
+  p.setFont(options->font(active));
+  p.drawText(tr.left() + 4, 0, tr.width() - 8, 18, AlignCenter, caption());
+
+  p.drawPixmap(tr.right() - 2, 0, s->titleTextRight(active));
+
+  // Resize bar.
+
+  int rbt = height() - 10; // Resize bar top.
+
+  p.drawPixmap(0, rbt, s->resize(active));
+
+  p.drawPixmap(30, rbt, s->resizeMidLeft(active));
+  p.drawTiledPixmap(32, rbt, width() - 34, 10, s->resizeMidMid(active));
+  p.drawPixmap(width() - 32, rbt, s->resizeMidRight(active));
+
+  p.drawPixmap(width() - 30, rbt, s->resize(active));
+}
+
+  void
+ToolManager::resizeEvent(QResizeEvent *)
+{
+  if (width() < 80) {
+    help_     ->hide();
+    close_    ->hide();
+  } else {
+    if (providesContextHelp())
+      help_     ->show();
+    close_    ->show();
+  }
+
+  repaint();
+}
+
+  Client::MousePosition
+ToolManager::mousePosition(const QPoint & p) const
+{
+  MousePosition m = Center;
+
+  if (p.y() > (height() - 10)) {
+     // Keep order !
+    if (p.x() >= (width() - 30))
+      m = BottomRight;
+    else if (p.x() <= 30)
+      m = BottomLeft;
+    else
+      m = Bottom;
+  }
+
+  return m;
+}
+
+  void
+ToolManager::mouseDoubleClickEvent(QMouseEvent * e)
+{
+  if (titleSpacer_->geometry().contains(e->pos()))
+    workspace()
+      ->performWindowOperation(this, options->operationTitlebarDblClick());
+  workspace()->requestFocus(this);
+}
+
+  void
+ToolManager::slotReset()
+{
+  Static::instance()->update();
+  repaint();
+}
+
+  void
+ToolManager::captionChange(const QString &)
+{
+  repaint();
+}
+
+  void
+ToolManager::paletteChange(const QPalette &)
+{
+  Static::instance()->update();
+  repaint();
+}
+
+  void
+ToolManager::activeChange(bool b)
+{
+  emit(activeChanged(b));
+  repaint();
+}
+
+  void
+ToolManager::slotHelp()
+{
+  contextHelp();
+}
+
+  void
+ToolManager::animateIconifyOrDeiconify(bool iconify)
+{
+  NETRect r = netWinInfo()->iconGeometry();
+
+  QRect icongeom(r.pos.x, r.pos.y, r.size.width, r.size.height);
+
+  if (!icongeom.isValid())
+    return;
+
+  QRect wingeom(x(), y(), width(), height());
+
+  XGrabServer(qt_xdisplay());
+
+  QPainter p(workspace()->desktopWidget());
+
+  p.setRasterOp(Qt::NotROP);
+
+  if (iconify)
+    p.setClipRegion(QRegion(workspace()->desktopWidget()->rect()) - wingeom);
+
+  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
+  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
+  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
+  p.drawLine(wingeom.topRight(), icongeom.topRight());
+
+  p.flush();
+
+  XSync( qt_xdisplay(), FALSE );
+
+  usleep(30000);
+
+  p.drawLine(wingeom.bottomRight(), icongeom.bottomRight());
+  p.drawLine(wingeom.bottomLeft(), icongeom.bottomLeft());
+  p.drawLine(wingeom.topLeft(), icongeom.topLeft());
+  p.drawLine(wingeom.topRight(), icongeom.topRight());
+
+  p.end();
+
+  XUngrabServer( qt_xdisplay() );
+}
 
 } // End namespace
 
