@@ -1007,7 +1007,7 @@ void Client::killProcess( bool ask, Time timestamp )
         if( machine != "localhost" )
             {
             KProcess proc;
-        proc << "xon" << machine << "kill" << pid;
+            proc << "xon" << machine << "kill" << pid;
             proc.start( KProcess::DontCare );
             }
         else

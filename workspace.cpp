@@ -25,6 +25,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qbitmap.h>
 #include <qclipboard.h>
 #include <kmenubar.h>
+#include <kprocess.h>
+#include <kglobalaccel.h>
 
 #include "plugins.h"
 #include "client.h"
@@ -1852,6 +1854,32 @@ void Workspace::focusToNull()
     XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, qt_x_time );
     }
 
+void Workspace::helperDialog( const QString& message, const Client* c )
+    {
+    QStringList args;
+    QString type;
+    if( message == "noborderaltf3" || message == "fullscreenaltf3" )
+        {
+        args.append( "\'" + keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString() + "\'" );
+        type = "altf3warning";
+        }
+    else
+        return;
+    KProcess proc;
+    proc << "kwin_dialog_helper" << "--message" << message;
+    if( !type.isEmpty())
+        {
+        KConfig cfg( "kwin_dialog_helperrc" );
+        cfg.setGroup( "Notification Messages" ); // this depends on KMessageBox
+        if( !cfg.readBoolEntry( type, true )) // has don't show again checked
+            return;
+        proc << "--type" << type;
+        }
+    if( c != NULL )
+        proc << "--window" << QString::number( c->window());
+    proc << "--" << args;
+    proc.start( KProcess::DontCare );
+    }
 
 } // namespace
 

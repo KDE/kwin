@@ -105,6 +105,7 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemChecked( Options::MaximizeOp, popup_client->maximizeMode() == Client::MaximizeFull );
     // TODO this doesn't show it's shaded when it's hovered or activated
     popup->setItemChecked( Options::ShadeOp, popup_client->isShade() );
+    popup->setItemEnabled( Options::ShadeOp, popup_client->isShadeable());
     options_popup->setItemChecked( Options::KeepAboveOp, popup_client->keepAbove() );
     options_popup->setItemChecked( Options::KeepBelowOp, popup_client->keepBelow() );
     options_popup->setItemChecked( Options::FullScreenOp, popup_client->isFullScreen() );
@@ -196,7 +197,25 @@ void Workspace::readShortcuts()
 
 void Workspace::clientPopupActivated( int id )
     {
-    performWindowOperation( popup_client ? popup_client : active_client, (Options::WindowOperation) id );
+    WindowOperation op = static_cast< WindowOperation >( id );
+    Client* c = popup_client ? popup_client : active_client;
+    QString type;
+    switch( op )
+        {
+        case FullScreenOp:
+            if( !c->isFullScreen() && c->userCanSetFullScreen())
+                type = "fullscreenaltf3";
+          break;
+        case NoBorderOp:
+            if( !c->noBorder() && c->userCanSetNoBorder())
+                type = "noborderaltf3";
+          break;
+        default:
+            break;
+        };
+    if( !type.isEmpty())
+        helperDialog( type, c );
+    performWindowOperation( c, op );
     }
 
 

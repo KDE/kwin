@@ -375,6 +375,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void raiseElectricBorders();
 
     // ------------------
+    
+        void helperDialog( const QString& message, const Client* c );
 
         void calcDesktopLayout(int &x, int &y);
 
