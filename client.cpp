@@ -3055,6 +3055,10 @@ bool Client::isTopMenu() const
     return windowType() == NET::TopMenu;
 }
 
+bool Client::isMenu() const
+{
+    return windowType() == NET::Menu;
+}
 
 bool Client::isToolbar() const
 {

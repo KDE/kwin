@@ -161,6 +161,7 @@ public:
     bool isTool() const; // KDE4 remove me
     bool isToolbar() const;
     bool isTopMenu() const;
+    bool isMenu() const;
     bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
     bool isDialog() const;
 
