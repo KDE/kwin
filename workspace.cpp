@@ -719,12 +719,79 @@ void Workspace::freeKeyboard(){
     XAllowEvents(qt_xdisplay(), AsyncKeyboard, kwin_time);
 }
 
-#define XMODMASK ( ShiftMask | ControlMask | Mod1Mask | Mod4Mask )
-
 /*!
   Handles alt-tab / control-tab
  */
 
+#include <stdarg.h>
+
+bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
+{
+	va_list args;
+	char keymap[32];
+
+	kdDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
+
+	va_start( args, nKeySyms );
+	XQueryKeymap( qt_xdisplay(), keymap );
+
+	for( int iKeySym = 0; iKeySym < nKeySyms; iKeySym++ ) {
+		uint keySymX = va_arg( args, uint );
+		uchar keyCodeX = XKeysymToKeycode( qt_xdisplay(), keySymX );
+		int i = keyCodeX / 8;
+		char mask = 1 << (keyCodeX - (i * 8));
+
+		kdDebug(125) << iKeySym << ": keySymX=0x" << QString::number( keySymX, 16 )
+			<< " i=" << i << " mask=0x" << QString::number( mask, 16 )
+			<< " keymap[i]=0x" << QString::number( keymap[i], 16 ) << endl;
+
+		// Abort if bad index value,
+		if( i < 0 || i >= 32 )
+			return false;
+
+		// If ALL keys passed need to be depressed,
+		if( bAll ) {
+			if( (keymap[i] & mask) == 0 )
+				return false;
+		} else {
+			// If we are looking for ANY key press, and this key is depressed,
+			if( keymap[i] & mask )
+				return true;
+		}
+	}
+
+	// If we were looking for ANY key press, then none was found, return false,
+	// If we were looking for ALL key presses, then all were found, return true.
+	return bAll;
+}
+
+bool areModKeysDepressed( uint keyCombQt )
+{
+	uint rgKeySyms[8];
+	int nKeySyms = 0;
+
+	if( keyCombQt & Qt::SHIFT ) {
+		rgKeySyms[nKeySyms++] = XK_Shift_L;
+		rgKeySyms[nKeySyms++] = XK_Shift_R;
+	}
+	if( keyCombQt & Qt::CTRL ) {
+		rgKeySyms[nKeySyms++] = XK_Control_L;
+		rgKeySyms[nKeySyms++] = XK_Control_R;
+	}
+	if( keyCombQt & Qt::ALT ) {
+		rgKeySyms[nKeySyms++] = XK_Alt_L;
+		rgKeySyms[nKeySyms++] = XK_Alt_R;
+	}
+	if( keyCombQt & (Qt::ALT<<1) ) {
+		rgKeySyms[nKeySyms++] = XK_Meta_L;
+		rgKeySyms[nKeySyms++] = XK_Meta_R;
+	}
+
+	// Is there a better way to push all 8 integer onto the stack?
+	return areKeySymXsDepressed( false, nKeySyms,
+		rgKeySyms[0], rgKeySyms[1], rgKeySyms[2], rgKeySyms[3],
+		rgKeySyms[4], rgKeySyms[5], rgKeySyms[6], rgKeySyms[7] );
+}
 
 void Workspace::slotWalkThroughWindows()
 {
@@ -736,7 +803,7 @@ void Workspace::slotWalkThroughWindows()
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
     else {
-        if(( keyToXMod( walkThroughWindowsKeycode ) & XMODMASK ) != 0 ) {
+        if( areModKeysDepressed( walkThroughWindowsKeycode ) ) {
             if ( startKDEWalkThroughWindows() )
 		KDEWalkThroughWindows( true );
         }
@@ -762,7 +829,7 @@ void Workspace::slotWalkBackThroughWindows()
 	// CDE style raise / lower
 	CDEWalkThroughWindows( true );
     } else {
-	if (( keyToXMod( walkBackThroughWindowsKeycode ) & XMODMASK ) != 0 ) {
+	if ( areModKeysDepressed( walkBackThroughWindowsKeycode ) ) {
 	    if ( startKDEWalkThroughWindows() )
 		KDEWalkThroughWindows( false );
 	} else {
@@ -777,7 +844,7 @@ void Workspace::slotWalkThroughDesktops()
 	return;
     if( tab_grab || control_grab )
 	return;
-    if (( keyToXMod( walkThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
+    if ( areModKeysDepressed( walkThroughDesktopsKeycode ) ) {
 	if ( startWalkThroughDesktops() )
 	    walkThroughDesktops( true );
     } else {
@@ -791,7 +858,7 @@ void Workspace::slotWalkBackThroughDesktops()
         return;
     if( tab_grab || control_grab )
 	return;
-    if (( keyToXMod( walkBackThroughDesktopsKeycode ) & XMODMASK ) != 0 ) {
+    if ( areModKeysDepressed( walkBackThroughDesktopsKeycode ) ) {
 	if ( startWalkThroughDesktops() )
 	    walkThroughDesktops( false );
     } else {
@@ -805,7 +872,7 @@ void Workspace::slotWalkThroughDesktopList()
 	return;
     if( tab_grab || control_grab )
 	return;
-    if (( keyToXMod( walkThroughDesktopListKeycode ) & XMODMASK ) != 0 ) {
+    if ( areModKeysDepressed( walkThroughDesktopListKeycode ) ) {
 	if ( startWalkThroughDesktopList() )
 	    walkThroughDesktops( true );
     } else {
@@ -819,7 +886,7 @@ void Workspace::slotWalkBackThroughDesktopList()
         return;
     if( tab_grab || control_grab )
 	return;
-    if (( keyToXMod( walkBackThroughDesktopListKeycode ) & XMODMASK ) != 0 ) {
+    if ( areModKeysDepressed( walkBackThroughDesktopListKeycode ) ) {
 	if ( startWalkThroughDesktopList() )
 	    walkThroughDesktops( false );
     } else {
@@ -1023,7 +1090,7 @@ bool Workspace::keyRelease(XKeyEvent key)
         return FALSE;
     if( !tab_grab && !control_grab )
         return FALSE;
-    unsigned int mk = key.state & XMODMASK;
+    unsigned int mk = key.state & KAccel::accelModMaskX();
     // key.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released is : only one modifier is active and the currently released
@@ -1072,7 +1139,7 @@ bool Workspace::keyRelease(XKeyEvent key)
     return FALSE;
 }
 
-#undef XMODMASK
+//#undef XMODMASK
 
 int Workspace::nextDesktop( int iDesktop ) const
 {
