@@ -15,5 +15,5 @@ KDE_ICON = kwin
 METASOURCES = AUTO
 
 messages:
-	$(XGETTEXT) -C -ktranslate -kaliasLocal -ki18n -x $(includedir)/kde.pot *.h *.cpp && mv messages.po $(podir)/kwin.pot
+	$(XGETTEXT) -C -ktranslate -kaliasLocal -kI18N_NOOP -ki18n -x $(includedir)/kde.pot *.h *.cpp && mv messages.po $(podir)/kwin.pot
 
