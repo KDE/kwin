@@ -476,6 +476,11 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
 // wasn't allowed to activate
 void Workspace::restoreFocus()
     {
+    // this updateXTime() is necessary - as FocusIn events don't have
+    // a timestamp *sigh*, kwin's timestamp would be older than the timestamp
+    // that was used by whoever caused the focus change, and therefore
+    // the attempt to restore the focus would fail due to old timestamp
+    updateXTime();
     if( should_get_focus.count() > 0 )
         requestFocus( should_get_focus.last());
     else if( last_active_client )
