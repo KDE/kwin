@@ -27,46 +27,67 @@
 #include <kwinmodule.h>
 #include <klocale.h>
 #include <qregexp.h>
+#include <qwhatsthis.h>
 
 #include "../../rules.h"
 
 namespace KWinInternal
 {
 
-#define SETUP_ENABLE( var ) \
+#define SETUP( var, type ) \
     connect( enable_##var, SIGNAL( toggled( bool )), rule_##var, SLOT( setEnabled( bool ))); \
     connect( enable_##var, SIGNAL( toggled( bool )), this, SLOT( updateEnable##var())); \
-    connect( rule_##var, SIGNAL( activated( int )), this, SLOT( updateEnable##var()));
+    connect( rule_##var, SIGNAL( activated( int )), this, SLOT( updateEnable##var())); \
+    QWhatsThis::add( enable_##var, enableDesc ); \
+    QWhatsThis::add( rule_##var, type##RuleDesc );
 
 RulesWidget::RulesWidget( QWidget* parent, const char* name )
 : RulesWidgetBase( parent, name )
     {
+    QString enableDesc =
+        i18n( "Enable this checkbox to alter this window property for the specified window(s)." );
+    QString setRuleDesc =
+        i18n( "Specify how the window property should be affected:<ul>"
+              "<li><em>Do Not Affect:</em> The window property will not be affected and therefore"
+              " the default handling for it will be used. Specifying this will block more generic"
+              " window settings from taking effect.</li>"
+              "<li><em>Apply Initially:</em> The window property will be only set to the given value"
+              " after the window is created. No further changes will be affected.</li>"
+              "<li><em>Remember:</em> The value of the window property will be remembered and every time"
+              " time the window is created, the last remembered value will be applied.</li>"
+              "<li><em>Force:</em> The window property will be always forced to the given value.</li></ul>" );
+    QString forceRuleDesc =
+        i18n( "Specify how the window property should be affected:<ul>"
+              "<li><em>Do Not Affect:</em> The window property will not be affected and therefore"
+              " the default handling for it will be used. Specifying this will block more generic"
+              " window settings from taking effect.</li>"
+              "<li><em>Force:</em> The window property will be always forced to the given value.</li></ul>" );
     // window tabs have enable signals done in designer
     // geometry tab
-    SETUP_ENABLE( position );
-    SETUP_ENABLE( size );
-    SETUP_ENABLE( desktop );
-    SETUP_ENABLE( maximizehoriz );
-    SETUP_ENABLE( maximizevert );
-    SETUP_ENABLE( minimize );
-    SETUP_ENABLE( shade );
-    SETUP_ENABLE( fullscreen );
-    SETUP_ENABLE( placement );
+    SETUP( position, set );
+    SETUP( size, set );
+    SETUP( desktop, set );
+    SETUP( maximizehoriz, set );
+    SETUP( maximizevert, set );
+    SETUP( minimize, set );
+    SETUP( shade, set );
+    SETUP( fullscreen, set );
+    SETUP( placement, force );
     // preferences tab
-    SETUP_ENABLE( above );
-    SETUP_ENABLE( below );
-    SETUP_ENABLE( noborder );
-    SETUP_ENABLE( skiptaskbar );
-    SETUP_ENABLE( skippager );
-    SETUP_ENABLE( acceptfocus );
-    SETUP_ENABLE( closeable );
+    SETUP( above, set );
+    SETUP( below, set );
+    SETUP( noborder, set );
+    SETUP( skiptaskbar, set );
+    SETUP( skippager, set );
+    SETUP( acceptfocus, force );
+    SETUP( closeable, force );
     // workarounds tab
-    SETUP_ENABLE( fsplevel );
-    SETUP_ENABLE( moveresizemode );
-    SETUP_ENABLE( type );
-    SETUP_ENABLE( ignoreposition );
-    SETUP_ENABLE( minsize );
-    SETUP_ENABLE( maxsize );
+    SETUP( fsplevel, force );
+    SETUP( moveresizemode, force );
+    SETUP( type, force );
+    SETUP( ignoreposition, force );
+    SETUP( minsize, force );
+    SETUP( maxsize, force );
     KWinModule module;
     int i;
     for( i = 1;
@@ -80,7 +101,7 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
     desktop->insertItem( i18n( "All Desktops" ));
     }
 
-#undef ENABLE_SETUP
+#undef SETUP
 
 #define UPDATE_ENABLE_SLOT( var ) \
 void RulesWidget::updateEnable##var() \
