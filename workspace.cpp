@@ -792,10 +792,11 @@ void Workspace::slotWalkThroughWindows()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
+    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) {
+        XUngrabKeyboard(qt_xdisplay(), kwin_time); // need that because of accelerator raw mode
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
-    else {
+    } else {
         if( areModKeysDepressed( walkThroughWindowsKeycode ) ) {
             if ( startKDEWalkThroughWindows() )
 		KDEWalkThroughWindows( true );
