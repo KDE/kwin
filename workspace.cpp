@@ -14,7 +14,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qdatastream.h>
 #include <kapp.h>
 #include <dcopclient.h>
-#include <kdebug.h>
 #include <kprocess.h>
 
 #include <netwm.h>
@@ -1290,7 +1289,7 @@ void Workspace::smartPlacement(Client* c){
     //loop over possible positions
     do {
 	//test if enough room in x and y directions
-	if ( y + ch > maxRect.bottom() && ch <= maxRect.height() )
+	if ( y + ch > maxRect.bottom() && ch <= maxRect.height()) 
 	    overlap = h_wrong; // this throws the algorithm to an exit
 	else if( x + cw > maxRect.right() )
 	    overlap = w_wrong;
@@ -1393,7 +1392,10 @@ void Workspace::smartPlacement(Client* c){
 	    y = possible;
 	}
     }
-    while( overlap != none && overlap != h_wrong );
+    while( overlap != none && overlap != h_wrong && y< maxRect.bottom() );
+
+    if(ch>= maxRect.height() )
+        y_optimal=maxRect.top();
 
     // place the window
     c->move( x_optimal, y_optimal );
