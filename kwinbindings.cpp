@@ -1,16 +1,16 @@
 #ifndef NOSLOTS
 # define DEF( name, key3, key4, fnSlot ) \
-   keys->insertAction( name, i18n(name), KShortcuts(key3), KShortcuts(key4), this, SLOT(fnSlot) )
+   keys->insertAction( name, i18n(name), key3, key4, this, SLOT(fnSlot) )
 #else
 # define DEF( name, key3, key4, fnSlot ) \
-   keys->insertAction( name, i18n(name), KShortcuts(key3), KShortcuts(key4) )
+   keys->insertAction( name, i18n(name), key3, key4 )
 #endif
 
 	keys->insertLabel( "Program:kwin", i18n("System") );
 
 	keys->insertLabel( "Group:Navigation", i18n("Navigation") );
 	DEF( "Walk Through Windows",                "Alt+Tab", "Alt+Tab", slotWalkThroughWindows() );
-	DEF( "Walk Through Windows (Reverse)",      "Alt+Shift+Tab", "Alt+Shift+Tab", slotBackWalkThroughWindows() );
+	DEF( "Walk Through Windows (Reverse)",      "Alt+Shift+Tab", "Alt+Shift+Tab", slotWalkBackThroughWindows() );
 	DEF( "Walk Through Desktops",               "", "Meta+Tab", slotWalkThroughDesktops() );
 	DEF( "Walk Through Desktops (Reverse)",     "", "Meta+Tab", slotWalkBackThroughDesktops() );
 	DEF( "Walk Through Desktop List",           "Ctrl+Tab", "", slotWalkThroughDesktopList() );
@@ -18,13 +18,12 @@
 
 	keys->insertLabel( "Group:Windows", i18n("Windows") );
 	DEF( "Window Operations Menu",              "Alt+F3", "Alt+Menu", slotWindowOperations() );
-	DEF( "Window Close",                        "Alt+F4", "Alt+Escape", slotWindowClose() );
+	DEF( "Window Close",                        "Alt+F4", "Alt+Escape;Alt+F4", slotWindowClose() );
 	DEF( "Window Close (All)",                  "ALT+Shift+F4", "Alt+Shift+Escape", slotWindowCloseAll() );
 	DEF( "Window Maximize",                     "", "Meta+Plus", slotWindowMaximize() );
 	DEF( "Window Maximize Vertical",            "", "Meta+Bar", slotWindowMaximizeVertical() );
 	DEF( "Window Maximize Horizontal",          "", "Meta+Equal", slotWindowMaximizeHorizontal() );
 	DEF( "Window Iconify",                      "", "Meta+Minus", slotWindowIconify() );
-	//keys->insertAction(i18n("Window Iconify (All)"Window iconify all", Meta+Ctrl+Minus"));
 	DEF( "Window Shade",                        "", "Meta+Underscore", slotWindowShade() );
 	DEF( "Window Move",                         "", "", slotWindowMove() );
 	DEF( "Window Resize",                       "", "", slotWindowResize() );
