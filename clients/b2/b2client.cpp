@@ -1124,6 +1124,7 @@ B2Button::B2Button(B2Client *_client, QWidget *parent,
    : QButton(parent, 0), hover(false)
 {
     setBackgroundMode(NoBackground);
+    setCursor(arrowCursor);
     realizeButtons = realizeBtns;
     client = _client;
     useMiniIcon = false;
@@ -1204,17 +1205,20 @@ void B2Button::mouseReleaseEvent(QMouseEvent * e)
     QButton::mouseReleaseEvent(&me);
 }
 
-void B2Button::enterEvent(QEvent *)
+void B2Button::enterEvent(QEvent *e)
 {
     hover = true;
     repaint(false);
+    QButton::enterEvent(e);
 }
 
-void B2Button::leaveEvent(QEvent *)
+void B2Button::leaveEvent(QEvent *e)
 {
     hover = false;
     repaint(false);
+    QButton::leaveEvent(e);
 }
+
 // =====================================
 
 B2Titlebar::B2Titlebar(B2Client *parent)
