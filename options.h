@@ -320,6 +320,8 @@ public:
     */
     int electricBorderDelay();
 
+    void reload();
+
 signals:
     /**
      * Emitted when KWin is asked to reconfigure itself.
@@ -330,17 +332,10 @@ signals:
      */
     void resetClients();
 
-public slots:
-    void reload();
-
-
 protected:
     QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;
 
 private:
-
-
-
     WindowOperation OpTitlebarDblClick;
 
     // mouse bindings

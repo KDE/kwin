@@ -45,8 +45,6 @@ Options::Options()
     for(i=0; i < KWINCOLORS*2; ++i)
         cg[i] = NULL;
     reload();
-
-    connect( kapp, SIGNAL( appearanceChanged() ), this, SLOT(reload() ) );
 }
 
 Options::~Options(){

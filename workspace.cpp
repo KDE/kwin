@@ -417,7 +417,7 @@ void Workspace::init()
     connect(mgr, SIGNAL(resetAllClients()), this,
             SLOT(slotResetAllClients()));
     connect(kapp, SIGNAL(appearanceChanged()), this,
-            SLOT(slotResetAllClientsDelayed()));
+            SLOT(slotReconfigure()));
     connect(kapp, SIGNAL(settingsChanged(int)), this,
             SLOT(slotSettingsChanged(int)));
 
