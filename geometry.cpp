@@ -922,7 +922,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if ( value_mask & CWY )
             new_pos.setY( ry );
 
-#if 1
+#if 0
         // clever workaround for applications like xv that want to set
         // the location to the current location but miscalculate the
         // frame size due to kwin being a double-reparenting window
