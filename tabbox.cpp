@@ -15,6 +15,10 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kconfig.h>
 #include <klocale.h>
 
+// specify externals before namespace
+
+extern QPixmap* kwin_get_menu_pix_hack();
+
 using namespace KWinInternal;
 
 const bool options_traverse_all = FALSE; // TODO
@@ -204,7 +208,6 @@ void TabBox::paintEvent( QPaintEvent* )
  */
 void TabBox::paintContents()
 {
-    extern QPixmap* kwin_get_menu_pix_hack();
     QPixmap* menu_pix = kwin_get_menu_pix_hack();
     QPainter p( this );
     QRect r( 6, 6, width()-12, height()-32 );

@@ -79,10 +79,15 @@ private:
 
 };
 
-using namespace KWinInternal;
+// put all externs before the namespace statement to allow the linker
+// to resolve them properly
 
 extern Atom qt_wm_state;
 extern Time kwin_time;
+extern Atom qt_window_role;
+extern Atom qt_sm_client_id;
+
+using namespace KWinInternal;
 
 static bool resizeHorizontalDirectionFixed = FALSE;
 static bool resizeVerticalDirectionFixed = FALSE;
@@ -2590,7 +2595,6 @@ void Client::keyPressEvent( QKeyEvent * e )
 
 QCString Client::windowRole()
 {
-    extern Atom qt_window_role;
     Atom type;
     int format;
     unsigned long length, after;
@@ -2608,7 +2612,6 @@ QCString Client::windowRole()
 
 QCString Client::sessionId()
 {
-    extern Atom qt_sm_client_id;
     Atom type;
     int format;
     unsigned long length, after;
