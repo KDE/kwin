@@ -157,6 +157,52 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
+static void drawGradient
+(
+  QPainter & p,
+  const QRect & t,
+  const QColor & c1,
+  const QColor & c2
+)
+{
+  // Don't draw a million vertical lines if we don't need to.
+
+  if (c1 == c2  || QPixmap::defaultDepth() <= 8)
+  {
+    p.fillRect(t, c1);
+    return;
+  }
+
+  // rikkus: Adapted from KPixmapEffect::gradient().
+
+  int rca = c1.red();
+  int gca = c1.green();
+  int bca = c1.blue();
+
+  int rDiff = c2.red()   - rca;
+  int gDiff = c2.green() - gca;
+  int bDiff = c2.blue()  - bca;
+
+  int rl = rca << 16;
+  int gl = gca << 16;
+  int bl = bca << 16;
+
+  int rcdelta = ((1 << 16) / t.width()) * rDiff;
+  int gcdelta = ((1 << 16) / t.width()) * gDiff;
+  int bcdelta = ((1 << 16) / t.width()) * bDiff;
+
+  for (int x = 0; x < t.width(); x++)
+  {
+    rl += rcdelta;
+    gl += gcdelta;
+    bl += bcdelta;
+
+    p.setPen(QColor(rl >> 16, gl >> 16, bl >> 16));
+
+    p.drawLine(t.x() + x, 0, t.x() + x, t.y() + t.height() - 1);
+  }
+}
+
 void StdClient::slotReset()
 {
     if(miniIcon().isNull())
@@ -186,7 +232,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 
     g->addColSpacing(0, 1);
     g->addColSpacing(2, 1);
-    g->addRowSpacing(2, 2);
+    g->addRowSpacing(2, 1);
 
 
     button[0] = new KWinToolButton( this, 0, i18n("Menu") );
@@ -335,7 +381,7 @@ void StdClient::paintEvent( QPaintEvent* )
 //     t.setTop( 1 );
     p.setClipRegion( t );
 //     t.setTop( 0 );
-    p.fillRect( t, options->color(Options::TitleBar, isActive()));
+    drawGradient(p, t, options->color(Options::TitleBar, isActive()), options->color(Options::TitleBlend, isActive()));
 //     p.setPen( options->color(Options::TitleBar, isActive()).light() );
 //     p.drawLine(t.left(), t.top()+1,  t.right(), t.top()+1);
     if ( isActive() )
@@ -424,7 +470,7 @@ StdToolClient::StdToolClient( Workspace *ws, WId w, QWidget *parent, const char 
 
     g->addColSpacing(0, 1);
     g->addColSpacing(2, 1);
-    g->addRowSpacing(2, 2);
+    g->addRowSpacing(2, 1);
 
     closeBtn = new KWinToolButton( this, 0, i18n("Close") );
     connect( closeBtn, SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
