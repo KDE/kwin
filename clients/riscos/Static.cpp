@@ -216,6 +216,8 @@ Static::update()
   // -------------------------------------------------------------------------
 
   Palette aBut, iBut;
+  QPixmap aTexture;
+  QPixmap iTexture;
 
   if (QPixmap::defaultDepth() > 8) {
 
@@ -225,46 +227,44 @@ Static::update()
     setPalette(aTitlePal_,  options->color(Options::TitleBar, true));
     setPalette(iTitlePal_,  options->color(Options::TitleBar, false));
 
-    setPalette(aResizePal_, options->color(Options::Handle, true));
-    setPalette(iResizePal_, options->color(Options::Handle, false));
+    setPalette(aResizePal_, options->color(Options::TitleBar, true));
+    setPalette(iResizePal_, options->color(Options::TitleBar, false));
+
+    QRgb light, dark;
+    QRgb * data;
+    QRgb w = qRgb(255,255,255);
+    QRgb b = qRgb(0,0,0);
+
+    QPixmap tx = QPixmap((const char **)texture_xpm);
+    QImage aTx(tx.convertToImage());
+    QImage iTx(aTx.copy());
+
+    light  = options->color(Options::TitleBar, true).light(110).rgb();
+    dark   = options->color(Options::TitleBar, true).dark(110).rgb();
+
+    data = (QRgb *)aTx.bits();
+
+    for (int x = 0; x < 64*12; x++)
+      if (data[x] == w)
+        data[x] = light;
+      else if (data[x] == b)
+        data[x] = dark;
+
+    light  = options->color(Options::TitleBar, false).light(110).rgb();
+    dark   = options->color(Options::TitleBar, false).dark(110).rgb();
+
+    data = (QRgb *)iTx.bits();
+
+    for (int x = 0; x < 64*12; x++)
+      if (data[x] == w)
+        data[x] = light;
+      else if (data[x] == b)
+        data[x] = dark;
+
+
+    aTexture.convertFromImage(aTx);
+    iTexture.convertFromImage(iTx);
   }
-
-  QRgb light, dark;
-  QRgb * data;
-  QRgb w = qRgb(255,255,255);
-  QRgb b = qRgb(0,0,0);
-
-  QPixmap tx = QPixmap((const char **)texture_xpm);
-  QImage aTx(tx.convertToImage());
-  QImage iTx(aTx.copy());
-
-  light  = options->color(Options::TitleBar, true).light(110).rgb();
-  dark   = options->color(Options::TitleBar, true).dark(110).rgb();
-
-  data = (QRgb *)aTx.bits();
-
-  for (int x = 0; x < 64*12; x++)
-    if (data[x] == w)
-      data[x] = light;
-    else if (data[x] == b)
-      data[x] = dark;
-
-  light  = options->color(Options::TitleBar, false).light(110).rgb();
-  dark   = options->color(Options::TitleBar, false).dark(110).rgb();
-
-  data = (QRgb *)iTx.bits();
-
-  for (int x = 0; x < 64*12; x++)
-    if (data[x] == w)
-      data[x] = light;
-    else if (data[x] == b)
-      data[x] = dark;
-
-
-  QPixmap aTexture;
-  aTexture.convertFromImage(aTx);
-  QPixmap iTexture;
-  iTexture.convertFromImage(iTx);
 
   // -------------------------------------------------------------------------
   // Bevels
@@ -337,7 +337,8 @@ Static::update()
   
   painter_.begin(&aTitleTextMid_);
   painter_.drawPixmap(0, 1, temp, 2, 0);
-  painter_.drawPixmap(0, 4, aTexture);
+  if (QPixmap::defaultDepth() > 8)
+    painter_.drawPixmap(0, 4, aTexture);
   painter_.end();
 
   palette_ = iTitlePal_;
@@ -345,7 +346,8 @@ Static::update()
   
   painter_.begin(&iTitleTextMid_);
   painter_.drawPixmap(0, 1, temp, 2, 0);
-  painter_.drawPixmap(0, 4, iTexture);
+  if (QPixmap::defaultDepth() > 8)
+    painter_.drawPixmap(0, 4, iTexture);
   painter_.end();
 
   transy = 1.0;
