@@ -450,6 +450,7 @@ void KDEClient::paintEvent( QPaintEvent* )
                         &g.brush(QColorGroup::Mid));
 
     r = titlebar->geometry();
+    r.setRight(r.right()-1);
 
     if(isActive()){
         updateActiveBuffer();
@@ -483,6 +484,11 @@ void KDEClient::paintEvent( QPaintEvent* )
         p.setPen(options->color(Options::Font, false));
         p.drawText(r.x(), r.y(), r.width(), r.height()-1,
                    AlignCenter, caption() );
+        g = options->colorGroup(Options::Frame, true);
+        p.setPen(g.background());
+        p.drawPoint(r.x(), r.y());
+        p.drawPoint(r.right(), r.y());
+        p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());
     }
 }
 
@@ -604,7 +610,7 @@ void KDEClient::updateActiveBuffer( )
     activeBuffer.resize(titlebar->geometry().width(),
                         titlebar->geometry().height());
     QPainter p;
-    QRect r(0, 0, activeBuffer.width(), activeBuffer.height());
+    QRect r(0, 0, activeBuffer.width()-1, activeBuffer.height());
     p.begin(&activeBuffer);
     if(aUpperGradient){
         p.drawTiledPixmap(r, *aUpperGradient);
@@ -635,6 +641,11 @@ void KDEClient::updateActiveBuffer( )
     p.setPen(options->color(Options::Font, true));
     p.drawText(r.x(), r.y(), r.width(), r.height()-1,
                AlignCenter, caption() );
+    g = options->colorGroup(Options::Frame, true);
+    p.setPen(g.background());
+    p.drawPoint(r.x(), r.y());
+    p.drawPoint(r.right(), r.y());
+    p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());
     p.end();
 }
 
