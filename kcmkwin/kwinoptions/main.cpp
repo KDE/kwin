@@ -59,7 +59,7 @@ KWinOptions::KWinOptions(QWidget *parent, const char *name, const QStringList &)
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mActions = new KActionsConfig(mConfig, this, "KWin Actions");
-  tab->addTab(mActions, i18n("Actions"));
+  tab->addTab(mActions, i18n("Actio&ns"));
   connect(mActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mMoving = new KMovingConfig(mConfig, this, "KWin Moving");

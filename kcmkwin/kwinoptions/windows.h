@@ -101,8 +101,6 @@ private:
   QCheckBox *autoRaiseOn;
   QCheckBox *clickRaiseOn;
   KIntNumInput *autoRaise;
-  QLabel *alabel;
-  //CT  QLabel *sec;
 
   QButtonGroup *kbdBox;
   QRadioButton *kdeMode;
@@ -203,7 +201,6 @@ private:
   QButtonGroup *shBox;
   QCheckBox *shadeHoverOn;
   KIntNumInput *shadeHover;
-  QLabel *shlabel;
 
 #ifdef HAVE_XINERAMA
   QButtonGroup *xineramaBox;

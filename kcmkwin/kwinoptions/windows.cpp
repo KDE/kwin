@@ -94,8 +94,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     : QWidget (parent, name), config(_config)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
-                                       KDialog::spacingHint());
+    QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),KDialog::spacingHint());
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -111,26 +110,24 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     //lay->addWidget(plcBox);
 
     // focus policy
-    fcsBox = new QButtonGroup(i18n("Focus Policy"),this);
+    fcsBox = new QButtonGroup(i18n("Focus"),this);
 
-    QGridLayout *fLay = new QGridLayout(fcsBox,5,3,
-                                        KDialog::marginHint(),
-                                        KDialog::spacingHint());
-    fLay->addRowSpacing(0,fontMetrics().lineSpacing());
-    fLay->setColStretch(0,0);
-    fLay->setColStretch(1,1);
-    fLay->setColStretch(2,1);
+    QBoxLayout *fLay = new QVBoxLayout(fcsBox, KDialog::marginHint(), KDialog::spacingHint());
+    fLay->addSpacing(fontMetrics().lineSpacing());
 
-
+    QBoxLayout *cLay = new QHBoxLayout(fLay);
+    QLabel *fLabel = new QLabel(i18n("&Policy:"), fcsBox);
+    cLay->addWidget(fLabel, 0);
     focusCombo =  new QComboBox(false, fcsBox);
     focusCombo->insertItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
     focusCombo->insertItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
     focusCombo->insertItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
     focusCombo->insertItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
-    fLay->addMultiCellWidget(focusCombo,1,1,0,1);
+    cLay->addWidget(focusCombo,1 ,Qt::AlignLeft);
+    fLabel->setBuddy(focusCombo);
 
     // FIXME, when more policies have been added to KWin
-    QWhatsThis::add( focusCombo, i18n("The focus policy is used to determine the active window, i.e."
+    wtstr = i18n("The focus policy is used to determine the active window, i.e."
                                       " the window you can work in. <ul>"
                                       " <li><em>Click to focus:</em> A window becomes active when you click into it. This is the behavior"
                                       " you might know from other operating systems.</li>"
@@ -146,42 +143,36 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
                                       " Note that 'Focus under mouse' and 'Focus strictly under mouse' are not"
                                       " particularly useful. They are only provided for old-fashioned"
                                       " die-hard UNIX people ;-)"
-                         ) );
+                         );
+    QWhatsThis::add( focusCombo, wtstr);
+    QWhatsThis::add(fLabel, wtstr);
 
-    connect(focusCombo, SIGNAL(activated(int)),this,
-            SLOT(setAutoRaiseEnabled()) );
+    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setAutoRaiseEnabled()) );
 
     // autoraise delay
-
-    autoRaiseOn = new QCheckBox(i18n("Auto raise"), fcsBox);
-    fLay->addWidget(autoRaiseOn,2,0);
+    autoRaiseOn = new QCheckBox(i18n("Auto &raise"), fcsBox);
+    fLay->addWidget(autoRaiseOn);
     connect(autoRaiseOn,SIGNAL(toggled(bool)), this, SLOT(autoRaiseOnTog(bool)));
 
-    clickRaiseOn = new QCheckBox(i18n("Click raise"), fcsBox);
-    fLay->addWidget(clickRaiseOn,4,0);
-
-    connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
-
-    alabel = new QLabel(i18n("Delay:"), fcsBox);
-    alabel->setAlignment(AlignVCenter|AlignHCenter);
-    fLay->addWidget(alabel,3,0,AlignLeft);
-
     autoRaise = new KIntNumInput(500, fcsBox);
+    autoRaise->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     autoRaise->setRange(0, 3000, 100, true);
     autoRaise->setSteps(100,100);
     autoRaise->setSuffix(i18n(" msec"));
-    fLay->addMultiCellWidget(autoRaise,3,3,1,2);
+    fLay->addWidget(autoRaise);
 
-    fLay->addColSpacing(0,QMAX(autoRaiseOn->sizeHint().width(),
-                               clickRaiseOn->sizeHint().width()) + 15);
+    clickRaiseOn = new QCheckBox(i18n("C&lick raise"), fcsBox);
+    connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
+    fLay->addWidget(clickRaiseOn);
+
+//     fLay->addColSpacing(0,QMAX(autoRaiseOn->sizeHint().width(),
+//                                clickRaiseOn->sizeHint().width()) + 15);
 
     QWhatsThis::add( autoRaiseOn, i18n("When this option is enabled, a window in the background will automatically"
                                        " come to the front when the mouse pointer has been over it for some time.") );
     wtstr = i18n("This is the delay after which the window that the mouse pointer is over will automatically"
                  " come to the front.");
     QWhatsThis::add( autoRaise, wtstr );
-//    QWhatsThis::add( s, wtstr );
-    QWhatsThis::add( alabel, wtstr );
 
     QWhatsThis::add( clickRaiseOn, i18n("When this option is enabled, your windows will be brought to the"
                                         " front when you click somewhere into the window contents.") );
@@ -195,9 +186,9 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     kLay->addRowSpacing(0,fontMetrics().lineSpacing());
     QLabel *altTabLabel = new QLabel( i18n("Walk through windows mode:"), kbdBox);
     kLay->addWidget(altTabLabel, 1, 0);
-    kdeMode = new QRadioButton(i18n("KDE"), kbdBox);
+    kdeMode = new QRadioButton(i18n("&KDE"), kbdBox);
     kLay->addWidget(kdeMode, 1, 1);
-    cdeMode = new QRadioButton(i18n("CDE"), kbdBox);
+    cdeMode = new QRadioButton(i18n("CD&E"), kbdBox);
     kLay->addWidget(cdeMode, 1, 2);
 
     wtstr = i18n("Keep the Alt key pressed and hit the Tab key repeatedly to walk"
@@ -211,7 +202,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     QWhatsThis::add( kdeMode, wtstr );
     QWhatsThis::add( cdeMode, wtstr );
 
-    traverseAll = new QCheckBox( i18n( "Traverse windows on all desktops" ), kbdBox );
+    traverseAll = new QCheckBox( i18n( "&Traverse windows on all desktops" ), kbdBox );
     kLay->addMultiCellWidget( traverseAll, 2, 2, 0, 2 );
     connect( cdeMode, SIGNAL( toggled( bool )), traverseAll, SLOT( setDisabled( bool )));
 
@@ -219,14 +210,14 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
                   " windows to the current desktop." );
     QWhatsThis::add( traverseAll, wtstr );
 
-    rollOverDesktops = new QCheckBox( i18n("Desktop navigation wraps around"), kbdBox );
+    rollOverDesktops = new QCheckBox( i18n("Desktop navi&gation wraps around"), kbdBox );
     kLay->addMultiCellWidget(rollOverDesktops, 3, 3, 0, 2);
 
     wtstr = i18n( "Enable this option if you want keyboard or electric border navigation beyond"
                   " an edge desktop to bring you to the desktop at the opposite edge." );
     QWhatsThis::add( rollOverDesktops, wtstr );
 
-    showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop switch"), kbdBox );
+    showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop &switch"), kbdBox );
     kLay->addMultiCellWidget(showPopupinfo, 4, 4, 0, 2);
 
     wtstr = i18n( "Enable this option if you wish to see the current desktop"
@@ -291,7 +282,7 @@ void KFocusConfig::setClickRaise(bool on)
 
 void KFocusConfig::setAutoRaiseEnabled()
 {
-    // the auto raise related widgets are: autoRaise, alabel, s, sec
+    // the auto raise related widgets are: autoRaise
     if ( focusCombo->currentItem() != CLICK_TO_FOCUS )
     {
         clickRaiseOn->setEnabled(true);
@@ -312,7 +303,6 @@ void KFocusConfig::setAutoRaiseEnabled()
 //CT 23Oct1998 make AutoRaise toggling much clear
 void KFocusConfig::autoRaiseOnTog(bool a) {
     autoRaise->setEnabled(a);
-    alabel->setEnabled(a);
     clickRaiseOn->setEnabled( !a );
     if ( a )
         clickRaiseOn->setChecked( TRUE );
@@ -460,33 +450,21 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
 
     //lay->addWidget(plcBox);
 
-    shBox = new QButtonGroup(i18n("Shading"), this);
-    QGridLayout *shLay = new QGridLayout(shBox, 3, 2,
-                                         KDialog::marginHint(),
-                                         KDialog::spacingHint());
-    shLay->setColStretch(1, 1);
+    shBox = new QVButtonGroup(i18n("Shading"), this);
 
-    shLay->addRowSpacing(0,fontMetrics().lineSpacing());
-    animateShade = new QCheckBox(i18n("A&nimate"), shBox);
+    animateShade = new QCheckBox(i18n("Anima&te"), shBox);
     QWhatsThis::add(animateShade, i18n("Animate the action of reducing the window to its titlebar (shading)"
                                        " as well as the expansion of a shaded window") );
-    shLay->addWidget(animateShade, 1, 0);
 
     shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
-    shLay->addWidget(shadeHoverOn, 2, 0);
 
     connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
 
-    shlabel = new QLabel(i18n("Dela&y:"), shBox);
-    shlabel->setAlignment(AlignVCenter | AlignHCenter);
-    shLay->addWidget(shlabel, 3, 0, AlignLeft);
-
     shadeHover = new KIntNumInput(500, shBox);
+    shadeHover->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     shadeHover->setRange(0, 3000, 100, true);
     shadeHover->setSteps(100, 100);
     shadeHover->setSuffix(i18n(" msec"));
-    shLay->addWidget(shadeHover, 3, 1);
-    shlabel->setBuddy(shadeHover);
 
     QWhatsThis::add(shadeHoverOn, i18n("If Shade Hover is enabled, a shaded window will un-shade automatically "
                                        "when the mouse pointer has been over the title bar for some time."));
@@ -494,7 +472,6 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
     wtstr = i18n("Sets the time in milliseconds before the window unshades "
                 "when the mouse pointer goes over the shaded window.");
     QWhatsThis::add(shadeHover, wtstr);
-    QWhatsThis::add(shlabel, wtstr);
 
     lay->addWidget(shBox);
 
@@ -526,7 +503,7 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
        " will change your desktop. This is e.g. useful if you want to drag windows from one desktop"
        " to the other.") );
     active_disable = new QRadioButton(i18n("D&isabled"), electricBox);
-    active_move    = new QRadioButton(i18n("Only when &moving windows"), electricBox);
+    active_move    = new QRadioButton(i18n("Only &when moving windows"), electricBox);
     active_always  = new QRadioButton(i18n("A&lways enabled"), electricBox);
 
     delays = new KIntNumInput(10, electricBox);
@@ -567,7 +544,6 @@ void KAdvancedConfig::slotChanged()
 void KAdvancedConfig::setShadeHover(bool on) {
     shadeHoverOn->setChecked(on);
     shadeHover->setEnabled(on);
-    shlabel->setEnabled(on);
 }
 
 void KAdvancedConfig::setShadeHoverInterval(int k) {
@@ -581,7 +557,6 @@ int KAdvancedConfig::getShadeHoverInterval() {
 
 void KAdvancedConfig::shadeHoverChanged(bool a) {
     shadeHover->setEnabled(a);
-    shlabel->setEnabled(a);
 }
 
 void KAdvancedConfig::setXinerama(bool on) {
@@ -711,13 +686,13 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     QBoxLayout *bLay = new QVBoxLayout;
     wLay->addLayout(bLay);
 
-    opaque = new QCheckBox(i18n("Display content in moving windows"), windowsBox);
+    opaque = new QCheckBox(i18n("Di&splay content in moving windows"), windowsBox);
     bLay->addWidget(opaque);
     QWhatsThis::add( opaque, i18n("Enable this option if you want a window's content to be fully shown"
                                   " while moving it, instead of just showing a window 'skeleton'. The result may not be satisfying"
                                   " on slow machines without graphic acceleration.") );
 
-    resizeOpaqueOn = new QCheckBox(i18n("Display content in resizing windows"), windowsBox);
+    resizeOpaqueOn = new QCheckBox(i18n("Display content in &resizing windows"), windowsBox);
     bLay->addWidget(resizeOpaqueOn);
     QWhatsThis::add( resizeOpaqueOn, i18n("Enable this option if you want a window's content to be shown"
                                           " while resizing it, instead of just showing a window 'skeleton'. The result may not be satisfying"
@@ -728,7 +703,7 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     rLay->setColStretch(0,0);
     rLay->setColStretch(1,1);
 
-    minimizeAnimOn = new QCheckBox(i18n("Animate minimize and restore"),
+    minimizeAnimOn = new QCheckBox(i18n("Animate minimi&ze and restore"),
                                    windowsBox);
     QWhatsThis::add( minimizeAnimOn, i18n("Enable this option if you want an animation shown when"
                                           " windows are minimized or restored." ) );
@@ -745,11 +720,11 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     connect(minimizeAnimSlider, SIGNAL(valueChanged(int)), this, SLOT(setMinimizeAnimSpeed(int)));
 
     minimizeAnimSlowLabel= new QLabel(i18n("Slow"),windowsBox);
-    minimizeAnimSlowLabel->setAlignment(AlignTop|AlignLeft);
+    minimizeAnimSlowLabel->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     rLay->addWidget(minimizeAnimSlowLabel,1,1);
 
     minimizeAnimFastLabel= new QLabel(i18n("Fast"),windowsBox);
-    minimizeAnimFastLabel->setAlignment(AlignTop|AlignRight);
+    minimizeAnimFastLabel->setAlignment(Qt::AlignTop|Qt::AlignRight);
     rLay->addWidget(minimizeAnimFastLabel,1,2);
 
     wtstr = i18n("Here you can set the speed of the animation shown when windows are"
@@ -758,19 +733,15 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     QWhatsThis::add( minimizeAnimSlowLabel, wtstr );
     QWhatsThis::add( minimizeAnimFastLabel, wtstr );
 
-    moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing of maximized windows"), windowsBox);
+    moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing o&f maximized windows"), windowsBox);
     bLay->addWidget(moveResizeMaximized);
     QWhatsThis::add(moveResizeMaximized, i18n("When enabled, this feature activates the border of maximized windows"
                                               " and allows you to move or resize them,"
                                               " just like for normal windows"));
 
-    rLay = new QGridLayout(1,3);
-    bLay->addLayout(rLay);
-    rLay->setColStretch(0,1);
-    rLay->setColStretch(1,3);
-    rLay->setColStretch(2,2);
+    QBoxLayout *vLay = new QHBoxLayout(bLay);
 
-    QLabel *plcLabel = new QLabel(i18n("Placement:"),windowsBox);
+    QLabel *plcLabel = new QLabel(i18n("&Placement:"),windowsBox);
 
     placementCombo = new QComboBox(false, windowsBox);
     placementCombo->insertItem(i18n("Smart"), SMART_PLACEMENT);
@@ -792,8 +763,8 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     QWhatsThis::add( placementCombo, wtstr);
 
     plcLabel->setBuddy(placementCombo);
-    rLay->addWidget(plcLabel, 0, 0);
-    rLay->addWidget(placementCombo, 0, 1);
+    vLay->addWidget(plcLabel, 0);
+    vLay->addWidget(placementCombo, 1, Qt::AlignLeft);
 
     bLay->addSpacing(10);
 
@@ -822,7 +793,7 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     BrdrSnap->setRange( 0, MAX_BRDR_SNAP);
     BrdrSnap->setLabel(i18n("&Border snap zone:"));
     BrdrSnap->setSuffix(i18n(" pixels"));
-    BrdrSnap->setSteps(1,1);
+    BrdrSnap->setSteps(1,10);
     QWhatsThis::add( BrdrSnap, i18n("Here you can set the snap zone for screen borders, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the border when"
                                     " moved near it.") );
@@ -832,12 +803,12 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     WndwSnap->setRange( 0, MAX_WNDW_SNAP);
     WndwSnap->setLabel(i18n("&Window snap zone:"));
     WndwSnap->setSuffix( i18n(" pixels"));
-    BrdrSnap->setSteps(1,1);
+    BrdrSnap->setSteps(1,10);
     QWhatsThis::add( WndwSnap, i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
                                     " they're moved near another window.") );
 
-    OverlapSnap=new QCheckBox(i18n("Snap windows only when &overlapping"),MagicBox);
+    OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
     QWhatsThis::add( OverlapSnap, i18n("Here you can set that windows will be only"
                                        " snapped if you try to overlap them, i.e. they won't be snapped if the windows"
                                        " comes only near another window or border.") );
