@@ -454,6 +454,7 @@ class Client : public QObject, public KDecorationDefines
         QRect frame_geometry;
         QSize client_size;
         int block_geometry; // >0 - new geometry is remembered, but not actually set
+        bool shade_geometry_change;
         int border_left, border_right, border_top, border_bottom;
         friend struct FetchNameInternalPredicate;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget

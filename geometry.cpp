@@ -491,39 +491,42 @@ void Client::checkWorkspacePosition()
         return;
         }
 
-    QRect area = workspace()->clientArea( geometry().center(), desktop());
-    int old_diff_x = workarea_diff_x;
-    int old_diff_y = workarea_diff_y;
-    updateWorkareaDiffs( area );
+    if( !isShade()) // TODO
+        {
+        QRect area = workspace()->clientArea( geometry().center(), desktop());
+        int old_diff_x = workarea_diff_x;
+        int old_diff_y = workarea_diff_y;
+        updateWorkareaDiffs( area );
 
-    // this can be true only if this window was mapped before KWin
-    // was started - in such case, don't adjust position to workarea,
-    // because the window already had its position, and if a window
-    // with a strut altering the workarea would be managed in initialization
-    // after this one, this window would be moved
-    if( workspace()->initializing())
-        return;
+        // this can be true only if this window was mapped before KWin
+        // was started - in such case, don't adjust position to workarea,
+        // because the window already had its position, and if a window
+        // with a strut altering the workarea would be managed in initialization
+        // after this one, this window would be moved
+        if( workspace()->initializing())
+            return;
 
-    QRect new_geom = geometry();
-    QRect tmp_rect_x( new_geom.left(), 0, new_geom.width(), 0 );
-    QRect tmp_area_x( area.left(), 0, area.width(), 0 );
-    checkDirection( workarea_diff_x, old_diff_x, tmp_rect_x, tmp_area_x );
-    // the x<->y swapping
-    QRect tmp_rect_y( new_geom.top(), 0, new_geom.height(), 0 );
-    QRect tmp_area_y( area.top(), 0, area.height(), 0 );
-    checkDirection( workarea_diff_y, old_diff_y, tmp_rect_y, tmp_area_y );
-    new_geom = QRect( tmp_rect_x.left(), tmp_rect_y.left(), tmp_rect_x.width(), tmp_rect_y.width());
-    QRect final_geom( new_geom.topLeft(), adjustedSize( new_geom.size()));
-    if( final_geom != new_geom ) // size increments, or size restrictions
-        { // adjusted size differing matters only for right and bottom edge
-        if( old_diff_x != INT_MAX && old_diff_x > 0 )
-            final_geom.moveRight( area.right() - ( old_diff_x - 1 ));
-        if( old_diff_y != INT_MAX && old_diff_y > 0 )
-            final_geom.moveBottom( area.bottom() - ( old_diff_y - 1 ));
+        QRect new_geom = geometry();
+        QRect tmp_rect_x( new_geom.left(), 0, new_geom.width(), 0 );
+        QRect tmp_area_x( area.left(), 0, area.width(), 0 );
+        checkDirection( workarea_diff_x, old_diff_x, tmp_rect_x, tmp_area_x );
+        // the x<->y swapping
+        QRect tmp_rect_y( new_geom.top(), 0, new_geom.height(), 0 );
+        QRect tmp_area_y( area.top(), 0, area.height(), 0 );
+        checkDirection( workarea_diff_y, old_diff_y, tmp_rect_y, tmp_area_y );
+        new_geom = QRect( tmp_rect_x.left(), tmp_rect_y.left(), tmp_rect_x.width(), tmp_rect_y.width());
+        QRect final_geom( new_geom.topLeft(), adjustedSize( new_geom.size()));
+        if( final_geom != new_geom ) // size increments, or size restrictions
+            { // adjusted size differing matters only for right and bottom edge
+            if( old_diff_x != INT_MAX && old_diff_x > 0 )
+                final_geom.moveRight( area.right() - ( old_diff_x - 1 ));
+            if( old_diff_y != INT_MAX && old_diff_y > 0 )
+                final_geom.moveBottom( area.bottom() - ( old_diff_y - 1 ));
+            }
+        if( final_geom != geometry() )
+            setGeometry( final_geom );
+        //    updateWorkareaDiffs( area ); done already by setGeometry()
         }
-    if( final_geom != geometry() )
-        setGeometry( final_geom );
-//    updateWorkareaDiffs( area ); done already by setGeometry()
     }
 
 // Try to be smart about keeping the clients visible.
@@ -809,7 +812,15 @@ void Client::setGeometry( int x, int y, int w, int h, bool force )
     if( !isShade())
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
     else
+        {
+        // check that the frame is not resized to full size when it should be shaded
+        if( !shade_geometry_change && h != border_top + border_bottom )
+            {
+            kdDebug() << "h:" << h << ":t:" << border_top << ":b:" << border_bottom << endl;
+            assert( false );
+            }
         client_size = QSize( w - border_left - border_right, client_size.height());
+        }
     updateWorkareaDiffs();
     if( block_geometry == 0 )
         {
