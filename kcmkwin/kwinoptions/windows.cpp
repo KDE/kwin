@@ -830,10 +830,14 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
 
     // FIXME, when more policies have been added to KWin
     wtstr = i18n("The placement policy determines where a new window"
-                 " will appear on the desktop. For now, there are three different policies:"
-                 " <ul><li><em>Smart</em> will try to achieve a minimum overlap of windows</li>"
+                 " will appear on the desktop."
+                 " <ul>"
+                 " <li><em>Smart</em> will try to achieve a minimum overlap of windows</li>"
                  " <li><em>Cascade</em> will cascade the windows</li>"
-                 " <li><em>Random</em> will use a random position</li></ul>") ;
+                 " <li><em>Random</em> will use a random position</li>"
+                 " <li><em>Centered</em> will place the window centered</li>"
+                 " <li><em>Zero-Cornered</em> will place the window in the top-left corner</li>"
+                 "</ul>") ;
 
     QWhatsThis::add( plcLabel, wtstr);
     QWhatsThis::add( placementCombo, wtstr);
