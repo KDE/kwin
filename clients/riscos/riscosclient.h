@@ -34,11 +34,18 @@ namespace RiscOS {
 
 static QPixmap * px_button_base_up;
 static QPixmap * px_button_base_down;
+static QPixmap * px_button_base_up_active;
+static QPixmap * px_button_base_down_active;
 static QPixmap * px_button_iconify_;
 static QPixmap * px_button_close_;
 static QPixmap * px_button_lower_;
 static QPixmap * px_button_max_;
 static QPixmap * px_button_unmax_;
+static QPixmap * px_button_iconify_active;
+static QPixmap * px_button_close_active;
+static QPixmap * px_button_lower_active;
+static QPixmap * px_button_max_active;
+static QPixmap * px_button_unmax_active;
 static QPixmap * px_title_inactive_left_;
 static QPixmap * px_title_inactive_;
 static QPixmap * px_title_inactive_right_;
@@ -61,10 +68,12 @@ class Button : public QButton
 
     Button(Manager * parent);
 
+    void update();
+
   protected:
 
     void drawButton(QPainter *);
-    void setSymbol(QPixmap *);
+    void setSymbols(QPixmap *, QPixmap *);
 
   protected:
 
@@ -74,7 +83,8 @@ class Button : public QButton
 
     Manager * client_;
     
-    QPixmap * px_symbol_;
+    QPixmap * px_symbol_inactive_;
+    QPixmap * px_symbol_active_;
 };
 
 // --------------------------------------------------------------------------

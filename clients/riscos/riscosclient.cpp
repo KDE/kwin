@@ -41,11 +41,18 @@
 #include "resize_bar_right.xpm"
 #include "button_base_up.xpm"
 #include "button_base_down.xpm"
+#include "button_base_up_active.xpm"
+#include "button_base_down_active.xpm"
 #include "button_close.xpm"
 #include "button_unmax.xpm"
 #include "button_max.xpm"
 #include "button_lower.xpm"
 #include "button_iconify.xpm"
+#include "button_close_active.xpm"
+#include "button_unmax_active.xpm"
+#include "button_max_active.xpm"
+#include "button_lower_active.xpm"
+#include "button_iconify_active.xpm"
 
 #include <X11/Xlib.h>
 
@@ -59,27 +66,35 @@ extern "C"
 
 using namespace RiscOS;
 
-QPixmap * px_button_base_up       = 0L;
-QPixmap * px_button_base_down     = 0L;
-QPixmap * px_button_iconify       = 0L;
-QPixmap * px_button_close         = 0L;
-QPixmap * px_button_lower         = 0L;
-QPixmap * px_button_max           = 0L;
-QPixmap * px_button_unmax         = 0L;
-QPixmap * px_title_inactive_left  = 0L;
-QPixmap * px_title_inactive       = 0L;
-QPixmap * px_title_inactive_right = 0L;
-QPixmap * px_title_active_left    = 0L;
-QPixmap * px_title_active         = 0L;
-QPixmap * px_title_active_right   = 0L;
-QPixmap * px_resize_left          = 0L;
-QPixmap * px_resize_mid           = 0L;
-QPixmap * px_resize_right         = 0L;
+QPixmap * px_button_base_up           = 0L;
+QPixmap * px_button_base_down         = 0L;
+QPixmap * px_button_base_up_active    = 0L;
+QPixmap * px_button_base_down_active  = 0L;
+QPixmap * px_button_iconify           = 0L;
+QPixmap * px_button_close             = 0L;
+QPixmap * px_button_lower             = 0L;
+QPixmap * px_button_max               = 0L;
+QPixmap * px_button_unmax             = 0L;
+QPixmap * px_button_iconify_active    = 0L;
+QPixmap * px_button_close_active      = 0L;
+QPixmap * px_button_lower_active      = 0L;
+QPixmap * px_button_max_active        = 0L;
+QPixmap * px_button_unmax_active      = 0L;
+QPixmap * px_title_inactive_left      = 0L;
+QPixmap * px_title_inactive           = 0L;
+QPixmap * px_title_inactive_right     = 0L;
+QPixmap * px_title_active_left        = 0L;
+QPixmap * px_title_active             = 0L;
+QPixmap * px_title_active_right       = 0L;
+QPixmap * px_resize_left              = 0L;
+QPixmap * px_resize_mid               = 0L;
+QPixmap * px_resize_right             = 0L;
 
 Button::Button(Manager * parent)
   : QButton(parent, "Button"),
     client_(parent),
-    px_symbol_(0L)
+    px_symbol_inactive_(0L),
+    px_symbol_active_(0L)
 {
   setFixedSize(18, 18);
   
@@ -89,21 +104,33 @@ Button::Button(Manager * parent)
 }
 
   void
-Button::drawButton(QPainter * p)
+Button::update()
 {
-  if (isDown())
-    p->drawPixmap(0, 0, *px_button_base_down);
-  else
-    p->drawPixmap(0, 0, *px_button_base_up);
-
-  if (px_symbol_ != 0)
-    p->drawPixmap(3, 3, *px_symbol_);
+  repaint(false);
 }
 
   void
-Button::setSymbol(QPixmap * p)
+Button::drawButton(QPainter * p)
 {
-  px_symbol_ = p;
+  // Excuse my minimalism.
+  QPixmap * px =
+    client_->isActive() ?
+    (isDown() ? px_button_base_down_active  : px_button_base_up_active) :
+    (isDown() ? px_button_base_down         : px_button_base_up);
+
+  p->drawPixmap(0, 0, *px);
+
+  if (client_->isActive())
+    p->drawPixmap(3, 3, *px_symbol_active_);
+  else
+    p->drawPixmap(3, 3, *px_symbol_inactive_);
+}
+
+  void
+Button::setSymbols(QPixmap * inactive, QPixmap * active)
+{
+  px_symbol_inactive_ = inactive;
+  px_symbol_active_ = active;
   repaint(false);
 }
 
@@ -111,36 +138,36 @@ LowerButton::LowerButton(Manager * parent)
   : Button(parent)
 {
 // TODO  connect(this, SIGNAL(clicked()), client(), (SLOT(lowerAndDeactivate())));
-  setSymbol(px_button_lower);
+  setSymbols(px_button_lower, px_button_lower_active);
 }
 
 CloseButton::CloseButton(Manager * parent)
   : Button(parent)
 {
   connect(this, SIGNAL(clicked()), client(), (SLOT(closeWindow())));
-  setSymbol(px_button_close);
+  setSymbols(px_button_close, px_button_close_active);
 }
 
 IconifyButton::IconifyButton(Manager * parent)
   : Button(parent)
 {
   connect(this, SIGNAL(clicked()), client(), (SLOT(iconify())));
-  setSymbol(px_button_iconify);
+  setSymbols(px_button_iconify, px_button_iconify_active);
 }
 
 MaximiseButton::MaximiseButton(Manager * parent)
   : Button(parent)
 {
-  setSymbol(px_button_unmax);
+  setSymbols(px_button_max, px_button_max_active);
 }
 
   void
 MaximiseButton::setOn(bool on)
 {
   if (on)
-    setSymbol(px_button_unmax);
+    setSymbols(px_button_unmax, px_button_unmax_active);
   else
-    setSymbol(px_button_max);
+    setSymbols(px_button_max, px_button_max_active);
 }
 
   void
@@ -207,7 +234,7 @@ TitleBar::_updatePixmap()
     p.drawPixmap(0, 0, *px_title_active_left);
     p.drawTiledPixmap(2, 0, width() - 4, 18, *px_title_active);
     p.drawPixmap(width() - 2, 0, *px_title_active_right);
-    p.setPen(Qt::black);
+    p.setPen(Qt::white);
     p.setFont(options->font());
     p.drawText(3, 0, width() - 6, 18, AlignCenter, client_->caption());
 
@@ -533,6 +560,10 @@ Manager::captionChange(const QString &)
 Manager::activeChange(bool b)
 {
   title_->update();
+  lower_->update();
+  close_->update();
+  iconify_->update();
+  maximize_->update();
 }
 
   void
@@ -589,40 +620,54 @@ Manager::_loadPixmaps()
 {
   if (pixmapsLoaded_) {
 
-    delete px_button_base_up;       px_button_base_up       = 0L;
-    delete px_button_base_down;     px_button_base_down     = 0L;
-    delete px_button_iconify;       px_button_iconify       = 0L;
-    delete px_button_close;         px_button_close         = 0L;
-    delete px_button_lower;         px_button_lower         = 0L;
-    delete px_button_max;           px_button_max           = 0L;
-    delete px_button_unmax;         px_button_unmax         = 0L;
-    delete px_title_inactive_left;  px_title_inactive_left  = 0L;
-    delete px_title_inactive;       px_title_inactive       = 0L;
-    delete px_title_inactive_right; px_title_inactive_right = 0L;
-    delete px_title_active_left;    px_title_active_left    = 0L;
-    delete px_title_active;         px_title_active         = 0L;
-    delete px_title_active_right;   px_title_active_right   = 0L;
-    delete px_resize_left;          px_resize_left          = 0L;
-    delete px_resize_mid;           px_resize_mid           = 0L;
-    delete px_resize_right;         px_resize_right         = 0L;
+    delete px_button_base_up;           px_button_base_up           = 0L;
+    delete px_button_base_down;         px_button_base_down         = 0L;
+    delete px_button_base_up_active;    px_button_base_up_active    = 0L;
+    delete px_button_base_down_active;  px_button_base_down_active  = 0L;
+    delete px_button_iconify;           px_button_iconify           = 0L;
+    delete px_button_close;             px_button_close             = 0L;
+    delete px_button_lower;             px_button_lower             = 0L;
+    delete px_button_max;               px_button_max               = 0L;
+    delete px_button_unmax;             px_button_unmax             = 0L;
+    delete px_button_iconify_active;    px_button_iconify_active    = 0L;
+    delete px_button_close_active;      px_button_close_active      = 0L;
+    delete px_button_lower_active;      px_button_lower_active      = 0L;
+    delete px_button_max_active;        px_button_max_active        = 0L;
+    delete px_button_unmax_active;      px_button_unmax_active      = 0L;
+    delete px_title_inactive_left;      px_title_inactive_left      = 0L;
+    delete px_title_inactive;           px_title_inactive           = 0L;
+    delete px_title_inactive_right;     px_title_inactive_right     = 0L;
+    delete px_title_active_left;        px_title_active_left        = 0L;
+    delete px_title_active;             px_title_active             = 0L;
+    delete px_title_active_right;       px_title_active_right       = 0L;
+    delete px_resize_left;              px_resize_left              = 0L;
+    delete px_resize_mid;               px_resize_mid               = 0L;
+    delete px_resize_right;             px_resize_right             = 0L;
   }
 
-  px_button_base_up       = new QPixmap(button_base_up_xpm);
-  px_button_base_down     = new QPixmap(button_base_down_xpm);
-  px_button_iconify       = new QPixmap(button_iconify_xpm);
-  px_button_close         = new QPixmap(button_close_xpm);
-  px_button_lower         = new QPixmap(button_lower_xpm);
-  px_button_max           = new QPixmap(button_max_xpm);
-  px_button_unmax         = new QPixmap(button_unmax_xpm);
-  px_title_inactive_left  = new QPixmap(title_inactive_left_xpm);
-  px_title_inactive       = new QPixmap(title_inactive_xpm);
-  px_title_inactive_right = new QPixmap(title_inactive_right_xpm);
-  px_title_active_left    = new QPixmap(title_active_left_xpm);
-  px_title_active         = new QPixmap(title_active_xpm);
-  px_title_active_right   = new QPixmap(title_active_right_xpm);
-  px_resize_left          = new QPixmap(resize_bar_left_xpm);
-  px_resize_mid           = new QPixmap(resize_bar_mid_xpm);
-  px_resize_right         = new QPixmap(resize_bar_right_xpm);
+  px_button_base_up           = new QPixmap(button_base_up_xpm);
+  px_button_base_down         = new QPixmap(button_base_down_xpm);
+  px_button_base_up_active    = new QPixmap(button_base_up_active_xpm);
+  px_button_base_down_active  = new QPixmap(button_base_down_active_xpm);
+  px_button_iconify           = new QPixmap(button_iconify_xpm);
+  px_button_close             = new QPixmap(button_close_xpm);
+  px_button_lower             = new QPixmap(button_lower_xpm);
+  px_button_max               = new QPixmap(button_max_xpm);
+  px_button_unmax             = new QPixmap(button_unmax_xpm);
+  px_button_iconify_active    = new QPixmap(button_iconify_active_xpm);
+  px_button_close_active      = new QPixmap(button_close_active_xpm);
+  px_button_lower_active      = new QPixmap(button_lower_active_xpm);
+  px_button_max_active        = new QPixmap(button_max_active_xpm);
+  px_button_unmax_active      = new QPixmap(button_unmax_active_xpm);
+  px_title_inactive_left      = new QPixmap(title_inactive_left_xpm);
+  px_title_inactive           = new QPixmap(title_inactive_xpm);
+  px_title_inactive_right     = new QPixmap(title_inactive_right_xpm);
+  px_title_active_left        = new QPixmap(title_active_left_xpm);
+  px_title_active             = new QPixmap(title_active_xpm);
+  px_title_active_right       = new QPixmap(title_active_right_xpm);
+  px_resize_left              = new QPixmap(resize_bar_left_xpm);
+  px_resize_mid               = new QPixmap(resize_bar_mid_xpm);
+  px_resize_right             = new QPixmap(resize_bar_right_xpm);
 
   pixmapsLoaded_ = true;
 }
