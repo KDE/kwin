@@ -2,8 +2,7 @@ INCLUDES = $(all_includes)
 
 SUBDIRS = . kcmkwin pics clients
 
-bin_PROGRAMS = kwin
-lib_LTLIBRARIES = kwin.la
+kdeinit_LTLIBRARIES = kwin.la
 
 # workspace.cpp has to be first in order not to break --enable-final
 kwin_la_SOURCES = workspace.cpp client.cpp placement.cpp atoms.cpp  main.cpp \
@@ -16,10 +15,6 @@ include_HEADERS = KWinInterface.h
 
 kwinincludedir = $(includedir)/kwin
 kwininclude_HEADERS = options.h client.h workspace.h kwinbutton.h
-
-kwin_SOURCES = kwin_main.cpp
-kwin_LDADD = kwin.la
-kwin_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 KDE_ICON = kwin
 
