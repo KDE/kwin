@@ -442,7 +442,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 
     // window wants to stay on top?
     stays_on_top = ( info->state() & NET::StaysOnTop) != 0;
-    
+
 
     // should we open this window on a certain desktop?
     if ( info->desktop() == NETWinInfo::OnAllDesktops )
@@ -482,7 +482,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	geom.setRect( session->x, session->y, session->width, session->height );
 
 
-    if ( isMapped  || session )
+    if ( isMapped  || session || isTransient() )
 	placementDone = TRUE;
     else {
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
@@ -560,7 +560,7 @@ bool Client::manage( bool isMapped, bool doNotShow )
 	    desk =  workspace()->currentDesktop();
 	} else if ( !isMapped && !doNotShow && desk != workspace()->currentDesktop() ) {
 	    //window didn't specify any specific desktop but will appear
-	    //somewhere else. This happens for example with "save data?" 
+	    //somewhere else. This happens for example with "save data?"
 	    //dialogs on shutdown. Switch to the respective desktop in
 	    //that case.
 	    workspace()->setCurrentDesktop( desk );
