@@ -1374,6 +1374,8 @@ bool Client::isResizable() const
 {
     if ( !isMovable() )
 	return FALSE;
+    if( isShade())
+	return FALSE;
 
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
 	return TRUE;
