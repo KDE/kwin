@@ -22,6 +22,7 @@
 #include <qcursor.h>
 #include <qpainter.h>
 #include <qtooltip.h>
+#include <qapplication.h>
 #include "../../lib/kdecoration.h"
 
 #include "WebButton.h"
@@ -109,8 +110,7 @@ WebButton::paintEvent(QPaintEvent *)
   QPainter p(this);
 
   p.fillRect(rect(), colorGroup().background());
-
-  switch (position_)
+  switch ( position_ )
   {
     case Left:
       {
@@ -120,7 +120,6 @@ WebButton::paintEvent(QPaintEvent *)
 
         p.drawLine(0, 0, width(), 0);
         p.drawLine(0, 1, 0, height() - 1);
-
         if (shape_)
         {
           p.drawPoint(3, 1);
@@ -129,7 +128,6 @@ WebButton::paintEvent(QPaintEvent *)
           p.drawPoint(1, 3);
           p.drawPoint(1, 4);
         }
-
         // Draw highlight.
 
         p.setBrush(NoBrush);
@@ -139,7 +137,6 @@ WebButton::paintEvent(QPaintEvent *)
           p.setClipRegion(QRegion(rect()) - QRect(0, 0, 6, 6));
 
         p.drawRect(2, 2, width() - 4, height() - 4);
-
         if (shape_)
         {
           p.setClipRect(rect());
@@ -159,7 +156,6 @@ WebButton::paintEvent(QPaintEvent *)
         p.setPen(Qt::black);
         p.drawLine(0, 0, width(), 0);
         p.drawLine(width() - 1, 1, width() - 1, height() - 1);
-
         if (shape_)
         {
           p.drawPoint(width() - 5, 1);
@@ -168,7 +164,6 @@ WebButton::paintEvent(QPaintEvent *)
           p.drawPoint(width() - 2, 3);
           p.drawPoint(width() - 2, 4);
         }
-
         // Draw highlight.
 
         p.setBrush(NoBrush);
@@ -178,7 +173,6 @@ WebButton::paintEvent(QPaintEvent *)
           p.setClipRegion(QRegion(rect()) - QRect(width() - 6, 0, 6, 6));
 
         p.drawRect(2, 2, width() - 4, height() - 4);
-
         if (shape_)
         {
           p.setClipRect(rect());
@@ -245,7 +239,15 @@ WebButton::setBitmap(const QBitmap & b)
   void
 WebButton::setPosition(Position p)
 {
-  position_ = p;
+  if (  QApplication::reverseLayout() )
+  {
+      if ( p == Left )
+          position_ = Right;
+      else if ( p == Right )
+          position_ = Left;
+  }
+  else
+      position_ = p;
   repaint();
 }
 
