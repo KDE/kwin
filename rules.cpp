@@ -594,7 +594,7 @@ bool Rules::discardTemporary( bool force )
 #ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Rules* r )
     {
-    return stream << "[" << r->description << "]";
+    return stream << "[" << r->description << ":" << r->wmclass << "]" ;
     }
 #endif
 
