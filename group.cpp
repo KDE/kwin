@@ -857,7 +857,6 @@ void Client::checkGroup( Group* set_group, bool force )
                 continue;
             addTransient( *it );
 	    }
-        checkGroupTransients();
         }
     checkGroupTransients();
     workspace()->updateClientLayer( this );
