@@ -2069,6 +2069,12 @@ void Client::activateLayout()
 	layout()->activate();
 }
 
+
+/*!  
+  Returns \a area with the client's strut taken into account.
+  
+  Used from Workspace in updateClientArea.
+ */
 QRect Client::adjustedClientArea( const QRect& area ) const
 {
     QRect r = area;

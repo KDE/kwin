@@ -168,8 +168,6 @@ public:
 
     void performWindowOperation( Client* c, Options::WindowOperation op );
 
-    Client* clientFactory(Workspace *ws, WId w);
-
     void storeSession( KConfig* config );
 
     SessionInfo* takeSessionInfo( Client* );
@@ -235,6 +233,8 @@ private:
     void createKeybindings();
     void freeKeyboard(bool pass);
 
+    Client* clientFactory(WId w);
+    
     void raiseTransientsOf( ClientList& safeset, Client* c );
     void lowerTransientsOf( ClientList& safeset, Client* c );
     void randomPlacement(Client* c);
@@ -258,7 +258,7 @@ private:
       int col;
       int row;
     };
-    
+
     // mouse emulation
     WId getMouseEmulationWindow();
     enum MouseEmulation { EmuPress, EmuRelease, EmuMove };

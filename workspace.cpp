@@ -138,6 +138,9 @@ bool Motif::noBorder( WId w )
 
 /*!
   Updates kwin_time by receiving a current timestamp from the server.
+  
+  Use this function only when really necessary. Keep in mind that it's
+  a roundtrip to the X-Server.
  */
 static void updateTime()
 {
@@ -152,26 +155,33 @@ static void updateTime()
     kwin_time = ev.xproperty.time;
 }
 
-Client* Workspace::clientFactory( Workspace *ws, WId w )
-{
-    if ( Motif::noBorder( w ) )
-	return new NoBorderClient( ws, w );
 
+/*!  
+  Creates a new client for window \a w, depending on certain hints
+  (like Motif hints and the NET_WM_TYPE.
+  
+  Shaped windows always get a NoBorderClient. 
+ */
+Client* Workspace::clientFactory( WId w )
+{
     NETWinInfo ni( qt_xdisplay(), w, root, NET::WMWindowType );
+
+    if ( ni.windowType() == NET::Normal && Motif::noBorder( w ) )
+	return new NoBorderClient( this, w );
 
     switch ( ni.windowType() ) {
     case NET::Desktop: {
 	XLowerWindow( qt_xdisplay(), w );
-	Client * c = new NoBorderClient( ws, w);
+	Client * c = new NoBorderClient( this, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
-	ws->setDesktopClient( c );
+	setDesktopClient( c );
 	c->setPassiveFocus( TRUE );
 	return c;
     }
 
     case NET::Dock: {
-	Client * c = new NoBorderClient( ws, w);
+	Client * c = new NoBorderClient( this, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
 	c->setPassiveFocus( TRUE );
@@ -179,7 +189,7 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
     }
 
     case NET::Menu: {
-	Client * c = new NoBorderClient( ws, w);
+	Client * c = new NoBorderClient( this, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
 	c->setPassiveFocus( TRUE );
@@ -187,7 +197,7 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
     }
 
     case NET::Toolbar: {
-	Client * c = new NoBorderClient( ws, w);
+	Client * c = new NoBorderClient( this, w);
 	return c;
     }
 
@@ -196,13 +206,18 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
     }
 
     if ( Shape::hasShape( w ) ){
-	return new NoBorderClient( ws, w );
+	return new NoBorderClient( this, w );
     }
-    return(mgr.allocateClient(ws, w));
+    return(mgr.allocateClient(this, w));
 }
 
 // Rikkus: This class is too complex. It needs splitting further.
 // It's a nightmare to understand, especially with so few comments :(
+
+// Matthias: Feel free to ask me questions about it. Feel free to add
+// comments. I dissagree that further splittings makes it easier. 2500
+// lines are not too much. It's the task that is complex, not the
+// code.
 Workspace::Workspace( bool restore )
   : QObject           (0, "workspace"),
     DCOPObject        ("KWinInterface"),
@@ -329,7 +344,7 @@ void Workspace::init()
 	if (attr.map_state != IsUnmapped) {
 	    if ( addDockwin( wins[i] ) )
 		continue;
-	    Client* c = clientFactory( this, wins[i] );
+	    Client* c = clientFactory( wins[i] );
 	    if ( c != desktop_client ) {
 		clients.append( c );
 		stacking_order.append( c );
@@ -456,7 +471,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    if ( e->xmaprequest.parent == root ) {
 		if ( addDockwin( e->xmaprequest.window ) )
 		    return TRUE;
-		c = clientFactory( this, e->xmaprequest.window );
+		c = clientFactory( e->xmaprequest.window );
 		if ( root != qt_xrootwin() ) {
 		    // TODO may use QWidget:.create
 		    XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
@@ -467,11 +482,11 @@ bool Workspace::workspaceEvent( XEvent * e )
 		    clients.append( c );
 		    stacking_order.append( c );
 		}
-		propagateClients();
 	    }
 	}
 	if ( c ) {
 	    bool result = c->windowEvent( e );
+	    propagateClients();
 	    if ( c == desktop_client )
 		setDesktopClient( c );
 	    return result;
@@ -1413,6 +1428,10 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
     cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
 }
 
+
+/*!
+  Cascades all clients on the current desktop
+ */
 void Workspace::cascadeDesktop()
 {
   ClientList::Iterator it(clients.fromLast());
@@ -1426,6 +1445,10 @@ void Workspace::cascadeDesktop()
   }
 }
 
+/*!  
+  Unclutters the current desktop by smart-placing all clients
+  again.
+ */
 void Workspace::unclutterDesktop()
 {
   ClientList::Iterator it(clients.fromLast());
@@ -1588,7 +1611,7 @@ void Workspace::lowerTransientsOf( ClientList& safeset, Client* c )
 }
 
 /*!
-  Puts the focus on a dummy winodw
+  Puts the focus on a dummy window
  */
 void Workspace::focusToNull(){
   static Window w = 0;
@@ -1605,6 +1628,10 @@ void Workspace::focusToNull(){
   //colormapFocus(0); TODO
 }
 
+
+/*!
+  Declares client \a c to be the desktop.
+ */
 void Workspace::setDesktopClient( Client* c)
 {
     desktop_client = c;
@@ -1686,6 +1713,11 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 
 
 
+/*!  
+  Returns the workspace's desktop widget. The desktop widget is
+  sometimes required by clients to draw on it, for example outlines on
+  moving or resizing.
+ */
 QWidget* Workspace::desktopWidget()
 {
     return desktop_widget;
@@ -2381,7 +2413,7 @@ void Workspace::slotResetAllClients()
         oldClient->hide();
         oldClient->releaseWindow();
         // Replace oldClient with newClient in all lists
-        Client *newClient = clientFactory (this, w);
+        Client *newClient = clientFactory (w);
         (*it) = newClient;
         ClientList::Iterator jt = stacking_order.find (oldClient);
         (*jt) = newClient;
@@ -2394,6 +2426,8 @@ void Workspace::slotResetAllClients()
 
 /*!
   Stores the current session in the config file
+  
+  \sa loadSessionInfo()
  */
 void Workspace::storeSession( KConfig* config )
 {
@@ -2421,6 +2455,11 @@ void Workspace::storeSession( KConfig* config )
 }
 
 
+/*!
+  Loads the session information from the config file.
+  
+  \sa storeSession()
+ */
 void Workspace::loadSessionInfo()
 {
     session.clear();
@@ -2443,6 +2482,13 @@ void Workspace::loadSessionInfo()
     }
 }
 
+
+/*!  
+  Returns the SessionInfo for client \a c. The returned session
+  info is removed from the storage. It's up to the caller to delete it.
+  
+  May return 0 if there's no session info for the client.
+ */
 SessionInfo* Workspace::takeSessionInfo( Client* c )
 {
     if ( session.isEmpty() )
@@ -2461,6 +2507,14 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     return 0;
 }
 
+
+/*!
+  Updates the current client area according to the current clients.
+  
+  If the area changes, the new area is propagate to the world.
+  
+  \sa clientArea()
+ */
 void Workspace::updateClientArea()
 {
     QRect all = QApplication::desktop()->geometry();
@@ -2482,6 +2536,10 @@ void Workspace::updateClientArea()
     }
 }
 
+
+/*!
+  Returns the current client area
+ */
 QRect Workspace::clientArea()
 {
   return area;
