@@ -197,8 +197,7 @@ void KWinDecorationModule::slotDecorationHighlighted( const QString& s )
 
 	// Let the user see config options for the currently selected decoration
 	resetPlugin( &kwinConfig, &s );
-	tabWidget->changeTab( pluginPage, i18n("&Configure [") + 
-						  decorationListBox->currentText() + i18n("]") );
+	tabWidget->changeTab( pluginPage, i18n("&Configure [%1]").arg( decorationListBox->currentText() ) );
 }
 
 
