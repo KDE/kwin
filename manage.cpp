@@ -197,10 +197,7 @@ bool Client::manage( Window w, bool isMapped )
     else
         area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
 
-    // if it's noborder window, and has size of one screen or the whole desktop geometry, it's fullscreen hack
-    if( ( geom.size() == workspace()->clientArea( FullArea, geom.center(), desktop()).size()
-            || geom.size() == workspace()->clientArea( ScreenArea, geom.center(), desktop()).size())
-        && noBorder() && !isUserNoBorder() && isFullScreenable( true )) 
+    if( checkFullScreenHack( geom ))
         {
         fullscreen_mode = FullScreenHack;
         geom = workspace()->clientArea( FullScreenArea, geom.center(), desktop());

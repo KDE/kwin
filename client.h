@@ -330,6 +330,8 @@ class Client : public QObject, public KDecorationDefines
         void updateAllowedActions( bool force = false );
         QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny ) const;
         void changeMaximize( bool horizontal, bool vertical, bool adjust );
+        bool checkFullScreenHack( const QRect& geom ) const;
+        void updateFullScreenHack( const QRect& geom );
         void getWmNormalHints();
         void getMotifHints();
         void getIcons();
