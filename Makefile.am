@@ -32,8 +32,9 @@ kwin_data_DATA= eventsrc
 sounddir= $(kde_sounddir)
 sound_DATA = pop.wav
 
-update_DATA = kwin.upd pluginlibFix.pl kwinsticky.upd kwiniconify.upd kwin3_plugin.upd kwin3_plugin.pl
+update_DATA = kwin.upd pluginlibFix.pl kwinsticky.upd kwiniconify.upd kwin3_plugin.upd kwin3_plugin.pl \
+	kwin_focus1.upd kwin_focus1.sh
+
 updatedir = $(kde_datadir)/kconf_update
 
 include ../admin/Doxyfile.am
-
