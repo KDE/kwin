@@ -1,6 +1,6 @@
 /*
   RISC OS KWin client
-  
+
   Copyright 2000
     Rik Hemsley <rik@kde.org>
 
@@ -22,13 +22,13 @@
 
 // for enable-final
 #ifdef Bool
-#undef Bool 
+#undef Bool
 #endif
 
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qpainter.h>
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include <ksimpleconfig.h>
 
@@ -86,7 +86,7 @@ Static::_drawBorder(QPixmap & pix, int w, int h)
 
   painter_.setPen(c0);
   painter_.drawPoint(0, 0);
-  
+
   painter_.setPen(c1);
   painter_.drawPoint(1, 1);
   painter_.drawLine(1, 0, w - 1, 0);
@@ -118,7 +118,7 @@ Static::_drawBorder(QPixmap & pix, int w, int h)
   painter_.setPen(c7);
   painter_.drawPoint(w - 1, h - 1);
   painter_.drawPoint(w, h);
-  
+
   painter_.end();
 
   painter_.resetXForm();

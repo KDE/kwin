@@ -174,7 +174,7 @@ Web::doShape()
 {
   if (!shape_)
     return;
-  
+
   QRegion mask(0, 0, width(), height());
 
   int r(width());
@@ -379,7 +379,7 @@ Web::_createButtons()
   rightButtonList_  .clear();
 
   QString buttons = options->titleButtonsLeft() + "|" + options->titleButtonsRight();
-  QList<WebButton> *buttonList = &leftButtonList_;
+  QPtrList<WebButton> *buttonList = &leftButtonList_;
   for (unsigned int i = 0; i < buttons.length(); ++i)
   {
     WebButton * tb = 0;
@@ -470,7 +470,7 @@ Web::_resetLayout()
 
   // Add left-side buttons.
 
-  for (QListIterator<WebButton> it(leftButtonList_); it.current(); ++it)
+  for (QPtrListIterator<WebButton> it(leftButtonList_); it.current(); ++it)
   {
     topLayout->addWidget(it.current(), Qt::AlignVCenter);
     topLayout->setStretchFactor(it.current(), 0);
@@ -481,7 +481,7 @@ Web::_resetLayout()
 
   // Add right-side buttons.
 
-  for (QListIterator<WebButton> it(rightButtonList_); it.current(); ++it)
+  for (QPtrListIterator<WebButton> it(rightButtonList_); it.current(); ++it)
   {
     topLayout->addWidget(it.current(), Qt::AlignVCenter);
     it.current()->setFixedSize(titleHeight, titleHeight);
@@ -490,7 +490,7 @@ Web::_resetLayout()
   // -------------------------------------------------------------------
 
   QHBoxLayout * midLayout   = new QHBoxLayout(mainLayout_, 0, 0);
- 
+
   midLayout->addSpacing(sideMargin);
   midLayout->addWidget(windowWrapper());
   midLayout->addSpacing(sideMargin);

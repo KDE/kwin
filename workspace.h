@@ -11,7 +11,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qpopupmenu.h>
 #include <qguardedptr.h>
 #include <qvaluelist.h>
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qtimer.h>
 #include <config.h>
 #include "options.h"
@@ -376,7 +376,7 @@ private:
 
     int current_desktop;
     int number_of_desktops;
-    QArray<int> desktop_focus_chain;
+    QMemArray<int> desktop_focus_chain;
 
     QGuardedPtr<Client> popup_client;
 
@@ -384,8 +384,8 @@ private:
 
     QWidget* desktop_widget;
 
-    QList<SessionInfo> session;
-    QList<SessionInfo> fakeSession;
+    QPtrList<SessionInfo> session;
+    QPtrList<SessionInfo> fakeSession;
     void loadFakeSessionInfo();
     void storeFakeSessionInfo( Client* c );
     void writeFakeSessionInfo();

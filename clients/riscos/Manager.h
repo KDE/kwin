@@ -105,8 +105,8 @@ class Manager : public KWinInternal::Client
     QSpacerItem     * titleSpacer_;
 
     QPixmap         titleBuf_;
-    QList<Button>   leftButtonList_;
-    QList<Button>   rightButtonList_;
+    QPtrList<Button>   leftButtonList_;
+    QPtrList<Button>   rightButtonList_;
 };
 
 class ToolManager : public Manager

@@ -22,7 +22,7 @@
 #ifndef KWIN_WEB_H
 #define KWIN_WEB_H
 
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include <kwin/client.h>
 
@@ -103,8 +103,8 @@ namespace KWinInternal
       QBoxLayout    * mainLayout_;
       QSpacerItem   * titleSpacer_;
 
-      QList<WebButton> leftButtonList_;
-      QList<WebButton> rightButtonList_;
+      QPtrList<WebButton> leftButtonList_;
+      QPtrList<WebButton> rightButtonList_;
   };
 }
 

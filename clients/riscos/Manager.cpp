@@ -582,7 +582,7 @@ Manager::createTitle()
     buttons = "XSH|IA";
 
 
-  QList<Button> *buttonList = &leftButtonList_;
+  QPtrList<Button> *buttonList = &leftButtonList_;
 
   for (unsigned int i = 0; i < buttons.length(); ++i)
   {
@@ -619,7 +619,7 @@ Manager::createTitle()
       buttonList->append(tb);
   }
 
-  for (QListIterator<Button> it(leftButtonList_); it.current(); ++it)
+  for (QPtrListIterator<Button> it(leftButtonList_); it.current(); ++it)
   {
     it.current()->setAlignment(Button::Left);
     titleLayout_->addWidget(it.current());
@@ -636,7 +636,7 @@ Manager::createTitle()
 
   titleLayout_->addItem(titleSpacer_);
 
-  for (QListIterator<Button> it(rightButtonList_); it.current(); ++it)
+  for (QPtrListIterator<Button> it(rightButtonList_); it.current(); ++it)
   {
     it.current()->setAlignment(Button::Right);
     titleLayout_->addWidget(it.current());
