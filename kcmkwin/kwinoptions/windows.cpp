@@ -61,6 +61,7 @@
 #define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
 #define KWIN_ALTTABMODE            "AltTabStyle"
 #define KWIN_TRAVERSE_ALL          "TraverseAll"
+#define KWIN_ROLL_OVER_DESKTOPS    "RollOverDesktops"
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
 #define KWIN_XINERAMA              "XineramaEnabled"
@@ -185,8 +186,8 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
 
     lay->addWidget(fcsBox);
 
-    kbdBox = new QButtonGroup(i18n("Keyboard"), this);
-    QGridLayout *kLay = new QGridLayout(kbdBox, 3, 3,
+    kbdBox = new QButtonGroup(i18n("Navigation"), this);
+    QGridLayout *kLay = new QGridLayout(kbdBox, 4, 4,
                                         KDialog::marginHint(),
                                         KDialog::spacingHint());
     kLay->addRowSpacing(0,fontMetrics().lineSpacing());
@@ -216,6 +217,13 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
                   " windows to the current desktop." );
     QWhatsThis::add( traverseAll, wtstr );
 
+    rollOverDesktops = new QCheckBox( i18n("Desktops navigation wraps around"), kbdBox );
+    kLay->addMultiCellWidget(rollOverDesktops, 3, 3, 0, 2);
+
+    wtstr = i18n( "Enable this option if you want that keyboard or electric border navigation beyond"
+                  " an edge desktop brings you to the desktop at the opposite edge" );
+    QWhatsThis::add( rollOverDesktops, wtstr );
+
     lay->addWidget(kbdBox);
 
     lay->addStretch();
@@ -227,6 +235,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     connect(kdeMode, SIGNAL(clicked()), this, SLOT(slotChanged()));
     connect(cdeMode, SIGNAL(clicked()), this, SLOT(slotChanged()));
     connect(traverseAll, SIGNAL(clicked()), this, SLOT(slotChanged()));
+    connect(rollOverDesktops, SIGNAL(clicked()), this, SLOT(slotChanged()));
 
     load();
 }
@@ -313,6 +322,10 @@ void KFocusConfig::setTraverseAll(bool a) {
     traverseAll->setChecked(a);
 }
 
+void KFocusConfig::setRollOverDesktops(bool a) {
+    rollOverDesktops->setChecked(a);
+}
+
 void KFocusConfig::load( void )
 {
     QString key;
@@ -340,6 +353,8 @@ void KFocusConfig::load( void )
 
     key = config->readEntry(KWIN_ALTTABMODE, "KDE");
     setAltTabMode(key == "KDE");
+
+    setRollOverDesktops( config->readBoolEntry(KWIN_ROLL_OVER_DESKTOPS, true ));
 
     config->setGroup( "TabBox" );
     setTraverseAll( config->readBoolEntry(KWIN_TRAVERSE_ALL, false ));
@@ -382,6 +397,8 @@ void KFocusConfig::save( void )
     else
         config->writeEntry(KWIN_ALTTABMODE, "CDE");
 
+    config->writeEntry( KWIN_ROLL_OVER_DESKTOPS, rollOverDesktops->isChecked());
+
     config->setGroup( "TabBox" );
     config->writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
 
@@ -395,6 +412,7 @@ void KFocusConfig::defaults()
     setClickRaise(false);
     setAltTabMode(true);
     setTraverseAll( false );
+    setRollOverDesktops(true);
 }
 
 KAdvancedConfig::~KAdvancedConfig ()
