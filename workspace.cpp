@@ -361,7 +361,7 @@ Workspace::Workspace( bool restore )
     );
 
     // call this before XSelectInput() on the root window
-    d->startup = new KStartupInfo( false, this );
+    d->startup = new KStartupInfo( false, true, this, NULL );
 
     // select windowmanager privileges
     XSelectInput(qt_xdisplay(), root,
