@@ -16,6 +16,7 @@
 
 #include <qpainter.h>
 #include <klocale.h>
+#include <kglobalsettings.h>
 #include "buttons.h"
 #include "pixmaps.h"
 
@@ -550,7 +551,7 @@ void ButtonDropSite::drawContents( QPainter* p )
 	QColor c1( 0x0A, 0x5F, 0x89 );		// KDE 2 titlebar default colour
 	p->fillRect( r, c1 );
 	p->setPen( Qt::white );
-	p->setFont( QFont( "helvetica", 12, QFont::Bold) );
+	p->setFont( QFont( KGlobalSettings::generalFont().family(), 12, QFont::Bold) );
 	p->drawText( r, AlignLeft | AlignVCenter, i18n("KDE") );
 
 	offset = geometry().width() - 3 - rightoffset;
