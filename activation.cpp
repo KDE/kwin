@@ -275,7 +275,8 @@ void Workspace::activateClient( Client* c, bool force )
     if( c->isMinimized())
         c->unminimize();
 
-    if( options->focusPolicyIsReasonable())
+// TODO force should perhaps allow this only if the window already contains the mouse
+    if( options->focusPolicyIsReasonable() || force )
         requestFocus( c, force );
 
     // Don't update user time for clients that have focus stealing workaround.
