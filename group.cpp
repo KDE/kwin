@@ -345,6 +345,8 @@ void Client::setTransient( Window new_transient_for_id )
             {
             transient_for = workspace()->findClient( WindowMatchPredicate( transient_for_id ));
             assert( transient_for != NULL ); // verifyTransient() had to check this
+            if( transient_for->groupTransient())
+                removeTransient( transient_for );
             transient_for->addTransient( this );
             }
         checkGroup();
@@ -436,7 +438,7 @@ void Client::cleanGrouping()
     }
 
 // Make sure that no group transient is considered transient
-// for a window trat is (directly or indirectly) transient for it.
+// for a window that is (directly or indirectly) transient for it.
 // Group transients not being transient for each other is already
 // handled before calling addTransient().
 void Client::checkGroupTransients()
@@ -543,6 +545,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
 void Client::addTransient( Client* cl )
     {
     assert( !transients_list.contains( cl ));
+    assert( !cl->transients_list.contains( this ));
     assert( cl != this );
     transients_list.append( cl );
 //    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
@@ -634,7 +637,7 @@ Client* Client::findModal()
 // but it should be used only to find the group, not for anything else
 void Client::checkGroup()
     {
-    bool check_group_transients = false;
+    Group* old_group = in_group;
     if( window_group != None )
         {
         Group* new_group = workspace()->findGroup( window_group );
@@ -651,7 +654,6 @@ void Client::checkGroup()
                 in_group->removeMember( this );
             in_group = new_group;
             in_group->addMember( this );
-	    check_group_transients = true;
             }
         }
     else
@@ -666,7 +668,6 @@ void Client::checkGroup()
                     in_group->removeMember( this );
                 in_group = transientFor()->group();
                 in_group->addMember( this );
-		check_group_transients = true;
                 }
             }
         else // not transient without a group, put it in its own group
@@ -684,15 +685,24 @@ void Client::checkGroup()
                 }
             }
         }
-    if( check_group_transients )
+    if( in_group != old_group )
         {
+        for( ClientList::Iterator it = transients_list.begin();
+             it != transients_list.end();
+             )
+            { // it's no longer transient for group transients in the old group
+            if( (*it)->groupTransient() && (*it)->group() != group())
+                it = transients_list.remove( it );
+            else
+                ++it;
+            }
         for( ClientList::ConstIterator it = group()->members().begin();
              it != group()->members().end();
              ++it )
             {
-            if( !(*it)->groupTransient())
+            if( !(*it)->groupTransient())  // and its transient for group transients in the new group
                 continue;
-	    if( !transients_list.contains( *it ))
+	    if( !transients_list.contains( *it )) // unless it's the other way around
 		addTransient( *it );
 	    }
         }
