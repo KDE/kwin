@@ -305,6 +305,8 @@ void Workspace::init()
 
     connect(&mgr, SIGNAL(resetAllClients()), this,
             SLOT(slotResetAllClients()));
+    connect(kapp, SIGNAL(appearanceChanged()), this,
+            SLOT(slotResetAllClients()));
 
     XGrabServer( qt_xdisplay() );
     XQueryTree(qt_xdisplay(), root, &dw1, &dw2, &wins, &nwins);
