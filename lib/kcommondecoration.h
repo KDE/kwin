@@ -28,7 +28,7 @@
 #include <qbutton.h>
 #include <qvaluevector.h>
 
-#include <kdecoration.h>
+#include "kdecoration.h"
 
 class KDecorationBridge;
 class KDecorationFactory;
