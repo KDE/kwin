@@ -517,23 +517,6 @@ QRect Workspace::geometry() const
     }
 }
 
-/*!
-  Returns the workspace's client area.
-
-  This is the area within the geometry() where clients can be placed,
-  i.e. the full geometry minus space for desktop panels, taskbars,
-  etc.
-
-  Placement algorithms should refer to clientArea.
-
-  \sa geometry()
- */
-QRect Workspace::clientArea() const
-{
-  return clientArea_;
-}
-
-
 /*
   Destroys the client \a c
  */
@@ -545,10 +528,11 @@ bool Workspace::destroyClient( Client* c)
     stacking_order.remove( c );
     focus_chain.remove( c );
     c->invalidateWindow();
-    delete c;
     clientHidden( c );
     if ( c == desktop_client )
 	desktop_client = 0;
+    delete c;
+    c = 0;
     propagateClients();
     updateClientArea();
     return TRUE;
@@ -2245,37 +2229,45 @@ Workspace::updateClientArea()
     (*it)->updateAvoidPolicy();
 
     if ((*it)->avoid()) {
+    
+//      qDebug("Looking at client " + (KWM::title((*it)->winId())));
   
       switch (AnchorEdge((*it)->anchorEdge())) {
 
         case AnchorNorth:
-//          qDebug("KWin: Ignoring a client at edge N");
+//          qDebug("KWin: Ignoring at edge N");
           clientArea_
             .setTop(QMAX(clientArea_.top(), (*it)->geometry().bottom()));
           break;
 
         case AnchorSouth:
-//          qDebug("KWin: Ignoring a client at edge S");
+//          qDebug("KWin: Ignoring at edge S");
           clientArea_
-            .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top()));
+            .setBottom(QMIN(clientArea_.bottom(), (*it)->geometry().top() - 1));
           break;
         
         case AnchorEast:
-//          qDebug("KWin: Ignoring a client at edge E");
+//          qDebug("KWin: Ignoring at edge E");
           clientArea_
-            .setRight(QMIN(clientArea_.right(), (*it)->geometry().left()));
+            .setRight(QMIN(clientArea_.right(), (*it)->geometry().left() - 1));
           break;
         
         case AnchorWest:
-//          qDebug("KWin: Ignoring a client at edge W");
+//          qDebug("KWin: Ignoring at edge W");
           clientArea_
             .setLeft(QMAX(clientArea_.left(), (*it)->geometry().right()));
           break;
           
         default:
-//          qDebug("KWin: Trying to ignore a client, but don't know which edge");
+//          qDebug("KWin: Not ignoring");
           break;
       }
+    }
+    
+    // FIXME: Using the hackish method...
+    if (KWM::title((*it)->winId()) == "MAC MENU [menu]") {
+      edgeClientArea_ = geometry();
+      edgeClientArea_.setTop((*it)->geometry().bottom());
     }
   }
 
@@ -2294,5 +2286,15 @@ Workspace::updateClientArea()
 // Useful when you want to see whether the client area has been
 // updated correctly...
 //  qDebug("clientArea now == l: %d, r: %d, t: %d, b: %d", clientArea_.left(), clientArea_.top(), clientArea_.right(), clientArea_.bottom());
+}
+
+QRect Workspace::clientArea()
+{
+  return clientArea_;
+}
+
+QRect Workspace::edgeClientArea()
+{
+  return edgeClientArea_;
 }
 

@@ -1217,9 +1217,9 @@ void Client::maximize( MaximizeMode m)
 {
   QRect clientArea = workspace()->clientArea();
 
-  qDebug("Client::maximise() - area: l: %d r: %d t: %d b: %d",
-    clientArea.left(), clientArea.right(),
-    clientArea.top(), clientArea.bottom());
+//  qDebug("Client::maximise() - area: l: %d r: %d t: %d b: %d",
+//    clientArea.left(), clientArea.right(),
+//    clientArea.top(), clientArea.bottom());
 
   if (isShade())
     setShade(false);
@@ -1894,6 +1894,7 @@ QCString Client::sessionId()
 
 void Client::updateAvoidPolicy()
 {
+//  qDebug("kwin: Client::updateAvoidPolicy() - win id == %x", (int)win);
   // Find out if we should be avoided.
 
   // If this atom isn't set, set it now.
@@ -1906,7 +1907,7 @@ void Client::updateAvoidPolicy()
 
   if (0 != avoidStatus) {
 
-    qDebug("XGetTextProperty worked for atom _NET_AVOID_SPEC");
+//    qDebug("XGetTextProperty worked for atom _NET_AVOID_SPEC");
 
     char ** avoidList;
     int avoidListCount;
@@ -1916,17 +1917,18 @@ void Client::updateAvoidPolicy()
 
     if (0 != convertStatus) {
 
-      qDebug("XTextPropertyToStringList succeded");
+//      qDebug("XTextPropertyToStringList succeded");
 
       avoid_ = true;
 
       if (avoidListCount != 1) {
-        qDebug("Extra values in avoidance list. Ignoring.");
+        qDebug( "kwin: Client::updateAvoidPolicy(): "
+                "Extra values in avoidance list. Ignoring.");
       }
 
       char * itemZero = avoidList[0];
 
-      qDebug("Anchoring to border %s", itemZero);
+//      qDebug("Anchoring to border %s", itemZero);
 
       switch (*itemZero) {
 
@@ -1950,7 +1952,8 @@ void Client::updateAvoidPolicy()
       XFreeStringList(avoidList);
 
     } else
-      qDebug("XTextPropertyToStringList failed");
+      qDebug( "kwin: Client::updateAvoidPolicy(): "
+              "XTextPropertyToStringList failed");
 
   }
 }

@@ -10,6 +10,8 @@ class KWinInterface : virtual public DCOPObject
   k_dcop:
 
     virtual void updateClientArea() = 0;
+    virtual QRect clientArea() = 0;
+    virtual QRect edgeClientArea() = 0;
 };
 
 #endif

@@ -90,7 +90,14 @@ public:
     Client* findClient( WId w ) const;
 
     QRect geometry() const;
-    QRect clientArea() const;
+    
+    /**
+     * @return the area available for clients. This is the desktop
+     * geometry adjusted for edge-anchored windows.
+     * Placement algorithms should refer to this rather than geometry().
+     * @sa geometry()
+     */
+    QRect clientArea();
 
     bool destroyClient( Client* );
 
@@ -167,6 +174,13 @@ public:
      * have changed, this will recalculate the available space.
      */
     virtual void updateClientArea();
+   
+    /**
+     * @return the area available for edge-anchored windows. This
+     * is the desktop geometry adjusted for other edge-anchored
+     * windows that have priority.
+     */
+    virtual QRect edgeClientArea();
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -280,7 +294,7 @@ private:
 
     PluginMgr mgr;
 
-    QRect clientArea_;
+    QRect clientArea_, edgeClientArea_;
 };
 
 inline WId Workspace::rootWin() const

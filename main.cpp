@@ -194,7 +194,7 @@ int main( int argc, char * argv[] )
 
     DCOPClient * client = a.dcopClient();
     client->attach();
-    client->registerAs(a.name());
+    client->registerAs("kwin", false);
 
     return a.exec();
 
