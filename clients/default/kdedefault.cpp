@@ -22,6 +22,7 @@
 #include "../../workspace.h"
 #include "../../options.h"
 #include "kdedefault.h"
+#include <qimage.h>
 
 using namespace KWinInternal;
 

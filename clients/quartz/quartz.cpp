@@ -25,6 +25,7 @@
 #include "../../workspace.h"
 #include "../../options.h"
 #include "quartz.h"
+#include <qimage.h>
 
 using namespace KWinInternal;
 

@@ -23,6 +23,7 @@
 #include <qbitmap.h>
 #include "../../workspace.h"
 #include "../../options.h"
+#include <qimage.h>
 
 using namespace KWinInternal;
 

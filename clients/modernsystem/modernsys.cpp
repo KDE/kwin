@@ -16,6 +16,7 @@
 
 #include "buttondata.h"
 #include "btnhighcolor.h"
+#include <qimage.h>
 
 using namespace KWinInternal;
 
