@@ -292,9 +292,10 @@ bool Client::sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool ac
 
  In the case of group transient window, Client::transient_for is NULL,
  and Client::groupTransient() returns true. Such window is treated as
- if it were transient for every window in its window group, with the exception
- of the windows that are (even indirectly) transient for it (quite nasty,
- loops must be avoided).
+ if it were transient for every window in its window group that has been
+ mapped _before_ it (or, to be exact, was added to the same group before it).
+ Otherwise two group transients can create loops, which can lead very very
+ nasty things (bug #67914 and all its dupes).
 
  Client::original_transient_for_id is the value of the property, which
  may be different if Client::transient_for_id if e.g. forcing NET::Splash
@@ -347,8 +348,11 @@ void Client::setTransient( Window new_transient_for_id )
             for( ClientList::ConstIterator it = group()->members().begin();
                  it != group()->members().end();
                  ++it )
-                if( *it != this )
-                    (*it)->addTransient( this );
+                {
+                if( *it == this )
+                    break; // this means the window is only transient for windows mapped before it
+                (*it)->addTransient( this );
+                }
             }
         else if( transient_for_id != None )
             {
@@ -726,17 +730,19 @@ void Client::checkGroup()
             else
                 ++it;
             }
+#if 0 // this would make group transients transient for window that were mapped later
         for( ClientList::ConstIterator it = group()->members().begin();
              it != group()->members().end();
              ++it )
             {
-            if( !(*it)->groupTransient())  // and its transient for group transients in the new group
+            if( !(*it)->groupTransient())  // and group transients in the new group are transient for it
                 continue;
             if( *it == this )
                 continue;
             addTransient( *it );
 	    }
         checkGroupTransients();
+#endif
         }
     }
 
