@@ -279,10 +279,50 @@ void ButtonDropSite::clearRight()
 void ButtonDropSite::dragMoveEvent( QDragMoveEvent* e )
 {
 	QPoint p = e->pos();
-	if (leftDropArea().contains(p) || rightDropArea().contains(p) || buttonAt(p) )
+	if (leftDropArea().contains(p) || rightDropArea().contains(p) || buttonAt(p) ) {
 		e->accept();
-	else
+
+		// 2 pixel wide drop visualizer...
+		QRect r = contentsRect();
+		int x = -1;
+		if (leftDropArea().contains(p) ) {
+			x = leftDropArea().left();
+		} else if (rightDropArea().contains(p) ) {
+			x = rightDropArea().right()+1;
+		} else {
+			ButtonDropSiteItem *item = buttonAt(p);
+			if (item) {
+				if (p.x() < item->rect.left()+item->rect.width()/2 ) {
+					x = item->rect.left();
+				} else {
+					x = item->rect.right()+1;
+				}
+			}
+		}
+		if (x != -1) {
+			QRect tmpRect(x, r.y(), 2, r.height() );
+			if (tmpRect != m_oldDropVisualizer) {
+				cleanDropVisualizer();
+				m_oldDropVisualizer = tmpRect;
+				update(tmpRect);
+			}
+		}
+
+	} else {
 		e->ignore();
+
+		cleanDropVisualizer();
+	}
+}
+
+void ButtonDropSite::cleanDropVisualizer()
+{
+	if (m_oldDropVisualizer.isValid())
+	{
+		QRect rect = m_oldDropVisualizer;
+		m_oldDropVisualizer = QRect(); // rect is invalid
+		update(rect);
+	}
 }
 
 void ButtonDropSite::dragEnterEvent( QDragEnterEvent* e )
@@ -293,11 +333,13 @@ void ButtonDropSite::dragEnterEvent( QDragEnterEvent* e )
 
 void ButtonDropSite::dragLeaveEvent( QDragLeaveEvent* /* e */ )
 {
-	// Do nothing...
+	cleanDropVisualizer();
 }
 
 void ButtonDropSite::dropEvent( QDropEvent* e )
 {
+	cleanDropVisualizer();
+
 	QPoint p = e->pos();
 
 	// collect information where to insert the dropped button
@@ -543,6 +585,11 @@ void ButtonDropSite::drawContents( QPainter* p )
 
 	offset = geometry().width() - 3 - rightoffset;
 	drawButtonList( p, buttonsRight, offset );
+
+	if (m_oldDropVisualizer.isValid() )
+	{
+		p->fillRect(m_oldDropVisualizer, Dense4Pattern);
+	}
 }
 
 ButtonSourceItem::ButtonSourceItem(QListView * parent, const Button& btn)

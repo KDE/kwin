@@ -179,6 +179,9 @@ class ButtonDropSite: public QFrame
 		 */
 		bool getItemIterator(ButtonDropSiteItem *item, ButtonList* &list, ButtonList::iterator &iterator);
 
+		void cleanDropVisualizer();
+		QRect m_oldDropVisualizer;
+
 		ButtonDropSiteItem *m_selected;
 };
 
