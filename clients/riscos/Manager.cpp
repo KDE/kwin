@@ -262,7 +262,7 @@ Manager::resizeEvent(QResizeEvent *)
 
   if (width() < 80) sizeProblem = 3;
   else if (width() < 100) sizeProblem = 2;
-  else if (width() < 120) sizeProblem = 1;
+  else if (width() < 180) sizeProblem = 1;
 
   switch (sizeProblem) {
 
@@ -304,6 +304,8 @@ Manager::resizeEvent(QResizeEvent *)
       close_    ->show();
       break;
   }
+
+  repaint();
 }
 
   Client::MousePosition
