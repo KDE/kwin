@@ -18,6 +18,7 @@ Comment[pt_BR]=Gerenciador de Janelas KDE
 Comment[ro]=Managerul de ferestre KDE
 Comment[sl]=Okenski upravljalnik KDE
 Comment[sv]=KDE:s fönsterhanterare
+Comment[zh_CN.GB2312]=KDE 窗口管理器
 
 [desktop1]
 Name=Change to Desktop 1
@@ -38,6 +39,7 @@ Name[pt_BR]=Mudar para ambiente 1
 Name[ro]=Trece la ecranul 1
 Name[sl]=Preklopi na namizje 1
 Name[sv]=Byt till skrivbord 1
+Name[zh_CN.GB2312]=切换到桌面 1
 Comment=Virtual Desktop One is Selected
 Comment[da]=Virtuelt skrivebord ét er valgt
 Comment[de]=Die virtuelle Arbeitsfläche eins ist ausgewählt
@@ -56,6 +58,7 @@ Comment[pt_BR]=Ambiente virtual um está selecionado
 Comment[ro]=Ecranul virtual 1 este selectat
 Comment[sl]=Izbrano je prvo navidezno namizje
 Comment[sv]=Virtuellt skrivbord ett är valt
+Comment[zh_CN.GB2312]=虚拟桌面 1 被选中
 default_presentation=0
 
 [desktop2]
@@ -77,6 +80,7 @@ Name[pt_BR]=Mudar para ambiente 2
 Name[ro]=Trece la ecranul 2
 Name[sl]=Preklopi na namizje 2
 Name[sv]=Byt till skrivbord 2
+Name[zh_CN.GB2312]=切换到桌面 2
 Comment=Virtual Desktop Two is Selected
 Comment[da]=Virtuelt skrivebord to er valgt
 Comment[de]=Die virtuelle Arbeitsfläche zwei ist ausgewählt
@@ -95,6 +99,7 @@ Comment[pt_BR]=Ecrã Virtual Dois é Seleccionado
 Comment[ro]=Ecranul virtual 2 este selectat
 Comment[sl]=Izbrano je drugo navidezno namizje
 Comment[sv]=Virtuellt skrivbord två är valt
+Comment[zh_CN.GB2312]=虚拟桌面 2 被选中
 default_presentation=0
 
 [desktop3]
@@ -115,6 +120,7 @@ Name[pt_BR]=Mudar para ambiente 3
 Name[ro]=Trece la ecranul 3
 Name[sl]=Preklopi na namizje 3
 Name[sv]=Byt till skrivbord 3
+Name[zh_CN.GB2312]=切换到桌面 3
 Comment=Virtual Desktop Three is Selected
 Comment[da]=Virtuelt skrivebord tre er valgt
 Comment[de]=Die virtuelle Arbeitsfläche drei ist ausgewählt
@@ -133,6 +139,7 @@ Comment[pt_BR]=Ecrã Virtual Três é Seleccionado
 Comment[ro]=Ecranul virtual 3 este selectat
 Comment[sl]=Izbrano je tretje navidezno namizje
 Comment[sv]=Virtuellt skrivbord tre är valt
+Comment[zh_CN.GB2312]=虚拟桌面 3 被选中
 default_presentation=0
 
 [desktop4]
@@ -154,6 +161,7 @@ Name[pt_BR]=Mudar para ambiente 4
 Name[ro]=Trece la ecranul 4
 Name[sl]=Preklopi na namizje 4
 Name[sv]=Byt till skrivbord 4
+Name[zh_CN.GB2312]=切换到桌面 4
 Comment=Virtual Desktop Four is Selected
 Comment[da]=Virtuelt skrivebord fire er valgt
 Comment[de]=Die virtuelle Arbeitsfläche vier ist ausgewählt
@@ -172,6 +180,7 @@ Comment[pt_BR]=Ecrã Virtual Quatro é Seleccionado
 Comment[ro]=Ecranul virtual 4 este selectat
 Comment[sl]=Izbrano je četrto navidezno namizje
 Comment[sv]=Virtuellt skrivbord fyra är valt
+Comment[zh_CN.GB2312]=虚拟桌面 4 被选中
 default_presentation=0
 
 [desktop5]
@@ -193,6 +202,7 @@ Name[pt_BR]=Mudar para ambiente 5
 Name[ro]=Trece la ecranul 5
 Name[sl]=Preklopi na namizje 5
 Name[sv]=Byt till skrivbord 5
+Name[zh_CN.GB2312]=切换到桌面 5
 Comment=Virtual Desktop Five is Selected
 Comment[da]=Virtuelt skrivebord fem er valgt
 Comment[de]=Die virtuelle Arbeitsfläche fünf ist ausgewählt
@@ -211,6 +221,7 @@ Comment[pt_BR]=Ecrã Virtual Cinco é Seleccionado
 Comment[ro]=Ecranul virtual 5 este selectat
 Comment[sl]=Izbrano je peto navidezno namizje
 Comment[sv]=Virtuellt skrivbord fem är valt
+Comment[zh_CN.GB2312]=虚拟桌面 5 被选中
 default_presentation=0
 
 [desktop6]
@@ -232,6 +243,7 @@ Name[pt_BR]=Mudar para ambiente 6
 Name[ro]=Trece la ecranul 6
 Name[sl]=Preklopi na namizje 6
 Name[sv]=Byt till skrivbord 6
+Name[zh_CN.GB2312]=切换到桌面 6
 Comment=Virtual Desktop Six is Selected
 Comment[da]=Virtuelt skrivebord seks er valgt
 Comment[de]=Die virtuelle Arbeitsfläche sechs ist ausgewählt
@@ -249,6 +261,7 @@ Comment[pt_BR]=Ecrã Virtual Seis é Seleccionado
 Comment[ro]=Ecranul virtual 6 este selectat
 Comment[sl]=Izbrano je šesto navidezno namizje
 Comment[sv]=Virtuellt skrivbord sex är valt
+Comment[zh_CN.GB2312]=虚拟桌面 6 被选中
 default_presentation=0
 
 [desktop7]
@@ -270,6 +283,7 @@ Name[pt_BR]=Mudar para ambiente 7
 Name[ro]=Trece la ecranul 7
 Name[sl]=Preklopi na namizje 7
 Name[sv]=Byt till skrivbord 7
+Name[zh_CN.GB2312]=切换到桌面 7
 Comment=Virtual Desktop Seven is Selected
 Comment[da]=Virtuelt skrivebord syv er valgt
 Comment[de]=Die virtuelle Arbeitsfläche sieben ist ausgewählt
@@ -287,6 +301,7 @@ Comment[pt_BR]=Ecrã Virtual Sete é Seleccionado
 Comment[ro]=Ecranul virtual 7 este selectat
 Comment[sl]=Izbrano je sedmo navidezno namizje
 Comment[sv]=Virtuellt skrivbord sju är valt
+Comment[zh_CN.GB2312]=虚拟桌面 7 被选中
 default_presentation=0
 
 [desktop8]
@@ -308,6 +323,7 @@ Name[pt_BR]=Mudar para ambiente 8
 Name[ro]=Trece la ecranul 8
 Name[sl]=Preklopi na namizje 8
 Name[sv]=Byt till skrivbord 8
+Name[zh_CN.GB2312]=切换到桌面 8
 Comment=Virtual Desktop Eight is Selected
 Comment[da]=Virtuelt skrivebord otte er valgt
 Comment[de]=Die virtuelle Arbeitsfläche acht ist ausgewählt
@@ -325,6 +341,7 @@ Comment[pt_BR]=Ecrã Virtual Oito é Seleccionado
 Comment[ro]=Ecranul virtual 8 este selectat
 Comment[sl]=Izbrano je osmo navidezno namizje
 Comment[sv]=Virtuellt skrivbord åtta är valt
+Comment[zh_CN.GB2312]=虚拟桌面 8 被选中
 default_presentation=0
 
 [activate]
@@ -346,6 +363,7 @@ Name[pt_BR]=Ativar janela
 Name[ro]=Activează fereastra
 Name[sl]=Aktiviraj okno
 Name[sv]=Aktivera fönster
+Name[zh_CN.GB2312]=激活窗口
 Comment=Another Window is Activated
 Comment[da]=Et andet vindue er aktiveret
 Comment[de]=Ein anderes Fenster ist aktiviert
@@ -363,6 +381,7 @@ Comment[pt_BR]=Outra Janela é Activada
 Comment[ro]=Este activată altă fereastră
 Comment[sl]=Aktivno je drugo okno
 Comment[sv]=Ett annat fönster är aktiverat
+Comment[zh_CN.GB2312]=另外一个窗口被激活
 default_presentation=0
 
 [new]
@@ -385,6 +404,7 @@ Comment[pt_BR]=Nova Janela
 Comment[ro]=Fereastră nouă
 Comment[sl]=Novo okno
 Comment[sv]=Nytt fönster
+Comment[zh_CN.GB2312]=新窗口
 default_presentation=0
 
 [delete]
@@ -406,6 +426,7 @@ Comment[pt_BR]=Apagar Janela
 Comment[ro]=Şterge fereastra
 Comment[sl]=Zbriši okno
 Comment[sv]=Ta bort fönster
+Comment[zh_CN.GB2312]=单纯窗口
 default_presentation=0
 
 [open]
@@ -427,6 +448,7 @@ Name[pt_BR]=Abrir nova janela
 Name[ro]=Deschide fereastră nouă
 Name[sl]=Odpri novo okno
 Name[sv]=Öppna nytt fönster
+Name[zh_CN.GB2312]=打开新窗口
 Comment=A New Window Appears
 Comment[da]=Et nyt vindue kommer tilsyne
 Comment[de]=Ein neues Fenster erscheint
@@ -445,6 +467,7 @@ Comment[pt_BR]=Aparece Uma Nova Janela
 Comment[ro]=Apare o nouă fereastră
 Comment[sl]=Prikaže se novo okno
 Comment[sv]=Ett nytt fönster visar sig
+Comment[zh_CN.GB2312]=出现一个新窗口
 default_presentation=0
 
 [close]
@@ -466,6 +489,7 @@ Name[pt_BR]=Fechar janela
 Name[ro]=Închide fereastra
 Name[sl]=Zapri okno
 Name[sv]=Stäng fönster
+Name[zh_CN.GB2312]=关闭窗口
 Comment=A Window Closes
 Comment[da]=Et vindue lukker
 Comment[de]=Ein Fenster wird geschlossen
@@ -484,6 +508,7 @@ Comment[pt_BR]=Uma Janela é Fechada
 Comment[ro]=Este închisă o fereastră
 Comment[sl]=Zapre se novo okno
 Comment[sv]=Ett fönster stängs
+Comment[zh_CN.GB2312]=关闭一个窗口
 default_presentation=0
 
 [shadeup]
@@ -579,6 +604,7 @@ Name[pt_BR]=Minimizar janela
 Name[ro]=Iconizează fereastra
 Name[sl]=Ikoniziraj okno
 Name[sv]=Ikonifiera fönster
+Name[zh_CN.GB2312]=最小化窗口
 Comment=A Window is Iconified
 Comment[da]=Et vindue minimeres
 Comment[de]=Ein Fenster ist auf Symbolgröße verkleinert
@@ -597,6 +623,7 @@ Comment[pt_BR]=Uma Janela é Iconificada
 Comment[ro]=O fereastră este inconizată
 Comment[sl]=Okno je ikonizirano
 Comment[sv]=Ett fönster ikonifieras
+Comment[zh_CN.GB2312]=窗口被最小化
 default_presentation=0
 
 [deiconify]
@@ -618,6 +645,7 @@ Name[pt_BR]=Restaurar janela
 Name[ro]=Deiconizează fereastra
 Name[sl]=Deikoniziraj okno
 Name[sv]=Avikonifiera fönster
+Name[zh_CN.GB2312]=恢复窗口
 Comment=A Window is Restored
 Comment[da]=Et vindue genetableres
 Comment[de]=Ein Fenster wird auf seine ursprüngliche Größe zurückgestellt
@@ -636,6 +664,7 @@ Comment[pt_BR]=Uma Janela é Restaurada
 Comment[ro]=O fereastră este refăcută
 Comment[sl]=Okno je povrnjeno
 Comment[sv]=Ett fönster återställs
+Comment[zh_CN.GB2312]=窗口恢复大小
 default_presentation=0
 
 [maximize]
@@ -657,6 +686,7 @@ Name[pt_BR]=Maximizar janela
 Name[ro]=Maximizează fereastra
 Name[sl]=Razpni okno
 Name[sv]=Maximera fönster
+Name[zh_CN.GB2312]=最大化窗口
 Comment=A Window is Maximized
 Comment[da]=Et vindue maksimeres
 Comment[de]=Ein Fenster wird maximiert
@@ -675,6 +705,7 @@ Comment[pt_BR]=Uma Janela é Maximizada
 Comment[ro]=O fereastră este maximizată
 Comment[sl]=Okno je razpeto
 Comment[sv]=Ett fönster maximeras
+Comment[zh_CN.GB2312]=窗口被最大化
 default_presentation=0
 
 [unmaximize]
@@ -696,6 +727,7 @@ Name[pt_BR]=Desmaximizar janela
 Name[ro]=Demaximizează fereastra
 Name[sl]=Skrči okno
 Name[sv]=Avmaximera fönster
+Name[zh_CN.GB2312]=恢复窗口
 Comment=A Window Loses Maximization
 Comment[da]=Et vindue taber maksimering
 Comment[de]=Ein Fenster wird unter Maximalgröße gebracht
@@ -713,6 +745,8 @@ Comment[pt]=Uma Janela Deixa de Estar Maximizada
 Comment[pt_BR]=Uma Janela Deixa de Estar Maximizada
 Comment[ro]=O fereastră pierde maximizarea
 Comment[sl]=Okno ni več razpeto
+Comment[sv]=Ett fönster förlorar maximering
+Comment[zh_CN.GB2312]=窗口恢复大小
 default_presentation=0
 
 [sticky]
@@ -734,6 +768,7 @@ Name[pt_BR]=Pregar janela
 Name[ro]=Ţintuieşte fereastra
 Name[sl]=Lepljivo okno
 Name[sv]=Klistrigt fönster
+Name[zh_CN.GB2312]=粘附窗口
 Comment=A Window is Made Sticky
 Comment[da]=Et vindue gøres klæbrigt
 Comment[de]=Ein Fenster wird auf "Haften" gestellt
@@ -751,6 +786,8 @@ Comment[pt]=Uma Janela Passa a Aparecer em Todos os Ecrãs
 Comment[pt_BR]=Uma Janela Passa a Aparecer em Todos os Ecrãs
 Comment[ro]=O fereastră este ţintuită
 Comment[sl]=Okno je lepljivo
+Comment[sv]=Ett fönster görs klistrigt
+Comment[zh_CN.GB2312]=窗口已粘附
 default_presentation=1
 soundfile=pop.wav
 
@@ -773,6 +810,7 @@ Name[pt_BR]=Despregar janela
 Name[ro]=Deţintuieşte fereastra
 Name[sl]=Nelepljivo okno
 Name[sv]=Oklistrigt fönster
+Name[zh_CN.GB2312]=取消粘附
 Comment=A Window is Made Unsticky
 Comment[da]=Et vindue gøres uklæbrigt
 Comment[de]=Ein Fenster "haftet" nicht mehr
@@ -790,6 +828,7 @@ Comment[pt]=Uma Janela Passa a Aparecer Apenas em Um Ecrã
 Comment[pt_BR]=Uma Janela Passa a Aparecer Apenas em Um Ecrã
 Comment[ro]=O fereastră este deţintuită
 Comment[sl]=Okno ni lepljivo
+Comment[zh_CN.GB2312]=窗口已取消粘附
 default_presentation=1
 soundfile=pop.wav
 
@@ -824,6 +863,7 @@ Comment[pt]=Uma Janela Transiente (um diálogo) Aparece
 Comment[pt_BR]=Uma Janela Transiente (um diálogo) Aparece
 Comment[ro]=Apare o fereastră tranzientă (un dialog)
 Comment[sl]=Odprlo se je prehodno (pogovorno) okno
+Comment[zh_CN.GB2312]=暂态窗口(对话)出现
 default_presentation=0
 
 [transdelete]
@@ -857,6 +897,7 @@ Comment[pt]=Uma Janela Transiente (um diálogo) Desaparece
 Comment[pt_BR]=Uma Janela Transiente (um diálogo) Desaparece
 Comment[ro]=Este ştearsă o fereastră tranzientă (un dialog)
 Comment[sl]=Zaprlo se je prehodno (pogovorno) okno
+Comment[zh_CN.GB2312]=暂态窗口(对话)取消
 default_presentation=0
 
 [movestart]
@@ -878,6 +919,7 @@ Name[pt_BR]=Janela começa a mover-se
 Name[ro]=Start mutare fereastră
 Name[sl]=Premakni začetek okna
 Name[sv]=Fönsterförflyttning börjar
+Name[zh_CN.GB2312]=开始移动窗口
 Comment=A Window has Began Moving
 Comment[da]=Et vindue begyndte at flyttes
 Comment[de]=Die Verschiebung eines Fensters hat begonnen
@@ -896,6 +938,7 @@ Comment[pt_BR]=Uma Janela Começou a Movimentar-se
 Comment[ro]=O fereastră a început să se mute
 Comment[sl]=Okno se je začelo premikati
 Comment[sv]=Ett fönster har börjat flyttats
+Comment[zh_CN.GB2312]=窗口开始移动
 default_presentation=0
 
 [moveend]
@@ -917,6 +960,7 @@ Name[pt_BR]=Janela para de mover-se
 Name[ro]=Oprire mutare fereastră
 Name[sl]=Premakni konec okna
 Name[sv]=Fönsterförflyttning slutar
+Name[zh_CN.GB2312]=完成移动窗口
 Comment=A Window has Completed its Moving
 Comment[da]=Et vindue er færdigt med at flytte
 Comment[de]=Die Verschiebung eines Fensters ist abgeschlossen
@@ -935,6 +979,7 @@ Comment[pt_BR]=Uma Janela Acabou de Mover-se
 Comment[ro]=O fereastră şi-a terminat mutarea
 Comment[sl]=Okno se je prenehalo premikati
 Comment[sv]=Ett fönster har flyttats klart
+Comment[zh_CN.GB2312]=窗口完成移动
 default_presentation=0
 
 [resizestart]
@@ -955,6 +1000,7 @@ Name[pt]=Janela começa a mudar de tamanho
 Name[pt_BR]=Janela começa a mudar de tamanho
 Name[ro]=Start redimensionare fereastră
 Name[sl]=Začetek raztezanja okna
+Name[zh_CN.GB2312]=开始改变窗口大小
 Comment=A Window has Began Resizing
 Comment[da]=Et vindue begyndte at ændre størrelse
 Comment[de]=Die Größenänderung eines Fensters hat begonnen
@@ -972,6 +1018,7 @@ Comment[pt]=Uma Janela Começou a Mudar de Tamanho
 Comment[pt_BR]=Uma Janela Começou a Mudar de Tamanho
 Comment[ro]=O fereastră a început redimensionarea
 Comment[sl]=Okno se je začelo raztegovati
+Comment[zh_CN.GB2312]=窗口开始改变大小
 default_presentation=0
 
 [resizeend]
@@ -992,6 +1039,7 @@ Name[pt]=Janela acaba de mudar de tamanho
 Name[pt_BR]=Janela acaba de mudar de tamanho
 Name[ro]=Oprire redimensionare fereastră
 Name[sl]=Konec raztezanja okna
+Name[zh_CN.GB2312]=完成改变窗口大小
 Comment=A Window has Done Resizing
 Comment[da]=Et vindue er færdigt merd at ændre størrelse
 Comment[de]=Die Größenänderung eines Fensters ist abgeschlossen
@@ -1009,4 +1057,5 @@ Comment[pt]=Uma Janela Acabou de Mudar de Tamanho
 Comment[pt_BR]=Uma Janela Acabou de Mudar de Tamanho
 Comment[ro]=O fereastră a terminat redimensionarea
 Comment[sl]=Okno se je končalo raztegovati
+Comment[zh_CN.GB2312]=窗口完成改变大小
 default_presentation=0
