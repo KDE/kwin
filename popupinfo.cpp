@@ -120,13 +120,10 @@ void PopupInfo::showInfo(QString infoString)
 {
     if (m_show) {
        m_infoString = infoString;
+       reset();
        if (m_shown) {
-          // AK, maybe reset() should be called for every view, otherwise the 
-          // contents is painted but setGeometry not called
-          // reset();
           paintContents();
        } else {
-          reset();
           show();
           raise();
           m_shown = true;
