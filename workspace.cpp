@@ -764,6 +764,10 @@ bool Workspace::hasClient(Client* c)
             return TRUE;
     }
 
+    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it) {
+        if ( (*it) == c )
+            return TRUE;
+    }
     return FALSE;
 }
 
