@@ -8,7 +8,10 @@
 class kwiniface : virtual public DCOPObject
 {
 K_DCOP 
-   virtual void logout();
+public:
+   kwiniface() : DCOPObject("kwiniface") {}
+   ~kwiniface() {}
+   void logout();
 };
 
 typedef QValueList<Workspace*> WorkspaceList;
