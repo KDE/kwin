@@ -31,7 +31,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
-
+#include <kcrash.h>
 
 Options* options;
 Atoms* atoms;
@@ -39,6 +39,15 @@ Atoms* atoms;
 Time kwin_time = CurrentTime;
 
 static bool initting = FALSE;
+static DCOPClient * client = 0;
+
+static void crashHandler(int)
+{
+   KCrash::setCrashHandler(0); // Exit on next crash.
+   delete client; client = 0; // Unregister with dcop.
+   system("kwin&"); // Try to restart
+}
+
 int x11ErrorHandler(Display *d, XErrorEvent *e){
     char msg[80], req[80], number[80];
     bool ignore_badwindow = TRUE; //maybe temporary
@@ -184,9 +193,10 @@ int main( int argc, char * argv[] )
 	signal(SIGHUP, SIG_IGN);
 
     Application a;
+    KCrash::setCrashHandler(crashHandler); // Try to restart on crash
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
-    DCOPClient * client = a.dcopClient();
+    client = a.dcopClient();
     client->attach();
     client->registerAs("kwin", false);
 
