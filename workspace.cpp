@@ -90,7 +90,7 @@ static bool block_focus = FALSE;
 // does the window w  need a shape combine mask around it?
 bool Shape::hasShape( WId w){
     int xws, yws, xbs, ybs;
-    unsigned wws, hws, wbs, hbs;
+    unsigned int wws, hws, wbs, hbs; 
     int boundingShaped, clipShaped;
     if (!kwin_has_shape)
 	return FALSE;
@@ -1180,7 +1180,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 void Workspace::showWindowMenuAt( unsigned long id, int x, int y )
 {
     Client *target = findClient( id );
-    
+
     if (!target)
         return;
 
@@ -1957,22 +1957,24 @@ bool Workspace::netCheck( XEvent* e )
  */
 void Workspace::propagateClients( bool onlyStacking )
 {
-    WId* cl;
+    Window *cl; // MW we should not assume WId and Window to be compatible
+				// when passig pointers around.
+
     int i;
     if ( !onlyStacking ) {
-	cl = new WId[ clients.count()];
+	cl = new Window[ clients.count()];
 	i = 0;
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it )
 	    cl[i++] =  (*it)->window();
-	rootInfo->setClientList( (Window*) cl, i );
+	rootInfo->setClientList( cl, i );
 	delete [] cl;
     }
 
-    cl = new WId[ stacking_order.count()];
+    cl = new Window[ stacking_order.count()];
     i = 0;
     for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
 	cl[i++] =  (*it)->window();
-    rootInfo->setClientListStacking(  (Window*) cl, i );
+    rootInfo->setClientListStacking( cl, i );
     delete [] cl;
 }
 
@@ -2033,13 +2035,14 @@ bool Workspace::iconifyMeansWithdraw( Client* c)
  */
 void Workspace::propagateSystemTrayWins()
 {
-    WId* cl = new WId[ systemTrayWins.count()];
+    Window *cl = new Window[ systemTrayWins.count()];
+
     int i = 0;
     for ( SystemTrayWindowList::ConstIterator it = systemTrayWins.begin(); it != systemTrayWins.end(); ++it ) {
 	cl[i++] =  (*it).win;
     }
 
-    rootInfo->setKDESystemTrayWindows( (Window*) cl, i );
+    rootInfo->setKDESystemTrayWindows( cl, i );
     delete [] cl;
 }
 

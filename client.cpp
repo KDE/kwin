@@ -544,8 +544,8 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	if ( XGetClassHint(qt_xdisplay(), win, &classHint) != 0 ) {
 	    if ( classHint.res_class )
 	        ignorePPosition = ( options->ignorePositionClasses.find(QString::fromLatin1(classHint.res_class)) != options->ignorePositionClasses.end() );
-	XFree(classHint.res_name);
-	XFree(classHint.res_class);
+	    XFree(classHint.res_name);
+	    XFree(classHint.res_class);
 	}
 
 	if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
@@ -592,6 +592,7 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
 	    move( x(), area.bottom() - height() );
     }
 
+    XShapeSelectInput( qt_xdisplay(), win, ShapeNotifyMask ); 
     if ( (is_shape = Shape::hasShape( win )) ) {
 	updateShape();
     }
@@ -835,6 +836,8 @@ bool Client::windowEvent( XEvent * e)
 	if ( isActive() )
 	    workspace()->updateColormap();
     default:
+	if ( e->type == Shape::shapeEvent() ) 
+	    updateShape();
 	break;
     }
 
