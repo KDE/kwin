@@ -71,7 +71,7 @@ void QuartzConfig::slotSelectionChanged()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void QuartzConfig::load( KConfig* conf )
+void QuartzConfig::load( KConfig* /*conf*/ )
 {
 	quartzConfig->setGroup("General");
 	bool override = quartzConfig->readBoolEntry( "UseTitleBarBorderColors", true );
@@ -80,7 +80,7 @@ void QuartzConfig::load( KConfig* conf )
 
 
 // Saves the configurable options to the kwinrc config file
-void QuartzConfig::save( KConfig* conf )
+void QuartzConfig::save( KConfig* /*conf*/ )
 {
 	quartzConfig->setGroup("General");
 	quartzConfig->writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
