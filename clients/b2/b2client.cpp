@@ -1217,13 +1217,14 @@ void B2Titlebar::mousePressEvent( QMouseEvent * e )
     if (shift_move) {
         moveOffset = e->globalPos();
     } else {
-	client->processMousePressEvent(e);
+	e->ignore();
     }
 }
 
 void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
 {
-    shift_move = false;
+    if (shift_move) shift_move = false;
+    else e->ignore();
 }
 
 void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
