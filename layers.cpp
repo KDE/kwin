@@ -270,6 +270,8 @@ void Workspace::lowerClient( Client* c )
     {
     if ( !c )
         return;
+    if( c->isTopMenu())
+        return;
 
     c->cancelAutoRaise();
 
@@ -294,6 +296,8 @@ void Workspace::lowerClient( Client* c )
 void Workspace::lowerClientWithinApplication( Client* c )
     {
     if ( !c )
+        return;
+    if( c->isTopMenu())
         return;
 
     c->cancelAutoRaise();
@@ -320,6 +324,8 @@ void Workspace::lowerClientWithinApplication( Client* c )
 void Workspace::raiseClient( Client* c )
     {
     if ( !c )
+        return;
+    if( c->isTopMenu())
         return;
 
     c->cancelAutoRaise();
@@ -348,6 +354,8 @@ void Workspace::raiseClient( Client* c )
 void Workspace::raiseClientWithinApplication( Client* c )
     {
     if ( !c )
+        return;
+    if( c->isTopMenu())
         return;
 
     c->cancelAutoRaise();
@@ -397,6 +405,8 @@ void Workspace::lowerClientRequest( Client* c, NET::RequestSource src, Time /*ti
 
 void Workspace::restackClientUnderActive( Client* c )
     {
+    if( c->isTopMenu())
+        return;
     if( !active_client || active_client == c )
         {
         raiseClient( c );
