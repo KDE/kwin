@@ -19,6 +19,7 @@ class QLabel;
 class QSpacerItem;
 class QHBoxLayout;
 
+namespace KWinInternal {
 
 class GalliumButton : public QButton
 {
@@ -58,7 +59,7 @@ protected:
 };
 
 
-class GalliumClient : public Client
+class GalliumClient : public KWinInternal::Client
 {
     Q_OBJECT
 
@@ -92,5 +93,6 @@ private:
     QHBoxLayout*   hb;
 };
 
+};
 
 #endif

@@ -8,6 +8,7 @@
 class QLabel;
 class QSpacerItem;
 
+namespace KWinInternal {
 
 // get rid of autohide :P
 class ModernButton : public QButton
@@ -31,7 +32,7 @@ public:
     int last_button;
 };
 
-class ModernSys : public Client
+class ModernSys : public KWinInternal::Client
 {
     Q_OBJECT
 public:
@@ -62,5 +63,6 @@ private:
     QString oldTitle;
 };
 
+};
 
 #endif

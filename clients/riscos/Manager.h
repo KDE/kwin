@@ -40,13 +40,13 @@ class StickyButton;
 class HelpButton;
 class Button;
 
-class Manager : public Client
+class Manager : public KWinInternal::Client
 {
   Q_OBJECT
 
   public:
 
-    Manager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
+    Manager(KWinInternal::Workspace *, WId, QWidget * parent = 0, const char * name = 0);
     ~Manager();
 
   signals:
@@ -65,7 +65,7 @@ class Manager : public Client
 
   protected:
 
-    Client::MousePosition mousePosition(const QPoint &) const;
+    KWinInternal::Client::MousePosition mousePosition(const QPoint &) const;
     void paletteChange(const QPalette &);
     void activeChange(bool);
     void maximizeChange(bool);
@@ -105,7 +105,7 @@ class ToolManager : public Manager
 
   public:
 
-    ToolManager(Workspace *, WId, QWidget * parent = 0, const char * name = 0);
+    ToolManager(KWinInternal::Workspace *, WId, QWidget * parent = 0, const char * name = 0);
     ~ToolManager();
 };
 

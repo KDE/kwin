@@ -10,6 +10,8 @@ class QLabel;
 //class QHBoxLayout;
 class QGridLayout;
 
+namespace KWinInternal {
+
 class B2Button : public QButton
 {
     Q_OBJECT
@@ -71,7 +73,7 @@ protected:
     B2Client *client;
 };
 
-class B2Client : public Client
+class B2Client : public KWinInternal::Client
 {
     Q_OBJECT
     friend class B2Titlebar;
@@ -113,7 +115,6 @@ private:
     
 };
 
-
-
+};
 
 #endif

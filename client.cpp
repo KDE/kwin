@@ -33,23 +33,16 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/Xatom.h>
 #include <X11/extensions/shape.h>
 
-extern Atom qt_wm_state;
-extern Time kwin_time;
-
-static bool resizeHorizontalDirectionFixed = FALSE;
-static bool resizeVerticalDirectionFixed = FALSE;
-static bool blockAnimation = FALSE;
-
-
-static QRect* visible_bound = 0;
+namespace KWinInternal {
 
 // NET WM Protocol handler class
-class WinInfo : public NETWinInfo {
+class WinInfo : public NETWinInfo 
+{
 public:
-    WinInfo(::Client * c, Display * display, Window window,
+    WinInfo(KWinInternal::Client * c, Display * display, Window window,
 	    Window rwin, unsigned long pr )
 	: NETWinInfo( display, window, rwin, pr, NET::WindowManager ) {
-      m_client = c;
+        m_client = c;
     }
 
     virtual void changeDesktop(int desktop) {
@@ -70,9 +63,9 @@ public:
 	if ( (mask & NET::Max) == NET::Max ) {
 	    m_client->maximizeRaw( state & NET::MaxVert, state & NET::MaxHoriz );
 	} else if ( mask & NET::MaxVert ) {
-	    m_client->maximizeRaw( state & NET::MaxVert, m_client->maximizeMode() & Client::MaximizeHorizontal );
+	    m_client->maximizeRaw( state & NET::MaxVert, m_client->maximizeMode() & KWinInternal::Client::MaximizeHorizontal );
 	} else if ( mask & NET::MaxHoriz ) {
-	    m_client->maximizeRaw( m_client->maximizeMode() & Client::MaximizeVertical, state & NET::MaxHoriz );
+	    m_client->maximizeRaw( m_client->maximizeMode() & KWinInternal::Client::MaximizeVertical, state & NET::MaxHoriz );
 	}
 	if ( mask & NET::StaysOnTop) {
 	    m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
@@ -81,9 +74,21 @@ public:
 	}
     }
 private:
-    ::Client * m_client;
+    KWinInternal::Client * m_client;
 };
 
+};
+
+using namespace KWinInternal;
+
+extern Atom qt_wm_state;
+extern Time kwin_time;
+
+static bool resizeHorizontalDirectionFixed = FALSE;
+static bool resizeVerticalDirectionFixed = FALSE;
+static bool blockAnimation = FALSE;
+
+static QRect* visible_bound = 0;
 
 void Client::drawbound( const QRect& geom )
 {
@@ -2950,4 +2955,3 @@ QPixmap * kwin_get_menu_pix_hack()
 
 
 #include "client.moc"
-

@@ -8,6 +8,8 @@
 class QLabel;
 class QSpacerItem;
 
+namespace KWinInternal {
+
 // QToolButton uses a 1 pixel border :P
 class MyButton : public QToolButton
 {
@@ -18,7 +20,7 @@ protected:
     void drawButtonLabel(QPainter *p);
 };
 
-class KWMThemeClient : public Client
+class KWMThemeClient : public KWinInternal::Client
 {
     Q_OBJECT
 public:
@@ -44,6 +46,8 @@ private:
     KPixmap *aGradient, *iGradient;
     MyButton *maxBtn, *stickyBtn;
     QSpacerItem *titlebar;
+};
+
 };
 
 #endif

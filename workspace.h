@@ -14,18 +14,19 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qlist.h>
 #include <qtimer.h>
 #include "options.h"
-#include "plugins.h"
 #include "KWinInterface.h"
 
 #include <X11/Xlib.h>
 
+class KConfig;
+class KGlobalAccel;
+
+namespace KWinInternal {
 
 class Client;
 class TabBox;
-
-class KConfig;
-class KGlobalAccel;
 class RootInfo;
+class PluginMgr;
 
 typedef QValueList<Client*> ClientList;
 
@@ -341,7 +342,7 @@ private:
     KGlobalAccel *keys;
     WId root;
 
-    PluginMgr mgr;
+    PluginMgr *mgr;
 
     RootInfo *rootInfo;
     QWidget* supportWindow;
@@ -386,5 +387,6 @@ inline const ClientList& Workspace::stackingOrder() const
     return stacking_order;
 }
 
+};
 
 #endif

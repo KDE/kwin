@@ -15,6 +15,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kconfig.h>
 #include <klocale.h>
 
+using namespace KWinInternal;
+
 const bool options_traverse_all = FALSE; // TODO
 
 TabBox::TabBox( Workspace *ws, const char *name )

@@ -9,6 +9,7 @@ class QLabel;
 class QSpacerItem;
 class QHBoxLayout;
 
+namespace KWinInternal {
 
 // get rid of autohide :P
 class LaptopClientButton : public QButton
@@ -41,7 +42,7 @@ protected:
     Client *client;
 };
 
-class LaptopClient : public Client
+class LaptopClient : public KWinInternal::Client
 {
     Q_OBJECT
 public:
@@ -80,7 +81,6 @@ private:
     int lastBufferWidth;
 };
 
-
-
+};
 
 #endif

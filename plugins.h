@@ -10,11 +10,12 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include <qstringlist.h>
 #include <ltdl.h>
 
+class QFileInfo;
+
+namespace KWinInternal {
 
 class Client;
 class Workspace;
-
-class QFileInfo;
 
 class PluginMgr : public QObject
 {
@@ -51,5 +52,6 @@ protected:
     PluginMgr *mgr;
 };
 
+};
 
 #endif

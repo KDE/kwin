@@ -9,6 +9,7 @@ class QLabel;
 class QSpacerItem;
 class QHBoxLayout;
 
+namespace KWinInternal {
 
 // get rid of autohide :P
 class KDEDefaultClientButton : public QToolButton
@@ -46,7 +47,7 @@ protected:
     bool isMouseOver;
 };
 
-class KDEClient : public Client
+class KDEClient : public KWinInternal::Client
 {
     Q_OBJECT
 public:
@@ -87,7 +88,6 @@ private:
     KPixmap lightIcon;
 };
 
-
-
+};
 
 #endif

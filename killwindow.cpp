@@ -17,6 +17,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #define None 0L
 #endif
 
+using namespace KWinInternal;
+
 KillWindow::KillWindow( Workspace* ws )
     : workspace( ws ) {}
 

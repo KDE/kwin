@@ -45,7 +45,7 @@
 
 extern "C"
 {
-  Client * allocate(Workspace * workSpace, WId winId, int tool)
+  KWinInternal::Client * allocate(KWinInternal::Workspace * workSpace, WId winId, int tool)
   {
     if (tool)
       return new RiscOS::ToolManager(workSpace, winId);
@@ -59,12 +59,12 @@ namespace RiscOS
 
 
 Manager::Manager(
-  Workspace * workSpace,
+  KWinInternal::Workspace * workSpace,
   WId id,
   QWidget * parent,
   const char * name
 )
-  : Client(workSpace, id, parent, name)
+  : KWinInternal::Client(workSpace, id, parent, name)
 {
   setBackgroundMode(NoBackground);
 
@@ -192,7 +192,7 @@ Manager::paintEvent(QPaintEvent * e)
   void
 Manager::resizeEvent(QResizeEvent * e)
 {
-  Client::resizeEvent(e);
+  KWinInternal::Client::resizeEvent(e);
   updateButtonVisibility();
   updateTitleBuffer();
   repaint();
@@ -292,7 +292,7 @@ Manager::updateTitleBuffer()
   p.drawPixmap(tr.width() - 3, 0, s->titleTextRight(active));
 }
 
-  Client::MousePosition
+KWinInternal::Client::MousePosition
 Manager::mousePosition(const QPoint & p) const
 {
   MousePosition m = Center;
@@ -580,7 +580,7 @@ void Manager::animate(bool iconify, int style)
 
 
 ToolManager::ToolManager(
-  Workspace * workSpace,
+  KWinInternal::Workspace * workSpace,
   WId id,
   QWidget * parent,
   const char * name

@@ -17,6 +17,8 @@
 #include "../../workspace.h"
 #include "../../options.h"
 
+using namespace KWinInternal;
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w)
@@ -24,7 +26,6 @@ extern "C"
         return(new KWMThemeClient(ws, w));
     }
 }
-
 
 
 enum FramePixmap{FrameTop=0, FrameBottom, FrameLeft, FrameRight, FrameTopLeft,

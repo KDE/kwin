@@ -9,7 +9,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kapp.h>
 #include "workspace.h"
 
-typedef QValueList<Workspace*> WorkspaceList;
+typedef QValueList<KWinInternal::Workspace*> WorkspaceList;
 class Application : public  KApplication
 {
 public:

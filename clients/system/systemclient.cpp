@@ -13,6 +13,8 @@
 #include "../../workspace.h"
 #include "../../options.h"
 
+using namespace KWinInternal;
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)

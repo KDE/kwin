@@ -16,6 +16,8 @@
 #include "buttondata.h"
 #include "btnhighcolor.h"
 
+using namespace KWinInternal;
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)

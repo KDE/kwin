@@ -20,6 +20,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 #include "kde1client_bitmaps.h"
 
+using namespace KWinInternal;
+
 extern "C"
 {
   Client * allocate(Workspace * workSpace, WId winId, int tool )

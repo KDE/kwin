@@ -10,7 +10,9 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 class QLabel;
 class QSpacerItem;
 
-class StdClient : public Client
+namespace KWinInternal {
+
+class StdClient : public KWinInternal::Client
 {
     Q_OBJECT
 public:
@@ -106,5 +108,6 @@ private:
 
 };
 
+};
 
 #endif

@@ -8,9 +8,12 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qwidget.h>
 #include <qtimer.h>
 
+class QLabel;
+
+namespace KWinInternal {
+
 class Workspace;
 class Client;
-class QLabel;
 typedef QValueList<Client*> ClientList;
 
 class TabBox : public QWidget
@@ -71,5 +74,7 @@ inline TabBox::Mode TabBox::mode() const
 {
     return m;
 }
+
+};
 
 #endif

@@ -12,6 +12,8 @@
 class QLabel;
 class QSpacerItem;
 
+namespace KWinInternal {
+
 class SystemButton : public QToolButton
 {
     Q_OBJECT
@@ -40,7 +42,7 @@ private:
     
 };
 
-class SystemClient : public Client
+class SystemClient : public KWinInternal::Client
 {
     Q_OBJECT
 public:
@@ -72,5 +74,6 @@ private:
     QString oldTitle;
 };
 
+};
 
 #endif

@@ -42,15 +42,13 @@ const int XIconicState = IconicState;
 #include <kwin.h>
 #include <kdebug.h>
 
-
-extern int kwin_screen_number;
-
+namespace KWinInternal {
 
 // NET WM Protocol handler class
 class RootInfo : public NETRootInfo
 {
 public:
-    RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr, int scr= -1)
+    RootInfo( KWinInternal::Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr, int scr= -1)
         : NETRootInfo( dpy, w, name, pr, scr ) {
             workspace = ws;
     }
@@ -59,12 +57,12 @@ public:
     void changeNumberOfDesktops(int n) { workspace->setNumberOfDesktops( n ); }
     void changeCurrentDesktop(int d) { workspace->setCurrentDesktop( d ); }
     void changeActiveWindow(Window w) {
-        ::Client* c = workspace->findClient( (WId) w );
+        KWinInternal::Client* c = workspace->findClient( (WId) w );
         if ( c )
             workspace->activateClient( c );
     }
     void closeWindow(Window w) {
-        ::Client* c = workspace->findClient( (WId) w );
+        KWinInternal::Client* c = workspace->findClient( (WId) w );
         if ( c ) {
             c->closeWindow();
         }
@@ -72,9 +70,14 @@ public:
     void moveResize(Window, int, int, unsigned long) { }
 
 private:
-    Workspace* workspace;
+    KWinInternal::Workspace* workspace;
 };
 
+};
+
+using namespace KWinInternal;
+
+extern int kwin_screen_number;
 
 QString Workspace::desktopName( int desk )
 {
@@ -167,7 +170,7 @@ Client* Workspace::clientFactory( WId w )
         }
 
     case NET::Tool:
-        return ( mgr.allocateClient( this, w, true ) );
+        return ( mgr->allocateClient( this, w, true ) );
 
     case NET::Menu:
     case NET::Dock:
@@ -187,7 +190,7 @@ Client* Workspace::clientFactory( WId w )
     if ( Shape::hasShape( w ) ){
         return new NoBorderClient( this, w );
     }
-    return ( mgr.allocateClient( this, w, false ) );
+    return ( mgr->allocateClient( this, w, false ) );
 }
 
 // Rikkus: This class is too complex. It needs splitting further.
@@ -218,6 +221,7 @@ Workspace::Workspace( bool restore )
     keys              (0),
     root              (0)
 {
+    mgr = new PluginMgr;
     root = qt_xrootwin();
     default_colormap = DefaultColormap(qt_xdisplay(), qt_xscreen() );
     installed_colormap = default_colormap;
@@ -330,7 +334,7 @@ void Workspace::init()
     connect(&resetTimer, SIGNAL(timeout()), this,
             SLOT(slotResetAllClients()));
 
-    connect(&mgr, SIGNAL(resetAllClients()), this,
+    connect(mgr, SIGNAL(resetAllClients()), this,
             SLOT(slotResetAllClients()));
     connect(kapp, SIGNAL(appearanceChanged()), this,
             SLOT(slotResetAllClientsDelayed()));
@@ -406,6 +410,7 @@ Workspace::~Workspace()
 
     delete rootInfo;
     delete supportWindow;
+    delete mgr;
 }
 
 
@@ -1213,7 +1218,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
 
-        PluginMenu *deco = new PluginMenu(&mgr, popup);
+        PluginMenu *deco = new PluginMenu(mgr, popup);
         deco->setFont(KGlobalSettings::menuFont());
 
         desk_popup = new QPopupMenu( popup );
@@ -1625,7 +1630,7 @@ void Workspace::unclutterDesktop()
 void Workspace::reconfigure()
 {
     KGlobal::config()->reparseConfiguration();
-    if ( mgr.updatePlugin() )
+    if ( mgr->updatePlugin() )
         slotResetAllClientsDelayed();
     options->reload();
     keys->readSettings();

@@ -8,6 +8,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 #include "workspace.h"
 
+namespace KWinInternal {
+
 class KillWindow 
 {
 public:
@@ -19,6 +21,8 @@ public:
     
 private:
     Workspace* workspace;
+};
+
 };
 
 #endif

@@ -16,10 +16,13 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+class NETWinInfo;
+
+namespace KWinInternal {
+
 class Workspace;
 class Client;
 class WinInfo;
-class NETWinInfo;
 
 class WindowWrapper : public QWidget
 {
@@ -450,6 +453,8 @@ public:
     NoBorderClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~NoBorderClient();
     void setShade( bool , int ){}
+};
+
 };
 
 #endif

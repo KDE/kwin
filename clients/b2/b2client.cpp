@@ -13,6 +13,8 @@
 #include "../../options.h"
 #include "bitmaps.h"
 
+using namespace KWinInternal;
+
 extern "C"
 {
     Client *allocate(Workspace *ws, WId w, int)

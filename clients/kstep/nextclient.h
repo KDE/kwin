@@ -8,6 +8,7 @@
 class QLabel;
 class QSpacerItem;
 
+namespace KWinInternal {
 
 // get rid of autohide :P
 class NextButton : public QButton
@@ -25,7 +26,7 @@ protected:
     Client *client;
 };
 
-class NextClient : public Client
+class NextClient : public KWinInternal::Client
 {
     Q_OBJECT
 public:
@@ -50,7 +51,6 @@ private:
     QSpacerItem* titlebar;
 };                      
 
-
-
+};
 
 #endif

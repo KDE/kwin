@@ -20,6 +20,8 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 #include "plugins.h"
 #include "kdedefault.h"
 
+using namespace KWinInternal;
+
 PluginMenu::PluginMenu(PluginMgr *manager, QWidget *parent, const char *name)
     : QPopupMenu(parent, name)
 {
@@ -155,7 +157,7 @@ void PluginMgr::loadPlugin(QString nameStr)
 
     // Rikkus: temporary change in semantics.
 
-    if (!nameStr)
+    if (nameStr.isEmpty())
       nameStr = "default";
 
     if(!dlregistered){
