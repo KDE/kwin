@@ -247,6 +247,8 @@ Manager::updateButtonVisibility()
       close_    ->show();
       break;
   }
+
+  layout()->activate();
 }
 
   void
@@ -258,7 +260,10 @@ Manager::updateTitleBuffer()
 
   QRect tr = titleSpacer_->geometry();
 
-  titleBuf_.resize(tr.size());
+  if (tr.width() == 0 || tr.height() == 0)
+    titleBuf_.resize(8, 8);
+  else
+    titleBuf_.resize(tr.size());
 
   QPainter p(&titleBuf_);
 
