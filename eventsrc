@@ -1076,6 +1076,7 @@ default_presentation=0
 
 [sticky]
 Name=Window Sticky
+Name[cs]=Přilepení okna
 Name[da]=Gør vindue klæbrigt
 Name[de]=Fenster anheften
 Name[el]=Παράθυρο - Κόλλημα
@@ -1101,6 +1102,7 @@ Name[sv]=Fönster klistras
 Name[uk]=Закріпити вікно
 Name[zh_CN.GB2312]=粘附窗口
 Comment=A Window is Made Sticky
+Comment[cs]=Okno je přilepeno
 Comment[da]=Et vindue gøres klæbrigt
 Comment[de]=Ein Fenster wird auf "Haften" gestellt
 Comment[el]=Ένα Παράθυρο γίνεται Κολλημένο
@@ -1130,6 +1132,7 @@ soundfile=pop.wav
 
 [unsticky]
 Name=Window Unsticky
+Name[cs]=Odlepení okna
 Name[da]=Gør vindue uklæbrigt
 Name[de]=Fenster nicht angeheftet
 Name[el]=Παράθυρο - Ξεκόλλημα
@@ -1156,6 +1159,7 @@ Name[sv]=Fönsterklister tas bort
 Name[uk]=Відпустити вікно
 Name[zh_CN.GB2312]=取消粘附
 Comment=A Window is Made Unsticky
+Comment[cs]=Okno je odlepeno
 Comment[da]=Et vindue gøres uklæbrigt
 Comment[de]=Ein Fenster "haftet" nicht mehr
 Comment[el]=Ένα Παράθυρο γίνεται Μη Κολλημένο
