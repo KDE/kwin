@@ -38,20 +38,40 @@ static const char * size_xpm[] = {
 static QPixmap* size_pix = 0;
 static bool pixmaps_created = FALSE;
 
+static QColorGroup *aFrameGrp = 0;
+static QColorGroup *iFrameGrp = 0;
+static QColorGroup *aTitleGrp = 0;
+static QColorGroup *iTitleGrp = 0;
+static bool colors_created = FALSE;
+
 static void create_pixmaps()
 {
     if ( pixmaps_created )
-	return;
+        return;
+    pixmaps_created = true;
     size_pix = new QPixmap( size_xpm );
 }
 
-
+static void create_colorgroups()
+{
+    if(colors_created)
+        return;
+    colors_created = true;
+    aFrameGrp = BeClient::makeColorGroup(options->
+                                         color(Options::Frame, true));
+    iFrameGrp = BeClient::makeColorGroup(options->
+                                         color(Options::Frame, false));
+    aTitleGrp = BeClient::makeColorGroup(options->
+                                         color(Options::TitleBar, true));
+    iTitleGrp = BeClient::makeColorGroup(options->
+                                         color(Options::TitleBar, false));
+}
 
 BeClient::BeClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name, WResizeNoErase  )
 {
     create_pixmaps();
-
+    create_colorgroups();
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
     g->addRowSpacing(1, 2);
     g->setRowStretch( 2, 10 );
@@ -70,12 +90,6 @@ BeClient::BeClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     hb->addItem( titlebar );
 
     hb->addStretch();
-
-    aFrameGrp = makeColorGroup(options->color(Options::Frame, true));
-    iFrameGrp = makeColorGroup(options->color(Options::Frame, false));
-    aTitleGrp = makeColorGroup(options->color(Options::TitleBar, true));
-    iTitleGrp = makeColorGroup(options->color(Options::TitleBar, false));      
-
 }
 
 
@@ -115,17 +129,17 @@ void BeClient::paintEvent( QPaintEvent* )
     QRect bar ( 0, 0, titlebar->geometry().right()+1,
                 titlebar->geometry().bottom() );
     qDrawWinPanel( &p, 0, bar.bottom()+2, width(), height() - bar.bottom()-2,
-                   isActive() ? aFrameGrp : iFrameGrp, FALSE );
+                   isActive() ? *aFrameGrp : *iFrameGrp, FALSE );
     qDrawWinPanel( &p, 2, bar.bottom()+4, width()-4, height() - bar.bottom()-6,
-                   isActive() ? aFrameGrp : iFrameGrp, TRUE );
+                   isActive() ? *aFrameGrp : *iFrameGrp, TRUE );
     QRect t = titlebar->geometry();
 
     bar.setBottom( bar.bottom() + 3 );
     p.setClipRect( bar );
     bar.setBottom( bar.bottom() + 2 );
-    qDrawWinPanel( &p, bar, isActive() ? aTitleGrp : iTitleGrp, FALSE,
-                   isActive() ? &aTitleGrp.brush(QColorGroup::Background) :
-                   &iTitleGrp.brush(QColorGroup::Background));
+    qDrawWinPanel( &p, bar, isActive() ? *aTitleGrp : *iTitleGrp, FALSE,
+                   isActive() ? &aTitleGrp->brush(QColorGroup::Background) :
+                   &iTitleGrp->brush(QColorGroup::Background));
     p.setClipping( FALSE );
 
     p.drawPixmap( t.right() - 20, t.center().y()-8, *size_pix );
@@ -215,9 +229,9 @@ void BeClient::mouseDoubleClickEvent( QMouseEvent * e )
     workspace()->requestFocus( this );
 }
 
-QColorGroup BeClient::makeColorGroup(const QColor &bg, const QColor &fg)
+QColorGroup* BeClient::makeColorGroup(const QColor &bg, const QColor &fg)
 {
-    return(QColorGroup( fg, bg, bg.light(150), bg.dark(),
+    return(new QColorGroup( fg, bg, bg.light(150), bg.dark(),
                         bg.dark(120), fg,
                         QApplication::palette().normal().base()));
 }            
