@@ -21,11 +21,18 @@
 #ifndef BENCH_MAIN_H
 #define BENCH_MAIN_H
 
+enum Tests {
+	AllTests,
+	RepaintTest,
+	CaptionTest,
+	ResizeTest
+};
+
 class DecoBenchApplication : public KApplication
 {
 	Q_OBJECT
 public:
-	DecoBenchApplication(const QString &library, int count);
+	DecoBenchApplication(const QString &library, Tests tests, int count);
 	~DecoBenchApplication();
 
 public slots:
@@ -34,7 +41,10 @@ public slots:
 private:
 	KDecorationPreview *preview;
 	KDecorationPlugins *plugins;
+	Tests m_tests;
 	int m_count;
 };
 
 #endif // BENCH_MAIN_H
+
+// kate: space-indent off; tab-width 4;

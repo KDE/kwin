@@ -39,13 +39,15 @@
 
 static KCmdLineOptions options[] =
 {
-	{ "+[STYLE]", "Decoration to use.", "kwin3_plastik" },
-	{ "+[N]", "Number of repetitions.", "200000" },
+	{ "+decoration", "Decoration library to use, such as kwin3_plastik.", 0 },
+	{ "+tests", "Which test should be executed ('all', 'repaint', 'caption', 'resize')", 0 },
+	{ "+repetitions", "Number of test repetitions.", 0 },
 	{ 0, 0, 0 }
 };
 
-DecoBenchApplication::DecoBenchApplication(const QString &library, int count) :
-m_count(count)
+DecoBenchApplication::DecoBenchApplication(const QString &library, Tests tests, int count) :
+		m_tests(tests),
+		m_count(count)
 {
 	KConfig kwinConfig("kwinrc");
 	kwinConfig.setGroup("Style");
@@ -67,11 +69,17 @@ DecoBenchApplication::~DecoBenchApplication()
 
 void DecoBenchApplication::executeTest()
 {
-	kdDebug() << "start " << m_count << " repaints..." << endl;
 	clock_t stime = clock();
 	timeb astart, aend;
 	ftime(&astart);
-	preview->performRepaintTest(m_count);
+
+	if (m_tests == AllTests || m_tests == RepaintTest)
+		preview->performRepaintTest(m_count);
+	if (m_tests == AllTests || m_tests == CaptionTest)
+		preview->performCaptionTest(m_count);
+	if (m_tests == AllTests || m_tests == ResizeTest)
+		preview->performResizeTest(m_count);
+
 	clock_t etime = clock();
 	ftime(&aend);
 
@@ -84,18 +92,36 @@ int main(int argc, char** argv)
 {
 	QString style = "keramik";
 	// KApplication app(argc, argv);
-	KAboutData about("decobench", "DecoBench", "0.1", "kwin decoration performance tester...", KAboutData::License_LGPL, "(C) 2005 Sandro Giessl");
+	KAboutData about("decobenchmark", "DecoBenchmark", "0.1", "kwin decoration performance tester...", KAboutData::License_LGPL, "(C) 2005 Sandro Giessl");
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions( options );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	QString library = QString(args->arg(0) );
-	int count = QString(args->arg(1) ).toInt();
+	if (args->count() != 3)
+		KCmdLineArgs::usage("Wrong number of arguments!");
 
-	DecoBenchApplication app(library, count);
+	QString library = QString(args->arg(0) );
+	QString t = QString(args->arg(1) );
+	int count = QString(args->arg(2) ).toInt();
+
+	Tests test;
+	if (t == "all")
+		test = AllTests;
+	else if (t == "repaint")
+		test = RepaintTest;
+	else if (t == "caption")
+		test = CaptionTest;
+	else if (t == "resize")
+		test = ResizeTest;
+	else
+		KCmdLineArgs::usage("Specify a valid test!");
+
+	DecoBenchApplication app(library, test, count);
 
 	QTimer::singleShot(0, &app, SLOT(executeTest()));
 	app.exec();
 }
 #include "main.moc"
+
+// kate: space-indent off; tab-width 4;

@@ -19,6 +19,8 @@
 
 #include "preview.h"
 
+#include <kdebug.h>
+
 #include <kapplication.h>
 #include <klocale.h>
 #include <kconfig.h>
@@ -40,7 +42,7 @@ KDecorationPreview::KDecorationPreview( QWidget* parent, const char* name )
 {
     options = new KDecorationPreviewOptions;
 
-    bridge = new KDecorationPreviewBridge( this, true );
+    bridge = new KDecorationPreviewBridge( this, true, "Deco Benchmark" );
 
     deco = 0;
 
@@ -58,8 +60,36 @@ KDecorationPreview::~KDecorationPreview()
 
 void KDecorationPreview::performRepaintTest(int n)
 {
+    kdDebug() << "start " << n << " repaints..." << endl;
+    bridge->setCaption("Deco Benchmark");
+    deco->captionChange();
+    positionPreviews(0);
     for (int i = 0; i < n; ++i) {
         deco->widget()->repaint();
+        kapp->processEvents();
+    }
+}
+
+void KDecorationPreview::performCaptionTest(int n)
+{
+    kdDebug() << "start " << n << " caption changes..." << endl;
+    QString caption = "Deco Benchmark %1";
+    positionPreviews(0);
+    for (int i = 0; i < n; ++i) {
+        bridge->setCaption(caption.arg(i) );
+        deco->captionChange();
+        deco->widget()->repaint();
+        kapp->processEvents();
+    }
+}
+
+void KDecorationPreview::performResizeTest(int n)
+{
+    kdDebug() << "start " << n << " resizes..." << endl;
+    bridge->setCaption("Deco Benchmark");
+    deco->captionChange();
+    for (int i = 0; i < n; ++i) {
+        positionPreviews(i % 200);
         kapp->processEvents();
     }
 }
@@ -79,38 +109,15 @@ bool KDecorationPreview::recreateDecoration( KDecorationPlugins* plugins )
     return true;
 }
 
-void KDecorationPreview::positionPreviews()
+void KDecorationPreview::positionPreviews(int shrink)
 {
-//     int titleBarHeight, leftBorder, rightBorder, xoffset,
-//         dummy1, dummy2, dummy3;
-
     if ( !deco )
         return;
 
-    QSize size = QSize(width()-2*10, height()-2*10)/*.expandedTo(deco->minimumSize()*/;
+    QSize size = QSize(width()-2*10-shrink, height()-2*10-shrink)/*.expandedTo(deco->minimumSize()*/;
 
     QRect geometry(QPoint(10, 10), size);
     deco->widget()->setGeometry(geometry);
-
-//     // don't have more than one reference to the same dummy variable in one borders() call.
-//     deco[Active]->borders( dummy1, dummy2, titleBarHeight, dummy3 );
-//     deco[Inactive]->borders( leftBorder, rightBorder, dummy1, dummy2 );
-//
-//     titleBarHeight = kMin( int( titleBarHeight * .9 ), 30 );
-//     xoffset = kMin( kMax( 10, QApplication::reverseLayout()
-// 			    ? leftBorder : rightBorder ), 30 );
-//
-//     // Resize the active window
-//     size = QSize( width() - xoffset, height() - titleBarHeight )
-//                 .expandedTo( deco[Active]->minimumSize() );
-//     geometry = QRect( QPoint( 0, titleBarHeight ), size );
-//     deco[Active]->widget()->setGeometry( QStyle::visualRect( geometry, this ) );
-//
-//     // Resize the inactive window
-//     size = QSize( width() - xoffset, height() - titleBarHeight )
-//                 .expandedTo( deco[Inactive]->minimumSize() );
-//     geometry = QRect( QPoint( xoffset, 0 ), size );
-//     deco[Inactive]->widget()->setGeometry( QStyle::visualRect( geometry, this ) );
 }
 
 void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode )
@@ -153,10 +160,15 @@ QRegion KDecorationPreview::unobscuredRegion( bool active, const QRegion& r ) co
         return r;
 }
 
-KDecorationPreviewBridge::KDecorationPreviewBridge( KDecorationPreview* p, bool a )
-    :   preview( p ), active( a )
-    {
-    }
+KDecorationPreviewBridge::KDecorationPreviewBridge( KDecorationPreview* p, bool a, const QString &c )
+    :   preview( p ), active( a ), m_caption( c )
+{
+}
+
+void KDecorationPreviewBridge::setCaption(const QString &c)
+{
+    m_caption = c;
+}
 
 QWidget* KDecorationPreviewBridge::initialParentWidget() const
     {
@@ -254,9 +266,9 @@ QIconSet KDecorationPreviewBridge::icon() const
     }
 
 QString KDecorationPreviewBridge::caption() const
-    {
-    return active ? i18n( "Active Window" ) : i18n( "Inactive Window" );
-    }
+{
+    return m_caption;
+}
 
 void KDecorationPreviewBridge::processMousePressEvent( QMouseEvent* )
     {

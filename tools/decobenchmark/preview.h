@@ -37,13 +37,15 @@ class KDecorationPreview
         virtual ~KDecorationPreview();
 
         void performRepaintTest(int n);
+        void performCaptionTest(int n);
+        void performResizeTest(int n);
 
         bool recreateDecoration( KDecorationPlugins* plugin );
         void setPreviewMask( const QRegion&, int );
         QRegion unobscuredRegion( bool, const QRegion& ) const;
         QRect windowGeometry( bool ) const;
     private:
-        void positionPreviews();
+        void positionPreviews(int shrink = 0);
         KDecorationPreviewOptions* options;
         KDecorationPreviewBridge* bridge;
         KDecoration* deco;
@@ -53,7 +55,10 @@ class KDecorationPreviewBridge
     : public KDecorationBridge
     {
     public:
-        KDecorationPreviewBridge( KDecorationPreview* preview, bool active );
+        KDecorationPreviewBridge( KDecorationPreview* preview, bool active, const QString &caption );
+
+        void setCaption(const QString &caption);
+
     	virtual bool isActive() const;
 	virtual bool isCloseable() const;
 	virtual bool isMaximizable() const;
@@ -100,6 +105,7 @@ class KDecorationPreviewBridge
     private:
         KDecorationPreview* preview;
         bool active;
+        QString m_caption;
     };
 
 class KDecorationPreviewOptions
