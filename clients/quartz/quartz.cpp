@@ -1,5 +1,4 @@
 /*
- * $Id$
  *
  * Gallium-Quartz KWin client
  *
@@ -26,6 +25,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qtooltip.h>
+#include <qapplication.h>
 
 #include "quartz.h"
 
@@ -160,7 +160,8 @@ void QuartzHandler::readConfig()
 
 	// A small hack to make the on all desktops button look nicer
 	onAllDesktopsButtonOnLeft = KDecoration::options()->titleButtonsLeft().contains( 'S' );
-
+        if ( QApplication::reverseLayout() )
+            onAllDesktopsButtonOnLeft = !onAllDesktopsButtonOnLeft;
 	switch(options()->preferredBorderSize(this)) {
 	case BorderLarge:
 		borderWidth = 8;
@@ -341,8 +342,11 @@ QuartzButton::QuartzButton(QuartzClient *parent, const char *name, bool largeBut
 	realizeButtons = realizeBtns;
 
 	deco 	 = NULL;
-    large 	 = largeButton;
-	isLeft 	 = isLeftButton;
+        large 	 = largeButton;
+        if ( QApplication::reverseLayout() )
+             isLeft 	 = !isLeftButton;
+         else
+             isLeft 	 = isLeftButton;
 	isOnAllDesktops = isOnAllDesktopsButton;
 	client   = parent;
 
