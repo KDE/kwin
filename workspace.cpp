@@ -427,19 +427,24 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    // race conditions
 	    c = findClientWidthId( e->xunmap.window );
 	    if ( c )
-		return c->windowEvent( e );
+		(void) c->windowEvent( e );
 	}
 
-	if ( e->xunmap.event != e->xunmap.window ) // hide wm typical event from Qt
-	    return TRUE;
+	return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
+	
     case MapNotify:
-	if ( e->xunmap.event == root ) {
+
+	if ( e->xmap.event == root ) {
 	    // keep track of map/unmap for own own windows to avoid
 	    // race conditions
 	    c = findClientWidthId( e->xmap.window );
 	    if ( c )
-		return c->windowEvent( e );
-	}
+		(void) c->windowEvent( e );
+	    return TRUE;
+	} 
+	
+	return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
+	
     case ReparentNotify:
 	c = findClient( e->xreparent.window );
 	if ( c )
@@ -456,7 +461,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	kwin_updateTime();
 	c = findClient( e->xmaprequest.window );
 	if ( !c ) {
-	    if ( e->xmaprequest.parent == root ) {
+	    if ( e->xmaprequest.parent ) { // == root ) { //###TODO store rpeviously destroyed client ids
 		if ( addSystemTrayWin( e->xmaprequest.window ) )
 		    return TRUE;
 		c = clientFactory( e->xmaprequest.window );
@@ -876,10 +881,10 @@ Client* Workspace::previousStaticClient( Client* c ) const
  */
 Client* Workspace::topClientOnDesktop() const
 {
-    if ( most_recently_raised && stacking_order.contains( most_recently_raised ) && 
+    if ( most_recently_raised && stacking_order.contains( most_recently_raised ) &&
 	 most_recently_raised->isVisible() )
 	return most_recently_raised;
-    
+
     for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
 	if ( !(*it)->isDesktop() && (*it)->isVisible() && (*it)->wantsTabFocus() )
 	    return *it;
@@ -1617,7 +1622,7 @@ void Workspace::lowerClient( Client* c )
     delete [] new_stack;
 
     propagateClients( TRUE );
-    
+
     if ( c == most_recently_raised )
 	most_recently_raised = 0;
 
@@ -1643,7 +1648,7 @@ void Workspace::raiseClient( Client* c )
     }
 
     most_recently_raised = c;
-    
+
     stacking_order.remove( c );
     stacking_order.append( c );
 
@@ -2359,10 +2364,8 @@ void Workspace::slotWindowOperations()
  */
 void Workspace::slotWindowClose()
 {
-    if ( tab_box->isVisible() ) {
-	qDebug("ARGGGLLLLLLLLL");
+    if ( tab_box->isVisible() )
 	return;
-    }
     performWindowOperation( popup_client, Options::CloseOp );
 }
 
