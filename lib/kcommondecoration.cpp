@@ -41,6 +41,7 @@
 KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
     : KDecoration (bridge, factory),
         m_previewWidget(0),
+        minBtnHideWidth(200),
         closing(false)
 {
     // sizeof(...) is calculated at compile time
@@ -239,6 +240,12 @@ void KCommonDecoration::resetLayout()
                false);
 
     updateLayout();
+
+    const int minTitleBarWidth = 35;
+    minBtnHideWidth = buttonContainerWidth(m_buttonsLeft,true) + buttonContainerWidth(m_buttonsRight,true) +
+            layoutMetric(LM_TitleEdgeLeft,false) + layoutMetric(LM_TitleEdgeRight,false) +
+            layoutMetric(LM_TitleBorderLeft,false) + layoutMetric(LM_TitleBorderRight,false) +
+            minTitleBarWidth;
 }
 
 int KCommonDecoration::buttonsLeftWidth() const
@@ -251,7 +258,7 @@ int KCommonDecoration::buttonsRightWidth() const
     return buttonContainerWidth(m_buttonsRight);
 }
 
-int KCommonDecoration::buttonContainerWidth(const ButtonContainer &btnContainer) const
+int KCommonDecoration::buttonContainerWidth(const ButtonContainer &btnContainer, bool countHidden) const
 {
     int explicitSpacer = layoutMetric(LM_ExplicitButtonSpacer);
 
@@ -260,7 +267,7 @@ int KCommonDecoration::buttonContainerWidth(const ButtonContainer &btnContainer)
     int w = 0;
     for (ButtonContainer::const_iterator it = btnContainer.begin(); it != btnContainer.end(); ++it) {
         if (*it) {
-            if (!(*it)->isHidden() ) {
+            if (countHidden || !(*it)->isHidden() ) {
                 w += (*it)->width();
                 ++shownElementsCount;
             }
@@ -408,18 +415,17 @@ void KCommonDecoration::calcHiddenButtons()
 {
     //Hide buttons in this order:
     //Shade, Below, Above, OnAllDesktops, Help, Maximize, Menu, Minimize, Close.
-    KCommonDecorationButton* btnArray[] = { m_button[ShadeButton], m_button[BelowButton], m_button[AboveButton],
-        m_button[OnAllDesktopsButton], m_button[HelpButton], m_button[MaxButton],
-        m_button[MenuButton], m_button[MinButton], m_button[CloseButton] };
+    KCommonDecorationButton* btnArray[] = { m_button[HelpButton], m_button[ShadeButton], m_button[BelowButton],
+        m_button[AboveButton], m_button[OnAllDesktopsButton], m_button[MaxButton],
+        m_button[MinButton], m_button[MenuButton], m_button[CloseButton] };
     const int buttonsCount = sizeof( btnArray ) / sizeof( btnArray[ 0 ] );
 
-    int minwidth = 160; // TODO: calculate a better value taking the button width into account...
     int current_width = width();
     int count = 0;
     int i;
 
     // Find out how many buttons we have to hide.
-    while (current_width < minwidth && count < buttonsCount)
+    while (current_width < minBtnHideWidth && count < buttonsCount)
     {
         if (btnArray[count] )
             current_width += btnArray[count]->width();
