@@ -1496,6 +1496,8 @@ bool Client::startMoveResize()
     if( QApplication::activePopupWidget() != NULL )
         return false; // popups have grab
     bool has_grab = false;
+    if( mode == Center )
+        setCursor( sizeAllCursor ); // change from arrow cursor if moving
     if( XGrabPointer( qt_xdisplay(), frameId(), False, ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
         GrabModeAsync, GrabModeAsync, None, cursor.handle(), qt_x_time ) == Success )
         has_grab = true;
@@ -1503,8 +1505,6 @@ bool Client::startMoveResize()
         has_grab = true;
     if( !has_grab ) // at least one grab is necessary in order to be able to finish move/resize
         return false;
-    if( mode == Center )
-        setCursor( sizeAllCursor ); // change from arrow cursor if moving
     if ( maximizeMode() != MaximizeRestore )
         resetMaximize();
     moveResizeMode = true;
@@ -1729,12 +1729,12 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
     if( update )
         {
-        if  (options->resizeMode == Options::Opaque )
+        if(( isResize() ? options->resizeMode : options->moveMode ) == Options::Opaque )
             {
             setGeometry( moveResizeGeom );
             positionGeometryTip();
             }
-        else if ( options->resizeMode == Options::Transparent )
+        else if(( isResize() ? options->resizeMode : options->moveMode ) == Options::Transparent )
             {
             clearbound();  // it's necessary to move the geometry tip when there's no outline
             positionGeometryTip(); // shown, otherwise it would cause repaint problems in case
