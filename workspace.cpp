@@ -376,7 +376,7 @@ Workspace::~Workspace()
          ++it )
         {
 	// only release the window
-        if( (*it)->isDesktop()) // TODO ?
+        if( !(*it)->isDesktop()) // TODO ?
             storeFakeSessionInfo( *it );
         (*it)->releaseWindow( true );
         }
