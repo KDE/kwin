@@ -21,6 +21,7 @@ protected:
     void iconChange();
     void maximizeChange( bool );
     void stickyChange( bool );
+    void activeChange( bool );
 
 private:
     QToolButton* button[6];
