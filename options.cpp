@@ -173,13 +173,13 @@ unsigned long Options::updateSettings()
     useTranslucency = config->readBoolEntry("UseTranslucency", false);
     config->setGroup( "Translucency");
     translucentActiveWindows = config->readBoolEntry("TranslucentActiveWindows", false);
-    activeWindowOpacity = (config->readNumEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF;
+    activeWindowOpacity = uint((config->readNumEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config->readBoolEntry("TranslucentInactiveWindows", false);
-    inactiveWindowOpacity = (config->readNumEntry("InactiveWindowOpacity", 100)/100.0)*0xFFFFFFFF;
+    inactiveWindowOpacity = uint((config->readNumEntry("InactiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentMovingWindows = config->readBoolEntry("TranslucentMovingWindows", false);
-    movingWindowOpacity = (config->readNumEntry("MovingWindowOpacity", 100)/100.0)*0xFFFFFFFF;
+    movingWindowOpacity = uint((config->readNumEntry("MovingWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentDocks = config->readBoolEntry("TranslucentDocks", false);
-    dockOpacity = (config->readNumEntry("DockOpacity", 100)/100.0)*0xFFFFFFFF;
+    dockOpacity = uint((config->readNumEntry("DockOpacity", 100)/100.0)*0xFFFFFFFF);
     keepAboveAsActive = config->readBoolEntry("TreatKeepAboveAsActive", true);
     //TODO: remove this variable
     useTitleMenuSlider = true;

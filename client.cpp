@@ -477,7 +477,7 @@ QRegion Client::mask() const
     
 void Client::setShapable(bool b)
     {
-    uint tmp = b?1:0;
+    long tmp = b?1:0;
     XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shapable, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &tmp, 1L);
     }
 
@@ -746,7 +746,7 @@ void Client::setShade( ShadeMode mode )
     if ( isShade()) 
         { // shade_mode == ShadeNormal
         // we're about to shade, texx xcompmgr to prepare
-        uint _shade = 1;
+        long _shade = 1;
         XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);
         // shade
         int h = height();
@@ -1776,8 +1776,9 @@ void Client::setOpacity(bool translucent, uint opacity)
         if(opacity == opacity_)
             return;
         opacity_ = opacity;
-        XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &opacity, 1L);
-        XChangeProperty(qt_xdisplay(), window(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &opacity, 1L);
+        long data = opacity; // 32bit XChangeProperty needs long
+        XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
+        XChangeProperty(qt_xdisplay(), window(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
         }
     }
     
@@ -1785,7 +1786,8 @@ void Client::setShadowSize(uint shadowSize)
     {
     // ignoring all individual settings - if we control a window, we control it's shadow
     // TODO somehow handle individual settings for docks (besides custom sizes)
-    XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shadow, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &shadowSize, 1L);
+    long data = shadowSize;
+    XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_shadow, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
     }
         
 void Client::updateOpacity()
@@ -1992,7 +1994,7 @@ uint Client::opacity()
 
 int Client::opacityPercentage()
     {
-    return ((int)100*((double)opacity_/0xffffffff));
+    return int(100*((double)opacity_/0xffffffff));
     }
     
 bool Client::touches(const Client* c)

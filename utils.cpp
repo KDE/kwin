@@ -165,7 +165,7 @@ bool KWinSelectionOwner::genericReply( Atom target_P, Atom property_P, Window re
     {
     if( target_P == xa_version )
         {
-        Q_INT32 version[] = { 2, 0 };
+        long version[] = { 2, 0 };
         XChangeProperty( qt_xdisplay(), requestor_P, property_P, XA_INTEGER, 32,
             PropModeReplace, reinterpret_cast< unsigned char* >( &version ), 2 );
         }
