@@ -11,27 +11,15 @@ class Atoms {
 public:
     Atoms();
 
+    Atom kwin_running;
+
     Atom wm_protocols;
     Atom wm_delete_window;
     Atom wm_take_focus;
     Atom wm_change_state;
-    Atom kwm_win_icon; // compatibility
-    Atom kwm_command;  // compatibility
-    Atom kwm_running;
 
     Atom motif_wm_hints;
-
-    Atom net_number_of_desktops;
-    Atom net_current_desktop;
-    Atom net_active_window;
-    Atom net_client_list;
-    Atom net_client_list_stacking;
     Atom net_wm_context_help;
-
-    Atom net_kde_docking_windows;
-    Atom net_avoid_spec;
-
-    Atom kwin_initial_desktop;
 
 };
 

@@ -1,8 +1,9 @@
 /*****************************************************************
 kwin - the KDE window manager
-								  
+								
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
+#define QT_CLEAN_NAMESPACE
 #include "tabbox.h"
 #include "workspace.h"
 #include "client.h"
@@ -103,7 +104,7 @@ void TabBox::nextPrev( bool next)
 	    else
 		client = workspace()->previousClient(client);
 	    if (!firstClient) {
-		// When we see our first client for the second time, 
+		// When we see our first client for the second time,
 		// it's time to stop.
 	        firstClient = client;
 	    }
@@ -210,7 +211,7 @@ void TabBox::paintContents()
 	if ( currentClient() ) {
 	    QString s;
 	    if (!client->isOnDesktop(workspace()->currentDesktop())){
-		s = KWM::desktopName(client->desktop());
+//### 		s = KWM::desktopName(client->desktop());
 		s.append(": ");
 	    }
 

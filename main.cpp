@@ -7,6 +7,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 // X11/Qt conflict
 #undef Bool
 
+#define QT_CLEAN_NAMESPACE
 #include <kconfig.h>
 #include "main.h"
 #include "options.h"
@@ -22,11 +23,11 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#define INT8 _X11INT8
-#define INT32 _X11INT32
+// #define INT8 _X11INT8
+// #define INT32 _X11INT32
 #include <X11/Xproto.h>
-#undef INT8
-#undef INT32
+// #undef INT8
+// #undef INT32
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>

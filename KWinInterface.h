@@ -8,10 +8,10 @@ class KWinInterface : virtual public DCOPObject
   K_DCOP
 
   k_dcop:
+  
+  virtual ASYNC cascadeDesktop() = 0;
+  virtual ASYNC unclutterDesktop() = 0;
 
-    virtual void updateClientArea() = 0;
-    virtual QRect clientArea() = 0;
-    virtual QRect edgeClientArea() = 0;
 };
 
 #endif

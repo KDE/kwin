@@ -3,6 +3,7 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
+#define QT_CLEAN_NAMESPACE
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
@@ -15,6 +16,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <dcopclient.h>
 #include <kdebug.h>
 
+#include <netwm.h>
+
 #include "workspace.h"
 #include "client.h"
 #include "stdclient.h"
@@ -22,6 +25,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "atoms.h"
 #include "plugins.h"
 #include "events.h"
+#include "killwindow.h"
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -38,6 +42,41 @@ const int XIconicState = IconicState;
 #include <kwin.h>
 #include <kapp.h>
 
+
+
+
+
+// NET WM Protocol handler class
+class RootInfo : public NETRootInfo
+{
+public:
+    RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr, int scr= -1)
+	: NETRootInfo( dpy, w, name, pr, scr ) {
+	    workspace = ws;
+    }
+    ~RootInfo() {}
+
+    void changeNumberOfDesktops(CARD32 n) { workspace->setNumberOfDesktops( n ); }
+    void changeCurrentDesktop(CARD32 d) { workspace->setCurrentDesktop( d ); }
+    void changeActiveWindow(Window w) { 
+	::Client* c = workspace->findClient( (WId) w );
+	if ( c )
+	    workspace->activateClient( c );
+    }
+    void closeWindow(Window w) { 
+	::Client* c = workspace->findClient( (WId) w );
+	if ( c ) {
+	    c->closeWindow();
+	}
+    }
+    void moveResize(Window, int, int, unsigned long) { }
+    
+private:
+    Workspace* workspace;
+};
+
+
+
 extern Time kwin_time;
 
 // used to store the return values of
@@ -48,15 +87,15 @@ static int kwin_shape_event = 0;
 static bool block_focus = FALSE;
 // does the window w  need a shape combine mask around it?
 bool Shape::hasShape( WId w){
-  int xws, yws, xbs, ybs;
-  unsigned wws, hws, wbs, hbs;
-  int boundingShaped, clipShaped;
-  if (!kwin_has_shape)
-      return FALSE;
-  XShapeQueryExtents(qt_xdisplay(), w,
-		     &boundingShaped, &xws, &yws, &wws, &hws,
-		     &clipShaped, &xbs, &ybs, &wbs, &hbs);
-  return boundingShaped != 0;
+    int xws, yws, xbs, ybs;
+    unsigned wws, hws, wbs, hbs;
+    int boundingShaped, clipShaped;
+    if (!kwin_has_shape)
+	return FALSE;
+    XShapeQueryExtents(qt_xdisplay(), w,
+		       &boundingShaped, &xws, &yws, &wws, &hws,
+		       &clipShaped, &xbs, &ybs, &wbs, &hbs);
+    return boundingShaped != 0;
 }
 
 int Shape::shapeEvent()
@@ -106,7 +145,7 @@ static void updateTime()
     if ( !w )
 	w = new QWidget;
     long data = 1;
-    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwm_running, atoms->kwm_running, 32,
+    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
 		    PropModeAppend, (unsigned char*) &data, 1);
     XEvent ev;
     XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
@@ -118,35 +157,42 @@ Client* Workspace::clientFactory( Workspace *ws, WId w )
     if ( Motif::noBorder( w ) )
 	return new NoBorderClient( ws, w );
 
+    NETWinInfo ni( qt_xdisplay(), w, root, NET::WMWindowType );
 
-    // hack TODO hints
-    QString s = KWM::title( w );
-    if ( s == "THE DESKTOP" ) {
+    switch ( ni.windowType() ) {
+    case NET::Desktop: {
 	XLowerWindow( qt_xdisplay(), w );
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
 	ws->setDesktopClient( c );
-        c->setPassiveFocus( TRUE );
+	c->setPassiveFocus( TRUE );
 	return c;
     }
-    if ( s.lower().right(6) == "kicker" ) {
+    
+    case NET::Dock: {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
-        c->setPassiveFocus( TRUE );
+	c->setPassiveFocus( TRUE );
 	return c;
     }
-    if ( s == "MAC MENU [menu]" ) {
+    
+    case NET::Menu: {
 	Client * c = new NoBorderClient( ws, w);
 	c->setSticky( TRUE );
 	c->setMayMove( FALSE );
-        c->setPassiveFocus( TRUE );
+	c->setPassiveFocus( TRUE );
 	return c;
     }
-    if ( ( s.right(6) == "[menu]" ) || ( s.right(7) == "[tools]" ) ) {
+    
+    case NET::Toolbar: {
 	Client * c = new NoBorderClient( ws, w);
 	return c;
+    }
+    
+    default:
+	break;
     }
 
     if ( Shape::hasShape( w ) ){
@@ -179,8 +225,7 @@ Workspace::Workspace( bool restore )
     root = qt_xrootwin();
     session.setAutoDelete( TRUE );
 
-    clientArea_ = QApplication::desktop()->geometry();
-    edgeClientArea_ = QApplication::desktop()->geometry();
+    area = QApplication::desktop()->geometry();
 
     if ( restore )
       loadSessionInfo();
@@ -213,8 +258,8 @@ Workspace::Workspace( bool restore )
     XChangeProperty(
       qt_xdisplay(),
       qt_xrootwin(),
-      atoms->kwm_running,
-      atoms->kwm_running,
+      atoms->kwin_running,
+      atoms->kwin_running,
       32,
       PropModeAppend,
       (unsigned char*) &data,
@@ -234,6 +279,32 @@ Workspace::Workspace( bool restore )
 
 void Workspace::init()
 {
+    supportWindow = new QWidget;
+    
+    unsigned long protocols = 
+	NET::Supported |
+	NET::SupportingWMCheck |
+	NET::ClientList |
+	NET::ClientListStacking |
+	NET::NumberOfDesktops |
+	NET::CurrentDesktop |
+	NET::ActiveWindow |
+	NET::WorkArea |
+	NET::CloseWindow |
+	
+	NET::WMName |
+	NET::WMDesktop |
+	NET::WMWindowType |
+	NET::WMState |
+	NET::WMStrut |
+	NET::WMIconGeometry |
+	NET::WMIcon |
+	NET::WMPid |
+	NET::WMKDEDockWinFor
+	;
+	
+    rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
+	       
     KConfig* config = KGlobal::config();
     config->setGroup("Desktops");
     if (!config->hasKey("NumberOfDesktops"))
@@ -308,8 +379,11 @@ Workspace::~Workspace()
     delete popup;
     delete keys;
     if ( root == qt_xrootwin() )
-	XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwm_running);
+	XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwin_running);
     KGlobal::config()->sync();
+    
+    delete rootInfo;
+    delete supportWindow;
 }
 
 
@@ -342,8 +416,8 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    return c->windowEvent( e );
 
 	// check for dock windows
-	if ( removeDockwin( e->xunmap.window ) )
-	    return TRUE;
+ 	if ( removeDockwin( e->xunmap.window ) )
+ 	    return TRUE;
 
 	if ( e->xunmap.event == root ) {
 	    // keep track of map/unmap for own own windows to avoid
@@ -365,8 +439,9 @@ bool Workspace::workspaceEvent( XEvent * e )
 	}
     case ReparentNotify:
 	c = findClient( e->xreparent.window );
-	if ( c )
+	if ( c ) 
 	    (void) c->windowEvent( e );
+	
 	//do not confuse Qt with these events. After all, _we_ are the
 	//window manager who does the reparenting.
 	return TRUE;
@@ -459,8 +534,9 @@ bool Workspace::workspaceEvent( XEvent * e )
 	break;
     case FocusOut:
 	break;
+    case PropertyNotify:
     case ClientMessage:
-	return clientMessage(e->xclient);
+	return netCheck( e );
 	break;
     default:
 	if  ( e->type == Shape::shapeEvent() ) {
@@ -847,11 +923,8 @@ void Workspace::setActiveClient( Client* c )
 	if ( c->wantsTabFocus() )
 	    focus_chain.append( c );
     }
-    WId w = active_client? active_client->window() : 0;
-    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
-		    atoms->net_active_window, XA_WINDOW, 32,
-		    PropModeReplace, (unsigned char *)&w, 1);
-
+    
+    rootInfo->setActiveWindow( active_client? active_client->window() : 0 );
 }
 
 
@@ -1340,7 +1413,7 @@ void Workspace::cascadePlacement (Client* c, bool re_init) {
     cci[d].pos = QPoint( xp + delta_x,  yp + delta_y );
 }
 
-void Workspace::deskCleanup(CleanupType ct)
+void Workspace::cascadeDesktop()
 {
   ClientList::Iterator it(clients.fromLast());
   for (; it != clients.end(); --it) {
@@ -1349,13 +1422,24 @@ void Workspace::deskCleanup(CleanupType ct)
        ((*it)->isSticky())                     ||
        (!(*it)->mayMove()) )
       continue;
-
-    if (ct == Cascade)
-       cascadePlacement(*it);
-    else if (ct == Unclutter)
-       smartPlacement(*it);
+    cascadePlacement(*it);
   }
 }
+
+void Workspace::unclutterDesktop()
+{
+  ClientList::Iterator it(clients.fromLast());
+  for (; it != clients.end(); --it) {
+    if((!(*it)->isOnDesktop(currentDesktop())) ||
+       ((*it)->isIconified())                  ||
+       ((*it)->isSticky())                     ||
+       (!(*it)->mayMove()) )
+      continue;
+    smartPlacement(*it);
+  }
+}
+
+
 
 /*!
   Lowers the client \a c taking layers, transient windows and window
@@ -1545,63 +1629,59 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     block_focus = TRUE;
 
     if (new_desktop != current_desktop) {
-       /*
+	/*
           optimized Desktop switching: unmapping done from back to front
           mapping done from front to back => less exposure events
         */
 
-       for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
-          if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
-             (*it)->hide();
-	  }
-       }
-       for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-          if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
-             (*it)->show();
-          }
-       }
+	for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
+	    if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {
+		(*it)->hide();
+	    }
+	}
+	for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+	    if ( (*it)->isOnDesktop( new_desktop ) && !(*it)->isIconified() ) {
+		(*it)->show();
+	    }
+	}
     }
     current_desktop = new_desktop;
 
-    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
-		    atoms->net_current_desktop, XA_CARDINAL, 32,
-		    PropModeReplace, (unsigned char *)&current_desktop, 1);
-
+    rootInfo->setCurrentDesktop( current_desktop );
 
     // restore the focus on this desktop
     block_focus = FALSE;
     Client* c = 0;
 
     if ( options->focusPolicyIsReasonable()) {
-       if (options->focusPolicy == Options::FocusFollowsMouse) {
-          // Search in focus chain
-          for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
-             if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
-	        c = *it;
-                break;	
-	     }
-          }
-       }
-   
+	if (options->focusPolicy == Options::FocusFollowsMouse) {
+	    // Search in focus chain
+	    for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) {
+		if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
+		    c = *it;
+		    break;	
+		}
+	    }
+	}
 
-       if (!c) {
-          // Search top-most visible window
-          for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
-	     if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
-	        c = *it;
-	        break;
-	     }
-          }
-       }
+
+	if (!c) {
+	    // Search top-most visible window
+	    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+		if ( (*it)->isVisible() && !(*it)->passiveFocus() ) {
+		    c = *it;
+		    break;
+		}
+	    }
+	}
     }
 
     if ( c )
-       requestFocus( c );
+	requestFocus( c );
     else
-       focusToNull();
+	focusToNull();
 
     QApplication::syncX();
-    KWM::switchToDesktop( current_desktop ); // ### compatibility
 }
 
 
@@ -1619,36 +1699,18 @@ void Workspace::setNumberOfDesktops( int n )
     if ( n == number_of_desktops )
 	return;
     number_of_desktops = n;
-    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
-		    atoms->net_number_of_desktops, XA_CARDINAL, 32,
-		    PropModeReplace, (unsigned char *)&number_of_desktops, 1);
+    rootInfo->setNumberOfDesktops( number_of_desktops );
 }
 
 /*!
   Handles client messages sent to the workspace
  */
-bool Workspace::clientMessage( XClientMessageEvent msg )
+bool Workspace::netCheck( XEvent* e )
 {
-    if ( msg.message_type == atoms->net_current_desktop ) {
-	setCurrentDesktop( msg.data.l[0] );
-	return TRUE;
-    }
-
-    if (msg.message_type == atoms->kwm_command) {
-      char c[21];
-      int i;
-      for (i=0;i<20;i++)
-	c[i] = msg.data.b[i];
-      c[i] = '\0';
-      QString com = c;
-      if (com == "deskUnclutter") {
-      	deskCleanup(Unclutter);
-      } else if (com == "deskCascade") {
-	deskCleanup(Cascade);
-      }
-      return TRUE;
-    }
-
+    unsigned int dirty = rootInfo->event( e );
+    
+    dirty = 0; // shut up, compiler
+    
     return FALSE;
 }
 
@@ -1665,9 +1727,7 @@ void Workspace::propagateClients( bool onlyStacking )
 	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it ) {
 	    cl[i++] =  (*it)->window();
 	}
-	XChangeProperty(qt_xdisplay(), qt_xrootwin(),
-			atoms->net_client_list, XA_WINDOW, 32,
-			PropModeReplace, (unsigned char *)cl, clients.count());
+	rootInfo->setClientList( (Window*) cl, i );
 	delete [] cl;
     }
 
@@ -1676,9 +1736,7 @@ void Workspace::propagateClients( bool onlyStacking )
     for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
 	cl[i++] =  (*it)->window();
     }
-    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
-		    atoms->net_client_list_stacking, XA_WINDOW, 32,
-		    PropModeReplace, (unsigned char *)cl, stacking_order.count());
+    rootInfo->setClientListStacking(  (Window*) cl, i );
     delete [] cl;
 }
 
@@ -1690,13 +1748,18 @@ void Workspace::propagateClients( bool onlyStacking )
  */
 bool Workspace::addDockwin( WId w )
 {
-    WId dockFor = 0;
-    if ( !KWin::isDockWindow( w, &dockFor ) )
-	return FALSE;
+    if ( dockwins.contains( w ) )
+	return TRUE;
+    
+    NETWinInfo ni( qt_xdisplay(), w, root, NET::WMKDEDockWinFor );
+    WId dockFor = ni.kdeDockWinFor();
+    if ( !dockFor )
+ 	return FALSE;
     dockwins.append( DockWindow( w, dockFor ) );
     XSelectInput( qt_xdisplay(), w,
 		  StructureNotifyMask
 		  );
+    XAddToSaveSet( qt_xdisplay(), w );
     propagateDockwins();
     return TRUE;
 }
@@ -1739,9 +1802,8 @@ void Workspace::propagateDockwins()
     for ( DockWindowList::ConstIterator it = dockwins.begin(); it != dockwins.end(); ++it ) {
 	cl[i++] =  (*it).dockWin;
     }
-    XChangeProperty(qt_xdisplay(), qt_xrootwin(),
-		    atoms->net_kde_docking_windows, XA_WINDOW, 32,
-		    PropModeReplace, (unsigned char *)cl, dockwins.count());
+    
+    rootInfo->setKDEDockingWindows( (Window*) cl, i );
     delete [] cl;
 }
 
@@ -1871,70 +1933,20 @@ void Workspace::slotLogout()
   kapp->requestShutDown();
 }
 
+
+/*!
+  Kill Window feature, similar to xkill
+ */
 void Workspace::slotKillWindow()
 {
-    static Cursor kill_cursor = 0;
-    if (!kill_cursor)
-        kill_cursor = XCreateFontCursor(qt_xdisplay(), XC_pirate);
-
-    if (XGrabPointer(qt_xdisplay(), qt_xrootwin(), False,
-                     ButtonPressMask | ButtonReleaseMask |
-                     PointerMotionMask |
-                     EnterWindowMask | LeaveWindowMask,
-                     GrabModeAsync, GrabModeAsync, None,
-                     kill_cursor, CurrentTime) == GrabSuccess)
-    {
-        XGrabKeyboard(qt_xdisplay(), qt_xrootwin(), False,
-                      GrabModeAsync, GrabModeAsync, CurrentTime);
-
-        XEvent ev;
-        int return_pressed  = 0;
-        int escape_pressed  = 0;
-        int button_released = 0;
-
-        XGrabServer(qt_xdisplay());
-
-        while (!return_pressed && !escape_pressed && !button_released)
-        {
-            XMaskEvent(qt_xdisplay(), KeyPressMask | ButtonPressMask |
-                       ButtonReleaseMask | PointerMotionMask, &ev);
-
-            if (ev.type == KeyPress)
-            {
-                int kc = XKeycodeToKeysym(qt_xdisplay(), ev.xkey.keycode, 0);
-                int mx = 0;
-                int my = 0;
-                return_pressed = (kc == XK_Return) || (kc == XK_space);
-                escape_pressed = (kc == XK_Escape);
-                if (kc == XK_Left)  mx = -10;
-                if (kc == XK_Right) mx = 10;
-                if (kc == XK_Up)    my = -10;
-                if (kc == XK_Down)  my = 10;
-                if (ev.xkey.state & ControlMask)
-                {
-                    mx /= 10;
-                    my /= 10;
-                }
-                QCursor::setPos(QCursor::pos()+QPoint(mx, my));
-            }
-
-            if (ev.type == ButtonRelease)
-            {
-                button_released = (ev.xbutton.button == Button1);
-                killWindowAtPosition(ev.xbutton.x_root, ev.xbutton.y_root);
-            }
-            continue;
-        }
-        if (return_pressed)
-            killWindowAtPosition(QCursor::pos().x(), QCursor::pos().y());
-
-        XUngrabServer(qt_xdisplay());
-
-        XUngrabKeyboard(qt_xdisplay(), CurrentTime);
-        XUngrabPointer(qt_xdisplay(), CurrentTime);
-    }
+    KillWindow kill( this );
+    kill.start();
 }
 
+
+/*!
+  Kills the window at position \a x,  \a y
+ */
 void Workspace::killWindowAtPosition(int x, int y)
 {
     ClientList::ConstIterator it(stacking_order.fromLast());
@@ -2346,61 +2358,27 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 
 void Workspace::updateClientArea()
 {
-    QRect area = QApplication::desktop()->geometry();
-    QRect edgeArea = QApplication::desktop()->geometry();
-
-    for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it) {
-	(*it)->updateAvoidPolicy();
-
-	if ((*it)->isAvoid() ) {
-	    switch (AnchorEdge((*it)->anchorEdge())) {
-
-	    case AnchorNorth:
-		area.setTop(QMAX(area.top(), (*it)->geometry().bottom()));
-		break;
-
-	    case AnchorSouth:
-		area.setBottom(QMIN(area.bottom(), (*it)->geometry().top() - 1));
-		break;
-
-	    case AnchorEast:
-		area.setRight(QMIN(area.right(), (*it)->geometry().left() - 1));
-		break;
-
-	    case AnchorWest:
-		area.setLeft(QMAX(area.left(), (*it)->geometry().right()));
-		break;
-
-	    default:
-		break;
-	    }
-	}
-
-	// FIXME: Using the hackish method...
-	if (KWM::title((*it)->winId()) == "MAC MENU [menu]")
-	    edgeArea.setTop((*it)->geometry().bottom());
+    QRect all = QApplication::desktop()->geometry();
+    QRect a = all;
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	a = a.intersect( (*it)->adjustedClientArea( all ) );
     }
     
-    edgeClientArea_ = edgeArea;
-    
-    if ( clientArea_ != area ) {
-	// something changed, remember it and notify kdesktop
-	clientArea_ = area;
-	
-	QByteArray data;
-	QDataStream arg( data, IO_WriteOnly );
-	arg << clientArea_;
-	kapp->dcopClient()->send("kdesktop", "KDesktopIface", "clientAreaUpdated(QRect)", data);
+    if ( area != a ) {
+	area = a;
+	NETRect r;
+	r.pos.x = area.x();
+	r.pos.y = area.y();
+	r.size.width = area.width();
+	r.size.height = area.height();
+	for( int i = 0; i < numberOfDesktops(); i++) {
+	    rootInfo->setWorkArea( i, r );
+	}
     }
 }
 
 QRect Workspace::clientArea()
 {
-  return clientArea_;
-}
-
-QRect Workspace::edgeClientArea()
-{
-  return edgeClientArea_;
+  return area;
 }
 

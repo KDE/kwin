@@ -3,6 +3,7 @@ kwin - the KDE window manager
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 ******************************************************************/
+#define QT_CLEAN_NAMESPACE
 #include <klocale.h>
 #include <kapp.h>
 #include <kdebug.h>
@@ -16,6 +17,8 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qpainter.h>
 #include <qwhatsthis.h>
 #include <qtimer.h>
+#include <kwin.h>
+#include <netwm.h>
 #include "workspace.h"
 #include "client.h"
 #include "events.h"
@@ -34,6 +37,20 @@ static bool resizeHorizontalDirectionFixed = FALSE;
 static bool resizeVerticalDirectionFixed = FALSE;
 
 static QRect* visible_bound = 0;
+
+
+// NET WM Protocol handler class
+class WinInfo : public NETWinInfo {
+public:
+    WinInfo(Display * display, Window window,
+	    Window rwin, unsigned long pr )
+	: NETWinInfo( display, window, rwin, pr, NET::WindowManager ) {
+    }
+
+    void changeDesktop(CARD32 /* desktop */) { }
+    void changeState(CARD32 /* state */, CARD32 /* mask */) { }
+};
+
 
 void Client::drawbound( const QRect& geom )
 {
@@ -326,11 +343,19 @@ bool WindowWrapper::x11Event( XEvent * e)
 Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags f )
     : QWidget( parent, name, f | WStyle_Customize | WStyle_NoBorder )
 {
-    avoid = false;
-    anchor = AnchorNorth;
-
     wspace = ws;
     win = w;
+
+    unsigned long properties =
+	NET::WMDesktop |
+	NET::WMState |
+	NET::WMWindowType |
+	NET::WMStrut |
+	NET::WMName
+	;
+
+    info = new WinInfo( qt_xdisplay(), win, qt_xrootwin(), properties );
+
     XWindowAttributes attr;
     if (XGetWindowAttributes(qt_xdisplay(), win, &attr)){
 	original_geometry.setRect(attr.x, attr.y, attr.width, attr.height );
@@ -367,33 +392,19 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     if ( mainClient()->isSticky() )
 	setSticky( TRUE );
 
-    updateAvoidPolicy();
 
     // should we open this window on a certain desktop?
-    Atom type;
-    int format;
-    unsigned long nitems, bytes;
-    long *data = 0L;
 
-    int status=XGetWindowProperty(qt_xdisplay(), w, atoms->kwin_initial_desktop, 0, 1L, 
-        False, atoms->kwin_initial_desktop, &type, &format, &nitems, &bytes, 
-        (unsigned char **)&data);
+    if ( info->desktop() )
+	desk= info->desktop(); // window had the initial desktop property!
 
-    if (status==Success) {
-        if (nitems>0)
-            desk=data[0]; // window had the initial desktop property!
-
-        XFree((char *)data);
-    }
 
     // if this window is transient, ensure that it is opened on the
     // same window as its parent.  this is necessary when an application
     // starts up on a different desktop than is currently displayed
     //
-    // are there any other cases we need to check?
-    //
-    if (transient_for != None)
-        desk=KWM::desktop(transient_for);
+    if ( isTransient() ) 
+	desk = mainClient()->desktop();
 
 }
 
@@ -405,6 +416,8 @@ Client::~Client()
     releaseWindow();
     if (workspace()->activeClient() == this)
        workspace()->setEnableFocusChange(true); // Safety
+
+    delete info;
 }
 
 
@@ -420,12 +433,12 @@ void Client::manage( bool isMapped )
     QRect geom( original_geometry );
     bool placementDone = FALSE;
 
-    SessionInfo* info = workspace()->takeSessionInfo( this );
-    if ( info )
-	geom.setRect( info->x, info->y, info->width, info->height );
+    SessionInfo* session = workspace()->takeSessionInfo( this );
+    if ( session )
+	geom.setRect( session->x, session->y, session->width, session->height );
 
 
-    if ( isMapped  || info )
+    if ( isMapped  || session )
 	placementDone = TRUE;
     else {
 	if ( (xSizeHint.flags & PPosition) || (xSizeHint.flags & USPosition) ) {
@@ -465,8 +478,8 @@ void Client::manage( bool isMapped )
 
     // initial state
     int state = NormalState;
-    if ( info ) {
-	if ( info->iconified )
+    if ( session ) {
+	if ( session->iconified )
 	    state = IconicState;
     } else {
 	// find out the initial state. Several possibilities exist
@@ -480,19 +493,15 @@ void Client::manage( bool isMapped )
     // initial desktop placement - note we don't clobber desk if it is
     // set to some value, in case the initial desktop code in the
     // constructor has already set a value for us
-    if ( info ) {
-	desk = info->desktop;
-    } else if (desk<=0) {
-        
+    if ( session  ) {
+	desk = session->desktop;
+    } else if ( desk <= 0 ) {
 	// assume window wants to be visible on the current desktop
 	desk =  workspace()->currentDesktop();
-
-	// KDE 1.x compatibility
-	desk = KWM::desktop( win );
     }
+    
+    info->setDesktop( desk );
 
-    // initial desktop code needs this now 
-    KWM::moveToDesktop( win, desk ); // KDE 1.x compatibility
 
     setMappingState( state );
     if ( state == NormalState && isOnDesktop( workspace()->currentDesktop() ) ) {
@@ -503,11 +512,11 @@ void Client::manage( bool isMapped )
     }
 
     // other settings from the previous session
-    if ( info ) {
-	setSticky( info->sticky );
+    if ( session ) {
+	setSticky( session->sticky );
     }
 
-    delete info;
+    delete session;
 
     workspace()->updateClientArea();
 }
@@ -530,7 +539,14 @@ void Client::getWmNormalHints()
  */
 void Client::fetchName()
 {
-    QString s = KWM::title( win );
+//####     QString s = KWM::title( win );
+    QString s;
+
+    char* c = 0;
+    if ( XFetchName( qt_xdisplay(), win, &c ) != 0 ) {
+	s = QString::fromLocal8Bit( c );
+	XFree( c );
+    }
 
     if ( s != caption() ) {
 	setCaption( "" );
@@ -544,6 +560,8 @@ void Client::fetchName()
 	    s = s2;
 	}
 	setCaption( s );
+	
+	info->setVisibleName( s.utf8() );
 
 	if ( !isWithdrawn() )
 	    captionChange( caption() );
@@ -572,6 +590,11 @@ void Client::setMappingState(int s){
  */
 bool Client::windowEvent( XEvent * e)
 {
+
+    unsigned int dirty = info->event( e ); // pass through the NET stuff
+
+    dirty = 0; // shut up, compiler
+
     switch (e->type) {
     case UnmapNotify:
 	if ( e->xunmap.window == winId() ) {
@@ -636,8 +659,8 @@ bool Client::mapRequest( XMapRequestEvent& /* e */  )
 	break;
     case NormalState:
 	// only show window if we're on current desktop
-	if (desk == KWM::currentDesktop())
-		show(); // for safety
+	if ( isOnDesktop( workspace()->currentDesktop() ) )
+	    show(); // for safety
 	break;
     }
 
@@ -686,7 +709,7 @@ void Client::withdraw()
 {
     Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
     setMappingState( WithdrawnState );
-    KWM::moveToDesktop( win, -1 ); // compatibility
+//###     KWM::moveToDesktop( win, -1 ); // compatibility
     releaseWindow();
     workspace()->destroyClient( this );
 }
@@ -791,9 +814,6 @@ bool Client::propertyNotify( XPropertyEvent& e )
     default:
 	if ( e.atom == atoms->wm_protocols )
 	    getWindowProtocols();
-	else if ( e.atom == atoms->kwm_win_icon ) {
-	    getWMHints(); // for the icons
-	}
 
 	break;
     }
@@ -809,9 +829,6 @@ bool Client::clientMessage( XClientMessageEvent& e )
     if ( e.message_type == atoms->wm_change_state) {
 	if ( e.data.l[0] == IconicState && isNormal() )
 	    iconify();
-	return TRUE;
-    } else  if ( e.message_type == atoms->net_active_window ) {
-	workspace()->activateClient( this );
 	return TRUE;
     }
 
@@ -836,6 +853,16 @@ void Client::sendSynteticConfigureNotify()
     c.height = windowWrapper()->height();
     c.border_width = 0;
     XSendEvent( qt_xdisplay(), c.event, TRUE, NoEventMask, (XEvent*)&c );
+
+    // inform clients about the frame geometry
+    NETStrut strut;
+    QRect wr = windowWrapper()->geometry();
+    QRect mr = rect();
+    strut.left = wr.left();
+    strut.right = mr.right() - wr.right();
+    strut.top = wr.top();
+    strut.bottom = mr.bottom() - wr.bottom();
+    info->setKDEFrameStrut( strut );
 }
 
 
@@ -1066,7 +1093,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
 	geom.moveTopLeft( pp );
 	break;
     default:
-//fprintf(stderr, "KWin::mouseMoveEvent with mode = %d\n", mode); 
+//fprintf(stderr, "KWin::mouseMoveEvent with mode = %d\n", mode);
 	break;
     }
 
@@ -1654,6 +1681,8 @@ void Client::setSticky( bool b )
 	Events::raise( Events::UnSticky );
     if ( !is_sticky )
 	setDesktop( workspace()->currentDesktop() );
+    else
+	info->setDesktop( NETWinInfo::OnAllDesktops );
     workspace()->setStickyTransientsOf( this, b );
     stickyChange( is_sticky );
 }
@@ -1661,16 +1690,15 @@ void Client::setSticky( bool b )
 
 void Client::setDesktop( int desktop)
 {
-    if ( isOnDesktop( desktop ) )
-	return;
     desk = desktop;
-    KWM::moveToDesktop( win, desk );//##### compatibility
+    info->setDesktop( desktop );
 }
 
 void Client::getWMHints()
 {
-    icon_pix = KWM::icon( win, 32, 32 ); // TODO sizes from workspace
-    miniicon_pix = KWM::miniIcon( win, 16, 16 );
+    // get the icons, allow scaling
+    icon_pix = KWin::icon( win, 32, 32, TRUE );
+    miniicon_pix = KWin::icon( win, 16, 16, TRUE );
     if ( !isWithdrawn() )
 	iconChange();
 
@@ -2016,57 +2044,21 @@ void Client::activateLayout()
 	layout()->activate();
 }
 
-void Client::updateAvoidPolicy()
+QRect Client::adjustedClientArea( const QRect& area ) const
 {
-    avoid = false;
-
-    // Find out if we should be avoided.
-    XTextProperty avoidProp;
-    if (  XGetTextProperty(
-	 qt_xdisplay(),
-	 win,
-	 &avoidProp,
-	 atoms->net_avoid_spec
-	 ) == 0 )
-	return;
-
-    char ** avoidList;
-    int avoidListCount;
-
-    if ( XTextPropertyToStringList( 
-	  &avoidProp, &avoidList, &avoidListCount) == 0 ) {
-	kdDebug() << "kwin: Client::updateAvoidPolicy: " << endl;
-	return;
-    }
-
-    // Must be one value only in string list.
-    if (avoidListCount != 1) {
-	kdDebug() << "kwin: Client::updateAvoidPolicy(): " << endl;
-	return;
-    }
-
-    // Which border is the client anchored to ?
-    avoid = true;
-    switch (avoidList[0][0]) {
-    case 'N': 
-	anchor = AnchorNorth;
-	break;
-    case 'S': 
-	anchor = AnchorSouth;
-	break;
-    case 'E': 
-	anchor = AnchorEast;	
-	break;
-    case 'W': 
-	anchor = AnchorWest;	
-	break;
-    default:		
-	avoid = false;
-	break;
-    }
-
-    XFreeStringList(avoidList);
+    QRect r = area;
+    NETStrut strut = info->strut();
+    if ( strut.left > 0 )
+	r.setLeft( r.left() + (int) strut.left );
+    if ( strut.top > 0 )
+	r.setTop( r.top() + (int) strut.top );
+    if ( strut.right > 0  )
+	r.setRight( r.right() - (int) strut.right );
+    if ( strut.bottom > 0  )
+	r.setBottom( r.bottom() - (int) strut.bottom );
+    return r;
 }
+
 
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name )
@@ -2078,4 +2070,5 @@ NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const cha
 NoBorderClient::~NoBorderClient()
 {
 }
+
 

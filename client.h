@@ -7,7 +7,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #define CLIENT_H
 
 #include "options.h"
-#include <kwm.h>
 #include <qframe.h>
 #include <qvbox.h>
 #include <qpixmap.h>
@@ -18,6 +17,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 
 class Workspace;
 class Client;
+class WinInfo;
 
 class WindowWrapper : public QWidget
 {
@@ -69,10 +69,6 @@ public:
     WId transientFor() const;
     bool isTransient() const;
     Client* mainClient();
-
-    void updateAvoidPolicy();
-    bool isAvoid() const { return avoid; }
-    int anchorEdge() const { return anchor; }
 
     virtual bool windowEvent( XEvent * );
 
@@ -159,6 +155,8 @@ public:
 
     QCString windowRole();
     QCString sessionId();
+    
+    QRect adjustedClientArea( const QRect& area ) const;
 
 public slots:
     void iconify();
@@ -257,9 +255,8 @@ private:
     QPixmap miniicon_pix;
     QRect geom_restore;
     QRegion mask;
+    WinInfo* info;
 
-    bool avoid;
-    int anchor;
 };
 
 inline WId Client::window() const

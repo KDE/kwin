@@ -12,20 +12,21 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qguardedptr.h>
 #include <qvaluelist.h>
 #include <qlist.h>
-#include <X11/Xlib.h>
 #include "options.h"
 #include "plugins.h"
 #include "KWinInterface.h"
+
+#include <X11/Xlib.h>
+
 
 class Client;
 class TabBox;
 
 class KConfig;
 class KGlobalAccel;
+class RootInfo;
 
 typedef QValueList<Client*> ClientList;
-
-enum AnchorEdge { AnchorNorth, AnchorSouth, AnchorEast, AnchorWest };
 
 class DockWindow
 {
@@ -180,12 +181,11 @@ public:
      */
     virtual void updateClientArea();
 
-    /**
-     * @return the area available for edge-anchored windows. This
-     * is the desktop geometry adjusted for other edge-anchored
-     * windows that have priority.
-     */
-    virtual QRect edgeClientArea();
+    
+    // dcop interface
+    void cascadeDesktop();
+    void unclutterDesktop();
+    
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -228,7 +228,7 @@ protected:
     bool keyPress( XKeyEvent key );
     bool keyRelease( XKeyEvent key );
     bool keyPressMouseEmulation( XKeyEvent key );
-    bool clientMessage( XClientMessageEvent msg );
+    bool netCheck( XEvent* e );
 
 private:
     void init();
@@ -240,9 +240,6 @@ private:
     void randomPlacement(Client* c);
     void smartPlacement(Client* c);
     void cascadePlacement(Client* c, bool re_init = false);
-
-    enum CleanupType { Cascade, Unclutter };
-    void deskCleanup(CleanupType);
 
     void focusToNull();
 
@@ -299,12 +296,12 @@ private:
     KGlobalAccel *keys;
     WId root;
 
-    // -cascading
-    Atom kwm_command;
-
     PluginMgr mgr;
+    
+    RootInfo *rootInfo;
+    QWidget* supportWindow;
 
-    QRect clientArea_, edgeClientArea_;
+    QRect area;
 };
 
 inline WId Workspace::rootWin() const
