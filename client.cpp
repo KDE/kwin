@@ -391,7 +391,7 @@ void WindowWrapper::releaseWindow()
                              parentWidget()->x(),
                              parentWidget()->y() );
         }
-	XDeleteProperty( qt_xdisplay(),  win, atoms->kde_net_user_time);
+        XDeleteProperty( qt_xdisplay(),  win, atoms->kde_net_user_time);
         XRemoveFromSaveSet( qt_xdisplay(), win );
         XSelectInput( qt_xdisplay(), win, NoEventMask );
         invalidateWindow();
@@ -1452,8 +1452,6 @@ bool Client::isResizable() const
 {
     if ( !isMovable() )
         return FALSE;
-    if( isShade())
-        return FALSE;
 
     if ( ( xSizeHint.flags & PMaxSize) == 0 || (xSizeHint.flags & PMinSize ) == 0 )
         return TRUE;
@@ -1556,14 +1554,6 @@ void Client::resizeEvent( QResizeEvent * e)
 }
 
 
-void Client::giveUpShade()
-{
-    wwrap->show();
-    workspace()->requestFocus( this );
-    shaded = FALSE;
-}
-
-
 /*!
   Reimplemented to provide move/resize
  */
@@ -1576,7 +1566,7 @@ void Client::mouseMoveEvent( QMouseEvent * e)
         return;
     }
 
-    if ( !isMovable() ) return;
+    if ( !isMovable() || (isShade() && mode != Center)) return;
 
     if ( !moveResizeMode ) {
         QPoint p( e->pos() - moveOffset );
@@ -1595,8 +1585,8 @@ void Client::mouseMoveEvent( QMouseEvent * e)
         }
     }
 
-    if ( mode !=  Center && shaded )
-        giveUpShade();
+    if ( mode !=  Center && hover_unshade )
+        setShade(false);
 
     QPoint globalPos = e->globalPos(); // pos() + geometry().topLeft();
 
@@ -1740,6 +1730,10 @@ void Client::show()
 {
     if ( isIconified() && ( !isTransient() || mainClient() == this ) )
         animateIconifyOrDeiconify( FALSE );
+
+    if (isShade())
+      setShade(false);
+
     setMappingState( NormalState );
     QWidget::show();
     windowWrapper()->map();
@@ -2242,7 +2236,7 @@ Client::MousePosition Client::mousePosition( const QPoint& p ) const
  */
 void Client::setMouseCursor( MousePosition m )
 {
-    if ( !isResizable() ) {
+    if ( !isResizable() || isShade() ) {
         setCursor( arrowCursor );
         return;
     }
