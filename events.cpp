@@ -1309,6 +1309,8 @@ void Client::focusInEvent( XFocusInEvent* e )
         return; // we don't care
     if ( e->detail == NotifyPointer )
         return;  // we don't care
+    if( !isShown( false ) || !isOnCurrentDesktop()) // we unmapped it, but it got focus meanwhile ->
+        return;            // activateNextClient() already transferred focus elsewhere
     // check if this client is in should_get_focus list or if activation is allowed
     bool activate =  workspace()->allowClientActivation( this, -1U, true );
     workspace()->gotFocusIn( this ); // remove from should_get_focus list

@@ -403,6 +403,7 @@ void Workspace::gotFocusIn( const Client* c )
       // but didn't for some reason (and also won't anymore, because they were sooner)
         while( should_get_focus.first() != c )
             should_get_focus.pop_front();
+        should_get_focus.pop_front(); // remove 'c'
         }
     }
 
