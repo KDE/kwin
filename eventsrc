@@ -819,7 +819,7 @@ default_presentation=0
 [new]
 Name=New Window
 Name[az]=Yeni Pəncərə
-Name[bg]=Íîâ Ïðîçîðåö
+Name[bg]=Нов Прозорец
 Name[bs]=Novi prozor
 Name[ca]=Nova finestra
 Name[cs]=Nové okno
@@ -906,7 +906,7 @@ default_presentation=0
 [delete]
 Name=Delete Window
 Name[az]=Pəncərəni Sil
-Name[bg]=Èçòðèé Ïðîçîðåö
+Name[bg]=Изтрий Прозорец
 Name[bs]=Brisanje prozora
 Name[ca]=Esborra finestra
 Name[cs]=Zrušit okno
