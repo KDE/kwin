@@ -1516,7 +1516,8 @@ bool Client::startMoveResize()
     bool has_grab = false;
     if( mode == PositionCenter )
         setCursor( sizeAllCursor ); // change from arrow cursor if moving
-    if( XGrabPointer( qt_xdisplay(), frameId(), False, ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
+    if( XGrabPointer( qt_xdisplay(), frameId(), False,
+        ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
         GrabModeAsync, GrabModeAsync, None, cursor.handle(), qt_x_time ) == Success )
         has_grab = true;
     if( XGrabKeyboard( qt_xdisplay(), frameId(), False, GrabModeAsync, GrabModeAsync, qt_x_time ) == Success )

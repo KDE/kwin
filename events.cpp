@@ -1226,48 +1226,34 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
     }
 
 static bool was_motion = false;
-static bool motion_done = false;
-// check whole incoming X queue for MotionNotify events
-// checking whole queue is done by always returning False in the predicate
-// if there's another motion event in the queue, and there's no other relevant
-// event before it, the current motion event may be safely discarded
-// this helps avoiding being overloaded by being flooded from many events
-// from the XServer
+static Time next_motion_time = CurrentTime;
+// Check whole incoming X queue for MotionNotify events
+// checking whole queue is done by always returning False in the predicate.
+// If there are more MotionNotify events in the queue, all until the last
+// one may be safely discarded (if a ButtonRelease event comes, a MotionNotify
+// will be faked from it, so there's no need to check other events).
+// This helps avoiding being overloaded by being flooded from many events
+// from the XServer.
 static Bool motion_predicate( Display*, XEvent* ev, XPointer )
 {
-    if( motion_done )
-	return False;
     if( ev->type == MotionNotify )
-    {
-	was_motion = true;
-	motion_done = true;
-    }
-    else if( ev->type == ConfigureNotify  // irrelevant often occuring events
-        || ev->type == Expose )
-        ; // ignore
-    else if( ev->type == PropertyNotify )
         {
-        if( ev->xproperty.atom == XA_WM_NORMAL_HINTS
-            && QWidget::find( ev->xproperty.window ))
-            ; // ignore - Qt is causing this in QWidget::internalSetGeometry()
-        else
-            {
-            was_motion = false;
-            motion_done = true;
-            }
-        }
-    else
-        {                  
-        was_motion = false;
-        motion_done = true;
+	was_motion = true;
+        next_motion_time = ev->xmotion.time;  // for setting time
         }
     return False;
 }
 
 static bool waitingMotionEvent()
     {
+// The queue doesn't need to be checked until the X timestamp
+// of processes events reaches the timestamp of the last suitable
+// MotionNotify event in the queue.
+    if( next_motion_time != CurrentTime
+        && timestampCompare( qt_x_time, next_motion_time ) < 0 )
+        return true;
     was_motion = false;
-    motion_done = false;
+    XSync( qt_xdisplay(), False ); // this helps to discard more MotionNotify events
     XEvent dummy;
     XCheckIfEvent( qt_xdisplay(), &dummy, motion_predicate, NULL );
     return was_motion;
