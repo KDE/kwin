@@ -186,6 +186,7 @@ void KWinDecorationModule::createDecorationList()
 		DecorationInfo info = *it;
 		decorationListBox->insertItem( info.name );
 	}
+	decorationListBox->sort();
 }
 
 
