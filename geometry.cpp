@@ -1921,8 +1921,8 @@ void Client::positionGeometryTip()
         {
         if( !geometryTip )
             { // save under is not necessary with opaque, and seem to make things slower
-            bool save_under = ( isMove() && options->moveMode != Options::Opaque )
-                        || ( isResize() && options->resizeMode != Options::Opaque );
+            bool save_under = ( isMove() && rules()->checkMoveResizeMode( options->moveMode ) != Options::Opaque )
+                        || ( isResize() && rules()->checkMoveResizeMode( options->resizeMode ) != Options::Opaque );
             geometryTip = new GeometryTip( &xSizeHint, save_under );
             }
         QRect wgeom( moveResizeGeom ); // position of the frame, size of the window itself
@@ -1983,8 +1983,8 @@ bool Client::startMoveResize()
     workspace()->setClientIsMoving(this);
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
-    if ( ( isMove() && options->moveMode != Options::Opaque )
-      || ( isResize() && options->resizeMode != Options::Opaque ) )
+    if ( ( isMove() && rules()->checkMoveResizeMode( options->moveMode ) != Options::Opaque )
+      || ( isResize() && rules()->checkMoveResizeMode( options->resizeMode ) != Options::Opaque ) )
         {
         grabXServer();
         kapp->sendPostedEvents();
@@ -2020,8 +2020,8 @@ void Client::leaveMoveResize()
         delete geometryTip;
         geometryTip = NULL;
         }
-    if ( ( isMove() && options->moveMode != Options::Opaque )
-      || ( isResize() && options->resizeMode != Options::Opaque ) )
+    if ( ( isMove() && rules()->checkMoveResizeMode( options->moveMode ) != Options::Opaque )
+      || ( isResize() && rules()->checkMoveResizeMode( options->resizeMode ) != Options::Opaque ) )
         ungrabXServer();
     XUngrabKeyboard( qt_xdisplay(), qt_x_time );
     XUngrabPointer( qt_xdisplay(), qt_x_time );
@@ -2256,12 +2256,14 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
     if( update )
         {
-        if(( isResize() ? options->resizeMode : options->moveMode ) == Options::Opaque )
+        if( rules()->checkMoveResizeMode
+            ( isResize() ? options->resizeMode : options->moveMode ) == Options::Opaque )
             {
             setGeometry( moveResizeGeom );
             positionGeometryTip();
             }
-        else if(( isResize() ? options->resizeMode : options->moveMode ) == Options::Transparent )
+        else if( rules()->checkMoveResizeMode
+            ( isResize() ? options->resizeMode : options->moveMode ) == Options::Transparent )
             {
             clearbound();  // it's necessary to move the geometry tip when there's no outline
             positionGeometryTip(); // shown, otherwise it would cause repaint problems in case

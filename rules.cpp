@@ -48,6 +48,8 @@ WindowRules::WindowRules()
     , noborderrule( DontCareRule )
     , fspleveladjustrule( DontCareRule )
     , acceptfocusrule( DontCareRule )
+    , moveresizemoderule( DontCareRule )
+    , closeablerule( DontCareRule )
     {
     }
 
@@ -103,6 +105,8 @@ WindowRules::WindowRules( KConfig& cfg )
     READ_SET_RULE( noborder, Bool, );
     READ_FORCE_RULE( fspleveladjust, Num, );
     READ_FORCE_RULE( acceptfocus, Bool, );
+    READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
+    READ_FORCE_RULE( closeable, Bool, );
     kdDebug() << "READ RULE:" << wmclass << endl;
     }
 
@@ -172,6 +176,8 @@ void WindowRules::write( KConfig& cfg ) const
     WRITE_SET_RULE( noborder, );
     WRITE_SET_RULE( fspleveladjust, );
     WRITE_SET_RULE( acceptfocus, );
+    WRITE_SET_RULE( moveresizemode, Options::moveResizeModeToString );
+    WRITE_SET_RULE( closeable, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -386,6 +392,16 @@ int WindowRules::checkFSP( int fsp ) const
 bool WindowRules::checkAcceptFocus( bool focus ) const
     {
     return checkForceRule( acceptfocusrule ) ? this->acceptfocus : focus;
+    }
+
+Options::MoveResizeMode WindowRules::checkMoveResizeMode( Options::MoveResizeMode mode ) const
+    {
+    return checkForceRule( moveresizemoderule ) ? this->moveresizemode : mode;
+    }
+
+bool WindowRules::checkCloseable( bool closeable ) const
+    {
+    return checkForceRule( closeablerule ) ? this->closeable : closeable;
     }
 
 // Client

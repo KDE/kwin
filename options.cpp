@@ -45,8 +45,8 @@ unsigned long Options::updateSettings()
     changed |= d->updateKWinSettings( config ); // read decoration settings
 
     config->setGroup( "Windows" );
-    moveMode = config->readEntry("MoveMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
-    resizeMode = config->readEntry("ResizeMode", "Opaque" ) == "Opaque"?Opaque:Transparent;
+    moveMode = stringToMoveResizeMode( config->readEntry("MoveMode", "Opaque" ));
+    resizeMode = stringToMoveResizeMode( config->readEntry("ResizeMode", "Opaque" ));
     show_geometry_tip = config->readBoolEntry("GeometryTip", false);
 
     QString val;
@@ -248,6 +248,16 @@ int Options::electricBorderDelay()
 bool Options::checkIgnoreFocusStealing( const Client* c )
     {
     return ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass()));
+    }
+
+Options::MoveResizeMode Options::stringToMoveResizeMode( const QString& s )
+    {
+    return s == "Opaque" ? Opaque : Transparent;
+    }
+
+const char* Options::moveResizeModeToString( MoveResizeMode mode )
+    {
+    return mode == Opaque ? "Opaque" : "Transparent";
     }
 
 } // namespace

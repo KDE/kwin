@@ -915,7 +915,7 @@ void Client::sendClientMessage(Window w, Atom a, Atom protocol, long data1, long
  */
 bool Client::isCloseable() const
     {
-    return motif_may_close && ( !isSpecialWindow() || isOverride()); // TODO is NET::Override special?
+    return rules()->checkCloseable( motif_may_close && ( !isSpecialWindow() || isOverride())); // TODO is NET::Override special?
     }
 
 /*!

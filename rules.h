@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "placement.h"
 #include "lib/kdecoration.h"
 #include "client.h"
+#include "options.h"
 
 class KConfig;
 
@@ -64,6 +65,8 @@ class WindowRules
         bool checkNoBorder( bool noborder, bool init = false ) const;
         int checkFSP( int fsp ) const;
         bool checkAcceptFocus( bool focus ) const;
+        Options::MoveResizeMode checkMoveResizeMode( Options::MoveResizeMode mode ) const;
+        bool checkCloseable( bool closeable ) const;
     private:
         static SettingRule readRule( KConfig&, const QString& key );
         static SettingRule readForceRule( KConfig&, const QString& key );
@@ -120,6 +123,10 @@ class WindowRules
         SettingRule fspleveladjustrule;
         bool acceptfocus;
         SettingRule acceptfocusrule;
+        Options::MoveResizeMode moveresizemode;
+        SettingRule moveresizemoderule;
+        bool closeable;
+        SettingRule closeablerule;
     };
 
 inline

@@ -141,6 +141,9 @@ class Options : public KDecorationOptions
 
         MoveResizeMode resizeMode;
         MoveResizeMode moveMode;
+        
+        static MoveResizeMode stringToMoveResizeMode( const QString& s );
+        static const char* moveResizeModeToString( MoveResizeMode mode );
 
         Placement::Policy placement;
 
