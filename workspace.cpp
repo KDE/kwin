@@ -834,12 +834,14 @@ bool Workspace::startKDEWalkThroughWindows()
 			      LeaveWindowMask | PointerMotionMask),
 		       GrabModeAsync, GrabModeAsync,
 		       None, None, kwin_time ) != GrabSuccess ) {
-        return FALSE;
+	XUngrabKeyboard( qt_xdisplay(), kwin_time );
+	return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
 		       root, FALSE,
 		       GrabModeAsync, GrabModeAsync,
 		       kwin_time) != GrabSuccess ) {
+	XUngrabKeyboard( qt_xdisplay(), kwin_time );
 	XUngrabPointer( qt_xdisplay(), kwin_time);
 	return FALSE;
     }
@@ -858,12 +860,14 @@ bool Workspace::startWalkThroughDesktops( int mode )
 			      LeaveWindowMask | PointerMotionMask),
 		       GrabModeAsync, GrabModeAsync,
               None, None, kwin_time ) != GrabSuccess ) {
-        return FALSE;
+	XUngrabKeyboard( qt_xdisplay(), kwin_time );
+	return FALSE;
     }
     if ( XGrabKeyboard(qt_xdisplay(),
 		       root, FALSE,
 		       GrabModeAsync, GrabModeAsync,
 		       kwin_time) != GrabSuccess ) {
+	XUngrabKeyboard( qt_xdisplay(), kwin_time );
 	XUngrabPointer( qt_xdisplay(), kwin_time);
 	return FALSE;
     }
@@ -2575,6 +2579,12 @@ void Workspace::createKeybindings(){
     walkBackThroughDesktopListKeycode = keys->currentKey( "Walk back through desktop list" );
     walkThroughWindowsKeycode = keys->currentKey( "Walk through windows" );
     walkBackThroughWindowsKeycode = keys->currentKey( "Walk back through windows" );
+    keys->setItemRawModeEnabled( "Walk through desktops", TRUE  );
+    keys->setItemRawModeEnabled( "Walk back through desktops", TRUE );
+    keys->setItemRawModeEnabled( "Walk through desktop list", TRUE  );
+    keys->setItemRawModeEnabled( "Walk back through desktop list", TRUE  );
+    keys->setItemRawModeEnabled( "Walk through windows", TRUE  );
+    keys->setItemRawModeEnabled( "Walk back through windows", TRUE  );
 }
 
 void Workspace::slotSwitchDesktop1(){
