@@ -3022,7 +3022,7 @@ bool Client::isMovable() const
 {
     return may_move &&
         ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Toolbar
-            || windowType() == NET::Menu ) &&
+            || windowType() == NET::Menu || windowType() == NET::Override ) &&
         ( !isMaximized() || ( options->moveResizeMaximizedWindows || max_mode != MaximizeFull ) );
 }
 
