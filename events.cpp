@@ -581,6 +581,8 @@ void Client::mapRequestEvent( XMapRequestEvent* e )
     {
     if( e->window != window())
         return; // no messing with frame etc.
+    if( isTopMenu() && workspace()->managingTopMenus())
+        return; // kwin controls these
     switch ( mappingState() )
         {
         case WithdrawnState:
@@ -633,10 +635,10 @@ void Client::unmapNotifyEvent( XUnmapEvent* e )
             XEvent ev;
             if( XCheckTypedWindowEvent (qt_xdisplay(), window(),
                 DestroyNotify, &ev) ) // TODO I don't like this much
-            {
-            destroyClient(); // deletes this
-            return;
-            }
+                {
+                destroyClient(); // deletes this
+                return;
+                }
         releaseWindow();
       break;
     default:
@@ -664,6 +666,8 @@ void Client::clientMessageEvent( XClientMessageEvent* e )
     // WM_STATE
     if ( e->message_type == atoms->kde_wm_change_state )
         {
+        if( isTopMenu() && workspace()->managingTopMenus())
+            return; // kwin controls these
         if( e->data.l[ 1 ] )
             blockAnimation = true;
         if( e->data.l[ 0 ] == IconicState )
@@ -686,6 +690,8 @@ void Client::clientMessageEvent( XClientMessageEvent* e )
         }
     else if ( e->message_type == atoms->wm_change_state)
         {
+        if( isTopMenu() && workspace()->managingTopMenus())
+            return; // kwin controls these
         if ( e->data.l[0] == IconicState )
             minimize();
         return;
