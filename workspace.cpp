@@ -2976,7 +2976,7 @@ void Workspace::clientPopupAboutToShow()
     popup->setItemEnabled( Options::IconifyOp, popup_client->isMinimizable() );
     popup->setItemEnabled( Options::ToggleStoreSettingsOp, !popup_client->isTransient() );
     popup->setItemChecked( Options::ToggleStoreSettingsOp, popup_client->storeSettings() );
-    popup->setItemChecked( Options::CloseOp, popup_client->isCloseable() );
+    popup->setItemEnabled( Options::CloseOp, popup_client->isCloseable() );
 }
 
 

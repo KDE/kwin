@@ -1521,8 +1521,8 @@ bool Client::isMinimizable() const
  */
 bool Client::isCloseable() const
 {
-    return may_close && !isDesktop() && !isDock() && !isTopMenu() && !isToolbar()
-        && windowType() != NET::Override;
+    return may_close && !isDesktop() && !isDock() && !isTopMenu()
+	&&  windowType() != NET::Override;
 }
 
 
