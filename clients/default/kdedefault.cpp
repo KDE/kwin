@@ -180,7 +180,8 @@ bool KDEDefaultHandler::reset( unsigned long changed )
                 createPixmaps();
         }
 	KDEDefault_initialized = true;
-        bool need_recreate = ( changed & ( SettingDecoration | SettingFont | SettingButtons | SettingBorder )) != 0;
+	// SettingButtons is handled by KCommonDecoration
+        bool need_recreate = ( changed & ( SettingDecoration | SettingFont | SettingBorder )) != 0;
         if( need_recreate )  // something else than colors changed
             return true;
         resetDecorations( changed );
@@ -556,32 +557,14 @@ bool KDEDefaultHandler::supports( Ability ability )
 
 // ===========================================================================
 
-KDEDefaultButton::KDEDefaultButton(KDEDefaultClient *parent, const char *name,
-           bool largeButton, bool isLeftButton, bool isStickyButton,
-           const unsigned char *bitmap, const QString& tip, const int realizeBtns )
-    : QButton(parent->widget(), name)
+KDEDefaultButton::KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name)
+	: KCommonDecorationButton(type, parent, name)
 {
-	realizeButtons = realizeBtns;
-
-    QToolTip::add( this, tip );
-    setCursor( arrowCursor );
     setBackgroundMode( QWidget::NoBackground );
-	setToggleButton( isStickyButton );
 
 	isMouseOver = false;
 	deco 		= NULL;
-    large 		= largeButton;
-	isLeft 		= isLeftButton;
-	isSticky 	= isStickyButton;
-	client 		= parent;
-
-    if (large)
-       setFixedSize(normalTitleHeight, normalTitleHeight);
-    else
-       setFixedSize(toolTitleHeight, toolTitleHeight);
-
-    if (bitmap)
-        setBitmap(bitmap);
+	large 		= !decoration()->isToolWindow();
 }
 
 
@@ -592,23 +575,53 @@ KDEDefaultButton::~KDEDefaultButton()
 }
 
 
-QSize KDEDefaultButton::sizeHint() const
+void KDEDefaultButton::reset(unsigned long changed)
 {
-   if ( large )
-      return( QSize(normalTitleHeight, normalTitleHeight) );
-   else
-      return( QSize(toolTitleHeight, toolTitleHeight) );
+	if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
+		switch (type() ) {
+			case CloseButton:
+				setBitmap(close_bits);
+				break;
+			case HelpButton:
+				setBitmap(question_bits);
+				break;
+			case MinButton:
+				setBitmap(iconify_bits);
+				break;
+			case MaxButton:
+				setBitmap( isOn() ? minmax_bits : maximize_bits );
+				break;
+			case OnAllDesktopsButton:
+				setBitmap(0);
+				break;
+			case ShadeButton:
+				setBitmap( isOn() ? shade_on_bits : shade_off_bits );
+				break;
+			case AboveButton:
+				setBitmap( isOn() ? above_on_bits : above_off_bits );
+				break;
+			case BelowButton:
+				setBitmap( isOn() ? below_on_bits : below_off_bits );
+				break;
+			default:
+				setBitmap(0);
+				break;
+		}
+
+		this->update();
+	}
 }
 
 
 void KDEDefaultButton::setBitmap(const unsigned char *bitmap)
 {
-	if (deco)
-		delete deco;
+	delete deco;
+	deco = 0;
 
-    deco = new QBitmap(10, 10, bitmap, true);
-    deco->setMask( *deco );
-    repaint( false );
+	if (bitmap) {
+		deco = new QBitmap(10, 10, bitmap, true);
+		deco->setMask( *deco );
+	}
 }
 
 
@@ -617,42 +630,44 @@ void KDEDefaultButton::drawButton(QPainter *p)
 	if (!KDEDefault_initialized)
 		return;
 
+	const bool active = decoration()->isActive();
+
 	if (deco) {
 		// Fill the button background with an appropriate button image
  		KPixmap btnbg;
 
-		if (isLeft)	{
+		if (isLeft() )	{
 			if (isDown())
-				btnbg = client->isActive() ?
+				btnbg = active ?
 							*leftBtnDownPix[large] : *ileftBtnDownPix[large];
 			else
-				btnbg = client->isActive() ?
+				btnbg = active ?
 							*leftBtnUpPix[large] : *ileftBtnUpPix[large];
 		} else {
 			if (isDown())
-				btnbg = client->isActive() ?
+				btnbg = active ?
 							*rightBtnDownPix[large] : *irightBtnDownPix[large];
 			else
-				btnbg = client->isActive() ?
+				btnbg = active ?
 							*rightBtnUpPix[large] : *irightBtnUpPix[large];
 		}
 
 		p->drawPixmap( 0, 0, btnbg );
 
-	} else if ( isLeft ) {
+	} else if ( isLeft() ) {
 
 		// Fill the button background with an appropriate color/gradient
 		// This is for sticky and menu buttons
-		KPixmap* grad = client->isActive() ? aUpperGradient : iUpperGradient;
+		KPixmap* grad = active ? aUpperGradient : iUpperGradient;
 		if (!grad) {
-			QColor c = KDecoration::options()->color(ColorTitleBar, client->isActive());
+			QColor c = KDecoration::options()->color(KDecoration::ColorTitleBar, active);
 			p->fillRect(0, 0, width(), height(), c );
 		} else
 		 	p->drawPixmap( 0, 0, *grad, 0,1, width(), height() );
 
 	} else {
 		// Draw a plain background for menus or sticky buttons on RHS
-   		QColor c = KDecoration::options()->color(ColorFrame, client->isActive());
+		QColor c = KDecoration::options()->color(KDecoration::ColorFrame, active);
 		p->fillRect(0, 0, width(), height(), c);
 	}
 
@@ -662,8 +677,8 @@ void KDEDefaultButton::drawButton(QPainter *p)
 	if( deco ) {
 		// Select the appropriate button decoration color
    		bool darkDeco = qGray( KDecoration::options()->color(
-				isLeft? ColorTitleBar : ColorButtonBg,
-				client->isActive()).rgb() ) > 127;
+				isLeft() ? KDecoration::ColorTitleBar : KDecoration::ColorButtonBg,
+				active).rgb() ) > 127;
 
 		if (isMouseOver)
 			p->setPen( darkDeco ? Qt::darkGray : Qt::lightGray );
@@ -677,13 +692,13 @@ void KDEDefaultButton::drawButton(QPainter *p)
 	} else {
 		KPixmap btnpix;
 
-		if (isSticky) {
-			if (client->isActive())
+		if (type()==OnAllDesktopsButton) {
+			if (active)
 				btnpix = isOn() ? *pinDownPix : *pinUpPix;
 			else
 				btnpix = isOn() ? *ipinDownPix : *ipinUpPix;
 		} else
-			btnpix = client->icon().pixmap( QIconSet::Small, QIconSet::Normal );
+			btnpix = decoration()->icon().pixmap( QIconSet::Small, QIconSet::Normal );
 
 		// Intensify the image if required
 		if (isMouseOver) {
@@ -699,14 +714,6 @@ void KDEDefaultButton::drawButton(QPainter *p)
 		else
 			p->drawPixmap( width()/2-8, height()/2-8, btnpix );
 	}
-}
-
-
-// Make the protected member public
-void KDEDefaultButton::turnOn( bool isOn )
-{
-	if ( isToggleButton() )
-		setOn( isOn );
 }
 
 
@@ -726,234 +733,134 @@ void KDEDefaultButton::leaveEvent(QEvent *e)
 }
 
 
-void KDEDefaultButton::mousePressEvent( QMouseEvent* e )
-{
-	last_button = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-	QButton::mousePressEvent( &me );
-}
-
-
-void KDEDefaultButton::mouseReleaseEvent( QMouseEvent* e )
-{
-	last_button = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
-					(e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-	QButton::mouseReleaseEvent( &me );
-}
-
-
 // ===========================================================================
 
 KDEDefaultClient::KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f )
-    : KDecoration( b, f ),
-      m_closing(false)
+    : KCommonDecoration( b, f )/*,
+      m_closing(false)*/
 {
+}
+
+QString KDEDefaultClient::visibleName() const
+{
+	return i18n("KDE2");
+}
+
+QString KDEDefaultClient::defaultButtonsLeft() const
+{
+	return "MS";
+}
+
+QString KDEDefaultClient::defaultButtonsRight() const
+{
+	return "HIAX";
+}
+
+bool KDEDefaultClient::decorationBehaviour(DecorationBehaviour behaviour) const
+{
+	switch (behaviour) {
+		case DB_MenuClose:
+			return true;
+		case DB_WindowMask:
+			return true;
+		case DB_ButtonHide:
+			return true;
+
+		default:
+			return KCommonDecoration::decorationBehaviour(behaviour);
+	}
+}
+
+int KDEDefaultClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
+{
+	bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+
+	switch (lm) {
+		case LM_BorderLeft:
+		case LM_BorderRight:
+			return borderWidth;
+
+		case LM_BorderBottom:
+			return mustDrawHandle() ? grabBorderWidth : borderWidth;
+
+		case LM_TitleEdgeLeft:
+		case LM_TitleEdgeRight:
+			return borderWidth;
+
+		case LM_TitleEdgeTop:
+			return 3;
+
+		case LM_TitleEdgeBottom:
+			return 1;
+
+		case LM_TitleBorderLeft:
+		case LM_TitleBorderRight:
+			return 1;
+
+		case LM_TitleHeight:
+			return titleHeight;
+
+		case LM_ButtonWidth:
+		case LM_ButtonHeight:
+			return titleHeight;
+
+		case LM_ButtonSpacing:
+			return 0;
+
+		case LM_ExplicitButtonSpacer:
+			if ( !isToolWindow() )
+				return borderWidth/2;
+
+		default:
+			return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
+	}
+}
+
+KCommonDecorationButton *KDEDefaultClient::createButton(ButtonType type)
+{
+	switch (type) {
+		case MenuButton:
+			return new KDEDefaultButton(MenuButton, this, "menu");
+		case OnAllDesktopsButton:
+			return new KDEDefaultButton(OnAllDesktopsButton, this, "on_all_desktops");
+		case HelpButton:
+			return new KDEDefaultButton(HelpButton, this, "help");
+		case MinButton:
+			return new KDEDefaultButton(MinButton, this, "minimize");
+		case MaxButton:
+			return new KDEDefaultButton(MaxButton, this, "maximize");
+		case CloseButton:
+			return new KDEDefaultButton(CloseButton, this, "close");
+		case AboveButton:
+			return new KDEDefaultButton(AboveButton, this, "above");
+		case BelowButton:
+			return new KDEDefaultButton(BelowButton, this, "below");
+		case ShadeButton:
+			return new KDEDefaultButton(ShadeButton, this, "shade");
+
+		default:
+			return 0;
+	}
 }
 
 void KDEDefaultClient::init()
 {
-    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
-    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
-
-    createMainWidget( WResizeNoErase | WStaticContents | WRepaintNoErase );
-    widget()->installEventFilter( this );
-
-	// No flicker thanks
-    widget()->setBackgroundMode( QWidget::NoBackground );
-
-	// Set button pointers to NULL so we can track things
-	for(int i=0; i < KDEDefaultClient::BtnCount; i++)
-		button[i] = NULL;
-
     // Finally, toolWindows look small
-    if ( isTool() ) {
+    if ( isToolWindow() ) {
 		titleHeight  = toolTitleHeight;
-		largeButtons = false;
 	}
 	else {
 		titleHeight  = normalTitleHeight;
-		largeButtons = true;
     }
 
-    // Pack the windowWrapper() window within a grid
-    g = new QGridLayout(widget(), 0, 0, 0);
-    g->setResizeMode(QLayout::FreeResize);
-    g->addRowSpacing(0, 3);       // Top grab bar
-    g->addRowSpacing(2, 1);       // line under titlebar
-    if( isPreview())
-        g->addWidget( new QLabel( i18n( "<b><center>KDE2 preview</center></b>" ), widget()), 3, 1);
-    else
-        g->addItem( new QSpacerItem( 0, 0 ), 3, 1); // no widget in the middle
-
-	// without the next line, unshade flickers
-	g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,
-								 QSizePolicy::Expanding ) );
-    g->setRowStretch(3, 10);      // Wrapped window
-
-	// Determine the size of the lower grab bar
-    spacer = new QSpacerItem(10,
-			mustDrawHandle() ? grabBorderWidth : borderWidth,
-			QSizePolicy::Expanding, QSizePolicy::Minimum);
-    g->addItem(spacer, 4, 1);
-
-    g->addColSpacing(0, borderWidth);
-    g->addColSpacing(2, borderWidth);
-
-    // Pack the titlebar HBox with items
-    hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0 );
-    hb->setResizeMode( QLayout::FreeResize );
-    g->addLayout ( hb, 1, 1 );
-
-	addClientButtons( options()->titleButtonsLeft() );
-    titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding,
-								QSizePolicy::Minimum );
-    hb->addItem(titlebar);
-    hb->addSpacing(2);
-	addClientButtons( options()->titleButtonsRight(), false );
+	KCommonDecoration::init();
 }
 
-
-void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
-{
-	if (s.length() > 0)
-		for(unsigned int i = 0; i < s.length(); i++) {
-		switch( s[i].latin1() )
-		{
-			// Menu button
-			case 'M':
-				if (!button[BtnMenu])
-				{
-   					button[BtnMenu] = new KDEDefaultButton(this, "menu",
-							largeButtons, isLeft, false, NULL, i18n("Menu"), LeftButton|RightButton);
-   					connect( button[BtnMenu], SIGNAL(pressed()),
-							this, SLOT(menuButtonPressed()) );
-					connect( button[BtnMenu], SIGNAL(released()),
-							 this, SLOT(menuButtonReleased()));
-					hb->addWidget( button[BtnMenu] );
-				}
-				break;
-
-			// Sticky button
-			case 'S':
-				if (!button[BtnSticky])
-				{
-   					button[BtnSticky] = new KDEDefaultButton(this, "sticky",
-							largeButtons, isLeft, true, NULL,
-                                                        isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops"));
-					button[BtnSticky]->turnOn( isOnAllDesktops() );
-   					connect( button[BtnSticky], SIGNAL(clicked()),
-							this, SLOT(toggleOnAllDesktops()) );
-					hb->addWidget( button[BtnSticky] );
-				}
-				break;
-
-			// Help button
-			case 'H':
-   				if( providesContextHelp() && (!button[BtnHelp]) )
-				{
-					button[BtnHelp] = new KDEDefaultButton(this, "help",
-							largeButtons, isLeft, true, question_bits,
-							i18n("Help"));
-					connect( button[BtnHelp], SIGNAL( clicked() ),
-							this, SLOT( showContextHelp() ));
-					hb->addWidget( button[BtnHelp] );
-				}
-				break;
-
-			// Minimize button
-			case 'I':
-				if ( (!button[BtnIconify]) && isMinimizable())
-				{
-				    button[BtnIconify] = new KDEDefaultButton(this, "iconify",
-							largeButtons, isLeft, true, iconify_bits,
-							i18n("Minimize"));
-				    connect( button[BtnIconify], SIGNAL( clicked()),
-							this, SLOT(minimize()) );
-					hb->addWidget( button[BtnIconify] );
-				}
-				break;
-
-			// Maximize button
-			case 'A':
-				if ( (!button[BtnMax]) && isMaximizable())
-				{
-				    button[BtnMax]  = new KDEDefaultButton(this, "maximize",
-							largeButtons, isLeft, true, maximize_bits,
-							i18n("Maximize"), LeftButton|MidButton|RightButton);
-				    connect( button[BtnMax], SIGNAL( clicked()),
-							this, SLOT(slotMaximize()) );
-					hb->addWidget( button[BtnMax] );
-				}
-				break;
-
-			// Close button
-			case 'X':
-				if (!button[BtnClose] && isCloseable())
-				{
-    				button[BtnClose] = new KDEDefaultButton(this, "close",
-							largeButtons, isLeft, true, close_bits,
-							i18n("Close"));
-				    connect( button[BtnClose], SIGNAL( clicked()),
-							this, SLOT(closeWindow()) );
-					hb->addWidget( button[BtnClose] );
-				}
-				break;
-
-			// Above button
-			case 'F':
-				if ( (!button[BtnAbove]))
-				{
-				    button[BtnAbove]  = new KDEDefaultButton(this, "above",
-							largeButtons, isLeft, true,
-                                                        keepAbove() ? above_on_bits : above_off_bits,
-							i18n("Keep Above Others"));
-				    connect( button[BtnAbove], SIGNAL( clicked()),
-							this, SLOT(slotAbove()) );
-					hb->addWidget( button[BtnAbove] );
-				}
-				break;
-
-			// Below button
-			case 'B':
-				if ( (!button[BtnBelow]))
-				{
-				    button[BtnBelow]  = new KDEDefaultButton(this, "below",
-							largeButtons, isLeft, true,
-                                                        keepBelow() ? below_on_bits : below_off_bits,
-							i18n("Keep Below Others"));
-				    connect( button[BtnBelow], SIGNAL( clicked()),
-							this, SLOT(slotBelow()) );
-					hb->addWidget( button[BtnBelow] );
-				}
-				break;
-
-			// Shade button
-			case 'L':
-				if ( (!button[BtnShade]) && isShadeable())
-				{
-				    button[BtnShade]  = new KDEDefaultButton(this, "shade",
-							largeButtons, isLeft, true,
-                                                        isSetShade() ? shade_on_bits : shade_off_bits,
-							isSetShade() ? i18n( "Unshade" ) : i18n("Shade"));
-				    connect( button[BtnShade], SIGNAL( clicked()),
-							this, SLOT(slotShade()) );
-					hb->addWidget( button[BtnShade] );
-				}
-				break;
-
-			// Spacer item (only for non-tool windows)
-			case '_':
-    			if ( !isTool() )
-	   				hb->addSpacing(borderWidth/2);
-		}
-	}
-}
-
-void KDEDefaultClient::reset( unsigned long )
+void KDEDefaultClient::reset( unsigned long changed)
 {
     widget()->repaint();
+
+	KCommonDecoration::reset(changed);
 }
 
 bool KDEDefaultClient::mustDrawHandle() const 
@@ -965,106 +872,6 @@ bool KDEDefaultClient::mustDrawHandle() const
 		return showGrabBar && isResizable();
     }
 }
-
-void KDEDefaultClient::iconChange()
-{
-	if (button[BtnMenu] && button[BtnMenu]->isVisible())
-		button[BtnMenu]->repaint(false);
-}
-
-void KDEDefaultClient::desktopChange()
-{
-	if (button[BtnSticky]) {
-                bool on = isOnAllDesktops();
-		button[BtnSticky]->turnOn(on);
-		button[BtnSticky]->repaint(false);
-                QToolTip::remove( button[BtnSticky] );
-		QToolTip::add( button[BtnSticky], on ? i18n("Not on all desktops") : i18n("On all desktops"));
-	}
-}
-
-void KDEDefaultClient::keepAboveChange( bool above )
-{
-	if (button[BtnAbove]) {
-		button[BtnAbove]->setBitmap( above ? above_on_bits : above_off_bits );
-		button[BtnAbove]->repaint(false);
-	}
-}
-
-void KDEDefaultClient::keepBelowChange( bool below )
-{
-	if (button[BtnBelow]) {
-		button[BtnBelow]->setBitmap( below ? below_on_bits : below_off_bits );
-		button[BtnBelow]->repaint(false);
-	}
-}
-
-void KDEDefaultClient::slotMaximize()
-{
-    maximize( button[BtnMax]->last_button );
-}
-
-void KDEDefaultClient::slotAbove()
-{
-    setKeepAbove( !keepAbove());
-    button[BtnAbove]->turnOn(keepAbove());
-    button[BtnAbove]->repaint(true);
-}
-
-void KDEDefaultClient::slotBelow()
-{
-    setKeepBelow( !keepBelow());
-    button[BtnBelow]->turnOn(keepBelow());
-    button[BtnBelow]->repaint(true);
-}
-
-void KDEDefaultClient::slotShade()
-{
-    setShade( !isSetShade());
-}
-
-void KDEDefaultClient::resizeEvent( QResizeEvent* e)
-{
-	doShape();
-    calcHiddenButtons();
-
-    if ( widget()->isShown())
-    {
-        widget()->update( widget()->rect());
-#if 1 // what's the point of this, when paintEvent() repaints everything anyway?
-        int dx = 0;
-        int dy = 0;
-
-        if ( e->oldSize().width() != width() )
-           dx = 32 + QABS( e->oldSize().width() -  width() );
-
-        if ( e->oldSize().height() != height() )
-	       dy = 8 + QABS( e->oldSize().height() -  height() );
-
-        if ( dy )
-	       widget()->update( 0, height() - dy + 1, width(), dy );
-
-        if ( dx )
-        {
-  	       widget()->update( width() - dx + 1, 0, dx, height() );
-	       widget()->update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() -
-					QPoint(1,0) ) );
-	       widget()->update( QRect( titlebar->geometry().topRight(), QPoint(width() - 4,
-						  titlebar->geometry().bottom()) ) );
-           // Titlebar needs no paint event
-	       QApplication::postEvent( widget(), new QPaintEvent(titlebar->geometry(),
-									 FALSE) );
-        }
-#endif
-    }
-}
-
-
-void KDEDefaultClient::captionChange()
-{
-    widget()->repaint( titlebar->geometry(), false );
-}
-
 
 void KDEDefaultClient::paintEvent( QPaintEvent* )
 {
@@ -1091,7 +898,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	int leftFrameStart = (h > 42) ? y+titleHeight+26: y+titleHeight;
 
 	// Determine where to make the titlebar color transition
-    r = titlebar->geometry();
+	r = titleRect();
 	int rightOffset = r.x()+r.width()+1;
 
     // Create a disposable pixmap buffer for the titlebar
@@ -1176,7 +983,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
     p.drawRect( x+borderWidth-1, y+titleHeight+3, w-2*borderWidth+2, h-titleHeight-offset-2 );
 
     // Draw the title bar.
-	r = titlebar->geometry();
+	r = titleRect();
 
     // Obtain titlebar blend colours
     QColor c1 = options()->color(ColorTitleBar, isActive() );
@@ -1197,7 +1004,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
     // for toolwindows than the default.
     QFont fnt = options()->font(true);
 
-    if ( isTool() )
+    if ( isToolWindow() )
        fnt.setPointSize( fnt.pointSize()-2 );  // Shrink font by 2pt
 
     p2.setFont( fnt );
@@ -1232,244 +1039,28 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 #endif
 }
 
-
-void KDEDefaultClient::doShape()
+QRegion KDEDefaultClient::cornerShape(WindowCorner corner)
 {
-    QRegion mask(QRect(0, 0, width(), height()));
-    mask -= QRect(0, 0, 1, 1);
-    mask -= QRect(width()-1, 0, 1, 1);
-    mask -= QRect(0, height()-1, 1, 1);
-    mask -= QRect(width()-1, height()-1, 1, 1);
-    setMask(mask);
-}
+	int w = widget()->width();
+	int h = widget()->height();
 
+	switch (corner) {
+		case WC_TopLeft:
+			return QRect(0, 0, 1, 1);
 
-void KDEDefaultClient::showEvent(QShowEvent *)
-{
-    calcHiddenButtons();
-	doShape();
-}
+		case WC_TopRight:
+			return QRect(width()-1, 0, 1, 1);
 
+		case WC_BottomLeft:
+			return QRect(0, height()-1, 1, 1);
 
-void KDEDefaultClient::mouseDoubleClickEvent( QMouseEvent * e )
-{
-	if (titlebar->geometry().contains( e->pos() ) )
-                titlebarDblClickOperation();
-}
+		case WC_BottomRight:
+			return QRect(width()-1, height()-1, 1, 1);
 
-
-void KDEDefaultClient::maximizeChange()
-{
-	if (button[BtnMax]) {
-                bool m = maximizeMode() == MaximizeFull;
-		button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
-                QToolTip::remove( button[ BtnMax ] );
-                QToolTip::add( button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
-	}
-	spacer->changeSize(10, mustDrawHandle() ? 8 : 4,
-			QSizePolicy::Expanding, QSizePolicy::Minimum);
-	g->activate();
-}
-
-
-void KDEDefaultClient::activeChange()
-{
-	for(int i=KDEDefaultClient::BtnHelp; i < KDEDefaultClient::BtnCount; i++)
-		if(button[i])
-			button[i]->repaint(false);
-	widget()->repaint(false);
-}
-
-void KDEDefaultClient::shadeChange()
-{
-	if (button[BtnShade]) {
-		bool on = isSetShade();
-		button[BtnShade]->setBitmap( on ? shade_on_bits : shade_off_bits );
-		button[BtnShade]->turnOn(on);
-		button[BtnShade]->repaint(false);
-                QToolTip::remove( button[BtnShade] );
-		QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));
+		default:
+			return QRegion();
 	}
 }
-
-QSize KDEDefaultClient::minimumSize() const
-{
-    return QSize( 100, 50 ); // FRAME
-}
-
-void KDEDefaultClient::resize( const QSize& s )
-{
-    widget()->resize( s );
-}
-
-void KDEDefaultClient::borders( int& left, int& right, int& top, int& bottom ) const
-{ // FRAME
-    left = right = borderWidth;
-//    , y+titleHeight+3, w-6, h-titleHeight-offset-6 );
-    top = titleHeight + 4;
-	bottom = mustDrawHandle() ? grabBorderWidth : borderWidth;
-}
-
-// The hiding button while shrinking, show button while expanding magic
-void KDEDefaultClient::calcHiddenButtons()
-{
-	// Hide buttons in this order:
-	// Shade, Below, Above, Sticky, Help, Maximize, Minimize, Close, Menu.
-	KDEDefaultButton* btnArray[] = { button[ BtnShade ], button[ BtnBelow ],
-                        button[ BtnAbove ], button[BtnSticky], button[BtnHelp],
-			button[BtnMax], button[BtnIconify], button[BtnClose],
-			button[BtnMenu] };
-        const int buttons_cnt = sizeof( btnArray ) / sizeof( btnArray[ 0 ] );
-
-	int minwidth  = largeButtons ? 10 * normalTitleHeight : 10 * toolTitleHeight; // Start hiding at this width
-	int btn_width = largeButtons ? normalTitleHeight : toolTitleHeight;
-	int current_width = width();
-	int count = 0;
-	int i;
-
-	// Find out how many buttons we need to hide.
-	while (current_width < minwidth)
-	{
-		current_width += btn_width;
-		count++;
-	}
-
-	// Bound the number of buttons to hide
-	if (count > buttons_cnt) count = buttons_cnt;
-
-	// Hide the required buttons...
-	for(i = 0; i < count; i++)
-	{
-		if (btnArray[i] && btnArray[i]->isVisible() )
-			btnArray[i]->hide();
-	}
-
-	// Show the rest of the buttons...
-	for(i = count; i < buttons_cnt; i++)
-	{
-		if (btnArray[i] && (!btnArray[i]->isVisible()) )
-			btnArray[i]->show();
-	}
-}
-
-
-KDecoration::Position KDEDefaultClient::mousePosition( const QPoint& p ) const
-{
-	Position m = PositionCenter;
-
-	int bottomSize = mustDrawHandle() ? grabBorderWidth : borderWidth;
-
-    const int range = 14 + 3*borderWidth/2;
-
-    if ( ( p.x() > borderWidth && p.x() < width() - borderWidth )
-         && ( p.y() > 4 && p.y() < height() - bottomSize ) )
-        m = PositionCenter;
-    else if ( p.y() <= range && p.x() <= range)
-        m = PositionTopLeft;
-    else if ( p.y() >= height()-range && p.x() >= width()-range)
-        m = PositionBottomRight;
-    else if ( p.y() >= height()-range && p.x() <= range)
-        m = PositionBottomLeft;
-    else if ( p.y() <= range && p.x() >= width()-range)
-        m = PositionTopRight;
-    else if ( p.y() <= 4 )
-        m = PositionTop;
-    else if ( p.y() >= height()-bottomSize )
-        m = PositionBottom;
-    else if ( p.x() <= borderWidth )
-        m = PositionLeft;
-    else if ( p.x() >= width()-borderWidth )
-        m = PositionRight;
-    else
-        m = PositionCenter;
-
-	// Modify the mouse position if we are using a grab bar.
-	if (mustDrawHandle())
-		if (p.y() >= (height() - grabBorderWidth))
-		{
-			if (p.x() >= (width() - 2*borderWidth - 12))
-				m = PositionBottomRight;
-			else if (p.x() <= 2*borderWidth + 12)
-				m = PositionBottomLeft;
-			else
-			m = PositionBottom;
-		}
-
-	return m;
-}
-
-
-// Make sure the menu button follows double click conventions set in kcontrol
-void KDEDefaultClient::menuButtonPressed()
-{
-	static QTime t;
-	static KDEDefaultClient* lastClient = NULL;
-	bool dbl = ( lastClient == this && t.elapsed() <= QApplication::doubleClickInterval());
-	lastClient = this;
-	t.start();
-
-	if (dbl)
-	{
-		m_closing = true;
-		return;
-	}
-
-	QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1,
-					   button[BtnMenu]->rect().bottomLeft().y()+2 );
-        KDecorationFactory* f = factory();
-	QRect menuRect = button[BtnMenu]->rect();
-	QPoint menutop = button[BtnMenu]->mapToGlobal(menuRect.topLeft());
-	QPoint menubottom = button[BtnMenu]->mapToGlobal(menuRect.bottomRight());
-	showWindowMenu(QRect(menutop, menubottom));
-        if( !f->exists( this )) // 'this' was destroyed
-            return;
-	button[BtnMenu]->setDown(false);
-}
-
-void KDEDefaultClient::menuButtonReleased()
-{
-	if (m_closing)
-		closeWindow();
-}
-
-const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
-    | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
-    | NET::UtilityMask | NET::SplashMask;
-
-bool KDEDefaultClient::isTool() const
-{
-    NET::WindowType type = windowType( SUPPORTED_WINDOW_TYPES_MASK );
-    return type == NET::Toolbar || type == NET::Utility || type == NET::Menu;
-}
-
-
-bool KDEDefaultClient::eventFilter( QObject* o, QEvent* e )
-{
-    if( o != widget())
-	return false;
-    switch( e->type())
-	{
-	case QEvent::Resize:
-	    resizeEvent( static_cast< QResizeEvent* >( e ));
-	    return true;
-	case QEvent::Paint:
-	    paintEvent( static_cast< QPaintEvent* >( e ));
-	    return true;
-	case QEvent::MouseButtonDblClick:
-	    mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ));
-	    return true;
-	case QEvent::MouseButtonPress:
-	    processMousePressEvent( static_cast< QMouseEvent* >( e ));
-	    return true;
-	case QEvent::Show:
-	    showEvent( static_cast< QShowEvent* >( e ));
-	    return true;
-	default:
-	    break;
-	}
-    return false;
-}
-
 
 } // namespace
 
@@ -1479,5 +1070,5 @@ extern "C" KDE_EXPORT KDecorationFactory* create_factory()
     return new Default::KDEDefaultHandler();
 }
 
-#include "kdedefault.moc"
 // vim: ts=4
+// kate: space-indent off; tab-width 4;

@@ -17,7 +17,7 @@
 #include <qbitmap.h>
 #include <qdatetime.h>
 #include <kpixmap.h>
-#include <kdecoration.h>
+#include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 
 class QSpacerItem;
@@ -47,97 +47,57 @@ class KDEDefaultHandler: public KDecorationFactory
 };
 
 
-class KDEDefaultButton : public QButton, public KDecorationDefines
+// class KDEDefaultButton : public QButton, public KDecorationDefines
+class KDEDefaultButton : public KCommonDecorationButton
 {
 	public:
-		KDEDefaultButton(KDEDefaultClient *parent=0, const char *name=0,
-			 bool largeButton=true, bool isLeftButton=true,
-			 bool isStickyButton=false, const unsigned char *bitmap=NULL,
-			 const QString& tip=NULL, const int realizeBtns = LeftButton);
+		KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name);
 		~KDEDefaultButton();
 
-		ButtonState last_button;
-		void turnOn( bool isOn );
+		void reset(unsigned long changed);
+
 		void setBitmap(const unsigned char *bitmap);
-		QSize sizeHint() const;
 
 	protected:
 		void enterEvent(QEvent *);
 		void leaveEvent(QEvent *);
-		void mousePressEvent( QMouseEvent* e );
-		void mouseReleaseEvent( QMouseEvent* e );
 		void drawButton(QPainter *p);
 		void drawButtonLabel(QPainter*) {;}
 
 		QBitmap* deco;
 		bool    large;
-		bool    isLeft;
-		bool    isSticky;
 		bool	isMouseOver;
-		KDEDefaultClient* client;
-
-		int realizeButtons;
 };
 
 
-class KDEDefaultClient : public KDecoration
+class KDEDefaultClient : public KCommonDecoration
 {
-	Q_OBJECT
-
 	public:
 		KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f );
 		~KDEDefaultClient() {;}
-                void init();
-                void borders( int&, int&, int&, int& ) const;
-                void resize( const QSize& );
-                QSize minimumSize() const;
-                void reset( unsigned long changed );
+
+		virtual QString visibleName() const;
+		virtual QString defaultButtonsLeft() const;
+		virtual QString defaultButtonsRight() const;
+		virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+		virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+		virtual KCommonDecorationButton *createButton(ButtonType type);
+
+		virtual QRegion cornerShape(WindowCorner corner);
+
+		void init();
+		void reset( unsigned long changed );
 
 	protected:
-                bool eventFilter( QObject*, QEvent* );
-		void resizeEvent( QResizeEvent* );
 		void paintEvent( QPaintEvent* );
-		void showEvent( QShowEvent* );
-		void mouseDoubleClickEvent( QMouseEvent * );
-		void captionChange();
-		void maximizeChange();
-		void activeChange();
-		void iconChange();
-		void desktopChange();
-                void shadeChange();
-		Position mousePosition(const QPoint &) const;
-
-	protected slots:
-		void slotMaximize();
-                void slotAbove();
-                void slotBelow();
-                void slotShade();
-		void menuButtonPressed();
-	        void menuButtonReleased();
-                void keepAboveChange( bool );
-                void keepBelowChange( bool );
 
 	private:
-		void doShape();
-		void calcHiddenButtons();
 		bool mustDrawHandle() const;
-		void addClientButtons( const QString& s, bool isLeft=true );
-                bool isTool() const;
-
-		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
-			BtnMenu, BtnSticky, BtnAbove, BtnBelow, BtnShade, BtnCount };
-		KDEDefaultButton* button[ KDEDefaultClient::BtnCount ];
-		int           lastButtonWidth;
 		int           titleHeight;
-		bool          largeButtons;
-		QGridLayout*  g;
-		QBoxLayout*   hb;
-		QSpacerItem*  titlebar;
-		QSpacerItem*  spacer;
-		bool m_closing;
 };
 
 }
 
 #endif
 // vim: ts=4
+// kate: space-indent off; tab-width 4;
