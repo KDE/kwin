@@ -963,7 +963,7 @@ void Client::setShortcut( const QString& _cut )
 // E.g. Alt+Ctrl+(ABCDEF) Win+X,Win+(ABCDEF)
     if( !cut.contains( '(' ) && !cut.contains( ')' ) && !cut.contains( ' ' ))
         {
-        if( workspace()->shortcutAvailable( KShortcut( cut )))
+        if( workspace()->shortcutAvailable( KShortcut( cut ), this ))
             setShortcutInternal( KShortcut( cut ));
         else
             setShortcutInternal( KShortcut());
