@@ -432,6 +432,11 @@ void Workspace::addClient( Client* c, allowed_t )
         }
     if( !unconstrained_stacking_order.contains( c ))
         unconstrained_stacking_order.append( c );
+    if( c->isTopMenu())
+        {
+        addTopMenu( c );
+        updateCurrentTopMenu(); // SELI make sure this is called correctly WRT things done in manage()
+        }
     updateClientArea(); // this cannot be in manage(), because the client got added only now
     updateClientLayer( c );
     if( c->isDesktop())
@@ -440,13 +445,6 @@ void Workspace::addClient( Client* c, allowed_t )
 	// if there's no active client, make this desktop the active one
         if( activeClient() == NULL && should_get_focus.count() == 0 )
             activateClient( findDesktop( true, currentDesktop()));
-        }
-    if( c->isTopMenu())
-        {
-        topmenus.append( c );
-        c->checkWorkspacePosition();
-//        kdDebug() << "NEW TOPMENU:" << c << endl;
-        updateCurrentTopMenu(); // SELI make sure this is called correctly WRT things done in manage()
         }
     if( c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows( true );
@@ -478,9 +476,8 @@ void Workspace::removeClient( Client* c, allowed_t )
     stacking_order.remove( c );
     focus_chain.remove( c );
     attention_chain.remove( c );
-//    if( c->isTopMenu())
-//        kdDebug() << "REMOVE TOPMENU:" << c << endl;
-    topmenus.remove( c );
+    if( c->isTopMenu())
+        removeTopMenu( c );
     Group* group = findGroup( c->window());
     if( group != NULL )
         group->lostLeader();
@@ -1804,6 +1801,33 @@ void Workspace::raiseElectricBorders()
         }
     }
 
+void Workspace::addTopMenu( Client* c )
+    {
+    assert( c->isTopMenu());
+    assert( !topmenus.contains( c ));
+    topmenus.append( c );
+    int minsize = c->minSize().height();
+    if( minsize > topMenuHeight())
+        {
+        topmenu_height = minsize;
+        for( ClientList::ConstIterator it = topmenus.begin();
+             it != topmenus.end();
+             ++it )
+            (*it)->checkWorkspacePosition();
+        }
+    c->checkWorkspacePosition();
+//        kdDebug() << "NEW TOPMENU:" << c << endl;
+    }
+
+void Workspace::removeTopMenu( Client* c )
+    {
+//    if( c->isTopMenu())
+//        kdDebug() << "REMOVE TOPMENU:" << c << endl;
+    assert( c->isTopMenu());
+    assert( topmenus.contains( c ));
+    topmenus.remove( c );
+    // TODO reduce topMenuHeight() if possible?
+    }
 
 void Workspace::lostTopMenuSelection()
     {

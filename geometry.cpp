@@ -351,6 +351,11 @@ void Workspace::unclutterDesktop()
 QRect Client::adjustedClientArea( const QRect& area ) const
     {
     QRect r = area;
+    if( isTopMenu() && workspace()->managingTopMenus())
+        {
+        r.setTop( r.top() + workspace()->topMenuHeight());
+        return r;
+        }
     NETStrut strut = info->strut();
     if ( strut.left > 0 )
         r.setLeft( r.left() + (int) strut.left );
@@ -430,18 +435,6 @@ void Client::checkWorkspacePosition()
             area.setHeight( workspace()->topMenuHeight());
 //            kdDebug() << "TOPMENU size adjust: " << area << ":" << this << endl;
             setGeometry( area );
-            }
-        NETStrut strut = info->strut();
-        int top = workspace()->managingTopMenus() ? workspace()->topMenuHeight() : 0;
-        if( strut.left != 0 || strut.right != 0 || strut.bottom != 0 || strut.top != top )
-            {
-            NETStrut new_strut;
-            new_strut.left = 0;
-            new_strut.right = 0;
-            new_strut.top = top;
-            new_strut.bottom = 0;
-            info->setStrut( new_strut );
-            workspace()->updateClientArea();
             }
         return;
         }

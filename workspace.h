@@ -339,6 +339,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool keepTransientAbove( const Client* mainwindow, const Client* transient );
         void blockStackingUpdates( bool block );
         void updateCurrentTopMenu();
+        void addTopMenu( Client* c );
+        void removeTopMenu( Client* c );
         void updateToolWindows( bool also_hide );
 
     // this is the right way to create a new client
