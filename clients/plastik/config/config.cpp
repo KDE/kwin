@@ -55,10 +55,6 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
             this, SIGNAL(changed()));
     connect(m_dialog->titleShadow, SIGNAL(toggled(bool)),
             this, SIGNAL(changed()));
-    connect(m_dialog->shrinkBorders, SIGNAL(toggled(bool)),
-            this, SIGNAL(changed()));
-    connect(m_dialog->borderSize, SIGNAL(valueChanged(int)),
-            this, SIGNAL(changed()));
     connect(m_dialog->titlebarHeight, SIGNAL(valueChanged(int)),
             this, SIGNAL(changed()));
 
@@ -82,10 +78,6 @@ void PlastikConfig::load(KConfig*)
     m_dialog->animateButtons->setChecked(animateButtons);
     bool titleShadow = m_config->readBoolEntry("TitleShadow", true);
     m_dialog->titleShadow->setChecked(titleShadow);
-    bool shrinkBorders = m_config->readBoolEntry("ShrinkBorders", true);
-    m_dialog->shrinkBorders->setChecked(shrinkBorders);
-    int borderSize = m_config->readNumEntry("BorderSize", 4);
-    m_dialog->borderSize->setValue(borderSize);
     int titlebarHeight = m_config->readNumEntry("TitleHeightMin", 19);
     if(titlebarHeight <= 16)
     {
@@ -121,8 +113,6 @@ void PlastikConfig::save(KConfig*)
     if (button) m_config->writeEntry("TitleAlignment", QString(button->name()));
     m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
     m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
-    m_config->writeEntry("ShrinkBorders", m_dialog->shrinkBorders->isChecked() );
-    m_config->writeEntry("BorderSize", m_dialog->borderSize->value() );
     switch(m_dialog->titlebarHeight->value())
     {
         case 2:
@@ -154,8 +144,6 @@ void PlastikConfig::defaults()
     if (button) button->setChecked(true);
     m_dialog->animateButtons->setChecked(true);
     m_dialog->titleShadow->setChecked(true);
-    m_dialog->shrinkBorders->setChecked(true);
-    m_dialog->borderSize->setValue(4);
     m_dialog->titlebarHeight->setValue(2);
 }
 

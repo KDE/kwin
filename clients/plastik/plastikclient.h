@@ -23,47 +23,59 @@
 #ifndef KNIFTYCLIENT_H
 #define KNIFTYCLIENT_H
 
-#include <kwin/client.h>
+#include <kdecoration.h>
 #include "plastik.h"
 
 class QSpacerItem;
 class QVBoxLayout;
+class QBoxLayout;
 
-namespace KWinInternal {
+namespace KWinPlastik {
 
 class PlastikButton;
 
-class PlastikClient : public KWinInternal::Client
+class PlastikClient : public KDecoration
 {
     Q_OBJECT
 public:
-    PlastikClient(Workspace *ws, WId w, QWidget *parent = 0, const char *name = 0);
+    PlastikClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     ~PlastikClient();
+
+    virtual void init();
+
+    virtual void borders( int& left, int& right, int& top, int& bottom ) const;
+    virtual void resize(const QSize&);
+    virtual QSize minimumSize() const;
+    virtual void show();
+    virtual bool eventFilter( QObject* o, QEvent* e );
 
     QPixmap getTitleBarTile(bool active) const
     {
         return active ? *aTitleBarTile : *iTitleBarTile;
     }
 protected:
-    virtual void resizeEvent(QResizeEvent *e);
+    virtual void resizeEvent();
     virtual void paintEvent(QPaintEvent *e);
     virtual void showEvent(QShowEvent *);
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
     virtual void windowWrapperShowEvent(QShowEvent *);
 
-    virtual void maximizeChange(bool m);
+    virtual void maximizeChange();
+    virtual void desktopChange();
+    virtual void shadeChange() {};
     virtual void doShape();
 
-    virtual void captionChange(const QString &name);
-    virtual void stickyChange(bool s);
+    virtual void reset( unsigned long changed );
+
+    virtual void captionChange();
     virtual void iconChange();
-    virtual void activeChange(bool a);
+    virtual void activeChange();
     virtual MousePosition mousePosition(const QPoint &point) const;
 
 private slots:
-    void maxButtonPressed();
+    void slotMaximize();
     void menuButtonPressed();
-    void menuButtonReleased();
+    bool isTool();
 private:
     void _resetLayout();
     void addButtons(QBoxLayout* layout, const QString& buttons, int buttonSize = 18);
@@ -84,16 +96,15 @@ private:
     void create_pixmaps();
     void delete_pixmaps();
 
-    PlastikButton *m_button[ButtonTypeCount];
+    PlastikButton *m_button[NumButtons];
 
     bool captionBufferDirty;
-    bool closing;
 
     // settings...
     int   s_titleHeight;
     QFont s_titleFont;
 };
 
-}
+} // KWinPlastik
 
 #endif // KNIFTCLIENT_H

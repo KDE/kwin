@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>ConfigDialog</class>
 <widget class="QWidget">
     <property name="name">
@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>541</width>
-            <height>584</height>
+            <height>188</height>
         </rect>
     </property>
     <property name="caption">
@@ -81,37 +81,6 @@
                         </size>
                     </property>
                 </spacer>
-                <widget class="QLabel" row="6" column="0">
-                    <property name="name">
-                        <cstring>textLabel1</cstring>
-                    </property>
-                    <property name="text">
-                        <string>B&amp;order size:</string>
-                    </property>
-                    <property name="buddy" stdset="0">
-                        <cstring>borderSize</cstring>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Here you can change the thickness of the borders to fit your taste.</string>
-                    </property>
-                </widget>
-                <widget class="QSpinBox" row="6" column="1" rowspan="1" colspan="4">
-                    <property name="name">
-                        <cstring>borderSize</cstring>
-                    </property>
-                    <property name="suffix">
-                        <string> pixel</string>
-                    </property>
-                    <property name="maxValue">
-                        <number>15</number>
-                    </property>
-                    <property name="minValue">
-                        <number>2</number>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Here you can change the thickness of the borders to fit your taste.</string>
-                    </property>
-                </widget>
                 <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="4">
                     <property name="name">
                         <cstring>animateButtons</cstring>
@@ -153,37 +122,6 @@ Note: This setting gets overwritten if the caption font is bigger than the title
                     </property>
                     <property name="text">
                         <string>Small</string>
-                    </property>
-                </widget>
-                <spacer row="9" column="3">
-                    <property name="name">
-                        <cstring>spacer6</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>200</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="5">
-                    <property name="name">
-                        <cstring>shrinkBorders</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Sh&amp;rink borders for maximized windows</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+R</string>
-                    </property>
-                    <property name="whatsThis" stdset="0">
-                        <string>Check this option if you want parts of the borders to be hidden for maximized windows to improve accessibility of side buttons and scrollbars.</string>
                     </property>
                 </widget>
                 <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="5">
@@ -250,8 +188,6 @@ Note: This setting gets overwritten if the caption font is bigger than the title
     <tabstop>AlignRight</tabstop>
     <tabstop>animateButtons</tabstop>
     <tabstop>titleShadow</tabstop>
-    <tabstop>shrinkBorders</tabstop>
-    <tabstop>borderSize</tabstop>
     <tabstop>titlebarHeight</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>

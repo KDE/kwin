@@ -20,14 +20,17 @@
   Boston, MA 02111-1307, USA.
  */
 
-#include <kwin/options.h>
+// #include <kwin/options.h>
 
 #include <qbitmap.h>
+#include <qcursor.h>
 #include <qimage.h>
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <kpixmap.h>
 #include <kpixmapeffect.h>
+#include <qtooltip.h>
+#include <qtimer.h>
 
 #include "xpm/close.xpm"
 #include "xpm/minimize.xpm"
@@ -44,14 +47,15 @@
 #include "misc.h"
 #include "shadow.h"
 
-using namespace KWinInternal;
+namespace KWinPlastik
+{
 
 static const uint TIMERINTERVAL = 50; // msec
 static const uint ANIMATIONSTEPS = 4;
 
 PlastikButton::PlastikButton(PlastikClient *parent, const char *name,
                              const QString& tip, ButtonType type, int size)
-    : KWinButton(parent, name, tip),
+    : QButton(parent->widget(), name),
     m_client(parent),
     m_lastMouse(0),
     m_size(size),
@@ -59,12 +63,14 @@ PlastikButton::PlastikButton(PlastikClient *parent, const char *name,
     m_aDecoLight(QImage() ), m_iDecoLight(QImage() ),
     m_aDecoDark(QImage() ), m_iDecoDark(QImage() ),
     hover(false),
-    isSticky(false),
+    isOnAllDesktops(false),
     isMaximized(false)
 {
+    QToolTip::add( this, tip );
+    setCursor(ArrowCursor);
+
     setBackgroundMode(NoBackground);
 
-    // the app icon should fit the button...
     if(m_size < 10) { m_size = 10; }
 
     setFixedSize(m_size, m_size);
@@ -83,6 +89,14 @@ PlastikButton::~PlastikButton()
 QSize PlastikButton::sizeHint() const
 {
     return QSize(m_size, m_size);
+}
+
+void PlastikButton::setSize(int s)
+{
+    m_size = s;
+    if(m_size < 10) { m_size = 10; }
+    setFixedSize(m_size, m_size);
+    setDeco();
 }
 
 void PlastikButton::setDeco()
@@ -109,24 +123,24 @@ void PlastikButton::setDeco()
 
     QImage img;
     switch (m_type) {
-        case ButtonClose:
+        case CloseButton:
             img = QImage(close_xpm);
             break;
-        case ButtonHelp:
+        case HelpButton:
             img = QImage(help_xpm);
             break;
-        case ButtonMin:
+        case MinButton:
             img = QImage(minimize_xpm);
             break;
-        case ButtonMax:
+        case MaxButton:
             if (isMaximized) {
                 img = QImage(restore_xpm);
             } else {
                 img = QImage(maximize_xpm);
             }
             break;
-        case ButtonSticky:
-            if (isSticky) {
+        case OnAllDesktopsButton:
+            if (isOnAllDesktops) {
                 img = QImage(unsticky_xpm);
             } else {
                 img = QImage(sticky_xpm);
@@ -143,6 +157,11 @@ void PlastikButton::setDeco()
     m_iDecoLight = recolorImage(&img, iDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
 
     this->repaint();
+}
+
+void PlastikButton::setTipText(const QString &tip) {
+    QToolTip::remove(this );
+    QToolTip::add(this, tip );
 }
 
 void PlastikButton::animate()
@@ -174,20 +193,20 @@ void PlastikButton::animate()
 
 void PlastikButton::enterEvent(QEvent *e)
 {
+    QButton::enterEvent(e);
+
     hover = true;
     animate();
 //     repaint(false);
-
-    KWinButton::enterEvent(e);
 }
 
 void PlastikButton::leaveEvent(QEvent *e)
 {
+    QButton::leaveEvent(e);
+
     hover = false;
     animate();
 //     repaint(false);
-
-    KWinButton::leaveEvent(e);
 }
 
 void PlastikButton::mousePressEvent(QMouseEvent* e)
@@ -196,7 +215,8 @@ void PlastikButton::mousePressEvent(QMouseEvent* e)
     // pass on event after changing button to LeftButton
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
                    LeftButton, e->state());
-    KWinButton::mousePressEvent(&me);
+
+    QButton::mousePressEvent(&me);
 }
 
 void PlastikButton::mouseReleaseEvent(QMouseEvent* e)
@@ -205,12 +225,8 @@ void PlastikButton::mouseReleaseEvent(QMouseEvent* e)
     // pass on event after changing button to LeftButton
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
                    LeftButton, e->state());
-    KWinButton::mouseReleaseEvent(&me);
-}
 
-int PlastikButton::inverseBwColor(QColor color)
-{
-    return ((color.red()*0.299 + color.green()*0.587 + color.blue()*0.114) < 128 ) * 255;
+    QButton::mouseReleaseEvent(&me);
 }
 
 void PlastikButton::drawButton(QPainter *painter)
@@ -225,7 +241,7 @@ void PlastikButton::drawButton(QPainter *painter)
     KPixmap tempKPixmap;
 
     QColor highlightColor;
-    if(m_type == ButtonClose) {
+    if(m_type == CloseButton) {
         highlightColor = QColor(255,64,0);
     } else {
         highlightColor = Qt::white;
@@ -261,7 +277,7 @@ void PlastikButton::drawButton(QPainter *painter)
     // fill with the titlebar background
     bP.drawTiledPixmap(0, 0, width(), width(), backgroundTile);
 
-    if (! (m_type == ButtonMenu && !hover) ) {
+    if (! (m_type == MenuButton && !hover) ) {
         // contour
         bP.setPen(contourTop);
         bP.drawLine(r.x()+2, r.y(), r.right()-2, r.y() );
@@ -307,11 +323,11 @@ void PlastikButton::drawButton(QPainter *painter)
         bP.drawTiledPixmap(r.x()+1, r.y()+2, r.width()-2, r.height()-4, tempKPixmap);
     }
 
-    if (m_type == ButtonMenu)
+    if (m_type == MenuButton)
     {
-        QPixmap menuIcon = m_client->miniIcon();
+        QPixmap menuIcon(m_client->icon().pixmap( QIconSet::Small, QIconSet::Normal));
         if (width() < menuIcon.width() || height() < menuIcon.height() ) {
-            menuIcon.convertFromImage( menuIcon.convertToImage().smoothScale(width()-2, height()-2));
+            menuIcon.convertFromImage( menuIcon.convertToImage().smoothScale(width(), height()));
         }
         bP.drawPixmap((width()-menuIcon.width())/2, (height()-menuIcon.height())/2, menuIcon);
     }
@@ -335,3 +351,5 @@ void PlastikButton::drawButton(QPainter *painter)
     bP.end();
     painter->drawPixmap(0, 0, buffer);
 }
+
+} // KWinPlastik

@@ -21,15 +21,14 @@
  */
 
 #include <kconfig.h>
-#include <kwin/workspace.h>
-#include <kwin/options.h>
 
 #include "misc.h"
 #include "plastik.h"
 #include "plastik.moc"
 #include "plastikclient.h"
 
-using namespace KWinInternal;
+namespace KWinPlastik
+{
 
 // static bool pixmaps_created = false;
 
@@ -46,7 +45,7 @@ Qt::AlignmentFlags PlastikHandler::m_titleAlign = Qt::AlignHCenter;
 
 PlastikHandler::PlastikHandler()
 {
-    reset();
+    reset(0);
 }
 
 PlastikHandler::~PlastikHandler()
@@ -54,20 +53,56 @@ PlastikHandler::~PlastikHandler()
     m_initialized = false;
 }
 
-void PlastikHandler::reset()
+bool PlastikHandler::reset(unsigned long changed)
 {
-    m_titleFont = options->font(true, false);
-    m_titleFontTool = m_titleFont;
-    // Shrink font by 3pt, but no less than 7pts, less is ugly and unreadable
-    m_titleFontTool.setPointSize(m_titleFont.pointSize() > 10? m_titleFont.pointSize() - 3: 7);
-    m_titleFontTool.setWeight( QFont::Normal ); // and disable bold
+    // we assume the active font to be the same as the inactive font since the control
+    // center doesn't offer different settings anyways.
+    m_titleFont = KDecoration::options()->font(true, false); // not small
+    m_titleFontTool = KDecoration::options()->font(true, true); // small
+
+    switch(KDecoration::options()->preferredBorderSize()) {
+        case BorderTiny:
+            m_borderSize = 2;
+            break;
+        case BorderLarge:
+            m_borderSize = 8;
+            break;
+        case BorderVeryLarge:
+            m_borderSize = 12;
+            break;
+        case BorderHuge:
+            m_borderSize = 16;
+            break;
+        case BorderNormal:
+        default:
+            m_borderSize = 4;
+    }
 
     // read in the configuration
     readConfig();
 
-    // reset all clients
-    Workspace::self()->slotResetAllClientsDelayed();
     m_initialized = true;
+
+    // Do we need to "hit the wooden hammer" ?
+    bool needHardReset = true;
+    // TODO: besides the Color and Font settings I can maybe handle more changes
+    //       without a hard reset. I will do this later...
+    if (changed & SettingColors || changed & SettingFont)
+    {
+        needHardReset = false;
+    }
+
+    if (needHardReset) {
+        return true;
+    } else {
+        resetDecorations(changed);
+        return false;
+    }
+}
+
+KDecoration* PlastikHandler::createDecoration( KDecorationBridge* bridge )
+{
+        return new PlastikClient( bridge, this );
 }
 
 void PlastikHandler::readConfig()
@@ -78,8 +113,6 @@ void PlastikHandler::readConfig()
 
     // grab settings
     m_titleShadow    = config.readBoolEntry("TitleShadow", true);
-    m_shrinkBorders  = config.readBoolEntry("ShrinkBorders", true);
-    m_borderSize     = config.readNumEntry("BorderSize", 4);
 
     QFontMetrics fm(m_titleFont);  // active font = inactive font
     int titleHeightMin = config.readNumEntry("TitleHeightMin", 19);
@@ -99,67 +132,54 @@ void PlastikHandler::readConfig()
     m_animateButtons = config.readBoolEntry("AnimateButtons", true);
 }
 
-QColor PlastikHandler::getColor(ColorType type, const bool active)
+QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)
 {
     switch (type) {
         case WindowContour:
-            return options->colorGroup(Options::TitleBar, active).background().dark(180);
+            return KDecoration::options()->color(ColorTitleBar, active).dark(190);
         case TitleGradientFrom:
-            return options->colorGroup(Options::TitleBar, active).background();
+            return KDecoration::options()->color(ColorTitleBar, active);
             break;
         case TitleGradientTo:
-            return alphaBlendColors(options->colorGroup(Options::TitleBar, active).background(),
+            return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
                     Qt::white, active?210:220);
             break;
         case TitleGradientToTop:
-            return alphaBlendColors(options->colorGroup(Options::TitleBar, active).background(),
+            return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
                     Qt::white, active?180:190);
             break;
         case TitleHighlightTop:
         case SideHighlightLeft:
-            return alphaBlendColors(options->colorGroup(Options::TitleBar, active).background(),
+            return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
                     Qt::white, active?150:160);
             break;
         case SideHighlightRight:
         case SideHighlightBottom:
-            return alphaBlendColors(options->colorGroup(Options::TitleBar, active).background(),
+            return alphaBlendColors(KDecoration::options()->color(ColorTitleBar, active),
                     Qt::black, active?150:160);
             break;
         case Border:
-            return options->colorGroup(Options::Frame, active).background();
+            return KDecoration::options()->color(ColorFrame, active);
         case TitleFont:
-            return options->color(Options::Font, active);
+            return KDecoration::options()->color(ColorFont, active);
         default:
             return Qt::black;
     }
 }
 
+} // KWinPlastik
+
 //////////////////////////////////////////////////////////////////////////////
 // Plugin Stuff                                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-static PlastikHandler *handler = 0;
+static KWinPlastik::PlastikHandler *handler = 0;
 
 extern "C"
 {
-    Client* allocate(Workspace *ws, WId w, int)
+    KDecorationFactory *create_factory()
     {
-        return new PlastikClient(ws, w);
-    }
-
-    void init()
-    {
-        handler = new PlastikHandler();
-    }
-
-    void reset()
-    {
-        handler->reset();
-    }
-
-    void deinit()
-    {
-         delete handler;
-         handler = 0;
+        handler = new KWinPlastik::PlastikHandler();
+        return handler;
     }
 }

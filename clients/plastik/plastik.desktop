@@ -2,4 +2,4 @@
 Encoding=UTF-8
 Icon=
 Name=Plastik
-X-KDE-Library=kwin_plastik
+X-KDE-Library=kwin3_plastik

@@ -23,21 +23,21 @@
 #ifndef KNIFTY_H
 #define KNIFTY_H
 
-#include <kwin/client.h>
+#include <kdecoration.h>
+#include <kdecorationfactory.h>
+
+namespace KWinPlastik {
+
 #include <qfont.h>
 
-
-
-namespace KWinInternal {
-
 enum ButtonType {
-    ButtonHelp=0,
-    ButtonMax,
-    ButtonMin,
-    ButtonClose,
-    ButtonMenu,
-    ButtonSticky,
-    ButtonTypeCount
+    HelpButton=0,
+    MaxButton,
+    MinButton,
+    CloseButton,
+    MenuButton,
+    OnAllDesktopsButton,
+    NumButtons
 };
 
 enum ColorType {
@@ -53,13 +53,15 @@ enum ColorType {
     TitleFont
 };
 
-class PlastikHandler: public QObject
+class PlastikHandler: public QObject, public KDecorationFactory
 {
     Q_OBJECT
 public:
     PlastikHandler();
     ~PlastikHandler();
-    void reset();
+    virtual bool reset( unsigned long changed );
+
+    virtual KDecoration* createDecoration( KDecorationBridge* );
 
     static bool initialized() { return m_initialized; }
 
@@ -68,12 +70,11 @@ public:
     static QFont titleFont() { return m_titleFont; }
     static QFont titleFontTool() { return m_titleFontTool; }
     static bool titleShadow() { return m_titleShadow; }
-    static bool shrinkBorders() { return m_shrinkBorders; }
     static int  borderSize() { return m_borderSize; }
     static bool useHighContrastHoveredButtons() { return m_useHighContrastHoveredButtons; }
     static bool animateButtons() { return m_animateButtons; }
     static Qt::AlignmentFlags titleAlign() { return m_titleAlign; }
-    static QColor getColor(ColorType type, const bool active = true);
+    static QColor getColor(KWinPlastik::ColorType type, const bool active = true);
 private:
     void readConfig();
 
@@ -91,6 +92,6 @@ private:
     static bool m_initialized;
 };
 
-} // namespace KWinInternal
+} // KWinPlastik
 
 #endif // KNIFT_H

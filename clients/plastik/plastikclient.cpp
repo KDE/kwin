@@ -23,13 +23,12 @@
 #include <klocale.h>
 #include <kpixmap.h>
 #include <kpixmapeffect.h>
-#include <kwin/workspace.h>
-#include <kwin/options.h>
 
 #include <qbitmap.h>
 #include <qdatetime.h>
 #include <qfontmetrics.h>
 #include <qimage.h>
+#include <qlabel.h>
 #include <qlayout.h>
 #include <qpainter.h>
 #include <qpixmap.h>
@@ -40,8 +39,6 @@
 #include "misc.h"
 #include "shadow.h"
 
-using namespace KWinInternal;
-
 // global constants
 static const int TOPMARGIN       = 4; // do not change
 static const int DECOHEIGHT      = 2; // do not change
@@ -51,40 +48,21 @@ static const int SIDETITLEMARGIN = 6;
 const char default_left[]  = "M";
 const char default_right[] = "HIAX";
 
-PlastikClient::PlastikClient(Workspace *ws, WId w, QWidget *parent, const char *name)
-    : Client (ws, w, parent, name, WResizeNoErase | WRepaintNoErase),
+namespace KWinPlastik
+{
+
+PlastikClient::PlastikClient(KDecorationBridge* bridge, KDecorationFactory* factory)
+    : KDecoration (bridge, factory),
     mainLayout_(0),
-    topSpacer_(0),
-    titleSpacer_(0),
-    leftTitleSpacer_(0), rightTitleSpacer_(0),
-    decoSpacer_(0),
-    leftSpacer_(0), rightSpacer_(0),
-    bottomSpacer_(0),
+    topSpacer_(0), titleSpacer_(0), leftTitleSpacer_(0), rightTitleSpacer_(0),
+    decoSpacer_(0), leftSpacer_(0), rightSpacer_(0), bottomSpacer_(0),
     aCaptionBuffer(0), iCaptionBuffer(0),
     aTitleBarTile(0), iTitleBarTile(0), aTitleBarTopTile(0), iTitleBarTopTile(0),
     pixmaps_created(false),
     captionBufferDirty(true),
-    closing(false),
     s_titleHeight(0),
     s_titleFont(QFont() )
-{
-    // store settings which maybe need to be changed "locally" or needed often
-    s_titleHeight = isTool()?PlastikHandler::titleHeightTool():PlastikHandler::titleHeight();
-    s_titleFont = isTool()?PlastikHandler::titleFontTool():PlastikHandler::titleFont();
-
-    // for flicker-free redraws
-    setBackgroundMode(NoBackground);
-
-    _resetLayout();
-
-    create_pixmaps();
-
-    aCaptionBuffer = new QPixmap();
-    iCaptionBuffer = new QPixmap();
-    captionBufferDirty = true;
-    repaint(titleSpacer_->geometry(), false);
-
-}
+{ }
 
 PlastikClient::~PlastikClient()
 {
@@ -93,16 +71,48 @@ PlastikClient::~PlastikClient()
     delete aCaptionBuffer;
     delete iCaptionBuffer;
 
-    for (int n=0; n<ButtonTypeCount; n++) {
+    for (int n=0; n<NumButtons; n++) {
         if (m_button[n]) delete m_button[n];
     }
 }
 
-void PlastikClient::resizeEvent(QResizeEvent *e)
+void PlastikClient::init()
 {
-    Client::resizeEvent(e);
+    s_titleHeight = isTool() ?
+            PlastikHandler::titleHeightTool()
+            : PlastikHandler::titleHeight();
+    s_titleFont = isTool() ?
+            PlastikHandler::titleFontTool()
+            : PlastikHandler::titleFont();
+
+    createMainWidget();
+
+    widget()->installEventFilter( this );
+
+    // for flicker-free redraws
+    widget()->setBackgroundMode(NoBackground);
+
+    _resetLayout();
+
+    create_pixmaps();
+
+    aCaptionBuffer = new QPixmap();
+    iCaptionBuffer = new QPixmap();
+    captionBufferDirty = true;
+    widget()->repaint(titleSpacer_->geometry(), false);
+}
+
+bool PlastikClient::isTool()
+{
+    NET::WindowType type = windowType(NET::NormalMask|NET::ToolbarMask|
+                                      NET::UtilityMask|NET::MenuMask);
+    return ((type==NET::Toolbar)||(type==NET::NET::Utility)||(type==NET::Menu));
+}
+
+void PlastikClient::resizeEvent()
+{
     doShape();
-    repaint();
+    widget()->repaint();
 }
 
 void PlastikClient::paintEvent(QPaintEvent*)
@@ -114,7 +124,7 @@ void PlastikClient::paintEvent(QPaintEvent*)
 
     bool active = isActive();
 
-    QPainter painter(this);
+    QPainter painter(widget() );
 
     QRegion mask;
 
@@ -396,29 +406,30 @@ void PlastikClient::paintEvent(QPaintEvent*)
 void PlastikClient::showEvent(QShowEvent *)
 {
     doShape();
-    repaint();
+    widget()->repaint();
 }
 
 
 void PlastikClient::windowWrapperShowEvent(QShowEvent *)
 {
     doShape();
-    repaint();
+    widget()->repaint();
 }
 
 void PlastikClient::mouseDoubleClickEvent(QMouseEvent *e)
 {
     if (titleSpacer_->geometry().contains(e->pos()))
-        workspace()->performWindowOperation(this,
-            options->operationTitlebarDblClick());
+           titlebarDblClickOperation();
 }
 
 void PlastikClient::doShape()
 {
-    QRegion mask(0, 0, width(), height());
+    int w = widget()->width();
+    int h = widget()->height();
+    int r(w);
+    int b(h);
 
-    int r(width());
-    int b(height());
+    QRegion mask(0, 0, w, h);
 
     if(topSpacer_->geometry().height() > 0)
     {
@@ -443,7 +454,8 @@ void PlastikClient::doShape()
         mask -= QRegion(r-1, b-1, 1, 1);
     }
 
-    setMask(mask);
+    setMask( mask );
+//     widget()->setMask(mask);
 }
 
 void PlastikClient::_resetLayout()
@@ -457,7 +469,7 @@ void PlastikClient::_resetLayout()
     // |                         decoSpacer                            |
     // |_______________________________________________________________|
     // | |                                                           | |
-    // | |                      windowWrapper                        | |
+    // | |                      contentsFake                         | |
     // | |                                                           | |
     // |leftSpacer                                          rightSpacer|
     // |_|___________________________________________________________|_|
@@ -478,7 +490,7 @@ void PlastikClient::_resetLayout()
     delete rightSpacer_;
     delete bottomSpacer_;
 
-    mainLayout_ = new QVBoxLayout(this, 0, 0);
+    mainLayout_ = new QVBoxLayout(widget(), 0, 0);
 
     topSpacer_        = new QSpacerItem(1, TOPMARGIN, QSizePolicy::Expanding, QSizePolicy::Fixed);
     titleSpacer_      = new QSpacerItem(1, s_titleHeight,
@@ -502,15 +514,15 @@ void PlastikClient::_resetLayout()
     QHBoxLayout *titleLayout_ = new QHBoxLayout(mainLayout_, 0, 0);
 
     // sizeof(...) is calculated at compile time
-    memset(m_button, 0, sizeof(PlastikButton *) * ButtonTypeCount);
+    memset(m_button, 0, sizeof(PlastikButton *) * NumButtons);
 
     titleLayout_->addItem(leftTitleSpacer_);
     addButtons(titleLayout_,
-               options->customButtonPositions() ? options->titleButtonsLeft() : QString(default_left),
+               options()->customButtonPositions() ? options()->titleButtonsLeft() : QString(default_left),
                s_titleHeight-1);
     titleLayout_->addItem(titleSpacer_);
     addButtons(titleLayout_,
-               options->customButtonPositions() ? options->titleButtonsRight() : QString(default_right),
+               options()->customButtonPositions() ? options()->titleButtonsRight() : QString(default_right),
                s_titleHeight-1);
     titleLayout_->addItem(rightTitleSpacer_);
 
@@ -520,7 +532,7 @@ void PlastikClient::_resetLayout()
     //Mid
     QHBoxLayout * midLayout   = new QHBoxLayout(mainLayout_, 0, 0);
     midLayout->addItem(leftSpacer_);
-    midLayout->addWidget(windowWrapper());
+    midLayout->addWidget(new QLabel( i18n( "<center><b>Plastik</b></center>" ), widget()) );
     midLayout->addItem(rightSpacer_);
 
     //Bottom
@@ -535,46 +547,45 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
         for (unsigned n=0; n < s.length(); n++) {
             switch (s[n]) {
               case 'M': // Menu button
-                  if (!m_button[ButtonMenu]){
-                      m_button[ButtonMenu] = new PlastikButton(this, "menu", i18n("Menu"), ButtonMenu, buttonSize);
-                      connect(m_button[ButtonMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
-                      connect(m_button[ButtonMenu], SIGNAL(released()), this, SLOT(menuButtonReleased()));
-                      layout->addWidget(m_button[ButtonMenu], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  if (!m_button[MenuButton]){
+                      m_button[MenuButton] = new PlastikButton(this, "menu", i18n("Menu"), MenuButton, buttonSize);
+                      connect(m_button[MenuButton], SIGNAL(pressed()), SLOT(menuButtonPressed()));
+                      layout->addWidget(m_button[MenuButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
-              case 'S': // Sticky button
-                  if (!m_button[ButtonSticky]){
-                      m_button[ButtonSticky] = new PlastikButton(this, "sticky", i18n("Sticky"), ButtonSticky, buttonSize);
-                      connect(m_button[ButtonSticky], SIGNAL(clicked()), this, SLOT(toggleSticky()));
-                      layout->addWidget(m_button[ButtonSticky], 0, Qt::AlignHCenter | Qt::AlignTop);
+              case 'S': // OnAllDesktops button
+                  if (!m_button[OnAllDesktopsButton]){
+                      m_button[OnAllDesktopsButton] = new PlastikButton(this, "on_all_desktops", i18n("On All Desktops"), OnAllDesktopsButton, buttonSize);
+                      connect(m_button[OnAllDesktopsButton], SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
+                      layout->addWidget(m_button[OnAllDesktopsButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
               case 'H': // Help button
-                  if ((!m_button[ButtonHelp]) && providesContextHelp()){
-                      m_button[ButtonHelp] = new PlastikButton(this, "help", i18n("Help"), ButtonHelp, buttonSize);
-                      connect(m_button[ButtonHelp], SIGNAL(clicked()), this, SLOT(contextHelp()));
-                      layout->addWidget(m_button[ButtonHelp], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  if ((!m_button[HelpButton]) && providesContextHelp()){
+                      m_button[HelpButton] = new PlastikButton(this, "help", i18n("Help"), HelpButton, buttonSize);
+                      connect(m_button[HelpButton], SIGNAL(clicked()), SLOT(showContextHelp()));
+                      layout->addWidget(m_button[HelpButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
               case 'I': // Minimize button
-                  if ((!m_button[ButtonMin]) && isMinimizable()){
-                      m_button[ButtonMin] = new PlastikButton(this, "iconify", i18n("Minimize"), ButtonMin, buttonSize);
-                      connect(m_button[ButtonMin], SIGNAL(clicked()), this, SLOT(iconify()));
-                      layout->addWidget(m_button[ButtonMin], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  if ((!m_button[MinButton]) && isMinimizable()){
+                      m_button[MinButton] = new PlastikButton(this, "minimize", i18n("Minimize"), MinButton, buttonSize);
+                      connect(m_button[MinButton], SIGNAL(clicked()), SLOT(minimize()));
+                      layout->addWidget(m_button[MinButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
               case 'A': // Maximize button
-                  if ((!m_button[ButtonMax]) && isMaximizable()){
-                      m_button[ButtonMax] = new PlastikButton(this, "maximize", i18n("Maximize"), ButtonMax, buttonSize);
-                      connect(m_button[ButtonMax], SIGNAL(clicked()), this, SLOT(maxButtonPressed()));
-                      layout->addWidget(m_button[ButtonMax], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  if ((!m_button[MaxButton]) && isMaximizable()){
+                      m_button[MaxButton] = new PlastikButton(this, "maximize", i18n("Maximize"), MaxButton, buttonSize);
+                      connect(m_button[MaxButton], SIGNAL(clicked()), SLOT(slotMaximize()));
+                      layout->addWidget(m_button[MaxButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
               case 'X': // Close button
-                  if ((!m_button[ButtonClose]) && isCloseable()){
-                      m_button[ButtonClose] = new PlastikButton(this, "close", i18n("Close"), ButtonClose, buttonSize);
-                      connect(m_button[ButtonClose], SIGNAL(clicked()), this, SLOT(closeWindow()));
-                      layout->addWidget(m_button[ButtonClose], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  if ((!m_button[CloseButton]) && isCloseable()){
+                      m_button[CloseButton] = new PlastikButton(this, "close", i18n("Close"), CloseButton, buttonSize);
+                      connect(m_button[CloseButton], SIGNAL(clicked()), SLOT(closeWindow()));
+                      layout->addWidget(m_button[CloseButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
               case '_': // Spacer item
@@ -582,19 +593,51 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
             }
 
              // add 2 px spacing between buttons
-            if(n < (s.length()-1) ) // and only between!
+            if(n < (s.length()-1) ) // and only between them!
                 layout->addSpacing (1);
         }
     }
 }
 
-void PlastikClient::captionChange(const QString &)
+void PlastikClient::captionChange()
 {
     captionBufferDirty = true;
-    repaint(titleSpacer_->geometry(), false);
+    widget()->repaint(titleSpacer_->geometry(), false);
 }
 
-Client::MousePosition PlastikClient::mousePosition(const QPoint &point) const
+void PlastikClient::reset( unsigned long changed )
+{
+    if (changed & SettingColors)
+    {
+        // repaint the whole thing
+        delete_pixmaps();
+        create_pixmaps();
+        captionBufferDirty = true;
+        widget()->repaint(false);
+    } else if (changed & SettingFont) {
+        // font has changed -- update title height and font
+        s_titleHeight = isTool() ?
+                PlastikHandler::titleHeightTool()
+                : PlastikHandler::titleHeight();
+        s_titleFont = isTool() ?
+                PlastikHandler::titleFontTool()
+                : PlastikHandler::titleFont();
+        // update buttons
+        for (int n=0; n<NumButtons; n++) {
+            if (m_button[n]) m_button[n]->setSize(s_titleHeight-1);
+        }
+        // update the spacer
+        titleSpacer_->changeSize(1, s_titleHeight,
+                QSizePolicy::Expanding, QSizePolicy::Fixed);
+        // then repaint
+        delete_pixmaps();
+        create_pixmaps();
+        captionBufferDirty = true;
+        widget()->repaint(false);
+    }
+}
+
+PlastikClient::MousePosition PlastikClient::mousePosition(const QPoint &point) const
 {
     const int corner = 24;
     MousePosition pos = Center;
@@ -609,41 +652,41 @@ Client::MousePosition PlastikClient::mousePosition(const QPoint &point) const
     QRect bottomRect(bottomSpacer_->geometry());
 
     if(bottomRect.contains(point)) {
-        if      (point.x() <= bottomRect.left()+corner)  pos = BottomLeft;
-        else if (point.x() >= bottomRect.right()-corner) pos = BottomRight;
-        else                                             pos = Bottom;
+        if      (point.x() <= bottomRect.left()+corner)  pos = KDecorationDefines::BottomLeft2;
+        else if (point.x() >= bottomRect.right()-corner) pos = KDecorationDefines::BottomRight2;
+        else                                             pos = KDecorationDefines::Bottom;
     }
     else if(leftRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = TopLeft;
-        else if (point.y() >= bottomRect.bottom()-corner) pos = BottomLeft;
-        else                                              pos = Left;
+        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopLeft2;
+        else if (point.y() >= bottomRect.bottom()-corner) pos = KDecorationDefines::BottomLeft2;
+        else                                              pos = KDecorationDefines::Left;
     }
     else if(leftTitleRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = TopLeft;
-        else                                              pos = Left;
+        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopLeft2;
+        else                                              pos = KDecorationDefines::Left;
     }
     else if(rightRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = TopRight;
-        else if (point.y() >= bottomRect.bottom()-corner) pos = BottomRight;
-        else                                              pos = Right;
+        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopRight2;
+        else if (point.y() >= bottomRect.bottom()-corner) pos = KDecorationDefines::BottomRight2;
+        else                                              pos = KDecorationDefines::Right;
     }
     else if(rightTitleRect.contains(point)) {
-        if      (point.y() <= topRect.top()+corner)       pos = TopRight;
-        else                                              pos = Right;
+        if      (point.y() <= topRect.top()+corner)       pos = KDecorationDefines::TopRight2;
+        else                                              pos = KDecorationDefines::Right;
     }
     else if(topRect.contains(point)) {
-        if      (point.x() <= topRect.left()+corner)      pos = TopLeft;
-        else if (point.x() >= topRect.right()-corner)     pos = TopRight;
-        else                                              pos = Top;
+        if      (point.x() <= topRect.left()+corner)      pos = KDecorationDefines::TopLeft2;
+        else if (point.x() >= topRect.right()-corner)     pos = KDecorationDefines::TopRight2;
+        else                                              pos = KDecorationDefines::Top;
     }
     else if(decoRect.contains(point)) {
         if(point.x() <= leftTitleRect.right()) {
-            if(point.y() <= topRect.top()+corner)         pos = TopLeft;
-            else                                          pos = Left;
+            if(point.y() <= topRect.top()+corner)         pos = KDecorationDefines::TopLeft2;
+            else                                          pos = KDecorationDefines::Left;
         }
         else if(point.x() >= rightTitleRect.left()) {
-            if(point.y() <= topRect.top()+corner)         pos = TopRight;
-            else                                          pos = Right;
+            if(point.y() <= topRect.top()+corner)         pos = KDecorationDefines::TopRight2;
+            else                                          pos = KDecorationDefines::Right;
         }
     }
 
@@ -652,109 +695,70 @@ Client::MousePosition PlastikClient::mousePosition(const QPoint &point) const
 
 void PlastikClient::iconChange()
 {
-    if (m_button[ButtonMenu])
+    if (m_button[MenuButton])
     {
-        m_button[ButtonMenu]->repaint(false);
+        m_button[MenuButton]->repaint(false);
     }
 }
 
-void PlastikClient::activeChange(bool)
+void PlastikClient::activeChange()
 {
-    for (int n=0; n<ButtonTypeCount; n++)
+    for (int n=0; n<NumButtons; n++)
         if (m_button[n]) m_button[n]->repaint(false);
-    repaint(false);
+    widget()->repaint(false);
 }
 
-void PlastikClient::maximizeChange(bool m)
+void PlastikClient::maximizeChange()
 {
     if (!PlastikHandler::initialized()) return;
 
-    if( m && (maximizeMode() == MaximizeFull) && PlastikHandler::shrinkBorders() )
-    {
-        topSpacer_->changeSize(1, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-        bottomSpacer_->changeSize(1, 3, QSizePolicy::Expanding, QSizePolicy::Fixed);
-        leftSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-        rightSpacer_->changeSize(0, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-        leftTitleSpacer_->changeSize(0, s_titleHeight,
-                    QSizePolicy::Fixed, QSizePolicy::Fixed);
-        rightTitleSpacer_->changeSize(0, s_titleHeight,
-                    QSizePolicy::Fixed, QSizePolicy::Fixed);
-    }
-    else
-    {
-        topSpacer_->changeSize(1, TOPMARGIN, QSizePolicy::Expanding, QSizePolicy::Fixed);
-        bottomSpacer_->changeSize(1, PlastikHandler::borderSize(),
-                    QSizePolicy::Expanding, QSizePolicy::Fixed);
-        leftSpacer_->changeSize(PlastikHandler::borderSize(), 1,
-                    QSizePolicy::Fixed, QSizePolicy::Expanding);
-        rightSpacer_->changeSize(PlastikHandler::borderSize(), 1,
-                    QSizePolicy::Fixed, QSizePolicy::Expanding);
-        leftTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
-                    QSizePolicy::Fixed, QSizePolicy::Fixed);
-        rightTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
-                    QSizePolicy::Fixed, QSizePolicy::Fixed);
-    }
-    layout()->activate();
-    repaint( false );
-
-    if (m_button[ButtonMax])
-    {
-        m_button[ButtonMax]->setMaximized(m);
-        m_button[ButtonMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
-        m_button[ButtonMax]->setDeco(); // update the button icon...
-    }
-
-    doShape();
 }
 
-void PlastikClient::stickyChange(bool s)
+void PlastikClient::desktopChange()
 {
-    if (m_button[ButtonSticky])
-    {
-        m_button[ButtonSticky]->setSticky(s);
-        m_button[ButtonSticky]->setTipText(s ? i18n("Un-Sticky") : i18n("Sticky"));
-        m_button[ButtonSticky]->setDeco(); // update the button icon...
+    if ( m_button[OnAllDesktopsButton] ) {
+        m_button[OnAllDesktopsButton]->setOnAllDesktops( isOnAllDesktops() );
+        m_button[OnAllDesktopsButton]->setTipText( isOnAllDesktops() ?
+                i18n("Not On All Desktops")
+                : i18n("On All Desktops"));
+        m_button[OnAllDesktopsButton]->setDeco(); // update icon/deco
     }
 }
 
-void PlastikClient::maxButtonPressed()
+void PlastikClient::slotMaximize()
 {
-    if (m_button[ButtonMax])
+    if (m_button[MaxButton])
     {
-        switch (m_button[ButtonMax]->lastMousePress())
+        switch (m_button[MaxButton]->lastMousePress())
         {
-          case MidButton:   maximize(MaximizeVertical);   break;
-          case RightButton: maximize(MaximizeHorizontal); break;
-          default:          maximize();
+          case MidButton:
+              maximize(maximizeMode() ^ MaximizeVertical );
+              maximizeChange();
+              break;
+          case RightButton:
+              maximize(maximizeMode() ^ MaximizeHorizontal );
+              maximizeChange();
+              break;
+          default:
+              maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
+              maximizeChange();
         }
+
+        m_button[MaxButton]->setMaximized( maximizeMode()!=MaximizeRestore);
+        m_button[MaxButton]->setTipText( (maximizeMode()==MaximizeRestore) ?
+                i18n("Maximize")
+                : i18n("Restore"));
+        m_button[MaxButton]->setDeco(); // update the button icon...
+        doShape();
     }
 }
 
 void PlastikClient::menuButtonPressed()
 {
-    static QTime* t = NULL;
-    static PlastikClient* lastClient = NULL;
-    if (t == NULL)
-        t = new QTime;
-    bool dbl = (lastClient == this && t->elapsed() <= QApplication::doubleClickInterval());
-    lastClient = this;
-    t->start();
-    if( !dbl )
-    {
-        QPoint pos = m_button[ButtonMenu]->mapToGlobal(
-            m_button[ButtonMenu]->rect().bottomLeft() );
-        workspace()->showWindowMenu( pos.x(), pos.y(), this );
-        m_button[ButtonMenu]->setDown(false);
-    }
-    else
-       closing = true;
-}
-
-void PlastikClient::menuButtonReleased()
-{
-    if(closing)
-        closeWindow();
+    QPoint pos = m_button[MenuButton]->mapToGlobal(m_button[MenuButton]->rect().bottomLeft() );
+    showWindowMenu( pos );
+    m_button[MenuButton]->setDown(false);
 }
 
 void PlastikClient::create_pixmaps()
@@ -891,3 +895,76 @@ void PlastikClient::update_captionBuffer()
 
     captionBufferDirty = false;
 }
+
+void PlastikClient::borders( int& left, int& right, int& top, int& bottom ) const
+{
+    if ((maximizeMode()==MaximizeFull) && !options()->moveResizeMaximizedWindows()) {
+        left = right = bottom = 0;
+        top = s_titleHeight + DECOHEIGHT;
+
+        // update layout etc.
+        topSpacer_->changeSize(1, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        leftSpacer_->changeSize(left, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
+        leftTitleSpacer_->changeSize(left, s_titleHeight, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        rightSpacer_->changeSize(right, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
+        rightTitleSpacer_->changeSize(right, s_titleHeight, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        bottomSpacer_->changeSize(1, bottom, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    } else {
+        left = right = bottom = PlastikHandler::borderSize();
+        top = s_titleHeight + DECOHEIGHT + TOPMARGIN;
+
+        // update layout etc.
+        topSpacer_->changeSize(1, TOPMARGIN, QSizePolicy::Expanding, QSizePolicy::Fixed);
+        leftSpacer_->changeSize(left, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
+        leftTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
+                QSizePolicy::Fixed, QSizePolicy::Fixed);
+        rightSpacer_->changeSize(right, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
+        rightTitleSpacer_->changeSize(SIDETITLEMARGIN, s_titleHeight,
+                QSizePolicy::Fixed, QSizePolicy::Fixed);
+        bottomSpacer_->changeSize(1, bottom, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    }
+
+    // activate updated layout
+    widget()->layout()->activate();
+}
+
+QSize PlastikClient::minimumSize() const
+{
+    return widget()->minimumSize();
+}
+
+void PlastikClient::show()
+{
+    widget()->show();
+}
+
+void PlastikClient::resize( const QSize& s )
+{
+    widget()->resize( s );
+}
+
+bool PlastikClient::eventFilter( QObject* o, QEvent* e )
+{
+    if( o != widget())
+    return false;
+    switch( e->type())
+    {
+    case QEvent::Resize:
+        resizeEvent();
+        return true;
+    case QEvent::Paint:
+        paintEvent( static_cast< QPaintEvent* >( e ));
+        return true;
+    case QEvent::MouseButtonDblClick:
+        mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ));
+        return true;
+    case QEvent::MouseButtonPress:
+        processMousePressEvent( static_cast< QMouseEvent* >( e ));
+        return true;
+    default:
+        break;
+    }
+    return false;
+}
+
+} // KWinPlastik

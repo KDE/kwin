@@ -20,33 +20,35 @@
   Boston, MA 02111-1307, USA.
  */
 
-#ifndef KNIFTYBUTTON_H
-#define KNIFTYBUTTON_H
+#ifndef PLASTIKBUTTON_H
+#define PLASTIKBUTTON_H
 
-#include <kwin/kwinbutton.h>
+#include <qbutton.h>
 #include <qimage.h>
 #include "plastik.h"
 
 class QTimer;
 
-namespace KWinInternal {
+namespace KWinPlastik {
 
 class PlastikClient;
 
-class PlastikButton : public KWinInternal::KWinButton
+class PlastikButton : public QButton
 {
     Q_OBJECT
 public:
-    PlastikButton(PlastikClient *parent=0, const char *name=0, const QString &tip=NULL, ButtonType type = ButtonHelp, int size = 18);
+    PlastikButton(PlastikClient *parent=0, const char *name=0, const QString &tip=NULL, ButtonType type = HelpButton, int size = 18);
     ~PlastikButton();
 
-    void setSticky(bool sticky) { isSticky = sticky; repaint(false); }
+    void setOnAllDesktops(bool oad) { isOnAllDesktops = oad; repaint(false); }
     void setMaximized(bool maximized) { isMaximized = maximized; repaint(false); }
     QSize sizeHint() const; ///< Return size hint.
     int lastMousePress() const { return m_lastMouse; }
     void reset() { repaint(false); }
     PlastikClient * client() { return m_client; }
     void setDeco();
+    void setTipText(const QString &tip);
+    void setSize(const int s);
 
 protected slots:
     void animate();
@@ -59,7 +61,6 @@ private:
     void drawButton(QPainter *painter);
 
 private:
-    int inverseBwColor(QColor color);
     PlastikClient *m_client;
     int m_lastMouse;
 
@@ -68,12 +69,12 @@ private:
     ButtonType m_type;
     QImage m_aDecoLight,m_iDecoLight,m_aDecoDark,m_iDecoDark;
     bool hover;
-    bool isSticky, isMaximized;
+    bool isOnAllDesktops, isMaximized;
 
     QTimer *animTmr;
     uint animProgress;
 };
 
-} // namespace KWinInternal
+} // namespace KWinPlastik
 
-#endif // KNIFTYBUTTON_H
+#endif // PLASTIKBUTTON_H
