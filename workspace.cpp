@@ -4016,7 +4016,7 @@ void Workspace::updateClientArea( bool force )
             continue;
         if( desktop == NETWinInfo::OnAllDesktops )
             for( int i = 1;
-                 i < numberOfDesktops();
+                 i <= numberOfDesktops();
                  ++i )
                 new_areas[ i ] = new_areas[ i ].intersect( r );
         else
