@@ -85,7 +85,6 @@ QPopupMenu* Workspace::clientPopup()
             connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
             connect(transSlider, SIGNAL(sliderMoved(int)), this, SLOT(setPopupClientOpacity(int)));
             connect(transSlider, SIGNAL(sliderReleased()), trans_popup, SLOT(hide()));
-            transSlider->setValue(100-active_popup_client->opacityPercentage());     
             trans_popup->insertItem(transBox);
             popup->insertItem(i18n("&Opacity"), trans_popup );
         }
