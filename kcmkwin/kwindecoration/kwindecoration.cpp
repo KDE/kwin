@@ -455,7 +455,7 @@ void KWinDecorationModule::defaults()
 
 QString KWinDecorationModule::quickHelp() const
 {
-	return i18n( "<h1>Window Manager Decoration</h1>"
+	return i18n( "<h1>Window Decorations</h1>"
                  "This module allows you to choose the window border decorations, "
                 "as well as titlebar button positions and custom decoration options.");
 }
