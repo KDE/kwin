@@ -43,14 +43,14 @@ static void create_pixmaps()
     QPainter p;
     QPainter maskPainter;
     int i, y;
-    titlePix = new QPixmap(32, 17);
-    QBitmap mask(32, 17);
+    titlePix = new QPixmap(32, 14);
+    QBitmap mask(32, 14);
     mask.fill(Qt::color0);
     
     p.begin(titlePix);
     maskPainter.begin(&mask);
     maskPainter.setPen(Qt::color1);
-    for(i=0, y=4; i < 4; ++i, y+=3){
+    for(i=0, y=2; i < 4; ++i, y+=3){
         p.setPen(options->color(Options::TitleBar, true).light(150));
         p.drawLine(0, y, 31, y);
         maskPainter.drawLine(0, y, 31, y);
@@ -98,8 +98,8 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
 {
     QPainter p;
 
-    aBackground.resize(16, 16);
-    iBackground.resize(16, 16);
+    aBackground.resize(14, 14);
+    iBackground.resize(14, 14);
 
     QColor hColor(options->color(Options::ButtonBg, true));
     QColor lColor(options->color(Options::ButtonBlend, true));
@@ -134,28 +134,28 @@ SystemButton::SystemButton(QWidget *parent, const char *name,
                             KPixmapEffect::DiagonalGradient);
 
     p.begin(&iBackground);
-    p.drawPixmap(3, 3, iInternal);
-    p.setPen(Qt::black);
-    p.drawRect(0, 0, 16, 16);
+    p.drawPixmap(2, 2, iInternal);
+    p.setPen(options->color(Options::ButtonBlend, false));
+    p.drawRect(0, 0, 14, 14);
     p.end();
 
     p.begin(&aBackground);
-    p.drawPixmap(3, 3, aInternal);
-    p.setPen(Qt::black);
-    p.drawRect(0, 0, 16, 16);
+    p.drawPixmap(2, 2, aInternal);
+    p.setPen(options->color(Options::ButtonBlend, true));
+    p.drawRect(0, 0, 14, 14);
     p.end();
 
-    resize(16, 16);
+    resize(14, 14);
 
     QBitmap mask;
-    mask.resize(16, 16);
+    mask.resize(14, 14);
     mask.fill(color1);
     p.begin(&mask);
     p.setPen(color0);
     p.drawPoint(0, 0);
-    p.drawPoint(15, 0);
-    p.drawPoint(0, 15);
-    p.drawPoint(15, 15);
+    p.drawPoint(13, 0);
+    p.drawPoint(0, 13);
+    p.drawPoint(13, 13);
     p.end();
     setMask(mask);
 
@@ -178,7 +178,7 @@ void SystemButton::drawButton(QPainter *p)
         p->drawPixmap(0, 0, iBackground);
 
     p->setPen(options->color(Options::ButtonFg, isDown()));
-    p->drawPixmap(isDown() ? 5 : 4, isDown() ? 5 : 4, deco);
+    p->drawPixmap(isDown() ? 4 : 3, isDown() ? 4 : 3, deco);
 }
 
 SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
@@ -187,7 +187,7 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
 {
     create_pixmaps();
 
-    QGridLayout* g = new QGridLayout(this, 0, 0, 2);
+    QGridLayout* g = new QGridLayout(this, 0, 0, 1);
     g->setRowStretch(1, 10);
     g->addWidget(windowWrapper(), 1, 1 );
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
@@ -211,18 +211,20 @@ SystemClient::SystemClient( Workspace *ws, WId w, QWidget *parent,
     g->addLayout( hb, 0, 1 );
     hb->addSpacing(2);
     hb->addWidget( button[0] );
-    titlebar = new QSpacerItem(10, 18, QSizePolicy::Expanding,
-                               QSizePolicy::Minimum );
+    titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
+                               QSizePolicy::Minimum);
     hb->addItem(titlebar);
     hb->addSpacing(2);
     hb->addWidget( button[1] );
+    hb->addSpacing(2);
     hb->addWidget( button[2] );
+    hb->addSpacing(2);
     hb->addWidget( button[3] );
     hb->addSpacing(2);
 
     for ( int i = 0; i < 4; i++) {
         button[i]->setMouseTracking( TRUE );
-        button[i]->setFixedSize( 16, 16 );
+        button[i]->setFixedSize( 14, 14 );
     }
 
 
