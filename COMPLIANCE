@@ -170,8 +170,14 @@ _NET_WM_WINDOW_TYPE		window property			PARTIAL
         | fixed in KDE3.1 by introducing _KDE_NET_WM_WINDOW_TYPE_TOPMENU |
         | and KWin tries to detect old KDE apps using the old type.      |
 	+----------------------------------------------------------------+
-  _NET_WM_WINDOW_TYPE_UTILITY	property value (atom)		NIL
-  _NET_WM_WINDOW_TYPE_SPLASH	property value (atom)		NIL
+  _NET_WM_WINDOW_TYPE_UTILITY	property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+	| Support is only in kdecore.                                    |
+	+----------------------------------------------------------------+
+  _NET_WM_WINDOW_TYPE_SPLASH	property value (atom)		PARTIAL
+	+----------------------------------------------------------------+
+	| Support is only in kdecore.                                    |
+	+----------------------------------------------------------------+
   _NET_WM_WINDOW_TYPE_DIALOG	property value (atom)
   _NET_WM_WINDOW_TYPE_NORMAL	property value (atom)		
 _NET_WM_STATE			window property + message			
