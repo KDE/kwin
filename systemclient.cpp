@@ -277,8 +277,6 @@ void SystemClient::paintEvent( QPaintEvent* )
         p.fillRect(t, options->colorGroup(Options::Frame, false).
                    brush(QColorGroup::Button));
         
-
-
     QRegion r = rect();
     r = r.subtract( t );
     p.setClipRegion( r );
@@ -290,9 +288,14 @@ void SystemClient::paintEvent( QPaintEvent* )
 
     p.setPen(options->color(Options::Font, isActive()));
     p.setFont(options->font(isActive()));
-    p.setBackgroundMode(OpaqueMode);
+    if(isActive()){
+        QFontMetrics fm(options->font(true));
+        p.fillRect(t.x()+((t.width()-fm.width(caption()))/2)-4, t.y(),
+                   fm.width(caption())+8, t.height(),
+                   colorGroup().brush(QColorGroup::Background));
+    }
+    
     p.drawText( t, AlignCenter, caption() );
-    p.setBackgroundMode(TransparentMode);
 
     qDrawShadePanel(&p, rect().x()+1, rect().bottom()-6, 24, 6,
                     options->colorGroup(Options::Handle, isActive()), false);
