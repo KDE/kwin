@@ -96,6 +96,8 @@ public:
     Workspace( bool restore = FALSE );
     virtual ~Workspace();
 
+    static Workspace * self() { return _self; }
+
     virtual bool workspaceEvent( XEvent * );
 
     bool hasClient(Client *);
@@ -386,6 +388,7 @@ private:
     QTimer focusEnsuranceTimer;
     
     WorkspacePrivate* d;
+    static Workspace *_self;
 };
 
 inline WId Workspace::rootWin() const

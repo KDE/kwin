@@ -124,8 +124,8 @@ Application::Application( )
     options = new Options;
     atoms = new Atoms;
 
-    // create a workspace.
-    workspaces += new Workspace( isSessionRestored() );
+    // create workspace.
+    (void) new Workspace( isSessionRestored() );
 
     syncX(); // trigger possible errors, there's still a chance to abort
 
@@ -136,9 +136,7 @@ Application::Application( )
 
 Application::~Application()
 {
-     for ( WorkspaceList::Iterator it = workspaces.begin(); it != workspaces.end(); ++it) {
-	 delete (*it);
-     }
+     delete Workspace::self();
      delete options;
 }
 
@@ -167,10 +165,8 @@ bool Application::x11EventFilter( XEvent *e )
 	break;
     }
 
-     for ( WorkspaceList::Iterator it = workspaces.begin(); it != workspaces.end(); ++it) {
-	 if ( (*it)->workspaceEvent( e ) )
+     if ( Workspace::self()->workspaceEvent( e ) )
 	     return TRUE;
-     }
      return KApplication::x11EventFilter( e );
 }
 
@@ -195,7 +191,7 @@ void Application::saveState( QSessionManager& sm )
 	return;
     }
 
-    workspaces.first()->storeSession( kapp->sessionConfig() );
+    Workspace::self()->storeSession( kapp->sessionConfig() );
     kapp->sessionConfig()->sync();
 }
 

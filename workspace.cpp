@@ -212,6 +212,8 @@ Client* Workspace::clientFactory( WId w )
     return ( mgr->allocateClient( this, w, false ) );
 }
 
+Workspace *Workspace::_self = 0;
+
 // Rikkus: This class is too complex. It needs splitting further.
 // It's a nightmare to understand, especially with so few comments :(
 
@@ -240,6 +242,7 @@ Workspace::Workspace( bool restore )
     keys              (0),
     root              (0)
 {
+    _self = this;
     d = new WorkspacePrivate;
     mgr = new PluginMgr;
     connect(options, SIGNAL(resetPlugin()), mgr, SLOT(resetPlugin()));
@@ -298,6 +301,7 @@ Workspace::Workspace( bool restore )
     if ( restore )
         restoreLegacySession(kapp->sessionConfig());
 }
+
 
 void Workspace::init()
 {
@@ -419,6 +423,7 @@ Workspace::~Workspace()
     delete supportWindow;
     delete mgr;
     delete d;
+    _self = 0;
 }
 
 
