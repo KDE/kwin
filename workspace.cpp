@@ -1686,7 +1686,8 @@ void Workspace::clientHidden( Client* c )
 
     if( popup )
         popup->close();
-    setActiveClient( NULL );
+    if( c == active_client )
+        setActiveClient( NULL );
     should_get_focus = 0;
     c->setActive( FALSE ); // clear the state in the client
     if (!block_focus ) {
