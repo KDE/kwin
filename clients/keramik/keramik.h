@@ -25,22 +25,15 @@
 #ifndef __KERAMIK_H
 #define __KERAMIK_H
 
-#include <qdict.h>
-
 #include "../../client.h"
 #include "../../kwinbutton.h"
+#include "tiles.h"
 
 class QSpacerItem;
 
 using namespace KWinInternal;
 
 namespace Keramik {
-
-	typedef QDict<QImage> ImageDict;
-	static ImageDict* imageDict = 0;
-
-	#include "tiles.h"
-
 
 	enum TilePixmap  { TitleLeft=0, TitleCenter, TitleRight,
 	                   CaptionSmallLeft, CaptionSmallCenter, CaptionSmallRight,
@@ -109,6 +102,7 @@ namespace Keramik {
 		private:
 			bool showIcons:1, shadowedText:1, smallCaptionBubbles:1;
 			SettingsCache *settings_cache;
+			KeramikImageDb *imageDb;
 			
 			QPixmap *activeTiles[ NumTiles ];
 			QPixmap *inactiveTiles[ NumTiles ];

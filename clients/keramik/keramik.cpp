@@ -144,7 +144,7 @@ KeramikHandler::KeramikHandler()
 
 	settings_cache = NULL;
 
-	imageDict = new ImageDict;
+	imageDb = KeramikImageDb::instance();
 
 	// Create the button deco bitmaps
 	buttonDecos[ Menu ]     = new QBitmap( 17, 17, menu_bits,       true );
@@ -187,8 +187,8 @@ KeramikHandler::~KeramikHandler()
 	if ( settings_cache )
 		delete settings_cache;
 
-	if ( imageDict )
-		delete imageDict;
+	KeramikImageDb::release();
+	imageDb = NULL;
 }
 
 
@@ -431,7 +431,6 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 {
 	QImage dest( over->width(), over->height(), 32 );
 	int width = over->width(), height = over->height();
-	dest.setAlphaBuffer( true );
 
 	// Clear the destination image
 	Q_UINT32 *data = reinterpret_cast<Q_UINT32*>( dest.bits() );
@@ -470,35 +469,21 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 			*dst = 0;
 		
 		src++; dst++;
-
 	}
-	
-	// Compute a 1 bpp mask from the alpha channel
-	QImage alphaMask = dest.createAlphaMask();
-	dest.setAlphaBuffer( false );
-	
-	// Create the final pixmap
-	QPixmap *pix = new QPixmap( dest );
-	
-	// Set the computed mask for the pixmap
-	if ( ! alphaMask.isNull() ) {
-		QBitmap mask;
-		mask.convertFromImage( alphaMask );
-		pix->setMask( mask );
-	} 
 
-	return pix;	
+	// Create the final pixmap and return it
+	return new QPixmap( dest );	
 }
 
 
 QImage *KeramikHandler::loadImage( const QString &name, const QColor &col )
 {
 	if ( col.isValid() ) {
-		QImage *img = new QImage( qembed_findImage(name)->copy() );
+		QImage *img = new QImage( imageDb->image(name)->copy() );
 		KIconEffect::colorize( *img, col, 1.0 );
 		return img;
 	} else
-		return new QImage( qembed_findImage(name)->copy() );
+		return new QImage( imageDb->image(name)->copy() );
 }
 
 
@@ -1001,7 +986,7 @@ void KeramikClient::updateCaptionBuffer()
 				*clientHandler->tile( CaptionSmallCenter, active ) );
 		p.drawPixmap( captionRect.width() - 15, 0, *clientHandler->tile( CaptionSmallRight, active ) );
 	}
-		
+
 	if ( clientHandler->showAppIcons() )
 	{
 		if ( active ) {
@@ -1028,7 +1013,7 @@ void KeramikClient::updateCaptionBuffer()
 
 	//p.setPen( Qt::red ); // debug
 	//p.drawRect( tr );    // debug
-	
+
 	// Application icon
 	if ( clientHandler->showAppIcons() )
 	{
@@ -1036,23 +1021,23 @@ void KeramikClient::updateCaptionBuffer()
 					1 + (captionRect.height() - 4 - 16) / 2, 16, 16), tr );
 		QRect r( icon->rect() );
 		r.moveCenter( iconRect.center() );
-	
+
 		if ( tr.width() > 16 ) {
 			p.drawPixmap( r, *icon );
 		} else {
 			QRect sr( 0, 0, icon->width(), icon->height() );
-			
+
 			if ( QApplication::reverseLayout() )
 				sr.addCoords( icon->width() - tr.width(), 0, 0, 0 );
 			else
 				sr.addCoords( 0, 0, -( icon->width() - tr.width() ), 0 ); 
-			
+
 			p.drawPixmap( r.x() + sr.x(), r.y() + sr.y(), *icon,
 					sr.x(), sr.y(), sr.width(), sr.height() );
 		}
-		
+
 		//p.drawRect( r ); // debug
-		
+
 		if ( QApplication::reverseLayout() )
 			tr.addCoords( 0, 0, -(16 + iconSpacing), 0 );
 		else
@@ -1067,12 +1052,12 @@ void KeramikClient::updateCaptionBuffer()
 	{
 		p.translate( QApplication::reverseLayout() ? -1 : 1, 1 );
 		p.setPen( options->color(Options::TitleBar, active).dark() );
-		p.drawText( tr,	flags, caption() );
+		p.drawText( tr, flags, caption() );
 		p.translate( QApplication::reverseLayout() ? 1 : -1, -1 );
 	}
 
 	p.setPen( options->color( Options::Font, active ) );
-	p.drawText( tr,	flags, caption() );
+	p.drawText( tr, flags, caption() );
 
 	captionBufferDirty = false;
 }
@@ -1420,7 +1405,7 @@ Client::MousePosition KeramikClient::mousePosition( const QPoint &p ) const
 			&& p.y() < titleBaseY+3 )
 		return Top;
 
-	if ( p.y() > height() - 8 )
+	if ( p.y() >= height() - 8 )
 		return Bottom;
 
 	return Center;

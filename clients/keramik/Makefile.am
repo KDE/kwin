@@ -2,7 +2,11 @@ INCLUDES                  = -I$(srcdir)/../.. $(all_includes)
 
 SUBDIRS                   = . config
 
-KDE_CXXFLAGS              = -UQT_NO_ASCII_CAST
+noinst_PROGRAMS           = embedtool
+
+embedtool_SOURCES         = embedtool.cpp
+embedtool_LDADD           = $(LIB_QT)
+embedtool_LDFLAGS         = $(all_libraries) $(KDE_RPATH)
 
 kde_module_LTLIBRARIES    = kwin_keramik.la
 
@@ -18,14 +22,16 @@ lnk_DATA                  = keramik.desktop
 
 EXTRA_DIST                = $(lnk_DATA)
 
-QEMBED                    = $(QTDIR)/tools/qembed/qembed
+tiles.h: pics/caption-large-left.png pics/caption-small-right.png pics/titlebar-center.png \
+	pics/titlebutton-square.png pics/border-left.png pics/caption-large-right.png \
+	pics/grabbar-center.png pics/titlebar-left.png pics/border-right.png \
+	pics/caption-small-center.png pics/grabbar-left.png pics/titlebar-right.png \
+	pics/caption-large-center.png  pics/caption-small-left.png pics/grabbar-right.png \
+	pics/titlebutton-round.png
+
+tiles.h: embedtool
+	pics=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\
+	./embedtool $$pics
 
 keramik.lo: tiles.h
 
-.PHONY: make-embed
-
-make-embed: 
-	pics=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\
-	$(QEMBED) --images $$pics | \
-	sed -e 's,static QDict<QImage> dict;,,' | \
-	sed -e 's,dict\.find,imageDict.find,' > $(srcdir)/tiles.h
