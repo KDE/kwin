@@ -33,6 +33,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #undef INT8
 #undef INT32
 
+extern Time qt_x_time;
+
 namespace KWinInternal
 {
 
@@ -123,7 +125,8 @@ Application::Application( )
 Application::~Application()
     {
     delete Workspace::self();
-    XSetInputFocus( qt_xdisplay(), PointerRoot, RevertToPointerRoot, CurrentTime );
+    if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
+        XSetInputFocus( qt_xdisplay(), PointerRoot, RevertToPointerRoot, qt_x_time );
     delete options;
     }
 
