@@ -36,6 +36,7 @@ protected:
     void captionChange( const QString& name );
     void stickyChange(bool on);
     void maximizeChange(bool m);
+    MousePosition mousePosition(const QPoint &) const;
 private:
     KPixmap *aGradient, *iGradient;
     MyButton *maxBtn, *stickyBtn;

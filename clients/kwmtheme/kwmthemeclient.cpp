@@ -174,7 +174,7 @@ void MyButton::drawButtonLabel(QPainter *p)
 
 KWMThemeClient::KWMThemeClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase )
+    : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity)
 {
     init_theme();
 
@@ -323,8 +323,6 @@ void KWMThemeClient::paintEvent( QPaintEvent* )
 {
     QPainter p;
     p.begin(this);
-    p.fillRect(rect(), options->colorGroup(Options::Frame, isActive()).
-               brush(QColorGroup::Background));
 
     // first the corners
     int w1 = framePixmaps[FrameTopLeft]->width();
@@ -459,6 +457,37 @@ void KWMThemeClient::stickyChange(bool on)
 void KWMThemeClient::maximizeChange(bool m)
 {
     maxBtn->setPixmap(m ? *minmaxPix : *maxPix);
+}
+
+Client::MousePosition KWMThemeClient::mousePosition(const QPoint &p) const
+{
+    MousePosition m = Client::mousePosition(p);
+    // corners
+    if(p.y() < framePixmaps[FrameTop]->height() &&
+       p.x() < framePixmaps[FrameLeft]->width()){
+        m = TopLeft;
+    }
+    else if(p.y() < framePixmaps[FrameTop]->height() &&
+            p.x() > width()-framePixmaps[FrameRight]->width()){
+        m = TopRight;
+    }
+    else if(p.y() > height()-framePixmaps[FrameBottom]->height() &&
+            p.x() < framePixmaps[FrameLeft]->width()){
+        m = BottomLeft;
+    }
+    else if(p.y() > height()-framePixmaps[FrameBottom]->height() &&
+            p.x() > width()-framePixmaps[FrameRight]->width()){
+        m = BottomRight;
+    } // edges
+    else if(p.y() < framePixmaps[FrameTop]->height())
+        m = Top;
+    else if(p.y() > height()-framePixmaps[FrameBottom]->height())
+        m = Bottom;
+    else if(p.x()  < framePixmaps[FrameLeft]->width())
+        m = Left;
+    else if(p.x() > width()-framePixmaps[FrameRight]->width())
+        m = Right;
+    return(m);
 }
 
 void KWMThemeClient::init()
