@@ -73,7 +73,7 @@ int main( int argc, char* argv[] )
 	"Do you wish to terminate this application? (All unsaved data in this application will be lost.)</qt>" )
 	.arg( appname ).arg( caption ).arg( pid ).arg( hostname );
     app.updateUserTimestamp( timestamp );
-    if( KMessageBox::warningYesNo( NULL, question, "" ) == KMessageBox::Yes )
+    if( KMessageBox::warningYesNoWId( id, question, "" ) == KMessageBox::Yes )
         {    
 	if( hostname != "localhost" )
             {
