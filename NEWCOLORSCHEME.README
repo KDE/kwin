@@ -1,0 +1,25 @@
+KWin can now handle some new color scheme entries in addition to the ones
+handled by KWM. Note that these are suggestions and all the colors may not
+be used by all KWin styles. These all currently go into the [WM] group.
+
+frame, inactiveFrame : Window frame (was fixed to general KDE bg in KWM).
+
+handle, inactiveHandle : Window handles (sometimes called "grips").
+
+activeBackground, inactiveBackground : Tilebars (bad name, but it's what KWM
+uses).
+
+activeBlend, inactiveBlend : Titlebar blend.
+
+activeForeground, inactiveForeground : Tilebar text.
+
+buttonBackground, buttonBackgroundDown : Button background color for up and 
+down states.
+
+buttonBlend, buttonBlendDown : Button blend.
+
+buttonForeground, buttonForegroundDown : Button foreground color.
+
+Daniel M. Duley
+mosfet@kde.org
+mosfet@linuxmandrake.com
