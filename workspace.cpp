@@ -172,6 +172,9 @@ Workspace::Workspace( bool restore )
     root = qt_xrootwin();
     session.setAutoDelete( TRUE );
 
+    clientArea_ = QApplication::desktop()->geometry();
+    edgeClientArea_ = QApplication::desktop()->geometry();
+
     if ( restore )
       loadSessionInfo();
 
@@ -2228,7 +2231,8 @@ Workspace::updateClientArea()
 {
 //  qDebug("KWin: Updating client area");
 
-  clientArea_ = geometry();
+  clientArea_ = QApplication::desktop()->geometry();
+  edgeClientArea_ = QApplication::desktop()->geometry();
 
   for (ClientList::ConstIterator it(clients.begin()); it != clients.end(); ++it)
   {
@@ -2271,10 +2275,8 @@ Workspace::updateClientArea()
     }
 
     // FIXME: Using the hackish method...
-    if (KWM::title((*it)->winId()) == "MAC MENU [menu]") {
-      edgeClientArea_ = geometry();
+    if (KWM::title((*it)->winId()) == "MAC MENU [menu]")
       edgeClientArea_.setTop((*it)->geometry().bottom());
-    }
   }
 
   DCOPClient * client = kapp->dcopClient();
