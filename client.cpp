@@ -1170,6 +1170,7 @@ void Client::fetchName()
         s = KWin::readNameProperty( window(), XA_WM_NAME );
     if ( s != cap_normal ) 
         {
+        bool reset_name = cap_normal.isEmpty();
         cap_normal = s;
         bool was_suffix = ( !cap_suffix.isEmpty());
         cap_suffix = QString::null;
@@ -1182,8 +1183,10 @@ void Client::fetchName()
                 i++;
                 } while ( workspace()->findClient( FetchNameInternalPredicate( this )));
             info->setVisibleName( caption().utf8() );
+            reset_name = false;
             }
-        if( was_suffix && cap_suffix.isEmpty())
+        if(( was_suffix && cap_suffix.isEmpty()
+            || reset_name )) // if it was new window, it may have old value still set, if the window is reused
             {
             info->setVisibleName( "" ); // remove
             info->setVisibleIconName( "" ); // remove
