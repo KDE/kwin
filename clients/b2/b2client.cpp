@@ -173,12 +173,15 @@ static void create_pixmaps()
     redraw_pixmaps();
 }
 
-B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, QWidget *parent,
-                   const char *name)
+B2Button::B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
+                   KPixmap *iPixDown, Client *parent, const char *name)
     : QButton(parent, name)
 {
+    client = parent;
     pNorm = pix;
     pDown = pixDown;
+    iNorm = iPix;
+    iDown = iPixDown;
     setFixedSize(16, 16);
     setFocusPolicy(NoFocus);
     resize(16, 16);
@@ -198,26 +201,38 @@ QSizePolicy B2Button::sizePolicy() const
 void B2Button::drawButton(QPainter *p)
 {
     p->fillRect(rect(), bg);
-    // hehe, nasty casts - I'm such a bad boy ;-)
-    if(useMiniIcon && !(((B2Client*)parent())->miniIcon().isNull())){
-        QPixmap miniIcon = ((B2Client*)parent())->miniIcon();
+    if(useMiniIcon && !client->miniIcon().isNull()){
+        QPixmap miniIcon = client->miniIcon();
         p->drawPixmap((width()-miniIcon.width())/2,
                       (height()-miniIcon.height())/2, miniIcon);
     }
     else{
-        if(isOn() || isDown())
-            p->drawPixmap((width()-pDown->width())/2,
-                          (height()-pDown->height())/2, *pDown);
-        else
-            p->drawPixmap((width()-pNorm->width())/2,
-                          (height()-pNorm->height())/2, *pNorm);
+        if(client->isActive()){
+            if(isOn() || isDown())
+                p->drawPixmap((width()-pDown->width())/2,
+                              (height()-pDown->height())/2, *pDown);
+            else
+                p->drawPixmap((width()-pNorm->width())/2,
+                              (height()-pNorm->height())/2, *pNorm);
+        }
+        else{
+            if(isOn() || isDown())
+                p->drawPixmap((width()-pDown->width())/2,
+                              (height()-pDown->height())/2, *iDown);
+            else
+                p->drawPixmap((width()-pNorm->width())/2,
+                              (height()-pNorm->height())/2, *iNorm);
+        }
     }
 }
 
-void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown)
+void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
+                          KPixmap *iPixDown)
 {
     pNorm = pix;
     pDown = pixDown;
+    iNorm = iPix;
+    iDown = iPixDown;
     repaint(false);
 }
 
@@ -258,30 +273,24 @@ B2Client::B2Client( Workspace *ws, WId w, QWidget *parent,
     if(!providesContextHelp())
         button[5]->hide();
 
-    if(isActive()){
-        button[BtnMenu]->setPixmaps(aMenuPix, aMenuPixDown);
-        button[BtnSticky]->setPixmaps(aPinupPix, aPinupPixDown);
-        button[BtnIconify]->setPixmaps(aIconifyPix, aIconifyPixDown);
-        button[BtnClose]->setPixmaps(aClosePix, aClosePixDown);
-        button[BtnHelp]->setPixmaps(aHelpPix, aHelpPixDown);
+    button[BtnMenu]->setPixmaps(aMenuPix, aMenuPixDown, iMenuPix,
+                                iMenuPixDown);
+    button[BtnSticky]->setPixmaps(aPinupPix, aPinupPixDown, iPinupPix,
+                                  iPinupPixDown);
+    button[BtnIconify]->setPixmaps(aIconifyPix, aIconifyPixDown,
+                                   iIconifyPix, iIconifyPixDown);
+    button[BtnClose]->setPixmaps(aClosePix, aClosePixDown, iClosePix,
+                                 iClosePixDown);
+    button[BtnHelp]->setPixmaps(aHelpPix, aHelpPixDown, iHelpPix,
+                                iHelpPixDown);
 
-        if(isMaximized())
-            button[BtnMax]->setPixmaps(aNormalizePix, aNormalizePixDown);
-        else
-            button[BtnMax]->setPixmaps(aMaxPix, aMaxPixDown);
-    }
-    else{
-        button[BtnMenu]->setPixmaps(iMenuPix, iMenuPixDown); // fixme
-        button[BtnSticky]->setPixmaps(iPinupPix, iPinupPixDown);
-        button[BtnIconify]->setPixmaps(iIconifyPix, iIconifyPixDown);
-        button[BtnClose]->setPixmaps(iClosePix, iClosePixDown);
-        button[BtnHelp]->setPixmaps(iHelpPix, iHelpPixDown);
+    if(isMaximized())
+        button[BtnMax]->setPixmaps(aNormalizePix, aNormalizePixDown,
+                                   iNormalizePix, iNormalizePixDown);
+    else
+        button[BtnMax]->setPixmaps(aMaxPix, aMaxPixDown, iMaxPix,
+                                   iMaxPixDown);
 
-        if(isMaximized())
-            button[BtnMax]->setPixmaps(iNormalizePix, iNormalizePixDown);
-        else
-            button[BtnMax]->setPixmaps(iMaxPix, iMaxPixDown);
-    }
     QColor c = options->colorGroup(Options::TitleBar, isActive()).
         color(QColorGroup::Button);
     for(i=0; i < 6; ++i)
@@ -519,16 +528,12 @@ void B2Client::stickyChange(bool on)
 void B2Client::maximizeChange(bool m)
 {
     if(m){
-        if(isActive())
-            button[BtnMax]->setPixmaps(aNormalizePix, aNormalizePixDown);
-        else
-            button[BtnMax]->setPixmaps(iNormalizePix, iNormalizePixDown);
+        button[BtnMax]->setPixmaps(aNormalizePix, aNormalizePixDown,
+                                   iNormalizePix, iNormalizePixDown);
     }
     else{
-        if(isActive())
-            button[BtnMax]->setPixmaps(aMaxPix, aMaxPixDown);
-        else
-            button[BtnMax]->setPixmaps(iMaxPix, iMaxPixDown);
+        button[BtnMax]->setPixmaps(aMaxPix, aMaxPixDown, iMaxPix,
+                                   iMaxPixDown);
     }
     button[BtnMax]->repaint();
 }
@@ -536,36 +541,14 @@ void B2Client::maximizeChange(bool m)
 
 void B2Client::activeChange(bool on)
 {
-    if(on){
-        button[BtnMenu]->setPixmaps(aMenuPix, aMenuPixDown);
-        button[BtnSticky]->setPixmaps(aPinupPix, aPinupPixDown);
-        button[BtnIconify]->setPixmaps(aIconifyPix, aIconifyPixDown);
-        button[BtnClose]->setPixmaps(aClosePix, aClosePixDown);
-        button[BtnHelp]->setPixmaps(aHelpPix, aHelpPixDown);
-        if(isMaximized())
-            button[BtnMax]->setPixmaps(aNormalizePix, aNormalizePixDown);
-        else
-            button[BtnMax]->setPixmaps(aMaxPix, aMaxPixDown);
-    }
-    else{
-        button[BtnMenu]->setPixmaps(iMenuPix, iMenuPixDown);
-        button[BtnSticky]->setPixmaps(iPinupPix, iPinupPixDown);
-        button[BtnIconify]->setPixmaps(iIconifyPix, iIconifyPixDown);
-        button[BtnClose]->setPixmaps(iClosePix, iClosePixDown);
-        button[BtnHelp]->setPixmaps(iHelpPix, iHelpPixDown);
-        if(isMaximized())
-            button[BtnMax]->setPixmaps(iNormalizePix, iNormalizePixDown);
-        else
-            button[BtnMax]->setPixmaps(iMaxPix, iMaxPixDown);
-    }
     int i;
+    repaint(false);
     QColor c = options->colorGroup(Options::TitleBar, on).
         color(QColorGroup::Button);
     for(i=0; i < 6; ++i){
         button[i]->setBg(c);
         button[i]->repaint();
     }
-    Client::activeChange(on);
 }
 
 void B2Client::init()
@@ -595,8 +578,8 @@ void B2Client::slotReset()
 
 static void redraw_pixmaps()
 {
-    QColorGroup aGrp = options->colorGroup(Options::ButtonSingleColor, true);
-    QColorGroup iGrp = options->colorGroup(Options::ButtonSingleColor, false);
+    QColorGroup aGrp = options->colorGroup(Options::ButtonBg, true);
+    QColorGroup iGrp = options->colorGroup(Options::ButtonBg, false);
 
     // close
     drawB2Rect(aClosePix, aGrp.button(), false);

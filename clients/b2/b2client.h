@@ -13,11 +13,13 @@ class QGridLayout;
 class B2Button : public QButton
 {
 public:
-    B2Button(QWidget *parent=0, const char *name=0)
-        : QButton(parent, name){useMiniIcon = false;}
-    B2Button(KPixmap *pix, KPixmap *pixDown, QWidget *parent=0, const char *name=0);
+    B2Button(Client *parent=0, const char *name=0)
+        : QButton(parent, name){useMiniIcon = false; client = parent;}
+    B2Button(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix, KPixmap *iPixDown,
+             Client *parent=0, const char *name=0);
     void setBg(const QColor &c){bg = c;}
-    void setPixmaps(KPixmap *pix, KPixmap *pixDown);
+    void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
+                    KPixmap *iPixDown);
     void setToggle(){setToggleType(Toggle);}
     void setActive(bool on){setOn(on);}
     void setUseMiniIcon(){useMiniIcon = true;}
@@ -27,8 +29,9 @@ protected:
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     bool useMiniIcon;
-    KPixmap *pNorm, *pDown;
+    KPixmap *pNorm, *pDown, *iNorm, *iDown;
     QColor bg; //only use one color (the rest is pixmap) so forget QPalette ;)
+    Client *client;
 };
 
 class B2Client : public Client
