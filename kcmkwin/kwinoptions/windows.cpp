@@ -23,7 +23,7 @@
 
 #include <config.h>
 
-#include <qdir.h> 
+#include <qdir.h>
 #include <qlayout.h>
 #include <qslider.h>
 #include <qwhatsthis.h>
@@ -32,11 +32,11 @@
 #include <qradiobutton.h>
 #include <qlabel.h>
 #include <qcombobox.h>
-#include <kmessagebox.h> 
+#include <kmessagebox.h>
 
 #include <kactivelabel.h>
 #include <klocale.h>
-#include <kcolorbutton.h> 
+#include <kcolorbutton.h>
 #include <kconfig.h>
 #include <knuminput.h>
 #include <kapplication.h>
@@ -173,7 +173,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     fLay->addWidget(autoRaise);
 
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()) );
-    
+
     delayFocusOn = new QCheckBox(i18n("Delay focus"), fcsBox);
     fLay->addWidget(delayFocusOn);
     connect(delayFocusOn,SIGNAL(toggled(bool)), this, SLOT(delayFocusOnTog(bool)));
@@ -184,7 +184,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     delayFocus->setSteps(100,100);
     delayFocus->setSuffix(i18n(" msec"));
     fLay->addWidget(delayFocus);
-    
+
     clickRaiseOn = new QCheckBox(i18n("C&lick raise active window"), fcsBox);
     connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
     fLay->addWidget(clickRaiseOn);
@@ -394,7 +394,7 @@ void KFocusConfig::load( void )
 
     k = config->readNumEntry(KWIN_DELAYFOCUS_INTERVAL,750);
     setDelayFocusInterval(k);
-    
+
     key = config->readEntry(KWIN_AUTORAISE);
     setAutoRaise(key == "on");
     key = config->readEntry(KWIN_DELAYFOCUS);
@@ -442,7 +442,7 @@ void KFocusConfig::save( void )
     v = getDelayFocusInterval();
     if (v <0) v = 0;
     config->writeEntry(KWIN_DELAYFOCUS_INTERVAL,v);
-    
+
     if (autoRaiseOn->isChecked())
         config->writeEntry(KWIN_AUTORAISE, "on");
     else
@@ -1181,7 +1181,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
                                  "Please make sure you have "
                                  "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>,"
                                  " and installed the kompmgr that came with kwin.<br>"
-                                 "Also, make sure you have the following entries in your XConfig (e.g. /etc/XF86Config):<br><br>"
+                                 "Also, make sure you have the following entries in your XConfig (e.g. /etc/X11/xorg.conf):<br><br>"
                                  "<i>Section \"Extensions\"<br>"
                                  "Option \"Composite\" \"Enable\"<br>"
                                  "EndSection</i><br><br>"
@@ -1198,85 +1198,85 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   vLay->addSpacing(11); // to get the proper gb top offset
   QGridLayout *gLay = new QGridLayout(vLay,4,2,KDialog::spacingHint());
   gLay->setColStretch(1,1);
-  
+
   activeWindowTransparency = new QCheckBox(i18n("Active windows"),tGroup);
   gLay->addWidget(activeWindowTransparency,0,0);
   activeWindowOpacity = new KIntNumInput(100, tGroup);
   activeWindowOpacity->setRange(0,100);
   activeWindowOpacity->setSuffix("%");
   gLay->addWidget(activeWindowOpacity,0,1);
-  
+
   inactiveWindowTransparency = new QCheckBox(i18n("Inactive windows"),tGroup);
   gLay->addWidget(inactiveWindowTransparency,1,0);
   inactiveWindowOpacity = new KIntNumInput(100, tGroup);
   inactiveWindowOpacity->setRange(0,100);
   inactiveWindowOpacity->setSuffix("%");
   gLay->addWidget(inactiveWindowOpacity,1,1);
-  
+
   movingWindowTransparency = new QCheckBox(i18n("Moving windows"),tGroup);
   gLay->addWidget(movingWindowTransparency,2,0);
   movingWindowOpacity = new KIntNumInput(100, tGroup);
   movingWindowOpacity->setRange(0,100);
   movingWindowOpacity->setSuffix("%");
   gLay->addWidget(movingWindowOpacity,2,1);
-  
+
   dockWindowTransparency = new QCheckBox(i18n("Dock windows"),tGroup);
   gLay->addWidget(dockWindowTransparency,3,0);
   dockWindowOpacity = new KIntNumInput(100, tGroup);
   dockWindowOpacity->setRange(0,100);
   dockWindowOpacity->setSuffix("%");
   gLay->addWidget(dockWindowOpacity,3,1);
-  
+
   keepAboveAsActive = new QCheckBox(i18n("Treat 'keep above' windows as active ones"),tGroup);
   vLay->addWidget(keepAboveAsActive);
   vLay->addStretch();
   tabW->addTab(tGroup, i18n("Translucency"));
-  
+
   QWidget *sGroup = new QWidget(tabW);
 //   sGroup->setCheckable(TRUE);
   QVBoxLayout *vLay2 = new QVBoxLayout (sGroup,11,6);
   vLay2->addSpacing(11); // to get the proper gb top offset
   useShadows = new QCheckBox(i18n("Use shadows"),sGroup);
   vLay2->addWidget(useShadows);
-  
+
   QGridLayout *gLay2 = new QGridLayout(vLay2,6,2);
   gLay2->setColStretch(1,1);
-  
+
   QLabel *label1 = new QLabel(i18n("Active window size"),sGroup);
   gLay2->addWidget(label1,0,0);
   activeWindowShadowSize = new KIntNumInput(12,sGroup);
   activeWindowShadowSize->setRange(0,32);
 //   activeWindowShadowSize->setSuffix("px");
   gLay2->addWidget(activeWindowShadowSize,0,1);
-  
+
   QLabel *label2 = new QLabel(i18n("Inactive window size"),sGroup);
   gLay2->addWidget(label2,1,0);
   inactiveWindowShadowSize = new KIntNumInput(6,sGroup);
   inactiveWindowShadowSize->setRange(0,32);
 //   inactiveWindowShadowSize->setSuffix("px");
   gLay2->addWidget(inactiveWindowShadowSize,1,1);
-  
+
   QLabel *label3 = new QLabel(i18n("Dock window size"),sGroup);
   gLay2->addWidget(label3,2,0);
   dockWindowShadowSize = new KIntNumInput(6,sGroup);
   dockWindowShadowSize->setRange(0,32);
 //   dockWindowShadowSize->setSuffix("px");
   gLay2->addWidget(dockWindowShadowSize,2,1);
-  
+
   QLabel *label4 = new QLabel(i18n("Vertical offset"),sGroup);
   gLay2->addWidget(label4,3,0);
   shadowTopOffset = new KIntNumInput(80,sGroup);
   shadowTopOffset->setSuffix("%");
   shadowTopOffset->setRange(-200,200);
   gLay2->addWidget(shadowTopOffset,3,1);
-  
+
   QLabel *label5 = new QLabel(i18n("Horizontal offset"),sGroup);
   gLay2->addWidget(label5,4,0);
   shadowLeftOffset = new KIntNumInput(0,sGroup);
   shadowLeftOffset->setSuffix("%");
   shadowLeftOffset->setRange(-200,200);
   gLay2->addWidget(shadowLeftOffset,4,1);
-  
+
   QLabel *label6 = new QLabel(i18n("Shadow color"),sGroup);
   gLay2->addWidget(label6,5,0);
   shadowColor = new KColorButton(Qt::black,sGroup);
@@ -1284,7 +1284,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   gLay2->setColStretch(1,1);
   vLay2->addStretch();
   tabW->addTab(sGroup, i18n("Shadows"));
-  
+
   QWidget *eGroup = new QWidget(this);
   QVBoxLayout *vLay3 = new QVBoxLayout (eGroup,11,6);
 
@@ -1301,20 +1301,20 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   vLay3->addWidget(fadeInSpeed);
   vLay3->addWidget(fadeOutSpeed);
   vLay3->addStretch();
-  
+
   tabW->addTab(eGroup, i18n("Effects"));
-    
+
   useTranslucency = new QCheckBox(i18n("Use translucency/shadows"),this);
   lay->addWidget(useTranslucency);
   lay->addWidget(tabW);
 
   connect(useTranslucency, SIGNAL(toggled(bool)), tabW, SLOT(setEnabled(bool)));
-  
+
   connect(activeWindowTransparency, SIGNAL(toggled(bool)), activeWindowOpacity, SLOT(setEnabled(bool)));
   connect(inactiveWindowTransparency, SIGNAL(toggled(bool)), inactiveWindowOpacity, SLOT(setEnabled(bool)));
   connect(movingWindowTransparency, SIGNAL(toggled(bool)), movingWindowOpacity, SLOT(setEnabled(bool)));
   connect(dockWindowTransparency, SIGNAL(toggled(bool)), dockWindowOpacity, SLOT(setEnabled(bool)));
-  
+
   connect(useTranslucency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(activeWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(inactiveWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
@@ -1322,7 +1322,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   connect(dockWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(keepAboveAsActive, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(useShadows, SIGNAL(toggled(bool)), SLOT(changed()));
-  
+
   connect(activeWindowOpacity, SIGNAL(valueChanged(int)), SLOT(changed()));
   connect(inactiveWindowOpacity, SIGNAL(valueChanged(int)), SLOT(changed()));
   connect(movingWindowOpacity, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -1337,22 +1337,22 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   connect(fadeOnOpacityChange, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(fadeInSpeed, SIGNAL(valueChanged(int)), SLOT(changed()));
   connect(fadeOutSpeed, SIGNAL(valueChanged(int)), SLOT(changed()));
-  
+
   connect(useShadows, SIGNAL(toggled(bool)), dockWindowShadowSize, SLOT(setEnabled(bool)));
   connect(useShadows, SIGNAL(toggled(bool)), activeWindowShadowSize, SLOT(setEnabled(bool)));
   connect(useShadows, SIGNAL(toggled(bool)), inactiveWindowShadowSize, SLOT(setEnabled(bool)));
   connect(useShadows, SIGNAL(toggled(bool)), shadowTopOffset, SLOT(setEnabled(bool)));
   connect(useShadows, SIGNAL(toggled(bool)), shadowLeftOffset, SLOT(setEnabled(bool)));
   connect(useShadows, SIGNAL(toggled(bool)), shadowColor, SLOT(setEnabled(bool)));
-  
+
   load();
-  
+
   tabW->setEnabled(useTranslucency->isChecked());
-  
+
   connect(useTranslucency, SIGNAL(toggled(bool)), this, SLOT(showWarning(bool)));
-  
+
   // handle kompmgr restarts if necessary
-  connect(useTranslucency, SIGNAL(toggled(bool)), SLOT(resetKompmgr())); 
+  connect(useTranslucency, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
   connect(useShadows, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
   connect(inactiveWindowShadowSize, SIGNAL(valueChanged(int)), SLOT(resetKompmgr()));
   connect(shadowTopOffset, SIGNAL(valueChanged(int)), SLOT(resetKompmgr()));
@@ -1362,7 +1362,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   connect(fadeOnOpacityChange, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
   connect(fadeInSpeed, SIGNAL(valueChanged(int)), SLOT(resetKompmgr()));
   connect(fadeOutSpeed, SIGNAL(valueChanged(int)), SLOT(resetKompmgr()));
-  
+
   }
 }
 
@@ -1375,41 +1375,41 @@ void KTranslucencyConfig::load( void )
 
   config->setGroup( "Notification Messages" );
   useTranslucency->setChecked(config->readBoolEntry("UseTranslucency",false));
-  
+
   config->setGroup( "Translucency" );
   activeWindowTransparency->setChecked(config->readBoolEntry("TranslucentActiveWindows",false));
   inactiveWindowTransparency->setChecked(config->readBoolEntry("TranslucentInactiveWindows",true));
   movingWindowTransparency->setChecked(config->readBoolEntry("TranslucentMovingWindows",false));
   dockWindowTransparency->setChecked(config->readBoolEntry("TranslucentDocks",true));
   keepAboveAsActive->setChecked(config->readBoolEntry("TreatKeepAboveAsActive",true));
-  
+
   activeWindowOpacity->setValue(config->readNumEntry("ActiveWindowOpacity",100));
   inactiveWindowOpacity->setValue(config->readNumEntry("InactiveWindowOpacity",50));
   movingWindowOpacity->setValue(config->readNumEntry("MovingWindowOpacity",25));
   dockWindowOpacity->setValue(config->readNumEntry("DockOpacity",80));
-  
+
   int ass, iss, dss;
   dss = config->readNumEntry("DockShadowSize", 50);
   ass = config->readNumEntry("ActiveWindowShadowSize", 200);
   iss = config->readNumEntry("InactiveWindowShadowSize", 100);
-  
+
   activeWindowOpacity->setEnabled(activeWindowTransparency->isChecked());
   inactiveWindowOpacity->setEnabled(inactiveWindowTransparency->isChecked());
   movingWindowOpacity->setEnabled(movingWindowTransparency->isChecked());
   dockWindowOpacity->setEnabled(dockWindowTransparency->isChecked());
-  
+
   KConfig conf_(QDir::homeDirPath() + "/.xcompmgrrc");
   conf_.setGroup("xcompmgr");
-  
+
   useShadows->setChecked(conf_.readEntry("Compmode","CompClientShadows").compare("CompClientShadows") == 0);
   shadowTopOffset->setValue(-1*(conf_.readNumEntry("ShadowOffsetY",-80)));
   shadowLeftOffset->setValue(-1*(conf_.readNumEntry("ShadowOffsetX",0)));
-  
+
   int ss =  conf_.readNumEntry("ShadowRadius",6);
   dockWindowShadowSize->setValue((int)(dss*ss/100.0));
   activeWindowShadowSize->setValue((int)(ass*ss/100.0));
   inactiveWindowShadowSize->setValue((int)(iss*ss/100.0));
-  
+
   QString hex = conf_.readEntry("ShadowColor","#000000");
   uint r, g, b;
   r = g = b = 256;
@@ -1418,21 +1418,21 @@ void KTranslucencyConfig::load( void )
     shadowColor->setColor(Qt::black);
   else
     shadowColor->setColor(QColor(r,g,b));
-    
+
   fadeInWindows->setChecked(conf_.readBoolEntry("FadeWindows",TRUE));
   fadeOnOpacityChange->setChecked(conf_.readBoolEntry("FadeTrans",FALSE));
   fadeInSpeed->setValue((int)(conf_.readDoubleNumEntry("FadeInStep",0.028)*1000.0));
   fadeOutSpeed->setValue((int)(conf_.readDoubleNumEntry("FadeOutStep",0.03)*1000.0));
-  
+
   emit KCModule::changed(false);
 }
 
 void KTranslucencyConfig::save( void )
 {
-  
+
   config->setGroup( "Notification Messages" );
-  config->writeEntry("UseTranslucency",useTranslucency->isChecked());   
-  
+  config->writeEntry("UseTranslucency",useTranslucency->isChecked());
+
   config->setGroup( "Translucency" );
   config->writeEntry("TranslucentActiveWindows",activeWindowTransparency->isChecked());
   config->writeEntry("TranslucentInactiveWindows",inactiveWindowTransparency->isChecked());
@@ -1452,15 +1452,15 @@ void KTranslucencyConfig::save( void )
   config->writeEntry("ActiveWindowShadowSize",(int)(100.0*activeWindowShadowSize->value()/inactiveWindowShadowSize->value()));
   config->writeEntry("InctiveWindowShadowSize",100);
   config->writeEntry("ResetKompmgr",resetKompmgr_);
-  
+
   KConfig *conf_ = new KConfig(QDir::homeDirPath() + "/.xcompmgrrc");
   conf_->setGroup("xcompmgr");
-  
+
   conf_->writeEntry("Compmode",useShadows->isChecked()?"CompClientShadows":"");
   conf_->writeEntry("ShadowOffsetY",-1*shadowTopOffset->value());
   conf_->writeEntry("ShadowOffsetX",-1*shadowLeftOffset->value());
-  
-  
+
+
   int r, g, b;
   shadowColor->color().rgb( &r, &g, &b );
   QString hex;
@@ -1471,9 +1471,9 @@ void KTranslucencyConfig::save( void )
   conf_->writeEntry("FadeTrans",fadeOnOpacityChange->isChecked());
   conf_->writeEntry("FadeInStep",fadeInSpeed->value()/1000.0);
   conf_->writeEntry("FadeOutStep",fadeOutSpeed->value()/1000.0);
-  
+
   delete conf_;
-  
+
   if (standAlone)
   {
     config->sync();
@@ -1492,12 +1492,12 @@ void KTranslucencyConfig::defaults()
   movingWindowTransparency->setChecked(false);
   dockWindowTransparency->setChecked(true);
   keepAboveAsActive->setChecked(true);
-  
+
   activeWindowOpacity->setValue(100);
   inactiveWindowOpacity->setValue(50);
   movingWindowOpacity->setValue(25);
   dockWindowOpacity->setValue(80);
-  
+
   dockWindowShadowSize->setValue(6);
   activeWindowShadowSize->setValue(12);
   inactiveWindowShadowSize->setValue(6);
