@@ -1392,10 +1392,11 @@ void Client::resetMaximize()
         decoration->maximizeChange();
     }
 
-bool Client::isFullScreenable() const
+bool Client::isFullScreenable( bool fullscreen_hack ) const
     {
     return isFullScreen() // necessary, because for fullscreen windows isMaximizable() returns false
-        || (( isNormalWindow() || isOverride()) && isMaximizable());
+        || (( isNormalWindow() || isOverride())
+            && ( isMaximizable() || fullscreen_hack ));
     }
 
 bool Client::userCanSetFullScreen() const

@@ -132,7 +132,7 @@ class Client : public QObject, public KDecorationDefines
 
         void setFullScreen( bool set, bool user );
         bool isFullScreen() const;
-        bool isFullScreenable() const;
+        bool isFullScreenable( bool fullscreen_hack = false ) const;
         bool userCanSetFullScreen() const;
         QRect geometryFSRestore() const { return geom_fs_restore; } // only for session saving
         int fullScreenMode() const { return fullscreen_mode; } // only for session saving
