@@ -235,6 +235,7 @@ class Client : public QObject, public KDecorationDefines
         void virtualDesktopChange();
 
         QString caption( bool full = true ) const;
+        void updateCaption();
 
         void keyPressEvent( uint key_code ); // FRAME ??
         void updateMouseGrab();

@@ -1278,13 +1278,14 @@ void Client::setCaption( const QString& s, bool force )
         QString machine_suffix;
         if( wmClientMachine( false ) != "localhost" && !isLocalMachine( wmClientMachine( false )))
             machine_suffix = " <@" + wmClientMachine( true ) + ">";
-        cap_suffix = machine_suffix;
+        QString shortcut_suffix = !shortcut().isNull() ? ( " {" + shortcut().toString() + "}" ) : "";
+        cap_suffix = machine_suffix + shortcut_suffix;
         if ( ( !isSpecialWindow() || isToolbar()) && workspace()->findClient( FetchNameInternalPredicate( this ))) 
             {
             int i = 2;
             do 
                 {
-                cap_suffix = machine_suffix + " <" + QString::number(i) + ">";
+                cap_suffix = machine_suffix + " <" + QString::number(i) + ">" + shortcut_suffix;
                 i++;
                 } while ( workspace()->findClient( FetchNameInternalPredicate( this )));
             info->setVisibleName( caption().utf8() );
@@ -1302,6 +1303,11 @@ void Client::setCaption( const QString& s, bool force )
         if( isManaged() && decoration != NULL )
                 decoration->captionChange();
         }
+    }
+
+void Client::updateCaption()
+    {
+    setCaption( cap_normal, true );
     }
 
 void Client::fetchIconicName()

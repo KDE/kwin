@@ -1015,6 +1015,7 @@ void Client::setShortcutInternal( const KShortcut& cut )
     if( _shortcut == cut )
         return;
     _shortcut = cut;
+    updateCaption();
     workspace()->clientShortcutUpdated( this );
     }
 
