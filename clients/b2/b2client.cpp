@@ -381,7 +381,7 @@ void B2Client::init()
     g->addRowSpacing(0, buttonSize + 4);
 
     titlebar = new B2Titlebar(this);
-    titlebar->setMinimumWidth(16);
+    titlebar->setMinimumWidth(buttonSize + 4);
     titlebar->setFixedHeight(buttonSize + 4);
 
     QBoxLayout *titleLayout = new QBoxLayout(titlebar, 
@@ -403,10 +403,12 @@ void B2Client::init()
     QColor c = options()->colorGroup(KDecoration::ColorTitleBar, isActive()).
         color(QColorGroup::Button);
 
-    for (int i = 0; i < BtnCount; i++)
+    for (int i = 0; i < BtnCount; i++) {
         if (button[i])
             button[i]->setBg(c);
+    }
 
+    titlebar->updateGeometry();
     positionButtons();
     titlebar->recalcBuffer();
     titlebar->installEventFilter(this);
@@ -702,6 +704,7 @@ void B2Client::doShape()
 void B2Client::showEvent(QShowEvent *)
 {
     calcHiddenButtons();
+    positionButtons();
     doShape();
     widget()->repaint();
     titlebar->repaint(false);
@@ -1253,7 +1256,7 @@ B2Titlebar::B2Titlebar(B2Client *parent)
       set_x11mask(false), isfullyobscured(false), shift_move(false)
 {
     setBackgroundMode(NoBackground);
-    captionSpacer = new QSpacerItem(10, buttonSize + 4,
+    captionSpacer = new QSpacerItem(buttonSize, buttonSize + 4,
 	    QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
 
@@ -1315,7 +1318,6 @@ void B2Titlebar::drawTitlebar(QPainter &p, bool state)
 
 void B2Titlebar::recalcBuffer()
 {
-    QFontMetrics fm(options()->font(true));
     titleBuffer.resize(width(), height());
 
     QPainter p(&titleBuffer);
