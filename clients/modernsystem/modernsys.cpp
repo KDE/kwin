@@ -492,7 +492,7 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
     MousePosition m = Client::mousePosition( p );
     
     if ( m == Center ) {
-	int border = 30;
+	int border = 10;
 	if ( p.y() >= height()-border )
 	    m =  Bottom;
 	else if ( p.x() >= width()-border )
