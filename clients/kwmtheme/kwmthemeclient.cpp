@@ -6,7 +6,6 @@
 #include <qpainter.h>
 #include <kpixmapeffect.h>
 #include <kstddirs.h>
-#include <kglobal.h>
 #include <klocale.h>
 #include <qbitmap.h>
 #include <qstyle.h>
