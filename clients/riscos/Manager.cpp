@@ -275,9 +275,9 @@ Manager::updateTitleBuffer()
   KWinInternal::Client::MousePosition
 Manager::mousePosition(const QPoint & p) const
 {
-  MousePosition m = Center;
+  MousePosition m = Nowhere;
 
-  // Off-by-one here ?
+  // Look out for off-by-one errors here.
 
   if (isResizable())
   {
@@ -292,6 +292,14 @@ Manager::mousePosition(const QPoint & p) const
       else
         m = Bottom;
     }
+    else
+    {
+      m = Client::mousePosition(p);
+    }
+  }
+  else
+  {
+      m = Client::mousePosition(p);
   }
 
   return m;

@@ -59,6 +59,7 @@ namespace KWinInternal
 
       void mousePressEvent(QMouseEvent *);
       void mouseReleaseEvent(QMouseEvent *);
+      void mouseMoveEvent(QMouseEvent *) { /* Empty */ }
       void enterEvent(QEvent *);
       void leaveEvent(QEvent *);
       void paintEvent(QPaintEvent *);

@@ -58,6 +58,7 @@ class Button : public KWinInternal::KWinWidgetButton
 
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *) { /* Empty. */ }
 
     void setPixmap(const QPixmap &);
 
