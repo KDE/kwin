@@ -7,6 +7,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 //#define QT_CLEAN_NAMESPACE
 #define select kwin_hide_select
 
+#include <kaccelbase.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
@@ -476,7 +477,6 @@ Workspace::~Workspace()
     delete desktop_widget;
     delete tab_box;
     delete popup;
-    delete keys;
     if ( root == qt_xrootwin() )
         XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwin_running);
 
@@ -844,7 +844,7 @@ void Workspace::slotWalkThroughWindows()
     if( tab_grab || control_grab )
         return;
     if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() ) {
-        XUngrabKeyboard(qt_xdisplay(), kwin_time); // need that because of accelerator raw mode
+        //XUngrabKeyboard(qt_xdisplay(), kwin_time); // need that because of accelerator raw mode
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
     } else {
@@ -1563,7 +1563,10 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-        QString k = KKey::keyToString( keys->currentKey( "Window close" ), true );
+        QString k;
+        KAccelAction* pAction = keys->basePtr()->actionPtr( "Window Close" );
+	if( pAction )
+	    k = pAction->m_rgShortcuts.toString();
         popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+k, Options::CloseOp );
     }
     return popup;
@@ -1975,22 +1978,37 @@ void Workspace::reconfigure()
 }
 
 
+// FIXME: get rid of this once Workspace looks at KKeySequences instead of
+//  uint's for keycodes.
+inline int currentKey( KGlobalAccel* keys, const char* psAction )
+{
+    KAccelAction* pAction = keys->basePtr()->actionPtr( psAction );
+    if( pAction )
+        return pAction->getShortcut(0).getSequence(0).getKey(0).keyQt();
+    else
+        return 0;
+}
+
 /*!
   Reread settings
  */
 void Workspace::slotReconfigure()
 {
+    kdDebug(1212) << "Workspace::slotReconfigure()" << endl;
+    
     reconfigureTimer.stop();
     KGlobal::config()->reparseConfiguration();
     options->reload();
     keys->readSettings();
+    keys->updateConnections();
     tab_box->reconfigure();
-    walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
-    walkBackThroughDesktopsKeycode = keys->currentKey( "Walk back through desktops" );
-    walkThroughDesktopListKeycode = keys->currentKey( "Walk through desktop list" );
-    walkBackThroughDesktopListKeycode = keys->currentKey( "Walk back through desktop list" );
-    walkThroughWindowsKeycode = keys->currentKey( "Walk through windows" );
-    walkBackThroughWindowsKeycode = keys->currentKey( "Walk back through windows" );
+    walkThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops" );
+    walkBackThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops (Reverse)" );
+    walkThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List" );
+    walkBackThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List (Reverse)" );
+    walkThroughWindowsKeycode = currentKey( keys, "Walk Through Windows" );
+    walkBackThroughWindowsKeycode = currentKey( keys, "Walk Through Windows (Reverse)" );
+
     mgr->updatePlugin();
     // NO need whatsoever to call slotResetAllClientsDelayed here,
     // updatePlugin resets all clients if necessary anyway.
@@ -2639,10 +2657,10 @@ void Workspace::propagateSystemTrayWins()
   Create the global accel object \c keys.
  */
 void Workspace::createKeybindings(){
-    keys = new KGlobalAccel();
+    keys = new KGlobalAccel( this );
 
 #include "kwinbindings.cpp"
-
+/*
     keys->connectItem( "Switch to desktop 1", this, SLOT( slotSwitchToDesktop( int ) ));
     keys->connectItem( "Switch to desktop 2", this, SLOT( slotSwitchToDesktop( int ) ));
     keys->connectItem( "Switch to desktop 3", this, SLOT( slotSwitchToDesktop( int ) ));
@@ -2666,50 +2684,6 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Switch desktop up", this, SLOT( slotSwitchDesktopUp() ));
     keys->connectItem( "Switch desktop down", this, SLOT( slotSwitchDesktopDown() ));
 
-    /*keys->connectItem( "Switch to Window 1", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 2", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 3", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 4", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 5", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 6", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 7", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 8", this, SLOT( slotSwitchToWindow( int ) ));
-    keys->connectItem( "Switch to Window 9", this, SLOT( slotSwitchToWindow( int ) ));*/
-
-    keys->connectItem( "Window to Desktop 1", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 2", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 3", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 4", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 5", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 6", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 7", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 8", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 9", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 10", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 11", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 12", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 13", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 14", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 15", this, SLOT( slotWindowToDesktop( int ) ));
-    keys->connectItem( "Window to Desktop 16", this, SLOT( slotWindowToDesktop( int ) ));
-
-    keys->connectItem( "Pop-up window operations menu", this, SLOT( slotWindowOperations() ) );
-    keys->connectItem( "Window close", this, SLOT( slotWindowClose() ) );
-    keys->connectItem( "Window close all", this, SLOT( slotWindowCloseAll() ) );
-    keys->connectItem( "Window maximize", this, SLOT( slotWindowMaximize() ) );
-    keys->connectItem( "Window maximize horizontal", this, SLOT( slotWindowMaximizeHorizontal() ) );
-    keys->connectItem( "Window maximize vertical", this, SLOT( slotWindowMaximizeVertical() ) );
-    keys->connectItem( "Window iconify", this, SLOT( slotWindowIconify() ) );
-    //keys->connectItem( "Window iconify all", this, SLOT( slotWindowIconifyAll() ) );
-    keys->connectItem( "Window shade", this, SLOT( slotWindowShade() ) );
-    keys->connectItem( "Window move", this, SLOT( slotWindowMove() ) );
-    keys->connectItem( "Window resize", this, SLOT( slotWindowResize() ) );
-    keys->connectItem( "Window raise", this, SLOT( slotWindowRaise() ) );
-    keys->connectItem( "Window lower", this, SLOT( slotWindowLower() ) );
-    keys->connectItem( "Toggle raise and lower", this, SLOT( slotWindowRaiseOrLower() ) );
-    keys->connectItem( "Window to next desktop", this, SLOT( slotWindowNextDesktop() ) );
-    keys->connectItem( "Window to previous desktop", this, SLOT( slotWindowPreviousDesktop() ) );
-
     keys->connectItem( "Walk through desktops", this, SLOT( slotWalkThroughDesktops()));
     keys->connectItem( "Walk back through desktops", this, SLOT( slotWalkBackThroughDesktops()));
     keys->connectItem( "Walk through desktop list", this, SLOT( slotWalkThroughDesktopList()));
@@ -2717,26 +2691,21 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Walk through windows",this, SLOT( slotWalkThroughWindows()));
     keys->connectItem( "Walk back through windows",this, SLOT( slotWalkBackThroughWindows()));
 
-    keys->connectItem( "Mouse emulation", this, SLOT( slotMouseEmulation() ) );
-
-    keys->connectItem( "Kill Window", this, SLOT( slotKillWindow() ) );
-
-    keys->connectItem( "Screenshot of active window", this, SLOT( slotGrabWindow() ) );
-    keys->connectItem( "Screenshot of desktop", this, SLOT( slotGrabDesktop() ) );
-
+*/
     keys->readSettings();
-    walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
-    walkBackThroughDesktopsKeycode = keys->currentKey( "Walk back through desktops" );
-    walkThroughDesktopListKeycode = keys->currentKey( "Walk through desktop list" );
-    walkBackThroughDesktopListKeycode = keys->currentKey( "Walk back through desktop list" );
-    walkThroughWindowsKeycode = keys->currentKey( "Walk through windows" );
-    walkBackThroughWindowsKeycode = keys->currentKey( "Walk back through windows" );
-    keys->setItemRawModeEnabled( "Walk through desktops", TRUE  );
-    keys->setItemRawModeEnabled( "Walk back through desktops", TRUE );
-    keys->setItemRawModeEnabled( "Walk through desktop list", TRUE  );
-    keys->setItemRawModeEnabled( "Walk back through desktop list", TRUE  );
-    keys->setItemRawModeEnabled( "Walk through windows", TRUE  );
-    keys->setItemRawModeEnabled( "Walk back through windows", TRUE  );
+    keys->updateConnections();
+    walkThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops" );
+    walkBackThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops (Reverse)" );
+    walkThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List" );
+    walkBackThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List (Reverse)" );
+    walkThroughWindowsKeycode = currentKey( keys, "Walk Through Windows" );
+    walkBackThroughWindowsKeycode = currentKey( keys, "Walk Through Windows (Reverse)" );
+    //keys->setItemRawModeEnabled( "Walk through desktops", TRUE  );
+    //keys->setItemRawModeEnabled( "Walk back through desktops", TRUE );
+    //keys->setItemRawModeEnabled( "Walk through desktop list", TRUE  );
+    //keys->setItemRawModeEnabled( "Walk back through desktop list", TRUE  );
+    //keys->setItemRawModeEnabled( "Walk through windows", TRUE  );
+    //keys->setItemRawModeEnabled( "Walk back through windows", TRUE  );
 }
 
 void Workspace::slotSwitchDesktop1(){
