@@ -59,7 +59,7 @@ class Button : public QWidget
     Alignment   alignment_;
     bool        down_;
     bool        active_;
-    QPixmap     pixmap_;
+    QPixmap     aPixmap_, iPixmap_;
 };
 
 } // End namespace

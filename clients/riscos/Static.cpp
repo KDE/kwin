@@ -219,7 +219,9 @@ Static::update()
   QPixmap aTexture;
   QPixmap iTexture;
 
-  if (QPixmap::defaultDepth() > 8) {
+  bool hicolour = QPixmap::defaultDepth() > 8;
+
+  if (hicolour) {
 
     setPalette(aBut, options->color(Options::ButtonBg, true));
     setPalette(iBut, options->color(Options::ButtonBg, false));
@@ -337,7 +339,7 @@ Static::update()
   
   painter_.begin(&aTitleTextMid_);
   painter_.drawPixmap(0, 1, temp, 2, 0);
-  if (QPixmap::defaultDepth() > 8)
+  if (hicolour)
     painter_.drawPixmap(0, 4, aTexture);
   painter_.end();
 
@@ -346,7 +348,7 @@ Static::update()
   
   painter_.begin(&iTitleTextMid_);
   painter_.drawPixmap(0, 1, temp, 2, 0);
-  if (QPixmap::defaultDepth() > 8)
+  if (hicolour)
     painter_.drawPixmap(0, 4, iTexture);
   painter_.end();
 
@@ -359,6 +361,8 @@ Static::update()
   
   painter_.begin(&aResizeMid_);
   painter_.drawPixmap(0, 0, temp, 2, 0);
+  if (hicolour)
+    painter_.drawPixmap(0, 3, aTexture, 0, 0, 64, 4);
   painter_.end();
 
   palette_ = iResizePal_;
@@ -366,6 +370,8 @@ Static::update()
   
   painter_.begin(&iResizeMid_);
   painter_.drawPixmap(0, 0, temp, 2, 0);
+  if (hicolour)
+    painter_.drawPixmap(0, 3, iTexture, 0, 0, 64, 4);
   painter_.end();
 
   down_ = false;
@@ -393,8 +399,20 @@ Static::update()
   palette_ = aResizePal_;
   _drawBorder(aResize_, 28, 7);
 
+  if (hicolour) {
+    painter_.begin(&aResize_);
+    painter_.drawPixmap(3, 3, aTexture, 0, 0, 24, 4);
+    painter_.end();
+  }
+
   palette_ = iResizePal_;
   _drawBorder(iResize_, 28, 7);
+
+  if (hicolour) {
+    painter_.begin(&iResize_);
+    painter_.drawPixmap(3, 3, iTexture, 0, 0, 24, 4);
+    painter_.end();
+  }
 }
 
   const QPixmap &

@@ -20,6 +20,7 @@
   Boston, MA 02111-1307, USA.
 */
 
+#include "../../options.h"
 #include "Button.h"
 #include "Static.h"
 
@@ -78,7 +79,45 @@ Button::mouseReleaseEvent(QMouseEvent *)
   void
 Button::setPixmap(const QPixmap & p)
 {
-  pixmap_ = p;
+  if (QPixmap::defaultDepth() <= 8)
+    aPixmap_ = iPixmap_ = p;
+
+  else {
+
+    QRgb light;
+    QRgb * data;
+    QRgb w = qRgb(255, 255, 255);
+
+    QImage aTx(p.convertToImage());
+    QImage iTx(aTx.copy());
+
+    light  = options->color(Options::ButtonBg, true).light(150).rgb();
+
+    if (light == qRgb(0, 0, 0))
+      light = qRgb(228, 228, 228);
+
+    data = (QRgb *)aTx.bits();
+
+    for (int x = 0; x < 64*12; x++)
+      if (data[x] == w)
+        data[x] = light;
+
+    light  = options->color(Options::ButtonBg, false).light(150).rgb();
+
+    if (light == qRgb(0, 0, 0))
+      light = qRgb(228, 228, 228);
+
+    data = (QRgb *)iTx.bits();
+
+    for (int x = 0; x < 64*12; x++)
+      if (data[x] == w)
+        data[x] = light;
+
+    aPixmap_.convertFromImage(aTx);
+    iPixmap_.convertFromImage(iTx);
+
+  }
+
   repaint();
 }
 
@@ -87,7 +126,11 @@ Button::paintEvent(QPaintEvent *)
 {
   bitBlt(this, alignment_ == Left ? 1 : 0, 0,
       &Static::instance()->buttonBase(active_, down_));
-  bitBlt(this, alignment_ == Left ? 4 : 3, 4, &pixmap_);
+
+  if (active_)
+    bitBlt(this, alignment_ == Left ? 4 : 3, 4, &aPixmap_);
+  else
+    bitBlt(this, alignment_ == Left ? 4 : 3, 4, &iPixmap_);
 }
 
 } // End namespace
