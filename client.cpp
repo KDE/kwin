@@ -28,6 +28,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "events.h"
 #include "atoms.h"
 #include <netwm.h>
+#include <stdlib.h>
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -3035,7 +3036,8 @@ NET::WindowType Client::windowType() const
         // ugly hack to support the times when NET::Menu meant NET::TopMenu
         // if it's as wide as the screen, not very high and has its upper-left
         // corner a bit above the screen's upper-left cornet, it's a topmenu
-        if( x() == 0 && y() < 0 && y() > -10 && height() < 100 && width() == workspace()->geometry().width())
+        if( x() == 0 && y() < 0 && y() > -10 && height() < 100
+            && abs( width() - workspace()->geometry().width()) < 10 )
             wt = NET::TopMenu;
     }
     return wt;

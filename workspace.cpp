@@ -288,7 +288,8 @@ Client* Workspace::clientFactory( WId w )
             // ugly hack to support the times when NET::Menu meant NET::TopMenu
             // if it's as wide as the screen, not very high and has its upper-left
             // corner a bit above the screen's upper-left cornet, it's a topmenu
-            if( x == 0 && y < 0 && y > -10 && height < 100 && int(width) == geometry().width()) {
+            if( x == 0 && y < 0 && y > -10 && height < 100
+                && abs( int(width) - geometry().width()) < 10 ) {
                 Client* c = new NoBorderClient( this, w);
                 c->setStaysOnTop( true );
                 return c;
