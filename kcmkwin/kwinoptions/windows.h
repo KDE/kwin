@@ -199,13 +199,11 @@ private:
   QCheckBox *shadeHoverOn;
   KIntNumInput *shadeHover;
 
-#ifdef HAVE_XINERAMA
   QButtonGroup *xineramaBox;
   QCheckBox *xineramaEnable;
   QCheckBox *xineramaMovementEnable;
   QCheckBox *xineramaPlacementEnable;
   QCheckBox *xineramaMaximizeEnable;
-#endif
 
   KConfig *config;
   bool     standAlone;
