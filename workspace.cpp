@@ -148,7 +148,8 @@ Client* Workspace::clientFactory( WId w )
 {
     NETWinInfo ni( qt_xdisplay(), w, root, NET::WMWindowType );
 
-    if ( ni.windowType() == NET::Normal && Motif::noBorder( w ) )
+    if ( (ni.windowType() == NET::Normal || ni.windowType() == NET::Unknown)
+	 && Motif::noBorder( w ) )
 	return new NoBorderClient( this, w );
 
     switch ( ni.windowType() ) {
@@ -1455,7 +1456,7 @@ void Workspace::reconfigure()
 }
 
 
-/*!  
+/*!
   Lowers the client \a c taking stays-on-top flags, layers,
   transient windows and window groups into account.
  */
@@ -1513,7 +1514,7 @@ void Workspace::lowerClient( Client* c, bool dropFocus )
 }
 
 
-/*!  
+/*!
   Raises the client \a c taking layers, stays-on-top flags,
   transient windows and window groups into account.
  */
@@ -1553,7 +1554,7 @@ void Workspace::raiseClient( Client* c )
     saveset.clear();
     saveset.append( c );
     raiseTransientsOf(saveset, c );
-    
+
     ClientList list = constrainedStackingOrder( stacking_order );
     Window* new_stack = new Window[ list.count() + 1 ];
     int i = 0;
@@ -1605,9 +1606,9 @@ void Workspace::lowerTransientsOf( ClientList& safeset, Client* c )
 
 /*!
   Returns a stacking order based upon \a list that fulfills certain contained.
-  
+
   Currently it obeyes the staysOnTop flag only.
-  
+
   \sa Client::staysOnTop()
  */
 ClientList Workspace::constrainedStackingOrder( const ClientList& list )
