@@ -402,8 +402,13 @@ void Placement::placeUtility(Client* c)
     }
 
 
-void Placement::placeDialog(Client*)
+void Placement::placeDialog(Client* c)
     {
+    // if the dialog is actually non-NETWM transient window, don't apply placement to it,
+    // it breaks with too many things (xmms, display)
+    if( !c->hasNETSupport())
+        return;
+    placeOnMainWindow( c );
     }
 
 void Placement::placeUnderMouse(Client* c)

@@ -220,12 +220,10 @@ bool Client::manage( Window w, bool isMapped )
         {  // TODO
         placementDone = TRUE;
         }
-    else if( isDialog())
-        {
-        if( false )
-            placementDone = true;
-        // else force using placement policy
-        }
+    else if( isTransient() && !hasNETSupport())
+        placementDone = true;
+    else if( isDialog() && hasNETSupport()) // see Placement::placeDialog()
+        ; // force using placement policy
     else if( isSplash())
         ; // force using placement policy
     else

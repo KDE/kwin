@@ -155,6 +155,7 @@ class Client : public QObject, public KDecorationDefines
     // auxiliary functions, depend on the windowType
         bool wantsTabFocus() const;
         bool wantsInput() const;
+        bool hasNETSupport() const;
         bool isMovable() const;
         bool isDesktop() const;
         bool isDock() const;
@@ -664,6 +665,11 @@ inline bool Client::isFullScreen() const
 inline bool Client::isModal() const
     {
     return modal;
+    }
+
+inline bool Client::hasNETSupport() const
+    {
+    return info->hasNETSupport();
     }
 
 inline Colormap Client::colormap() const
