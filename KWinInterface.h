@@ -21,6 +21,7 @@ class KWinInterface : virtual public DCOPObject
   virtual int currentDesktop() const = 0;
   virtual void nextDesktop() = 0;
   virtual void previousDesktop() = 0;
+  virtual void circulateDesktopApplications() = 0;
 };
 
 #endif

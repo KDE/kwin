@@ -260,7 +260,7 @@ int kdemain( int argc, char * argv[] )
 	signal(SIGHUP, SIG_IGN);
 
     Application a;
-    KCrash::setCrashHandler(crashHandler); // Try to restart on crash
+//     KCrash::setCrashHandler(crashHandler); // Try to restart on crash
     fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
 
     QCString appname;

@@ -80,7 +80,7 @@ public:
     WId window() const;
     WindowWrapper* windowWrapper() const;
     Workspace* workspace() const;
-    void releaseWindow();
+    void releaseWindow( bool withdraw = FALSE );
     void invalidateWindow();
     WId transientFor() const;
     bool isTransient() const;

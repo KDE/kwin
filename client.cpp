@@ -494,8 +494,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
         NET::WMWindowType |
         NET::WMStrut |
         NET::WMName |
-        NET::WMIconGeometry |
-        NET::WMPid
+        NET::WMIconGeometry
         ;
 
     info = new WinInfo( this, qt_xdisplay(), win, qt_xrootwin(), properties );
@@ -633,6 +632,13 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         if ( !stays_on_top )
             is_fullscreen = TRUE;
         may_move = FALSE; // don't let fullscreen windows be moved around
+    }
+
+    if ( isDesktop() ) {
+	// desktops are treated slightly special
+	geom = workspace()->geometry();
+	may_move = FALSE;
+	isMapped = TRUE;
     }
 
     if ( isMapped  || session || isTransient() ) {
@@ -1117,10 +1123,9 @@ void Client::withdraw()
     Events::raise( isTransient() ? Events::TransDelete : Events::Delete );
     // remove early from client list
     workspace()->removeClient( this );
-    setMappingState( WithdrawnState );
     info->setDesktop( 0 );
     desk = 0;
-    releaseWindow();
+    releaseWindow(TRUE);
     workspace()->destroyClient( this );
 }
 
@@ -1131,6 +1136,12 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 {
     if ( isResize() )
         return TRUE; // we have better things to do right now
+
+    if ( isDesktop() ) {
+	setGeometry( workspace()->geometry() );
+        sendSyntheticConfigureNotify();
+	return TRUE;
+    }
 
     if ( isShade() )
         setShade( FALSE );
@@ -1833,12 +1844,19 @@ void Client::paintEvent( QPaintEvent * )
 
 /*!
   Releases the window. The client has done its job and the window is still existing.
+
+  If withdraw is TRUE, the function also sets the mapping state of the
+  window to WithdrawnState
  */
-void Client::releaseWindow()
+void Client::releaseWindow( bool withdraw )
 {
     if ( win ) {
         move(gravitate(TRUE));
+	if ( withdraw )
+	    XUnmapWindow( qt_xdisplay(), win );
         windowWrapper()->releaseWindow();
+	if ( withdraw )
+	    setMappingState( WithdrawnState );
         win = 0;
     }
 }

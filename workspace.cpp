@@ -225,7 +225,6 @@ Client* Workspace::clientFactory( WId w )
             XLowerWindow( qt_xdisplay(), w );
             Client * c = new NoBorderClient( this, w);
             c->setSticky( TRUE );
-            setDesktopClient( c );
             return c;
         }
 
@@ -268,7 +267,6 @@ Workspace::Workspace( bool restore )
     current_desktop   (0),
     number_of_desktops(0),
     desktop_widget    (0),
-    desktop_client    (0),
     active_client     (0),
     last_active_client     (0),
     should_get_focus  (0),
@@ -436,15 +434,9 @@ void Workspace::init()
             if ( addSystemTrayWin( wins[i] ) )
                 continue;
             Client* c = clientFactory( wins[i] );
-            if ( c != desktop_client ) {
-                clients.append( c );
-                stacking_order.append( c );
-            }
-            if ( c->wantsTabFocus() )
-                focus_chain.append( c );
+	    addClient( c );
             c->manage( TRUE );
-            if ( c == desktop_client )
-                setDesktopClient( c );
+
             if ( root != qt_xrootwin() ) {
                 // TODO may use QWidget:.create
                 XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
@@ -471,9 +463,9 @@ void Workspace::init()
 
 Workspace::~Workspace()
 {
-    if ( desktop_client ) {
-        WId win = desktop_client->window();
-        delete desktop_client;
+    for ( ClientList::ConstIterator it = desktops.fromLast(); it != desktops.end(); --it) {
+        WId win = (*it)->window();
+        delete (*it);
         XMapWindow( qt_xdisplay(), win );
         XLowerWindow( qt_xdisplay(), win );
     }
@@ -591,7 +583,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         checkStartOnDesktop( e->xmaprequest.window );
         c = findClient( e->xmaprequest.window );
         if ( !c ) {
-            if ( e->xmaprequest.parent ) { // == root ) { //###TODO store rpeviously destroyed client ids
+            if ( e->xmaprequest.parent ) { // == root ) { //###TODO store previously destroyed client ids
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return TRUE;
                 c = clientFactory( e->xmaprequest.window );
@@ -599,19 +591,11 @@ bool Workspace::workspaceEvent( XEvent * e )
                     // TODO may use QWidget:.create
                     XReparentWindow( qt_xdisplay(), c->winId(), root, 0, 0 );
                 }
-                if ( c != desktop_client ) {
-                    if ( c->wantsTabFocus() )
-                        focus_chain.append( c );
-                    clients.append( c );
-                    stacking_order.append( c );
-                }
+		addClient( c );
             }
         }
         if ( c ) {
-            bool result = c->windowEvent( e );
-            if ( c == desktop_client )
-                setDesktopClient( c );
-            return result;
+            return c->windowEvent( e );
         }
         break;
     case EnterNotify:
@@ -702,8 +686,10 @@ Client* Workspace::findClient( WId w ) const
         if ( (*it)->window() == w )
             return *it;
     }
-    if ( desktop_client && w == desktop_client->window() )
-        return desktop_client;
+    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it) {
+        if ( (*it)->window() == w )
+            return *it;
+    }
     return 0;
 }
 
@@ -763,8 +749,8 @@ bool Workspace::destroyClient( Client* c)
 
     c->invalidateWindow();
     clientHidden( c );
-    if ( c == desktop_client )
-        desktop_client = 0;
+    if ( desktops.contains(c) )
+        desktops.remove(c);
     if ( c == most_recently_raised )
         most_recently_raised = 0;
     if ( c == should_get_focus )
@@ -1225,6 +1211,45 @@ int Workspace::previousDesktop( int iDesktop ) const
                 return numberOfDesktops();
 }
 
+void Workspace::circulateDesktopApplications()
+{
+    if ( desktops.count() <= 1 )
+	return;
+    Client* first = desktops.first();
+    desktops.remove( first );
+    desktops.append( first );
+    Window* new_stack = new Window[ desktops.count() + 1 ];
+    int i = 0;
+    for ( ClientList::ConstIterator it = desktops.fromLast(); it != desktops.end(); --it)
+	new_stack[i++] = (*it)->winId();
+    XRestackWindows(qt_xdisplay(), new_stack, i);
+    delete [] new_stack;
+}
+
+void Workspace::addClient( Client* c )
+{
+    if ( c->isDesktop() ) {
+	if ( !desktops.isEmpty() ) {
+	    Client* first = desktops.first();
+	    Window stack[2];
+	    stack[0] = first->winId();
+	    stack[1] = c->winId();
+	    XRestackWindows(  qt_xdisplay(), stack, 2 );
+	    desktops.prepend( c );
+	    circulateDesktopApplications();
+	} else {
+	    c->lower();
+	    desktops.append( c );
+	}
+    } else {
+	if ( c->wantsTabFocus() )
+	    focus_chain.append( c );
+	clients.append( c );
+	stacking_order.append( c );
+    }
+}
+
+
 /*!
   auxiliary functions to travers all clients according the focus
   order. Useful for kwm´s Alt-tab feature.
@@ -1356,9 +1381,9 @@ void Workspace::setActiveClient( Client* c )
             break;
         }
     }
-    if ( !menubar && desktop_client ) {
+    if ( !menubar && !desktops.isEmpty() ) {
         for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-            if ( (*it)->isMenu() && (*it)->mainClient() == desktop_client ) {
+            if ( (*it)->isMenu() && (*it)->mainClient()->isDesktop() ) {
                 menubar = *it;
                 break;
             }
@@ -1542,14 +1567,15 @@ void Workspace::clientHidden( Client* c )
                 }
             }
         }
-    if ( desktop_client )
-        requestFocus( desktop_client );
-    else
-        focusToNull();
-    } // if blocking focus, move focus to desktop_client later if needed
-      // in order to avoid flickering
-    else
-        focusToNull();
+	if ( !c->isDesktop() && !desktops.isEmpty() )
+	    requestFocus( desktops.last() );
+	else
+	    focusToNull();
+    } else {
+	// if blocking focus, move focus to the desktop later if needed
+	// in order to avoid flickering
+	focusToNull();
+    }
 }
 
 
@@ -1759,7 +1785,7 @@ void Workspace::smartPlacement(Client* c){
             cyt = y; cyb = y + ch;
             QValueList<Client*>::ConstIterator l;
             for(l = clients.begin(); l != clients.end() ; ++l ) {
-                if((*l)->isOnDesktop(desktop) && (*l) != desktop_client &&
+                if((*l)->isOnDesktop(desktop) && 
                    !(*l)->isIconified() && (*l) != c ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -1807,7 +1833,7 @@ void Workspace::smartPlacement(Client* c){
             QValueList<Client*>::ConstIterator l;
             for(l = clients.begin(); l != clients.end() ; ++l) {
 
-                if ( (*l)->isOnDesktop(desktop) && (*l) != desktop_client &&
+                if ( (*l)->isOnDesktop(desktop) && 
                      !(*l)->isIconified() &&  (*l) != c ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -1837,7 +1863,7 @@ void Workspace::smartPlacement(Client* c){
             //test the position of each window on the desk
             QValueList<Client*>::ConstIterator l;
             for( l = clients.begin(); l != clients.end() ; ++l ) {
-                if( (*l)->isOnDesktop(desktop) && (*l) != desktop_client &&
+                if( (*l)->isOnDesktop(desktop) && 
                     (*l) != c   &&  !c->isIconified() ) {
 
                     xl = (*l)->x();          yt = (*l)->y();
@@ -2052,7 +2078,7 @@ void Workspace::lowerClient( Client* c )
     if ( !c )
         return;
 
-    if ( c == desktop_client )
+    if ( c->isDesktop() )
         return; // deny
 
     ClientList saveset;
@@ -2070,7 +2096,7 @@ void Workspace::lowerClient( Client* c )
             saveset.append( t );
             t = tmp;
         }
-        if ( t && !saveset.contains( t ) && t != desktop_client ) {
+        if ( t && !saveset.contains( t ) ) {
             lowerClient( t );
             return;
         }
@@ -2085,9 +2111,8 @@ void Workspace::lowerClient( Client* c )
     stacking_order = constrainedStackingOrder( stacking_order );
     Window* new_stack = new Window[ stacking_order.count() + 1 ];
     int i = 0;
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
         new_stack[i++] = (*it)->winId();
-    }
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
@@ -2110,7 +2135,7 @@ void Workspace::raiseClient( Client* c )
 
     ClientList saveset;
 
-    if ( c == desktop_client ) {
+    if ( c->isDesktop() ) {
         saveset.clear();
         saveset.append( c );
         raiseTransientsOf(saveset, c );
@@ -2133,7 +2158,7 @@ void Workspace::raiseClient( Client* c )
             saveset.append( t );
             t = tmp;
         }
-        if ( t && !saveset.contains( t ) && t != desktop_client ) {
+        if ( t && !saveset.contains( t ) ) {
             raiseClient( t );
             most_recently_raised = c;
             return;
@@ -2171,9 +2196,8 @@ void Workspace::raiseClient( Client* c )
 
     Window* new_stack = new Window[ stacking_order.count() + 1 ];
     int i = 0;
-    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it) {
+    for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
         new_stack[i++] = (*it)->winId();
-    }
     XRestackWindows(qt_xdisplay(), new_stack, i);
     delete [] new_stack;
 
@@ -2301,42 +2325,14 @@ void Workspace::focusToNull(){
 
 
 /*!
-  Declares client \a c to be the desktop.
- */
-void Workspace::setDesktopClient( Client* c)
-{
-    desktop_client = c;
-    if ( desktop_client ) {
-        desktop_client->lower();
-        desktop_client->setGeometry( geometry() );
-    }
-}
-
-
-/*!
   Refreshes all the client windows
  */
 void Workspace::refresh() {
-   /* This idea/code is borrowed from FVWM 2.x */
-   XSetWindowAttributes attributes;
-   unsigned long valuemask = CWOverrideRedirect|
-                             CWBackingStore|
-                             CWSaveUnder|
-                             CWBackPixmap;
-   attributes.background_pixmap = None;
-   attributes.save_under = False;
-   attributes.override_redirect = True;
-   attributes.backing_store = NotUseful;
-   WId rw = XCreateWindow(qt_xdisplay(), root, 0, 0,
-                          desktop_client->width(),
-                          desktop_client->height(),
-                          0,
-                          CopyFromParent, CopyFromParent,
-                          CopyFromParent, valuemask,
-                          &attributes);
-   XMapWindow(qt_xdisplay(), rw);
-   XDestroyWindow(qt_xdisplay(), rw);
-   XFlush(qt_xdisplay());
+    QWidget w( 0, 0, WX11BypassWM );
+    w.setGeometry( QApplication::desktop()->geometry() );
+    w.show();
+    w.hide();
+    QApplication::flushX();
 }
 
 /*!
@@ -2517,12 +2513,12 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     } else {
         focusToNull();
     }
-    if( desktop_client ) {
+    if( !desktops.isEmpty() ) {
         Window w_tmp;
         int i_tmp;
         XGetInputFocus( qt_xdisplay(), &w_tmp, &i_tmp );
         if( w_tmp == null_focus_window )
-            requestFocus( desktop_client );
+            requestFocus( desktops.last() );
     }
 
     // Update focus chain:
@@ -2882,19 +2878,6 @@ void Workspace::slotSwitchToDesktop( int i )
         setCurrentDesktop( i );
 }
 
-/*void Workspace::slotSwitchToWindow( int i )
-{
-        int n = 0;
-        for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-                if( (*it)->isOnDesktop( currentDesktop() ) ) {
-                        if( n == i ) {
-                                activateClient( (*it) );
-                                break;
-                        }
-                        n++;
-                }
-        }
-}*/
 
 void Workspace::slotWindowToDesktop( int i )
 {
@@ -3297,7 +3280,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
          QValueList<Client *>::ConstIterator l;
          for (l = clients.begin();l != clients.end();++l )
          {
-            if ((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
+            if ((*l)->isOnDesktop(currentDesktop()) && 
                !(*l)->isIconified()
 #if 0
                 && (*l)->transientFor() == None
@@ -3596,8 +3579,8 @@ void Workspace::slotResetAllClients()
     block_focus = FALSE;
     if ( active )
         requestFocus( active );
-    else if( desktop_client )
-        requestFocus( desktop_client );
+    else if( !desktops.isEmpty() )
+        requestFocus( desktops.last() );
     else
         focusToNull();
 

@@ -206,8 +206,6 @@ public:
     QPopupMenu* clientPopup( Client* );
     void showWindowMenuAt( unsigned long id, int x, int y );
 
-    void setDesktopClient( Client* );
-
     void iconifyOrDeiconifyTransientsOf( Client* );
     void setStickyTransientsOf( Client*, bool sticky );
 
@@ -229,8 +227,9 @@ public:
     void unclutterDesktop();
     void doNotManage(QString);
     void setCurrentDesktop( int new_desktop );
-	void nextDesktop();
-	void previousDesktop();
+    void nextDesktop();
+    void previousDesktop();
+    void circulateDesktopApplications();
 
     QString desktopName( int desk );
     void setDesktopLayout(int o, int x, int y);
@@ -389,13 +388,13 @@ private:
     void writeFakeSessionInfo();
     QValueList<CascadingInfo> cci;
 
-    Client* desktop_client;
     Client* active_client;
     Client* last_active_client;
     Client* should_get_focus;
     Client* most_recently_raised;
 
     ClientList clients;
+    ClientList desktops;
     ClientList stacking_order;
     ClientList focus_chain;
 
@@ -449,6 +448,8 @@ private:
     XineramaScreenInfo *xineramaInfo;
     XineramaScreenInfo dummy_xineramaInfo;
 #endif
+
+    void addClient( Client* c );
 };
 
 inline WId Workspace::rootWin() const
