@@ -367,9 +367,9 @@ void Workspace::raiseClientWithinApplication( Client* c )
         }
     }
 
-void Workspace::raiseClientRequest( Client* c )
+void Workspace::raiseClientRequest( Client* c, NET::RequestSource src, Time timestamp )
     {
-    if( allowFullClientRaising( c ))
+    if( src == NET::FromTool || allowFullClientRaising( c, timestamp ))
         raiseClient( c );
     else
         {
@@ -378,16 +378,16 @@ void Workspace::raiseClientRequest( Client* c )
         }
     }
 
-void Workspace::lowerClientRequest( Client* c )
+void Workspace::lowerClientRequest( Client* c, NET::RequestSource src, Time /*timestamp*/ )
     {
     // If the client has support for all this focus stealing prevention stuff,
     // do only lowering within the application, as that's the more logical
     // variant of lowering when application requests it.
     // No demanding of attention here of course.
-    if( c->hasUserTimeSupport())
-        lowerClientWithinApplication( c );
-    else
+    if( src == NET::FromTool || !c->hasUserTimeSupport())
         lowerClient( c );
+    else
+        lowerClientWithinApplication( c );
     }
 
 void Workspace::restackClientUnderActive( Client* c )
@@ -605,24 +605,18 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
 // Client
 //*******************************
 
-void Client::restackWindow( Window /*above TODO */, int detail, NET::RequestSource source, bool send_event )
+void Client::restackWindow( Window /*above TODO */, int detail, NET::RequestSource src, Time timestamp, bool send_event )
     {
     switch ( detail )
         {
         case Above:
         case TopIf:
-            if( source == NET::FromTool )
-                workspace()->raiseClient( this );
-            else
-                workspace()->raiseClientRequest( this );
-            break;
+            workspace()->raiseClientRequest( this, src, timestamp );
+          break;
         case Below:
         case BottomIf:
-            if( source == NET::FromTool )
-                workspace()->lowerClient( this );
-            else
-                workspace()->lowerClientRequest( this );
-            break;
+            workspace()->lowerClientRequest( this, src, timestamp );
+          break;
         case Opposite:
         default:
             break;

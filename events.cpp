@@ -89,7 +89,7 @@ void WinInfo::changeState( unsigned long state, unsigned long mask )
 // ****************************************
 
 RootInfo::RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr )
-    : NETRootInfo2( dpy, w, name, pr, pr_num, scr )
+    : NETRootInfo3( dpy, w, name, pr, pr_num, scr )
     {
     workspace = ws;
     }
@@ -161,10 +161,10 @@ void RootInfo::gotPing( Window w, Time timestamp )
         c->gotPing( timestamp );
     }
 
-void RootInfo::restackWindow( Window w, Window above, int detail )
+void RootInfo::restackWindow( Window w, RequestSource source, Window above, int detail, Time timestamp )
     {
     if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
-        c->restackWindow( above, detail, NET::FromTool, true );
+        c->restackWindow( above, detail, source, timestamp, true );
     }
 
 // ****************************************
@@ -791,7 +791,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
         configureRequest( e->value_mask, e->x, e->y, e->width, e->height );
 
     if ( e->value_mask & CWStackMode )
-        restackWindow( e->above, e->detail, NET::FromApplication );
+        restackWindow( e->above, e->detail, NET::FromApplication, userTime(), false );
 
     // TODO sending a synthetic configure notify always is fine, even in cases where
     // the ICCCM doesn't require this - it can be though of as 'the WM decided to move

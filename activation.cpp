@@ -489,7 +489,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
 // a window to be fully raised upon its own request (XRaiseWindow),
 // if refused, it will be raised only on top of windows belonging
 // to the same application
-bool Workspace::allowFullClientRaising( const Client* c )
+bool Workspace::allowFullClientRaising( const Client* c, Time time )
     {
     if( session_saving
         && options->focusStealingPreventionLevel <= 2 ) // <= normal
@@ -516,15 +516,10 @@ bool Workspace::allowFullClientRaising( const Client* c )
         }
     if( options->focusStealingPreventionLevel == 3 ) // high
         return false;
-    if( !c->hasUserTimeSupport())
-        {
-        kdDebug( 1212 ) << "Raising: No support" << endl;
-        if( options->focusStealingPreventionLevel == 1 ) // low
-            return true;
-        }
-    // options->focusStealingPreventionLevel == 2 // normal
-    kdDebug( 1212 ) << "Raising: Refusing" << endl;
-    return false;
+    Time user_time = ac->userTime();
+    kdDebug( 1212 ) << "Raising, compared:" << time << ":" << user_time
+        << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
+    return timestampCompare( time, user_time ) >= 0; // time >= user_time
     }
 
 // called from Client after FocusIn that wasn't initiated by KWin and the client

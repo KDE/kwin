@@ -134,8 +134,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         QPoint adjustClientPosition( Client* c, QPoint pos );
         void raiseClient( Client* c );
         void lowerClient( Client* c );
-        void raiseClientRequest( Client* c );
-        void lowerClientRequest( Client* c );
+        void raiseClientRequest( Client* c, NET::RequestSource src, Time timestamp );
+        void lowerClientRequest( Client* c, NET::RequestSource src, Time timestamp );
         void restackClientUnderActive( Client* );
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client * );
@@ -346,7 +346,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         ClientList constrainedStackingOrder();
         void raiseClientWithinApplication( Client* c );
         void lowerClientWithinApplication( Client* c );
-        bool allowFullClientRaising( const Client* c );
+        bool allowFullClientRaising( const Client* c, Time timestamp );
         bool keepTransientAbove( const Client* mainwindow, const Client* transient );
         void blockStackingUpdates( bool block );
         void updateCurrentTopMenu();
@@ -539,7 +539,7 @@ class StackingUpdatesBlocker
     };
 
 // NET WM Protocol handler class
-class RootInfo : public NETRootInfo2
+class RootInfo : public NETRootInfo3
     {
     private:
         typedef KWinInternal::Client Client;  // because of NET::Client
@@ -554,7 +554,7 @@ class RootInfo : public NETRootInfo2
         virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction);
         virtual void moveResizeWindow(Window w, int flags, int x, int y, int width, int height );
         virtual void gotPing(Window w, Time timestamp);
-        virtual void restackWindow(Window w, Window above, int detail);
+        virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp);
     private:
         Workspace* workspace;
     };
