@@ -597,7 +597,8 @@ void KDEDefaultButton::mouseReleaseEvent( QMouseEvent* e )
 KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
 									const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WStaticContents |
-								   WRepaintNoErase )
+								   WRepaintNoErase ),
+      m_closing(false)
 {
 	// No flicker thanks
     setBackgroundMode( QWidget::NoBackground );
@@ -665,6 +666,8 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 							largeButtons, isLeft, false, NULL, i18n("Menu"));
    					connect( button[BtnMenu], SIGNAL(pressed()),
 							this, SLOT(menuButtonPressed()) );
+					connect( button[BtnMenu], SIGNAL(released()),
+							 this, SLOT(menuButtonReleased()));
 					hb->addWidget( button[BtnMenu] );
 				}
 				break;
@@ -1081,7 +1084,7 @@ void KDEDefaultClient::menuButtonPressed()
 
 	if (dbl)
 	{
-		closeWindow();
+		m_closing = true;
 		return;
 	}
 
@@ -1089,6 +1092,12 @@ void KDEDefaultClient::menuButtonPressed()
 					   button[BtnMenu]->rect().bottomLeft().y()+2 );
 	workspace()->showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ), this );
 	button[BtnMenu]->setDown(false);
+}
+
+void KDEDefaultClient::menuButtonReleased()
+{
+	if (m_closing)
+		closeWindow();
 }
 
 };

@@ -39,7 +39,7 @@ class KDEDefaultHandler: public QObject
 		void readConfig();
 		void createPixmaps();
 		void freePixmaps();
-		void drawButtonBackground(KPixmap *pix, 
+		void drawButtonBackground(KPixmap *pix,
 				const QColorGroup &g, bool sunken);
 };
 
@@ -47,11 +47,11 @@ class KDEDefaultHandler: public QObject
 class KDEDefaultButton : public KWinButton
 {
 	public:
-		KDEDefaultButton(Client *parent=0, const char *name=0, 
+		KDEDefaultButton(Client *parent=0, const char *name=0,
 			 bool largeButton=true, bool isLeftButton=true,
 			 bool isStickyButton=false, const unsigned char *bitmap=NULL,
 			 const QString& tip=NULL);
-		~KDEDefaultButton(); 
+		~KDEDefaultButton();
 
 		int last_button;
 		void turnOn( bool isOn );
@@ -80,7 +80,7 @@ class KDEDefaultClient : public Client
 	Q_OBJECT
 
 	public:
-		KDEDefaultClient( Workspace *ws, WId w, QWidget *parent=0, 
+		KDEDefaultClient( Workspace *ws, WId w, QWidget *parent=0,
 						  const char *name=0 );
 		~KDEDefaultClient() {;}
 
@@ -99,13 +99,14 @@ class KDEDefaultClient : public Client
 	protected slots:
 		void slotMaximize();
 		void menuButtonPressed();
+	    void menuButtonReleased();
 
 	private:
 		void doShape();
 		void calcHiddenButtons();
 		void addClientButtons( const QString& s, bool isLeft=true );
 
-		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, 
+		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
 					  BtnMenu, BtnSticky, BtnCount };
 		KDEDefaultButton* button[ KDEDefaultClient::BtnCount ];
 		int           lastButtonWidth;
@@ -113,6 +114,7 @@ class KDEDefaultClient : public Client
 		bool          largeButtons;
 		QBoxLayout*   hb;
 		QSpacerItem*  titlebar;
+		bool m_closing;
 };
 
 };
