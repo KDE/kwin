@@ -576,132 +576,148 @@ void KWMThemeClient::doShape()
     int h1 = framePixmaps[FrameTopLeft]->height();
     if (w1 > width()/2) w1 = width()/2;
     if (h1 > height()/2) h1 = height()/2;
-    p.drawPixmap(0,0,*framePixmaps[FrameTopLeft]->mask(),
-		 0,0,w1, h1);
+    if (framePixmaps[FrameTopLeft]->mask())
+        p.drawPixmap(0,0,*framePixmaps[FrameTopLeft]->mask(),
+		     0,0,w1, h1);
     int w2 = framePixmaps[FrameTopRight]->width();
     int h2 = framePixmaps[FrameTopRight]->height();
     if (w2 > width()/2) w2 = width()/2;
     if (h2 > height()/2) h2 = height()/2;
-    p.drawPixmap(width()-w2,0,*framePixmaps[FrameTopRight]->mask(),
-		 framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
+    if (framePixmaps[FrameTopRight]->mask())
+        p.drawPixmap(width()-w2,0,*framePixmaps[FrameTopRight]->mask(),
+		     framePixmaps[FrameTopRight]->width()-w2,0,w2, h2);
 
     int w3 = framePixmaps[FrameBottomLeft]->width();
     int h3 = framePixmaps[FrameBottomLeft]->height();
     if (w3 > width()/2) w3 = width()/2;
     if (h3 > height()/2) h3 = height()/2;
-    p.drawPixmap(0,height()-h3,*framePixmaps[FrameBottomLeft]->mask(),
-		 0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
+    if (framePixmaps[FrameBottomLeft]->mask())
+        p.drawPixmap(0,height()-h3,*framePixmaps[FrameBottomLeft]->mask(),
+		     0,framePixmaps[FrameBottomLeft]->height()-h3,w3, h3);
 
     int w4 = framePixmaps[FrameBottomRight]->width();
     int h4 = framePixmaps[FrameBottomRight]->height();
     if (w4 > width()/2) w4 = width()/2;
     if (h4 > height()/2) h4 = height()/2;
-    p.drawPixmap(width()-w4,height()-h4,*framePixmaps[FrameBottomRight]->mask(),
-		 framePixmaps[FrameBottomRight]->width()-w4,
-		 framePixmaps[FrameBottomRight]->height()-h4,
-		 w4, h4);
+    if (framePixmaps[FrameBottomRight]->mask())
+        p.drawPixmap(width()-w4,height()-h4,*framePixmaps[FrameBottomRight]->mask(),
+		     framePixmaps[FrameBottomRight]->width()-w4,
+		     framePixmaps[FrameBottomRight]->height()-h4,
+		     w4, h4);
 
     QPixmap pm;
     QWMatrix m;
     int n,s,w;
     //top
-    pm = *framePixmaps[FrameTop]->mask();
+    if (framePixmaps[FrameTop]->mask())
+    {
+        pm = *framePixmaps[FrameTop]->mask();
 
-    s = width()-w2-w1;
-    n = s/pm.width();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
+        s = width()-w2-w1;
+        n = s/pm.width();
+        w = n>0?s/n:s;
+        m.reset();
+        m.scale(w/(float)pm.width(), 1);
+        pm = pm.xForm(m);
 
-    x = w1;
-    while (1){
-      if (pm.width() < width()-w2-x){
-	p.drawPixmap(x,maxExtent-pm.height()-1,
-		     pm);
-	x += pm.width();
-      }
-      else {
-	p.drawPixmap(x,maxExtent-pm.height()-1,
-		     pm,
-		     0,0,width()-w2-x,pm.height());
-	break;
-      }
+        x = w1;
+        while (1){
+            if (pm.width() < width()-w2-x){
+                p.drawPixmap(x,maxExtent-pm.height()-1,
+		             pm);
+	        x += pm.width();
+            }
+            else {
+	        p.drawPixmap(x,maxExtent-pm.height()-1,
+		             pm,
+		             0,0,width()-w2-x,pm.height());
+	        break;
+            }
+        }
     }
 
     //bottom
-    pm = *framePixmaps[FrameBottom]->mask();
+    if (framePixmaps[FrameBottom]->mask())
+    {
+        pm = *framePixmaps[FrameBottom]->mask();
 
-    s = width()-w4-w3;
-    n = s/pm.width();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
+        s = width()-w4-w3;
+        n = s/pm.width();
+        w = n>0?s/n:s;
+        m.reset();
+        m.scale(w/(float)pm.width(), 1);
+        pm = pm.xForm(m);
 
-    x = w3;
-    while (1){
-      if (pm.width() < width()-w4-x){
-	p.drawPixmap(x,height()-maxExtent+1,pm);
-	x += pm.width();
-      }
-      else {
-	p.drawPixmap(x,height()-maxExtent+1,pm,
-		     0,0,width()-w4-x,pm.height());
-	break;
-      }
+        x = w3;
+        while (1){
+          if (pm.width() < width()-w4-x){
+	    p.drawPixmap(x,height()-maxExtent+1,pm);
+	    x += pm.width();
+          }
+          else {
+	    p.drawPixmap(x,height()-maxExtent+1,pm,
+	    		 0,0,width()-w4-x,pm.height());
+	    break;
+          }
+        }
     }
 
     //left
-    pm = *framePixmaps[FrameLeft]->mask();
+    if (framePixmaps[FrameLeft]->mask())
+    {
+        pm = *framePixmaps[FrameLeft]->mask();
 
-    s = height()-h3-h1;
-    n = s/pm.height();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
+        s = height()-h3-h1;
+        n = s/pm.height();
+        w = n>0?s/n:s;
+        m.reset();
+        m.scale(1, w/(float)pm.height());
+        pm = pm.xForm(m);
 
-    y = h1;
-    while (1){
-      if (pm.height() < height()-h3-y){
-	p.drawPixmap(maxExtent-pm.width()-1, y,
-		     pm);
-	y += pm.height();
-      }
-      else {
-	p.drawPixmap(maxExtent-pm.width()-1, y,
-		     pm,
-		     0,0, pm.width(),
-		     height()-h3-y);
-	break;
-      }
+        y = h1;
+        while (1){
+          if (pm.height() < height()-h3-y){
+	    p.drawPixmap(maxExtent-pm.width()-1, y,
+		         pm);
+	    y += pm.height();
+          }
+          else {
+	    p.drawPixmap(maxExtent-pm.width()-1, y,
+		         pm,
+		         0,0, pm.width(),
+		         height()-h3-y);
+	    break;
+          }
+        }
     }
 
     //right
-    pm = *framePixmaps[FrameRight]->mask();
+    if (framePixmaps[FrameRight]->mask())
+    {
+        pm = *framePixmaps[FrameRight]->mask();
 
-    s = height()-h4-h2;
-    n = s/pm.height();
-    w = n>0?s/n:s;
-    m.reset();
-    m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
+        s = height()-h4-h2;
+        n = s/pm.height();
+        w = n>0?s/n:s;
+        m.reset();
+        m.scale(1, w/(float)pm.height());
+        pm = pm.xForm(m);
 
-    y = h2;
-    while (1){
-      if (pm.height() < height()-h4-y){
-	p.drawPixmap(width()-maxExtent+1, y,
-		     pm);
-	y += pm.height();
-      }
-      else {
-	p.drawPixmap(width()-maxExtent+1, y,
-		     pm,
-		     0,0, pm.width(),
-		     height()-h4-y);
-	break;
-      }
+        y = h2;
+        while (1){
+          if (pm.height() < height()-h4-y){
+	    p.drawPixmap(width()-maxExtent+1, y,
+		         pm);
+	    y += pm.height();
+          }
+          else {
+	    p.drawPixmap(width()-maxExtent+1, y,
+		         pm,
+		         0,0, pm.width(),
+		         height()-h4-y);
+	    break;
+          }
+        }
     }
     p.fillRect(maxExtent-1, maxExtent-1, width()-2*maxExtent+2, height()-2*maxExtent+2, color1);
     setMask(shapemask);
