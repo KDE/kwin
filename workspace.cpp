@@ -23,7 +23,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kprocess.h>
 #include <kiconloader.h>
 #include <kstartupinfo.h>
-#include <kdesktopwidget.h>
+#include <qdesktopwidget.h>
 
 #include "workspace.h"
 #include "client.h"
