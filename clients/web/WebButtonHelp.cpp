@@ -45,7 +45,7 @@ WebButtonHelp::clickEvent(int /* button */)
   emit(help());
 }
 
-};
+}
 
 #include "WebButtonHelp.moc"
 // vim:ts=2:sw=2:tw=78:set et:

@@ -35,7 +35,7 @@ public:
     Workspace* m_WorkspacePtr;
 };
 
-};
+}
 
 Placement::Placement(Workspace* w)
 {

@@ -39,7 +39,7 @@ using namespace KWinInternal;
 
 namespace KWinInternal {
 Options* options;
-};
+}
 
 Atoms* atoms;
 

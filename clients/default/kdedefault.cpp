@@ -1100,7 +1100,7 @@ void KDEDefaultClient::menuButtonReleased()
 		closeWindow();
 }
 
-};
+}
 
 // Extended KWin plugin interface
 extern "C"

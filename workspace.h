@@ -522,6 +522,6 @@ inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
 }
 
 
-};
+}
 
 #endif

@@ -112,7 +112,7 @@ class QuartzClient : public Client
 		QSpacerItem*  titlebar;
 };
 
-};
+}
 
 #endif
 // vim: ts=4

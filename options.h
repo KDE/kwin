@@ -364,6 +364,6 @@ private:
 
 extern Options* options;
 
-}; // namespace
+} // namespace
 
 #endif

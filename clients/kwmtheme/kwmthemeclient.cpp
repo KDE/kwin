@@ -799,7 +799,7 @@ void KWMThemeClient::init()
     //
 }
 
-};
+}
 
 extern "C"
 {

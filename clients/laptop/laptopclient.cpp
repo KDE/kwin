@@ -683,7 +683,7 @@ LaptopClient::mousePosition( const QPoint& p ) const
   return m;
 }
 
-};
+}
 
 extern "C"
 {

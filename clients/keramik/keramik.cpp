@@ -1457,7 +1457,7 @@ Client::MousePosition KeramikClient::mousePosition( const QPoint &p ) const
 	return Nowhere;
 }
 
-}; // namespace Keramik
+} // namespace Keramik
 
 
 

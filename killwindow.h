@@ -23,6 +23,6 @@ private:
     Workspace* workspace;
 };
 
-};
+}
 
 #endif

@@ -44,7 +44,7 @@ WebButtonClose::clickEvent(int /* button */)
   emit(closeWindow());
 }
 
-};
+}
 
 #include "WebButtonClose.moc"
 // vim:ts=2:sw=2:tw=78:set et:

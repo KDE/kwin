@@ -615,7 +615,7 @@ Client::MousePosition ModernSys::mousePosition( const QPoint& p) const
     return m;
 }
 
-};
+}
 
 // KWin extended plugin interface
 extern "C"

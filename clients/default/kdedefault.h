@@ -117,7 +117,7 @@ class KDEDefaultClient : public Client
 		bool m_closing;
 };
 
-};
+}
 
 #endif
 // vim: ts=4

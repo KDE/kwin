@@ -54,7 +54,7 @@ private:
     QGridLayout* layout;
 };
 
-};
+}
 
 #endif
 

@@ -25,6 +25,6 @@ class GeometryTip: public QLabel
 	const Client* c;
 };
 
-};
+}
 
 #endif

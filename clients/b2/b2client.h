@@ -126,6 +126,6 @@ private:
     int in_unobs;
 };
 
-};
+}
 
 #endif

@@ -112,7 +112,7 @@ class KWinWidgetButton: public QWidget
 };
 
 
-};
+}
 
 #endif
 // vim: ts=4

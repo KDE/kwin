@@ -43,7 +43,7 @@
 // KCModule plugin interface
 // =========================
 typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") );
+K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") )
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, const QStringList &)
        : DCOPObject("KWinClientDecoration"), KCModule(KWinDecoFactory::instance(), parent, name),

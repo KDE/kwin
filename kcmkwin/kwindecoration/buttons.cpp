@@ -137,7 +137,7 @@ ButtonSource::ButtonSource( QWidget* parent, const char* name )
 
 	spacerCount = 0;	// No spacers inserted yet
 	setAcceptDrops( TRUE );
-};
+}
 
 
 ButtonSource::~ButtonSource()

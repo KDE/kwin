@@ -43,6 +43,6 @@ private:
 
 };
 
-};
+}
 
 #endif

@@ -135,7 +135,7 @@ public:
     QRect* workarea; //  array of workareas for virtual desktops
 };
 
-};
+}
 
 using namespace KWinInternal;
 
@@ -3009,10 +3009,10 @@ void Workspace::slotGrabWindow()
 		QMemArray<QRect> maskedAwayRects = maskedAway.rects();
 
 		//Fill the masked away area with black.
-		QPainter p(&p);
+		QPainter pt(&p);
 		for (uint pos = 0; pos < maskedAwayRects.count(); pos++)
-		    p.fillRect(maskedAwayRects[pos], Qt::black);
-		p.end();
+		    pt.fillRect(maskedAwayRects[pos], Qt::black);
+		pt.end();
 	    }
 	}
 

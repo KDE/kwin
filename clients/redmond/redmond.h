@@ -98,7 +98,7 @@ class GalliumClient : public Client
 		bool           closing;
 };
 
-};
+}
 
 #endif
 // vim: ts=4

@@ -784,7 +784,7 @@ void GalliumClient::menuButtonReleased()
 	closeWindow();
 }
 
-};
+}
 
 extern "C"
 {

@@ -511,7 +511,7 @@ WebClient::animateIconifyOrDeiconify(bool /* iconify */)
   // Nice and simple ;)
 }
 
-};
+}
 
 #include "Web.moc"
 // vim:ts=2:sw=2:tw=78:set et:

@@ -798,7 +798,7 @@ void QuartzClient::menuButtonPressed()
 	button[BtnMenu]->setDown(false);
 }
 
-};
+}
 
 // Extended KWin plugin interface
 /////////////////////////////////

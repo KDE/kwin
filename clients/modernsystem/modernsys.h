@@ -68,6 +68,6 @@ private:
     QString oldTitle;
 };
 
-};
+}
 
 #endif

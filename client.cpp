@@ -109,7 +109,7 @@ public:
     QCString windowRole;
 };
 
-};
+}
 
 // put all externs before the namespace statement to allow the linker
 // to resolve them properly

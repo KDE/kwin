@@ -33,7 +33,7 @@ public:
     int electric_border_delay;
     bool show_geometry_tip;
 };
-};
+}
 
 #define colors (d->colors)
 #define cg (d->cg)

@@ -82,6 +82,6 @@ private:
     int lastBufferWidth;
 };
 
-};
+}
 
 #endif

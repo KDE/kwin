@@ -58,7 +58,7 @@ WebButtonMaximize::clickEvent(int button)
   emit(maximize(button));
 }
 
-};
+}
 
 #include "WebButtonMaximize.moc"
 // vim:ts=2:sw=2:tw=78:set et:

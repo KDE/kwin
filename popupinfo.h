@@ -38,6 +38,6 @@ private:
     QString m_infoString;
 };
 
-};
+}
 
 #endif

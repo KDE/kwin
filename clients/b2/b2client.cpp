@@ -142,7 +142,7 @@ B2Button::B2Button(Client *_client, QWidget *parent, const QString& tip)
     client = _client;
     useMiniIcon = false;
     setFixedSize(16,16); 
-};
+}
 
 
 QSize B2Button::sizeHint() const
@@ -958,7 +958,7 @@ void B2Client::positionButtons()
     titlebar->move(bar_x_ofs, 0);
 }
 
-};
+}
 
 extern "C"
 {

@@ -527,6 +527,6 @@ public:
     void setShade( bool , int ){}
 };
 
-};
+}
 
 #endif

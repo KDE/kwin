@@ -40,6 +40,6 @@ protected:
     QCString defaultPlugin;
 };
 
-};
+}
 
 #endif

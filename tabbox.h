@@ -82,6 +82,6 @@ inline TabBox::Mode TabBox::mode() const
     return m;
 }
 
-};
+}
 
 #endif
