@@ -1149,6 +1149,11 @@ void Client::fetchName()
     if ( s != cap_normal ) 
         {
         bool reset_name = cap_normal.isEmpty();
+        for( unsigned int i = 0;
+             i < s.length();
+             ++i )
+            if( !s[ i ].isPrint())
+                s[ i ] = ' ';
         cap_normal = s;
         bool was_suffix = ( !cap_suffix.isEmpty());
         cap_suffix = QString::null;
