@@ -737,8 +737,8 @@ void KDEClient::paintEvent( QPaintEvent* )
                        options->color(Options::TitleBar, false));
         }
         r = titlebar->geometry();
-        QFontMetrics fm(options->font(false));
-        p.setFont(options->font(false));
+        QFontMetrics fm(options->font(true)); // font(false) doesn't work yet.
+        p.setFont(options->font(true));
         p.setPen(options->color(Options::Font, false));
         p.drawText(r.x(), r.y(), r.width(), r.height()-1,
                    AlignLeft, caption() );
