@@ -7,6 +7,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kdebug.h>
+#include <kkeynative.h>
 #include <kshortcut.h>
 #include <dcopclient.h>
 #include <qapplication.h>
