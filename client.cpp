@@ -502,7 +502,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
 	XFree( classHint.res_name );
 	XFree( classHint.res_class );
     }
-    
+
     getWMHints();
     getWindowProtocols();
     getWmNormalHints(); // get xSizeHint
@@ -2686,7 +2686,8 @@ NET::WindowType Client::windowType() const
 
 bool Client::wantsTabFocus() const
 {
-    return (windowType() == NET::Normal || windowType() == NET::Override ) && ( input || Ptakefocus ) && !skip_taskbar;
+    return (windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Override ) 
+			  && ( input || Ptakefocus ) && !skip_taskbar;
 }
 
 
@@ -2702,7 +2703,7 @@ bool Client::wantsInput() const
 bool Client::isMovable() const
 {
     return may_move &&
-	( windowType() == NET::Normal || windowType() == NET::Toolbar ) &&
+	( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Toolbar ) &&
 	( !isMaximized() || ( options->moveResizeMaximizedWindows || max_mode != MaximizeFull ) );
 }
 
