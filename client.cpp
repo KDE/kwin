@@ -1158,7 +1158,7 @@ void Client::showContextHelp()
   Fetches the window's caption (WM_NAME property). It will be
   stored in the client's caption().
  */
-KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, QString, cl->cap_normal + cl->cap_suffix == value );
+KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, const Client*, cl != value && cl->caption() == value->caption());
 
 void Client::fetchName()
     {
@@ -1170,20 +1170,19 @@ void Client::fetchName()
         s = KWin::readNameProperty( window(), XA_WM_NAME );
     if ( s != cap_normal ) 
         {
-        cap_normal = "";
+        cap_normal = s;
         bool was_suffix = ( !cap_suffix.isEmpty());
         cap_suffix = QString::null;
-        if ( workspace()->findClient( FetchNameInternalPredicate( s ))) 
+        if ( workspace()->findClient( FetchNameInternalPredicate( this ))) 
             {
             int i = 2;
             do 
                 {
                 cap_suffix = " <" + QString::number(i) + ">";
                 i++;
-                } while ( workspace()->findClient( FetchNameInternalPredicate( s + cap_suffix )));
-            info->setVisibleName( ( s + cap_suffix ).utf8() );
+                } while ( workspace()->findClient( FetchNameInternalPredicate( this )));
+            info->setVisibleName( caption().utf8() );
             }
-        cap_normal = s;
         if( was_suffix && cap_suffix.isEmpty())
             {
             info->setVisibleName( "" ); // remove
