@@ -525,7 +525,9 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     focusStealingLayout->addWidget( focusStealingLabel );
     focusStealingLayout->addWidget( focusStealing, AlignLeft );
     wtstr = i18n( "This option specifies how much KWin will try to prevent unwanted focus stealing "
-                  "caused by unexpected activation of new windows.<ul>"
+                  "caused by unexpected activation of new windows. (Note: This feature doesn't "
+                  "work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)"
+                  "<ul>"
                   "<li><em>None:</em> The standard old behavior - prevention is turned off "
                   "and new windows always become activated.</li>"
                   "<li><em>Low:</em> Prevention is enabled; when some window doesn't have support "

@@ -276,11 +276,6 @@ void Workspace::activateClient( Client* c, bool force )
 
     if( options->focusPolicyIsReasonable())
         requestFocus( c, force );
-    else
-        {
-        if( mostRecentlyActivatedClient() != c )
-            c->demandAttention();
-        }
 
     c->updateUserTime();
     }

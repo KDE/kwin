@@ -68,6 +68,8 @@ unsigned long Options::updateSettings()
     // TODO use low level for now
     focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 1 );
     focusStealingPreventionLevel = KMAX( 0, KMIN( 4, focusStealingPreventionLevel ));
+    if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
+        focusStealingPreventionLevel = 0;
 
     KConfig *gc = new KConfig("kdeglobals", false, false);
     bool isVirtual = KApplication::desktop()->isVirtualDesktop();
