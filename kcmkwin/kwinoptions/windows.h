@@ -94,6 +94,7 @@ private:
   void setAltTabMode(bool);
   void setTraverseAll(bool);
   void setRollOverDesktops(bool);
+  void setShowPopupinfo(bool);
 
   QButtonGroup *fcsBox;
   QComboBox *focusCombo;
@@ -108,6 +109,7 @@ private:
   QRadioButton *cdeMode;
   QCheckBox    *traverseAll;
   QCheckBox    *rollOverDesktops;
+  QCheckBox    *showPopupinfo;
 
   KConfig *config;
 };

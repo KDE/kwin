@@ -61,6 +61,7 @@
 #define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
 #define KWIN_ALTTABMODE            "AltTabStyle"
 #define KWIN_TRAVERSE_ALL          "TraverseAll"
+#define KWIN_SHOW                  "Show"
 #define KWIN_ROLL_OVER_DESKTOPS    "RollOverDesktops"
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
@@ -225,6 +226,13 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
                   " an edge desktop to bring you to the desktop at the opposite edge." );
     QWhatsThis::add( rollOverDesktops, wtstr );
 
+    showPopupinfo = new QCheckBox( i18n("Show desktop name on switch"), kbdBox );
+    kLay->addMultiCellWidget(showPopupinfo, 4, 4, 0, 2);
+
+    wtstr = i18n( "Enable this option if you wish to see the current desktop"
+                  " name when the current desktop is changed." );
+    QWhatsThis::add( showPopupinfo, wtstr );
+
     lay->addWidget(kbdBox);
 
     lay->addStretch();
@@ -237,6 +245,7 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     connect(cdeMode, SIGNAL(clicked()), this, SLOT(slotChanged()));
     connect(traverseAll, SIGNAL(clicked()), this, SLOT(slotChanged()));
     connect(rollOverDesktops, SIGNAL(clicked()), this, SLOT(slotChanged()));
+    connect(showPopupinfo, SIGNAL(clicked()), this, SLOT(slotChanged()));
 
     load();
 }
@@ -327,6 +336,10 @@ void KFocusConfig::setRollOverDesktops(bool a) {
     rollOverDesktops->setChecked(a);
 }
 
+void KFocusConfig::setShowPopupinfo(bool a) {
+    showPopupinfo->setChecked(a);
+}
+
 void KFocusConfig::load( void )
 {
     QString key;
@@ -356,6 +369,9 @@ void KFocusConfig::load( void )
     setAltTabMode(key == "KDE");
 
     setRollOverDesktops( config->readBoolEntry(KWIN_ROLL_OVER_DESKTOPS, true ));
+
+    config->setGroup( "PopupInfo" );
+    setShowPopupinfo( config->readBoolEntry(KWIN_SHOW, false ));
 
     config->setGroup( "TabBox" );
     setTraverseAll( config->readBoolEntry(KWIN_TRAVERSE_ALL, false ));
@@ -400,6 +416,9 @@ void KFocusConfig::save( void )
 
     config->writeEntry( KWIN_ROLL_OVER_DESKTOPS, rollOverDesktops->isChecked());
 
+    config->setGroup( "PopupInfo" );
+    config->writeEntry( KWIN_SHOW, showPopupinfo->isChecked());
+
     config->setGroup( "TabBox" );
     config->writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
 
@@ -414,6 +433,7 @@ void KFocusConfig::defaults()
     setAltTabMode(true);
     setTraverseAll( false );
     setRollOverDesktops(true);
+    setShowPopupinfo(false);
 }
 
 KAdvancedConfig::~KAdvancedConfig ()
