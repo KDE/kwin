@@ -147,7 +147,7 @@ void Options::reload()
 
     animate_shade = config->readBoolEntry("AnimateShade", TRUE );
 
-    anim_steps = config->readNumEntry("AnimSteps", 50);
+    anim_steps = config->readNumEntry("AnimSteps", 10);
 
     border_snap_zone = config->readNumEntry("BorderSnapZone", 10);
     window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
