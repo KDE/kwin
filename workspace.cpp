@@ -2871,7 +2871,7 @@ void Workspace::slotGrabWindow()
   qWarning( "grabbing window!!!\n" );
 
     if ( active_client ) {
-	QPixmap p = QPixmap::grabWindow( active_client->window() );
+	QPixmap p = QPixmap::grabWindow( active_client->winId() );
 	QClipboard *cb = QApplication::clipboard();
 	cb->setPixmap( p );
     }
