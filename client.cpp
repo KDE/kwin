@@ -65,9 +65,6 @@ public:
 
 	state &= mask; // for safety, clear all other bits
 
-	if ( mask & NET::Shaded )
-	    m_client->setShade( state & NET::Shaded );
-
 	if ( (mask & NET::Max) == NET::Max ) {
 	    m_client->maximizeRaw( state & NET::MaxVert, state & NET::MaxHoriz );
 	} else if ( mask & NET::MaxVert ) {
@@ -75,6 +72,8 @@ public:
 	} else if ( mask & NET::MaxHoriz ) {
 	    m_client->maximizeRaw( m_client->maximizeMode() & KWinInternal::Client::MaximizeVertical, state & NET::MaxHoriz );
 	}
+	if ( mask & NET::Shaded )
+	    m_client->setShade( state & NET::Shaded );
 	if ( mask & NET::StaysOnTop) {
 	    m_client->setStaysOnTop( (state & NET::StaysOnTop) != 0 );
 	    if ( m_client->staysOnTop() )
@@ -776,11 +775,11 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
     // other settings from the previous session
     if ( session ) {
 	setSticky( session->sticky );
-	setShade( session->shaded );
 	setStaysOnTop( session->staysOnTop );
 	setSkipTaskbar( session->skipTaskbar );
 	setSkipPager( session->skipPager );
 	maximize( (MaximizeMode) session->maximize );
+	setShade( session->shaded );
 	geom_restore = session->restore;
     } else if ( !is_fullscreen ){
 	// window may want to be maximized
