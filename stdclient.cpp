@@ -258,7 +258,7 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 	button[6]->setIconSet( *question_mark_pix );
 	connect( button[6], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
-    
+
     hb->addWidget( button[3] );
     hb->addWidget( button[4] );
     hb->addWidget( button[5] );
@@ -294,8 +294,8 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 
     if ( button[6] ) {
     }
-    
-    
+
+
     if ( isTransient() ) {
 	// lighter decoration for transient windows
 	button[1]->hide();
@@ -384,7 +384,7 @@ void StdClient::paintEvent( QPaintEvent* )
     t.setRight( t.right() - 2 );
     p.setPen(options->color(Options::Font, isActive()));
     p.setFont(options->font(isActive()));
-    p.drawText( t, AlignLeft|AlignVCenter, caption() );
+    p.drawText( t, AlignLeft|AlignVCenter|SingleLine, caption() );
 }
 
 

@@ -245,7 +245,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 	mouse_emulation = FALSE;
 	XUngrabKeyboard( qt_xdisplay(), kwin_time );
     }
-    
+
     Client * c = findClient( e->xany.window );
     if ( c )
 	return c->windowEvent( e );
@@ -853,12 +853,11 @@ void Workspace::requestFocus( Client* c)
 
     if ( !popup || !popup->isVisible() )
 	popup_client = c;
-    
-    active_client = c;
 
     if ( c->isVisible() && !c->isShade() ) {
 	c->takeFocus();
 	should_get_focus = c;
+	setActiveClient( c );
     } else if ( c->isShade() ) {
 	// client cannot accept focus, but at least the window should be active (window menu, et. al. )
 	focusToNull();
@@ -1731,7 +1730,7 @@ void Workspace::desktopPopupAboutToShow()
 
 /*!
   The client popup menu will become visible soon.
-  
+
   Adjust the items according to the respective popup client.
  */
 void Workspace::clientPopupAboutToShow()
@@ -1916,7 +1915,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
 }
 
 
-/*! 
+/*!
   Handles keypress event during mouse emulation
  */
 bool Workspace::keyPressMouseEmulation( XKeyEvent key )
@@ -1925,12 +1924,12 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 	return FALSE;
     int kc = XKeycodeToKeysym(qt_xdisplay(), key.keycode, 0);
     int km = key.state & (ControlMask | Mod1Mask | ShiftMask);
-    
+
     bool is_control = km & ControlMask;
     bool is_alt = km & Mod1Mask;
     int delta = is_control?1:is_alt?32:8;
     QPoint pos = QCursor::pos();
-    
+
     switch ( kc ) {
     case XK_Left:
     case XK_KP_Left:
@@ -1959,7 +1958,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 	    uint state;
 	    Window w;
 	    Client * c = 0;
-	    do { 
+	    do {
 		w = child;
 		if (!c)
 		    c = findClientWidthId( w );
@@ -1998,7 +1997,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
     default:
 	return FALSE;
     }
-    
+
     QCursor::setPos( pos );
     return TRUE;
 
