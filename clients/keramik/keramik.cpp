@@ -1236,11 +1236,9 @@ void KeramikClient::iconChange()
 	if ( clientHandler->showAppIcons() ) {
 
 		// Force updateCaptionBuffer() to recreate the cached icons
-		if ( activeIcon )
-			delete activeIcon;
+            delete activeIcon;
 
-		if ( inactiveIcon )
-			delete inactiveIcon;
+            delete inactiveIcon;
 
 		activeIcon = inactiveIcon = NULL;
 
