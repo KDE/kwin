@@ -208,7 +208,7 @@ void Workspace::desktopPopupAboutToShow()
 
     desk_popup->clear();
     desk_popup->insertItem( i18n("&All Desktops"), 0 );
-    if ( active_client && active_client->isOnAllDesktops() )
+    if ( active_popup_client && active_popup_client->isOnAllDesktops() )
         desk_popup->setItemChecked( 0, TRUE );
     desk_popup->insertSeparator( -1 );
     int id;
@@ -225,8 +225,8 @@ void Workspace::desktopPopupAboutToShow()
                     .arg(i)
                     .arg( desktopName(i).replace( '&', "&&" )),
                 i );
-        if ( active_client &&
-             !active_client->isOnAllDesktops() && active_client->desktop()  == i )
+        if ( active_popup_client &&
+             !active_popup_client->isOnAllDesktops() && active_popup_client->desktop()  == i )
             desk_popup->setItemChecked( id, TRUE );
         }
     }
@@ -618,11 +618,12 @@ void Workspace::slotSwitchToDesktop( int i )
 
 void Workspace::slotWindowToDesktop( int i )
     {
-    if( i >= 1 && i <= numberOfDesktops() && active_client
-        && !active_client->isDesktop()
-        && !active_client->isDock()
-        && !active_client->isTopMenu())
-            sendClientToDesktop( active_client, i, true );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( i >= 1 && i <= numberOfDesktops() && c
+        && !c->isDesktop()
+        && !c->isDock()
+        && !c->isTopMenu())
+            sendClientToDesktop( c, i, true );
     }
 
 /*!
@@ -630,8 +631,9 @@ void Workspace::slotWindowToDesktop( int i )
  */
 void Workspace::slotWindowMaximize()
     {
-    if ( active_client )
-        performWindowOperation( active_client, Options::MaximizeOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if ( c )
+        performWindowOperation( c, Options::MaximizeOp );
     }
 
 /*!
@@ -639,8 +641,9 @@ void Workspace::slotWindowMaximize()
  */
 void Workspace::slotWindowMaximizeVertical()
     {
-    if ( active_client )
-        performWindowOperation( active_client, Options::VMaximizeOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if ( c )
+        performWindowOperation( c, Options::VMaximizeOp );
     }
 
 /*!
@@ -648,8 +651,9 @@ void Workspace::slotWindowMaximizeVertical()
  */
 void Workspace::slotWindowMaximizeHorizontal()
     {
-    if ( active_client )
-        performWindowOperation( active_client, Options::HMaximizeOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if ( c )
+        performWindowOperation( c, Options::HMaximizeOp );
     }
 
 
@@ -658,7 +662,8 @@ void Workspace::slotWindowMaximizeHorizontal()
  */
 void Workspace::slotWindowMinimize()
     {
-    performWindowOperation( active_client, Options::MinimizeOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    performWindowOperation( c, Options::MinimizeOp );
     }
 
 /*!
@@ -666,7 +671,8 @@ void Workspace::slotWindowMinimize()
  */
 void Workspace::slotWindowShade()
     {
-    performWindowOperation( active_client, Options::ShadeOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    performWindowOperation( c, Options::ShadeOp );
     }
 
 /*!
@@ -674,8 +680,9 @@ void Workspace::slotWindowShade()
  */
 void Workspace::slotWindowRaise()
     {
-    if ( active_client )
-        raiseClient( active_client );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if ( c )
+        raiseClient( c );
     }
 
 /*!
@@ -683,8 +690,9 @@ void Workspace::slotWindowRaise()
  */
 void Workspace::slotWindowLower()
     {
-    if ( active_client )
-        lowerClient( active_client );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if ( c )
+        lowerClient( c );
     }
 
 /*!
@@ -692,43 +700,50 @@ void Workspace::slotWindowLower()
   */
 void Workspace::slotWindowRaiseOrLower()
     {
-    if  ( active_client )
-        raiseOrLowerClient( active_client );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if  ( c )
+        raiseOrLowerClient( c );
     }
 
 void Workspace::slotWindowOnAllDesktops()
     {
-    if( active_client )
-        active_client->setOnAllDesktops( !active_client->isOnAllDesktops());
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( c )
+        c->setOnAllDesktops( !c->isOnAllDesktops());
     }
 
 void Workspace::slotWindowFullScreen()
     {
-    if( active_client )
-        performWindowOperation( active_client, Options::FullScreenOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( c )
+        performWindowOperation( c, Options::FullScreenOp );
     }
 
 void Workspace::slotWindowNoBorder()
     {
-    if( active_client )
-        performWindowOperation( active_client, Options::NoBorderOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( c )
+        performWindowOperation( c, Options::NoBorderOp );
     }
 
 void Workspace::slotWindowAbove()
     {
-    if( active_client )
-        performWindowOperation( active_client, Options::KeepAboveOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( c )
+        performWindowOperation( c, Options::KeepAboveOp );
     }
 
 void Workspace::slotWindowBelow()
     {
-    if( active_client )
-        performWindowOperation( active_client, Options::KeepBelowOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( c )
+        performWindowOperation( c, Options::KeepBelowOp );
     }
 void Workspace::slotSetupWindowShortcut()
     {
-    if( active_client )
-        performWindowOperation( active_client, Options::SetupWindowShortcutOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( c )
+        performWindowOperation( c, Options::SetupWindowShortcutOp );
     }
 
 /*!
@@ -739,10 +754,11 @@ void Workspace::slotWindowToNextDesktop()
     int d = currentDesktop() + 1;
     if ( d > numberOfDesktops() )
         d = 1;
-    if (active_client && !active_client->isDesktop()
-        && !active_client->isDock() && !active_client->isTopMenu())
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if (c && !c->isDesktop()
+        && !c->isDock() && !c->isTopMenu())
         {
-        setClientIsMoving( active_client );
+        setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
         popupinfo->showInfo( desktopName(currentDesktop()) );
@@ -757,10 +773,11 @@ void Workspace::slotWindowToPreviousDesktop()
     int d = currentDesktop() - 1;
     if ( d <= 0 )
         d = numberOfDesktops();
-    if (active_client && !active_client->isDesktop()
-        && !active_client->isDock() && !active_client->isTopMenu())
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if (c && !c->isDesktop()
+        && !c->isDock() && !c->isTopMenu())
         {
-        setClientIsMoving( active_client );
+        setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
         popupinfo->showInfo( desktopName(currentDesktop()) );
@@ -772,10 +789,11 @@ void Workspace::slotWindowToDesktopRight()
     int d = desktopToRight( currentDesktop());
     if( d == currentDesktop())
         return;
-    if (active_client && !active_client->isDesktop()
-        && !active_client->isDock() && !active_client->isTopMenu())
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if (c && !c->isDesktop()
+        && !c->isDock() && !c->isTopMenu())
         {
-        setClientIsMoving( active_client );
+        setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
         popupinfo->showInfo( desktopName(currentDesktop()) );
@@ -787,10 +805,11 @@ void Workspace::slotWindowToDesktopLeft()
     int d = desktopToLeft( currentDesktop());
     if( d == currentDesktop())
         return;
-    if (active_client && !active_client->isDesktop()
-        && !active_client->isDock() && !active_client->isTopMenu())
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if (c && !c->isDesktop()
+        && !c->isDock() && !c->isTopMenu())
         {
-        setClientIsMoving( active_client );
+        setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
         popupinfo->showInfo( desktopName(currentDesktop()) );
@@ -802,10 +821,11 @@ void Workspace::slotWindowToDesktopUp()
     int d = desktopUp( currentDesktop());
     if( d == currentDesktop())
         return;
-    if (active_client && !active_client->isDesktop()
-        && !active_client->isDock() && !active_client->isTopMenu())
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if (c && !c->isDesktop()
+        && !c->isDock() && !c->isTopMenu())
         {
-        setClientIsMoving( active_client );
+        setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
         popupinfo->showInfo( desktopName(currentDesktop()) );
@@ -817,10 +837,11 @@ void Workspace::slotWindowToDesktopDown()
     int d = desktopDown( currentDesktop());
     if( d == currentDesktop())
         return;
-    if (active_client && !active_client->isDesktop()
-        && !active_client->isDock() && !active_client->isTopMenu())
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if (c && !c->isDesktop()
+        && !c->isDock() && !c->isTopMenu())
         {
-        setClientIsMoving( active_client );
+        setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
         popupinfo->showInfo( desktopName(currentDesktop()) );
@@ -908,7 +929,8 @@ void Workspace::slotWindowClose()
     {
     if ( tab_box->isVisible() || popupinfo->isVisible() )
         return;
-    performWindowOperation( active_client, Options::CloseOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    performWindowOperation( c, Options::CloseOp );
     }
 
 /*!
@@ -916,7 +938,8 @@ void Workspace::slotWindowClose()
  */
 void Workspace::slotWindowMove()
     {
-    performWindowOperation( active_client, Options::UnrestrictedMoveOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    performWindowOperation( c, Options::UnrestrictedMoveOp );
     }
 
 /*!
@@ -924,7 +947,8 @@ void Workspace::slotWindowMove()
  */
 void Workspace::slotWindowResize()
     {
-    performWindowOperation( active_client, Options::UnrestrictedResizeOp );
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    performWindowOperation( c, Options::UnrestrictedResizeOp );
     }
 
 void Client::setShortcut( const QString& _cut )
