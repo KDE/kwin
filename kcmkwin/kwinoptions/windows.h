@@ -251,6 +251,7 @@ private:
   QCheckBox *fadeOnOpacityChange;
   QCheckBox *useShadows;
   QCheckBox *removeShadowsOnResize;
+  QCheckBox *removeShadowsOnMove;
   QGroupBox *sGroup;
 //   QPushButton *xcompmgrButton;
   KIntNumInput *activeWindowOpacity;
@@ -270,6 +271,7 @@ private:
   bool alphaActivated;
   bool resetKompmgr_;
   bool kompmgrAvailable();
+  bool kompmgrAvailable_;
   KProcess *kompmgr;
   
 private slots:

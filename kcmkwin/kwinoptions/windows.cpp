@@ -1176,7 +1176,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   kompmgr = 0L;
   resetKompmgr_ = FALSE;
   QVBoxLayout *lay = new QVBoxLayout (this);
-  if (!kompmgrAvailable()){
+  kompmgrAvailable_ = kompmgrAvailable();
+  if (!kompmgrAvailable_){
   KActiveLabel *label = new KActiveLabel(i18n("<qt><b>It seems that alpha channel support is not available.</b><br><br>"
                                  "Please make sure you have "
                                  "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>,"
@@ -1286,6 +1287,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   shadowColor = new KColorButton(Qt::black,sGroup);
   gLay2->addWidget(shadowColor,5,1);
   gLay2->setColStretch(1,1);
+  removeShadowsOnMove = new QCheckBox(i18n("Remove shadows on move"),sGroup);
+  vLay2->addWidget(removeShadowsOnMove);
   removeShadowsOnResize = new QCheckBox(i18n("Remove shadows on resize"),sGroup);
   vLay2->addWidget(removeShadowsOnResize);
   vLay2->addStretch();
@@ -1330,6 +1333,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   connect(disableARGB, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(useShadows, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(removeShadowsOnResize, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(removeShadowsOnMove, SIGNAL(toggled(bool)), SLOT(changed()));
 
   connect(activeWindowOpacity, SIGNAL(valueChanged(int)), SLOT(changed()));
   connect(inactiveWindowOpacity, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -1382,6 +1386,8 @@ void KTranslucencyConfig::resetKompmgr()
 void KTranslucencyConfig::load( void )
 {
 
+    if (!kompmgrAvailable_)
+        return;
   config->setGroup( "Notification Messages" );
   useTranslucency->setChecked(config->readBoolEntry("UseTranslucency",false));
 
@@ -1389,7 +1395,8 @@ void KTranslucencyConfig::load( void )
   activeWindowTransparency->setChecked(config->readBoolEntry("TranslucentActiveWindows",false));
   inactiveWindowTransparency->setChecked(config->readBoolEntry("TranslucentInactiveWindows",true));
   movingWindowTransparency->setChecked(config->readBoolEntry("TranslucentMovingWindows",false));
-  removeShadowsOnResize->setChecked(config->readBoolEntry("RemoveShadowsOnResize",TRUE));
+  removeShadowsOnMove->setChecked(config->readBoolEntry("RemoveShadowsOnMove",FALSE));
+  removeShadowsOnResize->setChecked(config->readBoolEntry("RemoveShadowsOnResize",FALSE));
   dockWindowTransparency->setChecked(config->readBoolEntry("TranslucentDocks",true));
   keepAboveAsActive->setChecked(config->readBoolEntry("TreatKeepAboveAsActive",true));
 
@@ -1441,7 +1448,8 @@ void KTranslucencyConfig::load( void )
 
 void KTranslucencyConfig::save( void )
 {
-
+    if (!kompmgrAvailable_)
+        return;
   config->setGroup( "Notification Messages" );
   config->writeEntry("UseTranslucency",useTranslucency->isChecked());
 
@@ -1463,6 +1471,7 @@ void KTranslucencyConfig::save( void )
   config->writeEntry("DockShadowSize",(int)(100.0*dockWindowShadowSize->value()/inactiveWindowShadowSize->value()));
   config->writeEntry("ActiveWindowShadowSize",(int)(100.0*activeWindowShadowSize->value()/inactiveWindowShadowSize->value()));
   config->writeEntry("InctiveWindowShadowSize",100);
+  config->writeEntry("RemoveShadowsOnMove",removeShadowsOnMove->isChecked());
   config->writeEntry("RemoveShadowsOnResize",removeShadowsOnResize->isChecked());
   config->writeEntry("ResetKompmgr",resetKompmgr_);
 
@@ -1500,6 +1509,8 @@ void KTranslucencyConfig::save( void )
 
 void KTranslucencyConfig::defaults()
 {
+    if (!kompmgrAvailable_)
+        return;
   useTranslucency->setChecked(false);
   activeWindowTransparency->setChecked(false);
   inactiveWindowTransparency->setChecked(true);
@@ -1524,6 +1535,7 @@ void KTranslucencyConfig::defaults()
   movingWindowOpacity->setEnabled(false);
   dockWindowOpacity->setEnabled(true);
   useShadows->setChecked(TRUE);
+  removeShadowsOnMove->setChecked(FALSE);
   removeShadowsOnResize->setChecked(FALSE);
   shadowColor->setColor(Qt::black);
   fadeInWindows->setChecked(TRUE);
