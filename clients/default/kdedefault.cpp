@@ -724,7 +724,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 			// Spacer item (only for non-tool windows)
 			case '_':
     			if ( !isTool() )
-	   				hb->addSpacing(3);
+	   				hb->addSpacing(2);
 		}
 	}
 }
@@ -782,8 +782,8 @@ void KDEDefaultClient::resizeEvent( QResizeEvent* e)
   	       update( width() - dx + 1, 0, dx, height() );
 	       update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - 
 					QPoint(1,0) ) );
-	       update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, 
-					titlebar->geometry().bottom() ) ) );
+	       update( QRect( titlebar->geometry().topRight(), QPoint(width() - 4,
+						  titlebar->geometry().bottom()) ) );
            // Titlebar needs no paint event
 	       QApplication::postEvent( this, new QPaintEvent(titlebar->geometry(),
 									 FALSE) );
@@ -837,17 +837,13 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawRect(x,y,w,h);
 
     // Draw part of the frame that is the titlebar color
-	if (highcolor)
-		g = options->colorGroup(Options::TitleBlend, isActive());
-	else
-	   	g = options->colorGroup(Options::TitleBar, isActive());
-
-	p.setPen( highcolor ? g.mid().light() : g.light());
+	g = options->colorGroup(Options::TitleBar, isActive());
+	p.setPen(g.light());
 	p.drawLine(x+1, y+1, rightOffset-1, y+1);
 	p.drawLine(x+1, y+1, x+1, leftFrameStart);
 
 	// Draw titlebar colour separator line
-	p.setPen( highcolor ? g.mid().dark() : g.dark());
+	p.setPen(g.dark());
 	p.drawLine(rightOffset-1, y+1, rightOffset-1, titleHeight+2);
 
 	// Finish drawing the titlebar extension
@@ -930,7 +926,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	{
 		QFontMetrics fm(fnt);
 		int captionWidth = fm.width(caption());
-		p2.drawTiledPixmap( r.x()+captionWidth+1, 0, r.width()-captionWidth-4,
+		p2.drawTiledPixmap( r.x()+captionWidth+3, 0, r.width()-captionWidth-4,
 							titleHeight+1, *titlePix );
 	}
 
@@ -1002,7 +998,7 @@ void KDEDefaultClient::calcHiddenButtons()
 			button[BtnMax], button[BtnIconify], button[BtnClose],
 			button[BtnMenu] };
 
-	int minwidth  = largeButtons ? 140 : 120; // Start hiding at this width
+	int minwidth  = largeButtons ? 160 : 120; // Start hiding at this width
 	int btn_width = largeButtons ? 16 : 12;
 	int current_width = width();
 	int count = 0;
