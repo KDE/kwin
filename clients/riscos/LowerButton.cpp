@@ -20,6 +20,8 @@
   Boston, MA 02111-1307, USA.
 */
 
+#include "../../workspace.h"
+
 #include "LowerButton.h"
 #include "Manager.h"
 #include "Static.h"
@@ -43,7 +45,7 @@ LowerButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     default:
-      qDebug("Need kwin support for lowering window");
+      client()->workspace()->lowerClient(client());
       break;
   }
 
