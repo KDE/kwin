@@ -18,23 +18,24 @@
 #include <qbitmap.h>
 #include <qdatetime.h>
 #include <kpixmap.h>
-#include "../../client.h"
-#include "../../kwinbutton.h"
-
+#include <kdecoration.h>
+#include <kdecorationfactory.h>
 
 class QSpacerItem;
 class QBoxLayout;
+class QGridLayout;
 
 namespace Default {
 
-using namespace KWinInternal;
+class KDEDefaultClient;
 
-class KDEDefaultHandler: public QObject
+class KDEDefaultHandler: public KDecorationFactory
 {
 	public:
 		KDEDefaultHandler();
 		~KDEDefaultHandler();
-		void reset();
+                KDecoration* createDecoration( KDecorationBridge* b );
+		bool reset( unsigned long changed );
 
 	private:
 		void readConfig();
@@ -45,10 +46,10 @@ class KDEDefaultHandler: public QObject
 };
 
 
-class KDEDefaultButton : public KWinButton
+class KDEDefaultButton : public QButton, public KDecorationDefines
 {
 	public:
-		KDEDefaultButton(Client *parent=0, const char *name=0,
+		KDEDefaultButton(KDEDefaultClient *parent=0, const char *name=0,
 			 bool largeButton=true, bool isLeftButton=true,
 			 bool isStickyButton=false, const unsigned char *bitmap=NULL,
 			 const QString& tip=NULL);
@@ -72,29 +73,34 @@ class KDEDefaultButton : public KWinButton
 		bool    isLeft;
 		bool    isSticky;
 		bool	isMouseOver;
-		Client* client;
+		KDEDefaultClient* client;
 };
 
 
-class KDEDefaultClient : public Client
+class KDEDefaultClient : public KDecoration
 {
 	Q_OBJECT
 
 	public:
-		KDEDefaultClient( Workspace *ws, WId w, QWidget *parent=0,
-						  const char *name=0 );
+		KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f );
 		~KDEDefaultClient() {;}
+                void init();
+                void borders( int&, int&, int&, int& ) const;
+                void resize( const QSize& );
+                QSize minimumSize() const;
 
 	protected:
+                bool eventFilter( QObject*, QEvent* );
 		void resizeEvent( QResizeEvent* );
 		void paintEvent( QPaintEvent* );
 		void showEvent( QShowEvent* );
 		void mouseDoubleClickEvent( QMouseEvent * );
-		void captionChange( const QString& name );
-		void maximizeChange(bool m);
-		void activeChange(bool);
+		void captionChange();
+		void maximizeChange();
+		void activeChange();
 		void iconChange();
-		void stickyChange(bool on);
+		void desktopChange();
+                void shadeChange();
 		MousePosition mousePosition(const QPoint &) const;
 
 	protected slots:
@@ -106,6 +112,7 @@ class KDEDefaultClient : public Client
 		void doShape();
 		void calcHiddenButtons();
 		void addClientButtons( const QString& s, bool isLeft=true );
+                bool isTool() const;
 
 		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
 					  BtnMenu, BtnSticky, BtnCount };

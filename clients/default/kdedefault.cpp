@@ -11,6 +11,8 @@
  *	Many features are now customizable.
  */
 
+#include "kdedefault.h"
+
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kpixmapeffect.h>
@@ -20,12 +22,11 @@
 #include <qlayout.h>
 #include <qdrawutil.h>
 #include <qbitmap.h>
-#include "../../workspace.h"
-#include "../../options.h"
-#include "kdedefault.h"
 #include <qimage.h>
-
-using namespace KWinInternal;
+#include <qtooltip.h>
+#include <qapplication.h>
+#include <qlabel.h>
+#include <kdebug.h>
 
 namespace Default
 {
@@ -126,6 +127,7 @@ int	 normalTitleHeight;
 
 KDEDefaultHandler::KDEDefaultHandler()
 {
+        clientHandler = this;
 	readConfig();
 	createPixmaps();
 	KDEDefault_initialized = true;
@@ -136,17 +138,23 @@ KDEDefaultHandler::~KDEDefaultHandler()
 {
 	KDEDefault_initialized = false;
 	freePixmaps();
+        clientHandler = NULL;
 }
 
-
-void KDEDefaultHandler::reset()
+KDecoration* KDEDefaultHandler::createDecoration( KDecorationBridge* b )
 {
+        return new KDEDefaultClient( b, this );
+}
+
+bool KDEDefaultHandler::reset( unsigned long changed )
+{
+// FRAME
 	KDEDefault_initialized = false;
 	freePixmaps();
 	readConfig();
 	createPixmaps();
 	KDEDefault_initialized = true;
-	Workspace::self()->slotResetAllClientsDelayed();
+        return true;
 }
 
 
@@ -190,10 +198,10 @@ void KDEDefaultHandler::createPixmaps()
 		for(i=0, y=2; i < 6; ++i, y+=4)
 			for(x=1; x <= 132; x+=3)
 			{
-				p.setPen(options->color(Options::TitleBar, true).light(150));
+				p.setPen(options()->color(ColorTitleBar, true).light(150));
 				p.drawPoint(x, y);
 				maskPainter.drawPoint(x, y);
-				p.setPen(options->color(Options::TitleBar, true).dark(150));
+				p.setPen(options()->color(ColorTitleBar, true).dark(150));
 				p.drawPoint(x+1, y+1);
 				maskPainter.drawPoint(x+1, y+1);
 			}
@@ -203,11 +211,11 @@ void KDEDefaultHandler::createPixmaps()
 	} else
 		titlePix = NULL;
 
-	QColor activeTitleColor1(options->color(Options::TitleBar,      true));
-	QColor activeTitleColor2(options->color(Options::TitleBlend,    true));
+	QColor activeTitleColor1(options()->color(ColorTitleBar,      true));
+	QColor activeTitleColor2(options()->color(ColorTitleBlend,    true));
 
-	QColor inactiveTitleColor1(options->color(Options::TitleBar,    false));
-	QColor inactiveTitleColor2(options->color(Options::TitleBlend,  false));
+	QColor inactiveTitleColor1(options()->color(ColorTitleBar,    false));
+	QColor inactiveTitleColor2(options()->color(ColorTitleBlend,  false));
 
 	// Create titlebar gradient images if required
 	aUpperGradient = NULL;
@@ -243,7 +251,7 @@ void KDEDefaultHandler::createPixmaps()
 	QPainter p;
 
 	// Active pins
-	g = options->colorGroup( Options::ButtonBg, true );
+	g = options()->colorGroup( ColorButtonBg, true );
 	pinUpPix = new KPixmap();
 	pinUpPix->resize(16, 16);
 	p.begin( pinUpPix );
@@ -261,7 +269,7 @@ void KDEDefaultHandler::createPixmaps()
 	pinDownPix->setMask( QBitmap(16, 16, pindown_mask_bits, true) );
 
 	// Inactive pins
-	g = options->colorGroup( Options::ButtonBg, false );
+	g = options()->colorGroup( ColorButtonBg, false );
 	ipinUpPix = new KPixmap();
 	ipinUpPix->resize(16, 16);
 	p.begin( ipinUpPix );
@@ -301,19 +309,19 @@ void KDEDefaultHandler::createPixmaps()
 	irightBtnDownPix->resize(16, 16);
 
 	// Draw the button state pixmaps
-	g = options->colorGroup( Options::TitleBar, true );
+	g = options()->colorGroup( ColorTitleBar, true );
 	drawButtonBackground( leftBtnUpPix, g, false );
 	drawButtonBackground( leftBtnDownPix, g, true );
 
-	g = options->colorGroup( Options::ButtonBg, true );
+	g = options()->colorGroup( ColorButtonBg, true );
 	drawButtonBackground( rightBtnUpPix, g, false );
 	drawButtonBackground( rightBtnDownPix, g, true );
 
-	g = options->colorGroup( Options::TitleBar, false );
+	g = options()->colorGroup( ColorTitleBar, false );
 	drawButtonBackground( ileftBtnUpPix, g, false );
 	drawButtonBackground( ileftBtnDownPix, g, true );
 
-	g = options->colorGroup( Options::ButtonBg, false );
+	g = options()->colorGroup( ColorButtonBg, false );
 	drawButtonBackground( irightBtnUpPix, g, false );
 	drawButtonBackground( irightBtnDownPix, g, true );
 }
@@ -402,11 +410,12 @@ void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
 
 // ===========================================================================
 
-KDEDefaultButton::KDEDefaultButton(Client *parent, const char *name,
+KDEDefaultButton::KDEDefaultButton(KDEDefaultClient *parent, const char *name,
            bool largeButton, bool isLeftButton, bool isStickyButton,
            const unsigned char *bitmap, const QString& tip )
-    : KWinButton(parent, name, tip)
+    : QButton(parent->widget(), name)
 {
+    QToolTip::add( this, tip );
     setBackgroundMode( QWidget::NoBackground );
 	setToggleButton( isStickyButton );
 
@@ -494,7 +503,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 		// This is for sticky and menu buttons
 		KPixmap* grad = client->isActive() ? aUpperGradient : iUpperGradient;
 		if (!grad) {
-			QColor c = options->color(Options::TitleBar, client->isActive());
+			QColor c = KDecoration::options()->color(ColorTitleBar, client->isActive());
 			p->fillRect(0, 0, width(), height(), c );
 		} else
 		 	p->drawPixmap( 0, 0, *grad, 0,((normalTitleHeight-height())/2)+1,
@@ -502,7 +511,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 
 	} else {
 		// Draw a plain background for menus or sticky buttons on RHS
-   		QColor c = options->color(Options::Frame, client->isActive());
+   		QColor c = KDecoration::options()->color(ColorFrame, client->isActive());
 		p->fillRect(0, 0, width(), height(), c);
 	}
 
@@ -511,8 +520,8 @@ void KDEDefaultButton::drawButton(QPainter *p)
 	// otherwise we paint a menu button (with mini icon), or a sticky button.
 	if( deco ) {
 		// Select the appropriate button decoration color
-   		bool darkDeco = qGray( options->color(
-				isLeft? Options::TitleBar : Options::ButtonBg,
+   		bool darkDeco = qGray( KDecoration::options()->color(
+				isLeft? ColorTitleBar : ColorButtonBg,
 				client->isActive()).rgb() ) > 127;
 
 		if (isMouseOver)
@@ -533,7 +542,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 			else
 				btnpix = isOn() ? *ipinDownPix : *ipinUpPix;
 		} else
-			btnpix = client->miniIcon();
+			btnpix = client->icon().pixmap( QIconSet::Small, QIconSet::Normal );
 
 		// Intensify the image if required
 		if (isMouseOver) {
@@ -562,7 +571,7 @@ void KDEDefaultButton::enterEvent(QEvent *e)
 {
 	isMouseOver=true;
 	repaint(false);
-	KWinButton::enterEvent(e);
+	QButton::enterEvent(e);
 }
 
 
@@ -570,7 +579,7 @@ void KDEDefaultButton::leaveEvent(QEvent *e)
 {
 	isMouseOver=false;
 	repaint(false);
-	KWinButton::leaveEvent(e);
+	QButton::leaveEvent(e);
 }
 
 
@@ -579,7 +588,7 @@ void KDEDefaultButton::mousePressEvent( QMouseEvent* e )
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
 					LeftButton, e->state() );
-	KWinButton::mousePressEvent( &me );
+	QButton::mousePressEvent( &me );
 }
 
 
@@ -588,20 +597,25 @@ void KDEDefaultButton::mouseReleaseEvent( QMouseEvent* e )
 	last_button = e->button();
 	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
 					LeftButton, e->state() );
-	KWinButton::mouseReleaseEvent( &me );
+	QButton::mouseReleaseEvent( &me );
 }
 
 
 // ===========================================================================
 
-KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
-									const char *name )
-    : Client( ws, w, parent, name, WResizeNoErase | WStaticContents |
-								   WRepaintNoErase ),
+KDEDefaultClient::KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f )
+    : KDecoration( b, f ),
       m_closing(false)
 {
+}
+
+void KDEDefaultClient::init()
+{
+    createMainWidget( WResizeNoErase | WStaticContents | WRepaintNoErase );
+    widget()->installEventFilter( this );
+
 	// No flicker thanks
-    setBackgroundMode( QWidget::NoBackground );
+    widget()->setBackgroundMode( QWidget::NoBackground );
 
 	// Set button pointers to NULL so we can track things
 	for(int i=0; i < KDEDefaultClient::BtnCount; i++)
@@ -618,11 +632,15 @@ KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
     }
 
     // Pack the windowWrapper() window within a grid
-    g = new QGridLayout(this, 0, 0, 0);
+    g = new QGridLayout(widget(), 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 3);       // Top grab bar
     g->addRowSpacing(2, 1);       // line under titlebar
-    g->addWidget(windowWrapper(), 3, 1);
+    if( isPreview())
+        g->addWidget( new QLabel( i18n( "<b><center>KDE2 preview</center></b>" ), widget()), 3, 1);
+    else
+        g->addWidget( new QWidget( widget()), 3, 1);
+    
 
 	// without the next line, unshade flickers
 	g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed,
@@ -643,12 +661,12 @@ KDEDefaultClient::KDEDefaultClient( Workspace *ws, WId w, QWidget *parent,
     hb->setResizeMode( QLayout::FreeResize );
     g->addLayout ( hb, 1, 1 );
 
-	addClientButtons( options->titleButtonsLeft() );
+	addClientButtons( options()->titleButtonsLeft() );
     titlebar = new QSpacerItem( 10, titleHeight, QSizePolicy::Expanding,
 								QSizePolicy::Minimum );
     hb->addItem(titlebar);
     hb->addSpacing(2);
-	addClientButtons( options->titleButtonsRight(), false );
+	addClientButtons( options()->titleButtonsRight(), false );
 }
 
 
@@ -678,9 +696,9 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				{
    					button[BtnSticky] = new KDEDefaultButton(this, "sticky",
 							largeButtons, isLeft, true, NULL, i18n("Sticky"));
-					button[BtnSticky]->turnOn( isSticky() );
+					button[BtnSticky]->turnOn( isOnAllDesktops() );
    					connect( button[BtnSticky], SIGNAL(clicked()),
-							this, SLOT(toggleSticky()) );
+							this, SLOT(toggleOnAllDesktops()) );
 					hb->addWidget( button[BtnSticky] );
 				}
 				break;
@@ -693,7 +711,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 							largeButtons, isLeft, true, question_bits,
 							i18n("Help"));
 					connect( button[BtnHelp], SIGNAL( clicked() ),
-							this, SLOT( contextHelp() ));
+							this, SLOT( showContextHelp() ));
 					hb->addWidget( button[BtnHelp] );
 				}
 				break;
@@ -706,7 +724,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 							largeButtons, isLeft, true, iconify_bits,
 							i18n("Minimize"));
 				    connect( button[BtnIconify], SIGNAL( clicked()),
-							this, SLOT(iconify()) );
+							this, SLOT(minimize()) );
 					hb->addWidget( button[BtnIconify] );
 				}
 				break;
@@ -752,35 +770,37 @@ void KDEDefaultClient::iconChange()
 		button[BtnMenu]->repaint(false);
 }
 
-void KDEDefaultClient::stickyChange(bool on)
+void KDEDefaultClient::desktopChange()
 {
 	if (button[BtnSticky]) {
+                bool on = isOnAllDesktops();
 		button[BtnSticky]->turnOn(on);
 		button[BtnSticky]->repaint(false);
-		button[BtnSticky]->setTipText(on ? i18n("Un-Sticky") : i18n("Sticky"));
+                QToolTip::remove( button[BtnSticky] );
+		QToolTip::add( button[BtnSticky], on ? i18n("Un-Sticky") : i18n("Sticky"));
 	}
 }
 
 void KDEDefaultClient::slotMaximize()
 {
     if ( button[BtnMax]->last_button == MidButton )
-	   maximize( MaximizeVertical );
+	   maximize( maximizeMode() ^ MaximizeVertical );
     else if ( button[BtnMax]->last_button == RightButton )
-       maximize( MaximizeHorizontal );
+       maximize( maximizeMode() ^ MaximizeHorizontal );
     else
-	   maximize();
+	   maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
 }
 
 
 void KDEDefaultClient::resizeEvent( QResizeEvent* e)
 {
-    Client::resizeEvent( e );
 	doShape();
     calcHiddenButtons();
 
-    if (isVisibleToTLW())
+    if ( widget()->isShown())
     {
-        update(rect());
+        widget()->update( widget()->rect());
+#if 1 // what's the point of this, when paintEvent() repaints everything anyway?
         int dx = 0;
         int dy = 0;
 
@@ -791,26 +811,27 @@ void KDEDefaultClient::resizeEvent( QResizeEvent* e)
 	       dy = 8 + QABS( e->oldSize().height() -  height() );
 
         if ( dy )
-	       update( 0, height() - dy + 1, width(), dy );
+	       widget()->update( 0, height() - dy + 1, width(), dy );
 
         if ( dx )
         {
-  	       update( width() - dx + 1, 0, dx, height() );
-	       update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() -
+  	       widget()->update( width() - dx + 1, 0, dx, height() );
+	       widget()->update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() -
 					QPoint(1,0) ) );
-	       update( QRect( titlebar->geometry().topRight(), QPoint(width() - 4,
+	       widget()->update( QRect( titlebar->geometry().topRight(), QPoint(width() - 4,
 						  titlebar->geometry().bottom()) ) );
            // Titlebar needs no paint event
-	       QApplication::postEvent( this, new QPaintEvent(titlebar->geometry(),
+	       QApplication::postEvent( widget(), new QPaintEvent(titlebar->geometry(),
 									 FALSE) );
         }
+#endif
     }
 }
 
 
-void KDEDefaultClient::captionChange( const QString& )
+void KDEDefaultClient::captionChange()
 {
-    repaint( titlebar->geometry(), false );
+    widget()->repaint( titlebar->geometry(), false );
 }
 
 
@@ -824,10 +845,10 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 
 	KPixmap* upperGradient = isActive() ? aUpperGradient : iUpperGradient;
 
-    QPainter p(this);
+    QPainter p(widget());
 
     // Obtain widget bounds.
-    QRect r(rect());
+    QRect r(widget()->rect());
     int x = r.x();
     int y = r.y();
     int x2 = r.width() - 1;
@@ -852,7 +873,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawRect(x,y,w,h);
 
     // Draw part of the frame that is the titlebar color
-	g = options->colorGroup(Options::TitleBar, isActive());
+	g = options()->colorGroup(ColorTitleBar, isActive());
 	p.setPen(g.light());
 	p.drawLine(x+1, y+1, rightOffset-1, y+1);
 	p.drawLine(x+1, y+1, x+1, leftFrameStart);
@@ -868,7 +889,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawLine(x+2, y+titleHeight+3, x+2, leftFrameStart-2);
 
     // Fill out the border edges
-    g = options->colorGroup(Options::Frame, isActive());
+    g = options()->colorGroup(ColorFrame, isActive());
     p.setPen(g.light());
     p.drawLine(rightOffset, y+1, x2-1, y+1);
     p.drawLine(x+1, leftFrameStart+1, x+1, y2-1);
@@ -876,7 +897,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
     p.drawLine(x2-1, y+1, x2-1, y2-1);
     p.drawLine(x+1, y2-1, x2-1, y2-1);
 
-	p.setPen(options->color(Options::Frame, isActive()));
+	p.setPen(options()->color(ColorFrame, isActive()));
 	p.drawLine(x+2, leftFrameStart, x+2, y2-2 );
 	p.drawLine(x2-2, y+titleHeight+3, x2-2, y2-2);
 
@@ -913,8 +934,8 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	r = titlebar->geometry();
 
     // Obtain titlebar blend colours
-    QColor c1 = options->color(Options::TitleBar, isActive() );
-    QColor c2 = options->color(Options::Frame, isActive() );
+    QColor c1 = options()->color(ColorTitleBar, isActive() );
+    QColor c2 = options()->color(ColorFrame, isActive() );
 
 	// Fill with frame color behind RHS buttons
 	p.fillRect( rightOffset, y+2, x2-rightOffset-1, titleHeight+1, c2);
@@ -929,7 +950,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 
     // Draw the title text on the pixmap, and with a smaller font
     // for toolwindows than the default.
-    QFont fnt = options->font(true);
+    QFont fnt = options()->font(true);
 
     if ( isTool() )
        fnt.setPointSize( fnt.pointSize()-2 );  // Shrink font by 2pt
@@ -949,18 +970,21 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 								titleHeight+1, *titlePix );
 	}
 
-    p2.setPen( options->color(Options::Font, isActive()) );
+    p2.setPen( options()->color(ColorFont, isActive()) );
     p2.drawText(r.x(), 1, r.width()-1, r.height(),
 		(caption().isRightToLeft() ? AlignRight : AlignLeft) | AlignVCenter,
 		caption() );
 
-	bitBlt( this, 2, 2, titleBuffer );
+	bitBlt( widget(), 2, 2, titleBuffer );
 
     p2.end();
 
 	// Ensure a shaded window has no unpainted areas
+	// Is this still needed? 
+#if 1
 	p.setPen(c2);
     p.drawLine(x+4, y+titleHeight+4, x2-4, y+titleHeight+4);
+#endif
 }
 
 
@@ -975,26 +999,27 @@ void KDEDefaultClient::doShape()
 }
 
 
-void KDEDefaultClient::showEvent(QShowEvent *ev)
+void KDEDefaultClient::showEvent(QShowEvent *)
 {
     calcHiddenButtons();
 	doShape();
-    Client::showEvent(ev);
 }
 
 
 void KDEDefaultClient::mouseDoubleClickEvent( QMouseEvent * e )
 {
 	if (titlebar->geometry().contains( e->pos() ) )
-		workspace()->performWindowOperation( this, options->operationTitlebarDblClick() );
+                titlebarDblClickOperation();
 }
 
 
-void KDEDefaultClient::maximizeChange(bool m)
+void KDEDefaultClient::maximizeChange()
 {
 	if (button[BtnMax]) {
+                bool m = maximizeMode() == MaximizeFull;
 		button[BtnMax]->setBitmap(m ? minmax_bits : maximize_bits);
-		button[BtnMax]->setTipText(m ? i18n("Restore") : i18n("Maximize"));
+                QToolTip::remove( button[ BtnMax ] );
+                QToolTip::add( button[BtnMax], m ? i18n("Restore") : i18n("Maximize"));
 	}
 	spacer->changeSize(10, showGrabBar && isResizable() ? 8 : 4,
 			QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -1002,14 +1027,35 @@ void KDEDefaultClient::maximizeChange(bool m)
 }
 
 
-void KDEDefaultClient::activeChange(bool)
+void KDEDefaultClient::activeChange()
 {
 	for(int i=KDEDefaultClient::BtnHelp; i < KDEDefaultClient::BtnCount; i++)
 		if(button[i])
 			button[i]->repaint(false);
-	repaint(false);
+	widget()->repaint(false);
 }
 
+void KDEDefaultClient::shadeChange()
+{
+}
+
+QSize KDEDefaultClient::minimumSize() const
+{
+    return QSize( 100, 50 ); // FRAME
+}
+
+void KDEDefaultClient::resize( const QSize& s )
+{
+    widget()->resize( s );
+}
+
+void KDEDefaultClient::borders( int& left, int& right, int& top, int& bottom ) const
+{ // FRAME
+    left = right = 4;
+//    , y+titleHeight+3, w-6, h-titleHeight-offset-6 );
+    top = titleHeight + 4;
+	bottom = isResizable() ? 8 : 4;
+}
 
 // The hiding button while shrinking, show button while expanding magic
 void KDEDefaultClient::calcHiddenButtons()
@@ -1052,25 +1098,25 @@ void KDEDefaultClient::calcHiddenButtons()
 }
 
 
-Client::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) const
+KDecoration::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) const
 {
 	MousePosition m = Nowhere;
 
 	// Modify the mouse position if we are using a grab bar.
 	if (showGrabBar && isResizable())
 		if (p.y() < (height() - 8))
-			m = Client::mousePosition(p);
+			m = KDecoration::mousePosition(p);
 		else
 		{
 			if (p.x() >= (width() - 20))
-				m = BottomRight;
+				m = BottomRight2;
 			else if (p.x() <= 20)
-				m = BottomLeft;
+				m = BottomLeft2;
 			else
 			m = Bottom;
 		}
 	else
-		m = Client::mousePosition(p);
+		m = KDecoration::mousePosition(p);
 
 	return m;
 }
@@ -1093,7 +1139,7 @@ void KDEDefaultClient::menuButtonPressed()
 
 	QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1,
 					   button[BtnMenu]->rect().bottomLeft().y()+2 );
-	workspace()->showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ), this );
+	showWindowMenu( button[BtnMenu]->mapToGlobal( menupoint ));
 	button[BtnMenu]->setDown(false);
 }
 
@@ -1103,30 +1149,51 @@ void KDEDefaultClient::menuButtonReleased()
 		closeWindow();
 }
 
+const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
+    | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
+    | NET::UtilityMask | NET::SplashMask;
+
+bool KDEDefaultClient::isTool() const
+{
+    NET::WindowType type = windowType( SUPPORTED_WINDOW_TYPES_MASK );
+    return type == NET::Toolbar || type == NET::Utility || type == NET::Menu;
 }
 
-// Extended KWin plugin interface
-extern "C"
+
+bool KDEDefaultClient::eventFilter( QObject* o, QEvent* e )
 {
-    Client *allocate(Workspace *ws, WId w, int)
-    {
-        return(new Default::KDEDefaultClient(ws, w));
-    }
-
-	void init()
+    if( o != widget())
+	return false;
+    switch( e->type())
 	{
-		Default::clientHandler = new Default::KDEDefaultHandler();
+	case QEvent::Resize:
+	    resizeEvent( static_cast< QResizeEvent* >( e ));
+	    return true;
+	case QEvent::Paint:
+	    paintEvent( static_cast< QPaintEvent* >( e ));
+	    return true;
+	case QEvent::MouseButtonDblClick:
+	    mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ));
+	    return true;
+	case QEvent::MouseButtonPress:
+	    processMousePressEvent( static_cast< QMouseEvent* >( e ));
+	    return true;
+	case QEvent::Show:
+	    showEvent( static_cast< QShowEvent* >( e ));
+	    return true;
+	default:
+	    break;
 	}
+    return false;
+}
 
-	void reset()
-	{
-		Default::clientHandler->reset();
-	}
 
-	void deinit()
-	{
-		delete Default::clientHandler;
-	}
+} // namespace
+
+// Extended KWin plugin interface
+extern "C" KDecorationFactory* create_factory()
+{
+    return new Default::KDEDefaultHandler();
 }
 
 #include "kdedefault.moc"
