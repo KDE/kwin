@@ -616,7 +616,7 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
     // needs to be found.
     if( transient->isDialog() && !transient->isModal() && transient->groupTransient())
         return false;
-    return true;
+#if 0
     // #63223 - don't keep transients above docks, because the dock is kept high,
     // and e.g. dialogs for them would be too high too
     // TODO this doesn't really work - the transient should be raised after clicking
@@ -624,6 +624,7 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
     if( mainwindow->isDock() && !mainwindow->keepBelow()
         && !mainwindow->isActive() && !transient->isActive()) // TODO !w->group()->isActive() ???
         return false;
+#endif
     return true;
     }
 
