@@ -17,6 +17,7 @@
 #include <qslider.h>
 #include <qhbox.h>
 #include <qlabel.h>
+#include <qvbox.h>
 
 class KDEDefaultConfig: public QObject
 {
@@ -44,12 +45,11 @@ class KDEDefaultConfig: public QObject
 		QCheckBox* cbShowGrabBar;
 		QCheckBox* cbUseGradients;
 		QSlider*   titleBarSizeSlider;
-		QGroupBox* gb;
+		QVBox* gb;
 		bool 	   highcolor;
 		QLabel*	   label1;
 		QLabel*	   label2;
 		QLabel*	   label3;
-		QGroupBox* gbSlider;
 		QHBox* 	   hbox;
 };
 

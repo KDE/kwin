@@ -3,8 +3,10 @@
 
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kdialog.h>
 #include <klocale.h>
 #include <kglobal.h>
+#include <qlayout.h>
 #include <qwhatsthis.h>
 #include "config.h"
 
@@ -33,16 +35,16 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	vbox->setSpacing(6);
 	vbox->setMargin(0);
 
-	handleBox = new QGroupBox( 1, Qt::Vertical, i18n("Window Resize Handle"), mainw);
-	handleBox->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
+	handleBox = new QWidget(mainw);
+        QGridLayout* layout = new QGridLayout(handleBox, 0, KDialog::spacingHint());
 
-	cbShowHandle = new QCheckBox(i18n("&Show handle"), handleBox);
+	cbShowHandle = new QCheckBox(i18n("&Show window resize handle"), handleBox);
 	QWhatsThis::add(cbShowHandle,
 			i18n("When selected, all windows are drawn with a resize "
 			"handle at the lower right corner. This makes window resizing "
 			"easier, especially for trackballs and other mouse replacements "
 			"on laptops."));
-	handleBox->addSpace(20);
+        layout->addMultiCellWidget(cbShowHandle, 0, 0, 0, 1);
 	connect(cbShowHandle, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()));
 
 	sliderBox = new QVBox(handleBox);
@@ -66,6 +68,9 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	
 	vbox->addWidget(handleBox);
 	vbox->addStretch(1);
+
+        layout->setColSpacing(0, 30);
+        layout->addWidget(sliderBox, 1, 1);
 	
 	load(conf);
 	mainw->show();

@@ -33,7 +33,7 @@ class ModernSysConfig : public QObject
 		KConfig   	*clientrc;
 		QWidget		*mainw;
 		QVBoxLayout	*vbox;
-		QGroupBox 	*handleBox;
+		QWidget         *handleBox;
 		QCheckBox 	*cbShowHandle;
 		QVBox		*sliderBox;
 		QSlider		*handleSizeSlider;

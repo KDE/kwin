@@ -36,8 +36,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 {
 	quartzConfig = new KConfig("kwinquartzrc");
 	KGlobal::locale()->insertCatalogue("kwin_quartz_config");
-	gb = new QGroupBox( 1, Qt::Horizontal, 
-						i18n("Decoration Settings"), parent );
+	gb = new QVBox( parent );
 	cbColorBorder = new QCheckBox( 
 						i18n("Draw window frames using &titlebar colors"), gb );
 	QWhatsThis::add( cbColorBorder, 
@@ -57,7 +56,6 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 
 QuartzConfig::~QuartzConfig()
 {
-	delete cbColorBorder;
 	delete gb;
 	delete quartzConfig;
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>KeramikConfigUI</class>
 <widget class="QWidget">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>470</width>
-            <height>333</height>
+            <width>287</width>
+            <height>102</height>
         </rect>
     </property>
     <property name="caption">
@@ -22,72 +22,58 @@
         <property name="margin">
             <number>0</number>
         </property>
-        <widget class="QGroupBox">
+        <widget class="QCheckBox">
             <property name="name">
-                <cstring>decorationBox</cstring>
+                <cstring>showAppIcons</cstring>
             </property>
-            <property name="title">
-                <string>Decoration Settings</string>
+            <property name="text">
+                <string>Display the window &amp;icon in the caption bubble</string>
             </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>Layout4</cstring>
-                    </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QCheckBox">
-                            <property name="name">
-                                <cstring>showAppIcons</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Display the window &amp;icon in the caption bubble</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Check this option if you want the window icon to be displayed in the caption bubble next to the titlebar text.</string>
-                            </property>
-                        </widget>
-                        <widget class="QCheckBox">
-                            <property name="name">
-                                <cstring>smallCaptions</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Draw &amp;small caption bubbles on active windows</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Check this option if you want the caption bubble to have the same size on active windows that it has on inactive ones. This option is useful for laptops or low resolution displays where you want maximize the amount of space available to the window contents.</string>
-                            </property>
-                        </widget>
-                        <widget class="QCheckBox">
-			    <property name="name">
-			        <cstring>largeGrabBars</cstring>
-			    </property>
-			    <property name="text">
-			        <string>Draw g&amp;rab bars below windows</string>
-			    </property>
-			    <property name="whatsThis" stdset="0">
-			        <string>Check this option if you want a grab bar to be drawn below windows. When this option is not selected only a thin border will be drawn in its place.</string>
-			    </property>
-                        </widget>
-                        <widget class="QCheckBox">
-                            <property name="name">
-                                <cstring>useShadowedText</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Use shadowed &amp;text</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
-                            </property>
-                        </widget>
-	            </vbox>
-                </widget>
-            </hbox>
+            <property name="accel">
+                <string>Alt+I</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you want the window icon to be displayed in the caption bubble next to the titlebar text.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>smallCaptions</cstring>
+            </property>
+            <property name="text">
+                <string>Draw &amp;small caption bubbles on active windows</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you want the caption bubble to have the same size on active windows that it has on inactive ones. This option is useful for laptops or low resolution displays where you want maximize the amount of space available to the window contents.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>largeGrabBars</cstring>
+            </property>
+            <property name="text">
+                <string>Draw g&amp;rab bars below windows</string>
+            </property>
+            <property name="accel">
+                <string>Alt+R</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you want a grab bar to be drawn below windows. When this option is not selected only a thin border will be drawn in its place.</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>useShadowedText</cstring>
+            </property>
+            <property name="text">
+                <string>Use shadowed &amp;text</string>
+            </property>
+            <property name="accel">
+                <string>Alt+T</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
+            </property>
         </widget>
     </vbox>
 </widget>

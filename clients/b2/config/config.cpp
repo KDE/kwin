@@ -11,6 +11,7 @@
 #include "config.h"
 #include <kglobal.h>
 #include <qwhatsthis.h>
+#include <qvbox.h>
 #include <klocale.h>
 
 
@@ -36,8 +37,7 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalogue("kwin_b2_config");
 	b2Config = new KConfig("kwinb2rc");
-	gb = new QGroupBox( 1, Qt::Horizontal, 
-						i18n("Decoration Settings"), parent );
+	gb = new QVBox( parent );
 	cbColorBorder = new QCheckBox( 
 						i18n("Draw window frames using &titlebar colors"), gb );
 	QWhatsThis::add( cbColorBorder, 

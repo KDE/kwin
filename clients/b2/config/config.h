@@ -1,5 +1,5 @@
 /* 	
- * $Id:$
+ * $Id$
  *
  *	This file contains the B2 configuration widget
  *
@@ -38,7 +38,7 @@ class B2Config: public QObject
 	private:
 		KConfig*   b2Config;
 		QCheckBox* cbColorBorder;
-		QGroupBox* gb;
+		QWidget* gb;
 };
 
 #endif

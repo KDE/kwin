@@ -11,8 +11,10 @@
 #include "config.h"
 #include <kglobal.h>
 #include <qwhatsthis.h>
+#include <kdialog.h>
 #include <klocale.h>
 #include <qpixmap.h>
+#include <qvbox.h>
 
 extern "C"
 {
@@ -33,8 +35,8 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalogue("kwin_default_config");
 	highcolor = QPixmap::defaultDepth() > 8;
-	gb = new QGroupBox( 1, Qt::Horizontal, 
-		i18n("Decoration Settings"), parent );
+	gb = new QVBox( parent );
+        gb->setSpacing( KDialog::spacingHint() );
 
 	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), gb );
 	QWhatsThis::add( cbShowStipple, 
@@ -50,15 +52,20 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	// Only show the gradient checkbox for highcolor displays
 	if (highcolor)
 	{
-		cbUseGradients = new QCheckBox( i18n("Draw gr&adients"), gb );
+		cbUseGradients = new QCheckBox( i18n("Draw &gradients"), gb );
 		QWhatsThis::add( cbUseGradients, 
 			i18n("When selected, decorations are drawn with gradients "
 			"for highcolor displays, otherwise no gradients are drawn.") );
 	}
 
 	// Allow titlebar height customization
-	gbSlider = new QGroupBox( 1, Qt::Horizontal, i18n("Titlebar Height"), gb );
+        QHBox *hbSlider = new QHBox( gb );
+        hbSlider->setSpacing( KDialog::spacingHint() );
+        QLabel *titlebarLbl = new QLabel(i18n("&Titlebar height:"), hbSlider );
+        titlebarLbl->setAlignment( Qt::AlignTop );
+	QVBox *gbSlider = new QVBox( hbSlider );
 	titleBarSizeSlider = new QSlider(0, 2, 1, 0, QSlider::Horizontal, gbSlider);
+        titlebarLbl->setBuddy( titleBarSizeSlider );
 	QWhatsThis::add( titleBarSizeSlider,
 		i18n("By adjusting this slider, you can modify "
 		"the height of the titlebar to make room for larger fonts."));
