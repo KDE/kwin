@@ -370,6 +370,7 @@ class Workspace : public QObject, virtual public KWinInterface, public KDecorati
         void updateStackingOrder( bool propagate_new_clients = false );
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
         ClientList constrainedStackingOrder();
+        bool keepTransientAbove( const Client* mainwindow, const Client* transient );
         void blockStackingUpdates( bool block );
         void updateCurrentTopMenu();
         void updateToolWindows( bool also_hide );

@@ -394,7 +394,7 @@ ClientList Workspace::constrainedStackingOrder()
                         it2 = stacking.end(); // don't reorder
                         break;
                         }
-                    if( (*it2)->hasTransient( *it, true ))
+                    if( (*it2)->hasTransient( *it, true ) && keepTransientAbove( *it2, *it ))
                         break;
                     }
                 } // else it2 remains pointing at stacking.end()
@@ -410,7 +410,7 @@ ClientList Workspace::constrainedStackingOrder()
                     it2 = stacking.end(); // don't reorder
                     break;
                     }
-                if( *it2 == (*it)->transientFor())
+                if( *it2 == (*it)->transientFor() && keepTransientAbove( *it2, *it ))
                     break;
                 }
             }
@@ -464,6 +464,21 @@ ClientList Workspace::ensureStackingOrder( const ClientList& list ) const
         if( result.remove( *it ) != 0 )
             result.append( *it );
     return result;
+    }
+
+// check whether a transient should be actually kept above its mainwindow
+// there may be some special cases where this rule shouldn't be enfored
+bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* transient )
+    {
+    return true;
+    // #63223 - don't keep transients above docks, because the dock is kept high,
+    // and e.g. dialogs for them would be too high too
+    // TODO this doesn't really work - the transient should be raised after clicking
+    // on the dock, but docks don't become active after clicking them
+    if( mainwindow->isDock() && !mainwindow->keepBelow()
+        && !mainwindow->isActive() && !transient->isActive()) // TODO !w->group()->isActive() ???
+        return false;
+    return true;
     }
 
 //*******************************
