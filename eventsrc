@@ -2239,11 +2239,14 @@ Name[sv]=Fönster inte på alla skrivbord
 Name[tr]=Pencere Tüm Masaüstlerinde Değil
 Name[xx]=xxWindow Not On All Desktopsxx
 Comment=A Window is no longer Visible on All Desktops
+Comment[ca]=Una finestra es fa no visible a tots els escriptoris
 Comment[cs]=Okno již není viditelné na všech plochách
 Comment[da]=Et vindue er ikke længere synligt på alle skriveborde
+Comment[es]=Una ventana ya no es visible en todos los escritorios
 Comment[et]=Aken ei ole enam nähtav kõigil töölaudadel
 Comment[pt]=Uma janela deixa de aparecer em todos os ecrãs
 Comment[pt_BR]=Uma janela deixa de aparecer em todos os ecrãs
+Comment[sv]=Ett fönster blir inte längre synligt på alla skrivbord
 default_presentation=1
 default_sound=KDE_Window_UnSticky.wav
 
