@@ -48,6 +48,7 @@ private:
     Time lastMouseEventTime;
     bool reparented;
     QTimer* timer;
+    int cnt;
 };
 
 inline WId WindowWrapper::window() const

@@ -109,6 +109,8 @@ WindowWrapper::WindowWrapper( WId w, Client *parent, const char* name)
 {
     win = w;
     timer = 0;
+    cnt = 0;
+
     setMouseTracking( TRUE );
 
     setBackgroundColor( colorGroup().background() );
@@ -206,10 +208,16 @@ void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win && reparented ) {
 	if ( isVisible() ) {
-	    delete timer;
-	    timer = new QTimer( this );
-	    connect( timer, SIGNAL( timeout() ), this, SLOT( doResize() ) );
-	    timer->start( 5, TRUE );
+	    if( ++cnt > 3 ) {
+	        doResize(); // Too many pending, do it now.
+	    }
+	    else {
+	        delete timer;
+		timer = new QTimer( this );
+		connect( timer, SIGNAL( timeout() ), 
+			 this, SLOT( doResize() ) );
+		timer->start( 10, TRUE );
+	    }
 	} else {
 	    XMoveResizeWindow( qt_xdisplay(), win,
 			       0, 0, width(), height() );
@@ -221,6 +229,7 @@ void WindowWrapper::resizeEvent( QResizeEvent * )
 
 void WindowWrapper::doResize()
 {
+    cnt=0;
     delete timer;
     timer = 0;
     XMoveResizeWindow( qt_xdisplay(), win,
