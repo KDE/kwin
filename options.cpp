@@ -228,14 +228,6 @@ void Options::reload()
 
     ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
 
-
-    // desktop settings
-
-    config->setGroup("Desktops");
-    desktopRows = config->readNumEntry( "DesktopRows", 2 );
-    if ( desktopRows < 1 )
-        desktopRows = 1;
-
     // Mouse bindings
     config->setGroup( "MouseBindings");
     CmdActiveTitlebar1 = mouseCommand(config->readEntry("CommandActiveTitlebar1","Raise"));

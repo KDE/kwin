@@ -225,6 +225,7 @@ public:
 	void previousDesktop();
 
     QString desktopName( int desk );
+    void setDesktopLayout(int o, int x, int y);
 
     bool isNotManaged( const QString& title );
 
@@ -372,6 +373,9 @@ private:
     void raiseElectricBorders();
 
     // ------------------
+
+    void calcDesktopLayout(int &x, int &y);
+
 
     SystemTrayWindowList systemTrayWins;
 

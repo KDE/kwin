@@ -16,6 +16,7 @@ class KWinInterface : virtual public DCOPObject
   virtual void refresh() = 0;
   virtual void doNotManage(QString)= 0;
   virtual void showWindowMenuAt(unsigned long winId, int x, int y)= 0;
+  virtual void setDesktopLayout(int orientation, int x, int y)= 0;
   virtual void setCurrentDesktop(int)= 0;
   virtual int currentDesktop() const = 0;
   virtual void nextDesktop() = 0;

@@ -117,12 +117,6 @@ public:
     bool xineramaMaximizeEnabled;
 
     /**
-      Number of desktop rowsd
-     */
-    int desktopRows;
-
-
-    /**
        MoveResizeMode, either Tranparent or Opaque.
      */
     enum MoveResizeMode { Transparent, Opaque };

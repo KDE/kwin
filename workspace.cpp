@@ -105,7 +105,10 @@ public:
        electric_right_border(None),
        electric_time_first(0),
        electric_time_last(0),
-       movingClient(0)
+       movingClient(0),
+       layoutOrientation(Qt::Vertical),
+       layoutX(-1),
+       layoutY(2)
     { };
     ~WorkspacePrivate() {};
     KStartupInfo* startup;
@@ -123,6 +126,9 @@ public:
     Time electric_time_last;
     QPoint electric_push_point;
     Client *movingClient;
+    Qt::Orientation layoutOrientation;
+    int layoutX;
+    int layoutY;
 };
 
 };
@@ -2543,6 +2549,7 @@ void Workspace::setNumberOfDesktops( int n )
     if ( n == number_of_desktops )
         return;
     number_of_desktops = n;
+    
     rootInfo->setNumberOfDesktops( number_of_desktops );
     saveDesktopSettings();
 
@@ -2770,34 +2777,108 @@ void Workspace::slotSwitchDesktopPrevious(){
         d = numberOfDesktops();
     setCurrentDesktop(d);
 }
-void Workspace::slotSwitchDesktopRight(){
 
-    int d = currentDesktop() + options->desktopRows;
-    if ( d > numberOfDesktops() )
-        d -= numberOfDesktops();
-    setCurrentDesktop(d);
+void Workspace::setDesktopLayout(int o, int x, int y)
+{
+   d->layoutOrientation = (Qt::Orientation) o;
+   d->layoutX = x;
+   d->layoutY = y;
 }
+
+void Workspace::calcDesktopLayout(int &x, int &y)
+{
+    x = d->layoutX;
+    y = d->layoutY;
+    if ((x == -1) && (y > 0))
+       x = (numberOfDesktops()+y-1) / y;
+    else if ((y == -1) && (x > 0))
+       y = (numberOfDesktops()+x-1) / x;
+
+    if (x == -1)
+       x = 1;
+    if (y == -1)
+       y = 1;
+}
+
+void Workspace::slotSwitchDesktopRight()
+{
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = currentDesktop()-1;
+    if (d->layoutOrientation == Qt::Vertical)
+    {
+      dt += y;
+      if ( dt >= numberOfDesktops() )
+        dt -= numberOfDesktops();
+    }
+    else
+    {
+      int d = (dt % x) + 1;
+      if (d >= x)
+        d -= x;
+      dt = dt - (dt % x) + d; 
+    }
+    setCurrentDesktop(dt+1);
+}
+
 void Workspace::slotSwitchDesktopLeft(){
-    int d = currentDesktop() - options->desktopRows;
-    if ( d < 1 )
-        d += numberOfDesktops();
-    setCurrentDesktop(d);
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = currentDesktop()-1;
+    if (d->layoutOrientation == Qt::Vertical)
+    {
+      dt -= y;
+      if ( dt < 0 )
+        dt += numberOfDesktops();
+    }
+    else
+    {
+      int d = (dt % x) - 1;
+      if (d < 0)
+        d += x;
+      dt = dt - (dt % x) + d; 
+    }
+    setCurrentDesktop(dt+1);
 }
+
 void Workspace::slotSwitchDesktopUp(){
-    int d = currentDesktop();
-    if ( (d-1) % options->desktopRows == 0 )
-        d += options->desktopRows - 1;
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = currentDesktop()-1;
+    if (d->layoutOrientation == Qt::Horizontal)
+    {
+      dt -= x;
+      if ( dt < 0 )
+        dt += numberOfDesktops();
+    }
     else
-        d--;
-    setCurrentDesktop(d);
+    {
+      int d = (dt % y) - 1;
+      if (d < 0)
+        d += y;
+      dt = dt - (dt % y) + d; 
+    }
+    setCurrentDesktop(dt+1);
 }
+
 void Workspace::slotSwitchDesktopDown(){
-    int d = currentDesktop();
-    if ( d % options->desktopRows == 0 )
-        d -= options->desktopRows - 1;
+    int x,y;
+    calcDesktopLayout(x,y);
+    int dt = currentDesktop()-1;
+    if (d->layoutOrientation == Qt::Horizontal)
+    {
+      dt += x;
+      if ( dt >= numberOfDesktops() )
+        dt -= numberOfDesktops();
+    }
     else
-        d++;
-    setCurrentDesktop(d);
+    {
+      int d = (dt % y) + 1;
+      if (d >= y)
+        d -= y;
+      dt = dt - (dt % y) + d; 
+    }
+    setCurrentDesktop(dt+1);
 }
 
 void Workspace::slotSwitchToDesktop( int i )
