@@ -1315,7 +1315,8 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
         unrestrictedMoveResize = false;
         mode = convert[ direction ];
         setCursor( mode );
-        startMoveResize();
+        if( !startMoveResize())
+            buttonDown = false;
         }
     else if( direction == NET::KeyboardMove )
         { // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm

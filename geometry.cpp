@@ -1445,10 +1445,10 @@ static EatAllPaintEvents* eater = 0;
 bool Client::startMoveResize()
     {
     assert( !moveResizeMode );
-    if( mode == Center )
-        setCursor( sizeAllCursor ); // change from arrow cursor if moving
     if( !grabInput())
         return false;
+    if( mode == Center )
+        setCursor( sizeAllCursor ); // change from arrow cursor if moving
     if ( maximizeMode() != MaximizeRestore )
         resetMaximize();
     moveResizeMode = true;
@@ -1514,7 +1514,13 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         {
         QPoint p( QPoint( x, y ) - moveOffset );
         if (p.manhattanLength() >= 6)
-            startMoveResize();
+            {
+            if( !startMoveResize())
+                {
+                buttonDown = false;
+                return;
+                }
+            }
         else
             return;
         }
