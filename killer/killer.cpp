@@ -69,6 +69,7 @@ int main( int argc, char* argv[] )
 	I18N_NOOP( "KWin utility" ), "1.0" );
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
+    KGlobal::locale()->insertCatalogue( "kwin" ); // the messages are in kwin's .po file
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     QCString hostname = args->getOption( "hostname" );
     bool pid_ok = false;
