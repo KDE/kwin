@@ -199,6 +199,7 @@ int main( int argc, char * argv[] )
     client = a.dcopClient();
     client->attach();
     client->registerAs("kwin", false);
+    client->setDefaultObject( "KWinInterface" );
 
     return a.exec();
 
