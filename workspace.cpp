@@ -5,6 +5,7 @@
 #include "systemclient.h"
 #include "tabbox.h"
 #include "atoms.h"
+#include "minicli.h"
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -12,6 +13,8 @@
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 
+#include <kglobalaccel.h>
+#include <klocale.h>
 
 
 static Client* clientFactory( Workspace *ws, WId w )
@@ -63,8 +66,14 @@ Workspace::Workspace()
     grabKey(XK_Tab, Mod1Mask | ShiftMask);
     grabKey(XK_Tab, ControlMask);
     grabKey(XK_Tab, ControlMask | ShiftMask);
+}
 
-
+void Workspace::slotExecuteCommand()
+{
+  if (!minicli){
+    minicli = new Minicli(this, 0, 0, Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WStyle_Tool);
+  }
+  while (!minicli->do_grabbing());
 }
 
 Workspace::Workspace( WId rootwin )
@@ -93,6 +102,7 @@ Workspace::Workspace( WId rootwin )
 
 void Workspace::init()
 {
+    minicli = 0;
     tab_box = 0;
     active_client = 0;
     should_get_focus = 0;
@@ -134,6 +144,11 @@ void Workspace::init()
     XUngrabServer( qt_xdisplay() );
     popup = 0;
     propagateClients();
+
+    // KURT: Not sure where to put these..
+    keys = new KGlobalAccel();
+    keys->insertItem(i18n("Execute command"),  "Execute command", "ALT+F2");
+    keys->connectItem("Execute command", this, SLOT(slotExecuteCommand()));
 }
 
 Workspace::~Workspace()
@@ -161,6 +176,11 @@ bool Workspace::workspaceEvent( XEvent * e )
     Client * c = findClient( e->xany.window );
     if ( c )
 	return c->windowEvent( e );
+
+    if (!tab_grab && ! control_grab) { // don't process accelerators in tab or control mode
+        if (keys->x11EventFilter(e))
+            return true;
+    }
 
     switch (e->type) {
     case ButtonPress:
@@ -260,6 +280,16 @@ bool Workspace::workspaceEvent( XEvent * e )
     default:
 	break;
     }
+    return FALSE;
+}
+
+bool Workspace::hasClient(Client* c)
+{
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+	if ( (*it) == c )
+	    return TRUE;
+    }
+
     return FALSE;
 }
 

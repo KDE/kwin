@@ -9,6 +9,9 @@
 
 class Client;
 class TabBox;
+class Minicli;
+
+class KGlobalAccel;
 
 typedef QValueList<Client*> ClientList;
 
@@ -21,6 +24,8 @@ public:
     virtual ~Workspace();
 
     virtual bool workspaceEvent( XEvent * );
+
+    bool hasClient(Client *);
 
     Client* findClient( WId w ) const;
 
@@ -64,12 +69,17 @@ public:
 
     void makeFullScreen( Client* );
 
+protected slots:
+    void slotExecuteCommand();
+
 protected:
     bool keyPress( XKeyEvent key );
     bool keyRelease( XKeyEvent key );
     bool clientMessage( XClientMessageEvent msg );
 	
 private:
+    KGlobalAccel *keys;
+    Minicli *minicli;
     void init();
     WId root;
     ClientList clients;
