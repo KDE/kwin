@@ -1,3 +1,5 @@
+# $Id$
+
 INCLUDES = $(all_includes)
 
 kde_module_LTLIBRARIES = libkwinmodernsys_config.la

@@ -1,7 +1,8 @@
+# $Id$
 
 INCLUDES = $(all_includes)
 
-SUBDIRS = . config
+SUBDIRS = config
 
 kde_module_LTLIBRARIES = libkwinmodernsys.la
 
@@ -17,7 +18,3 @@ lnk_DATA = modernsystem.desktop
 
 EXTRA_DIST = $(lnk_DATA)
 
-
-###KMAKE-start (don't edit or delete this block)
-
-###KMAKE-end

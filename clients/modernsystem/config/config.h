@@ -27,10 +27,11 @@ class ModernSysConfig : public QObject
 		void slotSelectionChanged();	// Internal use
 
 	private:
+		KConfig   *clientrc;
 		QGroupBox *gb;
 		QCheckBox *cbShowHandle;
-		unsigned handle_width;
-		unsigned handle_size;
+		unsigned  handle_width;
+		unsigned  handle_size;
 };
 
 

@@ -2,8 +2,9 @@
 // Melchior FRANZ  <a8603365@unet.univie.ac.at>	-- 2001-04-22
 
 #include "config.h"
+#include <kconfig.h>
 #include <klocale.h>
-#include <qlayout.h>
+#include <qwhatsthis.h>
 
 
 extern "C"
@@ -23,8 +24,11 @@ extern "C"
 
 ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(parent)
 {	
+	clientrc = new KConfig("kwinmodernsysrc");
 	gb = new QGroupBox(1, Qt::Horizontal, i18n("Modern System Decoration Settings"), parent);
 	cbShowHandle = new QCheckBox(i18n("&Show resize handle"), gb);
+	QWhatsThis::add(cbShowHandle, i18n("When selected, all windows are drawn with a resize "
+					   "handle at the lower right corner."));
 	connect(cbShowHandle, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()));
 	load(conf);
 	gb->show();
@@ -35,6 +39,7 @@ ModernSysConfig::~ModernSysConfig()
 {
 	delete cbShowHandle;
 	delete gb;
+	delete clientrc;
 }
 
 
@@ -44,22 +49,23 @@ void ModernSysConfig::slotSelectionChanged()
 }
 
 
-void ModernSysConfig::load(KConfig* conf)
+void ModernSysConfig::load(KConfig* /*conf*/)
 {
-	conf->setGroup("ModernSystem");
-	bool i = conf->readBoolEntry("ShowHandle", true );
+	clientrc->setGroup("General");
+	bool i = clientrc->readBoolEntry("ShowHandle", true );
 	cbShowHandle->setChecked(i);
-	handle_width = conf->readUnsignedNumEntry("HandleWidth", 6);
-	handle_size = conf->readUnsignedNumEntry("HandleSize", 30);
+	handle_width = clientrc->readUnsignedNumEntry("HandleWidth", 6);
+	handle_size = clientrc->readUnsignedNumEntry("HandleSize", 30);
 }
 
 
-void ModernSysConfig::save(KConfig* conf)
+void ModernSysConfig::save(KConfig* /*conf*/)
 {
-	conf->setGroup("ModernSystem");
-	conf->writeEntry("ShowHandle", cbShowHandle->isChecked());
-	conf->writeEntry("HandleWidth", handle_width);
-	conf->writeEntry("HandleSize", handle_size);
+	clientrc->setGroup("General");
+	clientrc->writeEntry("ShowHandle", cbShowHandle->isChecked());
+	clientrc->writeEntry("HandleWidth", handle_width);
+	clientrc->writeEntry("HandleSize", handle_size);
+	clientrc->sync();
 }
 
 

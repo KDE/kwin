@@ -196,12 +196,12 @@ static bool read_config()
     int hsize, hwidth;
     QString bpatt;
 
-    KConfig* conf = KGlobal::config();
-    conf->setGroup("ModernSystem");
-    showh = conf->readBoolEntry("ShowHandle", true);
+    KConfig c("kwinmodernsysrc");
+    c.setGroup("General");
+    showh = c.readBoolEntry("ShowHandle", true);
 
-    hwidth = conf->readUnsignedNumEntry("HandleWidth", 6);
-    hsize = conf->readUnsignedNumEntry("HandleSize", 30);
+    hwidth = c.readUnsignedNumEntry("HandleWidth", 6);
+    hsize = c.readUnsignedNumEntry("HandleSize", 30);
     if (!(showh && hsize && hwidth)) {
         showh = false;
         hwidth = hsize = 0;
