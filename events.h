@@ -29,7 +29,8 @@ public:
 	MoveStart,
 	MoveEnd,
 	ResizeStart,
-	ResizeEnd
+	ResizeEnd,
+	DesktopChange = 100
     };
 	
     static void raise( Event );

@@ -1881,6 +1881,7 @@ void Workspace::setCurrentDesktop( int new_desktop ){
           optimized Desktop switching: unmapping done from back to front
           mapping done from front to back => less exposure events
         */
+        Events::raise((Events::Event) (Events::DesktopChange+new_desktop));
 
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it) {
             if ( (*it)->isVisible() && !(*it)->isOnDesktop( new_desktop ) ) {

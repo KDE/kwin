@@ -68,6 +68,12 @@ void Events::raise( Event e )
     case ResizeEnd:
 	event = "resizeend";
 	break;
+    default:
+        if ((e > DesktopChange) && (e <= DesktopChange+16))
+        {
+           event = QString("desktop%1").arg(e-DesktopChange);
+        }
+        break;
     }
 
     if ( !event )
