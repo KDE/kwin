@@ -1229,9 +1229,6 @@
                         <property name="text">
                             <string>I&amp;nactive opacity in %</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+N</string>
-                        </property>
                     </widget>
                     <widget class="QCheckBox" row="7" column="0">
                         <property name="name">
@@ -1239,9 +1236,6 @@
                         </property>
                         <property name="text">
                             <string>A&amp;ctive opacity in %</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+C</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="8" column="1">
@@ -1727,9 +1721,6 @@
                         </property>
                         <property name="text">
                             <string>&amp;Focus stealing prevention</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+F</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="2" column="1">
