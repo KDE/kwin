@@ -125,6 +125,7 @@ Application::Application( )
     syncX(); // trigger possible errors, there's still a chance to abort
 
     initting = FALSE; // startup done, we are up and running now.
+    dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
 }
 
 
@@ -214,10 +215,9 @@ int kdemain( int argc, char * argv[] )
         // we only do the multihead fork if we are not restored by the session
 	// manager, since the session manager will register multiple kwins,
         // one for each screen...
-	KInstance inst("kwin-multihead");
-	KConfig config("kdeglobals", true);
-	config.setGroup("X11");
-	if (config.readBoolEntry("enableMultihead")) {
+        QCString multiHead = getenv("KDE_MULTIHEAD");
+        if (multiHead.lower() == "true")
+        {
 	    Display* dpy = XOpenDisplay( NULL );
 	    if ( !dpy ) {
 		fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
