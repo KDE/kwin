@@ -79,6 +79,9 @@ PlastikClient::~PlastikClient()
 
 void PlastikClient::init()
 {
+    connect(this, SIGNAL(keepAboveChanged(bool) ), SLOT(keepAboveChange(bool) ) );
+    connect(this, SIGNAL(keepBelowChanged(bool) ), SLOT(keepBelowChange(bool) ) );
+
     s_titleHeight = isTool() ?
             PlastikHandler::titleHeightTool()
             : PlastikHandler::titleHeight();
@@ -816,8 +819,16 @@ void PlastikClient::slotShade()
 
 void PlastikClient::slotKeepAbove()
 {
-    bool above = !keepAbove();
-    setKeepAbove( above );
+    setKeepAbove(!keepAbove() );
+}
+
+void PlastikClient::slotKeepBelow()
+{
+    setKeepBelow(!keepBelow() );
+}
+
+void PlastikClient::keepAboveChange(bool above)
+{
     if (m_button[AboveButton])
     {
         m_button[AboveButton]->setOn(above);
@@ -830,11 +841,9 @@ void PlastikClient::slotKeepAbove()
         m_button[BelowButton]->setTipText( i18n("Keep below others") );
     }
 }
-
-void PlastikClient::slotKeepBelow()
+        
+void PlastikClient::keepBelowChange(bool below)
 {
-    bool below = !keepBelow();
-    setKeepBelow( below );
     if (m_button[BelowButton])
     {
         m_button[BelowButton]->setOn(below);

@@ -73,6 +73,8 @@ protected:
     virtual Position mousePosition(const QPoint &point) const;
 
 private slots:
+    void keepAboveChange(bool above);
+    void keepBelowChange(bool below);
     void slotMaximize();
     void slotShade();
     void slotKeepAbove();
