@@ -1266,14 +1266,16 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     QPoint pp = globalPos - moveOffset;
 
     if( !unrestrictedMoveResize )
-        { // TODO this is broken
+        {
         int left_overlap = width() - border_left - 100;
         int right_overlap = width() - border_right - 100;
-        int bottom_overlap = - border_top;
-        p.setX( QMIN( desktopArea.right() + right_overlap, QMAX( desktopArea.left() - left_overlap, p.x())));
-        p.setY( QMIN( desktopArea.bottom() + bottom_overlap, QMAX( desktopArea.top(), p.y())));
-        pp.setX( QMIN( desktopArea.right() + right_overlap, QMAX( desktopArea.left() - left_overlap, pp.x())));
-        pp.setY( QMIN( desktopArea.bottom() + bottom_overlap, QMAX( desktopArea.top(), pp.y())));
+        int top_overlap = 0;
+        int bottom_overlap = height() - border_top;
+        // 'pp' is top left corner, 'p' is bottom right corner
+        pp.setX( QMIN( desktopArea.right() + right_overlap - width(), QMAX( desktopArea.left() - left_overlap, pp.x())));
+        pp.setY( QMIN( desktopArea.bottom() + bottom_overlap - height(), QMAX( desktopArea.top() - top_overlap, pp.y())));
+        p.setX( QMIN( desktopArea.right() + right_overlap, QMAX( desktopArea.left() - left_overlap + width(), p.x())));
+        p.setY( QMIN( desktopArea.bottom() + bottom_overlap, QMAX( desktopArea.top() - top_overlap + height(), p.y())));
         }
 
     QSize mpsize( geometry().right() - pp.x() + 1, geometry().bottom() - pp.y() + 1 );
