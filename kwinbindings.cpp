@@ -153,4 +153,5 @@ DEF( I18N_NOOP("Window to Taskbar Position 9", WIN+Qt::Key_Alt+9"));
 */
 
 #undef DEF
+#undef DEF2
 #undef WIN
