@@ -61,8 +61,6 @@ Manager::Manager(
   QStringList leftButtons = Static::instance()->leftButtons();
   QStringList rightButtons = Static::instance()->rightButtons();
 
-  connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
-
   QVBoxLayout * l = new QVBoxLayout(this, 0, 0);
 
   lower_      = new LowerButton     (this);
@@ -72,15 +70,15 @@ Manager::Manager(
   maximise_   = new MaximiseButton  (this);
   help_       = new HelpButton      (this);
 
-  if (!providesContextHelp())
-    help_->hide();
-
   buttonDict_.insert("Lower",    lower_);
   buttonDict_.insert("Close",    close_);
   buttonDict_.insert("Sticky",   sticky_);
   buttonDict_.insert("Iconify",  iconify_);
   buttonDict_.insert("Maximize", maximise_);
   buttonDict_.insert("Help",     help_);
+
+  if (!providesContextHelp())
+    help_->hide();
 
   QStringList::ConstIterator it;
 
@@ -112,72 +110,11 @@ Manager::Manager(
 
   l->addSpacing(10);
 
-  connect(lower_,     SIGNAL(lowerClient()),          SLOT(lower()));
-  connect(close_,     SIGNAL(closeClient()),          SLOT(closeWindow()));
-  connect(iconify_,   SIGNAL(iconifyClient()),        SLOT(iconify()));
-  connect(sticky_,    SIGNAL(stickClient()),          SLOT(stick()));
-  connect(sticky_,    SIGNAL(unstickClient()),        SLOT(unstick()));
-  connect(maximise_,  SIGNAL(maximiseClient()),       SLOT(maximize()));
-  connect(maximise_,  SIGNAL(vMaxClient()),           SLOT(vMax()));
-  connect(maximise_,  SIGNAL(raiseClient()),          SLOT(raise()));
-  connect(help_,      SIGNAL(help()),                 SLOT(help()));
-
-  connect(
-      this,       SIGNAL(maximiseChanged(bool)),
-      maximise_,  SLOT(setOn(bool)));
-
-  connect(
-      this,       SIGNAL(stickyChanged(bool)),
-      sticky_,    SLOT(setOn(bool)));
+  connect(options, SIGNAL(resetClients()), this, SLOT(slotReset()));
 }
 
 Manager::~Manager()
 {
-}
-
-  void
-Manager::slotReset()
-{
-  Static::instance()->update();
-  repaint();
-}
-
-  void
-Manager::captionChange(const QString &)
-{
-  repaint();
-}
-
-  void
-Manager::paletteChange(const QPalette &)
-{
-  Static::instance()->update();
-  repaint();
-}
-
-  void
-Manager::activeChange(bool b)
-{
-  lower_      ->setActive(b);
-  close_      ->setActive(b);
-  sticky_     ->setActive(b);
-  iconify_    ->setActive(b);
-  maximise_   ->setActive(b);
-  help_       ->setActive(b);
-
-  repaint();
-}
-
-  void
-Manager::maximizeChange(bool b)
-{
-  emit(maximiseChanged(b));
-}
-
-  void
-Manager::stickyChange(bool b)
-{
-  emit(stickyChanged(b));
 }
 
   void
@@ -231,42 +168,6 @@ Manager::paintEvent(QPaintEvent * e)
   p.drawPixmap(width() - 32, rbt, s->resizeMidRight(active));
 
   p.drawPixmap(width() - 30, rbt, s->resize(active));
-}
-
-  void
-Manager::lower()
-{
-  workspace()->lowerClient(this);
-}
-
-  void
-Manager::raise()
-{
-  workspace()->raiseClient(this);
-}
-
-  void
-Manager::vMax()
-{
-  maximize(MaximizeVertical);
-}
-
-  void
-Manager::stick()
-{
-  setSticky(true);
-}
-
-  void
-Manager::unstick()
-{
-  setSticky(false);
-}
-
-  void
-Manager::help()
-{
-  contextHelp();
 }
 
   void
@@ -348,6 +249,76 @@ Manager::mouseDoubleClickEvent(QMouseEvent * e)
       ->performWindowOperation(this, options->operationTitlebarDblClick());
   workspace()->requestFocus(this);
 }
+
+  void
+Manager::slotReset()
+{
+  Static::instance()->update();
+  repaint();
+}
+
+  void
+Manager::captionChange(const QString &)
+{
+  repaint();
+}
+
+  void
+Manager::paletteChange(const QPalette &)
+{
+  Static::instance()->update();
+  repaint();
+}
+
+  void
+Manager::activeChange(bool b)
+{
+  emit(activeChanged(b));
+  repaint();
+}
+
+  void
+Manager::maximizeChange(bool b)
+{
+  emit(maximiseChanged(b));
+}
+
+  void
+Manager::stickyChange(bool b)
+{
+  emit(stickyChanged(b));
+}
+
+  void
+Manager::slotLower()
+{
+  workspace()->lowerClient(this);
+}
+
+  void
+Manager::slotRaise()
+{
+  workspace()->raiseClient(this);
+}
+
+  void
+Manager::slotVMax()
+{
+  maximize(MaximizeVertical);
+}
+
+  void
+Manager::slotSetSticky(bool b)
+{
+  setSticky(b);
+}
+
+  void
+Manager::slotHelp()
+{
+  contextHelp();
+}
+
 
 } // End namespace
 

@@ -42,9 +42,9 @@ class MaximiseButton : public Button
 
   signals:
 
-    void maximiseClient();
-    void raiseClient();
-    void vMaxClient();
+    void maximise();
+    void raise();
+    void vMax();
 
   protected:
 

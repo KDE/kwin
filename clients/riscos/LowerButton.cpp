@@ -48,6 +48,7 @@ LowerButton::LowerButton(QWidget * parent)
   : Button(parent)
 {
   setPixmap(QPixmap((const char **)lower_xpm));
+  connect(this, SIGNAL(lower()), parent, SLOT(lower()));
 }
 
   void
@@ -61,7 +62,7 @@ LowerButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     default:
-      emit(lowerClient());
+      emit(lower());
       break;
   }
 

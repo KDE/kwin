@@ -69,6 +69,8 @@ StickyButton::StickyButton(QWidget * parent)
     on_(false)
 {
   setPixmap(QPixmap((const char **)sticky_xpm));
+  connect(this, SIGNAL(setSticky(bool)), parent, SLOT(slotSetSticky(bool)));
+  connect(parent, SIGNAL(stickyChanged(bool)), this, SLOT(setOn(bool)));
 }
 
   void
@@ -94,10 +96,7 @@ StickyButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     default:
-      if (on_)
-        emit(unstickClient());
-      else
-        emit(stickClient());
+      emit(setSticky(!on_));
       break;
   }
 }

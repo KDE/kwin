@@ -42,8 +42,7 @@ class StickyButton : public Button
 
   signals:
 
-    void stickClient();
-    void unstickClient();
+    void setSticky(bool);
 
   protected:
 

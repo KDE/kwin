@@ -53,15 +53,15 @@ class Manager : public Client
 
     void maximiseChanged(bool);
     void stickyChanged(bool);
+    void activeChanged(bool);
 
   public slots:
 
-    void help();
-    void lower();
-    void raise();
-    void vMax();
-    void stick();
-    void unstick();
+    void slotHelp();
+    void slotLower();
+    void slotRaise();
+    void slotVMax();
+    void slotSetSticky(bool);
 
   protected:
 

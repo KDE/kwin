@@ -48,6 +48,7 @@ CloseButton::CloseButton(QWidget * parent)
   : Button(parent)
 {
   setPixmap(QPixmap((const char **)close_xpm));
+  connect(this, SIGNAL(close()), parent, SLOT(closeWindow()));
 }
 
   void
@@ -60,17 +61,8 @@ CloseButton::mouseReleaseEvent(QMouseEvent * e)
 
   switch (e->button())
   {
-    case RightButton:
-      emit(closeClient());
-      break;
-
-    case MidButton:
-      emit(closeClient());
-      break;
-
-    case LeftButton:
     default:
-      emit(closeClient());
+      emit(close());
       break;
   }
 }

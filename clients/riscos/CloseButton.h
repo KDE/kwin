@@ -38,7 +38,7 @@ class CloseButton : public Button
 
   signals:
 
-    void closeClient();
+    void close();
   
   protected:
 

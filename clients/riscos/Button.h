@@ -41,9 +41,12 @@ class Button : public QWidget
     virtual ~Button();
 
     void setAlignment(Alignment);
-    void setActive(bool);
 
     Alignment alignment() const;
+
+  protected slots:
+
+    void setActive(bool);
 
   protected:
 

@@ -38,7 +38,7 @@ class LowerButton : public Button
 
   signals:
 
-    void lowerClient();
+    void lower();
 
   protected:
 

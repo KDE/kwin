@@ -48,6 +48,7 @@ IconifyButton::IconifyButton(QWidget * parent)
   : Button(parent)
 {
   setPixmap(QPixmap((const char **)iconify_xpm));
+  connect(this, SIGNAL(iconify()), parent, SLOT(iconify()));
 }
 
   void
@@ -60,17 +61,8 @@ IconifyButton::mouseReleaseEvent(QMouseEvent * e)
 
   switch (e->button())
   {
-    case RightButton:
-      emit(iconifyClient());
-      break;
-
-    case MidButton:
-      emit(iconifyClient());
-      break;
-
-    case LeftButton:
     default:
-      emit(iconifyClient());
+      emit(iconify());
       break;
   }
 }

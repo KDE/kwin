@@ -35,6 +35,7 @@ Button::Button(QWidget * parent)
 {
   setBackgroundColor(Qt::black);
   setFixedSize(19, 20);
+  connect(parent, SIGNAL(activeChanged(bool)), this, SLOT(setActive(bool)));
 }
 
 Button::~Button()
@@ -98,7 +99,7 @@ Button::setPixmap(const QPixmap & p)
 
     data = (QRgb *)aTx.bits();
 
-    for (int x = 0; x < 64*12; x++)
+    for (int x = 0; x < 144; x++)
       if (data[x] == w)
         data[x] = light;
 
@@ -109,7 +110,7 @@ Button::setPixmap(const QPixmap & p)
 
     data = (QRgb *)iTx.bits();
 
-    for (int x = 0; x < 64*12; x++)
+    for (int x = 0; x < 144; x++)
       if (data[x] == w)
         data[x] = light;
 

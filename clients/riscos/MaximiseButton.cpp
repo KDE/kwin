@@ -68,6 +68,10 @@ MaximiseButton::MaximiseButton(QWidget * parent)
     on_(false)
 {
   setPixmap(QPixmap((const char **)maximise_xpm));
+  connect(this, SIGNAL(maximise()), parent, SLOT(maximize()));
+  connect(this, SIGNAL(vMax()),     parent, SLOT(slotVMax()));
+  connect(this, SIGNAL(raise()),    parent, SLOT(slotRaise()));
+  connect(parent, SIGNAL(maximiseChanged(bool)), this, SLOT(setOn(bool)));
 }
 
   void
@@ -93,17 +97,17 @@ MaximiseButton::mouseReleaseEvent(QMouseEvent * e)
   switch (e->button())
   {
     case RightButton:
-      emit(maximiseClient());
+      emit(maximise());
       break;
 
     case MidButton:
-      emit(vMaxClient());
+      emit(vMax());
       break;
 
     case LeftButton:
     default:
-      emit(raiseClient());
-      emit(maximiseClient());
+      emit(raise());
+      emit(maximise());
       break;
   }
 }

@@ -48,6 +48,7 @@ HelpButton::HelpButton(QWidget * parent)
   : Button(parent)
 {
   setPixmap(QPixmap((const char **)help_xpm));
+  connect(this, SIGNAL(help()), parent, SLOT(slotHelp()));
 }
 
   void

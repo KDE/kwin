@@ -38,7 +38,7 @@ class IconifyButton : public Button
 
   signals:
 
-    void iconifyClient();
+    void iconify();
   
   protected:
 
