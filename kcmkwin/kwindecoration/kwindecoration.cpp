@@ -143,6 +143,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	// Add nifty dnd button modification widgets
 	QLabel* label = new QLabel( buttonBox );
 	dropSite = new ButtonDropSite( buttonBox );
+	label->setAlignment( int( QLabel::WordBreak ) );
 	label->setText( i18n( "To add or remove titlebar buttons, simply <i>drag</i> items "
 		"between the available item list and the titlebar preview. Similarly, "
 		"drag items within the titlebar preview to re-position them.") );
