@@ -22,7 +22,7 @@
  keys->insertItem(i18n("Window Maximize Vertical"), "Window maximize vertical", KKey(), KKey("Meta+Bar"));
  keys->insertItem(i18n("Window Maximize Horizontal"), "Window maximize horizontal", KKey(), KKey("Meta+Equal"));
  keys->insertItem(i18n("Window Iconify"), "Window iconify", KKey(), KKey("Meta+Minus"));
- keys->insertItem(i18n("Window Iconify (All)"), "Window iconify all", KKey(), KKey("Meta+Ctrl+Minus"));
+ //keys->insertItem(i18n("Window Iconify (All)"), "Window iconify all", KKey(), KKey("Meta+Ctrl+Minus"));
  keys->insertItem(i18n("Window Shade"), "Window shade", KKey(), KKey("Meta+Underscore"));
  keys->insertItem(i18n("Window Move"), "Window move", 0);
  keys->insertItem(i18n("Window Resize"), "Window resize", 0);
@@ -113,6 +113,6 @@ This belongs in taskbar rather than here, so it'll have to wait until after 2.2 
 #endif
  keys->insertItem(i18n("Mouse Emulation"), "Mouse emulation", KKey("ALT+F12"), KKey());
  keys->insertItem(i18n("Kill Window"), "Kill Window", KKey("CTRL+ALT+Escape"), KKey("Meta+Ctrl+Delete"));
- keys->insertItem(i18n("Window Screenshot"), "Screenshot of active window", KKey("Print"), KKey());
- keys->insertItem(i18n("Desktop Screenshot"), "Screenshot of desktop", KKey("CTRL+PrtSc"), KKey());
+ keys->insertItem(i18n("Window Screenshot"), "Screenshot of active window", KKey("Print"), KKey("Alt+Print"));
+ keys->insertItem(i18n("Desktop Screenshot"), "Screenshot of desktop", KKey("CTRL+Print"), KKey("Meta+Print"));
 
