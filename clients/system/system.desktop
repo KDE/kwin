@@ -1,3 +1,16 @@
 [Desktop Entry]
 Name=System++
+Name[ca]=Sistema++
+Name[cs]=Systém++
+Name[eo]=Sistemo++
+Name[et]=Süsteem++
+Name[fi]=Järjestelmä++
+Name[fr]=Système++
+Name[is]=Kerfi++
+Name[mk]=Систем++
+Name[nl]=Systeem++
+Name[ro]=Sistem++
+Name[sk]=Systém++
+Name[sl]=Sistem++
+Name[tr]=Sistem++
 X-KDE-Library=libkwinsystem
