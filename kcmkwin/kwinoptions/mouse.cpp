@@ -27,6 +27,7 @@
 
 #include <dcopclient.h>
 #include <klocale.h>
+#include <kapplication.h>
 #include <kconfig.h>
 #include <kdialog.h>
 #include <kglobalsettings.h>
@@ -40,13 +41,8 @@
 #include "mouse.moc"
 
 
-KActionsConfig::~KActionsConfig ()
-{
-
-}
-
 KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *name)
-  : QWidget (parent, name), config(_config)
+  : KCModule(parent, name), config(_config)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
   QVBoxLayout *layout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
@@ -74,7 +70,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   combo->insertItem(i18n("Shade"));
   combo->insertItem(i18n("Lower"));
   combo->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   hlayout->addWidget(combo);
   coTiDbl = combo;
   QWhatsThis::add(combo, i18n("Behavior on <em>double</em> click into the titlebar."));
@@ -131,7 +127,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   combo->insertItem(i18n("Lower"));
   combo->insertItem(i18n("Operations Menu"));
   combo->insertItem(i18n("Toggle Raise and Lower"));
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct1 = combo;
 
   txtButton1 = i18n("Behavior on <em>left</em> click into the titlebar or frame of an "
@@ -156,14 +152,14 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct2 = combo;
   QWhatsThis::add(combo, i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>active</em> window."));
 
   // Titlebar and frame, active, mouse button 3
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct3 =  combo;
   QWhatsThis::add(combo, txtButton3 );
 
@@ -189,19 +185,19 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiInAct1 = combo;
   QWhatsThis::add(combo, txtButton1);
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiInAct2 = combo;
   QWhatsThis::add(combo, i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>inactive</em> window."));
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiInAct3 = combo;
   QWhatsThis::add(combo, txtButton3);
 
@@ -258,19 +254,19 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin1 = combo;
   QWhatsThis::add( combo, strWin1 );
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin2 = combo;
   QWhatsThis::add( combo, strWin2 );
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin3 = combo;
   QWhatsThis::add( combo, strWin3 );
 
@@ -323,7 +319,7 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
   combo = new QComboBox(grid);
   combo->insertItem(i18n("Meta"));
   combo->insertItem(i18n("Alt"));
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAllKey = combo;
   QWhatsThis::add( combo, strAllKey );
 
@@ -337,25 +333,30 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll1 = combo;
   QWhatsThis::add( combo, strAll1 );
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll2 = combo;
   QWhatsThis::add( combo, strAll2 );
 
   combo = new QComboBox(grid);
   combo->insertStringList(items);
-  connect(combo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll3 =  combo;
   QWhatsThis::add( combo, strAll3 );
 
   layout->addStretch();
 
   load();
+}
+
+KActionsConfig::~KActionsConfig()
+{
+  delete config;
 }
 
 void KActionsConfig::setComboText(QComboBox* combo, const char* text){
@@ -460,12 +461,6 @@ void KActionsConfig::load()
   setComboText(coAll3,config->readEntry("CommandAll3","Resize").ascii());
 }
 
-// many widgets connect to this slot
-void KActionsConfig::slotChanged()
-{
-  emit changed(true);
-}
-
 void KActionsConfig::save()
 {
   config->setGroup("Windows");
@@ -485,6 +480,10 @@ void KActionsConfig::save()
   config->writeEntry("CommandAll1", functionAll(coAll1->currentItem()));
   config->writeEntry("CommandAll2", functionAll(coAll2->currentItem()));
   config->writeEntry("CommandAll3", functionAll(coAll3->currentItem()));
+  config->sync();
+  if ( !kapp->dcopClient()->isAttached() )
+      kapp->dcopClient()->attach();
+  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
 }
 
 void KActionsConfig::defaults()

@@ -26,8 +26,9 @@ class QComboBox;
 class KConfig;
 
 #include <qwidget.h>
+#include <kcmodule.h>
 
-class KActionsConfig : public QWidget
+class KActionsConfig : public KCModule
 {
   Q_OBJECT
 
@@ -40,11 +41,8 @@ public:
   void save();
   void defaults();
 
-signals:
-  void changed( bool state );
-
-private  slots:
-    void slotChanged();
+public slots:
+	void changed() { emit KCModule::changed(true); }
 
 private:
   QComboBox* coTiDbl;

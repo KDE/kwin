@@ -23,6 +23,7 @@
 #define __KWINDOWCONFIG_H__
 
 #include <qwidget.h>
+#include <kcmodule.h>
 #include <config.h>
 
 class QRadioButton;
@@ -62,7 +63,7 @@ class KIntNumInput;
 
 class QSpinBox;
 
-class KFocusConfig : public QWidget
+class KFocusConfig : public KCModule
 {
   Q_OBJECT
 public:
@@ -73,14 +74,12 @@ public:
   void save();
   void defaults();
 
-signals:
-  void changed( bool state );
-
 private slots:
   void setAutoRaiseEnabled();
   void autoRaiseOnTog(bool);//CT 23Oct1998
   void clickRaiseOnTog(bool);
-  void slotChanged();
+	void changed() { emit KCModule::changed(true); }
+
 
 private:
 
@@ -112,7 +111,7 @@ private:
   KConfig *config;
 };
 
-class KMovingConfig : public QWidget
+class KMovingConfig : public KCModule
 {
   Q_OBJECT
 public:
@@ -123,13 +122,10 @@ public:
   void save();
   void defaults();
 
-signals:
-  void changed( bool state );
-
 private slots:
-  void slotChanged();
   void setMinimizeAnim( bool );
   void setMinimizeAnimSpeed( int );
+	void changed() { emit KCModule::changed(true); }
 
 private:
   int getMove( void );
@@ -167,7 +163,7 @@ private:
 
 };
 
-class KAdvancedConfig : public QWidget
+class KAdvancedConfig : public KCModule
 {
   Q_OBJECT
 public:
@@ -178,17 +174,14 @@ public:
   void save();
   void defaults();
 
-signals:
-  void changed( bool state );
-
 private slots:
-  void slotChanged();
   void shadeHoverChanged(bool);
 
   //copied from kcontrol/konq/kwindesktop, aleXXX
   void setEBorders();
 
   void setXinerama(bool);
+	void changed() { emit KCModule::changed(true); }
 
 private:
 

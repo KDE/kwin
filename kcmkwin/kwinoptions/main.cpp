@@ -31,59 +31,37 @@
 #include "mouse.h"
 #include "windows.h"
 
-#include "main.h"
+extern "C"
+{
+	KCModule *create_kwinfocus(QWidget *parent, const char *name)
+	{
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KFocusConfig(c, parent, name);
+	}
 
-typedef KGenericFactory<KWinOptions, QWidget> KWinOptFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kwinoptions, KWinOptFactory("kcmkwm") );
+	KCModule *create_kwinactions(QWidget *parent, const char *name)
+	{
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KActionsConfig(c, parent, name);
+	}
+
+	KCModule *create_kwinmoving(QWidget *parent, const char *name)
+	{
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KMovingConfig(c, parent, name);
+	}
+
+	KCModule *create_kwinadvanced(QWidget *parent, const char *name)
+	{
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KAdvancedConfig(c, parent, name);
+	}
+
+}
+
+
 /*
-extern "C" {
-  KCModule *create_kwinoptions ( QWidget *parent, const char* name)
-  {
-    //CT there's need for decision: kwm or kwin?
-    KGlobal::locale()->insertCatalogue("kcmkwm");
-    return new KWinOptions( parent, name);
-  }
-}
-*/
-KWinOptions::KWinOptions(QWidget *parent, const char *name, const QStringList &)
-  : KCModule(KWinOptFactory::instance(), parent, name)
-{
-  mConfig = new KConfig("kwinrc", false, true);
-
-  QVBoxLayout *layout = new QVBoxLayout(this);
-  tab = new QTabWidget(this);
-  layout->addWidget(tab);
-
-  mFocus = new KFocusConfig(mConfig, this, "KWin Focus Config");
-  tab->addTab(mFocus, i18n("&Focus"));
-  connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
-
-  mActions = new KActionsConfig(mConfig, this, "KWin Actions");
-  tab->addTab(mActions, i18n("Actio&ns"));
-  connect(mActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
-
-  mMoving = new KMovingConfig(mConfig, this, "KWin Moving");
-  tab->addTab(mMoving, i18n("&Moving"));
-  connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
-
-  mAdvanced = new KAdvancedConfig(mConfig, this, "KWin Advanced");
-  tab->addTab(mAdvanced, i18n("Ad&vanced"));
-  connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
-}
-
-KWinOptions::~KWinOptions()
-{
-  delete mConfig;
-}
-
-void KWinOptions::load()
-{
   mConfig->reparseConfiguration();
-  mFocus->load();
-  mActions->load();
-  mMoving->load();
-  mAdvanced->load();
-}
 
 
 void KWinOptions::save()
@@ -98,15 +76,6 @@ void KWinOptions::save()
   if ( !kapp->dcopClient()->isAttached() )
       kapp->dcopClient()->attach();
   kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
-}
-
-
-void KWinOptions::defaults()
-{
-  mFocus->defaults();
-  mActions->defaults();
-  mMoving->defaults();
-  mAdvanced->defaults();
 }
 
 QString KWinOptions::quickHelp() const
@@ -139,10 +108,6 @@ const KAboutData* KWinOptions::aboutData() const
     return about;
 }
 
-void KWinOptions::moduleChanged(bool state)
-{
-  emit changed(state);
-}
+*/
 
 
-#include "main.moc"

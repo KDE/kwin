@@ -10,13 +10,13 @@ kcm_kwinoptions_la_SOURCES = windows.cpp mouse.cpp main.cpp
 kcm_kwinoptions_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
 kcm_kwinoptions_la_LIBADD = $(LIB_KDEUI)
 
-noinst_HEADERS = windows.h mouse.h main.h
+noinst_HEADERS = windows.h mouse.h 
 
 messages:
 	$(XGETTEXT) *.cpp -o $(podir)/kcmkwm.pot
 
-data_DATA = kwinoptions.desktop  
-datadir = $(kde_appsdir)/Settings/LookNFeel
+data_DATA = kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  
+datadir = $(kde_appsdir)/Settings/Windows
 
 install-data-local: uninstall.desktop
 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Settings/LookNFeel/Windows

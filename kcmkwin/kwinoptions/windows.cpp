@@ -33,6 +33,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <knuminput.h>
+#include <kapplication.h>
 #include <kdialog.h>
 #include <dcopclient.h>
 
@@ -87,11 +88,12 @@
 
 KFocusConfig::~KFocusConfig ()
 {
+	delete config;
 }
 
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
 KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name)
-    : QWidget (parent, name), config(_config)
+    : KCModule(parent, name), config(_config)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),KDialog::spacingHint());
@@ -229,23 +231,18 @@ KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *name
     lay->addStretch();
 
     // Any changes goes to slotChanged()
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
-    connect(fcsBox, SIGNAL(clicked(int)), this, SLOT(slotChanged()));
-    connect(autoRaise, SIGNAL(valueChanged(int)), this, SLOT(slotChanged()));
-    connect(kdeMode, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect(cdeMode, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect(traverseAll, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect(rollOverDesktops, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect(showPopupinfo, SIGNAL(clicked()), this, SLOT(slotChanged()));
+    connect(focusCombo, SIGNAL(activated(int)), SLOT(changed()));
+    connect(fcsBox, SIGNAL(clicked(int)), SLOT(changed()));
+    connect(autoRaise, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect(kdeMode, SIGNAL(clicked()), SLOT(changed()));
+    connect(cdeMode, SIGNAL(clicked()), SLOT(changed()));
+    connect(traverseAll, SIGNAL(clicked()), SLOT(changed()));
+    connect(rollOverDesktops, SIGNAL(clicked()), SLOT(changed()));
+    connect(showPopupinfo, SIGNAL(clicked()), SLOT(changed()));
 
     load();
 }
 
-// many widgets connect to this slot
-void KFocusConfig::slotChanged()
-{
-    emit changed(true);
-}
 
 int KFocusConfig::getFocus()
 {
@@ -413,6 +410,11 @@ void KFocusConfig::save( void )
     config->writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
 
     config->setGroup("Desktops");
+
+  config->sync();
+  if ( !kapp->dcopClient()->isAttached() )
+      kapp->dcopClient()->attach();
+  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
 }
 
 void KFocusConfig::defaults()
@@ -428,10 +430,11 @@ void KFocusConfig::defaults()
 
 KAdvancedConfig::~KAdvancedConfig ()
 {
+	delete config;
 }
 
 KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char *name)
-    : QWidget (parent, name), config(_config)
+    : KCModule(parent, name), config(_config)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
@@ -476,9 +479,9 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
     lay->addWidget(shBox);
 
     // Any changes goes to slotChanged()
-    connect(animateShade, SIGNAL(toggled(bool)), this, SLOT(slotChanged()));
-    connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(slotChanged()));
-    connect(shadeHover, SIGNAL(valueChanged(int)), this, SLOT(slotChanged()));
+    connect(animateShade, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
 
 #ifdef HAVE_XINERAMA
     xineramaBox = new QVButtonGroup(i18n("Xinerama"), this);
@@ -517,8 +520,8 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
     connect( electricBox, SIGNAL(clicked(int)), this, SLOT(setEBorders()));
 
     // Any changes goes to slotChanged()
-    connect(electricBox, SIGNAL(clicked(int)), this, SLOT(slotChanged()));
-    connect(delays, SIGNAL(valueChanged(int)), this, SLOT(slotChanged()));
+    connect(electricBox, SIGNAL(clicked(int)), SLOT(changed()));
+    connect(delays, SIGNAL(valueChanged(int)), SLOT(changed()));
 
     lay->addWidget(electricBox);
 
@@ -526,19 +529,13 @@ KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char 
     load();
 
 #ifdef HAVE_XINERAMA
-    connect( xineramaEnable, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect( xineramaMovementEnable, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect( xineramaPlacementEnable, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect( xineramaMaximizeEnable, SIGNAL(clicked()), this, SLOT(slotChanged()));
+    connect( xineramaEnable, SIGNAL(clicked()), SLOT(changed()));
+    connect( xineramaMovementEnable, SIGNAL(clicked()), SLOT(changed()));
+    connect( xineramaPlacementEnable, SIGNAL(clicked()), SLOT(changed()));
+    connect( xineramaMaximizeEnable, SIGNAL(clicked()), SLOT(changed()));
 #endif
 
 
-}
-
-// many widgets connect to this slot
-void KAdvancedConfig::slotChanged()
-{
-    emit changed(true);
 }
 
 void KAdvancedConfig::setShadeHover(bool on) {
@@ -619,6 +616,10 @@ void KAdvancedConfig::save( void )
 
     config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
+  config->sync();
+  if ( !kapp->dcopClient()->isAttached() )
+      kapp->dcopClient()->attach();
+  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
 }
 
 void KAdvancedConfig::defaults()
@@ -668,10 +669,11 @@ void KAdvancedConfig::setElectricBorderDelay(int delay)
 
 KMovingConfig::~KMovingConfig ()
 {
+	delete config;
 }
 
 KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *name)
-    : QWidget (parent, name), config(_config)
+    : KCModule(parent, name), config(_config)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
@@ -819,21 +821,15 @@ KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *nam
     load();
 
     // Any changes goes to slotChanged()
-    connect( opaque, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect( resizeOpaqueOn, SIGNAL(clicked()), this, SLOT(slotChanged()));
-    connect( minimizeAnimOn, SIGNAL(clicked() ), this, SLOT(slotChanged()));
-    connect( minimizeAnimSlider, SIGNAL(valueChanged(int)), this, SLOT(slotChanged()));
-    connect( moveResizeMaximized, SIGNAL(toggled(bool)), this, SLOT(slotChanged()));
-    connect( placementCombo, SIGNAL(activated(int)), this, SLOT(slotChanged()));
-    connect( BrdrSnap, SIGNAL(valueChanged(int)), this, SLOT(slotChanged()));
-    connect( WndwSnap, SIGNAL(valueChanged(int)), this, SLOT(slotChanged()));
-    connect( OverlapSnap, SIGNAL(clicked()), this, SLOT(slotChanged()));
-}
-
-// many widgets connect to this slot
-void KMovingConfig::slotChanged()
-{
-    emit changed(true);
+    connect( opaque, SIGNAL(clicked()), SLOT(changed()));
+    connect( resizeOpaqueOn, SIGNAL(clicked()), SLOT(changed()));
+    connect( minimizeAnimOn, SIGNAL(clicked() ), SLOT(changed()));
+    connect( minimizeAnimSlider, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect( moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
+    connect( placementCombo, SIGNAL(activated(int)), SLOT(changed()));
+    connect( BrdrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect( WndwSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect( OverlapSnap, SIGNAL(clicked()), SLOT(changed()));
 }
 
 int KMovingConfig::getMove()
