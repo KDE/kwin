@@ -1072,8 +1072,8 @@ void Workspace::smartPlacement(Client* c){
 		if((*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
 		   !(*l)->isIconified() && (*l) != c ) {
 	
-		    xl = (*l)->x();           yt = (*l)->y();
-		    xr = xl + (*l)->height(); yb = yt + (*l)->width();
+		    xl = (*l)->x();          yt = (*l)->y();
+		    xr = xl + (*l)->width(); yb = yt + (*l)->height();
 	
 		    //if windows overlap, calc the overall overlapping
 		    if((cxl < xr) && (cxr > xl) &&
@@ -1117,22 +1117,22 @@ void Workspace::smartPlacement(Client* c){
 		if ( (*l)->isOnDesktop(currentDesktop()) && (*l) != desktop_client &&
 		     !(*l)->isIconified() &&  (*l) != c ) {
 
-		    xl = (*l)->x();           yt = (*l)->y();
-		    xr = xl + (*l)->height(); yb = yt + (*l)->width();
+		    xl = (*l)->x();          yt = (*l)->y();
+		    xr = xl + (*l)->width(); yb = yt + (*l)->height();
 	
 		    // if not enough room above or under the current tested client
 		    // determine the first non-overlapped x position
-		    if( y < yb  && yt < ch + y ) {
+		    if( ( y < yb ) && ( yt < ch + y ) ) {
 	
-			if( yb > x )
-			    possible = possible < yb ? possible : yb;
+			if( xr > x )
+			    possible = possible < xr ? possible : xr;
 	
 			if( xl - cw > x )
 			    possible = possible < xl - cw ? possible : xl - cw;
 		    }
 		}
-		x_optimal = x = possible;
 	    }
+	    x = possible;
 	}
 
 	// ... else ==> not enough x dimension (overlap was wrong on horizontal)
@@ -1148,8 +1148,8 @@ void Workspace::smartPlacement(Client* c){
 		if( (*l)->isOnDesktop( currentDesktop() ) && (*l) != desktop_client &&
 		    (*l) != c   &&  !c->isIconified() ) {
 	
-		    xl = (*l)->x();           yt = (*l)->y();
-		    xr = xl + (*l)->height(); yb = yt + (*l)->width();
+		    xl = (*l)->x();          yt = (*l)->y();
+		    xr = xl + (*l)->width(); yb = yt + (*l)->height();
 	
 		    if( yb > y)
 			possible = possible < yb ? possible : yb;
@@ -1157,8 +1157,8 @@ void Workspace::smartPlacement(Client* c){
 		    if( yt - ch > y )
 			possible = possible < yt - ch ? possible : yt - ch;
 		}
-		y_optimal = y = possible;
 	    }
+	    y = possible;
 	}
     }
     while( overlap != none && overlap != h_wrong );
