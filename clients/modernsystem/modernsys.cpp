@@ -68,6 +68,8 @@ static QString *button_pattern = NULL;
 static bool show_handle;
 static int handle_size;
 static int handle_width;
+static int border_width;
+static int title_height;
 
 static inline const KDecorationOptions* options()
 {
@@ -134,9 +136,9 @@ static void create_pixmaps()
 
     if(QPixmap::defaultDepth() > 8){
         aUpperGradient = new KPixmap;
-        aUpperGradient->resize(32, 18);
+        aUpperGradient->resize(32, title_height+2);
         iUpperGradient = new KPixmap;
-        iUpperGradient->resize(32, 18);
+        iUpperGradient->resize(32, title_height+2);
         KPixmapEffect::gradient(*aUpperGradient,
                                 options()->color(KDecoration::ColorTitleBar, true).light(130),
                                 options()->color(KDecoration::ColorTitleBlend, true),
@@ -188,10 +190,10 @@ static void delete_pixmaps()
     pixmaps_created = false;
 }
 
-static bool read_config()
+bool ModernSysFactory::read_config()
 {
     bool showh;
-    int hsize, hwidth;
+    int hsize, hwidth, bwidth, theight;
     QString bpatt;
 
     KConfig c("kwinmodernsysrc");
@@ -205,6 +207,47 @@ static bool read_config()
         hwidth = hsize = 0;
     }
 
+    switch(options()->preferredBorderSize( this )) {
+      case BorderLarge:
+          bwidth = 8;
+          hwidth = hwidth * 7/5;
+          hsize  = hsize  * 7/5;
+          break;
+      case BorderVeryLarge:
+          bwidth = 12;
+          hwidth = hwidth * 17/10 + 2;
+          hsize  = hsize  * 17/10;
+          break;
+      case BorderHuge:
+          bwidth = 18;
+          hwidth = hwidth * 2 + 6;
+          hsize  = hsize  * 2;
+          break;
+      /*
+      // If we allow these large sizes we need to change the
+      // correlation between the border width and the handle size.
+      case BorderVeryHuge:
+          bwidth = 27;
+          hwidth = hwidth * 5/2 + 15;
+          hsize  = hsize  * 5/2;
+          break;
+      case BorderOversized:
+          bwidth = 40;
+          hwidth = hwidth * 3 + 22;
+          hsize  = hsize  * 3;
+          break;
+      */
+      case BorderNormal:
+      default:
+          bwidth = 4;
+    }
+
+    theight = QFontMetrics(options()->font(true)).height() + 2;
+    if (theight < 16)
+        theight = 16;
+    if (theight < bwidth)
+        theight = bwidth;
+    
     if (options()->customButtonPositions()) {
         bpatt = "2" + options()->titleButtonsLeft() + "3t3"
                 + options()->titleButtonsRight() + "2";
@@ -213,14 +256,25 @@ static bool read_config()
         bpatt = "2X3t3HSIA2";
 
     if (showh == show_handle && hwidth == handle_width && hsize == handle_size
+            && bwidth == border_width && theight == title_height
             && bpatt == *button_pattern)
         return false;
     
     show_handle = showh;
     handle_width = hwidth;
     handle_size = hsize;
+    border_width = bwidth;
+    title_height = theight;
     *button_pattern = bpatt;
     return true;
+}
+
+QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
+{ // the list must be sorted
+  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+      BorderVeryLarge <<  BorderHuge;
+   // as long as the buttons don't scale don't offer the largest two sizes.
+   //   BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
 ModernButton::ModernButton(ModernSys *parent, const char *name,
@@ -318,14 +372,14 @@ void ModernSys::init()
     g->setRowStretch(1, 10);
     g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding ) );
 
-    g->addColSpacing(0, 2 + (reverse ? handle_width : 0));
-    g->addColSpacing(2, 2 + (reverse ? 0 : handle_width));
+    g->addColSpacing(0, border_width-2 + (reverse ? handle_width : 0));
+    g->addColSpacing(2, border_width-2 + (reverse ? 0 : handle_width));
 
-    g->addRowSpacing(2, 2 + handle_width);
+    g->addRowSpacing(2, border_width-2 + handle_width);
 
 	QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     hb->setResizeMode(QLayout::FreeResize);
-    titlebar = new QSpacerItem(10, 16, QSizePolicy::Expanding,
+    titlebar = new QSpacerItem(10, title_height, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
 
     button[BtnClose] = new ModernButton(this, "close", close_bits, i18n("Close"));
@@ -412,14 +466,15 @@ void ModernSys::recalcTitleBuffer()
 {
     if(oldTitle == caption() && width() == titleBuffer.width())
         return;
+
     QFontMetrics fm(options()->font(true));
-    titleBuffer.resize(width(), 18);
+    titleBuffer.resize(width(), title_height+2);
     QPainter p;
     p.begin(&titleBuffer);
     if(aUpperGradient)
-        p.drawTiledPixmap(0, 0, width(), 18, *aUpperGradient);
+        p.drawTiledPixmap(0, 0, width(), title_height+2, *aUpperGradient);
     else
-        p.fillRect(0, 0, width(), 18,
+        p.fillRect(0, 0, width(), title_height+2,
                    options()->colorGroup(ColorTitleBar, true).
                    brush(QColorGroup::Button));
 
@@ -428,12 +483,13 @@ void ModernSys::recalcTitleBuffer()
     t.setLeft( t.left() );
     t.setRight( t.right() - 2 );
 
-    QRegion r(t.x(), 0, t.width(), 18);
+    QRegion r(t.x(), 0, t.width(), title_height+2);
     r -= QRect(t.x()+((t.width()-fm.width(caption()))/2)-4,
-               0, fm.width(caption())+8, 18);
+               0, fm.width(caption())+8, title_height+2);
     p.setClipRegion(r);
     int i, ly;
-    for(i=0, ly=4; i < 4; ++i, ly+=3){
+    ly = (title_height % 3 == 0) ? 3 : 4;
+    for(i=0; i < (title_height-2)/3; ++i, ly+=3){
         p.setPen(options()->color(ColorTitleBar, true).light(150));
         p.drawLine(0, ly, width()-1, ly);
         p.setPen(options()->color(ColorTitleBar, true).dark(120));
@@ -444,7 +500,7 @@ void ModernSys::recalcTitleBuffer()
     p.setFont(options()->font(true));
 
     p.drawText(t.x()+((t.width()-fm.width(caption()))/2)-4,
-               0, fm.width(caption())+8, 18, AlignCenter, caption());
+               0, fm.width(caption())+8, title_height+2, AlignCenter, caption());
     p.setClipping(false);
     p.end();
     oldTitle = caption();
@@ -489,13 +545,13 @@ void ModernSys::paintEvent( QPaintEvent* )
     // titlebar
     QColorGroup g = options()->colorGroup(ColorTitleBar, isActive());
     if(isActive()){
-        p.drawPixmap(1, 1, titleBuffer, 0, 0, w-2, 18);
+        p.drawPixmap(1, 1, titleBuffer, 0, 0, w-2, title_height+2);
     }
     else{
         if(iUpperGradient)
-            p.drawTiledPixmap(1, 1, w-2, 18, *iUpperGradient);
+            p.drawTiledPixmap(1, 1, w-2, title_height+2, *iUpperGradient);
         else
-            p.fillRect(1, 1, w-2, 18, fillBrush);
+            p.fillRect(1, 1, w-2, title_height+2, fillBrush);
         p.setPen(options()->color(ColorFont, isActive()));
         p.setFont(options()->font(isActive()));
         p.drawText(t, AlignCenter, caption() );
@@ -503,23 +559,23 @@ void ModernSys::paintEvent( QPaintEvent* )
 
     // titlebar highlight
     p.setPen(g.light());
-    p.drawLine(1, 1, 1, 19);
+    p.drawLine(1, 1, 1, title_height+3);
     p.drawLine(1, 1, w-3, 1);
     p.setPen(g.dark());
-    p.drawLine(w-2, 1, w-2, 19);
-    p.drawLine(0, 18, w-2, 18);
+    p.drawLine(w-2, 1, w-2, title_height+3);
+    p.drawLine(0, title_height+2, w-2, title_height+2);
 
     // frame
     g = options()->colorGroup(ColorFrame, isActive());
     p.setPen(g.light());
-    p.drawLine(1, 19, 1, h-2);
+    p.drawLine(1, title_height+3, 1, h-2);
     p.setPen(g.dark());
     p.drawLine(2, h-2, w-2, h-2);
-    p.drawLine(w-2, 19, w-2, h-2);
-    //p.drawPoint(w-3, 19);
-    //p.drawPoint(2, 19);
+    p.drawLine(w-2, title_height+3, w-2, h-2);
+    //p.drawPoint(w-3, title_height+3);
+    //p.drawPoint(2, title_height+3);
 
-    qDrawShadePanel(&p, 3, 19, w-6, h-22, g, true);
+    qDrawShadePanel(&p, border_width-1, title_height+3, w-2*border_width+2, h-title_height-border_width-2, g, true);
 
     if (show_handle) {
         p.setPen(g.dark());
@@ -607,18 +663,33 @@ ModernSys::MousePosition ModernSys::mousePosition( const QPoint& p) const
 {
     MousePosition m = KDecoration::mousePosition( p );
 
-    if ( show_handle && m == Center ) {
-       int border = handle_width + 4;
-	   bool hx = (p.x() >= width() - border);
-	   bool hy = (p.y() >= height() - border);
+    const int range = 14 + 3*border_width/2;
+    const int border = show_handle ? handle_width + border_width : border_width;
+    const int range2 = show_handle ? handle_width + border_width : range;
+    const int range3 = show_handle ? handle_width + range : range;
 
-       if (hx && hy)
-           m = BottomRight2;
-       else if (hx)
-           m =  Right;
-       else if (hy)
-           m =  Bottom;
-    }
+    if ( ( p.x() > border_width && p.x() < width() - border )
+         && ( p.y() > 4 && p.y() < height() - border ) )
+        m = Center;
+    else if ( p.y() <= range && p.x() <= range)
+        m = TopLeft2;
+    else if ( p.y() >= height()-range2 && p.x() >= width()-range2)
+        m = BottomRight2;
+    else if ( p.y() >= height()-range3 && p.x() <= range)
+        m = BottomLeft2;
+    else if ( p.y() <= range && p.x() >= width()-range3)
+        m = TopRight2;
+    else if ( p.y() <= 4 )
+        m = Top;
+    else if ( p.y() >= height()-border )
+        m = Bottom;
+    else if ( p.x() <= border_width )
+        m = Left;
+    else if ( p.x() >= width()-border )
+        m = Right;
+    else
+        m = Center;
+
     return m;
 }
 
@@ -643,10 +714,10 @@ QSize ModernSys::minimumSize() const
 void ModernSys::borders( int& left, int& right, int& top, int& bottom ) const
 {
     bool reverse = QApplication::reverseLayout();
-    left = 2 + 2 + (reverse ? handle_width : 0);
-    right = 2 + 2 + (reverse ? 0 : handle_width);
-    top = 2 + 2 + titlebar->geometry().height(); // FRAME is this ok?
-    bottom = 2 + 2 + handle_width;
+    left = border_width + (reverse ? handle_width : 0);
+    right = border_width + (reverse ? 0 : handle_width);
+    top = 4 + titlebar->geometry().height(); // FRAME is this ok?
+    bottom = border_width + handle_width;
 // FRAME this below needs doShape() changes
 //    if( isShade())
 //        bottom = 0;
@@ -686,8 +757,8 @@ bool ModernSys::eventFilter( QObject* o, QEvent* e )
 ModernSysFactory::ModernSysFactory()
 {
     button_pattern = new QString;
-    create_pixmaps();
     read_config();
+    create_pixmaps();
 }
 
 ModernSysFactory::~ModernSysFactory()
@@ -704,7 +775,7 @@ KDecoration* ModernSysFactory::createDecoration( KDecorationBridge* b )
 bool ModernSysFactory::reset( unsigned long changed )
 {
     bool ret = read_config();
-    if( changed & SettingColors )
+    if( changed & (SettingColors | SettingBorder) )
     {
         delete_pixmaps();
         create_pixmaps();
