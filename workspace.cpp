@@ -112,9 +112,10 @@ public:
        movingClient(0),
        layoutOrientation(Qt::Vertical),
        layoutX(-1),
-       layoutY(2)
+       layoutY(2),
+       workarea(NULL)
     { };
-    ~WorkspacePrivate() {};
+    ~WorkspacePrivate() { delete[] workarea; };
     KStartupInfo* startup;
     bool electric_have_borders;
     int electric_current_border;
@@ -134,6 +135,7 @@ public:
     int layoutX;
     int layoutY;
     Placement *initPositioning;
+    QRect* workarea; //  array of workareas for virtual desktops
 };
 
 };
@@ -2419,21 +2421,16 @@ void Workspace::setNumberOfDesktops( int n )
     int old_number_of_desktops = number_of_desktops;
     number_of_desktops = n;
 
+    if( currentDesktop() > numberOfDesktops())
+        setCurrentDesktop( numberOfDesktops());
+
     // if increasing the number, do the resizing now,
     // otherwise after the moving of window to still existing desktops
     if( old_number_of_desktops < number_of_desktops ) {
         NETPoint* viewports = new NETPoint[ number_of_desktops ];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
-        NETRect r;
-        r.pos.x = area.x();
-        r.pos.y = area.y();
-        r.size.width = area.width();
-        r.size.height = area.height();
-        for( int i = 1; i <= number_of_desktops; i++)
-        {
-            rootInfo->setWorkArea( i, r );
-        }
+        updateClientArea( true );
         rootInfo->setNumberOfDesktops( number_of_desktops );
     }
 
@@ -2447,23 +2444,12 @@ void Workspace::setNumberOfDesktops( int n )
                 sendClientToDesktop( *it, numberOfDesktops());
         }
     }
-    if( currentDesktop() > numberOfDesktops())
-        setCurrentDesktop( numberOfDesktops());
-
     if( old_number_of_desktops > number_of_desktops ) {
         rootInfo->setNumberOfDesktops( number_of_desktops );
         NETPoint* viewports = new NETPoint[ number_of_desktops ];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
-        NETRect r;
-        r.pos.x = area.x();
-        r.pos.y = area.y();
-        r.size.width = area.width();
-        r.size.height = area.height();
-        for( int i = 1; i <= number_of_desktops; i++)
-        {
-            rootInfo->setWorkArea( i, r );
-        }
+        updateClientArea( true );
     }
 
     saveDesktopSettings();
@@ -3095,6 +3081,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk )
             sendClientToDesktop( *it, desk );
         }
     }
+    updateClientArea();
 }
 
 /*!
@@ -3184,7 +3171,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
    if (options->windowSnapZone || options->borderSnapZone )
    {
       bool sOWO=options->snapOnlyWhenOverlapping;
-      QRect maxRect = clientArea(MovementArea, pos+c->rect().center());
+      QRect maxRect = clientArea(MovementArea, pos+c->rect().center(), c->desktop());
       int xmin = maxRect.left();
       int xmax = maxRect.right()+1;               //desk size
       int ymin = maxRect.top();
@@ -4003,9 +3990,9 @@ NET::WindowType Workspace::txtToWindowType( const char* txt )
 }
 
 /*!
-  Updates the current client area according to the current clients.
+  Updates the current client areas according to the current clients.
 
-  If the area changes, the new area is propagate to the world.
+  If the area changes or force is true, the new areas are propagated to the world.
 
   The client area is the area that is available for clients (that
   which is not taken by windows like panels, the top-of-screen menu
@@ -4013,23 +4000,46 @@ NET::WindowType Workspace::txtToWindowType( const char* txt )
 
   \sa clientArea()
  */
-void Workspace::updateClientArea()
+ 
+void Workspace::updateClientArea( bool force )
 {
+    QRect* new_areas = new QRect[ numberOfDesktops() + 1 ];
     QRect all = QApplication::desktop()->geometry();
-    QRect a = all;
+    for( int i = 1;
+         i <= numberOfDesktops();
+         ++i )
+         new_areas[ i ] = all;
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
-        a = a.intersect( (*it)->adjustedClientArea( all ) );
+        int desktop = (*it)->desktop();
+        QRect r = (*it)->adjustedClientArea( all );
+        if( r == all )
+            continue;
+        if( desktop == NETWinInfo::OnAllDesktops )
+            for( int i = 1;
+                 i < numberOfDesktops();
+                 ++i )
+                new_areas[ i ] = new_areas[ i ].intersect( r );
+        else
+            new_areas[ desktop ] = new_areas[ desktop ].intersect( r );
     }
 
-    if ( area != a ) {
-        area = a;
+    bool changed = force;
+    for( int i = 1;
+         !changed && i <= numberOfDesktops();
+         ++i )
+        if( d->workarea[ i ] != new_areas[ i ] )
+            changed = true;
+    if ( changed ) {
+        delete[] d->workarea;
+        d->workarea = new_areas;
+        new_areas = NULL;
         NETRect r;
-        r.pos.x = area.x();
-        r.pos.y = area.y();
-        r.size.width = area.width();
-        r.size.height = area.height();
         for( int i = 1; i <= numberOfDesktops(); i++)
         {
+            r.pos.x = d->workarea[ i ].x();
+            r.pos.y = d->workarea[ i ].y();
+            r.size.width = d->workarea[ i ].width();
+            r.size.height = d->workarea[ i ].height();
             rootInfo->setWorkArea( i, r );
         }
 
@@ -4038,6 +4048,12 @@ void Workspace::updateClientArea()
                 (*it)->maximize( Client::MaximizeAdjust );
         }
     }
+    delete[] new_areas;
+}
+
+void Workspace::updateClientArea()
+{
+    updateClientArea( false );
 }
 
 
@@ -4048,41 +4064,55 @@ void Workspace::updateClientArea()
 
   \sa geometry()
  */
-QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p)
+QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop )
 {
+    if( desktop == NETWinInfo::OnAllDesktops )
+        desktop = currentDesktop();
     QRect rect = QApplication::desktop()->geometry();
-    QDesktopWidget *desktop = KApplication::desktop();
+    QDesktopWidget *desktopwidget = KApplication::desktop();
 
     switch (opt) {
         case MaximizeArea:
             if (options->xineramaMaximizeEnabled)
-                rect = desktop->screenGeometry(desktop->screenNumber(p));
+                rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
             break;
         case PlacementArea:
             if (options->xineramaPlacementEnabled)
-                rect = desktop->screenGeometry(desktop->screenNumber(p));
+                rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
             break;
         case MovementArea:
             if (options->xineramaMovementEnabled)
-                rect = desktop->screenGeometry(desktop->screenNumber(p));
+                rect = desktopwidget->screenGeometry(desktopwidget->screenNumber(p));
             break;
     }
 
-    if (area.isNull())
+    if (d->workarea[ desktop ].isNull())
         return rect;
 
-    return area.intersect(rect);
+    return d->workarea[ desktop ].intersect(rect);
+}
+
+QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p)
+{
+    return clientArea( opt, p, currentDesktop());
+}
+
+QRect Workspace::clientArea(const QPoint& p, int desktop)
+{
+    if( desktop == NETWinInfo::OnAllDesktops )
+        desktop = currentDesktop();
+    int screenNum = QApplication::desktop()->screenNumber(p);
+    QRect rect = QApplication::desktop()->screenGeometry(screenNum);
+
+    if (d->workarea[ desktop ].isNull())
+        return rect;
+
+    return d->workarea[ desktop ].intersect(rect);
 }
 
 QRect Workspace::clientArea(const QPoint& p)
 {
-    int screenNum = QApplication::desktop()->screenNumber(p);
-    QRect rect = QApplication::desktop()->screenGeometry(screenNum);
-
-    if (area.isNull())
-        return rect;
-
-    return area.intersect(rect);
+    return clientArea( p, currentDesktop());
 }
 
 void Workspace::loadDesktopSettings()
@@ -4098,6 +4128,8 @@ void Workspace::loadDesktopSettings()
 
     int n = c.readNumEntry("Number", 4);
     number_of_desktops = n;
+    delete d->workarea;
+    d->workarea = new QRect[ n + 1 ];
     rootInfo->setNumberOfDesktops( number_of_desktops );
     desktop_focus_chain.resize( n );
     for(int i = 1; i <= n; i++) {

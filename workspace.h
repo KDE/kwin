@@ -133,9 +133,12 @@ public:
 
 
     // default is MaximizeArea
+    QRect clientArea(clientAreaOption, const QPoint& p, int desktop);
+    QRect clientArea(const QPoint& p, int desktop);
+    // KDE4 remove the following 3 methods
+    inline QRect clientArea(clientAreaOption opt) { return clientArea(opt, QCursor::pos()); }
     QRect clientArea(clientAreaOption, const QPoint& p);
     QRect clientArea(const QPoint& p);
-    inline QRect clientArea(clientAreaOption opt) { return clientArea(opt, QCursor::pos()); }
 
     void removeClient( Client* );
 
@@ -397,6 +400,8 @@ private:
     void calcDesktopLayout(int &x, int &y);
 
     QPopupMenu* clientPopup();
+    
+    void updateClientArea( bool force );
 
     SystemTrayWindowList systemTrayWins;
 
@@ -456,7 +461,7 @@ private:
     RootInfo *rootInfo;
     QWidget* supportWindow;
 
-    QRect area;
+    QRect area_; // KDE4 remove me, unused
 
     // swallowing
     QStringList doNotManageList;
