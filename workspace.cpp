@@ -1290,7 +1290,7 @@ void Workspace::smartPlacement(Client* c){
     //loop over possible positions
     do {
 	//test if enough room in x and y directions
-	if ( y + ch > maxRect.bottom() )
+	if ( y + ch > maxRect.bottom() && ch <= maxRect.height() )
 	    overlap = h_wrong; // this throws the algorithm to an exit
 	else if( x + cw > maxRect.right() )
 	    overlap = w_wrong;
