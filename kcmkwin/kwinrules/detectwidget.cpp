@@ -127,6 +127,33 @@ QCString DetectDialog::selectedRole() const
     return "";
     }
 
+QString DetectDialog::selectedTitle() const
+    {
+    return title;
+    }
+
+Rules::StringMatch DetectDialog::titleMatch() const
+    {
+#if KDE_IS_VERSION( 3, 3, 90 )
+#warning Offer possibilities here
+#endif
+    return Rules::UnimportantMatch;
+    }
+
+bool DetectDialog::selectedWholeApp() const
+    {
+    return widget->use_class->isChecked();
+    }
+
+NET::WindowType DetectDialog::selectedType() const
+    {
+    return type;
+    }
+
+QCString DetectDialog::selectedMachine() const
+    {
+    return machine;
+    }
 
 void DetectDialog::selectWindow()
     {

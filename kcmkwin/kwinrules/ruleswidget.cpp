@@ -518,6 +518,28 @@ void RulesWidget::detected( bool ok )
         role_match->setCurrentItem( detect_dlg->selectedRole().isEmpty()
             ? Rules::UnimportantMatch : Rules::ExactMatch );
         roleMatchChanged();
+        if( detect_dlg->selectedWholeApp())
+            {
+            for( unsigned int i = 0;
+                 i < types->count();
+                 ++i )
+                types->setSelected( i, true );
+            }
+        else
+            {
+            NET::WindowType type = detect_dlg->selectedType();
+            for( unsigned int i = 0;
+                 i < types->count();
+                 ++i )
+                types->setSelected( i, false );
+            types->setSelected( typeToCombo( type ), true );
+            }
+        title->setText( detect_dlg->selectedTitle());
+        title_match->setCurrentItem( detect_dlg->titleMatch());
+        titleMatchChanged();
+        machine->setText( detect_dlg->selectedMachine());
+        machine_match->setCurrentItem( Rules::UnimportantMatch );
+        machineMatchChanged();
         }
     delete detect_dlg;
     detect_dlg = NULL;

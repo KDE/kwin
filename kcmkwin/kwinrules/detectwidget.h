@@ -25,6 +25,8 @@
 #include <kdialogbase.h>
 #include <netwm_def.h>
 
+#include "../../rules.h"
+
 namespace KWinInternal
 {
 
@@ -46,6 +48,11 @@ class DetectDialog
         QCString selectedClass() const;
         bool selectedWholeClass() const;
         QCString selectedRole() const;
+        bool selectedWholeApp() const;
+        NET::WindowType selectedType() const;
+        QString selectedTitle() const;
+        Rules::StringMatch titleMatch() const;
+        QCString selectedMachine() const;
     signals:
         void detectionDone( bool );
     protected:
