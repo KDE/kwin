@@ -193,227 +193,38 @@ static void delete_pixmaps()
 
 // =====================================
 
-B2Button::B2Button(B2Client *_client, QWidget *parent, const QString& tip)
-   : QButton(parent, 0) 
+B2ClientFactory::B2ClientFactory()
+{
+    read_config(this);
+    create_pixmaps();
+}
+
+B2ClientFactory::~B2ClientFactory()
+{
+    delete_pixmaps();
+}
+
+KDecoration *B2ClientFactory::createDecoration(KDecorationBridge *b)
+{
+    return new B2::B2Client(b, this);
+}
+
+bool B2ClientFactory::reset(unsigned long /*changed*/)
+{
+    // TODO Do not recreate decorations if it is not needed. Look at
+    // ModernSystem for how to do that
+    read_config(this);
+    redraw_pixmaps();
+    // For now just return true.
+    return true;
+}
+
+QValueList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
 { 
-    setBackgroundMode(NoBackground);
-    client = _client;
-    useMiniIcon = false;
-    setFixedSize(16,16); 
-    QToolTip::add(this, tip);
+    // the list must be sorted
+    return QValueList< BorderSize >() << BorderTiny << BorderNormal << 
+	BorderLarge << BorderVeryLarge;
 }
-
-
-QSize B2Button::sizeHint() const
-{
-    return(QSize(16, 16));
-}
-
-QSizePolicy B2Button::sizePolicy() const
-{
-    return(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-}
-
-void B2Button::drawButton(QPainter *p)
-{
-    KPixmap* gradient = titleGradient[client->isActive() ? 0 : 1];
-    if (gradient) { 
-	p->drawTiledPixmap(0, 0, 16, 16, *gradient, 0, 2);
-    } else { 
-	p->fillRect(rect(), bg);
-    }
-    if (useMiniIcon) {
-        QPixmap miniIcon = client->icon().pixmap(QIconSet::Small,
-		client->isActive() ? QIconSet::Normal : QIconSet::Disabled);
-        p->drawPixmap((width()-miniIcon.width())/2,
-                      (height()-miniIcon.height())/2, miniIcon);
-    }
-    else{
-        if(client->isActive()){
-            if (isDown())
-                p->drawPixmap((width()-pDown->width())/2,
-                              (height()-pDown->height())/2, *pDown);
-            else
-                p->drawPixmap((width()-pNorm->width())/2,
-                              (height()-pNorm->height())/2, *pNorm);
-        }
-        else{
-            if (isDown())
-                p->drawPixmap((width()-pDown->width())/2,
-                              (height()-pDown->height())/2, *iDown);
-            else
-                p->drawPixmap((width()-pNorm->width())/2,
-                              (height()-pNorm->height())/2, *iNorm);
-        }
-    }
-}
-
-void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
-                          KPixmap *iPixDown)
-{
-    pNorm = pix;
-    pDown = pixDown;
-    iNorm = iPix;
-    iDown = iPixDown;
-    repaint(false);
-}
-
-void B2Button::setPixmaps(int button_id)
-{
-  button_id *= 4;
-  setPixmaps(B2::pixmap[button_id], B2::pixmap[button_id+1],
-	     B2::pixmap[button_id+2], B2::pixmap[button_id+3]);
-}
-
-void B2Button::mousePressEvent( QMouseEvent* e )
-{
-    last_button = e->button();
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                    LeftButton, e->state());
-    QButton::mousePressEvent(&me);
-}
-
-void B2Button::mouseReleaseEvent( QMouseEvent* e )
-{
-    last_button = e->button();
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   LeftButton, e->state());
-    QButton::mouseReleaseEvent(&me);
-}
-
-// =====================================
-
-B2Titlebar::B2Titlebar(B2Client *parent)
-    : QWidget(parent->widget(), 0, WStyle_Customize | WRepaintNoErase),
-      client(parent),
-      set_x11mask(false), isfullyobscured(false), shift_move(false)
-{
-    setBackgroundMode(NoBackground);
-    captionSpacer = new QSpacerItem(10, 20, QSizePolicy::Expanding,
-                                            QSizePolicy::Fixed);
-}
-
-// TODO JUMPYTITLEBAR This is not useful until titlebar revealing can be reenabled
-
-bool B2Titlebar::x11Event(XEvent *e)
-{
-    if (!set_x11mask) {
-	set_x11mask = true;
-	XSelectInput(qt_xdisplay(), winId(),
-	    KeyPressMask | KeyReleaseMask |
-	    ButtonPressMask | ButtonReleaseMask |
-	    KeymapStateMask |
-	    ButtonMotionMask |
-	    EnterWindowMask | LeaveWindowMask |
-	    FocusChangeMask |
-	    ExposureMask |
-	    PropertyChangeMask |
-	    StructureNotifyMask | SubstructureRedirectMask |
-	    VisibilityChangeMask);
-    }
-    switch( e->type ) {
-    case VisibilityNotify:
-	isfullyobscured = false;
-	if (e->xvisibility.state == VisibilityFullyObscured) {
-	    isfullyobscured = true;
-	    client->unobscureTitlebar();
-	}
-	break;
-    default:
-	break;
-    }
-    return QWidget::x11Event(e);
-}
-
-void B2Titlebar::drawTitlebar(QPainter &p, bool state)
-{
-    KPixmap* gradient = titleGradient[state ? 0 : 1];
-    
-    QRect t = rect();
-    // black titlebar frame
-    p.setPen(Qt::black);
-    p.drawLine(0, 0, 0, t.bottom());
-    p.drawLine(0, 0, t.right(), 0);
-    p.drawLine(t.right(), 0, t.right(), t.bottom());
-
-    // titlebar fill
-    const QColorGroup cg = 
-	options()->colorGroup(KDecoration::ColorTitleBar, state);
-    QBrush brush(cg.background());
-    if (gradient) brush.setPixmap(*gradient);
-    qDrawShadeRect(&p, 1, 1, t.right() - 1, t.height() - 1, 
-		   cg, false, 1, 0, &brush);
-
-    // and the caption
-    p.setPen(options()->color(KDecoration::ColorFont, state));
-    p.setFont(options()->font(state));
-    t = captionSpacer->geometry();
-    p.drawText(t, AlignLeft | AlignVCenter, client->caption());
-}
-
-void B2Titlebar::recalcBuffer()
-{
-    QFontMetrics fm(options()->font(true));
-    titleBuffer.resize(width(), height());
-
-    QPainter p(&titleBuffer);
-    drawTitlebar(p, true);
-    oldTitle = caption();
-}
-
-void B2Titlebar::resizeEvent(QResizeEvent *)
-{
-    recalcBuffer();
-    repaint(false);
-}
-
-
-void B2Titlebar::paintEvent(QPaintEvent *)
-{
-    if(client->isActive())
-        bitBlt(this, 0, 0, &titleBuffer, 0, 0, titleBuffer.width(),
-               titleBuffer.height(), Qt::CopyROP, true);
-    else {
-        QPainter p(this);
-	drawTitlebar(p, false);
-    }
-}
-
-void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
-{
-    client->titlebarDblClickOperation();
-}
-
-#if 0
-void B2Titlebar::mousePressEvent( QMouseEvent * e )
-{
-    shift_move = e->state() & ShiftButton;
-    if (shift_move) {
-        moveOffset = e->globalPos();
-    } else {
-	client->processMousePressEvent(e);
-   	// client->performWindowOperation(KDecoration::MoveOp); 
-    }
-}
-
-void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
-{
-    shift_move = false;
-}
-
-void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
-{
-    if (shift_move) {
-	int oldx = mapFromGlobal(moveOffset).x();
-        int xdiff = e->globalPos().x() - moveOffset.x();
-        moveOffset = e->globalPos();
-	if (oldx >= 0 && oldx <= rect().right()) {
-            client->titleMoveRel(xdiff);
-	}
-    } 
-}
-
-#endif
 
 // =====================================
 
@@ -450,7 +261,7 @@ void B2Client::init()
     widget()->setBackgroundMode(NoBackground);
 
     // Set button pointers to NULL so we know what has been created
-    for(int i = 0; i < BtnCount; i++)
+    for (int i = 0; i < BtnCount; i++)
         button[i] = NULL;        
 
     g = new QGridLayout(widget(), 0, 0);
@@ -506,7 +317,7 @@ void B2Client::init()
     QColor c = options()->colorGroup(KDecoration::ColorTitleBar, isActive()).
         color(QColorGroup::Button);
 
-    for(int i = 0; i < BtnCount; i++)
+    for (int i = 0; i < BtnCount; i++)
         if (button[i])
             button[i]->setBg(c);
 
@@ -521,8 +332,8 @@ void B2Client::addButtons(const QString& s, const QString tips[],
     if (s.length() <= 0)
 	return;
 
-    for(unsigned int i = 0; i < s.length(); i++) {
-        switch(s[i].latin1()) {
+    for (unsigned int i = 0; i < s.length(); i++) {
+        switch (s[i].latin1()) {
             case 'M':  // Menu button
                 if (!button[BtnMenu]) {
                     button[BtnMenu] = new B2Button(this, tb, tips[BtnMenu]);
@@ -615,7 +426,7 @@ void B2Client::calcHiddenButtons()
     int i;
 
     // Determine how many buttons we need to hide
-    while(currentWidth < minWidth) {
+    while (currentWidth < minWidth) {
         currentWidth += 17;  // Allow for spacer (extra 1pix)
         count++;
     }
@@ -623,12 +434,12 @@ void B2Client::calcHiddenButtons()
     if (count > BtnCount) count = BtnCount;
 
     // Hide the required buttons
-    for(i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         if (btnArray[i] && btnArray[i]->isVisible())
             btnArray[i]->hide();
     }
     // Show the rest of the buttons
-    for(i = count; i < BtnCount; i++) {
+    for (i = count; i < BtnCount; i++) {
         if (btnArray[i] && (!btnArray[i]->isVisible()))
             btnArray[i]->show();
     }
@@ -896,7 +707,7 @@ void B2Client::activeChange()
     QColor c = options()->colorGroup(
 	    KDecoration::ColorTitleBar, isActive()).color(QColorGroup::Button);
 
-    for(int i = 0; i < BtnCount; i++)
+    for (int i = 0; i < BtnCount; i++)
         if (button[i]) {
            button[i]->setBg(c);
            button[i]->repaint(false);
@@ -942,7 +753,7 @@ void B2Client::slotReset()
     QColor c = options()->colorGroup(KDecoration::ColorTitleBar, isActive()).
         color(QColorGroup::Button);
 
-    for(int i = 0; i < BtnCount; i++)
+    for (int i = 0; i < BtnCount; i++)
         if (button[i]) {
             button[i]->setBg(c);
             button[i]->repaint(false);
@@ -1103,13 +914,13 @@ void B2Client::positionButtons()
 {
     QFontMetrics fm(options()->font(isActive()));
     QString cap = caption();
-    if( cap.length() < 5 ) // make sure the titlebar has sufficiently wide
-        cap = "XXXXX";     // area for dragging the window
+    if (cap.length() < 5) // make sure the titlebar has sufficiently wide
+        cap = "XXXXX";    // area for dragging the window
     int textLen = fm.width( cap );
 
     QRect t = titlebar->captionSpacer->geometry();
     int titleWidth = titlebar->width() - t.width() + textLen+2;
-    if( titleWidth > width()) titleWidth=width();
+    if (titleWidth > width()) titleWidth=width();
 
     titlebar->resize(titleWidth, 20);
     titlebar->move(bar_x_ofs, 0);
@@ -1186,38 +997,227 @@ bool B2Client::eventFilter(QObject *o, QEvent *e)
 
 // =====================================
 
-B2ClientFactory::B2ClientFactory()
-{
-    read_config(this);
-    create_pixmaps();
-}
-
-B2ClientFactory::~B2ClientFactory()
-{
-    delete_pixmaps();
-}
-
-KDecoration *B2ClientFactory::createDecoration(KDecorationBridge *b)
-{
-    return new B2::B2Client(b, this);
-}
-
-bool B2ClientFactory::reset(unsigned long /*changed*/)
-{
-    // TODO Do not recreate decorations if it is not needed. Look at
-    // ModernSystem for how to do that
-    read_config(this);
-    redraw_pixmaps();
-    // For now just return true.
-    return true;
-}
-
-QValueList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
+B2Button::B2Button(B2Client *_client, QWidget *parent, const QString& tip)
+   : QButton(parent, 0) 
 { 
-    // the list must be sorted
-    return QValueList< BorderSize >() << BorderTiny << BorderNormal << 
-	BorderLarge << BorderVeryLarge;
+    setBackgroundMode(NoBackground);
+    client = _client;
+    useMiniIcon = false;
+    setFixedSize(16,16); 
+    QToolTip::add(this, tip);
 }
+
+
+QSize B2Button::sizeHint() const
+{
+    return QSize(16, 16);
+}
+
+QSizePolicy B2Button::sizePolicy() const
+{
+    return(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+}
+
+void B2Button::drawButton(QPainter *p)
+{
+    KPixmap* gradient = titleGradient[client->isActive() ? 0 : 1];
+    if (gradient) { 
+	p->drawTiledPixmap(0, 0, 16, 16, *gradient, 0, 2);
+    } else { 
+	p->fillRect(rect(), bg);
+    }
+    if (useMiniIcon) {
+        QPixmap miniIcon = client->icon().pixmap(QIconSet::Small,
+		client->isActive() ? QIconSet::Normal : QIconSet::Disabled);
+        p->drawPixmap((width()-miniIcon.width())/2,
+                      (height()-miniIcon.height())/2, miniIcon);
+    }
+    else{
+        if(client->isActive()){
+            if (isDown())
+                p->drawPixmap((width()-pDown->width())/2,
+                              (height()-pDown->height())/2, *pDown);
+            else
+                p->drawPixmap((width()-pNorm->width())/2,
+                              (height()-pNorm->height())/2, *pNorm);
+        }
+        else{
+            if (isDown())
+                p->drawPixmap((width()-pDown->width())/2,
+                              (height()-pDown->height())/2, *iDown);
+            else
+                p->drawPixmap((width()-pNorm->width())/2,
+                              (height()-pNorm->height())/2, *iNorm);
+        }
+    }
+}
+
+void B2Button::setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
+                          KPixmap *iPixDown)
+{
+    pNorm = pix;
+    pDown = pixDown;
+    iNorm = iPix;
+    iDown = iPixDown;
+    repaint(false);
+}
+
+void B2Button::setPixmaps(int button_id)
+{
+  button_id *= 4;
+  setPixmaps(B2::pixmap[button_id], B2::pixmap[button_id+1],
+	     B2::pixmap[button_id+2], B2::pixmap[button_id+3]);
+}
+
+void B2Button::mousePressEvent( QMouseEvent* e )
+{
+    last_button = e->button();
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
+                    LeftButton, e->state());
+    QButton::mousePressEvent(&me);
+}
+
+void B2Button::mouseReleaseEvent( QMouseEvent* e )
+{
+    last_button = e->button();
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
+                   LeftButton, e->state());
+    QButton::mouseReleaseEvent(&me);
+}
+
+// =====================================
+
+B2Titlebar::B2Titlebar(B2Client *parent)
+    : QWidget(parent->widget(), 0, WStyle_Customize | WRepaintNoErase),
+      client(parent),
+      set_x11mask(false), isfullyobscured(false), shift_move(false)
+{
+    setBackgroundMode(NoBackground);
+    captionSpacer = new QSpacerItem(10, 20, QSizePolicy::Expanding,
+                                            QSizePolicy::Fixed);
+}
+
+// TODO JUMPYTITLEBAR This is not useful until titlebar revealing can be reenabled
+
+bool B2Titlebar::x11Event(XEvent *e)
+{
+    if (!set_x11mask) {
+	set_x11mask = true;
+	XSelectInput(qt_xdisplay(), winId(),
+	    KeyPressMask | KeyReleaseMask |
+	    ButtonPressMask | ButtonReleaseMask |
+	    KeymapStateMask |
+	    ButtonMotionMask |
+	    EnterWindowMask | LeaveWindowMask |
+	    FocusChangeMask |
+	    ExposureMask |
+	    PropertyChangeMask |
+	    StructureNotifyMask | SubstructureRedirectMask |
+	    VisibilityChangeMask);
+    }
+    switch ( e->type ) {
+    case VisibilityNotify:
+	isfullyobscured = false;
+	if (e->xvisibility.state == VisibilityFullyObscured) {
+	    isfullyobscured = true;
+	    client->unobscureTitlebar();
+	}
+	break;
+    default:
+	break;
+    }
+    return QWidget::x11Event(e);
+}
+
+void B2Titlebar::drawTitlebar(QPainter &p, bool state)
+{
+    KPixmap* gradient = titleGradient[state ? 0 : 1];
+    
+    QRect t = rect();
+    // black titlebar frame
+    p.setPen(Qt::black);
+    p.drawLine(0, 0, 0, t.bottom());
+    p.drawLine(0, 0, t.right(), 0);
+    p.drawLine(t.right(), 0, t.right(), t.bottom());
+
+    // titlebar fill
+    const QColorGroup cg = 
+	options()->colorGroup(KDecoration::ColorTitleBar, state);
+    QBrush brush(cg.background());
+    if (gradient) brush.setPixmap(*gradient);
+    qDrawShadeRect(&p, 1, 1, t.right() - 1, t.height() - 1, 
+		   cg, false, 1, 0, &brush);
+
+    // and the caption
+    p.setPen(options()->color(KDecoration::ColorFont, state));
+    p.setFont(options()->font(state));
+    t = captionSpacer->geometry();
+    p.drawText(t, AlignLeft | AlignVCenter, client->caption());
+}
+
+void B2Titlebar::recalcBuffer()
+{
+    QFontMetrics fm(options()->font(true));
+    titleBuffer.resize(width(), height());
+
+    QPainter p(&titleBuffer);
+    drawTitlebar(p, true);
+    oldTitle = caption();
+}
+
+void B2Titlebar::resizeEvent(QResizeEvent *)
+{
+    recalcBuffer();
+    repaint(false);
+}
+
+
+void B2Titlebar::paintEvent(QPaintEvent *)
+{
+    if(client->isActive())
+        bitBlt(this, 0, 0, &titleBuffer, 0, 0, titleBuffer.width(),
+               titleBuffer.height(), Qt::CopyROP, true);
+    else {
+        QPainter p(this);
+	drawTitlebar(p, false);
+    }
+}
+
+void B2Titlebar::mouseDoubleClickEvent( QMouseEvent * )
+{
+    client->titlebarDblClickOperation();
+}
+
+#if 0
+void B2Titlebar::mousePressEvent( QMouseEvent * e )
+{
+    shift_move = e->state() & ShiftButton;
+    if (shift_move) {
+        moveOffset = e->globalPos();
+    } else {
+	client->processMousePressEvent(e);
+   	// client->performWindowOperation(KDecoration::MoveOp); 
+    }
+}
+
+void B2Titlebar::mouseReleaseEvent( QMouseEvent * e )
+{
+    shift_move = false;
+}
+
+void B2Titlebar::mouseMoveEvent( QMouseEvent * e )
+{
+    if (shift_move) {
+	int oldx = mapFromGlobal(moveOffset).x();
+        int xdiff = e->globalPos().x() - moveOffset.x();
+        moveOffset = e->globalPos();
+	if (oldx >= 0 && oldx <= rect().right()) {
+            client->titleMoveRel(xdiff);
+	}
+    } 
+}
+
+#endif
 
 }
 
