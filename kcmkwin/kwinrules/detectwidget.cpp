@@ -24,10 +24,12 @@
 #include <kxerrorhandler.h>
 #include <kwin.h>
 #include <qlabel.h>
+#include <qradiobutton.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
+#include <fixx11h.h>
 
 namespace KWinInternal
 {
@@ -38,7 +40,7 @@ DetectWidget::DetectWidget( QWidget* parent, const char* name )
     }
 
 DetectDialog::DetectDialog( QWidget* parent, const char* name )
-: KDialogBase( parent, name, true, "", Ok /*| Cancel*/ )
+: KDialogBase( parent, name, true, "", Ok | Cancel )
 , grabber( NULL )
     {
     widget = new DetectWidget( this );
@@ -140,6 +142,26 @@ void DetectDialog::executeDialog()
     emit detectionDone( exec() == QDialog::Accepted );
     }
 
+QCString DetectDialog::selectedClass() const
+    {
+    if( widget->use_class->isChecked() || widget->use_role->isChecked())
+        return wmclass_class;
+    return wmclass_name + ' ' + wmclass_class;
+    }
+
+bool DetectDialog::selectedWholeClass() const
+    {
+    return widget->use_whole_class->isChecked();
+    }
+
+QCString DetectDialog::selectedRole() const
+    {
+    if( widget->use_role->isChecked())
+        return role;
+    return "";
+    }
+
+
 void DetectDialog::selectWindow()
     {
     // use a dialog, so that all user input is blocked
@@ -160,6 +182,11 @@ bool DetectDialog::eventFilter( QObject* o, QEvent* e )
         return false;
     delete grabber;
     grabber = NULL;
+    if( static_cast< QMouseEvent* >( e )->button() != LeftButton )
+        {
+        emit detectionDone( false );
+        return true;
+        }
     readWindow( findWindow());
     return true;
     }

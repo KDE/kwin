@@ -473,6 +473,12 @@ void RulesWidget::detectClicked()
 
 void RulesWidget::detected( bool ok )
     {
+    if( ok )
+        {
+        wmclass->setText( detect_dlg->selectedClass());
+        whole_wmclass->setChecked( detect_dlg->selectedWholeClass());
+        role->setText( detect_dlg->selectedRole());
+        }
     delete detect_dlg;
     detect_dlg = NULL;
     }

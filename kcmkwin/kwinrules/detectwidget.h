@@ -43,6 +43,9 @@ class DetectDialog
     public:
         DetectDialog( QWidget* parent = NULL, const char* name = NULL );
         void detect( WId window );
+        QCString selectedClass() const;
+        bool selectedWholeClass() const;
+        QCString selectedRole() const;
     signals:
         void detectionDone( bool );
     protected:
