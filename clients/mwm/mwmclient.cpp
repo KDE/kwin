@@ -83,7 +83,7 @@ void MwmButton::drawButton( QPainter* p )
 
 
 MwmClient::MwmClient( Workspace* ws, WId w, QWidget* parent, const char* name )
-    : Client( ws, w, parent, name, WNorthWestGravity | WResizeNoErase
+    : Client( ws, w, parent, name, WStaticContents | WResizeNoErase
 	| WRepaintNoErase )
 {
     setBackgroundMode( QWidget::NoBackground );
