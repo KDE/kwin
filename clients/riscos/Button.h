@@ -37,8 +37,6 @@ class Button : public QWidget
 
     enum Alignment { Left, Right };
 
-    enum SymbolType;
-
     Button(QWidget * parent, SymbolType);
     virtual ~Button();
     
