@@ -43,11 +43,7 @@ namespace KWinInternal
 void Workspace::desktopResized()
     {
     updateClientArea();
-    if (options->electricBorders() == Options::ElectricAlways)
-        { // update electric borders
-        destroyBorderWindows();
-        createBorderWindows();
-        }
+    checkElectricBorders();
     }
 
 /*!

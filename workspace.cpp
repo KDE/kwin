@@ -171,8 +171,7 @@ Workspace::Workspace( bool restore )
 
 void Workspace::init()
     {
-    if (options->electricBorders() == Options::ElectricAlways)
-       createBorderWindows();
+    checkElectricBorders();
 
     supportWindow = new QWidget;
     XLowerWindow( qt_xdisplay(), supportWindow->winId()); // see usage in layers.cpp
@@ -758,10 +757,7 @@ void Workspace::slotReconfigure()
         forEachClient( CheckBorderSizesProcedure());
         }
 
-    if (options->electricBorders() == Options::ElectricAlways)
-       createBorderWindows();
-    else
-       destroyBorderWindows();
+    checkElectricBorders();
 
     if( options->topMenuEnabled() && !managingTopMenus())
         {
@@ -1646,12 +1642,8 @@ QWidget* Workspace::desktopWidget()
 // borders. Technically this is done with input only windows. Since
 // electric borders can be switched on and off, we have these two
 // functions to create and destroy them.
-void Workspace::createBorderWindows()
+void Workspace::checkElectricBorders()
     {
-    if ( electric_have_borders )
-        return;
-
-    electric_have_borders = true;
     electric_current_border = 0;
 
     QRect r = QApplication::desktop()->geometry();
@@ -1660,6 +1652,20 @@ void Workspace::createBorderWindows()
     electricLeft = r.left();
     electricRight = r.right();
 
+    if (options->electricBorders() == Options::ElectricAlways)
+       createBorderWindows();
+    else
+       destroyBorderWindows();
+    }
+
+void Workspace::createBorderWindows()
+    {
+    if ( electric_have_borders )
+        return;
+
+    electric_have_borders = true;
+
+    QRect r = QApplication::desktop()->geometry();
     XSetWindowAttributes attributes;
     unsigned long valuemask;
     attributes.override_redirect = True;
