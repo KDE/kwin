@@ -37,7 +37,7 @@ TabBox::~TabBox()
 
 
 /*!
-  Sets the current mode to \a mode, either DesktopMode or WindowsMode
+  Sets the current mode to \a mode, either DesktopListMode or WindowsMode
 
   \sa mode()
  */
@@ -49,7 +49,7 @@ void TabBox::setMode( Mode mode )
 
 /*!
   Resets the tab box to display the active client in WindowsMode, or the
-  current desktop in DesktopMode
+  current desktop in DesktopListMode
  */
 void TabBox::reset()
 {
@@ -84,7 +84,7 @@ void TabBox::reset()
 	}
 	wmax = QMAX( wmax, int(clients.count())*20 );
     }
-    else { // DesktopMode
+    else { // DesktopListMode
 	desk = workspace()->currentDesktop();
     }
 
@@ -129,7 +129,13 @@ void TabBox::nextPrev( bool next)
 	    && !client->isOnDesktop(workspace()->currentDesktop()))
 	    client = 0;
     }
-    else { // DesktopMode
+    else if( mode() == DesktopMode ) {
+	if ( next )
+	    desk = workspace()->nextDesktop( desk );
+	else
+	    desk = workspace()->previousDesktop( desk );
+    }
+    else { // DesktopListMode
 	if ( next ) {
 	    desk++;
 	    if ( desk > workspace()->numberOfDesktops() )
@@ -159,14 +165,15 @@ Client* TabBox::currentClient()
 
 /*!
   Returns the currently displayed virtual desktop ( only works in
-  DesktopMode )
+  DesktopListMode )
   Returns -1 if no desktop is displayed.
  */
 int TabBox::currentDesktop()
 {
-    if ( mode() != DesktopMode )
+    if ( mode() == DesktopListMode || mode() == DesktopMode )
+	return desk;
+    else
 	return -1;
-    return desk;
 }
 
 
@@ -255,7 +262,7 @@ void TabBox::paintContents()
 		x += 20;
 	    }
 	}
-    } else { // DesktopMode
+    } else { // DesktopMode || DesktopListMode
 	p.drawText( r, AlignCenter, workspace()->desktopName(desk) );
 	int x = (width() - workspace()->numberOfDesktops() * 20 )/2;
 	int y = height() - 26;
@@ -263,15 +270,24 @@ void TabBox::paintContents()
 	f.setPointSize( 12 );
 	f.setBold( FALSE );
 	p.setFont(f );
+
+	// In DesktopMode, start at the current desktop
+	// In DesktopListMode, start at desktop #1
+	int iDesktop = (mode() == DesktopMode) ? workspace()->currentDesktop() : 1;
 	for ( int i = 1; i <= workspace()->numberOfDesktops(); i++ ) {
-	    p.setPen( i == desk?
+	    p.setPen( iDesktop == desk?
 		      colorGroup().highlight():colorGroup().background() );
 	    p.drawRect( x-2, y-2, 20, 20 );
 	    qDrawWinPanel( &p, QRect( x, y, 16, 16), colorGroup(), FALSE,
-			     &colorGroup().brush(QColorGroup::Base ) );
+			    &colorGroup().brush(QColorGroup::Base ) );
 	    p.setPen( colorGroup().text() );
-	    p.drawText( x, y, 16, 16, AlignCenter, QString::number(i) );
+	    p.drawText( x, y, 16, 16, AlignCenter, QString::number(iDesktop) );
 	    x += 20;
+	    
+	    if( mode() == DesktopMode )
+	        iDesktop = workspace()->nextDesktop( iDesktop );
+	    else
+	        iDesktop++;
 	}
     }
 }

@@ -802,6 +802,34 @@ void Workspace::slotWalkBackThroughDesktops()
     }
 }
 
+void Workspace::slotWalkThroughDesktopList()
+{
+    if ( root != qt_xrootwin() )
+	return;
+    if( tab_grab || control_grab )
+	return;
+    if (( keyToXMod( walkThroughDesktopListKeycode ) & XMODMASK ) != 0 ) {
+	if ( startWalkThroughDesktopList() )
+	    walkThroughDesktops( true );
+    } else {
+	oneStepThroughDesktopList( true );
+    }
+}
+
+void Workspace::slotWalkBackThroughDesktopList()
+{
+    if ( root != qt_xrootwin() )
+        return;
+    if( tab_grab || control_grab )
+	return;
+    if (( keyToXMod( walkBackThroughDesktopListKeycode ) & XMODMASK ) != 0 ) {
+	if ( startWalkThroughDesktopList() )
+	    walkThroughDesktops( false );
+    } else {
+	oneStepThroughDesktopList( false );
+    }
+}
+
 bool Workspace::startKDEWalkThroughWindows()
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
@@ -824,7 +852,7 @@ bool Workspace::startKDEWalkThroughWindows()
     return TRUE;
 }
 
-bool Workspace::startWalkThroughDesktops()
+bool Workspace::startWalkThroughDesktops( int mode )
 {
     if ( XGrabPointer( qt_xdisplay(), root, TRUE,
           (uint)(ButtonPressMask | ButtonReleaseMask |
@@ -841,9 +869,19 @@ bool Workspace::startWalkThroughDesktops()
                   kwin_time);
     control_grab = TRUE;
     keys->setKeyEventsEnabled( FALSE );
-    tab_box->setMode( TabBox::DesktopMode );
+    tab_box->setMode( (TabBox::Mode) mode );
     tab_box->reset();
     return TRUE;
+}
+
+bool Workspace::startWalkThroughDesktops()
+{
+    return startWalkThroughDesktops( TabBox::DesktopMode );
+}
+
+bool Workspace::startWalkThroughDesktopList()
+{
+    return startWalkThroughDesktops( TabBox::DesktopListMode );
 }
 
 void Workspace::KDEWalkThroughWindows( bool forward )
@@ -896,13 +934,23 @@ void Workspace::KDEOneStepThroughWindows( bool forward )
     }
 }
 
-void Workspace::oneStepThroughDesktops( bool forward )
+void Workspace::oneStepThroughDesktops( bool forward, int mode )
 {
-    tab_box->setMode( TabBox::DesktopMode );
+    tab_box->setMode( (TabBox::Mode) mode );
     tab_box->reset();
     tab_box->nextPrev( forward );
     if ( tab_box->currentDesktop() != -1 )
         setCurrentDesktop( tab_box->currentDesktop() );
+}
+
+void Workspace::oneStepThroughDesktops( bool forward )
+{
+    oneStepThroughDesktops( forward, TabBox::DesktopMode );
+}
+
+void Workspace::oneStepThroughDesktopList( bool forward )
+{
+    oneStepThroughDesktops( forward, TabBox::DesktopListMode );
 }
 
 /*!
@@ -935,6 +983,14 @@ bool Workspace::keyPress(XKeyEvent key)
                 return FALSE;
             }
             walkThroughDesktops( keyCombQt == walkThroughDesktopsKeycode );
+        }
+        else if( keyCombQt == walkThroughDesktopListKeycode
+           || keyCombQt == walkBackThroughDesktopListKeycode ) {
+            if (!control_grab) {
+                freeKeyboard(FALSE);
+                return FALSE;
+            }
+            walkThroughDesktops( keyCombQt == walkThroughDesktopListKeycode );
         }
     }
 
@@ -1014,6 +1070,28 @@ bool Workspace::keyRelease(XKeyEvent key)
 }
 
 #undef XMODMASK
+
+int Workspace::nextDesktop( int iDesktop ) const
+{
+	int i = desktop_focus_chain.find( iDesktop );
+	if( i >= 0 && i+1 < (int)desktop_focus_chain.size() )
+		return desktop_focus_chain[i+1];
+	else if( desktop_focus_chain.size() > 0 )
+		return 1;
+	else
+		return 0;
+}
+
+int Workspace::previousDesktop( int iDesktop ) const
+{
+	int i = desktop_focus_chain.find( iDesktop );
+	if( i-1 >= 0 )
+		return desktop_focus_chain[i-1];
+	else if( desktop_focus_chain.size() > 0 )
+		return desktop_focus_chain[desktop_focus_chain.size()-1];
+	else
+		return numberOfDesktops();
+}
 
 /*!
   auxiliary functions to travers all clients according the focus
@@ -1775,6 +1853,8 @@ void Workspace::slotReconfigure()
     tab_box->reconfigure();
     walkThroughDesktopsKeycode = keys->currentKey( "Walk through desktops" );
     walkBackThroughDesktopsKeycode = keys->currentKey( "Walk back through desktops" );
+    walkThroughDesktopListKeycode = keys->currentKey( "Walk through desktop list" );
+    walkBackThroughDesktopListKeycode = keys->currentKey( "Walk back through desktop list" );
     walkThroughWindowsKeycode = keys->currentKey( "Walk through windows" );
     walkBackThroughWindowsKeycode = keys->currentKey( "Walk back through windows" );
     mgr->updatePlugin();
@@ -2248,6 +2328,20 @@ void Workspace::setCurrentDesktop( int new_desktop ){
         if( w_tmp == null_focus_window )
             requestFocus( desktop_client );
     }
+
+    // Update focus chain:
+    //  If input: chain = { 1, 2, 3, 4 } and current_desktop = 3,
+    //   Output: chain = { 3, 1, 2, 4 }.
+    kdDebug() << QString("Switching to desktop #%1, at focus_chain index %2\n")
+    	.arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
+    for( int i = desktop_focus_chain.find( current_desktop ); i > 0; i-- )
+        desktop_focus_chain[i] = desktop_focus_chain[i-1];
+    desktop_focus_chain[0] = current_desktop;
+
+    QString s = "desktop_focus_chain[] = { ";
+    for( uint i = 0; i < desktop_focus_chain.size(); i++ )
+        s += QString::number(desktop_focus_chain[i]) + ", ";
+    kdDebug() << s << "}\n";
 }
 
 void Workspace::nextDesktop()
@@ -2282,6 +2376,11 @@ void Workspace::setNumberOfDesktops( int n )
     number_of_desktops = n;
     rootInfo->setNumberOfDesktops( number_of_desktops );
     saveDesktopSettings();
+
+    // Resize and reset the desktop focus chain.
+    desktop_focus_chain.resize( n );
+    for( int i = 0; i < (int)desktop_focus_chain.size(); i++ )
+    	desktop_focus_chain[i] = i+1;
 }
 
 /*!
@@ -2394,22 +2493,22 @@ void Workspace::createKeybindings(){
 
 #include "kwinbindings.cpp"
 
-    keys->connectItem( "Switch to desktop 1", this, SLOT( slotSwitchDesktop1() ));
-    keys->connectItem( "Switch to desktop 2", this, SLOT( slotSwitchDesktop2() ));
-    keys->connectItem( "Switch to desktop 3", this, SLOT( slotSwitchDesktop3() ));
-    keys->connectItem( "Switch to desktop 4", this, SLOT( slotSwitchDesktop4() ));
-    keys->connectItem( "Switch to desktop 5", this, SLOT( slotSwitchDesktop5() ));
-    keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchDesktop6() ));
-    keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchDesktop7() ));
-    keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchDesktop8() ));
-    keys->connectItem( "Switch to desktop 9", this, SLOT( slotSwitchDesktop9() ));
-    keys->connectItem( "Switch to desktop 10", this, SLOT( slotSwitchDesktop10() ));
-    keys->connectItem( "Switch to desktop 11", this, SLOT( slotSwitchDesktop11() ));
-    keys->connectItem( "Switch to desktop 12", this, SLOT( slotSwitchDesktop12() ));
-    keys->connectItem( "Switch to desktop 13", this, SLOT( slotSwitchDesktop13() ));
-    keys->connectItem( "Switch to desktop 14", this, SLOT( slotSwitchDesktop14() ));
-    keys->connectItem( "Switch to desktop 15", this, SLOT( slotSwitchDesktop15() ));
-    keys->connectItem( "Switch to desktop 16", this, SLOT( slotSwitchDesktop16() ));
+    keys->connectItem( "Switch to desktop 1", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 2", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 3", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 4", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 5", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 9", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 10", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 11", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 12", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 13", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 14", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 15", this, SLOT( slotSwitchToDesktop( int ) ));
+    keys->connectItem( "Switch to desktop 16", this, SLOT( slotSwitchToDesktop( int ) ));
     keys->connectItem( "Switch desktop previous", this, SLOT( slotSwitchDesktopPrevious() ));
     keys->connectItem( "Switch desktop next", this, SLOT( slotSwitchDesktopNext() ));
     keys->connectItem( "Switch desktop left", this, SLOT( slotSwitchDesktopLeft() ));
@@ -2417,8 +2516,36 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Switch desktop up", this, SLOT( slotSwitchDesktopUp() ));
     keys->connectItem( "Switch desktop down", this, SLOT( slotSwitchDesktopDown() ));
 
+    /*keys->connectItem( "Switch to Window 1", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 2", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 3", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 4", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 5", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 6", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 7", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 8", this, SLOT( slotSwitchToWindow( int ) ));
+    keys->connectItem( "Switch to Window 9", this, SLOT( slotSwitchToWindow( int ) ));*/
+
+    keys->connectItem( "Window to Desktop 1", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 2", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 3", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 4", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 5", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 6", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 7", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 8", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 9", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 10", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 11", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 12", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 13", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 14", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 15", this, SLOT( slotWindowToDesktop( int ) ));
+    keys->connectItem( "Window to Desktop 16", this, SLOT( slotWindowToDesktop( int ) ));
+
     keys->connectItem( "Pop-up window operations menu", this, SLOT( slotWindowOperations() ) );
     keys->connectItem( "Window close", this, SLOT( slotWindowClose() ) );
+    keys->connectItem( "Window close all", this, SLOT( slotWindowCloseAll() ) );
     keys->connectItem( "Window maximize", this, SLOT( slotWindowMaximize() ) );
     keys->connectItem( "Window maximize horizontal", this, SLOT( slotWindowMaximizeHorizontal() ) );
     keys->connectItem( "Window maximize vertical", this, SLOT( slotWindowMaximizeVertical() ) );
@@ -2537,6 +2664,31 @@ void Workspace::slotSwitchDesktopDown(){
     else
         d++;
     setCurrentDesktop(d);
+}
+
+void Workspace::slotSwitchToDesktop( int i )
+{
+	setCurrentDesktop( i );
+}
+
+/*void Workspace::slotSwitchToWindow( int i )
+{
+	int n = 0;
+	for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+		if( (*it)->isOnDesktop( currentDesktop() ) ) {
+			if( n == i ) {
+				activateClient( (*it) );
+				break;
+			}
+			n++;
+		}
+	}
+}*/
+
+void Workspace::slotWindowToDesktop( int i )
+{
+	if( i >= 1 && i <= numberOfDesktops() && popup_client )
+		sendClientToDesktop( popup_client, i );
 }
 
 /*!
@@ -2825,6 +2977,13 @@ void Workspace::slotWindowClose()
     performWindowOperation( popup_client, Options::CloseOp );
 }
 
+void Workspace::slotWindowCloseAll()
+{
+    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it) {
+        if( (*it)->isOnDesktop( currentDesktop() ) )
+            performWindowOperation( *it, Options::CloseOp );
+    }
+}
 
 /*!
   Starts keyboard move mode for the popup client
@@ -3688,10 +3847,12 @@ void Workspace::loadDesktopSettings()
     int n = c.readNumEntry("Number", 4);
     number_of_desktops = n;
     rootInfo->setNumberOfDesktops( number_of_desktops );
+    desktop_focus_chain.resize( n );
     for(int i = 1; i <= n; i++) {
         QString s = c.readEntry(QString("Name_%1").arg(i),
                                 i18n("Desktop %1").arg(i));
         rootInfo->setDesktopName( i, s.utf8().data() );
+        desktop_focus_chain[i-1] = i;
     }
 }
 

@@ -160,6 +160,8 @@ public:
      * Returns the current virtual desktop of this workspace
      */
     int currentDesktop() const;
+    int nextDesktop( int iDesktop ) const;
+    int previousDesktop( int iDesktop ) const;
 
     /**
      * Returns the number of virtual desktops of this workspace
@@ -244,6 +246,11 @@ public slots:
     void slotSwitchDesktopUp();
     void slotSwitchDesktopDown();
 
+    void slotSwitchToDesktop( int );
+    //void slotSwitchToWindow( int );
+    void slotWindowToDesktop( int );
+    //void slotWindowToListPosition( int );
+
     void slotWindowMaximize();
     void slotWindowMaximizeVertical();
     void slotWindowMaximizeHorizontal();
@@ -256,11 +263,14 @@ public slots:
 
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();
+    void slotWalkThroughDesktopList();
+    void slotWalkBackThroughDesktopList();
     void slotWalkThroughWindows();
     void slotWalkBackThroughWindows();
 
     void slotWindowOperations();
     void slotWindowClose();
+    void slotWindowCloseAll();
     void slotWindowMove();
     void slotWindowResize();
 
@@ -297,12 +307,16 @@ private:
     void freeKeyboard(bool pass);
 
     bool startKDEWalkThroughWindows();
+    bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
     bool startWalkThroughDesktops();
+    bool startWalkThroughDesktopList();
     void KDEWalkThroughWindows( bool forward );
     void CDEWalkThroughWindows( bool forward );
     void walkThroughDesktops( bool forward );
     void KDEOneStepThroughWindows( bool forward );
+    void oneStepThroughDesktops( bool forward, int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
     void oneStepThroughDesktops( bool forward );
+    void oneStepThroughDesktopList( bool forward );
 
     ClientList constrainedStackingOrder( const ClientList& list );
 
@@ -347,6 +361,7 @@ private:
 
     int current_desktop;
     int number_of_desktops;
+    QArray<int> desktop_focus_chain;
 
     QGuardedPtr<Client> popup_client;
 
@@ -374,6 +389,7 @@ private:
     bool control_grab;
     bool tab_grab;
     unsigned int walkThroughDesktopsKeycode,walkBackThroughDesktopsKeycode;
+    unsigned int walkThroughDesktopListKeycode,walkBackThroughDesktopListKeycode;
     unsigned int walkThroughWindowsKeycode,walkBackThroughWindowsKeycode;
     bool mouse_emulation;
     unsigned int mouse_emulation_state;

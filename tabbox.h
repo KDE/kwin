@@ -26,7 +26,10 @@ public:
     Client* currentClient();
     int currentDesktop();
 
-    enum Mode { DesktopMode, WindowsMode };
+    // DesktopMode and WindowsMode are based on the order in which the desktop
+    //  or window were viewed.
+    // DesktopListMode lists them in the order created.
+    enum Mode { DesktopMode, DesktopListMode, WindowsMode };
     void setMode( Mode mode );
     Mode mode() const;
 
@@ -37,7 +40,7 @@ public:
     void hide();
 
     Workspace* workspace() const;
-    
+
     void reconfigure();
 
 protected:
@@ -69,7 +72,7 @@ inline Workspace* TabBox::workspace() const
 }
 
 /*!
-  Returns the current mode, either DesktopMode or WindowsMode
+  Returns the current mode, either DesktopListMode or WindowsMode
 
   \sa setMode()
  */
