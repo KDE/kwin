@@ -692,15 +692,15 @@ bool Client::hasTransient( const Client* cl, bool indirect ) const
 
 bool Client::hasTransientInternal( const Client* cl, bool indirect, ConstClientList& set ) const
     {
-    if( set.contains( this ))
-        return false;
-    set.append( this );
     if( cl->transientFor() != NULL )
         {
         if( cl->transientFor() == this )
             return true;
         if( !indirect )
             return false;
+        if( set.contains( cl ))
+            return false;
+        set.append( cl );
         return hasTransientInternal( cl->transientFor(), indirect, set );
         }
     if( !cl->isTransient())
@@ -712,6 +712,9 @@ bool Client::hasTransientInternal( const Client* cl, bool indirect, ConstClientL
         return true;
     if( !indirect )
         return false;
+    if( set.contains( this ))
+        return false;
+    set.append( this );
     for( ClientList::ConstIterator it = transients().begin();
          it != transients().end();
          ++it )
