@@ -600,7 +600,7 @@ void Workspace::cascadeDesktop()
            (!(*it)->isMovable()) )
             continue;
         initPositioning->placeCascaded(*it, QRect(), re_init_cascade_at_first_client);
-        //CT is an if faster than an attribution??
+        //CT is an if faster than an attribution?
         if (re_init_cascade_at_first_client)
           re_init_cascade_at_first_client = false;
         }
@@ -1340,7 +1340,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if ( value_mask & CWY )
             new_pos.setY( ry );
 
-        // clever(??) workaround for applications like xv that want to set
+        // clever(?) workaround for applications like xv that want to set
         // the location to the current location but miscalculate the
         // frame size due to kwin being a double-reparenting window
         // manager
