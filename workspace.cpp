@@ -69,6 +69,10 @@ static Client* clientFactory( Workspace *ws, WId w )
 	c->setSticky( TRUE );
 	return c;
     }
+    if ( s.right(6) == "[menu]" ) {
+	Client * c = new NoBorderClient( ws, w);
+	return c;
+    }
 
     if ( Shape::hasShape( w ) ){
 	return new NoBorderClient( ws, w );
