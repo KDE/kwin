@@ -25,7 +25,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include "atoms.h"
 #include "plugins.h"
 #include "events.h"
-//#include "killwindow.h"
+#include "killwindow.h"
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -1939,11 +1939,8 @@ void Workspace::slotLogout()
  */
 void Workspace::slotKillWindow()
 {
-#warning KillWindow missing because killwindow.h not committed...
-/*
     KillWindow kill( this );
     kill.start();
-*/
 }
 
 
