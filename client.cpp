@@ -1184,9 +1184,14 @@ void Client::withdraw()
         Events::raise( Events::Delete );
     // remove early from client list
     workspace()->removeClient( this );
-    info->setDesktop( 0 );
-    desk = 0;
-    is_sticky_ = false;
+    if( !kapp->closingDown()) {
+        // only when the window is being unmapped, not when closing down KWin
+        // (NETWM sections 5.5,5.7)
+        info->setDesktop( 0 );
+        desk = 0;
+        is_sticky_ = false;
+        info->setState( 0, info->state()); // reset all state flags
+    }
     releaseWindow(TRUE);
     workspace()->destroyClient( this );
 }
