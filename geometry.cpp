@@ -236,9 +236,9 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
                 return warea;
         case MovementArea:
             if (options->xineramaMovementEnabled)
-                return sarea;
+                return desktopwidget->screenGeometry( screen );
             else
-                return warea;
+                return desktopwidget->geometry();
         case WorkArea:
             return warea;
         case FullArea:
