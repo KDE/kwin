@@ -1,6 +1,8 @@
 
 INCLUDES = $(all_includes)
 
+SUBDIRS = . config
+
 kde_module_LTLIBRARIES = libkwinquartz.la
 
 libkwinquartz_la_SOURCES = quartz.cpp

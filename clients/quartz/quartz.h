@@ -1,3 +1,4 @@
+// $Id$
 /*
   Gallium-Quartz KWin client
 
@@ -20,11 +21,8 @@
 #include <kpixmap.h>
 #include "../../client.h"
 
-class QLabel;
 class QSpacerItem;
 class QHBoxLayout;
-class QGridLayout;
-
 
 namespace KWinInternal {
 
@@ -41,7 +39,6 @@ class QuartzHandler: public QObject
 
 	private:
 		void readConfig();
-		void initTheme();
 		void createPixmaps();
 		void freePixmaps();
 		void drawBlocks(KPixmap* pi, KPixmap &p, const QColor &c1, const QColor &c2);
@@ -62,7 +59,7 @@ class QuartzButton : public QButton
 	protected:
 		void mousePressEvent( QMouseEvent* e );
 		void mouseReleaseEvent( QMouseEvent* e );
-		virtual void drawButton(QPainter *p);
+		void drawButton(QPainter *p);
 		void drawButtonLabel(QPainter*) {;}
 
 		Client*  client;
@@ -78,7 +75,6 @@ class QuartzClient : public KWinInternal::Client
 	Q_OBJECT
 
 	public:
-		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, BtnMenu, BtnSticky, BtnCount };
 		QuartzClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
 		~QuartzClient() {;}
 
@@ -100,6 +96,7 @@ class QuartzClient : public KWinInternal::Client
 		void calcHiddenButtons();
 		void addClientButtons( const QString& s, bool isLeft=true );
 
+		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose, BtnMenu, BtnSticky, BtnCount };
 		QuartzButton* button[ QuartzClient::BtnCount ];
 		int           lastButtonWidth;
 		int 		  titleHeight;
@@ -111,3 +108,4 @@ class QuartzClient : public KWinInternal::Client
 };
 
 #endif
+// vim: ts=4

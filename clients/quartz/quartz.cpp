@@ -1,3 +1,4 @@
+// $Id$
 /*
   Gallium-Quartz KWin client
 
@@ -17,7 +18,6 @@
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <qlayout.h>
-#include <qlabel.h>
 #include <qdrawutil.h>
 #include <qbitmap.h>
 #include "../../workspace.h"
@@ -82,6 +82,7 @@ static unsigned char pinup_dgray_bits[] = {
 
 // Titlebar button positions
 bool stickyButtonOnLeft = true;
+bool coloredFrame		= true;
 
 KPixmap* titleBlocks 	= NULL;
 KPixmap* ititleBlocks 	= NULL;
@@ -90,6 +91,7 @@ KPixmap* pinUpPix		= NULL;
 KPixmap* ipinDownPix	= NULL;
 KPixmap* ipinUpPix		= NULL;
 
+bool quartz_initialized = false;
 QuartzHandler* clientHandler;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -97,23 +99,28 @@ QuartzHandler* clientHandler;
 
 QuartzHandler::QuartzHandler()
 {
+	quartz_initialized = false;
 	readConfig();
 	createPixmaps();
+	quartz_initialized = true;
 	connect( options, SIGNAL(resetClients()), this, SLOT(slotReset()) );
 }
 
 
 QuartzHandler::~QuartzHandler()
 {
+	quartz_initialized = false;
 	freePixmaps();
 }
 
 
 void QuartzHandler::slotReset()
 {
+	quartz_initialized = false;
 	freePixmaps();
 	readConfig();
 	createPixmaps();
+	quartz_initialized = true;
 
 	// Make kwin create new clients for each window
 	Workspace::self()->slotResetAllClientsDelayed();
@@ -122,7 +129,10 @@ void QuartzHandler::slotReset()
 
 void QuartzHandler::readConfig()
 {
-//	KConfig* conf = KGlobal::config();
+	KConfig* conf = KGlobal::config();
+	conf->setGroup("Quartz");
+	coloredFrame = conf->readBoolEntry( "UseTitleBarBorderColors", true );
+
 	// A small hack to make the sticky button look nicer
 	stickyButtonOnLeft = (bool)options->titleButtonsLeft().contains( 'S' );
 }
@@ -188,50 +198,49 @@ void QuartzHandler::createPixmaps()
     drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
 
 	// Set the sticky pin pixmaps;
+	QColorGroup g;
 	QPainter p;
-	
-	g2 = options->colorGroup( stickyButtonOnLeft ? Options::TitleBar : Options::TitleBlend, true );
-	if ( stickyButtonOnLeft )
-		c = g2.background().light(130);
-	else
-		c = g2.background();
+
+	g = options->colorGroup( stickyButtonOnLeft ? Options::TitleBar : Options::TitleBlend, true );
+	c = stickyButtonOnLeft ? g.background().light(130) : g.background();
+	g2 = options->colorGroup( Options::ButtonBg, true );
+
 	pinUpPix = new KPixmap();
 	pinUpPix->resize(16, 16);
 	p.begin( pinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pinup_white_bits, pinup_gray_bits, NULL,
-					pinup_dgray_bits, NULL, NULL );
+	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits,
+					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 
 	pinDownPix = new KPixmap();
 	pinDownPix->resize(16, 16);
 	p.begin( pinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pindown_white_bits, pindown_gray_bits, NULL,
-					pindown_dgray_bits, NULL, NULL );
+	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits, 
+					pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
 	p.end();
 
 
 	// Inactive pins
-	g2 = options->colorGroup( stickyButtonOnLeft ? Options::TitleBar : Options::TitleBlend, false );
-	if ( stickyButtonOnLeft )
-		c = g2.background().light(130);
-	else
-		c = g2.background();
+	g = options->colorGroup( stickyButtonOnLeft ? Options::TitleBar : Options::TitleBlend, false );
+	c = stickyButtonOnLeft ? g.background().light(130) : g.background();
+	g2 = options->colorGroup( Options::ButtonBg, false );
+
 	ipinUpPix = new KPixmap();
 	ipinUpPix->resize(16, 16);
 	p.begin( ipinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pinup_white_bits, pinup_gray_bits, NULL,
-					pinup_dgray_bits, NULL, NULL );
+	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits, 
+					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 
 	ipinDownPix = new KPixmap();
 	ipinDownPix->resize(16, 16);
 	p.begin( ipinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 0, 16, 16, true, pindown_white_bits, pindown_gray_bits, NULL,
-					pindown_dgray_bits, NULL, NULL );
+	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits,
+					pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
 	p.end();
 }
 
@@ -311,6 +320,10 @@ void QuartzButton::setBitmap(const unsigned char *bitmap)
 
 void QuartzButton::drawButton(QPainter *p)
 {
+	// Never paint if the pixmaps have not been created
+	if (!quartz_initialized)
+		return;
+
 	QColor c;
 
 	if (isLeft)
@@ -343,17 +356,10 @@ void QuartzButton::drawButton(QPainter *p)
 
 				// Select the right sticky button to paint
 				if (client->isActive())
-				{
-					if (isOn())
-						btnpix = *pinDownPix;
-					else
-						btnpix = *pinUpPix;
-				} else {
-					if (isOn())
-						btnpix = *ipinDownPix;
-					else
-						btnpix = *ipinUpPix;
-				}
+					btnpix = isOn() ? *pinDownPix : *pinUpPix;
+				else
+					btnpix = isOn() ? *ipinDownPix : *ipinUpPix;
+
 			} else
 				btnpix = client->miniIcon();
 
@@ -424,7 +430,10 @@ QuartzClient::QuartzClient( Workspace *ws, WId w, QWidget *parent,
     QGridLayout* g = new QGridLayout(this, 0, 0, 0);
     g->setResizeMode(QLayout::FreeResize);
     g->addRowSpacing(0, 3);       // Top grab bar 
-    g->addWidget(windowWrapper(), 3, 1);
+	g->addWidget(windowWrapper(), 3, 1);
+	// without the next line, unshade flickers
+	g->addItem( new QSpacerItem( 0, 0, QSizePolicy::Fixed, 
+				QSizePolicy::Expanding ) );
     g->setRowStretch(3, 10);      // Wrapped window
     g->addRowSpacing(2, 1);       // line under titlebar
     g->addRowSpacing(4, 4);       // bottom handles
@@ -459,7 +468,8 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 				case 'M':
 					if (!button[BtnMenu])
 					{
-    					button[BtnMenu] = new QuartzButton(this, "menu", largeButtons, isLeft, false, NULL);
+    					button[BtnMenu] = new QuartzButton(this, "menu", 
+											largeButtons, isLeft, false, NULL);
     					connect( button[BtnMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()) );
 						hb->addWidget( button[BtnMenu] );
 					}
@@ -469,7 +479,8 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 				case 'S':
 					if (!button[BtnSticky])
 					{
-    					button[BtnSticky] = new QuartzButton(this, "menu", largeButtons, isLeft, true, NULL);
+    					button[BtnSticky] = new QuartzButton(this, "menu", 
+											largeButtons, isLeft, true, NULL);
 						button[BtnSticky]->turnOn( isSticky() );
     					connect( button[BtnSticky], SIGNAL(clicked()), this, SLOT(toggleSticky()) );
     					hb->addSpacing(1);
@@ -482,8 +493,9 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 				case 'H':
     				if( providesContextHelp() && (!button[BtnHelp]) )
 					{
-						button[BtnHelp] = new QuartzButton(this, "help", largeButtons, isLeft, true, question_bits);
-						connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
+						button[BtnHelp] = new QuartzButton(this, "help", 
+											largeButtons, isLeft, true, question_bits);
+						connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT(contextHelp()));
 						hb->addWidget( button[BtnHelp] );
 					}
 					break;
@@ -492,7 +504,8 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 				case 'I':
 					if ( (!button[BtnIconify]) && isMinimizable())
 					{
-					    button[BtnIconify] = new QuartzButton(this, "iconify", largeButtons, isLeft, true, iconify_bits);
+					    button[BtnIconify] = new QuartzButton(this, "iconify",
+											 largeButtons, isLeft, true, iconify_bits);
 					    connect( button[BtnIconify], SIGNAL( clicked()), this, SLOT(iconify()) );
 						hb->addWidget( button[BtnIconify] );
 					}
@@ -502,7 +515,8 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 				case 'A':
 					if ( (!button[BtnMax]) && isMaximizable())
 					{
-					    button[BtnMax]  = new QuartzButton(this, "maximize", largeButtons, isLeft, true, maximize_bits);
+					    button[BtnMax]  = new QuartzButton(this, "maximize", 
+											largeButtons, isLeft, true, maximize_bits);
 					    connect( button[BtnMax], SIGNAL( clicked()), this, SLOT(slotMaximize()) );
 						hb->addWidget( button[BtnMax] );
 					}
@@ -512,7 +526,8 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 				case 'X':
 					if (!button[BtnClose])
 					{
-		    			button[BtnClose] = new QuartzButton(this, "close", largeButtons, isLeft, true, close_bits);
+		    			button[BtnClose] = new QuartzButton(this, "close",
+											 largeButtons, isLeft, true, close_bits);
 					    connect( button[BtnClose], SIGNAL( clicked()), this, SLOT(closeWindow()) );
 						hb->addWidget( button[BtnClose] );
 					}
@@ -581,6 +596,11 @@ void QuartzClient::captionChange( const QString& )
 // Quartz Paint magic goes here.
 void QuartzClient::paintEvent( QPaintEvent* )
 {
+	// Never paint if the pixmaps have not been created
+	if (!quartz_initialized)
+		return;	
+
+	QColorGroup g;
     QPainter p(this);
 
     // Obtain widget bounds.
@@ -593,7 +613,11 @@ void QuartzClient::paintEvent( QPaintEvent* )
     int h  = r.height();
 
     // Draw part of the frame that is the title color
-    QColorGroup g = options->colorGroup(Options::TitleBar, isActive());
+
+	if( coloredFrame )
+    	g = options->colorGroup(Options::TitleBar, isActive());
+	else
+		g = options->colorGroup(Options::Frame, isActive());
  
     // Draw outer highlights and lowlights
     p.setPen( g.light().light(120) );
@@ -604,7 +628,10 @@ void QuartzClient::paintEvent( QPaintEvent* )
     p.drawLine( x, y2, x2, y2 );
 
     // Fill out the border edges
-    p.setPen( g.background().light(130) );
+	if ( coloredFrame)
+	    p.setPen( g.background().light(130) );
+	else
+	    p.setPen( g.background() );
     p.drawRect( x+1, y+1, w-2, h-2 );
     p.drawRect( x+2, y+2, w-4, h-4 );
 
@@ -649,13 +676,13 @@ void QuartzClient::paintEvent( QPaintEvent* )
     QFont fnt = options->font(true);
     if ( !largeButtons )
     { 
-       fnt.setPointSize( fnt.pointSize() - 2 );  // Shrink font by 2pt 
+       fnt.setPointSize( fnt.pointSize() - 3 );  // Shrink font by 3pt 
        fnt.setWeight( QFont::Normal );           // and disable bold
     }
     p2.setFont( fnt );
 
     p2.setPen( options->color(Options::Font, isActive() ));
-    p2.drawText(r.x(), 0, r.width()-3, r.height()-1,
+    p2.drawText(r.x(), 0, r.width()-3, r.height(),
                 AlignLeft | AlignVCenter, caption() );
     p2.end();
 
@@ -786,3 +813,4 @@ extern "C"
 
 
 #include "quartz.moc"
+// vim: ts=4
