@@ -24,11 +24,13 @@ public:
     ~PluginMgr();
     Client *allocateClient(Workspace *ws, WId w);
     void loadPlugin(QString name);
+    QString currentPlugin() { return pluginStr; }
 signals:
     void resetAllClients();
 protected:
     Client* (*alloc_ptr)(Workspace *ws, WId w);
     lt_dlhandle handle;
+    QString pluginStr;
 };
 
 class PluginMenu : public QPopupMenu
@@ -43,6 +45,7 @@ protected:
     void parseDesktop(QFileInfo *fi);
     QStringList fileList;
     int idCount;
+    int idCurrent;
     PluginMgr *mgr;
 };
 

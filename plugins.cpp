@@ -33,6 +33,7 @@ void PluginMenu::slotAboutToShow()
     fileList.clear();
     insertItem(i18n("KDE 2"), 0);
     idCount = 1;
+    idCurrent = 0;
 
     QDir dir;
     dir.setFilter(QDir::Files);
@@ -67,6 +68,7 @@ void PluginMenu::slotAboutToShow()
             }
         }
     }
+    setItemChecked(idCurrent, true);
 }
 
 void PluginMenu::parseDesktop(QFileInfo *fi)
@@ -80,6 +82,8 @@ void PluginMenu::parseDesktop(QFileInfo *fi)
         return;
     }
     fileList.append(tmpStr);
+    if (tmpStr == mgr->currentPlugin())
+       idCurrent = idCount;
     tmpStr = config.readEntry("Name", "");
     if(tmpStr.isEmpty())
         tmpStr = fi->baseName();
@@ -101,12 +105,11 @@ PluginMgr::PluginMgr()
     alloc_ptr = NULL;
     handle = 0;
 
-    QString pluginStr;
     KConfig *config = KGlobal::config();
     config->setGroup("Style");
     pluginStr = config->readEntry("PluginLib", "default");
     if(pluginStr.isEmpty() || pluginStr == "standard")
-        return;
+        pluginStr = "standard";
     else
         loadPlugin(pluginStr);
 }
@@ -130,9 +133,8 @@ void PluginMgr::loadPlugin(QString nameStr)
     static bool dlregistered = false;
     static lt_dlhandle oldHandle = 0;
 
-    KConfig *config = KGlobal::config();
-    config->setGroup("Style");
-    config->writeEntry("PluginLib", nameStr);
+    pluginStr = nameStr;
+  
     oldHandle = handle;
 
     // Rikkus: temporary change in semantics.
@@ -151,7 +153,7 @@ void PluginMgr::loadPlugin(QString nameStr)
         qWarning("KWin: cannot find client plugin.");
         handle = 0;
         alloc_ptr = NULL;
-        config->writeEntry("PluginLib", "standard");
+        pluginStr = "standard";
     }
     else{
         handle = lt_dlopen(nameStr.latin1());
@@ -159,7 +161,7 @@ void PluginMgr::loadPlugin(QString nameStr)
             qWarning("KWin: cannot load client plugin %s.", nameStr.latin1());
             handle = 0;
             alloc_ptr = NULL;
-            config->writeEntry("PluginLib", "standard");
+            pluginStr = "standard";
         }
         else{
             lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
@@ -170,10 +172,13 @@ void PluginMgr::loadPlugin(QString nameStr)
                 lt_dlclose(handle);
                 handle = 0;
                 alloc_ptr = NULL;
-                config->writeEntry("PluginLib", "standard");
+                pluginStr = "standard";
             }
         }
     }
+    KConfig *config = KGlobal::config();
+    config->setGroup("Style");
+    config->writeEntry("PluginLib", pluginStr);
     config->sync();
     emit resetAllClients();
     if(oldHandle)
