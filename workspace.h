@@ -8,6 +8,7 @@
 #include <qvaluelist.h>
 #include <X11/Xlib.h>
 #include "options.h"
+#include "plugins.h"
 class Client;
 class TabBox;
 
@@ -102,6 +103,7 @@ public:
 
     void performWindowOperation( Client* c, Options::WindowOperation op );
 
+    Client* clientFactory(Workspace *ws, WId w);
 
 public slots:
     void setCurrentDesktop( int new_desktop );
@@ -128,8 +130,9 @@ public slots:
 
     void slotMouseEmulation();
 
+    void slotResetAllClients();
+
 private slots:
-    void setDecorationStyle( int );
     void desktopPopupAboutToShow();
     void clientPopupAboutToShow();
     void sendToDesktop( int );
@@ -197,6 +200,8 @@ private:
     QValueList<CascadingInfo> cci;
     // -cascading
     Atom kwm_command;
+
+    PluginMgr mgr;
 };
 
 inline WId Workspace::rootWin() const

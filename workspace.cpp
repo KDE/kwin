@@ -9,11 +9,9 @@
 #include "workspace.h"
 #include "client.h"
 #include "stdclient.h"
-#include "beclient.h"
-#include "systemclient.h"
-#include "nextclient.h"
 #include "tabbox.h"
 #include "atoms.h"
+#include "plugins.h"
 #include <X11/X.h>
 #include <X11/Xos.h>
 #include <X11/Xlib.h>
@@ -50,7 +48,7 @@ int Shape::shapeEvent()
 }
 
 
-static Client* clientFactory( Workspace *ws, WId w )
+Client* Workspace::clientFactory( Workspace *ws, WId w )
 {
     // hack TODO hints
     char* name = 0;
@@ -79,19 +77,7 @@ static Client* clientFactory( Workspace *ws, WId w )
     if ( Shape::hasShape( w ) ){
 	return new NoBorderClient( ws, w );
     }
-
-    KConfig *config = KGlobal::config();
-    config->setGroup("Style");
-    // well, it will be soon ;-)
-    QString tmpStr = config->readEntry("Plugin", "standard");
-    if(tmpStr == "system")
-	return new SystemClient( ws, w );
-    else if(tmpStr == "next")
-	return new NextClient( ws, w );
-    else if(tmpStr == "Be")
-	return new BeClient( ws, w );
-    else
-	return new StdClient( ws, w );
+    return(mgr.allocateClient(ws, w));
 }
 
 Workspace::Workspace()
@@ -176,6 +162,9 @@ void Workspace::init()
     unsigned int i, nwins;
     Window dw1, dw2, *wins;
     XWindowAttributes attr;
+
+    connect(&mgr, SIGNAL(resetAllClients()), this,
+            SLOT(slotResetAllClients()));
 
     XGrabServer( qt_xdisplay() );
     XQueryTree(qt_xdisplay(), root, &dw1, &dw2, &wins, &nwins);
@@ -908,15 +897,8 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 	connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
 	connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
 	
-	
-	QPopupMenu* deco = new QPopupMenu( popup );
-	connect( deco, SIGNAL( activated(int) ), this, SLOT( setDecorationStyle(int) ) );
-	deco->insertItem( i18n( "KDE Classic" ), 1 );
-	deco->insertItem( i18n( "Be-like style" ),  2);
-	deco->insertItem( i18n( "System style" ), 3 );
-	deco->insertItem( i18n( "Next-like style" ), 4 );
+        PluginMenu *deco = new PluginMenu(&mgr, popup);
 
-	
 	desk_popup = new QPopupMenu( popup );
 	desk_popup->setCheckable( TRUE );
 	connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
@@ -1434,47 +1416,6 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     KWM::switchToDesktop( current_desktop ); // ### compatibility
 }
 
-
-
-// experimental
-void Workspace::setDecorationStyle( int deco )
-{
-    if ( !popup_client )
-	return;
-    Client* c = popup_client;
-    WId w = c->window();
-    clients.remove( c );
-    stacking_order.remove( c );
-    focus_chain.remove( c );
-    bool mapped = c->isVisible();
-    c->hide();
-    c->releaseWindow();
-    KWM::moveToDesktop( w, c->desktop() );
-    KConfig* config = KGlobal::config();
-    config->setGroup("Style");
-    switch ( deco ) {
-    case 2:
-	c = new BeClient( this, w);
-	config->writeEntry("Plugin", "Be");
-	break;
-    case 3:
-	c = new SystemClient(this, w);
-	config->writeEntry("Plugin", "system");
-	break;
-    case 4:
-	c = new NextClient(this, w);
-	config->writeEntry("Plugin", "next");
-	break;
-    default:
-	c = new StdClient( this, w );
-	config->writeEntry("Plugin", "standard");
-    }
-	config->sync();
-    clients.append( c );
-    stacking_order.append( c );
-    c->manage( mapped );
-    activateClient( c );
-}
 
 
 QWidget* Workspace::desktopWidget()
@@ -2030,3 +1971,27 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent key )
 
 }
 
+
+void Workspace::slotResetAllClients()
+{
+    for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
+        Client *oldClient = (*it);
+
+        WId w = oldClient->window();
+        bool mapped = oldClient->isVisible();
+        oldClient->hide();
+        oldClient->releaseWindow();
+        // Replace oldClient with newClient in all lists
+        Client *newClient = clientFactory (this, w);
+        (*it) = newClient;
+        ClientList::Iterator jt = stacking_order.find (oldClient);
+        //assert (jt != stacking_order.end());
+        (*jt) = newClient;
+        jt = focus_chain.find (oldClient);
+        //assert (jt != focus_chain.end());
+        (*jt) = newClient;
+        // Delete the old, display the new
+        delete oldClient;
+        newClient->manage (mapped);
+    }
+}

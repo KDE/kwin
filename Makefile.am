@@ -1,12 +1,12 @@
 
 INCLUDES = $(all_includes)
-LDFLAGS = $(all_libraries) $(KDE_RPATH)
+LDFLAGS = $(all_libraries) $(KDE_RPATH) -rdynamic
 
-SUBDIRS = pics
+SUBDIRS = pics clients
 
 bin_PROGRAMS = kwin
 
-kwin_SOURCES = atoms.cpp beclient.cpp client.cpp main.cpp stdclient.cpp workspace.cpp tabbox.cpp options.cpp systemclient.cpp nextclient.cpp
+kwin_SOURCES = atoms.cpp  client.cpp main.cpp stdclient.cpp workspace.cpp tabbox.cpp options.cpp plugins.cpp
 
 kwin_LDADD = $(LIB_KDECORE) $(LIB_KDEUI)
 
