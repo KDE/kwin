@@ -253,7 +253,12 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 		}
 
 	if (libName.isEmpty())
-		libName = "kwin_default";
+	{
+		if (QPixmap::defaultDepth() > 8)
+			libName = "kwin_keramik";
+		else
+			libName = "kwin_quartz";
+	}
 
 	return libName;
 }
@@ -328,7 +333,8 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	// the current plugin library name
 
 	oldLibraryName = currentLibraryName;
-	currentLibraryName = conf->readEntry("PluginLib", "kwin_default");
+	currentLibraryName = conf->readEntry("PluginLib", 
+					((QPixmap::defaultDepth() > 8) ? "kwin_keramik" : "kwin_quartz"));
 	QString decoName = decorationName( currentLibraryName );
 
 	// If we are using the "default" kde client, use the "default" entry.
