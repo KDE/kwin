@@ -222,7 +222,7 @@ inline int Workspace::currentDesktop() const
  */
 inline int Workspace::numberOfDesktops() const
 {
-    return 4;
+    return number_of_desktops;
 }
 
 #endif
