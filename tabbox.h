@@ -6,6 +6,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #ifndef TABBOX_H
 #define TABBOX_H
 #include <qwidget.h>
+#include <qtimer.h>
 
 class Workspace;
 class Client;
@@ -29,6 +30,9 @@ public:
     void reset();
     void nextPrev( bool next = TRUE);
 
+    void delayedShow();
+    void hide();
+
     Workspace* workspace() const;
 
 protected:
@@ -45,7 +49,7 @@ private:
     int desk;
     QLabel* icon;
     int wmax;
-
+    QTimer delayedShowTimer;
 };
 
 

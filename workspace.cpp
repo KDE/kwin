@@ -617,7 +617,7 @@ bool Workspace::keyPress(XKeyEvent key)
 		tab_box->reset();
 	    }
 	    tab_box->nextPrev( (km & ShiftMask) == 0 );
-	    tab_box->show();
+	    tab_box->delayedShow();
 	}
     }
 
@@ -648,7 +648,7 @@ bool Workspace::keyPress(XKeyEvent key)
 		tab_box->reset();
 	    }
 	    tab_box->nextPrev( (km & ShiftMask) == 0 );
-	    tab_box->show();
+	    tab_box->delayedShow();
 	}
     }
 

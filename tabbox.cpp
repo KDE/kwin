@@ -9,6 +9,9 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <qpainter.h>
 #include <qlabel.h>
 #include <qdrawutil.h>
+#undef Bool // f**king X11
+#include <kglobal.h>
+#include <kconfig.h>
 
 const bool options_traverse_all = FALSE; // TODO
 
@@ -17,6 +20,7 @@ TabBox::TabBox( Workspace *ws, const char *name )
 {
     wspace = ws;
     reset();
+    connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
 }
 
 TabBox::~TabBox()
@@ -258,3 +262,27 @@ void TabBox::paintContents()
 	}
     }
 }
+
+  void
+TabBox::hide()
+{
+  delayedShowTimer.stop();
+  QWidget::hide();
+}
+
+  void
+TabBox::delayedShow()
+{
+  KConfig * c(KGlobal::config());
+  c->setGroup("TabBox");
+  bool delay = c->readNumEntry("ShowDelay", false);
+
+  if (!delay) {
+    show();
+    return;
+  }
+
+  int delayTime = c->readNumEntry("DelayTime", 400);
+  delayedShowTimer.start(delayTime, true);
+}
+
