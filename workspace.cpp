@@ -23,7 +23,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kprocess.h>
 #include <kiconloader.h>
 #include <kstartupinfo.h>
-#include <qdesktopwidget.h>
 
 #include "workspace.h"
 #include "client.h"
@@ -92,8 +91,8 @@ private:
 class WorkspacePrivate
 {
 public:
-    WorkspacePrivate() 
-     : startup(0), electric_have_borders(false), 
+    WorkspacePrivate()
+     : startup(0), electric_have_borders(false),
        electric_current_border(None),
        electric_top_border(None),
        electric_bottom_border(None),
@@ -1058,7 +1057,7 @@ bool Workspace::keyPress(XKeyEvent key)
     if (!control_grab){
         if( keyCombQt == walkThroughWindowsKeycode
            || keyCombQt == walkBackThroughWindowsKeycode ) {
-            if (!tab_grab) 
+            if (!tab_grab)
                 return FALSE;
             KDEWalkThroughWindows( keyCombQt == walkThroughWindowsKeycode );
         }
@@ -1074,7 +1073,7 @@ bool Workspace::keyPress(XKeyEvent key)
         }
         else if( keyCombQt == walkThroughDesktopListKeycode
            || keyCombQt == walkBackThroughDesktopListKeycode ) {
-            if (!control_grab) 
+            if (!control_grab)
                 return FALSE;
             walkThroughDesktops( keyCombQt == walkThroughDesktopListKeycode );
         }
@@ -4215,7 +4214,7 @@ void Workspace::electricBorder(XEvent *e)
 
         QRect r = QApplication::desktop()->geometry();
         int offset;
-        
+
         if (border == d->electric_top_border){
            offset = r.height() / 3;
            QCursor::setPos(e->xcrossing.x_root, r.height() - offset);

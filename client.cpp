@@ -518,7 +518,7 @@ Client::Client( Workspace *ws, WId w, QWidget *parent, const char *name, WFlags 
     is_sticky = FALSE;
     stays_on_top = FALSE;
     may_move = TRUE;
-    is_fullscreen = TRUE;
+    is_fullscreen = FALSE;
     skip_taskbar = FALSE;
     skip_pager = FALSE;
     max_mode = MaximizeRestore;
@@ -1136,6 +1136,8 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 
 	//QRect area = workspace()->clientArea();
 	if ( isMaximizable() && isMaximized() ) {  //&& ( ns.width() < area.width() || ns.height() < area.height() ) ) {
+	    if ( (e.value_mask & (CWX | CWY )) == 0 )
+		geom_restore.moveTopLeft( geometry().topLeft() );
 	    geom_restore.setSize( ns );
 	    maximize( Client::MaximizeRestore );
 	} else if ( !isMaximized() ) {
