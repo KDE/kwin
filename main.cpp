@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
 //#define QT_CLEAN_NAMESPACE
+#include <kconfig.h>
+
 #include "main.h"
 
 #include <klocale.h>
@@ -79,10 +81,16 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
 Application::Application( )
 : KApplication( ), owner( screen_number )
     {
+    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    if (!config()->isImmutable() && args->isSet("lock"))
+        {
+        config()->setReadOnly(true);
+        config()->reparseConfiguration();
+        }
+
     if (screen_number == -1)
         screen_number = DefaultScreen(qt_xdisplay());
 
-    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     if( !owner.claim( args->isSet( "replace" ), true ))
         {
         fputs(i18n("kwin: couldn't claim manager selection, another wm running? (try using --replace)\n").local8Bit(), stderr);
@@ -147,6 +155,7 @@ static const char description[] = I18N_NOOP( "The KDE window manager." );
 
 static KCmdLineOptions args[] =
     {
+        { "lock", I18N_NOOP("Disable configuration options."), 0 },
         { "replace", I18N_NOOP("Replace already running ICCCM2.0 compliant window manager."), 0 },
         KCmdLineLastOption
     };
