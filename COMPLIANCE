@@ -182,9 +182,9 @@ _NET_WM_STATE			window property + message
 	+----------------------------------------------------------------+
   _NET_WM_STATE_MAXIMIZED_VERT	property value (atom)		COMPLETE
   _NET_WM_STATE_MAXIMIZED_HORZ	property value (atom)		COMPLETE
-  _NET_WM_STATE_SHADED		property value (atom)
-  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)
-  _NET_WM_STATE_SKIP_PAGER	property value (atom)
+  _NET_WM_STATE_SHADED		property value (atom)		
+  _NET_WM_STATE_SKIP_TASKBAR	property value (atom)		
+  _NET_WM_STATE_SKIP_PAGER	property value (atom)		
   _NET_WM_STATE_HIDDEN		property value (atom)		PARTIAL
 	+----------------------------------------------------------------+
 	| Done in kdecore/netwm.cpp. Implementation required in KWin.    |
@@ -296,6 +296,7 @@ WM_ICON_SIZE		window property			WM_ICON_SIZE / 8?
 
 
 NETWM spec compliance (whole document):
+version 1.2
 ======================
 
 1. COMPLETE
@@ -324,3 +325,39 @@ NETWM spec compliance (whole document):
 5.3.
 5.4.
 5.5. PARTIAL
+5.6. PARTIAL
+5.7. PARTIAL
+5.8. NIL
+5.9.
+5.10.
+5.11.
+5.12.
+5.13. COMPLETE
+6.1. NIL
+7.3.
+7.4.
+7.6.
+7.7.
+7.9.
+7.10.
+7. (rest of the section) COMPLETE
+
+ICCCM spec compliance (whole document):
+version 2.0
+======================
+
+1.2.3. ?
+1.2.6. ?
+1. (rest of the section) COMPLETE
+2.8.
+2. (rest of the section) COMPLETE (selections, not a KWin thing)
+3. COMPLETE - NOT SUPPORTED, OBSOLETE
+4.
+5. PARTIAL - patch sent to TT to make it COMPLETE
+5.3. COMPLETE - not KWin related
+6.1. clients thing
+6.2. clients thing
+6.3. COMPLETE
+6. (rest of the section) ?
+7. COMPLETE - no idea what it is, but it doesn't seem to be KWin related
+8. COMPLETE
