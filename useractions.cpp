@@ -200,6 +200,7 @@ void Workspace::readShortcuts()
     
     delete popup;
     popup = NULL; // so that it's recreated next time
+    desk_popup = NULL;
     }
 
 
