@@ -7,6 +7,7 @@
 #include <qlabel.h>
 #include <qdrawutil.h>
 #include "workspace.h"
+#include "options.h"
 
 
 static const char * close_xpm[] = {
@@ -190,9 +191,6 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 {
     create_pixmaps();
 
-    QFont f = font();
-    f.setBold( TRUE );
-    setFont( f );
 
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
     g->setRowStretch( 1, 10 );
@@ -242,6 +240,10 @@ StdClient::StdClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     button[5]->setIconSet( *close_pix );
     connect( button[5], SIGNAL( clicked() ), this, ( SLOT( closeWindow() ) ) );
 
+    aFrameGrp = makeColorGroup(options->color(Options::Frame, true));
+    iFrameGrp = makeColorGroup(options->color(Options::Frame, false));
+    aTitleGrp = makeColorGroup(options->color(Options::TitleBar, true));
+    iTitleGrp = makeColorGroup(options->color(Options::TitleBar, false));
 }
 
 
@@ -297,17 +299,18 @@ void StdClient::paintEvent( QPaintEvent* )
     QRegion r = rect();
     r = r.subtract( t );
     p.setClipRegion( r );
-    qDrawWinPanel( &p, rect(), colorGroup() );
+    qDrawWinPanel( &p, rect(), isActive()? aFrameGrp : iFrameGrp );
     p.setClipping( FALSE );
-    p.fillRect( t, isActive()?darkBlue:gray );
+    p.fillRect( t, options->color(Options::TitleBar, isActive()));
     qDrawShadePanel( &p, t.x(), t.y(), t.width(), t.height(),
-		     colorGroup(), TRUE );
+                     isActive() ? aTitleGrp : iTitleGrp, TRUE );
 
     t.setTop( 2 );
     t.setLeft( t.left() + 4 );
     t.setRight( t.right() - 2 );
 
-    p.setPen( colorGroup().light() );
+    p.setPen(options->color(Options::Font, isActive()));
+    p.setFont(options->font(isActive()));
     p.drawText( t, AlignLeft|AlignVCenter, caption() );
 }
 
@@ -331,4 +334,11 @@ void StdClient::iconChange()
 {
     button[0]->setIconSet( miniIcon() );
     button[0]->repaint( FALSE );
+}
+
+QColorGroup StdClient::makeColorGroup(const QColor &bg, const QColor &fg)
+{
+    return(QColorGroup( fg, bg, bg.light(150), bg.dark(),
+                        bg.dark(120), fg,
+                        QApplication::palette().normal().base()));
 }

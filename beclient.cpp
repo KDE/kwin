@@ -52,10 +52,6 @@ BeClient::BeClient( Workspace *ws, WId w, QWidget *parent, const char *name )
 {
     create_pixmaps();
 
-    QFont f = font();
-    f.setBold( TRUE );
-    setFont( f );
-
     QGridLayout* g = new QGridLayout( this, 0, 0, 2 );
     g->addRowSpacing(1, 2);
     g->setRowStretch( 2, 10 );
@@ -74,6 +70,11 @@ BeClient::BeClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     hb->addItem( titlebar );
 
     hb->addStretch();
+
+    aFrameGrp = makeColorGroup(options->color(Options::Frame, true));
+    iFrameGrp = makeColorGroup(options->color(Options::Frame, false));
+    aTitleGrp = makeColorGroup(options->color(Options::TitleBar, true));
+    iTitleGrp = makeColorGroup(options->color(Options::TitleBar, false));      
 
 }
 
@@ -111,25 +112,27 @@ void BeClient::captionChange( const QString& )
 void BeClient::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
-    QRect bar ( 0, 0, titlebar->geometry().right()+1, titlebar->geometry().bottom() );
-    qDrawWinPanel( &p, 0, bar.bottom()+2, width(), height() - bar.bottom()-2, colorGroup(), FALSE );
-    qDrawWinPanel( &p, 2, bar.bottom()+4, width()-4, height() - bar.bottom()-6, colorGroup(), TRUE );
+    QRect bar ( 0, 0, titlebar->geometry().right()+1,
+                titlebar->geometry().bottom() );
+    qDrawWinPanel( &p, 0, bar.bottom()+2, width(), height() - bar.bottom()-2,
+                   isActive() ? aFrameGrp : iFrameGrp, FALSE );
+    qDrawWinPanel( &p, 2, bar.bottom()+4, width()-4, height() - bar.bottom()-6,
+                   isActive() ? aFrameGrp : iFrameGrp, TRUE );
     QRect t = titlebar->geometry();
 
     bar.setBottom( bar.bottom() + 3 );
     p.setClipRect( bar );
     bar.setBottom( bar.bottom() + 2 );
-    if ( isActive() ) {
-	QPalette pal( QColor(248,204,0) );
-	qDrawWinPanel( &p, bar, pal.normal(), FALSE,  &pal.brush(QPalette::Normal, QColorGroup::Background ) );
-    }
-    else
-	qDrawWinPanel( &p, bar, colorGroup(), FALSE, &colorGroup().brush( QColorGroup::Background ) );
+    qDrawWinPanel( &p, bar, isActive() ? aTitleGrp : iTitleGrp, FALSE,
+                   isActive() ? &aTitleGrp.brush(QColorGroup::Background) :
+                   &iTitleGrp.brush(QColorGroup::Background));
     p.setClipping( FALSE );
 
     p.drawPixmap( t.right() - 20, t.center().y()-8, *size_pix );
     p.drawPixmap( t.left() +4, t.center().y()-miniIcon().height()/2, miniIcon() );
     t.setLeft( t.left() + 20 +10);
+    p.setPen(options->color(Options::Font, isActive()));
+    p.setFont(options->font(isActive()));
     p.drawText( t, AlignLeft|AlignVCenter, caption() );
 }
 
@@ -211,3 +214,10 @@ void BeClient::mouseDoubleClickEvent( QMouseEvent * e )
 	setShade( !isShade() );
     workspace()->requestFocus( this );
 }
+
+QColorGroup BeClient::makeColorGroup(const QColor &bg, const QColor &fg)
+{
+    return(QColorGroup( fg, bg, bg.light(150), bg.dark(),
+                        bg.dark(120), fg,
+                        QApplication::palette().normal().base()));
+}            

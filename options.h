@@ -1,6 +1,8 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include <qfont.h>
+#include <qcolor.h>
 
 class Options {
 public:
@@ -33,15 +35,38 @@ public:
     FocusPolicy focusPolicy;
     
     enum MoveResizeMode { Transparent, Opaque, HalfTransparent };
-    
+
+    /**
+     * Basic color types that should be recognized by all decoration styles.
+     * Not all styles have to implement all the colors, but for the ones that
+     * are implemented you should retrieve them here.
+     */
+    // increment KWINCOLORS in options.cpp if you add something (mosfet)
+    enum ColorType{TitleBar=0, TitleBlend, Font, ButtonFg, ButtonBg,
+    ButtonBlend, Frame, Handle};
+
     MoveResizeMode resizeMode;
     MoveResizeMode moveMode;
 
     bool focusPolicyIsReasonable() {
-	return focusPolicy == ClickToFocus || focusPolicy == FocusFollowsMouse;
+        return focusPolicy == ClickToFocus || focusPolicy == FocusFollowsMouse;
     }
 
+    /**
+     * Return the color for the given decoration.
+     */
+    const QColor& color(ColorType type, bool active=true);
+    /**
+     * Return the active or inactive decoration font.
+     */
+    const QFont& font(bool active=true);
+    // When restarting is implemented this should get called (mosfet).
+    void reload();
+    
     Options();
+protected:
+    QFont activeFont, inactiveFont;
+    QColor colors[16];
 };
 
 extern Options* options;

@@ -1,6 +1,7 @@
 #ifndef BECLIENT_H
 #define BECLIENT_H
 #include "client.h"
+#include <qpalette.h>
 class QToolButton;
 class QLabel;
 class QSpacerItem;
@@ -14,6 +15,7 @@ public:
     ~BeClient();
 
 protected:
+    QColorGroup makeColorGroup(const QColor &bg, const QColor &fg=Qt::white);
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
     void mousePressEvent( QMouseEvent * );
@@ -30,6 +32,7 @@ protected:
 private:
     QSpacerItem* titlebar;
     void doShape();
+    QColorGroup aFrameGrp, iFrameGrp, aTitleGrp, iTitleGrp;
 };
 
 
