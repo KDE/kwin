@@ -698,18 +698,6 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
         if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
              (xSizeHint.flags & USPosition) ) {
             placementDone = TRUE;
-            if ( windowType() == NET::Normal && !area.contains( geom.topLeft() ) && may_move ) {
-                int tx = geom.x();
-                int ty = geom.y();
-                if ( tx >= 0 && tx < area.x() )
-                        tx = area.x();
-                if ( ty >= 0 && ty < area.y() )
-                    ty = area.y();
-                if ( tx > area.right() || ty > area.bottom() )
-                    placementDone = FALSE; // weird, do not trust.
-                else
-                    geom.moveTopLeft( QPoint( tx, ty ) );
-            }
         }
         if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
             // keep in mind that we now actually have a size :-)
@@ -718,6 +706,21 @@ bool Client::manage( bool isMapped, bool doNotShow, bool isInitial )
             geom.setSize( geom.size().boundedTo( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) );
         if (xSizeHint.flags & PMinSize)
             geom.setSize( geom.size().expandedTo( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) );
+    }
+
+    if ( ( windowType() == NET::Normal || windowType() == NET::Dialog || windowType() == NET::Unknown
+            || windowType() == NET::Menu )
+        && !area.contains( geom.topLeft() ) && may_move ) {
+        int tx = geom.x();
+        int ty = geom.y();
+        if ( tx >= 0 && tx < area.x() )
+                tx = area.x();
+        if ( ty >= 0 && ty < area.y() )
+            ty = area.y();
+        if ( tx > area.right() || ty > area.bottom() )
+            placementDone = FALSE; // weird, do not trust.
+        else
+            geom.moveTopLeft( QPoint( tx, ty ) );
     }
 
     windowWrapper()->resize( geom.size() );
