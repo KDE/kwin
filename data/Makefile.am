@@ -3,7 +3,7 @@ kconfdir = $(libdir)/kconf_update_bin
 
 kwin_update_window_settings_SOURCES = update_window_settings.cpp
 
-kwin_update_window_settings_LDADD   = $(LIB_KDECORE)
+kwin_update_window_settings_LDADD   = $(LIB_KDECORE) $(KDE_RPATH)
 kwin_update_window_settings_LDFLAGS = $(all_libraries)
 
 INCLUDES = $(all_includes)
