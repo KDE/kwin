@@ -164,7 +164,7 @@ void PluginMgr::loadPlugin(QString nameStr)
 
 	if( !path.isEmpty() ) {
 	    if ( (handle = lt_dlopen(path.latin1() ) ) ) {
-		lt_ptr_t alloc_func = lt_dlsym(handle, "allocate");
+		lt_ptr alloc_func = lt_dlsym(handle, "allocate");
 		if(alloc_func) {
 		    alloc_ptr = (Client* (*)(Workspace *ws, WId w, int tool))alloc_func;
 		} else{
