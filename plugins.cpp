@@ -19,8 +19,8 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 
 #include "plugins.h"
 
-#if 0
-#define lt_ptr lt_ptr_t
+#ifndef lt_ptr_t
+#define lt_ptr_t lt_ptr
 #endif
 
 using namespace KWinInternal;
