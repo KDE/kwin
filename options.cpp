@@ -10,7 +10,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
-#include <kkeysequence.h> // for KKeySequence::keyboardHasMetaKey()
+#include <kshortcut.h> // for KKeySequence::keyboardHasMetaKey()
 
 using namespace KWinInternal;
 
@@ -239,7 +239,7 @@ void Options::reload()
     CmdWindow1 = mouseCommand(config->readEntry("CommandWindow1","Activate, raise and pass click"));
     CmdWindow2 = mouseCommand(config->readEntry("CommandWindow2","Activate and pass click"));
     CmdWindow3 = mouseCommand(config->readEntry("CommandWindow3","Activate and pass click"));
-    CmdAllModKey = (config->readEntry("CommandAllKey", KKeySequence::keyboardHasMetaKey() ? "Meta" : "Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
+    CmdAllModKey = (config->readEntry("CommandAllKey", KKeyNative::keyboardHasMetaKey() ? "Meta" : "Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
     CmdAll1 = mouseCommand(config->readEntry("CommandAll1","Move"));
     CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"));
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"));

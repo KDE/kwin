@@ -16,6 +16,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #include <config.h>
 #include "options.h"
 #include "KWinInterface.h"
+#include <kshortcut.h>
 
 #include <X11/Xlib.h>
 #ifdef HAVE_XINERAMA
@@ -317,6 +318,7 @@ protected:
 private:
     void init();
     void createKeybindings();
+    void readKeybindings();
 
     bool startKDEWalkThroughWindows();
     bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
@@ -409,9 +411,9 @@ private:
 
     bool control_grab;
     bool tab_grab;
-    unsigned int walkThroughDesktopsKeycode,walkBackThroughDesktopsKeycode;
-    unsigned int walkThroughDesktopListKeycode,walkBackThroughDesktopListKeycode;
-    unsigned int walkThroughWindowsKeycode,walkBackThroughWindowsKeycode;
+    KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
+    KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
+    KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
     bool mouse_emulation;
     unsigned int mouse_emulation_state;
     WId mouse_emulation_window;

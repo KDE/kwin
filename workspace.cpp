@@ -7,7 +7,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 //#define QT_CLEAN_NAMESPACE
 #define select kwin_hide_select
 
-#include <kaccelbase.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
@@ -28,7 +27,6 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #else
 #include <qdesktopwidget.h>
 #endif
-#include <kkey_x11.h>
 #include "workspace.h"
 #include "client.h"
 #include "tabbox.h"
@@ -817,24 +815,25 @@ bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
         return bAll;
 }
 
-bool areModKeysDepressed( uint keyCombQt )
+bool areModKeysDepressed( const KKeyNative& key )
 {
         uint rgKeySyms[8];
         int nKeySyms = 0;
+        int mod = key.spec().modFlags();
 
-        if( keyCombQt & Qt::SHIFT ) {
+        if( mod & KKey::SHIFT ) {
                 rgKeySyms[nKeySyms++] = XK_Shift_L;
                 rgKeySyms[nKeySyms++] = XK_Shift_R;
         }
-        if( keyCombQt & Qt::CTRL ) {
+        if( mod & KKey::CTRL ) {
                 rgKeySyms[nKeySyms++] = XK_Control_L;
                 rgKeySyms[nKeySyms++] = XK_Control_R;
         }
-        if( keyCombQt & Qt::ALT ) {
+        if( mod & KKey::ALT ) {
                 rgKeySyms[nKeySyms++] = XK_Alt_L;
                 rgKeySyms[nKeySyms++] = XK_Alt_R;
         }
-        if( keyCombQt & (Qt::ALT<<1) ) {
+        if( mod & KKey::WIN ) {
                 rgKeySyms[nKeySyms++] = XK_Meta_L;
                 rgKeySyms[nKeySyms++] = XK_Meta_R;
         }
@@ -1081,37 +1080,36 @@ bool Workspace::keyPress(XKeyEvent key)
     if ( root != qt_xrootwin() )
         return FALSE;
 
-    uint keyCombQt = KKeyX11::keyEventXToKeyQt( (XEvent*)&key );
-    kdDebug() << "Workspace::keyPress( " << KKeySequence(keyCombQt).toString() << " )" << endl;
+    KKeyNative keyX( (XEvent*)&key );
+    uint keyQt = keyX.keyCodeQt();
+
+    kdDebug() << "Workspace::keyPress( " << keyX.spec().toString() << " )" << endl;
     if (d->movingClient)
     {
-        d->movingClient->keyPressEvent(keyCombQt);
+        d->movingClient->keyPressEvent(keyQt);
         return TRUE;
     }
 
     if (tab_grab){
-        if( keyCombQt == walkThroughWindowsKeycode
-           || keyCombQt == walkBackThroughWindowsKeycode ) {
-            kdDebug() << "== " << KKeySequence(walkThroughWindowsKeycode).toString()
-                << " or " << KKeySequence(walkBackThroughWindowsKeycode).toString() << endl;
-            KDEWalkThroughWindows( keyCombQt == walkThroughWindowsKeycode );
+        bool forward = walkThroughWindowsKeycode == keyX;
+        bool backward = walkBackThroughWindowsKeycode == keyX;
+        if (forward || backward){
+            kdDebug() << "== " << walkThroughWindowsKeycode.spec().toString()
+                << " or " << walkBackThroughWindowsKeycode.spec().toString() << endl;
+            KDEWalkThroughWindows( forward );
         }
     }
-
-    if (control_grab){
-
-        if( keyCombQt == walkThroughDesktopsKeycode
-           || keyCombQt == walkBackThroughDesktopsKeycode ) {
-            walkThroughDesktops( keyCombQt == walkThroughDesktopsKeycode );
-        }
-        else if( keyCombQt == walkThroughDesktopListKeycode
-           || keyCombQt == walkBackThroughDesktopListKeycode ) {
-            walkThroughDesktops( keyCombQt == walkThroughDesktopListKeycode );
-        }
+    else if (control_grab){
+        bool forward = walkThroughDesktopsKeycode == keyX ||
+                       walkThroughDesktopListKeycode == keyX;
+        bool backward = walkBackThroughDesktopsKeycode == keyX ||
+                        walkBackThroughDesktopListKeycode == keyX;
+        if (forward || backward)
+            walkThroughDesktops(forward);
     }
 
     if (control_grab || tab_grab){
-        if ((keyCombQt & 0xffff) == Qt::Key_Escape){
+        if ((keyQt & 0xffff) == Qt::Key_Escape){
             XUngrabKeyboard(qt_xdisplay(), kwin_time);
             XUngrabPointer( qt_xdisplay(), kwin_time);
             tab_box->hide();
@@ -1134,10 +1132,14 @@ bool Workspace::keyRelease(XKeyEvent key)
         return FALSE;
     if( !tab_grab && !control_grab )
         return FALSE;
-    unsigned int mk = key.state & KKeyX11::accelModMaskX();
+    unsigned int mk = key.state &
+        (KKeyNative::modX(KKey::SHIFT) |
+         KKeyNative::modX(KKey::CTRL) |
+         KKeyNative::modX(KKey::ALT) |
+         KKeyNative::modX(KKey::WIN));
     // key.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
-    // modifiers are released is : only one modifier is active and the currently released
+    // modifiers are released: only one modifier is active and the currently released
     // key is this modifier - if yes, release the grab
     int mod_index = -1;
     for( int i = ShiftMapIndex;
@@ -1553,11 +1555,11 @@ QPopupMenu* Workspace::clientPopup( Client* c )
         connect( desk_popup, SIGNAL( activated(int) ), this, SLOT( sendToDesktop(int) ) );
         connect( desk_popup, SIGNAL( aboutToShow() ), this, SLOT( desktopPopupAboutToShow() ) );
 
-        popup->insertItem( SmallIconSet( "move" ), i18n("&Move"), Options::MoveOp );
-        popup->insertItem( i18n("&Size"), Options::ResizeOp );
-        popup->insertItem( i18n("Mi&nimize"), Options::IconifyOp );
-        popup->insertItem( i18n("Ma&ximize"), Options::MaximizeOp );
-        popup->insertItem( i18n("Sh&ade"), Options::ShadeOp );
+        popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").toString(), Options::MoveOp );
+        popup->insertItem( i18n("&Size")+'\t'+keys->shortcut("Window Resize").toString(), Options::ResizeOp );
+        popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").toString(), Options::IconifyOp );
+        popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").toString(), Options::MaximizeOp );
+        popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").toString(), Options::ShadeOp );
         popup->insertItem( SmallIconSet( "attach" ), i18n("Always &on Top"), Options::StaysOnTopOp );
         popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Settings"), Options::ToggleStoreSettingsOp );
 
@@ -1568,11 +1570,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-        QString k;
-        KAccelAction* pAction = keys->actions().actionPtr( "Window Close" );
-	if( pAction )
-	    k = pAction->m_rgShortcuts.toString();
-        popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+k, Options::CloseOp );
+        popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").toString(), Options::CloseOp );
     }
     return popup;
 }
@@ -1984,17 +1982,6 @@ void Workspace::reconfigure()
 }
 
 
-// FIXME: get rid of this once Workspace looks at KKeySequences instead of
-//  uint's for keycodes.
-inline int currentKey( KGlobalAccel* keys, const char* psAction )
-{
-    KAccelAction* pAction = keys->actions().actionPtr( psAction );
-    if( pAction )
-        return pAction->getShortcut(0).getSequence(0).getKey(0).keyQt();
-    else
-        return 0;
-}
-
 /*!
   Reread settings
  */
@@ -2005,15 +1992,9 @@ void Workspace::slotReconfigure()
     reconfigureTimer.stop();
     KGlobal::config()->reparseConfiguration();
     options->reload();
-    keys->readSettings();
-    keys->updateConnections();
     tab_box->reconfigure();
-    walkThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops" );
-    walkBackThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops (Reverse)" );
-    walkThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List" );
-    walkBackThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List (Reverse)" );
-    walkThroughWindowsKeycode = currentKey( keys, "Walk Through Windows" );
-    walkBackThroughWindowsKeycode = currentKey( keys, "Walk Through Windows (Reverse)" );
+
+    readKeybindings();
 
     mgr->updatePlugin();
     // NO need whatsoever to call slotResetAllClientsDelayed here,
@@ -2671,107 +2652,22 @@ void Workspace::propagateSystemTrayWins()
  */
 void Workspace::createKeybindings(){
     keys = new KGlobalAccel( this );
-
 #include "kwinbindings.cpp"
-/*
-    keys->connectItem( "Switch to desktop 1", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 2", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 3", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 4", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 5", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 6", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 7", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 8", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 9", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 10", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 11", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 12", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 13", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 14", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 15", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch to desktop 16", this, SLOT( slotSwitchToDesktop( int ) ));
-    keys->connectItem( "Switch desktop previous", this, SLOT( slotSwitchDesktopPrevious() ));
-    keys->connectItem( "Switch desktop next", this, SLOT( slotSwitchDesktopNext() ));
-    keys->connectItem( "Switch desktop left", this, SLOT( slotSwitchDesktopLeft() ));
-    keys->connectItem( "Switch desktop right", this, SLOT( slotSwitchDesktopRight() ));
-    keys->connectItem( "Switch desktop up", this, SLOT( slotSwitchDesktopUp() ));
-    keys->connectItem( "Switch desktop down", this, SLOT( slotSwitchDesktopDown() ));
+    readKeybindings();
+}
 
-    keys->connectItem( "Walk through desktops", this, SLOT( slotWalkThroughDesktops()));
-    keys->connectItem( "Walk back through desktops", this, SLOT( slotWalkBackThroughDesktops()));
-    keys->connectItem( "Walk through desktop list", this, SLOT( slotWalkThroughDesktopList()));
-    keys->connectItem( "Walk back through desktop list", this, SLOT( slotWalkBackThroughDesktopList()));
-    keys->connectItem( "Walk through windows",this, SLOT( slotWalkThroughWindows()));
-    keys->connectItem( "Walk back through windows",this, SLOT( slotWalkBackThroughWindows()));
-
-*/
+void Workspace::readKeybindings(){
     keys->readSettings();
-    keys->updateConnections();
-    walkThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops" );
-    walkBackThroughDesktopsKeycode = currentKey( keys, "Walk Through Desktops (Reverse)" );
-    walkThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List" );
-    walkBackThroughDesktopListKeycode = currentKey( keys, "Walk Through Desktop List (Reverse)" );
-    walkThroughWindowsKeycode = currentKey( keys, "Walk Through Windows" );
-    walkBackThroughWindowsKeycode = currentKey( keys, "Walk Through Windows (Reverse)" );
-    //keys->setItemRawModeEnabled( "Walk through desktops", TRUE  );
-    //keys->setItemRawModeEnabled( "Walk back through desktops", TRUE );
-    //keys->setItemRawModeEnabled( "Walk through desktop list", TRUE  );
-    //keys->setItemRawModeEnabled( "Walk back through desktop list", TRUE  );
-    //keys->setItemRawModeEnabled( "Walk through windows", TRUE  );
-    //keys->setItemRawModeEnabled( "Walk back through windows", TRUE  );
-}
 
-// Remove these -- ellis
-/*
-void Workspace::slotSwitchDesktop1(){
-    setCurrentDesktop(1);
+    walkThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops").keyPrimaryNative();
+    walkBackThroughDesktopsKeycode = keys->shortcut("Walk Through Desktops (Reverse)").keyPrimaryNative();
+    walkThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List").keyPrimaryNative();
+    walkBackThroughDesktopListKeycode = keys->shortcut("Walk Through Desktop List (Reverse)").keyPrimaryNative();
+    walkThroughWindowsKeycode = keys->shortcut("Walk Through Windows").keyPrimaryNative();
+    walkBackThroughWindowsKeycode = keys->shortcut("Walk Through Windows (Reverse)").keyPrimaryNative();
+
+    keys->updateConnections();
 }
-void Workspace::slotSwitchDesktop2(){
-    setCurrentDesktop(2);
-}
-void Workspace::slotSwitchDesktop3(){
-    setCurrentDesktop(3);
-}
-void Workspace::slotSwitchDesktop4(){
-    setCurrentDesktop(4);
-}
-void Workspace::slotSwitchDesktop5(){
-    setCurrentDesktop(5);
-}
-void Workspace::slotSwitchDesktop6(){
-    setCurrentDesktop(6);
-}
-void Workspace::slotSwitchDesktop7(){
-    setCurrentDesktop(7);
-}
-void Workspace::slotSwitchDesktop8(){
-    setCurrentDesktop(8);
-}
-void Workspace::slotSwitchDesktop9(){
-    setCurrentDesktop(9);
-}
-void Workspace::slotSwitchDesktop10(){
-    setCurrentDesktop(10);
-}
-void Workspace::slotSwitchDesktop11(){
-    setCurrentDesktop(11);
-}
-void Workspace::slotSwitchDesktop12(){
-    setCurrentDesktop(12);
-}
-void Workspace::slotSwitchDesktop13(){
-    setCurrentDesktop(13);
-}
-void Workspace::slotSwitchDesktop14(){
-    setCurrentDesktop(14);
-}
-void Workspace::slotSwitchDesktop15(){
-    setCurrentDesktop(15);
-}
-void Workspace::slotSwitchDesktop16(){
-    setCurrentDesktop(16);
-}
-*/
 
 void Workspace::slotSwitchDesktopNext(){
     int d = currentDesktop() + 1;
@@ -2779,6 +2675,7 @@ void Workspace::slotSwitchDesktopNext(){
         d = 1;
     setCurrentDesktop(d);
 }
+
 void Workspace::slotSwitchDesktopPrevious(){
     int d = currentDesktop() - 1;
     if ( d <= 0 )
@@ -3623,10 +3520,8 @@ void Workspace::slotResetAllClients()
 void Workspace::slotSettingsChanged(int category)
 {
     kdDebug(1212) << "Workspace::slotSettingsChanged()" << endl;
-    if( category == (int) KApplication::SETTINGS_SHORTCUTS ) {
-        keys->readSettings();
-        keys->updateConnections();
-    }
+    if( category == (int) KApplication::SETTINGS_SHORTCUTS )
+        readKeybindings();
 }
 
 /*
