@@ -303,19 +303,20 @@ Options::WindowOperation Options::windowOperation(const QString &name){
 
 Options::MouseCommand Options::mouseCommand(const QString &name)
 {
-    if (name == "Raise") return MouseRaise;
-    if (name == "Lower") return MouseLower;
-    if (name == "Operations menu") return MouseOperationsMenu;
-    if (name == "Toggle raise and lower") return MouseToggleRaiseAndLower;
-    if (name == "Activate and raise") return MouseActivateAndRaise;
-    if (name == "Activate and lower") return MouseActivateAndLower;
-    if (name == "Activate") return MouseActivate;
-    if (name == "Activate, raise and pass click") return MouseActivateRaiseAndPassClick;
-    if (name == "Activate and pass click") return MouseActivateAndPassClick;
-    if (name == "Move") return MouseMove;
-    if (name == "Resize") return MouseResize;
-    if (name == "Shade") return MouseShade;
-    if (name == "Nothing") return MouseNothing;
+    QString lowerName = name.lower();
+    if (lowerName == "rise") return MouseRaise;
+    if (lowerName == "lower") return MouseLower;
+    if (lowerName == "operations menu") return MouseOperationsMenu; 
+    if (lowerName == "toggle raise and lower") return MouseToggleRaiseAndLower;
+    if (lowerName == "activate and raise") return MouseActivateAndRaise;
+    if (lowerName == "activate and lower") return MouseActivateAndLower;
+    if (lowerName == "activate") return MouseActivate;
+    if (lowerName == "activate, raise and pass click") return MouseActivateRaiseAndPassClick;
+    if (lowerName == "activate and pass click") return MouseActivateAndPassClick;
+    if (lowerName == "move") return MouseMove;
+    if (lowerName == "resize") return MouseResize;
+    if (lowerName == "shade") return MouseShade;
+    if (lowerName == "nothing") return MouseNothing;
     return MouseNothing;
 }
 

@@ -387,8 +387,8 @@ const char*  KActionsConfig::functionTiAc(int i)
   switch (i){
   case 0: return "Raise"; break;
   case 1: return "Lower"; break;
-  case 2: return "Operations Menu"; break;
-  case 3: return "Toggle Raise and Lower"; break;
+  case 2: return "Operations menu"; break;
+  case 3: return "Toggle raise and lower"; break;
   case 4: return "Nothing"; break;
   case 5: return "Shade"; break;
   }
