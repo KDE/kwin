@@ -92,6 +92,7 @@ typedef struct _win {
     Atom                windowType;
     unsigned long	damage_sequence;    /* sequence when damage was created */
     Bool                shapable; /* this will allow window managers to exclude windows if just the deco is shaped*/
+    Bool                fadesBlocked;
 
     /* for drawing translucent windows */
     XserverRegion	borderClip;
@@ -354,6 +355,7 @@ run_fades (Display *dpy)
     int	    now = get_time_in_milliseconds();
     fade    *f, *next;
     int	    steps;
+    Bool    last;
 
 #if 0
     printf ("run fades\n");
@@ -363,7 +365,8 @@ run_fades (Display *dpy)
     steps = 1 + (now - fade_time) / fade_delta;
     for (next = fades; f = next; )
     {
-	win *w = f->w;
+        last = False;
+        win *w = f->w;
 	next = f->next;
 	f->cur += f->step * steps;
         if (f->cur >= 1)
@@ -379,6 +382,7 @@ run_fades (Display *dpy)
 	    if (f->cur >= f->finish)
 	    {
 		w->opacity = f->finish*OPAQUE;
+                last = True;
 		dequeue_fade (dpy, f);
 	    }
 	}
@@ -387,9 +391,12 @@ run_fades (Display *dpy)
 	    if (f->cur <= f->finish)
 	    {
 		w->opacity = f->finish*OPAQUE;
+                last = True;
 		dequeue_fade (dpy, f);
 	    }
 	}
+        if (w->fadesBlocked)
+            clipChanged = False;
 	determine_mode (dpy, w);
 	if (w->shadow)
 	{
@@ -2629,8 +2636,10 @@ main (int argc, char **argv)
                         /*this is hardly efficient, but a current workaraound 
                         shaping support isn't that good so far (e.g. we lack shaped shadows)
                         IDEA: use XRender to scale/shift a copy of the window and then blurr it*/
+                        w->fadesBlocked = True;
                         clipChanged = True;
                         repair_win (dpy, w);
+                        w->fadesBlocked = False;
                     }
                 }
 		break;
