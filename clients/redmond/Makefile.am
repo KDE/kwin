@@ -9,3 +9,9 @@ kwin3_redmond_la_LIBADD = $(LIB_KDECORE) ../../lib/libkdecorations.la
 
 METASOURCES = AUTO
 noinst_HEADERS = redmond.h
+
+lnkdir = $(kde_datadir)/kwin
+lnk_DATA = redmond.desktop
+
+EXTRA_DIST = $(lnk_DATA)
+
