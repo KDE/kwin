@@ -2206,24 +2206,24 @@ void Client::setShade( bool s, int hus )
 	QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
 	windowWrapper()->hide();
 	repaint( FALSE );
-	bool wasNorthWest = testWFlags( WNorthWestGravity );
-	setWFlags( WNorthWestGravity );
+	bool wasStaticContents = testWFlags( WStaticContents );
+	setWFlags( WStaticContents );
 	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
 	do {
 	    h -= step;
 	    resize ( s.width(), h );
 	    QApplication::syncX();
 	} while ( h > s.height() + step );
-	if ( !wasNorthWest )
-	    clearWFlags( WNorthWestGravity );
+	if ( !wasStaticContents )
+	    clearWFlags( WStaticContents );
 	resize (s );
 	if (hus)
 	    workspace()->requestFocus( NULL );
     } else {
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
-	bool wasNorthWest = testWFlags( WNorthWestGravity );
-	setWFlags( WNorthWestGravity );
+	bool wasStaticContents = testWFlags( WStaticContents );
+	setWFlags( WStaticContents );
 	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
 	do {
 	    h += step;
@@ -2233,8 +2233,8 @@ void Client::setShade( bool s, int hus )
 	    repaint( 0, h - step-5, width(), step+5, TRUE);
 	    QApplication::syncX();
 	} while ( h < s.height() - step );
-	if ( !wasNorthWest )
-	    clearWFlags( WNorthWestGravity );
+	if ( !wasStaticContents )
+	    clearWFlags( WStaticContents );
 	resize ( s );
 	if (hus)
 	    setActive( TRUE );

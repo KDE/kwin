@@ -81,7 +81,7 @@ const QColorGroup& Options::colorGroup(ColorType type, bool active)
         return(*cg[idx]);
     cg[idx] = new QColorGroup(Qt::black, colors[idx], colors[idx].light(150),
                               colors[idx].dark(), colors[idx].dark(120),
-                              Qt::black, QApplication::palette().normal().
+                              Qt::black, QApplication::palette().active().
                               base());
     return(*cg[idx]);
 }
@@ -93,7 +93,7 @@ void Options::reload()
     config->setGroup("WM");
 
     // normal colors
-    colors[Frame] = pal.normal().background();
+    colors[Frame] = pal.active().background();
     colors[Frame] = config->readColorEntry("frame", &colors[Frame]);
     colors[Handle] = colors[Frame];
     colors[Handle] = config->readColorEntry("handle", &colors[Handle]);
@@ -105,7 +105,7 @@ void Options::reload()
         colors[ButtonBg] = colors[Frame];
     colors[ButtonBg] = config->readColorEntry("activeTitleBtnBg",
                                               &colors[Frame]);
-    colors[TitleBar] = pal.normal().highlight();
+    colors[TitleBar] = pal.active().highlight();
     colors[TitleBar] = config->readColorEntry("activeBackground",
                                               &colors[TitleBar]);
     if(QPixmap::defaultDepth() > 8)
@@ -115,7 +115,7 @@ void Options::reload()
     colors[TitleBlend] = config->readColorEntry("activeBlend",
                                                 &colors[TitleBlend]);
 
-    colors[Font] = pal.normal().highlightedText();
+    colors[Font] = pal.active().highlightedText();
     colors[Font] = config->readColorEntry("activeForeground", &colors[Font]);
 
     // inactive

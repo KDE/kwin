@@ -2001,7 +2001,7 @@ bool Workspace::isNotManaged( const QString& title )
 {
     for ( QStringList::Iterator it = doNotManageList.begin(); it != doNotManageList.end(); ++it ) {
         QRegExp r( (*it) );
-        if (r.match(title) != -1) {
+        if (r.search(title) != -1) {
             doNotManageList.remove( it );
             return TRUE;
         }
