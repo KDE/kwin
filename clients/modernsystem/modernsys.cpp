@@ -383,7 +383,7 @@ void ModernSys::init()
                                QSizePolicy::Minimum);
 
     button[BtnClose] = new ModernButton(this, "close", close_bits, i18n("Close"));
-    button[BtnSticky] = new ModernButton(this, "sticky", NULL, isOnAllDesktops()?i18n("Un-Sticky"):i18n("Sticky"));
+    button[BtnSticky] = new ModernButton(this, "sticky", NULL, isOnAllDesktops()?i18n("Unsticky"):i18n("Sticky"));
     button[BtnMinimize] = new ModernButton(this, "iconify", iconify_bits, i18n("Minimize"));
     button[BtnMaximize] = new ModernButton(this, "maximize", maximize_bits, i18n("Maximize"), LeftButton|MidButton|RightButton);
     button[BtnHelp] = new ModernButton(this, "help", question_bits, i18n("Help"));
@@ -641,7 +641,7 @@ void ModernSys::desktopChange()
     bool sticky_on = isOnAllDesktops();
     button[BtnSticky]->setBitmap(sticky_on ? unsticky_bits : sticky_bits);
     QToolTip::remove( button[BtnSticky] );
-    QToolTip::add( button[BtnSticky], sticky_on ? i18n("Un-Sticky") : i18n("Sticky"));
+    QToolTip::add( button[BtnSticky], sticky_on ? i18n("Unsticky") : i18n("Sticky"));
 }
 
 void ModernSys::maximizeChange()

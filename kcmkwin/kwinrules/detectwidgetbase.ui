@@ -21,7 +21,7 @@
                 <cstring>textLabel9</cstring>
             </property>
             <property name="text">
-                <string>Information about the selected window:</string>
+                <string>Information About Selected Window</string>
             </property>
         </widget>
         <widget class="Line">

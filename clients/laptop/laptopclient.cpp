@@ -371,7 +371,7 @@ void LaptopClient::init()
     button[BtnClose] = new LaptopButton(btnWidth2, th, this, "close",
                                  close_bits, i18n("Close"));
     button[BtnSticky] = new LaptopButton(btnWidth1, th, this, "sticky",
-                                 NULL, isOnAllDesktops()?i18n("Not On All Desktops"):i18n("On All Desktops"));
+                                 NULL, isOnAllDesktops()?i18n("Not an all desktops"):i18n("On all desktops"));
     if(isOnAllDesktops())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
@@ -596,7 +596,7 @@ void LaptopClient::desktopChange()
     button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
     QToolTip::remove(button[BtnSticky]);
     QToolTip::add(button[BtnSticky],
-	    on ? i18n("Not On All Desktops") : i18n("On All Desktops"));
+	    on ? i18n("Not on all desktops") : i18n("On all desktops"));
 }
 
 void LaptopClient::maximizeChange()

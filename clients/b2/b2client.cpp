@@ -334,7 +334,7 @@ void B2Client::init()
     const QString tips[] = {
 	i18n("Menu"), 
 	isOnAllDesktops() ? 
-	    i18n("Not On All Desktops") : i18n("On All desktops"), 
+	    i18n("Not on all desktops") : i18n("On all desktops"), 
 	i18n("Minimize"), i18n("Maximize"), 
 	i18n("Close"), i18n("Help"),
 	isShade() ? i18n("Unshade") : i18n("Shade"),
@@ -781,7 +781,7 @@ void B2Client::desktopChange()
         b->setDown(on);
 	QToolTip::remove(b);
 	QToolTip::add(b, 
-		on ? i18n("Not On All Desktops") : i18n("On All Desktops"));
+		on ? i18n("Not on all desktops") : i18n("On all desktops"));
     }
 }
 

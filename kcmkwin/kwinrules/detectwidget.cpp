@@ -66,9 +66,9 @@ static QCString getStringProperty(WId w, Atom prop, char separator=0)
     status = XGetWindowProperty( qt_xdisplay(), w, prop, 0, 10000,
                                  FALSE, XA_STRING, &type, &format,
                                  &nitems, &extra, &data );
-    if ( status == Success) 
+    if ( status == Success)
         {
-        if (data && separator) 
+        if (data && separator)
             {
             for (int i=0; i<(int)nitems; i++)
                 if (!data[i] && i+1<(int)nitems)
@@ -128,7 +128,7 @@ void DetectDialog::executeDialog()
         I18N_NOOP( "Override Type" ),
         I18N_NOOP( "Standalone Menubar" ),
         I18N_NOOP( "Utility Window" ),
-        I18N_NOOP( "Splashscreen" )
+        I18N_NOOP( "Splash Screen" )
         };
     widget->class_label->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ")" );
     widget->role_label->setText( role );

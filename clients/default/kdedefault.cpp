@@ -794,7 +794,7 @@ void KDEDefaultClient::addClientButtons( const QString& s, bool isLeft )
 				{
    					button[BtnSticky] = new KDEDefaultButton(this, "sticky",
 							largeButtons, isLeft, true, NULL,
-                                                        isOnAllDesktops()?i18n("Not On All Desktops"):i18n("On All Desktops"));
+                                                        isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops"));
 					button[BtnSticky]->turnOn( isOnAllDesktops() );
    					connect( button[BtnSticky], SIGNAL(clicked()),
 							this, SLOT(toggleOnAllDesktops()) );
@@ -880,7 +880,7 @@ void KDEDefaultClient::desktopChange()
 		button[BtnSticky]->turnOn(on);
 		button[BtnSticky]->repaint(false);
                 QToolTip::remove( button[BtnSticky] );
-		QToolTip::add( button[BtnSticky], on ? i18n("Not On All Desktops") : i18n("On All Desktops"));
+		QToolTip::add( button[BtnSticky], on ? i18n("Not on all desktops") : i18n("On all desktops"));
 	}
 }
 

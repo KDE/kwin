@@ -157,7 +157,7 @@ static void sighandler(int)
 } // namespace
 
 static const char version[] = "2.95";
-static const char description[] = I18N_NOOP( "The KDE window manager." );
+static const char description[] = I18N_NOOP( "KDE window manager" );
 
 static KCmdLineOptions args[] =
     {

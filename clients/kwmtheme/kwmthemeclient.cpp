@@ -762,7 +762,7 @@ void KWMThemeClient::desktopChange()
        bool on = isOnAllDesktops();
        stickyBtn->setPixmap(on ? *pindownPix : *pinupPix);
        QToolTip::remove( stickyBtn );
-       QToolTip::add( stickyBtn, on ? i18n("Un-Sticky") : i18n("Sticky") );
+       QToolTip::add( stickyBtn, on ? i18n("Unsticky") : i18n("Sticky") );
     }
 }
 

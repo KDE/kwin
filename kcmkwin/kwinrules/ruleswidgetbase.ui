@@ -99,12 +99,12 @@
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Substring match</string>
+                                        <string>Substring Match</string>
                                     </property>
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Regular expression</string>
+                                        <string>Regular Expression</string>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -195,12 +195,12 @@
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Substring match</string>
+                                        <string>Substring Match</string>
                                     </property>
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Regular expression</string>
+                                        <string>Regular Expression</string>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -400,7 +400,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Splashscreen</string>
+                                <string>Splash Screen</string>
                             </property>
                         </item>
                         <item>
@@ -459,12 +459,12 @@
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Substring match</string>
+                                        <string>Substring Match</string>
                                     </property>
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Regular expression</string>
+                                        <string>Regular Expression</string>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -555,12 +555,12 @@
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Substring match</string>
+                                        <string>Substring Match</string>
                                     </property>
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Regular expression</string>
+                                        <string>Regular Expression</string>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -651,12 +651,12 @@
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Substring match</string>
+                                        <string>Substring Match</string>
                                     </property>
                                 </item>
                                 <item>
                                     <property name="text">
-                                        <string>Regular expression</string>
+                                        <string>Regular Expression</string>
                                     </property>
                                 </item>
                                 <property name="name">
@@ -1725,7 +1725,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Splashscreen</string>
+                                <string>Splash Screen</string>
                             </property>
                         </item>
                         <item>

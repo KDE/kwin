@@ -2,7 +2,7 @@
  *
  * Keramik KWin client (version 0.8)
  *
- * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>
+ * Copyright (C) 2002 Fredrik Hï¿½lund <fredrik@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -956,7 +956,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			case 'S' :
 				if ( !button[OnAllDesktopsButton] ) {
 					button[OnAllDesktopsButton] = new KeramikButton( this, "on_all_desktops",
-							OnAllDesktopsButton, isOnAllDesktops()?i18n("Not On All Desktops"):i18n("On All Desktops") );
+							OnAllDesktopsButton, isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops") );
 					if(isOnAllDesktops())
 						button[OnAllDesktopsButton]->toggle();
 					connect( button[OnAllDesktopsButton], SIGNAL( clicked() ), SLOT( toggleOnAllDesktops() ) );
@@ -1309,7 +1309,7 @@ void KeramikClient::desktopChange()
 	if ( button[ OnAllDesktopsButton ] )
 		{
 		QToolTip::remove( button[ OnAllDesktopsButton ] );
-		QToolTip::add( button[ OnAllDesktopsButton ], isOnAllDesktops() ? i18n("Not On All Desktops") : i18n("On All Desktops") );
+		QToolTip::add( button[ OnAllDesktopsButton ], isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops") );
 		}
 }
 
