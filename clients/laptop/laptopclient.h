@@ -1,5 +1,5 @@
-#ifndef __LAPTOPCLIENT_H
-#define __LAPTOPCLIENT_H
+#ifndef __KDECLIENT_H
+#define __KDECLIENT_H
 
 #include <qbutton.h>
 #include <qbitmap.h>
@@ -7,6 +7,7 @@
 #include "../../client.h"
 class QLabel;
 class QSpacerItem;
+class QHBoxLayout;
 
 
 // get rid of autohide :P
@@ -17,10 +18,25 @@ public:
                  const unsigned char *bitmap=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
-    //QSize sizeHint() const;
+    QSize sizeHint() const;
+    int last_button;
+
 protected:
+    void mousePressEvent( QMouseEvent* e )
+    {
+	last_button = e->button();
+	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QButton::mousePressEvent( &me );
+    }
+    void mouseReleaseEvent( QMouseEvent* e )
+    {
+	last_button = e->button();
+	QMouseEvent me ( e->type(), e->pos(), e->globalPos(), LeftButton, e->state() );
+	QButton::mouseReleaseEvent( &me );
+    }
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
+    QSize defaultSize;
     QBitmap deco;
     Client *client;
 };
@@ -29,9 +45,9 @@ class LaptopClient : public Client
 {
     Q_OBJECT
 public:
+    enum Buttons{BtnHelp=0, BtnSticky, BtnMax, BtnIconify, BtnClose};
     LaptopClient( Workspace *ws, WId w, QWidget *parent=0, const char *name=0 );
     ~LaptopClient(){;}
-    MousePosition mousePosition( const QPoint& ) const;
 protected:
     void resizeEvent( QResizeEvent* );
     void paintEvent( QPaintEvent* );
@@ -44,11 +60,24 @@ protected:
     void maximizeChange(bool m);
     void doShape();
     void activeChange(bool);
+
+    void calcHiddenButtons();
+    void updateActiveBuffer();
+
+    MousePosition mousePosition(const QPoint &) const;
+
 protected slots:
     void slotReset();
+    void slotMaximize();
 private:
     LaptopClientButton* button[5];
+    int lastButtonWidth;
     QSpacerItem* titlebar;
+    bool hiddenItems;
+    QHBoxLayout *hb;
+    KPixmap activeBuffer;
+    bool bufferDirty;
+    int lastBufferWidth;
 };
 
 
