@@ -80,6 +80,10 @@ Client* PluginMgr::createClient(Workspace *ws, WId w, NET::WindowType type)
 // returns true if plugin was loaded successfully
 bool PluginMgr::loadPlugin(QString nameStr)
 {
+    // make sure people can switch between HEAD and kwin_iii branch
+    if( nameStr.startsWith( "kwin3_" ))
+	nameStr = "kwin_" + nameStr.mid( 6 );
+
     KLibrary *oldLibrary = library;
 
     QString path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
