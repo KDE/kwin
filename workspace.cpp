@@ -745,6 +745,7 @@ void Workspace::showPopup( const QPoint& pos, Client* c)
     default:
 	break;
     }
+    config->sync();
 
     popup_client = 0;
     ret = 0;
