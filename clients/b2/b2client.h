@@ -125,13 +125,16 @@ private slots:
     //void slotReset();
     void maxButtonClicked();
     void shadeButtonClicked();
+    void resizeButtonClicked();
 private:
     void addButtons(const QString& s, const QString tips[],
                     B2Titlebar* tb, QBoxLayout* titleLayout);
     void positionButtons();
     void calcHiddenButtons();
+    bool mustDrawHandle() const { return draw_handle && isResizable(); }
+    
     enum ButtonType{BtnMenu=0, BtnSticky, BtnIconify, BtnMax, BtnClose,
-        BtnHelp, BtnShade, BtnCount};
+        BtnHelp, BtnShade, BtnResize, BtnCount};
     B2Button* button[BtnCount];
     QGridLayout *g;
     QSpacerItem *spacer; // Bottom border spacer
@@ -141,6 +144,7 @@ private:
     int bar_x_ofs;
     int in_unobs;
     QTime time;
+    bool draw_handle;
 };
 
 class B2ClientFactory : public QObject, public KDecorationFactory

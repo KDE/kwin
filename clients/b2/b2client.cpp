@@ -39,7 +39,7 @@ enum {
 
 enum {
     P_CLOSE = 0, 
-    P_MAX, P_NORMALIZE, P_ICONIFY, P_PINUP, P_MENU, P_HELP, P_SHADE, 
+    P_MAX, P_NORMALIZE, P_ICONIFY, P_PINUP, P_MENU, P_HELP, P_SHADE, P_RESIZE,
     P_NUM_BUTTON_TYPES
 };
 
@@ -76,6 +76,7 @@ static DblClickOperation menu_dbl_click_op = NoOp;
 
 static bool pixmaps_created = false;
 static bool colored_frame = false;
+static bool do_draw_handle = true;
 
 // =====================================
 
@@ -103,6 +104,7 @@ static void read_config(B2ClientFactory *f)
     KConfig conf("kwinb2rc");
     conf.setGroup("General");
     colored_frame = conf.readBoolEntry("UseTitleBarBorderColors", false);
+    do_draw_handle = conf.readBoolEntry("DrawGrabHandle", true);
     QString opString = conf.readEntry("MenuButtonDoubleClickOperation", "NoOp");
     if (opString == "Close") {
         menu_dbl_click_op = B2::CloseOp;
@@ -151,13 +153,13 @@ static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
     }
     else
         pix->fill(primary);
-    int x2 = pix->width()-1;
-    int y2 = pix->height()-1;
+    int x2 = pix->width() - 1;
+    int y2 = pix->height() - 1;
     p.setPen(down ? hColor : lColor);
     p.drawLine(0, 0, x2, 0);
     p.drawLine(0, 0, 0, y2);
-    p.drawLine(1, x2-1, x2-1, y2-1);
-    p.drawLine(x2-1, 1, x2-1, y2-1);
+    p.drawLine(1, x2 - 1, x2 - 1, y2 - 1);
+    p.drawLine(x2 - 1, 1, x2 - 1, y2 - 1);
     p.setPen(down ? lColor : hColor);
     p.drawRect(1, 1, x2, y2);
 
@@ -183,6 +185,7 @@ static void create_pixmaps()
         pixmap[i] = new KPixmap;
 	switch (i / NumStates) {
 	case P_MAX: // will be initialized by copying P_CLOSE
+	case P_RESIZE: 
 	    break;
 	case P_ICONIFY:
 	    pixmap[i]->resize(10, 10); break;
@@ -315,6 +318,11 @@ void B2Client::shadeButtonClicked()
     setShade(!isShade());
 }
 
+void B2Client::resizeButtonClicked()
+{
+    performWindowOperation(ResizeOp);
+}
+
 B2Client::B2Client(KDecorationBridge *b, KDecorationFactory *f)
     : KDecoration(b, f), bar_x_ofs(0), in_unobs(0)
 {
@@ -322,13 +330,15 @@ B2Client::B2Client(KDecorationBridge *b, KDecorationFactory *f)
 
 void B2Client::init()
 {
+    draw_handle = do_draw_handle;
     const QString tips[] = {
 	i18n("Menu"), 
 	isOnAllDesktops() ? 
 	    i18n("Not On All Desktops") : i18n("On All desktops"), 
 	i18n("Minimize"), i18n("Maximize"), 
 	i18n("Close"), i18n("Help"),
-	isShade() ? i18n("Unshade") : i18n("Shade")
+	isShade() ? i18n("Unshade") : i18n("Shade"),
+	i18n("Resize") 
     };
 
     createMainWidget(WResizeNoErase | WRepaintNoErase);
@@ -363,7 +373,7 @@ void B2Client::init()
     g->addItem(rightSpacer, 1, 3);
 
     // Bottom border height
-    spacer = new QSpacerItem(10, thickness + (isResizable() ? 4 : 0),
+    spacer = new QSpacerItem(10, thickness + (mustDrawHandle() ? 4 : 0),
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->addItem(spacer, 3, 1);
 
@@ -443,7 +453,7 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 	    break;
 	case 'I':  // Minimize button
 	    if (isMinimizable() && (!button[BtnIconify])) {
-		button[BtnIconify]= new B2Button(this, tb,tips[BtnIconify]);
+		button[BtnIconify] = new B2Button(this, tb,tips[BtnIconify]);
 		button[BtnIconify]->setPixmaps(P_ICONIFY);
 		connect(button[BtnIconify], SIGNAL(clicked()),
 			this, SLOT(minimize()));
@@ -452,7 +462,7 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 	    break;
 	case 'A':  // Maximize button
 	    if (isMaximizable() && (!button[BtnMax])) {
-		button[BtnMax]= new B2Button(this, tb, tips[BtnMax], 
+		button[BtnMax] = new B2Button(this, tb, tips[BtnMax], 
 			LeftButton | MidButton | RightButton);
 		button[BtnMax]->setPixmaps(maximizeMode() == MaximizeFull ?
 			P_NORMALIZE : P_MAX);
@@ -463,7 +473,7 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 	    break;
 	case 'X':  // Close button
 	    if (isCloseable() && !button[BtnClose]) {
-		button[BtnClose]= new B2Button(this, tb, tips[BtnClose]);
+		button[BtnClose] = new B2Button(this, tb, tips[BtnClose]);
 		button[BtnClose]->setPixmaps(P_CLOSE);
 		connect(button[BtnClose], SIGNAL(clicked()),
 			this, SLOT(closeWindow()));
@@ -472,11 +482,20 @@ void B2Client::addButtons(const QString& s, const QString tips[],
 	    break;
 	case 'L': // Shade button
 	    if (isShadeable() && !button[BtnShade]) {
-		button[BtnShade]= new B2Button(this, tb, tips[BtnShade]);
+		button[BtnShade] = new B2Button(this, tb, tips[BtnShade]);
 		button[BtnShade]->setPixmaps(P_SHADE);
 		connect(button[BtnShade], SIGNAL(clicked()),
 			this, SLOT(shadeButtonClicked()));
 		titleLayout->addWidget(button[BtnShade]);
+	    }
+	    break;
+	case 'R': // Resize button
+	    if (isResizable() && !button[BtnResize]) {
+		button[BtnResize] = new B2Button(this, tb, tips[BtnResize]);
+		button[BtnResize]->setPixmaps(P_RESIZE);
+		connect(button[BtnResize], SIGNAL(clicked()),
+			this, SLOT(resizeButtonClicked()));
+		titleLayout->addWidget(button[BtnResize]);
 	    }
 	    break;
 	case '_': // Additional spacing
@@ -498,9 +517,9 @@ void B2Client::iconChange()
 void B2Client::calcHiddenButtons()
 {
     // Hide buttons in this order:
-    // Shade, Sticky, Help, Maximize, Minimize, Close, Menu
+    // Shade, Sticky, Help, Resize, Maximize, Minimize, Close, Menu
     B2Button* btnArray[] = { 
-	button[BtnShade], button[BtnSticky], button[BtnHelp], 
+	button[BtnShade], button[BtnSticky], button[BtnHelp], button[BtnResize],
 	button[BtnMax], button[BtnIconify], button[BtnClose], button[BtnMenu] 
     };
     int minWidth = 120;
@@ -564,7 +583,7 @@ void B2Client::paintEvent(QPaintEvent* e)
     int fHeight = height() - t.height();
 
     // distance from the bottom border - it is different if window is resizable
-    int bb = isResizable() ? 4 : 0;
+    int bb = mustDrawHandle() ? 4 : 0;
     int bDepth = thickness + bb;
 
     QColorGroup fillColor = options()->colorGroup(frameColorGroup, isActive());
@@ -607,7 +626,7 @@ void B2Client::paintEvent(QPaintEvent* e)
     }
 
     // bottom handle rect
-    if (isResizable()) {
+    if (mustDrawHandle()) {
         p.setPen(Qt::black);
 	int hx = width() - 40;
 	int hw = 40;
@@ -668,7 +687,7 @@ void B2Client::doShape()
 		width() - t.right() - 1, t.height() - thickness);
     }
     mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
-    if (isResizable()) {
+    if (mustDrawHandle()) {
 	mask -= QRect(0, height() - 5, 1, 1); //bottom left point
 	mask -= QRect(width() - 1, height() - 1, 1, 1); //bottom right point
 	mask -= QRect(width() - 40, height() - 1, 1, 1); //handle left point
@@ -695,7 +714,7 @@ KDecoration::Position B2Client::mousePosition(const QPoint& p) const
     t.setHeight(buttonSize + 4 - thickness);
     int ly = t.bottom();
     int lx = t.right();
-    int bb = isResizable() ? 0 : 5;
+    int bb = mustDrawHandle() ? 0 : 5;
 
     if (p.x() > t.right()) {
         if (p.y() <= ly + range && p.x() >= width() - range)
@@ -776,7 +795,7 @@ void B2Client::maximizeChange()
 	QToolTip::add(button[BtnMax],
 		m ? i18n("Restore") : i18n("Maximize"));
     }
-    spacer->changeSize(10, thickness + (isResizable() ? 4 : 0),
+    spacer->changeSize(10, thickness + (mustDrawHandle() ? 4 : 0),
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     g->activate();
@@ -801,7 +820,7 @@ void B2Client::activeChange()
 
 void B2Client::shadeChange()
 {
-    spacer->changeSize(10, thickness + (isResizable() ? 4 : 0),
+    spacer->changeSize(10, thickness + (mustDrawHandle() ? 4 : 0),
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
     doShape();
@@ -827,7 +846,7 @@ void B2Client::borders(int &left, int &right, int &top, int &bottom) const
 {
     left = right = thickness;
     top = buttonSize + 4;
-    bottom = thickness + (isResizable() ? 4 : 0);
+    bottom = thickness + (mustDrawHandle() ? 4 : 0);
 }
 
 void B2Client::menuButtonPressed()
@@ -921,14 +940,14 @@ static void redraw_pixmaps()
 	*pixmap[P_MAX * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
 	pixmap[P_MAX * NumStates + i]->detach();
     }
-
+    
     // normalize + iconify
     KPixmap smallBox;
     smallBox.resize(10, 10);
     KPixmap largeBox;
     largeBox.resize(12, 12);
 
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
 	KPixmap *pix = pixmap[P_NORMALIZE * NumStates + i];
@@ -942,6 +961,18 @@ static void redraw_pixmaps()
 	bitBlt(pixmap[P_ICONIFY * NumStates + i], 0, 0,
 	       &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
     }
+    
+    // resize
+    for (i = 0; i < NumStates; i++) {
+	bool is_act = (i < 3);
+	bool is_down = (i == Down || i == IDown);
+	*pixmap[P_RESIZE * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
+	pixmap[P_RESIZE * NumStates + i]->detach();
+	drawB2Rect(&smallBox, is_act ? aGrp.button() : iGrp.button(), is_down);
+	bitBlt(pixmap[P_RESIZE * NumStates + i], 
+		0, 0, &smallBox, 0, 0, 10, 10, Qt::CopyROP, true);
+    }
+
 
     QPainter p;
     // x for close + menu + help

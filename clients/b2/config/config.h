@@ -39,6 +39,7 @@ class B2Config: public QObject
 	private:
 		KConfig*   b2Config;
 		QCheckBox* cbColorBorder;
+		QCheckBox*  showGrabHandleCb;
 		QHGroupBox* actionsGB;
 		QComboBox*  menuDblClickOp;
 		QWidget* gb;

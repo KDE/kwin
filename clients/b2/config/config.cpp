@@ -36,12 +36,21 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 	KGlobal::locale()->insertCatalogue("kwin_b2_config");
 	b2Config = new KConfig("kwinb2rc");
 	gb = new QVBox(parent);
+	
 	cbColorBorder = new QCheckBox( 
 			i18n("Draw window frames using &titlebar colors"), gb);
 	QWhatsThis::add(cbColorBorder, 
 			i18n("When selected, the window decoration borders " 
 				"are drawn using the titlebar colors. Otherwise, they are " 
 				"drawn using normal border colors instead."));
+    
+	// Grab Handle
+    showGrabHandleCb = new QCheckBox(
+	    i18n("Draw &resize handle"), gb);
+    QWhatsThis::add(showGrabHandleCb, 
+	    i18n("When selected, decorations are drawn with a \"grab handle\" " 
+		 "in the bottom left corner of the windows. Otherwise, no grab handle is drawn."));
+	
     // Double click menu option support
     actionsGB = new QHGroupBox(i18n("Actions Settings"), gb);
     QLabel *menuDblClickLabel = new QLabel(actionsGB);
@@ -55,12 +64,15 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
     QWhatsThis::add(menuDblClickOp, 
 	    i18n("An action can be associated to a double click " 
 		 "of the menu button. Leave it to none if in doubt."));
+
 	// Load configuration options
 	load(conf);
 
 	// Ensure we track user changes properly
 	connect(cbColorBorder, SIGNAL(clicked()), 
 			this, SLOT(slotSelectionChanged()));
+    connect(showGrabHandleCb, SIGNAL(clicked()), 
+		    this, SLOT(slotSelectionChanged()));
     connect(menuDblClickOp, SIGNAL(activated(int)), 
 		    this, SLOT(slotSelectionChanged()));
 	// Make the widgets visible in kwindecoration
@@ -86,8 +98,13 @@ void B2Config::slotSelectionChanged()
 void B2Config::load(KConfig * /*conf*/)
 {
 	b2Config->setGroup("General");
+	
 	bool override = b2Config->readBoolEntry("UseTitleBarBorderColors", false);
 	cbColorBorder->setChecked(override);
+	
+    override = b2Config->readBoolEntry( "DrawGrabHandle", true );
+    showGrabHandleCb->setChecked(override);
+
     QString returnString = b2Config->readEntry(
 					"MenuButtonDoubleClickOperation", "NoOp");
     
@@ -127,6 +144,7 @@ void B2Config::save(KConfig * /*conf*/)
 {
 	b2Config->setGroup("General");
 	b2Config->writeEntry("UseTitleBarBorderColors", cbColorBorder->isChecked());
+    b2Config->writeEntry("DrawGrabHandle", showGrabHandleCb->isChecked());
     b2Config->writeEntry("MenuButtonDoubleClickOperation", 
 	    opToString(menuDblClickOp->currentItem()));
 	// Ensure others trying to read this config get updated
@@ -137,7 +155,8 @@ void B2Config::save(KConfig * /*conf*/)
 // Sets UI widget defaults which must correspond to style defaults
 void B2Config::defaults()
 {
-	cbColorBorder->setChecked( false );
+	cbColorBorder->setChecked(false);
+    showGrabHandleCb->setChecked(true);
     menuDblClickOp->setCurrentItem(0);
 }
 
