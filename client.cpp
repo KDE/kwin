@@ -415,11 +415,9 @@ void Client::manage( bool isMapped )
 
     windowWrapper()->resize( geom.size() );
     // the clever activate() trick is necessary
-    if (layout())
-      layout()->activate();
+    activateLayout();
     resize ( sizeForWindowSize( geom.size() ) );
-    if (layout())
-      layout()->activate();
+    activateLayout();
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
@@ -1503,8 +1501,7 @@ void Client::setShade( bool s )
 	clearWFlags( WNorthWestGravity );
 	resize ( s );
 	windowWrapper()->show();
-  if (layout())
-    layout()->activate();
+  activateLayout();
 	repaint();
 	if ( isActive() )
 	    workspace()->requestFocus( this );
@@ -1903,6 +1900,12 @@ QCString Client::sessionId()
 	XFree( data );
     }
     return result;
+}
+
+void Client::activateLayout()
+{
+  if (layout())
+    layout()->activate();
 }
 
 void Client::updateAvoidPolicy()

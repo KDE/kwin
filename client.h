@@ -175,6 +175,8 @@ protected:
     void showEvent( QShowEvent* );
     void hideEvent( QHideEvent* );
     bool x11Event( XEvent * );		// X11 event
+    
+    virtual void activateLayout();
 
     bool eventFilter( QObject *, QEvent * );
 
