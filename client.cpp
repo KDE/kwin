@@ -879,7 +879,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	    nh = e.height;
 	QSize ns = sizeForWindowSize( QSize( nw, nh ) );
 	if ( ns == size() )
-	    return; // broken xemacs stuff (ediff)
+	    return TRUE; // broken xemacs stuff (ediff)
 	resize( ns );
     }
 
