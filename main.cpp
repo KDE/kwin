@@ -176,7 +176,7 @@ int main( int argc, char * argv[] )
 
     DCOPClient *client = kapp->dcopClient();
     client->attach();
-    client->registerAs("kwin");
+    client->registerAs(kapp->name());
 
     kwiniface iface;
 
