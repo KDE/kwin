@@ -272,7 +272,9 @@ static void ungrabButton( WId winId, int modifier )
 void WindowWrapper::setActive( bool active )
 {
     if ( active ) {
-      if ( options->focusPolicy == Options::ClickToFocus ||  !options->clickRaise )
+      if ( !options->clickRaise )
+          // TODO but we could at least ungrab when the window is the top client
+          // and grab again after it's lowered
 	ungrabButton( winId(),  None );
       ungrabButton( winId(),  ShiftMask );
       ungrabButton( winId(),  ControlMask );
@@ -416,11 +418,9 @@ bool WindowWrapper::x11Event( XEvent * e)
         bool bModKeyHeld = ( e->xbutton.state & KKeyNative::accelModMaskX()) == keyModX;
 
         if ( ((Client*)parentWidget())->isActive()
-             && ( options->focusPolicy != Options::ClickToFocus
-                  &&  options->clickRaise && !bModKeyHeld ) ) {
+             && ( options->clickRaise && !bModKeyHeld ) ) {
             if ( e->xbutton.button < 4 ) // exclude wheel
                 ((Client*)parentWidget())->autoRaise();
-            ungrabButton( winId(), None );
         }
 
         Options::MouseCommand com = Options::MouseNothing;
@@ -2589,15 +2589,8 @@ void Client::getWindowProtocols(){
  */
 void Client::takeFocus( bool force )
 {
-    if ( !force && ( isTopMenu() || isDock() ) ) {
-	if ( isDock() && !staysOnTop() && workspace()->activeClient() ) {
-	    // the active client might get covered by a dock
-	    // window. Re-enable ourselves passive grabs to make
-	    // click-raise work again
-	    workspace()->activeClient()->windowWrapper()->setActive( FALSE );
-	}
+    if ( !force && ( isTopMenu() || isDock() ) )
         return; // toplevel menus and dock windows don't take focus if not forced
-    }
 
     if ( input ) {
         // Matthias Ettrich says to comment it so that we avoid two consecutive setActive
@@ -2701,6 +2694,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             workspace()->raiseClient( this );
         break;
     case Options::MouseActivateAndRaise:
+        replay = isActive(); // for clickraise mode
         workspace()->requestFocus( this );
         workspace()->raiseClient( this );
         break;
@@ -2709,6 +2703,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         workspace()->lowerClient( this );
         break;
     case Options::MouseActivate:
+        replay = isActive(); // for clickraise mode
         workspace()->requestFocus( this );
         break;
     case Options::MouseActivateRaiseAndPassClick:

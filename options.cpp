@@ -224,9 +224,7 @@ void Options::reload()
     shadeHoverInterval = config->readNumEntry("ShadeHoverInterval", 250 );
 
     // important: autoRaise implies ClickRaise
-    // ClickToFocus implies clickRaise too
-    clickRaise = autoRaise || ( focusPolicy == ClickToFocus )
-        || config->readBoolEntry("ClickRaise", FALSE );
+    clickRaise = autoRaise || config->readBoolEntry("ClickRaise", true );
 
     borderSnapZone = config->readNumEntry("BorderSnapZone", 10);
     windowSnapZone = config->readNumEntry("WindowSnapZone", 10);

@@ -291,8 +291,8 @@ void KFocusConfig::setAutoRaiseEnabled()
     {
         autoRaiseOn->setEnabled(false);
         autoRaiseOnTog(false);
-        clickRaiseOn->setEnabled(false);
-        clickRaiseOnTog(false);
+        clickRaiseOn->setEnabled(true);
+        clickRaiseOnTog(true);
     }
 }
 
