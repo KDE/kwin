@@ -1282,6 +1282,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   shadowColor = new KColorButton(Qt::black,sGroup);
   gLay2->addWidget(shadowColor,5,1);
   gLay2->setColStretch(1,1);
+  removeShadowsOnResize = new QCheckBox(i18n("Remove shadows on resize"),sGroup);
+  vLay2->addWidget(removeShadowsOnResize);
   vLay2->addStretch();
   tabW->addTab(sGroup, i18n("Shadows"));
 
@@ -1322,6 +1324,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   connect(dockWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(keepAboveAsActive, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(useShadows, SIGNAL(toggled(bool)), SLOT(changed()));
+  connect(removeShadowsOnResize, SIGNAL(toggled(bool)), SLOT(changed()));
 
   connect(activeWindowOpacity, SIGNAL(valueChanged(int)), SLOT(changed()));
   connect(inactiveWindowOpacity, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -1380,6 +1383,7 @@ void KTranslucencyConfig::load( void )
   activeWindowTransparency->setChecked(config->readBoolEntry("TranslucentActiveWindows",false));
   inactiveWindowTransparency->setChecked(config->readBoolEntry("TranslucentInactiveWindows",true));
   movingWindowTransparency->setChecked(config->readBoolEntry("TranslucentMovingWindows",false));
+  removeShadowsOnResize->setChecked(config->readBoolEntry("RemoveShadowsOnResize",TRUE));
   dockWindowTransparency->setChecked(config->readBoolEntry("TranslucentDocks",true));
   keepAboveAsActive->setChecked(config->readBoolEntry("TreatKeepAboveAsActive",true));
 
@@ -1451,6 +1455,7 @@ void KTranslucencyConfig::save( void )
   config->writeEntry("DockShadowSize",(int)(100.0*dockWindowShadowSize->value()/inactiveWindowShadowSize->value()));
   config->writeEntry("ActiveWindowShadowSize",(int)(100.0*activeWindowShadowSize->value()/inactiveWindowShadowSize->value()));
   config->writeEntry("InctiveWindowShadowSize",100);
+  config->writeEntry("RemoveShadowsOnResize",removeShadowsOnResize->isChecked());
   config->writeEntry("ResetKompmgr",resetKompmgr_);
 
   KConfig *conf_ = new KConfig(QDir::homeDirPath() + "/.xcompmgrrc");
@@ -1508,6 +1513,8 @@ void KTranslucencyConfig::defaults()
   inactiveWindowOpacity->setEnabled(true);
   movingWindowOpacity->setEnabled(false);
   dockWindowOpacity->setEnabled(true);
+  useShadows->setChecked(TRUE);
+  removeShadowsOnResize->setChecked(FALSE);
   shadowColor->setColor(Qt::black);
   fadeInWindows->setChecked(TRUE);
   fadeOnOpacityChange->setChecked(FALSE);

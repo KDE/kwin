@@ -249,6 +249,7 @@ private:
   QCheckBox *fadeInWindows;
   QCheckBox *fadeOnOpacityChange;
   QCheckBox *useShadows;
+  QCheckBox *removeShadowsOnResize;
   QGroupBox *sGroup;
 //   QPushButton *xcompmgrButton;
   KIntNumInput *activeWindowOpacity;
