@@ -124,14 +124,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 			i18n(  "Enabling this checkbox will show window button tooltips. "
 				   "If this checkbox is off, no window button tooltips will be shown."));
 
-        lBorder = new QLabel( buttonPage );
-        slBorder = new QSlider( Horizontal, buttonPage );
-        slBorder->setPageStep(1);
-        QWhatsThis::add( slBorder, i18n( "This slider shows all border sizes supported by this decoration." ));
-        lBorder->setBuddy( slBorder );
-        lBorder->hide();
-        slBorder->hide();
-
 	cbUseCustomButtonPositions = new QCheckBox(
 			i18n("Use custom titlebar button &positions"), buttonPage );
 	QWhatsThis::add( cbUseCustomButtonPositions,
@@ -150,6 +142,20 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 		"drag items within the titlebar preview to re-position them.") );
 	buttonSource = new ButtonSource( buttonBox );
 
+	// Page 3 (Border size chooser)
+	QWidget* borderPage = new QWidget( tabWidget );
+	QVBoxLayout* borderLayout = new QVBoxLayout(borderPage, KDialog::marginHint(), KDialog::spacingHint());
+	lBorder = new QLabel( borderPage );
+	slBorder = new QSlider( Horizontal, borderPage );
+	slBorder->setPageStep(1);
+	QWhatsThis::add( slBorder, i18n( "This slider shows all border sizes supported by this decoration." ));
+	lBorder->setBuddy( slBorder );
+	lBorder->hide();
+	slBorder->hide();
+	borderLayout->addWidget(lBorder);
+	borderLayout->addWidget(slBorder);
+	borderLayout->addStretch();
+
 	// Load all installed decorations into memory
 	// Set up the decoration lists and other UI settings
 	findDecorations();
@@ -159,6 +165,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	tabWidget->insertTab( pluginPage, i18n("&Window Decoration") );
 	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
+	tabWidget->insertTab( borderPage, i18n("B&order Size") );
 
 	connect( dropSite, SIGNAL(buttonAdded(char)), buttonSource, SLOT(hideButton(char)) );
 	connect( dropSite, SIGNAL(buttonRemoved(char)), buttonSource, SLOT(showButton(char)) );
@@ -611,4 +618,5 @@ void KWinDecorationModule::resetKWin()
 
 #include "kwindecoration.moc"
 // vim: ts=4
+// kate: space-indent off; tab-width 4;
 
