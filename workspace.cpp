@@ -294,11 +294,14 @@ void Workspace::init()
 	
     rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin", protocols, qt_xscreen() );
 	
-    KConfig* config = KGlobal::config();
-    config->setGroup("Desktops");
-    if (!config->hasKey("NumberOfDesktops"))
-      config->writeEntry("NumberOfDesktops", 4);
-    int n = config->readNumEntry("NumberOfDesktops");
+    KConfig config("kdeglobals");
+    config.setGroup("KDE");
+    if (!config.hasKey("NumberOfDesktops"))
+      {
+	config.writeEntry("NumberOfDesktops", 4);
+	config.sync();
+      }
+    int n = config.readNumEntry("NumberOfDesktops");
     setNumberOfDesktops( n );
     setCurrentDesktop( 1 );
 
@@ -1795,6 +1798,11 @@ void Workspace::setNumberOfDesktops( int n )
 	return;
     number_of_desktops = n;
     rootInfo->setNumberOfDesktops( number_of_desktops );
+
+    KConfig c("kdeglobals");
+    c.setGroup("KDE");
+    c.writeEntry("NumberOfDesktops", n);
+    c.sync();
 }
 
 /*!
