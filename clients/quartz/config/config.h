@@ -37,6 +37,7 @@ class QuartzConfig: public QObject
 	private:
 		KConfig*   quartzConfig;
 		QCheckBox* cbColorBorder;
+		QCheckBox* cbExtraSmall;
 		QVBox* gb;
 };
 

@@ -112,6 +112,7 @@ static const unsigned char shade_off_bits[] = {
 // Titlebar button positions
 bool onAllDesktopsButtonOnLeft = true;
 bool coloredFrame		= true;
+bool extraSlim = false;
 
 KPixmap* titleBlocks 	= NULL;
 KPixmap* ititleBlocks 	= NULL;
@@ -202,6 +203,7 @@ void QuartzHandler::readConfig()
 	KConfig conf("kwinquartzrc");
 	conf.setGroup("General");
 	coloredFrame = conf.readBoolEntry( "UseTitleBarBorderColors", true );
+	extraSlim    = conf.readBoolEntry( "UseQuartzExtraSlim", false );
 
 	// A small hack to make the on all desktops button look nicer
 	onAllDesktopsButtonOnLeft = KDecoration::options()->titleButtonsLeft().contains( 'S' );
@@ -226,11 +228,13 @@ void QuartzHandler::readConfig()
 	case BorderTiny:
 	case BorderNormal:
 	default:
-		borderWidth = 4;
+		borderWidth = extraSlim?2:4;
 	}
 
 	normalTitleHeight = QFontMetrics(options()->font(true)).height();
-	if (normalTitleHeight < 18) normalTitleHeight = 18;
+	int nTH_limit=extraSlim?14:18;
+	normalTitleHeight = QFontMetrics(options()->font(true)).height()-(extraSlim?1:0);
+	if (normalTitleHeight < nTH_limit) normalTitleHeight = nTH_limit;
 	if (normalTitleHeight < borderWidth) normalTitleHeight = borderWidth;
 
 	toolTitleHeight = QFontMetrics(options()->font(true, true)).height();

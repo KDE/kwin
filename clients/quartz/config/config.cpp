@@ -42,11 +42,15 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 						i18n("When selected, the window decoration borders "
 						"are drawn using the titlebar colors; otherwise, they are "
 						"drawn using normal border colors instead.") );
+	cbExtraSmall = new QCheckBox( i18n("Quartz &extra slim"), gb );
+	QWhatsThis::add( cbExtraSmall,
+		i18n("Quartz window decorations with extra small title bar.") );
 	// Load configuration options
 	load( conf );
 
 	// Ensure we track user changes properly
 	connect( cbColorBorder, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
+	connect( cbExtraSmall,  SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
 
 	// Make the widgets visible in kwindecoration
 	gb->show();
@@ -73,6 +77,8 @@ void QuartzConfig::load( KConfig* /*conf*/ )
 	quartzConfig->setGroup("General");
 	bool override = quartzConfig->readBoolEntry( "UseTitleBarBorderColors", true );
 	cbColorBorder->setChecked( override );
+	override = quartzConfig->readBoolEntry( "UseQuartzExtraSlim", false );
+	cbExtraSmall->setChecked( override );
 }
 
 
@@ -81,6 +87,7 @@ void QuartzConfig::save( KConfig* /*conf*/ )
 {
 	quartzConfig->setGroup("General");
 	quartzConfig->writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
+	quartzConfig->writeEntry( "UseQuartzExtraSlim", cbExtraSmall->isChecked() );
 	// Ensure others trying to read this config get updated
 	quartzConfig->sync();
 }
@@ -90,6 +97,7 @@ void QuartzConfig::save( KConfig* /*conf*/ )
 void QuartzConfig::defaults()
 {
 	cbColorBorder->setChecked( true );
+	cbExtraSmall->setChecked( false );
 }
 
 #include "config.moc"
