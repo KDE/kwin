@@ -913,6 +913,8 @@ void Client::setMappingState(int s)
  */
 void Client::rawShow()
     {  // FRAME spravne poradi
+    if( decoration != NULL )
+        decoration->widget()->show(); // not really necessary, but let it know the state
     XMapWindow( qt_xdisplay(), frame );
     if( !isShade())
         {
@@ -939,6 +941,8 @@ void Client::rawHide()
     XUnmapWindow( qt_xdisplay(), wrapper );
     XUnmapWindow( qt_xdisplay(), frame );
     XSelectInput( qt_xdisplay(), wrapper, ClientWinMask | SubstructureNotifyMask );
+    if( decoration != NULL )
+        decoration->widget()->hide(); // not really necessary, but let it know the state
     workspace()->clientHidden( this );
     }
 

@@ -2,6 +2,7 @@
 
 #include <qtooltip.h>
 #include <kglobal.h>
+#include <kdebug.h>
 
 namespace KWinTest
 {
@@ -99,11 +100,23 @@ QSize Decoration::minimumSize() const
     
 bool Decoration::eventFilter( QObject* o, QEvent* e )
     {
-    if( o == widget() && e->type() == QEvent::MouseButtonPress )
-	{ // FRAME
-	processMousePressEvent( static_cast< QMouseEvent* >( e ));
-	return true;
-	}
+    if( o == widget())
+        {
+        switch( e->type())
+            {
+            case QEvent::MouseButtonPress:
+	        { // FRAME
+                processMousePressEvent( static_cast< QMouseEvent* >( e ));
+        	return true;
+	        }
+            case QEvent::Show:
+                break;
+            case QEvent::Hide:
+                break;
+            default:
+                break;
+            }
+        }
     return false;
     }
 
