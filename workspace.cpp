@@ -292,6 +292,7 @@ bool Workspace::workspaceEvent( XEvent * e )
     switch (e->type) {
     case ButtonPress:
     case ButtonRelease:
+    case MotionNotify:
 	break;
     case UnmapNotify:
 	// this is special due to
@@ -585,6 +586,12 @@ bool Workspace::keyPress(XKeyEvent key)
 		    freeKeyboard(FALSE);
 		    return TRUE;
 		}
+	        XGrabPointer( qt_xdisplay(), root, TRUE,
+			      (uint)(ButtonPressMask | ButtonReleaseMask |
+				     ButtonMotionMask | EnterWindowMask |
+				     LeaveWindowMask | PointerMotionMask),
+			      GrabModeSync, GrabModeAsync,
+			      None, None, kwin_time );
 		XGrabKeyboard(qt_xdisplay(),
 			      root, FALSE,
 			      GrabModeAsync, GrabModeAsync,
@@ -610,6 +617,12 @@ bool Workspace::keyPress(XKeyEvent key)
 // 		return TRUE;
 // 	    }
 	    if (!control_grab){
+	        XGrabPointer( qt_xdisplay(), root, TRUE,
+			      (uint)(ButtonPressMask | ButtonReleaseMask |
+				     ButtonMotionMask | EnterWindowMask |
+				     LeaveWindowMask | PointerMotionMask),
+			      GrabModeSync, GrabModeAsync,
+			      None, None, kwin_time );
 		XGrabKeyboard(qt_xdisplay(),
 			      root, FALSE,
 			      GrabModeAsync, GrabModeAsync,
@@ -626,6 +639,7 @@ bool Workspace::keyPress(XKeyEvent key)
     if (control_grab || tab_grab){
 	if (kc == XK_Escape){
 	    XUngrabKeyboard(qt_xdisplay(), kwin_time);
+            XUngrabPointer( qt_xdisplay(), kwin_time);
 	    tab_box->hide();
 	    tab_grab = FALSE;
 	    control_grab = FALSE;
@@ -652,6 +666,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 	    if (xmk->modifiermap[xmk->max_keypermod * Mod1MapIndex + i]
 		== key.keycode){
 		XUngrabKeyboard(qt_xdisplay(), kwin_time);
+                XUngrabPointer( qt_xdisplay(), kwin_time);
 		tab_box->hide();
 		tab_grab = false;
  		if ( tab_box->currentClient() ){
@@ -665,6 +680,7 @@ bool Workspace::keyRelease(XKeyEvent key)
 	for (i=0; i<xmk->max_keypermod; i++)
 	    if (xmk->modifiermap[xmk->max_keypermod * ControlMapIndex + i]
 		== key.keycode){
+                XUngrabPointer( qt_xdisplay(), kwin_time);
 		XUngrabKeyboard(qt_xdisplay(), kwin_time);
 		tab_box->hide();
 		control_grab = False;
@@ -897,7 +913,6 @@ bool Workspace::hasCaption( const QString& caption )
  */
 void Workspace::requestFocus( Client* c)
 {
-
     //TODO will be different for non-root clients. (subclassing?)
     if ( !c ) {
 	focusToNull();
