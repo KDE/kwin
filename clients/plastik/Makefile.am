@@ -9,7 +9,7 @@ INCLUDES = $(all_includes)
 kwindir = $(kde_datadir)/kwin/
 kwin_DATA = plastik.desktop
 
-noinst_HEADERS = plastik.h plastikclient.h plastikbutton.h misc.h shadow.h xpm/empty.xpm xpm/close.xpm xpm/help.xpm xpm/maximize.xpm xpm/restore.xpm xpm/minimize.xpm xpm/sticky.xpm xpm/unsticky.xpm
+noinst_HEADERS = plastik.h plastikclient.h plastikbutton.h misc.h shadow.h xpm/empty.xpm xpm/close.xpm xpm/help.xpm xpm/maximize.xpm xpm/restore.xpm xpm/minimize.xpm xpm/sticky.xpm xpm/unsticky.xpm xpm/shade.xpm xpm/unshade.xpm xpm/keepabove.xpm xpm/notkeepabove.xpm xpm/keepbelow.xpm xpm/notkeepbelow.xpm
 
 kde_module_LTLIBRARIES = kwin3_plastik.la
 kwin3_plastik_la_SOURCES = plastik.cpp plastikclient.cpp plastikbutton.cpp misc.cpp shadow.cpp

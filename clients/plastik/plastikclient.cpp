@@ -564,9 +564,10 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
               case 'S': // OnAllDesktops button
                   if (!m_button[OnAllDesktopsButton]){
                       const bool oad = isOnAllDesktops();
-                      m_button[OnAllDesktopsButton] = new PlastikButton(this, "on_all_desktops", oad?i18n("Not On All Desktops"):i18n("On All Desktops"), OnAllDesktopsButton, buttonSize);
-                      m_button[OnAllDesktopsButton]->setOnAllDesktops( oad );
-                      m_button[OnAllDesktopsButton]->setDeco(); // update deco...
+                      m_button[OnAllDesktopsButton] = new PlastikButton(this, "on_all_desktops",
+                              oad?i18n("Not On All Desktops"):i18n("On All Desktops"), OnAllDesktopsButton,
+                              buttonSize, true);
+                      m_button[OnAllDesktopsButton]->setOn( oad );
                       connect(m_button[OnAllDesktopsButton], SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
                       layout->addWidget(m_button[OnAllDesktopsButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
@@ -588,9 +589,10 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
               case 'A': // Maximize button
                   if ((!m_button[MaxButton]) && isMaximizable()){
                       const bool max = maximizeMode()!=MaximizeRestore;
-                      m_button[MaxButton] = new PlastikButton(this, "maximize", max?i18n("Restore"):i18n("Maximize"), MaxButton, buttonSize, LeftButton|MidButton|RightButton);
-                      m_button[MaxButton]->setMaximized( max );
-                      m_button[MaxButton]->setDeco(); // update deco...
+                      m_button[MaxButton] = new PlastikButton(this, "maximize",
+                              max?i18n("Restore"):i18n("Maximize"), MaxButton, buttonSize,
+                              true, LeftButton|MidButton|RightButton);
+                      m_button[MaxButton]->setOn( max );
                       connect(m_button[MaxButton], SIGNAL(clicked()), SLOT(slotMaximize()));
                       layout->addWidget(m_button[MaxButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
@@ -600,6 +602,36 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                       m_button[CloseButton] = new PlastikButton(this, "close", i18n("Close"), CloseButton, buttonSize);
                       connect(m_button[CloseButton], SIGNAL(clicked()), SLOT(closeWindow()));
                       layout->addWidget(m_button[CloseButton], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  }
+                  break;
+              case 'F': // AboveButton button
+                  if (!m_button[AboveButton]){
+                      bool above = keepAbove();
+                      m_button[AboveButton] = new PlastikButton(this, "above",
+                              above?i18n("Do Not Keep Above Others"):i18n("Keep Above Others"), AboveButton, buttonSize, true);
+                      m_button[AboveButton]->setOn( above );
+                      connect(m_button[AboveButton], SIGNAL(clicked()), SLOT(slotKeepAbove()));
+                      layout->addWidget(m_button[AboveButton], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  }
+                  break;
+              case 'B': // BelowButton button
+                  if (!m_button[BelowButton]){
+                      bool below = keepBelow();
+                      m_button[BelowButton] = new PlastikButton(this, "below",
+                              below?i18n("Do Not Keep Below Others"):i18n("Keep Below Others"), BelowButton, buttonSize, true);
+                      m_button[BelowButton]->setOn( below );
+                      connect(m_button[BelowButton], SIGNAL(clicked()), SLOT(slotKeepBelow()));
+                      layout->addWidget(m_button[BelowButton], 0, Qt::AlignHCenter | Qt::AlignTop);
+                  }
+                  break;
+              case 'L': // Shade button
+                  if ((!m_button[ShadeButton]) && isShadeable()){
+                      bool shaded = isShade();
+                      m_button[ShadeButton] = new PlastikButton(this, "shade",
+                              shaded?i18n("Unshade"):i18n("Shade"), ShadeButton, buttonSize, true);
+                      m_button[ShadeButton]->setOn( shaded );
+                      connect(m_button[ShadeButton], SIGNAL(clicked()), SLOT(slotShade()));
+                      layout->addWidget(m_button[ShadeButton], 0, Qt::AlignHCenter | Qt::AlignTop);
                   }
                   break;
               case '_': // Spacer item
@@ -730,22 +762,31 @@ void PlastikClient::maximizeChange()
     if (!PlastikHandler::initialized()) return;
 
     if( m_button[MaxButton] ) {
-        m_button[MaxButton]->setMaximized( maximizeMode()!=MaximizeRestore);
+        m_button[MaxButton]->setOn( maximizeMode()!=MaximizeRestore);
         m_button[MaxButton]->setTipText( (maximizeMode()==MaximizeRestore) ?
                 i18n("Maximize")
                 : i18n("Restore"));
-        m_button[MaxButton]->setDeco(); // update the button icon...
     }
 }
 
 void PlastikClient::desktopChange()
 {
     if ( m_button[OnAllDesktopsButton] ) {
-        m_button[OnAllDesktopsButton]->setOnAllDesktops( isOnAllDesktops() );
+        m_button[OnAllDesktopsButton]->setOn( isOnAllDesktops() );
         m_button[OnAllDesktopsButton]->setTipText( isOnAllDesktops() ?
                 i18n("Not On All Desktops")
                 : i18n("On All Desktops"));
-        m_button[OnAllDesktopsButton]->setDeco(); // update icon/deco
+    }
+}
+
+void PlastikClient::shadeChange()
+{
+    if ( m_button[ShadeButton] ) {
+        bool shaded = isShade();
+        m_button[ShadeButton]->setOn( shaded );
+        m_button[ShadeButton]->setTipText( shaded ?
+                i18n("Unshade")
+                : i18n("Shade"));
     }
 }
 
@@ -765,6 +806,45 @@ void PlastikClient::slotMaximize()
               maximize(maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
         }
         doShape();
+    }
+}
+
+void PlastikClient::slotShade()
+{
+    setShade( !isShade() );
+}
+
+void PlastikClient::slotKeepAbove()
+{
+    bool above = !keepAbove();
+    setKeepAbove( above );
+    if (m_button[AboveButton])
+    {
+        m_button[AboveButton]->setOn(above);
+        m_button[AboveButton]->setTipText( above?i18n("Do Not Keep Above Others"):i18n("Keep Above Others") );
+    }
+
+    if (m_button[BelowButton] && m_button[BelowButton]->isOn())
+    {
+        m_button[BelowButton]->setOn(false);
+        m_button[BelowButton]->setTipText( i18n("Keep Below Others") );
+    }
+}
+
+void PlastikClient::slotKeepBelow()
+{
+    bool below = !keepBelow();
+    setKeepBelow( below );
+    if (m_button[BelowButton])
+    {
+        m_button[BelowButton]->setOn(below);
+        m_button[BelowButton]->setTipText( below?i18n("Do Not Keep Below Others"):i18n("Keep Below Others") );
+    }
+
+    if (m_button[AboveButton] && m_button[AboveButton]->isOn())
+    {
+        m_button[AboveButton]->setOn(false);
+        m_button[AboveButton]->setTipText( i18n("Keep Above Others") );
     }
 }
 

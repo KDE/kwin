@@ -37,6 +37,9 @@ enum ButtonType {
     CloseButton,
     MenuButton,
     OnAllDesktopsButton,
+    AboveButton,
+    BelowButton,
+    ShadeButton,
     NumButtons
 };
 

@@ -39,6 +39,12 @@
 #include "xpm/help.xpm"
 #include "xpm/sticky.xpm"
 #include "xpm/unsticky.xpm"
+#include "xpm/shade.xpm"
+#include "xpm/unshade.xpm"
+#include "xpm/keepabove.xpm"
+#include "xpm/notkeepabove.xpm"
+#include "xpm/keepbelow.xpm"
+#include "xpm/notkeepbelow.xpm"
 #include "xpm/empty.xpm"
 
 #include "plastikbutton.h"
@@ -54,7 +60,8 @@ static const uint TIMERINTERVAL = 50; // msec
 static const uint ANIMATIONSTEPS = 4;
 
 PlastikButton::PlastikButton(PlastikClient *parent, const char *name,
-                             const QString& tip, ButtonType type, int size, int btns)
+                             const QString& tip, ButtonType type,
+                             int size, bool toggle, int btns)
     : QButton(parent->widget(), name),
     m_client(parent),
     m_lastMouse(0),
@@ -63,14 +70,14 @@ PlastikButton::PlastikButton(PlastikClient *parent, const char *name,
     m_type(type),
     m_aDecoLight(QImage() ), m_iDecoLight(QImage() ),
     m_aDecoDark(QImage() ), m_iDecoDark(QImage() ),
-    hover(false),
-    isOnAllDesktops(false),
-    isMaximized(false)
+    hover(false)
 {
     QToolTip::add( this, tip );
     setCursor(ArrowCursor);
 
     setBackgroundMode(NoBackground);
+
+    setToggleButton(toggle);
 
     if(m_size < 10) { m_size = 10; }
 
@@ -97,6 +104,12 @@ void PlastikButton::setSize(int s)
     m_size = s;
     if(m_size < 10) { m_size = 10; }
     setFixedSize(m_size, m_size);
+    setDeco();
+}
+
+void PlastikButton::setOn(bool on)
+{
+    QButton::setOn(on);
     setDeco();
 }
 
@@ -134,17 +147,38 @@ void PlastikButton::setDeco()
             img = QImage(minimize_xpm);
             break;
         case MaxButton:
-            if (isMaximized) {
+            if (isOn()) {
                 img = QImage(restore_xpm);
             } else {
                 img = QImage(maximize_xpm);
             }
             break;
         case OnAllDesktopsButton:
-            if (isOnAllDesktops) {
+            if (isOn()) {
                 img = QImage(unsticky_xpm);
             } else {
                 img = QImage(sticky_xpm);
+            }
+            break;
+        case ShadeButton:
+            if (isOn()) {
+                img = QImage(unshade_xpm);
+            } else {
+                img = QImage(shade_xpm);
+            }
+            break;
+        case AboveButton:
+            if (isOn()) {
+                img = QImage(notkeepabove_xpm);
+            } else {
+                img = QImage(keepabove_xpm);
+            }
+            break;
+        case BelowButton:
+            if (isOn()) {
+                img = QImage(notkeepbelow_xpm);
+            } else {
+                img = QImage(keepbelow_xpm);
             }
             break;
         default:

@@ -37,15 +37,14 @@ class PlastikButton : public QButton
 {
     Q_OBJECT
 public:
-    PlastikButton(PlastikClient *parent, const char *name, const QString &tip, ButtonType type, int size, int btns = LeftButton);
+    PlastikButton(PlastikClient *parent, const char *name, const QString &tip, ButtonType type, int size, bool toggle = false, int btns = LeftButton);
     ~PlastikButton();
 
-    void setOnAllDesktops(bool oad) { isOnAllDesktops = oad; repaint(false); }
-    void setMaximized(bool maximized) { isMaximized = maximized; repaint(false); }
     QSize sizeHint() const; ///< Return size hint.
     int lastMousePress() const { return m_lastMouse; }
     void reset() { repaint(false); }
     PlastikClient * client() { return m_client; }
+    virtual void setOn(bool on);
     void setDeco();
     void setTipText(const QString &tip);
     void setSize(const int s);
@@ -70,7 +69,6 @@ private:
     ButtonType m_type;
     QImage m_aDecoLight,m_iDecoLight,m_aDecoDark,m_iDecoDark;
     bool hover;
-    bool isOnAllDesktops, isMaximized;
 
     QTimer *animTmr;
     uint animProgress;

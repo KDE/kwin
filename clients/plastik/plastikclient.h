@@ -62,7 +62,7 @@ protected:
 
     virtual void maximizeChange();
     virtual void desktopChange();
-    virtual void shadeChange() {};
+    virtual void shadeChange();
     virtual void doShape();
 
     virtual void reset( unsigned long changed );
@@ -74,6 +74,9 @@ protected:
 
 private slots:
     void slotMaximize();
+    void slotShade();
+    void slotKeepAbove();
+    void slotKeepBelow();
     void menuButtonPressed();
     void menuButtonReleased();
     bool isTool();
