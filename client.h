@@ -7,6 +7,7 @@ Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 #define CLIENT_H
 
 #include "options.h"
+#include <kkeynative.h>
 #include <qframe.h>
 #include <qvbox.h>
 #include <qpixmap.h>
