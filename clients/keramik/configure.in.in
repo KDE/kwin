@@ -1,3 +1,6 @@
 dnl Check for the X shaped windows extension
-KDE_CHECK_HEADERS(X11/extensions/shape.h)
-
+KDE_CHECK_HEADERS(X11/extensions/shape.h,,,
+[
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+])
