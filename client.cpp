@@ -2929,6 +2929,21 @@ void Client::verifyTransientFor()
 	transient_for = old_transient_for; // nice try
 }
 
+
+/*!\reimp
+ */
+QString Client::caption() const
+{
+    return cap;
+}
+
+/*!\reimp
+ */
+void Client::setCaption( const QString & c)
+{
+    cap = c;
+}
+
 NoBorderClient::NoBorderClient( Workspace *ws, WId w, QWidget *parent, const char *name )
     : Client( ws, w, parent, name )
 {

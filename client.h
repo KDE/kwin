@@ -131,7 +131,7 @@ public:
 
     bool staysOnTop() const;
     void setStaysOnTop( bool );
-    
+
     bool storeSettings() const;
     void setStoreSettings( bool );
 
@@ -189,6 +189,9 @@ public:
     void hide();
 
     void maximizeRaw( bool vertically, bool horizontally );
+
+    QString caption() const;
+    void setCaption( const QString &);
 
 public slots:
     void iconify();
@@ -307,6 +310,7 @@ private:
     QCString resource_class;
     void verifyTransientFor();
     friend class WindowWrapper;
+    QString cap;
 };
 
 inline WId Client::window() const
