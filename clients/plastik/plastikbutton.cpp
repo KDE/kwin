@@ -32,21 +32,6 @@
 #include <qtooltip.h>
 #include <qtimer.h>
 
-#include "xpm/close.xpm"
-#include "xpm/minimize.xpm"
-#include "xpm/maximize.xpm"
-#include "xpm/restore.xpm"
-#include "xpm/help.xpm"
-#include "xpm/sticky.xpm"
-#include "xpm/unsticky.xpm"
-#include "xpm/shade.xpm"
-#include "xpm/unshade.xpm"
-#include "xpm/keepabove.xpm"
-#include "xpm/notkeepabove.xpm"
-#include "xpm/keepbelow.xpm"
-#include "xpm/notkeepbelow.xpm"
-#include "xpm/empty.xpm"
-
 #include "plastikbutton.h"
 #include "plastikbutton.moc"
 #include "plastikclient.h"
@@ -62,8 +47,7 @@ static const uint ANIMATIONSTEPS = 4;
 PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent, const char *name)
     : KCommonDecorationButton(type, parent, name),
     m_client(parent),
-    m_aDecoLight(QImage() ), m_iDecoLight(QImage() ),
-    m_aDecoDark(QImage() ), m_iDecoDark(QImage() ),
+    m_pixmapType(BtnClose),
     hover(false)
 {
     setBackgroundMode(NoBackground);
@@ -82,81 +66,55 @@ PlastikButton::~PlastikButton()
 void PlastikButton::reset(unsigned long changed)
 {
     if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
-        QColor aDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
-                Qt::black, 50);
-        QColor aDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, true),
-                Qt::white, 50);
-        QColor iDecoFgDark = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
-                Qt::black, 50);
-        QColor iDecoFgLight = alphaBlendColors(Handler()->getColor(TitleGradientTo, false),
-                Qt::white, 50);
-
-        int reduceW = 0, reduceH = 0;
-        if(width()>12) {
-            reduceW = static_cast<int>(2*(width()/3.5) );
-        }
-        else
-            reduceW = 4;
-        if(height()>12)
-            reduceH = static_cast<int>(2*(height()/3.5) );
-        else
-            reduceH = 4;
-
-        QImage img;
         switch (type() ) {
             case CloseButton:
-                img = QImage(close_xpm);
+                m_pixmapType = BtnClose;
                 break;
             case HelpButton:
-                img = QImage(help_xpm);
+                m_pixmapType = BtnHelp;
                 break;
             case MinButton:
-                img = QImage(minimize_xpm);
+                m_pixmapType = BtnMin;
                 break;
             case MaxButton:
                 if (isOn()) {
-                    img = QImage(restore_xpm);
+                    m_pixmapType = BtnMaxRestore;
                 } else {
-                    img = QImage(maximize_xpm);
+                    m_pixmapType = BtnMax;
                 }
                 break;
             case OnAllDesktopsButton:
                 if (isOn()) {
-                    img = QImage(unsticky_xpm);
+                    m_pixmapType = BtnNotOnAllDesktops;
                 } else {
-                    img = QImage(sticky_xpm);
+                    m_pixmapType = BtnOnAllDesktops;
                 }
                 break;
             case ShadeButton:
                 if (isOn()) {
-                    img = QImage(unshade_xpm);
+                    m_pixmapType = BtnShadeRestore;
                 } else {
-                    img = QImage(shade_xpm);
+                    m_pixmapType = BtnShade;
                 }
                 break;
             case AboveButton:
                 if (isOn()) {
-                    img = QImage(notkeepabove_xpm);
+                    m_pixmapType = BtnNotAbove;
                 } else {
-                    img = QImage(keepabove_xpm);
+                    m_pixmapType = BtnAbove;
                 }
                 break;
             case BelowButton:
                 if (isOn()) {
-                    img = QImage(notkeepbelow_xpm);
+                    m_pixmapType = BtnNotBelow;
                 } else {
-                    img = QImage(keepbelow_xpm);
+                    m_pixmapType = BtnBelow;
                 }
                 break;
             default:
-                img = QImage(empty_xpm);
+                m_pixmapType = NumButtonPixmaps; // invalid...
                 break;
         }
-
-        m_aDecoDark = recolorImage(&img, aDecoFgDark).smoothScale(width()-reduceW, height()-reduceH);
-        m_iDecoDark = recolorImage(&img, iDecoFgDark).smoothScale(width()-reduceW, height()-reduceH);
-        m_aDecoLight = recolorImage(&img, aDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
-        m_iDecoLight = recolorImage(&img, iDecoFgLight).smoothScale(width()-reduceW, height()-reduceH);
 
         this->update();
     }
@@ -195,7 +153,6 @@ void PlastikButton::enterEvent(QEvent *e)
 
     hover = true;
     animate();
-//     repaint(false);
 }
 
 void PlastikButton::leaveEvent(QEvent *e)
@@ -204,7 +161,6 @@ void PlastikButton::leaveEvent(QEvent *e)
 
     hover = false;
     animate();
-//     repaint(false);
 }
 
 void PlastikButton::drawButton(QPainter *painter)
@@ -309,18 +265,13 @@ void PlastikButton::drawButton(QPainter *painter)
     else
     {
         int dX,dY;
-        QImage *deco = 0;
-        if (isDown() ) {
-            deco = active?&m_aDecoLight:&m_iDecoLight;
-        } else {
-            deco = active?&m_aDecoDark:&m_iDecoDark;
-        }
-        dX = r.x()+(r.width()-deco->width())/2;
-        dY = r.y()+(r.height()-deco->height())/2;
+        const QPixmap &icon = Handler()->buttonPixmap(m_pixmapType, size(), isDown(), active, decoration()->isToolWindow() );
+        dX = r.x()+(r.width()-icon.width())/2;
+        dY = r.y()+(r.height()-icon.height())/2;
         if (isDown() ) {
             dY++;
         }
-        bP.drawImage(dX, dY, *deco);
+        bP.drawPixmap(dX, dY, icon);
     }
 
     bP.end();

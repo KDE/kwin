@@ -23,7 +23,6 @@
 #ifndef PLASTIK_H
 #define PLASTIK_H
 
-#include <qintcache.h>
 #include <qfont.h>
 
 #include <kdecoration.h>
@@ -45,15 +44,26 @@ enum ColorType {
 };
 
 enum Pixmaps {
-    aTitleBarTileTop=0, // normal windows
-    iTitleBarTileTop,
-    aTitleBarTile,
-    iTitleBarTile,
-    atTitleBarTileTop, // tool windows
-    itTitleBarTileTop,
-    atTitleBarTile,
-    itTitleBarTile,
+    TitleBarTileTop=0,
+    TitleBarTile,
     NumPixmaps
+};
+
+enum ButtonPixmaps {
+    BtnHelp = 0,
+    BtnMax,
+    BtnMaxRestore,
+    BtnMin,
+    BtnClose,
+    BtnOnAllDesktops,
+    BtnNotOnAllDesktops,
+    BtnAbove,
+    BtnNotAbove,
+    BtnBelow,
+    BtnNotBelow,
+    BtnShade,
+    BtnShadeRestore,
+    NumButtonPixmaps
 };
 
 class PlastikHandler: public QObject, public KDecorationFactory
@@ -67,7 +77,8 @@ public:
     virtual KDecoration* createDecoration( KDecorationBridge* );
     virtual bool supports( Ability ability );
 
-    const QPixmap &pixmap(Pixmaps pixmap);
+    const QPixmap &pixmap(Pixmaps type, bool active, bool toolWindow);
+    const QPixmap &buttonPixmap(ButtonPixmaps type, const QSize &size, bool pressed, bool active, bool toolWindow);
 
     int  titleHeight() { return m_titleHeight; }
     int  titleHeightTool() { return m_titleHeightTool; }
@@ -98,7 +109,7 @@ private:
     Qt::AlignmentFlags m_titleAlign;
 
     // pixmap cache
-    QPixmap *m_pixmaps[NumPixmaps];
+    QPixmap *m_pixmaps[2][2][NumPixmaps+NumButtonPixmaps*2]; // button pixmaps have normal+pressed state...
 };
 
 PlastikHandler* Handler();

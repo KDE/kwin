@@ -43,11 +43,6 @@
 namespace KWinPlastik
 {
 
-#define TITLEBARTILETOP (isToolWindow()? (isActive()?atTitleBarTileTop  : itTitleBarTileTop) \
-    : (isActive()?aTitleBarTileTop : iTitleBarTileTop))
-#define TITLEBARTILE (isToolWindow()? (isActive()?KWinPlastik::atTitleBarTile  : KWinPlastik::itTitleBarTile) \
-    : (isActive()?KWinPlastik::aTitleBarTile : KWinPlastik::iTitleBarTile))
-
 PlastikClient::PlastikClient(KDecorationBridge* bridge, KDecorationFactory* factory)
     : KCommonDecoration (bridge, factory),
     aCaptionBuffer(0), iCaptionBuffer(0),
@@ -256,6 +251,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         update_captionBuffer();
 
     bool active = isActive();
+    bool toolWindow = isToolWindow();
 
     QPainter painter(widget() );
 
@@ -356,7 +352,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
 
         tempRect.setRect(r_x+2, r_y+2, r_w-2*2, titleEdgeTop-2 );
         if (tempRect.isValid() && region.contains(tempRect) ) {
-            painter.drawTiledPixmap(tempRect, handler->pixmap(TITLEBARTILETOP) );
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TitleBarTileTop, active, toolWindow) );
         }
 
         // outside the region normally masked by doShape
@@ -403,14 +399,14 @@ void PlastikClient::paintEvent(QPaintEvent *e)
         tempRect.setRect(r_x+titleMarginLeft, m_captionRect.top(),
                          m_captionRect.left() - (r_x+titleMarginLeft), m_captionRect.height() );
         if (tempRect.isValid() && region.contains(tempRect) ) {
-            painter.drawTiledPixmap(tempRect, handler->pixmap(TITLEBARTILE) );
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TitleBarTile, active, toolWindow) );
         }
 
         // right to the title
         tempRect.setRect(m_captionRect.right()+1, m_captionRect.top(),
                          (r_x2-titleMarginRight) - m_captionRect.right(), m_captionRect.height() );
         if (tempRect.isValid() && region.contains(tempRect) ) {
-            painter.drawTiledPixmap(tempRect, handler->pixmap(TITLEBARTILE) );
+            painter.drawTiledPixmap(tempRect, handler->pixmap(TitleBarTile, active, toolWindow) );
         }
 
     }
@@ -599,8 +595,7 @@ void PlastikClient::reset( unsigned long changed )
 
 const QPixmap &PlastikClient::getTitleBarTile(bool active) const
 {
-    return Handler()->pixmap(isToolWindow() ?
-            (active? atTitleBarTile : itTitleBarTile) : (active? aTitleBarTile : iTitleBarTile) );
+    return Handler()->pixmap(TitleBarTile, active, isToolWindow() );
 }
 
 void PlastikClient::update_captionBuffer()
@@ -641,7 +636,7 @@ void PlastikClient::update_captionBuffer()
     aCaptionBuffer->resize(captionWidth+4, th ); // 4 px shadow
     painter.begin(aCaptionBuffer);
     painter.drawTiledPixmap(aCaptionBuffer->rect(),
-                            Handler()->pixmap(isToolWindow()?KWinPlastik::atTitleBarTile:KWinPlastik::aTitleBarTile) );
+                            Handler()->pixmap(TitleBarTile, true, isToolWindow()) );
     if(Handler()->titleShadow())
     {
         QColor shadowColor;
@@ -662,7 +657,7 @@ void PlastikClient::update_captionBuffer()
     iCaptionBuffer->resize(captionWidth+4, th );
     painter.begin(iCaptionBuffer);
     painter.drawTiledPixmap(iCaptionBuffer->rect(),
-                            Handler()->pixmap(isToolWindow()?KWinPlastik::itTitleBarTile:KWinPlastik::iTitleBarTile) );
+                            Handler()->pixmap(TitleBarTile, false, isToolWindow()) );
     if(Handler()->titleShadow())
     {
         painter.drawImage(1, 1, shadow);

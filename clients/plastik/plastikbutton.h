@@ -55,7 +55,7 @@ private:
 
 private:
     PlastikClient *m_client;
-    QImage m_aDecoLight,m_iDecoLight,m_aDecoDark,m_iDecoDark;
+    ButtonPixmaps m_pixmapType;
     bool hover;
 
     QTimer *animTmr;
