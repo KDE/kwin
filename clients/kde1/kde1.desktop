@@ -2,5 +2,6 @@
 Encoding=UTF-8
 Name=KDE 1
 Name[af]=kde 1
+Name[th]=โปรแกรมจัดการหน้าต่าง KDE 1
 Name[xx]=xx
 X-KDE-Library=kwin_kde1
