@@ -1967,23 +1967,23 @@ void Workspace::helperDialog( const QString& message, const Client* c )
     QString type;
     if( message == "noborderaltf3" )
         {
-        args << "--msgbox" << ( "\'"
-            + i18n( "You have selected to show a window without its border.\n"
+        args << "--msgbox" <<
+              i18n( "You have selected to show a window without its border.\n"
                     "Without the border, you won't be able to enable the border "
                     "again using the mouse. Use the window operations menu instead, "
                     "activated using the %1 keyboard shortcut." )
-                .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString()) + "\'" );
+                .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString());
         type = "altf3warning";
         }
     else if( message == "fullscreenaltf3" )
         {
-        args << "--msgbox" << ( "\'"
-            + i18n( "You have selected to show a window in fullscreen mode.\n"
+        args << "--msgbox" <<
+              i18n( "You have selected to show a window in fullscreen mode.\n"
                     "If the application itself doesn't have an option to turn the fullscreen "
                     "mode off, you won't be able to disable it "
                     "again using the mouse. Use the window operations menu instead, "
                     "activated using the %1 keyboard shortcut." )
-                .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString()) + "\'" );
+                .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString());
         type = "altf3warning";
         }
     else
