@@ -56,7 +56,7 @@ const int XIconicState = IconicState;
 
 // Possible protoypes for select() were hidden as `kwin_hide_select.
 // Undo the hiding definition and defines an acceptable prototype.
-// This is how QT does this. It should work where QT works.
+// This is how Qt does this. It should work where Qt works.
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
