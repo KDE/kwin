@@ -307,7 +307,6 @@ void Client::manage( bool isMapped )
     QRect geom( original_geometry );
     bool placementDone = FALSE;
 
-    qDebug("geom: width=%d", geom.width() );
     if ( isMapped )
 	placementDone = TRUE;
     else {
@@ -327,7 +326,6 @@ void Client::manage( bool isMapped )
 	}
     }
 
-    qDebug("geom after: width=%d", geom.width() );
     // the clever activate() trick is necessary
     layout()->activate();
     resize ( sizeForWindowSize( geom.size() ) );
@@ -367,9 +365,8 @@ void Client::getWmNormalHints()
 {
     // TODO keep in mind changing of fix size! if !isWithdrawn()!
     long msize;
-    if (XGetWMNormalHints(qt_xdisplay(), win, &xSizeHint, &msize) == 0
-	|| xSizeHint.flags == 0)
-	xSizeHint.flags = PSize;      /* not specified */
+    if (XGetWMNormalHints(qt_xdisplay(), win, &xSizeHint, &msize) == 0 )
+	xSizeHint.flags = 0;
 }
 
 /*!
