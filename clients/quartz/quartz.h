@@ -96,7 +96,7 @@ class QuartzClient : public KDecoration
 		void mouseDoubleClickEvent( QMouseEvent * );
 		virtual void captionChange();
 		void maximizeChange();
-		virtual void shadeChange() {};
+		virtual void shadeChange();
 		virtual void activeChange();
 		virtual void iconChange();
 		virtual void desktopChange();
@@ -106,7 +106,12 @@ class QuartzClient : public KDecoration
 
 	protected slots:
 		void slotMaximize();
+		void slotAbove();
+		void slotBelow();
+		void slotShade();
 		void menuButtonPressed();
+		void keepAboveChange( bool );
+		void keepBelowChange( bool );
 
 	private:
 		bool isTool();
@@ -114,7 +119,8 @@ class QuartzClient : public KDecoration
 		void addClientButtons( const QString& s, bool isLeft=true );
 
 		enum Buttons{ BtnHelp=0, BtnMax, BtnIconify, BtnClose,
-					  BtnMenu, BtnOnAllDesktops, BtnCount };
+					  BtnMenu, BtnOnAllDesktops, BtnAbove, BtnBelow,
+					  BtnShade, BtnCount };
 		QuartzButton* button[ QuartzClient::BtnCount ];
 		int           lastButtonWidth;
 		int 		  titleHeight, borderSize;

@@ -82,6 +82,30 @@ static const unsigned char pinup_dgray_bits[] = {
   0x40, 0x20, 0x40, 0x20, 0x7f, 0x2a, 0x40, 0x3f, 0xc0, 0x31, 0xc0, 0x20,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
+static const unsigned char above_on_bits[] = {
+  0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0x30, 0x00, 0xfc, 0x00, 0x78, 0x00,
+  0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static const unsigned char above_off_bits[] = {
+  0x30, 0x00, 0x78, 0x00, 0xfc, 0x00, 0x30, 0x00, 0xfe, 0x01, 0xfe, 0x01,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static const unsigned char below_on_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x78, 0x00, 0xfc, 0x00,
+  0x30, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0x00, 0x00};
+
+static const unsigned char below_off_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01,
+  0x30, 0x00, 0xfc, 0x00, 0x78, 0x00, 0x30, 0x00};
+
+static const unsigned char shade_on_bits[] = {
+  0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01, 0x02, 0x01, 0x02, 0x01,
+  0x02, 0x01, 0x02, 0x01, 0xfe, 0x01, 0x00, 0x00};
+
+static const unsigned char shade_off_bits[] = {
+  0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -491,6 +515,9 @@ QuartzClient::QuartzClient(KDecorationBridge* bridge, KDecorationFactory* factor
 
 void QuartzClient::init()
 {
+    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
+    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
+
 	createMainWidget(WNoAutoErase | WStaticContents);
 
 	widget()->installEventFilter( this );
@@ -648,6 +675,49 @@ void QuartzClient::addClientButtons( const QString& s, bool isLeft )
 								 this, SLOT(closeWindow()) );
 						hb->addWidget( button[BtnClose] );
 					}
+                    break;
+
+                // Above button
+                case 'F':
+                    if ( (!button[BtnAbove]))
+                    {
+                        button[BtnAbove]  = new QuartzButton(this, "above",
+                                largeButtons, isLeft, true,
+                                keepAbove() ? above_on_bits : above_off_bits,
+                                i18n("Keep Above Others"));
+                        connect( button[BtnAbove], SIGNAL( clicked()),
+                                 this, SLOT(slotAbove()) );
+                        hb->addWidget( button[BtnAbove] );
+                    }
+                    break;
+                        
+                // Below button
+                case 'B':
+                    if ( (!button[BtnBelow]))
+                    {
+                        button[BtnBelow]  = new QuartzButton(this, "below",
+                                largeButtons, isLeft, true,
+                                keepBelow() ? below_on_bits : below_off_bits,
+                                i18n("Keep Below Others"));
+                        connect( button[BtnBelow], SIGNAL( clicked()),
+                                 this, SLOT(slotBelow()) );
+                        hb->addWidget( button[BtnBelow] );
+                    }
+                    break;
+                            
+                // Shade button
+                case 'L':
+                    if ( (!button[BtnShade]) && isShadeable())
+                    {
+                        button[BtnShade]  = new QuartzButton(this, "shade",
+                                largeButtons, isLeft, true,
+                                isSetShade() ? shade_on_bits : shade_off_bits,
+                                isSetShade() ? i18n( "Unshade" ) : i18n("Shade"));
+                        connect( button[BtnShade], SIGNAL( clicked()),
+                                 this, SLOT(slotShade()) );
+                        hb->addWidget( button[BtnShade] );
+                    }
+                    break;
 			}
 		}
 }
@@ -671,12 +741,65 @@ void QuartzClient::desktopChange()
 }
 
 
+void QuartzClient::keepAboveChange( bool above )
+{
+    if (button[BtnAbove]) {
+        button[BtnAbove]->setBitmap( above ? above_on_bits : above_off_bits );
+        button[BtnAbove]->repaint(false);
+    }
+}
+
+        
+void QuartzClient::keepBelowChange( bool below )
+{
+    if (button[BtnBelow]) {
+        button[BtnBelow]->setBitmap( below ? below_on_bits : below_off_bits );
+        button[BtnBelow]->repaint(false);
+    }
+}
+
+void QuartzClient::shadeChange()
+{
+    if (button[BtnShade]) {
+        bool on = isShade();
+        button[BtnShade]->turnOn(on);
+        button[BtnShade]->repaint(false);
+        QToolTip::remove( button[BtnShade] );
+        QToolTip::add( button[BtnShade], on ? i18n("Unshade") : i18n("Shade"));
+    }
+}
+
+
 void QuartzClient::slotMaximize()
 {
 	if (button[BtnMax])
 	{
 		maximize(button[BtnMax]->last_button);
 	}
+}
+
+
+void QuartzClient::slotAbove()
+{
+    setKeepAbove( !keepAbove());
+    button[BtnAbove]->turnOn(keepAbove());
+    button[BtnAbove]->repaint(true);
+}
+
+    
+void QuartzClient::slotBelow()
+{
+    setKeepBelow( !keepBelow());
+    button[BtnBelow]->turnOn(keepBelow());
+    button[BtnBelow]->repaint(true);
+}
+
+        
+void QuartzClient::slotShade()
+{
+    setShade( !isSetShade());
+    button[BtnShade]->setBitmap(isSetShade() ? shade_on_bits : shade_off_bits );
+    button[BtnShade]->repaint(true);
 }
 
 
@@ -925,9 +1048,12 @@ QSize QuartzClient::minimumSize() const
 // The hiding button while shrinking, show button while expanding magic
 void QuartzClient::calcHiddenButtons()
 {
-	//Hide buttons in this order - OnAllDesktops, Help, Maximize, Menu, Minimize, Close.
-	QuartzButton* btnArray[] = { button[BtnOnAllDesktops], button[BtnHelp], button[BtnMax],
+	//Hide buttons in this order:
+	//Shade, Below, Above, OnAllDesktops, Help, Maximize, Menu, Minimize, Close.
+    QuartzButton* btnArray[] = { button[BtnShade], button[BtnBelow], button[BtnAbove],
+								 button[BtnOnAllDesktops], button[BtnHelp], button[BtnMax],
 								 button[BtnMenu], button[BtnIconify], button[BtnClose] };
+    const int buttons_cnt = sizeof( btnArray ) / sizeof( btnArray[ 0 ] );
 
 	int minwidth  = largeButtons ? 180 : 140;	// Start hiding buttons at this width
 	int btn_width = largeButtons ? 16 : 10;
@@ -943,7 +1069,7 @@ void QuartzClient::calcHiddenButtons()
 	}
 
 	// Bound the number of buttons to hide
-	if (count > 6) count = 6;
+    if (count > buttons_cnt) count = buttons_cnt;
 
 	// Hide the required buttons...
 	for(i = 0; i < count; i++)
@@ -953,7 +1079,7 @@ void QuartzClient::calcHiddenButtons()
 	}
 
 	// Show the rest of the buttons...
-	for(i = count; i < 6; i++)
+    for(i = count; i < buttons_cnt; i++)
 	{
 		if (btnArray[i] && (!btnArray[i]->isVisible()) )
 			btnArray[i]->show();
