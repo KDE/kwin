@@ -119,6 +119,7 @@ public slots:
     void slotWindowMaximizeVertical();
     void slotWindowMaximizeHorizontal();
     void slotWindowIconify();
+    void slotWindowShade();
 
     void slotWindowOperations();
     void slotWindowClose();
@@ -177,7 +178,7 @@ private:
     bool removeDockwin( WId w );
     void propagateDockwins();
     DockWindow findDockwin( WId w );
-
+    
     //CT needed for cascading+
     struct CascadingInfo {
       QPoint pos;

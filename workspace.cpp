@@ -26,7 +26,7 @@ extern Time kwin_time;
 // Necessary since shaped window are an extension to X
 static int kwin_has_shape = 0;
 static int kwin_shape_event = 0;
-
+static bool block_focus = FALSE;
 // does the window w  need a shape combine mask around it?
 bool Shape::hasShape( WId w){
   int xws, yws, xbs, ybs;
@@ -835,7 +835,7 @@ void Workspace::clientHidden( Client* c )
 	    focus_chain.remove( c );
 	    focus_chain.prepend( c );
 	}
-	if ( options->focusPolicyIsReasonable() ) {
+	if ( !block_focus && options->focusPolicyIsReasonable() ) {
 	    for ( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.begin(); --it) {
 		if ( (*it)->isVisible() ) {
 		    requestFocus( *it );
@@ -1283,6 +1283,9 @@ void Workspace::setCurrentDesktop( int new_desktop ){
     if (new_desktop == current_desktop || new_desktop < 1 || new_desktop > number_of_desktops )
 	return;
 
+    active_client = 0;
+    block_focus = TRUE;
+    
     /*
        optimized Desktop switching: unmapping done from back to front
        mapping done from front to back => less exposure events
@@ -1307,7 +1310,8 @@ void Workspace::setCurrentDesktop( int new_desktop ){
 		    PropModeReplace, (unsigned char *)&current_desktop, 1);
 
 
-    // try to restore the focus on this desktop
+    // restore the focus on this desktop
+    block_focus = FALSE;
     Client* c = active_client?active_client:previousClient(0);
     Client* stop = c;
     while ( c && !c->isVisible() ) {
@@ -1499,6 +1503,7 @@ void Workspace::createKeybindings(){
     keys->connectItem( "Window maximize horizontal", this, SLOT( slotWindowMaximizeHorizontal() ) );
     keys->connectItem( "Window maximize vertical", this, SLOT( slotWindowMaximizeVertical() ) );
     keys->connectItem( "Window iconify", this, SLOT( slotWindowIconify() ) );
+    keys->connectItem( "Window shade", this, SLOT( slotWindowShade() ) );
 
     keys->readSettings();
 }
@@ -1548,6 +1553,12 @@ void Workspace::slotWindowIconify()
 {
     if ( popup_client )
 	popup_client->iconify();
+}
+
+void Workspace::slotWindowShade()
+{
+    if ( popup_client )
+	popup_client->setShade( !popup_client->isShade() );
 }
 
 void Workspace::desktopPopupAboutToShow()

@@ -10,7 +10,7 @@ Currently supported options in the kwinrc:
 MoveMode=Opaque|Transparent
 ResizeMode=Opaque|Transparent
 Placement=Smart|Random|Cascade
-AnimateShade=TRUE|FALSE
+AnimateShade=true|false
 AnimSteps=<integer=20>
 BorderSnapZone=<integer=10>
 WindowSnapZone=<integer=10>

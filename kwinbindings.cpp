@@ -14,3 +14,4 @@
  keys->insertItem(i18n("Window maximize vertical"),"Window maximize vertical", "");
  keys->insertItem(i18n("Window maximize horizontal"),"Window maximize horizontal", "");
  keys->insertItem(i18n("Window iconify"),"Window iconify", "");
+ keys->insertItem(i18n("Window shade"),"Window shade", "");

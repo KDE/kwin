@@ -1356,8 +1356,8 @@ void Client::setShade( bool s )
 	windowWrapper()->hide();
 	repaint( FALSE ); // force direct repaint
 	setWFlags( WNorthWestGravity );
-	int step = QMAX( 15, QABS( h - s.height() ) / as )+1;
-        do {
+	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
+	do {
 	    h -= step;
 	    resize ( s.width(), h );
 	    QApplication::syncX();
@@ -1368,8 +1368,8 @@ void Client::setShade( bool s )
 	int h = height();
 	QSize s( sizeForWindowSize( windowWrapper()->size(), TRUE ) );
 	setWFlags( WNorthWestGravity );
-	int step = QMAX( 15, QABS( h - s.height() ) / as )+1;
-        do {
+	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
+	do {
 	    h += step;
 	    resize ( s.width(), h );
 	    // assume a border

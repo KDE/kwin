@@ -13,12 +13,6 @@ Options::Options()
         cg[i] = NULL;
     reload();
 
-    //CT fix them for now. Will be read from rc
-    placement = Smart;
-    animate_shade = false;
-    anim_steps = 20;
-    border_snap_zone = window_snap_zone = 10;
-
     connect( kapp, SIGNAL( appearanceChanged() ), this, SLOT(reload() ) );
 }
 
@@ -151,9 +145,9 @@ void Options::reload()
     else if (val == "Random") placement = Random;
     else if (val == "Cascade") placement = Cascade;
 
-    animate_shade = config->readBoolEntry("AnimateShade", false);
+    animate_shade = config->readBoolEntry("AnimateShade", TRUE );
 
-    anim_steps = config->readNumEntry("AnimSteps", 20);
+    anim_steps = config->readNumEntry("AnimSteps", 50);
 
     border_snap_zone = config->readNumEntry("BorderSnapZone", 10);
     window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
