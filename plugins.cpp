@@ -22,9 +22,6 @@ Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
 
 using namespace KWinInternal;
 
-const char* defaultPlugin = (QPixmap::defaultDepth() > 8) ? 
-	"kwin_keramik" : "kwin_quartz";
-
 
 PluginMgr::PluginMgr()
     : QObject()
@@ -33,6 +30,8 @@ PluginMgr::PluginMgr()
     old_create_ptr = NULL;
     library = 0;
     pluginStr = "kwin_undefined";
+    defaultPlugin = (QPixmap::defaultDepth() > 8) ?
+            "kwin_keramik" : "kwin_quartz";
 
     KConfig *config = KGlobal::config();
     config->setGroup("Style");

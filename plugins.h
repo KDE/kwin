@@ -37,6 +37,7 @@ protected:
     Client* (*old_create_ptr)(Workspace *ws, WId w, int tool);
     KLibrary *library;
     QString pluginStr;
+    QCString defaultPlugin;
 };
 
 };
