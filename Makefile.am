@@ -23,7 +23,7 @@ KDE_ICON = kwin
 METASOURCES = AUTO
 
 messages:
-	$(XGETTEXT) -kaliasLocal *.h *.cpp killer/*.cpp -o $(podir)/kwin.pot
+	$(XGETTEXT) -kaliasLocal *.h *.cpp killer/*.cpp lib/*.cpp -o $(podir)/kwin.pot
 
 kwin_datadir = $(kde_datadir)/kwin
 
