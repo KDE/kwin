@@ -292,7 +292,7 @@ void B2Client::init()
 	    i18n("Not On All Desktops") : i18n("On All desktops"), 
 	i18n("Minimize"), i18n("Maximize"), 
 	i18n("Close"), i18n("Help"),
-	i18n("Shade")
+	isShade() ? i18n("Unshade") : i18n("Shade")
     };
 
     createMainWidget(WResizeNoErase | WRepaintNoErase);
@@ -765,6 +765,10 @@ void B2Client::shadeChange()
 	    QSizePolicy::Expanding, QSizePolicy::Minimum);
     g->activate();
     doShape();
+    if (B2Button *b = button[BtnShade]) {
+	QToolTip::remove(b);
+	QToolTip::add(b, isShade() ? i18n("Unshade") : i18n("Shade"));
+    }
 }
 
 QSize B2Client::minimumSize() const
