@@ -1846,6 +1846,7 @@ void Client::setShade( bool s )
 	QSize s( sizeForWindowSize( QSize( windowWrapper()->width(), 0), TRUE ) );
 	windowWrapper()->hide();
 	repaint( FALSE ); // force direct repaint
+	bool wasNorthWest = testWFlags( WNorthWestGravity );
 	setWFlags( WNorthWestGravity );
 	int step = QMAX( 4, QABS( h - s.height() ) / as )+1;
 	do {
@@ -1853,7 +1854,8 @@ void Client::setShade( bool s )
 	    resize ( s.width(), h );
 	    QApplication::syncX();
 	} while ( h > s.height() + step );
-	clearWFlags( WNorthWestGravity );
+	if ( !wasNorthWest )
+	    clearWFlags( WNorthWestGravity );
 	resize (s );
 	XEvent tmpE;
 	do {

@@ -210,7 +210,7 @@ static void create_pixmaps()
 }
 
 
-SystemButton::SystemButton(int w, int h, Client *parent, const char *name,
+KDEDefaultClientButton::KDEDefaultClientButton(int w, int h, Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
 {
@@ -223,24 +223,24 @@ SystemButton::SystemButton(int w, int h, Client *parent, const char *name,
     //setBackgroundMode(QWidget::NoBackground);
 }
 
-QSize SystemButton::sizeHint() const
+QSize KDEDefaultClientButton::sizeHint() const
 {
     return(defaultSize);
 }
 
-void SystemButton::reset()
+void KDEDefaultClientButton::reset()
 {
     repaint(false);
 }
 
-void SystemButton::setBitmap(const unsigned char *bitmap)
+void KDEDefaultClientButton::setBitmap(const unsigned char *bitmap)
 {
     deco = QBitmap(8, 8, bitmap, true);
     deco.setMask(deco);
     repaint();
 }
 
-void SystemButton::drawButton(QPainter *p)
+void KDEDefaultClientButton::drawButton(QPainter *p)
 {
     bool smallBtn = width() == btnWidth1;
     if(btnPix1){
@@ -321,18 +321,18 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(0, 4);
     g->addColSpacing(2, 4);
 
-    button[BtnClose] = new SystemButton(28, titleHeight, this, "close", close_bits);
-    button[BtnSticky] = new SystemButton(18, titleHeight, this, "sticky");
+    button[BtnClose] = new KDEDefaultClientButton(28, titleHeight, this, "close", close_bits);
+    button[BtnSticky] = new KDEDefaultClientButton(18, titleHeight, this, "sticky");
     if(isSticky())
         button[BtnSticky]->setBitmap(unsticky_bits);
     else
         button[BtnSticky]->setBitmap(sticky_bits);
-    button[BtnIconify] = new SystemButton(28, titleHeight, this, "iconify",
+    button[BtnIconify] = new KDEDefaultClientButton(28, titleHeight, this, "iconify",
                                           iconify_bits);
-    button[BtnMax] = new SystemButton(28, titleHeight, this, "maximize",
+    button[BtnMax] = new KDEDefaultClientButton(28, titleHeight, this, "maximize",
                                       maximize_bits);
     if(help){
-        button[BtnHelp] = new SystemButton(18, titleHeight, this, "help",
+        button[BtnHelp] = new KDEDefaultClientButton(18, titleHeight, this, "help",
                                      question_bits);
         connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
@@ -386,14 +386,21 @@ void KDEClient::resizeEvent( QResizeEvent* e)
     doShape();
     calcHiddenButtons();
     if ( isVisibleToTLW() ) {
-	int dx = 16 + QABS( e->oldSize().width() -  width() );
-	int dy = 16 + QABS( e->oldSize().height() -  height() );
- 	update( 0, height() - dy + 1, width(), dy );
- 	update( width() - dx + 1, 0, dx, height() );
- 	update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
- 	update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
-	// titlebar needs no background
-  	QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+	int dx = 0;
+	int dy = 0;
+	if ( e->oldSize().width() != width() )
+	    dx = 16 + QABS( e->oldSize().width() -  width() );
+	if ( e->oldSize().height() != height() )
+	    dy = 8 + QABS( e->oldSize().height() -  height() );
+	if ( dy ) 
+	    update( 0, height() - dy + 1, width(), dy );
+	if ( dx ) {
+	    update( width() - dx + 1, 0, dx, height() );
+	    update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
+	    update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+	    // titlebar needs no background
+	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+	}
     }
 }
 

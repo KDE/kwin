@@ -181,7 +181,7 @@ static void create_pixmaps()
 }
 
 
-SystemButton::SystemButton(int w, int h, Client *parent, const char *name,
+LaptopClientButton::LaptopClientButton(int w, int h, Client *parent, const char *name,
                            const unsigned char *bitmap)
     : QButton(parent, name)
 {
@@ -193,24 +193,24 @@ SystemButton::SystemButton(int w, int h, Client *parent, const char *name,
 }
 
 /*
-QSize SystemButton::sizeHint() const
+QSize LaptopClientButton::sizeHint() const
 {
     return(QSize(22, 12));
 }*/
 
-void SystemButton::reset()
+void LaptopClientButton::reset()
 {
     repaint(false);
 }
 
-void SystemButton::setBitmap(const unsigned char *bitmap)
+void LaptopClientButton::setBitmap(const unsigned char *bitmap)
 {
     deco = QBitmap(8, 8, bitmap, true);
     deco.setMask(deco);
     repaint();
 }
 
-void SystemButton::drawButton(QPainter *p)
+void LaptopClientButton::drawButton(QPainter *p)
 {
     bool smallBtn = width() == btnWidth1;
     if(btnPix1){
@@ -302,18 +302,18 @@ LaptopClient::LaptopClient( Workspace *ws, WId w, QWidget *parent,
     g->addColSpacing(2, 4);
     g->addColSpacing(2, 12);
 
-    button[0] = new SystemButton(28, titleHeight-2, this, "close", close_bits);
-    button[1] = new SystemButton(18, titleHeight-2, this, "sticky");
+    button[0] = new LaptopClientButton(28, titleHeight-2, this, "close", close_bits);
+    button[1] = new LaptopClientButton(18, titleHeight-2, this, "sticky");
     if(isSticky())
         button[1]->setBitmap(unsticky_bits);
     else
         button[1]->setBitmap(sticky_bits);
-    button[2] = new SystemButton(28, titleHeight-2, this, "iconify",
+    button[2] = new LaptopClientButton(28, titleHeight-2, this, "iconify",
                                  iconify_bits);
-    button[3] = new SystemButton(28, titleHeight-2, this, "maximize",
+    button[3] = new LaptopClientButton(28, titleHeight-2, this, "maximize",
                                  maximize_bits);
     if(help){
-        button[4] = new SystemButton(18, titleHeight-2, this, "help",
+        button[4] = new LaptopClientButton(18, titleHeight-2, this, "help",
                                      question_bits);
         connect( button[4], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
@@ -353,14 +353,21 @@ void LaptopClient::resizeEvent( QResizeEvent* e)
 
     doShape();
     if ( isVisibleToTLW() ) {
-	int dx = 16 + QABS( e->oldSize().width() -  width() );
-	int dy = 16 + QABS( e->oldSize().height() -  height() );
-	update( 0, height() - dy + 1, width(), dy );
-	update( width() - dx + 1, 0, dx, height() );
-	update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() ) );
-	update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
-	// titlebar needs no background
-	QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+	int dx = 0;
+	int dy = 0;
+	if ( e->oldSize().width() != width() )
+	    dx = 16 + QABS( e->oldSize().width() -  width() );
+	if ( e->oldSize().height() != height() )
+	    dy = 16 + QABS( e->oldSize().height() -  height() );
+	if ( dy ) 
+	    update( 0, height() - dy + 1, width(), dy );
+	if ( dx ) {
+	    update( width() - dx + 1, 0, dx, height() );
+	    update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
+	    update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
+	    // titlebar needs no background
+	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+	}
     }
 }
 

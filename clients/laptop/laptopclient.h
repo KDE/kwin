@@ -10,10 +10,10 @@ class QSpacerItem;
 
 
 // get rid of autohide :P
-class SystemButton : public QButton
+class LaptopClientButton : public QButton
 {
 public:
-    SystemButton(int w, int h, Client *parent=0, const char *name=0,
+    LaptopClientButton(int w, int h, Client *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
@@ -47,7 +47,7 @@ protected:
 protected slots:
     void slotReset();
 private:
-    SystemButton* button[5];
+    LaptopClientButton* button[5];
     QSpacerItem* titlebar;
 };
 

@@ -11,10 +11,10 @@ class QHBoxLayout;
 
 
 // get rid of autohide :P
-class SystemButton : public QButton
+class KDEDefaultClientButton : public QButton
 {
 public:
-    SystemButton(int w, int h, Client *parent=0, const char *name=0,
+    KDEDefaultClientButton(int w, int h, Client *parent=0, const char *name=0,
                  const unsigned char *bitmap=NULL);
     void setBitmap(const unsigned char *bitmap);
     void reset();
@@ -67,7 +67,7 @@ protected slots:
     void slotReset();
     void slotMaximize();
 private:
-    SystemButton* button[5];
+    KDEDefaultClientButton* button[5];
     QSpacerItem* titlebar;
     bool hiddenItems;
     QHBoxLayout *hb;
