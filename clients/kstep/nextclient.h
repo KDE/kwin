@@ -1,6 +1,7 @@
 #ifndef __NEXTCLIENT_H
 #define __NEXTCLIENT_H
 
+#include <qvariant.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"

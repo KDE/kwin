@@ -1,6 +1,7 @@
 #ifndef __SYSTEMCLIENT_H
 #define __SYSTEMCLIENT_H
 
+#include <qvariant.h>
 #include <qbitmap.h>
 #include <kpixmap.h>
 #include "../../client.h"
