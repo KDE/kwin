@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 #ifndef KDECORATIONFACTORY_H
 #define KDECORATIONFACTORY_H
 
-#include <kdecoration.h>
+#include "kdecoration.h"
 
 class KDecoration;
 class KDecorationBridge;
