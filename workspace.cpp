@@ -2996,10 +2996,6 @@ void Workspace::sendClientToDesktop( Client* c, int desk )
     c->setDesktop( desk );
     if( desk == NETWinInfo::OnAllDesktops )
         c->setSticky( true );
-    else
-        //CT 01Jul2002 - the old position is most probably inappropriate on the new desktop
-        //    thus we place the client again, before we show it, but only if it's not OnAllDesktops
-        place(c);
 
     if ( c->isOnDesktop( currentDesktop() ) ) {
         c->show();
