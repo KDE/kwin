@@ -5,7 +5,6 @@
 #include <qcursor.h>
 #include <qabstractlayout.h>
 #include <qlayout.h>
-#include <qtoolbutton.h>
 #include <qlabel.h>
 #include <qdrawutil.h>
 #include <kpixmapeffect.h>
@@ -24,47 +23,120 @@ extern "C"
     }
 }
 
+static const char *kdelogo[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 8 1",
+" 	c None",
+".	c #000000",
+"+	c #A0A0A4",
+"@	c #FFFFFF",
+"#	c #585858",
+"$	c #C0C0C0",
+"%	c #808080",
+"&	c #DCDCDC",
+"                ",
+"     ..    ..   ",
+"    .+@.  .@#.  ",
+"   .@@@. .@@@#  ",
+"   .@@@..$@@$.  ",
+"   .@@@.@@@$.   ",
+"   .@@@%@@$.    ",
+"   .@@@&@@.     ",
+"   .@@@@@@.     ",
+"   .@@@$@@&.    ",
+"   .@@@.@@@.    ",
+"   .@@@.+@@@.   ",
+"   .@@@..$@@&.  ",
+"   .@@%. .@@@.  ",
+"   ....   ...   ",
+"                "};
 
 static unsigned char iconify_bits[] = {
-    0xff, 0xff, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18};
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0x00, 0x78, 0x00, 0x78, 0x00,
+  0x78, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 static unsigned char close_bits[] = {
-    0x42, 0xe7, 0x7e, 0x3c, 0x3c, 0x7e, 0xe7, 0x42};
+  0x00, 0x00, 0x84, 0x00, 0xce, 0x01, 0xfc, 0x00, 0x78, 0x00, 0x78, 0x00,
+  0xfc, 0x00, 0xce, 0x01, 0x84, 0x00, 0x00, 0x00};
+
 
 static unsigned char maximize_bits[] = {
-    0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0xff, 0xff };
+  0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0x86, 0x01, 0x86, 0x01, 0x86, 0x01,
+  0x86, 0x01, 0xfe, 0x01, 0xfe, 0x01, 0x00, 0x00};
 
 static unsigned char minmax_bits[] = {
-    0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
+  0x7f, 0x00, 0x7f, 0x00, 0x63, 0x00, 0xfb, 0x03, 0xfb, 0x03, 0x1f, 0x03,
+  0x1f, 0x03, 0x18, 0x03, 0xf8, 0x03, 0xf8, 0x03};
 
 static unsigned char question_bits[] = {
-    0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
+  0x00, 0x00, 0x78, 0x00, 0xcc, 0x00, 0xc0, 0x00, 0x60, 0x00, 0x30, 0x00,
+  0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00};
 
-static unsigned char unsticky_bits[] = {
-   0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
+static unsigned char pindown_white_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0x80, 0x1f, 0xa0, 0x03,
+  0xb0, 0x01, 0x30, 0x01, 0xf0, 0x00, 0x70, 0x00, 0x20, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-static unsigned char sticky_bits[] = {
-   0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
+static unsigned char pindown_gray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1c,
+  0x00, 0x0e, 0x00, 0x06, 0x00, 0x00, 0x80, 0x07, 0xc0, 0x03, 0xe0, 0x01,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pindown_dgray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0xc0, 0x10, 0x70, 0x20, 0x50, 0x20,
+  0x48, 0x30, 0xc8, 0x38, 0x08, 0x1f, 0x08, 0x18, 0x10, 0x1c, 0x10, 0x0e,
+  0xe0, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pindown_mask_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0xc0, 0x1f, 0xf0, 0x3f, 0xf0, 0x3f,
+  0xf8, 0x3f, 0xf8, 0x3f, 0xf8, 0x1f, 0xf8, 0x1f, 0xf0, 0x1f, 0xf0, 0x0f,
+  0xe0, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  
+static unsigned char pinup_white_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x11,
+  0x3f, 0x15, 0x00, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pinup_gray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x80, 0x0a, 0xbf, 0x0a, 0x80, 0x15, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pinup_dgray_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x20, 0x40, 0x31, 0x40, 0x2e,
+  0x40, 0x20, 0x40, 0x20, 0x7f, 0x2a, 0x40, 0x3f, 0xc0, 0x31, 0xc0, 0x20,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+static unsigned char pinup_mask_bits[] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x20, 0xc0, 0x31, 0xc0, 0x3f,
+  0xff, 0x3f, 0xff, 0x3f, 0xff, 0x3f, 0xc0, 0x3f, 0xc0, 0x31, 0xc0, 0x20,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
 
 static QPixmap *titlePix=0;
 static KPixmap *aUpperGradient=0;
 static KPixmap *iUpperGradient=0;
-// buttons active, inactive, up, down, and 2 sizes :P
+// buttons active, inactive, and mouse over for both
 static KPixmap *btnPix1=0;
 static KPixmap *iBtnPix1=0;
 static KPixmap *btnDownPix1=0;
 static KPixmap *iBtnDownPix1=0;
-static KPixmap *btnPix2=0;
-static KPixmap *btnDownPix2=0;
-static KPixmap *iBtnPix2=0;
-static KPixmap *iBtnDownPix2=0;
+static KPixmap *pinupPix=0;
+static KPixmap *pindownPix=0;
+static KPixmap *iPinupPix=0;
+static KPixmap *iPindownPix=0;
+static KPixmap *pinupPixMO=0;
+static KPixmap *pindownPixMO=0;
+static KPixmap *iPinupPixMO=0;
+static KPixmap *iPindownPixMO=0;
+
 static QColor btnForeground;
+static QColor btnMouseOver;
+static QPixmap *defaultMenuPix=0;
 
 static bool pixmaps_created = false;
 
 static int titleHeight = 14; // configurable title height not implemented yet
-static int btnWidth1 = 17;
-static int btnWidth2 = 27;
 
 
 static void drawButtonFrame(KPixmap *pix, const QColorGroup &g, bool sunken)
@@ -76,19 +148,21 @@ static void drawButtonFrame(KPixmap *pix, const QColorGroup &g, bool sunken)
     int y2 = h-1;
     p.begin(pix);
 
-    if(sunken){
-        qDrawShadePanel(&p, 0, 0, w, h, g, true, 2);
-    }
-    else{
-        p.setPen(g.dark());
-        p.drawRect(0, 0, w-1, h-1);
-        p.setPen(g.light());
-        p.drawLine(x2, 0, x2, y2);
-        p.drawLine(0, y2, x2, y2);
-        p.drawLine(1, 1, x2-2, 1);
-        p.drawLine(1, 1, 1, y2-2);
-        p.end();
-    }
+    // outer frame
+    p.setPen(g.mid());
+    p.drawLine(0, 0, x2, 0);
+    p.drawLine(0, 0, 0, y2);
+    p.setPen(g.light());
+    p.drawLine(x2, 0, x2, y2);
+    p.drawLine(0, x2, y2, x2);
+    p.setPen(g.dark());
+    p.drawRect(1, 1, w-2, h-2);
+    p.setPen(sunken ? g.mid() : g.light());
+    p.drawLine(2, 2, x2-2, 2);
+    p.drawLine(2, 2, 2, y2-2);
+    p.setPen(sunken ? g.light() : g.mid());
+    p.drawLine(x2-2, 2, x2-2, y2-2);
+    p.drawLine(2, x2-2, y2-2, x2-2);
 }
 
 static void create_pixmaps()
@@ -97,18 +171,19 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
+    bool highcolor = QPixmap::defaultDepth() > 8;
     // titlebar
     QPainter p;
     QPainter maskPainter;
     int i, x, y;
-    titlePix = new QPixmap(33, 12);
-    QBitmap mask(33, 12);
+    titlePix = new QPixmap(33, 18);
+    QBitmap mask(33, 18);
     mask.fill(Qt::color0);
 
     p.begin(titlePix);
     maskPainter.begin(&mask);
     maskPainter.setPen(Qt::color1);
-    for(i=0, y=2; i < 3; ++i, y+=4){
+    for(i=0, y=2; i < 4; ++i, y+=4){
         for(x=1; x <= 33; x+=3){
             p.setPen(options->color(Options::TitleBar, true).light(150));
             p.drawPoint(x, y);
@@ -122,101 +197,178 @@ static void create_pixmaps()
     maskPainter.end();
     titlePix->setMask(mask);
 
-    if(QPixmap::defaultDepth() > 8){
+    if(highcolor){
         aUpperGradient = new KPixmap;
-        aUpperGradient->resize(32, titleHeight+2);
+        aUpperGradient->resize(32, 18);
         iUpperGradient = new KPixmap;
-        iUpperGradient->resize(32, titleHeight+2);
-        QColor bgColor = options->color(Options::TitleBar, true);
+        iUpperGradient->resize(32, 18);
+        QColorGroup bgColor = options->colorGroup(Options::TitleBar, true);
         KPixmapEffect::gradient(*aUpperGradient,
-                                bgColor.light(120),
-                                bgColor.dark(120),
+                                bgColor.midlight(),
+                                bgColor.mid(),
                                 KPixmapEffect::VerticalGradient);
-        bgColor = options->color(Options::TitleBar, false);
+        bgColor = options->colorGroup(Options::TitleBar, false);
         KPixmapEffect::gradient(*iUpperGradient,
-                                bgColor.light(120),
-                                bgColor.dark(120),
+                                bgColor.midlight(),
+                                bgColor.mid(),
                                 KPixmapEffect::VerticalGradient);
     }
+    // pinup and pindown
+    pinupPix = new KPixmap;
+    pinupPix->resize(16, 16);
+    pindownPix = new KPixmap;
+    pindownPix->resize(16, 16);
+    iPinupPix = new KPixmap;
+    iPinupPix->resize(16, 16);
+    iPindownPix = new KPixmap;
+    iPindownPix->resize(16, 16);
+    QBitmap pinupMask(16, 16, pinup_mask_bits, true);
+    QBitmap pindownMask(16, 16, pindown_mask_bits, true);
+
+    p.begin(pinupPix);
+    if(highcolor)
+        p.drawPixmap(0, 0, *aUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, true));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, true), 0, 0,
+                  16, 16, true, pinup_white_bits, pinup_gray_bits, NULL,
+                  pinup_dgray_bits, NULL, NULL);
+    p.end();
+    p.begin(iPinupPix);
+    if(highcolor)
+        p.drawPixmap(0, 0, *iUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, false));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, false), 0, 0,
+                  16, 16, true, pinup_white_bits, pinup_gray_bits, NULL,
+                  pinup_dgray_bits, NULL, NULL);
+    p.end();
+    p.begin(pindownPix);
+    if(highcolor)
+        p.drawPixmap(0, 0, *aUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, true));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, true), 0, 0,
+                  16, 16, true, pindown_white_bits, pindown_gray_bits, NULL,
+                  pindown_dgray_bits, NULL, NULL);
+    p.end();
+    p.begin(iPindownPix);
+    if(highcolor)
+        p.drawPixmap(0, 0, *iUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, false));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, false), 0, 0,
+                  16, 16, true, pindown_white_bits, pindown_gray_bits, NULL,
+                  pindown_dgray_bits, NULL, NULL);
+    p.end();
+
+    // pin mouse over
+    pinupPixMO = new KPixmap;
+    pinupPixMO->resize(16, 16);
+    pindownPixMO = new KPixmap;
+    pindownPixMO->resize(16, 16);
+    iPinupPixMO = new KPixmap;
+    iPinupPixMO->resize(16, 16);
+    iPindownPixMO = new KPixmap;
+    iPindownPixMO->resize(16, 16);
+
+    p.begin(pinupPixMO);
+    if(highcolor)
+        p.drawPixmap(0, 0, *aUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, true));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, true), 0, 0,
+                  16, 16, true, pinup_white_bits, pinup_dgray_bits,
+                  pinup_gray_bits, NULL, NULL, NULL);
+    p.end();
+    p.begin(iPinupPixMO);
+    if(highcolor)
+        p.drawPixmap(0, 0, *iUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, false));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, false), 0, 0,
+                  16, 16, true, pinup_white_bits, pinup_dgray_bits,
+                  pinup_gray_bits, NULL, NULL, NULL);
+    p.end();
+    p.begin(pindownPixMO);
+    if(highcolor)
+        p.drawPixmap(0, 0, *aUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, true));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, true), 0, 0,
+                  16, 16, true, pindown_white_bits, pindown_dgray_bits,
+                  pindown_gray_bits, NULL, NULL, NULL);
+    p.end();
+    p.begin(iPindownPixMO);
+    if(highcolor)
+        p.drawPixmap(0, 0, *iUpperGradient);
+    else
+        p.fillRect(0, 0, 16, 16, options->color(Options::TitleBar, false));
+    kColorBitmaps(&p, options->colorGroup(Options::TitleBar, false), 0, 0,
+                  16, 16, true, pindown_white_bits, pindown_dgray_bits,
+                  pindown_gray_bits, NULL, NULL);
+    p.end();
+
     // buttons (active/inactive, sunken/unsunken, 2 sizes each)
     QColorGroup g = options->colorGroup(Options::ButtonBg, true);
     QColor c = g.background();
     btnPix1 = new KPixmap;
-    btnPix1->resize(btnWidth1, titleHeight);
+    btnPix1->resize(16, 16);
     btnDownPix1 = new KPixmap;
-    btnDownPix1->resize(btnWidth1, titleHeight);
-    btnPix2 = new KPixmap;
-    btnPix2->resize(btnWidth2, titleHeight);
-    btnDownPix2 = new KPixmap;
-    btnDownPix2->resize(btnWidth2, titleHeight);
+    btnDownPix1->resize(16, 16);
     iBtnPix1 = new KPixmap;
-    iBtnPix1->resize(btnWidth1, titleHeight);
+    iBtnPix1->resize(16, 16);
     iBtnDownPix1 = new KPixmap;
-    iBtnDownPix1->resize(btnWidth1, titleHeight);
-    iBtnPix2 = new KPixmap;
-    iBtnPix2->resize(btnWidth2, titleHeight);
-    iBtnDownPix2 = new KPixmap;
-    iBtnDownPix2->resize(btnWidth2, titleHeight);
-    if(QPixmap::defaultDepth() > 8){
-        KPixmapEffect::gradient(*btnPix1, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*btnDownPix1, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*btnPix2, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*btnDownPix2, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
+    iBtnDownPix1->resize(16, 16);
+    if(highcolor){
+        KPixmapEffect::gradient(*btnPix1, c.light(130), c.dark(130),
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(*btnDownPix1, c.dark(130), c.light(130),
+                                KPixmapEffect::VerticalGradient);
         g = options->colorGroup(Options::ButtonBg, false);
         c = g.background();
-        KPixmapEffect::gradient(*iBtnPix1, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*iBtnDownPix1, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*iBtnPix2, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*iBtnDownPix2, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
+        KPixmapEffect::gradient(*iBtnPix1, c.light(130), c.dark(130),
+                                KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(*iBtnDownPix1, c.dark(130), c.light(130),
+                                KPixmapEffect::VerticalGradient);
     }
     else{
         btnPix1->fill(c.rgb());
         btnDownPix1->fill(c.rgb());
-        btnPix2->fill(c.rgb());
-        btnDownPix2->fill(c.rgb());
         g = options->colorGroup(Options::ButtonBg, false);
         c = g.background();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
-        iBtnPix2->fill(c.rgb());
-        iBtnDownPix2->fill(c.rgb());
     }
     g = options->colorGroup(Options::ButtonBg, true);
     c = g.background();
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
-    drawButtonFrame(btnPix2, g, false);
-    drawButtonFrame(btnDownPix2, g, true);
     g = options->colorGroup(Options::ButtonBg, false);
     c = g.background();
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
-    drawButtonFrame(iBtnPix2, g, false);
-    drawButtonFrame(iBtnDownPix2, g, true);
 
-    if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128)
+    if(qGray(options->color(Options::ButtonBg, true).rgb()) > 128){
         btnForeground = Qt::black;
-    else
+        btnMouseOver = Qt::darkGray;
+    }
+    else{
         btnForeground = Qt::white;
+        btnMouseOver = Qt::lightGray;
+
+    }
 }
 
 
-KDEDefaultClientButton::KDEDefaultClientButton(int w, int h, Client *parent, const char *name,
+KDEDefaultClientButton::KDEDefaultClientButton(Client *parent, const char *name,
                            const unsigned char *bitmap)
-    : QButton(parent, name)
+    : QToolButton(parent, name)
 {
+    isMouseOver = false;
     client = parent;
-    defaultSize = QSize(w, h);
-    setFixedHeight(h);
-    resize(defaultSize);
+    setFixedSize(16, 16);
+    resize(16, 16);
     if(bitmap)
         setBitmap(bitmap);
     //setBackgroundMode(QWidget::NoBackground);
@@ -224,7 +376,7 @@ KDEDefaultClientButton::KDEDefaultClientButton(int w, int h, Client *parent, con
 
 QSize KDEDefaultClientButton::sizeHint() const
 {
-    return(defaultSize);
+    return(QSize(16, 16));
 }
 
 void KDEDefaultClientButton::reset()
@@ -234,51 +386,81 @@ void KDEDefaultClientButton::reset()
 
 void KDEDefaultClientButton::setBitmap(const unsigned char *bitmap)
 {
-    deco = QBitmap(8, 8, bitmap, true);
+    pix.resize(0, 0);
+    deco = QBitmap(10, 10, bitmap, true);
     deco.setMask(deco);
+    repaint();
+}
+
+void KDEDefaultClientButton::setPixmap(const QPixmap &p,
+                                       const QPixmap &mouseOverPix)
+{
+    deco.resize(0, 0);
+    pix = p;
+    moPix = mouseOverPix;
+    setMask(QRect(0, 0, 16, 16));
     repaint();
 }
 
 void KDEDefaultClientButton::drawButton(QPainter *p)
 {
-    bool smallBtn = width() == btnWidth1;
-    if(btnPix1){
-        if(client->isActive()){
-            if(isDown())
-                p->drawPixmap(0, 0, smallBtn ? *btnDownPix1 : *btnDownPix2);
-            else
-                p->drawPixmap(0, 0, smallBtn ? *btnPix1 : *btnPix2);
+    if(pix.isNull()){
+        if(btnPix1){
+            if(client->isActive()){
+                if(isDown())
+                    p->drawPixmap(0, 0, *btnDownPix1);
+                else
+                    p->drawPixmap(0, 0, *btnPix1);
+            }
+            else{
+                if(isDown())
+                    p->drawPixmap(0, 0, *iBtnDownPix1);
+                else
+                    p->drawPixmap(0, 0, *iBtnPix1);
+            }
         }
         else{
-            if(isDown())
-                p->drawPixmap(0, 0, smallBtn ? *iBtnDownPix1 : *iBtnDownPix2);
-            else
-                p->drawPixmap(0, 0, smallBtn ? *iBtnPix1 : *iBtnPix2);
+            QColorGroup g = options->colorGroup(Options::ButtonBg,
+                                                client->isActive());
+            int w = width();
+            int h = height();
+            p->fillRect(1, 1, w-2, h-2, isDown() ? g.mid() : g.button());
+            p->setPen(isDown() ? g.dark() : g.light());
+            p->drawLine(0, 0, w-1, 0);
+            p->drawLine(0, 0, 0, w-1);
+            p->setPen(isDown() ? g.light() : g.dark());
+            p->drawLine(w-1, 0, w-1, h-1);
+            p->drawLine(0, h-1, w-1, h-1);
         }
+        p->setPen(isMouseOver ? btnMouseOver : btnForeground);
+        int xOff = (width()-10)/2;
+        int yOff = (height()-10)/2;
+        p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
     }
     else{
-        QColorGroup g = options->colorGroup(Options::ButtonBg,
-                                            client->isActive());
-        int w = width();
-        int h = height();
-        p->fillRect(1, 1, w-2, h-2, isDown() ? g.mid() : g.button());
-        p->setPen(isDown() ? g.dark() : g.light());
-        p->drawLine(0, 0, w-1, 0);
-        p->drawLine(0, 0, 0, w-1);
-        p->setPen(isDown() ? g.light() : g.dark());
-        p->drawLine(w-1, 0, w-1, h-1);
-        p->drawLine(0, h-1, w-1, h-1);
+        if(QPixmap::defaultDepth() > 8)
+            p->drawPixmap(0, 0, client->isActive()? *aUpperGradient : *iUpperGradient);
+        else
+            p->fillRect(0, 0, width(), height(),
+                        options->color(Options::TitleBar, client->isActive()));
+        p->drawPixmap(0, 0, isMouseOver ? moPix : pix);
     }
 
-    p->setPen(btnForeground);
-    int xOff = (width()-8)/2;
-    int yOff = (height()-8)/2;
-    p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
 }
 
 void KDEClient::slotReset()
 {
     delete titlePix;
+    delete pinupPix;
+    delete pindownPix;
+    delete iPinupPix;
+    delete iPindownPix;
+    delete pinupPixMO;
+    delete pindownPixMO;
+    delete iPinupPixMO;
+    delete iPindownPixMO;
+
+
     if(aUpperGradient){
         delete aUpperGradient;
         delete iUpperGradient;
@@ -286,10 +468,6 @@ void KDEClient::slotReset()
         delete btnDownPix1;
         delete iBtnPix1;
         delete iBtnDownPix1;
-        delete btnPix2;
-        delete btnDownPix2;
-        delete iBtnPix2;
-        delete iBtnDownPix2;
     }
     pixmaps_created = false;
     create_pixmaps();
@@ -305,6 +483,9 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
                             const char *name )
     : Client( ws, w, parent, name, WResizeNoErase | WNorthWestGravity )
 {
+    if(!defaultMenuPix)
+        defaultMenuPix = new QPixmap(kdelogo);
+
     lastButtonWidth = 0;
     lastBufferWidth = 0;
 
@@ -327,18 +508,46 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     if ( isTool() )
 	th -= 2;
 
-    button[BtnClose] = new KDEDefaultClientButton(27, th, this, "close", close_bits);
-    button[BtnSticky] = new KDEDefaultClientButton(17, th, this, "sticky");
-    if(isSticky())
-        button[BtnSticky]->setBitmap(unsticky_bits);
-    else
-        button[BtnSticky]->setBitmap(sticky_bits);
-    button[BtnIconify] = new KDEDefaultClientButton(27, th, this, "iconify",
+    button[BtnMenu] = new KDEDefaultClientButton(this, "menu");
+    if(!miniIcon().isNull()){
+        lightIcon = miniIcon();
+        lightIcon.detach();
+        lightIcon = KPixmapEffect::intensity(lightIcon, 1.0);
+        if(miniIcon().mask())
+            lightIcon.setMask(*miniIcon().mask());
+        button[BtnMenu]->setPixmap(miniIcon(), lightIcon);
+    }
+    else{
+        lightIcon = *defaultMenuPix;
+        lightIcon.detach();
+        lightIcon = KPixmapEffect::intensity(lightIcon, .50);
+        lightIcon.setMask(*defaultMenuPix->mask());
+        button[BtnMenu]->setPixmap(*defaultMenuPix, lightIcon);
+    }
+    connect(button[BtnMenu], SIGNAL(pressed()), this,
+            SLOT(menuButtonPressed()));
+    button[BtnClose] = new KDEDefaultClientButton(this, "close", close_bits);
+    button[BtnSticky] = new KDEDefaultClientButton(this, "sticky");
+
+    if(isSticky()){
+        if(isActive())
+            button[BtnSticky]->setPixmap(*pindownPix, *pindownPixMO);
+        else
+            button[BtnSticky]->setPixmap(*iPindownPix, *iPindownPixMO);
+
+    }
+    else{
+        if(isActive())
+            button[BtnSticky]->setPixmap(*pinupPix, *pinupPixMO);
+        else
+            button[BtnSticky]->setPixmap(*iPinupPix, *iPinupPixMO);
+    }
+    button[BtnIconify] = new KDEDefaultClientButton(this, "iconify",
                                           iconify_bits);
-    button[BtnMax] = new KDEDefaultClientButton(27, th, this, "maximize",
+    button[BtnMax] = new KDEDefaultClientButton(this, "maximize",
                                       maximize_bits);
     if(help){
-        button[BtnHelp] = new KDEDefaultClientButton(17, th, this, "help",
+        button[BtnHelp] = new KDEDefaultClientButton(this, "help",
                                      question_bits);
         connect(button[BtnHelp], SIGNAL( clicked() ), this, ( SLOT( contextHelp() ) ) );
     }
@@ -353,18 +562,21 @@ KDEClient::KDEClient( Workspace *ws, WId w, QWidget *parent,
     hb = new QHBoxLayout();
     hb->setResizeMode(QLayout::FreeResize);
     g->addLayout( hb, 1, 1 );
-    hb->addWidget( button[BtnClose]);
+    hb->addWidget( button[BtnMenu]);
+    hb->addSpacing(2);
+    hb->addWidget( button[BtnSticky]);
     hb->addSpacing(1);
     titlebar = new QSpacerItem(10, th, QSizePolicy::Expanding,
                                QSizePolicy::Minimum);
     hb->addItem(titlebar);
-    hb->addSpacing(1);
+    hb->addSpacing(2);
     if(help){
         hb->addWidget( button[BtnHelp]);
     }
-    hb->addWidget( button[BtnSticky]);
     hb->addWidget( button[BtnIconify]);
     hb->addWidget( button[BtnMax]);
+    hb->addSpacing(1);
+    hb->addWidget( button[BtnClose]);
 
     if ( isTransient() || isTool() )
 	button[BtnSticky]->hide();
@@ -393,8 +605,9 @@ void KDEClient::resizeEvent( QResizeEvent* e)
 
     doShape();
     calcHiddenButtons();
-    if ( isVisibleToTLW() ) {
-	int dx = 0;
+    if (isVisibleToTLW()) {
+        update(rect());
+        int dx = 0;
 	int dy = 0;
 	if ( e->oldSize().width() != width() )
 	    dx = 32 + QABS( e->oldSize().width() -  width() );
@@ -402,11 +615,12 @@ void KDEClient::resizeEvent( QResizeEvent* e)
 	    dy = 8 + QABS( e->oldSize().height() -  height() );
 	if ( dy )
 	    update( 0, height() - dy + 1, width(), dy );
-	if ( dx ) {
+        if ( dx ) {
 	    update( width() - dx + 1, 0, dx, height() );
 	    update( QRect( QPoint(4,4), titlebar->geometry().bottomLeft() - QPoint(1,0) ) );
 	    update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4, titlebar->geometry().bottom() ) ) );
-	    // titlebar needs no background
+
+            // titlebar needs no background
 	    QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
 	}
     }
@@ -421,26 +635,53 @@ void KDEClient::captionChange( const QString& )
 void KDEClient::paintEvent( QPaintEvent* )
 {
     QPainter p(this);
-    QColorGroup g = options->colorGroup(Options::Frame, isActive());
 
     QRect r(rect());
     p.setPen(Qt::black);
     p.drawRect(r);
-    // outer frame
+
+    // calc the length of the titlebar (vs frame) color
+    int titleX2 = r.width() - 6 -
+        (button[BtnHelp] && button[BtnHelp]->isVisible() ? 16 : 0) -
+        (button[BtnMax]->isVisible() ? 16 : 0) -
+        (button[BtnIconify]->isVisible() ? 16 : 0) -
+        (button[BtnClose]->isVisible() ? 16 : 0);
+
+    // draw the part of the frame shaded to the titlebar color
+    // is the height large enough to handle the extended left titlebar color?
+    int leftFrameStart = r.height() > 54 ? r.y()+42 : r.y()+18;
+    QColorGroup g = options->colorGroup(Options::TitleBar, isActive());
     p.setPen(g.light());
-    p.drawLine(r.x()+1, r.y()+1, r.right()-1, r.y()+1);
-    p.drawLine(r.x()+1, r.y()+1, r.x()+1, r.bottom()-1);
+    p.drawLine(r.x()+1, r.y()+1, titleX2-1, r.y()+1);
+    p.drawLine(r.x()+1, r.y()+1, r.x()+1, leftFrameStart);
+    if(r.height() > 42){
+        p.setPen(Qt::black);
+        p.drawLine(r.x()+1, leftFrameStart, r.x()+2, leftFrameStart-1);
+        p.setPen(options->color(Options::Frame, isActive()));
+        p.drawPoint(r.x()+2, leftFrameStart);
+        p.setPen(g.mid());
+        p.drawLine(r.x()+2, r.y()+19, r.x()+2, leftFrameStart-2);
+    }
+    p.setPen(g.dark());
+    p.drawLine(titleX2-1, r.y()+1, titleX2-1, r.y()+18);
+
+    // part of the frame that is the frame color
+    g = options->colorGroup(Options::Frame, isActive());
+    p.setPen(g.light());
+    p.drawLine(titleX2, r.y()+1, r.right()-1, r.y()+1);
+    p.drawLine(r.x()+1, leftFrameStart+1, r.x()+1, r.bottom()-1);
     p.setPen(g.dark());
     p.drawLine(r.right()-1, r.y()+1, r.right()-1, r.bottom()-1);
     p.drawLine(r.x()+1, r.bottom()-1, r.right()-1, r.bottom()-1);
+
 
     int th = titleHeight;
     if ( isTool() )
 	th -= 2;
 
     // inner rect
-    p.drawRect(r.x()+3, r.y()+th+3, r.width()-6,
-               r.height()-th-10);
+    p.drawRect(r.x()+3, r.y()+16+3, r.width()-6,
+               r.height()-16-10);
     // handles
     if(r.width() > 44){
         qDrawShadePanel(&p, r.x()+1, r.bottom()-6, 20,
@@ -458,46 +699,49 @@ void KDEClient::paintEvent( QPaintEvent* )
                         &g.brush(QColorGroup::Background) :
                         &g.brush(QColorGroup::Mid));
 
-    r = titlebar->geometry();
     r.setRight(r.right()-1);
 
     if(isActive()){
+        /*
         updateActiveBuffer();
         p.drawPixmap(r.x(), r.y(), activeBuffer);
+        */
+        if(aUpperGradient){
+            p.drawTiledPixmap(r.x()+2, r.y()+2, titleX2-3, r.y()+17,
+                              *aUpperGradient);
+        }
+        else{
+            p.fillRect(QRect(QPoint(r.x()+2, r.y()+2),
+                             QPoint(titleX2-2, r.y()+18)),
+                       options->color(Options::TitleBar, true));
+        }
+        r = titlebar->geometry();
+        QFontMetrics fm(options->font(true));
+        p.setFont(options->font(true));
+        p.setPen(options->color(Options::Font, true));
+        p.drawText(r.x(), r.y(), r.width(), r.height()-1,
+                   AlignLeft, caption() );
+        p.drawTiledPixmap(r.x()+fm.width(caption()), 2,
+                          r.width()-fm.width(caption())-2,
+                          r.height(), *titlePix);
+
     }
     else{
-        if(iUpperGradient)
-            p.drawTiledPixmap(r.x(), r.y(), r.width(), r.height()-1,
+        if(iUpperGradient){
+            p.drawTiledPixmap(r.x()+2, r.y()+2, titleX2-3, r.y()+17,
                               *iUpperGradient);
-        else
-            p.fillRect(r.x(), r.y(), r.width(), r.height()-1,
+        }
+        else{
+            p.fillRect(QRect(QPoint(r.x()+2, r.y()+2),
+                             QPoint(titleX2-2, r.y()+18)),
                        options->color(Options::TitleBar, false));
-
-        p.setFont(options->font(false, isTool() ));
+        }
+        r = titlebar->geometry();
         QFontMetrics fm(options->font(false));
-        g = options->colorGroup(Options::TitleBar, false);
-        if(iUpperGradient)
-            p.drawTiledPixmap(r.x()+((r.width()-fm.width(caption()))/2)-4,
-                              r.y(), fm.width(caption())+8, r.height()-1,
-                              *iUpperGradient);
-        else
-            p.fillRect(r.x()+((r.width()-fm.width(caption()))/2)-4, r.y(),
-                       fm.width(caption())+8, r.height()-1,
-                       g.brush(QColorGroup::Background));
-        p.setPen(g.mid());
-        p.drawLine(r.x(), r.y(), r.right(), r.y());
-        p.drawLine(r.x(), r.y(), r.x(), r.bottom());
-        p.setPen(g.button());
-        p.drawLine(r.right(), r.y(), r.right(), r.bottom());
-        p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
+        p.setFont(options->font(false));
         p.setPen(options->color(Options::Font, false));
         p.drawText(r.x(), r.y(), r.width(), r.height()-1,
-                   AlignCenter, caption() );
-        g = options->colorGroup(Options::Frame, true);
-        p.setPen(g.background());
-        p.drawPoint(r.x(), r.y());
-        p.drawPoint(r.right(), r.y());
-        p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());
+                   AlignLeft, caption() );
     }
 }
 
@@ -518,6 +762,7 @@ void KDEClient::showEvent(QShowEvent *ev)
 {
     Client::showEvent(ev);
     doShape();
+    calcHiddenButtons();
     repaint();
 }
 
@@ -535,7 +780,19 @@ void KDEClient::mouseDoubleClickEvent( QMouseEvent * e )
 
 void KDEClient::stickyChange(bool on)
 {
-    button[BtnSticky]->setBitmap(on ? unsticky_bits : sticky_bits);
+    if(on){
+        if(isActive())
+            button[BtnSticky]->setPixmap(*pindownPix, *pindownPixMO);
+        else
+            button[BtnSticky]->setPixmap(*iPindownPix, *iPindownPixMO);
+
+    }
+    else{
+        if(isActive())
+            button[BtnSticky]->setPixmap(*pinupPix, *pinupPixMO);
+        else
+            button[BtnSticky]->setPixmap(*iPinupPix, *iPinupPixMO);
+    }
 }
 
 void KDEClient::maximizeChange(bool m)
@@ -552,7 +809,14 @@ void KDEClient::activeChange(bool)
 {
     repaint(false);
     int i;
-    for(i=0; i < 5; ++i){
+    stickyChange(isSticky()); // redo gradient
+    if(!miniIcon().isNull()){
+        button[BtnMenu]->setPixmap(miniIcon(), lightIcon); // reset gradient
+    }
+    else
+        button[BtnMenu]->setPixmap(kdelogo, lightIcon);
+    // TODO KLOGO reset?
+    for(i=0; i < 6; ++i){
         if(button[i])
             button[i]->reset();
     }
@@ -561,17 +825,17 @@ void KDEClient::activeChange(bool)
 
 void KDEClient::calcHiddenButtons()
 {
-    // order of hiding is help, sticky, maximize, minimize, close;
+    // order of hiding is help, sticky, maximize, minimize, close, then menu;
     // buttons can have
-    int minWidth = 32 + btnWidth2*3 + (providesContextHelp() ? btnWidth1*2 :
-                                       btnWidth1);
+    int minWidth = 32 + 16*4 + (providesContextHelp() ? 16*2 :
+                                       16);
 
     if(lastButtonWidth > width()){ // shrinking
         lastButtonWidth = width();
         if(width() < minWidth){
             hiddenItems = true;
             int i;
-            for(i=0; i<5; ++i){
+            for(i=0; i<6; ++i){
                 if(button[i]){
                     if( !button[i]->isHidden() ) {
                         button[i]->hide();
@@ -587,7 +851,7 @@ void KDEClient::calcHiddenButtons()
         lastButtonWidth = width();
         int i;
         int totalSize=32;
-        for(i=4; i>=0; --i){
+        for(i=5; i>=0; --i){
             if(button[i]){
                 if(button[i]->sizeHint().width() + totalSize <= width()){
                     totalSize+=button[i]->sizeHint().width();
@@ -612,54 +876,33 @@ void KDEClient::calcHiddenButtons()
         lastButtonWidth = width();
 }
 
+// not used right now
 void KDEClient::updateActiveBuffer( )
 {
-    if( !bufferDirty && (lastBufferWidth == titlebar->geometry().width()))
+    int titleX2 = width() - 6 -
+        (button[BtnHelp] && button[BtnHelp]->isVisible() ? 16 : 0) -
+        (button[BtnMax]->isVisible() ? 16 : 0) -
+        (button[BtnIconify]->isVisible() ? 16 : 0) -
+        (button[BtnClose]->isVisible() ? 16 : 0);
+
+    if(!bufferDirty && (lastBufferWidth == titleX2))
         return;
-    if ( titlebar->geometry().width() <= 0 || titlebar->geometry().height() <= 0 )
-	return;
-    lastBufferWidth = titlebar->geometry().width();
+    lastBufferWidth = titleX2;
     bufferDirty = false;
 
-    activeBuffer.resize(titlebar->geometry().width(),
-                        titlebar->geometry().height());
-    QPainter p;
-    QRect r(0, 0, activeBuffer.width()-1, activeBuffer.height());
-    p.begin(&activeBuffer);
-    if(aUpperGradient){
-        p.drawTiledPixmap(r, *aUpperGradient);
-    }
-    else{
-        p.fillRect(r, options->color(Options::TitleBar, true));
-    }
-    if(titlePix)
-        p.drawTiledPixmap(r, *titlePix);
-
-    p.setFont(options->font(true, isTool() ));
+    activeBuffer.resize(titleX2-3, 16);
+    QPainter p(&activeBuffer);
+    p.drawTiledPixmap(0, 0, activeBuffer.width(), activeBuffer.height(),
+                      *aUpperGradient);
+    QRect r = titlebar->geometry();
     QFontMetrics fm(options->font(true));
-    QColorGroup g = options->colorGroup(Options::TitleBar, true);
-    if(aUpperGradient)
-        p.drawTiledPixmap(r.x()+((r.width()-fm.width(caption()))/2)-4,
-                          r.y(), fm.width(caption())+8, r.height()-1,
-                          *aUpperGradient);
-    else
-        p.fillRect(r.x()+((r.width()-fm.width(caption()))/2)-4, 0,
-                   fm.width(caption())+8, r.height(),
-                   g.brush(QColorGroup::Background));
-    p.setPen(g.mid());
-    p.drawLine(r.x(), r.y(), r.right(), r.y());
-    p.drawLine(r.x(), r.y(), r.x(), r.bottom());
-    p.setPen(g.button());
-    p.drawLine(r.right(), r.y(), r.right(), r.bottom());
-    p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
+    p.setFont(options->font(true));
     p.setPen(options->color(Options::Font, true));
     p.drawText(r.x(), r.y(), r.width(), r.height()-1,
-               AlignCenter, caption() );
-    g = options->colorGroup(Options::Frame, true);
-    p.setPen(g.background());
-    p.drawPoint(r.x(), r.y());
-    p.drawPoint(r.right(), r.y());
-    p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());
+               AlignLeft, caption() );
+    p.drawTiledPixmap(r.x()+fm.width(caption()), 2,
+                      r.width()-fm.width(caption())-2,
+                      r.height(), *titlePix);
     p.end();
 }
 
@@ -681,6 +924,29 @@ KDEClient::mousePosition( const QPoint& p ) const
   }
 
   return m;
+}
+
+void KDEClient::menuButtonPressed()
+{
+   //workspace()->clientPopup(this)->
+   //     popup(button[BtnMenu]->mapToGlobal(button[BtnMenu]->
+   //                                        rect().bottomLeft()));
+    static QTime* t = 0;
+    static KDEClient* tc = 0;
+    if ( !t )
+        t = new QTime;
+ 
+    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() ){
+        workspace()->clientPopup(this)->
+            popup(button[BtnMenu]->mapToGlobal(button[BtnMenu]->
+                                               rect().bottomLeft()));
+    }
+    else {
+        button[BtnMenu]->setPopup( 0 );
+        closeWindow();
+    }
+    t->start();
+    tc = this;           
 }
 
 #include "kdedefault.moc"
