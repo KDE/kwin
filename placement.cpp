@@ -295,7 +295,7 @@ void Placement::placeCascaded (Client* c, bool re_init)
     const int W = maxRect.width();
 
   //initialize if needed
-    if (re_init) {
+    if (re_init || d->cci[dn].pos.x() < X || d->cci[dn].pos.y() < Y ) {
         d->cci[dn].pos = QPoint(X, Y);
         d->cci[dn].col = d->cci[dn].row = 0;
     }
