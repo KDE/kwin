@@ -379,7 +379,7 @@ bool Client::noBorder() const
 
 bool Client::userCanSetNoBorder() const
     {
-    return !noborder && !isFullScreen();
+    return !noborder && !isFullScreen() && !isShade();
     }
 
 bool Client::isUserNoBorder() const
