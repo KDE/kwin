@@ -1282,6 +1282,7 @@ void Workspace::setDecoration( int deco )
     bool mapped = c->isVisible();
     c->hide();
     c->releaseWindow();
+    KWM::moveToDesktop( w, c->desktop() );
     switch ( deco ) {
     case 1:
 	c = new BeClient( this, w);

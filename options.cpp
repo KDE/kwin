@@ -61,7 +61,7 @@ void Options::reload()
     config->setGroup("WM");
 
     // normal colors
-    colors[Frame] = Qt::lightGray;
+    colors[Frame] = pal.normal().background();
     colors[Frame] = config->readColorEntry("frame", &colors[Frame]);
     colors[Handle] = QColor( 140, 140, 140 );
     colors[Handle] = config->readColorEntry("handle", &colors[Handle]);
@@ -74,7 +74,7 @@ void Options::reload()
         colors[ButtonBlend] = colors[ ButtonBg ].dark(150);
     colors[ButtonBlend] = config->readColorEntry("activeTitleBtnBlend",
                                                  &colors[ButtonBlend]);
-    colors[TitleBar] = Qt::darkBlue;
+    colors[TitleBar] = pal.normal().highlight();
     colors[TitleBar] = config->readColorEntry("activeBackground",
                                               &colors[TitleBar]);
     if(QPixmap::defaultDepth() < 15)
@@ -84,7 +84,7 @@ void Options::reload()
     colors[TitleBlend] = config->readColorEntry("activeBlend",
                                                 &colors[TitleBlend]);
 
-    colors[Font] = Qt::white;
+    colors[Font] = pal.normal().highlightedText();
     colors[Font] = config->readColorEntry("activeForeground", &colors[Font]);
     colors[ButtonFg] = Qt::darkGray;
     colors[ButtonFg] = config->readColorEntry("activeTitleBtnFg",
@@ -93,7 +93,7 @@ void Options::reload()
     // inactive
     colors[Frame+KWINCOLORS] = config->readColorEntry("inactiveFrame",
                                                       &colors[Frame]);
-    colors[TitleBar+KWINCOLORS] = colors[Frame].dark();
+    colors[TitleBar+KWINCOLORS] = colors[Frame];
     colors[TitleBar+KWINCOLORS] = config->
         readColorEntry("inactiveBackground", &colors[TitleBar+KWINCOLORS]);
 
@@ -123,7 +123,7 @@ void Options::reload()
     colors[Handle+KWINCOLORS] = colors[Frame];
         config->readColorEntry("inactiveHandle", &colors[Handle]);
 
-    colors[Font+KWINCOLORS] = Qt::darkGray;
+    colors[Font+KWINCOLORS] = colors[Frame].dark();
     colors[Font+KWINCOLORS] = config->readColorEntry("inactiveForeground",
                                                      &colors[Font+KWINCOLORS]);
 
@@ -141,7 +141,7 @@ void Options::reload()
 
     //CT well, what this costs us?
     config->setGroup("Actions");
-    
+
     QString val;
     val = config->readEntry("Placement","Smart");
     if (val == "Smart") placement = Smart;
