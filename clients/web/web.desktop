@@ -1,10 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Web
-Name[af]=web
 Name[az]=Veb
 Name[da]=Net
 Name[eo]=TTT
+Name[fa]=وب
 Name[is]=Vefur
 Name[ko]=웹
 Name[nb]=Nett
@@ -14,10 +14,8 @@ Name[pt_BR]=Árvore Web
 Name[sl]=Splet
 Name[sv]=Webb
 Name[ta]=Å¨Ä
-Name[th]=แบบเวป
+Name[th]=แบบเว็บ
 Name[uk]=Тенета
 Name[ven]=Webu
-Name[xh]=iWeb
-Name[xx]=xx
-Name[zu]=I Web
+Name[zu]=I-Web
 X-KDE-Library=kwin_web

@@ -1,14 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KStep
-Name[af]=kstep
+Name[af]=Kstep
 Name[eo]=Step
-Name[mi]=KHïkoi
-Name[nb]=KSteg
+Name[fa]=پله‌ی K
+Name[nso]=KKgato
 Name[sv]=Kstep
 Name[th]=ตัวจัดการหน้าต่างสเต็ป - K
 Name[ven]=Tshitepe tsha K
-Name[xh]=Inqwanqwa le K
-Name[xx]=xx
-Name[zu]=Izinga le K
 X-KDE-Library=kwin_kstep
