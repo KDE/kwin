@@ -2814,6 +2814,7 @@ void Workspace::slotResetAllClients()
     Client* prev = 0;
     for (ClientList::Iterator it = stack.fromLast(); it != stack.end(); --it) {
 	Client *oldClient = (*it);
+	Client::MaximizeMode oldMaxMode = oldClient->maximizeMode();
 	oldClient->hide();
 	WId w = oldClient->window();
 	XUnmapWindow( qt_xdisplay(), w );
@@ -2839,6 +2840,7 @@ void Workspace::slotResetAllClients()
 	}
 	if ( showIt )
 	    newClient->show();
+	newClient->maximize(oldMaxMode);
 	prev = newClient;
     }
     block_focus = FALSE;
