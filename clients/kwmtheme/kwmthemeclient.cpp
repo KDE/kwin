@@ -779,22 +779,19 @@ Client::MousePosition KWMThemeClient::mousePosition(const QPoint &p) const
 
 void KWMThemeClient::menuButtonPressed()
 {
-    static QTime* t = 0;
     static KWMThemeClient* tc = 0;
-    if ( !t )
-        t = new QTime;
 
-    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() ){
+    if ( tc == this ) {
+        workspace()->clientPopup(this)->hide();
+        mnuBtn->setPopup(0);
+        tc = 0;
+    }
+    else {
         mnuBtn->setDown(false); // will stay down if I don't do this
         workspace()->clientPopup(this)->
             popup(mnuBtn->mapToGlobal(mnuBtn->rect().bottomLeft()));
+        tc = this;
     }
-    else {
-        mnuBtn->setPopup( 0 );
-        closeWindow();
-    }
-    t->start();
-    tc = this;
 }
 
 void KWMThemeClient::iconChange()

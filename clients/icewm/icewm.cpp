@@ -1354,12 +1354,14 @@ Client::MousePosition IceWMClient::mousePosition( const QPoint& p ) const
 // Make sure the menu button follows double click conventions set in kcontrol
 void IceWMClient::menuButtonPressed()
 {
-	static QTime* t = 0;
 	static IceWMClient* tc = 0;
-	if ( !t )
-		t = new QTime;
  
-	if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
+	if ( tc == this )
+    {
+        workspace()->clientPopup(this)->hide();
+        tc = 0;
+    }
+    else
 	{
 		QPoint menuPoint ( button[BtnSysMenu]->rect().bottomLeft() );
 
@@ -1370,12 +1372,9 @@ void IceWMClient::menuButtonPressed()
 		// Animate the menu button when pressed
 		if (button[BtnSysMenu])
 			button[BtnSysMenu]->animateClick();
-	}
-	else 
-		closeWindow();
-
-	t->start();
-	tc = this;           
+    
+    	tc = this;           
+    }
 }
 
 

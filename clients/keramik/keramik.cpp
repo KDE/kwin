@@ -1187,28 +1187,26 @@ void KeramikClient::stickyChange( bool on )
 
 void KeramikClient::menuButtonPressed()
 {
-	static QTime *t = NULL;
-	static KeramikClient *tc = NULL;
+	static KeramikClient *tc = 0;
 
-	if ( !t )
-		t = new QTime;
 
-	if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
+	if (tc == this)
+	{
+		workspace()->clientPopup( this )->hide();
+		tc = 0;
+	}
+	else
 	{
 		QPoint menuPoint ( button[MenuButton]->rect().bottomLeft().x() - 6, 
-				button[MenuButton]->rect().bottomLeft().y() + 3 );
+					button[MenuButton]->rect().bottomLeft().y() + 3 );
 		workspace()->clientPopup( this )->popup( button[MenuButton]->mapToGlobal( menuPoint ) );
 	
 		// Post a fake mouse button release event to the menu button
 		// to ensure that it's redrawn in its unpressed state
 		QApplication::postEvent( button[MenuButton], new QMouseEvent( QEvent::MouseButtonRelease,
 						QPoint(0,0), Qt::LeftButton, Qt::LeftButton ) );
-	} else
-		closeWindow();
-
-	
-	t->start();
-	tc = this;
+		tc = this;
+	}
 }
 
 

@@ -415,14 +415,13 @@ void NextClient::addButtons(QHBoxLayout* titleLayout, const QString& spec)
 // (Note: this was almost straight copy and paste from KDEDefaultClient.)
 void NextClient::menuButtonPressed()
 {
-    static QTime* t = 0;
     static NextClient* tc = 0;
-    if ( !t ) {
-        t = new QTime;
-    }
 
-    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
+    if ( tc == this )
     {
+        workspace()->clientPopup(this)->hide();
+        tc = 0;
+    } else {
         // Probably don't need this null check, but we might as well.
         if (button[MENU_IDX]) {
             QPoint menupoint ( button[MENU_IDX]->rect().bottomLeft().x()-1,
@@ -430,12 +429,9 @@ void NextClient::menuButtonPressed()
             workspace()->clientPopup(this)->popup(
                 button[MENU_IDX]->mapToGlobal( menupoint ));
         }
-    } else {
-        closeWindow();
+    
+        tc = this;
     }
-
-    t->start();
-    tc = this;
 }
 
 // Copied, with minor edits, from KDEDefaultClient::slotMaximize()

@@ -445,12 +445,14 @@ void StdClient::iconChange()
  */
 void StdClient::menuButtonPressed()
 {
-    static QTime* t = 0;
     static StdClient* tc = 0;
-    if ( !t )
-	t = new QTime;
 
-    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
+    if ( tc == this )
+    {
+        workspace()->clientPopup(this)->hide();
+        tc = 0;
+    }
+    else
     {
         QPoint menupoint ( button[0]->rect().bottomLeft().x()-1,
                            button[0]->rect().bottomLeft().y()+2 );
@@ -459,11 +461,9 @@ void StdClient::menuButtonPressed()
 
         // Animate the click when the menu button is pressed
         button[0]->animateClick();
-    } else
-	closeWindow();
-
-    t->start();
-    tc = this;
+    
+        tc = this;
+    }
 }
 
 

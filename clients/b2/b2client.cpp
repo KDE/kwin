@@ -778,9 +778,17 @@ void B2Client::activeChange(bool on)
 
 void B2Client::menuButtonPressed()
 {
-    workspace()->clientPopup(this)->
-        popup(button[BtnMenu]->mapToGlobal(button[BtnMenu]->
+    static B2Client *tc = 0;
+    if (tc == this) {
+        workspace()->clientPopup(this)->hide();
+        tc = 0;
+    }
+    else {
+        workspace()->clientPopup(this)->
+            popup(button[BtnMenu]->mapToGlobal(button[BtnMenu]->
                                            rect().bottomLeft()));
+        tc = this;
+    }
 }
 
 void B2Client::slotReset()

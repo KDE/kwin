@@ -1069,22 +1069,21 @@ Client::MousePosition KDEDefaultClient::mousePosition( const QPoint& p ) const
 // Make sure the menu button follows double click conventions set in kcontrol
 void KDEDefaultClient::menuButtonPressed()
 {
-    static QTime* t = 0;
     static KDEDefaultClient* tc = 0;
-    if ( !t )
-        t = new QTime;
 
-    if ( tc != this || t->elapsed() > QApplication::doubleClickInterval() )
+    if ( tc == this )
+    {
+        workspace()->clientPopup(this)->hide();
+        tc = 0;
+    }
+    else
     {
         QPoint menupoint ( button[BtnMenu]->rect().bottomLeft().x()-1,
                            button[BtnMenu]->rect().bottomLeft().y()+2 );
         workspace()->clientPopup(this)->popup(
 							button[BtnMenu]->mapToGlobal( menupoint ));
+        tc = this;
     }
-    else closeWindow();
-
-    t->start();
-    tc = this;
 }
 
 
