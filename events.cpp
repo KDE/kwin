@@ -1405,8 +1405,9 @@ void Client::keyPressEvent( uint key_code )
     if ( !isMove() && !isResize() )
         return;
     bool is_control = key_code & Qt::CTRL;
+    bool is_alt = key_code & Qt::ALT;
     key_code = key_code & 0xffff;
-    int delta = is_control?1:8;
+    int delta = is_control?1:is_alt?32:8;
     QPoint pos = QCursor::pos();
     switch ( key_code ) 
         {
