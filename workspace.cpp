@@ -423,7 +423,11 @@ void Workspace::addClient( Client* c, allowed_t )
         grp->gotLeader( c );
 
     if ( c->isDesktop() )
+        {
         desktops.append( c );
+        if( active_client == NULL && should_get_focus.isEmpty() && c->isOnCurrentDesktop())
+            requestFocus( c ); // CHECKME? make sure desktop is active after startup if there's no other window active
+        }
     else
         {
         if ( c->wantsTabFocus() && !focus_chain.contains( c ))
@@ -1002,19 +1006,16 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         setActiveClient( NULL, Allowed );
 
     if ( c ) 
-        {
         requestFocus( c );
-        }
     else 
-        {
         focusToNull();
-        }
+
     if( !desktops.isEmpty() ) 
         {
         Window w_tmp;
         int i_tmp;
         XGetInputFocus( qt_xdisplay(), &w_tmp, &i_tmp );
-        if( w_tmp == null_focus_window )
+        if( w_tmp == null_focus_window ) // CHECKME?
             requestFocus( findDesktop( true, currentDesktop()));
         }
 
