@@ -47,7 +47,8 @@ KCMRulesList::KCMRulesList( QWidget* parent, const char* name )
         SLOT( moveupClicked()));
     connect( movedown_button, SIGNAL( clicked()),
         SLOT( movedownClicked()));
-        
+    connect( rules_listbox, SIGNAL( doubleClicked ( QListBoxItem * ) ),
+            SLOT( modifyClicked()));
     load();
     }
 
@@ -86,7 +87,8 @@ void KCMRulesList::newClicked()
 void KCMRulesList::modifyClicked()
     {
     int pos = rules_listbox->currentItem();
-    assert( pos != -1 );
+    if ( pos == -1 )
+        return;
     RulesDialog dlg;
     Rules* rule = dlg.edit( rules[ pos ] );
     if( rule == rules[ pos ] )
