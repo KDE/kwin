@@ -1635,7 +1635,7 @@ QPopupMenu* Workspace::clientPopup( Client* c )
 
         popup->insertSeparator();
 
-        popup->insertItem( SmallIconSet( "remove" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").toString(), Options::CloseOp );
+        popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").toString(), Options::CloseOp );
     }
     return popup;
 }
