@@ -150,11 +150,21 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
     if( !role.isEmpty()
         && role != "unknown" && role != "unnamed" ) // Qt sets this if not specified
         {
-        ret->wmclasscomplete = false;
-        ret->wmclass = wmclass_class;
-        ret->wmclassmatch = Rules::ExactMatch;
         ret->windowrole = role;
         ret->windowrolematch = Rules::ExactMatch;
+        if( wmclass_name == wmclass_class )
+            {
+            ret->wmclasscomplete = false;
+            ret->wmclass = wmclass_class;
+            ret->wmclassmatch = Rules::ExactMatch;
+            }
+        else
+            {
+            // WM_CLASS components differ - perhaps the app got -name argument
+            ret->wmclasscomplete = true;
+            ret->wmclass = wmclass_name + ' ' + wmclass_class;
+            ret->wmclassmatch = Rules::ExactMatch;
+            }
         }
     else // no role set
         {
