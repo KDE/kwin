@@ -424,7 +424,7 @@ void RedmondDeco::init()
 
 	if ( providesContextHelp() ) {
 		button[BtnHelp] = new RedmondButton(this, "help", question_bits, false, smallButtons, titleHeight-2, i18n("Help"));
-		connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( contextHelp() ));
+		connect( button[BtnHelp], SIGNAL( clicked() ), this, SLOT( showContextHelp() ));
 		hb->addWidget( button[BtnHelp] );
 	} else {
 		button[BtnHelp] = NULL;

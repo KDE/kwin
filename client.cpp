@@ -1126,7 +1126,7 @@ void Client::takeFocus( bool force, allowed_t )
 
 /*!
   Returns whether the window provides context help or not. If it does,
-  you should show a help menu item or a help button lie '?' and call
+  you should show a help menu item or a help button like '?' and call
   contextHelp() if this is invoked.
 
   \sa contextHelp()
