@@ -41,8 +41,8 @@
 #include "mouse.moc"
 
 
-KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *)
-  : KCModule(parent, "kcmkwm"), config(_config)
+KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
+  : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
   QVBoxLayout *layout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
@@ -356,7 +356,8 @@ KActionsConfig::KActionsConfig (KConfig *_config, QWidget * parent, const char *
 
 KActionsConfig::~KActionsConfig()
 {
-  delete config;
+  if (standAlone)
+    delete config;
 }
 
 const char* KActionsConfig::fixup( const char* s )
@@ -512,15 +513,19 @@ void KActionsConfig::save()
   config->writeEntry("CommandAll1", functionAll(coAll1->currentItem()));
   config->writeEntry("CommandAll2", functionAll(coAll2->currentItem()));
   config->writeEntry("CommandAll3", functionAll(coAll3->currentItem()));
-  config->sync();
-  if ( !kapp->dcopClient()->isAttached() )
+  
+  if (standAlone)
+  {
+    config->sync();
+    if ( !kapp->dcopClient()->isAttached() )
       kapp->dcopClient()->attach();
-  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+  }
 }
 
 void KActionsConfig::defaults()
 {
-    setComboText(coTiDbl, "Shade");
+  setComboText(coTiDbl, "Shade");
   setComboText(coTiAct1,"Raise");
   setComboText(coTiAct2,"Lower");
   setComboText(coTiAct3,"Operations menu");

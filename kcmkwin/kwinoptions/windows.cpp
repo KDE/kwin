@@ -88,12 +88,13 @@
 
 KFocusConfig::~KFocusConfig ()
 {
-	delete config;
+    if (standAlone)
+        delete config;
 }
 
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
-KFocusConfig::KFocusConfig (KConfig *_config, QWidget * parent, const char *)
-    : KCModule(parent, "kcmkwm"), config(_config)
+KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
+    : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),KDialog::spacingHint());
@@ -411,10 +412,13 @@ void KFocusConfig::save( void )
 
     config->setGroup("Desktops");
 
-  config->sync();
-  if ( !kapp->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    if (standAlone)
+    {
+        config->sync();
+        if ( !kapp->dcopClient()->isAttached() )
+            kapp->dcopClient()->attach();
+        kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    }
 }
 
 void KFocusConfig::defaults()
@@ -430,11 +434,12 @@ void KFocusConfig::defaults()
 
 KAdvancedConfig::~KAdvancedConfig ()
 {
-	delete config;
+    if (standAlone)
+        delete config;
 }
 
-KAdvancedConfig::KAdvancedConfig (KConfig *_config, QWidget *parent, const char *)
-    : KCModule(parent, "kcmkwm"), config(_config)
+KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *parent, const char *)
+    : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
@@ -616,10 +621,14 @@ void KAdvancedConfig::save( void )
 
     config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
-  config->sync();
-  if ( !kapp->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    
+    if (standAlone)
+    {
+        config->sync();
+        if ( !kapp->dcopClient()->isAttached() )
+            kapp->dcopClient()->attach();
+        kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    }
 }
 
 void KAdvancedConfig::defaults()
@@ -669,11 +678,12 @@ void KAdvancedConfig::setElectricBorderDelay(int delay)
 
 KMovingConfig::~KMovingConfig ()
 {
-	delete config;
+    if (standAlone)
+        delete config;
 }
 
-KMovingConfig::KMovingConfig (KConfig *_config, QWidget *parent, const char *)
-    : KCModule(parent, "kcmkwm"), config(_config)
+KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *parent, const char *)
+    : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, KDialog::marginHint(),
@@ -1019,10 +1029,13 @@ void KMovingConfig::save( void )
     config->writeEntry(KWM_WNDW_SNAP_ZONE,getWindowSnapZone());
     config->writeEntry("SnapOnlyWhenOverlapping",OverlapSnap->isChecked());
 
-    config->sync();
-    if ( !kapp->dcopClient()->isAttached() )
-        kapp->dcopClient()->attach();
-    kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    if (standAlone)
+    {
+        config->sync();
+        if ( !kapp->dcopClient()->isAttached() )
+            kapp->dcopClient()->attach();
+        kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    }
 }
 
 void KMovingConfig::defaults()

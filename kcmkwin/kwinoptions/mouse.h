@@ -34,7 +34,7 @@ class KActionsConfig : public KCModule
 
 public:
 
-  KActionsConfig( KConfig *_config, QWidget *parent=0, const char* name=0 );
+  KActionsConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
   ~KActionsConfig( );
 
   void load();
@@ -64,6 +64,7 @@ private:
   QComboBox* coAll3;
 
   KConfig *config;
+  bool standAlone;
 
   const char* functionTiDbl(int);
   const char* functionTiAc(int);

@@ -69,7 +69,7 @@ class KFocusConfig : public KCModule
 {
   Q_OBJECT
 public:
-  KFocusConfig( KConfig *_config, QWidget *parent=0, const char* name=0 );
+  KFocusConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
   ~KFocusConfig();
 
   void load();
@@ -111,13 +111,14 @@ private:
   QCheckBox    *showPopupinfo;
 
   KConfig *config;
+  bool     standAlone;
 };
 
 class KMovingConfig : public KCModule
 {
   Q_OBJECT
 public:
-  KMovingConfig( KConfig *config, QWidget *parent=0, const char* name=0 );
+  KMovingConfig( bool _standAlone, KConfig *config, QWidget *parent=0, const char* name=0 );
   ~KMovingConfig();
 
   void load();
@@ -153,6 +154,7 @@ private:
   QComboBox *placementCombo;
 
   KConfig *config;
+  bool     standAlone;
 
   int getBorderSnapZone();
   void setBorderSnapZone( int );
@@ -169,7 +171,7 @@ class KAdvancedConfig : public KCModule
 {
   Q_OBJECT
 public:
-  KAdvancedConfig( KConfig *config, QWidget *parent=0, const char* name=0 );
+  KAdvancedConfig( bool _standAlone, KConfig *config, QWidget *parent=0, const char* name=0 );
   ~KAdvancedConfig();
 
   void load();
@@ -206,6 +208,7 @@ private:
 #endif
 
   KConfig *config;
+  bool     standAlone;
 
   int getElectricBorders( void );
   int getElectricBorderDelay();

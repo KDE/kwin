@@ -33,20 +33,50 @@
 
 #include "main.h"
 
-typedef KGenericFactory<KWinOptions, QWidget> KWinOptFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kwinoptions, KWinOptFactory("kcmkwm") );
-/*
-extern "C" {
-  KCModule *create_kwinoptions ( QWidget *parent, const char* name)
-  {
-    //CT there's need for decision: kwm or kwin?
-    KGlobal::locale()->insertCatalogue("kcmkwm");
-    return new KWinOptions( parent, name);
-  }
+extern "C"
+{
+	KCModule *create_kwinfocus(QWidget *parent, const char *name)
+	{
+		//CT there's need for decision: kwm or kwin?
+		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KFocusConfig(true, c, parent, name);
+	}
+
+	KCModule *create_kwinactions(QWidget *parent, const char *name)
+	{
+		//CT there's need for decision: kwm or kwin?
+		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KActionsConfig(true, c, parent, name);
+	}
+
+	KCModule *create_kwinmoving(QWidget *parent, const char *name)
+	{
+		//CT there's need for decision: kwm or kwin?
+		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KMovingConfig(true, c, parent, name);
+	}
+
+	KCModule *create_kwinadvanced(QWidget *parent, const char *name)
+	{
+		//CT there's need for decision: kwm or kwin?
+		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KConfig *c = new KConfig("kwinrc", false, true);
+		return new KAdvancedConfig(true, c, parent, name);
+	}
+
+	KCModule *create_kwinoptions ( QWidget *parent, const char* name)
+	{
+		//CT there's need for decision: kwm or kwin?
+		KGlobal::locale()->insertCatalogue("kcmkwm");
+		return new KWinOptions( parent, name);
+	}
 }
-*/
-KWinOptions::KWinOptions(QWidget *parent, const char *name, const QStringList &)
-  : KCModule(KWinOptFactory::instance(), parent, name)
+
+KWinOptions::KWinOptions(QWidget *parent, const char *name)
+  : KCModule(parent, name)
 {
   mConfig = new KConfig("kwinrc", false, true);
 
@@ -54,19 +84,19 @@ KWinOptions::KWinOptions(QWidget *parent, const char *name, const QStringList &)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  mFocus = new KFocusConfig(mConfig, this, "KWin Focus Config");
+  mFocus = new KFocusConfig(false, mConfig, this, "KWin Focus Config");
   tab->addTab(mFocus, i18n("&Focus"));
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mActions = new KActionsConfig(mConfig, this, "KWin Actions");
+  mActions = new KActionsConfig(false, mConfig, this, "KWin Actions");
   tab->addTab(mActions, i18n("Actio&ns"));
   connect(mActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mMoving = new KMovingConfig(mConfig, this, "KWin Moving");
+  mMoving = new KMovingConfig(false, mConfig, this, "KWin Moving");
   tab->addTab(mMoving, i18n("&Moving"));
   connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mAdvanced = new KAdvancedConfig(mConfig, this, "KWin Advanced");
+  mAdvanced = new KAdvancedConfig(false, mConfig, this, "KWin Advanced");
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 }
