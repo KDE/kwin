@@ -565,7 +565,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   if (!m_button[OnAllDesktopsButton]){
                       const bool oad = isOnAllDesktops();
                       m_button[OnAllDesktopsButton] = new PlastikButton(this, "on_all_desktops",
-                              oad?i18n("Not On All Desktops"):i18n("On All Desktops"), OnAllDesktopsButton,
+                              oad?i18n("Not on all desktops"):i18n("On all desktops"), OnAllDesktopsButton,
                               buttonSize, true);
                       m_button[OnAllDesktopsButton]->setOn( oad );
                       connect(m_button[OnAllDesktopsButton], SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
@@ -608,7 +608,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   if (!m_button[AboveButton]){
                       bool above = keepAbove();
                       m_button[AboveButton] = new PlastikButton(this, "above",
-                              above?i18n("Do Not Keep Above Others"):i18n("Keep Above Others"), AboveButton, buttonSize, true);
+                              above?i18n("Do not keep above others"):i18n("Keep above others"), AboveButton, buttonSize, true);
                       m_button[AboveButton]->setOn( above );
                       connect(m_button[AboveButton], SIGNAL(clicked()), SLOT(slotKeepAbove()));
                       layout->addWidget(m_button[AboveButton], 0, Qt::AlignHCenter | Qt::AlignTop);
@@ -618,7 +618,7 @@ void PlastikClient::addButtons(QBoxLayout *layout, const QString& s, int buttonS
                   if (!m_button[BelowButton]){
                       bool below = keepBelow();
                       m_button[BelowButton] = new PlastikButton(this, "below",
-                              below?i18n("Do Not Keep Below Others"):i18n("Keep Below Others"), BelowButton, buttonSize, true);
+                              below?i18n("Do not keep below others"):i18n("Keep below others"), BelowButton, buttonSize, true);
                       m_button[BelowButton]->setOn( below );
                       connect(m_button[BelowButton], SIGNAL(clicked()), SLOT(slotKeepBelow()));
                       layout->addWidget(m_button[BelowButton], 0, Qt::AlignHCenter | Qt::AlignTop);
@@ -774,8 +774,8 @@ void PlastikClient::desktopChange()
     if ( m_button[OnAllDesktopsButton] ) {
         m_button[OnAllDesktopsButton]->setOn( isOnAllDesktops() );
         m_button[OnAllDesktopsButton]->setTipText( isOnAllDesktops() ?
-                i18n("Not On All Desktops")
-                : i18n("On All Desktops"));
+                i18n("Not on all desktops")
+                : i18n("On all desktops"));
     }
 }
 
@@ -821,13 +821,13 @@ void PlastikClient::slotKeepAbove()
     if (m_button[AboveButton])
     {
         m_button[AboveButton]->setOn(above);
-        m_button[AboveButton]->setTipText( above?i18n("Do Not Keep Above Others"):i18n("Keep Above Others") );
+        m_button[AboveButton]->setTipText( above?i18n("Do not keep above others"):i18n("Keep above others") );
     }
 
     if (m_button[BelowButton] && m_button[BelowButton]->isOn())
     {
         m_button[BelowButton]->setOn(false);
-        m_button[BelowButton]->setTipText( i18n("Keep Below Others") );
+        m_button[BelowButton]->setTipText( i18n("Keep below others") );
     }
 }
 
@@ -838,13 +838,13 @@ void PlastikClient::slotKeepBelow()
     if (m_button[BelowButton])
     {
         m_button[BelowButton]->setOn(below);
-        m_button[BelowButton]->setTipText( below?i18n("Do Not Keep Below Others"):i18n("Keep Below Others") );
+        m_button[BelowButton]->setTipText( below?i18n("Do not keep below others"):i18n("Keep below others") );
     }
 
     if (m_button[AboveButton] && m_button[AboveButton]->isOn())
     {
         m_button[AboveButton]->setOn(false);
-        m_button[AboveButton]->setTipText( i18n("Keep Above Others") );
+        m_button[AboveButton]->setTipText( i18n("Keep above others") );
     }
 }
 
