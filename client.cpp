@@ -1386,7 +1386,7 @@ bool Client::isMaximizable() const
 {
     if ( isMaximized() )
 	return TRUE;
-    return isResizable() && !isTransient() && !isTool();
+    return isResizable() && !isTool();
 }
 
 /*
