@@ -41,46 +41,50 @@ WindowRules::WindowRules()
     {
     }
 
+#define READ_MATCH_STRING( var, func ) \
+    var = cfg.readEntry( #var ) func; \
+    var##regexp = cfg.readBoolEntry( #var "regexp" );
+    
+#define READ_SET_RULE( var, type, func ) \
+    var = func ( cfg.read##type##Entry( #var )); \
+    var##rule = readRule( cfg, #var "rule" );
+    
+#define READ_SET_RULE_2( var, type, func, funcarg ) \
+    var = func ( cfg.read##type##Entry( #var ), funcarg ); \
+    var##rule = readRule( cfg, #var "rule" );
+    
 WindowRules::WindowRules( KConfig& cfg )
     {
     wmclass = cfg.readEntry( "wmclass" ).lower().latin1();
     wmclassregexp = cfg.readBoolEntry( "wmclassregexp" );
     wmclasscomplete = cfg.readBoolEntry( "wmclasscomplete" );
-    windowrole = cfg.readEntry( "windowrole" ).lower().latin1();
-    windowroleregexp = cfg.readBoolEntry( "windowroleregexp" );
-    title = cfg.readEntry( "title" );
-    titleregexp = cfg.readBoolEntry( "titleregexp" );
-    extrarole = cfg.readEntry( "extrarole" ).lower().latin1();
-    extraroleregexp = cfg.readBoolEntry( "extraroleregexp" );
-    clientmachine = cfg.readEntry( "clientmachine" ).lower().latin1();
-    clientmachineregexp = cfg.readBoolEntry( "clientmachineregexp" );
+    READ_MATCH_STRING( windowrole, .lower().latin1() );
+    READ_MATCH_STRING( title, );
+    READ_MATCH_STRING( extrarole, .lower().latin1() );
+    READ_MATCH_STRING( clientmachine, .lower().latin1() );
     types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
-    placement = Placement::policyFromString( cfg.readEntry( "placement" ), false );
-    placementrule = readRule( cfg, "placementrule" );
-    position = cfg.readPointEntry( "position" );
-    positionrule = readRule( cfg, "positionrule" );
-    size = cfg.readSizeEntry( "size" );
-    sizerule = readRule( cfg, "sizerule" );
+    READ_SET_RULE_2( placement,, Placement::policyFromString, false );
+    READ_SET_RULE( position, Point, );
+    READ_SET_RULE( size, Size, );
     if( size.isEmpty())
         sizerule = DontCareRule;
-    minsize = cfg.readSizeEntry( "minsize" );
-    minsizerule = readRule( cfg, "minsizerule" );
+    READ_SET_RULE( minsize, Size, );
     if( !minsize.isValid())
         minsizerule = DontCareRule;
-    maxsize = cfg.readSizeEntry( "maxsize" );
-    maxsizerule = readRule( cfg, "maxsizerule" );
+    READ_SET_RULE( maxsize, Size, );
     if( maxsize.isEmpty())
         maxsizerule = DontCareRule;
-    desktop = cfg.readNumEntry( "desktop" );
-    desktoprule = readRule( cfg, "desktoprule" );
+    READ_SET_RULE( desktop, Num, );
     type = readType( cfg, "type" );
     typerule = type != NET::Unknown ? readForceRule( cfg, "typerule" ) : DontCareRule;
-    above = cfg.readBoolEntry( "above" );
-    aboverule = readRule( cfg, "aboverule" );
-    below = cfg.readBoolEntry( "below" );
-    belowrule = readRule( cfg, "belowrule" );
+    READ_SET_RULE( above, Bool, );
+    READ_SET_RULE( below, Bool, );
     kdDebug() << "READ RULE:" << wmclass << endl;
     }
+
+#undef READ_MATCH_STRING
+#undef READ_SET_RULE
+#undef READ_SET_RULE_2
 
 #define WRITE_MATCH_STRING( var, cast ) \
     if( !var.isEmpty()) \
