@@ -503,6 +503,20 @@ void Client::manage( bool isMapped )
 		geom.setRect( xSizeHint.x, geom.y(), geom.width(), geom.height() );
 	    if ( xSizeHint.y != 0 && geom.y() == 0 )
 		geom.setRect( geom.x(), xSizeHint.y, geom.width(), geom.height() );
+
+	    if ( (xSizeHint.flags & USPosition) == 0 ) {
+		QRect area = workspace()->clientArea();
+		if ( !area.contains( geom.topLeft() ) ) {
+		    int tx = geom.x();
+		    int ty = geom.y();
+		    if ( tx >= 0 && tx < area.x() )
+			tx = area.x();
+		    if ( ty >= 0 && ty < area.y() )
+			ty = area.y();
+		    geom.moveTopLeft( QPoint( tx, ty ) );
+		}
+	    }
+	    
 	    placementDone = TRUE;
 	}
  	if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) {
@@ -519,6 +533,7 @@ void Client::manage( bool isMapped )
     activateLayout();
     resize ( sizeForWindowSize( geom.size() ) );
     activateLayout();
+    
 
     move( geom.x(), geom.y() );
     gravitate( FALSE );
@@ -1022,7 +1037,7 @@ QSize Client::sizeForWindowSize( const QSize& wsize, bool ignore_height) const
 }
 
 
-/*!  
+/*!
   Returns whether the window is resizable or has a fixed size.
  */
 bool Client::isResizable() const
