@@ -279,7 +279,7 @@ bool Client::manage( Window w, bool isMapped )
 
     updateDecoration( false ); // also gravitates
     // TODO is CentralGravity right here, when resizing is done after gravitating?
-    resize( sizeForClientSize( geom.size() ), IgnoreGravity );
+    plainResize( sizeForClientSize( geom.size()));
 
     if( !placementDone ) 
         { // placement needs to be after setting size

@@ -747,7 +747,7 @@ void Client::getWmNormalHints()
         { // update to match restrictions
         QSize new_size = adjustedSize( size());
         if( new_size != size())
-            resize( new_size, UseGravity );
+            resizeWithChecks( new_size );
         }
     updateAllowedActions(); // affects isResizeable()
     }
@@ -885,7 +885,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             resetMaximize();
             ++block_geometry;
             move( new_pos );
-            resize( ns, IgnoreGravity ); // TODO must(?) resize before gravitating?
+            plainResize( ns ); // TODO must(?) resize before gravitating?
             --block_geometry;
             setGeometry( QRect( calculateGravitation( false, gravity ), size()), ForceGeometrySet );
             }
@@ -907,7 +907,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             resetMaximize();
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
-            resize( ns, UseGravity );
+            resizeWithChecks( ns );
             xSizeHint.win_gravity = save_gravity;
             }
         }
@@ -916,10 +916,19 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
     }
 
-void Client::resizeWithGravity( int w, int h, ForceGeometry_t force )
+void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
     {
     int newx = x();
     int newy = y();
+    QRect area = workspace()->clientArea( geometry().center(), desktop());
+    // don't allow growing larger than workarea
+    if( w > area.width())
+        w = area.width();
+    if( h > area.height())
+        h = area.height();
+    QSize tmp = adjustedSize( QSize( w, h )); // checks size constraints, including min/max size
+    w = tmp.width();
+    h = tmp.height();
     switch( xSizeHint.win_gravity )
         {
         case NorthWestGravity: // top left corner doesn't move
@@ -956,6 +965,24 @@ void Client::resizeWithGravity( int w, int h, ForceGeometry_t force )
             newx = newx + width() - w;
             newy = newy + height() - h;
             break;
+        }
+    // if it would be moved outside of workarea, keep it inside,
+    // see also Client::computeWorkareaDiff()
+    if( workarea_diff_x != INT_MIN ) // was inside
+        {
+        if( newx < area.left())
+            newx = area.left();
+        if( newx + w > area.right() + 1 )
+            newx = area.right() + 1 - w;
+        assert( newx >= area.left() && newx + w <= area.right() + 1 ); // width was checked above
+        }
+    if( workarea_diff_y != INT_MIN ) // was inside
+        {
+        if( newy < area.top())
+            newy = area.top();
+        if( newy + h > area.bottom() + 1 )
+            newy = area.bottom() + 1 - h;
+        assert( newy >= area.top() && newy + h <= area.bottom() + 1 ); // height was checked above
         }
     setGeometry( newx, newy, w, h, force );
     }
@@ -1047,15 +1074,10 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         }
     }
 
-void Client::resize( int w, int h, UseGravity_t use_gravity, ForceGeometry_t force )
+void Client::plainResize( int w, int h, ForceGeometry_t force )
     { // TODO make this deffered with isResize() ? old kwin did
     if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
         return;
-    if( use_gravity == UseGravity )
-        {
-        resizeWithGravity( w, h, force );
-        return;
-        }
     frame_geometry.setSize( QSize( w, h ));
     if( !isShade())
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
@@ -1189,7 +1211,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.width() == 0 )
                     { // needs placement
-                    resize( adjustedSize(QSize(width(), clientArea.height())), IgnoreGravity );
+                    plainResize( adjustedSize(QSize(width(), clientArea.height())));
                     workspace()->placeSmart( this );
                     }
                 else
@@ -1209,7 +1231,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.height() == 0 )
                     { // needs placement
-                    resize( adjustedSize(QSize(clientArea.width(), height())), IgnoreGravity );
+                    plainResize( adjustedSize(QSize(clientArea.width(), height())));
                     workspace()->placeSmart( this );
                     }
                 else
@@ -1233,7 +1255,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                     s.setWidth( geom_restore.width());
                 if( geom_restore.height() > 0 )
                     s.setHeight( geom_restore.height());
-                resize( adjustedSize( s ), IgnoreGravity );
+                plainResize( adjustedSize( s ));
                 workspace()->placeSmart( this );
                 restore = geometry();
                 if( geom_restore.width() > 0 )

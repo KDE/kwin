@@ -246,9 +246,9 @@ void Client::updateDecoration( bool check_workspace_pos, bool force, bool delay_
         int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( false ));
         if( !isShade())
-            resize( sizeForClientSize( clientSize()), IgnoreGravity, ForceGeometrySet );
+            plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         else
-            resize( sizeForClientSize( QSize( clientSize().width(), 0 ), true ), IgnoreGravity, ForceGeometrySet );
+            plainResize( sizeForClientSize( QSize( clientSize().width(), 0 ), true ), ForceGeometrySet );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         do_show = true;
@@ -284,9 +284,9 @@ void Client::destroyDecoration( bool delay_delete )
         int save_workarea_diff_y = workarea_diff_y;
         move( grav );
         if( !isShade())
-            resize( clientSize(), IgnoreGravity, ForceGeometrySet );
+            plainResize( clientSize(), ForceGeometrySet );
         else
-            resize( QSize( clientSize().width(), 0 ), IgnoreGravity, ForceGeometrySet );
+            plainResize( QSize( clientSize().width(), 0 ), ForceGeometrySet );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         }
@@ -308,7 +308,7 @@ void Client::checkBorderSizes()
     border_top = new_top;
     border_bottom = new_bottom;
     move( calculateGravitation( false ));
-    resize( sizeForClientSize( clientSize()), IgnoreGravity, ForceGeometrySet );
+    plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
     checkWorkspacePosition();
     --block_geometry;
     setGeometry( geometry(), ForceGeometrySet );
@@ -735,7 +735,7 @@ void Client::setShade( ShadeMode mode )
 //        if ( !wasStaticContents )
 //            clearWFlags( WStaticContents );
         shade_geometry_change = false;
-        resize( s, IgnoreGravity );
+        plainResize( s );
         if( isActive())
             workspace()->focusToNull();
         }
@@ -760,7 +760,7 @@ void Client::setShade( ShadeMode mode )
 //        if ( !wasStaticContents )
 //            clearWFlags( WStaticContents );
         shade_geometry_change = false;
-        resize( s, IgnoreGravity );
+        plainResize( s );
         if( shade_mode == ShadeHover || shade_mode == ShadeActivated )
             setActive( TRUE );
         XMapWindow( qt_xdisplay(), wrapperId());

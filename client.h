@@ -192,8 +192,9 @@ class Client : public QObject, public KDecorationDefines
         void setGeometry( const QRect& r, ForceGeometry_t force = NormalGeometrySet );
         void move( int x, int y, ForceGeometry_t force = NormalGeometrySet );
         void move( const QPoint & p, ForceGeometry_t force = NormalGeometrySet );
-        void resize( int w, int h, UseGravity_t use_gravity, ForceGeometry_t force = NormalGeometrySet );
-        void resize( const QSize& s, UseGravity_t use_gravity, ForceGeometry_t force = NormalGeometrySet );
+        // plainResize() simply resizes
+        void plainResize( int w, int h, ForceGeometry_t force = NormalGeometrySet );
+        void plainResize( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
 
         void growHorizontal();
         void shrinkHorizontal();
@@ -326,7 +327,9 @@ class Client : public QObject, public KDecorationDefines
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
         static int computeWorkareaDiff( int left, int right, int a_left, int a_right );
         void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity = 0 );
-        void resizeWithGravity( int w, int h, ForceGeometry_t force );
+        // resizeWithChecks() resizes according to gravity, and checks workarea position
+        void resizeWithChecks( int w, int h, ForceGeometry_t force = NormalGeometrySet );
+        void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
 
         bool startMoveResize();
         void finishMoveResize( bool cancel );
@@ -774,9 +777,14 @@ inline void Client::move( const QPoint & p, ForceGeometry_t force )
     move( p.x(), p.y(), force );
     }
 
-inline void Client::resize( const QSize& s, UseGravity_t use_gravity, ForceGeometry_t force )
+inline void Client::plainResize( const QSize& s, ForceGeometry_t force )
     {
-    resize( s.width(), s.height(), use_gravity, force );
+    plainResize( s.width(), s.height(), force );
+    }
+
+inline void Client::resizeWithChecks( const QSize& s, ForceGeometry_t force )
+    {
+    resizeWithChecks( s.width(), s.height(), force );
     }
 
 inline bool Client::hasUserTimeSupport() const
