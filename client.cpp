@@ -208,13 +208,12 @@ void WindowWrapper::resizeEvent( QResizeEvent * )
 {
     if ( win && reparented ) {
 	if ( isVisible() ) {
-	    if( ++cnt > 3 ) {
-	        doResize(); // Too many pending, do it now.
-	    }
-	    else {
-	        delete timer;
+	    if ( ++cnt > 3 ) {
+		doResize(); // Too many pending, do it now.
+	    } else {
+		delete timer;
 		timer = new QTimer( this );
-		connect( timer, SIGNAL( timeout() ), 
+		connect( timer, SIGNAL( timeout() ),
 			 this, SLOT( doResize() ) );
 		timer->start( 10, TRUE );
 	    }
@@ -498,27 +497,6 @@ void Client::manage( bool isMapped )
 
     delete info;
 
-    // Notify kicker that an app has mapped a window.
-
-    XClassHint xch;
-
-    if (0 != XGetClassHint(qt_xdisplay(), win, &xch)) {
-
-      QByteArray params;
-      QDataStream stream(params, IO_WriteOnly);
-      stream << QString::fromUtf8(xch.res_name);
-
-      kapp->dcopClient()->send(
-        "kicker",
-        "TaskbarApplet",
-        "clientMapped(QString)",
-        params
-      );
-
-      XFree(xch.res_name);
-      XFree(xch.res_class);
-    }
-
     workspace()->updateClientArea();
 }
 
@@ -724,7 +702,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 
     bool stacking = e.value_mask & CWStackMode;
     int stack_mode = e.detail;
-    
+
     if ( e.value_mask & CWBorderWidth ) {
 	// first, get rid of a window border
 	XWindowChanges wc;
@@ -755,7 +733,7 @@ bool Client::configureRequest( XConfigureRequestEvent& e )
 	resize( sizeForWindowSize( QSize( nw, nh ) ) );
     }
 
-    
+
     if ( stacking ){
 	switch (stack_mode){
 	case Above:
