@@ -160,3 +160,7 @@ void Options::reload()
     window_snap_zone = config->readNumEntry("WindowSnapZone", 10);
 
 }
+
+#include "options.moc" 
+
+
