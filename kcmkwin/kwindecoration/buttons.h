@@ -38,6 +38,8 @@
 
 #include <klistview.h>
 
+class KDecorationFactory;
+
 /**
  * This class holds the button data.
  */
@@ -195,6 +197,11 @@ class ButtonPositionWidget : public QWidget
 		ButtonPositionWidget(QWidget *parent = 0, const char* name = 0);
 		~ButtonPositionWidget();
 
+		/**
+		 * set the factory, so the class e.g. knows which buttons are supported by the client
+		 */
+		void setDecorationFactory(KDecorationFactory *factory);
+
 		QString buttonsLeft() const;
 		QString buttonsRight() const;
 		void setButtonsLeft(const QString &buttons);
@@ -209,6 +216,9 @@ class ButtonPositionWidget : public QWidget
 
 		ButtonDropSite* m_dropSite;
 		ButtonSource *m_buttonSource;
+
+		KDecorationFactory *m_factory;
+		QString m_supportedButtons;
 };
 
 

@@ -39,6 +39,9 @@
 #include <kdialog.h>
 #include <klocale.h>
 #include <kglobalsettings.h>
+
+#include <kdecorationfactory.h>
+
 #include "buttons.h"
 #include "pixmaps.h"
 
@@ -251,7 +254,10 @@ int ButtonDropSiteItem::height()
 void ButtonDropSiteItem::draw(QPainter *p, const QColorGroup& cg, QRect r)
 {
 // 	p->fillRect(r, cg.base() );
-	p->setPen(cg.foreground() );
+	if (m_button.supported)
+		p->setPen(cg.foreground() );
+	else
+		p->setPen(cg.mid() );
 	QBitmap &i = m_button.icon;
 	p->drawPixmap(r.left()+(r.width()-i.width())/2, r.top()+(r.height()-i.height())/2, i);
 }
@@ -665,7 +671,8 @@ Button ButtonSourceItem::button() const
 
 
 ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
-    : QWidget(parent,name)
+    : QWidget(parent,name),
+      m_factory(0)
 {
 	QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint() );
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
@@ -707,53 +714,110 @@ ButtonPositionWidget::~ButtonPositionWidget()
 {
 }
 
+void ButtonPositionWidget::setDecorationFactory(KDecorationFactory *factory)
+{
+	if (!factory)
+		return;
+
+	m_factory = factory;
+
+	// get the list of supported buttons
+	if (m_factory->supports(KDecorationDefines::AbilityAnnounceButtons) ) {
+		QString supportedButtons;
+
+		if (m_factory->supports(KDecorationDefines::AbilityButtonMenu) )
+			supportedButtons.append('M');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonOnAllDesktops) )
+			supportedButtons.append('S');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonSpacer) )
+			supportedButtons.append('_');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonHelp) )
+			supportedButtons.append('H');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonMinimize) )
+			supportedButtons.append('I');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonMaximize) )
+			supportedButtons.append('A');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonClose) )
+			supportedButtons.append('X');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonAboveOthers) )
+			supportedButtons.append('F');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonBelowOthers) )
+			supportedButtons.append('B');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonShade) )
+			supportedButtons.append('L');
+		if (m_factory->supports(KDecorationDefines::AbilityButtonResize) )
+			supportedButtons.append('R');
+
+		m_supportedButtons = supportedButtons;
+	} else {
+		// enable all buttons!
+		m_supportedButtons = "RLBFXAIHSM_";
+	}
+
+	// update the button lists...
+	// 1. set status on the source items...
+	QListViewItemIterator it(m_buttonSource);
+	while (it.current() ) {
+		ButtonSourceItem *i = dynamic_cast<ButtonSourceItem*>(it.current() );
+		if (i) {
+			Button b = i->button();
+			b.supported = m_supportedButtons.contains(b.type);
+			i->setButton(b);
+		}
+		++it;
+	}
+	// 2. rebuild the drop site items...
+	setButtonsLeft(buttonsLeft() );
+	setButtonsRight(buttonsRight() );
+}
+
 Button ButtonPositionWidget::getButton(QChar type, bool& success) {
 	success = true;
 
 	if (type == 'R') {
 		QBitmap bmp(resize_width, resize_height, resize_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Resize"), bmp, 'R', false, true);
+		return Button(i18n("Resize"), bmp, 'R', false, m_supportedButtons.contains('R') );
 	} else if (type == 'L') {
 		QBitmap bmp(shade_width, shade_height, shade_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Shade"), bmp, 'L', false, true);
+		return Button(i18n("Shade"), bmp, 'L', false, m_supportedButtons.contains('L') );
 	} else if (type == 'B') {
 		QBitmap bmp(keepbelowothers_width, keepbelowothers_height, keepbelowothers_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Keep Below Others"), bmp, 'B', false, true);
+		return Button(i18n("Keep Below Others"), bmp, 'B', false, m_supportedButtons.contains('B') );
 	} else if (type == 'F') {
 		QBitmap bmp(keepaboveothers_width, keepaboveothers_height, keepaboveothers_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Keep Above Others"), bmp, 'F', false, true);
+		return Button(i18n("Keep Above Others"), bmp, 'F', false, m_supportedButtons.contains('F') );
 	} else if (type == 'X') {
 		QBitmap bmp(close_width, close_height, close_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Close"), bmp, 'X', false, true);
+		return Button(i18n("Close"), bmp, 'X', false,  m_supportedButtons.contains('X') );
 	} else if (type == 'A') {
 		QBitmap bmp(maximize_width, maximize_height, maximize_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Maximize"), bmp, 'A', false, true);
+		return Button(i18n("Maximize"), bmp, 'A', false, m_supportedButtons.contains('A') );
 	} else if (type == 'I') {
 		QBitmap bmp(minimize_width, minimize_height, minimize_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Minimize"), bmp, 'I', false, true);
+		return Button(i18n("Minimize"), bmp, 'I', false, m_supportedButtons.contains('I') );
 	} else if (type == 'H') {
 		QBitmap bmp(help_width, help_height, help_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Help"), bmp, 'H', false, true);
+		return Button(i18n("Help"), bmp, 'H', false, m_supportedButtons.contains('H') );
 	} else if (type == 'S') {
 		QBitmap bmp(onalldesktops_width, onalldesktops_height, onalldesktops_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("On All Desktops"), bmp, 'S', false, true);
+		return Button(i18n("On All Desktops"), bmp, 'S', false, m_supportedButtons.contains('S') );
 	} else if (type == 'M') {
 		QBitmap bmp(menu_width, menu_height, menu_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Menu"), bmp, 'M', false, true);
+		return Button(i18n("Menu"), bmp, 'M', false, m_supportedButtons.contains('M') );
 	} else if (type == '_') {
 		QBitmap bmp(spacer_width, spacer_height, spacer_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("--- spacer ---"), bmp, '_', true, true);
+		return Button(i18n("--- spacer ---"), bmp, '_', true, m_supportedButtons.contains('_') );
 	} else {
 		return Button();
 		success = false;

@@ -137,6 +137,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	// Add nifty dnd button modification widgets
 	buttonPositionWidget = new ButtonPositionWidget(buttonPage, "button_position_widget");
+	buttonPositionWidget->setDecorationFactory(plugins->factory() );
 	QHBoxLayout* buttonControlLayout = new QHBoxLayout(buttonLayout);
 	buttonControlLayout->addSpacing(20);
 	buttonControlLayout->addWidget(buttonPositionWidget);
@@ -375,6 +376,9 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
         plugins->destroyPreviousPlugin();
 
         checkSupportedBorderSizes();
+
+	// inform buttonPositionWidget about the new factory...
+	buttonPositionWidget->setDecorationFactory(plugins->factory() );
 
 	currentName = styleToConfigLib( currentName );
 
