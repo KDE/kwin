@@ -11,7 +11,7 @@ kcm_kwinrules_la_SOURCES = main.cpp ruleswidget.cpp ruleslist.cpp kwinsrc.cpp de
 kcm_kwinrules_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
 kcm_kwinrules_la_LIBADD = $(LIB_KDEUI)
 
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kcmkwm.pot
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kcmkwinrules.pot
 
 xdg_apps_DATA = kwinrules.desktop
