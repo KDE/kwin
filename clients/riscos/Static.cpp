@@ -20,6 +20,11 @@
   Boston, MA 02111-1307, USA.
 */
 
+// for enable-final
+#ifdef Bool
+#undef Bool 
+#endif
+
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qpainter.h>
