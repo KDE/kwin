@@ -986,7 +986,6 @@ void Workspace::activateClient( Client* c)
     iconifyOrDeiconifyTransientsOf( c );
     if ( options->focusPolicyIsReasonable() ) {
 	requestFocus( c );
-	Events::raise( Events::Activate );
     }
 }
 
