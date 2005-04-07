@@ -53,7 +53,7 @@ extern int screen_number;
 
 Workspace *Workspace::_self = 0;
 
-KProcess* kompmgr;
+KProcess* kompmgr = 0;
 
 bool allowKompmgrRestart = TRUE;
 
@@ -2359,7 +2359,7 @@ void Workspace::stopKompmgr()
 
 bool Workspace::kompmgrIsRunning()
 {
-   return kompmgr->isRunning();
+   return kompmgr && kompmgr->isRunning();
 }
 
 void Workspace::unblockKompmgrRestart()
