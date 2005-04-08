@@ -1,4 +1,4 @@
-/********x*********************************************************
+/*****************************************************************
  KWin - the KDE window manager
  This file is part of the KDE project.
 
@@ -739,9 +739,7 @@ void Workspace::slotWalkThroughWindows()
         else
             // if the shortcut has no modifiers, don't show the tabbox,
             // don't grab, but simply go to the next window
-            // use the CDE style, because with KDE style it would cycle
-            // between the active and previously active window
-            CDEWalkThroughWindows( true );
+            KDEOneStepThroughWindows( true );
         }
     }
 
@@ -765,7 +763,7 @@ void Workspace::slotWalkBackThroughWindows()
             }
         else
             {
-            CDEWalkThroughWindows( false );
+            KDEOneStepThroughWindows( false );
             }
         }
     }
