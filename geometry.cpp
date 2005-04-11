@@ -182,6 +182,10 @@ void Workspace::updateClientArea( bool force )
              it != clients.end();
              ++it)
             (*it)->checkWorkspacePosition();
+        for( ClientList::ConstIterator it = desktops.begin();
+             it != desktops.end();
+             ++it)
+            (*it)->checkWorkspacePosition();
         }
     delete[] screens;
     delete[] new_sareas;
@@ -858,6 +862,13 @@ int Client::computeWorkareaDiff( int left, int right, int a_left, int a_right )
 
 void Client::checkWorkspacePosition()
     {
+    if( isDesktop())
+        {
+        QRect area = workspace()->clientArea( FullArea, this );
+        if( geometry() != area )
+            setGeometry( area );
+        return;
+        }
     if( maximizeMode() != MaximizeRestore )
 	// TODO update geom_restore?
         changeMaximize( false, false, true ); // adjust size
