@@ -425,7 +425,7 @@ bool Client::manage( Window w, bool isMapped )
     if( isTopMenu()) // they're shown in Workspace::addClient() if their mainwindow
         hideClient( true ); // is the active one
 
-    if( !doNotShow )
+    if( isShown( true ) && !doNotShow )
         {
         if( isDialog())
             Notify::raise( Notify::TransNew );
@@ -465,68 +465,9 @@ bool Client::manage( Window w, bool isMapped )
                 }
             }
         }
-    else // doNotShow
-        { // SELI HACK !!!
-        hideClient( true );
-        }
-    if ( isShown( true ) && !doNotShow )
+    else if( !doNotShow ) // if( !isShown( true ) && !doNotShow )
         {
-        if( isDialog())
-            Notify::raise( Notify::TransNew );
-        if( isNormalWindow())
-            Notify::raise( Notify::New );
-
-        bool allow;
-        if( session )
-            allow = session->active && !workspace()->wasUserInteraction();
-        else
-            allow = workspace()->allowClientActivation( this, userTime(), false );
-
-        // if session saving, force showing new windows (i.e. "save file?" dialogs etc.)
-        // also force if activation is allowed
-        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving()))
-            workspace()->setCurrentDesktop( desktop());
-
-        if( isOnCurrentDesktop())
-            {
-            setMappingState( NormalState );
-
-            if( isMapped )
-                {
-                workspace()->raiseClient( this );
-                rawShow();
-                }
-            else
-                {
-                if( allow )
-                    {
-                    workspace()->raiseClient( this );
-                    rawShow();
-                    if( !isSpecialWindow() || isOverride())
-                        if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
-                            workspace()->requestFocus( this );
-                    }
-                else
-                    {
-                    workspace()->restackClientUnderActive( this );
-                    rawShow();
-                    if( !session && ( !isSpecialWindow() || isOverride()))
-                        demandAttention();
-                    }
-                }
-            }
-        else
-            {
-            updateVisibility();
-            workspace()->raiseClient( this );
-            if( !session && !isMapped )
-                demandAttention();
-            }
-        }
-    else if( !doNotShow ) // !isShown()
-        {
-        rawHide();
-        setMappingState( IconicState );
+        updateVisibility();
         }
     else // doNotShow
         { // SELI HACK !!!
