@@ -425,6 +425,50 @@ bool Client::manage( Window w, bool isMapped )
     if( isTopMenu()) // they're shown in Workspace::addClient() if their mainwindow
         hideClient( true ); // is the active one
 
+    if( !doNotShow )
+        {
+        if( isDialog())
+            Notify::raise( Notify::TransNew );
+        if( isNormalWindow())
+            Notify::raise( Notify::New );
+
+        bool allow;
+        if( session )
+            allow = session->active && !workspace()->wasUserInteraction();
+        else
+            allow = workspace()->allowClientActivation( this, userTime(), false );
+
+        // if session saving, force showing new windows (i.e. "save file?" dialogs etc.)
+        // also force if activation is allowed
+        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving()))
+            workspace()->setCurrentDesktop( desktop());
+
+        if( isOnCurrentDesktop() && !isMapped && !allow )
+            workspace()->restackClientUnderActive( this );
+        else
+            workspace()->raiseClient( this );
+
+        updateVisibility();
+
+        if( !isMapped )
+            {
+            if( allow && isOnCurrentDesktop())
+                {
+                if( !isSpecialWindow() || isOverride())
+                    if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
+                        workspace()->requestFocus( this );
+                }
+            else
+                {
+                if( !session && ( !isSpecialWindow() || isOverride()))
+                        demandAttention();
+                }
+            }
+        }
+    else // doNotShow
+        { // SELI HACK !!!
+        hideClient( true );
+        }
     if ( isShown( true ) && !doNotShow )
         {
         if( isDialog())
@@ -473,7 +517,7 @@ bool Client::manage( Window w, bool isMapped )
             }
         else
             {
-            virtualDesktopChange();
+            updateVisibility();
             workspace()->raiseClient( this );
             if( !session && !isMapped )
                 demandAttention();

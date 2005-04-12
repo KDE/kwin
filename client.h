@@ -229,10 +229,10 @@ class Client : public QObject, public KDecorationDefines
 
         Colormap colormap() const;
 
+    // updates visibility depending on being shaded, virtual desktop, etc.
+        void updateVisibility();
     // hides a client - basically like minimize, but without effects, it's simply hidden
         void hideClient( bool hide );
-    // updates visibility depending on whether it's on the current desktop
-        void virtualDesktopChange();
 
         QString caption( bool full = true ) const;
         void updateCaption();

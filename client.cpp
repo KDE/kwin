@@ -488,25 +488,9 @@ void Client::hideClient( bool hide )
     if( hidden == hide )
         return;
     hidden = hide;
-    info->setState( hidden ? NET::Hidden : 0, NET::Hidden );
-    if( hidden )
-        {
-        setMappingState( IconicState );
-        rawHide();
-        setSkipTaskbar( true, false ); // also hide from taskbar
-        }
-    else // !hidden
-        {
-        setSkipTaskbar( original_skip_taskbar, false );
-        if( isOnCurrentDesktop())
-            {
-            if( isShown( false ))
-                setMappingState( NormalState );
-            rawShow(); // is either visible or shaded
-            }
-        }
+    updateVisibility();
     }
-
+    
 /*
   Returns whether the window is minimizable or not
  */
@@ -551,12 +535,10 @@ void Client::minimize( bool avoid_animation )
     Notify::raise( Notify::Minimize );
 
     // SELI mainClients().isEmpty() ??? - and in unminimize() too
-    if ( mainClients().isEmpty() && isOnCurrentDesktop() && !avoid_animation )
+    if ( mainClients().isEmpty() && isOnCurrentDesktop() && isShown( true ) && !avoid_animation )
         animateMinimizeOrUnminimize( true ); // was visible or shaded
 
-    setMappingState( IconicState );
-    info->setState( NET::Hidden, NET::Hidden );
-    rawHide();
+    updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
@@ -568,16 +550,13 @@ void Client::unminimize( bool avoid_animation )
         return;
 
     Notify::raise( Notify::UnMinimize );
-    minimized = false;    
-    info->setState( 0, NET::Hidden );
-    if( isOnCurrentDesktop())
+    minimized = false;
+    if( isOnCurrentDesktop() && isShown( true ))
         {
         if( mainClients().isEmpty() && !avoid_animation )
             animateMinimizeOrUnminimize( FALSE );
-        if( isShown( false ))
-            setMappingState( NormalState );
-        rawShow(); // is either visible or shaded
         }
+    updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
@@ -841,22 +820,42 @@ void Client::toggleShade()
     setShade( shade_mode == ShadeNone ? ShadeNormal : ShadeNone );
     }
 
-void Client::virtualDesktopChange()
+void Client::updateVisibility()
     {
-    if( hidden || minimized )
-        return; // no visibility change
-    // from here it can be only shaded or normally shown
-    if( isOnCurrentDesktop())
+    bool show = true;
+    if( hidden )
         {
-        if( !isShade())
-            setMappingState( NormalState );
-        rawShow();
+        setMappingState( IconicState );
+        info->setState( NET::Hidden, NET::Hidden );
+        setSkipTaskbar( true, false ); // also hide from taskbar
+        rawHide();
+        show = false;
         }
     else
         {
-        if( !isShade())
-            setMappingState( IconicState );
+        setSkipTaskbar( original_skip_taskbar, false );
+        }
+    if( minimized )
+        {
+        setMappingState( IconicState );
+        info->setState( NET::Hidden, NET::Hidden );
         rawHide();
+        show = false;
+        }
+    if( !isOnCurrentDesktop())
+        {
+        setMappingState( IconicState );
+        rawHide();
+        show = false;
+        }
+    if( show )
+        {
+        info->setState( 0, NET::Hidden );
+        if( isShade())
+            setMappingState( IconicState );
+        else
+            setMappingState( NormalState );
+        rawShow();
         }
     }
 
@@ -1149,7 +1148,7 @@ void Client::setDesktop( int desktop )
         }
     if( decoration != NULL )
         decoration->desktopChange();
-    virtualDesktopChange(); // hide/show if needed
+    updateVisibility();
     updateWindowRules();
     }
 

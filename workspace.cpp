@@ -1081,14 +1081,14 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         ObscuringWindows obs_wins;
 
         int old_desktop = current_desktop;
-        current_desktop = new_desktop; // change the desktop (so that Client::virtualDesktopChange() works)
+        current_desktop = new_desktop; // change the desktop (so that Client::updateVisibility() works)
 
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
             if ( !(*it)->isOnDesktop( new_desktop ) && (*it) != movingClient )
                 {
                 if( (*it)->isShown( true ) && (*it)->isOnDesktop( old_desktop ))
                     obs_wins.create( *it );
-                (*it)->virtualDesktopChange();
+                (*it)->updateVisibility();
                 }
 
         rootInfo->setCurrentDesktop( current_desktop ); // now propagate the change, after hiding, before showing
@@ -1098,7 +1098,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
         for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
             if ( (*it)->isOnDesktop( new_desktop ) )
-                (*it)->virtualDesktopChange();
+                (*it)->updateVisibility();
         }
 
     // restore the focus on this desktop
