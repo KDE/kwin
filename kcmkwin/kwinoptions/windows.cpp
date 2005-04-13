@@ -1050,7 +1050,7 @@ void KMovingConfig::load( void )
         setPlacement(SMART_PLACEMENT);
 //  }
 
-    setMoveResizeMaximized(config->readBoolEntry(KWIN_MOVE_RESIZE_MAXIMIZED, true));
+    setMoveResizeMaximized(config->readBoolEntry(KWIN_MOVE_RESIZE_MAXIMIZED, false));
 
     int v;
 
@@ -1134,7 +1134,7 @@ void KMovingConfig::defaults()
     setResizeOpaque(RESIZE_TRANSPARENT);
     setGeometryTip(false);
     setPlacement(SMART_PLACEMENT);
-    setMoveResizeMaximized(true);
+    setMoveResizeMaximized(false);
 
     //copied from kcontrol/konq/kwindesktop, aleXXX
     setWindowSnapZone(KWM_WNDW_SNAP_ZONE_DEFAULT);

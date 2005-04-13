@@ -205,7 +205,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
     config->setGroup( "Windows" );
     bool old_move_resize_maximized_windows = move_resize_maximized_windows;
-    move_resize_maximized_windows = config->readBoolEntry( "MoveResizeMaximizedWindows", true );
+    move_resize_maximized_windows = config->readBoolEntry( "MoveResizeMaximizedWindows", false );
     if( old_move_resize_maximized_windows != move_resize_maximized_windows )
         changed |= SettingBorder;
 
