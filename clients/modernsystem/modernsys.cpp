@@ -216,7 +216,7 @@ void ModernSysFactory::read_config()
 
     KConfig c("kwinmodernsysrc");
     c.setGroup("General");
-    show_handle = c.readBoolEntry("ShowHandle", true);
+    showh = c.readBoolEntry("ShowHandle", true);
 
     hwidth = c.readUnsignedNumEntry("HandleWidth", 6);
     hsize = c.readUnsignedNumEntry("HandleSize", 30);
@@ -409,7 +409,7 @@ bool ModernSys::decorationBehaviour(DecorationBehaviour behaviour) const
 
 int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
-    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+    // bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
     switch (lm) {
         case LM_BorderLeft:
