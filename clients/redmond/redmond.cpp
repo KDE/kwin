@@ -382,8 +382,6 @@ bool RedmondDeco::decorationBehaviour(DecorationBehaviour behaviour) const
 
 int RedmondDeco::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
-	bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
-
 	switch (lm) {
 		case LM_BorderLeft:
 		case LM_BorderRight:

@@ -773,8 +773,6 @@ bool KDEDefaultClient::decorationBehaviour(DecorationBehaviour behaviour) const
 
 int KDEDefaultClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
-	bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
-
 	switch (lm) {
 		case LM_BorderLeft:
 		case LM_BorderRight:
@@ -1041,9 +1039,6 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 
 QRegion KDEDefaultClient::cornerShape(WindowCorner corner)
 {
-	int w = widget()->width();
-	int h = widget()->height();
-
 	switch (corner) {
 		case WC_TopLeft:
 			return QRect(0, 0, 1, 1);
