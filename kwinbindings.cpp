@@ -58,10 +58,10 @@
             0, 0, slotWindowBelow() );
         DEF( I18N_NOOP("Activate Window Demanding Attention"), CTRL+ALT+Qt::Key_A, 0, slotActivateAttentionWindow());
         DEF( I18N_NOOP("Setup Window Shortcut"), 0, 0, slotSetupWindowShortcut());
-        DEF2( "Window Pack Left", I18N_NOOP("Pack Window to the Left"),
-            0, 0, slotWindowPackLeft() );
         DEF2( "Window Pack Right", I18N_NOOP("Pack Window to the Right"),
             0, 0, slotWindowPackRight() );
+        DEF2( "Window Pack Left", I18N_NOOP("Pack Window to the Left"),
+            0, 0, slotWindowPackLeft() );
         DEF2( "Window Pack Up", I18N_NOOP("Pack Window Up"),
             0, 0, slotWindowPackUp() );
         DEF2( "Window Pack Down", I18N_NOOP("Pack Window Down"),
