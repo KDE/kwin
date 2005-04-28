@@ -182,6 +182,7 @@ void Client::releaseWindow( bool on_shutdown )
        leaveMoveResize();
     finishWindowRules();
     ++block_geometry;
+    setMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
@@ -214,7 +215,6 @@ void Client::releaseWindow( bool on_shutdown )
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
         XUnmapWindow( qt_xdisplay(), client ); 
         }
-    setMappingState( WithdrawnState ); // after all is done, tell the app
     client = None;
     XDestroyWindow( qt_xdisplay(), wrapper );
     wrapper = None;
