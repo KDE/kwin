@@ -1235,7 +1235,8 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
     else if ( button == Button3 )
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-    if( com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
+    if( button == Button1
+        && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
         && com != Options::MouseMinimize )  // mouse release event
         {
 // FRAME      mouseMoveEvent( e ); shouldn't be necessary
