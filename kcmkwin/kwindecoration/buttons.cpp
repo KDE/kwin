@@ -750,8 +750,8 @@ void ButtonPositionWidget::setDecorationFactory(KDecorationFactory *factory)
 
 		m_supportedButtons = supportedButtons;
 	} else {
-		// enable all buttons!
-		m_supportedButtons = "RLBFXAIHSM_";
+		// enable only buttons available before AbilityButton* introduction
+		m_supportedButtons = "MSHIAX_";
 	}
 
 	// update the button lists...
