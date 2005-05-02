@@ -396,11 +396,23 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             c->setUserNoBorder( !c->isUserNoBorder());
             break;
         case Options::KeepAboveOp:
+            {
+            StackingUpdatesBlocker blocker( this );
+            bool was = c->keepAbove();
             c->setKeepAbove( !c->keepAbove() );
+            if( was && !c->keepAbove())
+                raiseClient( c );
             break;
+            }
         case Options::KeepBelowOp:
+            {
             c->setKeepBelow( !c->keepBelow() );
+            StackingUpdatesBlocker blocker( this );
+            bool was = c->keepBelow();
+            if( was && !c->keepBelow())
+                lowerClient( c );
             break;
+            }
         case Options::WindowRulesOp:
             editWindowRules( c );
             break;
