@@ -884,7 +884,7 @@ void Workspace::walkThroughDesktops( bool forward )
 
 void Workspace::CDEWalkThroughWindows( bool forward )
     {
-    Client* c = topClientOnDesktop( currentDesktop());
+    Client* c = activeClient();
     Client* nc = c;
     bool options_traverse_all;
         {
@@ -898,8 +898,8 @@ void Workspace::CDEWalkThroughWindows( bool forward )
             {
             nc = previousStaticClient(nc);
             } while (nc && nc != c &&
-        (( !options_traverse_all && !nc->isOnDesktop(currentDesktop())) ||
-         nc->isMinimized() || !nc->wantsTabFocus() ) );
+                (( !options_traverse_all && !nc->isOnDesktop(currentDesktop())) ||
+                 nc->isMinimized() || !nc->wantsTabFocus() ) );
         }
     else
         {
