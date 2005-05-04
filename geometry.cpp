@@ -962,18 +962,6 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
                 }
             return;
             }
-        if( isResizable())
-            {
-            if( rect.width() > area.width())
-                rect.setWidth( area.width());
-            if( rect.width() >= area.width() / 2 )
-                {
-                if( old_diff < 0 )
-                    rect.setLeft( area.left() + ( -old_diff - 1 ) );
-                else // old_diff > 0
-                    rect.setRight( area.right() - ( old_diff - 1 ));
-                }
-            }
         if( isMovable())
             {
             if( old_diff < 0 ) // was in left third, keep distance from left edge
@@ -981,15 +969,21 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
             else // old_diff > 0 // was in right third, keep distance from right edge
                 rect.moveRight( area.right() - ( old_diff - 1 ));
             }
-        // this isResizable() block is copied from above, the difference is
-        // the condition with 'area.width() / 2' - for windows that are not wide,
-        // moving is preffered to resizing
         if( isResizable())
             {
             if( old_diff < 0 )
                 rect.setLeft( area.left() + ( -old_diff - 1 ) );
             else // old_diff > 0
                 rect.setRight( area.right() - ( old_diff - 1 ));
+            }
+        if( rect.width() > area.width() && isResizable())
+            rect.setWidth( area.width());
+        if( isMovable())
+            {
+            if( rect.left() > area.left())
+                rect.moveLeft( area.left());
+            else if( rect.right() > area.right())
+                rect.moveRight( area.right());
             }
         }
     if( rect.right() < area.left() + 5 || rect.left() > area.right() - 5 )
