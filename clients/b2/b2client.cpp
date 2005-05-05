@@ -1383,7 +1383,7 @@ void B2Titlebar::paintEvent(QPaintEvent *)
 
 void B2Titlebar::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if (e->y() < height()) {
+    if (e->button() == LeftButton && e->y() < height()) {
 	client->titlebarDblClickOperation();
     }
 }

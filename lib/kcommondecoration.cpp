@@ -684,8 +684,10 @@ void KCommonDecoration::resizeWidget(int w, int h, QWidget *widget) const
 
 void KCommonDecoration::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
+    if( e->button() != LeftButton )
+        return;
 
+    int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
     // when shaded, react on double clicks everywhere to make it easier to unshade. otherwise
     // react only on double clicks in the title bar region...
     if (isSetShade() || e->pos().y() <= tb )

@@ -1653,7 +1653,8 @@ void KeramikClient::resizeEvent( QResizeEvent *e )
 
 void KeramikClient::mouseDoubleClickEvent( QMouseEvent *e )
 {
-	if ( QRect( 0, 0, width(), clientHandler->titleBarHeight( largeTitlebar ) ).contains( e->pos() ) )
+	if ( e->button() == LeftButton
+            && QRect( 0, 0, width(), clientHandler->titleBarHeight( largeTitlebar ) ).contains( e->pos() ) )
 		titlebarDblClickOperation();
 }
 
