@@ -405,9 +405,9 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             }
         case Options::KeepBelowOp:
             {
-            c->setKeepBelow( !c->keepBelow() );
             StackingUpdatesBlocker blocker( this );
             bool was = c->keepBelow();
+            c->setKeepBelow( !c->keepBelow() );
             if( was && !c->keepBelow())
                 lowerClient( c );
             break;
