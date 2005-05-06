@@ -48,14 +48,14 @@ protected:
 
 
 
-class KActionsConfig : public KCModule
+class KTitleBarActionsConfig : public KCModule
 {
   Q_OBJECT
 
 public:
 
-  KActionsConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
-  ~KActionsConfig( );
+  KTitleBarActionsConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
+  ~KTitleBarActionsConfig( );
 
   void load();
   void save();
@@ -76,6 +76,39 @@ private:
 
   ToolTipComboBox * coMax[3];
 
+  KConfig *config;
+  bool standAlone;
+
+  const char* functionTiDbl(int);
+  const char* functionTiAc(int);
+  const char* functionTiInAc(int);
+  const char* functionMax(int);
+
+  void setComboText(QComboBox* combo, const char* text);
+  const char* fixup( const char* s );
+
+private slots:
+  void paletteChanged();
+
+};
+
+class KWindowActionsConfig : public KCModule
+{
+  Q_OBJECT
+
+public:
+
+  KWindowActionsConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
+  ~KWindowActionsConfig( );
+
+  void load();
+  void save();
+  void defaults();
+
+public slots:
+	void changed() { emit KCModule::changed(true); }
+
+private:
   QComboBox* coWin1;
   QComboBox* coWin2;
   QComboBox* coWin3;
@@ -88,20 +121,12 @@ private:
   KConfig *config;
   bool standAlone;
 
-  const char* functionTiDbl(int);
-  const char* functionTiAc(int);
-  const char* functionTiInAc(int);
   const char* functionWin(int);
   const char* functionAllKey(int);
   const char* functionAll(int);
-  const char* functionMax(int);
 
   void setComboText(QComboBox* combo, const char* text);
   const char* fixup( const char* s );
-
-private slots:
-  void paletteChanged();
-
 };
 
 #endif

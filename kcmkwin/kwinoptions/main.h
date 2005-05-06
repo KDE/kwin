@@ -30,7 +30,8 @@
 
 class KConfig;
 class KFocusConfig;
-class KActionsConfig;
+class KTitleBarActionsConfig;
+class KWindowActionsConfig;
 class KAdvancedConfig;
 class KTranslucencyConfig;
 
@@ -59,10 +60,39 @@ private:
   QTabWidget   *tab;
 
   KFocusConfig *mFocus;
-  KActionsConfig *mActions;
+  KTitleBarActionsConfig *mTitleBarActions;
+  KWindowActionsConfig *mWindowActions;
   KMovingConfig *mMoving;
   KAdvancedConfig *mAdvanced;
   KTranslucencyConfig *mTranslucency;
+
+  KConfig *mConfig;
+};
+
+class KActionsOptions : public KCModule
+{
+  Q_OBJECT
+
+public:
+
+  KActionsOptions(QWidget *parent, const char *name);
+  virtual ~KActionsOptions();
+
+  void load();
+  void save();
+  void defaults();
+
+protected slots:
+
+  void moduleChanged(bool state);
+
+
+private:
+
+  QTabWidget   *tab;
+
+  KTitleBarActionsConfig *mTitleBarActions;
+  KWindowActionsConfig *mWindowActions;
 
   KConfig *mConfig;
 };

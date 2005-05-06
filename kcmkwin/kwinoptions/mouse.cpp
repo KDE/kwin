@@ -123,7 +123,7 @@ void createMaxButtonPixmaps()
 
 } // namespace
 
-void KActionsConfig::paletteChanged()
+void KTitleBarActionsConfig::paletteChanged()
 {
   createMaxButtonPixmaps();
   for (int b = 0; b < 3; ++b)
@@ -132,7 +132,7 @@ void KActionsConfig::paletteChanged()
 
 }
 
-KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
+KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
   : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
@@ -344,6 +344,205 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
 
   connect(kapp, SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
 
+  layout->addStretch();
+
+  load();
+}
+
+KTitleBarActionsConfig::~KTitleBarActionsConfig()
+{
+  if (standAlone)
+    delete config;
+}
+
+// do NOT change the texts below, they are written to config file
+// and are not shown in the GUI
+// they have to match the order of items in GUI elements though
+const char* const tbl_TiDbl[] = {
+    "Maximize",
+    "Maximize (vertical only)",
+    "Maximize (horizontal only)",
+    "Minimize",
+    "Shade",
+    "Lower",
+    "OnAllDesktops",
+    "Nothing",
+    "" };
+
+const char* const tbl_TiAc[] = {
+    "Raise",
+    "Lower",
+    "Operations menu",
+    "Toggle raise and lower",
+    "Nothing",
+    "Shade",
+    "" };
+
+const char* const tbl_TiInAc[] = {
+    "Activate and raise",
+    "Activate and lower",
+    "Activate",
+    "Shade",
+    "Operations menu",
+    "Raise",
+    "Lower",
+    "Nothing",
+    "" };
+
+const char* const tbl_Win[] = {
+    "Activate, raise and pass click",
+    "Activate and pass click",
+    "Activate",
+    "Activate and raise",
+    "" };
+
+const char* const tbl_AllKey[] = {
+    "Meta",
+    "Alt",
+    "" };
+
+const char* const tbl_All[] = {
+    "Move",
+    "Activate, raise and move",
+    "Toggle raise and lower",
+    "Resize",
+    "Raise",
+    "Lower",
+    "Minimize",
+    "Nothing",
+    "" };
+
+static const char* tbl_num_lookup( const char* const arr[], int pos )
+{
+    for( int i = 0;
+         arr[ i ][ 0 ] != '\0' && pos >= 0;
+         ++i )
+    {
+        if( pos == 0 )
+            return arr[ i ];
+        --pos;
+    }
+    abort(); // should never happen this way
+}
+
+static int tbl_txt_lookup( const char* const arr[], const char* txt )
+{
+    int pos = 0;
+    for( int i = 0;
+         arr[ i ][ 0 ] != '\0';
+         ++i )
+    {
+        if( qstricmp( txt, arr[ i ] ) == 0 )
+            return pos;
+        ++pos;
+    }
+    return 0;
+}
+
+void KTitleBarActionsConfig::setComboText( QComboBox* combo, const char*txt )
+{
+    if( combo == coTiDbl )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_TiDbl, txt ));
+    else if( combo == coTiAct1 || combo == coTiAct2 || combo == coTiAct3 )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_TiAc, txt ));
+    else if( combo == coTiInAct1 || combo == coTiInAct2 || combo == coTiInAct3 )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_TiInAc, txt ));
+    else if( combo == coMax[0] || combo == coMax[1] || combo == coMax[2] )
+    {
+        combo->setCurrentItem( tbl_txt_lookup( tbl_Max, txt ));
+        static_cast<ToolTipComboBox *>(combo)->changed();
+    }
+    else
+        abort();
+}
+
+const char* KTitleBarActionsConfig::functionTiDbl( int i )
+{
+    return tbl_num_lookup( tbl_TiDbl, i );
+}
+
+const char* KTitleBarActionsConfig::functionTiAc( int i )
+{
+    return tbl_num_lookup( tbl_TiAc, i );
+}
+
+const char* KTitleBarActionsConfig::functionTiInAc( int i )
+{
+    return tbl_num_lookup( tbl_TiInAc, i );
+}
+
+const char* KTitleBarActionsConfig::functionMax( int i )
+{
+    return tbl_num_lookup( tbl_Max, i );
+}
+
+void KTitleBarActionsConfig::load()
+{
+  config->setGroup("Windows");
+  setComboText(coTiDbl, config->readEntry("TitlebarDoubleClickCommand","Shade").ascii());
+  for (int t = 0; t < 3; ++t)
+    setComboText(coMax[t],config->readEntry(cnf_Max[t], tbl_Max[t]).ascii());
+
+  config->setGroup( "MouseBindings");
+  setComboText(coTiAct1,config->readEntry("CommandActiveTitlebar1","Raise").ascii());
+  setComboText(coTiAct2,config->readEntry("CommandActiveTitlebar2","Lower").ascii());
+  setComboText(coTiAct3,config->readEntry("CommandActiveTitlebar3","Operations menu").ascii());
+  setComboText(coTiInAct1,config->readEntry("CommandInactiveTitlebar1","Activate and raise").ascii());
+  setComboText(coTiInAct2,config->readEntry("CommandInactiveTitlebar2","Activate and lower").ascii());
+  setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Operations menu").ascii());
+}
+
+void KTitleBarActionsConfig::save()
+{
+  config->setGroup("Windows");
+  config->writeEntry("TitlebarDoubleClickCommand", functionTiDbl( coTiDbl->currentItem() ) );
+  for (int t = 0; t < 3; ++t)
+    config->writeEntry(cnf_Max[t], functionMax(coMax[t]->currentItem()));
+
+  config->setGroup("MouseBindings");
+  config->writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentItem()));
+  config->writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentItem()));
+  config->writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentItem()));
+  config->writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentItem()));
+  config->writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentItem()));
+  config->writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentItem()));
+  
+  if (standAlone)
+  {
+    config->sync();
+    if ( !kapp->dcopClient()->isAttached() )
+      kapp->dcopClient()->attach();
+    kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+  }
+}
+
+void KTitleBarActionsConfig::defaults()
+{
+  setComboText(coTiDbl, "Shade");
+  setComboText(coTiAct1,"Raise");
+  setComboText(coTiAct2,"Lower");
+  setComboText(coTiAct3,"Operations menu");
+  setComboText(coTiInAct1,"Activate and raise");
+  setComboText(coTiInAct2,"Activate and lower");
+  setComboText(coTiInAct3,"Operations menu");
+  for (int t = 0; t < 3; ++t)
+    setComboText(coMax[t], tbl_Max[t]);
+}
+
+
+KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
+  : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
+{
+  QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
+  QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+  QGrid *grid;
+  QGroupBox *box;
+  QLabel *label;
+  QString strMouseButton1, strMouseButton3;
+  QString txtButton1, txtButton3;
+  QStringList items;
+  bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
+
 /**  Inactive inner window ******************/
 
   box = new QVGroupBox(i18n("Inactive Inner Window"), this, "Inactive Inner Window");
@@ -395,7 +594,7 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
           << i18n("Activate")
           << i18n("Activate & Raise");
 
-  combo = new QComboBox(grid);
+  QComboBox* combo = new QComboBox(grid);
   combo->insertStringList(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin1 = combo;
@@ -499,168 +698,42 @@ KActionsConfig::KActionsConfig (bool _standAlone, KConfig *_config, QWidget * pa
   load();
 }
 
-KActionsConfig::~KActionsConfig()
+KWindowActionsConfig::~KWindowActionsConfig()
 {
   if (standAlone)
     delete config;
 }
 
-// do NOT change the texts below, they are written to config file
-// and are not shown in the GUI
-// they have to match the order of items in GUI elements though
-const char* const tbl_TiDbl[] = {
-    "Maximize",
-    "Maximize (vertical only)",
-    "Maximize (horizontal only)",
-    "Minimize",
-    "Shade",
-    "Lower",
-    "OnAllDesktops",
-    "Nothing",
-    "" };
-
-const char* const tbl_TiAc[] = {
-    "Raise",
-    "Lower",
-    "Operations menu",
-    "Toggle raise and lower",
-    "Nothing",
-    "Shade",
-    "" };
-
-const char* const tbl_TiInAc[] = {
-    "Activate and raise",
-    "Activate and lower",
-    "Activate",
-    "Shade",
-    "Operations menu",
-    "Raise",
-    "Lower",
-    "Nothing",
-    "" };
-
-const char* const tbl_Win[] = {
-    "Activate, raise and pass click",
-    "Activate and pass click",
-    "Activate",
-    "Activate and raise",
-    "" };
-
-const char* const tbl_AllKey[] = {
-    "Meta",
-    "Alt",
-    "" };
-
-const char* const tbl_All[] = {
-    "Move",
-    "Activate, raise and move",
-    "Toggle raise and lower",
-    "Resize",
-    "Raise",
-    "Lower",
-    "Minimize",
-    "Nothing",
-    "" };
-
-static const char* tbl_num_lookup( const char* const arr[], int pos )
+void KWindowActionsConfig::setComboText( QComboBox* combo, const char*txt )
 {
-    for( int i = 0;
-         arr[ i ][ 0 ] != '\0' && pos >= 0;
-         ++i )
-    {
-        if( pos == 0 )
-            return arr[ i ];
-        --pos;
-    }
-    abort(); // should never happen this way
-}
-
-static int tbl_txt_lookup( const char* const arr[], const char* txt )
-{
-    int pos = 0;
-    for( int i = 0;
-         arr[ i ][ 0 ] != '\0';
-         ++i )
-    {
-        if( qstricmp( txt, arr[ i ] ) == 0 )
-            return pos;
-        ++pos;
-    }
-    return 0;
-}
-
-void KActionsConfig::setComboText( QComboBox* combo, const char*txt )
-{
-    if( combo == coTiDbl )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_TiDbl, txt ));
-    else if( combo == coTiAct1 || combo == coTiAct2 || combo == coTiAct3 )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_TiAc, txt ));
-    else if( combo == coTiInAct1 || combo == coTiInAct2 || combo == coTiInAct3 )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_TiInAc, txt ));
-    else if( combo == coWin1 || combo == coWin2 || combo == coWin3 )
+    if( combo == coWin1 || combo == coWin2 || combo == coWin3 )
         combo->setCurrentItem( tbl_txt_lookup( tbl_Win, txt ));
     else if( combo == coAllKey )
         combo->setCurrentItem( tbl_txt_lookup( tbl_AllKey, txt ));
     else if( combo == coAll1 || combo == coAll2 || combo == coAll3 )
         combo->setCurrentItem( tbl_txt_lookup( tbl_All, txt ));
-    else if( combo == coMax[0] || combo == coMax[1] || combo == coMax[2] )
-    {
-        combo->setCurrentItem( tbl_txt_lookup( tbl_Max, txt ));
-        static_cast<ToolTipComboBox *>(combo)->changed();
-    }
     else
         abort();
 }
 
-const char* KActionsConfig::functionTiDbl( int i )
-{
-    return tbl_num_lookup( tbl_TiDbl, i );
-}
-
-const char* KActionsConfig::functionTiAc( int i )
-{
-    return tbl_num_lookup( tbl_TiAc, i );
-}
-
-const char* KActionsConfig::functionTiInAc( int i )
-{
-    return tbl_num_lookup( tbl_TiInAc, i );
-}
-
-const char* KActionsConfig::functionWin( int i )
+const char* KWindowActionsConfig::functionWin( int i )
 {
     return tbl_num_lookup( tbl_Win, i );
 }
 
-const char* KActionsConfig::functionAllKey( int i )
+const char* KWindowActionsConfig::functionAllKey( int i )
 {
     return tbl_num_lookup( tbl_AllKey, i );
 }
 
-const char* KActionsConfig::functionAll( int i )
+const char* KWindowActionsConfig::functionAll( int i )
 {
     return tbl_num_lookup( tbl_All, i );
 }
 
-const char* KActionsConfig::functionMax( int i )
+void KWindowActionsConfig::load()
 {
-    return tbl_num_lookup( tbl_Max, i );
-}
-
-void KActionsConfig::load()
-{
-  config->setGroup("Windows");
-  setComboText(coTiDbl, config->readEntry("TitlebarDoubleClickCommand","Shade").ascii());
-  for (int t = 0; t < 3; ++t)
-    setComboText(coMax[t],config->readEntry(cnf_Max[t], tbl_Max[t]).ascii());
-
   config->setGroup( "MouseBindings");
-  setComboText(coTiAct1,config->readEntry("CommandActiveTitlebar1","Raise").ascii());
-  setComboText(coTiAct2,config->readEntry("CommandActiveTitlebar2","Lower").ascii());
-  setComboText(coTiAct3,config->readEntry("CommandActiveTitlebar3","Operations menu").ascii());
-  setComboText(coTiInAct1,config->readEntry("CommandInactiveTitlebar1","Activate and raise").ascii());
-  setComboText(coTiInAct2,config->readEntry("CommandInactiveTitlebar2","Activate and lower").ascii());
-  setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Operations menu").ascii());
   setComboText(coWin1,config->readEntry("CommandWindow1","Activate, raise and pass click").ascii());
   setComboText(coWin2,config->readEntry("CommandWindow2","Activate and pass click").ascii());
   setComboText(coWin3,config->readEntry("CommandWindow3","Activate and pass click").ascii());
@@ -670,20 +743,9 @@ void KActionsConfig::load()
   setComboText(coAll3,config->readEntry("CommandAll3","Resize").ascii());
 }
 
-void KActionsConfig::save()
+void KWindowActionsConfig::save()
 {
-  config->setGroup("Windows");
-  config->writeEntry("TitlebarDoubleClickCommand", functionTiDbl( coTiDbl->currentItem() ) );
-  for (int t = 0; t < 3; ++t)
-    config->writeEntry(cnf_Max[t], functionMax(coMax[t]->currentItem()));
-
   config->setGroup("MouseBindings");
-  config->writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentItem()));
-  config->writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentItem()));
-  config->writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentItem()));
-  config->writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentItem()));
-  config->writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentItem()));
-  config->writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentItem()));
   config->writeEntry("CommandWindow1", functionWin(coWin1->currentItem()));
   config->writeEntry("CommandWindow2", functionWin(coWin2->currentItem()));
   config->writeEntry("CommandWindow3", functionWin(coWin3->currentItem()));
@@ -701,15 +763,8 @@ void KActionsConfig::save()
   }
 }
 
-void KActionsConfig::defaults()
+void KWindowActionsConfig::defaults()
 {
-  setComboText(coTiDbl, "Shade");
-  setComboText(coTiAct1,"Raise");
-  setComboText(coTiAct2,"Lower");
-  setComboText(coTiAct3,"Operations menu");
-  setComboText(coTiInAct1,"Activate and raise");
-  setComboText(coTiInAct2,"Activate and lower");
-  setComboText(coTiInAct3,"Operations menu");
   setComboText(coWin1,"Activate, raise and pass click");
   setComboText(coWin2,"Activate and pass click");
   setComboText(coWin3,"Activate and pass click");
@@ -717,6 +772,4 @@ void KActionsConfig::defaults()
   setComboText (coAll1,"Move");
   setComboText(coAll2,"Toggle raise and lower");
   setComboText(coAll3,"Resize");
-  for (int t = 0; t < 3; ++t)
-    setComboText(coMax[t], tbl_Max[t]);
 }

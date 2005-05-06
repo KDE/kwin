@@ -48,8 +48,7 @@ extern "C"
 	{
 		//CT there's need for decision: kwm or kwin?
 		KGlobal::locale()->insertCatalogue("kcmkwm");
-		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KActionsConfig(true, c, parent, name);
+		return new KActionsOptions( parent, name);
 	}
 
 	KDE_EXPORT KCModule *create_kwinmoving(QWidget *parent, const char *name)
@@ -98,10 +97,15 @@ KWinOptions::KWinOptions(QWidget *parent, const char *name)
   tab->addTab(mFocus, i18n("&Focus"));
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mActions = new KActionsConfig(false, mConfig, this, "KWin Actions");
-  mActions->layout()->setMargin( KDialog::marginHint() );
-  tab->addTab(mActions, i18n("Actio&ns"));
-  connect(mActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this, "KWin TitleBar Actions");
+  mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
+  tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
+  connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+
+  mWindowActions = new KWindowActionsConfig(false, mConfig, this, "KWin Window Actions");
+  mWindowActions->layout()->setMargin( KDialog::marginHint() );
+  tab->addTab(mWindowActions, i18n("Window Actio&ns"));
+  connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   mMoving = new KMovingConfig(false, mConfig, this, "KWin Moving");
   mMoving->layout()->setMargin( KDialog::marginHint() );
@@ -144,7 +148,8 @@ void KWinOptions::load()
 {
   mConfig->reparseConfiguration();
   mFocus->load();
-  mActions->load();
+  mTitleBarActions->load();
+  mWindowActions->load();
   mMoving->load();
   mAdvanced->load();
   mTranslucency->load();
@@ -155,7 +160,8 @@ void KWinOptions::load()
 void KWinOptions::save()
 {
   mFocus->save();
-  mActions->save();
+  mTitleBarActions->save();
+  mWindowActions->save();
   mMoving->save();
   mAdvanced->save();
   mTranslucency->save();
@@ -172,7 +178,8 @@ void KWinOptions::save()
 void KWinOptions::defaults()
 {
   mFocus->defaults();
-  mActions->defaults();
+  mTitleBarActions->defaults();
+  mWindowActions->defaults();
   mMoving->defaults();
   mAdvanced->defaults();
   mTranslucency->defaults();
@@ -193,5 +200,63 @@ void KWinOptions::moduleChanged(bool state)
   emit KCModule::changed(state);
 }
 
+
+KActionsOptions::KActionsOptions(QWidget *parent, const char *name)
+  : KCModule(parent, name)
+{
+  mConfig = new KConfig("kwinrc", false, true);
+
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  tab = new QTabWidget(this);
+  layout->addWidget(tab);
+
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this, "KWin TitleBar Actions");
+  mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
+  tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
+  connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+
+  mWindowActions = new KWindowActionsConfig(false, mConfig, this, "KWin Window Actions");
+  mWindowActions->layout()->setMargin( KDialog::marginHint() );
+  tab->addTab(mWindowActions, i18n("Window Actio&ns"));
+  connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+}
+
+KActionsOptions::~KActionsOptions()
+{
+  delete mConfig;
+}
+
+void KActionsOptions::load()
+{
+  mTitleBarActions->load();
+  mWindowActions->load();
+  emit KCModule::changed( false );
+}
+
+
+void KActionsOptions::save()
+{
+  mTitleBarActions->save();
+  mWindowActions->save();
+
+  emit KCModule::changed( false );
+  // Send signal to kwin
+  mConfig->sync();
+  if ( !kapp->dcopClient()->isAttached() )
+      kapp->dcopClient()->attach();
+  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+}
+
+
+void KActionsOptions::defaults()
+{
+  mTitleBarActions->defaults();
+  mWindowActions->defaults();
+}
+
+void KActionsOptions::moduleChanged(bool state)
+{
+  emit KCModule::changed(state);
+}
 
 #include "main.moc"
