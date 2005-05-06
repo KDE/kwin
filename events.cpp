@@ -939,8 +939,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
             {
             cancelAutoRaise();
             workspace()->cancelDelayFocus();
-            delete shadeHoverTimer;
-            shadeHoverTimer = 0;
+            cancelShadeHover();
             if ( shade_mode == ShadeHover && !moveResizeMode && !buttonDown )
                setShade( ShadeNormal );
             }
@@ -1076,6 +1075,15 @@ bool Client::eventFilter( QObject* o, QEvent* e )
         return motionNotifyEvent( decorationId(), qtToX11State( ev->state()),
             ev->x(), ev->y(), ev->globalX(), ev->globalY() );
         }
+    if( e->type() == QEvent::Wheel )
+        {
+        QWheelEvent* ev = static_cast< QWheelEvent* >( e );
+        bool r = buttonPressEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->state()),
+            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
+        r = r || buttonReleaseEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->state()),
+            ev->x(), ev->y(), ev->globalX(), ev->globalY() );
+        return r;
+        }
     if( e->type() == QEvent::Resize )
         {
         QResizeEvent* ev = static_cast< QResizeEvent* >( e );
@@ -1120,35 +1128,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
         Options::MouseCommand com = Options::MouseNothing;
         bool was_action = false;
         bool perform_handled = false;
-        if (keyModX != 0 && (state & keyModX) &&  (state & ControlMask))
-            {
-            switch (button)
-                {
-                case Button5:
-                    if (opacity_ > 0)
-                        {
-                        setOpacity(TRUE, (opacity_ > 0xCCCCCCC) ? opacity_ - 0xCCCCCCC : 0);
-                        custom_opacity = true;
-                        }
-                    XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime );
-                    return true;
-                case Button4:
-                    if (opacity_ < 0xFFFFFFFF)
-                        {
-                        if (opacity_ < 0xF3333333){
-                            setOpacity(TRUE, opacity_ + 0xCCCCCCC);
-                            custom_opacity = true;
-                            }
-                        else{
-                            setOpacity(FALSE, 0xFFFFFFFF);
-                            custom_opacity = false;
-                            }
-                        }
-                    XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime );
-                    return true;
-                }
-            }
-        else if ( bModKeyHeld )
+        if ( bModKeyHeld )
             {
             was_action = true;
             switch (button) 
@@ -1161,6 +1141,10 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
                     break;
                 case Button3:
                     com = options->commandAll3();
+                    break;
+                case Button4:
+                case Button5:
+                    com = options->operationWindowMouseWheel( button == Button4 ? 120 : -120 );
                     break;
                 }
             }
@@ -1201,8 +1185,8 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             if ( isSpecialWindow() && !isOverride())
                 replay = TRUE;
 
-                if( w == wrapperId()) // these can come only from a grab
-                    XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //qt_x_time);
+            if( w == wrapperId()) // these can come only from a grab
+                XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //qt_x_time);
             return true;
             }
         }

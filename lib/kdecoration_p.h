@@ -96,6 +96,7 @@ class KDecorationBridge : public KDecorationDefines
         virtual void showContextHelp() = 0;
         virtual void setDesktop( int desktop ) = 0;
         virtual void titlebarDblClickOperation() = 0;
+        virtual void titlebarMouseWheelOperation( int delta ) = 0;
         virtual void setShade( bool set ) = 0;
         virtual void setKeepAbove( bool ) = 0;
         virtual void setKeepBelow( bool ) = 0;

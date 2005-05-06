@@ -160,6 +160,7 @@ unsigned long Options::updateSettings()
     CmdInactiveTitlebar1 = mouseCommand(config->readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
     CmdInactiveTitlebar2 = mouseCommand(config->readEntry("CommandInactiveTitlebar2","Activate and lower"), true );
     CmdInactiveTitlebar3 = mouseCommand(config->readEntry("CommandInactiveTitlebar3","Operations menu"), true );
+    CmdTitlebarWheel = mouseWheelCommand(config->readEntry("CommandTitlebarWheel","Nothing"));
     CmdWindow1 = mouseCommand(config->readEntry("CommandWindow1","Activate, raise and pass click"), false );
     CmdWindow2 = mouseCommand(config->readEntry("CommandWindow2","Activate and pass click"), false );
     CmdWindow3 = mouseCommand(config->readEntry("CommandWindow3","Activate and pass click"), false );
@@ -167,6 +168,7 @@ unsigned long Options::updateSettings()
     CmdAll1 = mouseCommand(config->readEntry("CommandAll1","Move"), false );
     CmdAll2 = mouseCommand(config->readEntry("CommandAll2","Toggle raise and lower"), false );
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"), false );
+    CmdAllWheel = mouseWheelCommand(config->readEntry("CommandAllWheel","Nothing"));
 
     //translucency settings
     config->setGroup( "Notification Messages" );
@@ -266,6 +268,18 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     return MouseNothing;
     }
 
+Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
+    {
+    QString lowerName = name.lower();
+    if (lowerName == "raise/lower") return MouseWheelRaiseLower;
+    if (lowerName == "shade/unshade") return MouseWheelShadeUnshade;
+    if (lowerName == "maximize/restore") return MouseWheelMaximizeRestore;
+    if (lowerName == "above/below") return MouseWheelAboveBelow;
+    if (lowerName == "previous/next desktop") return MouseWheelPreviousNextDesktop;
+    if (lowerName == "change opacity") return MouseWheelChangeOpacity;
+    return MouseWheelNothing;
+    }
+
 bool Options::showGeometryTip()
     {
     return show_geometry_tip;
@@ -284,6 +298,27 @@ int Options::electricBorderDelay()
 bool Options::checkIgnoreFocusStealing( const Client* c )
     {
     return ignoreFocusStealingClasses.contains(QString::fromLatin1(c->resourceClass()));
+    }
+
+Options::MouseCommand Options::wheelToMouseCommand( MouseWheelCommand com, int delta )
+    {
+    switch( com )
+        {
+        case MouseWheelRaiseLower:
+            return delta > 0 ? MouseRaise : MouseLower;
+        case MouseWheelShadeUnshade:
+            return delta > 0 ? MouseSetShade : MouseUnsetShade;
+        case MouseWheelMaximizeRestore:
+            return delta > 0 ? MouseMaximize : MouseRestore;
+        case MouseWheelAboveBelow:
+            return delta > 0 ? MouseAbove : MouseBelow;
+        case MouseWheelPreviousNextDesktop:
+            return delta > 0 ? MousePreviousDesktop : MouseNextDesktop;
+        case MouseWheelChangeOpacity:
+            return delta > 0 ? MouseOpacityMore : MouseOpacityLess;
+        default:
+            return MouseNothing;
+        }
     }
 #endif
 

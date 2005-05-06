@@ -404,6 +404,10 @@ void KDecorationPreviewBridge::titlebarDblClickOperation()
     {
     }
 
+void KDecorationPreviewBridge::titlebarMouseWheelOperation( int )
+    {
+    }
+
 void KDecorationPreviewBridge::setShade( bool )
     {
     }

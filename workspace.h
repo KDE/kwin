@@ -183,6 +183,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         Client* topClientOnDesktop( int desktop, bool unconstrained = false ) const;
         Client* findDesktop( bool topmost, int desktop ) const;
         void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
+        void windowToPreviousDesktop( Client* c );
+        void windowToNextDesktop( Client* c );
 
     // KDE4 remove me - and it's also in the DCOP interface :(
         void showWindowMenuAt( unsigned long id, int x, int y );

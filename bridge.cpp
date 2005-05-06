@@ -123,6 +123,11 @@ void Bridge::titlebarDblClickOperation()
     c->workspace()->performWindowOperation( c, options->operationTitlebarDblClick());
     }
 
+void Bridge::titlebarMouseWheelOperation( int delta )
+    {
+    c->performMouseCommand( options->operationTitlebarMouseWheel( delta ), QCursor::pos());
+    }
+
 void Bridge::setShade( bool set )
     {
     c->setShade( set ? ShadeNormal : ShadeNone );

@@ -797,6 +797,13 @@ class KWIN_EXPORT KDecoration
 	 */
         void titlebarDblClickOperation();
 	/**
+	 * This function performs the operation configured as titlebar wheel mouse
+	 * operation.
+         * @param delta the mouse wheel delta
+         * @since 3.5
+	 */
+        void titlebarMouseWheelOperation( int delta );
+	/**
 	 * Shades or unshades the decorated window.
 	 * @param set Whether the window should be shaded
 	 */

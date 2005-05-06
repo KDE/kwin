@@ -810,6 +810,11 @@ void Client::setShade( ShadeMode mode )
 void Client::shadeHover()
     {
     setShade( ShadeHover );
+    cancelShadeHover();
+    }
+
+void Client::cancelShadeHover()
+    {
     delete shadeHoverTimer;
     shadeHoverTimer = 0;
     }

@@ -29,7 +29,7 @@
 #include <qtooltip.h>
 #include <qwidget.h>
 
-// #include <kdebug.h>
+#include <kdebug.h>
 
 #include <kapplication.h>
 #include <kdecorationfactory.h>
@@ -694,6 +694,13 @@ void KCommonDecoration::mouseDoubleClickEvent(QMouseEvent *e)
         titlebarDblClickOperation();
 }
 
+void KCommonDecoration::wheelEvent(QWheelEvent *e)
+{
+    int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
+    if (isSetShade() || e->pos().y() <= tb )
+        titlebarMouseWheelOperation( e->delta());
+}
+
 KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point) const
 {
     const int corner = 18+3*layoutMetric(LM_BorderBottom, false)/2;
@@ -826,6 +833,9 @@ bool KCommonDecoration::eventFilter( QObject* o, QEvent* e )
             return true;
         case QEvent::MouseButtonPress:
             processMousePressEvent( static_cast< QMouseEvent* >( e ));
+            return true;
+        case QEvent::Wheel:
+            wheelEvent( static_cast< QWheelEvent* >( e ));
             return true;
         default:
             return false;

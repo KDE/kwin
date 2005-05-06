@@ -140,8 +140,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   QGrid *grid;
   QGroupBox *box;
   QLabel *label;
-  QString strMouseButton1, strMouseButton3;
-  QString txtButton1, txtButton3;
+  QString strMouseButton1, strMouseButton3, strMouseWheel;
+  QString txtButton1, txtButton3, txtButton4;
   QStringList items;
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
 
@@ -171,6 +171,30 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
   label->setBuddy(combo);
 
+/** Mouse Wheel Events  **************/
+  QHBoxLayout *hlayoutW = new QHBoxLayout(layout);
+  strMouseWheel = i18n("Titlebar wheel event:");
+  label = new QLabel(strMouseWheel, this);
+  hlayoutW->addWidget(label);
+  txtButton4 = i18n("Handle mouse wheel events");
+  QWhatsThis::add( label, txtButton4);
+  
+  // Titlebar and frame mouse Wheel  
+  QComboBox* comboW = new QComboBox(this);
+  comboW->insertItem(i18n("Raise/Lower"));
+  comboW->insertItem(i18n("Shade/Unshade"));
+  comboW->insertItem(i18n("Maximize/Restore"));
+  comboW->insertItem(i18n("Keep Above/Below"));  
+  comboW->insertItem(i18n("Move to Previous/Next Desktop"));  
+  comboW->insertItem(i18n("Change Opacity"));  
+  comboW->insertItem(i18n("Nothing"));  
+  comboW->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
+  connect(comboW, SIGNAL(activated(int)), SLOT(changed()));
+  hlayoutW->addWidget(comboW);
+  coTiAct4 = comboW;
+  QWhatsThis::add(comboW, txtButton4);
+  label->setBuddy(comboW);
+  
 /** Titlebar and frame  **************/
 
   box = new QVGroupBox( i18n("Titlebar && Frame"), this, "Titlebar and Frame");
@@ -412,6 +436,26 @@ const char* const tbl_All[] = {
     "Nothing",
     "" };
 
+const char* tbl_TiWAc[] = {
+    "Raise/Lower",
+    "Shade/Unshade",
+    "Maximize/Restore",
+    "Above/Below",
+    "Previous/Next Desktop",
+    "Change Opacity",
+    "Nothing",
+    "" };
+
+const char* tbl_AllW[] = {
+    "Raise/Lower",
+    "Shade/Unshade",
+    "Maximize/Restore",
+    "Above/Below",
+    "Previous/Next Desktop",
+    "Change Opacity",
+    "Nothing",
+    "" };
+
 static const char* tbl_num_lookup( const char* const arr[], int pos )
 {
     for( int i = 0;
@@ -447,6 +491,8 @@ void KTitleBarActionsConfig::setComboText( QComboBox* combo, const char*txt )
         combo->setCurrentItem( tbl_txt_lookup( tbl_TiAc, txt ));
     else if( combo == coTiInAct1 || combo == coTiInAct2 || combo == coTiInAct3 )
         combo->setCurrentItem( tbl_txt_lookup( tbl_TiInAc, txt ));
+    else if( combo == coTiAct4 )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_TiWAc, txt ));	
     else if( combo == coMax[0] || combo == coMax[1] || combo == coMax[2] )
     {
         combo->setCurrentItem( tbl_txt_lookup( tbl_Max, txt ));
@@ -471,6 +517,11 @@ const char* KTitleBarActionsConfig::functionTiInAc( int i )
     return tbl_num_lookup( tbl_TiInAc, i );
 }
 
+const char* KTitleBarActionsConfig::functionTiWAc(int i)
+{
+    return tbl_num_lookup( tbl_TiWAc, i );
+}
+
 const char* KTitleBarActionsConfig::functionMax( int i )
 {
     return tbl_num_lookup( tbl_Max, i );
@@ -487,6 +538,7 @@ void KTitleBarActionsConfig::load()
   setComboText(coTiAct1,config->readEntry("CommandActiveTitlebar1","Raise").ascii());
   setComboText(coTiAct2,config->readEntry("CommandActiveTitlebar2","Lower").ascii());
   setComboText(coTiAct3,config->readEntry("CommandActiveTitlebar3","Operations menu").ascii());
+  setComboText(coTiAct4,config->readEntry("CommandTitlebarWheel","Nothing").ascii());  
   setComboText(coTiInAct1,config->readEntry("CommandInactiveTitlebar1","Activate and raise").ascii());
   setComboText(coTiInAct2,config->readEntry("CommandInactiveTitlebar2","Activate and lower").ascii());
   setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Operations menu").ascii());
@@ -504,6 +556,7 @@ void KTitleBarActionsConfig::save()
   config->writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentItem()));
   config->writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentItem()));
   config->writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentItem()));
+  config->writeEntry("CommandTitlebarWheel", functionTiWAc(coTiAct4->currentItem()));  
   config->writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentItem()));
   config->writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentItem()));
   
@@ -522,6 +575,7 @@ void KTitleBarActionsConfig::defaults()
   setComboText(coTiAct1,"Raise");
   setComboText(coTiAct2,"Lower");
   setComboText(coTiAct3,"Operations menu");
+  setComboText(coTiAct4,"Nothing");    
   setComboText(coTiInAct1,"Activate and raise");
   setComboText(coTiInAct2,"Activate and lower");
   setComboText(coTiInAct3,"Operations menu");
@@ -533,7 +587,7 @@ void KTitleBarActionsConfig::defaults()
 KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
   : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
 {
-  QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
+  QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3, strAllW;
   QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
   QGrid *grid;
   QGroupBox *box;
@@ -622,7 +676,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   QWhatsThis::add( box, i18n("Here you can customize KDE's behavior when clicking somewhere into"
                              " a window while pressing a modifier key."));
 
-  grid = new QGrid(4, Qt::Vertical, box);
+  grid = new QGrid(5, Qt::Vertical, box);
 
   // Labels
   label = new QLabel(i18n("Modifier key:"), grid);
@@ -656,6 +710,11 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
 
   label = new QLabel(strMouseButton3, grid);
   QWhatsThis::add( label, strAll3);
+
+  label = new QLabel(i18n("Modifier key + mouse wheel:"), grid);
+  strAllW = i18n("Here you can customize KDE's behavior when scrolling with the mouse wheel"
+      "  in a window while pressing the modifier key.");
+  QWhatsThis::add( label, strAllW);
 
   // Combo's
   combo = new QComboBox(grid);
@@ -693,6 +752,18 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAll3 =  combo;
   QWhatsThis::add( combo, strAll3 );
 
+  combo = new QComboBox(grid);
+  combo->insertItem(i18n("Raise/Lower"));
+  combo->insertItem(i18n("Shade/Unshade"));
+  combo->insertItem(i18n("Maximize/Restore"));
+  combo->insertItem(i18n("Keep Above/Below"));  
+  combo->insertItem(i18n("Move to Previous/Next Desktop"));  
+  combo->insertItem(i18n("Change Opacity"));  
+  combo->insertItem(i18n("Nothing"));  
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
+  coAllW =  combo;
+  QWhatsThis::add( combo, strAllW );
+
   layout->addStretch();
 
   load();
@@ -712,6 +783,8 @@ void KWindowActionsConfig::setComboText( QComboBox* combo, const char*txt )
         combo->setCurrentItem( tbl_txt_lookup( tbl_AllKey, txt ));
     else if( combo == coAll1 || combo == coAll2 || combo == coAll3 )
         combo->setCurrentItem( tbl_txt_lookup( tbl_All, txt ));
+    else if( combo == coAllW )
+        combo->setCurrentItem( tbl_txt_lookup( tbl_AllW, txt ));	
     else
         abort();
 }
@@ -731,6 +804,11 @@ const char* KWindowActionsConfig::functionAll( int i )
     return tbl_num_lookup( tbl_All, i );
 }
 
+const char* KWindowActionsConfig::functionAllW(int i)
+{
+    return tbl_num_lookup( tbl_AllW, i );
+}
+
 void KWindowActionsConfig::load()
 {
   config->setGroup( "MouseBindings");
@@ -741,6 +819,7 @@ void KWindowActionsConfig::load()
   setComboText(coAll1,config->readEntry("CommandAll1","Move").ascii());
   setComboText(coAll2,config->readEntry("CommandAll2","Toggle raise and lower").ascii());
   setComboText(coAll3,config->readEntry("CommandAll3","Resize").ascii());
+  setComboText(coAllW,config->readEntry("CommandAllWheel","Nothing").ascii());
 }
 
 void KWindowActionsConfig::save()
@@ -753,6 +832,7 @@ void KWindowActionsConfig::save()
   config->writeEntry("CommandAll1", functionAll(coAll1->currentItem()));
   config->writeEntry("CommandAll2", functionAll(coAll2->currentItem()));
   config->writeEntry("CommandAll3", functionAll(coAll3->currentItem()));
+  config->writeEntry("CommandAllWheel", functionAllW(coAllW->currentItem()));
   
   if (standAlone)
   {
@@ -772,4 +852,5 @@ void KWindowActionsConfig::defaults()
   setComboText (coAll1,"Move");
   setComboText(coAll2,"Toggle raise and lower");
   setComboText(coAll3,"Resize");
+  setComboText(coAllW,"Nothing");
 }

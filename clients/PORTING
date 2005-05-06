@@ -49,6 +49,10 @@ bool MyClient::eventFilter( QObject* o, QEvent* e )
 			mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ) );
 			return true;
 
+                case QEvent::Wheel:
+                        wheelEvent( static_cast< QWheelEvent* >( e ));
+                        return true;
+
 		case QEvent::MouseButtonPress:
 			processMousePressEvent( static_cast< QMouseEvent* >( e ) );
 			return true;

@@ -275,6 +275,7 @@ class Client : public QObject, public KDecorationDefines
         void maximize( MaximizeMode );
         void toggleShade();
         void showContextHelp();
+        void cancelShadeHover();
         void cancelAutoRaise();
         void destroyClient();
         void checkActiveModal();

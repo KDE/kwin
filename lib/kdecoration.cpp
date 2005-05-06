@@ -274,6 +274,11 @@ void KDecoration::titlebarDblClickOperation()
     bridge_->titlebarDblClickOperation();
     }
 
+void KDecoration::titlebarMouseWheelOperation( int delta )
+    {
+    bridge_->titlebarMouseWheelOperation( delta );
+    }
+
 void KDecoration::setShade( bool set )
     {
     bridge_->setShade( set );

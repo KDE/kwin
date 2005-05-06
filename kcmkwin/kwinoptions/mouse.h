@@ -70,6 +70,7 @@ private:
   QComboBox* coTiAct1;
   QComboBox* coTiAct2;
   QComboBox* coTiAct3;
+  QComboBox* coTiAct4;  
   QComboBox* coTiInAct1;
   QComboBox* coTiInAct2;
   QComboBox* coTiInAct3;
@@ -81,6 +82,7 @@ private:
 
   const char* functionTiDbl(int);
   const char* functionTiAc(int);
+  const char* functionTiWAc(int);  
   const char* functionTiInAc(int);
   const char* functionMax(int);
 
@@ -117,6 +119,7 @@ private:
   QComboBox* coAll1;
   QComboBox* coAll2;
   QComboBox* coAll3;
+  QComboBox* coAllW;
 
   KConfig *config;
   bool standAlone;
@@ -124,6 +127,7 @@ private:
   const char* functionWin(int);
   const char* functionAllKey(int);
   const char* functionAll(int);
+  const char* functionAllW(int);
 
   void setComboText(QComboBox* combo, const char* text);
   const char* fixup( const char* s );

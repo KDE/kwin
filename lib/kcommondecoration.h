@@ -255,6 +255,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         virtual bool eventFilter( QObject* o, QEvent* e );
         virtual void resizeEvent(QResizeEvent *e);
         virtual void mouseDoubleClickEvent(QMouseEvent *e);
+        virtual void wheelEvent(QWheelEvent *e);
 
     private:
         void resetLayout();

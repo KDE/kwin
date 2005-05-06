@@ -379,6 +379,8 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
         case Options::VMaximizeOp:
             c->maximize( c->maximizeMode() ^ Client::MaximizeVertical );
             break;
+        case Options::RestoreOp:
+            c->maximize( Client::MaximizeRestore );
         case Options::MinimizeOp:
             c->minimize();
             break;
@@ -412,6 +414,9 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
                 lowerClient( c );
             break;
             }
+        case Options::OperationsOp:
+            c->performMouseCommand( Options::MouseShade, QCursor::pos());
+            break;
         case Options::WindowRulesOp:
             editWindowRules( c );
             break;
@@ -421,7 +426,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
         case Options::LowerOp:
             lowerClient(c);
             break;
-        default:
+        case Options::NoOp:
             break;
         }
     }
@@ -441,9 +446,16 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             workspace()->lowerClient( this );
             break;
         case Options::MouseShade :
-            delete shadeHoverTimer;
-            shadeHoverTimer = 0;
             toggleShade();
+            cancelShadeHover();
+            break;
+        case Options::MouseSetShade:
+            setShade( ShadeNormal );
+            cancelShadeHover();
+            break;
+        case Options::MouseUnsetShade:
+            setShade( ShadeNone );
+            cancelShadeHover();
             break;
         case Options::MouseOperationsMenu:
             if ( isActive() & options->clickRaise )
@@ -531,12 +543,62 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
                 }
             break;
             }
+        case Options::MouseMaximize:
+            maximize( Client::MaximizeFull );
+            break;
+        case Options::MouseRestore:
+            maximize( Client::MaximizeRestore );
+            break;
         case Options::MouseMinimize:
             minimize();
             break;
+        case Options::MouseAbove:
+            {
+            StackingUpdatesBlocker blocker( workspace());
+            if( keepBelow())
+                setKeepBelow( false );
+            else
+                setKeepAbove( true );
+            break;
+            }
+        case Options::MouseBelow:
+            {
+            StackingUpdatesBlocker blocker( workspace());
+            if( keepAbove())
+                setKeepAbove( false );
+            else
+                setKeepBelow( true );
+            break;
+            }
+        case Options::MousePreviousDesktop:
+            workspace()->windowToPreviousDesktop( this );
+            break;
+        case Options::MouseNextDesktop:
+            workspace()->windowToNextDesktop( this );
+            break;
+        case Options::MouseOpacityMore:
+            if (opacity_ < 0xFFFFFFFF)
+                {
+                if (opacity_ < 0xF3333333)
+                    {
+                    setOpacity(TRUE, opacity_ + 0xCCCCCCC);
+                    custom_opacity = true;
+                    }
+                else
+                    {
+                    setOpacity(FALSE, 0xFFFFFFFF);
+                    custom_opacity = false;
+                    }
+                }
+            break;
+        case Options::MouseOpacityLess:
+            if (opacity_ > 0)
+                {
+                setOpacity(TRUE, (opacity_ > 0xCCCCCCC) ? opacity_ - 0xCCCCCCC : 0);
+                custom_opacity = true;
+                }
+            break;
         case Options::MouseNothing:
-        // fall through
-        default:
             replay = TRUE;
             break;
         }
@@ -758,10 +820,14 @@ void Workspace::slotSetupWindowShortcut()
  */
 void Workspace::slotWindowToNextDesktop()
     {
+    windowToNextDesktop( active_popup_client ? active_popup_client : active_client );
+    }
+    
+void Workspace::windowToNextDesktop( Client* c )
+    {
     int d = currentDesktop() + 1;
     if ( d > numberOfDesktops() )
         d = 1;
-    Client* c = active_popup_client ? active_popup_client : active_client;
     if (c && !c->isDesktop()
         && !c->isDock() && !c->isTopMenu())
         {
@@ -776,10 +842,14 @@ void Workspace::slotWindowToNextDesktop()
  */
 void Workspace::slotWindowToPreviousDesktop()
     {
+    windowToPreviousDesktop( active_popup_client ? active_popup_client : active_client );
+    }
+    
+void Workspace::windowToPreviousDesktop( Client* c )
+    {
     int d = currentDesktop() - 1;
     if ( d <= 0 )
         d = numberOfDesktops();
-    Client* c = active_popup_client ? active_popup_client : active_client;
     if (c && !c->isDesktop()
         && !c->isDock() && !c->isTopMenu())
         {

@@ -208,10 +208,30 @@ class Options : public KDecorationOptions
             MouseMove, MouseUnrestrictedMove,
             MouseActivateRaiseAndMove, MouseActivateRaiseAndUnrestrictedMove,
             MouseResize, MouseUnrestrictedResize,
-            MouseShade,
-            MouseMinimize,
+            MouseShade, MouseSetShade, MouseUnsetShade,
+            MouseMaximize, MouseRestore, MouseMinimize,
+            MouseNextDesktop, MousePreviousDesktop,
+            MouseAbove, MouseBelow,
+            MouseOpacityMore, MouseOpacityLess,
             MouseNothing
             };
+            
+        enum MouseWheelCommand
+            {
+            MouseWheelRaiseLower, MouseWheelShadeUnshade, MouseWheelMaximizeRestore,
+            MouseWheelAboveBelow, MouseWheelPreviousNextDesktop,
+            MouseWheelChangeOpacity,
+            MouseWheelNothing
+            };
+
+        MouseCommand operationTitlebarMouseWheel( int delta )
+            {
+            return wheelToMouseCommand( CmdTitlebarWheel, delta );
+            }
+        MouseCommand operationWindowMouseWheel( int delta )
+            {
+            return wheelToMouseCommand( CmdAllWheel, delta );
+            }
 
         MouseCommand commandActiveTitlebar1() { return CmdActiveTitlebar1; }
         MouseCommand commandActiveTitlebar2() { return CmdActiveTitlebar2; }
@@ -230,6 +250,7 @@ class Options : public KDecorationOptions
 
         static WindowOperation windowOperation(const QString &name, bool restricted );
         static MouseCommand mouseCommand(const QString &name, bool restricted );
+        static MouseWheelCommand mouseWheelCommand(const QString &name);
 
         /**
         * @returns true if the Geometry Tip should be shown during a window move/resize.
@@ -285,12 +306,14 @@ class Options : public KDecorationOptions
         MouseCommand CmdInactiveTitlebar1;
         MouseCommand CmdInactiveTitlebar2;
         MouseCommand CmdInactiveTitlebar3;
+        MouseWheelCommand CmdTitlebarWheel;
         MouseCommand CmdWindow1;
         MouseCommand CmdWindow2;
         MouseCommand CmdWindow3;
         MouseCommand CmdAll1;
         MouseCommand CmdAll2;
         MouseCommand CmdAll3;
+        MouseWheelCommand CmdAllWheel;
         uint CmdAllModKey;
 
         int electric_borders;
@@ -300,7 +323,8 @@ class Options : public KDecorationOptions
         bool desktop_topmenu;
         // List of window classes for which not to use focus stealing prevention
         QStringList ignoreFocusStealingClasses;
-        
+
+        MouseCommand wheelToMouseCommand( MouseWheelCommand com, int delta );
     };
 
 extern Options* options;
