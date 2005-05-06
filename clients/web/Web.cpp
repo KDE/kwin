@@ -200,7 +200,7 @@ WebClient::reset( unsigned long changed )
   } else if (changed & SettingFont) {
     // font has changed -- update title height
     // title height
-    const uint textVMargin   = 2;
+    const int textVMargin   = 2;
     QFontMetrics fm(options()->font(isActive(), isToolWindow()));
     titleHeight_ = QMAX(QMAX(14, fm.height() + textVMargin * 2), borderSize_);
     if (0 != titleHeight_ % 2)
