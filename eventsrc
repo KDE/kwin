@@ -1107,6 +1107,7 @@ default_presentation=0
 
 [desktop9]
 Name=Change to Desktop 9
+Name[bg]=Превключване на работен плот 9
 Name[da]=Skift til desktop 9
 Name[ga]=Téigh go Deasc 9
 Name[pt_BR]=Mudar para a Área de Trabalho 9
@@ -1114,6 +1115,7 @@ Name[sv]=Byt till skrivbord 9
 Name[ta]=மேல்மேசை 9க்கு மாற்று
 Name[tr]=9. Masaüstüne Git
 Comment=Virtual desktop nine is selected
+Comment[bg]=Превключване на работен плот 9
 Comment[da]=Virtuel desktop ni er valgt
 Comment[pt_BR]=Área de trabalho virtual 9 está selecionada
 Comment[sv]=Virtuellt skrivbord nio är valt
@@ -1121,6 +1123,7 @@ default_presentation=0
 
 [desktop10]
 Name=Change to Desktop 10
+Name[bg]=Превключване на работен плот 10
 Name[da]=Skift til desktop 10
 Name[ga]=Téigh go Deasc 10
 Name[pt_BR]=Mudar para a Área de Trabalho 10
@@ -1128,6 +1131,7 @@ Name[sv]=Byt till skrivbord 10
 Name[ta]=மேல்மேசை 10க்கு மாற்று
 Name[tr]=10. Masaüstüne Git
 Comment=Virtual desktop ten is selected
+Comment[bg]=Превключване на работен плот 10
 Comment[da]=Virtuel desktop ti er valgt
 Comment[pt_BR]=Área de trabalho virtual 10 está selecionada
 Comment[sv]=Virtuellt skrivbord tio är valt
@@ -1136,6 +1140,7 @@ default_presentation=0
 
 [desktop11]
 Name=Change to Desktop 11
+Name[bg]=Превключване на работен плот 11
 Name[da]=Skift til desktop 11
 Name[ga]=Téigh go Deasc 11
 Name[pt_BR]=Mudar para a Área de Trabalho 11
@@ -1143,12 +1148,16 @@ Name[sv]=Byt till skrivbord 11
 Name[ta]=மேல்மேசை 11க்கு மாற்று
 Name[tr]=11. Masaüstüne Git
 Comment=Virtual desktop eleven is selected
+Comment[bg]=Превключване на работен плот 11
+Comment[da]=Virtuel desktop elleve er valgt
 Comment[pt_BR]=Área de trabalho virtual 11 está selecionada
 Comment[sv]=Virtuellt skrivbord elva är valt
+Comment[ta]=மெய்நிகர் மேல்மேசை பதினொன்று தேர்ந்தெடுக்கப்பட்டது
 default_presentation=0
 
 [desktop12]
 Name=Change to Desktop 12
+Name[bg]=Превключване на работен плот 12
 Name[da]=Skift til desktop 12
 Name[ga]=Téigh go Deasc 12
 Name[pt_BR]=Mudar para a Área de Trabalho 12
@@ -1156,6 +1165,7 @@ Name[sv]=Byt till skrivbord 12
 Name[ta]=மேல்மேசை 12க்கு மாற்று
 Name[tr]=12. Masaüstüne Git
 Comment=Virtual desktop twelve is selected
+Comment[bg]=Превключване на работен плот 12
 Comment[da]=Virtuel desktop tolv er valgt
 Comment[pt_BR]=Área de trabalho virtual 12 está selecionada
 Comment[sv]=Virtuellt skrivbord tolv är valt
@@ -1164,6 +1174,7 @@ default_presentation=0
 
 [desktop13]
 Name=Change to Desktop 13
+Name[bg]=Превключване на работен плот 13
 Name[da]=Skift til desktop 13
 Name[ga]=Téigh go Deasc 13
 Name[pt_BR]=Mudar para o Área de Trabalho 13
@@ -1171,6 +1182,7 @@ Name[sv]=Byt till skrivbord 13
 Name[ta]=மேல்மேசை 13க்கு மாற்று
 Name[tr]=13. Masaüstüne Git
 Comment=Virtual desktop thirteen is selected
+Comment[bg]=Превключване на работен плот 13
 Comment[da]=Virtuel desktop tretten er valgt
 Comment[pt_BR]=Área de trabalho virtual 13 está selecionada
 Comment[sv]=Virtuellt skrivbord tretton är valt
@@ -1179,6 +1191,7 @@ default_presentation=0
 
 [desktop14]
 Name=Change to Desktop 14
+Name[bg]=Превключване на работен плот 14
 Name[da]=Skift til desktop 14
 Name[ga]=Téigh go Deasc 14
 Name[pt_BR]=Mudar para o Área de Trabalho 14
@@ -1186,6 +1199,7 @@ Name[sv]=Byt till skrivbord 14
 Name[ta]=மேல்மேசை 14க்கு மாற்று
 Name[tr]=14. Masaüstüne Git
 Comment=Virtual desktop fourteen is selected
+Comment[bg]=Превключване на работен плот 14
 Comment[da]=Virtuel desktop fjorten er valgt
 Comment[pt_BR]=Área de trabalho virtual 14 está selecionada
 Comment[sv]=Virtuellt skrivbord fjorton är valt
@@ -1194,6 +1208,7 @@ default_presentation=0
 
 [desktop15]
 Name=Change to Desktop 15
+Name[bg]=Превключване на работен плот 15
 Name[da]=Skift til desktop 15
 Name[ga]=Téigh go Deasc 15
 Name[pt_BR]=Mudar para o Área de Trabalho 15
@@ -1201,6 +1216,7 @@ Name[sv]=Byt till skrivbord 15
 Name[ta]=மேல்மேசை 15க்கு மாற்று
 Name[tr]=15. Masaüstüne Git
 Comment=Virtual desktop fifteen is selected
+Comment[bg]=Превключване на работен плот 15
 Comment[da]=Virtuel desktop femten er valgt
 Comment[pt_BR]=Área de trabalho virtual 15 está selecionada
 Comment[sv]=Virtuellt skrivbord femton är valt
@@ -1209,6 +1225,7 @@ default_presentation=0
 
 [desktop16]
 Name=Change to Desktop 16
+Name[bg]=Превключване на работен плот 16
 Name[da]=Skift til desktop 16
 Name[ga]=Téigh go Deasc 16
 Name[pt_BR]=Mudar para o Área de Trabalho 16
@@ -1216,6 +1233,7 @@ Name[sv]=Byt till skrivbord 16
 Name[ta]=மேல்மேசை 116க்கு மாற்று
 Name[tr]=16. Masaüstüne Git
 Comment=Virtual desktop sixteen is selected
+Comment[bg]=Превключване на работен плот 16
 Comment[da]=Virtuel desktop seksten er valgt
 Comment[pt_BR]=Área de trabalho virtual 16 está selecionada
 Comment[sv]=Virtuellt skrivbord sexton är valt
@@ -1224,6 +1242,7 @@ default_presentation=0
 
 [desktop17]
 Name=Change to Desktop 17
+Name[bg]=Превключване на работен плот 17
 Name[da]=Skift til desktop 17
 Name[ga]=Téigh go Deasc 17
 Name[pt_BR]=Mudar para o Área de Trabalho 17
@@ -1231,6 +1250,7 @@ Name[sv]=Byt till skrivbord 17
 Name[ta]=மேல்மேசை 17க்கு மாற்று
 Name[tr]=17. Masaüstüne Git
 Comment=Virtual desktop seventeen is selected
+Comment[bg]=Превключване на работен плот 17
 Comment[da]=Virtuel desktop sytten er valgt
 Comment[pt_BR]=Área de trabalho virtual 17 está selecionada
 Comment[sv]=Virtuellt skrivbord sjutton är valt
@@ -1239,6 +1259,7 @@ default_presentation=0
 
 [desktop18]
 Name=Change to Desktop 18
+Name[bg]=Превключване на работен плот 18
 Name[da]=Skift til desktop 18
 Name[ga]=Téigh go Deasc 18
 Name[pt_BR]=Mudar para o Área de Trabalho 18
@@ -1246,6 +1267,7 @@ Name[sv]=Byt till skrivbord 18
 Name[ta]=மேல்மேசை 18க்கு மாற்று
 Name[tr]=18. Masaüstüne Git
 Comment=Virtual desktop eighteen is selected
+Comment[bg]=Превключване на работен плот 18
 Comment[da]=Virtuel desktop atten er valgt
 Comment[pt_BR]=Área de trabalho virtual 18 está selecionada
 Comment[sv]=Virtuellt skrivbord arton är valt
@@ -1254,6 +1276,7 @@ default_presentation=0
 
 [desktop19]
 Name=Change to Desktop 19
+Name[bg]=Превключване на работен плот 19
 Name[da]=Skift til desktop 19
 Name[ga]=Téigh go Deasc 19
 Name[pt_BR]=Mudar para a Área de Trabalho 19
@@ -1261,6 +1284,7 @@ Name[sv]=Byt till skrivbord 19
 Name[ta]=மேல்மேசை 19க்கு மாற்று
 Name[tr]=19. Masaüstüne Git
 Comment=Virtual desktop nineteen is selected
+Comment[bg]=Превключване на работен плот 19
 Comment[da]=Virtuel desktop nitten er valgt
 Comment[pt_BR]=Área de trabalho virtual 19 está selecionada
 Comment[sv]=Virtuellt skrivbord nitton är valt
@@ -1269,6 +1293,7 @@ default_presentation=0
 
 [desktop20]
 Name=Change to Desktop 20
+Name[bg]=Превключване на работен плот 20
 Name[da]=Skift til desktop 20
 Name[ga]=Téigh go Deasc 20
 Name[pt_BR]=Mudar para a Área de Trabalho 20
@@ -1276,6 +1301,7 @@ Name[sv]=Byt till skrivbord 20
 Name[ta]=மேல்மேசை 20க்கு மாற்று
 Name[tr]=20. Masaüstüne Git
 Comment=Virtual desktop twenty is selected
+Comment[bg]=Превключване на работен плот 20
 Comment[da]=Virtuel desktop tyve er valgt
 Comment[pt_BR]=Área de trabalho virtual 20 está selecionada
 Comment[sv]=Virtuellt skrivbord tjugo är valt
