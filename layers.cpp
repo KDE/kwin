@@ -70,7 +70,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "workspace.h"
 #include "tabbox.h"
-#include "popupinfo.h"
 #include "group.h"
 #include "rules.h"
 

@@ -270,7 +270,6 @@ void Workspace::activateClient( Client* c, bool force )
         ++block_focus;
         setCurrentDesktop( c->desktop() );
         --block_focus;
-        // popupinfo->showInfo( desktopName(currentDesktop()) ); // AK - not sure
         }
     if( c->isMinimized())
         c->unminimize();

@@ -1070,6 +1070,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 // TODO    Q_ASSERT( block_stacking_updates == 0 ); // make sure stacking_order is up to date
     StackingUpdatesBlocker blocker( this );
 
+    int old_desktop = current_desktop;
     if (new_desktop != current_desktop) 
         {
         /*
@@ -1080,7 +1081,6 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
         ObscuringWindows obs_wins;
 
-        int old_desktop = current_desktop;
         current_desktop = new_desktop; // change the desktop (so that Client::updateVisibility() works)
 
         for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
@@ -1178,6 +1178,9 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 //    for( uint i = 0; i < desktop_focus_chain.size(); i++ )
 //        s += QString::number(desktop_focus_chain[i]) + ", ";
 //    kdDebug(1212) << s << "}\n";
+
+    if( old_desktop != 0 )  // not for the very first time
+        popupinfo->showInfo( desktopName(currentDesktop()) );
     return true;
     }
 
@@ -1186,7 +1189,6 @@ void Workspace::nextDesktop()
     {
     int desktop = currentDesktop() + 1;
     setCurrentDesktop(desktop > numberOfDesktops() ? 1 : desktop);
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 // called only from DCOP
@@ -1194,7 +1196,6 @@ void Workspace::previousDesktop()
     {
     int desktop = currentDesktop() - 1;
     setCurrentDesktop(desktop > 0 ? desktop : numberOfDesktops());
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 int Workspace::desktopToRight( int desktop ) const

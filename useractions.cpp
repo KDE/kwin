@@ -34,7 +34,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kapplication.h>
 #include <qregexp.h>
 
-#include "popupinfo.h"
 #include "killwindow.h"
 #include "tabbox.h"
 
@@ -571,7 +570,6 @@ void Workspace::slotSwitchDesktopNext()
             }
         }
     setCurrentDesktop(d);
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopPrevious()
@@ -585,7 +583,6 @@ void Workspace::slotSwitchDesktopPrevious()
           return;
         }
     setCurrentDesktop(d);
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopRight()
@@ -594,7 +591,6 @@ void Workspace::slotSwitchDesktopRight()
     if( desktop == currentDesktop())
         return;
     setCurrentDesktop( desktop );
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopLeft()
@@ -603,7 +599,6 @@ void Workspace::slotSwitchDesktopLeft()
     if( desktop == currentDesktop())
         return;
     setCurrentDesktop( desktop );
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopUp()
@@ -612,7 +607,6 @@ void Workspace::slotSwitchDesktopUp()
     if( desktop == currentDesktop())
         return;
     setCurrentDesktop( desktop );
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchDesktopDown()
@@ -621,13 +615,11 @@ void Workspace::slotSwitchDesktopDown()
     if( desktop == currentDesktop())
         return;
     setCurrentDesktop( desktop );
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 void Workspace::slotSwitchToDesktop( int i )
     {
     setCurrentDesktop( i );
-    popupinfo->showInfo( desktopName(currentDesktop()) );
     }
 
 
@@ -776,7 +768,6 @@ void Workspace::slotWindowToNextDesktop()
         setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
-        popupinfo->showInfo( desktopName(currentDesktop()) );
         }
     }
 
@@ -795,7 +786,6 @@ void Workspace::slotWindowToPreviousDesktop()
         setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
-        popupinfo->showInfo( desktopName(currentDesktop()) );
         }
     }
 
@@ -811,7 +801,6 @@ void Workspace::slotWindowToDesktopRight()
         setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
-        popupinfo->showInfo( desktopName(currentDesktop()) );
         }
     }
 
@@ -827,7 +816,6 @@ void Workspace::slotWindowToDesktopLeft()
         setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
-        popupinfo->showInfo( desktopName(currentDesktop()) );
         }
     }
 
@@ -843,7 +831,6 @@ void Workspace::slotWindowToDesktopUp()
         setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
-        popupinfo->showInfo( desktopName(currentDesktop()) );
         }
     }
 
@@ -859,7 +846,6 @@ void Workspace::slotWindowToDesktopDown()
         setClientIsMoving( c );
         setCurrentDesktop( d );
         setClientIsMoving( NULL );
-        popupinfo->showInfo( desktopName(currentDesktop()) );
         }
     }
 
@@ -942,7 +928,7 @@ void Workspace::showWindowMenu( const QRect &pos, Client* cl )
  */
 void Workspace::slotWindowClose()
     {
-    if ( tab_box->isVisible() || popupinfo->isVisible() )
+    if ( tab_box->isVisible())
         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     performWindowOperation( c, Options::CloseOp );

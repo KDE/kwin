@@ -1073,7 +1073,6 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         if ( tab_box->currentDesktop() != -1 )
             {
             setCurrentDesktop( tab_box->currentDesktop() );
-                    // popupinfo->showInfo( desktopName(currentDesktop()) ); // AK - not sure
             }
         }
     }
