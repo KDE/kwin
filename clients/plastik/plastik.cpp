@@ -184,7 +184,7 @@ void PlastikHandler::readConfig()
     if ( m_titleHeightTool%2 == 0)
         m_titleHeightTool++;
 
-    QString value = config.readEntry("TitleAlignment", "AlignHCenter");
+    QString value = config.readEntry("TitleAlignment", "AlignLeft");
     if (value == "AlignLeft")         m_titleAlign = Qt::AlignLeft;
     else if (value == "AlignHCenter") m_titleAlign = Qt::AlignHCenter;
     else if (value == "AlignRight")   m_titleAlign = Qt::AlignRight;
