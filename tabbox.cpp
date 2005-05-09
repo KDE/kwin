@@ -723,7 +723,7 @@ void Workspace::slotWalkThroughWindows()
         return;
     if ( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
+    if ( options->altTabStyle == Options::CDE )
         {
         //XUngrabKeyboard(qt_xdisplay(), qt_x_time); // need that because of accelerator raw mode
         // CDE style raise / lower
@@ -749,7 +749,7 @@ void Workspace::slotWalkBackThroughWindows()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE  || !options->focusPolicyIsReasonable() )
+    if ( options->altTabStyle == Options::CDE )
         {
         // CDE style raise / lower
         CDEWalkThroughWindows( false );
