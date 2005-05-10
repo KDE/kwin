@@ -330,7 +330,6 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
             // raising of the original window needs to be still done
             if( flags & ActivityRaise )
                 raiseClient( c );
-            flags &= ~ActivityRaise;
             c = modal;
             handled = false;
             }
