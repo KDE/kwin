@@ -223,8 +223,10 @@ private:
   KIntNumInput *delays;
   
   void setFocusStealing( int );
+  void setHideUtilityWindowsForInactive( bool );
 
   QComboBox* focusStealing;
+  QCheckBox* hideUtilityWindowsForInactive;
 };
 
 class KProcess;

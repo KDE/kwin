@@ -681,6 +681,14 @@ void Workspace::updateCurrentTopMenu()
 void Workspace::updateToolWindows( bool also_hide )
     {
     // TODO what if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
+    if( !options->hideUtilityWindowsForInactive )
+        {
+        for( ClientList::ConstIterator it = clients.begin();
+             it != clients.end();
+             ++it )
+            (*it)->hideClient( false );
+        return;
+        }
     const Group* group = NULL;
     const Client* client = active_client;
 // Go up in transiency hiearchy, if the top is found, only tool transients for the top mainwindow
@@ -816,6 +824,7 @@ void Workspace::slotReconfigure()
     popupinfo->reconfigure();
     readShortcuts();
     forEachClient( CheckIgnoreFocusStealingProcedure());
+    updateToolWindows( true );
 
     if( mgr->reset( changed ))
         { // decorations need to be recreated

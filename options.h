@@ -277,6 +277,9 @@ class Options : public KDecorationOptions
         // timeout before non-responding application will be killed after attempt to close
         int killPingTimeout;
         
+        // Whether to hide utility windows for inactive applications.
+        bool hideUtilityWindowsForInactive;
+
         //translucency settings
         bool useTranslucency;
         bool translucentActiveWindows;

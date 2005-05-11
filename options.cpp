@@ -151,6 +151,7 @@ unsigned long Options::updateSettings()
         (*it) = (*it).lower();
 
     killPingTimeout = config->readNumEntry( "KillPingTimeout", 5000 );
+    hideUtilityWindowsForInactive = config->readBoolEntry( "HideUtilityWindowsForInactive", false );
 
     // Mouse bindings
     config->setGroup( "MouseBindings");

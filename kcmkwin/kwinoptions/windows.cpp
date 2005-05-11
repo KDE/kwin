@@ -75,6 +75,7 @@
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
+#define KWIN_HIDE_UTILITY          "HideUtilityWindowsForInactive"
 
 // kwm config keywords
 #define KWM_ELECTRIC_BORDER                  "ElectricBorders"
@@ -608,8 +609,15 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
                   "</ul>" );
     QWhatsThis::add( focusStealing, wtstr );
     QWhatsThis::add( focusStealingLabel, wtstr );
-
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
+    
+    hideUtilityWindowsForInactive = new QCheckBox( i18n( "Hide utility windows for inactive applications" ), this );
+    QWhatsThis::add( hideUtilityWindowsForInactive,
+        i18n( "When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be"
+              " hidden and will be shown only when the application becomes active. Note that applications"
+              " have to mark the windows with the proper window type for this feature to work." ));
+    connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
+    lay->addWidget( hideUtilityWindowsForInactive );
 
     lay->addStretch();
     load();
@@ -643,6 +651,10 @@ void KAdvancedConfig::setFocusStealing(int l) {
     focusStealing->setCurrentItem(l);
 }
 
+void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
+    hideUtilityWindowsForInactive->setChecked( s );
+}
+
 void KAdvancedConfig::load( void )
 {
     config->setGroup( "Windows" );
@@ -657,6 +669,7 @@ void KAdvancedConfig::load( void )
 //    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 2 ));
     // TODO default to low for now
     setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 1 ));
+    setHideUtilityWindowsForInactive( config->readBoolEntry( KWIN_HIDE_UTILITY, true ));
 
     emit KCModule::changed(false);
 }
@@ -680,6 +693,7 @@ void KAdvancedConfig::save( void )
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
 
     config->writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentItem());
+    config->writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
 
     if (standAlone)
     {
@@ -701,6 +715,7 @@ void KAdvancedConfig::defaults()
 //    setFocusStealing(2);
     // TODO default to low for now
     setFocusStealing(1);
+    setHideUtilityWindowsForInactive( true );
     emit KCModule::changed(true);
 }
 
