@@ -456,6 +456,7 @@ class Client : public QObject, public KDecorationDefines
         ClientList transients_list; // SELI make this ordered in stacking order?
         ShadeMode shade_mode;
         uint active :1;
+        uint deleting : 1; // true when doing cleanup and destroying the client
         uint keep_above : 1; // NET::KeepAbove (was stays_on_top)
         uint is_shape :1;
         uint skip_taskbar :1;

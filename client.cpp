@@ -109,6 +109,7 @@ Client::Client( Workspace *ws )
 
     shade_mode = ShadeNone;
     active = FALSE;
+    deleting = false;
     keep_above = FALSE;
     keep_below = FALSE;
     is_shape = FALSE;
@@ -155,6 +156,7 @@ Client::Client( Workspace *ws )
  */
 Client::~Client()
     {
+    assert( deleting );
     assert(!moveResizeMode);
     assert( client == None );
     assert( frame == None && wrapper == None );
@@ -176,6 +178,8 @@ void Client::deleteClient( Client* c, allowed_t )
  */
 void Client::releaseWindow( bool on_shutdown )
     {
+    assert( !deleting );
+    deleting = true;
     StackingUpdatesBlocker blocker( workspace());
     if (!custom_opacity) setOpacity(FALSE);
     if (moveResizeMode)
@@ -228,6 +232,8 @@ void Client::releaseWindow( bool on_shutdown )
 // (e.g. the application closed it)
 void Client::destroyClient()
     {
+    assert( !deleting );
+    deleting = true;
     StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
        leaveMoveResize();
@@ -804,7 +810,7 @@ void Client::setShade( ShadeMode mode )
     setGeometry( geometry(), ForceGeometrySet );
     info->setState( isShade() ? NET::Shaded : 0, NET::Shaded );
     info->setState( isShown( false ) ? 0 : NET::Hidden, NET::Hidden );
-    setMappingState( isShown( false ) && isOnCurrentDesktop() ? NormalState : IconicState );
+    updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     decoration->shadeChange();
@@ -831,6 +837,8 @@ void Client::toggleShade()
 
 void Client::updateVisibility()
     {
+    if( deleting )
+        return;
     bool show = true;
     if( hidden )
         {
@@ -875,6 +883,7 @@ void Client::updateVisibility()
 void Client::setMappingState(int s)
     {
     assert( client != None );
+    assert( !deleting || s == WithdrawnState );
     if( mapping_state == s )
         return;
     bool was_unmanaged = ( mapping_state == WithdrawnState );
