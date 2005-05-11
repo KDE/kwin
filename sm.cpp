@@ -242,7 +242,7 @@ bool Workspace::sessionInfoWindowTypeMatch( Client* c, SessionInfo* info )
     {
     if( info->windowType == -2 ) 
         { // undefined (not really part of NET::WindowType)
-        return !c->isSpecialWindow() || c->isOverride();
+        return !c->isSpecialWindow();
         }
     return info->windowType == c->windowType();
     }

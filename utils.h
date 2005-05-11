@@ -22,7 +22,7 @@ namespace KWinInternal
 {
 
 const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
-    | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
+    | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
     | NET::UtilityMask | NET::SplashMask;
 
 const long ClientWinMask = KeyPressMask | KeyReleaseMask |

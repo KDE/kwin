@@ -163,7 +163,7 @@ bool Client::manage( Window w, bool isMapped )
                  it != mainclients.end();
                  ++it )
                 {
-                if( (*it)->isSpecialWindow() && !(*it)->isOverride())
+                if( (*it)->isSpecialWindow())
                     continue; // don't consider toolbars etc when placing
                 maincl = *it;
                 if( (*it)->isOnCurrentDesktop())
@@ -454,13 +454,13 @@ bool Client::manage( Window w, bool isMapped )
             {
             if( allow && isOnCurrentDesktop())
                 {
-                if( !isSpecialWindow() || isOverride())
+                if( !isSpecialWindow())
                     if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
                         workspace()->requestFocus( this );
                 }
             else
                 {
-                if( !session && ( !isSpecialWindow() || isOverride()))
+                if( !session && !isSpecialWindow())
                         demandAttention();
                 }
             }

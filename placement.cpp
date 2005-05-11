@@ -447,7 +447,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
          it != mainwindows.end();
          ++it )
         {
-        if( (*it)->isSpecialWindow() && !(*it)->isOverride())
+        if( (*it)->isSpecialWindow())
             continue; // don't consider toolbars etc when placing
         ++mains_count;
         place_on2 = *it;

@@ -1182,7 +1182,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             {
             bool replay = performMouseCommand( com, QPoint( x_root, y_root), perform_handled );
 
-            if ( isSpecialWindow() && !isOverride())
+            if ( isSpecialWindow())
                 replay = TRUE;
 
             if( w == wrapperId()) // these can come only from a grab

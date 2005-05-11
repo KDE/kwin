@@ -346,7 +346,6 @@ void Client::detectNoBorder()
         case NET::Desktop :
         case NET::Dock :
         case NET::TopMenu :
-        case NET::Override :
         case NET::Splash :
             noborder = true;
           break;
@@ -362,6 +361,11 @@ void Client::detectNoBorder()
         default:
             assert( false );
         }
+    // NET::Override is some strange beast without clear definition, usually
+    // just meaning "noborder", so let's treat it only as such flag, and ignore it as
+    // a window type otherwise (SUPPORTED_WINDOW_TYPES_MASK doesn't include it)
+    if( info->windowType( SUPPORTED_WINDOW_TYPES_MASK | NET::OverrideMask ) == NET::Override )
+        noborder = true;
     }
 
 void Client::updateFrameStrut()
@@ -496,7 +500,7 @@ void Client::hideClient( bool hide )
  */
 bool Client::isMinimizable() const
     {
-    if( isSpecialWindow() && !isOverride())
+    if( isSpecialWindow())
         return false;
     if( isTransient())
         { // #66868 - let other xmms windows be minimized when the mainwindow is minimized
@@ -961,7 +965,7 @@ void Client::sendClientMessage(Window w, Atom a, Atom protocol, long data1, long
  */
 bool Client::isCloseable() const
     {
-    return rules()->checkCloseable( motif_may_close && ( !isSpecialWindow() || isOverride())); // TODO is NET::Override special?
+    return rules()->checkCloseable( motif_may_close && !isSpecialWindow());
     }
 
 /*!
@@ -1573,7 +1577,7 @@ Window Client::wmClientLeader() const
 
 bool Client::wantsTabFocus() const
     {
-    return ( isNormalWindow() || isDialog() || isOverride())
+    return ( isNormalWindow() || isDialog())
         && wantsInput() && !skip_taskbar;
     }
 
@@ -1609,11 +1613,6 @@ bool Client::isToolbar() const
     return windowType() == NET::Toolbar;
     }
 
-bool Client::isOverride() const
-    {
-    return windowType() == NET::Override;
-    }
-
 bool Client::isSplash() const
     {
     return windowType() == NET::Splash;
@@ -1637,7 +1636,6 @@ bool Client::isNormalWindow() const
 bool Client::isSpecialWindow() const
     {
     return isDesktop() || isDock() || isSplash() || isTopMenu()
-        || ( isOverride() && !isFullScreen())// SELI is NET::Override special or not?
         || isToolbar(); // TODO
     }
 

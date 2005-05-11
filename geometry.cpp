@@ -882,8 +882,6 @@ void Client::checkWorkspacePosition()
         }
     if( isDock())
         return;
-    if( isOverride())
-        return; // I wish I knew what to do here :(
     if( isTopMenu())
         {
         if( workspace()->managingTopMenus())
@@ -1542,7 +1540,7 @@ bool Client::isMovable() const
     {
     if( !motif_may_move || isFullScreen())
         return false;
-    if( isSpecialWindow() && !isOverride() && !isSplash() && !isToolbar()) // allow moving of splashscreens :)
+    if( isSpecialWindow() && !isSplash() && !isToolbar()) // allow moving of splashscreens :)
         return false;
     if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
         return false;
@@ -1558,7 +1556,7 @@ bool Client::isResizable() const
     {
     if( !motif_may_resize || isFullScreen())
         return false;
-    if(( isSpecialWindow() || isSplash() || isToolbar()) && !isOverride())
+    if( isSpecialWindow() || isSplash() || isToolbar())
         return false;
     if( maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows() )
         return false;
@@ -1934,7 +1932,7 @@ bool Client::isFullScreenable( bool fullscreen_hack ) const
     if( !rules()->checkFullScreen( true ))
         return false;
     if( fullscreen_hack )
-        return isNormalWindow() || isOverride();
+        return isNormalWindow();
     if( rules()->checkStrictGeometry( false ))
         {
         // the app wouldn't fit exactly fullscreen geometry due its strict geometry requirements
