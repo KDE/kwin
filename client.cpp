@@ -156,7 +156,6 @@ Client::Client( Workspace *ws )
  */
 Client::~Client()
     {
-    assert( deleting );
     assert(!moveResizeMode);
     assert( client == None );
     assert( frame == None && wrapper == None );
