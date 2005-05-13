@@ -601,7 +601,7 @@ QString KWinDecorationModule::quickHelp() const
 
 void KWinDecorationModule::resetKWin()
 {
-	bool ok = kapp->dcopClient()->send("kwin", "KWinInterface",
+	bool ok = kapp->dcopClient()->send("kwin*", "KWinInterface",
                         "reconfigure()", QByteArray());
 	if (!ok)
 		kdDebug() << "kcmkwindecoration: Could not reconfigure kwin" << endl;
