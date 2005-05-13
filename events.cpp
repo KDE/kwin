@@ -1228,7 +1228,7 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
         && com != Options::MouseMinimize )  // mouse release event
         {
-// FRAME      mouseMoveEvent( e ); shouldn't be necessary
+        mode = mousePosition( QPoint( x, y ));
         buttonDown = TRUE;
         moveOffset = QPoint( x, y );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
