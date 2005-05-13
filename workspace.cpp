@@ -79,6 +79,8 @@ Workspace::Workspace( bool restore )
     movingClient(0),
     pending_take_activity ( NULL ),
     delayfocus_client (0),
+    showing_desktop( false ),
+    block_showing_desktop( 0 ),
     was_user_interaction (false),
     session_saving    (false),
     control_grab      (false),
@@ -281,6 +283,7 @@ void Workspace::init()
         NET::WM2MoveResizeWindow |
         NET::WM2ExtendedStrut |
         NET::WM2KDETemporaryRules |
+        NET::WM2ShowingDesktop |
         0
         ,
         NET::ActionMove |
@@ -389,6 +392,7 @@ void Workspace::init()
         desktop_geometry.height = geom.height();
     // TODO update also after gaining XRANDR support
         rootInfo->setDesktopGeometry( -1, desktop_geometry );
+        setShowingDesktop( false );
 
         } // end updates blocker block
 
@@ -1082,6 +1086,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     int old_desktop = current_desktop;
     if (new_desktop != current_desktop) 
         {
+        ++block_showing_desktop;
         /*
           optimized Desktop switching: unmapping done from back to front
           mapping done from front to back => less exposure events
@@ -1108,6 +1113,10 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
             if ( (*it)->isOnDesktop( new_desktop ) )
                 (*it)->updateVisibility();
+
+        --block_showing_desktop;
+        if( showingDesktop()) // do this only after desktop change to avoid flicker
+            resetShowingDesktop( false );
         }
 
     // restore the focus on this desktop
@@ -2482,7 +2491,71 @@ void Workspace::setUnshadowed(unsigned long winId)
             return;
             }
 }
-    
+
+void Workspace::setShowingDesktop( bool showing )
+    {
+    rootInfo->setShowingDesktop( showing );
+    showing_desktop = showing;
+    ++block_showing_desktop;
+    if( showing_desktop )
+        {
+        showing_desktop_clients.clear();
+        ++block_focus;
+        ClientList cls = stackingOrder();
+        // find them first, then minimize, otherwise transients may get minimized with the window
+        // they're transient for
+        for( ClientList::ConstIterator it = cls.begin();
+             it != cls.end();
+             ++it )
+            {
+            if( (*it)->isOnCurrentDesktop() && (*it)->isShown( true ) && !(*it)->isSpecialWindow())
+                showing_desktop_clients.prepend( *it ); // topmost first to reduce flicker
+            }
+        for( ClientList::ConstIterator it = showing_desktop_clients.begin();
+             it != showing_desktop_clients.end();
+             ++it )
+            (*it)->minimize();
+        --block_focus;
+        if( Client* desk = findDesktop( true, currentDesktop()))
+            requestFocus( desk );
+        }
+    else
+        {
+        for( ClientList::ConstIterator it = showing_desktop_clients.begin();
+             it != showing_desktop_clients.end();
+             ++it )
+            (*it)->unminimize();
+        if( showing_desktop_clients.count() > 0 )
+            requestFocus( showing_desktop_clients.first());
+        showing_desktop_clients.clear();
+        }
+    --block_showing_desktop;
+    }
+
+// Following Kicker's behavior:
+// Changing a virtual desktop resets the state and shows the windows again.
+// Unminimizing a window resets the state but keeps the windows hidden (except
+// the one that was unminimized).
+// A new window resets the state and shows the windows again, with the new window
+// being active.
+void Workspace::resetShowingDesktop( bool keep_hidden )
+    {
+    if( block_showing_desktop > 0 )
+        return;
+    rootInfo->setShowingDesktop( false );
+    showing_desktop = false;
+    ++block_showing_desktop;
+    if( !keep_hidden )
+        {
+        for( ClientList::ConstIterator it = showing_desktop_clients.begin();
+             it != showing_desktop_clients.end();
+             ++it )
+            (*it)->unminimize();
+        }
+    showing_desktop_clients.clear();
+    --block_showing_desktop;
+    }
+
 } // namespace
 
 #include "workspace.moc"

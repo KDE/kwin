@@ -443,6 +443,9 @@ bool Client::manage( Window w, bool isMapped )
         if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving()))
             workspace()->setCurrentDesktop( desktop());
 
+        if( workspace()->showingDesktop())
+            workspace()->resetShowingDesktop( false );
+
         if( isOnCurrentDesktop() && !isMapped && !allow )
             workspace()->restackClientUnderActive( this );
         else

@@ -858,6 +858,8 @@ void Client::updateVisibility()
         rawHide();
         show = false;
         }
+    if( show )
+        info->setState( 0, NET::Hidden );
     if( !isOnCurrentDesktop())
         {
         setMappingState( IconicState );
@@ -866,7 +868,8 @@ void Client::updateVisibility()
         }
     if( show )
         {
-        info->setState( 0, NET::Hidden );
+        if( workspace()->showingDesktop())
+            workspace()->resetShowingDesktop( true );
         if( isShade())
             setMappingState( IconicState );
         else

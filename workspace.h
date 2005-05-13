@@ -223,6 +223,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         QString desktopName( int desk ) const;
         void setDesktopLayout(int o, int x, int y);
+        void setShowingDesktop( bool showing );
+        void resetShowingDesktop( bool keep_hidden );
+        bool showingDesktop() const;
 
         bool isNotManaged( const QString& title );  // ### setter or getter ?
 
@@ -501,6 +504,10 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         ClientList focus_chain;
         ClientList should_get_focus; // last is most recent
         ClientList attention_chain;
+        
+        bool showing_desktop;
+        ClientList showing_desktop_clients;
+        int block_showing_desktop;
 
         GroupList groups;
 
@@ -624,7 +631,7 @@ class StackingUpdatesBlocker
     };
 
 // NET WM Protocol handler class
-class RootInfo : public NETRootInfo3
+class RootInfo : public NETRootInfo4
     {
     private:
         typedef KWinInternal::Client Client;  // because of NET::Client
@@ -641,6 +648,7 @@ class RootInfo : public NETRootInfo3
         virtual void gotPing(Window w, Time timestamp);
         virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp);
         virtual void gotTakeActivity(Window w, Time timestamp, long flags );
+        virtual void changeShowingDesktop( bool showing );
     private:
         Workspace* workspace;
     };
@@ -738,6 +746,11 @@ inline bool Workspace::sessionSaving() const
 inline bool Workspace::forcedGlobalMouseGrab() const
     {
     return forced_global_mouse_grab;
+    }
+
+inline bool Workspace::showingDesktop() const
+    {
+    return showing_desktop;
     }
 
 template< typename T >

@@ -90,7 +90,7 @@ void WinInfo::changeState( unsigned long state, unsigned long mask )
 // ****************************************
 
 RootInfo::RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr )
-    : NETRootInfo3( dpy, w, name, pr, pr_num, scr )
+    : NETRootInfo4( dpy, w, name, pr, pr_num, scr )
     {
     workspace = ws;
     }
@@ -178,6 +178,11 @@ void RootInfo::gotPing( Window w, Time timestamp )
     {
     if( Client* c = workspace->findClient( WindowMatchPredicate( w )))
         c->gotPing( timestamp );
+    }
+
+void RootInfo::changeShowingDesktop( bool showing )
+    {
+    workspace->setShowingDesktop( showing );
     }
 
 // ****************************************
