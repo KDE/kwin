@@ -457,7 +457,7 @@ Comment[uz]=Учинчи виртуал иш столи танланган
 Comment[wa]=Li troejhinme forveyou scribanne a stî tchoezi
 Comment[xx]=xxVirtual desktop three is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 3
-default_sound=KDE_Desktop_3.ogg 
+default_sound=KDE_Desktop_3.ogg
 default_presentation=0
 
 [desktop4]
@@ -586,7 +586,7 @@ Comment[uz]=Тўртинчи виртуал иш столи танланган
 Comment[wa]=Li cwatrinme forveyou scribanne a stî tchoezi
 Comment[xx]=xxVirtual desktop four is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 4
-default_sound=KDE_Desktop_4.ogg 
+default_sound=KDE_Desktop_4.ogg
 default_presentation=0
 
 [desktop5]
@@ -715,7 +715,7 @@ Comment[uz]=Бешинчи виртуал иш столи танланган
 Comment[wa]=Li cénkinme forveyou scribanne a stî tchoezi
 Comment[xx]=xxVirtual desktop five is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 5
-default_sound=KDE_Desktop_5.ogg 
+default_sound=KDE_Desktop_5.ogg
 default_presentation=0
 
 [desktop6]
@@ -844,7 +844,7 @@ Comment[uz]=Олтинчи виртуал иш столи танланган
 Comment[wa]=Li shijhinme forveyou scribanne a stî tchoezi
 Comment[xx]=xxVirtual desktop six is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 6
-default_sound=KDE_Desktop_6.ogg 
+default_sound=KDE_Desktop_6.ogg
 default_presentation=0
 
 [desktop7]
@@ -973,7 +973,7 @@ Comment[uz]=Еттинчи виртуал иш столи танланган
 Comment[wa]=Li setinme forveyou scribanne a stî tchoezi
 Comment[xx]=xxVirtual desktop seven is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 7
-default_sound=KDE_Desktop_7.ogg 
+default_sound=KDE_Desktop_7.ogg
 default_presentation=0
 
 [desktop8]
@@ -1102,7 +1102,7 @@ Comment[uz]=Саккизинчи виртуал иш столи танланга
 Comment[wa]=Li ûtinme forveyou scribanne a stî tchoezi
 Comment[xx]=xxVirtual desktop eight is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 8
-default_sound=KDE_Desktop_8.ogg 
+default_sound=KDE_Desktop_8.ogg
 default_presentation=0
 
 [desktop9]
@@ -2306,7 +2306,7 @@ Comment[uk]=Вікно відновлено
 Comment[uz]=Ойна тикланган
 Comment[xx]=xxA Window is restoredxx
 Comment[zh_CN]=窗口被恢复
-default_sound=KDE_Window_DeIconify.ogg   
+default_sound=KDE_Window_DeIconify.ogg
 default_presentation=0
 
 [maximize]
@@ -2437,7 +2437,7 @@ Comment[uz]=Ойна ёйилган
 Comment[wa]=On purnea a stî metou å pus grand
 Comment[xx]=xxA window is maximizedxx
 Comment[zh_CN]=窗口被最大化
-default_sound=KDE_Window_UnHide.ogg   
+default_sound=KDE_Window_UnHide.ogg
 default_presentation=0
 
 [unmaximize]

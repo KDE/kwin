@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Icon=kcmkwm
 Type=Application
-Exec=kcmshell kwinoptions 
+Exec=kcmshell kwinoptions
 DocPath=kcontrol/windowmanagement/index.html
 
 X-KDE-ModuleType=Library
