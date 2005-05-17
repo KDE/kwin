@@ -967,7 +967,7 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
             else // old_diff > 0 // was in right third, keep distance from right edge
                 rect.moveRight( area.right() - ( old_diff - 1 ));
             }
-        if( isResizable())
+        else if( isResizable())
             {
             if( old_diff < 0 )
                 rect.setLeft( area.left() + ( -old_diff - 1 ) );
@@ -978,7 +978,7 @@ void Client::checkDirection( int new_diff, int old_diff, QRect& rect, const QRec
             rect.setWidth( area.width());
         if( isMovable())
             {
-            if( rect.left() > area.left())
+            if( rect.left() < area.left())
                 rect.moveLeft( area.left());
             else if( rect.right() > area.right())
                 rect.moveRight( area.right());
