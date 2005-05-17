@@ -95,6 +95,7 @@ typedef struct _win {
     unsigned long	damage_sequence;    /* sequence when damage was created */
     Bool                shapable; /* this will allow window managers to exclude windows if just the deco is shaped*/
     int                 titleHeight;
+    Picture             dimPicture;
 
     /* for drawing translucent windows */
     XserverRegion	borderClip;
@@ -152,6 +153,8 @@ Atom		shadowAtom;
 Atom		shadeAtom;
 Atom		shapableAtom;
 Atom            titleHeightAtom;
+Atom            dimAtom;
+Atom            deskChangeAtom;
 Atom            winTypeAtom;
 Atom            winDesktopAtom;
 Atom            winDockAtom;
@@ -168,6 +171,8 @@ Atom            winNormalAtom;
 #define SHADE_PROP	"_KDE_WM_WINDOW_SHADE"
 #define SHAPABLE_PROP	"_KDE_WM_WINDOW_SHAPABLE"
 #define TITLEHEIGHT_PROP "_KDE_WM_WINDOW_TITLEHEIGHT"
+#define DIM_PROP "_KDE_WM_WINDOW_DIM"
+#define DESKCHANGE_PROP "_KDE_WM_DESKTOP_CHANGE"
 
 #define TRANSLUCENT	0xe0000000
 #define OPAQUE		0xffffffff
@@ -288,7 +293,7 @@ cleanup_fade (Display *dpy, win *w)
 {
     fade *f = find_fade (w);
     if (f)
-	dequeue_fade (dpy, f);
+      dequeue_fade (dpy, f);
 }
 
 void
@@ -296,10 +301,12 @@ enqueue_fade (Display *dpy, fade *f)
 {
     f->w->isInFade = True;
     if (!fades)
-	fade_time = get_time_in_milliseconds () + fade_delta;
+      fade_time = get_time_in_milliseconds () + fade_delta;
     f->next = fades;
     fades = f;
 }
+
+static void unmap_callback (Display *dpy, win *w, Bool gone);
 
 static void
 set_fade (Display *dpy, win *w, double start, double finish, double step,
@@ -322,8 +329,7 @@ set_fade (Display *dpy, win *w, double start, double finish, double step,
 		return;
 	else
 	{
-		if (exec_callback)
-			if (f->callback)
+   	if (exec_callback && f->callback)
 				(*f->callback)(dpy, f->w, f->gone);
 	}
 
@@ -336,8 +342,8 @@ set_fade (Display *dpy, win *w, double start, double finish, double step,
 		f->step = step;
 	else if (f->cur > finish)
 		f->step = -step;
+   f->gone = gone && (exec_callback || f->callback != unmap_callback);
 	f->callback = callback;
-	f->gone = gone;
 	w->opacity = f->cur * OPAQUE;
 	if (wholeWin)
 		w->titleHeight = 0;
@@ -1146,6 +1152,8 @@ paint_all (Display *dpy, XserverRegion region)
 				set_ignore (dpy, NextRequest (dpy));
 				XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
 						0, 0, 0, 0, x, y, wid, hei);
+                                if (w->dimPicture)
+    			             XRenderComposite (dpy, PictOpOver, w->dimPicture, None, rootBuffer, 0, 0, 0, 0, x, y, wid, hei);
 			}
 			else
 				switch (transMode) {
@@ -1569,7 +1577,7 @@ get_shapable_prop(Display *dpy, win *w)
 	return True; /*in general, the window should be shapable*/
 }
 
-	static unsigned int
+static unsigned int
 get_titleHeight_prop(Display *dpy, win *w)
 {
 	Atom actual;
@@ -1588,6 +1596,50 @@ get_titleHeight_prop(Display *dpy, win *w)
 		return i;
 	}
 	return 0; /*no titlebar*/
+        }
+
+static unsigned int
+get_dim_prop(Display *dpy, win *w)
+{
+    Atom actual;
+    int format;
+    unsigned long n, left;
+    
+    unsigned char *data = NULL;
+    int result = XGetWindowProperty(dpy, w->id, dimAtom, 0L, 1L, False, 
+                                    XA_CARDINAL, &actual, &format, 
+                                    &n, &left, &data);
+    if (result == Success && data != NULL)
+    {
+        unsigned int i;
+        memcpy (&i, data, sizeof (unsigned int));
+        XFree( (void *) data);
+        if (i == 0) i = 1;
+        return i;
+    }
+    return OPAQUE; /*in general, the window is not dimmed*/
+}
+
+static unsigned int
+get_deskchange_prop(Display *dpy, Window id)
+{
+    Atom actual;
+    int format;
+    unsigned long n, left;
+    
+    unsigned char *data = NULL;
+    int result = XGetWindowProperty(dpy, id, deskChangeAtom, 0L, 1L, False,
+    XA_CARDINAL, &actual, &format,
+    &n, &left, &data);
+    if (result == Success && data != NULL)
+    {
+        unsigned int i;
+        memcpy (&i, data, sizeof (unsigned int));
+        XFree( (void *) data);
+        if (i < 3)
+            return i;
+    }
+    return 0; /*no valid change state*/
 }
 
 /* Get the opacity property from the window in a percent format
@@ -1608,6 +1660,38 @@ get_opacity_percent(Display *dpy, win *w, double def)
 		return opacity*1.0/OPAQUE;
 	}
 }
+#if 0
+static void
+damage_shape(Display *dpy, win *w, XRectangle *shape_damage)
+{
+    set_ignore (dpy, NextRequest (dpy));
+    XserverRegion region = XFixesCreateRegion (dpy, shape_damage, 1);
+    set_ignore (dpy, NextRequest (dpy));
+    XserverRegion tmpRegion;
+    add_damage(dpy, region);
+    win *i;
+    XRectangle *rect;
+    int n;
+    for (i = w; i; i = i->next)
+    {
+        XFixesIntersectRegion (dpy, tmpRegion, region, w->extents);
+        rect = XFixesFetchRegion (dpy, region, &n);
+        free(rect);
+        printf("%d\n",n);
+        if (n != 1)
+        {
+            w->damage = True;
+            XFixesSubtractRegion (dpy, region, region, w->extents);
+        }
+        else
+            break;
+    }
+    set_ignore (dpy, NextRequest (dpy));
+    XFixesDestroyRegion (dpy, tmpRegion);
+    set_ignore (dpy, NextRequest (dpy));
+    XFixesDestroyRegion (dpy, region);
+}
+#endif
 
 /* determine mode for window all in one place.
    Future might check for menu flag and other cool things
@@ -1785,6 +1869,8 @@ add_win (Display *dpy, Window id, Window prev)
 	new->shadowSize = get_shadow_prop (dpy, new);
 	new->shapable = get_shapable_prop(dpy, new);
 	new->titleHeight = get_titleHeight_prop(dpy, new);
+        unsigned int tmp = get_dim_prop(dpy, new);
+        new->dimPicture = (tmp < OPAQUE) ? solid_picture (dpy, True, (double)tmp/OPAQUE, 0.1, 0.1, 0.1) : None;
 	new->windowType = determine_wintype (dpy, new->id);
         determine_mode (dpy, new);
 
@@ -2193,7 +2279,7 @@ typedef enum _option{
 	NUMBEROFOPTIONS
 } Option;
 
-char *
+const char *
 options[NUMBEROFOPTIONS] = {
 	"Display",              /*0*/
 	"Compmode",             /*1*/
@@ -2545,6 +2631,8 @@ main (int argc, char **argv)
 	shadeAtom = XInternAtom (dpy, SHADE_PROP, False);
 	shapableAtom = XInternAtom (dpy, SHAPABLE_PROP, False);
 	titleHeightAtom = XInternAtom (dpy, TITLEHEIGHT_PROP, False);
+        dimAtom = XInternAtom (dpy, DIM_PROP, False);
+        deskChangeAtom = XInternAtom (dpy, DESKCHANGE_PROP, False);
 	winTypeAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
 	winDesktopAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
 	winDockAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
@@ -2699,7 +2787,8 @@ main (int argc, char **argv)
 					if (ev.xproperty.atom == shadeAtom)
 					{
 						win * w = find_win(dpy, ev.xproperty.window);
-						unsigned int tmp = get_shade_prop(dpy, w);
+    					if (w){
+    					           unsigned int tmp = get_shade_prop(dpy, w);
 						if (tmp)
 						{
 							if (tmp == 1)
@@ -2712,9 +2801,10 @@ main (int argc, char **argv)
 							{
 								w->opacity = w->preShadeOpacity;
 								determine_mode(dpy, w);
-							}                       
+							}
 						}
 						break;
+    					}
 					}
 					else if (ev.xproperty.atom == shapableAtom)
 					{
@@ -2730,15 +2820,30 @@ main (int argc, char **argv)
 					else if (ev.xproperty.atom == titleHeightAtom)
 					{
 						win * w = find_win(dpy, ev.xproperty.window);
-						printf("titleheight changed\n");
 						if (w)
 						{
-							printf("titleheight window found\n");
 							w->titleHeight = get_titleHeight_prop(dpy, w);
 						}
 						else
 							printf("arrrg, window not found\n");
 					}
+                                        else if (ev.xproperty.atom == dimAtom)
+                                        {
+                                                win * w = find_win(dpy, ev.xproperty.window);
+                                                if (w)
+                                                {
+                                                    unsigned int tmp = get_dim_prop(dpy, w);
+                                                    if (tmp < OPAQUE)
+                                                        w->dimPicture = solid_picture (dpy, True, (double)tmp/OPAQUE, 0.1, 0.1, 0.1);
+                                                    else if (w->dimPicture)
+                                                    {
+                                                        XRenderFreePicture (dpy, w->dimPicture);
+                                                        w->dimPicture = None;
+                                                    }
+                                                }
+                                                else
+                                                printf("arrrg, window not found\n");
+                                        }
 					/* check if Trans or Shadow property was changed */    
 					else if (ev.xproperty.atom == opacityAtom || ev.xproperty.atom == shadowAtom)
 					{
@@ -2787,6 +2892,12 @@ main (int argc, char **argv)
                             }
 		    }
 		}
+                else if (ev.xproperty.atom == deskChangeAtom)
+                {
+                    /*just set global variable*/
+                    unsigned int tmp = get_deskchange_prop(dpy, ev.xproperty.window);
+                    printf("desk change, state:%d\n",tmp);
+                }
                 break;
 	    default:
 		if (ev.type == damage_event + XDamageNotify)
@@ -2797,8 +2908,21 @@ main (int argc, char **argv)
                 else if (ev.type == shapeEvent)
                 {
                     win * w = find_win(dpy, ev.xany.window);
-                    if (w && w->shapable) 
+#if 1
+                    if (w && w->shapable)
+#endif
+#if 0
+                    if (w)
+#endif
                     {
+#if 0
+                        XRectangle rect;
+                        rect.x = ((XShapeEvent*)&ev)->x;
+                        rect.y = ((XShapeEvent*)&ev)->y;
+                        rect.width = ((XShapeEvent*)&ev)->width;
+                        rect.height = ((XShapeEvent*)&ev)->height;
+                        damage_shape(dpy, w, &rect);
+#endif
 #if 0
 			if (w->shadowSize != 0)
 			{
@@ -2812,11 +2936,13 @@ main (int argc, char **argv)
                         /*this is hardly efficient, but a current workaraound 
                         shaping support isn't that good so far (e.g. we lack shaped shadows)
                         IDEA: use XRender to scale/shift a copy of the window and then blurr it*/
+#if 1
                         if (w->picture)
                         {
                         clipChanged = True;
                         repair_win (dpy, w);
                         }
+#endif
                     }
                 }
 		break;
