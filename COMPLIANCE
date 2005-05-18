@@ -177,6 +177,7 @@ version 2.0
 ?    - PSize, PPosition, USize, UPosition
 ?	- clients - Qt simply sets both
 +    - PWinGravity - window geometry constraints have higher priority than gravity
+/    - PBaseSize - PMinSize is not used as a fallback for size increments
 +    - (the rest)
 / 4.1.2.4
 +    - input - see 4.1.7

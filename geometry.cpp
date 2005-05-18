@@ -1075,6 +1075,9 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
         double min_aspect_h = xSizeHint.min_aspect.y; // and multiplying would go wrong otherwise
         double max_aspect_w = xSizeHint.max_aspect.x;
         double max_aspect_h = xSizeHint.max_aspect.y;
+        // According to ICCCM 4.1.2.3 PMinSize should be a fallback for PBaseSize for size increments,
+        // but not for aspect ratio. Since this code comes from FVWM, handles both at the same time,
+        // and I have no idea how it works, let's hope nobody relies on that.
         w -= xSizeHint.base_width;
         h -= xSizeHint.base_height;
         int max_width = max_size.width() - xSizeHint.base_width;
@@ -1200,14 +1203,13 @@ void Client::getWmNormalHints()
         xSizeHint.flags = 0;
     // set defined values for the fields, even if they're not in flags
 
-    // basesize is just like minsize, except for minsize is not used for aspect ratios
-    // keep basesize only for aspect ratios, for size increments, keep the base
-    // value in minsize - see ICCCM 4.1.2.3
     if( xSizeHint.flags & PBaseSize )
         {
-        if( ! ( xSizeHint.flags & PMinSize )) // PBaseSize and PMinSize are equivalent
+        // PBaseSize is a fallback for PMinSize according to ICCCM 4.1.2.3
+        // The other way around PMinSize is not a complete fallback for PBaseSize,
+        // so that's not handled here.
+        if( ! ( xSizeHint.flags & PMinSize ))
             {
-            xSizeHint.flags |= PMinSize;
             xSizeHint.min_width = xSizeHint.base_width;
             xSizeHint.min_height = xSizeHint.base_height;
             }

@@ -36,33 +36,15 @@ GeometryTip::~GeometryTip()
 
 void GeometryTip::setGeometry( const QRect& geom )
     {
-    int w, h;
-    int bw, bh;
-
-    w = geom.width();
-    h = geom.height();
+    int w = geom.width();
+    int h = geom.height();
 
     if (sizeHints) 
         {
-	// PBaseSize is only for aspect ratios, see Client::getWMNormalHints()
-        if (!(sizeHints->flags & PMinSize)) 
-            {
-            bw = 0;
-            bh = 0;
-            }
-        else 
-            {
-            bw = sizeHints->min_width;
-            bh = sizeHints->min_height;
-            }
-
         if (sizeHints->flags & PResizeInc) 
             {
-            if (sizeHints->width_inc > 0)
-                w = (w - bw) / sizeHints->width_inc;
-            if (sizeHints->height_inc > 0) 
-                h = (h - bh) / sizeHints->height_inc; 
-
+            w = ( w - sizeHints->base_width ) / sizeHints->width_inc;
+            h = ( h - sizeHints->base_height ) / sizeHints->height_inc; 
             }
         }
 
