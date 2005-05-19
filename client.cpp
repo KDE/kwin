@@ -1588,8 +1588,7 @@ Window Client::wmClientLeader() const
 
 bool Client::wantsTabFocus() const
     {
-    return ( isNormalWindow() || isDialog())
-        && wantsInput() && !skip_taskbar;
+    return ( isNormalWindow() || isDialog()) && wantsInput();
     }
 
 
