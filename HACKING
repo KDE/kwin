@@ -1,0 +1,162 @@
+Mailing list and bugzilla:
+==========================
+
+The KWin mailing list is kwin@kde.org . It's rather low traffic.
+
+The bugs.kde.org product for KWin is 'kwin'. Currently the components are 'general' (KWin core),
+'decorations' (decoration plugins), 'compatibility' (problems with non-KDE WMs/apps) and
+'eyecandy' (transparency and similar effects).
+There are also two kcontrol components 'kcmkwindecoration' and 'kcmkwinoptions' related
+to KWin's KControl modules.
+
+
+KWin parts:
+===========
+
+There are four parts of KWin:
+- The KWin core, located in kdebase/kwin/*, which implements the actual functionality.
+- The decoration plugins, located in kdebase/kwin/clients and kdeartwork/kwin-styles, which
+  are responsible for the visual representation of the windows.
+- The libkdecoration library, located in kdebase/kwin/lib/*, which is used for communication
+  between the core and the decoration, and also implements some shared functionality
+  for the decorations.
+- KControl modules, located in kdebase/kwin/kcmkwin.
+
+
+KWin decorations:
+=================
+
+If you want to develop a decoration plugin for KWin, a HOWTO is available at
+http://www.usermode.org/docs/kwintheme.html . It is currently not possible to create
+a new decoration without knowledge of C++, but it should be possible to write a themeable
+decoration (I'm not aware of any such decoration though).
+
+
+Restarting KWin:
+================
+
+Since KWin takes care of focus handling, first killing KWin and then launching new instance
+can cause focus trouble. Therefore it's possible to run 'kwin --replace', which will start
+new KWin instance and tell the old one to quit.
+
+
+Handling the case when KWin crashes:
+====================================
+
+Again, without KWin running there may be focus problems. The simplest way to solve them
+is to add the 'Run Command' applet to Kicker - it can receive focus even without KWin running.
+If you can't add the applet or can reach it for some reason, switch to text console, and run
+'DISPLAY=:0 kwin --replace' (and then you can run 'kwin --replace' again from X).
+
+If KWin is temporarily unusable because of some change and e.g. crashes during startup, it
+is possible to run another window manager, for example Metacity, OpenBox or FVWM (the command
+is similar to restarting KWin, i.e. 'metacity --replace', 'openbox --replace' or 'fvwm -replace').
+
+
+Debugging KWin:
+===============
+
+Focus problems once more. It is not possible to debug KWin in gdb in the X session that KWin is managing,
+because that'd block focus and window operations. It is necessary to switch to a text console
+and attach to the running KWin instance from there, or launch it as 'DISPLAY=:0 gdb kwin'.
+
+Since KWin is such an important component of KDE, it is usually better to start another X for development.
+Note that XNest is quite buggy and is therefore not recommended to use.
+
+
+Window manager spec:
+====================
+
+The EWMH window manager specification, also known as NETWM, is located at the freedesktop.org site,
+http://www.freedesktop.org/wiki/Standards_2fwm_2dspec . It defines how the window manager
+communicates information with the applications and other desktop utilities such as the taskbar
+or pager.
+
+
+KWin structure:
+===============
+
+KWin has relatively few classes. The two main classes are Client, which represents windows
+on the screen, and Workspace, which represents the whole screen and manages windows. Both these
+classes are rather large, because they fulfil complicated tasks. In other to reduce size
+of their source files these some functionality is in separate .cpp file grouped by the purpose:
+
+- workspace.* - core of class Workspace
+- client.* - core of class Client
+- activation.cpp - focus handling and window activation
+- events.cpp - event handling is in events.cpp
+- geometry.cpp - geometry-related code
+- layers.cpp - stacking-related code
+- manage.cpp - code dealing with new windows
+- placement.cpp - window placements algorithms
+- rules.cpp - code for window-specific settings
+- sm.cpp - session management code
+- useractions.cpp - handling of the Alt+F3 menu, shortcuts and other user actions
+
+The rest of the files contain additional helper classes:
+
+- atoms.* - so-called atoms (symbolic names for constants in X)
+- bridge.* - communication with the decoration plugin
+- geometrytip.* - window displaying window geometry while moving/resizing
+- group.* - grouping related windows together (warning! This is currently really messy and scary code
+  that should be rewritten).
+- killwindow.* - handling of the Ctrl+Esc feature
+- kwinbindings.cpp - KWin's keyboard shortcuts (used by kdebase/kcontrol/keys)
+- notifications.* - for KNotify
+- options.* - all configuration options for KWin are stored in this class
+- plugins.* - loading of the right decoration plugin
+- popupinfo.* - showing temporary information such as virtual desktop name when switching desktops
+- tabbox.* - the Alt+Tab dialog
+- utils.* - various small utility functions/classes
+
+KWin also uses code from kdelibs, specifically files netwm.cpp, netwm.h, netwm_def.h and netwm_p.h
+from kdelibs/kdecore. These files implement support for the EWMH window manager specification,
+originally called NETWM (hence the filenames).
+
+
+Developing KWin:
+================
+
+So, you feel brave, huh? But KWin is not THAT difficult. Some parts, especially the X-related ones,
+can be very complicated, but for many parts even knowledge of X and Xlib is not necessary. Most X
+code is wrapped in helper functions, and I can handle problems there ;) . However, although many
+features don't require touching X/Xlib directly, still X/Xlib may impose their semantics on the way
+things are done. When in doubt, simply ask.
+
+All patches for KWin core should be sent to kwin@kde.org for review first. Even seemingly harmless
+changes may have extensive consequences.
+
+Various notes:
+
+- kdDebug has overloaded operator << for the Client class, so you can e.g. use 'kdDebug() << this << endl;'
+in class Client and it will print information about the window.
+
+- KWin itself cannot create any normal windows, because it would have trouble managing its own windows.
+For such cases (which should be rare) a small external helper application is needed (kdialog should often
+do, and for special cases such a utility needs to be written like kwin/killer).
+
+
+Coding style:
+=============
+
+There are only three rules for patches for KWin:
+
+- the code should be relatively nice and clean. Seriously. Any messy code can be hard to comprehend,
+but if the code is in a window manager it will be twice as difficult.
+
+- unless the functionality of the code is obvious, there should be either at least a short comment explaining
+what it does, or it should be obvious from the commit log. If there's a hack needed, if there's a potentional
+problem, if something is just a temporary fix, say so. Comments like "this clever trick is necessary"
+don't count. See rule #1 above for reasons. I needed more than two years to understand all of KWin,
+and there were parts I never got and had to rewrite in order to fix a problem with them.
+
+- put matching opening { and closing } in the same column. That's the only formatting rule I ask for.
+I don't really care if they're aligned with the block one level higher or if they're aligned with the block
+they surround like I do (which is the only thing about the "weird coding style in KWin") or if you align them
+with something else, just put them in the same column. If I can handle about half a dozen different formatting
+styles when working on various parts of KDE, this shouldn't be much work for you (and you can do that only
+right before sending the patch). I don't care where you do and don't put spaces or what exactly you call local
+variables, as long as I can read it (trying to make it look like the rest of the code is bonus points though ;) ).
+
+
+kwin@kde.org
