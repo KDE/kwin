@@ -1974,6 +1974,7 @@ void Client::setFullScreen( bool set, bool user )
     if( was_fs == isFullScreen())
         return;
     StackingUpdatesBlocker blocker( workspace());
+    ++block_geometry;
     workspace()->updateClientLayer( this ); // active fullscreens get different layer
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false );
@@ -1991,6 +1992,8 @@ void Client::setFullScreen( bool set, bool user )
             setGeometry( workspace()->clientArea( MaximizeArea, this ));
             }
         }
+    --block_geometry;
+    setGeometry( geometry(), ForceGeometrySet );
     updateWindowRules();
     }
 
