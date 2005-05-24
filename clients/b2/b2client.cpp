@@ -146,24 +146,22 @@ static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
     QColor hColor = primary.light(150);
     QColor lColor = primary.dark(150);
 
+    if (down) qSwap(hColor, lColor);
+
     if (QPixmap::defaultDepth() > 8) {
-        if (down)
-            KPixmapEffect::gradient(*pix, lColor, hColor,
-                                    KPixmapEffect::DiagonalGradient);
-        else
-            KPixmapEffect::gradient(*pix, hColor, lColor,
-                                    KPixmapEffect::DiagonalGradient);
+	KPixmapEffect::gradient(*pix, hColor, lColor, 
+		KPixmapEffect::DiagonalGradient);
     }
     else
         pix->fill(primary);
     int x2 = pix->width() - 1;
     int y2 = pix->height() - 1;
-    p.setPen(down ? hColor : lColor);
+    p.setPen(lColor);
     p.drawLine(0, 0, x2, 0);
     p.drawLine(0, 0, 0, y2);
     p.drawLine(1, x2 - 1, x2 - 1, y2 - 1);
     p.drawLine(x2 - 1, 1, x2 - 1, y2 - 1);
-    p.setPen(down ? lColor : hColor);
+    p.setPen(hColor);
     p.drawRect(1, 1, x2, y2);
 
 }
