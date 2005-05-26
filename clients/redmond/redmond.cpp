@@ -382,25 +382,27 @@ bool RedmondDeco::decorationBehaviour(DecorationBehaviour behaviour) const
 
 int RedmondDeco::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
+	bool border = !(maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows());
+
 	switch (lm) {
 		case LM_BorderLeft:
 		case LM_BorderRight:
 		case LM_BorderBottom:
-			return borderWidth;
+			return border ? borderWidth : 0;
 
 		case LM_TitleEdgeLeft:
 		case LM_TitleEdgeRight:
-			return borderWidth+2;
+			return border ? borderWidth+2 : 2;
 
 		case LM_TitleEdgeTop:
-			return borderWidth+2;
+			return border ? borderWidth+2 : 2;
 
 		case LM_TitleEdgeBottom:
-			return 1;
+			return border ? 1 : 0;
 
 		case LM_TitleBorderLeft:
 		case LM_TitleBorderRight:
-			return 1;
+			return border ? 1 : 0;
 
 		case LM_TitleHeight:
 			return titleHeight-2;
@@ -465,6 +467,10 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 {
     bool hicolor = QPixmap::defaultDepth() > 8;
     int fontoffset = 1;
+
+    // Modify borderWith used by titlebar to 0, when maximized and not move or resize able
+    bool border = !(maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows());
+    int modBorderWidth = border ? borderWidth : 0;
 
     QPainter p(widget());
 
@@ -533,7 +539,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
         // Create a disposable pixmap buffer for the title blend
         KPixmap* titleBuffer = new KPixmap;
-        titleBuffer->resize(w-2*borderWidth, titleHeight);
+        titleBuffer->resize(w-2*modBorderWidth, titleHeight);
 
         if (titleBuffer->depth() > 16) {
             KPixmapEffect::gradient(*titleBuffer, c1, c2,
@@ -558,14 +564,14 @@ void RedmondDeco::paintEvent( QPaintEvent* )
                      AlignLeft | AlignVCenter, caption() );
         p2.end();
 
-        p.drawPixmap( borderWidth, borderWidth, *titleBuffer );
+        p.drawPixmap( modBorderWidth, modBorderWidth, *titleBuffer );
 
         delete titleBuffer;
 
     } else {
        // Assume lower ended hardware, so don't use buffers.
        // Don't draw a gradient either.
-       p.fillRect( borderWidth, borderWidth, w-2*borderWidth, titleHeight, c1 );
+       p.fillRect( modBorderWidth, modBorderWidth, w-2*modBorderWidth, titleHeight, c1 );
 
        // Draw the title text.
        p.setFont( fnt );
