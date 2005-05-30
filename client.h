@@ -341,6 +341,7 @@ class Client : public QObject, public KDecorationDefines
     private slots:
         void pingTimeout();
         void processKillerExited();
+        void demandAttentionKNotify();
 
     private:
     // ICCCM 4.1.3.1, 4.1.4 , NETWM 2.5.1
@@ -481,6 +482,7 @@ class Client : public QObject, public KDecorationDefines
         uint not_obscured : 1;
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
+        uint demands_attention : 1;
         WindowRules client_rules;
         void getWMHints();
         void readIcons();
@@ -534,7 +536,7 @@ class Client : public QObject, public KDecorationDefines
         uint rule_opacity_inactive; //dto.
         //int shadeOriginalHeight;
         bool isBMP_;
-        
+        QTimer* demandAttentionKNotifyTimer;
     };
 
 // NET WM Protocol handler class

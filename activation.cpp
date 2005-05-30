@@ -23,6 +23,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qpopupmenu.h>
 #include <kxerrorhandler.h>
 #include <kstartupinfo.h>
+#include <kstringhandler.h>
+#include <klocale.h>
 
 #include "notifications.h"
 #include "atoms.h"
@@ -658,8 +660,42 @@ void Client::demandAttention( bool set )
     {
     if( isActive())
         set = false;
-    info->setState( set ? NET::DemandsAttention : 0, NET::DemandsAttention );
+    if( demands_attention == set )
+        return;
+    demands_attention = set;
+    if( demands_attention )
+        {
+        // Demand attention flag is often set right from manage(), when focus stealing prevention
+        // steps in. At that time the window has no taskbar entry yet, so KNotify cannot place
+        // e.g. the passive popup next to it. So wait up to 1 second for the icon geometry
+        // to be set.
+        // Delayed call to KNotify also solves the problem of having X server grab in manage(),
+        // which may deadlock when KNotify (or KLauncher when launching KNotify) need to access X.
+        Notify::Event e = isOnCurrentDesktop() ? Notify::DemandAttentionCurrent : Notify::DemandAttentionOther;
+        // Setting the demands attention state needs to be done directly in KWin, because
+        // KNotify would try to set it, resulting in a call to KNotify again, etc.
+        if( Notify::makeDemandAttention( e ))
+            info->setState( set ? NET::DemandsAttention : 0, NET::DemandsAttention );
+
+        if( demandAttentionKNotifyTimer == NULL )
+            {
+            demandAttentionKNotifyTimer = new QTimer( this );
+            connect( demandAttentionKNotifyTimer, SIGNAL( timeout()), SLOT( demandAttentionKNotify()));
+            }
+        demandAttentionKNotifyTimer->start( 1000, true );
+        }
+    else
+        info->setState( set ? NET::DemandsAttention : 0, NET::DemandsAttention );
     workspace()->clientAttentionChanged( this, set );
+    }
+
+void Client::demandAttentionKNotify()
+    {
+    Notify::Event e = isOnCurrentDesktop() ? Notify::DemandAttentionCurrent : Notify::DemandAttentionOther;
+    Notify::raise( e, i18n( "Window '%1' demands attention." ).arg( KStringHandler::csqueeze(caption())), this );
+    demandAttentionKNotifyTimer->stop();
+    demandAttentionKNotifyTimer->deleteLater();
+    demandAttentionKNotifyTimer = NULL;
     }
 
 // TODO I probably shouldn't be lazy here and do it without the macro, so that people can read it

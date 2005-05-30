@@ -91,7 +91,8 @@ Client::Client( Workspace *ws )
         border_left( 0 ),
         border_right( 0 ),
         border_top( 0 ),
-        border_bottom( 0 )
+        border_bottom( 0 ),
+        demandAttentionKNotifyTimer( NULL )
 // SELI do all as initialization
     {
     autoRaiseTimer = 0;
@@ -128,6 +129,7 @@ Client::Client( Workspace *ws )
     not_obscured = false;
     urgency = false;
     ignore_focus_stealing = false;
+    demands_attention = false;
     check_active_modal = false;
 
     Pdeletewindow = 0;

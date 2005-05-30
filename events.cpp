@@ -543,6 +543,11 @@ bool Client::windowEvent( XEvent* e )
             }
         if(( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2StartupId ) != 0 )
             startupIdChanged();
+        if( dirty[ WinInfo::PROTOCOLS ] & NET::WMIconGeometry )
+            {
+            if( demandAttentionKNotifyTimer != NULL )
+                demandAttentionKNotify();
+            }
         }
 
 // TODO move all focus handling stuff to separate file?

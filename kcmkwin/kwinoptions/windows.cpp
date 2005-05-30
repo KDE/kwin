@@ -591,7 +591,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     focusStealingLabel->setBuddy( focusStealing );
     focusStealingLayout->addWidget( focusStealingLabel );
     focusStealingLayout->addWidget( focusStealing, AlignLeft );
-    wtstr = i18n( "This option specifies how much KWin will try to prevent unwanted focus stealing "
+    wtstr = i18n( "<p>This option specifies how much KWin will try to prevent unwanted focus stealing "
                   "caused by unexpected activation of new windows. (Note: This feature does not "
                   "work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)"
                   "<ul>"
@@ -606,7 +606,10 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
                   "or if they belong to the currently active application. This setting is probably "
                   "not really usable when not using mouse focus policy.</li>"
                   "<li><em>Extreme:</em> All windows must be explicitly activated by the user.</li>"
-                  "</ul>" );
+                  "</ul></p>"
+                  "<p>Windows that are prevented from stealing focus are marked as demanding attention, "
+                  "which by default means their taskbar entry will be highlighted. This can be changed "
+                  "in the Notifications control module.</p>" );
     QWhatsThis::add( focusStealing, wtstr );
     QWhatsThis::add( focusStealingLabel, wtstr );
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));

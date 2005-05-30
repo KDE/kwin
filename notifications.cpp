@@ -12,15 +12,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include <knotifyclient.h>
 
+#include "client.h"
+
 namespace KWinInternal
 {
 
-void Notify::raise( Event e )
+QString Notify::eventToName( Event e )
     {
-    static bool forgetIt = FALSE;
-    if ( forgetIt )
-        return; // no connection was possible, don't try each time
-
     QString event;
     switch ( e ) 
         {
@@ -78,6 +76,12 @@ void Notify::raise( Event e )
         case ResizeEnd:
             event = "resizeend";
             break;
+        case DemandAttentionCurrent:
+            event = "demandsattentioncurrent";
+            break;
+        case DemandAttentionOther:
+            event = "demandsattentionother";
+            break;
         default:
             if ((e > DesktopChange) && (e <= DesktopChange+20))
             {
@@ -85,11 +89,33 @@ void Notify::raise( Event e )
             }
         break;
         }
+    return event;
+    }
 
+bool Notify::raise( Event e, const QString& message, Client* c )
+    {
+    static bool forgetIt = FALSE;
+    if ( forgetIt )
+        return false; // no connection was possible, don't try each time
+
+    QString event = eventToName( e );
     if ( !event )
-        return;
+        return false;
 
-    forgetIt= !KNotifyClient::event( 0, event, event );
+    forgetIt= !KNotifyClient::event( c ? c->window() : 0, event, message );
+
+    return !forgetIt;
+    }
+
+bool Notify::makeDemandAttention( Event e )
+    {
+    QString event = eventToName( e );
+    if( !event )
+        return false;
+    int rep = KNotifyClient::getPresentation( event );
+    if( rep == -1 )
+        rep = KNotifyClient::getDefaultPresentation( event );
+    return rep != -1 && ( rep & KNotifyClient::Taskbar );
     }
 
 } // namespace

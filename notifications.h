@@ -12,8 +12,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_NOTIFICATIONS_H
 #define KWIN_NOTIFICATIONS_H
 
+#include <stdlib.h>
+#include <qstring.h>
+
 namespace KWinInternal
 {
+
+class Client;
 
 class Notify
     {
@@ -39,10 +44,15 @@ class Notify
             MoveEnd,
             ResizeStart,
             ResizeEnd,
+            DemandAttentionCurrent,
+            DemandAttentionOther,
             DesktopChange = 100
             };
 
-        static void raise( Event );
+        static bool raise( Event, const QString& message = QString::null, Client* c = NULL );
+        static bool makeDemandAttention( Event );
+    private:
+        static QString eventToName( Event );
     };
 
 } // namespace
