@@ -144,7 +144,7 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
     ret->title = title; // set, but make unimportant
     ret->titlematch = Rules::UnimportantMatch;
     ret->clientmachine = machine; // set, but make unimportant
-    ret->clientmachine = Rules::UnimportantMatch;
+    ret->clientmachinematch = Rules::UnimportantMatch;
 //    ret->extrarole = extra; TODO
     ret->extrarolematch = Rules::UnimportantMatch;
     if( !role.isEmpty()
