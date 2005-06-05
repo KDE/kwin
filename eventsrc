@@ -3534,10 +3534,14 @@ default_presentation=0
 
 [demandsattentioncurrent]
 Name=Window On Current Desktop Demands Attention
+Name[da]=Vindue på aktuel desktop kræver opmærksomhed
 Comment=A window on the current virtual desktop demands attention
+Comment[da]=Et vindue på den nuværende  desktop kræver opmærksomhed
 default_presentation=64
 
 [demandsattentionother]
 Name=Window On Other Desktop Demands Attention
+Name[da]=Vindue på anden desktop kræver opmærksomhed
 Comment=A window on an inactive virtual desktop demands attention
+Comment[da]=Vindue på anden desktop kræver opmærksomhed
 default_presentation=64
