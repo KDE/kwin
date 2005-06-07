@@ -495,6 +495,8 @@ bool Client::manage( Window w, bool isMapped )
     ungrabXServer();
     
     client_rules.discardTemporary();
+    applyWindowRules(); // just in case
+    workspace()->discardUsedWindowRules( this, false ); // remove ApplyNow rules
     updateWindowRules(); // was blocked while !isManaged()
 
 // TODO there's a small problem here - isManaged() depends on the mapping state,

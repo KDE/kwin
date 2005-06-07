@@ -40,6 +40,8 @@ class WindowRules
         WindowRules();
         void update( Client* );
         void discardTemporary();
+        bool contains( const Rules* rule ) const;
+        void remove( Rules* rule );
         Placement::Policy checkPlacement( Placement::Policy placement ) const;
         QRect checkGeometry( QRect rect, bool init = false ) const;
         // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
@@ -84,6 +86,7 @@ class Rules
         void write( KConfig& ) const;
         bool isEmpty() const;
 #ifndef KCMRULES
+        void discardUsed( bool withdrawn );
         bool match( const Client* c ) const;
         bool update( Client* );
         bool isTemporary() const;
@@ -130,7 +133,9 @@ class Rules
             DontAffect, // use the default value
             Force,      // force the given value
             Apply,      // apply only after initial mapping
-            Remember   // like apply, and remember the value when the window is withdrawn
+            Remember,   // like apply, and remember the value when the window is withdrawn
+            ApplyNow,   // apply immediatelly, then forget the setting
+            ForceTemporarily // apply and force until the window is withdrawn
             };
         enum SetRule
             {
@@ -236,7 +241,8 @@ bool Rules::checkSetRule( SetRule rule, bool init )
     {
     if( rule > ( SetRule )DontAffect) // Unused or DontAffect
         {
-        if( rule == ( SetRule )Force || init )
+        if( rule == ( SetRule )Force || rule == ( SetRule ) ApplyNow
+            || rule == ( SetRule ) ForceTemporarily || init )
             return true;
         }
     return false;
@@ -245,7 +251,7 @@ bool Rules::checkSetRule( SetRule rule, bool init )
 inline
 bool Rules::checkForceRule( ForceRule rule )
     {
-    return rule == ( ForceRule )Force;
+    return rule == ( ForceRule )Force || rule == ( ForceRule ) ForceTemporarily;
     }
 
 inline
@@ -270,6 +276,21 @@ inline
 WindowRules::WindowRules()
     {
     }
+
+inline
+bool WindowRules::contains( const Rules* rule ) const
+    {
+    return qFind( rules.begin(), rules.end(), rule ) != rules.end();
+    }
+    
+inline
+void WindowRules::remove( Rules* rule )
+    {
+    QValueVector< Rules* >::Iterator pos = qFind( rules.begin(), rules.end(), rule );
+    if( pos != rules.end())
+        rules.erase( pos );
+    }
+
 #endif
 
 #ifdef NDEBUG

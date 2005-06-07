@@ -61,13 +61,21 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
               " after the window is created. No further changes will be affected.</li>"
               "<li><em>Remember:</em> The value of the window property will be remembered and every time"
               " time the window is created, the last remembered value will be applied.</li>"
-              "<li><em>Force:</em> The window property will be always forced to the given value.</li></ul>" );
+              "<li><em>Force:</em> The window property will be always forced to the given value.</li>"
+              "<li><em>Apply Now:</em> The window property will be set to the given value immediatelly"
+              "and will not be affected later (this action will be deleted afterwards).</li>"
+              "<li><em>Force temporarily:</em> The window property will be forced to the given value"
+              "until it is hidden (this action will be deleted after the window is hidden).</li>"
+              "</ul>" );
     QString forceRuleDesc =
         i18n( "Specify how the window property should be affected:<ul>"
               "<li><em>Do Not Affect:</em> The window property will not be affected and therefore"
               " the default handling for it will be used. Specifying this will block more generic"
               " window settings from taking effect.</li>"
-              "<li><em>Force:</em> The window property will be always forced to the given value.</li></ul>" );
+              "<li><em>Force:</em> The window property will be always forced to the given value.</li>"
+              "<li><em>Force temporarily:</em> The window property will be forced to the given value"
+              "until it is hidden (this action will be deleted after the window is hidden).</li>"
+              "</ul>" );
     // window tabs have enable signals done in designer
     // geometry tab
     SETUP( position, set );
@@ -159,6 +167,8 @@ static const int set_rule_to_combo[] =
     3, // Force
     1, // Apply
     2, // Remember
+    4, // ApplyNow
+    5  // ForceTemporarily
     };
 
 static const Rules::SetRule combo_to_set_rule[] =
@@ -166,20 +176,27 @@ static const Rules::SetRule combo_to_set_rule[] =
     ( Rules::SetRule )Rules::DontAffect,
     ( Rules::SetRule )Rules::Apply,
     ( Rules::SetRule )Rules::Remember,
-    ( Rules::SetRule )Rules::Force
+    ( Rules::SetRule )Rules::Force,
+    ( Rules::SetRule )Rules::ApplyNow,
+    ( Rules::SetRule )Rules::ForceTemporarily
     };
 
 static const int force_rule_to_combo[] =
     {
     0, // Unused
     0, // Don't Affect
-    1 // Force
+    1, // Force
+    0, // Apply
+    0, // Remember
+    0, // ApplyNow
+    2  // ForceTemporarily
     };
 
 static const Rules::ForceRule combo_to_force_rule[] =
     {
     ( Rules::ForceRule )Rules::DontAffect,
-    ( Rules::ForceRule )Rules::Force
+    ( Rules::ForceRule )Rules::Force,
+    ( Rules::ForceRule )Rules::ForceTemporarily
     };
 
 static QString positionToStr( const QPoint& p )

@@ -815,7 +815,6 @@ void Workspace::slotSettingsChanged(int category)
   Reread settings
  */
 KWIN_PROCEDURE( CheckBorderSizesProcedure, cl->checkBorderSizes() );
-KWIN_PROCEDURE( ResetupRulesProcedure, cl->setupWindowRules( true ) );
 
 void Workspace::slotReconfigure()
     {
@@ -873,7 +872,14 @@ void Workspace::slotReconfigure()
         }
 
     loadWindowRules();
-    forEachClient( ResetupRulesProcedure());
+    for( ClientList::Iterator it = clients.begin();
+         it != clients.end();
+         ++it )
+        {
+        (*it)->setupWindowRules( true );
+        (*it)->applyWindowRules();
+        discardUsedWindowRules( *it, false );
+        }
 
     if (options->resetKompmgr) // need restart
         {

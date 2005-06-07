@@ -211,6 +211,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         SessionInfo* takeSessionInfo( Client* );
         WindowRules findWindowRules( const Client*, bool );
         void rulesUpdated();
+        void discardUsedWindowRules( Client* c, bool withdraw );
 
     // dcop interface
         void cascadeDesktop();

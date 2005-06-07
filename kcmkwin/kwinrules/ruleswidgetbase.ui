@@ -688,6 +688,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_size</cstring>
                         </property>
@@ -754,6 +764,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_position</cstring>
                         </property>
@@ -791,6 +811,16 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -851,6 +881,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_fullscreen</cstring>
                         </property>
@@ -887,6 +927,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_maximizevert</cstring>
                         </property>
@@ -921,6 +971,16 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -986,6 +1046,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_minimize</cstring>
                         </property>
@@ -1021,6 +1091,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1129,6 +1204,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_shade</cstring>
                         </property>
@@ -1222,6 +1307,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1466,6 +1556,11 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_closeable</cstring>
                         </property>
@@ -1482,6 +1577,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1512,6 +1612,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_skippager</cstring>
                         </property>
@@ -1538,6 +1648,16 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1568,6 +1688,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_noborder</cstring>
                         </property>
@@ -1596,6 +1726,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_below</cstring>
                         </property>
@@ -1622,6 +1762,16 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1657,6 +1807,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1734,6 +1889,16 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Apply Now</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_shortcut</cstring>
                         </property>
@@ -1787,6 +1952,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1899,6 +2069,11 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_fsplevel</cstring>
                         </property>
@@ -1915,6 +2090,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -1987,6 +2167,11 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_minsize</cstring>
                         </property>
@@ -2024,6 +2209,11 @@
                                 <string>Force</string>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>rule_maxsize</cstring>
                         </property>
@@ -2048,6 +2238,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">
@@ -2105,6 +2300,11 @@
                         <item>
                             <property name="text">
                                 <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
                             </property>
                         </item>
                         <property name="name">

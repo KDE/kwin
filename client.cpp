@@ -181,6 +181,7 @@ void Client::releaseWindow( bool on_shutdown )
     {
     assert( !deleting );
     deleting = true;
+    workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (!custom_opacity) setOpacity(FALSE);
     if (moveResizeMode)
@@ -235,6 +236,7 @@ void Client::destroyClient()
     {
     assert( !deleting );
     deleting = true;
+    workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
        leaveMoveResize();

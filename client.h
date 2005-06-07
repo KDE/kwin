@@ -70,6 +70,9 @@ class Client : public QObject, public KDecorationDefines
     // prefer isXXX() instead
         NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         const WindowRules* rules() const;
+        void removeRule( Rules* r );
+        void setupWindowRules( bool ignore_temporary );
+        void applyWindowRules();
 
         QRect geometry() const;
         QSize size() const;
@@ -366,7 +369,6 @@ class Client : public QObject, public KDecorationDefines
         QString readName() const;
         void setCaption( const QString& s, bool force = false );
         bool hasTransientInternal( const Client* c, bool indirect, ConstClientList& set ) const;
-        void setupWindowRules( bool ignore_temporary );
         void updateWindowRules();
         void finishWindowRules();
         void setShortcutInternal( const KShortcut& cut );
@@ -890,7 +892,12 @@ inline void Client::setBMP(bool b)
     {
     isBMP_ = b;
     }
-    
+
+inline void Client::removeRule( Rules* rule )
+    {
+    client_rules.remove( rule );
+    }
+
 #ifdef NDEBUG
 inline
 kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }

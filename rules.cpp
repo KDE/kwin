@@ -290,7 +290,7 @@ bool Rules::isEmpty() const
 Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
     {
     int v = cfg.readNumEntry( key );
-    if( v >= DontAffect && v <= Remember )
+    if( v >= DontAffect && v <= ForceTemporarily )
         return static_cast< SetRule >( v );
     return UnusedSetRule;
     }
@@ -298,7 +298,7 @@ Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
 Rules::ForceRule Rules::readForceRule( KConfig& cfg, const QString& key )
     {
     int v = cfg.readNumEntry( key );
-    if( v == DontAffect || v == Force )
+    if( v == DontAffect || v == Force || v == ForceTemporarily )
         return static_cast< ForceRule >( v );
     return UnusedForceRule;
     }
@@ -623,6 +623,50 @@ bool Rules::discardTemporary( bool force )
         }
     return false;
     }
+    
+#define DISCARD_USED_SET_RULE( var ) \
+    do { \
+    if( var##rule == ( SetRule ) ApplyNow || ( withdrawn && var##rule == ( SetRule ) ForceTemporarily )) \
+        var##rule = UnusedSetRule; \
+    } while( false )
+#define DISCARD_USED_FORCE_RULE( var ) \
+    do { \
+    if( withdrawn && var##rule == ( ForceRule ) ForceTemporarily ) \
+        var##rule = UnusedForceRule; \
+    } while( false )
+
+void Rules::discardUsed( bool withdrawn )
+    {
+    DISCARD_USED_FORCE_RULE( placement );
+    DISCARD_USED_SET_RULE( position );
+    DISCARD_USED_SET_RULE( size );
+    DISCARD_USED_FORCE_RULE( minsize );
+    DISCARD_USED_FORCE_RULE( maxsize );
+    DISCARD_USED_FORCE_RULE( opacityactive );
+    DISCARD_USED_FORCE_RULE( opacityinactive );
+    DISCARD_USED_FORCE_RULE( ignoreposition );
+    DISCARD_USED_SET_RULE( desktop );
+    DISCARD_USED_FORCE_RULE( type );
+    DISCARD_USED_SET_RULE( maximizevert );
+    DISCARD_USED_SET_RULE( maximizehoriz );
+    DISCARD_USED_SET_RULE( minimize );
+    DISCARD_USED_SET_RULE( shade );
+    DISCARD_USED_SET_RULE( skiptaskbar );
+    DISCARD_USED_SET_RULE( skippager );
+    DISCARD_USED_SET_RULE( above );
+    DISCARD_USED_SET_RULE( below );
+    DISCARD_USED_SET_RULE( fullscreen );
+    DISCARD_USED_SET_RULE( noborder );
+    DISCARD_USED_FORCE_RULE( fsplevel );
+    DISCARD_USED_FORCE_RULE( acceptfocus );
+    DISCARD_USED_FORCE_RULE( moveresizemode );
+    DISCARD_USED_FORCE_RULE( closeable );
+    DISCARD_USED_FORCE_RULE( strictgeometry );
+    DISCARD_USED_SET_RULE( shortcut );
+    }
+#undef DISCARD_USED_SET_RULE
+#undef DISCARD_USED_FORCE_RULE
+
 #endif
 
 #ifndef NDEBUG
@@ -740,59 +784,54 @@ CHECK_RULE( Shortcut, QString )
 
 // Client
 
-#define FORCE_RULE( rule, type, getf, setf ) \
-    { \
-    type val = client_rules.check##rule( getf()); \
-    if( val != getf()) \
-        setf( val ); \
-    }
-
 void Client::setupWindowRules( bool ignore_temporary )
     {
     client_rules = workspace()->findWindowRules( this, ignore_temporary );
     // check only after getting the rules, because there may be a rule forcing window type
     if( isTopMenu()) // TODO cannot have restrictions
         client_rules = WindowRules();
-    checkAndSetInitialRuledOpacity();        
-    if( isManaged())
-        { // apply force rules
-        // Placement - does need explicit update, just like some others below
-        // Geometry : setGeometry() doesn't check rules
-        QRect geom = client_rules.checkGeometry( geometry());
-        if( geom != geometry())
-            setGeometry( geom );
-        // MinSize, MaxSize handled by Geometry
-        // IgnorePosition
-        setDesktop( desktop());
-        // Type
-        maximize( maximizeMode());
-        // Minimize : functions don't check, and there are two functions
-        if( client_rules.checkMinimize( isMinimized()))
-            minimize();
-        else
-            unminimize();
-        setShade( shadeMode());
-        setSkipTaskbar( skipTaskbar(), true );
-        setSkipPager( skipPager());
-        setKeepAbove( keepAbove());
-        setKeepBelow( keepBelow());
-        setFullScreen( isFullScreen(), true );
-        setUserNoBorder( isUserNoBorder());
-        // FSP
-        // AcceptFocus :
-        if( workspace()->mostRecentlyActivatedClient() == this
-            && !client_rules.checkAcceptFocus( true ))
-            workspace()->activateNextClient( this );
-        // MoveResizeMode
-        // Closeable
-        QSize s = adjustedSize( size());
-        if( s != size())
-            resizeWithChecks( s );
-        setShortcut( rules()->checkShortcut( shortcut().toString()));
-        }
     }
 
-#undef FORCE_RULE
+// Applies Force, ForceTemporarily and ApplyNow rules
+// Used e.g. after the rules have been modified using the kcm.    
+void Client::applyWindowRules()
+    {
+    checkAndSetInitialRuledOpacity();        
+    // apply force rules
+    // Placement - does need explicit update, just like some others below
+    // Geometry : setGeometry() doesn't check rules
+    QRect geom = client_rules.checkGeometry( geometry());
+    if( geom != geometry())
+        setGeometry( geom );
+    // MinSize, MaxSize handled by Geometry
+    // IgnorePosition
+    setDesktop( desktop());
+    // Type
+    maximize( maximizeMode());
+    // Minimize : functions don't check, and there are two functions
+    if( client_rules.checkMinimize( isMinimized()))
+        minimize();
+    else
+        unminimize();
+    setShade( shadeMode());
+    setSkipTaskbar( skipTaskbar(), true );
+    setSkipPager( skipPager());
+    setKeepAbove( keepAbove());
+    setKeepBelow( keepBelow());
+    setFullScreen( isFullScreen(), true );
+    setUserNoBorder( isUserNoBorder());
+    // FSP
+    // AcceptFocus :
+    if( workspace()->mostRecentlyActivatedClient() == this
+        && !client_rules.checkAcceptFocus( true ))
+        workspace()->activateNextClient( this );
+    // MoveResizeMode
+    // Closeable
+    QSize s = adjustedSize( size());
+    if( s != size())
+        resizeWithChecks( s );
+    setShortcut( rules()->checkShortcut( shortcut().toString()));
+    }
 
 void Client::updateWindowRules()
     {
@@ -951,6 +990,29 @@ void Workspace::cleanupTemporaryRules()
         }
     if( has_temporary )
         QTimer::singleShot( 60000, this, SLOT( cleanupTemporaryRules()));
+    }
+
+void Workspace::discardUsedWindowRules( Client* c, bool withdrawn )
+    {
+    for( QValueList< Rules* >::Iterator it = rules.begin();
+         it != rules.end();
+         )
+        {
+        if( c->rules()->contains( *it ))
+            {
+            (*it)->discardUsed( withdrawn );
+            if( (*it)->isEmpty())
+                {
+                c->removeRule( *it );
+                Rules* r = *it;
+                it = rules.remove( it );
+                delete r;
+                continue;
+                }
+            }
+        ++it;
+        }
+    rulesUpdated();
     }
 
 void Workspace::rulesUpdated()
