@@ -876,6 +876,7 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
 
 void Workspace::editWindowRules( Client* c )
     {
+    writeWindowRules();
     KApplication::kdeinitExec( "kwin_rules_dialog", QStringList() << "--wid" << QString::number( c->window()));
     }
 
@@ -901,6 +902,7 @@ void Workspace::loadWindowRules()
 
 void Workspace::writeWindowRules()
     {
+    rulesUpdatedTimer.stop();
     KConfig cfg( "kwinrulesrc" );
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
