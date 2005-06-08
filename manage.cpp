@@ -43,7 +43,7 @@ bool Client::manage( Window w, bool isMapped )
     grabXServer();
 
     // from this place on, manage() mustn't return false
-    block_geometry = 1;
+    postpone_geometry_updates = 1;
 
     embedClient( w, attr );
 

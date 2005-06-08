@@ -1393,7 +1393,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             || ns != size())
             {
             QRect orig_geometry = geometry();
-            ++block_geometry;
+            GeometryUpdatesPostponer blocker( this );
             move( new_pos );
             plainResize( ns );
             setGeometry( QRect( calculateGravitation( false, gravity ), size()));
@@ -1402,8 +1402,6 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
                 && area.contains( orig_geometry ))
                 keepInArea( area );
-            --block_geometry;
-            setGeometry( geometry(), ForceGeometrySet );
 
             // this is part of the kicker-xinerama-hack... it should be
             // safe to remove when kicker gets proper ExtendedStrut support;
@@ -1428,7 +1426,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if( ns != size())  // don't restore if some app sets its own size again
             {
             QRect orig_geometry = geometry();
-            ++block_geometry;
+            GeometryUpdatesPostponer blocker( this );
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
             resizeWithChecks( ns );
@@ -1438,8 +1436,6 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
                 && area.contains( orig_geometry ))
                 keepInArea( area );
-            --block_geometry;
-            setGeometry( geometry(), ForceGeometrySet );
             }
         }
     // No need to send synthetic configure notify event here, either it's sent together
@@ -1612,27 +1608,28 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     else
         client_size = QSize( w - border_left - border_right, client_size.height());
     updateWorkareaDiffs();
-    if( block_geometry == 0 )
+    if( postpone_geometry_updates != 0 )
         {
-        resizeDecoration( QSize( w, h ));
-        XMoveResizeWindow( qt_xdisplay(), frameId(), x, y, w, h );
-//         resizeDecoration( QSize( w, h ));
-        if( !isShade())
-            {
-            QSize cs = clientSize();
-            XMoveResizeWindow( qt_xdisplay(), wrapperId(), clientPos().x(), clientPos().y(),
-                cs.width(), cs.height());
-    	    // FRAME tady poradi tak, at neni flicker
-            XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
-            }
-        if( shape())
-            updateShape();
-        // SELI TODO won't this be too expensive?
-        updateWorkareaDiffs();
-        sendSyntheticConfigureNotify();
-        updateWindowRules();
-        checkMaximizeGeometry();
+        pending_geometry_update = true;
+        return;
         }
+    resizeDecoration( QSize( w, h ));
+    XMoveResizeWindow( qt_xdisplay(), frameId(), x, y, w, h );
+//     resizeDecoration( QSize( w, h ));
+    if( !isShade())
+        {
+        QSize cs = clientSize();
+        XMoveResizeWindow( qt_xdisplay(), wrapperId(), clientPos().x(), clientPos().y(),
+            cs.width(), cs.height());
+        XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
+        }
+    if( shape())
+        updateShape();
+    // SELI TODO won't this be too expensive?
+    updateWorkareaDiffs();
+    sendSyntheticConfigureNotify();
+    updateWindowRules();
+    checkMaximizeGeometry();
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1651,25 +1648,27 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     else
         client_size = QSize( w - border_left - border_right, client_size.height());
     updateWorkareaDiffs();
-    if( block_geometry == 0 )
+    if( postpone_geometry_updates != 0 )
         {
-        resizeDecoration( QSize( w, h ));
-        XResizeWindow( qt_xdisplay(), frameId(), w, h );
-//         resizeDecoration( QSize( w, h ));
-        if( !isShade())
-            {
-            QSize cs = clientSize();
-            XMoveResizeWindow( qt_xdisplay(), wrapperId(), clientPos().x(), clientPos().y(),
-                cs.width(), cs.height());
-            XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
-            }
-        if( shape())
-            updateShape();
-        updateWorkareaDiffs();
-        sendSyntheticConfigureNotify();
-        updateWindowRules();
-        checkMaximizeGeometry();
+        pending_geometry_update = true;
+        return;
         }
+    resizeDecoration( QSize( w, h ));
+    XResizeWindow( qt_xdisplay(), frameId(), w, h );
+//     resizeDecoration( QSize( w, h ));
+    if( !isShade())
+        {
+        QSize cs = clientSize();
+        XMoveResizeWindow( qt_xdisplay(), wrapperId(), clientPos().x(), clientPos().y(),
+            cs.width(), cs.height());
+        XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
+        }
+    if( shape())
+        updateShape();
+    updateWorkareaDiffs();
+    sendSyntheticConfigureNotify();
+    updateWindowRules();
+    checkMaximizeGeometry();
     }
 
 // There may be cases when an application requests resizing while shaded,
@@ -1699,15 +1698,35 @@ void Client::move( int x, int y, ForceGeometry_t force )
         return;
     frame_geometry.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
-    if( block_geometry == 0 )
+    if( postpone_geometry_updates != 0 )
         {
-        XMoveWindow( qt_xdisplay(), frameId(), x, y );
-        sendSyntheticConfigureNotify();
-        updateWindowRules();
-        checkMaximizeGeometry();
+        pending_geometry_update = true;
+        return;
         }
+    XMoveWindow( qt_xdisplay(), frameId(), x, y );
+    sendSyntheticConfigureNotify();
+    updateWindowRules();
+    checkMaximizeGeometry();
     }
 
+
+void Client::postponeGeometryUpdates( bool postpone )
+    {
+    if( postpone )
+        {
+        ++postpone_geometry_updates;
+        pending_geometry_update = false;
+        }
+    else
+        {
+        if( --postpone_geometry_updates == 0 )
+            {
+            if( pending_geometry_update )
+                setGeometry( geometry(), ForceGeometrySet );
+            pending_geometry_update = false;
+            }
+        }
+    }
 
 void Client::maximize( MaximizeMode m )
     {
@@ -1744,7 +1763,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     if( !adjust && max_mode == old_mode )
         return;
 
-    ++block_geometry; // TODO GeometryBlocker class?
+    GeometryUpdatesPostponer blocker( this );
 
     // maximing one way and unmaximizing the other way shouldn't happen
     Q_ASSERT( !( vertical && horizontal )
@@ -1865,9 +1884,6 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
             break;
         }
 
-    --block_geometry;
-    setGeometry( geometry(), ForceGeometrySet );
-
     updateAllowedActions();
     if( decoration != NULL )
         decoration->maximizeChange();
@@ -1973,8 +1989,8 @@ void Client::setFullScreen( bool set, bool user )
     fullscreen_mode = set ? FullScreenNormal : FullScreenNone;
     if( was_fs == isFullScreen())
         return;
-    StackingUpdatesBlocker blocker( workspace());
-    ++block_geometry;
+    StackingUpdatesBlocker blocker1( workspace());
+    GeometryUpdatesPostponer blocker2( this );
     workspace()->updateClientLayer( this ); // active fullscreens get different layer
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false );
@@ -1992,8 +2008,6 @@ void Client::setFullScreen( bool set, bool user )
             setGeometry( workspace()->clientArea( MaximizeArea, this ));
             }
         }
-    --block_geometry;
-    setGeometry( geometry(), ForceGeometrySet );
     updateWindowRules();
     }
 

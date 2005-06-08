@@ -86,7 +86,8 @@ Client::Client( Workspace *ws )
         process_killer( NULL ),
         user_time( CurrentTime ), // not known yet
         allowed_actions( 0 ),
-        block_geometry( 0 ),
+        postpone_geometry_updates( 0 ),
+        pending_geometry_update( false ),
         shade_geometry_change( false ),
         border_left( 0 ),
         border_right( 0 ),
@@ -162,7 +163,7 @@ Client::~Client()
     assert( client == None );
     assert( frame == None && wrapper == None );
     assert( decoration == NULL );
-    assert( block_geometry == 0 );
+    assert( postpone_geometry_updates == 0 );
     assert( !check_active_modal );
     delete info;
     delete bridge;
@@ -187,7 +188,7 @@ void Client::releaseWindow( bool on_shutdown )
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
-    ++block_geometry;
+    ++postpone_geometry_updates;
     setMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
@@ -226,7 +227,7 @@ void Client::releaseWindow( bool on_shutdown )
     wrapper = None;
     XDestroyWindow( qt_xdisplay(), frame );
     frame = None;
-    --block_geometry;
+    --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
     }
 
@@ -241,7 +242,7 @@ void Client::destroyClient()
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
-    ++block_geometry;
+    ++postpone_geometry_updates;
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
     workspace()->clientHidden( this );
@@ -253,7 +254,7 @@ void Client::destroyClient()
     wrapper = None;
     XDestroyWindow( qt_xdisplay(), frame );
     frame = None;
-    --block_geometry;
+    --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
     }
 
@@ -263,7 +264,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
                     || ( decoration != NULL && !noBorder())))
         return;
     bool do_show = false;
-    ++block_geometry;
+    postponeGeometryUpdates( true );
     if( force )
         destroyDecoration();
     if( !noBorder())
@@ -291,8 +292,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         destroyDecoration();
     if( check_workspace_pos )
         checkWorkspacePosition();
-    --block_geometry;
-    setGeometry( geometry(), ForceGeometrySet );
+    postponeGeometryUpdates( false );
     if( do_show )
         decoration->widget()->show();
     updateFrameStrut();
@@ -328,7 +328,7 @@ void Client::checkBorderSizes()
     if( new_left == border_left && new_right == border_right
         && new_top == border_top && new_bottom == border_bottom )
         return;
-    ++block_geometry;
+    GeometryUpdatesPostponer blocker( this );
     move( calculateGravitation( true ));
     border_left = new_left;
     border_right = new_right;
@@ -339,8 +339,6 @@ void Client::checkBorderSizes()
     move( calculateGravitation( false ));
     plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
     checkWorkspacePosition();
-    --block_geometry;
-    setGeometry( geometry(), ForceGeometrySet );
     }
 
 void Client::detectNoBorder()
@@ -731,7 +729,7 @@ void Client::setShade( ShadeMode mode )
         }
 
     assert( decoration != NULL ); // noborder windows can't be shaded
-    ++block_geometry;
+    GeometryUpdatesPostponer blocker( this );
     // decorations may turn off some borders when shaded
     decoration->borders( border_left, border_right, border_top, border_bottom );
 
@@ -809,8 +807,6 @@ void Client::setShade( ShadeMode mode )
             workspace()->requestFocus( this );
         }
     checkMaximizeGeometry();
-    --block_geometry;
-    setGeometry( geometry(), ForceGeometrySet );
     info->setState( isShade() ? NET::Shaded : 0, NET::Shaded );
     info->setState( isShown( false ) ? 0 : NET::Hidden, NET::Hidden );
     updateVisibility();
@@ -907,12 +903,8 @@ void Client::setMappingState(int s)
     XChangeProperty(qt_xdisplay(), window(), qt_wm_state, qt_wm_state, 32,
         PropModeReplace, (unsigned char *)data, 2);
 
-    if( was_unmanaged ) // force setting the geometry, manage() did block_geometry = 1
-        {
-        assert( block_geometry == 1 );
-        --block_geometry;
-        setGeometry( frame_geometry, ForceGeometrySet );
-        }
+    if( was_unmanaged ) // manage() did postpone_geometry_updates = 1, now it's ok to finally set the geometry
+        postponeGeometryUpdates( false );
     }
 
 /*!

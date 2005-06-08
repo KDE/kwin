@@ -383,6 +383,7 @@ class Client : public QObject, public KDecorationDefines
         NETExtendedStrut strut() const;
         bool hasStrut() const;
         int checkShadeGeometry( int w, int h );
+        void postponeGeometryUpdates( bool postpone );
 
         bool startMoveResize();
         void finishMoveResize( bool cancel );
@@ -520,7 +521,8 @@ class Client : public QObject, public KDecorationDefines
         unsigned long allowed_actions;
         QRect frame_geometry;
         QSize client_size;
-        int block_geometry; // >0 - new geometry is remembered, but not actually set
+        int postpone_geometry_updates; // >0 - new geometry is remembered, but not actually set
+        bool pending_geometry_update;
         bool shade_geometry_change;
         int border_left, border_right, border_top, border_bottom;
         QRegion _mask;
@@ -529,6 +531,7 @@ class Client : public QObject, public KDecorationDefines
         friend struct FetchNameInternalPredicate;
         friend struct CheckIgnoreFocusStealingProcedure;
         friend struct ResetupRulesProcedure;
+        friend class GeometryUpdatesPostponer;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
         uint opacity_;
@@ -540,6 +543,19 @@ class Client : public QObject, public KDecorationDefines
         bool isBMP_;
         QTimer* demandAttentionKNotifyTimer;
     };
+
+// helper for Client::postponeGeometryUpdates() being called in pairs (true/false)
+class GeometryUpdatesPostponer
+    {
+    public:
+        GeometryUpdatesPostponer( Client* c )
+            : cl( c ) { cl->postponeGeometryUpdates( true ); }
+        ~GeometryUpdatesPostponer()
+            { cl->postponeGeometryUpdates( false ); }
+    private:
+        Client* cl;
+    };
+
 
 // NET WM Protocol handler class
 class WinInfo : public NETWinInfo
