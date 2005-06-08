@@ -819,8 +819,8 @@ Button ButtonPositionWidget::getButton(QChar type, bool& success) {
 		bmp.setMask(bmp);
 		return Button(i18n("--- spacer ---"), bmp, '_', true, m_supportedButtons.contains('_') );
 	} else {
-		return Button();
 		success = false;
+		return Button();
 	}
 }
 
