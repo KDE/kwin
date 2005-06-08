@@ -62,8 +62,8 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
               "<li><em>Remember:</em> The value of the window property will be remembered and every time"
               " time the window is created, the last remembered value will be applied.</li>"
               "<li><em>Force:</em> The window property will be always forced to the given value.</li>"
-              "<li><em>Apply Now:</em> The window property will be set to the given value immediatelly"
-              "and will not be affected later (this action will be deleted afterwards).</li>"
+              "<li><em>Apply Now:</em> The window property will be set to the given value immediately"
+              " and will not be affected later (this action will be deleted afterwards).</li>"
               "<li><em>Force temporarily:</em> The window property will be forced to the given value"
               "until it is hidden (this action will be deleted after the window is hidden).</li>"
               "</ul>" );
@@ -74,7 +74,7 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
               " window settings from taking effect.</li>"
               "<li><em>Force:</em> The window property will be always forced to the given value.</li>"
               "<li><em>Force temporarily:</em> The window property will be forced to the given value"
-              "until it is hidden (this action will be deleted after the window is hidden).</li>"
+              " until it is hidden (this action will be deleted after the window is hidden).</li>"
               "</ul>" );
     // window tabs have enable signals done in designer
     // geometry tab
