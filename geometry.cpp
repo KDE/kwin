@@ -1714,8 +1714,9 @@ void Client::postponeGeometryUpdates( bool postpone )
     {
     if( postpone )
         {
+        if( postpone_geometry_updates == 0 )
+            pending_geometry_update = false;
         ++postpone_geometry_updates;
-        pending_geometry_update = false;
         }
     else
         {

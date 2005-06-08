@@ -44,6 +44,7 @@ bool Client::manage( Window w, bool isMapped )
 
     // from this place on, manage() mustn't return false
     postpone_geometry_updates = 1;
+    pending_geometry_update = true; // force update when finishing with geometry changes
 
     embedClient( w, attr );
 
