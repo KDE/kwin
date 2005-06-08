@@ -65,7 +65,7 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
               "<li><em>Apply Now:</em> The window property will be set to the given value immediately"
               " and will not be affected later (this action will be deleted afterwards).</li>"
               "<li><em>Force temporarily:</em> The window property will be forced to the given value"
-              "until it is hidden (this action will be deleted after the window is hidden).</li>"
+              " until it is hidden (this action will be deleted after the window is hidden).</li>"
               "</ul>" );
     QString forceRuleDesc =
         i18n( "Specify how the window property should be affected:<ul>"
