@@ -1163,8 +1163,6 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
                 ASPECT_CHECK_GROW_H
                 break;
                 }
-            case SizemodeShaded:
-                break;
             }
 #undef ASPECT_CHECK_SHRINK_H_GROW_W
 #undef ASPECT_CHECK_SHRINK_W_GROW_H
@@ -1187,10 +1185,7 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
         w += border_left + border_right;
         h += border_top + border_bottom;
         }
-    QSize ret = rules()->checkSize( QSize( w, h ));
-    if ( mode == SizemodeShaded && wsize.height() == 0 )
-        ret.setHeight( noframe ? 0 : border_top + border_bottom );
-    return ret;
+    return rules()->checkSize( QSize( w, h ));
     }
 
 /*!
@@ -1445,6 +1440,16 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
 
 void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
     {
+    if( shade_geometry_change )
+        assert( false );
+    else if( isShade())
+        {
+        if( h == border_top + border_bottom )
+            {
+            kdDebug() << "Shaded geometry passed for size:" << endl;
+            kdDebug() << kdBacktrace() << endl;
+            }
+        }
     int newx = x();
     int newy = y();
     QRect area = workspace()->clientArea( WorkArea, this );
@@ -1599,14 +1604,38 @@ bool Client::isMaximizable() const
  */
 void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     {
+    // this code is also duplicated in Client::plainResize()
+    // Ok, the shading geometry stuff. Generally, code doesn't care about shaded geometry,
+    // simply because there are too many places dealing with geometry. Those places
+    // ignore shaded state and use normal geometry, which they usually should get
+    // from adjustedSize(). Such geometry comes here, and if the window is shaded,
+    // the geometry is used only for client_size, since that one is not used when
+    // shading. Then the frame geometry is adjusted for the shaded geometry.
+    // This gets more complicated in the case the code does only something like
+    // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
+    // Such code is wrong and should be changed to handle the case when the window is shaded.
+    if( shade_geometry_change )
+        ; // nothing
+    else if( isShade())
+        {
+        if( h == border_top + border_bottom )
+            {
+            kdDebug() << "Shaded geometry passed for size:" << endl;
+            kdDebug() << kdBacktrace() << endl;
+            }
+        else
+            {
+            client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
+            h = border_top + border_bottom;
+            }
+        }
+    else
+        {
+        client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
+        }
     if( force == NormalGeometrySet && frame_geometry == QRect( x, y, w, h ))
         return;
-    h = checkShadeGeometry( w, h );
     frame_geometry = QRect( x, y, w, h );
-    if( !isShade())
-        client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
-    else
-        client_size = QSize( w - border_left - border_right, client_size.height());
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1634,6 +1663,26 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
     {
+    // this code is also duplicated in Client::setGeometry()
+    if( shade_geometry_change )
+        ; // nothing
+    else if( isShade())
+        {
+        if( h == border_top + border_bottom )
+            {
+            kdDebug() << "Shaded geometry passed for size:" << endl;
+            kdDebug() << kdBacktrace() << endl;
+            }
+        else
+            {
+            client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
+            h = border_top + border_bottom;
+            }
+        }
+    else
+        {
+        client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
+        }
     if( QSize( w, h ) != rules()->checkSize( QSize( w, h )))
         {
         kdDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
@@ -1641,12 +1690,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
         return;
-    h = checkShadeGeometry( w, h );
     frame_geometry.setSize( QSize( w, h ));
-    if( !isShade())
-        client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
-    else
-        client_size = QSize( w - border_left - border_right, client_size.height());
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1669,24 +1713,6 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    }
-
-// There may be cases when an application requests resizing while shaded,
-// and even KWin itself may do so somewhere (too many places to check :-/ ).
-// If the requested geometry doesn't fit shaded geometry, adjust the height
-// of the requested geometry and return it.
-int Client::checkShadeGeometry( int w, int h )
-    {
-    // check that the frame is not resized to full size when it should be shaded
-    if( isShade() && !shade_geometry_change && h != border_top + border_bottom )
-        {
-        kdDebug() << "Fixing shaded geometry:" << this << endl;
-        // adjust the client size to match the newly requested geometry
-        client_size = adjustedSize( QSize( w, h ));
-//        checkMaximizeGeometry(); // doesn't work, actual setting of geometry changes this again
-        h = border_top + border_bottom;
-        }
-    return h;
     }
 
 /*!
@@ -1723,8 +1749,13 @@ void Client::postponeGeometryUpdates( bool postpone )
         if( --postpone_geometry_updates == 0 )
             {
             if( pending_geometry_update )
-                setGeometry( geometry(), ForceGeometrySet );
-            pending_geometry_update = false;
+                {
+                if( isShade())
+                    setGeometry( QRect( pos(), sizeForClientSize( clientSize())), ForceGeometrySet );
+                else
+                    setGeometry( geometry(), ForceGeometrySet );
+                pending_geometry_update = false;
+                }
             }
         }
     }
@@ -1901,7 +1932,10 @@ void Client::resetMaximize()
     updateAllowedActions();
     if( decoration != NULL )
         decoration->borders( border_left, border_right, border_top, border_bottom );
-    setGeometry( geometry(), ForceGeometrySet );
+    if( isShade())
+        setGeometry( QRect( pos(), sizeForClientSize( clientSize())), ForceGeometrySet );
+    else
+        setGeometry( geometry(), ForceGeometrySet );
     if( decoration != NULL )
         decoration->maximizeChange();
     }

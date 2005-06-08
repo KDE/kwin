@@ -280,10 +280,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( false ));
-        if( !isShade())
-            plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
-        else
-            plainResize( sizeForClientSize( QSize( clientSize().width(), 0 ), SizemodeShaded ), ForceGeometrySet );
+        plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         do_show = true;
@@ -309,10 +306,7 @@ void Client::destroyDecoration()
         setMask( QRegion()); // reset shape mask
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
-        if( !isShade())
-            plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
-        else
-            plainResize( sizeForClientSize( QSize( clientSize().width(), 0 ), SizemodeShaded ), ForceGeometrySet );
+        plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         move( grav );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
@@ -743,7 +737,8 @@ void Client::setShade( ShadeMode mode )
         // shade
         int h = height();
         shade_geometry_change = true;
-        QSize s( sizeForClientSize( QSize( clientSize().width(), 0), SizemodeShaded ) );
+        QSize s( sizeForClientSize( QSize( clientSize())));
+        s.setHeight( border_top + border_bottom );
         XSelectInput( qt_xdisplay(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
         XUnmapWindow( qt_xdisplay(), wrapper );
         XUnmapWindow( qt_xdisplay(), client );
@@ -763,8 +758,8 @@ void Client::setShade( ShadeMode mode )
             } while ( h > s.height() + step );
 //        if ( !wasStaticContents )
 //            clearWFlags( WStaticContents );
-        shade_geometry_change = false;
         plainResize( s );
+        shade_geometry_change = false;
         if( isActive())
             {
             if( was_shade_mode == ShadeHover )
@@ -780,7 +775,7 @@ void Client::setShade( ShadeMode mode )
         {
         int h = height();
         shade_geometry_change = true;
-        QSize s( sizeForClientSize( clientSize(), SizemodeShaded ));
+        QSize s( sizeForClientSize( clientSize()));
 // FRAME       bool wasStaticContents = testWFlags( WStaticContents );
 //        setWFlags( WStaticContents );
         int step = QMAX( 4, QABS( h - s.height() ) / as )+1;

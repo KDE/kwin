@@ -800,8 +800,9 @@ void Client::applyWindowRules()
     // apply force rules
     // Placement - does need explicit update, just like some others below
     // Geometry : setGeometry() doesn't check rules
-    QRect geom = client_rules.checkGeometry( geometry());
-    if( geom != geometry())
+    QRect orig_geom = QRect( pos(), sizeForClientSize( clientSize())); // handle shading
+    QRect geom = client_rules.checkGeometry( orig_geom );
+    if( geom != orig_geom )
         setGeometry( geom );
     // MinSize, MaxSize handled by Geometry
     // IgnorePosition
@@ -827,7 +828,7 @@ void Client::applyWindowRules()
         workspace()->activateNextClient( this );
     // MoveResizeMode
     // Closeable
-    QSize s = adjustedSize( size());
+    QSize s = adjustedSize( sizeForClientSize( clientSize())); // handle shading
     if( s != size())
         resizeWithChecks( s );
     setShortcut( rules()->checkShortcut( shortcut().toString()));

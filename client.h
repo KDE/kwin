@@ -99,8 +99,7 @@ class Client : public QObject, public KDecorationDefines
             SizemodeAny,
             SizemodeFixedW, // try not to affect width
             SizemodeFixedH, // try not to affect height
-            SizemodeMax, // try not to make it larger in either direction
-            SizemodeShaded // shaded - height == 0
+            SizemodeMax // try not to make it larger in either direction
             };
         QSize adjustedSize( const QSize&, Sizemode mode = SizemodeAny ) const;
 
