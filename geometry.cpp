@@ -248,6 +248,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
                 return desktopwidget->geometry();
         case WorkArea:
             return warea;
+        case FullXineramaArea:
         case FullArea:
             return desktopwidget->geometry();
         case ScreenArea:
@@ -2029,7 +2030,12 @@ void Client::setFullScreen( bool set, bool user )
     workspace()->updateClientLayer( this ); // active fullscreens get different layer
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false );
-    if( isFullScreen())
+    // XINERAMA
+    if( isFullScreen() && xSizeHint.width > workspace()->clientArea(FullScreenArea, this).width() )
+        setGeometry( workspace()->clientArea( FullXineramaArea, this ));
+    else if( isFullScreen() && xSizeHint.height > workspace()->clientArea(FullScreenArea, this).height() )
+        setGeometry( workspace()->clientArea( FullXineramaArea, this ));
+    else if( isFullScreen())
         setGeometry( workspace()->clientArea( FullScreenArea, this ));
     else
         {
