@@ -199,6 +199,7 @@ Keywords[ven]=kwin,windo,mulanguli,mukanoni,tshitaela,thero,sedza,upfa,vhuvha,ba
 Keywords[vi]=kwin,window,quản lý,biên,kiểu,theme,look,feel,layout,nút,điều khiển,cạnh,kwm,trang trí
 Keywords[xh]=kwin,window,umphathi,umda,uhlobo,umxholo wokuxoxwa,jonga,yiva,beka,iqhosha,umqheba,umda,kwm,uhombiso
 Keywords[xx]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx
+Keywords[zh_CN]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,窗口,管理器,边框,样式,主题,观感,布局,按钮,处理,边缘,装饰
 Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,視窗,管理員,邊框,風格,佈景主題,外觀,感覺,佈局,按鈕,邊緣,裝飾
 Keywords[zu]=kwin,i-window,imenenja,umngcele,isitayela,bona,izwa, isendlalelo,inkinobho,isibambo,unqenqema,kwm,umhlobiso
 Categories=Qt;KDE;X-KDE-settings-looknfeel;

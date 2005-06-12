@@ -186,4 +186,5 @@ Keywords[tr]=odak,odak davranış biçimi,pencere yerleşimi,pencere davranış�
 Keywords[uk]=фокус,розташовування,поведінка вікна,анімація,підняти,піднімати автоматично,вікна,рамка,заголовок,подвійне клацання
 Keywords[uz]=фокуслаш,жойлашиш,ойнанинг хусусиятлари,анимация,олдинга,авто-олдинга,ойналар,фрейм,сарлавҳа,икки марта босиш
 Keywords[xx]=xxfocus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx
+Keywords[zh_CN]=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick,焦点,放置,窗口行为,动画,升起,自动升起,窗口,框架,标题栏,双击
 Categories=Qt;KDE;X-KDE-settings-desktop;
