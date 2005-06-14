@@ -1010,6 +1010,13 @@ QSize Client::adjustedSize( const QSize& frame, Sizemode mode ) const
     return sizeForClientSize( wsize, mode, false );
     }
 
+// this helper returns proper size even if the window is shaded
+// see also the comment in Client::setGeometry()
+QSize Client::adjustedSize() const
+    {
+    return sizeForClientSize( clientSize());
+    }
+
 /*!
   Calculate the appropriate frame size for the given client size \a
   wsize.
@@ -1022,6 +1029,11 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
     {
     int w = wsize.width();
     int h = wsize.height();
+    if( w < 1 || h < 1 )
+        {
+        kdWarning() << "sizeForClientSize() with empty size!" << endl;
+        kdWarning() << kdBacktrace() << endl;
+        }
     if (w<1) w = 1;
     if (h<1) h = 1;
 
@@ -1247,7 +1259,7 @@ void Client::getWmNormalHints()
         xSizeHint.win_gravity = NorthWestGravity;
     if( isManaged())
         { // update to match restrictions
-        QSize new_size = adjustedSize( size());
+        QSize new_size = adjustedSize();
         if( new_size != size() && !isFullScreen())
             resizeWithChecks( new_size );
         }
@@ -1447,8 +1459,8 @@ void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
         {
         if( h == border_top + border_bottom )
             {
-            kdDebug() << "Shaded geometry passed for size:" << endl;
-            kdDebug() << kdBacktrace() << endl;
+            kdWarning() << "Shaded geometry passed for size:" << endl;
+            kdWarning() << kdBacktrace() << endl;
             }
         }
     int newx = x();
@@ -1614,7 +1626,8 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     // shading. Then the frame geometry is adjusted for the shaded geometry.
     // This gets more complicated in the case the code does only something like
     // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
-    // Such code is wrong and should be changed to handle the case when the window is shaded.
+    // Such code is wrong and should be changed to handle the case when the window is shaded,
+    // for example using Client::clientSize().
     if( shade_geometry_change )
         ; // nothing
     else if( isShade())
@@ -1664,7 +1677,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
     {
-    // this code is also duplicated in Client::setGeometry()
+    // this code is also duplicated in Client::setGeometry(), and it's also commented there
     if( shade_geometry_change )
         ; // nothing
     else if( isShade())
@@ -1752,7 +1765,7 @@ void Client::postponeGeometryUpdates( bool postpone )
             if( pending_geometry_update )
                 {
                 if( isShade())
-                    setGeometry( QRect( pos(), sizeForClientSize( clientSize())), ForceGeometrySet );
+                    setGeometry( QRect( pos(), adjustedSize()), ForceGeometrySet );
                 else
                     setGeometry( geometry(), ForceGeometrySet );
                 pending_geometry_update = false;

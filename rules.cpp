@@ -828,7 +828,7 @@ void Client::applyWindowRules()
         workspace()->activateNextClient( this );
     // MoveResizeMode
     // Closeable
-    QSize s = adjustedSize( sizeForClientSize( clientSize())); // handle shading
+    QSize s = adjustedSize();
     if( s != size())
         resizeWithChecks( s );
     setShortcut( rules()->checkShortcut( shortcut().toString()));

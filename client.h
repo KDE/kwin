@@ -102,6 +102,7 @@ class Client : public QObject, public KDecorationDefines
             SizemodeMax // try not to make it larger in either direction
             };
         QSize adjustedSize( const QSize&, Sizemode mode = SizemodeAny ) const;
+        QSize adjustedSize() const;
 
         QPixmap icon() const;
         QPixmap miniIcon() const;
