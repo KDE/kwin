@@ -567,7 +567,7 @@ void Workspace::slotWindowGrowHorizontal()
 
 void Client::growHorizontal()
     {
-    if( !isResizable())
+    if( !isResizable() || isShade())
         return;
     QRect geom = geometry();
     geom.setRight( workspace()->packPositionRight( this, geom.right(), true ));
@@ -593,7 +593,7 @@ void Workspace::slotWindowShrinkHorizontal()
 
 void Client::shrinkHorizontal()
     {
-    if( !isResizable())
+    if( !isResizable() || isShade())
         return;
     QRect geom = geometry();
     geom.setRight( workspace()->packPositionLeft( this, geom.right(), false ));
@@ -612,7 +612,7 @@ void Workspace::slotWindowGrowVertical()
 
 void Client::growVertical()
     {
-    if( !isResizable())
+    if( !isResizable() || isShade())
         return;
     QRect geom = geometry();
     geom.setBottom( workspace()->packPositionDown( this, geom.bottom(), true ));
@@ -638,7 +638,7 @@ void Workspace::slotWindowShrinkVertical()
 
 void Client::shrinkVertical()
     {
-    if( !isResizable())
+    if( !isResizable() || isShade())
         return;
     QRect geom = geometry();
     geom.setBottom( workspace()->packPositionUp( this, geom.bottom(), false ));
