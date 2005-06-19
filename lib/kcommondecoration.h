@@ -232,7 +232,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         virtual void reset( unsigned long changed );
         virtual void borders( int& left, int& right, int& top, int& bottom ) const;
         virtual void show();
-        virtual void resize(const QSize&);
+        virtual void resize(const QSize& s);
         virtual QSize minimumSize() const;
         virtual void maximizeChange();
         virtual void desktopChange();
