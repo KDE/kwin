@@ -206,8 +206,9 @@ void Client::releaseWindow( bool on_shutdown )
         desk = 0;
         info->setState( 0, info->state()); // reset all state flags
         }
-    XDeleteProperty( qt_xdisplay(),  client, atoms->kde_net_wm_user_creation_time);
-    // TODO remove KDEFrameStrut property
+    XDeleteProperty( qt_xdisplay(), client, atoms->kde_net_wm_user_creation_time);
+    XDeleteProperty( qt_xdisplay(), client, atoms->net_frame_extents );
+    XDeleteProperty( qt_xdisplay(), client, atoms->kde_net_wm_frame_strut );
     XReparentWindow( qt_xdisplay(), client, workspace()->rootWin(), x(), y());
     XRemoveFromSaveSet( qt_xdisplay(), client );
     XSelectInput( qt_xdisplay(), client, NoEventMask );
@@ -292,7 +293,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     postponeGeometryUpdates( false );
     if( do_show )
         decoration->widget()->show();
-    updateFrameStrut();
+    updateFrameExtents();
     }
 
 void Client::destroyDecoration()
@@ -369,15 +370,14 @@ void Client::detectNoBorder()
         noborder = true;
     }
 
-void Client::updateFrameStrut()
+void Client::updateFrameExtents()
     {
-// TODO KDEFrameStrut je ale pitome jmeno
     NETStrut strut;
     strut.left = border_left;
     strut.right = border_right;
     strut.top = border_top;
     strut.bottom = border_bottom;
-    info->setKDEFrameStrut( strut );
+    info->setFrameExtents( strut );
     }
 
 // Resizes the decoration, and makes sure the decoration widget gets resize event

@@ -44,6 +44,8 @@ class Atoms
         Atom net_wm_window_titleheight;
         Atom xdnd_aware;
         Atom xdnd_position;
+        Atom net_frame_extents;
+        Atom kde_net_wm_frame_strut;
     };
 
 

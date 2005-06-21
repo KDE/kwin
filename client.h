@@ -406,7 +406,7 @@ class Client : public QObject, public KDecorationDefines
         void embedClient( Window w, const XWindowAttributes &attr );    
         void detectNoBorder();
         void destroyDecoration();
-        void updateFrameStrut();
+        void updateFrameExtents();
 
         void rawShow(); // just shows it
         void rawHide(); // just hides it

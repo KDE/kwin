@@ -246,7 +246,7 @@ void Workspace::init()
         NET::WMPid |
         NET::WMMoveResize |
         NET::WMKDESystemTrayWinFor |
-        NET::WMKDEFrameStrut |
+        NET::WMFrameExtents |
         NET::WMPing
         ,
         NET::NormalMask |
