@@ -622,19 +622,17 @@ void TabBox::handleMouseEvent( XEvent* e )
  */
 
 static
-bool areKeySymXsDepressed( bool bAll, int nKeySyms, ... )
+bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
     {
-    va_list args;
     char keymap[32];
 
     kdDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
 
-    va_start( args, nKeySyms );
     XQueryKeymap( qt_xdisplay(), keymap );
 
     for( int iKeySym = 0; iKeySym < nKeySyms; iKeySym++ )
         {
-        uint keySymX = va_arg( args, uint );
+        uint keySymX = keySyms[ iKeySym ];
         uchar keyCodeX = XKeysymToKeycode( qt_xdisplay(), keySymX );
         int i = keyCodeX / 8;
         char mask = 1 << (keyCodeX - (i * 8));
@@ -699,10 +697,7 @@ static bool areModKeysDepressed( const KKeySequence& seq )
         rgKeySyms[nKeySyms++] = XK_Meta_R;
         }
 
-    // Is there a better way to push all 8 integer onto the stack?
-    return areKeySymXsDepressed( false, nKeySyms,
-        rgKeySyms[0], rgKeySyms[1], rgKeySyms[2], rgKeySyms[3],
-        rgKeySyms[4], rgKeySyms[5], rgKeySyms[6], rgKeySyms[7] );
+    return areKeySymXsDepressed( false, rgKeySyms, nKeySyms );
     }
 
 static bool areModKeysDepressed( const KShortcut& cut )
