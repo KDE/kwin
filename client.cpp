@@ -1196,7 +1196,7 @@ void Client::takeActivity( int flags, bool handled, allowed_t )
     static Client* previous_client;
     if( previous_activity_timestamp == qt_x_time && previous_client != this )
         {
-        kdWarning( 1212 ) << "Repeated use of the same X timestamp for activity" << endl;
+        kdDebug( 1212 ) << "Repeated use of the same X timestamp for activity" << endl;
         kdDebug( 1212 ) << kdBacktrace() << endl;
         }
     previous_activity_timestamp = qt_x_time;
@@ -1213,7 +1213,7 @@ void Client::takeFocus( allowed_t )
     static Client* previous_client;
     if( previous_focus_timestamp == qt_x_time && previous_client != this )
         {
-        kdWarning( 1212 ) << "Repeated use of the same X timestamp for focus" << endl;
+        kdDebug( 1212 ) << "Repeated use of the same X timestamp for focus" << endl;
         kdDebug( 1212 ) << kdBacktrace() << endl;
         }
     previous_focus_timestamp = qt_x_time;
