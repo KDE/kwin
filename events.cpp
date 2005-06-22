@@ -452,6 +452,10 @@ bool Workspace::workspaceEvent( XEvent * e )
             if( electricBorder( e ))
                 return true;
             break;
+        case MappingNotify:
+            XRefreshKeyboardMapping( &e->xmapping );
+            tab_box->updateKeyMapping();
+            break;
         default:
             break;
         }
