@@ -1381,6 +1381,8 @@ void Client::getMotifHints()
         motif_may_resize = mresize; // this should be set using minsize==maxsize, but oh well
         motif_may_move = mmove;
         }
+    else
+        motif_may_resize = motif_may_move = true;
     // mminimize; - ignore, bogus - e.g. shading or sending to another desktop is "minimizing" too
     // mmaximize; - ignore, bogus - maximizing is basically just resizing
     motif_may_close = mclose; // motif apps like to crash when they set this hint and WM closes them anyway
