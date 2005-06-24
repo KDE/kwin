@@ -104,6 +104,7 @@ bool Client::manage( Window w, bool isMapped )
     setCaption( cap_normal, true );
 
     detectNoBorder();
+    detectShapable();
     fetchIconicName();
     getWMHints(); // needs to be done before readTransient() because of reading the group
     modal = ( info->state() & NET::Modal ) != 0; // needs to be valid before handling groups

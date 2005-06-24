@@ -405,6 +405,7 @@ class Client : public QObject, public KDecorationDefines
 
         void embedClient( Window w, const XWindowAttributes &attr );    
         void detectNoBorder();
+        void detectShapable();
         void destroyDecoration();
         void updateFrameExtents();
 

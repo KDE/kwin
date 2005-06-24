@@ -358,7 +358,6 @@ void Client::detectNoBorder()
         case NET::Dialog :
         case NET::Utility :
             noborder = false;
-            setShapable(FALSE);
           break;
         default:
             assert( false );
@@ -368,6 +367,30 @@ void Client::detectNoBorder()
     // a window type otherwise (SUPPORTED_WINDOW_TYPES_MASK doesn't include it)
     if( info->windowType( SUPPORTED_WINDOW_TYPES_MASK | NET::OverrideMask ) == NET::Override )
         noborder = true;
+    }
+
+void Client::detectShapable()
+    {
+    if( Shape::hasShape( window()))
+        return;
+    switch( windowType())
+        {
+        case NET::Desktop :
+        case NET::Dock :
+        case NET::TopMenu :
+        case NET::Splash :
+          break;
+        case NET::Unknown :
+        case NET::Normal :
+        case NET::Toolbar :
+        case NET::Menu :
+        case NET::Dialog :
+        case NET::Utility :
+            setShapable(FALSE);
+          break;
+        default:
+            assert( false );
+        }
     }
 
 void Client::updateFrameExtents()
