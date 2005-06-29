@@ -712,8 +712,8 @@ Layer Client::belongsToLayer() const
     const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
     const Client* top = workspace()->topClientOnDesktop( desktop(), true );
     if( isFullScreen() && ac != NULL && top != NULL
-        && ( ac == this || this->hasTransient( ac, true ))
-        && ( top == this || this->hasTransient( top, true )))
+        && ( ac == this || this->group() == ac->group())
+        && ( top == this || this->group() == top->group()))
         return ActiveLayer;
     if( keepAbove())
         return AboveLayer;
