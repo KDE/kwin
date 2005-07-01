@@ -297,6 +297,7 @@ class Options : public KDecorationOptions
         uint activeWindowShadowSize;
         uint inactiveWindowShadowSize;
         uint dockShadowSize;
+        bool onlyDecoTranslucent;
         bool resetKompmgr;
 
     private:

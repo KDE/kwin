@@ -395,7 +395,8 @@ class Client : public QObject, public KDecorationDefines
         void ungrabButton( int mod );
         void resetMaximize();
         void resizeDecoration( const QSize& s );
-        void setXTitleHeightProperty(int titleHeight);
+        void setDecoHashProperty(uint topHeight, uint rightWidth, uint bottomHeight, uint leftWidth);
+        void unsetDecoHashProperty();
 
         void pingWindow();
         void killProcess( bool ask, Time timestamp = CurrentTime );

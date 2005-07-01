@@ -1216,15 +1216,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   QVBoxLayout *vLay = new QVBoxLayout (tGroup,KDialog::marginHint(), KDialog::spacingHint());
   vLay->addSpacing(11); // to get the proper gb top offset
   
-  QHBoxLayout *hLay = new QHBoxLayout(vLay);
-  QLabel *label0 = new QLabel(i18n("Apply translucency on"),tGroup);
-  hLay->addWidget(label0);
-  transMode = new QComboBox(tGroup);
-  transMode->insertItem (i18n("The whole window"));
-  transMode->insertItem (i18n("The titlebar only"));
-  transMode->insertItem (i18n("The content only"));
-  hLay->addWidget(transMode);
-  hLay->addStretch();
+  onlyDecoTranslucent = new QCheckBox(i18n("Apply translucency only to decoration"),tGroup);
+  vLay->addWidget(onlyDecoTranslucent);
   
   vLay->addSpacing(11);
   
@@ -1361,7 +1354,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
   connect(dockWindowTransparency, SIGNAL(toggled(bool)), dockWindowOpacity, SLOT(setEnabled(bool)));
 
   connect(useTranslucency, SIGNAL(toggled(bool)), SLOT(changed()));
-  connect(transMode, SIGNAL(activated(int)), SLOT(changed()));
+  connect(onlyDecoTranslucent, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(activeWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(inactiveWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
   connect(movingWindowTransparency, SIGNAL(toggled(bool)), SLOT(changed()));
@@ -1402,7 +1395,6 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QW
 
   // handle kompmgr restarts if necessary
   connect(useTranslucency, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
-  connect(transMode, SIGNAL(activated(int)), SLOT(resetKompmgr()));
   connect(disableARGB, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
   connect(useShadows, SIGNAL(toggled(bool)), SLOT(resetKompmgr()));
   connect(inactiveWindowShadowSize, SIGNAL(valueChanged(int)), SLOT(resetKompmgr()));
@@ -1433,10 +1425,11 @@ void KTranslucencyConfig::load( void )
   activeWindowTransparency->setChecked(config->readBoolEntry("TranslucentActiveWindows",false));
   inactiveWindowTransparency->setChecked(config->readBoolEntry("TranslucentInactiveWindows",true));
   movingWindowTransparency->setChecked(config->readBoolEntry("TranslucentMovingWindows",false));
-  removeShadowsOnMove->setChecked(config->readBoolEntry("RemoveShadowsOnMove",FALSE));
-  removeShadowsOnResize->setChecked(config->readBoolEntry("RemoveShadowsOnResize",FALSE));
+  removeShadowsOnMove->setChecked(config->readBoolEntry("RemoveShadowsOnMove",false));
+  removeShadowsOnResize->setChecked(config->readBoolEntry("RemoveShadowsOnResize",false));
   dockWindowTransparency->setChecked(config->readBoolEntry("TranslucentDocks",true));
   keepAboveAsActive->setChecked(config->readBoolEntry("TreatKeepAboveAsActive",true));
+  onlyDecoTranslucent->setChecked(config->readBoolEntry("OnlyDecoTranslucent",false));
 
   activeWindowOpacity->setValue(config->readNumEntry("ActiveWindowOpacity",100));
   inactiveWindowOpacity->setValue(config->readNumEntry("InactiveWindowOpacity",75));
@@ -1444,9 +1437,9 @@ void KTranslucencyConfig::load( void )
   dockWindowOpacity->setValue(config->readNumEntry("DockOpacity",80));
 
   int ass, iss, dss;
-  dss = config->readNumEntry("DockShadowSize", 50);
-  ass = config->readNumEntry("ActiveWindowShadowSize", 200);
-  iss = config->readNumEntry("InactiveWindowShadowSize", 100);
+  dss = config->readNumEntry("DockShadowSize", 33);
+  ass = config->readNumEntry("ActiveWindowShadowSize", 133);
+  iss = config->readNumEntry("InactiveWindowShadowSize", 67);
 
   activeWindowOpacity->setEnabled(activeWindowTransparency->isChecked());
   inactiveWindowOpacity->setEnabled(inactiveWindowTransparency->isChecked());
@@ -1455,9 +1448,6 @@ void KTranslucencyConfig::load( void )
 
   KConfig conf_(QDir::homeDirPath() + "/.xcompmgrrc");
   conf_.setGroup("xcompmgr");
-  
-  QString modeString = conf_.readEntry("TransMode","All");
-  transMode->setCurrentItem(!modeString.compare("Content")?2:!modeString.compare("Title")?1:0);
   
   disableARGB->setChecked(conf_.readBoolEntry("DisableARGB",FALSE));
 
@@ -1509,11 +1499,14 @@ void KTranslucencyConfig::save( void )
   // (speed reasons, so the shadow matrix hasn't to be recreated for every window)
   // we set inactive windows to 100%, the radius to the inactive window value and adjust the multiplicators for docks and active windows
   // this way the user can set the three values without caring about the radius/multiplicator stuff
-  config->writeEntry("DockShadowSize",(int)(100.0*dockWindowShadowSize->value()/inactiveWindowShadowSize->value()));
-  config->writeEntry("ActiveWindowShadowSize",(int)(100.0*activeWindowShadowSize->value()/inactiveWindowShadowSize->value()));
-  config->writeEntry("InctiveWindowShadowSize",100);
+   // additionally we find a value between big and small values to have a more smooth appereance
+   config->writeEntry("DockShadowSize",(int)(200.0 * dockWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
+   config->writeEntry("ActiveWindowShadowSize",(int)(200.0 * activeWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
+   config->writeEntry("InctiveWindowShadowSize",(int)(200.0 * inactiveWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
+   
   config->writeEntry("RemoveShadowsOnMove",removeShadowsOnMove->isChecked());
   config->writeEntry("RemoveShadowsOnResize",removeShadowsOnResize->isChecked());
+  config->writeEntry("OnlyDecoTranslucent", onlyDecoTranslucent->isChecked());
   config->writeEntry("ResetKompmgr",resetKompmgr_);
 
   KConfig *conf_ = new KConfig(QDir::homeDirPath() + "/.xcompmgrrc");
@@ -1523,7 +1516,6 @@ void KTranslucencyConfig::save( void )
   conf_->writeEntry("DisableARGB",disableARGB->isChecked());
   conf_->writeEntry("ShadowOffsetY",-1*shadowTopOffset->value());
   conf_->writeEntry("ShadowOffsetX",-1*shadowLeftOffset->value());
-  conf_->writeEntry("TransMode",transMode->currentItem()==0?"All":transMode->currentItem()==1?"Title":"Content");
 
 
   int r, g, b;
@@ -1531,7 +1523,7 @@ void KTranslucencyConfig::save( void )
   QString hex;
   hex.sprintf("0x%02X%02X%02X", r,g,b);
   conf_->writeEntry("ShadowColor",hex);
-  conf_->writeEntry("ShadowRadius",inactiveWindowShadowSize->value());
+  conf_->writeEntry("ShadowRadius",(activeWindowShadowSize->value() + inactiveWindowShadowSize->value()) / 2);
   conf_->writeEntry("FadeWindows",fadeInWindows->isChecked());
   conf_->writeEntry("FadeTrans",fadeOnOpacityChange->isChecked());
   conf_->writeEntry("FadeInStep",fadeInSpeed->value()/1000.0);
@@ -1554,7 +1546,7 @@ void KTranslucencyConfig::defaults()
     if (!kompmgrAvailable_)
         return;
   useTranslucency->setChecked(false);
-  transMode->setCurrentItem(0);
+  onlyDecoTranslucent->setChecked(false);
   activeWindowTransparency->setChecked(false);
   inactiveWindowTransparency->setChecked(true);
   movingWindowTransparency->setChecked(false);

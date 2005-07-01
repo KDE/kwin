@@ -79,8 +79,8 @@ Atoms::Atoms()
     atoms[n] = &net_wm_window_shapable;
     names[n++] = (char*) "_KDE_WM_WINDOW_SHAPABLE";
     
-    atoms[n] = &net_wm_window_titleheight;
-    names[n++] = (char*) "_KDE_WM_WINDOW_TITLEHEIGHT";
+    atoms[n] = &net_wm_window_decohash;
+    names[n++] = (char*) "_KDE_WM_WINDOW_DECOHASH";
         
     Atom fake;
     atoms[n] = &fake;

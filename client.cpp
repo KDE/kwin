@@ -277,7 +277,9 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         XReparentWindow( qt_xdisplay(), decoration->widget()->winId(), frameId(), 0, 0 );
         decoration->widget()->lower();
         decoration->borders( border_left, border_right, border_top, border_bottom );
-        setXTitleHeightProperty(border_top);
+        options->onlyDecoTranslucent ?
+            setDecoHashProperty(border_top, border_right, border_bottom, border_left):
+            unsetDecoHashProperty();
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( false ));
@@ -327,10 +329,15 @@ void Client::checkBorderSizes()
     move( calculateGravitation( true ));
     border_left = new_left;
     border_right = new_right;
-    if (border_top != new_top)
-        setXTitleHeightProperty(new_top);
     border_top = new_top;
     border_bottom = new_bottom;
+    if (border_left != new_left ||
+        border_right != new_right ||
+        border_top != new_top ||
+        border_bottom != new_bottom)
+    options->onlyDecoTranslucent ?
+       setDecoHashProperty(new_top, new_right, new_bottom, new_left):
+       unsetDecoHashProperty();
     move( calculateGravitation( false ));
     plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
     checkWorkspacePosition();
@@ -2043,10 +2050,18 @@ bool Client::touches(const Client* c)
     return FALSE;
     }
     
-void Client::setXTitleHeightProperty(int titleHeight)
+void Client::setDecoHashProperty(uint topHeight, uint rightWidth, uint bottomHeight, uint leftWidth)
 {
-    long data = titleHeight;
-    XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_titleheight, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
+   long data = (topHeight < 255 ? topHeight : 255) << 24 |
+               (rightWidth < 255 ? rightWidth : 255) << 16 |
+               (bottomHeight < 255 ? bottomHeight : 255) << 8 |
+               (leftWidth < 255 ? leftWidth : 255);
+    XChangeProperty(qt_xdisplay(), frameId(), atoms->net_wm_window_decohash, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
+}
+
+void Client::unsetDecoHashProperty()
+{
+   XDeleteProperty( qt_xdisplay(), frameId(), atoms->net_wm_window_decohash);
 }
     
 #ifndef NDEBUG

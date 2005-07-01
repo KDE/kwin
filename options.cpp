@@ -191,6 +191,7 @@ unsigned long Options::updateSettings()
     dockShadowSize = config->readNumEntry("DockShadowSize", 80);
     removeShadowsOnMove = config->readBoolEntry("RemoveShadowsOnMove", true);
     removeShadowsOnResize = config->readBoolEntry("RemoveShadowsOnResize", true);
+    onlyDecoTranslucent = config->readBoolEntry("OnlyDecoTranslucent",false);
     if (resetKompmgr = config->readBoolEntry("ResetKompmgr", false))
         config->writeEntry("ResetKompmgr",FALSE);
     

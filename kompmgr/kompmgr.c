@@ -56,6 +56,11 @@ check baghira.sf.net for more infos
 
 #define CAN_DO_USABLE 0
 
+#define _TOPHEIGHT_(x) ((x >> 24) & 0xff)
+#define _RIGHTWIDTH_(x) ((x >> 16) & 0xff)
+#define _BOTTOMHEIGHT_(x) ((x >> 8) & 0xff)
+#define _LEFTWIDTH_(x) (x & 0xff)
+
 typedef struct _ignore {
     struct _ignore	*next;
     unsigned long	sequence;
@@ -80,11 +85,12 @@ typedef struct _win {
     Picture		alphaPict;
     Picture		shadowPict;
     XserverRegion	borderSize;
-    XserverRegion	titleSize;
-    XserverRegion	contentSize;
+    XserverRegion	decoRegion;
+    XserverRegion	contentRegion;
     XserverRegion	extents;
     unsigned int	preShadeOpacity;
     Picture		shadow;
+   /*Picture		alpha;*/
     int			shadow_dx;
     int			shadow_dy;
     int			shadow_width;
@@ -94,7 +100,7 @@ typedef struct _win {
     Atom                windowType;
     unsigned long	damage_sequence;    /* sequence when damage was created */
     Bool                shapable; /* this will allow window managers to exclude windows if just the deco is shaped*/
-    int                 titleHeight;
+    unsigned int                 decoHash;
     Picture             dimPicture;
 
     /* for drawing translucent windows */
@@ -115,7 +121,7 @@ typedef struct _fade {
     double		step;
     void		(*callback) (Display *dpy, win *w, Bool gone);
     Display		*dpy;
-    int			titleHeight;
+    unsigned int			decoHash;
     Bool		gone;
 } fade;
 
@@ -152,7 +158,7 @@ Atom		opacityAtom;
 Atom		shadowAtom;
 Atom		shadeAtom;
 Atom		shapableAtom;
-Atom            titleHeightAtom;
+Atom            decoHashAtom;
 Atom            dimAtom;
 Atom            deskChangeAtom;
 Atom            winTypeAtom;
@@ -170,7 +176,7 @@ Atom            winNormalAtom;
 #define SHADOW_PROP	"_KDE_WM_WINDOW_SHADOW"
 #define SHADE_PROP	"_KDE_WM_WINDOW_SHADE"
 #define SHAPABLE_PROP	"_KDE_WM_WINDOW_SHAPABLE"
-#define TITLEHEIGHT_PROP "_KDE_WM_WINDOW_TITLEHEIGHT"
+#define DECOHASH_PROP "_KDE_WM_WINDOW_DECOHASH"
 #define DIM_PROP "_KDE_WM_WINDOW_DIM"
 #define DESKCHANGE_PROP "_KDE_WM_DESKTOP_CHANGE"
 
@@ -198,12 +204,6 @@ typedef enum _compMode {
     CompClientShadows,	/* use window extents for shadow, blurred */
 } CompMode;
 
-typedef enum _transMode {
-    Title,  /*only the titlebar is drawn translucent*/
-    Content, /*only the content is drawn translucent*/
-    All     /*all window is drawn translucent*/
-} TransMode;
-
 static void
 determine_mode(Display *dpy, win *w);
     
@@ -214,7 +214,6 @@ static XserverRegion
 win_extents (Display *dpy, win *w);
 
 CompMode    compMode = CompSimple;
-TransMode   transMode = All;
 
 int	    shadowRadius = 12;
 int         shadowOffsetX = 0;
@@ -268,24 +267,23 @@ find_fade (win *w)
     return 0;
 }
 
-void
-dequeue_fade (Display *dpy, fade *f)
+void dequeue_fade (Display *dpy, fade *f)
 {
-    fade    **prev;
-    f->w->isInFade = False;
-    f->w->titleHeight = f->titleHeight;
+   fade    **prev;
+   f->w->isInFade = False;
+   f->w->decoHash = f->decoHash;
 
-    for (prev = &fades; *prev; prev = &(*prev)->next)
-	if (*prev == f)
-	{
-	    *prev = f->next;
-	    if (f->callback)
-            {
-		(*f->callback) (dpy, f->w, f->gone);
-            }
-	    free (f);
-	    break;
-	}
+   for (prev = &fades; *prev; prev = &(*prev)->next)
+      if (*prev == f)
+      {
+         *prev = f->next;
+         if (f->callback)
+         {
+            (*f->callback) (dpy, f->w, f->gone);
+         }
+         free (f);
+         break;
+      }
 }
 
 void
@@ -318,20 +316,24 @@ set_fade (Display *dpy, win *w, double start, double finish, double step,
 	f = find_fade (w);
 	if (!f)
 	{
+   	if (start == finish)
+      	return;
 		f = malloc (sizeof (fade));
 		f->next = 0;
 		f->w = w;
-		f->titleHeight = w->titleHeight;
+		f->decoHash = w->decoHash;
 		f->cur = start;
 		enqueue_fade (dpy, f);
 	}
 	else if(!override)
-		return;
-	else
-	{
-   	if (exec_callback && f->callback)
-				(*f->callback)(dpy, f->w, f->gone);
-	}
+         return;
+   else if (start == finish)
+   {
+      dequeue_fade(dpy,f);
+      return;
+   }
+	else if (exec_callback && f->callback)
+      (*f->callback)(dpy, f->w, f->gone);
 
 	if (finish < 0)
 		finish = 0;
@@ -346,7 +348,7 @@ set_fade (Display *dpy, win *w, double start, double finish, double step,
 	f->callback = callback;
 	w->opacity = f->cur * OPAQUE;
 	if (wholeWin)
-		w->titleHeight = 0;
+		w->decoHash = 0;
 #if 0
 	printf ("set_fade start %g step %g\n", f->cur, f->step);
 #endif
@@ -393,7 +395,7 @@ run_fades (Display *dpy)
 		win *w = f->w;
 		next = f->next;
 		f->cur += f->step * steps;
-		if (f->cur >= 1)
+		if (f->cur > 1)
 			f->cur = 1;
 		else if (f->cur < 0)
 			f->cur = 0;
@@ -408,7 +410,6 @@ run_fades (Display *dpy)
 			{
 				w->opacity = f->finish*OPAQUE;
 				need_dequeue = True;
-				/*dequeue_fade (dpy, f);*/
 			}
 		}
 		else
@@ -417,7 +418,6 @@ run_fades (Display *dpy)
 			{
 				w->opacity = f->finish*OPAQUE;
 				need_dequeue = True;
-				/*dequeue_fade (dpy, f);*/
 			}
 		}
 		if (w->shadow)
@@ -426,10 +426,10 @@ run_fades (Display *dpy)
 			w->shadow = None;
 			w->extents = win_extents(dpy, w);
 		}
-                determine_mode (dpy, w);
-                /* Must do this last as it might destroy f->w in callbacks */
-                if (need_dequeue)
-                    dequeue_fade (dpy, f);
+      determine_mode (dpy, w);
+      /* Must do this last as it might destroy f->w in callbacks */
+      if (need_dequeue)
+         dequeue_fade (dpy, f);
 	}
 	fade_time = now + fade_delta;
 }
@@ -917,13 +917,18 @@ win_extents (Display *dpy, win *w)
 				{
 					double	opacity = shadowOpacity;
 					if (w->shadowSize > 100)
-						opacity = opacity/(w->shadowSize*0.01);
+						opacity = opacity/(w->shadowSize*0.015);
 					if (w->mode == WINDOW_TRANS)
 						opacity = opacity * ((double)w->opacity)/((double)OPAQUE);
 					w->shadow = shadow_picture (dpy, opacity, w->alphaPict,
 							w->a.width + w->a.border_width * 2 - 2*(shadowRadius - (w->shadowSize*shadowRadius/100)) ,
 							w->a.height + w->a.border_width * 2 - 2*(shadowRadius - (w->shadowSize*shadowRadius/100)),
 							&w->shadow_width, &w->shadow_height);
+   				/*int kill;
+   				w->alpha = shadow_picture (dpy, 0.9, w->alphaPict,
+   				                            w->a.width + w->a.border_width * 2,
+   				                            w->a.height + w->a.border_width * 2,
+   				                            &kill, &kill);*/
 				}
 			}
 			sr.x = w->a.x + w->shadow_dx;
@@ -971,7 +976,7 @@ border_size (Display *dpy, win *w)
 }
 
 	static XserverRegion
-title_size (Display *dpy, win *w)
+deco_region (Display *dpy, win *w)
 {
 	XserverRegion   title;
 	XRectangle	    r; /*titlebounding rect*/
@@ -982,21 +987,21 @@ title_size (Display *dpy, win *w)
 	 * of creates, that way you'd just end up with an empty region
 	 * instead of an invalid XID.
 	 */
-	r.x = w->a.x - w->a.border_width;
-	r.y = w->a.y - w->a.border_width;
-	r.width = w->a.width + w->a.border_width * 2;
-	r.height = w->titleHeight + w->a.border_width;
+   r.x = w->a.x - w->a.border_width + _LEFTWIDTH_(w->decoHash);
+   r.y = w->a.y - w->a.border_width + _TOPHEIGHT_(w->decoHash);
+   r.width = w->a.width + w->a.border_width * 2 - _LEFTWIDTH_(w->decoHash) - _RIGHTWIDTH_(w->decoHash);
+   r.height = w->a.height + w->a.border_width - _TOPHEIGHT_(w->decoHash) - _BOTTOMHEIGHT_(w->decoHash);
 	set_ignore (dpy, NextRequest (dpy));
 	title = XFixesCreateRegion (dpy, &r, 1);
 	if (!w->borderSize)
 		w->borderSize = border_size (dpy, w);
 	set_ignore (dpy, NextRequest (dpy));
-	XFixesIntersectRegion(dpy, title, w->borderSize, title);
+   XFixesSubtractRegion(dpy, title, w->borderSize, title);
 	return title;
 }
 
 	static XserverRegion
-content_size (Display *dpy, win *w)
+content_region (Display *dpy, win *w)
 {
 	XserverRegion   content;
 	XRectangle	    r; /*contentbounding rect*/
@@ -1007,10 +1012,10 @@ content_size (Display *dpy, win *w)
 	 * of creates, that way you'd just end up with an empty region
 	 * instead of an invalid XID.
 	 */
-	r.x = w->a.x - w->a.border_width;
-	r.y = w->a.y - w->a.border_width + w->titleHeight;
-	r.width = w->a.width + w->a.border_width * 2;
-	r.height = w->a.height + w->a.border_width - w->titleHeight;
+   r.x = w->a.x - w->a.border_width + _LEFTWIDTH_(w->decoHash);
+   r.y = w->a.y - w->a.border_width + _TOPHEIGHT_(w->decoHash);
+   r.width = w->a.width + w->a.border_width * 2 - _LEFTWIDTH_(w->decoHash) - _RIGHTWIDTH_(w->decoHash);
+   r.height = w->a.height + w->a.border_width - _TOPHEIGHT_(w->decoHash) - _BOTTOMHEIGHT_(w->decoHash);
 	set_ignore (dpy, NextRequest (dpy));
 	content = XFixesCreateRegion (dpy, &r, 1);
 	if (!w->borderSize)
@@ -1101,17 +1106,17 @@ paint_all (Display *dpy, XserverRegion region)
 				XFixesDestroyRegion (dpy, w->borderSize);
 				w->borderSize = None;
 			}
-			if (w->titleSize)
+			if (w->decoRegion)
 			{
 				set_ignore (dpy, NextRequest (dpy));
-				XFixesDestroyRegion (dpy, w->titleSize);
-				w->titleSize = None;
+				XFixesDestroyRegion (dpy, w->decoRegion);
+				w->decoRegion = None;
 			}
-			if (w->contentSize)
+			if (w->contentRegion)
 			{
 				set_ignore (dpy, NextRequest (dpy));
-				XFixesDestroyRegion (dpy, w->contentSize);
-				w->contentSize = None;
+				XFixesDestroyRegion (dpy, w->contentRegion);
+				w->contentRegion = None;
 			}
 			if (w->extents)
 			{
@@ -1128,7 +1133,7 @@ paint_all (Display *dpy, XserverRegion region)
 			w->borderSize = border_size (dpy, w);
 		if (!w->extents)
 			w->extents = win_extents (dpy, w);
-		if ((w->mode == WINDOW_SOLID) || ((w->mode == WINDOW_TRANS) && (transMode < All) && w->titleHeight))
+		if ((w->mode == WINDOW_SOLID) || ((w->mode == WINDOW_TRANS) && w->decoHash))
 		{
 			int	x, y, wid, hei;
 #if HAS_NAME_WINDOW_PIXMAP
@@ -1152,36 +1157,23 @@ paint_all (Display *dpy, XserverRegion region)
 				set_ignore (dpy, NextRequest (dpy));
 				XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
 						0, 0, 0, 0, x, y, wid, hei);
-                                if (w->dimPicture)
-    			             XRenderComposite (dpy, PictOpOver, w->dimPicture, None, rootBuffer, 0, 0, 0, 0, x, y, wid, hei);
+            if (w->dimPicture)
+               XRenderComposite (dpy, PictOpOver, w->dimPicture, None, rootBuffer, 0, 0, 0, 0, x, y, wid, hei);
 			}
 			else
-				switch (transMode) {
-					case Title:
-						{
-							if (!w->contentSize)
-								w->contentSize = content_size (dpy, w);
-							XFixesSubtractRegion (dpy, region, region, w->contentSize);
-							set_ignore (dpy, NextRequest (dpy));
-							/*solid part*/
-							XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
-									0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
-							break;
-						}
-					case Content:
-						{
-							if (!w->titleSize)
-								w->titleSize = title_size (dpy, w);
-							XFixesSubtractRegion (dpy, region, region, w->titleSize);
-							set_ignore (dpy, NextRequest (dpy));
-							/*solid part*/
-							XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
-									0, 0, 0, 0, x, y, wid, w->titleHeight);
-							break;
-						}
-                                    default:
-                                        break;
-				}
+         {
+            if (!w->contentRegion)
+               w->contentRegion = content_region (dpy, w);
+            XFixesSubtractRegion (dpy, region, region, w->contentRegion);
+            set_ignore (dpy, NextRequest (dpy));
+            /*solid part*/
+            XRenderComposite (dpy, PictOpSrc, w->picture, None, rootBuffer,
+                              _LEFTWIDTH_(w->decoHash), _TOPHEIGHT_(w->decoHash), 0, 0,
+                              x + _LEFTWIDTH_(w->decoHash),
+                              y + _TOPHEIGHT_(w->decoHash),
+                              wid - _LEFTWIDTH_(w->decoHash) - _RIGHTWIDTH_(w->decoHash),
+                              hei - _TOPHEIGHT_(w->decoHash) - _BOTTOMHEIGHT_(w->decoHash));
+         }
 		}
 		if (!w->borderClip)
 		{
@@ -1255,25 +1247,46 @@ paint_all (Display *dpy, XserverRegion region)
 			hei = w->a.height;
 #endif
 			set_ignore (dpy, NextRequest (dpy));
-			if (!w->titleHeight)
+			if (!w->decoHash)
+			{
 				XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
 						0, 0, 0, 0, x, y, wid, hei);
+			}
 			else
-				switch (transMode) {
-					case All:
-						XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-								0, 0, 0, 0, x, y, wid, hei);
-						break;
+			{
 						/*trans part*/
-					case Title:
-						XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-								0, 0, 0, 0, x, y, wid, w->titleHeight);
-						break;
-					case Content:
-						XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
-								0, w->titleHeight, 0, 0, x, y+w->titleHeight, wid, hei - w->titleHeight);
-						break;
-				}
+                  /* PICTURE ;)
+                  |-----------------------------|
+                  |             top             |
+                  |-----------------------------|
+                  |l |                       | r|
+                  |e |                       | i|
+                  |f |                       | g|
+                  |t |                       | h|
+                  |--------------------------| t|
+                  |           bottom         |  |
+                  |--------------------------|--|*/
+                  /*top*/
+   				XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+   				                  0, 0, 0, 0, x, y, wid, _TOPHEIGHT_(w->decoHash));
+                  /*right*/
+   				XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+   				                  wid - _RIGHTWIDTH_(w->decoHash), _TOPHEIGHT_(w->decoHash),
+   				                  0, 0,
+   				                  x + wid - _RIGHTWIDTH_(w->decoHash),
+   				                  y + _TOPHEIGHT_(w->decoHash), _RIGHTWIDTH_(w->decoHash),
+   				                  hei - _TOPHEIGHT_(w->decoHash));
+                  /*bottom*/
+   				XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+   				                  0, hei - _BOTTOMHEIGHT_(w->decoHash), 0, 0,
+   				                  x, y + hei - _BOTTOMHEIGHT_(w->decoHash),
+   				                  wid - _RIGHTWIDTH_(w->decoHash), _BOTTOMHEIGHT_(w->decoHash));
+                  /*left*/
+   				XRenderComposite (dpy, PictOpOver, w->picture, w->alphaPict, rootBuffer,
+   				                  0, _TOPHEIGHT_(w->decoHash), 0, 0,
+   				                  x, y + _TOPHEIGHT_(w->decoHash),
+   				                  _LEFTWIDTH_(w->decoHash), hei - _TOPHEIGHT_(w->decoHash) - _BOTTOMHEIGHT_(w->decoHash));
+		   }
 		}
 		else if (w->mode == WINDOW_ARGB)
 		{
@@ -1434,18 +1447,18 @@ finish_unmap_win (Display *dpy, win *w)
 		w->borderSize = None;
 	}
         
-        if (w->titleSize)
+        if (w->decoRegion)
         {
             set_ignore (dpy, NextRequest (dpy));
-            XFixesDestroyRegion (dpy, w->titleSize);
-            w->titleSize = None;
+            XFixesDestroyRegion (dpy, w->decoRegion);
+            w->decoRegion = None;
         }
         
-        if (w->contentSize)
+        if (w->contentRegion)
         {
             set_ignore (dpy, NextRequest (dpy));
-            XFixesDestroyRegion (dpy, w->contentSize);
-            w->contentSize = None;
+            XFixesDestroyRegion (dpy, w->contentRegion);
+            w->contentRegion = None;
         }
 	
         if (w->shadow)
@@ -1578,14 +1591,14 @@ get_shapable_prop(Display *dpy, win *w)
 }
 
 static unsigned int
-get_titleHeight_prop(Display *dpy, win *w)
+get_decoHash_prop(Display *dpy, win *w)
 {
 	Atom actual;
 	int format;
 	unsigned long n, left;
 
 	unsigned char *data = NULL;
-	int result = XGetWindowProperty(dpy, w->id, titleHeightAtom, 0L, 1L, False, 
+	int result = XGetWindowProperty(dpy, w->id, decoHashAtom, 0L, 1L, False, 
 			XA_CARDINAL, &actual, &format, 
 			&n, &left, &data);
 	if (result == Success && data != NULL && format == 32 )
@@ -1596,7 +1609,7 @@ get_titleHeight_prop(Display *dpy, win *w)
 		return i;
 	}
 	return 0; /*no titlebar*/
-        }
+}
 
 static unsigned int
 get_dim_prop(Display *dpy, win *w)
@@ -1857,7 +1870,7 @@ add_win (Display *dpy, Window id, Window prev)
 	new->shadow_height = 0;
 	new->opacity = OPAQUE;
 	new->shadowSize = 100;
-	new->titleHeight = 0;
+	new->decoHash = 0;
 
 	new->borderClip = None;
 	new->prev_trans = 0;
@@ -1868,7 +1881,7 @@ add_win (Display *dpy, Window id, Window prev)
         new->opacity = get_opacity_prop (dpy, new, OPAQUE);
 	new->shadowSize = get_shadow_prop (dpy, new);
 	new->shapable = get_shapable_prop(dpy, new);
-	new->titleHeight = get_titleHeight_prop(dpy, new);
+	new->decoHash = get_decoHash_prop(dpy, new);
         unsigned int tmp = get_dim_prop(dpy, new);
         new->dimPicture = (tmp < OPAQUE) ? solid_picture (dpy, True, (double)tmp/OPAQUE, 0.1, 0.1, 0.1) : None;
 	new->windowType = determine_wintype (dpy, new->id);
@@ -2275,7 +2288,6 @@ typedef enum _option{
 	FadeInStep,
 	FadeDelta,
 	DisableARGB,
-	TransMode_,
 	NUMBEROFOPTIONS
 } Option;
 
@@ -2297,7 +2309,6 @@ options[NUMBEROFOPTIONS] = {
 	"FadeInStep",           /*13*/
 	"FadeDelta",            /*14*/
 	"DisableARGB",          /*15*/
-	"TransMode",          /*16*/
 	/*put your thingy in here...*/    
 };
 
@@ -2361,17 +2372,6 @@ setValue(Option option, char *value ){
 				compMode = CompSimple; /*default*/
 			}
 			break;
-		case TransMode_:
-			if( strcasecmp(value, "Title") == 0 ){
-				transMode = Title;
-			}
-			else if( strcasecmp(value, "Content") == 0 ){
-				transMode = Content;
-			}
-			else{
-				transMode = All; /*default*/
-			}
-			break;
 		case Display_:
                         break;
 			display = strdup(value);
@@ -2413,7 +2413,9 @@ loadConfig(char *filename){
 		const char *home = getenv("HOME");
 		const char *configfile = "/.xcompmgrrc"; 
         wasNull = True;
-		filename = (char*)malloc((strlen(home)+strlen(configfile)+1)*sizeof(char));
+      int n = strlen(home)+strlen(configfile)+1;
+		filename = (char*)malloc(n*sizeof(char));
+      memset(filename,0,n);
 
 		strcat(filename, home);
 		strcat(filename, configfile);
@@ -2630,7 +2632,7 @@ main (int argc, char **argv)
 	opacityAtom = XInternAtom (dpy, OPACITY_PROP, False);
 	shadeAtom = XInternAtom (dpy, SHADE_PROP, False);
 	shapableAtom = XInternAtom (dpy, SHAPABLE_PROP, False);
-	titleHeightAtom = XInternAtom (dpy, TITLEHEIGHT_PROP, False);
+	decoHashAtom = XInternAtom (dpy, DECOHASH_PROP, False);
         dimAtom = XInternAtom (dpy, DIM_PROP, False);
         deskChangeAtom = XInternAtom (dpy, DESKCHANGE_PROP, False);
 	winTypeAtom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
@@ -2817,12 +2819,12 @@ main (int argc, char **argv)
 						else
 							printf("arrrg, window not found\n");
 					}
-					else if (ev.xproperty.atom == titleHeightAtom)
+					else if (ev.xproperty.atom == decoHashAtom)
 					{
 						win * w = find_win(dpy, ev.xproperty.window);
 						if (w)
 						{
-							w->titleHeight = get_titleHeight_prop(dpy, w);
+							w->decoHash = get_decoHash_prop(dpy, w);
 						}
 						else
 							printf("arrrg, window not found\n");
@@ -2856,8 +2858,9 @@ main (int argc, char **argv)
 							if (ev.xproperty.atom == opacityAtom)
 							{
 								tmp = get_opacity_prop(dpy, w, OPAQUE);
-								if (tmp == w->opacity)
-									break; /*skip if opacity does not change*/
+   							/*THis will most probably happen if window is in fade - resulting in that the fade process isn't updated or broken -> we may have a wrong opacity in the future*/
+   							/*if (tmp == w->opacity)
+									break;*/ /*skip if opacity does not change*/
 								if (fadeTrans)
 								{
 								    set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE, fade_out_step, 0, False, True, True, False);
