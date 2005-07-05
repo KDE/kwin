@@ -1822,6 +1822,7 @@ add_win (Display *dpy, Window id, Window prev)
 {
 	win				*new = malloc (sizeof (win));
 	win				**p;
+        unsigned int			tmp;
 
 	if (!new)
 		return;
@@ -1882,7 +1883,7 @@ add_win (Display *dpy, Window id, Window prev)
 	new->shadowSize = get_shadow_prop (dpy, new);
 	new->shapable = get_shapable_prop(dpy, new);
 	new->decoHash = get_decoHash_prop(dpy, new);
-        unsigned int tmp = get_dim_prop(dpy, new);
+	tmp = get_dim_prop(dpy, new);
         new->dimPicture = (tmp < OPAQUE) ? solid_picture (dpy, True, (double)tmp/OPAQUE, 0.1, 0.1, 0.1) : None;
 	new->windowType = determine_wintype (dpy, new->id);
         determine_mode (dpy, new);
