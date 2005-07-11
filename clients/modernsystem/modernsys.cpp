@@ -29,8 +29,11 @@ static unsigned char close_bits[] = {
 static unsigned char maximize_bits[] = {
     0x00, 0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0x00};
 
-static unsigned char minmax_bits[] = {
+static unsigned char r_minmax_bits[] = {
     0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
+
+static unsigned char l_minmax_bits[] = {
+    0x30, 0x18, 0xcc, 0xe6, 0xf3, 0xf9, 0xfc, 0xfc};
 
 static unsigned char unsticky_bits[] = {
     0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
@@ -307,7 +310,7 @@ void ModernButton::reset(unsigned long changed)
                 setBitmap(iconify_bits);
                 break;
             case MaxButton:
-                setBitmap( isOn() ? minmax_bits : maximize_bits );
+                setBitmap( isOn() ? (isLeft()?l_minmax_bits:r_minmax_bits) : maximize_bits );
                 break;
             case OnAllDesktopsButton:
                 setBitmap( isOn() ? unsticky_bits : sticky_bits );
