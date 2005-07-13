@@ -365,12 +365,12 @@ void ModernButton::drawButton(QPainter *p)
 
 void ModernSys::reset( unsigned long changed)
 {
+    KCommonDecoration::reset(changed);
+
     titleBuffer.resize(0, 0);
     recalcTitleBuffer();
     resetButtons();
-    widget()->repaint();
-
-    KCommonDecoration::reset(changed);
+    widget()->update();
 }
 
 ModernSys::ModernSys( KDecorationBridge* b, KDecorationFactory* f )
