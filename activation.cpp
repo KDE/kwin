@@ -848,8 +848,14 @@ void Client::startupIdChanged()
     bool asn_valid = workspace()->checkStartupNotification( window(), asn_id, asn_data );
     if( !asn_valid )
         return;
-    if( asn_data.desktop() != 0 && !isOnAllDesktops())
-        workspace()->sendClientToDesktop( this, asn_data.desktop(), true );
+    // If the ASN contains desktop, move it to the desktop, otherwise move it to the current
+    // desktop (since the new ASN should make the window act like if it's a new application
+    // launched). However don't affect the window's desktop if it's set to be on all desktops.
+    int desktop = workspace()->currentDesktop();
+    if( asn_data.desktop() != 0 )
+        desktop = asn_data.desktop();
+    if( !isOnAllDesktops())
+        workspace()->sendClientToDesktop( this, desktop, true );
     Time timestamp = asn_id.timestamp();
     if( timestamp == 0 && asn_data.timestamp() != -1U )
         timestamp = asn_data.timestamp();
