@@ -28,6 +28,9 @@ class Atoms
         Atom wm_take_focus;
         Atom wm_change_state;
         Atom wm_client_leader;
+        Atom wm_window_role;
+        Atom wm_state;
+        Atom sm_client_id;
 
         Atom motif_wm_hints;
         Atom net_wm_context_help;

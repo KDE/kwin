@@ -25,6 +25,9 @@
 #include <qapplication.h>
 
 #include "quartz.h"
+//Added by qt3to4:
+#include <QPixmap>
+#include <QPaintEvent>
 
 
 namespace Quartz {
@@ -370,9 +373,9 @@ void QuartzHandler::freePixmaps()
 }
 
 
-QValueList< QuartzHandler::BorderSize > QuartzHandler::borderSizes() const
+QList< QuartzHandler::BorderSize > QuartzHandler::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+  return QList< BorderSize >() << BorderNormal << BorderLarge <<
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
@@ -381,7 +384,7 @@ QuartzButton::QuartzButton(ButtonType type, QuartzClient *parent, const char *na
     : KCommonDecorationButton(type, parent, name)
 {
     // Eliminate any possible background flicker
-    setBackgroundMode( QWidget::NoBackground );
+    setBackgroundMode( Qt::NoBackground );
 
 	deco = 0;
 }
@@ -484,7 +487,7 @@ void QuartzButton::drawButton(QPainter *p)
 					btnpix = isOn() ? *ipinDownPix : *ipinUpPix;
 
 			} else
-				btnpix = decoration()->icon().pixmap( QIconSet::Small, QIconSet::Normal);
+				btnpix = decoration()->icon().pixmap( QIcon::Small, QIcon::Normal);
 
 			// Shrink the miniIcon for tiny titlebars.
 			if ( height() < 16)
@@ -742,7 +745,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
     KPixmap* titleBuffer = new KPixmap;
     titleBuffer->resize( maxFull?w-2:(w-2*(borderSize-1)), titleHeight );
 
-    QPainter p2( titleBuffer, this );
+    QPainter p2( titleBuffer );
 
 	// subtract titleBlocks pixmap width and some
 	int rightoffset = r.x()+r.width()-titleBlocks->width()-borderSize;
@@ -769,7 +772,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
 
     p2.setPen( options()->color(ColorFont, isActive() ));
     p2.drawText(r.x()+4-borderSize, 0, r.width()-3, r.height(),
-                AlignLeft | AlignVCenter, caption() );
+                Qt::AlignLeft | Qt::AlignVCenter, caption() );
     p2.end();
 
     p.drawPixmap( maxFull?1:borderSize-1, borderSize-1, *titleBuffer );

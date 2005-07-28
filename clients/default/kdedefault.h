@@ -13,7 +13,6 @@
 #ifndef _KDE_DEFAULT_H
 #define _KDE_DEFAULT_H
 
-#include <qbutton.h>
 #include <qbitmap.h>
 #include <qdatetime.h>
 #include <kpixmap.h>
@@ -35,7 +34,7 @@ class KDEDefaultHandler: public KDecorationFactory
 		~KDEDefaultHandler();
                 KDecoration* createDecoration( KDecorationBridge* b );
 		bool reset( unsigned long changed );
-		virtual QValueList< BorderSize > borderSizes() const;
+		virtual QList< BorderSize > borderSizes() const;
 		virtual bool supports( Ability ability );
 
 	private:

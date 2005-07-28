@@ -28,10 +28,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
+#include <QX11Info>
+#include <stdio.h>
 
 #include "atoms.h"
-
-extern Time qt_x_time;
 
 #endif
 
@@ -54,7 +54,7 @@ bool Shape::hasShape( WId w)
     int boundingShaped = 0, clipShaped = 0;
     if (!kwin_has_shape)
         return FALSE;
-    XShapeQueryExtents(qt_xdisplay(), w,
+    XShapeQueryExtents(QX11Info::display(), w,
                        &boundingShaped, &xws, &yws, &wws, &hws,
                        &clipShaped, &xbs, &ybs, &wbs, &hbs);
     return boundingShaped != 0;
@@ -69,7 +69,7 @@ void Shape::init()
     {
     int dummy;
     kwin_has_shape =
-      XShapeQueryExtension(qt_xdisplay(), &kwin_shape_event, &dummy);
+      XShapeQueryExtension(QX11Info::display(), &kwin_shape_event, &dummy);
     }
 
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
@@ -80,7 +80,7 @@ void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
     unsigned long length, after;
     unsigned char* data;
     MwmHints* hints = 0;
-    if ( XGetWindowProperty( qt_xdisplay(), w, atoms->motif_wm_hints, 0, 5,
+    if ( XGetWindowProperty( QX11Info::display(), w, atoms->motif_wm_hints, 0, 5,
                              FALSE, atoms->motif_wm_hints, &type, &format,
                              &length, &after, &data ) == Success ) 
         {
@@ -133,10 +133,10 @@ KWinSelectionOwner::KWinSelectionOwner( int screen_P )
 Atom KWinSelectionOwner::make_selection_atom( int screen_P )
     {
     if( screen_P < 0 )
-        screen_P = DefaultScreen( qt_xdisplay());
+        screen_P = DefaultScreen( QX11Info::display());
     char tmp[ 30 ];
     sprintf( tmp, "WM_S%d", screen_P );
-    return XInternAtom( qt_xdisplay(), tmp, False );
+    return XInternAtom( QX11Info::display(), tmp, False );
     }
 
 void KWinSelectionOwner::getAtoms()
@@ -147,7 +147,7 @@ void KWinSelectionOwner::getAtoms()
         Atom atoms[ 1 ];
         const char* const names[] =
             { "VERSION" };
-        XInternAtoms( qt_xdisplay(), const_cast< char** >( names ), 1, False, atoms );
+        XInternAtoms( QX11Info::display(), const_cast< char** >( names ), 1, False, atoms );
         xa_version = atoms[ 0 ];
         }
     }
@@ -157,7 +157,7 @@ void KWinSelectionOwner::replyTargets( Atom property_P, Window requestor_P )
     KSelectionOwner::replyTargets( property_P, requestor_P );
     Atom atoms[ 1 ] = { xa_version };
     // PropModeAppend !
-    XChangeProperty( qt_xdisplay(), requestor_P, property_P, XA_ATOM, 32, PropModeAppend,
+    XChangeProperty( QX11Info::display(), requestor_P, property_P, XA_ATOM, 32, PropModeAppend,
         reinterpret_cast< unsigned char* >( atoms ), 1 );
     }
 
@@ -166,7 +166,7 @@ bool KWinSelectionOwner::genericReply( Atom target_P, Atom property_P, Window re
     if( target_P == xa_version )
         {
         long version[] = { 2, 0 };
-        XChangeProperty( qt_xdisplay(), requestor_P, property_P, XA_INTEGER, 32,
+        XChangeProperty( QX11Info::display(), requestor_P, property_P, XA_INTEGER, 32,
             PropModeReplace, reinterpret_cast< unsigned char* >( &version ), 2 );
         }
     else
@@ -177,16 +177,16 @@ bool KWinSelectionOwner::genericReply( Atom target_P, Atom property_P, Window re
 Atom KWinSelectionOwner::xa_version = None;
 
 
-QCString getStringProperty(WId w, Atom prop, char separator)
+QByteArray getStringProperty(WId w, Atom prop, char separator)
     {
     Atom type;
     int format, status;
     unsigned long nitems = 0;
     unsigned long extra = 0;
     unsigned char *data = 0;
-    QCString result = "";
+    QByteArray result = "";
     KXErrorHandler handler; // ignore errors
-    status = XGetWindowProperty( qt_xdisplay(), w, prop, 0, 10000,
+    status = XGetWindowProperty( QX11Info::display(), w, prop, 0, 10000,
                                  FALSE, XA_STRING, &type, &format,
                                  &nitems, &extra, &data );
     if ( status == Success) 
@@ -241,8 +241,8 @@ static Bool update_x_time_predicate( Display*, XEvent* event, XPointer )
 }
 
 /*
- Updates qt_x_time. This used to simply fetch current timestamp from the server,
- but that can cause qt_x_time to be newer than timestamp of events that are
+ Updates QX11Info::appTime(). This used to simply fetch current timestamp from the server,
+ but that can cause QX11Info::appTime() to be newer than timestamp of events that are
  still in our events queue, thus e.g. making XSetInputFocus() caused by such
  event to be ignored. Therefore events queue is searched for first
  event with timestamp, and extra PropertyNotify is generated in order to make
@@ -254,20 +254,20 @@ void updateXTime()
     if ( !w )
         w = new QWidget;
     long data = 1;
-    XChangeProperty(qt_xdisplay(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
+    XChangeProperty(QX11Info::display(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
                     PropModeAppend, (unsigned char*) &data, 1);
     next_x_time = CurrentTime;
     XEvent dummy;
-    XCheckIfEvent( qt_xdisplay(), &dummy, update_x_time_predicate, NULL );
+    XCheckIfEvent( QX11Info::display(), &dummy, update_x_time_predicate, NULL );
     if( next_x_time == CurrentTime )
         {
-        XSync( qt_xdisplay(), False );
-        XCheckIfEvent( qt_xdisplay(), &dummy, update_x_time_predicate, NULL );
+        XSync( QX11Info::display(), False );
+        XCheckIfEvent( QX11Info::display(), &dummy, update_x_time_predicate, NULL );
         }
     assert( next_x_time != CurrentTime );
-    qt_x_time = next_x_time;
+    QX11Info::setAppTime( next_x_time );
     XEvent ev; // remove the PropertyNotify event from the events queue
-    XWindowEvent( qt_xdisplay(), w->winId(), PropertyChangeMask, &ev );
+    XWindowEvent( QX11Info::display(), w->winId(), PropertyChangeMask, &ev );
     }
 
 static int server_grab_count = 0;
@@ -275,18 +275,18 @@ static int server_grab_count = 0;
 void grabXServer()
     {
     if( ++server_grab_count == 1 )
-        XGrabServer( qt_xdisplay());
+        XGrabServer( QX11Info::display());
     }
 
 void ungrabXServer()
     {
     assert( server_grab_count > 0 );
     if( --server_grab_count == 0 )
-        XUngrabServer( qt_xdisplay());
+        XUngrabServer( QX11Info::display());
     }
 #endif
 
-bool isLocalMachine( const QCString& host )
+bool isLocalMachine( const QByteArray& host )
     {
 #ifdef HOST_NAME_MAX
     char hostnamebuf[HOST_NAME_MAX];
@@ -312,8 +312,8 @@ ShortcutDialog::ShortcutDialog( const KShortcut& cut )
     // make it a popup, so that it has the grab
     XSetWindowAttributes attrs;
     attrs.override_redirect = True;
-    XChangeWindowAttributes( qt_xdisplay(), winId(), CWOverrideRedirect, &attrs );
-    setWFlags( WType_Popup );
+    XChangeWindowAttributes( QX11Info::display(), winId(), CWOverrideRedirect, &attrs );
+    setWindowFlags( Qt::Popup );
     }
 
 void ShortcutDialog::accept()
@@ -325,12 +325,12 @@ void ShortcutDialog::accept()
         KKeySequence seq = shortcut().seq( i );
         if( seq.isNull())
             break;
-        if( seq.key( 0 ) == Key_Escape )
+        if( seq.key( 0 ) == Qt::Key_Escape )
             {
             reject();
             return;
             }
-        if( seq.key( 0 ) == Key_Space )
+        if( seq.key( 0 ) == Qt::Key_Space )
             { // clear
             setShortcut( KShortcut());
             KShortcutDialog::accept();

@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SM_H
 #define KWIN_SM_H
 
+#include <QDataStream>
 #include <X11/SM/SMlib.h>
 #include <kapplication.h>
 #include <netwm_def.h>
@@ -23,12 +24,12 @@ namespace KWinInternal
 
 struct SessionInfo
     {
-    QCString sessionId;
-    QCString windowRole;
-    QCString wmCommand;
-    QCString wmClientMachine;
-    QCString resourceName;
-    QCString resourceClass;
+    QByteArray sessionId;
+    QByteArray windowRole;
+    QByteArray wmCommand;
+    QByteArray wmClientMachine;
+    QByteArray resourceName;
+    QByteArray resourceClass;
 
     QRect geometry;
     QRect restore;

@@ -18,7 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <fixx11h.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <qpopupmenu.h>
+#include <Q3PopupMenu>
 #include <klocale.h>
 #include <qregexp.h>
 #include <qpainter.h>
@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kprocess.h>
 #include <kglobalaccel.h>
 #include <dcopclient.h>
+#include <QDesktopWidget>
 
 #include "plugins.h"
 #include "client.h"
@@ -43,8 +44,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include <X11/cursorfont.h>
-
-extern Time qt_x_time;
+#include <QX11Info>
+#include <stdio.h>
 
 namespace KWinInternal
 {
@@ -121,10 +122,10 @@ Workspace::Workspace( bool restore )
     {
     _self = this;
     mgr = new PluginMgr;
-    root = qt_xrootwin();
-    default_colormap = DefaultColormap(qt_xdisplay(), qt_xscreen() );
+    root = QX11Info::appRootWindow();
+	QX11Info info;
+    default_colormap = DefaultColormap(QX11Info::display(), info.screen() );
     installed_colormap = default_colormap;
-    session.setAutoDelete( TRUE );
 
     connect( &temporaryRulesMessages, SIGNAL( gotMessage( const QString& )),
         this, SLOT( gotTemporaryRulesMessage( const QString& )));
@@ -134,8 +135,8 @@ Workspace::Workspace( bool restore )
 
     delayFocusTimer = 0; 
     
-    electric_time_first = qt_x_time;
-    electric_time_last = qt_x_time;
+    electric_time_first = QX11Info::appTime();
+    electric_time_last = QX11Info::appTime();
 
     if ( restore )
       loadSessionInfo();
@@ -148,8 +149,8 @@ Workspace::Workspace( bool restore )
       new QWidget(
         0,
         "desktop_widget",
-        Qt::WType_Desktop | Qt::WPaintUnclipped
-    );
+        Qt::Desktop );
+	desktop_widget->setAttribute( Qt::WA_PaintUnclipped );
 
     kapp->setGlobalMouseTracking( true ); // so that this doesn't mess eventmask on root window later
     // call this before XSelectInput() on the root window
@@ -157,7 +158,7 @@ Workspace::Workspace( bool restore )
         KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this );
 
     // select windowmanager privileges
-    XSelectInput(qt_xdisplay(), root,
+    XSelectInput(QX11Info::display(), root,
                  KeyPressMask |
                  PropertyChangeMask |
                  ColormapChangeMask |
@@ -172,8 +173,8 @@ Workspace::Workspace( bool restore )
     long data = 1;
 
     XChangeProperty(
-      qt_xdisplay(),
-      qt_xrootwin(),
+      QX11Info::display(),
+      QX11Info::appRootWindow(),
       atoms->kwin_running,
       atoms->kwin_running,
       32,
@@ -203,7 +204,6 @@ Workspace::Workspace( bool restore )
         }
     }
 
-
 void Workspace::init()
     {
     checkElectricBorders();
@@ -213,13 +213,13 @@ void Workspace::init()
 //     maximizedWindowCounter = 0;
     
     supportWindow = new QWidget;
-    XLowerWindow( qt_xdisplay(), supportWindow->winId()); // see usage in layers.cpp
+    XLowerWindow( QX11Info::display(), supportWindow->winId()); // see usage in layers.cpp
 
     XSetWindowAttributes attr;
     attr.override_redirect = 1;
-    null_focus_window = XCreateWindow( qt_xdisplay(), qt_xrootwin(), -1,-1, 1, 1, 0, CopyFromParent,
+    null_focus_window = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), -1,-1, 1, 1, 0, CopyFromParent,
         InputOnly, CopyFromParent, CWOverrideRedirect, &attr );
-    XMapWindow(qt_xdisplay(), null_focus_window);
+    XMapWindow(QX11Info::display(), null_focus_window);
 
     unsigned long protocols[ 5 ] =
         {
@@ -300,12 +300,13 @@ void Workspace::init()
         ,
         };
 
-    rootInfo = new RootInfo( this, qt_xdisplay(), supportWindow->winId(), "KWin",
-        protocols, 5, qt_xscreen() );
+	QX11Info info;
+    rootInfo = new RootInfo( this, QX11Info::display(), supportWindow->winId(), "KWin",
+        protocols, 5, info.screen() );
 
     loadDesktopSettings();
     // extra NETRootInfo instance in Client mode is needed to get the values of the properties
-    NETRootInfo client_info( qt_xdisplay(), NET::ActiveWindow | NET::CurrentDesktop );
+    NETRootInfo client_info( QX11Info::display(), NET::ActiveWindow | NET::CurrentDesktop );
     int initial_desktop;
     if( !kapp->isSessionRestored())
         initial_desktop = client_info.currentDesktop();
@@ -336,8 +337,8 @@ void Workspace::init()
         ++block_focus; // because it will be set below
 
     char nm[ 100 ];
-    sprintf( nm, "_KDE_TOPMENU_OWNER_S%d", DefaultScreen( qt_xdisplay()));
-    Atom topmenu_atom = XInternAtom( qt_xdisplay(), nm, False );
+    sprintf( nm, "_KDE_TOPMENU_OWNER_S%d", DefaultScreen( QX11Info::display()));
+    Atom topmenu_atom = XInternAtom( QX11Info::display(), nm, False );
     topmenu_selection = new KSelectionOwner( topmenu_atom );
     topmenu_watcher = new KSelectionWatcher( topmenu_atom );
 // TODO grabXServer(); - where exactly put this? topmenu selection claiming down belong must be before
@@ -352,11 +353,11 @@ void Workspace::init()
 
         unsigned int i, nwins;
         Window root_return, parent_return, *wins;
-        XQueryTree(qt_xdisplay(), root, &root_return, &parent_return, &wins, &nwins);
+        XQueryTree(QX11Info::display(), root, &root_return, &parent_return, &wins, &nwins);
         for (i = 0; i < nwins; i++) 
             {
             XWindowAttributes attr;
-            XGetWindowAttributes(qt_xdisplay(), wins[i], &attr);
+            XGetWindowAttributes(QX11Info::display(), wins[i], &attr);
             if (attr.override_redirect )
                 continue;
             if( topmenu_space && topmenu_space->winId() == wins[ i ] )
@@ -366,10 +367,10 @@ void Workspace::init()
                 if ( addSystemTrayWin( wins[i] ) )
                     continue;
                 Client* c = createClient( wins[i], true );
-                if ( c != NULL && root != qt_xrootwin() ) 
+                if ( c != NULL && root != QX11Info::appRootWindow() ) 
                     { // TODO what is this?
                 // TODO may use QWidget:.create
-                    XReparentWindow( qt_xdisplay(), c->frameId(), root, 0, 0 );
+                    XReparentWindow( QX11Info::display(), c->frameId(), root, 0, 0 );
                     c->move(0,0);
                     }
                 }
@@ -438,8 +439,8 @@ Workspace::~Workspace()
     delete tab_box;
     delete popupinfo;
     delete popup;
-    if ( root == qt_xrootwin() )
-        XDeleteProperty(qt_xdisplay(), qt_xrootwin(), atoms->kwin_running);
+    if ( root == QX11Info::appRootWindow() )
+        XDeleteProperty(QX11Info::display(), QX11Info::appRootWindow(), atoms->kwin_running);
 
     writeWindowRules();
     KGlobal::config()->sync();
@@ -460,7 +461,9 @@ Workspace::~Workspace()
         delete rules.front();
         rules.pop_front();
         }
-    XDestroyWindow( qt_xdisplay(), null_focus_window );
+	foreach ( SessionInfo* s, session ) 
+		delete s;
+    XDestroyWindow( QX11Info::display(), null_focus_window );
 // TODO    ungrabXServer();
     _self = 0;
     }
@@ -759,11 +762,11 @@ void Workspace::updateToolWindows( bool also_hide )
                 to_show.append( *it );
             }
         } // first show new ones, then hide
-    for( ClientList::ConstIterator it = to_show.fromLast();
-         it != to_show.end();
-         --it ) // from topmost
+	for( int i = to_show.size() - 1;
+              i >= 0;
+              --i ) //from topmost
         // TODO since this is in stacking order, the order of taskbar entries changes :(
-        (*it)->hideClient( false );
+            to_show.at( i )->hideClient( false );
     if( also_hide )
         {
         for( ClientList::ConstIterator it = to_hide.begin();
@@ -793,7 +796,7 @@ void Workspace::updateColormap()
         cmap = activeClient()->colormap();
     if ( cmap != installed_colormap ) 
         {
-        XInstallColormap(qt_xdisplay(), cmap );
+        XInstallColormap(QX11Info::display(), cmap );
         installed_colormap = cmap;
         }
     }
@@ -893,7 +896,7 @@ void Workspace::slotReconfigure()
 void Workspace::loadDesktopSettings()
     {
     KConfig* c = KGlobal::config();
-    QCString groupname;
+    QString groupname;
     if (screen_number == 0)
         groupname = "Desktops";
     else
@@ -920,7 +923,7 @@ void Workspace::loadDesktopSettings()
 void Workspace::saveDesktopSettings()
     {
     KConfig* c = KGlobal::config();
-    QCString groupname;
+    QString groupname;
     if (screen_number == 0)
         groupname = "Desktops";
     else
@@ -1017,18 +1020,18 @@ class ObscuringWindows
         ~ObscuringWindows();
         void create( Client* c );
     private:
-        QValueList<Window> obscuring_windows;
-        static QValueList<Window>* cached;
+        QList<Window> obscuring_windows;
+        static QList<Window>* cached;
         static unsigned int max_cache_size;
     };
 
-QValueList<Window>* ObscuringWindows::cached = 0;
+QList<Window>* ObscuringWindows::cached = 0;
 unsigned int ObscuringWindows::max_cache_size = 0;
 
 void ObscuringWindows::create( Client* c )
     {
     if( cached == 0 )
-        cached = new QValueList<Window>;
+        cached = new QList<Window>;
     Window obs_win;
     XWindowChanges chngs;
     int mask = CWSibling | CWStackMode;
@@ -1046,29 +1049,29 @@ void ObscuringWindows::create( Client* c )
         XSetWindowAttributes a;
         a.background_pixmap = None;
         a.override_redirect = True;
-        obs_win = XCreateWindow( qt_xdisplay(), qt_xrootwin(), c->x(), c->y(),
+        obs_win = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), c->x(), c->y(),
             c->width(), c->height(), 0, CopyFromParent, InputOutput,
             CopyFromParent, CWBackPixmap | CWOverrideRedirect, &a );
         }
     chngs.sibling = c->frameId();
     chngs.stack_mode = Below;
-    XConfigureWindow( qt_xdisplay(), obs_win, mask, &chngs );
-    XMapWindow( qt_xdisplay(), obs_win );
+    XConfigureWindow( QX11Info::display(), obs_win, mask, &chngs );
+    XMapWindow( QX11Info::display(), obs_win );
     obscuring_windows.append( obs_win );
     }
 
 ObscuringWindows::~ObscuringWindows()
     {
-    max_cache_size = QMAX( max_cache_size, obscuring_windows.count() + 4 ) - 1;
-    for( QValueList<Window>::ConstIterator it = obscuring_windows.begin();
+    max_cache_size = qMax( ( int )max_cache_size, obscuring_windows.count() + 4 ) - 1;
+    for( QList<Window>::ConstIterator it = obscuring_windows.begin();
          it != obscuring_windows.end();
          ++it ) 
         {
-        XUnmapWindow( qt_xdisplay(), *it );
-        if( cached->count() < max_cache_size )
+        XUnmapWindow( QX11Info::display(), *it );
+        if( cached->count() < ( int )max_cache_size )
             cached->prepend( *it );
         else
-            XDestroyWindow( qt_xdisplay(), *it );
+            XDestroyWindow( QX11Info::display(), *it );
         }
     }
 
@@ -1116,9 +1119,9 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         if( movingClient && !movingClient->isOnDesktop( new_desktop ))
             movingClient->setDesktop( new_desktop );
 
-        for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
-            if ( (*it)->isOnDesktop( new_desktop ) )
-                (*it)->updateVisibility();
+        for( int i = stacking_order.size() - 1; i >= 0 ; --i )
+            if ( stacking_order.at( i )->isOnDesktop( new_desktop ) )
+                stacking_order.at( i )->updateVisibility();
 
         --block_showing_desktop;
         if( showingDesktop()) // do this only after desktop change to avoid flicker
@@ -1141,11 +1144,13 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
         if ( !c ) 
             {
-            for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) 
+                for( int i = focus_chain.size() - 1;
+                     i >= 0;
+                     --i )
                 {
-                if ( (*it)->isShown( false ) && !(*it)->isOnAllDesktops() && (*it)->isOnCurrentDesktop()) 
+                if ( focus_chain.at( i )->isShown( false ) && !focus_chain.at(  i )->isOnAllDesktops() && focus_chain.at(  i )->isOnCurrentDesktop()) 
                     {
-                    c = *it;
+                    c = focus_chain.at(  i );
                     break;
                     }
                 }
@@ -1153,11 +1158,13 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
         if ( !c ) 
             {
-            for( ClientList::ConstIterator it = focus_chain.fromLast(); it != focus_chain.end(); --it) 
+                for( int i = focus_chain.size() - 1;
+                     i >= 0;
+                     --i )
                 {
-                if ( (*it)->isShown( false ) && (*it)->isOnCurrentDesktop()) 
+                if ( focus_chain.at(  i )->isShown( false ) && focus_chain.at(  i )->isOnCurrentDesktop()) 
                     {
-                    c = *it;
+                    c = focus_chain.at(  i );
                     break;
                     }
                 }
@@ -1182,7 +1189,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         {
         Window w_tmp;
         int i_tmp;
-        XGetInputFocus( qt_xdisplay(), &w_tmp, &i_tmp );
+        XGetInputFocus( QX11Info::display(), &w_tmp, &i_tmp );
         if( w_tmp == null_focus_window ) // CHECKME?
             requestFocus( findDesktop( true, currentDesktop()));
         }
@@ -1194,7 +1201,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     //   Output: chain = { 3, 1, 2, 4 }.
 //    kdDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
 //      .arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
-    for( int i = desktop_focus_chain.find( current_desktop ); i > 0; i-- )
+    for( int i = desktop_focus_chain.indexOf( current_desktop ); i > 0; i-- )
         desktop_focus_chain[i] = desktop_focus_chain[i-1];
     desktop_focus_chain[0] = current_desktop;
 
@@ -1469,15 +1476,15 @@ bool Workspace::addSystemTrayWin( WId w )
     if ( systemTrayWins.contains( w ) )
         return TRUE;
 
-    NETWinInfo ni( qt_xdisplay(), w, root, NET::WMKDESystemTrayWinFor );
+    NETWinInfo ni( QX11Info::display(), w, root, NET::WMKDESystemTrayWinFor );
     WId trayWinFor = ni.kdeSystemTrayWinFor();
     if ( !trayWinFor )
         return FALSE;
     systemTrayWins.append( SystemTrayWindow( w, trayWinFor ) );
-    XSelectInput( qt_xdisplay(), w,
+    XSelectInput( QX11Info::display(), w,
                   StructureNotifyMask
                   );
-    XAddToSaveSet( qt_xdisplay(), w );
+    XAddToSaveSet( QX11Info::display(), w );
     propagateSystemTrayWins();
     return TRUE;
     }
@@ -1500,7 +1507,7 @@ bool Workspace::removeSystemTrayWin( WId w, bool check )
     // embedding it, allowing KWin to figure out. Kicker just mustn't
     // crash before removing it again ... *shrug* .
         int num_props;
-        Atom* props = XListProperties( qt_xdisplay(), w, &num_props );
+        Atom* props = XListProperties( QX11Info::display(), w, &num_props );
         if( props != NULL )
             {
             for( int i = 0;
@@ -1552,7 +1559,7 @@ void Workspace::killWindowId( Window window_to_kill )
         Window parent, root;
         Window* children;
         unsigned int children_count;
-        XQueryTree( qt_xdisplay(), window, &root, &parent, &children, &children_count );
+        XQueryTree( QX11Info::display(), window, &root, &parent, &children, &children_count );
         if( children != NULL )
             XFree( children );
         if( window == root ) // we didn't find the client, probably an override-redirect window
@@ -1562,7 +1569,7 @@ void Workspace::killWindowId( Window window_to_kill )
     if( client != NULL )
         client->killWindow();
     else
-        XKillClient( qt_xdisplay(), window_to_kill );
+        XKillClient( QX11Info::display(), window_to_kill );
     }
 
 
@@ -1592,7 +1599,7 @@ void Workspace::slotGrabWindow()
             {
 	    //As the first step, get the mask from XShape.
             int count, order;
-            XRectangle* rects = XShapeGetRectangles( qt_xdisplay(), active_client->frameId(),
+            XRectangle* rects = XShapeGetRectangles( QX11Info::display(), active_client->frameId(),
                                                      ShapeBounding, &count, &order);
 	    //The ShapeBounding region is the outermost shape of the window;
 	    //ShapeBounding - ShapeClipping is defined to be the border.
@@ -1612,13 +1619,13 @@ void Workspace::slotGrabWindow()
 
 		//Get the masked away area.
                 QRegion maskedAway = bbox - contents;
-                QMemArray<QRect> maskedAwayRects = maskedAway.rects();
+                QVector<QRect> maskedAwayRects = maskedAway.rects();
 
 		//Construct a bitmap mask from the rectangles
                 QBitmap mask( snapshot.width(), snapshot.height());
                 QPainter p(&mask);
                 p.fillRect(0, 0, mask.width(), mask.height(), Qt::color1);
-                for (uint pos = 0; pos < maskedAwayRects.count(); pos++)
+                for (int pos = 0; pos < maskedAwayRects.count(); pos++)
                     p.fillRect(maskedAwayRects[pos], Qt::color0);
                 p.end();
                 snapshot.setMask(mask);
@@ -1637,7 +1644,7 @@ void Workspace::slotGrabWindow()
 */
 void Workspace::slotGrabDesktop()
     {
-    QPixmap p = QPixmap::grabWindow( qt_xrootwin() );
+    QPixmap p = QPixmap::grabWindow( QX11Info::appRootWindow() );
     QClipboard *cb = QApplication::clipboard();
     cb->setPixmap( p );
     }
@@ -1651,15 +1658,15 @@ void Workspace::slotMouseEmulation()
 
     if ( mouse_emulation ) 
         {
-        XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+        XUngrabKeyboard(QX11Info::display(), QX11Info::appTime());
         mouse_emulation = FALSE;
         return;
         }
 
-    if ( XGrabKeyboard(qt_xdisplay(),
+    if ( XGrabKeyboard(QX11Info::display(),
                        root, FALSE,
                        GrabModeAsync, GrabModeAsync,
-                       qt_x_time) == GrabSuccess ) 
+                       QX11Info::appTime()) == GrabSuccess ) 
         {
         mouse_emulation = TRUE;
         mouse_emulation_state = 0;
@@ -1676,7 +1683,7 @@ void Workspace::slotMouseEmulation()
 WId Workspace::getMouseEmulationWindow()
     {
     Window root;
-    Window child = qt_xrootwin();
+    Window child = QX11Info::appRootWindow();
     int root_x, root_y, lx, ly;
     uint state;
     Window w;
@@ -1686,7 +1693,7 @@ WId Workspace::getMouseEmulationWindow()
         w = child;
         if (!c)
             c = findClient( FrameIdMatchPredicate( w ));
-        XQueryPointer( qt_xdisplay(), w, &root, &child,
+        XQueryPointer( QX11Info::display(), w, &root, &child,
                        &root_x, &root_y, &lx, &ly, &state );
         } while  ( child != None && child != w );
 
@@ -1707,38 +1714,38 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
         {
         int x, y;
         Window xw;
-        XTranslateCoordinates( qt_xdisplay(), qt_xrootwin(), w, pos.x(), pos.y(), &x, &y, &xw );
+        XTranslateCoordinates( QX11Info::display(), QX11Info::appRootWindow(), w, pos.x(), pos.y(), &x, &y, &xw );
         if ( type == EmuMove ) 
             { // motion notify events
             XMotionEvent e;
             e.type = MotionNotify;
             e.window = w;
-            e.root = qt_xrootwin();
+            e.root = QX11Info::appRootWindow();
             e.subwindow = w;
-            e.time = qt_x_time;
+            e.time = QX11Info::appTime();
             e.x = x;
             e.y = y;
             e.x_root = pos.x();
             e.y_root = pos.y();
             e.state = state;
             e.is_hint = NotifyNormal;
-            XSendEvent( qt_xdisplay(), w, TRUE, ButtonMotionMask, (XEvent*)&e );
+            XSendEvent( QX11Info::display(), w, TRUE, ButtonMotionMask, (XEvent*)&e );
             }
         else 
             {
             XButtonEvent e;
             e.type = type == EmuRelease ? ButtonRelease : ButtonPress;
             e.window = w;
-            e.root = qt_xrootwin();
+            e.root = QX11Info::appRootWindow();
             e.subwindow = w;
-            e.time = qt_x_time;
+            e.time = QX11Info::appTime();
             e.x = x;
             e.y = y;
             e.x_root = pos.x();
             e.y_root = pos.y();
             e.state = state;
             e.button = button;
-            XSendEvent( qt_xdisplay(), w, TRUE, ButtonPressMask, (XEvent*)&e );
+            XSendEvent( QX11Info::display(), w, TRUE, ButtonPressMask, (XEvent*)&e );
 
             if ( type == EmuPress ) 
                 {
@@ -1780,9 +1787,9 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
  */
 bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     {
-    if ( root != qt_xrootwin() )
+    if ( root != QX11Info::appRootWindow() )
         return FALSE;
-    int kc = XKeycodeToKeysym(qt_xdisplay(), ev.keycode, 0);
+    int kc = XKeycodeToKeysym(QX11Info::display(), ev.keycode, 0);
     int km = ev.state & (ControlMask | Mod1Mask | ShiftMask);
 
     bool is_control = km & ControlMask;
@@ -1857,7 +1864,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
             }
     // fall through
         case XK_Escape:
-            XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+            XUngrabKeyboard(QX11Info::display(), QX11Info::appTime());
             mouse_emulation = FALSE;
             return TRUE;
         default:
@@ -1943,58 +1950,58 @@ void Workspace::createBorderWindows()
     attributes.event_mask =  (EnterWindowMask | LeaveWindowMask |
                               VisibilityChangeMask);
     valuemask=  (CWOverrideRedirect | CWEventMask | CWCursor );
-    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+    attributes.cursor = XCreateFontCursor(QX11Info::display(),
                                           XC_sb_up_arrow);
-    electric_top_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+    electric_top_border = XCreateWindow (QX11Info::display(), QX11Info::appRootWindow(),
                                 0,0,
                                 r.width(),1,
                                 0,
                                 CopyFromParent, InputOnly,
                                 CopyFromParent,
                                 valuemask, &attributes);
-    XMapWindow(qt_xdisplay(), electric_top_border);
+    XMapWindow(QX11Info::display(), electric_top_border);
 
-    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+    attributes.cursor = XCreateFontCursor(QX11Info::display(),
                                           XC_sb_down_arrow);
-    electric_bottom_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+    electric_bottom_border = XCreateWindow (QX11Info::display(), QX11Info::appRootWindow(),
                                    0,r.height()-1,
                                    r.width(),1,
                                    0,
                                    CopyFromParent, InputOnly,
                                    CopyFromParent,
                                    valuemask, &attributes);
-    XMapWindow(qt_xdisplay(), electric_bottom_border);
+    XMapWindow(QX11Info::display(), electric_bottom_border);
 
-    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+    attributes.cursor = XCreateFontCursor(QX11Info::display(),
                                           XC_sb_left_arrow);
-    electric_left_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+    electric_left_border = XCreateWindow (QX11Info::display(), QX11Info::appRootWindow(),
                                  0,0,
                                  1,r.height(),
                                  0,
                                  CopyFromParent, InputOnly,
                                  CopyFromParent,
                                  valuemask, &attributes);
-    XMapWindow(qt_xdisplay(), electric_left_border);
+    XMapWindow(QX11Info::display(), electric_left_border);
 
-    attributes.cursor = XCreateFontCursor(qt_xdisplay(),
+    attributes.cursor = XCreateFontCursor(QX11Info::display(),
                                           XC_sb_right_arrow);
-    electric_right_border = XCreateWindow (qt_xdisplay(), qt_xrootwin(),
+    electric_right_border = XCreateWindow (QX11Info::display(), QX11Info::appRootWindow(),
                                   r.width()-1,0,
                                   1,r.height(),
                                   0,
                                   CopyFromParent, InputOnly,
                                   CopyFromParent,
                                   valuemask, &attributes);
-    XMapWindow(qt_xdisplay(),  electric_right_border);
+    XMapWindow(QX11Info::display(),  electric_right_border);
     // Set XdndAware on the windows, so that DND enter events are received (#86998)
     Atom version = 4; // XDND version
-    XChangeProperty( qt_xdisplay(), electric_top_border, atoms->xdnd_aware, XA_ATOM,
+    XChangeProperty( QX11Info::display(), electric_top_border, atoms->xdnd_aware, XA_ATOM,
         32, PropModeReplace, ( unsigned char* )&version, 1 );
-    XChangeProperty( qt_xdisplay(), electric_bottom_border, atoms->xdnd_aware, XA_ATOM,
+    XChangeProperty( QX11Info::display(), electric_bottom_border, atoms->xdnd_aware, XA_ATOM,
         32, PropModeReplace, ( unsigned char* )&version, 1 );
-    XChangeProperty( qt_xdisplay(), electric_left_border, atoms->xdnd_aware, XA_ATOM,
+    XChangeProperty( QX11Info::display(), electric_left_border, atoms->xdnd_aware, XA_ATOM,
         32, PropModeReplace, ( unsigned char* )&version, 1 );
-    XChangeProperty( qt_xdisplay(), electric_right_border, atoms->xdnd_aware, XA_ATOM,
+    XChangeProperty( QX11Info::display(), electric_right_border, atoms->xdnd_aware, XA_ATOM,
         32, PropModeReplace, ( unsigned char* )&version, 1 );
     }
 
@@ -2012,13 +2019,13 @@ void Workspace::destroyBorderWindows()
     electric_have_borders = false;
 
     if(electric_top_border)
-      XDestroyWindow(qt_xdisplay(),electric_top_border);
+      XDestroyWindow(QX11Info::display(),electric_top_border);
     if(electric_bottom_border)
-      XDestroyWindow(qt_xdisplay(),electric_bottom_border);
+      XDestroyWindow(QX11Info::display(),electric_bottom_border);
     if(electric_left_border)
-      XDestroyWindow(qt_xdisplay(),electric_left_border);
+      XDestroyWindow(QX11Info::display(),electric_left_border);
     if(electric_right_border)
-      XDestroyWindow(qt_xdisplay(),electric_right_border);
+      XDestroyWindow(QX11Info::display(),electric_right_border);
 
     electric_top_border    = None;
     electric_bottom_border = None;
@@ -2153,7 +2160,7 @@ bool Workspace::electricBorder(XEvent *e)
                  || e->xclient.window == electric_right_border ))
             {
             updateXTime();
-            clientMoved( QPoint( e->xclient.data.l[2]>>16, e->xclient.data.l[2]&0xffff), qt_x_time );
+            clientMoved( QPoint( e->xclient.data.l[2]>>16, e->xclient.data.l[2]&0xffff), QX11Info::appTime() );
             return true;
             }
         }
@@ -2168,10 +2175,10 @@ void Workspace::raiseElectricBorders()
 
     if(electric_have_borders)
         {
-        XRaiseWindow(qt_xdisplay(), electric_top_border);
-        XRaiseWindow(qt_xdisplay(), electric_left_border);
-        XRaiseWindow(qt_xdisplay(), electric_bottom_border);
-        XRaiseWindow(qt_xdisplay(), electric_right_border);
+        XRaiseWindow(QX11Info::display(), electric_top_border);
+        XRaiseWindow(QX11Info::display(), electric_left_border);
+        XRaiseWindow(QX11Info::display(), electric_bottom_border);
+        XRaiseWindow(QX11Info::display(), electric_right_border);
         }
     }
 
@@ -2250,7 +2257,7 @@ void Workspace::setupTopMenuHandling()
     Window stack[ 2 ];
     stack[ 0 ] = supportWindow->winId();
     stack[ 1 ] = topmenu_space->winId();
-    XRestackWindows(qt_xdisplay(), stack, 2);
+    XRestackWindows(QX11Info::display(), stack, 2);
     updateTopMenuGeometry();
     topmenu_space->show();
     updateClientArea();
@@ -2289,7 +2296,7 @@ bool Workspace::checkStartupNotification( Window w, KStartupInfoId& id, KStartup
  */
 void Workspace::focusToNull()
     {
-    XSetInputFocus(qt_xdisplay(), null_focus_window, RevertToPointerRoot, qt_x_time );
+    XSetInputFocus(QX11Info::display(), null_focus_window, RevertToPointerRoot, QX11Info::appTime() );
     }
 
 void Workspace::helperDialog( const QString& message, const Client* c )
@@ -2361,7 +2368,7 @@ void Workspace::startKompmgr()
         allowKompmgrRestart = FALSE;
         QTimer::singleShot( 60000, this, SLOT(unblockKompmgrRestart()) );
         QByteArray ba;
-        QDataStream arg(ba, IO_WriteOnly);
+        QDataStream arg(&ba, IO_WriteOnly);
         arg << "";
         kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStarted()", ba);
         }
@@ -2377,7 +2384,7 @@ void Workspace::stopKompmgr()
     if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
     kompmgr->kill();
     QByteArray ba;
-    QDataStream arg(ba, IO_WriteOnly);
+    QDataStream arg(&ba, IO_WriteOnly);
     arg << "";
     kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStopped()", ba);
 }

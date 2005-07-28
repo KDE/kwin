@@ -21,11 +21,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 
 #include <fixx11h.h>
-#include <qhbox.h>
 #include <qpushbutton.h>
 #include <qslider.h>
 #include <qtooltip.h>
-#include <qpopupmenu.h>
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -33,6 +31,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobalaccel.h>
 #include <kapplication.h>
 #include <qregexp.h>
+#include <Q3PopupMenu>
+#include <QVBoxLayout>
 
 #include "killwindow.h"
 #include "tabbox.h"
@@ -44,17 +44,17 @@ namespace KWinInternal
 // Workspace
 //****************************************
 
-QPopupMenu* Workspace::clientPopup()
+Q3PopupMenu* Workspace::clientPopup()
     {
     if ( !popup )
         {
-        popup = new QPopupMenu;
+        popup = new Q3PopupMenu;
         popup->setCheckable( TRUE );
         popup->setFont(KGlobalSettings::menuFont());
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
       
-        advanced_popup = new QPopupMenu( popup );
+        advanced_popup = new Q3PopupMenu( popup );
         advanced_popup->setCheckable( TRUE );
         advanced_popup->setFont(KGlobalSettings::menuFont());
         connect( advanced_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
@@ -73,18 +73,18 @@ QPopupMenu* Workspace::clientPopup()
         desk_popup_index = popup->count();
         
         if (options->useTranslucency){
-            QPopupMenu *trans_popup = new QPopupMenu( popup );
-            QVBox *transBox = new QVBox(trans_popup);
-            transButton = new QPushButton(transBox, "transButton");
+            Q3PopupMenu *trans_popup = new Q3PopupMenu( popup );
+			QVBoxLayout *transLayout = new QVBoxLayout(trans_popup);
+			trans_popup->setLayout( transLayout );
+            transButton = new QPushButton(trans_popup, "transButton");
             QToolTip::add(transButton, i18n("Reset opacity to default value"));
-            transSlider = new QSlider(0, 100, 1, 100, Qt::Vertical, transBox, "transSlider");
+            transSlider = new QSlider(0, 100, 1, 100, Qt::Vertical, trans_popup, "transSlider");
             QToolTip::add(transSlider, i18n("Slide this to set the window's opacity"));
             connect(transButton, SIGNAL(clicked()), SLOT(resetClientOpacity()));
             connect(transButton, SIGNAL(clicked()), trans_popup, SLOT(hide()));
             connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
             connect(transSlider, SIGNAL(valueChanged(int)), this, SLOT(setPopupClientOpacity(int)));
 //             connect(transSlider, SIGNAL(sliderReleased()), trans_popup, SLOT(hide()));
-            trans_popup->insertItem(transBox);
             popup->insertItem(i18n("&Opacity"), trans_popup );
         }
         
@@ -186,7 +186,7 @@ void Workspace::initDesktopPopup()
     if (desk_popup)
         return;
 
-    desk_popup = new QPopupMenu( popup );
+    desk_popup = new Q3PopupMenu( popup );
     desk_popup->setCheckable( TRUE );
     desk_popup->setFont(KGlobalSettings::menuFont());
     connect( desk_popup, SIGNAL( activated(int) ),
@@ -973,7 +973,7 @@ void Workspace::showWindowMenu( const QRect &pos, Client* cl )
         return;
 
     active_popup_client = cl;
-    QPopupMenu* p = clientPopup();
+    Q3PopupMenu* p = clientPopup();
     active_popup = p;
     int x = pos.left();
     int y = pos.bottom();
@@ -1038,7 +1038,7 @@ void Client::setShortcut( const QString& _cut )
             setShortcutInternal( KShortcut());
         return;
         }
-    QValueList< KShortcut > keys;
+    QList< KShortcut > keys;
     QStringList groups = QStringList::split( ' ', cut );
     for( QStringList::ConstIterator it = groups.begin();
          it != groups.end();
@@ -1049,7 +1049,7 @@ void Client::setShortcut( const QString& _cut )
             {
             QString base = reg.cap( 1 );
             QString list = reg.cap( 2 );
-            for( unsigned int i = 0;
+            for( int i = 0;
                  i < list.length();
                  ++i )
                 {
@@ -1059,14 +1059,14 @@ void Client::setShortcut( const QString& _cut )
                 }
             }
         }
-    for( QValueList< KShortcut >::ConstIterator it = keys.begin();
+    for( QList< KShortcut >::ConstIterator it = keys.begin();
          it != keys.end();
          ++it )
         {
         if( _shortcut == *it ) // current one is in the list
             return;
         }
-    for( QValueList< KShortcut >::ConstIterator it = keys.begin();
+    for( QList< KShortcut >::ConstIterator it = keys.begin();
          it != keys.end();
          ++it )
         {

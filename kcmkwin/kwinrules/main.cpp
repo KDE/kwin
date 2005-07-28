@@ -28,11 +28,14 @@
 
 #include "ruleswidget.h"
 #include "../../rules.h"
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 namespace KWinInternal
 {
 
-static void loadRules( QValueList< Rules* >& rules )
+static void loadRules( Q3ValueList< Rules* >& rules )
     {
     KConfig cfg( "kwinrulesrc", true );
     cfg.setGroup( "General" );
@@ -47,13 +50,13 @@ static void loadRules( QValueList< Rules* >& rules )
         }
     }
 
-static void saveRules( const QValueList< Rules* >& rules )
+static void saveRules( const Q3ValueList< Rules* >& rules )
     {
     KConfig cfg( "kwinrulesrc" );
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
     int i = 1;
-    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+    for( Q3ValueList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         {
@@ -63,25 +66,25 @@ static void saveRules( const QValueList< Rules* >& rules )
         }
     }
 
-static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
+static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid )
     {
     KWin::WindowInfo info = KWin::windowInfo( wid,
         NET::WMName | NET::WMWindowType,
         NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine );
     if( !info.valid()) // shouldn't really happen
         return NULL;
-    QCString wmclass_class = info.windowClassClass().lower();
-    QCString wmclass_name = info.windowClassName().lower();
-    QCString role = info.windowRole().lower();
+    Q3CString wmclass_class = info.windowClassClass().lower();
+    Q3CString wmclass_name = info.windowClassName().lower();
+    Q3CString role = info.windowRole().lower();
     NET::WindowType type = info.windowType( NET::NormalMask | NET::DesktopMask | NET::DockMask
         | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
         | NET::UtilityMask | NET::SplashMask );
     QString title = info.name();
 //    QCString extrarole = ""; // TODO
-    QCString machine = info.clientMachine().lower();
+    Q3CString machine = info.clientMachine().lower();
     Rules* best_match = NULL;
     int match_quality = 0;
-    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+    for( Q3ValueList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         {
@@ -136,7 +139,7 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
     if( best_match != NULL )
         return best_match;
     Rules* ret = new Rules;
-    ret->description = i18n( "Settings for %1" ).arg( wmclass_class );
+    ret->description = i18n( "Settings for %1" ).arg( QString::fromLatin1( wmclass_class ) );
     if( type == NET::Unknown )
         ret->types = NET::NormalMask;
     else
@@ -194,7 +197,7 @@ static Rules* findRule( const QValueList< Rules* >& rules, Window wid )
 
 static int edit( Window wid )
     {
-    QValueList< Rules* > rules;
+    Q3ValueList< Rules* > rules;
     loadRules( rules );
     Rules* orig_rule = findRule( rules, wid );
     RulesDialog dlg;
@@ -209,7 +212,7 @@ static int edit( Window wid )
         }
     else if( edited_rule != orig_rule )
         {
-        QValueList< Rules* >::Iterator pos = rules.find( orig_rule );
+        Q3ValueList< Rules* >::Iterator pos = rules.find( orig_rule );
         if( pos != rules.end())
             *pos = edited_rule;
         else
@@ -219,7 +222,7 @@ static int edit( Window wid )
     saveRules( rules );
     if( !kapp->dcopClient()->isAttached())
         kapp->dcopClient()->attach();
-    kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
     return 0;
     }
     
@@ -242,7 +245,7 @@ KDE_EXPORT int kdemain( int argc, char* argv[] )
     KApplication app;
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     bool id_ok = false;
-    Window id = args->getOption( "wid" ).toULong( &id_ok );
+    Window id = args->getOption( "wid" ).toULongLong( &id_ok );
     args->clear();
     if( !id_ok || id == None )
         {

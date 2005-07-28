@@ -31,7 +31,6 @@ DEALINGS IN THE SOFTWARE.
 
 #include "kdecoration.h"
 #include <qwidget.h>
-#include <qvaluelist.h>
 
 class KConfig;
 
@@ -42,7 +41,7 @@ class KWIN_EXPORT KDecorationOptionsPrivate : public KDecorationDefines
         virtual ~KDecorationOptionsPrivate();
         void defaultKWinSettings(); // shared implementation
         unsigned long updateKWinSettings( KConfig* ); // shared implementation
-        BorderSize findPreferredBorderSize( BorderSize size, QValueList< BorderSize > ) const; // shared implementation
+        BorderSize findPreferredBorderSize( BorderSize size, QList< BorderSize > ) const; // shared implementation
 
         QColor colors[NUM_COLORS*2];
         QColorGroup *cg[NUM_COLORS*2];

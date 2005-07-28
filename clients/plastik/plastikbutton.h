@@ -23,7 +23,6 @@
 #ifndef PLASTIKBUTTON_H
 #define PLASTIKBUTTON_H
 
-#include <qbutton.h>
 #include <qimage.h>
 #include "plastik.h"
 

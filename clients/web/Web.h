@@ -78,7 +78,7 @@ namespace Web
       virtual KDecoration* createDecoration( KDecorationBridge* );
       virtual bool reset( unsigned long changed );
       virtual bool supports( Ability ability );
-      virtual QValueList< BorderSize > borderSizes() const;
+      virtual QList< BorderSize > borderSizes() const;
   };
 }
 

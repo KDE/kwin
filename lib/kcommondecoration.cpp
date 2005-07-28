@@ -34,6 +34,7 @@
 #include <kapplication.h>
 #include <kdecorationfactory.h>
 #include <klocale.h>
+#include <QDesktopWidget>
 
 #include "kcommondecoration.h"
 #include "kcommondecoration.moc"
@@ -109,10 +110,10 @@ int KCommonDecoration::layoutMetric(LayoutMetric lm, bool, const KCommonDecorati
 
 void KCommonDecoration::init()
 {
-    createMainWidget(WNoAutoErase);
+    createMainWidget();
 
     // for flicker-free redraws
-    widget()->setBackgroundMode(NoBackground);
+    widget()->setBackgroundMode(Qt::NoBackground);
 
     widget()->installEventFilter( this );
 
@@ -199,7 +200,7 @@ void KCommonDecoration::updateLayout() const
             if (*it) {
                 if (!(*it)->isHidden() ) {
                     moveWidget(x,y, *it);
-                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );
+                    x += layoutMetric(LM_ButtonWidth, true, qobject_cast<KCommonDecorationButton*>(*it) );
                     elementLayouted = true;
                 }
             } else {
@@ -221,7 +222,7 @@ void KCommonDecoration::updateLayout() const
             if (*it) {
                 if (!(*it)->isHidden() ) {
                     moveWidget(x,y, *it);
-                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );;
+                    x += layoutMetric(LM_ButtonWidth, true, qobject_cast<KCommonDecorationButton*>(*it) );;
                     elementLayouted = true;
                 }
             } else {
@@ -319,15 +320,15 @@ int KCommonDecoration::buttonContainerWidth(const ButtonContainer &btnContainer,
 void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString& s, bool isLeft)
 {
     if (s.length() > 0) {
-        for (unsigned n=0; n < s.length(); n++) {
+        for (int n=0; n < s.length(); n++) {
             KCommonDecorationButton *btn = 0;
-            switch (s[n]) {
+            switch (s[n].toAscii()) {
               case 'M': // Menu button
                   if (!m_button[MenuButton]){
                       btn = createButton(MenuButton);
                       if (!btn) break;
                       btn->setTipText(i18n("Menu") );
-                      btn->setRealizeButtons(LeftButton|RightButton);
+                      btn->setRealizeButtons(Qt::LeftButton|Qt::RightButton);
                       connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
                       connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
 
@@ -371,7 +372,7 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                   if ((!m_button[MaxButton]) && isMaximizable()){
                       btn = createButton(MaxButton);
                       if (!btn) break;
-                      btn->setRealizeButtons(LeftButton|MidButton|RightButton);
+                      btn->setRealizeButtons(Qt::LeftButton|Qt::MidButton|Qt::RightButton);
                       const bool max = maximizeMode()!=MaximizeRestore;
                       btn->setTipText(max?i18n("Restore"):i18n("Maximize") );
                       btn->setToggleButton(true);
@@ -684,7 +685,7 @@ void KCommonDecoration::resizeWidget(int w, int h, QWidget *widget) const
 
 void KCommonDecoration::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if( e->button() != LeftButton )
+    if( e->button() != Qt::LeftButton )
         return;
 
     int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
@@ -871,14 +872,14 @@ QRect KCommonDecoration::titleRect() const
 
 
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent, const char *name)
-    : QButton(parent->widget(), name),
+    : Q3Button(parent->widget(), name),
         m_decoration(parent),
         m_type(type),
-        m_realizeButtons(LeftButton),
-        m_lastMouse(NoButton),
+        m_realizeButtons(Qt::LeftButton),
+        m_lastMouse(Qt::NoButton),
         m_isLeft(true)
 {
-    setCursor(ArrowCursor);
+    setCursor(Qt::ArrowCursor);
 }
 
 KCommonDecorationButton::~KCommonDecorationButton()
@@ -932,14 +933,14 @@ void KCommonDecorationButton::setTipText(const QString &tip) {
 
 void KCommonDecorationButton::setToggleButton(bool toggle)
 {
-    QButton::setToggleButton(toggle);
+    Q3Button::setToggleButton(toggle);
     reset(ToggleChange);
 }
 
 void KCommonDecorationButton::setOn(bool on)
 {
     if (on != isOn() ) {
-        QButton::setOn(on);
+        Q3Button::setOn(on);
         reset(StateChange);
     }
 }
@@ -949,9 +950,9 @@ void KCommonDecorationButton::mousePressEvent(QMouseEvent* e)
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
+                   (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state());
 
-    QButton::mousePressEvent(&me);
+    Q3Button::mousePressEvent(&me);
 }
 
 void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
@@ -959,7 +960,7 @@ void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
+                   (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state());
 
-    QButton::mouseReleaseEvent(&me);
+    Q3Button::mouseReleaseEvent(&me);
 }

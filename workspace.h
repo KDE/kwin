@@ -25,7 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <X11/Xlib.h>
 
-class QPopupMenu;
+class Q3PopupMenu;
 class KConfig;
 class KGlobalAccel;
 class KShortcutDialog;
@@ -67,7 +67,7 @@ class SystemTrayWindow
         WId winFor;
     };
 
-typedef QValueList<SystemTrayWindow> SystemTrayWindowList;
+typedef QList<SystemTrayWindow> SystemTrayWindowList;
 
 class Workspace : public QObject, public KWinInterface, public KDecorationDefines
     {
@@ -459,7 +459,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         void calcDesktopLayout(int &x, int &y) const;
 
-        QPopupMenu* clientPopup();
+        Q3PopupMenu* clientPopup();
         void closeActivePopup();
 
         void updateClientArea( bool force );
@@ -468,7 +468,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         int current_desktop;
         int number_of_desktops;
-        QMemArray<int> desktop_focus_chain;
+        QVector<int> desktop_focus_chain;
 
         QWidget* active_popup;
         Client* active_popup_client;
@@ -479,8 +479,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void loadWindowRules();
         void editWindowRules( Client* );
 
-        QPtrList<SessionInfo> session;
-        QValueList<Rules*> rules;
+        QList<SessionInfo*> session;
+        QList<Rules*> rules;
         KXMessages temporaryRulesMessages;
         QTimer rulesUpdatedTimer;
         static const char* windowTypeToTxt( NET::WindowType type );
@@ -533,9 +533,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         TabBox* tab_box;
         PopupInfo* popupinfo;
 
-        QPopupMenu *popup;
-        QPopupMenu *advanced_popup;
-        QPopupMenu *desk_popup;
+        Q3PopupMenu *popup;
+        Q3PopupMenu *advanced_popup;
+        Q3PopupMenu *desk_popup;
         int desk_popup_index;
 
         KGlobalAccel *keys;

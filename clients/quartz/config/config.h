@@ -11,7 +11,7 @@
 #define __KDE_QUARTZCONFIG_H
 
 #include <qcheckbox.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <kconfig.h>
 
 class QuartzConfig: public QObject
@@ -38,7 +38,7 @@ class QuartzConfig: public QObject
 		KConfig*   quartzConfig;
 		QCheckBox* cbColorBorder;
 		QCheckBox* cbExtraSmall;
-		QVBox* gb;
+		Q3VBox* gb;
 };
 
 

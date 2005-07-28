@@ -9,7 +9,7 @@
 
 #include "config.h"
 #include <kglobal.h>
-#include <qwhatsthis.h>
+
 #include <klocale.h>
 
 
@@ -35,15 +35,15 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 {
 	quartzConfig = new KConfig("kwinquartzrc");
 	KGlobal::locale()->insertCatalogue("kwin_clients");
-	gb = new QVBox( parent );
+	gb = new Q3VBox( parent );
 	cbColorBorder = new QCheckBox( 
 						i18n("Draw window frames using &titlebar colors"), gb );
-	QWhatsThis::add( cbColorBorder, 
+	cbColorBorder->setWhatsThis( 
 						i18n("When selected, the window decoration borders "
 						"are drawn using the titlebar colors; otherwise, they are "
 						"drawn using normal border colors instead.") );
 	cbExtraSmall = new QCheckBox( i18n("Quartz &extra slim"), gb );
-	QWhatsThis::add( cbExtraSmall,
+	cbExtraSmall->setWhatsThis(
 		i18n("Quartz window decorations with extra-small title bar.") );
 	// Load configuration options
 	load( conf );

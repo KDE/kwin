@@ -22,6 +22,7 @@
 
 // #include <kwin/options.h>
 
+#include <Q3Button>
 #include <qbitmap.h>
 #include <qpainter.h>
 #include <qpixmap.h>
@@ -46,7 +47,7 @@ PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent, const char 
     m_iconType(NumButtonIcons),
     hover(false)
 {
-    setBackgroundMode(NoBackground);
+    setBackgroundMode(Qt::NoBackground);
 
     // no need to reset here as the button will be resetted on first resize.
 
@@ -145,7 +146,7 @@ void PlastikButton::animate()
 
 void PlastikButton::enterEvent(QEvent *e)
 {
-    QButton::enterEvent(e);
+    Q3Button::enterEvent(e);
 
     hover = true;
     animate();
@@ -153,7 +154,7 @@ void PlastikButton::enterEvent(QEvent *e)
 
 void PlastikButton::leaveEvent(QEvent *e)
 {
-    QButton::leaveEvent(e);
+    Q3Button::leaveEvent(e);
 
     hover = false;
     animate();

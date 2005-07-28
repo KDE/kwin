@@ -70,7 +70,7 @@ Rules::Rules( const QString& str, bool temporary )
     QFile* f = file.file();
     if( f != NULL )
         {
-        QCString s = str.utf8();
+        QByteArray s = str.utf8();
         f->writeBlock( s.data(), s.length());
         }
     file.close();
@@ -83,7 +83,8 @@ Rules::Rules( const QString& str, bool temporary )
 
 #define READ_MATCH_STRING( var, func ) \
     var = cfg.readEntry( #var ) func; \
-    var##match = (StringMatch) QMAX( FirstStringMatch, QMIN( LastStringMatch, cfg.readNumEntry( #var "match" )));
+    var##match = (StringMatch) QMAX( FirstStringMatch, \
+        QMIN( LastStringMatch, static_cast< StringMatch >( cfg.readNumEntry( #var "match" ))));
     
 #define READ_SET_RULE( var, type, func ) \
     var = func ( cfg.read##type##Entry( #var )); \
@@ -323,11 +324,11 @@ bool Rules::matchType( NET::WindowType match_type ) const
     return true;
     }
     
-bool Rules::matchWMClass( const QCString& match_class, const QCString& match_name ) const
+bool Rules::matchWMClass( const QByteArray& match_class, const QByteArray& match_name ) const
     {
     if( wmclassmatch != UnimportantMatch )
         { // TODO optimize?
-        QCString cwmclass = wmclasscomplete
+        QByteArray cwmclass = wmclasscomplete
             ? match_name + ' ' + match_class : match_class;
         if( wmclassmatch == RegExpMatch && QRegExp( wmclass ).search( cwmclass ) == -1 )
             return false;
@@ -339,7 +340,7 @@ bool Rules::matchWMClass( const QCString& match_class, const QCString& match_nam
     return true;
     }
     
-bool Rules::matchRole( const QCString& match_role ) const
+bool Rules::matchRole( const QByteArray& match_role ) const
     {
     if( windowrolematch != UnimportantMatch )
         {
@@ -367,7 +368,7 @@ bool Rules::matchTitle( const QString& match_title ) const
     return true;
     }
 
-bool Rules::matchClientMachine( const QCString& match_machine ) const
+bool Rules::matchClientMachine( const QByteArray& match_machine ) const
     {
     if( clientmachinematch != UnimportantMatch )
         {
@@ -679,8 +680,8 @@ kdbgstream& operator<<( kdbgstream& stream, const Rules* r )
 #ifndef KCMRULES
 void WindowRules::discardTemporary()
     {
-    QValueVector< Rules* >::Iterator it2 = rules.begin();
-    for( QValueVector< Rules* >::Iterator it = rules.begin();
+    QVector< Rules* >::Iterator it2 = rules.begin();
+    for( QVector< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          )
         {
@@ -697,7 +698,7 @@ void WindowRules::discardTemporary()
 void WindowRules::update( Client* c )
     {
     bool updated = false;
-    for( QValueVector< Rules* >::ConstIterator it = rules.begin();
+    for( QVector< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         if( (*it)->update( c )) // no short-circuiting here
@@ -712,7 +713,7 @@ type WindowRules::check##rule( type arg, bool init ) const \
     if( rules.count() == 0 ) \
         return arg; \
     type ret = arg; \
-    for( QValueVector< Rules* >::ConstIterator it = rules.begin(); \
+    for( QVector< Rules* >::ConstIterator it = rules.begin(); \
          it != rules.end(); \
          ++it ) \
         { \
@@ -728,7 +729,7 @@ type WindowRules::check##rule( type arg ) const \
     if( rules.count() == 0 ) \
         return arg; \
     type ret = arg; \
-    for( QValueVector< Rules* >::ConstIterator it = rules.begin(); \
+    for( QVector< Rules* >::ConstIterator it = rules.begin(); \
          it != rules.end(); \
          ++it ) \
         { \
@@ -888,8 +889,8 @@ void Client::checkAndSetInitialRuledOpacity()
 
 WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
     {
-    QValueVector< Rules* > ret;
-    for( QValueList< Rules* >::Iterator it = rules.begin();
+    QVector< Rules* > ret;
+    for( QList< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          )
         {
@@ -947,7 +948,7 @@ void Workspace::writeWindowRules()
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
     int i = 1;
-    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+    for( QList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         {
@@ -962,7 +963,7 @@ void Workspace::writeWindowRules()
 void Workspace::gotTemporaryRulesMessage( const QString& message )
     {
     bool was_temporary = false;
-    for( QValueList< Rules* >::ConstIterator it = rules.begin();
+    for( QList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         if( (*it)->isTemporary())
@@ -976,7 +977,7 @@ void Workspace::gotTemporaryRulesMessage( const QString& message )
 void Workspace::cleanupTemporaryRules()
     {
     bool has_temporary = false;
-    for( QValueList< Rules* >::Iterator it = rules.begin();
+    for( QList< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          )
         {
@@ -995,7 +996,7 @@ void Workspace::cleanupTemporaryRules()
 
 void Workspace::discardUsedWindowRules( Client* c, bool withdrawn )
     {
-    for( QValueList< Rules* >::Iterator it = rules.begin();
+    for( QList< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          )
         {

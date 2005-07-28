@@ -57,7 +57,7 @@ const KDecorationOptions* KDecoration::options()
     return options_;
     }
 
-void KDecoration::createMainWidget( WFlags flags )
+void KDecoration::createMainWidget( Qt::WFlags flags )
     {
     // FRAME check flags?
     setMainWidget( new QWidget( initialParentWidget(), "decoration widget", initialWFlags() | flags ));
@@ -236,7 +236,7 @@ void KDecoration::closeWindow()
     bridge_->closeWindow();
     }
 
-void KDecoration::maximize( ButtonState button )
+void KDecoration::maximize( Qt::ButtonState button )
     {
     performWindowOperation( options()->operationMaxButtonClick( button ));
     }

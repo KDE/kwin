@@ -9,6 +9,9 @@
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
 #include <qdrawutil.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QPaintEvent>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <kglobal.h>
@@ -249,7 +252,7 @@ static void delete_pixmaps()
 LaptopButton::LaptopButton(ButtonType type, LaptopClient *parent, const char *name)
     : KCommonDecorationButton(type, parent, name)
 {
-    setBackgroundMode(QWidget::NoBackground);
+    setBackgroundMode(Qt::NoBackground);
 }
 
 void LaptopButton::reset(unsigned long changed)
@@ -556,7 +559,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
         p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
         p.setPen(options()->color(KDecoration::ColorFont, false));
         p.drawText(r.x(), r.y(), r.width(), r.height()-1,
-                   AlignCenter, caption() );
+                   Qt::AlignCenter, caption() );
         g = options()->colorGroup(KDecoration::ColorFrame, true);
         p.setPen(g.background());
         p.drawPoint(r.x(), r.y());
@@ -639,7 +642,7 @@ void LaptopClient::updateActiveBuffer( )
     p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
     p.setPen(options()->color(KDecoration::ColorFont, true));
     p.drawText(r.x(), r.y(), r.width(), r.height()-1,
-               AlignCenter, caption() );
+               Qt::AlignCenter, caption() );
     g = options()->colorGroup(KDecoration::ColorFrame, true);
     p.setPen(g.background());
     p.drawPoint(r.x(), r.y());
@@ -716,11 +719,11 @@ bool LaptopClientFactory::supports( Ability ability )
     };
 }
 
-QValueList< LaptopClientFactory::BorderSize >
+QList< LaptopClientFactory::BorderSize >
 LaptopClientFactory::borderSizes() const
 {
     // the list must be sorted
-    return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+    return QList< BorderSize >() << BorderNormal << BorderLarge <<
 	BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 

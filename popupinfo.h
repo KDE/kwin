@@ -13,7 +13,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_POPUPINFO_H
 #include <qwidget.h>
 #include <qtimer.h>
-#include <qvaluelist.h>
 
 namespace KWinInternal
 {

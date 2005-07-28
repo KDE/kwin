@@ -51,9 +51,9 @@ void KDecorationFactory::checkRequirements( KDecorationProvides* )
     {
     }
 
-QValueList< KDecorationDefines::BorderSize > KDecorationFactory::borderSizes() const
+QList< KDecorationDefines::BorderSize > KDecorationFactory::borderSizes() const
     {
-    return QValueList< BorderSize >() << BorderNormal;
+    return QList< BorderSize >() << BorderNormal;
     }
     
 bool KDecorationFactory::exists( const KDecoration* deco ) const
@@ -73,7 +73,7 @@ void KDecorationFactory::removeDecoration( KDecoration* deco )
 
 void KDecorationFactory::resetDecorations( unsigned long changed )
     {
-    for( QValueList< KDecoration* >::ConstIterator it = _decorations.begin();
+    for( QList< KDecoration* >::ConstIterator it = _decorations.begin();
          it != _decorations.end();
          ++it )
         (*it)->reset( changed );

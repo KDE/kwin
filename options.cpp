@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <qtooltip.h>
+#include <QDesktopWidget>
 
 #include "client.h"
 
@@ -210,8 +211,9 @@ unsigned long Options::updateSettings()
     desktop_topmenu = kdesktopcfg.readBoolEntry( "ShowMenubar", false );
     if( desktop_topmenu )
         topmenus = true;
-        
-    QToolTip::setGloballyEnabled( d->show_tooltips );
+
+//    QToolTip::setGloballyEnabled( d->show_tooltips );
+// KDE4 this probably needs to be done manually in clients
 
     return changed;
     }

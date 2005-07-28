@@ -144,7 +144,7 @@ for which it has been shown. This is solved in kcookiejar by including
 the window id in the DCOP call. When the cookie dialog is shown, its
 WM_TRANSIENT_FOR property is manually set using the XSetTransientForHint()
 call (see kdelibs/kioslave/http/kcookiejar/kcookiewin.cpp). The arguments
-to XSetTransientForHint() call are the X display (i.e. qt_xdisplay()),
+to XSetTransientForHint() call are the X display (i.e. QX11Info::display()),
 the window id on which the WM_TRANSIENT_FOR property is to be set
 (i.e. use QWidget::winId()), and the window id of the mainwindow.
 
@@ -159,7 +159,7 @@ prevention. The DCOP call should be changed to
 myMainWindow->winId() as the second argument. In the daemon, before
 the dialog is shown, a call to XSetTransientHint() should be added:
 
- XSetTransientForHint( qt_xdisplay(), dialog->winId(), id_of_mainwindow );
+ XSetTransientForHint( QX11Info::display(), dialog->winId(), id_of_mainwindow );
  
  That's it.
 

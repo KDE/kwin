@@ -2,11 +2,13 @@
 #define __KDE_MODSYSTEMCONFIG_H
 
 #include <qcheckbox.h>
-#include <qgroupbox.h>
+#include <q3groupbox.h>
 #include <qlayout.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qslider.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 class ModernSysConfig : public QObject
 {
@@ -34,9 +36,9 @@ class ModernSysConfig : public QObject
 		QVBoxLayout	*vbox;
 		QWidget         *handleBox;
 		QCheckBox 	*cbShowHandle;
-		QVBox		*sliderBox;
+		Q3VBox		*sliderBox;
 		QSlider		*handleSizeSlider;
-		QHBox		*hbox;
+		Q3HBox		*hbox;
 		QLabel		*label1;
 		QLabel		*label2;
 		QLabel		*label3;

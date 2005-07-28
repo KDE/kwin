@@ -12,11 +12,11 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_UTILS_H
 #define KWIN_UTILS_H
 
-#include <qvaluelist.h>
 #include <qwidget.h>
 #include <kmanagerselection.h>
 #include <netwm_def.h>
 #include <kshortcutdialog.h>
+#include <limits.h>
 
 namespace KWinInternal
 {
@@ -42,11 +42,11 @@ class Client;
 class Group;
 class Options;
 
-typedef QValueList< Client* > ClientList;
-typedef QValueList< const Client* > ConstClientList;
+typedef QList< Client* > ClientList;
+typedef QList< const Client* > ConstClientList;
 
-typedef QValueList< Group* > GroupList;
-typedef QValueList< const Group* > ConstGroupList;
+typedef QList< Group* > GroupList;
+typedef QList< const Group* > ConstGroupList;
 
 extern Options* options;
 
@@ -184,7 +184,7 @@ class TemporaryAssign
         T orig;
     };
 
-QCString getStringProperty(WId w, Atom prop, char separator=0);
+QByteArray getStringProperty(WId w, Atom prop, char separator=0);
 void updateXTime();
 void grabXServer();
 void ungrabXServer();
@@ -243,7 +243,7 @@ Time timestampDiff( Time time1, Time time2 ) // returns time2 - time1
     return time2 - time1;
     }
 
-bool isLocalMachine( const QCString& host );
+bool isLocalMachine( const QByteArray& host );
 
 #ifndef KCMRULES
 // Qt dialogs emit no signal when closed :(

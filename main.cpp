@@ -22,6 +22,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <QX11Info>
+#include <stdio.h>
 
 #include "atoms.h"
 #include "options.h"
@@ -32,8 +34,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/Xproto.h>
 #undef INT8
 #undef INT32
-
-extern Time qt_x_time;
 
 namespace KWinInternal
 {
@@ -91,7 +91,7 @@ Application::Application( )
         }
 
     if (screen_number == -1)
-        screen_number = DefaultScreen(qt_xdisplay());
+        screen_number = DefaultScreen(QX11Info::display());
 
     if( !owner.claim( args->isSet( "replace" ), true ))
         {
@@ -109,7 +109,7 @@ Application::Application( )
     XSetErrorHandler( x11ErrorHandler );
 
     // check  whether another windowmanager is running
-    XSelectInput(qt_xdisplay(), qt_xrootwin(), SubstructureRedirectMask  );
+    XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), SubstructureRedirectMask  );
     syncX(); // trigger error now
 
     options = new Options;
@@ -125,19 +125,19 @@ Application::Application( )
     dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
     XEvent e;
     e.xclient.type = ClientMessage;
-    e.xclient.message_type = XInternAtom( qt_xdisplay(), "_KDE_SPLASH_PROGRESS", False );
-    e.xclient.display = qt_xdisplay();
-    e.xclient.window = qt_xrootwin();
+    e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False );
+    e.xclient.display = QX11Info::display();
+    e.xclient.window = QX11Info::appRootWindow();
     e.xclient.format = 8;
     strcpy( e.xclient.data.b, "wm started" );
-    XSendEvent( qt_xdisplay(), qt_xrootwin(), False, SubstructureNotifyMask, &e );
+    XSendEvent( QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e );
     }
 
 Application::~Application()
     {
     delete Workspace::self();
     if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
-        XSetInputFocus( qt_xdisplay(), PointerRoot, RevertToPointerRoot, qt_x_time );
+        XSetInputFocus( QX11Info::display(), PointerRoot, RevertToPointerRoot, QX11Info::appTime() );
     delete options;
     }
 
@@ -145,7 +145,7 @@ void Application::lostSelection()
     {
     delete Workspace::self();
     // remove windowmanager privileges
-    XSelectInput(qt_xdisplay(), qt_xrootwin(), PropertyChangeMask );
+    XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), PropertyChangeMask );
     quit();
     }
 
@@ -192,7 +192,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
         // we only do the multihead fork if we are not restored by the session
 	// manager, since the session manager will register multiple kwins,
         // one for each screen...
-        QCString multiHead = getenv("KDE_MULTIHEAD");
+        QByteArray multiHead = getenv("KDE_MULTIHEAD");
         if (multiHead.lower() == "true") 
             {
 
@@ -207,14 +207,14 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
             int number_of_screens = ScreenCount( dpy );
             KWinInternal::screen_number = DefaultScreen( dpy );
             int pos; // temporarily needed to reconstruct DISPLAY var if multi-head
-            QCString display_name = XDisplayString( dpy );
+            QByteArray display_name = XDisplayString( dpy );
             XCloseDisplay( dpy );
             dpy = 0;
 
             if ((pos = display_name.findRev('.')) != -1 )
                 display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
 
-            QCString envir;
+            QString envir;
             if (number_of_screens != 1) 
                 {
                 for (int i = 0; i < number_of_screens; i++ ) 
@@ -233,7 +233,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 		//   number. If it had it, it was removed at the "pos" check
                 envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWinInternal::screen_number);
 
-                if (putenv( strdup(envir.data())) ) 
+                if (putenv( strdup(envir.toAscii())) ) 
                     {
                     fprintf(stderr,
                             "%s: WARNING: unable to set DISPLAY environment variable\n",
@@ -267,16 +267,16 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     KWinInternal::SessionManaged weAreIndeed;
     KWinInternal::SessionSaveDoneHelper helper;
 
-    fcntl(ConnectionNumber(qt_xdisplay()), F_SETFD, 1);
+    fcntl(ConnectionNumber(QX11Info::display()), F_SETFD, 1);
 
-    QCString appname;
+    QString appname;
     if (KWinInternal::screen_number == 0)
         appname = "kwin";
     else
         appname.sprintf("kwin-screen-%d", KWinInternal::screen_number);
 
     DCOPClient* client = a.dcopClient();
-    client->registerAs( appname.data(), false);
+    client->registerAs( DCOPCString( appname.toAscii() ) , false);
     client->setDefaultObject( "KWinInterface" );
 
     return a.exec();

@@ -33,6 +33,7 @@
 #include "plastik.moc"
 #include "plastikclient.h"
 #include "plastikbutton.h"
+#include <QApplication>
 
 namespace KWinPlastik
 {
@@ -272,7 +273,7 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             } else {
                 pm = new QPixmap(1, titleBarTileHeight);
                 painter.begin(pm);
-                painter.drawPixmap(0, 0, gradient, 0,2);
+                painter.drawPixmap(0, 0, gradient, 0,2 ,-1,-1);
                 if (m_coloredBorder) {
                     painter.setPen(getColor(TitleGradient3, active).dark(110) );
                 } else {
@@ -540,11 +541,11 @@ const QBitmap &PlastikHandler::buttonBitmap(ButtonIcon type, const QSize &size, 
     return *bitmap;
 }
 
-QValueList< PlastikHandler::BorderSize >
+QList< PlastikHandler::BorderSize >
 PlastikHandler::borderSizes() const
 {
     // the list must be sorted
-    return QValueList< BorderSize >() << BorderTiny << BorderNormal <<
+    return QList< BorderSize >() << BorderTiny << BorderNormal <<
 	BorderLarge << BorderVeryLarge <<  BorderHuge <<
 	BorderVeryHuge << BorderOversized;
 }

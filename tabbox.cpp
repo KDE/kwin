@@ -33,10 +33,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kiconeffect.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
+#include <QX11Info>
 
 // specify externals before namespace
-
-extern Time qt_x_time;
 
 namespace KWinInternal
 {
@@ -44,7 +43,7 @@ namespace KWinInternal
 extern QPixmap* kwin_get_menu_pix_hack();
 
 TabBox::TabBox( Workspace *ws, const char *name )
-    : QFrame( 0, name, Qt::WNoAutoErase ), client(0), wspace(ws)
+    : Q3Frame( 0, name, Qt::WNoAutoErase ), client(0), wspace(ws)
     {
     setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
     setLineWidth(2);
@@ -347,7 +346,7 @@ void TabBox::drawContents( QPainter * )
             f.setPointSize( 14 );
 
             p.setFont(f);
-            p.drawText( r, AlignCenter, no_tasks);
+            p.drawText( r, Qt::AlignCenter, no_tasks);
             }
         else
             {
@@ -483,14 +482,14 @@ void TabBox::drawContents( QPainter * )
             ClientList list;
             createClientList(list, iDesktop, 0, false);
             // clients are in reversed stacking order
-            for (ClientList::ConstIterator it = list.fromLast(); it != list.end(); --it)
+	    for ( int i = list.size() - 1; i>=0; i-- )
               {
-              if ( !(*it)->miniIcon().isNull() )
+              if ( !list.at( i )->miniIcon().isNull() )
                 {
                 if ( x1+18 >= x+r.width() )  // only show full icons
                   break;
 
-                p.drawPixmap( x1, y + (lineHeight - 16)/2, (*it)->miniIcon() );
+                p.drawPixmap( x1, y + (lineHeight - 16)/2, list.at(  i )->miniIcon() );
                 x1 += 18;
                 }
               }
@@ -515,7 +514,7 @@ void TabBox::hide()
     QWidget::hide();
     QApplication::syncX();
     XEvent otherEvent;
-    while (XCheckTypedEvent (qt_xdisplay(), EnterNotify, &otherEvent ) )
+    while (XCheckTypedEvent (QX11Info::display(), EnterNotify, &otherEvent ) )
         ;
     }
 
@@ -564,7 +563,7 @@ void TabBox::delayedShow()
 
 void TabBox::handleMouseEvent( XEvent* e )
     {
-    XAllowEvents( qt_xdisplay(), AsyncPointer, qt_x_time );
+    XAllowEvents( QX11Info::display(), AsyncPointer, QX11Info::appTime() );
     if( e->type != ButtonPress )
         return;
     QPoint pos( e->xbutton.x_root, e->xbutton.y_root );
@@ -629,12 +628,12 @@ bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
 
     kdDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
 
-    XQueryKeymap( qt_xdisplay(), keymap );
+    XQueryKeymap( QX11Info::display(), keymap );
 
     for( int iKeySym = 0; iKeySym < nKeySyms; iKeySym++ )
         {
         uint keySymX = keySyms[ iKeySym ];
-        uchar keyCodeX = XKeysymToKeycode( qt_xdisplay(), keySymX );
+        uchar keyCodeX = XKeysymToKeycode( QX11Info::display(), keySymX );
         int i = keyCodeX / 8;
         char mask = 1 << (keyCodeX - (i * 8));
 
@@ -721,7 +720,7 @@ void TabBox::updateKeyMapping()
     {
     const int size = 6;
     uint keysyms[ size ] = { XK_Alt_L, XK_Alt_R, XK_Super_L, XK_Super_R, XK_Meta_L, XK_Meta_R };
-    XModifierKeymap* map = XGetModifierMapping( qt_xdisplay() );
+    XModifierKeymap* map = XGetModifierMapping( QX11Info::display() );
     int altpos = 0;
     int winpos = 0;
     int winmodpos = -1;
@@ -739,7 +738,7 @@ void TabBox::updateKeyMapping()
          i < size;
          ++i )
         {
-        KeyCode keycode = XKeysymToKeycode( qt_xdisplay(), keysyms[ i ] );
+        KeyCode keycode = XKeysymToKeycode( QX11Info::display(), keysyms[ i ] );
         for( int j = 0;
              j < map->max_keypermod;
              ++j )
@@ -757,13 +756,13 @@ void TabBox::updateKeyMapping()
 
 void Workspace::slotWalkThroughWindows()
     {
-    if ( root != qt_xrootwin() )
+    if ( root != QX11Info::appRootWindow() )
         return;
     if ( tab_grab || control_grab )
         return;
     if ( options->altTabStyle == Options::CDE )
         {
-        //XUngrabKeyboard(qt_xdisplay(), qt_x_time); // need that because of accelerator raw mode
+        //XUngrabKeyboard(QX11Info::display(), QX11Info::appTime()); // need that because of accelerator raw mode
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
         }
@@ -783,7 +782,7 @@ void Workspace::slotWalkThroughWindows()
 
 void Workspace::slotWalkBackThroughWindows()
     {
-    if ( root != qt_xrootwin() )
+    if ( root != QX11Info::appRootWindow() )
         return;
     if( tab_grab || control_grab )
         return;
@@ -808,7 +807,7 @@ void Workspace::slotWalkBackThroughWindows()
 
 void Workspace::slotWalkThroughDesktops()
     {
-    if ( root != qt_xrootwin() )
+    if ( root != QX11Info::appRootWindow() )
         return;
     if( tab_grab || control_grab )
         return;
@@ -825,7 +824,7 @@ void Workspace::slotWalkThroughDesktops()
 
 void Workspace::slotWalkBackThroughDesktops()
     {
-    if ( root != qt_xrootwin() )
+    if ( root != QX11Info::appRootWindow() )
         return;
     if( tab_grab || control_grab )
         return;
@@ -842,7 +841,7 @@ void Workspace::slotWalkBackThroughDesktops()
 
 void Workspace::slotWalkThroughDesktopList()
     {
-    if ( root != qt_xrootwin() )
+    if ( root != QX11Info::appRootWindow() )
         return;
     if( tab_grab || control_grab )
         return;
@@ -859,7 +858,7 @@ void Workspace::slotWalkThroughDesktopList()
 
 void Workspace::slotWalkBackThroughDesktopList()
     {
-    if ( root != qt_xrootwin() )
+    if ( root != QX11Info::appRootWindow() )
         return;
     if( tab_grab || control_grab )
         return;
@@ -1078,7 +1077,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         release = true;
     else
         {
-        XModifierKeymap* xmk = XGetModifierMapping(qt_xdisplay());
+        XModifierKeymap* xmk = XGetModifierMapping(QX11Info::display());
         for (int i=0; i<xmk->max_keypermod; i++)
             if (xmk->modifiermap[xmk->max_keypermod * mod_index + i]
                 == ev.keycode)
@@ -1118,7 +1117,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
 
 int Workspace::nextDesktopFocusChain( int iDesktop ) const
     {
-    int i = desktop_focus_chain.find( iDesktop );
+    int i = desktop_focus_chain.indexOf( iDesktop );
     if( i >= 0 && i+1 < (int)desktop_focus_chain.size() )
             return desktop_focus_chain[i+1];
     else if( desktop_focus_chain.size() > 0 )
@@ -1129,7 +1128,7 @@ int Workspace::nextDesktopFocusChain( int iDesktop ) const
 
 int Workspace::previousDesktopFocusChain( int iDesktop ) const
     {
-    int i = desktop_focus_chain.find( iDesktop );
+    int i = desktop_focus_chain.indexOf( iDesktop );
     if( i-1 >= 0 )
             return desktop_focus_chain[i-1];
     else if( desktop_focus_chain.size() > 0 )
@@ -1207,8 +1206,8 @@ Client* Workspace::previousStaticClient( Client* c ) const
 
 bool Workspace::establishTabBoxGrab()
     {
-    if( XGrabKeyboard( qt_xdisplay(), root, FALSE,
-        GrabModeAsync, GrabModeAsync, qt_x_time) != GrabSuccess )
+    if( XGrabKeyboard( QX11Info::display(), root, FALSE,
+        GrabModeAsync, GrabModeAsync, QX11Info::appTime()) != GrabSuccess )
         return false;
     // Don't try to establish a global mouse grab using XGrabPointer, as that would prevent
     // using Alt+Tab while DND (#44972). However force passive grabs on all windows
@@ -1224,7 +1223,7 @@ bool Workspace::establishTabBoxGrab()
 
 void Workspace::removeTabBoxGrab()
     {
-    XUngrabKeyboard(qt_xdisplay(), qt_x_time);
+    XUngrabKeyboard(QX11Info::display(), QX11Info::appTime());
     assert( forced_global_mouse_grab );
     forced_global_mouse_grab = false;
     if( active_client != NULL )

@@ -10,8 +10,7 @@
 #define _KDE_B2CONFIG_H
 
 #include <qcheckbox.h>
-#include <qgroupbox.h>
-#include <qhgroupbox.h>
+#include <q3groupbox.h>
 #include <qlabel.h>
 #include <qcombobox.h>
 #include <kconfig.h>
@@ -40,7 +39,7 @@ class B2Config: public QObject
 		KConfig*   b2Config;
 		QCheckBox* cbColorBorder;
 		QCheckBox*  showGrabHandleCb;
-		QHGroupBox* actionsGB;
+		Q3GroupBox* actionsGB;
 		QComboBox*  menuDblClickOp;
 		QWidget* gb;
 };

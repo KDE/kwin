@@ -11,8 +11,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "sm.h"
 
-#include <qsocketnotifier.h>
-#include <qsessionmanager.h>
 #include <kdebug.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -23,6 +21,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "workspace.h"
 #include "client.h"
+#include <qsocketnotifier.h>
+#include <qsessionmanager.h>
 
 namespace KWinInternal
 {
@@ -75,8 +75,8 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) 
         {
         Client* c = (*it);
-        QCString sessionId = c->sessionId();
-        QCString wmCommand = c->wmCommand();
+        QByteArray sessionId = c->sessionId();
+        QByteArray wmCommand = c->wmCommand();
         if ( sessionId.isEmpty() )
 	    // remember also applications that are not XSMP capable
 	    // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
@@ -195,44 +195,53 @@ void Workspace::loadSessionInfo()
 SessionInfo* Workspace::takeSessionInfo( Client* c )
     {
     SessionInfo *realInfo = 0;
-    QCString sessionId = c->sessionId();
-    QCString windowRole = c->windowRole();
-    QCString wmCommand = c->wmCommand();
-    QCString wmClientMachine = c->wmClientMachine( true );
-    QCString resourceName = c->resourceName();
-    QCString resourceClass = c->resourceClass();
+    QByteArray sessionId = c->sessionId();
+    QByteArray windowRole = c->windowRole();
+    QByteArray wmCommand = c->wmCommand();
+    QByteArray wmClientMachine = c->wmClientMachine( true );
+    QByteArray resourceName = c->resourceName();
+    QByteArray resourceClass = c->resourceClass();
 
     // First search ``session''
     if (! sessionId.isEmpty() ) 
         {
-        // look for a real session managed client (algorithm suggested by ICCCM)
-        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() )
-            if ( info->sessionId == sessionId && sessionInfoWindowTypeMatch( c, info )) 
-            {
-            if ( ! windowRole.isEmpty() ) 
-                {
-                if ( info->windowRole == windowRole )
-                    realInfo = session.take();
-                }
-            else 
-                {
-                if ( info->windowRole.isEmpty() &&
-                     info->resourceName == resourceName &&
-                     info->resourceClass == resourceClass )
-                    realInfo = session.take();
-                }
-            }
+			// look for a real session managed client (algorithm suggested by ICCCM)
+			foreach( SessionInfo* info, session ) {
+				if ( realInfo )
+					break;
+				if ( info->sessionId == sessionId && sessionInfoWindowTypeMatch( c, info )) 
+				{
+				if ( ! windowRole.isEmpty() ) 
+					{
+					if ( info->windowRole == windowRole )
+						realInfo = info;
+						session.remove(info);
+					}
+				else 
+					{
+					if ( info->windowRole.isEmpty() &&
+						 info->resourceName == resourceName &&
+						 info->resourceClass == resourceClass )
+						realInfo = info;
+						session.remove(info);
+					}
+				}
+			}
         }
     else 
         {
-        // look for a sessioninfo with matching features.
-        for (SessionInfo* info = session.first(); info && !realInfo; info = session.next() )
-            if ( info->resourceName == resourceName &&
-                 info->resourceClass == resourceClass &&
-                 info->wmClientMachine == wmClientMachine &&
-                 sessionInfoWindowTypeMatch( c, info ))
-                if ( wmCommand.isEmpty() || info->wmCommand == wmCommand )
-                    realInfo = session.take();
+			// look for a sessioninfo with matching features.
+			foreach( SessionInfo* info, session ) {
+				if ( realInfo ) break;
+				if ( info->resourceName == resourceName &&
+						info->resourceClass == resourceClass &&
+						info->wmClientMachine == wmClientMachine &&
+						sessionInfoWindowTypeMatch( c, info ))
+					if ( wmCommand.isEmpty() || info->wmCommand == wmCommand ) {
+						realInfo = info;
+						session.remove( info );
+					}
+			}
         }
 
     return realInfo;
@@ -253,7 +262,7 @@ bool Workspace::sessionInfoWindowTypeMatch( Client* c, SessionInfo* info )
 // of <appname>-mainwindow#<number>
 // when comparing them for fake session info, it's probably better to check
 // them without the trailing number
-bool Workspace::windowRoleMatch( const QCString& role1, const QCString& role2 )
+bool Workspace::windowRoleMatch( const QByteArray& role1, const QByteArray& role2 )
     {
     if( role1.isEmpty() && role2.isEmpty())
         return true;

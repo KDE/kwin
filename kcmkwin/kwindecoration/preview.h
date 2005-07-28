@@ -21,6 +21,10 @@
 #define KWINDECORATION_PREVIEW_H
 
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QLabel>
+#include <QResizeEvent>
 #include <kdecoration_p.h>
 #include <kdecoration_plugins_p.h>
 
@@ -81,7 +85,7 @@ class KDecorationPreviewBridge
         virtual bool isMovable() const;
         virtual bool isResizable() const;
         virtual NET::WindowType windowType( unsigned long supported_types ) const;
-	virtual QIconSet icon() const;
+	virtual QIcon icon() const;
 	virtual QString caption() const;
 	virtual void processMousePressEvent( QMouseEvent* );
 	virtual void showWindowMenu( const QRect &);

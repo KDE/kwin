@@ -25,6 +25,10 @@
 #include <kglobal.h>
 #include <qlabel.h>
 #include <qstyle.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QResizeEvent>
+#include <QVector>
 #include <kiconloader.h>
 
 #include <X11/Xlib.h>
@@ -32,6 +36,7 @@
 
 #include <kdecorationfactory.h>
 #include <kdecoration_plugins_p.h>
+#include <QX11Info>
 
 // FRAME the preview doesn't update to reflect the changes done in the kcm
 
@@ -49,7 +54,7 @@ KDecorationPreview::KDecorationPreview( QWidget* parent, const char* name )
                                    "Most probably there\n"
                                    "was a problem loading the plugin." ), this );
 
-    no_preview->setAlignment( AlignCenter );
+    no_preview->setAlignment( Qt::AlignCenter );
 
     setMinimumSize( 100, 100 );
     no_preview->resize( size());
@@ -129,13 +134,13 @@ void KDecorationPreview::positionPreviews()
     size = QSize( width() - xoffset, height() - titleBarHeight )
                 .expandedTo( deco[Active]->minimumSize() );
     geometry = QRect( QPoint( 0, titleBarHeight ), size );
-    deco[Active]->widget()->setGeometry( QStyle::visualRect( geometry, this ) );
+    deco[Active]->widget()->setGeometry( QStyle::visualRect( this->layoutDirection(), this->rect(), geometry ) );
 
     // Resize the inactive window
     size = QSize( width() - xoffset, height() - titleBarHeight )
                 .expandedTo( deco[Inactive]->minimumSize() );
     geometry = QRect( QPoint( xoffset, 0 ), size );
-    deco[Inactive]->widget()->setGeometry( QStyle::visualRect( geometry, this ) );
+    deco[Inactive]->widget()->setGeometry( QStyle::visualRect( this->layoutDirection(), this->rect(), geometry ) );
     }
 
 void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode, bool active )
@@ -145,14 +150,14 @@ void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode, bool acti
     // FRAME duped from client.cpp
     if( mode == Unsorted )
         {
-        XShapeCombineRegion( qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0,
+        XShapeCombineRegion( QX11Info::display(), widget->winId(), ShapeBounding, 0, 0,
             reg.handle(), ShapeSet );
         }
     else
         {
-        QMemArray< QRect > rects = reg.rects();
+        QVector< QRect > rects = reg.rects();
         XRectangle* xrects = new XRectangle[ rects.count() ];
-        for( unsigned int i = 0;
+        for( int i = 0;
              i < rects.count();
              ++i )
             {
@@ -161,7 +166,7 @@ void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode, bool acti
             xrects[ i ].width = rects[ i ].width();
             xrects[ i ].height = rects[ i ].height();
             }
-        XShapeCombineRectangles( qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0,
+        XShapeCombineRectangles( QX11Info::display(), widget->winId(), ShapeBounding, 0, 0,
 	    xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
@@ -319,7 +324,7 @@ NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
     return NET::Normal;
     }
 
-QIconSet KDecorationPreviewBridge::icon() const
+QIcon KDecorationPreviewBridge::icon() const
     {
     return SmallIconSet( "xapp" );
     }

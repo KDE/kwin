@@ -2,7 +2,7 @@
 <class>KWinInternal::RulesWidgetBase</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form2</cstring>
+        <cstring>RulesWidgetBase</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -82,7 +82,7 @@
                             <cstring>spacer29</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Vertical</enum>
+                            <enum>Qt::Vertical</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -124,7 +124,7 @@
                             <cstring>spacer1</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -152,7 +152,7 @@
                             <cstring>spacer4</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -194,7 +194,7 @@
                             <cstring>spacer2</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -225,7 +225,7 @@
                             <cstring>spacer5</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -266,7 +266,7 @@
                                     <cstring>spacer27</cstring>
                                 </property>
                                 <property name="orientation">
-                                    <enum>Horizontal</enum>
+                                    <enum>Qt::Horizontal</enum>
                                 </property>
                                 <property name="sizeType">
                                     <enum>Expanding</enum>
@@ -291,7 +291,7 @@
                                     <cstring>spacer28</cstring>
                                 </property>
                                 <property name="orientation">
-                                    <enum>Horizontal</enum>
+                                    <enum>Qt::Horizontal</enum>
                                 </property>
                                 <property name="sizeType">
                                     <enum>Expanding</enum>
@@ -347,7 +347,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Dock (panel)</string>
+                                <string>Qt::ToolBarDock (panel)</string>
                             </property>
                         </item>
                         <item>
@@ -465,7 +465,7 @@
                             <cstring>spacer2_2</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -496,7 +496,7 @@
                             <cstring>spacer5_2</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -538,7 +538,7 @@
                             <cstring>spacer2_2_2</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -569,7 +569,7 @@
                             <cstring>spacer5_2_2</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -611,7 +611,7 @@
                             <cstring>spacer2_2_3</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -642,7 +642,7 @@
                             <cstring>spacer5_2_3</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1138,7 +1138,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Top-Left Corner</string>
+                                <string>Qt::DockTop-Qt::DockLeft Qt::Corner</string>
                             </property>
                         </item>
                         <item>
@@ -1171,7 +1171,7 @@
                             <cstring>spacer31</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Vertical</enum>
+                            <enum>Qt::Vertical</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1337,7 +1337,7 @@
                             <cstring>spacer24</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1354,7 +1354,7 @@
                             <cstring>spacer36_7</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1371,7 +1371,7 @@
                             <cstring>spacer36_6</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1388,7 +1388,7 @@
                             <cstring>spacer36_5</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1405,7 +1405,7 @@
                             <cstring>spacer36_4</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1422,7 +1422,7 @@
                             <cstring>spacer36_3</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1439,7 +1439,7 @@
                             <cstring>spacer36_2</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1456,7 +1456,7 @@
                             <cstring>spacer36</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1786,7 +1786,7 @@
                             <cstring>spacer33</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Vertical</enum>
+                            <enum>Qt::Vertical</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1837,7 +1837,7 @@
                             <cstring>spacer25</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Horizontal</enum>
+                            <enum>Qt::Horizontal</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -1984,7 +1984,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Dock (panel)</string>
+                                <string>Qt::ToolBarDock (panel)</string>
                             </property>
                         </item>
                         <item>
@@ -2257,7 +2257,7 @@
                             <cstring>spacer35</cstring>
                         </property>
                         <property name="orientation">
-                            <enum>Vertical</enum>
+                            <enum>Qt::Vertical</enum>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
@@ -2336,43 +2336,43 @@
     <connection>
         <sender>detect1</sender>
         <signal>clicked()</signal>
-        <receiver>Form2</receiver>
+        <receiver>RulesWidgetBase</receiver>
         <slot>detectClicked()</slot>
     </connection>
     <connection>
         <sender>wmclass_match</sender>
         <signal>activated(int)</signal>
-        <receiver>Form2</receiver>
+        <receiver>RulesWidgetBase</receiver>
         <slot>wmclassMatchChanged()</slot>
     </connection>
     <connection>
         <sender>role_match</sender>
         <signal>activated(int)</signal>
-        <receiver>Form2</receiver>
+        <receiver>RulesWidgetBase</receiver>
         <slot>roleMatchChanged()</slot>
     </connection>
     <connection>
         <sender>title_match</sender>
         <signal>activated(int)</signal>
-        <receiver>Form2</receiver>
+        <receiver>RulesWidgetBase</receiver>
         <slot>titleMatchChanged()</slot>
     </connection>
     <connection>
         <sender>extra_match</sender>
         <signal>activated(int)</signal>
-        <receiver>Form2</receiver>
+        <receiver>RulesWidgetBase</receiver>
         <slot>extraMatchChanged()</slot>
     </connection>
     <connection>
         <sender>machine_match</sender>
         <signal>activated(int)</signal>
-        <receiver>Form2</receiver>
+        <receiver>RulesWidgetBase</receiver>
         <slot>machineMatchChanged()</slot>
     </connection>
     <connection>
         <sender>shortcut_edit</sender>
         <signal>clicked()</signal>
-        <receiver>Form2</receiver>
+        <receiver>RulesWidgetBase</receiver>
         <slot>shortcutEditClicked()</slot>
     </connection>
 </connections>

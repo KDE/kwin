@@ -33,8 +33,17 @@
 
 #include <qbitmap.h>
 #include <qevent.h>
-#include <qdragobject.h>
-#include <qlistbox.h>
+#include <q3dragobject.h>
+#include <q3listbox.h>
+//Added by qt3to4:
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <Q3Frame>
+#include <QDropEvent>
+#include <Q3ValueList>
+#include <QResizeEvent>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
 
 #include <klistview.h>
 
@@ -57,7 +66,7 @@ class Button
 		bool supported;
 };
 
-class ButtonDrag : public QStoredDrag
+class ButtonDrag : public Q3StoredDrag
 {
 	public:
 		ButtonDrag( Button btn, QWidget* parent, const char* name=0 );
@@ -91,10 +100,10 @@ class ButtonDropSiteItem
 /**
  * This is plugged into ButtonSource
  */
-class ButtonSourceItem : public QListViewItem
+class ButtonSourceItem : public Q3ListViewItem
 {
 	public:
-		ButtonSourceItem(QListView * parent, const Button& btn);
+		ButtonSourceItem(Q3ListView * parent, const Button& btn);
 		virtual ~ButtonSourceItem();
 
 		void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int align);
@@ -128,15 +137,15 @@ class ButtonSource : public KListView
 
 	protected:
 		bool acceptDrag(QDropEvent* e) const;
-		virtual QDragObject *dragObject();
+		virtual Q3DragObject *dragObject();
 };
 
-typedef QValueList<ButtonDropSiteItem*> ButtonList;
+typedef Q3ValueList<ButtonDropSiteItem*> ButtonList;
 
 /**
  * This class renders and handles the demo titlebar dropsite
  */
-class ButtonDropSite: public QFrame
+class ButtonDropSite: public Q3Frame
 {
 	Q_OBJECT
 

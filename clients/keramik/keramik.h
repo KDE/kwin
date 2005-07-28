@@ -24,11 +24,9 @@
 #ifndef __KERAMIK_H
 #define __KERAMIK_H
 
-#include <qbutton.h>
+#include <Q3Button>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
-
-#include "tiles.h"
 
 class QSpacerItem;
 
@@ -60,7 +58,7 @@ namespace Keramik {
 			KeramikHandler();
 			~KeramikHandler();
 
-			virtual QValueList< BorderSize > borderSizes() const;
+			virtual QList< BorderSize > borderSizes() const;
 			virtual bool reset( unsigned long changed );
                         virtual KDecoration* createDecoration( KDecorationBridge* );
 			virtual bool supports( Ability ability );
@@ -101,7 +99,6 @@ namespace Keramik {
 			bool showIcons:1, shadowedText:1,
 				smallCaptionBubbles:1, largeGrabBars:1;
 			SettingsCache *settings_cache;
-			KeramikImageDb *imageDb;
 
 			QPixmap *activeTiles[ NumTiles ];
 			QPixmap *inactiveTiles[ NumTiles ];
@@ -112,13 +109,13 @@ namespace Keramik {
 	}; // class KeramikHandler
 
 	class KeramikClient;
-	class KeramikButton : public QButton
+	class KeramikButton : public Q3Button
 	{
 		public:
-			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = LeftButton );
+			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = Qt::LeftButton );
 			~KeramikButton();
 
-			ButtonState lastButton() const { return lastbutton; }
+			Qt::ButtonState lastButton() const { return lastbutton; }
 
 		private:
 			void enterEvent( QEvent * );
@@ -131,7 +128,7 @@ namespace Keramik {
 			KeramikClient *client;
 			Button button;
 			bool hover;
-			ButtonState lastbutton;
+			Qt::ButtonState lastbutton;
 			int realizeButtons;
 	}; // class KeramikButton
 

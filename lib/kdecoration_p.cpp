@@ -153,7 +153,8 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     inactiveFont = config->readFontEntry("inactiveFont", &activeFont);
 
     activeFontSmall = activeFont;
-    activeFontSmall.setPointSize(activeFont.pointSize() - 2);
+#warning KDE4 : is it usefull ? ( temporary hack )
+//    activeFontSmall.setPointSize(activeFont.pointSize() - 2 > 0 ? activeFont.pointSize() - 2 : activeFont.pointSize()+1 );
     activeFontSmall = config->readFontEntry("activeFontSmall", &activeFontSmall);
     inactiveFontSmall = config->readFontEntry("inactiveFontSmall", &activeFontSmall);
 
@@ -226,9 +227,9 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     }
 
 KDecorationDefines::BorderSize KDecorationOptionsPrivate::findPreferredBorderSize( BorderSize size,
-    QValueList< BorderSize > sizes ) const
+    QList< BorderSize > sizes ) const
     {
-    for( QValueList< BorderSize >::ConstIterator it = sizes.begin();
+    for( QList< BorderSize >::ConstIterator it = sizes.begin();
          it != sizes.end();
          ++it )
         if( size <= *it ) // size is either a supported size, or *it is the closest larger supported

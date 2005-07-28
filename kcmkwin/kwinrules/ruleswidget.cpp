@@ -27,7 +27,7 @@
 #include <kwinmodule.h>
 #include <klocale.h>
 #include <qregexp.h>
-#include <qwhatsthis.h>
+
 #include <assert.h>
 #include <kmessagebox.h>
 #include <qtabwidget.h>
@@ -43,8 +43,8 @@ namespace KWinInternal
     connect( enable_##var, SIGNAL( toggled( bool )), rule_##var, SLOT( setEnabled( bool ))); \
     connect( enable_##var, SIGNAL( toggled( bool )), this, SLOT( updateEnable##var())); \
     connect( rule_##var, SIGNAL( activated( int )), this, SLOT( updateEnable##var())); \
-    QWhatsThis::add( enable_##var, enableDesc ); \
-    QWhatsThis::add( rule_##var, type##RuleDesc );
+    enable_##var->setWhatsThis( enableDesc ); \
+    rule_##var->setWhatsThis( type##RuleDesc );
 
 RulesWidget::RulesWidget( QWidget* parent, const char* name )
 : RulesWidgetBase( parent, name )
@@ -121,7 +121,7 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
 void RulesWidget::updateEnable##var() \
     { \
     /* leave the label readable label_##var->setEnabled( enable_##var->isChecked() && rule_##var->currentItem() != 0 );*/ \
-    var->setEnabled( enable_##var->isChecked() && rule_##var->currentItem() != 0 ); \
+    Ui_RulesWidgetBase::var->setEnabled( enable_##var->isChecked() && rule_##var->currentItem() != 0 ); \
     }
 
 // geometry tab
@@ -346,14 +346,14 @@ static NET::WindowType comboToType( int val )
         { \
         enable_##var->setChecked( false ); \
         rule_##var->setCurrentItem( 0 ); \
-        var->uimethod0; \
+        Ui_RulesWidgetBase::var->uimethod0; \
         updateEnable##var(); \
         } \
     else \
         { \
         enable_##var->setChecked( true ); \
         rule_##var->setCurrentItem( type##_rule_to_combo[ rules->var##rule ] ); \
-        var->uimethod( func( rules->var )); \
+        Ui_RulesWidgetBase::var->uimethod( func( rules->var )); \
         updateEnable##var(); \
         }
 
@@ -436,7 +436,7 @@ void RulesWidget::setRules( Rules* rules )
     if( enable_##var->isChecked()) \
         { \
         rules->var##rule = combo_to_##type##_rule[ rule_##var->currentItem() ]; \
-        rules->var = func( var->uimethod()); \
+        rules->var = func( Ui_RulesWidgetBase::var->uimethod()); \
         } \
     else \
         rules->var##rule = Rules::Unused##Type##Rule;
@@ -591,7 +591,7 @@ void RulesWidget::detected( bool ok )
 #define GENERIC_PREFILL( var, func, info, uimethod ) \
     if( !enable_##var->isChecked()) \
         { \
-        var->uimethod( func( info )); \
+        Ui_RulesWidgetBase::var->uimethod( func( info )); \
         }
 
 #define CHECKBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setChecked )
@@ -751,12 +751,12 @@ void ShortcutDialog::accept()
         KKeySequence seq = shortcut().seq( i );
         if( seq.isNull())
             break;
-        if( seq.key( 0 ) == Key_Escape )
+        if( seq.key( 0 ) == Qt::Key_Escape )
             {
             reject();
             return;
             }
-        if( seq.key( 0 ) == Key_Space )
+        if( seq.key( 0 ) == Qt::Key_Space )
             { // clear
             setShortcut( KShortcut());
             KShortcutDialog::accept();

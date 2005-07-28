@@ -14,7 +14,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_PLACEMENT_H
 
 #include <qpoint.h>
-#include <qvaluelist.h>
+#include <QRect>
+#include <QList>
 
 namespace KWinInternal
 {
@@ -77,7 +78,7 @@ class Placement
             int row;
             };
 
-        QValueList<DesktopCascadingInfo> cci;
+        QList<DesktopCascadingInfo> cci;
 
         Workspace* m_WorkspacePtr;
     };

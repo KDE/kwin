@@ -26,12 +26,17 @@
 #include <qdir.h>
 #include <qlayout.h>
 #include <qslider.h>
-#include <qwhatsthis.h>
-#include <qvbuttongroup.h>
+
+#include <Q3ButtonGroup>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qlabel.h>
 #include <qcombobox.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QBoxLayout>
+#include <QVBoxLayout>
 #include <kmessagebox.h>
 
 #include <kactivelabel.h>
@@ -119,7 +124,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
     //lay->addWidget(plcBox);
 
     // focus policy
-    fcsBox = new QButtonGroup(i18n("Focus"),this);
+    fcsBox = new Q3ButtonGroup(i18n("Focus"),this);
     fcsBox->setColumnLayout( 0, Qt::Horizontal );
 
     QBoxLayout *fLay = new QVBoxLayout(fcsBox->layout(),
@@ -156,8 +161,8 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
                                       " features such as the Alt+Tab walk through windows dialog in the KDE mode"
                                       " from working properly."
                          );
-    QWhatsThis::add( focusCombo, wtstr);
-    QWhatsThis::add(fLabel, wtstr);
+    focusCombo->setWhatsThis( wtstr);
+    fLabel->setWhatsThis( wtstr);
 
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setAutoRaiseEnabled()) );
 
@@ -193,25 +198,25 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
 //     fLay->addColSpacing(0,QMAX(autoRaiseOn->sizeHint().width(),
 //                                clickRaiseOn->sizeHint().width()) + 15);
 
-    QWhatsThis::add( autoRaiseOn, i18n("When this option is enabled, a window in the background will automatically"
+    autoRaiseOn->setWhatsThis( i18n("When this option is enabled, a window in the background will automatically"
                                        " come to the front when the mouse pointer has been over it for some time.") );
     wtstr = i18n("This is the delay after which the window that the mouse pointer is over will automatically"
                  " come to the front.");
-    QWhatsThis::add( autoRaise, wtstr );
+    autoRaise->setWhatsThis( wtstr );
 
-    QWhatsThis::add( clickRaiseOn, i18n("When this option is enabled, the active window will be brought to the"
+    clickRaiseOn->setWhatsThis( i18n("When this option is enabled, the active window will be brought to the"
                                         " front when you click somewhere into the window contents. To change"
                                         " it for inactive windows, you need to change the settings"
                                         " in the Actions tab.") );
 
-    QWhatsThis::add( delayFocusOn, i18n("When this option is enabled, there will be a delay after which the"
+    delayFocusOn->setWhatsThis( i18n("When this option is enabled, there will be a delay after which the"
                                         " window the mouse pointer is over will become active (receive focus).") );
-    QWhatsThis::add( delayFocus, i18n("This is the delay after which the window the mouse pointer is over"
+    delayFocus->setWhatsThis( i18n("This is the delay after which the window the mouse pointer is over"
                                        " will automatically receive focus.") );
 
     lay->addWidget(fcsBox);
 
-    kbdBox = new QButtonGroup(i18n("Navigation"), this);
+    kbdBox = new Q3ButtonGroup(i18n("Navigation"), this);
     kbdBox->setColumnLayout( 0, Qt::Horizontal );
     QVBoxLayout *kLay = new QVBoxLayout(kbdBox->layout(), KDialog::spacingHint());
 
@@ -227,28 +232,28 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent
                  "Otherwise, the focus is passed to a new window each time Tab"
                  " is pressed, with no popup widget.  In addition, the previously"
                  " activated window will be sent to the back in this mode.");
-    QWhatsThis::add( altTabPopup, wtstr );
+    altTabPopup->setWhatsThis( wtstr );
 
     traverseAll = new QCheckBox( i18n( "&Traverse windows on all desktops" ), kbdBox );
     kLay->addWidget( traverseAll );
 
     wtstr = i18n( "Leave this option disabled if you want to limit walking through"
                   " windows to the current desktop." );
-    QWhatsThis::add( traverseAll, wtstr );
+    traverseAll->setWhatsThis( wtstr );
 
     rollOverDesktops = new QCheckBox( i18n("Desktop navi&gation wraps around"), kbdBox );
     kLay->addWidget(rollOverDesktops);
 
     wtstr = i18n( "Enable this option if you want keyboard or active desktop border navigation beyond"
                   " the edge of a desktop to take you to the opposite edge of the new desktop." );
-    QWhatsThis::add( rollOverDesktops, wtstr );
+    rollOverDesktops->setWhatsThis( wtstr );
 
     showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop &switch"), kbdBox );
     kLay->addWidget(showPopupinfo);
 
     wtstr = i18n( "Enable this option if you wish to see the current desktop"
                   " name popup whenever the current desktop is changed." );
-    QWhatsThis::add( showPopupinfo, wtstr );
+    showPopupinfo->setWhatsThis( wtstr );
 
     lay->addWidget(kbdBox);
 
@@ -479,7 +484,7 @@ void KFocusConfig::save( void )
         config->sync();
         if ( !kapp->dcopClient()->isAttached() )
             kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
     }
     emit KCModule::changed(false);
 }
@@ -524,10 +529,10 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
 
     //lay->addWidget(plcBox);
 
-    shBox = new QVButtonGroup(i18n("Shading"), this);
+    shBox = new Q3VButtonGroup(i18n("Shading"), this);
 
     animateShade = new QCheckBox(i18n("Anima&te"), shBox);
-    QWhatsThis::add(animateShade, i18n("Animate the action of reducing the window to its titlebar (shading)"
+    animateShade->setWhatsThis( i18n("Animate the action of reducing the window to its titlebar (shading)"
                                        " as well as the expansion of a shaded window") );
 
     shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
@@ -540,12 +545,12 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     shadeHover->setSteps(100, 100);
     shadeHover->setSuffix(i18n(" msec"));
 
-    QWhatsThis::add(shadeHoverOn, i18n("If Shade Hover is enabled, a shaded window will un-shade automatically "
+    shadeHoverOn->setWhatsThis( i18n("If Shade Hover is enabled, a shaded window will un-shade automatically "
                                        "when the mouse pointer has been over the title bar for some time."));
 
     wtstr = i18n("Sets the time in milliseconds before the window unshades "
                 "when the mouse pointer goes over the shaded window.");
-    QWhatsThis::add(shadeHover, wtstr);
+    shadeHover->setWhatsThis( wtstr);
 
     lay->addWidget(shBox);
 
@@ -554,10 +559,10 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
 
-    electricBox = new QVButtonGroup(i18n("Active Desktop Borders"), this);
-    electricBox->setMargin(15);
+    electricBox = new Q3VButtonGroup(i18n("Active Desktop Borders"), this);
+    electricBox->layout()->setMargin(15);
 
-    QWhatsThis::add( electricBox, i18n("If this option is enabled, moving the mouse to a screen border"
+    electricBox->setWhatsThis( i18n("If this option is enabled, moving the mouse to a screen border"
        " will change your desktop. This is e.g. useful if you want to drag windows from one desktop"
        " to the other.") );
     active_disable = new QRadioButton(i18n("D&isabled"), electricBox);
@@ -568,7 +573,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     delays->setRange(0, MAX_EDGE_RES, 50, true);
     delays->setSuffix(i18n(" msec"));
     delays->setLabel(i18n("Desktop &switch delay:"));
-    QWhatsThis::add( delays, i18n("Here you can set a delay for switching desktops using the active"
+    delays->setWhatsThis( i18n("Here you can set a delay for switching desktops using the active"
        " borders feature. Desktops will be switched after the mouse has been pushed against a screen border"
        " for the specified number of milliseconds.") );
 
@@ -590,7 +595,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
     focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "Extreme" ));
     focusStealingLabel->setBuddy( focusStealing );
     focusStealingLayout->addWidget( focusStealingLabel );
-    focusStealingLayout->addWidget( focusStealing, AlignLeft );
+    focusStealingLayout->addWidget( focusStealing, Qt::AlignLeft );
     wtstr = i18n( "<p>This option specifies how much KWin will try to prevent unwanted focus stealing "
                   "caused by unexpected activation of new windows. (Note: This feature does not "
                   "work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)"
@@ -610,12 +615,12 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *p
                   "<p>Windows that are prevented from stealing focus are marked as demanding attention, "
                   "which by default means their taskbar entry will be highlighted. This can be changed "
                   "in the Notifications control module.</p>" );
-    QWhatsThis::add( focusStealing, wtstr );
-    QWhatsThis::add( focusStealingLabel, wtstr );
+    focusStealing->setWhatsThis( wtstr );
+    focusStealingLabel->setWhatsThis( wtstr );
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
     
     hideUtilityWindowsForInactive = new QCheckBox( i18n( "Hide utility windows for inactive applications" ), this );
-    QWhatsThis::add( hideUtilityWindowsForInactive,
+    hideUtilityWindowsForInactive->setWhatsThis(
         i18n( "When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be"
               " hidden and will be shown only when the application becomes active. Note that applications"
               " have to mark the windows with the proper window type for this feature to work." ));
@@ -703,7 +708,7 @@ void KAdvancedConfig::save( void )
         config->sync();
         if ( !kapp->dcopClient()->isAttached() )
             kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
     }
     emit KCModule::changed(false);
 }
@@ -769,7 +774,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
 
-    windowsBox = new QButtonGroup(i18n("Windows"), this);
+    windowsBox = new Q3ButtonGroup(i18n("Windows"), this);
     windowsBox->setColumnLayout( 0, Qt::Horizontal );
 
     QBoxLayout *wLay = new QVBoxLayout (windowsBox->layout(), KDialog::spacingHint());
@@ -779,19 +784,19 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
 
     opaque = new QCheckBox(i18n("Di&splay content in moving windows"), windowsBox);
     bLay->addWidget(opaque);
-    QWhatsThis::add( opaque, i18n("Enable this option if you want a window's content to be fully shown"
+    opaque->setWhatsThis( i18n("Enable this option if you want a window's content to be fully shown"
                                   " while moving it, instead of just showing a window 'skeleton'. The result may not be satisfying"
                                   " on slow machines without graphic acceleration.") );
 
     resizeOpaqueOn = new QCheckBox(i18n("Display content in &resizing windows"), windowsBox);
     bLay->addWidget(resizeOpaqueOn);
-    QWhatsThis::add( resizeOpaqueOn, i18n("Enable this option if you want a window's content to be shown"
+    resizeOpaqueOn->setWhatsThis( i18n("Enable this option if you want a window's content to be shown"
                                           " while resizing it, instead of just showing a window 'skeleton'. The result may not be satisfying"
                                           " on slow machines.") );
 
     geometryTipOn = new QCheckBox(i18n("Display window &geometry when moving or resizing"), windowsBox);
     bLay->addWidget(geometryTipOn);
-    QWhatsThis::add(geometryTipOn, i18n("Enable this option if you want a window's geometry to be displayed"
+    geometryTipOn->setWhatsThis( i18n("Enable this option if you want a window's geometry to be displayed"
                                         " while it is being moved or resized. The window position relative"
                                         " to the top-left corner of the screen is displayed together with"
                                         " its size."));
@@ -803,15 +808,15 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
 
     minimizeAnimOn = new QCheckBox(i18n("Animate minimi&ze and restore"),
                                    windowsBox);
-    QWhatsThis::add( minimizeAnimOn, i18n("Enable this option if you want an animation shown when"
+    minimizeAnimOn->setWhatsThis( i18n("Enable this option if you want an animation shown when"
                                           " windows are minimized or restored." ) );
     rLay->addWidget(minimizeAnimOn,0,0);
 
-    minimizeAnimSlider = new QSlider(0,10,10,0,QSlider::Horizontal, windowsBox);
+    minimizeAnimSlider = new QSlider(0,10,10,0,Qt::Horizontal, windowsBox);
     minimizeAnimSlider->setSteps(1, 1);
     // QSlider::Below clashes with a X11/X.h #define
     #undef Below
-    minimizeAnimSlider->setTickmarks(QSlider::Below);
+    minimizeAnimSlider->setTickmarks(QSlider::TicksBelow);
     rLay->addMultiCellWidget(minimizeAnimSlider,0,0,1,2);
 
     connect(minimizeAnimOn, SIGNAL(toggled(bool)), this, SLOT(setMinimizeAnim(bool)));
@@ -827,13 +832,13 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
 
     wtstr = i18n("Here you can set the speed of the animation shown when windows are"
                  " minimized and restored. ");
-    QWhatsThis::add( minimizeAnimSlider, wtstr );
-    QWhatsThis::add( minimizeAnimSlowLabel, wtstr );
-    QWhatsThis::add( minimizeAnimFastLabel, wtstr );
+    minimizeAnimSlider->setWhatsThis( wtstr );
+    minimizeAnimSlowLabel->setWhatsThis( wtstr );
+    minimizeAnimFastLabel->setWhatsThis( wtstr );
 
     moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing o&f maximized windows"), windowsBox);
     bLay->addWidget(moveResizeMaximized);
-    QWhatsThis::add(moveResizeMaximized, i18n("When enabled, this feature activates the border of maximized windows"
+    moveResizeMaximized->setWhatsThis( i18n("When enabled, this feature activates the border of maximized windows"
                                               " and allows you to move or resize them,"
                                               " just like for normal windows"));
 
@@ -863,8 +868,8 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
                  " <li><em>Zero-Cornered</em> will place the window in the top-left corner</li>"
                  "</ul>") ;
 
-    QWhatsThis::add( plcLabel, wtstr);
-    QWhatsThis::add( placementCombo, wtstr);
+    plcLabel->setWhatsThis( wtstr);
+    placementCombo->setWhatsThis( wtstr);
 
     plcLabel->setBuddy(placementCombo);
     vLay->addWidget(plcLabel, 0);
@@ -889,8 +894,8 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
 
 
     //CT 15mar98 - add EdgeResistance, BorderAttractor, WindowsAttractor config
-    MagicBox = new QVButtonGroup(i18n("Snap Zones"), this);
-    MagicBox->setMargin(15);
+    MagicBox = new Q3VButtonGroup(i18n("Snap Zones"), this);
+    MagicBox->layout()->setMargin(15);
 
     BrdrSnap = new KIntNumInput(10, MagicBox);
     BrdrSnap->setSpecialValueText( i18n("none") );
@@ -898,7 +903,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
     BrdrSnap->setLabel(i18n("&Border snap zone:"));
     BrdrSnap->setSuffix(i18n(" pixels"));
     BrdrSnap->setSteps(1,10);
-    QWhatsThis::add( BrdrSnap, i18n("Here you can set the snap zone for screen borders, i.e."
+    BrdrSnap->setWhatsThis( i18n("Here you can set the snap zone for screen borders, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the border when"
                                     " moved near it.") );
 
@@ -908,12 +913,12 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
     WndwSnap->setLabel(i18n("&Window snap zone:"));
     WndwSnap->setSuffix( i18n(" pixels"));
     BrdrSnap->setSteps(1,10);
-    QWhatsThis::add( WndwSnap, i18n("Here you can set the snap zone for windows, i.e."
+    WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
                                     " they're moved near another window.") );
 
     OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
-    QWhatsThis::add( OverlapSnap, i18n("Here you can set that windows will be only"
+    OverlapSnap->setWhatsThis( i18n("Here you can set that windows will be only"
                                        " snapped if you try to overlap them, i.e. they will not be snapped if the windows"
                                        " comes only near another window or border.") );
 
@@ -1141,7 +1146,7 @@ void KMovingConfig::save( void )
         config->sync();
         if ( !kapp->dcopClient()->isAttached() )
             kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
     }
     emit KCModule::changed(false);
 }
@@ -1536,7 +1541,7 @@ void KTranslucencyConfig::save( void )
     config->sync();
         if ( !kapp->dcopClient()->isAttached() )
             kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
   }
   emit KCModule::changed(false);
 }

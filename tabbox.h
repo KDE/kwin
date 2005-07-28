@@ -12,9 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_TABBOX_H
 #define KWIN_TABBOX_H
 
-#include <qframe.h>
+#include <Q3Frame>
 #include <qtimer.h>
-#include <qvaluelist.h>
 #include "utils.h"
 
 class QLabel;
@@ -25,7 +24,7 @@ namespace KWinInternal
 class Workspace;
 class Client;
 
-class TabBox : public QFrame
+class TabBox : public Q3Frame
     {
     Q_OBJECT
     public:

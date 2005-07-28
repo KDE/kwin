@@ -28,9 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
-
-extern Time qt_x_time;
-extern Atom qt_window_role;
+#include <QX11Info>
 
 namespace KWinInternal
 {
@@ -197,7 +195,7 @@ bool Workspace::workspaceEvent( XEvent * e )
     if ( mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease ) ) 
         {
         mouse_emulation = FALSE;
-        XUngrabKeyboard( qt_xdisplay(), qt_x_time );
+        XUngrabKeyboard( QX11Info::display(), QX11Info::appTime() );
         }
 
     if ( e->type == PropertyNotify || e->type == ClientMessage ) 
@@ -288,9 +286,10 @@ bool Workspace::workspaceEvent( XEvent * e )
                  !e->xcreatewindow.override_redirect )
             {
         // see comments for allowClientActivation()
-            XChangeProperty(qt_xdisplay(), e->xcreatewindow.window,
+            Time t = QX11Info::appTime();
+            XChangeProperty(QX11Info::display(), e->xcreatewindow.window,
                             atoms->kde_net_wm_user_creation_time, XA_CARDINAL,
-                            32, PropModeReplace, (unsigned char *)&qt_x_time, 1);
+                            32, PropModeReplace, (unsigned char *)&t, 1);
             }
         break;
 
@@ -308,12 +307,12 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    // window.
                 XEvent ev;
                 WId w = e->xunmap.window;
-                if ( XCheckTypedWindowEvent (qt_xdisplay(), w,
+                if ( XCheckTypedWindowEvent (QX11Info::display(), w,
                                              ReparentNotify, &ev) )
                     {
                     if ( ev.xreparent.parent != root ) 
                         {
-                        XReparentWindow( qt_xdisplay(), w, root, 0, 0 );
+                        XReparentWindow( QX11Info::display(), w, root, 0, 0 );
                         addSystemTrayWin( w );
                         }
                     }
@@ -358,13 +357,13 @@ bool Workspace::workspaceEvent( XEvent * e )
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return TRUE;
                 c = createClient( e->xmaprequest.window, false );
-                if ( c != NULL && root != qt_xrootwin() ) 
+                if ( c != NULL && root != QX11Info::appRootWindow() ) 
                     { // TODO what is this?
                     // TODO may use QWidget::create
-                    XReparentWindow( qt_xdisplay(), c->frameId(), root, 0, 0 );
+                    XReparentWindow( QX11Info::display(), c->frameId(), root, 0, 0 );
                     }
                 if( c == NULL ) // refused to manage, simply map it (most probably override redirect)
-                    XMapRaised( qt_xdisplay(), e->xmaprequest.window );
+                    XMapRaised( QX11Info::display(), e->xmaprequest.window );
                 return true;
                 }
             if ( c ) 
@@ -412,7 +411,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 wc.sibling = None;
                 wc.stack_mode = Above;
                 value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
-                XConfigureWindow( qt_xdisplay(), e->xconfigurerequest.window, value_mask, &wc );
+                XConfigureWindow( QX11Info::display(), e->xconfigurerequest.window, value_mask, &wc );
                 return true;
                 }
             break;
@@ -429,10 +428,10 @@ bool Workspace::workspaceEvent( XEvent * e )
             if( e->xfocus.window == rootWin()
                 && ( e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot ))
                 {
-                updateXTime(); // focusToNull() uses qt_x_time, which is old now (FocusIn has no timestamp)
+                updateXTime(); // focusToNull() uses QX11Info::appTime(), which is old now (FocusIn has no timestamp)
                 Window focus;
                 int revert;
-                XGetInputFocus( qt_xdisplay(), &focus, &revert );
+                XGetInputFocus( QX11Info::display(), &focus, &revert );
                 if( focus == None || focus == PointerRoot )
                     {
                     //kdWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
@@ -724,7 +723,7 @@ void Client::unmapNotifyEvent( XUnmapEvent* e )
         case NormalState:
             // maybe we will be destroyed soon. Check this first.
             XEvent ev;
-            if( XCheckTypedWindowEvent (qt_xdisplay(), window(),
+            if( XCheckTypedWindowEvent (QX11Info::display(), window(),
                 DestroyNotify, &ev) ) // TODO I don't like this much
                 {
                 destroyClient(); // deletes this
@@ -820,7 +819,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
 
         wc.border_width = 0;
         value_mask = CWBorderWidth;
-        XConfigureWindow( qt_xdisplay(), window(), value_mask, & wc );
+        XConfigureWindow( QX11Info::display(), window(), value_mask, & wc );
         }
 
     if( e->value_mask & ( CWX | CWY | CWHeight | CWWidth ))
@@ -871,7 +870,7 @@ void Client::propertyNotifyEvent( XPropertyEvent* e )
                 getWindowProtocols();
             else if (e->atom == atoms->wm_client_leader )
                 getWmClientLeader();
-            else if( e->atom == qt_window_role )
+            else if( e->atom == atoms->wm_window_role )
                 window_role = staticWindowRole( window());
             else if( e->atom == atoms->motif_wm_hints )
                 getMotifHints();
@@ -930,7 +929,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
         if ( !buttonDown ) 
             {
             mode = PositionCenter;
-            setCursor( arrowCursor );
+            setCursor( Qt::arrowCursor );
             }
         bool lostMouse = !rect().contains( QPoint( e->x, e->y ) );
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
@@ -945,7 +944,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
             int d1, d2, d3, d4;
             unsigned int d5;
             Window w, child;
-            if( XQueryPointer( qt_xdisplay(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5 ) == False
+            if( XQueryPointer( QX11Info::display(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5 ) == False
                 || child == None )
                 lostMouse = true; // really lost the mouse
             }
@@ -978,7 +977,7 @@ void Client::grabButton( int modifier )
     for( int i = 0;
          i < 8;
          ++i )
-        XGrabButton( qt_xdisplay(), AnyButton,
+        XGrabButton( QX11Info::display(), AnyButton,
             modifier | mods[ i ],
             wrapperId(),  FALSE, ButtonPressMask,
             GrabModeSync, GrabModeAsync, None, None );
@@ -995,7 +994,7 @@ void Client::ungrabButton( int modifier )
     for( int i = 0;
          i < 8;
          ++i )
-        XUngrabButton( qt_xdisplay(), AnyButton,
+        XUngrabButton( QX11Info::display(), AnyButton,
             modifier | mods[ i ], wrapperId());
     }
 #undef XCapL
@@ -1024,9 +1023,9 @@ void Client::updateMouseGrab()
         }
     else
         {
-        XUngrabButton( qt_xdisplay(), AnyButton, AnyModifier, wrapperId());
+        XUngrabButton( QX11Info::display(), AnyButton, AnyModifier, wrapperId());
         // simply grab all modifier combinations
-        XGrabButton(qt_xdisplay(), AnyButton, AnyModifier, wrapperId(), FALSE,
+        XGrabButton(QX11Info::display(), AnyButton, AnyModifier, wrapperId(), FALSE,
             ButtonPressMask,
             GrabModeSync, GrabModeAsync,
             None, None );
@@ -1117,7 +1116,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
     if (buttonDown)
         {
         if( w == wrapperId())
-            XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
+            XAllowEvents(QX11Info::display(), SyncPointer, CurrentTime ); //QX11Info::appTime());
         return true;
         }
 
@@ -1135,7 +1134,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             { // hide splashwindow if the user clicks on it
             hideClient( true );
             if( w == wrapperId())
-                    XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
+                    XAllowEvents(QX11Info::display(), SyncPointer, CurrentTime ); //QX11Info::appTime());
             return true;
             }
 
@@ -1200,14 +1199,14 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
                 replay = TRUE;
 
             if( w == wrapperId()) // these can come only from a grab
-                XAllowEvents(qt_xdisplay(), replay? ReplayPointer : SyncPointer, CurrentTime ); //qt_x_time);
+                XAllowEvents(QX11Info::display(), replay? ReplayPointer : SyncPointer, CurrentTime ); //QX11Info::appTime());
             return true;
             }
         }
 
     if( w == wrapperId()) // these can come only from a grab
         {
-        XAllowEvents(qt_xdisplay(), ReplayPointer, CurrentTime ); //qt_x_time);
+        XAllowEvents(QX11Info::display(), ReplayPointer, CurrentTime ); //QX11Info::appTime());
         return true;
         }
     if( w == decorationId())
@@ -1258,13 +1257,13 @@ void Client::processMousePressEvent( QMouseEvent* e )
     int button;
     switch( e->button())
         {
-        case LeftButton:
+		case Qt::LeftButton:
             button = Button1;
           break;
-        case MidButton:
+		case Qt::MidButton:
             button = Button2;
           break;
-        case RightButton:
+		case Qt::RightButton:
             button = Button3;
           break;
         default:
@@ -1280,7 +1279,7 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
         return false;
     if( w == wrapperId())
         {
-        XAllowEvents(qt_xdisplay(), SyncPointer, CurrentTime ); //qt_x_time);
+        XAllowEvents(QX11Info::display(), SyncPointer, CurrentTime ); //QX11Info::appTime());
         return true;
         }
     if( w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
@@ -1327,12 +1326,12 @@ static bool waitingMotionEvent()
 // of processes events reaches the timestamp of the last suitable
 // MotionNotify event in the queue.
     if( next_motion_time != CurrentTime
-        && timestampCompare( qt_x_time, next_motion_time ) < 0 )
+        && timestampCompare( QX11Info::appTime(), next_motion_time ) < 0 )
         return true;
     was_motion = false;
-    XSync( qt_xdisplay(), False ); // this helps to discard more MotionNotify events
+    XSync( QX11Info::display(), False ); // this helps to discard more MotionNotify events
     XEvent dummy;
-    XCheckIfEvent( qt_xdisplay(), &dummy, motion_predicate, NULL );
+    XCheckIfEvent( QX11Info::display(), &dummy, motion_predicate, NULL );
     return was_motion;
     }
 
@@ -1425,7 +1424,7 @@ static bool check_follows_focusin( Client* c )
     // XCheckIfEvent() is used to make the search non-blocking, the predicate
     // always returns False, so nothing is removed from the events queue.
     // XPeekIfEvent() would block.
-    XCheckIfEvent( qt_xdisplay(), &dummy, predicate_follows_focusin, (XPointer)c );
+    XCheckIfEvent( QX11Info::display(), &dummy, predicate_follows_focusin, (XPointer)c );
     return follows_focusin;
     }
 
@@ -1517,26 +1516,26 @@ void Client::keyPressEvent( uint key_code )
     QPoint pos = QCursor::pos();
     switch ( key_code ) 
         {
-        case Key_Left:
+		case Qt::Key_Left:
             pos.rx() -= delta;
             break;
-        case Key_Right:
+		case Qt::Key_Right:
             pos.rx() += delta;
             break;
-        case Key_Up:
+		case Qt::Key_Up:
             pos.ry() -= delta;
             break;
-        case Key_Down:
+		case Qt::Key_Down:
             pos.ry() += delta;
             break;
-        case Key_Space:
-        case Key_Return:
-        case Key_Enter:
+		case Qt::Key_Space:
+		case Qt::Key_Return:
+		case Qt::Key_Enter:
             finishMoveResize( false );
             buttonDown = FALSE;
             setCursor( mode );
             break;
-        case Key_Escape:
+		case Qt::Key_Escape:
             finishMoveResize( true );
             buttonDown = FALSE;
             setCursor( mode );

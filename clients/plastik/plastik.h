@@ -93,11 +93,11 @@ public:
     int  borderSize() { return m_borderSize; }
     bool animateButtons() { return m_animateButtons; }
     bool menuClose() { return m_menuClose; }
-    Qt::AlignmentFlags titleAlign() { return m_titleAlign; }
+    Qt::AlignmentFlag titleAlign() { return m_titleAlign; }
     bool reverseLayout() { return m_reverse; }
     QColor getColor(KWinPlastik::ColorType type, const bool active = true);
 
-    QValueList< PlastikHandler::BorderSize >  borderSizes() const;
+    QList< PlastikHandler::BorderSize >  borderSizes() const;
 private:
     void readConfig();
 
@@ -111,7 +111,7 @@ private:
     int  m_titleHeightTool;
     QFont m_titleFont;
     QFont m_titleFontTool;
-    Qt::AlignmentFlags m_titleAlign;
+    Qt::AlignmentFlag m_titleAlign;
 
     // pixmap cache
     QPixmap *m_pixmaps[2][2][NumPixmaps]; // button pixmaps have normal+pressed state...

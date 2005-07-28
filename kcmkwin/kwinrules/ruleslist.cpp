@@ -33,10 +33,10 @@ KCMRulesList::KCMRulesList( QWidget* parent, const char* name )
 : KCMRulesListBase( parent, name )
     {
     // connect both current/selected, so that current==selected (stupid QListBox :( )
-    connect( rules_listbox, SIGNAL( currentChanged( QListBoxItem* )),
-        SLOT( activeChanged( QListBoxItem*)));
-    connect( rules_listbox, SIGNAL( selectionChanged( QListBoxItem* )),
-        SLOT( activeChanged( QListBoxItem*)));
+    connect( rules_listbox, SIGNAL( currentChanged( Q3ListBoxItem* )),
+        SLOT( activeChanged( Q3ListBoxItem*)));
+    connect( rules_listbox, SIGNAL( selectionChanged( Q3ListBoxItem* )),
+        SLOT( activeChanged( Q3ListBoxItem*)));
     connect( new_button, SIGNAL( clicked()),
         SLOT( newClicked()));
     connect( modify_button, SIGNAL( clicked()),
@@ -47,21 +47,21 @@ KCMRulesList::KCMRulesList( QWidget* parent, const char* name )
         SLOT( moveupClicked()));
     connect( movedown_button, SIGNAL( clicked()),
         SLOT( movedownClicked()));
-    connect( rules_listbox, SIGNAL( doubleClicked ( QListBoxItem * ) ),
+    connect( rules_listbox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
             SLOT( modifyClicked()));
     load();
     }
 
 KCMRulesList::~KCMRulesList()
     {
-    for( QValueVector< Rules* >::Iterator it = rules.begin();
+    for( Q3ValueVector< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          ++it )
         delete *it;
     rules.clear();
     }
 
-void KCMRulesList::activeChanged( QListBoxItem* item )
+void KCMRulesList::activeChanged( Q3ListBoxItem* item )
     {
     if( item != NULL )
         rules_listbox->setSelected( item, true ); // make current==selected
@@ -145,7 +145,7 @@ void KCMRulesList::movedownClicked()
 void KCMRulesList::load()
     {
     rules_listbox->clear();
-    for( QValueVector< Rules* >::Iterator it = rules.begin();
+    for( Q3ValueVector< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          ++it )
         delete *it;
@@ -175,7 +175,7 @@ void KCMRulesList::save()
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
     int i = 1;
-    for( QValueVector< Rules* >::ConstIterator it = rules.begin();
+    for( Q3ValueVector< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         {

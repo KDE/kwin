@@ -394,7 +394,7 @@ QRect PlastikClient::captionRect() const
             buttonsLeftWidth() - buttonsRightWidth() -
             marginLeft - marginRight;
 
-    Qt::AlignmentFlags a = Handler()->titleAlign();
+    Qt::AlignmentFlag a = Handler()->titleAlign();
 
     int tX, tW; // position/width of the title buffer
     if (caption.width() >  titleWidth) {
@@ -468,7 +468,7 @@ const QPixmap &PlastikClient::captionPixmap() const
 
     // not found, create new pixmap...
 
-    const uint maxCaptionLength = 300; // truncate captions longer than this!
+    const int maxCaptionLength = 300; // truncate captions longer than this!
     QString c(caption() );
     if (c.length() > maxCaptionLength) {
         c.truncate(maxCaptionLength);

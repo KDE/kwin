@@ -13,9 +13,8 @@
 #include <qcheckbox.h>
 #include <qgroupbox.h>
 #include <kconfig.h>
-#include <qhbox.h>
 #include <qlabel.h>
-#include <qvbox.h>
+#include <Qt3Support/q3vbox.h>
 
 class KDEDefaultConfig: public QObject
 {
@@ -41,7 +40,7 @@ class KDEDefaultConfig: public QObject
 		QCheckBox* cbShowStipple;
 		QCheckBox* cbShowGrabBar;
 		QCheckBox* cbUseGradients;
-		QVBox* gb;
+		Q3VBox* gb;
 		bool 	   highcolor;
 };
 

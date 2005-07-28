@@ -30,6 +30,9 @@ DEALINGS IN THE SOFTWARE.
 #include <unistd.h>
 #include <kwin.h>
 #include <X11/Xlib.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <QX11Info>
 
 static const KCmdLineOptions options[] =
     {
@@ -51,15 +54,15 @@ int main( int argc, char* argv[] )
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    QCString hostname = args->getOption( "hostname" );
+    Q3CString hostname = args->getOption( "hostname" );
     bool pid_ok = false;
-    pid_t pid = args->getOption( "pid" ).toULong( &pid_ok );
+    pid_t pid = QString( args->getOption( "pid" ) ).toULong( &pid_ok );
     QString caption = QString::fromUtf8( args->getOption( "windowname" ));
     QString appname = QString::fromLatin1( args->getOption( "applicationname" ));
     bool id_ok = false;
-    Window id = args->getOption( "wid" ).toULong( &id_ok );
+    Window id = QString( args->getOption( "wid" ) ).toULong( &id_ok );
     bool time_ok = false;
-    Time timestamp =args->getOption( "timestamp" ).toULong( &time_ok );
+    Time timestamp =QString( args->getOption( "timestamp" ) ).toULong( &time_ok );
     args->clear();
     if( !pid_ok || pid == 0 || !id_ok || id == None || !time_ok || timestamp == CurrentTime
 	|| hostname.isEmpty() || caption.isEmpty() || appname.isEmpty())
@@ -71,18 +74,18 @@ int main( int argc, char* argv[] )
 	"<qt>Window with title \"<b>%2</b>\" is not responding. "
 	"This window belongs to application <b>%1</b> (PID=%3, hostname=%4).<p>"
 	"Do you wish to terminate this application? (All unsaved data in this application will be lost.)</qt>" )
-	.arg( appname ).arg( caption ).arg( pid ).arg( hostname );
+	.arg( appname ).arg( caption ).arg( pid ).arg( QString( hostname ) );
     app.updateUserTimestamp( timestamp );
     if( KMessageBox::warningYesNoWId( id, question, QString::null, i18n("Terminate"), i18n("Keep Running") ) == KMessageBox::Yes )
         {    
 	if( hostname != "localhost" )
             {
     	    KProcess proc;
-	    proc << "xon" << hostname << "kill" << pid;
+	    proc << "xon" << hostname << "kill" << QString::number( pid );
     	    proc.start( KProcess::DontCare );
 	    }
 	else
 	    ::kill( pid, SIGKILL );
-	XKillClient( qt_xdisplay(), id );
+	XKillClient( QX11Info::display(), id );
         }
     }

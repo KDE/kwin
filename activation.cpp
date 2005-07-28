@@ -20,7 +20,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 
 #include <fixx11h.h>
-#include <qpopupmenu.h>
 #include <kxerrorhandler.h>
 #include <kstartupinfo.h>
 #include <kstringhandler.h>
@@ -30,8 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "atoms.h"
 #include "group.h"
 #include "rules.h"
-
-extern Time qt_x_time;
+#include <QX11Info>
 
 namespace KWinInternal
 {
@@ -408,19 +406,17 @@ bool Workspace::activateNextClient( Client* c )
           // if 'c' is transient, transfer focus to the first suitable mainwindow
             Client* get_focus = NULL;
             const ClientList mainwindows = ( c != NULL ? c->mainClients() : ClientList());
-            for( ClientList::ConstIterator it = focus_chain.fromLast();
-                 it != focus_chain.end();
-                 --it )
+	    for ( int i = focus_chain.size() - 1; i >= 0; --i )
                 {
-                if( !(*it)->isShown( false ) || !(*it)->isOnCurrentDesktop())
+                if( !focus_chain.at( i )->isShown( false ) || !focus_chain.at(  i )->isOnCurrentDesktop())
                     continue;
-                if( mainwindows.contains( *it ))
+                if( mainwindows.contains( focus_chain.at(  i ) ))
                     {
-                    get_focus = *it;
+                    get_focus = focus_chain.at(  i );
                     break;
                     }
                 if( get_focus == NULL )
-                    get_focus = *it;
+                    get_focus = focus_chain.at(  i );
                 }
             if( get_focus == NULL )
                 get_focus = findDesktop( true, currentDesktop());
@@ -628,7 +624,7 @@ void Workspace::unfakeActivity( Client* c )
 void Client::updateUserTime( Time time )
     { // copied in Group::updateUserTime
     if( time == CurrentTime )
-        time = qt_x_time;
+        time = QX11Info::appTime();
     if( time != -1U
         && ( user_time == CurrentTime
             || timestampCompare( time, user_time ) > 0 )) // time > user_time
@@ -644,7 +640,7 @@ Time Client::readUserCreationTime() const
     unsigned long extra = 0;
     unsigned char *data = 0;
     KXErrorHandler handler; // ignore errors?
-    status = XGetWindowProperty( qt_xdisplay(), window(),
+    status = XGetWindowProperty( QX11Info::display(), window(),
         atoms->kde_net_wm_user_creation_time, 0, 10000, FALSE, XA_CARDINAL,
         &type, &format, &nitems, &extra, &data );
     if (status  == Success )
@@ -906,7 +902,7 @@ void Group::startupIdChanged()
 void Group::updateUserTime( Time time )
     { // copy of Client::updateUserTime
     if( time == CurrentTime )
-        time = qt_x_time;
+        time = QX11Info::appTime();
     if( time != -1U
         && ( user_time == CurrentTime
             || timestampCompare( time, user_time ) > 0 )) // time > user_time

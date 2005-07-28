@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qcursor.h>
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
+#include <QX11Info>
 
 // specify externals before namespace
 
@@ -75,8 +76,8 @@ void PopupInfo::reset()
 void PopupInfo::paintEvent( QPaintEvent* )
     {
     QPainter p( this );
-    style().drawPrimitive( QStyle::PE_Panel, &p, QRect( 0, 0, width(), height() ),
-          colorGroup(), QStyle::Style_Default );
+#warning Somebody with QStyle knowledge, please fix.
+//    style()->drawPrimitive( QStyle::PE_Frame, &p, QRect( 0, 0, width(), height() ), colorGroup(), QStyle::Style_Default );
     paintContents();
     }
 
@@ -100,7 +101,7 @@ void PopupInfo::paintContents()
     p.drawText( r, AlignCenter, m_infoString );
     r.moveBy( -1, 0 );
     */
-    p.drawText( r, AlignCenter, m_infoString );
+    p.drawText( r, Qt::AlignCenter, m_infoString );
     }
 
 void PopupInfo::hide()
@@ -109,7 +110,7 @@ void PopupInfo::hide()
     QWidget::hide();
     QApplication::syncX();
     XEvent otherEvent;
-    while (XCheckTypedEvent (qt_xdisplay(), EnterNotify, &otherEvent ) )
+    while (XCheckTypedEvent (QX11Info::display(), EnterNotify, &otherEvent ) )
         ;
     m_shown = false;
     }

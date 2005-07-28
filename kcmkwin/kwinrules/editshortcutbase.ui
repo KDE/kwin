@@ -26,7 +26,7 @@ It is possible to have several possible shortcuts, and the first available short
 For example "&lt;b&gt;Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b&gt;" will first try &lt;b&gt;Shift+Alt+1&lt;/b&gt;, then others with &lt;b&gt;Shift+Ctrl+C&lt;/b&gt; as the last one.</string>
             </property>
             <property name="textFormat">
-                <enum>RichText</enum>
+                <enum>Qt::RichText</enum>
             </property>
         </widget>
         <widget class="Line">
@@ -40,7 +40,7 @@ For example "&lt;b&gt;Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b&gt;" will first try
                 <enum>Sunken</enum>
             </property>
             <property name="orientation">
-                <enum>Horizontal</enum>
+                <enum>Qt::Horizontal</enum>
             </property>
         </widget>
         <widget class="KLineEdit">
@@ -61,7 +61,7 @@ For example "&lt;b&gt;Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b&gt;" will first try
                         <cstring>spacer1</cstring>
                     </property>
                     <property name="orientation">
-                        <enum>Horizontal</enum>
+                        <enum>Qt::Horizontal</enum>
                     </property>
                     <property name="sizeType">
                         <enum>Expanding</enum>
@@ -86,7 +86,7 @@ For example "&lt;b&gt;Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b&gt;" will first try
                         <cstring>spacer2</cstring>
                     </property>
                     <property name="orientation">
-                        <enum>Horizontal</enum>
+                        <enum>Qt::Horizontal</enum>
                     </property>
                     <property name="sizeType">
                         <enum>Expanding</enum>
@@ -111,7 +111,7 @@ For example "&lt;b&gt;Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b&gt;" will first try
                         <cstring>spacer3</cstring>
                     </property>
                     <property name="orientation">
-                        <enum>Horizontal</enum>
+                        <enum>Qt::Horizontal</enum>
                     </property>
                     <property name="sizeType">
                         <enum>Expanding</enum>
@@ -136,7 +136,7 @@ For example "&lt;b&gt;Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b&gt;" will first try
                 <enum>Sunken</enum>
             </property>
             <property name="orientation">
-                <enum>Horizontal</enum>
+                <enum>Qt::Horizontal</enum>
             </property>
         </widget>
     </vbox>

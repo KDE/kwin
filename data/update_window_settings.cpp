@@ -14,15 +14,19 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <kinstance.h>
 #include <dcopclient.h>
+#include <qrect.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <Q3PtrList>
 
 struct SessionInfo
     {
-    QCString sessionId;
-    QCString windowRole;
-    QCString wmCommand;
-    QCString wmClientMachine;
-    QCString resourceName;
-    QCString resourceClass;
+    Q3CString sessionId;
+    Q3CString windowRole;
+    Q3CString wmCommand;
+    Q3CString wmClientMachine;
+    Q3CString resourceName;
+    Q3CString resourceClass;
 
     QRect geometry;
     QRect restore;
@@ -43,7 +47,7 @@ struct SessionInfo
     bool fake; // fake session, i.e. 'save window settings', not SM restored
     };
 
-QPtrList<SessionInfo> fakeSession;
+Q3PtrList<SessionInfo> fakeSession;
 
 static const char* const window_type_names[] = 
     {
@@ -164,5 +168,5 @@ int main()
     dest_cfg.sync();
     DCOPClient client;
     client.attach();
-    client.send("kwin*", "", "reconfigure()", "");
+    client.send("kwin*", "", "reconfigure()", QByteArray());
     }

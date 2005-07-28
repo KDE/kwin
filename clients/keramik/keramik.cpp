@@ -31,6 +31,8 @@
 #include <qtooltip.h>
 #include <qwidget.h>
 #include <qlabel.h>
+#include <QEvent>
+#include <QApplication>
 
 #include <X11/Xlib.h>
 
@@ -171,8 +173,6 @@ KeramikHandler::KeramikHandler()
 
 	settings_cache = NULL;
 
-	imageDb = KeramikImageDb::instance();
-
 	// Create the button deco bitmaps
 	buttonDecos[ Menu ]             = new QBitmap( 17, 17, menu_bits,       true );
 	buttonDecos[ OnAllDesktops ]    = new QBitmap( 17, 17, on_all_desktops_bits,  true );
@@ -219,8 +219,6 @@ KeramikHandler::~KeramikHandler()
 
 	delete settings_cache;
 
-	KeramikImageDb::release();
-	imageDb = NULL;
         clientHandler = NULL;
 }
 
@@ -628,11 +626,11 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 QImage *KeramikHandler::loadImage( const QString &name, const QColor &col )
 {
 	if ( col.isValid() ) {
-		QImage *img = new QImage( imageDb->image(name)->copy() );
+		QImage *img = new QImage( ":/pics/" + name + ".png" );
 		KIconEffect::colorize( *img, col, 1.0 );
 		return img;
 	} else
-		return new QImage( imageDb->image(name)->copy() );
+		return new QImage( ":/pics/" + name + ".png" );
 }
 
 
@@ -742,9 +740,9 @@ KDecoration* KeramikHandler::createDecoration( KDecorationBridge* bridge )
         return new KeramikClient( bridge, this );
 }
 
-QValueList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
+QList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+  return QList< BorderSize >() << BorderNormal << BorderLarge <<
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
@@ -754,14 +752,14 @@ QValueList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
 
 
 KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, const QString &tip, const int realizeBtns )
-		: QButton( c->widget(), name ),
-		client( c ), button( btn ), hover( false ), lastbutton( NoButton )
+		: Q3Button( c->widget(), name ),
+		client( c ), button( btn ), hover( false ), lastbutton( Qt::NoButton )
 {
 	realizeButtons = realizeBtns;
 
 	QToolTip::add( this, tip ); // FRAME
-	setBackgroundMode( NoBackground );
-        setCursor( arrowCursor );
+	setBackgroundMode( Qt::NoBackground );
+	setCursor( Qt::arrowCursor );
 	int size = clientHandler->roundButton()->height();
 	setFixedSize( size, size );
 
@@ -777,7 +775,7 @@ KeramikButton::~KeramikButton()
 
 void KeramikButton::enterEvent( QEvent *e )
 {
-	QButton::enterEvent( e );
+	Q3Button::enterEvent( e );
 
 	hover = true;
 	repaint( false );
@@ -786,7 +784,7 @@ void KeramikButton::enterEvent( QEvent *e )
 
 void KeramikButton::leaveEvent( QEvent *e )
 {
-	QButton::leaveEvent( e );
+	Q3Button::leaveEvent( e );
 
 	hover = false;
 	repaint( false );
@@ -796,16 +794,16 @@ void KeramikButton::leaveEvent( QEvent *e )
 void KeramikButton::mousePressEvent( QMouseEvent *e )
 {
 	lastbutton = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-	QButton::mousePressEvent( &me );
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state() );
+	Q3Button::mousePressEvent( &me );
 }
 
 
 void KeramikButton::mouseReleaseEvent( QMouseEvent *e )
 {
 	lastbutton = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?LeftButton:NoButton, e->state() );
-	QButton::mouseReleaseEvent( &me );
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state() );
+	Q3Button::mouseReleaseEvent( &me );
 }
 
 
@@ -828,14 +826,14 @@ void KeramikButton::drawButton( QPainter *p )
 
 	if ( isDown() ) {
 		// Pressed
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(2*size, 0, size, size), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(2*size, 0, size, size), pix->rect() ) );
 		p->translate( QApplication::reverseLayout() ? -1 : 1,  1 );
 	} else if ( hover )
 		// Mouse over
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(size, 0, size, size), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(size, 0, size, size), pix->rect() ) );
 	else
 		// Normal
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QRect(0, 0, size, size), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(0, 0, size, size), pix->rect() ) );
 
 
 	// Draw the button deco on the bevel
@@ -906,11 +904,12 @@ void KeramikClient::init()
 	connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
 	connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 
-        createMainWidget( WStaticContents | WResizeNoErase | WRepaintNoErase );
+	createMainWidget( Qt::WResizeNoErase );
+	widget()->setAttribute( Qt::WA_StaticContents );
 	widget()->installEventFilter( this );
 
 	// Minimize flicker
-	widget()->setBackgroundMode( NoBackground );
+	widget()->setBackgroundMode( Qt::NoBackground );
 
 	for ( int i=0; i < NumButtons; i++ )
 		button[i] = NULL;
@@ -1023,14 +1022,14 @@ void KeramikClient::reset( unsigned long )
 
 void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 {
-	for ( uint i=0; i < s.length(); i++ )
+	for ( int i=0; i < s.length(); i++ )
 	{
 		switch ( s[i].latin1() )
 		{
 			// Menu button
 			case 'M' :
 				if ( !button[MenuButton] ) {
-					button[MenuButton] = new KeramikButton( this, "menu", MenuButton, i18n("Menu"), LeftButton|RightButton );
+					button[MenuButton] = new KeramikButton( this, "menu", MenuButton, i18n("Menu"), Qt::LeftButton|Qt::RightButton );
 					connect( button[MenuButton], SIGNAL( pressed() ), SLOT( menuButtonPressed() ) );
 					layout->addWidget( button[MenuButton] );
 				}
@@ -1069,7 +1068,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Maximize button
 			case 'A' :
 				if ( !button[MaxButton] && isMaximizable() ) {
-					button[MaxButton] = new KeramikButton( this, "maximize", MaxButton, i18n("Maximize"), LeftButton|MidButton|RightButton );
+					button[MaxButton] = new KeramikButton( this, "maximize", MaxButton, i18n("Maximize"), Qt::LeftButton|Qt::MidButton|Qt::RightButton );
 					connect( button[MaxButton], SIGNAL( clicked() ), SLOT( slotMaximize() ) );
 					layout->addWidget( button[MaxButton] );
 				}
@@ -1257,7 +1256,7 @@ void KeramikClient::updateCaptionBuffer()
 		( clientHandler->showAppIcons() ? 16 + iconSpacing : 0 );
 
 	int xpos = QMAX( (captionRect.width() - tw) / 3, 8 );
-	QRect tr = QStyle::visualRect( QRect(xpos, 1, captionRect.width() - xpos - 10,
+	QRect tr = QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(xpos, 1, captionRect.width() - xpos - 10,
 				captionRect.height() - 4), captionBuffer.rect() );
 
 	//p.setPen( Qt::red ); // debug
@@ -1266,7 +1265,7 @@ void KeramikClient::updateCaptionBuffer()
 	// Application icon
 	if ( clientHandler->showAppIcons() )
 	{
-		QRect iconRect = QStyle::visualRect( QRect(tr.x(),
+		QRect iconRect = QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(tr.x(),
 					1 + (captionRect.height() - 4 - 16) / 2, 16, 16), tr );
 		QRect r( icon->rect() );
 		r.moveCenter( iconRect.center() );
@@ -1294,8 +1293,8 @@ void KeramikClient::updateCaptionBuffer()
 	}
 
 	// Draw the titlebar text
-	int flags = AlignVCenter | SingleLine;
-	flags |= ( QApplication::reverseLayout() ? AlignRight : AlignLeft );
+	int flags = Qt::AlignVCenter | Qt::SingleLine;
+	flags |= ( QApplication::reverseLayout() ? Qt::AlignRight : Qt::AlignLeft );
 
 	if ( clientHandler->useShadowedText() )
 	{
@@ -1304,7 +1303,7 @@ void KeramikClient::updateCaptionBuffer()
                 if (qGray(options()->color(ColorFont, active).rgb()) < 100)
                     p.setPen( QColor(200,200,200) );
                 else
-                    p.setPen( black );
+                    p.setPen( Qt::black );
 		p.drawText( tr, flags, caption() );
 		p.translate( QApplication::reverseLayout() ? 1 : -1, -1 );
 	}
@@ -1326,7 +1325,7 @@ void KeramikClient::calculateCaptionRect()
 		cw += 16 + 4; // icon width + space
 
 	cw = QMIN( cw, titlebar->geometry().width() );
-	captionRect = QStyle::visualRect( QRect(titlebar->geometry().x(), (largeCaption ? 0 : titleBaseY),
+	captionRect = QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(titlebar->geometry().x(), (largeCaption ? 0 : titleBaseY),
 				cw, clientHandler->titleBarHeight(largeCaption) ),
 				titlebar->geometry() );
 }
@@ -1645,7 +1644,7 @@ void KeramikClient::resizeEvent( QResizeEvent *e )
 			widget()->update( QRect( titlebar->geometry().topRight(), QPoint( width() - 4,
 							titlebar->geometry().bottom() ) ) );
 			// Titlebar needs no paint event
-			QApplication::postEvent( this, new QPaintEvent( titlebar->geometry(), FALSE ) );
+			QApplication::postEvent( this, new QPaintEvent( titlebar->geometry() ) );
 		}
 	}
 }
@@ -1653,7 +1652,7 @@ void KeramikClient::resizeEvent( QResizeEvent *e )
 
 void KeramikClient::mouseDoubleClickEvent( QMouseEvent *e )
 {
-	if ( e->button() == LeftButton
+	if ( e->button() == Qt::LeftButton
             && QRect( 0, 0, width(), clientHandler->titleBarHeight( largeTitlebar ) ).contains( e->pos() ) )
 		titlebarDblClickOperation();
 }

@@ -68,7 +68,7 @@ class KWIN_EXPORT KDecorationFactory
          * sizes, ordered from the smallest to the largest one. By default, only
          * BorderNormal is returned.
          */        
-        virtual QValueList< BorderSize > borderSizes() const;
+        virtual QList< BorderSize > borderSizes() const;
 
         virtual bool supports( Ability ability );
         
@@ -108,7 +108,7 @@ class KWIN_EXPORT KDecorationFactory
          */
         NET::WindowType windowType( unsigned long supported_types, KDecorationBridge* bridge ) const;
     private:
-        QValueList< KDecoration* > _decorations;
+        QList< KDecoration* > _decorations;
         KDecorationFactoryPrivate* d;
     };
     

@@ -20,6 +20,8 @@
 
 #include <kglobal.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 #include <klocale.h>
 #include <kapplication.h>
 #include <dcopclient.h>
@@ -68,7 +70,7 @@ void KCMRules::save()
     config.sync();
     if( !kapp->dcopClient()->isAttached())
         kapp->dcopClient()->attach();
-    kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+    kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
     }
 
 void KCMRules::defaults()

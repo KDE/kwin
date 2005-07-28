@@ -24,8 +24,12 @@
 
 #include <kdialogbase.h>
 #include <kwin.h>
+#include <q3cstring.h>
 
 #include "../../rules.h"
+//Added by qt3to4:
+#include <QEvent>
+#include <Q3CString>
 
 namespace KWinInternal
 {
@@ -45,14 +49,14 @@ class DetectDialog
     public:
         DetectDialog( QWidget* parent = NULL, const char* name = NULL );
         void detect( WId window );
-        QCString selectedClass() const;
+        Q3CString selectedClass() const;
         bool selectedWholeClass() const;
-        QCString selectedRole() const;
+        Q3CString selectedRole() const;
         bool selectedWholeApp() const;
         NET::WindowType selectedType() const;
         QString selectedTitle() const;
         Rules::StringMatch titleMatch() const;
-        QCString selectedMachine() const;
+        Q3CString selectedMachine() const;
         const KWin::WindowInfo& windowInfo() const;
     signals:
         void detectionDone( bool );
@@ -63,13 +67,13 @@ class DetectDialog
         void readWindow( WId window );
         void executeDialog();
         WId findWindow();
-        QCString wmclass_class;
-        QCString wmclass_name;
-        QCString role;
+        Q3CString wmclass_class;
+        Q3CString wmclass_name;
+        Q3CString role;
         NET::WindowType type;
         QString title;
-        QCString extrarole;
-        QCString machine;
+        Q3CString extrarole;
+        Q3CString machine;
         DetectWidget* widget;
         QDialog* grabber;
         KWin::WindowInfo info;

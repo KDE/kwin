@@ -39,12 +39,15 @@
 #include <kdecoration.h>
 
 #include "kwindecorationIface.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <Q3ValueList>
 
 class KComboBox;
 class QCheckBox;
 class QLabel;
 class QTabWidget;
-class QVBox;
+class Q3VBox;
 class QSlider;
 
 class KDecorationPlugins;
@@ -98,14 +101,14 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString::null );
 		void resetKWin();
 		void checkSupportedBorderSizes();
-		static int borderSizeToIndex( BorderSize size, QValueList< BorderSize > sizes );
-		static BorderSize indexToBorderSize( int index, QValueList< BorderSize > sizes );
+		static int borderSizeToIndex( BorderSize size, Q3ValueList< BorderSize > sizes );
+		static BorderSize indexToBorderSize( int index, Q3ValueList< BorderSize > sizes );
 
 		QTabWidget* tabWidget;
 
 		// Page 1
 		KComboBox* decorationList;
-		QValueList<DecorationInfo> decorations;
+		Q3ValueList<DecorationInfo> decorations;
 
 		KDecorationPreview* preview;
 		KDecorationPlugins* plugins;
@@ -126,7 +129,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 
 		// Page 2
 		ButtonPositionWidget *buttonPositionWidget;
-		QVBox*	 buttonPage;
+		Q3VBox*	 buttonPage;
 };
 
 

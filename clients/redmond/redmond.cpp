@@ -16,6 +16,9 @@
 
 #include <qdrawutil.h>
 #include <qdatetime.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QPaintEvent>
 #include <kpixmapeffect.h>
 #include <kimageeffect.h>
 #include <kdrawutil.h>
@@ -234,7 +237,7 @@ RedmondButton::RedmondButton(ButtonType type, RedmondDeco *parent, const char *n
     : KCommonDecorationButton(type, parent, name)
 {
 	// Eliminate background flicker
-	setBackgroundMode( NoBackground );
+	setBackgroundMode( Qt::NoBackground );
 
 	miniBtn = decoration()->isToolWindow();
 }
@@ -257,7 +260,7 @@ void RedmondButton::reset(unsigned long changed)
 				break;
 			case MenuButton:
 			{
-				QPixmap miniIcon = decoration()->icon().pixmap(QIconSet::Small, QIconSet::Normal);
+				QPixmap miniIcon = decoration()->icon().pixmap(QIcon::Small, QIcon::Normal);
 				if (!miniIcon.isNull()) {
 					setPixmap(miniIcon);
 				} else {
@@ -553,7 +556,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
             titleBuffer->convertFromImage(image, Qt::OrderedDither);
         }
 
-        QPainter p2( titleBuffer, this );
+        QPainter p2( titleBuffer );
 
         // Since drawing the gradient is (relatively) slow, it is best
         // to draw the title text on the pixmap.
@@ -561,7 +564,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
         p2.setFont( fnt );
         p2.setPen( options()->color(KDecoration::ColorFont, isActive() ));
 		p2.drawText( r.x(), fontoffset, r.width()-3, r.height()-1,
-                     AlignLeft | AlignVCenter, caption() );
+                     Qt::AlignLeft | Qt::AlignVCenter, caption() );
         p2.end();
 
         p.drawPixmap( modBorderWidth, modBorderWidth, *titleBuffer );
@@ -577,7 +580,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
        p.setFont( fnt );
        p.setPen(options()->color(KDecoration::ColorFont, isActive() ));
 	   p.drawText(r.x()+4, r.y()+fontoffset-2, r.width()-3, r.height()-1,
-                  AlignLeft | AlignVCenter, caption() );
+                  Qt::AlignLeft | Qt::AlignVCenter, caption() );
    }
 
 }
@@ -670,9 +673,9 @@ bool RedmondDecoFactory::supports( Ability ability )
 	}
 }
 
-QValueList< RedmondDecoFactory::BorderSize > RedmondDecoFactory::borderSizes() const
+QList< RedmondDecoFactory::BorderSize > RedmondDecoFactory::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+  return QList< BorderSize >() << BorderNormal << BorderLarge <<
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 

@@ -62,7 +62,7 @@ public:
     virtual KDecoration* createDecoration( KDecorationBridge* );
     virtual bool reset( unsigned long changed );
     virtual bool supports( Ability ability );
-    QValueList< BorderSize > borderSizes() const;
+    QList< BorderSize > borderSizes() const;
 private:
     void read_config();
 };

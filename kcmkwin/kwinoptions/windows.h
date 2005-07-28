@@ -33,9 +33,9 @@ class QComboBox;
 class QGroupBox;
 class QLabel;
 class QSlider;
-class QButtonGroup;
+class Q3ButtonGroup;
 class QSpinBox;
-class QVButtonGroup;
+class Q3VButtonGroup;
 
 class KColorButton;
 class KIntNumInput;
@@ -104,7 +104,7 @@ private:
   void setRollOverDesktops(bool);
   void setShowPopupinfo(bool);
 
-  QButtonGroup *fcsBox;
+  Q3ButtonGroup *fcsBox;
   QComboBox *focusCombo;
   QCheckBox *autoRaiseOn;
   QCheckBox *delayFocusOn;
@@ -112,7 +112,7 @@ private:
   KIntNumInput *autoRaise;
   KIntNumInput *delayFocus;
 
-  QButtonGroup *kbdBox;
+  Q3ButtonGroup *kbdBox;
   QCheckBox    *altTabPopup;
   QCheckBox    *traverseAll;
   QCheckBox    *rollOverDesktops;
@@ -152,7 +152,7 @@ private:
   void setPlacement(int); //CT
   void setMoveResizeMaximized(bool);
 
-  QButtonGroup *windowsBox;
+  Q3ButtonGroup *windowsBox;
   QCheckBox *opaque;
   QCheckBox *resizeOpaqueOn;
   QCheckBox *geometryTipOn;
@@ -171,7 +171,7 @@ private:
   int getWindowSnapZone();
   void setWindowSnapZone( int );
 
-  QVButtonGroup *MagicBox;
+  Q3VButtonGroup *MagicBox;
   KIntNumInput *BrdrSnap, *WndwSnap;
   QCheckBox *OverlapSnap;
 
@@ -204,7 +204,7 @@ private:
   void setShadeHoverInterval(int);
 
   QCheckBox *animateShade;
-  QButtonGroup *shBox;
+  Q3ButtonGroup *shBox;
   QCheckBox *shadeHoverOn;
   KIntNumInput *shadeHover;
 
@@ -216,7 +216,7 @@ private:
   void setElectricBorders( int );
   void setElectricBorderDelay( int );
 
-  QVButtonGroup *electricBox;
+  Q3VButtonGroup *electricBox;
   QRadioButton *active_disable;
   QRadioButton *active_move;
   QRadioButton *active_always;

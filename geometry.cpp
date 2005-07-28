@@ -28,8 +28,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "geometrytip.h"
 #include "rules.h"
-
-extern Time qt_x_time;
+#include <QX11Info>
+#include <QDesktopWidget>
 
 namespace KWinInternal
 {
@@ -326,7 +326,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
         snap = options->windowSnapZone;
         if (snap)
             {
-            QValueList<Client *>::ConstIterator l;
+            QList<Client *>::ConstIterator l;
             for (l = clients.begin();l != clients.end();++l )
                 {
                 if ((*l)->isOnDesktop(currentDesktop()) &&
@@ -483,7 +483,7 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
             {
             deltaX = int(snap);
             deltaY = int(snap);
-            QValueList<Client *>::ConstIterator l;
+            QList<Client *>::ConstIterator l;
             for (l = clients.begin();l != clients.end();++l )
                 {
                 if ((*l)->isOnDesktop(currentDesktop()) &&
@@ -617,15 +617,14 @@ void Workspace::cascadeDesktop()
  */
 void Workspace::unclutterDesktop()
     {
-    ClientList::Iterator it(clients.fromLast());
-    for (; it != clients.end(); --it)
+	for ( int i = clients.size() - 1; i>=0; i-- )
         {
-        if((!(*it)->isOnDesktop(currentDesktop())) ||
-           ((*it)->isMinimized())                  ||
-           ((*it)->isOnAllDesktops())              ||
-           (!(*it)->isMovable()) )
+        if( ( !clients.at( i )->isOnDesktop( currentDesktop() ) ) ||
+           (clients.at( i )->isMinimized())                  ||
+           (clients.at( i )->isOnAllDesktops())              ||
+           (!clients.at( i )->isMovable()) )
             continue;
-        initPositioning->placeSmart(*it, QRect());
+        initPositioning->placeSmart(clients.at(  i ), QRect());
         }
     }
 
@@ -637,18 +636,18 @@ void Workspace::updateTopMenuGeometry( Client* c )
     if( c != NULL )
         {
         XEvent ev;
-        ev.xclient.display = qt_xdisplay();
+        ev.xclient.display = QX11Info::display();
         ev.xclient.type = ClientMessage;
         ev.xclient.window = c->window();
-        static Atom msg_type_atom = XInternAtom( qt_xdisplay(), "_KDE_TOPMENU_MINSIZE", False );
+        static Atom msg_type_atom = XInternAtom( QX11Info::display(), "_KDE_TOPMENU_MINSIZE", False );
         ev.xclient.message_type = msg_type_atom;
         ev.xclient.format = 32;
-        ev.xclient.data.l[0] = qt_x_time;
+        ev.xclient.data.l[0] = QX11Info::appTime();
         ev.xclient.data.l[1] = topmenu_space->width();
         ev.xclient.data.l[2] = topmenu_space->height();
         ev.xclient.data.l[3] = 0;
         ev.xclient.data.l[4] = 0;
-        XSendEvent( qt_xdisplay(), c->window(), False, NoEventMask, &ev );
+        XSendEvent( QX11Info::display(), c->window(), False, NoEventMask, &ev );
         KWin::setStrut( c->window(), 0, 0, topmenu_height, 0 ); // so that kicker etc. know
         c->checkWorkspacePosition();
         return;
@@ -792,25 +791,25 @@ NETExtendedStrut Client::strut() const
             {
             ext.left_width = str.left;
             ext.left_start = 0;
-            ext.left_end = XDisplayHeight( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            ext.left_end = XDisplayHeight( QX11Info::display(), DefaultScreen( QX11Info::display()));
             }
         if( str.right != 0 )
             {
             ext.right_width = str.right;
             ext.right_start = 0;
-            ext.right_end = XDisplayHeight( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            ext.right_end = XDisplayHeight( QX11Info::display(), DefaultScreen( QX11Info::display()));
             }
         if( str.top != 0 )
             {
             ext.top_width = str.top;
             ext.top_start = 0;
-            ext.top_end = XDisplayWidth( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            ext.top_end = XDisplayWidth( QX11Info::display(), DefaultScreen( QX11Info::display()));
             }
         if( str.bottom != 0 )
             {
             ext.bottom_width = str.bottom;
             ext.bottom_start = 0;
-            ext.bottom_end = XDisplayWidth( qt_xdisplay(), DefaultScreen( qt_xdisplay()));
+            ext.bottom_end = XDisplayWidth( QX11Info::display(), DefaultScreen( QX11Info::display()));
             }
         }
     return ext;
@@ -1207,7 +1206,7 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
 void Client::getWmNormalHints()
     {
     long msize;
-    if (XGetWMNormalHints(qt_xdisplay(), window(), &xSizeHint, &msize) == 0 )
+    if (XGetWMNormalHints(QX11Info::display(), window(), &xSizeHint, &msize) == 0 )
         xSizeHint.flags = 0;
     // set defined values for the fields, even if they're not in flags
 
@@ -1295,7 +1294,7 @@ void Client::sendSyntheticConfigureNotify()
     c.border_width = 0;
     c.above = None;
     c.override_redirect = 0;
-    XSendEvent( qt_xdisplay(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
+    XSendEvent( QX11Info::display(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
     }
 
 const QPoint Client::calculateGravitation( bool invert, int gravity ) const
@@ -1657,14 +1656,14 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         return;
         }
     resizeDecoration( QSize( w, h ));
-    XMoveResizeWindow( qt_xdisplay(), frameId(), x, y, w, h );
+    XMoveResizeWindow( QX11Info::display(), frameId(), x, y, w, h );
 //     resizeDecoration( QSize( w, h ));
     if( !isShade())
         {
         QSize cs = clientSize();
-        XMoveResizeWindow( qt_xdisplay(), wrapperId(), clientPos().x(), clientPos().y(),
+        XMoveResizeWindow( QX11Info::display(), wrapperId(), clientPos().x(), clientPos().y(),
             cs.width(), cs.height());
-        XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
+        XMoveResizeWindow( QX11Info::display(), window(), 0, 0, cs.width(), cs.height());
         }
     if( shape())
         updateShape();
@@ -1712,14 +1711,14 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         return;
         }
     resizeDecoration( QSize( w, h ));
-    XResizeWindow( qt_xdisplay(), frameId(), w, h );
+    XResizeWindow( QX11Info::display(), frameId(), w, h );
 //     resizeDecoration( QSize( w, h ));
     if( !isShade())
         {
         QSize cs = clientSize();
-        XMoveResizeWindow( qt_xdisplay(), wrapperId(), clientPos().x(), clientPos().y(),
+        XMoveResizeWindow( QX11Info::display(), wrapperId(), clientPos().x(), clientPos().y(),
             cs.width(), cs.height());
-        XMoveResizeWindow( qt_xdisplay(), window(), 0, 0, cs.width(), cs.height());
+        XMoveResizeWindow( QX11Info::display(), window(), 0, 0, cs.width(), cs.height());
         }
     if( shape())
         updateShape();
@@ -1743,7 +1742,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
         pending_geometry_update = true;
         return;
         }
-    XMoveWindow( qt_xdisplay(), frameId(), x, y );
+    XMoveWindow( QX11Info::display(), frameId(), x, y );
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
@@ -2117,7 +2116,7 @@ void Client::doDrawbound( const QRect& geom, bool clear )
         return; // done by decoration
     QPainter p ( workspace()->desktopWidget() );
     p.setPen( QPen( Qt::white, 5 ) );
-    p.setRasterOp( Qt::XorROP );
+    p.setCompositionMode( QPainter::CompositionMode_Xor );
     // the line is 5 pixel thick, so compensate for the extra two pixels
     // on outside (#88657)
     QRect g = geom;
@@ -2183,18 +2182,18 @@ bool Client::startMoveResize()
     // (http://lists.kde.org/?t=107302193400001&r=1&w=2)
     XSetWindowAttributes attrs;
     QRect r = workspace()->clientArea( FullArea, this );
-    move_resize_grab_window = XCreateWindow( qt_xdisplay(), workspace()->rootWin(), r.x(), r.y(),
+    move_resize_grab_window = XCreateWindow( QX11Info::display(), workspace()->rootWin(), r.x(), r.y(),
         r.width(), r.height(), 0, CopyFromParent, InputOnly, CopyFromParent, 0, &attrs );
-    XMapRaised( qt_xdisplay(), move_resize_grab_window );
-    if( XGrabPointer( qt_xdisplay(), move_resize_grab_window, False,
+    XMapRaised( QX11Info::display(), move_resize_grab_window );
+    if( XGrabPointer( QX11Info::display(), move_resize_grab_window, False,
         ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
-        GrabModeAsync, GrabModeAsync, None, cursor.handle(), qt_x_time ) == Success )
+        GrabModeAsync, GrabModeAsync, None, cursor.handle(), QX11Info::appTime() ) == Success )
         has_grab = true;
-    if( XGrabKeyboard( qt_xdisplay(), frameId(), False, GrabModeAsync, GrabModeAsync, qt_x_time ) == Success )
+    if( XGrabKeyboard( QX11Info::display(), frameId(), False, GrabModeAsync, GrabModeAsync, QX11Info::appTime() ) == Success )
         has_grab = true;
     if( !has_grab ) // at least one grab is necessary in order to be able to finish move/resize
         {
-        XDestroyWindow( qt_xdisplay(), move_resize_grab_window );
+        XDestroyWindow( QX11Info::display(), move_resize_grab_window );
         move_resize_grab_window = None;
         return false;
         }
@@ -2257,9 +2256,9 @@ void Client::leaveMoveResize()
     if ( ( isMove() && rules()->checkMoveResizeMode( options->moveMode ) != Options::Opaque )
       || ( isResize() && rules()->checkMoveResizeMode( options->resizeMode ) != Options::Opaque ) )
         ungrabXServer();
-    XUngrabKeyboard( qt_xdisplay(), qt_x_time );
-    XUngrabPointer( qt_xdisplay(), qt_x_time );
-    XDestroyWindow( qt_xdisplay(), move_resize_grab_window );
+    XUngrabKeyboard( QX11Info::display(), QX11Info::appTime() );
+    XUngrabPointer( QX11Info::display(), QX11Info::appTime() );
+    XDestroyWindow( QX11Info::display(), move_resize_grab_window );
     move_resize_grab_window = None;
     workspace()->setClientIsMoving(0);
     if( move_faked_activity )
@@ -2505,7 +2504,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             }                               // so the geometry tip will be painted above the outline
         }
     if ( isMove() )
-      workspace()->clientMoved(globalPos, qt_x_time);
+      workspace()->clientMoved(globalPos, QX11Info::appTime());
     }
 
 

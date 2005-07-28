@@ -21,6 +21,8 @@
 */
 
 #include <qpainter.h>
+//Added by qt3to4:
+#include <QPaintEvent>
 
 #include <kconfig.h>
 
@@ -283,7 +285,7 @@ WebClient::paintEvent(QPaintEvent * pe)
 
   p.setPen(options()->color(ColorFont, isActive()));
 
-  p.drawText(titleRect, AlignCenter, caption());
+  p.drawText(titleRect, Qt::AlignCenter, caption());
 }
 
 void WebClient::updateWindowShape()
@@ -372,9 +374,9 @@ bool WebFactory::supports( Ability ability )
     };
 }
 
-QValueList< WebFactory::BorderSize > WebFactory::borderSizes() const
+QList< WebFactory::BorderSize > WebFactory::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+  return QList< BorderSize >() << BorderNormal << BorderLarge <<
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 

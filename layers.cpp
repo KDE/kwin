@@ -72,8 +72,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "tabbox.h"
 #include "group.h"
 #include "rules.h"
-
-extern Time qt_x_time;
+#include <QX11Info>
 
 namespace KWinInternal
 {
@@ -139,12 +138,10 @@ void Workspace::propagateClients( bool propagate_new_clients )
     // windows (e.g. popups).
     new_stack[ pos++ ] = supportWindow->winId();
     int topmenu_space_pos = 1; // not 0, that's supportWindow !!!
-    for( ClientList::ConstIterator it = stacking_order.fromLast();
-         it != stacking_order.end();
-         --it )
+	for ( int i = stacking_order.size() - 1; i >= 0; i-- )
         {
-        new_stack[ pos++ ] = (*it)->frameId();
-        if( (*it)->belongsToLayer() >= DockLayer )
+        new_stack[ pos++ ] = stacking_order.at( i )->frameId();
+        if( stacking_order.at( i )->belongsToLayer() >= DockLayer )
             topmenu_space_pos = pos;
         }
     if( topmenu_space != NULL )
@@ -159,7 +156,7 @@ void Workspace::propagateClients( bool propagate_new_clients )
     // TODO isn't it too inefficient to restart always all clients?
     // TODO don't restack not visible windows?
     assert( new_stack[ 0 ] = supportWindow->winId());
-    XRestackWindows(qt_xdisplay(), new_stack, pos);
+    XRestackWindows(QX11Info::display(), new_stack, pos);
     delete [] new_stack;
 
     if ( propagate_new_clients )
@@ -193,25 +190,21 @@ void Workspace::propagateClients( bool propagate_new_clients )
 Client* Workspace::topClientOnDesktop( int desktop, bool unconstrained ) const
     {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
-    ClientList::ConstIterator begin, end;
+    ClientList list;
     if( !unconstrained )
         {
-        begin = stacking_order.fromLast();
-        end = stacking_order.end();
+			list = stacking_order;
         }
     else
         {
-        begin = unconstrained_stacking_order.fromLast();
-        end = unconstrained_stacking_order.end();
+			list = unconstrained_stacking_order;
         }
-    for( ClientList::ConstIterator it = begin;
-        it != end;
-        --it )
-        {
-        if ( (*it)->isOnDesktop( desktop ) && !(*it)->isSpecialWindow()
-            && (*it)->isShown( false ) && (*it)->wantsTabFocus())
-            return *it;
-        }
+	for ( int i = list.size() - 1; i>=0; i-- )
+	{
+		if ( list.at( i )->isOnDesktop( desktop ) && !list.at( i )->isSpecialWindow()
+				&& list.at(  i )->isShown( false ) && list.at(  i )->wantsTabFocus())
+			return list.at(  i );
+	}
     return 0;
     }
 
@@ -220,20 +213,20 @@ Client* Workspace::findDesktop( bool topmost, int desktop ) const
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if( topmost )
         {
-        for ( ClientList::ConstIterator it = stacking_order.fromLast(); it != stacking_order.end(); --it)
+		for ( int i = stacking_order.size() - 1; i>=0; i-- )
             {
-            if ( (*it)->isOnDesktop( desktop ) && (*it)->isDesktop()
-                && (*it)->isShown( true ))
-                return *it;
+            if ( stacking_order.at( i )->isOnDesktop( desktop ) && stacking_order.at( i )->isDesktop()
+                && stacking_order.at( i )->isShown( true ))
+                return stacking_order.at(  i );
             }
         }
     else // bottom-most
         {
-        for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
+		foreach ( Client* c, stacking_order )
             {
-            if ( (*it)->isOnDesktop( desktop ) && (*it)->isDesktop()
-                && (*it)->isShown( true ))
-                return *it;
+            if ( c->isOnDesktop( desktop ) && c->isDesktop()
+                && c->isShown( true ))
+                return c;
             }
         }
     return NULL;
@@ -274,10 +267,10 @@ void Workspace::lowerClient( Client* c )
         {
         // lower also mainclients, in their reversed stacking order
         ClientList mainclients = ensureStackingOrder( c->mainClients());
-        for( ClientList::ConstIterator it = mainclients.fromLast();
-             it != mainclients.end();
-             ++it )
-            lowerClient( *it );
+        for( int i = mainclients.size() - 1;
+             i >= 0;
+             --i )
+            lowerClient( mainclients[ i ] );
         }
 
     if ( c == most_recently_raised )
@@ -355,17 +348,14 @@ void Workspace::raiseClientWithinApplication( Client* c )
     // ignore mainwindows
     
     // first try to put it above the top-most window of the application
-    for( ClientList::Iterator it = unconstrained_stacking_order.fromLast();
-         it != unconstrained_stacking_order.end();
-         --it )
+	for ( int i = unconstrained_stacking_order.size() - 1; i>= 0 ; i-- )
         {
-        if( *it == c ) // don't lower it just because it asked to be raised
+        if( unconstrained_stacking_order.at( i ) == c ) // don't lower it just because it asked to be raised
             return;
-        if( Client::belongToSameApplication( *it, c ))
+        if( Client::belongToSameApplication( unconstrained_stacking_order.at(  i ), c ))
             {
             unconstrained_stacking_order.remove( c );
-            ++it; // insert after the found one
-            unconstrained_stacking_order.insert( it, c );
+            unconstrained_stacking_order.insert( ++i, c ); // insert after the found one
             return;
             }
         }
@@ -425,13 +415,11 @@ void Workspace::restackClientUnderActive( Client* c )
         {
         // also put in focus_chain after all windows belonging to the active application
         focus_chain.remove( c );
-        for( ClientList::Iterator it = focus_chain.fromLast();
-             it != focus_chain.end();
-             --it )
+	for ( int i = focus_chain.size() - 1; i >= 0 ; i-- )
             {
-            if( Client::belongToSameApplication( active_client, *it ))
+            if( Client::belongToSameApplication( active_client, focus_chain.at( i ) ))
                 {
-                focus_chain.insert( it, c );
+                focus_chain.insert( i, c );
                 break;
                 }
             }
@@ -497,63 +485,64 @@ ClientList Workspace::constrainedStackingOrder()
 #endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
-    for( ClientList::Iterator it = stacking.fromLast();
-         it != stacking.end();
+    for( int i = stacking.size() - 1;
+         i >= 0;
          )
         {
-        if( !(*it)->isTransient())
+        if( !stacking[ i ]->isTransient())
             {
-            --it;
+            --i;
             continue;
             }
-        ClientList::Iterator it2 = stacking.end();
-        if( (*it)->groupTransient())
+        int i2 = -1;
+        if( stacking[ i ]->groupTransient())
             {
-            if( (*it)->group()->members().count() > 0 )
+            if( stacking[ i ]->group()->members().count() > 0 )
                 { // find topmost client this one is transient for
-                for( it2 = stacking.fromLast();
-                     it2 != stacking.end();
-                     --it2 )
+                for( i2 = stacking.size() - 1;
+                     i2 >= 0;
+                     --i2 )
                     {
-                    if( *it2 == *it )
+                    if( stacking[ i2 ] == stacking[ i ] )
                         {
-                        it2 = stacking.end(); // don't reorder
+                        i2 = -1; // don't reorder
                         break;
                         }
-                    if( (*it2)->hasTransient( *it, true ) && keepTransientAbove( *it2, *it ))
+                    if( stacking[ i2 ]->hasTransient( stacking[ i ], true )
+                        && keepTransientAbove( stacking[ i2 ], stacking[ i ] ))
                         break;
                     }
-                } // else it2 remains pointing at stacking.end()
+                } // else i2 remains pointing at -1
             }
         else
             {
-            for( it2 = stacking.fromLast();
-                 it2 != stacking.end();
-                 --it2 )
+            for( i2 = stacking.size() - 1;
+                 i2 >= 0;
+                 --i2 )
                 {
-                if( *it2 == *it )
+                if( stacking[ i2 ] == stacking[ i ] )
                     {
-                    it2 = stacking.end(); // don't reorder
+                    i2 = -1; // don't reorder
                     break;
                     }
-                if( *it2 == (*it)->transientFor() && keepTransientAbove( *it2, *it ))
+                if( stacking[ i2 ] == stacking[ i ]->transientFor()
+                    && keepTransientAbove( stacking[ i2 ], stacking[ i ] ))
                     break;
                 }
             }
-//        kdDebug() << "STACK:" << (*it) << ":" << ( it2 == stacking.end() ? ((Client*)0) : (*it2)) << endl;
-        if( it2 == stacking.end())
+//        kdDebug() << "STACK:" << stacking[ i ] << ":" << ( i2 == -1 ? ((Client*)0) : stacking[ i2 ] ) << endl;
+        if( i2 == -1 )
             {
-            --it;
+            --i;
             continue;
             }
-        Client* current = *it;
-        ClientList::Iterator remove_it = it;
-        --it;
-        stacking.remove( remove_it );
+        Client* current = stacking[ i ];
+        stacking.removeAt( i );
+        --i;
         if( !current->transients().isEmpty())  // this one now can be possibly above its transients,
-            it = it2; // so go again higher in the stack order and possibly move those transients again
-        ++it2; // insert after the mainwindow, it's ok if it2 is now stacking.end()
-        stacking.insert( it2, current );
+            i = i2; // so go again higher in the stack order and possibly move those transients again
+        ++i2; // insert after the mainwindow, it's ok if it2 is now stacking.end()
+        stacking.insert( i2, current );
         }
 #if 0
     kdDebug() << "stacking3:" << endl;

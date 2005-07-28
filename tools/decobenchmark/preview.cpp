@@ -34,6 +34,7 @@
 
 #include <kdecorationfactory.h>
 #include <kdecoration_plugins_p.h>
+#include <QX11Info>
 
 // FRAME the preview doesn't update to reflect the changes done in the kcm
 
@@ -140,7 +141,7 @@ void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode )
     // FRAME duped from client.cpp
     if( mode == Unsorted )
         {
-        XShapeCombineRegion( qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0,
+        XShapeCombineRegion( QX11Info::display(), widget->winId(), ShapeBounding, 0, 0,
             reg.handle(), ShapeSet );
         }
     else
@@ -156,7 +157,7 @@ void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode )
             xrects[ i ].width = rects[ i ].width();
             xrects[ i ].height = rects[ i ].height();
             }
-        XShapeCombineRectangles( qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0,
+        XShapeCombineRectangles( QX11Info::display(), widget->winId(), ShapeBounding, 0, 0,
 	    xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }

@@ -26,6 +26,7 @@
 #include <qapplication.h>
 #include <qlabel.h>
 #include <kdebug.h>
+#include <Qt3Support/q3pointarray.h>
 
 namespace Default
 {
@@ -528,9 +529,9 @@ void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
     p.drawLine(2, x2-2, y2-2, x2-2);
 }
 
-QValueList< KDEDefaultHandler::BorderSize > KDEDefaultHandler::borderSizes() const
+QList< KDEDefaultHandler::BorderSize > KDEDefaultHandler::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+  return QList< BorderSize >() << BorderNormal << BorderLarge <<
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
@@ -560,7 +561,7 @@ bool KDEDefaultHandler::supports( Ability ability )
 KDEDefaultButton::KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name)
 	: KCommonDecorationButton(type, parent, name)
 {
-    setBackgroundMode( QWidget::NoBackground );
+    setAttribute( Qt::WA_NoBackground );
 
 	isMouseOver = false;
 	deco 		= NULL;
@@ -721,7 +722,7 @@ void KDEDefaultButton::enterEvent(QEvent *e)
 {
 	isMouseOver=true;
 	repaint(false);
-	QButton::enterEvent(e);
+	KCommonDecorationButton::enterEvent(e);
 }
 
 
@@ -729,7 +730,7 @@ void KDEDefaultButton::leaveEvent(QEvent *e)
 {
 	isMouseOver=false;
 	repaint(false);
-	QButton::leaveEvent(e);
+	KCommonDecorationButton::leaveEvent(e);
 }
 
 
@@ -938,7 +939,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
     p.drawLine(x+1, y2-1, x2-1, y2-1);
 
 	p.setPen(options()->color(ColorFrame, isActive()));
-	QPointArray a;
+	Q3PointArray a;
 	QBrush brush( options()->color(ColorFrame, isActive()), Qt::SolidPattern );
 	p.setBrush( brush );                       // use solid, yellow brush
     a.setPoints( 4, x+2,             leftFrameStart+borderWidth-4,
@@ -990,7 +991,8 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	// Fill with frame color behind RHS buttons
 	p.fillRect( rightOffset, y+2, x2-rightOffset-1, titleHeight+1, c2);
 
-    QPainter p2( titleBuffer, this );
+    QPainter p2( titleBuffer );
+    p2.initFrom( widget());
 
 	// Draw the titlebar gradient
 	if (upperGradient)
@@ -1022,7 +1024,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 
     p2.setPen( options()->color(ColorFont, isActive()) );
     p2.drawText(r.x(), 1, r.width()-1, r.height(),
-		(caption().isRightToLeft() ? AlignRight : AlignLeft) | AlignVCenter,
+		(caption().isRightToLeft() ? Qt::AlignRight : Qt::AlignLeft) | Qt::AlignVCenter,
 		caption() );
 
 	bitBlt( widget(), 2, 2, titleBuffer );

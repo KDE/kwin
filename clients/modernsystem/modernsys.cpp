@@ -6,6 +6,9 @@
 #include <klocale.h>
 #include <qlayout.h>
 #include <qdrawutil.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QPaintEvent>
 #include <kpixmapeffect.h>
 #include <kdrawutil.h>
 #include <qbitmap.h>
@@ -276,9 +279,9 @@ void ModernSysFactory::read_config()
     title_height = theight;
 }
 
-QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
+QList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
+  return QList< BorderSize >() << BorderNormal << BorderLarge <<
       BorderVeryLarge <<  BorderHuge;
    // as long as the buttons don't scale don't offer the largest two sizes.
    //   BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
@@ -287,7 +290,7 @@ QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
 ModernButton::ModernButton(ButtonType type, ModernSys *parent, const char *name)
     : KCommonDecorationButton(type, parent, name)
 {
-    setBackgroundMode( NoBackground );
+    setBackgroundMode( Qt::NoBackground );
 
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
                  btnhighcolor_mask_bits : lowcolor_mask_bits, true);
@@ -540,7 +543,7 @@ void ModernSys::recalcTitleBuffer()
     p.setFont(options()->font(true));
 
     p.drawText(t.x()+((t.width()-fm.width(caption()))/2)-4,
-               0, fm.width(caption())+8, title_height+2, AlignCenter, caption());
+               0, fm.width(caption())+8, title_height+2, Qt::AlignCenter, caption());
     p.setClipping(false);
     p.end();
     oldTitle = caption();
@@ -597,7 +600,7 @@ void ModernSys::paintEvent( QPaintEvent* )
             p.fillRect(1, 1, w-2, title_height+2, fillBrush);
         p.setPen(options()->color(ColorFont, isActive()));
         p.setFont(options()->font(isActive()));
-        p.drawText(t, AlignCenter, caption() );
+        p.drawText(t, Qt::AlignCenter, caption() );
     }
 
     // titlebar highlight

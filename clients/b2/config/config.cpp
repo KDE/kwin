@@ -8,8 +8,10 @@
 
 #include "config.h"
 #include <kglobal.h>
-#include <qwhatsthis.h>
-#include <qvbox.h>
+
+#include <q3vbox.h>
+//Added by qt3to4:
+#include <QLabel>
 #include <klocale.h>
 
 
@@ -35,11 +37,11 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalogue("kwin_b2_config");
 	b2Config = new KConfig("kwinb2rc");
-	gb = new QVBox(parent);
+	gb = new Q3VBox(parent);
 
 	cbColorBorder = new QCheckBox(
 			i18n("Draw window frames using &titlebar colors"), gb);
-	QWhatsThis::add(cbColorBorder,
+	cbColorBorder->setWhatsThis(
 			i18n("When selected, the window borders "
 				"are drawn using the titlebar colors; otherwise, they are "
 				"drawn using normal border colors."));
@@ -47,13 +49,14 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 	// Grab Handle
     showGrabHandleCb = new QCheckBox(
 	    i18n("Draw &resize handle"), gb);
-    QWhatsThis::add(showGrabHandleCb,
+    showGrabHandleCb->setWhatsThis(
 	    i18n("When selected, decorations are drawn with a \"grab handle\" "
 		 "in the bottom right corner of the windows; "
 		 "otherwise, no grab handle is drawn."));
 
     // Double click menu option support
-    actionsGB = new QHGroupBox(i18n("Actions Settings"), gb);
+    actionsGB = new Q3GroupBox(i18n("Actions Settings"), gb);
+	actionsGB->setOrientation(Qt::Horizontal);
     QLabel *menuDblClickLabel = new QLabel(actionsGB);
     menuDblClickLabel->setText(i18n("Double click on menu button:"));
     menuDblClickOp = new QComboBox(actionsGB);
@@ -62,7 +65,7 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
     menuDblClickOp->insertItem(i18n("Shade Window"));
     menuDblClickOp->insertItem(i18n("Close Window"));
 
-    QWhatsThis::add(menuDblClickOp,
+    menuDblClickOp->setWhatsThis(
 	    i18n("An action can be associated to a double click "
 		 "of the menu button. Leave it to none if in doubt."));
 

@@ -11,6 +11,9 @@
 #endif
 
 #define WIN KKey::QtWIN
+#define ALT Qt::ALT
+#define SHIFT Qt::SHIFT
+#define CTRL Qt::CTRL
 
 // some shortcuts have Tarzan-speech like names, they need extra normal human descriptions with DEF2()
 // the others can use DEF()
@@ -168,3 +171,6 @@ DEF( I18N_NOOP("Window to Taskbar Position 9", WIN+Qt::Key_Alt+9"));
 #undef DEF
 #undef DEF2
 #undef WIN
+#undef ALT
+#undef SHIFT
+#undef CTRL

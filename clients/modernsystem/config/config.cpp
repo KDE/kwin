@@ -6,7 +6,11 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <qlayout.h>
-#include <qwhatsthis.h>
+
+//Added by qt3to4:
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QGridLayout>
 #include "config.h"
 
 
@@ -38,7 +42,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
         QGridLayout* layout = new QGridLayout(handleBox, 0, KDialog::spacingHint());
 
 	cbShowHandle = new QCheckBox(i18n("&Show window resize handle"), handleBox);
-	QWhatsThis::add(cbShowHandle,
+	cbShowHandle->setWhatsThis(
 			i18n("When selected, all windows are drawn with a resize "
 			"handle at the lower right corner. This makes window resizing "
 			"easier, especially for trackballs and other mouse replacements "
@@ -46,24 +50,24 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
         layout->addMultiCellWidget(cbShowHandle, 0, 0, 0, 1);
 	connect(cbShowHandle, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()));
 
-	sliderBox = new QVBox(handleBox);
-	handleSizeSlider = new QSlider(0, 4, 1, 0, QSlider::Horizontal, sliderBox);
-	QWhatsThis::add(handleSizeSlider,
+	sliderBox = new Q3VBox(handleBox);
+	handleSizeSlider = new QSlider(0, 4, 1, 0, Qt::Horizontal, sliderBox);
+	handleSizeSlider->setWhatsThis(
 			i18n("Here you can change the size of the resize handle."));
 	handleSizeSlider->setTickInterval(1);
 	handleSizeSlider->setTickmarks(QSlider::Below);
 	connect(handleSizeSlider, SIGNAL(valueChanged(int)), this, SLOT(slotSelectionChanged()));
 
-	hbox = new QHBox(sliderBox);
+	hbox = new Q3HBox(sliderBox);
 	hbox->setSpacing(6);
 
 	bool rtl = kapp->reverseLayout();
 	label1 = new QLabel(i18n("Small"), hbox);
-	label1->setAlignment(rtl ? AlignRight : AlignLeft);
+	label1->setAlignment(rtl ? Qt::AlignRight : Qt::AlignLeft);
 	label2 = new QLabel(i18n("Medium"), hbox);
-	label2->setAlignment(AlignHCenter);
+	label2->setAlignment( Qt::AlignHCenter );
 	label3 = new QLabel(i18n("Large"), hbox);
-	label3->setAlignment(rtl ? AlignLeft : AlignRight);
+	label3->setAlignment(rtl ? Qt::AlignLeft : Qt::AlignRight);
 	
 	vbox->addWidget(handleBox);
 	vbox->addStretch(1);
@@ -104,7 +108,7 @@ void ModernSysConfig::load(KConfig* /*conf*/)
 	handleSizeSlider->setEnabled(i);
 	handleWidth = clientrc->readUnsignedNumEntry("HandleWidth", 6);
 	handleSize = clientrc->readUnsignedNumEntry("HandleSize", 30);
-	handleSizeSlider->setValue(QMIN((handleWidth - 6) / 2, 4));
+	handleSizeSlider->setValue(QMIN((handleWidth - 6) / 2, (uint)4));
 	
 }
 

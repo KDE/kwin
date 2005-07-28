@@ -14,7 +14,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qstring.h>
 #include <netwm_def.h>
 #include <qrect.h>
-#include <qvaluevector.h>
 #include <kdebug.h>
 
 #include "placement.h"
@@ -36,7 +35,7 @@ class WindowRules
     : public KDecorationDefines
     {
     public:
-        WindowRules( const QValueVector< Rules* >& rules );
+        WindowRules( const QVector< Rules* >& rules );
         WindowRules();
         void update( Client* );
         void discardTemporary();
@@ -72,7 +71,7 @@ class WindowRules
     private:
         MaximizeMode checkMaximizeVert( MaximizeMode mode, bool init ) const;
         MaximizeMode checkMaximizeHoriz( MaximizeMode mode, bool init ) const;
-        QValueVector< Rules* > rules;
+        QVector< Rules* > rules;
     };
 #endif
 
@@ -122,10 +121,10 @@ class Rules
     private:
 #endif
         bool matchType( NET::WindowType match_type ) const;
-        bool matchWMClass( const QCString& match_class, const QCString& match_name ) const;
-        bool matchRole( const QCString& match_role ) const;
+        bool matchWMClass( const QByteArray& match_class, const QByteArray& match_name ) const;
+        bool matchRole( const QByteArray& match_role ) const;
         bool matchTitle( const QString& match_title ) const;
-        bool matchClientMachine( const QCString& match_machine ) const;
+        bool matchClientMachine( const QByteArray& match_machine ) const;
         // All these values are saved to the cfg file, and are also used in kstart!
         enum
             {
@@ -168,16 +167,16 @@ class Rules
 #endif
         int temporary_state; // e.g. for kstart
         QString description;
-        QCString wmclass;
+        QByteArray wmclass;
         StringMatch wmclassmatch;
         bool wmclasscomplete;
-        QCString windowrole;
+        QByteArray windowrole;
         StringMatch windowrolematch;
         QString title; // TODO "caption" ?
         StringMatch titlematch;
-        QCString extrarole;
+        QByteArray extrarole;
         StringMatch extrarolematch;
-        QCString clientmachine;
+        QByteArray clientmachine;
         StringMatch clientmachinematch;
         unsigned long types; // types for matching
         Placement::Policy placement;
@@ -267,7 +266,7 @@ bool Rules::checkForceStop( ForceRule rule )
     }
 
 inline
-WindowRules::WindowRules( const QValueVector< Rules* >& r )
+WindowRules::WindowRules( const QVector< Rules* >& r )
     : rules( r )
     {
     }
@@ -286,7 +285,7 @@ bool WindowRules::contains( const Rules* rule ) const
 inline
 void WindowRules::remove( Rules* rule )
     {
-    QValueVector< Rules* >::Iterator pos = qFind( rules.begin(), rules.end(), rule );
+    QVector< Rules* >::Iterator pos = qFind( rules.begin(), rules.end(), rule );
     if( pos != rules.end())
         rules.erase( pos );
     }

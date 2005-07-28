@@ -106,6 +106,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     KDecorationFactory* oldFactory = fact;
 
     QString path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
+	kdDebug() << "kwin : path " << path << " for " << nameStr << endl;
 
     // If the plugin was not found, try to find the default
     if (path.isEmpty())

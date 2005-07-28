@@ -22,9 +22,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/shape.h>
 
 #include "notifications.h"
+#include <QX11Info>
 #include "rules.h"
-
-extern Time qt_x_time;
 
 namespace KWinInternal
 {
@@ -37,7 +36,7 @@ namespace KWinInternal
 bool Client::manage( Window w, bool isMapped )
     {
     XWindowAttributes attr;
-    if( !XGetWindowAttributes(qt_xdisplay(), w, &attr))
+    if( !XGetWindowAttributes(QX11Info::display(), w, &attr))
         return false;
 
     grabXServer();
@@ -51,7 +50,7 @@ bool Client::manage( Window w, bool isMapped )
     // SELI order all these things in some sane manner
 
     bool init_minimize = false;
-    XWMHints * hints = XGetWMHints(qt_xdisplay(), w );
+    XWMHints * hints = XGetWMHints(QX11Info::display(), w );
     if (hints && (hints->flags & StateHint) && hints->initial_state == IconicState)
         init_minimize = true;
     if (hints)
@@ -77,17 +76,17 @@ bool Client::manage( Window w, bool isMapped )
         NET::WM2ExtendedStrut |
         0;
 
-    info = new WinInfo( this, qt_xdisplay(), client, qt_xrootwin(), properties, 2 );
+    info = new WinInfo( this, QX11Info::display(), client, QX11Info::appRootWindow(), properties, 2 );
 
     cmap = attr.colormap;
 
     XClassHint classHint;
-    if ( XGetClassHint( qt_xdisplay(), client, &classHint ) ) 
+    if ( XGetClassHint( QX11Info::display(), client, &classHint ) ) 
         {
         // Qt3.2 and older had this all lowercase, Qt3.3 capitalized resource class
         // force lowercase, so that workarounds listing resource classes still work
-        resource_name = QCString( classHint.res_name ).lower();
-        resource_class = QCString( classHint.res_class ).lower();
+        resource_name = QByteArray( classHint.res_name ).lower();
+        resource_class = QByteArray( classHint.res_class ).lower();
         XFree( classHint.res_name );
         XFree( classHint.res_class );
         }
@@ -307,7 +306,7 @@ bool Client::manage( Window w, bool isMapped )
     if(( !isSpecialWindow() || isToolbar()) && isMovable())
         keepInArea( area, partial_keep_in_area );
 
-    XShapeSelectInput( qt_xdisplay(), window(), ShapeNotifyMask );
+    XShapeSelectInput( QX11Info::display(), window(), ShapeNotifyMask );
     if ( (is_shape = Shape::hasShape( window())) ) 
         {
         updateShape();
@@ -420,7 +419,7 @@ bool Client::manage( Window w, bool isMapped )
     // TODO this should avoid flicker, because real restacking is done
     // only after manage() finishes, but the window is shown sooner
     // - keep it?
-    XLowerWindow( qt_xdisplay(), frameId());
+    XLowerWindow( QX11Info::display(), frameId());
 
     user_time = readUserTimeMapTimestamp( asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session );
 
@@ -483,9 +482,9 @@ bool Client::manage( Window w, bool isMapped )
 
     if( user_time == CurrentTime || user_time == -1U ) // no known user time, set something old
         {
-        user_time = qt_x_time - 1000000;
+        user_time = QX11Info::appTime() - 1000000;
         if( user_time == CurrentTime || user_time == -1U ) // let's be paranoid
-            user_time = qt_x_time - 1000000 + 10;
+            user_time = QX11Info::appTime() - 1000000 + 10;
         }
 
     updateWorkareaDiffs();
@@ -515,30 +514,30 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
     assert( wrapper == None );
     client = w;
     // we don't want the window to be destroyed when we are destroyed
-    XAddToSaveSet( qt_xdisplay(), client );
-    XSelectInput( qt_xdisplay(), client, NoEventMask );
-    XUnmapWindow( qt_xdisplay(), client );
+    XAddToSaveSet( QX11Info::display(), client );
+    XSelectInput( QX11Info::display(), client, NoEventMask );
+    XUnmapWindow( QX11Info::display(), client );
     XWindowChanges wc;     // set the border width to 0
     wc.border_width = 0; // TODO possibly save this, and also use it for initial configuring of the window
-    XConfigureWindow( qt_xdisplay(), client, CWBorderWidth, &wc );
+    XConfigureWindow( QX11Info::display(), client, CWBorderWidth, &wc );
 
     XSetWindowAttributes swa;
     swa.colormap = attr.colormap;
     swa.background_pixmap = None;
     swa.border_pixel = 0;
 
-    frame = XCreateWindow( qt_xdisplay(), qt_xrootwin(), 0, 0, 1, 1, 0,
+    frame = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
-    wrapper = XCreateWindow( qt_xdisplay(), frame, 0, 0, 1, 1, 0,
+    wrapper = XCreateWindow( QX11Info::display(), frame, 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
 
-    XDefineCursor( qt_xdisplay(), frame, arrowCursor.handle());
+    XDefineCursor( QX11Info::display(), frame, QCursor( Qt::arrowCursor ).handle());
     // some apps are stupid and don't define their own cursor - set the arrow one for them
-    XDefineCursor( qt_xdisplay(), wrapper, arrowCursor.handle());
-    XReparentWindow( qt_xdisplay(), client, wrapper, 0, 0 );
-    XSelectInput( qt_xdisplay(), frame,
+    XDefineCursor( QX11Info::display(), wrapper, QCursor( Qt::arrowCursor ).handle());
+    XReparentWindow( QX11Info::display(), client, wrapper, 0, 0 );
+    XSelectInput( QX11Info::display(), frame,
             KeyPressMask | KeyReleaseMask |
             ButtonPressMask | ButtonReleaseMask |
             KeymapStateMask |
@@ -550,8 +549,8 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
             PropertyChangeMask |
             StructureNotifyMask | SubstructureRedirectMask |
             VisibilityChangeMask );
-    XSelectInput( qt_xdisplay(), wrapper, ClientWinMask | SubstructureNotifyMask );
-    XSelectInput( qt_xdisplay(), client,
+    XSelectInput( QX11Info::display(), wrapper, ClientWinMask | SubstructureNotifyMask );
+    XSelectInput( QX11Info::display(), client,
                   FocusChangeMask |
                   PropertyChangeMask |
                   ColormapChangeMask |

@@ -31,6 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #include <qiconset.h>
 #include <netwm_def.h>
 #include <kdeversion.h>
+#include <QMouseEvent>
 
 class KDecorationOptionsPrivate;
 class KDecorationBridge;
@@ -693,7 +694,7 @@ class KWIN_EXPORT KDecoration
 	 *              flags that affect widget drawing are allowed. Window type flags
 	 *              like WX11BypassWM or WStyle_NoBorder are forbidden.
 	 */
-        void createMainWidget( WFlags flags = 0 );
+        void createMainWidget( Qt::WFlags flags = 0 );
 	/**
 	 * The parent widget that should be used for the main widget.
 	 */
@@ -704,7 +705,7 @@ class KWIN_EXPORT KDecoration
 	 * that affect widget drawing are allowed. Window type flags like WX11BypassWM
 	 * or WStyle_NoBorder are forbidden.
 	 */
-        WFlags initialWFlags() const;
+		Qt::WFlags initialWFlags() const;
 	/**
 	 * This function is only allowed to be called once from animateMinimize().
 	 * It can be used if the window should be shown or hidden at a specific
@@ -767,7 +768,7 @@ class KWIN_EXPORT KDecoration
 #if KDE_IS_VERSION( 3, 90, 0 )
 #warning Update the docs.
 #endif
-        void maximize( ButtonState button );
+        void maximize( Qt::ButtonState button );
 	/**
 	 * Set the maximize mode of the decorated window.
 	 * @param mode The maximization mode to be set.

@@ -99,7 +99,7 @@ bool Notify::raise( Event e, const QString& message, Client* c )
         return false; // no connection was possible, don't try each time
 
     QString event = eventToName( e );
-    if ( !event )
+    if ( event.isNull() )
         return false;
 
     forgetIt= !KNotifyClient::event( c ? c->window() : 0, event, message );
@@ -110,7 +110,7 @@ bool Notify::raise( Event e, const QString& message, Client* c )
 bool Notify::makeDemandAttention( Event e )
     {
     QString event = eventToName( e );
-    if( !event )
+    if( event.isNull() )
         return false;
     int rep = KNotifyClient::getPresentation( event );
     if( rep == -1 )

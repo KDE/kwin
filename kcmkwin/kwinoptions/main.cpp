@@ -18,6 +18,8 @@
  */
 
 #include <qlayout.h>
+//Added by qt3to4:
+#include <QVBoxLayout>
 
 #include <dcopclient.h>
 
@@ -171,7 +173,7 @@ void KWinOptions::save()
   mConfig->sync();
   if ( !kapp->dcopClient()->isAttached() )
       kapp->dcopClient()->attach();
-  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+  kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
 }
 
 
@@ -244,7 +246,7 @@ void KActionsOptions::save()
   mConfig->sync();
   if ( !kapp->dcopClient()->isAttached() )
       kapp->dcopClient()->attach();
-  kapp->dcopClient()->send("kwin*", "", "reconfigure()", "");
+  kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
 }
 
 

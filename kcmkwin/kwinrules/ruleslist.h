@@ -22,11 +22,11 @@
 
 #include "ruleslistbase.h"
 
-#include <qvaluevector.h>
+#include <q3valuevector.h>
 
 #include "../../rules.h"
 
-class QListBoxItem;
+class Q3ListBoxItem;
 
 namespace KWinInternal
 {
@@ -49,9 +49,9 @@ class KCMRulesList
         void deleteClicked();
         void moveupClicked();
         void movedownClicked();
-        void activeChanged( QListBoxItem* );
+        void activeChanged( Q3ListBoxItem* );
     private:
-        QValueVector< Rules* > rules;
+        Q3ValueVector< Rules* > rules;
     };
 
 } // namespace

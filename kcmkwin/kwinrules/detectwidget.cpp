@@ -16,6 +16,7 @@
  *  Foundation, Inc., 51 Franklin Steet, Fifth Floor, Cambridge, MA 02110-1301, USA.
  */
 
+#include <kdialog.h>
 #include "detectwidget.h"
 
 #include <kapplication.h>
@@ -25,11 +26,16 @@
 #include <qlabel.h>
 #include <qradiobutton.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QEvent>
+#include <Q3CString>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <fixx11h.h>
+#include <QX11Info>
 
 namespace KWinInternal
 {
@@ -112,7 +118,7 @@ void DetectDialog::executeDialog()
     emit detectionDone( exec() == QDialog::Accepted );
     }
 
-QCString DetectDialog::selectedClass() const
+Q3CString DetectDialog::selectedClass() const
     {
     if( widget->use_class->isChecked() || widget->use_role->isChecked())
         return wmclass_class;
@@ -124,7 +130,7 @@ bool DetectDialog::selectedWholeClass() const
     return widget->use_whole_class->isChecked();
     }
 
-QCString DetectDialog::selectedRole() const
+Q3CString DetectDialog::selectedRole() const
     {
     if( widget->use_role->isChecked())
         return role;
@@ -151,7 +157,7 @@ NET::WindowType DetectDialog::selectedType() const
     return type;
     }
 
-QCString DetectDialog::selectedMachine() const
+Q3CString DetectDialog::selectedMachine() const
     {
     return machine;
     }
@@ -161,10 +167,10 @@ void DetectDialog::selectWindow()
     // use a dialog, so that all user input is blocked
     // use WX11BypassWM and moving away so that it's not actually visible
     // grab only mouse, so that keyboard can be used e.g. for switching windows
-    grabber = new QDialog( NULL, NULL, true, WX11BypassWM );
+    grabber = new QDialog( NULL, NULL, true, Qt::WX11BypassWM );
     grabber->move( -1000, -1000 );
     grabber->show();
-    grabber->grabMouse( crossCursor );
+    grabber->grabMouse( Qt::CrossCursor );
     grabber->installEventFilter( this );
     }
 
@@ -176,7 +182,7 @@ bool DetectDialog::eventFilter( QObject* o, QEvent* e )
         return false;
     delete grabber;
     grabber = NULL;
-    if( static_cast< QMouseEvent* >( e )->button() != LeftButton )
+    if( static_cast< QMouseEvent* >( e )->button() != Qt::LeftButton )
         {
         emit detectionDone( false );
         return true;
@@ -191,13 +197,13 @@ WId DetectDialog::findWindow()
     Window child;
     uint mask;
     int rootX, rootY, x, y;
-    Window parent = qt_xrootwin();
-    Atom wm_state = XInternAtom( qt_xdisplay(), "WM_STATE", False );
+    Window parent = QX11Info::appRootWindow();
+    Atom wm_state = XInternAtom( QX11Info::display(), "WM_STATE", False );
     for( int i = 0;
          i < 10;
          ++i )
         {
-        XQueryPointer( qt_xdisplay(), parent, &root, &child,
+        XQueryPointer( QX11Info::display(), parent, &root, &child,
             &rootX, &rootY, &x, &y, &mask );
         if( child == None )
             return 0;
@@ -205,7 +211,7 @@ WId DetectDialog::findWindow()
         int format;
         unsigned long nitems, after;
         unsigned char* prop;
-        if( XGetWindowProperty( qt_xdisplay(), child, wm_state, 0, 0, False, AnyPropertyType,
+        if( XGetWindowProperty( QX11Info::display(), child, wm_state, 0, 0, False, AnyPropertyType,
 	    &type, &format, &nitems, &after, &prop ) == Success )
             {
 	    if( prop != NULL )

@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qapplication.h>
 #include "atoms.h"
 #include <assert.h>
+#include <QX11Info>
 
 namespace KWinInternal
 {
@@ -43,6 +44,15 @@ Atoms::Atoms()
 
     atoms[n] = &wm_client_leader;
     names[n++] = (char *) "WM_CLIENT_LEADER";
+
+    atoms[n] = &wm_window_role;
+    names[n++] = (char *) "WM_WINDOW_ROLE";
+
+    atoms[n] = &wm_state;
+    names[n++] = (char *) "WM_STATE";
+
+    atoms[n] = &sm_client_id;
+    names[n++] = (char *) "SM_CLIENT_ID";
 
     atoms[n] = &motif_wm_hints;
     names[n++] = (char *) "_MOTIF_WM_HINTS";
@@ -98,7 +108,7 @@ Atoms::Atoms()
     
     assert( n <= max );
 
-    XInternAtoms( qt_xdisplay(), names, n, FALSE, atoms_return );
+    XInternAtoms( QX11Info::display(), names, n, FALSE, atoms_return );
     for (int i = 0; i < n; i++ )
         *atoms[i] = atoms_return[i];
     }

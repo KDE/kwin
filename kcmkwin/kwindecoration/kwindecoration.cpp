@@ -31,14 +31,19 @@
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qlayout.h>
-#include <qwhatsthis.h>
-#include <qgroupbox.h>
+
+#include <q3groupbox.h>
 #include <qcheckbox.h>
 #include <qtabwidget.h>
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qlabel.h>
 #include <qfile.h>
 #include <qslider.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QHBoxLayout>
+#include <Q3ValueList>
+#include <QVBoxLayout>
 
 #include <kapplication.h>
 #include <kcombobox.h>
@@ -64,7 +69,7 @@ K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecorati
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, const QStringList &)
 	: DCOPObject("KWinClientDecoration"),
-	  KCModule(KWinDecoFactory::instance(), parent, name),
+	  KCModule(KWinDecoFactory::instance(), parent),
           kwinConfig("kwinrc"),
           pluginObject(0)
 {
@@ -89,11 +94,11 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	decorationList = new KComboBox( pluginPage );
 	QString whatsThis = i18n("Select the window decoration. This is the look and feel of both "
                              "the window borders and the window handle.");
-	QWhatsThis::add(decorationList, whatsThis);
+	decorationList->setWhatsThis( whatsThis);
 	pluginLayout->addWidget(decorationList);
 
-	QGroupBox *pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
-	pluginSettingsGrp->setColumnLayout( 0, Vertical );
+	Q3GroupBox *pluginSettingsGrp = new Q3GroupBox( i18n("Decoration Options"), pluginPage );
+	pluginSettingsGrp->setColumnLayout( 0, Qt::Vertical );
 	pluginSettingsGrp->setFlat( true );
 	pluginSettingsGrp->layout()->setMargin( 0 );
 	pluginSettingsGrp->layout()->setSpacing( KDialog::spacingHint() );
@@ -105,7 +110,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	lBorder = new QLabel (i18n("B&order size:"), pluginSettingsGrp);
 	cBorder = new QComboBox(pluginSettingsGrp);
 	lBorder->setBuddy(cBorder);
-	QWhatsThis::add( cBorder, i18n( "Use this combobox to change the border size of the decoration." ));
+	cBorder->setWhatsThis( i18n( "Use this combobox to change the border size of the decoration." ));
 	lBorder->hide();
 	cBorder->hide();
 	QHBoxLayout *borderSizeLayout = new QHBoxLayout(pluginSettingsGrp->layout() );
@@ -113,7 +118,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	borderSizeLayout->addWidget(cBorder);
 	borderSizeLayout->addStretch();
 
-	pluginConfigWidget = new QVBox(pluginSettingsGrp);
+	pluginConfigWidget = new Q3VBox(pluginSettingsGrp);
 	pluginSettingsGrp->layout()->add( pluginConfigWidget );
 
 	// Page 2 (Button Selector)
@@ -122,13 +127,13 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 
 	cbShowToolTips = new QCheckBox(
 			i18n("&Show window button tooltips"), buttonPage );
-	QWhatsThis::add( cbShowToolTips,
+	cbShowToolTips->setWhatsThis(
 			i18n(  "Enabling this checkbox will show window button tooltips. "
 				   "If this checkbox is off, no window button tooltips will be shown."));
 
 	cbUseCustomButtonPositions = new QCheckBox(
 			i18n("Use custom titlebar button &positions"), buttonPage );
-	QWhatsThis::add( cbUseCustomButtonPositions,
+	cbUseCustomButtonPositions->setWhatsThis(
 			i18n(  "The appropriate settings can be found in the \"Buttons\" Tab; "
 				   "please note that this option is not available on all styles yet." ) );
 
@@ -206,9 +211,9 @@ void KWinDecorationModule::findDecorations()
 	{
 		QDir d(*it);
 		if (d.exists())
-			for (QFileInfoListIterator it(*d.entryInfoList()); it.current(); ++it)
+			foreach (const QFileInfo& fi, d.entryInfoList())
 			{
-				QString filename(it.current()->absFilePath());
+				QString filename(fi.absFilePath());
 				if (KDesktopFile::isDesktopFile(filename))
 				{
 					KDesktopFile desktopFile(filename);
@@ -230,7 +235,7 @@ void KWinDecorationModule::findDecorations()
 // Fills the decorationList with a list of available kwin decorations
 void KWinDecorationModule::createDecorationList()
 {
-	QValueList<DecorationInfo>::ConstIterator it;
+	Q3ValueList<DecorationInfo>::ConstIterator it;
 
 	// Sync with kwin hardcoded KDE2 style which has no desktop item
     QStringList decorationNames;
@@ -272,10 +277,10 @@ static const char* const border_names[ KDecorationDefines::BordersCount ] =
     I18N_NOOP( "Oversized" )
     };
 
-int KWinDecorationModule::borderSizeToIndex( BorderSize size, QValueList< BorderSize > sizes )
+int KWinDecorationModule::borderSizeToIndex( BorderSize size, Q3ValueList< BorderSize > sizes )
 {
         int pos = 0;
-        for( QValueList< BorderSize >::ConstIterator it = sizes.begin();
+        for( Q3ValueList< BorderSize >::ConstIterator it = sizes.begin();
              it != sizes.end();
              ++it, ++pos )
             if( size <= *it )
@@ -284,9 +289,9 @@ int KWinDecorationModule::borderSizeToIndex( BorderSize size, QValueList< Border
 }
 
 KDecorationDefines::BorderSize KWinDecorationModule::indexToBorderSize( int index,
-    QValueList< BorderSize > sizes )
+    Q3ValueList< BorderSize > sizes )
 {
-        QValueList< BorderSize >::ConstIterator it = sizes.begin();
+        Q3ValueList< BorderSize >::ConstIterator it = sizes.begin();
         for(;
              it != sizes.end();
              ++it, --index )
@@ -300,7 +305,7 @@ void KWinDecorationModule::slotBorderChanged( int size )
         if( lBorder->isHidden())
             return;
         emit KCModule::changed( true );
-        QValueList< BorderSize > sizes;
+        Q3ValueList< BorderSize > sizes;
         if( plugins->factory() != NULL )
             sizes = plugins->factory()->borderSizes();
         assert( sizes.count() >= 2 );
@@ -320,7 +325,7 @@ QString KWinDecorationModule::decorationName( QString& libName )
 {
 	QString decoName;
 
-	QValueList<DecorationInfo>::Iterator it;
+	Q3ValueList<DecorationInfo>::Iterator it;
 	for( it = decorations.begin(); it != decorations.end(); ++it )
 		if ( (*it).libraryName == libName )
 		{
@@ -338,7 +343,7 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 
 	// Find the corresponding library name to that of
 	// the current plugin name
-	QValueList<DecorationInfo>::Iterator it;
+	Q3ValueList<DecorationInfo>::Iterator it;
 	for( it = decorations.begin(); it != decorations.end(); ++it )
 		if ( (*it).name == name )
 		{
@@ -558,7 +563,7 @@ void KWinDecorationModule::defaults()
 
 void KWinDecorationModule::checkSupportedBorderSizes()
 {
-        QValueList< BorderSize > sizes;
+        Q3ValueList< BorderSize > sizes;
         if( plugins->factory() != NULL )
             sizes = plugins->factory()->borderSizes();
 	if( sizes.count() < 2 ) {
@@ -566,7 +571,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 		cBorder->hide();
 	} else {
 		cBorder->clear();
-		for (QValueList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
+		for (Q3ValueList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
 			BorderSize size = *it;
 			cBorder->insertItem(i18n(border_names[size]), borderSizeToIndex(size,sizes) );
 		}

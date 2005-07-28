@@ -11,8 +11,16 @@
 
 #include <qvariant.h>
 #include <qdatetime.h>
-#include <qbutton.h>
+#include <q3button.h>
 #include <qbitmap.h>
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QGridLayout>
+#include <QEvent>
+#include <QBoxLayout>
+#include <QShowEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
 #include <kpixmap.h>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
@@ -25,17 +33,17 @@ namespace B2 {
 
 class B2Client;
 
-class B2Button : public QButton
+class B2Button : public Q3Button
 {
 public:
-    B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL, const int realizeBtns = LeftButton);
+    B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL, const int realizeBtns = Qt::LeftButton);
     ~B2Button() {};
 
     void setBg(const QColor &c){bg = c;}
     void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
                     KPixmap *iPixDown);
     void setPixmaps(int button_id);
-    void setToggle(){setToggleType(Toggle);}
+    void setToggle(){setCheckable(true);}
     void setActive(bool on){setOn(on);}
     void setUseMiniIcon(){useMiniIcon = true;}
     QSize sizeHint() const;
@@ -56,7 +64,7 @@ private:
 
 public:
     B2Client* client;
-    ButtonState last_button;
+    Qt::ButtonState last_button;
     int realizeButtons;
     bool hover;
 };
@@ -157,7 +165,7 @@ public:
     virtual KDecoration *createDecoration(KDecorationBridge *);
     virtual bool reset(unsigned long changed);
     virtual bool supports( Ability ability );
-    QValueList< B2ClientFactory::BorderSize > borderSizes() const;
+    QList< B2ClientFactory::BorderSize > borderSizes() const;
 };
 
 }

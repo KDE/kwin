@@ -25,9 +25,7 @@
 #ifndef KCOMMONDECORATION_H
 #define KCOMMONDECORATION_H
 
-#include <qbutton.h>
-#include <qvaluevector.h>
-
+#include <Q3Button>
 #include "kdecoration.h"
 
 class KDecorationBridge;
@@ -263,7 +261,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         void moveWidget(int x, int y, QWidget *w) const;
         void resizeWidget(int w, int h, QWidget *w) const;
 
-        typedef QValueVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
+        typedef QVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
         int buttonContainerWidth(const ButtonContainer &btnContainer, bool countHidden = false) const;
         void addButtons(ButtonContainer &btnContainer, const QString& buttons, bool isLeft);
 
@@ -287,7 +285,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
 /**
  * Title bar buttons of KCommonDecoration need to inherit this class.
  */
-class KWIN_EXPORT KCommonDecorationButton : public QButton
+class KWIN_EXPORT KCommonDecorationButton : public Q3Button
 {
     friend class KCommonDecoration;
 
@@ -341,7 +339,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
         /**
          * The mouse button that has been clicked last time.
          */
-        ButtonState lastMousePress() const { return m_lastMouse; }
+		Qt::ButtonState lastMousePress() const { return m_lastMouse; }
 
         QSize sizeHint() const;
 
@@ -357,7 +355,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QButton
         ButtonType m_type;
         int m_realizeButtons;
         QSize m_size;
-        ButtonState m_lastMouse;
+		Qt::ButtonState m_lastMouse;
 
         bool m_isLeft;
 

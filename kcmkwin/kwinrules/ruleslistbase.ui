@@ -2,7 +2,7 @@
 <class>KWinInternal::KCMRulesListBase</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form1</cstring>
+        <cstring>KCMRulesListBase</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -88,4 +88,8 @@
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includes>
+    <include location="local" impldecl="in declaration">kdialog.h</include>
+</includes>
+
 </UI>

@@ -13,7 +13,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_CLIENT_H
 
 #include <qframe.h>
-#include <qvbox.h>
 #include <qpixmap.h>
 #include <netwm.h>
 #include <kdebug.h>
@@ -218,12 +217,12 @@ class Client : public QObject, public KDecorationDefines
 
         bool performMouseCommand( Options::MouseCommand, QPoint globalPos, bool handled = false );
 
-        QCString windowRole() const;
-        QCString sessionId();
-        QCString resourceName() const;
-        QCString resourceClass() const;
-        QCString wmCommand();
-        QCString wmClientMachine( bool use_localhost ) const;
+        QByteArray windowRole() const;
+        QByteArray sessionId();
+        QByteArray resourceName() const;
+        QByteArray resourceClass() const;
+        QByteArray wmCommand();
+        QByteArray wmClientMachine( bool use_localhost ) const;
         Window   wmClientLeader() const;
         pid_t pid() const;
 
@@ -251,10 +250,10 @@ class Client : public QObject, public KDecorationDefines
         
         void gotPing( Time timestamp );
 
-        static QCString staticWindowRole(WId);
-        static QCString staticSessionId(WId);
-        static QCString staticWmCommand(WId);
-        static QCString staticWmClientMachine(WId);
+        static QByteArray staticWindowRole(WId);
+        static QByteArray staticSessionId(WId);
+        static QByteArray staticWmCommand(WId);
+        static QByteArray staticWmClientMachine(WId);
         static Window   staticWmClientLeader(WId);
 
         void checkWorkspacePosition();
@@ -507,12 +506,12 @@ class Client : public QObject, public KDecorationDefines
         QTimer* autoRaiseTimer;
         QTimer* shadeHoverTimer;
         Colormap cmap;
-        QCString resource_name;
-        QCString resource_class;
-        QCString client_machine;
+        QByteArray resource_name;
+        QByteArray resource_class;
+        QByteArray client_machine;
         QString cap_normal, cap_iconic, cap_suffix;
         WId wmClientLeaderWin;
-        QCString window_role;
+        QByteArray window_role;
         Group* in_group;
         Window window_group;
         Layer in_layer;
@@ -645,12 +644,12 @@ inline int Client::mappingState() const
     return mapping_state;
     }
 
-inline QCString Client::resourceName() const
+inline QByteArray Client::resourceName() const
     {
     return resource_name; // it is always lowercase
     }
 
-inline QCString Client::resourceClass() const
+inline QByteArray Client::resourceClass() const
     {
     return resource_class; // it is always lowercase
     }
@@ -799,7 +798,7 @@ inline bool Client::isManaged() const
     return mapping_state != WithdrawnState;
     }
 
-inline QCString Client::windowRole() const
+inline QByteArray Client::windowRole() const
     {
     return window_role;
     }

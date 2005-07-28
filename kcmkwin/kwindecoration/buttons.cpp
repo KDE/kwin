@@ -28,11 +28,21 @@
 
 */
 
-#include <qheader.h>
+#include <q3header.h>
 #include <qpainter.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qstyle.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <Q3Frame>
+#include <QResizeEvent>
+#include <QVBoxLayout>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
 
 #include <kdebug.h>
 
@@ -48,10 +58,10 @@
 
 #define BUTTONDRAGMIMETYPE "application/x-kde_kwindecoration_buttons"
 ButtonDrag::ButtonDrag( Button btn, QWidget* parent, const char* name)
-	: QStoredDrag( BUTTONDRAGMIMETYPE, parent, name)
+	: Q3StoredDrag( BUTTONDRAGMIMETYPE, parent, name)
 {
 	QByteArray data;
-	QDataStream stream(data, IO_WriteOnly);
+	QDataStream stream(&data, QIODevice::WriteOnly);
 	stream << btn.name;
 	stream << btn.icon;
 	stream << btn.type.unicode();
@@ -72,7 +82,7 @@ bool ButtonDrag::decode( QDropEvent* e, Button& btn )
 	if ( data.size() )
 	{
 		e->accept();
-		QDataStream stream(data, IO_ReadOnly);
+		QDataStream stream(data);
 		stream >> btn.name;
 		stream >> btn.icon;
 		ushort type;
@@ -125,7 +135,7 @@ ButtonSource::ButtonSource(QWidget *parent, const char* name)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-	setResizeMode(QListView::AllColumns);
+	setResizeMode(Q3ListView::AllColumns);
 	setDragEnabled(true);
 	setAcceptDrops(true);
 	setDropVisualizer(false);
@@ -152,7 +162,7 @@ QSize ButtonSource::sizeHint() const
 	QSize s( header()->sizeHint() );
 
 	if ( verticalScrollBar()->isVisible() )
-		s.setWidth( s.width() + style().pixelMetric(QStyle::PM_ScrollBarExtent) );
+		s.setWidth( s.width() + style()->pixelMetric(QStyle::PM_ScrollBarExtent) );
 	s += QSize(frameWidth()*2,frameWidth()*2);
 
 	// size hint: 4 lines of text...
@@ -165,7 +175,7 @@ QSize ButtonSource::sizeHint() const
 
 void ButtonSource::hideAllButtons()
 {
-	QListViewItemIterator it(this);
+	Q3ListViewItemIterator it(this);
 	while (it.current() ) {
 		it.current()->setVisible(false);
 		++it;
@@ -174,7 +184,7 @@ void ButtonSource::hideAllButtons()
 
 void ButtonSource::showAllButtons()
 {
-	QListViewItemIterator it(this);
+	Q3ListViewItemIterator it(this);
 	while (it.current() ) {
 		it.current()->setVisible(true);
 		++it;
@@ -183,7 +193,7 @@ void ButtonSource::showAllButtons()
 
 void ButtonSource::showButton( QChar btn )
 {
-	QListViewItemIterator it(this);
+	Q3ListViewItemIterator it(this);
 	while (it.current() ) {
 		ButtonSourceItem *item = dynamic_cast<ButtonSourceItem*>(it.current() );
 		if (item && item->button().type == btn) {
@@ -196,7 +206,7 @@ void ButtonSource::showButton( QChar btn )
 
 void ButtonSource::hideButton( QChar btn )
 {
-	QListViewItemIterator it(this);
+	Q3ListViewItemIterator it(this);
 	while (it.current() ) {
 		ButtonSourceItem *item = dynamic_cast<ButtonSourceItem*>(it.current() );
 		if (item && item->button().type == btn && !item->button().duplicate) {
@@ -212,7 +222,7 @@ bool ButtonSource::acceptDrag(QDropEvent* e) const
 	return acceptDrops() && ButtonDrag::canDecode(e);
 }
 
-QDragObject *ButtonSource::dragObject()
+Q3DragObject *ButtonSource::dragObject()
 {
 	ButtonSourceItem *i = dynamic_cast<ButtonSourceItem*>(selectedItem() );
 
@@ -264,7 +274,7 @@ void ButtonDropSiteItem::draw(QPainter *p, const QColorGroup& cg, QRect r)
 
 
 ButtonDropSite::ButtonDropSite( QWidget* parent, const char* name )
-	: QFrame( parent, name ),
+	: Q3Frame( parent, name ),
 	  m_selected(0)
 {
 	setAcceptDrops( TRUE );
@@ -608,19 +618,19 @@ void ButtonDropSite::drawContents( QPainter* p )
 	p->fillRect( r, c1 );
 	p->setPen( Qt::white );
 	p->setFont( QFont( KGlobalSettings::generalFont().family(), 12, QFont::Bold) );
-	p->drawText( r, AlignLeft | AlignVCenter, i18n("KDE") );
+	p->drawText( r, Qt::AlignLeft | Qt::AlignVCenter, i18n("KDE") );
 
 	offset = geometry().width() - 3 - rightoffset;
 	drawButtonList( p, buttonsRight, offset );
 
 	if (m_oldDropVisualizer.isValid() )
 	{
-		p->fillRect(m_oldDropVisualizer, Dense4Pattern);
+		p->fillRect(m_oldDropVisualizer, Qt::Dense4Pattern);
 	}
 }
 
-ButtonSourceItem::ButtonSourceItem(QListView * parent, const Button& btn)
-	: QListViewItem(parent),
+ButtonSourceItem::ButtonSourceItem(Q3ListView * parent, const Button& btn)
+	: Q3ListViewItem(parent),
 	  m_button(btn),
 	  m_dirty(true)
 {
@@ -644,12 +654,12 @@ void ButtonSourceItem::paintCell(QPainter *p, const QColorGroup &cg, int column,
 	}
 
 	if (m_button.supported) {
-		QListViewItem::paintCell(p,cg,column,width,align);
+		Q3ListViewItem::paintCell(p,cg,column,width,align);
 	} else {
 		// grey out unsupported buttons
 		QColorGroup cg2 = cg;
 		cg2.setColor(QColorGroup::Text, cg.mid() );
-		QListViewItem::paintCell(p,cg2,column,width,align);
+		Q3ListViewItem::paintCell(p,cg2,column,width,align);
 	}
 }
 
@@ -679,7 +689,7 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
 
 	QLabel* label = new QLabel( this );
 	m_dropSite = new ButtonDropSite( this );
-	label->setAlignment( int( QLabel::WordBreak ) );
+	label->setWordWrap( true );
 	label->setText( i18n( "To add or remove titlebar buttons, simply <i>drag</i> items "
 		"between the available item list and the titlebar preview. Similarly, "
 		"drag items within the titlebar preview to re-position them.") );
@@ -691,7 +701,7 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
 
 	connect( m_dropSite, SIGNAL(buttonAdded(QChar)), m_buttonSource, SLOT(hideButton(QChar)) );
 	connect( m_dropSite, SIGNAL(buttonRemoved(QChar)), m_buttonSource, SLOT(showButton(QChar)) );
-	connect( m_buttonSource, SIGNAL(dropped(QDropEvent*, QListViewItem*)), m_dropSite, SLOT(removeSelectedButton()) );
+	connect( m_buttonSource, SIGNAL(dropped(QDropEvent*, Q3ListViewItem*)), m_dropSite, SLOT(removeSelectedButton()) );
 
 	connect( m_dropSite, SIGNAL(changed()), SIGNAL(changed()) );
 
@@ -756,7 +766,7 @@ void ButtonPositionWidget::setDecorationFactory(KDecorationFactory *factory)
 
 	// update the button lists...
 	// 1. set status on the source items...
-	QListViewItemIterator it(m_buttonSource);
+	Q3ListViewItemIterator it(m_buttonSource);
 	while (it.current() ) {
 		ButtonSourceItem *i = dynamic_cast<ButtonSourceItem*>(it.current() );
 		if (i) {
@@ -849,7 +859,7 @@ void ButtonPositionWidget::setButtonsLeft(const QString &buttons)
 	// to keep the button lists consistent, first remove all left buttons, then add buttons again...
 	m_dropSite->clearLeft();
 
-	for (uint i = 0; i < buttons.length(); ++i) {
+	for (int i = 0; i < buttons.length(); ++i) {
 		bool succ = false;
 		Button btn = getButton(buttons[i], succ);
 		if (succ) {
@@ -866,7 +876,7 @@ void ButtonPositionWidget::setButtonsRight(const QString &buttons)
 	// to keep the button lists consistent, first remove all left buttons, then add buttons again...
 	m_dropSite->clearRight();
 
-	for (uint i = 0; i < buttons.length(); ++i) {
+	for (int i = 0; i < buttons.length(); ++i) {
 		bool succ = false;
 		Button btn = getButton(buttons[i], succ);
 		if (succ) {

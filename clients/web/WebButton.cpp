@@ -20,6 +20,8 @@
 */
 
 #include <qpainter.h>
+//Added by qt3to4:
+#include <QEvent>
 
 #include "WebButton.h"
 #include "Web.h"
@@ -75,7 +77,7 @@ WebButton::WebButton(ButtonType type, WebClient *parent, const char *name, bool 
     shape_      (shape),
     deco_       (parent)
 {
-  setBackgroundMode(NoBackground);
+  setBackgroundMode(Qt::NoBackground);
 }
 
 WebButton::~WebButton()
@@ -128,7 +130,7 @@ WebButton::enterEvent(QEvent * e)
 {
   mouseOver_ = true;
   repaint();
-  QButton::enterEvent(e);
+  Q3Button::enterEvent(e);
 }
 
   void
@@ -136,7 +138,7 @@ WebButton::leaveEvent(QEvent * e)
 {
   mouseOver_ = false;
   repaint();
-  QButton::leaveEvent(e);
+  Q3Button::leaveEvent(e);
 }
 
   void
@@ -152,7 +154,7 @@ WebButton::drawButton(QPainter *p)
     if (mouseOver_)
       highlightPen = QPen(colorGroup().highlight());
     else
-      highlightPen = QPen(NoPen);
+      highlightPen = QPen(Qt::NoPen);
   }
 
   p->fillRect(rect(), colorGroup().background());
@@ -166,7 +168,7 @@ WebButton::drawButton(QPainter *p)
     position_ = Mid;
   switch ( position_ )
   {
-    case Left:
+    case Qt::DockLeft:
       {
         // Draw edge.
 
@@ -184,7 +186,7 @@ WebButton::drawButton(QPainter *p)
         }
         // Draw highlight.
 
-        p->setBrush(NoBrush);
+        p->setBrush(Qt::NoBrush);
         p->setPen(highlightPen);
 
         if (shape_)
@@ -203,7 +205,7 @@ WebButton::drawButton(QPainter *p)
 
       break;
 
-    case Right:
+    case Qt::DockRight:
       {
         // Draw edge.
 
@@ -220,7 +222,7 @@ WebButton::drawButton(QPainter *p)
         }
         // Draw highlight.
 
-        p->setBrush(NoBrush);
+        p->setBrush(Qt::NoBrush);
         p->setPen(highlightPen);
 
         if (shape_)
@@ -249,7 +251,7 @@ WebButton::drawButton(QPainter *p)
 
         // Draw highlight.
 
-        p->setBrush(NoBrush);
+        p->setBrush(Qt::NoBrush);
         p->setPen(highlightPen);
 
         p->drawRect(2, 2, width() - 4, height() - 4);
@@ -265,7 +267,7 @@ WebButton::drawButton(QPainter *p)
   int bwby2(bitmap_.width() / 2);    // Bitmap Width BY 2
   int bhby2(bitmap_.height() / 2);   // Bitmap Height BY 2
 
-  p->setBrush(NoBrush);
+  p->setBrush(Qt::NoBrush);
   p->setPen(Qt::black);
 
   p->drawPixmap(center.x() - bwby2 + 1, center.y() - bhby2 + 1, bitmap_);
