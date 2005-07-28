@@ -848,7 +848,7 @@ void Client::startupIdChanged()
     bool asn_valid = workspace()->checkStartupNotification( window(), asn_id, asn_data );
     if( !asn_valid )
         return;
-    if( asn_data.desktop() != 0 )
+    if( asn_data.desktop() != 0 && !isOnAllDesktops())
         workspace()->sendClientToDesktop( this, asn_data.desktop(), true );
     Time timestamp = asn_id.timestamp();
     if( timestamp == 0 && asn_data.timestamp() != -1U )
