@@ -172,7 +172,7 @@ Atom            winDialogAtom;
 Atom            winNormalAtom;
 
 /* opacity property name; sometime soon I'll write up an EWMH spec for it */
-#define OPACITY_PROP	"_KDE_WM_WINDOW_OPACITY"
+#define OPACITY_PROP	"_NET_WM_WINDOW_OPACITY"
 #define SHADOW_PROP	"_KDE_WM_WINDOW_SHADOW"
 #define SHADE_PROP	"_KDE_WM_WINDOW_SHADE"
 #define SHAPABLE_PROP	"_KDE_WM_WINDOW_SHAPABLE"

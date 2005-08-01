@@ -78,7 +78,7 @@ Atoms::Atoms()
     names[n++] = (char*) "_NET_WM_TAKE_ACTIVITY";
     
     atoms[n] = &net_wm_window_opacity;
-    names[n++] = (char*) "_KDE_WM_WINDOW_OPACITY";
+    names[n++] = (char*) "_NET_WM_WINDOW_OPACITY";
 
     atoms[n] = &net_wm_window_shadow;
     names[n++] = (char*) "_KDE_WM_WINDOW_SHADOW";
