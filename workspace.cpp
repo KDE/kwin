@@ -29,6 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobalaccel.h>
 #include <dcopclient.h>
 #include <QDesktopWidget>
+#include <kipc.h>
 
 #include "plugins.h"
 #include "client.h"
@@ -98,6 +99,9 @@ Workspace::Workspace( bool restore )
     client_keys       ( NULL ),
     client_keys_dialog ( NULL ),
     client_keys_client ( NULL ),
+    disable_shortcuts_keys ( NULL ),
+    global_shortcuts_disabled( false ),
+    global_shortcuts_disabled_for_client( false ),
     root              (0),
     workspaceInit     (true),
     startup(0), electric_have_borders(false),
@@ -329,6 +333,7 @@ void Workspace::init()
             SLOT(slotReconfigure()));
     connect(kapp, SIGNAL(settingsChanged(int)), this,
             SLOT(slotSettingsChanged(int)));
+    connect(kapp, SIGNAL( kipcMessage( int, int )), this, SLOT( kipcMessage( int, int )));
 
     active_client = NULL;
     rootInfo->setActiveWindow( None );
@@ -2567,6 +2572,63 @@ void Workspace::resetShowingDesktop( bool keep_hidden )
         }
     showing_desktop_clients.clear();
     --block_showing_desktop;
+    }
+
+// Activating/deactivating this feature works like this:
+// When nothing is active, and the shortcut is pressed, global shortcuts are disabled
+//   (using global_shortcuts_disabled)
+// When a window that has disabling forced is activated, global shortcuts are disabled.
+//   (using global_shortcuts_disabled_for_client)
+// When a shortcut is pressed and global shortcuts are disabled (either by a shortcut
+// or for a client), they are enabled again.
+void Workspace::slotDisableGlobalShortcuts()
+    {
+    if( global_shortcuts_disabled || global_shortcuts_disabled_for_client )
+        disableGlobalShortcuts( false );
+    else
+        disableGlobalShortcuts( true );
+    }
+
+static bool pending_dfc = false;
+
+void Workspace::disableGlobalShortcutsForClient( bool disable )
+    {
+    if( global_shortcuts_disabled_for_client == disable )
+        return;
+    if( !global_shortcuts_disabled )
+        {
+        if( disable )
+            pending_dfc = true;
+        KIPC::sendMessageAll( KIPC::BlockShortcuts, disable );
+        // kwin will get the kipc message too
+        }
+    }
+
+void Workspace::disableGlobalShortcuts( bool disable )
+    {
+    KIPC::sendMessageAll( KIPC::BlockShortcuts, disable );
+    // kwin will get the kipc message too
+    }
+
+void Workspace::kipcMessage( int id, int data )
+    {
+    if( id != KIPC::BlockShortcuts )
+        return;
+    if( pending_dfc && data )
+        {
+        global_shortcuts_disabled_for_client = true;
+        pending_dfc = false;
+        }
+    else
+        {
+        global_shortcuts_disabled = data;
+        global_shortcuts_disabled_for_client = false;
+        }
+    // update also Alt+LMB actions etc.
+    for( ClientList::ConstIterator it = clients.begin();
+         it != clients.end();
+         ++it )
+        (*it)->updateMouseGrab();
     }
 
 } // namespace

@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>600</width>
+            <width>630</width>
             <height>503</height>
         </rect>
     </property>
@@ -2252,7 +2252,18 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <spacer row="7" column="2">
+                    <widget class="QCheckBox" row="3" column="3">
+                        <property name="name">
+                            <cstring>ignoreposition</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <spacer row="8" column="2">
                         <property name="name">
                             <cstring>spacer35</cstring>
                         </property>
@@ -2265,21 +2276,10 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>190</height>
+                                <height>160</height>
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QCheckBox" row="3" column="3">
-                        <property name="name">
-                            <cstring>ignoreposition</cstring>
-                        </property>
-                        <property name="enabled">
-                            <bool>false</bool>
-                        </property>
-                        <property name="text">
-                            <string></string>
-                        </property>
-                    </widget>
                     <widget class="QCheckBox" row="6" column="0">
                         <property name="name">
                             <cstring>enable_strictgeometry</cstring>
@@ -2323,6 +2323,51 @@
                         </property>
                         <property name="text">
                             <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="7" column="3">
+                        <property name="name">
+                            <cstring>disableglobalshortcuts</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="7" column="0">
+                        <property name="name">
+                            <cstring>enable_disableglobalshortcuts</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Block global shortcuts</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="KComboBox" row="7" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Do Not Affect</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Force Temporarily</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>rule_disableglobalshortcuts</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
                         </property>
                     </widget>
                 </grid>
@@ -2445,6 +2490,16 @@
     <tabstop>enable_closeable</tabstop>
     <tabstop>rule_closeable</tabstop>
     <tabstop>closeable</tabstop>
+    <tabstop>enable_opacityactive</tabstop>
+    <tabstop>rule_opacityactive</tabstop>
+    <tabstop>opacityactive</tabstop>
+    <tabstop>enable_opacityinactive</tabstop>
+    <tabstop>rule_opacityinactive</tabstop>
+    <tabstop>opacityinactive</tabstop>
+    <tabstop>enable_shortcut</tabstop>
+    <tabstop>rule_shortcut</tabstop>
+    <tabstop>shortcut</tabstop>
+    <tabstop>shortcut_edit</tabstop>
     <tabstop>enable_fsplevel</tabstop>
     <tabstop>rule_fsplevel</tabstop>
     <tabstop>fsplevel</tabstop>
@@ -2463,6 +2518,12 @@
     <tabstop>enable_maxsize</tabstop>
     <tabstop>rule_maxsize</tabstop>
     <tabstop>maxsize</tabstop>
+    <tabstop>enable_strictgeometry</tabstop>
+    <tabstop>rule_strictgeometry</tabstop>
+    <tabstop>strictgeometry</tabstop>
+    <tabstop>enable_disableglobalshortcuts</tabstop>
+    <tabstop>rule_disableglobalshortcuts</tabstop>
+    <tabstop>disableglobalshortcuts</tabstop>
 </tabstops>
 <slots>
     <slot access="protected" specifier="pure virtual">detectClicked()</slot>
@@ -2523,6 +2584,7 @@
     <includehint>krestrictedline.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>krestrictedline.h</includehint>
+    <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>

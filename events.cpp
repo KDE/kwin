@@ -1008,8 +1008,16 @@ void Client::ungrabButton( int modifier )
   (Motif, AWT, Tk, ...)
  */
 void Client::updateMouseGrab()
-    {                   // see Workspace::establishTabBoxGrab()
-    if( isActive() && !workspace()->forcedGlobalMouseGrab())
+    {
+    if( workspace()->globalShortcutsDisabled())
+        {
+        XUngrabButton( QX11Info::display(), AnyButton, AnyModifier, wrapperId());
+        // keep grab for the simple click without modifiers if needed
+        if( !( !options->clickRaise || not_obscured ))
+            grabButton( None );
+        return;
+        }
+    if( isActive() && !workspace()->forcedGlobalMouseGrab()) // see Workspace::establishTabBoxGrab()
         {
         // remove the grab for no modifiers only if the window
         // is unobscured or if the user doesn't want click raise

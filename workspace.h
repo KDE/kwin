@@ -254,6 +254,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool forcedGlobalMouseGrab() const;
         void clientShortcutUpdated( Client* c );
         bool shortcutAvailable( const KShortcut& cut, Client* ignore = NULL ) const;
+        bool globalShortcutsDisabled() const;
+        void disableGlobalShortcuts( bool disable );
+        void disableGlobalShortcutsForClient( bool disable );
 
         void sessionSaveStarted();
         void sessionSaveDone();
@@ -335,6 +338,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void slotWindowToDesktopDown();
 
         void slotMouseEmulation();
+        void slotDisableGlobalShortcuts();
 
         void slotSettingsChanged( int category );
 
@@ -367,6 +371,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void gotTemporaryRulesMessage( const QString& );
         void cleanupTemporaryRules();
         void writeWindowRules();
+        void kipcMessage( int id, int data );
         // kompmgr
         void setPopupClientOpacity(int v);
         void resetClientOpacity();
@@ -542,6 +547,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         KGlobalAccel *client_keys;
         ShortcutDialog* client_keys_dialog;
         Client* client_keys_client;
+        KGlobalAccel *disable_shortcuts_keys;
+        bool global_shortcuts_disabled;
+        bool global_shortcuts_disabled_for_client;
 
         WId root;
 
@@ -752,6 +760,11 @@ inline bool Workspace::forcedGlobalMouseGrab() const
 inline bool Workspace::showingDesktop() const
     {
     return showing_desktop;
+    }
+
+inline bool Workspace::globalShortcutsDisabled() const
+    {
+    return global_shortcuts_disabled || global_shortcuts_disabled_for_client;
     }
 
 template< typename T >

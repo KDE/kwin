@@ -247,6 +247,11 @@ void Workspace::closeActivePopup()
 void Workspace::initShortcuts()
     {
     keys = new KGlobalAccel( this );
+    // a separate KGlobalAccel is needed for the shortcut for disabling global shortcuts,
+    // otherwise it would also disable itself
+    disable_shortcuts_keys = new KGlobalAccel( this );
+    disable_shortcuts_keys->disableBlocking( true );
+#define IN_KWIN
 #include "kwinbindings.cpp"
     readShortcuts();
     }
@@ -254,6 +259,7 @@ void Workspace::initShortcuts()
 void Workspace::readShortcuts()
     {
     keys->readSettings();
+    disable_shortcuts_keys->readSettings();
 
     cutWalkThroughDesktops = keys->shortcut("Walk Through Desktops");
     cutWalkThroughDesktopsReverse = keys->shortcut("Walk Through Desktops (Reverse)");
@@ -263,6 +269,7 @@ void Workspace::readShortcuts()
     cutWalkThroughWindowsReverse = keys->shortcut("Walk Through Windows (Reverse)");
 
     keys->updateConnections();
+    disable_shortcuts_keys->updateConnections();
     
     delete popup;
     popup = NULL; // so that it's recreated next time
@@ -274,6 +281,7 @@ void Workspace::setupWindowShortcut( Client* c )
     {
     assert( client_keys_dialog == NULL );
     keys->setEnabled( false );
+    disable_shortcuts_keys->setEnabled( false );
     client_keys->setEnabled( false );
     client_keys_dialog = new ShortcutDialog( c->shortcut());
     client_keys_client = c;
@@ -294,6 +302,7 @@ void Workspace::setupWindowShortcut( Client* c )
 void Workspace::setupWindowShortcutDone( bool ok )
     {
     keys->setEnabled( true );
+    disable_shortcuts_keys->setEnabled( true );
     client_keys->setEnabled( true );
     if( ok )
         {

@@ -83,6 +83,7 @@ class RulesWidget
         void updateEnablemaxsize();
         void updateEnablestrictgeometry();
         void updateEnableshortcut();
+        void updateEnabledisableglobalshortcuts();
         // internal
         void detected( bool );
     private:

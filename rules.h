@@ -68,6 +68,7 @@ class WindowRules
         bool checkCloseable( bool closeable ) const;
         bool checkStrictGeometry( bool strict ) const;
         QString checkShortcut( QString s, bool init = false ) const;
+        bool checkDisableGlobalShortcuts( bool disable ) const;
     private:
         MaximizeMode checkMaximizeVert( MaximizeMode mode, bool init ) const;
         MaximizeMode checkMaximizeHoriz( MaximizeMode mode, bool init ) const;
@@ -118,6 +119,7 @@ class Rules
         bool applyCloseable( bool& closeable ) const;
         bool applyStrictGeometry( bool& strict ) const;
         bool applyShortcut( QString& shortcut, bool init ) const;
+        bool applyDisableGlobalShortcuts( bool& disable ) const;
     private:
 #endif
         bool matchType( NET::WindowType match_type ) const;
@@ -231,6 +233,8 @@ class Rules
         ForceRule strictgeometryrule;
         QString shortcut;
         SetRule shortcutrule;
+        bool disableglobalshortcuts;
+        ForceRule disableglobalshortcutsrule;
         friend kdbgstream& operator<<( kdbgstream& stream, const Rules* );
     };
 

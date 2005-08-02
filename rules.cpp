@@ -60,6 +60,7 @@ Rules::Rules()
     , closeablerule( UnusedForceRule )
     , strictgeometryrule( UnusedForceRule )
     , shortcutrule( UnusedSetRule )
+    , disableglobalshortcutsrule( UnusedForceRule )
     {
     }
 
@@ -162,6 +163,7 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_FORCE_RULE( closeable, Bool, );
     READ_FORCE_RULE( strictgeometry, Bool, );
     READ_SET_RULE( shortcut, , );
+    READ_FORCE_RULE( disableglobalshortcuts, Bool, );
     }
 
 #undef READ_MATCH_STRING
@@ -250,6 +252,7 @@ void Rules::write( KConfig& cfg ) const
     WRITE_FORCE_RULE( closeable, );
     WRITE_FORCE_RULE( strictgeometry, );
     WRITE_SET_RULE( shortcut, );
+    WRITE_FORCE_RULE( disableglobalshortcuts, );
     }
     
 #undef WRITE_MATCH_STRING
@@ -285,7 +288,8 @@ bool Rules::isEmpty() const
         && moveresizemoderule == UnusedForceRule
         && closeablerule == UnusedForceRule
         && strictgeometryrule == UnusedForceRule
-        && shortcutrule == UnusedSetRule );
+        && shortcutrule == UnusedSetRule
+        && disableglobalshortcutsrule == UnusedForceRule );
     }
 
 Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
@@ -604,6 +608,8 @@ APPLY_FORCE_RULE( moveresizemode, MoveResizeMode, Options::MoveResizeMode )
 APPLY_FORCE_RULE( closeable, Closeable, bool )
 APPLY_FORCE_RULE( strictgeometry, StrictGeometry, bool )
 APPLY_RULE( shortcut, Shortcut, QString )
+APPLY_FORCE_RULE( disableglobalshortcuts, DisableGlobalShortcuts, bool )
+
 
 #undef APPLY_RULE
 #undef APPLY_FORCE_RULE
@@ -664,6 +670,7 @@ void Rules::discardUsed( bool withdrawn )
     DISCARD_USED_FORCE_RULE( closeable );
     DISCARD_USED_FORCE_RULE( strictgeometry );
     DISCARD_USED_SET_RULE( shortcut );
+    DISCARD_USED_FORCE_RULE( disableglobalshortcuts );
     }
 #undef DISCARD_USED_SET_RULE
 #undef DISCARD_USED_FORCE_RULE
@@ -779,6 +786,7 @@ CHECK_FORCE_RULE( MoveResizeMode, Options::MoveResizeMode )
 CHECK_FORCE_RULE( Closeable, bool )
 CHECK_FORCE_RULE( StrictGeometry, bool )
 CHECK_RULE( Shortcut, QString )
+CHECK_FORCE_RULE( DisableGlobalShortcuts, bool )
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE
@@ -832,7 +840,11 @@ void Client::applyWindowRules()
     QSize s = adjustedSize();
     if( s != size())
         resizeWithChecks( s );
+    // StrictGeometry
     setShortcut( rules()->checkShortcut( shortcut().toString()));
+    // see also Client::setActive()
+    if( isActive())
+        workspace()->disableGlobalShortcutsForClient( rules()->checkDisableGlobalShortcuts( false ));
     }
 
 void Client::updateWindowRules()

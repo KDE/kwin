@@ -238,6 +238,10 @@ void Workspace::setActiveClient( Client* c, allowed_t )
 
     updateCurrentTopMenu();
     updateToolWindows( false );
+    if( c )
+        disableGlobalShortcutsForClient( c->rules()->checkDisableGlobalShortcuts( false ));
+    else
+        disableGlobalShortcutsForClient( false );
 
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 
@@ -825,7 +829,7 @@ void Client::setActive( bool act, bool updateOpacity_)
 
     if( !active && shade_mode == ShadeActivated )
         setShade( ShadeNormal );
-
+        
     StackingUpdatesBlocker blocker( workspace());
     workspace()->updateClientLayer( this ); // active windows may get different layer
     // TODO optimize? mainClients() may be a bit expensive
