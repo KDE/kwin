@@ -204,6 +204,9 @@ class Client : public QObject, public KDecorationDefines
         // plainResize() simply resizes
         void plainResize( int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void plainResize( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
+        // resizeWithChecks() resizes according to gravity, and checks workarea position
+        void resizeWithChecks( int w, int h, ForceGeometry_t force = NormalGeometrySet );
+        void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
         void keepInArea( QRect area, bool partial = false );
 
         void growHorizontal();
@@ -376,9 +379,6 @@ class Client : public QObject, public KDecorationDefines
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
         static int computeWorkareaDiff( int left, int right, int a_left, int a_right );
         void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool );
-        // resizeWithChecks() resizes according to gravity, and checks workarea position
-        void resizeWithChecks( int w, int h, ForceGeometry_t force = NormalGeometrySet );
-        void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
         NETExtendedStrut strut() const;
         bool hasStrut() const;
         int checkShadeGeometry( int w, int h );

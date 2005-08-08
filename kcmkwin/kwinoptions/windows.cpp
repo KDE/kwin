@@ -848,6 +848,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
 
     placementCombo = new QComboBox(false, windowsBox);
     placementCombo->insertItem(i18n("Smart"), SMART_PLACEMENT);
+    placementCombo->insertItem(i18n("Maximizing"), MAXIMIZING_PLACEMENT);
     placementCombo->insertItem(i18n("Cascade"), CASCADE_PLACEMENT);
     placementCombo->insertItem(i18n("Random"), RANDOM_PLACEMENT);
     placementCombo->insertItem(i18n("Centered"), CENTERED_PLACEMENT);
@@ -862,6 +863,9 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *paren
                  " will appear on the desktop."
                  " <ul>"
                  " <li><em>Smart</em> will try to achieve a minimum overlap of windows</li>"
+                 " <li><em>Maximizing</em> will try to maximize every window to fill the whole screen."
+                 " It might be useful to selectively affect placement of some windows using"
+                 " the window-specific settings.</li>"
                  " <li><em>Cascade</em> will cascade the windows</li>"
                  " <li><em>Random</em> will use a random position</li>"
                  " <li><em>Centered</em> will place the window centered</li>"
@@ -1068,7 +1072,8 @@ void KMovingConfig::load( void )
         setPlacement(CENTERED_PLACEMENT);
     else if( key == "ZeroCornered")
         setPlacement(ZEROCORNERED_PLACEMENT);
-
+    else if( key == "Maximizing")
+        setPlacement(MAXIMIZING_PLACEMENT);
     else
         setPlacement(SMART_PLACEMENT);
 //  }
@@ -1115,6 +1120,8 @@ void KMovingConfig::save( void )
         config->writeEntry(KWIN_PLACEMENT, "Centered");
     else if (v == ZEROCORNERED_PLACEMENT)
         config->writeEntry(KWIN_PLACEMENT, "ZeroCornered");
+    else if (v == MAXIMIZING_PLACEMENT)
+        config->writeEntry(KWIN_PLACEMENT, "Maximizing");
 //CT 13mar98 manual and interactive placement
 //   else if (v == MANUAL_PLACEMENT)
 //     config->writeEntry(KWIN_PLACEMENT, "Manual");

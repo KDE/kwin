@@ -80,6 +80,8 @@ void Placement::place(Client* c, Policy policy, QRect& area )
         placeUnderMouse(c, area);
     else if (policy == OnMainWindow)
         placeOnMainWindow(c, area);
+    else if( policy == Maximizing )
+        placeMaximizing(c, area);
     else
         placeSmart(c, area);
     }
@@ -479,6 +481,24 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
     c->keepInArea( area ); // make sure it's kept inside workarea
     }
 
+void Placement::placeMaximizing(Client* c, const QRect& area )
+    {
+    if( c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height())
+        {
+        if( m_WorkspacePtr->clientArea( MaximizeArea, c ) == area )
+            c->maximize( Client::MaximizeFull );
+        else // if the geometry doesn't match default maximize area (xinerama case?),
+            { // it's probably better to use the given area
+            c->setGeometry( area );
+            }
+        }
+    else
+        {
+        c->resizeWithChecks( c->maxSize().boundedTo( area.size()));
+        placeSmart( c, area );
+        }
+    }
+
 QRect Placement::checkArea( const Client* c, const QRect& area )
     {
     if( area.isNull())
@@ -507,6 +527,8 @@ Placement::Policy Placement::policyFromString( const QString& policy, bool no_sp
         return UnderMouse;
     else if( policy == "OnMainWindow" && !no_special)
         return OnMainWindow;
+    else if( policy == "Maximizing" )
+        return Maximizing;
     else
         return Smart;
     }
@@ -515,7 +537,7 @@ const char* Placement::policyToString( Policy policy )
     {
     const char* const policies[] =
         { "NoPlacement", "Default", "Random", "Smart", "Cascade", "Centered",
-            "ZeroCornered", "UnderMouse", "OnMainWindow" };
+            "ZeroCornered", "UnderMouse", "OnMainWindow", "Maximizing" };
     assert( policy < int( sizeof( policies ) / sizeof( policies[ 0 ] )));
     return policies[ policy ];
     }

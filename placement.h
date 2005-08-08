@@ -34,6 +34,7 @@ class Placement
         void placeAtRandom            (Client* c, const QRect& area );
         void placeCascaded            (Client* c, const QRect& area, bool re_init = false);
         void placeSmart               (Client* c, const QRect& area );
+        void placeMaximizing          (Client* c, const QRect& area );
         void placeCentered    (Client* c, const QRect& area );
         void placeZeroCornered(Client* c, const QRect& area );
         void placeDialog      (Client* c, QRect& area );
@@ -55,7 +56,8 @@ class Placement
             Centered,
             ZeroCornered,
             UnderMouse, // special
-            OnMainWindow // special
+            OnMainWindow, // special
+            Maximizing
             };
 
         static Policy policyFromString( const QString& policy, bool no_special );

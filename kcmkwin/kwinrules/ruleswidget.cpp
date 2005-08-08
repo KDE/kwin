@@ -267,13 +267,14 @@ static int placementToCombo( Placement::Policy placement )
         {
         1, // NoPlacement
         0, // Default
-        5, // Random
+        6, // Random
         2, // Smart
-        3, // Cascade
-        4, // Centered
-        6, // ZeroCornered
-        7, // UnderMouse
-        8 // OnMainWindow
+        4, // Cascade
+        5, // Centered
+        7, // ZeroCornered
+        8, // UnderMouse
+        9, // OnMainWindow
+        3  // Maximizing
         };
     return conv[ placement ];
     }
@@ -285,6 +286,7 @@ static Placement::Policy comboToPlacement( int val )
         Placement::Default,
         Placement::NoPlacement,
         Placement::Smart,
+        Placement::Maximizing,
         Placement::Cascade,
         Placement::Centered,
         Placement::Random,

@@ -1123,6 +1123,11 @@
                         </item>
                         <item>
                             <property name="text">
+                                <string>Maximizing</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
                                 <string>Cascade</string>
                             </property>
                         </item>
