@@ -50,7 +50,7 @@ class WindowRules
         QSize checkMaxSize( QSize s ) const;
         int checkOpacityActive(int s) const;
         int checkOpacityInactive(int s) const;
-        bool checkIgnorePosition( bool ignore ) const;
+        bool checkIgnoreGeometry( bool ignore ) const;
         int checkDesktop( int desktop, bool init = false ) const;
         NET::WindowType checkType( NET::WindowType type ) const;
         MaximizeMode checkMaximize( MaximizeMode mode, bool init = false ) const;
@@ -69,6 +69,7 @@ class WindowRules
         bool checkStrictGeometry( bool strict ) const;
         QString checkShortcut( QString s, bool init = false ) const;
         bool checkDisableGlobalShortcuts( bool disable ) const;
+        bool checkIgnorePosition( bool ignore ) const; // obsolete
     private:
         MaximizeMode checkMaximizeVert( MaximizeMode mode, bool init ) const;
         MaximizeMode checkMaximizeHoriz( MaximizeMode mode, bool init ) const;
@@ -100,7 +101,7 @@ class Rules
         bool applyMaxSize( QSize& s ) const;
         bool applyOpacityActive(int& s) const;
         bool applyOpacityInactive(int& s) const;
-        bool applyIgnorePosition( bool& ignore ) const;
+        bool applyIgnoreGeometry( bool& ignore ) const;
         bool applyDesktop( int& desktop, bool init ) const;
         bool applyType( NET::WindowType& type ) const;
         bool applyMaximizeVert( MaximizeMode& mode, bool init ) const;
@@ -120,6 +121,7 @@ class Rules
         bool applyStrictGeometry( bool& strict ) const;
         bool applyShortcut( QString& shortcut, bool init ) const;
         bool applyDisableGlobalShortcuts( bool& disable ) const;
+        bool applyIgnorePosition( bool& ignore ) const; // obsolete
     private:
 #endif
         bool matchType( NET::WindowType match_type ) const;

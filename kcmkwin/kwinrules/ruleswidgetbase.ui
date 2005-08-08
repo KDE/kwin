@@ -2231,7 +2231,7 @@
                             <cstring>enable_ignoreposition</cstring>
                         </property>
                         <property name="text">
-                            <string>Ignore requested &amp;position</string>
+                            <string>Ignore requested &amp;geometry</string>
                         </property>
                     </widget>
                     <widget class="KComboBox" row="3" column="1">

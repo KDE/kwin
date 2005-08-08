@@ -250,7 +250,7 @@ bool Client::manage( Window w, bool isMapped )
         ; // force using placement policy
     else
         usePosition = true;
-    if( !rules()->checkIgnorePosition( !usePosition ))
+    if( !rules()->checkIgnoreGeometry( !usePosition ))
         {
         bool ignorePPosition = ( options->ignorePositionClasses.contains(QString::fromLatin1(resourceClass())));
 

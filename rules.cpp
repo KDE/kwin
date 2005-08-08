@@ -565,6 +565,13 @@ APPLY_FORCE_RULE( maxsize, MaxSize, QSize )
 APPLY_FORCE_RULE( opacityactive, OpacityActive, int )
 APPLY_FORCE_RULE( opacityinactive, OpacityInactive, int )
 APPLY_FORCE_RULE( ignoreposition, IgnorePosition, bool )
+
+// the cfg. entry needs to stay named the say for backwards compatibility
+bool Rules::applyIgnoreGeometry( bool& ignore ) const
+    {
+    return applyIgnorePosition( ignore );
+    }
+
 APPLY_RULE( desktop, Desktop, int )
 APPLY_FORCE_RULE( type, Type, NET::WindowType )
 
@@ -760,6 +767,12 @@ CHECK_FORCE_RULE( MaxSize, QSize )
 CHECK_FORCE_RULE( OpacityActive, int )
 CHECK_FORCE_RULE( OpacityInactive, int )
 CHECK_FORCE_RULE( IgnorePosition, bool )
+
+bool WindowRules::checkIgnoreGeometry( bool ignore ) const
+    {
+    return checkIgnorePosition( ignore );
+    }
+
 CHECK_RULE( Desktop, int )
 CHECK_FORCE_RULE( Type, NET::WindowType )
 CHECK_RULE( MaximizeVert, KDecorationDefines::MaximizeMode )
