@@ -459,6 +459,8 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
     {
     if( nextPlacement == Unknown )
         nextPlacement = Centered;
+    if( nextPlacement == Maximizing ) // maximize if needed
+        placeMaximizing( c, area, NoPlacement );
     area = checkArea( c, area );
     ClientList mainwindows = c->mainClients();
     Client* place_on = NULL;
@@ -483,7 +485,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
                   // made as large as its maximum size and then placed centered.
                   // So the nextPlacement argument allows chaining. In this case, nextPlacement
                   // is Maximizing and it will call placeCentered().
-                place( c, area, nextPlacement, Centered );
+                place( c, area, Centered );
                 return;
                 }
             }
@@ -492,7 +494,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
         { // 'mains_count' is used because it doesn't include ignored mainwindows
         if( mains_count != 1 )
             {
-            place( c, area, nextPlacement, Centered );
+            place( c, area, Centered );
             return;
             }
         place_on = place_on2; // use the only window filtered together with 'mains_count'
@@ -503,8 +505,6 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
     // get area again, because the mainwindow may be on different xinerama screen
     area = checkArea( c, QRect()); 
     c->keepInArea( area ); // make sure it's kept inside workarea
-    if( nextPlacement == Maximizing ) // maximize if needed
-        placeMaximizing( c, area, Unknown );
     }
 
 void Placement::placeMaximizing(Client* c, QRect& area, Policy nextPlacement )
