@@ -833,6 +833,7 @@ void Workspace::slotReconfigure()
     unsigned long changed = options->updateSettings();
     tab_box->reconfigure();
     popupinfo->reconfigure();
+    initPositioning->reinitCascading( 0 );
     readShortcuts();
     forEachClient( CheckIgnoreFocusStealingProcedure());
     updateToolWindows( true );

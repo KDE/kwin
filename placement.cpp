@@ -31,16 +31,7 @@ Placement::Placement(Workspace* w)
     {
     m_WorkspacePtr = w;
 
-    //CT initialize the cascading info
-    for( int i = 0; i < m_WorkspacePtr->numberOfDesktops(); i++) 
-        {
-        DesktopCascadingInfo inf;
-        inf.pos = QPoint(0,0);
-        inf.col = 0;
-        inf.row = 0;
-        cci.append(inf);
-        }
-
+    reinitCascading( 0 );
     }
 
 /*!
@@ -50,46 +41,48 @@ void Placement::place(Client* c, QRect& area )
     {
     Policy policy = c->rules()->checkPlacement( Default );
     if( policy != Default )
-        return place( c, policy, area );
+        place( c, area, policy );
 
     if( c->isUtility())
-        placeUtility(c, area);
+        placeUtility(c, area, options->placement );
     else if( c->isDialog())
-        placeDialog(c, area);
+        placeDialog(c, area, options->placement );
     else if( c->isSplash())
         placeOnMainWindow( c, area ); // on mainwindow, if any, otherwise centered
     else
-        place(c, options->placement, area);
+        place(c, area, options->placement);
     }
 
-void Placement::place(Client* c, Policy policy, QRect& area )
+void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacement )
     {
+    if( policy == Unknown )
+        policy = Default;
     if( policy == Default )
         policy = options->placement;
     if( policy == NoPlacement )
         return;
     else if (policy == Random)
-        placeAtRandom(c, area);
+        placeAtRandom(c, area, nextPlacement);
     else if (policy == Cascade)
-        placeCascaded(c, area);
+        placeCascaded(c, area, nextPlacement);
     else if (policy == Centered)
-        placeCentered(c, area);
+        placeCentered(c, area, nextPlacement);
     else if (policy == ZeroCornered)
-        placeZeroCornered(c, area);
+        placeZeroCornered(c, area, nextPlacement);
     else if (policy == UnderMouse)
-        placeUnderMouse(c, area);
+        placeUnderMouse(c, area, nextPlacement);
     else if (policy == OnMainWindow)
-        placeOnMainWindow(c, area);
+        placeOnMainWindow(c, area, nextPlacement);
     else if( policy == Maximizing )
-        placeMaximizing(c, area);
+        placeMaximizing(c, area, nextPlacement);
     else
-        placeSmart(c, area);
+        placeSmart(c, area, nextPlacement);
     }
 
 /*!
   Place the client \a c according to a simply "random" placement algorithm.
  */
-void Placement::placeAtRandom(Client* c, const QRect& area )
+void Placement::placeAtRandom(Client* c, const QRect& area, Policy /*next*/ )
     {
     const int step  = 24;
     static int px = step;
@@ -132,7 +125,7 @@ void Placement::placeAtRandom(Client* c, const QRect& area )
 /*!
   Place the client \a c according to a really smart placement algorithm :-)
 */
-void Placement::placeSmart(Client* c, const QRect& area )
+void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/ )
     {
     /*
      * SmartPlacement by Cristian Tibirna (tibirna@kde.org)
@@ -300,10 +293,31 @@ void Placement::placeSmart(Client* c, const QRect& area )
 
     }
 
+void Placement::reinitCascading( int desktop )
+    { // desktop == 0 - reinit all
+    if( desktop == 0 )
+        {
+        cci.clear();
+        for( int i = 0; i < m_WorkspacePtr->numberOfDesktops(); i++) 
+            {
+            DesktopCascadingInfo inf;
+            inf.pos = QPoint(-1,-1);
+            inf.col = 0;
+            inf.row = 0;
+            cci.append(inf);
+            }
+        }
+    else
+        {
+        cci[desktop - 1].pos = QPoint(-1, -1);
+        cci[desktop - 1].col = cci[desktop - 1].row = 0;
+        }
+    }
+
 /*!
   Place windows in a cascading order, remembering positions for each desktop
 */
-void Placement::placeCascaded (Client* c, const QRect& area, bool re_init)
+void Placement::placeCascaded (Client* c, QRect& area, Policy nextPlacement)
     {
     /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
      */
@@ -327,8 +341,11 @@ void Placement::placeCascaded (Client* c, const QRect& area, bool re_init)
     const int H = maxRect.height();
     const int W = maxRect.width();
 
+    if( nextPlacement == Unknown )
+        nextPlacement = Smart;
+
   //initialize if needed
-    if (re_init || cci[dn].pos.x() < X || cci[dn].pos.y() < Y ) 
+    if (cci[dn].pos.x() < 0 || cci[dn].pos.x() < X || cci[dn].pos.y() < Y )
         {
         cci[dn].pos = QPoint(X, Y);
         cci[dn].col = cci[dn].row = 0;
@@ -344,7 +361,7 @@ void Placement::placeCascaded (Client* c, const QRect& area, bool re_init)
     if ((xp + cw) > W)
         if (!yp) 
         {
-        placeSmart(c,area);
+        place(c,area,nextPlacement);
         return;
         }
     else xp = X;
@@ -373,7 +390,7 @@ void Placement::placeCascaded (Client* c, const QRect& area, bool re_init)
         // last resort: if still doesn't fit, smart place it
         if (((xp + cw) > W - X) || ((yp + ch) > H - Y)) 
             {
-            placeSmart(c,area);
+            place(c,area,nextPlacement);
             return;
             }
         }
@@ -388,7 +405,7 @@ void Placement::placeCascaded (Client* c, const QRect& area, bool re_init)
 /*!
   Place windows centered, on top of all others
 */
-void Placement::placeCentered (Client* c, const QRect& area )
+void Placement::placeCentered (Client* c, const QRect& area, Policy /*next*/ )
     {
 
     // get the maximum allowed windows space and desk's origin
@@ -404,7 +421,7 @@ void Placement::placeCentered (Client* c, const QRect& area )
 /*!
   Place windows in the (0,0) corner, on top of all others
 */
-void Placement::placeZeroCornered(Client* c, const QRect& area )
+void Placement::placeZeroCornered(Client* c, const QRect& area, Policy /*next*/ )
     {
     // get the maximum allowed windows space and desk's origin
     const QRect maxRect = checkArea( c, area );
@@ -413,23 +430,23 @@ void Placement::placeZeroCornered(Client* c, const QRect& area )
     c->move(QPoint(maxRect.left(), maxRect.top()));
     }
 
-void Placement::placeUtility(Client* c, QRect& area )
+void Placement::placeUtility(Client* c, QRect& area, Policy /*next*/ )
     {
 // TODO kwin should try to place utility windows next to their mainwindow,
 // preferably at the right edge, and going down if there are more of them
 // if there's not enough place outside the mainwindow, it should prefer
 // top-right corner
     // use the default placement for now
-    place( c, Default, area );
+    place( c, area, Default );
     }
 
 
-void Placement::placeDialog(Client* c, QRect& area )
+void Placement::placeDialog(Client* c, QRect& area, Policy nextPlacement )
     {
-    placeOnMainWindow( c, area );
+    placeOnMainWindow( c, area, nextPlacement );
     }
 
-void Placement::placeUnderMouse(Client* c, QRect& area )
+void Placement::placeUnderMouse(Client* c, QRect& area, Policy /*next*/ )
     {
     area = checkArea( c, area );
     QRect geom = c->geometry();
@@ -438,8 +455,10 @@ void Placement::placeUnderMouse(Client* c, QRect& area )
     c->keepInArea( area ); // make sure it's kept inside workarea
     }
 
-void Placement::placeOnMainWindow(Client* c, QRect& area )
+void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
     {
+    if( nextPlacement == Unknown )
+        nextPlacement = Centered;
     area = checkArea( c, area );
     ClientList mainwindows = c->mainClients();
     Client* place_on = NULL;
@@ -459,7 +478,12 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
                 place_on = *it;
             else
                 { // two or more on current desktop -> center
-                placeCentered( c, area );
+                  // That's the default at least. However, with maximizing placement
+                  // policy as the default, the dialog should be either maximized or
+                  // made as large as its maximum size and then placed centered.
+                  // So the nextPlacement argument allows chaining. In this case, nextPlacement
+                  // is Maximizing and it will call placeCentered().
+                place( c, area, nextPlacement, Centered );
                 return;
                 }
             }
@@ -468,7 +492,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
         { // 'mains_count' is used because it doesn't include ignored mainwindows
         if( mains_count != 1 )
             {
-            placeCentered( c, area );
+            place( c, area, nextPlacement, Centered );
             return;
             }
         place_on = place_on2; // use the only window filtered together with 'mains_count'
@@ -479,10 +503,14 @@ void Placement::placeOnMainWindow(Client* c, QRect& area )
     // get area again, because the mainwindow may be on different xinerama screen
     area = checkArea( c, QRect()); 
     c->keepInArea( area ); // make sure it's kept inside workarea
+    if( nextPlacement == Maximizing ) // maximize if needed
+        placeMaximizing( c, area, Unknown );
     }
 
-void Placement::placeMaximizing(Client* c, const QRect& area )
+void Placement::placeMaximizing(Client* c, QRect& area, Policy nextPlacement )
     {
+    if( nextPlacement == Unknown )
+        nextPlacement = Smart;
     if( c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height())
         {
         if( m_WorkspacePtr->clientArea( MaximizeArea, c ) == area )
@@ -495,7 +523,7 @@ void Placement::placeMaximizing(Client* c, const QRect& area )
     else
         {
         c->resizeWithChecks( c->maxSize().boundedTo( area.size()));
-        placeSmart( c, area );
+        place( c, area, nextPlacement );
         }
     }
 
@@ -536,7 +564,7 @@ Placement::Policy Placement::policyFromString( const QString& policy, bool no_sp
 const char* Placement::policyToString( Policy policy )
     {
     const char* const policies[] =
-        { "NoPlacement", "Default", "Random", "Smart", "Cascade", "Centered",
+        { "NoPlacement", "Default", "XXX should never see", "Random", "Smart", "Cascade", "Centered",
             "ZeroCornered", "UnderMouse", "OnMainWindow", "Maximizing" };
     assert( policy < int( sizeof( policies ) / sizeof( policies[ 0 ] )));
     return policies[ policy ];

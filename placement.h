@@ -29,17 +29,6 @@ class Placement
 
         Placement(Workspace* w);
 
-        void place(Client* c, QRect& area );
-
-        void placeAtRandom            (Client* c, const QRect& area );
-        void placeCascaded            (Client* c, const QRect& area, bool re_init = false);
-        void placeSmart               (Client* c, const QRect& area );
-        void placeMaximizing          (Client* c, const QRect& area );
-        void placeCentered    (Client* c, const QRect& area );
-        void placeZeroCornered(Client* c, const QRect& area );
-        void placeDialog      (Client* c, QRect& area );
-        void placeUtility     (Client* c, QRect& area );
-
         /**
          * Placement policies. How workspace decides the way windows get positioned
          * on the screen. The better the policy, the heavier the resource use.
@@ -50,6 +39,7 @@ class Placement
             {
             NoPlacement, // not really a placement
             Default, // special, means to use the global default
+            Unknown, // special, means the function should use its default
             Random,
             Smart,
             Cascade,
@@ -60,14 +50,27 @@ class Placement
             Maximizing
             };
 
+        void place(Client* c, QRect& area );
+        
+        void placeAtRandom            (Client* c, const QRect& area, Policy next = Unknown );
+        void placeCascaded            (Client* c, QRect& area, Policy next = Unknown );
+        void placeSmart               (Client* c, const QRect& area, Policy next = Unknown );
+        void placeMaximizing          (Client* c, QRect& area, Policy next = Unknown );
+        void placeCentered    (Client* c, const QRect& area, Policy next = Unknown );
+        void placeZeroCornered(Client* c, const QRect& area, Policy next = Unknown );
+        void placeDialog      (Client* c, QRect& area, Policy next = Unknown );
+        void placeUtility     (Client* c, QRect& area, Policy next = Unknown );
+
+        void reinitCascading( int desktop );
+
         static Policy policyFromString( const QString& policy, bool no_special );
         static const char* policyToString( Policy policy );
 
     private:
 
-        void place(Client* c, Policy policy, QRect& area);
-        void placeUnderMouse(Client* c, QRect& area );
-        void placeOnMainWindow(Client* c, QRect& area );
+        void place(Client* c, QRect& area, Policy policy, Policy nextPlacement = Unknown );
+        void placeUnderMouse(Client* c, QRect& area, Policy next = Unknown );
+        void placeOnMainWindow(Client* c, QRect& area, Policy next = Unknown );
         QRect checkArea( const Client*c, const QRect& area );
 
         Placement();

@@ -596,7 +596,8 @@ void Workspace::cascadeDesktop()
 // TODO XINERAMA this probably is not right for xinerama
     Q_ASSERT( block_stacking_updates == 0 );
     ClientList::ConstIterator it(stackingOrder().begin());
-    bool re_init_cascade_at_first_client = true;
+    initPositioning->reinitCascading( currentDesktop());
+    QRect area = clientArea( PlacementArea, QPoint( 0, 0 ), currentDesktop());
     for (; it != stackingOrder().end(); ++it)
         {
         if((!(*it)->isOnDesktop(currentDesktop())) ||
@@ -604,10 +605,7 @@ void Workspace::cascadeDesktop()
            ((*it)->isOnAllDesktops())              ||
            (!(*it)->isMovable()) )
             continue;
-        initPositioning->placeCascaded(*it, QRect(), re_init_cascade_at_first_client);
-        //CT is an if faster than an attribution?
-        if (re_init_cascade_at_first_client)
-          re_init_cascade_at_first_client = false;
+        initPositioning->placeCascaded(*it, area);
         }
     }
 

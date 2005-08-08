@@ -267,6 +267,7 @@ static int placementToCombo( Placement::Policy placement )
         {
         1, // NoPlacement
         0, // Default
+        0, // Unknown
         6, // Random
         2, // Smart
         4, // Cascade
@@ -293,6 +294,7 @@ static Placement::Policy comboToPlacement( int val )
         Placement::ZeroCornered,
         Placement::UnderMouse,
         Placement::OnMainWindow
+        // no Placement::Unknown
         };
     return conv[ val ];
     }
