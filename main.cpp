@@ -246,7 +246,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 
     KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
                           version, description, KAboutData::License_GPL,
-                          I18N_NOOP("(c) 1999-2003, The KDE Developers"));
+                          I18N_NOOP("(c) 1999-2005, The KDE Developers"));
     aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
     aboutData.addAuthor("Cristian Tibirna",0, "tibirna@kde.org");
     aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
