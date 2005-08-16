@@ -127,6 +127,7 @@ class Client : public QObject, public KDecorationDefines
         bool isMinimized() const;
         bool isMaximizable() const;
         QRect geometryRestore() const;
+        MaximizeMode maximizeModeRestore() const;
         MaximizeMode maximizeMode() const;
         bool isMinimizable() const;
         void setMaximize( bool vertically, bool horizontally );
@@ -501,6 +502,7 @@ class Client : public QObject, public KDecorationDefines
         MaximizeMode max_mode;
         QRect geom_restore;
         QRect geom_fs_restore;
+        MaximizeMode maxmode_restore;
         int workarea_diff_x, workarea_diff_y;
         WinInfo* info;
         QTimer* autoRaiseTimer;
@@ -720,6 +722,11 @@ inline QPixmap Client::miniIcon() const
 inline QRect Client::geometryRestore() const
     {
     return geom_restore;
+    }
+
+inline Client::MaximizeMode Client::maximizeModeRestore() const
+    {
+    return maxmode_restore;
     }
 
 inline Client::MaximizeMode Client::maximizeMode() const

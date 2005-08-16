@@ -1838,6 +1838,21 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     if( decoration != NULL ) // decorations may turn off some borders when maximized
         decoration->borders( border_left, border_right, border_top, border_bottom );
 
+    // restore partial maximizations
+    if ( old_mode==MaximizeFull && max_mode==MaximizeRestore )
+        {
+        if ( maximizeModeRestore()==MaximizeVertical )
+	    {
+	    max_mode = MaximizeVertical;
+	    maxmode_restore = MaximizeRestore;
+	    }
+	if ( maximizeModeRestore()==MaximizeHorizontal )
+	    {
+	    max_mode = MaximizeHorizontal;
+	    maxmode_restore = MaximizeRestore;
+	    }	
+	}
+    
     switch (max_mode)
         {
 
@@ -1917,6 +1932,10 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
         case MaximizeFull:
             {
+            if( old_mode & MaximizeVertical )
+                maxmode_restore = MaximizeVertical;
+            if( old_mode & MaximizeHorizontal )
+	        maxmode_restore = MaximizeHorizontal;
             QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax );
             QRect r = QRect(clientArea.topLeft(), adjSize);
             setGeometry( r );
