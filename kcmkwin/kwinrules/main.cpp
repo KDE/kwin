@@ -66,7 +66,7 @@ static void saveRules( const Q3ValueList< Rules* >& rules )
         }
     }
 
-static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid )
+static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid, bool whole_app )
     {
     KWin::WindowInfo info = KWin::windowInfo( wid,
         NET::WMName | NET::WMWindowType,
@@ -102,29 +102,37 @@ static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid )
             quality += 1;
             generic = false;  // this can be considered specific enough (old X apps)
             }
-        if( rule->windowrolematch != Rules::UnimportantMatch )
+        if( !whole_app )
             {
-            quality += rule->windowrolematch == Rules::ExactMatch ? 5 : 1;
-            generic = false;
+            if( rule->windowrolematch != Rules::UnimportantMatch )
+                {
+                quality += rule->windowrolematch == Rules::ExactMatch ? 5 : 1;
+                generic = false;
+                }
+            if( rule->titlematch != Rules::UnimportantMatch )
+                {
+                quality += rule->titlematch == Rules::ExactMatch ? 3 : 1;
+                generic = false;
+                }
+            if( rule->types != NET::AllTypesMask )
+                {
+                int bits = 0;
+                for( int bit = 1;
+                     bit < 1 << 31;
+                     bit <<= 1 )
+                    if( rule->types & bit )
+                        ++bits;
+                if( bits == 1 )
+                    quality += 2;
+                }
+            if( generic ) // ignore generic rules, use only the ones that are for this window
+                continue;
             }
-        if( rule->titlematch != Rules::UnimportantMatch )
+        else
             {
-            quality += rule->titlematch == Rules::ExactMatch ? 3 : 1;
-            generic = false;
-            }
-        if( rule->types != NET::AllTypesMask )
-            {
-            int bits = 0;
-            for( int bit = 1;
-                 bit < 1 << 31;
-                 bit <<= 1 )
-                if( rule->types & bit )
-                    ++bits;
-            if( bits == 1 )
+            if( rule->types == NET::AllTypesMask )
                 quality += 2;
             }
-        if( generic ) // ignore generic rules, use only the ones that are for this window
-            continue;
         if( !rule->matchType( type )
             || !rule->matchRole( role )
             || !rule->matchTitle( title )
@@ -139,7 +147,33 @@ static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid )
     if( best_match != NULL )
         return best_match;
     Rules* ret = new Rules;
-    ret->description = i18n( "Settings for %1" ).arg( QString::fromLatin1( wmclass_class ) );
+    if( whole_app )
+        {
+        ret->description = i18n( "Application settings for %1" ).arg( QString::fromLatin1( wmclass_class ));
+        // TODO maybe exclude some types? If yes, then also exclude them above
+        // when searching.
+        ret->types = NET::AllTypesMask; 
+        ret->titlematch = Rules::UnimportantMatch;
+        ret->clientmachine = machine; // set, but make unimportant
+        ret->clientmachinematch = Rules::UnimportantMatch;
+        ret->extrarolematch = Rules::UnimportantMatch;
+        ret->windowrolematch = Rules::UnimportantMatch;
+        if( wmclass_name == wmclass_class )
+            {
+            ret->wmclasscomplete = false;
+            ret->wmclass = wmclass_class;
+            ret->wmclassmatch = Rules::ExactMatch;
+            }
+        else
+            {
+            // WM_CLASS components differ - perhaps the app got -name argument
+            ret->wmclasscomplete = true;
+            ret->wmclass = wmclass_name + ' ' + wmclass_class;
+            ret->wmclassmatch = Rules::ExactMatch;
+            }
+        return ret;
+        }
+    ret->description = i18n( "Window settings for %1" ).arg( QString::fromLatin1( wmclass_class ));
     if( type == NET::Unknown )
         ret->types = NET::NormalMask;
     else
@@ -195,11 +229,11 @@ static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid )
     return ret;
     }
 
-static int edit( Window wid )
+static int edit( Window wid, bool whole_app )
     {
     Q3ValueList< Rules* > rules;
     loadRules( rules );
-    Rules* orig_rule = findRule( rules, wid );
+    Rules* orig_rule = findRule( rules, wid, whole_app );
     RulesDialog dlg;
     // dlg.edit() creates new Rules instance if edited
     Rules* edited_rule = dlg.edit( orig_rule, wid );
@@ -232,6 +266,7 @@ static const KCmdLineOptions options[] =
     {
     // no need for I18N_NOOP(), this is not supposed to be used directly
         { "wid <wid>", "WId of the window for special window settings.", 0 },
+        { "whole-app", "Whether the settings should affect all windows of the application.", 0 },
         KCmdLineLastOption
     };
 
@@ -246,11 +281,12 @@ KDE_EXPORT int kdemain( int argc, char* argv[] )
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     bool id_ok = false;
     Window id = args->getOption( "wid" ).toULongLong( &id_ok );
+    bool whole_app = args->isSet( "whole-app" );
     args->clear();
     if( !id_ok || id == None )
         {
 	KCmdLineArgs::usage( i18n( "This helper utility is not supposed to be called directly." ));
 	return 1;
         }
-    return KWinInternal::edit( id );
+    return KWinInternal::edit( id, whole_app );
     }

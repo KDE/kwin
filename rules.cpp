@@ -940,10 +940,14 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
     return WindowRules( ret );
     }
 
-void Workspace::editWindowRules( Client* c )
+void Workspace::editWindowRules( Client* c, bool whole_app )
     {
     writeWindowRules();
-    KApplication::kdeinitExec( "kwin_rules_dialog", QStringList() << "--wid" << QString::number( c->window()));
+    QStringList args;
+    args << "--wid" << QString::number( c->window());
+    if( whole_app )
+        args << "--whole-app";
+    KApplication::kdeinitExec( "kwin_rules_dialog", args );
     }
 
 void Workspace::loadWindowRules()

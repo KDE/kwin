@@ -482,7 +482,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         void loadSessionInfo();
         void loadWindowRules();
-        void editWindowRules( Client* );
+        void editWindowRules( Client* c, bool whole_app );
 
         QList<SessionInfo*> session;
         QList<Rules*> rules;

@@ -68,6 +68,7 @@ Q3PopupMenu* Workspace::clientPopup()
         advanced_popup->insertItem( SmallIconSet("key_bindings"),
             i18n("Window &Shortcut...")+'\t'+keys->shortcut("Setup Window Shortcut").seq(0).toString(), Options::SetupWindowShortcutOp );
         advanced_popup->insertItem( SmallIconSet( "wizard" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
+        advanced_popup->insertItem( SmallIconSet( "wizard" ), i18n("&Special Application Settings..."), Options::ApplicationRulesOp );
 
         popup->insertItem(i18n("Ad&vanced"), advanced_popup );
         desk_popup_index = popup->count();
@@ -427,7 +428,10 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             c->performMouseCommand( Options::MouseShade, QCursor::pos());
             break;
         case Options::WindowRulesOp:
-            editWindowRules( c );
+            editWindowRules( c, false );
+            break;
+        case Options::ApplicationRulesOp:
+            editWindowRules( c, true );
             break;
         case Options::SetupWindowShortcutOp:
             setupWindowShortcut( c );
