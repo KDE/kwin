@@ -138,7 +138,8 @@ Client::Client( Workspace *ws )
     skip_pager = FALSE;
 
     max_mode = MaximizeRestore;
-
+    maxmode_restore = MaximizeRestore;
+    
     cmap = None;
     
     frame_geometry = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
