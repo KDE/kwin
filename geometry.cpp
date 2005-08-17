@@ -1815,12 +1815,12 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     QRect clientArea = workspace()->clientArea( MaximizeArea, this );
 
     // save sizes for restoring, if maximalizing
-    if( !( y() == clientArea.top() && height() == clientArea.height()))
+    if( !adjust && !( y() == clientArea.top() && height() == clientArea.height()))
         {
         geom_restore.setTop( y());
         geom_restore.setHeight( height());
         }
-    if( !( x() == clientArea.left() && width() == clientArea.width()))
+    if( !adjust && !( x() == clientArea.left() && width() == clientArea.width()))
         {
         geom_restore.setLeft( x());
         geom_restore.setWidth( width());
@@ -1932,10 +1932,13 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
         case MaximizeFull:
             {
-            if( old_mode & MaximizeVertical )
-                maxmode_restore = MaximizeVertical;
-            if( old_mode & MaximizeHorizontal )
-	        maxmode_restore = MaximizeHorizontal;
+            if( !adjust )
+                {
+                if( old_mode & MaximizeVertical )
+                    maxmode_restore = MaximizeVertical;
+                if( old_mode & MaximizeHorizontal )
+    	            maxmode_restore = MaximizeHorizontal;
+                }
             QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax );
             QRect r = QRect(clientArea.topLeft(), adjSize);
             setGeometry( r );
