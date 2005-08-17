@@ -625,6 +625,11 @@ void KDEDefaultButton::setBitmap(const unsigned char *bitmap)
 	}
 }
 
+void KDEDefaultButton::paintEvent(QPaintEvent *)
+{
+	QPainter p(this);
+	drawButton(&p);
+}
 
 void KDEDefaultButton::drawButton(QPainter *p)
 {

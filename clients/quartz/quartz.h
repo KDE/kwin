@@ -58,6 +58,7 @@ class QuartzButton : public KCommonDecorationButton
 		void reset(unsigned long changed);
 
 	protected:
+		void paintEvent(QPaintEvent *);
 		void drawButton(QPainter *p);
 
 		QBitmap* deco;

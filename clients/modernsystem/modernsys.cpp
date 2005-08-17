@@ -350,6 +350,12 @@ void ModernButton::setBitmap(const unsigned char *bitmap)
     deco.setMask(deco);
 }
 
+void ModernButton::paintEvent(QPaintEvent *)
+{
+    QPainter p(this);
+    drawButton(&p);
+}
+
 void ModernButton::drawButton(QPainter *p)
 {
     if(decoration()->isActive()){

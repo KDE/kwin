@@ -444,6 +444,12 @@ void QuartzButton::setBitmap(const unsigned char *bitmap)
 	}
 }
 
+void QuartzButton::paintEvent(QPaintEvent *)
+{
+	QPainter p(this);
+	drawButton(&p);
+}
+
 void QuartzButton::drawButton(QPainter *p)
 {
 	// Never paint if the pixmaps have not been created

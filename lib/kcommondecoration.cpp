@@ -872,7 +872,7 @@ QRect KCommonDecoration::titleRect() const
 
 
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent, const char *name)
-    : Q3Button(parent->widget(), name),
+    : QAbstractButton(parent->widget(), name),
         m_decoration(parent),
         m_type(type),
         m_realizeButtons(Qt::LeftButton),
@@ -933,14 +933,14 @@ void KCommonDecorationButton::setTipText(const QString &tip) {
 
 void KCommonDecorationButton::setToggleButton(bool toggle)
 {
-    Q3Button::setToggleButton(toggle);
+    QAbstractButton::setToggleButton(toggle);
     reset(ToggleChange);
 }
 
 void KCommonDecorationButton::setOn(bool on)
 {
     if (on != isOn() ) {
-        Q3Button::setOn(on);
+        QAbstractButton::setOn(on);
         reset(StateChange);
     }
 }
@@ -952,7 +952,7 @@ void KCommonDecorationButton::mousePressEvent(QMouseEvent* e)
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
                    (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state());
 
-    Q3Button::mousePressEvent(&me);
+    QAbstractButton::mousePressEvent(&me);
 }
 
 void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
@@ -962,5 +962,5 @@ void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
                    (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state());
 
-    Q3Button::mouseReleaseEvent(&me);
+    QAbstractButton::mouseReleaseEvent(&me);
 }

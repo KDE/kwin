@@ -299,6 +299,12 @@ void LaptopButton::setBitmap(const unsigned char *bitmap)
     repaint();
 }
 
+void LaptopButton::paintEvent(QPaintEvent *)
+{
+    QPainter p(this);
+    drawButton(&p);
+}
+
 void LaptopButton::drawButton(QPainter *p)
 {
     bool smallBtn = width() == btnWidth1;

@@ -20,7 +20,7 @@ public:
     void setBitmap(const unsigned char *bitmap);
     virtual void reset(unsigned long changed);
 protected:
-
+    void paintEvent(QPaintEvent *);
     virtual void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *){;}
     QBitmap deco;

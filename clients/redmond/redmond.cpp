@@ -300,6 +300,11 @@ void RedmondButton::setPixmap( const QPixmap &p )
 	repaint(false);
 }
 
+void RedmondButton::paintEvent(QPaintEvent *)
+{
+	QPainter p(this);
+	drawButton(&p);
+}
 
 void RedmondButton::drawButton(QPainter *p)
 {

@@ -130,7 +130,7 @@ WebButton::enterEvent(QEvent * e)
 {
   mouseOver_ = true;
   repaint();
-  Q3Button::enterEvent(e);
+  QAbstractButton::enterEvent(e);
 }
 
   void
@@ -138,7 +138,13 @@ WebButton::leaveEvent(QEvent * e)
 {
   mouseOver_ = false;
   repaint();
-  Q3Button::leaveEvent(e);
+  QAbstractButton::leaveEvent(e);
+}
+
+void WebButton::paintEvent(QPaintEvent *)
+{
+  QPainter p(this);
+  drawButton(&p);
 }
 
   void

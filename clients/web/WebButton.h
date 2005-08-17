@@ -52,6 +52,7 @@ namespace Web
 
       void enterEvent(QEvent *);
       void leaveEvent(QEvent *);
+      void paintEvent(QPaintEvent *);
       void drawButton(QPainter *p);
 
     private:

@@ -25,7 +25,7 @@
 #ifndef KCOMMONDECORATION_H
 #define KCOMMONDECORATION_H
 
-#include <Q3Button>
+#include <QAbstractButton>
 #include "kdecoration.h"
 
 class KDecorationBridge;
@@ -285,7 +285,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
 /**
  * Title bar buttons of KCommonDecoration need to inherit this class.
  */
-class KWIN_EXPORT KCommonDecorationButton : public Q3Button
+class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
 {
     friend class KCommonDecoration;
 

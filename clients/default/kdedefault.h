@@ -60,6 +60,7 @@ class KDEDefaultButton : public KCommonDecorationButton
 	protected:
 		void enterEvent(QEvent *);
 		void leaveEvent(QEvent *);
+		void paintEvent(QPaintEvent *);
 		void drawButton(QPainter *p);
 		void drawButtonLabel(QPainter*) {;}
 

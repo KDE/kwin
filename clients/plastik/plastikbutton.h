@@ -47,6 +47,9 @@ public:
 protected slots:
     void animate();
 
+protected:
+    void paintEvent(QPaintEvent *);
+
 private:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);

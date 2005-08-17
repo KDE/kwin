@@ -24,6 +24,7 @@ public:
     virtual void reset(unsigned long changed);
 
 protected:
+    void paintEvent(QPaintEvent *);
     virtual void drawButton(QPainter *p);
     QBitmap deco;
 };

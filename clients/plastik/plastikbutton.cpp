@@ -22,7 +22,7 @@
 
 // #include <kwin/options.h>
 
-#include <Q3Button>
+#include <QAbstractButton>
 #include <qbitmap.h>
 #include <qpainter.h>
 #include <qpixmap.h>
@@ -146,7 +146,7 @@ void PlastikButton::animate()
 
 void PlastikButton::enterEvent(QEvent *e)
 {
-    Q3Button::enterEvent(e);
+    QAbstractButton::enterEvent(e);
 
     hover = true;
     animate();
@@ -154,10 +154,16 @@ void PlastikButton::enterEvent(QEvent *e)
 
 void PlastikButton::leaveEvent(QEvent *e)
 {
-    Q3Button::leaveEvent(e);
+    QAbstractButton::leaveEvent(e);
 
     hover = false;
     animate();
+}
+
+void PlastikButton::paintEvent(QPaintEvent *)
+{
+    QPainter p(this);
+    drawButton(&p);
 }
 
 void PlastikButton::drawButton(QPainter *painter)
