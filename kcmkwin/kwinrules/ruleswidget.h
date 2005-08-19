@@ -100,9 +100,11 @@ class RulesDialog
     Q_OBJECT
     public:
         RulesDialog( QWidget* parent = NULL, const char* name = NULL );
-        Rules* edit( Rules* r, WId window );
+        Rules* edit( Rules* r, WId window, bool show_hints );
     protected:
         virtual void accept();
+    private slots:
+        void displayHints();
     private:
         RulesWidget* widget;
         Rules* rules;

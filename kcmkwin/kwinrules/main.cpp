@@ -236,7 +236,7 @@ static int edit( Window wid, bool whole_app )
     Rules* orig_rule = findRule( rules, wid, whole_app );
     RulesDialog dlg;
     // dlg.edit() creates new Rules instance if edited
-    Rules* edited_rule = dlg.edit( orig_rule, wid );
+    Rules* edited_rule = dlg.edit( orig_rule, wid, true );
     if( edited_rule == NULL || edited_rule->isEmpty())
         {
         rules.remove( orig_rule );

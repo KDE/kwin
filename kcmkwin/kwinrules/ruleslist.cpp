@@ -74,7 +74,7 @@ void KCMRulesList::activeChanged( Q3ListBoxItem* item )
 void KCMRulesList::newClicked()
     {
     RulesDialog dlg;
-    Rules* rule = dlg.edit( NULL, 0 );
+    Rules* rule = dlg.edit( NULL, 0, false );
     if( rule == NULL )
         return;
     int pos = rules_listbox->currentItem() + 1;
@@ -90,7 +90,7 @@ void KCMRulesList::modifyClicked()
     if ( pos == -1 )
         return;
     RulesDialog dlg;
-    Rules* rule = dlg.edit( rules[ pos ], 0 );
+    Rules* rule = dlg.edit( rules[ pos ], 0, false );
     if( rule == rules[ pos ] )
         return;
     delete rules[ pos ];

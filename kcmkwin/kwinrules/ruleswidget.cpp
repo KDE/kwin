@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <kmessagebox.h>
 #include <qtabwidget.h>
+#include <qtimer.h>
 
 #include "../../rules.h"
 
@@ -694,14 +695,29 @@ RulesDialog::RulesDialog( QWidget* parent, const char* name )
 
 // window is set only for Alt+F3/Window-specific settings, because the dialog
 // is then related to one specific window
-Rules* RulesDialog::edit( Rules* r, WId window )
+Rules* RulesDialog::edit( Rules* r, WId window, bool show_hints )
     {
     rules = r;
     widget->setRules( rules );
     if( window != 0 )
         widget->prepareWindowSpecific( window );
+    if( show_hints )
+        QTimer::singleShot( 0, this, SLOT( displayHints()));
     exec();
     return rules;
+    }
+
+void RulesDialog::displayHints()
+    {
+    QString str = "<qt><p>";
+    str += i18n( "This configuration dialog allows altering settings only for the selected window"
+                 " or application. Find the setting you want to affect, enable the setting using the checkbox,"
+                 " select in what way the setting should be affected and to which value." );
+#if 0 // maybe later
+    str += "</p><p>" + i18n( "Consult the documentation for more details." );
+#endif
+    str += "</p></qt>";
+    KMessageBox::information( this, str, QString::null, "displayhints" );
     }
 
 void RulesDialog::accept()
