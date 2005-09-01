@@ -13,7 +13,7 @@ include_HEADERS = kdecoration.h kdecoration_p.h kdecoration_plugins_p.h \
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
 
-include ../../admin/Doxyfile.am
+include ../../../admin/Doxyfile.am
 
 messages: rc.cpp
 	$(XGETTEXT) `find . -name \*.cpp` -o $(podir)/kwin_lib.pot

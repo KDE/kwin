@@ -35,4 +35,4 @@ kwin_data_DATA= eventsrc
 
 kde_kcfg_DATA = kwin.kcfg
 
-include ../admin/Doxyfile.am
+include ../../admin/Doxyfile.am
