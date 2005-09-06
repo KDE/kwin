@@ -10,7 +10,7 @@
    keys->insert( name, i18n(name), QString::null, key3, key4 )
 #endif
 
-#define WIN KKey::QtWIN
+#define WIN Qt::META
 #define ALT Qt::ALT
 #define SHIFT Qt::SHIFT
 #define CTRL Qt::CTRL
