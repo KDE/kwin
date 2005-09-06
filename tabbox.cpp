@@ -1060,7 +1060,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         (KKeyNative::modXShift() |
          KKeyNative::modXCtrl() |
          KKeyNative::modXAlt() |
-         KKeyNative::modXWin();
+         KKeyNative::modXWin() );
     // ev.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released: only one modifier is active and the currently released
