@@ -1065,9 +1065,9 @@ int qtToX11State( Qt::ButtonState state )
     if( state & Qt::ControlButton )
         ret |= ControlMask;
     if( state & Qt::AltButton )
-        ret |= KKeyNative::modX(KKey::ALT);
+        ret |= KKeyNative::modXAlt();
     if( state & Qt::MetaButton )
-        ret |= KKeyNative::modX(KKey::WIN);
+        ret |= KKeyNative::modXWin();
     return ret;
     }
 
@@ -1133,8 +1133,8 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
         updateUserTime();
         workspace()->setWasUserInteraction();
         uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-            KKeyNative::modX(KKey::WIN) :
-            KKeyNative::modX(KKey::ALT);
+            KKeyNative::modXWin() :
+            KKeyNative::modXAlt();
         bool bModKeyHeld = keyModX != 0 && ( state & KKeyNative::accelModMaskX()) == keyModX;
 
         if( isSplash()

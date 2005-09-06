@@ -724,7 +724,7 @@ void TabBox::updateKeyMapping()
     int altpos = 0;
     int winpos = 0;
     int winmodpos = -1;
-    int winmod = KKeyNative::modX( KKey::WIN );
+    int winmod = KKeyNative::modXWin();
     while( winmod > 0 ) // get position of the set bit in winmod
         {
         winmod >>= 1;
@@ -1057,10 +1057,10 @@ void Workspace::closeTabBox()
 void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
     {
     unsigned int mk = ev.state &
-        (KKeyNative::modX(KKey::SHIFT) |
-         KKeyNative::modX(KKey::CTRL) |
-         KKeyNative::modX(KKey::ALT) |
-         KKeyNative::modX(KKey::WIN));
+        (KKeyNative::modXShift() |
+         KKeyNative::modXCtrl() |
+         KKeyNative::modXAlt() |
+         KKeyNative::modXWin();
     // ev.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released: only one modifier is active and the currently released
