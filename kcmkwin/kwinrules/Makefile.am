@@ -1,6 +1,6 @@
 METASOURCES = AUTO
 AM_CPPFLAGS = $(all_includes) -DKCMRULES
-INCLUDES = -I$(top_srcdir)/kwin/lib
+INCLUDES = -I$(top_srcdir)/workspace/kwin/lib
 
 bin_PROGRAMS =
 lib_LTLIBRARIES =
