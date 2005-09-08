@@ -16,3 +16,4 @@ kwin_kcmkwin_options_data_DATA = kwinactions.desktop  kwinadvanced.desktop  kwin
 kwin_kcmkwin_options_datadir = $(kde_appsdir)/.hidden
 
 xdg_apps_DATA = kwinoptions.desktop
+KDE_ICON=AUTO
