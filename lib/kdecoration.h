@@ -625,9 +625,7 @@ class KWIN_EXPORT KDecoration
 	 * isShade() to get the current state.
 	 */
         virtual void shadeChange() = 0;
-#if KDE_IS_VERSION( 3, 90, 0 )
 #warning Redo all the XYZChange() virtuals as signals.
-#endif
     signals:
         /**
          * This signal is emitted whenever the window's keep-above state changes.
@@ -767,9 +765,7 @@ class KWIN_EXPORT KDecoration
          * \endcode
          * @since 3.3
          */
-#if KDE_IS_VERSION( 3, 90, 0 )
 #warning Update the docs.
-#endif
         void maximize( Qt::ButtonState button );
 	/**
 	 * Set the maximize mode of the decorated window.
