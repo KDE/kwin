@@ -194,9 +194,7 @@ Workspace::Workspace( bool restore )
 
     init();
 
-#if (QT_VERSION-0 >= 0x030200) // XRANDR support
     connect( kapp->desktop(), SIGNAL( resized( int )), SLOT( desktopResized()));
-#endif
 
     // start kompmgr - i wanted to put this into main.cpp, but that would prevent dcop support, as long as Application was no dcop_object
     if (options->useTranslucency)
