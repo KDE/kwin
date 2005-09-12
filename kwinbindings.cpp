@@ -25,8 +25,8 @@
 	DEF( I18N_NOOP("Walk Through Windows (Reverse)"),      ALT+SHIFT+Qt::Key_Tab, ALT+SHIFT+Qt::Key_Tab, slotWalkBackThroughWindows() );
 	DEF( I18N_NOOP("Walk Through Desktops"),               0, WIN+Qt::Key_Tab, slotWalkThroughDesktops() );
 	DEF( I18N_NOOP("Walk Through Desktops (Reverse)"),     0, WIN+SHIFT+Qt::Key_Tab, slotWalkBackThroughDesktops() );
-	DEF( I18N_NOOP("Walk Through Desktop List"),           CTRL+Qt::Key_Tab, 0, slotWalkThroughDesktopList() );
-	DEF( I18N_NOOP("Walk Through Desktop List (Reverse)"), CTRL+SHIFT+Qt::Key_Tab, 0, slotWalkBackThroughDesktopList() );
+	DEF( I18N_NOOP("Walk Through Desktop List"),           0, 0, slotWalkThroughDesktopList() );
+	DEF( I18N_NOOP("Walk Through Desktop List (Reverse)"), 0, 0, slotWalkBackThroughDesktopList() );
 
 	keys->insert( "Group:Windows", i18n("Windows") );
 	DEF( I18N_NOOP("Window Operations Menu"),              ALT+Qt::Key_F3, ALT+Qt::Key_Menu, slotWindowOperations() );
