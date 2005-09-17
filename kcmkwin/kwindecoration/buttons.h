@@ -40,7 +40,7 @@
 #include <QDragMoveEvent>
 #include <Q3Frame>
 #include <QDropEvent>
-#include <Q3ValueList>
+#include <QList>
 #include <QResizeEvent>
 #include <QDragEnterEvent>
 #include <QMouseEvent>
@@ -140,7 +140,7 @@ class ButtonSource : public KListView
 		virtual Q3DragObject *dragObject();
 };
 
-typedef Q3ValueList<ButtonDropSiteItem*> ButtonList;
+typedef QList<ButtonDropSiteItem*> ButtonList;
 
 /**
  * This class renders and handles the demo titlebar dropsite

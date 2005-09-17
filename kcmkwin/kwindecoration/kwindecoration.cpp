@@ -42,7 +42,6 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QHBoxLayout>
-#include <Q3ValueList>
 #include <QVBoxLayout>
 
 #include <kapplication.h>
@@ -235,7 +234,7 @@ void KWinDecorationModule::findDecorations()
 // Fills the decorationList with a list of available kwin decorations
 void KWinDecorationModule::createDecorationList()
 {
-	Q3ValueList<DecorationInfo>::ConstIterator it;
+	QList<DecorationInfo>::ConstIterator it;
 
 	// Sync with kwin hardcoded KDE2 style which has no desktop item
     QStringList decorationNames;
@@ -277,10 +276,10 @@ static const char* const border_names[ KDecorationDefines::BordersCount ] =
     I18N_NOOP( "Oversized" )
     };
 
-int KWinDecorationModule::borderSizeToIndex( BorderSize size, Q3ValueList< BorderSize > sizes )
+int KWinDecorationModule::borderSizeToIndex( BorderSize size, QList< BorderSize > sizes )
 {
         int pos = 0;
-        for( Q3ValueList< BorderSize >::ConstIterator it = sizes.begin();
+        for( QList< BorderSize >::ConstIterator it = sizes.begin();
              it != sizes.end();
              ++it, ++pos )
             if( size <= *it )
@@ -289,9 +288,9 @@ int KWinDecorationModule::borderSizeToIndex( BorderSize size, Q3ValueList< Borde
 }
 
 KDecorationDefines::BorderSize KWinDecorationModule::indexToBorderSize( int index,
-    Q3ValueList< BorderSize > sizes )
+    QList< BorderSize > sizes )
 {
-        Q3ValueList< BorderSize >::ConstIterator it = sizes.begin();
+        QList< BorderSize >::ConstIterator it = sizes.begin();
         for(;
              it != sizes.end();
              ++it, --index )
@@ -305,7 +304,7 @@ void KWinDecorationModule::slotBorderChanged( int size )
         if( lBorder->isHidden())
             return;
         emit KCModule::changed( true );
-        Q3ValueList< BorderSize > sizes;
+        QList< BorderSize > sizes;
         if( plugins->factory() != NULL )
             sizes = plugins->factory()->borderSizes();
         assert( sizes.count() >= 2 );
@@ -325,7 +324,7 @@ QString KWinDecorationModule::decorationName( QString& libName )
 {
 	QString decoName;
 
-	Q3ValueList<DecorationInfo>::Iterator it;
+	QList<DecorationInfo>::Iterator it;
 	for( it = decorations.begin(); it != decorations.end(); ++it )
 		if ( (*it).libraryName == libName )
 		{
@@ -343,7 +342,7 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 
 	// Find the corresponding library name to that of
 	// the current plugin name
-	Q3ValueList<DecorationInfo>::Iterator it;
+	QList<DecorationInfo>::Iterator it;
 	for( it = decorations.begin(); it != decorations.end(); ++it )
 		if ( (*it).name == name )
 		{
@@ -563,7 +562,7 @@ void KWinDecorationModule::defaults()
 
 void KWinDecorationModule::checkSupportedBorderSizes()
 {
-        Q3ValueList< BorderSize > sizes;
+        QList< BorderSize > sizes;
         if( plugins->factory() != NULL )
             sizes = plugins->factory()->borderSizes();
 	if( sizes.count() < 2 ) {
@@ -571,7 +570,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 		cBorder->hide();
 	} else {
 		cBorder->clear();
-		for (Q3ValueList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
+		for (QList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
 			BorderSize size = *it;
 			cBorder->insertItem(i18n(border_names[size]), borderSizeToIndex(size,sizes) );
 		}
