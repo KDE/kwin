@@ -35,7 +35,7 @@
 #include <q3groupbox.h>
 #include <qcheckbox.h>
 #include <qtabwidget.h>
-#include <q3vbox.h>
+
 #include <qlabel.h>
 #include <qfile.h>
 #include <qslider.h>
@@ -60,6 +60,7 @@
 #include "preview.h"
 #include <kdecoration_plugins_p.h>
 #include <kdecorationfactory.h>
+#include <kvbox.h>
 
 // KCModule plugin interface
 // =========================
@@ -117,7 +118,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	borderSizeLayout->addWidget(cBorder);
 	borderSizeLayout->addStretch();
 
-	pluginConfigWidget = new Q3VBox(pluginSettingsGrp);
+	pluginConfigWidget = new KVBox(pluginSettingsGrp);
 	pluginSettingsGrp->layout()->add( pluginConfigWidget );
 
 	// Page 2 (Button Selector)

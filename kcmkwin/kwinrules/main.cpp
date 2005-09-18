@@ -28,14 +28,12 @@
 
 #include "ruleswidget.h"
 #include "../../rules.h"
-//Added by qt3to4:
-#include <Q3ValueList>
 #include <Q3CString>
 
 namespace KWinInternal
 {
 
-static void loadRules( Q3ValueList< Rules* >& rules )
+static void loadRules( QList< Rules* >& rules )
     {
     KConfig cfg( "kwinrulesrc", true );
     cfg.setGroup( "General" );
@@ -50,13 +48,13 @@ static void loadRules( Q3ValueList< Rules* >& rules )
         }
     }
 
-static void saveRules( const Q3ValueList< Rules* >& rules )
+static void saveRules( const QList< Rules* >& rules )
     {
     KConfig cfg( "kwinrulesrc" );
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
     int i = 1;
-    for( Q3ValueList< Rules* >::ConstIterator it = rules.begin();
+    for( QList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         {
@@ -66,7 +64,7 @@ static void saveRules( const Q3ValueList< Rules* >& rules )
         }
     }
 
-static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid, bool whole_app )
+static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app )
     {
     KWin::WindowInfo info = KWin::windowInfo( wid,
         NET::WMName | NET::WMWindowType,
@@ -84,7 +82,7 @@ static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid, bool who
     Q3CString machine = info.clientMachine().lower();
     Rules* best_match = NULL;
     int match_quality = 0;
-    for( Q3ValueList< Rules* >::ConstIterator it = rules.begin();
+    for( QList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         {
@@ -231,7 +229,7 @@ static Rules* findRule( const Q3ValueList< Rules* >& rules, Window wid, bool who
 
 static int edit( Window wid, bool whole_app )
     {
-    Q3ValueList< Rules* > rules;
+    QList< Rules* > rules;
     loadRules( rules );
     Rules* orig_rule = findRule( rules, wid, whole_app );
     RulesDialog dlg;
@@ -246,7 +244,7 @@ static int edit( Window wid, bool whole_app )
         }
     else if( edited_rule != orig_rule )
         {
-        Q3ValueList< Rules* >::Iterator pos = rules.find( orig_rule );
+        QList< Rules* >::Iterator pos = rules.find( orig_rule );
         if( pos != rules.end())
             *pos = edited_rule;
         else

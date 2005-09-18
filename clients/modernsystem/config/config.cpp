@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <kvbox.h>
 #include "config.h"
 
 
@@ -50,7 +51,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
         layout->addMultiCellWidget(cbShowHandle, 0, 0, 0, 1);
 	connect(cbShowHandle, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()));
 
-	sliderBox = new Q3VBox(handleBox);
+	sliderBox = new KVBox(handleBox);
 	handleSizeSlider = new QSlider(0, 4, 1, 0, Qt::Horizontal, sliderBox);
 	handleSizeSlider->setWhatsThis(
 			i18n("Here you can change the size of the resize handle."));
@@ -58,7 +59,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	handleSizeSlider->setTickmarks(QSlider::Below);
 	connect(handleSizeSlider, SIGNAL(valueChanged(int)), this, SLOT(slotSelectionChanged()));
 
-	hbox = new Q3HBox(sliderBox);
+	hbox = new KHBox(sliderBox);
 	hbox->setSpacing(6);
 
 	bool rtl = kapp->reverseLayout();

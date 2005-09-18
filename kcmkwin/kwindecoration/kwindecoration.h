@@ -41,12 +41,13 @@
 #include "kwindecorationIface.h"
 //Added by qt3to4:
 #include <QLabel>
+#include <kvbox.h>
 
 class KComboBox;
 class QCheckBox;
 class QLabel;
 class QTabWidget;
-class Q3VBox;
+class KVBox;
 class QSlider;
 
 class KDecorationPlugins;
@@ -128,7 +129,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 
 		// Page 2
 		ButtonPositionWidget *buttonPositionWidget;
-		Q3VBox*	 buttonPage;
+		KVBox*	 buttonPage;
 };
 
 

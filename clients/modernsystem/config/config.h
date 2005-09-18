@@ -4,11 +4,12 @@
 #include <qcheckbox.h>
 #include <q3groupbox.h>
 #include <qlayout.h>
-#include <q3vbox.h>
+
 #include <qslider.h>
 #include <qlabel.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
+#include <kvbox.h>
 
 class ModernSysConfig : public QObject
 {
@@ -36,9 +37,9 @@ class ModernSysConfig : public QObject
 		QVBoxLayout	*vbox;
 		QWidget         *handleBox;
 		QCheckBox 	*cbShowHandle;
-		Q3VBox		*sliderBox;
+		KVBox		*sliderBox;
 		QSlider		*handleSizeSlider;
-		Q3HBox		*hbox;
+		KHBox		*hbox;
 		QLabel		*label1;
 		QLabel		*label2;
 		QLabel		*label3;

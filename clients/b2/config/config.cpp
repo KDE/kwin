@@ -9,10 +9,11 @@
 #include "config.h"
 #include <kglobal.h>
 
-#include <q3vbox.h>
+
 //Added by qt3to4:
 #include <QLabel>
 #include <klocale.h>
+#include <kvbox.h>
 
 
 extern "C"
@@ -37,7 +38,7 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalogue("kwin_b2_config");
 	b2Config = new KConfig("kwinb2rc");
-	gb = new Q3VBox(parent);
+	gb = new KVBox(parent);
 
 	cbColorBorder = new QCheckBox(
 			i18n("Draw window frames using &titlebar colors"), gb);

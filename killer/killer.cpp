@@ -30,8 +30,6 @@ DEALINGS IN THE SOFTWARE.
 #include <unistd.h>
 #include <kwin.h>
 #include <X11/Xlib.h>
-//Added by qt3to4:
-#include <Q3CString>
 #include <QX11Info>
 
 static const KCmdLineOptions options[] =
@@ -54,7 +52,7 @@ int main( int argc, char* argv[] )
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    Q3CString hostname = args->getOption( "hostname" );
+    QByteArray hostname = args->getOption( "hostname" );
     bool pid_ok = false;
     pid_t pid = QString( args->getOption( "pid" ) ).toULong( &pid_ok );
     QString caption = QString::fromUtf8( args->getOption( "windowname" ));

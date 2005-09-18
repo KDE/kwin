@@ -13,6 +13,7 @@
 #include <kdialog.h>
 #include <klocale.h>
 #include <qpixmap.h>
+#include <kvbox.h>
 
 extern "C"
 {
@@ -33,7 +34,7 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalogue("kwin_clients");
 	highcolor = QPixmap::defaultDepth() > 8;
-	gb = new Q3VBox( parent );
+	gb = new KVBox( parent );
         gb->setSpacing( KDialog::spacingHint() );
 
 	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), gb );

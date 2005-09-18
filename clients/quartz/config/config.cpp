@@ -11,6 +11,7 @@
 #include <kglobal.h>
 
 #include <klocale.h>
+#include <kvbox.h>
 
 
 extern "C"
@@ -35,7 +36,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 {
 	quartzConfig = new KConfig("kwinquartzrc");
 	KGlobal::locale()->insertCatalogue("kwin_clients");
-	gb = new Q3VBox( parent );
+	gb = new KVBox( parent );
 	cbColorBorder = new QCheckBox( 
 						i18n("Draw window frames using &titlebar colors"), gb );
 	cbColorBorder->setWhatsThis( 
