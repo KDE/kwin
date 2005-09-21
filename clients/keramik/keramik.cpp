@@ -757,7 +757,7 @@ KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, co
 {
 	realizeButtons = realizeBtns;
 
-	QToolTip::add( this, tip ); // FRAME
+	this->setToolTip( tip ); // FRAME
 	setBackgroundMode( Qt::NoBackground );
 	setCursor( Qt::arrowCursor );
 	int size = clientHandler->roundButton()->height();
@@ -1412,7 +1412,7 @@ void KeramikClient::maximizeChange()
 
 	if ( button[ MaxButton ] ) {
 		QToolTip::remove( button[ MaxButton ] );
-		QToolTip::add( button[ MaxButton ], maximizeMode() == MaximizeFull ? i18n("Restore") : i18n("Maximize") );
+		button[ MaxButton ]->setToolTip( maximizeMode() == MaximizeFull ? i18n("Restore") : i18n("Maximize") );
 		button[ MaxButton ]->repaint();
 	}
 }
@@ -1424,7 +1424,7 @@ void KeramikClient::desktopChange()
 		{
                 button[ OnAllDesktopsButton ]->repaint( true );
 		QToolTip::remove( button[ OnAllDesktopsButton ] );
-		QToolTip::add( button[ OnAllDesktopsButton ], isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops") );
+		button[ OnAllDesktopsButton ]->setToolTip( isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops") );
 		}
 }
 
@@ -1435,7 +1435,7 @@ void KeramikClient::shadeChange()
 		{
                 button[ ShadeButton ]->repaint( true );
 		QToolTip::remove( button[ ShadeButton ] );
-		QToolTip::add( button[ ShadeButton ], isSetShade() ? i18n("Unshade") : i18n("Shade") );
+		button[ ShadeButton ]->setToolTip( isSetShade() ? i18n("Unshade") : i18n("Shade") );
 		}
 }
 

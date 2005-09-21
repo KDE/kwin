@@ -289,7 +289,7 @@ void KWMThemeClient::init()
         val = config->readEntry(key, defaultButtons[i]);
         if(val == "Menu"){
             mnuBtn = new MyButton(widget(), "menu");
-            QToolTip::add( mnuBtn, i18n("Menu"));
+            mnuBtn->setToolTip( i18n("Menu"));
             iconChange();
             hb->addWidget(mnuBtn);
             mnuBtn->setFixedSize(20, 20);
@@ -298,7 +298,7 @@ void KWMThemeClient::init()
         }
         else if(val == "Sticky"){
             stickyBtn = new MyButton(widget(), "sticky");
-            QToolTip::add( stickyBtn, i18n("Sticky"));
+            stickyBtn->setToolTip( i18n("Sticky"));
             if (isOnAllDesktops())
                 stickyBtn->setPixmap(*pindownPix);
             else
@@ -309,7 +309,7 @@ void KWMThemeClient::init()
         }
         else if((val == "Iconify") && isMinimizable()){
             btn = new MyButton(widget(), "iconify");
-            QToolTip::add( btn, i18n("Minimize"));
+            btn->setToolTip( i18n("Minimize"));
             btn->setPixmap(*iconifyPix);
             connect(btn, SIGNAL(clicked()), this, SLOT(minimize()));
             hb->addWidget(btn);
@@ -317,7 +317,7 @@ void KWMThemeClient::init()
         }
         else if((val == "Maximize") && isMaximizable()){
             maxBtn = new MyButton(widget(), "max");
-            QToolTip::add( maxBtn, i18n("Maximize"));
+            maxBtn->setToolTip( i18n("Maximize"));
             maxBtn->setPixmap(*maxPix);
             connect(maxBtn, SIGNAL(clicked()), this, SLOT(maximize()));
             hb->addWidget(maxBtn);
@@ -325,7 +325,7 @@ void KWMThemeClient::init()
         }
         else if((val == "Close") && isCloseable()){
             btn = new MyButton(widget(), "close");
-            QToolTip::add( btn, i18n("Close"));
+            btn->setToolTip( i18n("Close"));
             btn->setPixmap(*closePix);
             connect(btn, SIGNAL(clicked()), this, SLOT(closeWindow()));
             hb->addWidget(btn);
@@ -762,7 +762,7 @@ void KWMThemeClient::desktopChange()
        bool on = isOnAllDesktops();
        stickyBtn->setPixmap(on ? *pindownPix : *pinupPix);
        QToolTip::remove( stickyBtn );
-       QToolTip::add( stickyBtn, on ? i18n("Unsticky") : i18n("Sticky") );
+       stickyBtn->setToolTip( on ? i18n("Unsticky") : i18n("Sticky") );
     }
 }
 
@@ -772,7 +772,7 @@ void KWMThemeClient::maximizeChange()
        bool m = maximizeMode() == MaximizeFull;
        maxBtn->setPixmap(m ? *minmaxPix : *maxPix);
        QToolTip::remove( maxBtn );
-       QToolTip::add( maxBtn, m ? i18n("Restore") : i18n("Maximize"));
+       maxBtn->setToolTip( m ? i18n("Restore") : i18n("Maximize"));
     }
 }
 

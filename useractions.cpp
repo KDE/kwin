@@ -78,9 +78,9 @@ Q3PopupMenu* Workspace::clientPopup()
 			QVBoxLayout *transLayout = new QVBoxLayout(trans_popup);
 			trans_popup->setLayout( transLayout );
             transButton = new QPushButton(trans_popup, "transButton");
-            QToolTip::add(transButton, i18n("Reset opacity to default value"));
+            transButton->setToolTip( i18n("Reset opacity to default value"));
             transSlider = new QSlider(0, 100, 1, 100, Qt::Vertical, trans_popup, "transSlider");
-            QToolTip::add(transSlider, i18n("Slide this to set the window's opacity"));
+            transSlider->setToolTip( i18n("Slide this to set the window's opacity"));
             connect(transButton, SIGNAL(clicked()), SLOT(resetClientOpacity()));
             connect(transButton, SIGNAL(clicked()), trans_popup, SLOT(hide()));
             connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));

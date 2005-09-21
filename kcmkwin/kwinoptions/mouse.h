@@ -40,7 +40,7 @@ public:
     , toolTips(toolTips_) {}
 
 public slots:
-  void changed() {QToolTip::add( this, i18n(toolTips[currentItem()]) );}
+  void changed() {this->setToolTip( i18n(toolTips[currentItem()]) );}
 
 protected:
   char const * const * toolTips;

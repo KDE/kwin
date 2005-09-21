@@ -822,7 +822,7 @@ void B2Client::desktopChange()
     if (B2Button *b = button[BtnSticky]) {
         b->setDown(on);
 	QToolTip::remove(b);
-	QToolTip::add(b, 
+	b->setToolTip( 
 		on ? i18n("Not on all desktops") : i18n("On all desktops"));
     }
 }
@@ -834,7 +834,7 @@ void B2Client::maximizeChange()
         button[BtnMax]->setPixmaps(m ? P_NORMALIZE : P_MAX);
         button[BtnMax]->repaint();
 	QToolTip::remove(button[BtnMax]);
-	QToolTip::add(button[BtnMax],
+	button[BtnMax]->setToolTip(
 		m ? i18n("Restore") : i18n("Maximize"));
     }
     bottomSpacer->changeSize(10, thickness + (mustDrawHandle() ? 4 : 0),
@@ -868,7 +868,7 @@ void B2Client::shadeChange()
     doShape();
     if (B2Button *b = button[BtnShade]) {
 	QToolTip::remove(b);
-	QToolTip::add(b, isSetShade() ? i18n("Unshade") : i18n("Shade"));
+	b->setToolTip( isSetShade() ? i18n("Unshade") : i18n("Shade"));
     }
 }
 
@@ -1208,7 +1208,7 @@ B2Button::B2Button(B2Client *_client, QWidget *parent,
     client = _client;
     useMiniIcon = false;
     setFixedSize(buttonSize, buttonSize);
-    QToolTip::add(this, tip);
+    this->setToolTip( tip);
 }
 
 

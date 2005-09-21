@@ -928,7 +928,7 @@ QSize KCommonDecorationButton::sizeHint() const
 
 void KCommonDecorationButton::setTipText(const QString &tip) {
     QToolTip::remove(this );
-    QToolTip::add(this, tip );
+    this->setToolTip( tip );
 }
 
 void KCommonDecorationButton::setToggleButton(bool toggle)

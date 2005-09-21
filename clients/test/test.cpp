@@ -25,7 +25,7 @@ void Decoration::init()
         button->setCursor( arrowCursor );
 	button->move( 0, 0 );
         connect( button, SIGNAL( clicked()), SLOT( closeWindow()));
-	QToolTip::add( button, "Zelva Mana" );
+	button->setToolTip( "Zelva Mana" );
 	}
     }
     
