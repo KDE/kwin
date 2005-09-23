@@ -1052,7 +1052,7 @@ void Client::setShortcut( const QString& _cut )
         return;
         }
     QList< KShortcut > keys;
-    QStringList groups = QStringList::split( ' ', cut );
+    QStringList groups = cut.split( ' ');
     for( QStringList::ConstIterator it = groups.begin();
          it != groups.end();
          ++it )
