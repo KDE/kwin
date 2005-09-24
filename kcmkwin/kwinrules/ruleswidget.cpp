@@ -113,7 +113,7 @@ RulesWidget::RulesWidget( QWidget* parent, const char* name )
     for( i = 1;
          i <= module.numberOfDesktops();
          ++i )
-        desktop->insertItem( QString::number( i ).rightJustify( 2 ) + ":" + module.desktopName( i ));
+        desktop->insertItem( QString::number( i ).rightJustified( 2 ) + ":" + module.desktopName( i ));
     desktop->insertItem( i18n( "All Desktops" ));
     }
 
@@ -460,10 +460,10 @@ Rules* RulesWidget::rules() const
     {
     Rules* rules = new Rules();
     rules->description = description->text();
-    rules->wmclass = wmclass->text().utf8();
+    rules->wmclass = wmclass->text().toUtf8();
     rules->wmclasscomplete = whole_wmclass->isChecked();
     rules->wmclassmatch = static_cast< Rules::StringMatch >( wmclass_match->currentItem());
-    rules->windowrole = role->text().utf8();
+    rules->windowrole = role->text().toUtf8();
     rules->windowrolematch = static_cast< Rules::StringMatch >( role_match->currentItem());
     rules->types = 0;
     bool all_types = true;
@@ -489,9 +489,9 @@ Rules* RulesWidget::rules() const
         }
     rules->title = title->text();
     rules->titlematch = static_cast< Rules::StringMatch >( title_match->currentItem());
-    rules->extrarole = extra->text().utf8();
+    rules->extrarole = extra->text().toUtf8();
     rules->extrarolematch = static_cast< Rules::StringMatch >( extra_match->currentItem());
-    rules->clientmachine = machine->text().utf8();
+    rules->clientmachine = machine->text().toUtf8();
     rules->clientmachinematch = static_cast< Rules::StringMatch >( machine_match->currentItem());
     LINEEDIT_SET_RULE( position, strToPosition );
     LINEEDIT_SET_RULE( size, strToSize );

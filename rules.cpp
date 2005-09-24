@@ -71,7 +71,7 @@ Rules::Rules( const QString& str, bool temporary )
     QFile* f = file.file();
     if( f != NULL )
         {
-        QByteArray s = str.utf8();
+        QByteArray s = str.toUtf8();
         f->writeBlock( s.data(), s.length());
         }
     file.close();

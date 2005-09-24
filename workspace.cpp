@@ -919,7 +919,7 @@ void Workspace::loadDesktopSettings()
         {
         QString s = c->readEntry(QString("Name_%1").arg(i),
                                 i18n("Desktop %1").arg(i));
-        rootInfo->setDesktopName( i, s.utf8().data() );
+        rootInfo->setDesktopName( i, s.toUtf8().data() );
         desktop_focus_chain[i-1] = i;
         }
     }
@@ -942,7 +942,7 @@ void Workspace::saveDesktopSettings()
         if ( s.isEmpty() ) 
             {
             s = defaultvalue;
-            rootInfo->setDesktopName( i, s.utf8().data() );
+            rootInfo->setDesktopName( i, s.toUtf8().data() );
             }
 
         if (s != defaultvalue) 

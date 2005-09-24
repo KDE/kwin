@@ -59,7 +59,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
          )
         && (e->error_code == BadAccess)) 
         {
-        fputs(i18n("kwin: it looks like there's already a window manager running. kwin not started.\n").local8Bit(), stderr);
+        fputs(i18n("kwin: it looks like there's already a window manager running. kwin not started.\n").toLocal8Bit(), stderr);
         exit(1);
         }
 
@@ -74,7 +74,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
 
     if (initting) 
         {
-        fputs(i18n("kwin: failure during initialization; aborting").local8Bit(), stderr);
+        fputs(i18n("kwin: failure during initialization; aborting").toLocal8Bit(), stderr);
         exit(1);
         }
     return 0;
@@ -95,7 +95,7 @@ Application::Application( )
 
     if( !owner.claim( args->isSet( "replace" ), true ))
         {
-        fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").local8Bit(), stderr);
+        fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit(), stderr);
         ::exit(1);
         }
     connect( &owner, SIGNAL( lostOwnership()), SLOT( lostSelection()));
@@ -211,7 +211,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
             XCloseDisplay( dpy );
             dpy = 0;
 
-            if ((pos = display_name.findRev('.')) != -1 )
+            if ((pos = display_name.lastIndexOf('.')) != -1 )
                 display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
 
             QString envir;

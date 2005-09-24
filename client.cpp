@@ -1111,7 +1111,7 @@ void Client::killProcess( bool ask, Time timestamp )
         process_killer = new KProcess( this );
         *process_killer << KStandardDirs::findExe( "kwin_killer_helper" )
             << "--pid" << QByteArray().setNum( pid ) << "--hostname" << machine
-            << "--windowname" << caption().utf8()
+            << "--windowname" << caption().toUtf8()
             << "--applicationname" << resourceClass()
             << "--wid" << QString::number( window() )
             << "--timestamp" << QString::number( timestamp );
@@ -1329,7 +1329,7 @@ void Client::setCaption( const QString& _s, bool force )
                 cap_suffix = machine_suffix + " <" + QString::number(i) + ">" + shortcut_suffix;
                 i++;
                 } while ( workspace()->findClient( FetchNameInternalPredicate( this )));
-            info->setVisibleName( caption().utf8() );
+            info->setVisibleName( caption().toUtf8() );
             reset_name = false;
             }
         if(( was_suffix && cap_suffix.isEmpty()
@@ -1339,7 +1339,7 @@ void Client::setCaption( const QString& _s, bool force )
             info->setVisibleIconName( "" ); // remove
             }
         else if( !cap_suffix.isEmpty() && !cap_iconic.isEmpty()) // keep the same suffix in iconic name if it's set
-            info->setVisibleIconName( ( cap_iconic + cap_suffix ).utf8() );
+            info->setVisibleIconName( ( cap_iconic + cap_suffix ).toUtf8() );
 
         if( isManaged() && decoration != NULL )
                 decoration->captionChange();
@@ -1365,7 +1365,7 @@ void Client::fetchIconicName()
         if( !cap_suffix.isEmpty())
 	    {
 	    if( !cap_iconic.isEmpty()) // keep the same suffix in iconic name if it's set
-        	info->setVisibleIconName( ( s + cap_suffix ).utf8() );
+        	info->setVisibleIconName( ( s + cap_suffix ).toUtf8() );
 	    else if( was_set )
 		info->setVisibleIconName( "" ); //remove
 	    }

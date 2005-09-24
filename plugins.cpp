@@ -30,7 +30,7 @@ PluginMgr::PluginMgr()
 void PluginMgr::error( const QString &error_msg )
     {
     qWarning( "%s", (i18n("KWin: ") + error_msg +
-                    i18n("\nKWin will now exit...")).local8Bit().data() );
+                    i18n("\nKWin will now exit...")).toLocal8Bit().data() );
     exit(1);
     }
 
