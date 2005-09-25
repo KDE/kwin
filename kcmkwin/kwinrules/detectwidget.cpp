@@ -29,7 +29,7 @@
 //Added by qt3to4:
 #include <QMouseEvent>
 #include <QEvent>
-#include <Q3CString>
+#include <QByteArray>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -118,7 +118,7 @@ void DetectDialog::executeDialog()
     emit detectionDone( exec() == QDialog::Accepted );
     }
 
-Q3CString DetectDialog::selectedClass() const
+QByteArray DetectDialog::selectedClass() const
     {
     if( widget->use_class->isChecked() || widget->use_role->isChecked())
         return wmclass_class;
@@ -130,7 +130,7 @@ bool DetectDialog::selectedWholeClass() const
     return widget->use_whole_class->isChecked();
     }
 
-Q3CString DetectDialog::selectedRole() const
+QByteArray DetectDialog::selectedRole() const
     {
     if( widget->use_role->isChecked())
         return role;
@@ -157,7 +157,7 @@ NET::WindowType DetectDialog::selectedType() const
     return type;
     }
 
-Q3CString DetectDialog::selectedMachine() const
+QByteArray DetectDialog::selectedMachine() const
     {
     return machine;
     }

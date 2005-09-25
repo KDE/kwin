@@ -28,7 +28,7 @@
 
 #include "ruleswidget.h"
 #include "../../rules.h"
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KWinInternal
 {
@@ -71,15 +71,15 @@ static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app
         NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine );
     if( !info.valid()) // shouldn't really happen
         return NULL;
-    Q3CString wmclass_class = info.windowClassClass().lower();
-    Q3CString wmclass_name = info.windowClassName().lower();
-    Q3CString role = info.windowRole().lower();
+    QByteArray wmclass_class = info.windowClassClass().lower();
+    QByteArray wmclass_name = info.windowClassName().lower();
+    QByteArray role = info.windowRole().lower();
     NET::WindowType type = info.windowType( NET::NormalMask | NET::DesktopMask | NET::DockMask
         | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
         | NET::UtilityMask | NET::SplashMask );
     QString title = info.name();
 //    QCString extrarole = ""; // TODO
-    Q3CString machine = info.clientMachine().lower();
+    QByteArray machine = info.clientMachine().lower();
     Rules* best_match = NULL;
     int match_quality = 0;
     for( QList< Rules* >::ConstIterator it = rules.begin();

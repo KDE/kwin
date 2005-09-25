@@ -29,7 +29,7 @@
 #include "../../rules.h"
 //Added by qt3to4:
 #include <QEvent>
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KWinInternal
 {
@@ -49,14 +49,14 @@ class DetectDialog
     public:
         DetectDialog( QWidget* parent = NULL, const char* name = NULL );
         void detect( WId window );
-        Q3CString selectedClass() const;
+        QByteArray selectedClass() const;
         bool selectedWholeClass() const;
-        Q3CString selectedRole() const;
+        QByteArray selectedRole() const;
         bool selectedWholeApp() const;
         NET::WindowType selectedType() const;
         QString selectedTitle() const;
         Rules::StringMatch titleMatch() const;
-        Q3CString selectedMachine() const;
+        QByteArray selectedMachine() const;
         const KWin::WindowInfo& windowInfo() const;
     signals:
         void detectionDone( bool );
@@ -67,13 +67,13 @@ class DetectDialog
         void readWindow( WId window );
         void executeDialog();
         WId findWindow();
-        Q3CString wmclass_class;
-        Q3CString wmclass_name;
-        Q3CString role;
+        QByteArray wmclass_class;
+        QByteArray wmclass_name;
+        QByteArray role;
         NET::WindowType type;
         QString title;
-        Q3CString extrarole;
-        Q3CString machine;
+        QByteArray extrarole;
+        QByteArray machine;
         DetectWidget* widget;
         QDialog* grabber;
         KWin::WindowInfo info;
