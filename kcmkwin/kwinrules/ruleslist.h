@@ -51,7 +51,7 @@ class KCMRulesList
         void movedownClicked();
         void activeChanged( Q3ListBoxItem* );
     private:
-        Q3ValueVector< Rules* > rules;
+        QVector< Rules* > rules;
     };
 
 } // namespace

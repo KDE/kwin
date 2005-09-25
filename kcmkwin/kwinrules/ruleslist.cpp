@@ -54,7 +54,7 @@ KCMRulesList::KCMRulesList( QWidget* parent, const char* name )
 
 KCMRulesList::~KCMRulesList()
     {
-    for( Q3ValueVector< Rules* >::Iterator it = rules.begin();
+    for( QVector< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          ++it )
         delete *it;
@@ -145,7 +145,7 @@ void KCMRulesList::movedownClicked()
 void KCMRulesList::load()
     {
     rules_listbox->clear();
-    for( Q3ValueVector< Rules* >::Iterator it = rules.begin();
+    for( QVector< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          ++it )
         delete *it;
@@ -175,7 +175,7 @@ void KCMRulesList::save()
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
     int i = 1;
-    for( Q3ValueVector< Rules* >::ConstIterator it = rules.begin();
+    for( QVector< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
          ++it )
         {
