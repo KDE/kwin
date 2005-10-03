@@ -16,12 +16,12 @@
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-  
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Steet, Fifth Floor, Cambridge, MA 02110-1301, USA.
@@ -130,8 +130,8 @@ QPixmap bitmapPixmap(const QBitmap& bm, const QColor& color)
 }
 
 
-ButtonSource::ButtonSource(QWidget *parent, const char* name)
-	: KListView(parent, name)
+ButtonSource::ButtonSource(QWidget *parent)
+	: KListView(parent)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -870,7 +870,7 @@ void ButtonPositionWidget::setButtonsLeft(const QString &buttons)
 	m_dropSite->recalcItemGeometry();
 	m_dropSite->update();
 }
-	
+
 void ButtonPositionWidget::setButtonsRight(const QString &buttons)
 {
 	// to keep the button lists consistent, first remove all left buttons, then add buttons again...
