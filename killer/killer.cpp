@@ -46,7 +46,7 @@ static const KCmdLineOptions options[] =
 
 int main( int argc, char* argv[] )
     {
-    KLocale::setMainCatalogue( "kwin" ); // the messages are in kwin's .po file
+    KLocale::setMainCatalog( "kwin" ); // the messages are in kwin's .po file
     KCmdLineArgs::init( argc, argv, "kwin_killer_helper", I18N_NOOP( "KWin" ),
 	I18N_NOOP( "KWin helper utility" ), "1.0" );
     KCmdLineArgs::addCmdLineOptions( options );

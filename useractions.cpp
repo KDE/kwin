@@ -33,6 +33,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qregexp.h>
 #include <Q3PopupMenu>
 #include <QVBoxLayout>
+#include <kauthorized.h>
 
 #include "killwindow.h"
 #include "tabbox.h"
@@ -98,7 +99,7 @@ Q3PopupMenu* Workspace::clientPopup()
         popup->insertSeparator();
 
         if (!KGlobal::config()->isImmutable() && 
-            !kapp->authorizeControlModules(Workspace::configModules(true)).isEmpty())
+            !KAuthorized::authorizeKActionControlModules(Workspace::configModules(true)).isEmpty())
             {
             popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e Window Behavior..."), this, SLOT( configureWM() ));
             popup->insertSeparator();
@@ -974,7 +975,7 @@ void Workspace::slotWindowOperations()
 
 void Workspace::showWindowMenu( const QRect &pos, Client* cl )
     {
-    if (!kapp->authorizeKAction("kwin_rmb"))
+    if (!KAuthorized::authorizeKAction("kwin_rmb"))
         return;
     if( !cl )
         return;

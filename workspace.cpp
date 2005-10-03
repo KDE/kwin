@@ -47,6 +47,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/cursorfont.h>
 #include <QX11Info>
 #include <stdio.h>
+#include <kauthorized.h>
 
 namespace KWinInternal
 {
@@ -964,7 +965,7 @@ QStringList Workspace::configModules(bool controlCenter)
     args <<  "kde-kwindecoration.desktop";
     if (controlCenter)
         args << "kde-kwinoptions.desktop";
-    else if (kapp->authorizeControlModule("kde-kwinoptions.desktop"))
+    else if (KAuthorized::authorizeKActionControlModule("kde-kwinoptions.desktop"))
         args  << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced" << "kwinrules" << "kwintranslucency";
     return args;
     }

@@ -33,7 +33,7 @@ extern "C"
 ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(parent)
 {	
 	clientrc = new KConfig("kwinmodernsysrc");
-	KGlobal::locale()->insertCatalogue("kwin_clients");
+	KGlobal::locale()->insertCatalog("kwin_clients");
 	mainw = new QWidget(parent);
 	vbox = new QVBoxLayout(mainw);
 	vbox->setSpacing(6);

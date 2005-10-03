@@ -36,7 +36,7 @@ extern "C"
 B2Config::B2Config( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
-	KGlobal::locale()->insertCatalogue("kwin_b2_config");
+	KGlobal::locale()->insertCatalog("kwin_b2_config");
 	b2Config = new KConfig("kwinb2rc");
 	gb = new KVBox(parent);
 

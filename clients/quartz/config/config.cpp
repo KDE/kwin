@@ -35,7 +35,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
 	quartzConfig = new KConfig("kwinquartzrc");
-	KGlobal::locale()->insertCatalogue("kwin_clients");
+	KGlobal::locale()->insertCatalog("kwin_clients");
 	gb = new KVBox( parent );
 	cbColorBorder = new QCheckBox( 
 						i18n("Draw window frames using &titlebar colors"), gb );

@@ -33,7 +33,7 @@ extern "C"
     KDE_EXPORT KCModule *create_kwinrules( QWidget *parent, const char *name )
     {
     //CT there's need for decision: kwm or kwin?
-    KGlobal::locale()->insertCatalogue( "kcmkwinrules" );
+    KGlobal::locale()->insertCatalog( "kcmkwinrules" );
     return new KWinInternal::KCMRules( parent, name );
     }
 

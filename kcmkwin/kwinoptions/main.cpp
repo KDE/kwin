@@ -41,7 +41,7 @@ extern "C"
 	KDE_EXPORT KCModule *create_kwinfocus(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
 		return new KFocusConfig(true, c, parent, name);
 	}
@@ -49,14 +49,14 @@ extern "C"
 	KDE_EXPORT KCModule *create_kwinactions(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KGlobal::locale()->insertCatalog("kcmkwm");
 		return new KActionsOptions( parent, name);
 	}
 
 	KDE_EXPORT KCModule *create_kwinmoving(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
 		return new KMovingConfig(true, c, parent, name);
 	}
@@ -64,7 +64,7 @@ extern "C"
 	KDE_EXPORT KCModule *create_kwinadvanced(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
 		return new KAdvancedConfig(true, c, parent, name);
 	}
@@ -72,7 +72,7 @@ extern "C"
 	KDE_EXPORT KCModule *create_kwintranslucency(QWidget *parent, const char *name)
 	{
 		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
 		return new KTranslucencyConfig(true, c, parent, name);
 	}
@@ -80,7 +80,7 @@ extern "C"
 	KDE_EXPORT KCModule *create_kwinoptions ( QWidget *parent, const char* name)
 	{
 		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalogue("kcmkwm");
+		KGlobal::locale()->insertCatalog("kcmkwm");
 		return new KWinOptions( parent, name);
 	}
 }

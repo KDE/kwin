@@ -271,7 +271,7 @@ static const KCmdLineOptions options[] =
 extern "C"
 KDE_EXPORT int kdemain( int argc, char* argv[] )
     {
-    KLocale::setMainCatalogue( "kcmkwinrules" );
+    KLocale::setMainCatalog( "kcmkwinrules" );
     KCmdLineArgs::init( argc, argv, "kwin_rules_dialog", I18N_NOOP( "KWin" ),
 	I18N_NOOP( "KWin helper utility" ), "1.0" );
     KCmdLineArgs::addCmdLineOptions( options );
