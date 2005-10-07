@@ -32,6 +32,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 
 #include "atoms.h"
+#include "notifications.h"
 
 #endif
 
@@ -282,8 +283,18 @@ void ungrabXServer()
     {
     assert( server_grab_count > 0 );
     if( --server_grab_count == 0 )
+        {
         XUngrabServer( QX11Info::display());
+        XFlush( QX11Info::display());
+        Notify::sendPendingEvents();
+        }
     }
+
+bool grabbedXServer()
+    {
+    return server_grab_count > 0;
+    }
+
 #endif
 
 bool isLocalMachine( const QByteArray& host )

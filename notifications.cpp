@@ -92,9 +92,11 @@ QString Notify::eventToName( Event e )
     return event;
     }
 
+static bool forgetIt = FALSE;
+QList< Notify::EventData > Notify::pending_events;
+
 bool Notify::raise( Event e, const QString& message, Client* c )
     {
-    static bool forgetIt = FALSE;
     if ( forgetIt )
         return false; // no connection was possible, don't try each time
 
@@ -102,9 +104,33 @@ bool Notify::raise( Event e, const QString& message, Client* c )
     if ( event.isNull() )
         return false;
 
-    forgetIt= !KNotifyClient::event( c ? c->window() : 0, event, message );
+// There may be a deadlock if KNotify event is sent while KWin has X grabbed.
+// If KNotify is not running, KLauncher may do X requests (startup notification, whatever)
+// that will block it. And KNotifyClient waits for the launch to succeed, which means
+// KLauncher waits for X and KWin waits for KLauncher. So postpone events in such case.
+    if( grabbedXServer())
+        {
+        EventData data;
+        data.event = event;
+        data.message = message;
+        data.window = c ? c->window() : 0;
+        pending_events.append( data );
+        return true;
+        }
 
+    forgetIt= !KNotifyClient::event( c ? c->window() : 0, event, message );
     return !forgetIt;
+    }
+
+void Notify::sendPendingEvents()
+    {
+    while( !pending_events.isEmpty())
+        {
+        EventData data = pending_events.first();
+        pending_events.pop_front();
+        if( !forgetIt )
+            forgetIt= !KNotifyClient::event( data.window, data.event, data.message );
+        }
     }
 
 bool Notify::makeDemandAttention( Event e )

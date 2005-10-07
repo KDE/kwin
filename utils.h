@@ -188,6 +188,7 @@ QByteArray getStringProperty(WId w, Atom prop, char separator=0);
 void updateXTime();
 void grabXServer();
 void ungrabXServer();
+bool grabbedXServer();
 
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint

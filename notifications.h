@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <stdlib.h>
 #include <qstring.h>
+#include <qlist.h>
 
 namespace KWinInternal
 {
@@ -51,8 +52,16 @@ class Notify
 
         static bool raise( Event, const QString& message = QString::null, Client* c = NULL );
         static bool makeDemandAttention( Event );
+        static void sendPendingEvents();
     private:
         static QString eventToName( Event );
+        struct EventData
+            {
+            QString event;
+            QString message;
+            long window;
+            };
+        static QList< EventData > pending_events;
     };
 
 } // namespace
