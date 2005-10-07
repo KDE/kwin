@@ -518,6 +518,8 @@ void KCommonDecoration::maximizeChange()
             : i18n("Restore"));
         m_button[MaxButton]->reset(KCommonDecorationButton::StateChange);
     }
+    updateWindowShape();
+    widget()->update();
 }
 
 void KCommonDecoration::desktopChange()
@@ -602,7 +604,6 @@ void KCommonDecoration::slotMaximize()
     if (m_button[MaxButton])
     {
         maximize(m_button[MaxButton]->lastMousePress() );
-        updateWindowShape();
     }
 }
 
