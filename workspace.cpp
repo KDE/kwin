@@ -48,6 +48,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QX11Info>
 #include <stdio.h>
 #include <kauthorized.h>
+#include <ktoolinvocation.h>
 
 namespace KWinInternal
 {
@@ -965,14 +966,14 @@ QStringList Workspace::configModules(bool controlCenter)
     args <<  "kde-kwindecoration.desktop";
     if (controlCenter)
         args << "kde-kwinoptions.desktop";
-    else if (KAuthorized::authorizeKActionControlModule("kde-kwinoptions.desktop"))
+    else if (KAuthorized::authorizeControlModule("kde-kwinoptions.desktop"))
         args  << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced" << "kwinrules" << "kwintranslucency";
     return args;
     }
 
 void Workspace::configureWM()
     {
-    KApplication::kdeinitExec( "kcmshell", configModules(false) );
+	KToolInvocation::kdeinitExec( "kcmshell", configModules(false) );
     }
 
 /*!
