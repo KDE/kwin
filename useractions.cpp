@@ -99,7 +99,7 @@ Q3PopupMenu* Workspace::clientPopup()
         popup->insertSeparator();
 
         if (!KGlobal::config()->isImmutable() && 
-            !KAuthorized::authorizeKActionControlModules(Workspace::configModules(true)).isEmpty())
+            !KAuthorized::authorizeControlModules(Workspace::configModules(true)).isEmpty())
             {
             popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e Window Behavior..."), this, SLOT( configureWM() ));
             popup->insertSeparator();

@@ -693,7 +693,8 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
 	label->setText( i18n( "To add or remove titlebar buttons, simply <i>drag</i> items "
 		"between the available item list and the titlebar preview. Similarly, "
 		"drag items within the titlebar preview to re-position them.") );
-	m_buttonSource = new ButtonSource(this, "button_source");
+	m_buttonSource = new ButtonSource(this);
+    m_buttonSource->setObjectName("button_source");
 
 	layout->addWidget(label);
 	layout->addWidget(m_dropSite);
