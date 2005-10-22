@@ -77,7 +77,7 @@ unsigned long Options::updateSettings()
 //    focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
     focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 1 );
-    focusStealingPreventionLevel = KMAX( 0, KMIN( 4, focusStealingPreventionLevel ));
+    focusStealingPreventionLevel = qMax( 0, qMin( 4, focusStealingPreventionLevel ));
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 

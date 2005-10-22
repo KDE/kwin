@@ -655,7 +655,7 @@ void KAdvancedConfig::setAnimateShade(bool a) {
 }
 
 void KAdvancedConfig::setFocusStealing(int l) {
-    l = KMAX( 0, KMIN( 4, l ));
+    l = qMax( 0, qMin( 4, l ));
     focusStealing->setCurrentItem(l);
 }
 

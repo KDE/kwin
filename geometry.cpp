@@ -1232,8 +1232,8 @@ void Client::getWmNormalHints()
         }
     if( xSizeHint.flags & PResizeInc )
         {
-        xSizeHint.width_inc = kMax( xSizeHint.width_inc, 1 );
-        xSizeHint.height_inc = kMax( xSizeHint.height_inc, 1 );
+        xSizeHint.width_inc = qMax( xSizeHint.width_inc, 1 );
+        xSizeHint.height_inc = qMax( xSizeHint.height_inc, 1 );
         }
     else
         {
@@ -1242,8 +1242,8 @@ void Client::getWmNormalHints()
         }
     if( xSizeHint.flags & PAspect )
         { // no dividing by zero
-        xSizeHint.min_aspect.y = kMax( xSizeHint.min_aspect.y, 1 );
-        xSizeHint.max_aspect.y = kMax( xSizeHint.max_aspect.y, 1 );
+        xSizeHint.min_aspect.y = qMax( xSizeHint.min_aspect.y, 1 );
+        xSizeHint.max_aspect.y = qMax( xSizeHint.max_aspect.y, 1 );
         }
     else
         {
@@ -2301,8 +2301,8 @@ void Client::checkUnrestrictedMoveResize()
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
     // restricted move/resize - keep at least part of the titlebar always visible 
     // how much must remain visible when moved away in that direction
-    left_marge = KMIN( 100 + border_right, moveResizeGeom.width());
-    right_marge = KMIN( 100 + border_left, moveResizeGeom.width());
+    left_marge = qMin( 100 + border_right, moveResizeGeom.width());
+    right_marge = qMin( 100 + border_left, moveResizeGeom.width());
     // width/height change with opaque resizing, use the initial ones
     titlebar_marge = initialMoveResizeGeom.height();
     top_marge = border_bottom;
@@ -2378,8 +2378,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     else // restricted move/resize - keep at least part of the titlebar always visible 
         {        
         // how much must remain visible when moved away in that direction
-        left_marge = KMIN( 100 + border_right, moveResizeGeom.width());
-        right_marge = KMIN( 100 + border_left, moveResizeGeom.width());
+        left_marge = qMin( 100 + border_right, moveResizeGeom.width());
+        right_marge = qMin( 100 + border_left, moveResizeGeom.width());
         // width/height change with opaque resizing, use the initial ones
         titlebar_marge = initialMoveResizeGeom.height();
         top_marge = border_bottom;

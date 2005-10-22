@@ -126,8 +126,8 @@ void KDecorationPreview::positionPreviews()
     deco[Active]->borders( dummy1, dummy2, titleBarHeight, dummy3 );
     deco[Inactive]->borders( leftBorder, rightBorder, dummy1, dummy2 );
 
-    titleBarHeight = kMin( int( titleBarHeight * .9 ), 30 );
-    xoffset = kMin( kMax( 10, QApplication::reverseLayout()
+    titleBarHeight = qMin( int( titleBarHeight * .9 ), 30 );
+    xoffset = qMin( qMax( 10, QApplication::reverseLayout()
 			    ? leftBorder : rightBorder ), 30 );
 
     // Resize the active window

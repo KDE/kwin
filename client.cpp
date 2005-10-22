@@ -1171,7 +1171,7 @@ void Client::setModal( bool m )
 void Client::setDesktop( int desktop )
     {
     if( desktop != NET::OnAllDesktops ) // do range check
-        desktop = KMAX( 1, KMIN( workspace()->numberOfDesktops(), desktop ));
+        desktop = qMax( 1, qMin( workspace()->numberOfDesktops(), desktop ));
     desktop = rules()->checkDesktop( desktop );
     if( desk == desktop )
         return;
