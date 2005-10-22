@@ -212,7 +212,7 @@ void TabBox::reset()
     // height, width for the popup
     h += 2 * frameWidth();
     w = 2*frameWidth() + 5*2 + ( showMiniIcon ? 16 : 32 ) + 8 + wmax; // 5*2=margins, ()=icon, 8=space between icon+text
-    w = kClamp( w, r.width()/3 , r.width() * 4 / 5 );
+    w = qBound( r.width()/3 , w, r.width() * 4 / 5 );
 
     setGeometry( (r.width()-w)/2 + r.x(),
                  (r.height()-h)/2+ r.y(),
@@ -724,11 +724,7 @@ void TabBox::updateKeyMapping()
     int altpos = 0;
     int winpos = 0;
     int winmodpos = -1;
-#ifdef QT3_SUPPORT
-    int winmod = KKeyNative::modX(KKey::WIN);
-#else
     int winmod = KKeyNative::modXWin();
-#endif
     while( winmod > 0 ) // get position of the set bit in winmod
         {
         winmod >>= 1;
@@ -1061,17 +1057,10 @@ void Workspace::closeTabBox()
 void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
     {
     unsigned int mk = ev.state &
-#ifdef QT3_SUPPORT
-        (KKeyNative::modX(KKey::SHIFT) |
-         KKeyNative::modX(KKey::CTRL) |
-         KKeyNative::modX(KKey::ALT) |
-         KKeyNative::modX(KKey::WIN) );
-#else
         (KKeyNative::modXShift() |
          KKeyNative::modXCtrl() |
          KKeyNative::modXAlt() |
          KKeyNative::modXWin() );
-#endif
     // ev.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released: only one modifier is active and the currently released
