@@ -36,7 +36,7 @@ class KCMRules
     {
     Q_OBJECT
     public:
-        KCMRules( QWidget *parent, const char *name );
+        KCMRules( KInstance *inst, QWidget *parent );
         virtual void load();
         virtual void save();
         virtual void defaults();

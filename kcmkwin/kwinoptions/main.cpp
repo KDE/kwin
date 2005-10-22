@@ -36,57 +36,55 @@
 
 #include "main.h"
 
+static KInstance *_kcmkwm = 0;
+
+inline KInstance *inst() {
+        if (_kcmkwm)
+                return _kcmkwm;
+        _kcmkwm = new KInstance("kcmkwm");
+        return _kcmkwm;
+}
+
+
 extern "C"
 {
 	KDE_EXPORT KCModule *create_kwinfocus(QWidget *parent, const char *name)
 	{
-		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KFocusConfig(true, c, parent, name);
+		return new KFocusConfig(true, c, inst(), parent);
 	}
 
 	KDE_EXPORT KCModule *create_kwinactions(QWidget *parent, const char *name)
 	{
-		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalog("kcmkwm");
-		return new KActionsOptions( parent, name);
+		return new KActionsOptions( inst(), parent);
 	}
 
 	KDE_EXPORT KCModule *create_kwinmoving(QWidget *parent, const char *name)
 	{
-		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KMovingConfig(true, c, parent, name);
+		return new KMovingConfig(true, c, inst(), parent);
 	}
 
 	KDE_EXPORT KCModule *create_kwinadvanced(QWidget *parent, const char *name)
 	{
-		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KAdvancedConfig(true, c, parent, name);
+		return new KAdvancedConfig(true, c, inst(), parent);
 	}
         
 	KDE_EXPORT KCModule *create_kwintranslucency(QWidget *parent, const char *name)
 	{
-		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalog("kcmkwm");
 		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KTranslucencyConfig(true, c, parent, name);
+		return new KTranslucencyConfig(true, c, inst(), parent);
 	}
 
 	KDE_EXPORT KCModule *create_kwinoptions ( QWidget *parent, const char* name)
 	{
-		//CT there's need for decision: kwm or kwin?
-		KGlobal::locale()->insertCatalog("kcmkwm");
-		return new KWinOptions( parent, name);
+		return new KWinOptions( inst(), parent);
 	}
 }
 
-KWinOptions::KWinOptions(QWidget *parent, const char *name)
-  : KCModule(parent, name)
+KWinOptions::KWinOptions(KInstance *inst, QWidget *parent)
+  : KCModule(inst, parent)
 {
   mConfig = new KConfig("kwinrc", false, true);
 
@@ -94,32 +92,38 @@ KWinOptions::KWinOptions(QWidget *parent, const char *name)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  mFocus = new KFocusConfig(false, mConfig, this, "KWin Focus Config");
+  mFocus = new KFocusConfig(false, mConfig, inst, this);
+  mFocus->setObjectName("KWin Focus Config");
   mFocus->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mFocus, i18n("&Focus"));
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this, "KWin TitleBar Actions");
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, inst, this);
+  mTitleBarActions->setObjectName("KWin TitleBar Actions");
   mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mWindowActions = new KWindowActionsConfig(false, mConfig, this, "KWin Window Actions");
+  mWindowActions = new KWindowActionsConfig(false, mConfig, inst, this);
+  mWindowActions->setObjectName("KWin Window Actions");
   mWindowActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));
   connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mMoving = new KMovingConfig(false, mConfig, this, "KWin Moving");
+  mMoving = new KMovingConfig(false, mConfig, inst, this);
+  mMoving->setObjectName("KWin Moving");
   mMoving->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mMoving, i18n("&Moving"));
   connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mAdvanced = new KAdvancedConfig(false, mConfig, this, "KWin Advanced");
+  mAdvanced = new KAdvancedConfig(false, mConfig, inst, this);
+  mAdvanced->setObjectName("KWin Advanced");
   mAdvanced->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mTranslucency = new KTranslucencyConfig(false, mConfig, this, "KWin Translucency");
+  mTranslucency = new KTranslucencyConfig(false, mConfig, inst, this);
+  mTranslucency->setObjectName("KWin Translucency");
   mTranslucency->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTranslucency, i18n("&Translucency"));
   connect(mTranslucency, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
@@ -203,8 +207,8 @@ void KWinOptions::moduleChanged(bool state)
 }
 
 
-KActionsOptions::KActionsOptions(QWidget *parent, const char *name)
-  : KCModule(parent, name)
+KActionsOptions::KActionsOptions(KInstance *inst, QWidget *parent)
+  : KCModule(inst, parent)
 {
   mConfig = new KConfig("kwinrc", false, true);
 
@@ -212,12 +216,14 @@ KActionsOptions::KActionsOptions(QWidget *parent, const char *name)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this, "KWin TitleBar Actions");
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, inst, this);
+  mTitleBarActions->setObjectName("KWin TitleBar Actions");
   mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mWindowActions = new KWindowActionsConfig(false, mConfig, this, "KWin Window Actions");
+  mWindowActions = new KWindowActionsConfig(false, mConfig, inst, this);
+  mWindowActions->setObjectName("KWin Window Actions");
   mWindowActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));
   connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));

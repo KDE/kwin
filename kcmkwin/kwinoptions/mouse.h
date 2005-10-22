@@ -54,7 +54,7 @@ class KTitleBarActionsConfig : public KCModule
 
 public:
 
-  KTitleBarActionsConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
+  KTitleBarActionsConfig( bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent );
   ~KTitleBarActionsConfig( );
 
   void load();
@@ -100,7 +100,7 @@ class KWindowActionsConfig : public KCModule
 
 public:
 
-  KWindowActionsConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
+  KWindowActionsConfig( bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent );
   ~KWindowActionsConfig( );
 
   void load();

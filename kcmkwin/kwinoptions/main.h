@@ -41,7 +41,7 @@ class KWinOptions : public KCModule
 
 public:
 
-  KWinOptions(QWidget *parent, const char *name);
+  KWinOptions(KInstance *inst, QWidget *parent);
   virtual ~KWinOptions();
 
   void load();
@@ -75,7 +75,7 @@ class KActionsOptions : public KCModule
 
 public:
 
-  KActionsOptions(QWidget *parent, const char *name);
+  KActionsOptions(KInstance *inst, QWidget *parent);
   virtual ~KActionsOptions();
 
   void load();

@@ -104,8 +104,8 @@ KFocusConfig::~KFocusConfig ()
 }
 
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
-KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
-    : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
+KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget * parent)
+    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
@@ -510,8 +510,8 @@ KAdvancedConfig::~KAdvancedConfig ()
         delete config;
 }
 
-KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, QWidget *parent, const char *)
-    : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
+KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent)
+    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
@@ -768,8 +768,8 @@ KMovingConfig::~KMovingConfig ()
         delete config;
 }
 
-KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, QWidget *parent, const char *)
-    : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
+KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent)
+    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
@@ -1200,8 +1200,8 @@ KTranslucencyConfig::~KTranslucencyConfig ()
         kompmgr->detach();
 }
 
-KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, QWidget *parent, const char *)
-    : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
+KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent)
+    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   kompmgr = 0L;
   resetKompmgr_ = FALSE;

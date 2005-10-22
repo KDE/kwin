@@ -135,8 +135,8 @@ void KTitleBarActionsConfig::paletteChanged()
 
 }
 
-KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
-  : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
+KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget * parent)
+  : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
   QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
@@ -587,8 +587,8 @@ void KTitleBarActionsConfig::defaults()
 }
 
 
-KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, QWidget * parent, const char *)
-  : KCModule(parent, "kcmkwm"), config(_config), standAlone(_standAlone)
+KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget * parent)
+  : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3, strAllW;
   QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());

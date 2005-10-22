@@ -32,16 +32,15 @@
 extern "C"
     KDE_EXPORT KCModule *create_kwinrules( QWidget *parent, const char *name )
     {
-    //CT there's need for decision: kwm or kwin?
-    KGlobal::locale()->insertCatalog( "kcmkwinrules" );
-    return new KWinInternal::KCMRules( parent, name );
+    KInstance *inst = new KInstance("kcmkwinrules");
+    return new KWinInternal::KCMRules( inst, parent );
     }
 
 namespace KWinInternal
 {
 
-KCMRules::KCMRules( QWidget *parent, const char *name )
-: KCModule( parent, name )
+KCMRules::KCMRules( KInstance *inst, QWidget *parent )
+: KCModule( inst, parent )
 , config( "kwinrulesrc" )
     {
     QVBoxLayout *layout = new QVBoxLayout( this );
