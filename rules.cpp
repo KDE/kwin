@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <ktempfile.h>
 #include <ksimpleconfig.h>
 #include <qfile.h>
+#include <ktoolinvocation.h>
 
 #ifndef KCMRULES
 #include "client.h"
@@ -947,7 +948,7 @@ void Workspace::editWindowRules( Client* c, bool whole_app )
     args << "--wid" << QString::number( c->window());
     if( whole_app )
         args << "--whole-app";
-    KApplication::kdeinitExec( "kwin_rules_dialog", args );
+    KToolInvocation::kdeinitExec( "kwin_rules_dialog", args );
     }
 
 void Workspace::loadWindowRules()
