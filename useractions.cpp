@@ -996,6 +996,7 @@ void Workspace::showWindowMenu( const QRect &pos, Client* cl )
     else
         {
 	QRect area = clientArea(ScreenArea, QPoint(x, y), currentDesktop());
+        clientPopupAboutToShow(); // needed for sizeHint() to be correct :-/
 	int popupHeight = p->sizeHint().height();
 	if (y + popupHeight < area.height())
 	    p->exec( QPoint( x, y ) );
