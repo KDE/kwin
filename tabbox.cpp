@@ -415,7 +415,7 @@ void TabBox::drawContents( QPainter * )
                     p.setPen(colorGroup().text());
 
                   p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
-                              Qt::AlignLeft | Qt::AlignVCenter | Qt::SingleLine, s);
+                              Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, s);
 
                   y += lineHeight;
                   }
@@ -473,7 +473,7 @@ void TabBox::drawContents( QPainter * )
               p.setPen(colorGroup().text());
 
             p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
-                       Qt::AlignLeft | Qt::AlignVCenter | Qt::SingleLine,
+                       Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine,
                        workspace()->desktopName(iDesktop));
 
             // show mini icons from that desktop aligned to each other

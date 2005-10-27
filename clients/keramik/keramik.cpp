@@ -759,7 +759,7 @@ KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, co
 
 	this->setToolTip( tip ); // FRAME
 	setBackgroundMode( Qt::NoBackground );
-	setCursor( Qt::arrowCursor );
+	setCursor( Qt::ArrowCursor );
 	int size = clientHandler->roundButton()->height();
 	setFixedSize( size, size );
 
@@ -1293,7 +1293,7 @@ void KeramikClient::updateCaptionBuffer()
 	}
 
 	// Draw the titlebar text
-	int flags = Qt::AlignVCenter | Qt::SingleLine;
+	int flags = Qt::AlignVCenter | Qt::TextSingleLine;
 	flags |= ( QApplication::reverseLayout() ? Qt::AlignRight : Qt::AlignLeft );
 
 	if ( clientHandler->useShadowedText() )

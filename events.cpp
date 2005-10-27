@@ -929,7 +929,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
         if ( !buttonDown ) 
             {
             mode = PositionCenter;
-            setCursor( Qt::arrowCursor );
+            setCursor( Qt::ArrowCursor );
             }
         bool lostMouse = !rect().contains( QPoint( e->x, e->y ) );
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations

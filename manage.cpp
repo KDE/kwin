@@ -533,9 +533,9 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
 
-    XDefineCursor( QX11Info::display(), frame, QCursor( Qt::arrowCursor ).handle());
+    XDefineCursor( QX11Info::display(), frame, QCursor( Qt::ArrowCursor ).handle());
     // some apps are stupid and don't define their own cursor - set the arrow one for them
-    XDefineCursor( QX11Info::display(), wrapper, QCursor( Qt::arrowCursor ).handle());
+    XDefineCursor( QX11Info::display(), wrapper, QCursor( Qt::ArrowCursor ).handle());
     XReparentWindow( QX11Info::display(), client, wrapper, 0, 0 );
     XSelectInput( QX11Info::display(), frame,
             KeyPressMask | KeyReleaseMask |

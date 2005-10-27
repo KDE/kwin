@@ -711,7 +711,7 @@ QPixmap Client::animationPixmap( int w )
     QPainter p( &pm );
     p.setPen(options->color(Options::ColorFont, isActive() || isMinimized() ));
     p.setFont(options->font(isActive()));
-    p.drawText( pm.rect(), Qt::AlignLeft|Qt::AlignVCenter|Qt::SingleLine, caption() );
+    p.drawText( pm.rect(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, caption() );
     return pm;
     }
 
@@ -1715,25 +1715,25 @@ void Client::setCursor( Position m )
         {
         case PositionTopLeft:
         case PositionBottomRight:
-            setCursor( Qt::sizeFDiagCursor );
+            setCursor( Qt::SizeFDiagCursor );
             break;
         case PositionBottomLeft:
         case PositionTopRight:
-            setCursor( Qt::sizeBDiagCursor );
+            setCursor( Qt::SizeBDiagCursor );
             break;
         case PositionTop:
         case PositionBottom:
-            setCursor( Qt::sizeVerCursor );
+            setCursor( Qt::SizeHorCursor );
             break;
         case PositionLeft:
         case PositionRight:
-            setCursor( Qt::sizeHorCursor );
+            setCursor( Qt::SizeHorCursor );
             break;
         default:
             if( buttonDown && isMovable())
-                setCursor( Qt::sizeAllCursor );
+                setCursor( Qt::SizeAllCursor );
             else
-                setCursor( Qt::arrowCursor );
+                setCursor( Qt::ArrowCursor );
             break;
         }
     }
