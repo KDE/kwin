@@ -56,7 +56,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	handleSizeSlider->setWhatsThis(
 			i18n("Here you can change the size of the resize handle."));
 	handleSizeSlider->setTickInterval(1);
-	handleSizeSlider->setTickmarks(QSlider::Below);
+	handleSizeSlider->setTickmarks(QSlider::TicksBelow);
 	connect(handleSizeSlider, SIGNAL(valueChanged(int)), this, SLOT(slotSelectionChanged()));
 
 	hbox = new KHBox(sliderBox);
