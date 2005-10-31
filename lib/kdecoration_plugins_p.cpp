@@ -95,8 +95,8 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     {
     if( nameStr.isEmpty())
         {
-        KConfigGroup saver( config, "Style" );
-        nameStr = saver.readEntry("PluginLib", defaultPlugin );
+        KConfigGroup group( config, "Style" );
+        nameStr = group.readEntry("PluginLib", defaultPlugin );
         }
     // make sure people can switch between HEAD and kwin_iii branch
     if( nameStr.startsWith( "kwin_" ))
