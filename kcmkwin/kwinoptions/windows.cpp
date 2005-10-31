@@ -814,8 +814,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
 
     minimizeAnimSlider = new QSlider(0,10,10,0,Qt::Horizontal, windowsBox);
     minimizeAnimSlider->setSteps(1, 1);
-    // QSlider::TicksBelow clashes with a X11/X.h #define
-    #undef Below
     minimizeAnimSlider->setTickmarks(QSlider::TicksBelow);
     rLay->addMultiCellWidget(minimizeAnimSlider,0,0,1,2);
 
