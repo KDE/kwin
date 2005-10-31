@@ -316,8 +316,8 @@ void Workspace::init()
         initial_desktop = client_info.currentDesktop();
     else
         {
-        KConfigGroupSaver saver( kapp->sessionConfig(), "Session" );
-        initial_desktop = kapp->sessionConfig()->readNumEntry( "desktop", 1 );
+        KConfigGroup saver( kapp->sessionConfig(), "Session" );
+        initial_desktop = saver.readNumEntry( "desktop", 1 );
         }
     if( !setCurrentDesktop( initial_desktop ))
         setCurrentDesktop( 1 );
@@ -907,9 +907,9 @@ void Workspace::loadDesktopSettings()
         groupname = "Desktops";
     else
         groupname.sprintf("Desktops-screen-%d", screen_number);
-    KConfigGroupSaver saver(c,groupname);
+    KConfigGroup saver(c,groupname);
 
-    int n = c->readNumEntry("Number", 4);
+    int n = saver.readNumEntry("Number", 4);
     number_of_desktops = n;
     delete workarea;
     workarea = new QRect[ n + 1 ];
@@ -919,7 +919,7 @@ void Workspace::loadDesktopSettings()
     desktop_focus_chain.resize( n );
     for(int i = 1; i <= n; i++) 
         {
-        QString s = c->readEntry(QString("Name_%1").arg(i),
+        QString s = saver.readEntry(QString("Name_%1").arg(i),
                                 i18n("Desktop %1").arg(i));
         rootInfo->setDesktopName( i, s.toUtf8().data() );
         desktop_focus_chain[i-1] = i;
@@ -934,9 +934,9 @@ void Workspace::saveDesktopSettings()
         groupname = "Desktops";
     else
         groupname.sprintf("Desktops-screen-%d", screen_number);
-    KConfigGroupSaver saver(c,groupname);
+    KConfigGroup saver(c,groupname);
 
-    c->writeEntry("Number", number_of_desktops );
+   	saver.writeEntry("Number", number_of_desktops );
     for(int i = 1; i <= number_of_desktops; i++) 
         {
         QString s = desktopName( i );
@@ -949,13 +949,13 @@ void Workspace::saveDesktopSettings()
 
         if (s != defaultvalue) 
             {
-            c->writeEntry( QString("Name_%1").arg(i), s );
+            saver.writeEntry( QString("Name_%1").arg(i), s );
             }
         else 
             {
-            QString currentvalue = c->readEntry(QString("Name_%1").arg(i));
+            QString currentvalue = saver.readEntry(QString("Name_%1").arg(i));
             if (currentvalue != defaultvalue)
-                c->writeEntry( QString("Name_%1").arg(i), "" );
+                saver.writeEntry( QString("Name_%1").arg(i), "" );
             }
         }
     }

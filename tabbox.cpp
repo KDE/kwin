@@ -927,8 +927,8 @@ void Workspace::CDEWalkThroughWindows( bool forward )
     Client* nc = c;
     bool options_traverse_all;
         {
-        KConfigGroupSaver saver( KGlobal::config(), "TabBox" );
-        options_traverse_all = KGlobal::config()->readNumEntry("TraverseAll", false );
+        KConfigGroup saver( KGlobal::config(), "TabBox" );
+        options_traverse_all = saver.readNumEntry("TraverseAll", false );
         }
 
     if ( !forward )
