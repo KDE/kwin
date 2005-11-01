@@ -1026,12 +1026,14 @@ void Workspace::cleanupTemporaryRules()
 
 void Workspace::discardUsedWindowRules( Client* c, bool withdrawn )
     {
+    bool updated = false;
     for( QList< Rules* >::Iterator it = rules.begin();
          it != rules.end();
          )
         {
         if( c->rules()->contains( *it ))
             {
+            updated = true;
             (*it)->discardUsed( withdrawn );
             if( (*it)->isEmpty())
                 {
@@ -1044,7 +1046,8 @@ void Workspace::discardUsedWindowRules( Client* c, bool withdrawn )
             }
         ++it;
         }
-    rulesUpdated();
+    if( updated )
+        rulesUpdated();
     }
 
 void Workspace::rulesUpdated()
