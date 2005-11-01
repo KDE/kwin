@@ -562,13 +562,13 @@ void Client::minimize( bool avoid_animation )
     if ( !isMinimizable() || isMinimized())
         return;
 
-    minimized = true;
-
     Notify::raise( Notify::Minimize );
 
     // SELI mainClients().isEmpty() ??? - and in unminimize() too
     if ( mainClients().isEmpty() && isOnCurrentDesktop() && isShown( true ) && !avoid_animation )
         animateMinimizeOrUnminimize( true ); // was visible or shaded
+
+    minimized = true;
 
     updateVisibility();
     updateAllowedActions();
