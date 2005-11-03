@@ -84,10 +84,11 @@ Application::Application( )
 : KApplication( ), owner( screen_number )
     {
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    if (!config()->isImmutable() && args->isSet("lock"))
+    KConfig *config = KGlobal::config();
+    if (!config->isImmutable() && args->isSet("lock"))
         {
-        config()->setReadOnly(true);
-        config()->reparseConfiguration();
+        config->setReadOnly(true);
+        config->reparseConfiguration();
         }
 
     if (screen_number == -1)
@@ -101,7 +102,7 @@ Application::Application( )
     connect( &owner, SIGNAL( lostOwnership()), SLOT( lostSelection()));
     
     // if there was already kwin running, it saved its configuration after loosing the selection -> reread
-    config()->reparseConfiguration();
+    config->reparseConfiguration();
 
     initting = TRUE; // startup....
 
