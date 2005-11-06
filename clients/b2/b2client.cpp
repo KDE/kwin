@@ -450,7 +450,7 @@ void B2Client::addButtons(const QString& s, const QString tips[],
     if (s.length() <= 0)
 	return;
 
-    for (unsigned int i = 0; i < s.length(); i++) {
+    for (int i = 0; i < s.length(); i++) {
         switch (s[i].latin1()) {
 	case 'M':  // Menu button
 	    if (!button[BtnMenu]) {
