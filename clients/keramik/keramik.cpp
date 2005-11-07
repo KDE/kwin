@@ -1239,11 +1239,11 @@ void KeramikClient::updateCaptionBuffer()
 	{
 		if ( active ) {
 			if ( ! activeIcon )
-				activeIcon = new QPixmap( this->icon().pixmap( QIconSet::Small, QIconSet::Normal )); // FRAME
+				activeIcon = new QPixmap( this->icon().pixmap( QIcon::Small, QIcon::Normal )); // FRAME
 			icon = activeIcon;
 		} else {
 			if ( ! inactiveIcon ) {
-				QImage img = this->icon().pixmap( QIconSet::Small, QIconSet::Normal ).convertToImage();
+				QImage img = this->icon().pixmap( QIcon::Small, QIcon::Normal ).convertToImage();
 				KIconEffect::semiTransparent( img );
 				inactiveIcon = new QPixmap( img );
 			}

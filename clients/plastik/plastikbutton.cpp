@@ -258,7 +258,7 @@ void PlastikButton::drawButton(QPainter *painter)
 
     if (type() == MenuButton)
     {
-        QPixmap menuIcon(m_client->icon().pixmap( QIconSet::Small, QIconSet::Normal));
+        QPixmap menuIcon(m_client->icon().pixmap( QIcon::Small, QIcon::Normal));
         if (width() < menuIcon.width() || height() < menuIcon.height() ) {
             menuIcon.convertFromImage( menuIcon.convertToImage().smoothScale(width(), height()));
         }
