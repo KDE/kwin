@@ -21,7 +21,7 @@ void copy(const QString &src, const QString &dest)
 {
     QFile copyInput(src);
     QFile copyOutput(dest);
-    if(!copyInput.open(IO_ReadOnly)){
+    if(!copyInput.open(QIODevice::ReadOnly)){
         kdWarning() << "Couldn't open " << src << endl;
         return;
     }
