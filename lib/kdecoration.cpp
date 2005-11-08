@@ -161,7 +161,7 @@ NET::WindowType KDecoration::windowType( unsigned long supported_types ) const
     return bridge_->windowType( supported_types );
     }
 
-QIconSet KDecoration::icon() const
+QIcon KDecoration::icon() const
     {
     return bridge_->icon();
     }

@@ -827,11 +827,11 @@ void KWMThemeClient::menuButtonPressed()
 void KWMThemeClient::iconChange()
 {
     if(mnuBtn){
-        if( icon().pixmap( QIconSet::Small, QIconSet::Normal ).isNull()){
+        if( icon().pixmap( QIcon::Small, QIcon::Normal ).isNull()){
             mnuBtn->setPixmap(*menuPix);
         }
         else{
-            mnuBtn->setPixmap(icon().pixmap( QIconSet::Small, QIconSet::Normal ));
+            mnuBtn->setPixmap(icon().pixmap( QIcon::Small, QIcon::Normal ));
         }
     }
 }

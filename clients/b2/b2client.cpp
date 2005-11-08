@@ -1402,7 +1402,7 @@ void B2Titlebar::mouseDoubleClickEvent(QMouseEvent *e)
 
 void B2Titlebar::mousePressEvent(QMouseEvent * e)
 {
-    shift_move = e->state() & Qt::ShiftButton;
+    shift_move = e->state() & Qt::ShiftModifier;
     if (shift_move) {
         moveOffset = e->globalPos();
     } else {

@@ -274,7 +274,7 @@ NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
     return NET::Normal;
     }
 
-QIconSet KDecorationPreviewBridge::icon() const
+QIcon KDecorationPreviewBridge::icon() const
     {
     return SmallIconSet( "xapp" );
     }

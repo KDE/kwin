@@ -77,7 +77,7 @@ class KDecorationPreviewBridge
         virtual bool isMovable() const;
         virtual bool isResizable() const;
         virtual NET::WindowType windowType( unsigned long supported_types ) const;
-	virtual QIconSet icon() const;
+	virtual QIcon icon() const;
 	virtual QString caption() const;
 	virtual void processMousePressEvent( QMouseEvent* );
 	virtual void showWindowMenu( const QRect &);

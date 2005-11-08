@@ -1060,13 +1060,13 @@ int qtToX11State( Qt::ButtonState state )
         ret |= Button2Mask;
     if( state & Qt::RightButton )
         ret |= Button3Mask;
-    if( state & Qt::ShiftButton )
+    if( state & Qt::ShiftModifier )
         ret |= ShiftMask;
-    if( state & Qt::ControlButton )
+    if( state & Qt::ControlModifier )
         ret |= ControlMask;
-    if( state & Qt::AltButton )
+    if( state & Qt::AltModifier )
         ret |= KKeyNative::modXAlt();
-    if( state & Qt::MetaButton )
+    if( state & Qt::MetaModifier )
         ret |= KKeyNative::modXWin();
     return ret;
     }

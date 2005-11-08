@@ -704,7 +704,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 			else
 				btnpix = isOn() ? *ipinDownPix : *ipinUpPix;
 		} else
-			btnpix = decoration()->icon().pixmap( QIconSet::Small, QIconSet::Normal );
+			btnpix = decoration()->icon().pixmap( QIcon::Small, QIcon::Normal );
 
 		// Intensify the image if required
 		if (isMouseOver) {

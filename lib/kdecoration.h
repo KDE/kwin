@@ -438,7 +438,7 @@ class KWIN_EXPORT KDecoration
 	/**
 	 * Returns an icon set with the decorated window's icon.
 	 */
-	QIconSet icon() const;
+	QIcon icon() const;
 	/**
 	 * Returns the decorated window's caption that should be shown in the titlebar.
 	 */

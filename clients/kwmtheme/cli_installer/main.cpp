@@ -67,7 +67,7 @@ int main(int argc, char **argv)
         QDir().mkdir(localDirStr);
 
     QFileInfo fi(f);
-    KSimpleConfig input(fi.absFilePath());
+    KSimpleConfig input(fi.absoluteFilePath());
     srcStr = fi.dirPath(true) + "/";
     KConfig *output = KGlobal::config();
     input.setGroup("Window Border");

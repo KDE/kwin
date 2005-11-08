@@ -1456,7 +1456,7 @@ void KTranslucencyConfig::load( void )
   movingWindowOpacity->setEnabled(movingWindowTransparency->isChecked());
   dockWindowOpacity->setEnabled(dockWindowTransparency->isChecked());
 
-  KConfig conf_(QDir::homeDirPath() + "/.xcompmgrrc");
+  KConfig conf_(QDir::homePath() + "/.xcompmgrrc");
   conf_.setGroup("xcompmgr");
   
   disableARGB->setChecked(conf_.readBoolEntry("DisableARGB",FALSE));
@@ -1519,7 +1519,7 @@ void KTranslucencyConfig::save( void )
   config->writeEntry("OnlyDecoTranslucent", onlyDecoTranslucent->isChecked());
   config->writeEntry("ResetKompmgr",resetKompmgr_);
 
-  KConfig *conf_ = new KConfig(QDir::homeDirPath() + "/.xcompmgrrc");
+  KConfig *conf_ = new KConfig(QDir::homePath() + "/.xcompmgrrc");
   conf_->setGroup("xcompmgr");
 
   conf_->writeEntry("Compmode",useShadows->isChecked()?"CompClientShadows":"");

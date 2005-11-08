@@ -213,7 +213,7 @@ void KWinDecorationModule::findDecorations()
 		if (d.exists())
 			foreach (const QFileInfo& fi, d.entryInfoList())
 			{
-				QString filename(fi.absFilePath());
+				QString filename(fi.absoluteFilePath());
 				if (KDesktopFile::isDesktopFile(filename))
 				{
 					KDesktopFile desktopFile(filename);

@@ -77,7 +77,7 @@ class KDecorationBridge : public KDecorationDefines
         virtual bool isMovable() const = 0;
         virtual bool isResizable() const = 0;
         virtual NET::WindowType windowType( unsigned long supported_types ) const = 0;
-	virtual QIconSet icon() const = 0;
+	virtual QIcon icon() const = 0;
 	virtual QString caption() const = 0;
 	virtual void processMousePressEvent( QMouseEvent* ) = 0;
 	virtual void showWindowMenu( const QRect &) = 0;
