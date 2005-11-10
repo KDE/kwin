@@ -211,7 +211,7 @@ void QuartzHandler::readConfig()
 
 	// A small hack to make the on all desktops button look nicer
 	onAllDesktopsButtonOnLeft = KDecoration::options()->titleButtonsLeft().contains( 'S' );
-        if ( QApplication::reverseLayout() )
+        if ( QApplication::isRightToLeft() )
             onAllDesktopsButtonOnLeft = !onAllDesktopsButtonOnLeft;
 	switch(options()->preferredBorderSize(this)) {
 	case BorderLarge:

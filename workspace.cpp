@@ -2374,7 +2374,7 @@ void Workspace::startKompmgr()
         allowKompmgrRestart = FALSE;
         QTimer::singleShot( 60000, this, SLOT(unblockKompmgrRestart()) );
         QByteArray ba;
-        QDataStream arg(&ba, IO_WriteOnly);
+        QDataStream arg(&ba, QIODevice::WriteOnly);
         arg << "";
         kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStarted()", ba);
         }
@@ -2390,7 +2390,7 @@ void Workspace::stopKompmgr()
     if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
     kompmgr->kill();
     QByteArray ba;
-    QDataStream arg(&ba, IO_WriteOnly);
+    QDataStream arg(&ba, QIODevice::WriteOnly);
     arg << "";
     kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStopped()", ba);
 }

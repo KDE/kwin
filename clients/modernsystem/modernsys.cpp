@@ -504,7 +504,7 @@ KCommonDecorationButton *ModernSys::createButton(ButtonType type)
 
 void ModernSys::init()
 {
-    reverse = QApplication::reverseLayout();
+    reverse = QApplication::isRightToLeft();
 
     KCommonDecoration::init();
 

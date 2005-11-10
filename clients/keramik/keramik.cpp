@@ -194,7 +194,7 @@ KeramikHandler::KeramikHandler()
 		buttonDecos[i]->setMask( *buttonDecos[i] );
 
 	// Flip the bitmaps horizontally in right-to-left mode
-	if ( QApplication::reverseLayout() ) {
+	if ( QApplication::isRightToLeft() ) {
 		for ( int i = 0; i < Help; i++ )
 			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
 
@@ -374,7 +374,7 @@ void KeramikHandler::createPixmaps()
 
 	// Prepare the tiles for use
 	// -------------------------------------------------------------------------
-	if ( QApplication::reverseLayout() ) {
+	if ( QApplication::isRightToLeft() ) {
 
 		// Fix lighting
 		flip( activeTiles[CaptionSmallLeft], activeTiles[CaptionSmallRight] );
@@ -826,14 +826,14 @@ void KeramikButton::drawButton( QPainter *p )
 
 	if ( isDown() ) {
 		// Pressed
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(2*size, 0, size, size), pix->rect() ) );
-		p->translate( QApplication::reverseLayout() ? -1 : 1,  1 );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(2*size, 0, size, size), pix->rect() ) );
+		p->translate( QApplication::isRightToLeft() ? -1 : 1,  1 );
 	} else if ( hover )
 		// Mouse over
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(size, 0, size, size), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(size, 0, size, size), pix->rect() ) );
 	else
 		// Normal
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(0, 0, size, size), pix->rect() ) );
+		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(0, 0, size, size), pix->rect() ) );
 
 
 	// Draw the button deco on the bevel
@@ -851,7 +851,7 @@ void KeramikButton::drawButton( QPainter *p )
 			// The '?' won't be flipped around in the ctor, so we need to
 			//  shift it to the right to compensate for the button shadow
 			//  being on the left side of the button in RTL mode.
-			if ( QApplication::reverseLayout() )
+			if ( QApplication::isRightToLeft() )
 				p->translate( 2, 0 );
 			break;
 
@@ -1134,7 +1134,7 @@ void KeramikClient::updateMask()
 	register int w, y = 0;
 	int nrects;
 
-	if ( QApplication::reverseLayout() ) {
+	if ( QApplication::isRightToLeft() ) {
 
 		// If the caption bubble is visible and extends above the titlebar
 		if ( largeCaption && captionRect.width() >= 25 ) {
@@ -1256,7 +1256,7 @@ void KeramikClient::updateCaptionBuffer()
 		( clientHandler->showAppIcons() ? 16 + iconSpacing : 0 );
 
 	int xpos = QMAX( (captionRect.width() - tw) / 3, 8 );
-	QRect tr = QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(xpos, 1, captionRect.width() - xpos - 10,
+	QRect tr = QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(xpos, 1, captionRect.width() - xpos - 10,
 				captionRect.height() - 4), captionBuffer.rect() );
 
 	//p.setPen( Qt::red ); // debug
@@ -1265,7 +1265,7 @@ void KeramikClient::updateCaptionBuffer()
 	// Application icon
 	if ( clientHandler->showAppIcons() )
 	{
-		QRect iconRect = QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(tr.x(),
+		QRect iconRect = QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(tr.x(),
 					1 + (captionRect.height() - 4 - 16) / 2, 16, 16), tr );
 		QRect r( icon->rect() );
 		r.moveCenter( iconRect.center() );
@@ -1275,7 +1275,7 @@ void KeramikClient::updateCaptionBuffer()
 		} else {
 			QRect sr( 0, 0, icon->width(), icon->height() );
 
-			if ( QApplication::reverseLayout() )
+			if ( QApplication::isRightToLeft() )
 				sr.addCoords( icon->width() - tr.width(), 0, 0, 0 );
 			else
 				sr.addCoords( 0, 0, -( icon->width() - tr.width() ), 0 );
@@ -1286,7 +1286,7 @@ void KeramikClient::updateCaptionBuffer()
 
 		//p.drawRect( r ); // debug
 
-		if ( QApplication::reverseLayout() )
+		if ( QApplication::isRightToLeft() )
 			tr.addCoords( 0, 0, -(16 + iconSpacing), 0 );
 		else
 			tr.addCoords( (16 + iconSpacing), 0, 0, 0 );
@@ -1294,18 +1294,18 @@ void KeramikClient::updateCaptionBuffer()
 
 	// Draw the titlebar text
 	int flags = Qt::AlignVCenter | Qt::TextSingleLine;
-	flags |= ( QApplication::reverseLayout() ? Qt::AlignRight : Qt::AlignLeft );
+	flags |= ( QApplication::isRightToLeft() ? Qt::AlignRight : Qt::AlignLeft );
 
 	if ( clientHandler->useShadowedText() )
 	{
-		p.translate( QApplication::reverseLayout() ? -1 : 1, 1 );
+		p.translate( QApplication::isRightToLeft() ? -1 : 1, 1 );
 		//p.setPen( options()->color(ColorTitleBar, active).dark() );
                 if (qGray(options()->color(ColorFont, active).rgb()) < 100)
                     p.setPen( QColor(200,200,200) );
                 else
                     p.setPen( Qt::black );
 		p.drawText( tr, flags, caption() );
-		p.translate( QApplication::reverseLayout() ? 1 : -1, -1 );
+		p.translate( QApplication::isRightToLeft() ? 1 : -1, -1 );
 	}
 
 	p.setPen( options()->color( ColorFont, active ) );
@@ -1325,7 +1325,7 @@ void KeramikClient::calculateCaptionRect()
 		cw += 16 + 4; // icon width + space
 
 	cw = QMIN( cw, titlebar->geometry().width() );
-	captionRect = QStyle::visualRect( QApplication::reverseLayout() ? Qt::RightToLeft : Qt::LeftToRight, QRect(titlebar->geometry().x(), (largeCaption ? 0 : titleBaseY),
+	captionRect = QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(titlebar->geometry().x(), (largeCaption ? 0 : titleBaseY),
 				cw, clientHandler->titleBarHeight(largeCaption) ),
 				titlebar->geometry() );
 }

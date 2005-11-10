@@ -89,7 +89,7 @@ bool PlastikHandler::reset(unsigned long changed)
     }
 
     // check if we are in reverse layout mode
-    m_reverse = QApplication::reverseLayout();
+    m_reverse = QApplication::isRightToLeft();
 
     // read in the configuration
     readConfig();

@@ -25,7 +25,7 @@ void copy(const QString &src, const QString &dest)
         kdWarning() << "Couldn't open " << src << endl;
         return;
     }
-    if(!copyOutput.open(IO_WriteOnly)){
+    if(!copyOutput.open(QIODevice::WriteOnly)){
         kdWarning() << "Couldn't open " << dest << endl;
         copyInput.close();
         return;
