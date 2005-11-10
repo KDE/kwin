@@ -1010,7 +1010,7 @@ void Workspace::refresh()
     w.setGeometry( QApplication::desktop()->geometry() );
     w.show();
     w.hide();
-    QApplication::flushX();
+    QApplication::flush();
     }
 
 /*!
