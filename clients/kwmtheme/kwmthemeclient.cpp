@@ -457,7 +457,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
     w = n>0?s/n:s;
     m.reset();
     m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
+    pm = pm.transformed(m);
 
     x = w1;
     while (1){
@@ -484,7 +484,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
     w = n>0?s/n:s;
     m.reset();
     m.scale(w/(float)pm.width(), 1);
-    pm = pm.xForm(m);
+    pm = pm.transformed(m);
 
     x = w3;
     while (1){
@@ -509,7 +509,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
     w = n>0?s/n:s;
     m.reset();
     m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
+    pm = pm.transformed(m);
 
     y = h1;
     while (1){
@@ -537,7 +537,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
     w = n>0?s/n:s;
     m.reset();
     m.scale(1, w/(float)pm.height());
-    pm = pm.xForm(m);
+    pm = pm.transformed(m);
 
     y = h2;
     while (1){
@@ -638,7 +638,7 @@ void KWMThemeClient::doShape()
         w = n>0?s/n:s;
         m.reset();
         m.scale(w/(float)pm.width(), 1);
-        pm = pm.xForm(m);
+        pm = pm.transformed(m);
 
         x = w1;
         while (1){
@@ -666,7 +666,7 @@ void KWMThemeClient::doShape()
         w = n>0?s/n:s;
         m.reset();
         m.scale(w/(float)pm.width(), 1);
-        pm = pm.xForm(m);
+        pm = pm.transformed(m);
 
         x = w3;
         while (1){
@@ -692,7 +692,7 @@ void KWMThemeClient::doShape()
         w = n>0?s/n:s;
         m.reset();
         m.scale(1, w/(float)pm.height());
-        pm = pm.xForm(m);
+        pm = pm.transformed(m);
 
         y = h1;
         while (1){
@@ -721,7 +721,7 @@ void KWMThemeClient::doShape()
         w = n>0?s/n:s;
         m.reset();
         m.scale(1, w/(float)pm.height());
-        pm = pm.xForm(m);
+        pm = pm.transformed(m);
 
         y = h2;
         while (1){
