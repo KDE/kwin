@@ -52,7 +52,7 @@ public:
      * These values represent positions inside an area
      */
     enum Position
-        { // without prefix, they'd conflict with Qt::TopLeft etc. :(
+        { // without prefix, they'd conflict with Qt::TopLeftCorner etc. :(
         PositionCenter         = 0x00,
         PositionLeft           = 0x01,
         PositionRight          = 0x02,
