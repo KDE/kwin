@@ -446,7 +446,7 @@ void KWMThemeClient::paintEvent( QPaintEvent *)
 		 w4, h4);
 
     QPixmap pm;
-    QWMatrix m;
+    QMatrix m;
     int n,s,w;
     //top
     pm = *framePixmaps[FrameTop];
@@ -626,7 +626,7 @@ void KWMThemeClient::doShape()
         p.fillRect(width()-w4,height()-h4,w4,h4,color1);
 
     QPixmap pm;
-    QWMatrix m;
+    QMatrix m;
     int n,s,w;
     //top
     if (framePixmaps[FrameTop]->mask())

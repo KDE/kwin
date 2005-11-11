@@ -516,10 +516,10 @@ void KeramikHandler::addHeight (int height, QPixmap *&pix) {
 void KeramikHandler::flip( QPixmap *&pix1, QPixmap *&pix2 )
 {
 	// Flip the pixmaps horizontally
-	QPixmap *tmp = new QPixmap( pix1->transformed( QWMatrix(-1,0,0,1,pix1->width(),0) ) );
+	QPixmap *tmp = new QPixmap( pix1->transformed( QMatrix(-1,0,0,1,pix1->width(),0) ) );
 
 	delete pix1;
-	pix1 = new QPixmap( pix2->transformed( QWMatrix(-1,0,0,1,pix2->width(),0) ) );
+	pix1 = new QPixmap( pix2->transformed( QMatrix(-1,0,0,1,pix2->width(),0) ) );
 
 	delete pix2;
 	pix2 = tmp;
@@ -529,7 +529,7 @@ void KeramikHandler::flip( QPixmap *&pix1, QPixmap *&pix2 )
 void KeramikHandler::flip( QPixmap *&pix )
 {
 	// Flip the pixmap horizontally
-	QPixmap *tmp = new QPixmap( pix->transformed( QWMatrix(-1,0,0,1,pix->width(),0) ) );
+	QPixmap *tmp = new QPixmap( pix->transformed( QMatrix(-1,0,0,1,pix->width(),0) ) );
 	delete pix;
 	pix = tmp;
 }

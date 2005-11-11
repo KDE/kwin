@@ -79,7 +79,7 @@ inline const KDecorationOptions* options() { return KDecoration::options(); }
 =====
 - Options for colors need 'Color' prepended (e.g. 'ColorButtonBg').
 - Replace miniIcon() with getting the right pixmap from icon() (usually
-    'icon().pixmap( QIconSet::Small, QIconSet::Normal )' ).
+    'icon().pixmap( QIcon::Small, QIcon::Normal )' ).
 - Replace stickyChange() with desktopChange(), and test isOnAllDesktops().
 - Replace Sticky with OnAllDestops.
 - Replace iconify with minimize.
