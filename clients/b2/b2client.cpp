@@ -17,7 +17,7 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QPaintEvent>
-#include <Q3PointArray>
+#include <QPolygon>
 #include <QGridLayout>
 #include <QEvent>
 #include <QBoxLayout>
@@ -1119,7 +1119,7 @@ void B2Client::positionButtons()
 // Transparent bound stuff.
 
 static QRect *visible_bound;
-static Q3PointArray bound_shape;
+static QPolygon bound_shape;
 
 bool B2Client::drawbound(const QRect& geom, bool clear)
 {

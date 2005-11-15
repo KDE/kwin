@@ -26,7 +26,7 @@
 #include <qapplication.h>
 #include <qlabel.h>
 #include <kdebug.h>
-#include <Qt3Support/q3pointarray.h>
+#include <QPolygon>
 
 namespace Default
 {
@@ -944,7 +944,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
     p.drawLine(x+1, y2-1, x2-1, y2-1);
 
 	p.setPen(options()->color(ColorFrame, isActive()));
-	Q3PointArray a;
+	QPolygon a;
 	QBrush brush( options()->color(ColorFrame, isActive()), Qt::SolidPattern );
 	p.setBrush( brush );                       // use solid, yellow brush
     a.setPoints( 4, x+2,             leftFrameStart+borderWidth-4,
