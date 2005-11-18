@@ -42,13 +42,13 @@ bool SessionManaged::saveState( QSessionManager& sm )
         {
         Workspace::self()->sessionSaveStarted();
         if( ksmserver ) // save stacking order etc. before "save file?" etc. dialogs change it
-            Workspace::self()->storeSession( kapp->sessionConfig(), SMSavePhase0 );
+            Workspace::self()->storeSession( KGlobal::config(), SMSavePhase0 );
         sm.release(); // Qt doesn't automatically release in this case (bug?)
         sm.requestPhase2();
         return true;
         }
-    Workspace::self()->storeSession( kapp->sessionConfig(), ksmserver ? SMSavePhase2 : SMSavePhase2Full );
-    kapp->sessionConfig()->sync();
+    Workspace::self()->storeSession( KGlobal::config(), ksmserver ? SMSavePhase2 : SMSavePhase2Full );
+	KGlobal::config()->sync();
     return true;
     }
 
@@ -148,7 +148,7 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
 void Workspace::loadSessionInfo()
     {
     session.clear();
-    KConfig* config = kapp->sessionConfig();
+    KConfig* config = KGlobal::config();
     config->setGroup("Session" );
     int count =  config->readNumEntry( "count" );
     int active_client = config->readNumEntry( "active" );
