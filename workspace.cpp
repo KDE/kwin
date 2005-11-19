@@ -316,7 +316,7 @@ void Workspace::init()
         initial_desktop = client_info.currentDesktop();
     else
         {
-        KConfigGroup group( KGlobal::config() , "Session" );
+        KConfigGroup group( kapp->sessionConfig(), "Session" );
         initial_desktop = group.readNumEntry( "desktop", 1 );
         }
     if( !setCurrentDesktop( initial_desktop ))
