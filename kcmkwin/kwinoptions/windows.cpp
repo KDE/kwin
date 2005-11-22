@@ -1209,7 +1209,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   KActiveLabel *label = new KActiveLabel(i18n("<qt><b>It seems that alpha channel support is not available.</b><br><br>"
                                  "Please make sure you have "
                                  "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>,"
-                                 " and installed the kompmgr that came with kwin.<br>"
+                                 " and have installed the kompmgr that came with kwin.<br>"
                                  "Also, make sure you have the following entries in your XConfig (e.g. /etc/X11/xorg.conf):<br><br>"
                                  "<i>Section \"Extensions\"<br>"
                                  "Option \"Composite\" \"Enable\"<br>"
