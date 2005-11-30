@@ -24,7 +24,6 @@
 
 #include <kdialogbase.h>
 #include <kwin.h>
-#include <q3cstring.h>
 
 #include "../../rules.h"
 //Added by qt3to4:

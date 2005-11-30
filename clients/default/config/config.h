@@ -14,7 +14,6 @@
 #include <qgroupbox.h>
 #include <kconfig.h>
 #include <qlabel.h>
-#include <Qt3Support/q3vbox.h>
 #include <kvbox.h>
 
 class KDEDefaultConfig: public QObject

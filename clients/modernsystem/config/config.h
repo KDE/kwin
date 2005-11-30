@@ -2,7 +2,6 @@
 #define __KDE_MODSYSTEMCONFIG_H
 
 #include <qcheckbox.h>
-#include <q3groupbox.h>
 #include <qlayout.h>
 
 #include <qslider.h>
