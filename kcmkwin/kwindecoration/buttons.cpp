@@ -38,7 +38,7 @@
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
-#include <Q3Frame>
+#include <QFrame>
 #include <QResizeEvent>
 #include <QVBoxLayout>
 #include <QDragEnterEvent>
@@ -274,9 +274,10 @@ void ButtonDropSiteItem::draw(QPainter *p, const QColorGroup& cg, QRect r)
 
 
 ButtonDropSite::ButtonDropSite( QWidget* parent, const char* name )
-	: Q3Frame( parent, name ),
+	: QFrame( parent ),
 	  m_selected(0)
 {
+	setObjectName( name );
 	setAcceptDrops( TRUE );
 	setFrameShape( WinPanel );
 	setFrameShadow( Raised );

@@ -31,7 +31,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobalaccel.h>
 #include <kapplication.h>
 #include <qregexp.h>
-#include <Q3PopupMenu>
+#include <QMenu>
 #include <QVBoxLayout>
 #include <kauthorized.h>
 
@@ -45,17 +45,17 @@ namespace KWinInternal
 // Workspace
 //****************************************
 
-Q3PopupMenu* Workspace::clientPopup()
+QMenu* Workspace::clientPopup()
     {
     if ( !popup )
         {
-        popup = new Q3PopupMenu;
+        popup = new QMenu;
         popup->setCheckable( TRUE );
         popup->setFont(KGlobalSettings::menuFont());
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
       
-        advanced_popup = new Q3PopupMenu( popup );
+        advanced_popup = new QMenu( popup );
         advanced_popup->setCheckable( TRUE );
         advanced_popup->setFont(KGlobalSettings::menuFont());
         connect( advanced_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
@@ -75,7 +75,7 @@ Q3PopupMenu* Workspace::clientPopup()
         desk_popup_index = popup->count();
         
         if (options->useTranslucency){
-            Q3PopupMenu *trans_popup = new Q3PopupMenu( popup );
+            QMenu *trans_popup = new QMenu( popup );
 			QVBoxLayout *transLayout = new QVBoxLayout(trans_popup);
 			trans_popup->setLayout( transLayout );
             transButton = new QPushButton(trans_popup, "transButton");
@@ -188,7 +188,7 @@ void Workspace::initDesktopPopup()
     if (desk_popup)
         return;
 
-    desk_popup = new Q3PopupMenu( popup );
+    desk_popup = new QMenu( popup );
     desk_popup->setCheckable( TRUE );
     desk_popup->setFont(KGlobalSettings::menuFont());
     connect( desk_popup, SIGNAL( activated(int) ),
@@ -987,7 +987,7 @@ void Workspace::showWindowMenu( const QRect &pos, Client* cl )
         return;
 
     active_popup_client = cl;
-    Q3PopupMenu* p = clientPopup();
+    QMenu* p = clientPopup();
     active_popup = p;
     int x = pos.left();
     int y = pos.bottom();

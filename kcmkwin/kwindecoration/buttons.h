@@ -38,7 +38,7 @@
 //Added by qt3to4:
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
-#include <Q3Frame>
+#include <QFrame>
 #include <QDropEvent>
 #include <QList>
 #include <QResizeEvent>
@@ -145,7 +145,7 @@ typedef QList<ButtonDropSiteItem*> ButtonList;
 /**
  * This class renders and handles the demo titlebar dropsite
  */
-class ButtonDropSite: public Q3Frame
+class ButtonDropSite: public QFrame
 {
 	Q_OBJECT
 

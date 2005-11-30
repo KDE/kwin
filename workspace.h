@@ -25,7 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <X11/Xlib.h>
 
-class Q3PopupMenu;
+class QMenu;
 class KConfig;
 class KGlobalAccel;
 class KShortcutDialog;
@@ -464,7 +464,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         void calcDesktopLayout(int &x, int &y) const;
 
-        Q3PopupMenu* clientPopup();
+        QMenu* clientPopup();
         void closeActivePopup();
 
         void updateClientArea( bool force );
@@ -538,9 +538,9 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         TabBox* tab_box;
         PopupInfo* popupinfo;
 
-        Q3PopupMenu *popup;
-        Q3PopupMenu *advanced_popup;
-        Q3PopupMenu *desk_popup;
+        QMenu *popup;
+        QMenu *advanced_popup;
+        QMenu *desk_popup;
         int desk_popup_index;
 
         KGlobalAccel *keys;
