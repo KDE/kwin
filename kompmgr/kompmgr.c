@@ -30,7 +30,7 @@
 /* Modified by Dan Doel*/
 
 /*
-Version 2.x of xcompmgr, kompmgr changes by Thomas Lübking and Heiko Przybyl
+Version 2.x of xcompmgr, kompmgr changes by Thomas LÃ¼bking and Heiko Przybyl
 check baghira.sf.net for more infos
 */
 #define _VERSION_ 2.02
@@ -2254,7 +2254,7 @@ ev_window (XEvent *ev)
 }
 
 void
-setShadowColor(char *value){  /*format nach #xxxxxx (html) ändern?*/
+setShadowColor(char *value){  /*format nach #xxxxxx (html) Ã¤ndern?*/
 	unsigned int tmp;
 	char **res = NULL;
 	tmp = strtoul(value, res, 16);

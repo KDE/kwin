@@ -1,7 +1,7 @@
 /*
  * Keramik KWin client configuration module
  *
- * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>
+ * Copyright (C) 2002 Fredrik HÃ¶glund <fredrik@kde.org>
  *
  * Based on the Quartz configuration module,
  *     Copyright (c) 2001 Karol Szwed <gallium@kde.org>

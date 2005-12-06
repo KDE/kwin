@@ -2,7 +2,7 @@
  *
  * Keramik KWin client (version 0.8)
  *
- * Copyright (C) 2002 Fredrik Höglund <fredrik@kde.org>
+ * Copyright (C) 2002 Fredrik HÃ¶glund <fredrik@kde.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
