@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobalaccel.h>
 #include <dcopclient.h>
 #include <QDesktopWidget>
+#include <QToolButton>
 #include <kipc.h>
 
 #include "plugins.h"
@@ -1715,7 +1716,7 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
     if ( !w )
         return state;
     QWidget* widget = QWidget::find( w );
-    if ( (!widget ||  widget->inherits("QToolButton") ) && !findClient( WindowMatchPredicate( w )) ) 
+    if ( (!widget ||  qobject_cast<QToolButton*>(widget)) && !findClient( WindowMatchPredicate( w )) ) 
         {
         int x, y;
         Window xw;
