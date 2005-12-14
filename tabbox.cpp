@@ -931,28 +931,29 @@ void Workspace::CDEWalkThroughWindows( bool forward )
         options_traverse_all = group.readNumEntry("TraverseAll", false );
         }
 
-    if ( !forward )
+    Client* firstClient = 0;
+    do
         {
-        do
+        nc = forward ? nextStaticClient(nc) : previousStaticClient(nc);
+        if (!firstClient)
             {
-            nc = previousStaticClient(nc);
-            } while (nc && nc != c &&
-                (( !options_traverse_all && !nc->isOnDesktop(currentDesktop())) ||
-                 nc->isMinimized() || !nc->wantsTabFocus() ) );
-        }
-    else
-        {
-            do
+            // When we see our first client for the second time,
+            // it's time to stop.
+            firstClient = nc;
+            }
+        else if (nc == firstClient)
             {
-            nc = nextStaticClient(nc);
-            } while (nc && nc != c &&
-                    (( !options_traverse_all && !nc->isOnDesktop(currentDesktop())) ||
-                     nc->isMinimized() || !nc->wantsTabFocus() ) );
-        }
-    if (c && c != nc)
-        lowerClient( c );
+            // No candidates found.
+            nc = 0;
+            break;
+            }
+        } while (nc && nc != c &&
+            (( !options_traverse_all && !nc->isOnDesktop(currentDesktop())) ||
+             nc->isMinimized() || !nc->wantsTabFocus() ) );
     if (nc)
         {
+        if (c && c != nc)
+            lowerClient( c );
         if ( options->focusPolicyIsReasonable() )
             {
             activateClient( nc );
