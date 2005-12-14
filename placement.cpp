@@ -41,7 +41,10 @@ void Placement::place(Client* c, QRect& area )
     {
     Policy policy = c->rules()->checkPlacement( Default );
     if( policy != Default )
+        {
         place( c, area, policy );
+        return;
+        }
 
     if( c->isUtility())
         placeUtility(c, area, options->placement );
