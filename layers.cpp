@@ -29,7 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
  the clients were created.
 
  Every window has one layer assigned in which it is. There are 6 layers,
- from bottom : DesktopLayer, BelowLayer, NormalLayer, AboveLayer, DockLayer
+ from bottom : DesktopLayer, BelowLayer, NormalLayer, DockLayer, AboveLayer
  and ActiveLayer (see also NETWM sect.7.10.). The layer a window is in depends
  on the window type, and on other things like whether the window is active.
 
