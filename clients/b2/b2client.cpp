@@ -21,7 +21,6 @@
 #include <QGridLayout>
 #include <QEvent>
 #include <QBoxLayout>
-#include <Q3ValueList>
 #include <QShowEvent>
 #include <QResizeEvent>
 #include <QMouseEvent>
@@ -326,7 +325,7 @@ bool B2ClientFactory::supports( Ability ability )
 QList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
 {
     // the list must be sorted
-    return Q3ValueList< BorderSize >() << BorderTiny << BorderNormal <<
+    return QList< BorderSize >() << BorderTiny << BorderNormal <<
 	BorderLarge << BorderVeryLarge << BorderHuge;
 }
 
