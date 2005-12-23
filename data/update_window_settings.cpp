@@ -16,17 +16,17 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <dcopclient.h>
 #include <qrect.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3PtrList>
 
 struct SessionInfo
     {
-    Q3CString sessionId;
-    Q3CString windowRole;
-    Q3CString wmCommand;
-    Q3CString wmClientMachine;
-    Q3CString resourceName;
-    Q3CString resourceClass;
+    QByteArray sessionId;
+    QByteArray windowRole;
+    QByteArray wmCommand;
+    QByteArray wmClientMachine;
+    QByteArray resourceName;
+    QByteArray resourceClass;
 
     QRect geometry;
     QRect restore;
