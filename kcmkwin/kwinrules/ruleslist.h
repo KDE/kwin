@@ -22,7 +22,7 @@
 
 #include "ruleslistbase.h"
 
-#include <q3valuevector.h>
+
 
 #include "../../rules.h"
 
