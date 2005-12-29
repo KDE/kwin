@@ -158,7 +158,6 @@ Workspace::Workspace( bool restore )
         Qt::Desktop );
 	desktop_widget->setAttribute( Qt::WA_PaintUnclipped );
 
-    kapp->setGlobalMouseTracking( true ); // so that this doesn't mess eventmask on root window later
     // call this before XSelectInput() on the root window
     startup = new KStartupInfo(
         KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this );
