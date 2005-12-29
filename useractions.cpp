@@ -50,13 +50,11 @@ QMenu* Workspace::clientPopup()
     if ( !popup )
         {
         popup = new QMenu;
-        popup->setCheckable( TRUE );
         popup->setFont(KGlobalSettings::menuFont());
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
         connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
       
         advanced_popup = new QMenu( popup );
-        advanced_popup->setCheckable( TRUE );
         advanced_popup->setFont(KGlobalSettings::menuFont());
         connect( advanced_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
         advanced_popup->insertItem( SmallIconSet( "up" ),
@@ -189,7 +187,6 @@ void Workspace::initDesktopPopup()
         return;
 
     desk_popup = new QMenu( popup );
-    desk_popup->setCheckable( TRUE );
     desk_popup->setFont(KGlobalSettings::menuFont());
     connect( desk_popup, SIGNAL( activated(int) ),
              this, SLOT( slotSendToDesktop(int) ) );
