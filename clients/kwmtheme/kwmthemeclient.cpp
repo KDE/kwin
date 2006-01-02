@@ -232,7 +232,7 @@ void MyButton::drawButtonLabel(QPainter *p)
                          (pixmap()->height() >= height()))) ? 1 : 0;
         style().drawItem(p, QRect( offset, offset, width(), height() ), 
                          AlignCenter, colorGroup(),
-                         true, pixmap(), QString::null);
+                         true, pixmap(), QString());
     }
 }
 

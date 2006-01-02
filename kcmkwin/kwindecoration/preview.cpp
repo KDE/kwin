@@ -443,8 +443,8 @@ KDecorationPreviewOptions::KDecorationPreviewOptions()
     customBorderSize = BordersCount; // invalid
     customButtonsChanged = false; // invalid
     customButtons = true;
-    customTitleButtonsLeft = QString::null; // invalid
-    customTitleButtonsRight = QString::null; // invalid
+    customTitleButtonsLeft.clear(); // invalid
+    customTitleButtonsRight.clear(); // invalid
 
     d = new KDecorationOptionsPrivate;
     d->defaultKWinSettings();

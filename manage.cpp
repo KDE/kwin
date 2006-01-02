@@ -134,7 +134,7 @@ bool Client::manage( Window w, bool isMapped )
             setUserNoBorder( true );
         }
 
-    setShortcut( rules()->checkShortcut( session ? session->shortcut : QString::null, true ));
+    setShortcut( rules()->checkShortcut( session ? session->shortcut : QString(), true ));
 
     init_minimize = rules()->checkMinimize( init_minimize, !isMapped );
     if( rules()->checkNoBorder( false, !isMapped ))

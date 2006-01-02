@@ -74,7 +74,7 @@ int main( int argc, char* argv[] )
 	"Do you wish to terminate this application? (All unsaved data in this application will be lost.)</qt>" )
 	.arg( appname ).arg( caption ).arg( pid ).arg( QString( hostname ) );
     app.updateUserTimestamp( timestamp );
-    if( KMessageBox::warningYesNoWId( id, question, QString::null, i18n("Terminate"), i18n("Keep Running") ) == KMessageBox::Yes )
+    if( KMessageBox::warningYesNoWId( id, question, QString(), i18n("Terminate"), i18n("Keep Running") ) == KMessageBox::Yes )
         {    
 	if( hostname != "localhost" )
             {

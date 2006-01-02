@@ -50,7 +50,7 @@ class Notify
             DesktopChange = 100
             };
 
-        static bool raise( Event, const QString& message = QString::null, Client* c = NULL );
+        static bool raise( Event, const QString& message = QString(), Client* c = NULL );
         static bool makeDemandAttention( Event );
         static void sendPendingEvents();
     private:

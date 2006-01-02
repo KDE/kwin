@@ -98,7 +98,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 		QString decorationLibName( const QString& name );
 		QString decorationName ( QString& libName );
 		static QString styleToConfigLib( QString& styleLib );
-		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString::null );
+		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString() );
 		void resetKWin();
 		void checkSupportedBorderSizes();
 		static int borderSizeToIndex( BorderSize size, QList< BorderSize > sizes );

@@ -551,7 +551,7 @@ void Workspace::removeClient( Client* c, allowed_t )
     if( client_keys_client == c )
         setupWindowShortcutDone( false );
     if( !c->shortcut().isNull())
-        c->setShortcut( QString::null ); // remove from client_keys
+        c->setShortcut( QString() ); // remove from client_keys
 
     if( c->isDialog())
         Notify::raise( Notify::TransDelete );

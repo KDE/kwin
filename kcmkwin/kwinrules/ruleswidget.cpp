@@ -205,7 +205,7 @@ static const Rules::ForceRule combo_to_force_rule[] =
 static QString positionToStr( const QPoint& p )
     {
     if( p == invalidPoint )
-        return QString::null;
+        return QString();
     return QString::number( p.x()) + "," + QString::number( p.y());
     }
 
@@ -220,7 +220,7 @@ static QPoint strToPosition( const QString& str )
 static QString sizeToStr( const QSize& s )
     {
     if( !s.isValid())
-        return QString::null;
+        return QString();
     return QString::number( s.width()) + "," + QString::number( s.height());
     }
 
@@ -236,7 +236,7 @@ static QSize strToSize( const QString& str )
 static QString intToStr( const int& s )
     {
     if( s < 1 || s > 100 )
-        return QString::null;
+        return QString();
     return QString::number(s);
     }
  
@@ -717,7 +717,7 @@ void RulesDialog::displayHints()
     str += "</p><p>" + i18n( "Consult the documentation for more details." );
 #endif
     str += "</p></qt>";
-    KMessageBox::information( this, str, QString::null, "displayhints" );
+    KMessageBox::information( this, str, QString(), "displayhints" );
     }
 
 void RulesDialog::accept()
