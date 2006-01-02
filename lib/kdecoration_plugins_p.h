@@ -55,7 +55,7 @@ class KWIN_EXPORT KDecorationPlugins
         bool reset( unsigned long changed ); // returns true if decorations need to be recreated
     protected:
         virtual void error( const QString& error_msg );
-        QByteArray defaultPlugin; // FRAME normalne protected?
+        QString defaultPlugin; // FRAME normalne protected?
     private:
         KDecorationFactory* (*create_ptr)();
         KLibrary *library;

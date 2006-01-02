@@ -226,7 +226,7 @@ void Rules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( title,, false );
     WRITE_MATCH_STRING( extrarole, (const char*), false );
     WRITE_MATCH_STRING( clientmachine, (const char*), false );
-    WRITE_WITH_DEFAULT( types, NET::AllTypesMask );
+    WRITE_WITH_DEFAULT( QVariant::fromValue(types), NET::AllTypesMask );
     WRITE_FORCE_RULE( placement, Placement::policyToString );
     WRITE_SET_RULE( position, );
     WRITE_SET_RULE( size, );
