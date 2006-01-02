@@ -76,10 +76,10 @@ void loadFakeSessionInfo( KConfig* config )
         QString n = QString::number(i);
         SessionInfo* info = new SessionInfo;
         fakeSession.append( info );
-        info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
-        info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
-        info->resourceClass = config->readEntry( QString("resourceClass")+n ).lower().latin1();
-        info->wmClientMachine = config->readEntry( QString("clientMachine")+n ).latin1();
+        info->windowRole = config->readEntry( QString("windowRole")+n, QString() ).latin1();
+        info->resourceName = config->readEntry( QString("resourceName")+n, QString() ).latin1();
+        info->resourceClass = config->readEntry( QString("resourceClass")+n, QString() ).lower().latin1();
+        info->wmClientMachine = config->readEntry( QString("clientMachine")+n, QString() ).latin1();
         info->geometry = config->readRectEntry( QString("geometry")+n );
         info->restore = config->readRectEntry( QString("restore")+n );
         info->fsrestore = config->readRectEntry( QString("fsrestore")+n );
@@ -94,7 +94,7 @@ void loadFakeSessionInfo( KConfig* config )
         info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
         info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
         info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
-        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
+        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n, QString() ).latin1());
         info->active = false;
         info->fake = true;
         }
