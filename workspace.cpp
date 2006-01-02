@@ -952,7 +952,7 @@ void Workspace::saveDesktopSettings()
             }
         else 
             {
-            QString currentvalue = group.readEntry(QString("Name_%1").arg(i));
+            QString currentvalue = group.readEntry(QString("Name_%1").arg(i), QString());
             if (currentvalue != defaultvalue)
                 group.writeEntry( QString("Name_%1").arg(i), "" );
             }

@@ -157,12 +157,12 @@ void Workspace::loadSessionInfo()
         QString n = QString::number(i);
         SessionInfo* info = new SessionInfo;
         session.append( info );
-        info->sessionId = config->readEntry( QString("sessionId")+n ).latin1();
-        info->windowRole = config->readEntry( QString("windowRole")+n ).latin1();
-        info->wmCommand = config->readEntry( QString("wmCommand")+n ).latin1();
-        info->wmClientMachine = config->readEntry( QString("wmClientMachine")+n ).latin1();
-        info->resourceName = config->readEntry( QString("resourceName")+n ).latin1();
-        info->resourceClass = config->readEntry( QString("resourceClass")+n ).lower().latin1();
+        info->sessionId = config->readEntry( QString("sessionId")+n, QString() ).latin1();
+        info->windowRole = config->readEntry( QString("windowRole")+n, QString() ).latin1();
+        info->wmCommand = config->readEntry( QString("wmCommand")+n, QString() ).latin1();
+        info->wmClientMachine = config->readEntry( QString("wmClientMachine")+n, QString() ).latin1();
+        info->resourceName = config->readEntry( QString("resourceName")+n, QString() ).latin1();
+        info->resourceClass = config->readEntry( QString("resourceClass")+n, QString() ).lower().latin1();
         info->geometry = config->readRectEntry( QString("geometry")+n );
         info->restore = config->readRectEntry( QString("restore")+n );
         info->fsrestore = config->readRectEntry( QString("fsrestore")+n );
@@ -177,8 +177,8 @@ void Workspace::loadSessionInfo()
         info->skipTaskbar = config->readBoolEntry( QString("skipTaskbar")+n, FALSE  );
         info->skipPager = config->readBoolEntry( QString("skipPager")+n, FALSE  );
         info->userNoBorder = config->readBoolEntry( QString("userNoBorder")+n, FALSE  );
-        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n ).latin1());
-        info->shortcut = config->readEntry( QString("shortcut")+n );
+        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n, QString() ).latin1());
+        info->shortcut = config->readEntry( QString("shortcut")+n, QString() );
         info->active = ( active_client == i );
         }
     }
