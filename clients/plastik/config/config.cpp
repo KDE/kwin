@@ -75,13 +75,13 @@ void PlastikConfig::load(KConfig*)
     QString value = m_config->readEntry("TitleAlignment", "AlignLeft");
     QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->child(value.latin1());
     if (button) button->setChecked(true);
-    bool animateButtons = m_config->readBoolEntry("AnimateButtons", true);
+    bool animateButtons = m_config->readEntry("AnimateButtons", QVariant(true)).toBool();
     m_dialog->animateButtons->setChecked(animateButtons);
-    bool menuClose = m_config->readBoolEntry("CloseOnMenuDoubleClick", true);
+    bool menuClose = m_config->readEntry("CloseOnMenuDoubleClick", QVariant(true)).toBool();
     m_dialog->menuClose->setChecked(menuClose);
-    bool titleShadow = m_config->readBoolEntry("TitleShadow", true);
+    bool titleShadow = m_config->readEntry("TitleShadow", QVariant(true)).toBool();
     m_dialog->titleShadow->setChecked(titleShadow);
-    bool coloredBorder = m_config->readBoolEntry("ColoredBorder", true);
+    bool coloredBorder = m_config->readEntry("ColoredBorder", QVariant(true)).toBool();
     m_dialog->coloredBorder->setChecked(coloredBorder);
 }
 

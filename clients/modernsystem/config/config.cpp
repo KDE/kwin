@@ -103,7 +103,7 @@ void ModernSysConfig::slotSelectionChanged()
 void ModernSysConfig::load(KConfig* /*conf*/)
 {
 	clientrc->setGroup("General");
-	bool i = clientrc->readBoolEntry("ShowHandle", true );
+	bool i = clientrc->readEntry("ShowHandle", QVariant(true )).toBool();
 	cbShowHandle->setChecked(i);
 	hbox->setEnabled(i);
 	handleSizeSlider->setEnabled(i);

@@ -428,8 +428,8 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 {
 	// General tab
 	// ============
-	cbShowToolTips->setChecked( conf->readBoolEntry("ShowToolTips", true ));
-//	cbUseMiniWindows->setChecked( conf->readBoolEntry("MiniWindowBorders", false));
+	cbShowToolTips->setChecked( conf->readEntry("ShowToolTips", QVariant(true )).toBool());
+//	cbUseMiniWindows->setChecked( conf->readEntry("MiniWindowBorders", QVariant(false)).toBool());
 
 	// Find the corresponding decoration name to that of
 	// the current plugin library name
@@ -455,7 +455,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 
 	// Buttons tab
 	// ============
-	bool customPositions = conf->readBoolEntry("CustomButtonPositions", false);
+	bool customPositions = conf->readEntry("CustomButtonPositions", QVariant(false)).toBool();
 	cbUseCustomButtonPositions->setChecked( customPositions );
 	buttonPositionWidget->setEnabled( customPositions );
 	// Menu and onAllDesktops buttons are default on LHS

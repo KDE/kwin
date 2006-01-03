@@ -169,7 +169,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QString old_title_buttons_left = title_buttons_left;
     QString old_title_buttons_right = title_buttons_right;
     bool old_custom_button_positions = custom_button_positions;
-    custom_button_positions = config->readBoolEntry("CustomButtonPositions", false);
+    custom_button_positions = config->readEntry("CustomButtonPositions", QVariant(false)).toBool();
     if (custom_button_positions)
         {
         title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
@@ -188,7 +188,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
 // SettingTooltips
     bool old_show_tooltips = show_tooltips;
-    show_tooltips = config->readBoolEntry("ShowToolTips", true);
+    show_tooltips = config->readEntry("ShowToolTips", QVariant(true)).toBool();
     if( old_show_tooltips != show_tooltips )
         changed |= SettingTooltips;
 
@@ -206,7 +206,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
     config->setGroup( "Windows" );
     bool old_move_resize_maximized_windows = move_resize_maximized_windows;
-    move_resize_maximized_windows = config->readBoolEntry( "MoveResizeMaximizedWindows", false );
+    move_resize_maximized_windows = config->readEntry( "MoveResizeMaximizedWindows", QVariant(false )).toBool();
     if( old_move_resize_maximized_windows != move_resize_maximized_windows )
         changed |= SettingBorder;
 

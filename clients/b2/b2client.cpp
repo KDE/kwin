@@ -115,8 +115,8 @@ static void read_config(B2ClientFactory *f)
 
     KConfig conf("kwinb2rc");
     conf.setGroup("General");
-    colored_frame = conf.readBoolEntry("UseTitleBarBorderColors", false);
-    do_draw_handle = conf.readBoolEntry("DrawGrabHandle", true);
+    colored_frame = conf.readEntry("UseTitleBarBorderColors", QVariant(false)).toBool();
+    do_draw_handle = conf.readEntry("DrawGrabHandle", QVariant(true)).toBool();
     drawSmallBorders = !options()->moveResizeMaximizedWindows();
 
     QString opString = conf.readEntry("MenuButtonDoubleClickOperation", "NoOp");

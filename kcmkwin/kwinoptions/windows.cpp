@@ -413,13 +413,13 @@ void KFocusConfig::load( void )
     key = config->readEntry(KWIN_ALTTABMODE, "KDE");
     setAltTabMode(key == "KDE");
 
-    setRollOverDesktops( config->readBoolEntry(KWIN_ROLL_OVER_DESKTOPS, true ));
+    setRollOverDesktops( config->readEntry(KWIN_ROLL_OVER_DESKTOPS, QVariant(true )).toBool());
 
     config->setGroup( "PopupInfo" );
-    setShowPopupinfo( config->readBoolEntry(KWIN_SHOW_POPUP, false ));
+    setShowPopupinfo( config->readEntry(KWIN_SHOW_POPUP, QVariant(false )).toBool());
 
     config->setGroup( "TabBox" );
-    setTraverseAll( config->readBoolEntry(KWIN_TRAVERSE_ALL, false ));
+    setTraverseAll( config->readEntry(KWIN_TRAVERSE_ALL, QVariant(false )).toBool());
 
     config->setGroup("Desktops");
     emit KCModule::changed(false);
@@ -667,8 +667,8 @@ void KAdvancedConfig::load( void )
 {
     config->setGroup( "Windows" );
 
-    setAnimateShade(config->readBoolEntry(KWIN_ANIMSHADE, true));
-    setShadeHover(config->readBoolEntry(KWIN_SHADEHOVER, false));
+    setAnimateShade(config->readEntry(KWIN_ANIMSHADE, QVariant(true)).toBool());
+    setShadeHover(config->readEntry(KWIN_SHADEHOVER, QVariant(false)).toBool());
     setShadeHoverInterval(config->readNumEntry(KWIN_SHADEHOVER_INTERVAL, 250));
 
     setElectricBorders(config->readNumEntry(KWM_ELECTRIC_BORDER, false));
@@ -677,7 +677,7 @@ void KAdvancedConfig::load( void )
 //    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 2 ));
     // TODO default to low for now
     setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 1 ));
-    setHideUtilityWindowsForInactive( config->readBoolEntry( KWIN_HIDE_UTILITY, true ));
+    setHideUtilityWindowsForInactive( config->readEntry( KWIN_HIDE_UTILITY, QVariant(true )).toBool());
 
     emit KCModule::changed(false);
 }
@@ -1023,7 +1023,7 @@ void KMovingConfig::load( void )
         setMove(OPAQUE);
 
     //CT 17Jun1998 - variable animation speed from 0 (none!!) to 10 (max)
-    bool anim = config->readBoolEntry(KWIN_MINIMIZE_ANIM, true );
+    bool anim = config->readEntry(KWIN_MINIMIZE_ANIM, QVariant(true )).toBool();
     int animSpeed = config->readNumEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
     if( animSpeed < 1 ) animSpeed = 0;
     if( animSpeed > 10 ) animSpeed = 10;
@@ -1038,7 +1038,7 @@ void KMovingConfig::load( void )
         setResizeOpaque(RESIZE_TRANSPARENT);
 
     //KS 10Jan2003 - Geometry Tip during window move/resize
-    bool showGeomTip = config->readBoolEntry(KWIN_GEOMETRY, false);
+    bool showGeomTip = config->readEntry(KWIN_GEOMETRY, QVariant(false)).toBool();
     setGeometryTip( showGeomTip );
 
     // placement policy --- CT 19jan98 ---
@@ -1076,7 +1076,7 @@ void KMovingConfig::load( void )
         setPlacement(SMART_PLACEMENT);
 //  }
 
-    setMoveResizeMaximized(config->readBoolEntry(KWIN_MOVE_RESIZE_MAXIMIZED, false));
+    setMoveResizeMaximized(config->readEntry(KWIN_MOVE_RESIZE_MAXIMIZED, QVariant(false)).toBool());
 
     int v;
 
@@ -1090,7 +1090,7 @@ void KMovingConfig::load( void )
     else if (v < 0) setWindowSnapZone (0);
     else setWindowSnapZone(v);
 
-    OverlapSnap->setChecked(config->readBoolEntry("SnapOnlyWhenOverlapping",false));
+    OverlapSnap->setChecked(config->readEntry("SnapOnlyWhenOverlapping", QVariant(false)).toBool());
     emit KCModule::changed(false);
 }
 
@@ -1429,17 +1429,17 @@ void KTranslucencyConfig::load( void )
     if (!kompmgrAvailable_)
         return;
   config->setGroup( "Notification Messages" );
-  useTranslucency->setChecked(config->readBoolEntry("UseTranslucency",false));
+  useTranslucency->setChecked(config->readEntry("UseTranslucency", QVariant(false)).toBool());
 
   config->setGroup( "Translucency" );
-  activeWindowTransparency->setChecked(config->readBoolEntry("TranslucentActiveWindows",false));
-  inactiveWindowTransparency->setChecked(config->readBoolEntry("TranslucentInactiveWindows",true));
-  movingWindowTransparency->setChecked(config->readBoolEntry("TranslucentMovingWindows",false));
-  removeShadowsOnMove->setChecked(config->readBoolEntry("RemoveShadowsOnMove",false));
-  removeShadowsOnResize->setChecked(config->readBoolEntry("RemoveShadowsOnResize",false));
-  dockWindowTransparency->setChecked(config->readBoolEntry("TranslucentDocks",true));
-  keepAboveAsActive->setChecked(config->readBoolEntry("TreatKeepAboveAsActive",true));
-  onlyDecoTranslucent->setChecked(config->readBoolEntry("OnlyDecoTranslucent",false));
+  activeWindowTransparency->setChecked(config->readEntry("TranslucentActiveWindows", QVariant(false)).toBool());
+  inactiveWindowTransparency->setChecked(config->readEntry("TranslucentInactiveWindows", QVariant(true)).toBool());
+  movingWindowTransparency->setChecked(config->readEntry("TranslucentMovingWindows", QVariant(false)).toBool());
+  removeShadowsOnMove->setChecked(config->readEntry("RemoveShadowsOnMove", QVariant(false)).toBool());
+  removeShadowsOnResize->setChecked(config->readEntry("RemoveShadowsOnResize", QVariant(false)).toBool());
+  dockWindowTransparency->setChecked(config->readEntry("TranslucentDocks", QVariant(true)).toBool());
+  keepAboveAsActive->setChecked(config->readEntry("TreatKeepAboveAsActive", QVariant(true)).toBool());
+  onlyDecoTranslucent->setChecked(config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool());
 
   activeWindowOpacity->setValue(config->readNumEntry("ActiveWindowOpacity",100));
   inactiveWindowOpacity->setValue(config->readNumEntry("InactiveWindowOpacity",75));
@@ -1459,7 +1459,7 @@ void KTranslucencyConfig::load( void )
   KConfig conf_(QDir::homePath() + "/.xcompmgrrc");
   conf_.setGroup("xcompmgr");
   
-  disableARGB->setChecked(conf_.readBoolEntry("DisableARGB",FALSE));
+  disableARGB->setChecked(conf_.readEntry("DisableARGB", QVariant(FALSE)).toBool());
 
   useShadows->setChecked(conf_.readEntry("Compmode","CompClientShadows").compare("CompClientShadows") == 0);
   shadowTopOffset->setValue(-1*(conf_.readNumEntry("ShadowOffsetY",-80)));
@@ -1479,8 +1479,8 @@ void KTranslucencyConfig::load( void )
   else
     shadowColor->setColor(QColor(r,g,b));
 
-  fadeInWindows->setChecked(conf_.readBoolEntry("FadeWindows",TRUE));
-  fadeOnOpacityChange->setChecked(conf_.readBoolEntry("FadeTrans",FALSE));
+  fadeInWindows->setChecked(conf_.readEntry("FadeWindows", QVariant(TRUE)).toBool());
+  fadeOnOpacityChange->setChecked(conf_.readEntry("FadeTrans", QVariant(FALSE)).toBool());
   fadeInSpeed->setValue((int)(conf_.readDoubleNumEntry("FadeInStep",0.020)*1000.0));
   fadeOutSpeed->setValue((int)(conf_.readDoubleNumEntry("FadeOutStep",0.070)*1000.0));
 

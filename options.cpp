@@ -54,7 +54,7 @@ unsigned long Options::updateSettings()
     config->setGroup( "Windows" );
     moveMode = stringToMoveResizeMode( config->readEntry("MoveMode", "Opaque" ));
     resizeMode = stringToMoveResizeMode( config->readEntry("ResizeMode", "Opaque" ));
-    show_geometry_tip = config->readBoolEntry("GeometryTip", false);
+    show_geometry_tip = config->readEntry("GeometryTip", QVariant(false)).toBool();
 
     QString val;
 
@@ -72,7 +72,7 @@ unsigned long Options::updateSettings()
     if ( val == "CDE" )
         altTabStyle = CDE;
 
-    rollOverDesktops = config->readBoolEntry("RollOverDesktops", TRUE);
+    rollOverDesktops = config->readEntry("RollOverDesktops", QVariant(TRUE)).toBool();
     
 //    focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
@@ -84,14 +84,14 @@ unsigned long Options::updateSettings()
     KConfig *gc = new KConfig("kdeglobals", false, false);
     bool isVirtual = KApplication::desktop()->isVirtualDesktop();
     gc->setGroup("Windows");
-    xineramaEnabled = gc->readBoolEntry ("XineramaEnabled", isVirtual ) &&
+    xineramaEnabled = gc->readEntry ("XineramaEnabled", QVariant(isVirtual )).toBool() &&
                       isVirtual;
     if (xineramaEnabled) 
         {
-        xineramaPlacementEnabled = gc->readBoolEntry ("XineramaPlacementEnabled", true);
-        xineramaMovementEnabled = gc->readBoolEntry ("XineramaMovementEnabled", true);
-        xineramaMaximizeEnabled = gc->readBoolEntry ("XineramaMaximizeEnabled", true);
-        xineramaFullscreenEnabled = gc->readBoolEntry ("XineramaFullscreenEnabled", true);
+        xineramaPlacementEnabled = gc->readEntry ("XineramaPlacementEnabled", QVariant(true)).toBool();
+        xineramaMovementEnabled = gc->readEntry ("XineramaMovementEnabled", QVariant(true)).toBool();
+        xineramaMaximizeEnabled = gc->readEntry ("XineramaMaximizeEnabled", QVariant(true)).toBool();
+        xineramaFullscreenEnabled = gc->readEntry ("XineramaFullscreenEnabled", QVariant(true)).toBool();
         }
     else 
         {
@@ -101,9 +101,9 @@ unsigned long Options::updateSettings()
 
     placement = Placement::policyFromString( config->readEntry("Placement"), true );
 
-    animateShade = config->readBoolEntry("AnimateShade", TRUE );
+    animateShade = config->readEntry("AnimateShade", QVariant(TRUE )).toBool();
 
-    animateMinimize = config->readBoolEntry("AnimateMinimize", TRUE );
+    animateMinimize = config->readEntry("AnimateMinimize", QVariant(TRUE )).toBool();
     animateMinimizeSpeed = config->readNumEntry("AnimateMinimizeSpeed", 5 );
 
     if( focusPolicy == ClickToFocus ) 
@@ -115,21 +115,21 @@ unsigned long Options::updateSettings()
         }
     else 
         {
-        autoRaise = config->readBoolEntry("AutoRaise", FALSE );
+        autoRaise = config->readEntry("AutoRaise", QVariant(FALSE )).toBool();
         autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
-        delayFocus = config->readBoolEntry("DelayFocus", FALSE );
+        delayFocus = config->readEntry("DelayFocus", QVariant(FALSE )).toBool();
         delayFocusInterval = config->readNumEntry("DelayFocusInterval", 0 );
         }
 
-    shadeHover = config->readBoolEntry("ShadeHover", FALSE );
+    shadeHover = config->readEntry("ShadeHover", QVariant(FALSE )).toBool();
     shadeHoverInterval = config->readNumEntry("ShadeHoverInterval", 250 );
 
     // important: autoRaise implies ClickRaise
-    clickRaise = autoRaise || config->readBoolEntry("ClickRaise", TRUE );
+    clickRaise = autoRaise || config->readEntry("ClickRaise", QVariant(TRUE )).toBool();
 
     borderSnapZone = config->readNumEntry("BorderSnapZone", 10);
     windowSnapZone = config->readNumEntry("WindowSnapZone", 10);
-    snapOnlyWhenOverlapping=config->readBoolEntry("SnapOnlyWhenOverlapping",FALSE);
+    snapOnlyWhenOverlapping=config->readEntry("SnapOnlyWhenOverlapping", QVariant(FALSE)).toBool();
     electric_borders = config->readNumEntry("ElectricBorders", 0);
     electric_border_delay = config->readNumEntry("ElectricBorderDelay", 150);
 
@@ -152,7 +152,7 @@ unsigned long Options::updateSettings()
         (*it) = (*it).lower();
 
     killPingTimeout = config->readNumEntry( "KillPingTimeout", 5000 );
-    hideUtilityWindowsForInactive = config->readBoolEntry( "HideUtilityWindowsForInactive", false );
+    hideUtilityWindowsForInactive = config->readEntry( "HideUtilityWindowsForInactive", QVariant(false )).toBool();
 
     // Mouse bindings
     config->setGroup( "MouseBindings");
@@ -174,26 +174,26 @@ unsigned long Options::updateSettings()
 
     //translucency settings
     config->setGroup( "Notification Messages" );
-    useTranslucency = config->readBoolEntry("UseTranslucency", false);
+    useTranslucency = config->readEntry("UseTranslucency", QVariant(false)).toBool();
     config->setGroup( "Translucency");
-    translucentActiveWindows = config->readBoolEntry("TranslucentActiveWindows", false);
+    translucentActiveWindows = config->readEntry("TranslucentActiveWindows", QVariant(false)).toBool();
     activeWindowOpacity = uint((config->readNumEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
-    translucentInactiveWindows = config->readBoolEntry("TranslucentInactiveWindows", false);
+    translucentInactiveWindows = config->readEntry("TranslucentInactiveWindows", QVariant(false)).toBool();
     inactiveWindowOpacity = uint((config->readNumEntry("InactiveWindowOpacity", 75)/100.0)*0xFFFFFFFF);
-    translucentMovingWindows = config->readBoolEntry("TranslucentMovingWindows", false);
+    translucentMovingWindows = config->readEntry("TranslucentMovingWindows", QVariant(false)).toBool();
     movingWindowOpacity = uint((config->readNumEntry("MovingWindowOpacity", 50)/100.0)*0xFFFFFFFF);
-    translucentDocks = config->readBoolEntry("TranslucentDocks", false);
+    translucentDocks = config->readEntry("TranslucentDocks", QVariant(false)).toBool();
     dockOpacity = uint((config->readNumEntry("DockOpacity", 80)/100.0)*0xFFFFFFFF);
-    keepAboveAsActive = config->readBoolEntry("TreatKeepAboveAsActive", true);
+    keepAboveAsActive = config->readEntry("TreatKeepAboveAsActive", QVariant(true)).toBool();
     //TODO: remove this variable
     useTitleMenuSlider = true;
     activeWindowShadowSize = config->readNumEntry("ActiveWindowShadowSize", 200);
     inactiveWindowShadowSize = config->readNumEntry("InactiveWindowShadowSize", 100);
     dockShadowSize = config->readNumEntry("DockShadowSize", 80);
-    removeShadowsOnMove = config->readBoolEntry("RemoveShadowsOnMove", true);
-    removeShadowsOnResize = config->readBoolEntry("RemoveShadowsOnResize", true);
-    onlyDecoTranslucent = config->readBoolEntry("OnlyDecoTranslucent",false);
-    if (resetKompmgr = config->readBoolEntry("ResetKompmgr", false))
+    removeShadowsOnMove = config->readEntry("RemoveShadowsOnMove", QVariant(true)).toBool();
+    removeShadowsOnResize = config->readEntry("RemoveShadowsOnResize", QVariant(true)).toBool();
+    onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool();
+    if (resetKompmgr = config->readEntry("ResetKompmgr", QVariant(false)).toBool())
         config->writeEntry("ResetKompmgr",FALSE);
     
     
@@ -204,11 +204,11 @@ unsigned long Options::updateSettings()
     // "EffectNoTooltip" setting from kdeglobals.
     KConfig globalConfig("kdeglobals");
     globalConfig.setGroup("KDE");
-    topmenus = globalConfig.readBoolEntry( "macStyle", false );
+    topmenus = globalConfig.readEntry( "macStyle", QVariant(false )).toBool();
 
     KConfig kdesktopcfg( "kdesktoprc", true );
     kdesktopcfg.setGroup( "Menubar" );
-    desktop_topmenu = kdesktopcfg.readBoolEntry( "ShowMenubar", false );
+    desktop_topmenu = kdesktopcfg.readEntry( "ShowMenubar", QVariant(false )).toBool();
     if( desktop_topmenu )
         topmenus = true;
 

@@ -77,10 +77,10 @@ KeramikConfig::~KeramikConfig()
 void KeramikConfig::load( KConfig* )
 {
 	c->setGroup("General");
-	ui->showAppIcons->setChecked( c->readBoolEntry("ShowAppIcons", true) );
-	ui->smallCaptions->setChecked( c->readBoolEntry("SmallCaptionBubbles", false) );
-	ui->largeGrabBars->setChecked( c->readBoolEntry("LargeGrabBars", true) );
-	ui->useShadowedText->setChecked( c->readBoolEntry("UseShadowedText", true) );
+	ui->showAppIcons->setChecked( c->readEntry("ShowAppIcons", QVariant(true)).toBool() );
+	ui->smallCaptions->setChecked( c->readEntry("SmallCaptionBubbles", QVariant(false)).toBool() );
+	ui->largeGrabBars->setChecked( c->readEntry("LargeGrabBars", QVariant(true)).toBool() );
+	ui->useShadowedText->setChecked( c->readEntry("UseShadowedText", QVariant(true)).toBool() );
 }
 
 

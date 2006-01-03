@@ -104,10 +104,10 @@ void B2Config::load(KConfig * /*conf*/)
 {
 	b2Config->setGroup("General");
 
-	bool override = b2Config->readBoolEntry("UseTitleBarBorderColors", false);
+	bool override = b2Config->readEntry("UseTitleBarBorderColors", QVariant(false)).toBool();
 	cbColorBorder->setChecked(override);
 
-    override = b2Config->readBoolEntry( "DrawGrabHandle", true );
+    override = b2Config->readEntry( "DrawGrabHandle", QVariant(true )).toBool();
     showGrabHandleCb->setChecked(override);
 
     QString returnString = b2Config->readEntry(

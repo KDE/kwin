@@ -187,7 +187,7 @@ WebClient::init()
 
   KConfig c("kwinwebrc");
   c.setGroup("General");
-  shape_ = c.readBoolEntry("Shape", true);
+  shape_ = c.readEntry("Shape", QVariant(true)).toBool();
 
   KCommonDecoration::init();
 }

@@ -146,9 +146,9 @@ static void create_pixmaps()
         titleAlign = Qt::AlignCenter;
     else
         titleAlign = Qt::AlignLeft | Qt::AlignVCenter;
-    titleSunken = config->readBoolEntry("TitleFrameShaded", true);
+    titleSunken = config->readEntry("TitleFrameShaded", QVariant(true)).toBool();
     // titleSunken = true; // is this fixed?
-    titleTransparent = config->readBoolEntry("PixmapUnderTitleText", true);
+    titleTransparent = config->readEntry("PixmapUnderTitleText", QVariant(true)).toBool();
 
     tmpStr = config->readEntry("TitlebarLook");
     if(tmpStr == "shadedVertical"){
