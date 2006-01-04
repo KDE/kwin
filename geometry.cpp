@@ -2071,9 +2071,7 @@ void Client::setFullScreen( bool set, bool user )
         setGeometry( workspace()->clientArea( FullScreenArea, this ));
     else
         {
-        if( maximizeMode() != MaximizeRestore )
-            changeMaximize( false, false, true ); // adjust size
-        else if( !geom_fs_restore.isNull())
+        if( !geom_fs_restore.isNull())
             setGeometry( QRect( geom_fs_restore.topLeft(), adjustedSize( geom_fs_restore.size())));
         // TODO isShaded() ?
         else
