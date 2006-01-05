@@ -49,6 +49,7 @@ protected:
     void paintEvent( QPaintEvent* );
     void reset( unsigned long );
     void updateActiveBuffer();
+    void captionChange();
 private:
     bool mustDrawHandle() const;
     bool isTransient() const;

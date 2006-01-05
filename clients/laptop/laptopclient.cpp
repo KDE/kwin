@@ -468,6 +468,13 @@ void LaptopClient::init()
     KCommonDecoration::init();
 }
 
+void LaptopClient::captionChange()
+{
+    bufferDirty = true;
+
+    KCommonDecoration::captionChange();
+}
+
 void LaptopClient::paintEvent( QPaintEvent* )
 {
     QPainter p(widget());
