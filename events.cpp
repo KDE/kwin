@@ -1471,6 +1471,12 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
     {
     if( direction == NET::Move )
         performMouseCommand( Options::MouseMove, QPoint( x_root, y_root ));
+    else if( moveResizeMode && direction == NET::MoveResizeCancel)
+    {
+        finishMoveResize( true );
+        buttonDown = FALSE;
+        setCursor( mode );
+    }
     else if( direction >= NET::TopLeft && direction <= NET::Left ) 
         {
         static const Position convert[] =
