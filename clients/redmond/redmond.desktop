@@ -1,16 +1,5 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Redmond
-Name[bn]=রেডমন্ড
-Name[eo]=Redmondo
-Name[fa]=ردموند
-Name[hi]=रेडमण्ड
-Name[ko]=레드몬드
-Name[lo]=ເລດມອນ
-Name[lv]=Redmonda
-Name[pa]=ਰੀਡਮੋਂਡ
-Name[ta]=ரெட்மான்ட்
-Name[th]=แบบเรดมอนด์
-Name[uz]=Редмонд
-Name[xx]=xxRedmondxx
+Name[x-test]=xxRedmondxx
 X-KDE-Library=kwin3_redmond

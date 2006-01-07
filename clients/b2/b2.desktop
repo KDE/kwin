@@ -1,10 +1,5 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=B II
-Name[af]=B Ii
-Name[fa]=B ۲
-Name[hi]=बी II
-Name[lo]= B II
-Name[th]=ชุดตกแต่ง B II
-Name[xx]=xxB IIxx
+Name[x-test]=xxB IIxx
 X-KDE-Library=kwin3_b2
