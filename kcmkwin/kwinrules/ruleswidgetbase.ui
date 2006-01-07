@@ -347,7 +347,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Qt::ToolBarDock (panel)</string>
+                                <string>Dock (panel)</string>
                             </property>
                         </item>
                         <item>
@@ -1143,7 +1143,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Qt::DockTop-Qt::DockLeft Qt::Corner</string>
+                                <string>Top-Left Corner</string>
                             </property>
                         </item>
                         <item>
@@ -1989,7 +1989,7 @@
                         </item>
                         <item>
                             <property name="text">
-                                <string>Qt::ToolBarDock (panel)</string>
+                                <string>Dock (panel)</string>
                             </property>
                         </item>
                         <item>
