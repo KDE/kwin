@@ -47,8 +47,8 @@ namespace KWinInternal
     enable_##var->setWhatsThis( enableDesc ); \
     rule_##var->setWhatsThis( type##RuleDesc );
 
-RulesWidget::RulesWidget( QWidget* parent, const char* name )
-: RulesWidgetBase( parent, name )
+RulesWidget::RulesWidget( QWidget* parent )
+: RulesWidgetBase( parent )
 , detect_dlg( NULL )
     {
     QString enableDesc =
@@ -728,8 +728,8 @@ void RulesDialog::accept()
     KDialogBase::accept();
     }
 
-EditShortcut::EditShortcut( QWidget* parent, const char* name )
-: EditShortcutBase( parent, name )
+EditShortcut::EditShortcut( QWidget* parent )
+: EditShortcutBase( parent )
     {
     }
 
@@ -762,8 +762,8 @@ QString EditShortcutDialog::shortcut() const
     return widget->shortcut->text();
     }
 
-ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent, const char* name )
-    : KShortcutDialog( cut, false /*TODO???*/, parent, name )
+ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent )
+    : KShortcutDialog( cut, false /*TODO???*/, parent )
     {
     }
 
