@@ -463,7 +463,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	// Help, Minimize, Maximize and Close are default on RHS
 	buttonPositionWidget->setButtonsRight( conf->readEntry("ButtonsOnRight", "HIAX") );
 
-        int bsize = conf->readNumEntry( "BorderSize", BorderNormal );
+        int bsize = conf->readEntry( "BorderSize", (int)BorderNormal );
         if( bsize >= BorderTiny && bsize < BordersCount )
             border_size = static_cast< BorderSize >( bsize );
         else
@@ -492,7 +492,7 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 	// Button settings
 	conf->writeEntry("ButtonsOnLeft", buttonPositionWidget->buttonsLeft() );
 	conf->writeEntry("ButtonsOnRight", buttonPositionWidget->buttonsRight() );
-        conf->writeEntry("BorderSize", border_size );
+	conf->writeEntry("BorderSize", static_cast<int>( border_size ) );
 
 	oldLibraryName = currentLibraryName;
 	currentLibraryName = libName;

@@ -123,7 +123,7 @@ void writeRules( KConfig& cfg )
         if( info->windowType == static_cast< NET::WindowType >( -2 )) // undefined
             ; // all types
         if( info->windowType == NET::Unknown )
-            cfg.writeEntry( "types", NET::NormalMask );
+            cfg.writeEntry( "types", (int)NET::NormalMask );
         else
             cfg.writeEntry( "types", 1 << info->windowType );
         cfg.writeEntry( "position", info->geometry.topLeft());
