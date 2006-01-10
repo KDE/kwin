@@ -88,12 +88,12 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
         QString n = QString::number(count);
         if( phase == SMSavePhase2 || phase == SMSavePhase2Full )
             {
-            config->writeEntry( QString("sessionId")+n, sessionId.data() );
-            config->writeEntry( QString("windowRole")+n, c->windowRole().data() );
-            config->writeEntry( QString("wmCommand")+n, wmCommand.data() );
-            config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine( true ).data() );
-            config->writeEntry( QString("resourceName")+n, c->resourceName().data() );
-            config->writeEntry( QString("resourceClass")+n, c->resourceClass().data() );
+            config->writeEntry( QString("sessionId")+n, sessionId.constData() );
+            config->writeEntry( QString("windowRole")+n, c->windowRole().constData() );
+            config->writeEntry( QString("wmCommand")+n, wmCommand.constData() );
+            config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine( true ).constData() );
+            config->writeEntry( QString("resourceName")+n, c->resourceName().constData() );
+            config->writeEntry( QString("resourceClass")+n, c->resourceClass().constData() );
             config->writeEntry( QString("geometry")+n,  QRect( c->calculateGravitation(TRUE), c->clientSize() ) ); // FRAME
             config->writeEntry( QString("restore")+n, c->geometryRestore() );
             config->writeEntry( QString("fsrestore")+n, c->geometryFSRestore() );

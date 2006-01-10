@@ -177,7 +177,7 @@ void Rules::readFromCfg( KConfig& cfg )
     if( !var.isEmpty() || force ) \
         { \
         cfg.writeEntry( #var, cast var ); \
-        cfg.writeEntry( #var "match", var##match ); \
+        cfg.writeEntry( #var "match", (int)var##match ); \
         } \
     else \
         { \
@@ -189,7 +189,7 @@ void Rules::readFromCfg( KConfig& cfg )
     if( var##rule != UnusedSetRule ) \
         { \
         cfg.writeEntry( #var, func ( var )); \
-        cfg.writeEntry( #var "rule", var##rule ); \
+        cfg.writeEntry( #var "rule", (int)var##rule ); \
         } \
     else \
         { \
@@ -201,7 +201,7 @@ void Rules::readFromCfg( KConfig& cfg )
     if( var##rule != UnusedForceRule ) \
         { \
         cfg.writeEntry( #var, func ( var )); \
-        cfg.writeEntry( #var "rule", var##rule ); \
+        cfg.writeEntry( #var "rule", (int)var##rule ); \
         } \
     else \
         { \
@@ -236,7 +236,7 @@ void Rules::write( KConfig& cfg ) const
     WRITE_FORCE_RULE( opacityinactive, );
     WRITE_FORCE_RULE( ignoreposition, );
     WRITE_SET_RULE( desktop, );
-    WRITE_FORCE_RULE( type, );
+    WRITE_FORCE_RULE( type, int );
     WRITE_SET_RULE( maximizevert, );
     WRITE_SET_RULE( maximizehoriz, );
     WRITE_SET_RULE( minimize, );
