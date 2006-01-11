@@ -79,43 +79,43 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QPalette pal = QApplication::palette();
     // normal colors
     colors[ColorFrame] = pal.active().background();
-    colors[ColorFrame] = config->readColorEntry("frame", &colors[ColorFrame]);
+    colors[ColorFrame] = config->readEntry("frame", colors[ColorFrame]);
     colors[ColorHandle] = colors[ColorFrame];
-    colors[ColorHandle] = config->readColorEntry("handle", &colors[ColorHandle]);
+    colors[ColorHandle] = config->readEntry("handle", colors[ColorHandle]);
 
     // full button configuration (background, blend, and foreground
     if(QPixmap::defaultDepth() > 8)
         colors[ColorButtonBg] = colors[ColorFrame].light(130);
     else
         colors[ColorButtonBg] = colors[ColorFrame];
-    colors[ColorButtonBg] = config->readColorEntry("activeTitleBtnBg",
-                                              &colors[ColorFrame]);
+    colors[ColorButtonBg] = config->readEntry("activeTitleBtnBg",
+                                              colors[ColorFrame]);
     colors[ColorTitleBar] = pal.active().highlight();
-    colors[ColorTitleBar] = config->readColorEntry("activeBackground",
-                                              &colors[ColorTitleBar]);
+    colors[ColorTitleBar] = config->readEntry("activeBackground",
+                                              colors[ColorTitleBar]);
     if(QPixmap::defaultDepth() > 8)
         colors[ColorTitleBlend] = colors[ ColorTitleBar ].dark(110);
     else
         colors[ColorTitleBlend] = colors[ ColorTitleBar ];
-    colors[ColorTitleBlend] = config->readColorEntry("activeBlend",
-                                                &colors[ColorTitleBlend]);
+    colors[ColorTitleBlend] = config->readEntry("activeBlend",
+                                                colors[ColorTitleBlend]);
 
     colors[ColorFont] = pal.active().highlightedText();
-    colors[ColorFont] = config->readColorEntry("activeForeground", &colors[ColorFont]);
+    colors[ColorFont] = config->readEntry("activeForeground", colors[ColorFont]);
 
     // inactive
-    colors[ColorFrame+NUM_COLORS] = config->readColorEntry("inactiveFrame",
-                                                      &colors[ColorFrame]);
+    colors[ColorFrame+NUM_COLORS] = config->readEntry("inactiveFrame",
+                                                      colors[ColorFrame]);
     colors[ColorTitleBar+NUM_COLORS] = colors[ColorFrame];
     colors[ColorTitleBar+NUM_COLORS] = config->
-        readColorEntry("inactiveBackground", &colors[ColorTitleBar+NUM_COLORS]);
+        readEntry("inactiveBackground", colors[ColorTitleBar+NUM_COLORS]);
 
     if(QPixmap::defaultDepth() > 8)
         colors[ColorTitleBlend+NUM_COLORS] = colors[ ColorTitleBar+NUM_COLORS ].dark(110);
     else
         colors[ColorTitleBlend+NUM_COLORS] = colors[ ColorTitleBar+NUM_COLORS ];
     colors[ColorTitleBlend+NUM_COLORS] =
-        config->readColorEntry("inactiveBlend", &colors[ColorTitleBlend+NUM_COLORS]);
+        config->readEntry("inactiveBlend", colors[ColorTitleBlend+NUM_COLORS]);
 
     // full button configuration
     if(QPixmap::defaultDepth() > 8)
@@ -123,15 +123,15 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     else
         colors[ColorButtonBg+NUM_COLORS] = colors[ColorFrame+NUM_COLORS];
     colors[ColorButtonBg+NUM_COLORS] =
-        config->readColorEntry("inactiveTitleBtnBg",
-                               &colors[ColorButtonBg]);
+        config->readEntry("inactiveTitleBtnBg",
+                               colors[ColorButtonBg]);
 
     colors[ColorHandle+NUM_COLORS] =
-        config->readColorEntry("inactiveHandle", &colors[ColorHandle]);
+        config->readEntry("inactiveHandle", colors[ColorHandle]);
 
     colors[ColorFont+NUM_COLORS] = colors[ColorFrame].dark();
-    colors[ColorFont+NUM_COLORS] = config->readColorEntry("inactiveForeground",
-                                                     &colors[ColorFont+NUM_COLORS]);
+    colors[ColorFont+NUM_COLORS] = config->readEntry("inactiveForeground",
+                                                     colors[ColorFont+NUM_COLORS]);
 
     for( int i = 0;
          i < NUM_COLORS*2;
@@ -149,14 +149,14 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     activeFontGuess.setBold(true);
     activeFontGuess.setPixelSize(12);
 
-    activeFont = config->readFontEntry("activeFont", &activeFontGuess);
-    inactiveFont = config->readFontEntry("inactiveFont", &activeFont);
+    activeFont = config->readEntry("activeFont", activeFontGuess);
+    inactiveFont = config->readEntry("inactiveFont", activeFont);
 
     activeFontSmall = activeFont;
 #warning KDE4 : is it usefull ? ( temporary hack )
 //    activeFontSmall.setPointSize(activeFont.pointSize() - 2 > 0 ? activeFont.pointSize() - 2 : activeFont.pointSize()+1 );
-    activeFontSmall = config->readFontEntry("activeFontSmall", &activeFontSmall);
-    inactiveFontSmall = config->readFontEntry("inactiveFontSmall", &activeFontSmall);
+    activeFontSmall = config->readEntry("activeFontSmall", activeFontSmall);
+    inactiveFontSmall = config->readEntry("inactiveFontSmall", activeFontSmall);
 
     if( old_activeFont != activeFont
         || old_inactiveFont != inactiveFont
@@ -195,7 +195,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 // SettingBorder
 
     BorderSize old_border_size = border_size;
-    int border_size_num = config->readNumEntry( "BorderSize", BorderNormal );
+    int border_size_num = config->readEntry( "BorderSize", (int)BorderNormal );
     if( border_size_num >= 0 && border_size_num < BordersCount )
         border_size = static_cast< BorderSize >( border_size_num );
     else
