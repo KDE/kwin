@@ -70,7 +70,7 @@ void loadFakeSessionInfo( KConfig* config )
     {
     fakeSession.clear();
     config->setGroup("FakeSession" );
-    int count =  config->readNumEntry( "count" );
+    int count =  config->readEntry( "count",0 );
     for ( int i = 1; i <= count; i++ ) 
         {
         QString n = QString::number(i);
@@ -80,12 +80,12 @@ void loadFakeSessionInfo( KConfig* config )
         info->resourceName = config->readEntry( QString("resourceName")+n, QString() ).latin1();
         info->resourceClass = config->readEntry( QString("resourceClass")+n, QString() ).lower().latin1();
         info->wmClientMachine = config->readEntry( QString("clientMachine")+n, QString() ).latin1();
-        info->geometry = config->readRectEntry( QString("geometry")+n );
-        info->restore = config->readRectEntry( QString("restore")+n );
-        info->fsrestore = config->readRectEntry( QString("fsrestore")+n );
-        info->maximized = config->readNumEntry( QString("maximize")+n, 0 );
-        info->fullscreen = config->readNumEntry( QString("fullscreen")+n, 0 );
-        info->desktop = config->readNumEntry( QString("desktop")+n, 0 );
+        info->geometry = config->readEntry( QString("geometry")+n, QRect() );
+        info->restore = config->readEntry( QString("restore")+n, QRect() );
+        info->fsrestore = config->readEntry( QString("fsrestore")+n, QRect() );
+        info->maximized = config->readEntry( QString("maximize")+n, 0 );
+        info->fullscreen = config->readEntry( QString("fullscreen")+n, 0 );
+        info->desktop = config->readEntry( QString("desktop")+n, 0 );
         info->minimized = config->readEntry( QString("iconified")+n, FALSE );
         info->onAllDesktops = config->readEntry( QString("sticky")+n, FALSE );
         info->shaded = config->readEntry( QString("shaded")+n, FALSE );
@@ -104,7 +104,7 @@ void loadFakeSessionInfo( KConfig* config )
 void writeRules( KConfig& cfg )
     {
     cfg.setGroup( "General" );
-    int pos = cfg.readNumEntry( "count" );
+    int pos = cfg.readEntry( "count",0 );
     for ( SessionInfo* info = fakeSession.first(); info; info = fakeSession.next() )
         {
         if( info->resourceName.isEmpty() && info->resourceClass.isEmpty())
