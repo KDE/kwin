@@ -322,9 +322,17 @@ bool Workspace::workspaceEvent( XEvent * e )
             return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
             }
         case MapNotify:
-
+            {
+#if KDE_IS_VERSION( 3, 9, 90 )
+#warning Consider dumping this workaround.
+#endif
+            // See bug #100177, especially comments #6 and #14. This workaround shouldn't be
+            // necessary when X.org with that fix becomes available and it's an unnecessary
+            // X roundtrip for an experimental unstable feature.
+            if( addSystemTrayWin( e->xmap.window ))
+                return true;
             return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
-
+            }
         case ReparentNotify:
             {
         //do not confuse Qt with these events. After all, _we_ are the
