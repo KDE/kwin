@@ -1005,11 +1005,8 @@ void Client::closeWindow()
     {
     if( !isCloseable())
         return;
-    // Update user time, needed for whole group, because the window may create a confirming dialog,
-    // and this window's user time wouldn't apply to it
-    // This is needed even for apps without support for user timestamp (e.g. nedit), so updating
-    // user timestamp in apps on WM_DELETE_WINDOW is not an option (and I'm not sure if it would be right)
-    group()->updateUserTime(); 
+    // Update user time, because the window may create a confirming dialog.
+    updateUserTime(); 
     if ( Pdeletewindow )
         {
         Notify::raise( Notify::Close );
