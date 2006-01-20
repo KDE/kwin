@@ -633,6 +633,7 @@ void Client::updateUserTime( Time time )
         && ( user_time == CurrentTime
             || timestampCompare( time, user_time ) > 0 )) // time > user_time
         user_time = time;
+    group()->updateUserTime( user_time );
     }
 
 Time Client::readUserCreationTime() const

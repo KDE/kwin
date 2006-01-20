@@ -24,6 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include <QX11Info>
 #include "rules.h"
+#include "group.h"
 
 namespace KWinInternal
 {
@@ -421,7 +422,9 @@ bool Client::manage( Window w, bool isMapped )
     // - keep it?
     XLowerWindow( QX11Info::display(), frameId());
 
+    // set initial user time directly
     user_time = readUserTimeMapTimestamp( asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session );
+    group()->updateUserTime( user_time ); // and do what Client::updateUserTime() does
 
     if( isTopMenu()) // they're shown in Workspace::addClient() if their mainwindow
         hideClient( true ); // is the active one
