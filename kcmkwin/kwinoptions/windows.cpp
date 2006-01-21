@@ -395,10 +395,10 @@ void KFocusConfig::load( void )
     else if(key == "FocusStrictlyUnderMouse")
         setFocus(FOCUS_STRICTLY_UNDER_MOUSE);
 
-    int k = config->readNumEntry(KWIN_AUTORAISE_INTERVAL,750);
+    int k = config->readEntry(KWIN_AUTORAISE_INTERVAL,750);
     setAutoRaiseInterval(k);
 
-    k = config->readNumEntry(KWIN_DELAYFOCUS_INTERVAL,750);
+    k = config->readEntry(KWIN_DELAYFOCUS_INTERVAL,750);
     setDelayFocusInterval(k);
 
     key = config->readEntry(KWIN_AUTORAISE);
@@ -669,14 +669,14 @@ void KAdvancedConfig::load( void )
 
     setAnimateShade(config->readEntry(KWIN_ANIMSHADE, QVariant(true)).toBool());
     setShadeHover(config->readEntry(KWIN_SHADEHOVER, QVariant(false)).toBool());
-    setShadeHoverInterval(config->readNumEntry(KWIN_SHADEHOVER_INTERVAL, 250));
+    setShadeHoverInterval(config->readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
 
-    setElectricBorders(config->readNumEntry(KWM_ELECTRIC_BORDER, false));
-    setElectricBorderDelay(config->readNumEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
+    setElectricBorders(config->readEntry(KWM_ELECTRIC_BORDER, false));
+    setElectricBorderDelay(config->readEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
 
-//    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 2 ));
+//    setFocusStealing( config->readEntry(KWIN_FOCUS_STEALING, 2 ));
     // TODO default to low for now
-    setFocusStealing( config->readNumEntry(KWIN_FOCUS_STEALING, 1 ));
+    setFocusStealing( config->readEntry(KWIN_FOCUS_STEALING, 1 ));
     setHideUtilityWindowsForInactive( config->readEntry( KWIN_HIDE_UTILITY, QVariant(true )).toBool());
 
     emit KCModule::changed(false);
@@ -1024,7 +1024,7 @@ void KMovingConfig::load( void )
 
     //CT 17Jun1998 - variable animation speed from 0 (none!!) to 10 (max)
     bool anim = config->readEntry(KWIN_MINIMIZE_ANIM, QVariant(true )).toBool();
-    int animSpeed = config->readNumEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
+    int animSpeed = config->readEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
     if( animSpeed < 1 ) animSpeed = 0;
     if( animSpeed > 10 ) animSpeed = 10;
     setMinimizeAnim( anim );
@@ -1080,12 +1080,12 @@ void KMovingConfig::load( void )
 
     int v;
 
-    v = config->readNumEntry(KWM_BRDR_SNAP_ZONE, KWM_BRDR_SNAP_ZONE_DEFAULT);
+    v = config->readEntry(KWM_BRDR_SNAP_ZONE, KWM_BRDR_SNAP_ZONE_DEFAULT);
     if (v > MAX_BRDR_SNAP) setBorderSnapZone(MAX_BRDR_SNAP);
     else if (v < 0) setBorderSnapZone (0);
     else setBorderSnapZone(v);
 
-    v = config->readNumEntry(KWM_WNDW_SNAP_ZONE, KWM_WNDW_SNAP_ZONE_DEFAULT);
+    v = config->readEntry(KWM_WNDW_SNAP_ZONE, KWM_WNDW_SNAP_ZONE_DEFAULT);
     if (v > MAX_WNDW_SNAP) setWindowSnapZone(MAX_WNDW_SNAP);
     else if (v < 0) setWindowSnapZone (0);
     else setWindowSnapZone(v);
@@ -1441,15 +1441,15 @@ void KTranslucencyConfig::load( void )
   keepAboveAsActive->setChecked(config->readEntry("TreatKeepAboveAsActive", QVariant(true)).toBool());
   onlyDecoTranslucent->setChecked(config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool());
 
-  activeWindowOpacity->setValue(config->readNumEntry("ActiveWindowOpacity",100));
-  inactiveWindowOpacity->setValue(config->readNumEntry("InactiveWindowOpacity",75));
-  movingWindowOpacity->setValue(config->readNumEntry("MovingWindowOpacity",25));
-  dockWindowOpacity->setValue(config->readNumEntry("DockOpacity",80));
+  activeWindowOpacity->setValue(config->readEntry("ActiveWindowOpacity",100));
+  inactiveWindowOpacity->setValue(config->readEntry("InactiveWindowOpacity",75));
+  movingWindowOpacity->setValue(config->readEntry("MovingWindowOpacity",25));
+  dockWindowOpacity->setValue(config->readEntry("DockOpacity",80));
 
   int ass, iss, dss;
-  dss = config->readNumEntry("DockShadowSize", 33);
-  ass = config->readNumEntry("ActiveWindowShadowSize", 133);
-  iss = config->readNumEntry("InactiveWindowShadowSize", 67);
+  dss = config->readEntry("DockShadowSize", 33);
+  ass = config->readEntry("ActiveWindowShadowSize", 133);
+  iss = config->readEntry("InactiveWindowShadowSize", 67);
 
   activeWindowOpacity->setEnabled(activeWindowTransparency->isChecked());
   inactiveWindowOpacity->setEnabled(inactiveWindowTransparency->isChecked());
@@ -1462,10 +1462,10 @@ void KTranslucencyConfig::load( void )
   disableARGB->setChecked(conf_.readEntry("DisableARGB", QVariant(FALSE)).toBool());
 
   useShadows->setChecked(conf_.readEntry("Compmode","CompClientShadows").compare("CompClientShadows") == 0);
-  shadowTopOffset->setValue(-1*(conf_.readNumEntry("ShadowOffsetY",-80)));
-  shadowLeftOffset->setValue(-1*(conf_.readNumEntry("ShadowOffsetX",0)));
+  shadowTopOffset->setValue(-1*(conf_.readEntry("ShadowOffsetY",-80)));
+  shadowLeftOffset->setValue(-1*(conf_.readEntry("ShadowOffsetX",0)));
 
-  int ss =  conf_.readNumEntry("ShadowRadius",6);
+  int ss =  conf_.readEntry("ShadowRadius",6);
   dockWindowShadowSize->setValue((int)(dss*ss/100.0));
   activeWindowShadowSize->setValue((int)(ass*ss/100.0));
   inactiveWindowShadowSize->setValue((int)(iss*ss/100.0));
@@ -1481,8 +1481,8 @@ void KTranslucencyConfig::load( void )
 
   fadeInWindows->setChecked(conf_.readEntry("FadeWindows", QVariant(TRUE)).toBool());
   fadeOnOpacityChange->setChecked(conf_.readEntry("FadeTrans", QVariant(FALSE)).toBool());
-  fadeInSpeed->setValue((int)(conf_.readDoubleNumEntry("FadeInStep",0.020)*1000.0));
-  fadeOutSpeed->setValue((int)(conf_.readDoubleNumEntry("FadeOutStep",0.070)*1000.0));
+  fadeInSpeed->setValue((int)(conf_.readEntry("FadeInStep",0.020)*1000.0));
+  fadeOutSpeed->setValue((int)(conf_.readEntry("FadeOutStep",0.070)*1000.0));
 
   emit KCModule::changed(false);
 }

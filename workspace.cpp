@@ -316,7 +316,7 @@ void Workspace::init()
     else
         {
         KConfigGroup group( kapp->sessionConfig(), "Session" );
-        initial_desktop = group.readNumEntry( "desktop", 1 );
+        initial_desktop = group.readEntry( "desktop", 1 );
         }
     if( !setCurrentDesktop( initial_desktop ))
         setCurrentDesktop( 1 );
@@ -908,7 +908,7 @@ void Workspace::loadDesktopSettings()
         groupname.sprintf("Desktops-screen-%d", screen_number);
     KConfigGroup group(c,groupname);
 
-    int n = group.readNumEntry("Number", 4);
+    int n = group.readEntry("Number", 4);
     number_of_desktops = n;
     delete workarea;
     workarea = new QRect[ n + 1 ];

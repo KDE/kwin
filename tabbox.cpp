@@ -523,7 +523,7 @@ void TabBox::reconfigure()
     {
     KConfig * c(KGlobal::config());
     c->setGroup("TabBox");
-    options_traverse_all = c->readNumEntry("TraverseAll", false );
+    options_traverse_all = c->readEntry("TraverseAll", false );
     }
 
 /*!
@@ -548,7 +548,7 @@ void TabBox::delayedShow()
     {
     KConfig * c(KGlobal::config());
     c->setGroup("TabBox");
-    bool delay = c->readNumEntry("ShowDelay", true);
+    bool delay = c->readEntry("ShowDelay", true);
 
     if (!delay)
         {
@@ -556,7 +556,7 @@ void TabBox::delayedShow()
         return;
         }
 
-    int delayTime = c->readNumEntry("DelayTime", 90);
+    int delayTime = c->readEntry("DelayTime", 90);
     delayedShowTimer.start(delayTime, true);
     }
 
@@ -928,7 +928,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
     bool options_traverse_all;
         {
         KConfigGroup group( KGlobal::config(), "TabBox" );
-        options_traverse_all = group.readNumEntry("TraverseAll", false );
+        options_traverse_all = group.readEntry("TraverseAll", false );
         }
 
     Client* firstClient = 0;

@@ -152,7 +152,7 @@ void KCMRulesList::load()
     rules.clear();
     KConfig cfg( "kwinrulesrc", true );
     cfg.setGroup( "General" );
-    int count = cfg.readNumEntry( "count" );
+    int count = cfg.readEntry( "count",0 );
     rules.reserve( count );
     for( int i = 1;
          i <= count;

@@ -119,8 +119,8 @@ void PopupInfo::reconfigure()
     {
     KConfig * c(KGlobal::config());
     c->setGroup("PopupInfo");
-    m_show = c->readNumEntry("ShowPopup", false );
-    m_delayTime = c->readNumEntry("PopupHideDelay", 350 );
+    m_show = c->readEntry("ShowPopup", false );
+    m_delayTime = c->readEntry("PopupHideDelay", 350 );
     }
 
 void PopupInfo::showInfo(QString infoString)

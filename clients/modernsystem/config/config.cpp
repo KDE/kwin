@@ -107,8 +107,8 @@ void ModernSysConfig::load(KConfig* /*conf*/)
 	cbShowHandle->setChecked(i);
 	hbox->setEnabled(i);
 	handleSizeSlider->setEnabled(i);
-	handleWidth = clientrc->readUnsignedNumEntry("HandleWidth", 6);
-	handleSize = clientrc->readUnsignedNumEntry("HandleSize", 30);
+	handleWidth = clientrc->readEntry("HandleWidth", 6);
+	handleSize = clientrc->readEntry("HandleSize", 30);
 	handleSizeSlider->setValue(QMIN((handleWidth - 6) / 2, (uint)4));
 	
 }

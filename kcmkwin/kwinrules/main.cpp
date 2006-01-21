@@ -37,7 +37,7 @@ static void loadRules( QList< Rules* >& rules )
     {
     KConfig cfg( "kwinrulesrc", true );
     cfg.setGroup( "General" );
-    int count = cfg.readNumEntry( "count" );
+    int count = cfg.readEntry( "count",0 );
     for( int i = 1;
          i <= count;
          ++i )

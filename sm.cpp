@@ -150,8 +150,8 @@ void Workspace::loadSessionInfo()
     session.clear();
     KConfig* config = kapp->sessionConfig();
     config->setGroup("Session" );
-    int count =  config->readNumEntry( "count" );
-    int active_client = config->readNumEntry( "active" );
+    int count =  config->readEntry( "count",0 );
+    int active_client = config->readEntry( "active",0 );
     for ( int i = 1; i <= count; i++ ) 
         {
         QString n = QString::number(i);
@@ -163,12 +163,12 @@ void Workspace::loadSessionInfo()
         info->wmClientMachine = config->readEntry( QString("wmClientMachine")+n, QString() ).latin1();
         info->resourceName = config->readEntry( QString("resourceName")+n, QString() ).latin1();
         info->resourceClass = config->readEntry( QString("resourceClass")+n, QString() ).lower().latin1();
-        info->geometry = config->readRectEntry( QString("geometry")+n );
-        info->restore = config->readRectEntry( QString("restore")+n );
-        info->fsrestore = config->readRectEntry( QString("fsrestore")+n );
-        info->maximized = config->readNumEntry( QString("maximize")+n, 0 );
-        info->fullscreen = config->readNumEntry( QString("fullscreen")+n, 0 );
-        info->desktop = config->readNumEntry( QString("desktop")+n, 0 );
+        info->geometry = config->readEntry( QString("geometry")+n,QRect() );
+        info->restore = config->readEntry( QString("restore")+n,QRect() );
+        info->fsrestore = config->readEntry( QString("fsrestore")+n,QRect() );
+        info->maximized = config->readEntry( QString("maximize")+n, 0 );
+        info->fullscreen = config->readEntry( QString("fullscreen")+n, 0 );
+        info->desktop = config->readEntry( QString("desktop")+n, 0 );
         info->minimized = config->readEntry( QString("iconified")+n, FALSE );
         info->onAllDesktops = config->readEntry( QString("sticky")+n, FALSE );
         info->shaded = config->readEntry( QString("shaded")+n, FALSE );

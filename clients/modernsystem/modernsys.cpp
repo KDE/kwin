@@ -222,10 +222,10 @@ void ModernSysFactory::read_config()
 
     KConfig c("kwinmodernsysrc");
     c.setGroup("General");
-    showh = c.readEntry("ShowHandle", QVariant(true)).toBool();
+    showh = c.readEntry("ShowHandle", true);
 
-    hwidth = c.readUnsignedNumEntry("HandleWidth", 6);
-    hsize = c.readUnsignedNumEntry("HandleSize", 30);
+    hwidth = c.readEntry("HandleWidth", 6);
+    hsize = c.readEntry("HandleSize", 30);
     if (!(showh && hsize && hwidth)) {
         showh = false;
         hwidth = hsize = 0;

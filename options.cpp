@@ -74,9 +74,9 @@ unsigned long Options::updateSettings()
 
     rollOverDesktops = config->readEntry("RollOverDesktops", QVariant(TRUE)).toBool();
     
-//    focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 2 );
+//    focusStealingPreventionLevel = config->readEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
-    focusStealingPreventionLevel = config->readNumEntry( "FocusStealingPreventionLevel", 1 );
+    focusStealingPreventionLevel = config->readEntry( "FocusStealingPreventionLevel", 1 );
     focusStealingPreventionLevel = qMax( 0, qMin( 4, focusStealingPreventionLevel ));
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
@@ -104,7 +104,7 @@ unsigned long Options::updateSettings()
     animateShade = config->readEntry("AnimateShade", QVariant(TRUE )).toBool();
 
     animateMinimize = config->readEntry("AnimateMinimize", QVariant(TRUE )).toBool();
-    animateMinimizeSpeed = config->readNumEntry("AnimateMinimizeSpeed", 5 );
+    animateMinimizeSpeed = config->readEntry("AnimateMinimizeSpeed", 5 );
 
     if( focusPolicy == ClickToFocus ) 
         {
@@ -116,22 +116,22 @@ unsigned long Options::updateSettings()
     else 
         {
         autoRaise = config->readEntry("AutoRaise", QVariant(FALSE )).toBool();
-        autoRaiseInterval = config->readNumEntry("AutoRaiseInterval", 0 );
+        autoRaiseInterval = config->readEntry("AutoRaiseInterval", 0 );
         delayFocus = config->readEntry("DelayFocus", QVariant(FALSE )).toBool();
-        delayFocusInterval = config->readNumEntry("DelayFocusInterval", 0 );
+        delayFocusInterval = config->readEntry("DelayFocusInterval", 0 );
         }
 
     shadeHover = config->readEntry("ShadeHover", QVariant(FALSE )).toBool();
-    shadeHoverInterval = config->readNumEntry("ShadeHoverInterval", 250 );
+    shadeHoverInterval = config->readEntry("ShadeHoverInterval", 250 );
 
     // important: autoRaise implies ClickRaise
     clickRaise = autoRaise || config->readEntry("ClickRaise", QVariant(TRUE )).toBool();
 
-    borderSnapZone = config->readNumEntry("BorderSnapZone", 10);
-    windowSnapZone = config->readNumEntry("WindowSnapZone", 10);
+    borderSnapZone = config->readEntry("BorderSnapZone", 10);
+    windowSnapZone = config->readEntry("WindowSnapZone", 10);
     snapOnlyWhenOverlapping=config->readEntry("SnapOnlyWhenOverlapping", QVariant(FALSE)).toBool();
-    electric_borders = config->readNumEntry("ElectricBorders", 0);
-    electric_border_delay = config->readNumEntry("ElectricBorderDelay", 150);
+    electric_borders = config->readEntry("ElectricBorders", 0);
+    electric_border_delay = config->readEntry("ElectricBorderDelay", 150);
 
     OpTitlebarDblClick = windowOperation( config->readEntry("TitlebarDoubleClickCommand", "Shade"), true );
     d->OpMaxButtonLeftClick = windowOperation( config->readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true );
@@ -151,7 +151,7 @@ unsigned long Options::updateSettings()
          ++it )
         (*it) = (*it).lower();
 
-    killPingTimeout = config->readNumEntry( "KillPingTimeout", 5000 );
+    killPingTimeout = config->readEntry( "KillPingTimeout", 5000 );
     hideUtilityWindowsForInactive = config->readEntry( "HideUtilityWindowsForInactive", QVariant( true )).toBool();
 
     // Mouse bindings
@@ -177,19 +177,19 @@ unsigned long Options::updateSettings()
     useTranslucency = config->readEntry("UseTranslucency", QVariant(false)).toBool();
     config->setGroup( "Translucency");
     translucentActiveWindows = config->readEntry("TranslucentActiveWindows", QVariant(false)).toBool();
-    activeWindowOpacity = uint((config->readNumEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
+    activeWindowOpacity = uint((config->readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config->readEntry("TranslucentInactiveWindows", QVariant(false)).toBool();
-    inactiveWindowOpacity = uint((config->readNumEntry("InactiveWindowOpacity", 75)/100.0)*0xFFFFFFFF);
+    inactiveWindowOpacity = uint((config->readEntry("InactiveWindowOpacity", 75)/100.0)*0xFFFFFFFF);
     translucentMovingWindows = config->readEntry("TranslucentMovingWindows", QVariant(false)).toBool();
-    movingWindowOpacity = uint((config->readNumEntry("MovingWindowOpacity", 50)/100.0)*0xFFFFFFFF);
+    movingWindowOpacity = uint((config->readEntry("MovingWindowOpacity", 50)/100.0)*0xFFFFFFFF);
     translucentDocks = config->readEntry("TranslucentDocks", QVariant(false)).toBool();
-    dockOpacity = uint((config->readNumEntry("DockOpacity", 80)/100.0)*0xFFFFFFFF);
+    dockOpacity = uint((config->readEntry("DockOpacity", 80)/100.0)*0xFFFFFFFF);
     keepAboveAsActive = config->readEntry("TreatKeepAboveAsActive", QVariant(true)).toBool();
     //TODO: remove this variable
     useTitleMenuSlider = true;
-    activeWindowShadowSize = config->readNumEntry("ActiveWindowShadowSize", 200);
-    inactiveWindowShadowSize = config->readNumEntry("InactiveWindowShadowSize", 100);
-    dockShadowSize = config->readNumEntry("DockShadowSize", 80);
+    activeWindowShadowSize = config->readEntry("ActiveWindowShadowSize", 200);
+    inactiveWindowShadowSize = config->readEntry("InactiveWindowShadowSize", 100);
+    dockShadowSize = config->readEntry("DockShadowSize", 80);
     removeShadowsOnMove = config->readEntry("RemoveShadowsOnMove", QVariant(true)).toBool();
     removeShadowsOnResize = config->readEntry("RemoveShadowsOnResize", QVariant(true)).toBool();
     onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool();

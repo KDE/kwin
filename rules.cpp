@@ -86,27 +86,24 @@ Rules::Rules( const QString& str, bool temporary )
 #define READ_MATCH_STRING( var, func ) \
     var = cfg.readEntry( #var ) func; \
     var##match = (StringMatch) QMAX( FirstStringMatch, \
-        QMIN( LastStringMatch, static_cast< StringMatch >( cfg.readNumEntry( #var "match" ))));
+        QMIN( LastStringMatch, static_cast< StringMatch >( cfg.readEntry( #var "match",0 ))));
     
-#define READ_SET_RULE( var, type, func ) \
-    var = func ( cfg.read##type##Entry( #var )); \
-    var##rule = readSetRule( cfg, #var "rule" );
-    
-#define READ_SET_RULE_DEF( var, type, func, def ) \
-    var = func ( cfg.read##type##Entry( #var, def )); \
-    var##rule = readSetRule( cfg, #var "rule" );
-    
-#define READ_SET_RULE_2( var, type, func, funcarg ) \
-    var = func ( cfg.read##type##Entry( #var ), funcarg ); \
+#define READ_SET_RULE( var, func, def ) \
+    var = func ( cfg.readEntry( #var, def)); \
     var##rule = readSetRule( cfg, #var "rule" );
 
-#define READ_FORCE_RULE( var, type, func ) \
-    var = func ( cfg.read##type##Entry( #var )); \
+#define READ_SET_RULE_DEF( var , func, def ) \
+    var = func ( cfg.readEntry( #var, def )); \
+    var##rule = readSetRule( cfg, #var "rule" );
+    
+#define READ_FORCE_RULE( var, func, def) \
+    var = func ( cfg.readEntry( #var, def)); \
     var##rule = readForceRule( cfg, #var "rule" );
 
-#define READ_FORCE_RULE_2( var, type, func, funcarg ) \
-    var = func ( cfg.read##type##Entry( #var ), funcarg ); \
+#define READ_FORCE_RULE2( var, def, func, funcarg ) \
+    var = func ( cfg.readEntry( #var, def),funcarg ); \
     var##rule = readForceRule( cfg, #var "rule" );
+
 
 
 Rules::Rules( KConfig& cfg )
@@ -127,51 +124,50 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_MATCH_STRING( extrarole, .lower().latin1() );
     READ_MATCH_STRING( clientmachine, .lower().latin1() );
     types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
-    READ_FORCE_RULE_2( placement,, Placement::policyFromString, false );
-    READ_SET_RULE_DEF( position, Point,, &invalidPoint );
-    READ_SET_RULE( size, Size, );
+    READ_FORCE_RULE2( placement,QString(), Placement::policyFromString,false );
+    READ_SET_RULE_DEF( position, , invalidPoint );
+    READ_SET_RULE( size,, QSize());
     if( size.isEmpty() && sizerule != ( SetRule )Remember)
         sizerule = UnusedSetRule;
-    READ_FORCE_RULE( minsize, Size, );
+    READ_FORCE_RULE( minsize,, QSize());
     if( !minsize.isValid())
         minsize = QSize( 1, 1 );
-    READ_FORCE_RULE( maxsize, Size, );
+    READ_FORCE_RULE( maxsize, , QSize());
     if( maxsize.isEmpty())
         maxsize = QSize( 32767, 32767 );
-    READ_FORCE_RULE( opacityactive, Num, );
+    READ_FORCE_RULE( opacityactive, , 0);
     if( opacityactive < 0 || opacityactive > 100 )
         opacityactive = 100;
-    READ_FORCE_RULE( opacityinactive, Num, );
+    READ_FORCE_RULE( opacityinactive,, 0);
     if( opacityinactive < 0 || opacityinactive > 100 )
         opacityinactive = 100;
-    READ_FORCE_RULE( ignoreposition, Bool, );
-    READ_SET_RULE( desktop, Num, );
+    READ_FORCE_RULE( ignoreposition,, false);
+    READ_SET_RULE( desktop,,0  );
     type = readType( cfg, "type" );
     typerule = type != NET::Unknown ? readForceRule( cfg, "typerule" ) : UnusedForceRule;
-    READ_SET_RULE( maximizevert, Bool, );
-    READ_SET_RULE( maximizehoriz, Bool, );
-    READ_SET_RULE( minimize, Bool, );
-    READ_SET_RULE( shade, Bool, );
-    READ_SET_RULE( skiptaskbar, Bool, );
-    READ_SET_RULE( skippager, Bool, );
-    READ_SET_RULE( above, Bool, );
-    READ_SET_RULE( below, Bool, );
-    READ_SET_RULE( fullscreen, Bool, );
-    READ_SET_RULE( noborder, Bool, );
-    READ_FORCE_RULE( fsplevel, Num, limit0to4 ); // fsp is 0-4
-    READ_FORCE_RULE( acceptfocus, Bool, );
-    READ_FORCE_RULE( moveresizemode, , Options::stringToMoveResizeMode );
-    READ_FORCE_RULE( closeable, Bool, );
-    READ_FORCE_RULE( strictgeometry, Bool, );
-    READ_SET_RULE( shortcut, , );
-    READ_FORCE_RULE( disableglobalshortcuts, Bool, );
+    READ_SET_RULE( maximizevert,, false);
+    READ_SET_RULE( maximizehoriz,, false);
+    READ_SET_RULE( minimize,, false);
+    READ_SET_RULE( shade,, false);
+    READ_SET_RULE( skiptaskbar,, false);
+    READ_SET_RULE( skippager,, false);
+    READ_SET_RULE( above,, false);
+    READ_SET_RULE( below,, false);
+    READ_SET_RULE( fullscreen,, false);
+    READ_SET_RULE( noborder,,false );
+    READ_FORCE_RULE( fsplevel,limit0to4,0 ); // fsp is 0-4
+    READ_FORCE_RULE( acceptfocus, , false);
+    READ_FORCE_RULE( moveresizemode,Options::stringToMoveResizeMode, QString());
+    READ_FORCE_RULE( closeable, , false);
+    READ_FORCE_RULE( strictgeometry, , false);
+    READ_SET_RULE( shortcut, ,QString() );
+    READ_FORCE_RULE( disableglobalshortcuts, , false);
     }
 
 #undef READ_MATCH_STRING
 #undef READ_SET_RULE
-#undef READ_SET_RULE_2
 #undef READ_FORCE_RULE
-#undef READ_FORCE_RULE_2
+#undef READ_FORCE_RULE2
 
 #define WRITE_MATCH_STRING( var, cast, force ) \
     if( !var.isEmpty() || force ) \
@@ -295,7 +291,7 @@ bool Rules::isEmpty() const
 
 Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
     {
-    int v = cfg.readNumEntry( key );
+    int v = cfg.readEntry( key,0 );
     if( v >= DontAffect && v <= ForceTemporarily )
         return static_cast< SetRule >( v );
     return UnusedSetRule;
@@ -303,7 +299,7 @@ Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
 
 Rules::ForceRule Rules::readForceRule( KConfig& cfg, const QString& key )
     {
-    int v = cfg.readNumEntry( key );
+    int v = cfg.readEntry( key,0 );
     if( v == DontAffect || v == Force || v == ForceTemporarily )
         return static_cast< ForceRule >( v );
     return UnusedForceRule;
@@ -311,7 +307,7 @@ Rules::ForceRule Rules::readForceRule( KConfig& cfg, const QString& key )
 
 NET::WindowType Rules::readType( KConfig& cfg, const QString& key )
     {
-    int v = cfg.readNumEntry( key );
+    int v = cfg.readEntry( key,0 );
     if( v >= NET::Normal && v <= NET::Splash )
         return static_cast< NET::WindowType >( v );
     return NET::Unknown;
@@ -960,7 +956,7 @@ void Workspace::loadWindowRules()
         }
     KConfig cfg( "kwinrulesrc", true );
     cfg.setGroup( "General" );
-    int count = cfg.readNumEntry( "count" );
+    int count = cfg.readEntry( "count",0 );
     for( int i = 1;
          i <= count;
          ++i )
