@@ -2011,6 +2011,7 @@ bool Client::getWindowOpacity() //query translucency settings from X, returns tr
         opacity_ = *reinterpret_cast< long* >( data );
         custom_opacity = true;
 //         setOpacity(opacity_ < 0xFFFFFFFF, opacity_);
+        XFree ((char*)data);
         return TRUE;
         }
     return FALSE;
