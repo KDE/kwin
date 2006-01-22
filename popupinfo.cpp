@@ -29,6 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
 #include <QX11Info>
+#include <QStyleOptionFrame>
 
 // specify externals before namespace
 
@@ -76,8 +77,11 @@ void PopupInfo::reset()
 void PopupInfo::paintEvent( QPaintEvent* )
     {
     QPainter p( this );
-#warning Somebody with QStyle knowledge, please fix.
-//    style()->drawPrimitive( QStyle::PE_Frame, &p, QRect( 0, 0, width(), height() ), colorGroup(), QStyle::Style_Default );
+    QStyleOptionFrame *so = new QStyleOptionFrame;
+    so->rect = QRect( 0, 0, width(), height() );
+    so->palette = palette();
+    so->state = QStyle::State_None;
+    style()->drawPrimitive( QStyle::PE_Frame, so, &p );
     paintContents();
     }
 
