@@ -138,8 +138,8 @@ unsigned long Options::updateSettings()
     d->OpMaxButtonMiddleClick = windowOperation( config->readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true );
     d->OpMaxButtonRightClick = windowOperation( config->readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true );
 
-    ignorePositionClasses = config->readListEntry("IgnorePositionClasses");
-    ignoreFocusStealingClasses = config->readListEntry("IgnoreFocusStealingClasses");
+    ignorePositionClasses = config->readEntry("IgnorePositionClasses",QStringList());
+    ignoreFocusStealingClasses = config->readEntry("IgnoreFocusStealingClasses",QStringList());
     // Qt3.2 and older had resource class all lowercase, but Qt3.3 has it capitalized
     // therefore Client::resourceClass() forces lowercase, force here lowercase as well
     for( QStringList::Iterator it = ignorePositionClasses.begin();
