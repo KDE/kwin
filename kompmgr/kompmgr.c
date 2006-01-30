@@ -2201,7 +2201,7 @@ expose_root (Display *dpy, Window root, XRectangle *rects, int nrects)
 	static int
 ev_serial (XEvent *ev)
 {
-	if (ev->type & 0x7f != KeymapNotify)
+	if ((ev->type & 0x7f) != KeymapNotify)
 		return ev->xany.serial;
 	return NextRequest (ev->xany.display);
 }
@@ -2413,10 +2413,10 @@ loadConfig(char *filename){
 	if( filename == NULL ){
 		const char *home = getenv("HOME");
 		const char *configfile = "/.xcompmgrrc"; 
-        wasNull = True;
-      int n = strlen(home)+strlen(configfile)+1;
+		int n = strlen(home)+strlen(configfile)+1;
 		filename = (char*)malloc(n*sizeof(char));
-      memset(filename,0,n);
+		memset(filename,0,n);
+		wasNull = True;
 
 		strcat(filename, home);
 		strcat(filename, configfile);
@@ -2710,7 +2710,7 @@ main (int argc, char **argv)
 			}
 
 			XNextEvent (dpy, &ev);
-			if (ev.type & 0x7f != KeymapNotify)
+			if ((ev.type & 0x7f) != KeymapNotify)
 				discard_ignore (dpy, ev.xany.serial);
 #if DEBUG_EVENTS
 			printf ("event %10.10s serial 0x%08x window 0x%08x\n",
