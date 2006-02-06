@@ -1,0 +1,8 @@
+Id=kde351
+# the file is intentionally a dummy, as the binary will update kwinrulesrc,
+# file kwinrules_update will just remember it has been done
+File=kwinrules_update
+Group=Dummy
+Options=overwrite
+ScriptArguments=fsp_workarounds_1
+Script=kwin_update_default_rules
