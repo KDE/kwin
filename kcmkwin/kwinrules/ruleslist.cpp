@@ -172,6 +172,11 @@ void KCMRulesList::load()
 void KCMRulesList::save()
     {
     KConfig cfg( "kwinrulesrc" );
+    QStringList groups = cfg.groupList();
+    for( QStringList::ConstIterator it = groups.begin();
+         it != groups.end();
+         ++it )
+        cfg.deleteGroup( *it );
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
     int i = 1;

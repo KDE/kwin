@@ -971,6 +971,11 @@ void Workspace::writeWindowRules()
     {
     rulesUpdatedTimer.stop();
     KConfig cfg( "kwinrulesrc" );
+    QStringList groups = cfg.groupList();
+    for( QStringList::ConstIterator it = groups.begin();
+         it != groups.end();
+         ++it )
+        cfg.deleteGroup( *it );
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", rules.count());
     int i = 1;
