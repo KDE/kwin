@@ -22,11 +22,11 @@ void copy(const QString &src, const QString &dest)
     QFile copyInput(src);
     QFile copyOutput(dest);
     if(!copyInput.open(QIODevice::ReadOnly)){
-        kdWarning() << "Couldn't open " << src << endl;
+        kWarning() << "Couldn't open " << src << endl;
         return;
     }
     if(!copyOutput.open(QIODevice::WriteOnly)){
-        kdWarning() << "Couldn't open " << dest << endl;
+        kWarning() << "Couldn't open " << dest << endl;
         copyInput.close();
         return;
     }
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     KApplication app(argc, argv);
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if(!args->count()){
-        kdWarning() << "You need to specify the path to a theme config file!" << endl;
+        kWarning() << "You need to specify the path to a theme config file!" << endl;
         return(1);
     }
 
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     QString tmpStr;
 
     if(!f.exists()){
-        kdWarning() << "Specified theme config file doesn't exist!" << endl;
+        kWarning() << "Specified theme config file doesn't exist!" << endl;
         return(2);
     }
 

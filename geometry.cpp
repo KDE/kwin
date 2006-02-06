@@ -63,7 +63,7 @@ void Workspace::updateClientArea( bool force )
     {
     QDesktopWidget *desktopwidget = KApplication::desktop();
     int nscreens = desktopwidget -> numScreens ();
-//    kdDebug () << "screens: " << nscreens << endl;
+//    kDebug () << "screens: " << nscreens << endl;
     QRect* new_wareas = new QRect[ numberOfDesktops() + 1 ];
     QRect** new_sareas = new QRect*[ numberOfDesktops() + 1];
     QRect* screens = new QRect [ nscreens ];
@@ -111,7 +111,7 @@ void Workspace::updateClientArea( bool force )
                             iS < nscreens;
                             iS ++ )
                         {
-//                            kdDebug () << "adjusting new_sarea: " << screens[ iS ] << endl;
+//                            kDebug () << "adjusting new_sarea: " << screens[ iS ] << endl;
                             new_sareas[ (*it)->desktop() ][ iS ] =
                                 new_sareas[ (*it)->desktop() ][ iS ].intersect(
                                         (*it)->adjustedClientArea( desktopArea, screens[ iS ] )
@@ -127,7 +127,7 @@ void Workspace::updateClientArea( bool force )
             for( int iS = 0;
                     iS < nscreens;
                     iS ++ )
-                kdDebug () << "new_sarea: " << new_sareas[ i ][ iS ] << endl;
+                kDebug () << "new_sarea: " << new_sareas[ i ][ iS ] << endl;
         }
 #endif
     // TODO topmenu update for screenarea changes?
@@ -740,38 +740,38 @@ QRect Client::adjustedClientArea( const QRect &desktopArea, const QRect& area ) 
         if (stareaT.top() == geometry().top() && stareaT.bottom() == geometry().bottom()) {
             stareaT.setLeft(geometry().left());
             stareaT.setRight(geometry().right());
-//            kdDebug () << "Trimming top-strut to geometry() to: " << stareaT << endl;
+//            kDebug () << "Trimming top-strut to geometry() to: " << stareaT << endl;
         }
         if (stareaB.top() == geometry().top() && stareaB.bottom() == geometry().bottom()) {
             stareaB.setLeft(geometry().left());
             stareaB.setRight(geometry().right());
-//            kdDebug () << "Trimming bottom-strut to geometry(): " << stareaB << endl;
+//            kDebug () << "Trimming bottom-strut to geometry(): " << stareaB << endl;
         }
         if (stareaL.left() == geometry().left() && stareaL.right() == geometry().right()) {
             stareaL.setTop(geometry().top());
             stareaL.setBottom(geometry().bottom());
-//            kdDebug () << "Trimming left-strut to geometry(): " << stareaL << endl;
+//            kDebug () << "Trimming left-strut to geometry(): " << stareaL << endl;
         }
         if (stareaR.left() == geometry().left() && stareaR.right() == geometry().right()) {
             stareaR.setTop(geometry().top());
             stareaR.setBottom(geometry().bottom());
-//            kdDebug () << "Trimming right-strut to geometry(): " << stareaR << endl;
+//            kDebug () << "Trimming right-strut to geometry(): " << stareaR << endl;
         }
     }
     if (stareaL . intersects (area)) {
-//        kdDebug () << "Moving left of: " << r << " to " << stareaL.right() + 1 << endl;
+//        kDebug () << "Moving left of: " << r << " to " << stareaL.right() + 1 << endl;
         r . setLeft( stareaL . right() + 1 );
     }
     if (stareaR . intersects (area)) {
-//        kdDebug () << "Moving right of: " << r << " to " << stareaR.left() - 1 << endl;
+//        kDebug () << "Moving right of: " << r << " to " << stareaR.left() - 1 << endl;
         r . setRight( stareaR . left() - 1 );
     }
     if (stareaT . intersects (area)) {
-//        kdDebug () << "Moving top of: " << r << " to " << stareaT.bottom() + 1 << endl;
+//        kDebug () << "Moving top of: " << r << " to " << stareaT.bottom() + 1 << endl;
         r . setTop( stareaT . bottom() + 1 );
     }
     if (stareaB . intersects (area)) {
-//        kdDebug () << "Moving bottom of: " << r << " to " << stareaB.top() - 1 << endl;
+//        kDebug () << "Moving bottom of: " << r << " to " << stareaB.top() - 1 << endl;
         r . setBottom( stareaB . top() - 1 );
     }
     return r;
@@ -891,7 +891,7 @@ void Client::checkWorkspacePosition()
             else
                 area = workspace()->clientArea( MaximizeFullArea, QPoint( 0, 0 ), desktop());
             area.setHeight( workspace()->topMenuHeight());
-//            kdDebug() << "TOPMENU size adjust: " << area << ":" << this << endl;
+//            kDebug() << "TOPMENU size adjust: " << area << ":" << this << endl;
             setGeometry( area );
             }
         return;
@@ -1028,8 +1028,8 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
     int h = wsize.height();
     if( w < 1 || h < 1 )
         {
-        kdWarning() << "sizeForClientSize() with empty size!" << endl;
-        kdWarning() << kdBacktrace() << endl;
+        kWarning() << "sizeForClientSize() with empty size!" << endl;
+        kWarning() << kBacktrace() << endl;
         }
     if (w<1) w = 1;
     if (h<1) h = 1;
@@ -1456,8 +1456,8 @@ void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
         {
         if( h == border_top + border_bottom )
             {
-            kdWarning() << "Shaded geometry passed for size:" << endl;
-            kdWarning() << kdBacktrace() << endl;
+            kWarning() << "Shaded geometry passed for size:" << endl;
+            kWarning() << kBacktrace() << endl;
             }
         }
     int newx = x();
@@ -1631,8 +1631,8 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         {
         if( h == border_top + border_bottom )
             {
-            kdDebug() << "Shaded geometry passed for size:" << endl;
-            kdDebug() << kdBacktrace() << endl;
+            kDebug() << "Shaded geometry passed for size:" << endl;
+            kDebug() << kBacktrace() << endl;
             }
         else
             {
@@ -1681,8 +1681,8 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         {
         if( h == border_top + border_bottom )
             {
-            kdDebug() << "Shaded geometry passed for size:" << endl;
-            kdDebug() << kdBacktrace() << endl;
+            kDebug() << "Shaded geometry passed for size:" << endl;
+            kDebug() << kBacktrace() << endl;
             }
         else
             {
@@ -1696,8 +1696,8 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         }
     if( QSize( w, h ) != rules()->checkSize( QSize( w, h )))
         {
-        kdDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
-        kdDebug() << kdBacktrace() << endl;
+        kDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
+        kDebug() << kBacktrace() << endl;
         }
     if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
         return;
@@ -1985,8 +1985,8 @@ void Client::checkMaximizeGeometry()
     static int recursion_protection = 0;
     if( recursion_protection > 3 )
         {
-        kdWarning( 1212 ) << "Check maximize overflow - you loose!" << endl;
-        kdWarning( 1212 ) << kdBacktrace() << endl;
+        kWarning( 1212 ) << "Check maximize overflow - you loose!" << endl;
+        kWarning( 1212 ) << kBacktrace() << endl;
         return;
         }
     ++recursion_protection;

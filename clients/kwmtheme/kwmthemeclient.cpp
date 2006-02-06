@@ -92,7 +92,7 @@ static void create_pixmaps()
         framePixmaps[i] = new QPixmap(locate("data",
                                       "kwin/pics/"+config->readEntry(keys[i], " ")));
         if(framePixmaps[i]->isNull())
-            kdWarning() << "Unable to load frame pixmap for " << keys[i] << endl;
+            kWarning() << "Unable to load frame pixmap for " << keys[i] << endl;
     }
 /*
     *framePixmaps[FrameTop] = stretchPixmap(*framePixmaps[FrameTop], false);
@@ -335,7 +335,7 @@ void KWMThemeClient::init()
             if((val != "Off") && 
                ((val == "Iconify") && !isMinimizable()) &&
                ((val == "Maximize") && !isMaximizable()))
-                kdWarning() << "KWin: Unrecognized button value: " << val << endl;
+                kWarning() << "KWin: Unrecognized button value: " << val << endl;
 
         }
     }

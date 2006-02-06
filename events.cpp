@@ -223,7 +223,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             was_user_interaction = true;
             KKeyNative keyX( (XEvent*)e );
             uint keyQt = keyX.keyCodeQt();
-            kdDebug(125) << "Workspace::keyPress( " << keyX.key().toString() << " )" << endl;
+            kDebug(125) << "Workspace::keyPress( " << keyX.key().toString() << " )" << endl;
             if (movingClient)
                 {
                 movingClient->keyPressEvent(keyQt);
@@ -442,7 +442,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 XGetInputFocus( QX11Info::display(), &focus, &revert );
                 if( focus == None || focus == PointerRoot )
                     {
-                    //kdWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
+                    //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
                     Client *c = mostRecentlyActivatedClient();
                     if( c != NULL )
                         requestFocus( c, true );
@@ -1267,7 +1267,7 @@ void Client::processMousePressEvent( QMouseEvent* e )
     {
     if( e->type() != QEvent::MouseButtonPress )
         {
-        kdWarning() << "processMousePressEvent()" << endl;
+        kWarning() << "processMousePressEvent()" << endl;
         return;
         }
     int button;

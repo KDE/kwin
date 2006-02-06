@@ -924,7 +924,7 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
         if( (*it)->match( c ))
             {
             Rules* rule = *it;
-            kdDebug( 1212 ) << "Rule found:" << rule << ":" << c << endl;
+            kDebug( 1212 ) << "Rule found:" << rule << ":" << c << endl;
             if( rule->isTemporary())
                 it = rules.remove( it );
             else

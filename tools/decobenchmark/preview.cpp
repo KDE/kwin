@@ -62,7 +62,7 @@ KDecorationPreview::~KDecorationPreview()
 
 void KDecorationPreview::performRepaintTest(int n)
 {
-    kdDebug() << "start " << n << " repaints..." << endl;
+    kDebug() << "start " << n << " repaints..." << endl;
     bridge->setCaption("Deco Benchmark");
     deco->captionChange();
     positionPreviews(0);
@@ -74,7 +74,7 @@ void KDecorationPreview::performRepaintTest(int n)
 
 void KDecorationPreview::performCaptionTest(int n)
 {
-    kdDebug() << "start " << n << " caption changes..." << endl;
+    kDebug() << "start " << n << " caption changes..." << endl;
     QString caption = "Deco Benchmark %1";
     positionPreviews(0);
     for (int i = 0; i < n; ++i) {
@@ -87,7 +87,7 @@ void KDecorationPreview::performCaptionTest(int n)
 
 void KDecorationPreview::performResizeTest(int n)
 {
-    kdDebug() << "start " << n << " resizes..." << endl;
+    kDebug() << "start " << n << " resizes..." << endl;
     bridge->setCaption("Deco Benchmark");
     deco->captionChange();
     for (int i = 0; i < n; ++i) {
@@ -98,7 +98,7 @@ void KDecorationPreview::performResizeTest(int n)
 
 void KDecorationPreview::performRecreationTest(int n)
 {
-    kdDebug() << "start " << n << " resizes..." << endl;
+    kDebug() << "start " << n << " resizes..." << endl;
     bridge->setCaption("Deco Benchmark");
     deco->captionChange();
     positionPreviews(0);

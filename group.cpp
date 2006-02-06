@@ -91,14 +91,14 @@ QPixmap Group::miniIcon() const
 void Group::addMember( Client* member_P )
     {
     _members.append( member_P );
-//    kdDebug() << "GROUPADD:" << this << ":" << member_P << endl;
-//    kdDebug() << kdBacktrace() << endl;
+//    kDebug() << "GROUPADD:" << this << ":" << member_P << endl;
+//    kDebug() << kBacktrace() << endl;
     }
 
 void Group::removeMember( Client* member_P )
     {
-//    kdDebug() << "GROUPREMOVE:" << this << ":" << member_P << endl;
-//    kdDebug() << kdBacktrace() << endl;
+//    kDebug() << "GROUPREMOVE:" << this << ":" << member_P << endl;
+//    kDebug() << kBacktrace() << endl;
     Q_ASSERT( _members.contains( member_P ));
     _members.remove( member_P );
     if( _members.isEmpty())
@@ -445,28 +445,28 @@ void Client::removeFromMainClients()
 // related lists.
 void Client::cleanGrouping()
     {
-//    kdDebug() << "CLEANGROUPING:" << this << endl;
+//    kDebug() << "CLEANGROUPING:" << this << endl;
 //    for( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kdDebug() << "CL:" << *it << endl;
+//        kDebug() << "CL:" << *it << endl;
 //    ClientList mains;
 //    mains = mainClients();
 //    for( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kdDebug() << "MN:" << *it << endl;
+//        kDebug() << "MN:" << *it << endl;
     removeFromMainClients();
-//    kdDebug() << "CLEANGROUPING2:" << this << endl;
+//    kDebug() << "CLEANGROUPING2:" << this << endl;
 //    for( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kdDebug() << "CL2:" << *it << endl;
+//        kDebug() << "CL2:" << *it << endl;
 //    mains = mainClients();
 //    for( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kdDebug() << "MN2:" << *it << endl;
+//        kDebug() << "MN2:" << *it << endl;
     for( ClientList::ConstIterator it = transients_list.begin();
          it != transients_list.end();
          )
@@ -479,16 +479,16 @@ void Client::cleanGrouping()
         else
             ++it;
         }
-//    kdDebug() << "CLEANGROUPING3:" << this << endl;
+//    kDebug() << "CLEANGROUPING3:" << this << endl;
 //    for( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kdDebug() << "CL3:" << *it << endl;
+//        kDebug() << "CL3:" << *it << endl;
 //    mains = mainClients();
 //    for( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kdDebug() << "MN3:" << *it << endl;
+//        kDebug() << "MN3:" << *it << endl;
     // HACK
     // removeFromMainClients() did remove 'this' from transient
     // lists of all group members, but then made windows that
@@ -501,11 +501,11 @@ void Client::cleanGrouping()
          it != group_members.end();
          ++it )
         (*it)->removeTransient( this );
-//    kdDebug() << "CLEANGROUPING4:" << this << endl;
+//    kDebug() << "CLEANGROUPING4:" << this << endl;
 //    for( ClientList::ConstIterator it = group_members.begin();
 //         it != group_members.end();
 //         ++it )
-//        kdDebug() << "CL4:" << *it << endl;
+//        kDebug() << "CL4:" << *it << endl;
     }
 
 // Make sure that no group transient is considered transient
@@ -582,7 +582,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
             return None;
     if( new_transient_for == window()) // pointing to self
         { // also fix the property itself
-        kdWarning( 1216 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." << endl;
+        kWarning( 1216 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." << endl;
         new_property_value = new_transient_for = workspace()->rootWin();
         }
 //  The transient_for window may be embedded in another application,
@@ -607,7 +607,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         {
         if( new_transient_for != before_search )
             {
-            kdDebug( 1212 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
+            kDebug( 1212 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
                 << before_search << ", child of " << new_transient_for_client << ", adjusting." << endl;
             new_property_value = new_transient_for; // also fix the property
             }
@@ -627,7 +627,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         loop_pos = pos->transient_for_id;
         if( --count == 0 )
             {
-            kdWarning( 1216 ) << "Client " << this << " caused WM_TRANSIENT_FOR loop." << endl;
+            kWarning( 1216 ) << "Client " << this << " caused WM_TRANSIENT_FOR loop." << endl;
             new_transient_for = workspace()->rootWin();
             }
         }
@@ -649,18 +649,18 @@ void Client::addTransient( Client* cl )
     transients_list.append( cl );
     if( workspace()->mostRecentlyActivatedClient() == this && cl->isModal())        
         check_active_modal = true;
-//    kdDebug() << "ADDTRANS:" << this << ":" << cl << endl;
-//    kdDebug() << kdBacktrace() << endl;
+//    kDebug() << "ADDTRANS:" << this << ":" << cl << endl;
+//    kDebug() << kBacktrace() << endl;
 //    for( ClientList::ConstIterator it = transients_list.begin();
 //         it != transients_list.end();
 //         ++it )
-//        kdDebug() << "AT:" << (*it) << endl;
+//        kDebug() << "AT:" << (*it) << endl;
     }
 
 void Client::removeTransient( Client* cl )
     {
-//    kdDebug() << "REMOVETRANS:" << this << ":" << cl << endl;
-//    kdDebug() << kdBacktrace() << endl;
+//    kDebug() << "REMOVETRANS:" << this << ":" << cl << endl;
+//    kDebug() << kBacktrace() << endl;
     transients_list.remove( cl );
     // cl is transient for this, but this is going away
     // make cl group transient

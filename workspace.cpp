@@ -662,7 +662,7 @@ void Workspace::updateCurrentTopMenu()
             }
         }
 
-//    kdDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client << endl;
+//    kDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client << endl;
     if ( menubar )
         {
         if( active_client && !menubar->isOnDesktop( active_client->desktop()))
@@ -813,7 +813,7 @@ void Workspace::reconfigure()
 
 void Workspace::slotSettingsChanged(int category)
     {
-    kdDebug(1212) << "Workspace::slotSettingsChanged()" << endl;
+    kDebug(1212) << "Workspace::slotSettingsChanged()" << endl;
     if( category == (int) KApplication::SETTINGS_SHORTCUTS )
         readShortcuts();
     }
@@ -825,7 +825,7 @@ KWIN_PROCEDURE( CheckBorderSizesProcedure, cl->checkBorderSizes() );
 
 void Workspace::slotReconfigure()
     {
-    kdDebug(1212) << "Workspace::slotReconfigure()" << endl;
+    kDebug(1212) << "Workspace::slotReconfigure()" << endl;
     reconfigureTimer.stop();
 
     KGlobal::config()->reparseConfiguration();
@@ -1204,7 +1204,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     // Update focus chain:
     //  If input: chain = { 1, 2, 3, 4 } and current_desktop = 3,
     //   Output: chain = { 3, 1, 2, 4 }.
-//    kdDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
+//    kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
 //      .arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
     for( int i = desktop_focus_chain.indexOf( current_desktop ); i > 0; i-- )
         desktop_focus_chain[i] = desktop_focus_chain[i-1];
@@ -1213,7 +1213,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 //    QString s = "desktop_focus_chain[] = { ";
 //    for( uint i = 0; i < desktop_focus_chain.size(); i++ )
 //        s += QString::number(desktop_focus_chain[i]) + ", ";
-//    kdDebug(1212) << s << "}\n";
+//    kDebug(1212) << s << "}\n";
 
     if( old_desktop != 0 )  // not for the very first time
         popupinfo->showInfo( desktopName(currentDesktop()) );
@@ -2203,13 +2203,13 @@ void Workspace::addTopMenu( Client* c )
         updateTopMenuGeometry( c );
         updateCurrentTopMenu();
         }
-//        kdDebug() << "NEW TOPMENU:" << c << endl;
+//        kDebug() << "NEW TOPMENU:" << c << endl;
     }
 
 void Workspace::removeTopMenu( Client* c )
     {
 //    if( c->isTopMenu())
-//        kdDebug() << "REMOVE TOPMENU:" << c << endl;
+//        kDebug() << "REMOVE TOPMENU:" << c << endl;
     assert( c->isTopMenu());
     assert( topmenus.contains( c ));
     topmenus.remove( c );
@@ -2219,7 +2219,7 @@ void Workspace::removeTopMenu( Client* c )
 
 void Workspace::lostTopMenuSelection()
     {
-//    kdDebug() << "lost TopMenu selection" << endl;
+//    kDebug() << "lost TopMenu selection" << endl;
     // make sure this signal is always set when not owning the selection
     disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
@@ -2241,13 +2241,13 @@ void Workspace::lostTopMenuOwner()
     {
     if( !options->topMenuEnabled())
         return;
-//    kdDebug() << "TopMenu selection lost owner" << endl;
+//    kDebug() << "TopMenu selection lost owner" << endl;
     if( !topmenu_selection->claim( false ))
         {
-//        kdDebug() << "Failed to claim TopMenu selection" << endl;
+//        kDebug() << "Failed to claim TopMenu selection" << endl;
         return;
         }
-//    kdDebug() << "claimed TopMenu selection" << endl;
+//    kDebug() << "claimed TopMenu selection" << endl;
     setupTopMenuHandling();
     }
 

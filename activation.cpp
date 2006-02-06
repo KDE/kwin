@@ -354,7 +354,7 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
         }
     if( !c->isShown( true )) // shouldn't happen, call activateClient() if needed
         {
-        kdWarning( 1212 ) << "takeActivity: not shown" << endl;
+        kWarning( 1212 ) << "takeActivity: not shown" << endl;
         return;
         }
     c->takeActivity( flags, handled, Allowed );
@@ -497,20 +497,20 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         return true;
     if( ac == NULL || ac->isDesktop())
         {
-        kdDebug( 1212 ) << "Activation: No client active, allowing" << endl;
+        kDebug( 1212 ) << "Activation: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
     // TODO window urgency  -> return true?
     if( Client::belongToSameApplication( c, ac, true ))
         {
-        kdDebug( 1212 ) << "Activation: Belongs to active application" << endl;
+        kDebug( 1212 ) << "Activation: Belongs to active application" << endl;
         return true;
         }
     if( level == 3 ) // high
         return false;
     if( time == -1U )  // no time known
         {
-        kdDebug( 1212 ) << "Activation: No timestamp at all" << endl;
+        kDebug( 1212 ) << "Activation: No timestamp at all" << endl;
         if( level == 1 ) // low
             return true;
         // no timestamp at all, don't activate - because there's also creation timestamp
@@ -520,7 +520,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         }
     // level == 2 // normal
     Time user_time = ac->userTime();
-    kdDebug( 1212 ) << "Activation, compared:" << c << ":" << time << ":" << user_time
+    kDebug( 1212 ) << "Activation, compared:" << c << ":" << time << ":" << user_time
         << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
     return timestampCompare( time, user_time ) >= 0; // time >= user_time
     }
@@ -543,7 +543,7 @@ bool Workspace::allowFullClientRaising( const Client* c, Time time )
         return false;
     if( ac == NULL || ac->isDesktop())
         {
-        kdDebug( 1212 ) << "Raising: No client active, allowing" << endl;
+        kDebug( 1212 ) << "Raising: No client active, allowing" << endl;
         return true; // no active client -> always allow
         }
     if( c->ignoreFocusStealing())
@@ -551,13 +551,13 @@ bool Workspace::allowFullClientRaising( const Client* c, Time time )
     // TODO window urgency  -> return true?
     if( Client::belongToSameApplication( c, ac, true ))
         {
-        kdDebug( 1212 ) << "Raising: Belongs to active application" << endl;
+        kDebug( 1212 ) << "Raising: Belongs to active application" << endl;
         return true;
         }
     if( level == 3 ) // high
         return false;
     Time user_time = ac->userTime();
-    kdDebug( 1212 ) << "Raising, compared:" << time << ":" << user_time
+    kDebug( 1212 ) << "Raising, compared:" << time << ":" << user_time
         << ":" << ( timestampCompare( time, user_time ) >= 0 ) << endl;
     return timestampCompare( time, user_time ) >= 0; // time >= user_time
     }
@@ -710,7 +710,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
     bool session ) const
     {
     Time time = info->userTime();
-    kdDebug( 1212 ) << "User timestamp, initial:" << time << endl;
+    kDebug( 1212 ) << "User timestamp, initial:" << time << endl;
     // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0
     // helps e.g. with konqy reusing
     if( asn_data != NULL && time != 0 )
@@ -727,7 +727,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
             time = asn_data->timestamp();
             }
         }
-    kdDebug( 1212 ) << "User timestamp, ASN:" << time << endl;
+    kDebug( 1212 ) << "User timestamp, ASN:" << time << endl;
     if( time == -1U )
         { // The window doesn't have any timestamp.
       // If it's the first window for its application
@@ -759,7 +759,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
             // don't refuse if focus stealing prevention is turned off
             if( !first_window && rules()->checkFSP( options->focusStealingPreventionLevel ) > 0 )
                 {
-                kdDebug( 1212 ) << "User timestamp, already exists:" << 0 << endl;
+                kDebug( 1212 ) << "User timestamp, already exists:" << 0 << endl;
                 return 0; // refuse activation
                 }
             }
@@ -779,7 +779,7 @@ Time Client::readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStar
         else
             time = readUserCreationTime();
         }
-    kdDebug( 1212 ) << "User timestamp, final:" << this << ":" << time << endl;
+    kDebug( 1212 ) << "User timestamp, final:" << this << ":" << time << endl;
     return time;
     }
 

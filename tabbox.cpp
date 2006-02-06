@@ -626,7 +626,7 @@ bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
     {
     char keymap[32];
 
-    kdDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
+    kDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
 
     XQueryKeymap( QX11Info::display(), keymap );
 
@@ -637,7 +637,7 @@ bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
         int i = keyCodeX / 8;
         char mask = 1 << (keyCodeX - (i * 8));
 
-        kdDebug(125) << iKeySym << ": keySymX=0x" << QString::number( keySymX, 16 )
+        kDebug(125) << iKeySym << ": keySymX=0x" << QString::number( keySymX, 16 )
                 << " i=" << i << " mask=0x" << QString::number( mask, 16 )
                 << " keymap[i]=0x" << QString::number( keymap[i], 16 ) << endl;
 
@@ -1015,7 +1015,7 @@ void Workspace::tabBoxKeyPress( const KKeyNative& keyX )
         backward = cutWalkThroughWindowsReverse.contains( keyX );
         if (forward || backward)
             {
-            kdDebug(125) << "== " << cutWalkThroughWindows.toStringInternal()
+            kDebug(125) << "== " << cutWalkThroughWindows.toStringInternal()
                 << " or " << cutWalkThroughWindowsReverse.toStringInternal() << endl;
             KDEWalkThroughWindows( forward );
             }

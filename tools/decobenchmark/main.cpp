@@ -56,14 +56,14 @@ DecoBenchApplication::DecoBenchApplication(const QString &library, Tests tests, 
 	preview = new KDecorationPreview( plugins, 0 );
 
 	if (plugins->loadPlugin(library) )
-		kdDebug() << "Decoration library " << library << " loaded..." << endl;
+		kDebug() << "Decoration library " << library << " loaded..." << endl;
 	else
-		kdError() << "Error loading decoration library " << library << "!" << endl;
+		kError() << "Error loading decoration library " << library << "!" << endl;
 
 	if (preview->recreateDecoration() )
-		kdDebug() << "Decoration created..." << endl;
+		kDebug() << "Decoration created..." << endl;
 	else
-		kdError() << "Error creating decoration!" << endl;
+		kError() << "Error creating decoration!" << endl;
 
 	preview->show();
 }
@@ -93,7 +93,7 @@ void DecoBenchApplication::executeTest()
 	ftime(&aend);
 
 	long long time_diff = (aend.time - astart.time)*1000+aend.millitm - astart.millitm;
-	kdDebug() << "Total:" << (float(time_diff)/1000) << endl;
+	kDebug() << "Total:" << (float(time_diff)/1000) << endl;
 	quit();
 }
 

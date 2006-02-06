@@ -128,7 +128,7 @@ changes may have extensive consequences.
 
 Various notes:
 
-- kdDebug has overloaded operator << for the Client class, so you can e.g. use 'kdDebug() << this << endl;'
+- kDebug has overloaded operator << for the Client class, so you can e.g. use 'kDebug() << this << endl;'
 in class Client and it will print information about the window.
 
 - KWin itself cannot create any normal windows, because it would have trouble managing its own windows.

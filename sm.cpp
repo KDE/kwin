@@ -273,7 +273,7 @@ bool Workspace::windowRoleMatch( const QByteArray& role1, const QByteArray& role
         ret = role1 == role2;
     else
         ret = qstrncmp( role1, role2, pos1 ) == 0;
-    kdDebug() << "WR:" << role1 << ":" << pos1 << ":" << role2 << ":" << pos2 << ":::" << ret << endl;
+    kDebug() << "WR:" << role1 << ":" << pos1 << ":" << role2 << ":" << pos2 << ":::" << ret << endl;
     return ret;
     }
 #endif
@@ -291,7 +291,7 @@ const char* Workspace::windowTypeToTxt( NET::WindowType type )
         return window_type_names[ type + 1 ]; // +1 (unknown==-1)
     if( type == -2 ) // undefined (not really part of NET::WindowType)
         return "Undefined";
-    kdFatal() << "Unknown Window Type" << endl;
+    kFatal() << "Unknown Window Type" << endl;
     return NULL;
     }
 
