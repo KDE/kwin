@@ -820,7 +820,6 @@ void B2Client::desktopChange()
     bool on = isOnAllDesktops();
     if (B2Button *b = button[BtnSticky]) {
         b->setDown(on);
-	QToolTip::remove(b);
 	b->setToolTip( 
 		on ? i18n("Not on all desktops") : i18n("On all desktops"));
     }
@@ -832,7 +831,6 @@ void B2Client::maximizeChange()
     if (button[BtnMax]) {
         button[BtnMax]->setPixmaps(m ? P_NORMALIZE : P_MAX);
         button[BtnMax]->repaint();
-	QToolTip::remove(button[BtnMax]);
 	button[BtnMax]->setToolTip(
 		m ? i18n("Restore") : i18n("Maximize"));
     }
@@ -866,7 +864,6 @@ void B2Client::shadeChange()
     g->activate();
     doShape();
     if (B2Button *b = button[BtnShade]) {
-	QToolTip::remove(b);
 	b->setToolTip( isSetShade() ? i18n("Unshade") : i18n("Shade"));
     }
 }

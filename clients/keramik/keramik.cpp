@@ -1411,7 +1411,6 @@ void KeramikClient::maximizeChange()
 	}
 
 	if ( button[ MaxButton ] ) {
-		QToolTip::remove( button[ MaxButton ] );
 		button[ MaxButton ]->setToolTip( maximizeMode() == MaximizeFull ? i18n("Restore") : i18n("Maximize") );
 		button[ MaxButton ]->repaint();
 	}
@@ -1423,7 +1422,6 @@ void KeramikClient::desktopChange()
 	if ( button[ OnAllDesktopsButton ] )
 		{
                 button[ OnAllDesktopsButton ]->repaint( true );
-		QToolTip::remove( button[ OnAllDesktopsButton ] );
 		button[ OnAllDesktopsButton ]->setToolTip( isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops") );
 		}
 }
@@ -1434,7 +1432,6 @@ void KeramikClient::shadeChange()
 	if ( button[ ShadeButton ] )
 		{
                 button[ ShadeButton ]->repaint( true );
-		QToolTip::remove( button[ ShadeButton ] );
 		button[ ShadeButton ]->setToolTip( isSetShade() ? i18n("Unshade") : i18n("Shade") );
 		}
 }

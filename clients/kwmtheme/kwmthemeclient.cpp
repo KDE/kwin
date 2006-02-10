@@ -761,7 +761,6 @@ void KWMThemeClient::desktopChange()
     if (stickyBtn) {
        bool on = isOnAllDesktops();
        stickyBtn->setPixmap(on ? *pindownPix : *pinupPix);
-       QToolTip::remove( stickyBtn );
        stickyBtn->setToolTip( on ? i18n("Unsticky") : i18n("Sticky") );
     }
 }
@@ -771,7 +770,6 @@ void KWMThemeClient::maximizeChange()
     if (maxBtn) {
        bool m = maximizeMode() == MaximizeFull;
        maxBtn->setPixmap(m ? *minmaxPix : *maxPix);
-       QToolTip::remove( maxBtn );
        maxBtn->setToolTip( m ? i18n("Restore") : i18n("Maximize"));
     }
 }
