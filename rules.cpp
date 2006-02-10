@@ -73,7 +73,7 @@ Rules::Rules( const QString& str, bool temporary )
     if( f != NULL )
         {
         QByteArray s = str.toUtf8();
-        f->writeBlock( s.data(), s.length());
+        f->write( s.data(), s.length());
         }
     file.close();
     KSimpleConfig cfg( file.name());
