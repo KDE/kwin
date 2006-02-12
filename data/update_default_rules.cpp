@@ -24,7 +24,7 @@ int main( int argc, char* argv[] )
     QString file = locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
     if( file.isEmpty())
         {
-        kdWarning() << "File " << argv[ 1 ] << " not found!" << endl;
+        kWarning() << "File " << argv[ 1 ] << " not found!" << endl;
         return 1;
         }
     KConfig src_cfg( file );
