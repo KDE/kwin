@@ -12,7 +12,7 @@
             <height>170</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>Config Dialog</string>
     </property>
     <vbox>
