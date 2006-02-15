@@ -27,10 +27,10 @@
                 <cstring>showAppIcons</cstring>
             </property>
             <property name="text">
-                <string>Display the window &amp;icon in the windowTitle bubble</string>
+                <string>Display the window &amp;icon in the caption bubble</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>Check this option if you want the window icon to be displayed in the windowTitle bubble next to the titlebar text.</string>
+                <string>Check this option if you want the window icon to be displayed in the caption bubble next to the titlebar text.</string>
             </property>
         </widget>
         <widget class="QCheckBox">
@@ -38,10 +38,10 @@
                 <cstring>smallCaptions</cstring>
             </property>
             <property name="text">
-                <string>Draw &amp;small windowTitle bubbles on active windows</string>
+                <string>Draw &amp;small caption bubbles on active windows</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>Check this option if you want the windowTitle bubble to have the same size on active windows that it has on inactive ones. This option is useful for laptops or low resolution displays where you want maximize the amount of space available to the window contents.</string>
+                <string>Check this option if you want the caption bubble to have the same size on active windows that it has on inactive ones. This option is useful for laptops or low resolution displays where you want maximize the amount of space available to the window contents.</string>
             </property>
         </widget>
         <widget class="QCheckBox">
