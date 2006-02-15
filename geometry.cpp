@@ -1208,6 +1208,8 @@ void Client::getWmNormalHints()
         xSizeHint.flags = 0;
     // set defined values for the fields, even if they're not in flags
 
+    if( ! ( xSizeHint.flags & PMinSize ))
+        xSizeHint.min_width = xSizeHint.min_height = 0;
     if( xSizeHint.flags & PBaseSize )
         {
         // PBaseSize is a fallback for PMinSize according to ICCCM 4.1.2.3
@@ -1221,8 +1223,6 @@ void Client::getWmNormalHints()
         }
     else
         xSizeHint.base_width = xSizeHint.base_height = 0;
-    if( ! ( xSizeHint.flags & PMinSize ))
-        xSizeHint.min_width = xSizeHint.min_height = 0;
     if( ! ( xSizeHint.flags & PMaxSize ))
         xSizeHint.max_width = xSizeHint.max_height = INT_MAX;
     else
