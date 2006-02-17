@@ -85,8 +85,8 @@ Rules::Rules( const QString& str, bool temporary )
 
 #define READ_MATCH_STRING( var, func ) \
     var = cfg.readEntry( #var ) func; \
-    var##match = (StringMatch) QMAX( FirstStringMatch, \
-        QMIN( LastStringMatch, static_cast< StringMatch >( cfg.readEntry( #var "match",0 ))));
+    var##match = (StringMatch) qMax( FirstStringMatch, \
+        qMin( LastStringMatch, static_cast< StringMatch >( cfg.readEntry( #var "match",0 ))));
     
 #define READ_SET_RULE( var, func, def ) \
     var = func ( cfg.readEntry( #var, def)); \
@@ -112,7 +112,7 @@ Rules::Rules( KConfig& cfg )
     readFromCfg( cfg );
     }
 
-static int limit0to4( int i ) { return QMAX( 0, QMIN( 4, i )); }
+static int limit0to4( int i ) { return qMax( 0, qMin( 4, i )); }
 
 void Rules::readFromCfg( KConfig& cfg )
     {

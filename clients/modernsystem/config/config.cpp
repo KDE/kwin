@@ -109,7 +109,7 @@ void ModernSysConfig::load(KConfig* /*conf*/)
 	handleSizeSlider->setEnabled(i);
 	handleWidth = clientrc->readEntry("HandleWidth", 6);
 	handleSize = clientrc->readEntry("HandleSize", 30);
-	handleSizeSlider->setValue(QMIN((handleWidth - 6) / 2, (uint)4));
+	handleSizeSlider->setValue(qMin((handleWidth - 6) / 2, (uint)4));
 	
 }
 

@@ -195,7 +195,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst,
     connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
     fLay->addWidget(clickRaiseOn);
 
-//     fLay->addColSpacing(0,QMAX(autoRaiseOn->sizeHint().width(),
+//     fLay->addColSpacing(0,qMax(autoRaiseOn->sizeHint().width(),
 //                                clickRaiseOn->sizeHint().width()) + 15);
 
     autoRaiseOn->setWhatsThis( i18n("When this option is enabled, a window in the background will automatically"

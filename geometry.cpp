@@ -671,10 +671,10 @@ void Client::keepInArea( QRect area, bool partial )
     if( partial )
         {
         // increase the area so that can have only 100 pixels in the area
-        area.setLeft( QMIN( area.left() - width() + 100, area.left()));
-        area.setTop( QMIN( area.top() - height() + 100, area.top()));
-        area.setRight( QMAX( area.right() + width() - 100, area.right()));
-        area.setBottom( QMAX( area.bottom() + height() - 100, area.bottom()));
+        area.setLeft( qMin( area.left() - width() + 100, area.left()));
+        area.setTop( qMin( area.top() - height() + 100, area.top()));
+        area.setRight( qMax( area.right() + width() - 100, area.right()));
+        area.setBottom( qMax( area.bottom() + height() - 100, area.bottom()));
         }
     if ( geometry().right() > area.right() && width() < area.width() )
         move( area.right() - width(), y() );
@@ -1051,10 +1051,10 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
         if( decominsize.height() > min_size.height())
                 min_size.setHeight( decominsize.height());
         }
-    w = QMIN( max_size.width(), w );
-    h = QMIN( max_size.height(), h );
-    w = QMAX( min_size.width(), w );
-    h = QMAX( min_size.height(), h );
+    w = qMin( max_size.width(), w );
+    h = qMin( max_size.height(), h );
+    w = qMax( min_size.width(), w );
+    h = qMax( min_size.height(), h );
 
     int w1 = w;
     int h1 = h;
@@ -1227,8 +1227,8 @@ void Client::getWmNormalHints()
         xSizeHint.max_width = xSizeHint.max_height = INT_MAX;
     else
         {
-        xSizeHint.max_width = QMAX( xSizeHint.max_width, 1 );
-        xSizeHint.max_height = QMAX( xSizeHint.max_height, 1 );
+        xSizeHint.max_width = qMax( xSizeHint.max_width, 1 );
+        xSizeHint.max_height = qMax( xSizeHint.max_height, 1 );
         }
     if( xSizeHint.flags & PResizeInc )
         {

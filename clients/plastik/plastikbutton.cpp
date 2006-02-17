@@ -538,7 +538,7 @@ QBitmap IconEngine::icon(ButtonIcon icon, int size)
                 lw2 = 1;
             }
 
-            int h = QMAX( (r.width()/2), (lw1+2*lw2) );
+            int h = qMax( (r.width()/2), (lw1+2*lw2) );
 
             // horizontal bars
             drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lw1);

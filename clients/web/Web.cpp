@@ -181,7 +181,7 @@ WebClient::init()
     default:
       borderSize_ = 4;
   }
-  titleHeight_ = QMAX(QMAX(14, fm.height() + textVMargin * 2), borderSize_);
+  titleHeight_ = qMax(qMax(14, fm.height() + textVMargin * 2), borderSize_);
   if (0 != titleHeight_ % 2)
     titleHeight_ += 1;
 
@@ -204,7 +204,7 @@ WebClient::reset( unsigned long changed )
     // title height
     const int textVMargin   = 2;
     QFontMetrics fm(options()->font(isActive(), isToolWindow()));
-    titleHeight_ = QMAX(QMAX(14, fm.height() + textVMargin * 2), borderSize_);
+    titleHeight_ = qMax(qMax(14, fm.height() + textVMargin * 2), borderSize_);
     if (0 != titleHeight_ % 2)
       titleHeight_ += 1;
 
