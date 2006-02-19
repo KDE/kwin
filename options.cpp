@@ -72,7 +72,7 @@ unsigned long Options::updateSettings()
     if ( val == "CDE" )
         altTabStyle = CDE;
 
-    rollOverDesktops = config->readEntry("RollOverDesktops", QVariant(TRUE)).toBool();
+    rollOverDesktops = config->readEntry("RollOverDesktops", QVariant(true)).toBool();
     
 //    focusStealingPreventionLevel = config->readEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
@@ -101,9 +101,9 @@ unsigned long Options::updateSettings()
 
     placement = Placement::policyFromString( config->readEntry("Placement"), true );
 
-    animateShade = config->readEntry("AnimateShade", QVariant(TRUE )).toBool();
+    animateShade = config->readEntry("AnimateShade", QVariant(true)).toBool();
 
-    animateMinimize = config->readEntry("AnimateMinimize", QVariant(TRUE )).toBool();
+    animateMinimize = config->readEntry("AnimateMinimize", QVariant(true)).toBool();
     animateMinimizeSpeed = config->readEntry("AnimateMinimizeSpeed", 5 );
 
     if( focusPolicy == ClickToFocus ) 
@@ -115,21 +115,21 @@ unsigned long Options::updateSettings()
         }
     else 
         {
-        autoRaise = config->readEntry("AutoRaise", QVariant(FALSE )).toBool();
+        autoRaise = config->readEntry("AutoRaise", QVariant(false)).toBool();
         autoRaiseInterval = config->readEntry("AutoRaiseInterval", 0 );
-        delayFocus = config->readEntry("DelayFocus", QVariant(FALSE )).toBool();
+        delayFocus = config->readEntry("DelayFocus", QVariant(false)).toBool();
         delayFocusInterval = config->readEntry("DelayFocusInterval", 0 );
         }
 
-    shadeHover = config->readEntry("ShadeHover", QVariant(FALSE )).toBool();
+    shadeHover = config->readEntry("ShadeHover", QVariant(false)).toBool();
     shadeHoverInterval = config->readEntry("ShadeHoverInterval", 250 );
 
     // important: autoRaise implies ClickRaise
-    clickRaise = autoRaise || config->readEntry("ClickRaise", QVariant(TRUE )).toBool();
+    clickRaise = autoRaise || config->readEntry("ClickRaise", QVariant(true)).toBool();
 
     borderSnapZone = config->readEntry("BorderSnapZone", 10);
     windowSnapZone = config->readEntry("WindowSnapZone", 10);
-    snapOnlyWhenOverlapping=config->readEntry("SnapOnlyWhenOverlapping", QVariant(FALSE)).toBool();
+    snapOnlyWhenOverlapping=config->readEntry("SnapOnlyWhenOverlapping", QVariant(false)).toBool();
     electric_borders = config->readEntry("ElectricBorders", 0);
     electric_border_delay = config->readEntry("ElectricBorderDelay", 150);
 
@@ -152,7 +152,7 @@ unsigned long Options::updateSettings()
         (*it) = (*it).lower();
 
     killPingTimeout = config->readEntry( "KillPingTimeout", 5000 );
-    hideUtilityWindowsForInactive = config->readEntry( "HideUtilityWindowsForInactive", QVariant( true )).toBool();
+    hideUtilityWindowsForInactive = config->readEntry( "HideUtilityWindowsForInactive", QVariant( true)).toBool();
 
     // Mouse bindings
     config->setGroup( "MouseBindings");
@@ -194,7 +194,7 @@ unsigned long Options::updateSettings()
     removeShadowsOnResize = config->readEntry("RemoveShadowsOnResize", QVariant(true)).toBool();
     onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool();
     if (resetKompmgr = config->readEntry("ResetKompmgr", QVariant(false)).toBool())
-        config->writeEntry("ResetKompmgr",FALSE);
+        config->writeEntry("ResetKompmgr",false);
     
     
     
@@ -204,11 +204,11 @@ unsigned long Options::updateSettings()
     // "EffectNoTooltip" setting from kdeglobals.
     KConfig globalConfig("kdeglobals");
     globalConfig.setGroup("KDE");
-    topmenus = globalConfig.readEntry( "macStyle", QVariant(false )).toBool();
+    topmenus = globalConfig.readEntry( "macStyle", QVariant(false)).toBool();
 
     KConfig kdesktopcfg( "kdesktoprc", true );
     kdesktopcfg.setGroup( "Menubar" );
-    desktop_topmenu = kdesktopcfg.readEntry( "ShowMenubar", QVariant(false )).toBool();
+    desktop_topmenu = kdesktopcfg.readEntry( "ShowMenubar", QVariant(false)).toBool();
     if( desktop_topmenu )
         topmenus = true;
 

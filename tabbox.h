@@ -42,7 +42,7 @@ class TabBox : public Q3Frame
         Mode mode() const;
 
         void reset();
-        void nextPrev( bool next = TRUE);
+        void nextPrev( bool next = true);
 
         void delayedShow();
         void hide();

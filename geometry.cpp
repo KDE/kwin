@@ -1292,7 +1292,7 @@ void Client::sendSyntheticConfigureNotify()
     c.border_width = 0;
     c.above = None;
     c.override_redirect = 0;
-    XSendEvent( QX11Info::display(), c.event, TRUE, StructureNotifyMask, (XEvent*)&c );
+    XSendEvent( QX11Info::display(), c.event, true, StructureNotifyMask, (XEvent*)&c );
     }
 
 const QPoint Client::calculateGravitation( bool invert, int gravity ) const
@@ -1593,7 +1593,7 @@ bool Client::isMaximizable() const
             return false;
         }
     if ( maximizeMode() != MaximizeRestore )
-        return TRUE;
+        return true;
     QSize max = maxSize();
 #if 0
     if( max.width() < 32767 || max.height() < 32767 ) // sizes are 16bit with X

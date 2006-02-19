@@ -84,7 +84,7 @@ void KillWindow::start()
                 button_released = (ev.xbutton.button == Button1);
                 if ( ev.xbutton.button == Button3 ) 
                     {
-                    escape_pressed = TRUE;
+                    escape_pressed = true;
                     break;
                     }
                 workspace->killWindowId(ev.xbutton.subwindow);

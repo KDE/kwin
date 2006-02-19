@@ -1202,7 +1202,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   kompmgr = 0L;
-  resetKompmgr_ = FALSE;
+  resetKompmgr_ = false;
   QVBoxLayout *lay = new QVBoxLayout (this);
   kompmgrAvailable_ = kompmgrAvailable();
   if (!kompmgrAvailable_){
@@ -1274,7 +1274,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   tabW->addTab(tGroup, i18n("Opacity"));
 
   QWidget *sGroup = new QWidget(tabW);
-//   sGroup->setCheckable(TRUE);
+//   sGroup->setCheckable(true);
   QVBoxLayout *vLay2 = new QVBoxLayout (sGroup,11,6);
   vLay2->addSpacing(11); // to get the proper gb top offset
   useShadows = new QCheckBox(i18n("Use shadows"),sGroup);
@@ -1421,7 +1421,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
 
 void KTranslucencyConfig::resetKompmgr()
 {
-    resetKompmgr_ = TRUE;
+    resetKompmgr_ = true;
 }
 void KTranslucencyConfig::load( void )
 {
@@ -1459,7 +1459,7 @@ void KTranslucencyConfig::load( void )
   KConfig conf_(QDir::homePath() + "/.xcompmgrrc");
   conf_.setGroup("xcompmgr");
   
-  disableARGB->setChecked(conf_.readEntry("DisableARGB", QVariant(FALSE)).toBool());
+  disableARGB->setChecked(conf_.readEntry("DisableARGB", QVariant(false)).toBool());
 
   useShadows->setChecked(conf_.readEntry("Compmode","CompClientShadows").compare("CompClientShadows") == 0);
   shadowTopOffset->setValue(-1*(conf_.readEntry("ShadowOffsetY",-80)));
@@ -1479,8 +1479,8 @@ void KTranslucencyConfig::load( void )
   else
     shadowColor->setColor(QColor(r,g,b));
 
-  fadeInWindows->setChecked(conf_.readEntry("FadeWindows", QVariant(TRUE)).toBool());
-  fadeOnOpacityChange->setChecked(conf_.readEntry("FadeTrans", QVariant(FALSE)).toBool());
+  fadeInWindows->setChecked(conf_.readEntry("FadeWindows", QVariant(true)).toBool());
+  fadeOnOpacityChange->setChecked(conf_.readEntry("FadeTrans", QVariant(false)).toBool());
   fadeInSpeed->setValue((int)(conf_.readEntry("FadeInStep",0.020)*1000.0));
   fadeOutSpeed->setValue((int)(conf_.readEntry("FadeOutStep",0.070)*1000.0));
 
@@ -1579,12 +1579,12 @@ void KTranslucencyConfig::defaults()
   inactiveWindowOpacity->setEnabled(true);
   movingWindowOpacity->setEnabled(false);
   dockWindowOpacity->setEnabled(true);
-  useShadows->setChecked(TRUE);
-  removeShadowsOnMove->setChecked(FALSE);
-  removeShadowsOnResize->setChecked(FALSE);
+  useShadows->setChecked(true);
+  removeShadowsOnMove->setChecked(false);
+  removeShadowsOnResize->setChecked(false);
   shadowColor->setColor(Qt::black);
-  fadeInWindows->setChecked(TRUE);
-  fadeOnOpacityChange->setChecked(FALSE);
+  fadeInWindows->setChecked(true);
+  fadeOnOpacityChange->setChecked(false);
   fadeInSpeed->setValue(70);
   fadeOutSpeed->setValue(20);
   emit KCModule::changed(true);

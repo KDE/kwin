@@ -684,7 +684,7 @@ inline bool Client::isOnAllDesktops() const
     }
 /*!
   Returns whether the client is on the virtual desktop \a d.
-  This is always TRUE for onAllDesktops clients.
+  This is always true for onAllDesktops clients.
  */
 inline bool Client::isOnDesktop( int d ) const
     {

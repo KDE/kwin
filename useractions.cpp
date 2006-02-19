@@ -208,7 +208,7 @@ void Workspace::desktopPopupAboutToShow()
     desk_popup->clear();
     desk_popup->insertItem( i18n("&All Desktops"), 0 );
     if ( active_popup_client && active_popup_client->isOnAllDesktops() )
-        desk_popup->setItemChecked( 0, TRUE );
+        desk_popup->setItemChecked( 0, true );
     desk_popup->insertSeparator( -1 );
     int id;
     const int BASE = 10;
@@ -226,7 +226,7 @@ void Workspace::desktopPopupAboutToShow()
                 i );
         if ( active_popup_client &&
              !active_popup_client->isOnAllDesktops() && active_popup_client->desktop()  == i )
-            desk_popup->setItemChecked( id, TRUE );
+            desk_popup->setItemChecked( id, true );
         }
     }
 
@@ -447,7 +447,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
  */
 bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos, bool handled )
     {
-    bool replay = FALSE;
+    bool replay = false;
     switch (command) 
         {
         case Options::MouseRaise:
@@ -490,11 +490,11 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             break;
         case Options::MouseActivateRaiseAndPassClick:
             workspace()->takeActivity( this, ActivityFocus | ActivityRaise, handled );
-            replay = TRUE;
+            replay = true;
             break;
         case Options::MouseActivateAndPassClick:
             workspace()->takeActivity( this, ActivityFocus, handled );
-            replay = TRUE;
+            replay = true;
             break;
         case Options::MouseActivateRaiseAndMove:
         case Options::MouseActivateRaiseAndUnrestrictedMove:
@@ -511,7 +511,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             if( moveResizeMode )
                 finishMoveResize( false );
             mode = PositionCenter;
-            buttonDown = TRUE;
+            buttonDown = true;
             moveOffset = QPoint( globalPos.x() - x(), globalPos.y() - y()); // map from global
             invertedMoveOffset = rect().bottomRight() - moveOffset;
             unrestrictedMoveResize = ( command == Options::MouseActivateRaiseAndUnrestrictedMove
@@ -531,7 +531,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
                 break;
             if( moveResizeMode )
                 finishMoveResize( false );
-            buttonDown = TRUE;
+            buttonDown = true;
             moveOffset = QPoint( globalPos.x() - x(), globalPos.y() - y()); // map from global
             int x = moveOffset.x(), y = moveOffset.y();
             bool left = x < width() / 3;
@@ -592,12 +592,12 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
                 {
                 if (opacity_ < 0xF3333333)
                     {
-                    setOpacity(TRUE, opacity_ + 0xCCCCCCC);
+                    setOpacity(true, opacity_ + 0xCCCCCCC);
                     custom_opacity = true;
                     }
                 else
                     {
-                    setOpacity(FALSE, 0xFFFFFFFF);
+                    setOpacity(false, 0xFFFFFFFF);
                     custom_opacity = false;
                     }
                 }
@@ -605,12 +605,12 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         case Options::MouseOpacityLess:
             if (opacity_ > 0)
                 {
-                setOpacity(TRUE, (opacity_ > 0xCCCCCCC) ? opacity_ - 0xCCCCCCC : 0);
+                setOpacity(true, (opacity_ > 0xCCCCCCC) ? opacity_ - 0xCCCCCCC : 0);
                 custom_opacity = true;
                 }
             break;
         case Options::MouseNothing:
-            replay = TRUE;
+            replay = true;
             break;
         }
     return replay;

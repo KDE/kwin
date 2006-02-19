@@ -194,14 +194,14 @@ bool Workspace::workspaceEvent( XEvent * e )
     {
     if ( mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease ) ) 
         {
-        mouse_emulation = FALSE;
+        mouse_emulation = false;
         XUngrabKeyboard( QX11Info::display(), QX11Info::appTime() );
         }
 
     if ( e->type == PropertyNotify || e->type == ClientMessage ) 
         {
         if ( netCheck( e ) )
-            return TRUE;
+            return true;
         }
 
     // events that should be handled before Clients can get them
@@ -215,7 +215,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             if ( tab_grab || control_grab )
                 {
                 tab_box->handleMouseEvent( e );
-                return TRUE;
+                return true;
                 }
             break;
         case KeyPress:
@@ -316,7 +316,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                         addSystemTrayWin( w );
                         }
                     }
-                return TRUE;
+                return true;
                 }
 
             return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
@@ -337,12 +337,12 @@ bool Workspace::workspaceEvent( XEvent * e )
             {
         //do not confuse Qt with these events. After all, _we_ are the
         //window manager who does the reparenting.
-            return TRUE;
+            return true;
             }
         case DestroyNotify:
             {
             if ( removeSystemTrayWin( e->xdestroywindow.window, false ) )
-                return TRUE;
+                return true;
             return false;
             }
         case MapRequest:
@@ -363,7 +363,7 @@ bool Workspace::workspaceEvent( XEvent * e )
 // this code doesn't check the parent to be root.
 //            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
-                    return TRUE;
+                    return true;
                 c = createClient( e->xmaprequest.window, false );
                 if ( c != NULL && root != QX11Info::appRootWindow() ) 
                     { // TODO what is this?
@@ -430,7 +430,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             break;
         case KeyRelease:
             if ( mouse_emulation )
-                return FALSE;
+                return false;
             break;
         case FocusIn:
             if( e->xfocus.window == rootWin()
@@ -466,7 +466,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         default:
             break;
         }
-    return FALSE;
+    return false;
     }
 
 // Some events don't have the actual window which caused the event
@@ -752,7 +752,7 @@ void Client::destroyNotifyEvent( XDestroyWindowEvent* e )
     }
     
     
-bool         blockAnimation = FALSE;
+bool         blockAnimation = false;
 
 /*!
    Handles client messages for the client window
@@ -901,7 +901,7 @@ void Client::enterNotifyEvent( XCrossingEvent* e )
             delete shadeHoverTimer;
             shadeHoverTimer = new QTimer( this );
             connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
-            shadeHoverTimer->start( options->shadeHoverInterval, TRUE );
+            shadeHoverTimer->start( options->shadeHoverInterval, true );
             }
 
         if ( options->focusPolicy == Options::ClickToFocus )
@@ -914,7 +914,7 @@ void Client::enterNotifyEvent( XCrossingEvent* e )
             delete autoRaiseTimer;
             autoRaiseTimer = new QTimer( this );
             connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
-            autoRaiseTimer->start( options->autoRaiseInterval, TRUE  );
+            autoRaiseTimer->start( options->autoRaiseInterval, true  );
             }
 
         if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isTopMenu() ) )
@@ -987,7 +987,7 @@ void Client::grabButton( int modifier )
          ++i )
         XGrabButton( QX11Info::display(), AnyButton,
             modifier | mods[ i ],
-            wrapperId(),  FALSE, ButtonPressMask,
+            wrapperId(),  false, ButtonPressMask,
             GrabModeSync, GrabModeAsync, None, None );
     }
 
@@ -1041,7 +1041,7 @@ void Client::updateMouseGrab()
         {
         XUngrabButton( QX11Info::display(), AnyButton, AnyModifier, wrapperId());
         // simply grab all modifier combinations
-        XGrabButton(QX11Info::display(), AnyButton, AnyModifier, wrapperId(), FALSE,
+        XGrabButton(QX11Info::display(), AnyButton, AnyModifier, wrapperId(), false,
             ButtonPressMask,
             GrabModeSync, GrabModeAsync,
             None, None );
@@ -1212,7 +1212,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             bool replay = performMouseCommand( com, QPoint( x_root, y_root), perform_handled );
 
             if ( isSpecialWindow())
-                replay = TRUE;
+                replay = true;
 
             if( w == wrapperId()) // these can come only from a grab
                 XAllowEvents(QX11Info::display(), replay? ReplayPointer : SyncPointer, CurrentTime ); //QX11Info::appTime());
@@ -1240,7 +1240,7 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
     if ( !wantsInput() ) // we cannot be active, use it anyway
-        active = TRUE;
+        active = true;
 
     if ( button == Button1 )
         com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
@@ -1253,7 +1253,7 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         && com != Options::MouseMinimize )  // mouse release event
         {
         mode = mousePosition( QPoint( x, y ));
-        buttonDown = TRUE;
+        buttonDown = true;
         moveOffset = QPoint( x, y );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
@@ -1304,7 +1304,7 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
     y = this->y();
     if ( (state & ( Button1Mask & Button2Mask & Button3Mask )) == 0 )
         {
-        buttonDown = FALSE;
+        buttonDown = false;
         if ( moveResizeMode ) 
             {
             finishMoveResize( false );
@@ -1391,7 +1391,7 @@ void Client::focusInEvent( XFocusInEvent* e )
     bool activate =  workspace()->allowClientActivation( this, -1U, true );
     workspace()->gotFocusIn( this ); // remove from should_get_focus list
     if( activate )
-        setActive( TRUE );
+        setActive( true );
     else
         {
         workspace()->restoreFocus();
@@ -1460,7 +1460,7 @@ void Client::focusOutEvent( XFocusOutEvent* e )
     if ( QApplication::activePopupWidget() )
         return;
     if( !check_follows_focusin( this ))
-        setActive( FALSE );
+        setActive( false );
     }
 
 void Client::visibilityNotifyEvent( XVisibilityEvent * e)
@@ -1482,7 +1482,7 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
     else if( moveResizeMode && direction == NET::MoveResizeCancel)
     {
         finishMoveResize( true );
-        buttonDown = FALSE;
+        buttonDown = false;
         setCursor( mode );
     }
     else if( direction >= NET::TopLeft && direction <= NET::Left ) 
@@ -1502,7 +1502,7 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
             return;
         if( moveResizeMode )
             finishMoveResize( false );
-        buttonDown = TRUE;
+        buttonDown = true;
         moveOffset = QPoint( x_root - x(), y_root - y()); // map from global
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
@@ -1554,12 +1554,12 @@ void Client::keyPressEvent( uint key_code )
 		case Qt::Key_Return:
 		case Qt::Key_Enter:
             finishMoveResize( false );
-            buttonDown = FALSE;
+            buttonDown = false;
             setCursor( mode );
             break;
 		case Qt::Key_Escape:
             finishMoveResize( true );
-            buttonDown = FALSE;
+            buttonDown = false;
             setCursor( mode );
             break;
         default:

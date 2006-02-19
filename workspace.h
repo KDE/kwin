@@ -73,7 +73,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
     {
     Q_OBJECT
     public:
-        Workspace( bool restore = FALSE );
+        Workspace( bool restore = false );
         virtual ~Workspace();
 
         static Workspace * self() { return _self; }
@@ -112,8 +112,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         // stealing prevention code.
         Client* mostRecentlyActivatedClient() const;
 
-        void activateClient( Client*, bool force = FALSE  );
-        void requestFocus( Client* c, bool force = FALSE );
+        void activateClient( Client*, bool force = false  );
+        void requestFocus( Client* c, bool force = false );
         void takeActivity( Client* c, int flags, bool handled ); // flags are ActivityFlags
         void handleTakeActivity( Client* c, Time timestamp, int flags ); // flags are ActivityFlags
         bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false );

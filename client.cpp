@@ -100,23 +100,23 @@ Client::Client( Workspace *ws )
     desk = 0; // no desktop yet
 
     mode = PositionCenter;
-    buttonDown = FALSE;
-    moveResizeMode = FALSE;
+    buttonDown = false;
+    moveResizeMode = false;
 
     info = NULL;
 
     shade_mode = ShadeNone;
-    active = FALSE;
+    active = false;
     deleting = false;
-    keep_above = FALSE;
-    keep_below = FALSE;
-    is_shape = FALSE;
+    keep_above = false;
+    keep_below = false;
+    is_shape = false;
     motif_noborder = false;
-    motif_may_move = TRUE;
-    motif_may_resize = TRUE;
-    motif_may_close = TRUE;
+    motif_may_move = true;
+    motif_may_resize = true;
+    motif_may_close = true;
     fullscreen_mode = FullScreenNone;
-    skip_taskbar = FALSE;
+    skip_taskbar = false;
     original_skip_taskbar = false;
     minimized = false;
     hidden = false;
@@ -134,8 +134,8 @@ Client::Client( Workspace *ws )
     Ptakeactivity = 0;
     Pcontexthelp = 0;
     Pping = 0;
-    input = FALSE;
-    skip_pager = FALSE;
+    input = false;
+    skip_pager = false;
 
     max_mode = MaximizeRestore;
     maxmode_restore = MaximizeRestore;
@@ -181,7 +181,7 @@ void Client::releaseWindow( bool on_shutdown )
     deleting = true;
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
-    if (!custom_opacity) setOpacity(FALSE);
+    if (!custom_opacity) setOpacity(false);
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
@@ -390,7 +390,7 @@ void Client::detectShapable()
         case NET::Menu :
         case NET::Dialog :
         case NET::Utility :
-            setShapable(FALSE);
+            setShapable(false);
           break;
         default:
             assert( false );
@@ -454,7 +454,7 @@ void Client::setUserNoBorder( bool set )
 
 void Client::updateShape()
     {
-    setShapable(TRUE);
+    setShapable(true);
     if ( shape() )
     {
         XShapeCombineShape(QX11Info::display(), frameId(), ShapeBounding,
@@ -586,7 +586,7 @@ void Client::unminimize( bool avoid_animation )
     if( isOnCurrentDesktop() && isShown( true ))
         {
         if( mainClients().isEmpty() && !avoid_animation )
-            animateMinimizeOrUnminimize( FALSE );
+            animateMinimizeOrUnminimize( false );
         }
     updateVisibility();
     updateAllowedActions();
@@ -655,7 +655,7 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
     float diff;
 
     QPainter p ( workspace()->desktopWidget() );
-    bool need_to_clear = FALSE;
+    bool need_to_clear = false;
     QPixmap pm3;
     do 
         {
@@ -667,12 +667,12 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
             if ( need_to_clear ) 
                 {
                 p.drawPixmap( area2.x(), area2.y(), pm3 );
-                need_to_clear = FALSE;
+                need_to_clear = false;
                 }
             area2 = area;
             }
         XFlush(QX11Info::display());
-        XSync( QX11Info::display(), FALSE );
+        XSync( QX11Info::display(), false );
         diff = t.elapsed();
         if (diff > step)
             diff = step;
@@ -687,7 +687,7 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
             else 
                 { // no overlap, we can clear later to avoid flicker
                 pm3 = pm2;
-                need_to_clear = TRUE;
+                need_to_clear = true;
                 }
             }
         } while ( t.elapsed() < step);
@@ -772,7 +772,7 @@ void Client::setShade( ShadeMode mode )
         XSelectInput( QX11Info::display(), wrapper, ClientWinMask | SubstructureNotifyMask );
         //as we hid the unmap event, xcompmgr didn't recognize the client wid has vanished, so we'll extra inform it        
         //done xcompmgr workaround
-// FRAME       repaint( FALSE );
+// FRAME       repaint( false );
 //        bool wasStaticContents = testWFlags( WStaticContents );
 //        setWFlags( WStaticContents );
         int step = qMax( 4, QABS( h - s.height() ) / as )+1;
@@ -813,7 +813,7 @@ void Client::setShade( ShadeMode mode )
             resizeDecoration( QSize( s.width(), h ));
             // assume a border
             // we do not have time to wait for X to send us paint events
-// FRAME           repaint( 0, h - step-5, width(), step+5, TRUE);
+// FRAME           repaint( 0, h - step-5, width(), step+5, true);
             QApplication::syncX();
             } while ( h < s.height() - step );
 //        if ( !wasStaticContents )
@@ -821,7 +821,7 @@ void Client::setShade( ShadeMode mode )
         shade_geometry_change = false;
         plainResize( s );
         if( shade_mode == ShadeHover || shade_mode == ShadeActivated )
-            setActive( TRUE );
+            setActive( true );
         XMapWindow( QX11Info::display(), wrapperId());
         XMapWindow( QX11Info::display(), window());
         XDeleteProperty (QX11Info::display(), client, atoms->net_wm_window_shade);
@@ -1419,10 +1419,10 @@ void Client::readIcons( Window win, QPixmap* icon, QPixmap* miniicon )
     {    
     // get the icons, allow scaling
     if( icon != NULL )
-        *icon = KWin::icon( win, 32, 32, TRUE, KWin::NETWM | KWin::WMHints );
+        *icon = KWin::icon( win, 32, 32, true, KWin::NETWM | KWin::WMHints );
     if( miniicon != NULL )
         if( icon == NULL || !icon->isNull())
-            *miniicon = KWin::icon( win, 16, 16, TRUE, KWin::NETWM | KWin::WMHints );
+            *miniicon = KWin::icon( win, 16, 16, true, KWin::NETWM | KWin::WMHints );
         else
             *miniicon = QPixmap();
     }
@@ -1449,8 +1449,8 @@ void Client::getIcons()
         }
     if( icon_pix.isNull())
         { // and if nothing else, load icon from classhint or xapp icon
-        icon_pix = KWin::icon( window(), 32, 32, TRUE, KWin::ClassHint | KWin::XApp );
-        miniicon_pix = KWin::icon( window(), 16, 16, TRUE, KWin::ClassHint | KWin::XApp );
+        icon_pix = KWin::icon( window(), 32, 32, true, KWin::ClassHint | KWin::XApp );
+        miniicon_pix = KWin::icon( window(), 16, 16, true, KWin::ClassHint | KWin::XApp );
         }
     if( isManaged() && decoration != NULL )
         decoration->iconChange();
@@ -1527,7 +1527,7 @@ Window Client::staticWmClientLeader(WId w)
     Window result = w;
     XErrorHandler oldHandler = XSetErrorHandler(nullErrorHandler);
     status = XGetWindowProperty( QX11Info::display(), w, atoms->wm_client_leader, 0, 10000,
-                                 FALSE, XA_WINDOW, &type, &format,
+                                 false, XA_WINDOW, &type, &format,
                                  &nitems, &extra, &data );
     XSetErrorHandler(oldHandler);
     if (status  == Success ) 
@@ -2012,9 +2012,9 @@ bool Client::getWindowOpacity() //query translucency settings from X, returns tr
         custom_opacity = true;
 //         setOpacity(opacity_ < 0xFFFFFFFF, opacity_);
         XFree ((char*)data);
-        return TRUE;
+        return true;
         }
-    return FALSE;
+    return false;
     }
     
 void Client::setCustomOpacityFlag(bool custom)
@@ -2036,14 +2036,14 @@ bool Client::touches(const Client* c)
 // checks if this client borders c, needed to test beep media player window state
     {
     if (y() == c->y() + c->height()) // this bottom to c
-        return TRUE;
+        return true;
     if (y() + height() == c->y()) // this top to c
-        return TRUE;
+        return true;
     if (x() == c->x() + c->width()) // this right to c
-        return TRUE;
+        return true;
     if (x() + width() == c->x()) // this left to c
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
     }
     
 void Client::setDecoHashProperty(uint topHeight, uint rightWidth, uint bottomHeight, uint leftWidth)

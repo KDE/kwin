@@ -94,7 +94,7 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine( true ).constData() );
             config->writeEntry( QString("resourceName")+n, c->resourceName().constData() );
             config->writeEntry( QString("resourceClass")+n, c->resourceClass().constData() );
-            config->writeEntry( QString("geometry")+n,  QRect( c->calculateGravitation(TRUE), c->clientSize() ) ); // FRAME
+            config->writeEntry( QString("geometry")+n,  QRect( c->calculateGravitation(true), c->clientSize() ) ); // FRAME
             config->writeEntry( QString("restore")+n, c->geometryRestore() );
             config->writeEntry( QString("fsrestore")+n, c->geometryFSRestore() );
             config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );
@@ -169,14 +169,14 @@ void Workspace::loadSessionInfo()
         info->maximized = config->readEntry( QString("maximize")+n, 0 );
         info->fullscreen = config->readEntry( QString("fullscreen")+n, 0 );
         info->desktop = config->readEntry( QString("desktop")+n, 0 );
-        info->minimized = config->readEntry( QString("iconified")+n, FALSE );
-        info->onAllDesktops = config->readEntry( QString("sticky")+n, FALSE );
-        info->shaded = config->readEntry( QString("shaded")+n, FALSE );
-        info->keepAbove = config->readEntry( QString("staysOnTop")+n, FALSE  );
-        info->keepBelow = config->readEntry( QString("keepBelow")+n, FALSE  );
-        info->skipTaskbar = config->readEntry( QString("skipTaskbar")+n, FALSE  );
-        info->skipPager = config->readEntry( QString("skipPager")+n, FALSE  );
-        info->userNoBorder = config->readEntry( QString("userNoBorder")+n, FALSE  );
+        info->minimized = config->readEntry( QString("iconified")+n, false );
+        info->onAllDesktops = config->readEntry( QString("sticky")+n, false );
+        info->shaded = config->readEntry( QString("shaded")+n, false );
+        info->keepAbove = config->readEntry( QString("staysOnTop")+n, false  );
+        info->keepBelow = config->readEntry( QString("keepBelow")+n, false  );
+        info->skipTaskbar = config->readEntry( QString("skipTaskbar")+n, false  );
+        info->skipPager = config->readEntry( QString("skipPager")+n, false  );
+        info->userNoBorder = config->readEntry( QString("userNoBorder")+n, false  );
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n, QString() ).latin1());
         info->shortcut = config->readEntry( QString("shortcut")+n, QString() );
         info->active = ( active_client == i );

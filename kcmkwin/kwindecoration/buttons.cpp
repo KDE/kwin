@@ -94,9 +94,9 @@ bool ButtonDrag::decode( QDropEvent* e, Button& btn )
 		int supported;
 		stream >> supported;
 		btn.supported = supported;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -278,7 +278,7 @@ ButtonDropSite::ButtonDropSite( QWidget* parent, const char* name )
 	  m_selected(0)
 {
 	setObjectName( name );
-	setAcceptDrops( TRUE );
+	setAcceptDrops( true );
 	setFrameShape( WinPanel );
 	setFrameShadow( Raised );
 	setMinimumHeight( 26 );

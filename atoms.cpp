@@ -108,7 +108,7 @@ Atoms::Atoms()
     
     assert( n <= max );
 
-    XInternAtoms( QX11Info::display(), names, n, FALSE, atoms_return );
+    XInternAtoms( QX11Info::display(), names, n, false, atoms_return );
     for (int i = 0; i < n; i++ )
         *atoms[i] = atoms_return[i];
     }

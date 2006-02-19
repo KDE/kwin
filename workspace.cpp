@@ -59,7 +59,7 @@ Workspace *Workspace::_self = 0;
 
 KProcess* kompmgr = 0;
 
-bool allowKompmgrRestart = TRUE;
+bool allowKompmgrRestart = true;
 
 // Rikkus: This class is too complex. It needs splitting further.
 // It's a nightmare to understand, especially with so few comments :(
@@ -994,10 +994,10 @@ bool Workspace::isNotManaged( const QString& title )
         if (r.search(title) != -1) 
             {
             doNotManageList.remove( it );
-            return TRUE;
+            return true;
             }
         }
-    return FALSE;
+    return false;
     }
 
 /*!
@@ -1479,19 +1479,19 @@ void Workspace::calcDesktopLayout(int &x, int &y) const
 bool Workspace::addSystemTrayWin( WId w )
     {
     if ( systemTrayWins.contains( w ) )
-        return TRUE;
+        return true;
 
     NETWinInfo ni( QX11Info::display(), w, root, NET::WMKDESystemTrayWinFor );
     WId trayWinFor = ni.kdeSystemTrayWinFor();
     if ( !trayWinFor )
-        return FALSE;
+        return false;
     systemTrayWins.append( SystemTrayWindow( w, trayWinFor ) );
     XSelectInput( QX11Info::display(), w,
                   StructureNotifyMask
                   );
     XAddToSaveSet( QX11Info::display(), w );
     propagateSystemTrayWins();
-    return TRUE;
+    return true;
     }
 
 /*!
@@ -1501,7 +1501,7 @@ bool Workspace::addSystemTrayWin( WId w )
 bool Workspace::removeSystemTrayWin( WId w, bool check )
     {
     if ( !systemTrayWins.contains( w ) )
-        return FALSE;
+        return false;
     if( check )
         {
     // When getting UnmapNotify, it's not clear if it's the systray
@@ -1528,7 +1528,7 @@ bool Workspace::removeSystemTrayWin( WId w, bool check )
         }
     systemTrayWins.remove( w );
     propagateSystemTrayWins();
-    return TRUE;
+    return true;
     }
 
 
@@ -1664,16 +1664,16 @@ void Workspace::slotMouseEmulation()
     if ( mouse_emulation ) 
         {
         XUngrabKeyboard(QX11Info::display(), QX11Info::appTime());
-        mouse_emulation = FALSE;
+        mouse_emulation = false;
         return;
         }
 
     if ( XGrabKeyboard(QX11Info::display(),
-                       root, FALSE,
+                       root, false,
                        GrabModeAsync, GrabModeAsync,
                        QX11Info::appTime()) == GrabSuccess ) 
         {
-        mouse_emulation = TRUE;
+        mouse_emulation = true;
         mouse_emulation_state = 0;
         mouse_emulation_window = 0;
         }
@@ -1734,7 +1734,7 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
             e.y_root = pos.y();
             e.state = state;
             e.is_hint = NotifyNormal;
-            XSendEvent( QX11Info::display(), w, TRUE, ButtonMotionMask, (XEvent*)&e );
+            XSendEvent( QX11Info::display(), w, true, ButtonMotionMask, (XEvent*)&e );
             }
         else 
             {
@@ -1750,7 +1750,7 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
             e.y_root = pos.y();
             e.state = state;
             e.button = button;
-            XSendEvent( QX11Info::display(), w, TRUE, ButtonPressMask, (XEvent*)&e );
+            XSendEvent( QX11Info::display(), w, true, ButtonPressMask, (XEvent*)&e );
 
             if ( type == EmuPress ) 
                 {
@@ -1793,7 +1793,7 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
 bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     {
     if ( root != QX11Info::appRootWindow() )
-        return FALSE;
+        return false;
     int kc = XKeycodeToKeysym(QX11Info::display(), ev.keycode, 0);
     int km = ev.state & (ControlMask | Mod1Mask | ShiftMask);
 
@@ -1870,16 +1870,16 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     // fall through
         case XK_Escape:
             XUngrabKeyboard(QX11Info::display(), QX11Info::appTime());
-            mouse_emulation = FALSE;
-            return TRUE;
+            mouse_emulation = false;
+            return true;
         default:
-            return FALSE;
+            return false;
         }
 
     QCursor::setPos( pos );
     if ( mouse_emulation_state )
         mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0,  mouse_emulation_state );
-    return TRUE;
+    return true;
 
     }
 
@@ -1906,7 +1906,7 @@ void Workspace::requestDelayFocus( Client* c )
     delete delayFocusTimer;
     delayFocusTimer = new QTimer( this );
     connect( delayFocusTimer, SIGNAL( timeout() ), this, SLOT( delayFocus() ) );
-    delayFocusTimer->start( options->delayFocusInterval, TRUE  );
+    delayFocusTimer->start( options->delayFocusInterval, true  );
     }
     
 void Workspace::cancelDelayFocus()
@@ -2359,7 +2359,7 @@ void Workspace::startKompmgr()
         return;
     if (!kompmgr->start(KProcess::OwnGroup, KProcess::Stderr))
         {
-        options->useTranslucency = FALSE;
+        options->useTranslucency = false;
         KProcess proc;
         proc << "kdialog" << "--error"
             << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
@@ -2369,8 +2369,8 @@ void Workspace::startKompmgr()
     else
         {
         connect(kompmgr, SIGNAL(processExited(KProcess*)), SLOT(restartKompmgr()));
-        options->useTranslucency = TRUE;
-        allowKompmgrRestart = FALSE;
+        options->useTranslucency = true;
+        allowKompmgrRestart = false;
         QTimer::singleShot( 60000, this, SLOT(unblockKompmgrRestart()) );
         QByteArray ba;
         QDataStream arg(&ba, QIODevice::WriteOnly);
@@ -2385,7 +2385,7 @@ void Workspace::stopKompmgr()
     if (!kompmgr  || !kompmgr->isRunning())
         return;
     kompmgr->disconnect(this, SLOT(restartKompmgr()));
-    options->useTranslucency = FALSE;
+    options->useTranslucency = false;
     if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
     kompmgr->kill();
     QByteArray ba;
@@ -2401,7 +2401,7 @@ bool Workspace::kompmgrIsRunning()
 
 void Workspace::unblockKompmgrRestart()
 {
-    allowKompmgrRestart = TRUE;
+    allowKompmgrRestart = true;
 }
 
 void Workspace::restartKompmgr()
@@ -2409,7 +2409,7 @@ void Workspace::restartKompmgr()
 {
     if (!allowKompmgrRestart) // uh-ohh
         {
-        options->useTranslucency = FALSE;
+        options->useTranslucency = false;
         KProcess proc;
         proc << "kdialog" << "--error"
             << i18n( "The Composite Manager crashed twice within a minute and is therefore disabled for this session.")
@@ -2429,7 +2429,7 @@ void Workspace::restartKompmgr()
 // -------------------
     if (!kompmgr->start(KProcess::NotifyOnExit, KProcess::Stderr))
         {
-        options->useTranslucency = FALSE;
+        options->useTranslucency = false;
         KProcess proc;
         proc << "kdialog" << "--error"
             << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
@@ -2438,7 +2438,7 @@ void Workspace::restartKompmgr()
         }
     else
         {
-        allowKompmgrRestart = FALSE;
+        allowKompmgrRestart = false;
         QTimer::singleShot( 60000, this, SLOT(unblockKompmgrRestart()) );
         }
 }

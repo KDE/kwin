@@ -92,7 +92,7 @@ QString Notify::eventToName( Event e )
     return event;
     }
 
-static bool forgetIt = FALSE;
+static bool forgetIt = false;
 QList< Notify::EventData > Notify::pending_events;
 
 bool Notify::raise( Event e, const QString& message, Client* c )

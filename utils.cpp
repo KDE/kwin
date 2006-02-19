@@ -54,7 +54,7 @@ bool Shape::hasShape( WId w)
     unsigned int wws, hws, wbs, hbs;
     int boundingShaped = 0, clipShaped = 0;
     if (!kwin_has_shape)
-        return FALSE;
+        return false;
     XShapeQueryExtents(QX11Info::display(), w,
                        &boundingShaped, &xws, &yws, &wws, &hws,
                        &clipShaped, &xbs, &ybs, &wbs, &hbs);
@@ -82,7 +82,7 @@ void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
     unsigned char* data;
     MwmHints* hints = 0;
     if ( XGetWindowProperty( QX11Info::display(), w, atoms->motif_wm_hints, 0, 5,
-                             FALSE, atoms->motif_wm_hints, &type, &format,
+                             false, atoms->motif_wm_hints, &type, &format,
                              &length, &after, &data ) == Success ) 
         {
         if ( data )
@@ -188,7 +188,7 @@ QByteArray getStringProperty(WId w, Atom prop, char separator)
     QByteArray result = "";
     KXErrorHandler handler; // ignore errors
     status = XGetWindowProperty( QX11Info::display(), w, prop, 0, 10000,
-                                 FALSE, XA_STRING, &type, &format,
+                                 false, XA_STRING, &type, &format,
                                  &nitems, &extra, &data );
     if ( status == Success) 
         {

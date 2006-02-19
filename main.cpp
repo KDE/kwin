@@ -44,13 +44,13 @@ Atoms* atoms;
 
 int screen_number = -1;
 
-static bool initting = FALSE;
+static bool initting = false;
 
 static
 int x11ErrorHandler(Display *d, XErrorEvent *e)
     {
     char msg[80], req[80], number[80];
-    bool ignore_badwindow = TRUE; //maybe temporary
+    bool ignore_badwindow = true; //maybe temporary
 
     if (initting &&
         (
@@ -104,7 +104,7 @@ Application::Application( )
     // if there was already kwin running, it saved its configuration after loosing the selection -> reread
     config->reparseConfiguration();
 
-    initting = TRUE; // startup....
+    initting = true; // startup....
 
     // install X11 error handler
     XSetErrorHandler( x11ErrorHandler );
@@ -121,7 +121,7 @@ Application::Application( )
 
     syncX(); // trigger possible errors, there's still a chance to abort
 
-    initting = FALSE; // startup done, we are up and running now.
+    initting = false; // startup done, we are up and running now.
        
     dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
     XEvent e;
@@ -153,7 +153,7 @@ void Application::lostSelection()
 bool Application::x11EventFilter( XEvent *e )
     {
     if ( Workspace::self()->workspaceEvent( e ) )
-             return TRUE;
+             return true;
     return KApplication::x11EventFilter( e );
     }
     

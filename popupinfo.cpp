@@ -45,7 +45,7 @@ PopupInfo::PopupInfo( const char *name )
     connect(&m_delayedHideTimer, SIGNAL(timeout()), this, SLOT(hide()));
 
     QFont f = font();
-    f.setBold( TRUE );
+    f.setBold( true );
     f.setPointSize( 14 );
     setFont( f );
 

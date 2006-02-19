@@ -164,7 +164,7 @@ void TabBox::reset()
         if ( clients.count() == 0 )  // height for the "not tasks" text
           {
           QFont f = font();
-          f.setBold( TRUE );
+          f.setBold( true );
           f.setPointSize( 14 );
 
           h = QFontMetrics(f).height()*4;
@@ -342,7 +342,7 @@ void TabBox::drawContents( QPainter * )
         if ( !currentClient() )
             {
             QFont f = font();
-            f.setBold( TRUE );
+            f.setBold( true );
             f.setPointSize( 14 );
 
             p.setFont(f);
@@ -877,26 +877,26 @@ bool Workspace::startKDEWalkThroughWindows()
     {
     if( !establishTabBoxGrab())
         return false;
-    tab_grab        = TRUE;
+    tab_grab        = true;
     keys->setEnabled( false );
     disable_shortcuts_keys->setEnabled( false );
     client_keys->setEnabled( false );
     tab_box->setMode( TabBox::WindowsMode );
     tab_box->reset();
-    return TRUE;
+    return true;
     }
 
 bool Workspace::startWalkThroughDesktops( int mode )
     {
     if( !establishTabBoxGrab())
         return false;
-    control_grab = TRUE;
+    control_grab = true;
     keys->setEnabled( false );
     disable_shortcuts_keys->setEnabled( false );
     client_keys->setEnabled( false );
     tab_box->setMode( (TabBox::Mode) mode );
     tab_box->reset();
-    return TRUE;
+    return true;
     }
 
 bool Workspace::startWalkThroughDesktops()
@@ -1048,8 +1048,8 @@ void Workspace::closeTabBox()
     keys->setEnabled( true );
     disable_shortcuts_keys->setEnabled( true );
     client_keys->setEnabled( true );
-    tab_grab = FALSE;
-    control_grab = FALSE;
+    tab_grab = false;
+    control_grab = false;
     }
 
 /*!
@@ -1212,7 +1212,7 @@ Client* Workspace::previousStaticClient( Client* c ) const
 
 bool Workspace::establishTabBoxGrab()
     {
-    if( XGrabKeyboard( QX11Info::display(), root, FALSE,
+    if( XGrabKeyboard( QX11Info::display(), root, false,
         GrabModeAsync, GrabModeAsync, QX11Info::appTime()) != GrabSuccess )
         return false;
     // Don't try to establish a global mouse grab using XGrabPointer, as that would prevent
