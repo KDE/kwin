@@ -10,10 +10,13 @@ X-KDE-Library=kwinoptions
 X-KDE-FactoryName=kwinadvanced
 
 Name=Advanced
+Name[fr]=Avancé
 Name[x-test]=xxAdvancedxx
 
 Comment=Configure advanced window management features
+Comment[fr]=Configuration des fonctionnalités de gestion avancée des fenêtres
 Comment[x-test]=xxConfigure advanced window management featuresxx
 
 Keywords=shading,border,hover,active borders
+Keywords[fr]=bordures,cacher,couvrir,bordures actives
 Keywords[x-test]=xxshading,border,hover,active bordersxx

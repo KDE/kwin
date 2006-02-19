@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KWin test
+Name[fr]=Test de KWin
 Name[x-test]=xxKWin testxx
 X-KDE-Library=kwin3_test

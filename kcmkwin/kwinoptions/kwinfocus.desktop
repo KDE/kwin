@@ -13,7 +13,9 @@ Name=Focus
 Name[x-test]=xxFocusxx
 
 Comment=Configure the window focus policy
+Comment[fr]=Configuration de la politique de focus des fenêtres
 Comment[x-test]=xxConfigure the window focus policyxx
 
 Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
+Keywords[fr]=focus,placement,auto élévation,élévation,clic clavier,CDE,alt-tab,tous les bureaux
 Keywords[x-test]=xxfocus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktopxx

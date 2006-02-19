@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Modern System
+Name[fr]=Système Moderne
 Name[x-test]=xxModern Systemxx
 X-KDE-Library=kwin3_modernsys

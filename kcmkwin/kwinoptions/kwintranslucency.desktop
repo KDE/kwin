@@ -10,10 +10,13 @@ X-KDE-Library=kwinoptions
 X-KDE-FactoryName=kwintranslucency
 
 Name=Translucency
+Name[fr]=Transparence
 Name[x-test]=xxTranslucencyxx
 
 Comment=Configure window translucency and shadow management
+Comment[fr]=Configuration de la transparence et de l'ombre des fenêtres
 Comment[x-test]=xxConfigure window translucency and shadow managementxx
 
 Keywords=translucency,transparence,shadows
+Keywords[fr]=translucidité,translucide,transparence,transparent,ombre
 Keywords[x-test]=xxtranslucency,transparence,shadowsxx

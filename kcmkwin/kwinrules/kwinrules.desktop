@@ -10,11 +10,14 @@ X-KDE-Library=kwinrules
 X-KDE-FactoryName=kwinrules
 
 Name=Window-Specific Settings
+Name[fr]=Paramètres spécifiques à la fenêtre
 Name[x-test]=xxWindow-Specific Settingsxx
 
 Comment=Configure settings specifically for a window
+Comment[fr]=Configuration de paramètres spécifiques à une fenêtre
 Comment[x-test]=xxConfigure settings specifically for a windowxx
 
 Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
+Keywords[fr]=taille,position,état,comportement de fenêtre,fenêtres,spécifique,astuces,souvenir,règles
 Keywords[x-test]=xxsize,position,state,window behavior,windows,specific,workarounds,remember,rulesxx
 Categories=Qt;KDE;X-KDE-settings-desktop;
