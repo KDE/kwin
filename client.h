@@ -300,6 +300,7 @@ class Client : public QObject, public KDecorationDefines
         void setBMP(bool b);
         bool touches(const Client* c);
         void setShapable(bool b);
+        bool hasStrut() const;
 
     private slots:
         void autoRaise();
@@ -381,7 +382,6 @@ class Client : public QObject, public KDecorationDefines
         static int computeWorkareaDiff( int left, int right, int a_left, int a_right );
         void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool );
         NETExtendedStrut strut() const;
-        bool hasStrut() const;
         int checkShadeGeometry( int w, int h );
         void postponeGeometryUpdates( bool postpone );
 

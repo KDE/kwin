@@ -87,9 +87,9 @@ void Workspace::updateClientArea( bool force )
         }
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
         {
-            QRect r = (*it)->adjustedClientArea( desktopArea, desktopArea );
-            if( r == desktopArea ) // should be sufficient
+            if( !(*it)->hasStrut())
                 continue;
+            QRect r = (*it)->adjustedClientArea( desktopArea, desktopArea );
             if( (*it)->isOnAllDesktops())
                 for( int i = 1;
                         i <= numberOfDesktops();
@@ -727,6 +727,29 @@ QRect Client::adjustedClientArea( const QRect &desktopArea, const QRect& area ) 
             str . bottom_end - str . bottom_start + 1,
             str . bottom_width);
 
+    QRect screenarea = workspace()->clientArea( ScreenArea, this );
+    // HACK: workarea handling is not xinerama aware, so if this strut
+    // reserves place at a xinerama edge that's inside the virtual screen,
+    // ignore the strut for workspace setting.
+    if( area == kapp->desktop()->geometry())
+        {
+        if( stareaL.left() < screenarea.left())
+            stareaL = QRect();
+        if( stareaR.right() > screenarea.right())
+            stareaR = QRect();
+        if( stareaT.top() < screenarea.top())
+            stareaT = QRect();
+        if( stareaB.bottom() < screenarea.bottom())
+            stareaB = QRect();
+        }
+    // Handle struts at xinerama edges that are inside the virtual screen.
+    // They're given in virtual screen coordinates, make them affect only
+    // their xinerama screen.
+    stareaL.setLeft( QMAX( stareaL.left(), screenarea.left()));
+    stareaR.setRight( QMIN( stareaR.right(), screenarea.right()));
+    stareaT.setTop( QMAX( stareaT.top(), screenarea.top()));
+    stareaB.setBottom( QMIN( stareaB.bottom(), screenarea.bottom()));
+
     if (stareaL . intersects (area)) {
 //        kDebug () << "Moving left of: " << r << " to " << stareaL.right() + 1 << endl;
         r . setLeft( stareaL . right() + 1 );
@@ -781,13 +804,12 @@ NETExtendedStrut Client::strut() const
         }
     return ext;
     }
+
 bool Client::hasStrut() const
     {
     NETExtendedStrut ext = strut();
     if( ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0 )
-        {
-            return false;
-        }
+        return false;
     return true;
     }
 
