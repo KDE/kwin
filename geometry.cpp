@@ -727,37 +727,6 @@ QRect Client::adjustedClientArea( const QRect &desktopArea, const QRect& area ) 
             str . bottom_end - str . bottom_start + 1,
             str . bottom_width);
 
-    NETExtendedStrut ext = info->extendedStrut();
-    if( ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0
-        && ( str.left_width != 0 || str.right_width != 0 || str.top_width != 0 || str.bottom_width != 0 )) {
-
-        // hack, might cause problems... this tries to guess the start/end of a
-        // non-extended strut; only works on windows that have exact same
-        // geometry as their strut (ie, if the geometry fits the width
-        // exactly, we will adjust length of strut to match the geometry as well;
-        // otherwise we use the full-edge strut)
-
-        if (stareaT.top() == geometry().top() && stareaT.bottom() == geometry().bottom()) {
-            stareaT.setLeft(geometry().left());
-            stareaT.setRight(geometry().right());
-//            kDebug () << "Trimming top-strut to geometry() to: " << stareaT << endl;
-        }
-        if (stareaB.top() == geometry().top() && stareaB.bottom() == geometry().bottom()) {
-            stareaB.setLeft(geometry().left());
-            stareaB.setRight(geometry().right());
-//            kDebug () << "Trimming bottom-strut to geometry(): " << stareaB << endl;
-        }
-        if (stareaL.left() == geometry().left() && stareaL.right() == geometry().right()) {
-            stareaL.setTop(geometry().top());
-            stareaL.setBottom(geometry().bottom());
-//            kDebug () << "Trimming left-strut to geometry(): " << stareaL << endl;
-        }
-        if (stareaR.left() == geometry().left() && stareaR.right() == geometry().right()) {
-            stareaR.setTop(geometry().top());
-            stareaR.setBottom(geometry().bottom());
-//            kDebug () << "Trimming right-strut to geometry(): " << stareaR << endl;
-        }
-    }
     if (stareaL . intersects (area)) {
 //        kDebug () << "Moving left of: " << r << " to " << stareaL.right() + 1 << endl;
         r . setLeft( stareaL . right() + 1 );
