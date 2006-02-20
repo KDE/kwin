@@ -252,7 +252,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
         case FullArea:
             return desktopwidget->geometry();
         case ScreenArea:
-            return sarea;
+            return desktopwidget->screenGeometry( screen );
         }
     assert( false );
     return QRect();
