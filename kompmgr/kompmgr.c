@@ -2484,6 +2484,17 @@ usage (char *program)
 	exit (1);
 }
 
+	static void
+give_me_a_name(void)
+{
+  Window w;
+
+  w = XCreateSimpleWindow (dpy, RootWindow(dpy, 0), 0, 0, 1, 1, 0, None,
+		  None);
+  Xutf8SetWMProperties(dpy, w, "kcompmgr", "kcompmgr", NULL, 0, NULL, NULL,
+		  NULL);
+}	
+
 	int
 main (int argc, char **argv)
 {
@@ -2628,6 +2639,9 @@ main (int argc, char **argv)
 	}
 
 	fprintf(stderr, "Started\n");
+
+	give_me_a_name();
+
 	/* get atoms */
 	shadowAtom = XInternAtom (dpy, SHADOW_PROP, False);
 	opacityAtom = XInternAtom (dpy, OPACITY_PROP, False);
