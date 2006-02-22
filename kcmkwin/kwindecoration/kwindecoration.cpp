@@ -446,7 +446,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
     int numDecos = decorationList->count();
 	for (int i = 0; i < numDecos; ++i)
     {
-		 if (decorationList->text(i) == decoName)
+		 if (decorationList->itemText(i) == decoName)
 		 {
 		 		 decorationList->setCurrentIndex(i);
 		 		 break;
