@@ -313,19 +313,19 @@ void ModernButton::reset(unsigned long changed)
                 setBitmap(iconify_bits);
                 break;
             case MaxButton:
-                setBitmap( isOn() ? (isLeft()?l_minmax_bits:r_minmax_bits) : maximize_bits );
+                setBitmap( isChecked() ? (isLeft()?l_minmax_bits:r_minmax_bits) : maximize_bits );
                 break;
             case OnAllDesktopsButton:
-                setBitmap( isOn() ? unsticky_bits : sticky_bits );
+                setBitmap( isChecked() ? unsticky_bits : sticky_bits );
                 break;
             case ShadeButton:
-                setBitmap( isOn() ? shade_on_bits : shade_off_bits );
+                setBitmap( isChecked() ? shade_on_bits : shade_off_bits );
                 break;
             case AboveButton:
-                setBitmap( isOn() ? above_on_bits : above_off_bits );
+                setBitmap( isChecked() ? above_on_bits : above_off_bits );
                 break;
             case BelowButton:
-                setBitmap( isOn() ? below_on_bits : below_off_bits );
+                setBitmap( isChecked() ? below_on_bits : below_off_bits );
                 break;
             case MenuButton:
                 setBitmap(menu_bits);

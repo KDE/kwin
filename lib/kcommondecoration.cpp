@@ -574,7 +574,7 @@ void KCommonDecoration::keepAboveChange(bool above)
         m_button[AboveButton]->reset(KCommonDecorationButton::StateChange);
     }
 
-    if (m_button[BelowButton] && m_button[BelowButton]->isOn())
+    if (m_button[BelowButton] && m_button[BelowButton]->isChecked())
     {
         m_button[BelowButton]->setOn(false);
         m_button[BelowButton]->setTipText( i18n("Keep below others") );
@@ -591,7 +591,7 @@ void KCommonDecoration::keepBelowChange(bool below)
         m_button[BelowButton]->reset(KCommonDecorationButton::StateChange);
     }
 
-    if (m_button[AboveButton] && m_button[AboveButton]->isOn())
+    if (m_button[AboveButton] && m_button[AboveButton]->isChecked())
     {
         m_button[AboveButton]->setOn(false);
         m_button[AboveButton]->setTipText( i18n("Keep above others") );
@@ -939,7 +939,7 @@ void KCommonDecorationButton::setToggleButton(bool toggle)
 
 void KCommonDecorationButton::setOn(bool on)
 {
-    if (on != isOn() ) {
+    if (on != isChecked() ) {
         QAbstractButton::setOn(on);
         reset(StateChange);
     }

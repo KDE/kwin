@@ -74,35 +74,35 @@ void PlastikButton::reset(unsigned long changed)
                 m_iconType = MinIcon;
                 break;
             case MaxButton:
-                if (isOn()) {
+                if (isChecked()) {
                     m_iconType = MaxRestoreIcon;
                 } else {
                     m_iconType = MaxIcon;
                 }
                 break;
             case OnAllDesktopsButton:
-                if (isOn()) {
+                if (isChecked()) {
                     m_iconType = NotOnAllDesktopsIcon;
                 } else {
                     m_iconType = OnAllDesktopsIcon;
                 }
                 break;
             case ShadeButton:
-                if (isOn()) {
+                if (isChecked()) {
                     m_iconType = UnShadeIcon;
                 } else {
                     m_iconType = ShadeIcon;
                 }
                 break;
             case AboveButton:
-                if (isOn()) {
+                if (isChecked()) {
                     m_iconType = NoKeepAboveIcon;
                 } else {
                     m_iconType = KeepAboveIcon;
                 }
                 break;
             case BelowButton:
-                if (isOn()) {
+                if (isChecked()) {
                     m_iconType = NoKeepBelowIcon;
                 } else {
                     m_iconType = KeepBelowIcon;

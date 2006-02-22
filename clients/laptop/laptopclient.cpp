@@ -269,14 +269,14 @@ void LaptopButton::reset(unsigned long changed)
                 setBitmap(iconify_bits);
                 break;
             case MaxButton:
-                if (isOn() ) {
+                if (isChecked() ) {
                     setBitmap(isLeft() ? l_minmax_bits : r_minmax_bits);
                 } else {
                     setBitmap(maximize_bits);
                 }
                 break;
             case OnAllDesktopsButton:
-                setBitmap( isOn() ? unsticky_bits : sticky_bits );
+                setBitmap( isChecked() ? unsticky_bits : sticky_bits );
                 break;
             default:
                 setBitmap(0);

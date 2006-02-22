@@ -409,19 +409,19 @@ void QuartzButton::reset(unsigned long changed)
 				setBitmap(iconify_bits);
 				break;
 			case MaxButton:
-				setBitmap( isOn() ? minmax_bits : maximize_bits );
+				setBitmap( isChecked() ? minmax_bits : maximize_bits );
 				break;
 			case OnAllDesktopsButton:
 				setBitmap(0);
 				break;
 			case ShadeButton:
-				setBitmap( isOn() ? shade_on_bits : shade_off_bits );
+				setBitmap( isChecked() ? shade_on_bits : shade_off_bits );
 				break;
 			case AboveButton:
-				setBitmap( isOn() ? above_on_bits : above_off_bits );
+				setBitmap( isChecked() ? above_on_bits : above_off_bits );
 				break;
 			case BelowButton:
-				setBitmap( isOn() ? below_on_bits : below_off_bits );
+				setBitmap( isChecked() ? below_on_bits : below_off_bits );
 				break;
 			default:
 				setBitmap(0);
@@ -488,9 +488,9 @@ void QuartzButton::drawButton(QPainter *p)
 
 				// Select the right onAllDesktops button to paint
 				if (decoration()->isActive())
-					btnpix = isOn() ? *pinDownPix : *pinUpPix;
+					btnpix = isChecked() ? *pinDownPix : *pinUpPix;
 				else
-					btnpix = isOn() ? *ipinDownPix : *ipinUpPix;
+					btnpix = isChecked() ? *ipinDownPix : *ipinUpPix;
 
 			} else
 				btnpix = decoration()->icon().pixmap( QIcon::Small, QIcon::Normal);

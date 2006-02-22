@@ -1234,14 +1234,14 @@ void B2Button::drawButton(QPainter *p)
     } else {
 	int type;
         if (client->isActive()) {
-            if (isOn() || isDown())
+            if (isChecked() || isDown())
 		type = Down;
             else if (hover)
 		type = Hover;
 	    else
 		type = Norm;
         } else {
-            if (isOn() || isDown())
+            if (isChecked() || isDown())
 		type = IDown;
 	    else if (hover)
 		type = IHover;

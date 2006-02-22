@@ -256,7 +256,7 @@ void RedmondButton::reset(unsigned long changed)
 				setBitmap(iconify_bits);
 				break;
 			case MaxButton:
-				setBitmap( isOn() ? minmax_bits : maximize_bits );
+				setBitmap( isChecked() ? minmax_bits : maximize_bits );
 				break;
 			case MenuButton:
 			{
