@@ -1276,9 +1276,9 @@ void KeramikClient::updateCaptionBuffer()
 			QRect sr( 0, 0, icon->width(), icon->height() );
 
 			if ( QApplication::isRightToLeft() )
-				sr.addCoords( icon->width() - tr.width(), 0, 0, 0 );
+				sr.adjust( icon->width() - tr.width(), 0, 0, 0 );
 			else
-				sr.addCoords( 0, 0, -( icon->width() - tr.width() ), 0 );
+				sr.adjust( 0, 0, -( icon->width() - tr.width() ), 0 );
 
 			p.drawPixmap( r.x() + sr.x(), r.y() + sr.y(), *icon,
 					sr.x(), sr.y(), sr.width(), sr.height() );
@@ -1287,9 +1287,9 @@ void KeramikClient::updateCaptionBuffer()
 		//p.drawRect( r ); // debug
 
 		if ( QApplication::isRightToLeft() )
-			tr.addCoords( 0, 0, -(16 + iconSpacing), 0 );
+			tr.adjust( 0, 0, -(16 + iconSpacing), 0 );
 		else
-			tr.addCoords( (16 + iconSpacing), 0, 0, 0 );
+			tr.adjust( (16 + iconSpacing), 0, 0, 0 );
 	}
 
 	// Draw the titlebar text
