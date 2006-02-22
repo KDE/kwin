@@ -62,7 +62,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	hbox = new KHBox(sliderBox);
 	hbox->setSpacing(6);
 
-	bool rtl = kapp->reverseLayout();
+	bool rtl = kapp->layoutDirection() == Qt::RightToLeft;
 	label1 = new QLabel(i18n("Small"), hbox);
 	label1->setAlignment(rtl ? Qt::AlignRight : Qt::AlignLeft);
 	label2 = new QLabel(i18n("Medium"), hbox);
