@@ -160,7 +160,7 @@ void KCommonDecoration::updateLayout() const
 {
     QRect r = widget()->rect();
     int r_x, r_y, r_x2, r_y2;
-    r.coords(&r_x, &r_y, &r_x2, &r_y2);
+    r.getCoords(&r_x, &r_y, &r_x2, &r_y2);
 
     // layout preview widget
     if (m_previewWidget) {
@@ -710,7 +710,7 @@ KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point
 
     QRect r = widget()->rect();
     int r_x, r_y, r_x2, r_y2;
-    r.coords(&r_x, &r_y, &r_x2, &r_y2);
+    r.getCoords(&r_x, &r_y, &r_x2, &r_y2);
     int p_x = point.x();
     int p_y = point.y();
     const int borderLeft = layoutMetric(LM_BorderLeft);
@@ -857,7 +857,7 @@ bool KCommonDecoration::isToolWindow() const
 QRect KCommonDecoration::titleRect() const
 {
     int r_x, r_y, r_x2, r_y2;
-    widget()->rect().coords(&r_x, &r_y, &r_x2, &r_y2);
+    widget()->rect().getCoords(&r_x, &r_y, &r_x2, &r_y2);
     const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
     const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
     const int titleEdgeRight = layoutMetric(LM_TitleEdgeRight);

@@ -253,7 +253,7 @@ void PlastikClient::paintEvent(QPaintEvent *e)
     int r_w = r.width();
 //     int r_h = r.height();
     int r_x, r_y, r_x2, r_y2;
-    r.coords(&r_x, &r_y, &r_x2, &r_y2);
+    r.getCoords(&r_x, &r_y, &r_x2, &r_y2);
     const int borderLeft = layoutMetric(LM_BorderLeft);
     const int borderRight = layoutMetric(LM_BorderRight);
     const int borderBottom = layoutMetric(LM_BorderBottom);
