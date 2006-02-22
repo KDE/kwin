@@ -609,7 +609,7 @@ void ButtonDropSite::drawContents( QPainter* p )
 	QRect r = contentsRect();
 
 	// Shrink by 1
-	r.moveBy(1 + leftoffset, 1);
+	r.translate(1 + leftoffset, 1);
 	r.setWidth( r.width() - 2 - leftoffset - rightoffset );
 	r.setHeight( r.height() - 2 );
 
