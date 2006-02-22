@@ -44,7 +44,7 @@ public:
                     KPixmap *iPixDown);
     void setPixmaps(int button_id);
     void setToggle(){setCheckable(true);}
-    void setActive(bool on){setOn(on);}
+    void setActive(bool on){setChecked(on);}
     void setUseMiniIcon(){useMiniIcon = true;}
     QSize sizeHint() const;
     QSizePolicy sizePolicy() const;
