@@ -402,8 +402,8 @@ void TabBox::drawContents( QPainter * )
                     int r1, g1, b1;
                     int r2, g2, b2;
 
-                    c1.rgb( &r1, &g1, &b1 );
-                    c2.rgb( &r2, &g2, &b2 );
+                    c1.getRgb( &r1, &g1, &b1 );
+                    c2.getRgb( &r2, &g2, &b2 );
 
                     r1 += (int) ( .5 * ( r2 - r1 ) );
                     g1 += (int) ( .5 * ( g2 - g1 ) );

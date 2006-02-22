@@ -1529,7 +1529,7 @@ void KTranslucencyConfig::save( void )
 
 
   int r, g, b;
-  shadowColor->color().rgb( &r, &g, &b );
+  shadowColor->color().getRgb( &r, &g, &b );
   QString hex;
   hex.sprintf("0x%02X%02X%02X", r,g,b);
   conf_->writeEntry("ShadowColor",hex);
