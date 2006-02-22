@@ -352,24 +352,24 @@ static NET::WindowType comboToType( int val )
     if( rules->var##rule == Rules::Unused##Type##Rule ) \
         { \
         enable_##var->setChecked( false ); \
-        rule_##var->setCurrentItem( 0 ); \
+        rule_##var->setCurrentIndex( 0 ); \
         Ui_RulesWidgetBase::var->uimethod0; \
         updateEnable##var(); \
         } \
     else \
         { \
         enable_##var->setChecked( true ); \
-        rule_##var->setCurrentItem( type##_rule_to_combo[ rules->var##rule ] ); \
+        rule_##var->setCurrentIndex( type##_rule_to_combo[ rules->var##rule ] ); \
         Ui_RulesWidgetBase::var->uimethod( func( rules->var )); \
         updateEnable##var(); \
         }
 
 #define CHECKBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setChecked, setChecked( false ))
 #define LINEEDIT_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setText, setText( "" ))
-#define COMBOBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setCurrentItem, setCurrentItem( 0 ))
+#define COMBOBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setCurrentIndex, setCurrentIndex( 0 ))
 #define CHECKBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setChecked, setChecked( false ))
 #define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setText, setText( "" ))
-#define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setCurrentItem, setCurrentItem( 0 ))
+#define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setCurrentIndex, setCurrentIndex( 0 ))
 
 void RulesWidget::setRules( Rules* rules )
     {
@@ -379,10 +379,10 @@ void RulesWidget::setRules( Rules* rules )
     description->setText( rules->description );
     wmclass->setText( rules->wmclass );
     whole_wmclass->setChecked( rules->wmclasscomplete );
-    wmclass_match->setCurrentItem( rules->wmclassmatch );
+    wmclass_match->setCurrentIndex( rules->wmclassmatch );
     wmclassMatchChanged();
     role->setText( rules->windowrole );
-    role_match->setCurrentItem( rules->windowrolematch );
+    role_match->setCurrentIndex( rules->windowrolematch );
     roleMatchChanged();
     types->setSelected( 0, rules->types & NET::NormalMask );
     types->setSelected( 1, rules->types & NET::DialogMask );
@@ -395,13 +395,13 @@ void RulesWidget::setRules( Rules* rules )
     types->setSelected( 8, rules->types & NET::OverrideMask );
     types->setSelected( 9, rules->types & NET::TopMenuMask );
     title->setText( rules->title );
-    title_match->setCurrentItem( rules->titlematch );
+    title_match->setCurrentIndex( rules->titlematch );
     titleMatchChanged();
     extra->setText( rules->extrarole );
-    extra_match->setCurrentItem( rules->extrarolematch );
+    extra_match->setCurrentIndex( rules->extrarolematch );
     extraMatchChanged();
     machine->setText( rules->clientmachine );
-    machine_match->setCurrentItem( rules->clientmachinematch );
+    machine_match->setCurrentIndex( rules->clientmachinematch );
     machineMatchChanged();
     LINEEDIT_SET_RULE( position, positionToStr );
     LINEEDIT_SET_RULE( size, sizeToStr );
@@ -559,11 +559,11 @@ void RulesWidget::detected( bool ok )
     if( ok )
         {
         wmclass->setText( detect_dlg->selectedClass());
-        wmclass_match->setCurrentItem( Rules::ExactMatch );
+        wmclass_match->setCurrentIndex( Rules::ExactMatch );
         wmclassMatchChanged(); // grrr
         whole_wmclass->setChecked( detect_dlg->selectedWholeClass());
         role->setText( detect_dlg->selectedRole());
-        role_match->setCurrentItem( detect_dlg->selectedRole().isEmpty()
+        role_match->setCurrentIndex( detect_dlg->selectedRole().isEmpty()
             ? Rules::UnimportantMatch : Rules::ExactMatch );
         roleMatchChanged();
         if( detect_dlg->selectedWholeApp())
@@ -583,10 +583,10 @@ void RulesWidget::detected( bool ok )
             types->setSelected( typeToCombo( type ), true );
             }
         title->setText( detect_dlg->selectedTitle());
-        title_match->setCurrentItem( detect_dlg->titleMatch());
+        title_match->setCurrentIndex( detect_dlg->titleMatch());
         titleMatchChanged();
         machine->setText( detect_dlg->selectedMachine());
-        machine_match->setCurrentItem( Rules::UnimportantMatch );
+        machine_match->setCurrentIndex( Rules::UnimportantMatch );
         machineMatchChanged();
         // prefill values from to window to settings which already set
         const KWin::WindowInfo& info = detect_dlg->windowInfo();
@@ -605,7 +605,7 @@ void RulesWidget::detected( bool ok )
 
 #define CHECKBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setChecked )
 #define LINEEDIT_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setText )
-#define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentItem )
+#define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentIndex )
 
 void RulesWidget::prefillUnusedValues( const KWin::WindowInfo& info )
     {

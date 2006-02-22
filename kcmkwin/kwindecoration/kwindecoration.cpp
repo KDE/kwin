@@ -448,7 +448,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
     {
 		 if (decorationList->text(i) == decoName)
 		 {
-		 		 decorationList->setCurrentItem(i);
+		 		 decorationList->setCurrentIndex(i);
 		 		 break;
 		 }
 	}
@@ -578,7 +578,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 		int pos = borderSizeToIndex( border_size, sizes );
 		lBorder->show();
 		cBorder->show();
-		cBorder->setCurrentItem(pos);
+		cBorder->setCurrentIndex(pos);
 		slotBorderChanged( pos );
 	}
 }
