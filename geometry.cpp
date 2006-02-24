@@ -1428,10 +1428,17 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             resizeWithChecks( ns );
             xSizeHint.win_gravity = save_gravity;
             updateFullScreenHack( QRect( calculateGravitation( true, xSizeHint.win_gravity ), QSize( nw, nh )));
-            QRect area = workspace()->clientArea( WorkArea, this );
-            if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen()
-                && area.contains( orig_geometry ))
-                keepInArea( area );
+            if( !from_tool && ( !isSpecialWindow() || isToolbar()) && !isFullScreen())
+                {
+                // try to keep the window in its xinerama screen if possible,
+                // if that fails at least keep it visible somewhere
+                QRect area = workspace()->clientArea( MovementArea, this );
+                if( area.contains( orig_geometry ))
+                    keepInArea( area );
+                area = workspace()->clientArea( WorkArea, this );
+                if( area.contains( orig_geometry ))
+                    keepInArea( area );
+                }
             }
         }
     // No need to send synthetic configure notify event here, either it's sent together
