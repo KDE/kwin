@@ -366,11 +366,10 @@ bool Workspace::workspaceEvent( XEvent * e )
                     XMapRaised( QX11Info::display(), e->xmaprequest.window );
                 return true;
                 }
-            if ( c ) 
+            if( c )
                 {
                 c->windowEvent( e );
-                if ( !c->wantsTabFocus())
-                    focus_chain.remove( c );  // TODO move focus_chain changes to functions
+                updateFocusChains( c, true );
                 return true;
                 }
             break;

@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_WORKSPACE_H
 
 #include <qtimer.h>
+#include <qvector.h>
 #include <kshortcut.h>
 #include <qcursor.h>
 #include <netwm.h>
@@ -250,6 +251,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
+        void updateFocusChains( Client* c, bool make_first );
         
         bool forcedGlobalMouseGrab() const;
         void clientShortcutUpdated( Client* c );
@@ -507,7 +509,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         ClientList unconstrained_stacking_order;
         ClientList stacking_order;
-        ClientList focus_chain;
+        QVector< ClientList > focus_chain;
         ClientList should_get_focus; // last is most recent
         ClientList attention_chain;
         

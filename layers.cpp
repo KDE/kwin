@@ -411,16 +411,23 @@ void Workspace::restackClientUnderActive( Client* c )
             }
         }
     assert( unconstrained_stacking_order.contains( c ));
-    if( c->wantsTabFocus() && focus_chain.contains( active_client ))
-        {
-        // also put in focus_chain after all windows belonging to the active application
-        focus_chain.remove( c );
-	for ( int i = focus_chain.size() - 1; i >= 0 ; i-- )
+    for( int desktop = 1;
+         desktop <= numberOfDesktops();
+         ++desktop )
+        { // do for every virtual desktop to handle the case of onalldesktop windows
+        if( c->wantsTabFocus() && c->isOnDesktop( desktop ) && focus_chain[ desktop ].contains( active_client ))
             {
-            if( Client::belongToSameApplication( active_client, focus_chain.at( i ) ))
+            // also put in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
+            focus_chain[ desktop ].remove( c );
+            for ( int i = focus_chain[ desktop ].size() - 1;
+                  i >= 0;
+                  --i )
                 {
-                focus_chain.insert( i, c );
-                break;
+                if( Client::belongToSameApplication( active_client, focus_chain[ desktop ].at( i ) ))
+                    {
+                    focus_chain[ desktop ].insert( i, c );
+                    break;
+                    }
                 }
             }
         }

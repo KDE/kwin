@@ -574,6 +574,7 @@ void Client::minimize( bool avoid_animation )
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
+    workspace()->updateFocusChains( this, false ); // make it last in the focus chain
     }
 
 void Client::unminimize( bool avoid_animation )
@@ -1132,6 +1133,7 @@ void Client::processKillerExited()
 
 void Client::setSkipTaskbar( bool b, bool from_outside )
     {
+    int was_wants_tab_focus = wantsTabFocus();
     if( from_outside )
         {
         b = rules()->checkSkipTaskbar( b );
@@ -1142,6 +1144,8 @@ void Client::setSkipTaskbar( bool b, bool from_outside )
     skip_taskbar = b;
     info->setState( b?NET::SkipTaskbar:0, NET::SkipTaskbar );
     updateWindowRules();
+    if( was_wants_tab_focus != wantsTabFocus())
+        workspace()->updateFocusChains( this, isActive());
     }
 
 void Client::setSkipPager( bool b )
@@ -1183,6 +1187,7 @@ void Client::setDesktop( int desktop )
         }
     if( decoration != NULL )
         decoration->desktopChange();
+    workspace()->updateFocusChains( this, true );
     updateVisibility();
     updateWindowRules();
     }

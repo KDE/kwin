@@ -514,8 +514,7 @@ void Workspace::addClient( Client* c, allowed_t )
         }
     else
         {
-        if ( c->wantsTabFocus() && !focus_chain.contains( c ))
-            focus_chain.append( c );
+        updateFocusChains( c, true );
         clients.append( c );
         }
     if( !unconstrained_stacking_order.contains( c ))
@@ -563,7 +562,10 @@ void Workspace::removeClient( Client* c, allowed_t )
     desktops.remove( c );
     unconstrained_stacking_order.remove( c );
     stacking_order.remove( c );
-    focus_chain.remove( c );
+    for( int i = 1;
+         i <= numberOfDesktops();
+         ++i )
+        focus_chain[ i ].remove( c );
     attention_chain.remove( c );
     if( c->isTopMenu())
         removeTopMenu( c );
@@ -588,6 +590,49 @@ void Workspace::removeClient( Client* c, allowed_t )
        tab_box->repaint();
 
     updateClientArea();
+    }
+
+void Workspace::updateFocusChains( Client* c, bool make_first )
+    {
+    if( !c->wantsTabFocus()) // doesn't want tab focus, remove
+        {
+        for( int i=1;
+             i<= numberOfDesktops();
+             ++i )
+            focus_chain[i].remove(c);
+        return;
+        }
+    if(c->desktop() == NET::OnAllDesktops)
+        { //now on all desktops, add it to focus_chains it is not already in
+        for( int i=1; i<= numberOfDesktops(); i++)
+            { // make_first works only on current desktop, don't affect all desktops
+            if( make_first && i == currentDesktop())
+                {
+                focus_chain[ i ].remove( c );
+                focus_chain[ i ].append( c );
+                }
+            else if( !focus_chain[ i ].contains( c ))
+                focus_chain[ i ].prepend( c ); // otherwise add as the last one
+            }
+        }
+    else    //now only on desktop, remove it anywhere else
+        {
+        for( int i=1; i<= numberOfDesktops(); i++)
+            {
+            if( i == c->desktop())
+                {
+                if( make_first )
+                    {
+                    focus_chain[ i ].remove( c );
+                    focus_chain[ i ].append( c );
+                    }
+                else if( !focus_chain[ i ].contains( c ))
+                    focus_chain[ i ].prepend( c );
+                }
+            else
+                focus_chain[ i ].remove( c );
+            }
+        }
     }
 
 void Workspace::updateCurrentTopMenu()
@@ -916,6 +961,8 @@ void Workspace::loadDesktopSettings()
     screenarea = NULL;
     rootInfo->setNumberOfDesktops( number_of_desktops );
     desktop_focus_chain.resize( n );
+    // make it +1, so that it can be accessed as [1..numberofdesktops]
+    focus_chain.resize( n + 1 );
     for(int i = 1; i <= n; i++) 
         {
         QString s = group.readEntry(QString("Name_%1").arg(i),
@@ -1140,36 +1187,22 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     if ( options->focusPolicyIsReasonable()) 
         {
         // Search in focus chain
-
-        if ( focus_chain.contains( active_client ) && active_client->isShown( true )
-            && active_client->isOnCurrentDesktop())
+        if ( movingClient != NULL && active_client == movingClient
+            && focus_chain[currentDesktop()].contains( active_client )
+            && active_client->isShown( true ) && active_client->isOnCurrentDesktop())
             {
             c = active_client; // the requestFocus below will fail, as the client is already active
             }
-
-        if ( !c ) 
+        if( !c ) 
             {
-                for( int i = focus_chain.size() - 1;
-                     i >= 0;
-                     --i )
+            for( int i = focus_chain[ currentDesktop() ].size() - 1;
+                 i >= 0;
+                 --i )
                 {
-                if ( focus_chain.at( i )->isShown( false ) && !focus_chain.at(  i )->isOnAllDesktops() && focus_chain.at(  i )->isOnCurrentDesktop()) 
+                if( focus_chain[ currentDesktop() ].at( i )->isShown( false )
+                    && focus_chain[ currentDesktop() ].at( i )->isOnCurrentDesktop())
                     {
-                    c = focus_chain.at(  i );
-                    break;
-                    }
-                }
-            }
-
-        if ( !c ) 
-            {
-                for( int i = focus_chain.size() - 1;
-                     i >= 0;
-                     --i )
-                {
-                if ( focus_chain.at(  i )->isShown( false ) && focus_chain.at(  i )->isOnCurrentDesktop()) 
-                    {
-                    c = focus_chain.at(  i );
+                    c = focus_chain[ currentDesktop() ].at(  i );
                     break;
                     }
                 }
@@ -1202,13 +1235,13 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     updateCurrentTopMenu();
 
     // Update focus chain:
-    //  If input: chain = { 1, 2, 3, 4 } and current_desktop = 3,
+    //  If input: chain = { 1, 2, 3, 4 } and currentDesktop() = 3,
     //   Output: chain = { 3, 1, 2, 4 }.
 //    kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
-//      .arg(current_desktop).arg(desktop_focus_chain.find( current_desktop ));
-    for( int i = desktop_focus_chain.indexOf( current_desktop ); i > 0; i-- )
+//      .arg(currentDesktop()).arg(desktop_focus_chain.find( currentDesktop() ));
+    for( int i = desktop_focus_chain.indexOf( currentDesktop() ); i > 0; i-- )
         desktop_focus_chain[i] = desktop_focus_chain[i-1];
-    desktop_focus_chain[0] = current_desktop;
+    desktop_focus_chain[0] = currentDesktop();
 
 //    QString s = "desktop_focus_chain[] = { ";
 //    for( uint i = 0; i < desktop_focus_chain.size(); i++ )
@@ -1381,6 +1414,7 @@ void Workspace::setNumberOfDesktops( int n )
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
         updateClientArea( true );
+        focus_chain.resize( number_of_desktops + 1 );
         }
 
     // if the number of desktops decreased, move all
@@ -1402,6 +1436,7 @@ void Workspace::setNumberOfDesktops( int n )
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
         updateClientArea( true );
+        focus_chain.resize( number_of_desktops + 1 );
         }
 
     saveDesktopSettings();
@@ -1437,9 +1472,6 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     else 
         {
         raiseClient( c );
-        focus_chain.remove( c );
-        if ( c->wantsTabFocus() )
-            focus_chain.append( c );
         }
 
     ClientList transients_stacking_order = ensureStackingOrder( c->transients());

@@ -229,9 +229,7 @@ void Workspace::setActiveClient( Client* c, allowed_t )
         last_active_client = active_client;
     if ( active_client ) 
         {
-        focus_chain.remove( c );
-        if ( c->wantsTabFocus() )
-            focus_chain.append( c );
+        updateFocusChains( active_client, true ); // make it first in focus chain
         active_client->demandAttention( false );
         }
     pending_take_activity = NULL;
@@ -400,27 +398,25 @@ bool Workspace::activateNextClient( Client* c )
         }
     if( focusChangeEnabled())
         {
-        if ( c != NULL && c->wantsTabFocus() && focus_chain.contains( c ) )
-            {
-            focus_chain.remove( c );
-            focus_chain.prepend( c );
-            }
         if ( options->focusPolicyIsReasonable())
             { // search the focus_chain for a client to transfer focus to
-          // if 'c' is transient, transfer focus to the first suitable mainwindow
+              // if 'c' is transient, transfer focus to the first suitable mainwindow
             Client* get_focus = NULL;
             const ClientList mainwindows = ( c != NULL ? c->mainClients() : ClientList());
-	    for ( int i = focus_chain.size() - 1; i >= 0; --i )
+	    for ( int i = focus_chain[ currentDesktop() ].size() - 1;
+                  i >= 0;
+                  --i )
                 {
-                if( !focus_chain.at( i )->isShown( false ) || !focus_chain.at(  i )->isOnCurrentDesktop())
+                if( !focus_chain[ currentDesktop() ].at( i )->isShown( false )
+                    || !focus_chain[ currentDesktop() ].at(  i )->isOnCurrentDesktop())
                     continue;
-                if( mainwindows.contains( focus_chain.at(  i ) ))
+                if( mainwindows.contains( focus_chain[ currentDesktop() ].at(  i ) ))
                     {
-                    get_focus = focus_chain.at(  i );
+                    get_focus = focus_chain[ currentDesktop() ].at(  i );
                     break;
                     }
                 if( get_focus == NULL )
-                    get_focus = focus_chain.at(  i );
+                    get_focus = focus_chain[ currentDesktop() ].at(  i );
                 }
             if( get_focus == NULL )
                 get_focus = findDesktop( true, currentDesktop());
