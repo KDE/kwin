@@ -97,8 +97,7 @@ enum clientAreaOption
     // these below don't depend on xinerama settings
     WorkArea,              // whole workarea (all screens together)
     FullArea,              // whole area (all screens together), ignore struts
-    ScreenArea,            // one whole screen, ignore struts
-    FullXineramaArea
+    ScreenArea             // one whole screen, ignore struts
     };
 
 enum ShadeMode

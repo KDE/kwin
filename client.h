@@ -361,7 +361,7 @@ class Client : public QObject, public KDecorationDefines
         QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny, bool noframe = false ) const;
         void changeMaximize( bool horizontal, bool vertical, bool adjust );
         void checkMaximizeGeometry();
-        bool checkFullScreenHack( const QRect& geom ) const;
+        int checkFullScreenHack( const QRect& geom ) const; // 0 - none, 1 - one xinerama screen, 2 - full area
         void updateFullScreenHack( const QRect& geom );
         void getWmNormalHints();
         void getMotifHints();

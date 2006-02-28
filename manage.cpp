@@ -205,10 +205,17 @@ bool Client::manage( Window w, bool isMapped )
     else
         area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
 
-    if( checkFullScreenHack( geom ))
+    if( int type = checkFullScreenHack( geom ))
         {
         fullscreen_mode = FullScreenHack;
-        geom = workspace()->clientArea( FullScreenArea, geom.center(), desktop());
+        if( rules()->checkStrictGeometry( false ))
+            {
+            geom = type == 2 // 1 - it's xinerama-aware fullscreen hack, 2 - it's full area
+                ? workspace()->clientArea( FullArea, geom.center(), desktop())
+                : workspace()->clientArea( ScreenArea, geom.center(), desktop());
+            }
+        else
+            geom = workspace()->clientArea( FullScreenArea, geom.center(), desktop());
         placementDone = true;
         }
 
