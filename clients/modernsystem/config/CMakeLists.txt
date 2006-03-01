@@ -13,7 +13,7 @@ kde4_add_plugin(kwin_modernsys_config ${kwin_modernsys_config_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_modernsys_config )
 
-target_link_libraries(kwin_modernsys_config  ${QT_AND_KDECORE_LIBS} kdeui )
+target_link_libraries(kwin_modernsys_config  ${QT_AND_KDECORE_LIBS} kdeui ${QT_QTGUI_LIBRARY}) 
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin_modernsys_config )
 

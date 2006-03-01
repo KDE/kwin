@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( config ) 
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}   ${CMAKE_SOURCE_DIR}/workspace/kwin/lib )
 
 
 ########### next target ###############
@@ -15,7 +15,7 @@ kde4_add_plugin(kwin3_b2 ${kwin3_b2_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_b2 )
 
-target_link_libraries(kwin3_b2  ${QT_AND_KDECORE_LIBS} kdecorations kdefx )
+target_link_libraries(kwin3_b2  ${QT_AND_KDECORE_LIBS} kdecorations kdefx ${QT_QT3SUPPORT_LIBRARY} ${X11_LIBRARIES} ${QT_QTGUI_LIBRARY})
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_b2 )
 
