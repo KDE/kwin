@@ -2,13 +2,14 @@ kde4_header()
 
 add_subdirectory( lib ) 
 add_subdirectory( killer ) 
-add_subdirectory( kcmkwin ) 
+#add_subdirectory( kcmkwin ) 
 add_subdirectory( pics ) 
 add_subdirectory( clients ) 
 add_subdirectory( oldheaders ) 
 add_subdirectory( data ) 
 
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(KOMPMGR)")
+message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: Readd kcmkwin )" )
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_BINARY_DIR}/lib)
 
 
