@@ -9,7 +9,7 @@ add_subdirectory( oldheaders )
 add_subdirectory( data ) 
 
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(KOMPMGR)")
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_BINARY_DIR}/lib)
 
 
 ########### next target ###############
@@ -45,7 +45,7 @@ kde4_add_dcop_skels(kwin_KDEINIT_SRCS KWinInterface.h )
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin  ${QT_AND_KDECORE_LIBS} kdeui kdecorations )
+target_link_libraries(kdeinit_kwin  ${QT_AND_KDECORE_LIBS} kdeui kdecorations DCOP  ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 
 install_targets(${LIB_INSTALL_DIR} kdeinit_kwin )
 
