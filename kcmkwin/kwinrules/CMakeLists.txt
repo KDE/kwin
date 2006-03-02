@@ -5,13 +5,16 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib ${KDE4_INCLUDE_DIR} 
 
 ########### next target ###############
 
-set(kwin_rules_dialog_KDEINIT_SRCS main.cpp )
+set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp)
+kde4_add_ui3_files(kwinrules_SRCS ruleswidgetbase.ui ruleslistbase.ui detectwidgetbase.ui editshortcutbase.ui )
+
+set(kwin_rules_dialog_KDEINIT_SRCS main.cpp ${kwinrules_SRCS})
 
 kde4_automoc(${kwin_rules_dialog_KDEINIT_SRCS})
 
 kde4_add_kdeinit_executable( kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin_rules_dialog  ${QT_AND_KDECORE_LIBS} kwinrules )
+target_link_libraries(kdeinit_kwin_rules_dialog  ${QT_AND_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR} kdeinit_kwin_rules_dialog )
 
@@ -20,7 +23,7 @@ install_targets(/bin kwin_rules_dialog )
 
 ########### next target ###############
 
-set(kcm_kwinrules_PART_SRCS kcm.cpp )
+set(kcm_kwinrules_PART_SRCS kcm.cpp ${kwinrules_SRCS})
 
 kde4_automoc(${kcm_kwinrules_PART_SRCS})
 
@@ -28,7 +31,7 @@ kde4_add_plugin(kcm_kwinrules ${kcm_kwinrules_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwinrules )
 
-target_link_libraries(kcm_kwinrules  ${QT_AND_KDECORE_LIBS} kwinrules )
+target_link_libraries(kcm_kwinrules  ${QT_AND_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kwinrules )
 
