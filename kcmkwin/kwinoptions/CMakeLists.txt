@@ -23,7 +23,7 @@ install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kwinoptions )
 install_files( ${XDG_APPS_DIR} FILES kwinoptions.desktop )
 install_files( ${APPLNK_INSTALL_DIR}/.hidden FILES kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  kwintranslucency.desktop  )
 
-kde4_install_icons( hicolor crystalsvg )
+kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 
 kde4_footer()
 

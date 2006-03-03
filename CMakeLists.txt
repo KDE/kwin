@@ -61,7 +61,7 @@ install_files( ${KCFG_INSTALL_DIR} FILES kwin.kcfg )
 install_files( ${DATA_INSTALL_DIR}/kwin FILES eventsrc )
 install_files( /include FILES KWinInterface.h )
 
-kde4_install_icons( hicolor crystalsvg )
+kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 
 kde4_create_doxygen_docs(  )
 
