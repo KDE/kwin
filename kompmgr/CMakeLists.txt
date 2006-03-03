@@ -11,7 +11,7 @@ kde4_automoc(${kompmgr_SRCS})
 
 kde4_add_executable(kompmgr ${kompmgr_SRCS})
 
-target_link_libraries(kompmgr  ${QT_AND_KDECORE_LIBS} Xcomposite Xdamage Xfixes Xext m )
+target_link_libraries(kompmgr  ${QT_AND_KDECORE_LIBS} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xfixes_LIB} ${X11_Xext_LIB} m )
 
 install_targets(/bin kompmgr )
 
