@@ -113,7 +113,7 @@ void KCommonDecoration::init()
     createMainWidget();
 
     // for flicker-free redraws
-    widget()->setBackgroundMode(Qt::NoBackground);
+    widget()->setAttribute(Qt::WA_NoSystemBackground);
 
     widget()->installEventFilter( this );
 
