@@ -38,7 +38,7 @@ class PlastikButton : public KCommonDecorationButton
 {
     Q_OBJECT
 public:
-    PlastikButton(ButtonType type, PlastikClient *parent, const char *name);
+    PlastikButton(ButtonType type, PlastikClient *parent);
     ~PlastikButton();
 
     void reset(unsigned long changed);

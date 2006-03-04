@@ -290,7 +290,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
     friend class KCommonDecoration;
 
     public:
-        KCommonDecorationButton(ButtonType type, KCommonDecoration *parent, const char *name);
+        KCommonDecorationButton(ButtonType type, KCommonDecoration *parent);
         virtual ~KCommonDecorationButton();
 
         /**
@@ -339,7 +339,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
         /**
          * The mouse button that has been clicked last time.
          */
-		Qt::ButtonState lastMousePress() const { return m_lastMouse; }
+        Qt::MouseButtons lastMousePress() const { return m_lastMouse; }
 
         QSize sizeHint() const;
 
@@ -355,7 +355,7 @@ class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
         ButtonType m_type;
         int m_realizeButtons;
         QSize m_size;
-		Qt::ButtonState m_lastMouse;
+        Qt::MouseButtons m_lastMouse;
 
         bool m_isLeft;
 
@@ -363,3 +363,5 @@ class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
 };
 
 #endif // KCOMMONDECORATION_H
+
+// kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;

@@ -198,13 +198,13 @@ public:
      */
     const QColor& color(ColorType type, bool active=true) const;
     /**
-     * Returns a colorgroup using the given decoration color as the background.
+     * Returns a palette using the given decoration color as the background.
      * The changed flags for this setting is SettingColors.
      *
      * @param type   The requested color type.
      * @param active Whether to return the color for active or inactive windows.
      */
-    const QColorGroup& colorGroup(ColorType type, bool active=true) const;
+    const QPalette& palette(ColorType type, bool active=true) const;
     /**
      * Returns the active or inactive decoration font.
      * The changed flags for this setting is SettingFont.
@@ -285,7 +285,7 @@ public:
     /**
      * @internal
      */
-    WindowOperation operationMaxButtonClick( Qt::ButtonState button ) const;
+		WindowOperation operationMaxButtonClick( Qt::MouseButtons button ) const;
 
     /**
      * @internal
@@ -745,7 +745,7 @@ class KWIN_EXPORT KDecoration
          * NOTE: This function is new in KDE3.3. In order to support also KDE3.2,
          * it is recommended to use code like this:
          * \code
-         * ButtonState button = ... ;
+         * MouseButtons button = ... ;
          * #if KDE_IS_VERSION( 3, 3, 0 )
          * maximize( button );
          * #else
@@ -759,7 +759,7 @@ class KWIN_EXPORT KDecoration
          * \endcode
          */
 #warning Update the docs.
-        void maximize( Qt::ButtonState button );
+        void maximize( Qt::MouseButtons button );
 	/**
 	 * Set the maximize mode of the decorated window.
 	 * @param mode The maximization mode to be set.

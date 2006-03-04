@@ -115,7 +115,7 @@ namespace Keramik {
 			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = Qt::LeftButton );
 			~KeramikButton();
 
-			Qt::ButtonState lastButton() const { return lastbutton; }
+			Qt::MouseButtons lastButton() const { return lastbutton; }
 
 		private:
 			void enterEvent( QEvent * );
@@ -128,7 +128,7 @@ namespace Keramik {
 			KeramikClient *client;
 			Button button;
 			bool hover;
-			Qt::ButtonState lastbutton;
+			Qt::MouseButtons lastbutton;
 			int realizeButtons;
 	}; // class KeramikButton
 

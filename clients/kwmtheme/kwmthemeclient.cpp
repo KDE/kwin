@@ -364,7 +364,7 @@ void KWMThemeClient::drawTitle(QPainter &dest)
     p.begin(&buffer);
 
     if(titleSunken){
-        qDrawShadeRect(&p, r, options()->colorGroup(KDecorationOptions::ColorFrame, isActive()),
+			qDrawShadeRect(&p, r, options()->palette(KDecorationOptions::ColorFrame, isActive()).active(),
                        true, 1, 0);
         r.setRect(r.x()+1, r.y()+1, r.width()-2, r.height()-2);
     }
@@ -384,7 +384,7 @@ void KWMThemeClient::drawTitle(QPainter &dest)
         p.drawTiledPixmap(r, *fill);
     }
     else{
-        p.fillRect(r, options()->colorGroup(KDecorationOptions::ColorTitleBar, isActive()).
+			p.fillRect(r, options()->palette(KDecorationOptions::ColorTitleBar, isActive()).active().
                    brush(QColorGroup::Button));
     }
     p.setFont(options()->font(isActive()));

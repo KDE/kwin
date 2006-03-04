@@ -44,7 +44,7 @@ class KWIN_EXPORT KDecorationOptionsPrivate : public KDecorationDefines
         BorderSize findPreferredBorderSize( BorderSize size, QList< BorderSize > ) const; // shared implementation
 
         QColor colors[NUM_COLORS*2];
-        QColorGroup *cg[NUM_COLORS*2];
+        QPalette *pal[NUM_COLORS*2];
         QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;
         QString title_buttons_left;
         QString title_buttons_right;

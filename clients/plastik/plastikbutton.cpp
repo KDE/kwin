@@ -41,8 +41,8 @@ namespace KWinPlastik
 static const uint TIMERINTERVAL = 50; // msec
 static const uint ANIMATIONSTEPS = 4;
 
-PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent, const char *name)
-    : KCommonDecorationButton(type, parent, name),
+PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent)
+    : KCommonDecorationButton(type, parent),
     m_client(parent),
     m_iconType(NumButtonIcons),
     hover(false)

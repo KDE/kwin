@@ -60,7 +60,9 @@ const KDecorationOptions* KDecoration::options()
 void KDecoration::createMainWidget( Qt::WFlags flags )
     {
     // FRAME check flags?
-    setMainWidget( new QWidget( initialParentWidget(), "decoration widget", initialWFlags() | flags ));
+    QWidget *w = new QWidget( initialParentWidget(), initialWFlags() | flags );
+    w->setObjectName("decoration widget");
+    setMainWidget(w);
     }
 
 void KDecoration::setMainWidget( QWidget* w )
@@ -236,7 +238,7 @@ void KDecoration::closeWindow()
     bridge_->closeWindow();
     }
 
-void KDecoration::maximize( Qt::ButtonState button )
+void KDecoration::maximize( Qt::MouseButtons button )
     {
     performWindowOperation( options()->operationMaxButtonClick( button ));
     }
@@ -388,16 +390,19 @@ const QFont& KDecorationOptions::font(bool active, bool small) const
         return(active ? d->activeFont : d->inactiveFont);
 }
 
-const QColorGroup& KDecorationOptions::colorGroup(ColorType type, bool active) const
+const QPalette& KDecorationOptions::palette(ColorType type, bool active) const
 {
     int idx = type + (active ? 0 : NUM_COLORS);
-    if(d->cg[idx])
-        return(*d->cg[idx]);
-    d->cg[idx] = new QColorGroup(Qt::black, d->colors[idx], d->colors[idx].light(150),
-                              d->colors[idx].dark(), d->colors[idx].dark(120),
-                              Qt::black, QApplication::palette().active().
-                              base());
-    return(*d->cg[idx]);
+    if(d->pal[idx])
+        return(*d->pal[idx]);
+#warning KDE4 : why construct the palette this way?
+		// TODO: Is this worth 'porting' to Qt4?
+//     d->pal[idx] = new QPalette(Qt::black, d->colors[idx], d->colors[idx].light(150),
+//                               d->colors[idx].dark(), d->colors[idx].dark(120),
+//                               Qt::black, QApplication::palette().active().
+//                               base());
+    d->pal[idx] = new QPalette(d->colors[idx]);
+    return(*d->pal[idx]);
 }
 
 bool KDecorationOptions::customButtonPositions() const
@@ -434,7 +439,7 @@ bool KDecorationOptions::moveResizeMaximizedWindows() const
     return d->move_resize_maximized_windows;
 }
 
-KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick( Qt::ButtonState button ) const
+KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick( Qt::MouseButtons button ) const
     {
     return button == Qt::RightButton? d->OpMaxButtonRightClick : 
            button == Qt::MidButton?   d->OpMaxButtonMiddleClick :

@@ -33,7 +33,7 @@ DEALINGS IN THE SOFTWARE.
 KDecorationOptionsPrivate::KDecorationOptionsPrivate()
     {
     for(int i=0; i < NUM_COLORS*2; ++i)
-        cg[i] = NULL;
+        pal[i] = NULL;
     }
 
 KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
@@ -41,10 +41,10 @@ KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
     int i;
     for(i=0; i < NUM_COLORS*2; ++i)
         {
-        if(cg[i])
+        if(pal[i])
             {
-            delete cg[i];
-            cg[i] = NULL;
+            delete pal[i];
+            pal[i] = NULL;
             }
         }
     }
@@ -76,9 +76,9 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
          ++i )
         old_colors[ i ] = colors[ i ];
         
-    QPalette pal = QApplication::palette();
+    QPalette appPal = QApplication::palette();
     // normal colors
-    colors[ColorFrame] = pal.active().background();
+    colors[ColorFrame] = appPal.active().background();
     colors[ColorFrame] = config->readEntry("frame", colors[ColorFrame]);
     colors[ColorHandle] = colors[ColorFrame];
     colors[ColorHandle] = config->readEntry("handle", colors[ColorHandle]);
@@ -90,7 +90,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
         colors[ColorButtonBg] = colors[ColorFrame];
     colors[ColorButtonBg] = config->readEntry("activeTitleBtnBg",
                                               colors[ColorFrame]);
-    colors[ColorTitleBar] = pal.active().highlight();
+    colors[ColorTitleBar] = appPal.active().highlight();
     colors[ColorTitleBar] = config->readEntry("activeBackground",
                                               colors[ColorTitleBar]);
     if(QPixmap::defaultDepth() > 8)
@@ -100,7 +100,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     colors[ColorTitleBlend] = config->readEntry("activeBlend",
                                                 colors[ColorTitleBlend]);
 
-    colors[ColorFont] = pal.active().highlightedText();
+    colors[ColorFont] = appPal.active().highlightedText();
     colors[ColorFont] = config->readEntry("activeForeground", colors[ColorFont]);
 
     // inactive
@@ -214,10 +214,10 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     int i;
     for(i=0; i < NUM_COLORS*2; ++i)
         {
-        if(cg[i])
+        if(pal[i])
             {
-            delete cg[i];
-            cg[i] = NULL;
+            delete pal[i];
+            pal[i] = NULL;
             }
         }
 

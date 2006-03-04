@@ -872,8 +872,8 @@ QRect KCommonDecoration::titleRect() const
 }
 
 
-KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent, const char *name)
-    : QAbstractButton(parent->widget(), name),
+KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent)
+    : QAbstractButton(parent->widget() ),
         m_decoration(parent),
         m_type(type),
         m_realizeButtons(Qt::LeftButton),
@@ -933,14 +933,14 @@ void KCommonDecorationButton::setTipText(const QString &tip) {
 
 void KCommonDecorationButton::setToggleButton(bool toggle)
 {
-    QAbstractButton::setToggleButton(toggle);
+    QAbstractButton::setCheckable(toggle);
     reset(ToggleChange);
 }
 
 void KCommonDecorationButton::setOn(bool on)
 {
     if (on != isChecked() ) {
-        QAbstractButton::setOn(on);
+        QAbstractButton::setChecked(on);
         reset(StateChange);
     }
 }
@@ -949,8 +949,7 @@ void KCommonDecorationButton::mousePressEvent(QMouseEvent* e)
 {
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state());
+    QMouseEvent me(e->type(), e->pos(), (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->buttons(), e->modifiers() );
 
     QAbstractButton::mousePressEvent(&me);
 }
@@ -959,8 +958,10 @@ void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
 {
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state());
+    QMouseEvent me(e->type(), e->pos(), (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->buttons(), e->modifiers() );
 
     QAbstractButton::mouseReleaseEvent(&me);
 }
+
+// kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;
+

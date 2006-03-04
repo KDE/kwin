@@ -152,7 +152,7 @@ static void create_pixmaps ()
     defaultMenuPix = new QPixmap(kdelogo);
 
     // buttons (active/inactive, sunken/unsunken)
-	QColorGroup g = options()->colorGroup(KDecoration::ColorButtonBg, true);
+	QColorGroup g = options()->palette(KDecoration::ColorButtonBg, true).active();
     QColor c = g.background();
     btnPix1->resize(normalTitleHeight, normalTitleHeight-2);
     btnDownPix1->resize(normalTitleHeight, normalTitleHeight-2);
@@ -175,7 +175,7 @@ static void create_pixmaps ()
         KPixmapEffect::gradient(*miniBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
 
-        g = options()->colorGroup(KDecoration::ColorButtonBg, false);
+		g = options()->palette(KDecoration::ColorButtonBg, false).active();
         c = g.background();
         KPixmapEffect::gradient(*iBtnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
@@ -191,7 +191,7 @@ static void create_pixmaps ()
         miniBtnPix1->fill(c.rgb());
         miniBtnDownPix1->fill(c.rgb());
 
-        g = options()->colorGroup(KDecoration::ColorButtonBg, false);
+		g = options()->palette(KDecoration::ColorButtonBg, false).active();
         c = g.background();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
@@ -199,13 +199,13 @@ static void create_pixmaps ()
         iMiniBtnDownPix1->fill(c.rgb());
     }
 
-    g = options()->colorGroup(KDecoration::ColorButtonBg, true);
+	g = options()->palette(KDecoration::ColorButtonBg, true).active();
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(miniBtnPix1, g, false);
     drawButtonFrame(miniBtnDownPix1, g, true);
 
-    g = options()->colorGroup(KDecoration::ColorButtonBg, false);
+	g = options()->palette(KDecoration::ColorButtonBg, false).active();
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
     drawButtonFrame(iMiniBtnPix1, g, false);
@@ -234,7 +234,7 @@ void delete_pixmaps()
 }
 
 RedmondButton::RedmondButton(ButtonType type, RedmondDeco *parent, const char *name)
-    : KCommonDecorationButton(type, parent, name)
+    : KCommonDecorationButton(type, parent)
 {
 	// Eliminate background flicker
 	setBackgroundMode( Qt::NoBackground );
@@ -493,7 +493,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
     // Draw part of the frame that is the frame color
     // ==============================================
-    QColorGroup g = options()->colorGroup(KDecoration::ColorFrame, isActive());
+	QColorGroup g = options()->palette(KDecoration::ColorFrame, isActive()).active();
     p.setPen( g.background() );
     p.drawLine( x, y, x2-1, y );
     p.drawLine( x, y, x, y2-1 );

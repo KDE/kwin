@@ -122,31 +122,31 @@ KCommonDecorationButton *WebClient::createButton(ButtonType type)
 {
     switch (type) {
         case MenuButton:
-            return new WebButton(MenuButton, this, "menu", shape_);
+            return new WebButton(MenuButton, this, shape_);
 
         case OnAllDesktopsButton:
-            return new WebButton(OnAllDesktopsButton, this, "on_all_desktops", shape_);
+            return new WebButton(OnAllDesktopsButton, this, shape_);
 
         case HelpButton:
-            return new WebButton(HelpButton, this, "help", shape_);
+            return new WebButton(HelpButton, this, shape_);
 
         case MinButton:
-            return new WebButton(MinButton, this, "minimize", shape_);
+            return new WebButton(MinButton, this, shape_);
 
         case MaxButton:
-            return new WebButton(MaxButton, this, "maximize", shape_);
+            return new WebButton(MaxButton, this, shape_);
 
         case CloseButton:
-            return new WebButton(CloseButton, this, "close", shape_);
+            return new WebButton(CloseButton, this, shape_);
 
         case AboveButton:
-            return new WebButton(AboveButton, this, "above", shape_);
+            return new WebButton(AboveButton, this, shape_);
 
         case BelowButton:
-            return new WebButton(BelowButton, this, "below", shape_);
+            return new WebButton(BelowButton, this, shape_);
 
         case ShadeButton:
-            return new WebButton(ShadeButton, this, "shade", shape_);
+            return new WebButton(ShadeButton, this, shape_);
 
         default:
             return 0;
@@ -233,7 +233,7 @@ WebClient::paintEvent(QPaintEvent * pe)
   QPainter p(widget());
 
   p.setPen(Qt::black);
-  p.setBrush(options()->colorGroup(ColorFrame, isActive()).background());
+  p.setBrush(options()->palette(ColorFrame, isActive()).active().background());
 
   p.setClipRegion(pe->region() - titleRect);
 

@@ -64,7 +64,7 @@ private:
 
 public:
     B2Client* client;
-    Qt::ButtonState last_button;
+    Qt::MouseButtons last_button;
     int realizeButtons;
     bool hover;
 };

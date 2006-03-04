@@ -329,7 +329,7 @@ void KDEDefaultHandler::createPixmaps()
 	QPainter p;
 
 	// Active pins
-	g = options()->colorGroup( ColorButtonBg, true );
+	g = options()->palette( ColorButtonBg, true ).active();
 	pinUpPix  = new KPixmap();
 	pinUpPix->resize(16, 16);
 	p.begin( pinUpPix );
@@ -347,7 +347,7 @@ void KDEDefaultHandler::createPixmaps()
 	pinDownPix->setMask( QBitmap(16, 16, pindown_mask_bits, true) );
 
 	// Inactive pins
-	g = options()->colorGroup( ColorButtonBg, false );
+	g = options()->palette( ColorButtonBg, false ).active();
 	ipinUpPix = new KPixmap();
 	ipinUpPix->resize(16, 16);
 	p.begin( ipinUpPix );
@@ -405,25 +405,25 @@ void KDEDefaultHandler::createPixmaps()
 	irightBtnDownPix[false]->resize(toolTitleHeight, toolTitleHeight);
 
 	// Draw the button state pixmaps
-	g = options()->colorGroup( ColorTitleBar, true );
+	g = options()->palette( ColorTitleBar, true ).active();
 	drawButtonBackground( leftBtnUpPix[true], g, false );
 	drawButtonBackground( leftBtnDownPix[true], g, true );
 	drawButtonBackground( leftBtnUpPix[false], g, false );
 	drawButtonBackground( leftBtnDownPix[false], g, true );
 
-	g = options()->colorGroup( ColorButtonBg, true );
+	g = options()->palette( ColorButtonBg, true ).active();
 	drawButtonBackground( rightBtnUpPix[true], g, false );
 	drawButtonBackground( rightBtnDownPix[true], g, true );
 	drawButtonBackground( rightBtnUpPix[false], g, false );
 	drawButtonBackground( rightBtnDownPix[false], g, true );
 
-	g = options()->colorGroup( ColorTitleBar, false );
+	g = options()->palette( ColorTitleBar, false ).active();
 	drawButtonBackground( ileftBtnUpPix[true], g, false );
 	drawButtonBackground( ileftBtnDownPix[true], g, true );
 	drawButtonBackground( ileftBtnUpPix[false], g, false );
 	drawButtonBackground( ileftBtnDownPix[false], g, true );
 
-	g = options()->colorGroup( ColorButtonBg, false );
+	g = options()->palette( ColorButtonBg, false ).active();
 	drawButtonBackground( irightBtnUpPix[true], g, false );
 	drawButtonBackground( irightBtnDownPix[true], g, true );
 	drawButtonBackground( irightBtnUpPix[false], g, false );
@@ -559,7 +559,7 @@ bool KDEDefaultHandler::supports( Ability ability )
 // ===========================================================================
 
 KDEDefaultButton::KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name)
-	: KCommonDecorationButton(type, parent, name)
+	: KCommonDecorationButton(type, parent)
 {
     setAttribute( Qt::WA_NoBackground );
 
@@ -915,7 +915,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawRect(x,y,w,h);
 
     // Draw part of the frame that is the titlebar color
-	g = options()->colorGroup(ColorTitleBar, isActive());
+	g = options()->palette(ColorTitleBar, isActive()).active();
 	p.setPen(g.light());
 	p.drawLine(x+1, y+1, rightOffset-1, y+1);
 	p.drawLine(x+1, y+1, x+1, leftFrameStart+borderWidth-4);
@@ -935,7 +935,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawLine(x+borderWidth-2, y+titleHeight+3, x+borderWidth-2, leftFrameStart-2);
 
     // Fill out the border edges
-    g = options()->colorGroup(ColorFrame, isActive());
+	g = options()->palette(ColorFrame, isActive()).active();
     p.setPen(g.light());
     p.drawLine(rightOffset, y+1, x2-1, y+1);
     p.drawLine(x+1, leftFrameStart+borderWidth-3, x+1, y2-1);

@@ -71,8 +71,8 @@ namespace Web {
     0xff, 0x81, 0x81, 0xff, 0x81, 0xff, 0x81, 0xff
   };
 
-WebButton::WebButton(ButtonType type, WebClient *parent, const char *name, bool shape)
-  : KCommonDecorationButton (type, parent, name),
+WebButton::WebButton(ButtonType type, WebClient *parent, bool shape)
+  : KCommonDecorationButton (type, parent),
     mouseOver_  (false),
     shape_      (shape),
     deco_       (parent)

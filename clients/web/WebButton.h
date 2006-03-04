@@ -41,7 +41,7 @@ namespace Web
         Left, Mid, Right
       };
 
-      WebButton(ButtonType type, WebClient *parent, const char *name, bool shape);
+      WebButton(ButtonType type, WebClient *parent, bool shape);
 
       virtual ~WebButton();
 

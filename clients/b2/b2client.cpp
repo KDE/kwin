@@ -429,7 +429,7 @@ void B2Client::init()
 
     titleLayout->addSpacing(3);
 
-    QColor c = options()->colorGroup(KDecoration::ColorTitleBar, isActive()).
+		QColor c = options()->palette(KDecoration::ColorTitleBar, isActive()).active().
         color(QColorGroup::Button);
 
     for (int i = 0; i < BtnCount; i++) {
@@ -625,7 +625,7 @@ void B2Client::paintEvent(QPaintEvent* e)
     int bb = mustDrawHandle() ? 4 : 0;
     int bDepth = thickness + bb;
 
-    QColorGroup fillColor = options()->colorGroup(frameColorGroup, isActive());
+		QColorGroup fillColor = options()->palette(frameColorGroup, isActive()).active();
     QBrush fillBrush(options()->color(frameColorGroup, isActive()));
 
     // outer frame rect
@@ -847,8 +847,8 @@ void B2Client::activeChange()
     widget()->repaint(false);
     titlebar->repaint(false);
 
-    QColor c = options()->colorGroup(
-	    KDecoration::ColorTitleBar, isActive()).color(QColorGroup::Button);
+    QColor c = options()->palette(
+				KDecoration::ColorTitleBar, isActive()).active().color(QColorGroup::Button);
 
     for (int i = 0; i < BtnCount; i++)
         if (button[i]) {
@@ -947,8 +947,8 @@ void B2Client::unobscureTitlebar()
 static void redraw_pixmaps()
 {
     int i;
-    QColorGroup aGrp = options()->colorGroup(KDecoration::ColorButtonBg, true);
-    QColorGroup iGrp = options()->colorGroup(KDecoration::ColorButtonBg, false);
+		QColorGroup aGrp = options()->palette(KDecoration::ColorButtonBg, true).active();
+		QColorGroup iGrp = options()->palette(KDecoration::ColorButtonBg, false).active();
 
     // close
     drawB2Rect(PIXMAP_A(P_CLOSE), aGrp.button(), false);
@@ -1349,7 +1349,7 @@ void B2Titlebar::drawTitlebar(QPainter &p, bool state)
 
     // titlebar fill
     const QColorGroup cg =
-	options()->colorGroup(KDecoration::ColorTitleBar, state);
+				options()->palette(KDecoration::ColorTitleBar, state).active();
     QBrush brush(cg.background());
     if (gradient) brush.setPixmap(*gradient);
     qDrawShadeRect(&p, 1, 1, t.right() - 1, t.height() - 1,

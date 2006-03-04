@@ -157,31 +157,31 @@ KCommonDecorationButton *PlastikClient::createButton(ButtonType type)
 {
     switch (type) {
         case MenuButton:
-            return new PlastikButton(MenuButton, this, "menu");
+            return new PlastikButton(MenuButton, this);
 
         case OnAllDesktopsButton:
-            return new PlastikButton(OnAllDesktopsButton, this, "on_all_desktops");
+            return new PlastikButton(OnAllDesktopsButton, this);
 
         case HelpButton:
-            return new PlastikButton(HelpButton, this, "help");
+            return new PlastikButton(HelpButton, this);
 
         case MinButton:
-            return new PlastikButton(MinButton, this, "minimize");
+            return new PlastikButton(MinButton, this);
 
         case MaxButton:
-            return new PlastikButton(MaxButton, this, "maximize");
+            return new PlastikButton(MaxButton, this);
 
         case CloseButton:
-            return new PlastikButton(CloseButton, this, "close");
+            return new PlastikButton(CloseButton, this);
 
         case AboveButton:
-            return new PlastikButton(AboveButton, this, "above");
+            return new PlastikButton(AboveButton, this);
 
         case BelowButton:
-            return new PlastikButton(BelowButton, this, "below");
+            return new PlastikButton(BelowButton, this);
 
         case ShadeButton:
-            return new PlastikButton(ShadeButton, this, "shade");
+            return new PlastikButton(ShadeButton, this);
 
         default:
             return 0;
