@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( lib ) 
 add_subdirectory( killer ) 
-add_subdirectory( kcmkwin ) 
+#add_subdirectory( kcmkwin ) 
 add_subdirectory( pics ) 
 add_subdirectory( clients ) 
 add_subdirectory( oldheaders ) 
