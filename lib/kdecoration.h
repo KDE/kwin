@@ -43,7 +43,6 @@ class KDecorationFactory;
 /**
  * This class provides a namespace for all decoration related classes.
  * All shared types are defined here.
- * @since 3.2
  */
 class KWIN_EXPORT KDecorationDefines
 {
@@ -100,7 +99,7 @@ public:
         NoBorderOp,
         NoOp,
         SetupWindowShortcutOp,
-        ApplicationRulesOp     ///< @since 3.5
+        ApplicationRulesOp
         };
     /**
      * Basic color types that should be recognized by all decoration styles.
@@ -184,7 +183,6 @@ class KDecorationProvides
  * This class holds various configuration settings for the decoration.
  * It is accessible from the decorations either as KDecoration::options()
  * or KDecorationFactory::options().
- * @since 3.2
  */
 class KWIN_EXPORT KDecorationOptions : public KDecorationDefines
     {
@@ -307,7 +305,6 @@ protected:
  * that give various information about the decorated window, and also
  * provides pure virtual functions for controlling the decoration that
  * every decoration should implement.
- * @since 3.2
  */
 class KWIN_EXPORT KDecoration
     : public QObject, public KDecorationDefines
@@ -534,7 +531,6 @@ class KWIN_EXPORT KDecoration
          * other cases.
          * Careless abuse of this function will usually sooner or later lead
          * to problems.
-         * @since 3.4
          */
         WId windowId() const;
 	/**
@@ -629,12 +625,10 @@ class KWIN_EXPORT KDecoration
     signals:
         /**
          * This signal is emitted whenever the window's keep-above state changes.
-         * @since 3.3
          */
         void keepAboveChanged( bool );
         /**
          * This signal is emitted whenever the window's keep-below state changes.
-         * @since 3.3
          */
         void keepBelowChanged( bool );
     public:
@@ -763,7 +757,6 @@ class KWIN_EXPORT KDecoration
          *     maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
          * #endif
          * \endcode
-         * @since 3.3
          */
 #warning Update the docs.
         void maximize( Qt::ButtonState button );
@@ -799,7 +792,6 @@ class KWIN_EXPORT KDecoration
 	 * This function performs the operation configured as titlebar wheel mouse
 	 * operation.
          * @param delta the mouse wheel delta
-         * @since 3.5
 	 */
         void titlebarMouseWheelOperation( int delta );
 	/**

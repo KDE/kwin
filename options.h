@@ -254,7 +254,6 @@ class Options : public KDecorationOptions
 
         /**
         * @returns true if the Geometry Tip should be shown during a window move/resize.
-        * @since 3.2
         */
         bool showGeometryTip();
 
