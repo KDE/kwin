@@ -1,5 +1,5 @@
 [1]
-description=(Default) Disable focus stealing prevention for OopenOffice.org 2.0
+description=(Default) Disable focus stealing prevention for OpenOffice.org 2.0
 fsplevel=0
 fsplevelrule=2
 wmclass=vclsalframe openoffice.org 2.0
@@ -30,5 +30,13 @@ wmclass=thunderbird-bin
 wmclasscomplete=false
 wmclassmatch=1
 
+[5]
+description=(Default) Disable focus stealing prevention for XV
+fsplevel=0
+fsplevelrule=2
+wmclass=^xv .*
+wmclasscomplete=true
+wmclassmatch=3
+
 [General]
-count=4
+count=5
