@@ -96,6 +96,7 @@ class KDecorationPreviewBridge
         virtual void showContextHelp();
         virtual void setDesktop( int desktop );
         virtual void titlebarDblClickOperation();
+				virtual void titlebarMouseWheelOperation( int delta );
         virtual void setShade( bool set );
         virtual void setKeepAbove( bool );
         virtual void setKeepBelow( bool );

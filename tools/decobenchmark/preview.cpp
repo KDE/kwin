@@ -27,6 +27,9 @@
 #include <kglobal.h>
 #include <qlabel.h>
 #include <qstyle.h>
+#include <QMouseEvent>
+#include <QResizeEvent>
+#include <QVector>
 #include <kiconloader.h>
 
 #include <X11/Xlib.h>
@@ -146,7 +149,7 @@ void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode )
         }
     else
         {
-        QMemArray< QRect > rects = reg.rects();
+        QVector< QRect > rects = reg.rects();
         XRectangle* xrects = new XRectangle[ rects.count() ];
         for( unsigned int i = 0;
              i < rects.count();
@@ -276,7 +279,7 @@ NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
 
 QIcon KDecorationPreviewBridge::icon() const
     {
-    return SmallIconSet( "xapp" );
+		return QIcon( KGlobal::iconLoader()->loadIcon( "xapp", KIcon::NoGroup, 32 ));
     }
 
 QString KDecorationPreviewBridge::caption() const
@@ -358,6 +361,10 @@ void KDecorationPreviewBridge::setDesktop( int )
 void KDecorationPreviewBridge::titlebarDblClickOperation()
     {
     }
+
+void KDecorationPreviewBridge::titlebarMouseWheelOperation( int )
+{
+}
 
 void KDecorationPreviewBridge::setShade( bool )
     {
