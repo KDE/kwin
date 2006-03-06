@@ -114,7 +114,7 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
             *btnSource = btnSource->convertDepth(32);
         if(light)
             btnColor = btnColor.light(120);
-        btnColor.hsv(&destH, &destS, &destV);
+        btnColor.getHsv(&destH, &destS, &destV);
         QImage btnDest(14, 15, 32);
 
         unsigned int *srcData = (unsigned int *)btnSource->bits();
@@ -122,7 +122,7 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
         QColor srcColor;
         for(i=0; i < btnSource->width()*btnSource->height(); ++i){
             srcColor.setRgb(srcData[i]);
-            srcColor.hsv(&srcH, &srcS, &srcV);
+            srcColor.getHsv(&srcH, &srcS, &srcV);
             srcColor.setHsv(destH, destS, srcV);
             destData[i] = srcColor.rgb();
         }

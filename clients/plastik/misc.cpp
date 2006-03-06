@@ -32,7 +32,7 @@
 QColor hsvRelative(const QColor& baseColor, int relativeH, int relativeS, int relativeV)
 {
     int h, s, v;
-    baseColor.hsv(&h, &s, &v);
+    baseColor.getHsv(&h, &s, &v);
 
     h += relativeH;
     s += relativeS;
