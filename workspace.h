@@ -702,7 +702,7 @@ inline void Workspace::addGroup( Group* group, allowed_t )
 
 inline void Workspace::removeGroup( Group* group, allowed_t )
     {
-    groups.remove( group );
+    groups.removeAll( group );
     }
 
 inline const ClientList& Workspace::stackingOrder() const

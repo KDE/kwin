@@ -215,7 +215,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 					{
 					if ( info->windowRole == windowRole )
 						realInfo = info;
-						session.remove(info);
+						session.removeAll(info);
 					}
 				else 
 					{
@@ -223,7 +223,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 						 info->resourceName == resourceName &&
 						 info->resourceClass == resourceClass )
 						realInfo = info;
-						session.remove(info);
+						session.removeAll(info);
 					}
 				}
 			}
@@ -239,7 +239,7 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
 						sessionInfoWindowTypeMatch( c, info ))
 					if ( wmCommand.isEmpty() || info->wmCommand == wmCommand ) {
 						realInfo = info;
-						session.remove( info );
+						session.removeAll( info );
 					}
 			}
         }

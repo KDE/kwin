@@ -68,7 +68,7 @@ void KDecorationFactory::addDecoration( KDecoration* deco )
     
 void KDecorationFactory::removeDecoration( KDecoration* deco )
     {
-    _decorations.remove( deco );
+    _decorations.removeAll( deco );
     }
 
 void KDecorationFactory::resetDecorations( unsigned long changed )

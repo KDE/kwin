@@ -242,7 +242,7 @@ static int edit( Window wid, bool whole_app )
     Rules* edited_rule = dlg.edit( orig_rule, wid, true );
     if( edited_rule == NULL || edited_rule->isEmpty())
         {
-        rules.remove( orig_rule );
+        rules.removeAll( orig_rule );
         delete orig_rule;
         if( orig_rule != edited_rule )
             delete edited_rule;

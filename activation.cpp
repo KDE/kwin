@@ -394,7 +394,7 @@ bool Workspace::activateNextClient( Client* c )
         {
         if( c == active_client )
             setActiveClient( NULL, Allowed );
-        should_get_focus.remove( c );
+        should_get_focus.removeAll( c );
         }
     if( focusChangeEnabled())
         {
@@ -577,11 +577,11 @@ void Workspace::clientAttentionChanged( Client* c, bool set )
     {
     if( set )
         {
-        attention_chain.remove( c );
+        attention_chain.removeAll( c );
         attention_chain.prepend( c );
         }
     else
-        attention_chain.remove( c );
+        attention_chain.removeAll( c );
     }
 
 // This is used when a client should be shown active immediately after requestFocus(),

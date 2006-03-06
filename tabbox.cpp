@@ -100,7 +100,7 @@ void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client
             {
             if ( start == c )
                 {
-                list.remove( c );
+                list.removeAll( c );
                 list.prepend( c );
                 }
             else
@@ -187,7 +187,7 @@ void TabBox::reset()
                 // how many clients to remove
                 int howMany = (h - (r.height()-(2*frameWidth())))/lineHeight;
                 for (; howMany; howMany--)
-                  clients.remove(clients.last());
+                  clients.removeAll(clients.last());
 
                 h = clients.count() * lineHeight;
               }

@@ -261,7 +261,7 @@ void Workspace::lowerClient( Client* c )
 
     StackingUpdatesBlocker blocker( this );
 
-    unconstrained_stacking_order.remove( c );
+    unconstrained_stacking_order.removeAll( c );
     unconstrained_stacking_order.prepend( c );
     if( c->isTransient())
         {
@@ -288,7 +288,7 @@ void Workspace::lowerClientWithinApplication( Client* c )
 
     StackingUpdatesBlocker blocker( this );
 
-    unconstrained_stacking_order.remove( c );
+    unconstrained_stacking_order.removeAll( c );
     bool lowered = false;
     // first try to put it below the bottom-most window of the application
     for( ClientList::Iterator it = unconstrained_stacking_order.begin();
@@ -325,7 +325,7 @@ void Workspace::raiseClient( Client* c )
             raiseClient( *it );
         }
 
-    unconstrained_stacking_order.remove( c );
+    unconstrained_stacking_order.removeAll( c );
     unconstrained_stacking_order.append( c );
 
     if( !c->isSpecialWindow())
@@ -354,7 +354,7 @@ void Workspace::raiseClientWithinApplication( Client* c )
             return;
         if( Client::belongToSameApplication( unconstrained_stacking_order.at(  i ), c ))
             {
-            unconstrained_stacking_order.remove( c );
+            unconstrained_stacking_order.removeAll( c );
             unconstrained_stacking_order.insert( ++i, c ); // insert after the found one
             return;
             }
@@ -404,7 +404,7 @@ void Workspace::restackClientUnderActive( Client* c )
             {
             if( *it != c )
                 {
-                unconstrained_stacking_order.remove( c );
+                unconstrained_stacking_order.removeAll( c );
                 unconstrained_stacking_order.insert( it, c );
                 }
             break;
@@ -418,7 +418,7 @@ void Workspace::restackClientUnderActive( Client* c )
         if( c->wantsTabFocus() && c->isOnDesktop( desktop ) && focus_chain[ desktop ].contains( active_client ))
             {
             // also put in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
-            focus_chain[ desktop ].remove( c );
+            focus_chain[ desktop ].removeAll( c );
             for ( int i = focus_chain[ desktop ].size() - 1;
                   i >= 0;
                   --i )
@@ -586,7 +586,7 @@ ClientList Workspace::ensureStackingOrder( const ClientList& list ) const
     for( ClientList::ConstIterator it = stacking_order.begin();
          it != stacking_order.end();
          ++it )
-        if( result.remove( *it ) != 0 )
+        if( result.removeAll( *it ) != 0 )
             result.append( *it );
     return result;
     }
