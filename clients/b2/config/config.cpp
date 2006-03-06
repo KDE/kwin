@@ -124,7 +124,7 @@ void B2Config::load(KConfig * /*conf*/)
 		op = 0;
     }
 
-    menuDblClickOp->setCurrentItem(op);
+    menuDblClickOp->setCurrentIndex(op);
 
 }
 
@@ -162,7 +162,7 @@ void B2Config::defaults()
 {
 	cbColorBorder->setChecked(false);
     showGrabHandleCb->setChecked(true);
-    menuDblClickOp->setCurrentItem(0);
+    menuDblClickOp->setCurrentIndex(0);
 }
 
 #include "config.moc"

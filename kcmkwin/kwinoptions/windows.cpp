@@ -280,7 +280,7 @@ int KFocusConfig::getFocus()
 
 void KFocusConfig::setFocus(int foc)
 {
-    focusCombo->setCurrentItem(foc);
+    focusCombo->setCurrentIndex(foc);
 
     // this will disable/hide the auto raise delay widget if focus==click
     setAutoRaiseEnabled();
@@ -656,7 +656,7 @@ void KAdvancedConfig::setAnimateShade(bool a) {
 
 void KAdvancedConfig::setFocusStealing(int l) {
     l = qMax( 0, qMin( 4, l ));
-    focusStealing->setCurrentItem(l);
+    focusStealing->setCurrentIndex(l);
 }
 
 void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
@@ -854,7 +854,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
     // CT: disabling is needed as long as functionality misses in kwin
     //placementCombo->insertItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
     //placementCombo->insertItem(i18n("Manual"), MANUAL_PLACEMENT);
-    placementCombo->setCurrentItem(SMART_PLACEMENT);
+    placementCombo->setCurrentIndex(SMART_PLACEMENT);
 
     // FIXME, when more policies have been added to KWin
     wtstr = i18n("The placement policy determines where a new window"
@@ -970,7 +970,7 @@ int KMovingConfig::getPlacement()
 
 void KMovingConfig::setPlacement(int plac)
 {
-    placementCombo->setCurrentItem(plac);
+    placementCombo->setCurrentIndex(plac);
 }
 
 bool KMovingConfig::getMinimizeAnim()

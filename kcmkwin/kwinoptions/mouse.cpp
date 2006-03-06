@@ -489,16 +489,16 @@ static int tbl_txt_lookup( const char* const arr[], const char* txt )
 void KTitleBarActionsConfig::setComboText( QComboBox* combo, const char*txt )
 {
     if( combo == coTiDbl )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_TiDbl, txt ));
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_TiDbl, txt ));
     else if( combo == coTiAct1 || combo == coTiAct2 || combo == coTiAct3 )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_TiAc, txt ));
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_TiAc, txt ));
     else if( combo == coTiInAct1 || combo == coTiInAct2 || combo == coTiInAct3 )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_TiInAc, txt ));
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_TiInAc, txt ));
     else if( combo == coTiAct4 )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_TiWAc, txt ));	
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_TiWAc, txt ));	
     else if( combo == coMax[0] || combo == coMax[1] || combo == coMax[2] )
     {
-        combo->setCurrentItem( tbl_txt_lookup( tbl_Max, txt ));
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_Max, txt ));
         static_cast<ToolTipComboBox *>(combo)->changed();
     }
     else
@@ -781,13 +781,13 @@ KWindowActionsConfig::~KWindowActionsConfig()
 void KWindowActionsConfig::setComboText( QComboBox* combo, const char*txt )
 {
     if( combo == coWin1 || combo == coWin2 || combo == coWin3 )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_Win, txt ));
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_Win, txt ));
     else if( combo == coAllKey )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_AllKey, txt ));
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_AllKey, txt ));
     else if( combo == coAll1 || combo == coAll2 || combo == coAll3 )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_All, txt ));
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_All, txt ));
     else if( combo == coAllW )
-        combo->setCurrentItem( tbl_txt_lookup( tbl_AllW, txt ));	
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_AllW, txt ));	
     else
         abort();
 }
