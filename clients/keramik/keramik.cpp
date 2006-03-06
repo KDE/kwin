@@ -763,7 +763,7 @@ KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, co
 	int size = clientHandler->roundButton()->height();
 	setFixedSize( size, size );
 
-	setToggleButton( (button == OnAllDesktopsButton) );
+	setCheckable( (button == OnAllDesktopsButton) );
 }
 
 
