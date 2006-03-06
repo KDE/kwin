@@ -145,11 +145,11 @@ unsigned long Options::updateSettings()
     for( QStringList::Iterator it = ignorePositionClasses.begin();
          it != ignorePositionClasses.end();
          ++it )
-        (*it) = (*it).lower();
+        (*it) = (*it).toLower();
     for( QStringList::Iterator it = ignoreFocusStealingClasses.begin();
          it != ignoreFocusStealingClasses.end();
          ++it )
-        (*it) = (*it).lower();
+        (*it) = (*it).toLower();
 
     killPingTimeout = config->readEntry( "KillPingTimeout", 5000 );
     hideUtilityWindowsForInactive = config->readEntry( "HideUtilityWindowsForInactive", QVariant( true)).toBool();
@@ -252,7 +252,7 @@ Options::WindowOperation Options::windowOperation(const QString &name, bool rest
 
 Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted )
     {
-    QString lowerName = name.lower();
+    QString lowerName = name.toLower();
     if (lowerName == "raise") return MouseRaise;
     if (lowerName == "lower") return MouseLower;
     if (lowerName == "operations menu") return MouseOperationsMenu;
@@ -274,7 +274,7 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
 
 Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
     {
-    QString lowerName = name.lower();
+    QString lowerName = name.toLower();
     if (lowerName == "raise/lower") return MouseWheelRaiseLower;
     if (lowerName == "shade/unshade") return MouseWheelShadeUnshade;
     if (lowerName == "maximize/restore") return MouseWheelMaximizeRestore;

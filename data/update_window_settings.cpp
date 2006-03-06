@@ -78,7 +78,7 @@ void loadFakeSessionInfo( KConfig* config )
         fakeSession.append( info );
         info->windowRole = config->readEntry( QString("windowRole")+n, QString() ).latin1();
         info->resourceName = config->readEntry( QString("resourceName")+n, QString() ).latin1();
-        info->resourceClass = config->readEntry( QString("resourceClass")+n, QString() ).lower().latin1();
+        info->resourceClass = config->readEntry( QString("resourceClass")+n, QString() ).toLower().latin1();
         info->wmClientMachine = config->readEntry( QString("clientMachine")+n, QString() ).latin1();
         info->geometry = config->readEntry( QString("geometry")+n, QRect() );
         info->restore = config->readEntry( QString("restore")+n, QRect() );
