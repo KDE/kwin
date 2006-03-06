@@ -151,7 +151,7 @@ void B2Config::save(KConfig * /*conf*/)
 	b2Config->writeEntry("UseTitleBarBorderColors", cbColorBorder->isChecked());
     b2Config->writeEntry("DrawGrabHandle", showGrabHandleCb->isChecked());
     b2Config->writeEntry("MenuButtonDoubleClickOperation",
-	    opToString(menuDblClickOp->currentItem()));
+	    opToString(menuDblClickOp->currentIndex()));
 	// Ensure others trying to read this config get updated
 	b2Config->sync();
 }

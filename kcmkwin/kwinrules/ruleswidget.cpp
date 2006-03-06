@@ -122,8 +122,8 @@ RulesWidget::RulesWidget( QWidget* parent )
 #define UPDATE_ENABLE_SLOT( var ) \
 void RulesWidget::updateEnable##var() \
     { \
-    /* leave the label readable label_##var->setEnabled( enable_##var->isChecked() && rule_##var->currentItem() != 0 );*/ \
-    Ui_RulesWidgetBase::var->setEnabled( enable_##var->isChecked() && rule_##var->currentItem() != 0 ); \
+    /* leave the label readable label_##var->setEnabled( enable_##var->isChecked() && rule_##var->currentIndex() != 0 );*/ \
+    Ui_RulesWidgetBase::var->setEnabled( enable_##var->isChecked() && rule_##var->currentIndex() != 0 ); \
     }
 
 // geometry tab
@@ -148,8 +148,8 @@ UPDATE_ENABLE_SLOT( opacityactive )
 UPDATE_ENABLE_SLOT( opacityinactive )
 void RulesWidget::updateEnableshortcut()
     {
-    shortcut->setEnabled( enable_shortcut->isChecked() && rule_shortcut->currentItem() != 0 );
-    shortcut_edit->setEnabled( enable_shortcut->isChecked() && rule_shortcut->currentItem() != 0 );
+    shortcut->setEnabled( enable_shortcut->isChecked() && rule_shortcut->currentIndex() != 0 );
+    shortcut_edit->setEnabled( enable_shortcut->isChecked() && rule_shortcut->currentIndex() != 0 );
     }
 // workarounds tab
 UPDATE_ENABLE_SLOT( fsplevel )
@@ -443,7 +443,7 @@ void RulesWidget::setRules( Rules* rules )
 #define GENERIC_RULE( var, func, Type, type, uimethod ) \
     if( enable_##var->isChecked()) \
         { \
-        rules->var##rule = combo_to_##type##_rule[ rule_##var->currentItem() ]; \
+        rules->var##rule = combo_to_##type##_rule[ rule_##var->currentIndex() ]; \
         rules->var = func( Ui_RulesWidgetBase::var->uimethod()); \
         } \
     else \
@@ -462,9 +462,9 @@ Rules* RulesWidget::rules() const
     rules->description = description->text();
     rules->wmclass = wmclass->text().toUtf8();
     rules->wmclasscomplete = whole_wmclass->isChecked();
-    rules->wmclassmatch = static_cast< Rules::StringMatch >( wmclass_match->currentItem());
+    rules->wmclassmatch = static_cast< Rules::StringMatch >( wmclass_match->currentIndex());
     rules->windowrole = role->text().toUtf8();
-    rules->windowrolematch = static_cast< Rules::StringMatch >( role_match->currentItem());
+    rules->windowrolematch = static_cast< Rules::StringMatch >( role_match->currentIndex());
     rules->types = 0;
     bool all_types = true;
     for( unsigned int i = 0;
@@ -488,11 +488,11 @@ Rules* RulesWidget::rules() const
         rules->types |= types->isSelected( 9 ) ? NET::TopMenuMask : 0;
         }
     rules->title = title->text();
-    rules->titlematch = static_cast< Rules::StringMatch >( title_match->currentItem());
+    rules->titlematch = static_cast< Rules::StringMatch >( title_match->currentIndex());
     rules->extrarole = extra->text().toUtf8();
-    rules->extrarolematch = static_cast< Rules::StringMatch >( extra_match->currentItem());
+    rules->extrarolematch = static_cast< Rules::StringMatch >( extra_match->currentIndex());
     rules->clientmachine = machine->text().toUtf8();
-    rules->clientmachinematch = static_cast< Rules::StringMatch >( machine_match->currentItem());
+    rules->clientmachinematch = static_cast< Rules::StringMatch >( machine_match->currentIndex());
     LINEEDIT_SET_RULE( position, strToPosition );
     LINEEDIT_SET_RULE( size, strToSize );
     COMBOBOX_SET_RULE( desktop, comboToDesktop );
@@ -534,8 +534,8 @@ Rules* RulesWidget::rules() const
 #define STRING_MATCH_COMBO( type ) \
 void RulesWidget::type##MatchChanged() \
     { \
-    edit_reg_##type->setEnabled( type##_match->currentItem() == Rules::RegExpMatch ); \
-    type->setEnabled( type##_match->currentItem() != Rules::UnimportantMatch ); \
+    edit_reg_##type->setEnabled( type##_match->currentIndex() == Rules::RegExpMatch ); \
+    type->setEnabled( type##_match->currentIndex() != Rules::UnimportantMatch ); \
     }
 
 STRING_MATCH_COMBO( wmclass )
@@ -659,7 +659,7 @@ bool RulesWidget::finalCheck()
          ++i )
         if( !types->isSelected( i ))
             all_types = false;
-    if( wmclass_match->currentItem() == Rules::UnimportantMatch && all_types )
+    if( wmclass_match->currentIndex() == Rules::UnimportantMatch && all_types )
         {
         if( KMessageBox::warningContinueCancel( topLevelWidget(),
             i18n( "You have specified the window class as unimportant.\n"

@@ -40,7 +40,7 @@ public:
     , toolTips(toolTips_) {}
 
 public slots:
-  void changed() {this->setToolTip( i18n(toolTips[currentItem()]) );}
+  void changed() {this->setToolTip( i18n(toolTips[currentIndex()]) );}
 
 protected:
   char const * const * toolTips;

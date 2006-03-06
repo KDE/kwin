@@ -550,18 +550,18 @@ void KTitleBarActionsConfig::load()
 void KTitleBarActionsConfig::save()
 {
   config->setGroup("Windows");
-  config->writeEntry("TitlebarDoubleClickCommand", functionTiDbl( coTiDbl->currentItem() ) );
+  config->writeEntry("TitlebarDoubleClickCommand", functionTiDbl( coTiDbl->currentIndex() ) );
   for (int t = 0; t < 3; ++t)
-    config->writeEntry(cnf_Max[t], functionMax(coMax[t]->currentItem()));
+    config->writeEntry(cnf_Max[t], functionMax(coMax[t]->currentIndex()));
 
   config->setGroup("MouseBindings");
-  config->writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentItem()));
-  config->writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentItem()));
-  config->writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentItem()));
-  config->writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentItem()));
-  config->writeEntry("CommandTitlebarWheel", functionTiWAc(coTiAct4->currentItem()));  
-  config->writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentItem()));
-  config->writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentItem()));
+  config->writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentIndex()));
+  config->writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentIndex()));
+  config->writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentIndex()));
+  config->writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentIndex()));
+  config->writeEntry("CommandTitlebarWheel", functionTiWAc(coTiAct4->currentIndex()));  
+  config->writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentIndex()));
+  config->writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentIndex()));
   
   if (standAlone)
   {
@@ -828,14 +828,14 @@ void KWindowActionsConfig::load()
 void KWindowActionsConfig::save()
 {
   config->setGroup("MouseBindings");
-  config->writeEntry("CommandWindow1", functionWin(coWin1->currentItem()));
-  config->writeEntry("CommandWindow2", functionWin(coWin2->currentItem()));
-  config->writeEntry("CommandWindow3", functionWin(coWin3->currentItem()));
-  config->writeEntry("CommandAllKey", functionAllKey(coAllKey->currentItem()));
-  config->writeEntry("CommandAll1", functionAll(coAll1->currentItem()));
-  config->writeEntry("CommandAll2", functionAll(coAll2->currentItem()));
-  config->writeEntry("CommandAll3", functionAll(coAll3->currentItem()));
-  config->writeEntry("CommandAllWheel", functionAllW(coAllW->currentItem()));
+  config->writeEntry("CommandWindow1", functionWin(coWin1->currentIndex()));
+  config->writeEntry("CommandWindow2", functionWin(coWin2->currentIndex()));
+  config->writeEntry("CommandWindow3", functionWin(coWin3->currentIndex()));
+  config->writeEntry("CommandAllKey", functionAllKey(coAllKey->currentIndex()));
+  config->writeEntry("CommandAll1", functionAll(coAll1->currentIndex()));
+  config->writeEntry("CommandAll2", functionAll(coAll2->currentIndex()));
+  config->writeEntry("CommandAll3", functionAll(coAll3->currentIndex()));
+  config->writeEntry("CommandAllWheel", functionAllW(coAllW->currentIndex()));
   
   if (standAlone)
   {

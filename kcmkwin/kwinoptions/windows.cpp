@@ -275,7 +275,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst,
 
 int KFocusConfig::getFocus()
 {
-    return focusCombo->currentItem();
+    return focusCombo->currentIndex();
 }
 
 void KFocusConfig::setFocus(int foc)
@@ -324,7 +324,7 @@ void KFocusConfig::setClickRaise(bool on)
 void KFocusConfig::setAutoRaiseEnabled()
 {
     // the auto raise related widgets are: autoRaise
-    if ( focusCombo->currentItem() != CLICK_TO_FOCUS )
+    if ( focusCombo->currentIndex() != CLICK_TO_FOCUS )
     {
         autoRaiseOn->setEnabled(true);
         autoRaiseOnTog(autoRaiseOn->isChecked());
@@ -339,7 +339,7 @@ void KFocusConfig::setAutoRaiseEnabled()
 void KFocusConfig::setDelayFocusEnabled()
 {
     // the delayed focus related widgets are: delayFocus
-    if ( focusCombo->currentItem() != CLICK_TO_FOCUS )
+    if ( focusCombo->currentIndex() != CLICK_TO_FOCUS )
     {
         delayFocusOn->setEnabled(true);
         delayFocusOnTog(delayFocusOn->isChecked());
@@ -700,7 +700,7 @@ void KAdvancedConfig::save( void )
     config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
 
-    config->writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentItem());
+    config->writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentIndex());
     config->writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
 
     if (standAlone)
@@ -965,7 +965,7 @@ bool KMovingConfig::getGeometryTip()
 // placement policy --- CT 31jan98 ---
 int KMovingConfig::getPlacement()
 {
-    return placementCombo->currentItem();
+    return placementCombo->currentIndex();
 }
 
 void KMovingConfig::setPlacement(int plac)
