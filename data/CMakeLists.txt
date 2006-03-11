@@ -8,6 +8,7 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 install_files( ${DATA_INSTALL_DIR}/kwin/default_rules FILES fsp_workarounds_1 )
 install_files( ${SOUND_INSTALL_DIR} FILES pop.wav )
 install_files( ${DATA_INSTALL_DIR}/kconf_update FILES kwin.upd kwinsticky.upd kwiniconify.upd kwin3_plugin.upd kwin_focus1.upd          kwinupdatewindowsettings.upd kwin_focus2.upd kwin_fsp_workarounds_1.upd )
+install_files( ${DATA_INSTALL_DIR}/kconf_update FILES pluginlibFix.pl kwin3_plugin.pl kwin_focus1.sh kwin_focus2.sh )
 
 kde4_footer()
 
