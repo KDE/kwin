@@ -3,6 +3,31 @@ kde4_header()
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
+########### next target ###############
+set(kwin_update_window_settings_SRCS update_window_settings.cpp)
+
+kde4_automoc(${kwin_update_window_settings_SRCS})
+
+kde4_add_executable( kwin_update_window_settings ${kwin_update_window_settings_SRCS})
+
+target_link_libraries( kwin_update_window_settings ${LIB_KDECORE} )
+
+install_targets(/lib/kconf_update_bin/ kwin_update_window_settings )
+
+
+
+########### next target ###############
+set(kwin_update_default_rules_SRCS update_default_rules.cpp)
+
+kde4_automoc(${kwin_update_default_rules})
+
+kde4_add_executable( kwin_update_default_rules ${kwin_update_default_rules_SRCS})
+
+target_link_libraries( kwin_update_default_rules ${LIB_KDECORE} )
+
+install_targets(/lib/kconf_update_bin/ kwin_update_default_rules )
+
+
 ########### install files ###############
 
 install_files( ${DATA_INSTALL_DIR}/kwin/default_rules FILES fsp_workarounds_1 )
