@@ -131,7 +131,7 @@ QPixmap bitmapPixmap(const QBitmap& bm, const QColor& color)
 
 
 ButtonSource::ButtonSource(QWidget *parent)
-	: KListView(parent)
+	: K3ListView(parent)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 

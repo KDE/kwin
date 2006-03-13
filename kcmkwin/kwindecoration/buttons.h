@@ -45,7 +45,7 @@
 #include <QDragEnterEvent>
 #include <QMouseEvent>
 
-#include <klistview.h>
+#include <k3listview.h>
 
 class KDecorationFactory;
 
@@ -118,7 +118,7 @@ class ButtonSourceItem : public Q3ListViewItem
 /**
  * Implements the button drag source list view
  */
-class ButtonSource : public KListView
+class ButtonSource : public K3ListView
 {
 	Q_OBJECT
 
