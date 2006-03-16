@@ -1,5 +1,7 @@
 kde4_header()
 
+project(kwin)
+
 add_subdirectory( lib ) 
 add_subdirectory( killer ) 
 add_subdirectory( kcmkwin ) 
