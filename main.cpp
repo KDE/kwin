@@ -194,7 +194,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 	// manager, since the session manager will register multiple kwins,
         // one for each screen...
         QByteArray multiHead = getenv("KDE_MULTIHEAD");
-        if (multiHead.lower() == "true") 
+        if (multiHead.toLower() == "true") 
             {
 
             Display* dpy = XOpenDisplay( NULL );

@@ -86,8 +86,8 @@ bool Client::manage( Window w, bool isMapped )
         {
         // Qt3.2 and older had this all lowercase, Qt3.3 capitalized resource class
         // force lowercase, so that workarounds listing resource classes still work
-        resource_name = QByteArray( classHint.res_name ).lower();
-        resource_class = QByteArray( classHint.res_class ).lower();
+        resource_name = QByteArray( classHint.res_name ).toLower();
+        resource_class = QByteArray( classHint.res_class ).toLower();
         XFree( classHint.res_name );
         XFree( classHint.res_class );
         }
