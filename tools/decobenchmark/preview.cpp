@@ -279,7 +279,7 @@ NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
 
 QIcon KDecorationPreviewBridge::icon() const
     {
-		return QIcon( KGlobal::iconLoader()->loadIcon( "xapp", KIcon::NoGroup, 32 ));
+		return QIcon( KGlobal::iconLoader()->loadIcon( "xapp", K3Icon::NoGroup, 32 ));
     }
 
 QString KDecorationPreviewBridge::caption() const
