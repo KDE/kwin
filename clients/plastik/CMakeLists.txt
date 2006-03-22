@@ -19,7 +19,7 @@ kde4_add_plugin(kwin3_plastik ${kwin3_plastik_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_plastik )
 
-target_link_libraries(kwin3_plastik  ${QT_AND_KDECORE_LIBS} kdeui kdecorations kdefx)
+target_link_libraries(kwin3_plastik  ${KDE4_KDECORE_LIBS} kdeui kdecorations kdefx)
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_plastik )
 

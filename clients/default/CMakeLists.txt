@@ -15,7 +15,7 @@ kde4_add_plugin(kwin3_default ${kwin3_default_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_default )
 
-target_link_libraries(kwin3_default  ${QT_AND_KDECORE_LIBS} kdefx kdecorations ${QT_QTGUI_LIBRARY})
+target_link_libraries(kwin3_default  ${KDE4_KDECORE_LIBS} kdefx kdecorations ${QT_QTGUI_LIBRARY})
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_default )
 

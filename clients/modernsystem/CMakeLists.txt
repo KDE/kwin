@@ -15,7 +15,7 @@ kde4_add_plugin(kwin3_modernsys ${kwin3_modernsys_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_modernsys )
 
-target_link_libraries(kwin3_modernsys  ${QT_AND_KDECORE_LIBS} kdecorations kdefx ${QT_QTGUI_LIBRARY})
+target_link_libraries(kwin3_modernsys  ${KDE4_KDECORE_LIBS} kdecorations kdefx ${QT_QTGUI_LIBRARY})
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_modernsys )
 

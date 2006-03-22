@@ -13,7 +13,7 @@ kde4_automoc(${test_gravity_SRCS})
 
 kde4_add_executable(test_gravity ${test_gravity_SRCS})
 
-target_link_libraries(test_gravity  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(test_gravity  ${KDE4_KDECORE_LIBS} )
 
 
 ########### install files ###############

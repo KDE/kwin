@@ -17,7 +17,7 @@ kde4_add_plugin(kwin3_keramik ${kwin3_keramik_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_keramik )
 
-target_link_libraries(kwin3_keramik  ${QT_AND_KDECORE_LIBS} kdeui kdecorations ${QT_QT3SUPPORT_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(kwin3_keramik  ${KDE4_KDECORE_LIBS} kdeui kdecorations ${QT_QT3SUPPORT_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_keramik )
 

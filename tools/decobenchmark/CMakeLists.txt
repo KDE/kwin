@@ -11,7 +11,7 @@ kde4_automoc(${decobenchmark_SRCS})
 
 kde4_add_executable(decobenchmark ${decobenchmark_SRCS})
 
-target_link_libraries(decobenchmark  ${QT_AND_KDECORE_LIBS} kdecorations )
+target_link_libraries(decobenchmark  ${KDE4_KDECORE_LIBS} kdecorations )
 
 
 ########### install files ###############

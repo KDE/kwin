@@ -13,7 +13,7 @@ kde4_add_plugin(kwin3_redmond ${kwin3_redmond_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_redmond )
 
-target_link_libraries(kwin3_redmond  ${QT_AND_KDECORE_LIBS} kdefx kdecorations )
+target_link_libraries(kwin3_redmond  ${KDE4_KDECORE_LIBS} kdefx kdecorations )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_redmond )
 

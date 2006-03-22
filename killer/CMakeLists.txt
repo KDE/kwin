@@ -11,7 +11,7 @@ kde4_automoc(${kwin_killer_helper_SRCS})
 
 kde4_add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 
-target_link_libraries(kwin_killer_helper  ${QT_AND_KDECORE_LIBS} kdeui )
+target_link_libraries(kwin_killer_helper  ${KDE4_KDECORE_LIBS} kdeui )
 
 install_targets(/bin kwin_killer_helper )
 

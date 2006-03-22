@@ -15,7 +15,7 @@ kde4_add_plugin(kwin_plastik_config ${kwin_plastik_config_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_plastik_config )
 
-target_link_libraries(kwin_plastik_config  ${QT_AND_KDECORE_LIBS} kdeui ${QT_QTGUI_LIBRARY} ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kwin_plastik_config  ${KDE4_KDECORE_LIBS} kdeui ${QT_QTGUI_LIBRARY} ${QT_QT3SUPPORT_LIBRARY})
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin_plastik_config )
 
