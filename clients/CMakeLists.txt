@@ -10,9 +10,6 @@ add_subdirectory( quartz )
 add_subdirectory( redmond ) 
 add_subdirectory( web ) 
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
-
-
 ########### install files ###############
 
 

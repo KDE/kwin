@@ -14,8 +14,8 @@ if(X11_kompmgr_FOUND)
    add_subdirectory(kompmgr)
 endif(X11_kompmgr_FOUND)
 
+include_directories( ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}/lib )
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 
 ########### next target ###############

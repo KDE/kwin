@@ -1,6 +1,5 @@
 kde4_header()
-
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_SOURCE_DIR}/workspace/kwin/lib)
+include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  ${CMAKE_SOURCE_DIR}/workspace/kwin/lib ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} )
 
 ADD_DEFINITIONS(-DKCMRULES)
 ########### next target ###############
