@@ -51,7 +51,7 @@ kde4_add_dcop_skels(kwin_KDEINIT_SRCS KWinInterface.h )
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin  ${KDE4_KDECORE_LIBS} kdeui kdecorations DCOP  ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
+target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations DCOP  ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 
 install_targets(${LIB_INSTALL_DIR} kdeinit_kwin )
 

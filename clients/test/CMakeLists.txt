@@ -13,7 +13,7 @@ kde4_add_plugin(kwin3_test ${kwin3_test_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_test )
 
-target_link_libraries(kwin3_test  ${KDE4_KDECORE_LIBS} kdeui kdecorations )
+target_link_libraries(kwin3_test  ${KDE4_KDEUI_LIBS} kdecorations )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_test )
 

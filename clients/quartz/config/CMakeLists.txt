@@ -12,7 +12,7 @@ kde4_add_plugin(kwin_quartz_config ${kwin_quartz_config_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_quartz_config )
 
-target_link_libraries(kwin_quartz_config  ${KDE4_KDECORE_LIBS} kdeui ${QT_QTGUI_LIBRARY})
+target_link_libraries(kwin_quartz_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kwin_quartz_config )
 
