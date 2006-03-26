@@ -32,7 +32,7 @@
 
 #include <kcmodule.h>
 #include <dcopobject.h>
-#include <buttons.h>
+#include "buttons.h"
 #include <kconfig.h>
 #include <klibloader.h>
 
