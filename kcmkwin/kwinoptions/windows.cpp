@@ -903,7 +903,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
     BrdrSnap->setSpecialValueText( i18n("none") );
     BrdrSnap->setRange( 0, MAX_BRDR_SNAP);
     BrdrSnap->setLabel(i18n("&Border snap zone:"));
-    BrdrSnap->setSuffix(i18n(" pixels"));
     BrdrSnap->setSteps(1,10);
     BrdrSnap->setWhatsThis( i18n("Here you can set the snap zone for screen borders, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the border when"
@@ -913,7 +912,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
     WndwSnap->setSpecialValueText( i18n("none") );
     WndwSnap->setRange( 0, MAX_WNDW_SNAP);
     WndwSnap->setLabel(i18n("&Window snap zone:"));
-    WndwSnap->setSuffix( i18n(" pixels"));
     BrdrSnap->setSteps(1,10);
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
@@ -938,8 +936,14 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
     connect( moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
     connect( placementCombo, SIGNAL(activated(int)), SLOT(changed()));
     connect( BrdrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect( BrdrSnap, SIGNAL(valueChanged(int)), SLOT(slotBrdrSnapChanged(int)));
     connect( WndwSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect( WndwSnap, SIGNAL(valueChanged(int)), SLOT(slotWndwSnapChanged(int)));
     connect( OverlapSnap, SIGNAL(clicked()), SLOT(changed()));
+
+    // To get suffix to BrdrSnap and WndwSnap inputs with default values.
+    slotBrdrSnapChanged(BrdrSnap->value());
+    slotWndwSnapChanged(WndwSnap->value());
 }
 
 int KMovingConfig::getMove()
@@ -1008,6 +1012,14 @@ void KMovingConfig::setResizeOpaque(int opaque)
 
 void KMovingConfig::setMoveResizeMaximized(bool a) {
     moveResizeMaximized->setChecked(a);
+}
+
+void KMovingConfig::slotBrdrSnapChanged(int value) {
+    BrdrSnap->setSuffix(i18n(" pixel", " pixels", value));
+}
+
+void KMovingConfig::slotWndwSnapChanged(int value) {
+    WndwSnap->setSuffix(i18n(" pixel", " pixels", value));
 }
 
 void KMovingConfig::load( void )

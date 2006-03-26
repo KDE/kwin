@@ -138,6 +138,8 @@ private slots:
   void setMinimizeAnim( bool );
   void setMinimizeAnimSpeed( int );
 	void changed() { emit KCModule::changed(true); }
+  void slotBrdrSnapChanged( int );
+  void slotWndwSnapChanged( int );
 
 private:
   int getMove( void );
