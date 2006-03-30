@@ -32,7 +32,7 @@
 #include <kdebug.h>
 
 #include <kapplication.h>
-#include <kdecorationfactory.h>
+#include "kdecorationfactory.h"
 #include <klocale.h>
 #include <QDesktopWidget>
 
