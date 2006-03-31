@@ -40,6 +40,7 @@ PopupInfo::PopupInfo( const char *name )
     : QWidget( 0, name )
     {
     m_infoString = "";
+    m_shown = false;
     reset();
     reconfigure();
     connect(&m_delayedHideTimer, SIGNAL(timeout()), this, SLOT(hide()));
