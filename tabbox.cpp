@@ -1149,9 +1149,7 @@ int Workspace::previousDesktopFocusChain( int iDesktop ) const
 */
 Client* Workspace::nextFocusChainClient( Client* c ) const
     {
-    if ( !c )
-        return 0;
-    int desktop = c->isOnAllDesktops() ? currentDesktop() : c->desktop();
+    int desktop = !c || c->isOnAllDesktops() ? currentDesktop() : c->desktop();
     if ( focus_chain[desktop].isEmpty() )
         return 0;
     ClientList::ConstIterator it = focus_chain[desktop].find( c );
@@ -1169,9 +1167,7 @@ Client* Workspace::nextFocusChainClient( Client* c ) const
 */
 Client* Workspace::previousFocusChainClient( Client* c ) const
     {
-    if ( !c )
-        return 0;
-    int desktop = c->isOnAllDesktops() ? currentDesktop() : c->desktop();
+    int desktop = !c || c->isOnAllDesktops() ? currentDesktop() : c->desktop();
     if ( focus_chain[desktop].isEmpty() )
         return 0;
     ClientList::ConstIterator it = focus_chain[desktop].find( c );
