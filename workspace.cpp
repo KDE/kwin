@@ -514,7 +514,7 @@ void Workspace::addClient( Client* c, allowed_t )
         }
     else
         {
-        updateFocusChains( c, true );
+        updateFocusChains( c, false ); // add to focus chain if not already there
         clients.append( c );
         }
     if( !unconstrained_stacking_order.contains( c ))
