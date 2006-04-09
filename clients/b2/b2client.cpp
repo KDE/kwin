@@ -541,7 +541,7 @@ bool B2Client::mustDrawHandle() const
     if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
 	return false;
     } else {
-	return do_draw_handle & resizable;
+	return do_draw_handle && resizable;
     }
 }
 
