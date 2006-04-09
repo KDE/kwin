@@ -326,8 +326,8 @@ bool Client::sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool ac
                 || c1->group()->leaderClient() == c1 || c2->group()->leaderClient() == c2;
 #endif
         }
-    int pos1 = c1->windowRole().find( '#' );
-    int pos2 = c2->windowRole().find( '#' );
+    int pos1 = c1->windowRole().indexOf( '#' );
+    int pos2 = c2->windowRole().indexOf( '#' );
     if(( pos1 >= 0 && pos2 >= 0 )
         ||
     // hacks here
