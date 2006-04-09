@@ -120,8 +120,8 @@ static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app
             if( rule->types != NET::AllTypesMask )
                 {
                 int bits = 0;
-                for( int bit = 1;
-                     bit < 1 << 31;
+                for( unsigned int bit = 1;
+                     bit < 1U << 31;
                      bit <<= 1 )
                     if( rule->types & bit )
                         ++bits;
