@@ -470,7 +470,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             cancelShadeHover();
             break;
         case Options::MouseOperationsMenu:
-            if ( isActive() & options->clickRaise )
+            if ( isActive() && options->clickRaise )
                 autoRaise();
             workspace()->showWindowMenu( globalPos, this );
             break;

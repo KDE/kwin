@@ -97,9 +97,9 @@ void Workspace::updateClientLayer( Client* c )
 
 void Workspace::updateStackingOrder( bool propagate_new_clients )
     {
-    if( block_stacking_updates > 0 )
+    if( block_stacking_updates > 0 && propagate_new_clients )
         {
-        blocked_propagating_new_clients |= propagate_new_clients;
+        blocked_propagating_new_clients = true;
         return;
         }
     ClientList new_stacking_order = constrainedStackingOrder();
