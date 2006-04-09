@@ -389,6 +389,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             break;
         case Options::RestoreOp:
             c->maximize( Client::MaximizeRestore );
+            break;
         case Options::MinimizeOp:
             c->minimize();
             break;
