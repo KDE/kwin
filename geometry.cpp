@@ -1807,7 +1807,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
     // maximing one way and unmaximizing the other way shouldn't happen
     Q_ASSERT( !( vertical && horizontal )
-        || (( max_mode & MaximizeVertical != 0 ) == ( max_mode & MaximizeHorizontal != 0 )));
+        || ((( max_mode & MaximizeVertical ) != 0 ) == (( max_mode & MaximizeHorizontal ) != 0 )));
 
     QRect clientArea = workspace()->clientArea( MaximizeArea, this );
 
