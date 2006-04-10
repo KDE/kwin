@@ -454,7 +454,16 @@ bool Client::manage( Window w, bool isMapped )
         if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving()))
             workspace()->setCurrentDesktop( desktop());
 
-        if( workspace()->showingDesktop())
+        bool belongs_to_desktop = false;
+        for( ClientList::ConstIterator it = group()->members().begin();
+             it != group()->members().end();
+             ++it )
+            if( (*it)->isDesktop())
+                {
+                belongs_to_desktop = true;
+                break;
+                }
+        if( !belongs_to_desktop && workspace()->showingDesktop())
             workspace()->resetShowingDesktop( false );
 
         if( isOnCurrentDesktop() && !isMapped && !allow )
