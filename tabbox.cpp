@@ -27,13 +27,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kstringhandler.h>
 #include <stdarg.h>
 #include <kdebug.h>
-#include <kglobalaccel.h>
-#include <kkeynative.h>
 #include <kglobalsettings.h>
 #include <kiconeffect.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include <QX11Info>
+#include <kactioncollection.h>
+#include <kkeyserver.h>
 
 // specify externals before namespace
 
@@ -668,32 +668,32 @@ static const int MAX_KEYSYMS = 4;
 static uint alt_keysyms[ MAX_KEYSYMS ];
 static uint win_keysyms[ MAX_KEYSYMS ];
 
-static bool areModKeysDepressed( const KKeySequence& seq )
+static bool areModKeysDepressed( const QKeySequence& seq )
     {
     uint rgKeySyms[10];
     int nKeySyms = 0;
-    if( seq.isNull())
+    if( seq.isEmpty())
 	return false;
-    int mod = seq.key(seq.count()-1).modFlags();
+    int mod = seq[seq.count()-1] & Qt::KeyboardModifierMask;
 
-    if ( mod & KKey::SHIFT )
+    if ( mod & Qt::SHIFT )
         {
         rgKeySyms[nKeySyms++] = XK_Shift_L;
         rgKeySyms[nKeySyms++] = XK_Shift_R;
         }
-    if ( mod & KKey::CTRL )
+    if ( mod & Qt::CTRL )
         {
         rgKeySyms[nKeySyms++] = XK_Control_L;
         rgKeySyms[nKeySyms++] = XK_Control_R;
         }
-    if( mod & KKey::ALT )
+    if( mod & Qt::ALT )
         {
         for( int i = 0;
              i < MAX_KEYSYMS && alt_keysyms[ i ] != NoSymbol;
              ++i )
             rgKeySyms[nKeySyms++] = alt_keysyms[ i ];
         }
-    if( mod & KKey::WIN )
+    if( mod & Qt::META )
         {
         for( int i = 0;
              i < MAX_KEYSYMS && win_keysyms[ i ] != NoSymbol;
@@ -706,7 +706,7 @@ static bool areModKeysDepressed( const KKeySequence& seq )
 
 static bool areModKeysDepressed( const KShortcut& cut )
     {
-    for( unsigned int i = 0;
+    for( int i = 0;
 	 i < cut.count();
 	 ++i )
 	{
@@ -724,7 +724,7 @@ void TabBox::updateKeyMapping()
     int altpos = 0;
     int winpos = 0;
     int winmodpos = -1;
-    int winmod = KKeyNative::modXWin();
+    int winmod = KKeyServer::modXMeta();
     while( winmod > 0 ) // get position of the set bit in winmod
         {
         winmod >>= 1;
@@ -1004,15 +1004,15 @@ void Workspace::oneStepThroughDesktopList( bool forward )
 /*!
   Handles holding alt-tab / control-tab
  */
-void Workspace::tabBoxKeyPress( const KKeyNative& keyX )
+void Workspace::tabBoxKeyPress( int keyQt )
     {
     bool forward = false;
     bool backward = false;
 
     if (tab_grab)
         {
-        forward = cutWalkThroughWindows.contains( keyX );
-        backward = cutWalkThroughWindowsReverse.contains( keyX );
+        forward = cutWalkThroughWindows.contains( keyQt );
+        backward = cutWalkThroughWindowsReverse.contains( keyQt );
         if (forward || backward)
             {
             kDebug(125) << "== " << cutWalkThroughWindows.toStringInternal()
@@ -1022,18 +1022,17 @@ void Workspace::tabBoxKeyPress( const KKeyNative& keyX )
         }
     else if (control_grab)
         {
-        forward = cutWalkThroughDesktops.contains( keyX ) ||
-                  cutWalkThroughDesktopList.contains( keyX );
-        backward = cutWalkThroughDesktopsReverse.contains( keyX ) ||
-                   cutWalkThroughDesktopListReverse.contains( keyX );
+        forward = cutWalkThroughDesktops.contains( keyQt ) ||
+                  cutWalkThroughDesktopList.contains( keyQt );
+        backward = cutWalkThroughDesktopsReverse.contains( keyQt ) ||
+                   cutWalkThroughDesktopListReverse.contains( keyQt );
         if (forward || backward)
             walkThroughDesktops(forward);
         }
 
     if (control_grab || tab_grab)
         {
-        uint keyQt = keyX.keyCodeQt();
-        if ( ((keyQt & 0xffff) == Qt::Key_Escape)
+        if ( ((keyQt & ~Qt::KeyboardModifierMask) == Qt::Key_Escape)
             && !(forward || backward) )
             { // if Escape is part of the shortcut, don't cancel
             closeTabBox();
@@ -1058,10 +1057,10 @@ void Workspace::closeTabBox()
 void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
     {
     unsigned int mk = ev.state &
-        (KKeyNative::modXShift() |
-         KKeyNative::modXCtrl() |
-         KKeyNative::modXAlt() |
-         KKeyNative::modXWin() );
+        (KKeyServer::modXShift() |
+         KKeyServer::modXCtrl() |
+         KKeyServer::modXAlt() |
+         KKeyServer::modXMeta() );
     // ev.state is state before the key release, so just checking mk being 0 isn't enough
     // using XQueryPointer() also doesn't seem to work well, so the check that all
     // modifiers are released: only one modifier is active and the currently released

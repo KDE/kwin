@@ -146,7 +146,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/ )
     int desktop = c->desktop() == 0 || c->isOnAllDesktops() ? m_WorkspacePtr->currentDesktop() : c->desktop();
 
     int cxl, cxr, cyt, cyb;     //temp coords
-    int  xl,  xr,  yt,  yb;     //temp coords
+    int  xl, xr, yt, yb;     //temp coords
     int basket;                 //temp holder
 
     // get the maximum allowed windows space
@@ -402,7 +402,7 @@ void Placement::placeCascaded (Client* c, QRect& area, Policy nextPlacement)
     c->move(QPoint(xp, yp));
 
     // new position
-    cci[dn].pos = QPoint(xp + delta_x,  yp + delta_y);
+    cci[dn].pos = QPoint(xp + delta_x, yp + delta_y);
     }
 
 /*!

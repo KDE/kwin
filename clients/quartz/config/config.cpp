@@ -51,7 +51,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 
 	// Ensure we track user changes properly
 	connect( cbColorBorder, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
-	connect( cbExtraSmall,  SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
+	connect( cbExtraSmall, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
 
 	// Make the widgets visible in kwindecoration
 	gb->show();

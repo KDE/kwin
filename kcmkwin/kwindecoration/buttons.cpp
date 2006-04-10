@@ -1,7 +1,7 @@
 /*
 	This is the new kwindecoration kcontrol module
 
-	Copyright (c) 2004,  Sandro Giessl <sandro@giessl.com>
+	Copyright (c) 2004, Sandro Giessl <sandro@giessl.com>
 	Copyright (c) 2001
 		Karol Szwed <gallium@kde.org>
 		http://gallium.n3.net/
@@ -671,7 +671,7 @@ void ButtonSourceItem::setButton(const Button& btn)
 	if (btn.supported) {
 		setText(0, btn.name);
 	} else {
-		setText(0, i18n("%1 (unavailable)").arg(btn.name) );
+		setText(0, i18n("%1 (unavailable)", btn.name) );
 	}
 }
 
@@ -805,7 +805,7 @@ Button ButtonPositionWidget::getButton(QChar type, bool& success) {
 	} else if (type == 'X') {
 		QBitmap bmp(close_width, close_height, close_bits, true);
 		bmp.setMask(bmp);
-		return Button(i18n("Close"), bmp, 'X', false,  m_supportedButtons.contains('X') );
+		return Button(i18n("Close"), bmp, 'X', false, m_supportedButtons.contains('X') );
 	} else if (type == 'A') {
 		QBitmap bmp(maximize_width, maximize_height, maximize_bits, true);
 		bmp.setMask(bmp);

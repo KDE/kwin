@@ -588,11 +588,11 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, KInstance 
     QHBoxLayout* focusStealingLayout = new QHBoxLayout( lay,KDialog::spacingHint());
     QLabel* focusStealingLabel = new QLabel( i18n( "Focus stealing prevention level:" ), this );
     focusStealing = new QComboBox( this );
-    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "None" ));
-    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "Low" ));
-    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "Normal" ));
-    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "High" ));
-    focusStealing->insertItem( i18n( "Focus Stealing Prevention Level", "Extreme" ));
+    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "None" ));
+    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
+    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "Normal" ));
+    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "High" ));
+    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "Extreme" ));
     focusStealingLabel->setBuddy( focusStealing );
     focusStealingLayout->addWidget( focusStealingLabel );
     focusStealingLayout->addWidget( focusStealing, Qt::AlignLeft );
@@ -1015,11 +1015,11 @@ void KMovingConfig::setMoveResizeMaximized(bool a) {
 }
 
 void KMovingConfig::slotBrdrSnapChanged(int value) {
-    BrdrSnap->setSuffix(i18n(" pixel", " pixels", value));
+    BrdrSnap->setSuffix(i18np(" pixel", " pixels", value));
 }
 
 void KMovingConfig::slotWndwSnapChanged(int value) {
-    WndwSnap->setSuffix(i18n(" pixel", " pixels", value));
+    WndwSnap->setSuffix(i18np(" pixel", " pixels", value));
 }
 
 void KMovingConfig::load( void )

@@ -157,7 +157,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
         }
     if(!create_ptr)
         {
-        error( i18n( "The library %1 is not a KWin plugin." ).arg( path ));
+        error( i18n( "The library %1 is not a KWin plugin.", path ));
         library->unload();
         return false;
         }

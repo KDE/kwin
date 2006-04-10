@@ -152,7 +152,7 @@ static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app
     Rules* ret = new Rules;
     if( whole_app )
         {
-        ret->description = i18n( "Application settings for %1" ).arg( QString::fromLatin1( wmclass_class ));
+        ret->description = i18n( "Application settings for %1", QString::fromLatin1( wmclass_class ));
         // TODO maybe exclude some types? If yes, then also exclude them above
         // when searching.
         ret->types = NET::AllTypesMask; 
@@ -176,7 +176,7 @@ static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app
             }
         return ret;
         }
-    ret->description = i18n( "Window settings for %1" ).arg( QString::fromLatin1( wmclass_class ));
+    ret->description = i18n( "Window settings for %1", QString::fromLatin1( wmclass_class ));
     if( type == NET::Unknown )
         ret->types = NET::NormalMask;
     else

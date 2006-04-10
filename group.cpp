@@ -596,7 +596,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         Window root_return, parent_return;
         Window* wins = NULL;
         unsigned int nwins;
-        int r = XQueryTree(QX11Info::display(), new_transient_for, &root_return, &parent_return,  &wins, &nwins);
+        int r = XQueryTree(QX11Info::display(), new_transient_for, &root_return, &parent_return, &wins, &nwins);
         if ( wins )
             XFree((void *) wins);
         if ( r == 0)

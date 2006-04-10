@@ -264,25 +264,25 @@ void QuartzHandler::drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const
 	int x = pi->width() - 5*factor - square;
 	int y = (pi->height() - 4*factor)/2;
 
-	px.fillRect( x, y,          square, square, c1.light(120) );
-	px.fillRect( x, y+factor,   square, square, c1 );
+	px.fillRect( x, y,         square, square, c1.light(120) );
+	px.fillRect( x, y+factor,  square, square, c1 );
 	px.fillRect( x, y+2*factor, square, square, c1.light(110) );
 	px.fillRect( x, y+3*factor, square, square, c1 );
 
-	px.fillRect( x+factor, y,          square, square, c1.light(110) );
-	px.fillRect( x+factor, y+factor,   square, square, c2.light(110) );
+	px.fillRect( x+factor, y,         square, square, c1.light(110) );
+	px.fillRect( x+factor, y+factor,  square, square, c2.light(110) );
 	px.fillRect( x+factor, y+2*factor, square, square, c1.light(120) );
 	px.fillRect( x+factor, y+3*factor, square, square, c2.light(130) );
 
-	px.fillRect( x+2*factor, y+factor,   square, square, c1.light(110) );
+	px.fillRect( x+2*factor, y+factor,  square, square, c1.light(110) );
 	px.fillRect( x+2*factor, y+2*factor, square, square, c2.light(120) );
 	px.fillRect( x+2*factor, y+3*factor, square, square, c2.light(150) );
 
-	px.fillRect( x+3*factor, y,          square, square, c1.dark(110) );
+	px.fillRect( x+3*factor, y,         square, square, c1.dark(110) );
 	px.fillRect( x+3*factor, y+2*factor, square, square, c2.light(120) );
 	px.fillRect( x+3*factor, y+3*factor, square, square, c1.dark(120) );
 
-	px.fillRect( x+4*factor, y+factor,   square, square, c1.light(110) );
+	px.fillRect( x+4*factor, y+factor,  square, square, c1.light(110) );
 	px.fillRect( x+4*factor, y+3*factor, square, square, c1.dark(110) );
 
 	px.fillRect( x+5*factor, y+2*factor, square, square, c2.light(120));

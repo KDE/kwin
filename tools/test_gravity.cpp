@@ -10,9 +10,9 @@ using namespace std;
 const int gravities[ 10 ] =
     {
     NorthWestGravity, 
-    NorthGravity,  
+    NorthGravity, 
     NorthEastGravity,
-    WestGravity,      
+    WestGravity,     
     CenterGravity, 
     EastGravity,
     SouthWestGravity,

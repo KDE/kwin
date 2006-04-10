@@ -649,7 +649,7 @@ bool RulesWidget::finalCheck()
     if( description->text().isEmpty())
         {
         if( !wmclass->text().isEmpty())
-            description->setText( i18n( "Settings for %1" ).arg( wmclass->text()));
+            description->setText( i18n( "Settings for %1", wmclass->text()));
         else
             description->setText( i18n( "Unnamed entry" ));
         }
@@ -763,7 +763,7 @@ QString EditShortcutDialog::shortcut() const
     }
 
 ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent )
-    : KShortcutDialog( cut, false /*TODO???*/, parent )
+    : KShortcutDialog( cut, parent )
     {
     }
 
@@ -773,24 +773,24 @@ void ShortcutDialog::accept()
          ;
          ++i )
         {
-        KKeySequence seq = shortcut().seq( i );
-        if( seq.isNull())
+        QKeySequence seq = shortcut().seq( i );
+        if( seq.isEmpty())
             break;
-        if( seq.key( 0 ) == Qt::Key_Escape )
+        if( seq[0] == Qt::Key_Escape )
             {
             reject();
             return;
             }
-        if( seq.key( 0 ) == Qt::Key_Space )
+        if( seq[0] == Qt::Key_Space )
             { // clear
             setShortcut( KShortcut());
             KShortcutDialog::accept();
             return;
             }
-        if( seq.key( 0 ).modFlags() == 0 )
+        if( (seq[0] & Qt::KeyboardModifierMask) == 0 )
             { // no shortcuts without modifiers
             KShortcut cut = shortcut();
-            cut.setSeq( i, KKeySequence());
+            cut.setSeq( i, QKeySequence());
             setShortcut( cut );
             return;
             }

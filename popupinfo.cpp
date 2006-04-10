@@ -68,7 +68,7 @@ void PopupInfo::reset()
 
     setGeometry( 
        (r.width()-w)/2 + r.x(), r.height()/2-fontMetrics().height()-10 + r.y(),
-                 w,                       fontMetrics().height() + 20 );
+                 w,                      fontMetrics().height() + 20 );
     }
 
 

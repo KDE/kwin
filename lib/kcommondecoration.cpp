@@ -263,7 +263,7 @@ void KCommonDecoration::resetLayout()
 
     // shown instead of the window contents in decoration previews
     if(isPreview() ) {
-        m_previewWidget = new QLabel(i18n("<center><b>%1 preview</b></center>").arg(visibleName() ), widget());
+        m_previewWidget = new QLabel(i18n("<center><b>%1 preview</b></center>", visibleName() ), widget());
         m_previewWidget->show();
     }
 

@@ -55,9 +55,9 @@ KeramikConfig::KeramikConfig( KConfig* conf, QWidget* parent )
 	c = new KConfig( "kwinkeramikrc" );
 	
 	ui = new KeramikConfigUI( parent );
-	connect( ui->showAppIcons,    SIGNAL(clicked()), SIGNAL(changed()) );
-	connect( ui->smallCaptions,   SIGNAL(clicked()), SIGNAL(changed()) );
-	connect( ui->largeGrabBars,   SIGNAL(clicked()), SIGNAL(changed()) );
+	connect( ui->showAppIcons,   SIGNAL(clicked()), SIGNAL(changed()) );
+	connect( ui->smallCaptions,  SIGNAL(clicked()), SIGNAL(changed()) );
+	connect( ui->largeGrabBars,  SIGNAL(clicked()), SIGNAL(changed()) );
 	connect( ui->useShadowedText, SIGNAL(clicked()), SIGNAL(changed()) );
 
 	load( conf );

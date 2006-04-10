@@ -28,7 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 class QMenu;
 class KConfig;
-class KGlobalAccel;
+class KActionCollection;
 class KShortcutDialog;
 class KStartupInfo;
 class KStartupInfoId;
@@ -450,7 +450,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
         unsigned int sendFakedMouseEvent( QPoint pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
 
-        void tabBoxKeyPress( const KKeyNative& keyX );
+        void tabBoxKeyPress( int key );
         void tabBoxKeyRelease( const XKeyEvent& ev );
 
     // electric borders
@@ -545,11 +545,11 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         QMenu *desk_popup;
         int desk_popup_index;
 
-        KGlobalAccel *keys;
-        KGlobalAccel *client_keys;
+        KActionCollection *keys;
+        KActionCollection *client_keys;
         ShortcutDialog* client_keys_dialog;
         Client* client_keys_client;
-        KGlobalAccel *disable_shortcuts_keys;
+        KActionCollection *disable_shortcuts_keys;
         bool global_shortcuts_disabled;
         bool global_shortcuts_disabled_for_client;
 

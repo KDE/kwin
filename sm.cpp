@@ -94,7 +94,7 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             config->writeEntry( QString("wmClientMachine")+n, c->wmClientMachine( true ).constData() );
             config->writeEntry( QString("resourceName")+n, c->resourceName().constData() );
             config->writeEntry( QString("resourceClass")+n, c->resourceClass().constData() );
-            config->writeEntry( QString("geometry")+n,  QRect( c->calculateGravitation(true), c->clientSize() ) ); // FRAME
+            config->writeEntry( QString("geometry")+n, QRect( c->calculateGravitation(true), c->clientSize() ) ); // FRAME
             config->writeEntry( QString("restore")+n, c->geometryRestore() );
             config->writeEntry( QString("fsrestore")+n, c->geometryFSRestore() );
             config->writeEntry( QString("maximize")+n, (int) c->maximizeMode() );

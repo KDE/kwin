@@ -34,6 +34,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QMenu>
 #include <QVBoxLayout>
 #include <kauthorized.h>
+#include <kactioncollection.h>
+#include <kaction.h>
 
 #include "killwindow.h"
 #include "tabbox.h"
@@ -58,14 +60,14 @@ QMenu* Workspace::clientPopup()
         advanced_popup->setFont(KGlobalSettings::menuFont());
         connect( advanced_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
         advanced_popup->insertItem( SmallIconSet( "up" ),
-            i18n("Keep &Above Others")+'\t'+keys->shortcut("Window Above Other Windows").seq(0).toString(), Options::KeepAboveOp );
+            i18n("Keep &Above Others")+'\t'+keys->action("Window Above Other Windows")->shortcut().seq(0).toString(), Options::KeepAboveOp );
         advanced_popup->insertItem( SmallIconSet( "down" ),
-            i18n("Keep &Below Others")+'\t'+keys->shortcut("Window Below Other Windows").seq(0).toString(), Options::KeepBelowOp );
+            i18n("Keep &Below Others")+'\t'+keys->action("Window Below Other Windows")->shortcut().seq(0).toString(), Options::KeepBelowOp );
         advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ),
-            i18n("&Fullscreen")+'\t'+keys->shortcut("Window Fullscreen").seq(0).toString(), Options::FullScreenOp );
-        advanced_popup->insertItem( i18n("&No Border")+'\t'+keys->shortcut("Window No Border").seq(0).toString(), Options::NoBorderOp );
+            i18n("&Fullscreen")+'\t'+keys->action("Window Fullscreen")->shortcut().seq(0).toString(), Options::FullScreenOp );
+        advanced_popup->insertItem( i18n("&No Border")+'\t'+keys->action("Window No Border")->shortcut().seq(0).toString(), Options::NoBorderOp );
         advanced_popup->insertItem( SmallIconSet("key_bindings"),
-            i18n("Window &Shortcut...")+'\t'+keys->shortcut("Setup Window Shortcut").seq(0).toString(), Options::SetupWindowShortcutOp );
+            i18n("Window &Shortcut...")+'\t'+keys->action("Setup Window Shortcut")->shortcut().seq(0).toString(), Options::SetupWindowShortcutOp );
         advanced_popup->insertItem( SmallIconSet( "wizard" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
         advanced_popup->insertItem( SmallIconSet( "wizard" ), i18n("&Special Application Settings..."), Options::ApplicationRulesOp );
 
@@ -88,11 +90,11 @@ QMenu* Workspace::clientPopup()
             popup->insertItem(i18n("&Opacity"), trans_popup );
         }
         
-        popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->shortcut("Window Move").seq(0).toString(), Options::MoveOp );
-        popup->insertItem( i18n("Re&size")+'\t'+keys->shortcut("Window Resize").seq(0).toString(), Options::ResizeOp );
-        popup->insertItem( i18n("Mi&nimize")+'\t'+keys->shortcut("Window Minimize").seq(0).toString(), Options::MinimizeOp );
-        popup->insertItem( i18n("Ma&ximize")+'\t'+keys->shortcut("Window Maximize").seq(0).toString(), Options::MaximizeOp );
-        popup->insertItem( i18n("Sh&ade")+'\t'+keys->shortcut("Window Shade").seq(0).toString(), Options::ShadeOp );
+        popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->action("Window Move")->shortcut().seq(0).toString(), Options::MoveOp );
+        popup->insertItem( i18n("Re&size")+'\t'+keys->action("Window Resize")->shortcut().seq(0).toString(), Options::ResizeOp );
+        popup->insertItem( i18n("Mi&nimize")+'\t'+keys->action("Window Minimize")->shortcut().seq(0).toString(), Options::MinimizeOp );
+        popup->insertItem( i18n("Ma&ximize")+'\t'+keys->action("Window Maximize")->shortcut().seq(0).toString(), Options::MaximizeOp );
+        popup->insertItem( i18n("Sh&ade")+'\t'+keys->action("Window Shade")->shortcut().seq(0).toString(), Options::ShadeOp );
 
         popup->insertSeparator();
 
@@ -103,7 +105,7 @@ QMenu* Workspace::clientPopup()
             popup->insertSeparator();
             }
 
-        popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->shortcut("Window Close").seq(0).toString(), Options::CloseOp );
+        popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->action("Window Close")->shortcut().seq(0).toString(), Options::CloseOp );
         }
     return popup;
     }
@@ -245,11 +247,15 @@ void Workspace::closeActivePopup()
  */
 void Workspace::initShortcuts()
     {
-    keys = new KGlobalAccel( this );
-    // a separate KGlobalAccel is needed for the shortcut for disabling global shortcuts,
+    keys = new KActionCollection( this );
+    KActionCollection* actionCollection = keys;
+    KAction* a = 0L;
+
+    // a separate KActionCollection is needed for the shortcut for disabling global shortcuts,
     // otherwise it would also disable itself
-    disable_shortcuts_keys = new KGlobalAccel( this );
-    disable_shortcuts_keys->disableBlocking( true );
+    disable_shortcuts_keys = new KActionCollection( this );
+    // FIXME KAccel port... needed?
+    //disable_shortcuts_keys->disableBlocking( true );
 #define IN_KWIN
 #include "kwinbindings.cpp"
     readShortcuts();
@@ -257,19 +263,15 @@ void Workspace::initShortcuts()
 
 void Workspace::readShortcuts()
     {
-    keys->readSettings();
-    disable_shortcuts_keys->readSettings();
+    KGlobalAccel::self()->readSettings();
 
-    cutWalkThroughDesktops = keys->shortcut("Walk Through Desktops");
-    cutWalkThroughDesktopsReverse = keys->shortcut("Walk Through Desktops (Reverse)");
-    cutWalkThroughDesktopList = keys->shortcut("Walk Through Desktop List");
-    cutWalkThroughDesktopListReverse = keys->shortcut("Walk Through Desktop List (Reverse)");
-    cutWalkThroughWindows = keys->shortcut("Walk Through Windows");
-    cutWalkThroughWindowsReverse = keys->shortcut("Walk Through Windows (Reverse)");
+    cutWalkThroughDesktops = keys->action("Walk Through Desktops")->shortcut();
+    cutWalkThroughDesktopsReverse = keys->action("Walk Through Desktops (Reverse)")->shortcut();
+    cutWalkThroughDesktopList = keys->action("Walk Through Desktop List")->shortcut();
+    cutWalkThroughDesktopListReverse = keys->action("Walk Through Desktop List (Reverse)")->shortcut();
+    cutWalkThroughWindows = keys->action("Walk Through Windows")->shortcut();
+    cutWalkThroughWindowsReverse = keys->action("Walk Through Windows (Reverse)")->shortcut();
 
-    keys->updateConnections();
-    disable_shortcuts_keys->updateConnections();
-    
     delete popup;
     popup = NULL; // so that it's recreated next time
     desk_popup = NULL;
@@ -316,15 +318,17 @@ void Workspace::setupWindowShortcutDone( bool ok )
 void Workspace::clientShortcutUpdated( Client* c )
     {
     QString key = QString::number( c->window());
-    client_keys->remove( key );
+    KAction* action = client_keys->action( key.toLatin1().constData() );
     if( !c->shortcut().isNull())
         {
-        client_keys->insert( key, key );
-        client_keys->setShortcut( key, c->shortcut());
-        client_keys->setSlot( key, c, SLOT( shortcutActivated()));
-        client_keys->setActionEnabled( key, true );
+        action->setShortcut(c->shortcut());
+        connect(action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
+        action->setEnabled( true );
         }
-    client_keys->updateConnections();
+    else
+        {
+        delete action;
+        }
     }
 
 void Workspace::clientPopupActivated( int id )

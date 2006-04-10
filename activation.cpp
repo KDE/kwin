@@ -689,7 +689,7 @@ void Client::demandAttention( bool set )
 void Client::demandAttentionKNotify()
     {
     Notify::Event e = isOnCurrentDesktop() ? Notify::DemandAttentionCurrent : Notify::DemandAttentionOther;
-    Notify::raise( e, i18n( "Window '%1' demands attention." ).arg( KStringHandler::csqueeze(caption())), this );
+    Notify::raise( e, i18n( "Window '%1' demands attention.", KStringHandler::csqueeze(caption())), this );
     demandAttentionKNotifyTimer->stop();
     demandAttentionKNotifyTimer->deleteLater();
     demandAttentionKNotifyTimer = NULL;

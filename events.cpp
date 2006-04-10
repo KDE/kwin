@@ -23,8 +23,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 
 #include <qwhatsthis.h>
-#include <kkeynative.h>
 #include <qapplication.h>
+
+#include <kkeyserver.h>
 
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
@@ -221,9 +222,9 @@ bool Workspace::workspaceEvent( XEvent * e )
         case KeyPress:
             {
             was_user_interaction = true;
-            KKeyNative keyX( (XEvent*)e );
-            uint keyQt = keyX.keyCodeQt();
-            kDebug(125) << "Workspace::keyPress( " << keyX.key().toString() << " )" << endl;
+            int keyQt;
+            KKeyServer::xEventToQt(e, keyQt);
+            kDebug(125) << "Workspace::keyPress( " << keyQt << " )" << endl;
             if (movingClient)
                 {
                 movingClient->keyPressEvent(keyQt);
@@ -231,7 +232,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 }
             if( tab_grab || control_grab )
                 {
-                tabBoxKeyPress( keyX );
+                tabBoxKeyPress( keyQt );
                 return true;
                 }
             break;
@@ -962,9 +963,9 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
         }
     }
 
-#define XCapL KKeyNative::modXLock()
-#define XNumL KKeyNative::modXNumLock()
-#define XScrL KKeyNative::modXScrollLock()
+#define XCapL KKeyServer::modXLock()
+#define XNumL KKeyServer::modXNumLock()
+#define XScrL KKeyServer::modXScrollLock()
 void Client::grabButton( int modifier )
     {
     unsigned int mods[ 8 ] = 
@@ -978,7 +979,7 @@ void Client::grabButton( int modifier )
          ++i )
         XGrabButton( QX11Info::display(), AnyButton,
             modifier | mods[ i ],
-            wrapperId(),  false, ButtonPressMask,
+            wrapperId(), false, ButtonPressMask,
             GrabModeSync, GrabModeAsync, None, None );
     }
 
@@ -1064,9 +1065,9 @@ int qtToX11State( Qt::ButtonState state )
     if( state & Qt::ControlModifier )
         ret |= ControlMask;
     if( state & Qt::AltModifier )
-        ret |= KKeyNative::modXAlt();
+        ret |= KKeyServer::modXAlt();
     if( state & Qt::MetaModifier )
-        ret |= KKeyNative::modXWin();
+        ret |= KKeyServer::modXMeta();
     return ret;
     }
 
@@ -1132,9 +1133,9 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
         updateUserTime();
         workspace()->setWasUserInteraction();
         uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
-            KKeyNative::modXWin() :
-            KKeyNative::modXAlt();
-        bool bModKeyHeld = keyModX != 0 && ( state & KKeyNative::accelModMaskX()) == keyModX;
+            KKeyServer::modXMeta() :
+            KKeyServer::modXAlt();
+        bool bModKeyHeld = keyModX != 0 && ( state & KKeyServer::accelModMaskX()) == keyModX;
 
         if( isSplash()
             && button == Button1 && !bModKeyHeld )

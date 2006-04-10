@@ -174,20 +174,20 @@ KeramikHandler::KeramikHandler()
 	settings_cache = NULL;
 
 	// Create the button deco bitmaps
-	buttonDecos[ Menu ]             = new QBitmap( 17, 17, menu_bits,       true );
-	buttonDecos[ OnAllDesktops ]    = new QBitmap( 17, 17, on_all_desktops_bits,  true );
+	buttonDecos[ Menu ]             = new QBitmap( 17, 17, menu_bits,      true );
+	buttonDecos[ OnAllDesktops ]    = new QBitmap( 17, 17, on_all_desktops_bits, true );
 	buttonDecos[ NotOnAllDesktops ] = new QBitmap( 17, 17, not_on_all_desktops_bits, true );
-	buttonDecos[ Help ]             = new QBitmap( 17, 17, help_bits,       true );
-	buttonDecos[ Minimize ]         = new QBitmap( 17, 17, minimize_bits,   true );
-	buttonDecos[ Maximize ]         = new QBitmap( 17, 17, maximize_bits,   true );
-	buttonDecos[ Restore ]          = new QBitmap( 17, 17, restore_bits,    true );
-	buttonDecos[ Close ]            = new QBitmap( 17, 17, close_bits,      true );
-	buttonDecos[ AboveOn ]          = new QBitmap( 17, 17, above_on_bits,   true );
-	buttonDecos[ AboveOff ]         = new QBitmap( 17, 17, above_off_bits,  true );
-	buttonDecos[ BelowOn ]          = new QBitmap( 17, 17, below_on_bits,   true );
-	buttonDecos[ BelowOff ]         = new QBitmap( 17, 17, below_off_bits,  true );
-	buttonDecos[ ShadeOn ]          = new QBitmap( 17, 17, shade_on_bits,   true );
-	buttonDecos[ ShadeOff ]         = new QBitmap( 17, 17, shade_off_bits,  true );
+	buttonDecos[ Help ]             = new QBitmap( 17, 17, help_bits,      true );
+	buttonDecos[ Minimize ]         = new QBitmap( 17, 17, minimize_bits,  true );
+	buttonDecos[ Maximize ]         = new QBitmap( 17, 17, maximize_bits,  true );
+	buttonDecos[ Restore ]          = new QBitmap( 17, 17, restore_bits,   true );
+	buttonDecos[ Close ]            = new QBitmap( 17, 17, close_bits,     true );
+	buttonDecos[ AboveOn ]          = new QBitmap( 17, 17, above_on_bits,  true );
+	buttonDecos[ AboveOff ]         = new QBitmap( 17, 17, above_off_bits, true );
+	buttonDecos[ BelowOn ]          = new QBitmap( 17, 17, below_on_bits,  true );
+	buttonDecos[ BelowOff ]         = new QBitmap( 17, 17, below_off_bits, true );
+	buttonDecos[ ShadeOn ]          = new QBitmap( 17, 17, shade_on_bits,  true );
+	buttonDecos[ ShadeOff ]         = new QBitmap( 17, 17, shade_off_bits, true );
 
 	// Selfmask the bitmaps
 	for ( int i = 0; i < NumButtonDecos; i++ )
@@ -267,11 +267,11 @@ void KeramikHandler::createPixmaps()
 
 	// Active tiles
 	// -------------------------------------------------------------------------
-	captionColor = KDecoration::options()->color( ColorTitleBar,   true );
+	captionColor = KDecoration::options()->color( ColorTitleBar,  true );
 	titleColor   = KDecoration::options()->color( ColorTitleBlend, true );
 
 	// Load the titlebar corners.
-	activeTiles[ TitleLeft ]  = loadPixmap( "titlebar-left",  titleColor );
+	activeTiles[ TitleLeft ]  = loadPixmap( "titlebar-left", titleColor );
 	activeTiles[ TitleRight ] = loadPixmap( "titlebar-right", titleColor );
 
 	// Load the titlebar center tile image (this will be used as
@@ -279,13 +279,13 @@ void KeramikHandler::createPixmaps()
 	titleCenter = loadImage( "titlebar-center", titleColor );
 
 	// Load the small version of the caption bubble corner & center images.
-	captionLeft   = loadImage( "caption-small-left",   captionColor );
-	captionRight  = loadImage( "caption-small-right",  captionColor );
+	captionLeft   = loadImage( "caption-small-left",  captionColor );
+	captionRight  = loadImage( "caption-small-right", captionColor );
 	captionCenter = loadImage( "caption-small-center", captionColor );
 
 	// Create the caption bubble tiles (by blending the images onto the titlebar)
-	activeTiles[ CaptionSmallLeft   ] = composite( captionLeft,   titleCenter );
-	activeTiles[ CaptionSmallRight  ] = composite( captionRight,  titleCenter );
+	activeTiles[ CaptionSmallLeft   ] = composite( captionLeft,  titleCenter );
+	activeTiles[ CaptionSmallRight  ] = composite( captionRight, titleCenter );
 	activeTiles[ CaptionSmallCenter ] = composite( captionCenter, titleCenter );
 
 	delete captionLeft;
@@ -293,12 +293,12 @@ void KeramikHandler::createPixmaps()
 	delete captionCenter;
 
 	// Now do the same with the large version
-	captionLeft   = loadImage( "caption-large-left",   captionColor );
-	captionRight  = loadImage( "caption-large-right",  captionColor );
+	captionLeft   = loadImage( "caption-large-left",  captionColor );
+	captionRight  = loadImage( "caption-large-right", captionColor );
 	captionCenter = loadImage( "caption-large-center", captionColor );
 
-	activeTiles[ CaptionLargeLeft   ] = composite( captionLeft,   titleCenter );
-	activeTiles[ CaptionLargeRight  ] = composite( captionRight,  titleCenter );
+	activeTiles[ CaptionLargeLeft   ] = composite( captionLeft,  titleCenter );
+	activeTiles[ CaptionLargeRight  ] = composite( captionRight, titleCenter );
 	activeTiles[ CaptionLargeCenter ] = composite( captionCenter, titleCenter );
 
 	delete captionLeft;
@@ -311,36 +311,36 @@ void KeramikHandler::createPixmaps()
 	delete titleCenter;
 
 	// Load the left & right border pixmaps
-	activeTiles[ BorderLeft ]  = loadPixmap( "border-left",  titleColor );
+	activeTiles[ BorderLeft ]  = loadPixmap( "border-left", titleColor );
 	activeTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
 
 	// Load the bottom grabbar pixmaps
 	if ( largeGrabBars ) {
-		activeTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
-		activeTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
+		activeTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",  titleColor );
+		activeTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right", titleColor );
 		activeTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
 	} else {
-		activeTiles[ GrabBarLeft ]   = loadPixmap( "bottom-left",   titleColor );
-		activeTiles[ GrabBarRight ]  = loadPixmap( "bottom-right",  titleColor );
+		activeTiles[ GrabBarLeft ]   = loadPixmap( "bottom-left",  titleColor );
+		activeTiles[ GrabBarRight ]  = loadPixmap( "bottom-right", titleColor );
 		activeTiles[ GrabBarCenter ] = loadPixmap( "bottom-center", titleColor );
 	}
 
 	// Inactive tiles
 	// -------------------------------------------------------------------------
-	captionColor = KDecoration::options()->color( ColorTitleBar,   false );
+	captionColor = KDecoration::options()->color( ColorTitleBar,  false );
 	titleColor   = KDecoration::options()->color( ColorTitleBlend, false );
 
-	inactiveTiles[ TitleLeft ]  = loadPixmap( "titlebar-left",  titleColor );
+	inactiveTiles[ TitleLeft ]  = loadPixmap( "titlebar-left", titleColor );
 	inactiveTiles[ TitleRight ] = loadPixmap( "titlebar-right", titleColor );
 
 	titleCenter = loadImage( "titlebar-center", titleColor );
 
-	captionLeft   = loadImage( "caption-small-left",   captionColor );
-	captionRight  = loadImage( "caption-small-right",  captionColor );
+	captionLeft   = loadImage( "caption-small-left",  captionColor );
+	captionRight  = loadImage( "caption-small-right", captionColor );
 	captionCenter = loadImage( "caption-small-center", captionColor );
 
-	inactiveTiles[ CaptionSmallLeft  ]  = composite( captionLeft,   titleCenter );
-	inactiveTiles[ CaptionSmallRight ]  = composite( captionRight,  titleCenter );
+	inactiveTiles[ CaptionSmallLeft  ]  = composite( captionLeft,  titleCenter );
+	inactiveTiles[ CaptionSmallRight ]  = composite( captionRight, titleCenter );
 	inactiveTiles[ CaptionSmallCenter ] = composite( captionCenter, titleCenter );
 
 	delete captionLeft;
@@ -351,16 +351,16 @@ void KeramikHandler::createPixmaps()
 
 	delete titleCenter;
 
-	inactiveTiles[ BorderLeft ]  = loadPixmap( "border-left",  titleColor );
+	inactiveTiles[ BorderLeft ]  = loadPixmap( "border-left", titleColor );
 	inactiveTiles[ BorderRight ] = loadPixmap( "border-right", titleColor );
 
 	if ( largeGrabBars ) {
-		inactiveTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",   titleColor );
-		inactiveTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right",  titleColor );
+		inactiveTiles[ GrabBarLeft ]   = loadPixmap( "grabbar-left",  titleColor );
+		inactiveTiles[ GrabBarRight ]  = loadPixmap( "grabbar-right", titleColor );
 		inactiveTiles[ GrabBarCenter ] = loadPixmap( "grabbar-center", titleColor );
 	} else {
-		inactiveTiles[ GrabBarLeft ]   = loadPixmap( "bottom-left",   titleColor );
-		inactiveTiles[ GrabBarRight ]  = loadPixmap( "bottom-right",  titleColor );
+		inactiveTiles[ GrabBarLeft ]   = loadPixmap( "bottom-left",  titleColor );
+		inactiveTiles[ GrabBarRight ]  = loadPixmap( "bottom-right", titleColor );
 		inactiveTiles[ GrabBarCenter ] = loadPixmap( "bottom-center", titleColor );
 	}
 
@@ -368,7 +368,7 @@ void KeramikHandler::createPixmaps()
 	// -------------------------------------------------------------------------
 	buttonColor  = QColor(); //KDecoration::options()->color( ButtonBg, true );
 
-	titleButtonRound  = loadPixmap( "titlebutton-round"+size,  buttonColor );
+	titleButtonRound  = loadPixmap( "titlebutton-round"+size, buttonColor );
 	titleButtonSquare = loadPixmap( "titlebutton-square"+size, buttonColor );
 
 
@@ -827,7 +827,7 @@ void KeramikButton::drawButton( QPainter *p )
 	if ( isDown() ) {
 		// Pressed
 		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(2*size, 0, size, size), pix->rect() ) );
-		p->translate( QApplication::isRightToLeft() ? -1 : 1,  1 );
+		p->translate( QApplication::isRightToLeft() ? -1 : 1, 1 );
 	} else if ( hover )
 		// Mouse over
 		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(size, 0, size, size), pix->rect() ) );
@@ -1141,8 +1141,8 @@ void KeramikClient::updateMask()
 			register int x = captionRect.left();
 			w = captionRect.width();
 			r += QRegion( x + 11, y++, w - 19, 1 );
-			r += QRegion( x + 9,  y++, w - 15, 1 );
-			r += QRegion( x + 7,  y++, w - 12, 1 );
+			r += QRegion( x + 9, y++, w - 15, 1 );
+			r += QRegion( x + 7, y++, w - 12, 1 );
 		} else {
 			nrects = 8;
 
@@ -1158,11 +1158,11 @@ void KeramikClient::updateMask()
 		// The rounded titlebar corners
 		r += QRegion( 9, y++, w - 17, 1 );
 		r += QRegion( 7, y++, w - 13, 1 );
-		r += QRegion( 5, y++, w - 9,  1 );
-		r += QRegion( 4, y++, w - 7,  1 );
-		r += QRegion( 3, y++, w - 5,  1 );
-		r += QRegion( 2, y++, w - 4,  1 );
-		r += QRegion( 1, y++, w - 2,  2 );
+		r += QRegion( 5, y++, w - 9, 1 );
+		r += QRegion( 4, y++, w - 7, 1 );
+		r += QRegion( 3, y++, w - 5, 1 );
+		r += QRegion( 2, y++, w - 4, 1 );
+		r += QRegion( 1, y++, w - 2, 2 );
 	} else {
 
 		// If the caption bubble is visible and extends above the titlebar
@@ -1188,11 +1188,11 @@ void KeramikClient::updateMask()
 		// The rounded titlebar corners
 		r += QRegion( 8, y++, w - 17, 1 );
 		r += QRegion( 6, y++, w - 13, 1 );
-		r += QRegion( 4, y++, w - 9,  1 );
-		r += QRegion( 3, y++, w - 7,  1 );
-		r += QRegion( 2, y++, w - 5,  1 );
-		r += QRegion( 2, y++, w - 4,  1 );
-		r += QRegion( 1, y++, w - 2,  2 );
+		r += QRegion( 4, y++, w - 9, 1 );
+		r += QRegion( 3, y++, w - 7, 1 );
+		r += QRegion( 2, y++, w - 5, 1 );
+		r += QRegion( 2, y++, w - 4, 1 );
+		r += QRegion( 1, y++, w - 2, 2 );
 	}
 
 	y++;

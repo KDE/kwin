@@ -30,6 +30,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QDesktopWidget>
 #include <QToolButton>
 #include <kipc.h>
+#include <kactioncollection.h>
+#include <kaction.h>
 
 #include "plugins.h"
 #include "client.h"
@@ -188,7 +190,7 @@ Workspace::Workspace( bool restore )
       1
     );
 
-    client_keys = new KGlobalAccel( this );
+    client_keys = new KActionCollection( this );
     initShortcuts();
     tab_box = new TabBox( this );
     popupinfo = new PopupInfo( );
@@ -966,7 +968,7 @@ void Workspace::loadDesktopSettings()
     for(int i = 1; i <= n; i++) 
         {
         QString s = group.readEntry(QString("Name_%1").arg(i),
-                                i18n("Desktop %1").arg(i));
+                                i18n("Desktop %1", i));
         rootInfo->setDesktopName( i, s.toUtf8().data() );
         desktop_focus_chain[i-1] = i;
         }
@@ -986,7 +988,7 @@ void Workspace::saveDesktopSettings()
     for(int i = 1; i <= number_of_desktops; i++) 
         {
         QString s = desktopName( i );
-        QString defaultvalue = i18n("Desktop %1").arg(i);
+        QString defaultvalue = i18n("Desktop %1", i);
         if ( s.isEmpty() ) 
             {
             s = defaultvalue;
@@ -1910,7 +1912,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
 
     QCursor::setPos( pos );
     if ( mouse_emulation_state )
-        mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0,  mouse_emulation_state );
+        mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0, mouse_emulation_state );
     return true;
 
     }
@@ -2029,7 +2031,7 @@ void Workspace::createBorderWindows()
                                   CopyFromParent, InputOnly,
                                   CopyFromParent,
                                   valuemask, &attributes);
-    XMapWindow(QX11Info::display(),  electric_right_border);
+    XMapWindow(QX11Info::display(), electric_right_border);
     // Set XdndAware on the windows, so that DND enter events are received (#86998)
     Atom version = 4; // XDND version
     XChangeProperty( QX11Info::display(), electric_top_border, atoms->xdnd_aware, XA_ATOM,
@@ -2342,27 +2344,29 @@ void Workspace::helperDialog( const QString& message, const Client* c )
     QString type;
     if( message == "noborderaltf3" )
         {
-        QString shortcut = QString( "%1 (%2)" ).arg( keys->label( "Window Operations Menu" ))
-            .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString());
+        KAction* action = keys->action( "Window Operations Menu" );
+        QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
+            .arg( action->shortcut().seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window without its border.\n"
                     "Without the border, you will not be able to enable the border "
                     "again using the mouse: use the window operations menu instead, "
-                    "activated using the %1 keyboard shortcut." )
-                .arg( shortcut );
+                    "activated using the %1 keyboard shortcut." ,
+                  shortcut );
         type = "altf3warning";
         }
     else if( message == "fullscreenaltf3" )
         {
-        QString shortcut = QString( "%1 (%2)" ).arg( keys->label( "Window Operations Menu" ))
-            .arg( keys->shortcut( "Window Operations Menu" ).seq( 0 ).toString());
+        KAction* action = keys->action( "Window Operations Menu" );
+        QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
+            .arg( action->shortcut().seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window in fullscreen mode.\n"
                     "If the application itself does not have an option to turn the fullscreen "
                     "mode off you will not be able to disable it "
                     "again using the mouse: use the window operations menu instead, "
-                    "activated using the %1 keyboard shortcut." )
-                .arg( shortcut );
+                    "activated using the %1 keyboard shortcut." ,
+                  shortcut );
         type = "altf3warning";
         }
     else

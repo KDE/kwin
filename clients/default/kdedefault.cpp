@@ -289,11 +289,11 @@ void KDEDefaultHandler::createPixmaps()
 	} else
 		titlePix = NULL;
 
-	QColor activeTitleColor1(options()->color(ColorTitleBar,      true));
-	QColor activeTitleColor2(options()->color(ColorTitleBlend,    true));
+	QColor activeTitleColor1(options()->color(ColorTitleBar,     true));
+	QColor activeTitleColor2(options()->color(ColorTitleBlend,   true));
 
-	QColor inactiveTitleColor1(options()->color(ColorTitleBar,    false));
-	QColor inactiveTitleColor2(options()->color(ColorTitleBlend,  false));
+	QColor inactiveTitleColor1(options()->color(ColorTitleBar,   false));
+	QColor inactiveTitleColor2(options()->color(ColorTitleBlend, false));
 
 	// Create titlebar gradient images if required
 	aUpperGradient = NULL;
@@ -947,10 +947,10 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	QPolygon a;
 	QBrush brush( options()->color(ColorFrame, isActive()), Qt::SolidPattern );
 	p.setBrush( brush );                       // use solid, yellow brush
-    a.setPoints( 4, x+2,             leftFrameStart+borderWidth-4,
+    a.setPoints( 4, x+2,            leftFrameStart+borderWidth-4,
 	                x+borderWidth-2, leftFrameStart,
 	                x+borderWidth-2, y2-2,
-	                x+2,             y2-2);
+	                x+2,            y2-2);
     p.drawPolygon( a );
 	p.fillRect(x2-borderWidth+2, y+titleHeight+3,
 	           borderWidth-3, y2-y-titleHeight-4,

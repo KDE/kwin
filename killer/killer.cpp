@@ -71,8 +71,8 @@ int main( int argc, char* argv[] )
     QString question = i18n(
 	"<qt>Window with title \"<b>%2</b>\" is not responding. "
 	"This window belongs to application <b>%1</b> (PID=%3, hostname=%4).<p>"
-	"Do you wish to terminate this application? (All unsaved data in this application will be lost.)</qt>" )
-	.arg( appname ).arg( caption ).arg( pid ).arg( QString( hostname ) );
+	"Do you wish to terminate this application? (All unsaved data in this application will be lost.)</qt>" ,
+	  appname, caption, pid, QString( hostname ) );
     app.updateUserTimestamp( timestamp );
     if( KMessageBox::warningYesNoWId( id, question, QString(), i18n("Terminate"), i18n("Keep Running") ) == KMessageBox::Yes )
         {    
