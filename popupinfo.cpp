@@ -43,6 +43,8 @@ PopupInfo::PopupInfo( const char *name )
     m_shown = false;
     reset();
     reconfigure();
+
+    m_delayedHideTimer.setSingleShot(true);
     connect(&m_delayedHideTimer, SIGNAL(timeout()), this, SLOT(hide()));
 
     QFont f = font();
@@ -144,7 +146,7 @@ void PopupInfo::showInfo(QString infoString)
             raise();
             m_shown = true;
             }
-        m_delayedHideTimer.start(m_delayTime, true);
+        m_delayedHideTimer.start(m_delayTime);
         }
     }
 

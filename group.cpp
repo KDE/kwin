@@ -100,7 +100,7 @@ void Group::removeMember( Client* member_P )
 //    kDebug() << "GROUPREMOVE:" << this << ":" << member_P << endl;
 //    kDebug() << kBacktrace() << endl;
     Q_ASSERT( _members.contains( member_P ));
-    _members.remove( member_P );
+    _members.removeAll( member_P );
     if( _members.isEmpty())
         {
         workspace()->removeGroup( this, Allowed );
@@ -532,7 +532,7 @@ void Client::checkGroupTransients()
                 {
                 if( cl == *it1 )
                     { // don't use removeTransient(), that would modify *it2 too
-                    (*it2)->transients_list.remove( *it1 );
+                    (*it2)->transients_list.removeAll( *it1 );
                     continue;
                     }
                 }
@@ -541,7 +541,7 @@ void Client::checkGroupTransients()
             // and should be therefore on top of *it1
             // TODO This could possibly be optimized, it also requires hasTransient() to check for loops.
             if( (*it2)->groupTransient() && (*it1)->hasTransient( *it2, true ) && (*it2)->hasTransient( *it1, true ))
-                (*it2)->transients_list.remove( *it1 );
+                (*it2)->transients_list.removeAll( *it1 );
             // if there are already windows W1 and W2, W2 being transient for W1, and group transient W3
             // is added, make it transient only for W2, not for W1, because it's already indirectly
             // transient for it - the indirect transiency actually shouldn't break anything,
@@ -556,9 +556,9 @@ void Client::checkGroupTransients()
                 if( (*it2)->hasTransient( *it1, false ) && (*it3)->hasTransient( *it1, false ))
                     {
                     if( (*it2)->hasTransient( *it3, true ))
-                        (*it3)->transients_list.remove( *it1 );
+                        (*it3)->transients_list.removeAll( *it1 );
                     if( (*it3)->hasTransient( *it2, true ))
-                        (*it2)->transients_list.remove( *it1 );
+                        (*it2)->transients_list.removeAll( *it1 );
                     }
                 }
             }
@@ -661,7 +661,7 @@ void Client::removeTransient( Client* cl )
     {
 //    kDebug() << "REMOVETRANS:" << this << ":" << cl << endl;
 //    kDebug() << kBacktrace() << endl;
-    transients_list.remove( cl );
+    transients_list.removeAll( cl );
     // cl is transient for this, but this is going away
     // make cl group transient
     if( cl->transientFor() == this )
@@ -834,7 +834,7 @@ void Client::checkGroup( Group* set_group, bool force )
              )
             { // group transients in the old group are no longer transient for it
             if( (*it)->groupTransient() && (*it)->group() != group())
-                it = transients_list.remove( it );
+                it = transients_list.erase( it );
             else
                 ++it;
             }

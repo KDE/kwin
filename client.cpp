@@ -1510,7 +1510,7 @@ static int nullErrorHandler(Display *, XErrorEvent *)
  */
 QByteArray Client::staticWindowRole(WId w)
     {
-    return getStringProperty(w, atoms->wm_window_role).lower();
+    return getStringProperty(w, atoms->wm_window_role).toLower();
     }
 
 /*!
@@ -1856,7 +1856,7 @@ void Client::updateOpacity()
             ClientList tmpGroupMembers = group()->members();
             ClientList activeGroupMembers;
             activeGroupMembers.append(this);
-            tmpGroupMembers.remove(this);
+            tmpGroupMembers.removeAll(this);
             ClientList::Iterator it = tmpGroupMembers.begin();
             while (it != tmpGroupMembers.end())
             // search for next attached and not activated client and repeat if found
@@ -1875,7 +1875,7 @@ void Client::updateOpacity()
 //                         qWarning("activated, search restarted (1)");
                         (*it)->setShadowSize(options->activeWindowShadowSize);
                         activeGroupMembers.append(*it);
-                        tmpGroupMembers.remove(it);
+                        tmpGroupMembers.erase(it);
                         it = tmpGroupMembers.begin(); // restart, search next client
                         continue;
                         }
@@ -1893,7 +1893,7 @@ void Client::updateOpacity()
                                     (*it)->setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
                                 (*it)->setShadowSize(options->activeWindowShadowSize);
                                 activeGroupMembers.append(*it);
-                                tmpGroupMembers.remove(it);
+                                tmpGroupMembers.erase(it);
                                 it = tmpGroupMembers.begin(); // reset potential client search
                                 found = true;
 //                                 qWarning("activated, search restarted (2)");
@@ -1931,7 +1931,7 @@ void Client::updateOpacity()
             ClientList tmpGroupMembers = group()->members();
             ClientList inactiveGroupMembers;
             inactiveGroupMembers.append(this);
-            tmpGroupMembers.remove(this);
+            tmpGroupMembers.removeAll(this);
             ClientList::Iterator it = tmpGroupMembers.begin();
             while ( it != tmpGroupMembers.end() )
             // search for next attached and not activated client and repeat if found
@@ -1950,7 +1950,7 @@ void Client::updateOpacity()
                         (*it)->setShadowSize(options->inactiveWindowShadowSize);
 //                         qWarning("deactivated, search restarted (1)");
                         inactiveGroupMembers.append(*it);
-                        tmpGroupMembers.remove(it);
+                        tmpGroupMembers.erase(it);
                         it = tmpGroupMembers.begin(); // restart, search next client
                         continue;
                         }
@@ -1969,7 +1969,7 @@ void Client::updateOpacity()
                                 (*it)->setShadowSize(options->inactiveWindowShadowSize);
 //                                 qWarning("deactivated, search restarted (2)");
                                 inactiveGroupMembers.append(*it);
-                                tmpGroupMembers.remove(it);
+                                tmpGroupMembers.erase(it);
                                 it = tmpGroupMembers.begin(); // reset potential client search
                                 found = true;
                                 break; // skip this loop

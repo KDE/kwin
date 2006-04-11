@@ -677,9 +677,10 @@ void Client::demandAttention( bool set )
         if( demandAttentionKNotifyTimer == NULL )
             {
             demandAttentionKNotifyTimer = new QTimer( this );
+            demandAttentionKNotifyTimer->setSingleShot( true );
             connect( demandAttentionKNotifyTimer, SIGNAL( timeout()), SLOT( demandAttentionKNotify()));
             }
-        demandAttentionKNotifyTimer->start( 1000, true );
+        demandAttentionKNotifyTimer->start( 1000 );
         }
     else
         info->setState( set ? NET::DemandsAttention : 0, NET::DemandsAttention );

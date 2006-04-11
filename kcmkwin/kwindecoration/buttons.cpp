@@ -552,12 +552,12 @@ bool ButtonDropSite::removeButton(ButtonDropSiteItem *item) {
 		return false;
 
 	// try to remove the item from the left button list
-	if (buttonsLeft.remove(item) >= 1) {
+	if (buttonsLeft.removeAll(item) >= 1) {
 		return true;
 	}
 
 	// try to remove the item from the right button list
-	if (buttonsRight.remove(item) >= 1) {
+	if (buttonsRight.removeAll(item) >= 1) {
 		return true;
 	}
 

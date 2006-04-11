@@ -893,7 +893,8 @@ void Client::enterNotifyEvent( XCrossingEvent* e )
             delete shadeHoverTimer;
             shadeHoverTimer = new QTimer( this );
             connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
-            shadeHoverTimer->start( options->shadeHoverInterval, true );
+            shadeHoverTimer->setSingleShot( true );
+            shadeHoverTimer->start( options->shadeHoverInterval );
             }
 
         if ( options->focusPolicy == Options::ClickToFocus )
@@ -906,7 +907,8 @@ void Client::enterNotifyEvent( XCrossingEvent* e )
             delete autoRaiseTimer;
             autoRaiseTimer = new QTimer( this );
             connect( autoRaiseTimer, SIGNAL( timeout() ), this, SLOT( autoRaise() ) );
-            autoRaiseTimer->start( options->autoRaiseInterval, true  );
+            autoRaiseTimer->setSingleShot( true );
+            autoRaiseTimer->start( options->autoRaiseInterval );
             }
 
         if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isTopMenu() ) )

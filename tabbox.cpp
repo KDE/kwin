@@ -557,7 +557,8 @@ void TabBox::delayedShow()
         }
 
     int delayTime = c->readEntry("DelayTime", 90);
-    delayedShowTimer.start(delayTime, true);
+    delayedShowTimer.setSingleShot(true);
+    delayedShowTimer.start(delayTime);
     }
 
 

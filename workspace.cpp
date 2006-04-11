@@ -326,6 +326,9 @@ void Workspace::init()
     // now we know how many desktops we'll, thus, we initialise the positioning object
     initPositioning = new Placement(this);
 
+    reconfigureTimer.setSingleShot( true );
+    updateToolWindowsTimer.setSingleShot( true );
+	
     connect(&reconfigureTimer, SIGNAL(timeout()), this,
             SLOT(slotReconfigure()));
     connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
@@ -560,16 +563,16 @@ void Workspace::removeClient( Client* c, allowed_t )
         Notify::raise( Notify::Delete );
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
-    clients.remove( c );
-    desktops.remove( c );
-    unconstrained_stacking_order.remove( c );
-    stacking_order.remove( c );
+    clients.removeAll( c );
+    desktops.removeAll( c );
+    unconstrained_stacking_order.removeAll( c );
+    stacking_order.removeAll( c );
     for( int i = 1;
          i <= numberOfDesktops();
          ++i )
-        focus_chain[ i ].remove( c );
-    global_focus_chain.remove( c );
-    attention_chain.remove( c );
+        focus_chain[ i ].removeAll( c );
+    global_focus_chain.removeAll( c );
+    attention_chain.removeAll( c );
     if( c->isTopMenu())
         removeTopMenu( c );
     Group* group = findGroup( c->window());
@@ -578,7 +581,7 @@ void Workspace::removeClient( Client* c, allowed_t )
 
     if ( c == most_recently_raised )
         most_recently_raised = 0;
-    should_get_focus.remove( c );
+    should_get_focus.removeAll( c );
     Q_ASSERT( c != active_client );
     if ( c == last_active_client )
         last_active_client = 0;
@@ -602,8 +605,8 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
         for( int i=1;
              i<= numberOfDesktops();
              ++i )
-            focus_chain[i].remove(c);
-        global_focus_chain.remove( c );
+            focus_chain[i].removeAll(c);
+        global_focus_chain.removeAll( c );
         return;
         }
     if(c->desktop() == NET::OnAllDesktops)
@@ -613,7 +616,7 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
             if( i == currentDesktop()
                 && ( change == FocusChainMakeFirst || change == FocusChainMakeLast ))
                 {
-                focus_chain[ i ].remove( c );
+                focus_chain[ i ].removeAll( c );
                 if( change == FocusChainMakeFirst )
                     focus_chain[ i ].append( c );
                 else
@@ -631,7 +634,7 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                 {
                 if( change == FocusChainMakeFirst )
                     {
-                    focus_chain[ i ].remove( c );
+                    focus_chain[ i ].removeAll( c );
                     focus_chain[ i ].append( c );
                     }
                 else if( change == FocusChainMakeLast )
@@ -643,12 +646,12 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     focus_chain[ i ].prepend( c );
                 }
             else
-                focus_chain[ i ].remove( c );
+                focus_chain[ i ].removeAll( c );
             }
         }
     if( change == FocusChainMakeFirst )
         {
-        global_focus_chain.remove( c );
+        global_focus_chain.removeAll( c );
         global_focus_chain.append( c );
         }
     else if( change == FocusChainMakeLast )
@@ -742,7 +745,7 @@ void Workspace::updateCurrentTopMenu()
         // make it appear like it's been raised manually - it's in the Dock layer anyway,
         // and not raising it could mess up stacking order of topmenus within one application,
         // and thus break raising of mainclients in raiseClient()
-        unconstrained_stacking_order.remove( menubar );
+        unconstrained_stacking_order.removeAll( menubar );
         unconstrained_stacking_order.append( menubar );
         }
     else if( !block_desktop_menubar )
@@ -851,7 +854,7 @@ void Workspace::updateToolWindows( bool also_hide )
         }
     else // setActiveClient() is after called with NULL client, quickly followed
         {    // by setting a new client, which would result in flickering
-        updateToolWindowsTimer.start( 50, true );
+        updateToolWindowsTimer.start( 50 );
         }
     }
 
@@ -877,7 +880,7 @@ void Workspace::updateColormap()
 
 void Workspace::reconfigure()
     {
-    reconfigureTimer.start(200, true);
+    reconfigureTimer.start( 200 );
     }
 
 
@@ -1063,9 +1066,9 @@ bool Workspace::isNotManaged( const QString& title )
     for ( QStringList::Iterator it = doNotManageList.begin(); it != doNotManageList.end(); ++it ) 
         {
         QRegExp r( (*it) );
-        if (r.search(title) != -1) 
+        if (r.indexIn(title) != -1) 
             {
-            doNotManageList.remove( it );
+            doNotManageList.erase( it );
             return true;
             }
         }
@@ -1114,7 +1117,7 @@ void ObscuringWindows::create( Client* c )
     int mask = CWSibling | CWStackMode;
     if( cached->count() > 0 ) 
         {
-        cached->remove( obs_win = cached->first());
+        cached->removeAll( obs_win = cached->first());
         chngs.x = c->x();
         chngs.y = c->y();
         chngs.width = c->width();
@@ -1583,7 +1586,7 @@ bool Workspace::removeSystemTrayWin( WId w, bool check )
             XFree( props );
             }
         }
-    systemTrayWins.remove( w );
+    systemTrayWins.removeAll( w );
     propagateSystemTrayWins();
     return true;
     }
@@ -1963,7 +1966,8 @@ void Workspace::requestDelayFocus( Client* c )
     delete delayFocusTimer;
     delayFocusTimer = new QTimer( this );
     connect( delayFocusTimer, SIGNAL( timeout() ), this, SLOT( delayFocus() ) );
-    delayFocusTimer->start( options->delayFocusInterval, true  );
+    delayFocusTimer->setSingleShot( true );
+    delayFocusTimer->start( options->delayFocusInterval );
     }
     
 void Workspace::cancelDelayFocus()
@@ -2269,7 +2273,7 @@ void Workspace::removeTopMenu( Client* c )
 //        kDebug() << "REMOVE TOPMENU:" << c << endl;
     assert( c->isTopMenu());
     assert( topmenus.contains( c ));
-    topmenus.remove( c );
+    topmenus.removeAll( c );
     updateCurrentTopMenu();
     // TODO reduce topMenuHeight() if possible?
     }
@@ -2506,20 +2510,20 @@ void Workspace::handleKompmgrOutput( KProcess* , char *buffer, int buflen)
 {
     QString message;
     QString output = QString::fromLocal8Bit( buffer, buflen );
-    if (output.contains("Started",false))
+    if (output.contains("Started",Qt::CaseInsensitive))
         ; // don't do anything, just pass to the connection release
-    else if (output.contains("Can't open display",false))
+    else if (output.contains("Can't open display",Qt::CaseInsensitive))
         message = i18n("<qt><b>kompmgr failed to open the display</b><br>There is probably an invalid display entry in your ~/.xcompmgrrc.</qt>");
-    else if (output.contains("No render extension",false))
+    else if (output.contains("No render extension",Qt::CaseInsensitive))
         message = i18n("<qt><b>kompmgr cannot find the Xrender extension</b><br>You are using either an outdated or a crippled version of XOrg.<br>Get XOrg &ge; 6.8 from www.freedesktop.org.<br></qt>");
-    else if (output.contains("No composite extension",false))
+    else if (output.contains("No composite extension",Qt::CaseInsensitive))
         message = i18n("<qt><b>Composite extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.<br>Additionally, you need to add a new section to your X config file:<br>"
         "<i>Section \"Extensions\"<br>"
         "Option \"Composite\" \"Enable\"<br>"
         "EndSection</i></qt>");
-    else if (output.contains("No damage extension",false))
+    else if (output.contains("No damage extension",Qt::CaseInsensitive))
         message = i18n("<qt><b>Damage extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>");
-    else if (output.contains("No XFixes extension",false))
+    else if (output.contains("No XFixes extension",Qt::CaseInsensitive))
         message = i18n("<qt><b>XFixes extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>");
     else return; //skip others
     // kompmgr startup failed or succeeded, release connection

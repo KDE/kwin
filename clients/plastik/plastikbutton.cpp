@@ -52,6 +52,7 @@ PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent)
     // no need to reset here as the button will be resetted on first resize.
 
     animTmr = new QTimer(this);
+    animTmr->setSingleShot(true);  // single-shot
     connect(animTmr, SIGNAL(timeout() ), this, SLOT(animate() ) );
     animProgress = 0;
 }
@@ -128,7 +129,7 @@ void PlastikButton::animate()
             } else {
                 animProgress = ANIMATIONSTEPS;
             }
-            animTmr->start(TIMERINTERVAL, true); // single-shot
+            animTmr->start(TIMERINTERVAL); // single-shot timer
         }
     } else {
         if(animProgress > 0) {
@@ -137,7 +138,7 @@ void PlastikButton::animate()
             } else {
                 animProgress = 0;
             }
-            animTmr->start(TIMERINTERVAL, true); // single-shot
+            animTmr->start(TIMERINTERVAL); // single-shot timer
         }
     }
 

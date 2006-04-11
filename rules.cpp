@@ -331,7 +331,7 @@ bool Rules::matchWMClass( const QByteArray& match_class, const QByteArray& match
         { // TODO optimize?
         QByteArray cwmclass = wmclasscomplete
             ? match_name + ' ' + match_class : match_class;
-        if( wmclassmatch == RegExpMatch && QRegExp( wmclass ).search( cwmclass ) == -1 )
+        if( wmclassmatch == RegExpMatch && QRegExp( wmclass ).indexIn( cwmclass ) == -1 )
             return false;
         if( wmclassmatch == ExactMatch && wmclass != cwmclass )
             return false;
@@ -345,7 +345,7 @@ bool Rules::matchRole( const QByteArray& match_role ) const
     {
     if( windowrolematch != UnimportantMatch )
         {
-        if( windowrolematch == RegExpMatch && QRegExp( windowrole ).search( match_role ) == -1 )
+        if( windowrolematch == RegExpMatch && QRegExp( windowrole ).indexIn( match_role ) == -1 )
             return false;
         if( windowrolematch == ExactMatch && windowrole != match_role )
             return false;
@@ -359,7 +359,7 @@ bool Rules::matchTitle( const QString& match_title ) const
     {
     if( titlematch != UnimportantMatch )
         {
-        if( titlematch == RegExpMatch && QRegExp( title ).search( match_title ) == -1 )
+        if( titlematch == RegExpMatch && QRegExp( title ).indexIn( match_title ) == -1 )
             return false;
         if( titlematch == ExactMatch && title != match_title )
             return false;
@@ -378,7 +378,7 @@ bool Rules::matchClientMachine( const QByteArray& match_machine ) const
             && matchClientMachine( "localhost" ))
             return true;
         if( clientmachinematch == RegExpMatch
-            && QRegExp( clientmachine ).search( match_machine ) == -1 )
+            && QRegExp( clientmachine ).indexIn( match_machine ) == -1 )
             return false;
         if( clientmachinematch == ExactMatch
             && clientmachine != match_machine )
@@ -926,7 +926,7 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
             Rules* rule = *it;
             kDebug( 1212 ) << "Rule found:" << rule << ":" << c << endl;
             if( rule->isTemporary())
-                it = rules.remove( it );
+                it = rules.erase( it );
             else
                 ++it;
             ret.append( rule );
@@ -1013,7 +1013,7 @@ void Workspace::cleanupTemporaryRules()
          )
         {
         if( (*it)->discardTemporary( false ))
-            it = rules.remove( it );
+            it = rules.erase( it );
         else
             {
             if( (*it)->isTemporary())
@@ -1040,7 +1040,7 @@ void Workspace::discardUsedWindowRules( Client* c, bool withdrawn )
                 {
                 c->removeRule( *it );
                 Rules* r = *it;
-                it = rules.remove( it );
+                it = rules.erase( it );
                 delete r;
                 continue;
                 }
@@ -1053,7 +1053,8 @@ void Workspace::discardUsedWindowRules( Client* c, bool withdrawn )
 
 void Workspace::rulesUpdated()
     {
-    rulesUpdatedTimer.start( 1000, true );
+    rulesUpdatedTimer.setSingleShot( true );
+    rulesUpdatedTimer.start( 1000 );
     }
 
 #endif

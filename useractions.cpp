@@ -1062,7 +1062,7 @@ void Client::setShortcut( const QString& _cut )
          ++it )
         {
         QRegExp reg( "(.*\\+)\\((.*)\\)" );
-        if( reg.search( *it ) > -1 )
+        if( reg.indexIn( *it ) > -1 )
             {
             QString base = reg.cap( 1 );
             QString list = reg.cap( 2 );
