@@ -431,6 +431,21 @@ void Workspace::restackClientUnderActive( Client* c )
                 }
             }
         }
+    // the same for global_focus_chain
+    if( c->wantsTabFocus() && global_focus_chain.contains( active_client ))
+        {
+        global_focus_chain.removeAll( c );
+        for ( int i = global_focus_chain.size() - 1;
+              i >= 0;
+              --i )
+            {
+            if( Client::belongToSameApplication( active_client, global_focus_chain.at( i ) ))
+                {
+                global_focus_chain.insert( i, c );
+                break;
+                }
+            }
+        }
     updateStackingOrder();
     }
 

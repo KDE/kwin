@@ -568,6 +568,7 @@ void Workspace::removeClient( Client* c, allowed_t )
          i <= numberOfDesktops();
          ++i )
         focus_chain[ i ].remove( c );
+    global_focus_chain.remove( c );
     attention_chain.remove( c );
     if( c->isTopMenu())
         removeTopMenu( c );
@@ -602,6 +603,7 @@ void Workspace::updateFocusChains( Client* c, bool make_first )
              i<= numberOfDesktops();
              ++i )
             focus_chain[i].remove(c);
+        global_focus_chain.remove( c );
         return;
         }
     if(c->desktop() == NET::OnAllDesktops)
@@ -635,6 +637,13 @@ void Workspace::updateFocusChains( Client* c, bool make_first )
                 focus_chain[ i ].remove( c );
             }
         }
+    if( make_first )
+        {
+        global_focus_chain.remove( c );
+        global_focus_chain.append( c );
+        }
+    else if( !global_focus_chain.contains( c ))
+        global_focus_chain.prepend( c );
     }
 
 void Workspace::updateCurrentTopMenu()

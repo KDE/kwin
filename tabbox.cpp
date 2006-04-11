@@ -1165,14 +1165,13 @@ int Workspace::previousDesktopFocusChain( int iDesktop ) const
 */
 Client* Workspace::nextFocusChainClient( Client* c ) const
     {
-    int desktop = !c || c->isOnAllDesktops() ? currentDesktop() : c->desktop();
-    if ( focus_chain[desktop].isEmpty() )
+    if ( global_focus_chain.isEmpty() )
         return 0;
-    ClientList::ConstIterator it = focus_chain[desktop].find( c );
-    if ( it == focus_chain[desktop].end() )
-        return focus_chain[desktop].last();
-    if ( it == focus_chain[desktop].begin() )
-        return focus_chain[desktop].last();
+    ClientList::ConstIterator it = global_focus_chain.find( c );
+    if ( it == global_focus_chain.end() )
+        return global_focus_chain.last();
+    if ( it == global_focus_chain.begin() )
+        return global_focus_chain.last();
     --it;
     return *it;
     }
@@ -1183,15 +1182,14 @@ Client* Workspace::nextFocusChainClient( Client* c ) const
 */
 Client* Workspace::previousFocusChainClient( Client* c ) const
     {
-    int desktop = !c || c->isOnAllDesktops() ? currentDesktop() : c->desktop();
-    if ( focus_chain[desktop].isEmpty() )
+    if ( global_focus_chain.isEmpty() )
         return 0;
-    ClientList::ConstIterator it = focus_chain[desktop].find( c );
-    if ( it == focus_chain[desktop].end() )
-        return focus_chain[desktop].first();
+    ClientList::ConstIterator it = global_focus_chain.find( c );
+    if ( it == global_focus_chain.end() )
+        return global_focus_chain.first();
     ++it;
-    if ( it == focus_chain[desktop].end() )
-        return focus_chain[desktop].first();
+    if ( it == global_focus_chain.end() )
+        return global_focus_chain.first();
     return *it;
     }
 
