@@ -402,15 +402,15 @@ bool Workspace::workspaceEvent( XEvent * e )
             if ( e->xconfigurerequest.parent == root ) 
                 {
                 XWindowChanges wc;
-                unsigned int value_mask = 0;
-                wc.border_width = 0;
+                wc.border_width = e->xconfigurerequest.border_width;
                 wc.x = e->xconfigurerequest.x;
                 wc.y = e->xconfigurerequest.y;
                 wc.width = e->xconfigurerequest.width;
                 wc.height = e->xconfigurerequest.height;
                 wc.sibling = None;
                 wc.stack_mode = Above;
-                value_mask = e->xconfigurerequest.value_mask | CWBorderWidth;
+                unsigned int value_mask = e->xconfigurerequest.value_mask
+                    & ( CWX | CWY | CWWidth | CWHeight | CWBorderWidth );
                 XConfigureWindow( QX11Info::display(), e->xconfigurerequest.window, value_mask, &wc );
                 return true;
                 }

@@ -85,6 +85,7 @@ private slots:
   void autoRaiseOnTog(bool);//CT 23Oct1998
   void delayFocusOnTog(bool);
   void clickRaiseOnTog(bool);
+  void updateAltTabMode();
 	void changed() { emit KCModule::changed(true); }
 
 

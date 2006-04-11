@@ -233,6 +233,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst,
                  " is pressed, with no popup widget.  In addition, the previously"
                  " activated window will be sent to the back in this mode.");
     altTabPopup->setWhatsThis( wtstr );
+    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateAltTabMode()));
 
     traverseAll = new QCheckBox( i18n( "&Traverse windows on all desktops" ), kbdBox );
     kLay->addWidget( traverseAll );
@@ -284,6 +285,13 @@ void KFocusConfig::setFocus(int foc)
 
     // this will disable/hide the auto raise delay widget if focus==click
     setAutoRaiseEnabled();
+    updateAltTabMode();
+}
+
+void KFocusConfig::updateAltTabMode()
+{
+    // not KDE-style Alt+Tab with unreasonable focus policies
+    altTabPopup->setEnabled( focusCombo->currentItem() == 0 || focusCombo->currentItem() == 1 );
 }
 
 void KFocusConfig::setAutoRaiseInterval(int tb)

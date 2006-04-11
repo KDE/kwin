@@ -760,7 +760,7 @@ void Workspace::slotWalkThroughWindows()
         return;
     if ( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE )
+    if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
         {
         //XUngrabKeyboard(QX11Info::display(), QX11Info::appTime()); // need that because of accelerator raw mode
         // CDE style raise / lower
@@ -786,7 +786,7 @@ void Workspace::slotWalkBackThroughWindows()
         return;
     if( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE )
+    if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
         {
         // CDE style raise / lower
         CDEWalkThroughWindows( false );
@@ -923,7 +923,24 @@ void Workspace::walkThroughDesktops( bool forward )
 
 void Workspace::CDEWalkThroughWindows( bool forward )
     {
-    Client* c = activeClient();
+    Client* c = NULL;
+// this function find the first suitable client for unreasonable focus
+// policies - the topmost one, with some exceptions (can't be keepabove/below,
+// otherwise it gets stuck on them)
+    Q_ASSERT( block_stacking_updates == 0 );
+    for( int i = stacking_order.size() - 1;
+         i >= 0 ;
+         --i )
+        {
+        Client* it = stacking_order.at( i );
+        if ( it->isOnCurrentDesktop() && !it->isSpecialWindow()
+            && it->isShown( false ) && it->wantsTabFocus()
+            && !it->keepAbove() && !it->keepBelow())
+            {
+            c = it;
+            break;
+            }
+        }
     Client* nc = c;
     bool options_traverse_all;
         {
@@ -949,7 +966,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
             }
         } while (nc && nc != c &&
             (( !options_traverse_all && !nc->isOnDesktop(currentDesktop())) ||
-             nc->isMinimized() || !nc->wantsTabFocus() ) );
+             nc->isMinimized() || !nc->wantsTabFocus() || nc->keepAbove() || nc->keepBelow() ) );
     if (nc)
         {
         if (c && c != nc)
