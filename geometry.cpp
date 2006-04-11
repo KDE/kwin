@@ -1248,7 +1248,21 @@ void Client::getWmNormalHints()
         { // update to match restrictions
         QSize new_size = adjustedSize();
         if( new_size != size() && !isFullScreen())
+            {
+            QRect orig_geometry = geometry();
             resizeWithChecks( new_size );
+            if( ( !isSpecialWindow() || isToolbar()) && !isFullScreen())
+                {
+                // try to keep the window in its xinerama screen if possible,
+                // if that fails at least keep it visible somewhere
+                QRect area = workspace()->clientArea( MovementArea, this );
+                if( area.contains( orig_geometry ))
+                    keepInArea( area );
+                area = workspace()->clientArea( WorkArea, this );
+                if( area.contains( orig_geometry ))
+                    keepInArea( area );
+                }
+            }
         }
     updateAllowedActions(); // affects isResizeable()
     }
