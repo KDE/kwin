@@ -516,7 +516,7 @@ void Workspace::addClient( Client* c, allowed_t )
         }
     else
         {
-        updateFocusChains( c, false ); // add to focus chain if not already there
+        updateFocusChains( c, FocusChainUpdate ); // add to focus chain if not already there
         clients.append( c );
         }
     if( !unconstrained_stacking_order.contains( c ))
@@ -595,7 +595,7 @@ void Workspace::removeClient( Client* c, allowed_t )
     updateClientArea();
     }
 
-void Workspace::updateFocusChains( Client* c, bool make_first )
+void Workspace::updateFocusChains( Client* c, FocusChainChange change )
     {
     if( !c->wantsTabFocus()) // doesn't want tab focus, remove
         {
@@ -609,11 +609,15 @@ void Workspace::updateFocusChains( Client* c, bool make_first )
     if(c->desktop() == NET::OnAllDesktops)
         { //now on all desktops, add it to focus_chains it is not already in
         for( int i=1; i<= numberOfDesktops(); i++)
-            { // make_first works only on current desktop, don't affect all desktops
-            if( make_first && i == currentDesktop())
+            { // making first/last works only on current desktop, don't affect all desktops
+            if( i == currentDesktop()
+                && ( change == FocusChainMakeFirst || change == FocusChainMakeLast ))
                 {
                 focus_chain[ i ].remove( c );
-                focus_chain[ i ].append( c );
+                if( change == FocusChainMakeFirst )
+                    focus_chain[ i ].append( c );
+                else
+                    focus_chain[ i ].prepend( c );
                 }
             else if( !focus_chain[ i ].contains( c ))
                 focus_chain[ i ].prepend( c ); // otherwise add as the last one
@@ -625,10 +629,15 @@ void Workspace::updateFocusChains( Client* c, bool make_first )
             {
             if( i == c->desktop())
                 {
-                if( make_first )
+                if( change == FocusChainMakeFirst )
                     {
                     focus_chain[ i ].remove( c );
                     focus_chain[ i ].append( c );
+                    }
+                else if( change == FocusChainMakeLast )
+                    {
+                    focus_chain[ i ].remove( c );
+                    focus_chain[ i ].prepend( c );
                     }
                 else if( !focus_chain[ i ].contains( c ))
                     focus_chain[ i ].prepend( c );
@@ -637,10 +646,15 @@ void Workspace::updateFocusChains( Client* c, bool make_first )
                 focus_chain[ i ].remove( c );
             }
         }
-    if( make_first )
+    if( change == FocusChainMakeFirst )
         {
         global_focus_chain.remove( c );
         global_focus_chain.append( c );
+        }
+    else if( change == FocusChainMakeLast )
+        {
+        global_focus_chain.remove( c );
+        global_focus_chain.prepend( c );
         }
     else if( !global_focus_chain.contains( c ))
         global_focus_chain.prepend( c );

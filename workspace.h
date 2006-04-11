@@ -251,7 +251,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
-        void updateFocusChains( Client* c, bool make_first );
+        enum FocusChainChange { FocusChainMakeFirst, FocusChainMakeLast, FocusChainUpdate };
+        void updateFocusChains( Client* c, FocusChainChange change );
         
         bool forcedGlobalMouseGrab() const;
         void clientShortcutUpdated( Client* c );

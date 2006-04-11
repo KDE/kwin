@@ -229,7 +229,7 @@ void Workspace::setActiveClient( Client* c, allowed_t )
         last_active_client = active_client;
     if ( active_client ) 
         {
-        updateFocusChains( active_client, true ); // make it first in focus chain
+        updateFocusChains( active_client, FocusChainMakeFirst );
         active_client->demandAttention( false );
         }
     pending_take_activity = NULL;

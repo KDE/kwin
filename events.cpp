@@ -370,7 +370,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             if( c )
                 {
                 c->windowEvent( e );
-                updateFocusChains( c, true );
+                updateFocusChains( c, FocusChainUpdate );
                 return true;
                 }
             break;
