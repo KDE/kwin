@@ -232,15 +232,13 @@ Client* findClientInList( const ClientList& list, T predicate )
 inline
 int timestampCompare( Time time1, Time time2 ) // like strcmp()
     {
-    if( time1 == time2 )
-        return 0;
-    return ( time1 - time2 ) < 1000000000 ? 1 : -1; // time1 > time2 -> 1, handle wrapping
+    return NET::timestampCompare( time1, time2 );
     }
 
 inline
 Time timestampDiff( Time time1, Time time2 ) // returns time2 - time1
-    { // no need to handle wrapping?
-    return time2 - time1;
+    {
+    return NET::timestampDiff( time1, time2 );
     }
 
 bool isLocalMachine( const QByteArray& host );
