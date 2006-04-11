@@ -451,10 +451,10 @@ void RulesWidget::setRules( Rules* rules )
 
 #define CHECKBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, isChecked )
 #define LINEEDIT_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, text )
-#define COMBOBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, currentItem )
+#define COMBOBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, currentIndex )
 #define CHECKBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, isChecked )
 #define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, text )
-#define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, currentItem )
+#define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, currentIndex )
 
 Rules* RulesWidget::rules() const
     {

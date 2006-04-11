@@ -291,7 +291,7 @@ void KFocusConfig::setFocus(int foc)
 void KFocusConfig::updateAltTabMode()
 {
     // not KDE-style Alt+Tab with unreasonable focus policies
-    altTabPopup->setEnabled( focusCombo->currentItem() == 0 || focusCombo->currentItem() == 1 );
+    altTabPopup->setEnabled( focusCombo->currentIndex() == 0 || focusCombo->currentIndex() == 1 );
 }
 
 void KFocusConfig::setAutoRaiseInterval(int tb)

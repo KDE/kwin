@@ -1368,7 +1368,7 @@ void B2Titlebar::recalcBuffer()
 
     QPainter p(&titleBuffer);
     drawTitlebar(p, true);
-    oldTitle = caption();
+    oldTitle = windowTitle();
 }
 
 void B2Titlebar::resizeEvent(QResizeEvent *)
