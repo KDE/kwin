@@ -2878,7 +2878,16 @@ main (int argc, char **argv)
 									break;*/ /*skip if opacity does not change*/
 								if (fadeTrans)
 								{
-								    set_fade (dpy, w, w->opacity*1.0/OPAQUE, (tmp*1.0)/OPAQUE, fade_out_step, 0, False, True, True, False);
+									static double start, finish, step;
+									start = w->opacity*1.0/OPAQUE;
+									finish = (tmp*1.0)/OPAQUE;
+									
+									if ( start > finish )
+										step = fade_out_step;
+									else
+										step = fade_in_step;
+									
+								    set_fade (dpy, w, start, finish, step, 0, False, True, True, False);
                                     break;
                                     }
                                 else
