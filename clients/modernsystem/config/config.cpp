@@ -52,11 +52,15 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	connect(cbShowHandle, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()));
 
 	sliderBox = new KVBox(handleBox);
-	handleSizeSlider = new QSlider(0, 4, 1, 0, Qt::Horizontal, sliderBox);
+	//handleSizeSlider = new QSlider(0, 4, 1, 0, Qt::Horizontal, sliderBox);
+	handleSizeSlider = new QSlider(Qt::Horizontal, sliderBox);
+	handleSizeSlider->setMinimum(0);
+	handleSizeSlider->setMaximum(4);
+	handleSizeSlider->setPageStep(1);
 	handleSizeSlider->setWhatsThis(
 			i18n("Here you can change the size of the resize handle."));
 	handleSizeSlider->setTickInterval(1);
-	handleSizeSlider->setTickmarks(QSlider::TicksBelow);
+	handleSizeSlider->setTickPosition(QSlider::TicksBelow);
 	connect(handleSizeSlider, SIGNAL(valueChanged(int)), this, SLOT(slotSelectionChanged()));
 
 	hbox = new KHBox(sliderBox);

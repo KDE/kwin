@@ -93,8 +93,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	QWidget *pluginPage = new QWidget( tabWidget );
 
 	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage);
-    pluginLayout->setMargin(KDialog::marginHint());
-    pluginLayout->setSpacing(KDialog::spacingHint());
+	pluginLayout->setMargin(KDialog::marginHint());
+	pluginLayout->setSpacing(KDialog::spacingHint());
 
 	// decoration chooser
 	decorationList = new KComboBox( pluginPage );
@@ -131,8 +131,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	// Page 2 (Button Selector)
 	QWidget* buttonPage = new QWidget( tabWidget );
 	QVBoxLayout* buttonLayout = new QVBoxLayout(buttonPage);
-    buttonLayout->setMargin(KDialog::marginHint());
-    buttonLayout->setSpacing(KDialog::spacingHint());
+	buttonLayout->setMargin(KDialog::marginHint());
+	buttonLayout->setSpacing(KDialog::spacingHint());
 
 	cbShowToolTips = new QCheckBox(
 			i18n("&Show window button tooltips"), buttonPage );
