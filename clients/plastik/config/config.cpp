@@ -73,7 +73,7 @@ void PlastikConfig::load(KConfig*)
 
 
     QString value = m_config->readEntry("TitleAlignment", "AlignLeft");
-    QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->child(value.latin1());
+    QRadioButton *button = m_dialog->titleAlign->findChild<QRadioButton*>(value.toLatin1());
     if (button) button->setChecked(true);
     bool animateButtons = m_config->readEntry("AnimateButtons", QVariant(true)).toBool();
     m_dialog->animateButtons->setChecked(animateButtons);
@@ -90,7 +90,7 @@ void PlastikConfig::save(KConfig*)
     m_config->setGroup("General");
 
     QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->selected();
-    if (button) m_config->writeEntry("TitleAlignment", QString(button->name()));
+    if (button) m_config->writeEntry("TitleAlignment", QString(button->objectName()));
     m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
     m_config->writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
     m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
@@ -100,8 +100,7 @@ void PlastikConfig::save(KConfig*)
 
 void PlastikConfig::defaults()
 {
-    QRadioButton *button =
-        (QRadioButton*)m_dialog->titleAlign->child("AlignLeft");
+    QRadioButton *button = m_dialog->titleAlign->findChild<QRadioButton*>("AlignLeft");
     if (button) button->setChecked(true);
     m_dialog->animateButtons->setChecked(true);
     m_dialog->menuClose->setChecked(false);

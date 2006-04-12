@@ -72,7 +72,7 @@ bool allowKompmgrRestart = true;
 // code.
 Workspace::Workspace( bool restore )
   : DCOPObject        ("KWinInterface"),
-    QObject           (0, "workspace"),
+    QObject           (0),
     current_desktop   (0),
     number_of_desktops(0),
     active_popup( NULL ),
@@ -128,6 +128,7 @@ Workspace::Workspace( bool restore )
     block_stacking_updates( 0 ),
     forced_global_mouse_grab( false )
     {
+      setObjectName( "workspace" );
     _self = this;
     mgr = new PluginMgr;
     root = QX11Info::appRootWindow();
@@ -153,12 +154,9 @@ Workspace::Workspace( bool restore )
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
 
-    desktop_widget =
-      new QWidget(
-        0,
-        "desktop_widget",
-        Qt::Desktop );
-	desktop_widget->setAttribute( Qt::WA_PaintUnclipped );
+    desktop_widget = new QWidget( 0, Qt::Desktop );
+    desktop_widget->setObjectName( "desktop_widget" );
+    desktop_widget->setAttribute( Qt::WA_PaintUnclipped );
 
     // call this before XSelectInput() on the root window
     startup = new KStartupInfo(
@@ -639,7 +637,7 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     }
                 else if( change == FocusChainMakeLast )
                     {
-                    focus_chain[ i ].remove( c );
+                    focus_chain[ i ].removeAll( c );
                     focus_chain[ i ].prepend( c );
                     }
                 else if( !focus_chain[ i ].contains( c ))
@@ -656,7 +654,7 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
         }
     else if( change == FocusChainMakeLast )
         {
-        global_focus_chain.remove( c );
+        global_focus_chain.removeAll( c );
         global_focus_chain.prepend( c );
         }
     else if( !global_focus_chain.contains( c ))
@@ -2335,7 +2333,7 @@ int Workspace::topMenuHeight() const
     if( topmenu_height == 0 )
         { // simply create a dummy menubar and use its preffered height as the menu height
         KMenuBar tmpmenu;
-        tmpmenu.insertItem( "dummy" );
+        tmpmenu.addAction( "dummy" );
         topmenu_height = tmpmenu.sizeHint().height();
         }
     return topmenu_height;

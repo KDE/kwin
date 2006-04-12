@@ -41,8 +41,10 @@
 // FRAME the preview doesn't update to reflect the changes done in the kcm
 
 KDecorationPreview::KDecorationPreview( QWidget* parent, const char* name )
-    :   QWidget( parent, name )
+    :   QWidget( parent )
     {
+      setObjectName( name );
+
     options = new KDecorationPreviewOptions;
 
     bridge[Active]   = new KDecorationPreviewBridge( this, true );

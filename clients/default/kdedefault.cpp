@@ -27,6 +27,7 @@
 #include <qlabel.h>
 #include <kdebug.h>
 #include <QPolygon>
+#include <QStyle>
 
 namespace Default
 {
@@ -325,18 +326,18 @@ void KDEDefaultHandler::createPixmaps()
 	}
 
 	// Set the sticky pin pixmaps;
-	QColorGroup g;
+	QPalette g;
 	QPainter p;
 
 	// Active pins
-	g = options()->palette( ColorButtonBg, true ).active();
+	g = options()->palette( ColorButtonBg, true );
 	pinUpPix  = new KPixmap();
 	pinUpPix->resize(16, 16);
 	p.begin( pinUpPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
 		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
-	pinUpPix->setMask( QBitmap(16, 16, pinup_mask_bits, true) );
+	pinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
 	pinDownPix = new KPixmap();
 	pinDownPix->resize(16, 16);
@@ -344,17 +345,17 @@ void KDEDefaultHandler::createPixmaps()
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
 		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
 	p.end();
-	pinDownPix->setMask( QBitmap(16, 16, pindown_mask_bits, true) );
+	pinDownPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits) );
 
 	// Inactive pins
-	g = options()->palette( ColorButtonBg, false ).active();
+	g = options()->palette( ColorButtonBg, false );
 	ipinUpPix = new KPixmap();
 	ipinUpPix->resize(16, 16);
 	p.begin( ipinUpPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
 		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
-	ipinUpPix->setMask( QBitmap(16, 16, pinup_mask_bits, true) );
+	ipinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
 	ipinDownPix = new KPixmap();
 	ipinDownPix->resize(16, 16);
@@ -362,7 +363,7 @@ void KDEDefaultHandler::createPixmaps()
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
 		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
 	p.end();
-	ipinDownPix->setMask( QBitmap(16, 16, pindown_mask_bits, true) );
+	ipinDownPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits) );
 
 	// Create a title buffer for flicker-free painting
 	titleBuffer = new KPixmap();
@@ -405,25 +406,25 @@ void KDEDefaultHandler::createPixmaps()
 	irightBtnDownPix[false]->resize(toolTitleHeight, toolTitleHeight);
 
 	// Draw the button state pixmaps
-	g = options()->palette( ColorTitleBar, true ).active();
+	g = options()->palette( ColorTitleBar, true );
 	drawButtonBackground( leftBtnUpPix[true], g, false );
 	drawButtonBackground( leftBtnDownPix[true], g, true );
 	drawButtonBackground( leftBtnUpPix[false], g, false );
 	drawButtonBackground( leftBtnDownPix[false], g, true );
 
-	g = options()->palette( ColorButtonBg, true ).active();
+	g = options()->palette( ColorButtonBg, true );
 	drawButtonBackground( rightBtnUpPix[true], g, false );
 	drawButtonBackground( rightBtnDownPix[true], g, true );
 	drawButtonBackground( rightBtnUpPix[false], g, false );
 	drawButtonBackground( rightBtnDownPix[false], g, true );
 
-	g = options()->palette( ColorTitleBar, false ).active();
+	g = options()->palette( ColorTitleBar, false );
 	drawButtonBackground( ileftBtnUpPix[true], g, false );
 	drawButtonBackground( ileftBtnDownPix[true], g, true );
 	drawButtonBackground( ileftBtnUpPix[false], g, false );
 	drawButtonBackground( ileftBtnDownPix[false], g, true );
 
-	g = options()->palette( ColorButtonBg, false ).active();
+	g = options()->palette( ColorButtonBg, false );
 	drawButtonBackground( irightBtnUpPix[true], g, false );
 	drawButtonBackground( irightBtnDownPix[true], g, true );
 	drawButtonBackground( irightBtnUpPix[false], g, false );
@@ -493,7 +494,7 @@ void KDEDefaultHandler::freePixmaps()
 
 
 void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
-		const QColorGroup &g, bool sunken)
+		const QPalette &g, bool sunken)
 {
     QPainter p;
     int w = pix->width();
@@ -502,7 +503,7 @@ void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
     int y2 = h-1;
 
 	bool highcolor = useGradients && (QPixmap::defaultDepth() > 8);
-	QColor c = g.background();
+	QColor c = g.color( QPalette::Background );
 
 	// Fill the background with a gradient if possible
 	if (highcolor)
@@ -513,18 +514,18 @@ void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
 
     p.begin(pix);
     // outer frame
-    p.setPen(g.mid());
+    p.setPen(g.color( QPalette::Mid ));
     p.drawLine(0, 0, x2, 0);
     p.drawLine(0, 0, 0, y2);
-    p.setPen(g.light());
+    p.setPen(g.color( QPalette::Light ));
     p.drawLine(x2, 0, x2, y2);
     p.drawLine(0, x2, y2, x2);
-    p.setPen(g.dark());
+    p.setPen(g.color( QPalette::Dark ));
     p.drawRect(1, 1, w-2, h-2);
-    p.setPen(sunken ? g.mid() : g.light());
+    p.setPen(sunken ? g.color( QPalette::Mid ) : g.color( QPalette::Light ));
     p.drawLine(2, 2, x2-2, 2);
     p.drawLine(2, 2, 2, y2-2);
-    p.setPen(sunken ? g.light() : g.mid());
+    p.setPen(sunken ? g.color( QPalette::Light ) : g.color( QPalette::Mid ));
     p.drawLine(x2-2, 2, x2-2, y2-2);
     p.drawLine(2, x2-2, y2-2, x2-2);
 }
@@ -561,6 +562,7 @@ bool KDEDefaultHandler::supports( Ability ability )
 KDEDefaultButton::KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name)
 	: KCommonDecorationButton(type, parent)
 {
+    setObjectName( name );
     setAttribute( Qt::WA_NoBackground );
 
 	isMouseOver = false;
@@ -620,7 +622,7 @@ void KDEDefaultButton::setBitmap(const unsigned char *bitmap)
 	deco = 0;
 
 	if (bitmap) {
-		deco = new QBitmap(10, 10, bitmap, true);
+		deco = new QBitmap( QBitmap::fromData(QSize( 10, 10 ), bitmap) );
 		deco->setMask( *deco );
 	}
 }
@@ -704,7 +706,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 			else
 				btnpix = isChecked() ? *ipinDownPix : *ipinUpPix;
 		} else
-			btnpix = decoration()->icon().pixmap( QIcon::Small, QIcon::Normal );
+			btnpix = decoration()->icon().pixmap( style()->pixelMetric( QStyle::PM_SmallIconSize ), QIcon::Normal );
 
 		// Intensify the image if required
 		if (isMouseOver) {
@@ -714,7 +716,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 		// Smooth scale the pixmap for small titlebars
 		// This is slow, but we assume this isn't done too often
 		if ( width() < 16 ) {
-			btnpix.convertFromImage(btnpix.convertToImage().smoothScale(12, 12));
+			btnpix = QPixmap::fromImage(btnpix.toImage().scaled(12, 12));
 			p->drawPixmap( 0, 0, btnpix );
 		}
 		else
@@ -726,7 +728,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 void KDEDefaultButton::enterEvent(QEvent *e)
 {
 	isMouseOver=true;
-	repaint(false);
+	repaint();
 	KCommonDecorationButton::enterEvent(e);
 }
 
@@ -734,7 +736,7 @@ void KDEDefaultButton::enterEvent(QEvent *e)
 void KDEDefaultButton::leaveEvent(QEvent *e)
 {
 	isMouseOver=false;
-	repaint(false);
+	repaint();
 	KCommonDecorationButton::leaveEvent(e);
 }
 
@@ -882,7 +884,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	if (!KDEDefault_initialized)
 		return;
 
-	QColorGroup g;
+	QPalette g;
 	int offset;
 
 	KPixmap* upperGradient = isActive() ? aUpperGradient : iUpperGradient;
@@ -915,13 +917,13 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	p.drawRect(x,y,w,h);
 
     // Draw part of the frame that is the titlebar color
-	g = options()->palette(ColorTitleBar, isActive()).active();
-	p.setPen(g.light());
+	g = options()->palette(ColorTitleBar, isActive());
+	p.setPen(g.color( QPalette::Light ));
 	p.drawLine(x+1, y+1, rightOffset-1, y+1);
 	p.drawLine(x+1, y+1, x+1, leftFrameStart+borderWidth-4);
 
 	// Draw titlebar colour separator line
-	p.setPen(g.dark());
+	p.setPen(g.color( QPalette::Dark ));
 	p.drawLine(rightOffset-1, y+1, rightOffset-1, titleHeight+2);
 
 	p.fillRect(x+2, y+titleHeight+3,
@@ -931,15 +933,15 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	// Finish drawing the titlebar extension
 	p.setPen(Qt::black);
 	p.drawLine(x+1, leftFrameStart+borderWidth-4, x+borderWidth-2, leftFrameStart-1);
-	p.setPen(g.mid());
+	p.setPen(g.color( QPalette::Mid ));
 	p.drawLine(x+borderWidth-2, y+titleHeight+3, x+borderWidth-2, leftFrameStart-2);
 
     // Fill out the border edges
-	g = options()->palette(ColorFrame, isActive()).active();
-    p.setPen(g.light());
+	g = options()->palette(ColorFrame, isActive());
+    p.setPen(g.color( QPalette::Light ));
     p.drawLine(rightOffset, y+1, x2-1, y+1);
     p.drawLine(x+1, leftFrameStart+borderWidth-3, x+1, y2-1);
-    p.setPen(g.dark());
+    p.setPen(g.color( QPalette::Dark ));
     p.drawLine(x2-1, y+1, x2-1, y2-1);
     p.drawLine(x+1, y2-1, x2-1, y2-1);
 
@@ -962,18 +964,18 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 		if(w > 50)
 		{
 			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+2, 2*borderWidth+12, grabBorderWidth-2,
-							g, false, 1, &g.brush(QColorGroup::Mid));
+							g, false, 1, &g.brush(QPalette::Mid));
 			qDrawShadePanel(&p, x+2*borderWidth+13, y2-grabBorderWidth+2, w-4*borderWidth-26, grabBorderWidth-2,
 							g, false, 1, isActive() ?
-							&g.brush(QColorGroup::Background) :
-							&g.brush(QColorGroup::Mid));
+							&g.brush(QPalette::Background) :
+							&g.brush(QPalette::Mid));
 			qDrawShadePanel(&p, x2-2*borderWidth-12, y2-grabBorderWidth+2, 2*borderWidth+12, grabBorderWidth-2,
-							g, false, 1, &g.brush(QColorGroup::Mid));
+							g, false, 1, &g.brush(QPalette::Mid));
 		} else
 			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+2, w-2, grabBorderWidth-2,
 							g, false, 1, isActive() ?
-							&g.brush(QColorGroup::Background) :
-							&g.brush(QColorGroup::Mid));
+							&g.brush(QPalette::Background) :
+							&g.brush(QPalette::Mid));
 		offset = grabBorderWidth;
 	} else
 		{
@@ -983,7 +985,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 		}
 
     // Draw a frame around the wrapped widget.
-    p.setPen( g.dark() );
+    p.setPen( g.color( QPalette::Dark ) );
     p.drawRect( x+borderWidth-1, y+titleHeight+3, w-2*borderWidth+2, h-titleHeight-offset-2 );
 
     // Draw the title bar.

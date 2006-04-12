@@ -1053,22 +1053,22 @@ int qtToX11Button( Qt::ButtonState button )
     return AnyButton;
     }
     
-int qtToX11State( Qt::ButtonState state )
+int qtToX11State( Qt::ButtonState buttons, Qt::KeyboardModifiers modifiers )
     {
     int ret = 0;
-    if( state & Qt::LeftButton )
+    if( buttons & Qt::LeftButton )
         ret |= Button1Mask;
-    if( state & Qt::MidButton )
+    if( buttons & Qt::MidButton )
         ret |= Button2Mask;
-    if( state & Qt::RightButton )
+    if( buttons & Qt::RightButton )
         ret |= Button3Mask;
-    if( state & Qt::ShiftModifier )
+    if( modifiers & Qt::ShiftModifier )
         ret |= ShiftMask;
-    if( state & Qt::ControlModifier )
+    if( modifiers & Qt::ControlModifier )
         ret |= ControlMask;
-    if( state & Qt::AltModifier )
+    if( modifiers & Qt::AltModifier )
         ret |= KKeyServer::modXAlt();
-    if( state & Qt::MetaModifier )
+    if( modifiers & Qt::MetaModifier )
         ret |= KKeyServer::modXMeta();
     return ret;
     }
@@ -1083,27 +1083,27 @@ bool Client::eventFilter( QObject* o, QEvent* e )
     if( e->type() == QEvent::MouseButtonPress )
         {
         QMouseEvent* ev = static_cast< QMouseEvent* >( e );
-        return buttonPressEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->state()),
+        return buttonPressEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->buttons(), ev->modifiers() ),
             ev->x(), ev->y(), ev->globalX(), ev->globalY() );
         }
     if( e->type() == QEvent::MouseButtonRelease )
         {
         QMouseEvent* ev = static_cast< QMouseEvent* >( e );
-        return buttonReleaseEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->state()),
+        return buttonReleaseEvent( decorationId(), qtToX11Button( ev->button()), qtToX11State( ev->buttons(), ev->modifiers() ),
             ev->x(), ev->y(), ev->globalX(), ev->globalY() );
         }
     if( e->type() == QEvent::MouseMove ) // FRAME i fake z enter/leave?
         {
         QMouseEvent* ev = static_cast< QMouseEvent* >( e );
-        return motionNotifyEvent( decorationId(), qtToX11State( ev->state()),
+        return motionNotifyEvent( decorationId(), qtToX11State( ev->buttons(), ev->modifiers() ),
             ev->x(), ev->y(), ev->globalX(), ev->globalY() );
         }
     if( e->type() == QEvent::Wheel )
         {
         QWheelEvent* ev = static_cast< QWheelEvent* >( e );
-        bool r = buttonPressEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->state()),
+        bool r = buttonPressEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->buttons(), ev->modifiers() ),
             ev->x(), ev->y(), ev->globalX(), ev->globalY() );
-        r = r || buttonReleaseEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->state()),
+        r = r || buttonReleaseEvent( decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State( ev->buttons(), ev->modifiers() ),
             ev->x(), ev->y(), ev->globalX(), ev->globalY() );
         return r;
         }
@@ -1279,7 +1279,7 @@ void Client::processMousePressEvent( QMouseEvent* e )
         default:
             return;
         }
-    processDecorationButtonPress( button, e->state(), e->x(), e->y(), e->globalX(), e->globalY());
+    processDecorationButtonPress( button, e->buttons(), e->x(), e->y(), e->globalX(), e->globalY());
     }
 
 // return value matters only when filtering events before decoration gets them

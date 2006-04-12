@@ -73,10 +73,14 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
           kwinConfig("kwinrc"),
           pluginObject(0)
 {
+    setObjectName( name );
+
 	kwinConfig.setGroup("Style");
         plugins = new KDecorationPreviewPlugins( &kwinConfig );
 
-	QVBoxLayout* layout = new QVBoxLayout(this, 0, KDialog::spacingHint()); 
+	QVBoxLayout* layout = new QVBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(KDialog::spacingHint());
 
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
@@ -88,7 +92,9 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	// Page 1 (General Options)
 	QWidget *pluginPage = new QWidget( tabWidget );
 
-	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage, KDialog::marginHint(), KDialog::spacingHint());
+	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage);
+    pluginLayout->setMargin(KDialog::marginHint());
+    pluginLayout->setSpacing(KDialog::spacingHint());
 
 	// decoration chooser
 	decorationList = new KComboBox( pluginPage );
@@ -113,17 +119,20 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	cBorder->setWhatsThis( i18n( "Use this combobox to change the border size of the decoration." ));
 	lBorder->hide();
 	cBorder->hide();
-	QHBoxLayout *borderSizeLayout = new QHBoxLayout(pluginSettingsGrp->layout() );
+	QHBoxLayout *borderSizeLayout = new QHBoxLayout();
+    pluginSettingsGrp->layout()->addItem( borderSizeLayout );
 	borderSizeLayout->addWidget(lBorder);
 	borderSizeLayout->addWidget(cBorder);
 	borderSizeLayout->addStretch();
 
 	pluginConfigWidget = new KVBox(pluginSettingsGrp);
-	pluginSettingsGrp->layout()->add( pluginConfigWidget );
+	pluginSettingsGrp->layout()->addWidget( pluginConfigWidget );
 
 	// Page 2 (Button Selector)
 	QWidget* buttonPage = new QWidget( tabWidget );
-	QVBoxLayout* buttonLayout = new QVBoxLayout(buttonPage, KDialog::marginHint(), KDialog::spacingHint());
+	QVBoxLayout* buttonLayout = new QVBoxLayout(buttonPage);
+    buttonLayout->setMargin(KDialog::marginHint());
+    buttonLayout->setSpacing(KDialog::spacingHint());
 
 	cbShowToolTips = new QCheckBox(
 			i18n("&Show window button tooltips"), buttonPage );
@@ -143,13 +152,16 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	// Add nifty dnd button modification widgets
 	buttonPositionWidget = new ButtonPositionWidget(buttonPage, "button_position_widget");
 	buttonPositionWidget->setDecorationFactory(plugins->factory() );
-	QHBoxLayout* buttonControlLayout = new QHBoxLayout(buttonLayout);
+	QHBoxLayout* buttonControlLayout = new QHBoxLayout();
+    buttonLayout->addLayout( buttonControlLayout );
 	buttonControlLayout->addSpacing(20);
 	buttonControlLayout->addWidget(buttonPositionWidget);
 // 	buttonLayout->addStretch();
 
 	// preview
-	QVBoxLayout* previewLayout = new QVBoxLayout(layout, KDialog::spacingHint() );
+	QVBoxLayout* previewLayout = new QVBoxLayout();
+    previewLayout->setSpacing( KDialog::spacingHint() );
+    layout->addLayout( previewLayout );
 	previewLayout->setMargin( KDialog::marginHint() );
 
 	preview = new KDecorationPreview( this );
@@ -165,8 +177,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, co
 	readConfig( &kwinConfig );
 	resetPlugin( &kwinConfig );
 
-	tabWidget->insertTab( pluginPage, i18n("&Window Decoration") );
-	tabWidget->insertTab( buttonPage, i18n("&Buttons") );
+	tabWidget->addTab( pluginPage, i18n("&Window Decoration") );
+	tabWidget->addTab( buttonPage, i18n("&Buttons") );
 
 	connect( buttonPositionWidget, SIGNAL(changed()), this, SLOT(slotButtonsChanged()) ); // update preview etc.
 	connect( buttonPositionWidget, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) ); // emit changed()...
@@ -245,7 +257,7 @@ void KWinDecorationModule::createDecorationList()
 		decorationNames.append((*it).name);
 	}
 	decorationNames.sort();
-    decorationList->insertStringList(decorationNames);
+    decorationList->addItems(decorationNames);
 }
 
 
@@ -573,7 +585,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 		cBorder->clear();
 		for (QList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
 			BorderSize size = *it;
-			cBorder->insertItem(i18n(border_names[size]), borderSizeToIndex(size,sizes) );
+			cBorder->addItem(i18n(border_names[size]), borderSizeToIndex(size,sizes) );
 		}
 		int pos = borderSizeToIndex( border_size, sizes );
 		lBorder->show();

@@ -46,7 +46,7 @@ DetectWidget::DetectWidget( QWidget* parent, const char* name )
     }
 
 DetectDialog::DetectDialog( QWidget* parent, const char* name )
-: KDialogBase( parent, name, true, "", Ok | Cancel )
+: KDialogBase( Swallow, 0, parent, name, true, "", Ok | Cancel )
 , grabber( NULL )
     {
     widget = new DetectWidget( this );
@@ -167,7 +167,7 @@ void DetectDialog::selectWindow()
     // use a dialog, so that all user input is blocked
     // use WX11BypassWM and moving away so that it's not actually visible
     // grab only mouse, so that keyboard can be used e.g. for switching windows
-    grabber = new QDialog( NULL, NULL, true, Qt::WX11BypassWM );
+    grabber = new QDialog( 0, Qt::WX11BypassWM );
     grabber->move( -1000, -1000 );
     grabber->show();
     grabber->grabMouse( Qt::CrossCursor );

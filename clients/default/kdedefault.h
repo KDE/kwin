@@ -42,7 +42,7 @@ class KDEDefaultHandler: public KDecorationFactory
 		void createPixmaps();
 		void freePixmaps();
 		void drawButtonBackground(KPixmap *pix,
-				const QColorGroup &g, bool sunken);
+				const QPalette &g, bool sunken);
 };
 
 

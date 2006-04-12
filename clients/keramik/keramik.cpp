@@ -33,6 +33,7 @@
 #include <qlabel.h>
 #include <QEvent>
 #include <QApplication>
+#include <QStyle>
 
 #include <X11/Xlib.h>
 
@@ -174,20 +175,20 @@ KeramikHandler::KeramikHandler()
 	settings_cache = NULL;
 
 	// Create the button deco bitmaps
-	buttonDecos[ Menu ]             = new QBitmap( 17, 17, menu_bits,      true );
-	buttonDecos[ OnAllDesktops ]    = new QBitmap( 17, 17, on_all_desktops_bits, true );
-	buttonDecos[ NotOnAllDesktops ] = new QBitmap( 17, 17, not_on_all_desktops_bits, true );
-	buttonDecos[ Help ]             = new QBitmap( 17, 17, help_bits,      true );
-	buttonDecos[ Minimize ]         = new QBitmap( 17, 17, minimize_bits,  true );
-	buttonDecos[ Maximize ]         = new QBitmap( 17, 17, maximize_bits,  true );
-	buttonDecos[ Restore ]          = new QBitmap( 17, 17, restore_bits,   true );
-	buttonDecos[ Close ]            = new QBitmap( 17, 17, close_bits,     true );
-	buttonDecos[ AboveOn ]          = new QBitmap( 17, 17, above_on_bits,  true );
-	buttonDecos[ AboveOff ]         = new QBitmap( 17, 17, above_off_bits, true );
-	buttonDecos[ BelowOn ]          = new QBitmap( 17, 17, below_on_bits,  true );
-	buttonDecos[ BelowOff ]         = new QBitmap( 17, 17, below_off_bits, true );
-	buttonDecos[ ShadeOn ]          = new QBitmap( 17, 17, shade_on_bits,  true );
-	buttonDecos[ ShadeOff ]         = new QBitmap( 17, 17, shade_off_bits, true );
+	buttonDecos[ Menu ]             = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), menu_bits ) );
+	buttonDecos[ OnAllDesktops ]    = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), on_all_desktops_bits ) );
+	buttonDecos[ NotOnAllDesktops ] = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), not_on_all_desktops_bits ) );
+	buttonDecos[ Help ]             = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), help_bits ) );
+	buttonDecos[ Minimize ]         = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), minimize_bits ) );
+	buttonDecos[ Maximize ]         = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), maximize_bits ) );
+	buttonDecos[ Restore ]          = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), restore_bits ) );
+	buttonDecos[ Close ]            = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), close_bits ) );
+	buttonDecos[ AboveOn ]          = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), above_on_bits ) );
+	buttonDecos[ AboveOff ]         = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), above_off_bits ) );
+	buttonDecos[ BelowOn ]          = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), below_on_bits ) );
+	buttonDecos[ BelowOff ]         = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), below_off_bits ) );
+	buttonDecos[ ShadeOn ]          = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), shade_on_bits ) );
+	buttonDecos[ ShadeOff ]         = new QBitmap( QBitmap::fromData( QSize( 17, 17 ), shade_off_bits ) );
 
 	// Selfmask the bitmaps
 	for ( int i = 0; i < NumButtonDecos; i++ )
@@ -306,7 +307,7 @@ void KeramikHandler::createPixmaps()
 	delete captionCenter;
 
 	// Create the titlebar center tile
-	activeTiles[ TitleCenter ] = new QPixmap( *titleCenter );
+	activeTiles[ TitleCenter ] = new QPixmap( QPixmap::fromImage( *titleCenter ) );
 
 	delete titleCenter;
 
@@ -347,7 +348,7 @@ void KeramikHandler::createPixmaps()
 	delete captionRight;
 	delete captionCenter;
 
-	inactiveTiles[ TitleCenter ] = new QPixmap( *titleCenter );
+	inactiveTiles[ TitleCenter ] = new QPixmap( QPixmap::fromImage( *titleCenter ) );
 
 	delete titleCenter;
 
@@ -576,7 +577,7 @@ void KeramikHandler::readConfig()
 
 QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 {
-	QImage dest( over->width(), over->height(), 32 );
+	QImage dest( over->width(), over->height(), QImage::Format_RGB32 );
 	int width = over->width(), height = over->height();
 
 	// Clear the destination image
@@ -619,7 +620,7 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 	}
 
 	// Create the final pixmap and return it
-	return new QPixmap( dest );
+	return new QPixmap( QPixmap::fromImage( dest ) );
 }
 
 
@@ -637,7 +638,7 @@ QImage *KeramikHandler::loadImage( const QString &name, const QColor &col )
 QPixmap *KeramikHandler::loadPixmap( const QString &name, const QColor &col )
 {
 	QImage *img = loadImage( name, col );
-	QPixmap *pix = new QPixmap( *img );
+	QPixmap *pix = new QPixmap( QPixmap::fromImage( *img ) );
 	delete img;
 
 	return pix;
@@ -758,7 +759,7 @@ KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, co
 	realizeButtons = realizeBtns;
 
 	this->setToolTip( tip ); // FRAME
-	setBackgroundMode( Qt::NoBackground );
+	setAttribute( Qt::WA_NoSystemBackground );
 	setCursor( Qt::ArrowCursor );
 	int size = clientHandler->roundButton()->height();
 	setFixedSize( size, size );
@@ -778,7 +779,7 @@ void KeramikButton::enterEvent( QEvent *e )
 	Q3Button::enterEvent( e );
 
 	hover = true;
-	repaint( false );
+	repaint();
 }
 
 
@@ -787,14 +788,17 @@ void KeramikButton::leaveEvent( QEvent *e )
 	Q3Button::leaveEvent( e );
 
 	hover = false;
-	repaint( false );
+	repaint();
 }
 
 
 void KeramikButton::mousePressEvent( QMouseEvent *e )
 {
 	lastbutton = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state() );
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
+                   (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
+                   (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
+                    e->modifiers() );
 	Q3Button::mousePressEvent( &me );
 }
 
@@ -802,7 +806,10 @@ void KeramikButton::mousePressEvent( QMouseEvent *e )
 void KeramikButton::mouseReleaseEvent( QMouseEvent *e )
 {
 	lastbutton = e->button();
-	QMouseEvent me( e->type(), e->pos(), e->globalPos(), (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton, e->state() );
+	QMouseEvent me( e->type(), e->pos(), e->globalPos(),
+                   (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
+                   (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
+                    e->modifiers() );
 	Q3Button::mouseReleaseEvent( &me );
 }
 
@@ -909,7 +916,7 @@ void KeramikClient::init()
 	widget()->installEventFilter( this );
 
 	// Minimize flicker
-	widget()->setBackgroundMode( Qt::NoBackground );
+	widget()->setAttribute( Qt::WA_NoSystemBackground );
 
 	for ( int i=0; i < NumButtons; i++ )
 		button[i] = NULL;
@@ -921,7 +928,9 @@ void KeramikClient::createLayout()
 {
 
 	QVBoxLayout *mainLayout   = new QVBoxLayout( widget() );
-	QBoxLayout *titleLayout   = new QBoxLayout( 0, QBoxLayout::LeftToRight, 0, 0, 0 );
+	QBoxLayout *titleLayout   = new QBoxLayout( QBoxLayout::LeftToRight );
+	titleLayout->setMargin( 0 );
+	titleLayout->setSpacing( 0 );
 	QHBoxLayout *windowLayout = new QHBoxLayout();
 
 	largeTitlebar = ( !maximizedVertical() && clientHandler->largeCaptionBubbles() );
@@ -1012,10 +1021,10 @@ void KeramikClient::reset( unsigned long )
 	// Only repaint the window if it's visible
 	// (i.e. not minimized and on the current desktop)
 	if ( widget()->isVisible() ) {
-		widget()->repaint( false );
+		widget()->repaint();
 
 		for ( int i = 0; i < NumButtons; i++ )
-			if ( button[i] ) button[i]->repaint( false );
+			if ( button[i] ) button[i]->repaint();
 	}
 }
 
@@ -1024,7 +1033,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 {
 	for ( int i=0; i < s.length(); i++ )
 	{
-		switch ( s[i].latin1() )
+		switch ( s[i].toLatin1() )
 		{
 			// Menu button
 			case 'M' :
@@ -1237,15 +1246,16 @@ void KeramikClient::updateCaptionBuffer()
 
 	if ( clientHandler->showAppIcons() )
 	{
+		QStyle *style = button[ 0 ]->style();
 		if ( active ) {
 			if ( ! activeIcon )
-				activeIcon = new QPixmap( this->icon().pixmap( QIcon::Small, QIcon::Normal )); // FRAME
+				activeIcon = new QPixmap( this->icon().pixmap( style->pixelMetric( QStyle::PM_SmallIconSize ), QIcon::Normal )); // FRAME
 			icon = activeIcon;
 		} else {
 			if ( ! inactiveIcon ) {
-				QImage img = this->icon().pixmap( QIcon::Small, QIcon::Normal ).convertToImage();
+				QImage img = this->icon().pixmap( style->pixelMetric( QStyle::PM_SmallIconSize ), QIcon::Normal ).toImage();
 				KIconEffect::semiTransparent( img );
-				inactiveIcon = new QPixmap( img );
+				inactiveIcon = new QPixmap( QPixmap::fromImage( img ) );
 			}
 			icon = inactiveIcon;
 		}
@@ -1341,7 +1351,7 @@ void KeramikClient::captionChange()
 
 	captionBufferDirty = true;
 
-	widget()->repaint( r | captionRect, false );
+	widget()->repaint( r | captionRect );
 }
 
 
@@ -1357,7 +1367,7 @@ void KeramikClient::iconChange()
 		activeIcon = inactiveIcon = NULL;
 
 		captionBufferDirty = true;
-		widget()->repaint( captionRect, false );
+		widget()->repaint( captionRect );
 	}
 }
 
@@ -1376,10 +1386,10 @@ void KeramikClient::activeChange()
 
 	captionBufferDirty = true;
 
-	widget()->repaint( false );
+	widget()->repaint();
 
 	for ( int i=0; i < NumButtons; i++ )
-		if ( button[i] ) button[i]->repaint( false );
+		if ( button[i] ) button[i]->repaint();
 }
 
 
@@ -1396,7 +1406,7 @@ void KeramikClient::maximizeChange()
 			captionBufferDirty = maskDirty = true;
 
 			widget()->layout()->activate();
-			widget()->repaint( false );
+			widget()->repaint();
 		} else if (( maximizeMode() & MaximizeVertical ) == 0 && !largeTitlebar ) {
 			// We've been restored - enlarge the titlebar by 3 pixels
 			topSpacer->changeSize( 10, 4, QSizePolicy::Expanding, QSizePolicy::Minimum );
@@ -1406,7 +1416,7 @@ void KeramikClient::maximizeChange()
 			captionBufferDirty = maskDirty = true;
 
 			widget()->layout()->activate();
-			widget()->repaint( false );
+			widget()->repaint();
 		}
 	}
 
@@ -1421,7 +1431,7 @@ void KeramikClient::desktopChange()
 {
 	if ( button[ OnAllDesktopsButton ] )
 		{
-                button[ OnAllDesktopsButton ]->repaint( true );
+                button[ OnAllDesktopsButton ]->repaint();
 		button[ OnAllDesktopsButton ]->setToolTip( isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops") );
 		}
 }
@@ -1431,7 +1441,7 @@ void KeramikClient::shadeChange()
 {
 	if ( button[ ShadeButton ] )
 		{
-                button[ ShadeButton ]->repaint( true );
+                button[ ShadeButton ]->repaint();
 		button[ ShadeButton ]->setToolTip( isSetShade() ? i18n("Unshade") : i18n("Shade") );
 		}
 }
@@ -1440,14 +1450,14 @@ void KeramikClient::shadeChange()
 void KeramikClient::keepAboveChange( bool )
 {
 	if ( button[ AboveButton ] )
-                button[ AboveButton ]->repaint( true );
+                button[ AboveButton ]->repaint();
 }
 
 
 void KeramikClient::keepBelowChange( bool )
 {
 	if ( button[ BelowButton ] )
-                button[ BelowButton ]->repaint( true );
+                button[ BelowButton ]->repaint();
 }
 
 
@@ -1475,21 +1485,21 @@ void KeramikClient::slotMaximize()
 void KeramikClient::slotAbove()
 {
     setKeepAbove( !keepAbove());
-    button[ AboveButton ]->repaint( true );
+    button[ AboveButton ]->repaint();
 }
 
 
 void KeramikClient::slotBelow()
 {
     setKeepBelow( !keepBelow());
-    button[ BelowButton ]->repaint( true );
+    button[ BelowButton ]->repaint();
 }
 
 
 void KeramikClient::slotShade()
 {
     setShade( !isSetShade());
-    button[ ShadeButton ]->repaint( true );
+    button[ ShadeButton ]->repaint();
 }
 
 

@@ -117,8 +117,8 @@ void createMaxButtonPixmaps()
   for (int t = 0; t < 3; ++t)
   {
     maxButtonXpms[t][0] = "15 13 2 1";
-    maxButtonXpms[t][1] = baseColor.ascii();
-    maxButtonXpms[t][2] = textColor.ascii();
+    maxButtonXpms[t][1] = baseColor.toAscii();
+    maxButtonXpms[t][2] = textColor.toAscii();
     maxButtonPixmaps[t] = QPixmap(maxButtonXpms[t]);
     maxButtonPixmaps[t].setMask(maxButtonPixmaps[t].createHeuristicMask());
   }
@@ -131,7 +131,7 @@ void KTitleBarActionsConfig::paletteChanged()
   createMaxButtonPixmaps();
   for (int b = 0; b < 3; ++b)
     for (int t = 0; t < 3; ++t)
-      coMax[b]->changeItem(maxButtonPixmaps[t], t);
+      coMax[b]->setItemIcon(t, maxButtonPixmaps[t]);
 
 }
 
@@ -139,7 +139,9 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
-  QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setMargin(0);
+  layout->setSpacing(KDialog::spacingHint());
   Q3Grid *grid;
   Q3GroupBox *box;
   QLabel *label;
@@ -150,7 +152,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
 /** Titlebar doubleclick ************/
 
-  QHBoxLayout *hlayout = new QHBoxLayout(layout);
+  QHBoxLayout *hlayout = new QHBoxLayout();
+  layout->addLayout( hlayout );
 
   label = new QLabel(i18n("&Titlebar double-click:"), this);
   hlayout->addWidget(label);
@@ -158,14 +161,14 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     " titlebar of a window.") );
 
   QComboBox* combo = new QComboBox(this);
-  combo->insertItem(i18n("Maximize"));
-  combo->insertItem(i18n("Maximize (vertical only)"));
-  combo->insertItem(i18n("Maximize (horizontal only)"));
-  combo->insertItem(i18n("Minimize"));
-  combo->insertItem(i18n("Shade"));
-  combo->insertItem(i18n("Lower"));
-  combo->insertItem(i18n("On All Desktops"));
-  combo->insertItem(i18n("Nothing"));
+  combo->addItem(i18n("Maximize"));
+  combo->addItem(i18n("Maximize (vertical only)"));
+  combo->addItem(i18n("Maximize (horizontal only)"));
+  combo->addItem(i18n("Minimize"));
+  combo->addItem(i18n("Shade"));
+  combo->addItem(i18n("Lower"));
+  combo->addItem(i18n("On All Desktops"));
+  combo->addItem(i18n("Nothing"));
   combo->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   hlayout->addWidget(combo);
@@ -175,7 +178,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   label->setBuddy(combo);
 
 /** Mouse Wheel Events  **************/
-  QHBoxLayout *hlayoutW = new QHBoxLayout(layout);
+  QHBoxLayout *hlayoutW = new QHBoxLayout();
+  layout->addLayout( hlayoutW );
   strMouseWheel = i18n("Titlebar wheel event:");
   label = new QLabel(strMouseWheel, this);
   hlayoutW->addWidget(label);
@@ -184,13 +188,13 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   
   // Titlebar and frame mouse Wheel  
   QComboBox* comboW = new QComboBox(this);
-  comboW->insertItem(i18n("Raise/Lower"));
-  comboW->insertItem(i18n("Shade/Unshade"));
-  comboW->insertItem(i18n("Maximize/Restore"));
-  comboW->insertItem(i18n("Keep Above/Below"));  
-  comboW->insertItem(i18n("Move to Previous/Next Desktop"));  
-  comboW->insertItem(i18n("Change Opacity"));  
-  comboW->insertItem(i18n("Nothing"));  
+  comboW->addItem(i18n("Raise/Lower"));
+  comboW->addItem(i18n("Shade/Unshade"));
+  comboW->addItem(i18n("Maximize/Restore"));
+  comboW->addItem(i18n("Keep Above/Below"));  
+  comboW->addItem(i18n("Move to Previous/Next Desktop"));  
+  comboW->addItem(i18n("Change Opacity"));  
+  comboW->addItem(i18n("Nothing"));  
   comboW->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
   connect(comboW, SIGNAL(activated(int)), SLOT(changed()));
   hlayoutW->addWidget(comboW);
@@ -244,11 +248,11 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
   // Titlebar and frame, active, mouse button 1
   combo = new QComboBox(grid);
-  combo->insertItem(i18n("Raise"));
-  combo->insertItem(i18n("Lower"));
-  combo->insertItem(i18n("Operations Menu"));
-  combo->insertItem(i18n("Toggle Raise & Lower"));
-  combo->insertItem(i18n("Nothing"));
+  combo->addItem(i18n("Raise"));
+  combo->addItem(i18n("Lower"));
+  combo->addItem(i18n("Operations Menu"));
+  combo->addItem(i18n("Toggle Raise & Lower"));
+  combo->addItem(i18n("Nothing"));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct1 = combo;
 
@@ -273,14 +277,14 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
         << i18n("Shade");
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct2 = combo;
   combo->setWhatsThis( i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>active</em> window."));
 
   // Titlebar and frame, active, mouse button 3
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct3 =  combo;
   combo->setWhatsThis( txtButton3 );
@@ -310,19 +314,19 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
          << i18n("Nothing");
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiInAct1 = combo;
   combo->setWhatsThis( txtButton1);
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiInAct2 = combo;
   combo->setWhatsThis( i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>inactive</em> window."));
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiInAct3 = combo;
   combo->setWhatsThis( txtButton3);
@@ -362,7 +366,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     label   ->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
 
     coMax[b] = new ToolTipComboBox(box, tbl_Max);
-    for (int t = 0; t < 3; ++t) coMax[b]->insertItem(maxButtonPixmaps[t]);
+    for (int t = 0; t < 3; ++t) coMax[b]->addItem(maxButtonPixmaps[t], QString());
     connect(coMax[b], SIGNAL(activated(int)), SLOT(changed()));
     connect(coMax[b], SIGNAL(activated(int)), coMax[b], SLOT(changed()));
     coMax[b]->setWhatsThis( txtButton[b] );
@@ -533,18 +537,18 @@ const char* KTitleBarActionsConfig::functionMax( int i )
 void KTitleBarActionsConfig::load()
 {
   config->setGroup("Windows");
-  setComboText(coTiDbl, config->readEntry("TitlebarDoubleClickCommand","Shade").ascii());
+  setComboText(coTiDbl, config->readEntry("TitlebarDoubleClickCommand","Shade").toAscii());
   for (int t = 0; t < 3; ++t)
-    setComboText(coMax[t],config->readEntry(cnf_Max[t], tbl_Max[t]).ascii());
+    setComboText(coMax[t],config->readEntry(cnf_Max[t], tbl_Max[t]).toAscii());
 
   config->setGroup( "MouseBindings");
-  setComboText(coTiAct1,config->readEntry("CommandActiveTitlebar1","Raise").ascii());
-  setComboText(coTiAct2,config->readEntry("CommandActiveTitlebar2","Lower").ascii());
-  setComboText(coTiAct3,config->readEntry("CommandActiveTitlebar3","Operations menu").ascii());
-  setComboText(coTiAct4,config->readEntry("CommandTitlebarWheel","Nothing").ascii());  
-  setComboText(coTiInAct1,config->readEntry("CommandInactiveTitlebar1","Activate and raise").ascii());
-  setComboText(coTiInAct2,config->readEntry("CommandInactiveTitlebar2","Activate and lower").ascii());
-  setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Operations menu").ascii());
+  setComboText(coTiAct1,config->readEntry("CommandActiveTitlebar1","Raise").toAscii());
+  setComboText(coTiAct2,config->readEntry("CommandActiveTitlebar2","Lower").toAscii());
+  setComboText(coTiAct3,config->readEntry("CommandActiveTitlebar3","Operations menu").toAscii());
+  setComboText(coTiAct4,config->readEntry("CommandTitlebarWheel","Nothing").toAscii());  
+  setComboText(coTiInAct1,config->readEntry("CommandInactiveTitlebar1","Activate and raise").toAscii());
+  setComboText(coTiInAct2,config->readEntry("CommandInactiveTitlebar2","Activate and lower").toAscii());
+  setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Operations menu").toAscii());
 }
 
 void KTitleBarActionsConfig::save()
@@ -591,7 +595,9 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3, strAllW;
-  QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setMargin(0);
+  layout->setSpacing(KDialog::spacingHint());
   Q3Grid *grid;
   Q3GroupBox *box;
   QLabel *label;
@@ -652,19 +658,19 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
           << i18n("Activate & Raise");
 
   QComboBox* combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin1 = combo;
   combo->setWhatsThis( strWin1 );
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin2 = combo;
   combo->setWhatsThis( strWin2 );
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin3 = combo;
   combo->setWhatsThis( strWin3 );
@@ -721,8 +727,8 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
 
   // Combo's
   combo = new QComboBox(grid);
-  combo->insertItem(i18n("Meta"));
-  combo->insertItem(i18n("Alt"));
+  combo->addItem(i18n("Meta"));
+  combo->addItem(i18n("Alt"));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAllKey = combo;
   combo->setWhatsThis( strAllKey );
@@ -738,31 +744,31 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
         << i18n("Nothing");
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll1 = combo;
   combo->setWhatsThis( strAll1 );
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll2 = combo;
   combo->setWhatsThis( strAll2 );
 
   combo = new QComboBox(grid);
-  combo->insertStringList(items);
+  combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll3 =  combo;
   combo->setWhatsThis( strAll3 );
 
   combo = new QComboBox(grid);
-  combo->insertItem(i18n("Raise/Lower"));
-  combo->insertItem(i18n("Shade/Unshade"));
-  combo->insertItem(i18n("Maximize/Restore"));
-  combo->insertItem(i18n("Keep Above/Below"));  
-  combo->insertItem(i18n("Move to Previous/Next Desktop"));  
-  combo->insertItem(i18n("Change Opacity"));  
-  combo->insertItem(i18n("Nothing"));  
+  combo->addItem(i18n("Raise/Lower"));
+  combo->addItem(i18n("Shade/Unshade"));
+  combo->addItem(i18n("Maximize/Restore"));
+  combo->addItem(i18n("Keep Above/Below"));  
+  combo->addItem(i18n("Move to Previous/Next Desktop"));  
+  combo->addItem(i18n("Change Opacity"));  
+  combo->addItem(i18n("Nothing"));  
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAllW =  combo;
   combo->setWhatsThis( strAllW );
@@ -815,14 +821,14 @@ const char* KWindowActionsConfig::functionAllW(int i)
 void KWindowActionsConfig::load()
 {
   config->setGroup( "MouseBindings");
-  setComboText(coWin1,config->readEntry("CommandWindow1","Activate, raise and pass click").ascii());
-  setComboText(coWin2,config->readEntry("CommandWindow2","Activate and pass click").ascii());
-  setComboText(coWin3,config->readEntry("CommandWindow3","Activate and pass click").ascii());
-  setComboText(coAllKey,config->readEntry("CommandAllKey","Alt").ascii());
-  setComboText(coAll1,config->readEntry("CommandAll1","Move").ascii());
-  setComboText(coAll2,config->readEntry("CommandAll2","Toggle raise and lower").ascii());
-  setComboText(coAll3,config->readEntry("CommandAll3","Resize").ascii());
-  setComboText(coAllW,config->readEntry("CommandAllWheel","Nothing").ascii());
+  setComboText(coWin1,config->readEntry("CommandWindow1","Activate, raise and pass click").toAscii());
+  setComboText(coWin2,config->readEntry("CommandWindow2","Activate and pass click").toAscii());
+  setComboText(coWin3,config->readEntry("CommandWindow3","Activate and pass click").toAscii());
+  setComboText(coAllKey,config->readEntry("CommandAllKey","Alt").toAscii());
+  setComboText(coAll1,config->readEntry("CommandAll1","Move").toAscii());
+  setComboText(coAll2,config->readEntry("CommandAll2","Toggle raise and lower").toAscii());
+  setComboText(coAll3,config->readEntry("CommandAll3","Resize").toAscii());
+  setComboText(coAllW,config->readEntry("CommandAllWheel","Nothing").toAscii());
 }
 
 void KWindowActionsConfig::save()

@@ -23,6 +23,7 @@
 // #include <kwin/options.h>
 
 #include <QAbstractButton>
+#include <QStyle>
 #include <qbitmap.h>
 #include <qpainter.h>
 #include <qpixmap.h>
@@ -47,7 +48,7 @@ PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent)
     m_iconType(NumButtonIcons),
     hover(false)
 {
-    setBackgroundMode(Qt::NoBackground);
+    setAttribute(Qt::WA_NoSystemBackground);
 
     // no need to reset here as the button will be resetted on first resize.
 
@@ -142,7 +143,7 @@ void PlastikButton::animate()
         }
     }
 
-    repaint(false);
+    repaint();
 }
 
 void PlastikButton::enterEvent(QEvent *e)
@@ -204,8 +205,7 @@ void PlastikButton::drawButton(QPainter *painter)
         sourfaceBottom = alphaBlendColors(sourfaceBottom, Qt::black, 200);
     }
 
-    QPixmap buffer;
-    buffer.resize(width(), height());
+    QPixmap buffer(width(), height());
     QPainter bP(&buffer);
 
     // fake the titlebar background
@@ -259,9 +259,9 @@ void PlastikButton::drawButton(QPainter *painter)
 
     if (type() == MenuButton)
     {
-        QPixmap menuIcon(m_client->icon().pixmap( QIcon::Small, QIcon::Normal));
+        QPixmap menuIcon(m_client->icon().pixmap( style()->pixelMetric( QStyle::PM_SmallIconSize ) ));
         if (width() < menuIcon.width() || height() < menuIcon.height() ) {
-            menuIcon.convertFromImage( menuIcon.convertToImage().smoothScale(width(), height()));
+            menuIcon = QPixmap::fromImage( menuIcon.toImage().scaled(width(), height()));
         }
         bP.drawPixmap((width()-menuIcon.width())/2, (height()-menuIcon.height())/2, menuIcon);
     }

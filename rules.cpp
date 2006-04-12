@@ -117,13 +117,13 @@ static int limit0to4( int i ) { return qMax( 0, qMin( 4, i )); }
 void Rules::readFromCfg( KConfig& cfg )
     {
     description = cfg.readEntry( "description" );
-    READ_MATCH_STRING( wmclass, .toLower().latin1() );
+    READ_MATCH_STRING( wmclass, .toLower().toLatin1() );
     wmclasscomplete = cfg.readEntry( "wmclasscomplete" , QVariant(false)).toBool();
-    READ_MATCH_STRING( windowrole, .toLower().latin1() );
+    READ_MATCH_STRING( windowrole, .toLower().toLatin1() );
     READ_MATCH_STRING( title, );
-    READ_MATCH_STRING( extrarole, .toLower().latin1() );
-    READ_MATCH_STRING( clientmachine, .toLower().latin1() );
-    types = cfg.readUnsignedLongNumEntry( "types", NET::AllTypesMask );
+    READ_MATCH_STRING( extrarole, .toLower().toLatin1() );
+    READ_MATCH_STRING( clientmachine, .toLower().toLatin1() );
+    types = cfg.readEntry( "types", NET::AllTypesMask ).toULongLong();
     READ_FORCE_RULE2( placement,QString(), Placement::policyFromString,false );
     READ_SET_RULE_DEF( position, , invalidPoint );
     READ_SET_RULE( size,, QSize());

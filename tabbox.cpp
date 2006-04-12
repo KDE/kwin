@@ -329,7 +329,7 @@ void TabBox::drawContents( QPainter * )
     pix.fill(this, 0, 0);
 
     QPainter p;
-    p.begin(&pix, this);
+    p.begin(&pix);
 
     QPixmap* menu_pix = kwin_get_menu_pix_hack();
 
@@ -356,7 +356,7 @@ void TabBox::drawContents( QPainter * )
                   {
                   // draw highlight background
                   if ( (*it) == currentClient() )
-                    p.fillRect(x, y, r.width(), lineHeight, colorGroup().highlight());
+                    p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Highlight ));
 
                   // draw icon
                   QPixmap icon;
@@ -393,11 +393,11 @@ void TabBox::drawContents( QPainter * )
 
                   // draw text
                   if ( (*it) == currentClient() )
-                    p.setPen(colorGroup().highlightedText());
+                    p.setPen(palette().color( QPalette::HighlightedText ));
                   else if( (*it)->isMinimized())
                     {
-                    QColor c1 = colorGroup().text();
-                    QColor c2 = colorGroup().background();
+                    QColor c1 = palette().color( QPalette::Text );
+                    QColor c2 = palette().color( QPalette::Background );
                     // from kicker's TaskContainer::blendColors()
                     int r1, g1, b1;
                     int r2, g2, b2;
@@ -412,7 +412,7 @@ void TabBox::drawContents( QPainter * )
                     p.setPen(QColor( r1, g1, b1 ));
                     }
                   else
-                    p.setPen(colorGroup().text());
+                    p.setPen(palette().color( QPalette::Text ));
 
                   p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
                               Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, s);
@@ -450,13 +450,13 @@ void TabBox::drawContents( QPainter * )
             {
             // draw highlight background
             if ( iDesktop == desk )  // current desktop
-              p.fillRect(x, y, r.width(), lineHeight, colorGroup().highlight());
+              p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Highlight ));
 
             p.save();
 
             // draw "icon" (here: number of desktop)
-            p.fillRect(x+5, y+2, iconWidth, iconHeight, colorGroup().base());
-            p.setPen(colorGroup().text());
+            p.fillRect(x+5, y+2, iconWidth, iconHeight, palette().brush( QPalette::Base ));
+            p.setPen(palette().color( QPalette::Text ));
             p.drawRect(x+5, y+2, iconWidth, iconHeight);
 
             // draw desktop-number
@@ -468,9 +468,9 @@ void TabBox::drawContents( QPainter * )
 
             // draw desktop name text
             if ( iDesktop == desk )
-              p.setPen(colorGroup().highlightedText());
+              p.setPen(palette().color( QPalette::HighlightedText ));
             else
-              p.setPen(colorGroup().text());
+              p.setPen(palette().color( QPalette::Text ));
 
             p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
                        Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine,
@@ -505,7 +505,9 @@ void TabBox::drawContents( QPainter * )
             }
         }
     p.end();
-    bitBlt(this, r.x(), r.y(), &pix);
+
+    QPainter localPainter( this );
+    localPainter.drawImage( QPoint( r.x(), r.y() ), pix.toImage() );
     }
 
 void TabBox::hide()
@@ -1168,13 +1170,13 @@ Client* Workspace::nextFocusChainClient( Client* c ) const
     {
     if ( global_focus_chain.isEmpty() )
         return 0;
-    ClientList::ConstIterator it = global_focus_chain.find( c );
-    if ( it == global_focus_chain.end() )
+    int pos = global_focus_chain.indexOf( c );
+    if ( pos == -1 )
         return global_focus_chain.last();
-    if ( it == global_focus_chain.begin() )
+    if ( pos == 0 )
         return global_focus_chain.last();
-    --it;
-    return *it;
+    pos--;
+    return global_focus_chain[ pos ];
     }
 
 /*!
@@ -1185,13 +1187,13 @@ Client* Workspace::previousFocusChainClient( Client* c ) const
     {
     if ( global_focus_chain.isEmpty() )
         return 0;
-    ClientList::ConstIterator it = global_focus_chain.find( c );
-    if ( it == global_focus_chain.end() )
+    int pos = global_focus_chain.indexOf( c );
+    if ( pos == -1 )
         return global_focus_chain.first();
-    ++it;
-    if ( it == global_focus_chain.end() )
+    pos++;
+    if ( pos == global_focus_chain.count() )
         return global_focus_chain.first();
-    return *it;
+    return global_focus_chain[ pos ];
     }
 
 /*!
@@ -1202,13 +1204,13 @@ Client* Workspace::nextStaticClient( Client* c ) const
     {
     if ( !c || clients.isEmpty() )
         return 0;
-    ClientList::ConstIterator it = clients.find( c );
-    if ( it == clients.end() )
+    int pos = clients.indexOf( c );
+    if ( pos == -1 )
         return clients.first();
-    ++it;
-    if ( it == clients.end() )
+    ++pos;
+    if ( pos == clients.count() )
         return clients.first();
-    return *it;
+    return clients[ pos ];
     }
 /*!
   auxiliary functions to travers all clients according the static
@@ -1218,13 +1220,13 @@ Client* Workspace::previousStaticClient( Client* c ) const
     {
     if ( !c || clients.isEmpty() )
         return 0;
-    ClientList::ConstIterator it = clients.find( c );
-    if ( it == clients.end() )
+    int pos = clients.indexOf( c );
+    if ( pos == -1 )
         return clients.last();
-    if ( it == clients.begin() )
+    if ( pos == 0 )
         return clients.last();
-    --it;
-    return *it;
+    --pos;
+    return clients[ pos ];
     }
 
 bool Workspace::establishTabBoxGrab()

@@ -249,9 +249,9 @@ static int edit( Window wid, bool whole_app )
         }
     else if( edited_rule != orig_rule )
         {
-        QList< Rules* >::Iterator pos = rules.find( orig_rule );
-        if( pos != rules.end())
-            *pos = edited_rule;
+        int pos = rules.indexOf( orig_rule );
+        if( pos != -1)
+            rules[ pos ] = edited_rule;
         else
             rules.prepend( edited_rule );
         delete orig_rule;

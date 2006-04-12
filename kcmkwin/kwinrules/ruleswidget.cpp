@@ -113,8 +113,8 @@ RulesWidget::RulesWidget( QWidget* parent )
     for( i = 1;
          i <= module.numberOfDesktops();
          ++i )
-        desktop->insertItem( QString::number( i ).rightJustified( 2 ) + ":" + module.desktopName( i ));
-    desktop->insertItem( i18n( "All Desktops" ));
+        desktop->addItem( QString::number( i ).rightJustified( 2 ) + ":" + module.desktopName( i ));
+    desktop->addItem( i18n( "All Desktops" ));
     }
 
 #undef SETUP
@@ -673,7 +673,7 @@ bool RulesWidget::finalCheck()
 
 void RulesWidget::prepareWindowSpecific( WId window )
     {
-    tabs->setCurrentPage( 2 ); // geometry tab, skip tabs for window identification
+    tabs->setCurrentIndex( 2 ); // geometry tab, skip tabs for window identification
     KWin::WindowInfo info( window, -1U, -1U ); // read everything
     prefillUnusedValues( info );
     }
@@ -687,7 +687,7 @@ void RulesWidget::shortcutEditClicked()
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
-: KDialogBase( parent, name, true, i18n( "Edit Window-Specific Settings" ), Ok | Cancel )
+: KDialogBase( Swallow, 0, parent, name, true, i18n( "Edit Window-Specific Settings" ), Ok | Cancel )
     {
     widget = new RulesWidget( this );
     setMainWidget( widget );
@@ -746,7 +746,7 @@ void EditShortcut::clearShortcut()
     }
 
 EditShortcutDialog::EditShortcutDialog( QWidget* parent, const char* name )
-: KDialogBase( parent, name, true, i18n( "Edit Shortcut" ), Ok | Cancel )
+: KDialogBase( Swallow, 0, parent, name, true, i18n( "Edit Shortcut" ), Ok | Cancel )
     {
     widget = new EditShortcut( this );
     setMainWidget( widget );

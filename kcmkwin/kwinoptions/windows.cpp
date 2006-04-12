@@ -108,7 +108,9 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst,
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
+    QBoxLayout *lay = new QVBoxLayout(this);
+    lay->setMargin(0);
+    lay->setSpacing(KDialog::spacingHint());
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -127,17 +129,20 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst,
     fcsBox = new Q3ButtonGroup(i18n("Focus"),this);
     fcsBox->setColumnLayout( 0, Qt::Horizontal );
 
-    QBoxLayout *fLay = new QVBoxLayout(fcsBox->layout(),
-        KDialog::spacingHint());
+    QBoxLayout *fLay = new QVBoxLayout();
+    fLay->setSpacing(KDialog::spacingHint());
+    fcsBox->layout()->addItem( fLay );
 
-    QBoxLayout *cLay = new QHBoxLayout(fLay);
+    QBoxLayout *cLay = new QHBoxLayout();
+    fLay->addLayout( cLay );
     QLabel *fLabel = new QLabel(i18n("&Policy:"), fcsBox);
     cLay->addWidget(fLabel, 0);
-    focusCombo =  new QComboBox(false, fcsBox);
-    focusCombo->insertItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
-    focusCombo->insertItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
-    focusCombo->insertItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
-    focusCombo->insertItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
+    focusCombo =  new QComboBox(fcsBox);
+    focusCombo->setEditable( false );
+    focusCombo->addItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
+    focusCombo->addItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
+    focusCombo->addItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
+    focusCombo->addItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
     cLay->addWidget(focusCombo,1 ,Qt::AlignLeft);
     fLabel->setBuddy(focusCombo);
 
@@ -218,7 +223,9 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst,
 
     kbdBox = new Q3ButtonGroup(i18n("Navigation"), this);
     kbdBox->setColumnLayout( 0, Qt::Horizontal );
-    QVBoxLayout *kLay = new QVBoxLayout(kbdBox->layout(), KDialog::spacingHint());
+    QVBoxLayout *kLay = new QVBoxLayout();
+    kLay->setSpacing(KDialog::spacingHint());
+    kbdBox->layout()->addItem( kLay );
 
     altTabPopup = new QCheckBox( i18n("Show window list while switching windows"), kbdBox );
     kLay->addWidget( altTabPopup );
@@ -522,7 +529,9 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, KInstance 
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
+    QBoxLayout *lay = new QVBoxLayout (this);
+    lay->setMargin(0);
+    lay->setSpacing(KDialog::spacingHint());
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -593,14 +602,16 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, KInstance 
 
     lay->addWidget(electricBox);
 
-    QHBoxLayout* focusStealingLayout = new QHBoxLayout( lay,KDialog::spacingHint());
+    QHBoxLayout* focusStealingLayout = new QHBoxLayout();
+    focusStealingLayout->setSpacing(KDialog::spacingHint());
+    lay->addLayout( focusStealingLayout );
     QLabel* focusStealingLabel = new QLabel( i18n( "Focus stealing prevention level:" ), this );
     focusStealing = new QComboBox( this );
-    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "None" ));
-    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
-    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "Normal" ));
-    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "High" ));
-    focusStealing->insertItem( i18nc( "Focus Stealing Prevention Level", "Extreme" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "None" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Normal" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "High" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Extreme" ));
     focusStealingLabel->setBuddy( focusStealing );
     focusStealingLayout->addWidget( focusStealingLabel );
     focusStealingLayout->addWidget( focusStealing, Qt::AlignLeft );
@@ -780,12 +791,16 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this, 0, KDialog::spacingHint());
+    QBoxLayout *lay = new QVBoxLayout (this);
+    lay->setMargin(0);
+    lay->setSpacing(KDialog::spacingHint());
 
     windowsBox = new Q3ButtonGroup(i18n("Windows"), this);
     windowsBox->setColumnLayout( 0, Qt::Horizontal );
 
-    QBoxLayout *wLay = new QVBoxLayout (windowsBox->layout(), KDialog::spacingHint());
+    QBoxLayout *wLay = new QVBoxLayout ();
+    wLay->setSpacing(KDialog::spacingHint());
+    windowsBox->layout()->addItem( wLay );
 
     QBoxLayout *bLay = new QVBoxLayout;
     wLay->addLayout(bLay);
@@ -809,10 +824,10 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
                                         " to the top-left corner of the screen is displayed together with"
                                         " its size."));
 
-    QGridLayout *rLay = new QGridLayout(2,3);
+    QGridLayout *rLay = new QGridLayout();
     bLay->addLayout(rLay);
-    rLay->setColStretch(0,0);
-    rLay->setColStretch(1,1);
+    rLay->setColumnStretch(0,0);
+    rLay->setColumnStretch(1,1);
 
     minimizeAnimOn = new QCheckBox(i18n("Animate minimi&ze and restore"),
                                    windowsBox);
@@ -820,10 +835,14 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
                                           " windows are minimized or restored." ) );
     rLay->addWidget(minimizeAnimOn,0,0);
 
-    minimizeAnimSlider = new QSlider(0,10,10,0,Qt::Horizontal, windowsBox);
-    minimizeAnimSlider->setSteps(1, 1);
-    minimizeAnimSlider->setTickmarks(QSlider::TicksBelow);
-    rLay->addMultiCellWidget(minimizeAnimSlider,0,0,1,2);
+    minimizeAnimSlider = new QSlider(windowsBox);
+    minimizeAnimSlider->setRange( 0, 10 );
+    minimizeAnimSlider->setSingleStep( 1 );
+    minimizeAnimSlider->setPageStep( 1 );
+    minimizeAnimSlider->setValue( 0 );
+    minimizeAnimSlider->setOrientation( Qt::Horizontal );
+    minimizeAnimSlider->setTickPosition(QSlider::TicksBelow);
+    rLay->addWidget(minimizeAnimSlider,0,0,1,2);
 
     connect(minimizeAnimOn, SIGNAL(toggled(bool)), this, SLOT(setMinimizeAnim(bool)));
     connect(minimizeAnimSlider, SIGNAL(valueChanged(int)), this, SLOT(setMinimizeAnimSpeed(int)));
@@ -848,20 +867,22 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *ins
                                               " and allows you to move or resize them,"
                                               " just like for normal windows"));
 
-    QBoxLayout *vLay = new QHBoxLayout(bLay);
+    QBoxLayout *vLay = new QHBoxLayout();
+    bLay->addLayout( vLay );
 
     QLabel *plcLabel = new QLabel(i18n("&Placement:"),windowsBox);
 
-    placementCombo = new QComboBox(false, windowsBox);
-    placementCombo->insertItem(i18n("Smart"), SMART_PLACEMENT);
-    placementCombo->insertItem(i18n("Maximizing"), MAXIMIZING_PLACEMENT);
-    placementCombo->insertItem(i18n("Cascade"), CASCADE_PLACEMENT);
-    placementCombo->insertItem(i18n("Random"), RANDOM_PLACEMENT);
-    placementCombo->insertItem(i18n("Centered"), CENTERED_PLACEMENT);
-    placementCombo->insertItem(i18n("Zero-Cornered"), ZEROCORNERED_PLACEMENT);
+    placementCombo = new QComboBox(windowsBox);
+    placementCombo->setEditable( false );
+    placementCombo->addItem(i18n("Smart"), SMART_PLACEMENT);
+    placementCombo->addItem(i18n("Maximizing"), MAXIMIZING_PLACEMENT);
+    placementCombo->addItem(i18n("Cascade"), CASCADE_PLACEMENT);
+    placementCombo->addItem(i18n("Random"), RANDOM_PLACEMENT);
+    placementCombo->addItem(i18n("Centered"), CENTERED_PLACEMENT);
+    placementCombo->addItem(i18n("Zero-Cornered"), ZEROCORNERED_PLACEMENT);
     // CT: disabling is needed as long as functionality misses in kwin
-    //placementCombo->insertItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
-    //placementCombo->insertItem(i18n("Manual"), MANUAL_PLACEMENT);
+    //placementCombo->addItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
+    //placementCombo->addItem(i18n("Manual"), MANUAL_PLACEMENT);
     placementCombo->setCurrentIndex(SMART_PLACEMENT);
 
     // FIXME, when more policies have been added to KWin
@@ -1243,7 +1264,9 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   {
   QTabWidget *tabW = new QTabWidget(this);
   QWidget *tGroup = new QWidget(tabW);
-  QVBoxLayout *vLay = new QVBoxLayout (tGroup,KDialog::marginHint(), KDialog::spacingHint());
+  QVBoxLayout *vLay = new QVBoxLayout (tGroup);
+  vLay->setMargin(KDialog::marginHint());
+  vLay->setSpacing(KDialog::spacingHint());
   vLay->addSpacing(11); // to get the proper gb top offset
   
   onlyDecoTranslucent = new QCheckBox(i18n("Apply translucency only to decoration"),tGroup);
@@ -1251,8 +1274,10 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   
   vLay->addSpacing(11);
   
-  QGridLayout *gLay = new QGridLayout(vLay,4,2,KDialog::spacingHint());
-  gLay->setColStretch(1,1);
+  QGridLayout *gLay = new QGridLayout();
+  gLay->setSpacing(KDialog::spacingHint());
+  gLay->setColumnStretch(1,1);
+  vLay->addLayout( gLay );
 
   activeWindowTransparency = new QCheckBox(i18n("Active windows:"),tGroup);
   gLay->addWidget(activeWindowTransparency,0,0);
@@ -1295,15 +1320,18 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
 
   QWidget *sGroup = new QWidget(tabW);
 //   sGroup->setCheckable(true);
-  QVBoxLayout *vLay2 = new QVBoxLayout (sGroup,11,6);
+  QVBoxLayout *vLay2 = new QVBoxLayout (sGroup);
+  vLay2->setMargin(11);
+  vLay2->setSpacing(6);
   vLay2->addSpacing(11); // to get the proper gb top offset
   useShadows = new QCheckBox(i18n("Use shadows"),sGroup);
   vLay2->addWidget(useShadows);
   
   vLay2->addSpacing(11);
 
-  QGridLayout *gLay2 = new QGridLayout(vLay2,6,2);
-  gLay2->setColStretch(1,1);
+  QGridLayout *gLay2 = new QGridLayout();
+  gLay2->setColumnStretch(1,1);
+  vLay2->addLayout( gLay2 );
 
   QLabel *label1 = new QLabel(i18n("Active window size:"),sGroup);
   gLay2->addWidget(label1,0,0);
@@ -1344,7 +1372,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   gLay2->addWidget(label6,5,0);
   shadowColor = new KColorButton(Qt::black,sGroup);
   gLay2->addWidget(shadowColor,5,1);
-  gLay2->setColStretch(1,1);
+  gLay2->setColumnStretch(1,1);
   vLay2->addSpacing(11);
   removeShadowsOnMove = new QCheckBox(i18n("Remove shadows on move"),sGroup);
   vLay2->addWidget(removeShadowsOnMove);
@@ -1354,7 +1382,9 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   tabW->addTab(sGroup, i18n("Shadows"));
 
   QWidget *eGroup = new QWidget(this);
-  QVBoxLayout *vLay3 = new QVBoxLayout (eGroup,11,6);
+  QVBoxLayout *vLay3 = new QVBoxLayout (eGroup);
+  vLay3->setMargin( 11 );
+  vLay3->setSpacing( 6 );
 
   fadeInWindows = new QCheckBox(i18n("Fade-in windows (including popups)"),eGroup);
   fadeOnOpacityChange = new QCheckBox(i18n("Fade between opacity changes"),eGroup);
@@ -1494,7 +1524,7 @@ void KTranslucencyConfig::load( void )
   uint r, g, b;
   r = g = b = 256;
 
-  if (sscanf(hex.latin1(), "0x%02x%02x%02x", &r, &g, &b)!=3 || r > 255 || g > 255 || b > 255)
+  if (sscanf(hex.toLatin1(), "0x%02x%02x%02x", &r, &g, &b)!=3 || r > 255 || g > 255 || b > 255)
     shadowColor->setColor(Qt::black);
   else
     shadowColor->setColor(QColor(r,g,b));

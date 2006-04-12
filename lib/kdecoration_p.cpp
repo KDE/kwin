@@ -78,7 +78,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
         
     QPalette appPal = QApplication::palette();
     // normal colors
-    colors[ColorFrame] = appPal.active().background();
+    colors[ColorFrame] = appPal.color( QPalette::Active, QPalette::Background );
     colors[ColorFrame] = config->readEntry("frame", colors[ColorFrame]);
     colors[ColorHandle] = colors[ColorFrame];
     colors[ColorHandle] = config->readEntry("handle", colors[ColorHandle]);
@@ -90,7 +90,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
         colors[ColorButtonBg] = colors[ColorFrame];
     colors[ColorButtonBg] = config->readEntry("activeTitleBtnBg",
                                               colors[ColorFrame]);
-    colors[ColorTitleBar] = appPal.active().highlight();
+    colors[ColorTitleBar] = appPal.color( QPalette::Active, QPalette::Highlight );
     colors[ColorTitleBar] = config->readEntry("activeBackground",
                                               colors[ColorTitleBar]);
     if(QPixmap::defaultDepth() > 8)
@@ -100,7 +100,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     colors[ColorTitleBlend] = config->readEntry("activeBlend",
                                                 colors[ColorTitleBlend]);
 
-    colors[ColorFont] = appPal.active().highlightedText();
+    colors[ColorFont] = appPal.color( QPalette::Active, QPalette::HighlightedText );
     colors[ColorFont] = config->readEntry("activeForeground", colors[ColorFont]);
 
     // inactive

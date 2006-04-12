@@ -30,7 +30,7 @@
 #include "ruleslist.h"
 
 extern "C"
-    KDE_EXPORT KCModule *create_kwinrules( QWidget *parent, const char *name )
+    KDE_EXPORT KCModule *create_kwinrules( QWidget *parent, const char* )
     {
     KInstance *inst = new KInstance("kcmkwinrules");
     return new KWinInternal::KCMRules( inst, parent );

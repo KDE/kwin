@@ -61,10 +61,10 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
     QLabel *menuDblClickLabel = new QLabel(actionsGB);
     menuDblClickLabel->setText(i18n("Double click on menu button:"));
     menuDblClickOp = new QComboBox(actionsGB);
-    menuDblClickOp->insertItem(i18n("Do Nothing"));
-    menuDblClickOp->insertItem(i18n("Minimize Window"));
-    menuDblClickOp->insertItem(i18n("Shade Window"));
-    menuDblClickOp->insertItem(i18n("Close Window"));
+    menuDblClickOp->addItem(i18n("Do Nothing"));
+    menuDblClickOp->addItem(i18n("Minimize Window"));
+    menuDblClickOp->addItem(i18n("Shade Window"));
+    menuDblClickOp->addItem(i18n("Close Window"));
 
     menuDblClickOp->setWhatsThis(
 	    i18n("An action can be associated to a double click "

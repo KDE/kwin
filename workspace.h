@@ -363,8 +363,8 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
     private slots:
         void desktopPopupAboutToShow();
         void clientPopupAboutToShow();
-        void slotSendToDesktop( int );
-        void clientPopupActivated( int );
+        void slotSendToDesktop( QAction* );
+        void clientPopupActivated( QAction* );
         void configureWM();
         void desktopResized();
         void slotUpdateToolWindows();
@@ -549,6 +549,16 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
 
         KActionCollection *keys;
         KActionCollection *client_keys;
+        QAction *mResizeOpAction;
+        QAction *mMoveOpAction;
+        QAction *mMaximizeOpAction;
+        QAction *mShadeOpAction;
+        QAction *mKeepAboveOpAction;
+        QAction *mKeepBelowOpAction;
+        QAction *mFullScreenOpAction;
+        QAction *mNoBorderOpAction;
+        QAction *mMinimizeOpAction;
+        QAction *mCloseOpAction;
         ShortcutDialog* client_keys_dialog;
         Client* client_keys_client;
         KActionCollection *disable_shortcuts_keys;

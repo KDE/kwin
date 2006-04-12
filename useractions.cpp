@@ -54,62 +54,117 @@ QMenu* Workspace::clientPopup()
         popup = new QMenu;
         popup->setFont(KGlobalSettings::menuFont());
         connect( popup, SIGNAL( aboutToShow() ), this, SLOT( clientPopupAboutToShow() ) );
-        connect( popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-      
+        connect( popup, SIGNAL( triggered(QAction*) ), this, SLOT( clientPopupActivated(QAction*) ) );
+
         advanced_popup = new QMenu( popup );
         advanced_popup->setFont(KGlobalSettings::menuFont());
-        connect( advanced_popup, SIGNAL( activated(int) ), this, SLOT( clientPopupActivated(int) ) );
-        advanced_popup->insertItem( SmallIconSet( "up" ),
-            i18n("Keep &Above Others")+'\t'+keys->action("Window Above Other Windows")->shortcut().seq(0).toString(), Options::KeepAboveOp );
-        advanced_popup->insertItem( SmallIconSet( "down" ),
-            i18n("Keep &Below Others")+'\t'+keys->action("Window Below Other Windows")->shortcut().seq(0).toString(), Options::KeepBelowOp );
-        advanced_popup->insertItem( SmallIconSet( "window_fullscreen" ),
-            i18n("&Fullscreen")+'\t'+keys->action("Window Fullscreen")->shortcut().seq(0).toString(), Options::FullScreenOp );
-        advanced_popup->insertItem( i18n("&No Border")+'\t'+keys->action("Window No Border")->shortcut().seq(0).toString(), Options::NoBorderOp );
-        advanced_popup->insertItem( SmallIconSet("key_bindings"),
-            i18n("Window &Shortcut...")+'\t'+keys->action("Setup Window Shortcut")->shortcut().seq(0).toString(), Options::SetupWindowShortcutOp );
-        advanced_popup->insertItem( SmallIconSet( "wizard" ), i18n("&Special Window Settings..."), Options::WindowRulesOp );
-        advanced_popup->insertItem( SmallIconSet( "wizard" ), i18n("&Special Application Settings..."), Options::ApplicationRulesOp );
+        connect( advanced_popup, SIGNAL( triggered(QAction*) ), this, SLOT( clientPopupActivated(QAction*) ) );
 
-        popup->insertItem(i18n("Ad&vanced"), advanced_popup );
-        desk_popup_index = popup->count();
-        
+        mKeepAboveOpAction = advanced_popup->addAction( i18n("Keep &Above Others") );
+        mKeepAboveOpAction->setIcon( SmallIconSet( "up" ) );
+        mKeepAboveOpAction->setShortcut( keys->action("Window Above Other Windows")->shortcut() );
+        mKeepAboveOpAction->setCheckable( true );
+        mKeepAboveOpAction->setData( Options::KeepAboveOp );
+
+        mKeepBelowOpAction = advanced_popup->addAction( i18n("Keep &Below Others") );
+        mKeepBelowOpAction->setIcon( SmallIconSet( "down" ) );
+        mKeepBelowOpAction->setShortcut( keys->action("Window Below Other Windows")->shortcut() );
+        mKeepBelowOpAction->setCheckable( true );
+        mKeepBelowOpAction->setData( Options::KeepBelowOp );
+
+        mFullScreenOpAction = advanced_popup->addAction( i18n("&Fullscreen") );
+        mFullScreenOpAction->setIcon( SmallIconSet( "window_fullscreen" ) );
+        mFullScreenOpAction->setShortcut( keys->action("Window Fullscreen")->shortcut() );
+        mFullScreenOpAction->setCheckable( true );
+        mFullScreenOpAction->setData( Options::FullScreenOp );
+
+        mNoBorderOpAction = advanced_popup->addAction( i18n("&No Border") );
+        mNoBorderOpAction->setShortcut( keys->action("Window No Border")->shortcut() );
+        mNoBorderOpAction->setCheckable( true );
+        mNoBorderOpAction->setData( Options::NoBorderOp );
+
+        QAction *action = advanced_popup->addAction( i18n("Window &Shortcut...") );
+        action->setIcon( SmallIconSet("key_bindings") );
+        action->setShortcut( keys->action("Setup Window Shortcut")->shortcut() );
+        action->setData( Options::SetupWindowShortcutOp );
+
+        action = advanced_popup->addAction( i18n("&Special Window Settings...") );
+        action->setIcon( SmallIconSet( "wizard" ) );
+        action->setData( Options::WindowRulesOp );
+
+        action = advanced_popup->addAction( i18n("&Special Application Settings...") );
+        action->setIcon( SmallIconSet( "wizard" ) );
+        action->setData( Options::ApplicationRulesOp );
+
+        action = popup->addMenu( advanced_popup );
+        action->setText( i18n("Ad&vanced") );
+
+        desk_popup_index = popup->actions().count();
+
         if (options->useTranslucency){
             QMenu *trans_popup = new QMenu( popup );
-			QVBoxLayout *transLayout = new QVBoxLayout(trans_popup);
-			trans_popup->setLayout( transLayout );
-            transButton = new QPushButton(trans_popup, "transButton");
+            QVBoxLayout *transLayout = new QVBoxLayout(trans_popup);
+            trans_popup->setLayout( transLayout );
+            transButton = new QPushButton(trans_popup);
+            transButton->setObjectName("transButton");
             transButton->setToolTip( i18n("Reset opacity to default value"));
-            transSlider = new QSlider(0, 100, 1, 100, Qt::Vertical, trans_popup, "transSlider");
+            transSlider = new QSlider(trans_popup);
+            transSlider->setObjectName( "transSlider" );
+            transSlider->setRange( 0, 100 );
+            transSlider->setValue( 100 );
+            transSlider->setOrientation( Qt::Vertical );
             transSlider->setToolTip( i18n("Slide this to set the window's opacity"));
             connect(transButton, SIGNAL(clicked()), SLOT(resetClientOpacity()));
             connect(transButton, SIGNAL(clicked()), trans_popup, SLOT(hide()));
             connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
             connect(transSlider, SIGNAL(valueChanged(int)), this, SLOT(setPopupClientOpacity(int)));
 //             connect(transSlider, SIGNAL(sliderReleased()), trans_popup, SLOT(hide()));
-            popup->insertItem(i18n("&Opacity"), trans_popup );
+            action = popup->addMenu( trans_popup );
+            action->setText( i18n("&Opacity") );
         }
-        
-        popup->insertItem( SmallIconSet( "move" ), i18n("&Move")+'\t'+keys->action("Window Move")->shortcut().seq(0).toString(), Options::MoveOp );
-        popup->insertItem( i18n("Re&size")+'\t'+keys->action("Window Resize")->shortcut().seq(0).toString(), Options::ResizeOp );
-        popup->insertItem( i18n("Mi&nimize")+'\t'+keys->action("Window Minimize")->shortcut().seq(0).toString(), Options::MinimizeOp );
-        popup->insertItem( i18n("Ma&ximize")+'\t'+keys->action("Window Maximize")->shortcut().seq(0).toString(), Options::MaximizeOp );
-        popup->insertItem( i18n("Sh&ade")+'\t'+keys->action("Window Shade")->shortcut().seq(0).toString(), Options::ShadeOp );
 
-        popup->insertSeparator();
+        mMoveOpAction = popup->addAction( i18n("&Move") );
+        mMoveOpAction->setIcon( SmallIconSet( "move" ) );
+        mMoveOpAction->setShortcut( keys->action("Window Move")->shortcut() );
+        mMoveOpAction->setData( Options::MoveOp );
+
+        mResizeOpAction = popup->addAction( i18n("Re&size") );
+        mResizeOpAction->setShortcut( keys->action("Window Resize")->shortcut() );
+        mResizeOpAction->setData( Options::ResizeOp );
+
+        mMinimizeOpAction = popup->addAction( i18n("Mi&nimize") );
+        mMinimizeOpAction->setShortcut( keys->action("Window Minimize")->shortcut() );
+        mMinimizeOpAction->setData( Options::MinimizeOp );
+
+        mMaximizeOpAction = popup->addAction( i18n("Ma&ximize") );
+        mMaximizeOpAction->setShortcut( keys->action("Window Maximize")->shortcut() );
+        mMaximizeOpAction->setCheckable( true );
+        mMaximizeOpAction->setData( Options::MaximizeOp );
+
+        mShadeOpAction = popup->addAction( i18n("Sh&ade") );
+        mShadeOpAction->setShortcut( keys->action("Window Shade")->shortcut() );
+        mShadeOpAction->setCheckable( true );
+        mShadeOpAction->setData( Options::ShadeOp );
+
+        popup->addSeparator();
 
         if (!KGlobal::config()->isImmutable() && 
             !KAuthorized::authorizeControlModules(Workspace::configModules(true)).isEmpty())
             {
-            popup->insertItem(SmallIconSet( "configure" ), i18n("Configur&e Window Behavior..."), this, SLOT( configureWM() ));
-            popup->insertSeparator();
+              action = popup->addAction( i18n("Configur&e Window Behavior...") );
+              action->setIcon( SmallIconSet( "configure" ) );
+              connect( action, SIGNAL( triggered() ), this, SLOT( configureWM() ) );
+              popup->addSeparator();
             }
 
-        popup->insertItem( SmallIconSet( "fileclose" ), i18n("&Close")+'\t'+keys->action("Window Close")->shortcut().seq(0).toString(), Options::CloseOp );
+        mCloseOpAction = popup->addAction( i18n("&Close") );
+        mCloseOpAction->setIcon( SmallIconSet( "fileclose" ) );
+        mCloseOpAction->setShortcut( keys->action("Window Close")->shortcut() );
+        mCloseOpAction->setData( Options::CloseOp );
         }
     return popup;
     }
-    
+
 //sets the transparency of the client to given value(given by slider)
 void Workspace::setPopupClientOpacity(int value)
     {
@@ -160,21 +215,21 @@ void Workspace::clientPopupAboutToShow()
         initDesktopPopup();
         }
 
-    popup->setItemEnabled( Options::ResizeOp, active_popup_client->isResizable() );
-    popup->setItemEnabled( Options::MoveOp, active_popup_client->isMovable() );
-    popup->setItemEnabled( Options::MaximizeOp, active_popup_client->isMaximizable() );
-    popup->setItemChecked( Options::MaximizeOp, active_popup_client->maximizeMode() == Client::MaximizeFull );
-    // This should be checked also when hover unshaded
-    popup->setItemChecked( Options::ShadeOp, active_popup_client->shadeMode() != ShadeNone );
-    popup->setItemEnabled( Options::ShadeOp, active_popup_client->isShadeable());
-    advanced_popup->setItemChecked( Options::KeepAboveOp, active_popup_client->keepAbove() );
-    advanced_popup->setItemChecked( Options::KeepBelowOp, active_popup_client->keepBelow() );
-    advanced_popup->setItemChecked( Options::FullScreenOp, active_popup_client->isFullScreen() );
-    advanced_popup->setItemEnabled( Options::FullScreenOp, active_popup_client->userCanSetFullScreen() );
-    advanced_popup->setItemChecked( Options::NoBorderOp, active_popup_client->noBorder() );
-    advanced_popup->setItemEnabled( Options::NoBorderOp, active_popup_client->userCanSetNoBorder() );
-    popup->setItemEnabled( Options::MinimizeOp, active_popup_client->isMinimizable() );
-    popup->setItemEnabled( Options::CloseOp, active_popup_client->isCloseable() );
+    mResizeOpAction->setEnabled( active_popup_client->isResizable() );
+    mMoveOpAction->setEnabled( active_popup_client->isMovable() );
+    mMaximizeOpAction->setEnabled( active_popup_client->isMaximizable() );
+    mMaximizeOpAction->setChecked( active_popup_client->maximizeMode() == Client::MaximizeFull );
+    mShadeOpAction->setEnabled( active_popup_client->isShadeable() );
+    mShadeOpAction->setChecked( active_popup_client->shadeMode() != ShadeNone );
+    mKeepAboveOpAction->setChecked( active_popup_client->keepAbove() );
+    mKeepBelowOpAction->setChecked( active_popup_client->keepBelow() );
+    mFullScreenOpAction->setEnabled( active_popup_client->userCanSetFullScreen() );
+    mFullScreenOpAction->setChecked( active_popup_client->isFullScreen() );
+    mNoBorderOpAction->setEnabled( active_popup_client->userCanSetNoBorder() );
+    mNoBorderOpAction->setChecked( active_popup_client->noBorder() );
+    mMinimizeOpAction->setEnabled( active_popup_client->isMinimizable() );
+    mCloseOpAction->setEnabled( active_popup_client->isCloseable() );
+
     if (options->useTranslucency)
         {
         transSlider->setValue(100-active_popup_client->opacityPercentage());
@@ -190,12 +245,14 @@ void Workspace::initDesktopPopup()
 
     desk_popup = new QMenu( popup );
     desk_popup->setFont(KGlobalSettings::menuFont());
-    connect( desk_popup, SIGNAL( activated(int) ),
-             this, SLOT( slotSendToDesktop(int) ) );
+    connect( desk_popup, SIGNAL( triggered(QAction*) ),
+             this, SLOT( slotSendToDesktop(QAction*) ) );
     connect( desk_popup, SIGNAL( aboutToShow() ),
              this, SLOT( desktopPopupAboutToShow() ) );
 
-    popup->insertItem(i18n("To &Desktop"), desk_popup, -1, desk_popup_index );
+    QAction *action = popup->addMenu( desk_popup );
+    action->setText( i18n("To &Desktop") );
+    action->setData( desk_popup_index );
     }
 
 /*!
@@ -208,27 +265,27 @@ void Workspace::desktopPopupAboutToShow()
         return;
 
     desk_popup->clear();
-    desk_popup->insertItem( i18n("&All Desktops"), 0 );
+    QAction *action = desk_popup->addAction( i18n("&All Desktops") );
+    action->setData( 0 );
+    action->setCheckable( true );
+
     if ( active_popup_client && active_popup_client->isOnAllDesktops() )
-        desk_popup->setItemChecked( 0, true );
-    desk_popup->insertSeparator( -1 );
-    int id;
+        action->setChecked( true );
+    desk_popup->addSeparator();
+
     const int BASE = 10;
-    for ( int i = 1; i <= numberOfDesktops(); i++ ) 
-        {
+    for ( int i = 1; i <= numberOfDesktops(); i++ ) {
         QString basic_name("%1  %2");
-        if (i<BASE)
-            {
+        if (i<BASE) {
             basic_name.prepend('&');
-            }
-        id = desk_popup->insertItem(
-                basic_name
-                    .arg(i)
-                    .arg( desktopName(i).replace( '&', "&&" )),
-                i );
+        }
+        action = desk_popup->addAction( basic_name.arg(i).arg( desktopName(i).replace( '&', "&&" ) ) );
+        action->setData( i );
+        action->setCheckable( true );
+
         if ( active_popup_client &&
              !active_popup_client->isOnAllDesktops() && active_popup_client->desktop()  == i )
-            desk_popup->setItemChecked( id, true );
+            action->setChecked( true );
         }
     }
 
@@ -331,9 +388,12 @@ void Workspace::clientShortcutUpdated( Client* c )
         }
     }
 
-void Workspace::clientPopupActivated( int id )
+void Workspace::clientPopupActivated( QAction *action )
     {
-    WindowOperation op = static_cast< WindowOperation >( id );
+      if ( !action->data().isValid() )
+        return;
+
+    WindowOperation op = static_cast< WindowOperation >( action->data().toInt() );
     Client* c = active_popup_client ? active_popup_client : active_client;
     QString type;
     switch( op )
@@ -950,8 +1010,9 @@ void Workspace::slotKillWindow()
 
   Internal slot for the window operation menu
  */
-void Workspace::slotSendToDesktop( int desk )
+void Workspace::slotSendToDesktop( QAction *action )
     {
+      int desk = action->data().toInt();
     if ( !active_popup_client )
         return;
     if ( desk == 0 ) 

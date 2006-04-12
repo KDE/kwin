@@ -38,13 +38,13 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
         gb->setSpacing( KDialog::spacingHint() );
 
 	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), gb );
-	QWhatsThis::add( cbShowStipple, 
+	cbShowStipple->setWhatsThis(
 		i18n("When selected, active titlebars are drawn "
 		 "with a stipple (dotted) effect; otherwise, they are "
 		 "drawn without the stipple."));
 
 	cbShowGrabBar = new QCheckBox( i18n("Draw g&rab bar below windows"), gb );
-	QWhatsThis::add( cbShowGrabBar, 
+	cbShowGrabBar->setWhatsThis(
 		i18n("When selected, decorations are drawn with a \"grab bar\" "
 		"below windows; otherwise, no grab bar is drawn."));
 
@@ -52,7 +52,7 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	if (highcolor)
 	{
 		cbUseGradients = new QCheckBox( i18n("Draw &gradients"), gb );
-		QWhatsThis::add( cbUseGradients, 
+		cbUseGradients->setWhatsThis(
 			i18n("When selected, decorations are drawn with gradients "
 			"for high-color displays; otherwise, no gradients are drawn.") );
 	}

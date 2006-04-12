@@ -37,8 +37,10 @@ namespace KWinInternal
 {
 
 PopupInfo::PopupInfo( const char *name )
-    : QWidget( 0, name )
+    : QWidget( 0 )
     {
+      setObjectName( name );
+
     m_infoString = "";
     m_shown = false;
     reset();
@@ -98,7 +100,7 @@ void PopupInfo::paintContents()
     QPainter p( this );
     QRect r( 6, 6, width()-12, height()-12 );
 
-    p.fillRect( r, colorGroup().brush( QColorGroup::Background ) );
+    p.fillRect( r, palette().brush( QPalette::Background ) );
 
     /*
     p.setPen(Qt::white);

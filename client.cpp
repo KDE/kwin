@@ -477,7 +477,7 @@ void Client::updateShape()
 void Client::setMask( const QRegion& reg, int mode )
     {
     _mask = reg;
-    if( reg.isNull())
+    if( reg.isEmpty())
         XShapeCombineMask( QX11Info::display(), frameId(), ShapeBounding, 0, 0,
             None, ShapeSet );
     else if( mode == X::Unsorted )
@@ -1065,7 +1065,8 @@ void Client::pingWindow()
         return; // pinging already
     ping_timer = new QTimer( this );
     connect( ping_timer, SIGNAL( timeout()), SLOT( pingTimeout()));
-    ping_timer->start( options->killPingTimeout, true );
+    ping_timer->setSingleShot( true );
+    ping_timer->start( options->killPingTimeout );
     ping_timestamp = QX11Info::appTime();
     workspace()->sendPingToWindow( window(), ping_timestamp );
     }

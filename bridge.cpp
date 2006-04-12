@@ -161,30 +161,28 @@ QRegion Bridge::unobscuredRegion( const QRegion& r ) const
     {
     QRegion reg( r );
     const ClientList stacking_order = c->workspace()->stackingOrder();
-    ClientList::ConstIterator it = stacking_order.find( c );
-    ++it;
-    for(;
-         it != stacking_order.end();
-         ++it )
+    int pos = stacking_order.indexOf( c );
+    ++pos;
+    for(; pos < stacking_order.count(); ++pos )
         {
-        if( !(*it)->isShown( true ))
+        if( !stacking_order[pos]->isShown( true ))
             continue; // these don't obscure the window
         if( c->isOnAllDesktops())
             {
-            if( !(*it)->isOnCurrentDesktop())
+            if( !stacking_order[ pos ]->isOnCurrentDesktop())
                 continue;
             }
         else
             {
-            if( !(*it)->isOnDesktop( c->desktop()))
+            if( !stacking_order[ pos ]->isOnDesktop( c->desktop()))
                 continue;
             }
         /* the clients all have their mask-regions in local coords
 	   so we have to translate them to a shared coord system
 	   we choose ours */
-	int dx = (*it)->x() - c->x();
-	int dy = (*it)->y() - c->y();
-	QRegion creg = (*it)->mask();
+	int dx = stacking_order[ pos ]->x() - c->x();
+	int dy = stacking_order[ pos ]->y() - c->y();
+	QRegion creg = stacking_order[ pos ]->mask();
 	creg.translate(dx, dy);
 	reg -= creg;
 	if (reg.isEmpty())

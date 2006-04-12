@@ -78,7 +78,7 @@ bool ButtonDrag::canDecode( QDropEvent* e )
 
 bool ButtonDrag::decode( QDropEvent* e, Button& btn )
 {
-	QByteArray data = e->data( BUTTONDRAGMIMETYPE );
+	QByteArray data = e->mimeData()->data( BUTTONDRAGMIMETYPE );
 	if ( data.size() )
 	{
 		e->accept();
@@ -157,7 +157,7 @@ QSize ButtonSource::sizeHint() const
 	if ( cachedSizeHint().isValid() )
 		return cachedSizeHint();
 
-	constPolish();
+	ensurePolished();
 
 	QSize s( header()->sizeHint() );
 
@@ -228,7 +228,7 @@ Q3DragObject *ButtonSource::dragObject()
 
 	if (i) {
 		ButtonDrag *bd = new ButtonDrag(i->button(), viewport(), "button_drag");
-		bd->setPixmap(bitmapPixmap(i->button().icon, colorGroup().foreground() ));
+		bd->setPixmap(bitmapPixmap(i->button().icon, palette().color( QPalette::Foreground )));
 		return bd;
 	}
 
@@ -429,7 +429,7 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 			if (oldPos == buttonPosition)
 				return; // button didn't change its position during the drag...
 
-			oldList->remove(oldPos);
+			oldList->erase(oldPos);
 			buttonItem = m_selected;
 		} else {
 			return; // m_selected not found, return...
@@ -498,7 +498,7 @@ void ButtonDropSite::mousePressEvent( QMouseEvent* e )
 	m_selected = buttonAt(e->pos() );
 	if (m_selected) {
 		ButtonDrag *bd = new ButtonDrag(m_selected->button(), this);
-		bd->setPixmap(bitmapPixmap(m_selected->button().icon, colorGroup().foreground() ) );
+		bd->setPixmap(bitmapPixmap(m_selected->button().icon, palette().color( QPalette::Foreground ) ) );
 		bd->dragMove();
 	}
 }
@@ -682,10 +682,14 @@ Button ButtonSourceItem::button() const
 
 
 ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
-    : QWidget(parent,name),
+    : QWidget(parent),
       m_factory(0)
 {
-	QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint() );
+    setObjectName( name );
+
+	QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setMargin(0);
+    layout->setSpacing(KDialog::spacingHint());
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
 	QLabel* label = new QLabel( this );
@@ -787,47 +791,47 @@ Button ButtonPositionWidget::getButton(QChar type, bool& success) {
 	success = true;
 
 	if (type == 'R') {
-		QBitmap bmp(resize_width, resize_height, resize_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( resize_width, resize_height ), resize_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Resize"), bmp, 'R', false, m_supportedButtons.contains('R') );
 	} else if (type == 'L') {
-		QBitmap bmp(shade_width, shade_height, shade_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( shade_width, shade_height ), shade_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Shade"), bmp, 'L', false, m_supportedButtons.contains('L') );
 	} else if (type == 'B') {
-		QBitmap bmp(keepbelowothers_width, keepbelowothers_height, keepbelowothers_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( keepbelowothers_width, keepbelowothers_height ), keepbelowothers_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Keep Below Others"), bmp, 'B', false, m_supportedButtons.contains('B') );
 	} else if (type == 'F') {
-		QBitmap bmp(keepaboveothers_width, keepaboveothers_height, keepaboveothers_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( keepaboveothers_width, keepaboveothers_height ), keepaboveothers_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Keep Above Others"), bmp, 'F', false, m_supportedButtons.contains('F') );
 	} else if (type == 'X') {
-		QBitmap bmp(close_width, close_height, close_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( close_width, close_height ), close_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Close"), bmp, 'X', false, m_supportedButtons.contains('X') );
 	} else if (type == 'A') {
-		QBitmap bmp(maximize_width, maximize_height, maximize_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( maximize_width, maximize_height ), maximize_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Maximize"), bmp, 'A', false, m_supportedButtons.contains('A') );
 	} else if (type == 'I') {
-		QBitmap bmp(minimize_width, minimize_height, minimize_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( minimize_width, minimize_height ), minimize_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Minimize"), bmp, 'I', false, m_supportedButtons.contains('I') );
 	} else if (type == 'H') {
-		QBitmap bmp(help_width, help_height, help_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( help_width, help_height ), help_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Help"), bmp, 'H', false, m_supportedButtons.contains('H') );
 	} else if (type == 'S') {
-		QBitmap bmp(onalldesktops_width, onalldesktops_height, onalldesktops_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( onalldesktops_width, onalldesktops_height ), onalldesktops_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("On All Desktops"), bmp, 'S', false, m_supportedButtons.contains('S') );
 	} else if (type == 'M') {
-		QBitmap bmp(menu_width, menu_height, menu_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( menu_width, menu_height ), menu_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("Menu"), bmp, 'M', false, m_supportedButtons.contains('M') );
 	} else if (type == '_') {
-		QBitmap bmp(spacer_width, spacer_height, spacer_bits, true);
+		QBitmap bmp = QBitmap::fromData(QSize( spacer_width, spacer_height ), spacer_bits);
 		bmp.setMask(bmp);
 		return Button(i18n("--- spacer ---"), bmp, '_', true, m_supportedButtons.contains('_') );
 	} else {
