@@ -123,7 +123,7 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_MATCH_STRING( title, );
     READ_MATCH_STRING( extrarole, .toLower().toLatin1() );
     READ_MATCH_STRING( clientmachine, .toLower().toLatin1() );
-    types = cfg.readEntry( "types", NET::AllTypesMask ).toULongLong();
+    types = cfg.readEntry( "types", static_cast<unsigned int>(NET::AllTypesMask) );
     READ_FORCE_RULE2( placement,QString(), Placement::policyFromString,false );
     READ_SET_RULE_DEF( position, , invalidPoint );
     READ_SET_RULE( size,, QSize());
