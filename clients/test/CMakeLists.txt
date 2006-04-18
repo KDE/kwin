@@ -15,7 +15,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_test )
 
 target_link_libraries(kwin3_test  ${KDE4_KDEUI_LIBS} kdecorations )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_test )
+install_targets(${PLUGIN_INSTALL_DIR} kwin3_test )
 
 
 ########### install files ###############

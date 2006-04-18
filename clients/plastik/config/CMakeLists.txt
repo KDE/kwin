@@ -16,7 +16,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_plastik_config )
 
 target_link_libraries(kwin_plastik_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${QT_QT3SUPPORT_LIBRARY})
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kwin_plastik_config )
+install_targets(${PLUGIN_INSTALL_DIR} kwin_plastik_config )
 
 
 ########### install files ###############

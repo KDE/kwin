@@ -14,7 +14,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwinoptions )
 
 target_link_libraries(kcm_kwinoptions  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} DCOP ${QT_QT3SUPPORT_LIBRARY})
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kwinoptions )
+install_targets(${PLUGIN_INSTALL_DIR} kcm_kwinoptions )
 
 
 ########### install files ###############

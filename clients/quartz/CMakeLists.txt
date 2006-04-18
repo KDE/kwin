@@ -17,7 +17,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_quartz )
 
 target_link_libraries(kwin3_quartz  ${KDE4_KDEUI_LIBS} kdecorations kdefx)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_quartz )
+install_targets(${PLUGIN_INSTALL_DIR} kwin3_quartz )
 
 
 ########### install files ###############

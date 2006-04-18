@@ -16,7 +16,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_keramik_config )
 
 target_link_libraries(kwin_keramik_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kwin_keramik_config )
+install_targets(${PLUGIN_INSTALL_DIR} kwin_keramik_config )
 
 
 ########### install files ###############

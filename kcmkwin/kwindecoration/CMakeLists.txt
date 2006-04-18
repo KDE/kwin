@@ -16,7 +16,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwindecoration )
 
 target_link_libraries(kcm_kwindecoration  ${KDE4_KDEUI_LIBS} kdecorations DCOP ${QT_QT3SUPPORT_LIBRARY} ${X11_LIBRARIES})
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kwindecoration )
+install_targets(${PLUGIN_INSTALL_DIR} kcm_kwindecoration )
 
 
 ########### install files ###############

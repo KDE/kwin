@@ -21,7 +21,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_plastik )
 
 target_link_libraries(kwin3_plastik  ${KDE4_KDEUI_LIBS} kdecorations kdefx)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kwin3_plastik )
+install_targets(${PLUGIN_INSTALL_DIR} kwin3_plastik )
 
 
 ########### install files ###############

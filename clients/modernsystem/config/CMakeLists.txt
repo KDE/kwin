@@ -14,7 +14,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_modernsys_config )
 
 target_link_libraries(kwin_modernsys_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY}) 
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kwin_modernsys_config )
+install_targets(${PLUGIN_INSTALL_DIR} kwin_modernsys_config )
 
 
 ########### install files ###############

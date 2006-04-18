@@ -14,7 +14,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_b2_config )
 
 target_link_libraries(kwin_b2_config  ${KDE4_KDEUI_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${QT_QTGUI_LIBRARY})
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kwin_b2_config )
+install_targets(${PLUGIN_INSTALL_DIR} kwin_b2_config )
 
 
 ########### install files ###############
