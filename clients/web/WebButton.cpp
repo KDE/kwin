@@ -174,7 +174,7 @@ WebButton::drawButton(QPainter *p)
     position_ = Mid;
   switch ( position_ )
   {
-    case Qt::DockLeft:
+    case Left:
       {
         // Draw edge.
 
@@ -211,7 +211,7 @@ WebButton::drawButton(QPainter *p)
 
       break;
 
-    case Qt::DockRight:
+    case Right:
       {
         // Draw edge.
 
