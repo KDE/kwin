@@ -441,7 +441,7 @@ void RulesWidget::setRules( Rules* rules )
 #undef COMBOBOX_FORCE_RULE
 
 #define GENERIC_RULE( var, func, Type, type, uimethod ) \
-    if( enable_##var->isChecked()) \
+    if( enable_##var->isChecked() && rule_##var->currentIndex() >= 0) \
         { \
         rules->var##rule = combo_to_##type##_rule[ rule_##var->currentIndex() ]; \
         rules->var = func( Ui_RulesWidgetBase::var->uimethod()); \
