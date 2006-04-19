@@ -1662,7 +1662,7 @@ otherwise: the value
 	static double
 get_opacity_percent(Display *dpy, win *w, double def)
 {
-	if (w && w->isInFade)
+	if (w->isInFade)
 	{
 		fade *f = find_fade(w);
 		return f->finish;
