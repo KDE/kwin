@@ -48,7 +48,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 			"handle at the lower right corner. This makes window resizing "
 			"easier, especially for trackballs and other mouse replacements "
 			"on laptops."));
-        layout->addMultiCellWidget(cbShowHandle, 0, 0, 0, 1);
+        layout->addWidget(cbShowHandle, 0, 0, 1, 2 );
 	connect(cbShowHandle, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()));
 
 	sliderBox = new KVBox(handleBox);
