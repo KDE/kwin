@@ -157,6 +157,7 @@ class Client : public QObject, public KDecorationDefines
         Layer layer() const;
         Layer belongsToLayer() const;
         void invalidateLayer();
+        int sessionStackingOrder() const;
 
         void setModal( bool modal );
         bool isModal() const;
@@ -531,6 +532,7 @@ class Client : public QObject, public KDecorationDefines
         QRegion _mask;
         static bool check_active_modal; // see Client::checkActiveModal()
         KShortcut _shortcut;
+        int sm_stacking_order;
         friend struct FetchNameInternalPredicate;
         friend struct CheckIgnoreFocusStealingProcedure;
         friend struct ResetupRulesProcedure;
@@ -788,6 +790,11 @@ inline pid_t Client::pid() const
 inline void Client::invalidateLayer()
     {
     in_layer = UnknownLayer;
+    }
+
+inline int Client::sessionStackingOrder() const
+    {
+    return sm_stacking_order;
     }
 
 inline bool Client::isIconicState() const

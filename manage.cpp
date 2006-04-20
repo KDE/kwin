@@ -36,6 +36,8 @@ namespace KWinInternal
  */
 bool Client::manage( Window w, bool isMapped )
     {
+    StackingUpdatesBlocker stacking_blocker( workspace());
+
     XWindowAttributes attr;
     if( !XGetWindowAttributes(QX11Info::display(), w, &attr))
         return false;
@@ -424,17 +426,21 @@ bool Client::manage( Window w, bool isMapped )
 
     updateAllowedActions( true );
 
-    // TODO this should avoid flicker, because real restacking is done
-    // only after manage() finishes, but the window is shown sooner
-    // - keep it?
-    XLowerWindow( QX11Info::display(), frameId());
-
     // set initial user time directly
     user_time = readUserTimeMapTimestamp( asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session );
     group()->updateUserTime( user_time ); // and do what Client::updateUserTime() does
 
     if( isTopMenu()) // they're shown in Workspace::addClient() if their mainwindow
         hideClient( true ); // is the active one
+
+    // this should avoid flicker, because real restacking is done
+    // only after manage() finishes because of blocking, but the window is shown sooner
+    XLowerWindow( QX11Info::display(), frameId());
+    if( session && session->stackingOrder != -1 )
+        {
+        sm_stacking_order = session->stackingOrder;
+        workspace()->restoreSessionStackingOrder( this );
+        }
 
     if( isShown( true ) && !doNotShow )
         {
@@ -466,10 +472,8 @@ bool Client::manage( Window w, bool isMapped )
         if( !belongs_to_desktop && workspace()->showingDesktop())
             workspace()->resetShowingDesktop( false );
 
-        if( isOnCurrentDesktop() && !isMapped && !allow )
+        if( isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0 ))
             workspace()->restackClientUnderActive( this );
-        else
-            workspace()->raiseClient( this );
 
         updateVisibility();
 

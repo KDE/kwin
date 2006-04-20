@@ -449,6 +449,26 @@ void Workspace::restackClientUnderActive( Client* c )
     updateStackingOrder();
     }
 
+void Workspace::restoreSessionStackingOrder( Client* c )
+    {
+    if( c->sessionStackingOrder() < 0 )
+        return;
+    StackingUpdatesBlocker blocker( this );
+    unconstrained_stacking_order.remove( c );
+    ClientList::Iterator best_pos = unconstrained_stacking_order.end();
+    for( ClientList::Iterator it = unconstrained_stacking_order.begin(); // from bottom
+         it != unconstrained_stacking_order.end();
+         ++it )
+        {
+        if( (*it)->sessionStackingOrder() > c->sessionStackingOrder() )
+            {
+            unconstrained_stacking_order.insert( it, c );
+            return;
+            }
+        }
+    unconstrained_stacking_order.append( c );
+    }
+
 void Workspace::circulateDesktopApplications()
     {
     if ( desktops.count() > 1 )

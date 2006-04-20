@@ -145,6 +145,7 @@ class Workspace : public QObject, public KWinInterface, public KDecorationDefine
         void restackClientUnderActive( Client* );
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client * );
+        void restoreSessionStackingOrder( Client* c );
         void reconfigure();
 
         void clientHidden( Client*  );

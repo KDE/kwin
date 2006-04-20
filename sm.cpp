@@ -114,9 +114,9 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             config->writeEntry( QString("userNoBorder")+n, c->isUserNoBorder() );
             config->writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
             config->writeEntry( QString("shortcut")+n, c->shortcut().toStringInternal());
+            config->writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.findIndex( c ));
             }
         }
-    // TODO store also stacking order
     if( phase == SMSavePhase0 )
         {
         // it would be much simpler to save these values to the config file,
@@ -180,6 +180,7 @@ void Workspace::loadSessionInfo()
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n, QString() ).toLatin1());
         info->shortcut = config->readEntry( QString("shortcut")+n, QString() );
         info->active = ( active_client == i );
+        info->stackingOrder = config->readNumEntry( QString("stackingOrder")+n, -1 );
         }
     }
 

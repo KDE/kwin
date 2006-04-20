@@ -89,6 +89,7 @@ Client::Client( Workspace *ws )
         border_right( 0 ),
         border_top( 0 ),
         border_bottom( 0 ),
+        sm_stacking_order( -1 ),
         demandAttentionKNotifyTimer( NULL )
 // SELI do all as initialization
     {

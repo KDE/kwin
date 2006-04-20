@@ -48,6 +48,7 @@ struct SessionInfo
     NET::WindowType windowType;
     QString shortcut;
     bool active; // means 'was active in the saved session'
+    int stackingOrder;
     };
 
 

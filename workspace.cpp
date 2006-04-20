@@ -521,7 +521,7 @@ void Workspace::addClient( Client* c, allowed_t )
         clients.append( c );
         }
     if( !unconstrained_stacking_order.contains( c ))
-        unconstrained_stacking_order.append( c );
+        unconstrained_stacking_order.append( c ); // raise if it hasn't got any stacking position yet
     if( !stacking_order.contains( c )) // it'll be updated later, and updateToolWindows() requires
         stacking_order.append( c );    // c to be in stacking_order
     if( c->isTopMenu())
