@@ -891,7 +891,8 @@ void KeramikButton::drawButton( QPainter *p )
 	}
 
 	p->setPen( Qt::black ); // ### hardcoded color
-	p->drawPixmap( (size-17)/2, (size-17)/2, *deco );
+	if (deco)
+		p->drawPixmap( (size-17)/2, (size-17)/2, *deco );
 }
 
 
