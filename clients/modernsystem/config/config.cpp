@@ -77,7 +77,7 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	vbox->addWidget(handleBox);
 	vbox->addStretch(1);
 
-//        layout->setColSpacing(0, 30);
+//        layout->setColumnMinimumWidth(0, 30);
         layout->addItem(new QSpacerItem(30, 10, QSizePolicy::Fixed, QSizePolicy::Fixed), 1, 0);
         layout->addWidget(sliderBox, 1, 1);
 	

@@ -265,7 +265,7 @@ void KWMThemeClient::init()
     layout->addItem( new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding) );
     layout->addRowSpacing(3, maxExtent);
     layout->setRowStretch(2, 10);
-    layout->setColStretch(1, 10);
+    layout->setColumnStretch(1, 10);
     
     QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     layout->addLayout( hb, 1, 1 );
