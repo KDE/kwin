@@ -339,7 +339,7 @@ void RedmondButton::drawButton(QPainter *p)
 
 		 // Smooth scale the menu button pixmap
 			tmpPix.convertFromImage(
-					pix.convertToImage().scaled( height(), height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation ));
+					pix.toImage().scaled( height(), height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation ));
 
 			p->drawPixmap( 0, 0, tmpPix );
 		} else {
