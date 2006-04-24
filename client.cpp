@@ -1737,7 +1737,7 @@ void Client::setCursor( Position m )
             break;
         case PositionTop:
         case PositionBottom:
-            setCursor( Qt::SizeHorCursor );
+            setCursor( Qt::SizeVerCursor );
             break;
         case PositionLeft:
         case PositionRight:
