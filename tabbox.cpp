@@ -977,7 +977,7 @@ void Workspace::CDEWalkThroughWindows( bool forward )
         if ( options->focusPolicyIsReasonable() )
             {
             activateClient( nc );
-            if( nc->isShade())
+            if( nc->isShade() && options->shadeHover )
                 nc->setShade( ShadeActivated );
             }
         else
@@ -997,7 +997,7 @@ void Workspace::KDEOneStepThroughWindows( bool forward )
     if( Client* c = tab_box->currentClient() )
         {
         activateClient( c );
-        if( c->isShade())
+        if( c->isShade() && options->shadeHover )
             c->setShade( ShadeActivated );
         }
     }
@@ -1120,7 +1120,7 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         if( Client* c = tab_box->currentClient())
             {
             activateClient( c );
-            if( c->isShade())
+            if( c->isShade() && options->shadeHover )
                 c->setShade( ShadeActivated );
             }
         }
