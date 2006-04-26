@@ -640,13 +640,13 @@ bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
         int i = keyCodeX / 8;
         char mask = 1 << (keyCodeX - (i * 8));
 
-        kDebug(125) << iKeySym << ": keySymX=0x" << QString::number( keySymX, 16 )
-                << " i=" << i << " mask=0x" << QString::number( mask, 16 )
-                << " keymap[i]=0x" << QString::number( keymap[i], 16 ) << endl;
-
                 // Abort if bad index value,
         if( i < 0 || i >= 32 )
                 return false;
+
+        kDebug(125) << iKeySym << ": keySymX=0x" << QString::number( keySymX, 16 )
+                << " i=" << i << " mask=0x" << QString::number( mask, 16 )
+                << " keymap[i]=0x" << QString::number( keymap[i], 16 ) << endl;
 
                 // If ALL keys passed need to be depressed,
         if( bAll )
