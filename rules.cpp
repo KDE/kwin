@@ -123,7 +123,7 @@ void Rules::readFromCfg( KConfig& cfg )
     READ_MATCH_STRING( title, );
     READ_MATCH_STRING( extrarole, .toLower().toLatin1() );
     READ_MATCH_STRING( clientmachine, .toLower().toLatin1() );
-    types = cfg.readEntry( "types", static_cast<unsigned int>(NET::AllTypesMask) );
+    types = cfg.readEntry( "types", uint(NET::AllTypesMask) );
     READ_FORCE_RULE2( placement,QString(), Placement::policyFromString,false );
     READ_SET_RULE_DEF( position, , invalidPoint );
     READ_SET_RULE( size,, QSize());
@@ -205,13 +205,6 @@ void Rules::readFromCfg( KConfig& cfg )
         cfg.deleteEntry( #var "rule" ); \
         }
 
-#define WRITE_WITH_DEFAULT( var, default ) \
-    if( var != default ) \
-        cfg.writeEntry( #var, var ); \
-    else \
-        cfg.deleteEntry( #var );
-
-
 void Rules::write( KConfig& cfg ) const
     {
     cfg.writeEntry( "description", description );
@@ -222,7 +215,10 @@ void Rules::write( KConfig& cfg ) const
     WRITE_MATCH_STRING( title,, false );
     WRITE_MATCH_STRING( extrarole, (const char*), false );
     WRITE_MATCH_STRING( clientmachine, (const char*), false );
-    WRITE_WITH_DEFAULT( QVariant::fromValue(types), static_cast<int>(NET::AllTypesMask) );
+    if (types != NET::AllTypesMask)
+        cfg.writeEntry("types", uint(types));
+    else
+        cfg.deleteEntry("types");
     WRITE_FORCE_RULE( placement, Placement::policyToString );
     WRITE_SET_RULE( position, );
     WRITE_SET_RULE( size, );
@@ -255,7 +251,6 @@ void Rules::write( KConfig& cfg ) const
 #undef WRITE_MATCH_STRING
 #undef WRITE_SET_RULE
 #undef WRITE_FORCE_RULE
-#undef WRITE_WITH_DEFAULT
 
 // returns true if it doesn't affect anything
 bool Rules::isEmpty() const
