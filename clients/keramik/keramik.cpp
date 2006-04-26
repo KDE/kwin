@@ -1225,7 +1225,7 @@ void KeramikClient::updateCaptionBuffer()
 	QPixmap *icon = NULL;
 
 	if ( captionBuffer.size() != captionRect.size() )
-		captionBuffer.resize( captionRect.size() );
+            captionBuffer = QPixmap( captionRect.size() );
 
 	if ( captionBuffer.isNull() )
 		return;
@@ -1469,7 +1469,7 @@ void KeramikClient::menuButtonPressed()
 	menuTop += QPoint(-6, -3);
 	menuBottom += QPoint(6, 3);
 	KDecorationFactory* f = factory();
-	showWindowMenu( QRect( button[MenuButton]->mapToGlobal( menuTop ), 
+	showWindowMenu( QRect( button[MenuButton]->mapToGlobal( menuTop ),
 				button[MenuButton]->mapToGlobal( menuBottom )) );
 	if( !f->exists( this )) // 'this' was destroyed
 		return;

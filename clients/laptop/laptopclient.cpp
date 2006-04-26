@@ -13,6 +13,7 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
+#include <kpixmap.h>
 #include <kdrawutil.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -144,10 +145,8 @@ static void create_pixmaps()
     titlePix->setMask(mask);
 
     if(QPixmap::defaultDepth() > 8){
-        aUpperGradient = new KPixmap;
-        aUpperGradient->resize(32, titleHeight+2);
-        iUpperGradient = new KPixmap;
-        iUpperGradient->resize(32, titleHeight+2);
+        aUpperGradient = new KPixmap(32, titleHeight+2);
+        iUpperGradient = new KPixmap(32, titleHeight+2);
         QColor bgColor = options()->color(KDecoration::ColorTitleBar, true);
         KPixmapEffect::gradient(*aUpperGradient,
                                 bgColor.light(120),
@@ -162,22 +161,14 @@ static void create_pixmaps()
     // buttons (active/inactive, sunken/unsunken, 2 sizes each)
 		QColorGroup g = options()->palette(KDecoration::ColorButtonBg, true).active();
     QColor c = g.background();
-    btnPix1 = new KPixmap;
-    btnPix1->resize(btnWidth1, titleHeight);
-    btnDownPix1 = new KPixmap;
-    btnDownPix1->resize(btnWidth1, titleHeight);
-    btnPix2 = new KPixmap;
-    btnPix2->resize(btnWidth2, titleHeight);
-    btnDownPix2 = new KPixmap;
-    btnDownPix2->resize(btnWidth2, titleHeight);
-    iBtnPix1 = new KPixmap;
-    iBtnPix1->resize(btnWidth1, titleHeight);
-    iBtnDownPix1 = new KPixmap;
-    iBtnDownPix1->resize(btnWidth1, titleHeight);
-    iBtnPix2 = new KPixmap;
-    iBtnPix2->resize(btnWidth2, titleHeight);
-    iBtnDownPix2 = new KPixmap;
-    iBtnDownPix2->resize(btnWidth2, titleHeight);
+    btnPix1 = new KPixmap(btnWidth1, titleHeight);
+    btnDownPix1 = new KPixmap(btnWidth1, titleHeight);
+    btnPix2 = new KPixmap(btnWidth2, titleHeight);
+    btnDownPix2 = new KPixmap(btnWidth2, titleHeight);
+    iBtnPix1 = new KPixmap(btnWidth1, titleHeight);
+    iBtnDownPix1 = new KPixmap(btnWidth1, titleHeight);
+    iBtnPix2 = new KPixmap(btnWidth2, titleHeight);
+    iBtnDownPix2 = new KPixmap(btnWidth2, titleHeight);
     if(QPixmap::defaultDepth() > 8){
         KPixmapEffect::gradient(*btnPix1, c.light(120), c.dark(130),
                                 KPixmapEffect::DiagonalGradient);
@@ -203,20 +194,20 @@ static void create_pixmaps()
         btnDownPix1->fill(c.rgb());
         btnPix2->fill(c.rgb());
         btnDownPix2->fill(c.rgb());
-				g = options()->palette(KDecoration::ColorButtonBg, false).active();
+        g = options()->palette(KDecoration::ColorButtonBg, false).active();
         c = g.background();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
         iBtnPix2->fill(c.rgb());
         iBtnDownPix2->fill(c.rgb());
     }
-		g = options()->palette(KDecoration::ColorButtonBg, true).active();
+    g = options()->palette(KDecoration::ColorButtonBg, true).active();
     c = g.background();
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(btnPix2, g, false);
     drawButtonFrame(btnDownPix2, g, true);
-		g = options()->palette(KDecoration::ColorButtonBg, false).active();
+    g = options()->palette(KDecoration::ColorButtonBg, false).active();
     c = g.background();
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
@@ -519,7 +510,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     if (mustDrawHandle()) {
 	if (r.width() > 3*handleSize + 20) {
 	    int range = 8 + 3*handleSize/2;
-	    qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, range, 
+	    qDrawShadePanel(&p, r.x() + 1, r.bottom() - bs, range,
 		    handleSize - 2, g, false, 1, &g.brush(QColorGroup::Mid));
 	    qDrawShadePanel(&p, r.x() + range + 1, r.bottom() - bs,
 		    r.width() - 2*range - 2, handleSize - 2, g, false, 1,
@@ -602,8 +593,8 @@ QRegion LaptopClient::cornerShape(WindowCorner corner)
 
 }
 
-bool LaptopClient::mustDrawHandle() const 
-{ 
+bool LaptopClient::mustDrawHandle() const
+{
     bool drawSmallBorders = !options()->moveResizeMaximizedWindows();
     if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
 	return false;
@@ -622,8 +613,7 @@ void LaptopClient::updateActiveBuffer( )
     lastBufferWidth = rTitle.width();
     bufferDirty = false;
 
-    activeBuffer.resize(rTitle.width(),
-                        rTitle.height());
+    activeBuffer = QPixmap(rTitle.width(), rTitle.height());
     QPainter p;
     QRect r(0, 0, activeBuffer.width(), activeBuffer.height());
     p.begin(&activeBuffer);

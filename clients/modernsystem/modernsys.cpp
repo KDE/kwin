@@ -10,6 +10,7 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
+#include <kpixmap.h>
 #include <kdrawutil.h>
 #include <qbitmap.h>
 #include <qtooltip.h>
@@ -126,7 +127,7 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
             srcColor.setHsv(destH, destS, srcV);
             destData[i] = srcColor.rgb();
         }
-        pix->convertFromImage(btnDest);
+        *pix = QPixmap::fromImage(btnDest);
 
     }
     else{
@@ -160,10 +161,8 @@ static void create_pixmaps()
     btnSource = new QImage(btnhighcolor_xpm);
 
     if(QPixmap::defaultDepth() > 8){
-        aUpperGradient = new KPixmap;
-        aUpperGradient->resize(32, title_height+2);
-        iUpperGradient = new KPixmap;
-        iUpperGradient->resize(32, title_height+2);
+        aUpperGradient = new KPixmap( 32, title_height+2 );
+        iUpperGradient = new KPixmap( 32, title_height+2);;
         KPixmapEffect::gradient(*aUpperGradient,
                                 options()->color(KDecoration::ColorTitleBar, true).light(130),
                                 options()->color(KDecoration::ColorTitleBlend, true),
@@ -376,7 +375,7 @@ void ModernSys::reset( unsigned long changed)
 {
     KCommonDecoration::reset(changed);
 
-    titleBuffer.resize(0, 0);
+    titleBuffer = QPixmap();
     recalcTitleBuffer();
     resetButtons();
     widget()->update();
@@ -517,7 +516,7 @@ void ModernSys::recalcTitleBuffer()
         return;
 
     QFontMetrics fm(options()->font(true));
-    titleBuffer.resize(width(), title_height+2);
+    titleBuffer = QPixmap(width(), title_height+2);
     QPainter p;
     p.begin(&titleBuffer);
     if(aUpperGradient)

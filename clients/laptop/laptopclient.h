@@ -8,7 +8,7 @@
 #define __KDECLIENT_H
 
 #include <qbitmap.h>
-#include <kpixmap.h>
+#include <qpixmap.h>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 
@@ -54,7 +54,7 @@ private:
     bool mustDrawHandle() const;
     bool isTransient() const;
 private:
-    KPixmap activeBuffer;
+    QPixmap activeBuffer;
     int lastBufferWidth;
     bool bufferDirty;
 };

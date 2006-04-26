@@ -23,6 +23,7 @@
 #include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
+#include <kpixmap.h>
 
 #include <qbitmap.h>
 #include <qimage.h>
@@ -90,7 +91,7 @@ static KPixmap *iMiniBtnPix1;
 static KPixmap *miniBtnDownPix1;
 static KPixmap *iMiniBtnDownPix1;
 
-static QPixmap *defaultMenuPix;
+static KPixmap *defaultMenuPix;
 static QColor  *btnForeground;
 static bool    pixmaps_created = false;
 
@@ -103,7 +104,7 @@ static inline const KDecorationOptions *options()
    return KDecoration::options();
 }
 
-static void drawButtonFrame( KPixmap *pix, const QColorGroup &g, bool sunken )
+static void drawButtonFrame( QPixmap *pix, const QColorGroup &g, bool sunken )
 {
     QPainter p;
     int x2 = pix->width() - 1;
@@ -149,20 +150,20 @@ static void create_pixmaps ()
     miniBtnDownPix1 = new KPixmap;
     iMiniBtnPix1 = new KPixmap;
     iMiniBtnDownPix1 = new KPixmap;
-    defaultMenuPix = new QPixmap(kdelogo);
+    defaultMenuPix = new KPixmap(kdelogo);
 
     // buttons (active/inactive, sunken/unsunken)
 	QColorGroup g = options()->palette(KDecoration::ColorButtonBg, true).active();
     QColor c = g.background();
-    btnPix1->resize(normalTitleHeight, normalTitleHeight-2);
-    btnDownPix1->resize(normalTitleHeight, normalTitleHeight-2);
-    iBtnPix1->resize(normalTitleHeight, normalTitleHeight-2);
-    iBtnDownPix1->resize(normalTitleHeight, normalTitleHeight-2);
+    *btnPix1 = QPixmap(normalTitleHeight, normalTitleHeight-2);
+    *btnDownPix1 = QPixmap(normalTitleHeight, normalTitleHeight-2);
+    *iBtnPix1 = QPixmap(normalTitleHeight, normalTitleHeight-2);
+    *iBtnDownPix1 = QPixmap(normalTitleHeight, normalTitleHeight-2);
 
-    miniBtnPix1->resize(toolTitleHeight, toolTitleHeight);
-    miniBtnDownPix1->resize(toolTitleHeight, toolTitleHeight);
-    iMiniBtnPix1->resize(toolTitleHeight, toolTitleHeight);
-    iMiniBtnDownPix1->resize(toolTitleHeight, toolTitleHeight);
+    *miniBtnPix1 = QPixmap(toolTitleHeight, toolTitleHeight);
+    *miniBtnDownPix1 = QPixmap(toolTitleHeight, toolTitleHeight);
+    *iMiniBtnPix1 = QPixmap(toolTitleHeight, toolTitleHeight);
+    *iMiniBtnDownPix1 = QPixmap(toolTitleHeight, toolTitleHeight);
 
     if (highcolor && false) {
         KPixmapEffect::gradient(*btnPix1, c.light(130), c.dark(130),
@@ -280,7 +281,7 @@ void RedmondButton::reset(unsigned long changed)
 
 void RedmondButton::setBitmap(const unsigned char *bitmap)
 {
-	pix.resize(0, 0);
+        pix = QPixmap();
 
 	if (bitmap)
 		deco = QBitmap(10, 10, bitmap, true);
@@ -294,7 +295,7 @@ void RedmondButton::setBitmap(const unsigned char *bitmap)
 
 void RedmondButton::setPixmap( const QPixmap &p )
 {
-	deco.resize(0, 0);
+        deco = QPixmap();
 	pix = p;
 
 	repaint(false);
@@ -335,11 +336,10 @@ void RedmondButton::drawButton(QPainter *p)
 		}
 
 		if ( type()==MenuButton && height() < 16) {
-			QPixmap tmpPix;
 
-		 // Smooth scale the menu button pixmap
-			tmpPix.convertFromImage(
-					pix.toImage().scaled( height(), height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation ));
+                    // Smooth scale the menu button pixmap
+                    QPixmap tmpPix = QPixmap::fromImage(
+                        pix.toImage().scaled( height(), height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation ));
 
 			p->drawPixmap( 0, 0, tmpPix );
 		} else {
@@ -547,7 +547,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
         // Create a disposable pixmap buffer for the title blend
         KPixmap* titleBuffer = new KPixmap;
-        titleBuffer->resize(w-2*modBorderWidth, titleHeight);
+        *titleBuffer = QPixmap(w-2*modBorderWidth, titleHeight);
 
         if (titleBuffer->depth() > 16) {
             KPixmapEffect::gradient(*titleBuffer, c1, c2,

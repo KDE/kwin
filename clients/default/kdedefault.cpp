@@ -26,6 +26,7 @@
 #include <qapplication.h>
 #include <qlabel.h>
 #include <kdebug.h>
+#include <kpixmap.h>
 #include <QPolygon>
 #include <QStyle>
 
@@ -118,7 +119,7 @@ static const unsigned char pinup_mask_bits[] = {
 
 // ===========================================================================
 
-static QPixmap* titlePix;
+static KPixmap* titlePix;
 static KPixmap* titleBuffer;
 static KPixmap* aUpperGradient;
 static KPixmap* iUpperGradient;
@@ -267,7 +268,7 @@ void KDEDefaultHandler::createPixmaps()
 		QPainter p;
 		QPainter maskPainter;
 		int i, x, y;
-		titlePix = new QPixmap(132, normalTitleHeight+2);
+		titlePix = new KPixmap(132, normalTitleHeight+2);
 		QBitmap mask(132, normalTitleHeight+2);
 		mask.fill(Qt::color0);
 
@@ -305,8 +306,7 @@ void KDEDefaultHandler::createPixmaps()
 		// Create the titlebar gradients
 		if (activeTitleColor1 != activeTitleColor2)
 		{
-			aUpperGradient = new KPixmap;
-			aUpperGradient->resize(128, normalTitleHeight+2);
+			aUpperGradient = new KPixmap(128, normalTitleHeight+2);
 			KPixmapEffect::gradient(*aUpperGradient,
 				activeTitleColor1,
 				activeTitleColor2,
@@ -315,8 +315,7 @@ void KDEDefaultHandler::createPixmaps()
 
 		if (inactiveTitleColor1 != inactiveTitleColor2)
 		{
-			iUpperGradient = new KPixmap;
-			iUpperGradient->resize(128, normalTitleHeight+2);
+			iUpperGradient = new KPixmap(128, normalTitleHeight+2);
 
 			KPixmapEffect::gradient(*iUpperGradient,
 					inactiveTitleColor1,
@@ -331,16 +330,14 @@ void KDEDefaultHandler::createPixmaps()
 
 	// Active pins
 	g = options()->palette( ColorButtonBg, true );
-	pinUpPix  = new KPixmap();
-	pinUpPix->resize(16, 16);
+	pinUpPix  = new KPixmap(16, 16);
 	p.begin( pinUpPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
 		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 	pinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
-	pinDownPix = new KPixmap();
-	pinDownPix->resize(16, 16);
+	pinDownPix = new KPixmap(16, 16);
 	p.begin( pinDownPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
 		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
@@ -349,16 +346,14 @@ void KDEDefaultHandler::createPixmaps()
 
 	// Inactive pins
 	g = options()->palette( ColorButtonBg, false );
-	ipinUpPix = new KPixmap();
-	ipinUpPix->resize(16, 16);
+	ipinUpPix = new KPixmap(16, 16);
 	p.begin( ipinUpPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
 		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 	ipinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
-	ipinDownPix = new KPixmap();
-	ipinDownPix->resize(16, 16);
+	ipinDownPix = new KPixmap(16, 16);
 	p.begin( ipinDownPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
 		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
@@ -369,41 +364,25 @@ void KDEDefaultHandler::createPixmaps()
 	titleBuffer = new KPixmap();
 
 	// Cache all possible button states
-	leftBtnUpPix[true] 	= new KPixmap();
-	leftBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
-	leftBtnDownPix[true]	= new KPixmap();
-	leftBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
-	ileftBtnUpPix[true]	= new KPixmap();
-	ileftBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
-	ileftBtnDownPix[true]	= new KPixmap();
-	ileftBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	leftBtnUpPix[true] 	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	leftBtnDownPix[true]	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	ileftBtnUpPix[true]	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	ileftBtnDownPix[true]	= new KPixmap(normalTitleHeight, normalTitleHeight);
 
-	rightBtnUpPix[true] 	= new KPixmap();
-	rightBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
-	rightBtnDownPix[true] = new KPixmap();
-	rightBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
-	irightBtnUpPix[true] 	= new KPixmap();
-	irightBtnUpPix[true]->resize(normalTitleHeight, normalTitleHeight);
-	irightBtnDownPix[true] = new KPixmap();
-	irightBtnDownPix[true]->resize(normalTitleHeight, normalTitleHeight);
+	rightBtnUpPix[true] 	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	rightBtnDownPix[true] = new KPixmap(normalTitleHeight, normalTitleHeight);
+	irightBtnUpPix[true] 	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	irightBtnDownPix[true] = new KPixmap(normalTitleHeight, normalTitleHeight);
 
-	leftBtnUpPix[false] 	= new KPixmap();
-	leftBtnUpPix[false]->resize(toolTitleHeight, normalTitleHeight);
-	leftBtnDownPix[false]	= new KPixmap();
-	leftBtnDownPix[false]->resize(toolTitleHeight, normalTitleHeight);
-	ileftBtnUpPix[false]	= new KPixmap();
-	ileftBtnUpPix[false]->resize(normalTitleHeight, normalTitleHeight);
-	ileftBtnDownPix[false]	= new KPixmap();
-	ileftBtnDownPix[false]->resize(normalTitleHeight, normalTitleHeight);
+	leftBtnUpPix[false] 	= new KPixmap(toolTitleHeight, normalTitleHeight);
+	leftBtnDownPix[false]	= new KPixmap(toolTitleHeight, normalTitleHeight);
+	ileftBtnUpPix[false]	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	ileftBtnDownPix[false]	= new KPixmap(normalTitleHeight, normalTitleHeight);
 
-	rightBtnUpPix[false] 	= new KPixmap();
-	rightBtnUpPix[false]->resize(toolTitleHeight, toolTitleHeight);
-	rightBtnDownPix[false] = new KPixmap();
-	rightBtnDownPix[false]->resize(toolTitleHeight, toolTitleHeight);
-	irightBtnUpPix[false] 	= new KPixmap();
-	irightBtnUpPix[false]->resize(toolTitleHeight, toolTitleHeight);
-	irightBtnDownPix[false] = new KPixmap();
-	irightBtnDownPix[false]->resize(toolTitleHeight, toolTitleHeight);
+	rightBtnUpPix[false] 	= new KPixmap(toolTitleHeight, toolTitleHeight);
+	rightBtnDownPix[false] = new KPixmap(toolTitleHeight, toolTitleHeight);
+	irightBtnUpPix[false] 	= new KPixmap(toolTitleHeight, toolTitleHeight);
+	irightBtnDownPix[false] = new KPixmap(toolTitleHeight, toolTitleHeight);
 
 	// Draw the button state pixmaps
 	g = options()->palette( ColorTitleBar, true );
@@ -642,7 +621,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 
 	if (deco) {
 		// Fill the button background with an appropriate button image
- 		KPixmap btnbg;
+ 		QPixmap btnbg;
 
 		if (isLeft() )	{
 			if (isDown())
@@ -666,7 +645,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 
 		// Fill the button background with an appropriate color/gradient
 		// This is for sticky and menu buttons
-		KPixmap* grad = active ? aUpperGradient : iUpperGradient;
+		QPixmap* grad = active ? aUpperGradient : iUpperGradient;
 		if (!grad) {
 			QColor c = KDecoration::options()->color(KDecoration::ColorTitleBar, active);
 			p->fillRect(0, 0, width(), height(), c );
@@ -869,8 +848,8 @@ void KDEDefaultClient::reset( unsigned long changed)
 	KCommonDecoration::reset(changed);
 }
 
-bool KDEDefaultClient::mustDrawHandle() const 
-{ 
+bool KDEDefaultClient::mustDrawHandle() const
+{
     bool drawSmallBorders = !options()->moveResizeMaximizedWindows();
     if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
 		return false;
@@ -887,9 +866,9 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	QPalette g;
 	int offset;
 
-	KPixmap* upperGradient = isActive() ? aUpperGradient : iUpperGradient;
+	QPixmap* upperGradient = isActive() ? aUpperGradient : iUpperGradient;
 
-    QPainter p(widget());
+        QPainter p(widget());
 
     // Obtain widget bounds.
     QRect r(widget()->rect());
@@ -907,16 +886,16 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 	r = titleRect();
 	int rightOffset = r.x()+r.width()+1;
 
-    // Create a disposable pixmap buffer for the titlebar
+        // Create a disposable pixmap buffer for the titlebar
 	// very early before drawing begins so there is no lag
 	// during painting pixels.
-    titleBuffer->resize( rightOffset-3, titleHeight+1 );
+        *titleBuffer = QPixmap( rightOffset-3, titleHeight+1 );
 
 	// Draw an outer black frame
 	p.setPen(Qt::black);
 	p.drawRect(x,y,w,h);
 
-    // Draw part of the frame that is the titlebar color
+        // Draw part of the frame that is the titlebar color
 	g = options()->palette(ColorTitleBar, isActive());
 	p.setPen(g.color( QPalette::Light ));
 	p.drawLine(x+1, y+1, rightOffset-1, y+1);

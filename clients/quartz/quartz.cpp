@@ -22,6 +22,7 @@
 #include <qbitmap.h>
 #include <qdrawutil.h>
 #include <qimage.h>
+#include <kpixmap.h>
 #include <qapplication.h>
 
 #include "quartz.h"
@@ -294,22 +295,20 @@ void QuartzHandler::drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const
 void QuartzHandler::createPixmaps()
 {
     // Obtain titlebar blend colours, and create the block stuff on pixmaps.
-	QColorGroup g2 = options()->palette(ColorTitleBlend, true).active();
+    QColorGroup g2 = options()->palette(ColorTitleBlend, true).active();
     QColor c2 = g2.background();
-	g2 = options()->palette(ColorTitleBar, true ).active();
+    g2 = options()->palette(ColorTitleBar, true ).active();
     QColor c = g2.background().light(130);
 
-	titleBlocks = new KPixmap();
-    titleBlocks->resize( normalTitleHeight*25/18, normalTitleHeight );
+    titleBlocks = new KPixmap( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( titleBlocks, *titleBlocks, c, c2 );
 
-	g2 = options()->palette(ColorTitleBlend, false).active();
+    g2 = options()->palette(ColorTitleBlend, false).active();
     c2 = g2.background();
-	g2 = options()->palette(ColorTitleBar, false ).active();
+    g2 = options()->palette(ColorTitleBar, false ).active();
     c = g2.background().light(130);
 
-	ititleBlocks = new KPixmap();
-    ititleBlocks->resize( normalTitleHeight*25/18, normalTitleHeight );
+    ititleBlocks = new KPixmap( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
 
 	// Set the on all desktops pin pixmaps;
@@ -320,16 +319,14 @@ void QuartzHandler::createPixmaps()
 	c = onAllDesktopsButtonOnLeft ? g.background().light(130) : g.background();
 	g2 = options()->palette( ColorButtonBg, true ).active();
 
-	pinUpPix = new KPixmap();
-	pinUpPix->resize(16, 16);
+	pinUpPix = new KPixmap(16, 16);
 	p.begin( pinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits,
 					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 
-	pinDownPix = new KPixmap();
-	pinDownPix->resize(16, 16);
+	pinDownPix = new KPixmap(16, 16);
 	p.begin( pinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits,
@@ -342,16 +339,14 @@ void QuartzHandler::createPixmaps()
 	c = onAllDesktopsButtonOnLeft ? g.background().light(130) : g.background();
 	g2 = options()->palette( ColorButtonBg, false ).active();
 
-	ipinUpPix = new KPixmap();
-	ipinUpPix->resize(16, 16);
+	ipinUpPix = new KPixmap(16, 16);
 	p.begin( ipinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits,
 					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 
-	ipinDownPix = new KPixmap();
-	ipinDownPix->resize(16, 16);
+	ipinDownPix = new KPixmap(16, 16);
 	p.begin( ipinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits,
@@ -498,10 +493,8 @@ void QuartzButton::drawButton(QPainter *p)
 			// Shrink the miniIcon for tiny titlebars.
 			if ( height() < 16)
 			{
-				QPixmap tmpPix;
-
 				// Smooth scale the image
-				tmpPix.convertFromImage( btnpix.toImage().scaled(height(), height(), Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+				QPixmap tmpPix = QPixmap::fromImage( btnpix.toImage().scaled(height(), height(), Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
 				p->drawPixmap( 0, 0, tmpPix );
 			} else {
 				Offset += (height() - 16)/2;
@@ -748,8 +741,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
     QColor c2 = options()->color(ColorTitleBlend, isActive() );
 
     // Create a disposable pixmap buffer for the titlebar
-    KPixmap* titleBuffer = new KPixmap;
-    titleBuffer->resize( maxFull?w-2:(w-2*(borderSize-1)), titleHeight );
+    QPixmap* titleBuffer = new QPixmap( maxFull?w-2:(w-2*(borderSize-1)), titleHeight );
 
     QPainter p2( titleBuffer );
 

@@ -15,13 +15,13 @@
 
 #include <qbitmap.h>
 #include <qdatetime.h>
-#include <kpixmap.h>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 
 class QSpacerItem;
 class QBoxLayout;
 class QGridLayout;
+class KPixmap;
 
 namespace Default {
 

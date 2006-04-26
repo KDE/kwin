@@ -240,7 +240,7 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             const int titleBarTileHeight = (toolWindow ? m_titleHeightTool : m_titleHeight) + 2;
             // gradient used as well in TitleBarTileTop as TitleBarTile
             const int gradientHeight = 2 + titleBarTileHeight-1;
-            QPixmap gradient(1, gradientHeight);
+            KPixmap gradient(1, gradientHeight);
             QPainter painter(&gradient);
             KPixmap tempPixmap( 1, 4 );
             KPixmapEffect::gradient(tempPixmap,
@@ -248,7 +248,7 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
                                     getColor(TitleGradient2, active),
                                     KPixmapEffect::VerticalGradient);
             painter.drawPixmap(0,0, tempPixmap);
-            tempPixmap.resize(1, gradientHeight-4);
+            tempPixmap = QPixmap(1, gradientHeight-4);
             KPixmapEffect::gradient(tempPixmap,
                                     getColor(TitleGradient2, active),
                                     getColor(TitleGradient3, active),

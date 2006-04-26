@@ -19,7 +19,6 @@
 #define __KDE_REDMOND_H
 
 #include <qbitmap.h>
-#include <kpixmap.h>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 

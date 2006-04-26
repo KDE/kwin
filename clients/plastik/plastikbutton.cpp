@@ -27,8 +27,8 @@
 #include <qbitmap.h>
 #include <qpainter.h>
 #include <qpixmap.h>
-#include <kpixmap.h>
 #include <kpixmapeffect.h>
+#include <kpixmap.h>
 #include <qtimer.h>
 
 #include "plastikbutton.h"
@@ -173,7 +173,7 @@ void PlastikButton::drawButton(QPainter *painter)
     QRect r(0,0,width(),height());
 
     bool active = m_client->isActive();
-    KPixmap tempKPixmap;
+    KPixmap tempPixmap;
 
     QColor highlightColor;
     if(type() == CloseButton) {
@@ -222,13 +222,13 @@ void PlastikButton::drawButton(QPainter *painter)
         bP.drawPoint(r.x()+1, r.bottom()-1);
         bP.drawPoint(r.right()-1, r.bottom()-1);
         // sides of the contour
-        tempKPixmap.resize(1, r.height()-2*2);
-        KPixmapEffect::gradient(tempKPixmap,
+        tempPixmap = QPixmap( 1, r.height()-2*2 );
+        KPixmapEffect::gradient(tempPixmap,
                                 contourTop,
                                 contourBottom,
                                 KPixmapEffect::VerticalGradient);
-        bP.drawPixmap(r.x(), r.y()+2, tempKPixmap);
-        bP.drawPixmap(r.right(), r.y()+2, tempKPixmap);
+        bP.drawPixmap(r.x(), r.y()+2, tempPixmap);
+        bP.drawPixmap(r.right(), r.y()+2, tempPixmap);
         // sort of anti-alias for the contour
         bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradient2, active),
                 contourTop, 150) );
@@ -249,12 +249,12 @@ void PlastikButton::drawButton(QPainter *painter)
         bP.setPen(sourfaceBottom);
         bP.drawLine(r.x()+2, r.bottom()-1, r.right()-2, r.bottom()-1 );
         // fill the rest! :)
-        tempKPixmap.resize(1, r.height()-2*2);
-        KPixmapEffect::gradient(tempKPixmap,
+        tempPixmap = QPixmap(1, r.height()-2*2);
+        KPixmapEffect::gradient(tempPixmap,
                                 sourfaceTop,
                                 sourfaceBottom,
                                 KPixmapEffect::VerticalGradient);
-        bP.drawTiledPixmap(r.x()+1, r.y()+2, r.width()-2, r.height()-4, tempKPixmap);
+        bP.drawTiledPixmap(r.x()+1, r.y()+2, r.width()-2, r.height()-4, tempPixmap);
     }
 
     if (type() == MenuButton)

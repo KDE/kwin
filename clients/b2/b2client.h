@@ -21,7 +21,7 @@
 #include <QShowEvent>
 #include <QResizeEvent>
 #include <QMouseEvent>
-#include <kpixmap.h>
+#include <QPixmap>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
@@ -40,8 +40,8 @@ public:
     ~B2Button() {};
 
     void setBg(const QColor &c){bg = c;}
-    void setPixmaps(KPixmap *pix, KPixmap *pixDown, KPixmap *iPix,
-                    KPixmap *iPixDown);
+    void setPixmaps(QPixmap *pix, QPixmap *pixDown, QPixmap *iPix,
+                    QPixmap *iPixDown);
     void setPixmaps(int button_id);
     void setToggle(){setCheckable(true);}
     void setActive(bool on){setChecked(on);}
@@ -59,7 +59,7 @@ private:
     void leaveEvent(QEvent *e);
     
     bool useMiniIcon;
-    KPixmap *icon[6];
+    QPixmap *icon[6];
     QColor bg; //only use one color (the rest is pixmap) so forget QPalette ;)
 
 public:
@@ -91,7 +91,7 @@ private:
 
     B2Client *client;
     QString oldTitle;
-    KPixmap titleBuffer;
+    QPixmap titleBuffer;
     QPoint moveOffset;
     bool set_x11mask;
     bool isfullyobscured;
