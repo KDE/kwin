@@ -454,7 +454,7 @@ void Workspace::restoreSessionStackingOrder( Client* c )
     if( c->sessionStackingOrder() < 0 )
         return;
     StackingUpdatesBlocker blocker( this );
-    unconstrained_stacking_order.remove( c );
+    unconstrained_stacking_order.removeAll( c );
     ClientList::Iterator best_pos = unconstrained_stacking_order.end();
     for( ClientList::Iterator it = unconstrained_stacking_order.begin(); // from bottom
          it != unconstrained_stacking_order.end();

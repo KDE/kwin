@@ -457,18 +457,18 @@ bool ButtonDropSite::getItemIterator(ButtonDropSiteItem *item, ButtonList* &list
 	if (!item)
 		return false;
 
-	ButtonList::iterator it = buttonsLeft.find(item); // try the left list first...
-	if (it == buttonsLeft.end() ) {
-		it = buttonsRight.find(item); // try the right list...
-		if (it == buttonsRight.end() ) {
+	int ind = buttonsLeft.indexOf(item); // try the left list first...
+	if (ind < 0  ) {
+		ind = buttonsRight.indexOf(item); // try the right list...
+		if ( ind < 0 ) {
 			return false; // item hasn't been found in one of the list, return...
 		} else {
 			list = &buttonsRight;
-			iterator = it;
+			iterator = buttonsRight.begin()+ind;
 		}
 	} else {
 		list = &buttonsLeft;
-		iterator = it;
+		buttonsLeft.begin()+ind;
 	}
 
 	return true;

@@ -114,7 +114,7 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             config->writeEntry( QString("userNoBorder")+n, c->isUserNoBorder() );
             config->writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
             config->writeEntry( QString("shortcut")+n, c->shortcut().toStringInternal());
-            config->writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.findIndex( c ));
+            config->writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.indexOf( c ));
             }
         }
     if( phase == SMSavePhase0 )
@@ -180,7 +180,7 @@ void Workspace::loadSessionInfo()
         info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n, QString() ).toLatin1());
         info->shortcut = config->readEntry( QString("shortcut")+n, QString() );
         info->active = ( active_client == i );
-        info->stackingOrder = config->readNumEntry( QString("stackingOrder")+n, -1 );
+        info->stackingOrder = config->readEntry( QString("stackingOrder")+n, -1 );
         }
     }
 
