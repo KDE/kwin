@@ -695,7 +695,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 		// Smooth scale the pixmap for small titlebars
 		// This is slow, but we assume this isn't done too often
 		if ( width() < 16 ) {
-			btnpix.scaled(12, 12);
+			btnpix = btnpix.scaled(12, 12);
 			p->drawPixmap( 0, 0, btnpix );
 		}
 		else

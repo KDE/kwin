@@ -494,7 +494,7 @@ void QuartzButton::drawButton(QPainter *p)
 			if ( height() < 16)
 			{
 				// Smooth scale the image
-				QPixmap tmpPix ( btnpix.scaled(height(), height(), Qt::IgnoreAspectRatio,Qt::SmoothTransformation) );
+				QPixmap tmpPix = btnpix.scaled(height(), height(), Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
 				p->drawPixmap( 0, 0, tmpPix );
 			} else {
 				Offset += (height() - 16)/2;
