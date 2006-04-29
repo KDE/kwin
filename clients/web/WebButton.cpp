@@ -77,7 +77,7 @@ WebButton::WebButton(ButtonType type, WebClient *parent, bool shape)
     shape_      (shape),
     deco_       (parent)
 {
-  setBackgroundMode(Qt::NoBackground);
+    setAttribute(Qt::WA_NoSystemBackground, true);
 }
 
 WebButton::~WebButton()
@@ -153,17 +153,17 @@ WebButton::drawButton(QPainter *p)
   QPen highlightPen;
 
   if (isDown() )
-    highlightPen = QPen(colorGroup().light());
+    highlightPen = QPen(QColorGroup( palette() ).light());
 
   else
   {
     if (mouseOver_)
-      highlightPen = QPen(colorGroup().highlight());
+      highlightPen = QPen( QColorGroup( palette() ).highlight());
     else
       highlightPen = QPen(Qt::NoPen);
   }
 
-  p->fillRect(rect(), colorGroup().background());
+  p->fillRect(rect(), QColorGroup( palette() ).background());
 
   Position position_;
   if (0 == mapToParent(rect().topLeft() ).x() )
