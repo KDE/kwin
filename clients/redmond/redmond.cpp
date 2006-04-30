@@ -104,7 +104,7 @@ static inline const KDecorationOptions *options()
    return KDecoration::options();
 }
 
-static void drawButtonFrame( QPixmap *pix, const QColorGroup &g, bool sunken )
+static void drawButtonFrame( QPixmap *pix, const QPalette &g, bool sunken )
 {
     QPainter p;
     int x2 = pix->width() - 1;
@@ -112,22 +112,22 @@ static void drawButtonFrame( QPixmap *pix, const QColorGroup &g, bool sunken )
     p.begin(pix);
 
     // titlebar button frame
-    p.setPen( sunken ? g.dark().dark(155) : g.light());
+    p.setPen( sunken ? g.color(QPalette::Dark).dark(155) : g.color(QPalette::Light));
     p.drawLine(0, 0, x2-1, 0);
     p.drawLine(0, 0, 0, y2-1);
 
     if (sunken)
     {
-       p.setPen( g.mid().dark(135) );
+       p.setPen( g.color(QPalette::Mid).dark(135) );
        p.drawLine(1, 1, x2-2, 1);
        p.drawLine(1, 1, 1, y2-2);
     }
 
-    p.setPen( sunken ? g.light() : g.mid().dark(135));
+    p.setPen( sunken ? g.color(QPalette::Light) : g.color(QPalette::Mid).dark(135));
     p.drawLine(1, y2-1, x2-1, y2-1);
     p.drawLine(x2-1, 1, x2-1, y2-1);
 
-    p.setPen( sunken ? g.light() : g.dark().dark(155));
+    p.setPen( sunken ? g.color(QPalette::Light) : g.color(QPalette::Dark).dark(155));
     p.drawLine(0, y2, x2, y2);
     p.drawLine(x2, 0, x2, y2);
 }
@@ -176,7 +176,8 @@ static void create_pixmaps ()
         KPixmapEffect::gradient(*miniBtnDownPix1, c.dark(130), c.light(130),
                                 KPixmapEffect::VerticalGradient);
 
-		g = options()->palette(KDecoration::ColorButtonBg, false).active();
+        g = options()->palette(KDecoration::ColorButtonBg, false);
+        g.setCurrentColorGroup( QPalette::Active );
         c = g.background();
         KPixmapEffect::gradient(*iBtnPix1, c.light(130), c.dark(130),
                                 KPixmapEffect::VerticalGradient);
@@ -192,7 +193,8 @@ static void create_pixmaps ()
         miniBtnPix1->fill(c.rgb());
         miniBtnDownPix1->fill(c.rgb());
 
-		g = options()->palette(KDecoration::ColorButtonBg, false).active();
+        g = options()->palette(KDecoration::ColorButtonBg, false);
+        g.setCurrentColorGroup( QPalette::Active );
         c = g.background();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
@@ -200,13 +202,15 @@ static void create_pixmaps ()
         iMiniBtnDownPix1->fill(c.rgb());
     }
 
-	g = options()->palette(KDecoration::ColorButtonBg, true).active();
+    g = options()->palette(KDecoration::ColorButtonBg, true);
+    g.setCurrentColorGroup( QPalette::Active );
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(miniBtnPix1, g, false);
     drawButtonFrame(miniBtnDownPix1, g, true);
 
-	g = options()->palette(KDecoration::ColorButtonBg, false).active();
+    g = options()->palette(KDecoration::ColorButtonBg, false);
+    g.setCurrentColorGroup( QPalette::Active );
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
     drawButtonFrame(iMiniBtnPix1, g, false);
@@ -238,7 +242,7 @@ RedmondButton::RedmondButton(ButtonType type, RedmondDeco *parent, const char *n
     : KCommonDecorationButton(type, parent)
 {
 	// Eliminate background flicker
-	setBackgroundMode( Qt::NoBackground );
+	setAttribute(Qt::WA_NoSystemBackground, true);
 
 	miniBtn = decoration()->isToolWindow();
 }
@@ -493,7 +497,8 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
     // Draw part of the frame that is the frame color
     // ==============================================
-	QColorGroup g = options()->palette(KDecoration::ColorFrame, isActive()).active();
+    QPalette g = options()->palette(KDecoration::ColorFrame, isActive());
+    g.setCurrentColorGroup( QPalette::Active );
     p.setPen( g.background() );
     p.drawLine( x, y, x2-1, y );
     p.drawLine( x, y, x, y2-1 );
@@ -514,14 +519,14 @@ void RedmondDeco::paintEvent( QPaintEvent* )
         p.drawLine( x+i, y+i, x+i, y2-i-1);
     }
 
-    p.setPen(g.mid().dark(135));
+    p.setPen(g.color(QPalette::Dark).dark(135));
     for (int i = 1; i <= borderWidth/3; i++) {
         p.drawLine( x2-i, y+i+1, x2-i, y2-i);
         p.drawLine( x+i+1, y2-i, x2-i, y2-i);
     }
 
     // Draw black edges
-    p.setPen( g.dark().dark(155) );
+    p.setPen( g.color(QPalette::Dark).dark(155) );
     p.drawLine(x2, y, x2, y2);
     p.drawLine(x, y2, x2, y2);
 

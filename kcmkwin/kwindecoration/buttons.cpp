@@ -261,13 +261,13 @@ int ButtonDropSiteItem::height()
 	return 20;
 }
 
-void ButtonDropSiteItem::draw(QPainter *p, const QColorGroup& cg, QRect r)
+void ButtonDropSiteItem::draw(QPainter *p, const QPalette& cg, QRect r)
 {
 // 	p->fillRect(r, cg.base() );
 	if (m_button.supported)
-		p->setPen(cg.foreground() );
+            p->setPen(cg.color(QPalette::Foreground) );
 	else
-		p->setPen(cg.mid() );
+            p->setPen( cg.color(QPalette::Mid) );
 	QBitmap &i = m_button.icon;
 	p->drawPixmap(r.left()+(r.width()-i.width())/2, r.top()+(r.height()-i.height())/2, i);
 }
@@ -594,7 +594,7 @@ void ButtonDropSite::drawButtonList(QPainter *p, const ButtonList& btns, int off
 	for (ButtonList::const_iterator it = btns.begin(); it != btns.end(); ++it) {
 		QRect itemRect = (*it)->rect;
 		if (itemRect.isValid() ) {
-			(*it)->draw(p, colorGroup(), itemRect);
+			(*it)->draw(p, palette(), itemRect);
 		}
 		offset += (*it)->width();
 	}
@@ -642,7 +642,7 @@ ButtonSourceItem::~ButtonSourceItem()
 {
 }
 
-void ButtonSourceItem::paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int align)
+void ButtonSourceItem::paintCell(QPainter *p, const QPalette &cg, int column, int width, int align)
 {
 	// we need the color group cg, so to the work here, not in setButton...
 	if (m_dirty) {
@@ -658,8 +658,8 @@ void ButtonSourceItem::paintCell(QPainter *p, const QColorGroup &cg, int column,
 		Q3ListViewItem::paintCell(p,cg,column,width,align);
 	} else {
 		// grey out unsupported buttons
-		QColorGroup cg2 = cg;
-		cg2.setColor(QColorGroup::Text, cg.mid() );
+		QPalette cg2 = cg;
+		cg2.setColor(QPalette::Text, cg.mid() );
 		Q3ListViewItem::paintCell(p,cg2,column,width,align);
 	}
 }

@@ -102,7 +102,7 @@ static inline const KDecorationOptions* options()
     return KDecoration::options();
 }
 
-static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
+static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
 {
     pix->fill(g.background());
     QPainter p(pix);
@@ -173,20 +173,22 @@ static void create_pixmaps()
                                 KPixmapEffect::VerticalGradient);
     }
     // buttons
-		QColorGroup btnColor(options()->palette(KDecoration::ColorButtonBg, true).active());
+    QPalette btnColor(options()->palette(KDecoration::ColorButtonBg, true) );
+    btnColor.setCurrentColorGroup(QPalette::Active);
     buttonPix = new QPixmap(14, 15);
     make_button_fx(btnColor, buttonPix);
     buttonPixDown = new QPixmap(14, 15);
     make_button_fx(btnColor, buttonPixDown, true);
 
-		btnColor = options()->palette(KDecoration::ColorButtonBg, false).active();
+    btnColor = options()->palette(KDecoration::ColorButtonBg, false);
+    btnColor.setCurrentColorGroup(QPalette::Active);
     iButtonPix = new QPixmap(14, 15);
     make_button_fx(btnColor, iButtonPix);
     iButtonPixDown = new QPixmap(14, 15);
     make_button_fx(btnColor, iButtonPixDown, true);
 
 
-    if(qGray(btnColor.background().rgb()) < 150)
+    if(qGray(btnColor.background().color().rgb()) < 150)
         buttonFg = new QColor(Qt::white);
     else
         buttonFg = new QColor(Qt::black);
@@ -289,7 +291,8 @@ QList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
 ModernButton::ModernButton(ButtonType type, ModernSys *parent, const char *name)
     : KCommonDecorationButton(type, parent)
 {
-    setBackgroundMode( Qt::NoBackground );
+    setObjectName( name );
+    setAttribute(Qt::WA_NoSystemBackground, true);
 
     QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
                  btnhighcolor_mask_bits : lowcolor_mask_bits, true);
@@ -519,12 +522,14 @@ void ModernSys::recalcTitleBuffer()
     titleBuffer = QPixmap(width(), title_height+2);
     QPainter p;
     p.begin(&titleBuffer);
+
+    QPalette pt = options()->palette(ColorTitleBar, true);
+    pt.setCurrentColorGroup( QPalette::Active );
     if(aUpperGradient)
         p.drawTiledPixmap(0, 0, width(), title_height+2, *aUpperGradient);
     else
         p.fillRect(0, 0, width(), title_height+2,
-									 options()->palette(ColorTitleBar, true).active().
-                   brush(QColorGroup::Button));
+                   pt.brush(QColorGroup::Button));
 
     QRect t = titleRect(); // titlebar->geometry();
     t.setTop( 2 );
@@ -561,8 +566,10 @@ void ModernSys::updateCaption()
 
 void ModernSys::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
 {
+    QPalette pt = options()->palette(ColorFrame, isActive());
+    pt.setCurrentColorGroup( QPalette::Active );
     kDrawRoundButton(&p, x, y, w, h,
-											options()->palette(ColorFrame, isActive()).active(), false);
+                     pt, false);
 
 }
 
@@ -578,10 +585,11 @@ void ModernSys::paintEvent( QPaintEvent* )
     QPainter p( widget() );
     QRect t = titleRect(); // titlebar->geometry();
 
-    QBrush fillBrush(widget()->colorGroup().brush(QColorGroup::Background).pixmap() ?
-                     widget()->colorGroup().brush(QColorGroup::Background) :
-				options()->palette(ColorFrame, isActive()).active().
-                     brush(QColorGroup::Button));
+    QPalette pt = options()->palette(ColorFrame, isActive());
+    pt.setCurrentColorGroup( QPalette::Active );
+    QBrush fillBrush(widget()->palette().brush(QPalette::Background).pixmap() ?
+                     widget()->palette().brush(QPalette::Background) :
+                     pt.brush(QPalette::Button));
 
     p.fillRect(1, title_height+3, width()-2, height()-(title_height+3), fillBrush);
     p.fillRect(width()-6, 0, width()-1, height(), fillBrush);
@@ -594,7 +602,8 @@ void ModernSys::paintEvent( QPaintEvent* )
     int h = height() - hw;
 
     // titlebar
-		QColorGroup g = options()->palette(ColorTitleBar, isActive()).active();
+    QPalette g = options()->palette(ColorTitleBar, isActive());
+    g.setCurrentColorGroup( QPalette::Active );
     if(isActive()){
         p.drawPixmap(1, 1, titleBuffer, 0, 0, w-2, title_height+2);
     }
@@ -617,7 +626,8 @@ void ModernSys::paintEvent( QPaintEvent* )
     p.drawLine(0, title_height+2, w-2, title_height+2);
 
     // frame
-    g = options()->palette(ColorFrame, isActive()).active();
+    g = options()->palette(ColorFrame, isActive());
+    g.setCurrentColorGroup(QPalette::Active);
     p.setPen(g.light());
     p.drawLine(1, title_height+3, 1, h-2);
     p.setPen(g.dark());

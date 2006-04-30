@@ -153,17 +153,17 @@ WebButton::drawButton(QPainter *p)
   QPen highlightPen;
 
   if (isDown() )
-    highlightPen = QPen(QColorGroup( palette() ).light());
+      highlightPen = QPen( palette().color( QPalette::Light ));
 
   else
   {
     if (mouseOver_)
-      highlightPen = QPen( QColorGroup( palette() ).highlight());
+      highlightPen = QPen( palette().highlight());
     else
       highlightPen = QPen(Qt::NoPen);
   }
 
-  p->fillRect(rect(), QColorGroup( palette() ).background());
+  p->fillRect(rect(), palette().color( QPalette::Background ) );
 
   Position position_;
   if (0 == mapToParent(rect().topLeft() ).x() )

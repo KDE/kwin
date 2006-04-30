@@ -198,7 +198,7 @@ WebClient::reset( unsigned long changed )
   if (changed & SettingColors)
   {
     // repaint the whole thing
-    widget()->repaint(false);
+    widget()->repaint();
   } else if (changed & SettingFont) {
     // font has changed -- update title height
     // title height
@@ -208,7 +208,7 @@ WebClient::reset( unsigned long changed )
     if (0 != titleHeight_ % 2)
       titleHeight_ += 1;
 
-    widget()->repaint(false);
+    widget()->repaint();
   }
 
   KCommonDecoration::reset(changed);
@@ -233,7 +233,9 @@ WebClient::paintEvent(QPaintEvent * pe)
   QPainter p(widget());
 
   p.setPen(Qt::black);
-  p.setBrush(options()->palette(ColorFrame, isActive()).active().background());
+  QPalette pal = options()->palette(ColorFrame, isActive());
+  pal.setCurrentColorGroup( QPalette::Active );
+  p.setBrush( pal.background() );
 
   p.setClipRegion(pe->region() - titleRect);
 

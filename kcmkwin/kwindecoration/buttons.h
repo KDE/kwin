@@ -91,7 +91,7 @@ class ButtonDropSiteItem
 		int width();
 		int height();
 
-		void draw(QPainter *p, const QColorGroup& cg, QRect rect);
+		void draw(QPainter *p, const QPalette& cg, QRect rect);
 
 	private:
 		Button m_button;
@@ -106,7 +106,7 @@ class ButtonSourceItem : public Q3ListViewItem
 		ButtonSourceItem(Q3ListView * parent, const Button& btn);
 		virtual ~ButtonSourceItem();
 
-		void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int align);
+		void paintCell(QPainter *p, const QPalette &cg, int column, int width, int align);
 
 		void setButton(const Button& btn);
 		Button button() const;

@@ -295,29 +295,35 @@ void QuartzHandler::drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const
 void QuartzHandler::createPixmaps()
 {
     // Obtain titlebar blend colours, and create the block stuff on pixmaps.
-    QColorGroup g2 = options()->palette(ColorTitleBlend, true).active();
-    QColor c2 = g2.background();
-    g2 = options()->palette(ColorTitleBar, true ).active();
-    QColor c = g2.background().light(130);
+    QPalette g2 = options()->palette(ColorTitleBlend, true);
+    g2.setCurrentColorGroup( QPalette::Active );
+    QColor c2 = g2.color( QPalette::Background );
+    g2 = options()->palette(ColorTitleBar, true );
+    g2.setCurrentColorGroup( QPalette::Active );
+    QColor c = g2.color(QPalette::Background).light(130);
 
     titleBlocks = new KPixmap( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( titleBlocks, *titleBlocks, c, c2 );
 
-    g2 = options()->palette(ColorTitleBlend, false).active();
-    c2 = g2.background();
-    g2 = options()->palette(ColorTitleBar, false ).active();
-    c = g2.background().light(130);
+    g2 = options()->palette(ColorTitleBlend, false);
+    g2.setCurrentColorGroup( QPalette::Active );
+    c2 = g2.color( QPalette::Background );
+    g2 = options()->palette(ColorTitleBar, false );
+    g2.setCurrentColorGroup( QPalette::Active );
+    c = g2.color(QPalette::Background).light(130);
 
     ititleBlocks = new KPixmap( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
 
 	// Set the on all desktops pin pixmaps;
-	QColorGroup g;
+	QPalette g;
 	QPainter p;
 
-	g = options()->palette( onAllDesktopsButtonOnLeft ? ColorTitleBar : ColorTitleBlend, true ).active();
-	c = onAllDesktopsButtonOnLeft ? g.background().light(130) : g.background();
-	g2 = options()->palette( ColorButtonBg, true ).active();
+	g = options()->palette( onAllDesktopsButtonOnLeft ? ColorTitleBar : ColorTitleBlend, true );
+        g.setCurrentColorGroup( QPalette::Active );
+	c = onAllDesktopsButtonOnLeft ? g.color(QPalette::Background).light(130) : g.color(QPalette::Background);
+	g2 = options()->palette( ColorButtonBg, true );
+        g2.setCurrentColorGroup( QPalette::Active );
 
 	pinUpPix = new KPixmap(16, 16);
 	p.begin( pinUpPix );
@@ -335,9 +341,11 @@ void QuartzHandler::createPixmaps()
 
 
 	// Inactive pins
-	g = options()->palette( onAllDesktopsButtonOnLeft ? ColorTitleBar : ColorTitleBlend, false ).active();
-	c = onAllDesktopsButtonOnLeft ? g.background().light(130) : g.background();
-	g2 = options()->palette( ColorButtonBg, false ).active();
+	g = options()->palette( onAllDesktopsButtonOnLeft ? ColorTitleBar : ColorTitleBlend, false );
+        g.setCurrentColorGroup( QPalette::Active );
+	c = onAllDesktopsButtonOnLeft ? g.color(QPalette::Background).light(130) : g.color( QPalette::Background );
+	g2 = options()->palette( ColorButtonBg, false );
+        g2.setCurrentColorGroup( QPalette::Active );
 
 	ipinUpPix = new KPixmap(16, 16);
 	p.begin( ipinUpPix );
@@ -378,10 +386,11 @@ QList< QuartzHandler::BorderSize > QuartzHandler::borderSizes() const
 QuartzButton::QuartzButton(ButtonType type, QuartzClient *parent, const char *name)
     : KCommonDecorationButton(type, parent)
 {
+    setObjectName( name );
     // Eliminate any possible background flicker
-    setBackgroundMode( Qt::NoBackground );
+    setAttribute(Qt::WA_NoSystemBackground, false);
 
-	deco = 0;
+    deco = 0;
 }
 
 
@@ -435,7 +444,7 @@ void QuartzButton::setBitmap(const unsigned char *bitmap)
 	if (bitmap) {
 		deco = new QBitmap(10, 10, bitmap, true);
 		deco->setMask( *deco );
-		repaint( false );
+		repaint( );
 	}
 }
 
@@ -646,7 +655,7 @@ void QuartzClient::reset( unsigned long changed )
 	if (changed & SettingColors || changed & SettingFont)
 	{
 		// repaint the whole thing
-		widget()->repaint(false);
+		widget()->repaint();
 	}
 
 	KCommonDecoration::reset(changed);
@@ -662,7 +671,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
 
 	const bool maxFull = (maximizeMode()==MaximizeFull) && !options()->moveResizeMaximizedWindows();
 
-	QColorGroup g;
+	QPalette g;
     QPainter p(widget());
 
     // Obtain widget bounds.
@@ -676,25 +685,26 @@ void QuartzClient::paintEvent( QPaintEvent* )
 
     // Draw part of the frame that is the title color
 
-	if( coloredFrame )
-		g = options()->palette(ColorTitleBar, isActive()).active();
-	else
-		g = options()->palette(ColorFrame, isActive()).active();
+    if( coloredFrame )
+        g = options()->palette(ColorTitleBar, isActive());
+    else
+        g = options()->palette(ColorFrame, isActive());
+    g.setCurrentColorGroup( QPalette::Active );
 
     // Draw outer highlights and lowlights
-    p.setPen( g.light().light(120) );
+    p.setPen( g.color(QPalette::Light).light(120) );
     p.drawLine( x, y, x2-1, y );
     p.drawLine( x, y+1, x, y2-1 );
-    p.setPen( g.dark().light(120) );
+    p.setPen( g.color(QPalette::Dark).light(120) );
     p.drawLine( x2, y, x2, y2 );
     p.drawLine( x, y2, x2, y2 );
 
     // Fill out the border edges
 	QColor frameColor;
 	if ( coloredFrame)
-		frameColor = g.background().light(130);
+            frameColor = g.color(QPalette::Background).light(130);
 	else
-		frameColor = g.background();
+            frameColor = g.color( QPalette::Background );
 	if (borderSize > 2) {
 		p.fillRect(x+1, y+1, w-2, borderSize-2, frameColor); // top
 		if (!maxFull) {
@@ -705,7 +715,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
 	}
 
     // Draw a frame around the wrapped widget.
-    p.setPen( g.background() );
+        p.setPen( g.color(QPalette::Background) );
 	if (maxFull) {
 		p.drawLine(x+1, y+titleHeight+(borderSize-1), w-2, y+titleHeight+(borderSize-1));
 	} else {
@@ -716,9 +726,9 @@ void QuartzClient::paintEvent( QPaintEvent* )
 	p.drawLine( x+borderSize, y2-borderSize, x2-borderSize, y2-borderSize);
 
     // Highlight top corner
-    p.setPen( g.light().light(160) );
+    p.setPen( g.color(QPalette::Light).light(160) );
     p.drawPoint( x, y );
-    p.setPen( g.light().light(140) );
+    p.setPen( g.color(QPalette::Light).light(140) );
     p.drawPoint( x+1, y );
     p.drawPoint( x, y+1 );
 
