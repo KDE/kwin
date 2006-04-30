@@ -31,7 +31,7 @@ extern "C"
 //		Configure tab in kwindecoration
 
 ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(parent)
-{	
+{
 	clientrc = new KConfig("kwinmodernsysrc");
 	KGlobal::locale()->insertCatalog("kwin_clients");
 	mainw = new QWidget(parent);
@@ -40,7 +40,8 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	vbox->setMargin(0);
 
 	handleBox = new QWidget(mainw);
-        QGridLayout* layout = new QGridLayout(handleBox, 0, KDialog::spacingHint());
+        QGridLayout* layout = new QGridLayout(handleBox );
+        layout->setSpacing( KDialog::spacingHint() );
 
 	cbShowHandle = new QCheckBox(i18n("&Show window resize handle"), handleBox);
 	cbShowHandle->setWhatsThis(
@@ -73,14 +74,14 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
 	label2->setAlignment( Qt::AlignHCenter );
 	label3 = new QLabel(i18n("Large"), hbox);
 	label3->setAlignment(rtl ? Qt::AlignLeft : Qt::AlignRight);
-	
+
 	vbox->addWidget(handleBox);
 	vbox->addStretch(1);
 
 //        layout->setColumnMinimumWidth(0, 30);
         layout->addItem(new QSpacerItem(30, 10, QSizePolicy::Fixed, QSizePolicy::Fixed), 1, 0);
         layout->addWidget(sliderBox, 1, 1);
-	
+
 	load(conf);
 	mainw->show();
 }
@@ -114,7 +115,7 @@ void ModernSysConfig::load(KConfig* /*conf*/)
 	handleWidth = clientrc->readEntry("HandleWidth", 6);
 	handleSize = clientrc->readEntry("HandleSize", 30);
 	handleSizeSlider->setValue(qMin((handleWidth - 6) / 2, (uint)4));
-	
+
 }
 
 
