@@ -44,7 +44,19 @@
 
 // -------------------------------------------------------------------------------------------
 
+static void flip( QPixmap *&pix )
+{
+	QPixmap *tmp = new QPixmap( pix->transformed( QWMatrix(-1,0,0,1,pix->width(),0) ) );
+	delete pix;
+	pix = tmp;
+}
 
+static void flip( QBitmap *&pix )
+{
+	QBitmap *tmp = new QBitmap( pix->transformed( QWMatrix(-1,0,0,1,pix->width(),0) ) );
+	delete pix;
+	pix = tmp;
+}
 
 namespace Keramik
 {
@@ -196,11 +208,11 @@ KeramikHandler::KeramikHandler()
 
 	// Flip the bitmaps horizontally in right-to-left mode
 	if ( QApplication::isRightToLeft() ) {
-		for ( int i = 0; i < Help; i++ )
-			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
+		for ( int i = 0; i < Help; ++i )
+			::flip( buttonDecos[i] );
 
-		for ( int i = Help + 1; i < NumButtonDecos; i++ )
-			flip( reinterpret_cast<QPixmap**>(buttonDecos)[i] );
+		for ( int i = Help + 1; i < NumButtonDecos; ++i )
+                    	::flip( buttonDecos[i] );
 	}
 
 	readConfig();
@@ -392,8 +404,8 @@ void KeramikHandler::createPixmaps()
 		flip( activeTiles[GrabBarLeft], activeTiles[GrabBarRight] );
 		flip( inactiveTiles[GrabBarLeft], inactiveTiles[GrabBarRight] );
 
-		flip( titleButtonRound );
-		flip( titleButtonSquare );
+		::flip( titleButtonRound );
+		::flip( titleButtonSquare );
 	}
 
 	// Pretile the center & border tiles for optimal performance
@@ -524,15 +536,6 @@ void KeramikHandler::flip( QPixmap *&pix1, QPixmap *&pix2 )
 
 	delete pix2;
 	pix2 = tmp;
-}
-
-
-void KeramikHandler::flip( QPixmap *&pix )
-{
-	// Flip the pixmap horizontally
-	QPixmap *tmp = new QPixmap( pix->transformed( QMatrix(-1,0,0,1,pix->width(),0) ) );
-	delete pix;
-	pix = tmp;
 }
 
 

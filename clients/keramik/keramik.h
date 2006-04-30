@@ -90,7 +90,6 @@ namespace Keramik {
 			void addWidth  (int width,  QPixmap *&pix, bool left, QPixmap *bottomPix);
 			void addHeight (int height, QPixmap *&pix);
 			void flip( QPixmap *&, QPixmap *& );
-			void flip( QPixmap *& );
 			void pretile( QPixmap *&, int, Qt::Orientation );
 			QPixmap *composite( QImage *, QImage * );
 			QImage  *loadImage( const QString &, const QColor & );
