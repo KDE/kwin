@@ -385,7 +385,7 @@ void KWMThemeClient::drawTitle(QPainter &dest)
     }
     else{
 			p.fillRect(r, options()->palette(KDecorationOptions::ColorTitleBar, isActive()).active().
-                   brush(QColorGroup::Button));
+                   brush(QPalette::Button));
     }
     p.setFont(options()->font(isActive()));
     p.setPen(options()->color(KDecorationOptions::ColorFont, isActive()));

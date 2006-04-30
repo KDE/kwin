@@ -529,7 +529,7 @@ void ModernSys::recalcTitleBuffer()
         p.drawTiledPixmap(0, 0, width(), title_height+2, *aUpperGradient);
     else
         p.fillRect(0, 0, width(), title_height+2,
-                   pt.brush(QColorGroup::Button));
+                   pt.brush(QPalette::Button));
 
     QRect t = titleRect(); // titlebar->geometry();
     t.setTop( 2 );
