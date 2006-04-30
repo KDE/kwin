@@ -513,7 +513,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
         p.drawRect( x+i, y+i, w-2*i, h-2*i );
 
     // Draw highlights and lowlights
-    p.setPen(g.light());
+    p.setPen(g.color( QPalette::Light ));
     for (int i = 1; i <= borderWidth/3; i++) {
         p.drawLine( x+i, y+i, x2-i-1, y+i);
         p.drawLine( x+i, y+i, x+i, y2-i-1);

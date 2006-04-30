@@ -158,9 +158,9 @@ WebButton::drawButton(QPainter *p)
   else
   {
     if (mouseOver_)
-      highlightPen = QPen( palette().highlight());
+        highlightPen = QPen( palette().color( QPalette::Highlight ));
     else
-      highlightPen = QPen(Qt::NoPen);
+        highlightPen = QPen(Qt::NoPen);
   }
 
   p->fillRect(rect(), palette().color( QPalette::Background ) );

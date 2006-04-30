@@ -323,11 +323,11 @@ void LaptopButton::drawButton(QPainter *p)
         g.setCurrentColorGroup( QPalette::Active );
         int w = width();
         int h = height();
-        p->fillRect(1, 1, w-2, h-2, isDown() ? g.mid() : g.button());
-        p->setPen(isDown() ? g.dark() : g.light());
+        p->fillRect(1, 1, w-2, h-2, isDown() ? g.color(QPalette::Mid) : g.color(QPalette::Button) );
+        p->setPen(isDown() ? g.color( QPalette::Dark ) : g.color( QPalette::Light ));
         p->drawLine(0, 0, w-1, 0);
         p->drawLine(0, 0, 0, w-1);
-        p->setPen(isDown() ? g.light() : g.dark());
+        p->setPen(isDown() ? g.color( QPalette::Light ) : g.color( QPalette::Dark ));
         p->drawLine(w-1, 0, w-1, h-1);
         p->drawLine(0, h-1, w-1, h-1);
     }
@@ -493,7 +493,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
         p.drawLine(r.left()+1, r.bottom()-2, r.right()-1, r.bottom()-2);
 
     // outer frame
-    p.setPen(g.light());
+    p.setPen(g.color(QPalette::Light));
     p.drawLine(r.x()+1, r.y()+1, r.right()-1, r.y()+1);
     p.drawLine(r.x()+1, r.y()+1, r.x()+1, r.bottom()-1);
     p.setPen(g.dark());
@@ -566,7 +566,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
         p.setPen(g.mid());
         p.drawLine(r.x(), r.y(), r.right(), r.y());
         p.drawLine(r.x(), r.y(), r.x(), r.bottom());
-        p.setPen(g.button());
+        p.setPen(g.color(QPalette::Button));
         p.drawLine(r.right(), r.y(), r.right(), r.bottom());
         p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
         p.setPen(options()->color(KDecoration::ColorFont, false));
@@ -650,7 +650,7 @@ void LaptopClient::updateActiveBuffer( )
     p.setPen(g.mid());
     p.drawLine(r.x(), r.y(), r.right(), r.y());
     p.drawLine(r.x(), r.y(), r.x(), r.bottom());
-    p.setPen(g.button());
+    p.setPen(g.color(QPalette::Button));
     p.drawLine(r.right(), r.y(), r.right(), r.bottom());
     p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
     p.setPen(options()->color(KDecoration::ColorFont, true));

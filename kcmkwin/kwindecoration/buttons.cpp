@@ -647,9 +647,9 @@ void ButtonSourceItem::paintCell(QPainter *p, const QPalette &cg, int column, in
 	// we need the color group cg, so to the work here, not in setButton...
 	if (m_dirty) {
 		if (m_button.supported) {
-			setPixmap(0, bitmapPixmap(m_button.icon, cg.foreground() ) );
+                    setPixmap(0, bitmapPixmap(m_button.icon, cg.color( QPalette::Foreground ) ) );
 		} else {
-			setPixmap(0, bitmapPixmap(m_button.icon, cg.mid() ) );
+                    setPixmap(0, bitmapPixmap(m_button.icon, cg.color( QPalette::Mid ) ) );
 		}
 		m_dirty = false;
 	}
@@ -659,7 +659,7 @@ void ButtonSourceItem::paintCell(QPainter *p, const QPalette &cg, int column, in
 	} else {
 		// grey out unsupported buttons
 		QPalette cg2 = cg;
-		cg2.setColor(QPalette::Text, cg.mid() );
+		cg2.setColor(QPalette::Text, cg.color(QPalette::Mid) );
 		Q3ListViewItem::paintCell(p,cg2,column,width,align);
 	}
 }
