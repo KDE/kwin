@@ -12,7 +12,5 @@ kcm_kwindecoration_la_LIBADD = $(LIB_KDEUI) ../../lib/libkdecorations.la
 
 METASOURCES = AUTO
 
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kcmkwindecoration.pot
 
 xdg_apps_DATA = kwindecoration.desktop

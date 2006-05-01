@@ -23,7 +23,5 @@ kwin_rules_dialog_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undef
 kwin_rules_dialog_la_LIBADD = libkwinrules.la 
 kwin_rules_dialog_la_COMPILE_FIRST = ruleslistbase.h ruleswidgetbase.h
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kcmkwinrules.pot
 
 xdg_apps_DATA = kwinrules.desktop
