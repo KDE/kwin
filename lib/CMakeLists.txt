@@ -25,8 +25,6 @@ install_targets(${LIB_INSTALL_DIR} kdecorations )
 
 install_files( /include FILES kdecoration.h kdecoration_p.h kdecoration_plugins_p.h          kdecorationfactory.h kcommondecoration.h )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

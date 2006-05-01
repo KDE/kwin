@@ -66,8 +66,6 @@ install_files( /include FILES KWinInterface.h )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 
