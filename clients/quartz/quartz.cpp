@@ -22,6 +22,7 @@
 #include <qbitmap.h>
 #include <qdrawutil.h>
 #include <qimage.h>
+#include <kpixmap.h>
 #include <qapplication.h>
 
 #include "quartz.h"
@@ -114,12 +115,12 @@ bool onAllDesktopsButtonOnLeft = true;
 bool coloredFrame		= true;
 bool extraSlim = false;
 
-QPixmap* titleBlocks 	= NULL;
-QPixmap* ititleBlocks 	= NULL;
-QPixmap* pinDownPix		= NULL;
-QPixmap* pinUpPix		= NULL;
-QPixmap* ipinDownPix	= NULL;
-QPixmap* ipinUpPix		= NULL;
+KPixmap* titleBlocks 	= NULL;
+KPixmap* ititleBlocks 	= NULL;
+KPixmap* pinDownPix		= NULL;
+KPixmap* pinUpPix		= NULL;
+KPixmap* ipinDownPix	= NULL;
+KPixmap* ipinUpPix		= NULL;
 static int normalTitleHeight;
 static int toolTitleHeight;
 static int borderWidth;
@@ -249,7 +250,7 @@ void QuartzHandler::readConfig()
 
 // This does the colour transition magic. (You say "Oh, is that it?")
 // This may be made configurable at a later stage
-void QuartzHandler::drawBlocks( QPixmap *pi, QPixmap &p, const QColor &c1, const QColor &c2 )
+void QuartzHandler::drawBlocks( KPixmap *pi, KPixmap &p, const QColor &c1, const QColor &c2 )
 {
 	QPainter px;
 
@@ -301,7 +302,7 @@ void QuartzHandler::createPixmaps()
     g2.setCurrentColorGroup( QPalette::Active );
     QColor c = g2.color(QPalette::Background).light(130);
 
-    titleBlocks = new QPixmap( normalTitleHeight*25/18, normalTitleHeight );
+    titleBlocks = new KPixmap( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( titleBlocks, *titleBlocks, c, c2 );
 
     g2 = options()->palette(ColorTitleBlend, false);
@@ -311,7 +312,7 @@ void QuartzHandler::createPixmaps()
     g2.setCurrentColorGroup( QPalette::Active );
     c = g2.color(QPalette::Background).light(130);
 
-    ititleBlocks = new QPixmap( normalTitleHeight*25/18, normalTitleHeight );
+    ititleBlocks = new KPixmap( normalTitleHeight*25/18, normalTitleHeight );
     drawBlocks( ititleBlocks, *ititleBlocks, c, c2 );
 
 	// Set the on all desktops pin pixmaps;
@@ -324,14 +325,14 @@ void QuartzHandler::createPixmaps()
 	g2 = options()->palette( ColorButtonBg, true );
         g2.setCurrentColorGroup( QPalette::Active );
 
-	pinUpPix = new QPixmap(16, 16);
+	pinUpPix = new KPixmap(16, 16);
 	p.begin( pinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits,
 					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 
-	pinDownPix = new QPixmap(16, 16);
+	pinDownPix = new KPixmap(16, 16);
 	p.begin( pinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits,
@@ -346,14 +347,14 @@ void QuartzHandler::createPixmaps()
 	g2 = options()->palette( ColorButtonBg, false );
         g2.setCurrentColorGroup( QPalette::Active );
 
-	ipinUpPix = new QPixmap(16, 16);
+	ipinUpPix = new KPixmap(16, 16);
 	p.begin( ipinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits,
 					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 
-	ipinDownPix = new QPixmap(16, 16);
+	ipinDownPix = new KPixmap(16, 16);
 	p.begin( ipinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
 	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits,

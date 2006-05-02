@@ -36,6 +36,7 @@
 #include <qbitmap.h>
 #include <qlabel.h>
 #include <qtooltip.h>
+#include <kpixmap.h>
 
 #include <X11/Xlib.h>
 #include <QX11Info>
@@ -58,7 +59,7 @@ enum {
 
 #define NUM_PIXMAPS (P_NUM_BUTTON_TYPES * NumStates)
 
-static QPixmap *pixmap[NUM_PIXMAPS];
+static KPixmap *pixmap[NUM_PIXMAPS];
 
 // active
 #define PIXMAP_A(i)  (pixmap[(i) * NumStates + Norm])
@@ -73,7 +74,7 @@ static QPixmap *pixmap[NUM_PIXMAPS];
 // inactive, down
 #define PIXMAP_ID(i) (pixmap[(i) * NumStates + IDown])
 
-static QPixmap* titleGradient[2] = {0, 0};
+static KPixmap* titleGradient[2] = {0, 0};
 
 static int thickness = 4; // Frame thickness
 static int buttonSize = 16;
@@ -153,7 +154,7 @@ static void read_config(B2ClientFactory *f)
     }
 }
 
-static void drawB2Rect(QPixmap *pix, const QColor &primary, bool down)
+static void drawB2Rect(KPixmap *pix, const QColor &primary, bool down)
 {
     QPainter p(pix);
     QColor hColor = primary.light(150);
@@ -200,17 +201,17 @@ static void create_pixmaps()
         switch (i / NumStates) {
             case P_MAX: // will be initialized by copying P_CLOSE
             case P_RESIZE:
-                pixmap[i] = new QPixmap();
+                pixmap[i] = new KPixmap();
                 break;
             case P_ICONIFY:
-                pixmap[i] = new QPixmap(10, 10);
+                pixmap[i] = new KPixmap(10, 10);
                 break;
             case P_SHADE:
             case P_CLOSE:
-                pixmap[i] = new QPixmap(bsize, bsize);
+                pixmap[i] = new KPixmap(bsize, bsize);
                 break;
             default:
-                pixmap[i] = new QPixmap(16, 16);
+                pixmap[i] = new KPixmap(16, 16);
                 break;
         }
     }
@@ -967,11 +968,11 @@ static void redraw_pixmaps()
     drawB2Rect(PIXMAP_ID(P_CLOSE), iGrp.color( QPalette::Button ), true);
 
     // shade
-    QPixmap thinBox(buttonSize - 2, 6);
+    KPixmap thinBox(buttonSize - 2, 6);
     for (i = 0; i < NumStates; i++) {
 	bool is_act = (i < 2);
 	bool is_down = ((i & 1) == 1);
-	QPixmap *pix = pixmap[P_SHADE * NumStates + i];
+	KPixmap *pix = pixmap[P_SHADE * NumStates + i];
 	QColor color = is_act ? aGrp.color( QPalette::Button ) : iGrp.color( QPalette::Button );
 	drawB2Rect(&thinBox, color, is_down);
 	pix->fill(Qt::black);
@@ -986,8 +987,8 @@ static void redraw_pixmaps()
     }
 
     // normalize + iconify
-    QPixmap smallBox( 10, 10 );
-    QPixmap largeBox( 12, 12 );
+    KPixmap smallBox( 10, 10 );
+    KPixmap largeBox( 12, 12 );
 
     for (i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
@@ -1086,7 +1087,7 @@ static void redraw_pixmaps()
 	for (i = 0; i < 2; i++) {
 	    if (titleColor[2 * i] != titleColor[2 * i + 1]) {
 		if (!titleGradient[i]) {
-		    titleGradient[i] = new QPixmap;
+		    titleGradient[i] = new KPixmap;
 		}
 		*titleGradient[i] = QPixmap(64, buttonSize + 3);
 		KPixmapEffect::gradient(*titleGradient[i],

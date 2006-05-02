@@ -26,7 +26,7 @@
 #include <qapplication.h>
 #include <qlabel.h>
 #include <kdebug.h>
-#include <QPixmap>
+#include <kpixmap.h>
 #include <QPolygon>
 #include <QStyle>
 
@@ -119,25 +119,25 @@ static const unsigned char pinup_mask_bits[] = {
 
 // ===========================================================================
 
-static QPixmap* titlePix;
-static QPixmap* titleBuffer;
-static QPixmap* aUpperGradient;
-static QPixmap* iUpperGradient;
+static KPixmap* titlePix;
+static KPixmap* titleBuffer;
+static KPixmap* aUpperGradient;
+static KPixmap* iUpperGradient;
 
-static QPixmap* pinDownPix;
-static QPixmap* pinUpPix;
-static QPixmap* ipinDownPix;
-static QPixmap* ipinUpPix;
+static KPixmap* pinDownPix;
+static KPixmap* pinUpPix;
+static KPixmap* ipinDownPix;
+static KPixmap* ipinUpPix;
 
-static QPixmap* rightBtnUpPix[2];
-static QPixmap* rightBtnDownPix[2];
-static QPixmap* irightBtnUpPix[2];
-static QPixmap* irightBtnDownPix[2];
+static KPixmap* rightBtnUpPix[2];
+static KPixmap* rightBtnDownPix[2];
+static KPixmap* irightBtnUpPix[2];
+static KPixmap* irightBtnDownPix[2];
 
-static QPixmap* leftBtnUpPix[2];
-static QPixmap* leftBtnDownPix[2];
-static QPixmap* ileftBtnUpPix[2];
-static QPixmap* ileftBtnDownPix[2];
+static KPixmap* leftBtnUpPix[2];
+static KPixmap* leftBtnDownPix[2];
+static KPixmap* ileftBtnUpPix[2];
+static KPixmap* ileftBtnDownPix[2];
 
 static KDEDefaultHandler* clientHandler;
 static int	toolTitleHeight;
@@ -268,7 +268,7 @@ void KDEDefaultHandler::createPixmaps()
 		QPainter p;
 		QPainter maskPainter;
 		int i, x, y;
-		titlePix = new QPixmap(132, normalTitleHeight+2);
+		titlePix = new KPixmap(132, normalTitleHeight+2);
 		QBitmap mask(132, normalTitleHeight+2);
 		mask.fill(Qt::color0);
 
@@ -306,7 +306,7 @@ void KDEDefaultHandler::createPixmaps()
 		// Create the titlebar gradients
 		if (activeTitleColor1 != activeTitleColor2)
 		{
-			aUpperGradient = new QPixmap(128, normalTitleHeight+2);
+			aUpperGradient = new KPixmap(128, normalTitleHeight+2);
 			KPixmapEffect::gradient(*aUpperGradient,
 				activeTitleColor1,
 				activeTitleColor2,
@@ -315,7 +315,7 @@ void KDEDefaultHandler::createPixmaps()
 
 		if (inactiveTitleColor1 != inactiveTitleColor2)
 		{
-			iUpperGradient = new QPixmap(128, normalTitleHeight+2);
+			iUpperGradient = new KPixmap(128, normalTitleHeight+2);
 
 			KPixmapEffect::gradient(*iUpperGradient,
 					inactiveTitleColor1,
@@ -330,14 +330,14 @@ void KDEDefaultHandler::createPixmaps()
 
 	// Active pins
 	g = options()->palette( ColorButtonBg, true );
-	pinUpPix  = new QPixmap(16, 16);
+	pinUpPix  = new KPixmap(16, 16);
 	p.begin( pinUpPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
 		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 	pinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
-	pinDownPix = new QPixmap(16, 16);
+	pinDownPix = new KPixmap(16, 16);
 	p.begin( pinDownPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
 		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
@@ -346,14 +346,14 @@ void KDEDefaultHandler::createPixmaps()
 
 	// Inactive pins
 	g = options()->palette( ColorButtonBg, false );
-	ipinUpPix = new QPixmap(16, 16);
+	ipinUpPix = new KPixmap(16, 16);
 	p.begin( ipinUpPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
 		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
 	p.end();
 	ipinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
-	ipinDownPix = new QPixmap(16, 16);
+	ipinDownPix = new KPixmap(16, 16);
 	p.begin( ipinDownPix );
 	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
 		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
@@ -361,28 +361,28 @@ void KDEDefaultHandler::createPixmaps()
 	ipinDownPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits) );
 
 	// Create a title buffer for flicker-free painting
-	titleBuffer = new QPixmap();
+	titleBuffer = new KPixmap();
 
 	// Cache all possible button states
-	leftBtnUpPix[true] 	= new QPixmap(normalTitleHeight, normalTitleHeight);
-	leftBtnDownPix[true]	= new QPixmap(normalTitleHeight, normalTitleHeight);
-	ileftBtnUpPix[true]	= new QPixmap(normalTitleHeight, normalTitleHeight);
-	ileftBtnDownPix[true]	= new QPixmap(normalTitleHeight, normalTitleHeight);
+	leftBtnUpPix[true] 	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	leftBtnDownPix[true]	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	ileftBtnUpPix[true]	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	ileftBtnDownPix[true]	= new KPixmap(normalTitleHeight, normalTitleHeight);
 
-	rightBtnUpPix[true] 	= new QPixmap(normalTitleHeight, normalTitleHeight);
-	rightBtnDownPix[true] = new QPixmap(normalTitleHeight, normalTitleHeight);
-	irightBtnUpPix[true] 	= new QPixmap(normalTitleHeight, normalTitleHeight);
-	irightBtnDownPix[true] = new QPixmap(normalTitleHeight, normalTitleHeight);
+	rightBtnUpPix[true] 	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	rightBtnDownPix[true] = new KPixmap(normalTitleHeight, normalTitleHeight);
+	irightBtnUpPix[true] 	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	irightBtnDownPix[true] = new KPixmap(normalTitleHeight, normalTitleHeight);
 
-	leftBtnUpPix[false] 	= new QPixmap(toolTitleHeight, normalTitleHeight);
-	leftBtnDownPix[false]	= new QPixmap(toolTitleHeight, normalTitleHeight);
-	ileftBtnUpPix[false]	= new QPixmap(normalTitleHeight, normalTitleHeight);
-	ileftBtnDownPix[false]	= new QPixmap(normalTitleHeight, normalTitleHeight);
+	leftBtnUpPix[false] 	= new KPixmap(toolTitleHeight, normalTitleHeight);
+	leftBtnDownPix[false]	= new KPixmap(toolTitleHeight, normalTitleHeight);
+	ileftBtnUpPix[false]	= new KPixmap(normalTitleHeight, normalTitleHeight);
+	ileftBtnDownPix[false]	= new KPixmap(normalTitleHeight, normalTitleHeight);
 
-	rightBtnUpPix[false] 	= new QPixmap(toolTitleHeight, toolTitleHeight);
-	rightBtnDownPix[false] = new QPixmap(toolTitleHeight, toolTitleHeight);
-	irightBtnUpPix[false] 	= new QPixmap(toolTitleHeight, toolTitleHeight);
-	irightBtnDownPix[false] = new QPixmap(toolTitleHeight, toolTitleHeight);
+	rightBtnUpPix[false] 	= new KPixmap(toolTitleHeight, toolTitleHeight);
+	rightBtnDownPix[false] = new KPixmap(toolTitleHeight, toolTitleHeight);
+	irightBtnUpPix[false] 	= new KPixmap(toolTitleHeight, toolTitleHeight);
+	irightBtnDownPix[false] = new KPixmap(toolTitleHeight, toolTitleHeight);
 
 	// Draw the button state pixmaps
 	g = options()->palette( ColorTitleBar, true );
@@ -472,7 +472,7 @@ void KDEDefaultHandler::freePixmaps()
 }
 
 
-void KDEDefaultHandler::drawButtonBackground(QPixmap *pix,
+void KDEDefaultHandler::drawButtonBackground(KPixmap *pix,
 		const QPalette &g, bool sunken)
 {
     QPainter p;
@@ -677,7 +677,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 		p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, *deco);
 
 	} else {
-		QPixmap btnpix;
+		KPixmap btnpix;
 
 		if (type()==OnAllDesktopsButton) {
 			if (active)

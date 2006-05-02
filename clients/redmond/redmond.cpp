@@ -23,6 +23,7 @@
 #include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
+#include <kpixmap.h>
 
 #include <qbitmap.h>
 #include <qimage.h>
@@ -80,17 +81,17 @@ static unsigned char question_bits[] = {
 
 
 // Up / Down titlebar button images
-static QPixmap *btnPix1;
-static QPixmap *iBtnPix1;
-static QPixmap *btnDownPix1;
-static QPixmap *iBtnDownPix1;
+static KPixmap *btnPix1;
+static KPixmap *iBtnPix1;
+static KPixmap *btnDownPix1;
+static KPixmap *iBtnDownPix1;
 
-static QPixmap *miniBtnPix1;
-static QPixmap *iMiniBtnPix1;
-static QPixmap *miniBtnDownPix1;
-static QPixmap *iMiniBtnDownPix1;
+static KPixmap *miniBtnPix1;
+static KPixmap *iMiniBtnPix1;
+static KPixmap *miniBtnDownPix1;
+static KPixmap *iMiniBtnDownPix1;
 
-static QPixmap *defaultMenuPix;
+static KPixmap *defaultMenuPix;
 static QColor  *btnForeground;
 static bool    pixmaps_created = false;
 
@@ -141,15 +142,15 @@ static void create_pixmaps ()
 
     bool highcolor = QPixmap::defaultDepth() > 8;
 
-    btnPix1 = new QPixmap;
-    btnDownPix1 = new QPixmap;
-    iBtnPix1 = new QPixmap;
-    iBtnDownPix1 = new QPixmap;
-    miniBtnPix1 = new QPixmap;
-    miniBtnDownPix1 = new QPixmap;
-    iMiniBtnPix1 = new QPixmap;
-    iMiniBtnDownPix1 = new QPixmap;
-    defaultMenuPix = new QPixmap(kdelogo);
+    btnPix1 = new KPixmap;
+    btnDownPix1 = new KPixmap;
+    iBtnPix1 = new KPixmap;
+    iBtnDownPix1 = new KPixmap;
+    miniBtnPix1 = new KPixmap;
+    miniBtnDownPix1 = new KPixmap;
+    iMiniBtnPix1 = new KPixmap;
+    iMiniBtnDownPix1 = new KPixmap;
+    defaultMenuPix = new KPixmap(kdelogo);
 
     // buttons (active/inactive, sunken/unsunken)
 	QColorGroup g = options()->palette(KDecoration::ColorButtonBg, true).active();
@@ -550,7 +551,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
         // KS - Add gradient caching if needed at a later stage.
 
         // Create a disposable pixmap buffer for the title blend
-        QPixmap* titleBuffer = new QPixmap;
+        KPixmap* titleBuffer = new KPixmap;
         *titleBuffer = QPixmap(w-2*modBorderWidth, titleHeight);
 
         if (titleBuffer->depth() > 16) {
