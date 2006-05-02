@@ -21,7 +21,7 @@
 class QSpacerItem;
 class QBoxLayout;
 class QGridLayout;
-class KPixmap;
+class QPixmap;
 
 namespace Default {
 
@@ -41,7 +41,7 @@ class KDEDefaultHandler: public KDecorationFactory
 		unsigned long readConfig( bool update );
 		void createPixmaps();
 		void freePixmaps();
-		void drawButtonBackground(KPixmap *pix,
+		void drawButtonBackground(QPixmap *pix,
 				const QPalette &g, bool sunken);
 };
 

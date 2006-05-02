@@ -10,7 +10,6 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
-#include <kpixmap.h>
 #include <kdrawutil.h>
 #include <qbitmap.h>
 #include <qtooltip.h>
@@ -75,8 +74,8 @@ static unsigned char btnhighcolor_mask_bits[] = {
     0x00,0x40,0x80,0x00,0x00,0x00,0x39,0x00,0x00,0x00,0x20,0x99,0x0f,0x08,0xc4,
     0x00,0x00,0x00,0x67,0x00,0x00,0x00,0x58,0x5f,0x43,0x68,0x61,0x6e,0x67,0x65 };
 
-static KPixmap *aUpperGradient=0;
-static KPixmap *iUpperGradient=0;
+static QPixmap *aUpperGradient=0;
+static QPixmap *iUpperGradient=0;
 static QPixmap *buttonPix=0;
 static QPixmap *buttonPixDown=0;
 static QPixmap *iButtonPix=0;
@@ -161,8 +160,8 @@ static void create_pixmaps()
     btnSource = new QImage(btnhighcolor_xpm);
 
     if(QPixmap::defaultDepth() > 8){
-        aUpperGradient = new KPixmap( 32, title_height+2 );
-        iUpperGradient = new KPixmap( 32, title_height+2);;
+        aUpperGradient = new QPixmap( 32, title_height+2 );
+        iUpperGradient = new QPixmap( 32, title_height+2);;
         KPixmapEffect::gradient(*aUpperGradient,
                                 options()->color(KDecoration::ColorTitleBar, true).light(130),
                                 options()->color(KDecoration::ColorTitleBlend, true),

@@ -43,7 +43,7 @@ class QuartzHandler: public QObject, public KDecorationFactory
 		void readConfig();
 		void createPixmaps();
 		void freePixmaps();
-		void drawBlocks(KPixmap* pi, KPixmap &p, const QColor &c1, const QColor &c2);
+		void drawBlocks(QPixmap* pi, QPixmap &p, const QColor &c1, const QColor &c2);
 };
 
 
