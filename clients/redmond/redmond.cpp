@@ -302,7 +302,7 @@ void RedmondButton::setPixmap( const QPixmap &p )
         deco = QPixmap();
 	pix = p;
 
-	repaint(false);
+	repaint();
 }
 
 void RedmondButton::paintEvent(QPaintEvent *)
