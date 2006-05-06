@@ -12,7 +12,7 @@ kde4_add_executable(kompmgr ${kompmgr_SRCS})
 
 target_link_libraries(kompmgr  ${KDE4_KDECORE_LIBS} ${X11_Xcomposite_LIB} ${X11_Xdamage_LIB} ${X11_Xfixes_LIB} ${X11_Xext_LIB} m )
 
-install_targets(/bin kompmgr )
+install(TARGETS kompmgr DESTINATION bin)
 
 
 ########### install files ###############

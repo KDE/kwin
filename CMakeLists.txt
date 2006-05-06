@@ -56,7 +56,7 @@ target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations DCOP  ${X11_
 install_targets(${LIB_INSTALL_DIR} kdeinit_kwin )
 
 target_link_libraries( kwin kdeinit_kwin )
-install_targets(/bin kwin )
+install(TARGETS kwin DESTINATION bin)
 
 ########### install files ###############
 

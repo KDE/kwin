@@ -12,7 +12,7 @@ kde4_add_executable(kwmtheme ${kwmtheme_SRCS})
 
 target_link_libraries(kwmtheme  ${KDE4_KDECORE_LIBS} )
 
-install_targets(/bin kwmtheme )
+install(TARGETS kwmtheme DESTINATION bin)
 
 
 ########### install files ###############

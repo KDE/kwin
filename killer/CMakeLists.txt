@@ -12,7 +12,7 @@ kde4_add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 
 target_link_libraries(kwin_killer_helper  ${KDE4_KDEUI_LIBS} )
 
-install_targets(/bin kwin_killer_helper )
+install(TARGETS kwin_killer_helper DESTINATION bin)
 
 
 ########### install files ###############
