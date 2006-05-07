@@ -321,7 +321,7 @@ void Workspace::init()
     if( !setCurrentDesktop( initial_desktop ))
         setCurrentDesktop( 1 );
 
-    // now we know how many desktops we'll, thus, we initialise the positioning object
+    // now we know how many desktops we'll, thus, we initialize the positioning object
     initPositioning = new Placement(this);
 
     reconfigureTimer.setSingleShot( true );

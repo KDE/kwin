@@ -153,7 +153,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     inactiveFont = config->readEntry("inactiveFont", activeFont);
 
     activeFontSmall = activeFont;
-#warning KDE4 : is it usefull ? ( temporary hack )
+#warning KDE4 : is it useful ? ( temporary hack )
 //    activeFontSmall.setPointSize(activeFont.pointSize() - 2 > 0 ? activeFont.pointSize() - 2 : activeFont.pointSize()+1 );
     activeFontSmall = config->readEntry("activeFontSmall", activeFontSmall);
     inactiveFontSmall = config->readEntry("inactiveFontSmall", activeFontSmall);

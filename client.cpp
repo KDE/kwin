@@ -1926,7 +1926,7 @@ void Client::updateOpacity()
         else
             setOpacity(options->translucentInactiveWindows && !(keepAbove() && options->keepAboveAsActive),
                     options->inactiveWindowOpacity);
-        // deactivate dependend minor windows as well
+        // deactivate dependent minor windows as well
         if (isBMP())
         // beep-media-player, only undecorated windows (gtk2 xmms, xmms doesn't work with compmgr at all - s.e.p. :P )
             {
