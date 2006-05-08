@@ -28,7 +28,7 @@
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <kpixmapeffect.h>
-#include <kpixmap.h>
+#include <QPixmap>
 #include <qtimer.h>
 
 #include "plastikbutton.h"
@@ -173,7 +173,7 @@ void PlastikButton::drawButton(QPainter *painter)
     QRect r(0,0,width(),height());
 
     bool active = m_client->isActive();
-    KPixmap tempPixmap;
+    QPixmap tempPixmap;
 
     QColor highlightColor;
     if(type() == CloseButton) {

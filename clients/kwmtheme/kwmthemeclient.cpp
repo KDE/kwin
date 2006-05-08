@@ -65,8 +65,8 @@ enum FramePixmap{FrameTop=0, FrameBottom, FrameLeft, FrameRight, FrameTopLeft,
 static QPixmap *framePixmaps[8];
 static QPixmap *menuPix, *iconifyPix, *closePix, *maxPix, *minmaxPix,
     *pinupPix, *pindownPix;
-static KPixmap *aTitlePix = 0;
-static KPixmap *iTitlePix = 0;
+static QPixmap *aTitlePix = 0;
+static QPixmap *iTitlePix = 0;
 static KPixmapEffect::GradientType grType;
 static int maxExtent, titleAlign;
 static bool titleGradient = true;
@@ -152,13 +152,13 @@ static void create_pixmaps()
 
     tmpStr = config->readEntry("TitlebarLook");
     if(tmpStr == "shadedVertical"){
-        aTitlePix = new KPixmap;
+        aTitlePix = new QPixmap;
         aTitlePix->resize(32, 20);
         KPixmapEffect::gradient(*aTitlePix,
                                 options()->color(KDecorationOptions::ColorTitleBar, true),
                                 options()->color(KDecorationOptions::ColorTitleBlend, true),
                                 KPixmapEffect::VerticalGradient);
-        iTitlePix = new KPixmap;
+        iTitlePix = new QPixmap;
         iTitlePix->resize(32, 20);
         KPixmapEffect::gradient(*iTitlePix,
                                 options()->color(KDecorationOptions::ColorTitleBar, false),
@@ -185,14 +185,14 @@ static void create_pixmaps()
         titleGradient = false;
         tmpStr = config->readEntry("TitlebarPixmapActive", "");
         if(!tmpStr.isEmpty()){
-            aTitlePix = new KPixmap;
+            aTitlePix = new QPixmap;
             aTitlePix->load(locate("data", "kwin/pics/" + tmpStr));
         }
         else
             aTitlePix = NULL;
         tmpStr = config->readEntry("TitlebarPixmapInactive", "");
         if(!tmpStr.isEmpty()){
-            iTitlePix = new KPixmap;
+            iTitlePix = new QPixmap;
             iTitlePix->load(locate("data", "kwin/pics/" + tmpStr));
         }
         else
@@ -340,8 +340,8 @@ void KWMThemeClient::init()
         }
     }
     if(titleGradient){
-        aGradient = new KPixmap;
-        iGradient = new KPixmap;
+        aGradient = new QPixmap;
+        iGradient = new QPixmap;
     }
     else{
         aGradient = 0;
@@ -369,7 +369,7 @@ void KWMThemeClient::drawTitle(QPainter &dest)
         r.setRect(r.x()+1, r.y()+1, r.width()-2, r.height()-2);
     }
     
-    KPixmap *fill = isActive() ? aTitlePix : iTitlePix;
+    QPixmap *fill = isActive() ? aTitlePix : iTitlePix;
     if(fill)
         p.drawTiledPixmap(r, *fill);
     else if(titleGradient){

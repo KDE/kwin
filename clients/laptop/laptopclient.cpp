@@ -13,7 +13,7 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
-#include <kpixmap.h>
+#include <QPixmap>
 #include <kdrawutil.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -46,17 +46,17 @@ static const unsigned char sticky_bits[] = {
    0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
 
 static QPixmap *titlePix;
-static KPixmap *aUpperGradient;
-static KPixmap *iUpperGradient;
+static QPixmap *aUpperGradient;
+static QPixmap *iUpperGradient;
 // buttons active, inactive, up, down, and 2 sizes :P
-static KPixmap *btnPix1;
-static KPixmap *iBtnPix1;
-static KPixmap *btnDownPix1;
-static KPixmap *iBtnDownPix1;
-static KPixmap *btnPix2;
-static KPixmap *btnDownPix2;
-static KPixmap *iBtnPix2;
-static KPixmap *iBtnDownPix2;
+static QPixmap *btnPix1;
+static QPixmap *iBtnPix1;
+static QPixmap *btnDownPix1;
+static QPixmap *iBtnDownPix1;
+static QPixmap *btnPix2;
+static QPixmap *btnDownPix2;
+static QPixmap *iBtnPix2;
+static QPixmap *iBtnDownPix2;
 static QColor btnForeground;
 
 static int titleHeight = 14;
@@ -81,7 +81,7 @@ static inline const KDecorationOptions* options()
     return KDecoration::options();
 }
 
-static void drawButtonFrame(KPixmap *pix, const QPalette &g, bool sunken)
+static void drawButtonFrame(QPixmap *pix, const QPalette &g, bool sunken)
 {
     QPainter p;
     int w = pix->width();
@@ -145,8 +145,8 @@ static void create_pixmaps()
     titlePix->setMask(mask);
 
     if(QPixmap::defaultDepth() > 8){
-        aUpperGradient = new KPixmap(32, titleHeight+2);
-        iUpperGradient = new KPixmap(32, titleHeight+2);
+        aUpperGradient = new QPixmap(32, titleHeight+2);
+        iUpperGradient = new QPixmap(32, titleHeight+2);
         QColor bgColor = options()->color(KDecoration::ColorTitleBar, true);
         KPixmapEffect::gradient(*aUpperGradient,
                                 bgColor.light(120),
@@ -162,14 +162,14 @@ static void create_pixmaps()
     QPalette g = options()->palette(KDecoration::ColorButtonBg, true);
     g.setCurrentColorGroup( QPalette::Active );
     QColor c = g.color( QPalette::Background );
-    btnPix1 = new KPixmap(btnWidth1, titleHeight);
-    btnDownPix1 = new KPixmap(btnWidth1, titleHeight);
-    btnPix2 = new KPixmap(btnWidth2, titleHeight);
-    btnDownPix2 = new KPixmap(btnWidth2, titleHeight);
-    iBtnPix1 = new KPixmap(btnWidth1, titleHeight);
-    iBtnDownPix1 = new KPixmap(btnWidth1, titleHeight);
-    iBtnPix2 = new KPixmap(btnWidth2, titleHeight);
-    iBtnDownPix2 = new KPixmap(btnWidth2, titleHeight);
+    btnPix1 = new QPixmap(btnWidth1, titleHeight);
+    btnDownPix1 = new QPixmap(btnWidth1, titleHeight);
+    btnPix2 = new QPixmap(btnWidth2, titleHeight);
+    btnDownPix2 = new QPixmap(btnWidth2, titleHeight);
+    iBtnPix1 = new QPixmap(btnWidth1, titleHeight);
+    iBtnDownPix1 = new QPixmap(btnWidth1, titleHeight);
+    iBtnPix2 = new QPixmap(btnWidth2, titleHeight);
+    iBtnDownPix2 = new QPixmap(btnWidth2, titleHeight);
     if(QPixmap::defaultDepth() > 8){
         KPixmapEffect::gradient(*btnPix1, c.light(120), c.dark(130),
                                 KPixmapEffect::DiagonalGradient);

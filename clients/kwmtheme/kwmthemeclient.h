@@ -3,7 +3,7 @@
 
 #include <qbutton.h>
 #include <qtoolbutton.h>
-#include <kpixmap.h>
+#include <QPixmap>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 

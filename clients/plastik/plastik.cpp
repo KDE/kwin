@@ -25,7 +25,7 @@
 #include <qimage.h>
 
 #include <kconfig.h>
-#include <kpixmap.h>
+#include <QPixmap>
 #include <kpixmapeffect.h>
 
 #include "misc.h"
@@ -240,9 +240,9 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             const int titleBarTileHeight = (toolWindow ? m_titleHeightTool : m_titleHeight) + 2;
             // gradient used as well in TitleBarTileTop as TitleBarTile
             const int gradientHeight = 2 + titleBarTileHeight-1;
-            KPixmap gradient(1, gradientHeight);
+            QPixmap gradient(1, gradientHeight);
             QPainter painter(&gradient);
-            KPixmap tempPixmap( 1, 4 );
+            QPixmap tempPixmap( 1, 4 );
             KPixmapEffect::gradient(tempPixmap,
                                     getColor(TitleGradient1, active),
                                     getColor(TitleGradient2, active),
