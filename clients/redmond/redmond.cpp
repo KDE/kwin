@@ -551,7 +551,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
         // KS - Add gradient caching if needed at a later stage.
 
         // Create a disposable pixmap buffer for the title blend
-        QPixmap* titleBuffer = new KPixmap;
+        QPixmap* titleBuffer = new QPixmap;
         *titleBuffer = QPixmap(w-2*modBorderWidth, titleHeight);
 
         if (titleBuffer->depth() > 16) {

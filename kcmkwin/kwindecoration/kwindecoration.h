@@ -66,7 +66,7 @@ class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface
 	Q_OBJECT
 
 	public:
-		KWinDecorationModule(QWidget* parent, const char* name, const QStringList &);
+		KWinDecorationModule(QWidget* parent, const QStringList &);
 		~KWinDecorationModule();
 
 		virtual void load();

@@ -250,7 +250,7 @@ void QuartzHandler::readConfig()
 
 // This does the colour transition magic. (You say "Oh, is that it?")
 // This may be made configurable at a later stage
-void QuartzHandler::drawBlocks( QPixmap *pi, KPixmap &p, const QColor &c1, const QColor &c2 )
+void QuartzHandler::drawBlocks( QPixmap *pi, QPixmap &p, const QColor &c1, const QColor &c2 )
 {
 	QPainter px;
 

@@ -67,14 +67,12 @@
 typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") )
 
-KWinDecorationModule::KWinDecorationModule(QWidget* parent, const char* name, const QStringList &)
+KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 	: DCOPObject("KWinClientDecoration"),
 	  KCModule(KWinDecoFactory::instance(), parent),
           kwinConfig("kwinrc"),
           pluginObject(0)
 {
-    setObjectName( name );
-
 	kwinConfig.setGroup("Style");
         plugins = new KDecorationPreviewPlugins( &kwinConfig );
 
