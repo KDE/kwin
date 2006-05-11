@@ -10,10 +10,10 @@
 #ifndef _KDE_DEFAULT_CONFIG_H
 #define _KDE_DEFAULT_CONFIG_H
 
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <qgroupbox.h>
 #include <kconfig.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <kvbox.h>
 
 class KDEDefaultConfig: public QObject

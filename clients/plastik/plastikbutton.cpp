@@ -29,7 +29,7 @@
 #include <qpixmap.h>
 #include <kpixmapeffect.h>
 #include <QPixmap>
-#include <qtimer.h>
+#include <QTimer>
 
 #include "plastikbutton.h"
 #include "plastikbutton.moc"

@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_UTILS_H
 #define KWIN_UTILS_H
 
-#include <qwidget.h>
+#include <QWidget>
 #include <kmanagerselection.h>
 #include <netwm_def.h>
 #include <kshortcutdialog.h>

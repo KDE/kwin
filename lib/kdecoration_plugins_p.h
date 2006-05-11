@@ -30,8 +30,8 @@ DEALINGS IN THE SOFTWARE.
 // This header file is internal. I mean it.
 // 
 
-#include <qstring.h>
-#include <qwidget.h>
+#include <QString>
+#include <QWidget>
 
 #include "kdecoration.h"
 

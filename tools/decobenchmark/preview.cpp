@@ -25,7 +25,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <qstyle.h>
 #include <QMouseEvent>
 #include <QResizeEvent>

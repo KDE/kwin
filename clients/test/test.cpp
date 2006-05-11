@@ -1,6 +1,6 @@
 #include "test.h"
 
-#include <qtooltip.h>
+#include <QToolTip>
 #include <kglobal.h>
 #include <kdebug.h>
 

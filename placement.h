@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_PLACEMENT_H
 #define KWIN_PLACEMENT_H
 
-#include <qpoint.h>
+#include <QPoint>
 #include <QRect>
 #include <QList>
 

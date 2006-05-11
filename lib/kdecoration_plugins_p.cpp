@@ -31,8 +31,8 @@ DEALINGS IN THE SOFTWARE.
 #include <klibloader.h>
 #include <assert.h>
 
-#include <qdir.h>
-#include <qfile.h>
+#include <QDir>
+#include <QFile>
 
 #include "kdecorationfactory.h"
 

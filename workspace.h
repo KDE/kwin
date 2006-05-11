@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_WORKSPACE_H
 #define KWIN_WORKSPACE_H
 
-#include <qtimer.h>
+#include <QTimer>
 #include <qvector.h>
 #include <kshortcut.h>
 #include <qcursor.h>

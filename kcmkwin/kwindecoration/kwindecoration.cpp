@@ -28,16 +28,16 @@
 */
 
 #include <assert.h>
-#include <qdir.h>
+#include <QDir>
 #include <qfileinfo.h>
-#include <qlayout.h>
+#include <QLayout>
 
 #include <q3groupbox.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <qtabwidget.h>
 
-#include <qlabel.h>
-#include <qfile.h>
+#include <QLabel>
+#include <QFile>
 #include <qslider.h>
 //Added by qt3to4:
 #include <QPixmap>

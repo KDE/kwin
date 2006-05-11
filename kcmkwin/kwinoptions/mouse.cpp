@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <qlabel.h>
-#include <qcombobox.h>
+#include <QLabel>
+#include <QComboBox>
 
-#include <qlayout.h>
+#include <QLayout>
 #include <q3grid.h>
 #include <qsizepolicy.h>
 #include <qbitmap.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <Q3GroupBox>
 //Added by qt3to4:
 #include <QPixmap>

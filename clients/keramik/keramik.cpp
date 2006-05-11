@@ -25,12 +25,12 @@
 #include <kiconeffect.h>
 
 #include <qpainter.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qbitmap.h>
 #include <qstyle.h>
-#include <qtooltip.h>
-#include <qwidget.h>
-#include <qlabel.h>
+#include <QToolTip>
+#include <QWidget>
+#include <QLabel>
 #include <QEvent>
 #include <QApplication>
 #include <QStyle>

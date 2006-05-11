@@ -3,7 +3,7 @@
 
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 
 namespace KWinTest
 {

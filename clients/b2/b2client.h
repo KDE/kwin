@@ -9,8 +9,8 @@
 #ifndef __B2CLIENT_H
 #define __B2CLIENT_H
 
-#include <qvariant.h>
-#include <qdatetime.h>
+#include <QVariant>
+#include <QDateTime>
 #include <q3button.h>
 #include <qbitmap.h>
 //Added by qt3to4:

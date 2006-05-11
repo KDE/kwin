@@ -11,8 +11,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #ifndef KWIN_POPUPINFO_H
 #define KWIN_POPUPINFO_H
-#include <qwidget.h>
-#include <qtimer.h>
+#include <QWidget>
+#include <QTimer>
 
 namespace KWinInternal
 {

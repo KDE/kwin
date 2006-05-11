@@ -26,7 +26,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 
-#include <qcheckbox.h>
+#include <QCheckBox>
 
 #include "config.h"
 #include "config.moc"

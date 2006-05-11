@@ -23,7 +23,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <qstyle.h>
 //Added by qt3to4:
 #include <QMouseEvent>

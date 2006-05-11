@@ -14,7 +14,7 @@
 
 #include "b2client.h"
 #include <qapplication.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qdrawutil.h>
 #include <QPixmap>
 #include <QPaintEvent>
@@ -34,8 +34,8 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <qbitmap.h>
-#include <qlabel.h>
-#include <qtooltip.h>
+#include <QLabel>
+#include <QToolTip>
 #include <QPixmap>
 
 #include <X11/Xlib.h>

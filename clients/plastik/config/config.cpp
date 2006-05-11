@@ -21,10 +21,10 @@
  */
 
 #include <qbuttongroup.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <qradiobutton.h>
 #include <qslider.h>
-#include <qspinbox.h>
+#include <QSpinBox>
 #include <qwhatsthis.h>
 
 #include <kconfig.h>

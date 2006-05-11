@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <qapplication.h>
 #include <qpainter.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <kprocess.h>
 #include <unistd.h>
 #include <kstandarddirs.h>

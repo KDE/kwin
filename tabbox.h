@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_TABBOX_H
 
 #include <Q3Frame>
-#include <qtimer.h>
+#include <QTimer>
 #include "utils.h"
 
 class QLabel;

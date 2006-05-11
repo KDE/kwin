@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_GEOMETRY_TIP_H
 #define KWIN_GEOMETRY_TIP_H
 
-#include <qlabel.h>
+#include <QLabel>
 #include "client.h"
 
 namespace KWinInternal

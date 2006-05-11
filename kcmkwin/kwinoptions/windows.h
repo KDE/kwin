@@ -22,7 +22,7 @@
 #ifndef __KWINDOWCONFIG_H__
 #define __KWINDOWCONFIG_H__
 
-#include <qwidget.h>
+#include <QWidget>
 #include <kcmodule.h>
 #include <config.h>
 

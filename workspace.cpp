@@ -19,7 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <qpainter.h>
 #include <qbitmap.h>
 #include <qclipboard.h>

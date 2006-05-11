@@ -24,10 +24,10 @@
 
 class KConfig;
 
-#include <qwidget.h>
+#include <QWidget>
 #include <kcmodule.h>
-#include <qcombobox.h>
-#include <qtooltip.h>
+#include <QComboBox>
+#include <QToolTip>
 
 
 class ToolTipComboBox: public QComboBox

@@ -22,7 +22,7 @@
 #ifndef KWIN_WEB_BUTTON_H
 #define KWIN_WEB_BUTTON_H
 
-#include <qwidget.h>
+#include <QWidget>
 #include <qbitmap.h>
 #include <klocale.h>
 

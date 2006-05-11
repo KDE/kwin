@@ -1,7 +1,7 @@
 #include <kconfig.h>
 #include "kwmthemeclient.h"
 #include <kglobal.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qdrawutil.h>
 #include <qpainter.h>
 #include <kpixmapeffect.h>
@@ -10,8 +10,8 @@
 #include <klocale.h>
 #include <qbitmap.h>
 #include <qstyle.h>
-#include <qlabel.h>
-#include <qtooltip.h>
+#include <QLabel>
+#include <QToolTip>
 
 namespace KWMTheme {
 

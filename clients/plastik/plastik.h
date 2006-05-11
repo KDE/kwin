@@ -23,7 +23,7 @@
 #ifndef PLASTIK_H
 #define PLASTIK_H
 
-#include <qfont.h>
+#include <QFont>
 
 #include <kdecoration.h>
 #include <kdecorationfactory.h>

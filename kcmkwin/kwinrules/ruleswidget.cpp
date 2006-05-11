@@ -21,17 +21,17 @@
 #include <klineedit.h>
 #include <krestrictedline.h>
 #include <kcombobox.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <kpushbutton.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <kwinmodule.h>
 #include <klocale.h>
-#include <qregexp.h>
+#include <QRegExp>
 
 #include <assert.h>
 #include <kmessagebox.h>
 #include <qtabwidget.h>
-#include <qtimer.h>
+#include <QTimer>
 
 #include "../../rules.h"
 

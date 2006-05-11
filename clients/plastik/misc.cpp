@@ -22,7 +22,7 @@
 
 #include <kpixmapeffect.h>
 
-#include <qcolor.h>
+#include <QColor>
 #include <qimage.h>
 #include <qpainter.h>
 

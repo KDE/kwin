@@ -1,5 +1,5 @@
-#include <qfile.h>
-#include <qdir.h>
+#include <QFile>
+#include <QDir>
 #include <kapplication.h>
 #include <ksimpleconfig.h>
 #include <kglobal.h>

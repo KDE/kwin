@@ -14,7 +14,7 @@
 #define _KDE_DEFAULT_H
 
 #include <qbitmap.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 

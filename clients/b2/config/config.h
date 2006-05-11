@@ -9,10 +9,10 @@
 #ifndef _KDE_B2CONFIG_H
 #define _KDE_B2CONFIG_H
 
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <q3groupbox.h>
-#include <qlabel.h>
-#include <qcombobox.h>
+#include <QLabel>
+#include <QComboBox>
 #include <kconfig.h>
 
 class B2Config: public QObject

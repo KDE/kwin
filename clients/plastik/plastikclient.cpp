@@ -23,11 +23,11 @@
 #include <klocale.h>
 
 #include <qbitmap.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <qfontmetrics.h>
 #include <qimage.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qdesktopwidget.h>

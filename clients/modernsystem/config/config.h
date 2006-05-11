@@ -1,11 +1,11 @@
 #ifndef __KDE_MODSYSTEMCONFIG_H
 #define __KDE_MODSYSTEMCONFIG_H
 
-#include <qcheckbox.h>
-#include <qlayout.h>
+#include <QCheckBox>
+#include <QLayout>
 
 #include <qslider.h>
-#include <qlabel.h>
+#include <QLabel>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <kvbox.h>

@@ -20,7 +20,7 @@
 #ifndef KWINDECORATION_PREVIEW_H
 #define KWINDECORATION_PREVIEW_H
 
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QMouseEvent>
 #include <QLabel>

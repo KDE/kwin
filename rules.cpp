@@ -12,10 +12,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <fixx11h.h>
 #include <kconfig.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <ktempfile.h>
 #include <ksimpleconfig.h>
-#include <qfile.h>
+#include <QFile>
 #include <ktoolinvocation.h>
 
 #ifndef KCMRULES

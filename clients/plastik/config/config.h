@@ -23,7 +23,7 @@
 #ifndef KNIFTYCONFIG_H
 #define KNIFTYCONFIG_H
 
-#include <qobject.h>
+#include <QObject>
 
 class QButtonGroup;
 class QGroupBox;

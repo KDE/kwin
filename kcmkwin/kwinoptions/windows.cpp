@@ -23,15 +23,15 @@
 
 #include <config.h>
 
-#include <qdir.h>
-#include <qlayout.h>
+#include <QDir>
+#include <QLayout>
 #include <qslider.h>
 
 #include <Q3ButtonGroup>
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <qradiobutton.h>
-#include <qlabel.h>
-#include <qcombobox.h>
+#include <QLabel>
+#include <QComboBox>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QHBoxLayout>

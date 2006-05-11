@@ -12,8 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_OPTIONS_H
 #define KWIN_OPTIONS_H
 
-#include <qobject.h>
-#include <qfont.h>
+#include <QObject>
+#include <QFont>
 #include <qpalette.h>
 #include <qstringlist.h>
 #include <kdecoration_p.h>

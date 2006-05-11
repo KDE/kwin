@@ -10,7 +10,7 @@
 #ifndef __KDE_QUARTZCONFIG_H
 #define __KDE_QUARTZCONFIG_H
 
-#include <qcheckbox.h>
+#include <QCheckBox>
 
 #include <kconfig.h>
 #include <kvbox.h>

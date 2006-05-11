@@ -18,13 +18,13 @@
 #include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qdrawutil.h>
 #include <qbitmap.h>
 #include <qimage.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qapplication.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <kdebug.h>
 #include <QPixmap>
 #include <QPolygon>

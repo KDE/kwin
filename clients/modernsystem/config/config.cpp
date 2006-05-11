@@ -5,7 +5,7 @@
 #include <kdialog.h>
 #include <klocale.h>
 #include <kglobal.h>
-#include <qlayout.h>
+#include <QLayout>
 
 //Added by qt3to4:
 #include <QLabel>

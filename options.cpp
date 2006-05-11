@@ -19,7 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <QDesktopWidget>
 
 #include "client.h"

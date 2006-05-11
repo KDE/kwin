@@ -30,8 +30,8 @@
 
 #include <q3header.h>
 #include <qpainter.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <qstyle.h>
 //Added by qt3to4:
 #include <QPixmap>

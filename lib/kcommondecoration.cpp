@@ -24,10 +24,10 @@
 
 #include <qapplication.h>
 #include <qcursor.h>
-#include <qdatetime.h>
-#include <qlabel.h>
-#include <qtooltip.h>
-#include <qwidget.h>
+#include <QDateTime>
+#include <QLabel>
+#include <QToolTip>
+#include <QWidget>
 
 #include <kdebug.h>
 

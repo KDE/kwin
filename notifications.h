@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_NOTIFICATIONS_H
 
 #include <stdlib.h>
-#include <qstring.h>
+#include <QString>
 #include <qlist.h>
 
 namespace KWinInternal

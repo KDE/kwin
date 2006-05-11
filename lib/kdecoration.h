@@ -25,9 +25,9 @@ DEALINGS IN THE SOFTWARE.
 #ifndef KDECORATION_H
 #define KDECORATION_H
 
-#include <qcolor.h>
-#include <qfont.h>
-#include <qobject.h>
+#include <QColor>
+#include <QFont>
+#include <QObject>
 #include <qiconset.h>
 #include <netwm_def.h>
 #include <kdeversion.h>

@@ -21,16 +21,16 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 
 #include <fixx11h.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 #include <qslider.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobalaccel.h>
 #include <kapplication.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <QMenu>
 #include <QVBoxLayout>
 #include <kauthorized.h>

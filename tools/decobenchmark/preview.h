@@ -20,7 +20,7 @@
 #ifndef KWINDECORATION_PREVIEW_H
 #define KWINDECORATION_PREVIEW_H
 
-#include <qwidget.h>
+#include <QWidget>
 #include <kdecoration_p.h>
 #include <kdecoration_plugins_p.h>
 

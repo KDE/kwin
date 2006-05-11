@@ -4,7 +4,7 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qdrawutil.h>
 //Added by qt3to4:
 #include <QPixmap>
@@ -13,9 +13,9 @@
 #include <QPixmap>
 #include <kdrawutil.h>
 #include <qbitmap.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qapplication.h>
-#include <qlabel.h>
+#include <QLabel>
 #include "modernsys.h"
 
 #include "buttondata.h"
