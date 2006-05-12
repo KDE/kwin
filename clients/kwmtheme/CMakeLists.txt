@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( cli_installer ) 
 
-include_directories( ${KDE4_INCLUDES} )
+
 
 
 ########### next target ###############

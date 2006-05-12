@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( config ) 
 
-include_directories( ${KDE4_INCLUDES} )
+
 
 
 ########### next target ###############

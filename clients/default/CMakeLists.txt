@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( config ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib ${KDE4_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 ########### next target ###############
 

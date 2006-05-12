@@ -15,7 +15,7 @@ if(X11_kompmgr_FOUND)
 endif(X11_kompmgr_FOUND)
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}/lib )
-include_directories( ${KDE4_INCLUDES} )
+
 
 
 ########### next target ###############
