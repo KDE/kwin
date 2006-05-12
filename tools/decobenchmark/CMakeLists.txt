@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -16,7 +15,6 @@ target_link_libraries(decobenchmark  ${KDE4_KDECORE_LIBS} kdecorations )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

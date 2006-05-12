@@ -1,4 +1,3 @@
-kde4_header()
 include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 
@@ -23,7 +22,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcm_kwindecoration )
 
 install_files( ${XDG_APPS_DIR} FILES kwindecoration.desktop )
 
-kde4_footer()
 
 
 

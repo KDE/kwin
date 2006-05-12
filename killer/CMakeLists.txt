@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -18,7 +17,6 @@ install(TARGETS kwin_killer_helper DESTINATION bin)
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

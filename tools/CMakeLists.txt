@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( decobenchmark ) 
 
@@ -18,7 +17,6 @@ target_link_libraries(test_gravity  ${KDE4_KDECORE_LIBS} )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

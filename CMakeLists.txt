@@ -1,4 +1,3 @@
-kde4_header()
 
 project(kwin)
 
@@ -66,7 +65,6 @@ install_files( /include FILES KWinInterface.h )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 
-kde4_footer()
 
 
 

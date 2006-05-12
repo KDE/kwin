@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( cli_installer ) 
 
@@ -24,7 +23,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kwin3_kwmtheme )
 
 install_files( ${DATA_INSTALL_DIR}/kwin FILES kwmtheme.desktop )
 
-kde4_footer()
 
 
 

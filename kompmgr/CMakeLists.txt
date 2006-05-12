@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -18,7 +17,6 @@ install(TARGETS kompmgr DESTINATION bin)
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

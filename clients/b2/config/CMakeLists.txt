@@ -1,4 +1,3 @@
-kde4_header()
 include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 
@@ -21,7 +20,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kwin_b2_config )
 
 install_files( ${DATA_INSTALL_DIR}/kwin/ FILES  )
 
-kde4_footer()
 
 
 

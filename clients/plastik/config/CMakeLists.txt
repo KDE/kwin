@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -23,7 +22,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kwin_plastik_config )
 
 install_files( ${DATA_INSTALL_DIR}/kwin FILES  )
 
-kde4_footer()
 
 
 

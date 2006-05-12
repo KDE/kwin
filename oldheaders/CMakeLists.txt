@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -6,7 +5,6 @@ kde4_header()
 
 install_files( /include/kwin FILES options.h client.h workspace.h kwinbutton.h )
 
-kde4_footer()
 
 
 

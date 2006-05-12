@@ -1,4 +1,3 @@
-kde4_header()
 include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 ADD_DEFINITIONS(-DKCMRULES)
@@ -42,7 +41,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcm_kwinrules )
 
 install_files( ${XDG_APPS_DIR} FILES kwinrules.desktop )
 
-kde4_footer()
 
 
 

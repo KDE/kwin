@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
@@ -23,7 +22,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kwin3_redmond )
 
 install_files( ${DATA_INSTALL_DIR}/kwin FILES redmond.desktop )
 
-kde4_footer()
 
 
 

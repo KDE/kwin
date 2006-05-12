@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( config ) 
 
@@ -26,7 +25,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kwin3_keramik )
 
 install_files( ${DATA_INSTALL_DIR}/kwin FILES keramik.desktop )
 
-kde4_footer()
 
 
 

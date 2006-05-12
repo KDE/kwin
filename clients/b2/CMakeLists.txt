@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( config ) 
 
@@ -24,7 +23,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kwin3_b2 )
 
 install_files( ${DATA_INSTALL_DIR}/kwin/ FILES b2.desktop )
 
-kde4_footer()
 
 
 

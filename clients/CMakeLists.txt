@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( plastik ) 
 add_subdirectory( b2 ) 
@@ -13,7 +12,6 @@ add_subdirectory( web )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 
