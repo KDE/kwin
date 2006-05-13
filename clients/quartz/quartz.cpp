@@ -19,11 +19,11 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kpixmapeffect.h>
-#include <qbitmap.h>
+#include <QBitmap>
 #include <qdrawutil.h>
-#include <qimage.h>
+#include <QImage>
 #include <QPixmap>
-#include <qapplication.h>
+#include <QApplication>
 
 #include "quartz.h"
 //Added by qt3to4:

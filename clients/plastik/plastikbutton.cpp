@@ -24,9 +24,9 @@
 
 #include <QAbstractButton>
 #include <QStyle>
-#include <qbitmap.h>
-#include <qpainter.h>
-#include <qpixmap.h>
+#include <QBitmap>
+#include <QPainter>
+#include <QPixmap>
 #include <kpixmapeffect.h>
 #include <QPixmap>
 #include <QTimer>

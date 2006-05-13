@@ -11,13 +11,13 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "client.h"
 
-#include <qapplication.h>
-#include <qpainter.h>
+#include <QApplication>
+#include <QPainter>
 #include <QDateTime>
 #include <kprocess.h>
 #include <unistd.h>
 #include <kstandarddirs.h>
-#include <qwhatsthis.h>
+#include <QWhatsThis>
 #include <kwin.h>
 #include <kiconloader.h>
 #include <stdlib.h>

@@ -22,7 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <fixx11h.h>
 #include <QPushButton>
-#include <qslider.h>
+#include <QSlider>
 #include <QToolTip>
 #include <kglobalsettings.h>
 #include <kiconloader.h>

@@ -12,15 +12,15 @@
 #include <kpixmapeffect.h>
 #include <QPixmap>
 #include <kdrawutil.h>
-#include <qbitmap.h>
+#include <QBitmap>
 #include <QToolTip>
-#include <qapplication.h>
+#include <QApplication>
 #include <QLabel>
 #include "modernsys.h"
 
 #include "buttondata.h"
 #include "btnhighcolor.h"
-#include <qimage.h>
+#include <QImage>
 
 namespace ModernSystem {
 

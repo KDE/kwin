@@ -24,7 +24,7 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <QLabel>
-#include <qstyle.h>
+#include <QStyle>
 //Added by qt3to4:
 #include <QMouseEvent>
 #include <QResizeEvent>

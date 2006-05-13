@@ -12,7 +12,7 @@
 #include <QVariant>
 #include <QDateTime>
 #include <q3button.h>
-#include <qbitmap.h>
+#include <QBitmap>
 //Added by qt3to4:
 #include <QPaintEvent>
 #include <QGridLayout>

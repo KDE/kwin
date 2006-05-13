@@ -26,8 +26,8 @@ DEALINGS IN THE SOFTWARE.
 
 #include <kconfig.h>
 #include <kglobalsettings.h>
-#include <qpalette.h>
-#include <qapplication.h>
+#include <QPalette>
+#include <QApplication>
 #include <assert.h>
 
 KDecorationOptionsPrivate::KDecorationOptionsPrivate()

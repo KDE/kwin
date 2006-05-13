@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <kinstance.h>
 #include <dcopclient.h>
-#include <qrect.h>
+#include <QRect>
 //Added by qt3to4:
 #include <QByteArray>
 #include <Q3PtrList>

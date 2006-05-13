@@ -24,10 +24,10 @@
 #include <klocale.h>
 #include <kiconeffect.h>
 
-#include <qpainter.h>
+#include <QPainter>
 #include <QLayout>
-#include <qbitmap.h>
-#include <qstyle.h>
+#include <QBitmap>
+#include <QStyle>
 #include <QToolTip>
 #include <QWidget>
 #include <QLabel>

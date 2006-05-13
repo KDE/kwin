@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobal.h>
 #include <klocale.h>
 #include <stdlib.h>
-#include <qpixmap.h>
+#include <QPixmap>
 
 namespace KWinInternal
 {

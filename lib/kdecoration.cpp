@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration.h"
 
 #include <kdebug.h>
-#include <qapplication.h>
+#include <QApplication>
 #include <kglobal.h>
 #include <assert.h>
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY

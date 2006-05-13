@@ -20,7 +20,7 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <qpainter.h>
+#include <QPainter>
 //Added by qt3to4:
 #include <QPaintEvent>
 

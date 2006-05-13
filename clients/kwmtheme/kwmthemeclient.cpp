@@ -3,13 +3,13 @@
 #include <kglobal.h>
 #include <QLayout>
 #include <qdrawutil.h>
-#include <qpainter.h>
+#include <QPainter>
 #include <kpixmapeffect.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <qbitmap.h>
-#include <qstyle.h>
+#include <QBitmap>
+#include <QStyle>
 #include <QLabel>
 #include <QToolTip>
 

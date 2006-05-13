@@ -26,7 +26,7 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <QLabel>
-#include <qstyle.h>
+#include <QStyle>
 #include <QMouseEvent>
 #include <QResizeEvent>
 #include <QVector>

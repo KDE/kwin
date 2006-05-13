@@ -25,9 +25,9 @@
 #include <klocale.h>
 #include <QPixmap>
 
-#include <qbitmap.h>
-#include <qimage.h>
-#include <qapplication.h>
+#include <QBitmap>
+#include <QImage>
+#include <QApplication>
 
 namespace Redmond {
 

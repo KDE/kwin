@@ -22,14 +22,14 @@
 
 #include <klocale.h>
 
-#include <qbitmap.h>
+#include <QBitmap>
 #include <QDateTime>
-#include <qfontmetrics.h>
-#include <qimage.h>
+#include <QFontMetrics>
+#include <QImage>
 #include <QLabel>
 #include <QLayout>
-#include <qpainter.h>
-#include <qpixmap.h>
+#include <QPainter>
+#include <QPixmap>
 #include <qdesktopwidget.h>
 
 #include "plastikclient.h"

@@ -20,9 +20,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobal.h>
 #include <klocale.h>
 #include <QRegExp>
-#include <qpainter.h>
-#include <qbitmap.h>
-#include <qclipboard.h>
+#include <QPainter>
+#include <QBitmap>
+#include <QClipboard>
 #include <kmenubar.h>
 #include <kprocess.h>
 #include <kglobalaccel.h>

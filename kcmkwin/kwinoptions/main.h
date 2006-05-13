@@ -25,7 +25,7 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
-#include <qtabwidget.h>
+#include <QTabWidget>
 #include <kcmodule.h>
 
 class KConfig;

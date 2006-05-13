@@ -10,7 +10,7 @@ License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
 
-#include <qapplication.h>
+#include <QApplication>
 #include "atoms.h"
 #include <assert.h>
 #include <QX11Info>

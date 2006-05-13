@@ -2,7 +2,7 @@
 #define __KWMTHEMECLIENT_H
 
 #include <qbutton.h>
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <QPixmap>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>

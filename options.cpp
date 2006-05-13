@@ -13,8 +13,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #ifndef KCMRULES
 
-#include <qpalette.h>
-#include <qpixmap.h>
+#include <QPalette>
+#include <QPixmap>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kglobal.h>

@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <kwin.h>
 #include <QLabel>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <QCheckBox>
 //Added by qt3to4:
 #include <QMouseEvent>

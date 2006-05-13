@@ -4,7 +4,7 @@
 #include <QCheckBox>
 #include <QLayout>
 
-#include <qslider.h>
+#include <QSlider>
 #include <QLabel>
 //Added by qt3to4:
 #include <QVBoxLayout>

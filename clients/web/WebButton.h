@@ -23,7 +23,7 @@
 #define KWIN_WEB_BUTTON_H
 
 #include <QWidget>
-#include <qbitmap.h>
+#include <QBitmap>
 #include <klocale.h>
 
 #include "../../lib/kcommondecoration.h"

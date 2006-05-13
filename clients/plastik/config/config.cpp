@@ -20,12 +20,12 @@
   Boston, MA 02110-1301, USA.
  */
 
-#include <qbuttongroup.h>
+#include <QButtonGroup>
 #include <QCheckBox>
-#include <qradiobutton.h>
-#include <qslider.h>
+#include <QRadioButton>
+#include <QSlider>
 #include <QSpinBox>
-#include <qwhatsthis.h>
+#include <QWhatsThis>
 
 #include <kconfig.h>
 #include <klocale.h>

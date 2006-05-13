@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <stdlib.h>
 #include <QString>
-#include <qlist.h>
+#include <QList>
 
 namespace KWinInternal
 {

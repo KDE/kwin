@@ -14,8 +14,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <QObject>
 #include <QFont>
-#include <qpalette.h>
-#include <qstringlist.h>
+#include <QPalette>
+#include <QStringList>
 #include <kdecoration_p.h>
 
 #include "placement.h"

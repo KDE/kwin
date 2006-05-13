@@ -17,7 +17,7 @@
 #include <kdrawutil.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <qbitmap.h>
+#include <QBitmap>
 
 namespace Laptop {
 

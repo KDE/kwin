@@ -21,7 +21,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "workspace.h"
 #include "client.h"
-#include <qsocketnotifier.h>
+#include <QSocketNotifier>
 #include <qsessionmanager.h>
 
 namespace KWinInternal

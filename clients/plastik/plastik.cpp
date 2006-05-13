@@ -20,9 +20,9 @@
   Boston, MA 02110-1301, USA.
  */
 
-#include <qbitmap.h>
-#include <qpainter.h>
-#include <qimage.h>
+#include <QBitmap>
+#include <QPainter>
+#include <QImage>
 
 #include <kconfig.h>
 #include <QPixmap>

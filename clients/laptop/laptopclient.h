@@ -7,8 +7,8 @@
 #ifndef __KDECLIENT_H
 #define __KDECLIENT_H
 
-#include <qbitmap.h>
-#include <qpixmap.h>
+#include <QBitmap>
+#include <QPixmap>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 

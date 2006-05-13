@@ -9,10 +9,10 @@
 
 #include "config.h"
 #include <kglobal.h>
-#include <qwhatsthis.h>
+#include <QWhatsThis>
 #include <kdialog.h>
 #include <klocale.h>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <kvbox.h>
 
 extern "C"

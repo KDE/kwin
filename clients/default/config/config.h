@@ -11,7 +11,7 @@
 #define _KDE_DEFAULT_CONFIG_H
 
 #include <QCheckBox>
-#include <qgroupbox.h>
+#include <QGroupBox>
 #include <kconfig.h>
 #include <QLabel>
 #include <kvbox.h>

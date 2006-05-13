@@ -23,8 +23,8 @@
 #include <kpixmapeffect.h>
 
 #include <QColor>
-#include <qimage.h>
-#include <qpainter.h>
+#include <QImage>
+#include <QPainter>
 
 #include "misc.h"
 

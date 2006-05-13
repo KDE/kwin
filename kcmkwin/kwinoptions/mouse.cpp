@@ -22,8 +22,8 @@
 
 #include <QLayout>
 #include <q3grid.h>
-#include <qsizepolicy.h>
-#include <qbitmap.h>
+#include <QSizePolicy>
+#include <QBitmap>
 #include <QToolTip>
 #include <Q3GroupBox>
 //Added by qt3to4:

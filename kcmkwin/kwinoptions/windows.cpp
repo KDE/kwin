@@ -25,11 +25,11 @@
 
 #include <QDir>
 #include <QLayout>
-#include <qslider.h>
+#include <QSlider>
 
 #include <Q3ButtonGroup>
 #include <QCheckBox>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <QLabel>
 #include <QComboBox>
 //Added by qt3to4:
@@ -49,7 +49,7 @@
 #include <dcopclient.h>
 #include <kglobal.h>
 #include <kprocess.h>
-#include <qtabwidget.h>
+#include <QTabWidget>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>

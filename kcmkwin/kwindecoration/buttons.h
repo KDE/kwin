@@ -31,8 +31,8 @@
 #ifndef __BUTTONS_H_
 #define __BUTTONS_H_
 
-#include <qbitmap.h>
-#include <qevent.h>
+#include <QBitmap>
+#include <QEvent>
 #include <q3dragobject.h>
 #include <q3listbox.h>
 //Added by qt3to4:

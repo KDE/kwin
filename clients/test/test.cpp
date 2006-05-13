@@ -121,8 +121,8 @@ bool Decoration::eventFilter( QObject* o, QEvent* e )
     }
 
 }
-#include <qapplication.h>
-#include <qpainter.h>
+#include <QApplication>
+#include <QPainter>
 #include <X11/Xlib.h>
 #include <math.h>
 #include <unistd.h>

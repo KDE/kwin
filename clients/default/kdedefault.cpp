@@ -20,10 +20,10 @@
 #include <klocale.h>
 #include <QLayout>
 #include <qdrawutil.h>
-#include <qbitmap.h>
-#include <qimage.h>
+#include <QBitmap>
+#include <QImage>
 #include <QToolTip>
-#include <qapplication.h>
+#include <QApplication>
 #include <QLabel>
 #include <kdebug.h>
 #include <QPixmap>

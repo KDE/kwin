@@ -13,7 +13,7 @@
  */
 
 #include "b2client.h"
-#include <qapplication.h>
+#include <QApplication>
 #include <QLayout>
 #include <qdrawutil.h>
 #include <QPixmap>
@@ -33,7 +33,7 @@
 #include <kdrawutil.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <qbitmap.h>
+#include <QBitmap>
 #include <QLabel>
 #include <QToolTip>
 #include <QPixmap>

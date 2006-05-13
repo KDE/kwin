@@ -30,7 +30,7 @@
 
 #include <assert.h>
 #include <kmessagebox.h>
-#include <qtabwidget.h>
+#include <QTabWidget>
 #include <QTimer>
 
 #include "../../rules.h"

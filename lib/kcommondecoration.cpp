@@ -22,8 +22,8 @@
   DEALINGS IN THE SOFTWARE.
  */
 
-#include <qapplication.h>
-#include <qcursor.h>
+#include <QApplication>
+#include <QCursor>
 #include <QDateTime>
 #include <QLabel>
 #include <QToolTip>

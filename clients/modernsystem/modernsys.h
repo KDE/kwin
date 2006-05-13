@@ -1,7 +1,7 @@
 #ifndef __MODSYSTEMCLIENT_H
 #define __MODSYSTEMCLIENT_H
 
-#include <qbitmap.h>
+#include <QBitmap>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 

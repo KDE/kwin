@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "placement.h"
 
-#include <qrect.h>
+#include <QRect>
 #include <assert.h>
 
 #ifndef KCMRULES

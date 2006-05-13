@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 //#define QT_CLEAN_NAMESPACE
 //#endif
 #include "killwindow.h"
-#include <qcursor.h>
+#include <QCursor>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>

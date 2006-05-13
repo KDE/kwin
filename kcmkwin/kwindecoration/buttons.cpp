@@ -29,10 +29,10 @@
 */
 
 #include <q3header.h>
-#include <qpainter.h>
+#include <QPainter>
 #include <QLabel>
 #include <QLayout>
-#include <qstyle.h>
+#include <QStyle>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QDragLeaveEvent>

@@ -22,8 +22,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "group.h"
 #include "rules.h"
 
-#include <qwhatsthis.h>
-#include <qapplication.h>
+#include <QWhatsThis>
+#include <QApplication>
 
 #include <kkeyserver.h>
 

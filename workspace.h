@@ -13,9 +13,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_WORKSPACE_H
 
 #include <QTimer>
-#include <qvector.h>
+#include <QVector>
 #include <kshortcut.h>
-#include <qcursor.h>
+#include <QCursor>
 #include <netwm.h>
 #include <kxmessages.h>
 

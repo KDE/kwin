@@ -21,7 +21,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kapplication.h>
 #include <kglobal.h>
-#include <qpainter.h>
+#include <QPainter>
 #include <kwin.h>
 
 #include "placement.h"

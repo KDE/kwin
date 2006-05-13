@@ -29,16 +29,16 @@
 
 #include <assert.h>
 #include <QDir>
-#include <qfileinfo.h>
+#include <QFileInfo>
 #include <QLayout>
 
 #include <q3groupbox.h>
 #include <QCheckBox>
-#include <qtabwidget.h>
+#include <QTabWidget>
 
 #include <QLabel>
 #include <QFile>
-#include <qslider.h>
+#include <QSlider>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QHBoxLayout>
