@@ -600,7 +600,10 @@ extern bool         blockAnimation;
 
 void Client::animateMinimizeOrUnminimize( bool minimize )
     {
-    if ( blockAnimation )
+#ifdef __GNUC__
+    #warning implement kwin animation
+#endif
+    if ( 1 || blockAnimation )
         return;
     if ( !options->animateMinimize )
         return;
