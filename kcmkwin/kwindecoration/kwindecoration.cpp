@@ -82,7 +82,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
-//	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet!" ) );
+//	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet" ) );
 
 	tabWidget = new QTabWidget( this );
 	layout->addWidget( tabWidget );
