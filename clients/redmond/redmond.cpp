@@ -499,7 +499,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
     // ==============================================
     QPalette g = options()->palette(KDecoration::ColorFrame, isActive());
     g.setCurrentColorGroup( QPalette::Active );
-    p.setPen( g.background() );
+    p.setPen( g.background().color() );
     p.drawLine( x, y, x2-1, y );
     p.drawLine( x, y, x, y2-1 );
 
