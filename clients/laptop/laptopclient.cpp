@@ -198,7 +198,7 @@ static void create_pixmaps()
         btnDownPix2->fill(c.rgb());
         g = options()->palette(KDecoration::ColorButtonBg, false);
         g.setCurrentColorGroup( QPalette::Active );
-        c = g.background();
+        c = g.background().color();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
         iBtnPix2->fill(c.rgb());
@@ -206,14 +206,14 @@ static void create_pixmaps()
     }
     g = options()->palette(KDecoration::ColorButtonBg, true);
     g.setCurrentColorGroup( QPalette::Active );
-    c = g.background();
+    c = g.background().color();
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(btnPix2, g, false);
     drawButtonFrame(btnDownPix2, g, true);
     g = options()->palette(KDecoration::ColorButtonBg, false);
     g.setCurrentColorGroup( QPalette::Active );
-    c = g.background();
+    c = g.background().color();
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
     drawButtonFrame(iBtnPix2, g, false);
@@ -483,7 +483,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.drawRect(r);
 
     // fill mid frame...
-    p.setPen(g.background() );
+    p.setPen(g.background().color());
     p.drawLine(r.x()+2, r.y()+2, r.right()-2, r.y()+2);
     p.drawLine(r.left()+2, r.y()+3, r.left()+2, r.bottom()-layoutMetric(LM_BorderBottom)+1 );
     p.drawLine(r.right()-2, r.y()+3, r.right()-2, r.bottom()-layoutMetric(LM_BorderBottom)+1 );
@@ -496,7 +496,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     p.setPen(g.color(QPalette::Light));
     p.drawLine(r.x()+1, r.y()+1, r.right()-1, r.y()+1);
     p.drawLine(r.x()+1, r.y()+1, r.x()+1, r.bottom()-1);
-    p.setPen(g.dark());
+    p.setPen(g.dark().color());
     p.drawLine(r.right()-1, r.y()+1, r.right()-1, r.bottom()-1);
     p.drawLine(r.x()+1, r.bottom()-1, r.right()-1, r.bottom()-1);
 
@@ -538,7 +538,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
     if(isActive()){
         updateActiveBuffer();
         p.drawPixmap(r.x(), r.y(), activeBuffer);
-        p.setPen(g.background());
+        p.setPen(g.background().color());
         p.drawPoint(r.x(), r.y());
         p.drawPoint(r.right(), r.y());
         p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());
@@ -563,7 +563,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
             p.fillRect(r.x()+((r.width()-fm.width(caption()))/2)-4, r.y(),
                        fm.width(caption())+8, r.height()-1,
                        g.brush(QPalette::Background));
-        p.setPen(g.mid());
+        p.setPen(g.mid().color());
         p.drawLine(r.x(), r.y(), r.right(), r.y());
         p.drawLine(r.x(), r.y(), r.x(), r.bottom());
         p.setPen(g.color(QPalette::Button));
@@ -574,7 +574,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
                    Qt::AlignCenter, caption() );
         g = options()->palette(KDecoration::ColorFrame, true);
         g.setCurrentColorGroup( QPalette::Active );
-        p.setPen(g.background());
+        p.setPen(g.background().color());
         p.drawPoint(r.x(), r.y());
         p.drawPoint(r.right(), r.y());
         p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());
@@ -647,7 +647,7 @@ void LaptopClient::updateActiveBuffer( )
         p.fillRect(r.x()+((r.width()-fm.width(caption()))/2)-4, 0,
                    fm.width(caption())+8, r.height(),
                    g.brush(QPalette::Background));
-    p.setPen(g.mid());
+    p.setPen(g.mid().color());
     p.drawLine(r.x(), r.y(), r.right(), r.y());
     p.drawLine(r.x(), r.y(), r.x(), r.bottom());
     p.setPen(g.color(QPalette::Button));
@@ -658,7 +658,7 @@ void LaptopClient::updateActiveBuffer( )
                Qt::AlignCenter, caption() );
     g = options()->palette(KDecoration::ColorFrame, true);
     g.setCurrentColorGroup( QPalette::Active );
-    p.setPen(g.background());
+    p.setPen(g.background().color());
     p.drawPoint(r.x(), r.y());
     p.drawPoint(r.right(), r.y());
     p.drawLine(r.right()+1, r.y(), r.right()+1, r.bottom());

@@ -104,12 +104,12 @@ static inline const KDecorationOptions* options()
 
 static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
 {
-    pix->fill(g.background());
+    pix->fill(g.background().color());
     QPainter p(pix);
 
     if(QPixmap::defaultDepth() > 8){
         int i, destH, destS, destV, srcH, srcS, srcV;
-        QColor btnColor = g.background();
+        QColor btnColor = g.background().color();
 
         if(btnSource->depth() < 32)
             *btnSource = btnSource->convertDepth(32);
@@ -137,12 +137,12 @@ static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
             lcDark3->setMask(*lcDark3);
             lcLight1->setMask(*lcLight1);
         }
-        p.setPen(g.dark());
+        p.setPen(g.dark().color());
         p.drawPixmap(0, 0, *lcDark2);
         p.drawPixmap(0, 0, *lcDark1);
-        p.setPen(g.mid());
+        p.setPen(g.mid().color());
         p.drawPixmap(0, 0, *lcDark3);
-        p.setPen(g.light());
+        p.setPen(g.light().color());
         p.drawPixmap(0, 0, *lcLight1);
     }
 }
@@ -618,19 +618,19 @@ void ModernSys::paintEvent( QPaintEvent* )
     }
 
     // titlebar highlight
-    p.setPen(g.light());
+    p.setPen(g.light().color());
     p.drawLine(1, 1, 1, title_height+3);
     p.drawLine(1, 1, w-3, 1);
-    p.setPen(g.dark());
+    p.setPen(g.dark().color());
     p.drawLine(w-2, 1, w-2, title_height+3);
     p.drawLine(0, title_height+2, w-2, title_height+2);
 
     // frame
     g = options()->palette(ColorFrame, isActive());
     g.setCurrentColorGroup(QPalette::Active);
-    p.setPen(g.light());
+    p.setPen(g.light().color());
     p.drawLine(1, title_height+3, 1, h-2);
-    p.setPen(g.dark());
+    p.setPen(g.dark().color());
     p.drawLine(2, h-2, w-2, h-2);
     p.drawLine(w-2, title_height+3, w-2, h-2);
     //p.drawPoint(w-3, title_height+3);
@@ -639,11 +639,11 @@ void ModernSys::paintEvent( QPaintEvent* )
     qDrawShadePanel(&p, border_width-1, title_height+3, w-2*border_width+2, h-title_height-border_width-2, g, true);
 
     if (show_handle) {
-        p.setPen(g.dark());
+        p.setPen(g.dark().color());
         p.drawLine(width()-3, height()-hs-1, width()-3, height()-3);
         p.drawLine(width()-hs-1, height()-3, width()-3, height()-3);
 
-        p.setPen(g.light());
+        p.setPen(g.light().color());
         p.drawLine(width()-hw, height()-hs-1, width()-hw, height()-hw);
         p.drawLine(width()-hs-1, height()-hw, width()-hw, height()-hw);
         p.drawLine(width()-hw, height()-hs-1, width()-4, height()-hs-1);
