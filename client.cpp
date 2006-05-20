@@ -1335,15 +1335,15 @@ void Client::setCaption( const QString& _s, bool force )
         bool was_suffix = ( !cap_suffix.isEmpty());
         QString machine_suffix;
         if( wmClientMachine( false ) != "localhost" && !isLocalMachine( wmClientMachine( false )))
-            machine_suffix = " <@" + wmClientMachine( true ) + ">";
-        QString shortcut_suffix = !shortcut().isNull() ? ( " {" + shortcut().toString() + "}" ) : "";
+            machine_suffix = " <@" + wmClientMachine( true ) + '>';
+        QString shortcut_suffix = !shortcut().isNull() ? ( " {" + shortcut().toString() + '}' ) : "";
         cap_suffix = machine_suffix + shortcut_suffix;
         if ( ( !isSpecialWindow() || isToolbar()) && workspace()->findClient( FetchNameInternalPredicate( this ))) 
             {
             int i = 2;
             do 
                 {
-                cap_suffix = machine_suffix + " <" + QString::number(i) + ">" + shortcut_suffix;
+                cap_suffix = machine_suffix + " <" + QString::number(i) + '>' + shortcut_suffix;
                 i++;
                 } while ( workspace()->findClient( FetchNameInternalPredicate( this )));
             info->setVisibleName( caption().toUtf8() );

@@ -113,7 +113,7 @@ RulesWidget::RulesWidget( QWidget* parent )
     for( i = 1;
          i <= module.numberOfDesktops();
          ++i )
-        desktop->addItem( QString::number( i ).rightJustified( 2 ) + ":" + module.desktopName( i ));
+        desktop->addItem( QString::number( i ).rightJustified( 2 ) + ':' + module.desktopName( i ));
     desktop->addItem( i18n( "All Desktops" ));
     }
 
@@ -206,7 +206,7 @@ static QString positionToStr( const QPoint& p )
     {
     if( p == invalidPoint )
         return QString();
-    return QString::number( p.x()) + "," + QString::number( p.y());
+    return QString::number( p.x()) + ',' + QString::number( p.y());
     }
 
 static QPoint strToPosition( const QString& str )
@@ -221,7 +221,7 @@ static QString sizeToStr( const QSize& s )
     {
     if( !s.isValid())
         return QString();
-    return QString::number( s.width()) + "," + QString::number( s.height());
+    return QString::number( s.width()) + ',' + QString::number( s.height());
     }
 
 static QSize strToSize( const QString& str )

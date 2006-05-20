@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 
     QFileInfo fi(f);
     KSimpleConfig input(fi.absoluteFilePath());
-    srcStr = fi.dirPath(true) + "/";
+    srcStr = fi.dirPath(true) + '/';
     KConfig *output = KGlobal::config();
     input.setGroup("Window Border");
     output->setGroup("General");

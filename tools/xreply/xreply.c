@@ -7,7 +7,7 @@
  exits. If set to a number, backtrace for every roundtrip will be printed, and the
  backtraces will be as deep as the given number. If set to C<number> (e.g. C10),
  the backtraces will be "compressed" - every backtrace will be printed only once
- after the process exits, together with number of times it occured.
+ after the process exits, together with number of times it occurred.
 
 */
 

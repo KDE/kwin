@@ -101,7 +101,7 @@ void DetectDialog::executeDialog()
         I18N_NOOP( "Utility Window" ),
         I18N_NOOP( "Splash Screen" )
         };
-    widget->class_label->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ")" );
+    widget->class_label->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
     widget->role_label->setText( role );
     widget->use_role->setEnabled( !role.isEmpty());
     if( widget->use_role->isEnabled())

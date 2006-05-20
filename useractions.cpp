@@ -183,7 +183,7 @@ void Workspace::setTransButtonText(int value)
     else if(value < 10)
         transButton->setText("00"+QString::number(value)+" %");
     else if(value < 100)
-        transButton->setText("0"+QString::number(value)+" %");
+        transButton->setText('0'+QString::number(value)+" %");
     }
 
 void Workspace::resetClientOpacity()

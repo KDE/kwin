@@ -385,7 +385,7 @@ void TabBox::drawContents( QPainter * )
                     s = workspace()->desktopName((*it)->desktop()) + ": ";
 
                   if ( (*it)->isMinimized() )
-                    s += QString("(") + (*it)->caption() + ")";
+                    s += '(' + (*it)->caption() + ')';
                   else
                     s += (*it)->caption();
 

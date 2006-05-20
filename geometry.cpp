@@ -744,10 +744,10 @@ QRect Client::adjustedClientArea( const QRect &desktopArea, const QRect& area ) 
     // Handle struts at xinerama edges that are inside the virtual screen.
     // They're given in virtual screen coordinates, make them affect only
     // their xinerama screen.
-    stareaL.setLeft( QMAX( stareaL.left(), screenarea.left()));
-    stareaR.setRight( QMIN( stareaR.right(), screenarea.right()));
-    stareaT.setTop( QMAX( stareaT.top(), screenarea.top()));
-    stareaB.setBottom( QMIN( stareaB.bottom(), screenarea.bottom()));
+    stareaL.setLeft( qMax( stareaL.left(), screenarea.left()));
+    stareaR.setRight( qMin( stareaR.right(), screenarea.right()));
+    stareaT.setTop( qMax( stareaT.top(), screenarea.top()));
+    stareaB.setBottom( qMin( stareaB.bottom(), screenarea.bottom()));
 
     if (stareaL . intersects (area)) {
 //        kDebug () << "Moving left of: " << r << " to " << stareaL.right() + 1 << endl;
