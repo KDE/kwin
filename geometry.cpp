@@ -993,6 +993,8 @@ QSize Client::adjustedSize( const QSize& frame, Sizemode mode ) const
 
     QSize wsize( frame.width() - ( border_left + border_right ),
              frame.height() - ( border_top + border_bottom ));
+    if( wsize.isEmpty())
+        wsize = QSize( 1, 1 );
 
     return sizeForClientSize( wsize, mode, false );
     }
