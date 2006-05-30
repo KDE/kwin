@@ -470,7 +470,7 @@ bool Client::manage( Window w, bool isMapped )
                 break;
                 }
         if( !belongs_to_desktop && workspace()->showingDesktop())
-            workspace()->resetShowingDesktop( false );
+            workspace()->resetShowingDesktop( options->showDesktopIsMinimizeAll );
 
         if( isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0 ))
             workspace()->restackClientUnderActive( this );

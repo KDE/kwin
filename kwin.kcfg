@@ -59,6 +59,7 @@
   <entry key="ElectricBorderDelay" type="Int" />
   <entry key="IgnorePositionClasses" type="StringList" />
   <entry key="KillPingTimeout" type="Int" />
+  <entry key="ShowDesktopIsMinimizeAll" type="Bool" />
  </group>
  <group name="WM" >
   <entry key="frame" type="Color" />

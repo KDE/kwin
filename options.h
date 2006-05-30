@@ -182,6 +182,8 @@ class Options : public KDecorationOptions
          * Animation speed (0 .. 10 )
         */
         int animateMinimizeSpeed;
+        
+        bool showDesktopIsMinimizeAll;
 
         /**
          * whether or not we roll over to the other edge when switching desktops past the edge

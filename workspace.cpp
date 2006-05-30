@@ -2616,7 +2616,10 @@ void Workspace::setShowingDesktop( bool showing )
 // Unminimizing a window resets the state but keeps the windows hidden (except
 // the one that was unminimized).
 // A new window resets the state and shows the windows again, with the new window
-// being active.
+// being active. Due to popular demand (#67406) by people who apparently
+// don't see a difference between "show desktop" and "minimize all", this is not
+// true if "showDesktopIsMinimizeAll" is set in kwinrc. In such case showing
+// a new window resets the state but doesn't show windows.
 void Workspace::resetShowingDesktop( bool keep_hidden )
     {
     if( block_showing_desktop > 0 )
