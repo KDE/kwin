@@ -302,9 +302,9 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    // If the system tray gets destroyed, the system tray
 	    // icons automatically get unmapped, reparented and mapped
 	    // again to the closest non-client ancestor due to
-	    // QXEmbed's SaveSet feature. Unfortunatly with kicker
+	    // QXEmbed's SaveSet feature. Unfortunately with kicker
 	    // this closest ancestor is not the root window, but our
-	    // decoration, so we reparent explicitely back to the root
+	    // decoration, so we reparent explicitly back to the root
 	    // window.
                 XEvent ev;
                 WId w = e->xunmap.window;

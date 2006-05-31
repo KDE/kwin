@@ -153,7 +153,7 @@ void KCommonDecoration::borders( int& left, int& right, int& top, int& bottom ) 
             layoutMetric(LM_TitleEdgeTop) +
             layoutMetric(LM_TitleEdgeBottom);
 
-    updateLayout(); // TODO!! don't call everytime we are in ::borders
+    updateLayout(); // TODO!! don't call every time we are in ::borders
 }
 
 void KCommonDecoration::updateLayout() const

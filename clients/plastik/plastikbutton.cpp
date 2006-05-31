@@ -50,7 +50,7 @@ PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent)
 {
     setAttribute(Qt::WA_NoSystemBackground);
 
-    // no need to reset here as the button will be resetted on first resize.
+    // no need to reset here as the button will be reseted on first resize.
 
     animTmr = new QTimer(this);
     animTmr->setSingleShot(true);  // single-shot

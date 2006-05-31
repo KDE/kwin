@@ -393,7 +393,7 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 	} else {
 		ButtonDropSiteItem *aboveItem = buttonAt(p);
 		if (!aboveItem)
-			return; // invalid drop. hasn't occured _over_ a button (or left/right dropArea), return...
+			return; // invalid drop. hasn't occurred _over_ a button (or left/right dropArea), return...
 
 		ButtonList::iterator it;
 		if (!getItemIterator(aboveItem, buttonList, it) ) {

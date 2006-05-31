@@ -314,7 +314,7 @@ NET::WindowType Workspace::txtToWindowType( const char* txt )
 // Therefore it's temporarily disabled during session saving. Start of
 // session saving can be detected in SessionManaged::saveState() above,
 // but Qt doesn't have API for saying when session saved finished (either
-// successfully, or was cancelled). Therefore, create another connection
+// successfully, or was canceled). Therefore, create another connection
 // to session manager, that will provide this information.
 static void save_yourself( SmcConn conn_P, SmPointer ptr, int, Bool, int, Bool )
     {
