@@ -451,7 +451,9 @@ bool Client::manage( Window w, bool isMapped )
 
         bool allow;
         if( session )
-            allow = session->active && !workspace()->wasUserInteraction();
+            allow = session->active
+                && ( !workspace()->wasUserInteraction()
+                    || workspace()->activeClient() == NULL || workspace()->activeClient()->isDesktop());
         else
             allow = workspace()->allowClientActivation( this, userTime(), false );
 
