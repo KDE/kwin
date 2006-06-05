@@ -46,7 +46,6 @@ set(kwin_KDEINIT_SRCS
 
 kde4_automoc(${kwin_KDEINIT_SRCS})
 
-kde4_add_dcop_skels(kwin_KDEINIT_SRCS KWinInterface.h )
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
