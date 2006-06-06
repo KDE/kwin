@@ -1384,8 +1384,8 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         // the location to the current location but miscalculate the
         // frame size due to kwin being a double-reparenting window
         // manager
-        if ( new_pos.x() == x() + clientPos().x() &&
-             new_pos.y() == y() + clientPos().y() && gravity == NorthWestGravity )
+        if ( new_pos.x() == x() + clientPos().x() && new_pos.y() == y() + clientPos().y()
+            && gravity == NorthWestGravity && !from_tool )
             {
             new_pos.setX( x());
             new_pos.setY( y());
