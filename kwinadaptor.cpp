@@ -146,37 +146,37 @@ void KWinAdaptor::setDesktopLayout(int orientation, int x, int y)
     //static_cast<YourObjectType *>(parent())->setDesktopLayout(orientation, x, y);
 }
 
-void KWinAdaptor::setOpacity(qulonglong winId, uint opacityPercent)
+void KWinAdaptor::setOpacity(qlonglong winId, uint opacityPercent)
 {
     // handle method call org.kde.KWin.setOpacity
-    QMetaObject::invokeMethod(parent(), "setOpacity", Q_ARG(qulonglong, winId), Q_ARG(uint, opacityPercent));
+    QMetaObject::invokeMethod(parent(), "setOpacity", Q_ARG(qlonglong, winId), Q_ARG(uint, opacityPercent));
 
     // Alternative:
     //static_cast<YourObjectType *>(parent())->setOpacity(winId, opacityPercent);
 }
 
-void KWinAdaptor::setShadowSize(qulonglong winId, uint shadowSizePercent)
+void KWinAdaptor::setShadowSize(qlonglong winId, uint shadowSizePercent)
 {
     // handle method call org.kde.KWin.setShadowSize
-    QMetaObject::invokeMethod(parent(), "setShadowSize", Q_ARG(qulonglong, winId), Q_ARG(uint, shadowSizePercent));
+    QMetaObject::invokeMethod(parent(), "setShadowSize", Q_ARG(qlonglong, winId), Q_ARG(uint, shadowSizePercent));
 
     // Alternative:
     //static_cast<YourObjectType *>(parent())->setShadowSize(winId, shadowSizePercent);
 }
 
-void KWinAdaptor::setUnshadowed(qulonglong winId)
+void KWinAdaptor::setUnshadowed(qlonglong winId)
 {
     // handle method call org.kde.KWin.setUnshadowed
-    QMetaObject::invokeMethod(parent(), "setUnshadowed", Q_ARG(qulonglong, winId));
+    QMetaObject::invokeMethod(parent(), "setUnshadowed", Q_ARG(qlonglong, winId));
 
     // Alternative:
     //static_cast<YourObjectType *>(parent())->setUnshadowed(winId);
 }
 
-void KWinAdaptor::showWindowMenuAt(qulonglong winId, int x, int y)
+void KWinAdaptor::showWindowMenuAt(qlonglong winId, int x, int y)
 {
     // handle method call org.kde.KWin.showWindowMenuAt
-    QMetaObject::invokeMethod(parent(), "showWindowMenuAt", Q_ARG(qulonglong, winId), Q_ARG(int, x), Q_ARG(int, y));
+    QMetaObject::invokeMethod(parent(), "showWindowMenuAt", Q_ARG(qlonglong, winId), Q_ARG(int, x), Q_ARG(int, y));
 
     // Alternative:
     //static_cast<YourObjectType *>(parent())->showWindowMenuAt(winId, x, y);

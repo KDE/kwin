@@ -7,8 +7,8 @@
  * This is an auto-generated file.
  */
 
-#ifndef KWINADAPTOR_H_289111149679568
-#define KWINADAPTOR_H_289111149679568
+#ifndef KWINADAPTOR_H_187881149684785
+#define KWINADAPTOR_H_187881149684785
 
 #include <QtCore/QObject>
 #include <dbus/qdbus.h>
@@ -45,7 +45,7 @@ class KWinAdaptor: public QDBusAbstractAdaptor
 "      <arg direction=\"in\" type=\"s\" name=\"name\" />\n"
 "    </method>\n"
 "    <method name=\"showWindowMenuAt\" >\n"
-"      <arg direction=\"in\" type=\"t\" name=\"winId\" />\n"
+"      <arg direction=\"in\" type=\"x\" name=\"winId\" />\n"
 "      <arg direction=\"in\" type=\"i\" name=\"x\" />\n"
 "      <arg direction=\"in\" type=\"i\" name=\"y\" />\n"
 "    </method>\n"
@@ -70,15 +70,15 @@ class KWinAdaptor: public QDBusAbstractAdaptor
 "      <arg direction=\"out\" type=\"b\" />\n"
 "    </method>\n"
 "    <method name=\"setOpacity\" >\n"
-"      <arg direction=\"in\" type=\"t\" name=\"winId\" />\n"
+"      <arg direction=\"in\" type=\"x\" name=\"winId\" />\n"
 "      <arg direction=\"in\" type=\"u\" name=\"opacityPercent\" />\n"
 "    </method>\n"
 "    <method name=\"setShadowSize\" >\n"
-"      <arg direction=\"in\" type=\"t\" name=\"winId\" />\n"
+"      <arg direction=\"in\" type=\"x\" name=\"winId\" />\n"
 "      <arg direction=\"in\" type=\"u\" name=\"shadowSizePercent\" />\n"
 "    </method>\n"
 "    <method name=\"setUnshadowed\" >\n"
-"      <arg direction=\"in\" type=\"t\" name=\"winId\" />\n"
+"      <arg direction=\"in\" type=\"x\" name=\"winId\" />\n"
 "    </method>\n"
 "    <signal name=\"kompmgrStarted\" />\n"
 "    <signal name=\"kompmgrStopped\" />\n"
@@ -103,10 +103,10 @@ public Q_SLOTS: // METHODS
     void refresh();
     bool setCurrentDesktop(int desktop);
     void setDesktopLayout(int orientation, int x, int y);
-    void setOpacity(qulonglong winId, uint opacityPercent);
-    void setShadowSize(qulonglong winId, uint shadowSizePercent);
-    void setUnshadowed(qulonglong winId);
-    void showWindowMenuAt(qulonglong winId, int x, int y);
+    void setOpacity(qlonglong winId, uint opacityPercent);
+    void setShadowSize(qlonglong winId, uint shadowSizePercent);
+    void setUnshadowed(qlonglong winId);
+    void showWindowMenuAt(qlonglong winId, int x, int y);
     void startKompmgr();
     void stopKompmgr();
     Q_ASYNC void unclutterDesktop();
