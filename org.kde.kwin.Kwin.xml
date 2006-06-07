@@ -1,0 +1,61 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.kwin.KWin">
+    <method name="cascadeDesktop">
+    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="unclutterDesktop">
+    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="reconfigure">
+    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="killWindow">
+    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="refresh"/>
+    <method name="doNotManage">
+    <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="showWindowMenuAt">
+    <arg name="winId" type="i" direction="in"/>
+    <arg name="x" type="i" direction="in"/>
+    <arg name="y" type="i" direction="in"/>
+    </method>
+    <method name="setDesktopLayout">
+    <arg name="orientation" type="i" direction="in"/>
+    <arg name="x" type="i" direction="in"/>
+    <arg name="y" type="i" direction="in"/>
+    </method>
+    <method name="setCurrentDesktop">
+    <arg name="desktop" type="i" direction="in"/>
+    <arg type="b" direction="out"/>
+    </method>
+    <method name="currentDesktop">
+    <arg type="i" direction="out"/>
+    </method>
+    <method name="nextDesktop"/>
+    <method name="previousDesktop"/>
+    <method name="circulateDesktopApplications"/>
+    <method name="startKompmgr"/>
+    <method name="stopKompmgr"/>
+    <method name="kompmgrIsRunning">
+    <arg type="b" direction="out"/>
+    </method>
+    <method name="setOpacity">
+    <arg name="winId" type="i" direction="in"/>
+    <arg name="opacityPercent" type="i" direction="in"/>
+    </method>
+    <method name="setShadowSize">
+    <arg name="winId" type="i" direction="in"/>
+    <arg name="shadowSizePercent" type="i" direction="in"/>
+    </method>
+    <method name="setUnshadowed">
+    <arg name="winId" type="i" direction="in"/>
+    </method>
+    <signal name="kompmgrStarted"/>
+    <signal name="kompmgrStopped"/>
+    <signal name="dcopResetAllClients"/>
+  </interface>
+</node>

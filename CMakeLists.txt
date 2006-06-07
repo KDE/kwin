@@ -19,7 +19,8 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}
 
 ########### next target ###############
 
-set(kwin_KDEINIT_SRCS 
+set(kwin_KDEINIT_SRCS
+	kwinadaptor.cpp
    workspace.cpp 
    client.cpp 
    placement.cpp 
@@ -60,7 +61,6 @@ install(TARGETS kwin DESTINATION bin)
 
 install_files( ${KCFG_INSTALL_DIR} FILES kwin.kcfg )
 install_files( ${DATA_INSTALL_DIR}/kwin FILES eventsrc )
-install_files( /include FILES KWinInterface.h )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 

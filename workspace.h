@@ -19,7 +19,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <netwm.h>
 #include <kxmessages.h>
 
-#include "KWinInterface.h"
 #include "utils.h"
 #include "kdecoration.h"
 #include "sm.h"
@@ -70,7 +69,7 @@ class SystemTrayWindow
 
 typedef QList<SystemTrayWindow> SystemTrayWindowList;
 
-class Workspace : public QObject, public KWinInterface, public KDecorationDefines
+class Workspace : public QObject, public KDecorationDefines
     {
     Q_OBJECT
     public:
