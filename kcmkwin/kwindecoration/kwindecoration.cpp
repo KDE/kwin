@@ -54,13 +54,14 @@
 #include <kdialog.h>
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
-#include <dcopclient.h>
 
 #include "kwindecoration.h"
 #include "preview.h"
 #include <kdecoration_plugins_p.h>
 #include <kdecorationfactory.h>
 #include <kvbox.h>
+#include "kwindecorationadaptor.h"
+#include <dbus/qdbus.h>
 
 // KCModule plugin interface
 // =========================
@@ -68,12 +69,13 @@ typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") )
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
-	: DCOPObject("KWinClientDecoration"),
-	  KCModule(KWinDecoFactory::instance(), parent),
+	: KCModule(KWinDecoFactory::instance(), parent),
           kwinConfig("kwinrc"),
           pluginObject(0)
 {
-	kwinConfig.setGroup("Style");
+    new DecorationAdaptor(this);
+    QDBus::sessionBus().registerObject("/KWinClientDecoration", this);
+    kwinConfig.setGroup("Style");
         plugins = new KDecorationPreviewPlugins( &kwinConfig );
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
@@ -192,7 +194,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 
 	// Allow kwin dcop signal to update our selection list
 	connectDCOPSignal("kwin", 0, "dcopResetAllClients()", "dcopUpdateClientList()", false);
-	
+
 	KAboutData *about =
 		new KAboutData(I18N_NOOP("kcmkwindecoration"),
 				I18N_NOOP("Window Decoration Control Module"),
@@ -616,10 +618,13 @@ QString KWinDecorationModule::quickHelp() const
 
 void KWinDecorationModule::resetKWin()
 {
+#warning "kde4: port it to dbus call kwin*"
+#if 0
 	bool ok = kapp->dcopClient()->send("kwin*", "KWinInterface",
                         "reconfigure()", QByteArray());
 	if (!ok)
 		kDebug() << "kcmkwindecoration: Could not reconfigure kwin" << endl;
+#endif
 }
 
 #include "kwindecoration.moc"

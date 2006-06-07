@@ -38,7 +38,6 @@
 
 #include <kdecoration.h>
 
-#include "kwindecorationIface.h"
 //Added by qt3to4:
 #include <QLabel>
 #include <kvbox.h>
@@ -61,7 +60,7 @@ struct DecorationInfo
 };
 
 
-class KWinDecorationModule : public KCModule, virtual public KWinDecorationIface, public KDecorationDefines
+class KWinDecorationModule : public KCModule, public KDecorationDefines
 {
 	Q_OBJECT
 
