@@ -44,6 +44,8 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include <dbus/qdbus.h>
+
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kdebug.h>
@@ -191,9 +193,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 	connect( cbShowToolTips, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 	connect( cBorder, SIGNAL( activated( int )), SLOT( slotBorderChanged( int )));
 //	connect( cbUseMiniWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
-
-	// Allow kwin dcop signal to update our selection list
-	connectDCOPSignal("kwin", 0, "dcopResetAllClients()", "dcopUpdateClientList()", false);
 
 	KAboutData *about =
 		new KAboutData(I18N_NOOP("kcmkwindecoration"),
@@ -514,18 +513,6 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 }
 
 
-void KWinDecorationModule::dcopUpdateClientList()
-{
-	// Changes the current active ListBox item, and
-	// Loads a new plugin configuration tab if required.
-	KConfig kwinConfig("kwinrc");
-	kwinConfig.setGroup("Style");
-
-	readConfig( &kwinConfig );
-	resetPlugin( &kwinConfig );
-}
-
-
 // Virutal functions required by KCModule
 void KWinDecorationModule::load()
 {
@@ -547,8 +534,8 @@ void KWinDecorationModule::save()
 	emit pluginSave( &kwinConfig );
 
 	kwinConfig.sync();
-	resetKWin();
-	// resetPlugin() will get called via the above DCOP function
+        QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+        kwin->call( "reconfigure" );
 }
 
 
@@ -613,18 +600,6 @@ QString KWinDecorationModule::quickHelp() const
 		"<p>You can configure each theme in the \"Configure [...]\" tab. There are different options specific for each theme.</p>"
 		"<p>In \"General Options (if available)\" you can activate the \"Buttons\" tab by checking the \"Use custom titlebar button positions\" box."
 		" In the \"Buttons\" tab you can change the positions of the buttons to your liking.</p>" );
-}
-
-
-void KWinDecorationModule::resetKWin()
-{
-#warning "kde4: port it to dbus call kwin*"
-#if 0
-	bool ok = kapp->dcopClient()->send("kwin*", "KWinInterface",
-                        "reconfigure()", QByteArray());
-	if (!ok)
-		kDebug() << "kcmkwindecoration: Could not reconfigure kwin" << endl;
-#endif
 }
 
 #include "kwindecoration.moc"

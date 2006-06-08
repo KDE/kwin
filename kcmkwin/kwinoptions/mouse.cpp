@@ -31,13 +31,13 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include <dcopclient.h>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kdialog.h>
 #include <kglobalsettings.h>
 #include <kseparator.h>
+#include <dbus/qdbus.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -571,9 +571,8 @@ void KTitleBarActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    if ( !kapp->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-    kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    kwin->call( "reconfigure" );
   }
 }
 
@@ -848,9 +847,8 @@ void KWindowActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    if ( !kapp->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-    kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    kwin->call( "reconfigure" );
   }
 }
 

@@ -24,8 +24,8 @@
 #include <QVBoxLayout>
 #include <klocale.h>
 #include <kapplication.h>
-#include <dcopclient.h>
 #include <kaboutdata.h>
+#include <dbus/qdbus.h>
 
 #include "ruleslist.h"
 
@@ -67,9 +67,8 @@ void KCMRules::save()
     emit KCModule::changed( false );
     // Send signal to kwin
     config.sync();
-    if( !kapp->dcopClient()->isAttached())
-        kapp->dcopClient()->attach();
-    kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    kwin->call( "reconfigure" );
     }
 
 void KCMRules::defaults()

@@ -46,10 +46,10 @@
 #include <knuminput.h>
 #include <kapplication.h>
 #include <kdialog.h>
-#include <dcopclient.h>
 #include <kglobal.h>
 #include <kprocess.h>
 #include <QTabWidget>
+#include <dbus/qdbus.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -497,9 +497,8 @@ void KFocusConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        if ( !kapp->dcopClient()->isAttached() )
-            kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+        QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+        kwin->call( "reconfigure" );
     }
     emit KCModule::changed(false);
 }
@@ -725,9 +724,8 @@ void KAdvancedConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        if ( !kapp->dcopClient()->isAttached() )
-            kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+        QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+        kwin->call( "reconfigure" );
     }
     emit KCModule::changed(false);
 }
@@ -1190,9 +1188,8 @@ void KMovingConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        if ( !kapp->dcopClient()->isAttached() )
-            kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+        QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+        kwin->call( "reconfigure" );
     }
     emit KCModule::changed(false);
 }
@@ -1594,9 +1591,8 @@ void KTranslucencyConfig::save( void )
   if (standAlone)
   {
     config->sync();
-        if ( !kapp->dcopClient()->isAttached() )
-            kapp->dcopClient()->attach();
-        kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    kwin->call( "reconfigure" );
   }
   emit KCModule::changed(false);
 }

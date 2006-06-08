@@ -10,11 +10,11 @@ License. See the file "COPYING" for the exact licensing terms.
 
 // read addtional window rules and add them to kwinrulesrc
 
-#include <dcopclient.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kinstance.h>
 #include <kstandarddirs.h>
+#include <dbus/qdbus.h>
 
 int main( int argc, char* argv[] )
     {
@@ -50,7 +50,10 @@ int main( int argc, char* argv[] )
     dest_cfg.writeEntry( "count", pos );
     src_cfg.sync();
     dest_cfg.sync();
-    DCOPClient client;
-    client.attach();
-    client.send("kwin*", "", "reconfigure()", QByteArray());
+#ifdef __GNUC__
+#warning D-BUS TODO
+// kwin* , and an attach to dbus is missing as well
+#endif
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    kwin->call( "reconfigure" );
     }

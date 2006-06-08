@@ -21,7 +21,7 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 
-#include <dcopclient.h>
+#include <dbus/qdbus.h>
 
 #include <kapplication.h>
 #include <kglobal.h>
@@ -175,9 +175,12 @@ void KWinOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  if ( !kapp->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-  kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+#ifdef __GNUC__
+#warning D-BUS TODO
+// All these calls in kcmkwin modules should be actually kwin*, because of multihead.
+#endif
+  QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+  kwin->call( "reconfigure" );
 }
 
 
@@ -250,9 +253,8 @@ void KActionsOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  if ( !kapp->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-  kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+  QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+  kwin->call( "reconfigure" );
 }
 
 

@@ -31,7 +31,6 @@
 #define KWINDECORATION_H
 
 #include <kcmodule.h>
-#include <dcopobject.h>
 #include "buttons.h"
 #include <kconfig.h>
 #include <klibloader.h>
@@ -74,8 +73,6 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 
 		QString quickHelp() const;
 
-		virtual void dcopUpdateClientList();
-
 	signals:
 		void pluginLoad( KConfig* conf );
 		void pluginSave( KConfig* conf );
@@ -98,7 +95,6 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 		QString decorationName ( QString& libName );
 		static QString styleToConfigLib( QString& styleLib );
 		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString() );
-		void resetKWin();
 		void checkSupportedBorderSizes();
 		static int borderSizeToIndex( BorderSize size, QList< BorderSize > sizes );
 		static BorderSize indexToBorderSize( int index, QList< BorderSize > sizes );

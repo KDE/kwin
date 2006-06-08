@@ -13,11 +13,11 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <netwm_def.h>
 #include <kconfig.h>
 #include <kinstance.h>
-#include <dcopclient.h>
 #include <QRect>
 //Added by qt3to4:
 #include <QByteArray>
 #include <Q3PtrList>
+#include <dbus/qdbus.h>
 
 struct SessionInfo
     {
@@ -166,7 +166,10 @@ int main()
     writeRules( dest_cfg );
     src_cfg.sync();
     dest_cfg.sync();
-    DCOPClient client;
-    client.attach();
-    client.send("kwin*", "", "reconfigure()", QByteArray());
+#ifdef __GNUC__
+#warning D-BUS TODO
+// kwin* , and an attach to dbus is missing as well
+#endif
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    kwin->call( "reconfigure" );
     }

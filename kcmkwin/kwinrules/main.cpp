@@ -18,10 +18,10 @@
 
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <dcopclient.h>
 #include <kconfig.h>
 #include <klocale.h>
 #include <kwin.h>
+#include <dbus/qdbus.h>
 
 #include <X11/Xlib.h>
 #include <fixx11h.h>
@@ -257,9 +257,8 @@ static int edit( Window wid, bool whole_app )
         delete orig_rule;
         }
     saveRules( rules );
-    if( !kapp->dcopClient()->isAttached())
-        kapp->dcopClient()->attach();
-    kapp->dcopClient()->send("kwin*", "", "reconfigure()", QByteArray());
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    kwin->call( "reconfigure" );
     return 0;
     }
     

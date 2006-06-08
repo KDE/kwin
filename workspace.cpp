@@ -42,6 +42,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "group.h"
 #include "rules.h"
+#include "kwinadaptor.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -128,7 +129,7 @@ Workspace::Workspace( bool restore )
     forced_global_mouse_grab( false )
     {
         new KWinAdaptor(this);
-        QDBus::sessionBus().registerObject("/KWinInterface", this);
+        QDBus::sessionBus().registerObject("/KWin", this);
       setObjectName( "workspace" );
 
     _self = this;
@@ -2438,7 +2439,10 @@ void Workspace::startKompmgr()
         QByteArray ba;
         QDataStream arg(&ba, QIODevice::WriteOnly);
         arg << "";
-        kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStarted()", ba);
+#ifdef __GNUC__
+#warning D-BUS TODO
+//        kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStarted()", ba);
+#endif
         }
         if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
 }
@@ -2454,7 +2458,10 @@ void Workspace::stopKompmgr()
     QByteArray ba;
     QDataStream arg(&ba, QIODevice::WriteOnly);
     arg << "";
-    kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStopped()", ba);
+#ifdef __GNUC__
+#warning D-BUS TODO
+//    kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStopped()", ba);
+#endif
 }
 
 bool Workspace::kompmgrIsRunning()

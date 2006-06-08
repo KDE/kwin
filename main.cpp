@@ -18,12 +18,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdlib.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
-#include <dcopclient.h>
 #include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <QX11Info>
 #include <stdio.h>
+#include <fixx11h.h>
+#include <dbus/qdbus.h>
 
 #include "atoms.h"
 #include "options.h"
@@ -122,8 +123,9 @@ Application::Application( )
     syncX(); // trigger possible errors, there's still a chance to abort
 
     initting = false; // startup done, we are up and running now.
-       
-    dcopClient()->send( "ksplash", "", "upAndRunning(QString)", QString("wm started"));
+    
+    QDBusInterfacePtr ksplash( "org.kde.ksplash", "/ksplash", "org.kde.KSplash" );   
+    ksplash->call( "upAndRunning", QString( "wm started" ));
     XEvent e;
     e.xclient.type = ClientMessage;
     e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False );
@@ -262,8 +264,10 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
         signal(SIGINT, SIG_IGN);
     if (signal(SIGHUP, KWinInternal::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
-
-    KApplication::disableAutoDcopRegistration();
+#ifdef __GNUC__
+#warning D-BUS TODO
+//    KApplication::disableAutoDcopRegistration();
+#endif
     KWinInternal::Application a;
     KWinInternal::SessionManaged weAreIndeed;
     KWinInternal::SessionSaveDoneHelper helper;
@@ -276,9 +280,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     else
         appname.sprintf("kwin-screen-%d", KWinInternal::screen_number);
 
-    DCOPClient* client = a.dcopClient();
-    client->registerAs( DCOPCString( appname.toAscii() ) , false);
-    client->setDefaultObject( "KWinInterface" );
+    QDBus::sessionBus().busService()->requestName( appname, 0 );
 
     return a.exec();
     }
