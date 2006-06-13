@@ -46,9 +46,13 @@ DetectWidget::DetectWidget( QWidget* parent, const char* name )
     }
 
 DetectDialog::DetectDialog( QWidget* parent, const char* name )
-: KDialogBase( Swallow, 0, parent, name, true, "", Ok | Cancel )
-, grabber( NULL )
+  : KDialog( parent ),
+    grabber( NULL )
     {
+    setObjectName( name );
+    setModal( true );
+    setButtons( Ok | Cancel );
+
     widget = new DetectWidget( this );
     setMainWidget( widget );
     }

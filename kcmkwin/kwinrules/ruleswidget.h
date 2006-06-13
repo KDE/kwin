@@ -20,7 +20,7 @@
 #ifndef __RULESWIDGET_H__
 #define __RULESWIDGET_H__
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kwin.h>
 #include <kshortcutdialog.h>
 
@@ -95,7 +95,7 @@ class RulesWidget
     };
 
 class RulesDialog
-    : public KDialogBase
+    : public KDialog
     {
     Q_OBJECT
     public:
@@ -122,7 +122,7 @@ class EditShortcut
     };
 
 class EditShortcutDialog
-    : public KDialogBase
+    : public KDialog
     {
     Q_OBJECT
     public:

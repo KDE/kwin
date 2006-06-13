@@ -687,10 +687,15 @@ void RulesWidget::shortcutEditClicked()
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
-: KDialogBase( Swallow, 0, parent, name, true, i18n( "Edit Window-Specific Settings" ), Ok | Cancel )
+  : KDialog( parent )
     {
-    widget = new RulesWidget( this );
-    setMainWidget( widget );
+      setObjectName( name );
+      setModal( true );
+      setCaption( i18n( "Edit Window-Specific Settings" ) );
+      setButtons( Ok | Cancel );
+
+      widget = new RulesWidget( this );
+      setMainWidget( widget );
     }
 
 // window is set only for Alt+F3/Window-specific settings, because the dialog
@@ -725,7 +730,7 @@ void RulesDialog::accept()
     if( !widget->finalCheck())
         return;
     rules = widget->rules();
-    KDialogBase::accept();
+    KDialog::accept();
     }
 
 EditShortcut::EditShortcut( QWidget* parent )
@@ -746,10 +751,15 @@ void EditShortcut::clearShortcut()
     }
 
 EditShortcutDialog::EditShortcutDialog( QWidget* parent, const char* name )
-: KDialogBase( Swallow, 0, parent, name, true, i18n( "Edit Shortcut" ), Ok | Cancel )
+: KDialog( parent )
     {
-    widget = new EditShortcut( this );
-    setMainWidget( widget );
+      setObjectName( name );
+      setModal( true );
+      setCaption( i18n( "Edit Shortcut" ) );
+      setButtons( Ok | Cancel );
+
+      widget = new EditShortcut( this );
+      setMainWidget( widget );
     }
 
 void EditShortcutDialog::setShortcut( const QString& cut )

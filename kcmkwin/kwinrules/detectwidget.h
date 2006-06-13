@@ -22,7 +22,7 @@
 
 #include "detectwidgetbase.h"
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kwin.h>
 
 #include "../../rules.h"
@@ -42,7 +42,7 @@ class DetectWidget
     };
 
 class DetectDialog
-    : public KDialogBase
+    : public KDialog
     {
     Q_OBJECT
     public:
