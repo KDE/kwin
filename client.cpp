@@ -1912,7 +1912,7 @@ void Client::updateOpacity()
                 }
             }
         else if (isNormalWindow())
-        // activate dependend minor windows as well
+        // activate dependent minor windows as well
             {
             for( ClientList::ConstIterator it = group()->members().begin(); it != group()->members().end(); it++ )
                 if ((*it)->isDialog() || (*it)->isUtility())

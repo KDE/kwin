@@ -167,9 +167,9 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     pluginStr = nameStr;
 
     // For clients in kdeartwork    
-    QString catalogue = nameStr;
-    catalogue.replace( "kwin3_", "kwin_" );
-    KGlobal::locale()->insertCatalog( catalogue );
+    QString catalog = nameStr;
+    catalog.replace( "kwin3_", "kwin_" );
+    KGlobal::locale()->insertCatalog( catalog );
     // For KCommonDecoration based clients
     KGlobal::locale()->insertCatalog( "kwin_lib" );
     // For clients in kdebase
