@@ -1783,35 +1783,35 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
         XTranslateCoordinates( QX11Info::display(), QX11Info::appRootWindow(), w, pos.x(), pos.y(), &x, &y, &xw );
         if ( type == EmuMove )
             { // motion notify events
-            XMotionEvent e;
+            XEvent e;
             e.type = MotionNotify;
-            e.window = w;
-            e.root = QX11Info::appRootWindow();
-            e.subwindow = w;
-            e.time = QX11Info::appTime();
-            e.x = x;
-            e.y = y;
-            e.x_root = pos.x();
-            e.y_root = pos.y();
-            e.state = state;
-            e.is_hint = NotifyNormal;
-            XSendEvent( QX11Info::display(), w, true, ButtonMotionMask, (XEvent*)&e );
+            e.xmotion.window = w;
+            e.xmotion.root = QX11Info::appRootWindow();
+            e.xmotion.subwindow = w;
+            e.xmotion.time = QX11Info::appTime();
+            e.xmotion.x = x;
+            e.xmotion.y = y;
+            e.xmotion.x_root = pos.x();
+            e.xmotion.y_root = pos.y();
+            e.xmotion.state = state;
+            e.xmotion.is_hint = NotifyNormal;
+            XSendEvent( QX11Info::display(), w, true, ButtonMotionMask, &e );
             }
         else
             {
-            XButtonEvent e;
+            XEvent e;
             e.type = type == EmuRelease ? ButtonRelease : ButtonPress;
-            e.window = w;
-            e.root = QX11Info::appRootWindow();
-            e.subwindow = w;
-            e.time = QX11Info::appTime();
-            e.x = x;
-            e.y = y;
-            e.x_root = pos.x();
-            e.y_root = pos.y();
-            e.state = state;
-            e.button = button;
-            XSendEvent( QX11Info::display(), w, true, ButtonPressMask, (XEvent*)&e );
+            e.xbutton.window = w;
+            e.xbutton.root = QX11Info::appRootWindow();
+            e.xbutton.subwindow = w;
+            e.xbutton.time = QX11Info::appTime();
+            e.xbutton.x = x;
+            e.xbutton.y = y;
+            e.xbutton.x_root = pos.x();
+            e.xbutton.y_root = pos.y();
+            e.xbutton.state = state;
+            e.xbutton.button = button;
+            XSendEvent( QX11Info::display(), w, true, ButtonPressMask, &e );
 
             if ( type == EmuPress )
                 {
