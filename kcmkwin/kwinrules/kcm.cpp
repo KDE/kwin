@@ -67,7 +67,7 @@ void KCMRules::save()
     emit KCModule::changed( false );
     // Send signal to kwin
     config.sync();
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
     kwin->call( "reconfigure" );
     }
 

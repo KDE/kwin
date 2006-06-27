@@ -54,6 +54,6 @@ int main( int argc, char* argv[] )
 #warning D-BUS TODO
 // kwin* , and an attach to dbus is missing as well
 #endif
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
     kwin->call( "reconfigure" );
     }

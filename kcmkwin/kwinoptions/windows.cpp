@@ -497,7 +497,7 @@ void KFocusConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+        QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
         kwin->call( "reconfigure" );
     }
     emit KCModule::changed(false);
@@ -724,7 +724,7 @@ void KAdvancedConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+        QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
         kwin->call( "reconfigure" );
     }
     emit KCModule::changed(false);
@@ -1188,7 +1188,7 @@ void KMovingConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+        QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
         kwin->call( "reconfigure" );
     }
     emit KCModule::changed(false);
@@ -1591,7 +1591,7 @@ void KTranslucencyConfig::save( void )
   if (standAlone)
   {
     config->sync();
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
     kwin->call( "reconfigure" );
   }
   emit KCModule::changed(false);

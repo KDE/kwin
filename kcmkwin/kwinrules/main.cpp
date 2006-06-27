@@ -257,7 +257,7 @@ static int edit( Window wid, bool whole_app )
         delete orig_rule;
         }
     saveRules( rules );
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/kwin", "org.kde.KWin" );
+    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
     kwin->call( "reconfigure" );
     return 0;
     }
