@@ -31,7 +31,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kipc.h>
 #include <kactioncollection.h>
 #include <kaction.h>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 #include "plugins.h"
 #include "client.h"

@@ -25,7 +25,7 @@
 #include <klocale.h>
 #include <kapplication.h>
 #include <kaboutdata.h>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 #include "ruleslist.h"
 
@@ -67,8 +67,8 @@ void KCMRules::save()
     emit KCModule::changed( false );
     // Send signal to kwin
     config.sync();
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin->call( "reconfigure" );
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
     }
 
 void KCMRules::defaults()

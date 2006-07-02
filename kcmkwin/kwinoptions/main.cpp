@@ -21,7 +21,7 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 #include <kapplication.h>
 #include <kglobal.h>
@@ -179,8 +179,8 @@ void KWinOptions::save()
 #warning D-BUS TODO
 // All these calls in kcmkwin modules should be actually kwin*, because of multihead.
 #endif
-  QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-  kwin->call( "reconfigure" );
+  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+  kwin.call( "reconfigure" );
 }
 
 
@@ -253,8 +253,8 @@ void KActionsOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-  kwin->call( "reconfigure" );
+  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+  kwin.call( "reconfigure" );
 }
 
 

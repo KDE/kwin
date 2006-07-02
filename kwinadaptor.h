@@ -11,7 +11,7 @@
 #define KWINADAPTOR_H_187881149684785
 
 #include <QtCore/QObject>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 class QByteArray;
 template<class T> class QList;
 template<class Key, class Value> class QMap;
@@ -91,15 +91,15 @@ public:
 
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
-    Q_ASYNC void cascadeDesktop();
+    Q_NOREPLY void cascadeDesktop();
     void circulateDesktopApplications();
     int currentDesktop();
     void doNotManage(const QString &name);
-    Q_ASYNC void killWindow();
+    Q_NOREPLY void killWindow();
     bool kompmgrIsRunning();
     void nextDesktop();
     void previousDesktop();
-    Q_ASYNC void reconfigure();
+    Q_NOREPLY void reconfigure();
     void refresh();
     bool setCurrentDesktop(int desktop);
     void setDesktopLayout(int orientation, int x, int y);
@@ -109,7 +109,7 @@ public Q_SLOTS: // METHODS
     void showWindowMenuAt(qlonglong winId, int x, int y);
     void startKompmgr();
     void stopKompmgr();
-    Q_ASYNC void unclutterDesktop();
+    Q_NOREPLY void unclutterDesktop();
 Q_SIGNALS: // SIGNALS
     void dcopResetAllClients();
     void kompmgrStarted();

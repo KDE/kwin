@@ -24,7 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QX11Info>
 #include <stdio.h>
 #include <fixx11h.h>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 #include "atoms.h"
 #include "options.h"
@@ -124,8 +124,8 @@ Application::Application( )
 
     initting = false; // startup done, we are up and running now.
     
-    QDBusInterfacePtr ksplash( "org.kde.ksplash", "/ksplash", "org.kde.KSplash" );   
-    ksplash->call( "upAndRunning", QString( "wm started" ));
+    QDBusInterface ksplash( "org.kde.ksplash", "/ksplash", "org.kde.KSplash" );   
+    ksplash.call( "upAndRunning", QString( "wm started" ));
     XEvent e;
     e.xclient.type = ClientMessage;
     e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False );

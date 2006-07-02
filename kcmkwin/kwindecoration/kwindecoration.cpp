@@ -44,7 +44,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 #include <kapplication.h>
 #include <kcombobox.h>
@@ -63,7 +63,7 @@
 #include <kdecorationfactory.h>
 #include <kvbox.h>
 #include "kwindecorationadaptor.h"
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 // KCModule plugin interface
 // =========================
@@ -534,8 +534,8 @@ void KWinDecorationModule::save()
 	emit pluginSave( &kwinConfig );
 
 	kwinConfig.sync();
-        QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin->call( "reconfigure" );
+        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+        kwin.call( "reconfigure" );
 }
 
 

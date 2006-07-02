@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 //Added by qt3to4:
 #include <QByteArray>
 #include <Q3PtrList>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 struct SessionInfo
     {
@@ -170,6 +170,6 @@ int main()
 #warning D-BUS TODO
 // kwin* , and an attach to dbus is missing as well
 #endif
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin->call( "reconfigure" );
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
     }

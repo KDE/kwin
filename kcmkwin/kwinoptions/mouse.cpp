@@ -37,7 +37,7 @@
 #include <kdialog.h>
 #include <kglobalsettings.h>
 #include <kseparator.h>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -571,8 +571,8 @@ void KTitleBarActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin->call( "reconfigure" );
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
   }
 }
 
@@ -847,8 +847,8 @@ void KWindowActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin->call( "reconfigure" );
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
   }
 }
 

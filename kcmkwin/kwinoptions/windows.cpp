@@ -49,7 +49,7 @@
 #include <kglobal.h>
 #include <kprocess.h>
 #include <QTabWidget>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -497,8 +497,8 @@ void KFocusConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin->call( "reconfigure" );
+        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+        kwin.call( "reconfigure" );
     }
     emit KCModule::changed(false);
 }
@@ -724,8 +724,8 @@ void KAdvancedConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin->call( "reconfigure" );
+        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+        kwin.call( "reconfigure" );
     }
     emit KCModule::changed(false);
 }
@@ -1188,8 +1188,8 @@ void KMovingConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin->call( "reconfigure" );
+        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+        kwin.call( "reconfigure" );
     }
     emit KCModule::changed(false);
 }
@@ -1591,8 +1591,8 @@ void KTranslucencyConfig::save( void )
   if (standAlone)
   {
     config->sync();
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin->call( "reconfigure" );
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
   }
   emit KCModule::changed(false);
 }

@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kdebug.h>
 #include <kinstance.h>
 #include <kstandarddirs.h>
-#include <dbus/qdbus.h>
+#include <QtDBus/QtDBus>
 
 int main( int argc, char* argv[] )
     {
@@ -54,6 +54,6 @@ int main( int argc, char* argv[] )
 #warning D-BUS TODO
 // kwin* , and an attach to dbus is missing as well
 #endif
-    QDBusInterfacePtr kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin->call( "reconfigure" );
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
     }
