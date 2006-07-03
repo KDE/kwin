@@ -24,6 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kxerrorhandler.h>
 #include <assert.h>
 #include <kdebug.h>
+#include <kshortcut.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
