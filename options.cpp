@@ -173,7 +173,7 @@ unsigned long Options::updateSettings()
     CmdAll3 = mouseCommand(config->readEntry("CommandAll3","Resize"), false );
     CmdAllWheel = mouseWheelCommand(config->readEntry("CommandAllWheel","Nothing"));
 
-    //translucency settings
+    //translucency settings - TODO
     config->setGroup( "Notification Messages" );
     useTranslucency = config->readEntry("UseTranslucency", QVariant(false)).toBool();
     config->setGroup( "Translucency");
@@ -194,10 +194,6 @@ unsigned long Options::updateSettings()
     removeShadowsOnMove = config->readEntry("RemoveShadowsOnMove", QVariant(true)).toBool();
     removeShadowsOnResize = config->readEntry("RemoveShadowsOnResize", QVariant(true)).toBool();
     onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool();
-    if (resetKompmgr = config->readEntry("ResetKompmgr", QVariant(false)).toBool())
-        config->writeEntry("ResetKompmgr",false);
-    
-    
     
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips

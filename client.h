@@ -100,7 +100,7 @@ class Client
         QPixmap miniIcon() const;
 
         bool isActive() const;
-        void setActive( bool, bool updateOpacity = true );
+        void setActive( bool );
 
         int desktop() const;
         void setDesktop( int );
@@ -278,22 +278,6 @@ class Client
         void cancelAutoRaise();
         void destroyClient();
         void checkActiveModal();
-        void setOpacity(bool translucent, uint opacity = 0);
-        void setShadowSize(uint shadowSize);
-        void updateOpacity();
-        void updateShadowSize();
-        bool hasCustomOpacity(){return custom_opacity;}
-        void setCustomOpacityFlag(bool custom = true);
-        bool getWindowOpacity();
-        int opacityPercentage();
-        void checkAndSetInitialRuledOpacity();
-        uint ruleOpacityInactive();
-        uint ruleOpacityActive();
-        unsigned int opacity();
-        bool isBMP();
-        void setBMP(bool b);
-        bool touches(const Client* c);
-        void setShapable(bool b);
         bool hasStrut() const;
         
     private slots:
@@ -393,8 +377,6 @@ class Client
         void ungrabButton( int mod );
         void resetMaximize();
         void resizeDecoration( const QSize& s );
-        void setDecoHashProperty(uint topHeight, uint rightWidth, uint bottomHeight, uint leftWidth);
-        void unsetDecoHashProperty();
 
         void pingWindow();
         void killProcess( bool ask, Time timestamp = CurrentTime );
@@ -404,7 +386,6 @@ class Client
 
         void embedClient( Window w, const XWindowAttributes &attr );    
         void detectNoBorder();
-        void detectShapable();
         void destroyDecoration();
         void updateFrameExtents();
 
@@ -534,13 +515,6 @@ class Client
         friend class GeometryUpdatesPostponer;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
-        uint opacity_;
-        uint savedOpacity_;
-        bool custom_opacity;
-        uint rule_opacity_active; //translucency rules
-        uint rule_opacity_inactive; //dto.
-        //int shadeOriginalHeight;
-        bool isBMP_;
         QTimer* demandAttentionKNotifyTimer;
         Damage damage;
     };
@@ -863,16 +837,6 @@ inline Window Client::moveResizeGrabWindow() const
 inline KShortcut Client::shortcut() const
     {
     return _shortcut;
-    }
-
-inline bool Client::isBMP()
-    {
-    return isBMP_;
-    }
-
-inline void Client::setBMP(bool b)
-    {
-    isBMP_ = b;
     }
 
 inline void Client::removeRule( Rules* rule )

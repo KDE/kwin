@@ -491,13 +491,11 @@ bool Rules::update( Client* c )
         }
     if (opacityactiverule == ( ForceRule )Force)
         {
-        updated = updated || (uint) (opacityactive/100.0*0xffffffff) != c->ruleOpacityActive();
-        opacityactive = (uint)(((double)c->ruleOpacityActive())/0xffffffff*100);
+        // TODO
         }
     if (opacityinactiverule == ( ForceRule )Force)
         {
-        updated = updated || (uint) (opacityinactive/100.0*0xffffffff) != c->ruleOpacityInactive();
-        opacityinactive = (uint)(((double)c->ruleOpacityInactive())/0xffffffff*100);
+        // TODO
         }
     return updated;
     }
@@ -810,7 +808,6 @@ void Client::setupWindowRules( bool ignore_temporary )
 // Used e.g. after the rules have been modified using the kcm.    
 void Client::applyWindowRules()
     {
-    checkAndSetInitialRuledOpacity();        
     // apply force rules
     // Placement - does need explicit update, just like some others below
     // Geometry : setGeometry() doesn't check rules
@@ -865,43 +862,6 @@ void Client::finishWindowRules()
     client_rules = WindowRules();
     }
     
-void Client::checkAndSetInitialRuledOpacity()
-//apply kwin-rules for window-translucency upon hitting apply or starting to manage client
-    {
-    int tmp;
-    
-    //active translucency
-    tmp = -1;
-    tmp = rules()->checkOpacityActive(tmp);
-    if( tmp != -1 ) //rule did apply and returns valid value
-        {
-        rule_opacity_active = (uint)((tmp/100.0)*0xffffffff);
-        }
-    else
-        rule_opacity_active = 0;
-
-    //inactive translucency
-    tmp = -1;
-    tmp = rules()->checkOpacityInactive(tmp);
-    if( tmp != -1 ) //rule did apply and returns valid value
-        {
-        rule_opacity_inactive = (uint)((tmp/100.0)*0xffffffff);
-        }
-    else
-        rule_opacity_inactive = 0;
-
-    return;
-        
-    if( isDock() )
-     //workaround for docks, as they don't have active/inactive settings and don't aut, therefore we take only the active one...
-        {
-        uint tmp = rule_opacity_active ? rule_opacity_active : options->dockOpacity;
-        setOpacity(tmp < 0xFFFFFFFF && (rule_opacity_active || options->translucentDocks), tmp);
-        }
-    else
-        updateOpacity();
-    }
-
 // Workspace
 
 WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )

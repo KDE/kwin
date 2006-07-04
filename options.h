@@ -299,7 +299,6 @@ class Options : public KDecorationOptions
         uint inactiveWindowShadowSize;
         uint dockShadowSize;
         bool onlyDecoTranslucent;
-        bool resetKompmgr;
 
     private:
         WindowOperation OpTitlebarDblClick;

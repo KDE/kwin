@@ -61,10 +61,6 @@ extern int screen_number;
 
 Workspace *Workspace::_self = 0;
 
-KProcess* kompmgr = 0;
-
-bool allowKompmgrRestart = true;
-
 // Rikkus: This class is too complex. It needs splitting further.
 // It's a nightmare to understand, especially with so few comments :(
 
@@ -131,9 +127,7 @@ Workspace::Workspace( bool restore )
     composite_pixmap( None ),
     damaged( false )
     {
-        new KWinAdaptor(this);
-        QDBus::sessionBus().registerObject("/KWin", this);
-      setObjectName( "workspace" );
+    new KWinAdaptor( "org.kde.kwin", "/KWin", QDBus::sessionBus(), this );
 
     _self = this;
     mgr = new PluginMgr;
@@ -203,15 +197,6 @@ Workspace::Workspace( bool restore )
     init();
 
     connect( kapp->desktop(), SIGNAL( resized( int )), SLOT( desktopResized()));
-
-    // start kompmgr - i wanted to put this into main.cpp, but that would prevent dcop support, as long as Application was no dcop_object
-    if (options->useTranslucency)
-        {
-        kompmgr = new KProcess;
-        connect(kompmgr, SIGNAL(receivedStderr(KProcess*, char*, int)), SLOT(handleKompmgrOutput(KProcess*, char*, int)));
-        *kompmgr << "kompmgr";
-        startKompmgr();
-        }
     }
 
 void Workspace::init()
@@ -441,8 +426,6 @@ void Workspace::init()
 
 Workspace::~Workspace()
     {
-    if (kompmgr)
-        delete kompmgr;
     finishCompositing();
     blockStackingUpdates( true );
 // TODO    grabXServer();
@@ -519,21 +502,6 @@ Unmanaged* Workspace::createUnmanaged( Window w )
 
 void Workspace::addClient( Client* c, allowed_t )
     {
-    // waited with trans settings until window figured out if active or not ;)
-//     qWarning("%s", (const char*)(c->resourceClass()));
-    c->setBMP(c->resourceName() == "beep-media-player" || c->decorationId() == None);
-    // first check if the window has it's own opinion of it's translucency ;)
-    c->getWindowOpacity();
-    if (c->isDock())
-        {
-//         if (c->x() == 0 && c->y() == 0 && c->width() > c->height()) topDock = c;
-        if (!c->hasCustomOpacity()) // this xould be done slightly more efficient, but we want to support the topDock in future
-            {
-            c->setShadowSize(options->dockShadowSize);
-            c->setOpacity(options->translucentDocks, options->dockOpacity);
-            }
-        }
-//------------------------------------------------
     Group* grp = findGroup( c->window());
     if( grp != NULL )
         grp->gotLeader( c );
@@ -998,14 +966,6 @@ void Workspace::slotReconfigure()
         (*it)->setupWindowRules( true );
         (*it)->applyWindowRules();
         discardUsedWindowRules( *it, false );
-        }
-
-    if (options->resetKompmgr) // need restart
-        {
-        bool tmp = options->useTranslucency;
-        stopKompmgr();
-        if (tmp)
-            QTimer::singleShot( 200, this, SLOT(startKompmgr()) ); // wait some time to ensure system's ready for restart
         }
     }
 
@@ -2450,172 +2410,6 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         proc << "--embed" << QString::number( c->window());
     proc.start( KProcess::DontCare );
     }
-
-
-// kompmgr stuff
-
-void Workspace::startKompmgr()
-{
-    if (!kompmgr || kompmgr->isRunning())
-        return;
-    if (!kompmgr->start(KProcess::OwnGroup, KProcess::Stderr))
-        {
-        options->useTranslucency = false;
-        KProcess proc;
-        proc << "kdialog" << "--error"
-            << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
-            << "--title" << "Composite Manager Failure";
-        proc.start(KProcess::DontCare);
-        }
-    else
-        {
-        connect(kompmgr, SIGNAL(processExited(KProcess*)), SLOT(restartKompmgr()));
-        options->useTranslucency = true;
-        allowKompmgrRestart = false;
-        QTimer::singleShot( 60000, this, SLOT(unblockKompmgrRestart()) );
-        QByteArray ba;
-        QDataStream arg(&ba, QIODevice::WriteOnly);
-        arg << "";
-#ifdef __GNUC__
-#warning D-BUS TODO
-//        kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStarted()", ba);
-#endif
-        }
-        if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
-}
-
-void Workspace::stopKompmgr()
-{
-    if (!kompmgr  || !kompmgr->isRunning())
-        return;
-    kompmgr->disconnect(this, SLOT(restartKompmgr()));
-    options->useTranslucency = false;
-    if (popup){ delete popup; popup = 0L; } // to add/remove opacity slider
-    kompmgr->kill();
-    QByteArray ba;
-    QDataStream arg(&ba, QIODevice::WriteOnly);
-    arg << "";
-#ifdef __GNUC__
-#warning D-BUS TODO
-//    kapp->dcopClient()->emitDCOPSignal("default", "kompmgrStopped()", ba);
-#endif
-}
-
-bool Workspace::kompmgrIsRunning()
-{
-   return kompmgr && kompmgr->isRunning();
-}
-
-void Workspace::unblockKompmgrRestart()
-{
-    allowKompmgrRestart = true;
-}
-
-void Workspace::restartKompmgr()
-// this is for inernal purpose (crashhandling) only, usually you want to use workspace->stopKompmgr(); QTimer::singleShot(200, workspace, SLOT(startKompmgr()));
-{
-    if (!allowKompmgrRestart) // uh-ohh
-        {
-        options->useTranslucency = false;
-        KProcess proc;
-        proc << "kdialog" << "--error"
-            << i18n( "The Composite Manager crashed twice within a minute and is therefore disabled for this session.")
-            << "--title" << i18n("Composite Manager Failure");
-        proc.start(KProcess::DontCare);
-        return;
-        }
-    if (!kompmgr)
-        return;
-// this should be useless, i keep it for maybe future need
-//     if (!kcompmgr)
-//         {
-//         kompmgr = new KProcess;
-//         kompmgr->clearArguments();
-//         *kompmgr << "kompmgr";
-//         }
-// -------------------
-    if (!kompmgr->start(KProcess::NotifyOnExit, KProcess::Stderr))
-        {
-        options->useTranslucency = false;
-        KProcess proc;
-        proc << "kdialog" << "--error"
-            << i18n("The Composite Manager could not be started.\\nMake sure you have \"kompmgr\" in a $PATH directory.")
-            << "--title" << i18n("Composite Manager Failure");
-        proc.start(KProcess::DontCare);
-        }
-    else
-        {
-        allowKompmgrRestart = false;
-        QTimer::singleShot( 60000, this, SLOT(unblockKompmgrRestart()) );
-        }
-}
-
-void Workspace::handleKompmgrOutput( KProcess* , char *buffer, int buflen)
-{
-    QString message;
-    QString output = QString::fromLocal8Bit( buffer, buflen );
-    if (output.contains("Started",Qt::CaseInsensitive))
-        ; // don't do anything, just pass to the connection release
-    else if (output.contains("Can't open display",Qt::CaseInsensitive))
-        message = i18n("<qt><b>kompmgr failed to open the display</b><br>There is probably an invalid display entry in your ~/.xcompmgrrc.</qt>");
-    else if (output.contains("No render extension",Qt::CaseInsensitive))
-        message = i18n("<qt><b>kompmgr cannot find the Xrender extension</b><br>You are using either an outdated or a crippled version of XOrg.<br>Get XOrg &ge; 6.8 from www.freedesktop.org.<br></qt>");
-    else if (output.contains("No composite extension",Qt::CaseInsensitive))
-        message = i18n("<qt><b>Composite extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.<br>Additionally, you need to add a new section to your X config file:<br>"
-        "<i>Section \"Extensions\"<br>"
-        "Option \"Composite\" \"Enable\"<br>"
-        "EndSection</i></qt>");
-    else if (output.contains("No damage extension",Qt::CaseInsensitive))
-        message = i18n("<qt><b>Damage extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>");
-    else if (output.contains("No XFixes extension",Qt::CaseInsensitive))
-        message = i18n("<qt><b>XFixes extension not found</b><br>You <i>must</i> use XOrg &ge; 6.8 for translucency and shadows to work.</qt>");
-    else return; //skip others
-    // kompmgr startup failed or succeeded, release connection
-    kompmgr->closeStderr();
-    disconnect(kompmgr, SIGNAL(receivedStderr(KProcess*, char*, int)), this, SLOT(handleKompmgrOutput(KProcess*, char*, int)));
-    if( !message.isEmpty())
-        {
-        KProcess proc;
-        proc << "kdialog" << "--error"
-            << message
-            << "--title" << i18n("Composite Manager Failure");
-        proc.start(KProcess::DontCare);
-        }
-}
-
-
-void Workspace::setOpacity(unsigned long winId, unsigned int opacityPercent)
-{
-    if (opacityPercent > 100) opacityPercent = 100;
-    for( ClientList::ConstIterator it = stackingOrder().begin(); it != stackingOrder().end(); it++ )
-        if (winId == (*it)->window())
-            {
-            (*it)->setOpacity(opacityPercent < 100, (unsigned int)((opacityPercent/100.0)*0xFFFFFFFF));
-            return;
-            }
-}
-
-void Workspace::setShadowSize(unsigned long winId, unsigned int shadowSizePercent)
-{
-    //this is open to the user by dcop - to avoid stupid trials, we limit the max shadow size to 400%
-    if (shadowSizePercent > 400) shadowSizePercent = 400;
-    for( ClientList::ConstIterator it = stackingOrder().begin(); it != stackingOrder().end(); it++ )
-        if (winId == (*it)->window())
-            {
-            (*it)->setShadowSize(shadowSizePercent);
-            return;
-            }
-}
-
-void Workspace::setUnshadowed(unsigned long winId)
-{
-    for( ClientList::ConstIterator it = stackingOrder().begin(); it != stackingOrder().end(); it++ )
-        if (winId == (*it)->window())
-            {
-            (*it)->setShadowSize(0);
-            return;
-            }
-}
 
 void Workspace::setShowingDesktop( bool showing )
     {

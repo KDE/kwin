@@ -118,7 +118,6 @@ QMenu* Workspace::clientPopup()
             connect(transButton, SIGNAL(clicked()), trans_popup, SLOT(hide()));
             connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
             connect(transSlider, SIGNAL(valueChanged(int)), this, SLOT(setPopupClientOpacity(int)));
-//             connect(transSlider, SIGNAL(sliderReleased()), trans_popup, SLOT(hide()));
             action = popup->addMenu( trans_popup );
             action->setText( i18n("&Opacity") );
         }
@@ -168,9 +167,7 @@ QMenu* Workspace::clientPopup()
 //sets the transparency of the client to given value(given by slider)
 void Workspace::setPopupClientOpacity(int value)
     {
-    active_popup_client->setCustomOpacityFlag(true);
-    value = 100 - value;
-    value<100?active_popup_client->setOpacity(true, (uint)((value/100.0)*0xffffffff)):active_popup_client->setOpacity(false,0xffffffff);
+    // TODO
     }
 
 void Workspace::setTransButtonText(int value)
@@ -188,10 +185,7 @@ void Workspace::setTransButtonText(int value)
 
 void Workspace::resetClientOpacity()
     {
-    active_popup_client->setCustomOpacityFlag(false);
-    active_popup_client->updateOpacity();
-    transSlider->setValue(100-active_popup_client->opacityPercentage());
-    setTransButtonText(100-active_popup_client->opacityPercentage());
+    // TODO
     }
 
 
@@ -229,12 +223,6 @@ void Workspace::clientPopupAboutToShow()
     mNoBorderOpAction->setChecked( active_popup_client->noBorder() );
     mMinimizeOpAction->setEnabled( active_popup_client->isMinimizable() );
     mCloseOpAction->setEnabled( active_popup_client->isCloseable() );
-
-    if (options->useTranslucency)
-        {
-        transSlider->setValue(100-active_popup_client->opacityPercentage());
-        setTransButtonText(100-active_popup_client->opacityPercentage());
-        }
     }
 
 
@@ -653,26 +641,10 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             workspace()->windowToNextDesktop( this );
             break;
         case Options::MouseOpacityMore:
-            if (opacity_ < 0xFFFFFFFF)
-                {
-                if (opacity_ < 0xF3333333)
-                    {
-                    setOpacity(true, opacity_ + 0xCCCCCCC);
-                    custom_opacity = true;
-                    }
-                else
-                    {
-                    setOpacity(false, 0xFFFFFFFF);
-                    custom_opacity = false;
-                    }
-                }
+            // TODO
             break;
         case Options::MouseOpacityLess:
-            if (opacity_ > 0)
-                {
-                setOpacity(true, (opacity_ > 0xCCCCCCC) ? opacity_ - 0xCCCCCCC : 0);
-                custom_opacity = true;
-                }
+            // TODO
             break;
         case Options::MouseNothing:
             replay = true;

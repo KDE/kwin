@@ -239,12 +239,6 @@ class Workspace : public QObject, public KDecorationDefines
         void sendPingToWindow( Window w, Time timestamp ); // called from Client::pingWindow()
         void sendTakeActivity( Client* c, Time timestamp, long flags ); // called from Client::takeActivity()
         
-        void stopKompmgr();
-        bool kompmgrIsRunning();
-        void setOpacity(unsigned long winId, unsigned int opacityPercent);
-        void setShadowSize(unsigned long winId, unsigned int shadowSizePercent);
-        void setUnshadowed(unsigned long winId); // redundant, equals setShadowSize(inId, 0)
-
     // only called from Client::destroyClient() or Client::releaseWindow()
         void removeClient( Client*, allowed_t );
         void setActiveClient( Client*, allowed_t );
@@ -367,9 +361,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         void updateClientArea();
         
-        // kompmgr, also dcop
-        void startKompmgr();
-
     private slots:
         void desktopPopupAboutToShow();
         void clientPopupAboutToShow();
@@ -389,9 +380,6 @@ class Workspace : public QObject, public KDecorationDefines
         void setPopupClientOpacity(int v);
         void resetClientOpacity();
         void setTransButtonText(int value);
-        void unblockKompmgrRestart();
-        void restartKompmgr();
-        void handleKompmgrOutput( KProcess *proc, char *buffer, int buflen);
         // end 
         void compositeTimeout();
 
@@ -651,15 +639,6 @@ class Workspace : public QObject, public KDecorationDefines
         //kompmgr
         QSlider *transSlider;
         QPushButton *transButton;
-        // not used yet
-        /*Client* topDock;
-        int maximizedWindowCounter;
-        int topDockShadowSize;*/
-        //end
-        
-     signals:
-        void kompmgrStarted();
-        void kompmgrStopped();
     };
 
 // helper for Workspace::blockStackingUpdates() being called in pairs (true/false)

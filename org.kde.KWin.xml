@@ -38,24 +38,6 @@
     <method name="nextDesktop"/>
     <method name="previousDesktop"/>
     <method name="circulateDesktopApplications"/>
-    <method name="startKompmgr"/>
-    <method name="stopKompmgr"/>
-    <method name="kompmgrIsRunning">
-    <arg type="b" direction="out"/>
     </method>
-    <method name="setOpacity">
-    <arg name="winId" type="x" direction="in"/>
-    <arg name="opacityPercent" type="u" direction="in"/>
-    </method>
-    <method name="setShadowSize">
-    <arg name="winId" type="x" direction="in"/>
-    <arg name="shadowSizePercent" type="u" direction="in"/>
-    </method>
-    <method name="setUnshadowed">
-    <arg name="winId" type="x" direction="in"/>
-    </method>
-    <signal name="kompmgrStarted"/>
-    <signal name="kompmgrStopped"/>
-    <signal name="dcopResetAllClients"/>
   </interface>
 </node>
