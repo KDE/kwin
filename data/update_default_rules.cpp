@@ -21,7 +21,7 @@ int main( int argc, char* argv[] )
     if( argc != 2 )
         return 1;
     KInstance inst( "kwin_update_default_rules" );
-    QString file = locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
+    QString file = KStandardDirs::locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
     if( file.isEmpty())
         {
         kWarning() << "File " << argv[ 1 ] << " not found!" << endl;
