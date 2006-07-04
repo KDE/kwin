@@ -169,7 +169,8 @@ Workspace::Workspace( bool restore )
                  ColormapChangeMask |
                  SubstructureRedirectMask |
                  SubstructureNotifyMask |
-                 FocusChangeMask // for NotifyDetailNone
+                 FocusChangeMask | // for NotifyDetailNone
+                 ExposureMask
                  );
 
     Extensions::init();

@@ -472,6 +472,10 @@ bool Workspace::workspaceEvent( XEvent * e )
             XRefreshKeyboardMapping( &e->xmapping );
             tab_box->updateKeyMapping();
             break;
+        case Expose:
+            if( e->xexpose.window == rootWindow() && compositing())
+                setDamaged(); // root window needs repainting
+            break;
         default:
             break;
         }
