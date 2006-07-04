@@ -89,8 +89,7 @@ Client::Client( Workspace *ws )
         border_bottom( 0 ),
         sm_stacking_order( -1 ),
         demandAttentionKNotifyTimer( NULL ),
-        damage( None ),
-        appear_stage( 0 )
+        damage( None )
 // SELI do all as initialization
     {
     autoRaiseTimer = 0;

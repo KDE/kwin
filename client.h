@@ -296,9 +296,6 @@ class Client
         void setShapable(bool b);
         bool hasStrut() const;
         
-        int appearStage() const { return appear_stage; }
-        void appearStep() { if (appear_stage > 0 ) --appear_stage; }
-        
     private slots:
         void autoRaise();
         void shadeHover();
@@ -546,7 +543,6 @@ class Client
         bool isBMP_;
         QTimer* demandAttentionKNotifyTimer;
         Damage damage;
-        int appear_stage;
     };
 
 // helper for Client::postponeGeometryUpdates() being called in pairs (true/false)

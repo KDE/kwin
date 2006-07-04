@@ -54,7 +54,6 @@ bool Client::manage( Window w, bool isMapped )
     embedClient( w, attr );
     
     setupCompositing();
-    appear_stage = 20;
 
     // SELI order all these things in some sane manner
 
