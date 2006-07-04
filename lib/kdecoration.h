@@ -621,7 +621,6 @@ class KWIN_EXPORT KDecoration
 	 * isShade() to get the current state.
 	 */
         virtual void shadeChange() = 0;
-#warning Redo all the XYZChange() virtuals as signals.
     signals:
         /**
          * This signal is emitted whenever the window's keep-above state changes.
@@ -742,23 +741,7 @@ class KWIN_EXPORT KDecoration
          * Changes the maximize mode of the decorated window. This function should
          * be preferred to the other maximize() overload for reacting on clicks
          * on the maximize titlebar button.
-         * NOTE: This function is new in KDE3.3. In order to support also KDE3.2,
-         * it is recommended to use code like this:
-         * \code
-         * MouseButtons button = ... ;
-         * #if KDE_IS_VERSION( 3, 3, 0 )
-         * maximize( button );
-         * #else
-         * if( button == MidButton )
-	 *     maximize( maximizeMode() ^ MaximizeVertical );
-         * else if( button == RightButton )
-         *     maximize( maximizeMode() ^ MaximizeHorizontal );
-         * else
-         *     maximize( maximizeMode() == MaximizeFull ? MaximizeRestore : MaximizeFull );
-         * #endif
-         * \endcode
          */
-#warning Update the docs.
         void maximize( Qt::MouseButtons button );
 	/**
 	 * Set the maximize mode of the decorated window.

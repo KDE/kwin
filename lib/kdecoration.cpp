@@ -446,4 +446,6 @@ KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick(
                                       d->OpMaxButtonLeftClick;
     }
 
+#warning Redo all the XYZChange() virtuals as signals.
+
 #include "kdecoration.moc"
