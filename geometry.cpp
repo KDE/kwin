@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "geometrytip.h"
 #include "rules.h"
+#include "effects.h"
 #include <QX11Info>
 #include <QDesktopWidget>
 
@@ -2549,7 +2550,10 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         }
     if ( isMove() )
       workspace()->clientMoved(globalPos, xTime());
+    if( isMove())
+        effects->windowUserMoved( this );
+    else
+        effects->windowUserResized( this );
     }
-
 
 } // namespace

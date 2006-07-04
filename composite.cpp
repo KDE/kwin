@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "client.h"
 #include "unmanaged.h"
+#include "effects.h"
 
 namespace KWinInternal
 {
@@ -63,21 +64,30 @@ void Workspace::compositeTimeout()
          it != stackingOrder().end();
          ++it )
         {
+#if 1
+        (*it)->windowPixmap(); // trigger creation
+        effects->paintWindow( *it );
+#else
         QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
         if( !r.isEmpty())
             {
             XCopyArea( display(), (*it)->windowPixmap(), composite_pixmap, gc,
                 qMax( 0, -(*it)->x()), qMax( 0, -(*it)->y()), r.width(), r.height(), r.x(), r.y());
             }
+#endif
         }
     for( UnmanagedList::ConstIterator it = unmanaged.begin();
          it != unmanaged.end();
          ++it )
         {
+#if 1
+        effects->paintWorkspace( this );
+#else
         QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
         if( !r.isEmpty())
             XCopyArea( display(), (*it)->windowPixmap(), composite_pixmap, gc,
                 qMax( 0, -(*it)->x()), qMax( 0, -(*it)->y()), r.width(), r.height(), r.x(), r.y());
+#endif
         }
     XCopyArea( display(), composite_pixmap, rootWindow(), gc, 0, 0, displayWidth(), displayHeight(), 0, 0 );
     XFreeGC( display(), gc );

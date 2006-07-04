@@ -30,6 +30,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "options.h"
 #include "sm.h"
 #include "utils.h"
+#include "effects.h"
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -117,6 +118,7 @@ Application::Application( )
 
     options = new Options;
     atoms = new Atoms;
+    effects = new EffectsHandler;
     
     // create workspace.
     (void) new Workspace( isSessionRestored() );
@@ -143,6 +145,8 @@ Application::~Application()
     if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
         XSetInputFocus( display(), PointerRoot, RevertToPointerRoot, xTime() );
     delete options;
+    delete effects;
+    delete atoms;
     }
 
 void Application::lostSelection()

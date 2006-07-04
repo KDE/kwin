@@ -46,7 +46,8 @@ set(kwin_KDEINIT_SRCS
    rules.cpp
    composite.cpp
    toplevel.cpp
-   unmanaged.cpp )
+   unmanaged.cpp
+   effects.cpp )
 
 kde4_automoc(${kwin_KDEINIT_SRCS})
 
