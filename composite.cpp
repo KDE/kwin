@@ -52,6 +52,17 @@ void Workspace::setDamaged()
     
 void Workspace::compositeTimeout()
     {
+    bool effect = false;
+    for( ClientList::ConstIterator it = clients.begin();
+         it != clients.end();
+         ++it )
+        {
+        if( (*it)->appearStage())
+            {
+            effect = true;
+            (*it)->appearStep();
+            }
+        }
 #define EFF
 #ifdef EFF
     const int SPD = 10;
@@ -61,10 +72,10 @@ void Workspace::compositeTimeout()
     if( cnt == 8 * SPD )
         cnt = 0;
     int s = cnt / SPD;
-    if( !damaged && s == olds )
+    if( !damaged && s == olds && !effect )
         return;
 #else
-    if( !damaged )
+    if( !damaged && !effect )
         return;
 #endif
     XGCValues val;
@@ -84,7 +95,10 @@ void Workspace::compositeTimeout()
          it != stackingOrder().end();
          ++it )
         {
-        QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
+        QRect r = (*it)->geometry();
+        if( (*it)->appearStage())
+            r.setHeight( r.height() * ( 20 - (*it)->appearStage()) / 20 );
+        r = r.intersect( QRect( 0, 0, displayWidth(), displayHeight()));
         if( !r.isEmpty())
             {
             XCopyArea( display(), (*it)->windowPixmap(), composite_pixmap, gc,
