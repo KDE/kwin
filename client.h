@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "kdecoration.h"
 #include "rules.h"
+#include "toplevel.h"
 
 class QTimer;
 class KProcess;
@@ -42,7 +43,8 @@ class WinInfo;
 class SessionInfo;
 class Bridge;
 
-class Client : public QObject, public KDecorationDefines
+class Client
+    : public Toplevel
     {
     Q_OBJECT
     public:
@@ -52,7 +54,6 @@ class Client : public QObject, public KDecorationDefines
         Window wrapperId() const;
         Window decorationId() const;
 
-        Workspace* workspace() const;
         const Client* transientFor() const;
         Client* transientFor();
         bool isTransient() const;
@@ -73,16 +74,8 @@ class Client : public QObject, public KDecorationDefines
         void setupWindowRules( bool ignore_temporary );
         void applyWindowRules();
 
-        QRect geometry() const;
-        QSize size() const;
         QSize minSize() const;
         QSize maxSize() const;
-        QPoint pos() const;
-        QRect rect() const;
-        int x() const;
-        int y() const;
-        int width() const;
-        int height() const;
         QPoint clientPos() const; // inside of geometry()
         QSize clientSize() const;
 
@@ -302,7 +295,7 @@ class Client : public QObject, public KDecorationDefines
         bool touches(const Client* c);
         void setShapable(bool b);
         bool hasStrut() const;
-
+        
     private slots:
         void autoRaise();
         void shadeHover();
@@ -339,12 +332,16 @@ class Client : public QObject, public KDecorationDefines
         void visibilityNotifyEvent( XVisibilityEvent* e );
         void focusInEvent( XFocusInEvent* e );
         void focusOutEvent( XFocusOutEvent* e );
+        void damageNotifyEvent( XDamageNotifyEvent* e );
 
         bool buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
         bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
         bool motionNotifyEvent( Window w, int state, int x, int y, int x_root, int y_root );
 
         void processDecorationButtonPress( int button, int state, int x, int y, int x_root, int y_root );
+
+    protected:
+        virtual void debug( kdbgstream& stream ) const;
 
     private slots:
         void pingTimeout();
@@ -419,12 +416,11 @@ class Client : public QObject, public KDecorationDefines
         Time readUserCreationTime() const;
         static bool sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool active_hack );
         void startupIdChanged();
-
+        static bool hasShape( Window w );
+        
         Window client;
         Window wrapper;
-        Window frame;
         KDecoration* decoration;
-        Workspace* wspace;
         Bridge* bridge;
         int desk;
         bool buttonDown;
@@ -523,7 +519,6 @@ class Client : public QObject, public KDecorationDefines
         Time ping_timestamp;
         Time user_time;
         unsigned long allowed_actions;
-        QRect frame_geometry;
         QSize client_size;
         int postpone_geometry_updates; // >0 - new geometry is remembered, but not actually set
         bool pending_geometry_update;
@@ -547,6 +542,7 @@ class Client : public QObject, public KDecorationDefines
         //int shadeOriginalHeight;
         bool isBMP_;
         QTimer* demandAttentionKNotifyTimer;
+        Damage damage;
     };
 
 // helper for Client::postponeGeometryUpdates() being called in pairs (true/false)
@@ -583,7 +579,7 @@ inline Window Client::window() const
 
 inline Window Client::frameId() const
     {
-    return frame;
+    return handle();
     }
 
 inline Window Client::wrapperId() const
@@ -594,11 +590,6 @@ inline Window Client::wrapperId() const
 inline Window Client::decorationId() const
     {
     return decoration != NULL ? decoration->widget()->winId() : None;
-    }
-
-inline Workspace* Client::workspace() const
-    {
-    return wspace;
     }
 
 inline const Client* Client::transientFor() const
@@ -817,46 +808,6 @@ inline QByteArray Client::windowRole() const
     return window_role;
     }
 
-inline QRect Client::geometry() const
-    {
-    return frame_geometry;
-    }
-
-inline QSize Client::size() const
-    {
-    return frame_geometry.size();
-    }
-
-inline QPoint Client::pos() const
-    {
-    return frame_geometry.topLeft();
-    }
-
-inline int Client::x() const
-    {
-    return frame_geometry.x();
-    }
-
-inline int Client::y() const
-    {
-    return frame_geometry.y();
-    }
-
-inline int Client::width() const
-    {
-    return frame_geometry.width();
-    }
-
-inline int Client::height() const
-    {
-    return frame_geometry.height();
-    }
-
-inline QRect Client::rect() const
-    {
-    return QRect( 0, 0, width(), height());
-    }
-
 inline QPoint Client::clientPos() const
     {
     return QPoint( border_left, border_top );
@@ -902,7 +853,7 @@ inline const WindowRules* Client::rules() const
     return &client_rules;
     }
 
-KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing( cl ));
+KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, Client, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing( cl ));
 
 inline Window Client::moveResizeGrabWindow() const
     {
@@ -929,22 +880,9 @@ inline void Client::removeRule( Rules* rule )
     client_rules.remove( rule );
     }
 
-#ifdef NDEBUG
-inline
-kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }
-inline
-kndbgstream& operator<<( kndbgstream& stream, const ClientList& ) { return stream; }
-inline
-kndbgstream& operator<<( kndbgstream& stream, const ConstClientList& ) { return stream; }
-#else
-kdbgstream& operator<<( kdbgstream& stream, const Client* );
-kdbgstream& operator<<( kdbgstream& stream, const ClientList& );
-kdbgstream& operator<<( kdbgstream& stream, const ConstClientList& );
-#endif
-
-KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Window, cl->window() == value );
-KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Window, cl->frameId() == value );
-KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Window, cl->wrapperId() == value );
+KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Client, Window, cl->window() == value );
+KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Client, Window, cl->frameId() == value );
+KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value );
 
 } // namespace
 

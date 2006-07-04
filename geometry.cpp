@@ -1657,9 +1657,9 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         {
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
-    if( force == NormalGeometrySet && frame_geometry == QRect( x, y, w, h ))
+    if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
         return;
-    frame_geometry = QRect( x, y, w, h );
+    geom = QRect( x, y, w, h );
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1683,6 +1683,8 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    setDamaged();
+    resetWindowPixmap();
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1712,9 +1714,9 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         kDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
         kDebug() << kBacktrace() << endl;
         }
-    if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
+    if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
         return;
-    frame_geometry.setSize( QSize( w, h ));
+    geom.setSize( QSize( w, h ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1737,6 +1739,8 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    setDamaged();
+    resetWindowPixmap();
     }
 
 /*!
@@ -1744,9 +1748,9 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
  */
 void Client::move( int x, int y, ForceGeometry_t force )
     {
-    if( force == NormalGeometrySet && frame_geometry.topLeft() == QPoint( x, y ))
+    if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
         return;
-    frame_geometry.moveTopLeft( QPoint( x, y ));
+    geom.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1757,8 +1761,8 @@ void Client::move( int x, int y, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    setDamaged();
     }
-
 
 void Client::postponeGeometryUpdates( bool postpone )
     {

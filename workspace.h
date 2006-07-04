@@ -77,6 +77,8 @@ class Workspace : public QObject, public KDecorationDefines
         virtual ~Workspace();
 
         static Workspace * self() { return _self; }
+        
+        bool compositing() const { return composite_pixmap != None; }
 
         bool workspaceEvent( XEvent * );
 
@@ -87,6 +89,9 @@ class Workspace : public QObject, public KDecorationDefines
         template< typename T > Client* findClient( T predicate );
         template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
         template< typename T > void forEachClient( T procedure );
+        template< typename T > Unmanaged* findUnmanaged( T predicate );
+        template< typename T1, typename T2 > void forEachUnmanaged( T1 procedure, T2 predicate );
+        template< typename T > void forEachUnmanaged( T procedure );
 
         QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         QRect clientArea( clientAreaOption, const Client* c ) const;
@@ -248,6 +253,9 @@ class Workspace : public QObject, public KDecorationDefines
         void removeGroup( Group* group, allowed_t );
         Group* findClientLeaderGroup( const Client* c ) const;
 
+    // only called from Unmanaged::release()
+        void removeUnmanaged( Unmanaged*, allowed_t );
+
         bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
@@ -282,6 +290,8 @@ class Workspace : public QObject, public KDecorationDefines
         void requestDelayFocus( Client* );
         
         void toggleTopDockShadows(bool on);
+        
+        void setDamaged();
 
     public slots:
         void refresh();
@@ -383,6 +393,7 @@ class Workspace : public QObject, public KDecorationDefines
         void restartKompmgr();
         void handleKompmgrOutput( KProcess *proc, char *buffer, int buflen);
         // end 
+        void compositeTimeout();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -430,6 +441,8 @@ class Workspace : public QObject, public KDecorationDefines
     // this is the right way to create a new client
         Client* createClient( Window w, bool is_mapped );
         void addClient( Client* c, allowed_t );
+        Unmanaged* createUnmanaged( Window w );
+        void addUnmanaged( Unmanaged* c, allowed_t );
 
         Window findSpecialEventWindow( XEvent* e );
 
@@ -471,6 +484,9 @@ class Workspace : public QObject, public KDecorationDefines
         void closeActivePopup();
 
         void updateClientArea( bool force );
+        
+        void setupCompositing();
+        void finishCompositing();
 
         SystemTrayWindowList systemTrayWins;
 
@@ -507,6 +523,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         ClientList clients;
         ClientList desktops;
+        UnmanagedList unmanaged;
 
         ClientList unconstrained_stacking_order;
         ClientList stacking_order;
@@ -626,6 +643,10 @@ class Workspace : public QObject, public KDecorationDefines
         Window null_focus_window;
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
+
+        Pixmap composite_pixmap;
+        bool damaged;
+        QTimer compositeTimer;
         
         //kompmgr
         QSlider *transSlider;
@@ -808,7 +829,27 @@ inline void Workspace::forEachClient( T procedure )
     return forEachClient( procedure, TruePredicate());
     }
 
-KWIN_COMPARE_PREDICATE( ClientMatchPredicate, const Client*, cl == value );
+template< typename T >
+inline Unmanaged* Workspace::findUnmanaged( T predicate )
+    {
+    return findUnmanagedInList( unmanaged, predicate );
+    }
+
+template< typename T1, typename T2 >
+inline void Workspace::forEachUnmanaged( T1 procedure, T2 predicate )
+    {
+    for ( UnmanagedList::ConstIterator it = unmanaged.begin(); it != unmanaged.end(); ++it)
+        if ( predicate( const_cast< const Unmanaged* >( *it)))
+            procedure( *it );
+    }
+
+template< typename T >
+inline void Workspace::forEachUnmanaged( T procedure )
+    {
+    return forEachUnmanaged( procedure, TruePredicate());
+    }
+
+KWIN_COMPARE_PREDICATE( ClientMatchPredicate, Client, const Client*, cl == value );
 inline bool Workspace::hasClient( const Client* c )
     {
     return findClient( ClientMatchPredicate( c ));

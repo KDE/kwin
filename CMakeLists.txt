@@ -43,7 +43,10 @@ set(kwin_KDEINIT_SRCS
    activation.cpp 
    useractions.cpp 
    geometry.cpp 
-   rules.cpp )
+   rules.cpp
+   composite.cpp
+   toplevel.cpp
+   unmanaged.cpp )
 
 kde4_automoc(${kwin_KDEINIT_SRCS})
 
@@ -51,6 +54,12 @@ kde4_automoc(${kwin_KDEINIT_SRCS})
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
+if (X11_Xcomposite_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xcomposite_LIB})
+endif (X11_Xcomposite_FOUND)
+if (X11_Xdamage_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xdamage_LIB})
+endif (X11_Xdamage_FOUND)
 
 install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 

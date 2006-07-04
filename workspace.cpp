@@ -43,6 +43,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "group.h"
 #include "rules.h"
 #include "kwinadaptor.h"
+#include "unmanaged.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -126,7 +127,9 @@ Workspace::Workspace( bool restore )
     topmenu_space( NULL ),
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
-    forced_global_mouse_grab( false )
+    forced_global_mouse_grab( false ),
+    composite_pixmap( None ),
+    damaged( false )
     {
         new KWinAdaptor(this);
         QDBus::sessionBus().registerObject("/KWin", this);
@@ -175,7 +178,8 @@ Workspace::Workspace( bool restore )
                  FocusChangeMask // for NotifyDetailNone
                  );
 
-    Shape::init();
+    Extensions::init();
+    setupCompositing();
 
     // compatibility
     long data = 1;
@@ -333,6 +337,7 @@ void Workspace::init()
     connect(&reconfigureTimer, SIGNAL(timeout()), this,
             SLOT(slotReconfigure()));
     connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
+    connect( &compositeTimer, SIGNAL( timeout()), SLOT( compositeTimeout()));
 
     connect(kapp, SIGNAL(appearanceChanged()), this,
             SLOT(slotReconfigure()));
@@ -369,7 +374,11 @@ void Workspace::init()
             XWindowAttributes attr;
             XGetWindowAttributes(display(), wins[i], &attr);
             if (attr.override_redirect )
+                {
+                if( attr.map_state != IsUnmapped && compositing())
+                    createUnmanaged( wins[ i ] );
                 continue;
+                }
             if( topmenu_space && topmenu_space->winId() == wins[ i ] )
                 continue;
             if (attr.map_state != IsUnmapped)
@@ -434,6 +443,7 @@ Workspace::~Workspace()
     {
     if (kompmgr)
         delete kompmgr;
+    finishCompositing();
     blockStackingUpdates( true );
 // TODO    grabXServer();
     // use stacking_order, so that kwin --replace keeps stacking order
@@ -445,6 +455,10 @@ Workspace::~Workspace()
         (*it)->releaseWindow( true );
         // no removeClient() is called !
         }
+    for( UnmanagedList::ConstIterator it = unmanaged.begin();
+         it != unmanaged.end();
+         ++it )
+        (*it)->release();
     delete desktop_widget;
     delete tab_box;
     delete popupinfo;
@@ -488,6 +502,18 @@ Client* Workspace::createClient( Window w, bool is_mapped )
         return NULL;
         }
     addClient( c, Allowed );
+    return c;
+    }
+
+Unmanaged* Workspace::createUnmanaged( Window w )
+    {
+    Unmanaged* c = new Unmanaged( this );
+    if( !c->track( w ))
+        {
+        Unmanaged::deleteUnmanaged( c, Allowed );
+        return NULL;
+        }
+    addUnmanaged( c, Allowed );
     return c;
     }
 
@@ -545,6 +571,11 @@ void Workspace::addClient( Client* c, allowed_t )
         updateToolWindows( true );
     }
 
+void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
+    {
+    unmanaged.append( c );
+    }
+
 /*
   Destroys the client \a c
  */
@@ -597,6 +628,12 @@ void Workspace::removeClient( Client* c, allowed_t )
        tab_box->repaint();
 
     updateClientArea();
+    }
+
+void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
+    {
+    assert( unmanaged.contains( c ));
+    unmanaged.removeAll( c );
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )
@@ -895,7 +932,7 @@ void Workspace::slotSettingsChanged(int category)
 /*!
   Reread settings
  */
-KWIN_PROCEDURE( CheckBorderSizesProcedure, cl->checkBorderSizes() );
+KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes() );
 
 void Workspace::slotReconfigure()
     {
@@ -1661,7 +1698,7 @@ void Workspace::slotGrabWindow()
         QPixmap snapshot = QPixmap::grabWindow( active_client->frameId() );
 
 	//No XShape - no work.
-        if( Shape::available())
+        if( Extensions::shapeAvailable())
             {
 	    //As the first step, get the mask from XShape.
             int count, order;

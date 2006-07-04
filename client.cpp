@@ -63,12 +63,10 @@ namespace KWinInternal
  is done in manage().
  */
 Client::Client( Workspace *ws )
-    :   QObject( NULL ),
+    :   Toplevel( ws ),
         client( None ),
         wrapper( None ),
-        frame( None ),
         decoration( NULL ),
-        wspace( ws ),
         bridge( new Bridge( this )),
         move_faked_activity( false ),
         move_resize_grab_window( None ),
@@ -90,7 +88,8 @@ Client::Client( Workspace *ws )
         border_top( 0 ),
         border_bottom( 0 ),
         sm_stacking_order( -1 ),
-        demandAttentionKNotifyTimer( NULL )
+        demandAttentionKNotifyTimer( NULL ),
+        damage( None )
 // SELI do all as initialization
     {
     autoRaiseTimer = 0;
@@ -143,7 +142,7 @@ Client::Client( Workspace *ws )
     
     cmap = None;
     
-    frame_geometry = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
+    geom = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
     client_size = QSize( 100, 100 );
     custom_opacity = false;
     rule_opacity_active = 0;; //translucency rules
@@ -159,7 +158,8 @@ Client::~Client()
     {
     assert(!moveResizeMode);
     assert( client == None );
-    assert( frame == None && wrapper == None );
+    assert( wrapper == None );
+//    assert( frameId() == None );
     assert( decoration == NULL );
     assert( postpone_geometry_updates == 0 );
     assert( !check_active_modal );
@@ -180,6 +180,7 @@ void Client::releaseWindow( bool on_shutdown )
     {
     assert( !deleting );
     deleting = true;
+    finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (!custom_opacity) setOpacity(false);
@@ -224,8 +225,8 @@ void Client::releaseWindow( bool on_shutdown )
     client = None;
     XDestroyWindow( display(), wrapper );
     wrapper = None;
-    XDestroyWindow( display(), frame );
-    frame = None;
+    XDestroyWindow( display(), frameId());
+//    frame = None;
     --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
     }
@@ -236,6 +237,7 @@ void Client::destroyClient()
     {
     assert( !deleting );
     deleting = true;
+    finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
@@ -251,8 +253,8 @@ void Client::destroyClient()
     client = None; // invalidate
     XDestroyWindow( display(), wrapper );
     wrapper = None;
-    XDestroyWindow( display(), frame );
-    frame = None;
+    XDestroyWindow( display(), frameId());
+//    frame = None;
     --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
     }
@@ -343,7 +345,7 @@ void Client::checkBorderSizes()
 
 void Client::detectNoBorder()
     {
-    if( Shape::hasShape( window()))
+    if( hasShape( window()))
         {
         noborder = true;
         return;
@@ -376,7 +378,7 @@ void Client::detectNoBorder()
 
 void Client::detectShapable()
     {
-    if( Shape::hasShape( window()))
+    if( hasShape( window()))
         return;
     switch( windowType())
         {
@@ -951,7 +953,7 @@ void Client::rawShow()
     {
     if( decoration != NULL )
         decoration->widget()->show(); // not really necessary, but let it know the state
-    XMapWindow( display(), frame );
+    XMapWindow( display(), frameId());
     if( !isShade())
         {
         XMapWindow( display(), wrapper );
@@ -973,7 +975,7 @@ void Client::rawHide()
 // will be missed is also very minimal, so I don't think it's needed to grab the server
 // here.
     XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-    XUnmapWindow( display(), frame );
+    XUnmapWindow( display(), frameId());
     XUnmapWindow( display(), wrapper );
     XUnmapWindow( display(), client );
     XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
@@ -1318,7 +1320,7 @@ QString Client::readName() const
         return KWin::readNameProperty( window(), XA_WM_NAME );
     }
     
-KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
+KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, Client, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
 
 void Client::setCaption( const QString& _s, bool force )
     {
@@ -1814,6 +1816,20 @@ void Client::cancelAutoRaise()
     autoRaiseTimer = 0;
     }
 
+// does the window w need a shape combine mask around it?
+bool Client::hasShape( Window w )
+    {
+    int xws, yws, xbs, ybs;
+    unsigned int wws, hws, wbs, hbs;
+    int boundingShaped = 0, clipShaped = 0;
+    if( !Extensions::shapeAvailable())
+        return false;
+    XShapeQueryExtents(display(), w,
+                       &boundingShaped, &xws, &yws, &wws, &hws,
+                       &clipShaped, &xbs, &ybs, &wbs, &hbs);
+    return boundingShaped != 0;
+    }
+
 void Client::setOpacity(bool translucent, uint opacity)
     {
     if (isDesktop())
@@ -2080,46 +2096,10 @@ void Client::unsetDecoHashProperty()
    XDeleteProperty( display(), frameId(), atoms->net_wm_window_decohash);
 }
     
-#ifndef NDEBUG
-kdbgstream& operator<<( kdbgstream& stream, const Client* cl )
+void Client::debug( kdbgstream& stream ) const
     {
-    if( cl == NULL )
-        return stream << "\'NULL_CLIENT\'";
-    return stream << "\'ID:" << cl->window() << ";WMCLASS:" << cl->resourceClass() << ":" << cl->resourceName() << ";Caption:" << cl->caption() << "\'";
+    stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":" << resourceName() << ";Caption:" << caption() << "\'";
     }
-kdbgstream& operator<<( kdbgstream& stream, const ClientList& list )
-    {
-    stream << "LIST:(";
-    bool first = true;
-    for( ClientList::ConstIterator it = list.begin();
-         it != list.end();
-         ++it )
-        {
-        if( !first )
-            stream << ":";
-        first = false;
-        stream << *it;
-        }
-    stream << ")";
-    return stream;
-    }
-kdbgstream& operator<<( kdbgstream& stream, const ConstClientList& list )
-    {
-    stream << "LIST:(";
-    bool first = true;
-    for( ConstClientList::ConstIterator it = list.begin();
-         it != list.end();
-         ++it )
-        {
-        if( !first )
-            stream << ":";
-        first = false;
-        stream << *it;
-        }
-    stream << ")";
-    return stream;
-    }
-#endif
 
 QPixmap * kwin_get_menu_pix_hack()
     {
