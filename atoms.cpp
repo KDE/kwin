@@ -12,8 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <QApplication>
 #include "atoms.h"
+#include "utils.h"
 #include <assert.h>
-#include <QX11Info>
 
 namespace KWinInternal
 {
@@ -108,7 +108,7 @@ Atoms::Atoms()
     
     assert( n <= max );
 
-    XInternAtoms( QX11Info::display(), names, n, false, atoms_return );
+    XInternAtoms( display(), names, n, false, atoms_return );
     for (int i = 0; i < n; i++ )
         *atoms[i] = atoms_return[i];
     }

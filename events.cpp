@@ -196,7 +196,7 @@ bool Workspace::workspaceEvent( XEvent * e )
     if ( mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease ) ) 
         {
         mouse_emulation = false;
-        XUngrabKeyboard( QX11Info::display(), QX11Info::appTime() );
+        XUngrabKeyboard( display(), xTime() );
         }
 
     if ( e->type == PropertyNotify || e->type == ClientMessage ) 
@@ -287,8 +287,8 @@ bool Workspace::workspaceEvent( XEvent * e )
                  !e->xcreatewindow.override_redirect )
             {
         // see comments for allowClientActivation()
-            Time t = QX11Info::appTime();
-            XChangeProperty(QX11Info::display(), e->xcreatewindow.window,
+            Time t = xTime();
+            XChangeProperty(display(), e->xcreatewindow.window,
                             atoms->kde_net_wm_user_creation_time, XA_CARDINAL,
                             32, PropModeReplace, (unsigned char *)&t, 1);
             }
@@ -308,12 +308,12 @@ bool Workspace::workspaceEvent( XEvent * e )
 	    // window.
                 XEvent ev;
                 WId w = e->xunmap.window;
-                if ( XCheckTypedWindowEvent (QX11Info::display(), w,
+                if ( XCheckTypedWindowEvent (display(), w,
                                              ReparentNotify, &ev) )
                     {
                     if ( ev.xreparent.parent != root ) 
                         {
-                        XReparentWindow( QX11Info::display(), w, root, 0, 0 );
+                        XReparentWindow( display(), w, root, 0, 0 );
                         addSystemTrayWin( w );
                         }
                     }
@@ -358,13 +358,13 @@ bool Workspace::workspaceEvent( XEvent * e )
                 if ( addSystemTrayWin( e->xmaprequest.window ) )
                     return true;
                 c = createClient( e->xmaprequest.window, false );
-                if ( c != NULL && root != QX11Info::appRootWindow() ) 
+                if ( c != NULL && root != rootWindow() ) 
                     { // TODO what is this?
                     // TODO may use QWidget::create
-                    XReparentWindow( QX11Info::display(), c->frameId(), root, 0, 0 );
+                    XReparentWindow( display(), c->frameId(), root, 0, 0 );
                     }
                 if( c == NULL ) // refused to manage, simply map it (most probably override redirect)
-                    XMapRaised( QX11Info::display(), e->xmaprequest.window );
+                    XMapRaised( display(), e->xmaprequest.window );
                 return true;
                 }
             if( c )
@@ -411,7 +411,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 wc.stack_mode = Above;
                 unsigned int value_mask = e->xconfigurerequest.value_mask
                     & ( CWX | CWY | CWWidth | CWHeight | CWBorderWidth );
-                XConfigureWindow( QX11Info::display(), e->xconfigurerequest.window, value_mask, &wc );
+                XConfigureWindow( display(), e->xconfigurerequest.window, value_mask, &wc );
                 return true;
                 }
             break;
@@ -428,10 +428,10 @@ bool Workspace::workspaceEvent( XEvent * e )
             if( e->xfocus.window == rootWin()
                 && ( e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot ))
                 {
-                updateXTime(); // focusToNull() uses QX11Info::appTime(), which is old now (FocusIn has no timestamp)
+                updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
                 Window focus;
                 int revert;
-                XGetInputFocus( QX11Info::display(), &focus, &revert );
+                XGetInputFocus( display(), &focus, &revert );
                 if( focus == None || focus == PointerRoot )
                     {
                     //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" << endl;
@@ -723,7 +723,7 @@ void Client::unmapNotifyEvent( XUnmapEvent* e )
         case NormalState:
             // maybe we will be destroyed soon. Check this first.
             XEvent ev;
-            if( XCheckTypedWindowEvent (QX11Info::display(), window(),
+            if( XCheckTypedWindowEvent (display(), window(),
                 DestroyNotify, &ev) ) // TODO I don't like this much
                 {
                 destroyClient(); // deletes this
@@ -819,7 +819,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
 
         wc.border_width = 0;
         value_mask = CWBorderWidth;
-        XConfigureWindow( QX11Info::display(), window(), value_mask, & wc );
+        XConfigureWindow( display(), window(), value_mask, & wc );
         }
 
     if( e->value_mask & ( CWX | CWY | CWHeight | CWWidth ))
@@ -946,7 +946,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
             int d1, d2, d3, d4;
             unsigned int d5;
             Window w, child;
-            if( XQueryPointer( QX11Info::display(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5 ) == False
+            if( XQueryPointer( display(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5 ) == False
                 || child == None )
                 lostMouse = true; // really lost the mouse
             }
@@ -979,7 +979,7 @@ void Client::grabButton( int modifier )
     for( int i = 0;
          i < 8;
          ++i )
-        XGrabButton( QX11Info::display(), AnyButton,
+        XGrabButton( display(), AnyButton,
             modifier | mods[ i ],
             wrapperId(), false, ButtonPressMask,
             GrabModeSync, GrabModeAsync, None, None );
@@ -996,7 +996,7 @@ void Client::ungrabButton( int modifier )
     for( int i = 0;
          i < 8;
          ++i )
-        XUngrabButton( QX11Info::display(), AnyButton,
+        XUngrabButton( display(), AnyButton,
             modifier | mods[ i ], wrapperId());
     }
 #undef XCapL
@@ -1013,7 +1013,7 @@ void Client::updateMouseGrab()
     {
     if( workspace()->globalShortcutsDisabled())
         {
-        XUngrabButton( QX11Info::display(), AnyButton, AnyModifier, wrapperId());
+        XUngrabButton( display(), AnyButton, AnyModifier, wrapperId());
         // keep grab for the simple click without modifiers if needed
         if( !( !options->clickRaise || not_obscured ))
             grabButton( None );
@@ -1033,9 +1033,9 @@ void Client::updateMouseGrab()
         }
     else
         {
-        XUngrabButton( QX11Info::display(), AnyButton, AnyModifier, wrapperId());
+        XUngrabButton( display(), AnyButton, AnyModifier, wrapperId());
         // simply grab all modifier combinations
-        XGrabButton(QX11Info::display(), AnyButton, AnyModifier, wrapperId(), false,
+        XGrabButton(display(), AnyButton, AnyModifier, wrapperId(), false,
             ButtonPressMask,
             GrabModeSync, GrabModeAsync,
             None, None );
@@ -1126,7 +1126,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
     if (buttonDown)
         {
         if( w == wrapperId())
-            XAllowEvents(QX11Info::display(), SyncPointer, CurrentTime ); //QX11Info::appTime());
+            XAllowEvents(display(), SyncPointer, CurrentTime ); //xTime());
         return true;
         }
 
@@ -1144,7 +1144,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             { // hide splashwindow if the user clicks on it
             hideClient( true );
             if( w == wrapperId())
-                    XAllowEvents(QX11Info::display(), SyncPointer, CurrentTime ); //QX11Info::appTime());
+                    XAllowEvents(display(), SyncPointer, CurrentTime ); //xTime());
             return true;
             }
 
@@ -1209,14 +1209,14 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
                 replay = true;
 
             if( w == wrapperId()) // these can come only from a grab
-                XAllowEvents(QX11Info::display(), replay? ReplayPointer : SyncPointer, CurrentTime ); //QX11Info::appTime());
+                XAllowEvents(display(), replay? ReplayPointer : SyncPointer, CurrentTime ); //xTime());
             return true;
             }
         }
 
     if( w == wrapperId()) // these can come only from a grab
         {
-        XAllowEvents(QX11Info::display(), ReplayPointer, CurrentTime ); //QX11Info::appTime());
+        XAllowEvents(display(), ReplayPointer, CurrentTime ); //xTime());
         return true;
         }
     if( w == decorationId())
@@ -1289,7 +1289,7 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
         return false;
     if( w == wrapperId())
         {
-        XAllowEvents(QX11Info::display(), SyncPointer, CurrentTime ); //QX11Info::appTime());
+        XAllowEvents(display(), SyncPointer, CurrentTime ); //xTime());
         return true;
         }
     if( w != frameId() && w != decorationId() && w != moveResizeGrabWindow())
@@ -1336,12 +1336,12 @@ static bool waitingMotionEvent()
 // of processes events reaches the timestamp of the last suitable
 // MotionNotify event in the queue.
     if( next_motion_time != CurrentTime
-        && timestampCompare( QX11Info::appTime(), next_motion_time ) < 0 )
+        && timestampCompare( xTime(), next_motion_time ) < 0 )
         return true;
     was_motion = false;
-    XSync( QX11Info::display(), False ); // this helps to discard more MotionNotify events
+    XSync( display(), False ); // this helps to discard more MotionNotify events
     XEvent dummy;
-    XCheckIfEvent( QX11Info::display(), &dummy, motion_predicate, NULL );
+    XCheckIfEvent( display(), &dummy, motion_predicate, NULL );
     return was_motion;
     }
 
@@ -1434,7 +1434,7 @@ static bool check_follows_focusin( Client* c )
     // XCheckIfEvent() is used to make the search non-blocking, the predicate
     // always returns False, so nothing is removed from the events queue.
     // XPeekIfEvent() would block.
-    XCheckIfEvent( QX11Info::display(), &dummy, predicate_follows_focusin, (XPointer)c );
+    XCheckIfEvent( display(), &dummy, predicate_follows_focusin, (XPointer)c );
     return follows_focusin;
     }
 

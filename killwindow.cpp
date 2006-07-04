@@ -36,16 +36,16 @@ void KillWindow::start()
     {
     static Cursor kill_cursor = 0;
     if (!kill_cursor)
-        kill_cursor = XCreateFontCursor(QX11Info::display(), XC_pirate);
+        kill_cursor = XCreateFontCursor(display(), XC_pirate);
 
-    if (XGrabPointer(QX11Info::display(), QX11Info::appRootWindow(), False,
+    if (XGrabPointer(display(), rootWindow(), False,
                      ButtonPressMask | ButtonReleaseMask |
                      PointerMotionMask |
                      EnterWindowMask | LeaveWindowMask,
                      GrabModeAsync, GrabModeAsync, None,
                      kill_cursor, CurrentTime) == GrabSuccess) 
         {
-        XGrabKeyboard(QX11Info::display(), QX11Info::appRootWindow(), False,
+        XGrabKeyboard(display(), rootWindow(), False,
                       GrabModeAsync, GrabModeAsync, CurrentTime);
 
         XEvent ev;
@@ -57,12 +57,12 @@ void KillWindow::start()
 
         while (!return_pressed && !escape_pressed && !button_released) 
             {
-            XMaskEvent(QX11Info::display(), KeyPressMask | ButtonPressMask |
+            XMaskEvent(display(), KeyPressMask | ButtonPressMask |
                        ButtonReleaseMask | PointerMotionMask, &ev);
 
             if (ev.type == KeyPress)    
                 {
-                int kc = XKeycodeToKeysym(QX11Info::display(), ev.xkey.keycode, 0);
+                int kc = XKeycodeToKeysym(display(), ev.xkey.keycode, 0);
                 int mx = 0;
                 int my = 0;
                 return_pressed = (kc == XK_Return) || (kc == XK_space);
@@ -96,7 +96,7 @@ void KillWindow::start()
             Window root, child;
             int dummy1, dummy2, dummy3, dummy4;
             unsigned int dummy5;
-            if( XQueryPointer( QX11Info::display(), QX11Info::appRootWindow(), &root, &child,
+            if( XQueryPointer( display(), rootWindow(), &root, &child,
                 &dummy1, &dummy2, &dummy3, &dummy4, &dummy5 ) == true
                 && child != None )
                 workspace->killWindowId( child );
@@ -104,8 +104,8 @@ void KillWindow::start()
 
         ungrabXServer();
 
-        XUngrabKeyboard(QX11Info::display(), CurrentTime);
-        XUngrabPointer(QX11Info::display(), CurrentTime);
+        XUngrabKeyboard(display(), CurrentTime);
+        XUngrabPointer(display(), CurrentTime);
         }
     }
 

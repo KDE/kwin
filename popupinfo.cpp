@@ -119,7 +119,7 @@ void PopupInfo::hide()
     QWidget::hide();
     QApplication::syncX();
     XEvent otherEvent;
-    while (XCheckTypedEvent (QX11Info::display(), EnterNotify, &otherEvent ) )
+    while (XCheckTypedEvent (display(), EnterNotify, &otherEvent ) )
         ;
     m_shown = false;
     }

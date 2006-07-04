@@ -624,7 +624,7 @@ void Workspace::unfakeActivity( Client* c )
 void Client::updateUserTime( Time time )
     { // copied in Group::updateUserTime
     if( time == CurrentTime )
-        time = QX11Info::appTime();
+        time = xTime();
     if( time != -1U
         && ( user_time == CurrentTime
             || timestampCompare( time, user_time ) > 0 )) // time > user_time
@@ -641,7 +641,7 @@ Time Client::readUserCreationTime() const
     unsigned long extra = 0;
     unsigned char *data = 0;
     KXErrorHandler handler; // ignore errors?
-    status = XGetWindowProperty( QX11Info::display(), window(),
+    status = XGetWindowProperty( display(), window(),
         atoms->kde_net_wm_user_creation_time, 0, 10000, false, XA_CARDINAL,
         &type, &format, &nitems, &extra, &data );
     if (status  == Success )
@@ -910,7 +910,7 @@ void Group::startupIdChanged()
 void Group::updateUserTime( Time time )
     { // copy of Client::updateUserTime
     if( time == CurrentTime )
-        time = QX11Info::appTime();
+        time = xTime();
     if( time != -1U
         && ( user_time == CurrentTime
             || timestampCompare( time, user_time ) > 0 )) // time > user_time

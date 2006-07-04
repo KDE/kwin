@@ -39,7 +39,7 @@ bool Client::manage( Window w, bool isMapped )
     StackingUpdatesBlocker stacking_blocker( workspace());
 
     XWindowAttributes attr;
-    if( !XGetWindowAttributes(QX11Info::display(), w, &attr))
+    if( !XGetWindowAttributes(display(), w, &attr))
         return false;
 
     grabXServer();
@@ -53,7 +53,7 @@ bool Client::manage( Window w, bool isMapped )
     // SELI order all these things in some sane manner
 
     bool init_minimize = false;
-    XWMHints * hints = XGetWMHints(QX11Info::display(), w );
+    XWMHints * hints = XGetWMHints(display(), w );
     if (hints && (hints->flags & StateHint) && hints->initial_state == IconicState)
         init_minimize = true;
     if (hints)
@@ -79,12 +79,12 @@ bool Client::manage( Window w, bool isMapped )
         NET::WM2ExtendedStrut |
         0;
 
-    info = new WinInfo( this, QX11Info::display(), client, QX11Info::appRootWindow(), properties, 2 );
+    info = new WinInfo( this, display(), client, rootWindow(), properties, 2 );
 
     cmap = attr.colormap;
 
     XClassHint classHint;
-    if ( XGetClassHint( QX11Info::display(), client, &classHint ) ) 
+    if ( XGetClassHint( display(), client, &classHint ) ) 
         {
         // Qt3.2 and older had this all lowercase, Qt3.3 capitalized resource class
         // force lowercase, so that workarounds listing resource classes still work
@@ -316,7 +316,7 @@ bool Client::manage( Window w, bool isMapped )
     if(( !isSpecialWindow() || isToolbar()) && isMovable())
         keepInArea( area, partial_keep_in_area );
 
-    XShapeSelectInput( QX11Info::display(), window(), ShapeNotifyMask );
+    XShapeSelectInput( display(), window(), ShapeNotifyMask );
     if ( (is_shape = Shape::hasShape( window())) ) 
         {
         updateShape();
@@ -435,7 +435,7 @@ bool Client::manage( Window w, bool isMapped )
 
     // this should avoid flicker, because real restacking is done
     // only after manage() finishes because of blocking, but the window is shown sooner
-    XLowerWindow( QX11Info::display(), frameId());
+    XLowerWindow( display(), frameId());
     if( session && session->stackingOrder != -1 )
         {
         sm_stacking_order = session->stackingOrder;
@@ -507,9 +507,9 @@ bool Client::manage( Window w, bool isMapped )
 
     if( user_time == CurrentTime || user_time == -1U ) // no known user time, set something old
         {
-        user_time = QX11Info::appTime() - 1000000;
+        user_time = xTime() - 1000000;
         if( user_time == CurrentTime || user_time == -1U ) // let's be paranoid
-            user_time = QX11Info::appTime() - 1000000 + 10;
+            user_time = xTime() - 1000000 + 10;
         }
 
     updateWorkareaDiffs();
@@ -539,30 +539,30 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
     assert( wrapper == None );
     client = w;
     // we don't want the window to be destroyed when we are destroyed
-    XAddToSaveSet( QX11Info::display(), client );
-    XSelectInput( QX11Info::display(), client, NoEventMask );
-    XUnmapWindow( QX11Info::display(), client );
+    XAddToSaveSet( display(), client );
+    XSelectInput( display(), client, NoEventMask );
+    XUnmapWindow( display(), client );
     XWindowChanges wc;     // set the border width to 0
     wc.border_width = 0; // TODO possibly save this, and also use it for initial configuring of the window
-    XConfigureWindow( QX11Info::display(), client, CWBorderWidth, &wc );
+    XConfigureWindow( display(), client, CWBorderWidth, &wc );
 
     XSetWindowAttributes swa;
     swa.colormap = attr.colormap;
     swa.background_pixmap = None;
     swa.border_pixel = 0;
 
-    frame = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+    frame = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
-    wrapper = XCreateWindow( QX11Info::display(), frame, 0, 0, 1, 1, 0,
+    wrapper = XCreateWindow( display(), frame, 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
 
-    XDefineCursor( QX11Info::display(), frame, QCursor( Qt::ArrowCursor ).handle());
+    XDefineCursor( display(), frame, QCursor( Qt::ArrowCursor ).handle());
     // some apps are stupid and don't define their own cursor - set the arrow one for them
-    XDefineCursor( QX11Info::display(), wrapper, QCursor( Qt::ArrowCursor ).handle());
-    XReparentWindow( QX11Info::display(), client, wrapper, 0, 0 );
-    XSelectInput( QX11Info::display(), frame,
+    XDefineCursor( display(), wrapper, QCursor( Qt::ArrowCursor ).handle());
+    XReparentWindow( display(), client, wrapper, 0, 0 );
+    XSelectInput( display(), frame,
             KeyPressMask | KeyReleaseMask |
             ButtonPressMask | ButtonReleaseMask |
             KeymapStateMask |
@@ -574,8 +574,8 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
             PropertyChangeMask |
             StructureNotifyMask | SubstructureRedirectMask |
             VisibilityChangeMask );
-    XSelectInput( QX11Info::display(), wrapper, ClientWinMask | SubstructureNotifyMask );
-    XSelectInput( QX11Info::display(), client,
+    XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
+    XSelectInput( display(), client,
                   FocusChangeMask |
                   PropertyChangeMask |
                   ColormapChangeMask |
