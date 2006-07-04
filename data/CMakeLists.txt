@@ -28,10 +28,10 @@ install_targets(/lib/kconf_update_bin/ kwin_update_default_rules )
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kwin/default_rules FILES fsp_workarounds_1 )
-install_files( ${SOUND_INSTALL_DIR} FILES pop.wav )
-install_files( ${KCONF_UPDATE_INSTALL_DIR} FILES kwin.upd kwinsticky.upd kwiniconify.upd kwin3_plugin.upd kwin_focus1.upd          kwinupdatewindowsettings.upd kwin_focus2.upd kwin_fsp_workarounds_1.upd )
-install_programs( ${KCONF_UPDATE_INSTALL_DIR} FILES pluginlibFix.pl kwin3_plugin.pl kwin_focus1.sh kwin_focus2.sh )
+install( FILES fsp_workarounds_1  DESTINATION  ${DATA_INSTALL_DIR}/kwin/default_rules )
+install( FILES pop.wav  DESTINATION  ${SOUND_INSTALL_DIR} )
+install( FILES kwin.upd kwinsticky.upd kwiniconify.upd kwin3_plugin.upd kwin_focus1.upd          kwinupdatewindowsettings.upd kwin_focus2.upd kwin_fsp_workarounds_1.upd  DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
+install(PROGRAMS pluginlibFix.pl kwin3_plugin.pl kwin_focus1.sh kwin_focus2.sh  DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
 
 
 

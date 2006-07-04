@@ -13,13 +13,13 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwinoptions )
 
 target_link_libraries(kcm_kwinoptions  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${QT_QT3SUPPORT_LIBRARY})
 
-install_targets(${PLUGIN_INSTALL_DIR} kcm_kwinoptions )
+install(TARGETS kcm_kwinoptions  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES kwinoptions.desktop )
-install_files( ${APPLNK_INSTALL_DIR}/.hidden FILES kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  kwintranslucency.desktop  )
+install( FILES kwinoptions.desktop  DESTINATION  ${XDG_APPS_DIR} )
+install( FILES kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  kwintranslucency.desktop   DESTINATION  ${APPLNK_INSTALL_DIR}/.hidden )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 

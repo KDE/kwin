@@ -14,7 +14,7 @@ kde4_add_kdeinit_executable( kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS}
 
 target_link_libraries(kdeinit_kwin_rules_dialog  ${KDE4_KDEUI_LIBS} )
 
-install_targets(${LIB_INSTALL_DIR} kdeinit_kwin_rules_dialog )
+install(TARGETS kdeinit_kwin_rules_dialog  DESTINATION ${LIB_INSTALL_DIR} )
 
 target_link_libraries( kwin_rules_dialog kdeinit_kwin_rules_dialog )
 install(TARGETS kwin_rules_dialog DESTINATION bin)
@@ -31,7 +31,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwinrules )
 
 target_link_libraries(kcm_kwinrules  ${KDE4_KDEUI_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcm_kwinrules )
+install(TARGETS kcm_kwinrules  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### next target ###############
@@ -39,7 +39,7 @@ install_targets(${PLUGIN_INSTALL_DIR} kcm_kwinrules )
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES kwinrules.desktop )
+install( FILES kwinrules.desktop  DESTINATION  ${XDG_APPS_DIR} )
 
 
 

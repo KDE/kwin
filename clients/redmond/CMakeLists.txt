@@ -15,12 +15,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_redmond )
 
 target_link_libraries(kwin3_redmond  ${KDE4_KDECORE_LIBS} kdefx kdecorations )
 
-install_targets(${PLUGIN_INSTALL_DIR} kwin3_redmond )
+install(TARGETS kwin3_redmond  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kwin FILES redmond.desktop )
+install( FILES redmond.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
 
 

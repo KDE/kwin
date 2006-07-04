@@ -52,15 +52,15 @@ kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 
-install_targets(${LIB_INSTALL_DIR} kdeinit_kwin )
+install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 
 target_link_libraries( kwin kdeinit_kwin )
 install(TARGETS kwin DESTINATION bin)
 
 ########### install files ###############
 
-install_files( ${KCFG_INSTALL_DIR} FILES kwin.kcfg )
-install_files( ${DATA_INSTALL_DIR}/kwin FILES eventsrc )
+install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
+install( FILES eventsrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 

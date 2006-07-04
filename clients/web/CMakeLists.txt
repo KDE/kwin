@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_web )
 
 target_link_libraries(kwin3_web  ${KDE4_KDEUI_LIBS} kdecorations )
 
-install_targets(${PLUGIN_INSTALL_DIR} kwin3_web )
+install(TARGETS kwin3_web  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kwin/ FILES web.desktop )
+install( FILES web.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin/ )
 
 
 

@@ -15,7 +15,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_default )
 
 target_link_libraries(kwin3_default  ${KDE4_KDECORE_LIBS} kdefx kdecorations ${QT_QTGUI_LIBRARY})
 
-install_targets(${PLUGIN_INSTALL_DIR} kwin3_default )
+install(TARGETS kwin3_default  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############

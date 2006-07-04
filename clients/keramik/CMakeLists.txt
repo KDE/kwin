@@ -18,12 +18,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_keramik )
 
 target_link_libraries(kwin3_keramik  ${KDE4_KDEUI_LIBS} kdecorations ${QT_QT3SUPPORT_LIBRARY} ${QT_QTGUI_LIBRARY})
 
-install_targets(${PLUGIN_INSTALL_DIR} kwin3_keramik )
+install(TARGETS kwin3_keramik  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kwin FILES keramik.desktop )
+install( FILES keramik.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
 
 

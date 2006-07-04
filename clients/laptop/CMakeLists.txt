@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_laptop )
 
 target_link_libraries(kwin3_laptop  ${KDE4_KDECORE_LIBS} kdecorations kdefx )
 
-install_targets(${PLUGIN_INSTALL_DIR} kwin3_laptop )
+install(TARGETS kwin3_laptop  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kwin FILES laptop.desktop )
+install( FILES laptop.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
 
 

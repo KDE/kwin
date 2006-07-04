@@ -16,12 +16,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_kwmtheme )
 
 target_link_libraries(kwin3_kwmtheme  ${KDE4_KDECORE_LIBS} kdecorations )
 
-install_targets(${PLUGIN_INSTALL_DIR} kwin3_kwmtheme )
+install(TARGETS kwin3_kwmtheme  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kwin FILES kwmtheme.desktop )
+install( FILES kwmtheme.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
 
 
