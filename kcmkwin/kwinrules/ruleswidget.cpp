@@ -747,7 +747,7 @@ void EditShortcut::editShortcut()
 
 void EditShortcut::clearShortcut()
     {
-    shortcut->setText( "" );
+    shortcut->setText( QLatin1String("") );
     }
 
 EditShortcutDialog::EditShortcutDialog( QWidget* parent, const char* name )

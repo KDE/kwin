@@ -171,7 +171,7 @@ void KCMRulesList::load()
 
 void KCMRulesList::save()
     {
-    KConfig cfg( "kwinrulesrc" );
+    KConfig cfg( QLatin1String("kwinrulesrc") );
     QStringList groups = cfg.groupList();
     for( QStringList::ConstIterator it = groups.begin();
          it != groups.end();
