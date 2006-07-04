@@ -119,6 +119,8 @@ Application::Application( )
     options = new Options;
     atoms = new Atoms;
     effects = new EffectsHandler;
+
+    initting = false; // TODO
     
     // create workspace.
     (void) new Workspace( isSessionRestored() );
