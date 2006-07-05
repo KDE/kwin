@@ -25,7 +25,6 @@ class SceneBasic
         virtual void paint();
     };
 
-
 } // namespace
 
 #endif

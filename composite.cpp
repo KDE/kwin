@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "unmanaged.h"
 #include "scene.h"
 #include "scene_basic.h"
+#include "scene_xrender.h"
 
 namespace KWinInternal
 {
@@ -33,7 +34,8 @@ void Workspace::setupCompositing()
     compositeTimer.start( 20 );
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     setDamaged();
-    scene = new SceneBasic( this );
+//    scene = new SceneBasic( this );
+    scene = new SceneXrender( this );
     }
 
 void Workspace::finishCompositing()

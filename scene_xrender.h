@@ -11,9 +11,32 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SCENE_XRENDER_H
 #define KWIN_SCENE_XRENDER_H
 
+#include "config.h"
+
+#ifdef HAVE_XRENDER
+#include <X11/extensions/Xrender.h>
+
+#include "scene.h"
+
 namespace KWinInternal
 {
 
+class SceneXrender
+    : public Scene
+    {
+    public:
+        SceneXrender( Workspace* ws );
+        virtual ~SceneXrender();
+        virtual void paint();
+    private:
+        void createBuffer();
+        XRenderPictFormat* format;
+        Picture front;
+        Picture buffer;
+    };
+
 } // namespace
+
+#endif
 
 #endif

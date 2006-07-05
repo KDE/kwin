@@ -16,7 +16,7 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}
 ########### next target ###############
 
 set(kwin_KDEINIT_SRCS
-	kwinadaptor.cpp
+   kwinadaptor.cpp
    workspace.cpp 
    client.cpp 
    placement.cpp 
@@ -60,6 +60,9 @@ endif (X11_Xcomposite_FOUND)
 if (X11_Xdamage_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xdamage_LIB})
 endif (X11_Xdamage_FOUND)
+if (X11_Xrender_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xrender_LIB})
+endif (X11_Xrender_FOUND)
 
 install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 
