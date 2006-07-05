@@ -14,6 +14,30 @@ namespace KWinInternal
 {
 
 //****************************************
+// Matrix
+//****************************************
+
+Matrix::Matrix()
+    {
+    m[ 0 ][ 0 ] = 1;
+    m[ 0 ][ 1 ] = 0;
+    m[ 0 ][ 2 ] = 0;
+    m[ 0 ][ 3 ] = 0;
+    m[ 1 ][ 0 ] = 0;
+    m[ 1 ][ 1 ] = 1;
+    m[ 1 ][ 2 ] = 0;
+    m[ 1 ][ 3 ] = 0;
+    m[ 2 ][ 0 ] = 0;
+    m[ 2 ][ 1 ] = 0;
+    m[ 2 ][ 2 ] = 1;
+    m[ 2 ][ 3 ] = 0;
+    m[ 3 ][ 0 ] = 0;
+    m[ 3 ][ 1 ] = 0;
+    m[ 3 ][ 2 ] = 0;
+    m[ 3 ][ 3 ] = 1;
+    }
+
+//****************************************
 // Effect
 //****************************************
 
@@ -29,11 +53,11 @@ void Effect::windowUserResized( Toplevel* )
     {
     }
 
-void Effect::paintWindow( Toplevel* )
+void Effect::paintWindow( Toplevel*, EffectData& )
     {
     }
 
-void Effect::paintWorkspace( Workspace* )
+void Effect::paintWorkspace( Workspace*, EffectData& )
     {
     }
 
@@ -41,19 +65,19 @@ void Effect::paintWorkspace( Workspace* )
 // EffectsHandler
 //****************************************
 
-void EffectsHandler::windowUserMoved( Toplevel* c )
+void EffectsHandler::windowUserMoved( Toplevel* )
     {
     }
 
-void EffectsHandler::windowUserResized( Toplevel* c )
+void EffectsHandler::windowUserResized( Toplevel* )
     {
     }
 
-void EffectsHandler::paintWindow( Toplevel* c )
+void EffectsHandler::paintWindow( Toplevel*, EffectData& )
     {
     }
 
-void EffectsHandler::paintWorkspace( Workspace* )
+void EffectsHandler::paintWorkspace( Workspace*, EffectData& )
     {
     }
 
