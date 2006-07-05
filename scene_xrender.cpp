@@ -48,28 +48,41 @@ void SceneXrender::createBuffer()
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
-void SceneXrender::paint()
+void SceneXrender::paint( XserverRegion damage )
     {
-    XRenderColor col = { 0xffff, 0xffff, 0xffff, 0xffff };
-    XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
-    for( ToplevelList::ConstIterator it = windows.begin();
-         it != windows.end();
-         ++it )
+    // Use the damage region as the clip region for the root window
+    XFixesSetPictureClipRegion( display(), front, 0, 0, damage );
+    // Draw each opaque window top to bottom, subtracting the bounding rect of
+    // each window from the clip region after it's been drawn.
+    for( int i = windows.count() - 1;
+         i >= 0;
+         --i )
         {
-        QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
-        if( !r.isEmpty())
+        Toplevel* c = windows[ i ];
+        XWindowAttributes attrs;
+        if( !XGetWindowAttributes( display(), c->handle(), &attrs ))
+            continue;
+        if( XRenderPictFormat* clientFormat = XRenderFindVisualFormat( display(), attrs.visual ))
             {
-            XWindowAttributes attrs;
-            if( !XGetWindowAttributes( display(), (*it)->handle(), &attrs ))
-                continue;
-            if( XRenderPictFormat* clientFormat = XRenderFindVisualFormat( display(), attrs.visual ))
-                {
-                Picture picture = XRenderCreatePicture( display(), (*it)->windowPixmap(), clientFormat, 0, 0 );
-                XRenderComposite( display(), PictOpSrc, picture, None, buffer, 0, 0, 0, 0,
-                    (*it)->x(), (*it)->y(), (*it)->width(), (*it)->height());
-                }
+            Picture picture = XRenderCreatePicture( display(), c->windowPixmap(), clientFormat, 0, 0 );
+            // Set the clip region for the buffer to the damage region, and
+            // subtract the clients shape from the damage region
+            XFixesSetPictureClipRegion( display(), buffer, 0, 0, damage );
+            XserverRegion cr = XFixesCreateRegionFromWindow( display(), c->handle(), WindowRegionBounding );
+            XFixesTranslateRegion( display(), cr, c->x(), c->y());
+            XFixesSubtractRegion( display(), damage, damage, cr );
+            XFixesDestroyRegion( display(), cr );
+            XRenderComposite( display(), PictOpSrc, picture, None, buffer, 0, 0, 0, 0,
+                c->x(), c->y(), c->width(), c->height());
+            XRenderFreePicture( display(), picture );
             }
         }
+    // fill background
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, damage );
+    XRenderColor col = { 0xffff, 0xffff, 0xffff, 0xffff };
+    XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
+    // copy composed buffer to the root window
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
     XFlush( display());
     }

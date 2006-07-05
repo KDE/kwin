@@ -473,8 +473,8 @@ bool Workspace::workspaceEvent( XEvent * e )
             tab_box->updateKeyMapping();
             break;
         case Expose:
-            if( e->xexpose.window == rootWindow() && compositing())
-                setDamaged(); // root window needs repainting
+            if( e->xexpose.window == rootWindow() && compositing())  // root window needs repainting
+                addDamage( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
             break;
         default:
             break;
@@ -1624,9 +1624,11 @@ void Unmanaged::unmapNotifyEvent( XUnmapEvent* )
 
 void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     {
-    geom = QRect( e->x, e->y, e->width, e->height );
     resetWindowPixmap();
-    setDamaged();
+    // add old and new geometry to damage
+    workspace()->addDamage( geometry());
+    geom = QRect( e->x, e->y, e->width, e->height );
+    workspace()->addDamage( geometry());
     }
 
 // ****************************************

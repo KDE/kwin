@@ -34,6 +34,7 @@ bool Unmanaged::track( Window w )
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
     setupCompositing();
     resetWindowPixmap();
+    workspace()->addDamage( geometry());
     return true;
     }
 

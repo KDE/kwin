@@ -316,7 +316,6 @@ class Client
         void visibilityNotifyEvent( XVisibilityEvent* e );
         void focusInEvent( XFocusInEvent* e );
         void focusOutEvent( XFocusOutEvent* e );
-        void damageNotifyEvent( XDamageNotifyEvent* e );
 
         bool buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
         bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
@@ -516,7 +515,6 @@ class Client
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
         QTimer* demandAttentionKNotifyTimer;
-        Damage damage;
     };
 
 // helper for Client::postponeGeometryUpdates() being called in pairs (true/false)

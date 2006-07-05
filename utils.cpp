@@ -48,6 +48,7 @@ int Extensions::shape_event_base = 0;
 bool Extensions::has_damage = 0;
 int Extensions::damage_event_base = 0;
 bool Extensions::has_composite = 0;
+bool Extensions::has_fixes = 0;
 
 void Extensions::init()
     {
@@ -70,6 +71,11 @@ void Extensions::init()
         }
 #else
     has_composite = false;
+#endif
+#ifdef HAVE_XFIXES
+    has_fixes = XFixesQueryExtension( display(), &dummy, &dummy );
+#else
+    has_fixes = false;
 #endif
     }
 

@@ -29,7 +29,7 @@ SceneBasic::~SceneBasic()
     {
     }
     
-void SceneBasic::paint()
+void SceneBasic::paint( XserverRegion )
     {
     Pixmap composite_pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), QX11Info::appDepth());
     XGCValues val;

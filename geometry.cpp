@@ -1660,6 +1660,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
         return;
+    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom = QRect( x, y, w, h );
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1684,8 +1685,8 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    setDamaged();
     resetWindowPixmap();
+    workspace()->addDamage( geometry());
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1717,6 +1718,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
         return;
+    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.setSize( QSize( w, h ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1740,8 +1742,8 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    setDamaged();
     resetWindowPixmap();
+    workspace()->addDamage( geometry());
     }
 
 /*!
@@ -1751,6 +1753,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     {
     if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
         return;
+    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1762,7 +1765,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    setDamaged();
+    workspace()->addDamage( geometry());
     }
 
 void Client::postponeGeometryUpdates( bool postpone )

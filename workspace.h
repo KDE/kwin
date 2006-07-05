@@ -283,7 +283,9 @@ class Workspace : public QObject, public KDecorationDefines
         
         void toggleTopDockShadows(bool on);
         
-        void setDamaged();
+        void addDamage( const QRect& r );
+        void addDamage( int x, int y, int w, int h );
+        void addDamage( XserverRegion r, bool destroy );
 
     public slots:
         void refresh();
@@ -630,8 +632,8 @@ class Workspace : public QObject, public KDecorationDefines
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
 
-        bool damaged;
         QTimer compositeTimer;
+        XserverRegion damage;
         
         //kompmgr
         QSlider *transSlider;

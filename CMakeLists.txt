@@ -63,6 +63,9 @@ endif (X11_Xdamage_FOUND)
 if (X11_Xrender_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xrender_LIB})
 endif (X11_Xrender_FOUND)
+if (X11_Xfixes_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xfixes_LIB})
+endif (X11_Xfixes_FOUND)
 
 install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 

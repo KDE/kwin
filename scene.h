@@ -24,7 +24,7 @@ class Scene
         Scene( Workspace* ws );
         virtual ~Scene();
         void setWindows( const ToplevelList& list );
-        virtual void paint() = 0;
+        virtual void paint( XserverRegion damage ) = 0;
     protected:
         Workspace* wspace;
         ToplevelList windows;

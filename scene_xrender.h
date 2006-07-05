@@ -27,7 +27,7 @@ class SceneXrender
     public:
         SceneXrender( Workspace* ws );
         virtual ~SceneXrender();
-        virtual void paint();
+        virtual void paint( XserverRegion damage );
     private:
         void createBuffer();
         XRenderPictFormat* format;

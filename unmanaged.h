@@ -34,7 +34,6 @@ class Unmanaged
         void mapNotifyEvent( XMapEvent* e );
         void unmapNotifyEvent( XUnmapEvent*e );
         void configureNotifyEvent( XConfigureEvent* e );
-        void damageNotifyEvent( XDamageNotifyEvent* e );
     };
 
 } // namespace

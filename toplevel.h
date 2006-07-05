@@ -43,16 +43,16 @@ class Toplevel
     protected:
         void setupCompositing();
         void finishCompositing();
-        void setDamaged();
         void setHandle( Window id );
         void resetWindowPixmap();
+        void damageNotifyEvent( XDamageNotifyEvent* e );
         QRect geom;
         virtual void debug( kdbgstream& stream ) const = 0;
         friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
     private:
         Window id;
         Workspace* wspace;
-        Damage damage;
+        Damage damage_handle;
         mutable Pixmap window_pixmap;
     };
 

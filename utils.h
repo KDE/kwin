@@ -21,6 +21,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
 #endif
+#ifdef HAVE_XFIXES
+#include <X11/extensions/Xfixes.h>
+#endif
 
 #include <fixx11h.h>
 
@@ -37,6 +40,11 @@ namespace KWinInternal
 #ifndef HAVE_XDAMAGE
 typedef long Damage;
 struct XDamageNotifyEvent
+    {
+    };
+#endif
+#ifndef HAVE_XFIXES
+struct XserverRegion
     {
     };
 #endif
@@ -143,12 +151,14 @@ class Extensions
         static bool damageAvailable() { return has_damage; }
         static int damageNotifyEvent();
         static bool compositeAvailable() { return has_composite; }
+        static bool fixesAvailable() { return has_fixes; }
     private:
         static bool has_shape;
         static int shape_event_base;
         static bool has_damage;
         static int damage_event_base;
         static bool has_composite;
+        static bool has_fixes;
     };
 
 class Motif 

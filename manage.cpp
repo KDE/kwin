@@ -518,6 +518,9 @@ bool Client::manage( Window w, bool isMapped )
 //    sendSyntheticConfigureNotify(); done when setting mapping state
 
     delete session;
+    
+    if( isMapped ) // otherwise damage will come when the client paints it
+        workspace()->addDamage( geometry());
 
     ungrabXServer();
     

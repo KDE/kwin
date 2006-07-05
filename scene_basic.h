@@ -22,7 +22,7 @@ class SceneBasic
     public:
         SceneBasic( Workspace* ws );
         virtual ~SceneBasic();
-        virtual void paint();
+        virtual void paint( XserverRegion damage );
     };
 
 } // namespace

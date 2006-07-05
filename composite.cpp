@@ -23,7 +23,7 @@ namespace KWinInternal
 // Workspace
 //****************************************
 
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE ) && defined( HAVE_XFIXES )
 void Workspace::setupCompositing()
     {
     if( !Extensions::compositeAvailable() || !Extensions::damageAvailable())
@@ -33,9 +33,9 @@ void Workspace::setupCompositing()
     // TODO start tracking unmanaged windows
     compositeTimer.start( 20 );
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
-    setDamaged();
 //    scene = new SceneBasic( this );
     scene = new SceneXrender( this );
+    addDamage( 0, 0, displayWidth(), displayHeight());
     }
 
 void Workspace::finishCompositing()
@@ -49,18 +49,69 @@ void Workspace::finishCompositing()
     scene = NULL;
     }
 
-void Workspace::setDamaged()
+void Workspace::addDamage( const QRect& r )
+    {
+    addDamage( r.x(), r.y(), r.height(), r.width());
+    }
+
+void Workspace::addDamage( int x, int y, int w, int h )
+    {
+    XRectangle r;
+    r.x = x;
+    r.y = y;
+    r.width = w;
+    r.height = h;
+    addDamage( XFixesCreateRegion( display(), &r, 1 ), true );
+    }
+
+struct XXX
+    {
+    XXX( XserverRegion r ) : rr( r ) {}
+    XserverRegion rr;
+    };
+    
+kdbgstream& operator<<( kdbgstream& stream, XXX r )
+    {
+    if( r.rr == None )
+        return stream << "NONE";
+    int num;
+    XRectangle* rects = XFixesFetchRegion( display(), r.rr, &num );
+    if( rects == NULL || num == 0 )
+        return stream << "NONE";
+    for( int i = 0;
+         i < num;
+         ++i )
+        stream << "[" << rects[ i ].x << "+" << rects[ i ].y << " " << rects[ i ].width << "x" << rects[ i ].height << "]";
+    return stream;
+    }
+
+
+void Workspace::addDamage( XserverRegion r, bool destroy )
     {
     if( !compositing())
         return;
-    damaged = true;
+    if( damage != None )
+        {
+        XFixesUnionRegion( display(), damage, damage, r );
+        if( destroy )
+            XFixesDestroyRegion( display(), r );
+        }
+    else
+        {
+        if( destroy )
+            damage = r;
+        else
+            {
+            damage = XFixesCreateRegion( display(), NULL, 0 );
+            XFixesCopyRegion( display(), damage, r );
+            }
+        }
     }
     
 void Workspace::compositeTimeout()
     {
-    if( !damaged )
+    if( damage == None )
         return;
-    damaged = false;
     ToplevelList windows;
     Window* children;
     unsigned int children_count;
@@ -79,7 +130,9 @@ void Workspace::compositeTimeout()
             windows.append( c );
         }
     scene->setWindows( windows );
-    scene->paint();
+    scene->paint( damage );
+    XFixesDestroyRegion( display(), damage );
+    damage = None;
     }
 
 //****************************************
@@ -90,30 +143,22 @@ void Toplevel::setupCompositing()
     {
     if( !compositing())
         return;
-    if( damage != None )
+    if( damage_handle != None )
         return;
-    damage = XDamageCreate( display(), handle(), XDamageReportRawRectangles );
-    setDamaged();
+    damage_handle = XDamageCreate( display(), handle(), XDamageReportRawRectangles );
     }
 
 void Toplevel::finishCompositing()
     {
-    if( damage == None )
+    if( damage_handle == None )
         return;
-    XDamageDestroy( display(), damage );
-    damage = None;
+    XDamageDestroy( display(), damage_handle );
+    damage_handle = None;
     if( window_pixmap != None )
         {
         XFreePixmap( display(), window_pixmap );
         window_pixmap = None;
         }
-    }
-
-void Toplevel::setDamaged()
-    {
-    if( !compositing())
-        return;
-    workspace()->setDamaged();
     }
 
 void Toplevel::resetWindowPixmap()
@@ -132,22 +177,11 @@ Pixmap Toplevel::windowPixmap() const
     return window_pixmap;
     }
 
-//****************************************
-// Client
-//****************************************
-
-void Client::damageNotifyEvent( XDamageNotifyEvent* )
+void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     {
-    setDamaged();
-    }
-    
-//****************************************
-// Unmanaged
-//****************************************
-
-void Unmanaged::damageNotifyEvent( XDamageNotifyEvent* )
-    {
-    setDamaged();
+    XserverRegion r = XFixesCreateRegion( display(), &e->area, 1 );
+    XFixesTranslateRegion( display(), r, x(), y());
+    workspace()->addDamage( r, true );
     }
     
 #endif
