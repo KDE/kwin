@@ -22,6 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "group.h"
 #include "rules.h"
 #include "unmanaged.h"
+#include "scene.h"
 
 #include <QWhatsThis>
 #include <QApplication>
@@ -571,6 +572,19 @@ bool Client::windowEvent( XEvent* e )
             {
             if( demandAttentionKNotifyTimer != NULL )
                 demandAttentionKNotify();
+            }
+        if( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
+            {
+            if( compositing())
+                {
+                workspace()->addDamage( geometry());
+                scene->windowOpacityChanged( this );
+                }
+            else
+                { // forward to the frame if there's possibly another compositing manager running
+                NETWinInfo i( display(), frameId(), rootWindow(), 0 );
+                i.setOpacity( info->opacity());
+                }
             }
         }
 
@@ -1594,6 +1608,13 @@ void Client::keyPressEvent( uint key_code )
 
 bool Unmanaged::windowEvent( XEvent* e )
     {
+    unsigned long dirty[ 2 ];
+    info->event( e, dirty, 2 ); // pass through the NET stuff
+    if( dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
+        {
+        scene->windowOpacityChanged( this );
+        workspace()->addDamage( geometry());
+        }
     switch (e->type) 
         {
         case UnmapNotify:

@@ -28,11 +28,32 @@ class SceneXrender
         SceneXrender( Workspace* ws );
         virtual ~SceneXrender();
         virtual void paint( XserverRegion damage );
+        virtual void windowGeometryShapeChanged( Toplevel* );
+        virtual void windowOpacityChanged( Toplevel* );
+        virtual void windowDeleted( Toplevel* );
     private:
         void createBuffer();
+        void checkWindowData( Toplevel* c );
+        Picture windowPicture( Toplevel* c );
+        void saveWindowClipRegion( Toplevel* c, XserverRegion r );
+        XserverRegion savedWindowClipRegion( Toplevel* c );
+        bool isOpaque( Toplevel* c ) const;
+        Picture windowAlphaMask( Toplevel* c );
+        Picture windowShape( Toplevel* c );
         XRenderPictFormat* format;
         Picture front;
         Picture buffer;
+        struct WindowData
+            {
+            WindowData();
+            void free();
+            Picture picture;
+            XRenderPictFormat* format;
+            XserverRegion saved_clip_region;
+            Picture alpha;
+            XserverRegion shape;
+            };
+        QMap< Toplevel*, WindowData > window_data;
     };
 
 } // namespace

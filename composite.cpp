@@ -47,11 +47,21 @@ void Workspace::finishCompositing()
     // TODO stop tracking unmanaged windows
     delete scene;
     scene = NULL;
+    for( ClientList::ConstIterator it = clients.begin();
+         it != clients.end();
+         ++it )
+        { // forward all opacity values to the frame in case there'll be other CM running
+        if( (*it)->opacity() != 1.0 )
+            {
+            NETWinInfo i( display(), (*it)->frameId(), rootWindow(), 0 );
+            i.setOpacity( long((*it)->opacity() * 0xffffffff ));
+            }
+        }
     }
 
 void Workspace::addDamage( const QRect& r )
     {
-    addDamage( r.x(), r.y(), r.height(), r.width());
+    addDamage( r.x(), r.y(), r.width(), r.height());
     }
 
 void Workspace::addDamage( int x, int y, int w, int h )
@@ -63,28 +73,6 @@ void Workspace::addDamage( int x, int y, int w, int h )
     r.height = h;
     addDamage( XFixesCreateRegion( display(), &r, 1 ), true );
     }
-
-struct XXX
-    {
-    XXX( XserverRegion r ) : rr( r ) {}
-    XserverRegion rr;
-    };
-    
-kdbgstream& operator<<( kdbgstream& stream, XXX r )
-    {
-    if( r.rr == None )
-        return stream << "NONE";
-    int num;
-    XRectangle* rects = XFixesFetchRegion( display(), r.rr, &num );
-    if( rects == NULL || num == 0 )
-        return stream << "NONE";
-    for( int i = 0;
-         i < num;
-         ++i )
-        stream << "[" << rects[ i ].x << "+" << rects[ i ].y << " " << rects[ i ].width << "x" << rects[ i ].height << "]";
-    return stream;
-    }
-
 
 void Workspace::addDamage( XserverRegion r, bool destroy )
     {

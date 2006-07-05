@@ -31,6 +31,18 @@ void Scene::setWindows( const ToplevelList& list )
     windows = list;
     }
 
+void Scene::windowGeometryShapeChanged( Toplevel* )
+    {
+    }
+
+void Scene::windowOpacityChanged( Toplevel* )
+    {
+    }
+
+void Scene::windowDeleted( Toplevel* )
+    {
+    }
+
 Scene* scene;
 
 } // namespace

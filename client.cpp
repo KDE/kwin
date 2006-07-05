@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "atoms.h"
 #include "notifications.h"
 #include "rules.h"
+#include "scene.h"
 
 #include <X11/extensions/shape.h>
 #include <QX11Info>
@@ -279,6 +280,8 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         do_show = true;
+        if( scene != NULL )
+            scene->windowGeometryShapeChanged( this );
         }
     else
         destroyDecoration();
@@ -305,6 +308,8 @@ void Client::destroyDecoration()
         move( grav );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
+        if( scene != NULL )
+            scene->windowGeometryShapeChanged( this );
         }
     }
 
@@ -423,16 +428,14 @@ void Client::setUserNoBorder( bool set )
 void Client::updateShape()
     {
     if ( shape() )
-    {
         XShapeCombineShape(display(), frameId(), ShapeBounding,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSet);
-    }
     else
-    {
         XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
                            None, ShapeSet);
-    }
+    if( scene != NULL )
+        scene->windowGeometryShapeChanged( this );
     // workaround for #19644 - shaped windows shouldn't have decoration
     if( shape() && !noBorder()) 
         {
@@ -467,6 +470,8 @@ void Client::setMask( const QRegion& reg, int mode )
             xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
+    if( scene != NULL )
+        scene->windowGeometryShapeChanged( this );
     }
 
 QRegion Client::mask() const
@@ -1786,6 +1791,13 @@ bool Client::hasShape( Window w )
                        &boundingShaped, &xws, &yws, &wws, &hws,
                        &clipShaped, &xbs, &ybs, &wbs, &hbs);
     return boundingShaped != 0;
+    }
+
+float Client::opacity() const
+    {
+    if( info->opacity() == 0xffffffff )
+        return 1.0;
+    return info->opacity() * 1.0 / 0xffffffff;
     }
 
 void Client::debug( kdbgstream& stream ) const

@@ -11,6 +11,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_UNMANAGED_H
 #define KWIN_UNMANAGED_H
 
+#include <netwm.h>
+
 #include "toplevel.h"
 
 namespace KWinInternal
@@ -27,6 +29,7 @@ class Unmanaged
         void release();
         bool track( Window w );
         static void deleteUnmanaged( Unmanaged* c, allowed_t );
+        virtual float opacity() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
     private:
@@ -34,6 +37,7 @@ class Unmanaged
         void mapNotifyEvent( XMapEvent* e );
         void unmapNotifyEvent( XUnmapEvent*e );
         void configureNotifyEvent( XConfigureEvent* e );
+        NETWinInfo* info;
     };
 
 } // namespace

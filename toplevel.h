@@ -40,6 +40,8 @@ class Toplevel
         int width() const;
         int height() const;
         Pixmap windowPixmap() const;
+        Visual* visual() const;
+        virtual float opacity() const = 0;
     protected:
         void setupCompositing();
         void finishCompositing();
@@ -47,6 +49,7 @@ class Toplevel
         void resetWindowPixmap();
         void damageNotifyEvent( XDamageNotifyEvent* e );
         QRect geom;
+        Visual* vis;
         virtual void debug( kdbgstream& stream ) const = 0;
         friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
     private:
@@ -110,6 +113,11 @@ inline int Toplevel::height() const
 inline QRect Toplevel::rect() const
     {
     return QRect( 0, 0, width(), height());
+    }
+
+inline Visual* Toplevel::visual() const
+    {
+    return vis;
     }
 
 #ifdef NDEBUG

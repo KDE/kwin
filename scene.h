@@ -25,6 +25,9 @@ class Scene
         virtual ~Scene();
         void setWindows( const ToplevelList& list );
         virtual void paint( XserverRegion damage ) = 0;
+        virtual void windowGeometryShapeChanged( Toplevel* );
+        virtual void windowOpacityChanged( Toplevel* );
+        virtual void windowDeleted( Toplevel* );
     protected:
         Workspace* wspace;
         ToplevelList windows;

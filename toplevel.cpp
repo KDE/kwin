@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "toplevel.h"
 
+#include "scene.h"
+
 namespace KWinInternal
 {
 
@@ -18,13 +20,16 @@ Toplevel::Toplevel( Workspace* ws )
     , wspace( ws )
     , damage_handle( None )
     , window_pixmap( None )
+    , vis( None )
     {
     }
-    
+
 Toplevel::~Toplevel()
     {
     if( window_pixmap != None )
         XFreePixmap( display(), window_pixmap );
+    if( scene != NULL )
+        scene->windowDeleted( this );
     }
 
 #ifndef NDEBUG

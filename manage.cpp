@@ -53,6 +53,8 @@ bool Client::manage( Window w, bool isMapped )
 
     embedClient( w, attr );
     
+    vis = attr.visual;
+
     setupCompositing();
 
     // SELI order all these things in some sane manner
@@ -82,6 +84,7 @@ bool Client::manage( Window w, bool isMapped )
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2ExtendedStrut |
+        NET::WM2Opacity |
         0;
 
     info = new WinInfo( this, display(), client, rootWindow(), properties, 2 );
