@@ -78,8 +78,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         static Workspace * self() { return _self; }
         
-        bool compositing() const { return composite_pixmap != None; }
-
         bool workspaceEvent( XEvent * );
 
         KDecoration* createDecoration( KDecorationBridge* bridge );
@@ -632,7 +630,6 @@ class Workspace : public QObject, public KDecorationDefines
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
 
-        Pixmap composite_pixmap;
         bool damaged;
         QTimer compositeTimer;
         

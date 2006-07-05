@@ -43,6 +43,9 @@ set(kwin_KDEINIT_SRCS
    composite.cpp
    toplevel.cpp
    unmanaged.cpp
+   scene.cpp
+   scene_basic.cpp
+   scene_xrender.cpp
    effects.cpp )
 
 kde4_automoc(${kwin_KDEINIT_SRCS})

@@ -124,7 +124,6 @@ Workspace::Workspace( bool restore )
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
     forced_global_mouse_grab( false ),
-    composite_pixmap( None ),
     damaged( false )
     {
     new KWinAdaptor( "org.kde.kwin", "/KWin", QDBus::sessionBus(), this );

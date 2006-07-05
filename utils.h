@@ -250,6 +250,10 @@ int displayHeight()
     return XDisplayHeight( display(), DefaultScreen( display()));
     }
 
+class Scene;
+extern Scene* scene;
+inline bool compositing() { return scene != NULL; }
+
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint
 #define UrgencyHint XUrgencyHint

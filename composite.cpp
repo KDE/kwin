@@ -12,7 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "client.h"
 #include "unmanaged.h"
-#include "effects.h"
+#include "scene.h"
+#include "scene_basic.h"
 
 namespace KWinInternal
 {
@@ -26,22 +27,24 @@ void Workspace::setupCompositing()
     {
     if( !Extensions::compositeAvailable() || !Extensions::damageAvailable())
         return;
-    if( composite_pixmap != None )
+    if( scene != NULL )
         return;
+    // TODO start tracking unmanaged windows
     compositeTimer.start( 20 );
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
-    composite_pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), QX11Info::appDepth());
     setDamaged();
+    scene = new SceneBasic( this );
     }
 
 void Workspace::finishCompositing()
     {
-    if( composite_pixmap == None )
+    if( scene == NULL )
         return;
     XCompositeUnredirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
-    XFreePixmap( display(), composite_pixmap );
     compositeTimer.stop();
-    composite_pixmap = None;
+    // TODO stop tracking unmanaged windows
+    delete scene;
+    scene = NULL;
     }
 
 void Workspace::setDamaged()
@@ -55,6 +58,7 @@ void Workspace::compositeTimeout()
     {
     if( !damaged )
         return;
+    damaged = false;
     ToplevelList windows;
     Window* children;
     unsigned int children_count;
@@ -65,44 +69,15 @@ void Workspace::compositeTimeout()
          ++i )
         {
         if( Client* c = findClient( FrameIdMatchPredicate( children[ i ] )))
-            windows.append( c );
+            {
+            if( c->isShown( true ) && c->isOnCurrentDesktop())
+                windows.append( c );
+            }
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
-    XGCValues val;
-    val.foreground = WhitePixel( display(), DefaultScreen( display()));
-    val.subwindow_mode = IncludeInferiors;
-    GC gc = XCreateGC( display(), composite_pixmap, GCForeground | GCSubwindowMode, &val );
-    XFillRectangle( display(), composite_pixmap, gc, 0, 0, displayWidth(), displayHeight());
-    for( ToplevelList::ConstIterator it = windows.begin();
-         it != windows.end();
-         ++it )
-        {
-        if( Client* c = dynamic_cast< Client* >( *it ))
-            {
-            if( !c->isShown( true ) || !c->isOnCurrentDesktop())
-                continue;
-            }
-#if 1
-        (*it)->windowPixmap(); // trigger creation
-        effects->paintWindow( *it );
-#else
-        QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
-        if( !r.isEmpty())
-            {
-            XCopyArea( display(), (*it)->windowPixmap(), composite_pixmap, gc,
-                qMax( 0, -(*it)->x()), qMax( 0, -(*it)->y()), r.width(), r.height(), r.x(), r.y());
-            }
-#endif
-        }
-#if 1
-    effects->paintWorkspace( this );
-#else
-    XCopyArea( display(), composite_pixmap, rootWindow(), gc, 0, 0, displayWidth(), displayHeight(), 0, 0 );
-#endif
-    XFreeGC( display(), gc );
-    XFlush( display());
-    damaged = false;
+    scene->setWindows( windows );
+    scene->paint();
     }
 
 //****************************************
@@ -111,7 +86,7 @@ void Workspace::compositeTimeout()
 
 void Toplevel::setupCompositing()
     {
-    if( !workspace()->compositing())
+    if( !compositing())
         return;
     if( damage != None )
         return;
@@ -134,14 +109,14 @@ void Toplevel::finishCompositing()
 
 void Toplevel::setDamaged()
     {
-    if( !workspace()->compositing())
+    if( !compositing())
         return;
     workspace()->setDamaged();
     }
 
 void Toplevel::resetWindowPixmap()
     {
-    if( !workspace()->compositing())
+    if( !compositing())
         return;
     if( window_pixmap != None )
         XFreePixmap( display(), window_pixmap );
@@ -150,7 +125,7 @@ void Toplevel::resetWindowPixmap()
 
 Pixmap Toplevel::windowPixmap() const
     {
-    if( window_pixmap == None && workspace()->compositing())
+    if( window_pixmap == None && compositing())
         window_pixmap = XCompositeNameWindowPixmap( display(), handle());
     return window_pixmap;
     }
