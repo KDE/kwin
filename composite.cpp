@@ -55,15 +55,34 @@ void Workspace::compositeTimeout()
     {
     if( !damaged )
         return;
+    ToplevelList windows;
+    Window* children;
+    unsigned int children_count;
+    Window dummy;
+    XQueryTree( display(), rootWindow(), &dummy, &dummy, &children, &children_count );
+    for( unsigned int i = 0;
+         i < children_count;
+         ++i )
+        {
+        if( Client* c = findClient( FrameIdMatchPredicate( children[ i ] )))
+            windows.append( c );
+        else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
+            windows.append( c );
+        }
     XGCValues val;
     val.foreground = WhitePixel( display(), DefaultScreen( display()));
     val.subwindow_mode = IncludeInferiors;
     GC gc = XCreateGC( display(), composite_pixmap, GCForeground | GCSubwindowMode, &val );
     XFillRectangle( display(), composite_pixmap, gc, 0, 0, displayWidth(), displayHeight());
-    for( ClientList::ConstIterator it = stackingOrder().begin();
-         it != stackingOrder().end();
+    for( ToplevelList::ConstIterator it = windows.begin();
+         it != windows.end();
          ++it )
         {
+        if( Client* c = dynamic_cast< Client* >( *it ))
+            {
+            if( !c->isShown( true ) || !c->isOnCurrentDesktop())
+                continue;
+            }
 #if 1
         (*it)->windowPixmap(); // trigger creation
         effects->paintWindow( *it );
@@ -76,20 +95,11 @@ void Workspace::compositeTimeout()
             }
 #endif
         }
-    for( UnmanagedList::ConstIterator it = unmanaged.begin();
-         it != unmanaged.end();
-         ++it )
-        {
 #if 1
-        effects->paintWorkspace( this );
+    effects->paintWorkspace( this );
 #else
-        QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
-        if( !r.isEmpty())
-            XCopyArea( display(), (*it)->windowPixmap(), composite_pixmap, gc,
-                qMax( 0, -(*it)->x()), qMax( 0, -(*it)->y()), r.width(), r.height(), r.x(), r.y());
-#endif
-        }
     XCopyArea( display(), composite_pixmap, rootWindow(), gc, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+#endif
     XFreeGC( display(), gc );
     XFlush( display());
     damaged = false;
