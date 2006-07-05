@@ -42,9 +42,9 @@ class Toplevel
         Pixmap windowPixmap() const;
         Visual* visual() const;
         virtual float opacity() const = 0;
-    protected:
         void setupCompositing();
         void finishCompositing();
+    protected:
         void setHandle( Window id );
         void resetWindowPixmap();
         void damageNotifyEvent( XDamageNotifyEvent* e );

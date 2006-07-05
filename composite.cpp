@@ -26,6 +26,8 @@ namespace KWinInternal
 #if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE ) && defined( HAVE_XFIXES )
 void Workspace::setupCompositing()
     {
+    if( !options->useTranslucency )
+        return;
     if( !Extensions::compositeAvailable() || !Extensions::damageAvailable())
         return;
     if( scene != NULL )
@@ -36,12 +38,20 @@ void Workspace::setupCompositing()
 //    scene = new SceneBasic( this );
     scene = new SceneXrender( this );
     addDamage( 0, 0, displayWidth(), displayHeight());
+    foreach( Client* c, clients )
+        c->setupCompositing();
+    foreach( Unmanaged* c, unmanaged )
+        c->setupCompositing();
     }
 
 void Workspace::finishCompositing()
     {
     if( scene == NULL )
         return;
+    foreach( Client* c, clients )
+        c->finishCompositing();
+    foreach( Unmanaged* c, unmanaged )
+        c->finishCompositing();
     XCompositeUnredirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     compositeTimer.stop();
     // TODO stop tracking unmanaged windows

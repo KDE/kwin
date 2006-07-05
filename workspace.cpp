@@ -961,6 +961,11 @@ void Workspace::slotReconfigure()
         updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
+        
+    if( options->useTranslucency )
+        setupCompositing();
+    else
+        finishCompositing();
 
     loadWindowRules();
     for( ClientList::Iterator it = clients.begin();
