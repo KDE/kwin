@@ -8,10 +8,6 @@ add_subdirectory( pics )
 add_subdirectory( clients ) 
 add_subdirectory( data ) 
 
-if(X11_kompmgr_FOUND)
-   add_subdirectory(kompmgr)
-endif(X11_kompmgr_FOUND)
-
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}/lib )
 
 
@@ -19,7 +15,7 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}
 ########### next target ###############
 
 set(kwin_KDEINIT_SRCS
-	kwinadaptor.cpp
+   kwinadaptor.cpp
    workspace.cpp 
    client.cpp 
    placement.cpp 
@@ -42,7 +38,14 @@ set(kwin_KDEINIT_SRCS
    activation.cpp 
    useractions.cpp 
    geometry.cpp 
-   rules.cpp )
+   rules.cpp
+   composite.cpp
+   toplevel.cpp
+   unmanaged.cpp
+   scene.cpp
+   scene_basic.cpp
+   scene_xrender.cpp
+   effects.cpp )
 
 kde4_automoc(${kwin_KDEINIT_SRCS})
 
@@ -50,6 +53,18 @@ kde4_automoc(${kwin_KDEINIT_SRCS})
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
+if (X11_Xcomposite_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xcomposite_LIB})
+endif (X11_Xcomposite_FOUND)
+if (X11_Xdamage_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xdamage_LIB})
+endif (X11_Xdamage_FOUND)
+if (X11_Xrender_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xrender_LIB})
+endif (X11_Xrender_FOUND)
+if (X11_Xfixes_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xfixes_LIB})
+endif (X11_Xfixes_FOUND)
 
 install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 
@@ -70,11 +85,7 @@ kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 
 #INCLUDES = -I$(srcdir)/lib $(all_includes)
 #
-#if include_kompmgr
-#KOMPMGR=kompmgr
-#endif
-#
-#SUBDIRS = lib . killer kcmkwin pics clients oldheaders data $(KOMPMGR)
+#SUBDIRS = lib . killer kcmkwin pics clients oldheaders data
 #
 #bin_PROGRAMS = 
 #lib_LTLIBRARIES =
