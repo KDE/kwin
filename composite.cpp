@@ -32,7 +32,6 @@ void Workspace::setupCompositing()
         return;
     if( scene != NULL )
         return;
-    // TODO start tracking unmanaged windows
     compositeTimer.start( 20 );
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
 //    scene = new SceneBasic( this );
@@ -54,7 +53,6 @@ void Workspace::finishCompositing()
         c->finishCompositing();
     XCompositeUnredirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     compositeTimer.stop();
-    // TODO stop tracking unmanaged windows
     delete scene;
     scene = NULL;
     for( ClientList::ConstIterator it = clients.begin();
@@ -64,7 +62,7 @@ void Workspace::finishCompositing()
         if( (*it)->opacity() != 1.0 )
             {
             NETWinInfo i( display(), (*it)->frameId(), rootWindow(), 0 );
-            i.setOpacity( long((*it)->opacity() * 0xffffffff ));
+            i.setOpacity( static_cast< unsigned long >((*it)->opacity() * 0xffffffff ));
             }
         }
     }

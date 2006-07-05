@@ -63,7 +63,7 @@ void Unmanaged::deleteUnmanaged( Unmanaged* c, allowed_t )
     delete c;
     }
 
-float Unmanaged::opacity() const
+double Unmanaged::opacity() const
     {
     if( info->opacity() == 0xffffffff )
         return 1.0;

@@ -192,7 +192,8 @@ class Client
         bool shape() const;
         void updateShape();
         
-        virtual float opacity() const;
+        virtual double opacity() const;
+        void setOpacity( double opacity );
 
         void setGeometry( int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void setGeometry( const QRect& r, ForceGeometry_t force = NormalGeometrySet );

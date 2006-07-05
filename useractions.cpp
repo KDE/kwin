@@ -164,10 +164,18 @@ QMenu* Workspace::clientPopup()
     return popup;
     }
 
-//sets the transparency of the client to given value(given by slider)
 void Workspace::setPopupClientOpacity(int value)
     {
-    // TODO
+    if( active_popup_client == NULL )
+        return;
+    active_popup_client->setOpacity( value / 100.0 );
+    }
+
+void Workspace::resetClientOpacity()
+    {
+    if( active_popup_client == NULL )
+        return;
+    active_popup_client->setOpacity( 1.0 );
     }
 
 void Workspace::setTransButtonText(int value)
@@ -181,11 +189,6 @@ void Workspace::setTransButtonText(int value)
         transButton->setText("00"+QString::number(value)+" %");
     else if(value < 100)
         transButton->setText('0'+QString::number(value)+" %");
-    }
-
-void Workspace::resetClientOpacity()
-    {
-    // TODO
     }
 
 
@@ -641,10 +644,10 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             workspace()->windowToNextDesktop( this );
             break;
         case Options::MouseOpacityMore:
-            // TODO
+            setOpacity( qMin( opacity() + 0.1, 1.0 ));
             break;
         case Options::MouseOpacityLess:
-            // TODO
+            setOpacity( qMax( opacity() - 0.1, 0.0 ));
             break;
         case Options::MouseNothing:
             replay = true;

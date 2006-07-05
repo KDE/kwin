@@ -29,7 +29,7 @@ class Unmanaged
         void release();
         bool track( Window w );
         static void deleteUnmanaged( Unmanaged* c, allowed_t );
-        virtual float opacity() const;
+        virtual double opacity() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
     private:

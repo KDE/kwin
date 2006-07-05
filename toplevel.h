@@ -41,7 +41,7 @@ class Toplevel
         int height() const;
         Pixmap windowPixmap() const;
         Visual* visual() const;
-        virtual float opacity() const = 0;
+        virtual double opacity() const = 0;
         void setupCompositing();
         void finishCompositing();
     protected:

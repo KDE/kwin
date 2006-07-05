@@ -23,14 +23,14 @@ class Matrix
     {
     public:
         Matrix();
-        float m[ 4 ][ 4 ];
+        double m[ 4 ][ 4 ];
     };
 
 class EffectData
     {
     public:
         Matrix matrix;
-        float opacity;
+        double opacity;
     };
 
 class Effect

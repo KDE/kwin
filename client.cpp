@@ -1793,11 +1793,18 @@ bool Client::hasShape( Window w )
     return boundingShaped != 0;
     }
 
-float Client::opacity() const
+double Client::opacity() const
     {
     if( info->opacity() == 0xffffffff )
         return 1.0;
     return info->opacity() * 1.0 / 0xffffffff;
+    }
+
+void Client::setOpacity( double opacity )
+    {
+    opacity = qBound( 0.0, opacity, 1.0 );
+    info->setOpacity( static_cast< unsigned long >( opacity * 0xffffffff ));
+    // we'll react on PropertyNotify
     }
 
 void Client::debug( kdbgstream& stream ) const

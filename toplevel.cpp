@@ -16,11 +16,11 @@ namespace KWinInternal
 {
 
 Toplevel::Toplevel( Workspace* ws )
-    : id( None )
+    : vis( None )
+    , id( None )
     , wspace( ws )
     , damage_handle( None )
     , window_pixmap( None )
-    , vis( None )
     {
     }
 
