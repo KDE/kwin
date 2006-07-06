@@ -111,7 +111,7 @@ void SceneXrender::paint( XserverRegion damage, ToplevelList windows )
         {
         Toplevel* c = windows[ i ];
         WindowData& data = window_data[ c ];
-        if( data.phase != 2 && false)
+        if( data.phase != 2 )
             continue;
         XFixesSetPictureClipRegion( display(), buffer, 0, 0, savedWindowClipRegion( c ));
         Picture picture = windowPicture( c );
