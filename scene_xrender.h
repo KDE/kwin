@@ -30,7 +30,7 @@ class SceneXrender
     public:
         SceneXrender( Workspace* ws );
         virtual ~SceneXrender();
-        virtual void paint( XserverRegion damage );
+        virtual void paint( XserverRegion damage, ToplevelList windows );
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowDeleted( Toplevel* );
@@ -38,7 +38,7 @@ class SceneXrender
         virtual void updateTransformation( Toplevel* );
     private:
         void createBuffer();
-        void checkWindowData( Toplevel* c );
+        void resetWindowData( Toplevel* c );
         Picture windowPicture( Toplevel* c );
         void saveWindowClipRegion( Toplevel* c, XserverRegion r );
         XserverRegion savedWindowClipRegion( Toplevel* c );
@@ -46,6 +46,7 @@ class SceneXrender
         Picture windowAlphaMask( Toplevel* c );
         XserverRegion windowShape( Toplevel* c );
         static void setPictureMatrix( Picture pic, const Matrix& m );
+        void cleanup( Toplevel* c );
         XRenderPictFormat* format;
         Picture front;
         Picture buffer;
@@ -53,13 +54,16 @@ class SceneXrender
             {
             WindowData();
             void free();
+            bool simpleTransformation() const;
             Picture picture;
             XRenderPictFormat* format;
             XserverRegion saved_clip_region;
             Picture alpha;
             double alpha_cached_opacity;
             XserverRegion shape;
+            Matrix matrix;
             EffectData effect;
+            int phase;
             };
         QMap< Toplevel*, WindowData > window_data;
     };

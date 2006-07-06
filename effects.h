@@ -62,7 +62,6 @@ inline double Matrix::zTranslate() const
 class EffectData
     {
     public:
-        Matrix matrix;
         double opacity;
     };
 
@@ -73,8 +72,8 @@ class Effect
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void windowDeleted( Toplevel* c );
-        virtual void transformWindow( Toplevel* c, EffectData& data );
-        virtual void transformWorkspace( Workspace*, EffectData& data );
+        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
+        virtual void transformWorkspace( Workspace*, Matrix& m, EffectData& data );
     };
 
 class EffectsHandler
@@ -83,8 +82,8 @@ class EffectsHandler
         EffectsHandler();
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowDeleted( Toplevel* c );
-        void transformWindow( Toplevel* c, EffectData& data );
-        void transformWorkspace( Workspace*, EffectData& data );
+        void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
+        void transformWorkspace( Workspace*, Matrix& m, EffectData& data );
     };
 
 extern EffectsHandler* effects;
@@ -94,7 +93,7 @@ class MakeHalfTransparent
     {
     public:
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void transformWindow( Toplevel* c, EffectData& data );
+        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
     };
 
 class ShakyMove
@@ -104,7 +103,7 @@ class ShakyMove
     public:
         ShakyMove();
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void transformWindow( Toplevel* c, EffectData& data );
+        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
         virtual void windowDeleted( Toplevel* c );
     private slots:
         void tick();
@@ -113,6 +112,13 @@ class ShakyMove
         QTimer timer;
     };
 
+class GrowMove
+    : public Effect
+    {
+    public:
+        virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
+        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
+    };
 
 } // namespace
 

@@ -26,11 +26,6 @@ Scene::~Scene()
     {
     }
     
-void Scene::setWindows( const ToplevelList& list )
-    {
-    windows = list;
-    }
-
 void Scene::windowGeometryShapeChanged( Toplevel* )
     {
     }

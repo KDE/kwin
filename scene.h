@@ -23,8 +23,7 @@ class Scene
     public:
         Scene( Workspace* ws );
         virtual ~Scene();
-        void setWindows( const ToplevelList& list );
-        virtual void paint( XserverRegion damage ) = 0;
+        virtual void paint( XserverRegion damage, ToplevelList windows ) = 0;
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowDeleted( Toplevel* );
@@ -32,7 +31,6 @@ class Scene
         virtual void updateTransformation( Toplevel* );
     protected:
         Workspace* wspace;
-        ToplevelList windows;
     };
 
 extern Scene* scene;

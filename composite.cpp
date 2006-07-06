@@ -165,8 +165,7 @@ void Workspace::compositeTimeout()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
-    scene->setWindows( windows );
-    scene->paint( damage );
+    scene->paint( damage, windows );
     XFixesDestroyRegion( display(), damage );
     damage = None;
     }

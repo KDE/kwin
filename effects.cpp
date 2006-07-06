@@ -132,11 +132,11 @@ void Effect::windowUserMovedResized( Toplevel* , bool, bool )
     {
     }
 
-void Effect::transformWindow( Toplevel*, EffectData& )
+void Effect::transformWindow( Toplevel*, Matrix&, EffectData& )
     {
     }
 
-void Effect::transformWorkspace( Workspace*, EffectData& )
+void Effect::transformWorkspace( Workspace*, Matrix&, EffectData& )
     {
     }
 
@@ -144,7 +144,7 @@ void Effect::windowDeleted( Toplevel* )
     {
     }
 
-void MakeHalfTransparent::transformWindow( Toplevel* c, EffectData& data )
+void MakeHalfTransparent::transformWindow( Toplevel* c, Matrix&, EffectData& data )
     {
     if( c->isDialog())
         data.opacity *= 0.8;
@@ -167,13 +167,13 @@ ShakyMove::ShakyMove()
 static const int shaky_diff[] = { 0, 1, 2, 3, 2, 1, 0, -1, -2, -3, -2, -1 };
 static const int SHAKY_MAX = sizeof( shaky_diff ) / sizeof( shaky_diff[ 0 ] );
 
-void ShakyMove::transformWindow( Toplevel* c, EffectData& data )
+void ShakyMove::transformWindow( Toplevel* c, Matrix& matrix, EffectData& )
     {
     if( windows.contains( c ))
         {
         Matrix m;
         m.m[ 0 ][ 3 ] = shaky_diff[ windows[ c ]];
-        data.matrix *= m;
+        matrix *= m;
         }
     }
 
@@ -217,8 +217,31 @@ void ShakyMove::tick()
         }
     }
 
+void GrowMove::transformWindow( Toplevel* c, Matrix& matrix, EffectData& )
+    {
+    if( Client* c2 = dynamic_cast< Client* >( c ))
+        if( c2->isMove())
+            {
+            Matrix m;
+            m.m[ 0 ][ 0 ] = 1.2;
+            m.m[ 1 ][ 1 ] = 1.4;
+            matrix *= m;
+            }
+    }
+
+void GrowMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
+    {
+    if( first || last )
+        {
+        c->workspace()->addDamage( c, c->geometry());
+        scene->updateTransformation( c );
+        c->workspace()->addDamage( c, c->geometry());
+        }
+    }
+
 static MakeHalfTransparent* mht;
 static ShakyMove* sm;
+static GrowMove* gm;
 
 //****************************************
 // EffectsHandler
@@ -228,6 +251,7 @@ EffectsHandler::EffectsHandler()
     {
     mht = new MakeHalfTransparent;
     sm = new ShakyMove;
+//    gm = new GrowMove;
     }
 
 void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last )
@@ -236,22 +260,28 @@ void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last 
         mht->windowUserMovedResized( c, first, last );
     if( sm )
         sm->windowUserMovedResized( c, first, last );
+    if( gm )
+        gm->windowUserMovedResized( c, first, last );
     }
 
-void EffectsHandler::transformWindow( Toplevel* c, EffectData& data )
+void EffectsHandler::transformWindow( Toplevel* c, Matrix& matrix, EffectData& data )
     {
     if( mht )
-        mht->transformWindow( c, data );
+        mht->transformWindow( c, matrix, data );
     if( sm )
-        sm->transformWindow( c, data );
+        sm->transformWindow( c, matrix, data );
+    if( gm )
+        gm->transformWindow( c, matrix, data );
     }
 
-void EffectsHandler::transformWorkspace( Workspace* w, EffectData& data )
+void EffectsHandler::transformWorkspace( Workspace* w, Matrix& matrix, EffectData& data )
     {
     if( mht )
-        mht->transformWorkspace( w, data );
+        mht->transformWorkspace( w, matrix, data );
     if( sm )
-        sm->transformWorkspace( w, data );
+        sm->transformWorkspace( w, matrix, data );
+    if( gm )
+        gm->transformWorkspace( w, matrix, data );
     }
 
 void EffectsHandler::windowDeleted( Toplevel* c )
@@ -260,6 +290,8 @@ void EffectsHandler::windowDeleted( Toplevel* c )
         mht->windowDeleted( c );
     if( sm )
         sm->windowDeleted( c );
+    if( gm )
+        gm->windowDeleted( c );
     }
 
 EffectsHandler* effects;
