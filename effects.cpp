@@ -136,7 +136,7 @@ void Effect::transformWindow( Toplevel*, Matrix&, EffectData& )
     {
     }
 
-void Effect::transformWorkspace( Workspace*, Matrix&, EffectData& )
+void Effect::transformWorkspace( Matrix&, EffectData& )
     {
     }
 
@@ -239,19 +239,44 @@ void GrowMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
         }
     }
 
+ShiftWorkspaceUp::ShiftWorkspaceUp( Workspace* ws )
+    : up( false )
+    , wspace( ws )
+    {
+    connect( &timer, SIGNAL( timeout()), SLOT( tick()));
+    timer.start( 2000 );
+    }
+
+void ShiftWorkspaceUp::transformWorkspace( Matrix& matrix, EffectData& )
+    {
+    if( !up )
+        return;
+    Matrix m;
+    m.m[ 1 ][ 3 ] = -10;
+    matrix *= m;
+    }
+
+void ShiftWorkspaceUp::tick()
+    {
+    up = !up;
+    wspace->addDamage( 0, 0, displayWidth(), displayHeight());
+    }
+
 static MakeHalfTransparent* mht;
 static ShakyMove* sm;
 static GrowMove* gm;
+static ShiftWorkspaceUp* swu;
 
 //****************************************
 // EffectsHandler
 //****************************************
 
-EffectsHandler::EffectsHandler()
+EffectsHandler::EffectsHandler( Workspace* ws )
     {
     mht = new MakeHalfTransparent;
     sm = new ShakyMove;
 //    gm = new GrowMove;
+    swu = new ShiftWorkspaceUp( ws );
     }
 
 void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last )
@@ -262,6 +287,8 @@ void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last 
         sm->windowUserMovedResized( c, first, last );
     if( gm )
         gm->windowUserMovedResized( c, first, last );
+    if( swu )
+        swu->windowUserMovedResized( c, first, last );
     }
 
 void EffectsHandler::transformWindow( Toplevel* c, Matrix& matrix, EffectData& data )
@@ -272,16 +299,20 @@ void EffectsHandler::transformWindow( Toplevel* c, Matrix& matrix, EffectData& d
         sm->transformWindow( c, matrix, data );
     if( gm )
         gm->transformWindow( c, matrix, data );
+    if( swu )
+        swu->transformWindow( c, matrix, data );
     }
 
-void EffectsHandler::transformWorkspace( Workspace* w, Matrix& matrix, EffectData& data )
+void EffectsHandler::transformWorkspace( Matrix& matrix, EffectData& data )
     {
     if( mht )
-        mht->transformWorkspace( w, matrix, data );
+        mht->transformWorkspace( matrix, data );
     if( sm )
-        sm->transformWorkspace( w, matrix, data );
+        sm->transformWorkspace( matrix, data );
     if( gm )
-        gm->transformWorkspace( w, matrix, data );
+        gm->transformWorkspace( matrix, data );
+    if( swu )
+        swu->transformWorkspace( matrix, data );
     }
 
 void EffectsHandler::windowDeleted( Toplevel* c )
@@ -292,6 +323,8 @@ void EffectsHandler::windowDeleted( Toplevel* c )
         sm->windowDeleted( c );
     if( gm )
         gm->windowDeleted( c );
+    if( swu )
+        swu->windowDeleted( c );
     }
 
 EffectsHandler* effects;

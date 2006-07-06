@@ -29,6 +29,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "atoms.h"
 #include "options.h"
 #include "sm.h"
+#include "utils.h"
+#include "effects.h"
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -93,7 +95,7 @@ Application::Application( )
         }
 
     if (screen_number == -1)
-        screen_number = DefaultScreen(QX11Info::display());
+        screen_number = DefaultScreen(display());
 
     if( !owner.claim( args->isSet( "replace" ), true ))
         {
@@ -111,14 +113,18 @@ Application::Application( )
     XSetErrorHandler( x11ErrorHandler );
 
     // check  whether another windowmanager is running
-    XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), SubstructureRedirectMask  );
+    XSelectInput(display(), rootWindow(), SubstructureRedirectMask  );
     syncX(); // trigger error now
 
     options = new Options;
     atoms = new Atoms;
+
+    initting = false; // TODO
     
     // create workspace.
-    (void) new Workspace( isSessionRestored() );
+    Workspace* workspace = new Workspace( isSessionRestored() );
+
+    effects = new EffectsHandler( workspace );
 
     syncX(); // trigger possible errors, there's still a chance to abort
 
@@ -128,27 +134,29 @@ Application::Application( )
     ksplash.call( "upAndRunning", QString( "wm started" ));
     XEvent e;
     e.xclient.type = ClientMessage;
-    e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False );
-    e.xclient.display = QX11Info::display();
-    e.xclient.window = QX11Info::appRootWindow();
+    e.xclient.message_type = XInternAtom( display(), "_KDE_SPLASH_PROGRESS", False );
+    e.xclient.display = display();
+    e.xclient.window = rootWindow();
     e.xclient.format = 8;
     strcpy( e.xclient.data.b, "wm started" );
-    XSendEvent( QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e );
+    XSendEvent( display(), rootWindow(), False, SubstructureNotifyMask, &e );
     }
 
 Application::~Application()
     {
     delete Workspace::self();
     if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
-        XSetInputFocus( QX11Info::display(), PointerRoot, RevertToPointerRoot, QX11Info::appTime() );
+        XSetInputFocus( display(), PointerRoot, RevertToPointerRoot, xTime() );
     delete options;
+    delete effects;
+    delete atoms;
     }
 
 void Application::lostSelection()
     {
     delete Workspace::self();
     // remove windowmanager privileges
-    XSelectInput(QX11Info::display(), QX11Info::appRootWindow(), PropertyChangeMask );
+    XSelectInput(display(), rootWindow(), PropertyChangeMask );
     quit();
     }
 
@@ -272,13 +280,13 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     KWinInternal::SessionManaged weAreIndeed;
     KWinInternal::SessionSaveDoneHelper helper;
 
-    fcntl(ConnectionNumber(QX11Info::display()), F_SETFD, 1);
+    fcntl(XConnectionNumber(KWinInternal::display()), F_SETFD, 1);
 
     QString appname;
     if (KWinInternal::screen_number == 0)
-        appname = "org.kde.kwin";
+        appname = "kwin";
     else
-        appname.sprintf("org.kde.kwin-screen-%d", KWinInternal::screen_number);
+        appname.sprintf("kwin-screen-%d", KWinInternal::screen_number);
 
     QDBus::sessionBus().interface()->registerService( appname, QDBusConnectionInterface::DontQueueService );
 

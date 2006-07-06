@@ -70,6 +70,7 @@ void SceneXrender::paint( XserverRegion damage, ToplevelList windows )
             continue;
             }
         effects->transformWindow( c, data.matrix, data.effect ); // TODO remove, instead add initWindow() to effects
+        effects->transformWorkspace( data.matrix, data.effect );
         saveWindowClipRegion( c, damage );
         if( data.simpleTransformation() && isOpaque( c ))
             { // is opaque, has simple shape, can be clipped, will be painted using simpler faster method
@@ -172,6 +173,7 @@ void SceneXrender::updateTransformation( Toplevel* c )
     resetWindowData( c );
     WindowData& data = window_data[ c ];
     effects->transformWindow( c, data.matrix, data.effect );
+    effects->transformWorkspace( data.matrix, data.effect );
     }
 
 void SceneXrender::resetWindowData( Toplevel* c )
@@ -319,7 +321,7 @@ void SceneXrender::createBuffer()
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
-void SceneXrender::setPictureMatrix( Picture pic, const Matrix& m )
+void SceneXrender::setPictureMatrix( Picture pic, const Matrix& )
     {
     if( pic == None )
         return;

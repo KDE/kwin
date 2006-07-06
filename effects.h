@@ -73,17 +73,17 @@ class Effect
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void windowDeleted( Toplevel* c );
         virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
-        virtual void transformWorkspace( Workspace*, Matrix& m, EffectData& data );
+        virtual void transformWorkspace( Matrix& m, EffectData& data );
     };
 
 class EffectsHandler
     {
     public:
-        EffectsHandler();
+        EffectsHandler( Workspace* ws );
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowDeleted( Toplevel* c );
         void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
-        void transformWorkspace( Workspace*, Matrix& m, EffectData& data );
+        void transformWorkspace( Matrix& m, EffectData& data );
     };
 
 extern EffectsHandler* effects;
@@ -118,6 +118,21 @@ class GrowMove
     public:
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
+    };
+
+class ShiftWorkspaceUp
+    : public QObject, public Effect
+    {
+    Q_OBJECT
+    public:
+        ShiftWorkspaceUp( Workspace* ws );
+        virtual void transformWorkspace( Matrix& m, EffectData& data );
+    private slots:
+        void tick();
+    private:
+        QTimer timer;
+        bool up;
+        Workspace* wspace;
     };
 
 } // namespace
