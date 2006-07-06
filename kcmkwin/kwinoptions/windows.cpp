@@ -39,7 +39,7 @@
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 
-#include <kactivelabel.h>
+#include <qlabel.h>
 #include <klocale.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
@@ -1244,7 +1244,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   QVBoxLayout *lay = new QVBoxLayout (this);
   kompmgrAvailable_ = kompmgrAvailable();
   if (!kompmgrAvailable_){
-  KActiveLabel *label = new KActiveLabel(i18n("<qt><b>It seems that alpha channel support is not available.</b><br><br>"
+  QLabel *label = new QLabel(i18n("<qt><b>It seems that alpha channel support is not available.</b><br><br>"
                                  "Please make sure you have "
                                  "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>,"
                                  " and have installed the kompmgr that came with kwin.<br>"
@@ -1255,6 +1255,9 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
                                  "And if your GPU provides hardware-accelerated Xrender support (mainly nVidia cards):<br><br>"
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
                                  "In <i>Section \"Device\"</i></qt>"), this);
+  label->setOpenExternalLinks(true);
+  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+  label->setTextInteractionFlags(Qt::TextInteractionFlags(style()->styleHint(QStyle::SH_MessageBox_TextInteractionFlags)));
   lay->addWidget(label);
   }
   else
@@ -1475,8 +1478,10 @@ void KTranslucencyConfig::load( void )
 
     if (!kompmgrAvailable_)
         return;
-  config->setGroup( "Translucency" );
+  config->setGroup( "Notification Messages" );
   useTranslucency->setChecked(config->readEntry("UseTranslucency", QVariant(false)).toBool());
+
+  config->setGroup( "Translucency" );
   activeWindowTransparency->setChecked(config->readEntry("TranslucentActiveWindows", QVariant(false)).toBool());
   inactiveWindowTransparency->setChecked(config->readEntry("TranslucentInactiveWindows", QVariant(true)).toBool());
   movingWindowTransparency->setChecked(config->readEntry("TranslucentMovingWindows", QVariant(false)).toBool());
@@ -1536,8 +1541,10 @@ void KTranslucencyConfig::save( void )
 {
     if (!kompmgrAvailable_)
         return;
-  config->setGroup( "Translucency" );
+  config->setGroup( "Notification Messages" );
   config->writeEntry("UseTranslucency",useTranslucency->isChecked());
+
+  config->setGroup( "Translucency" );
   config->writeEntry("TranslucentActiveWindows",activeWindowTransparency->isChecked());
   config->writeEntry("TranslucentInactiveWindows",inactiveWindowTransparency->isChecked());
   config->writeEntry("TranslucentMovingWindows",movingWindowTransparency->isChecked());
