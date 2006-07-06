@@ -17,9 +17,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/Xrender.h>
 
 #include "scene.h"
+#include "effects.h"
 
 namespace KWinInternal
 {
+
+class Matrix;
 
 class SceneXrender
     : public Scene
@@ -51,7 +54,9 @@ class SceneXrender
             XRenderPictFormat* format;
             XserverRegion saved_clip_region;
             Picture alpha;
+            double alpha_cached_opacity;
             XserverRegion shape;
+            EffectData effect;
             };
         QMap< Toplevel*, WindowData > window_data;
     };

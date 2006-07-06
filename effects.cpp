@@ -65,6 +65,24 @@ void Effect::paintWorkspace( Workspace*, EffectData& )
 // EffectsHandler
 //****************************************
 
+class MakeHalfTransparent
+    : public Effect
+    {
+    public:
+        virtual void paintWindow( Toplevel* c, EffectData& data );
+    };
+
+void MakeHalfTransparent::paintWindow( Toplevel*, EffectData& data )
+    {
+    data.opacity *= 0.8;
+    }
+
+static MakeHalfTransparent* mht;
+EffectsHandler::EffectsHandler()
+    {
+    mht = new MakeHalfTransparent;
+    }
+
 void EffectsHandler::windowUserMoved( Toplevel* )
     {
     }
@@ -73,8 +91,9 @@ void EffectsHandler::windowUserResized( Toplevel* )
     {
     }
 
-void EffectsHandler::paintWindow( Toplevel*, EffectData& )
+void EffectsHandler::paintWindow( Toplevel* c, EffectData& data )
     {
+    mht->paintWindow( c, data );
     }
 
 void EffectsHandler::paintWorkspace( Workspace*, EffectData& )

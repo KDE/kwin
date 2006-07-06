@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifdef HAVE_XRENDER
 
 #include "toplevel.h"
+#include "effects.h"
 
 namespace KWinInternal
 {
@@ -43,6 +44,14 @@ SceneXrender::~SceneXrender()
 
 void SceneXrender::paint( XserverRegion damage )
     {
+#if 0
+    XRectangle r;
+    r.x = 0;
+    r.y = 0;
+    r.width = displayWidth();
+    r.height = displayHeight();
+    XFixesSetRegion( display(), damage, &r, 1 );
+#endif
     // Use the damage region as the clip region for the root window
     XFixesSetPictureClipRegion( display(), front, 0, 0, damage );
     // Client list for clients that are either translucent or have a shadow
@@ -55,6 +64,7 @@ void SceneXrender::paint( XserverRegion damage )
         {
         Toplevel* c = windows[ i ];
         checkWindowData( c );
+        effects->paintWindow( c, window_data[ c ].effect );
         if( isOpaque( c ))
             {
             Picture picture = windowPicture( c );
@@ -91,9 +101,11 @@ void SceneXrender::paint( XserverRegion damage )
             Picture picture = windowPicture( c );
             Picture alpha = windowAlphaMask( c );
             if( picture != None )
+                {
                 // TODO clip also using shape? also above?
                 XRenderComposite( display(), PictOpOver, picture, alpha, buffer, 0, 0, 0, 0,
                     c->x(), c->y(), c->width(), c->height());
+                }
             }
         XFixesDestroyRegion( display(), r );
         }
@@ -110,6 +122,9 @@ void SceneXrender::checkWindowData( Toplevel* c )
         window_data[ c ] = WindowData();
         window_data[ c ].format = XRenderFindVisualFormat( display(), c->visual());
         }
+    WindowData& data = window_data[ c ];
+    data.effect.matrix = Matrix();
+    data.effect.opacity = c->opacity();
     }
 
 void SceneXrender::windowGeometryShapeChanged( Toplevel* c )
@@ -174,7 +189,7 @@ bool SceneXrender::isOpaque( Toplevel* c ) const
     const WindowData& data = window_data[ c ];
     if( data.format->type == PictTypeDirect && data.format->direct.alphaMask )
         return false;
-    if( c->opacity() != 1.0 )
+    if( data.effect.opacity != 1.0 )
         return false;
     return true;
     }
@@ -184,6 +199,12 @@ Picture SceneXrender::windowAlphaMask( Toplevel* c )
     if( isOpaque( c ))
         return None;
     WindowData& data = window_data[ c ];
+    if( data.alpha != None && data.alpha_cached_opacity != data.effect.opacity )
+        {
+        if( data.alpha != None )
+            XRenderFreePicture( display(), data.alpha );
+        data.alpha = None;
+        }
     if( data.alpha != None )
         return data.alpha;
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), 1, 1, 8 );
@@ -193,7 +214,8 @@ Picture SceneXrender::windowAlphaMask( Toplevel* c )
     data.alpha = XRenderCreatePicture( display(), pixmap, format, CPRepeat, &pa );
     XFreePixmap( display(), pixmap );
     XRenderColor col;
-    col.alpha = int( c->opacity() * 0xffff );
+    col.alpha = int( data.effect.opacity * 0xffff );
+    data.alpha_cached_opacity = data.effect.opacity;
     XRenderFillRectangle( display(), PictOpSrc, data.alpha, &col, 0, 0, 1, 1 );
     return data.alpha;
     }

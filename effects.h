@@ -46,6 +46,7 @@ class Effect
 class EffectsHandler
     {
     public:
+        EffectsHandler();
         void windowUserMoved( Toplevel* c );
         void windowUserResized( Toplevel* c );
         void paintWindow( Toplevel* c, EffectData& data );
