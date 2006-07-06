@@ -39,6 +39,20 @@ class Toplevel
         int y() const;
         int width() const;
         int height() const;
+
+    // prefer isXXX() instead
+        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const = 0;
+        bool hasNETSupport() const;
+        bool isDesktop() const;
+        bool isDock() const;
+        bool isToolbar() const;
+        bool isTopMenu() const;
+        bool isMenu() const;
+        bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
+        bool isDialog() const;
+        bool isSplash() const;
+        bool isUtility() const;
+
         Pixmap windowPixmap() const;
         Visual* visual() const;
         virtual double opacity() const = 0;
@@ -118,6 +132,51 @@ inline QRect Toplevel::rect() const
 inline Visual* Toplevel::visual() const
     {
     return vis;
+    }
+
+inline bool Toplevel::isDesktop() const
+    {
+    return windowType() == NET::Desktop;
+    }
+
+inline bool Toplevel::isDock() const
+    {
+    return windowType() == NET::Dock;
+    }
+
+inline bool Toplevel::isTopMenu() const
+    {
+    return windowType() == NET::TopMenu;
+    }
+
+inline bool Toplevel::isMenu() const
+    {
+    return windowType() == NET::Menu && !isTopMenu(); // because of backwards comp.
+    }
+
+inline bool Toplevel::isToolbar() const
+    {
+    return windowType() == NET::Toolbar;
+    }
+
+inline bool Toplevel::isSplash() const
+    {
+    return windowType() == NET::Splash;
+    }
+
+inline bool Toplevel::isUtility() const
+    {
+    return windowType() == NET::Utility;
+    }
+
+inline bool Toplevel::isDialog() const
+    {
+    return windowType() == NET::Dialog;
+    }
+
+inline bool Toplevel::isNormalWindow() const
+    {
+    return windowType() == NET::Normal;
     }
 
 #ifdef NDEBUG

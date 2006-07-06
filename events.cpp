@@ -577,7 +577,7 @@ bool Client::windowEvent( XEvent* e )
             {
             if( compositing())
                 {
-                workspace()->addDamage( geometry());
+                workspace()->addDamage( this, geometry());
                 scene->windowOpacityChanged( this );
                 }
             else
@@ -1613,7 +1613,7 @@ bool Unmanaged::windowEvent( XEvent* e )
     if( dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
         {
         scene->windowOpacityChanged( this );
-        workspace()->addDamage( geometry());
+        workspace()->addDamage( this, geometry());
         }
     switch (e->type) 
         {
@@ -1647,9 +1647,9 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     {
     resetWindowPixmap();
     // add old and new geometry to damage
-    workspace()->addDamage( geometry());
+    workspace()->addDamage( this, geometry());
     geom = QRect( e->x, e->y, e->width, e->height );
-    workspace()->addDamage( geometry());
+    workspace()->addDamage( this, geometry());
     }
 
 // ****************************************

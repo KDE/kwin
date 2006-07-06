@@ -523,7 +523,7 @@ bool Client::manage( Window w, bool isMapped )
     delete session;
     
     if( isMapped ) // otherwise damage will come when the client paints it
-        workspace()->addDamage( geometry());
+        workspace()->addDamage( this, geometry());
 
     ungrabXServer();
     

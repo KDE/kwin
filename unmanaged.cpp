@@ -47,7 +47,7 @@ bool Unmanaged::track( Window w )
 
     setupCompositing();
     resetWindowPixmap();
-    workspace()->addDamage( geometry());
+    workspace()->addDamage( this, geometry());
     return true;
     }
 
@@ -61,6 +61,11 @@ void Unmanaged::release()
 void Unmanaged::deleteUnmanaged( Unmanaged* c, allowed_t )
     {
     delete c;
+    }
+
+NET::WindowType Unmanaged::windowType( bool, int supported_types ) const
+    {
+    return info->windowType( supported_types );
     }
 
 double Unmanaged::opacity() const

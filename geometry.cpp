@@ -1660,7 +1660,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
         return;
-    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
+    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
     geom = QRect( x, y, w, h );
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1686,7 +1686,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     resetWindowPixmap();
-    workspace()->addDamage( geometry());
+    workspace()->addDamage( this, geometry());
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1718,7 +1718,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
         return;
-    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
+    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
     geom.setSize( QSize( w, h ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1743,7 +1743,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     resetWindowPixmap();
-    workspace()->addDamage( geometry());
+    workspace()->addDamage( this, geometry());
     }
 
 /*!
@@ -1753,7 +1753,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     {
     if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
         return;
-    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
+    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
     geom.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1765,7 +1765,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    workspace()->addDamage( geometry());
+    workspace()->addDamage( this, geometry());
     }
 
 void Client::postponeGeometryUpdates( bool postpone )
@@ -2265,6 +2265,8 @@ bool Client::startMoveResize()
 // not needed anymore?        kapp->installEventFilter( eater );
         }
     Notify::raise( isResize() ? Notify::ResizeStart : Notify::MoveStart );
+    if( effects )
+        effects->windowUserMovedResized( this, true, false );
     return true;
     }
 
@@ -2278,6 +2280,8 @@ void Client::finishMoveResize( bool cancel )
     checkMaximizeGeometry();
 // FRAME    update();
     Notify::raise( isResize() ? Notify::ResizeEnd : Notify::MoveEnd );
+    if( effects )
+        effects->windowUserMovedResized( this, false, true );
     }
 
 void Client::leaveMoveResize()
@@ -2541,10 +2545,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         }
     if ( isMove() )
       workspace()->clientMoved(globalPos, xTime());
-    if( isMove())
-        effects->windowUserMoved( this );
-    else
-        effects->windowUserResized( this );
+    if( effects )
+        effects->windowUserMovedResized( this, false, false );
     }
 
 } // namespace

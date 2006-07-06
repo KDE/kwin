@@ -120,6 +120,20 @@ enum allowed_t { Allowed };
 // some enums to have more readable code, instead of using bools
 enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
 
+
+struct RegionDebug
+   {   
+   RegionDebug( XserverRegion r ) : rr( r ) {}   
+   XserverRegion rr;   
+   };   
+      
+#ifdef NDEBUG
+inline
+kndbgstream& operator<<( kndbgstream& stream, RegionDebug ) { return stream; }
+#else
+kdbgstream& operator<<( kdbgstream& stream, RegionDebug r );
+#endif
+
 // Areas, mostly related to Xinerama
 enum clientAreaOption
     {

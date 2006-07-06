@@ -74,6 +74,8 @@ void Workspace::addDamage( const QRect& r )
 
 void Workspace::addDamage( int x, int y, int w, int h )
     {
+    if( !compositing())
+        return;
     XRectangle r;
     r.x = x;
     r.y = y;
@@ -103,7 +105,45 @@ void Workspace::addDamage( XserverRegion r, bool destroy )
             }
         }
     }
-    
+
+void Workspace::addDamage( Toplevel* c, const QRect& r )
+    {
+    addDamage( c, r.x(), r.y(), r.width(), r.height());
+    }
+
+void Workspace::addDamage( Toplevel* c, int x, int y, int w, int h )
+    {
+    if( !compositing())
+        return;
+    XRectangle r;
+    r.x = x;
+    r.y = y;
+    r.width = w;
+    r.height = h;
+    addDamage( c, XFixesCreateRegion( display(), &r, 1 ), true );
+    }
+
+void Workspace::addDamage( Toplevel* c, XserverRegion r, bool destroy )
+    {
+    if( !compositing())
+        return;
+    if( !destroy )
+        {
+        XserverRegion r2 = XFixesCreateRegion( display(), NULL, 0 );
+        XFixesCopyRegion( display(), r2, r );
+        r = r2;
+        destroy = true;
+        }
+    scene->transformWindowDamage( c, r );
+    if( damage != None )
+        {
+        XFixesUnionRegion( display(), damage, damage, r );
+        XFixesDestroyRegion( display(), r );
+        }
+    else
+        damage = r;
+    }
+
 void Workspace::compositeTimeout()
     {
     if( damage == None )
@@ -177,9 +217,9 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     {
     XserverRegion r = XFixesCreateRegion( display(), &e->area, 1 );
     XFixesTranslateRegion( display(), r, x(), y());
-    workspace()->addDamage( r, true );
+    workspace()->addDamage( this, r, true );
     }
-    
+
 #endif
 
 } // namespace

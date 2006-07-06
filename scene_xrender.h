@@ -34,6 +34,8 @@ class SceneXrender
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowDeleted( Toplevel* );
+        virtual void transformWindowDamage( Toplevel*, XserverRegion ) const;
+        virtual void updateTransformation( Toplevel* );
     private:
         void createBuffer();
         void checkWindowData( Toplevel* c );
@@ -42,7 +44,8 @@ class SceneXrender
         XserverRegion savedWindowClipRegion( Toplevel* c );
         bool isOpaque( Toplevel* c ) const;
         Picture windowAlphaMask( Toplevel* c );
-        Picture windowShape( Toplevel* c );
+        XserverRegion windowShape( Toplevel* c );
+        static void setPictureMatrix( Picture pic, const Matrix& m );
         XRenderPictFormat* format;
         Picture front;
         Picture buffer;

@@ -1600,58 +1600,6 @@ bool Client::wantsInput() const
     return rules()->checkAcceptFocus( input || Ptakefocus );
     }
 
-bool Client::isDesktop() const
-    {
-    return windowType() == NET::Desktop;
-    }
-
-bool Client::isDock() const
-    {
-    return windowType() == NET::Dock;
-    }
-
-bool Client::isTopMenu() const
-    {
-    return windowType() == NET::TopMenu;
-    }
-
-
-bool Client::isMenu() const
-    {
-    return windowType() == NET::Menu && !isTopMenu(); // because of backwards comp.
-    }
-
-bool Client::isToolbar() const
-    {
-    return windowType() == NET::Toolbar;
-    }
-
-bool Client::isSplash() const
-    {
-    return windowType() == NET::Splash;
-    }
-
-bool Client::isUtility() const
-    {
-    return windowType() == NET::Utility;
-    }
-
-bool Client::isDialog() const
-    {
-    return windowType() == NET::Dialog;
-    }
-
-bool Client::isNormalWindow() const
-    {
-    return windowType() == NET::Normal;
-    }
-
-bool Client::isSpecialWindow() const
-    {
-    return isDesktop() || isDock() || isSplash() || isTopMenu()
-        || isToolbar(); // TODO
-    }
-
 NET::WindowType Client::windowType( bool direct, int supported_types ) const
     {
     NET::WindowType wt = info->windowType( supported_types );
@@ -1681,6 +1629,12 @@ NET::WindowType Client::windowType( bool direct, int supported_types ) const
     if( wt == NET::Unknown ) // this is more or less suggested in NETWM spec
         wt = isTransient() ? NET::Dialog : NET::Normal;
     return wt;
+    }
+
+bool Client::isSpecialWindow() const
+    {
+    return isDesktop() || isDock() || isSplash() || isTopMenu()
+        || isToolbar(); // TODO
     }
 
 /*!

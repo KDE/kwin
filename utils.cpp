@@ -315,6 +315,20 @@ bool grabbedXServer()
     return server_grab_count > 0;
     }
 
+kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
+    {       
+    if( r.rr == None )
+        return stream << "EMPTY";
+    int num;
+    XRectangle* rects = XFixesFetchRegion( display(), r.rr, &num );
+    if( rects == NULL || num == 0 )
+        return stream << "EMPTY";
+    for( int i = 0;
+         i < num;
+         ++i )
+       stream << "[" << rects[ i ].x << "+" << rects[ i ].y << " " << rects[ i ].width << "x" << rects[ i ].height << "]";
+    return stream;
+    }
 #endif
 
 bool isLocalMachine( const QByteArray& host )
@@ -381,8 +395,6 @@ void ShortcutDialog::accept()
     KShortcutDialog::accept();
     }
 #endif
-
-
 } // namespace
 
 #ifndef KCMRULES

@@ -28,6 +28,8 @@ class Scene
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowDeleted( Toplevel* );
+        virtual void transformWindowDamage( Toplevel*, XserverRegion ) const;
+        virtual void updateTransformation( Toplevel* );
     protected:
         Workspace* wspace;
         ToplevelList windows;

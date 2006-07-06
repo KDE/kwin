@@ -28,6 +28,7 @@ class Unmanaged
         bool windowEvent( XEvent* e );
         void release();
         bool track( Window w );
+        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         static void deleteUnmanaged( Unmanaged* c, allowed_t );
         virtual double opacity() const;
     protected:

@@ -64,19 +64,26 @@ void SceneXrender::paint( XserverRegion damage )
         {
         Toplevel* c = windows[ i ];
         checkWindowData( c );
-        effects->paintWindow( c, window_data[ c ].effect );
+        WindowData& data = window_data[ c ];
+        effects->transformWindow( c, data.effect ); // TODO remove, instead add initWindow() to effects
         if( isOpaque( c ))
             {
             Picture picture = windowPicture( c );
-            Picture shape = windowShape( c );
+            XserverRegion shape = windowShape( c );
             if( picture != None && shape != None )
                 {
                 // Set the clip region for the buffer to the damage region, and
                 // subtract the clients shape from the damage region
                 XFixesSetPictureClipRegion( display(), buffer, 0, 0, damage );
+                const Matrix& matrix = data.effect.matrix;
+                if( !matrix.isIdentity())
+                    {
+                    assert( matrix.isOnlyTranslate());
+                    XFixesTranslateRegion( display(), shape, int( matrix.xTranslate()), int( matrix.yTranslate()));
+                    }
                 XFixesSubtractRegion( display(), damage, damage, shape );
                 XRenderComposite( display(), PictOpSrc, picture, None, buffer, 0, 0, 0, 0,
-                    c->x(), c->y(), c->width(), c->height());
+                    c->x() + int( matrix.xTranslate()), c->y() + int( matrix.yTranslate()), c->width(), c->height());
                 }
             }
         saveWindowClipRegion( c, damage );
@@ -102,9 +109,10 @@ void SceneXrender::paint( XserverRegion damage )
             Picture alpha = windowAlphaMask( c );
             if( picture != None )
                 {
+                const Matrix& matrix = window_data[ c ].effect.matrix;
                 // TODO clip also using shape? also above?
                 XRenderComposite( display(), PictOpOver, picture, alpha, buffer, 0, 0, 0, 0,
-                    c->x(), c->y(), c->width(), c->height());
+                    c->x() + int( matrix.xTranslate()), c->y() + int( matrix.yTranslate()), c->width(), c->height());
                 }
             }
         XFixesDestroyRegion( display(), r );
@@ -113,6 +121,27 @@ void SceneXrender::paint( XserverRegion damage )
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
     XFlush( display());
+    }
+
+void SceneXrender::transformWindowDamage( Toplevel* c, XserverRegion r ) const
+    {
+    if( !window_data.contains( c ))
+        return;
+    const Matrix& matrix = window_data[ c ].effect.matrix;
+    if( matrix.isIdentity())
+        return;
+    assert( matrix.isOnlyTranslate());
+    // TODO the matrix here is not valid after it changes but before it's first painted
+    // (i.e. a changes to state where it should be translated but the matrix is not yet updated)
+    XFixesTranslateRegion( display(), r, int( matrix.xTranslate()), int( matrix.yTranslate()));
+    }
+
+void SceneXrender::updateTransformation( Toplevel* c )
+    {
+    // TODO maybe only mark as invalid and update on-demand
+    checkWindowData( c );
+    WindowData& data = window_data[ c ];
+    effects->transformWindow( c, data.effect );
     }
 
 void SceneXrender::checkWindowData( Toplevel* c )
@@ -139,7 +168,7 @@ void SceneXrender::windowGeometryShapeChanged( Toplevel* c )
         XRenderFreePicture( display(), data.alpha );
     data.alpha = None;
     if( data.shape != None )
-        XRenderFreePicture( display(), data.shape );
+        XFixesDestroyRegion( display(), data.shape );
     data.shape = None;
     }
 
@@ -220,8 +249,9 @@ Picture SceneXrender::windowAlphaMask( Toplevel* c )
     return data.alpha;
     }
 
-Picture SceneXrender::windowShape( Toplevel* c )
+XserverRegion SceneXrender::windowShape( Toplevel* c )
     {
+#if 0 // it probably doesn't make sense to cache this, and perhaps some others - they aren't roundtrips
     WindowData& data = window_data[ c ];
     if( data.shape == None )
         {
@@ -229,6 +259,11 @@ Picture SceneXrender::windowShape( Toplevel* c )
         XFixesTranslateRegion( display(), data.shape, c->x(), c->y());
         }
     return data.shape;
+#else
+    XserverRegion shape = XFixesCreateRegionFromWindow( display(), c->handle(), WindowRegionBounding );
+    XFixesTranslateRegion( display(), shape, c->x(), c->y());
+    return shape;
+#endif
     }
 
 // TODO handle xrandr changes
@@ -240,6 +275,36 @@ void SceneXrender::createBuffer()
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), QX11Info::appDepth());
     buffer = XRenderCreatePicture( display(), pixmap, format, 0, 0 );
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
+    }
+
+void SceneXrender::setPictureMatrix( Picture pic, const Matrix& m )
+    {
+    if( pic == None )
+        return;
+    XTransform t;
+    // ignore z axis
+    t.matrix[ 0 ][ 0 ] = XDoubleToFixed( m.m[ 0 ][ 0 ] );
+    t.matrix[ 0 ][ 1 ] = XDoubleToFixed( m.m[ 0 ][ 1 ] );
+    t.matrix[ 0 ][ 2 ] = -XDoubleToFixed( m.m[ 0 ][ 3 ] ); // translation seems to be inverted
+    t.matrix[ 1 ][ 0 ] = XDoubleToFixed( m.m[ 1 ][ 0 ] );
+    t.matrix[ 1 ][ 1 ] = XDoubleToFixed( m.m[ 1 ][ 1 ] );
+    t.matrix[ 1 ][ 2 ] = -XDoubleToFixed( m.m[ 1 ][ 3 ] );
+    t.matrix[ 2 ][ 0 ] = XDoubleToFixed( m.m[ 3 ][ 0 ] );
+    t.matrix[ 2 ][ 1 ] = XDoubleToFixed( m.m[ 3 ][ 1 ] );
+    t.matrix[ 2 ][ 2 ] = XDoubleToFixed( m.m[ 3 ][ 3 ] );
+    XRenderSetPictureTransform( display(), pic, &t );
+    if( t.matrix[ 0 ][ 0 ] != XDoubleToFixed( 1 ) // fast filter for identity or translation
+     || t.matrix[ 1 ][ 1 ] != XDoubleToFixed( 1 )
+     || t.matrix[ 2 ][ 2 ] != XDoubleToFixed( 1 )
+     || t.matrix[ 0 ][ 1 ] != XDoubleToFixed( 0 )
+     || t.matrix[ 1 ][ 0 ] != XDoubleToFixed( 0 ))
+        {
+        XRenderSetPictureFilter( display(), pic, const_cast< char* >( FilterGood ), 0, 0 );
+        }
+    else
+        {
+        XRenderSetPictureFilter( display(), pic, const_cast< char* >( FilterFast ), 0, 0 );
+        }
     }
 
 SceneXrender::WindowData::WindowData()

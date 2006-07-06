@@ -67,12 +67,17 @@ class Client
         const Group* group() const;
         Group* group();
         void checkGroup( Group* gr = NULL, bool force = false );
-    // prefer isXXX() instead
-        NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         const WindowRules* rules() const;
         void removeRule( Rules* r );
         void setupWindowRules( bool ignore_temporary );
         void applyWindowRules();
+        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
+    // returns true for "special" windows and false for windows which are "normal"
+    // (normal=window which has a border, can be moved by the user, can be closed, etc.)
+    // true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
+    // false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
+        bool isSpecialWindow() const;
+        bool hasNETSupport() const;
 
         QSize minSize() const;
         QSize maxSize() const;
@@ -158,24 +163,9 @@ class Client
     // auxiliary functions, depend on the windowType
         bool wantsTabFocus() const;
         bool wantsInput() const;
-        bool hasNETSupport() const;
-        bool isMovable() const;
-        bool isDesktop() const;
-        bool isDock() const;
-        bool isToolbar() const;
-        bool isTopMenu() const;
-        bool isMenu() const;
-        bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
-        bool isDialog() const;
-        bool isSplash() const;
-        bool isUtility() const;
-    // returns true for "special" windows and false for windows which are "normal"
-    // (normal=window which has a border, can be moved by the user, can be closed, etc.)
-    // true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
-    // false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
-        bool isSpecialWindow() const;
 
         bool isResizable() const;
+        bool isMovable() const;
         bool isCloseable() const; // may be closed by the user (may have a close button)
 
         void takeActivity( int flags, bool handled, allowed_t ); // takes ActivityFlags as arg (in utils.h)
@@ -282,6 +272,15 @@ class Client
         void destroyClient();
         void checkActiveModal();
         bool hasStrut() const;
+
+        bool isMove() const 
+            {
+            return moveResizeMode && mode == PositionCenter;
+            }
+        bool isResize() const 
+            {
+            return moveResizeMode && mode != PositionCenter;
+            }
         
     private slots:
         void autoRaise();
@@ -411,14 +410,6 @@ class Client
         bool move_faked_activity;
         Window move_resize_grab_window;
         bool unrestrictedMoveResize;
-        bool isMove() const 
-            {
-            return moveResizeMode && mode == PositionCenter;
-            }
-        bool isResize() const 
-            {
-            return moveResizeMode && mode != PositionCenter;
-            }
 
         Position mode;
         QPoint moveOffset;
