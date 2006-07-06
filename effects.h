@@ -13,8 +13,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_EFFECTS_H
 #define KWIN_EFFECTS_H
 
-#include <QMap>
-#include <QTimer>
+#include <qmap.h>
+#include <qpoint.h>
+#include <qtimer.h>
 
 namespace KWinInternal
 {
@@ -32,6 +33,7 @@ class Matrix
         double xTranslate() const;
         double yTranslate() const;
         double zTranslate() const;
+        QPoint transform( const QPoint& p ) const;
         double m[ 4 ][ 4 ];
     };
 

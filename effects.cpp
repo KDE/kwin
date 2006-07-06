@@ -55,7 +55,7 @@ Matrix operator*( const Matrix& m1, const Matrix& m2 )
             for( int k = 0;
                  k < 4;
                  ++k )
-                s += m1.m[ i ][ k ]  * m2.m[ k ][ j ];
+                s += m1.m[ k ][ j ]  * m2.m[ i ][ k ];
             r.m[ i ][ j ] = s;
             }
     return r;
@@ -100,6 +100,24 @@ bool Matrix::isOnlyTranslate() const
         && m[ 3 ][ 1 ] == 0
         && m[ 3 ][ 2 ] == 0
         && m[ 3 ][ 3 ] == 1;
+    }
+
+QPoint Matrix::transform( const QPoint& p ) const
+    {
+    int vec[ 4 ] = { p.x(), p.y(), 0, 1 };
+    int res[ 4 ];
+    for( int i = 0;
+         i < 4;
+         ++i )
+        {
+        double s = 0;
+        for( int j = 0;
+             j < 4;
+             ++j )
+            s += m[ i ][ j ] * vec[ j ];
+        res[ i ] = int( s );
+        }
+    return QPoint( res[ 0 ], res[ 1 ] );
     }
 
 //****************************************
