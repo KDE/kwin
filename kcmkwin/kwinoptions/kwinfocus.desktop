@@ -5,7 +5,6 @@ Type=Application
 Exec=kcmshell kwinfocus
 DocPath=kcontrol/windowmanagement/index.html#action-focus
 
-X-KDE-ModuleType=Library
 X-KDE-Library=kwinoptions
 X-KDE-FactoryName=kwinfocus
 

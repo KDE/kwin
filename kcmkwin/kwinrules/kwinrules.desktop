@@ -5,7 +5,6 @@ Type=Application
 Exec=kcmshell kwinrules
 DocPath=kcontrol/windowmanagement/index.html
 
-X-KDE-ModuleType=Library
 X-KDE-Library=kwinrules
 X-KDE-FactoryName=kwinrules
 

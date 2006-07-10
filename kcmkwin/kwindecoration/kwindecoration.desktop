@@ -5,7 +5,6 @@ Icon=kcmkwm
 Type=Application
 DocPath=kcontrol/kwindecoration/index.html
 
-X-KDE-ModuleType=Library
 X-KDE-Library=kwindecoration
 X-KDE-FactoryName=kwindecoration
 

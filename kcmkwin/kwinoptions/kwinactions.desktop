@@ -5,7 +5,6 @@ Type=Application
 Exec=kcmshell kwinactions
 DocPath=kcontrol/windowmanagement/index.html#action-actions
 
-X-KDE-ModuleType=Library
 X-KDE-Library=kwinoptions
 X-KDE-FactoryName=kwinactions
 
