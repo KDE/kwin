@@ -32,6 +32,8 @@ bool Unmanaged::track( Window w )
     XWindowAttributes attr;
     if( !XGetWindowAttributes(display(), w, &attr))
         return false;
+    if( attr.c_class == InputOnly )
+        return false;
     setHandle( w );
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
     vis = attr.visual;
