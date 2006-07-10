@@ -273,10 +273,24 @@ static ShiftWorkspaceUp* swu;
 
 EffectsHandler::EffectsHandler( Workspace* ws )
     {
+    if( !compositing())
+        return;
     mht = new MakeHalfTransparent;
     sm = new ShakyMove;
 //    gm = new GrowMove;
     swu = new ShiftWorkspaceUp( ws );
+    }
+    
+EffectsHandler::~EffectsHandler()
+    {
+    delete mht;
+    mht = NULL;
+    delete sm;
+    sm = NULL;
+    delete gm;
+    gm = NULL;
+    delete swu;
+    swu = NULL;
     }
 
 void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last )

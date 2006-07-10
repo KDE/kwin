@@ -80,6 +80,7 @@ class EffectsHandler
     {
     public:
         EffectsHandler( Workspace* ws );
+        ~EffectsHandler();
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowDeleted( Toplevel* c );
         void transformWindow( Toplevel* c, Matrix& m, EffectData& data );

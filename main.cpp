@@ -122,9 +122,7 @@ Application::Application( )
     initting = false; // TODO
     
     // create workspace.
-    Workspace* workspace = new Workspace( isSessionRestored() );
-
-    effects = new EffectsHandler( workspace );
+    (void) new Workspace( isSessionRestored() );
 
     syncX(); // trigger possible errors, there's still a chance to abort
 

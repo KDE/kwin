@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "client.h"
 #include "unmanaged.h"
+#include "effects.h"
 #include "scene.h"
 #include "scene_basic.h"
 #include "scene_xrender.h"
@@ -36,6 +37,7 @@ void Workspace::setupCompositing()
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
 //    scene = new SceneBasic( this );
     scene = new SceneXrender( this );
+    effects = new EffectsHandler( this );
     addDamage( 0, 0, displayWidth(), displayHeight());
     foreach( Client* c, clients )
         c->setupCompositing();
@@ -53,6 +55,8 @@ void Workspace::finishCompositing()
         c->finishCompositing();
     XCompositeUnredirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     compositeTimer.stop();
+    delete effects;
+    effects = NULL;
     delete scene;
     scene = NULL;
     for( ClientList::ConstIterator it = clients.begin();
