@@ -39,31 +39,37 @@ class SceneXrender
     private:
         void createBuffer();
         void resetWindowData( Toplevel* c );
-        Picture windowPicture( Toplevel* c );
-        void saveWindowClipRegion( Toplevel* c, XserverRegion r );
-        XserverRegion savedWindowClipRegion( Toplevel* c );
-        bool isOpaque( Toplevel* c ) const;
-        Picture windowAlphaMask( Toplevel* c );
-        XserverRegion windowShape( Toplevel* c );
         static void setPictureMatrix( Picture pic, const Matrix& m );
-        void cleanup( Toplevel* c );
         XRenderPictFormat* format;
         Picture front;
         Picture buffer;
-        struct WindowData
+        class WindowData
             {
-            WindowData();
-            void free();
-            bool simpleTransformation() const;
-            Picture picture;
-            XRenderPictFormat* format;
-            XserverRegion saved_clip_region;
-            Picture alpha;
-            double alpha_cached_opacity;
-            XserverRegion shape;
-            Matrix matrix;
-            EffectData effect;
-            int phase;
+            public:
+                WindowData( Toplevel* c, XRenderPictFormat* f );
+                void free(); // is often copied by value, use manually instead of dtor
+                void cleanup(); // removes data needed only during painting pass
+                Picture picture();
+                bool simpleTransformation() const;
+                void saveClipRegion( XserverRegion r );
+                XserverRegion savedClipRegion();
+                bool isOpaque() const;
+                Picture alphaMask();
+                XserverRegion shape();
+                void geometryShapeChanged();
+                void opacityChanged();
+                Matrix matrix;
+                EffectData effect;
+                int phase;
+                WindowData() {} // QMap sucks even in Qt4
+            private:
+                Toplevel* window;
+                Picture _picture;
+                XRenderPictFormat* format;
+                XserverRegion saved_clip_region;
+                Picture alpha;
+                double alpha_cached_opacity;
+                XserverRegion _shape;
             };
         QMap< Toplevel*, WindowData > window_data;
     };
