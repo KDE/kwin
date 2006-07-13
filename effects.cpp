@@ -278,7 +278,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     mht = new MakeHalfTransparent;
     sm = new ShakyMove;
 //    gm = new GrowMove;
-    swu = new ShiftWorkspaceUp( ws );
+//    swu = new ShiftWorkspaceUp( ws );
     }
     
 EffectsHandler::~EffectsHandler()
