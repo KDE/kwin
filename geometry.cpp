@@ -1660,6 +1660,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
         return;
+    // TODO add damage only if not obscured
     workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
     geom = QRect( x, y, w, h );
     updateWorkareaDiffs();

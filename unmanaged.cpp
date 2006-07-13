@@ -49,7 +49,6 @@ bool Unmanaged::track( Window w )
 
     setupCompositing();
     resetWindowPixmap();
-    workspace()->addDamage( this, geometry());
     return true;
     }
 

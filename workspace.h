@@ -636,7 +636,7 @@ class Workspace : public QObject, public KDecorationDefines
         friend class StackingUpdatesBlocker;
 
         QTimer compositeTimer;
-        XserverRegion damage;
+        XserverRegion damage_region;
         
         //kompmgr
         QSlider *transSlider;

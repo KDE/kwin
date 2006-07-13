@@ -124,7 +124,7 @@ Workspace::Workspace( bool restore )
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
     forced_global_mouse_grab( false ),
-    damage( None )
+    damage_region( None )
     {
     new KWinAdaptor( "org.kde.kwin", "/KWin", QDBus::sessionBus(), this );
 
@@ -471,10 +471,6 @@ Workspace::~Workspace()
 	foreach ( SessionInfo* s, session )
 		delete s;
     XDestroyWindow( display(), null_focus_window );
-#ifdef HAVE_XFIXES
-    if( damage != None )
-        XFixesDestroyRegion( display(), damage );
-#endif
 // TODO    ungrabXServer();
     _self = 0;
     }

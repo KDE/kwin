@@ -156,7 +156,7 @@ void MakeHalfTransparent::transformWindow( Toplevel* c, Matrix&, EffectData& dat
 void MakeHalfTransparent::windowUserMovedResized( Toplevel* c, bool first, bool last )
     {
     if( first || last )
-        c->workspace()->addDamage( c, c->geometry());
+        c->addDamage( c->rect());
     }
 
 ShakyMove::ShakyMove()

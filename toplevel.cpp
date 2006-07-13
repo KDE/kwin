@@ -20,14 +20,16 @@ Toplevel::Toplevel( Workspace* ws )
     , id( None )
     , wspace( ws )
     , damage_handle( None )
+    , damage_region( None )
     , window_pixmap( None )
     {
     }
 
 Toplevel::~Toplevel()
     {
-    if( window_pixmap != None )
-        XFreePixmap( display(), window_pixmap );
+    assert( damage_handle == None );
+    assert( damage_region == None );
+    assert( window_pixmap == None );
     if( scene != NULL )
         scene->windowDeleted( this );
     }

@@ -58,6 +58,11 @@ class Toplevel
         virtual double opacity() const = 0;
         void setupCompositing();
         void finishCompositing();
+        void addDamage( const QRect& r );
+        void addDamage( int x, int y, int w, int h );
+        void addDamage( XserverRegion r, bool destroy );
+        XserverRegion damage() const;
+        void resetDamage();
     protected:
         void setHandle( Window id );
         void resetWindowPixmap();
@@ -70,6 +75,7 @@ class Toplevel
         Window id;
         Workspace* wspace;
         Damage damage_handle;
+        XserverRegion damage_region;
         mutable Pixmap window_pixmap;
     };
 
@@ -177,6 +183,11 @@ inline bool Toplevel::isDialog() const
 inline bool Toplevel::isNormalWindow() const
     {
     return windowType() == NET::Normal;
+    }
+
+inline XserverRegion Toplevel::damage() const
+    {
+    return damage_region;
     }
 
 #ifdef NDEBUG
