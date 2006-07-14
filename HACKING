@@ -4,8 +4,9 @@ Mailing list and bugzilla:
 The KWin mailing list is kwin@kde.org . It's rather low traffic.
 
 The bugs.kde.org product for KWin is 'kwin'. Currently the components are 'general' (KWin core),
-'decorations' (decoration plugins), 'compatibility' (problems with non-KDE WMs/apps) and
-'eyecandy' (transparency and similar effects).
+'decorations' (decoration plugins), 'compatibility' (problems with non-KDE WMs/apps),
+'eyecandy' (transparency and similar effects), 'xinerama' (problems with Xinerama) and
+'multihead' (non-Xinerama multihead, without maintainer).
 There are also two kcontrol components 'kcmkwindecoration' and 'kcmkwinoptions' related
 to KWin's KControl modules.
 
@@ -63,6 +64,11 @@ and attach to the running KWin instance from there, or launch it as 'DISPLAY=:0 
 Since KWin is such an important component of KDE, it is usually better to start another X for development.
 Note that XNest is quite buggy and is therefore not recommended to use.
 
+Starting separate X for testing KWin: I myself use a separate user, login to a text console and run
+"( X vt10 :1 -terminate &); sleep 5; DISPLAY=:1 xterm". This launches another X with DISPLAY=:1
+on virtual console 10 (Ctrl+Alt+F10) with xterm. Then it's normally possible to run just KWin
+or whole KDE with startkde (in which case it's a good idea to disable xterm from session management
+in KControl->KDE components->Session manager).
 
 Window manager spec:
 ====================
