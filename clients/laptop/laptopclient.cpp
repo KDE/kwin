@@ -286,7 +286,7 @@ void LaptopButton::reset(unsigned long changed)
 void LaptopButton::setBitmap(const unsigned char *bitmap)
 {
     if (bitmap)
-        deco = QBitmap(8, 8, bitmap, true);
+        deco = QBitmap::fromData( QSize(8,  8),  bitmap);
     else {
         deco = QBitmap(8,8);
         deco.fill(Qt::color0);
