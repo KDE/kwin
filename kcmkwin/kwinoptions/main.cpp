@@ -45,46 +45,51 @@ inline KInstance *inst() {
         return _kcmkwm;
 }
 
-
-extern "C"
+class KFocusConfigStandalone : public KFocusConfig
 {
-	KDE_EXPORT KCModule *create_kwinfocus(QWidget *parent, const char *name)
-	{
-		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KFocusConfig(true, c, inst(), parent);
-	}
+    public:
+        KFocusConfigStandalone(QWidget* parent, const QStringList &)
+            : KFocusConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+        {}
+};
+typedef KGenericFactory<KFocusConfigStandalone> KFocusConfigFactory;
+K_EXPORT_COMPONENT_FACTORY(kwinfocus, KFocusConfigFactory)
 
-	KDE_EXPORT KCModule *create_kwinactions(QWidget *parent, const char *name)
-	{
-		return new KActionsOptions( inst(), parent);
-	}
+class KMovingConfigStandalone : public KMovingConfig
+{
+    public:
+        KMovingConfigStandalone(QWidget* parent, const QStringList &)
+            : KMovingConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+        {}
+};
+typedef KGenericFactory<KMovingConfigStandalone> KMovingConfigFactory;
+K_EXPORT_COMPONENT_FACTORY(kwinmoving, KMovingConfigFactory)
 
-	KDE_EXPORT KCModule *create_kwinmoving(QWidget *parent, const char *name)
-	{
-		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KMovingConfig(true, c, inst(), parent);
-	}
+class KAdvancedConfigStandalone : public KAdvancedConfig
+{
+    public:
+        KAdvancedConfigStandalone(QWidget* parent, const QStringList &)
+            : KAdvancedConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+        {}
+};
+typedef KGenericFactory<KAdvancedConfigStandalone> KAdvancedConfigFactory;
+K_EXPORT_COMPONENT_FACTORY(kwinadvanced, KAdvancedConfigFactory)
 
-	KDE_EXPORT KCModule *create_kwinadvanced(QWidget *parent, const char *name)
-	{
-		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KAdvancedConfig(true, c, inst(), parent);
-	}
-        
-	KDE_EXPORT KCModule *create_kwintranslucency(QWidget *parent, const char *name)
-	{
-		KConfig *c = new KConfig("kwinrc", false, true);
-		return new KTranslucencyConfig(true, c, inst(), parent);
-	}
+class KTranslucencyConfigStandalone : public KTranslucencyConfig
+{
+    public:
+        KTranslucencyConfigStandalone(QWidget* parent, const QStringList &)
+            : KTranslucencyConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+        {}
+};
+typedef KGenericFactory<KTranslucencyConfigStandalone> KTranslucencyConfigFactory;
+K_EXPORT_COMPONENT_FACTORY(kwintranslucency, KTranslucencyConfigFactory)
 
-	KDE_EXPORT KCModule *create_kwinoptions ( QWidget *parent, const char* name)
-	{
-		return new KWinOptions( inst(), parent);
-	}
-}
+typedef KGenericFactory<KWinOptions> KWinOptionsFactory;
+K_EXPORT_COMPONENT_FACTORY(kwinoptions, KWinOptionsFactory)
 
-KWinOptions::KWinOptions(KInstance *inst, QWidget *parent)
-  : KCModule(inst, parent)
+KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
+  : KCModule(inst(), parent)
 {
   mConfig = new KConfig("kwinrc", false, true);
 
@@ -92,37 +97,37 @@ KWinOptions::KWinOptions(KInstance *inst, QWidget *parent)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  mFocus = new KFocusConfig(false, mConfig, inst, this);
+  mFocus = new KFocusConfig(false, mConfig, instance(), this);
   mFocus->setObjectName("KWin Focus Config");
   mFocus->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mFocus, i18n("&Focus"));
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, inst, this);
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, instance(), this);
   mTitleBarActions->setObjectName("KWin TitleBar Actions");
   mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mWindowActions = new KWindowActionsConfig(false, mConfig, inst, this);
+  mWindowActions = new KWindowActionsConfig(false, mConfig, instance(), this);
   mWindowActions->setObjectName("KWin Window Actions");
   mWindowActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));
   connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mMoving = new KMovingConfig(false, mConfig, inst, this);
+  mMoving = new KMovingConfig(false, mConfig, instance(), this);
   mMoving->setObjectName("KWin Moving");
   mMoving->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mMoving, i18n("&Moving"));
   connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mAdvanced = new KAdvancedConfig(false, mConfig, inst, this);
+  mAdvanced = new KAdvancedConfig(false, mConfig, instance(), this);
   mAdvanced->setObjectName("KWin Advanced");
   mAdvanced->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mTranslucency = new KTranslucencyConfig(false, mConfig, inst, this);
+  mTranslucency = new KTranslucencyConfig(false, mConfig, instance(), this);
   mTranslucency->setObjectName("KWin Translucency");
   mTranslucency->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTranslucency, i18n("&Translucency"));
@@ -209,9 +214,11 @@ void KWinOptions::moduleChanged(bool state)
   emit KCModule::changed(state);
 }
 
+typedef KGenericFactory<KActionsOptions> KActionsOptionsFactory;
+K_EXPORT_COMPONENT_FACTORY(kwinactions, KActionsOptionsFactory)
 
-KActionsOptions::KActionsOptions(KInstance *inst, QWidget *parent)
-  : KCModule(inst, parent)
+KActionsOptions::KActionsOptions(QWidget *parent, const QStringList &)
+  : KCModule(inst(), parent)
 {
   mConfig = new KConfig("kwinrc", false, true);
 
@@ -219,13 +226,13 @@ KActionsOptions::KActionsOptions(KInstance *inst, QWidget *parent)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, inst, this);
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, instance(), this);
   mTitleBarActions->setObjectName("KWin TitleBar Actions");
   mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mWindowActions = new KWindowActionsConfig(false, mConfig, inst, this);
+  mWindowActions = new KWindowActionsConfig(false, mConfig, instance(), this);
   mWindowActions->setObjectName("KWin Window Actions");
   mWindowActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));

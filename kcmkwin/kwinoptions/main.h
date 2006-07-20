@@ -34,6 +34,7 @@ class KTitleBarActionsConfig;
 class KWindowActionsConfig;
 class KAdvancedConfig;
 class KTranslucencyConfig;
+class QStringList;
 
 class KWinOptions : public KCModule
 {
@@ -41,7 +42,7 @@ class KWinOptions : public KCModule
 
 public:
 
-  KWinOptions(KInstance *inst, QWidget *parent);
+  KWinOptions(QWidget *parent, const QStringList &args);
   virtual ~KWinOptions();
 
   void load();
@@ -75,7 +76,7 @@ class KActionsOptions : public KCModule
 
 public:
 
-  KActionsOptions(KInstance *inst, QWidget *parent);
+  KActionsOptions(QWidget *parent, const QStringList &args);
   virtual ~KActionsOptions();
 
   void load();

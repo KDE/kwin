@@ -18,8 +18,9 @@ install(TARGETS kcm_kwinoptions  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kwinoptions.desktop  DESTINATION  ${XDG_APPS_DIR} )
-install( FILES kwinactions.desktop  kwinadvanced.desktop  kwinfocus.desktop  kwinmoving.desktop  kwintranslucency.desktop   DESTINATION  ${APPLNK_INSTALL_DIR}/.hidden )
+install( FILES kwinoptions.desktop kwinactions.desktop kwinadvanced.desktop
+    kwinfocus.desktop kwinmoving.desktop kwintranslucency.desktop
+    DESTINATION ${SERVICES_INSTALL_DIR})
 
 kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 

@@ -1,7 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Icon=kcmkwm
-Type=Application
+Type=Service
+ServiceTypes=KCModule
 Exec=kcmshell kwinadvanced
 DocPath=kcontrol/windowmanagement/index.html#action-advanced
 
