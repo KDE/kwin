@@ -44,6 +44,7 @@
 #include <X11/Xutil.h>
 
 #include <stdlib.h>
+#include <cstring>
 
 #include "mouse.h"
 #include "mouse.moc"
@@ -112,13 +113,13 @@ void createMaxButtonPixmaps()
     "..............."},
   };
 
-  QString baseColor(". c " + KGlobalSettings::baseColor().name());
-  QString textColor("# c " + KGlobalSettings::textColor().name());
+  QByteArray baseColor(". c " + KGlobalSettings::baseColor().name().toAscii());
+  QByteArray textColor("# c " + KGlobalSettings::textColor().name().toAscii());
   for (int t = 0; t < 3; ++t)
   {
     maxButtonXpms[t][0] = "15 13 2 1";
-    maxButtonXpms[t][1] = baseColor.toAscii();
-    maxButtonXpms[t][2] = textColor.toAscii();
+    maxButtonXpms[t][1] = baseColor.constData();
+    maxButtonXpms[t][2] = textColor.constData();
     maxButtonPixmaps[t] = QPixmap(maxButtonXpms[t]);
     maxButtonPixmaps[t].setMask(maxButtonPixmaps[t].createHeuristicMask());
   }
