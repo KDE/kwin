@@ -1,12 +1,14 @@
 [Desktop Entry]
 Encoding=UTF-8
 Icon=kcmkwm
-Type=Application
+Type=Service
+ServiceTypes=KCModule
 Exec=kcmshell kwinrules
 DocPath=kcontrol/windowmanagement/index.html
 
 X-KDE-Library=kwinrules
 X-KDE-FactoryName=kwinrules
+X-KDE-ParentApp=kcontrol
 
 Name=Window-Specific Settings
 Name[fr]=Paramètres spécifiques à la fenêtre
@@ -19,4 +21,3 @@ Comment[x-test]=xxConfigure settings specifically for a windowxx
 Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
 Keywords[fr]=taille,position,état,comportement de fenêtre,fenêtres,spécifique,astuces,souvenir,règles
 Keywords[x-test]=xxsize,position,state,window behavior,windows,specific,workarounds,remember,rulesxx
-Categories=Qt;KDE;X-KDE-settings-desktop;

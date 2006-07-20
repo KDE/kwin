@@ -25,6 +25,7 @@
 
 class KConfig;
 class KAboutData;
+class QStringList;
 
 namespace KWinInternal
 {
@@ -36,7 +37,7 @@ class KCMRules
     {
     Q_OBJECT
     public:
-        KCMRules( KInstance *inst, QWidget *parent );
+        KCMRules( QWidget *parent, const QStringList &args );
         virtual void load();
         virtual void save();
         virtual void defaults();

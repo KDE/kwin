@@ -19,7 +19,7 @@ install(TARGETS kcm_kwindecoration  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kwindecoration.desktop  DESTINATION  ${XDG_APPS_DIR} )
+install( FILES kwindecoration.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
 
 
 

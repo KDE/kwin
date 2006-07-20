@@ -2,11 +2,13 @@
 Encoding=UTF-8
 Exec=kcmshell kwindecoration
 Icon=kcmkwm
-Type=Application
+Type=Service
+ServiceTypes=KCModule
 DocPath=kcontrol/kwindecoration/index.html
 
-X-KDE-Library=kwindecoration
-X-KDE-FactoryName=kwindecoration
+X-KDE-Library=kcm_kwindecoration
+X-KDE-FactoryName=kcm_kwindecoration
+X-KDE-ParentApp=kcontrol
 
 Name=Window Decorations
 Name[fr]=Décoration des fenêtres
@@ -19,4 +21,3 @@ Comment[x-test]=xxConfigure the look and feel of window titlesxx
 Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 Keywords[fr]=kwin,fenêtre,gestionnaire,bordure,style,thème,apparence,ergonomie,disposition,bouton,poignée,bord,kwm,décoration
 Keywords[x-test]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx
-Categories=Qt;KDE;X-KDE-settings-looknfeel;

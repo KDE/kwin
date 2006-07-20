@@ -39,7 +39,7 @@ install(TARGETS kcm_kwinrules  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kwinrules.desktop  DESTINATION  ${XDG_APPS_DIR} )
+install( FILES kwinrules.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
 
 
 
