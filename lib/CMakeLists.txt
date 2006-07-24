@@ -22,7 +22,7 @@ install(TARGETS kdecorations  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install_files( /include FILES kdecoration.h kdecoration_p.h kdecoration_plugins_p.h          kdecorationfactory.h kcommondecoration.h )
+install( FILES kdecoration.h kdecoration_p.h kdecoration_plugins_p.h kdecorationfactory.h kcommondecoration.h DESTINATION ${INCLUDE_INSTALL_DIR})
 
 
 
