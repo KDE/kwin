@@ -4,17 +4,17 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 ########### next target ###############
 
-set(kwin3_laptop_PART_SRCS laptopclient.cpp )
+set(kwin3_laptop_PART_SRCS laptopclient.cpp)
 
 kde4_automoc(${kwin3_laptop_PART_SRCS})
 
 kde4_add_plugin(kwin3_laptop ${kwin3_laptop_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_laptop )
+kde4_install_libtool_file(${PLUGIN_INSTALL_DIR} kwin3_laptop)
 
-target_link_libraries(kwin3_laptop  ${KDE4_KDECORE_LIBS} kdecorations kdefx )
+target_link_libraries(kwin3_laptop ${KDE4_KDECORE_LIBS} ${KDE4_KDEFX_LIBS} kdecorations)
 
-install(TARGETS kwin3_laptop  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kwin3_laptop  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
