@@ -18,9 +18,6 @@ target_link_libraries(kwin_keramik_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY
 install(TARGETS kwin_keramik_config  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
-########### install files ###############
-
-install( FILES   DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
 
 

@@ -16,13 +16,6 @@ target_link_libraries(kwin_quartz_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY}
 install(TARGETS kwin_quartz_config  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
-########### install files ###############
-
-install( FILES   DESTINATION  ${DATA_INSTALL_DIR}/kwin/ )
-
-
-
-
 #original Makefile.am contents follow:
 
 #INCLUDES = $(all_includes)
