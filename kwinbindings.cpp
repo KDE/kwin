@@ -1,19 +1,19 @@
 #ifndef NOSLOTS
 # define DEF2( name, descr, key, fnSlot ) \
    a = new KAction( i18n(descr), actionCollection, name ); \
-   a->setShortcut(KShortcut(key)); \
+   a->setGlobalShortcut(KShortcut(key)); \
    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot))
 # define DEF( name, key, fnSlot ) \
    a = new KAction( i18n(name), actionCollection, name ); \
-   a->setShortcut(KShortcut(key)); \
+   a->setGlobalShortcut(KShortcut(key)); \
    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot))
 #else
 # define DEF2( name, descr, key, fnSlot ) \
    a = new KAction( i18n(descr), actionCollection, name ); \
-   a->setShortcut(KShortcut(key));
+   a->setGlobalShortcut(KShortcut(key));
 # define DEF( name, key, fnSlot ) \
    a = new KAction( i18n(name), actionCollection, name ); \
-   a->setShortcut(KShortcut(key));
+   a->setGlobalShortcut(KShortcut(key));
 #endif
 
 // some shortcuts have Tarzan-speech like names, they need extra normal human descriptions with DEF2()
