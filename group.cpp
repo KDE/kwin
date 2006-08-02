@@ -51,7 +51,7 @@ Group::Group( Window leader_P, Workspace* workspace_P )
         {
         leader_client = workspace_P->findClient( WindowMatchPredicate( leader_P ));
         unsigned long properties[ 2 ] = { 0, NET::WM2StartupId };
-        leader_info = new NETWinInfo( display(), leader_P, workspace()->rootWin(),
+        leader_info = new NETWinInfo( QX11Info::display(), leader_P, workspace()->rootWin(),
             properties, 2 );
         }
     workspace()->addGroup( this, Allowed );
@@ -260,12 +260,22 @@ bool Client::resourceMatch( const Client* c1, const Client* c2 )
 bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool active_hack )
     {
     bool same_app = false;
+
+    // tests that definitely mean they belong together
     if( c1 == c2 )
         same_app = true;
     else if( c1->isTransient() && c2->hasTransient( c1, true ))
         same_app = true; // c1 has c2 as mainwindow
     else if( c2->isTransient() && c1->hasTransient( c2, true ))
         same_app = true; // c2 has c1 as mainwindow
+    else if( c1->group() == c2->group())
+        same_app = true; // same group
+    else if( c1->wmClientLeader() == c2->wmClientLeader()
+        && c1->wmClientLeader() != c1->window() // if WM_CLIENT_LEADER is not set, it returns window(),
+        && c2->wmClientLeader() != c2->window()) // don't use in this test then
+        same_app = true; // same client leader
+
+    // tests that mean they most probably don't belong together
     else if( c1->pid() != c2->pid()
         || c1->wmClientMachine( false ) != c2->wmClientMachine( false ))
         ; // different processes
@@ -277,17 +287,12 @@ bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool a
         ; // different apps
     else if( !sameAppWindowRoleMatch( c1, c2, active_hack ))
         ; // "different" apps
-    else if( c1->wmClientLeader() == c2->wmClientLeader()
-        && c1->wmClientLeader() != c1->window() // if WM_CLIENT_LEADER is not set, it returns window(),
-        && c2->wmClientLeader() != c2->window()) // don't use in this test then
-        same_app = true; // same client leader
-    else if( c1->group() == c2->group())
-        same_app = true; // same group
     else if( c1->pid() == 0 || c2->pid() == 0 )
         ; // old apps that don't have _NET_WM_PID, consider them different
           // if they weren't found to match above
     else
         same_app = true; // looks like it's the same app
+
     return same_app;
     }
 
@@ -393,7 +398,7 @@ bool Client::sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool ac
 void Client::readTransient()
     {
     Window new_transient_for_id;
-    if( XGetTransientForHint( display(), window(), &new_transient_for_id ))
+    if( XGetTransientForHint( QX11Info::display(), window(), &new_transient_for_id ))
         {
         original_transient_for_id = new_transient_for_id;
         new_transient_for_id = verifyTransientFor( new_transient_for_id, true );
@@ -596,7 +601,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         Window root_return, parent_return;
         Window* wins = NULL;
         unsigned int nwins;
-        int r = XQueryTree(display(), new_transient_for, &root_return, &parent_return, &wins, &nwins);
+        int r = XQueryTree(QX11Info::display(), new_transient_for, &root_return, &parent_return, &wins, &nwins);
         if ( wins )
             XFree((void *) wins);
         if ( r == 0)
@@ -637,7 +642,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         new_transient_for = workspace()->rootWin();
         }
     if( new_property_value != original_transient_for_id )
-        XSetTransientForHint( display(), window(), new_property_value );
+        XSetTransientForHint( QX11Info::display(), window(), new_property_value );
     return new_transient_for;
     }
 
