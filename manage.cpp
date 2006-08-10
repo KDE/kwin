@@ -325,8 +325,6 @@ bool Client::manage( Window w, bool isMapped )
         XShapeSelectInput( display(), window(), ShapeNotifyMask );
     if ( (is_shape = hasShape( window())) ) 
         updateShape();
-//    else
-//	setShapable(false);
 	
     //CT extra check for stupid jdk 1.3.1. But should make sense in general
     // if client has initial state set to Iconic and is transient with a parent
