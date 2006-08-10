@@ -30,7 +30,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
-
 #include <stdio.h>
 
 #include "atoms.h"
@@ -43,54 +42,41 @@ namespace KWinInternal
 
 #ifndef KCMRULES
 
-bool Extensions::has_shape = 0;
-int Extensions::shape_event_base = 0;
-bool Extensions::has_damage = 0;
-int Extensions::damage_event_base = 0;
-bool Extensions::has_composite = 0;
-bool Extensions::has_fixes = 0;
+// used to store the return values of
+// XShapeQueryExtension.
+// Necessary since shaped window are an extension to X
+int Shape::kwin_shape_version = 0;
+int Shape::kwin_shape_event = 0;
 
-void Extensions::init()
+// does the window w  need a shape combine mask around it?
+bool Shape::hasShape( WId w)
     {
+    int xws, yws, xbs, ybs;
+    unsigned int wws, hws, wbs, hbs;
+    int boundingShaped = 0, clipShaped = 0;
+    if (!available())
+        return false;
+    XShapeQueryExtents(QX11Info::display(), w,
+                       &boundingShaped, &xws, &yws, &wws, &hws,
+                       &clipShaped, &xbs, &ybs, &wbs, &hbs);
+    return boundingShaped != 0;
+    }
+
+int Shape::shapeEvent()
+    {
+    return kwin_shape_event;
+    }
+
+void Shape::init()
+    {
+    kwin_shape_version = 0;
     int dummy;
-    has_shape = XShapeQueryExtension( display(), &shape_event_base, &dummy);
-#ifdef HAVE_XDAMAGE
-    has_damage = XDamageQueryExtension( display(), &damage_event_base, &dummy );
-#else
-    has_damage = false;
-#endif
-#ifdef HAVE_XCOMPOSITE
-    has_composite = XCompositeQueryExtension( display(), &dummy, &dummy );
-    if( has_composite )
-        {
-        int major = 0;
-        int minor = 2;
-        XCompositeQueryVersion( display(), &major, &minor );
-        if( major == 0 && minor < 2 )
-            has_composite = false;
-        }
-#else
-    has_composite = false;
-#endif
-#ifdef HAVE_XFIXES
-    has_fixes = XFixesQueryExtension( display(), &dummy, &dummy );
-#else
-    has_fixes = false;
-#endif
-    }
-
-int Extensions::shapeNotifyEvent()
-    {
-    return shape_event_base + ShapeNotify;
-    }
-
-int Extensions::damageNotifyEvent()
-    {
-#ifdef HAVE_XDAMAGE
-    return damage_event_base + XDamageNotify;
-#else
-    return 0;
-#endif
+    if( !XShapeQueryExtension( QX11Info::display(), &kwin_shape_event, &dummy ))
+        return;
+    int major, minor;
+    if( !XShapeQueryVersion( QX11Info::display(), &major, &minor ))
+        return;
+    kwin_shape_version = major * 16 + minor;
     }
 
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
@@ -101,7 +87,7 @@ void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
     unsigned long length, after;
     unsigned char* data;
     MwmHints* hints = 0;
-    if ( XGetWindowProperty( display(), w, atoms->motif_wm_hints, 0, 5,
+    if ( XGetWindowProperty( QX11Info::display(), w, atoms->motif_wm_hints, 0, 5,
                              false, atoms->motif_wm_hints, &type, &format,
                              &length, &after, &data ) == Success ) 
         {
@@ -154,10 +140,10 @@ KWinSelectionOwner::KWinSelectionOwner( int screen_P )
 Atom KWinSelectionOwner::make_selection_atom( int screen_P )
     {
     if( screen_P < 0 )
-        screen_P = DefaultScreen( display());
+        screen_P = DefaultScreen( QX11Info::display());
     char tmp[ 30 ];
     sprintf( tmp, "WM_S%d", screen_P );
-    return XInternAtom( display(), tmp, False );
+    return XInternAtom( QX11Info::display(), tmp, False );
     }
 
 void KWinSelectionOwner::getAtoms()
@@ -168,7 +154,7 @@ void KWinSelectionOwner::getAtoms()
         Atom atoms[ 1 ];
         const char* const names[] =
             { "VERSION" };
-        XInternAtoms( display(), const_cast< char** >( names ), 1, False, atoms );
+        XInternAtoms( QX11Info::display(), const_cast< char** >( names ), 1, False, atoms );
         xa_version = atoms[ 0 ];
         }
     }
@@ -178,7 +164,7 @@ void KWinSelectionOwner::replyTargets( Atom property_P, Window requestor_P )
     KSelectionOwner::replyTargets( property_P, requestor_P );
     Atom atoms[ 1 ] = { xa_version };
     // PropModeAppend !
-    XChangeProperty( display(), requestor_P, property_P, XA_ATOM, 32, PropModeAppend,
+    XChangeProperty( QX11Info::display(), requestor_P, property_P, XA_ATOM, 32, PropModeAppend,
         reinterpret_cast< unsigned char* >( atoms ), 1 );
     }
 
@@ -187,7 +173,7 @@ bool KWinSelectionOwner::genericReply( Atom target_P, Atom property_P, Window re
     if( target_P == xa_version )
         {
         long version[] = { 2, 0 };
-        XChangeProperty( display(), requestor_P, property_P, XA_INTEGER, 32,
+        XChangeProperty( QX11Info::display(), requestor_P, property_P, XA_INTEGER, 32,
             PropModeReplace, reinterpret_cast< unsigned char* >( &version ), 2 );
         }
     else
@@ -207,7 +193,7 @@ QByteArray getStringProperty(WId w, Atom prop, char separator)
     unsigned char *data = 0;
     QByteArray result = "";
     KXErrorHandler handler; // ignore errors
-    status = XGetWindowProperty( display(), w, prop, 0, 10000,
+    status = XGetWindowProperty( QX11Info::display(), w, prop, 0, 10000,
                                  false, XA_STRING, &type, &format,
                                  &nitems, &extra, &data );
     if ( status == Success) 
@@ -262,8 +248,8 @@ static Bool update_x_time_predicate( Display*, XEvent* event, XPointer )
 }
 
 /*
- Updates xTime(). This used to simply fetch current timestamp from the server,
- but that can cause xTime() to be newer than timestamp of events that are
+ Updates QX11Info::appTime(). This used to simply fetch current timestamp from the server,
+ but that can cause QX11Info::appTime() to be newer than timestamp of events that are
  still in our events queue, thus e.g. making XSetInputFocus() caused by such
  event to be ignored. Therefore events queue is searched for first
  event with timestamp, and extra PropertyNotify is generated in order to make
@@ -275,20 +261,20 @@ void updateXTime()
     if ( !w )
         w = new QWidget;
     long data = 1;
-    XChangeProperty(display(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
+    XChangeProperty(QX11Info::display(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
                     PropModeAppend, (unsigned char*) &data, 1);
     next_x_time = CurrentTime;
     XEvent dummy;
-    XCheckIfEvent( display(), &dummy, update_x_time_predicate, NULL );
+    XCheckIfEvent( QX11Info::display(), &dummy, update_x_time_predicate, NULL );
     if( next_x_time == CurrentTime )
         {
-        XSync( display(), False );
-        XCheckIfEvent( display(), &dummy, update_x_time_predicate, NULL );
+        XSync( QX11Info::display(), False );
+        XCheckIfEvent( QX11Info::display(), &dummy, update_x_time_predicate, NULL );
         }
     assert( next_x_time != CurrentTime );
     QX11Info::setAppTime( next_x_time );
     XEvent ev; // remove the PropertyNotify event from the events queue
-    XWindowEvent( display(), w->winId(), PropertyChangeMask, &ev );
+    XWindowEvent( QX11Info::display(), w->winId(), PropertyChangeMask, &ev );
     }
 
 static int server_grab_count = 0;
@@ -296,7 +282,7 @@ static int server_grab_count = 0;
 void grabXServer()
     {
     if( ++server_grab_count == 1 )
-        XGrabServer( display());
+        XGrabServer( QX11Info::display());
     }
 
 void ungrabXServer()
@@ -304,8 +290,8 @@ void ungrabXServer()
     assert( server_grab_count > 0 );
     if( --server_grab_count == 0 )
         {
-        XUngrabServer( display());
-        XFlush( display());
+        XUngrabServer( QX11Info::display());
+        XFlush( QX11Info::display());
         Notify::sendPendingEvents();
         }
     }
@@ -315,20 +301,6 @@ bool grabbedXServer()
     return server_grab_count > 0;
     }
 
-kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
-    {       
-    if( r.rr == None )
-        return stream << "EMPTY";
-    int num;
-    XRectangle* rects = XFixesFetchRegion( display(), r.rr, &num );
-    if( rects == NULL || num == 0 )
-        return stream << "EMPTY";
-    for( int i = 0;
-         i < num;
-         ++i )
-       stream << "[" << rects[ i ].x << "+" << rects[ i ].y << " " << rects[ i ].width << "x" << rects[ i ].height << "]";
-    return stream;
-    }
 #endif
 
 bool isLocalMachine( const QByteArray& host )
@@ -360,7 +332,7 @@ ShortcutDialog::ShortcutDialog( const KShortcut& cut )
     // make it a popup, so that it has the grab
     XSetWindowAttributes attrs;
     attrs.override_redirect = True;
-    XChangeWindowAttributes( display(), winId(), CWOverrideRedirect, &attrs );
+    XChangeWindowAttributes( QX11Info::display(), winId(), CWOverrideRedirect, &attrs );
     setWindowFlags( Qt::Popup );
     }
 
@@ -395,6 +367,8 @@ void ShortcutDialog::accept()
     KShortcutDialog::accept();
     }
 #endif
+
+
 } // namespace
 
 #ifndef KCMRULES
