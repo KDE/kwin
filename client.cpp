@@ -145,9 +145,6 @@ Client::Client( Workspace *ws )
     
     frame_geometry = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
     client_size = QSize( 100, 100 );
-    custom_opacity = false;
-    rule_opacity_active = 0;; //translucency rules
-    rule_opacity_inactive = 0; //dito.
 
     // SELI initialize xsizehints??
     }
@@ -182,7 +179,6 @@ void Client::releaseWindow( bool on_shutdown )
     deleting = true;
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
-    if (!custom_opacity) setOpacity(false);
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
@@ -192,7 +188,7 @@ void Client::releaseWindow( bool on_shutdown )
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
         workspace()->clientHidden( this );
-    XUnmapWindow( QX11Info::display(), frameId()); // destroying decoration would cause ugly visual effect
+    XUnmapWindow( display(), frameId()); // destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
     if( !on_shutdown )
@@ -204,27 +200,27 @@ void Client::releaseWindow( bool on_shutdown )
         desk = 0;
         info->setState( 0, info->state()); // reset all state flags
         }
-    XDeleteProperty( QX11Info::display(), client, atoms->kde_net_wm_user_creation_time);
-    XDeleteProperty( QX11Info::display(), client, atoms->net_frame_extents );
-    XDeleteProperty( QX11Info::display(), client, atoms->kde_net_wm_frame_strut );
-    XReparentWindow( QX11Info::display(), client, workspace()->rootWin(), x(), y());
-    XRemoveFromSaveSet( QX11Info::display(), client );
-    XSelectInput( QX11Info::display(), client, NoEventMask );
+    XDeleteProperty( display(), client, atoms->kde_net_wm_user_creation_time);
+    XDeleteProperty( display(), client, atoms->net_frame_extents );
+    XDeleteProperty( display(), client, atoms->kde_net_wm_frame_strut );
+    XReparentWindow( display(), client, workspace()->rootWin(), x(), y());
+    XRemoveFromSaveSet( display(), client );
+    XSelectInput( display(), client, NoEventMask );
     if( on_shutdown )
         { // map the window, so it can be found after another WM is started
-        XMapWindow( QX11Info::display(), client );
+        XMapWindow( display(), client );
 	// TODO preserve minimized, shaded etc. state?
         }
     else
         {
         // Make sure it's not mapped if the app unmapped it (#65279). The app
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
-        XUnmapWindow( QX11Info::display(), client ); 
+        XUnmapWindow( display(), client ); 
         }
     client = None;
-    XDestroyWindow( QX11Info::display(), wrapper );
+    XDestroyWindow( display(), wrapper );
     wrapper = None;
-    XDestroyWindow( QX11Info::display(), frame );
+    XDestroyWindow( display(), frame );
     frame = None;
     --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
@@ -249,9 +245,9 @@ void Client::destroyClient()
     cleanGrouping();
     workspace()->removeClient( this, Allowed );
     client = None; // invalidate
-    XDestroyWindow( QX11Info::display(), wrapper );
+    XDestroyWindow( display(), wrapper );
     wrapper = None;
-    XDestroyWindow( QX11Info::display(), frame );
+    XDestroyWindow( display(), frame );
     frame = None;
     --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
@@ -272,12 +268,9 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         // TODO check decoration's minimum size?
         decoration->init();
         decoration->widget()->installEventFilter( this );
-        XReparentWindow( QX11Info::display(), decoration->widget()->winId(), frameId(), 0, 0 );
+        XReparentWindow( display(), decoration->widget()->winId(), frameId(), 0, 0 );
         decoration->widget()->lower();
         decoration->borders( border_left, border_right, border_top, border_bottom );
-        options->onlyDecoTranslucent ?
-            setDecoHashProperty(border_top, border_right, border_bottom, border_left):
-            unsetDecoHashProperty();
         int save_workarea_diff_x = workarea_diff_x;
         int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( false ));
@@ -333,9 +326,6 @@ void Client::checkBorderSizes()
         border_right != new_right ||
         border_top != new_top ||
         border_bottom != new_bottom)
-    options->onlyDecoTranslucent ?
-       setDecoHashProperty(new_top, new_right, new_bottom, new_left):
-       unsetDecoHashProperty();
     move( calculateGravitation( false ));
     plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
     checkWorkspacePosition();
@@ -372,30 +362,6 @@ void Client::detectNoBorder()
     // a window type otherwise (SUPPORTED_WINDOW_TYPES_MASK doesn't include it)
     if( info->windowType( SUPPORTED_WINDOW_TYPES_MASK | NET::OverrideMask ) == NET::Override )
         noborder = true;
-    }
-
-void Client::detectShapable()
-    {
-    if( Shape::hasShape( window()))
-        return;
-    switch( windowType())
-        {
-        case NET::Desktop :
-        case NET::Dock :
-        case NET::TopMenu :
-        case NET::Splash :
-          break;
-        case NET::Unknown :
-        case NET::Normal :
-        case NET::Toolbar :
-        case NET::Menu :
-        case NET::Dialog :
-        case NET::Utility :
-            setShapable(false);
-          break;
-        default:
-            assert( false );
-        }
     }
 
 void Client::updateFrameExtents()
@@ -463,25 +429,25 @@ void Client::updateShape()
         }
     if( shape())
         {
-        XShapeCombineShape(QX11Info::display(), frameId(), ShapeBounding,
+        XShapeCombineShape(display(), frameId(), ShapeBounding,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSet);
         }
     else
         {
-        XShapeCombineMask( QX11Info::display(), frameId(), ShapeBounding, 0, 0,
+        XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
                            None, ShapeSet);
         }
     if( Shape::major() > 1 || Shape::minor() >= 1 ) // has input shape support
         { // there appears to be no way to find out if a window has input
           // shape set or not, so always set propagate the input shape
           // (it's the same like the bounding shape by default)
-        XShapeCombineMask( QX11Info::display(), frameId(), ShapeInput, 0, 0,
+        XShapeCombineMask( display(), frameId(), ShapeInput, 0, 0,
                            None, ShapeSet );
-        XShapeCombineShape( QX11Info::display(), frameId(), ShapeInput,
+        XShapeCombineShape( display(), frameId(), ShapeInput,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSubtract );
-        XShapeCombineShape( QX11Info::display(), frameId(), ShapeInput,
+        XShapeCombineShape( display(), frameId(), ShapeInput,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeInput, ShapeUnion );
         }
@@ -491,10 +457,10 @@ void Client::setMask( const QRegion& reg, int mode )
     {
     _mask = reg;
     if( reg.isEmpty())
-        XShapeCombineMask( QX11Info::display(), frameId(), ShapeBounding, 0, 0,
+        XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
             None, ShapeSet );
     else if( mode == X::Unsorted )
-        XShapeCombineRegion( QX11Info::display(), frameId(), ShapeBounding, 0, 0,
+        XShapeCombineRegion( display(), frameId(), ShapeBounding, 0, 0,
             reg.handle(), ShapeSet );
     else
         {
@@ -509,7 +475,7 @@ void Client::setMask( const QRegion& reg, int mode )
             xrects[ i ].width = rects[ i ].width();
             xrects[ i ].height = rects[ i ].height();
             }
-        XShapeCombineRectangles( QX11Info::display(), frameId(), ShapeBounding, 0, 0,
+        XShapeCombineRectangles( display(), frameId(), ShapeBounding, 0, 0,
             xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
@@ -522,12 +488,6 @@ QRegion Client::mask() const
     return _mask;
     }
     
-void Client::setShapable(bool b)
-    {
-    long tmp = b?1:0;
-    XChangeProperty(QX11Info::display(), frameId(), atoms->net_wm_window_shapable, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &tmp, 1L);
-    }
-
 void Client::hideClient( bool hide )
     {
     if( hidden == hide )
@@ -679,7 +639,7 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
         if (area2 != area)
             {
             pm = animationPixmap( area.width() );
-            pm2 = QPixmap::grabWindow( QX11Info::appRootWindow(), area.x(), area.y(), area.width(), area.height() );
+            pm2 = QPixmap::grabWindow( rootWindow(), area.x(), area.y(), area.width(), area.height() );
             p.drawPixmap( area.x(), area.y(), pm );
             if ( need_to_clear ) 
                 {
@@ -688,8 +648,8 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
                 }
             area2 = area;
             }
-        XFlush(QX11Info::display());
-        XSync( QX11Info::display(), false );
+        XFlush(display());
+        XSync( display(), false );
         diff = t.elapsed();
         if (diff > step)
             diff = step;
@@ -777,16 +737,16 @@ void Client::setShade( ShadeMode mode )
         { // shade_mode == ShadeNormal
         // we're about to shade, texx xcompmgr to prepare
         long _shade = 1;
-        XChangeProperty(QX11Info::display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);
+        XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);
         // shade
         int h = height();
         shade_geometry_change = true;
         QSize s( sizeForClientSize( QSize( clientSize())));
         s.setHeight( border_top + border_bottom );
-        XSelectInput( QX11Info::display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-        XUnmapWindow( QX11Info::display(), wrapper );
-        XUnmapWindow( QX11Info::display(), client );
-        XSelectInput( QX11Info::display(), wrapper, ClientWinMask | SubstructureNotifyMask );
+        XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
+        XUnmapWindow( display(), wrapper );
+        XUnmapWindow( display(), client );
+        XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
         //as we hid the unmap event, xcompmgr didn't recognize the client wid has vanished, so we'll extra inform it        
         //done xcompmgr workaround
 // FRAME       repaint( false );
@@ -796,7 +756,7 @@ void Client::setShade( ShadeMode mode )
         do 
             {
             h -= step;
-            XResizeWindow( QX11Info::display(), frameId(), s.width(), h );
+            XResizeWindow( display(), frameId(), s.width(), h );
             resizeDecoration( QSize( s.width(), h ));
             QApplication::syncX();
             } while ( h > s.height() + step );
@@ -813,7 +773,7 @@ void Client::setShade( ShadeMode mode )
             }
         // tell xcompmgr shade's done
         _shade = 2;
-        XChangeProperty(QX11Info::display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);    
+        XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);    
         }
     else 
         {
@@ -826,7 +786,7 @@ void Client::setShade( ShadeMode mode )
         do 
             {
             h += step;
-            XResizeWindow( QX11Info::display(), frameId(), s.width(), h );
+            XResizeWindow( display(), frameId(), s.width(), h );
             resizeDecoration( QSize( s.width(), h ));
             // assume a border
             // we do not have time to wait for X to send us paint events
@@ -839,9 +799,9 @@ void Client::setShade( ShadeMode mode )
         plainResize( s );
         if( shade_mode == ShadeHover || shade_mode == ShadeActivated )
             setActive( true );
-        XMapWindow( QX11Info::display(), wrapperId());
-        XMapWindow( QX11Info::display(), window());
-        XDeleteProperty (QX11Info::display(), client, atoms->net_wm_window_shade);
+        XMapWindow( display(), wrapperId());
+        XMapWindow( display(), window());
+        XDeleteProperty (display(), client, atoms->net_wm_window_shade);
         if ( isActive() )
             workspace()->requestFocus( this );
         }
@@ -940,7 +900,7 @@ void Client::setMappingState(int s)
     mapping_state = s;
     if( mapping_state == WithdrawnState )
         {
-        XDeleteProperty( QX11Info::display(), window(), atoms->wm_state );
+        XDeleteProperty( display(), window(), atoms->wm_state );
         return;
         }
     assert( s == NormalState || s == IconicState );
@@ -948,7 +908,7 @@ void Client::setMappingState(int s)
     unsigned long data[2];
     data[0] = (unsigned long) s;
     data[1] = (unsigned long) None;
-    XChangeProperty(QX11Info::display(), window(), atoms->wm_state, atoms->wm_state, 32,
+    XChangeProperty(display(), window(), atoms->wm_state, atoms->wm_state, 32,
         PropModeReplace, (unsigned char *)data, 2);
 
     if( was_unmanaged ) // manage() did postpone_geometry_updates = 1, now it's ok to finally set the geometry
@@ -963,11 +923,11 @@ void Client::rawShow()
     {
     if( decoration != NULL )
         decoration->widget()->show(); // not really necessary, but let it know the state
-    XMapWindow( QX11Info::display(), frame );
+    XMapWindow( display(), frame );
     if( !isShade())
         {
-        XMapWindow( QX11Info::display(), wrapper );
-        XMapWindow( QX11Info::display(), client );
+        XMapWindow( display(), wrapper );
+        XMapWindow( display(), client );
         }
     }
 
@@ -984,11 +944,11 @@ void Client::rawHide()
 // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
 // will be missed is also very minimal, so I don't think it's needed to grab the server
 // here.
-    XSelectInput( QX11Info::display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-    XUnmapWindow( QX11Info::display(), frame );
-    XUnmapWindow( QX11Info::display(), wrapper );
-    XUnmapWindow( QX11Info::display(), client );
-    XSelectInput( QX11Info::display(), wrapper, ClientWinMask | SubstructureNotifyMask );
+    XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
+    XUnmapWindow( display(), frame );
+    XUnmapWindow( display(), wrapper );
+    XUnmapWindow( display(), client );
+    XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
     if( decoration != NULL )
         decoration->widget()->hide(); // not really necessary, but let it know the state
     workspace()->clientHidden( this );
@@ -1005,14 +965,14 @@ void Client::sendClientMessage(Window w, Atom a, Atom protocol, long data1, long
     ev.xclient.message_type = a;
     ev.xclient.format = 32;
     ev.xclient.data.l[0] = protocol;
-    ev.xclient.data.l[1] = QX11Info::appTime();
+    ev.xclient.data.l[1] = xTime();
     ev.xclient.data.l[2] = data1;
     ev.xclient.data.l[3] = data2;
     ev.xclient.data.l[4] = data3;
     mask = 0L;
-    if (w == QX11Info::appRootWindow())
+    if (w == rootWindow())
       mask = SubstructureRedirectMask;        /* magic! */
-    XSendEvent(QX11Info::display(), w, False, mask, &ev);
+    XSendEvent(display(), w, False, mask, &ev);
     }
 
 /*
@@ -1064,7 +1024,7 @@ void Client::killWindow()
         Notify::raise( Notify::Delete );
     killProcess( false );
     // always kill this client at the server
-    XKillClient(QX11Info::display(), window() );
+    XKillClient(display(), window() );
     destroyClient();
     }
 
@@ -1083,7 +1043,7 @@ void Client::pingWindow()
     connect( ping_timer, SIGNAL( timeout()), SLOT( pingTimeout()));
     ping_timer->setSingleShot( true );
     ping_timer->start( options->killPingTimeout );
-    ping_timestamp = QX11Info::appTime();
+    ping_timestamp = xTime();
     workspace()->sendPingToWindow( window(), ping_timestamp );
     }
 
@@ -1250,15 +1210,15 @@ void Client::takeActivity( int flags, bool handled, allowed_t )
 #ifndef NDEBUG
     static Time previous_activity_timestamp;
     static Client* previous_client;
-    if( previous_activity_timestamp == QX11Info::appTime() && previous_client != this )
+    if( previous_activity_timestamp == xTime() && previous_client != this )
         {
         kDebug( 1212 ) << "Repeated use of the same X timestamp for activity" << endl;
         kDebug( 1212 ) << kBacktrace() << endl;
         }
-    previous_activity_timestamp = QX11Info::appTime();
+    previous_activity_timestamp = xTime();
     previous_client = this;
 #endif
-    workspace()->sendTakeActivity( this, QX11Info::appTime(), flags );
+    workspace()->sendTakeActivity( this, xTime(), flags );
     }
 
 // performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS
@@ -1267,17 +1227,17 @@ void Client::takeFocus( allowed_t )
 #ifndef NDEBUG
     static Time previous_focus_timestamp;
     static Client* previous_client;
-    if( previous_focus_timestamp == QX11Info::appTime() && previous_client != this )
+    if( previous_focus_timestamp == xTime() && previous_client != this )
         {
         kDebug( 1212 ) << "Repeated use of the same X timestamp for focus" << endl;
         kDebug( 1212 ) << kBacktrace() << endl;
         }
-    previous_focus_timestamp = QX11Info::appTime();
+    previous_focus_timestamp = xTime();
     previous_client = this;
 #endif
     if ( rules()->checkAcceptFocus( input ))
         {
-        XSetInputFocus( QX11Info::display(), window(), RevertToPointerRoot, QX11Info::appTime() );
+        XSetInputFocus( display(), window(), RevertToPointerRoot, xTime() );
         }
     if ( Ptakefocus )
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
@@ -1410,7 +1370,7 @@ QString Client::caption( bool full ) const
 
 void Client::getWMHints()
     {
-    XWMHints *hints = XGetWMHints(QX11Info::display(), window() );
+    XWMHints *hints = XGetWMHints(display(), window() );
     input = true;
     window_group = None;
     urgency = false;
@@ -1499,7 +1459,7 @@ void Client::getWindowProtocols()
     Pcontexthelp = 0;
     Pping = 0;
 
-    if (XGetWMProtocols(QX11Info::display(), window(), &p, &n))
+    if (XGetWMProtocols(display(), window(), &p, &n))
         {
         for (i = 0; i < n; i++)
             if (p[i] == atoms->wm_delete_window)
@@ -1558,7 +1518,7 @@ Window Client::staticWmClientLeader(WId w)
     unsigned char *data = 0;
     Window result = w;
     XErrorHandler oldHandler = XSetErrorHandler(nullErrorHandler);
-    status = XGetWindowProperty( QX11Info::display(), w, atoms->wm_client_leader, 0, 10000,
+    status = XGetWindowProperty( display(), w, atoms->wm_client_leader, 0, 10000,
                                  false, XA_WINDOW, &type, &format,
                                  &nitems, &extra, &data );
     XSetErrorHandler(oldHandler);
@@ -1775,7 +1735,7 @@ void Client::setCursor( const QCursor& c )
     cursor = c;
     if( decoration != NULL )
         decoration->widget()->setCursor( cursor );
-    XDefineCursor( QX11Info::display(), frameId(), cursor.handle());
+    XDefineCursor( display(), frameId(), cursor.handle());
     }
 
 Client::Position Client::mousePosition( const QPoint& p ) const
@@ -1826,272 +1786,6 @@ void Client::cancelAutoRaise()
     autoRaiseTimer = 0;
     }
 
-void Client::setOpacity(bool translucent, uint opacity)
-    {
-    if (isDesktop())
-        return; // xcompmgr does not like non solid desktops and the user could set it accidently by mouse scrolling
-//     qWarning("setting opacity for %d",QX11Info::display());
-    //rule out activated translulcency with 100% opacity
-    if (!translucent || opacity ==  0xFFFFFFFF)
-        {
-        opacity_ = 0xFFFFFFFF;
-        XDeleteProperty (QX11Info::display(), frameId(), atoms->net_wm_window_opacity);
-        XDeleteProperty (QX11Info::display(), window(), atoms->net_wm_window_opacity); // ??? frameId() is necessary for visible changes, window() is the winId() that would be set by apps - we set both to be sure the app knows what's currently displayd
-        }
-    else{
-        if(opacity == opacity_)
-            return;
-        opacity_ = opacity;
-        long data = opacity; // 32bit XChangeProperty needs long
-        XChangeProperty(QX11Info::display(), frameId(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
-        XChangeProperty(QX11Info::display(), window(), atoms->net_wm_window_opacity, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
-        }
-    }
-    
-void Client::setShadowSize(uint shadowSize)
-    {
-    // ignoring all individual settings - if we control a window, we control it's shadow
-    // TODO somehow handle individual settings for docks (besides custom sizes)
-    long data = shadowSize;
-    XChangeProperty(QX11Info::display(), frameId(), atoms->net_wm_window_shadow, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
-    }
-        
-void Client::updateOpacity()
-// extra syncscreen flag allows to avoid double syncs when active state changes (as it will usually change for two windows)
-    {
-    if (!(isNormalWindow() || isDialog() || isUtility() )|| custom_opacity)
-        return;
-    if (isActive())
-        {
-        if( ruleOpacityActive() )
-            setOpacity(rule_opacity_active < 0xFFFFFFFF, rule_opacity_active);
-        else
-            setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
-        if (isBMP())
-        // beep-media-player, only undecorated windows (gtk2 xmms, xmms doesn't work with compmgr at all - s.e.p. :P )
-            {
-            ClientList tmpGroupMembers = group()->members();
-            ClientList activeGroupMembers;
-            activeGroupMembers.append(this);
-            tmpGroupMembers.removeAll(this);
-            ClientList::Iterator it = tmpGroupMembers.begin();
-            while (it != tmpGroupMembers.end())
-            // search for next attached and not activated client and repeat if found
-                {
-                if ((*it) != this && (*it)->isBMP())
-                // potential "to activate" client found
-                    {
-//                     qWarning("client found");
-                    if ((*it)->touches(this)) // first test, if the new client touches the just activated one
-                        {
-//                         qWarning("found client touches me");
-                        if( ruleOpacityActive() )
-                            (*it)->setOpacity(rule_opacity_active < 0xFFFFFFFF, rule_opacity_active);
-                        else
-                            (*it)->setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
-//                         qWarning("activated, search restarted (1)");
-                        (*it)->setShadowSize(options->activeWindowShadowSize);
-                        activeGroupMembers.append(*it);
-                        tmpGroupMembers.erase(it);
-                        it = tmpGroupMembers.begin(); // restart, search next client
-                        continue;
-                        }
-                    else
-                        { // pot. client does not touch c, so we have to search if it touches some other activated client
-                        bool found = false;
-                        for( ClientList::ConstIterator it2 = activeGroupMembers.begin(); it2 != activeGroupMembers.end(); it2++ )
-                            {
-                            if ((*it2) != this && (*it2) != (*it) && (*it)->touches(*it2))
-                                {
-//                                 qWarning("found client touches other active client");
-                                if( ruleOpacityActive() )
-                                    (*it)->setOpacity(rule_opacity_active < 0xFFFFFFFF, rule_opacity_active);
-                                else
-                                    (*it)->setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
-                                (*it)->setShadowSize(options->activeWindowShadowSize);
-                                activeGroupMembers.append(*it);
-                                tmpGroupMembers.erase(it);
-                                it = tmpGroupMembers.begin(); // reset potential client search
-                                found = true;
-//                                 qWarning("activated, search restarted (2)");
-                                break; // skip this loop
-                                }
-                            }
-                        if (found) continue;
-                        }
-                    }
-                    it++;
-                }
-            }
-        else if (isNormalWindow())
-        // activate dependent minor windows as well
-            {
-            for( ClientList::ConstIterator it = group()->members().begin(); it != group()->members().end(); it++ )
-                if ((*it)->isDialog() || (*it)->isUtility())
-                    if( (*it)->ruleOpacityActive() )
-                        (*it)->setOpacity((*it)->ruleOpacityActive() < 0xFFFFFFFF, (*it)->ruleOpacityActive());
-                    else
-                        (*it)->setOpacity(options->translucentActiveWindows, options->activeWindowOpacity);
-            }
-        }
-    else
-        {
-        if( ruleOpacityInactive() )
-            setOpacity(rule_opacity_inactive < 0xFFFFFFFF, rule_opacity_inactive);
-        else
-            setOpacity(options->translucentInactiveWindows && !(keepAbove() && options->keepAboveAsActive),
-                    options->inactiveWindowOpacity);
-        // deactivate dependent minor windows as well
-        if (isBMP())
-        // beep-media-player, only undecorated windows (gtk2 xmms, xmms doesn't work with compmgr at all - s.e.p. :P )
-            {
-            ClientList tmpGroupMembers = group()->members();
-            ClientList inactiveGroupMembers;
-            inactiveGroupMembers.append(this);
-            tmpGroupMembers.removeAll(this);
-            ClientList::Iterator it = tmpGroupMembers.begin();
-            while ( it != tmpGroupMembers.end() )
-            // search for next attached and not activated client and repeat if found
-                {
-                if ((*it) != this && (*it)->isBMP())
-                // potential "to activate" client found
-                    {
-//                     qWarning("client found");
-                    if ((*it)->touches(this)) // first test, if the new client touches the just activated one
-                        {
-//                         qWarning("found client touches me");
-                        if( (*it)->ruleOpacityInactive() )
-                            (*it)->setOpacity((*it)->ruleOpacityInactive() < 0xFFFFFFFF, (*it)->ruleOpacityInactive());
-                        else
-                            (*it)->setOpacity(options->translucentInactiveWindows && !((*it)->keepAbove() && options->keepAboveAsActive), options->inactiveWindowOpacity);
-                        (*it)->setShadowSize(options->inactiveWindowShadowSize);
-//                         qWarning("deactivated, search restarted (1)");
-                        inactiveGroupMembers.append(*it);
-                        tmpGroupMembers.erase(it);
-                        it = tmpGroupMembers.begin(); // restart, search next client
-                        continue;
-                        }
-                    else // pot. client does not touch c, so we have to search if it touches some other activated client
-                        {
-                        bool found = false;
-                        for( ClientList::ConstIterator it2 = inactiveGroupMembers.begin(); it2 != inactiveGroupMembers.end(); it2++ )
-                            {
-                            if ((*it2) != this && (*it2) != (*it) && (*it)->touches(*it2))
-                                {
-//                                 qWarning("found client touches other inactive client");
-                                if( (*it)->ruleOpacityInactive() )
-                                    (*it)->setOpacity((*it)->ruleOpacityInactive() < 0xFFFFFFFF, (*it)->ruleOpacityInactive());
-                                else
-                                    (*it)->setOpacity(options->translucentInactiveWindows && !((*it)->keepAbove() && options->keepAboveAsActive), options->inactiveWindowOpacity);
-                                (*it)->setShadowSize(options->inactiveWindowShadowSize);
-//                                 qWarning("deactivated, search restarted (2)");
-                                inactiveGroupMembers.append(*it);
-                                tmpGroupMembers.erase(it);
-                                it = tmpGroupMembers.begin(); // reset potential client search
-                                found = true;
-                                break; // skip this loop
-                                }
-                            }
-                            if (found) continue;
-                        }
-                    }
-                    it++;
-                }
-            }
-        else if (isNormalWindow())
-            {
-            for( ClientList::ConstIterator it = group()->members().begin(); it != group()->members().end(); it++ )
-                if ((*it)->isUtility()) //don't deactivate dialogs...
-                    if( (*it)->ruleOpacityInactive() )
-                        (*it)->setOpacity((*it)->ruleOpacityInactive() < 0xFFFFFFFF, (*it)->ruleOpacityInactive());
-                    else
-                        (*it)->setOpacity(options->translucentInactiveWindows && !((*it)->keepAbove() && options->keepAboveAsActive), options->inactiveWindowOpacity);
-            }
-        }
-    }
-    
-void Client::updateShadowSize()
-// extra syncscreen flag allows to avoid double syncs when active state changes (as it will usually change for two windows)
-    {
-    if (!(isNormalWindow() || isDialog() || isUtility() ))
-        return;
-    if (isActive())
-        setShadowSize(options->activeWindowShadowSize);
-    else
-        setShadowSize(options->inactiveWindowShadowSize);
-    }
-
-uint Client::ruleOpacityInactive()
-    {
-    return rule_opacity_inactive;// != 0 ;
-    }
-
-uint Client::ruleOpacityActive()
-    {
-    return rule_opacity_active;// != 0;
-    }
-    
-bool Client::getWindowOpacity() //query translucency settings from X, returns true if window opacity is set
-    {
-    unsigned char *data = 0;
-    Atom actual;
-    int format, result;
-    unsigned long n, left;
-    result = XGetWindowProperty(QX11Info::display(), window(), atoms->net_wm_window_opacity, 0L, 1L, False, XA_CARDINAL, &actual, &format, &n, &left, /*(unsigned char **)*/ &data);
-    if (result == Success && data != None && format == 32 )
-        {
-        opacity_ = *reinterpret_cast< long* >( data );
-        custom_opacity = true;
-//         setOpacity(opacity_ < 0xFFFFFFFF, opacity_);
-        XFree ((char*)data);
-        return true;
-        }
-    return false;
-    }
-    
-void Client::setCustomOpacityFlag(bool custom)
-    {
-    custom_opacity = custom;
-    }
-    
-uint Client::opacity()
-    {
-    return opacity_;
-    }
-
-int Client::opacityPercentage()
-    {
-    return int(100*((double)opacity_/0xffffffff));
-    }
-    
-bool Client::touches(const Client* c)
-// checks if this client borders c, needed to test beep media player window state
-    {
-    if (y() == c->y() + c->height()) // this bottom to c
-        return true;
-    if (y() + height() == c->y()) // this top to c
-        return true;
-    if (x() == c->x() + c->width()) // this right to c
-        return true;
-    if (x() + width() == c->x()) // this left to c
-        return true;
-    return false;
-    }
-    
-void Client::setDecoHashProperty(uint topHeight, uint rightWidth, uint bottomHeight, uint leftWidth)
-{
-   long data = (topHeight < 255 ? topHeight : 255) << 24 |
-               (rightWidth < 255 ? rightWidth : 255) << 16 |
-               (bottomHeight < 255 ? bottomHeight : 255) << 8 |
-               (leftWidth < 255 ? leftWidth : 255);
-    XChangeProperty(QX11Info::display(), frameId(), atoms->net_wm_window_decohash, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &data, 1L);
-}
-
-void Client::unsetDecoHashProperty()
-{
-   XDeleteProperty( QX11Info::display(), frameId(), atoms->net_wm_window_decohash);
-}
-    
 #ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Client* cl )
     {

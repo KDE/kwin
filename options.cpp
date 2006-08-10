@@ -174,8 +174,9 @@ unsigned long Options::updateSettings()
     CmdAllWheel = mouseWheelCommand(config->readEntry("CommandAllWheel","Nothing"));
 
     //translucency settings - TODO
+    config->setGroup( "Notification Messages" );
+    useTranslucency = config->readEntry("UseTranslucency", QVariant(false)).toBool();
     config->setGroup( "Translucency");
-    useTranslucency = config->readEntry("UseTranslucency", QVariant(true)).toBool();
     translucentActiveWindows = config->readEntry("TranslucentActiveWindows", QVariant(false)).toBool();
     activeWindowOpacity = uint((config->readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config->readEntry("TranslucentInactiveWindows", QVariant(false)).toBool();

@@ -77,7 +77,7 @@ class Workspace : public QObject, public KDecorationDefines
         virtual ~Workspace();
 
         static Workspace * self() { return _self; }
-        
+
         bool workspaceEvent( XEvent * );
 
         KDecoration* createDecoration( KDecorationBridge* bridge );
@@ -87,9 +87,6 @@ class Workspace : public QObject, public KDecorationDefines
         template< typename T > Client* findClient( T predicate );
         template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
         template< typename T > void forEachClient( T procedure );
-        template< typename T > Unmanaged* findUnmanaged( T predicate );
-        template< typename T1, typename T2 > void forEachUnmanaged( T1 procedure, T2 predicate );
-        template< typename T > void forEachUnmanaged( T procedure );
 
         QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         QRect clientArea( clientAreaOption, const Client* c ) const;
@@ -245,9 +242,6 @@ class Workspace : public QObject, public KDecorationDefines
         void removeGroup( Group* group, allowed_t );
         Group* findClientLeaderGroup( const Client* c ) const;
 
-    // only called from Unmanaged::release()
-        void removeUnmanaged( Unmanaged*, allowed_t );
-
         bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
@@ -282,13 +276,6 @@ class Workspace : public QObject, public KDecorationDefines
         void requestDelayFocus( Client* );
         
         void toggleTopDockShadows(bool on);
-        
-        void addDamage( const QRect& r );
-        void addDamage( int x, int y, int w, int h );
-        void addDamage( XserverRegion r, bool destroy );
-        void addDamage( Toplevel* c, const QRect& r );
-        void addDamage( Toplevel* c, int x, int y, int w, int h );
-        void addDamage( Toplevel* c, XserverRegion r, bool destroy );
 
     public slots:
         void refresh();
@@ -301,8 +288,48 @@ class Workspace : public QObject, public KDecorationDefines
         void slotSwitchDesktopDown();
 
         void slotSwitchToDesktop( int );
+        void slotSwitchToDesktop1() { return slotSwitchToDesktop( 1 ); }
+        void slotSwitchToDesktop2() { return slotSwitchToDesktop( 2 ); }
+        void slotSwitchToDesktop3() { return slotSwitchToDesktop( 3 ); }
+        void slotSwitchToDesktop4() { return slotSwitchToDesktop( 4 ); }
+        void slotSwitchToDesktop5() { return slotSwitchToDesktop( 5 ); }
+        void slotSwitchToDesktop6() { return slotSwitchToDesktop( 6 ); }
+        void slotSwitchToDesktop7() { return slotSwitchToDesktop( 7 ); }
+        void slotSwitchToDesktop8() { return slotSwitchToDesktop( 8 ); }
+        void slotSwitchToDesktop9() { return slotSwitchToDesktop( 9 ); }
+        void slotSwitchToDesktop10() { return slotSwitchToDesktop( 10 ); }
+        void slotSwitchToDesktop11() { return slotSwitchToDesktop( 11 ); }
+        void slotSwitchToDesktop12() { return slotSwitchToDesktop( 12 ); }
+        void slotSwitchToDesktop13() { return slotSwitchToDesktop( 13 ); }
+        void slotSwitchToDesktop14() { return slotSwitchToDesktop( 14 ); }
+        void slotSwitchToDesktop15() { return slotSwitchToDesktop( 15 ); }
+        void slotSwitchToDesktop16() { return slotSwitchToDesktop( 16 ); }
+        void slotSwitchToDesktop17() { return slotSwitchToDesktop( 17 ); }
+        void slotSwitchToDesktop18() { return slotSwitchToDesktop( 18 ); }
+        void slotSwitchToDesktop19() { return slotSwitchToDesktop( 19 ); }
+        void slotSwitchToDesktop20() { return slotSwitchToDesktop( 20 ); }
     //void slotSwitchToWindow( int );
         void slotWindowToDesktop( int );
+        void slotWindowToDesktop1() { return slotWindowToDesktop( 1 ); }
+        void slotWindowToDesktop2() { return slotWindowToDesktop( 2 ); }
+        void slotWindowToDesktop3() { return slotWindowToDesktop( 3 ); }
+        void slotWindowToDesktop4() { return slotWindowToDesktop( 4 ); }
+        void slotWindowToDesktop5() { return slotWindowToDesktop( 5 ); }
+        void slotWindowToDesktop6() { return slotWindowToDesktop( 6 ); }
+        void slotWindowToDesktop7() { return slotWindowToDesktop( 7 ); }
+        void slotWindowToDesktop8() { return slotWindowToDesktop( 8 ); }
+        void slotWindowToDesktop9() { return slotWindowToDesktop( 9 ); }
+        void slotWindowToDesktop10() { return slotWindowToDesktop( 10 ); }
+        void slotWindowToDesktop11() { return slotWindowToDesktop( 11 ); }
+        void slotWindowToDesktop12() { return slotWindowToDesktop( 12 ); }
+        void slotWindowToDesktop13() { return slotWindowToDesktop( 13 ); }
+        void slotWindowToDesktop14() { return slotWindowToDesktop( 14 ); }
+        void slotWindowToDesktop15() { return slotWindowToDesktop( 15 ); }
+        void slotWindowToDesktop16() { return slotWindowToDesktop( 16 ); }
+        void slotWindowToDesktop17() { return slotWindowToDesktop( 17 ); }
+        void slotWindowToDesktop18() { return slotWindowToDesktop( 18 ); }
+        void slotWindowToDesktop19() { return slotWindowToDesktop( 19 ); }
+        void slotWindowToDesktop20() { return slotWindowToDesktop( 20 ); }
     //void slotWindowToListPosition( int );
 
         void slotWindowMaximize();
@@ -379,10 +406,11 @@ class Workspace : public QObject, public KDecorationDefines
         void cleanupTemporaryRules();
         void writeWindowRules();
         void kipcMessage( int id, int data );
+        // kompmgr
         void setPopupClientOpacity(int v);
         void resetClientOpacity();
         void setTransButtonText(int value);
-        void compositeTimeout();
+        // end 
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -430,8 +458,6 @@ class Workspace : public QObject, public KDecorationDefines
     // this is the right way to create a new client
         Client* createClient( Window w, bool is_mapped );
         void addClient( Client* c, allowed_t );
-        Unmanaged* createUnmanaged( Window w );
-        void addUnmanaged( Unmanaged* c, allowed_t );
 
         Window findSpecialEventWindow( XEvent* e );
 
@@ -473,9 +499,6 @@ class Workspace : public QObject, public KDecorationDefines
         void closeActivePopup();
 
         void updateClientArea( bool force );
-        
-        void setupCompositing();
-        void finishCompositing();
 
         SystemTrayWindowList systemTrayWins;
 
@@ -512,7 +535,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         ClientList clients;
         ClientList desktops;
-        UnmanagedList unmanaged;
 
         ClientList unconstrained_stacking_order;
         ClientList stacking_order;
@@ -632,10 +654,8 @@ class Workspace : public QObject, public KDecorationDefines
         Window null_focus_window;
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
-
-        QTimer compositeTimer;
-        XserverRegion damage_region;
         
+        //kompmgr
         QSlider *transSlider;
         QPushButton *transButton;
     };
@@ -807,27 +827,7 @@ inline void Workspace::forEachClient( T procedure )
     return forEachClient( procedure, TruePredicate());
     }
 
-template< typename T >
-inline Unmanaged* Workspace::findUnmanaged( T predicate )
-    {
-    return findUnmanagedInList( unmanaged, predicate );
-    }
-
-template< typename T1, typename T2 >
-inline void Workspace::forEachUnmanaged( T1 procedure, T2 predicate )
-    {
-    for ( UnmanagedList::ConstIterator it = unmanaged.begin(); it != unmanaged.end(); ++it)
-        if ( predicate( const_cast< const Unmanaged* >( *it)))
-            procedure( *it );
-    }
-
-template< typename T >
-inline void Workspace::forEachUnmanaged( T procedure )
-    {
-    return forEachUnmanaged( procedure, TruePredicate());
-    }
-
-KWIN_COMPARE_PREDICATE( ClientMatchPredicate, Client, const Client*, cl == value );
+KWIN_COMPARE_PREDICATE( ClientMatchPredicate, const Client*, cl == value );
 inline bool Workspace::hasClient( const Client* c )
     {
     return findClient( ClientMatchPredicate( c ));

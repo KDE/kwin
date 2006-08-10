@@ -697,7 +697,7 @@ void Client::demandAttentionKNotify()
     }
 
 // TODO I probably shouldn't be lazy here and do it without the macro, so that people can read it
-KWIN_COMPARE_PREDICATE( SameApplicationActiveHackPredicate, Client, const Client*,
+KWIN_COMPARE_PREDICATE( SameApplicationActiveHackPredicate, const Client*,
     // ignore already existing splashes, toolbars, utilities, menus and topmenus,
     // as the app may show those before the main window
     !cl->isSplash() && !cl->isToolbar() && !cl->isTopMenu() && !cl->isUtility() && !cl->isMenu()

@@ -17,6 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <netwm_def.h>
 #include <kshortcutdialog.h>
 #include <limits.h>
+#include <QX11Info>
 
 namespace KWinInternal
 {
@@ -190,6 +191,36 @@ void updateXTime();
 void grabXServer();
 void ungrabXServer();
 bool grabbedXServer();
+
+inline
+Display* display()
+    {
+    return QX11Info::display();
+    }
+    
+inline
+Window rootWindow()
+    {
+    return QX11Info::appRootWindow();
+    }
+
+inline
+Window xTime()
+    {
+    return QX11Info::appTime();
+    }
+
+inline
+int displayWidth()
+    {
+    return XDisplayWidth( display(), DefaultScreen( display()));
+    }
+
+inline
+int displayHeight()
+    {
+    return XDisplayHeight( display(), DefaultScreen( display()));
+    }
 
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint

@@ -8,10 +8,6 @@ add_subdirectory( pics )
 add_subdirectory( clients ) 
 add_subdirectory( data ) 
 
-if(X11_kompmgr_FOUND)
-   add_subdirectory(kompmgr)
-endif(X11_kompmgr_FOUND)
-
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}/lib )
 
 
@@ -70,11 +66,7 @@ kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
 
 #INCLUDES = -I$(srcdir)/lib $(all_includes)
 #
-#if include_kompmgr
-#KOMPMGR=kompmgr
-#endif
-#
-#SUBDIRS = lib . killer kcmkwin pics clients oldheaders data $(KOMPMGR)
+#SUBDIRS = lib . killer kcmkwin pics clients oldheaders data
 #
 #bin_PROGRAMS = 
 #lib_LTLIBRARIES =
