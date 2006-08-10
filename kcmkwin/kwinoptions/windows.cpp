@@ -689,7 +689,7 @@ void KAdvancedConfig::load( void )
     setShadeHover(config->readEntry(KWIN_SHADEHOVER, QVariant(false)).toBool());
     setShadeHoverInterval(config->readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
 
-    setElectricBorders(config->readEntry(KWM_ELECTRIC_BORDER, false));
+    setElectricBorders(config->readEntry(KWM_ELECTRIC_BORDER, 0));
     setElectricBorderDelay(config->readEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
 
 //    setFocusStealing( config->readEntry(KWIN_FOCUS_STEALING, 2 ));
