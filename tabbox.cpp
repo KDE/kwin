@@ -43,7 +43,7 @@ namespace KWinInternal
 extern QPixmap* kwin_get_menu_pix_hack();
 
 TabBox::TabBox( Workspace *ws, const char *name )
-    : Q3Frame( 0, name, Qt::WNoAutoErase ), client(0), wspace(ws)
+    : Q3Frame( 0, name, Qt::WNoAutoErase ), current_client( NULL ), wspace(ws)
     {
     setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
     setLineWidth(2);
@@ -57,10 +57,25 @@ TabBox::TabBox( Workspace *ws, const char *name )
     reconfigure();
     reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
+    
+    XSetWindowAttributes attr;
+    attr.override_redirect = 1;
+    outline_left = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_right = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_top = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_bottom = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
     }
 
 TabBox::~TabBox()
     {
+    XDestroyWindow( display(), outline_left );
+    XDestroyWindow( display(), outline_right );
+    XDestroyWindow( display(), outline_top );
+    XDestroyWindow( display(), outline_bottom );
     }
 
 
@@ -147,10 +162,10 @@ void TabBox::reset()
 
     if ( mode() == WindowsMode )
         {
-        client = workspace()->activeClient();
+        setCurrentClient( workspace()->activeClient());
 
         // get all clients to show
-        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), client, true);
+        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), current_client, true);
 
         // calculate maximum caption width
         cw = fontMetrics().width(no_tasks)+20;
@@ -227,7 +242,8 @@ void TabBox::nextPrev( bool next)
     {
     if ( mode() == WindowsMode )
         {
-        Client* firstClient = 0;
+        Client* firstClient = NULL;
+        Client* client = current_client;
         do
             {
             if ( next )
@@ -247,6 +263,7 @@ void TabBox::nextPrev( bool next)
                 break;
                 }
             } while ( client && !clients.contains( client ));
+        setCurrentClient( client );
         }
     else if( mode() == DesktopMode )
         {
@@ -284,9 +301,18 @@ Client* TabBox::currentClient()
     {
     if ( mode() != WindowsMode )
         return 0;
-    if (!workspace()->hasClient( client ))
+    if (!workspace()->hasClient( current_client ))
         return 0;
-    return client;
+    return current_client;
+    }
+
+void TabBox::setCurrentClient( Client* c )
+    {
+    if( current_client != c )
+        {
+        current_client = c;
+        updateOutline();
+        }
     }
 
 /*!
@@ -308,6 +334,11 @@ int TabBox::currentDesktop()
  */
 void TabBox::showEvent( QShowEvent* )
     {
+    updateOutline();
+    XRaiseWindow( display(), outline_left );
+    XRaiseWindow( display(), outline_right );
+    XRaiseWindow( display(), outline_top );
+    XRaiseWindow( display(), outline_bottom );
     raise();
     }
 
@@ -317,6 +348,10 @@ void TabBox::showEvent( QShowEvent* )
  */
 void TabBox::hideEvent( QHideEvent* )
     {
+    XUnmapWindow( display(), outline_left );
+    XUnmapWindow( display(), outline_right );
+    XUnmapWindow( display(), outline_top );
+    XUnmapWindow( display(), outline_bottom );
     }
 
 /*!
@@ -355,7 +390,7 @@ void TabBox::drawContents( QPainter * )
               if ( workspace()->hasClient( *it ) )  // safety
                   {
                   // draw highlight background
-                  if ( (*it) == currentClient() )
+                  if ( (*it) == current_client )
                     p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Highlight ));
 
                   // draw icon
@@ -392,7 +427,7 @@ void TabBox::drawContents( QPainter * )
                   s = KStringHandler::cPixelSqueeze(s, fontMetrics(), r.width() - 5 - iconWidth - 8);
 
                   // draw text
-                  if ( (*it) == currentClient() )
+                  if ( (*it) == current_client )
                     p.setPen(palette().color( QPalette::HighlightedText ));
                   else if( (*it)->isMinimized())
                     {
@@ -510,6 +545,88 @@ void TabBox::drawContents( QPainter * )
     localPainter.drawImage( QPoint( r.x(), r.y() ), pix.toImage() );
     }
 
+void TabBox::updateOutline()
+    {
+    Client* c = currentClient();
+    if( c == NULL )
+        {
+        XUnmapWindow( display(), outline_left );
+        XUnmapWindow( display(), outline_right );
+        XUnmapWindow( display(), outline_top );
+        XUnmapWindow( display(), outline_bottom );
+        return;
+        }
+    // left/right parts are between top/bottom, they don't reach as far as the corners
+    XMoveResizeWindow( display(), outline_left, c->x(), c->y() + 7, 7, c->height() - 14 );
+    XMoveResizeWindow( display(), outline_right, c->x() + c->width() - 7, c->y() + 7, 7, c->height() - 14 );
+    XMoveResizeWindow( display(), outline_top, c->x(), c->y(), c->width(), 7 );
+    XMoveResizeWindow( display(), outline_bottom, c->x(), c->y() + c->height() - 7, c->width(), 7 );
+    {
+    QPixmap pix( 7, c->height() - 14 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, 0, pix.height() - 1 );
+    p.drawLine( 6, 0, 6, pix.height() - 1 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 0, 1, pix.height() - 1 );
+    p.drawLine( 5, 0, 5, pix.height() - 1 );
+    p.fillRect( QRect( QPoint( 2, 0 ), QPoint( 4, pix.height() - 1 )), Qt::black );
+    p.end();
+    XSetWindowBackgroundPixmap( display(), outline_left, pix.handle());
+    XSetWindowBackgroundPixmap( display(), outline_right, pix.handle());
+    }
+    {
+    QPixmap pix( c->width(), 7 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, pix.width() - 1 - 0, 0 );
+    p.drawLine( 6, 6, pix.width() - 1 - 6, 6 );
+    p.drawLine( 0, 0, 0, 6 );
+    p.drawLine( pix.width() - 1 - 0, 0, pix.width() - 1 - 0, 6 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 1, pix.width() - 1 - 1, 1 );
+    p.drawLine( 5, 5, pix.width() - 1 - 5, 5 );
+    p.drawLine( 1, 1, 1, 6 );
+    p.drawLine( 5, 5, 5, 6 );
+    p.drawLine( pix.width() - 1 - 1, 1, pix.width() - 1 - 1, 6 );
+    p.drawLine( pix.width() - 1 - 5, 5, pix.width() - 1 - 5, 6 );
+    p.fillRect( QRect( QPoint( 2, 2 ), QPoint( pix.width() - 1 - 4, 4 )), Qt::black );
+    p.fillRect( QRect( QPoint( 2, 2 ), QPoint( 4, 6 )), Qt::black );
+    p.fillRect( QRect( QPoint( pix.width() - 1 - 4, 2 ), QPoint( pix.width() - 1 - 2, 6 )), Qt::black );
+    p.end();
+    XSetWindowBackgroundPixmap( display(), outline_top, pix.handle());
+    }
+    {
+    QPixmap pix( c->width(), 7 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 6, 0, pix.width() - 1 - 6, 0 );
+    p.drawLine( 0, 6, pix.width() - 1 - 0, 6 );
+    p.drawLine( 0, 6, 0, 0 );
+    p.drawLine( pix.width() - 1 - 0, 6, pix.width() - 1 - 0, 0 );
+    p.setPen( Qt::gray );
+    p.drawLine( 5, 1, pix.width() - 1 - 5, 1 );
+    p.drawLine( 1, 5, pix.width() - 1 - 1, 5 );
+    p.drawLine( 5, 1, 5, 0 );
+    p.drawLine( 1, 5, 1, 0 );
+    p.drawLine( pix.width() - 1 - 5, 1, pix.width() - 1 - 5, 0 );
+    p.drawLine( pix.width() - 1 - 1, 5, pix.width() - 1 - 1, 0 );
+    p.fillRect( QRect( QPoint( 2, 2 ), QPoint( pix.width() - 1 - 4, 4 )), Qt::black );
+    p.fillRect( QRect( QPoint( 2, 0 ), QPoint( 4, 4 )), Qt::black );
+    p.fillRect( QRect( QPoint( pix.width() - 1 - 4, 0 ), QPoint( pix.width() - 1 - 2, 4 )), Qt::black );
+    p.end();
+    XSetWindowBackgroundPixmap( display(), outline_bottom, pix.handle());
+    }
+    XClearWindow( display(), outline_left );
+    XClearWindow( display(), outline_right );
+    XClearWindow( display(), outline_top );
+    XClearWindow( display(), outline_bottom );
+    XMapWindow( display(), outline_left );
+    XMapWindow( display(), outline_right );
+    XMapWindow( display(), outline_top );
+    XMapWindow( display(), outline_bottom );
+    }
+
 void TabBox::hide()
     {
     delayedShowTimer.stop();
@@ -587,7 +704,7 @@ void TabBox::handleMouseEvent( XEvent* e )
             {
             if( workspace()->hasClient( *it ) && (num == 0) ) // safety
                 {
-                client = *it;
+                setCurrentClient( *it );
                 break;
                 }
             num--;

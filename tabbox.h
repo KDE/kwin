@@ -32,6 +32,7 @@ class TabBox : public Q3Frame
         ~TabBox();
 
         Client* currentClient();
+        void setCurrentClient( Client* c );
         int currentDesktop();
 
     // DesktopMode and WindowsMode are based on the order in which the desktop
@@ -61,9 +62,10 @@ class TabBox : public Q3Frame
 
     private:
         void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
+        void updateOutline();
 
     private:
-        Client* client;
+        Client* current_client;
         Mode m;
         Workspace* wspace;
         ClientList clients;
@@ -73,6 +75,7 @@ class TabBox : public Q3Frame
         QTimer delayedShowTimer;
         QString no_tasks;
         bool options_traverse_all;
+        Window outline_left, outline_right, outline_top, outline_bottom;
     };
 
 
