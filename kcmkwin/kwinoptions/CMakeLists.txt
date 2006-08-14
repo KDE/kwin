@@ -22,7 +22,7 @@ install( FILES kwinoptions.desktop kwinactions.desktop kwinadvanced.desktop
     kwinfocus.desktop kwinmoving.desktop kwintranslucency.desktop
     DESTINATION ${SERVICES_INSTALL_DIR})
 
-kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
+kde4_install_icons( ${ICON_INSTALL_DIR}  )
 
 
 

@@ -57,7 +57,7 @@ install(TARGETS kwin DESTINATION ${BIN_INSTALL_DIR})
 install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES eventsrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
-kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
+kde4_install_icons( ${ICON_INSTALL_DIR}  )
 
 
 
