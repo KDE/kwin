@@ -113,15 +113,19 @@ class Shape
     {
     public:
         static bool available() { return kwin_shape_version > 0; }
-        static int major() { return kwin_shape_version / 16; }
-        static int minor() { return kwin_shape_version % 16; }
+        static int version() { return kwin_shape_version; } // as 16*major+minor, i.e. two hex digits
         static bool hasShape( WId w);
         static int shapeEvent();
         static void init();
     private:
-        static int kwin_shape_version; // as 16*major+minor
+        static int kwin_shape_version;
         static int kwin_shape_event;
     };
+
+// compile with XShape older than 1.0
+#ifndef ShapeInput
+const int ShapeInput = 2;
+#endif
 
 class Motif 
     {

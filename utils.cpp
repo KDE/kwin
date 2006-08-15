@@ -76,7 +76,7 @@ void Shape::init()
     int major, minor;
     if( !XShapeQueryVersion( display(), &major, &minor ))
         return;
-    kwin_shape_version = major * 16 + minor;
+    kwin_shape_version = major * 0x10 + minor;
     }
 
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,

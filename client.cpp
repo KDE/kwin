@@ -438,7 +438,7 @@ void Client::updateShape()
         XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
                            None, ShapeSet);
         }
-    if( Shape::major() > 1 || Shape::minor() >= 1 ) // has input shape support
+    if( Shape::version() >= 0x11 ) // 1.1, has input shape support
         { // there appears to be no way to find out if a window has input
           // shape set or not, so always set propagate the input shape
           // (it's the same like the bounding shape by default)
