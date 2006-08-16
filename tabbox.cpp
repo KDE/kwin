@@ -548,7 +548,7 @@ void TabBox::drawContents( QPainter * )
 void TabBox::updateOutline()
     {
     Client* c = currentClient();
-    if( c == NULL )
+    if( c == NULL || this->isHidden() || !c->isShown( true ) || !c->isOnCurrentDesktop())
         {
         XUnmapWindow( display(), outline_left );
         XUnmapWindow( display(), outline_right );
