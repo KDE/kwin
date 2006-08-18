@@ -264,6 +264,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         destroyDecoration();
     if( !noBorder())
         {
+        setMask( QRegion()); // reset shape mask
         decoration = workspace()->createDecoration( bridge );
         // TODO check decoration's minimum size?
         decoration->init();
@@ -433,17 +434,15 @@ void Client::updateShape()
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSet);
         }
-    else
-        {
-        XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
-                           None, ShapeSet);
-        }
+    // !shape() mask setting is done in setMask() when the decoration
+    // calls it or when the decoration is created/destroyed
+
     if( Shape::version() >= 0x11 ) // 1.1, has input shape support
         { // there appears to be no way to find out if a window has input
           // shape set or not, so always set propagate the input shape
           // (it's the same like the bounding shape by default)
-        XShapeCombineMask( display(), frameId(), ShapeInput, 0, 0,
-                           None, ShapeSet );
+        XShapeCombineShape( display(), frameId(), ShapeInput, 0, 0,
+                           frameId(), ShapeBounding, ShapeSet );
         XShapeCombineShape( display(), frameId(), ShapeInput,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSubtract );
@@ -479,6 +478,7 @@ void Client::setMask( const QRegion& reg, int mode )
             xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
+    updateShape();
     }
 
 QRegion Client::mask() const
