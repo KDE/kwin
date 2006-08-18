@@ -1,0 +1,72 @@
+CONTENTS:
+=========
+
+
+1. Pre-configuring window-specific settings
+
+
+
+
+
+1. Pre-configuring window-specific settings
+===========================================
+
+Window-specific settings is a feature of KWin that allows specifying some
+settings only for a specific window or windows. See the Window-specific
+settings section in the KWin configuration and the Special settings
+menu entries in Alt+F3/Advanced menu.
+
+One aspect of window-specific settings is the ability to specify various
+workarounds for (usually broken) applications that otherwise don't work
+properly with KWin. This section describes how to create additional
+window-specific settings that will be automatically used by all users
+without any need of manual configuration.
+
+Example case:
+
+Application FooBar does not specify any maximum size for its main window,
+but when resized to larger size than 1600x1200 it crashes because of a bug.
+Manual configuration of a window-specific setting that avoids this problem
+is opening and activating this window, selecting
+Alt+F3/Advanced/Special window settings, activating tab Workarounds, enabling
+setting Maximum size, changing it to Force and entering "1600,1200" as
+the maximum size, which will make KWin force this size as the maximum size.
+
+To create such window-specific setting automatically without a need of doing
+it manually for every user (for example when doing a large deployment), follow
+these steps:
+
+- Back up your $KDEHOME/share/config/kwinrulesrc ($KDEHOME usually being $HOME/.kde)
+- Run 'dcop kwin default reconfigure'
+- Create manually all window-specific settings that should be included (see above)
+- When done, check in Window-specific settings configuration module
+ (Alt+F3/Configure window behavior/Window-specific settings) that all rules are
+ included
+- Create a copy of $KDEHOME/share/config/kwinrulesrc and restore the original one
+- Rename the copy (i.e. the newly created kwinrulesrc) to have its unique name
+ (e.g. foobar_fix_maxsize in this example case)
+- Be careful with manual modifications of the file, especially make sure the count=
+ field in the [General] group is updated if needed
+- Create a file for kconfig_update like this (named kwin_foobar_fix_maxsize.upd
+ in this example):
+
+# kwin_foobar_fix_maxsize.upd start # 
+Id=foobar_fix_maxsize
+File=kwinrules_update
+Group=Dummy
+Options=overwrite
+ScriptArguments=foobar_fix_maxsize
+Script=kwin_update_default_rules
+
+# kwin_foobar_fix_maxsize.upd end # 
+
+- The kconfig_file (kwin_foobar_fix_maxsize.upd) is to be placed
+ in $KDEDIR/share/apps/kconf_update/
+- The file with the window-specific settings (foobar_fix_maxsize) is to be placed
+ in $KDEDIR/share/apps/kwin/default_rules/
+
+
+All KDE user accounts should have these new window-specific settings added
+automatically during next KDE startup (or within few seconds if they are active).
+They can be checked again in the Window-specific settings configuration module of KWin.
+
