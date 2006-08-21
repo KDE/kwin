@@ -281,7 +281,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     else
         appname.sprintf("org.kde.kwin-screen-%d", KWinInternal::screen_number);
 
-    QDBus::sessionBus().interface()->registerService( appname, QDBusConnectionInterface::DontQueueService );
+    QDBusConnection::sessionBus().interface()->registerService( appname, QDBusConnectionInterface::DontQueueService );
 
     return a.exec();
     }

@@ -76,7 +76,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
           pluginObject(0)
 {
     new DecorationAdaptor(this);
-    QDBus::sessionBus().registerObject("/KWinClientDecoration", this);
+    QDBusConnection::sessionBus().registerObject("/KWinClientDecoration", this);
     kwinConfig.setGroup("Style");
         plugins = new KDecorationPreviewPlugins( &kwinConfig );
 
