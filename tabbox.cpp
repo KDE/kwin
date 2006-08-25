@@ -126,7 +126,9 @@ void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client
                 else if( !list.contains( modal ))
                     list += modal;
                 else
-                    ; // nothing
+                    {
+                    // nothing
+                    }
                 }
             }
 
