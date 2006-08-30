@@ -1,1 +1,0 @@
-SUBDIRS = kwinoptions kwindecoration kwinrules
