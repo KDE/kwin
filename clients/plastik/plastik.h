@@ -85,16 +85,16 @@ public:
     const QPixmap &pixmap(Pixmaps type, bool active, bool toolWindow);
     const QBitmap &buttonBitmap(ButtonIcon type, const QSize &size, bool toolWindow);
 
-    int  titleHeight() { return m_titleHeight; }
-    int  titleHeightTool() { return m_titleHeightTool; }
+    int  titleHeight() const { return m_titleHeight; }
+    int  titleHeightTool() const { return m_titleHeightTool; }
     const QFont &titleFont() { return m_titleFont; }
     const QFont &titleFontTool() { return m_titleFontTool; }
-    bool titleShadow() { return m_titleShadow; }
-    int  borderSize() { return m_borderSize; }
-    bool animateButtons() { return m_animateButtons; }
-    bool menuClose() { return m_menuClose; }
-    Qt::AlignmentFlag titleAlign() { return m_titleAlign; }
-    bool reverseLayout() { return m_reverse; }
+    bool titleShadow() const { return m_titleShadow; }
+    int  borderSize() const { return m_borderSize; }
+    bool animateButtons() const { return m_animateButtons; }
+    bool menuClose() const { return m_menuClose; }
+    Qt::AlignmentFlag titleAlign() const { return m_titleAlign; }
+    bool reverseLayout() const { return m_reverse; }
     QColor getColor(KWinPlastik::ColorType type, const bool active = true);
 
     QList< PlastikHandler::BorderSize >  borderSizes() const;
