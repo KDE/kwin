@@ -3,7 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 ########### next target ###############
 
-set(kcm_kwindecoration_PART_SRCS kwindecorationadaptor.cpp kwindecoration.cpp buttons.cpp preview.cpp )
+set(kcm_kwindecoration_PART_SRCS kwindecoration.cpp buttons.cpp preview.cpp )
 
 kde4_automoc(${kcm_kwindecoration_PART_SRCS})
 
