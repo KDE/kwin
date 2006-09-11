@@ -233,7 +233,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         void sendPingToWindow( Window w, Time timestamp ); // called from Client::pingWindow()
         void sendTakeActivity( Client* c, Time timestamp, long flags ); // called from Client::takeActivity()
-        
+
     // only called from Client::destroyClient() or Client::releaseWindow()
         void removeClient( Client*, allowed_t );
         void setActiveClient( Client*, allowed_t );
@@ -247,7 +247,7 @@ class Workspace : public QObject, public KDecorationDefines
         void focusToNull(); // SELI public?
         enum FocusChainChange { FocusChainMakeFirst, FocusChainMakeLast, FocusChainUpdate };
         void updateFocusChains( Client* c, FocusChainChange change );
-        
+
         bool forcedGlobalMouseGrab() const;
         void clientShortcutUpdated( Client* c );
         bool shortcutAvailable( const KShortcut& cut, Client* ignore = NULL ) const;
@@ -274,7 +274,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         void cancelDelayFocus();
         void requestDelayFocus( Client* );
-        
+
         void toggleTopDockShadows(bool on);
 
     public slots:
@@ -390,7 +390,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setupWindowShortcutDone( bool );
 
         void updateClientArea();
-        
+
     private slots:
         void desktopPopupAboutToShow();
         void clientPopupAboutToShow();
@@ -405,12 +405,12 @@ class Workspace : public QObject, public KDecorationDefines
         void gotTemporaryRulesMessage( const QString& );
         void cleanupTemporaryRules();
         void writeWindowRules();
-        void kipcMessage( int id, int data );
+        void slotBlockShortcuts(int data);
         // kompmgr
         void setPopupClientOpacity(int v);
         void resetClientOpacity();
         void setTransButtonText(int value);
-        // end 
+        // end
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -490,7 +490,7 @@ class Workspace : public QObject, public KDecorationDefines
         void raiseElectricBorders();
 
     // ------------------
-    
+
         void helperDialog( const QString& message, const Client* c );
 
         void calcDesktopLayout(int &x, int &y) const;
@@ -542,7 +542,7 @@ class Workspace : public QObject, public KDecorationDefines
         ClientList global_focus_chain; // this one is only for things like tabbox's MRU
         ClientList should_get_focus; // last is most recent
         ClientList attention_chain;
-        
+
         bool showing_desktop;
         ClientList showing_desktop_clients;
         int block_showing_desktop;
@@ -654,7 +654,7 @@ class Workspace : public QObject, public KDecorationDefines
         Window null_focus_window;
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
-        
+
         //kompmgr
         QSlider *transSlider;
         QPushButton *transButton;

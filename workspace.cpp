@@ -28,7 +28,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobalaccel.h>
 #include <QDesktopWidget>
 #include <QToolButton>
-#include <kipc.h>
 #include <kactioncollection.h>
 #include <kaction.h>
 #include <QtDBus/QtDBus>
@@ -52,6 +51,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 #include <kauthorized.h>
 #include <ktoolinvocation.h>
+#include <kglobalsettings.h>
 
 namespace KWinInternal
 {
@@ -319,11 +319,12 @@ void Workspace::init()
             SLOT(slotReconfigure()));
     connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
 
-    connect(kapp, SIGNAL(appearanceChanged()), this,
+    connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this,
             SLOT(slotReconfigure()));
-    connect(kapp, SIGNAL(settingsChanged(int)), this,
+    connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)), this,
             SLOT(slotSettingsChanged(int)));
-    connect(kapp, SIGNAL( kipcMessage( int, int )), this, SLOT( kipcMessage( int, int )));
+    connect(KGlobalSettings::self(), SIGNAL(blockShortcuts(int)), this,
+            SLOT(slotBlockShortcuts(int)));
 
     active_client = NULL;
     rootInfo->setActiveWindow( None );
@@ -856,7 +857,7 @@ void Workspace::reconfigure()
 void Workspace::slotSettingsChanged(int category)
     {
     kDebug(1212) << "Workspace::slotSettingsChanged()" << endl;
-    if( category == (int) KApplication::SETTINGS_SHORTCUTS )
+    if( category == KGlobalSettings::SETTINGS_SHORTCUTS )
         readShortcuts();
     }
 
@@ -2466,21 +2467,19 @@ void Workspace::disableGlobalShortcutsForClient( bool disable )
         {
         if( disable )
             pending_dfc = true;
-        KIPC::sendMessageAll( KIPC::BlockShortcuts, disable );
+        KGlobalSettings::self()->emitChange( KGlobalSettings::BlockShortcuts, disable );
         // kwin will get the kipc message too
         }
     }
 
 void Workspace::disableGlobalShortcuts( bool disable )
     {
-    KIPC::sendMessageAll( KIPC::BlockShortcuts, disable );
+    KGlobalSettings::self()->emitChange( KGlobalSettings::BlockShortcuts, disable );
     // kwin will get the kipc message too
     }
 
-void Workspace::kipcMessage( int id, int data )
+void Workspace::slotBlockShortcuts( int data )
     {
-    if( id != KIPC::BlockShortcuts )
-        return;
     if( pending_dfc && data )
         {
         global_shortcuts_disabled_for_client = true;
