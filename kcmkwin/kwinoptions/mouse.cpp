@@ -374,7 +374,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     coMax[b]->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
   }
 
-  connect(kapp, SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
+  connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
 
   layout->addStretch();
 
