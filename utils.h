@@ -12,6 +12,22 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_UTILS_H
 #define KWIN_UTILS_H
 
+#include <config.h>
+#include <config-X11.h>
+
+#include <X11/Xlib.h>
+#ifdef HAVE_XCOMPOSITE
+#include <X11/extensions/Xcomposite.h>
+#endif
+#ifdef HAVE_XDAMAGE
+#include <X11/extensions/Xdamage.h>
+#endif
+#ifdef HAVE_XFIXES
+#include <X11/extensions/Xfixes.h>
+#endif
+
+#include <fixx11h.h>
+
 #include <QWidget>
 #include <kmanagerselection.h>
 #include <netwm_def.h>
@@ -21,6 +37,18 @@ License. See the file "COPYING" for the exact licensing terms.
 
 namespace KWinInternal
 {
+
+#ifndef HAVE_XDAMAGE
+typedef long Damage;
+struct XDamageNotifyEvent
+    {
+    };
+#endif
+#ifndef HAVE_XFIXES
+struct XserverRegion
+    {
+    };
+#endif
 
 const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
     | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
@@ -39,12 +67,18 @@ const long ClientWinMask = KeyPressMask | KeyReleaseMask |
 
 const QPoint invalidPoint( INT_MIN, INT_MIN );
 
+class Toplevel;
 class Client;
+class Unmanaged;
 class Group;
 class Options;
 
+typedef QList< Toplevel* > ToplevelList;
+typedef QList< const Toplevel* > ConstToplevelList;
 typedef QList< Client* > ClientList;
 typedef QList< const Client* > ConstClientList;
+typedef QList< Unmanaged* > UnmanagedList;
+typedef QList< const Unmanaged* > ConstUnmanagedList;
 
 typedef QList< Group* > GroupList;
 typedef QList< const Group* > ConstGroupList;
@@ -87,6 +121,20 @@ enum allowed_t { Allowed };
 // some enums to have more readable code, instead of using bools
 enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
 
+
+struct RegionDebug
+   {   
+   RegionDebug( XserverRegion r ) : rr( r ) {}   
+   XserverRegion rr;   
+   };   
+      
+#ifdef NDEBUG
+inline
+kndbgstream& operator<<( kndbgstream& stream, RegionDebug ) { return stream; }
+#else
+kdbgstream& operator<<( kdbgstream& stream, RegionDebug r );
+#endif
+
 // Areas, mostly related to Xinerama
 enum clientAreaOption
     {
@@ -109,23 +157,24 @@ enum ShadeMode
     ShadeActivated // "shaded", but visible due to alt+tab to the window
     };
 
-class Shape 
+class Extensions
     {
     public:
-        static bool available() { return kwin_shape_version > 0; }
-        static int version() { return kwin_shape_version; } // as 16*major+minor, i.e. two hex digits
-        static bool hasShape( WId w);
-        static int shapeEvent();
         static void init();
+        static bool shapeAvailable() { return has_shape; }
+        static int shapeNotifyEvent();
+        static bool damageAvailable() { return has_damage; }
+        static int damageNotifyEvent();
+        static bool compositeAvailable() { return has_composite; }
+        static bool fixesAvailable() { return has_fixes; }
     private:
-        static int kwin_shape_version;
-        static int kwin_shape_event;
+        static bool has_shape;
+        static int shape_event_base;
+        static bool has_damage;
+        static int damage_event_base;
+        static bool has_composite;
+        static bool has_fixes;
     };
-
-// compile with XShape older than 1.0
-#ifndef ShapeInput
-const int ShapeInput = 2;
-#endif
 
 class Motif 
     {
@@ -226,34 +275,38 @@ int displayHeight()
     return XDisplayHeight( display(), DefaultScreen( display()));
     }
 
+class Scene;
+extern Scene* scene;
+inline bool compositing() { return scene != NULL; }
+
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint
 #define UrgencyHint XUrgencyHint
 #endif
 
 // for STL-like algo's
-#define KWIN_CHECK_PREDICATE( name, check ) \
+#define KWIN_CHECK_PREDICATE( name, cls, check ) \
 struct name \
     { \
-    inline bool operator()( const Client* cl ) { return check; }; \
+    inline bool operator()( const cls* cl ) { return check; }; \
     }
 
-#define KWIN_COMPARE_PREDICATE( name, type, check ) \
+#define KWIN_COMPARE_PREDICATE( name, cls, type, check ) \
 struct name \
     { \
     typedef type type_helper; /* in order to work also with type being 'const Client*' etc. */ \
     inline name( const type_helper& compare_value ) : value( compare_value ) {}; \
-    inline bool operator()( const Client* cl ) { return check; }; \
+    inline bool operator()( const cls* cl ) { return check; }; \
     const type_helper& value; \
     }
 
-#define KWIN_PROCEDURE( name, action ) \
+#define KWIN_PROCEDURE( name, cls, action ) \
 struct name \
     { \
-    inline void operator()( Client* cl ) { action; }; \
+    inline void operator()( cls* cl ) { action; }; \
     }
 
-KWIN_CHECK_PREDICATE( TruePredicate, cl == cl /*true, avoid warning about 'cl' */ );
+KWIN_CHECK_PREDICATE( TruePredicate, Client, cl == cl /*true, avoid warning about 'cl' */ );
 
 template< typename T >
 Client* findClientInList( const ClientList& list, T predicate )
@@ -261,6 +314,17 @@ Client* findClientInList( const ClientList& list, T predicate )
     for ( ClientList::ConstIterator it = list.begin(); it != list.end(); ++it) 
         {
         if ( predicate( const_cast< const Client* >( *it)))
+            return *it;
+        }
+    return NULL;
+    }
+
+template< typename T >
+Unmanaged* findUnmanagedInList( const UnmanagedList& list, T predicate )
+    {
+    for ( UnmanagedList::ConstIterator it = list.begin(); it != list.end(); ++it) 
+        {
+        if ( predicate( const_cast< const Unmanaged* >( *it)))
             return *it;
         }
     return NULL;
