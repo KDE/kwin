@@ -426,7 +426,7 @@ void TabBox::drawContents( QPainter * )
                   else
                     s += (*it)->caption();
 
-                  s = KStringHandler::cPixelSqueeze(s, fontMetrics(), r.width() - 5 - iconWidth - 8);
+                  s = fontMetrics().elidedText(s, Qt::ElideMiddle, r.width() - 5 - iconWidth - 8);
 
                   // draw text
                   if ( (*it) == current_client )
