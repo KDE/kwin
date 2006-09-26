@@ -142,6 +142,18 @@ For such cases (which should be rare) a small external helper application is nee
 do, and for special cases such a utility needs to be written like kwin/killer).
 
 
+X documentation:
+================
+
+As already said, many parts of KWin don't need knowledge of Xlib or even how X actually works.
+Some parts do, and it may be also useful to have at least a basic understand for general
+understanding. A reference manual for Xlib can be found e.g.
+at ftp://ftp.x.org/pub/X11R7.0/doc/PDF/xlib.pdf , a tutorial explaining basic can be found
+e.g. at ttp://users.actcom.co.il/~choo/lupg/tutorials/xlib-programming/xlib-programming.html
+(note that you don't need to know that all - e.g. GC's are very rarely needed and the
+section on fonts is today outdated).
+
+
 Coding style:
 =============
 
