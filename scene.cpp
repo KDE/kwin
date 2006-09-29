@@ -34,6 +34,10 @@ void Scene::windowOpacityChanged( Toplevel* )
     {
     }
 
+void Scene::windowAdded( Toplevel* )
+    {
+    }
+
 void Scene::windowDeleted( Toplevel* )
     {
     }

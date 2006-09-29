@@ -45,12 +45,20 @@ void Workspace::setupCompositing()
         c->setupCompositing();
     foreach( Unmanaged* c, unmanaged )
         c->setupCompositing();
+    foreach( Client* c, clients )
+        scene->windowAdded( c );
+    foreach( Unmanaged* c, unmanaged )
+        scene->windowAdded( c );
     }
 
 void Workspace::finishCompositing()
     {
     if( scene == NULL )
         return;
+    foreach( Client* c, clients )
+        scene->windowDeleted( c );
+    foreach( Unmanaged* c, unmanaged )
+        scene->windowDeleted( c );
     foreach( Client* c, clients )
         c->finishCompositing();
     foreach( Unmanaged* c, unmanaged )

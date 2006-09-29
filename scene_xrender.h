@@ -33,6 +33,7 @@ class SceneXrender
         virtual void paint( XserverRegion damage, ToplevelList windows );
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
+        virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
         virtual void transformWindowDamage( Toplevel*, XserverRegion ) const;
         virtual void updateTransformation( Toplevel* );

@@ -26,14 +26,52 @@ class SceneOpenGL
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
         virtual void paint( XserverRegion damage, ToplevelList windows );
+        virtual void windowAdded( Toplevel* );
+        virtual void windowDeleted( Toplevel* );
     private:
+        typedef GLuint Texture;
         GC gcroot;
         Pixmap buffer;
         GLXFBConfig fbcroot;
-        GLXFBConfig fbcdrawable;
+        static GLXFBConfig fbcdrawable;
         GLXPixmap glxroot;
         GLXContext context;
+        class Window;
+        QMap< Toplevel*, Window > windows;
     };
+
+class SceneOpenGL::Window
+    {
+    public:
+        Window( Toplevel* c );
+        ~Window();
+        void free(); // is often copied by value, use manually instead of dtor
+        GLXPixmap glxPixmap() const;
+        Texture texture() const;
+        Window() {} // QMap sucks even in Qt4
+    private:
+        void discardPixmap();
+        void discardTexture();
+        Toplevel* toplevel;
+        mutable GLXPixmap glxpixmap;
+        mutable Texture gltexture;
+    };
+
+inline
+void SceneOpenGL::Window::discardPixmap()
+    {
+    if( glxpixmap != None )
+        glXDestroyPixmap( display(), glxpixmap );
+    glxpixmap = None;
+    }
+
+inline
+void SceneOpenGL::Window::discardTexture()
+    {
+    if( gltexture != None )
+        glDeleteTextures( 1, &gltexture );
+    gltexture = None;
+    }
 
 } // namespace
 

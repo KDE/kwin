@@ -24,6 +24,8 @@ namespace KWinInternal
 // SceneOpenGL
 //****************************************
 
+GLXFBConfig SceneOpenGL::fbcdrawable;
+
 const int root_attrs[] =
     {
     GLX_DOUBLEBUFFER, False,
@@ -81,6 +83,10 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
 
 SceneOpenGL::~SceneOpenGL()
     {
+    for( QMap< Toplevel*, Window >::Iterator it = windows.begin();
+         it != windows.end();
+         ++it )
+        (*it).free();
     glXDestroyPixmap( display(), glxroot );
     XFreeGC( display(), gcroot );
     XFreePixmap( display(), buffer );
@@ -99,17 +105,12 @@ static void quadDraw( int x, int y, int w, int h )
     glVertex2i( x, y + h );
     }
 
-GLuint txts[ 100 ];
-int txts_i = 0;
-GLXDrawable drws[ 100 ];
-int drws_i;
-    
 void SceneOpenGL::paint( XserverRegion, ToplevelList windows )
     {
+    grabXServer();
+    glXWaitX();
     glClearColor( 0, 0, 0, 1 );
     glClear( GL_COLOR_BUFFER_BIT /* TODO| GL_DEPTH_BUFFER_BIT*/ );
-    txts_i = 0;
-    drws_i = 0;
     for( ToplevelList::ConstIterator it = windows.begin();
          it != windows.end();
          ++it )
@@ -117,19 +118,16 @@ void SceneOpenGL::paint( XserverRegion, ToplevelList windows )
         QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
         if( !r.isEmpty())
             {
-            GLXDrawable gldraw = glXCreatePixmap( display(), fbcdrawable,
-                (*it)->windowPixmap(), NULL );
-            glXMakeContextCurrent( display(), gldraw, gldraw, context );
+            assert( this->windows.contains( *it ));
+            Window& w = this->windows[ *it ];
+            GLXDrawable pixmap = w.glxPixmap();
+            glXMakeContextCurrent( display(), pixmap, pixmap, context );
             glReadBuffer( GL_FRONT );
             glDrawBuffer( GL_FRONT );
-            // TODO grabXServer();
-            glXWaitX();
-            GLuint texture;
-            glGenTextures( 1, &texture );
+            Texture texture = w.texture();
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
             glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA,
                 0, 0, (*it)->width(), (*it)->height(), 0 );
-            //ungrabXServer();
             glXMakeContextCurrent( display(), glxroot, glxroot, context );
             glDrawBuffer( GL_BACK );
             glPushMatrix();
@@ -143,21 +141,57 @@ void SceneOpenGL::paint( XserverRegion, ToplevelList windows )
             glDisable( GL_TEXTURE_RECTANGLE_ARB );
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
             glXWaitGL();
-            txts[ txts_i++ ] = texture;
-            drws[ drws_i++ ] = gldraw;
             }
         }
     glFlush();
     XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+    ungrabXServer();
     XFlush( display());
-    for( int i = 0;
-         i < txts_i;
-         ++i )
-        glDeleteTextures( 1, &txts[ i ] );
-    for( int i = 0;
-         i < drws_i;
-         ++i )
-        glXDestroyPixmap( display(), drws[ i ] );
+    }
+
+void SceneOpenGL::windowAdded( Toplevel* c )
+    {
+    assert( !windows.contains( c ));
+    windows[ c ] = Window( c );
+    }
+
+void SceneOpenGL::windowDeleted( Toplevel* c )
+    {
+    assert( windows.contains( c ));
+    windows[ c ].free();
+    windows.remove( c );
+    }
+
+SceneOpenGL::Window::Window( Toplevel* c )
+    : toplevel( c )
+    , glxpixmap( None )
+    , gltexture( None )
+    {
+    }
+
+SceneOpenGL::Window::~Window()
+    {
+    }
+    
+void SceneOpenGL::Window::free()
+    {
+    discardPixmap();
+    discardTexture();
+    }
+
+GLXPixmap SceneOpenGL::Window::glxPixmap() const
+    {
+    if( glxpixmap == None )
+        glxpixmap = glXCreatePixmap( display(), fbcdrawable,
+            toplevel->windowPixmap(), NULL );
+    return glxpixmap;
+    }
+
+SceneOpenGL::Texture SceneOpenGL::Window::texture() const
+    {
+    if( gltexture == None )
+        glGenTextures( 1, &gltexture );
+    return gltexture;
     }
 
 } // namespace

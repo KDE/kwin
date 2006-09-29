@@ -10,8 +10,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "toplevel.h"
 
-#include "scene.h"
-
 namespace KWinInternal
 {
 
@@ -30,8 +28,6 @@ Toplevel::~Toplevel()
     assert( damage_handle == None );
     assert( damage_region == None );
     assert( window_pixmap == None );
-    if( scene != NULL )
-        scene->windowDeleted( this );
     }
 
 #ifndef NDEBUG

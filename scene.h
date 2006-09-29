@@ -26,6 +26,7 @@ class Scene
         virtual void paint( XserverRegion damage, ToplevelList windows ) = 0;
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
+        virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
         virtual void transformWindowDamage( Toplevel*, XserverRegion ) const;
         virtual void updateTransformation( Toplevel* );

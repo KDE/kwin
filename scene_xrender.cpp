@@ -202,10 +202,15 @@ void SceneXrender::windowOpacityChanged( Toplevel* c )
 
 void SceneXrender::windowDeleted( Toplevel* c )
     {
-    if( !window_data.contains( c ))
-        return;
+    assert( window_data.contains( c ));
     window_data[ c ].free();
     window_data.remove( c );
+    }
+
+void SceneXrender::windowAdded( Toplevel* c )
+    {
+    assert( !window_data.contains( c ));
+    resetWindowData( c );
     }
 
 // TODO handle xrandr changes
