@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene.h"
 #include "scene_basic.h"
 #include "scene_xrender.h"
+#include "scene_opengl.h"
 
 namespace KWinInternal
 {
@@ -36,7 +37,8 @@ void Workspace::setupCompositing()
     compositeTimer.start( 20 );
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
 //    scene = new SceneBasic( this );
-    scene = new SceneXrender( this );
+//    scene = new SceneXrender( this );
+    scene = new SceneOpenGL( this );
     effects = new EffectsHandler( this );
     addDamage( 0, 0, displayWidth(), displayHeight());
     foreach( Client* c, clients )
