@@ -301,8 +301,48 @@ class Workspace : public QObject, public KDecorationDefines
         void slotSwitchDesktopDown();
 
         void slotSwitchToDesktop( int );
+        void slotSwitchToDesktop1() { return slotSwitchToDesktop( 1 ); }
+        void slotSwitchToDesktop2() { return slotSwitchToDesktop( 2 ); }
+        void slotSwitchToDesktop3() { return slotSwitchToDesktop( 3 ); }
+        void slotSwitchToDesktop4() { return slotSwitchToDesktop( 4 ); }
+        void slotSwitchToDesktop5() { return slotSwitchToDesktop( 5 ); }
+        void slotSwitchToDesktop6() { return slotSwitchToDesktop( 6 ); }
+        void slotSwitchToDesktop7() { return slotSwitchToDesktop( 7 ); }
+        void slotSwitchToDesktop8() { return slotSwitchToDesktop( 8 ); }
+        void slotSwitchToDesktop9() { return slotSwitchToDesktop( 9 ); }
+        void slotSwitchToDesktop10() { return slotSwitchToDesktop( 10 ); }
+        void slotSwitchToDesktop11() { return slotSwitchToDesktop( 11 ); }
+        void slotSwitchToDesktop12() { return slotSwitchToDesktop( 12 ); }
+        void slotSwitchToDesktop13() { return slotSwitchToDesktop( 13 ); }
+        void slotSwitchToDesktop14() { return slotSwitchToDesktop( 14 ); }
+        void slotSwitchToDesktop15() { return slotSwitchToDesktop( 15 ); }
+        void slotSwitchToDesktop16() { return slotSwitchToDesktop( 16 ); }
+        void slotSwitchToDesktop17() { return slotSwitchToDesktop( 17 ); }
+        void slotSwitchToDesktop18() { return slotSwitchToDesktop( 18 ); }
+        void slotSwitchToDesktop19() { return slotSwitchToDesktop( 19 ); }
+        void slotSwitchToDesktop20() { return slotSwitchToDesktop( 20 ); }
     //void slotSwitchToWindow( int );
         void slotWindowToDesktop( int );
+        void slotWindowToDesktop1() { return slotWindowToDesktop( 1 ); }
+        void slotWindowToDesktop2() { return slotWindowToDesktop( 2 ); }
+        void slotWindowToDesktop3() { return slotWindowToDesktop( 3 ); }
+        void slotWindowToDesktop4() { return slotWindowToDesktop( 4 ); }
+        void slotWindowToDesktop5() { return slotWindowToDesktop( 5 ); }
+        void slotWindowToDesktop6() { return slotWindowToDesktop( 6 ); }
+        void slotWindowToDesktop7() { return slotWindowToDesktop( 7 ); }
+        void slotWindowToDesktop8() { return slotWindowToDesktop( 8 ); }
+        void slotWindowToDesktop9() { return slotWindowToDesktop( 9 ); }
+        void slotWindowToDesktop10() { return slotWindowToDesktop( 10 ); }
+        void slotWindowToDesktop11() { return slotWindowToDesktop( 11 ); }
+        void slotWindowToDesktop12() { return slotWindowToDesktop( 12 ); }
+        void slotWindowToDesktop13() { return slotWindowToDesktop( 13 ); }
+        void slotWindowToDesktop14() { return slotWindowToDesktop( 14 ); }
+        void slotWindowToDesktop15() { return slotWindowToDesktop( 15 ); }
+        void slotWindowToDesktop16() { return slotWindowToDesktop( 16 ); }
+        void slotWindowToDesktop17() { return slotWindowToDesktop( 17 ); }
+        void slotWindowToDesktop18() { return slotWindowToDesktop( 18 ); }
+        void slotWindowToDesktop19() { return slotWindowToDesktop( 19 ); }
+        void slotWindowToDesktop20() { return slotWindowToDesktop( 20 ); }
     //void slotWindowToListPosition( int );
 
         void slotWindowMaximize();
