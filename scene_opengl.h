@@ -25,7 +25,7 @@ class SceneOpenGL
     public:
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
-        virtual void paint( XserverRegion damage, ToplevelList windows );
+        virtual void paint( QRegion damage, ToplevelList windows );
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
     private:

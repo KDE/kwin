@@ -44,11 +44,6 @@ struct XDamageNotifyEvent
     {
     };
 #endif
-#ifndef HAVE_XFIXES
-struct XserverRegion
-    {
-    };
-#endif
 
 const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
     | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
@@ -121,19 +116,6 @@ enum allowed_t { Allowed };
 // some enums to have more readable code, instead of using bools
 enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
 
-
-struct RegionDebug
-   {   
-   RegionDebug( XserverRegion r ) : rr( r ) {}   
-   XserverRegion rr;   
-   };   
-      
-#ifdef NDEBUG
-inline
-kndbgstream& operator<<( kndbgstream& stream, RegionDebug ) { return stream; }
-#else
-kdbgstream& operator<<( kdbgstream& stream, RegionDebug r );
-#endif
 
 // Areas, mostly related to Xinerama
 enum clientAreaOption

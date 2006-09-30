@@ -30,6 +30,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
+
 #include <stdio.h>
 
 #include "atoms.h"
@@ -42,41 +43,54 @@ namespace KWinInternal
 
 #ifndef KCMRULES
 
-// used to store the return values of
-// XShapeQueryExtension.
-// Necessary since shaped window are an extension to X
-int Shape::kwin_shape_version = 0;
-int Shape::kwin_shape_event = 0;
+bool Extensions::has_shape = 0;
+int Extensions::shape_event_base = 0;
+bool Extensions::has_damage = 0;
+int Extensions::damage_event_base = 0;
+bool Extensions::has_composite = 0;
+bool Extensions::has_fixes = 0;
 
-// does the window w  need a shape combine mask around it?
-bool Shape::hasShape( WId w)
+void Extensions::init()
     {
-    int xws, yws, xbs, ybs;
-    unsigned int wws, hws, wbs, hbs;
-    int boundingShaped = 0, clipShaped = 0;
-    if (!available())
-        return false;
-    XShapeQueryExtents(display(), w,
-                       &boundingShaped, &xws, &yws, &wws, &hws,
-                       &clipShaped, &xbs, &ybs, &wbs, &hbs);
-    return boundingShaped != 0;
-    }
-
-int Shape::shapeEvent()
-    {
-    return kwin_shape_event;
-    }
-
-void Shape::init()
-    {
-    kwin_shape_version = 0;
     int dummy;
-    if( !XShapeQueryExtension( display(), &kwin_shape_event, &dummy ))
-        return;
-    int major, minor;
-    if( !XShapeQueryVersion( display(), &major, &minor ))
-        return;
-    kwin_shape_version = major * 0x10 + minor;
+    has_shape = XShapeQueryExtension( display(), &shape_event_base, &dummy);
+#ifdef HAVE_XDAMAGE
+    has_damage = XDamageQueryExtension( display(), &damage_event_base, &dummy );
+#else
+    has_damage = false;
+#endif
+#ifdef HAVE_XCOMPOSITE
+    has_composite = XCompositeQueryExtension( display(), &dummy, &dummy );
+    if( has_composite )
+        {
+        int major = 0;
+        int minor = 2;
+        XCompositeQueryVersion( display(), &major, &minor );
+        if( major == 0 && minor < 2 )
+            has_composite = false;
+        }
+#else
+    has_composite = false;
+#endif
+#ifdef HAVE_XFIXES
+    has_fixes = XFixesQueryExtension( display(), &dummy, &dummy );
+#else
+    has_fixes = false;
+#endif
+    }
+
+int Extensions::shapeNotifyEvent()
+    {
+    return shape_event_base + ShapeNotify;
+    }
+
+int Extensions::damageNotifyEvent()
+    {
+#ifdef HAVE_XDAMAGE
+    return damage_event_base + XDamageNotify;
+#else
+    return 0;
+#endif
     }
 
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
@@ -300,7 +314,6 @@ bool grabbedXServer()
     {
     return server_grab_count > 0;
     }
-
 #endif
 
 bool isLocalMachine( const QByteArray& host )
@@ -367,8 +380,6 @@ void ShortcutDialog::accept()
     KShortcutDialog::accept();
     }
 #endif
-
-
 } // namespace
 
 #ifndef KCMRULES

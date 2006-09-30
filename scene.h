@@ -23,12 +23,12 @@ class Scene
     public:
         Scene( Workspace* ws );
         virtual ~Scene();
-        virtual void paint( XserverRegion damage, ToplevelList windows ) = 0;
+        virtual void paint( QRegion damage, ToplevelList windows ) = 0;
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
-        virtual void transformWindowDamage( Toplevel*, XserverRegion ) const;
+        virtual void transformWindowDamage( Toplevel*, QRegion& ) const;
         virtual void updateTransformation( Toplevel* );
     protected:
         Workspace* wspace;

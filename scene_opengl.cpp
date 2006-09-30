@@ -114,7 +114,7 @@ static void quadDraw( int x, int y, int w, int h )
     glVertex2i( x, y + h );
     }
 
-void SceneOpenGL::paint( XserverRegion, ToplevelList windows )
+void SceneOpenGL::paint( QRegion, ToplevelList windows )
     {
     grabXServer();
     glXWaitX();

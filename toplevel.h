@@ -60,8 +60,7 @@ class Toplevel
         void finishCompositing();
         void addDamage( const QRect& r );
         void addDamage( int x, int y, int w, int h );
-        void addDamage( XserverRegion r, bool destroy );
-        XserverRegion damage() const;
+        QRegion damage() const;
         void resetDamage();
     protected:
         void setHandle( Window id );
@@ -75,7 +74,7 @@ class Toplevel
         Window id;
         Workspace* wspace;
         Damage damage_handle;
-        XserverRegion damage_region;
+        QRegion damage_region;
         mutable Pixmap window_pixmap;
     };
 
@@ -185,7 +184,7 @@ inline bool Toplevel::isNormalWindow() const
     return windowType() == NET::Normal;
     }
 
-inline XserverRegion Toplevel::damage() const
+inline QRegion Toplevel::damage() const
     {
     return damage_region;
     }

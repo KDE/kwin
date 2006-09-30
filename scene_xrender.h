@@ -30,12 +30,12 @@ class SceneXrender
     public:
         SceneXrender( Workspace* ws );
         virtual ~SceneXrender();
-        virtual void paint( XserverRegion damage, ToplevelList windows );
+        virtual void paint( QRegion damage, ToplevelList windows );
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
-        virtual void transformWindowDamage( Toplevel*, XserverRegion ) const;
+        virtual void transformWindowDamage( Toplevel*, QRegion& ) const;
         virtual void updateTransformation( Toplevel* );
     private:
         void createBuffer();

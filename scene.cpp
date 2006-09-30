@@ -42,7 +42,7 @@ void Scene::windowDeleted( Toplevel* )
     {
     }
 
-void Scene::transformWindowDamage( Toplevel*, XserverRegion ) const
+void Scene::transformWindowDamage( Toplevel*, QRegion& ) const
     {
     }
 

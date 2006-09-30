@@ -69,9 +69,7 @@ void Workspace::finishCompositing()
     effects = NULL;
     delete scene;
     scene = NULL;
-    if( damage_region != None )
-        XFixesDestroyRegion( display(), damage_region );
-    damage_region = None;
+    damage_region = QRegion();
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
          ++it )
@@ -84,107 +82,41 @@ void Workspace::finishCompositing()
         }
     }
 
-void Workspace::addDamage( const QRect& r )
-    {
-    addDamage( r.x(), r.y(), r.width(), r.height());
-    }
-
 void Workspace::addDamage( int x, int y, int w, int h )
     {
     if( !compositing())
         return;
-    XRectangle r;
-    r.x = x;
-    r.y = y;
-    r.width = w;
-    r.height = h;
-    addDamage( XFixesCreateRegion( display(), &r, 1 ), true );
+    damage_region += QRegion( x, y, w, h );
     }
 
-void Workspace::addDamage( XserverRegion r, bool destroy )
+void Workspace::addDamage( const QRect& r )
     {
     if( !compositing())
         return;
-    if( damage_region != None )
-        {
-        XFixesUnionRegion( display(), damage_region, damage_region, r );
-        if( destroy )
-            XFixesDestroyRegion( display(), r );
-        }
-    else
-        {
-        if( destroy )
-            damage_region = r;
-        else
-            {
-            damage_region = XFixesCreateRegion( display(), NULL, 0 );
-            XFixesCopyRegion( display(), damage_region, r );
-            }
-        }
-    }
-
-void Workspace::addDamage( Toplevel* c, const QRect& r )
-    {
-    addDamage( c, r.x(), r.y(), r.width(), r.height());
+    damage_region += r;
     }
 
 void Workspace::addDamage( Toplevel* c, int x, int y, int w, int h )
     {
     if( !compositing())
         return;
-    XRectangle r;
-    r.x = x;
-    r.y = y;
-    r.width = w;
-    r.height = h;
-    addDamage( c, XFixesCreateRegion( display(), &r, 1 ), true );
+    addDamage( c, QRect( x, y, w, h ));
     }
 
-void Workspace::addDamage( Toplevel* c, XserverRegion r, bool destroy )
+void Workspace::addDamage( Toplevel* c, const QRect& r )
     {
     if( !compositing())
         return;
-    if( !destroy )
-        {
-        XserverRegion r2 = XFixesCreateRegion( display(), NULL, 0 );
-        XFixesCopyRegion( display(), r2, r );
-        r = r2;
-        destroy = true;
-        }
-    scene->transformWindowDamage( c, r );
-    if( damage_region != None )
-        {
-        XFixesUnionRegion( display(), damage_region, damage_region, r );
-        XFixesDestroyRegion( display(), r );
-        }
-    else
-        damage_region = r;
+    QRegion r2( r );
+    scene->transformWindowDamage( c, r2 );
+    damage_region += r2;
     }
 
 void Workspace::compositeTimeout()
     {
-    ToplevelList windows;
-    foreach( Toplevel* c, clients )
-        windows.append( c );
-    foreach( Toplevel* c, unmanaged )
-        windows.append( c );
-    foreach( Toplevel* c, windows )
-        {
-        if( c->damage() != None )
-            {
-            if( damage_region == None )
-                damage_region = XFixesCreateRegion( display(), NULL, 0 );
-            XserverRegion r = XFixesCreateRegion( display(), NULL, 0 );
-            XFixesCopyRegion( display(), r, c->damage());
-            scene->transformWindowDamage( c, r );
-            XFixesUnionRegion( display(), damage_region, damage_region, r );
-            XFixesDestroyRegion( display(), r );
-            c->resetDamage();
-            }
-        }
-    if( damage_region == None ) // no damage
+    if( damage_region.isEmpty()) // no damage
         return;
-    windows.clear();
+    ToplevelList windows;
     Window* children;
     unsigned int children_count;
     Window dummy;
@@ -202,8 +134,7 @@ void Workspace::compositeTimeout()
             windows.append( c );
         }
     scene->paint( damage_region, windows );
-    XFixesDestroyRegion( display(), damage_region );
-    damage_region = None;
+    damage_region = QRegion();
     }
 
 //****************************************
@@ -217,6 +148,7 @@ void Toplevel::setupCompositing()
     if( damage_handle != None )
         return;
     damage_handle = XDamageCreate( display(), handle(), XDamageReportRawRectangles );
+    damage_region = QRegion( 0, 0, width(), height());
     }
 
 void Toplevel::finishCompositing()
@@ -228,9 +160,7 @@ void Toplevel::finishCompositing()
     if( window_pixmap != None )
         XFreePixmap( display(), window_pixmap );
     window_pixmap = None;
-    if( damage_region != None )
-        XFixesDestroyRegion( display(), damage_region );
-    damage_region = None;
+    damage_region = QRegion();
     }
 
 void Toplevel::resetWindowPixmap()
@@ -251,8 +181,7 @@ Pixmap Toplevel::windowPixmap() const
 
 void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     {
-    XserverRegion r = XFixesCreateRegion( display(), &e->area, 1 );
-    addDamage( r, true );
+    addDamage( e->area.x, e->area.y, e->area.width, e->area.height );
     }
 
 void Toplevel::addDamage( const QRect& r )
@@ -264,41 +193,18 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     {
     if( !compositing())
         return;
-    XRectangle r;
-    r.x = x;
-    r.y = y;
-    r.width = w;
-    r.height = h;
-    addDamage( XFixesCreateRegion( display(), &r, 1 ), true );
-    }
-
-void Toplevel::addDamage( XserverRegion r, bool destroy )
-    {
-    if( !compositing())
-        return;
-    if( damage_region != None )
-        {
-        XFixesUnionRegion( display(), damage_region, damage_region, r );
-        if( destroy )
-            XFixesDestroyRegion( display(), r );
-        }
-    else
-        {
-        if( destroy )
-            damage_region = r;
-        else
-            {
-            damage_region = XFixesCreateRegion( display(), NULL, 0 );
-            XFixesCopyRegion( display(), damage_region, r );
-            }
-        }
+    QRect r( x, y, w, h );
+    damage_region += r;
+    r.translate( this->x(), this->y());
+    // this could be possibly optimized to damage Workspace only if the toplevel
+    // is actually visible there and not obscured by something, but I guess
+    // that's not really worth it
+    workspace()->addDamage( this, r );
     }
 
 void Toplevel::resetDamage()
     {
-    if( damage_region != None )
-        XFixesDestroyRegion( display(), damage_region );
-    damage_region = None;
+    damage_region = QRegion();
     }
 
 #endif

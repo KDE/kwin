@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "geometrytip.h"
 #include "rules.h"
+#include "effects.h"
 #include <QX11Info>
 #include <QDesktopWidget>
 
@@ -1657,9 +1658,11 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         {
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
-    if( force == NormalGeometrySet && frame_geometry == QRect( x, y, w, h ))
+    if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
         return;
-    frame_geometry = QRect( x, y, w, h );
+    // TODO add damage only if not obscured
+    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
+    geom = QRect( x, y, w, h );
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1676,12 +1679,15 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
             cs.width(), cs.height());
         XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
         }
-    updateShape();
+    if( shape())
+        updateShape();
     // SELI TODO won't this be too expensive?
     updateWorkareaDiffs();
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    resetWindowPixmap();
+    addDamage( rect());
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1711,9 +1717,10 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         kDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
         kDebug() << kBacktrace() << endl;
         }
-    if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
+    if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
         return;
-    frame_geometry.setSize( QSize( w, h ));
+    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
+    geom.setSize( QSize( w, h ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1730,11 +1737,15 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
             cs.width(), cs.height());
         XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
         }
-    updateShape();
+    if( shape())
+        updateShape();
     updateWorkareaDiffs();
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    resetWindowPixmap();
+    // TODO add damage only in added area?
+    addDamage( rect());
     }
 
 /*!
@@ -1742,9 +1753,10 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
  */
 void Client::move( int x, int y, ForceGeometry_t force )
     {
-    if( force == NormalGeometrySet && frame_geometry.topLeft() == QPoint( x, y ))
+    if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
         return;
-    frame_geometry.moveTopLeft( QPoint( x, y ));
+    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
+    geom.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
         {
@@ -1755,8 +1767,9 @@ void Client::move( int x, int y, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    // client itself is not damaged
+    workspace()->addDamage( this, geometry());
     }
-
 
 void Client::postponeGeometryUpdates( bool postpone )
     {
@@ -2255,6 +2268,8 @@ bool Client::startMoveResize()
 // not needed anymore?        kapp->installEventFilter( eater );
         }
     Notify::raise( isResize() ? Notify::ResizeStart : Notify::MoveStart );
+    if( effects )
+        effects->windowUserMovedResized( this, true, false );
     return true;
     }
 
@@ -2268,6 +2283,8 @@ void Client::finishMoveResize( bool cancel )
     checkMaximizeGeometry();
 // FRAME    update();
     Notify::raise( isResize() ? Notify::ResizeEnd : Notify::MoveEnd );
+    if( effects )
+        effects->windowUserMovedResized( this, false, true );
     }
 
 void Client::leaveMoveResize()
@@ -2531,7 +2548,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         }
     if ( isMove() )
       workspace()->clientMoved(globalPos, xTime());
+    if( effects )
+        effects->windowUserMovedResized( this, false, false );
     }
-
 
 } // namespace

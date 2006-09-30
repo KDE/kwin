@@ -18,7 +18,6 @@ Toplevel::Toplevel( Workspace* ws )
     , id( None )
     , wspace( ws )
     , damage_handle( None )
-    , damage_region( None )
     , window_pixmap( None )
     {
     }
@@ -26,7 +25,6 @@ Toplevel::Toplevel( Workspace* ws )
 Toplevel::~Toplevel()
     {
     assert( damage_handle == None );
-    assert( damage_region == None );
     assert( window_pixmap == None );
     }
 

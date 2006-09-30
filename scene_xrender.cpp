@@ -22,6 +22,32 @@ namespace KWinInternal
 // SceneXrender
 //****************************************
 
+struct RegionDebug
+   {   
+   RegionDebug( XserverRegion r ) : rr( r ) {}   
+   XserverRegion rr;   
+   };   
+      
+#ifdef NDEBUG
+inline
+kndbgstream& operator<<( kndbgstream& stream, RegionDebug ) { return stream; }
+#else
+kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
+    {       
+    if( r.rr == None )
+        return stream << "EMPTY";
+    int num;
+    XRectangle* rects = XFixesFetchRegion( display(), r.rr, &num );
+    if( rects == NULL || num == 0 )
+        return stream << "EMPTY";
+    for( int i = 0;
+         i < num;
+         ++i )
+       stream << "[" << rects[ i ].x << "+" << rects[ i ].y << " " << rects[ i ].width << "x" << rects[ i ].height << "]";
+    return stream;
+    }
+#endif
+
 SceneXrender::SceneXrender( Workspace* ws )
     : Scene( ws )
     {
@@ -42,16 +68,24 @@ SceneXrender::~SceneXrender()
         (*it).free();
     }
 
-void SceneXrender::paint( XserverRegion damage, ToplevelList windows )
+void SceneXrender::paint( QRegion dam, ToplevelList windows )
     {
 #if 1
-    XRectangle r;
-    r.x = 0;
-    r.y = 0;
-    r.width = displayWidth();
-    r.height = displayHeight();
-    XFixesSetRegion( display(), damage, &r, 1 );
+    dam = QRegion( 0, 0, displayWidth(), displayHeight());
 #endif
+    QVector< QRect > rects = dam.rects();
+    XRectangle* xr = new XRectangle[ rects.count() ];
+    for( int i = 0;
+         i < rects.count();
+         ++i )
+        {
+        xr[ i ].x = rects[ i ].x();
+        xr[ i ].y = rects[ i ].y();
+        xr[ i ].width = rects[ i ].width();
+        xr[ i ].height = rects[ i ].height();
+        }
+    XserverRegion damage = XFixesCreateRegion( display(), xr, rects.count());
+    delete[] xr;
     // Use the damage region as the clip region for the root window
     XFixesSetPictureClipRegion( display(), front, 0, 0, damage );
     // Prepare pass for windows
@@ -144,9 +178,10 @@ void SceneXrender::paint( XserverRegion damage, ToplevelList windows )
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
     XFlush( display());
+    XFixesDestroyRegion( display(), damage );
     }
 
-void SceneXrender::transformWindowDamage( Toplevel* c, XserverRegion r ) const
+void SceneXrender::transformWindowDamage( Toplevel* c, QRegion& r ) const
     {
     if( !window_data.contains( c ))
         return;
@@ -154,17 +189,13 @@ void SceneXrender::transformWindowDamage( Toplevel* c, XserverRegion r ) const
     if( matrix.isIdentity())
         return;
     if( matrix.isOnlyTranslate())
-        XFixesTranslateRegion( display(), r, int( matrix.xTranslate()), int( matrix.yTranslate()));
+        r.translate( int( matrix.xTranslate()), int( matrix.yTranslate()));
     else
         {
         // The region here should be translated using the matrix, but that's not possible
         // (well, maybe fetch the region and transform manually - TODO check). So simply
         // mark whole screen as damaged.
-        XRectangle s;
-        s.x = s.y = 0;
-        s.width = displayWidth();
-        s.height = displayHeight();
-        XFixesSetRegion( display(), r, &s, 1 );
+        r = QRegion( 0, 0, displayWidth(), displayHeight());
         }
     }
 
