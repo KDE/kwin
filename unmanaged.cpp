@@ -12,6 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "workspace.h"
 
+#include <X11/extensions/shape.h>
+
 namespace KWinInternal
 {
 
@@ -47,6 +49,9 @@ bool Unmanaged::track( Window w )
         0;
     info = new NETWinInfo( display(), w, rootWindow(), properties, 2 );
 
+    if( Extensions::shapeAvailable())
+        XShapeSelectInput( display(), w, ShapeNotifyMask );
+    detectShape( w );
     setupCompositing();
     resetWindowPixmap();
     return true;

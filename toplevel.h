@@ -55,6 +55,7 @@ class Toplevel
 
         Pixmap windowPixmap() const;
         Visual* visual() const;
+        bool shape() const;
         virtual double opacity() const = 0;
         void setupCompositing();
         void finishCompositing();
@@ -64,6 +65,7 @@ class Toplevel
         void resetDamage();
     protected:
         void setHandle( Window id );
+        void detectShape( Window id );
         void resetWindowPixmap();
         void damageNotifyEvent( XDamageNotifyEvent* e );
         QRect geom;
@@ -76,6 +78,7 @@ class Toplevel
         Damage damage_handle;
         QRegion damage_region;
         mutable Pixmap window_pixmap;
+        bool is_shape;
     };
 
 inline Window Toplevel::handle() const
@@ -187,6 +190,11 @@ inline bool Toplevel::isNormalWindow() const
 inline QRegion Toplevel::damage() const
     {
     return damage_region;
+    }
+
+inline bool Toplevel::shape() const
+    {
+    return is_shape;
     }
 
 #ifdef NDEBUG

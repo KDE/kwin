@@ -84,6 +84,20 @@ int Extensions::shapeNotifyEvent()
     return shape_event_base + ShapeNotify;
     }
 
+// does the window w need a shape combine mask around it?
+bool Extensions::hasShape( Window w )
+    {
+    int xws, yws, xbs, ybs;
+    unsigned int wws, hws, wbs, hbs;
+    int boundingShaped = 0, clipShaped = 0;
+    if( !Extensions::shapeAvailable())
+        return false;
+    XShapeQueryExtents(display(), w,
+                       &boundingShaped, &xws, &yws, &wws, &hws,
+                       &clipShaped, &xbs, &ybs, &wbs, &hbs);
+    return boundingShaped != 0;
+    }
+
 int Extensions::damageNotifyEvent()
     {
 #ifdef HAVE_XDAMAGE

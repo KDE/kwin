@@ -19,6 +19,7 @@ Toplevel::Toplevel( Workspace* ws )
     , wspace( ws )
     , damage_handle( None )
     , window_pixmap( None )
+    , is_shape( false )
     {
     }
 
@@ -72,6 +73,10 @@ kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& list )
     }
 #endif
 
+void Toplevel::detectShape( Window id )
+    {
+    is_shape = Extensions::hasShape( id );
+    }
 
 } // namespace
 

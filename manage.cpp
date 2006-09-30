@@ -38,17 +38,24 @@ bool Client::manage( Window w, bool isMapped )
     {
     StackingUpdatesBlocker stacking_blocker( workspace());
 
+    grabXServer();
+
     XWindowAttributes attr;
     if( !XGetWindowAttributes(display(), w, &attr))
+        {
+        ungrabXServer();
         return false;
-
-    grabXServer();
+        }
 
     // from this place on, manage() mustn't return false
     postpone_geometry_updates = 1;
     pending_geometry_update = true; // force update when finishing with geometry changes
 
     embedClient( w, attr );
+    
+    vis = attr.visual;
+
+    setupCompositing();
 
     // SELI order all these things in some sane manner
 
@@ -77,6 +84,7 @@ bool Client::manage( Window w, bool isMapped )
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2ExtendedStrut |
+        NET::WM2Opacity |
         0;
 
     info = new WinInfo( this, display(), client, rootWindow(), properties, 2 );
@@ -105,6 +113,9 @@ bool Client::manage( Window w, bool isMapped )
     setupWindowRules( false );
     setCaption( cap_normal, true );
 
+    if( Extensions::shapeAvailable())
+        XShapeSelectInput( display(), window(), ShapeNotifyMask );
+    detectShape( window());
     detectNoBorder();
     fetchIconicName();
     getWMHints(); // needs to be done before readTransient() because of reading the group
@@ -313,9 +324,8 @@ bool Client::manage( Window w, bool isMapped )
     if(( !isSpecialWindow() || isToolbar()) && isMovable())
         keepInArea( area, partial_keep_in_area );
 
-    XShapeSelectInput( display(), window(), ShapeNotifyMask );
-    is_shape = Shape::hasShape( window());
-    updateShape();
+    if( shape()) 
+        updateShape();
 	
     //CT extra check for stupid jdk 1.3.1. But should make sense in general
     // if client has initial state set to Iconic and is transient with a parent
@@ -510,7 +520,7 @@ bool Client::manage( Window w, bool isMapped )
 //    sendSyntheticConfigureNotify(); done when setting mapping state
 
     delete session;
-
+    
     ungrabXServer();
     
     client_rules.discardTemporary();
@@ -528,7 +538,7 @@ bool Client::manage( Window w, bool isMapped )
 void Client::embedClient( Window w, const XWindowAttributes &attr )
     {
     assert( client == None );
-    assert( frame == None );
+    assert( frameId() == None );
     assert( wrapper == None );
     client = w;
     // we don't want the window to be destroyed when we are destroyed
@@ -544,9 +554,10 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
     swa.background_pixmap = None;
     swa.border_pixel = 0;
 
-    frame = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+    Window frame = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
+    setHandle( frame );
     wrapper = XCreateWindow( display(), frame, 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );

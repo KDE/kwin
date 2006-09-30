@@ -17,6 +17,8 @@ Based on glcompmgr code by Felix Bellaby.
 #include "utils.h"
 #include "client.h"
 
+#include <X11/extensions/shape.h>
+
 namespace KWinInternal
 {
 
@@ -134,11 +136,11 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
 // TODO for double-buffered root            glDrawBuffer( GL_BACK );
             glXMakeContextCurrent( display(), glxroot, glxroot, context );
             glPushMatrix();
-            // TODO Y axis in opengl grows up apparently
             glTranslatef( w.glX(), w.glY(), 0 );
             glEnable( GL_TEXTURE_RECTANGLE_ARB );
             glBegin( GL_QUADS );
-            quadDraw( 0, 0, w.width(), w.height());
+            foreach( QRect r, w.shape().rects())
+                quadDraw( r.x(), w.height() - r.y() - r.height(), r.width(), r.height());
             glEnd();
             glPopMatrix();
             glDisable( GL_TEXTURE_RECTANGLE_ARB );
@@ -166,10 +168,21 @@ void SceneOpenGL::windowDeleted( Toplevel* c )
     windows.remove( c );
     }
 
+void SceneOpenGL::windowGeometryShapeChanged( Toplevel* c )
+    {
+    if( !windows.contains( c )) // this is ok, shape is not valid
+        return;                 // by default
+    Window& w = windows[ c ];
+    w.discardShape();
+    w.discardPixmap();
+    w.discardTexture();
+    }
+
 SceneOpenGL::Window::Window( Toplevel* c )
     : toplevel( c )
     , glxpixmap( None )
     , texture( None )
+    , shape_valid( false )
     {
     }
 
@@ -217,6 +230,40 @@ void SceneOpenGL::Window::bindTexture()
                 }
             }
         }
+    }
+
+void SceneOpenGL::Window::discardShape()
+    {
+    shape_valid = false;
+    }
+
+QRegion SceneOpenGL::Window::shape() const
+    {
+    if( !shape_valid )
+        {
+        if( toplevel->shape())
+            {
+            int count, order;
+            XRectangle* rects = XShapeGetRectangles( display(), toplevel->handle(),
+                ShapeBounding, &count, &order );
+            if(rects)
+                {
+                shape_region = QRegion();
+                for( int i = 0;
+                     i < count;
+                     ++i )
+                    shape_region += QRegion( rects[ i ].x, rects[ i ].y,
+                        rects[ i ].width, rects[ i ].height );
+                XFree(rects);
+                }
+            else
+                shape_region = QRegion( 0, 0, width(), height());
+            }
+        else
+            shape_region = QRegion( 0, 0, width(), height());
+        shape_valid = true;
+        }
+    return shape_region;
     }
 
 } // namespace

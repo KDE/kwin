@@ -674,7 +674,7 @@ bool Client::windowEvent( XEvent* e )
                 {
                 if( e->type == Extensions::shapeNotifyEvent() )
                     {
-                    is_shape = hasShape( window()); // workaround for #19644
+                    detectShape( window()); // workaround for #19644
                     updateShape();
                     }
                 }
@@ -1627,9 +1627,17 @@ bool Unmanaged::windowEvent( XEvent* e )
             configureNotifyEvent( &e->xconfigure );
             break;
         default:
+            {
+            if( e->type == Extensions::shapeNotifyEvent() )
+                {
+                detectShape( handle());
+                if( scene != NULL )
+                    scene->windowGeometryShapeChanged( this );
+                }
             if( e->type == Extensions::damageNotifyEvent())
                 damageNotifyEvent( reinterpret_cast< XDamageNotifyEvent* >( e ));
             break;
+            }
         }
     return true; // eat all events
     }

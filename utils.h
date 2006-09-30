@@ -149,6 +149,7 @@ class Extensions
         static int damageNotifyEvent();
         static bool compositeAvailable() { return has_composite; }
         static bool fixesAvailable() { return has_fixes; }
+        static bool hasShape( Window w );
     private:
         static bool has_shape;
         static int shape_event_base;

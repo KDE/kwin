@@ -27,8 +27,9 @@ class SceneOpenGL
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
         virtual void paint( QRegion damage, ToplevelList windows );
-        virtual void windowAdded( Toplevel* );
-        virtual void windowDeleted( Toplevel* );
+        virtual void windowAdded( Toplevel* c );
+        virtual void windowDeleted( Toplevel* c );
+        virtual void windowGeometryShapeChanged( Toplevel* c );
     private:
         typedef GLuint Texture;
         GC gcroot;
@@ -53,13 +54,17 @@ class SceneOpenGL::Window
         int height() const;
         GLXPixmap glxPixmap() const;
         void bindTexture();
-        Window() {} // QMap sucks even in Qt4
-    private:
+        QRegion shape() const;
         void discardPixmap();
         void discardTexture();
+        void discardShape();
+        Window() {} // QMap sucks even in Qt4
+    private:
         Toplevel* toplevel;
         mutable GLXPixmap glxpixmap;
         Texture texture;
+        mutable QRegion shape_region;
+        mutable bool shape_valid;
     };
 
 inline
