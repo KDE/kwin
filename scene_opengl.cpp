@@ -25,6 +25,7 @@ namespace KWinInternal
 //****************************************
 
 GLXFBConfig SceneOpenGL::fbcdrawable;
+GLXContext SceneOpenGL::context;
 
 const int root_attrs[] =
     {
@@ -129,22 +130,15 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
             {
             assert( this->windows.contains( *it ));
             Window& w = this->windows[ *it ];
-            GLXDrawable pixmap = w.glxPixmap();
-            glXMakeContextCurrent( display(), pixmap, pixmap, context );
-            glReadBuffer( GL_FRONT );
-            glDrawBuffer( GL_FRONT );
-            Texture texture = w.texture();
-            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
-            glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA,
-                0, 0, (*it)->width(), (*it)->height(), 0 );
+            w.bindTexture();
 // TODO for double-buffered root            glDrawBuffer( GL_BACK );
             glXMakeContextCurrent( display(), glxroot, glxroot, context );
             glPushMatrix();
             // TODO Y axis in opengl grows up apparently
-            glTranslatef( (*it)->x(), displayHeight() - (*it)->height() - (*it)->y(), 0 );
+            glTranslatef( w.glX(), w.glY(), 0 );
             glEnable( GL_TEXTURE_RECTANGLE_ARB );
             glBegin( GL_QUADS );
-            quadDraw( 0, 0, (*it)->width(), (*it)->height());
+            quadDraw( 0, 0, w.width(), w.height());
             glEnd();
             glPopMatrix();
             glDisable( GL_TEXTURE_RECTANGLE_ARB );
@@ -175,7 +169,7 @@ void SceneOpenGL::windowDeleted( Toplevel* c )
 SceneOpenGL::Window::Window( Toplevel* c )
     : toplevel( c )
     , glxpixmap( None )
-    , gltexture( None )
+    , texture( None )
     {
     }
 
@@ -197,11 +191,32 @@ GLXPixmap SceneOpenGL::Window::glxPixmap() const
     return glxpixmap;
     }
 
-SceneOpenGL::Texture SceneOpenGL::Window::texture() const
+void SceneOpenGL::Window::bindTexture()
     {
-    if( gltexture == None )
-        glGenTextures( 1, &gltexture );
-    return gltexture;
+    GLXDrawable pixmap = glxPixmap();
+    glXMakeContextCurrent( display(), pixmap, pixmap, context );
+    glReadBuffer( GL_FRONT );
+    glDrawBuffer( GL_FRONT );
+    if( texture == None )
+        {
+        glGenTextures( 1, &texture );
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA,
+            0, 0, toplevel->width(), toplevel->height(), 0 );
+        }
+    else
+        {
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        if( !toplevel->damage().isEmpty())
+            {
+            foreach( QRect r, toplevel->damage().rects())
+                {
+                int gly = height() - r.y() - r.height(); // to opengl coords
+                glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+                    r.x(), gly, r.x(), gly, r.width(), r.height());
+                }
+            }
+        }
     }
 
 } // namespace

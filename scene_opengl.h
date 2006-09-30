@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_SCENE_OPENGL_H
 
 #include "scene.h"
+#include "toplevel.h"
 
 #include <GL/gl.h>
 #include <GL/glx.h>
@@ -35,7 +36,7 @@ class SceneOpenGL
         GLXFBConfig fbcroot;
         static GLXFBConfig fbcdrawable;
         GLXPixmap glxroot;
-        GLXContext context;
+        static GLXContext context;
         class Window;
         QMap< Toplevel*, Window > windows;
     };
@@ -46,17 +47,45 @@ class SceneOpenGL::Window
         Window( Toplevel* c );
         ~Window();
         void free(); // is often copied by value, use manually instead of dtor
+        int glX() const; // remap to OpenGL coordinates
+        int glY() const;
+        int width() const;
+        int height() const;
         GLXPixmap glxPixmap() const;
-        Texture texture() const;
+        void bindTexture();
         Window() {} // QMap sucks even in Qt4
     private:
         void discardPixmap();
         void discardTexture();
         Toplevel* toplevel;
         mutable GLXPixmap glxpixmap;
-        mutable Texture gltexture;
+        Texture texture;
     };
 
+inline
+int SceneOpenGL::Window::glX() const
+    {
+    return toplevel->x();
+    }
+    
+inline
+int SceneOpenGL::Window::glY() const
+    {
+    return displayHeight() - toplevel->y() - toplevel->height();
+    }
+
+inline
+int SceneOpenGL::Window::width() const
+    {
+    return toplevel->width();
+    }
+    
+inline
+int SceneOpenGL::Window::height() const
+    {
+    return toplevel->height();
+    }
+    
 inline
 void SceneOpenGL::Window::discardPixmap()
     {
@@ -68,9 +97,9 @@ void SceneOpenGL::Window::discardPixmap()
 inline
 void SceneOpenGL::Window::discardTexture()
     {
-    if( gltexture != None )
-        glDeleteTextures( 1, &gltexture );
-    gltexture = None;
+    if( texture != None )
+        glDeleteTextures( 1, &texture );
+    texture = None;
     }
 
 } // namespace

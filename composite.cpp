@@ -140,6 +140,8 @@ void Workspace::compositeTimeout()
             windows.append( c );
         }
     scene->paint( damage_region, windows );
+    foreach( Toplevel* c, windows )
+        c->resetDamage();
     damage_region = QRegion();
     }
 
