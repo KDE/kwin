@@ -28,6 +28,7 @@ namespace KWinInternal
 
 GLXFBConfig SceneOpenGL::fbcdrawable;
 GLXContext SceneOpenGL::context;
+GLXPixmap SceneOpenGL::glxroot;
 
 const int root_attrs[] =
     {
@@ -88,7 +89,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
     glOrtho( 0, displayWidth(), 0, displayHeight(), 0, 65535 );
-// TODO    glEnable( GL_DEPTH_TEST );
+    glEnable( GL_DEPTH_TEST );
     checkGLError( "Init" );
     }
 
@@ -122,30 +123,39 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
     grabXServer();
     glXWaitX();
     glClearColor( 0, 0, 0, 1 );
-    glClear( GL_COLOR_BUFFER_BIT /* TODO| GL_DEPTH_BUFFER_BIT*/ );
-    for( ToplevelList::ConstIterator it = windows.begin();
-         it != windows.end();
-         ++it )
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    int depth = 0;
+    for( int i = windows.count() - 1; // top to bottom
+         i >= 0;
+         --i )
         {
-        QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
-        if( !r.isEmpty())
-            {
-            assert( this->windows.contains( *it ));
-            Window& w = this->windows[ *it ];
-            w.bindTexture();
-// TODO for double-buffered root            glDrawBuffer( GL_BACK );
-            glXMakeContextCurrent( display(), glxroot, glxroot, context );
-            glPushMatrix();
-            glTranslatef( w.glX(), w.glY(), 0 );
-            glEnable( GL_TEXTURE_RECTANGLE_ARB );
-            glBegin( GL_QUADS );
-            foreach( QRect r, w.shape().rects())
-                quadDraw( r.x(), w.height() - r.y() - r.height(), r.width(), r.height());
-            glEnd();
-            glPopMatrix();
-            glDisable( GL_TEXTURE_RECTANGLE_ARB );
-            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
-            }
+        Toplevel* c = windows[ i ];
+        assert( this->windows.contains( c ));
+        Window& w = this->windows[ c ];
+        w.setDepth( --depth );
+        if( !w.isVisible())
+            continue;
+        if( !w.isOpaque())
+            continue;
+        w.bindTexture();
+        w.draw();
+        }
+    for( int i = 0;
+         i < windows.count();
+         ++i )
+        {
+        Toplevel* c = windows[ i ];
+        assert( this->windows.contains( c ));
+        Window& w = this->windows[ c ];
+        if( !w.isVisible())
+            continue;
+        if( w.isOpaque())
+            continue;
+        w.bindTexture();
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        w.draw();
+        glDisable( GL_BLEND );
         }
     glFlush();
     glXWaitGL();
@@ -183,6 +193,7 @@ SceneOpenGL::Window::Window( Toplevel* c )
     , glxpixmap( None )
     , texture( None )
     , shape_valid( false )
+    , depth( 0 )
     {
     }
 
@@ -204,12 +215,26 @@ GLXPixmap SceneOpenGL::Window::glxPixmap() const
     return glxpixmap;
     }
 
+// for relative window positioning
+void SceneOpenGL::Window::setDepth( int d )
+    {
+    depth = d;
+    }
+
 void SceneOpenGL::Window::bindTexture()
     {
     GLXDrawable pixmap = glxPixmap();
     glXMakeContextCurrent( display(), pixmap, pixmap, context );
     glReadBuffer( GL_FRONT );
     glDrawBuffer( GL_FRONT );
+    if( !toplevel->hasAlpha() && toplevel->opacity() != 1.0 )
+        {
+        // TODO this doesn't quite work with the decoration
+        glColorMask( 0, 0, 0, 1 );
+        glClearColor( 0, 0, 0, toplevel->opacity());
+        glClear( GL_COLOR_BUFFER_BIT );
+        glColorMask( 1, 1, 1, 1 );
+        }
     if( texture == None )
         {
         glGenTextures( 1, &texture );
@@ -264,6 +289,35 @@ QRegion SceneOpenGL::Window::shape() const
         shape_valid = true;
         }
     return shape_region;
+    }
+
+void SceneOpenGL::Window::draw()
+    {
+// TODO for double-buffered root            glDrawBuffer( GL_BACK );
+    glXMakeContextCurrent( display(), glxroot, glxroot, context );
+    glPushMatrix();
+    glTranslatef( glX(), glY(), depth );
+    glEnable( GL_TEXTURE_RECTANGLE_ARB );
+    glBegin( GL_QUADS );
+    foreach( QRect r, shape().rects())
+        quadDraw( r.x(), height() - r.y() - r.height(), r.width(), r.height());
+    glEnd();
+    glPopMatrix();
+    glDisable( GL_TEXTURE_RECTANGLE_ARB );
+    glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
+    }
+
+bool SceneOpenGL::Window::isVisible() const
+    {
+    // TODO mapping state?
+    return !toplevel->geometry()
+        .intersect( QRect( 0, 0, displayWidth(), displayHeight()))
+        .isEmpty();
+    }
+
+bool SceneOpenGL::Window::isOpaque() const
+    {
+    return toplevel->opacity() == 1.0 && !toplevel->hasAlpha();
     }
 
 } // namespace

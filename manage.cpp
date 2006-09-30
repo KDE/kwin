@@ -54,6 +54,7 @@ bool Client::manage( Window w, bool isMapped )
     embedClient( w, attr );
     
     vis = attr.visual;
+    depth = attr.depth;
 
     setupCompositing();
 

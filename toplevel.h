@@ -57,6 +57,7 @@ class Toplevel
         Visual* visual() const;
         bool shape() const;
         virtual double opacity() const = 0;
+        bool hasAlpha() const;
         void setupCompositing();
         void finishCompositing();
         void addDamage( const QRect& r );
@@ -70,6 +71,7 @@ class Toplevel
         void damageNotifyEvent( XDamageNotifyEvent* e );
         QRect geom;
         Visual* vis;
+        int depth;
         virtual void debug( kdbgstream& stream ) const = 0;
         friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
     private:
@@ -195,6 +197,11 @@ inline QRegion Toplevel::damage() const
 inline bool Toplevel::shape() const
     {
     return is_shape;
+    }
+
+inline bool Toplevel::hasAlpha() const
+    {
+    return depth == 32;
     }
 
 #ifdef NDEBUG

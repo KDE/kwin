@@ -36,7 +36,7 @@ class SceneOpenGL
         Pixmap buffer;
         GLXFBConfig fbcroot;
         static GLXFBConfig fbcdrawable;
-        GLXPixmap glxroot;
+        static GLXPixmap glxroot;
         static GLXContext context;
         class Window;
         QMap< Toplevel*, Window > windows;
@@ -52,6 +52,10 @@ class SceneOpenGL::Window
         int glY() const;
         int width() const;
         int height() const;
+        void setDepth( int depth );
+        void draw();
+        bool isVisible() const;
+        bool isOpaque() const;
         GLXPixmap glxPixmap() const;
         void bindTexture();
         QRegion shape() const;
@@ -65,6 +69,7 @@ class SceneOpenGL::Window
         Texture texture;
         mutable QRegion shape_region;
         mutable bool shape_valid;
+        int depth;
     };
 
 inline

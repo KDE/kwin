@@ -39,6 +39,7 @@ bool Unmanaged::track( Window w )
     setHandle( w );
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
     vis = attr.visual;
+    depth = attr.depth;
     unsigned long properties[ 2 ];
     properties[ NETWinInfo::PROTOCOLS ] =
         NET::WMWindowType |
