@@ -39,6 +39,12 @@ void Workspace::setupCompositing()
 //    scene = new SceneBasic( this );
 //    scene = new SceneXrender( this );
     scene = new SceneOpenGL( this );
+    if( dynamic_cast< SceneOpenGL* >( scene ))
+        kDebug() << "OpenGL compositing" << endl;
+    else if( dynamic_cast< SceneXrender* >( scene ))
+        kDebug() << "XRender compositing" << endl;
+    else if( dynamic_cast< SceneBasic* >( scene ))
+        kDebug() << "X compositing" << endl;
     effects = new EffectsHandler( this );
     addDamage( 0, 0, displayWidth(), displayHeight());
     foreach( Client* c, clients )
