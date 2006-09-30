@@ -52,6 +52,13 @@ const int drawable_attrs[] =
     None
     };
 
+static void checkGLError( const char* txt )
+    {
+    GLenum err = glGetError();
+    if( err != GL_NO_ERROR )
+        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
+    }
+
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     {
@@ -79,6 +86,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glLoadIdentity();
     glOrtho( 0, displayWidth(), 0, displayHeight(), 0, 65535 );
 // TODO    glEnable( GL_DEPTH_TEST );
+    checkGLError( "Init" );
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -91,6 +99,7 @@ SceneOpenGL::~SceneOpenGL()
     XFreeGC( display(), gcroot );
     XFreePixmap( display(), buffer );
     glXDestroyContext( display(), context );
+    checkGLError( "Cleanup" );
     }
 
 static void quadDraw( int x, int y, int w, int h )
@@ -128,8 +137,8 @@ void SceneOpenGL::paint( XserverRegion, ToplevelList windows )
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
             glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA,
                 0, 0, (*it)->width(), (*it)->height(), 0 );
+// TODO for double-buffered root            glDrawBuffer( GL_BACK );
             glXMakeContextCurrent( display(), glxroot, glxroot, context );
-            glDrawBuffer( GL_BACK );
             glPushMatrix();
             // TODO Y axis in opengl grows up apparently
             glTranslatef( (*it)->x(), displayHeight() - (*it)->height() - (*it)->y(), 0 );
@@ -140,13 +149,14 @@ void SceneOpenGL::paint( XserverRegion, ToplevelList windows )
             glPopMatrix();
             glDisable( GL_TEXTURE_RECTANGLE_ARB );
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
-            glXWaitGL();
             }
         }
     glFlush();
+    glXWaitGL();
     XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
     ungrabXServer();
     XFlush( display());
+    checkGLError( "PostPaint" );
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )
