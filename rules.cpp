@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <fixx11h.h>
 #include <kconfig.h>
 #include <QRegExp>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <ksimpleconfig.h>
 #include <QFile>
 #include <ktoolinvocation.h>
@@ -68,19 +68,17 @@ Rules::Rules()
 Rules::Rules( const QString& str, bool temporary )
     : temporary_state( temporary ? 2 : 0 )
     {
-    KTempFile file;
-    QFile* f = file.file();
-    if( f != NULL )
+    KTemporaryFile file;
+    if( file.open() )
         {
         QByteArray s = str.toUtf8();
-        f->write( s.data(), s.length());
+        file.write( s.data(), s.length());
         }
-    file.close();
-    KSimpleConfig cfg( file.name());
+    file.flush();
+    KSimpleConfig cfg( file.fileName());
     readFromCfg( cfg );
     if( description.isEmpty())
         description = "temporary";
-    file.unlink();
     }
 
 #define READ_MATCH_STRING( var, func ) \
