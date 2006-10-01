@@ -227,19 +227,12 @@ void SceneOpenGL::Window::bindTexture()
     glXMakeContextCurrent( display(), pixmap, pixmap, context );
     glReadBuffer( GL_FRONT );
     glDrawBuffer( GL_FRONT );
-    if( !toplevel->hasAlpha() && toplevel->opacity() != 1.0 )
-        {
-        // TODO this doesn't quite work with the decoration
-        glColorMask( 0, 0, 0, 1 );
-        glClearColor( 0, 0, 0, toplevel->opacity());
-        glClear( GL_COLOR_BUFFER_BIT );
-        glColorMask( 1, 1, 1, 1 );
-        }
     if( texture == None )
         {
         glGenTextures( 1, &texture );
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
-        glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA,
+        glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+            toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
             0, 0, toplevel->width(), toplevel->height(), 0 );
         }
     else
@@ -297,12 +290,25 @@ void SceneOpenGL::Window::draw()
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
     glPushMatrix();
     glTranslatef( glX(), glY(), depth );
+    if( toplevel->opacity() != 1.0 )
+        {
+        glEnable( GL_BLEND );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+        glColor4f( toplevel->opacity(), toplevel->opacity(), toplevel->opacity(),
+            toplevel->opacity());
+        }
     glEnable( GL_TEXTURE_RECTANGLE_ARB );
     glBegin( GL_QUADS );
     foreach( QRect r, shape().rects())
         quadDraw( r.x(), height() - r.y() - r.height(), r.width(), r.height());
     glEnd();
     glPopMatrix();
+    if( toplevel->opacity() != 1.0 )
+        {
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+        glColor4f( 0, 0, 0, 0 );
+        glDisable( GL_BLEND );
+        }
     glDisable( GL_TEXTURE_RECTANGLE_ARB );
     glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
     }
