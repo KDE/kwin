@@ -138,7 +138,7 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
             continue;
         if( !w.isOpaque())
             {
-            phase2.prepend( w );
+            phase2.prepend( &w );
             continue;
             }
         w.bindTexture();
@@ -197,7 +197,7 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
 #endif
     }
 
-void SceneOpenGL::updateTransformation( Toplevel* c )
+void SceneOpenGL::updateTransformation( Toplevel* )
     {
     // TODO this is only used in effects to later update
     // screen damage - since opengl doesn't use screen
