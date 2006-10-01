@@ -125,6 +125,7 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
     glClearColor( 0, 0, 0, 1 );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     int depth = 0;
+    QList< Window* > phase2;
     for( int i = windows.count() - 1; // top to bottom
          i >= 0;
          --i )
@@ -136,24 +137,19 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
         if( !w.isVisible())
             continue;
         if( !w.isOpaque())
+            {
+            phase2.prepend( w );
             continue;
+            }
         w.bindTexture();
         w.draw();
         }
-    for( int i = 0;
-         i < windows.count();
-         ++i )
+    foreach( Window* w2, phase2 )
         {
-        Toplevel* c = windows[ i ];
-        assert( this->windows.contains( c ));
-        Window& w = this->windows[ c ];
-        if( !w.isVisible())
-            continue;
-        if( w.isOpaque())
-            continue;
-        w.bindTexture();
+        Window& w = *w2;
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        w.bindTexture();
         w.draw();
         glDisable( GL_BLEND );
         }
