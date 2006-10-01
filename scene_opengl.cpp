@@ -184,6 +184,26 @@ void SceneOpenGL::windowGeometryShapeChanged( Toplevel* c )
     w.discardTexture();
     }
 
+void SceneOpenGL::windowOpacityChanged( Toplevel* )
+    {
+#if 0 // not really needed, windows are painted on every repaint
+      // and opacity is used when applying texture, not when
+      // creating it
+    if( !windows.contains( c )) // this is ok, texture is created
+        return;                 // on demand
+    Window& w = windows[ c ];
+    w.discardPixmap();
+    w.discardTexture();
+#endif
+    }
+
+void SceneOpenGL::updateTransformation( Toplevel* c )
+    {
+    // TODO this is only used in effects to later update
+    // screen damage - since opengl doesn't use screen
+    // damage, just leave this empty
+    }
+
 SceneOpenGL::Window::Window( Toplevel* c )
     : toplevel( c )
     , glxpixmap( None )

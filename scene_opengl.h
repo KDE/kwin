@@ -27,9 +27,13 @@ class SceneOpenGL
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
         virtual void paint( QRegion damage, ToplevelList windows );
-        virtual void windowAdded( Toplevel* c );
-        virtual void windowDeleted( Toplevel* c );
-        virtual void windowGeometryShapeChanged( Toplevel* c );
+        virtual void windowGeometryShapeChanged( Toplevel* );
+        virtual void windowOpacityChanged( Toplevel* );
+        virtual void windowAdded( Toplevel* );
+        virtual void windowDeleted( Toplevel* );
+// screen damage is not used with opengl, it's completely repainted
+//         virtual void transformWindowDamage( Toplevel*, QRegion& ) const;
+        virtual void updateTransformation( Toplevel* );
     private:
         typedef GLuint Texture;
         GC gcroot;
