@@ -321,7 +321,8 @@ QRegion SceneOpenGL::Window::shape() const
     {
     if( !shape_valid )
         {
-        if( toplevel->shape())
+        Client* c = dynamic_cast< Client* >( toplevel );
+        if( toplevel->shape() || ( c != NULL && !c->mask().isEmpty()))
             {
             int count, order;
             XRectangle* rects = XShapeGetRectangles( display(), toplevel->handle(),
