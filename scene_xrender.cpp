@@ -181,33 +181,6 @@ void SceneXrender::paint( QRegion dam, ToplevelList windows )
     XFixesDestroyRegion( display(), damage );
     }
 
-void SceneXrender::transformWindowDamage( Toplevel* c, QRegion& r ) const
-    {
-    if( !window_data.contains( c ))
-        return;
-    const Matrix& matrix = window_data[ c ].matrix;
-    if( matrix.isIdentity())
-        return;
-    if( matrix.isOnlyTranslate())
-        r.translate( int( matrix.xTranslate()), int( matrix.yTranslate()));
-    else
-        {
-        // The region here should be translated using the matrix, but that's not possible
-        // (well, maybe fetch the region and transform manually - TODO check). So simply
-        // mark whole screen as damaged.
-        r = QRegion( 0, 0, displayWidth(), displayHeight());
-        }
-    }
-
-void SceneXrender::updateTransformation( Toplevel* c )
-    {
-    // TODO maybe only mark as invalid and update on-demand
-    resetWindowData( c );
-    WindowData& data = window_data[ c ];
-    effects->transformWindow( c, data.matrix, data.effect );
-    effects->transformWorkspace( data.matrix, data.effect );
-    }
-
 void SceneXrender::resetWindowData( Toplevel* c )
     {
     if( !window_data.contains( c ))

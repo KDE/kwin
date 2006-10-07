@@ -35,8 +35,6 @@ class SceneXrender
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
-        virtual void transformWindowDamage( Toplevel*, QRegion& ) const;
-        virtual void updateTransformation( Toplevel* );
     private:
         void createBuffer();
         void resetWindowData( Toplevel* c );

@@ -117,22 +117,6 @@ void Workspace::addDamage( const QRect& r )
     damage_region += r;
     }
 
-void Workspace::addDamage( Toplevel* c, int x, int y, int w, int h )
-    {
-    if( !compositing())
-        return;
-    addDamage( c, QRect( x, y, w, h ));
-    }
-
-void Workspace::addDamage( Toplevel* c, const QRect& r )
-    {
-    if( !compositing())
-        return;
-    QRegion r2( r );
-    scene->transformWindowDamage( c, r2 );
-    damage_region += r2;
-    }
-
 void Workspace::compositeTimeout()
     {
     if( damage_region.isEmpty()) // no damage
@@ -222,7 +206,7 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     // this could be possibly optimized to damage Workspace only if the toplevel
     // is actually visible there and not obscured by something, but I guess
     // that's not really worth it
-    workspace()->addDamage( this, r );
+    workspace()->addDamage( r );
     }
 
 void Toplevel::resetDamage()

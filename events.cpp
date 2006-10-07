@@ -1655,7 +1655,7 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     {
     resetWindowPixmap();
     // TODO add damage only if the window is not obscured
-    workspace()->addDamage( this, geometry());
+    workspace()->addDamage( geometry());
     geom = QRect( e->x, e->y, e->width, e->height );
     // TODO maybe only damage changed area
     addDamage( rect());

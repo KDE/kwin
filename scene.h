@@ -22,7 +22,7 @@ class Scene
     {
     public:
         Scene( Workspace* ws );
-        virtual ~Scene();
+        virtual ~Scene() = 0;
         // repaints the given screen areas, windows provides the stacking order
         virtual void paint( QRegion damage, ToplevelList windows ) = 0;
         // shape/size of a window changed
@@ -33,12 +33,6 @@ class Scene
         virtual void windowAdded( Toplevel* );
         // a window has been destroyed
         virtual void windowDeleted( Toplevel* );
-        // transforms the window areas to screen areas
-        virtual void transformWindowDamage( Toplevel*, QRegion& ) const;
-        // updates cached window information after an effect changes
-        // transformation
-        // TODO - remove?
-        virtual void updateTransformation( Toplevel* );
     protected:
         Workspace* wspace;
     };

@@ -1661,7 +1661,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
         return;
     // TODO add damage only if not obscured
-    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
+    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom = QRect( x, y, w, h );
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1719,7 +1719,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
         return;
-    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
+    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.setSize( QSize( w, h ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1755,7 +1755,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     {
     if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
         return;
-    workspace()->addDamage( this, geometry()); // TODO cache the previous real geometry
+    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
     if( postpone_geometry_updates != 0 )
@@ -1768,7 +1768,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     // client itself is not damaged
-    workspace()->addDamage( this, geometry());
+    workspace()->addDamage( geometry());
     }
 
 void Client::postponeGeometryUpdates( bool postpone )

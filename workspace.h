@@ -285,10 +285,6 @@ class Workspace : public QObject, public KDecorationDefines
         
         void addDamage( const QRect& r );
         void addDamage( int x, int y, int w, int h );
-        // these damage the workspace without actually damaging the contents
-        // of the toplevel - e.g. when the toplevel moves away from that area
-        void addDamage( Toplevel* c, const QRect& r );
-        void addDamage( Toplevel* c, int x, int y, int w, int h );
 
     public slots:
         void refresh();

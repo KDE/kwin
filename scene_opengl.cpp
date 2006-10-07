@@ -195,13 +195,6 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
 #endif
     }
 
-void SceneOpenGL::updateTransformation( Toplevel* )
-    {
-    // TODO this is only used in effects to later update
-    // screen damage - since opengl doesn't use screen
-    // damage, just leave this empty
-    }
-
 SceneOpenGL::Window::Window( Toplevel* c )
     : toplevel( c )
     , texture( 0 )

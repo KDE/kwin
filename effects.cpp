@@ -188,8 +188,8 @@ void ShakyMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
     else if( last )
         {
         windows.remove( c );
-        scene->updateTransformation( c );
-        c->workspace()->addDamage( c, c->geometry().adjusted( -3, 7, 0, 0 ));
+        // TODO just damage whole screen, transformation is involved
+        c->workspace()->addDamage( c->geometry().adjusted( -3, 7, 0, 0 ));
         if( windows.isEmpty())
             timer.stop();
         }
@@ -212,8 +212,8 @@ void ShakyMove::tick()
             *it = 0;
         else
             ++(*it);
-        scene->updateTransformation( it.key());
-        it.key()->workspace()->addDamage( it.key(), it.key()->geometry().adjusted( -1, 2, 0, 0 ));
+        // TODO damage whole screen, transformation is involved
+        it.key()->workspace()->addDamage( it.key()->geometry().adjusted( -1, 2, 0, 0 ));
         }
     }
 
@@ -233,9 +233,8 @@ void GrowMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
     {
     if( first || last )
         {
-        c->workspace()->addDamage( c, c->geometry());
-        scene->updateTransformation( c );
-        c->workspace()->addDamage( c, c->geometry());
+        // TODO damage whole screen, transformation is involved
+        c->workspace()->addDamage( c->geometry());
         }
     }
 
