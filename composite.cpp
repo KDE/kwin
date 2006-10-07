@@ -34,11 +34,26 @@ void Workspace::setupCompositing()
         return;
     if( scene != NULL )
         return;
+    char type = 'O';
+    if( getenv( "KWIN_COMPOSE" ))
+        type = getenv( "KWIN_COMPOSE" )[ 0 ];
+    switch( type )
+        {
+        case 'B':
+            scene = new SceneBasic( this );
+          break;
+        case 'X':
+            scene = new SceneXrender( this );
+          break;
+        case 'O':
+            scene = new SceneOpenGL( this );
+          break;
+        default:
+          kDebug() << "No compositing" << endl;
+          return;
+        }    
     compositeTimer.start( 20 );
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
-//    scene = new SceneBasic( this );
-//    scene = new SceneXrender( this );
-    scene = new SceneOpenGL( this );
     if( dynamic_cast< SceneOpenGL* >( scene ))
         kDebug() << "OpenGL compositing" << endl;
     else if( dynamic_cast< SceneXrender* >( scene ))
