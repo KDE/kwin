@@ -250,36 +250,24 @@ void SceneOpenGL::Window::bindTexture()
         XFreeGC( display(), gc );
         }
 #endif
+    if( alpha_clear )
+        {
+        XGCValues gcv;
+        gcv.foreground = 0xff000000;
+        gcv.plane_mask = 0xff000000;
+        GC gc = XCreateGC( display(), pix, GCPlaneMask | GCForeground, &gcv );
+        XFillRectangle( display(), pix, gc, 0, 0, c->width(), c->clientPos().y());
+        XFillRectangle( display(), pix, gc, 0, 0, c->clientPos().x(), c->height());
+        int tw = c->clientPos().x() + c->clientSize().width();
+        int th = c->clientPos().y() + c->clientSize().height();
+        XFillRectangle( display(), pix, gc, 0, th, c->width(), c->height() - th );
+        XFillRectangle( display(), pix, gc, tw, 0, c->width() - tw, c->height());
+        XFreeGC( display(), gc );
+        }
     GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
     glXMakeContextCurrent( display(), pixmap, pixmap, context );
     glReadBuffer( GL_FRONT );
     glDrawBuffer( GL_FRONT );
-    if( alpha_clear )
-        {
-        glColor4f( 0, 0, 0, 1 );
-        glColorMask( 0, 0, 0, 1 );
-        glBegin( GL_QUADS );
-        // "c->height() - ..." is to convert to opengl coords
-        glVertex2i( 0, c->height() - 0 ); // left
-        glVertex2i( 0, c->height() - c->height());
-        glVertex2i( c->clientPos().x(), c->height() - c->height());
-        glVertex2i( c->clientPos().x(), c->height() - 0 );
-        glVertex2i( 0, c->height() - 0 ); // top
-        glVertex2i( 0, c->height() - c->clientPos().y());
-        glVertex2i( c->width(), c->height() - c->clientPos().y());
-        glVertex2i( c->width(), c->height() - 0 );
-        glVertex2i( c->width(), c->height() - c->height()); // right
-        glVertex2i( c->width(), c->height() - 0 );
-        glVertex2i( c->clientPos().x() + c->clientSize().width(), c->height() - 0 );
-        glVertex2i( c->clientPos().x() + c->clientSize().width(), c->height() - c->height());
-        glVertex2i( c->width(), c->height() - c->height()); // bottom
-        glVertex2i( c->width(), c->height() - ( c->clientPos().y() + c->clientSize().height()));
-        glVertex2i( 0, c->height() - ( c->clientPos().y() + c->clientSize().height()));
-        glVertex2i( 0, c->height() - c->height());
-        glEnd();
-        glColorMask( 1, 1, 1, 1 );
-        glColor4f( 1, 1, 1, 1 );
-        }
     if( texture == None )
         {
         glGenTextures( 1, &texture );
@@ -305,10 +293,10 @@ void SceneOpenGL::Window::bindTexture()
     // only when the window changes anyway, so no need to cache
     // the pixmap
     glXDestroyPixmap( display(), pixmap );
-    XFreePixmap( display(), window_pix );
+    XFreePixmap( display(), pix );
 #ifdef ALPHA_CLEAR_COPY
     if( alpha_clear )
-        XFreePixmap( display(), pix );
+        XFreePixmap( display(), window_pix );
 #endif
     }
 
