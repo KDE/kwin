@@ -233,11 +233,59 @@ void SceneOpenGL::Window::bindTexture()
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         return;
         }
-    GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable,
-        toplevel->windowPixmap(), NULL );
+    Pixmap pix = toplevel->windowPixmap();
+    // HACK
+    // When a window uses ARGB visual and has a decoration, the decoration
+    // does use ARGB visual. When converting such window to a texture
+    // the alpha for the decoration part is broken for some reason (undefined?).
+    // I wasn't lucky converting KWin to use ARGB visuals for decorations,
+    // so instead simply set alpha in those parts to opaque.
+    // Without ALPHA_CLEAR_COPY the setting is done directly in the window
+    // pixmap, which seems to be ok, but let's not risk trouble right now.
+    // TODO check if this isn't a performance problem and how it can be done better
+    Client* c = dynamic_cast< Client* >( toplevel );
+    bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
+#define ALPHA_CLEAR_COPY
+#ifdef ALPHA_CLEAR_COPY
+    if( alpha_clear )
+        {
+        Pixmap p2 = XCreatePixmap( display(), pix, c->width(), c->height(), 32 );
+        GC gc = XCreateGC( display(), pix, 0, NULL );
+        XCopyArea( display(), pix, p2, gc, 0, 0, c->width(), c->height(), 0, 0 );
+        pix = p2;
+        XFreeGC( display(), gc );
+        }
+#endif
+    GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
     glXMakeContextCurrent( display(), pixmap, pixmap, context );
     glReadBuffer( GL_FRONT );
     glDrawBuffer( GL_FRONT );
+    if( alpha_clear )
+        {
+        glColor4f( 0, 0, 0, 1 );
+        glColorMask( 0, 0, 0, 1 );
+        glBegin( GL_QUADS );
+        // "c->height() - ..." is to convert to opengl coords
+        glVertex2i( 0, c->height() - 0 ); // left
+        glVertex2i( 0, c->height() - c->height());
+        glVertex2i( c->clientPos().x(), c->height() - c->height());
+        glVertex2i( c->clientPos().x(), c->height() - 0 );
+        glVertex2i( 0, c->height() - 0 ); // top
+        glVertex2i( 0, c->height() - c->clientPos().y());
+        glVertex2i( c->width(), c->height() - c->clientPos().y());
+        glVertex2i( c->width(), c->height() - 0 );
+        glVertex2i( c->width(), c->height() - c->height()); // right
+        glVertex2i( c->width(), c->height() - 0 );
+        glVertex2i( c->clientPos().x() + c->clientSize().width(), c->height() - 0 );
+        glVertex2i( c->clientPos().x() + c->clientSize().width(), c->height() - c->height());
+        glVertex2i( c->width(), c->height() - c->height()); // bottom
+        glVertex2i( c->width(), c->height() - ( c->clientPos().y() + c->clientSize().height()));
+        glVertex2i( 0, c->height() - ( c->clientPos().y() + c->clientSize().height()));
+        glVertex2i( 0, c->height() - c->height());
+        glEnd();
+        glColorMask( 1, 1, 1, 1 );
+        glColor4f( 1, 1, 1, 1 );
+        }
     if( texture == None )
         {
         glGenTextures( 1, &texture );
@@ -264,6 +312,10 @@ void SceneOpenGL::Window::bindTexture()
     // the pixmap
     glXDestroyPixmap( display(), pixmap );
     toplevel->resetWindowPixmap();
+#ifdef ALPHA_CLEAR_COPY
+    if( alpha_clear )
+        XFreePixmap( display(), pix );
+#endif
     }
 
 void SceneOpenGL::Window::discardShape()
