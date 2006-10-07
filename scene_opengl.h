@@ -60,16 +60,13 @@ class SceneOpenGL::Window
         void draw();
         bool isVisible() const;
         bool isOpaque() const;
-        GLXPixmap glxPixmap() const;
         void bindTexture();
         QRegion shape() const;
-        void discardPixmap();
         void discardTexture();
         void discardShape();
         Window() {} // QMap sucks even in Qt4
     private:
         Toplevel* toplevel;
-        mutable GLXPixmap glxpixmap;
         Texture texture;
         mutable QRegion shape_region;
         mutable bool shape_valid;
@@ -101,19 +98,11 @@ int SceneOpenGL::Window::height() const
     }
     
 inline
-void SceneOpenGL::Window::discardPixmap()
-    {
-    if( glxpixmap != None )
-        glXDestroyPixmap( display(), glxpixmap );
-    glxpixmap = None;
-    }
-
-inline
 void SceneOpenGL::Window::discardTexture()
     {
-    if( texture != None )
+    if( texture != 0 )
         glDeleteTextures( 1, &texture );
-    texture = None;
+    texture = 0;
     }
 
 } // namespace

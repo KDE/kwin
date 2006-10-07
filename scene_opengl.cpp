@@ -147,9 +147,9 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
     foreach( Window* w2, phase2 )
         {
         Window& w = *w2;
+        w.bindTexture();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        w.bindTexture();
         w.draw();
         glDisable( GL_BLEND );
         }
@@ -180,7 +180,6 @@ void SceneOpenGL::windowGeometryShapeChanged( Toplevel* c )
         return;                 // by default
     Window& w = windows[ c ];
     w.discardShape();
-    w.discardPixmap();
     w.discardTexture();
     }
 
@@ -192,7 +191,6 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
     if( !windows.contains( c )) // this is ok, texture is created
         return;                 // on demand
     Window& w = windows[ c ];
-    w.discardPixmap();
     w.discardTexture();
 #endif
     }
@@ -206,8 +204,7 @@ void SceneOpenGL::updateTransformation( Toplevel* )
 
 SceneOpenGL::Window::Window( Toplevel* c )
     : toplevel( c )
-    , glxpixmap( None )
-    , texture( None )
+    , texture( 0 )
     , shape_valid( false )
     , depth( 0 )
     {
@@ -219,16 +216,7 @@ SceneOpenGL::Window::~Window()
     
 void SceneOpenGL::Window::free()
     {
-    discardPixmap();
     discardTexture();
-    }
-
-GLXPixmap SceneOpenGL::Window::glxPixmap() const
-    {
-    if( glxpixmap == None )
-        glxpixmap = glXCreatePixmap( display(), fbcdrawable,
-            toplevel->windowPixmap(), NULL );
-    return glxpixmap;
     }
 
 // for relative window positioning
@@ -239,7 +227,14 @@ void SceneOpenGL::Window::setDepth( int d )
 
 void SceneOpenGL::Window::bindTexture()
     {
-    GLXDrawable pixmap = glxPixmap();
+    if( texture != 0 && toplevel->damage().isEmpty())
+        {
+        // texture doesn't need updating, just bind it
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        return;
+        }
+    GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable,
+        toplevel->windowPixmap(), NULL );
     glXMakeContextCurrent( display(), pixmap, pixmap, context );
     glReadBuffer( GL_FRONT );
     glDrawBuffer( GL_FRONT );
@@ -264,6 +259,11 @@ void SceneOpenGL::Window::bindTexture()
                 }
             }
         }
+    // the pixmap is no longer needed, the texture will be updated
+    // only when the window changes anyway, so no need to cache
+    // the pixmap
+    glXDestroyPixmap( display(), pixmap );
+    toplevel->resetWindowPixmap();
     }
 
 void SceneOpenGL::Window::discardShape()

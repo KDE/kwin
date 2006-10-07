@@ -54,6 +54,7 @@ class Toplevel
         bool isUtility() const;
 
         Pixmap windowPixmap() const;
+        void resetWindowPixmap();
         Visual* visual() const;
         bool shape() const;
         virtual double opacity() const = 0;
@@ -67,7 +68,6 @@ class Toplevel
     protected:
         void setHandle( Window id );
         void detectShape( Window id );
-        void resetWindowPixmap();
         void damageNotifyEvent( XDamageNotifyEvent* e );
         QRect geom;
         Visual* vis;
