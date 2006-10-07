@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifdef HAVE_XRENDER
 
 #include "toplevel.h"
+#include "client.h"
 #include "effects.h"
 
 namespace KWinInternal
@@ -302,9 +303,42 @@ Picture SceneXrender::WindowData::picture()
         }
     if( _picture == None && format != NULL )
         {
-        Pixmap pix = window->createWindowPixmap();
+        Pixmap window_pix = window->createWindowPixmap();
+        Pixmap pix = window_pix;
+        // HACK the same like with opengl
+        Client* c = dynamic_cast< Client* >( window );
+        bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
+#define ALPHA_CLEAR_COPY
+#ifdef ALPHA_CLEAR_COPY
+        if( alpha_clear )
+            {
+            Pixmap p2 = XCreatePixmap( display(), pix, c->width(), c->height(), 32 );
+            GC gc = XCreateGC( display(), pix, 0, NULL );
+            XCopyArea( display(), pix, p2, gc, 0, 0, c->width(), c->height(), 0, 0 );
+            pix = p2;
+            XFreeGC( display(), gc );
+            }
+#endif
+        if( alpha_clear )
+            {
+            XGCValues gcv;
+            gcv.foreground = 0xff000000;
+            gcv.plane_mask = 0xff000000;
+            GC gc = XCreateGC( display(), pix, GCPlaneMask | GCForeground, &gcv );
+            XFillRectangle( display(), pix, gc, 0, 0, c->width(), c->clientPos().y());
+            XFillRectangle( display(), pix, gc, 0, 0, c->clientPos().x(), c->height());
+            int tw = c->clientPos().x() + c->clientSize().width();
+            int th = c->clientPos().y() + c->clientSize().height();
+            XFillRectangle( display(), pix, gc, 0, th, c->width(), c->height() - th );
+            XFillRectangle( display(), pix, gc, tw, 0, c->width() - tw, c->height());
+            XFreeGC( display(), gc );
+            }
         _picture = XRenderCreatePicture( display(), pix, format, 0, 0 );
         XFreePixmap( display(), pix ); // the picture owns the pixmap
+#ifdef ALPHA_CLEAR_COPY
+        if( alpha_clear )
+            XFreePixmap( display(), window_pix );
+#endif
         }
     return _picture;
     }
