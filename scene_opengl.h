@@ -32,6 +32,7 @@ class SceneOpenGL
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
     private:
+        bool findConfig( const int* attrs, GLXFBConfig& config );
         typedef GLuint Texture;
         GC gcroot;
         Pixmap buffer;

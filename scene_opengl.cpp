@@ -30,6 +30,13 @@ GLXFBConfig SceneOpenGL::fbcdrawable;
 GLXContext SceneOpenGL::context;
 GLXPixmap SceneOpenGL::glxroot;
 
+static void checkGLError( const char* txt )
+    {
+    GLenum err = glGetError();
+    if( err != GL_NO_ERROR )
+        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
+    }
+
 const int root_attrs[] =
     {
     GLX_DOUBLEBUFFER, False,
@@ -42,7 +49,7 @@ const int root_attrs[] =
     GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT | GLX_WINDOW_BIT,
     None
     };
-    
+
 const int drawable_attrs[] = 
     {
     GLX_DOUBLEBUFFER, False,
@@ -56,13 +63,6 @@ const int drawable_attrs[] =
     None
     };
 
-static void checkGLError( const char* txt )
-    {
-    GLenum err = glGetError();
-    if( err != GL_NO_ERROR )
-        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
-    }
-
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     {
@@ -75,14 +75,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     gcroot = XCreateGC( display(), rootWindow(), GCSubwindowMode, &gcattr );
     buffer = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(),
         QX11Info::appDepth());
-    GLXFBConfig* fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()),
-        root_attrs, &dummy );
-    fbcroot = fbconfigs[ 0 ];
-    XFree( fbconfigs );
-    fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()),
-        drawable_attrs, &dummy );
-    fbcdrawable = fbconfigs[ 0 ];
-    XFree( fbconfigs );
+    findConfig( root_attrs, fbcroot );
+    findConfig( drawable_attrs, fbcdrawable );
     glxroot = glXCreatePixmap( display(), fbcroot, buffer, NULL );
     context = glXCreateNewContext( display(), fbcroot, GLX_RGBA_TYPE, NULL, GL_FALSE );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
@@ -104,6 +98,41 @@ SceneOpenGL::~SceneOpenGL()
     XFreePixmap( display(), buffer );
     glXDestroyContext( display(), context );
     checkGLError( "Cleanup" );
+    }
+
+bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config )
+    {
+    int cnt;
+    GLXFBConfig* fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()),
+        attrs, &cnt );
+    if( fbconfigs != NULL )
+        {
+        config = fbconfigs[ 0 ];
+        XFree( fbconfigs );
+        return true;
+        }
+    static const int empty[] = { None };
+    fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()), empty, &cnt );
+    for( int i = 0;
+         i < cnt;
+         ++i )
+        {
+        int pos = 0;
+        kDebug() << "FBCONF:" << i << endl;
+        while( attrs[ pos ] != (int)None )
+            {
+            int value;
+            if( glXGetFBConfigAttrib( display(), fbconfigs[ i ], attrs[ pos ], &value )
+                == Success )
+                kDebug() << "ATTR:" << attrs[ pos ] << ":" << value
+                    << ":" << attrs[ pos + 1 ] << endl;
+            else
+                kDebug() << "ATTR FAIL:" << attrs[ pos ] << endl;
+            pos += 2;
+            }
+        }
+    assert( false );
+    return false;
     }
 
 static void quadDraw( int x, int y, int w, int h )
