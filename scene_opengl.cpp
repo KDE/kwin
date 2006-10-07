@@ -17,6 +17,8 @@ Based on glcompmgr code by Felix Bellaby.
 #include "utils.h"
 #include "client.h"
 
+#include <dlfcn.h>
+
 #include <X11/extensions/shape.h>
 
 namespace KWinInternal
@@ -29,6 +31,13 @@ namespace KWinInternal
 GLXFBConfig SceneOpenGL::fbcdrawable;
 GLXContext SceneOpenGL::context;
 GLXPixmap SceneOpenGL::glxroot;
+bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
+
+typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
+    int buffer, const int* attrib_list );
+typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
+glXBindTexImageEXT_func glXBindTexImageEXT;
+glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 
 static void checkGLError( const char* txt )
     {
@@ -63,6 +72,20 @@ const int drawable_attrs[] =
     None
     };
 
+const int drawable_tfp_attrs[] = 
+    {
+    GLX_DOUBLEBUFFER, False,
+    GLX_DEPTH_SIZE, 0,
+    GLX_RED_SIZE, 1,
+    GLX_GREEN_SIZE, 1,
+    GLX_BLUE_SIZE, 1,
+    GLX_ALPHA_SIZE, 1,
+    GLX_RENDER_TYPE, GLX_RGBA_BIT,
+    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT | GLX_WINDOW_BIT,
+    GLX_BIND_TO_TEXTURE_RGBA_EXT, True, // additional for tfp
+    None
+    };
+
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     {
@@ -70,13 +93,30 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     int dummy;
     if( !glXQueryExtension( display(), &dummy, &dummy ))
         return;
+    glXBindTexImageEXT = (glXBindTexImageEXT_func)
+        dlsym( RTLD_DEFAULT, "glXBindTexImageEXT" );
+    glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func)
+        dlsym( RTLD_DEFAULT, "glXReleaseTexImageEXT" );
+    tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
     XGCValues gcattr;
     gcattr.subwindow_mode = IncludeInferiors;
     gcroot = XCreateGC( display(), rootWindow(), GCSubwindowMode, &gcattr );
     buffer = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(),
         QX11Info::appDepth());
-    findConfig( root_attrs, fbcroot );
-    findConfig( drawable_attrs, fbcdrawable );
+    if( !findConfig( root_attrs, fbcroot ))
+        assert( false );
+    if( tfp_mode )
+        {
+        if( !findConfig( drawable_tfp_attrs, fbcdrawable ))
+            {
+            tfp_mode = false;
+            if( !findConfig( drawable_attrs, fbcdrawable ))
+                assert( false );
+            }
+        }
+    else
+        if( !findConfig( drawable_attrs, fbcdrawable ))
+            assert( false );
     glxroot = glXCreatePixmap( display(), fbcroot, buffer, NULL );
     context = glXCreateNewContext( display(), fbcroot, GLX_RGBA_TYPE, NULL, GL_FALSE );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
@@ -131,20 +171,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config )
             pos += 2;
             }
         }
-    assert( false );
     return false;
-    }
-
-static void quadDraw( int x, int y, int w, int h )
-    {
-    glTexCoord2i( x, y );
-    glVertex2i( x, y );
-    glTexCoord2i( x + w, y );
-    glVertex2i( x + w, y );
-    glTexCoord2i( x + w, y + h );
-    glVertex2i( x + w, y + h );
-    glTexCoord2i( x, y + h );
-    glVertex2i( x, y + h );
     }
 
 void SceneOpenGL::paint( QRegion, ToplevelList windows )
@@ -227,6 +254,9 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
 SceneOpenGL::Window::Window( Toplevel* c )
     : toplevel( c )
     , texture( 0 )
+    , texture_y_inverted( false )
+    , bound_pixmap( None )
+    , bound_glxpixmap( None )
     , shape_valid( false )
     , depth( 0 )
     {
@@ -249,12 +279,14 @@ void SceneOpenGL::Window::setDepth( int d )
 
 void SceneOpenGL::Window::bindTexture()
     {
-    if( texture != 0 && toplevel->damage().isEmpty())
+    if( texture != 0 && toplevel->damage().isEmpty()
+        && !tfp_mode ) // interestingly this makes tfp slower
         {
         // texture doesn't need updating, just bind it
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         return;
         }
+    // TODO cache pixmaps here if possible
     Pixmap window_pix = toplevel->createWindowPixmap();
     Pixmap pix = window_pix;
     // HACK
@@ -293,41 +325,85 @@ void SceneOpenGL::Window::bindTexture()
         XFillRectangle( display(), pix, gc, tw, 0, c->width() - tw, c->height());
         XFreeGC( display(), gc );
         }
-    GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
-    glXMakeContextCurrent( display(), pixmap, pixmap, context );
-    glReadBuffer( GL_FRONT );
-    glDrawBuffer( GL_FRONT );
-    if( texture == None )
+    if( tfp_mode )
         {
-        glGenTextures( 1, &texture );
+        if( texture == None )
+            glGenTextures( 1, &texture );
+        if( bound_pixmap != None )
+            {
+            glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
+            glXDestroyGLXPixmap( display(), bound_glxpixmap );
+            XFreePixmap( display(), bound_pixmap );
+            }
+        static const int attrs[] =
+            {
+            GLX_TEXTURE_FORMAT_EXT, GLX_TEXTURE_FORMAT_RGBA_EXT,
+            None
+            };
+        bound_pixmap = pix;
+        bound_glxpixmap = glXCreatePixmap( display(), fbcdrawable, pix, attrs );
+        int value;
+        glXGetFBConfigAttrib( display(), fbcdrawable, GLX_Y_INVERTED_EXT, &value );
+        texture_y_inverted = value ? true : false;
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
-        glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
-            toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
-            0, 0, toplevel->width(), toplevel->height(), 0 );
+        glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
     else
         {
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
-        if( !toplevel->damage().isEmpty())
+        GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
+        glXMakeContextCurrent( display(), pixmap, pixmap, context );
+        glReadBuffer( GL_FRONT );
+        glDrawBuffer( GL_FRONT );
+        if( texture == None )
             {
-            foreach( QRect r, toplevel->damage().rects())
+            glGenTextures( 1, &texture );
+            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+                toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
+                0, 0, toplevel->width(), toplevel->height(), 0 );
+            }
+        else
+            {
+            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            if( !toplevel->damage().isEmpty())
                 {
-                int gly = height() - r.y() - r.height(); // to opengl coords
-                glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
-                    r.x(), gly, r.x(), gly, r.width(), r.height());
+                foreach( QRect r, toplevel->damage().rects())
+                    {
+                    int gly = height() - r.y() - r.height(); // to opengl coords
+                    glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+                        r.x(), gly, r.x(), gly, r.width(), r.height());
+                    }
                 }
             }
+        // the pixmap is no longer needed, the texture will be updated
+        // only when the window changes anyway, so no need to cache
+        // the pixmap
+        glXDestroyPixmap( display(), pixmap );
+        XFreePixmap( display(), pix );
         }
-    // the pixmap is no longer needed, the texture will be updated
-    // only when the window changes anyway, so no need to cache
-    // the pixmap
-    glXDestroyPixmap( display(), pixmap );
-    XFreePixmap( display(), pix );
 #ifdef ALPHA_CLEAR_COPY
     if( alpha_clear )
         XFreePixmap( display(), window_pix );
 #endif
     }
+
+void SceneOpenGL::Window::discardTexture()
+    {
+    if( texture != 0 )
+        {
+        if( tfp_mode )
+            {
+            glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
+            glXDestroyGLXPixmap( display(), bound_glxpixmap );
+            XFreePixmap( display(), bound_pixmap );
+            bound_pixmap = None;
+            bound_glxpixmap = None;
+            }
+        glDeleteTextures( 1, &texture );
+        }
+    texture = 0;
+    }
+
 
 void SceneOpenGL::Window::discardShape()
     {
@@ -364,6 +440,18 @@ QRegion SceneOpenGL::Window::shape() const
     return shape_region;
     }
 
+static void quadDraw( int x1, int y1, int x2, int y2, bool invert_y )
+    {
+    glTexCoord2i( x1, invert_y ? y2 : y1 );
+    glVertex2i( x1, y1 );
+    glTexCoord2i( x2, invert_y ? y2 : y1 );
+    glVertex2i( x2, y1 );
+    glTexCoord2i( x2, invert_y ? y1 : y2 );
+    glVertex2i( x2, y2 );
+    glTexCoord2i( x1, invert_y ? y1 : y2 );
+    glVertex2i( x1, y2 );
+    }
+
 void SceneOpenGL::Window::draw()
     {
 // TODO for double-buffered root            glDrawBuffer( GL_BACK );
@@ -380,7 +468,8 @@ void SceneOpenGL::Window::draw()
     glEnable( GL_TEXTURE_RECTANGLE_ARB );
     glBegin( GL_QUADS );
     foreach( QRect r, shape().rects())
-        quadDraw( r.x(), height() - r.y() - r.height(), r.width(), r.height());
+        quadDraw( r.x(), height() - r.y() - r.height(),
+            r.x() + r.width(), height() - r.y(), texture_y_inverted );
     glEnd();
     glPopMatrix();
     if( toplevel->opacity() != 1.0 )

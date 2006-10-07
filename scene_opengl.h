@@ -40,6 +40,7 @@ class SceneOpenGL
         static GLXFBConfig fbcdrawable;
         static GLXPixmap glxroot;
         static GLXContext context;
+        static bool tfp_mode;
         class Window;
         QMap< Toplevel*, Window > windows;
     };
@@ -66,6 +67,9 @@ class SceneOpenGL::Window
     private:
         Toplevel* toplevel;
         Texture texture;
+        bool texture_y_inverted;
+        Pixmap bound_pixmap;
+        GLXPixmap bound_glxpixmap; // only for tfp_mode
         mutable QRegion shape_region;
         mutable bool shape_valid;
         int depth;
@@ -95,14 +99,6 @@ int SceneOpenGL::Window::height() const
     return toplevel->height();
     }
     
-inline
-void SceneOpenGL::Window::discardTexture()
-    {
-    if( texture != 0 )
-        glDeleteTextures( 1, &texture );
-    texture = 0;
-    }
-
 } // namespace
 
 #endif
