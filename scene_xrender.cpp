@@ -295,8 +295,17 @@ bool SceneXrender::WindowData::simpleTransformation() const
 
 Picture SceneXrender::WindowData::picture()
     {
+    if( !window->damage().isEmpty() && _picture != None )
+        {
+        XRenderFreePicture( display(), _picture );
+        _picture = None;
+        }
     if( _picture == None && format != NULL )
-        _picture = XRenderCreatePicture( display(), window->windowPixmap(), format, 0, 0 );
+        {
+        Pixmap pix = window->createWindowPixmap();
+        _picture = XRenderCreatePicture( display(), pix, format, 0, 0 );
+        XFreePixmap( display(), pix ); // the picture owns the pixmap
+        }
     return _picture;
     }
 

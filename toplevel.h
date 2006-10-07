@@ -53,8 +53,7 @@ class Toplevel
         bool isSplash() const;
         bool isUtility() const;
 
-        Pixmap windowPixmap() const;
-        void resetWindowPixmap();
+        Pixmap createWindowPixmap() const;
         Visual* visual() const;
         bool shape() const;
         virtual double opacity() const = 0;
@@ -79,7 +78,6 @@ class Toplevel
         Workspace* wspace;
         Damage damage_handle;
         QRegion damage_region;
-        mutable Pixmap window_pixmap;
         bool is_shape;
     };
 

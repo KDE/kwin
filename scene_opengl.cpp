@@ -226,7 +226,8 @@ void SceneOpenGL::Window::bindTexture()
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         return;
         }
-    Pixmap pix = toplevel->windowPixmap();
+    Pixmap window_pix = toplevel->createWindowPixmap();
+    Pixmap pix = window_pix;
     // HACK
     // When a window uses ARGB visual and has a decoration, the decoration
     // does use ARGB visual. When converting such window to a texture
@@ -304,7 +305,7 @@ void SceneOpenGL::Window::bindTexture()
     // only when the window changes anyway, so no need to cache
     // the pixmap
     glXDestroyPixmap( display(), pixmap );
-    toplevel->resetWindowPixmap();
+    XFreePixmap( display(), window_pix );
 #ifdef ALPHA_CLEAR_COPY
     if( alpha_clear )
         XFreePixmap( display(), pix );

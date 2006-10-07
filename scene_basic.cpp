@@ -44,8 +44,10 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
         QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
         if( !r.isEmpty())
             {
-            XCopyArea( display(), (*it)->windowPixmap(), composite_pixmap, gc,
+            Pixmap pix = (*it)->createWindowPixmap();
+            XCopyArea( display(), pix, composite_pixmap, gc,
                 qMax( 0, -(*it)->x()), qMax( 0, -(*it)->y()), r.width(), r.height(), r.x(), r.y());
+            XFreePixmap( display(), pix );
             }
         }
     XCopyArea( display(), composite_pixmap, rootWindow(), gc, 0, 0, displayWidth(), displayHeight(), 0, 0 );

@@ -18,7 +18,6 @@ Toplevel::Toplevel( Workspace* ws )
     , id( None )
     , wspace( ws )
     , damage_handle( None )
-    , window_pixmap( None )
     , is_shape( false )
     {
     }
@@ -26,7 +25,6 @@ Toplevel::Toplevel( Workspace* ws )
 Toplevel::~Toplevel()
     {
     assert( damage_handle == None );
-    assert( window_pixmap == None );
     }
 
 #ifndef NDEBUG

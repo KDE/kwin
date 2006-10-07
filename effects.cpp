@@ -274,8 +274,8 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
-    mht = new MakeHalfTransparent;
-    sm = new ShakyMove;
+//    mht = new MakeHalfTransparent;
+//    sm = new ShakyMove;
 //    gm = new GrowMove;
 //    swu = new ShiftWorkspaceUp( ws );
     }

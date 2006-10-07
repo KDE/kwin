@@ -54,7 +54,6 @@ bool Unmanaged::track( Window w )
         XShapeSelectInput( display(), w, ShapeNotifyMask );
     detectShape( w );
     setupCompositing();
-    resetWindowPixmap();
     return true;
     }
 

@@ -1653,7 +1653,6 @@ void Unmanaged::unmapNotifyEvent( XUnmapEvent* )
 
 void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     {
-    resetWindowPixmap();
     // TODO add damage only if the window is not obscured
     workspace()->addDamage( geometry());
     geom = QRect( e->x, e->y, e->width, e->height );
