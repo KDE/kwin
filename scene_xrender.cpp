@@ -338,6 +338,11 @@ Picture SceneXrender::WindowData::alphaMask()
         }
     if( alpha != None )
         return alpha;
+    if( effect.opacity == 1.0 )
+        { // no need to create alpha mask
+        alpha_cached_opacity = 1.0;
+        return None;
+        }
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), 1, 1, 8 );
     XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardA8 );
     XRenderPictureAttributes pa;
