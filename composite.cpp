@@ -164,26 +164,13 @@ void Toplevel::finishCompositing()
         return;
     XDamageDestroy( display(), damage_handle );
     damage_handle = None;
-    if( window_pixmap != None )
-        XFreePixmap( display(), window_pixmap );
-    window_pixmap = None;
     damage_region = QRegion();
     }
 
-void Toplevel::resetWindowPixmap()
+Pixmap Toplevel::createWindowPixmap() const
     {
-    if( !compositing())
-        return;
-    if( window_pixmap != None )
-        XFreePixmap( display(), window_pixmap );
-    window_pixmap = None;
-    }
-
-Pixmap Toplevel::windowPixmap() const
-    {
-    if( window_pixmap == None && compositing())
-        window_pixmap = XCompositeNameWindowPixmap( display(), handle());
-    return window_pixmap;
+    assert( compositing());
+    return XCompositeNameWindowPixmap( display(), handle());
     }
 
 void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
