@@ -32,13 +32,15 @@ class SceneOpenGL
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
     private:
-        bool findConfig( const int* attrs, GLXFBConfig& config );
+        void initBuffer();
+        bool findConfig( const int* attrs, GLXFBConfig& config, VisualID visual = None );
         typedef GLuint Texture;
         GC gcroot;
-        Pixmap buffer;
+        Drawable buffer;
         GLXFBConfig fbcroot;
+        bool root_db;
         static GLXFBConfig fbcdrawable;
-        static GLXPixmap glxroot;
+        static GLXDrawable glxroot;
         static GLXContext context;
         static bool tfp_mode;
         class Window;

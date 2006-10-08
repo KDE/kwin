@@ -46,7 +46,20 @@ static void checkGLError( const char* txt )
         kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
     }
 
-const int root_attrs[] =
+const int root_db_attrs[] =
+    {
+    GLX_DOUBLEBUFFER, True,
+    GLX_DEPTH_SIZE, 16,
+    GLX_RED_SIZE, 1,
+    GLX_GREEN_SIZE, 1,
+    GLX_BLUE_SIZE, 1,
+    GLX_ALPHA_SIZE, 1,
+    GLX_RENDER_TYPE, GLX_RGBA_BIT,
+    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+    None
+    };
+
+static const int root_buffer_attrs[] =
     {
     GLX_DOUBLEBUFFER, False,
     GLX_DEPTH_SIZE, 16,
@@ -55,7 +68,7 @@ const int root_attrs[] =
     GLX_BLUE_SIZE, 1,
     GLX_ALPHA_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT | GLX_WINDOW_BIT,
+    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT,
     None
     };
 
@@ -68,7 +81,7 @@ const int drawable_attrs[] =
     GLX_BLUE_SIZE, 1,
     GLX_ALPHA_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT | GLX_WINDOW_BIT,
+    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT,
     None
     };
 
@@ -81,7 +94,7 @@ const int drawable_tfp_attrs[] =
     GLX_BLUE_SIZE, 1,
     GLX_ALPHA_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT | GLX_WINDOW_BIT,
+    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT,
     GLX_BIND_TO_TEXTURE_RGBA_EXT, True, // additional for tfp
     None
     };
@@ -98,13 +111,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func)
         dlsym( RTLD_DEFAULT, "glXReleaseTexImageEXT" );
     tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
-    XGCValues gcattr;
-    gcattr.subwindow_mode = IncludeInferiors;
-    gcroot = XCreateGC( display(), rootWindow(), GCSubwindowMode, &gcattr );
-    buffer = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(),
-        QX11Info::appDepth());
-    if( !findConfig( root_attrs, fbcroot ))
-        assert( false );
+    initBuffer();
     if( tfp_mode )
         {
         if( !findConfig( drawable_tfp_attrs, fbcdrawable ))
@@ -117,7 +124,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     else
         if( !findConfig( drawable_attrs, fbcdrawable ))
             assert( false );
-    glxroot = glXCreatePixmap( display(), fbcroot, buffer, NULL );
     context = glXCreateNewContext( display(), fbcroot, GLX_RGBA_TYPE, NULL, GL_FALSE );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
     glMatrixMode( GL_PROJECTION );
@@ -125,6 +131,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glOrtho( 0, displayWidth(), 0, displayHeight(), 0, 65535 );
     glEnable( GL_DEPTH_TEST );
     checkGLError( "Init" );
+    kDebug() << "Root DB:" << root_db << ", TFP:" << tfp_mode << endl;
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -133,46 +140,110 @@ SceneOpenGL::~SceneOpenGL()
          it != windows.end();
          ++it )
         (*it).free();
-    glXDestroyPixmap( display(), glxroot );
-    XFreeGC( display(), gcroot );
-    XFreePixmap( display(), buffer );
+    if( root_db )
+        glXDestroyWindow( display(), glxroot );
+    else
+        {
+        glXDestroyPixmap( display(), glxroot );
+        XFreeGC( display(), gcroot );
+        XFreePixmap( display(), buffer );
+        }
     glXDestroyContext( display(), context );
     checkGLError( "Cleanup" );
     }
 
-bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config )
+void SceneOpenGL::initBuffer()
+    {
+    XWindowAttributes attrs;
+    XGetWindowAttributes( display(), rootWindow(), &attrs );
+    if( findConfig( root_db_attrs, fbcroot, XVisualIDFromVisual( attrs.visual )))
+        root_db = true;
+    else
+        {
+        if( findConfig( root_buffer_attrs, fbcroot ))
+            root_db = false;
+        else
+            assert( false );
+        }
+    if( root_db )
+        {
+        buffer = rootWindow();
+        glxroot = glXCreateWindow( display(), fbcroot, buffer, NULL );
+        }
+    else
+        {
+        XGCValues gcattr;
+        gcattr.subwindow_mode = IncludeInferiors;
+        gcroot = XCreateGC( display(), rootWindow(), GCSubwindowMode, &gcattr );
+        buffer = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(),
+            QX11Info::appDepth());
+        glxroot = glXCreatePixmap( display(), fbcroot, buffer, NULL );
+        }
+    }
+
+static void debugFBConfig( GLXFBConfig* fbconfigs, int i, const int* attrs )
+    {
+    int pos = 0;
+    while( attrs[ pos ] != (int)None )
+        {
+        int value;
+        if( glXGetFBConfigAttrib( display(), fbconfigs[ i ], attrs[ pos ], &value )
+            == Success )
+            kDebug() << "ATTR: 0x" << QString::number( attrs[ pos ], 16 )
+                << ": 0x" << QString::number( attrs[ pos + 1 ], 16 )
+                << ": 0x" << QString::number( value, 16 ) << endl;
+        else
+            kDebug() << "ATTR FAIL: 0x" << QString::number( attrs[ pos ], 16 ) << endl;
+        pos += 2;
+        }
+    }
+
+bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID visual )
     {
     int cnt;
     GLXFBConfig* fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()),
         attrs, &cnt );
     if( fbconfigs != NULL )
         {
-        config = fbconfigs[ 0 ];
-        XFree( fbconfigs );
-        return true;
+        if( visual == None )
+            {
+            config = fbconfigs[ 0 ];
+            kDebug() << "Found FBConfig" << endl;
+            debugFBConfig( fbconfigs, 0, attrs );
+            XFree( fbconfigs );
+            return true;
+            }
+        else
+            {
+            for( int i = 0;
+                 i < cnt;
+                 ++i )
+                {
+                int value;
+                glXGetFBConfigAttrib( display(), fbconfigs[ i ], GLX_VISUAL_ID, &value );
+                if( value == (int)visual )
+                    {
+                    kDebug() << "Found FBConfig" << endl;
+                    config = fbconfigs[ i ];
+                    debugFBConfig( fbconfigs, i, attrs );
+                    XFree( fbconfigs );
+                    return true;
+                    }
+                }
+            }
         }
+#if 0 // for debug
     fbconfigs = glXGetFBConfigs( display(), DefaultScreen( display()), &cnt );
     for( int i = 0;
          i < cnt;
          ++i )
         {
-        int pos = 0;
-        kDebug() << "FBCONF:" << i << endl;
-        while( attrs[ pos ] != (int)None )
-            {
-            int value;
-            if( glXGetFBConfigAttrib( display(), fbconfigs[ i ], attrs[ pos ], &value )
-                == Success )
-                kDebug() << "ATTR: 0x" << QString::number( attrs[ pos ], 16 )
-                    << ": 0x" << QString::number( attrs[ pos + 1 ], 16 )
-                    << ": 0x" << QString::number( value, 16 ) << endl;
-            else
-                kDebug() << "ATTR FAIL: 0x" << QString::number( attrs[ pos ], 16 ) << endl;
-            pos += 2;
-            }
+        kDebug() << "Listing FBConfig:" << i << endl;
+        debugFBConfig( fbconfigs, i, attrs );
         }
     if( fbconfigs != NULL )
         XFree( fbconfigs );
+#endif
     return false;
     }
 
@@ -211,11 +282,16 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
         w.draw();
         glDisable( GL_BLEND );
         }
-    glFlush();
-    glXWaitGL();
-    XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+    if( root_db )
+        glXSwapBuffers( display(), glxroot );
+    else
+        {
+        glFlush();
+        glXWaitGL();
+        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+        XFlush( display());
+        }
     ungrabXServer();
-    XFlush( display());
     checkGLError( "PostPaint" );
     }
 
