@@ -120,8 +120,9 @@ void writeRules( KConfig& cfg )
             cfg.writeEntry( "windowrole", ( const char* ) info->windowRole );
             cfg.writeEntry( "windowrolematch", 1 );
             }
-        if( info->windowType == static_cast< NET::WindowType >( -2 )) // undefined
-            {} // all types
+        if( info->windowType == static_cast< NET::WindowType >( -2 )) { // undefined
+            // all types
+        }
         if( info->windowType == NET::Unknown )
             cfg.writeEntry( "types", (int)NET::NormalMask );
         else
