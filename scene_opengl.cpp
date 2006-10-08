@@ -151,8 +151,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config )
         XFree( fbconfigs );
         return true;
         }
-    static const int empty[] = { None };
-    fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()), empty, &cnt );
+    fbconfigs = glXGetFBConfigs( display(), DefaultScreen( display()), &cnt );
     for( int i = 0;
          i < cnt;
          ++i )
@@ -164,13 +163,16 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config )
             int value;
             if( glXGetFBConfigAttrib( display(), fbconfigs[ i ], attrs[ pos ], &value )
                 == Success )
-                kDebug() << "ATTR:" << attrs[ pos ] << ":" << value
-                    << ":" << attrs[ pos + 1 ] << endl;
+                kDebug() << "ATTR: 0x" << QString::number( attrs[ pos ], 16 )
+                    << ": 0x" << QString::number( attrs[ pos + 1 ], 16 )
+                    << ": 0x" << QString::number( value, 16 ) << endl;
             else
-                kDebug() << "ATTR FAIL:" << attrs[ pos ] << endl;
+                kDebug() << "ATTR FAIL: 0x" << QString::number( attrs[ pos ], 16 ) << endl;
             pos += 2;
             }
         }
+    if( fbconfigs != NULL )
+        XFree( fbconfigs );
     return false;
     }
 
@@ -324,6 +326,7 @@ void SceneOpenGL::Window::bindTexture()
         XFillRectangle( display(), pix, gc, 0, th, c->width(), c->height() - th );
         XFillRectangle( display(), pix, gc, tw, 0, c->width() - tw, c->height());
         XFreeGC( display(), gc );
+        glXWaitX();
         }
     if( tfp_mode )
         {
