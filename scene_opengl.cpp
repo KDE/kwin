@@ -36,8 +36,11 @@ bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
     int buffer, const int* attrib_list );
 typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
+typedef void (*glXFuncPtr)();
+typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
 glXBindTexImageEXT_func glXBindTexImageEXT;
 glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
+glXGetProcAddress_func glXGetProcAddress;
 
 static void checkGLError( const char* txt )
     {
@@ -99,6 +102,16 @@ const int drawable_tfp_attrs[] =
     None
     };
 
+static glXFuncPtr getProcAddress( const char* name )
+    {
+    glXFuncPtr ret = NULL;
+    if( glXGetProcAddress != NULL )
+        ret = glXGetProcAddress( ( const GLubyte* ) name );
+    if( ret == NULL )
+        ret = ( glXFuncPtr ) dlsym( RTLD_DEFAULT, name );
+    return ret;
+    }
+
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     {
@@ -106,10 +119,11 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     int dummy;
     if( !glXQueryExtension( display(), &dummy, &dummy ))
         return;
-    glXBindTexImageEXT = (glXBindTexImageEXT_func)
-        dlsym( RTLD_DEFAULT, "glXBindTexImageEXT" );
-    glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func)
-        dlsym( RTLD_DEFAULT, "glXReleaseTexImageEXT" );
+    glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddress" );
+    if( glXGetProcAddress == NULL )
+        glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
+    glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
+    glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress( "glXReleaseTexImageEXT" );
     tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
     initBuffer();
     if( tfp_mode )
