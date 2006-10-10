@@ -7,7 +7,8 @@ composite.cpp and scene_opengl.cpp (TODO: add comments and general overview).
 
 Sources:
 
-- glcompmgr : http://lists.freedesktop.org/archives/xorg/2006-July/017006.html
+- glcompmgr : http://lists.freedesktop.org/archives/xorg/2006-July/017006.html ,
+              http://www.mail-archive.com/compiz%40lists.freedesktop.org/msg00023.html
     - simple and easy to understand
     - works even without texture_from_pixmap extension
     - claims to support several different gfx cards
