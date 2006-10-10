@@ -1,0 +1,73 @@
+* = not done
+/ = work in progress
+? = should it be done?
+
+See the HACKING file for KWin details. The composite-related sources are mostly
+composite.cpp and scene_opengl.cpp (TODO: add comments and general overview).
+
+Sources:
+
+- glcompmgr : http://lists.freedesktop.org/archives/xorg/2006-July/017006.html
+    - simple and easy to understand
+    - works even without texture_from_pixmap extension
+    - claims to support several different gfx cards
+- compiz : git clone git://anongit.freedesktop.org/git/xorg/app/compiz
+    - the ultimate <whatever>
+    - glxcompmgr : git clone git://anongit.freedesktop.org/git/xorg/app/glxcompgr
+        - a rather old version of compiz, but also simpler and as such simpler
+            to understand
+- libcm (metacity) : cvs -d :pserver:anonymous@anoncvs.gnome.org:/cvs/gnome co libcm
+    - no idea about it
+
+TODO:
+
+* Check/make it work with other gfx cards
+    - I've tested only with nvidia with the 9625 beta drivers so far
+    * latest stable nvidia drivers don't quite work, the COPY_BUFFERS
+        or REFRESH_DRAWABLES workaround from glcompmgr should take care of that
+        - the COPY_BUFFERS hack, if I'm getting it right, just creates a copy
+            of the X Pixmap first, so just always using ALPHA_CLEAR_COPY hack
+            in KWin should do the same
+    - I have absolutely no idea about other gfx cards, needs to be tested
+        * ati
+        * intel
+        * who knows what else
+
+? Xgl support
+    - Compiz itself doesn't work when compiled with the libGL from nvidia,
+        it ships its own and links against it
+    ? might be worth trying to use that libGL as well
+    - it may be just because of the special libGL, but when testing with Xgl
+        it even seemed non-conformant - none of the provided configs had
+        GLX_RENDER_TYPE with GLX_RGBA_BIT even though required by GLX
+        and other funny things. Indeed, it may be just me being still pretty
+        clueless about these things.
+    * is there a good reason to support Xgl? With the 9625 nvidia drivers
+        it seems to work fine without them
+        
+? AIGLX support
+    - no idea about this at all
+    * find out if it works
+
+* XComposite overlay window
+    - X.Org 7.1 and newer have XComposite extension version 0.3, which allows
+        creating an overlay window to paint to instead of painting to the root window
+    - I still run older X.Org here
+    - the code in glcompmgr for this is in HAVE_OVERLAYS, stealing primarily from
+        here should be better since it's simpler and the code so far has been
+        modelled more after glcompmgr
+    - the code in compiz for this is in USE_COW
+    * use double-buffering with the overlay window - kwin already has code
+        for double-buffered destination drawable, but I haven't been able to test it
+
+* when relying on extensions, detect that they are available
+    - some of the glcompmgr code probably depends on OpenGL/GLX extensions that may
+        not be always available, probably the same with compiz
+    * find out which code relies on extensions and add checks
+
+? alpha clear hack
+    * find out if it affects performance
+    * if yes, try to find a better way of solving the problem
+
+/ design framework for graphical effects
+    - modelling it after compiz seems to make a lot of sense
