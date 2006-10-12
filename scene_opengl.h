@@ -34,6 +34,8 @@ class SceneOpenGL
     private:
         void initBuffer();
         bool findConfig( const int* attrs, GLXFBConfig& config, VisualID visual = None );
+        void paintGenericScreen( ToplevelList windows );
+        void paintSimpleScreen( QRegion damage, ToplevelList windows );
         typedef GLuint Texture;
         GC gcroot;
         Drawable buffer;

@@ -72,3 +72,8 @@ TODO:
 
 / design framework for graphical effects
     - modelling it after compiz seems to make a lot of sense
+
+* make paintSimpleScreen() clip non-visible parts
+    - clip parts of lower windows by parts of windows above them, so that those parts
+        don't need to be painted
+    - similarly like in scene_xrender.cpp

@@ -261,7 +261,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID vi
     return false;
     }
 
-void SceneOpenGL::paint( QRegion, ToplevelList windows )
+void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
     {
     grabXServer();
     glXWaitX();
@@ -270,6 +270,50 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
+    if( /*generic case*/false )
+        paintGenericScreen( windows );
+    else
+        paintSimpleScreen( damage, windows );
+    glPopMatrix();
+    if( root_db )
+        glXSwapBuffers( display(), glxroot );
+    else
+        {
+        glFlush();
+        glXWaitGL();
+        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+        XFlush( display());
+        }
+    ungrabXServer();
+    checkGLError( "PostPaint" );
+    }
+    
+// the generic drawing code that should eventually handle even
+// transformations
+void SceneOpenGL::paintGenericScreen( ToplevelList windows )
+    {
+    int depth = 0;
+    foreach( Toplevel* c, windows ) // bottom to top
+        {
+        assert( this->windows.contains( c ));
+        Window& w = this->windows[ c ];
+        w.setDepth( --depth );
+        if( !w.isVisible())
+            continue;
+        w.bindTexture();
+        if( !w.isOpaque())
+            {
+            glEnable( GL_BLEND );
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            }
+        w.draw();
+        glDisable( GL_BLEND );
+        }
+    }
+
+// the optimized case without any transformations at all
+void SceneOpenGL::paintSimpleScreen( QRegion, ToplevelList windows )
+    {
     int depth = 0;
     QList< Window* > phase2;
     for( int i = windows.count() - 1; // top to bottom
@@ -299,18 +343,6 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
         w.draw();
         glDisable( GL_BLEND );
         }
-    glPopMatrix();
-    if( root_db )
-        glXSwapBuffers( display(), glxroot );
-    else
-        {
-        glFlush();
-        glXWaitGL();
-        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
-        XFlush( display());
-        }
-    ungrabXServer();
-    checkGLError( "PostPaint" );
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )
