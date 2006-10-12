@@ -553,10 +553,23 @@ void SceneOpenGL::Window::draw()
     glTranslatef( glX(), glY(), depth );
     if( toplevel->opacity() != 1.0 )
         {
-        glEnable( GL_BLEND );
-        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-        glColor4f( toplevel->opacity(), toplevel->opacity(), toplevel->opacity(),
-            toplevel->opacity());
+        if( toplevel->hasAlpha())
+            {
+            glEnable( GL_BLEND );
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+            glColor4f( toplevel->opacity(), toplevel->opacity(), toplevel->opacity(),
+                toplevel->opacity());
+            }
+        else
+            {
+            float constant_alpha[] = { 0, 0, 0, toplevel->opacity() };
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_CONSTANT );
+            glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant_alpha );
+            }
         }
     glEnable( GL_TEXTURE_RECTANGLE_ARB );
     glBegin( GL_QUADS );
