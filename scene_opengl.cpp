@@ -265,8 +265,11 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
     {
     grabXServer();
     glXWaitX();
+    glPushMatrix();
     glClearColor( 0, 0, 0, 1 );
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glScalef( 1, -1, 1 );
+    glTranslatef( 0, -displayHeight(), 0 );
     int depth = 0;
     QList< Window* > phase2;
     for( int i = windows.count() - 1; // top to bottom
@@ -296,6 +299,7 @@ void SceneOpenGL::paint( QRegion, ToplevelList windows )
         w.draw();
         glDisable( GL_BLEND );
         }
+    glPopMatrix();
     if( root_db )
         glXSwapBuffers( display(), glxroot );
     else
@@ -437,7 +441,9 @@ void SceneOpenGL::Window::bindTexture()
         bound_glxpixmap = glXCreatePixmap( display(), fbcdrawable, pix, attrs );
         int value;
         glXGetFBConfigAttrib( display(), fbcdrawable, GLX_Y_INVERTED_EXT, &value );
-        texture_y_inverted = value ? true : false;
+        // this is swapped in order to get a conversion of OpenGL coordinates
+        // (binding to a texture is not affected by transforming the OpenGL scene)
+        texture_y_inverted = value ? false : true;
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
@@ -451,6 +457,7 @@ void SceneOpenGL::Window::bindTexture()
             {
             glGenTextures( 1, &texture );
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            texture_y_inverted = true; // conversion to OpenGL coordinates
             glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
                 toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
                 0, 0, toplevel->width(), toplevel->height(), 0 );
@@ -462,7 +469,11 @@ void SceneOpenGL::Window::bindTexture()
                 {
                 foreach( QRect r, toplevel->damage().rects())
                     {
-                    int gly = height() - r.y() - r.height(); // to opengl coords
+                    // convert to OpenGL coordinates (this is mapping
+                    // the pixmap to a texture, this is not affected
+                    // by transforming the OpenGL scene)
+                    int gly = toplevel->height() - r.y() - r.height();
+                    texture_y_inverted = true;
                     glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
                         r.x(), gly, r.x(), gly, r.width(), r.height());
                     }
@@ -550,7 +561,7 @@ void SceneOpenGL::Window::draw()
 // TODO for double-buffered root            glDrawBuffer( GL_BACK );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
     glPushMatrix();
-    glTranslatef( glX(), glY(), depth );
+    glTranslatef( x(), y(), depth );
     if( toplevel->opacity() != 1.0 )
         {
         if( toplevel->hasAlpha())
@@ -574,8 +585,10 @@ void SceneOpenGL::Window::draw()
     glEnable( GL_TEXTURE_RECTANGLE_ARB );
     glBegin( GL_QUADS );
     foreach( QRect r, shape().rects())
-        quadDraw( r.x(), height() - r.y() - r.height(),
-            r.x() + r.width(), height() - r.y(), texture_y_inverted );
+        {
+        quadDraw( r.x(), r.y(), r.x() + r.width(), r.y() + r.height(),
+            texture_y_inverted );
+        }
     glEnd();
     glPopMatrix();
     if( toplevel->opacity() != 1.0 )

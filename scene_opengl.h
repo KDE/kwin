@@ -53,8 +53,8 @@ class SceneOpenGL::Window
         Window( Toplevel* c );
         ~Window();
         void free(); // is often copied by value, use manually instead of dtor
-        int glX() const; // remap to OpenGL coordinates
-        int glY() const;
+        int x() const;
+        int y() const;
         int width() const;
         int height() const;
         void setDepth( int depth );
@@ -78,15 +78,15 @@ class SceneOpenGL::Window
     };
 
 inline
-int SceneOpenGL::Window::glX() const
+int SceneOpenGL::Window::x() const
     {
     return toplevel->x();
     }
     
 inline
-int SceneOpenGL::Window::glY() const
+int SceneOpenGL::Window::y() const
     {
-    return displayHeight() - toplevel->y() - toplevel->height();
+    return toplevel->y();
     }
 
 inline
