@@ -8,7 +8,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 set(kwin3_b2_PART_SRCS b2client.cpp)
 
-kde4_automoc(${kwin3_b2_PART_SRCS})
+kde4_automoc(kwin3_b2 ${kwin3_b2_PART_SRCS})
 
 kde4_add_plugin(kwin3_b2 ${kwin3_b2_PART_SRCS})
 

@@ -6,7 +6,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 set(kwin3_laptop_PART_SRCS laptopclient.cpp)
 
-kde4_automoc(${kwin3_laptop_PART_SRCS})
+kde4_automoc(kwin3_laptop ${kwin3_laptop_PART_SRCS})
 
 kde4_add_plugin(kwin3_laptop ${kwin3_laptop_PART_SRCS})
 

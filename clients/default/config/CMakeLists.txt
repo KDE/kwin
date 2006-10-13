@@ -5,7 +5,7 @@
 
 set(kwin_default_config_PART_SRCS config.cpp )
 
-kde4_automoc(${kwin_default_config_PART_SRCS})
+kde4_automoc(kwin_default_config ${kwin_default_config_PART_SRCS})
 
 kde4_add_plugin(kwin_default_config ${kwin_default_config_PART_SRCS})
 

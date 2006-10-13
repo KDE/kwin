@@ -6,7 +6,7 @@
 
 set(kwin3_test_PART_SRCS test.cpp )
 
-kde4_automoc(${kwin3_test_PART_SRCS})
+kde4_automoc(kwin3_test ${kwin3_test_PART_SRCS})
 
 kde4_add_plugin(kwin3_test ${kwin3_test_PART_SRCS})
 

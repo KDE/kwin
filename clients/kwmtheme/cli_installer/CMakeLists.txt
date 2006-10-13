@@ -5,7 +5,7 @@
 
 set(kwmtheme_SRCS main.cpp )
 
-kde4_automoc(${kwmtheme_SRCS})
+kde4_automoc(kwmtheme ${kwmtheme_SRCS})
 
 kde4_add_executable(kwmtheme ${kwmtheme_SRCS})
 

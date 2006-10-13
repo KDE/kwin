@@ -8,7 +8,7 @@ add_subdirectory( config )
 
 set(kwin3_quartz_PART_SRCS quartz.cpp )
 
-kde4_automoc(${kwin3_quartz_PART_SRCS})
+kde4_automoc(kwin3_quartz ${kwin3_quartz_PART_SRCS})
 
 kde4_add_plugin(kwin3_quartz ${kwin3_quartz_PART_SRCS})
 

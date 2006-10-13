@@ -5,7 +5,7 @@
 
 set(kwin_killer_helper_SRCS killer.cpp )
 
-kde4_automoc(${kwin_killer_helper_SRCS})
+kde4_automoc(kwin_killer_helper ${kwin_killer_helper_SRCS})
 
 kde4_add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 

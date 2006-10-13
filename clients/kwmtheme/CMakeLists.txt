@@ -8,7 +8,7 @@ add_subdirectory( cli_installer )
 
 set(kwin3_kwmtheme_PART_SRCS kwmthemeclient.cpp )
 
-kde4_automoc(${kwin3_kwmtheme_PART_SRCS})
+kde4_automoc(kwin3_kwmtheme ${kwin3_kwmtheme_PART_SRCS})
 
 kde4_add_plugin(kwin3_kwmtheme ${kwin3_kwmtheme_PART_SRCS})
 

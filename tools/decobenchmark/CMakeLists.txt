@@ -5,7 +5,7 @@
 
 set(decobenchmark_SRCS main.cpp preview.cpp )
 
-kde4_automoc(${decobenchmark_SRCS})
+kde4_automoc(decobenchmark ${decobenchmark_SRCS})
 
 kde4_add_executable(decobenchmark ${decobenchmark_SRCS})
 

@@ -5,7 +5,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 set(kwin_keramik_config_PART_SRCS config.cpp )
 
-kde4_automoc(${kwin_keramik_config_PART_SRCS})
+kde4_automoc(kwin_keramik_config ${kwin_keramik_config_PART_SRCS})
 
 kde4_add_ui3_files(kwin_keramik_config_PART_SRCS keramikconfig.ui )
 

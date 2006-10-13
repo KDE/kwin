@@ -5,7 +5,7 @@
 
 set(kwin_quartz_config_PART_SRCS config.cpp )
 
-kde4_automoc(${kwin_quartz_config_PART_SRCS})
+kde4_automoc(kwin_quartz_config ${kwin_quartz_config_PART_SRCS})
 
 kde4_add_plugin(kwin_quartz_config ${kwin_quartz_config_PART_SRCS})
 

@@ -7,7 +7,7 @@ add_subdirectory( decobenchmark )
 
 set(test_gravity_SRCS test_gravity.cpp )
 
-kde4_automoc(${test_gravity_SRCS})
+kde4_automoc(test_gravity ${test_gravity_SRCS})
 
 kde4_add_executable(test_gravity ${test_gravity_SRCS})
 

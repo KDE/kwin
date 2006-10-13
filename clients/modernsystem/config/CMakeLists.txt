@@ -5,7 +5,7 @@
 
 set(kwin_modernsys_config_PART_SRCS config.cpp )
 
-kde4_automoc(${kwin_modernsys_config_PART_SRCS})
+kde4_automoc(kwin_modernsys_config ${kwin_modernsys_config_PART_SRCS})
 
 kde4_add_plugin(kwin_modernsys_config ${kwin_modernsys_config_PART_SRCS})
 

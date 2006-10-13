@@ -10,7 +10,7 @@ set(kdecorations_LIB_SRCS
    kdecorationfactory.cpp 
    kcommondecoration.cpp )
 
-kde4_automoc(${kdecorations_LIB_SRCS})
+kde4_automoc(kdecorations ${kdecorations_LIB_SRCS})
 
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 

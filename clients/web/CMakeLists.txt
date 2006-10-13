@@ -6,7 +6,7 @@
 
 set(kwin3_web_PART_SRCS Web.cpp WebButton.cpp )
 
-kde4_automoc(${kwin3_web_PART_SRCS})
+kde4_automoc(kwin3_web ${kwin3_web_PART_SRCS})
 
 kde4_add_plugin(kwin3_web ${kwin3_web_PART_SRCS})
 

@@ -8,7 +8,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 set(kwin3_keramik_PART_SRCS keramik.cpp )
 
-kde4_automoc(${kwin3_keramik_PART_SRCS})
+kde4_automoc(kwin3_keramik ${kwin3_keramik_PART_SRCS})
 
 qt4_add_resources(kwin3_keramik_PART_SRCS tiles.qrc )
 

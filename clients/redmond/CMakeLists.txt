@@ -7,7 +7,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 set(kwin3_redmond_PART_SRCS redmond.cpp)
 
-kde4_automoc(${kwin3_redmond_PART_SRCS})
+kde4_automoc(kwin3_redmond ${kwin3_redmond_PART_SRCS})
 
 kde4_add_plugin(kwin3_redmond ${kwin3_redmond_PART_SRCS})
 
