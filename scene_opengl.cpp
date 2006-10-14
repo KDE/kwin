@@ -32,6 +32,7 @@ GLXFBConfig SceneOpenGL::fbcdrawable;
 GLXContext SceneOpenGL::context;
 GLXPixmap SceneOpenGL::glxroot;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
+bool SceneOpenGL::root_db; // destination drawable is double-buffered
 
 typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
     int buffer, const int* attrib_list );
@@ -180,6 +181,7 @@ void SceneOpenGL::initBuffer()
         {
         buffer = rootWindow();
         glxroot = glXCreateWindow( display(), fbcroot, buffer, NULL );
+        glDrawBuffer( GL_BACK );
         }
     else
         {
@@ -262,15 +264,33 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
     {
     grabXServer();
     glXWaitX();
+    if( /*generic case*/false )
+        paintGenericScreen( windows );
+    else
+        paintSimpleScreen( damage, windows );
+    ungrabXServer();
+    checkGLError( "PostPaint" );
+    }
+    
+// the generic painting code that should eventually handle even
+// transformations
+void SceneOpenGL::paintGenericScreen( ToplevelList windows )
+    {
     glPushMatrix();
     glClearColor( 0, 0, 0, 1 );
     glClear( GL_COLOR_BUFFER_BIT );
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
-    if( /*generic case*/false )
-        paintGenericScreen( windows );
-    else
-        paintSimpleScreen( damage, windows );
+    paintBackground( infiniteRegion());
+    foreach( Toplevel* c, windows ) // bottom to top
+        {
+        assert( this->windows.contains( c ));
+        Window& w = this->windows[ c ];
+        if( !w.isVisible())
+            continue;
+        w.bindTexture();
+        w.paint( infiniteRegion(), PAINT_OPAQUE | PAINT_TRANSLUCENT );
+        }
     glPopMatrix();
     if( root_db )
         glXSwapBuffers( display(), glxroot );
@@ -281,34 +301,16 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
         XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
         XFlush( display());
         }
-    ungrabXServer();
-    checkGLError( "PostPaint" );
-    }
-    
-// the generic painting code that should eventually handle even
-// transformations
-void SceneOpenGL::paintGenericScreen( ToplevelList windows )
-    {
-    foreach( Toplevel* c, windows ) // bottom to top
-        {
-        assert( this->windows.contains( c ));
-        Window& w = this->windows[ c ];
-        if( !w.isVisible())
-            continue;
-        w.bindTexture();
-        if( !w.isOpaque())
-            {
-            glEnable( GL_BLEND );
-            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-            }
-        w.paint( infiniteRegion());
-        glDisable( GL_BLEND );
-        }
     }
 
 // the optimized case without any transformations at all
 void SceneOpenGL::paintSimpleScreen( QRegion damage, ToplevelList windows )
     {
+    glPushMatrix();
+    glClearColor( 0, 0, 0, 1 );
+    glClear( GL_COLOR_BUFFER_BIT );
+    glScalef( 1, -1, 1 );
+    glTranslatef( 0, -displayHeight(), 0 );
     QList< Phase2Data > phase2;
     QRegion region = damage;
     // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
@@ -330,7 +332,7 @@ void SceneOpenGL::paintSimpleScreen( QRegion damage, ToplevelList windows )
             continue;
             }
         w.bindTexture();
-        w.paint( region );
+        w.paint( region, PAINT_OPAQUE );
         // window is opaque, clip windows below
         region -= w.shape().translated( w.x(), w.y());
         }
@@ -339,10 +341,17 @@ void SceneOpenGL::paintSimpleScreen( QRegion damage, ToplevelList windows )
         {
         Window& w = *d.window;
         w.bindTexture();
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        w.paint( d.region );
-        glDisable( GL_BLEND );
+        w.paint( d.region, PAINT_TRANSLUCENT );
+        }
+    glPopMatrix();
+    if( root_db )
+        glXSwapBuffers( display(), glxroot );
+    else
+        {
+        glFlush();
+        glXWaitGL();
+        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+        XFlush( display());
         }
     }
 
@@ -515,6 +524,8 @@ void SceneOpenGL::Window::bindTexture()
         // the pixmap
         glXDestroyPixmap( display(), pixmap );
         XFreePixmap( display(), pix );
+        if( root_db )
+            glDrawBuffer( GL_BACK );
         }
 #ifdef ALPHA_CLEAR_COPY
     if( alpha_clear )
@@ -587,7 +598,7 @@ static void quadPaint( int x1, int y1, int x2, int y2, bool invert_y )
     glVertex2i( x1, y2 );
     }
 
-void SceneOpenGL::Window::paint( QRegion region )
+void SceneOpenGL::Window::paint( QRegion region, int mask )
     {
     // paint only requested areas
     if( region != infiniteRegion()) // avoid integer overflow
@@ -595,15 +606,31 @@ void SceneOpenGL::Window::paint( QRegion region )
     region &= shape();
     if( region.isEmpty())
         return;
-// TODO for double-buffered root            glDrawBuffer( GL_BACK );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
     glPushMatrix();
     glTranslatef( x(), y(), 0 );
+    if( mask & ( PAINT_OPAQUE | PAINT_TRANSLUCENT ))
+        {}
+    else if( mask & PAINT_OPAQUE )
+        {
+        if( !isOpaque())
+            return;
+        }
+    else if( mask & PAINT_TRANSLUCENT )
+        {
+        if( isOpaque())
+            return;
+        }
+    bool was_blend = glIsEnabled( GL_BLEND );
+    if( !isOpaque())
+        {
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        }
     if( toplevel->opacity() != 1.0 )
         {
         if( toplevel->hasAlpha())
             {
-            glEnable( GL_BLEND );
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
             glColor4f( toplevel->opacity(), toplevel->opacity(), toplevel->opacity(),
                 toplevel->opacity());
@@ -632,8 +659,9 @@ void SceneOpenGL::Window::paint( QRegion region )
         {
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
         glColor4f( 0, 0, 0, 0 );
-        glDisable( GL_BLEND );
         }
+    if( !was_blend )
+        glDisable( GL_BLEND );
     glDisable( GL_TEXTURE_RECTANGLE_ARB );
     glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
     }

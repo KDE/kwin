@@ -38,11 +38,16 @@ class SceneOpenGL
         void paintSimpleScreen( QRegion damage, ToplevelList windows );
         void paintBackground( QRegion damage );
         static QRegion infiniteRegion();
+        enum
+            {
+            PAINT_OPAQUE = 1 << 0,
+            PAINT_TRANSLUCENT = 1 << 1
+            };
         typedef GLuint Texture;
         GC gcroot;
         Drawable buffer;
         GLXFBConfig fbcroot;
-        bool root_db;
+        static bool root_db;
         static GLXFBConfig fbcdrawable;
         static GLXDrawable glxroot;
         static GLXContext context;
@@ -67,7 +72,7 @@ class SceneOpenGL::Window
         int y() const;
         int width() const;
         int height() const;
-        void paint( QRegion region );
+        void paint( QRegion region, int mask );
         bool isVisible() const;
         bool isOpaque() const;
         void bindTexture();
