@@ -36,6 +36,8 @@ class SceneOpenGL
         bool findConfig( const int* attrs, GLXFBConfig& config, VisualID visual = None );
         void paintGenericScreen( ToplevelList windows );
         void paintSimpleScreen( QRegion damage, ToplevelList windows );
+        void paintBackground( QRegion damage );
+        static QRegion infiniteRegion();
         typedef GLuint Texture;
         GC gcroot;
         Drawable buffer;
@@ -47,6 +49,12 @@ class SceneOpenGL
         static bool tfp_mode;
         class Window;
         QMap< Toplevel*, Window > windows;
+        struct Phase2Data
+            {
+            Phase2Data( Window* w, QRegion r ) : window( w ), region( r ) {}
+            Window* window;
+            QRegion region;
+            };
     };
 
 class SceneOpenGL::Window
@@ -59,7 +67,7 @@ class SceneOpenGL::Window
         int y() const;
         int width() const;
         int height() const;
-        void draw();
+        void paint( QRegion region );
         bool isVisible() const;
         bool isOpaque() const;
         void bindTexture();
@@ -76,6 +84,12 @@ class SceneOpenGL::Window
         mutable QRegion shape_region;
         mutable bool shape_valid;
     };
+
+inline
+QRegion SceneOpenGL::infiniteRegion()
+    { // INT_MIN / 2 because it's width/height (INT_MIN+INT_MAX==-1)
+    return QRegion( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
+    }
 
 inline
 int SceneOpenGL::Window::x() const

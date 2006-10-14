@@ -267,7 +267,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
     glClear( GL_COLOR_BUFFER_BIT );
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
-    if( /*generic case*/true )
+    if( /*generic case*/false )
         paintGenericScreen( windows );
     else
         paintSimpleScreen( damage, windows );
@@ -285,7 +285,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
     checkGLError( "PostPaint" );
     }
     
-// the generic drawing code that should eventually handle even
+// the generic painting code that should eventually handle even
 // transformations
 void SceneOpenGL::paintGenericScreen( ToplevelList windows )
     {
@@ -301,15 +301,18 @@ void SceneOpenGL::paintGenericScreen( ToplevelList windows )
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
             }
-        w.draw();
+        w.paint( infiniteRegion());
         glDisable( GL_BLEND );
         }
     }
 
 // the optimized case without any transformations at all
-void SceneOpenGL::paintSimpleScreen( QRegion, ToplevelList windows )
+void SceneOpenGL::paintSimpleScreen( QRegion damage, ToplevelList windows )
     {
-    QList< Window* > phase2;
+    QList< Phase2Data > phase2;
+    QRegion region = damage;
+    // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
+    region = QRegion( 0, 0, displayWidth(), displayHeight());
     for( int i = windows.count() - 1; // top to bottom
          i >= 0;
          --i )
@@ -319,23 +322,33 @@ void SceneOpenGL::paintSimpleScreen( QRegion, ToplevelList windows )
         Window& w = this->windows[ c ];
         if( !w.isVisible())
             continue;
+        if( region.isEmpty()) // completely clipped
+            continue;
         if( !w.isOpaque())
             {
-            phase2.prepend( &w );
+            phase2.prepend( Phase2Data( &w, region ));
             continue;
             }
         w.bindTexture();
-        w.draw();
+        w.paint( region );
+        // window is opaque, clip windows below
+        region -= w.shape().translated( w.x(), w.y());
         }
-    foreach( Window* w2, phase2 )
+    paintBackground( region );
+    foreach( Phase2Data d, phase2 )
         {
-        Window& w = *w2;
+        Window& w = *d.window;
         w.bindTexture();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        w.draw();
+        w.paint( d.region );
         glDisable( GL_BLEND );
         }
+    }
+
+void SceneOpenGL::paintBackground( QRegion )
+    {
+// TODO?
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )
@@ -562,7 +575,7 @@ QRegion SceneOpenGL::Window::shape() const
     return shape_region;
     }
 
-static void quadDraw( int x1, int y1, int x2, int y2, bool invert_y )
+static void quadPaint( int x1, int y1, int x2, int y2, bool invert_y )
     {
     glTexCoord2i( x1, invert_y ? y2 : y1 );
     glVertex2i( x1, y1 );
@@ -574,8 +587,14 @@ static void quadDraw( int x1, int y1, int x2, int y2, bool invert_y )
     glVertex2i( x1, y2 );
     }
 
-void SceneOpenGL::Window::draw()
+void SceneOpenGL::Window::paint( QRegion region )
     {
+    // paint only requested areas
+    if( region != infiniteRegion()) // avoid integer overflow
+        region.translate( -x(), -y());
+    region &= shape();
+    if( region.isEmpty())
+        return;
 // TODO for double-buffered root            glDrawBuffer( GL_BACK );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
     glPushMatrix();
@@ -602,9 +621,9 @@ void SceneOpenGL::Window::draw()
         }
     glEnable( GL_TEXTURE_RECTANGLE_ARB );
     glBegin( GL_QUADS );
-    foreach( QRect r, shape().rects())
+    foreach( QRect r, region.rects())
         {
-        quadDraw( r.x(), r.y(), r.x() + r.width(), r.y() + r.height(),
+        quadPaint( r.x(), r.y(), r.x() + r.width(), r.y() + r.height(),
             texture_y_inverted );
         }
     glEnd();

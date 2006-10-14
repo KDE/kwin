@@ -73,7 +73,8 @@ TODO:
 / design framework for graphical effects
     - modelling it after compiz seems to make a lot of sense
 
-* make paintSimpleScreen() clip non-visible parts
-    - clip parts of lower windows by parts of windows above them, so that those parts
-        don't need to be painted
-    - similarly like in scene_xrender.cpp
+* update only those parts of the screen that have been changed
+    - for paintSimpleScreen() - it currently sets region to the whole screen
+    - instead of using glXSwapBuffers() or XCopyArea() that update the whole screen,
+        there should be glCopyPixels() used
+    - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
