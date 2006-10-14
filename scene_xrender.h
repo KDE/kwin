@@ -37,40 +37,52 @@ class SceneXrender
         virtual void windowDeleted( Toplevel* );
     private:
         void createBuffer();
-        void resetWindowData( Toplevel* c );
-        static void setPictureMatrix( Picture pic, const Matrix& m );
+        void paintGenericScreen( ToplevelList windows );
+        void paintSimpleScreen( QRegion damage, ToplevelList windows );
+        void paintBackground( XserverRegion region );
+        enum
+            {
+            PAINT_OPAQUE = 1 << 0,
+            PAINT_TRANSLUCENT = 1 << 1
+            };
         XRenderPictFormat* format;
         Picture front;
-        Picture buffer;
-        class WindowData
+        static Picture buffer;
+        class Window;
+        static XserverRegion infiniteRegion;
+        QMap< Toplevel*, Window > windows;
+        struct Phase2Data
             {
-            public:
-                WindowData( Toplevel* c, XRenderPictFormat* f );
-                void free(); // is often copied by value, use manually instead of dtor
-                void cleanup(); // removes data needed only during painting pass
-                Picture picture();
-                bool simpleTransformation() const;
-                void saveClipRegion( XserverRegion r );
-                XserverRegion savedClipRegion();
-                bool isOpaque() const;
-                Picture alphaMask();
-                XserverRegion shape();
-                void geometryShapeChanged();
-                void opacityChanged();
-                Matrix matrix;
-                EffectData effect;
-                int phase;
-                WindowData() {} // QMap sucks even in Qt4
-            private:
-                Toplevel* window;
-                Picture _picture;
-                XRenderPictFormat* format;
-                XserverRegion saved_clip_region;
-                Picture alpha;
-                double alpha_cached_opacity;
-                XserverRegion _shape;
+            Phase2Data( Window* w, XserverRegion r ) : window( w ), region( r ) {}
+            Window* window;
+            XserverRegion region;
             };
-        QMap< Toplevel*, WindowData > window_data;
+    };
+
+class SceneXrender::Window
+    {
+    public:
+        Window( Toplevel* c );
+        void free(); // is often copied by value, use manually instead of dtor
+        void paint( XserverRegion region, int mask );
+        bool isOpaque() const;
+        void geometryShapeChanged();
+        void opacityChanged();
+        bool isVisible() const;
+        XserverRegion shape();
+        void discardPicture();
+        void discardShape();
+        void discardAlpha();
+        Window() {} // QMap sucks even in Qt4
+    private:
+        Picture picture();
+        Picture alphaMask();
+        Toplevel* toplevel;
+        Picture _picture;
+        XRenderPictFormat* format;
+        Picture alpha;
+        double alpha_cached_opacity;
+        XserverRegion _shape;
     };
 
 } // namespace

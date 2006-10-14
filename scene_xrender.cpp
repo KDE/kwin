@@ -49,6 +49,9 @@ kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
     }
 #endif
 
+Picture SceneXrender::buffer;
+XserverRegion SceneXrender::infiniteRegion;
+
 SceneXrender::SceneXrender( Workspace* ws )
     : Scene( ws )
     {
@@ -56,6 +59,12 @@ SceneXrender::SceneXrender( Workspace* ws )
     XRenderPictureAttributes pa;
     pa.subwindow_mode = IncludeInferiors;
     front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
+    XRectangle xr;
+    xr.x = SHRT_MIN / 2;
+    xr.y = SHRT_MIN / 2;
+    xr.width = SHRT_MAX;
+    xr.height = SHRT_MAX;
+    infiniteRegion = XFixesCreateRegion( display(), &xr, 1 );
     createBuffer();
     }
 
@@ -63,18 +72,40 @@ SceneXrender::~SceneXrender()
     {
     XRenderFreePicture( display(), front );
     XRenderFreePicture( display(), buffer );
-    for( QMap< Toplevel*, WindowData >::Iterator it = window_data.begin();
-         it != window_data.end();
+    for( QMap< Toplevel*, Window >::Iterator it = windows.begin();
+         it != windows.end();
          ++it )
         (*it).free();
+    XFixesDestroyRegion( display(), infiniteRegion );
     }
 
-void SceneXrender::paint( QRegion dam, ToplevelList windows )
+void SceneXrender::paint( QRegion damage, ToplevelList windows )
     {
-#if 1
-    dam = QRegion( 0, 0, displayWidth(), displayHeight());
-#endif
-    QVector< QRect > rects = dam.rects();
+    if( /*generic case*/ false )
+        paintGenericScreen( windows );
+    else
+        paintSimpleScreen( damage, windows );
+    }
+    
+void SceneXrender::paintGenericScreen( ToplevelList windows )
+    {
+    paintBackground( infiniteRegion );
+    foreach( Toplevel* c, windows ) // bottom to top
+        {
+        assert( this->windows.contains( c ));
+        Window& w = this->windows[ c ];
+        if( !w.isVisible())
+            continue;
+        w.paint( infiniteRegion, PAINT_OPAQUE | PAINT_TRANSLUCENT );
+        }
+    // copy composed buffer to the root window
+    XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+    XFlush( display());
+    }
+
+void SceneXrender::paintSimpleScreen( QRegion damage, ToplevelList windows )
+    {
+    QVector< QRect > rects = damage.rects();
     XRectangle* xr = new XRectangle[ rects.count() ];
     for( int i = 0;
          i < rects.count();
@@ -85,43 +116,11 @@ void SceneXrender::paint( QRegion dam, ToplevelList windows )
         xr[ i ].width = rects[ i ].width();
         xr[ i ].height = rects[ i ].height();
         }
-    XserverRegion damage = XFixesCreateRegion( display(), xr, rects.count());
+    XserverRegion region = XFixesCreateRegion( display(), xr, rects.count());
     delete[] xr;
     // Use the damage region as the clip region for the root window
-    XFixesSetPictureClipRegion( display(), front, 0, 0, damage );
-    // Prepare pass for windows
-    // Go top to bottom so that clipping is computed properly for phase1
-    for( int i = windows.count() - 1;
-         i >= 0;
-         --i )
-        {
-        Toplevel* c = windows[ i ];
-        resetWindowData( c );
-        WindowData& data = window_data[ c ];
-        Picture picture = data.picture();
-        if( picture == None ) // The render format can be null for GL and/or Xv visuals
-            {
-            windows.removeAt( i );
-            continue;
-            }
-        effects->transformWindow( c, data.matrix, data.effect ); // TODO remove, instead add initWindow() to effects
-        effects->transformWorkspace( data.matrix, data.effect );
-        data.saveClipRegion( damage );
-        if( data.simpleTransformation() && data.isOpaque())
-            { // is opaque, has simple shape, can be clipped, will be painted using simpler faster method
-            // Subtract the clients shape from the damage region
-            XserverRegion shape = data.shape();
-            assert( shape != None );
-            XFixesSubtractRegion( display(), damage, damage, shape );
-            data.phase = 1;
-            }
-        else
-            data.phase = 2; // will be painted later bottom to top
-        }
-    // Fill any areas of the root window not covered by windows
-    XFixesSetPictureClipRegion( display(), buffer, 0, 0, damage );
-    XRenderColor col = { 0xffff, 0xffff, 0xffff, 0xffff };
-    XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
+    XFixesSetPictureClipRegion( display(), front, 0, 0, region );
+    QList< Phase2Data > phase2;
     // Draw each opaque window top to bottom, subtracting the bounding rect of
     // each window from the clip region after it's been drawn.
     for( int i = windows.count() - 1;
@@ -129,93 +128,77 @@ void SceneXrender::paint( QRegion dam, ToplevelList windows )
          --i )
         {
         Toplevel* c = windows[ i ];
-        WindowData& data = window_data[ c ];
-        if( data.phase != 1 )
+        assert( this->windows.contains( c ));
+        Window& w = this->windows[ c ];
+        if( !w.isVisible())
             continue;
-        XFixesSetPictureClipRegion( display(), buffer, 0, 0, data.savedClipRegion());
-        Picture picture = data.picture();
-        XRenderComposite( display(), PictOpSrc, picture, None, buffer, 0, 0, 0, 0,
-            c->x() + int( data.matrix.xTranslate()), c->y() + int( data.matrix.yTranslate()), c->width(), c->height());
+        if( !w.isOpaque())
+            {
+            XserverRegion saved_clip_region = XFixesCreateRegion( display(), NULL, 0 );
+            XFixesCopyRegion( display(), saved_clip_region, region );
+            phase2.prepend( Phase2Data( &w, saved_clip_region ));
+            continue;
+            }
+        w.paint( region, PAINT_OPAQUE );
+        // Subtract the clients shape from the damage region
+        XserverRegion shape = w.shape();
+        assert( shape != None );
+        XFixesSubtractRegion( display(), region, region, shape );
         }
-    // Now walk the list bottom to top, drawing translucent and complicated windows.
+    // Fill any areas of the root window not covered by windows
+    paintBackground( region );
+    // Now walk the list bottom to top, drawing translucent windows.
     // That we draw bottom to top is important now since we're drawing translucent objects
     // and also are clipping only by opaque windows.
-    for( int i = 0;
-         i < windows.count();
-         ++i )
+    foreach( Phase2Data d, phase2 )
         {
-        Toplevel* c = windows[ i ];
-        WindowData& data = window_data[ c ];
-        if( data.phase != 2 )
-            continue;
-        XFixesSetPictureClipRegion( display(), buffer, 0, 0, data.savedClipRegion());
-        Picture picture = data.picture();
-        Picture alpha = data.alphaMask();
-        if( data.simpleTransformation())
-            {
-            XRenderComposite( display(), PictOpOver, picture, alpha, buffer, 0, 0, 0, 0,
-                c->x() + int( data.matrix.xTranslate()), c->y() + int( data.matrix.yTranslate()), c->width(), c->height());
-            }
-        else
-            {
-            // TODO Okay, I'm at loss here. Whoever wants advanced transformations can implement
-            // it themselves. If not, they actually don't want it that badly *shrug*.
-//            setPictureMatrix( picture, data.matrix );
-            XRenderComposite( display(), PictOpSrc, picture, alpha, buffer, 0, 0, 0, 0,
-                c->x(), c->y(), c->width(), c->height());
-//            setPictureMatrix( picture, Matrix());
-            }
+        Window& w = *d.window;
+        w.paint( d.region, PAINT_TRANSLUCENT );
+        XFixesDestroyRegion( display(), d.region );
         }
-    // cleanup
-    for( int i = 0;
-         i < windows.count();
-         ++i )
-        {
-        Toplevel* c = windows[ i ];
-        WindowData& data = window_data[ c ];
-        data.cleanup();
-        }
-    // copy composed buffer to the root window
+    // copy composed buffer to the root window (clipped by original damage area)
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
     XFlush( display());
-    XFixesDestroyRegion( display(), damage );
+    XFixesDestroyRegion( display(), region );
     }
 
-void SceneXrender::resetWindowData( Toplevel* c )
+void SceneXrender::paintBackground( XserverRegion region )
     {
-    if( !window_data.contains( c ))
-        window_data[ c ] = WindowData( c, XRenderFindVisualFormat( display(), c->visual()));
-    WindowData& data = window_data[ c ];
-    data.matrix = Matrix();
-    data.effect.opacity = c->opacity();
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, region );
+    XRenderColor col = { 0xffff, 0xffff, 0xffff, 0xffff };
+    XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
     }
 
 void SceneXrender::windowGeometryShapeChanged( Toplevel* c )
     {
-    if( !window_data.contains( c ))
+    if( !windows.contains( c )) // this is ok, shape is not valid by default
         return;
-    window_data[ c ].geometryShapeChanged();
+    Window& w = windows[ c ];
+    w.discardPicture();
+    w.discardShape();
+    w.discardAlpha();
     }
     
 void SceneXrender::windowOpacityChanged( Toplevel* c )
     {
-    if( !window_data.contains( c ))
+    if( !windows.contains( c )) // this is ok, alpha is created on demand
         return;
-    window_data[ c ].opacityChanged();
+    Window& w = windows[ c ];
+    w.discardAlpha();
     }
 
 void SceneXrender::windowDeleted( Toplevel* c )
     {
-    assert( window_data.contains( c ));
-    window_data[ c ].free();
-    window_data.remove( c );
+    assert( windows.contains( c ));
+    windows[ c ].free();
+    windows.remove( c );
     }
 
 void SceneXrender::windowAdded( Toplevel* c )
     {
-    assert( !window_data.contains( c ));
-    resetWindowData( c );
+    assert( !windows.contains( c ));
+    windows[ c ] = Window( c );
     }
 
 // TODO handle xrandr changes
@@ -229,84 +212,35 @@ void SceneXrender::createBuffer()
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
-void SceneXrender::setPictureMatrix( Picture pic, const Matrix& )
-    {
-    if( pic == None )
-        return;
-#if 0
-    XTransform t;
-    // ignore z axis
-    t.matrix[ 0 ][ 0 ] = XDoubleToFixed( 1 / m.m[ 0 ][ 0 ] );
-    t.matrix[ 0 ][ 1 ] = XDoubleToFixed( m.m[ 0 ][ 1 ] );
-    t.matrix[ 0 ][ 2 ] = -XDoubleToFixed( m.m[ 0 ][ 3 ] ); // translation seems to be inverted
-    t.matrix[ 1 ][ 0 ] = XDoubleToFixed( m.m[ 1 ][ 0 ] );
-    t.matrix[ 1 ][ 1 ] = XDoubleToFixed( 1 / m.m[ 1 ][ 1 ] );
-    t.matrix[ 1 ][ 2 ] = -XDoubleToFixed( m.m[ 1 ][ 3 ] );
-    t.matrix[ 2 ][ 0 ] = XDoubleToFixed( m.m[ 3 ][ 0 ] );
-    t.matrix[ 2 ][ 1 ] = XDoubleToFixed( m.m[ 3 ][ 1 ] );
-    t.matrix[ 2 ][ 2 ] = XDoubleToFixed( m.m[ 3 ][ 3 ] );
-    // and scaling seems to be wrong too
-    // or maybe I just don't get it, but anyway, for now
-    if( m.m[ 3 ][ 3 ] != 1 )
-        {
-        t.matrix[ 0 ][ 0 ] = XDoubleToFixed( 1 / m.m[ 0 ][ 0 ] * m.m[ 3 ][ 3 ] );
-        t.matrix[ 1 ][ 1 ] = XDoubleToFixed( 1 / m.m[ 1 ][ 1 ] * m.m[ 3 ][ 3 ] );
-        t.matrix[ 2 ][ 2 ] = XDoubleToFixed( 1 );
-        }
-    XRenderSetPictureTransform( display(), pic, &t );
-    if( t.matrix[ 0 ][ 0 ] != XDoubleToFixed( 1 )
-     || t.matrix[ 1 ][ 1 ] != XDoubleToFixed( 1 )
-     || t.matrix[ 2 ][ 2 ] != XDoubleToFixed( 1 )
-     || t.matrix[ 0 ][ 1 ] != XDoubleToFixed( 0 )
-     || t.matrix[ 1 ][ 0 ] != XDoubleToFixed( 0 ))
-        {
-        XRenderSetPictureFilter( display(), pic, const_cast< char* >( FilterGood ), 0, 0 );
-        }
-    else // fast filter for identity or translation
-        {
-        XRenderSetPictureFilter( display(), pic, const_cast< char* >( FilterFast ), 0, 0 );
-        }
-#endif
-    }
-
-SceneXrender::WindowData::WindowData( Toplevel* c, XRenderPictFormat* f )
-    : window( c )
+SceneXrender::Window::Window( Toplevel* c )
+    : toplevel( c )
     , _picture( None )
-    , format( f )
-    , saved_clip_region( None )
+    , format( XRenderFindVisualFormat( display(), c->visual()))
     , alpha( None )
     , _shape( None )
     {
     }
 
-void SceneXrender::WindowData::free()
+void SceneXrender::Window::free()
     {
-    if( _picture != None )
-        XRenderFreePicture( display(), _picture );
-    if( alpha != None )
-        XRenderFreePicture( display(), alpha );
-    if( _shape != None )
-        XRenderFreePicture( display(), _shape );
+    discardPicture();
+    discardAlpha();
+    discardShape();
     }
 
-bool SceneXrender::WindowData::simpleTransformation() const
+Picture SceneXrender::Window::picture()
     {
-    return ( matrix.isIdentity() || matrix.isOnlyTranslate());
-    }
-
-Picture SceneXrender::WindowData::picture()
-    {
-    if( !window->damage().isEmpty() && _picture != None )
+    if( !toplevel->damage().isEmpty() && _picture != None )
         {
         XRenderFreePicture( display(), _picture );
         _picture = None;
         }
     if( _picture == None && format != NULL )
         {
-        Pixmap window_pix = window->createWindowPixmap();
+        Pixmap window_pix = toplevel->createWindowPixmap();
         Pixmap pix = window_pix;
         // HACK the same like with opengl
-        Client* c = dynamic_cast< Client* >( window );
+        Client* c = dynamic_cast< Client* >( toplevel );
         bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
 #define ALPHA_CLEAR_COPY
 #ifdef ALPHA_CLEAR_COPY
@@ -343,37 +277,33 @@ Picture SceneXrender::WindowData::picture()
     return _picture;
     }
 
-void SceneXrender::WindowData::saveClipRegion( XserverRegion r )
+
+void SceneXrender::Window::discardPicture()
     {
-    saved_clip_region = XFixesCreateRegion( display(), NULL, 0 );
-    XFixesCopyRegion( display(), saved_clip_region, r );
+    if( _picture != None )
+        XRenderFreePicture( display(), _picture );
+    _picture = None;
     }
 
-XserverRegion SceneXrender::WindowData::savedClipRegion()
+void SceneXrender::Window::discardAlpha()
     {
-    return saved_clip_region;
+    if( alpha != None )
+        XRenderFreePicture( display(), alpha );
+    alpha = None;
     }
 
-void SceneXrender::WindowData::cleanup()
+void SceneXrender::Window::discardShape()
     {
-    XFixesDestroyRegion( display(), saved_clip_region );
-    saved_clip_region = None;
+    if( _shape != None )
+        XRenderFreePicture( display(), _shape );
+    _shape = None;
     }
 
-bool SceneXrender::WindowData::isOpaque() const
-    {
-    if( format->type == PictTypeDirect && format->direct.alphaMask )
-        return false;
-    if( effect.opacity != 1.0 )
-        return false;
-    return true;
-    }
-
-Picture SceneXrender::WindowData::alphaMask()
+Picture SceneXrender::Window::alphaMask()
     {
     if( isOpaque())
         return None;
-    if( alpha != None && alpha_cached_opacity != effect.opacity )
+    if( alpha != None && alpha_cached_opacity != toplevel->opacity())
         {
         if( alpha != None )
             XRenderFreePicture( display(), alpha );
@@ -381,7 +311,7 @@ Picture SceneXrender::WindowData::alphaMask()
         }
     if( alpha != None )
         return alpha;
-    if( effect.opacity == 1.0 )
+    if( toplevel->opacity() == 1.0 )
         { // no need to create alpha mask
         alpha_cached_opacity = 1.0;
         return None;
@@ -393,54 +323,75 @@ Picture SceneXrender::WindowData::alphaMask()
     alpha = XRenderCreatePicture( display(), pixmap, format, CPRepeat, &pa );
     XFreePixmap( display(), pixmap );
     XRenderColor col;
-    col.alpha = int( effect.opacity * 0xffff );
-    alpha_cached_opacity = effect.opacity;
+    col.alpha = int( toplevel->opacity() * 0xffff );
+    alpha_cached_opacity = toplevel->opacity();
     XRenderFillRectangle( display(), PictOpSrc, alpha, &col, 0, 0, 1, 1 );
     return alpha;
     }
 
-
-XserverRegion SceneXrender::WindowData::shape()
+XserverRegion SceneXrender::Window::shape()
     {
 #if 0 // it probably doesn't make sense to cache this, and perhaps some others - they aren't roundtrips
     if( shape == None )
         {
-        shape = XFixesCreateRegionFromWindow( display(), window->handle(), WindowRegionBounding );
-        XFixesTranslateRegion( display(), shape, window->x(), window->y());
+        shape = XFixesCreateRegionFromWindow( display(), toplevel->handle(), WindowRegionBounding );
+        XFixesTranslateRegion( display(), shape, toplevel->x(), toplevel->y());
         }
     return shape;
 #else
-    if( !simpleTransformation())
-        {
-        // The region here should be translated using the matrix, but that's not possible
-        // (well, maybe fetch the region and transform manually - TODO check).
-        return None;
-        }
-    XserverRegion shape = XFixesCreateRegionFromWindow( display(), window->handle(), WindowRegionBounding );
-    XFixesTranslateRegion( display(), shape,
-        window->x() + int( matrix.xTranslate()), window->y() + int( matrix.yTranslate()));
+    XserverRegion shape = XFixesCreateRegionFromWindow( display(), toplevel->handle(), WindowRegionBounding );
+    XFixesTranslateRegion( display(), shape, toplevel->x(), toplevel->y());
     return shape;
 #endif
     }
 
-void SceneXrender::WindowData::geometryShapeChanged()
+void SceneXrender::Window::paint( XserverRegion region, int mask )
     {
-    if( _picture != None )
-        XRenderFreePicture( display(), _picture );
-    _picture = None;
-    if( alpha != None )
-        XRenderFreePicture( display(), alpha );
-    alpha = None;
-    if( _shape != None )
-        XFixesDestroyRegion( display(), _shape );
-    _shape = None;
+    if( mask & ( PAINT_OPAQUE | PAINT_TRANSLUCENT ))
+        {}
+    else if( mask & PAINT_OPAQUE )
+        {
+        if( !isOpaque())
+            return;
+        }
+    else if( mask & PAINT_TRANSLUCENT )
+        {
+        if( isOpaque())
+            return;
+        }
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, region );
+    Picture pic = picture();
+    if( pic == None ) // The render format can be null for GL and/or Xv visuals
+        return;
+    if( isOpaque())
+        {
+        XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
+            toplevel->x(), toplevel->y(), toplevel->width(), toplevel->height());
+        }
+    else
+        {
+        Picture alpha = alphaMask();
+        XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
+            toplevel->x(), toplevel->y(), toplevel->width(), toplevel->height());
+        }
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }
 
-void SceneXrender::WindowData::opacityChanged()
+bool SceneXrender::Window::isVisible() const
     {
-    if( alpha != None )
-        XRenderFreePicture( display(), alpha );
-    alpha = None;
+    // TODO mapping state?
+    return !toplevel->geometry()
+        .intersect( QRect( 0, 0, displayWidth(), displayHeight()))
+        .isEmpty();
+    }
+
+bool SceneXrender::Window::isOpaque() const
+    {
+    if( format->type == PictTypeDirect && format->direct.alphaMask )
+        return false;
+    if( toplevel->opacity() != 1.0 )
+        return false;
+    return true;
     }
 
 } // namespace
