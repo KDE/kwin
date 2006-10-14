@@ -288,7 +288,6 @@ void SceneOpenGL::paintGenericScreen( ToplevelList windows )
         Window& w = this->windows[ c ];
         if( !w.isVisible())
             continue;
-        w.bindTexture();
         w.paint( infiniteRegion(), PAINT_OPAQUE | PAINT_TRANSLUCENT );
         }
     glPopMatrix();
@@ -331,7 +330,6 @@ void SceneOpenGL::paintSimpleScreen( QRegion damage, ToplevelList windows )
             phase2.prepend( Phase2Data( &w, region ));
             continue;
             }
-        w.bindTexture();
         w.paint( region, PAINT_OPAQUE );
         // window is opaque, clip windows below
         region -= w.shape().translated( w.x(), w.y());
@@ -340,7 +338,6 @@ void SceneOpenGL::paintSimpleScreen( QRegion damage, ToplevelList windows )
     foreach( Phase2Data d, phase2 )
         {
         Window& w = *d.window;
-        w.bindTexture();
         w.paint( d.region, PAINT_TRANSLUCENT );
         }
     glPopMatrix();
@@ -526,6 +523,7 @@ void SceneOpenGL::Window::bindTexture()
         XFreePixmap( display(), pix );
         if( root_db )
             glDrawBuffer( GL_BACK );
+        glXMakeContextCurrent( display(), glxroot, glxroot, context );
         }
 #ifdef ALPHA_CLEAR_COPY
     if( alpha_clear )
@@ -600,15 +598,6 @@ static void quadPaint( int x1, int y1, int x2, int y2, bool invert_y )
 
 void SceneOpenGL::Window::paint( QRegion region, int mask )
     {
-    // paint only requested areas
-    if( region != infiniteRegion()) // avoid integer overflow
-        region.translate( -x(), -y());
-    region &= shape();
-    if( region.isEmpty())
-        return;
-    glXMakeContextCurrent( display(), glxroot, glxroot, context );
-    glPushMatrix();
-    glTranslatef( x(), y(), 0 );
     if( mask & ( PAINT_OPAQUE | PAINT_TRANSLUCENT ))
         {}
     else if( mask & PAINT_OPAQUE )
@@ -621,6 +610,15 @@ void SceneOpenGL::Window::paint( QRegion region, int mask )
         if( isOpaque())
             return;
         }
+    // paint only requested areas
+    if( region != infiniteRegion()) // avoid integer overflow
+        region.translate( -x(), -y());
+    region &= shape();
+    if( region.isEmpty())
+        return;
+    bindTexture();
+    glPushMatrix();
+    glTranslatef( x(), y(), 0 );
     bool was_blend = glIsEnabled( GL_BLEND );
     if( !isOpaque())
         {
