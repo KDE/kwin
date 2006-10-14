@@ -69,12 +69,18 @@ TODO:
 ? alpha clear hack
     * find out if it affects performance
     * if yes, try to find a better way of solving the problem
+    - since kompmgr has an option to make only the decoration transparent,
+        it should be possible to do the same here - if the window has alpha and a decoration
+        or if there should be only the decoration transparent, paint first the contents
+        and then the decoration - this should make it possible to paint the decoration
+        without the random alpha that is right now handled by the alpha hack
 
 / design framework for graphical effects
     - modelling it after compiz seems to make a lot of sense
 
 * update only those parts of the screen that have been changed
     - for paintSimpleScreen() - it currently sets region to the whole screen
-    - instead of using glXSwapBuffers() or XCopyArea() that update the whole screen,
-        there should be glCopyPixels() used
-    - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
+    * instead of using glXSwapBuffers() there should be glCopyPixels() used
+        - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
+        * perhaps syncing to vblank will be needed to avoid flicker
+    * XCopyArea() should not update the whole screen but only the affected areas
