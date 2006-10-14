@@ -52,7 +52,6 @@ static void checkGLError( const char* txt )
 const int root_db_attrs[] =
     {
     GLX_DOUBLEBUFFER, True,
-    GLX_DEPTH_SIZE, 16,
     GLX_RED_SIZE, 1,
     GLX_GREEN_SIZE, 1,
     GLX_BLUE_SIZE, 1,
@@ -65,7 +64,6 @@ const int root_db_attrs[] =
 static const int root_buffer_attrs[] =
     {
     GLX_DOUBLEBUFFER, False,
-    GLX_DEPTH_SIZE, 16,
     GLX_RED_SIZE, 1,
     GLX_GREEN_SIZE, 1,
     GLX_BLUE_SIZE, 1,
@@ -143,7 +141,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
     glOrtho( 0, displayWidth(), 0, displayHeight(), 0, 65535 );
-    glEnable( GL_DEPTH_TEST );
     checkGLError( "Init" );
     kDebug() << "Root DB:" << root_db << ", TFP:" << tfp_mode << endl;
     }
@@ -267,10 +264,10 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
     glXWaitX();
     glPushMatrix();
     glClearColor( 0, 0, 0, 1 );
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glClear( GL_COLOR_BUFFER_BIT );
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
-    if( /*generic case*/false )
+    if( /*generic case*/true )
         paintGenericScreen( windows );
     else
         paintSimpleScreen( damage, windows );
@@ -292,12 +289,10 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
 // transformations
 void SceneOpenGL::paintGenericScreen( ToplevelList windows )
     {
-    int depth = 0;
     foreach( Toplevel* c, windows ) // bottom to top
         {
         assert( this->windows.contains( c ));
         Window& w = this->windows[ c ];
-        w.setDepth( --depth );
         if( !w.isVisible())
             continue;
         w.bindTexture();
@@ -314,7 +309,6 @@ void SceneOpenGL::paintGenericScreen( ToplevelList windows )
 // the optimized case without any transformations at all
 void SceneOpenGL::paintSimpleScreen( QRegion, ToplevelList windows )
     {
-    int depth = 0;
     QList< Window* > phase2;
     for( int i = windows.count() - 1; // top to bottom
          i >= 0;
@@ -323,7 +317,6 @@ void SceneOpenGL::paintSimpleScreen( QRegion, ToplevelList windows )
         Toplevel* c = windows[ i ];
         assert( this->windows.contains( c ));
         Window& w = this->windows[ c ];
-        w.setDepth( --depth );
         if( !w.isVisible())
             continue;
         if( !w.isOpaque())
@@ -386,7 +379,6 @@ SceneOpenGL::Window::Window( Toplevel* c )
     , bound_pixmap( None )
     , bound_glxpixmap( None )
     , shape_valid( false )
-    , depth( 0 )
     {
     }
 
@@ -397,12 +389,6 @@ SceneOpenGL::Window::~Window()
 void SceneOpenGL::Window::free()
     {
     discardTexture();
-    }
-
-// for relative window positioning
-void SceneOpenGL::Window::setDepth( int d )
-    {
-    depth = d;
     }
 
 void SceneOpenGL::Window::bindTexture()
@@ -593,7 +579,7 @@ void SceneOpenGL::Window::draw()
 // TODO for double-buffered root            glDrawBuffer( GL_BACK );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
     glPushMatrix();
-    glTranslatef( x(), y(), depth );
+    glTranslatef( x(), y(), 0 );
     if( toplevel->opacity() != 1.0 )
         {
         if( toplevel->hasAlpha())

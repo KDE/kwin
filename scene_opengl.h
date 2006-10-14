@@ -59,7 +59,6 @@ class SceneOpenGL::Window
         int y() const;
         int width() const;
         int height() const;
-        void setDepth( int depth );
         void draw();
         bool isVisible() const;
         bool isOpaque() const;
@@ -76,7 +75,6 @@ class SceneOpenGL::Window
         GLXPixmap bound_glxpixmap; // only for tfp_mode
         mutable QRegion shape_region;
         mutable bool shape_valid;
-        int depth;
     };
 
 inline
