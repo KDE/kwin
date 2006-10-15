@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_SCENE_H
 
 #include "utils.h"
+#include "toplevel.h"
 
 namespace KWinInternal
 {
@@ -34,11 +35,75 @@ class Scene
         // a window has been destroyed
         virtual void windowDeleted( Toplevel* );
     protected:
+        enum
+            {
+            PAINT_OPAQUE = 1 << 0,
+            PAINT_TRANSLUCENT = 1 << 1
+            };
+        static QRegion infiniteRegion();
+        class Window;
+        template< typename T >
+        struct Phase2Data
+            {
+            Phase2Data( T* w, QRegion r ) : window( w ), region( r ) {}
+            T* window;
+            QRegion region;
+            };
         Workspace* wspace;
+    };
+
+class Scene::Window
+    {
+    public:
+        Window( Toplevel* c );
+        int x() const;
+        int y() const;
+        int width() const;
+        int height() const;
+        bool isVisible() const;
+        bool isOpaque() const;
+        QRegion shape() const;
+        void discardShape();
+        Window() {} // QMap sucks even in Qt4
+    protected:
+        Toplevel* toplevel;
+    private:
+        mutable QRegion shape_region;
+        mutable bool shape_valid;
     };
 
 extern Scene* scene;
 
+inline
+QRegion Scene::infiniteRegion()
+    { // INT_MIN / 2 because it's width/height (INT_MIN+INT_MAX==-1)
+    return QRegion( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
+    }
+
+inline
+int Scene::Window::x() const
+    {
+    return toplevel->x();
+    }
+    
+inline
+int Scene::Window::y() const
+    {
+    return toplevel->y();
+    }
+
+inline
+int Scene::Window::width() const
+    {
+    return toplevel->width();
+    }
+    
+inline
+int Scene::Window::height() const
+    {
+    return toplevel->height();
+    }
+    
 } // namespace
 
 #endif

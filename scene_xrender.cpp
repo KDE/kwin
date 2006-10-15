@@ -16,8 +16,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "effects.h"
 
-#include <X11/extensions/shape.h>
-
 namespace KWinInternal
 {
 
@@ -215,12 +213,15 @@ XserverRegion SceneXrender::toXserverRegion( QRegion region )
     return ret;
     }
 
+//****************************************
+// SceneXrender::Window
+//****************************************
+
 SceneXrender::Window::Window( Toplevel* c )
-    : toplevel( c )
+    : Scene::Window( c )
     , _picture( None )
     , format( XRenderFindVisualFormat( display(), c->visual()))
     , alpha( None )
-    , shape_valid( false )
     {
     }
 
@@ -295,11 +296,6 @@ void SceneXrender::Window::discardAlpha()
     alpha = None;
     }
 
-void SceneXrender::Window::discardShape()
-    {
-    shape_valid = false;
-    }
-
 Picture SceneXrender::Window::alphaMask()
     {
     if( isOpaque())
@@ -328,36 +324,6 @@ Picture SceneXrender::Window::alphaMask()
     alpha_cached_opacity = toplevel->opacity();
     XRenderFillRectangle( display(), PictOpSrc, alpha, &col, 0, 0, 1, 1 );
     return alpha;
-    }
-
-QRegion SceneXrender::Window::shape() const
-    {
-    if( !shape_valid )
-        {
-        Client* c = dynamic_cast< Client* >( toplevel );
-        if( toplevel->shape() || ( c != NULL && !c->mask().isEmpty()))
-            {
-            int count, order;
-            XRectangle* rects = XShapeGetRectangles( display(), toplevel->handle(),
-                ShapeBounding, &count, &order );
-            if(rects)
-                {
-                shape_region = QRegion();
-                for( int i = 0;
-                     i < count;
-                     ++i )
-                    shape_region += QRegion( rects[ i ].x, rects[ i ].y,
-                        rects[ i ].width, rects[ i ].height );
-                XFree(rects);
-                }
-            else
-                shape_region = QRegion( 0, 0, width(), height());
-            }
-        else
-            shape_region = QRegion( 0, 0, width(), height());
-        shape_valid = true;
-        }
-    return shape_region;
     }
 
 void SceneXrender::Window::paint( QRegion region, int mask )
@@ -392,23 +358,6 @@ void SceneXrender::Window::paint( QRegion region, int mask )
             toplevel->x(), toplevel->y(), toplevel->width(), toplevel->height());
         }
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
-    }
-
-bool SceneXrender::Window::isVisible() const
-    {
-    // TODO mapping state?
-    return !toplevel->geometry()
-        .intersect( QRect( 0, 0, displayWidth(), displayHeight()))
-        .isEmpty();
-    }
-
-bool SceneXrender::Window::isOpaque() const
-    {
-    if( format->type == PictTypeDirect && format->direct.alphaMask )
-        return false;
-    if( toplevel->opacity() != 1.0 )
-        return false;
-    return true;
     }
 
 } // namespace

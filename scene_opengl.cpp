@@ -19,8 +19,6 @@ Based on glcompmgr code by Felix Bellaby.
 
 #include <dlfcn.h>
 
-#include <X11/extensions/shape.h>
-
 namespace KWinInternal
 {
 
@@ -391,20 +389,19 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
 #endif
     }
 
+//****************************************
+// SceneOpenGL::Window
+//****************************************
+
 SceneOpenGL::Window::Window( Toplevel* c )
-    : toplevel( c )
+    : Scene::Window( c )
     , texture( 0 )
     , texture_y_inverted( false )
     , bound_pixmap( None )
     , bound_glxpixmap( None )
-    , shape_valid( false )
     {
     }
 
-SceneOpenGL::Window::~Window()
-    {
-    }
-    
 void SceneOpenGL::Window::free()
     {
     discardTexture();
@@ -548,42 +545,6 @@ void SceneOpenGL::Window::discardTexture()
     texture = 0;
     }
 
-
-void SceneOpenGL::Window::discardShape()
-    {
-    shape_valid = false;
-    }
-
-QRegion SceneOpenGL::Window::shape() const
-    {
-    if( !shape_valid )
-        {
-        Client* c = dynamic_cast< Client* >( toplevel );
-        if( toplevel->shape() || ( c != NULL && !c->mask().isEmpty()))
-            {
-            int count, order;
-            XRectangle* rects = XShapeGetRectangles( display(), toplevel->handle(),
-                ShapeBounding, &count, &order );
-            if(rects)
-                {
-                shape_region = QRegion();
-                for( int i = 0;
-                     i < count;
-                     ++i )
-                    shape_region += QRegion( rects[ i ].x, rects[ i ].y,
-                        rects[ i ].width, rects[ i ].height );
-                XFree(rects);
-                }
-            else
-                shape_region = QRegion( 0, 0, width(), height());
-            }
-        else
-            shape_region = QRegion( 0, 0, width(), height());
-        shape_valid = true;
-        }
-    return shape_region;
-    }
-
 static void quadPaint( int x1, int y1, int x2, int y2, bool invert_y )
     {
     glTexCoord2i( x1, invert_y ? y2 : y1 );
@@ -662,19 +623,6 @@ void SceneOpenGL::Window::paint( QRegion region, int mask )
         glDisable( GL_BLEND );
     glDisable( GL_TEXTURE_RECTANGLE_ARB );
     glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
-    }
-
-bool SceneOpenGL::Window::isVisible() const
-    {
-    // TODO mapping state?
-    return !toplevel->geometry()
-        .intersect( QRect( 0, 0, displayWidth(), displayHeight()))
-        .isEmpty();
-    }
-
-bool SceneOpenGL::Window::isOpaque() const
-    {
-    return toplevel->opacity() == 1.0 && !toplevel->hasAlpha();
     }
 
 } // namespace
