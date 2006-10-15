@@ -140,6 +140,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
     glOrtho( 0, displayWidth(), 0, displayHeight(), 0, 65535 );
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
     checkGLError( "Init" );
     kDebug() << "Root DB:" << root_db << ", TFP:" << tfp_mode << endl;
     }
