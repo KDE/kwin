@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "scene.h"
 #include "effects.h"
+#include "toplevel.h"
 
 namespace KWinInternal
 {
@@ -39,7 +40,9 @@ class SceneXrender
         void createBuffer();
         void paintGenericScreen( ToplevelList windows );
         void paintSimpleScreen( QRegion damage, ToplevelList windows );
-        void paintBackground( XserverRegion region );
+        void paintBackground( QRegion region );
+        static QRegion infiniteRegion();
+        static XserverRegion toXserverRegion( QRegion region );
         enum
             {
             PAINT_OPAQUE = 1 << 0,
@@ -49,13 +52,12 @@ class SceneXrender
         Picture front;
         static Picture buffer;
         class Window;
-        static XserverRegion infiniteRegion;
         QMap< Toplevel*, Window > windows;
         struct Phase2Data
             {
-            Phase2Data( Window* w, XserverRegion r ) : window( w ), region( r ) {}
+            Phase2Data( Window* w, QRegion r ) : window( w ), region( r ) {}
             Window* window;
-            XserverRegion region;
+            QRegion region;
             };
     };
 
@@ -64,12 +66,16 @@ class SceneXrender::Window
     public:
         Window( Toplevel* c );
         void free(); // is often copied by value, use manually instead of dtor
-        void paint( XserverRegion region, int mask );
+        int x() const;
+        int y() const;
+        int width() const;
+        int height() const;
+        void paint( QRegion region, int mask );
         bool isOpaque() const;
         void geometryShapeChanged();
         void opacityChanged();
         bool isVisible() const;
-        XserverRegion shape();
+        QRegion shape() const;
         void discardPicture();
         void discardShape();
         void discardAlpha();
@@ -82,9 +88,40 @@ class SceneXrender::Window
         XRenderPictFormat* format;
         Picture alpha;
         double alpha_cached_opacity;
-        XserverRegion _shape;
+        mutable QRegion shape_region;
+        mutable bool shape_valid;
     };
 
+inline
+QRegion SceneXrender::infiniteRegion()
+    { // INT_MIN / 2 because it's width/height (INT_MIN+INT_MAX==-1)
+    return QRegion( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
+    }
+
+inline
+int SceneXrender::Window::x() const
+    {
+    return toplevel->x();
+    }
+    
+inline
+int SceneXrender::Window::y() const
+    {
+    return toplevel->y();
+    }
+
+inline
+int SceneXrender::Window::width() const
+    {
+    return toplevel->width();
+    }
+    
+inline
+int SceneXrender::Window::height() const
+    {
+    return toplevel->height();
+    }
+    
 } // namespace
 
 #endif

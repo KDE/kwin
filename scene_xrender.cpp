@@ -16,6 +16,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "effects.h"
 
+#include <X11/extensions/shape.h>
+
 namespace KWinInternal
 {
 
@@ -50,7 +52,6 @@ kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
 #endif
 
 Picture SceneXrender::buffer;
-XserverRegion SceneXrender::infiniteRegion;
 
 SceneXrender::SceneXrender( Workspace* ws )
     : Scene( ws )
@@ -64,7 +65,6 @@ SceneXrender::SceneXrender( Workspace* ws )
     xr.y = SHRT_MIN / 2;
     xr.width = SHRT_MAX;
     xr.height = SHRT_MAX;
-    infiniteRegion = XFixesCreateRegion( display(), &xr, 1 );
     createBuffer();
     }
 
@@ -76,7 +76,6 @@ SceneXrender::~SceneXrender()
          it != windows.end();
          ++it )
         (*it).free();
-    XFixesDestroyRegion( display(), infiniteRegion );
     }
 
 void SceneXrender::paint( QRegion damage, ToplevelList windows )
@@ -89,14 +88,14 @@ void SceneXrender::paint( QRegion damage, ToplevelList windows )
     
 void SceneXrender::paintGenericScreen( ToplevelList windows )
     {
-    paintBackground( infiniteRegion );
+    paintBackground( infiniteRegion());
     foreach( Toplevel* c, windows ) // bottom to top
         {
         assert( this->windows.contains( c ));
         Window& w = this->windows[ c ];
         if( !w.isVisible())
             continue;
-        w.paint( infiniteRegion, PAINT_OPAQUE | PAINT_TRANSLUCENT );
+        w.paint( infiniteRegion(), PAINT_OPAQUE | PAINT_TRANSLUCENT );
         }
     // copy composed buffer to the root window
     XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
@@ -105,22 +104,8 @@ void SceneXrender::paintGenericScreen( ToplevelList windows )
 
 void SceneXrender::paintSimpleScreen( QRegion damage, ToplevelList windows )
     {
-    QVector< QRect > rects = damage.rects();
-    XRectangle* xr = new XRectangle[ rects.count() ];
-    for( int i = 0;
-         i < rects.count();
-         ++i )
-        {
-        xr[ i ].x = rects[ i ].x();
-        xr[ i ].y = rects[ i ].y();
-        xr[ i ].width = rects[ i ].width();
-        xr[ i ].height = rects[ i ].height();
-        }
-    XserverRegion region = XFixesCreateRegion( display(), xr, rects.count());
-    delete[] xr;
-    // Use the damage region as the clip region for the root window
-    XFixesSetPictureClipRegion( display(), front, 0, 0, region );
     QList< Phase2Data > phase2;
+    QRegion region = damage;
     // Draw each opaque window top to bottom, subtracting the bounding rect of
     // each window from the clip region after it's been drawn.
     for( int i = windows.count() - 1;
@@ -134,16 +119,12 @@ void SceneXrender::paintSimpleScreen( QRegion damage, ToplevelList windows )
             continue;
         if( !w.isOpaque())
             {
-            XserverRegion saved_clip_region = XFixesCreateRegion( display(), NULL, 0 );
-            XFixesCopyRegion( display(), saved_clip_region, region );
-            phase2.prepend( Phase2Data( &w, saved_clip_region ));
+            phase2.prepend( Phase2Data( &w, region ));
             continue;
             }
         w.paint( region, PAINT_OPAQUE );
-        // Subtract the clients shape from the damage region
-        XserverRegion shape = w.shape();
-        assert( shape != None );
-        XFixesSubtractRegion( display(), region, region, shape );
+        // window is opaque, clip windows below
+        region -= w.shape().translated( w.x(), w.y());
         }
     // Fill any areas of the root window not covered by windows
     paintBackground( region );
@@ -154,18 +135,22 @@ void SceneXrender::paintSimpleScreen( QRegion damage, ToplevelList windows )
         {
         Window& w = *d.window;
         w.paint( d.region, PAINT_TRANSLUCENT );
-        XFixesDestroyRegion( display(), d.region );
         }
-    // copy composed buffer to the root window (clipped by original damage area)
+    // Use the damage region as the clip region for the root window
+    XserverRegion front_region = toXserverRegion( damage );
+    XFixesSetPictureClipRegion( display(), front, 0, 0, front_region );
+    XFixesDestroyRegion( display(), front_region );
+    // copy composed buffer to the root window
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
     XFlush( display());
-    XFixesDestroyRegion( display(), region );
     }
 
-void SceneXrender::paintBackground( XserverRegion region )
+void SceneXrender::paintBackground( QRegion region )
     {
-    XFixesSetPictureClipRegion( display(), buffer, 0, 0, region );
+    XserverRegion background_region = toXserverRegion( region );
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, background_region );
+    XFixesDestroyRegion( display(), background_region );
     XRenderColor col = { 0xffff, 0xffff, 0xffff, 0xffff };
     XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
     }
@@ -212,12 +197,30 @@ void SceneXrender::createBuffer()
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
+XserverRegion SceneXrender::toXserverRegion( QRegion region )
+    {
+    QVector< QRect > rects = region.rects();
+    XRectangle* xr = new XRectangle[ rects.count() ];
+    for( int i = 0;
+         i < rects.count();
+         ++i )
+        {
+        xr[ i ].x = rects[ i ].x();
+        xr[ i ].y = rects[ i ].y();
+        xr[ i ].width = rects[ i ].width();
+        xr[ i ].height = rects[ i ].height();
+        }
+    XserverRegion ret = XFixesCreateRegion( display(), xr, rects.count());
+    delete[] xr;
+    return ret;
+    }
+
 SceneXrender::Window::Window( Toplevel* c )
     : toplevel( c )
     , _picture( None )
     , format( XRenderFindVisualFormat( display(), c->visual()))
     , alpha( None )
-    , _shape( None )
+    , shape_valid( false )
     {
     }
 
@@ -294,9 +297,7 @@ void SceneXrender::Window::discardAlpha()
 
 void SceneXrender::Window::discardShape()
     {
-    if( _shape != None )
-        XRenderFreePicture( display(), _shape );
-    _shape = None;
+    shape_valid = false;
     }
 
 Picture SceneXrender::Window::alphaMask()
@@ -329,23 +330,37 @@ Picture SceneXrender::Window::alphaMask()
     return alpha;
     }
 
-XserverRegion SceneXrender::Window::shape()
+QRegion SceneXrender::Window::shape() const
     {
-#if 0 // it probably doesn't make sense to cache this, and perhaps some others - they aren't roundtrips
-    if( shape == None )
+    if( !shape_valid )
         {
-        shape = XFixesCreateRegionFromWindow( display(), toplevel->handle(), WindowRegionBounding );
-        XFixesTranslateRegion( display(), shape, toplevel->x(), toplevel->y());
+        Client* c = dynamic_cast< Client* >( toplevel );
+        if( toplevel->shape() || ( c != NULL && !c->mask().isEmpty()))
+            {
+            int count, order;
+            XRectangle* rects = XShapeGetRectangles( display(), toplevel->handle(),
+                ShapeBounding, &count, &order );
+            if(rects)
+                {
+                shape_region = QRegion();
+                for( int i = 0;
+                     i < count;
+                     ++i )
+                    shape_region += QRegion( rects[ i ].x, rects[ i ].y,
+                        rects[ i ].width, rects[ i ].height );
+                XFree(rects);
+                }
+            else
+                shape_region = QRegion( 0, 0, width(), height());
+            }
+        else
+            shape_region = QRegion( 0, 0, width(), height());
+        shape_valid = true;
         }
-    return shape;
-#else
-    XserverRegion shape = XFixesCreateRegionFromWindow( display(), toplevel->handle(), WindowRegionBounding );
-    XFixesTranslateRegion( display(), shape, toplevel->x(), toplevel->y());
-    return shape;
-#endif
+    return shape_region;
     }
 
-void SceneXrender::Window::paint( XserverRegion region, int mask )
+void SceneXrender::Window::paint( QRegion region, int mask )
     {
     if( mask & ( PAINT_OPAQUE | PAINT_TRANSLUCENT ))
         {}
@@ -359,7 +374,9 @@ void SceneXrender::Window::paint( XserverRegion region, int mask )
         if( isOpaque())
             return;
         }
-    XFixesSetPictureClipRegion( display(), buffer, 0, 0, region );
+    XserverRegion clip_region = toXserverRegion( region );
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, clip_region );
+    XFixesDestroyRegion( display(), clip_region );
     Picture pic = picture();
     if( pic == None ) // The render format can be null for GL and/or Xv visuals
         return;
