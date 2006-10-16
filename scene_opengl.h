@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_SCENE_OPENGL_H
 
 #include "scene.h"
+#include "effects.h"
 
 #include <GL/gl.h>
 #include <GL/glx.h>
@@ -33,9 +34,9 @@ class SceneOpenGL
     private:
         void initBuffer();
         bool findConfig( const int* attrs, GLXFBConfig& config, VisualID visual = None );
-        void paintGenericScreen( ToplevelList windows );
-        void paintSimpleScreen( QRegion damage, ToplevelList windows );
-        void paintBackground( QRegion damage );
+        void paintGenericScreen();
+        void paintSimpleScreen( QRegion region );
+        void paintBackground( QRegion region );
         typedef GLuint Texture;
         GC gcroot;
         Drawable buffer;
@@ -47,7 +48,9 @@ class SceneOpenGL
         static bool tfp_mode;
         class Window;
         QMap< Toplevel*, Window > windows;
+        QVector< Window* > stacking_order;
         typedef Scene::Phase2Data< Window > Phase2Data;
+        class WrapperEffect;
     };
 
 class SceneOpenGL::Window
@@ -65,6 +68,15 @@ class SceneOpenGL::Window
         bool texture_y_inverted;
         Pixmap bound_pixmap;
         GLXPixmap bound_glxpixmap; // only for tfp_mode
+    };
+
+// a special effect that is last in the order that'll actually call the painting functions
+class SceneOpenGL::WrapperEffect
+    : public Effect
+    {
+    public:
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
     };
 
 } // namespace

@@ -47,9 +47,17 @@ void Scene::windowDeleted( Toplevel* )
     {
     }
 
+//****************************************
+// Scene::Window
+//****************************************
+
 Scene::Window::Window( Toplevel * c )
     : toplevel( c )
     , shape_valid( false )
+    {
+    }
+
+Scene::Window::~Window()
     {
     }
 

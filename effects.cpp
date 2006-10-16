@@ -18,109 +18,6 @@ namespace KWinInternal
 {
 
 //****************************************
-// Matrix
-//****************************************
-
-Matrix::Matrix()
-    {
-    m[ 0 ][ 0 ] = 1;
-    m[ 0 ][ 1 ] = 0;
-    m[ 0 ][ 2 ] = 0;
-    m[ 0 ][ 3 ] = 0;
-    m[ 1 ][ 0 ] = 0;
-    m[ 1 ][ 1 ] = 1;
-    m[ 1 ][ 2 ] = 0;
-    m[ 1 ][ 3 ] = 0;
-    m[ 2 ][ 0 ] = 0;
-    m[ 2 ][ 1 ] = 0;
-    m[ 2 ][ 2 ] = 1;
-    m[ 2 ][ 3 ] = 0;
-    m[ 3 ][ 0 ] = 0;
-    m[ 3 ][ 1 ] = 0;
-    m[ 3 ][ 2 ] = 0;
-    m[ 3 ][ 3 ] = 1;
-    }
-
-Matrix operator*( const Matrix& m1, const Matrix& m2 )
-    {
-    Matrix r;
-    for( int i = 0;
-         i < 4;
-         ++i )
-        for( int j = 0;
-             j < 4;
-             ++j )
-            {
-            double s = 0;
-            for( int k = 0;
-                 k < 4;
-                 ++k )
-                s += m1.m[ k ][ j ]  * m2.m[ i ][ k ];
-            r.m[ i ][ j ] = s;
-            }
-    return r;
-    }
-
-bool Matrix::isIdentity() const
-    {
-    return m[ 0 ][ 0 ] == 1
-        && m[ 0 ][ 1 ] == 0
-        && m[ 0 ][ 2 ] == 0
-        && m[ 0 ][ 3 ] == 0
-        && m[ 1 ][ 0 ] == 0
-        && m[ 1 ][ 1 ] == 1
-        && m[ 1 ][ 2 ] == 0
-        && m[ 1 ][ 3 ] == 0
-        && m[ 2 ][ 0 ] == 0
-        && m[ 2 ][ 1 ] == 0
-        && m[ 2 ][ 2 ] == 1
-        && m[ 2 ][ 3 ] == 0
-        && m[ 3 ][ 0 ] == 0
-        && m[ 3 ][ 1 ] == 0
-        && m[ 3 ][ 2 ] == 0
-        && m[ 3 ][ 3 ] == 1;
-    }
-
-
-bool Matrix::isOnlyTranslate() const
-    {
-    return m[ 0 ][ 0 ] == 1
-        && m[ 0 ][ 1 ] == 0
-        && m[ 0 ][ 2 ] == 0
-//        && m[ 0 ][ 3 ] == 
-        && m[ 1 ][ 0 ] == 0
-        && m[ 1 ][ 1 ] == 1
-        && m[ 1 ][ 2 ] == 0
-//        && m[ 1 ][ 3 ] == 
-        && m[ 2 ][ 0 ] == 0
-        && m[ 2 ][ 1 ] == 0
-        && m[ 2 ][ 2 ] == 1
-//        && m[ 2 ][ 3 ] == 
-        && m[ 3 ][ 0 ] == 0
-        && m[ 3 ][ 1 ] == 0
-        && m[ 3 ][ 2 ] == 0
-        && m[ 3 ][ 3 ] == 1;
-    }
-
-QPoint Matrix::transform( const QPoint& p ) const
-    {
-    int vec[ 4 ] = { p.x(), p.y(), 0, 1 };
-    int res[ 4 ];
-    for( int i = 0;
-         i < 4;
-         ++i )
-        {
-        double s = 0;
-        for( int j = 0;
-             j < 4;
-             ++j )
-            s += m[ i ][ j ] * vec[ j ];
-        res[ i ] = int( s );
-        }
-    return QPoint( res[ 0 ], res[ 1 ] );
-    }
-
-//****************************************
 // Effect
 //****************************************
 
@@ -132,11 +29,7 @@ void Effect::windowUserMovedResized( Toplevel* , bool, bool )
     {
     }
 
-void Effect::transformWindow( Toplevel*, Matrix&, EffectData& )
-    {
-    }
-
-void Effect::transformWorkspace( Matrix&, EffectData& )
+void Effect::windowAdded( Toplevel* )
     {
     }
 
@@ -144,6 +37,17 @@ void Effect::windowDeleted( Toplevel* )
     {
     }
 
+void Effect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    effects->nextPaintWindow( w, mask, region, data );
+    }
+
+void Effect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
+    {
+    effects->nextPaintScreen( mask, region, data );
+    }
+
+#if 0
 void MakeHalfTransparent::transformWindow( Toplevel* c, Matrix&, EffectData& data )
     {
     if( c->isDialog())
@@ -265,79 +169,75 @@ static MakeHalfTransparent* mht;
 static ShakyMove* sm;
 static GrowMove* gm;
 static ShiftWorkspaceUp* swu;
+#endif
 
 //****************************************
 // EffectsHandler
 //****************************************
 
 EffectsHandler::EffectsHandler( Workspace* ws )
+    : current_paint_window( 0 )
+    , current_paint_screen( 0 )
     {
     if( !compositing())
         return;
-//    mht = new MakeHalfTransparent;
-//    sm = new ShakyMove;
-//    gm = new GrowMove;
-//    swu = new ShiftWorkspaceUp( ws );
+//    effects.append( new MakeHalfTransparent );
+//    effects.append( new ShakyMove );
+//    effects.append( new GrowMove );
+//    effects.append( new ShiftWorkspaceUp( ws ));
     }
     
 EffectsHandler::~EffectsHandler()
     {
-    delete mht;
-    mht = NULL;
-    delete sm;
-    sm = NULL;
-    delete gm;
-    gm = NULL;
-    delete swu;
-    swu = NULL;
+    foreach( Effect* e, effects )
+        delete e;
     }
 
 void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last )
     {
-    if( mht )
-        mht->windowUserMovedResized( c, first, last );
-    if( sm )
-        sm->windowUserMovedResized( c, first, last );
-    if( gm )
-        gm->windowUserMovedResized( c, first, last );
-    if( swu )
-        swu->windowUserMovedResized( c, first, last );
+    foreach( Effect* e, effects )
+        e->windowUserMovedResized( c, first, last );
     }
 
-void EffectsHandler::transformWindow( Toplevel* c, Matrix& matrix, EffectData& data )
+void EffectsHandler::windowAdded( Toplevel* c )
     {
-    if( mht )
-        mht->transformWindow( c, matrix, data );
-    if( sm )
-        sm->transformWindow( c, matrix, data );
-    if( gm )
-        gm->transformWindow( c, matrix, data );
-    if( swu )
-        swu->transformWindow( c, matrix, data );
-    }
-
-void EffectsHandler::transformWorkspace( Matrix& matrix, EffectData& data )
-    {
-    if( mht )
-        mht->transformWorkspace( matrix, data );
-    if( sm )
-        sm->transformWorkspace( matrix, data );
-    if( gm )
-        gm->transformWorkspace( matrix, data );
-    if( swu )
-        swu->transformWorkspace( matrix, data );
+    foreach( Effect* e, effects )
+        e->windowAdded( c );
     }
 
 void EffectsHandler::windowDeleted( Toplevel* c )
     {
-    if( mht )
-        mht->windowDeleted( c );
-    if( sm )
-        sm->windowDeleted( c );
-    if( gm )
-        gm->windowDeleted( c );
-    if( swu )
-        swu->windowDeleted( c );
+    foreach( Effect* e, effects )
+        e->windowDeleted( c );
+    }
+
+void EffectsHandler::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data, Effect* final )
+    {
+    assert( current_paint_window == 0 );
+    effects.append( final );
+    nextPaintWindow( w, mask, region, data );
+    effects.pop_back();
+    }
+
+void EffectsHandler::paintScreen( int mask, QRegion region, ScreenPaintData& data, Effect* final )
+    {
+    assert( current_paint_screen == 0 );
+    effects.append( final );
+    nextPaintScreen( mask, region, data );
+    effects.pop_back();
+    }
+
+void EffectsHandler::nextPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    // the idea is that effects call this function again which calls the next one
+    effects[ current_paint_window++ ]->paintWindow( w, mask, region, data );
+    --current_paint_window;
+    }
+
+void EffectsHandler::nextPaintScreen( int mask, QRegion region, ScreenPaintData& data )
+    {
+    effects[ current_paint_screen++ ]->paintScreen( mask, region, data );
+    --current_paint_screen;
     }
 
 EffectsHandler* effects;

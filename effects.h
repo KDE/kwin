@@ -17,63 +17,43 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qpoint.h>
 #include <qtimer.h>
 
+#include "scene.h"
+
 namespace KWinInternal
 {
 
 class Toplevel;
 class Workspace;
 
-class Matrix
+class WindowPaintData
     {
     public:
-        Matrix();
-        Matrix& operator*=( const Matrix& m );
-        bool isOnlyTranslate() const;
-        bool isIdentity() const;
-        double xTranslate() const;
-        double yTranslate() const;
-        double zTranslate() const;
-        QPoint transform( const QPoint& p ) const;
-        double m[ 4 ][ 4 ];
+        WindowPaintData();
+        double opacity;
+        double xScale;
+        double yScale;
+        int xTranslate;
+        int yTranslate;
     };
 
-Matrix operator*( const Matrix& m1, const Matrix& m2 );
-
-inline Matrix& Matrix::operator*=( const Matrix& m )
-    {
-    return *this = *this * m;
-    }
-
-inline double Matrix::xTranslate() const
-    {
-    return m[ 0 ][ 3 ];
-    }
-
-inline double Matrix::yTranslate() const
-    {
-    return m[ 1 ][ 3 ];
-    }
-
-inline double Matrix::zTranslate() const
-    {
-    return m[ 2 ][ 3 ];
-    }
-
-class EffectData
+class ScreenPaintData
     {
     public:
-        double opacity;
+        ScreenPaintData();
+        int xTranslate;
+        int yTranslate;
     };
 
 class Effect
     {
     public:
         virtual ~Effect();
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
+        virtual void windowAdded( Toplevel* c );
         virtual void windowDeleted( Toplevel* c );
-        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
-        virtual void transformWorkspace( Matrix& m, EffectData& data );
     };
 
 class EffectsHandler
@@ -81,14 +61,24 @@ class EffectsHandler
     public:
         EffectsHandler( Workspace* ws );
         ~EffectsHandler();
+        // for use by effects
+        void nextPaintWindow( Scene::Window* w, int mask, QRegion, WindowPaintData& data );
+        void nextPaintScreen( int mask, QRegion region, ScreenPaintData& data );
+        // internal (used by kwin core or compositing code)
+        void paintWindow( Scene::Window* w, int mask, QRegion, WindowPaintData& data, Effect* final );
+        void paintScreen( int mask, QRegion region, ScreenPaintData& data, Effect* final );
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
+        void windowAdded( Toplevel* c );
         void windowDeleted( Toplevel* c );
-        void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
-        void transformWorkspace( Matrix& m, EffectData& data );
+    private:
+        QVector< Effect* > effects;
+        int current_paint_window;
+        int current_paint_screen;
     };
 
 extern EffectsHandler* effects;
 
+#if 0
 class MakeHalfTransparent
     : public Effect
     {
@@ -135,6 +125,24 @@ class ShiftWorkspaceUp
         bool up;
         Workspace* wspace;
     };
+#endif
+
+inline
+WindowPaintData::WindowPaintData()
+    : opacity( 1.0 )
+    , xScale( 1 )
+    , yScale( 1 )
+    , xTranslate( 0 )
+    , yTranslate( 0 )
+    {
+    }
+
+inline
+ScreenPaintData::ScreenPaintData()
+    : xTranslate( 0 )
+    , yTranslate( 0 )
+    {
+    }
 
 } // namespace
 

@@ -18,12 +18,15 @@ namespace KWinInternal
 {
 
 class Workspace;
+class WindowPaintData;
+class ScreenPaintData;
 
 class Scene
     {
     public:
         Scene( Workspace* ws );
         virtual ~Scene() = 0;
+        class Window;
         // repaints the given screen areas, windows provides the stacking order
         virtual void paint( QRegion damage, ToplevelList windows ) = 0;
         // shape/size of a window changed
@@ -37,11 +40,11 @@ class Scene
     protected:
         enum
             {
-            PAINT_OPAQUE = 1 << 0,
-            PAINT_TRANSLUCENT = 1 << 1
+            PAINT_OPAQUE         = 1 << 0,
+            PAINT_TRANSLUCENT    = 1 << 1,
+            PAINT_REGION         = 1 << 2
             };
         static QRegion infiniteRegion();
-        class Window;
         template< typename T >
         struct Phase2Data
             {
@@ -56,6 +59,7 @@ class Scene::Window
     {
     public:
         Window( Toplevel* c );
+        virtual ~Window();
         int x() const;
         int y() const;
         int width() const;

@@ -17,6 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/Xrender.h>
 
 #include "scene.h"
+#include "effects.h"
 
 namespace KWinInternal
 {
@@ -36,8 +37,8 @@ class SceneXrender
         virtual void windowDeleted( Toplevel* );
     private:
         void createBuffer();
-        void paintGenericScreen( ToplevelList windows );
-        void paintSimpleScreen( QRegion damage, ToplevelList windows );
+        void paintGenericScreen();
+        void paintSimpleScreen( QRegion region );
         void paintBackground( QRegion region );
         static XserverRegion toXserverRegion( QRegion region );
         XRenderPictFormat* format;
@@ -45,7 +46,9 @@ class SceneXrender
         static Picture buffer;
         class Window;
         QMap< Toplevel*, Window > windows;
+        QVector< Window* > stacking_order;
         typedef Scene::Phase2Data< Window > Phase2Data;
+        class WrapperEffect;
     };
 
 class SceneXrender::Window
@@ -65,6 +68,15 @@ class SceneXrender::Window
         XRenderPictFormat* format;
         Picture alpha;
         double alpha_cached_opacity;
+    };
+
+// a special effect that is last in the order that'll actually call the painting functions
+class SceneXrender::WrapperEffect
+    : public Effect
+    {
+    public:
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
     };
 
 } // namespace

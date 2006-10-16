@@ -16,6 +16,7 @@ Based on glcompmgr code by Felix Bellaby.
 
 #include "utils.h"
 #include "client.h"
+#include "effects.h"
 
 #include <dlfcn.h>
 
@@ -260,96 +261,105 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID vi
     return false;
     }
 
-void SceneOpenGL::paint( QRegion damage, ToplevelList windows )
+void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     {
     grabXServer();
     glXWaitX();
-    if( /*generic case*/false )
-        paintGenericScreen( windows );
+    glPushMatrix();
+    glClearColor( 0, 0, 0, 1 );
+    glClear( GL_COLOR_BUFFER_BIT );
+    glScalef( 1, -1, 1 );
+    glTranslatef( 0, -displayHeight(), 0 );
+    foreach( Toplevel* c, toplevels )
+        {
+        assert( windows.contains( c ));
+        stacking_order.append( &windows[ c ] );
+        }
+    ScreenPaintData data;
+    WrapperEffect wrapper;
+    effects->paintScreen( PAINT_REGION, damage, data, &wrapper );
+    glPopMatrix();
+    if( root_db )
+        glXSwapBuffers( display(), glxroot );
     else
-        paintSimpleScreen( damage, windows );
+        {
+        glFlush();
+        glXWaitGL();
+        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+        XFlush( display());
+        }
     ungrabXServer();
     checkGLError( "PostPaint" );
+    stacking_order.clear();
+    }
+
+// the function that'll be eventually called by wrapper.peformPaintScreen() above
+void SceneOpenGL::WrapperEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
+    {
+    if( mask & PAINT_REGION )
+        static_cast< SceneOpenGL* >( scene )->paintSimpleScreen( region );
+    else
+        static_cast< SceneOpenGL* >( scene )->paintGenericScreen();
     }
     
 // the generic painting code that should eventually handle even
 // transformations
-void SceneOpenGL::paintGenericScreen( ToplevelList windows )
+void SceneOpenGL::paintGenericScreen()
     {
-    glPushMatrix();
-    glClearColor( 0, 0, 0, 1 );
-    glClear( GL_COLOR_BUFFER_BIT );
-    glScalef( 1, -1, 1 );
-    glTranslatef( 0, -displayHeight(), 0 );
     paintBackground( infiniteRegion());
-    foreach( Toplevel* c, windows ) // bottom to top
+    foreach( Window* w, stacking_order ) // bottom to top
         {
-        assert( this->windows.contains( c ));
-        Window& w = this->windows[ c ];
-        if( !w.isVisible())
+        if( !w->isVisible())
             continue;
-        w.paint( infiniteRegion(), PAINT_OPAQUE | PAINT_TRANSLUCENT );
-        }
-    glPopMatrix();
-    if( root_db )
-        glXSwapBuffers( display(), glxroot );
-    else
-        {
-        glFlush();
-        glXWaitGL();
-        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
-        XFlush( display());
+        WindowPaintData data;
+//        data.opacity = w->opacity();
+        WrapperEffect wrapper;
+        effects->paintWindow( w, PAINT_OPAQUE | PAINT_TRANSLUCENT, infiniteRegion(), data, &wrapper );
         }
     }
 
 // the optimized case without any transformations at all
-void SceneOpenGL::paintSimpleScreen( QRegion damage, ToplevelList windows )
+void SceneOpenGL::paintSimpleScreen( QRegion region )
     {
-    glPushMatrix();
-    glClearColor( 0, 0, 0, 1 );
-    glClear( GL_COLOR_BUFFER_BIT );
-    glScalef( 1, -1, 1 );
-    glTranslatef( 0, -displayHeight(), 0 );
     QList< Phase2Data > phase2;
-    QRegion region = damage;
     // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
     region = QRegion( 0, 0, displayWidth(), displayHeight());
-    for( int i = windows.count() - 1; // top to bottom
+    for( int i = stacking_order.count() - 1; // top to bottom
          i >= 0;
          --i )
         {
-        Toplevel* c = windows[ i ];
-        assert( this->windows.contains( c ));
-        Window& w = this->windows[ c ];
-        if( !w.isVisible())
+        Window* w = stacking_order[ i ];
+        if( !w->isVisible())
             continue;
         if( region.isEmpty()) // completely clipped
             continue;
-        if( !w.isOpaque())
+        if( !w->isOpaque())
             {
-            phase2.prepend( Phase2Data( &w, region ));
+            phase2.prepend( Phase2Data( w, region ));
             continue;
             }
-        w.paint( region, PAINT_OPAQUE );
+        WindowPaintData data;
+//        data.opacity = w->opacity();
+        WrapperEffect wrapper;
+        effects->paintWindow( w, PAINT_OPAQUE, region, data, &wrapper );
         // window is opaque, clip windows below
-        region -= w.shape().translated( w.x(), w.y());
+        region -= w->shape().translated( w->x(), w->y());
         }
     paintBackground( region );
     foreach( Phase2Data d, phase2 )
         {
-        Window& w = *d.window;
-        w.paint( d.region, PAINT_TRANSLUCENT );
+        Window* w = d.window;
+        WindowPaintData data;
+//        data.opacity = w->opacity();
+        WrapperEffect wrapper;
+        effects->paintWindow( w, PAINT_TRANSLUCENT, d.region, data, &wrapper );
         }
-    glPopMatrix();
-    if( root_db )
-        glXSwapBuffers( display(), glxroot );
-    else
-        {
-        glFlush();
-        glXWaitGL();
-        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
-        XFlush( display());
-        }
+    }
+
+// the function that'll be eventually called by wrapper.performPaintWindow() above
+void SceneOpenGL::WrapperEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    static_cast< Window* >( w )->paint( region, mask );
     }
 
 void SceneOpenGL::paintBackground( QRegion )
