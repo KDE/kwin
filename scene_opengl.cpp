@@ -275,10 +275,16 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
         assert( windows.contains( c ));
         stacking_order.append( &windows[ c ] );
         }
-    ScreenPaintData data;
+    int mask = ( damage == QRegion( 0, 0, displayWidth(), displayHeight()))
+        ? PAINT_SCREEN_ALL : PAINT_SCREEN_REGION;
     WrapperEffect wrapper;
-    effects->paintScreen( PAINT_REGION, damage, data, &wrapper );
+    // preparation step
+    effects->prePaintScreen( &mask, &damage, &wrapper );
+    // TODO call also prePaintWindow() for all windows
+    ScreenPaintData data;
+    effects->paintScreen( mask, damage, data, &wrapper );
     glPopMatrix();
+    // TODO only partial repaint for mask & PAINT_SCREEN_REGION
     if( root_db )
         glXSwapBuffers( display(), glxroot );
     else
@@ -293,10 +299,15 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     stacking_order.clear();
     }
 
+void SceneOpenGL::WrapperEffect::prePaintScreen( int*, QRegion* )
+    {
+    // nothing, no changes
+    }
+
 // the function that'll be eventually called by wrapper.peformPaintScreen() above
 void SceneOpenGL::WrapperEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( mask & PAINT_REGION )
+    if( mask & PAINT_SCREEN_REGION )
         static_cast< SceneOpenGL* >( scene )->paintSimpleScreen( region );
     else
         static_cast< SceneOpenGL* >( scene )->paintGenericScreen();
@@ -311,10 +322,7 @@ void SceneOpenGL::paintGenericScreen()
         {
         if( !w->isVisible())
             continue;
-        WindowPaintData data;
-//        data.opacity = w->opacity();
-        WrapperEffect wrapper;
-        effects->paintWindow( w, PAINT_OPAQUE | PAINT_TRANSLUCENT, infiniteRegion(), data, &wrapper );
+        paintWindow( w, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT, infiniteRegion());
         }
     }
 
@@ -338,10 +346,7 @@ void SceneOpenGL::paintSimpleScreen( QRegion region )
             phase2.prepend( Phase2Data( w, region ));
             continue;
             }
-        WindowPaintData data;
-//        data.opacity = w->opacity();
-        WrapperEffect wrapper;
-        effects->paintWindow( w, PAINT_OPAQUE, region, data, &wrapper );
+        paintWindow( w, PAINT_WINDOW_OPAQUE, region );
         // window is opaque, clip windows below
         region -= w->shape().translated( w->x(), w->y());
         }
@@ -349,17 +354,27 @@ void SceneOpenGL::paintSimpleScreen( QRegion region )
     foreach( Phase2Data d, phase2 )
         {
         Window* w = d.window;
-        WindowPaintData data;
-//        data.opacity = w->opacity();
-        WrapperEffect wrapper;
-        effects->paintWindow( w, PAINT_TRANSLUCENT, d.region, data, &wrapper );
+        paintWindow( w, PAINT_WINDOW_TRANSLUCENT, d.region );
         }
     }
 
-// the function that'll be eventually called by wrapper.performPaintWindow() above
+void SceneOpenGL::WrapperEffect::prePaintWindow( Scene::Window* , int*, QRegion* )
+    {
+    // nothing, no changes
+    }
+
+void SceneOpenGL::paintWindow( Window* w, int mask, QRegion region )
+    {
+    WindowPaintData data;
+//        data.opacity = w->opacity();
+    WrapperEffect wrapper;
+    effects->paintWindow( w, mask, region, data, &wrapper );
+    }
+
+// the function that'll be eventually called by paintWindow() above
 void SceneOpenGL::WrapperEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
     {
-    static_cast< Window* >( w )->paint( region, mask );
+    static_cast< Window* >( w )->performPaint( region, mask );
     }
 
 void SceneOpenGL::paintBackground( QRegion )
@@ -569,16 +584,16 @@ static void quadPaint( int x1, int y1, int x2, int y2, bool invert_y )
     glVertex2i( x1, y2 );
     }
 
-void SceneOpenGL::Window::paint( QRegion region, int mask )
+void SceneOpenGL::Window::performPaint( QRegion region, int mask )
     {
-    if( mask & ( PAINT_OPAQUE | PAINT_TRANSLUCENT ))
+    if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
         {}
-    else if( mask & PAINT_OPAQUE )
+    else if( mask & PAINT_WINDOW_OPAQUE )
         {
         if( !isOpaque())
             return;
         }
-    else if( mask & PAINT_TRANSLUCENT )
+    else if( mask & PAINT_WINDOW_TRANSLUCENT )
         {
         if( isOpaque())
             return;

@@ -40,9 +40,13 @@ class Scene
     protected:
         enum
             {
-            PAINT_OPAQUE         = 1 << 0,
-            PAINT_TRANSLUCENT    = 1 << 1,
-            PAINT_REGION         = 1 << 2
+            PAINT_WINDOW_OPAQUE         = 1 << 0,
+            PAINT_WINDOW_TRANSLUCENT    = 1 << 1
+            };
+        enum
+            {
+            PAINT_SCREEN_REGION         = 1 << 0,
+            PAINT_SCREEN_ALL            = 1 << 1
             };
         static QRegion infiniteRegion();
         template< typename T >

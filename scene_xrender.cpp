@@ -78,16 +78,19 @@ SceneXrender::~SceneXrender()
 
 void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     {
-    int mask = PAINT_REGION;
     foreach( Toplevel* c, toplevels )
         {
         assert( windows.contains( c ));
         stacking_order.append( &windows[ c ] );
         }
-    ScreenPaintData data;
+    int mask = ( damage == QRegion( 0, 0, displayWidth(), displayHeight()))
+        ? PAINT_SCREEN_ALL : PAINT_SCREEN_REGION;
     WrapperEffect wrapper;
+    // preparation step
+    effects->prePaintScreen( &mask, &damage, &wrapper );
+    ScreenPaintData data;
     effects->paintScreen( mask, damage, data, &wrapper );
-    if( mask & PAINT_REGION )
+    if( mask & PAINT_SCREEN_REGION )
         {
         // Use the damage region as the clip region for the root window
         XserverRegion front_region = toXserverRegion( damage );
@@ -107,9 +110,14 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     stacking_order.clear();
     }
 
+void SceneXrender::WrapperEffect::prePaintScreen( int*, QRegion* )
+    {
+    // nothing, no changes
+    }
+
 void SceneXrender::WrapperEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( mask & PAINT_REGION )
+    if( mask & PAINT_SCREEN_REGION )
         static_cast< SceneXrender* >( scene )->paintSimpleScreen( region );
     else
         static_cast< SceneXrender* >( scene )->paintGenericScreen();
@@ -122,10 +130,7 @@ void SceneXrender::paintGenericScreen()
         {
         if( !w->isVisible())
             continue;
-        WindowPaintData data;
-//        data.opacity = w->opacity();
-        WrapperEffect wrapper;
-        effects->paintWindow( w, PAINT_OPAQUE | PAINT_TRANSLUCENT, infiniteRegion(), data, &wrapper );
+        paintWindow( w, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT, infiniteRegion());
         }
     }
 
@@ -146,10 +151,7 @@ void SceneXrender::paintSimpleScreen( QRegion region )
             phase2.prepend( Phase2Data( w, region ));
             continue;
             }
-        WindowPaintData data;
-//        data.opacity = w->opacity();
-        WrapperEffect wrapper;
-        effects->paintWindow( w, PAINT_OPAQUE, region, data, &wrapper );
+        paintWindow( w, PAINT_WINDOW_OPAQUE, region );
         // window is opaque, clip windows below
         region -= w->shape().translated( w->x(), w->y());
         }
@@ -161,16 +163,26 @@ void SceneXrender::paintSimpleScreen( QRegion region )
     foreach( Phase2Data d, phase2 )
         {
         Window* w = d.window;
-        WindowPaintData data;
-//        data.opacity = w->opacity();
-        WrapperEffect wrapper;
-        effects->paintWindow( w, PAINT_TRANSLUCENT, d.region, data, &wrapper );
+        paintWindow( w, PAINT_WINDOW_TRANSLUCENT, d.region );
         }
+    }
+
+void SceneXrender::WrapperEffect::prePaintWindow( Scene::Window* , int*, QRegion* )
+    {
+    // nothing, no changes
+    }
+
+void SceneXrender::paintWindow( Window* w, int mask, QRegion region )
+    {
+    WindowPaintData data;
+//        data.opacity = w->opacity();
+    WrapperEffect wrapper;
+    effects->paintWindow( w, mask, region, data, &wrapper );
     }
 
 void SceneXrender::WrapperEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
     {
-    static_cast< Window* >( w )->paint( region, mask );
+    static_cast< Window* >( w )->performPaint( region, mask );
     }
 
 void SceneXrender::paintBackground( QRegion region )
@@ -355,16 +367,16 @@ Picture SceneXrender::Window::alphaMask()
     return alpha;
     }
 
-void SceneXrender::Window::paint( QRegion region, int mask )
+void SceneXrender::Window::performPaint( QRegion region, int mask )
     {
-    if( mask & ( PAINT_OPAQUE | PAINT_TRANSLUCENT ))
+    if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
         {}
-    else if( mask & PAINT_OPAQUE )
+    else if( mask & PAINT_WINDOW_OPAQUE )
         {
         if( !isOpaque())
             return;
         }
-    else if( mask & PAINT_TRANSLUCENT )
+    else if( mask & PAINT_WINDOW_TRANSLUCENT )
         {
         if( isOpaque())
             return;

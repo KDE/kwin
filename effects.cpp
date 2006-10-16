@@ -37,14 +37,24 @@ void Effect::windowDeleted( Toplevel* )
     {
     }
 
-void Effect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void Effect::prePaintScreen( int* mask, QRegion* region )
     {
-    effects->nextPaintWindow( w, mask, region, data );
+    effects->nextPrePaintScreen( mask, region );
     }
 
 void Effect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects->nextPaintScreen( mask, region, data );
+    }
+
+void Effect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region )
+    {
+    effects->nextPrePaintWindow( w, mask, region );
+    }
+
+void Effect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    effects->nextPaintWindow( w, mask, region, data );
     }
 
 #if 0
@@ -211,11 +221,11 @@ void EffectsHandler::windowDeleted( Toplevel* c )
         e->windowDeleted( c );
     }
 
-void EffectsHandler::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data, Effect* final )
+void EffectsHandler::prePaintScreen( int* mask, QRegion* region, Effect* final )
     {
-    assert( current_paint_window == 0 );
+    assert( current_paint_screen == 0 );
     effects.append( final );
-    nextPaintWindow( w, mask, region, data );
+    nextPrePaintScreen( mask, region );
     effects.pop_back();
     }
 
@@ -227,17 +237,45 @@ void EffectsHandler::paintScreen( int mask, QRegion region, ScreenPaintData& dat
     effects.pop_back();
     }
 
-void EffectsHandler::nextPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void EffectsHandler::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, Effect* final )
     {
-    // the idea is that effects call this function again which calls the next one
-    effects[ current_paint_window++ ]->paintWindow( w, mask, region, data );
-    --current_paint_window;
+    assert( current_paint_window == 0 );
+    effects.append( final );
+    nextPrePaintWindow( w, mask, region );
+    effects.pop_back();
+    }
+
+void EffectsHandler::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data, Effect* final )
+    {
+    assert( current_paint_window == 0 );
+    effects.append( final );
+    nextPaintWindow( w, mask, region, data );
+    effects.pop_back();
+    }
+
+// the idea is that effects call this function again which calls the next one
+void EffectsHandler::nextPrePaintScreen( int* mask, QRegion* region )
+    {
+    effects[ current_paint_screen++ ]->prePaintScreen( mask, region );
+    --current_paint_screen;
     }
 
 void EffectsHandler::nextPaintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects[ current_paint_screen++ ]->paintScreen( mask, region, data );
     --current_paint_screen;
+    }
+
+void EffectsHandler::nextPrePaintWindow( Scene::Window* w, int* mask, QRegion* region )
+    {
+    effects[ current_paint_window++ ]->prePaintWindow( w, mask, region );
+    --current_paint_window;
+    }
+
+void EffectsHandler::nextPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    effects[ current_paint_window++ ]->paintWindow( w, mask, region, data );
+    --current_paint_window;
     }
 
 EffectsHandler* effects;

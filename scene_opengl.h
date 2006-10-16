@@ -37,6 +37,8 @@ class SceneOpenGL
         void paintGenericScreen();
         void paintSimpleScreen( QRegion region );
         void paintBackground( QRegion region );
+        class Window;
+        void paintWindow( Window* w, int mask, QRegion region );
         typedef GLuint Texture;
         GC gcroot;
         Drawable buffer;
@@ -46,7 +48,6 @@ class SceneOpenGL
         static GLXDrawable glxroot;
         static GLXContext context;
         static bool tfp_mode;
-        class Window;
         QMap< Toplevel*, Window > windows;
         QVector< Window* > stacking_order;
         typedef Scene::Phase2Data< Window > Phase2Data;
@@ -59,7 +60,7 @@ class SceneOpenGL::Window
     public:
         Window( Toplevel* c );
         void free(); // is often copied by value, use manually instead of dtor
-        void paint( QRegion region, int mask );
+        void performPaint( QRegion region, int mask );
         void bindTexture();
         void discardTexture();
         Window() {} // QMap sucks even in Qt4
@@ -75,8 +76,10 @@ class SceneOpenGL::WrapperEffect
     : public Effect
     {
     public:
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void prePaintScreen( int* mask, QRegion* region );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
     };
 
 } // namespace

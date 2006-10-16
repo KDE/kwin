@@ -40,11 +40,12 @@ class SceneXrender
         void paintGenericScreen();
         void paintSimpleScreen( QRegion region );
         void paintBackground( QRegion region );
+        class Window;
+        void paintWindow( Window* w, int mask, QRegion region );
         static XserverRegion toXserverRegion( QRegion region );
         XRenderPictFormat* format;
         Picture front;
         static Picture buffer;
-        class Window;
         QMap< Toplevel*, Window > windows;
         QVector< Window* > stacking_order;
         typedef Scene::Phase2Data< Window > Phase2Data;
@@ -57,7 +58,7 @@ class SceneXrender::Window
     public:
         Window( Toplevel* c );
         void free(); // is often copied by value, use manually instead of dtor
-        void paint( QRegion region, int mask );
+        void performPaint( QRegion region, int mask );
         void discardPicture();
         void discardAlpha();
         Window() {} // QMap sucks even in Qt4
@@ -75,8 +76,10 @@ class SceneXrender::WrapperEffect
     : public Effect
     {
     public:
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void prePaintScreen( int* mask, QRegion* region );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
     };
 
 } // namespace

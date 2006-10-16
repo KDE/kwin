@@ -48,8 +48,10 @@ class Effect
     {
     public:
         virtual ~Effect();
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void prePaintScreen( int* mask, QRegion* region );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void windowAdded( Toplevel* c );
@@ -62,11 +64,15 @@ class EffectsHandler
         EffectsHandler( Workspace* ws );
         ~EffectsHandler();
         // for use by effects
-        void nextPaintWindow( Scene::Window* w, int mask, QRegion, WindowPaintData& data );
+        void nextPrePaintScreen( int* mask, QRegion* region );
         void nextPaintScreen( int mask, QRegion region, ScreenPaintData& data );
+        void nextPrePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        void nextPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         // internal (used by kwin core or compositing code)
-        void paintWindow( Scene::Window* w, int mask, QRegion, WindowPaintData& data, Effect* final );
+        void prePaintScreen( int* mask, QRegion* region, Effect* final );
         void paintScreen( int mask, QRegion region, ScreenPaintData& data, Effect* final );
+        void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, Effect* final );
+        void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data, Effect* final );
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowAdded( Toplevel* c );
         void windowDeleted( Toplevel* c );
