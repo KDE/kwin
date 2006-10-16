@@ -11,8 +11,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
 
-#include "utils.h"
 #include "toplevel.h"
+#include "utils.h"
 
 namespace KWinInternal
 {
@@ -48,15 +48,20 @@ class Scene
             PAINT_SCREEN_REGION         = 1 << 0,
             PAINT_SCREEN_ALL            = 1 << 1
             };
+        virtual void paintGenericScreen();
+        virtual void paintSimpleScreen( QRegion region );
+        virtual void paintBackground( QRegion region ) = 0;
+        virtual void paintWindow( Window* w, int mask, QRegion region );
         static QRegion infiniteRegion();
-        template< typename T >
         struct Phase2Data
             {
-            Phase2Data( T* w, QRegion r ) : window( w ), region( r ) {}
-            T* window;
+            Phase2Data( Window* w, QRegion r ) : window( w ), region( r ) {}
+            Window* window;
             QRegion region;
             };
+        QVector< Window* > stacking_order;
         Workspace* wspace;
+        class WrapperEffect;
     };
 
 class Scene::Window
@@ -64,6 +69,8 @@ class Scene::Window
     public:
         Window( Toplevel* c );
         virtual ~Window();
+        virtual void free(); // is often copied by value, use manually instead of dtor
+        virtual void performPaint( QRegion region, int mask ) = 0;
         int x() const;
         int y() const;
         int width() const;

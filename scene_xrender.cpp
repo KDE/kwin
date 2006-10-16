@@ -88,8 +88,10 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     WrapperEffect wrapper;
     // preparation step
     effects->prePaintScreen( &mask, &damage, &wrapper );
+    // TODO call also prePaintWindow() for all windows
     ScreenPaintData data;
     effects->paintScreen( mask, damage, data, &wrapper );
+    stacking_order.clear();
     if( mask & PAINT_SCREEN_REGION )
         {
         // Use the damage region as the clip region for the root window
@@ -107,82 +109,6 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
         XFlush( display());
         }
-    stacking_order.clear();
-    }
-
-void SceneXrender::WrapperEffect::prePaintScreen( int*, QRegion* )
-    {
-    // nothing, no changes
-    }
-
-void SceneXrender::WrapperEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    if( mask & PAINT_SCREEN_REGION )
-        static_cast< SceneXrender* >( scene )->paintSimpleScreen( region );
-    else
-        static_cast< SceneXrender* >( scene )->paintGenericScreen();
-    }
-    
-void SceneXrender::paintGenericScreen()
-    {
-    paintBackground( infiniteRegion());
-    foreach( Window* w, stacking_order ) // bottom to top
-        {
-        if( !w->isVisible())
-            continue;
-        paintWindow( w, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT, infiniteRegion());
-        }
-    }
-
-void SceneXrender::paintSimpleScreen( QRegion region )
-    {
-    QList< Phase2Data > phase2;
-    // Draw each opaque window top to bottom, subtracting the bounding rect of
-    // each window from the clip region after it's been drawn.
-    for( int i = stacking_order.count() - 1;
-         i >= 0;
-         --i )
-        {
-        Window* w = stacking_order[ i ];
-        if( !w->isVisible())
-            continue;
-        if( !w->isOpaque())
-            {
-            phase2.prepend( Phase2Data( w, region ));
-            continue;
-            }
-        paintWindow( w, PAINT_WINDOW_OPAQUE, region );
-        // window is opaque, clip windows below
-        region -= w->shape().translated( w->x(), w->y());
-        }
-    // Fill any areas of the root window not covered by windows
-    paintBackground( region );
-    // Now walk the list bottom to top, drawing translucent windows.
-    // That we draw bottom to top is important now since we're drawing translucent objects
-    // and also are clipping only by opaque windows.
-    foreach( Phase2Data d, phase2 )
-        {
-        Window* w = d.window;
-        paintWindow( w, PAINT_WINDOW_TRANSLUCENT, d.region );
-        }
-    }
-
-void SceneXrender::WrapperEffect::prePaintWindow( Scene::Window* , int*, QRegion* )
-    {
-    // nothing, no changes
-    }
-
-void SceneXrender::paintWindow( Window* w, int mask, QRegion region )
-    {
-    WindowPaintData data;
-//        data.opacity = w->opacity();
-    WrapperEffect wrapper;
-    effects->paintWindow( w, mask, region, data, &wrapper );
-    }
-
-void SceneXrender::WrapperEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    static_cast< Window* >( w )->performPaint( region, mask );
     }
 
 void SceneXrender::paintBackground( QRegion region )

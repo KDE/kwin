@@ -23,6 +23,8 @@ class SceneBasic
         SceneBasic( Workspace* ws );
         virtual ~SceneBasic();
         virtual void paint( QRegion damage, ToplevelList windows );
+    protected:
+        virtual void paintBackground( QRegion region );
     };
 
 } // namespace

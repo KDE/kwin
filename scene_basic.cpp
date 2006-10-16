@@ -56,4 +56,9 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
     XFlush( display());
     }
 
+void SceneBasic::paintBackground( QRegion )
+    {
+    // empty, not using inherited functionality
+    }
+
 } // namespace

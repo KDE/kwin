@@ -133,6 +133,20 @@ class ShiftWorkspaceUp
     };
 #endif
 
+// a special effect that is last in the order that'll actually call the painting functions
+// TODO this should actually be in scene.h
+class Scene::WrapperEffect
+    : public Effect
+    {
+    public:
+        virtual ~WrapperEffect();
+        virtual void prePaintScreen( int* mask, QRegion* region );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+    };
+
+
 inline
 WindowPaintData::WindowPaintData()
     : opacity( 1.0 )

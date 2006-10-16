@@ -13,11 +13,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "config.h"
 
+#include "scene.h"
+
 #ifdef HAVE_XRENDER
 #include <X11/extensions/Xrender.h>
-
-#include "scene.h"
-#include "effects.h"
 
 namespace KWinInternal
 {
@@ -35,21 +34,16 @@ class SceneXrender
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
+    protected:
+        virtual void paintBackground( QRegion region );
     private:
         void createBuffer();
-        void paintGenericScreen();
-        void paintSimpleScreen( QRegion region );
-        void paintBackground( QRegion region );
-        class Window;
-        void paintWindow( Window* w, int mask, QRegion region );
         static XserverRegion toXserverRegion( QRegion region );
         XRenderPictFormat* format;
         Picture front;
         static Picture buffer;
+        class Window;
         QMap< Toplevel*, Window > windows;
-        QVector< Window* > stacking_order;
-        typedef Scene::Phase2Data< Window > Phase2Data;
-        class WrapperEffect;
     };
 
 class SceneXrender::Window
@@ -57,8 +51,8 @@ class SceneXrender::Window
     {
     public:
         Window( Toplevel* c );
-        void free(); // is often copied by value, use manually instead of dtor
-        void performPaint( QRegion region, int mask );
+        virtual void free();
+        virtual void performPaint( QRegion region, int mask );
         void discardPicture();
         void discardAlpha();
         Window() {} // QMap sucks even in Qt4
@@ -69,17 +63,6 @@ class SceneXrender::Window
         XRenderPictFormat* format;
         Picture alpha;
         double alpha_cached_opacity;
-    };
-
-// a special effect that is last in the order that'll actually call the painting functions
-class SceneXrender::WrapperEffect
-    : public Effect
-    {
-    public:
-        virtual void prePaintScreen( int* mask, QRegion* region );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
     };
 
 } // namespace

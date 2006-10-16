@@ -10,8 +10,6 @@ License. See the file "COPYING" for the exact licensing terms.
 Based on glcompmgr code by Felix Bellaby.
 ******************************************************************/
 
-
-
 #include "scene_opengl.h"
 
 #include "utils.h"
@@ -263,6 +261,11 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID vi
 
 void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     {
+    foreach( Toplevel* c, toplevels )
+        {
+        assert( windows.contains( c ));
+        stacking_order.append( &windows[ c ] );
+        }
     grabXServer();
     glXWaitX();
     glPushMatrix();
@@ -270,11 +273,6 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glClear( GL_COLOR_BUFFER_BIT );
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
-    foreach( Toplevel* c, toplevels )
-        {
-        assert( windows.contains( c ));
-        stacking_order.append( &windows[ c ] );
-        }
     int mask = ( damage == QRegion( 0, 0, displayWidth(), displayHeight()))
         ? PAINT_SCREEN_ALL : PAINT_SCREEN_REGION;
     WrapperEffect wrapper;
@@ -283,6 +281,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     // TODO call also prePaintWindow() for all windows
     ScreenPaintData data;
     effects->paintScreen( mask, damage, data, &wrapper );
+    stacking_order.clear();
     glPopMatrix();
     // TODO only partial repaint for mask & PAINT_SCREEN_REGION
     if( root_db )
@@ -296,85 +295,14 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
         }
     ungrabXServer();
     checkGLError( "PostPaint" );
-    stacking_order.clear();
-    }
-
-void SceneOpenGL::WrapperEffect::prePaintScreen( int*, QRegion* )
-    {
-    // nothing, no changes
-    }
-
-// the function that'll be eventually called by wrapper.peformPaintScreen() above
-void SceneOpenGL::WrapperEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    if( mask & PAINT_SCREEN_REGION )
-        static_cast< SceneOpenGL* >( scene )->paintSimpleScreen( region );
-    else
-        static_cast< SceneOpenGL* >( scene )->paintGenericScreen();
-    }
-    
-// the generic painting code that should eventually handle even
-// transformations
-void SceneOpenGL::paintGenericScreen()
-    {
-    paintBackground( infiniteRegion());
-    foreach( Window* w, stacking_order ) // bottom to top
-        {
-        if( !w->isVisible())
-            continue;
-        paintWindow( w, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT, infiniteRegion());
-        }
     }
 
 // the optimized case without any transformations at all
 void SceneOpenGL::paintSimpleScreen( QRegion region )
     {
-    QList< Phase2Data > phase2;
     // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
     region = QRegion( 0, 0, displayWidth(), displayHeight());
-    for( int i = stacking_order.count() - 1; // top to bottom
-         i >= 0;
-         --i )
-        {
-        Window* w = stacking_order[ i ];
-        if( !w->isVisible())
-            continue;
-        if( region.isEmpty()) // completely clipped
-            continue;
-        if( !w->isOpaque())
-            {
-            phase2.prepend( Phase2Data( w, region ));
-            continue;
-            }
-        paintWindow( w, PAINT_WINDOW_OPAQUE, region );
-        // window is opaque, clip windows below
-        region -= w->shape().translated( w->x(), w->y());
-        }
-    paintBackground( region );
-    foreach( Phase2Data d, phase2 )
-        {
-        Window* w = d.window;
-        paintWindow( w, PAINT_WINDOW_TRANSLUCENT, d.region );
-        }
-    }
-
-void SceneOpenGL::WrapperEffect::prePaintWindow( Scene::Window* , int*, QRegion* )
-    {
-    // nothing, no changes
-    }
-
-void SceneOpenGL::paintWindow( Window* w, int mask, QRegion region )
-    {
-    WindowPaintData data;
-//        data.opacity = w->opacity();
-    WrapperEffect wrapper;
-    effects->paintWindow( w, mask, region, data, &wrapper );
-    }
-
-// the function that'll be eventually called by paintWindow() above
-void SceneOpenGL::WrapperEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    static_cast< Window* >( w )->performPaint( region, mask );
+    Scene::paintSimpleScreen( region );
     }
 
 void SceneOpenGL::paintBackground( QRegion )
