@@ -258,8 +258,8 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
     private:
         void resetLayout();
 
-        void moveWidget(int x, int y, QWidget *w) const;
-        void resizeWidget(int w, int h, QWidget *w) const;
+        void moveWidget(int x, int y, QWidget *widget) const;
+        void resizeWidget(int w, int h, QWidget *widget) const;
 
         typedef QVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
         int buttonContainerWidth(const ButtonContainer &btnContainer, bool countHidden = false) const;
