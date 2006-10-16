@@ -19,6 +19,8 @@ Sources:
             to understand
 - libcm (metacity) : cvs -d :pserver:anonymous@anoncvs.gnome.org:/cvs/gnome co libcm
     - no idea about it
+    
+- http://opengl.org - documentation - OpenGL Redbook, GLX docs, extensions docs
 
 TODO:
 
