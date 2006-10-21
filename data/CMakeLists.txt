@@ -10,7 +10,7 @@ kde4_add_executable( kwin_update_window_settings ${kwin_update_window_settings_S
 
 target_link_libraries( kwin_update_window_settings ${KDE4_KDECORE_LIBS} )
 
-install(TARGETS kwin_update_window_settings DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/  )
+install_targets(/lib/kconf_update_bin/ kwin_update_window_settings )
 
 
 
@@ -23,7 +23,7 @@ kde4_add_executable( kwin_update_default_rules ${kwin_update_default_rules_SRCS}
 
 target_link_libraries( kwin_update_default_rules ${KDE4_KDECORE_LIBS} )
 
-install(TARGETS kwin_update_default_rules DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/  )
+install_targets(/lib/kconf_update_bin/ kwin_update_default_rules )
 
 
 ########### install files ###############

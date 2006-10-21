@@ -17,3 +17,26 @@ target_link_libraries(kwin_keramik_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY
 
 install(TARGETS kwin_keramik_config  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
+
+########### install files ###############
+
+install( FILES   DESTINATION  ${DATA_INSTALL_DIR}/kwin )
+
+
+
+
+#original Makefile.am contents follow:
+
+#INCLUDES                       = $(all_includes)
+#
+#kde_module_LTLIBRARIES         = kwin_keramik_config.la
+#
+#kwin_keramik_config_la_SOURCES = config.cpp keramikconfig.ui
+#kwin_keramik_config_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+#kwin_keramik_config_la_LIBADD  = $(LIB_KDEUI)
+#
+#METASOURCES                    = AUTO
+#noinst_HEADERS                 = config.h keramikconfig.h
+#
+#lnkdir                         = $(kde_datadir)/kwin
+#

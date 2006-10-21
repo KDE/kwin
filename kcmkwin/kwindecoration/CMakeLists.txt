@@ -3,7 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 ########### next target ###############
 
-set(kcm_kwindecoration_PART_SRCS kwindecoration.cpp buttons.cpp preview.cpp )
+set(kcm_kwindecoration_PART_SRCS kwindecorationadaptor.cpp kwindecoration.cpp buttons.cpp preview.cpp )
 
 kde4_automoc(kcm_kwindecoration ${kcm_kwindecoration_PART_SRCS})
 
@@ -19,6 +19,28 @@ install(TARGETS kcm_kwindecoration  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kwindecoration.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
+install( FILES kwindecoration.desktop  DESTINATION  ${XDG_APPS_DIR} )
 
 
+
+
+#original Makefile.am contents follow:
+
+#INCLUDES = -I$(srcdir)/../../lib $(all_includes)
+#
+#kde_module_LTLIBRARIES = kcm_kwindecoration.la
+#
+#kcm_kwindecoration_la_SOURCES = kwindecoration.cpp buttons.cpp kwindecorationIface.skel preview.cpp
+#noinst_HEADERS = kwindecoration.h kwindecorationIface.h buttons.h preview.h
+#
+#kcm_kwindecoration_la_LDFLAGS = \
+#  -module -avoid-version $(all_libraries) -no-undefined
+#
+#kcm_kwindecoration_la_LIBADD = $(LIB_KDEUI) ../../lib/libkdecorations.la
+#
+#METASOURCES = AUTO
+#
+#messages:
+#	$(XGETTEXT) *.cpp -o $(podir)/kcmkwindecoration.pot
+#
+#xdg_apps_DATA = kwindecoration.desktop
