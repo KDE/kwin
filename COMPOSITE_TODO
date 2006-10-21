@@ -86,3 +86,8 @@ TODO:
         - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
         * perhaps syncing to vblank will be needed to avoid flicker
     * XCopyArea() should not update the whole screen but only the affected areas
+
+? in SceneOpenGL::bindTexture() with tfp_mode, with some gfx cards it seems
+    to be faster to not short-circuit the texture binding when there's been
+    no damage
+    * confirm and try to find out when to do it and when not
