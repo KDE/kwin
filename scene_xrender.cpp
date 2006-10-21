@@ -50,6 +50,7 @@ kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
 #endif
 
 Picture SceneXrender::buffer;
+ScreenPaintData SceneXrender::screen_paint;
 
 SceneXrender::SceneXrender( Workspace* ws )
     : Scene( ws )
@@ -84,10 +85,12 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         stacking_order.append( &windows[ c ] );
         }
     int mask = ( damage == QRegion( 0, 0, displayWidth(), displayHeight()))
-        ? PAINT_SCREEN_ALL : PAINT_SCREEN_REGION;
+        ? 0 : PAINT_SCREEN_REGION;
     WrapperEffect wrapper;
     // preparation step
     effects->prePaintScreen( &mask, &damage, &wrapper );
+    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
+        mask &= ~PAINT_SCREEN_REGION;
     // TODO call also prePaintWindow() for all windows
     ScreenPaintData data;
     effects->paintScreen( mask, damage, data, &wrapper );
@@ -101,6 +104,7 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         // copy composed buffer to the root window
         XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
         XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+        XFixesSetPictureClipRegion( display(), front, 0, 0, None );
         XFlush( display());
         }
     else
@@ -111,13 +115,23 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         }
     }
 
+void SceneXrender::paintGenericScreen( int mask, ScreenPaintData data )
+    {
+    screen_paint = data; // save, transformations will be done when painting windows
+    Scene::paintGenericScreen( mask, data );
+    }
+
 void SceneXrender::paintBackground( QRegion region )
     {
-    XserverRegion background_region = toXserverRegion( region );
-    XFixesSetPictureClipRegion( display(), buffer, 0, 0, background_region );
-    XFixesDestroyRegion( display(), background_region );
+    if( region != infiniteRegion())
+        {
+        XserverRegion background_region = toXserverRegion( region );
+        XFixesSetPictureClipRegion( display(), buffer, 0, 0, background_region );
+        XFixesDestroyRegion( display(), background_region );
+        }
     XRenderColor col = { 0xffff, 0xffff, 0xffff, 0xffff };
     XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
+    XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }
 
 void SceneXrender::windowGeometryShapeChanged( Toplevel* c )
@@ -307,22 +321,32 @@ void SceneXrender::Window::performPaint( QRegion region, int mask )
         if( isOpaque())
             return;
         }
-    XserverRegion clip_region = toXserverRegion( region );
-    XFixesSetPictureClipRegion( display(), buffer, 0, 0, clip_region );
-    XFixesDestroyRegion( display(), clip_region );
+    if( region != infiniteRegion())
+        {
+        XserverRegion clip_region = toXserverRegion( region );
+        XFixesSetPictureClipRegion( display(), buffer, 0, 0, clip_region );
+        XFixesDestroyRegion( display(), clip_region );
+        }
     Picture pic = picture();
     if( pic == None ) // The render format can be null for GL and/or Xv visuals
         return;
+    int x = toplevel->x();
+    int y = toplevel->y();
+    if( mask & PAINT_SCREEN_TRANSFORMED )
+        {
+        x += screen_paint.xTranslate;
+        y += screen_paint.yTranslate;
+        }
     if( isOpaque())
         {
         XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
-            toplevel->x(), toplevel->y(), toplevel->width(), toplevel->height());
+            x, y, toplevel->width(), toplevel->height());
         }
     else
         {
         Picture alpha = alphaMask();
         XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
-            toplevel->x(), toplevel->y(), toplevel->width(), toplevel->height());
+            x, y, toplevel->width(), toplevel->height());
         }
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }

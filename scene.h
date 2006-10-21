@@ -37,19 +37,17 @@ class Scene
         virtual void windowAdded( Toplevel* );
         // a window has been destroyed
         virtual void windowDeleted( Toplevel* );
-    protected:
         enum
             {
             PAINT_WINDOW_OPAQUE         = 1 << 0,
-            PAINT_WINDOW_TRANSLUCENT    = 1 << 1
+            PAINT_WINDOW_TRANSLUCENT    = 1 << 1,
+            PAINT_WINDOW_TRANSFORMED    = 1 << 2,
+            PAINT_SCREEN_REGION         = 1 << 3,
+            PAINT_SCREEN_TRANSFORMED    = 1 << 4
             };
-        enum
-            {
-            PAINT_SCREEN_REGION         = 1 << 0,
-            PAINT_SCREEN_ALL            = 1 << 1
-            };
-        virtual void paintGenericScreen();
-        virtual void paintSimpleScreen( QRegion region );
+    protected:
+        virtual void paintGenericScreen( int mask, ScreenPaintData data );
+        virtual void paintSimpleScreen( int mask, QRegion region );
         virtual void paintBackground( QRegion region ) = 0;
         virtual void paintWindow( Window* w, int mask, QRegion region );
         static QRegion infiniteRegion();

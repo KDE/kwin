@@ -50,30 +50,30 @@ void Scene::WrapperEffect::prePaintScreen( int*, QRegion* )
 void Scene::WrapperEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     if( mask & PAINT_SCREEN_REGION )
-        scene->paintSimpleScreen( region );
+        scene->paintSimpleScreen( mask, region );
     else
-        scene->paintGenericScreen();
+        scene->paintGenericScreen( mask, data );
     }
-    
+
 // the generic painting code that should eventually handle even
 // transformations
-void Scene::paintGenericScreen()
+void Scene::paintGenericScreen( int mask, ScreenPaintData )
     {
     paintBackground( infiniteRegion());
     foreach( Window* w, stacking_order ) // bottom to top
         {
         if( !w->isVisible())
             continue;
-        paintWindow( w, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT, infiniteRegion());
+        paintWindow( w, mask | PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT, infiniteRegion());
         }
     }
 
 // the optimized case without any transformations at all
-void Scene::paintSimpleScreen( QRegion region )
+void Scene::paintSimpleScreen( int mask, QRegion region )
     {
+    assert(( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED
+        | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_OPAQUE )) == 0 );
     QList< Phase2Data > phase2;
-    // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
-    region = QRegion( 0, 0, displayWidth(), displayHeight());
     // Draw each opaque window top to bottom, subtracting the bounding rect of
     // each window from the clip region after it's been drawn.
     for( int i = stacking_order.count() - 1; // top to bottom
@@ -90,7 +90,7 @@ void Scene::paintSimpleScreen( QRegion region )
             phase2.prepend( Phase2Data( w, region ));
             continue;
             }
-        paintWindow( w, PAINT_WINDOW_OPAQUE, region );
+        paintWindow( w, mask | PAINT_WINDOW_OPAQUE, region );
         // window is opaque, clip windows below
         region -= w->shape().translated( w->x(), w->y());
         }
@@ -102,7 +102,7 @@ void Scene::paintSimpleScreen( QRegion region )
     foreach( Phase2Data d, phase2 )
         {
         Window* w = d.window;
-        paintWindow( w, PAINT_WINDOW_TRANSLUCENT, d.region );
+        paintWindow( w, mask | PAINT_WINDOW_TRANSLUCENT, d.region );
         }
     }
 

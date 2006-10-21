@@ -151,6 +151,7 @@ void GrowMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
         c->workspace()->addDamage( c->geometry());
         }
     }
+#endif
 
 ShiftWorkspaceUp::ShiftWorkspaceUp( Workspace* ws )
     : up( false )
@@ -160,13 +161,18 @@ ShiftWorkspaceUp::ShiftWorkspaceUp( Workspace* ws )
     timer.start( 2000 );
     }
 
-void ShiftWorkspaceUp::transformWorkspace( Matrix& matrix, EffectData& )
+void ShiftWorkspaceUp::prePaintScreen( int* mask, QRegion* region )
     {
-    if( !up )
-        return;
-    Matrix m;
-    m.m[ 1 ][ 3 ] = -10;
-    matrix *= m;
+    if( up )
+        *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+    effects->nextPrePaintScreen( mask, region );
+    }
+
+void ShiftWorkspaceUp::paintScreen( int mask, QRegion region, ScreenPaintData& data )
+    {
+    if( up )
+        data.yTranslate -= 10;
+    effects->nextPaintScreen( mask, region, data );
     }
 
 void ShiftWorkspaceUp::tick()
@@ -174,12 +180,6 @@ void ShiftWorkspaceUp::tick()
     up = !up;
     wspace->addDamage( 0, 0, displayWidth(), displayHeight());
     }
-
-static MakeHalfTransparent* mht;
-static ShakyMove* sm;
-static GrowMove* gm;
-static ShiftWorkspaceUp* swu;
-#endif
 
 //****************************************
 // EffectsHandler
@@ -194,9 +194,9 @@ EffectsHandler::EffectsHandler( Workspace* ws )
 //    effects.append( new MakeHalfTransparent );
 //    effects.append( new ShakyMove );
 //    effects.append( new GrowMove );
-//    effects.append( new ShiftWorkspaceUp( ws ));
+    effects.append( new ShiftWorkspaceUp( ws ));
     }
-    
+
 EffectsHandler::~EffectsHandler()
     {
     foreach( Effect* e, effects )

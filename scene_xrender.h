@@ -36,12 +36,14 @@ class SceneXrender
         virtual void windowDeleted( Toplevel* );
     protected:
         virtual void paintBackground( QRegion region );
+        virtual void paintGenericScreen( int mask, ScreenPaintData data );
     private:
         void createBuffer();
         static XserverRegion toXserverRegion( QRegion region );
         XRenderPictFormat* format;
         Picture front;
         static Picture buffer;
+        static ScreenPaintData screen_paint;
         class Window;
         QMap< Toplevel*, Window > windows;
     };

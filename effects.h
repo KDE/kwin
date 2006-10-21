@@ -116,6 +116,7 @@ class GrowMove
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
     };
+#endif
 
 class ShiftWorkspaceUp
     : public QObject, public Effect
@@ -123,7 +124,8 @@ class ShiftWorkspaceUp
     Q_OBJECT
     public:
         ShiftWorkspaceUp( Workspace* ws );
-        virtual void transformWorkspace( Matrix& m, EffectData& data );
+        virtual void prePaintScreen( int* mask, QRegion* region );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
     private slots:
         void tick();
     private:
@@ -131,7 +133,6 @@ class ShiftWorkspaceUp
         bool up;
         Workspace* wspace;
     };
-#endif
 
 // a special effect that is last in the order that'll actually call the painting functions
 // TODO this should actually be in scene.h

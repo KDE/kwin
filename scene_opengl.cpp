@@ -278,10 +278,12 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
     int mask = ( damage == QRegion( 0, 0, displayWidth(), displayHeight()))
-        ? PAINT_SCREEN_ALL : PAINT_SCREEN_REGION;
+        ? 0 : PAINT_SCREEN_REGION;
     WrapperEffect wrapper;
     // preparation step
     effects->prePaintScreen( &mask, &damage, &wrapper );
+    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
+        mask &= ~PAINT_SCREEN_REGION;
     // TODO call also prePaintWindow() for all windows
     ScreenPaintData data;
     effects->paintScreen( mask, damage, data, &wrapper );
@@ -301,12 +303,24 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     checkGLError( "PostPaint" );
     }
 
+void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
+    {
+    if( mask & PAINT_SCREEN_TRANSFORMED )
+        {
+        glPushMatrix();
+        glTranslatef( data.xTranslate, data.yTranslate, 0 );
+        }
+    Scene::paintGenericScreen( mask, data );
+    if( mask & PAINT_SCREEN_TRANSFORMED )
+        glPopMatrix();
+    }
+
 // the optimized case without any transformations at all
-void SceneOpenGL::paintSimpleScreen( QRegion region )
+void SceneOpenGL::paintSimpleScreen( int mask, QRegion region )
     {
     // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
     region = QRegion( 0, 0, displayWidth(), displayHeight());
-    Scene::paintSimpleScreen( region );
+    Scene::paintSimpleScreen( mask, region );
     }
 
 void SceneOpenGL::paintBackground( QRegion )
