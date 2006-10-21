@@ -30,6 +30,7 @@ GLXContext SceneOpenGL::context;
 GLXPixmap SceneOpenGL::glxroot;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::root_db; // destination drawable is double-buffered
+bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 
 typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
     int buffer, const int* attrib_list );
@@ -121,6 +122,9 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
     glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress( "glXReleaseTexImageEXT" );
     tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
+    // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
+    // 1.0-9xxx don't update pixmaps properly, so do a copy first
+    copy_buffer_hack = !tfp_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
     initBuffer();
     if( tfp_mode )
         {
@@ -380,22 +384,21 @@ void SceneOpenGL::Window::bindTexture()
     // the alpha for the decoration part is broken for some reason (undefined?).
     // I wasn't lucky converting KWin to use ARGB visuals for decorations,
     // so instead simply set alpha in those parts to opaque.
-    // Without ALPHA_CLEAR_COPY the setting is done directly in the window
+    // Without alpha_clear_copy the setting is done directly in the window
     // pixmap, which seems to be ok, but let's not risk trouble right now.
     // TODO check if this isn't a performance problem and how it can be done better
     Client* c = dynamic_cast< Client* >( toplevel );
     bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
-#define ALPHA_CLEAR_COPY
-#ifdef ALPHA_CLEAR_COPY
-    if( alpha_clear )
+    bool alpha_clear_copy = true;
+    bool copy_buffer = (( alpha_clear && alpha_clear_copy ) || copy_buffer_hack );
+    if( copy_buffer )
         {
-        Pixmap p2 = XCreatePixmap( display(), pix, c->width(), c->height(), 32 );
+        Pixmap p2 = XCreatePixmap( display(), pix, c->width(), c->height(), toplevel->depth());
         GC gc = XCreateGC( display(), pix, 0, NULL );
         XCopyArea( display(), pix, p2, gc, 0, 0, c->width(), c->height(), 0, 0 );
         pix = p2;
         XFreeGC( display(), gc );
         }
-#endif
     if( alpha_clear )
         {
         XGCValues gcv;
@@ -475,10 +478,8 @@ void SceneOpenGL::Window::bindTexture()
             glDrawBuffer( GL_BACK );
         glXMakeContextCurrent( display(), glxroot, glxroot, context );
         }
-#ifdef ALPHA_CLEAR_COPY
-    if( alpha_clear )
+    if( copy_buffer )
         XFreePixmap( display(), window_pix );
-#endif
     }
 
 void SceneOpenGL::Window::discardTexture()

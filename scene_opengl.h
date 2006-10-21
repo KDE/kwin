@@ -45,6 +45,7 @@ class SceneOpenGL
         static GLXDrawable glxroot;
         static GLXContext context;
         static bool tfp_mode;
+        static bool copy_buffer_hack;
         class Window;
         QMap< Toplevel*, Window > windows;
     };

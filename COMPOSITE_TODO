@@ -25,12 +25,7 @@ Sources:
 TODO:
 
 * Check/make it work with other gfx cards
-    - I've tested only with nvidia with the 9625 beta drivers so far
-    * latest stable nvidia drivers don't quite work, the COPY_BUFFERS
-        or REFRESH_DRAWABLES workaround from glcompmgr should take care of that
-        - the COPY_BUFFERS hack, if I'm getting it right, just creates a copy
-            of the X Pixmap first, so just always using ALPHA_CLEAR_COPY hack
-            in KWin should do the same
+    - I've tested only with nvidia with the 9625 beta drivers and 8776 stable drivers so far
     - I have absolutely no idea about other gfx cards, needs to be tested
         * ati
         * intel
