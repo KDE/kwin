@@ -430,9 +430,7 @@ void SceneOpenGL::Window::bindTexture()
         bound_glxpixmap = glXCreatePixmap( display(), fbcdrawable, pix, attrs );
         int value;
         glXGetFBConfigAttrib( display(), fbcdrawable, GLX_Y_INVERTED_EXT, &value );
-        // this is swapped in order to get a conversion of OpenGL coordinates
-        // (binding to a texture is not affected by transforming the OpenGL scene)
-        texture_y_inverted = value ? false : true;
+        texture_y_inverted = value ? true : false;
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
@@ -446,7 +444,7 @@ void SceneOpenGL::Window::bindTexture()
             {
             glGenTextures( 1, &texture );
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
-            texture_y_inverted = true; // conversion to OpenGL coordinates
+            texture_y_inverted = false;
             glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
                 toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
                 0, 0, toplevel->width(), toplevel->height(), 0 );
@@ -462,7 +460,7 @@ void SceneOpenGL::Window::bindTexture()
                     // the pixmap to a texture, this is not affected
                     // by transforming the OpenGL scene)
                     int gly = toplevel->height() - r.y() - r.height();
-                    texture_y_inverted = true;
+                    texture_y_inverted = false;
                     glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
                         r.x(), gly, r.x(), gly, r.width(), r.height());
                     }
@@ -500,15 +498,15 @@ void SceneOpenGL::Window::discardTexture()
     texture = 0;
     }
 
-static void quadPaint( int x1, int y1, int x2, int y2, bool invert_y )
+static void quadPaint( int x1, int y1, int x2, int y2, int ty1, int ty2 )
     {
-    glTexCoord2i( x1, invert_y ? y2 : y1 );
+    glTexCoord2i( x1, ty1 );
     glVertex2i( x1, y1 );
-    glTexCoord2i( x2, invert_y ? y2 : y1 );
+    glTexCoord2i( x2, ty1 );
     glVertex2i( x2, y1 );
-    glTexCoord2i( x2, invert_y ? y1 : y2 );
+    glTexCoord2i( x2, ty2 );
     glVertex2i( x2, y2 );
-    glTexCoord2i( x1, invert_y ? y1 : y2 );
+    glTexCoord2i( x1, ty2 );
     glVertex2i( x1, y2 );
     }
 
@@ -564,8 +562,16 @@ void SceneOpenGL::Window::performPaint( QRegion region, int mask )
     glBegin( GL_QUADS );
     foreach( QRect r, region.rects())
         {
-        quadPaint( r.x(), r.y(), r.x() + r.width(), r.y() + r.height(),
-            texture_y_inverted );
+        int y1 = r.y();
+        int y2 = r.y() + r.height();
+        int ty1 = y1;
+        int ty2 = y2;
+        if( !texture_y_inverted ) // "!" because of converting to OpenGL coords
+            {
+            ty1 = height() - y1;
+            ty2 = height() - y2;
+            }
+        quadPaint( r.x(), y1, r.x() + r.width(), y2, ty1, ty2 );
         }
     glEnd();
     glPopMatrix();
