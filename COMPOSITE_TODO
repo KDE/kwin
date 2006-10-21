@@ -82,6 +82,16 @@ TODO:
         * perhaps syncing to vblank will be needed to avoid flicker
     * XCopyArea() should not update the whole screen but only the affected areas
 
+* sync to vblank
+    - currently the compositing code is run with 20ms timer, i.e. constant 50fps
+    - the GLX_SGI_video_sync extension should be used
+    - compiz uses this, no idea about it though
+
+? GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
+    - code currently uses GL_ARB_texture_rectangle (GL_TEXTURE_RECTANGLE_ARB), using
+        normal textures when GL_ARB_texture_non_power_of_two is available should(?) be
+        preferred
+
 ? in SceneOpenGL::bindTexture() with tfp_mode, with some gfx cards it seems
     to be faster to not short-circuit the texture binding when there's been
     no damage
