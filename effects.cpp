@@ -194,7 +194,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
 //    effects.append( new MakeHalfTransparent );
 //    effects.append( new ShakyMove );
 //    effects.append( new GrowMove );
-    effects.append( new ShiftWorkspaceUp( ws ));
+//    effects.append( new ShiftWorkspaceUp( ws ));
     }
 
 EffectsHandler::~EffectsHandler()
