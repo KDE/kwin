@@ -84,13 +84,13 @@ class EffectsHandler
 
 extern EffectsHandler* effects;
 
-#if 0
 class MakeHalfTransparent
     : public Effect
     {
     public:
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
     };
 
 class ShakyMove
@@ -100,15 +100,18 @@ class ShakyMove
     public:
         ShakyMove();
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
+        virtual void prePaintScreen( int* mask, QRegion* region );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowDeleted( Toplevel* c );
     private slots:
         void tick();
     private:
-        QMap< Toplevel*, int > windows;
+        QMap< const Toplevel*, int > windows;
         QTimer timer;
     };
 
+#if 0
 class GrowMove
     : public Effect
     {

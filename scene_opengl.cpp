@@ -525,18 +525,19 @@ static void quadPaint( int x1, int y1, int x2, int y2, int ty1, int ty2 )
     glVertex2i( x1, y2 );
     }
 
-void SceneOpenGL::Window::performPaint( QRegion region, int mask )
+void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintData data )
     {
+    bool opaque = isOpaque() && data.opacity == 1.0;
     if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
         {}
     else if( mask & PAINT_WINDOW_OPAQUE )
         {
-        if( !isOpaque())
+        if( !opaque )
             return;
         }
     else if( mask & PAINT_WINDOW_TRANSLUCENT )
         {
-        if( isOpaque())
+        if( opaque )
             return;
         }
     // paint only requested areas
@@ -547,24 +548,32 @@ void SceneOpenGL::Window::performPaint( QRegion region, int mask )
         return;
     bindTexture();
     glPushMatrix();
-    glTranslatef( x(), y(), 0 );
+    int x = toplevel->x();
+    int y = toplevel->y();
+    if( mask & PAINT_WINDOW_TRANSFORMED )
+        {
+        x += data.xTranslate;
+        y += data.yTranslate;
+        glScalef( data.xScale, data.yScale, 1 );
+        }
+    glTranslatef( x, y, 0 );
     bool was_blend = glIsEnabled( GL_BLEND );
-    if( !isOpaque())
+    if( !opaque )
         {
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         }
-    if( toplevel->opacity() != 1.0 )
+    if( data.opacity != 1.0 )
         {
         if( toplevel->hasAlpha())
             {
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-            glColor4f( toplevel->opacity(), toplevel->opacity(), toplevel->opacity(),
-                toplevel->opacity());
+            glColor4f( data.opacity, data.opacity, data.opacity,
+                data.opacity);
             }
         else
             {
-            float constant_alpha[] = { 0, 0, 0, toplevel->opacity() };
+            float constant_alpha[] = { 0, 0, 0, data.opacity };
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
             glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
             glTexEnvi( GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE );
@@ -590,7 +599,7 @@ void SceneOpenGL::Window::performPaint( QRegion region, int mask )
         }
     glEnd();
     glPopMatrix();
-    if( toplevel->opacity() != 1.0 )
+    if( data.opacity != 1.0 )
         {
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
         glColor4f( 0, 0, 0, 0 );

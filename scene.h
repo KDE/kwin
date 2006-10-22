@@ -53,9 +53,10 @@ class Scene
         static QRegion infiniteRegion();
         struct Phase2Data
             {
-            Phase2Data( Window* w, QRegion r ) : window( w ), region( r ) {}
+            Phase2Data( Window* w, QRegion r, int m ) : window( w ), region( r ), mask( m ) {}
             Window* window;
             QRegion region;
+            int mask;
             };
         QVector< Window* > stacking_order;
         Workspace* wspace;
@@ -68,11 +69,12 @@ class Scene::Window
         Window( Toplevel* c );
         virtual ~Window();
         virtual void free(); // is often copied by value, use manually instead of dtor
-        virtual void performPaint( QRegion region, int mask ) = 0;
+        virtual void performPaint( int mask, QRegion region, WindowPaintData data ) = 0;
         int x() const;
         int y() const;
         int width() const;
         int height() const;
+        const Toplevel* window() const;
         bool isVisible() const;
         bool isOpaque() const;
         QRegion shape() const;
@@ -116,7 +118,13 @@ int Scene::Window::height() const
     {
     return toplevel->height();
     }
-    
+
+inline
+const Toplevel* Scene::Window::window() const
+    {
+    return toplevel;
+    }
+
 } // namespace
 
 #endif

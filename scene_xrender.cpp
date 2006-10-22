@@ -277,11 +277,11 @@ void SceneXrender::Window::discardAlpha()
     alpha = None;
     }
 
-Picture SceneXrender::Window::alphaMask()
+Picture SceneXrender::Window::alphaMask( double opacity )
     {
-    if( isOpaque())
+    if( isOpaque() && opacity == 1.0 )
         return None;
-    if( alpha != None && alpha_cached_opacity != toplevel->opacity())
+    if( alpha != None && alpha_cached_opacity != opacity )
         {
         if( alpha != None )
             XRenderFreePicture( display(), alpha );
@@ -289,7 +289,7 @@ Picture SceneXrender::Window::alphaMask()
         }
     if( alpha != None )
         return alpha;
-    if( toplevel->opacity() == 1.0 )
+    if( opacity == 1.0 )
         { // no need to create alpha mask
         alpha_cached_opacity = 1.0;
         return None;
@@ -301,24 +301,25 @@ Picture SceneXrender::Window::alphaMask()
     alpha = XRenderCreatePicture( display(), pixmap, format, CPRepeat, &pa );
     XFreePixmap( display(), pixmap );
     XRenderColor col;
-    col.alpha = int( toplevel->opacity() * 0xffff );
-    alpha_cached_opacity = toplevel->opacity();
+    col.alpha = int( opacity * 0xffff );
+    alpha_cached_opacity = opacity;
     XRenderFillRectangle( display(), PictOpSrc, alpha, &col, 0, 0, 1, 1 );
     return alpha;
     }
 
-void SceneXrender::Window::performPaint( QRegion region, int mask )
+void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintData data )
     {
+    bool opaque = isOpaque() && data.opacity == 1.0;
     if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
         {}
     else if( mask & PAINT_WINDOW_OPAQUE )
         {
-        if( !isOpaque())
+        if( !opaque )
             return;
         }
     else if( mask & PAINT_WINDOW_TRANSLUCENT )
         {
-        if( isOpaque())
+        if( opaque )
             return;
         }
     if( region != infiniteRegion())
@@ -337,14 +338,20 @@ void SceneXrender::Window::performPaint( QRegion region, int mask )
         x += screen_paint.xTranslate;
         y += screen_paint.yTranslate;
         }
-    if( isOpaque())
+    if( mask & PAINT_WINDOW_TRANSFORMED )
+        {
+        x += data.xTranslate;
+        y += data.yTranslate;
+        }
+    // TODO xScale,yScale
+    if( opaque )
         {
         XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
             x, y, toplevel->width(), toplevel->height());
         }
     else
         {
-        Picture alpha = alphaMask();
+        Picture alpha = alphaMask( data.opacity );
         XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
             x, y, toplevel->width(), toplevel->height());
         }

@@ -57,14 +57,25 @@ void Effect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPain
     effects->nextPaintWindow( w, mask, region, data );
     }
 
-#if 0
-void MakeHalfTransparent::transformWindow( Toplevel* c, Matrix&, EffectData& data )
+void MakeHalfTransparent::prePaintWindow( Scene::Window* w, int* mask, QRegion* region )
     {
-    if( c->isDialog())
+    const Client* c = dynamic_cast< const Client* >( w->window());
+    if(( c != NULL && ( c->isMove() || c->isResize())) || w->window()->isDialog())
+        {
+        *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
+        *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+        }
+    effects->nextPrePaintWindow( w, mask, region );
+    }
+
+void MakeHalfTransparent::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    const Client* c = dynamic_cast< const Client* >( w->window());
+    if( w->window()->isDialog())
         data.opacity *= 0.8;
-    if( Client* c2 = dynamic_cast< Client* >( c ))
-        if( c2->isMove() || c2->isResize())
-            data.opacity *= 0.5;
+    if( c->isMove() || c->isResize())
+        data.opacity *= 0.5;
+    effects->nextPaintWindow( w, mask, region, data );
     }
 
 void MakeHalfTransparent::windowUserMovedResized( Toplevel* c, bool first, bool last )
@@ -81,14 +92,25 @@ ShakyMove::ShakyMove()
 static const int shaky_diff[] = { 0, 1, 2, 3, 2, 1, 0, -1, -2, -3, -2, -1 };
 static const int SHAKY_MAX = sizeof( shaky_diff ) / sizeof( shaky_diff[ 0 ] );
 
-void ShakyMove::transformWindow( Toplevel* c, Matrix& matrix, EffectData& )
+void ShakyMove::prePaintScreen( int* mask, QRegion* region )
     {
-    if( windows.contains( c ))
-        {
-        Matrix m;
-        m.m[ 0 ][ 3 ] = shaky_diff[ windows[ c ]];
-        matrix *= m;
-        }
+    if( !windows.isEmpty())
+        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+    effects->nextPrePaintScreen( mask, region );
+    }
+
+void ShakyMove::prePaintWindow( Scene::Window* w, int* mask, QRegion* region )
+    {
+    if( windows.contains( w->window()))
+        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+    effects->nextPrePaintWindow( w, mask, region );
+    }
+
+void ShakyMove::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    if( windows.contains( w->window()))
+        data.xTranslate += shaky_diff[ windows[ w->window() ]];
+    effects->nextPaintWindow( w, mask, region, data );
     }
 
 void ShakyMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
@@ -102,8 +124,8 @@ void ShakyMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
     else if( last )
         {
         windows.remove( c );
-        // TODO just damage whole screen, transformation is involved
-        c->workspace()->addDamage( c->geometry().adjusted( -3, 7, 0, 0 ));
+        // just damage whole screen, transformation is involved
+        c->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
         if( windows.isEmpty())
             timer.stop();
         }
@@ -118,7 +140,7 @@ void ShakyMove::windowDeleted( Toplevel* c )
 
 void ShakyMove::tick()
     {
-    for( QMap< Toplevel*, int >::Iterator it = windows.begin();
+    for( QMap< const Toplevel*, int >::Iterator it = windows.begin();
          it != windows.end();
          ++it )
         {
@@ -126,11 +148,12 @@ void ShakyMove::tick()
             *it = 0;
         else
             ++(*it);
-        // TODO damage whole screen, transformation is involved
-        it.key()->workspace()->addDamage( it.key()->geometry().adjusted( -1, 2, 0, 0 ));
+        // just damage whole screen, transformation is involved
+        it.key()->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
         }
     }
 
+#if 0
 void GrowMove::transformWindow( Toplevel* c, Matrix& matrix, EffectData& )
     {
     if( Client* c2 = dynamic_cast< Client* >( c ))
@@ -191,8 +214,8 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
-//    effects.append( new MakeHalfTransparent );
-//    effects.append( new ShakyMove );
+    effects.append( new MakeHalfTransparent );
+    effects.append( new ShakyMove );
 //    effects.append( new GrowMove );
 //    effects.append( new ShiftWorkspaceUp( ws ));
     }

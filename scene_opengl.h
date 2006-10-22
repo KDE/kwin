@@ -57,7 +57,7 @@ class SceneOpenGL::Window
     public:
         Window( Toplevel* c );
         virtual void free();
-        virtual void performPaint( QRegion region, int mask );
+        virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         void bindTexture();
         void discardTexture();
         Window() {} // QMap sucks even in Qt4
