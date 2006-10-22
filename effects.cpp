@@ -214,8 +214,8 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
-    effects.append( new MakeHalfTransparent );
-    effects.append( new ShakyMove );
+//    effects.append( new MakeHalfTransparent );
+//    effects.append( new ShakyMove );
 //    effects.append( new GrowMove );
 //    effects.append( new ShiftWorkspaceUp( ws ));
     }
