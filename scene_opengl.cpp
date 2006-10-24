@@ -399,9 +399,9 @@ void SceneOpenGL::Window::bindTexture()
     bool copy_buffer = (( alpha_clear && alpha_clear_copy ) || copy_buffer_hack );
     if( copy_buffer )
         {
-        Pixmap p2 = XCreatePixmap( display(), pix, c->width(), c->height(), toplevel->depth());
+        Pixmap p2 = XCreatePixmap( display(), pix, toplevel->width(), toplevel->height(), toplevel->depth());
         GC gc = XCreateGC( display(), pix, 0, NULL );
-        XCopyArea( display(), pix, p2, gc, 0, 0, c->width(), c->height(), 0, 0 );
+        XCopyArea( display(), pix, p2, gc, 0, 0, toplevel->width(), toplevel->height(), 0, 0 );
         pix = p2;
         XFreeGC( display(), gc );
         }
