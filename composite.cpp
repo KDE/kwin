@@ -51,8 +51,9 @@ void Workspace::setupCompositing()
         default:
           kDebug() << "No compositing" << endl;
           return;
-        }    
+        }
     compositeTimer.start( 20 );
+    lastCompositePaint.start();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     if( dynamic_cast< SceneOpenGL* >( scene ))
         kDebug() << "OpenGL compositing" << endl;
@@ -121,6 +122,13 @@ void Workspace::compositeTimeout()
     {
     if( damage_region.isEmpty()) // no damage
         return;
+    // The event loop apparently tries to fire a QTimer as often as possible, even
+    // at the expense of not processing many X events. This means that the composite
+    // repaints can seriously impact performance of everything else, therefore throttle
+    // them - leave at least 5msec time after one repaint is finished and next one
+    // is started.
+    if( lastCompositePaint.elapsed() < 5 )
+        return;
     ToplevelList windows;
     Window* children;
     unsigned int children_count;
@@ -142,6 +150,7 @@ void Workspace::compositeTimeout()
     foreach( Toplevel* c, windows )
         c->resetDamage();
     damage_region = QRegion();
+    lastCompositePaint.start();
     }
 
 //****************************************

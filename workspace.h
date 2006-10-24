@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QCursor>
 #include <netwm.h>
 #include <kxmessages.h>
+#include <qdatetime.h>
 
 #include "utils.h"
 #include "kdecoration.h"
@@ -669,6 +670,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
         QTimer compositeTimer;
+        QTime lastCompositePaint;
         QRegion damage_region;
         QSlider *transSlider;
         QPushButton *transButton;
