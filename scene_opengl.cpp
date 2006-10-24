@@ -277,16 +277,8 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glClear( GL_COLOR_BUFFER_BIT );
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
-    int mask = ( damage == QRegion( 0, 0, displayWidth(), displayHeight()))
-        ? 0 : PAINT_SCREEN_REGION;
-    WrapperEffect wrapper;
-    // preparation step
-    effects->prePaintScreen( &mask, &damage, &wrapper );
-    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
-        mask &= ~PAINT_SCREEN_REGION;
-    // TODO call also prePaintWindow() for all windows
-    ScreenPaintData data;
-    effects->paintScreen( mask, damage, data, &wrapper );
+    int mask = 0;
+    paintScreen( &mask, &damage );
     stacking_order.clear();
     glPopMatrix();
     // TODO only partial repaint for mask & PAINT_SCREEN_REGION

@@ -41,6 +41,21 @@ Scene::~Scene()
     {
     }
 
+// returns mask and possibly modified region
+void Scene::paintScreen( int* mask, QRegion* region )
+    {
+    *mask = ( *region == QRegion( 0, 0, displayWidth(), displayHeight()))
+        ? 0 : PAINT_SCREEN_REGION;
+    WrapperEffect wrapper;
+    // preparation step
+    effects->prePaintScreen( mask, region, &wrapper );
+    if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
+        *mask &= ~PAINT_SCREEN_REGION;
+    // TODO call also prePaintWindow() for all windows
+    ScreenPaintData data;
+    effects->paintScreen( *mask, *region, data, &wrapper );
+    }
+
 void Scene::WrapperEffect::prePaintScreen( int*, QRegion* )
     {
     // nothing, no changes

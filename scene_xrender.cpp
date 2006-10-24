@@ -84,16 +84,8 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         assert( windows.contains( c ));
         stacking_order.append( &windows[ c ] );
         }
-    int mask = ( damage == QRegion( 0, 0, displayWidth(), displayHeight()))
-        ? 0 : PAINT_SCREEN_REGION;
-    WrapperEffect wrapper;
-    // preparation step
-    effects->prePaintScreen( &mask, &damage, &wrapper );
-    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
-        mask &= ~PAINT_SCREEN_REGION;
-    // TODO call also prePaintWindow() for all windows
-    ScreenPaintData data;
-    effects->paintScreen( mask, damage, data, &wrapper );
+    int mask = 0;
+    paintScreen( &mask, &damage );
     stacking_order.clear();
     if( mask & PAINT_SCREEN_REGION )
         {

@@ -46,6 +46,7 @@ class Scene
             PAINT_SCREEN_TRANSFORMED    = 1 << 4
             };
     protected:
+        void paintScreen( int* mask, QRegion* region );
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
         virtual void paintSimpleScreen( int mask, QRegion region );
         virtual void paintBackground( QRegion region ) = 0;
