@@ -81,7 +81,7 @@ void MakeHalfTransparent::paintWindow( Scene::Window* w, int mask, QRegion regio
 void MakeHalfTransparent::windowUserMovedResized( Toplevel* c, bool first, bool last )
     {
     if( first || last )
-        c->addDamage( c->rect());
+        c->addDamageFull();
     }
 
 ShakyMove::ShakyMove()
@@ -125,7 +125,7 @@ void ShakyMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
         {
         windows.remove( c );
         // just damage whole screen, transformation is involved
-        c->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
+        c->workspace()->addDamageFull();
         if( windows.isEmpty())
             timer.stop();
         }
@@ -149,7 +149,7 @@ void ShakyMove::tick()
         else
             ++(*it);
         // just damage whole screen, transformation is involved
-        it.key()->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
+        it.key()->workspace()->addDamageFull();
         }
     }
 
@@ -191,13 +191,13 @@ void ShiftWorkspaceUp::prePaintScreen( int* mask, QRegion* region, int time )
         {
         diff = qBound( 0, diff + time, 1000 ); // KDE3: note this differs from KCLAMP
         if( diff < 1000 )
-            wspace->addDamage( 0, 0, displayWidth(), displayHeight()); // affects next redraw
+            wspace->addDamageFull(); // affects next redraw
         }
     if( !up && diff > 0 )
         {
         diff = qBound( 0, diff - time, 1000 );
         if( diff > 0 )
-            wspace->addDamage( 0, 0, displayWidth(), displayHeight()); // affects next redraw
+            wspace->addDamageFull(); // affects next redraw
         }
     if( diff != 0 )
         *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
@@ -214,7 +214,7 @@ void ShiftWorkspaceUp::paintScreen( int mask, QRegion region, ScreenPaintData& d
 void ShiftWorkspaceUp::tick()
     {
     up = !up;
-    wspace->addDamage( 0, 0, displayWidth(), displayHeight());
+    wspace->addDamageFull();
     }
 
 
@@ -229,7 +229,7 @@ void FadeIn::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int t
             *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
             // TODO this should just damage the window, but right now window
             // damage is cleared after the painting pass - a postpaint pass is needed
-            w->window()->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
+            w->window()->workspace()->addDamageFull();
             }
         else
             windows.remove( w->window());
@@ -252,7 +252,7 @@ void FadeIn::windowAdded( Toplevel* c )
     if( cc == NULL || cc->isOnCurrentDesktop())
         {
         windows[ c ] = 0;
-        c->addDamage( c->rect());
+        c->addDamageFull();
         }
     }
 
@@ -272,7 +272,7 @@ void ScaleIn::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int 
             *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
             // TODO this should just damage the window, but right now window
             // damage is cleared after the painting pass - a postpaint pass is needed
-            w->window()->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
+            w->window()->workspace()->addDamageFull();
             }
         else
             windows.remove( w->window());
@@ -298,7 +298,7 @@ void ScaleIn::windowAdded( Toplevel* c )
     if( cc == NULL || cc->isOnCurrentDesktop())
         {
         windows[ c ] = 0;
-        c->addDamage( c->rect());
+        c->addDamageFull();
         }
     }
 

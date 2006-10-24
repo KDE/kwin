@@ -286,6 +286,7 @@ class Workspace : public QObject, public KDecorationDefines
         
         void addDamage( const QRect& r );
         void addDamage( int x, int y, int w, int h );
+        void addDamageFull();
 
     public slots:
         void refresh();

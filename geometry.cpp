@@ -1686,7 +1686,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    addDamage( rect());
+    addDamageFull();
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1743,7 +1743,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     // TODO add damage only in added area?
-    addDamage( rect());
+    addDamageFull();
     }
 
 /*!

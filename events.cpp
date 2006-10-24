@@ -577,7 +577,7 @@ bool Client::windowEvent( XEvent* e )
             {
             if( compositing())
                 {
-                addDamage( rect());
+                addDamageFull();
                 scene->windowOpacityChanged( this );
                 }
             else
@@ -1613,7 +1613,7 @@ bool Unmanaged::windowEvent( XEvent* e )
     if( dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
         {
         scene->windowOpacityChanged( this );
-        addDamage( rect());
+        addDamageFull();
         }
     switch (e->type) 
         {
@@ -1657,7 +1657,7 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     workspace()->addDamage( geometry());
     geom = QRect( e->x, e->y, e->width, e->height );
     // TODO maybe only damage changed area
-    addDamage( rect());
+    addDamageFull();
     }
 
 // ****************************************

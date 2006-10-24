@@ -63,6 +63,7 @@ class Toplevel
         void finishCompositing();
         void addDamage( const QRect& r );
         void addDamage( int x, int y, int w, int h );
+        void addDamageFull();
         QRegion damage() const;
         void resetDamage();
     protected:

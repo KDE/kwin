@@ -62,7 +62,7 @@ void Workspace::setupCompositing()
     else if( dynamic_cast< SceneBasic* >( scene ))
         kDebug() << "X compositing" << endl;
     effects = new EffectsHandler( this );
-    addDamage( 0, 0, displayWidth(), displayHeight());
+    addDamageFull();
     foreach( Client* c, clients )
         c->setupCompositing();
     foreach( Unmanaged* c, unmanaged )
@@ -116,6 +116,13 @@ void Workspace::addDamage( const QRect& r )
     if( !compositing())
         return;
     damage_region += r;
+    }
+    
+void Workspace::addDamageFull()
+    {
+    if( !compositing())
+        return;
+    damage_region = QRegion( 0, 0, displayWidth(), displayHeight());
     }
 
 void Workspace::compositeTimeout()
@@ -208,6 +215,11 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     // is actually visible there and not obscured by something, but I guess
     // that's not really worth it
     workspace()->addDamage( r );
+    }
+
+void Toplevel::addDamageFull()
+    {
+    addDamage( rect());
     }
 
 void Toplevel::resetDamage()
