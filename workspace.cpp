@@ -44,6 +44,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "kwinadaptor.h"
 #include "unmanaged.h"
 #include "scene.h"
+#include "effects.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -489,6 +490,8 @@ Client* Workspace::createClient( Window w, bool is_mapped )
     addClient( c, Allowed );
     if( scene )
         scene->windowAdded( c );
+    if( effects )
+        effects->windowAdded( c );
     return c;
     }
 
@@ -503,6 +506,8 @@ Unmanaged* Workspace::createUnmanaged( Window w )
     addUnmanaged( c, Allowed );
     if( scene )
         scene->windowAdded( c );
+    if( effects )
+        effects->windowAdded( c );
     return c;
     }
 
@@ -571,6 +576,8 @@ void Workspace::removeClient( Client* c, allowed_t )
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
     if( scene )
         scene->windowDeleted( c );
+    if( effects )
+        effects->windowDeleted( c );
     clients.removeAll( c );
     desktops.removeAll( c );
     unconstrained_stacking_order.removeAll( c );
@@ -611,6 +618,8 @@ void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
     assert( unmanaged.contains( c ));
     if( scene )
         scene->windowDeleted( c );
+    if( effects )
+        effects->windowDeleted( c );
     unmanaged.removeAll( c );
     }
 

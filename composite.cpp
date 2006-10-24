@@ -120,8 +120,6 @@ void Workspace::addDamage( const QRect& r )
 
 void Workspace::compositeTimeout()
     {
-    if( damage_region.isEmpty()) // no damage
-        return;
     // The event loop apparently tries to fire a QTimer as often as possible, even
     // at the expense of not processing many X events. This means that the composite
     // repaints can seriously impact performance of everything else, therefore throttle
@@ -129,6 +127,11 @@ void Workspace::compositeTimeout()
     // is started.
     if( lastCompositePaint.elapsed() < 5 )
         return;
+    if( damage_region.isEmpty()) // no damage
+        {
+        scene->idle();
+        return;
+        }
     ToplevelList windows;
     Window* children;
     unsigned int children_count;
@@ -146,10 +149,12 @@ void Workspace::compositeTimeout()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
-    scene->paint( damage_region, windows );
+    // TODO when effects cause damage, it should be only enqueued for next repaint
+    QRegion r = damage_region;
+    damage_region = QRegion();
+    scene->paint( r, windows );
     foreach( Toplevel* c, windows )
         c->resetDamage();
-    damage_region = QRegion();
     lastCompositePaint.start();
     }
 

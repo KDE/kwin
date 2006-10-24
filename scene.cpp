@@ -8,11 +8,11 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include "scene_basic.h"
-#include "client.h"
+#include "scene.h"
 
 #include <X11/extensions/shape.h>
 
+#include "client.h"
 #include "effects.h"
 
 namespace KWinInternal
@@ -47,8 +47,9 @@ void Scene::paintScreen( int* mask, QRegion* region )
     *mask = ( *region == QRegion( 0, 0, displayWidth(), displayHeight()))
         ? 0 : PAINT_SCREEN_REGION;
     WrapperEffect wrapper;
+    updateTimeDiff();
     // preparation step
-    effects->prePaintScreen( mask, region, &wrapper );
+    effects->prePaintScreen( mask, region, time_diff, &wrapper );
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
         *mask &= ~PAINT_SCREEN_REGION;
     // TODO call also prePaintWindow() for all windows
@@ -56,7 +57,26 @@ void Scene::paintScreen( int* mask, QRegion* region )
     effects->paintScreen( *mask, *region, data, &wrapper );
     }
 
-void Scene::WrapperEffect::prePaintScreen( int*, QRegion* )
+void Scene::updateTimeDiff()
+    {
+    if( last_time.isNull())
+        {
+        // has been idle for some time, time_diff would be huge
+        time_diff = 0;
+        }
+    else
+        time_diff = last_time.elapsed();
+    if( time_diff < 0 )
+        time_diff = 0;
+    last_time.start();;
+    }
+
+void Scene::idle()
+    {
+    last_time = QTime();
+    }
+
+void Scene::WrapperEffect::prePaintScreen( int*, QRegion*, int )
     {
     // nothing, no changes
     }
@@ -83,7 +103,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         QRegion damage = infiniteRegion();
         WrapperEffect wrapper;
         // preparation step
-        effects->prePaintWindow( w, &mask, &damage, &wrapper );
+        effects->prePaintWindow( w, &mask, &damage, time_diff, &wrapper );
         paintWindow( w, mask, damage );
         }
     }
@@ -109,7 +129,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         QRegion damage = region;
         WrapperEffect wrapper;
         // preparation step
-        effects->prePaintWindow( w, &mask, &damage, &wrapper );
+        effects->prePaintWindow( w, &mask, &damage, time_diff, &wrapper );
         if( mask & PAINT_WINDOW_TRANSLUCENT )
             phase2.prepend( Phase2Data( w, region, mask ));
         if( mask & PAINT_WINDOW_OPAQUE )
@@ -131,7 +151,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         }
     }
 
-void Scene::WrapperEffect::prePaintWindow( Scene::Window* , int*, QRegion* )
+void Scene::WrapperEffect::prePaintWindow( Scene::Window* , int*, QRegion*, int )
     {
     // nothing, no changes
     }

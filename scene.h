@@ -11,6 +11,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
 
+#include <qdatetime.h>
+
 #include "toplevel.h"
 #include "utils.h"
 
@@ -45,6 +47,8 @@ class Scene
             PAINT_SCREEN_REGION         = 1 << 3,
             PAINT_SCREEN_TRANSFORMED    = 1 << 4
             };
+        // there's nothing to paint (adjust time_diff later)
+        void idle();
     protected:
         void paintScreen( int* mask, QRegion* region );
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
@@ -52,6 +56,7 @@ class Scene
         virtual void paintBackground( QRegion region ) = 0;
         virtual void paintWindow( Window* w, int mask, QRegion region );
         static QRegion infiniteRegion();
+        void updateTimeDiff();
         struct Phase2Data
             {
             Phase2Data( Window* w, QRegion r, int m ) : window( w ), region( r ), mask( m ) {}
@@ -60,6 +65,8 @@ class Scene
             int mask;
             };
         QVector< Window* > stacking_order;
+        int time_diff;
+        QTime last_time;
         Workspace* wspace;
         class WrapperEffect;
     };

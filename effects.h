@@ -48,9 +48,9 @@ class Effect
     {
     public:
         virtual ~Effect();
-        virtual void prePaintScreen( int* mask, QRegion* region );
+        virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
@@ -64,14 +64,14 @@ class EffectsHandler
         EffectsHandler( Workspace* ws );
         ~EffectsHandler();
         // for use by effects
-        void nextPrePaintScreen( int* mask, QRegion* region );
+        void nextPrePaintScreen( int* mask, QRegion* region, int time );
         void nextPaintScreen( int mask, QRegion region, ScreenPaintData& data );
-        void nextPrePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        void nextPrePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         void nextPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         // internal (used by kwin core or compositing code)
-        void prePaintScreen( int* mask, QRegion* region, Effect* final );
+        void prePaintScreen( int* mask, QRegion* region, int time, Effect* final );
         void paintScreen( int mask, QRegion region, ScreenPaintData& data, Effect* final );
-        void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, Effect* final );
+        void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time, Effect* final );
         void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data, Effect* final );
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowAdded( Toplevel* c );
@@ -89,7 +89,7 @@ class MakeHalfTransparent
     {
     public:
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
     };
 
@@ -100,8 +100,8 @@ class ShakyMove
     public:
         ShakyMove();
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void prePaintScreen( int* mask, QRegion* region );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void prePaintScreen( int* mask, QRegion* region, int time );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowDeleted( Toplevel* c );
     private slots:
@@ -127,14 +127,41 @@ class ShiftWorkspaceUp
     Q_OBJECT
     public:
         ShiftWorkspaceUp( Workspace* ws );
-        virtual void prePaintScreen( int* mask, QRegion* region );
+        virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
     private slots:
         void tick();
     private:
         QTimer timer;
         bool up;
+        int diff;
         Workspace* wspace;
+    };
+
+class FadeIn
+    : public Effect
+    {
+    public:
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        // TODO react also on virtual desktop changes
+        virtual void windowAdded( Toplevel* c );
+        virtual void windowDeleted( Toplevel* c );
+    private:
+        QMap< const Toplevel*, double > windows;
+    };
+
+class ScaleIn
+    : public Effect
+    {
+    public:
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        // TODO react also on virtual desktop changes
+        virtual void windowAdded( Toplevel* c );
+        virtual void windowDeleted( Toplevel* c );
+    private:
+        QMap< const Toplevel*, double > windows;
     };
 
 // a special effect that is last in the order that'll actually call the painting functions
@@ -144,9 +171,9 @@ class Scene::WrapperEffect
     {
     public:
         virtual ~WrapperEffect();
-        virtual void prePaintScreen( int* mask, QRegion* region );
+        virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region );
+        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
     };
 

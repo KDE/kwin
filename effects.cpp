@@ -37,9 +37,9 @@ void Effect::windowDeleted( Toplevel* )
     {
     }
 
-void Effect::prePaintScreen( int* mask, QRegion* region )
+void Effect::prePaintScreen( int* mask, QRegion* region, int time )
     {
-    effects->nextPrePaintScreen( mask, region );
+    effects->nextPrePaintScreen( mask, region, time );
     }
 
 void Effect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -47,9 +47,9 @@ void Effect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     effects->nextPaintScreen( mask, region, data );
     }
 
-void Effect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region )
+void Effect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
     {
-    effects->nextPrePaintWindow( w, mask, region );
+    effects->nextPrePaintWindow( w, mask, region, time );
     }
 
 void Effect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
@@ -57,7 +57,7 @@ void Effect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPain
     effects->nextPaintWindow( w, mask, region, data );
     }
 
-void MakeHalfTransparent::prePaintWindow( Scene::Window* w, int* mask, QRegion* region )
+void MakeHalfTransparent::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
     {
     const Client* c = dynamic_cast< const Client* >( w->window());
     if(( c != NULL && ( c->isMove() || c->isResize())) || w->window()->isDialog())
@@ -65,7 +65,7 @@ void MakeHalfTransparent::prePaintWindow( Scene::Window* w, int* mask, QRegion* 
         *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
         *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
         }
-    effects->nextPrePaintWindow( w, mask, region );
+    effects->nextPrePaintWindow( w, mask, region, time );
     }
 
 void MakeHalfTransparent::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
@@ -92,18 +92,18 @@ ShakyMove::ShakyMove()
 static const int shaky_diff[] = { 0, 1, 2, 3, 2, 1, 0, -1, -2, -3, -2, -1 };
 static const int SHAKY_MAX = sizeof( shaky_diff ) / sizeof( shaky_diff[ 0 ] );
 
-void ShakyMove::prePaintScreen( int* mask, QRegion* region )
+void ShakyMove::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( !windows.isEmpty())
         *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-    effects->nextPrePaintScreen( mask, region );
+    effects->nextPrePaintScreen( mask, region, time );
     }
 
-void ShakyMove::prePaintWindow( Scene::Window* w, int* mask, QRegion* region )
+void ShakyMove::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
     {
     if( windows.contains( w->window()))
         *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-    effects->nextPrePaintWindow( w, mask, region );
+    effects->nextPrePaintWindow( w, mask, region, time );
     }
 
 void ShakyMove::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
@@ -178,23 +178,36 @@ void GrowMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
 
 ShiftWorkspaceUp::ShiftWorkspaceUp( Workspace* ws )
     : up( false )
+    , diff( 0 )
     , wspace( ws )
     {
     connect( &timer, SIGNAL( timeout()), SLOT( tick()));
     timer.start( 2000 );
     }
 
-void ShiftWorkspaceUp::prePaintScreen( int* mask, QRegion* region )
+void ShiftWorkspaceUp::prePaintScreen( int* mask, QRegion* region, int time )
     {
-    if( up )
+    if( up && diff < 1000 )
+        {
+        diff = qBound( 0, diff + time, 1000 ); // KDE3: note this differs from KCLAMP
+        if( diff < 1000 )
+            wspace->addDamage( 0, 0, displayWidth(), displayHeight()); // affects next redraw
+        }
+    if( !up && diff > 0 )
+        {
+        diff = qBound( 0, diff - time, 1000 );
+        if( diff > 0 )
+            wspace->addDamage( 0, 0, displayWidth(), displayHeight()); // affects next redraw
+        }
+    if( diff != 0 )
         *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
-    effects->nextPrePaintScreen( mask, region );
+    effects->nextPrePaintScreen( mask, region, time );
     }
 
 void ShiftWorkspaceUp::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( up )
-        data.yTranslate -= 10;
+    if( diff != 0 )
+        data.yTranslate -= diff / 100;
     effects->nextPaintScreen( mask, region, data );
     }
 
@@ -202,6 +215,96 @@ void ShiftWorkspaceUp::tick()
     {
     up = !up;
     wspace->addDamage( 0, 0, displayWidth(), displayHeight());
+    }
+
+
+void FadeIn::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+    {
+    if( windows.contains( w->window()))
+        {
+        windows[ w->window() ] += time / 1000.; // complete change in 1000ms
+        if( windows[ w->window() ] < 1 )
+            {
+            *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
+            *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+            // TODO this should just damage the window, but right now window
+            // damage is cleared after the painting pass - a postpaint pass is needed
+            w->window()->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
+            }
+        else
+            windows.remove( w->window());
+        }
+    effects->nextPrePaintWindow( w, mask, region, time );
+    }
+
+void FadeIn::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    if( windows.contains( w->window()))
+        {
+        data.opacity *= windows[ w->window()];
+        }
+    effects->nextPaintWindow( w, mask, region, data );
+    }
+
+void FadeIn::windowAdded( Toplevel* c )
+    {
+    Client* cc = dynamic_cast< Client* >( c );
+    if( cc == NULL || cc->isOnCurrentDesktop())
+        {
+        windows[ c ] = 0;
+        c->addDamage( c->rect());
+        }
+    }
+
+void FadeIn::windowDeleted( Toplevel* c )
+    {
+    windows.remove( c );
+    }
+
+
+void ScaleIn::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+    {
+    if( windows.contains( w->window()))
+        {
+        windows[ w->window() ] += time / 500.; // complete change in 500ms
+        if( windows[ w->window() ] < 1 )
+            {
+            *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+            // TODO this should just damage the window, but right now window
+            // damage is cleared after the painting pass - a postpaint pass is needed
+            w->window()->workspace()->addDamage( 0, 0, displayWidth(), displayHeight());
+            }
+        else
+            windows.remove( w->window());
+        }
+    effects->nextPrePaintWindow( w, mask, region, time );
+    }
+
+void ScaleIn::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    if( windows.contains( w->window()))
+        {
+        data.xScale *= windows[ w->window()];
+        data.yScale *= windows[ w->window()];
+        data.xTranslate += w->window()->width() / 2 * ( 1 - windows[ w->window()] );
+        data.yTranslate += w->window()->height() / 2 * ( 1 - windows[ w->window()] );
+        }
+    effects->nextPaintWindow( w, mask, region, data );
+    }
+
+void ScaleIn::windowAdded( Toplevel* c )
+    {
+    Client* cc = dynamic_cast< Client* >( c );
+    if( cc == NULL || cc->isOnCurrentDesktop())
+        {
+        windows[ c ] = 0;
+        c->addDamage( c->rect());
+        }
+    }
+
+void ScaleIn::windowDeleted( Toplevel* c )
+    {
+    windows.remove( c );
     }
 
 //****************************************
@@ -218,6 +321,8 @@ EffectsHandler::EffectsHandler( Workspace* ws )
 //    effects.append( new ShakyMove );
 //    effects.append( new GrowMove );
 //    effects.append( new ShiftWorkspaceUp( ws ));
+    effects.append( new FadeIn );
+    effects.append( new ScaleIn );
     }
 
 EffectsHandler::~EffectsHandler()
@@ -244,11 +349,11 @@ void EffectsHandler::windowDeleted( Toplevel* c )
         e->windowDeleted( c );
     }
 
-void EffectsHandler::prePaintScreen( int* mask, QRegion* region, Effect* final )
+void EffectsHandler::prePaintScreen( int* mask, QRegion* region, int time, Effect* final )
     {
     assert( current_paint_screen == 0 );
     effects.append( final );
-    nextPrePaintScreen( mask, region );
+    nextPrePaintScreen( mask, region, time );
     effects.pop_back();
     }
 
@@ -260,11 +365,11 @@ void EffectsHandler::paintScreen( int mask, QRegion region, ScreenPaintData& dat
     effects.pop_back();
     }
 
-void EffectsHandler::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, Effect* final )
+void EffectsHandler::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time, Effect* final )
     {
     assert( current_paint_window == 0 );
     effects.append( final );
-    nextPrePaintWindow( w, mask, region );
+    nextPrePaintWindow( w, mask, region, time );
     effects.pop_back();
     }
 
@@ -277,9 +382,9 @@ void EffectsHandler::paintWindow( Scene::Window* w, int mask, QRegion region, Wi
     }
 
 // the idea is that effects call this function again which calls the next one
-void EffectsHandler::nextPrePaintScreen( int* mask, QRegion* region )
+void EffectsHandler::nextPrePaintScreen( int* mask, QRegion* region, int time )
     {
-    effects[ current_paint_screen++ ]->prePaintScreen( mask, region );
+    effects[ current_paint_screen++ ]->prePaintScreen( mask, region, time );
     --current_paint_screen;
     }
 
@@ -289,9 +394,9 @@ void EffectsHandler::nextPaintScreen( int mask, QRegion region, ScreenPaintData&
     --current_paint_screen;
     }
 
-void EffectsHandler::nextPrePaintWindow( Scene::Window* w, int* mask, QRegion* region )
+void EffectsHandler::nextPrePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
     {
-    effects[ current_paint_window++ ]->prePaintWindow( w, mask, region );
+    effects[ current_paint_window++ ]->prePaintWindow( w, mask, region, time );
     --current_paint_window;
     }
 
