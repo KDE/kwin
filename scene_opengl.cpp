@@ -554,9 +554,10 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         {
         x += data.xTranslate;
         y += data.yTranslate;
-        glScalef( data.xScale, data.yScale, 1 );
         }
     glTranslatef( x, y, 0 );
+    if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
+        glScalef( data.xScale, data.yScale, 1 );
     bool was_blend = glIsEnabled( GL_BLEND );
     if( !opaque )
         {
