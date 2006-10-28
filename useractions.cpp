@@ -309,12 +309,12 @@ void Workspace::readShortcuts()
     {
     KGlobalAccel::self()->readSettings();
 
-    cutWalkThroughDesktops = keys->action("Walk Through Desktops")->shortcut();
-    cutWalkThroughDesktopsReverse = keys->action("Walk Through Desktops (Reverse)")->shortcut();
-    cutWalkThroughDesktopList = keys->action("Walk Through Desktop List")->shortcut();
-    cutWalkThroughDesktopListReverse = keys->action("Walk Through Desktop List (Reverse)")->shortcut();
-    cutWalkThroughWindows = keys->action("Walk Through Windows")->shortcut();
-    cutWalkThroughWindowsReverse = keys->action("Walk Through Windows (Reverse)")->shortcut();
+    cutWalkThroughDesktops = keys->action("Walk Through Desktops")->globalShortcut();
+    cutWalkThroughDesktopsReverse = keys->action("Walk Through Desktops (Reverse)")->globalShortcut();
+    cutWalkThroughDesktopList = keys->action("Walk Through Desktop List")->globalShortcut();
+    cutWalkThroughDesktopListReverse = keys->action("Walk Through Desktop List (Reverse)")->globalShortcut();
+    cutWalkThroughWindows = keys->action("Walk Through Windows")->globalShortcut();
+    cutWalkThroughWindowsReverse = keys->action("Walk Through Windows (Reverse)")->globalShortcut();
 
     delete popup;
     popup = NULL; // so that it's recreated next time
