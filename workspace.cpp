@@ -42,9 +42,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "group.h"
 #include "rules.h"
 #include "kwinadaptor.h"
-#include "unmanaged.h"
-#include "scene.h"
-#include "effects.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -125,8 +122,7 @@ Workspace::Workspace( bool restore )
     topmenu_space( NULL ),
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
-    forced_global_mouse_grab( false ),
-    damage_region( None )
+    forced_global_mouse_grab( false )
     {
     new KWinAdaptor( "org.kde.kwin", "/KWin", QDBusConnection::sessionBus(), this );
 
@@ -170,12 +166,10 @@ Workspace::Workspace( bool restore )
                  ColormapChangeMask |
                  SubstructureRedirectMask |
                  SubstructureNotifyMask |
-                 FocusChangeMask | // for NotifyDetailNone
-                 ExposureMask
+                 FocusChangeMask // for NotifyDetailNone
                  );
 
-    Extensions::init();
-    setupCompositing();
+    Shape::init();
 
     // compatibility
     long data = 1;
@@ -324,7 +318,6 @@ void Workspace::init()
     connect(&reconfigureTimer, SIGNAL(timeout()), this,
             SLOT(slotReconfigure()));
     connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
-    connect( &compositeTimer, SIGNAL( timeout()), SLOT( compositeTimeout()));
 
     connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this,
             SLOT(slotReconfigure()));
@@ -362,11 +355,7 @@ void Workspace::init()
             XWindowAttributes attr;
             XGetWindowAttributes(display(), wins[i], &attr);
             if (attr.override_redirect )
-                {
-                if( attr.map_state != IsUnmapped && attr.c_class != InputOnly && compositing())
-                    createUnmanaged( wins[ i ] );
                 continue;
-                }
             if( topmenu_space && topmenu_space->winId() == wins[ i ] )
                 continue;
             if (attr.map_state != IsUnmapped)
@@ -429,7 +418,6 @@ void Workspace::init()
 
 Workspace::~Workspace()
     {
-    finishCompositing();
     blockStackingUpdates( true );
 // TODO    grabXServer();
     // use stacking_order, so that kwin --replace keeps stacking order
@@ -441,10 +429,6 @@ Workspace::~Workspace()
         (*it)->releaseWindow( true );
         // no removeClient() is called !
         }
-    for( UnmanagedList::ConstIterator it = unmanaged.begin();
-         it != unmanaged.end();
-         ++it )
-        (*it)->release();
     delete desktop_widget;
     delete tab_box;
     delete popupinfo;
@@ -488,26 +472,6 @@ Client* Workspace::createClient( Window w, bool is_mapped )
         return NULL;
         }
     addClient( c, Allowed );
-    if( scene )
-        scene->windowAdded( c );
-    if( effects )
-        effects->windowAdded( c );
-    return c;
-    }
-
-Unmanaged* Workspace::createUnmanaged( Window w )
-    {
-    Unmanaged* c = new Unmanaged( this );
-    if( !c->track( w ))
-        {
-        Unmanaged::deleteUnmanaged( c, Allowed );
-        return NULL;
-        }
-    addUnmanaged( c, Allowed );
-    if( scene )
-        scene->windowAdded( c );
-    if( effects )
-        effects->windowAdded( c );
     return c;
     }
 
@@ -550,11 +514,6 @@ void Workspace::addClient( Client* c, allowed_t )
         updateToolWindows( true );
     }
 
-void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
-    {
-    unmanaged.append( c );
-    }
-
 /*
   Destroys the client \a c
  */
@@ -574,10 +533,6 @@ void Workspace::removeClient( Client* c, allowed_t )
         Notify::raise( Notify::Delete );
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
-    if( scene )
-        scene->windowDeleted( c );
-    if( effects )
-        effects->windowDeleted( c );
     clients.removeAll( c );
     desktops.removeAll( c );
     unconstrained_stacking_order.removeAll( c );
@@ -611,16 +566,6 @@ void Workspace::removeClient( Client* c, allowed_t )
        tab_box->repaint();
 
     updateClientArea();
-    }
-
-void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
-    {
-    assert( unmanaged.contains( c ));
-    if( scene )
-        scene->windowDeleted( c );
-    if( effects )
-        effects->windowDeleted( c );
-    unmanaged.removeAll( c );
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )
@@ -919,7 +864,7 @@ void Workspace::slotSettingsChanged(int category)
 /*!
   Reread settings
  */
-KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes() );
+KWIN_PROCEDURE( CheckBorderSizesProcedure, cl->checkBorderSizes() );
 
 void Workspace::slotReconfigure()
     {
@@ -976,11 +921,6 @@ void Workspace::slotReconfigure()
         updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
-        
-    if( options->useTranslucency )
-        setupCompositing();
-    else
-        finishCompositing();
 
     loadWindowRules();
     for( ClientList::Iterator it = clients.begin();
@@ -1682,7 +1622,7 @@ void Workspace::slotGrabWindow()
         QPixmap snapshot = QPixmap::grabWindow( active_client->frameId() );
 
 	//No XShape - no work.
-        if( Extensions::shapeAvailable())
+        if( Shape::available())
             {
 	    //As the first step, get the mask from XShape.
             int count, order;
@@ -2395,7 +2335,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         {
         KAction* action = keys->action( "Window Operations Menu" );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
-            .arg( action->shortcut().seq( 0 ).toString());
+            .arg( action->globalShortcut().seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window without its border.\n"
                     "Without the border, you will not be able to enable the border "
@@ -2408,7 +2348,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         {
         KAction* action = keys->action( "Window Operations Menu" );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
-            .arg( action->shortcut().seq( 0 ).toString());
+            .arg( action->globalShortcut().seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window in fullscreen mode.\n"
                     "If the application itself does not have an option to turn the fullscreen "

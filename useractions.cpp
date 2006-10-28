@@ -61,30 +61,30 @@ QMenu* Workspace::clientPopup()
 
         mKeepAboveOpAction = advanced_popup->addAction( i18n("Keep &Above Others") );
         mKeepAboveOpAction->setIcon( SmallIconSet( "up" ) );
-        mKeepAboveOpAction->setShortcut( keys->action("Window Above Other Windows")->shortcut() );
+        mKeepAboveOpAction->setShortcut( keys->action("Window Above Other Windows")->globalShortcut() );
         mKeepAboveOpAction->setCheckable( true );
         mKeepAboveOpAction->setData( Options::KeepAboveOp );
 
         mKeepBelowOpAction = advanced_popup->addAction( i18n("Keep &Below Others") );
         mKeepBelowOpAction->setIcon( SmallIconSet( "down" ) );
-        mKeepBelowOpAction->setShortcut( keys->action("Window Below Other Windows")->shortcut() );
+        mKeepBelowOpAction->setShortcut( keys->action("Window Below Other Windows")->globalShortcut() );
         mKeepBelowOpAction->setCheckable( true );
         mKeepBelowOpAction->setData( Options::KeepBelowOp );
 
         mFullScreenOpAction = advanced_popup->addAction( i18n("&Fullscreen") );
         mFullScreenOpAction->setIcon( SmallIconSet( "window_fullscreen" ) );
-        mFullScreenOpAction->setShortcut( keys->action("Window Fullscreen")->shortcut() );
+        mFullScreenOpAction->setShortcut( keys->action("Window Fullscreen")->globalShortcut() );
         mFullScreenOpAction->setCheckable( true );
         mFullScreenOpAction->setData( Options::FullScreenOp );
 
         mNoBorderOpAction = advanced_popup->addAction( i18n("&No Border") );
-        mNoBorderOpAction->setShortcut( keys->action("Window No Border")->shortcut() );
+        mNoBorderOpAction->setShortcut( keys->action("Window No Border")->globalShortcut() );
         mNoBorderOpAction->setCheckable( true );
         mNoBorderOpAction->setData( Options::NoBorderOp );
 
         QAction *action = advanced_popup->addAction( i18n("Window &Shortcut...") );
         action->setIcon( SmallIconSet("key_bindings") );
-        action->setShortcut( keys->action("Setup Window Shortcut")->shortcut() );
+        action->setShortcut( keys->action("Setup Window Shortcut")->globalShortcut() );
         action->setData( Options::SetupWindowShortcutOp );
 
         action = advanced_popup->addAction( i18n("&Special Window Settings...") );
@@ -123,24 +123,24 @@ QMenu* Workspace::clientPopup()
 
         mMoveOpAction = popup->addAction( i18n("&Move") );
         mMoveOpAction->setIcon( SmallIconSet( "move" ) );
-        mMoveOpAction->setShortcut( keys->action("Window Move")->shortcut() );
+        mMoveOpAction->setShortcut( keys->action("Window Move")->globalShortcut() );
         mMoveOpAction->setData( Options::MoveOp );
 
         mResizeOpAction = popup->addAction( i18n("Re&size") );
-        mResizeOpAction->setShortcut( keys->action("Window Resize")->shortcut() );
+        mResizeOpAction->setShortcut( keys->action("Window Resize")->globalShortcut() );
         mResizeOpAction->setData( Options::ResizeOp );
 
         mMinimizeOpAction = popup->addAction( i18n("Mi&nimize") );
-        mMinimizeOpAction->setShortcut( keys->action("Window Minimize")->shortcut() );
+        mMinimizeOpAction->setShortcut( keys->action("Window Minimize")->globalShortcut() );
         mMinimizeOpAction->setData( Options::MinimizeOp );
 
         mMaximizeOpAction = popup->addAction( i18n("Ma&ximize") );
-        mMaximizeOpAction->setShortcut( keys->action("Window Maximize")->shortcut() );
+        mMaximizeOpAction->setShortcut( keys->action("Window Maximize")->globalShortcut() );
         mMaximizeOpAction->setCheckable( true );
         mMaximizeOpAction->setData( Options::MaximizeOp );
 
         mShadeOpAction = popup->addAction( i18n("Sh&ade") );
-        mShadeOpAction->setShortcut( keys->action("Window Shade")->shortcut() );
+        mShadeOpAction->setShortcut( keys->action("Window Shade")->globalShortcut() );
         mShadeOpAction->setCheckable( true );
         mShadeOpAction->setData( Options::ShadeOp );
 
@@ -157,7 +157,7 @@ QMenu* Workspace::clientPopup()
 
         mCloseOpAction = popup->addAction( i18n("&Close") );
         mCloseOpAction->setIcon( SmallIconSet( "fileclose" ) );
-        mCloseOpAction->setShortcut( keys->action("Window Close")->shortcut() );
+        mCloseOpAction->setShortcut( keys->action("Window Close")->globalShortcut() );
         mCloseOpAction->setData( Options::CloseOp );
         }
     return popup;
