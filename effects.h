@@ -64,15 +64,12 @@ class EffectsHandler
         EffectsHandler( Workspace* ws );
         ~EffectsHandler();
         // for use by effects
-        void nextPrePaintScreen( int* mask, QRegion* region, int time );
-        void nextPaintScreen( int mask, QRegion region, ScreenPaintData& data );
-        void nextPrePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        void nextPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        void prePaintScreen( int* mask, QRegion* region, int time );
+        void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
+        void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         // internal (used by kwin core or compositing code)
-        void prePaintScreen( int* mask, QRegion* region, int time, Effect* final );
-        void paintScreen( int mask, QRegion region, ScreenPaintData& data, Effect* final );
-        void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time, Effect* final );
-        void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data, Effect* final );
+        void startPaint();
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowAdded( Toplevel* c );
         void windowDeleted( Toplevel* c );
@@ -163,20 +160,6 @@ class ScaleIn
     private:
         QMap< const Toplevel*, double > windows;
     };
-
-// a special effect that is last in the order that'll actually call the painting functions
-// TODO this should actually be in scene.h
-class Scene::WrapperEffect
-    : public Effect
-    {
-    public:
-        virtual ~WrapperEffect();
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-    };
-
 
 inline
 WindowPaintData::WindowPaintData()

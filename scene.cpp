@@ -19,14 +19,6 @@ namespace KWinInternal
 {
 
 //****************************************
-// Scene::WrapperEffect
-//****************************************
-
-Scene::WrapperEffect::~WrapperEffect()
-    {
-    }
-
-//****************************************
 // Scene
 //****************************************
 
@@ -46,15 +38,14 @@ void Scene::paintScreen( int* mask, QRegion* region )
     {
     *mask = ( *region == QRegion( 0, 0, displayWidth(), displayHeight()))
         ? 0 : PAINT_SCREEN_REGION;
-    WrapperEffect wrapper;
     updateTimeDiff();
     // preparation step
-    effects->prePaintScreen( mask, region, time_diff, &wrapper );
+    effects->prePaintScreen( mask, region, time_diff );
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
         *mask &= ~PAINT_SCREEN_REGION;
     // TODO call also prePaintWindow() for all windows
     ScreenPaintData data;
-    effects->paintScreen( *mask, *region, data, &wrapper );
+    effects->paintScreen( *mask, *region, data );
     }
 
 void Scene::updateTimeDiff()
@@ -76,18 +67,13 @@ void Scene::idle()
     last_time = QTime();
     }
 
-void Scene::WrapperEffect::prePaintScreen( int*, QRegion*, int )
-    {
-    // nothing, no changes
-    }
-
 // the function that'll be eventually called by paintScreen() above
-void Scene::WrapperEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
+void Scene::finalPaintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     if( mask & PAINT_SCREEN_REGION )
-        scene->paintSimpleScreen( mask, region );
+        paintSimpleScreen( mask, region );
     else
-        scene->paintGenericScreen( mask, data );
+        paintGenericScreen( mask, data );
     }
 
 // the generic painting code that should eventually handle even
@@ -101,9 +87,8 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
             continue;
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         QRegion damage = infiniteRegion();
-        WrapperEffect wrapper;
         // preparation step
-        effects->prePaintWindow( w, &mask, &damage, time_diff, &wrapper );
+        effects->prePaintWindow( w, &mask, &damage, time_diff );
         paintWindow( w, mask, damage );
         }
     }
@@ -127,9 +112,8 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
             continue;
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         QRegion damage = region;
-        WrapperEffect wrapper;
         // preparation step
-        effects->prePaintWindow( w, &mask, &damage, time_diff, &wrapper );
+        effects->prePaintWindow( w, &mask, &damage, time_diff );
         if( mask & PAINT_WINDOW_TRANSLUCENT )
             phase2.prepend( Phase2Data( w, region, mask ));
         if( mask & PAINT_WINDOW_OPAQUE )
@@ -151,21 +135,15 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         }
     }
 
-void Scene::WrapperEffect::prePaintWindow( Scene::Window* , int*, QRegion*, int )
-    {
-    // nothing, no changes
-    }
-
 void Scene::paintWindow( Window* w, int mask, QRegion region )
     {
     WindowPaintData data;
     data.opacity = w->window()->opacity();
-    WrapperEffect wrapper;
-    effects->paintWindow( w, mask, region, data, &wrapper );
+    effects->paintWindow( w, mask, region, data );
     }
 
 // the function that'll be eventually called by paintWindow() above
-void Scene::WrapperEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void Scene::finalPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
     {
     w->performPaint( mask, region, data );
     }

@@ -156,6 +156,7 @@ void Workspace::compositeTimeout()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
+    effects->startPaint();
     // TODO when effects cause damage, it should be only enqueued for next repaint
     QRegion r = damage_region;
     damage_region = QRegion();

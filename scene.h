@@ -51,9 +51,12 @@ class Scene
         void idle();
     protected:
         void paintScreen( int* mask, QRegion* region );
+        friend class EffectsHandler;
+        void finalPaintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
         virtual void paintSimpleScreen( int mask, QRegion region );
         virtual void paintBackground( QRegion region ) = 0;
+        void finalPaintWindow( Window* w, int mask, QRegion region, WindowPaintData& data );
         virtual void paintWindow( Window* w, int mask, QRegion region );
         static QRegion infiniteRegion();
         void updateTimeDiff();
@@ -68,7 +71,6 @@ class Scene
         int time_diff;
         QTime last_time;
         Workspace* wspace;
-        class WrapperEffect;
     };
 
 class Scene::Window
