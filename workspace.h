@@ -420,7 +420,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setPopupClientOpacity(int v);
         void resetClientOpacity();
         void setTransButtonText(int value);
-        void compositeTimeout();
+        void performCompositing();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );

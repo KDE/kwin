@@ -1,93 +1,99 @@
-* = not done
+This file lists TODO items for the compositing code.
+
+See file HACKING for details on developing KWin.
+See effects/howto.* for a HOWTO on writting effects.
+See documentation in source (mainly in scene.cpp) for description
+of the design of the compositing framework.
+
+TODO
+=================================
+
+* = not done, will be either done by me, or should be at least discussed first with me
++ = not done, I don't plan on doing it that soon
+    - in other words, these should be the best ones for you if you want to help
+! = like +, but they should be relatively simple
+    - in other words, these should be the best if you want to get started with the code
 / = work in progress
 ? = should it be done?
 
-See the HACKING file for KWin details. The composite-related sources are mostly
-composite.cpp and scene_opengl.cpp (TODO: add comments and general overview).
 
-Sources:
+General TODO
+=================================
 
-- glcompmgr : http://lists.freedesktop.org/archives/xorg/2006-July/017006.html ,
-              http://www.mail-archive.com/compiz%40lists.freedesktop.org/msg00023.html
-    - simple and easy to understand
-    - works even without texture_from_pixmap extension
-    - claims to support several different gfx cards
-- compiz : git clone git://anongit.freedesktop.org/git/xorg/app/compiz
-    - the ultimate <whatever>
-    - glxcompmgr : git clone git://anongit.freedesktop.org/git/xorg/app/glxcompgr
-        - a rather old version of compiz, but also simpler and as such simpler
-            to understand
-- libcm (metacity) : cvs -d :pserver:anonymous@anoncvs.gnome.org:/cvs/gnome co libcm
-    - no idea about it
-    
-- http://opengl.org - documentation - OpenGL Redbook, GLX docs, extensions docs
-
-TODO:
-
-* Check/make it work with other gfx cards
-    - I've tested only with nvidia with the 9625 beta drivers and 8776 stable drivers so far
-    - I have absolutely no idea about other gfx cards, needs to be tested
-        * ati
-        * intel
-        * who knows what else
-
-? Xgl support
-    - Compiz itself doesn't work when compiled with the libGL from nvidia,
-        it ships its own and links against it
-    ? might be worth trying to use that libGL as well
-    - it may be just because of the special libGL, but when testing with Xgl
-        it even seemed non-conformant - none of the provided configs had
-        GLX_RENDER_TYPE with GLX_RGBA_BIT even though required by GLX
-        and other funny things. Indeed, it may be just me being still pretty
-        clueless about these things.
-    * is there a good reason to support Xgl? With the 9625 nvidia drivers
-        it seems to work fine without them
-        
-? AIGLX support
-    - no idea about this at all
-    * find out if it works
-
-* XComposite overlay window
+! XComposite overlay window
     - X.Org 7.1 and newer have XComposite extension version 0.3, which allows
         creating an overlay window to paint to instead of painting to the root window
-    - I still run older X.Org here
     - the code in glcompmgr for this is in HAVE_OVERLAYS, stealing primarily from
         here should be better since it's simpler and the code so far has been
         modelled more after glcompmgr
     - the code in compiz for this is in USE_COW
-    * use double-buffering with the overlay window - kwin already has code
+!   - use double-buffering with the overlay window - kwin already has code
         for double-buffered destination drawable, but I haven't been able to test it
-
-* when relying on extensions, detect that they are available
-    - some of the glcompmgr code probably depends on OpenGL/GLX extensions that may
-        not be always available, probably the same with compiz
-    * find out which code relies on extensions and add checks
+    - should be only needed for OpenGL code, I think this doesn't matter for XRender
 
 ? alpha clear hack
-    * find out if it affects performance
-    * if yes, try to find a better way of solving the problem
-    - since kompmgr has an option to make only the decoration transparent,
++   - find out if it affects performance
++   - if yes, try to find a better way of solving the problem
+!   - since kompmgr has an option to make only the decoration transparent,
         it should be possible to do the same here - if the window has alpha and a decoration
         or if there should be only the decoration transparent, paint first the contents
         and then the decoration - this should make it possible to paint the decoration
         without the random alpha that is right now handled by the alpha hack
 
-/ design framework for graphical effects
-    - modelling it after compiz seems to make a lot of sense
+* don't add workspace damage in Toplevel::addDamage()
+    - instead add damage of windows to the screen only before doing the painting
+    - this should prevent repaints because of changing obscured windows
 
-* update only those parts of the screen that have been changed
-    - for paintSimpleScreen() - it currently sets region to the whole screen
-    * instead of using glXSwapBuffers() there should be glCopyPixels() used
-        - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
-        * perhaps syncing to vblank will be needed to avoid flicker
-    * XCopyArea() should not update the whole screen but only the affected areas
+* wait for decoration repaints
+    - it is sometimes visible that the window contents are painted first and the decoration
+        only afterwards with a small delay
+    - maybe posted paint events need to be processed immediatelly, or maybe the compositing
+        code should not update the window until the decoration is finished painting
 
-* sync to vblank
+* handle XRandr changes
+    - output buffers and similar probably need recreating when the screen size changes
+
+
+OpenGL TODO
+=================================
+
++ Check/make it work with other gfx cards
+    - I've tested only with nvidia with the 9625 beta drivers and 8776 stable drivers so far
+    - I have absolutely no idea about other gfx cards, needs to be tested
++       - ati
++       - intel
++       - who knows what else
+
+? Xgl support
+    - Compiz itself doesn't work when compiled with the libGL from nvidia,
+        it ships its own and links against it
+?   - might be worth trying to use that libGL as well
+    - it may be just because of the special libGL, but when testing with Xgl
+        it even seemed non-conformant - none of the provided configs had
+        GLX_RENDER_TYPE with GLX_RGBA_BIT even though required by GLX
+        and other funny things. Indeed, it may be just me being still pretty
+        clueless about these things.
+?   - is there a good reason to support Xgl? With the 9625 nvidia drivers
+        it seems to work fine without them and there's AIGLX
+    
+? AIGLX support
+    - no idea about this at all
++   - find out if it works
+
+! when relying on extensions, detect that they are available
+    - some of the glcompmgr code probably depends on OpenGL/GLX extensions that may
+        not be always available, probably the same with compiz
+!   - find out which code relies on extensions and add checks
+!   - it seems that some systems (using older X.org?) will need local versions
+        of some #defines like GLX_TEXTURE_FORMAT_EXT
+        - Beryl has this code in beryl.h
+
++ sync to vblank
     - currently the compositing code is run with 20ms timer, i.e. constant 50fps
     - the GLX_SGI_video_sync extension should be used
     - compiz uses this, no idea about it though
 
-? GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
++ GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
     - code currently uses GL_ARB_texture_rectangle (GL_TEXTURE_RECTANGLE_ARB), using
         normal textures when GL_ARB_texture_non_power_of_two is available should(?) be
         preferred
@@ -95,26 +101,98 @@ TODO:
 ? in SceneOpenGL::bindTexture() with tfp_mode, with some gfx cards it seems
     to be faster to not short-circuit the texture binding when there's been
     no damage
-    * confirm and try to find out when to do it and when not
++   - confirm and try to find out when to do it and when not
 
-* SceneXrender::Window::performPaint() doesn't use xScale/yScale
+! update only those parts of the screen that have been changed
+    - for paintSimpleScreen() - it currently sets region to the whole screen
+!   - instead of using glXSwapBuffers() there should be glCopyPixels() used
+        - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
++       - perhaps syncing to vblank will be needed to avoid flicker
+!   - XCopyArea() should not update the whole screen but only the affected areas
+
+
+XRender TODO
+==============================
+
++ SceneXrender::Window::performPaint() doesn't use xScale/yScale
     - XRenderSetPictureTransform() should be capable of doing this
     - note that the matrix used seems to be weird (it doesn't act like the normal transformation
         matrix as far as I can tell)
 
+
+Effects framework TODO
+==============================
+
+/ design framework for graphical effects
+    - modelling it after compiz seems to make a lot of sense
+
 * solve somehow disappearing windows
     - i.e. when a window is e.g. closed, the Client/Unmanaged object is destroyed, but animations
         should be going on
-    ? maybe animations could be done actually before the state change, it makes sense to destroy
+?   - maybe animations could be done actually before the state change, it makes sense to destroy
         the window only after it's finished exploding or really minimizing the window only after
         the animation of minimizing to the taskbar is done, however this looks very hairy
         and error-prone
-    ? maybe the animation effects should keep the necessary info themselves, so that the object
+?   - maybe the animation effects should keep the necessary info themselves, so that the object
         can be destroyed
         - the problem here may be what to do when the window again reappears, a new object will
             be created, but the old animation should be stopped - compare window id's?
-    ? maybe just keep the object around in a special list
+        - another problem is that then the window won't exist at all in the scene functions,
+            so e.g. no paintWindow() will be called for it
+?   - maybe just keep the object around in a special list
 
-* don't add workspace damage in Toplevel::addDamage()
-    - instead add damage of windows to the screen only before doing the painting
-    - this should prevent repaints because of obscured windows
+* more notification functions for effects are needed
+    - currently there are only very few notification functions (windowAdded, windowActivated,...)
+!   - virtual desktop change
+!   - window state changes
+    ? more
+
+* shadows
+
+* support for effects involving more virtual desktops
+    - currently effects are limited to only the active virtual desktop
+
+* support for grabbing input
+    - during some more complicated effects, input (at least mouse) should be disabled,
+        because currently there is no way to do input redirection
+
+
+Effects TODO
+===============================
+
++ adapt the kcontrol module used by Kompmgr
+    - in kcmkwin/kwinoptions
+!   - uses ~/.xcompmgr, convert to use normal KConfig
+?   - I don't think these effects should be plugins or anything like that,
+        probably simply write to kwinrc and use the Option class in KWin
+
++ implements all effects Kompmgr could do
++   - all effects from the Opacity tab should be already doable
+!       - applying translucency only to the decoration
+            - use clientSize() and clientPos() from Client
+            - see also the alpha clear hack todo entry
+!       - not usign ARGB visuals
+            - just clear the alpha channel in the alpha clear hack
+            - or do it while painting (see also the alpha clear hack todo entry)
+!       - the rest - should be simple
+*   - shadows
+        - framework is not ready for them yet (see the todo entry)
++   - tab Effects
+!       - fade-in should be simple
++       - fade between changes
+            - will need notification about opacity changes
+            - not sure if this is doable for other opacity changes then the ones
+                initiated by the user or by the application
+*       - fade-out needs framework for disappearing windows (see the todo entry)
+
++ minimize/shade effects
+    - to replace the ones from KWin core
+    - Client::animateMinimizeOrUnminimize()
+    - Client::setShade()
+
++ zoom effect
+    - enlarge a portion of the screen
+!   - would require adding xScale/yScale to ScreenPaintData
+        - should be doable even for XRender
+
+? other effects

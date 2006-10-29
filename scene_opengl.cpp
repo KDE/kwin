@@ -8,7 +8,48 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 
 Based on glcompmgr code by Felix Bellaby.
+Using code from Compiz and Beryl.
 ******************************************************************/
+
+/*
+ This is the OpenGL-based compositing code. It is the primary and most powerful
+ compositing backend.
+ 
+Sources and other compositing managers:
+=======================================
+
+- http://opengl.org
+    - documentation
+        - OpenGL Redbook
+        - GLX docs
+        - extensions docs
+
+- glcompmgr
+    - http://lists.freedesktop.org/archives/xorg/2006-July/017006.html ,
+    - http://www.mail-archive.com/compiz%40lists.freedesktop.org/msg00023.html
+    - simple and easy to understand
+    - works even without texture_from_pixmap extension
+    - claims to support several different gfx cards
+
+- compiz
+    - git clone git://anongit.freedesktop.org/git/xorg/app/compiz
+    - the ultimate <whatever>
+    - glxcompmgr
+        - git clone git://anongit.freedesktop.org/git/xorg/app/glxcompgr
+        - a rather old version of compiz, but also simpler and as such simpler
+            to understand
+
+- beryl
+    - the community fork of Compiz
+    - http://beryl-project.org
+    - svn co svn://metascape.afraid.org/svnroot/beryl
+
+- libcm (metacity)
+    - cvs -d :pserver:anonymous@anoncvs.gnome.org:/cvs/gnome co libcm
+    - not much idea about it, the model differs a lot from KWin/Compiz/Beryl
+    - does not seem to be very powerful or with that much development going on
+
+*/
 
 #include "scene_opengl.h"
 
@@ -25,22 +66,39 @@ namespace KWinInternal
 // SceneOpenGL
 //****************************************
 
+// the config used for windows
 GLXFBConfig SceneOpenGL::fbcdrawable;
+// GLX content
 GLXContext SceneOpenGL::context;
-GLXPixmap SceneOpenGL::glxroot;
+// the destination drawable where the compositing is done
+GLXDrawable SceneOpenGL::glxroot;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::root_db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 
+// finding of OpenGL extensions functions
+typedef void (*glXFuncPtr)();
+typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
+
+static glXFuncPtr getProcAddress( const char* name )
+    {
+    glXFuncPtr ret = NULL;
+    if( glXGetProcAddress != NULL )
+        ret = glXGetProcAddress( ( const GLubyte* ) name );
+    if( ret == NULL )
+        ret = ( glXFuncPtr ) dlsym( RTLD_DEFAULT, name );
+    return ret;
+    }
+
+// texture_from_pixmap extension functions
 typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
     int buffer, const int* attrib_list );
 typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
-typedef void (*glXFuncPtr)();
-typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
-glXBindTexImageEXT_func glXBindTexImageEXT;
 glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 glXGetProcAddress_func glXGetProcAddress;
+glXBindTexImageEXT_func glXBindTexImageEXT;
 
+// detect OpenGL error (add to various places in code to pinpoint the place)
 static void checkGLError( const char* txt )
     {
     GLenum err = glGetError();
@@ -48,6 +106,7 @@ static void checkGLError( const char* txt )
         kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
     }
 
+// attributes for finding a double-buffered root window config
 const int root_db_attrs[] =
     {
     GLX_DOUBLEBUFFER, True,
@@ -60,6 +119,7 @@ const int root_db_attrs[] =
     None
     };
 
+// attributes for finding a non-double-buffered root window config
 static const int root_buffer_attrs[] =
     {
     GLX_DOUBLEBUFFER, False,
@@ -72,6 +132,7 @@ static const int root_buffer_attrs[] =
     None
     };
 
+// attributes for finding config for windows
 const int drawable_attrs[] = 
     {
     GLX_DOUBLEBUFFER, False,
@@ -85,6 +146,7 @@ const int drawable_attrs[] =
     None
     };
 
+// attributes for finding config for windows when using tfp
 const int drawable_tfp_attrs[] = 
     {
     GLX_DOUBLEBUFFER, False,
@@ -99,16 +161,6 @@ const int drawable_tfp_attrs[] =
     None
     };
 
-static glXFuncPtr getProcAddress( const char* name )
-    {
-    glXFuncPtr ret = NULL;
-    if( glXGetProcAddress != NULL )
-        ret = glXGetProcAddress( ( const GLubyte* ) name );
-    if( ret == NULL )
-        ret = ( glXFuncPtr ) dlsym( RTLD_DEFAULT, name );
-    return ret;
-    }
-
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     {
@@ -116,6 +168,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     int dummy;
     if( !glXQueryExtension( display(), &dummy, &dummy ))
         return;
+    // handle OpenGL extensions functions
     glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddress" );
     if( glXGetProcAddress == NULL )
         glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
@@ -125,7 +178,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
     // 1.0-9xxx don't update pixmaps properly, so do a copy first
     copy_buffer_hack = !tfp_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
-    initBuffer();
+    initBuffer(); // create destination buffer
     if( tfp_mode )
         {
         if( !findConfig( drawable_tfp_attrs, fbcdrawable ))
@@ -140,6 +193,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             assert( false );
     context = glXCreateNewContext( display(), fbcroot, GLX_RGBA_TYPE, NULL, GL_FALSE );
     glXMakeContextCurrent( display(), glxroot, glxroot, context );
+    // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
     glOrtho( 0, displayWidth(), 0, displayHeight(), 0, 65535 );
@@ -167,6 +221,7 @@ SceneOpenGL::~SceneOpenGL()
     checkGLError( "Cleanup" );
     }
 
+// create destination buffer
 void SceneOpenGL::initBuffer()
     {
     XWindowAttributes attrs;
@@ -182,12 +237,14 @@ void SceneOpenGL::initBuffer()
         }
     if( root_db )
         {
+        // root window is double-buffered, paint directly to it
         buffer = rootWindow();
         glxroot = glXCreateWindow( display(), fbcroot, buffer, NULL );
         glDrawBuffer( GL_BACK );
         }
     else
         {
+        // no double-buffered root, paint to a buffer and copy to root window
         XGCValues gcattr;
         gcattr.subwindow_mode = IncludeInferiors;
         gcroot = XCreateGC( display(), rootWindow(), GCSubwindowMode, &gcattr );
@@ -197,6 +254,7 @@ void SceneOpenGL::initBuffer()
         }
     }
 
+// print info about found configs
 static void debugFBConfig( GLXFBConfig* fbconfigs, int i, const int* attrs )
     {
     int pos = 0;
@@ -214,6 +272,7 @@ static void debugFBConfig( GLXFBConfig* fbconfigs, int i, const int* attrs )
         }
     }
 
+// find config matching the given attributes and possibly the given X visual
 bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID visual )
     {
     int cnt;
@@ -263,6 +322,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID vi
     return false;
     }
 
+// the entry function for painting
 void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     {
     foreach( Toplevel* c, toplevels )
@@ -275,10 +335,13 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glPushMatrix();
     glClearColor( 0, 0, 0, 1 );
     glClear( GL_COLOR_BUFFER_BIT );
+    // OpenGL has (0,0) in the bottom-left corner while X has it in the top-left corner,
+    // which is annoying and confusing. Therefore flip the whole OpenGL scene upside down
+    // and move it up, so that it actually uses the same coordinate system like X.
     glScalef( 1, -1, 1 );
     glTranslatef( 0, -displayHeight(), 0 );
     int mask = 0;
-    paintScreen( &mask, &damage );
+    paintScreen( &mask, &damage ); // call generic implementation
     glPopMatrix();
     // TODO only partial repaint for mask & PAINT_SCREEN_REGION
     if( root_db )
@@ -296,7 +359,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
 void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
     {
     if( mask & PAINT_SCREEN_TRANSFORMED )
-        {
+        { // apply screen transformations
         glPushMatrix();
         glTranslatef( data.xTranslate, data.yTranslate, 0 );
         }
@@ -309,6 +372,7 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
 void SceneOpenGL::paintSimpleScreen( int mask, QRegion region )
     {
     // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
+    // For now always force redrawing of the whole area.
     region = QRegion( 0, 0, displayWidth(), displayHeight());
     Scene::paintSimpleScreen( mask, region );
     }
@@ -376,16 +440,17 @@ void SceneOpenGL::Window::free()
     discardTexture();
     }
 
+// Bind the window pixmap to an OpenGL texture.
 void SceneOpenGL::Window::bindTexture()
     {
     if( texture != 0 && toplevel->damage().isEmpty()
-        && !tfp_mode ) // interestingly this makes tfp slower
+        && !tfp_mode ) // TODO interestingly this makes tfp slower with some gfx cards
         {
         // texture doesn't need updating, just bind it
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         return;
         }
-    // TODO cache pixmaps here if possible
+    // Get the pixmap with the window contents
     Pixmap window_pix = toplevel->createWindowPixmap();
     Pixmap pix = window_pix;
     // HACK
@@ -425,11 +490,11 @@ void SceneOpenGL::Window::bindTexture()
         glXWaitX();
         }
     if( tfp_mode )
-        {
+        { // tfp mode, simply bind the pixmap to texture
         if( texture == None )
             glGenTextures( 1, &texture );
         if( bound_pixmap != None )
-            {
+            { // release old if needed
             glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
             XFreePixmap( display(), bound_pixmap );
@@ -448,7 +513,7 @@ void SceneOpenGL::Window::bindTexture()
         glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
     else
-        {
+        { // non-tfp case, copy pixmap contents to a texture
         GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
         glXMakeContextCurrent( display(), pixmap, pixmap, context );
         glReadBuffer( GL_FRONT );
@@ -509,6 +574,8 @@ void SceneOpenGL::Window::discardTexture()
     texture = 0;
     }
 
+// paint a quad (rectangle), ty1/ty2 are texture coordinates (for handling
+// swapped y coordinate, see below)
 static void quadPaint( int x1, int y1, int x2, int y2, int ty1, int ty2 )
     {
     glTexCoord2i( x1, ty1 );
@@ -521,8 +588,11 @@ static void quadPaint( int x1, int y1, int x2, int y2, int ty1, int ty2 )
     glVertex2i( x1, y2 );
     }
 
+// paint the window
 void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintData data )
     {
+    // check if there is something to paint (e.g. don't paint if the window
+    // is only opaque and only PAINT_WINDOW_TRANSLUCENT is requested)
     bool opaque = isOpaque() && data.opacity == 1.0;
     if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
         {}
@@ -544,6 +614,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         return;
     bindTexture();
     glPushMatrix();
+    // do required transformations
     int x = toplevel->x();
     int y = toplevel->y();
     if( mask & PAINT_WINDOW_TRANSFORMED )
@@ -554,6 +625,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     glTranslatef( x, y, 0 );
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
+    // setup blending of transparent windows
     bool was_blend = glIsEnabled( GL_BLEND );
     if( !opaque )
         {
@@ -562,6 +634,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
     if( data.opacity != 1.0 )
         {
+        // the window is additionally configured to have its opacity adjusted,
+        // do it
         if( toplevel->hasAlpha())
             {
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
@@ -580,6 +654,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             }
         }
     glEnable( GL_TEXTURE_RECTANGLE_ARB );
+    // actually paint the window
     glBegin( GL_QUADS );
     foreach( QRect r, region.rects())
         {
@@ -587,6 +662,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         int y2 = r.y() + r.height();
         int ty1 = y1;
         int ty2 = y2;
+        // tfp can result in the texture having y coordinate inverted (because
+        // of the internal format), so do the inversion if needed
         if( !texture_y_inverted ) // "!" because of converting to OpenGL coords
             {
             ty1 = height() - y1;

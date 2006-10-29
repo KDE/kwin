@@ -8,6 +8,65 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+/*
+ (NOTE: The compositing code is work in progress. As such this design
+ documentation may get outdated in some areas.)
+
+ The base class for compositing, implementing shared functionality
+ between the OpenGL and XRender backends.
+ 
+ Design:
+ 
+ When compositing is turned on, XComposite extension is used to redirect
+ drawing of windows to pixmaps and XDamage extension is used to get informed
+ about damage (changes) to window contents. This code is mostly in composite.cpp .
+ 
+ Workspace::performCompositing() starts one painting pass. Painting is done
+ by painting the screen, which in turn paints every window. Painting can be affected
+ using effects, which are chained. E.g. painting a screen means that actually
+ paintScreen() of the first effect is called, which possibly does modifications
+ and calls next effect's paintScreen() and so on, until Scene::finalPaintScreen()
+ is called.
+ 
+ There are 3 phases of every paint (not necessarily done together):
+ The pre-paint phase, the paint phase and the post-paint phase.
+ 
+ The pre-paint phase is used to find out about how the painting will be actually
+ done (i.e. what the effects will do). For example when only a part of the screen
+ needs to be updated and no effect will do any transformation it is possible to use
+ an optimized paint function. How the painting will be done is controlled
+ by the mask argument, see PAINT_WINDOW_* and PAINT_SCREEN_* flags in scene.h .
+ For example an effect that decides to paint a normal windows as translucent
+ will need to modify the mask in its prePaintWindow() to include
+ the PAINT_WINDOW_TRANSLUCENT flag. The paintWindow() function will then get
+ the mask with this flag turned on and will also paint using transparency.
+ 
+ The paint pass does the actual painting, based on the information collected
+ using the pre-paint pass. After running through the effects' paintScreen()
+ either paintGenericScreen() or optimized paintSimpleScreen() are called.
+ Those call paintWindow() on windows (not necessarily all), possibly using
+ clipping to optimize performance and calling paintWindow() first with only
+ PAINT_WINDOW_OPAQUE to paint the opaque parts and then later
+ with PAINT_WINDOW_TRANSLUCENT to paint the transparent parts. Function
+ paintWindow() again goes through effects' paintWindow() until
+ finalPaintWindow() is called, which calls the window's performPaint() to
+ do the actual painting.
+ 
+ The post-paint can be used for cleanups and is also used for scheduling
+ repaints during the next painting pass for animations. Effects wanting to
+ repaint certain parts can manually damage them during post-paint and repaint
+ of these parts will be done during the next paint pass.
+ 
+ 
+ Various notes:
+ 
+ - When the screen or a window are transformed (*_TRANSFORMED flag), clipping
+   and similar optimizations are not done (too complicated), so in such cases
+   infiniteRegion() should be always used. Make sure not to make any transformations
+   of such regions.
+ 
+*/
+
 #include "scene.h"
 
 #include <X11/extensions/shape.h>
@@ -33,7 +92,7 @@ Scene::~Scene()
     {
     }
 
-void Scene::prePaint()
+void Scene::initPaint()
     {
     effects->startPaint();
     // do the rest of prepaint pass together with paint pass
@@ -47,43 +106,48 @@ void Scene::paintScreen( int* mask, QRegion* region )
     updateTimeDiff();
     // preparation step
     effects->prePaintScreen( mask, region, time_diff );
+    // optimized painting is not possible with transformations
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
         *mask &= ~PAINT_SCREEN_REGION;
-    // TODO call also prePaintWindow() for all windows
     ScreenPaintData data;
     effects->paintScreen( *mask, *region, data );
     }
 
+// Compute time since the last painting pass.
 void Scene::updateTimeDiff()
     {
     if( last_time.isNull())
         {
-        // has been idle for some time, time_diff would be huge
+        // Painting has been idle (optimized out) for some time,
+        // which means time_diff would be huge and would break animations.
+        // Simply set it to zero.
         time_diff = 0;
         }
     else
         time_diff = last_time.elapsed();
-    if( time_diff < 0 )
+    if( time_diff < 0 ) // check time rollback
         time_diff = 0;
     last_time.start();;
     }
 
+// Painting pass is optimized away.
 void Scene::idle()
     {
+    // Don't break time since last paint for the next pass.
     last_time = QTime();
     }
 
 // the function that'll be eventually called by paintScreen() above
 void Scene::finalPaintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( mask & PAINT_SCREEN_REGION )
+    if( mask & PAINT_SCREEN_REGION ) // can do optimized case?
         paintSimpleScreen( mask, region );
     else
         paintGenericScreen( mask, data );
     }
 
-// the generic painting code that should eventually handle even
-// transformations
+// The generic painting code that can handle even transformations.
+// It simply paints bottom-to-top.
 void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
     {
     paintBackground( infiniteRegion());
@@ -99,9 +163,13 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         }
     }
 
-// the optimized case without any transformations at all
+// The optimized case without any transformations at all.
+// It can paint only the requested region and can use clipping
+// to reduce painting and improve performance.
 void Scene::paintSimpleScreen( int orig_mask, QRegion region )
     {
+    // TODO PAINT_WINDOW_* flags don't belong here, that's why it's in the assert,
+    // perhaps the two enums should be separated
     assert(( orig_mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED
         | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_OPAQUE )) == 0 );
     QList< Phase2Data > phase2;
@@ -120,12 +188,15 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         QRegion damage = region;
         // preparation step
         effects->prePaintWindow( w, &mask, &damage, time_diff );
+        // If the window is transparent, the transparent part will be done
+        // in the 2nd pass.
         if( mask & PAINT_WINDOW_TRANSLUCENT )
             phase2.prepend( Phase2Data( w, region, mask ));
         if( mask & PAINT_WINDOW_OPAQUE )
             {
             paintWindow( w, mask, region );
-            if( ( mask & PAINT_WINDOW_TRANSLUCENT ) == 0 ) // window is not transparent, can clip windows below
+            // If the window is not transparent at all, it can clip windows below.
+            if( ( mask & PAINT_WINDOW_TRANSLUCENT ) == 0 )
                 region -= w->shape().translated( w->x(), w->y());
             }
         }
@@ -159,23 +230,8 @@ void Scene::postPaint()
     effects->postPaintScreen();
     foreach( Window* w, stacking_order )
         effects->postPaintWindow( w );
+    // do cleanup
     stacking_order.clear();
-    }
-
-void Scene::windowGeometryShapeChanged( Toplevel* )
-    {
-    }
-
-void Scene::windowOpacityChanged( Toplevel* )
-    {
-    }
-
-void Scene::windowAdded( Toplevel* )
-    {
-    }
-
-void Scene::windowDeleted( Toplevel* )
-    {
     }
 
 //****************************************
@@ -198,9 +254,13 @@ void Scene::Window::free()
 
 void Scene::Window::discardShape()
     {
+    // it is created on-demand and cached, simply
+    // reset the flag
     shape_valid = false;
     }
 
+// Find out the shape of the window using the XShape extension
+// or if not shape is set then simply it's the window geometry.
 QRegion Scene::Window::shape() const
     {
     if( !shape_valid )

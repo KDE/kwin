@@ -23,45 +23,73 @@ class Workspace;
 class WindowPaintData;
 class ScreenPaintData;
 
+// The base class for compositing backends.
 class Scene
     {
     public:
         Scene( Workspace* ws );
         virtual ~Scene() = 0;
         class Window;
-        virtual void prePaint();
-        // repaints the given screen areas, windows provides the stacking order
+        // Called before calling paint() to perform initialization (does not
+        // do the prepaint pass though)
+        virtual void initPaint();
+        // Repaints the given screen areas, windows provides the stacking order.
+        // The entry point for the main part of the painting pass.
         virtual void paint( QRegion damage, ToplevelList windows ) = 0;
+        // Called to perform post paint cleanup and for animations to prepare
+        // for next pass.
         virtual void postPaint();
+        
+        // Notification function - KWin core informs about changes.
+        // Used to mainly discard cached data.
+        
         // shape/size of a window changed
-        virtual void windowGeometryShapeChanged( Toplevel* );
+        virtual void windowGeometryShapeChanged( Toplevel* ) = 0;
         // opacity of a window changed
-        virtual void windowOpacityChanged( Toplevel* );
+        virtual void windowOpacityChanged( Toplevel* ) = 0;
         // a new window has been created
-        virtual void windowAdded( Toplevel* );
+        virtual void windowAdded( Toplevel* ) = 0;
         // a window has been destroyed
-        virtual void windowDeleted( Toplevel* );
+        virtual void windowDeleted( Toplevel* ) = 0;
+        // Flags controlling how painting is done.
         enum
             {
+            // Window (or at least part of it) will be painted opaque.
             PAINT_WINDOW_OPAQUE         = 1 << 0,
+            // Window (or at least part of it) will be painted translucent.
             PAINT_WINDOW_TRANSLUCENT    = 1 << 1,
+            // Window will be painted with transformed geometry.
             PAINT_WINDOW_TRANSFORMED    = 1 << 2,
+            // Paint only a region of the screen (can be optimized, cannot
+            // be used together with TRANSFORMED flags).
             PAINT_SCREEN_REGION         = 1 << 3,
+            // Whole screen will be painted with transformed geometry.
             PAINT_SCREEN_TRANSFORMED    = 1 << 4
             };
         // there's nothing to paint (adjust time_diff later)
         void idle();
     protected:
+        // shared implementation, starts painting the screen
         void paintScreen( int* mask, QRegion* region );
         friend class EffectsHandler;
+        // called after all effects had their paintScreen() called
         void finalPaintScreen( int mask, QRegion region, ScreenPaintData& data );
+        // shared implementation of painting the screen in the generic
+        // (unoptimized) way
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
+        // shared implementation of painting the screen in an optimized way
         virtual void paintSimpleScreen( int mask, QRegion region );
+        // paint the background (not the desktop background - the whole background)
         virtual void paintBackground( QRegion region ) = 0;
+        // called after all effects had their paintWindow() called
         void finalPaintWindow( Window* w, int mask, QRegion region, WindowPaintData& data );
+        // shared implementation, starts painting the window
         virtual void paintWindow( Window* w, int mask, QRegion region );
+        // infinite region, i.e. everything
         static QRegion infiniteRegion();
+        // compute time since the last repaint
         void updateTimeDiff();
+        // saved data for 2nd pass of optimized screen painting
         struct Phase2Data
             {
             Phase2Data( Window* w, QRegion r, int m ) : window( w ), region( r ), mask( m ) {}
@@ -69,26 +97,36 @@ class Scene
             QRegion region;
             int mask;
             };
+        // windows in their stacking order
         QVector< Window* > stacking_order;
+        // time since last repaint
         int time_diff;
         QTime last_time;
         Workspace* wspace;
     };
 
+// The base class for windows representations in composite backends
 class Scene::Window
     {
     public:
         Window( Toplevel* c );
         virtual ~Window();
-        virtual void free(); // is often copied by value, use manually instead of dtor
+        // this class is often copied by value, use manually instead of dtor
+        virtual void free();
+        // perform the actual painting of the window
         virtual void performPaint( int mask, QRegion region, WindowPaintData data ) = 0;
         int x() const;
         int y() const;
         int width() const;
         int height() const;
+        // access to the internal window class
+        // TODO eventually get rid of this
         Toplevel* window();
+        // is the window visible at all
         bool isVisible() const;
+        // is the window fully opaque
         bool isOpaque() const;
+        // shape of the window
         QRegion shape() const;
         void discardShape();
         Window() {} // QMap sucks even in Qt4
@@ -103,7 +141,7 @@ extern Scene* scene;
 
 inline
 QRegion Scene::infiniteRegion()
-    { // INT_MIN / 2 because it's width/height (INT_MIN+INT_MAX==-1)
+    { // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
     return QRegion( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
     }
 

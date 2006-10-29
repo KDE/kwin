@@ -8,6 +8,27 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+/*
+ This is the XRender-based compositing code. The primary compositing
+ backend is the OpenGL-based one, which should be more powerful
+ and also possibly better documented. This backend is mostly for cases
+ when the OpenGL backend cannot be used for some reason (insufficient
+ performance, no usable OpenGL support at all, etc.)
+ The plan is to keep it around as long as needed/possible, but if it
+ proves to be too much hassle it will be dropped in the future.
+ 
+ Docs:
+ 
+ XRender (the protocol, but the function calls map to it):
+ http://webcvs.freedesktop.org/xlibs/Render/protocol
+ (I couldn't find it in the freedesktop git repository, so this one
+ is a bit older, but it shouldn't matter.)
+ 
+ XFixes (again, the protocol):
+ http://gitweb.freedesktop.org/?p=xorg/proto/fixesproto.git;a=blob;hb=HEAD;f=protocol
+
+*/
+
 #include "scene_xrender.h"
 
 #ifdef HAVE_XRENDER
@@ -23,12 +44,13 @@ namespace KWinInternal
 // SceneXrender
 //****************************************
 
+// kDebug() support for the XserverRegion type
 struct RegionDebug
    {   
    RegionDebug( XserverRegion r ) : rr( r ) {}   
    XserverRegion rr;   
    };   
-      
+
 #ifdef NDEBUG
 inline
 kndbgstream& operator<<( kndbgstream& stream, RegionDebug ) { return stream; }
@@ -55,15 +77,11 @@ ScreenPaintData SceneXrender::screen_paint;
 SceneXrender::SceneXrender( Workspace* ws )
     : Scene( ws )
     {
+    // create XRender picture for the root window
     format = XRenderFindVisualFormat( display(), DefaultVisual( display(), DefaultScreen( display())));
     XRenderPictureAttributes pa;
     pa.subwindow_mode = IncludeInferiors;
     front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
-    XRectangle xr;
-    xr.x = SHRT_MIN / 2;
-    xr.y = SHRT_MIN / 2;
-    xr.width = SHRT_MAX;
-    xr.height = SHRT_MAX;
     createBuffer();
     }
 
@@ -77,6 +95,7 @@ SceneXrender::~SceneXrender()
         (*it).free();
     }
 
+// the entry point for painting
 void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     {
     foreach( Toplevel* c, toplevels )
@@ -112,6 +131,7 @@ void SceneXrender::paintGenericScreen( int mask, ScreenPaintData data )
     Scene::paintGenericScreen( mask, data );
     }
 
+// fill the screen background
 void SceneXrender::paintBackground( QRegion region )
     {
     if( region != infiniteRegion())
@@ -156,8 +176,8 @@ void SceneXrender::windowAdded( Toplevel* c )
     windows[ c ] = Window( c );
     }
 
-// TODO handle xrandr changes
-
+// Create the compositing buffer. The root window is not double-buffered,
+// so it is done manually using this buffer,
 void SceneXrender::createBuffer()
     {
     if( buffer != None )
@@ -167,6 +187,9 @@ void SceneXrender::createBuffer()
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
+// Convert QRegion to XserverRegion. This code uses XserverRegion
+// only when really necessary as the shared implementation uses
+// QRegion.
 XserverRegion SceneXrender::toXserverRegion( QRegion region )
     {
     QVector< QRect > rects = region.rects();
@@ -204,6 +227,7 @@ void SceneXrender::Window::free()
     discardShape();
     }
 
+// Create XRender picture for the pixmap with the window contents.
 Picture SceneXrender::Window::picture()
     {
     if( !toplevel->damage().isEmpty() && _picture != None )
@@ -213,9 +237,10 @@ Picture SceneXrender::Window::picture()
         }
     if( _picture == None && format != NULL )
         {
+        // Get the pixmap with the window contents.
         Pixmap window_pix = toplevel->createWindowPixmap();
         Pixmap pix = window_pix;
-        // HACK the same like with opengl
+        // HACK the same alpha clear hack like with opengl, see there
         Client* c = dynamic_cast< Client* >( toplevel );
         bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
 #define ALPHA_CLEAR_COPY
@@ -268,6 +293,7 @@ void SceneXrender::Window::discardAlpha()
     alpha = None;
     }
 
+// Create XRender picture for the alpha mask.
 Picture SceneXrender::Window::alphaMask( double opacity )
     {
     if( isOpaque() && opacity == 1.0 )
@@ -285,6 +311,7 @@ Picture SceneXrender::Window::alphaMask( double opacity )
         alpha_cached_opacity = 1.0;
         return None;
         }
+    // Create a 1x1 8bpp pixmap containing the given opacity in the alpha channel.
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), 1, 1, 8 );
     XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardA8 );
     XRenderPictureAttributes pa;
@@ -298,8 +325,10 @@ Picture SceneXrender::Window::alphaMask( double opacity )
     return alpha;
     }
 
+// paint the window
 void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintData data )
     {
+    // check if there is something to paint
     bool opaque = isOpaque() && data.opacity == 1.0;
     if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
         {}
@@ -319,9 +348,10 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         XFixesSetPictureClipRegion( display(), buffer, 0, 0, clip_region );
         XFixesDestroyRegion( display(), clip_region );
         }
-    Picture pic = picture();
+    Picture pic = picture(); // get XRender picture
     if( pic == None ) // The render format can be null for GL and/or Xv visuals
         return;
+    // do required transformations
     int x = toplevel->x();
     int y = toplevel->y();
     if( mask & PAINT_SCREEN_TRANSFORMED )

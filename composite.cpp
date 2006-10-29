@@ -8,6 +8,23 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+/*
+ Code related to compositing (redirecting windows to pixmaps and tracking
+ window damage).
+ 
+ Docs:
+ 
+ XComposite (the protocol, but the function calls map to it):
+ http://gitweb.freedesktop.org/?p=xorg/proto/compositeproto.git;a=blob;hb=HEAD;f=protocol
+ 
+ XDamage (again the protocol):
+ http://gitweb.freedesktop.org/?p=xorg/proto/damageproto.git;a=blob;hb=HEAD;f=protocol
+
+ Composite HOWTO from Fredrik:
+ http://ktown.kde.org/~fredrik/composite_howto.html
+
+*/
+
 #include "utils.h"
 #include "workspace.h"
 #include "client.h"
@@ -125,7 +142,7 @@ void Workspace::addDamageFull()
     damage_region = QRegion( 0, 0, displayWidth(), displayHeight());
     }
 
-void Workspace::compositeTimeout()
+void Workspace::performCompositing()
     {
     // The event loop apparently tries to fire a QTimer as often as possible, even
     // at the expense of not processing many X events. This means that the composite
@@ -139,6 +156,8 @@ void Workspace::compositeTimeout()
         scene->idle();
         return;
         }
+    // create a list of all windows in the stacking order
+    // TODO keep this list like now a stacking order of Client window is kept
     ToplevelList windows;
     Window* children;
     unsigned int children_count;
@@ -156,11 +175,13 @@ void Workspace::compositeTimeout()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
-    scene->prePaint();
+    scene->initPaint();
     scene->paint( damage_region, windows );
+    // clear all damage
     damage_region = QRegion();
     foreach( Toplevel* c, windows )
         c->resetDamage();
+    // run post-pass only after clearing the damage
     scene->postPaint();
     lastCompositePaint.start();
     }

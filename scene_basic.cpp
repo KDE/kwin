@@ -8,6 +8,13 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+/*
+ This is very simple compositing code using only plain X. It doesn't use any effects
+ or anything like that, it merely draws everything as it would be visible without
+ compositing. It was the first compositing code in KWin and is usable only for testing
+ and as the very simple "this is how it works".
+*/
+
 #include "scene_basic.h"
 
 #include "utils.h"
@@ -15,10 +22,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 namespace KWinInternal
 {
-
-//****************************************
-// SceneBasic
-//****************************************
 
 SceneBasic::SceneBasic( Workspace* ws )
     : Scene( ws )
@@ -56,9 +59,27 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
     XFlush( display());
     }
 
+// These functions are not used at all, SceneBasic
+// is not using inherited functionality.
+
 void SceneBasic::paintBackground( QRegion )
     {
-    // empty, not using inherited functionality
+    }
+
+void SceneBasic::windowGeometryShapeChanged( Toplevel* )
+    {
+    }
+
+void SceneBasic::windowOpacityChanged( Toplevel* )
+    {
+    }
+
+void SceneBasic::windowAdded( Toplevel* )
+    {
+    }
+
+void SceneBasic::windowDeleted( Toplevel* )
+    {
     }
 
 } // namespace

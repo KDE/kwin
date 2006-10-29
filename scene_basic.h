@@ -25,6 +25,10 @@ class SceneBasic
         virtual void paint( QRegion damage, ToplevelList windows );
     protected:
         virtual void paintBackground( QRegion region );
+        virtual void windowGeometryShapeChanged( Toplevel* );
+        virtual void windowOpacityChanged( Toplevel* );
+        virtual void windowAdded( Toplevel* );
+        virtual void windowDeleted( Toplevel* );
     };
 
 } // namespace
