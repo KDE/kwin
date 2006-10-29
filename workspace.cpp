@@ -2395,7 +2395,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         {
         KAction* action = keys->action( "Window Operations Menu" );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
-            .arg( action->shortcut().seq( 0 ).toString());
+            .arg( action->globalShortcut().seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window without its border.\n"
                     "Without the border, you will not be able to enable the border "
@@ -2408,7 +2408,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         {
         KAction* action = keys->action( "Window Operations Menu" );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
-            .arg( action->shortcut().seq( 0 ).toString());
+            .arg( action->globalShortcut().seq( 0 ).toString());
         args << "--msgbox" <<
               i18n( "You have selected to show a window in fullscreen mode.\n"
                     "If the application itself does not have an option to turn the fullscreen "
