@@ -279,7 +279,6 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glTranslatef( 0, -displayHeight(), 0 );
     int mask = 0;
     paintScreen( &mask, &damage );
-    stacking_order.clear();
     glPopMatrix();
     // TODO only partial repaint for mask & PAINT_SCREEN_REGION
     if( root_db )
@@ -292,7 +291,6 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
         XFlush( display());
         }
     ungrabXServer();
-    checkGLError( "PostPaint" );
     }
 
 void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
@@ -318,6 +316,12 @@ void SceneOpenGL::paintSimpleScreen( int mask, QRegion region )
 void SceneOpenGL::paintBackground( QRegion )
     {
 // TODO?
+    }
+
+void SceneOpenGL::postPaint()
+    {
+    checkGLError( "PostPaint" );
+    Scene::postPaint();
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )

@@ -29,8 +29,10 @@ class Scene
         Scene( Workspace* ws );
         virtual ~Scene() = 0;
         class Window;
+        virtual void prePaint();
         // repaints the given screen areas, windows provides the stacking order
         virtual void paint( QRegion damage, ToplevelList windows ) = 0;
+        virtual void postPaint();
         // shape/size of a window changed
         virtual void windowGeometryShapeChanged( Toplevel* );
         // opacity of a window changed
@@ -84,7 +86,7 @@ class Scene::Window
         int y() const;
         int width() const;
         int height() const;
-        const Toplevel* window() const;
+        Toplevel* window();
         bool isVisible() const;
         bool isOpaque() const;
         QRegion shape() const;
@@ -130,7 +132,7 @@ int Scene::Window::height() const
     }
 
 inline
-const Toplevel* Scene::Window::window() const
+Toplevel* Scene::Window::window()
     {
     return toplevel;
     }

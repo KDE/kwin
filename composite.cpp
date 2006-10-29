@@ -156,13 +156,12 @@ void Workspace::compositeTimeout()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
-    effects->startPaint();
-    // TODO when effects cause damage, it should be only enqueued for next repaint
-    QRegion r = damage_region;
+    scene->prePaint();
+    scene->paint( damage_region, windows );
     damage_region = QRegion();
-    scene->paint( r, windows );
     foreach( Toplevel* c, windows )
         c->resetDamage();
+    scene->postPaint();
     lastCompositePaint.start();
     }
 

@@ -86,7 +86,6 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         }
     int mask = 0;
     paintScreen( &mask, &damage );
-    stacking_order.clear();
     if( mask & PAINT_SCREEN_REGION )
         {
         // Use the damage region as the clip region for the root window

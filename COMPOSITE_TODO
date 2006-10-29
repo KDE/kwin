@@ -115,8 +115,6 @@ TODO:
             be created, but the old animation should be stopped - compare window id's?
     ? maybe just keep the object around in a special list
 
-* add a postpaint pass
-    - needed for animations to trigger next repaint, currently window damage is reset after
-        the painting pass, meaning the damage cannot be added from there
-    - current workaround is to damage the whole screen, as there's a for resetting that damage
-        in advance
+* don't add workspace damage in Toplevel::addDamage()
+    - instead add damage of windows to the screen only before doing the painting
+    - this should prevent repaints because of obscured windows
