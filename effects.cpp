@@ -14,6 +14,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "scene.h"
 
+#include "effects/fadein.h"
+#include "effects/maketransparent.h"
+#include "effects/scalein.h"
+#include "effects/shakymove.h"
+#include "effects/shiftworkspaceup.h"
+
 namespace KWinInternal
 {
 
@@ -67,261 +73,6 @@ void Effect::postPaintWindow( Scene::Window* w )
     effects->postPaintWindow( w );
     }
 
-void MakeHalfTransparent::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
-    {
-    const Client* c = dynamic_cast< const Client* >( w->window());
-    if(( c != NULL && ( c->isMove() || c->isResize())) || w->window()->isDialog())
-        {
-        *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
-        *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
-        }
-    effects->prePaintWindow( w, mask, region, time );
-    }
-
-void MakeHalfTransparent::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    const Client* c = dynamic_cast< const Client* >( w->window());
-    if( w->window()->isDialog())
-        data.opacity *= 0.8;
-    if( c->isMove() || c->isResize())
-        data.opacity *= 0.5;
-    effects->paintWindow( w, mask, region, data );
-    }
-
-void MakeHalfTransparent::windowUserMovedResized( Toplevel* c, bool first, bool last )
-    {
-    if( first || last )
-        c->addDamageFull();
-    }
-
-ShakyMove::ShakyMove()
-    {
-    connect( &timer, SIGNAL( timeout()), SLOT( tick()));
-    }
-
-static const int shaky_diff[] = { 0, 1, 2, 3, 2, 1, 0, -1, -2, -3, -2, -1 };
-static const int SHAKY_MAX = sizeof( shaky_diff ) / sizeof( shaky_diff[ 0 ] );
-
-void ShakyMove::prePaintScreen( int* mask, QRegion* region, int time )
-    {
-    if( !windows.isEmpty())
-        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-    effects->prePaintScreen( mask, region, time );
-    }
-
-void ShakyMove::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
-    {
-    if( windows.contains( w->window()))
-        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-    effects->prePaintWindow( w, mask, region, time );
-    }
-
-void ShakyMove::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    if( windows.contains( w->window()))
-        data.xTranslate += shaky_diff[ windows[ w->window() ]];
-    effects->paintWindow( w, mask, region, data );
-    }
-
-void ShakyMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
-    {
-    if( first )
-        {
-        if( windows.isEmpty())
-            timer.start( 50 );
-        windows[ c ] = 0;
-        }
-    else if( last )
-        {
-        windows.remove( c );
-        // just damage whole screen, transformation is involved
-        c->workspace()->addDamageFull();
-        if( windows.isEmpty())
-            timer.stop();
-        }
-    }
-
-void ShakyMove::windowDeleted( Toplevel* c )
-    {
-    windows.remove( c );
-    if( windows.isEmpty())
-        timer.stop();
-    }
-
-void ShakyMove::tick()
-    {
-    for( QMap< const Toplevel*, int >::Iterator it = windows.begin();
-         it != windows.end();
-         ++it )
-        {
-        if( *it == SHAKY_MAX - 1 )
-            *it = 0;
-        else
-            ++(*it);
-        // just damage whole screen, transformation is involved
-        it.key()->workspace()->addDamageFull();
-        }
-    }
-
-#if 0
-void GrowMove::transformWindow( Toplevel* c, Matrix& matrix, EffectData& )
-    {
-    if( Client* c2 = dynamic_cast< Client* >( c ))
-        if( c2->isMove())
-            {
-            Matrix m;
-            m.m[ 0 ][ 0 ] = 1.2;
-            m.m[ 1 ][ 1 ] = 1.4;
-            matrix *= m;
-            }
-    }
-
-void GrowMove::windowUserMovedResized( Toplevel* c, bool first, bool last )
-    {
-    if( first || last )
-        {
-        // TODO damage whole screen, transformation is involved
-        c->workspace()->addDamage( c->geometry());
-        }
-    }
-#endif
-
-ShiftWorkspaceUp::ShiftWorkspaceUp( Workspace* ws )
-    : up( false )
-    , diff( 0 )
-    , wspace( ws )
-    {
-    connect( &timer, SIGNAL( timeout()), SLOT( tick()));
-    timer.start( 2000 );
-    }
-
-void ShiftWorkspaceUp::prePaintScreen( int* mask, QRegion* region, int time )
-    {
-    if( up && diff < 1000 )
-        diff = qBound( 0, diff + time, 1000 ); // KDE3: note this differs from KCLAMP
-    if( !up && diff > 0 )
-        diff = qBound( 0, diff - time, 1000 );
-    if( diff != 0 )
-        *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
-    effects->prePaintScreen( mask, region, time );
-    }
-
-void ShiftWorkspaceUp::paintScreen( int mask, QRegion region, ScreenPaintData& data )
-    {
-    if( diff != 0 )
-        data.yTranslate -= diff / 100;
-    effects->paintScreen( mask, region, data );
-    }
-
-void ShiftWorkspaceUp::postPaintScreen()
-    {
-    if( up ? diff < 1000 : diff > 0 )
-        wspace->addDamageFull(); // trigger next animation repaint
-    effects->postPaintScreen();
-    }
-
-void ShiftWorkspaceUp::tick()
-    {
-    up = !up;
-    wspace->addDamageFull();
-    }
-
-
-void FadeIn::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
-    {
-    if( windows.contains( w->window()))
-        {
-        windows[ w->window() ] += time / 1000.; // complete change in 1000ms
-        if( windows[ w->window() ] < 1 )
-            {
-            *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
-            *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
-            }
-        else
-            windows.remove( w->window());
-        }
-    effects->prePaintWindow( w, mask, region, time );
-    }
-
-void FadeIn::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    if( windows.contains( w->window()))
-        {
-        data.opacity *= windows[ w->window()];
-        }
-    effects->paintWindow( w, mask, region, data );
-    }
-
-void FadeIn::postPaintWindow( Scene::Window* w )
-    {
-    if( windows.contains( w->window()))
-        w->window()->addDamageFull(); // trigger next animation repaint
-    effects->postPaintWindow( w );
-    }
-
-void FadeIn::windowAdded( Toplevel* c )
-    {
-    Client* cc = dynamic_cast< Client* >( c );
-    if( cc == NULL || cc->isOnCurrentDesktop())
-        {
-        windows[ c ] = 0;
-        c->addDamageFull();
-        }
-    }
-
-void FadeIn::windowDeleted( Toplevel* c )
-    {
-    windows.remove( c );
-    }
-
-
-void ScaleIn::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
-    {
-    if( windows.contains( w->window()))
-        {
-        windows[ w->window() ] += time / 500.; // complete change in 500ms
-        if( windows[ w->window() ] < 1 )
-            *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-        else
-            windows.remove( w->window());
-        }
-    effects->prePaintWindow( w, mask, region, time );
-    }
-
-void ScaleIn::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
-    {
-    if( windows.contains( w->window()))
-        {
-        data.xScale *= windows[ w->window()];
-        data.yScale *= windows[ w->window()];
-        data.xTranslate += int( w->window()->width() / 2 * ( 1 - windows[ w->window()] ));
-        data.yTranslate += int( w->window()->height() / 2 * ( 1 - windows[ w->window()] ));
-        }
-    effects->paintWindow( w, mask, region, data );
-    }
-
-void ScaleIn::postPaintWindow( Scene::Window* w )
-    {
-    if( windows.contains( w->window()))
-        w->window()->addDamageFull(); // trigger next animation repaint
-    effects->postPaintWindow( w );
-    }
-
-void ScaleIn::windowAdded( Toplevel* c )
-    {
-    Client* cc = dynamic_cast< Client* >( c );
-    if( cc == NULL || cc->isOnCurrentDesktop())
-        {
-        windows[ c ] = 0;
-        c->addDamageFull();
-        }
-    }
-
-void ScaleIn::windowDeleted( Toplevel* c )
-    {
-    windows.remove( c );
-    }
-
 //****************************************
 // EffectsHandler
 //****************************************
@@ -332,12 +83,11 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
-//    effects.append( new MakeHalfTransparent );
-//    effects.append( new ShakyMove );
-//    effects.append( new GrowMove );
-//    effects.append( new ShiftWorkspaceUp( ws ));
-    effects.append( new FadeIn );
-    effects.append( new ScaleIn );
+//    effects.append( new MakeTransparentEffect );
+//    effects.append( new ShakyMoveEffect );
+//    effects.append( new ShiftWorkspaceUpEffect( ws ));
+//    effects.append( new FadeInEffect );
+//    effects.append( new ScaleInEffect );
     }
 
 EffectsHandler::~EffectsHandler()
@@ -437,5 +187,3 @@ void EffectsHandler::postPaintWindow( Scene::Window* w )
 EffectsHandler* effects;
 
 } // namespace
-
-#include "effects.moc"

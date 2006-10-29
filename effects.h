@@ -13,10 +13,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_EFFECTS_H
 #define KWIN_EFFECTS_H
 
-#include <qmap.h>
-#include <qpoint.h>
-#include <qtimer.h>
-
 #include "scene.h"
 
 namespace KWinInternal
@@ -84,89 +80,6 @@ class EffectsHandler
     };
 
 extern EffectsHandler* effects;
-
-class MakeHalfTransparent
-    : public Effect
-    {
-    public:
-        virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-    };
-
-class ShakyMove
-    : public QObject, public Effect
-    {
-    Q_OBJECT
-    public:
-        ShakyMove();
-        virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowDeleted( Toplevel* c );
-    private slots:
-        void tick();
-    private:
-        QMap< const Toplevel*, int > windows;
-        QTimer timer;
-    };
-
-#if 0
-class GrowMove
-    : public Effect
-    {
-    public:
-        virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void transformWindow( Toplevel* c, Matrix& m, EffectData& data );
-    };
-#endif
-
-class ShiftWorkspaceUp
-    : public QObject, public Effect
-    {
-    Q_OBJECT
-    public:
-        ShiftWorkspaceUp( Workspace* ws );
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
-    private slots:
-        void tick();
-    private:
-        QTimer timer;
-        bool up;
-        int diff;
-        Workspace* wspace;
-    };
-
-class FadeIn
-    : public Effect
-    {
-    public:
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( Scene::Window* w );
-        // TODO react also on virtual desktop changes
-        virtual void windowAdded( Toplevel* c );
-        virtual void windowDeleted( Toplevel* c );
-    private:
-        QMap< const Toplevel*, double > windows;
-    };
-
-class ScaleIn
-    : public Effect
-    {
-    public:
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( Scene::Window* w );
-        // TODO react also on virtual desktop changes
-        virtual void windowAdded( Toplevel* c );
-        virtual void windowDeleted( Toplevel* c );
-    private:
-        QMap< const Toplevel*, double > windows;
-    };
 
 inline
 WindowPaintData::WindowPaintData()
