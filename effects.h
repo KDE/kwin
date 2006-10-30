@@ -54,6 +54,7 @@ class Effect
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void windowAdded( Toplevel* c );
         virtual void windowDeleted( Toplevel* c );
+        virtual void windowActivated( Toplevel* c );
     };
 
 class EffectsHandler
@@ -73,6 +74,7 @@ class EffectsHandler
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowAdded( Toplevel* c );
         void windowDeleted( Toplevel* c );
+        void windowActivated( Toplevel* c );
     private:
         QVector< Effect* > effects;
         int current_paint_window;

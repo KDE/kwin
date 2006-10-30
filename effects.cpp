@@ -15,6 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene.h"
 
 #include "effects/fadein.h"
+#include "effects/howto.h"
 #include "effects/maketransparent.h"
 #include "effects/scalein.h"
 #include "effects/shakymove.h"
@@ -40,6 +41,10 @@ void Effect::windowAdded( Toplevel* )
     }
 
 void Effect::windowDeleted( Toplevel* )
+    {
+    }
+
+void Effect::windowActivated( Toplevel* )
     {
     }
 
@@ -83,6 +88,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
+    effects.append( new HowtoEffect );
 //    effects.append( new MakeTransparentEffect );
 //    effects.append( new ShakyMoveEffect );
 //    effects.append( new ShiftWorkspaceUpEffect( ws ));
@@ -112,6 +118,12 @@ void EffectsHandler::windowDeleted( Toplevel* c )
     {
     foreach( Effect* e, effects )
         e->windowDeleted( c );
+    }
+
+void EffectsHandler::windowActivated( Toplevel* c )
+    {
+    foreach( Effect* e, effects )
+        e->windowActivated( c );
     }
 
 // start another painting pass

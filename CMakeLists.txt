@@ -56,6 +56,7 @@ set(kwin_KDEINIT_SRCS
    effects/scalein.cpp
    effects/shakymove.cpp
    effects/shiftworkspaceup.cpp
+   effects/howto.cpp
    )
 
 kde4_automoc(kwin ${kwin_KDEINIT_SRCS})
