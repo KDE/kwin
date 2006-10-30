@@ -83,13 +83,18 @@ KWin structure:
 ===============
 
 KWin has relatively few classes. The two main classes are Client, which represents windows
-on the screen, and Workspace, which represents the whole screen and manages windows. Both these
-classes are rather large, because they fulfil complicated tasks. In other to reduce size
+on the screen, and Workspace, which represents the whole screen and manages windows. Since
+KWin also needs to track unmanaged windows for compositing, there is a base class Toplevel
+for all windows, from which Client inherits, and from which also class Unmanaged inherits.
+These classes are rather large, because they fulfil complicated tasks. In other to reduce size
 of their source files these some functionality is in separate .cpp file grouped by the purpose:
 
 - workspace.* - core of class Workspace
 - client.* - core of class Client
+- toplevel.* - core of the base class Toplevel
+- unmanaged.* - core of the class Unmanaged
 - activation.cpp - focus handling and window activation
+- composite.cpp - code related to redirecting windows to pixmaps and tracking their damage
 - events.cpp - event handling is in events.cpp
 - geometry.cpp - geometry-related code
 - layers.cpp - stacking-related code
@@ -103,6 +108,7 @@ The rest of the files contain additional helper classes:
 
 - atoms.* - so-called atoms (symbolic names for constants in X)
 - bridge.* - communication with the decoration plugin
+- effects.* - support for compositing effects
 - geometrytip.* - window displaying window geometry while moving/resizing
 - group.* - grouping related windows together (warning! This is currently really messy and scary code
   that should be rewritten).
@@ -112,6 +118,10 @@ The rest of the files contain additional helper classes:
 - options.* - all configuration options for KWin are stored in this class
 - plugins.* - loading of the right decoration plugin
 - popupinfo.* - showing temporary information such as virtual desktop name when switching desktops
+- scene.* - base class for compositing backends, with shared functionality
+- scene_basic.* - a very simple testing compositing code
+- scene_opengl.* - compositing backed using OpenGL
+- scene_xrender.* - compositing backend using XRender
 - tabbox.* - the Alt+Tab dialog
 - utils.* - various small utility functions/classes
 
@@ -142,39 +152,33 @@ For such cases (which should be rare) a small external helper application is nee
 do, and for special cases such a utility needs to be written like kwin/killer).
 
 
-X documentation:
-================
-
-As already said, many parts of KWin don't need knowledge of Xlib or even how X actually works.
-Some parts do, and it may be also useful to have at least a basic understand for general
-understanding. A reference manual for Xlib can be found e.g.
-at ftp://ftp.x.org/pub/X11R7.0/doc/PDF/xlib.pdf , a tutorial explaining basic can be found
-e.g. at ttp://users.actcom.co.il/~choo/lupg/tutorials/xlib-programming/xlib-programming.html
-(note that you don't need to know that all - e.g. GC's are very rarely needed and the
-section on fonts is today outdated).
-
-
 Coding style:
 =============
 
-There are only three rules for patches for KWin:
+There are these rules for patches for KWin:
 
-- the code should be relatively nice and clean. Seriously. Any messy code can be hard to comprehend,
+- the code should be relatively nice and clean. Seriously. Rationale: Any messy code can be hard to comprehend,
 but if the code is in a window manager it will be twice as difficult.
 
 - unless the functionality of the code is obvious, there should be either at least a short comment explaining
 what it does, or it should be obvious from the commit log. If there's a hack needed, if there's a potentional
 problem, if something is just a temporary fix, say so. Comments like "this clever trick is necessary"
-don't count. See rule #1 above for reasons. I needed more than two years to understand all of KWin,
+don't count. See above for rationale. I needed more than two years to understand all of KWin,
 and there were parts I never got and had to rewrite in order to fix a problem with them.
 
-- put matching opening { and closing } in the same column. That's the only formatting rule I ask for.
-I don't really care if they're aligned with the block one level higher or if they're aligned with the block
-they surround like I do (which is the only thing about the "weird coding style in KWin") or if you align them
-with something else, just put them in the same column. If I can handle about half a dozen different formatting
-styles when working on various parts of KDE, this shouldn't be much work for you (and you can do that only
-right before sending the patch). I don't care where you do and don't put spaces or what exactly you call local
-variables, as long as I can read it (trying to make it look like the rest of the code is bonus points though ;) ).
+- indentation is 4 spaces, not tabs. Rationale: The code looks like a mess if this is not consistent.
 
+- { and } enclosing a block are aligned with the block, neither with the above level nor there is any
+trailing { (i.e. { and } are indented in the same column like the code they surround). See above for rationale.
+If this feel weird or whatever, put them wherever you want first and when the changes are done, check
+"svn diff" and fix it. If I can handle about half a dozen different formatting styles when working
+on various parts of KDE, this shouldn't be that much work for you (and yes, I've even done
+the "fix-before-submit" thing).
+
+- there is not space before (, i.e. it's "foo(", not "foo (". Rationale: This makes it simpler to grep for functions.
+
+That's all. Bonus points if you try to follow the existing coding style in general, but I don't think
+I really care about the rest, as long as these rules are followed. If I find out I care about more,
+I'll add them here.
 
 kwin@kde.org
