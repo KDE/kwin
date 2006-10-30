@@ -31,7 +31,7 @@ void MakeTransparentEffect::paintWindow( Scene::Window* w, int mask, QRegion reg
     const Client* c = dynamic_cast< const Client* >( w->window());
     if( w->window()->isDialog())
         data.opacity *= 0.8;
-    if( c->isMove() || c->isResize())
+    if( c != NULL && ( c->isMove() || c->isResize()))
         data.opacity *= 0.5;
     effects->paintWindow( w, mask, region, data );
     }
