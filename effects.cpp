@@ -88,7 +88,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
-    effects.append( new HowtoEffect );
+//    effects.append( new HowtoEffect );
 //    effects.append( new MakeTransparentEffect );
 //    effects.append( new ShakyMoveEffect );
 //    effects.append( new ShiftWorkspaceUpEffect( ws ));
