@@ -79,6 +79,7 @@ bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 // finding of OpenGL extensions functions
 typedef void (*glXFuncPtr)();
 typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
+glXGetProcAddress_func glXGetProcAddress;
 
 static glXFuncPtr getProcAddress( const char* name )
     {
@@ -95,7 +96,6 @@ typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
     int buffer, const int* attrib_list );
 typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
 glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
-glXGetProcAddress_func glXGetProcAddress;
 glXBindTexImageEXT_func glXBindTexImageEXT;
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
