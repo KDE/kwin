@@ -60,8 +60,14 @@ OpenGL TODO
 + Check/make it work with other gfx cards
     - I've tested only with nvidia with the 9625 beta drivers and 8776 stable drivers so far
     - I have absolutely no idea about other gfx cards, needs to be tested
-+       - ati
-+       - intel
+        - ati
+!           - does kwin_composite work there at all?
+!           - does glcompmgr work there at all? (even with the various switches in the source)
++           - make kwin_composite work there if it doesn't
+        - intel
+!           - does kwin_composite work there at all?
+!           - does glcompmgr work there at all? (even with the various switches in the source)
++           - make kwin_composite work there if it doesn't
 +       - who knows what else
 
 ? Xgl support

@@ -30,6 +30,8 @@ Sources and other compositing managers:
     - simple and easy to understand
     - works even without texture_from_pixmap extension
     - claims to support several different gfx cards
+    - compile with something like
+      "gcc -Wall glcompmgr-0.5.c `pkg-config --cflags --libs glib-2.0` -lGL -lXcomposite -lXdamage -L/usr/X11R6/lib"
 
 - compiz
     - git clone git://anongit.freedesktop.org/git/xorg/app/compiz
