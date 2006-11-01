@@ -27,6 +27,21 @@ $ svn switch https://svn.kde.org/home/kde/branches/work/kwin_composite
 $ make
 (i.e. build and use it as usually)
 
+After starting, KWin's debug output also says which compositing backend it uses, e.g.
+"OpenGL compositing". If it does not, most probably your X is not configured properly.
+
+For nVidia:
+-----------
+Both 9625 (beta) and 8776 drivers work. You need
+
+Option "AddARGBGLXVisuals" "True"
+
+in 'Section "Screen"' and also the Xcomposite extension enabled:
+
+Section "Extensions"
+ Option "Composite" "Enable"
+EndSection
+
 
 KWin parts:
 ===========
