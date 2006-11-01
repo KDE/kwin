@@ -202,4 +202,7 @@ Effects TODO
 !   - would require adding xScale/yScale to ScreenPaintData
         - should be doable even for XRender
 
++ logout effect
+    - should be triggered by ksmserver somehow
+
 ? other effects
