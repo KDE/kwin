@@ -11,6 +11,23 @@ There are also two kcontrol components 'kcmkwindecoration' and 'kcmkwinoptions' 
 to KWin's KControl modules.
 
 
+Using kwin_composite branch:
+============================
+
+See the KDE trunk HOWTO at http://developer.kde.org/build/trunk.html .
+
+The simplest way to build the kwin_composite branch is to switch the trunk version
+to the branch:
+
+$ cd kdebase/workspace/kwin
+$ svn info
+(prints the repository URL, for example https://svn.kde.org/home/kde/trunk/KDE/kdebase/workspace/kwin)
+$ svn switch https://svn.kde.org/home/kde/branches/work/kwin_composite
+(i.e. replace trunk/KDE/kdebase/workspace/kwin with branches/work/kwin_composite)
+$ make
+(i.e. build and use it as usually)
+
+
 KWin parts:
 ===========
 

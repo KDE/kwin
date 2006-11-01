@@ -1,9 +1,10 @@
 This file lists TODO items for the compositing code.
 
-See file HACKING for details on developing KWin.
+See file HACKING for details on developing KWin, including building
+    the kwin_composite branch.
 See effects/howto.* for a HOWTO on writting effects.
 See documentation in source (mainly in scene.cpp) for description
-of the design of the compositing framework.
+    of the design of the compositing framework.
 
 TODO
 =================================
