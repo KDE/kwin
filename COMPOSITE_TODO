@@ -21,17 +21,6 @@ TODO
 General TODO
 =================================
 
-! XComposite overlay window
-    - X.Org 7.1 and newer have XComposite extension version 0.3, which allows
-        creating an overlay window to paint to instead of painting to the root window
-    - the code in glcompmgr for this is in HAVE_OVERLAYS, stealing primarily from
-        here should be better since it's simpler and the code so far has been
-        modelled more after glcompmgr
-    - the code in compiz for this is in USE_COW
-!   - use double-buffering with the overlay window - kwin already has code
-        for double-buffered destination drawable, but I haven't been able to test it
-    - should be only needed for OpenGL code, I think this doesn't matter for XRender
-
 ? alpha clear hack
 +   - find out if it affects performance
 +   - if yes, try to find a better way of solving the problem
@@ -95,6 +84,29 @@ OpenGL TODO
         of some #defines like GLX_TEXTURE_FORMAT_EXT
         - Beryl has this code in beryl.h
 
+! XComposite overlay window
+    - X.Org 7.1 and newer have XComposite extension version 0.3, which allows
+        creating an overlay window to paint to instead of painting to the root window
+    - the code in glcompmgr for this is in HAVE_OVERLAYS, stealing primarily from
+        here should be better since it's simpler and the code so far has been
+        modelled more after glcompmgr
+    - the code in compiz for this is in USE_COW
+!   - use double-buffering with the overlay window - kwin already has code
+        for double-buffered destination drawable, but I haven't been able to test it
+    - should be only needed for OpenGL code, I think this doesn't matter for XRender
+
+! improved GLXFBConfig support
+    - it seems a different config for each depth would be needed
+    - from http://lists.freedesktop.org/archives/xorg/2006-July/016859.html and
+        http://lists.freedesktop.org/archives/xorg/2006-July/017005.html it seems
+        that some implementations have config support broken and glXChooseFBConfig()
+        doesn't work with them properly
+    - Compiz instead uses glXGetFBConfigs(), iterates over all configs and chooses
+        the best one for every depth (code is in screen.c, search for "getFBConfigs")
+!   - so most probably KWin should do similarly - get all configs, find the best
+      one for the root window (or for the window used in the XComposite overlay)
+      and the best one for every depth of drawables
+
 + sync to vblank
     - currently the compositing code is run with 20ms timer, i.e. constant 50fps
     - the GLX_SGI_video_sync extension should be used
@@ -116,6 +128,8 @@ OpenGL TODO
         - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
 +       - perhaps syncing to vblank will be needed to avoid flicker
 !   - XCopyArea() should not update the whole screen but only the affected areas
+
+? compiz checks that "GLX_SGIX_fbconfig" extension is present and requires it
 
 
 XRender TODO
