@@ -20,9 +20,9 @@ Sources and other compositing managers:
 
 - http://opengl.org
     - documentation
-        - OpenGL Redbook
-        - GLX docs
-        - extensions docs
+        - OpenGL Redbook (http://opengl.org/documentation/red_book/)
+        - GLX docs (http://opengl.org/documentation/specs/glx/glx1.4.pdf)
+        - extensions docs (http://www.opengl.org/registry/)
 
 - glcompmgr
     - http://lists.freedesktop.org/archives/xorg/2006-July/017006.html ,
