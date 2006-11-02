@@ -61,6 +61,8 @@ Sources and other compositing managers:
 
 #include <dlfcn.h>
 
+#include <GL/glxtokens.h>
+
 namespace KWinInternal
 {
 
