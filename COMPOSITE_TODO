@@ -217,6 +217,10 @@ Effects TODO
         - should be doable even for XRender
 
 + logout effect
-    - should be triggered by ksmserver somehow
+*   - should be triggered by ksmserver somehow
+
++ effects to replace widget effects (the ones in the Effects tab in "kcmshell style")
++   - needs support for new window types from the current draft of the EWMH WM spec
++       - needs patching Qt, netwm* classes in kdecore
 
 ? other effects
