@@ -27,7 +27,17 @@
 
 #include <kconfig.h>
 
-#include "keramikconfig.h"
+#include "ui_keramikconfig.h"
+
+class KeramikConfigUI : public QWidget, public Ui::KeramikConfigUI
+{
+public:
+  KeramikConfigUI( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
+
 
 class KeramikConfig: public QObject
 {

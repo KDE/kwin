@@ -32,7 +32,6 @@
 #include <kglobal.h>
 
 #include "config.h"
-#include "configdialog.h"
 
 PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
     : QObject(parent), m_config(0), m_dialog(0)

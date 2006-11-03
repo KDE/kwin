@@ -7,7 +7,7 @@ set(kwin_keramik_config_PART_SRCS config.cpp )
 
 kde4_automoc(${kwin_keramik_config_PART_SRCS})
 
-kde4_add_ui3_files(kwin_keramik_config_PART_SRCS keramikconfig.ui )
+kde4_add_ui_files(kwin_keramik_config_PART_SRCS keramikconfig.ui )
 
 kde4_add_plugin(kwin_keramik_config ${kwin_keramik_config_PART_SRCS})
 
