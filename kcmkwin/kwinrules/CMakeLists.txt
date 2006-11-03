@@ -4,7 +4,8 @@ ADD_DEFINITIONS(-DKCMRULES)
 ########### next target ###############
 
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp)
-kde4_add_ui3_files(kwinrules_SRCS ruleswidgetbase.ui ruleslistbase.ui detectwidgetbase.ui editshortcutbase.ui )
+kde4_add_ui_files(kwinrules_SRCS ruleslistbase.ui detectwidgetbase.ui)
+kde4_add_ui3_files(kwinrules_SRCS ruleswidgetbase.ui editshortcutbase.ui )
 
 set(kwin_rules_dialog_KDEINIT_SRCS main.cpp ${kwinrules_SRCS})
 

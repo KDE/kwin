@@ -29,8 +29,8 @@
 namespace KWinInternal
 {
 
-KCMRulesList::KCMRulesList( QWidget* parent, const char* name )
-: KCMRulesListBase( parent, name )
+KCMRulesList::KCMRulesList( QWidget* parent)
+: KCMRulesListBase( parent)
     {
     // connect both current/selected, so that current==selected (stupid QListBox :( )
     connect( rules_listbox, SIGNAL( currentChanged( Q3ListBoxItem* )),

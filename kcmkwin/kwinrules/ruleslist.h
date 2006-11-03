@@ -20,7 +20,7 @@
 #ifndef __RULESLIST_H__
 #define __RULESLIST_H__
 
-#include "ruleslistbase.h"
+#include "ui_ruleslistbase.h"
 
 
 
@@ -31,12 +31,21 @@ class Q3ListBoxItem;
 namespace KWinInternal
 {
 
+class KCMRulesListBase : public QWidget, public Ui::KCMRulesListBase
+{
+public:
+  KCMRulesListBase( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
+
 class KCMRulesList
     : public KCMRulesListBase
     {
     Q_OBJECT
     public:
-        KCMRulesList( QWidget* parent = NULL, const char* name = NULL );
+        KCMRulesList( QWidget* parent = NULL );
         virtual ~KCMRulesList();
         void load();
         void save();

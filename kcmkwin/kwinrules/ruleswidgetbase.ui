@@ -2542,56 +2542,9 @@
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
 <includehints>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>klistbox.h</includehint>
     <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kcombobox.h</includehint>
     <includehint>krestrictedline.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kcombobox.h</includehint>
 </includehints>
 </UI>

@@ -20,7 +20,7 @@
 #ifndef __DETECTWIDGET_H__
 #define __DETECTWIDGET_H__
 
-#include "detectwidgetbase.h"
+#include "ui_detectwidgetbase.h"
 
 #include <kdialog.h>
 #include <kwin.h>
@@ -33,12 +33,21 @@
 namespace KWinInternal
 {
 
+class DetectWidgetBase : public QWidget, public Ui::DetectWidgetBase
+{
+public:
+  DetectWidgetBase( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
+
 class DetectWidget
     : public DetectWidgetBase
     {
     Q_OBJECT
     public:
-        DetectWidget( QWidget* parent = NULL, const char* name = NULL );
+        DetectWidget( QWidget* parent = NULL );
     };
 
 class DetectDialog
