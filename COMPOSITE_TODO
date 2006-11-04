@@ -43,6 +43,12 @@ General TODO
 * handle XRandr changes
     - output buffers and similar probably need recreating when the screen size changes
 
+! compile even without OpenGL or XRender
+    - kwin_composite currently requires both OpenGL and XRender to build
+    - compiling without either results in compile errors, needs to be fixed
+!   - scene_xrender.cpp also requires XFixes
+!   - check whether it compiles fine without XComposite/XDamage
+
 
 OpenGL TODO
 =================================

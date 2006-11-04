@@ -42,7 +42,7 @@ namespace KWinInternal
 // Workspace
 //****************************************
 
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE ) && defined( HAVE_XFIXES )
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
 void Workspace::setupCompositing()
     {
     if( !options->useTranslucency )
