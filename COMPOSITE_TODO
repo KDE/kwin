@@ -223,4 +223,18 @@ Effects TODO
 +   - needs support for new window types from the current draft of the EWMH WM spec
 +       - needs patching Qt, netwm* classes in kdecore
 
++ showftp effect
+    - for debugging, just shows transparent fps in some corner
+    - just painting the number in paintScreen() should do, with glPushMatrix() and glLoadIdentity()
+        to avoid all transformations
++   - needs bindPixmapToTexture() or something like that, for displaying the text
+    - should also detect kwin being idle - it probably should detect in pre-paint that the only
+        damage is its own area and avoid damaging for the next round in post-paint
+
++ debugpaint effect
+    - should show what is damaged during each repaint step
+    - probably just e.g. paint a red almost transparent area over damaged areas
+    - needs special care to avoid causing infinite loops by its own damage (i.e. it damages
+        part of screen to clear its own painting, that triggers itself again next repaint)
+
 ? other effects
