@@ -44,7 +44,7 @@ Sources and other compositing managers:
 - beryl
     - the community fork of Compiz
     - http://beryl-project.org
-    - svn co svn://metascape.afraid.org/svnroot/beryl
+    - svn co http://svn.beryl-project.org/trunk/
 
 - libcm (metacity)
     - cvs -d :pserver:anonymous@anoncvs.gnome.org:/cvs/gnome co libcm
