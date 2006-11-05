@@ -1639,7 +1639,7 @@ bool Unmanaged::windowEvent( XEvent* e )
             break;
             }
         }
-    return true; // eat all events
+    return false; // don't eat events, even our own unmanaged widgets are tracked
     }
 
 void Unmanaged::mapNotifyEvent( XMapEvent* )
