@@ -11,7 +11,6 @@ kde4_add_ui_files(kwin_keramik_config_PART_SRCS keramikconfig.ui )
 
 kde4_add_plugin(kwin_keramik_config ${kwin_keramik_config_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin_keramik_config )
 
 target_link_libraries(kwin_keramik_config  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
 

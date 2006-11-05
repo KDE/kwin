@@ -16,7 +16,6 @@ kde4_automoc(${kwin3_plastik_PART_SRCS})
 
 kde4_add_plugin(kwin3_plastik ${kwin3_plastik_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_plastik )
 
 target_link_libraries(kwin3_plastik kdecorations ${KDE4_KDEFX_LIBS})
 

@@ -28,7 +28,6 @@ kde4_automoc(${kcm_kwinrules_PART_SRCS})
 
 kde4_add_plugin(kcm_kwinrules ${kcm_kwinrules_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwinrules )
 
 target_link_libraries(kcm_kwinrules  ${KDE4_KDEUI_LIBS} )
 

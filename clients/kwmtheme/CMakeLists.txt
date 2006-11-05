@@ -12,7 +12,6 @@ kde4_automoc(${kwin3_kwmtheme_PART_SRCS})
 
 kde4_add_plugin(kwin3_kwmtheme ${kwin3_kwmtheme_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kwin3_kwmtheme )
 
 target_link_libraries(kwin3_kwmtheme  ${KDE4_KDECORE_LIBS} kdecorations )
 
