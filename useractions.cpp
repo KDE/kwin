@@ -58,7 +58,6 @@ QMenu* Workspace::clientPopup()
 
         advanced_popup = new QMenu( popup );
         advanced_popup->setFont(KGlobalSettings::menuFont());
-        connect( advanced_popup, SIGNAL( triggered(QAction*) ), this, SLOT( clientPopupActivated(QAction*) ) );
 
         mKeepAboveOpAction = advanced_popup->addAction( i18n("Keep &Above Others") );
         mKeepAboveOpAction->setIcon( SmallIconSet( "up" ) );
