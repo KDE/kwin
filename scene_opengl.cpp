@@ -74,7 +74,8 @@ namespace KWinInternal
 // the config used for windows
 GLXFBConfig SceneOpenGL::fbcdrawable;
 // GLX content
-GLXContext SceneOpenGL::context;
+GLXContext SceneOpenGL::ctxroot;
+GLXContext SceneOpenGL::ctxdrawable;
 // the destination drawable where the compositing is done
 GLXDrawable SceneOpenGL::glxroot;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
@@ -198,8 +199,9 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     else
         if( !findConfig( drawable_attrs, fbcdrawable ))
             assert( false );
-    context = glXCreateNewContext( display(), fbcroot, GLX_RGBA_TYPE, NULL, GL_FALSE );
-    glXMakeContextCurrent( display(), glxroot, glxroot, context );
+    ctxroot = glXCreateNewContext( display(), fbcroot, GLX_RGBA_TYPE, NULL, GL_FALSE );
+    ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxroot, GL_FALSE );
+    glXMakeContextCurrent( display(), glxroot, glxroot, ctxroot );
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -224,7 +226,8 @@ SceneOpenGL::~SceneOpenGL()
         XFreeGC( display(), gcroot );
         XFreePixmap( display(), buffer );
         }
-    glXDestroyContext( display(), context );
+    glXDestroyContext( display(), ctxroot );
+    glXDestroyContext( display(), ctxdrawable );
     checkGLError( "Cleanup" );
     }
 
@@ -522,7 +525,7 @@ void SceneOpenGL::Window::bindTexture()
     else
         { // non-tfp case, copy pixmap contents to a texture
         GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
-        glXMakeContextCurrent( display(), pixmap, pixmap, context );
+        glXMakeContextCurrent( display(), pixmap, pixmap, ctxdrawable );
         glReadBuffer( GL_FRONT );
         glDrawBuffer( GL_FRONT );
         if( texture == None )
@@ -558,7 +561,7 @@ void SceneOpenGL::Window::bindTexture()
         XFreePixmap( display(), pix );
         if( root_db )
             glDrawBuffer( GL_BACK );
-        glXMakeContextCurrent( display(), glxroot, glxroot, context );
+        glXMakeContextCurrent( display(), glxroot, glxroot, ctxroot );
         }
     if( copy_buffer )
         XFreePixmap( display(), window_pix );

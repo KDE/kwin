@@ -45,7 +45,8 @@ class SceneOpenGL
         static bool root_db;
         static GLXFBConfig fbcdrawable;
         static GLXDrawable glxroot;
-        static GLXContext context;
+        static GLXContext ctxroot;
+        static GLXContext ctxdrawable;
         static bool tfp_mode;
         static bool copy_buffer_hack;
         class Window;
