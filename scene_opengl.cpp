@@ -118,7 +118,6 @@ const int root_db_attrs[] =
     GLX_RED_SIZE, 1,
     GLX_GREEN_SIZE, 1,
     GLX_BLUE_SIZE, 1,
-    GLX_ALPHA_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
     GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
     None
@@ -144,6 +143,7 @@ const int drawable_attrs[] =
     GLX_RED_SIZE, 1,
     GLX_GREEN_SIZE, 1,
     GLX_BLUE_SIZE, 1,
+    GLX_ALPHA_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
     GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT,
     None
