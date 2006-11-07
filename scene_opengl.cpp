@@ -114,6 +114,7 @@ static void checkGLError( const char* txt )
 // attributes for finding a double-buffered root window config
 const int root_db_attrs[] =
     {
+    GLX_CONFIG_CAVEAT, GLX_NONE,
     GLX_DOUBLEBUFFER, True,
     GLX_RED_SIZE, 1,
     GLX_GREEN_SIZE, 1,
@@ -126,6 +127,7 @@ const int root_db_attrs[] =
 // attributes for finding a non-double-buffered root window config
 static const int root_buffer_attrs[] =
     {
+    GLX_CONFIG_CAVEAT, GLX_NONE,
     GLX_DOUBLEBUFFER, False,
     GLX_RED_SIZE, 1,
     GLX_GREEN_SIZE, 1,
@@ -138,6 +140,7 @@ static const int root_buffer_attrs[] =
 // attributes for finding config for windows
 const int drawable_attrs[] = 
     {
+    GLX_CONFIG_CAVEAT, GLX_NONE,
     GLX_DOUBLEBUFFER, False,
     GLX_DEPTH_SIZE, 0,
     GLX_RED_SIZE, 1,
@@ -152,6 +155,7 @@ const int drawable_attrs[] =
 // attributes for finding config for windows when using tfp
 const int drawable_tfp_attrs[] = 
     {
+    GLX_CONFIG_CAVEAT, GLX_NONE,
     GLX_DOUBLEBUFFER, False,
     GLX_DEPTH_SIZE, 0,
     GLX_RED_SIZE, 1,
