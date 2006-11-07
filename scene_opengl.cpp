@@ -237,7 +237,7 @@ void SceneOpenGL::initBuffer()
         root_db = true;
     else
         {
-        if( findConfig( root_buffer_attrs, fbcroot, XVisualIDFromVisual( attrs.visual )))
+        if( findConfig( root_buffer_attrs, fbcroot ))
             root_db = false;
         else
             assert( false );
