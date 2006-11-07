@@ -497,8 +497,9 @@ void SceneOpenGL::Window::bindTexture()
         XFillRectangle( display(), pix, gc, 0, th, c->width(), c->height() - th );
         XFillRectangle( display(), pix, gc, tw, 0, c->width() - tw, c->height());
         XFreeGC( display(), gc );
-        glXWaitX();
         }
+    if( copy_buffer || alpha_clear )
+        glXWaitX();
     if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
         if( texture == None )
@@ -557,11 +558,13 @@ void SceneOpenGL::Window::bindTexture()
         // the pixmap is no longer needed, the texture will be updated
         // only when the window changes anyway, so no need to cache
         // the pixmap
+        glXWaitGL();
         glXDestroyPixmap( display(), pixmap );
         XFreePixmap( display(), pix );
         if( root_db )
             glDrawBuffer( GL_BACK );
         glXMakeContextCurrent( display(), glxroot, glxroot, ctxroot );
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         }
     if( copy_buffer )
         XFreePixmap( display(), window_pix );
