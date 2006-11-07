@@ -258,7 +258,7 @@ void SceneOpenGL::initBuffer()
     {
     XWindowAttributes attrs;
     XGetWindowAttributes( display(), rootWindow(), &attrs );
-    if( findConfig( root_db_attrs, &fbcbuffer, XVisualIDFromVisual( attrs.visual )))
+    if( false && findConfig( root_db_attrs, &fbcbuffer, XVisualIDFromVisual( attrs.visual )))
         {
         // root window is double-buffered, paint directly to it
         // TODO no need to use overlay?
@@ -266,7 +266,7 @@ void SceneOpenGL::initBuffer()
         buffer = rootWindow();
         glxbuffer = glXCreateWindow( display(), fbcbuffer, buffer, NULL );
         }
-    else if( findConfig( buffer_db_attrs, &fbcbuffer ) && wspace->createOverlay())
+    else if( false && findConfig( buffer_db_attrs, &fbcbuffer ) && wspace->createOverlay())
         { // we have overlay, try to create double-buffered window in it
         XVisualInfo* visual = glXGetVisualFromFBConfig( display(), fbcbuffer );
         kDebug() << "Using overlay visual 0x" << QString::number( visual->visualid ) << endl;
