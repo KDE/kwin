@@ -43,12 +43,13 @@ namespace KWinInternal
 
 #ifndef KCMRULES
 
-bool Extensions::has_shape = 0;
+bool Extensions::has_shape = false;
 int Extensions::shape_event_base = 0;
-bool Extensions::has_damage = 0;
+bool Extensions::has_damage = false;
 int Extensions::damage_event_base = 0;
-bool Extensions::has_composite = 0;
-bool Extensions::has_fixes = 0;
+bool Extensions::has_composite = false;
+bool Extensions::has_composite_overlay = false;
+bool Extensions::has_fixes = false;
 
 void Extensions::init()
     {
@@ -63,14 +64,14 @@ void Extensions::init()
     has_composite = XCompositeQueryExtension( display(), &dummy, &dummy );
     if( has_composite )
         {
-        int major = 0;
-        int minor = 2;
+        int major, minor;
         XCompositeQueryVersion( display(), &major, &minor );
-        if( major == 0 && minor < 2 )
-            has_composite = false;
+        has_composite = ( major > 0 || minor >= 2 );
+        has_composite_overlay = ( major > 0 || minor >= 3 );
         }
 #else
     has_composite = false;
+    has_composite_overlay = false;
 #endif
 #ifdef HAVE_XFIXES
     has_fixes = XFixesQueryExtension( display(), &dummy, &dummy );

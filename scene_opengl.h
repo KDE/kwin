@@ -37,15 +37,15 @@ class SceneOpenGL
         virtual void paintBackground( QRegion region );
     private:
         void initBuffer();
-        bool findConfig( const int* attrs, GLXFBConfig& config, VisualID visual = None );
+        bool findConfig( const int* attrs, GLXFBConfig* config, VisualID visual = None );
         typedef GLuint Texture;
         GC gcroot;
         Drawable buffer;
-        GLXFBConfig fbcroot;
-        static bool root_db;
+        GLXFBConfig fbcbuffer;
+        static bool db;
         static GLXFBConfig fbcdrawable;
-        static GLXDrawable glxroot;
-        static GLXContext ctxroot;
+        static GLXDrawable glxbuffer;
+        static GLXContext ctxbuffer;
         static GLXContext ctxdrawable;
         static bool tfp_mode;
         static bool copy_buffer_hack;

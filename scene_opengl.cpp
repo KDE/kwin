@@ -74,12 +74,12 @@ namespace KWinInternal
 // the config used for windows
 GLXFBConfig SceneOpenGL::fbcdrawable;
 // GLX content
-GLXContext SceneOpenGL::ctxroot;
+GLXContext SceneOpenGL::ctxbuffer;
 GLXContext SceneOpenGL::ctxdrawable;
 // the destination drawable where the compositing is done
-GLXDrawable SceneOpenGL::glxroot;
+GLXDrawable SceneOpenGL::glxbuffer;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
-bool SceneOpenGL::root_db; // destination drawable is double-buffered
+bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 
 // finding of OpenGL extensions functions
@@ -125,8 +125,21 @@ const int root_db_attrs[] =
     None
     };
 
-// attributes for finding a non-double-buffered root window config
-static const int root_buffer_attrs[] =
+// attributes for finding a double-buffered destination window config
+static const int buffer_db_attrs[] =
+    {
+    GLX_CONFIG_CAVEAT, GLX_NONE,
+    GLX_DOUBLEBUFFER, True,
+    GLX_RED_SIZE, 1,
+    GLX_GREEN_SIZE, 1,
+    GLX_BLUE_SIZE, 1,
+    GLX_RENDER_TYPE, GLX_RGBA_BIT,
+    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+    None
+    };
+
+// attributes for finding a non-double-buffered destination pixmap config
+static const int buffer_nondb_attrs[] =
     {
     GLX_CONFIG_CAVEAT, GLX_NONE,
     GLX_DOUBLEBUFFER, False,
@@ -189,19 +202,21 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     initBuffer(); // create destination buffer
     if( tfp_mode )
         {
-        if( !findConfig( drawable_tfp_attrs, fbcdrawable ))
+        if( !findConfig( drawable_tfp_attrs, &fbcdrawable ))
             {
             tfp_mode = false;
-            if( !findConfig( drawable_attrs, fbcdrawable ))
+            if( !findConfig( drawable_attrs, &fbcdrawable ))
                 assert( false );
             }
         }
     else
-        if( !findConfig( drawable_attrs, fbcdrawable ))
+        if( !findConfig( drawable_attrs, &fbcdrawable ))
             assert( false );
-    ctxroot = glXCreateNewContext( display(), fbcroot, GLX_RGBA_TYPE, NULL, GL_FALSE );
-    ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxroot, GL_FALSE );
-    glXMakeContextCurrent( display(), glxroot, glxroot, ctxroot );
+    ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
+    ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
+    glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
+    if( db )
+        glDrawBuffer( GL_BACK );
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -209,7 +224,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     checkGLError( "Init" );
-    kDebug() << "Root DB:" << root_db << ", TFP:" << tfp_mode << endl;
+    kDebug() << "DB:" << db << ", TFP:" << tfp_mode << endl;
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -218,15 +233,22 @@ SceneOpenGL::~SceneOpenGL()
          it != windows.end();
          ++it )
         (*it).free();
-    if( root_db )
-        glXDestroyWindow( display(), glxroot );
+    // do cleanup after initBuffer()
+    if( buffer == rootWindow())
+        glXDestroyWindow( display(), glxbuffer );
+    else if( wspace->overlayWindow())
+        {
+        glXDestroyWindow( display(), glxbuffer );
+        XDestroyWindow( display(), buffer );
+        wspace->destroyOverlay();
+        }
     else
         {
-        glXDestroyPixmap( display(), glxroot );
+        glXDestroyPixmap( display(), glxbuffer );
         XFreeGC( display(), gcroot );
         XFreePixmap( display(), buffer );
         }
-    glXDestroyContext( display(), ctxroot );
+    glXDestroyContext( display(), ctxbuffer );
     glXDestroyContext( display(), ctxdrawable );
     checkGLError( "Cleanup" );
     }
@@ -236,32 +258,39 @@ void SceneOpenGL::initBuffer()
     {
     XWindowAttributes attrs;
     XGetWindowAttributes( display(), rootWindow(), &attrs );
-    if( findConfig( root_db_attrs, fbcroot, XVisualIDFromVisual( attrs.visual )))
-        root_db = true;
-    else
-        {
-        if( findConfig( root_buffer_attrs, fbcroot ))
-            root_db = false;
-        else
-            assert( false );
-        }
-    if( root_db )
+    if( findConfig( root_db_attrs, &fbcbuffer, XVisualIDFromVisual( attrs.visual )))
         {
         // root window is double-buffered, paint directly to it
+        // TODO no need to use overlay?
+        db = true;
         buffer = rootWindow();
-        glxroot = glXCreateWindow( display(), fbcroot, buffer, NULL );
-        glDrawBuffer( GL_BACK );
+        glxbuffer = glXCreateWindow( display(), fbcbuffer, buffer, NULL );
         }
-    else
-        {
-        // no double-buffered root, paint to a buffer and copy to root window
+    else if( findConfig( buffer_db_attrs, &fbcbuffer ) && wspace->createOverlay())
+        { // we have overlay, try to create double-buffered window in it
+        XVisualInfo* visual = glXGetVisualFromFBConfig( display(), fbcbuffer );
+        kDebug() << "Using overlay visual 0x" << QString::number( visual->visualid ) << endl;
+        XSetWindowAttributes attrs;
+        attrs.colormap = XCreateColormap( display(), rootWindow(), visual->visual, AllocNone );
+        buffer = XCreateWindow( display(), wspace->overlayWindow(), 0, 0, displayWidth(), displayHeight(),
+            0, QX11Info::appDepth(), InputOutput, visual->visual, CWColormap, &attrs );
+        glxbuffer = glXCreateWindow( display(), fbcbuffer, buffer, NULL );
+        wspace->setupOverlay( buffer );
+        db = true;
+        XFree( visual );
+        }
+    else if( findConfig( buffer_nondb_attrs, &fbcbuffer ))
+        { // cannot get any double-buffered drawable, will double-buffer using a pixmap
+        db = false;
         XGCValues gcattr;
         gcattr.subwindow_mode = IncludeInferiors;
         gcroot = XCreateGC( display(), rootWindow(), GCSubwindowMode, &gcattr );
         buffer = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(),
             QX11Info::appDepth());
-        glxroot = glXCreatePixmap( display(), fbcroot, buffer, NULL );
+        glxbuffer = glXCreatePixmap( display(), fbcbuffer, buffer, NULL );
         }
+    else
+        assert( false );
     }
 
 // print info about found configs
@@ -283,7 +312,7 @@ static void debugFBConfig( GLXFBConfig* fbconfigs, int i, const int* attrs )
     }
 
 // find config matching the given attributes and possibly the given X visual
-bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID visual )
+bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig* config, VisualID visual )
     {
     int cnt;
     GLXFBConfig* fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()),
@@ -292,7 +321,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID vi
         {
         if( visual == None )
             {
-            config = fbconfigs[ 0 ];
+            *config = fbconfigs[ 0 ];
             kDebug() << "Found FBConfig" << endl;
             debugFBConfig( fbconfigs, 0, attrs );
             XFree( fbconfigs );
@@ -309,7 +338,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig& config, VisualID vi
                 if( value == (int)visual )
                     {
                     kDebug() << "Found FBConfig" << endl;
-                    config = fbconfigs[ i ];
+                    *config = fbconfigs[ i ];
                     debugFBConfig( fbconfigs, i, attrs );
                     XFree( fbconfigs );
                     return true;
@@ -354,8 +383,12 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     paintScreen( &mask, &damage ); // call generic implementation
     glPopMatrix();
     // TODO only partial repaint for mask & PAINT_SCREEN_REGION
-    if( root_db )
-        glXSwapBuffers( display(), glxroot );
+    if( db )
+        {
+        glXSwapBuffers( display(), glxbuffer );
+        glXWaitGL();
+        XFlush( display());
+        }
     else
         {
         glFlush();
@@ -561,9 +594,9 @@ void SceneOpenGL::Window::bindTexture()
         glXWaitGL();
         glXDestroyPixmap( display(), pixmap );
         XFreePixmap( display(), pix );
-        if( root_db )
+        if( db )
             glDrawBuffer( GL_BACK );
-        glXMakeContextCurrent( display(), glxroot, glxroot, ctxroot );
+        glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         }
     if( copy_buffer )

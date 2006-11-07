@@ -385,10 +385,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 if( c == NULL )
                     c = createUnmanaged( e->xmap.window );
                 if( c )
-                    {
-                    c->windowEvent( e );
-                    return true;
-                    }
+                    return c->windowEvent( e );
                 }
             return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
             }

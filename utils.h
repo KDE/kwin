@@ -16,12 +16,18 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <config-X11.h>
 
 #include <X11/Xlib.h>
+
 #ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
+#if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
+#define HAVE_XCOMPOSITE_OVERLAY
 #endif
+#endif
+
 #ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
 #endif
+
 #ifdef HAVE_XFIXES
 #include <X11/extensions/Xfixes.h>
 #endif
@@ -148,6 +154,7 @@ class Extensions
         static bool damageAvailable() { return has_damage; }
         static int damageNotifyEvent();
         static bool compositeAvailable() { return has_composite; }
+        static bool compositeOverlayAvailable() { return has_composite && has_composite_overlay; }
         static bool fixesAvailable() { return has_fixes; }
         static bool hasShape( Window w );
     private:
@@ -156,6 +163,7 @@ class Extensions
         static bool has_damage;
         static int damage_event_base;
         static bool has_composite;
+        static bool has_composite_overlay;
         static bool has_fixes;
     };
 

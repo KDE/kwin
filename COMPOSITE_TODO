@@ -49,6 +49,10 @@ General TODO
 !   - scene_xrender.cpp also requires XFixes
 !   - check whether it compiles fine without XComposite/XDamage
 
+? XComposite overlay window
+?   - does it make any sense to use it instead of painting directly to the root window
+        when the root window's visual etc. are good?
+
 
 OpenGL TODO
 =================================
@@ -89,17 +93,6 @@ OpenGL TODO
 !   - it seems that some systems (using older X.org?) will need local versions
         of some #defines like GLX_TEXTURE_FORMAT_EXT
         - Beryl has this code in beryl.h
-
-! XComposite overlay window
-    - X.Org 7.1 and newer have XComposite extension version 0.3, which allows
-        creating an overlay window to paint to instead of painting to the root window
-    - the code in glcompmgr for this is in HAVE_OVERLAYS, stealing primarily from
-        here should be better since it's simpler and the code so far has been
-        modelled more after glcompmgr
-    - the code in compiz for this is in USE_COW
-!   - use double-buffering with the overlay window - kwin already has code
-        for double-buffered destination drawable, but I haven't been able to test it
-    - should be only needed for OpenGL code, I think this doesn't matter for XRender
 
 ! improved GLXFBConfig support
     - it seems a different config for each depth would be needed

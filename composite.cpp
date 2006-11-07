@@ -35,6 +35,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 
+#include <X11/extensions/shape.h>
+
 namespace KWinInternal
 {
 
@@ -184,6 +186,39 @@ void Workspace::performCompositing()
     // run post-pass only after clearing the damage
     scene->postPaint();
     lastCompositePaint.start();
+    }
+
+bool Workspace::createOverlay()
+    {
+    assert( overlay == None );
+    if( !Extensions::compositeOverlayAvailable())
+        return false;
+#ifdef HAVE_XCOMPOSITE_OVERLAY
+    overlay = XCompositeGetOverlayWindow( display(), rootWindow());
+    if( overlay == None )
+        return false;
+    return true;
+#else
+    return false;
+#endif
+    }
+
+void Workspace::setupOverlay( Window w )
+    {
+    assert( overlay != None );
+    XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
+    XShapeCombineRectangles( display(), w, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
+    XMapRaised( display(), overlay );
+    }
+
+void Workspace::destroyOverlay()
+    {
+    if( overlay == None )
+        return;
+#ifdef HAVE_XCOMPOSITE_OVERLAY
+    XCompositeReleaseOverlayWindow( display(), overlay );
+#endif
+    overlay = None;
     }
 
 //****************************************
