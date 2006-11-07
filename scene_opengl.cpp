@@ -212,6 +212,11 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     else
         if( !findConfig( drawable_attrs, &fbcdrawable ))
             assert( false );
+    int vis_buffer, vis_drawable;
+    glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
+    glXGetFBConfigAttrib( display(), fbcdrawable, GLX_VISUAL_ID, &vis_drawable );
+    kDebug() << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
+        << QString::number( vis_drawable, 16 ) << endl;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
     ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
     glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
