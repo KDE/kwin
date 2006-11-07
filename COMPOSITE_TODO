@@ -138,6 +138,7 @@ XRender TODO
     - XRenderSetPictureTransform() should be capable of doing this
     - note that the matrix used seems to be weird (it doesn't act like the normal transformation
         matrix as far as I can tell)
++ SceneXrender::Window::performPaint() doesn't use saturation
 
 
 Effects framework TODO

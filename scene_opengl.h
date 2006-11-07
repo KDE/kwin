@@ -49,6 +49,7 @@ class SceneOpenGL
         static GLXContext ctxdrawable;
         static bool tfp_mode;
         static bool copy_buffer_hack;
+        static bool supports_saturation;
         class Window;
         QMap< Toplevel*, Window > windows;
     };

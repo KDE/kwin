@@ -61,8 +61,27 @@ Sources and other compositing managers:
 
 #include <dlfcn.h>
 
+#include <GL/gl.h>
 #include <GL/glext.h>
 #include <GL/glxext.h>
+
+/*
+** GLX_EXT_texture_from_pixmap
+*/
+#define GLX_BIND_TO_TEXTURE_RGB_EXT        0x20D0
+#define GLX_BIND_TO_TEXTURE_RGBA_EXT       0x20D1
+#define GLX_BIND_TO_MIPMAP_TEXTURE_EXT     0x20D2
+#define GLX_BIND_TO_TEXTURE_TARGETS_EXT    0x20D3
+#define GLX_Y_INVERTED_EXT                 0x20D4
+
+#define GLX_TEXTURE_FORMAT_EXT             0x20D5
+#define GLX_TEXTURE_TARGET_EXT             0x20D6
+#define GLX_MIPMAP_TEXTURE_EXT             0x20D7
+
+#define GLX_TEXTURE_FORMAT_NONE_EXT        0x20D8
+#define GLX_TEXTURE_FORMAT_RGB_EXT         0x20D9
+#define GLX_TEXTURE_FORMAT_RGBA_EXT        0x20DA
+
 
 namespace KWinInternal
 {
@@ -81,6 +100,7 @@ GLXDrawable SceneOpenGL::glxbuffer;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
+bool SceneOpenGL::supports_saturation;
 
 // finding of OpenGL extensions functions
 typedef void (*glXFuncPtr)();
@@ -103,6 +123,9 @@ typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
 typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
 glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 glXBindTexImageEXT_func glXBindTexImageEXT;
+// glActiveTexture
+typedef void (*glActiveTexture_func)(GLenum);
+glActiveTexture_func glActiveTexture;
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
 static void checkGLError( const char* txt )
@@ -222,6 +245,22 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
     if( db )
         glDrawBuffer( GL_BACK );
+    // Get OpenGL version
+    QString glversionstring = QString((const char*)glGetString(GL_VERSION));
+    QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
+    int glversionmajor = glversioninfo[0].toInt();
+    int glversionminor = glversioninfo[1].toInt();
+    int glversion = glversionmajor*100 + glversionminor;
+    // Get list of supported OpenGL extensions
+    QStringList extensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(" ");
+    // Get number of texture units
+    int textureUnitsCount;
+    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &textureUnitsCount);
+    // Check whether certain features are supported
+    glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTexture" );
+    supports_saturation = ((extensions.contains("GL_ARB_texture_env_crossbar")
+        && extensions.contains("GL_ARB_texture_env_dot3")) || glversion >= 104)
+        && (textureUnitsCount >= 4) && glActiveTexture != NULL;
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -683,7 +722,84 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         }
-    if( data.opacity != 1.0 )
+    if( data.saturation != 1.0 && supports_saturation )
+        {
+        // First we need to get the color from [0; 1] range to [0.5; 1] range
+        glActiveTexture( GL_TEXTURE0 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
+        const float scale_constant[] = { 1.0, 1.0, 1.0, 0.5};
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, scale_constant );
+        glEnable( GL_TEXTURE_RECTANGLE_ARB );
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+
+        // Then we take dot product of the result of previous pass and
+        //  saturation_constant. This gives us completely unsaturated
+        //  (greyscale) image
+        // Note that both operands have to be in range [0.5; 1] since opengl
+        //  automatically substracts 0.5 from them
+        glActiveTexture( GL_TEXTURE1 );
+        float saturation_constant[] = { 0.5 + 0.5*0.30, 0.5 + 0.5*0.59, 0.5 + 0.5*0.11, data.saturation };
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
+        glEnable( GL_TEXTURE_RECTANGLE_ARB );
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+
+        // Finally we need to interpolate between the original image and the
+        //  greyscale image to get wanted level of saturation
+        glActiveTexture( GL_TEXTURE2 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE0 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
+        // Also replace alpha by primary color's alpha here
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PRIMARY_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+        // And make primary color contain the wanted opacity
+        glColor4f( data.opacity, data.opacity, data.opacity, data.opacity );
+        glEnable( GL_TEXTURE_RECTANGLE_ARB );
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+
+        if( toplevel->hasAlpha() )
+            {
+            // Modulate both color and alpha by window's opacity
+            glActiveTexture( GL_TEXTURE3 );
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PRIMARY_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+            // Here we have to multiply original texture's alpha by our opacity
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0 );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, GL_PRIMARY_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA );
+            glEnable( GL_TEXTURE_RECTANGLE_ARB );
+            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            }
+
+        glActiveTexture(GL_TEXTURE0 );
+        }
+    else if( data.opacity != 1.0 )
         {
         // the window is additionally configured to have its opacity adjusted,
         // do it
@@ -698,9 +814,9 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             float constant_alpha[] = { 0, 0, 0, data.opacity };
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
             glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
             glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_CONSTANT );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
             glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant_alpha );
             }
         }
@@ -724,8 +840,18 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
     glEnd();
     glPopMatrix();
-    if( data.opacity != 1.0 )
+    if( data.opacity != 1.0 || data.saturation != 1.0 )
         {
+        if( data.saturation != 1.0 && supports_saturation )
+            {
+            glActiveTexture(GL_TEXTURE3);
+            glDisable( GL_TEXTURE_RECTANGLE_ARB );
+            glActiveTexture(GL_TEXTURE2);
+            glDisable( GL_TEXTURE_RECTANGLE_ARB );
+            glActiveTexture(GL_TEXTURE1);
+            glDisable( GL_TEXTURE_RECTANGLE_ARB );
+            glActiveTexture(GL_TEXTURE0);
+            }
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
         glColor4f( 0, 0, 0, 0 );
         }
