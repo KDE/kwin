@@ -58,30 +58,7 @@ Sources and other compositing managers:
 #include "utils.h"
 #include "client.h"
 #include "effects.h"
-
-#include <dlfcn.h>
-
-#include <GL/gl.h>
-#include <GL/glext.h>
-#include <GL/glxext.h>
-
-/*
-** GLX_EXT_texture_from_pixmap
-*/
-#define GLX_BIND_TO_TEXTURE_RGB_EXT        0x20D0
-#define GLX_BIND_TO_TEXTURE_RGBA_EXT       0x20D1
-#define GLX_BIND_TO_MIPMAP_TEXTURE_EXT     0x20D2
-#define GLX_BIND_TO_TEXTURE_TARGETS_EXT    0x20D3
-#define GLX_Y_INVERTED_EXT                 0x20D4
-
-#define GLX_TEXTURE_FORMAT_EXT             0x20D5
-#define GLX_TEXTURE_TARGET_EXT             0x20D6
-#define GLX_MIPMAP_TEXTURE_EXT             0x20D7
-
-#define GLX_TEXTURE_FORMAT_NONE_EXT        0x20D8
-#define GLX_TEXTURE_FORMAT_RGB_EXT         0x20D9
-#define GLX_TEXTURE_FORMAT_RGBA_EXT        0x20DA
-
+#include "glutils.h"
 
 namespace KWinInternal
 {
@@ -102,30 +79,7 @@ bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 bool SceneOpenGL::supports_saturation;
 
-// finding of OpenGL extensions functions
-typedef void (*glXFuncPtr)();
-typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
-glXGetProcAddress_func glXGetProcAddress;
 
-static glXFuncPtr getProcAddress( const char* name )
-    {
-    glXFuncPtr ret = NULL;
-    if( glXGetProcAddress != NULL )
-        ret = glXGetProcAddress( ( const GLubyte* ) name );
-    if( ret == NULL )
-        ret = ( glXFuncPtr ) dlsym( RTLD_DEFAULT, name );
-    return ret;
-    }
-
-// texture_from_pixmap extension functions
-typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
-    int buffer, const int* attrib_list );
-typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
-glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
-glXBindTexImageEXT_func glXBindTexImageEXT;
-// glActiveTexture
-typedef void (*glActiveTexture_func)(GLenum);
-glActiveTexture_func glActiveTexture;
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
 static void checkGLError( const char* txt )
@@ -212,12 +166,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     int dummy;
     if( !glXQueryExtension( display(), &dummy, &dummy ))
         return;
-    // handle OpenGL extensions functions
-    glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddress" );
-    if( glXGetProcAddress == NULL )
-        glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
-    glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
-    glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress( "glXReleaseTexImageEXT" );
+    initGLX();
     tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
     // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
     // 1.0-9xxx don't update pixmaps properly, so do a copy first
@@ -243,24 +192,17 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
     ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
     glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
+
+    // Initialize OpenGL
+    initGL();
     if( db )
         glDrawBuffer( GL_BACK );
-    // Get OpenGL version
-    QString glversionstring = QString((const char*)glGetString(GL_VERSION));
-    QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
-    int glversionmajor = glversioninfo[0].toInt();
-    int glversionminor = glversioninfo[1].toInt();
-    int glversion = glversionmajor*100 + glversionminor;
-    // Get list of supported OpenGL extensions
-    QStringList extensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(" ");
-    // Get number of texture units
-    int textureUnitsCount;
-    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &textureUnitsCount);
+
     // Check whether certain features are supported
-    glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTexture" );
-    supports_saturation = ((extensions.contains("GL_ARB_texture_env_crossbar")
-        && extensions.contains("GL_ARB_texture_env_dot3")) || glversion >= 104)
-        && (textureUnitsCount >= 4) && glActiveTexture != NULL;
+    supports_saturation = ((hasGLExtension("GL_ARB_texture_env_crossbar")
+        && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
+        && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
+
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -777,9 +719,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glEnable( GL_TEXTURE_RECTANGLE_ARB );
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
 
-        if( toplevel->hasAlpha() )
+        if( toplevel->hasAlpha() || data.brightness != 1.0f )
             {
-            // Modulate both color and alpha by window's opacity
             glActiveTexture( GL_TEXTURE3 );
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
             glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
@@ -787,37 +728,57 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
             glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PRIMARY_COLOR );
             glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
-            // Here we have to multiply original texture's alpha by our opacity
-            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0 );
-            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
-            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, GL_PRIMARY_COLOR );
-            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA );
+            if( toplevel->hasAlpha() )
+                {
+                // The color has to be multiplied by both opacity and brightness
+                float opacityByBrightness = data.opacity * data.brightness;
+                glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, data.opacity );
+                // Also multiply original texture's alpha by our opacity
+                glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0 );
+                glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, GL_PRIMARY_COLOR );
+                glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA );
+                }
+            else
+                {
+                // Color has to be multiplied only by brightness
+                glColor4f( data.brightness, data.brightness, data.brightness, data.opacity );
+                // Alpha will be taken from previous stage
+                glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+                glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS );
+                glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+                }
             glEnable( GL_TEXTURE_RECTANGLE_ARB );
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
             }
 
         glActiveTexture(GL_TEXTURE0 );
         }
-    else if( data.opacity != 1.0 )
+    else if( data.opacity != 1.0 || data.brightness != 1.0 )
         {
         // the window is additionally configured to have its opacity adjusted,
         // do it
         if( toplevel->hasAlpha())
             {
+            float opacityByBrightness = data.opacity * data.brightness;
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-            glColor4f( data.opacity, data.opacity, data.opacity,
+            glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness,
                 data.opacity);
             }
         else
             {
-            float constant_alpha[] = { 0, 0, 0, data.opacity };
+            // Multiply color by brightness and replace alpha by opacity
+            float constant[] = { data.brightness, data.brightness, data.brightness, data.opacity };
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
-            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
             glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
             glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
             glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
-            glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant_alpha );
+            glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
             }
         }
     glEnable( GL_TEXTURE_RECTANGLE_ARB );
@@ -840,7 +801,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
     glEnd();
     glPopMatrix();
-    if( data.opacity != 1.0 || data.saturation != 1.0 )
+    if( data.opacity != 1.0 || data.saturation != 1.0 || data.brightness != 1.0f )
         {
         if( data.saturation != 1.0 && supports_saturation )
             {

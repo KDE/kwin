@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "scene.h"
 
+#include "effects/dialogparent.h"
 #include "effects/fadein.h"
 #include "effects/howto.h"
 #include "effects/maketransparent.h"
@@ -94,6 +95,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
 //    effects.append( new ShiftWorkspaceUpEffect( ws ));
 //    effects.append( new FadeInEffect );
 //    effects.append( new ScaleInEffect );
+//    effects.append( new DialogParentEffect );
     }
 
 EffectsHandler::~EffectsHandler()

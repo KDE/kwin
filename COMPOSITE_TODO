@@ -147,6 +147,7 @@ XRender TODO
     - note that the matrix used seems to be weird (it doesn't act like the normal transformation
         matrix as far as I can tell)
 + SceneXrender::Window::performPaint() doesn't use saturation
++ SceneXrender::Window::performPaint() doesn't use brightness
 
 
 Effects framework TODO

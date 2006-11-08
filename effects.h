@@ -31,6 +31,7 @@ class WindowPaintData
         int xTranslate;
         int yTranslate;
         float saturation;
+        float brightness;
     };
 
 class ScreenPaintData
@@ -92,6 +93,7 @@ WindowPaintData::WindowPaintData()
     , xTranslate( 0 )
     , yTranslate( 0 )
     , saturation( 1 )
+    , brightness( 1 )
     {
     }
 

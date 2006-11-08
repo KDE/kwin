@@ -50,6 +50,7 @@ set(kwin_KDEINIT_SRCS
    scene_basic.cpp
    scene_xrender.cpp
    scene_opengl.cpp
+   glutils.cpp
    effects.cpp
    effects/fadein.cpp
    effects/maketransparent.cpp
@@ -57,6 +58,7 @@ set(kwin_KDEINIT_SRCS
    effects/shakymove.cpp
    effects/shiftworkspaceup.cpp
    effects/howto.cpp
+   effects/dialogparent.cpp
    )
 
 kde4_automoc(kwin ${kwin_KDEINIT_SRCS})
