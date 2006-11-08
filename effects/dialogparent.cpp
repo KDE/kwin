@@ -78,8 +78,8 @@ void DialogParentEffect::windowActivated( Toplevel* t )
     if ( c && c->isModal() )
         {
         // c is a modal dialog
-        Client* parent = c->transientFor();
-        if ( parent )
+        ClientList mainclients = c->mainClients();
+        foreach( Client* parent, mainclients )
             parent->addDamageFull();
         }
     }
@@ -93,8 +93,8 @@ void DialogParentEffect::windowDeleted( Toplevel* t )
     if ( c && c->isModal() )
         {
         // c is a modal dialog
-        Client* parent = c->transientFor();
-        if ( parent )
+        ClientList mainclients = c->mainClients();
+        foreach( Client* parent, mainclients )
             parent->addDamageFull();
         }
     }
@@ -107,7 +107,7 @@ bool DialogParentEffect::hasModalWindow( Toplevel* t )
 
     // Check if any of the direct transients (children) of this window is modal
     for( ClientList::ConstIterator it = c->transients().begin(); it != c->transients().end(); ++it )
-        if( (*it)->isModal() && (*it)->transientFor() == c )
+        if( (*it)->isModal())
             return true;
 
     return false;
