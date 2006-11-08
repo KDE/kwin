@@ -52,6 +52,14 @@ General TODO
 ? XComposite overlay window
 ?   - does it make any sense to use it instead of painting directly to the root window
         when the root window's visual etc. are good?
+    - it seems OpenGL drawing to the root window is always clipped, unlike with X drawing,
+        so the overlay should be always used, or manual double-buffering should be used
+    - nvidia has option "DisableGLXRootClipping" though, make kwin config option to draw
+        directly to the root window?
+
+! the opacity slider in the Alt+F3 menu doesn't work
+    - looks like the hack with adding custom widgets to popups no longer works
+    - it should probably be just changed to normal menu with reasonable opacity values
 
 
 OpenGL TODO
