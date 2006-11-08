@@ -90,6 +90,8 @@ void Workspace::setupCompositing()
         scene->windowAdded( c );
     foreach( Unmanaged* c, unmanaged )
         scene->windowAdded( c );
+    delete popup; // force re-creation of the Alt+F3 popup (opacity option)
+    popup = NULL;
     }
 
 void Workspace::finishCompositing()
@@ -121,6 +123,8 @@ void Workspace::finishCompositing()
             i.setOpacity( static_cast< unsigned long >((*it)->opacity() * 0xffffffff ));
             }
         }
+    delete popup; // force re-creation of the Alt+F3 popup (opacity option)
+    popup = NULL;
     }
 
 void Workspace::addDamage( int x, int y, int w, int h )
