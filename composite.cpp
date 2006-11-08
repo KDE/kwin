@@ -35,6 +35,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 
+#include <stdio.h>
+
+#include <QMenu>
+
 #include <X11/extensions/shape.h>
 
 namespace KWinInternal
@@ -53,6 +57,11 @@ void Workspace::setupCompositing()
         return;
     if( scene != NULL )
         return;
+    char selection_name[ 100 ];
+    sprintf( selection_name, "_NET_WM_CM_S%d", DefaultScreen( display()));
+    cm_selection = new KSelectionOwner( selection_name );
+    connect( cm_selection, SIGNAL( lostOwnership()), SLOT( lostCMSelection()));
+    cm_selection->claim( true ); // force claiming
     char type = 'O';
     if( getenv( "KWIN_COMPOSE" ))
         type = getenv( "KWIN_COMPOSE" )[ 0 ];
@@ -98,6 +107,7 @@ void Workspace::finishCompositing()
     {
     if( scene == NULL )
         return;
+    delete cm_selection;
     foreach( Client* c, clients )
         scene->windowDeleted( c );
     foreach( Unmanaged* c, unmanaged )
@@ -125,6 +135,12 @@ void Workspace::finishCompositing()
         }
     delete popup; // force re-creation of the Alt+F3 popup (opacity option)
     popup = NULL;
+    }
+
+void Workspace::lostCMSelection()
+    {
+    kDebug( 1212 ) << "Lost compositing manager selection" << endl;
+    finishCompositing();
     }
 
 void Workspace::addDamage( int x, int y, int w, int h )

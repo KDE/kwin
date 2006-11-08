@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <netwm.h>
 #include <kxmessages.h>
 #include <qdatetime.h>
+#include <kmanagerselection.h>
 
 #include "utils.h"
 #include "kdecoration.h"
@@ -428,6 +429,7 @@ class Workspace : public QObject, public KDecorationDefines
         void resetClientOpacity();
         void setTransButtonText(int value);
         void performCompositing();
+        void lostCMSelection();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -677,6 +679,8 @@ class Workspace : public QObject, public KDecorationDefines
         Window null_focus_window;
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
+
+        KSelectionOwner* cm_selection;
         QTimer compositeTimer;
         QTime lastCompositePaint;
         QRegion damage_region;
