@@ -124,7 +124,6 @@ Client::Client( Workspace *ws )
     modal = false;
     noborder = false;
     user_noborder = false;
-    not_obscured = false;
     urgency = false;
     ignore_focus_stealing = false;
     demands_attention = false;
