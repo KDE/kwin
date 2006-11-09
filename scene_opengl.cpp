@@ -191,7 +191,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         << QString::number( vis_drawable, 16 ) << endl;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
     ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
-    glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
+    if( !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ) )
+        assert( false );
 
     // Initialize OpenGL
     initGL();
