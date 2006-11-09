@@ -68,6 +68,8 @@ kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 target_link_libraries(kdeinit_kwin -lGL)
+# -ldl used by OpenGL code
+target_link_libraries(kdeinit_kwin -ldl)
 if (X11_Xcomposite_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xcomposite_LIB})
 endif (X11_Xcomposite_FOUND)
