@@ -25,12 +25,26 @@ class WindowPaintData
     {
     public:
         WindowPaintData();
+        /**
+         * Window opacity, in range 0 = transparent to 1 = fully opaque
+         */
         double opacity;
         double xScale;
         double yScale;
         int xTranslate;
         int yTranslate;
+        /**
+         * Saturation of the window, in range [0; 1]
+         * 1 means that the window is unchanged, 0 means that it's completely
+         *  unsaturated (greyscale). 0.5 would make the colors less intense,
+         *  but not completely grey
+         **/
         float saturation;
+        /**
+         * Brightness of the window, in range [0; 1]
+         * 1 means that the window is unchanged, 0 means that it's completely
+         * black. 0.5 would make it 50% darker than usual
+         **/
         float brightness;
     };
 
