@@ -138,6 +138,12 @@ OpenGL TODO
 
 ? compiz checks that "GLX_SGIX_fbconfig" extension is present and requires it
 
+? non-tfp mode creates context everytime it updates the texture in bindTexture()
+    - otherwise ATI crashes (http://lists.kde.org/?l=kwin&m=116304346330186&w=2,
+        http://lists.kde.org/?l=kwin&m=116310179311409&w=2)
+?   - it causes small performance decrease (5-10%), but non-tfp is bound to be slower anyway
+    - the commit is r603713, maybe it should be checked later and perhaps reverted
+
 
 XRender TODO
 ==============================

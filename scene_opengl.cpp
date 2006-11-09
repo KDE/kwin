@@ -71,7 +71,6 @@ namespace KWinInternal
 GLXFBConfig SceneOpenGL::fbcdrawable;
 // GLX content
 GLXContext SceneOpenGL::ctxbuffer;
-GLXContext SceneOpenGL::ctxdrawable;
 // the destination drawable where the compositing is done
 GLXDrawable SceneOpenGL::glxbuffer;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
@@ -190,7 +189,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     kDebug() << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
         << QString::number( vis_drawable, 16 ) << endl;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
-    ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
     if( !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ) )
         assert( false );
 
@@ -236,7 +234,6 @@ SceneOpenGL::~SceneOpenGL()
         XFreePixmap( display(), buffer );
         }
     glXDestroyContext( display(), ctxbuffer );
-    glXDestroyContext( display(), ctxdrawable );
     checkGLError( "Cleanup" );
     }
 
@@ -545,6 +542,7 @@ void SceneOpenGL::Window::bindTexture()
         }
     else
         { // non-tfp case, copy pixmap contents to a texture
+        GLXContext ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
         GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
         glXMakeContextCurrent( display(), pixmap, pixmap, ctxdrawable );
         glReadBuffer( GL_FRONT );
@@ -580,6 +578,7 @@ void SceneOpenGL::Window::bindTexture()
         // the pixmap
         glXWaitGL();
         glXDestroyPixmap( display(), pixmap );
+        glXDestroyContext( display(), ctxdrawable );
         XFreePixmap( display(), pix );
         if( db )
             glDrawBuffer( GL_BACK );

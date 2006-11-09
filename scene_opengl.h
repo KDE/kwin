@@ -46,7 +46,6 @@ class SceneOpenGL
         static GLXFBConfig fbcdrawable;
         static GLXDrawable glxbuffer;
         static GLXContext ctxbuffer;
-        static GLXContext ctxdrawable;
         static bool tfp_mode;
         static bool copy_buffer_hack;
         static bool supports_saturation;
