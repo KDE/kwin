@@ -200,7 +200,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
-    glOrtho( 0, displayWidth(), 0, displayHeight(), 0, 65535 );
+    // swap top and bottom to have OpenGL coordinate system match X system
+    glOrtho( 0, displayWidth(), displayHeight(), 0, 0, 65535 );
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     checkGLError( "Init" );
@@ -353,11 +354,6 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glPushMatrix();
     glClearColor( 0, 0, 0, 1 );
     glClear( GL_COLOR_BUFFER_BIT );
-    // OpenGL has (0,0) in the bottom-left corner while X has it in the top-left corner,
-    // which is annoying and confusing. Therefore flip the whole OpenGL scene upside down
-    // and move it up, so that it actually uses the same coordinate system like X.
-    glScalef( 1, -1, 1 );
-    glTranslatef( 0, -displayHeight(), 0 );
     int mask = 0;
     paintScreen( &mask, &damage ); // call generic implementation
     glPopMatrix();
@@ -560,7 +556,7 @@ void SceneOpenGL::Window::bindTexture()
                     {
                     // convert to OpenGL coordinates (this is mapping
                     // the pixmap to a texture, this is not affected
-                    // by transforming the OpenGL scene)
+                    // by using glOrtho() for the OpenGL scene)
                     int gly = toplevel->height() - r.y() - r.height();
                     texture_y_inverted = false;
                     glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
