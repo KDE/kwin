@@ -97,7 +97,6 @@ const int root_db_attrs[] =
     GLX_GREEN_SIZE, 1,
     GLX_BLUE_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
     None
     };
 
@@ -110,7 +109,6 @@ static const int buffer_db_attrs[] =
     GLX_GREEN_SIZE, 1,
     GLX_BLUE_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
     None
     };
 
@@ -123,7 +121,6 @@ static const int buffer_nondb_attrs[] =
     GLX_GREEN_SIZE, 1,
     GLX_BLUE_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT,
     None
     };
 
@@ -138,7 +135,6 @@ const int drawable_attrs[] =
     GLX_BLUE_SIZE, 1,
     GLX_ALPHA_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT,
     None
     };
 
@@ -153,7 +149,6 @@ const int drawable_tfp_attrs[] =
     GLX_BLUE_SIZE, 1,
     GLX_ALPHA_SIZE, 1,
     GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE, GLX_PIXMAP_BIT,
     GLX_BIND_TO_TEXTURE_RGBA_EXT, True, // additional for tfp
     None
     };
