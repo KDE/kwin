@@ -88,18 +88,6 @@ static void checkGLError( const char* txt )
         kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
     }
 
-// attributes for finding a double-buffered root window config
-const int root_db_attrs[] =
-    {
-    GLX_CONFIG_CAVEAT, GLX_NONE,
-    GLX_DOUBLEBUFFER, True,
-    GLX_RED_SIZE, 1,
-    GLX_GREEN_SIZE, 1,
-    GLX_BLUE_SIZE, 1,
-    GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    None
-    };
-
 // attributes for finding a double-buffered destination window config
 static const int buffer_db_attrs[] =
     {
@@ -238,18 +226,9 @@ void SceneOpenGL::initBuffer()
     {
     XWindowAttributes attrs;
     XGetWindowAttributes( display(), rootWindow(), &attrs );
-    if( false && findConfig( root_db_attrs, &fbcbuffer, XVisualIDFromVisual( attrs.visual )))
-        {
-        // root window is double-buffered, paint directly to it
-        // TODO no need to use overlay?
-        db = true;
-        buffer = rootWindow();
-        glxbuffer = glXCreateWindow( display(), fbcbuffer, buffer, NULL );
-        }
-    else if( false && findConfig( buffer_db_attrs, &fbcbuffer ) && wspace->createOverlay())
+    if( findConfig( buffer_db_attrs, &fbcbuffer ) && wspace->createOverlay())
         { // we have overlay, try to create double-buffered window in it
         XVisualInfo* visual = glXGetVisualFromFBConfig( display(), fbcbuffer );
-        kDebug() << "Using overlay visual 0x" << QString::number( visual->visualid ) << endl;
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap( display(), rootWindow(), visual->visual, AllocNone );
         buffer = XCreateWindow( display(), wspace->overlayWindow(), 0, 0, displayWidth(), displayHeight(),
