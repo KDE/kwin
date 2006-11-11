@@ -53,6 +53,8 @@ General TODO
     - looks like the hack with adding custom widgets to popups no longer works
     - it should probably be just changed to normal menu with reasonable opacity values
 
+? Expose events for overlay window - is it necessary to track it, like with root window?
+
 
 OpenGL TODO
 =================================
@@ -136,7 +138,10 @@ OpenGL TODO
 ?   - it causes small performance decrease (5-10%), but non-tfp is bound to be slower anyway
     - the commit is r603713, maybe it should be checked later and perhaps reverted
 
-
++ direct vs indirect rendering
++   - figure out when it is better to enable direct rendering (last argument to glXCreateNewContext())
+        and figure out how to turn it on safely
+        
 XRender TODO
 ==============================
 
