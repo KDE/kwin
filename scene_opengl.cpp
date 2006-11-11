@@ -203,9 +203,7 @@ SceneOpenGL::~SceneOpenGL()
          ++it )
         (*it).free();
     // do cleanup after initBuffer()
-    if( buffer == rootWindow())
-        glXDestroyWindow( display(), glxbuffer );
-    else if( wspace->overlayWindow())
+    if( wspace->overlayWindow())
         {
         glXDestroyWindow( display(), glxbuffer );
         XDestroyWindow( display(), buffer );
