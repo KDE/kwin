@@ -395,7 +395,9 @@ const QPalette& KDecorationOptions::palette(ColorType type, bool active) const
     int idx = type + (active ? 0 : NUM_COLORS);
     if(d->pal[idx])
         return(*d->pal[idx]);
+#ifdef __GNUC__
 #warning KDE4 : why construct the palette this way?
+#endif    
 		// TODO: Is this worth 'porting' to Qt4?
 //     d->pal[idx] = new QPalette(Qt::black, d->colors[idx], d->colors[idx].light(150),
 //                               d->colors[idx].dark(), d->colors[idx].dark(120),
@@ -445,7 +447,7 @@ KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick(
            button == Qt::MidButton?   d->OpMaxButtonMiddleClick :
                                       d->OpMaxButtonLeftClick;
     }
-
+#ifdef __GNUC__
 #warning Redo all the XYZChange() virtuals as signals.
-
+#endif
 #include "kdecoration.moc"
