@@ -63,6 +63,7 @@ bool hasGLExtension(const QString& extension);
 #define GLX_TEXTURE_FORMAT_RGB_EXT         0x20D9
 #define GLX_TEXTURE_FORMAT_RGBA_EXT        0x20DA
 
+#define GLX_FRONT_LEFT_EXT                 0x20DE
 
 // Function pointers
 // finding of OpenGL extensions functions
