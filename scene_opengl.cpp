@@ -149,6 +149,9 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     if( !glXQueryExtension( display(), &dummy, &dummy ))
         return;
     initGLX();
+    // check for FBConfig support
+    if( !hasGLXVersion( 1, 3 ) && !hasGLExtension( "GLX_SGIX_fbconfig" ))
+        return;
     tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
     // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
     // 1.0-9xxx don't update pixmaps properly, so do a copy first

@@ -17,11 +17,11 @@ namespace KWinInternal
 {
 // Variables
 // GL version, use MAKE_OPENGL_VERSION() macro for comparing with a specific version
-int glVersion;
+static int glVersion;
 // GLX version, use MAKE_GLX_VERSION() macro for comparing with a specific version
-int glXVersion;
-// List of all supported GL extensions
-QStringList glExtensions;
+static int glXVersion;
+// List of all supported GL and GLX extensions
+static QStringList glExtensions;
 int glTextureUnitsCount;
 
 // Function pointers
@@ -58,6 +58,9 @@ void initGLX()
     int major, minor;
     glXQueryVersion( display(), &major, &minor );
     glXVersion = MAKE_GLX_VERSION( major, minor, 0 );
+    // Get list of supported GLX extensions. Simply add it to the list of OpenGL extensions.
+    glExtensions += QString((const char*)glXQueryExtensionsString(
+        display(), DefaultScreen( display()))).split(" ");
     }
 
 void initGL()
@@ -93,6 +96,5 @@ bool hasGLExtension(const QString& extension)
     {
     return glExtensions.contains(extension);
     }
-
 
 } // namespace

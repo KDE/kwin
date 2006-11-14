@@ -44,6 +44,7 @@ extern int glTextureUnitsCount;
 
 bool hasGLVersion(int major, int minor, int release = 0);
 bool hasGLXVersion(int major, int minor, int release = 0);
+// use for both OpenGL and GLX extensions
 bool hasGLExtension(const QString& extension);
 
 
