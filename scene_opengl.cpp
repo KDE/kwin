@@ -208,7 +208,8 @@ SceneOpenGL::~SceneOpenGL()
     // do cleanup after initBuffer()
     if( wspace->overlayWindow())
         {
-        glXDestroyWindow( display(), glxbuffer );
+        if( hasGLXVersion( 1, 3 ))
+            glXDestroyWindow( display(), glxbuffer );
         XDestroyWindow( display(), buffer );
         wspace->destroyOverlay();
         }
@@ -234,7 +235,10 @@ void SceneOpenGL::initBuffer()
         attrs.colormap = XCreateColormap( display(), rootWindow(), visual->visual, AllocNone );
         buffer = XCreateWindow( display(), wspace->overlayWindow(), 0, 0, displayWidth(), displayHeight(),
             0, QX11Info::appDepth(), InputOutput, visual->visual, CWColormap, &attrs );
-        glxbuffer = glXCreateWindow( display(), fbcbuffer, buffer, NULL );
+        if( hasGLXVersion( 1, 3 ))
+            glxbuffer = glXCreateWindow( display(), fbcbuffer, buffer, NULL );
+        else
+            glxbuffer = buffer;
         wspace->setupOverlay( buffer );
         db = true;
         XFree( visual );
