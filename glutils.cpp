@@ -18,6 +18,8 @@ namespace KWinInternal
 // Variables
 // GL version, use MAKE_OPENGL_VERSION() macro for comparing with a specific version
 int glVersion;
+// GLX version, use MAKE_GLX_VERSION() macro for comparing with a specific version
+int glXVersion;
 // List of all supported GL extensions
 QStringList glExtensions;
 int glTextureUnitsCount;
@@ -43,17 +45,23 @@ static glXFuncPtr getProcAddress( const char* name )
     }
 
 void initGLX()
-{
+    {
     // handle OpenGL extensions functions
     glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddress" );
     if( glXGetProcAddress == NULL )
         glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
     glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
     glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress( "glXReleaseTexImageEXT" );
-}
+
+
+    // Get GLX version
+    int major, minor;
+    glXQueryVersion( display(), &major, &minor );
+    glXVersion = MAKE_GLX_VERSION( major, minor, 0 );
+    }
 
 void initGL()
-{
+    {
     // handle OpenGL extensions functions
     glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTexture" );
     if( !glActiveTexture )
@@ -69,16 +77,22 @@ void initGL()
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(" ");
     // Get number of texture units
     glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
-}
+    }
 
 bool hasGLVersion(int major, int minor, int release)
-{
+    {
     return glVersion >= MAKE_OPENGL_VERSION(major, minor, release);
-}
+    }
+
+bool hasGLXVersion(int major, int minor, int release)
+    {
+    return glXVersion >= MAKE_GLX_VERSION(major, minor, release);
+    }
+
 bool hasGLExtension(const QString& extension)
-{
+    {
     return glExtensions.contains(extension);
-}
+    }
 
 
 } // namespace

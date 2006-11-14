@@ -23,6 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 
 #define MAKE_OPENGL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
+#define MAKE_GLX_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
 
 
 namespace KWinInternal
@@ -42,6 +43,7 @@ extern int glTextureUnitsCount;
 
 
 bool hasGLVersion(int major, int minor, int release = 0);
+bool hasGLXVersion(int major, int minor, int release = 0);
 bool hasGLExtension(const QString& extension);
 
 
