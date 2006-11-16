@@ -793,7 +793,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
     // setup blending of transparent windows
-    bool was_blend = glIsEnabled( GL_BLEND );
+    glPushAttrib( GL_ENABLE_BIT );
     if( !opaque )
         {
         glEnable( GL_BLEND );
@@ -947,8 +947,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
         glColor4f( 0, 0, 0, 0 );
         }
-    if( !was_blend )
-        glDisable( GL_BLEND );
+    glPopAttrib();
     disableTexture();
     }
 
