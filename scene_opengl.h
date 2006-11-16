@@ -16,6 +16,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <GL/gl.h>
 #include <GL/glx.h>
 
+#include <X11/extensions/XShm.h>
+
 namespace KWinInternal
 {
 
@@ -36,6 +38,8 @@ class SceneOpenGL
         virtual void paintSimpleScreen( int mask, QRegion region );
         virtual void paintBackground( QRegion region );
     private:
+        bool initShm();
+        void cleanupShm();
         void initBuffer();
         bool findConfig( const int* attrs, GLXFBConfig* config, VisualID visual = None );
         typedef GLuint Texture;
@@ -49,11 +53,13 @@ class SceneOpenGL
         static GLXContext ctxdrawable;
         static GLXDrawable last_pixmap; // for a workaround in bindTexture()
         static bool tfp_mode;
+        static bool shm_mode;
         static bool strict_binding;
         static bool copy_buffer_hack;
         static bool supports_saturation;
         class Window;
         QMap< Toplevel*, Window > windows;
+        static XShmSegmentInfo shm;
     };
 
 class SceneOpenGL::Window

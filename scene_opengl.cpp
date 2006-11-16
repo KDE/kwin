@@ -55,10 +55,15 @@ Sources and other compositing managers:
 
 #include "scene_opengl.h"
 
+#include <kxerrorhandler.h>
+
 #include "utils.h"
 #include "client.h"
 #include "effects.h"
 #include "glutils.h"
+
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 namespace KWinInternal
 {
@@ -80,7 +85,8 @@ bool SceneOpenGL::strict_binding; // intended for AIGLX
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 bool SceneOpenGL::supports_saturation;
-
+bool SceneOpenGL::shm_mode;
+XShmSegmentInfo SceneOpenGL::shm;
 
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
@@ -155,12 +161,10 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     // check for FBConfig support
     if( !hasGLXVersion( 1, 3 ) && !hasGLExtension( "GLX_SGIX_fbconfig" ))
         return;
-    tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
     strict_binding = false; // not needed now
-    // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
-    // 1.0-9xxx don't update pixmaps properly, so do a copy first
-    copy_buffer_hack = !tfp_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
-    initBuffer(); // create destination buffer
+    // select mode - try TFP first, then SHM, otherwise fallback mode
+    shm_mode = false;
+    tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
     if( tfp_mode )
         {
         if( !findConfig( drawable_tfp_attrs, &fbcdrawable ))
@@ -173,13 +177,19 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     else
         if( !findConfig( drawable_attrs, &fbcdrawable ))
             assert( false );
+    if( !tfp_mode && initShm())
+        shm_mode = true;
+    // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
+    // 1.0-9xxx don't update pixmaps properly, so do a copy first
+    copy_buffer_hack = !tfp_mode && !shm_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
+    initBuffer(); // create destination buffer
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
     glXGetFBConfigAttrib( display(), fbcdrawable, GLX_VISUAL_ID, &vis_drawable );
     kDebug() << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
         << QString::number( vis_drawable, 16 ) << endl;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
-    if( !tfp_mode )
+    if( !tfp_mode && !shm_mode )
         ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
     if( !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ) )
         assert( false );
@@ -202,7 +212,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     checkGLError( "Init" );
-    kDebug() << "DB:" << db << ", TFP:" << tfp_mode << endl;
+    kDebug() << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode << endl;
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -225,7 +235,9 @@ SceneOpenGL::~SceneOpenGL()
         XFreeGC( display(), gcroot );
         XFreePixmap( display(), buffer );
         }
-    if( !tfp_mode )
+    if( shm_mode )
+        cleanupShm();
+    if( !tfp_mode && !shm_mode )
         {
         if( last_pixmap != None )
             glXDestroyPixmap( display(), last_pixmap );
@@ -233,6 +245,52 @@ SceneOpenGL::~SceneOpenGL()
         }
     glXDestroyContext( display(), ctxbuffer );
     checkGLError( "Cleanup" );
+    }
+
+bool SceneOpenGL::initShm()
+    {
+    int major, minor;
+    Bool pixmaps;
+    if( !XShmQueryVersion( display(), &major, &minor, &pixmaps ) || !pixmaps )
+        return false;
+    if( XShmPixmapFormat( display()) != ZPixmap )
+        return false;
+    const int MAXSIZE = 4096 * 2048 * 4; // TODO check there are not larger windows
+    // TODO check that bytes_per_line doesn't involve padding?
+    shm.readOnly = False;
+    shm.shmid = shmget( IPC_PRIVATE, MAXSIZE, IPC_CREAT | 0600 );
+    if( shm.shmid < 0 )
+        return false;
+    shm.shmaddr = ( char* ) shmat( shm.shmid, NULL, 0 );
+    if( shm.shmaddr == ( void * ) -1 )
+        {
+        shmctl( shm.shmid, IPC_RMID, 0 );
+        return false;
+        }
+#ifdef __linux__
+    // mark as deleted to automatically free the memory in case
+    // of a crash (but this doesn't work e.g. on Solaris ... oh well)
+    shmctl( shm.shmid, IPC_RMID, 0 );
+#endif
+    KXErrorHandler errs;
+    XShmAttach( display(), &shm );
+    if( errs.error( true ))
+        {
+#ifndef __linux__
+        shmctl( shm.shmid, IPC_RMID, 0 );
+#endif
+        shmdt( shm.shmaddr );
+        return false;
+        }
+    return true;
+    }
+
+void SceneOpenGL::cleanupShm()
+    {
+    shmdt( shm.shmaddr );
+#ifndef __linux__
+    shmctl( shm.shmid, IPC_RMID, 0 );
+#endif
     }
 
 // create destination buffer
@@ -504,7 +562,49 @@ void SceneOpenGL::Window::bindTexture()
         }
     if( copy_buffer || alpha_clear )
         glXWaitX();
-    if( tfp_mode )
+    if( shm_mode )
+        { // non-tfp case, copy pixmap contents to a texture
+        if( texture == None )
+            {
+            glGenTextures( 1, &texture );
+            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            texture_y_inverted = false;
+            glTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, toplevel->width(), toplevel->height(),
+                0, GL_BGRA, GL_UNSIGNED_BYTE, NULL );
+            // TODO hasAlpha() ?
+//            glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+//                toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
+//                0, 0, toplevel->width(), toplevel->height(), 0 );
+            }
+        else
+            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        if( !toplevel->damage().isEmpty())
+            {
+            XGCValues xgcv;
+            xgcv.graphics_exposures = False;
+            xgcv.subwindow_mode = IncludeInferiors;
+            GC gc = XCreateGC( display(), pix, GCGraphicsExposures | GCSubwindowMode, &xgcv );
+            foreach( QRect r, toplevel->damage().rects())
+                { // TODO for small areas it might be faster to not use SHM to avoid the XSync()
+                Pixmap p = XShmCreatePixmap( display(), rootWindow(), shm.shmaddr, &shm,
+                    r.width(), r.height(), toplevel->depth());
+                XCopyArea( display(), pix, p, gc, r.x(), r.y(), r.width(), r.height(), 0, 0 );
+                XSync( display(), False );
+                glXWaitX();
+                glTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+                    r.x(), r.y(), r.width(), r.height(), GL_BGRA, GL_UNSIGNED_BYTE, shm.shmaddr );
+                glXWaitGL();
+                XFreePixmap( display(), p );
+                }
+            XFreeGC( display(), gc );
+            }
+        // the pixmap is no longer needed, the texture will be updated
+        // only when the window changes anyway, so no need to cache
+        // the pixmap
+        XFreePixmap( display(), pix );
+        texture_y_inverted = true;
+        }
+    else if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
         if( texture == None )
             glGenTextures( 1, &texture );
@@ -559,7 +659,6 @@ void SceneOpenGL::Window::bindTexture()
                     // the pixmap to a texture, this is not affected
                     // by using glOrtho() for the OpenGL scene)
                     int gly = toplevel->height() - r.y() - r.height();
-                    texture_y_inverted = false;
                     glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
                         r.x(), gly, r.x(), gly, r.width(), r.height());
                     }
@@ -574,6 +673,7 @@ void SceneOpenGL::Window::bindTexture()
             glDrawBuffer( GL_BACK );
         glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        texture_y_inverted = false;
         }
     if( copy_buffer )
         XFreePixmap( display(), window_pix );
