@@ -130,17 +130,16 @@ OpenGL TODO
 +       - perhaps syncing to vblank will be needed to avoid flicker
 !   - XCopyArea() should not update the whole screen but only the affected areas
 
-? compiz checks that "GLX_SGIX_fbconfig" extension is present and requires it
-
-? non-tfp mode creates context everytime it updates the texture in bindTexture()
-    - otherwise ATI crashes (http://lists.kde.org/?l=kwin&m=116304346330186&w=2,
-        http://lists.kde.org/?l=kwin&m=116310179311409&w=2)
-?   - it causes small performance decrease (5-10%), but non-tfp is bound to be slower anyway
-    - the commit is r603713, maybe it should be checked later and perhaps reverted
-
 + direct vs indirect rendering
 +   - figure out when it is better to enable direct rendering (last argument to glXCreateNewContext())
         and figure out how to turn it on safely
+
++ strict binding
+    - there is code to support strict binding as required by AIGLX, but it's disabled, because
+        copy_buffer in bindTexture() ensures strict binding as a side-effect
+    - since copy_buffer hack should be removed in the future, strict binding will need to be enabled then
+    - http://lists.kde.org/?l=kwin&m=116363084129170&w=2
+
         
 XRender TODO
 ==============================

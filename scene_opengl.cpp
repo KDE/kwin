@@ -74,6 +74,7 @@ GLXContext SceneOpenGL::ctxbuffer;
 // the destination drawable where the compositing is done
 GLXDrawable SceneOpenGL::glxbuffer;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
+bool SceneOpenGL::strict_binding; // intended for AIGLX
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 bool SceneOpenGL::supports_saturation;
@@ -153,6 +154,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     if( !hasGLXVersion( 1, 3 ) && !hasGLExtension( "GLX_SGIX_fbconfig" ))
         return;
     tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
+    strict_binding = false; // not needed now
     // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
     // 1.0-9xxx don't update pixmaps properly, so do a copy first
     copy_buffer_hack = !tfp_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
@@ -496,8 +498,8 @@ void SceneOpenGL::Window::bindTexture()
         { // tfp mode, simply bind the pixmap to texture
         if( texture == None )
             glGenTextures( 1, &texture );
-        if( bound_pixmap != None )
-            { // release old if needed
+        if( bound_pixmap != None && !strict_binding ) // release old if needed
+            {
             glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
             XFreePixmap( display(), bound_pixmap );
@@ -513,7 +515,8 @@ void SceneOpenGL::Window::bindTexture()
         glXGetFBConfigAttrib( display(), fbcdrawable, GLX_Y_INVERTED_EXT, &value );
         texture_y_inverted = value ? true : false;
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
-        glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+        if( !strict_binding )
+            glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
     else
         { // non-tfp case, copy pixmap contents to a texture
@@ -564,13 +567,37 @@ void SceneOpenGL::Window::bindTexture()
         XFreePixmap( display(), window_pix );
     }
 
+void SceneOpenGL::Window::enableTexture()
+    {
+    glEnable( GL_TEXTURE_RECTANGLE_ARB );
+    glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+    if( tfp_mode && strict_binding )
+        {
+        assert( bound_pixmap != None );
+        glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+        }
+    }
+
+void SceneOpenGL::Window::disableTexture()
+    {
+    if( tfp_mode && strict_binding )
+        {
+        assert( bound_pixmap != None );
+        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
+        }
+    glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
+    glDisable( GL_TEXTURE_RECTANGLE_ARB );
+    }
+
 void SceneOpenGL::Window::discardTexture()
     {
     if( texture != 0 )
         {
         if( tfp_mode )
             {
-            glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
+            if( !strict_binding )
+                glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
             XFreePixmap( display(), bound_pixmap );
             bound_pixmap = None;
@@ -653,8 +680,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
         const float scale_constant[] = { 1.0, 1.0, 1.0, 0.5};
         glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, scale_constant );
-        glEnable( GL_TEXTURE_RECTANGLE_ARB );
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        enableTexture();
 
         // Then we take dot product of the result of previous pass and
         //  saturation_constant. This gives us completely unsaturated
@@ -670,8 +696,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
         glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
         glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
-        glEnable( GL_TEXTURE_RECTANGLE_ARB );
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        enableTexture();
 
         // Finally we need to interpolate between the original image and the
         //  greyscale image to get wanted level of saturation
@@ -691,8 +716,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
         // And make primary color contain the wanted opacity
         glColor4f( data.opacity, data.opacity, data.opacity, data.opacity );
-        glEnable( GL_TEXTURE_RECTANGLE_ARB );
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        enableTexture();
 
         if( toplevel->hasAlpha() || data.brightness != 1.0f )
             {
@@ -724,8 +748,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
                 glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS );
                 glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
                 }
-            glEnable( GL_TEXTURE_RECTANGLE_ARB );
-            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            enableTexture();
             }
 
         glActiveTexture(GL_TEXTURE0 );
@@ -756,7 +779,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
             }
         }
-    glEnable( GL_TEXTURE_RECTANGLE_ARB );
+    enableTexture();
     // actually paint the window
     glBegin( GL_QUADS );
     foreach( QRect r, region.rects())
@@ -793,8 +816,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
     if( !was_blend )
         glDisable( GL_BLEND );
-    glDisable( GL_TEXTURE_RECTANGLE_ARB );
-    glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
+    disableTexture();
     }
 
 } // namespace

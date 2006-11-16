@@ -47,6 +47,7 @@ class SceneOpenGL
         static GLXDrawable glxbuffer;
         static GLXContext ctxbuffer;
         static bool tfp_mode;
+        static bool strict_binding;
         static bool copy_buffer_hack;
         static bool supports_saturation;
         class Window;
@@ -61,6 +62,8 @@ class SceneOpenGL::Window
         virtual void free();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         void bindTexture();
+        void enableTexture();
+        void disableTexture();
         void discardTexture();
         Window() {} // QMap sucks even in Qt4
     private:
