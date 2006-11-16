@@ -41,6 +41,7 @@ class SceneOpenGL
         bool initShm();
         void cleanupShm();
         void initBuffer();
+        void initRenderingContext();
         bool findConfig( const int* attrs, GLXFBConfig* config, VisualID visual = None );
         typedef GLuint Texture;
         GC gcroot;

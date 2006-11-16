@@ -188,11 +188,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glXGetFBConfigAttrib( display(), fbcdrawable, GLX_VISUAL_ID, &vis_drawable );
     kDebug() << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
         << QString::number( vis_drawable, 16 ) << endl;
-    ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
-    if( !tfp_mode && !shm_mode )
-        ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
-    if( !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ) )
-        assert( false );
+    initRenderingContext();
 
     // Initialize OpenGL
     initGL();
@@ -291,6 +287,31 @@ void SceneOpenGL::cleanupShm()
 #ifndef __linux__
     shmctl( shm.shmid, IPC_RMID, 0 );
 #endif
+    }
+
+void SceneOpenGL::initRenderingContext()
+    {
+    bool direct_rendering = true;
+    KXErrorHandler errs;
+    ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL,
+        direct_rendering ? GL_TRUE : GL_FALSE );
+    if( ctxbuffer == NULL || !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer )
+        || errs.error( true ))
+        { // failed
+        if( !direct_rendering )
+            assert( false );
+        glXDestroyContext( display(), ctxbuffer );
+        direct_rendering = false; // try again
+        ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
+        if( ctxbuffer == NULL || !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ))
+            assert( false );
+        }
+    if( !tfp_mode && !shm_mode )
+        {
+        ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer,
+            direct_rendering ? GL_TRUE : GL_FALSE );
+        }
+    kDebug() << "Direct rendering:" << direct_rendering << endl;
     }
 
 // create destination buffer
