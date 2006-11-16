@@ -186,7 +186,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
     glXGetFBConfigAttrib( display(), fbcdrawable, GLX_VISUAL_ID, &vis_drawable );
-    kDebug() << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
+    kDebug( 1212 ) << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
         << QString::number( vis_drawable, 16 ) << endl;
     initRenderingContext();
 
@@ -208,7 +208,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     checkGLError( "Init" );
-    kDebug() << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode << endl;
+    kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode << endl;
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -311,7 +311,7 @@ void SceneOpenGL::initRenderingContext()
         ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer,
             direct_rendering ? GL_TRUE : GL_FALSE );
         }
-    kDebug() << "Direct rendering:" << direct_rendering << endl;
+    kDebug( 1212 ) << "Direct rendering:" << direct_rendering << endl;
     }
 
 // create destination buffer
@@ -357,11 +357,11 @@ static void debugFBConfig( GLXFBConfig* fbconfigs, int i, const int* attrs )
         int value;
         if( glXGetFBConfigAttrib( display(), fbconfigs[ i ], attrs[ pos ], &value )
             == Success )
-            kDebug() << "ATTR: 0x" << QString::number( attrs[ pos ], 16 )
+            kDebug( 1212 ) << "ATTR: 0x" << QString::number( attrs[ pos ], 16 )
                 << ": 0x" << QString::number( attrs[ pos + 1 ], 16 )
                 << ": 0x" << QString::number( value, 16 ) << endl;
         else
-            kDebug() << "ATTR FAIL: 0x" << QString::number( attrs[ pos ], 16 ) << endl;
+            kDebug( 1212 ) << "ATTR FAIL: 0x" << QString::number( attrs[ pos ], 16 ) << endl;
         pos += 2;
         }
     }
@@ -377,7 +377,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig* config, VisualID vi
         if( visual == None )
             {
             *config = fbconfigs[ 0 ];
-            kDebug() << "Found FBConfig" << endl;
+            kDebug( 1212 ) << "Found FBConfig" << endl;
             debugFBConfig( fbconfigs, 0, attrs );
             XFree( fbconfigs );
             return true;
@@ -392,7 +392,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig* config, VisualID vi
                 glXGetFBConfigAttrib( display(), fbconfigs[ i ], GLX_VISUAL_ID, &value );
                 if( value == (int)visual )
                     {
-                    kDebug() << "Found FBConfig" << endl;
+                    kDebug( 1212 ) << "Found FBConfig" << endl;
                     *config = fbconfigs[ i ];
                     debugFBConfig( fbconfigs, i, attrs );
                     XFree( fbconfigs );
@@ -407,7 +407,7 @@ bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig* config, VisualID vi
          i < cnt;
          ++i )
         {
-        kDebug() << "Listing FBConfig:" << i << endl;
+        kDebug( 1212 ) << "Listing FBConfig:" << i << endl;
         debugFBConfig( fbconfigs, i, attrs );
         }
     if( fbconfigs != NULL )

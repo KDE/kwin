@@ -77,18 +77,18 @@ void Workspace::setupCompositing()
             scene = new SceneOpenGL( this );
           break;
         default:
-          kDebug() << "No compositing" << endl;
+          kDebug( 1212 ) << "No compositing" << endl;
           return;
         }
     compositeTimer.start( 20 );
     lastCompositePaint.start();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     if( dynamic_cast< SceneOpenGL* >( scene ))
-        kDebug() << "OpenGL compositing" << endl;
+        kDebug( 1212 ) << "OpenGL compositing" << endl;
     else if( dynamic_cast< SceneXrender* >( scene ))
-        kDebug() << "XRender compositing" << endl;
+        kDebug( 1212 ) << "XRender compositing" << endl;
     else if( dynamic_cast< SceneBasic* >( scene ))
-        kDebug() << "X compositing" << endl;
+        kDebug( 1212 ) << "X compositing" << endl;
     effects = new EffectsHandler( this );
     addDamageFull();
     foreach( Client* c, clients )
