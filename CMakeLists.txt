@@ -59,6 +59,7 @@ set(kwin_KDEINIT_SRCS
    effects/shiftworkspaceup.cpp
    effects/howto.cpp
    effects/dialogparent.cpp
+   effects/showfps.cpp
    )
 
 kde4_automoc(kwin ${kwin_KDEINIT_SRCS})

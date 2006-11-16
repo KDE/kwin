@@ -234,7 +234,7 @@ Effects TODO
 +   - needs support for new window types from the current draft of the EWMH WM spec
 +       - needs patching Qt, netwm* classes in kdecore
 
-+ showfps effect
+/ showfps effect
     - for debugging, just shows transparent fps in some corner
     - just painting the number in paintScreen() should do, with glPushMatrix() and glLoadIdentity()
         to avoid all transformations
