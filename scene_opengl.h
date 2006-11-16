@@ -46,6 +46,8 @@ class SceneOpenGL
         static GLXFBConfig fbcdrawable;
         static GLXDrawable glxbuffer;
         static GLXContext ctxbuffer;
+        static GLXContext ctxdrawable;
+        static GLXDrawable last_pixmap; // for a workaround in bindTexture()
         static bool tfp_mode;
         static bool strict_binding;
         static bool copy_buffer_hack;

@@ -71,8 +71,10 @@ namespace KWinInternal
 GLXFBConfig SceneOpenGL::fbcdrawable;
 // GLX content
 GLXContext SceneOpenGL::ctxbuffer;
+GLXContext SceneOpenGL::ctxdrawable;
 // the destination drawable where the compositing is done
 GLXDrawable SceneOpenGL::glxbuffer;
+GLXDrawable SceneOpenGL::last_pixmap;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::strict_binding; // intended for AIGLX
 bool SceneOpenGL::db; // destination drawable is double-buffered
@@ -177,6 +179,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     kDebug() << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
         << QString::number( vis_drawable, 16 ) << endl;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
+    if( !tfp_mode )
+        ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
     if( !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ) )
         assert( false );
 
@@ -220,6 +224,12 @@ SceneOpenGL::~SceneOpenGL()
         glXDestroyPixmap( display(), glxbuffer );
         XFreeGC( display(), gcroot );
         XFreePixmap( display(), buffer );
+        }
+    if( !tfp_mode )
+        {
+        if( last_pixmap != None )
+            glXDestroyPixmap( display(), last_pixmap );
+        glXDestroyContext( display(), ctxdrawable );
         }
     glXDestroyContext( display(), ctxbuffer );
     checkGLError( "Cleanup" );
@@ -520,9 +530,13 @@ void SceneOpenGL::Window::bindTexture()
         }
     else
         { // non-tfp case, copy pixmap contents to a texture
-        GLXContext ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer, GL_FALSE );
         GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
         glXMakeContextCurrent( display(), pixmap, pixmap, ctxdrawable );
+        if( last_pixmap != None )
+            glXDestroyPixmap( display(), last_pixmap );
+        // workaround for ATI - it leaks/crashes when the pixmap is destroyed immediately
+        // here (http://lists.kde.org/?l=kwin&m=116353772208535&w=2)
+        last_pixmap = pixmap;
         glReadBuffer( GL_FRONT );
         glDrawBuffer( GL_FRONT );
         if( texture == None )
@@ -551,12 +565,10 @@ void SceneOpenGL::Window::bindTexture()
                     }
                 }
             }
+        glXWaitGL();
         // the pixmap is no longer needed, the texture will be updated
         // only when the window changes anyway, so no need to cache
         // the pixmap
-        glXWaitGL();
-        glXDestroyPixmap( display(), pixmap );
-        glXDestroyContext( display(), ctxdrawable );
         XFreePixmap( display(), pix );
         if( db )
             glDrawBuffer( GL_BACK );
