@@ -1014,7 +1014,7 @@ void Client::updateMouseGrab()
         // is unobscured or if the user doesn't want click raise
         // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
         // the most recently raised window)
-        bool not_obscured = workspace()->topClientOnDesktop( workspace()->currentDesktop(), true ) == this;
+        bool not_obscured = workspace()->topClientOnDesktop( workspace()->currentDesktop(), true, false ) == this;
         if( !options->clickRaise || not_obscured )
             ungrabButton( None );
         else
