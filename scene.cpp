@@ -106,9 +106,15 @@ void Scene::paintScreen( int* mask, QRegion* region )
     updateTimeDiff();
     // preparation step
     effects->prePaintScreen( mask, region, time_diff );
-    // optimized painting is not possible with transformations
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
+        { // optimized painting is not possible with transformations
         *mask &= ~PAINT_SCREEN_REGION;
+        *region = infiniteRegion();
+        }
+    else if(( *mask & PAINT_SCREEN_REGION ) == 0 )
+        { // force region to be full
+        *region = QRegion( 0, 0, displayWidth(), displayHeight());
+        }
     ScreenPaintData data;
     effects->paintScreen( *mask, *region, data );
     }
@@ -140,10 +146,10 @@ void Scene::idle()
 // the function that'll be eventually called by paintScreen() above
 void Scene::finalPaintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( mask & PAINT_SCREEN_REGION ) // can do optimized case?
-        paintSimpleScreen( mask, region );
-    else
+    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
         paintGenericScreen( mask, data );
+    else
+        paintSimpleScreen( mask, region );
     }
 
 // The generic painting code that can handle even transformations.

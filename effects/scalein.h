@@ -22,6 +22,7 @@ class ScaleInEffect
     : public Effect
     {
     public:
+        virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( Scene::Window* w );

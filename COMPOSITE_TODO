@@ -188,6 +188,11 @@ Effects framework TODO
     - during some more complicated effects, input (at least mouse) should be disabled,
         because currently there is no way to do input redirection
 
+* pre-paint pass should be done completely before the paint pass
+    - currently prePaintWindow() is done only after paintScreen() has already started,
+        which means that if an effect sets PAINT_WINDOW_TRANSFORMED it needs to set it
+        also in prePaintScreen()
+
 
 Effects TODO
 ===============================

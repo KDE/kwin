@@ -15,6 +15,14 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
+// TODO right now it's necessary to set PAINT_WINDOW_TRANSFORMED also here
+void ScaleInEffect::prePaintScreen( int* mask, QRegion* region, int time )
+    {
+    if( !windows.isEmpty())
+        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+    effects->prePaintScreen( mask, region, time );
+    }
+
 void ScaleInEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
     {
     if( windows.contains( w->window()))
