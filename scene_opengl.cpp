@@ -603,7 +603,8 @@ void SceneOpenGL::Window::bindTexture()
             xgcv.graphics_exposures = False;
             xgcv.subwindow_mode = IncludeInferiors;
             GC gc = XCreateGC( display(), pix, GCGraphicsExposures | GCSubwindowMode, &xgcv );
-            foreach( QRect r, toplevel->damage().rects())
+            QRegion damage = optimizeBindDamage( toplevel->damage(), 100 * 100 );
+            foreach( QRect r, damage.rects())
                 { // TODO for small areas it might be faster to not use SHM to avoid the XSync()
                 Pixmap p = XShmCreatePixmap( display(), rootWindow(), shm.shmaddr, &shm,
                     r.width(), r.height(), toplevel->depth());
@@ -670,17 +671,15 @@ void SceneOpenGL::Window::bindTexture()
         else
             {
             glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
-            if( !toplevel->damage().isEmpty())
+            QRegion damage = optimizeBindDamage( toplevel->damage(), 30 * 30 );
+            foreach( QRect r, damage.rects())
                 {
-                foreach( QRect r, toplevel->damage().rects())
-                    {
-                    // convert to OpenGL coordinates (this is mapping
-                    // the pixmap to a texture, this is not affected
-                    // by using glOrtho() for the OpenGL scene)
-                    int gly = toplevel->height() - r.y() - r.height();
-                    glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
-                        r.x(), gly, r.x(), gly, r.width(), r.height());
-                    }
+                // convert to OpenGL coordinates (this is mapping
+                // the pixmap to a texture, this is not affected
+                // by using glOrtho() for the OpenGL scene)
+                int gly = toplevel->height() - r.y() - r.height();
+                glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+                    r.x(), gly, r.x(), gly, r.width(), r.height());
                 }
             }
         glXWaitGL();
@@ -696,6 +695,23 @@ void SceneOpenGL::Window::bindTexture()
         }
     if( copy_buffer )
         XFreePixmap( display(), window_pix );
+    }
+
+
+QRegion SceneOpenGL::Window::optimizeBindDamage( const QRegion& reg, int limit )
+    {
+    if( reg.rects().count() <= 1 )
+        return reg;
+    // try to reduce the number of rects, as especially with SHM mode every rect
+    // causes X roundtrip, even for very small areas - so, when the size difference
+    // between all the areas and the bounding rectangle is small, simply use
+    // only the bounding rectangle
+    int size = 0;
+    foreach( QRect r, reg.rects())
+        size += r.width() * r.height();
+    if( reg.boundingRect().width() * reg.boundingRect().height() - size < limit )
+        return reg.boundingRect();
+    return reg;
     }
 
 void SceneOpenGL::Window::enableTexture()

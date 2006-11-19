@@ -76,6 +76,7 @@ class SceneOpenGL::Window
         void discardTexture();
         Window() {} // QMap sucks even in Qt4
     private:
+        QRegion optimizeBindDamage( const QRegion& reg, int limit );
         Texture texture;
         bool texture_y_inverted; // texture has y inverted
         Pixmap bound_pixmap; // the pixmap the texture is bound to, only for tfp_mode
