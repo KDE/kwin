@@ -204,6 +204,10 @@ unsigned long Options::updateSettings()
     glAlwaysRebind = config->readEntry("GLAlwaysRebind", false );
     glDirect = config->readEntry("GLDirect", true );
     
+    config->setGroup( "EffectShowFps" );
+    effectShowFpsAlpha = config->readEntry( "Alpha", 0.5 );
+    effectShowFpsX = config->readEntry( "X", -10000 );
+    effectShowFpsY = config->readEntry( "Y", 0 );
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the

@@ -29,6 +29,8 @@ class ShowFpsEffect
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
     private:
+        void paintGL( int fps );
+        void paintX( int fps );
         Workspace* wspace;
         QTime t;
         enum { NUM_PAINTS = 100 }; // remember time needed to paint this many paints
@@ -37,6 +39,9 @@ class ShowFpsEffect
         enum { MAX_FPS = 200 };
         int frames[ MAX_FPS ]; // (sec*1000+msec) of the time the frame was done
         int frames_pos; // position in the queue
+        double alpha;
+        int x;
+        int y;
     };
 
 } // namespace

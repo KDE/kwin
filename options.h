@@ -305,6 +305,10 @@ class Options : public KDecorationOptions
         bool glAlwaysRebind;
         bool glDirect;
 
+        double effectShowFpsAlpha;
+        int effectShowFpsX;
+        int effectShowFpsY;
+
     private:
         WindowOperation OpTitlebarDblClick;
 

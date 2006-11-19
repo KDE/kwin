@@ -34,6 +34,7 @@ class SceneXrender
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowAdded( Toplevel* );
         virtual void windowDeleted( Toplevel* );
+        Picture bufferPicture();
     protected:
         virtual void paintBackground( QRegion region );
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
@@ -66,6 +67,12 @@ class SceneXrender::Window
         Picture alpha;
         double alpha_cached_opacity;
     };
+
+inline
+Picture SceneXrender::bufferPicture()
+    {
+    return buffer;
+    }
 
 } // namespace
 

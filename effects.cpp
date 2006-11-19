@@ -90,7 +90,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
-//    effects.append( new ShowFpsEffect( ws ));
+    effects.append( new ShowFpsEffect( ws ));
 //    effects.append( new HowtoEffect );
 //    effects.append( new MakeTransparentEffect );
 //    effects.append( new ShakyMoveEffect );
