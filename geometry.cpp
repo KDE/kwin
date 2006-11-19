@@ -1660,8 +1660,6 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
         return;
-    // TODO add damage only if not obscured
-    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom = QRect( x, y, w, h );
     updateWorkareaDiffs();
     if( block_geometry_updates != 0 )
@@ -1669,24 +1667,31 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         pending_geometry_update = true;
         return;
         }
-    resizeDecoration( QSize( w, h ));
-    XMoveResizeWindow( display(), frameId(), x, y, w, h );
-//     resizeDecoration( QSize( w, h ));
-    if( !isShade())
+    if( geom_before_block.size() != geom.size())
         {
-        QSize cs = clientSize();
-        XMoveResizeWindow( display(), wrapperId(), clientPos().x(), clientPos().y(),
-            cs.width(), cs.height());
-        XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
+        resizeDecoration( QSize( w, h ));
+        XMoveResizeWindow( display(), frameId(), x, y, w, h );
+        if( !isShade())
+            {
+            QSize cs = clientSize();
+            XMoveResizeWindow( display(), wrapperId(), clientPos().x(), clientPos().y(),
+                cs.width(), cs.height());
+            XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
+            }
+        if( shape())
+            updateShape();
         }
-    if( shape())
-        updateShape();
+    else
+        XMoveWindow( display(), frameId(), x, y );
     // SELI TODO won't this be too expensive?
     updateWorkareaDiffs();
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    addDamageFull();
+    if( geom_before_block.size() != geom.size())
+        addDamageFull(); // damage window only if it actually was a resize
+    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
+    geom_before_block = geom;
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1718,7 +1723,6 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         }
     if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
         return;
-    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.setSize( QSize( w, h ));
     updateWorkareaDiffs();
     if( block_geometry_updates != 0 )
@@ -1742,8 +1746,9 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    // TODO add damage only in added area?
-    addDamageFull();
+    addDamageFull();  // TODO add damage only in added area?
+    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
+    geom_before_block = geom;
     }
 
 /*!
@@ -1753,7 +1758,6 @@ void Client::move( int x, int y, ForceGeometry_t force )
     {
     if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
         return;
-    workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
     if( block_geometry_updates != 0 )
@@ -1766,7 +1770,8 @@ void Client::move( int x, int y, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     // client itself is not damaged
-    workspace()->addDamage( geometry());
+    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
+    geom_before_block = geom;
     }
 
 void Client::blockGeometryUpdates( bool block )
