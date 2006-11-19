@@ -317,8 +317,6 @@ void SceneOpenGL::initRenderingContext()
 // create destination buffer
 void SceneOpenGL::initBuffer()
     {
-    XWindowAttributes attrs;
-    XGetWindowAttributes( display(), rootWindow(), &attrs );
     if( findConfig( buffer_db_attrs, &fbcbuffer ) && wspace->createOverlay())
         { // we have overlay, try to create double-buffered window in it
         XVisualInfo* visual = glXGetVisualFromFBConfig( display(), fbcbuffer );
