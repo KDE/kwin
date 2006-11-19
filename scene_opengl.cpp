@@ -162,26 +162,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     if( !hasGLXVersion( 1, 3 ) && !hasGLExtension( "GLX_SGIX_fbconfig" ))
         return;
     strict_binding = false; // not needed now
-    // select mode - try TFP first, then SHM, otherwise fallback mode
-    shm_mode = false;
-    tfp_mode = ( glXBindTexImageEXT != NULL && glXReleaseTexImageEXT != NULL );
-    if( tfp_mode )
-        {
-        if( !findConfig( drawable_tfp_attrs, &fbcdrawable ))
-            {
-            tfp_mode = false;
-            if( !findConfig( drawable_attrs, &fbcdrawable ))
-                assert( false );
-            }
-        }
-    else
-        if( !findConfig( drawable_attrs, &fbcdrawable ))
-            assert( false );
-    if( !tfp_mode && initShm())
-        shm_mode = true;
-    // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
-    // 1.0-9xxx don't update pixmaps properly, so do a copy first
-    copy_buffer_hack = !tfp_mode && !shm_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
+    selectMode();
     initBuffer(); // create destination buffer
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
@@ -243,6 +224,41 @@ SceneOpenGL::~SceneOpenGL()
     checkGLError( "Cleanup" );
     }
 
+void SceneOpenGL::selectMode()
+    {
+    // select mode - try TFP first, then SHM, otherwise fallback mode
+    shm_mode = false;
+    tfp_mode = false;
+    if( options->glMode == Options::GLTFP )
+        {
+        if( initTfp())
+            tfp_mode = true;
+        else if( initShm())
+            shm_mode = true;
+        }
+    else if( options->glMode == Options::GLSHM )
+        {
+        if( initShm())
+            shm_mode = true;
+        else if( initTfp())
+            tfp_mode = true;
+        }
+    if( !tfp_mode && !findConfig( drawable_attrs, &fbcdrawable ))
+        assert( false );
+    // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
+    // 1.0-9xxx don't update pixmaps properly, so do a copy first
+    copy_buffer_hack = !tfp_mode && !shm_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
+    }
+
+bool SceneOpenGL::initTfp()
+    {
+    if( glXBindTexImageEXT == NULL || glXReleaseTexImageEXT == NULL )
+        return false;
+    if( !findConfig( drawable_tfp_attrs, &fbcdrawable ))
+        return false;
+    return true;
+    }
+
 bool SceneOpenGL::initShm()
     {
     int major, minor;
@@ -291,7 +307,7 @@ void SceneOpenGL::cleanupShm()
 
 void SceneOpenGL::initRenderingContext()
     {
-    bool direct_rendering = true;
+    bool direct_rendering = options->glDirect;
     KXErrorHandler errs;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL,
         direct_rendering ? GL_TRUE : GL_FALSE );
@@ -535,7 +551,7 @@ void SceneOpenGL::Window::free()
 void SceneOpenGL::Window::bindTexture()
     {
     if( texture != 0 && toplevel->damage().isEmpty()
-        && !tfp_mode ) // TODO interestingly this makes tfp slower with some gfx cards
+        && !options->glAlwaysRebind ) // interestingly with some gfx cards always rebinding is faster
         {
         // texture doesn't need updating, just bind it
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );

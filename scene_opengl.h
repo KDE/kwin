@@ -38,6 +38,8 @@ class SceneOpenGL
         virtual void paintSimpleScreen( int mask, QRegion region );
         virtual void paintBackground( QRegion region );
     private:
+        void selectMode();
+        bool initTfp();
         bool initShm();
         void cleanupShm();
         void initBuffer();
