@@ -1405,7 +1405,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             || ns != size())
             {
             QRect orig_geometry = geometry();
-            GeometryUpdatesPostponer blocker( this );
+            GeometryUpdatesBlocker blocker( this );
             move( new_pos );
             plainResize( ns );
             setGeometry( QRect( calculateGravitation( false, gravity ), size()));
@@ -1438,7 +1438,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if( ns != size())  // don't restore if some app sets its own size again
             {
             QRect orig_geometry = geometry();
-            GeometryUpdatesPostponer blocker( this );
+            GeometryUpdatesBlocker blocker( this );
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
             resizeWithChecks( ns );
@@ -1664,7 +1664,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom = QRect( x, y, w, h );
     updateWorkareaDiffs();
-    if( postpone_geometry_updates != 0 )
+    if( block_geometry_updates != 0 )
         {
         pending_geometry_update = true;
         return;
@@ -1721,7 +1721,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.setSize( QSize( w, h ));
     updateWorkareaDiffs();
-    if( postpone_geometry_updates != 0 )
+    if( block_geometry_updates != 0 )
         {
         pending_geometry_update = true;
         return;
@@ -1756,7 +1756,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     workspace()->addDamage( geometry()); // TODO cache the previous real geometry
     geom.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
-    if( postpone_geometry_updates != 0 )
+    if( block_geometry_updates != 0 )
         {
         pending_geometry_update = true;
         return;
@@ -1769,17 +1769,17 @@ void Client::move( int x, int y, ForceGeometry_t force )
     workspace()->addDamage( geometry());
     }
 
-void Client::postponeGeometryUpdates( bool postpone )
+void Client::blockGeometryUpdates( bool block )
     {
-    if( postpone )
+    if( block )
         {
-        if( postpone_geometry_updates == 0 )
+        if( block_geometry_updates == 0 )
             pending_geometry_update = false;
-        ++postpone_geometry_updates;
+        ++block_geometry_updates;
         }
     else
         {
-        if( --postpone_geometry_updates == 0 )
+        if( --block_geometry_updates == 0 )
             {
             if( pending_geometry_update )
                 {
@@ -1828,7 +1828,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     if( !adjust && max_mode == old_mode )
         return;
 
-    GeometryUpdatesPostponer blocker( this );
+    GeometryUpdatesBlocker blocker( this );
 
     // maximing one way and unmaximizing the other way shouldn't happen
     Q_ASSERT( !( vertical && horizontal )
@@ -2080,7 +2080,7 @@ void Client::setFullScreen( bool set, bool user )
     if( was_fs == isFullScreen())
         return;
     StackingUpdatesBlocker blocker1( workspace());
-    GeometryUpdatesPostponer blocker2( this );
+    GeometryUpdatesBlocker blocker2( this );
     workspace()->updateClientLayer( this ); // active fullscreens get different layer
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false );
