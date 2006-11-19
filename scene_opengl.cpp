@@ -446,10 +446,40 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     int mask = 0;
     paintScreen( &mask, &damage ); // call generic implementation
     glPopMatrix();
-    // TODO only partial repaint for mask & PAINT_SCREEN_REGION
+    flushBuffer( mask, damage );
+    ungrabXServer();
+    }
+
+// actually paint to the screen (double-buffer swap or copy from pixmap buffer)
+void SceneOpenGL::flushBuffer( int mask, const QRegion& damage )
+    {
     if( db )
         {
-        glXSwapBuffers( display(), glxbuffer );
+        if( mask & PAINT_SCREEN_REGION )
+            {
+            if( glXCopySubBuffer )
+                {
+                foreach( QRect r, damage.rects())
+                    glXCopySubBuffer( display(), glxbuffer, r.x(), r.y(), r.width(), r.height());
+                }
+            else
+                { // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
+                glEnable( GL_SCISSOR_TEST );
+                glDrawBuffer( GL_FRONT );
+                foreach( QRect r, damage.rects())
+                    {
+                    // convert to OpenGL coordinates
+                    int y = displayHeight() - r.y() - r.height();
+                    glRasterPos2f( r.x(), r.y() + r.height());
+                    glScissor( r.x(), y, r.width(), r.height());
+                    glCopyPixels( r.x(), y, r.width(), r.height(), GL_COLOR );
+                    }
+                glDrawBuffer( GL_BACK );
+                glDisable( GL_SCISSOR_TEST );
+                }
+            }
+        else
+            glXSwapBuffers( display(), glxbuffer );
         glXWaitGL();
         XFlush( display());
         }
@@ -457,10 +487,13 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
         {
         glFlush();
         glXWaitGL();
-        XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
+        if( mask & PAINT_SCREEN_REGION )
+            foreach( QRect r, damage.rects())
+                XCopyArea( display(), buffer, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());
+        else
+            XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
         XFlush( display());
         }
-    ungrabXServer();
     }
 
 void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
@@ -473,15 +506,6 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
     Scene::paintGenericScreen( mask, data );
     if( mask & PAINT_SCREEN_TRANSFORMED )
         glPopMatrix();
-    }
-
-// the optimized case without any transformations at all
-void SceneOpenGL::paintSimpleScreen( int mask, QRegion region )
-    {
-    // TODO repaint only damaged areas (means also don't do glXSwapBuffers and similar)
-    // For now always force redrawing of the whole area.
-    region = QRegion( 0, 0, displayWidth(), displayHeight());
-    Scene::paintSimpleScreen( mask, region );
     }
 
 void SceneOpenGL::paintBackground( QRegion )

@@ -35,7 +35,6 @@ class SceneOpenGL
         virtual void windowDeleted( Toplevel* );
     protected:
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
-        virtual void paintSimpleScreen( int mask, QRegion region );
         virtual void paintBackground( QRegion region );
     private:
         void selectMode();
@@ -45,6 +44,7 @@ class SceneOpenGL
         void initBuffer();
         void initRenderingContext();
         bool findConfig( const int* attrs, GLXFBConfig* config, VisualID visual = None );
+        void flushBuffer( int mask, const QRegion& damage );
         typedef GLuint Texture;
         GC gcroot;
         Drawable buffer;

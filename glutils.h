@@ -82,6 +82,9 @@ extern glXBindTexImageEXT_func glXBindTexImageEXT;
 // glActiveTexture
 typedef void (*glActiveTexture_func)(GLenum);
 extern glActiveTexture_func glActiveTexture;
+// glXCopySubBufferMESA
+typedef void (*glXCopySubBuffer_func) ( Display* , GLXDrawable, int, int, int, int );
+extern glXCopySubBuffer_func glXCopySubBuffer;
 
 } // namespace
 

@@ -31,6 +31,8 @@ glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 glXBindTexImageEXT_func glXBindTexImageEXT;
 // glActiveTexture
 glActiveTexture_func glActiveTexture;
+// glXCopySubBufferMESA
+glXCopySubBuffer_func glXCopySubBuffer;
 
 
 // Functions
@@ -52,7 +54,7 @@ void initGLX()
         glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
     glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
     glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress( "glXReleaseTexImageEXT" );
-
+    glXCopySubBuffer = (glXCopySubBuffer_func) getProcAddress( "glXCopySubBufferMESA" );
 
     // Get GLX version
     int major, minor;
@@ -69,7 +71,6 @@ void initGL()
     glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTexture" );
     if( !glActiveTexture )
         glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTextureARB" );
-
 
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
