@@ -48,14 +48,6 @@ static glXFuncPtr getProcAddress( const char* name )
 
 void initGLX()
     {
-    // handle OpenGL extensions functions
-    glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddress" );
-    if( glXGetProcAddress == NULL )
-        glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
-    glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
-    glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress( "glXReleaseTexImageEXT" );
-    glXCopySubBuffer = (glXCopySubBuffer_func) getProcAddress( "glXCopySubBufferMESA" );
-
     // Get GLX version
     int major, minor;
     glXQueryVersion( display(), &major, &minor );
@@ -63,15 +55,29 @@ void initGLX()
     // Get list of supported GLX extensions. Simply add it to the list of OpenGL extensions.
     glExtensions += QString((const char*)glXQueryExtensionsString(
         display(), DefaultScreen( display()))).split(" ");
+
+    // handle OpenGL extensions functions
+    glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddress" );
+    if( glXGetProcAddress == NULL )
+        glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
+    if( hasGLExtension( "GLX_EXT_texture_from_pixmap" ))
+        {
+        glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
+        glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress( "glXReleaseTexImageEXT" );
+        }
+    else
+        {
+        glXBindTexImageEXT = NULL;
+        glXReleaseTexImageEXT = NULL;
+        }
+    if( hasGLExtension( "GLX_MESA_copy_sub_buffer" ))
+        glXCopySubBuffer = (glXCopySubBuffer_func) getProcAddress( "glXCopySubBufferMESA" );
+    else
+        glXCopySubBuffer = NULL;
     }
 
 void initGL()
     {
-    // handle OpenGL extensions functions
-    glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTexture" );
-    if( !glActiveTexture )
-        glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTextureARB" );
-
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
@@ -79,8 +85,21 @@ void initGL()
                                     glversioninfo.count() > 2 ? glversioninfo[2].toInt() : 0);
     // Get list of supported OpenGL extensions
     glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(" ");
-    // Get number of texture units
-    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
+
+    // handle OpenGL extensions functions
+    if( hasGLExtension( "GL_ARB_multitexture" ))
+        {
+        glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTexture" );
+        if( !glActiveTexture )
+            glActiveTexture = (glActiveTexture_func) getProcAddress( "glActiveTextureARB" );
+        // Get number of texture units
+        glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
+        }
+    else
+        {
+        glActiveTexture = NULL;
+        glTextureUnitsCount = 0;
+        }
     }
 
 bool hasGLVersion(int major, int minor, int release)
