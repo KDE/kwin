@@ -84,14 +84,6 @@ OpenGL TODO
     - no idea about this at all
 +   - find out if it works
 
-! when relying on extensions, detect that they are available
-    - some of the glcompmgr code probably depends on OpenGL/GLX extensions that may
-        not be always available, probably the same with compiz
-!   - find out which code relies on extensions and add checks
-!   - it seems that some systems (using older X.org?) will need local versions
-        of some #defines like GLX_TEXTURE_FORMAT_EXT
-        - Beryl has this code in beryl.h
-
 ! improved GLXFBConfig support
     - it seems a different config for each depth would be needed
     - from http://lists.freedesktop.org/archives/xorg/2006-July/016859.html and
@@ -117,18 +109,6 @@ OpenGL TODO
 ? in SceneOpenGL::bindTexture() with tfp_mode, with some gfx cards it seems
     to be faster to not short-circuit the texture binding when there's been
     no damage
-+   - confirm and try to find out when to do it and when not
-
-! update only those parts of the screen that have been changed
-    - for paintSimpleScreen() - it currently sets region to the whole screen
-!   - instead of using glXSwapBuffers() there should be glCopyPixels() used
-        - compiz has such code in evenLoop() in the if() block for COMP_SCREEN_DAMAGE_REGION_MASK
-+       - perhaps syncing to vblank will be needed to avoid flicker
-!   - XCopyArea() should not update the whole screen but only the affected areas
-
-+ direct vs indirect rendering
-+   - figure out when it is better to enable direct rendering (last argument to glXCreateNewContext())
-        and figure out how to turn it on safely
 
 + strict binding
     - there is code to support strict binding as required by AIGLX, but it's disabled, because
