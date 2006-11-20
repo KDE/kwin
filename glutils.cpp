@@ -57,9 +57,9 @@ void initGLX()
         display(), DefaultScreen( display()))).split(" ");
 
     // handle OpenGL extensions functions
-    glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddress" );
+    glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glXGetProcAddress" );
     if( glXGetProcAddress == NULL )
-        glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glxGetProcAddressARB" );
+        glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glXGetProcAddressARB" );
     if( hasGLExtension( "GLX_EXT_texture_from_pixmap" ))
         {
         glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );
