@@ -96,6 +96,7 @@ Workspace::Workspace( bool restore )
     popupinfo         (0),
     popup             (0),
     advanced_popup    (0),
+    trans_popup       (0),
     desk_popup        (0),
     desk_popup_index  (0),
     keys              (0),

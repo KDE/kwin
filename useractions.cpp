@@ -101,22 +101,18 @@ QMenu* Workspace::clientPopup()
         desk_popup_index = popup->actions().count();
 
         if (options->useTranslucency){
-            QMenu *trans_popup = new QMenu( popup );
-            QVBoxLayout *transLayout = new QVBoxLayout(trans_popup);
-            trans_popup->setLayout( transLayout );
-            transButton = new QPushButton(trans_popup);
-            transButton->setObjectName("transButton");
-            transButton->setToolTip( i18n("Reset opacity to default value"));
-            transSlider = new QSlider(trans_popup);
-            transSlider->setObjectName( "transSlider" );
-            transSlider->setRange( 0, 100 );
-            transSlider->setValue( 100 );
-            transSlider->setOrientation( Qt::Vertical );
-            transSlider->setToolTip( i18n("Slide this to set the window's opacity"));
-            connect(transButton, SIGNAL(clicked()), SLOT(resetClientOpacity()));
-            connect(transButton, SIGNAL(clicked()), trans_popup, SLOT(hide()));
-            connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
-            connect(transSlider, SIGNAL(valueChanged(int)), this, SLOT(setPopupClientOpacity(int)));
+            trans_popup = new QMenu( popup );
+            trans_popup->setFont(KGlobalSettings::menuFont());
+            connect( trans_popup, SIGNAL( triggered(QAction*) ), this, SLOT( setPopupClientOpacity(QAction*)));
+            const int levels[] = { 100, 90, 75, 50, 25, 10 };
+            for( unsigned int i = 0;
+                 i < sizeof( levels ) / sizeof( levels[ 0 ] );
+                 ++i )
+                {
+                action = trans_popup->addAction( QString::number( levels[ i ] ) + "%" );
+                action->setCheckable( true );
+                action->setData( levels[ i ] );
+                }
             action = popup->addMenu( trans_popup );
             action->setText( i18n("&Opacity") );
         }
@@ -163,33 +159,13 @@ QMenu* Workspace::clientPopup()
     return popup;
     }
 
-void Workspace::setPopupClientOpacity(int value)
+void Workspace::setPopupClientOpacity( QAction* action )
     {
     if( active_popup_client == NULL )
         return;
-    active_popup_client->setOpacity( value / 100.0 );
+    int level = action->data().toInt();
+    active_popup_client->setOpacity( level / 100.0 );
     }
-
-void Workspace::resetClientOpacity()
-    {
-    if( active_popup_client == NULL )
-        return;
-    active_popup_client->setOpacity( 1.0 );
-    }
-
-void Workspace::setTransButtonText(int value)
-    {
-    value = 100 - value;
-    if(value < 0)
-        transButton->setText("000 %");
-    else if (value >= 100 )
-        transButton->setText("100 %");
-    else if(value < 10)
-        transButton->setText("00"+QString::number(value)+" %");
-    else if(value < 100)
-        transButton->setText('0'+QString::number(value)+" %");
-    }
-
 
 /*!
   The client popup menu will become visible soon.
@@ -225,6 +201,16 @@ void Workspace::clientPopupAboutToShow()
     mNoBorderOpAction->setChecked( active_popup_client->noBorder() );
     mMinimizeOpAction->setEnabled( active_popup_client->isMinimizable() );
     mCloseOpAction->setEnabled( active_popup_client->isCloseable() );
+    if (options->useTranslucency)
+        {
+        foreach( QAction* action, trans_popup->actions())
+            {
+            if( action->data().toInt() == qRound( active_popup_client->opacity() * 100 ))
+                action->setChecked( true );
+            else
+                action->setChecked( false );
+            }
+        }
     }
 
 

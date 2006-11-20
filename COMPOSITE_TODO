@@ -49,10 +49,6 @@ General TODO
 !   - scene_xrender.cpp also requires XFixes
 !   - check whether it compiles fine without XComposite/XDamage
 
-! the opacity slider in the Alt+F3 menu doesn't work
-    - looks like the hack with adding custom widgets to popups no longer works
-    - it should probably be just changed to normal menu with reasonable opacity values
-
 ? Expose events for overlay window - is it necessary to track it, like with root window?
 
 
