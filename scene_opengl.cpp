@@ -460,7 +460,11 @@ void SceneOpenGL::flushBuffer( int mask, const QRegion& damage )
             if( glXCopySubBuffer )
                 {
                 foreach( QRect r, damage.rects())
-                    glXCopySubBuffer( display(), glxbuffer, r.x(), r.y(), r.width(), r.height());
+                    {
+                    // convert to OpenGL coordinates
+                    int y = displayHeight() - r.y() - r.height();
+                    glXCopySubBuffer( display(), glxbuffer, r.x(), y, r.width(), r.height());
+                    }
                 }
             else
                 { // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
