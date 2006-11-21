@@ -208,6 +208,8 @@ void ShowFpsEffect::paintX( int fps )
 void ShowFpsEffect::postPaintScreen()
     {
     effects->postPaintScreen();
+    if( dynamic_cast< SceneXrender* >( scene ))
+        XSync( display(), False ); // make sure all rendering is done
     paints[ paints_pos ] = t.elapsed();
     if( ++paints_pos == NUM_PAINTS )
         paints_pos = 0;
