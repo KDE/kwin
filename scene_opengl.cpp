@@ -189,7 +189,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     checkGLError( "Init" );
-    kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode << endl;
+    kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
+        << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -327,7 +328,6 @@ void SceneOpenGL::initRenderingContext()
         ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer,
             direct_rendering ? GL_TRUE : GL_FALSE );
         }
-    kDebug( 1212 ) << "Direct rendering:" << direct_rendering << endl;
     }
 
 // create destination buffer
