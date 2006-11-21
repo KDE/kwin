@@ -111,8 +111,12 @@ void Scene::paintScreen( int* mask, QRegion* region )
         *mask &= ~PAINT_SCREEN_REGION;
         *region = infiniteRegion();
         }
-    else if(( *mask & PAINT_SCREEN_REGION ) == 0 )
-        { // force region to be full
+    else if(  *mask & PAINT_SCREEN_REGION )
+        { // make sure not to go outside visible screen
+        *region &= QRegion( 0, 0, displayWidth(), displayHeight());
+        }
+    else
+        { // whole screen, not transformed, force region to be full
         *region = QRegion( 0, 0, displayWidth(), displayHeight());
         }
     ScreenPaintData data;
