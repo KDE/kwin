@@ -44,6 +44,7 @@ class SceneOpenGL
         void initBuffer();
         void initRenderingContext();
         bool findConfig( const int* attrs, GLXFBConfig* config, VisualID visual = None );
+        void waitSync();
         void flushBuffer( int mask, const QRegion& damage );
         typedef GLuint Texture;
         GC gcroot;

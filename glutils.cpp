@@ -33,6 +33,9 @@ glXBindTexImageEXT_func glXBindTexImageEXT;
 glActiveTexture_func glActiveTexture;
 // glXCopySubBufferMESA
 glXCopySubBuffer_func glXCopySubBuffer;
+// video_sync extension functions
+glXGetVideoSync_func glXGetVideoSync;
+glXWaitVideoSync_func glXWaitVideoSync;
 
 
 // Functions
@@ -74,6 +77,16 @@ void initGLX()
         glXCopySubBuffer = (glXCopySubBuffer_func) getProcAddress( "glXCopySubBufferMESA" );
     else
         glXCopySubBuffer = NULL;
+    if( hasGLExtension( "GLX_SGI_video_sync" ))
+        {
+        glXGetVideoSync = (glXGetVideoSync_func) getProcAddress( "glXGetVideoSyncSGI" );
+        glXWaitVideoSync = (glXWaitVideoSync_func) getProcAddress( "glXWaitVideoSyncSGI" );
+        }
+    else
+        {
+        glXGetVideoSync = NULL;
+        glXWaitVideoSync = NULL;
+        }
     }
 
 void initGL()

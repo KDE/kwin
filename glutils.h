@@ -85,6 +85,11 @@ extern glActiveTexture_func glActiveTexture;
 // glXCopySubBufferMESA
 typedef void (*glXCopySubBuffer_func) ( Display* , GLXDrawable, int, int, int, int );
 extern glXCopySubBuffer_func glXCopySubBuffer;
+// video_sync extension functions
+typedef void (*glXGetVideoSync_func)( unsigned int *count );
+typedef void (*glXWaitVideoSync_func)( int divisor, int remainder, unsigned int *count );
+extern glXGetVideoSync_func glXGetVideoSync;
+extern glXWaitVideoSync_func glXWaitVideoSync;
 
 } // namespace
 

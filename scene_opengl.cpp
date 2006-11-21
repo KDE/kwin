@@ -450,6 +450,22 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     ungrabXServer();
     }
 
+// wait for vblank signal before painting
+void SceneOpenGL::waitSync()
+    { // NOTE that vsync has no effect with indirect rendering
+    bool vsync = options->glVSync;
+    unsigned int sync;
+
+    if( !vsync )
+        return;
+    if( glXGetVideoSync )
+        {
+        glFlush();
+        glXGetVideoSync( &sync );
+        glXWaitVideoSync( 2, ( sync + 1 ) % 2, &sync );
+        }
+    }
+
 // actually paint to the screen (double-buffer swap or copy from pixmap buffer)
 void SceneOpenGL::flushBuffer( int mask, const QRegion& damage )
     {
@@ -457,6 +473,7 @@ void SceneOpenGL::flushBuffer( int mask, const QRegion& damage )
         {
         if( mask & PAINT_SCREEN_REGION )
             {
+            waitSync();
             if( glXCopySubBuffer )
                 {
                 foreach( QRect r, damage.rects())
@@ -483,7 +500,10 @@ void SceneOpenGL::flushBuffer( int mask, const QRegion& damage )
                 }
             }
         else
+            {
+            waitSync();
             glXSwapBuffers( display(), glxbuffer );
+            }
         glXWaitGL();
         XFlush( display());
         }
@@ -491,6 +511,7 @@ void SceneOpenGL::flushBuffer( int mask, const QRegion& damage )
         {
         glFlush();
         glXWaitGL();
+        waitSync();
         if( mask & PAINT_SCREEN_REGION )
             foreach( QRect r, damage.rects())
                 XCopyArea( display(), buffer, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());

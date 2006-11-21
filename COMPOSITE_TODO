@@ -96,10 +96,9 @@ OpenGL TODO
       one for the root window (or for the window used in the XComposite overlay)
       and the best one for every depth of drawables
 
-+ sync to vblank
+/ sync to vblank
     - currently the compositing code is run with 20ms timer, i.e. constant 50fps
     - the GLX_SGI_video_sync extension should be used
-    - compiz uses this, no idea about it though
 
 + GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
     - code currently uses GL_ARB_texture_rectangle (GL_TEXTURE_RECTANGLE_ARB), using

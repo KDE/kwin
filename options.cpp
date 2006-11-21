@@ -203,6 +203,7 @@ unsigned long Options::updateSettings()
         glMode = GLFallback;
     glAlwaysRebind = config->readEntry("GLAlwaysRebind", false );
     glDirect = config->readEntry("GLDirect", true );
+    glVSync = config->readEntry("GLVSync", true );
     
     config->setGroup( "EffectShowFps" );
     effectShowFpsAlpha = config->readEntry( "Alpha", 0.5 );

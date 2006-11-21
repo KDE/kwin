@@ -304,6 +304,7 @@ class Options : public KDecorationOptions
         GLMode glMode;
         bool glAlwaysRebind;
         bool glDirect;
+        bool glVSync;
 
         double effectShowFpsAlpha;
         int effectShowFpsX;
