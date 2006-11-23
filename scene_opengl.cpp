@@ -309,6 +309,8 @@ void SceneOpenGL::cleanupShm()
 void SceneOpenGL::initRenderingContext()
     {
     bool direct_rendering = options->glDirect;
+    if( !tfp_mode && !shm_mode )
+        direct_rendering = false; // fallback doesn't seem to work with direct rendering
     KXErrorHandler errs;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL,
         direct_rendering ? GL_TRUE : GL_FALSE );
