@@ -183,6 +183,8 @@ void Client::releaseWindow( bool on_shutdown )
        leaveMoveResize();
     finishWindowRules();
     ++block_geometry_updates;
+    if( isNormalState()) // is mapped?
+        workspace()->addDamage( geometry());
     setMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
@@ -239,6 +241,8 @@ void Client::destroyClient()
        leaveMoveResize();
     finishWindowRules();
     ++block_geometry_updates;
+    if( isNormalState()) // is mapped?
+        workspace()->addDamage( geometry());
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
     workspace()->clientHidden( this );
@@ -770,9 +774,13 @@ void Client::setShade( ShadeMode mode )
         // tell xcompmgr shade's done
         _shade = 2;
         XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);    
+        if( isNormalState()) // is mapped?
+            workspace()->addDamage( geometry());
         }
     else 
         {
+        if( isNormalState()) // is mapped?
+            workspace()->addDamage( geometry());
         int h = height();
         shade_geometry_change = true;
         QSize s( sizeForClientSize( clientSize()));
@@ -934,6 +942,7 @@ void Client::rawShow()
 */
 void Client::rawHide()
     {
+    workspace()->addDamage( geometry());
 // Here it may look like a race condition, as some other client might try to unmap
 // the window between these two XSelectInput() calls. However, they're supposed to
 // use XWithdrawWindow(), which also sends a synthetic event to the root window,

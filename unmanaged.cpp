@@ -59,6 +59,7 @@ bool Unmanaged::track( Window w )
 
 void Unmanaged::release()
     {
+    workspace()->addDamage( geometry());
     finishCompositing();
     workspace()->removeUnmanaged( this, Allowed );
     delete this;
