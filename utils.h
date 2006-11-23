@@ -17,6 +17,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <X11/Xlib.h>
 
+#ifdef HAVE_XRANDR
+#include <X11/extensions/Xrandr.h>
+#endif
+
 #ifdef HAVE_XCOMPOSITE
 #include <X11/extensions/Xcomposite.h>
 #if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
@@ -151,6 +155,8 @@ class Extensions
         static void init();
         static bool shapeAvailable() { return has_shape; }
         static int shapeNotifyEvent();
+        static bool randrAvailable() { return has_randr; }
+        static int randrNotifyEvent();
         static bool damageAvailable() { return has_damage; }
         static int damageNotifyEvent();
         static bool compositeAvailable() { return has_composite; }
@@ -160,6 +166,8 @@ class Extensions
     private:
         static bool has_shape;
         static int shape_event_base;
+        static bool has_randr;
+        static int randr_event_base;
         static bool has_damage;
         static int damage_event_base;
         static bool has_composite;

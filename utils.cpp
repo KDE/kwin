@@ -45,6 +45,8 @@ namespace KWinInternal
 
 bool Extensions::has_shape = false;
 int Extensions::shape_event_base = 0;
+bool Extensions::has_randr = false;
+int Extensions::randr_event_base = 0;
 bool Extensions::has_damage = false;
 int Extensions::damage_event_base = 0;
 bool Extensions::has_composite = false;
@@ -55,6 +57,17 @@ void Extensions::init()
     {
     int dummy;
     has_shape = XShapeQueryExtension( display(), &shape_event_base, &dummy);
+#ifdef HAVE_XRANDR
+    has_randr = XRRQueryExtension( display(), &randr_event_base, &dummy );
+    if( has_randr )
+        {
+        int major, minor;
+        XRRQueryVersion( display(), &major, &minor );
+        has_randr = ( major > 1 || ( major == 1 && minor >= 1 ) );
+        }
+#else
+    has_randr = false;
+#endif
 #ifdef HAVE_XDAMAGE
     has_damage = XDamageQueryExtension( display(), &damage_event_base, &dummy );
 #else
@@ -97,6 +110,15 @@ bool Extensions::hasShape( Window w )
                        &boundingShaped, &xws, &yws, &wws, &hws,
                        &clipShaped, &xbs, &ybs, &wbs, &hbs);
     return boundingShaped != 0;
+    }
+
+int Extensions::randrNotifyEvent()
+    {
+#ifdef HAVE_XRANDR
+    return randr_event_base + RRScreenChangeNotify;
+#else
+    return 0;
+#endif
     }
 
 int Extensions::damageNotifyEvent()

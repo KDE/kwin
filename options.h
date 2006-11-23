@@ -300,6 +300,7 @@ class Options : public KDecorationOptions
         uint dockShadowSize;
         bool onlyDecoTranslucent;
         
+        uint refreshRate;
         enum GLMode { GLTFP, GLSHM, GLFallback };
         GLMode glMode;
         bool glAlwaysRebind;

@@ -16,6 +16,7 @@ TODO
     - in other words, these should be the best if you want to get started with the code
 / = work in progress
 ? = should it be done?
+% = should be probably done later, during cleanups and preparations for being stable
 
 
 General TODO
@@ -40,7 +41,7 @@ General TODO
     - maybe posted paint events need to be processed immediatelly, or maybe the compositing
         code should not update the window until the decoration is finished painting
 
-* handle XRandr changes
+/ handle XRandr changes
     - output buffers and similar probably need recreating when the screen size changes
 
 ! compile even without OpenGL or XRender
@@ -51,17 +52,18 @@ General TODO
 
 ? Expose events for overlay window - is it necessary to track it, like with root window?
 
+% paint throttling
+    - there's 5ms grace period per repaint to avoid overloading the system with just compositing
+        and not letting the system do anything else - check and evaluate 
+
 
 OpenGL TODO
 =================================
 
 + Check/make it work with other gfx cards
     - I've tested only with nvidia with the 9625 beta drivers and 8776 stable drivers so far
+    - ATI - some (especially R200 chips) seem to work
     - I have absolutely no idea about other gfx cards, needs to be tested
-        - ati
-!           - does kwin_composite work there at all?
-!           - does glcompmgr work there at all? (even with the various switches in the source)
-+           - make kwin_composite work there if it doesn't
         - intel
 !           - does kwin_composite work there at all?
 !           - does glcompmgr work there at all? (even with the various switches in the source)
@@ -80,9 +82,8 @@ OpenGL TODO
 ?   - is there a good reason to support Xgl? With the 9625 nvidia drivers
         it seems to work fine without them and there's AIGLX
     
-? AIGLX support
-    - no idea about this at all
-+   - find out if it works
++ AIGLX support
+    - kind of works, needs more work
 
 ! improved GLXFBConfig support
     - it seems a different config for each depth would be needed
@@ -95,10 +96,6 @@ OpenGL TODO
 !   - so most probably KWin should do similarly - get all configs, find the best
       one for the root window (or for the window used in the XComposite overlay)
       and the best one for every depth of drawables
-
-/ sync to vblank
-    - currently the compositing code is run with 20ms timer, i.e. constant 50fps
-    - the GLX_SGI_video_sync extension should be used
 
 + GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
     - code currently uses GL_ARB_texture_rectangle (GL_TEXTURE_RECTANGLE_ARB), using

@@ -80,7 +80,34 @@ void Workspace::setupCompositing()
           kDebug( 1212 ) << "No compositing" << endl;
           return;
         }
-    compositeTimer.start( 20 );
+    int rate = 0;
+    if( options->refreshRate > 0 )
+        { // use manually configured refresh rate
+        rate = options->refreshRate;
+        }
+#ifdef HAVE_XRANDR
+    else
+        { // autoconfigure refresh rate based on XRandR info
+        if( Extensions::randrAvailable() )
+            {
+            XRRScreenConfiguration *config;
+
+            config = XRRGetScreenInfo( display(), rootWindow() );
+            rate = XRRConfigCurrentRate( config );
+            XRRFreeScreenConfigInfo( config );
+            }
+        }
+#endif
+    // 0Hz or less is invalid, so we fallback to a default rate
+    if( rate <= 0 )
+        rate = 50;
+    // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
+    // however, since compositing is limited to no more than once per 5msec,
+    // 200Hz to 1000Hz are effectively identical
+    else if( rate > 1000 )
+        rate = 1000;
+    kDebug( 1212 ) << "Refresh rate " << rate << "Hz" << endl;
+    compositeTimer.start( 1000 / rate );
     lastCompositePaint.start();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     if( dynamic_cast< SceneOpenGL* >( scene ))

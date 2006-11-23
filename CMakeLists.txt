@@ -71,6 +71,9 @@ target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations ${X11_LIBRAR
 target_link_libraries(kdeinit_kwin -lGL)
 # -ldl used by OpenGL code
 target_link_libraries(kdeinit_kwin -ldl)
+if (X11_Xrandr_FOUND)
+  target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
+endif (X11_Xrandr_FOUND)
 if (X11_Xcomposite_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xcomposite_LIB})
 endif (X11_Xcomposite_FOUND)

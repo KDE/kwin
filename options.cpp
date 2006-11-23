@@ -194,6 +194,7 @@ unsigned long Options::updateSettings()
     removeShadowsOnResize = config->readEntry("RemoveShadowsOnResize", QVariant(true)).toBool();
     onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool();
     
+    refreshRate = config->readEntry( "RefreshRate", 0 );
     QString glmode = config->readEntry("GLMode", "TFP" ).upper();
     if( glmode == "TFP" )
         glMode = GLTFP;
