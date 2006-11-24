@@ -85,6 +85,9 @@ OpenGL TODO
     
 + AIGLX support
     - kind of works, needs more work
++   - it needs indirect rendering, should be autodetected and disabled somehow
+%   - may require LIBGL_ALWAYS_INDIRECT set with older X.org
+        (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)
 
 ! improved GLXFBConfig support
     - it seems a different config for each depth would be needed

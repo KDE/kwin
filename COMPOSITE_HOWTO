@@ -63,7 +63,8 @@ Option "XaaNoOffscreenPixmaps" "true"
 in 'Section "Screen"' may improve performance for non-TFP (texture_from_pixmap) modes.
 
 For the TFP mode AIGLX needs to work. With AIGLX direct rendering should be be disabled
-(export LIBGL_ALWAYS_INDIRECT=1 before running kwin).
+(see GLDirect below, with X.org older than 7.2 "export LIBGL_ALWAYS_INDIRECT=1" before
+running kwin may be necessary).
 
 
 Intel:
