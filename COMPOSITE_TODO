@@ -1,5 +1,6 @@
 This file lists TODO items for the compositing code.
 
+See file COMPOSITE_HOWTO for setting up kwin_composite.
 See file HACKING for details on developing KWin, including building
     the kwin_composite branch.
 See effects/howto.* for a HOWTO on writting effects.

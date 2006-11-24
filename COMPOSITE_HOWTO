@@ -1,0 +1,97 @@
+This file describes how to set up kwin_composite.
+
+See file HACKING for details on developing KWin, including building
+    the kwin_composite branch.
+See file COMPOSITE_TODO for a list of things that still need to be done.
+See effects/howto.* for a HOWTO on writting effects.
+See documentation in source (mainly in scene.cpp) for description
+    of the design of the compositing framework.
+
+Using kwin_composite branch:
+============================
+
+See the KDE trunk HOWTO at http://developer.kde.org/build/trunk.html .
+
+The simplest way to build the kwin_composite branch is to switch the trunk version
+to the branch:
+
+$ cd kdebase/workspace/kwin
+$ svn info
+(prints the repository URL, for example https://svn.kde.org/home/kde/trunk/KDE/kdebase/workspace/kwin)
+$ svn switch https://svn.kde.org/home/kde/branches/work/kwin_composite
+(i.e. replace trunk/KDE/kdebase/workspace/kwin with branches/work/kwin_composite)
+$ make
+(i.e. build and use it as usually)
+
+After starting, KWin's debug output also says which compositing backend it uses, e.g.
+"OpenGL compositing". If it does not, most probably your X is not configured properly.
+
+
+nVidia:
+-----------
+
+Both 9xxx and 8xxx drivers work, only 9xxx drivers provide TFP (texture_from_pixmap)
+functionality.
+
+You need in xorg.conf
+
+Option "AddARGBGLXVisuals" "True"
+
+in 'Section "Screen"' and also the XComposite extension enabled:
+
+Section "Extensions"
+ Option "Composite" "Enable"
+EndSection
+
+
+ATI:
+--------
+
+The radeon driver should work for R200 chips, it's worse with R300 chips.
+TODO - fglrx - no idea
+
+You need in xorg.conf the XComposite extension enabled:
+
+Section "Extensions"
+ Option "Composite" "Enable"
+EndSection
+
+Also using
+
+Option "XaaNoOffscreenPixmaps" "true"
+
+in 'Section "Screen"' may improve performance for non-TFP (texture_from_pixmap) modes.
+
+For the TFP mode AIGLX needs to work. With AIGLX direct rendering should be be disabled
+(export LIBGL_ALWAYS_INDIRECT=1 before running kwin).
+
+
+Intel:
+-------
+
+TODO - no idea. Possibly similar to ATI.
+
+
+Configuration options:
+----------------------
+
+All general configuration option are in group [Translucency] in kwinrc config file:
+
+UseTranslucency=<true|false> - enables/disables compositing support
+GLMode=<TFP|SHM|Fallback> - selects texture creating mode
+RefreshRate=<number> - manually specified refresh rate, should be usually automatically detected
+GLAlwaysRebind=<true|false> - may increase speed with some graphics cards
+GLDirect=<true|false> - enables/disables direct rendering
+GLVSync=<true|false> - enables/disables synchronizing with monitor refresh
+
+ShowFPSEffect:
+Options are in group [EffectShowFps] in kwinrc config file:
+Alpha=<number 0.0-1.0> - transparency
+X=<number> - X position, negative is from the right edge, -10000 is exactly right edge
+Y=<number> = Y position, the same like X
+
+
+Effects:
+--------
+
+Effects can be currently enabled/disabled only by modifying effects.cpp source file.
