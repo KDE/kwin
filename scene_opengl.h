@@ -28,7 +28,6 @@ class SceneOpenGL
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
         virtual void paint( QRegion damage, ToplevelList windows );
-        virtual void postPaint();
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowAdded( Toplevel* );

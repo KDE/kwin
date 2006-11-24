@@ -123,6 +123,8 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
         XFlush( display());
         }
+    // do cleanup
+    stacking_order.clear();
     }
 
 void SceneXrender::paintGenericScreen( int mask, ScreenPaintData data )
@@ -274,6 +276,7 @@ Picture SceneXrender::Window::picture()
         if( alpha_clear )
             XFreePixmap( display(), window_pix );
 #endif
+        toplevel->resetDamage( toplevel->rect());
         }
     return _picture;
     }

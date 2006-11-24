@@ -450,6 +450,9 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glPopMatrix();
     flushBuffer( mask, damage );
     ungrabXServer();
+    // do cleanup
+    stacking_order.clear();
+    checkGLError( "PostPaint" );
     }
 
 // wait for vblank signal before painting
@@ -540,12 +543,6 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
 void SceneOpenGL::paintBackground( QRegion )
     {
 // TODO?
-    }
-
-void SceneOpenGL::postPaint()
-    {
-    checkGLError( "PostPaint" );
-    Scene::postPaint();
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )
@@ -692,6 +689,7 @@ void SceneOpenGL::Window::bindTexture()
         // the pixmap
         XFreePixmap( display(), pix );
         texture_y_inverted = true;
+        toplevel->resetDamage( toplevel->rect());
         }
     else if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
@@ -716,6 +714,7 @@ void SceneOpenGL::Window::bindTexture()
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         if( !strict_binding )
             glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
+        toplevel->resetDamage( toplevel->rect());
         }
     else
         { // non-tfp case, copy pixmap contents to a texture
@@ -761,6 +760,7 @@ void SceneOpenGL::Window::bindTexture()
         glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         texture_y_inverted = false;
+        toplevel->resetDamage( toplevel->rect());
         }
     if( copy_buffer )
         XFreePixmap( display(), window_pix );

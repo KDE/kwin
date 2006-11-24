@@ -112,7 +112,11 @@ OpenGL TODO
     - since copy_buffer hack should be removed in the future, strict binding will need to be enabled then
     - http://lists.kde.org/?l=kwin&m=116363084129170&w=2
 
-        
+% bindTexture() optimize copied areas
+    - right now bindTexture() updates every damaged area and resets the window damage
+    - it might make things faster to update only areas that need to be repainted
+        and keep the rest damaged until needed
+
 XRender TODO
 ==============================
 

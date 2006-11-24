@@ -224,14 +224,10 @@ void Workspace::performCompositing()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
-    scene->initPaint();
-    scene->paint( damage_region, windows );
-    // clear all damage
+    QRegion damage = damage_region;
+    // clear all damage, so that post-pass can add damage for the next repaint
     damage_region = QRegion();
-    foreach( Toplevel* c, windows )
-        c->resetDamage();
-    // run post-pass only after clearing the damage
-    scene->postPaint();
+    scene->paint( damage, windows );
     lastCompositePaint.start();
     }
 
@@ -326,9 +322,9 @@ void Toplevel::addDamageFull()
     addDamage( rect());
     }
 
-void Toplevel::resetDamage()
+void Toplevel::resetDamage( const QRect& r )
     {
-    damage_region = QRegion();
+    damage_region -= r;
     }
 
 #endif

@@ -65,7 +65,7 @@ class Toplevel
         void addDamage( int x, int y, int w, int h );
         void addDamageFull();
         QRegion damage() const;
-        void resetDamage();
+        void resetDamage( const QRect& r );
     protected:
         void setHandle( Window id );
         void detectShape( Window id );

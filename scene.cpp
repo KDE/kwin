@@ -92,12 +92,6 @@ Scene::~Scene()
     {
     }
 
-void Scene::initPaint()
-    {
-    effects->startPaint();
-    // do the rest of prepaint pass together with paint pass
-    }
-
 // returns mask and possibly modified region
 void Scene::paintScreen( int* mask, QRegion* region )
     {
@@ -105,6 +99,7 @@ void Scene::paintScreen( int* mask, QRegion* region )
         ? 0 : PAINT_SCREEN_REGION;
     updateTimeDiff();
     // preparation step
+    effects->startPaint();
     effects->prePaintScreen( mask, region, time_diff );
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
         { // optimized painting is not possible with transformations
@@ -121,6 +116,9 @@ void Scene::paintScreen( int* mask, QRegion* region )
         }
     ScreenPaintData data;
     effects->paintScreen( *mask, *region, data );
+    effects->postPaintScreen();
+    foreach( Window* w, stacking_order )
+        effects->postPaintWindow( w );
     }
 
 // Compute time since the last painting pass.
@@ -233,15 +231,6 @@ void Scene::paintWindow( Window* w, int mask, QRegion region )
 void Scene::finalPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
     {
     w->performPaint( mask, region, data );
-    }
-
-void Scene::postPaint()
-    {
-    effects->postPaintScreen();
-    foreach( Window* w, stacking_order )
-        effects->postPaintWindow( w );
-    // do cleanup
-    stacking_order.clear();
     }
 
 //****************************************

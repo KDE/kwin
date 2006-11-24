@@ -30,15 +30,9 @@ class Scene
         Scene( Workspace* ws );
         virtual ~Scene() = 0;
         class Window;
-        // Called before calling paint() to perform initialization (does not
-        // do the prepaint pass though)
-        virtual void initPaint();
         // Repaints the given screen areas, windows provides the stacking order.
         // The entry point for the main part of the painting pass.
         virtual void paint( QRegion damage, ToplevelList windows ) = 0;
-        // Called to perform post paint cleanup and for animations to prepare
-        // for next pass.
-        virtual void postPaint();
         
         // Notification function - KWin core informs about changes.
         // Used to mainly discard cached data.
