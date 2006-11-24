@@ -1628,6 +1628,7 @@ bool Unmanaged::windowEvent( XEvent* e )
             if( e->type == Extensions::shapeNotifyEvent() )
                 {
                 detectShape( handle());
+                addDamageFull();
                 if( scene != NULL )
                     scene->windowGeometryShapeChanged( this );
                 }

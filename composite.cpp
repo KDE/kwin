@@ -309,6 +309,9 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     if( !compositing())
         return;
     QRect r( x, y, w, h );
+    // resizing the decoration may lag behind a bit and when shrinking there
+    // may be a damage event coming with size larger than the current window size
+    r &= rect();
     damage_region += r;
     r.translate( this->x(), this->y());
     // this could be possibly optimized to damage Workspace only if the toplevel
@@ -319,6 +322,7 @@ void Toplevel::addDamage( int x, int y, int w, int h )
 
 void Toplevel::addDamageFull()
     {
+    damage_region = QRegion(); // first reset e.g. in case of shrinking
     addDamage( rect());
     }
 
