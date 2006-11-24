@@ -448,8 +448,8 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     int mask = 0;
     paintScreen( &mask, &damage ); // call generic implementation
     glPopMatrix();
+    ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     flushBuffer( mask, damage );
-    ungrabXServer();
     // do cleanup
     stacking_order.clear();
     checkGLError( "PostPaint" );
