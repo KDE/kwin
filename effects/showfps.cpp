@@ -74,9 +74,15 @@ void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data
     if( fps > MAX_TIME )
         fps = MAX_TIME; // keep it the same height
     if( dynamic_cast< SceneOpenGL* >( scene ))
+        {
         paintGL( fps );
+        glFinish(); // make sure all rendering is done
+        }
     else
+        {
         paintX( fps );
+        XSync( display(), False ); // make sure all rendering is done
+        }
     }
 
 void ShowFpsEffect::paintGL( int fps )
@@ -208,8 +214,6 @@ void ShowFpsEffect::paintX( int fps )
 void ShowFpsEffect::postPaintScreen()
     {
     effects->postPaintScreen();
-    if( dynamic_cast< SceneXrender* >( scene ))
-        XSync( display(), False ); // make sure all rendering is done
     paints[ paints_pos ] = t.elapsed();
     if( ++paints_pos == NUM_PAINTS )
         paints_pos = 0;
