@@ -779,11 +779,8 @@ ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent )
 
 void ShortcutDialog::accept()
     {
-    for( int i = 0;
-         ;
-         ++i )
+    foreach( const QKeySequence &seq, shortcut().toList() )
         {
-        QKeySequence seq = shortcut().seq( i );
         if( seq.isEmpty())
             break;
         if( seq[0] == Qt::Key_Escape )
@@ -800,7 +797,7 @@ void ShortcutDialog::accept()
         if( (seq[0] & Qt::KeyboardModifierMask) == 0 )
             { // no shortcuts without modifiers
             KShortcut cut = shortcut();
-            cut.setSeq( i, QKeySequence());
+            cut.remove( seq );
             setShortcut( cut );
             return;
             }

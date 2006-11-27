@@ -28,7 +28,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "atoms.h"
 #include "notifications.h"
 #include "rules.h"
-#include "scene.h"
 
 #include <X11/extensions/shape.h>
 #include <QX11Info>
@@ -64,10 +63,12 @@ namespace KWinInternal
  is done in manage().
  */
 Client::Client( Workspace *ws )
-    :   Toplevel( ws ),
+    :   QObject( NULL ),
         client( None ),
         wrapper( None ),
+        frame( None ),
         decoration( NULL ),
+        wspace( ws ),
         bridge( new Bridge( this )),
         move_faked_activity( false ),
         move_resize_grab_window( None ),
@@ -81,7 +82,7 @@ Client::Client( Workspace *ws )
         process_killer( NULL ),
         user_time( CurrentTime ), // not known yet
         allowed_actions( 0 ),
-        block_geometry_updates( 0 ),
+        postpone_geometry_updates( 0 ),
         pending_geometry_update( false ),
         shade_geometry_change( false ),
         border_left( 0 ),
@@ -110,6 +111,7 @@ Client::Client( Workspace *ws )
     deleting = false;
     keep_above = false;
     keep_below = false;
+    is_shape = false;
     motif_noborder = false;
     motif_may_move = true;
     motif_may_resize = true;
@@ -122,7 +124,6 @@ Client::Client( Workspace *ws )
     modal = false;
     noborder = false;
     user_noborder = false;
-    not_obscured = false;
     urgency = false;
     ignore_focus_stealing = false;
     demands_attention = false;
@@ -141,7 +142,7 @@ Client::Client( Workspace *ws )
     
     cmap = None;
     
-    geom = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
+    frame_geometry = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
     client_size = QSize( 100, 100 );
 
     // SELI initialize xsizehints??
@@ -154,10 +155,9 @@ Client::~Client()
     {
     assert(!moveResizeMode);
     assert( client == None );
-    assert( wrapper == None );
-//    assert( frameId() == None );
+    assert( frame == None && wrapper == None );
     assert( decoration == NULL );
-    assert( block_geometry_updates == 0 );
+    assert( postpone_geometry_updates == 0 );
     assert( !check_active_modal );
     delete info;
     delete bridge;
@@ -176,15 +176,12 @@ void Client::releaseWindow( bool on_shutdown )
     {
     assert( !deleting );
     deleting = true;
-    finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
-    ++block_geometry_updates;
-    if( isNormalState()) // is mapped?
-        workspace()->addDamage( geometry());
+    ++postpone_geometry_updates;
     setMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
@@ -222,9 +219,9 @@ void Client::releaseWindow( bool on_shutdown )
     client = None;
     XDestroyWindow( display(), wrapper );
     wrapper = None;
-    XDestroyWindow( display(), frameId());
-//    frame = None;
-    --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
+    XDestroyWindow( display(), frame );
+    frame = None;
+    --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
     }
 
@@ -234,15 +231,12 @@ void Client::destroyClient()
     {
     assert( !deleting );
     deleting = true;
-    finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
        leaveMoveResize();
     finishWindowRules();
-    ++block_geometry_updates;
-    if( isNormalState()) // is mapped?
-        workspace()->addDamage( geometry());
+    ++postpone_geometry_updates;
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
     workspace()->clientHidden( this );
@@ -252,9 +246,9 @@ void Client::destroyClient()
     client = None; // invalidate
     XDestroyWindow( display(), wrapper );
     wrapper = None;
-    XDestroyWindow( display(), frameId());
-//    frame = None;
-    --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
+    XDestroyWindow( display(), frame );
+    frame = None;
+    --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
     }
 
@@ -264,11 +258,12 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
                     || ( decoration != NULL && !noBorder())))
         return;
     bool do_show = false;
-    blockGeometryUpdates( true );
+    postponeGeometryUpdates( true );
     if( force )
         destroyDecoration();
     if( !noBorder())
         {
+        setMask( QRegion()); // reset shape mask
         decoration = workspace()->createDecoration( bridge );
         // TODO check decoration's minimum size?
         decoration->init();
@@ -283,18 +278,15 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
         do_show = true;
-        if( scene != NULL )
-            scene->windowGeometryShapeChanged( this );
         }
     else
         destroyDecoration();
     if( check_workspace_pos )
         checkWorkspacePosition();
-    blockGeometryUpdates( false );
+    postponeGeometryUpdates( false );
     if( do_show )
         decoration->widget()->show();
     updateFrameExtents();
-    addDamageFull();
     }
 
 void Client::destroyDecoration()
@@ -312,9 +304,6 @@ void Client::destroyDecoration()
         move( grav );
         workarea_diff_x = save_workarea_diff_x;
         workarea_diff_y = save_workarea_diff_y;
-        if( scene != NULL )
-            scene->windowGeometryShapeChanged( this );
-        addDamageFull();
         }
     }
 
@@ -327,7 +316,7 @@ void Client::checkBorderSizes()
     if( new_left == border_left && new_right == border_right
         && new_top == border_top && new_bottom == border_bottom )
         return;
-    GeometryUpdatesBlocker blocker( this );
+    GeometryUpdatesPostponer blocker( this );
     move( calculateGravitation( true ));
     border_left = new_left;
     border_right = new_right;
@@ -344,7 +333,7 @@ void Client::checkBorderSizes()
 
 void Client::detectNoBorder()
     {
-    if( shape())
+    if( Shape::hasShape( window()))
         {
         noborder = true;
         return;
@@ -432,21 +421,46 @@ void Client::setUserNoBorder( bool set )
 
 void Client::updateShape()
     {
-    if ( shape() )
-        XShapeCombineShape(display(), frameId(), ShapeBounding,
-                           clientPos().x(), clientPos().y(),
-                           window(), ShapeBounding, ShapeSet);
-    else
-        XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
-                           None, ShapeSet);
-    if( scene != NULL )
-        scene->windowGeometryShapeChanged( this );
-    addDamageFull();
     // workaround for #19644 - shaped windows shouldn't have decoration
     if( shape() && !noBorder()) 
         {
         noborder = true;
         updateDecoration( true );
+        }
+    if( shape())
+        {
+        XShapeCombineShape(display(), frameId(), ShapeBounding,
+                           clientPos().x(), clientPos().y(),
+                           window(), ShapeBounding, ShapeSet);
+        }
+    // !shape() mask setting is done in setMask() when the decoration
+    // calls it or when the decoration is created/destroyed
+
+    if( Shape::version() >= 0x11 ) // 1.1, has input shape support
+        { // There appears to be no way to find out if a window has input
+          // shape set or not, so always propagate the input shape
+          // (it's the same like the bounding shape by default).
+          // Also, build the shape using a helper window, not directly
+          // in the frame window, because the sequence set-shape-to-frame,
+          // remove-shape-of-client, add-input-shape-of-client has the problem
+          // that after the second step there's a hole in the input shape
+          // until the real shape of the client is added and that can make
+          // the window lose focus (which is a problem with mouse focus policies)
+        static Window helper_window = None;
+        if( helper_window == None )
+            helper_window = XCreateSimpleWindow( display(), rootWindow(),
+                0, 0, 1, 1, 0, 0, 0 );
+        XResizeWindow( display(), helper_window, width(), height());
+        XShapeCombineShape( display(), helper_window, ShapeInput, 0, 0,
+                           frameId(), ShapeBounding, ShapeSet );
+        XShapeCombineShape( display(), helper_window, ShapeInput,
+                           clientPos().x(), clientPos().y(),
+                           window(), ShapeBounding, ShapeSubtract );
+        XShapeCombineShape( display(), helper_window, ShapeInput,
+                           clientPos().x(), clientPos().y(),
+                           window(), ShapeInput, ShapeUnion );
+        XShapeCombineShape( display(), frameId(), ShapeInput, 0, 0,
+                           helper_window, ShapeInput, ShapeSet );
         }
     }
 
@@ -476,9 +490,7 @@ void Client::setMask( const QRegion& reg, int mode )
             xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
-    if( scene != NULL )
-        scene->windowGeometryShapeChanged( this );
-    addDamageFull();
+    updateShape();
     }
 
 QRegion Client::mask() const
@@ -727,7 +739,7 @@ void Client::setShade( ShadeMode mode )
         }
 
     assert( decoration != NULL ); // noborder windows can't be shaded
-    GeometryUpdatesBlocker blocker( this );
+    GeometryUpdatesPostponer blocker( this );
     // decorations may turn off some borders when shaded
     decoration->borders( border_left, border_right, border_top, border_bottom );
 
@@ -774,13 +786,9 @@ void Client::setShade( ShadeMode mode )
         // tell xcompmgr shade's done
         _shade = 2;
         XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);    
-        if( isNormalState()) // is mapped?
-            workspace()->addDamage( geometry());
         }
     else 
         {
-        if( isNormalState()) // is mapped?
-            workspace()->addDamage( geometry());
         int h = height();
         shade_geometry_change = true;
         QSize s( sizeForClientSize( clientSize()));
@@ -915,8 +923,8 @@ void Client::setMappingState(int s)
     XChangeProperty(display(), window(), atoms->wm_state, atoms->wm_state, 32,
         PropModeReplace, (unsigned char *)data, 2);
 
-    if( was_unmanaged ) // manage() did block_geometry_updates = 1, now it's ok to finally set the geometry
-        blockGeometryUpdates( false );
+    if( was_unmanaged ) // manage() did postpone_geometry_updates = 1, now it's ok to finally set the geometry
+        postponeGeometryUpdates( false );
     }
 
 /*!
@@ -927,7 +935,7 @@ void Client::rawShow()
     {
     if( decoration != NULL )
         decoration->widget()->show(); // not really necessary, but let it know the state
-    XMapWindow( display(), frameId());
+    XMapWindow( display(), frame );
     if( !isShade())
         {
         XMapWindow( display(), wrapper );
@@ -942,7 +950,6 @@ void Client::rawShow()
 */
 void Client::rawHide()
     {
-    workspace()->addDamage( geometry());
 // Here it may look like a race condition, as some other client might try to unmap
 // the window between these two XSelectInput() calls. However, they're supposed to
 // use XWithdrawWindow(), which also sends a synthetic event to the root window,
@@ -950,7 +957,7 @@ void Client::rawHide()
 // will be missed is also very minimal, so I don't think it's needed to grab the server
 // here.
     XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-    XUnmapWindow( display(), frameId());
+    XUnmapWindow( display(), frame );
     XUnmapWindow( display(), wrapper );
     XUnmapWindow( display(), client );
     XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
@@ -1295,7 +1302,7 @@ QString Client::readName() const
         return KWin::readNameProperty( window(), XA_WM_NAME );
     }
     
-KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, Client, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
+KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
 
 void Client::setCaption( const QString& _s, bool force )
     {
@@ -1313,7 +1320,7 @@ void Client::setCaption( const QString& _s, bool force )
         QString machine_suffix;
         if( wmClientMachine( false ) != "localhost" && !isLocalMachine( wmClientMachine( false )))
             machine_suffix = " <@" + wmClientMachine( true ) + '>';
-        QString shortcut_suffix = !shortcut().isNull() ? ( " {" + shortcut().toString() + '}' ) : "";
+        QString shortcut_suffix = !shortcut().isEmpty() ? ( " {" + shortcut().toString() + '}' ) : QString();
         cap_suffix = machine_suffix + shortcut_suffix;
         if ( ( !isSpecialWindow() || isToolbar()) && workspace()->findClient( FetchNameInternalPredicate( this ))) 
             {
@@ -1612,6 +1619,58 @@ bool Client::wantsInput() const
     return rules()->checkAcceptFocus( input || Ptakefocus );
     }
 
+bool Client::isDesktop() const
+    {
+    return windowType() == NET::Desktop;
+    }
+
+bool Client::isDock() const
+    {
+    return windowType() == NET::Dock;
+    }
+
+bool Client::isTopMenu() const
+    {
+    return windowType() == NET::TopMenu;
+    }
+
+
+bool Client::isMenu() const
+    {
+    return windowType() == NET::Menu && !isTopMenu(); // because of backwards comp.
+    }
+
+bool Client::isToolbar() const
+    {
+    return windowType() == NET::Toolbar;
+    }
+
+bool Client::isSplash() const
+    {
+    return windowType() == NET::Splash;
+    }
+
+bool Client::isUtility() const
+    {
+    return windowType() == NET::Utility;
+    }
+
+bool Client::isDialog() const
+    {
+    return windowType() == NET::Dialog;
+    }
+
+bool Client::isNormalWindow() const
+    {
+    return windowType() == NET::Normal;
+    }
+
+bool Client::isSpecialWindow() const
+    {
+    return isDesktop() || isDock() || isSplash() || isTopMenu()
+        || isToolbar(); // TODO
+    }
+
 NET::WindowType Client::windowType( bool direct, int supported_types ) const
     {
     NET::WindowType wt = info->windowType( supported_types );
@@ -1641,12 +1700,6 @@ NET::WindowType Client::windowType( bool direct, int supported_types ) const
     if( wt == NET::Unknown ) // this is more or less suggested in NETWM spec
         wt = isTransient() ? NET::Dialog : NET::Normal;
     return wt;
-    }
-
-bool Client::isSpecialWindow() const
-    {
-    return isDesktop() || isDock() || isSplash() || isTopMenu()
-        || isToolbar(); // TODO
     }
 
 /*!
@@ -1745,24 +1798,46 @@ void Client::cancelAutoRaise()
     autoRaiseTimer = 0;
     }
 
-double Client::opacity() const
+#ifndef NDEBUG
+kdbgstream& operator<<( kdbgstream& stream, const Client* cl )
     {
-    if( info->opacity() == 0xffffffff )
-        return 1.0;
-    return info->opacity() * 1.0 / 0xffffffff;
+    if( cl == NULL )
+        return stream << "\'NULL_CLIENT\'";
+    return stream << "\'ID:" << cl->window() << ";WMCLASS:" << cl->resourceClass() << ":" << cl->resourceName() << ";Caption:" << cl->caption() << "\'";
     }
-
-void Client::setOpacity( double opacity )
+kdbgstream& operator<<( kdbgstream& stream, const ClientList& list )
     {
-    opacity = qBound( 0.0, opacity, 1.0 );
-    info->setOpacity( static_cast< unsigned long >( opacity * 0xffffffff ));
-    // we'll react on PropertyNotify
+    stream << "LIST:(";
+    bool first = true;
+    for( ClientList::ConstIterator it = list.begin();
+         it != list.end();
+         ++it )
+        {
+        if( !first )
+            stream << ":";
+        first = false;
+        stream << *it;
+        }
+    stream << ")";
+    return stream;
     }
-
-void Client::debug( kdbgstream& stream ) const
+kdbgstream& operator<<( kdbgstream& stream, const ConstClientList& list )
     {
-    stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":" << resourceName() << ";Caption:" << caption() << "\'";
+    stream << "LIST:(";
+    bool first = true;
+    for( ConstClientList::ConstIterator it = list.begin();
+         it != list.end();
+         ++it )
+        {
+        if( !first )
+            stream << ":";
+        first = false;
+        stream << *it;
+        }
+    stream << ")";
+    return stream;
     }
+#endif
 
 QPixmap * kwin_get_menu_pix_hack()
     {

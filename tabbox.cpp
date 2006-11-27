@@ -831,13 +831,9 @@ static bool areModKeysDepressed( const QKeySequence& seq )
 
 static bool areModKeysDepressed( const KShortcut& cut )
     {
-    for( int i = 0;
-	 i < cut.count();
-	 ++i )
-	{
-	if( areModKeysDepressed( cut.seq( i )))
-	    return true;
-	}
+    if( areModKeysDepressed( cut.primary()) || areModKeysDepressed( cut.alternate()) )
+        return true;
+
     return false;
     }
 
