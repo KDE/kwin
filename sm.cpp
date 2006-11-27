@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "sm.h"
 
-#include <kdebug.h>
+//#include <kdebug.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <pwd.h>
