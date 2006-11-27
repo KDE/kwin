@@ -443,8 +443,6 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     grabXServer();
     glXWaitX();
     glPushMatrix();
-    glClearColor( 0, 0, 0, 1 );
-    glClear( GL_COLOR_BUFFER_BIT );
     int mask = 0;
     paintScreen( &mask, &damage ); // call generic implementation
     glPopMatrix();
@@ -540,9 +538,26 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
         glPopMatrix();
     }
 
-void SceneOpenGL::paintBackground( QRegion )
+void SceneOpenGL::paintBackground( QRegion region )
     {
-// TODO?
+    if( region == infiniteRegion())
+        {
+        glClearColor( 1, 1, 1, 1 ); // white
+        glClear( GL_COLOR_BUFFER_BIT );
+        }
+    else
+        {
+        glColor4f( 1, 1, 1, 1 ); // white
+        glBegin( GL_QUADS );
+        foreach( QRect r, region.rects())
+            {
+            glVertex2i( r.x(), r.y());
+            glVertex2i( r.x() + r.width(), r.y());
+            glVertex2i( r.x() + r.width(), r.y() + r.height());
+            glVertex2i( r.x(), r.y() + r.height());
+            }
+        glEnd();
+        }
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )
