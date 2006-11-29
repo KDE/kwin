@@ -182,6 +182,9 @@ void Client::releaseWindow( bool on_shutdown )
        leaveMoveResize();
     finishWindowRules();
     ++postpone_geometry_updates;
+    // grab X during the release to make removing of properties, setting to withdrawn state
+    // and repareting to root an atomic operation (http://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
+    grabXServer();
     setMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
@@ -223,6 +226,7 @@ void Client::releaseWindow( bool on_shutdown )
     frame = None;
     --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     deleteClient( this, Allowed );
+    ungrabXServer();
     }
 
 // like releaseWindow(), but this one is called when the window has been already destroyed
