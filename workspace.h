@@ -426,6 +426,7 @@ class Workspace : public QObject, public KDecorationDefines
         void writeWindowRules();
         void slotBlockShortcuts(int data);
         void setPopupClientOpacity( QAction* action );
+        void setupCompositing();
         void performCompositing();
         void lostCMSelection();
 
@@ -519,7 +520,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         void updateClientArea( bool force );
         
-        void setupCompositing();
         void finishCompositing();
 
         SystemTrayWindowList systemTrayWins;

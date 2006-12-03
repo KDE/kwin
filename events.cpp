@@ -475,6 +475,20 @@ bool Workspace::workspaceEvent( XEvent * e )
                 addDamage( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
             break;
         default:
+            if( e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable() )
+                {
+#ifdef HAVE_XRANDR
+                XRRUpdateConfiguration( e );
+#endif
+                if( compositing() )
+                    {
+                    // desktopResized() should take care of when the size or
+                    // shape of the desktop has changed, but we also want to
+                    // catch refresh rate changes
+                    finishCompositing();
+                    QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
+                    }
+                }
             break;
         }
     return false;
