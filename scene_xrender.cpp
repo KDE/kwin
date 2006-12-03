@@ -355,6 +355,8 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     // do required transformations
     int x = toplevel->x();
     int y = toplevel->y();
+    int width = toplevel->width();
+    int height = toplevel->height();
     if( mask & PAINT_SCREEN_TRANSFORMED )
         {
         x += screen_paint.xTranslate;
@@ -365,17 +367,38 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         x += data.xTranslate;
         y += data.yTranslate;
         }
-    // TODO xScale,yScale
+    bool transform = false;
+    if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
+        {
+        XTransform xform = {{
+            { XDoubleToFixed( 1 / data.xScale ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
+            { XDoubleToFixed( 0 ), XDoubleToFixed( 1 / data.yScale ), XDoubleToFixed( 0 ) },
+            { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
+        }};
+        XRenderSetPictureTransform( display(), pic, &xform );
+        width = (int)(width * data.xScale);
+        height = (int)(height * data.yScale);
+        transform = true;
+        }
     if( opaque )
         {
         XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
-            x, y, toplevel->width(), toplevel->height());
+            x, y, width, height);
         }
     else
         {
         Picture alpha = alphaMask( data.opacity );
         XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
-            x, y, toplevel->width(), toplevel->height());
+            x, y, width, height);
+        }
+    if( transform )
+        {
+        XTransform xform = {{
+            { XDoubleToFixed( 1 ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
+            { XDoubleToFixed( 0 ), XDoubleToFixed( 1 ), XDoubleToFixed( 0 ) },
+            { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
+        }};
+        XRenderSetPictureTransform( display(), pic, &xform );
         }
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }
