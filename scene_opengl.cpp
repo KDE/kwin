@@ -530,6 +530,7 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
         { // apply screen transformations
         glPushMatrix();
         glTranslatef( data.xTranslate, data.yTranslate, 0 );
+        glScalef( data.xScale, data.yScale, 1 );
         }
     Scene::paintGenericScreen( mask, data );
     if( mask & PAINT_SCREEN_TRANSFORMED )

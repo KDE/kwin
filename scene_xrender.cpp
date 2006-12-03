@@ -359,6 +359,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     int height = toplevel->height();
     if( mask & PAINT_SCREEN_TRANSFORMED )
         {
+        // TODO xScale, yScale
         x += screen_paint.xTranslate;
         y += screen_paint.yTranslate;
         }

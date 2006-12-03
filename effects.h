@@ -52,6 +52,8 @@ class ScreenPaintData
     {
     public:
         ScreenPaintData();
+        double xScale;
+        double yScale;
         int xTranslate;
         int yTranslate;
     };
@@ -113,7 +115,9 @@ WindowPaintData::WindowPaintData()
 
 inline
 ScreenPaintData::ScreenPaintData()
-    : xTranslate( 0 )
+    : xScale( 1 )
+    , yScale( 1 )
+    , xTranslate( 0 )
     , yTranslate( 0 )
     {
     }

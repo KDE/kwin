@@ -22,6 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/shakymove.h"
 #include "effects/shiftworkspaceup.h"
 #include "effects/showfps.h"
+#include "effects/zoom.h"
 
 namespace KWinInternal
 {
@@ -91,6 +92,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     if( !compositing())
         return;
     effects.append( new ShowFpsEffect( ws ));
+    effects.append( new ZoomEffect( ws ));
 //    effects.append( new HowtoEffect );
 //    effects.append( new MakeTransparentEffect );
 //    effects.append( new ShakyMoveEffect );
