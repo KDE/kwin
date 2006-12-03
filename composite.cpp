@@ -261,8 +261,11 @@ void Workspace::setupOverlay( Window w )
     {
     assert( overlay != None );
     XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
-    XShapeCombineRectangles( display(), w, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
-    XMapWindow( display(), w );
+    if( w != None )
+        {
+        XShapeCombineRectangles( display(), w, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
+        XMapWindow( display(), w );
+        }
     XMapRaised( display(), overlay );
     }
 

@@ -77,9 +77,17 @@ SceneXrender::SceneXrender( Workspace* ws )
     {
     // create XRender picture for the root window
     format = XRenderFindVisualFormat( display(), DefaultVisual( display(), DefaultScreen( display())));
-    XRenderPictureAttributes pa;
-    pa.subwindow_mode = IncludeInferiors;
-    front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
+    if( wspace->createOverlay())
+        {
+        wspace->setupOverlay( None );
+        front = XRenderCreatePicture( display(), wspace->overlayWindow(), format, 0, NULL );
+        }
+    else
+        {
+        XRenderPictureAttributes pa;
+        pa.subwindow_mode = IncludeInferiors;
+        front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
+        }
     createBuffer();
     }
 
@@ -87,6 +95,7 @@ SceneXrender::~SceneXrender()
     {
     XRenderFreePicture( display(), front );
     XRenderFreePicture( display(), buffer );
+    wspace->destroyOverlay();
     for( QMap< Toplevel*, Window >::Iterator it = windows.begin();
          it != windows.end();
          ++it )
