@@ -175,6 +175,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     initGL();
     if( db )
         glDrawBuffer( GL_BACK );
+    has_waitSync = glXGetVideoSync ? true : false;
 
     // Check whether certain features are supported
     supports_saturation = ((hasGLExtension("GL_ARB_texture_env_crossbar")
@@ -456,13 +457,10 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
 // wait for vblank signal before painting
 void SceneOpenGL::waitSync()
     { // NOTE that vsync has no effect with indirect rendering
-    bool vsync = options->glVSync;
-    unsigned int sync;
-
-    if( !vsync )
-        return;
-    if( glXGetVideoSync )
+    if( waitSyncAvailable() && options->glVSync )
         {
+        unsigned int sync;
+
         glFlush();
         glXGetVideoSync( &sync );
         glXWaitVideoSync( 2, ( sync + 1 ) % 2, &sync );

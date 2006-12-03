@@ -107,7 +107,8 @@ void Workspace::setupCompositing()
     else if( rate > 1000 )
         rate = 1000;
     kDebug( 1212 ) << "Refresh rate " << rate << "Hz" << endl;
-    compositeTimer.start( 1000 / rate );
+    compositeRate = 1000 / rate;
+    compositeTimer.start( compositeRate );
     lastCompositePaint.start();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     if( dynamic_cast< SceneOpenGL* >( scene ))
@@ -228,6 +229,16 @@ void Workspace::performCompositing()
     // clear all damage, so that post-pass can add damage for the next repaint
     damage_region = QRegion();
     scene->paint( damage, windows );
+    if( scene->waitSyncAvailable() && options->glVSync )
+        { // if we're using vsync, then time the next paint pass to
+          // before the next available sync
+        int paintTime = ( lastCompositePaint.elapsed() % compositeRate ) +
+                        ( compositeRate / 2 );
+        if( paintTime >= compositeRate )
+            compositeTimer.start( paintTime );
+        else if( paintTime < compositeRate )
+            compositeTimer.start( compositeRate - paintTime );
+        }
     lastCompositePaint.start();
     }
 

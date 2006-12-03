@@ -682,6 +682,7 @@ class Workspace : public QObject, public KDecorationDefines
         KSelectionOwner* cm_selection;
         QTimer compositeTimer;
         QTime lastCompositePaint;
+        int compositeRate;
         QRegion damage_region;
         Window overlay; // XComposite overlay window
         QSlider *transSlider;

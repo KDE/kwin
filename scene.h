@@ -62,6 +62,7 @@ class Scene
             };
         // there's nothing to paint (adjust time_diff later)
         void idle();
+        bool waitSyncAvailable() { return has_waitSync; }
     protected:
         // shared implementation, starts painting the screen
         void paintScreen( int* mask, QRegion* region );
@@ -97,6 +98,7 @@ class Scene
         int time_diff;
         QTime last_time;
         Workspace* wspace;
+        bool has_waitSync;
     };
 
 // The base class for windows representations in composite backends

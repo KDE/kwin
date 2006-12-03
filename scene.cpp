@@ -84,7 +84,8 @@ namespace KWinInternal
 Scene* scene;
 
 Scene::Scene( Workspace* ws )
-    : wspace( ws )
+    : wspace( ws ),
+    has_waitSync( false )
     {
     }
     
