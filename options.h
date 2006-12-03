@@ -301,6 +301,8 @@ class Options : public KDecorationOptions
         bool onlyDecoTranslucent;
         
         uint refreshRate;
+        int smoothScale; // 0 = no, 1 = yes, -1 = auto
+        
         enum GLMode { GLTFP, GLSHM, GLFallback };
         GLMode glMode;
         bool glAlwaysRebind;

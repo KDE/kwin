@@ -394,6 +394,8 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         XRenderSetPictureTransform( display(), pic, &xform );
         width = (int)(width * xscale);
         height = (int)(height * yscale);
+        if( options->smoothScale == 1 ) // only when forced, it's slow
+            XRenderSetPictureFilter( display(), pic, "good", NULL, 0 );
         }
     if( opaque )
         {
@@ -414,6 +416,8 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
             { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
         }};
         XRenderSetPictureTransform( display(), pic, &xform );
+        if( options->smoothScale == 1 )
+            XRenderSetPictureFilter( display(), pic, "fast", NULL, 0 );
         }
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }

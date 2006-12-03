@@ -195,6 +195,8 @@ unsigned long Options::updateSettings()
     onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool();
     
     refreshRate = config->readEntry( "RefreshRate", 0 );
+    smoothScale = qBound( -1, config->readEntry( "SmoothScale", -1 ), 1 );
+
     QString glmode = config->readEntry("GLMode", "TFP" ).upper();
     if( glmode == "TFP" )
         glMode = GLTFP;
