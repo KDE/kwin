@@ -357,29 +357,34 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     int y = toplevel->y();
     int width = toplevel->width();
     int height = toplevel->height();
-    if( mask & PAINT_SCREEN_TRANSFORMED )
-        {
-        // TODO xScale, yScale
-        x += screen_paint.xTranslate;
-        y += screen_paint.yTranslate;
-        }
+    double xscale = 1;
+    double yscale = 1;
     if( mask & PAINT_WINDOW_TRANSFORMED )
         {
+        xscale *= data.xScale;
+        yscale *= data.yScale;
         x += data.xTranslate;
         y += data.yTranslate;
         }
-    bool transform = false;
-    if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
+    if( mask & PAINT_SCREEN_TRANSFORMED )
+        {
+        xscale *= screen_paint.xScale;
+        yscale *= screen_paint.yScale;
+        x = int( x * screen_paint.xScale );
+        y = int( y * screen_paint.yScale );
+        x += screen_paint.xTranslate;
+        y += screen_paint.yTranslate;
+        }
+    if( yscale != 1 || xscale != 1 )
         {
         XTransform xform = {{
-            { XDoubleToFixed( 1 / data.xScale ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
-            { XDoubleToFixed( 0 ), XDoubleToFixed( 1 / data.yScale ), XDoubleToFixed( 0 ) },
+            { XDoubleToFixed( 1 / xscale ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
+            { XDoubleToFixed( 0 ), XDoubleToFixed( 1 / yscale ), XDoubleToFixed( 0 ) },
             { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
         }};
         XRenderSetPictureTransform( display(), pic, &xform );
-        width = (int)(width * data.xScale);
-        height = (int)(height * data.yScale);
-        transform = true;
+        width = (int)(width * xscale);
+        height = (int)(height * yscale);
         }
     if( opaque )
         {
@@ -392,7 +397,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
             x, y, width, height);
         }
-    if( transform )
+    if( xscale != 1 || yscale != 1 )
         {
         XTransform xform = {{
             { XDoubleToFixed( 1 ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
