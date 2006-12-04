@@ -455,7 +455,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         width = (int)(width * xscale);
         height = (int)(height * yscale);
         if( options->smoothScale == 1 ) // only when forced, it's slow
-            XRenderSetPictureFilter( display(), pic, "good", NULL, 0 );
+            XRenderSetPictureFilter( display(), pic, const_cast< char* >( "good" ), NULL, 0 );
         // transform the shape for clipping in paintTransformedScreen()
         QVector< QRect > rects = transformed_shape.rects();
         for( int i = 0;
@@ -491,7 +491,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         }};
         XRenderSetPictureTransform( display(), pic, &xform );
         if( options->smoothScale == 1 )
-            XRenderSetPictureFilter( display(), pic, "fast", NULL, 0 );
+            XRenderSetPictureFilter( display(), pic, const_cast< char* >( "fast" ), NULL, 0 );
         }
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }
