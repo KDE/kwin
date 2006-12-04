@@ -57,14 +57,6 @@ License. See the file "COPYING" for the exact licensing terms.
  repaint certain parts can manually damage them during post-paint and repaint
  of these parts will be done during the next paint pass.
  
- 
- Various notes:
- 
- - When the screen or a window are transformed (*_TRANSFORMED flag), clipping
-   and similar optimizations are not done (too complicated), so in such cases
-   infiniteRegion() should be always used. Make sure not to make any transformations
-   of such regions.
- 
 */
 
 #include "scene.h"
@@ -103,7 +95,8 @@ void Scene::paintScreen( int* mask, QRegion* region )
     effects->startPaint();
     effects->prePaintScreen( mask, region, time_diff );
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
-        { // optimized painting is not possible with transformations
+        { // Region painting is not possible with transformations,
+          // because screen damage doesn't match transformed positions.
         *mask &= ~PAINT_SCREEN_REGION;
         *region = infiniteRegion();
         }

@@ -75,7 +75,8 @@ void HowtoEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, 
 // w - the window that will be painted
 // mask - a mask of flags controlling the painting
 // region - the region of the screen that needs to be painted, if mask includes the TRANSFORMED
-//   flag, region is infiniteRegion(), meaning that everything needs to be painted
+//   then special care needs to be taken, because the region may be infiniteRegion(), meaning
+//   everything needs to be painted
 // data - painting data that can be modified to do some simple transformations
 void HowtoEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
     {

@@ -137,7 +137,65 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
 void SceneXrender::paintGenericScreen( int mask, ScreenPaintData data )
     {
     screen_paint = data; // save, transformations will be done when painting windows
-    Scene::paintGenericScreen( mask, data );
+    if( false ) // TODO never needed?
+        Scene::paintGenericScreen( mask, data );
+    else
+        paintTransformedScreen( mask );
+    }
+
+/*
+ Try to do optimized painting even with transformations. Since only scaling
+ and translation are supported by the painting code, clipping can be done
+ manually to avoid having to paint everything in every pass. Whole screen
+ still need to be painted but e.g. obscured windows don't. So this below
+ is basically paintSimpleScreen() with extra code to compute clipping correctly.
+ 
+ This code assumes that the only transformations possible with XRender are those
+ provided by Window/ScreenPaintData, In the (very unlikely?) case more is needed
+ then paintGenericScreen() needs to be used.
+*/
+void SceneXrender::paintTransformedScreen( int orig_mask )
+    {
+    QRegion region( 0, 0, displayWidth(), displayHeight());
+    QList< Phase2Data > phase2;
+    // Draw each opaque window top to bottom, subtracting the bounding rect of
+    // each window from the clip region after it's been drawn.
+    for( int i = stacking_order.count() - 1; // top to bottom
+         i >= 0;
+         --i )
+        {
+        Window* w = static_cast< Window* >( stacking_order[ i ] );
+        if( !w->isVisible())
+            continue;
+        if( region.isEmpty()) // completely clipped
+            continue;
+        int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        QRegion damage = region;
+        // preparation step
+        effects->prePaintWindow( w, &mask, &damage, time_diff );
+        // If the window is transparent, the transparent part will be done
+        // in the 2nd pass.
+        if( mask & PAINT_WINDOW_TRANSLUCENT )
+            phase2.prepend( Phase2Data( w, region, mask ));
+        if( mask & PAINT_WINDOW_OPAQUE )
+            {
+            w->setTransformedShape( QRegion());
+            paintWindow( w, mask, region );
+            // If the window is not transparent at all, it can clip windows below.
+            if( ( mask & PAINT_WINDOW_TRANSLUCENT ) == 0 )
+                region -= w->transformedShape();
+            }
+        }
+    // Fill any areas of the root window not covered by windows
+    paintBackground( region );
+    // Now walk the list bottom to top, drawing translucent windows.
+    // That we draw bottom to top is important now since we're drawing translucent objects
+    // and also are clipping only by opaque windows.
+    foreach( Phase2Data d, phase2 )
+        {
+        Scene::Window* w = d.window;
+        paintWindow( w, d.mask, d.region );
+        }
     }
 
 // fill the screen background
@@ -338,6 +396,7 @@ Picture SceneXrender::Window::alphaMask( double opacity )
 // paint the window
 void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintData data )
     {
+    setTransformedShape( QRegion()); // maybe nothing will be painted
     // check if there is something to paint
     bool opaque = isOpaque() && data.opacity == 1.0;
     if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
@@ -368,6 +427,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     int height = toplevel->height();
     double xscale = 1;
     double yscale = 1;
+    transformed_shape = shape();
     if( mask & PAINT_WINDOW_TRANSFORMED )
         {
         xscale *= data.xScale;
@@ -396,7 +456,20 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         height = (int)(height * yscale);
         if( options->smoothScale == 1 ) // only when forced, it's slow
             XRenderSetPictureFilter( display(), pic, "good", NULL, 0 );
+        // transform the shape for clipping in paintTransformedScreen()
+        QVector< QRect > rects = transformed_shape.rects();
+        for( int i = 0;
+             i < rects.count();
+             ++i )
+            {
+            QRect& r = rects[ i ];
+            r = QRect( int( r.x() * xscale ), int( r.y() * yscale ),
+                int( r.width() * xscale ), int( r.height() * xscale ));
+            }
+        transformed_shape.setRects( rects.constData(), rects.count());
         }
+    if( x != toplevel->x() || y != toplevel->y())
+        transformed_shape.translate( x, y );
     if( opaque )
         {
         XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
@@ -407,6 +480,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         Picture alpha = alphaMask( data.opacity );
         XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
             x, y, width, height);
+        transformed_shape = QRegion();
         }
     if( xscale != 1 || yscale != 1 )
         {

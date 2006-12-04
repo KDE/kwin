@@ -39,6 +39,7 @@ class SceneXrender
         virtual void paintBackground( QRegion region );
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
     private:
+        void paintTransformedScreen( int mask );
         void createBuffer();
         static XserverRegion toXserverRegion( QRegion region );
         XRenderPictFormat* format;
@@ -58,6 +59,8 @@ class SceneXrender::Window
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         void discardPicture();
         void discardAlpha();
+        QRegion transformedShape() const;
+        void setTransformedShape( const QRegion& shape );
         Window() {} // QMap sucks even in Qt4
     private:
         Picture picture();
@@ -66,12 +69,25 @@ class SceneXrender::Window
         XRenderPictFormat* format;
         Picture alpha;
         double alpha_cached_opacity;
+        QRegion transformed_shape;
     };
 
 inline
 Picture SceneXrender::bufferPicture()
     {
     return buffer;
+    }
+
+inline
+QRegion SceneXrender::Window::transformedShape() const
+    {
+    return transformed_shape;
+    }
+
+inline
+void SceneXrender::Window::setTransformedShape( const QRegion& shape )
+    {
+    transformed_shape = shape;
     }
 
 } // namespace
