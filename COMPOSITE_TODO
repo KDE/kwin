@@ -121,13 +121,16 @@ OpenGL TODO
     - it might make things faster to update only areas that need to be repainted
         and keep the rest damaged until needed
 
++ clipping optimization
+    - like XRender code has paintTransformedScreen(), avoid painting parts that are
+        obscured (makes a difference with many windows open)
+    - Compiz has some stencil code that possibly does this, although I don't quite get
+        the code, or maybe using Z-buffer could be an option
+
+
 XRender TODO
 ==============================
 
-+ SceneXrender::Window::performPaint() doesn't use xScale/yScale
-    - XRenderSetPictureTransform() should be capable of doing this
-    - note that the matrix used seems to be weird (it doesn't act like the normal transformation
-        matrix as far as I can tell)
 + SceneXrender::Window::performPaint() doesn't use saturation
 + SceneXrender::Window::performPaint() doesn't use brightness
 
