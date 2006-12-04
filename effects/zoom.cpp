@@ -26,10 +26,11 @@ void ZoomEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( zoom != target_zoom )
         {
+        double diff = time / 500.0;
         if( target_zoom > zoom )
-            zoom = qMin( zoom + 0.1, target_zoom );
+            zoom = qMin( zoom + diff, target_zoom );
         else
-            zoom = qMax( zoom - 0.1, target_zoom );
+            zoom = qMax( zoom - diff, target_zoom );
         }
     if( zoom != 1.0 )
         *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
