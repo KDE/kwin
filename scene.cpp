@@ -286,8 +286,10 @@ QRegion Scene::Window::shape() const
 
 bool Scene::Window::isVisible() const
     {
-    return true; // TODO there may be transformations, so always true for now
-    // TODO mapping state?
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->isShown( true ) && c->isOnCurrentDesktop();
+    return true; // Unmanaged is always visible
+    // TODO there may be transformations, so ignore this for now
     return !toplevel->geometry()
         .intersect( QRect( 0, 0, displayWidth(), displayHeight()))
         .isEmpty();
