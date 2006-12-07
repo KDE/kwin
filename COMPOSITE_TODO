@@ -88,6 +88,7 @@ OpenGL TODO
 +   - it needs indirect rendering, should be autodetected and disabled somehow
 %   - may require LIBGL_ALWAYS_INDIRECT set with older X.org
         (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)
+        (http://lists.freedesktop.org/archives/xorg/2006-December/020323.html)
 
 ! improved GLXFBConfig support
     - it seems a different config for each depth would be needed
