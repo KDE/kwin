@@ -125,8 +125,7 @@ OpenGL TODO
 + clipping optimization
     - like XRender code has paintTransformedScreen(), avoid painting parts that are
         obscured (makes a difference with many windows open)
-    - Compiz has some stencil code that possibly does this, although I don't quite get
-        the code, or maybe using Z-buffer could be an option
+    - maybe stencil could be used
 
 
 XRender TODO
