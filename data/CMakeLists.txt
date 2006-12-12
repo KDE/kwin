@@ -8,7 +8,7 @@ kde4_automoc(kwin_update_window_settings ${kwin_update_window_settings_SRCS})
 
 kde4_add_executable( kwin_update_window_settings ${kwin_update_window_settings_SRCS})
 
-target_link_libraries( kwin_update_window_settings ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kwin_update_window_settings ${KDE4_KDECORE_LIBS}  ${QT_QT3SUPPORT_LIBRARY})
 
 install_targets(/lib/kconf_update_bin/ kwin_update_window_settings )
 
