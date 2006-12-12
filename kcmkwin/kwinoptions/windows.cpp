@@ -39,7 +39,7 @@
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 
-#include <k3activelabel.h>
+#include <kactivelabel.h>
 #include <klocale.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
@@ -1244,7 +1244,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
   QVBoxLayout *lay = new QVBoxLayout (this);
   kompmgrAvailable_ = kompmgrAvailable();
   if (!kompmgrAvailable_){
-  K3ActiveLabel *label = new K3ActiveLabel(i18n("<qt><b>It seems that alpha channel support is not available.</b><br><br>"
+  KActiveLabel *label = new KActiveLabel(i18n("<qt><b>It seems that alpha channel support is not available.</b><br><br>"
                                  "Please make sure you have "
                                  "<a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>,"
                                  " and have installed the kompmgr that came with kwin.<br>"

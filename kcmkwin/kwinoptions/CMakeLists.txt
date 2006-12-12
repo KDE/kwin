@@ -11,7 +11,7 @@ kde4_add_plugin(kcm_kwinoptions ${kcm_kwinoptions_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwinoptions )
 
-target_link_libraries(kcm_kwinoptions  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBS})
+target_link_libraries(kcm_kwinoptions  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS kcm_kwinoptions  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
