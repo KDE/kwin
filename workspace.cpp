@@ -1278,17 +1278,10 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
     if ( c )
         requestFocus( c );
+    else if( !desktops.isEmpty() )
+        requestFocus( findDesktop( true, currentDesktop()));
     else
         focusToNull();
-
-    if( !desktops.isEmpty() )
-        {
-        Window w_tmp;
-        int i_tmp;
-        XGetInputFocus( display(), &w_tmp, &i_tmp );
-        if( w_tmp == null_focus_window ) // CHECKME?
-            requestFocus( findDesktop( true, currentDesktop()));
-        }
 
     updateCurrentTopMenu();
 
