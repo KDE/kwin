@@ -122,10 +122,10 @@ OpenGL TODO
     - it might make things faster to update only areas that need to be repainted
         and keep the rest damaged until needed
 
-+ clipping optimization
+% clipping optimization
     - like XRender code has paintTransformedScreen(), avoid painting parts that are
         obscured (makes a difference with many windows open)
-    - maybe stencil could be used
+    - http://lists.kde.org/?l=kwin&m=116585618111882&w=2
 
 
 XRender TODO
