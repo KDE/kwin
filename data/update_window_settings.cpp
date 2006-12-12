@@ -14,9 +14,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <kinstance.h>
 #include <QRect>
-//Added by qt3to4:
 #include <QByteArray>
-#include <Q3PtrList>
+#include <QList>
 #include <QtDBus/QtDBus>
 
 struct SessionInfo
@@ -47,7 +46,7 @@ struct SessionInfo
     bool fake; // fake session, i.e. 'save window settings', not SM restored
     };
 
-Q3PtrList<SessionInfo> fakeSession;
+QList<SessionInfo*> fakeSession;
 
 static const char* const window_type_names[] = 
     {
@@ -105,53 +104,55 @@ void writeRules( KConfig& cfg )
     {
     cfg.setGroup( "General" );
     int pos = cfg.readEntry( "count",0 );
-    for ( SessionInfo* info = fakeSession.first(); info; info = fakeSession.next() )
+
+    QList<SessionInfo*>::iterator it;
+    for ( it = fakeSession.begin(); it != fakeSession.end(); ++it)
         {
-        if( info->resourceName.isEmpty() && info->resourceClass.isEmpty())
+        if( (*it)->resourceName.isEmpty() && (*it)->resourceClass.isEmpty())
             continue;
         ++pos;
         cfg.setGroup( QString::number( pos ));
-        cfg.writeEntry( "description", ( const char* ) ( info->resourceClass + " (KDE3.2)" ));
-        cfg.writeEntry( "wmclass", ( const char* )( info->resourceName + ' ' + info->resourceClass ));
+        cfg.writeEntry( "description", ( const char* ) ( (*it)->resourceClass + " (KDE3.2)" ));
+        cfg.writeEntry( "wmclass", ( const char* )( (*it)->resourceName + ' ' + (*it)->resourceClass ));
         cfg.writeEntry( "wmclasscomplete", true );
         cfg.writeEntry( "wmclassmatch", 1 ); // 1 == exact match
-        if( !info->windowRole.isEmpty())
+        if( !(*it)->windowRole.isEmpty())
             {
-            cfg.writeEntry( "windowrole", ( const char* ) info->windowRole );
+            cfg.writeEntry( "windowrole", ( const char* ) (*it)->windowRole );
             cfg.writeEntry( "windowrolematch", 1 );
             }
-        if( info->windowType == static_cast< NET::WindowType >( -2 )) { // undefined
+        if( (*it)->windowType == static_cast< NET::WindowType >( -2 )) { // undefined
             // all types
         }
-        if( info->windowType == NET::Unknown )
+        if( (*it)->windowType == NET::Unknown )
             cfg.writeEntry( "types", (int)NET::NormalMask );
         else
-            cfg.writeEntry( "types", 1 << info->windowType );
-        cfg.writeEntry( "position", info->geometry.topLeft());
+            cfg.writeEntry( "types", 1 << (*it)->windowType );
+        cfg.writeEntry( "position", (*it)->geometry.topLeft());
         cfg.writeEntry( "positionrule", 4 ); // 4 == remember
-        cfg.writeEntry( "size", info->geometry.size());
+        cfg.writeEntry( "size", (*it)->geometry.size());
         cfg.writeEntry( "sizerule", 4 );
-        cfg.writeEntry( "maximizevert", info->maximized & NET::MaxVert );
+        cfg.writeEntry( "maximizevert", (*it)->maximized & NET::MaxVert );
         cfg.writeEntry( "maximizevertrule", 4 );
-        cfg.writeEntry( "maximizehoriz", info->maximized & NET::MaxHoriz );
+        cfg.writeEntry( "maximizehoriz", (*it)->maximized & NET::MaxHoriz );
         cfg.writeEntry( "maximizehorizrule", 4 );
-        cfg.writeEntry( "fullscreen", info->fullscreen );
+        cfg.writeEntry( "fullscreen", (*it)->fullscreen );
         cfg.writeEntry( "fullscreenrule", 4 );
-        cfg.writeEntry( "desktop", info->desktop );
+        cfg.writeEntry( "desktop", (*it)->desktop );
         cfg.writeEntry( "desktoprule", 4 );
-        cfg.writeEntry( "minimize", info->minimized );
+        cfg.writeEntry( "minimize", (*it)->minimized );
         cfg.writeEntry( "minimizerule", 4 );
-        cfg.writeEntry( "shade", info->shaded );
+        cfg.writeEntry( "shade", (*it)->shaded );
         cfg.writeEntry( "shaderule", 4 );
-        cfg.writeEntry( "above", info->keepAbove );
+        cfg.writeEntry( "above", (*it)->keepAbove );
         cfg.writeEntry( "aboverule", 4 );
-        cfg.writeEntry( "below", info->keepBelow );
+        cfg.writeEntry( "below", (*it)->keepBelow );
         cfg.writeEntry( "belowrule", 4 );
-        cfg.writeEntry( "skiptaskbar", info->skipTaskbar );
+        cfg.writeEntry( "skiptaskbar", (*it)->skipTaskbar );
         cfg.writeEntry( "skiptaskbarrule", 4 );
-        cfg.writeEntry( "skippager", info->skipPager );
+        cfg.writeEntry( "skippager", (*it)->skipPager );
         cfg.writeEntry( "skippagerrule", 4 );
-        cfg.writeEntry( "noborder", info->userNoBorder );
+        cfg.writeEntry( "noborder", (*it)->userNoBorder );
         cfg.writeEntry( "noborderrule", 4 );
         }
     cfg.setGroup( "General" );
