@@ -18,8 +18,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QCursor>
 #include <netwm.h>
 #include <kxmessages.h>
-#include <qdatetime.h>
-#include <kmanagerselection.h>
 
 #include "utils.h"
 #include "kdecoration.h"
@@ -79,7 +77,7 @@ class Workspace : public QObject, public KDecorationDefines
         virtual ~Workspace();
 
         static Workspace * self() { return _self; }
-        
+
         bool workspaceEvent( XEvent * );
 
         KDecoration* createDecoration( KDecorationBridge* bridge );
@@ -89,9 +87,6 @@ class Workspace : public QObject, public KDecorationDefines
         template< typename T > Client* findClient( T predicate );
         template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
         template< typename T > void forEachClient( T procedure );
-        template< typename T > Unmanaged* findUnmanaged( T predicate );
-        template< typename T1, typename T2 > void forEachUnmanaged( T1 procedure, T2 predicate );
-        template< typename T > void forEachUnmanaged( T procedure );
 
         QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         QRect clientArea( clientAreaOption, const Client* c ) const;
@@ -186,7 +181,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         ClientList ensureStackingOrder( const ClientList& clients ) const;
 
-        Client* topClientOnDesktop( int desktop, bool unconstrained = false ) const;
+        Client* topClientOnDesktop( int desktop, bool unconstrained = false, bool only_normal = true ) const;
         Client* findDesktop( bool topmost, int desktop ) const;
         void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
         void windowToPreviousDesktop( Client* c );
@@ -247,9 +242,6 @@ class Workspace : public QObject, public KDecorationDefines
         void removeGroup( Group* group, allowed_t );
         Group* findClientLeaderGroup( const Client* c ) const;
 
-    // only called from Unmanaged::release()
-        void removeUnmanaged( Unmanaged*, allowed_t );
-
         bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
         void focusToNull(); // SELI public?
@@ -284,17 +276,6 @@ class Workspace : public QObject, public KDecorationDefines
         void requestDelayFocus( Client* );
 
         void toggleTopDockShadows(bool on);
-        
-        void addDamage( const QRect& r );
-        void addDamage( int x, int y, int w, int h );
-        void addDamageFull();
-        // creates XComposite overlay window, cal initOverlay() afterwards
-        bool createOverlay();
-        // init overlay and the destination window in it
-        void setupOverlay( Window window );
-        // destroys XComposite overlay window
-        void destroyOverlay();
-        Window overlayWindow();
 
     public slots:
         void refresh();
@@ -425,10 +406,11 @@ class Workspace : public QObject, public KDecorationDefines
         void cleanupTemporaryRules();
         void writeWindowRules();
         void slotBlockShortcuts(int data);
-        void setPopupClientOpacity( QAction* action );
-        void setupCompositing();
-        void performCompositing();
-        void lostCMSelection();
+        // kompmgr
+        void setPopupClientOpacity(int v);
+        void resetClientOpacity();
+        void setTransButtonText(int value);
+        // end
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -476,8 +458,6 @@ class Workspace : public QObject, public KDecorationDefines
     // this is the right way to create a new client
         Client* createClient( Window w, bool is_mapped );
         void addClient( Client* c, allowed_t );
-        Unmanaged* createUnmanaged( Window w );
-        void addUnmanaged( Unmanaged* c, allowed_t );
 
         Window findSpecialEventWindow( XEvent* e );
 
@@ -519,8 +499,6 @@ class Workspace : public QObject, public KDecorationDefines
         void closeActivePopup();
 
         void updateClientArea( bool force );
-        
-        void finishCompositing();
 
         SystemTrayWindowList systemTrayWins;
 
@@ -557,11 +535,10 @@ class Workspace : public QObject, public KDecorationDefines
 
         ClientList clients;
         ClientList desktops;
-        UnmanagedList unmanaged;
 
-        ClientList unconstrained_stacking_order;
-        ClientList stacking_order;
-        QVector< ClientList > focus_chain;
+        ClientList unconstrained_stacking_order; // topmost last
+        ClientList stacking_order; // topmost last
+        QVector< ClientList > focus_chain; // currently ative last
         ClientList global_focus_chain; // this one is only for things like tabbox's MRU
         ClientList should_get_focus; // last is most recent
         ClientList attention_chain;
@@ -595,7 +572,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         QMenu *popup;
         QMenu *advanced_popup;
-        QMenu *trans_popup;
         QMenu *desk_popup;
         int desk_popup_index;
 
@@ -679,14 +655,12 @@ class Workspace : public QObject, public KDecorationDefines
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
 
-        KSelectionOwner* cm_selection;
-        QTimer compositeTimer;
-        QTime lastCompositePaint;
-        int compositeRate;
-        QRegion damage_region;
-        Window overlay; // XComposite overlay window
+        //kompmgr
         QSlider *transSlider;
         QPushButton *transButton;
+
+    private:
+        friend bool performTransiencyCheck();
     };
 
 // helper for Workspace::blockStackingUpdates() being called in pairs (true/false)
@@ -829,11 +803,6 @@ inline bool Workspace::globalShortcutsDisabled() const
     return global_shortcuts_disabled || global_shortcuts_disabled_for_client;
     }
 
-inline Window Workspace::overlayWindow()
-    {
-    return overlay;
-    }
-
 template< typename T >
 inline Client* Workspace::findClient( T predicate )
     {
@@ -861,27 +830,7 @@ inline void Workspace::forEachClient( T procedure )
     return forEachClient( procedure, TruePredicate());
     }
 
-template< typename T >
-inline Unmanaged* Workspace::findUnmanaged( T predicate )
-    {
-    return findUnmanagedInList( unmanaged, predicate );
-    }
-
-template< typename T1, typename T2 >
-inline void Workspace::forEachUnmanaged( T1 procedure, T2 predicate )
-    {
-    for ( UnmanagedList::ConstIterator it = unmanaged.begin(); it != unmanaged.end(); ++it)
-        if ( predicate( const_cast< const Unmanaged* >( *it)))
-            procedure( *it );
-    }
-
-template< typename T >
-inline void Workspace::forEachUnmanaged( T procedure )
-    {
-    return forEachUnmanaged( procedure, TruePredicate());
-    }
-
-KWIN_COMPARE_PREDICATE( ClientMatchPredicate, Client, const Client*, cl == value );
+KWIN_COMPARE_PREDICATE( ClientMatchPredicate, const Client*, cl == value );
 inline bool Workspace::hasClient( const Client* c )
     {
     return findClient( ClientMatchPredicate( c ));

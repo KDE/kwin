@@ -520,6 +520,8 @@ class Client : public QObject, public KDecorationDefines
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
         QTimer* demandAttentionKNotifyTimer;
+
+        friend bool performTransiencyCheck();
     };
 
 // helper for Client::postponeGeometryUpdates() being called in pairs (true/false)
