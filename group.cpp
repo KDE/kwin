@@ -873,6 +873,7 @@ void Client::checkGroup( Group* set_group, bool force )
     {
     TRANSIENCY_CHECK( this );
     Group* old_group = in_group;
+    Window old_group_leader = old_group != NULL ? old_group->leader() : None;
     if( set_group != NULL )
         {
         if( set_group != in_group )
@@ -959,7 +960,16 @@ void Client::checkGroup( Group* set_group, bool force )
                 ++it;
             }
         if( groupTransient())
-            { // and make transient for all in the group
+            {
+            // no longer transient for ones in the old group
+            if( old_group != NULL && workspace()->findGroup( old_group_leader ) == old_group ) // if it still exists
+                {
+                for( ClientList::ConstIterator it = old_group->members().begin();
+                     it != old_group->members().end();
+                     ++it )
+                    (*it)->removeTransient( this );
+                }
+            // and make transient for all in the new group
             for( ClientList::ConstIterator it = group()->members().begin();
                  it != group()->members().end();
                  ++it )
@@ -969,25 +979,6 @@ void Client::checkGroup( Group* set_group, bool force )
                 (*it)->addTransient( this );
                 }
             }
-#if 0 // TODO
-        if( groupTransient())
-            {
-            if( workspace()->findGroup( old_group )) // if it still exists
-                { // it's no longer transient for windows in the old group
-                for( ClientList::ConstIterator it = old_group->members().begin();
-                     it != old_group->members().end();
-                     ++it )
-                    (*it)->removeTransient( this );
-                }
-            // and it's transiet for all windows in the new group (this one is the most recent
-            // in the group, so it is transient only for all previous windows)
-            // loops are checked in checkGroupTransients()
-            for( ClientList::ConstIterator it = group()->members().begin();
-                 it != group()->members().end();
-                 ++it )
-                (*it)->addTransient( this );
-            }
-#endif
         // group transient splashscreens should be transient even for windows
         // in group mapped later
         for( ClientList::ConstIterator it = group()->members().begin();
