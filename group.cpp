@@ -166,14 +166,15 @@ Group* Workspace::findClientLeaderGroup( const Client* c ) const
                 // This most probably means the app uses group transients without
                 // setting group for its windows. Merging the two groups is a bad
                 // hack, but there's no really good solution for this case.
-                Group* old_group = (*it)->group();
+                ClientList old_group = (*it)->group()->members();
                 // old_group autodeletes when being empty
-                for( int cnt = old_group->members().count();
-                     cnt > 0;
-                     --cnt )
+                for( int pos = 0;
+                     pos < old_group.count();
+                     ++pos )
                     {
-                    Client* tmp = old_group->members().first();
-                    tmp->checkGroup( ret ); // change group
+                    Client* tmp = old_group[ pos ];
+                    if( tmp != c )
+                        tmp->changeClientLeaderGroup( ret );
                     }
                 }
             }
@@ -818,13 +819,17 @@ void Client::checkGroup( Group* set_group, bool force )
                 in_group->addMember( this );
                 }
             }
-        else // not transient without a group, put it in its own group
-            {
-            if( in_group != NULL && in_group->leader() != window())
+        else // Not transient without a group, put it in its client leader group.
+            { // This might be stupid if grouping was used for e.g. taskbar grouping
+              // or minimizing together the whole group, but as long as its used
+              // only for dialogs it's better to keep windows from one app in one group.
+            Group* new_group = workspace()->findClientLeaderGroup( this );
+            if( in_group != NULL && in_group != new_group )
                 {
                 in_group->removeMember( this );            
                 in_group = NULL;
                 }
+            in_group = new_group;
             if( in_group == NULL )
                 {
                 in_group = new Group( None, workspace());
@@ -891,6 +896,18 @@ void Client::checkGroup( Group* set_group, bool force )
     checkGroupTransients();
     checkActiveModal();
     workspace()->updateClientLayer( this );
+    }
+
+// used by Workspace::findClientLeaderGroup()
+void Client::changeClientLeaderGroup( Group* gr )
+    {
+    // transientFor() != NULL are in the group of their mainwindow, so keep them there
+    if( transientFor() != NULL )
+        return;
+    // also don't change the group for window which have group set
+    if( window_group )
+        return;
+    checkGroup( gr ); // change group
     }
 
 bool Client::check_active_modal = false;

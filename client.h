@@ -28,7 +28,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "kdecoration.h"
 #include "rules.h"
-#include "toplevel.h"
 
 class QTimer;
 class KProcess;
@@ -43,8 +42,7 @@ class WinInfo;
 class SessionInfo;
 class Bridge;
 
-class Client
-    : public Toplevel
+class Client : public QObject, public KDecorationDefines
     {
     Q_OBJECT
     public:
@@ -54,6 +52,7 @@ class Client
         Window wrapperId() const;
         Window decorationId() const;
 
+        Workspace* workspace() const;
         const Client* transientFor() const;
         Client* transientFor();
         bool isTransient() const;
@@ -67,20 +66,24 @@ class Client
         const Group* group() const;
         Group* group();
         void checkGroup( Group* gr = NULL, bool force = false );
+        void changeClientLeaderGroup( Group* gr );
+    // prefer isXXX() instead
+        NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         const WindowRules* rules() const;
         void removeRule( Rules* r );
         void setupWindowRules( bool ignore_temporary );
         void applyWindowRules();
-        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
-    // returns true for "special" windows and false for windows which are "normal"
-    // (normal=window which has a border, can be moved by the user, can be closed, etc.)
-    // true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
-    // false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
-        bool isSpecialWindow() const;
-        bool hasNETSupport() const;
 
+        QRect geometry() const;
+        QSize size() const;
         QSize minSize() const;
         QSize maxSize() const;
+        QPoint pos() const;
+        QRect rect() const;
+        int x() const;
+        int y() const;
+        int width() const;
+        int height() const;
         QPoint clientPos() const; // inside of geometry()
         QSize clientSize() const;
 
@@ -163,9 +166,24 @@ class Client
     // auxiliary functions, depend on the windowType
         bool wantsTabFocus() const;
         bool wantsInput() const;
+        bool hasNETSupport() const;
+        bool isMovable() const;
+        bool isDesktop() const;
+        bool isDock() const;
+        bool isToolbar() const;
+        bool isTopMenu() const;
+        bool isMenu() const;
+        bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
+        bool isDialog() const;
+        bool isSplash() const;
+        bool isUtility() const;
+    // returns true for "special" windows and false for windows which are "normal"
+    // (normal=window which has a border, can be moved by the user, can be closed, etc.)
+    // true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
+    // false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
+        bool isSpecialWindow() const;
 
         bool isResizable() const;
-        bool isMovable() const;
         bool isCloseable() const; // may be closed by the user (may have a close button)
 
         void takeActivity( int flags, bool handled, allowed_t ); // takes ActivityFlags as arg (in utils.h)
@@ -178,10 +196,9 @@ class Client
         void updateDecoration( bool check_workspace_pos, bool force = false );
         void checkBorderSizes();
 
+    // shape extensions
+        bool shape() const;
         void updateShape();
-        
-        virtual double opacity() const;
-        void setOpacity( double opacity );
 
         void setGeometry( int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void setGeometry( const QRect& r, ForceGeometry_t force = NormalGeometrySet );
@@ -271,15 +288,6 @@ class Client
         void checkActiveModal();
         bool hasStrut() const;
 
-        bool isMove() const 
-            {
-            return moveResizeMode && mode == PositionCenter;
-            }
-        bool isResize() const 
-            {
-            return moveResizeMode && mode != PositionCenter;
-            }
-        
     private slots:
         void autoRaise();
         void shadeHover();
@@ -313,7 +321,6 @@ class Client
         void clientMessageEvent( XClientMessageEvent* e );
         void enterNotifyEvent( XCrossingEvent* e );
         void leaveNotifyEvent( XCrossingEvent* e );
-        void visibilityNotifyEvent( XVisibilityEvent* e );
         void focusInEvent( XFocusInEvent* e );
         void focusOutEvent( XFocusOutEvent* e );
 
@@ -322,9 +329,6 @@ class Client
         bool motionNotifyEvent( Window w, int state, int x, int y, int x_root, int y_root );
 
         void processDecorationButtonPress( int button, int state, int x, int y, int x_root, int y_root );
-
-    protected:
-        virtual void debug( kdbgstream& stream ) const;
 
     private slots:
         void pingTimeout();
@@ -364,7 +368,7 @@ class Client
         void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool );
         NETExtendedStrut strut() const;
         int checkShadeGeometry( int w, int h );
-        void blockGeometryUpdates( bool block );
+        void postponeGeometryUpdates( bool postpone );
 
         bool startMoveResize();
         void finishMoveResize( bool cancel );
@@ -396,10 +400,12 @@ class Client
         Time readUserCreationTime() const;
         static bool sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool active_hack );
         void startupIdChanged();
-        
+
         Window client;
         Window wrapper;
+        Window frame;
         KDecoration* decoration;
+        Workspace* wspace;
         Bridge* bridge;
         int desk;
         bool buttonDown;
@@ -407,6 +413,14 @@ class Client
         bool move_faked_activity;
         Window move_resize_grab_window;
         bool unrestrictedMoveResize;
+        bool isMove() const 
+            {
+            return moveResizeMode && mode == PositionCenter;
+            }
+        bool isResize() const 
+            {
+            return moveResizeMode && mode != PositionCenter;
+            }
 
         Position mode;
         QPoint moveOffset;
@@ -432,6 +446,7 @@ class Client
         uint active :1;
         uint deleting : 1; // true when doing cleanup and destroying the client
         uint keep_above : 1; // NET::KeepAbove (was stays_on_top)
+        uint is_shape :1;
         uint skip_taskbar :1;
         uint original_skip_taskbar :1; // unaffected by KWin
         uint Pdeletewindow :1; // does the window understand the DeleteWindow protocol?
@@ -451,7 +466,6 @@ class Client
         uint modal : 1; // NET::Modal
         uint noborder : 1;
         uint user_noborder : 1;
-        uint not_obscured : 1;
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint demands_attention : 1;
@@ -489,10 +503,10 @@ class Client
         Time ping_timestamp;
         Time user_time;
         unsigned long allowed_actions;
+        QRect frame_geometry;
         QSize client_size;
-        int block_geometry_updates; // >0 - new geometry is remembered, but not actually set
+        int postpone_geometry_updates; // >0 - new geometry is remembered, but not actually set
         bool pending_geometry_update;
-        QRect geom_before_block;
         bool shade_geometry_change;
         int border_left, border_right, border_top, border_bottom;
         QRegion _mask;
@@ -502,20 +516,20 @@ class Client
         friend struct FetchNameInternalPredicate;
         friend struct CheckIgnoreFocusStealingProcedure;
         friend struct ResetupRulesProcedure;
-        friend class GeometryUpdatesBlocker;
+        friend class GeometryUpdatesPostponer;
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
         QTimer* demandAttentionKNotifyTimer;
     };
 
-// helper for Client::blockGeometryUpdates() being called in pairs (true/false)
-class GeometryUpdatesBlocker
+// helper for Client::postponeGeometryUpdates() being called in pairs (true/false)
+class GeometryUpdatesPostponer
     {
     public:
-        GeometryUpdatesBlocker( Client* c )
-            : cl( c ) { cl->blockGeometryUpdates( true ); }
-        ~GeometryUpdatesBlocker()
-            { cl->blockGeometryUpdates( false ); }
+        GeometryUpdatesPostponer( Client* c )
+            : cl( c ) { cl->postponeGeometryUpdates( true ); }
+        ~GeometryUpdatesPostponer()
+            { cl->postponeGeometryUpdates( false ); }
     private:
         Client* cl;
     };
@@ -542,7 +556,7 @@ inline Window Client::window() const
 
 inline Window Client::frameId() const
     {
-    return handle();
+    return frame;
     }
 
 inline Window Client::wrapperId() const
@@ -553,6 +567,11 @@ inline Window Client::wrapperId() const
 inline Window Client::decorationId() const
     {
     return decoration != NULL ? decoration->widget()->winId() : None;
+    }
+
+inline Workspace* Client::workspace() const
+    {
+    return wspace;
     }
 
 inline const Client* Client::transientFor() const
@@ -710,6 +729,12 @@ inline bool Client::keepBelow() const
     return keep_below;
     }
 
+inline bool Client::shape() const
+    {
+    return is_shape;
+    }
+
+
 inline bool Client::isFullScreen() const
     {
     return fullscreen_mode != FullScreenNone;
@@ -765,6 +790,46 @@ inline QByteArray Client::windowRole() const
     return window_role;
     }
 
+inline QRect Client::geometry() const
+    {
+    return frame_geometry;
+    }
+
+inline QSize Client::size() const
+    {
+    return frame_geometry.size();
+    }
+
+inline QPoint Client::pos() const
+    {
+    return frame_geometry.topLeft();
+    }
+
+inline int Client::x() const
+    {
+    return frame_geometry.x();
+    }
+
+inline int Client::y() const
+    {
+    return frame_geometry.y();
+    }
+
+inline int Client::width() const
+    {
+    return frame_geometry.width();
+    }
+
+inline int Client::height() const
+    {
+    return frame_geometry.height();
+    }
+
+inline QRect Client::rect() const
+    {
+    return QRect( 0, 0, width(), height());
+    }
+
 inline QPoint Client::clientPos() const
     {
     return QPoint( border_left, border_top );
@@ -810,7 +875,7 @@ inline const WindowRules* Client::rules() const
     return &client_rules;
     }
 
-KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, Client, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing( cl ));
+KWIN_PROCEDURE( CheckIgnoreFocusStealingProcedure, cl->ignore_focus_stealing = options->checkIgnoreFocusStealing( cl ));
 
 inline Window Client::moveResizeGrabWindow() const
     {
@@ -827,9 +892,22 @@ inline void Client::removeRule( Rules* rule )
     client_rules.remove( rule );
     }
 
-KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Client, Window, cl->window() == value );
-KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Client, Window, cl->frameId() == value );
-KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value );
+#ifdef NDEBUG
+inline
+kndbgstream& operator<<( kndbgstream& stream, const Client* ) { return stream; }
+inline
+kndbgstream& operator<<( kndbgstream& stream, const ClientList& ) { return stream; }
+inline
+kndbgstream& operator<<( kndbgstream& stream, const ConstClientList& ) { return stream; }
+#else
+kdbgstream& operator<<( kdbgstream& stream, const Client* );
+kdbgstream& operator<<( kdbgstream& stream, const ClientList& );
+kdbgstream& operator<<( kdbgstream& stream, const ConstClientList& );
+#endif
+
+KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Window, cl->window() == value );
+KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Window, cl->frameId() == value );
+KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Window, cl->wrapperId() == value );
 
 } // namespace
 
