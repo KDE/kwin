@@ -48,6 +48,8 @@ namespace KWinInternal
 #endif
 
 #ifdef ENABLE_TRANSIENCY_CHECK
+static bool transiencyCheckNonExistent = false;
+
 bool performTransiencyCheck()
     {
     bool ret = true;
@@ -73,7 +75,8 @@ bool performTransiencyCheck()
                  it2 != mains.end();
                  ++it2 )
                 {
-                if( !Workspace::self()->clients.contains( *it2 )
+                if( transiencyCheckNonExistent
+                    && !Workspace::self()->clients.contains( *it2 )
                     && !Workspace::self()->desktops.contains( *it2 ))
                     {
                     kDebug() << "TC:" << *it1 << " has non-existent main client " << endl;
@@ -93,7 +96,8 @@ bool performTransiencyCheck()
              it2 != trans.end();
              ++it2 )
             {
-            if( !Workspace::self()->clients.contains( *it2 )
+            if( transiencyCheckNonExistent
+                && !Workspace::self()->clients.contains( *it2 )
                 && !Workspace::self()->desktops.contains( *it2 ))
                 {
                 kDebug() << "TC:" << *it1 << " has non-existent transient " << endl;
@@ -114,13 +118,16 @@ bool performTransiencyCheck()
 static QString transiencyCheckStartBt;
 static const Client* transiencyCheckClient;
 static int transiencyCheck = 0;
-static void startTransiencyCheck( const QString& bt, const Client* c )
+
+static void startTransiencyCheck( const QString& bt, const Client* c, bool ne )
     {
     if( ++transiencyCheck == 1 )
         {
         transiencyCheckStartBt = bt;
         transiencyCheckClient = c;
         }
+    if( ne )
+        transiencyCheckNonExistent = true;
     }
 static void checkTransiency()
     {
@@ -132,20 +139,31 @@ static void checkTransiency()
             kdDebug() << "CLIENT:" << transiencyCheckClient << endl;
             assert( false );
             }
+        transiencyCheckNonExistent = false;
         }
     }
 class TransiencyChecker
     {
     public:
-        TransiencyChecker( const QString& bt, const Client*c ) { startTransiencyCheck( bt, c ); }
+        TransiencyChecker( const QString& bt, const Client*c ) { startTransiencyCheck( bt, c, false ); }
         ~TransiencyChecker() { checkTransiency(); }
     };
+
+void checkNonExistentClients()
+    {
+    startTransiencyCheck( kdBacktrace(), NULL, true );
+    checkTransiency();
+    }
 
 #define TRANSIENCY_CHECK( c ) TransiencyChecker transiency_checker( kdBacktrace(), c )
 
 #else
 
 #define TRANSIENCY_CHECK( c )
+
+void checkNonExistentClients()
+    {
+    }
 
 #endif
 

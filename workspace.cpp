@@ -516,6 +516,7 @@ void Workspace::addClient( Client* c, allowed_t )
     updateStackingOrder( true ); // propagate new client
     if( c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows( true );
+    checkNonExistentClients();
     }
 
 /*
