@@ -73,6 +73,14 @@ bool performTransiencyCheck()
                  it2 != mains.end();
                  ++it2 )
                 {
+                if( !Workspace::self()->clients.contains( *it2 )
+                    && !Workspace::self()->desktops.contains( *it2 ))
+                    {
+                    kDebug() << "TC:" << *it1 << " has non-existent main client " << endl;
+                    kDebug() << "TC2:" << *it2 << endl; // this may crash
+                    ret = false;
+                    continue;
+                    }
                 if( !(*it2)->transients_list.contains( *it1 ))
                     {
                     kdDebug() << "TC:" << *it1 << " has main client " << *it2 << " but main client does not have it as a transient" << endl;
@@ -85,6 +93,14 @@ bool performTransiencyCheck()
              it2 != trans.end();
              ++it2 )
             {
+            if( !Workspace::self()->clients.contains( *it2 )
+                && !Workspace::self()->desktops.contains( *it2 ))
+                {
+                kDebug() << "TC:" << *it1 << " has non-existent transient " << endl;
+                kDebug() << "TC2:" << *it2 << endl; // this may crash
+                ret = false;
+                continue;
+                }
             if( !(*it2)->mainClients().contains( *it1 ))
                 {
                 kdDebug() << "TC:" << *it1 << " has transient " << *it2 << " but transient does not have it as a main client" << endl;
