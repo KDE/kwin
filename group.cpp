@@ -176,7 +176,8 @@ Group::Group( Window leader_P, Workspace* workspace_P )
         leader_wid( leader_P ),
         _workspace( workspace_P ),
         leader_info( NULL ),
-        user_time( -1U )
+        user_time( -1U ),
+        refcount( 0 )
     {
     if( leader_P != None )
         {
@@ -234,7 +235,25 @@ void Group::removeMember( Client* member_P )
 //    kDebug() << kBacktrace() << endl;
     Q_ASSERT( _members.contains( member_P ));
     _members.removeAll( member_P );
-    if( _members.isEmpty())
+// there are cases when automatic deleting of groups must be delayed,
+// e.g. when removing a member and doing some operation on the possibly
+// other members of the group (which would be however deleted already
+// if there were no other members)
+    if( refcount == 0 && _members.isEmpty())
+        {
+        workspace()->removeGroup( this, Allowed );
+        delete this;
+        }
+    }
+
+void Group::ref()
+    {
+    ++refcount;
+    }
+
+void Group::deref()
+    {
+    if( --refcount == 0 && _members.isEmpty())
         {
         workspace()->removeGroup( this, Allowed );
         delete this;
@@ -907,7 +926,8 @@ void Client::checkGroup( Group* set_group, bool force )
     {
     TRANSIENCY_CHECK( this );
     Group* old_group = in_group;
-    Window old_group_leader = old_group != NULL ? old_group->leader() : None;
+    if( old_group != NULL )
+        old_group->ref(); // turn off automatic deleting
     if( set_group != NULL )
         {
         if( set_group != in_group )
@@ -996,7 +1016,7 @@ void Client::checkGroup( Group* set_group, bool force )
         if( groupTransient())
             {
             // no longer transient for ones in the old group
-            if( old_group != NULL && workspace()->findGroup( old_group_leader ) == old_group ) // if it still exists
+            if( old_group != NULL )
                 {
                 for( ClientList::ConstIterator it = old_group->members().begin();
                      it != old_group->members().end();
@@ -1028,6 +1048,8 @@ void Client::checkGroup( Group* set_group, bool force )
             addTransient( *it );
 	    }
         }
+    if( old_group != NULL )
+        old_group->deref(); // can be now deleted if empty
     checkGroupTransients();
     checkActiveModal();
     workspace()->updateClientLayer( this );
