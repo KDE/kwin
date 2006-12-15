@@ -225,9 +225,9 @@ void Client::releaseWindow( bool on_shutdown )
     XDestroyWindow( display(), frame );
     frame = None;
     --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
+    checkNonExistentClients();
     deleteClient( this, Allowed );
     ungrabXServer();
-    checkNonExistentClients();
     }
 
 // like releaseWindow(), but this one is called when the window has been already destroyed
@@ -254,8 +254,8 @@ void Client::destroyClient()
     XDestroyWindow( display(), frame );
     frame = None;
     --postpone_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
-    deleteClient( this, Allowed );
     checkNonExistentClients();
+    deleteClient( this, Allowed );
     }
 
 void Client::updateDecoration( bool check_workspace_pos, bool force )
