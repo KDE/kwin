@@ -779,7 +779,7 @@ ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent )
 
 void ShortcutDialog::accept()
     {
-    foreach( const QKeySequence &seq, shortcut().toList() )
+    foreach( const QKeySequence &seq, shortcut() )
         {
         if( seq.isEmpty())
             break;
