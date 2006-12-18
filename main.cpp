@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "main.h"
 
+#include <kglobal.h>
 #include <klocale.h>
 #include <stdlib.h>
 #include <kcmdlineargs.h>
@@ -30,7 +31,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "options.h"
 #include "sm.h"
 #include "utils.h"
-#include "effects.h"
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -118,8 +118,6 @@ Application::Application( )
 
     options = new Options;
     atoms = new Atoms;
-
-    initting = false; // TODO
     
     // create workspace.
     (void) new Workspace( isSessionRestored() );
@@ -146,8 +144,6 @@ Application::~Application()
     if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
         XSetInputFocus( display(), PointerRoot, RevertToPointerRoot, xTime() );
     delete options;
-    delete effects;
-    delete atoms;
     }
 
 void Application::lostSelection()
@@ -282,9 +278,9 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 
     QString appname;
     if (KWinInternal::screen_number == 0)
-        appname = "kwin";
+        appname = "org.kde.kwin";
     else
-        appname.sprintf("kwin-screen-%d", KWinInternal::screen_number);
+        appname.sprintf("org.kde.kwin-screen-%d", KWinInternal::screen_number);
 
     QDBusConnection::sessionBus().interface()->registerService( appname, QDBusConnectionInterface::DontQueueService );
 
