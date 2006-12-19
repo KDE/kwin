@@ -124,7 +124,8 @@ Workspace::Workspace( bool restore )
     block_stacking_updates( 0 ),
     forced_global_mouse_grab( false )
     {
-    new KWinAdaptor( "org.kde.kwin", "/KWin", QDBusConnection::sessionBus(), this );
+    (void) new KWinAdaptor( this );
+    QDBusConnection::sessionBus().registerObject("/KWin", this);
 
     _self = this;
     mgr = new PluginMgr;
