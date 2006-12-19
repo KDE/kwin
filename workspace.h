@@ -406,6 +406,7 @@ class Workspace : public QObject, public KDecorationDefines
         void cleanupTemporaryRules();
         void writeWindowRules();
         void slotBlockShortcuts(int data);
+	void slotReloadConfig();
         // kompmgr
         void setPopupClientOpacity(int v);
         void resetClientOpacity();

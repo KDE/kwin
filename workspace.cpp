@@ -125,7 +125,9 @@ Workspace::Workspace( bool restore )
     forced_global_mouse_grab( false )
     {
     (void) new KWinAdaptor( this );
-    QDBusConnection::sessionBus().registerObject("/KWin", this);
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject("/KWin", this);
+    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
 
     _self = this;
     mgr = new PluginMgr;
@@ -871,6 +873,11 @@ void Workspace::updateColormap()
         installed_colormap = cmap;
         }
     }
+
+void Workspace::slotReloadConfig()
+{
+  reconfigure();
+}
 
 void Workspace::reconfigure()
     {
