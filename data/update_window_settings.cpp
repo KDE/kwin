@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QByteArray>
 #include <QList>
 #include <QtDBus/QtDBus>
-
+#include <kwin_interface.h>
 struct SessionInfo
     {
     QByteArray sessionId;
@@ -172,6 +172,6 @@ int main()
 #warning D-BUS TODO
 // kwin* , and an attach to dbus is missing as well
 #endif
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    kwin.reconfigure();
     }

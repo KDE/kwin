@@ -1,8 +1,14 @@
 
+set(kwin_xml  ${CMAKE_SOURCE_DIR}/workspace/kwin/org.kde.KWin.xml)
+
+set(interface_file)
+
+QT4_ADD_DBUS_INTERFACE( interface_file ${kwin_xml} kwin_interface )
 
 
 ########### next target ###############
-set(kwin_update_window_settings_SRCS update_window_settings.cpp)
+set(kwin_update_window_settings_SRCS update_window_settings.cpp ${interface_file})
+
 
 kde4_automoc(${kwin_update_window_settings_SRCS})
 
@@ -15,7 +21,7 @@ install(TARGETS kwin_update_window_settings DESTINATION ${LIB_INSTALL_DIR}/kconf
 
 
 ########### next target ###############
-set(kwin_update_default_rules_SRCS update_default_rules.cpp)
+set(kwin_update_default_rules_SRCS update_default_rules.cpp ${interface_file})
 
 kde4_automoc(${kwin_update_default_rules})
 

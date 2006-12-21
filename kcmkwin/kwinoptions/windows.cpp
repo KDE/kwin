@@ -39,6 +39,7 @@
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 
+#include <qlabel.h>
 #include <klocale.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
@@ -55,7 +56,7 @@
 #include <X11/Xutil.h>
 
 #include "windows.h"
-
+#include "kwin_interface.h"
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
@@ -496,8 +497,8 @@ void KFocusConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+        kwin.reconfigure();
     }
     emit KCModule::changed(false);
 }
@@ -688,7 +689,7 @@ void KAdvancedConfig::load( void )
     setShadeHover(config->readEntry(KWIN_SHADEHOVER, QVariant(false)).toBool());
     setShadeHoverInterval(config->readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
 
-    setElectricBorders(config->readEntry(KWM_ELECTRIC_BORDER, false));
+    setElectricBorders(config->readEntry(KWM_ELECTRIC_BORDER, 0));
     setElectricBorderDelay(config->readEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
 
 //    setFocusStealing( config->readEntry(KWIN_FOCUS_STEALING, 2 ));
@@ -723,8 +724,8 @@ void KAdvancedConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+        kwin.reconfigure();
     }
     emit KCModule::changed(false);
 }
@@ -1187,8 +1188,8 @@ void KMovingConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+        kwin.reconfigure();
     }
     emit KCModule::changed(false);
 }
@@ -1254,6 +1255,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KI
                                  "And if your GPU provides hardware-accelerated Xrender support (mainly nVidia cards):<br><br>"
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
                                  "In <i>Section \"Device\"</i></qt>"), this);
+  label->setOpenExternalLinks(true);
+  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
   lay->addWidget(label);
   }
   else
@@ -1474,8 +1477,10 @@ void KTranslucencyConfig::load( void )
 
     if (!kompmgrAvailable_)
         return;
-  config->setGroup( "Translucency" );
+  config->setGroup( "Notification Messages" );
   useTranslucency->setChecked(config->readEntry("UseTranslucency", QVariant(false)).toBool());
+
+  config->setGroup( "Translucency" );
   activeWindowTransparency->setChecked(config->readEntry("TranslucentActiveWindows", QVariant(false)).toBool());
   inactiveWindowTransparency->setChecked(config->readEntry("TranslucentInactiveWindows", QVariant(true)).toBool());
   movingWindowTransparency->setChecked(config->readEntry("TranslucentMovingWindows", QVariant(false)).toBool());
@@ -1535,8 +1540,10 @@ void KTranslucencyConfig::save( void )
 {
     if (!kompmgrAvailable_)
         return;
-  config->setGroup( "Translucency" );
+  config->setGroup( "Notification Messages" );
   config->writeEntry("UseTranslucency",useTranslucency->isChecked());
+
+  config->setGroup( "Translucency" );
   config->writeEntry("TranslucentActiveWindows",activeWindowTransparency->isChecked());
   config->writeEntry("TranslucentInactiveWindows",inactiveWindowTransparency->isChecked());
   config->writeEntry("TranslucentMovingWindows",movingWindowTransparency->isChecked());

@@ -5,6 +5,11 @@ include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
 
 set(kcm_kwindecoration_PART_SRCS kwindecoration.cpp buttons.cpp preview.cpp )
 
+set(kwin_xml  ${CMAKE_SOURCE_DIR}/workspace/kwin/org.kde.KWin.xml)
+
+QT4_ADD_DBUS_INTERFACE( kcm_kwindecoration_PART_SRCS ${kwin_xml} kwin_interface )
+
+
 kde4_automoc(${kcm_kwindecoration_PART_SRCS})
 
 

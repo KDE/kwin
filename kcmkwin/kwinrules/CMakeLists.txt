@@ -4,6 +4,11 @@ ADD_DEFINITIONS(-DKCMRULES)
 ########### next target ###############
 
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp)
+
+set(kwin_xml  ${CMAKE_SOURCE_DIR}/workspace/kwin/org.kde.KWin.xml)
+
+QT4_ADD_DBUS_INTERFACE( kwinrules_SRCS ${kwin_xml} kwin_interface )
+
 kde4_add_ui_files(kwinrules_SRCS ruleslistbase.ui detectwidgetbase.ui)
 kde4_add_ui3_files(kwinrules_SRCS ruleswidgetbase.ui editshortcutbase.ui )
 

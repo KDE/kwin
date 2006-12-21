@@ -62,8 +62,7 @@
 #include <kdecoration_plugins_p.h>
 #include <kdecorationfactory.h>
 #include <kvbox.h>
-#include "kwindecorationadaptor.h"
-#include <QtDBus/QtDBus>
+#include <kwin_interface.h>
 
 // KCModule plugin interface
 // =========================
@@ -75,8 +74,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
           kwinConfig("kwinrc"),
           pluginObject(0)
 {
-    new DecorationAdaptor(this);
-    QDBusConnection::sessionBus().registerObject("/KWinClientDecoration", this);
     kwinConfig.setGroup("Style");
         plugins = new KDecorationPreviewPlugins( &kwinConfig );
 
@@ -534,8 +531,8 @@ void KWinDecorationModule::save()
 	emit pluginSave( &kwinConfig );
 
 	kwinConfig.sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    kwin.reconfigure();
 }
 
 
