@@ -51,7 +51,6 @@ class Notify
             };
 
         static bool raise( Event, const QString& message = QString(), Client* c = NULL );
-        static bool makeDemandAttention( Event );
         static void sendPendingEvents();
     private:
         static QString eventToName( Event );

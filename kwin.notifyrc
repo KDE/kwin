@@ -1,0 +1,382 @@
+[Global]
+IconName=kwin
+Comment=The KDE Window Manager
+
+[Event/desktop1]
+Name=Change to Desktop 1
+Name[Event/fr]=Aller au bureau 1
+Name[Event/x-test]=xxChange to Desktop 1xx
+Comment=Virtual desktop one is selected
+Comment[Event/fr]=Le bureau virtuel 1 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop one is selectedxx
+Sound=KDE_Desktop_1.ogg
+
+
+[Event/desktop2]
+Name=Change to Desktop 2
+Name[Event/fr]=Aller au bureau 2
+Name[Event/x-test]=xxChange to Desktop 2xx
+Comment=Virtual desktop two is selected
+Comment[Event/fr]=Le bureau virtuel 2 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop two is selectedxx
+Sound=KDE_Desktop_2.ogg
+
+
+[Event/desktop3]
+Name=Change to Desktop 3
+Name[Event/fr]=Aller au bureau 3
+Name[Event/x-test]=xxChange to Desktop 3xx
+Comment=Virtual desktop three is selected
+Comment[Event/fr]=Le bureau virtuel 3 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop three is selectedxx
+Sound=KDE_Desktop_3.ogg
+
+
+[Event/desktop4]
+Name=Change to Desktop 4
+Name[Event/fr]=Aller au bureau 4
+Name[Event/x-test]=xxChange to Desktop 4xx
+Comment=Virtual desktop four is selected
+Comment[Event/fr]=Le bureau virtuel 4 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop four is selectedxx
+Sound=KDE_Desktop_4.ogg
+
+
+[Event/desktop5]
+Name=Change to Desktop 5
+Name[Event/fr]=Aller au bureau 5
+Name[Event/x-test]=xxChange to Desktop 5xx
+Comment=Virtual desktop five is selected
+Comment[Event/fr]=Le bureau virtuel 5 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop five is selectedxx
+Sound=KDE_Desktop_5.ogg
+
+
+[Event/desktop6]
+Name=Change to Desktop 6
+Name[Event/fr]=Aller au bureau 6
+Name[Event/x-test]=xxChange to Desktop 6xx
+Comment=Virtual desktop six is selected
+Comment[Event/fr]=Le bureau virtuel 6 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop six is selectedxx
+Sound=KDE_Desktop_6.ogg
+
+
+[Event/desktop7]
+Name=Change to Desktop 7
+Name[Event/fr]=Aller au bureau 7
+Name[Event/x-test]=xxChange to Desktop 7xx
+Comment=Virtual desktop seven is selected
+Comment[Event/fr]=Le bureau virtuel 7 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop seven is selectedxx
+Sound=KDE_Desktop_7.ogg
+
+
+[Event/desktop8]
+Name=Change to Desktop 8
+Name[Event/fr]=Aller au bureau 8
+Name[Event/x-test]=xxChange to Desktop 8xx
+Comment=Virtual desktop eight is selected
+Comment[Event/fr]=Le bureau virtuel 8 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop eight is selectedxx
+Sound=KDE_Desktop_8.ogg
+
+
+[Event/desktop9]
+Name=Change to Desktop 9
+Name[Event/fr]=Aller au bureau 9
+Name[Event/x-test]=xxChange to Desktop 9xx
+Comment=Virtual desktop nine is selected
+Comment[Event/fr]=Le bureau virtuel 9 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop nine is selectedxx
+
+
+[Event/desktop10]
+Name=Change to Desktop 10
+Name[Event/fr]=Aller au bureau 10
+Name[Event/x-test]=xxChange to Desktop 10xx
+Comment=Virtual desktop ten is selected
+Comment[Event/fr]=Le bureau virtuel 10 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop ten is selectedxx
+
+
+[Event/desktop11]
+Name=Change to Desktop 11
+Name[Event/fr]=Aller au bureau 11
+Name[Event/x-test]=xxChange to Desktop 11xx
+Comment=Virtual desktop eleven is selected
+Comment[Event/fr]=Le bureau virtuel 11 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop eleven is selectedxx
+
+
+[Event/desktop12]
+Name=Change to Desktop 12
+Name[Event/fr]=Aller au bureau 12
+Name[Event/x-test]=xxChange to Desktop 12xx
+Comment=Virtual desktop twelve is selected
+Comment[Event/fr]=Le bureau virtuel 12 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop twelve is selectedxx
+
+
+[Event/desktop13]
+Name=Change to Desktop 13
+Name[Event/fr]=Aller au bureau 13
+Name[Event/x-test]=xxChange to Desktop 13xx
+Comment=Virtual desktop thirteen is selected
+Comment[Event/fr]=Le bureau virtuel 13 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop thirteen is selectedxx
+
+
+[Event/desktop14]
+Name=Change to Desktop 14
+Name[Event/fr]=Aller au bureau 14
+Name[Event/x-test]=xxChange to Desktop 14xx
+Comment=Virtual desktop fourteen is selected
+Comment[Event/fr]=Le bureau virtuel 14 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop fourteen is selectedxx
+
+
+[Event/desktop15]
+Name=Change to Desktop 15
+Name[Event/fr]=Aller au bureau 15
+Name[Event/x-test]=xxChange to Desktop 15xx
+Comment=Virtual desktop fifteen is selected
+Comment[Event/fr]=Le bureau virtuel 15 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop fifteen is selectedxx
+
+
+[Event/desktop16]
+Name=Change to Desktop 16
+Name[Event/fr]=Aller au bureau 16
+Name[Event/x-test]=xxChange to Desktop 16xx
+Comment=Virtual desktop sixteen is selected
+Comment[Event/fr]=Le bureau virtuel 16 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop sixteen is selectedxx
+
+
+[Event/desktop17]
+Name=Change to Desktop 17
+Name[Event/fr]=Aller au bureau 17
+Name[Event/x-test]=xxChange to Desktop 17xx
+Comment=Virtual desktop seventeen is selected
+Comment[Event/fr]=Le bureau virtuel 17 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop seventeen is selectedxx
+
+
+[Event/desktop18]
+Name=Change to Desktop 18
+Name[Event/fr]=Aller au bureau 18
+Name[Event/x-test]=xxChange to Desktop 18xx
+Comment=Virtual desktop eighteen is selected
+Comment[Event/fr]=Le bureau virtuel 18 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop eighteen is selectedxx
+
+
+[Event/desktop19]
+Name=Change to Desktop 19
+Name[Event/fr]=Aller au bureau 19
+Name[Event/x-test]=xxChange to Desktop 19xx
+Comment=Virtual desktop nineteen is selected
+Comment[Event/fr]=Le bureau virtuel 19 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop nineteen is selectedxx
+
+
+[Event/desktop20]
+Name=Change to Desktop 20
+Name[Event/fr]=Aller au bureau 20
+Name[Event/x-test]=xxChange to Desktop 20xx
+Comment=Virtual desktop twenty is selected
+Comment[Event/fr]=Le bureau virtuel 20 est sélectionné
+Comment[Event/x-test]=xxVirtual desktop twenty is selectedxx
+
+
+[Event/activate]
+Name=Activate Window
+Name[Event/fr]=Activer une fenêtre
+Name[Event/x-test]=xxActivate Windowxx
+Comment=Another window is activated
+Comment[Event/fr]=Une autre fenêtre est activée
+Comment[Event/x-test]=xxAnother window is activatedxx
+
+
+[Event/new]
+Name=New Window
+Name[Event/fr]=Nouvelle fenêtre
+Name[Event/x-test]=xxNew Windowxx
+Comment=New window
+Comment[Event/fr]=Nouvelle fenêtre
+Comment[Event/x-test]=xxNew windowxx
+Sound=KDE_Window_Open.ogg
+
+
+[Event/delete]
+Name=Delete Window
+Name[Event/fr]=Supprimer la fenêtre
+Name[Event/x-test]=xxDelete Windowxx
+Comment=Delete window
+Comment[Event/fr]=Supprimer une fenêtre
+Comment[Event/x-test]=xxDelete windowxx
+
+[Event/close]
+Name=Window Close
+Name[Event/fr]=Fermer une fenêtre
+Name[Event/x-test]=xxWindow Closexx
+Comment=A window closes
+Comment[Event/fr]=Une fenêtre se ferme
+Comment[Event/x-test]=xxA window closesxx
+Sound=KDE_Window_Close.ogg
+
+
+[Event/shadeup]
+Name=Window Shade Up
+Name[Event/fr]=Enrouler une fenêtre
+Name[Event/x-test]=xxWindow Shade Upxx
+Comment=A window is shaded up
+Comment[Event/fr]=Une fenêtre est enroulée
+Comment[Event/x-test]=xxA window is shaded upxx
+Sound=KDE_Window_Shade_Up.ogg
+
+
+[Event/shadedown]
+Name=Window Shade Down
+Name[Event/fr]=Dérouler une fenêtre
+Name[Event/x-test]=xxWindow Shade Downxx
+Comment=A window is shaded down
+Comment[Event/fr]=Une fenêtre est déroulée
+Comment[Event/x-test]=xxA window is shaded downxx
+Sound=KDE_Window_Shade_Down.ogg
+
+
+[Event/minimize]
+Name=Window Minimize
+Name[Event/fr]=Réduire une fenêtre
+Name[Event/x-test]=xxWindow Minimizexx
+Comment=A window is minimized
+Comment[Event/fr]=Une fenêtre est réduite
+Comment[Event/x-test]=xxA window is minimizedxx
+Sound=KDE_Window_Iconify.ogg
+
+
+[Event/unminimize]
+Name=Window Unminimize
+Name[Event/fr]=Restaurer une fenêtre
+Name[Event/x-test]=xxWindow Unminimizexx
+Comment=A Window is restored
+Comment[Event/fr]=Une fenêtre en icône est restaurée
+Comment[Event/x-test]=xxA Window is restoredxx
+Sound=KDE_Window_DeIconify.ogg
+
+
+[Event/maximize]
+Name=Window Maximize
+Name[Event/fr]=Maximiser une fenêtre
+Name[Event/x-test]=xxWindow Maximizexx
+Comment=A window is maximized
+Comment[Event/fr]=Une fenêtre est maximisée
+Comment[Event/x-test]=xxA window is maximizedxx
+Sound=KDE_Window_UnHide.ogg
+
+
+[Event/unmaximize]
+Name=Window Unmaximize
+Name[Event/fr]=Restaurer une fenêtre maximisée
+Name[Event/x-test]=xxWindow Unmaximizexx
+Comment=A window loses maximization
+Comment[Event/fr]=Une fenêtre maximisée est restaurée
+Comment[Event/x-test]=xxA window loses maximizationxx
+Sound=KDE_Window_Hide.ogg
+
+
+[Event/on_all_desktops]
+Name=Window On All Desktops
+Name[Event/fr]=Fenêtre visible sur tous les bureaux
+Name[Event/x-test]=xxWindow On All Desktopsxx
+Comment=A window is made visible on all desktops
+Comment[Event/fr]=Une fenêtre est maintenant visible sur tous les bureaux
+Comment[Event/x-test]=xxA window is made visible on all desktopsxx
+Sound=KDE_Window_Sticky.ogg
+
+
+[Event/not_on_all_desktops]
+Name=Window Not On All Desktops
+Name[Event/fr]=Fenêtre visible sur un seul bureau
+Name[Event/x-test]=xxWindow Not On All Desktopsxx
+Comment=A Window is no longer visible on all desktops
+Comment[Event/fr]=Une fenêtre n'est maintenant plus visible sur tous les bureaux
+Comment[Event/x-test]=xxA Window is no longer visible on all desktopsxx
+Action=Sound
+Sound=KDE_Window_UnSticky.ogg
+
+[Event/transnew]
+Name=New Dialog
+Name[Event/fr]=Nouvelle boîte de dialogue
+Name[Event/x-test]=xxNew Dialogxx
+Comment=Transient window (a dialog) appears
+Comment[Event/fr]=Une boîte de dialogue apparaît
+Comment[Event/x-test]=xxTransient window (a dialog) appearsxx
+Sound=KDE_Dialog_Appear.ogg
+
+
+[Event/transdelete]
+Name=Delete Dialog
+Name[Event/fr]=Fermeture de la boîte de dialogue
+Name[Event/x-test]=xxDelete Dialogxx
+Comment=Transient window (a dialog) is removed
+Comment[Event/fr]=Une boîte de dialogue disparaît
+Comment[Event/x-test]=xxTransient window (a dialog) is removedxx
+Sound=KDE_Dialog_Disappear.ogg
+
+
+[Event/movestart]
+Name=Window Move Start
+Name[Event/fr]=Début de déplacement de fenêtre
+Name[Event/x-test]=xxWindow Move Startxx
+Comment=A window has begun moving
+Comment[Event/fr]=Début de déplacement de fenêtre
+Comment[Event/x-test]=xxA window has begun movingxx
+
+
+[Event/moveend]
+Name=Window Move End
+Name[Event/fr]=Fin de déplacement de fenêtre
+Name[Event/x-test]=xxWindow Move Endxx
+Comment=A window has completed its moving
+Comment[Event/fr]=Fin de déplacement de fenêtre
+Comment[Event/x-test]=xxA window has completed its movingxx
+
+
+[Event/resizestart]
+Name=Window Resize Start
+Name[Event/fr]=Début de redimensionnement de fenêtre
+Name[Event/x-test]=xxWindow Resize Startxx
+Comment=A window has begun resizing
+Comment[Event/fr]=Début de redimensionnement de fenêtre
+Comment[Event/x-test]=xxA window has begun resizingxx
+
+
+[Event/resizeend]
+Name=Window Resize End
+Name[Event/fr]=Fin de redimensionnement de fenêtre
+Name[Event/x-test]=xxWindow Resize Endxx
+Comment=A window has finished resizing
+Comment[Event/fr]=Fin de redimensionnement de fenêtre
+Comment[Event/x-test]=xxA window has finished resizingxx
+
+
+[Event/demandsattentioncurrent]
+Name=Window On Current Desktop Demands Attention
+Name[Event/fr]=La fenêtre sur le bureau courant demande votre attention
+Name[Event/x-test]=xxWindow On Current Desktop Demands Attentionxx
+Comment=A window on the current virtual desktop demands attention
+Comment[Event/fr]=Une fenêtre du bureau virtuel actuel demande votre attention
+Comment[Event/x-test]=xxA window on the current virtual desktop demands attentionxx
+
+
+[Event/demandsattentionother]
+Name=Window On Other Desktop Demands Attention
+Name[Event/fr]=Une fenêtre sur un autre bureau demande votre attention
+Name[Event/x-test]=xxWindow On Other Desktop Demands Attentionxx
+Comment=A window on an inactive virtual desktop demands attention
+Comment[Event/fr]=Une fenêtre sur un bureau virtuel inactif demande l'attention
+Comment[Event/x-test]=xxA window on an inactive virtual desktop demands attentionxx
+

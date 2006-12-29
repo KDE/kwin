@@ -10,7 +10,7 @@ License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
 #include "notifications.h"
-#include <knotifyclient.h>
+#include <knotification.h>
 
 #include "client.h"
 
@@ -118,8 +118,8 @@ bool Notify::raise( Event e, const QString& message, Client* c )
         return true;
         }
 
-    forgetIt= !KNotifyClient::event( c ? c->window() : 0, event, message );
-    return !forgetIt;
+    
+    return KNotification::event( event, message /*, QPixmap() , c ? c->window() : 0*/ ); //FIXME get the widget ?
     }
 
 void Notify::sendPendingEvents()
@@ -129,19 +129,8 @@ void Notify::sendPendingEvents()
         EventData data = pending_events.first();
         pending_events.pop_front();
         if( !forgetIt )
-            forgetIt= !KNotifyClient::event( data.window, data.event, data.message );
+            KNotification::event( data.event, data.message /*  , QPixmap() , data.window  */ );
         }
-    }
-
-bool Notify::makeDemandAttention( Event e )
-    {
-    QString event = eventToName( e );
-    if( event.isNull() )
-        return false;
-    int rep = KNotifyClient::getPresentation( event );
-    if( rep == -1 )
-        rep = KNotifyClient::getDefaultPresentation( event );
-    return rep != -1 && ( rep & KNotifyClient::Taskbar );
     }
 
 } // namespace
