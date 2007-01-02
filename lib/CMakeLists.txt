@@ -14,7 +14,7 @@ kde4_automoc(${kdecorations_LIB_SRCS})
 
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
-target_link_libraries(kdecorations  ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
+target_link_libraries(kdecorations  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
 
 set_target_properties(kdecorations PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kdecorations  DESTINATION ${LIB_INSTALL_DIR} )
