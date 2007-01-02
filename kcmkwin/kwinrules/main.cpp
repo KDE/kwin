@@ -22,7 +22,6 @@
 #include <klocale.h>
 #include <kwin.h>
 #include <QtDBus/QtDBus>
-#include <kwin_interface.h>
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 
@@ -257,8 +256,10 @@ static int edit( Window wid, bool whole_app )
         delete orig_rule;
         }
     saveRules( rules );
-    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-    kwin.reconfigure();
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
     return 0;
     }
     

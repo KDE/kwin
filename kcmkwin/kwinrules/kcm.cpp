@@ -29,7 +29,6 @@
 #include <QtDBus/QtDBus>
 
 #include "ruleslist.h"
-#include "kwin_interface.h"
 
 typedef KGenericFactory<KWinInternal::KCMRules> KCMRulesFactory;
 K_EXPORT_COMPONENT_FACTORY(kwinrules, KCMRulesFactory("kcmkwinrules"))
@@ -65,8 +64,11 @@ void KCMRules::save()
     emit KCModule::changed( false );
     // Send signal to kwin
     config.sync();
-    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-    kwin.reconfigure();
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
     }
 
 void KCMRules::defaults()
