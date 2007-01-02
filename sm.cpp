@@ -11,6 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "sm.h"
 
+//#include <kdebug.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <pwd.h>
@@ -22,12 +23,11 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include <QSocketNotifier>
 #include <qsessionmanager.h>
-#include <kdebug.h>
 
 namespace KWinInternal
 {
 
-bool SessionManaged::saveState( QSessionManager& sm )
+bool SessionManager::saveState( QSessionManager& sm )
     {
     // If the session manager is ksmserver, save stacking
     // order, active window, active desktop etc. in phase 1,
@@ -53,7 +53,7 @@ bool SessionManaged::saveState( QSessionManager& sm )
     }
 
 // I bet this is broken, just like everywhere else in KDE
-bool SessionManaged::commitData( QSessionManager& sm )
+bool SessionManager::commitData( QSessionManager& sm )
     {
     if ( !sm.isPhase2() )
         Workspace::self()->sessionSaveStarted();
@@ -257,28 +257,6 @@ bool Workspace::sessionInfoWindowTypeMatch( Client* c, SessionInfo* info )
     return info->windowType == c->windowType();
     }
 
-// maybe needed later
-#if 0
-// KMainWindow's without name() given have WM_WINDOW_ROLE in the form
-// of <appname>-mainwindow#<number>
-// when comparing them for fake session info, it's probably better to check
-// them without the trailing number
-bool Workspace::windowRoleMatch( const QByteArray& role1, const QByteArray& role2 )
-    {
-    if( role1.isEmpty() && role2.isEmpty())
-        return true;
-    int pos1 = role1.find( '#' );
-    int pos2 = role2.find( '#' );
-    bool ret;
-    if( pos1 < 0 || pos2 < 0 || pos1 != pos2 )
-        ret = role1 == role2;
-    else
-        ret = qstrncmp( role1, role2, pos1 ) == 0;
-    kDebug() << "WR:" << role1 << ":" << pos1 << ":" << role2 << ":" << pos2 << ":::" << ret << endl;
-    return ret;
-    }
-#endif
-
 static const char* const window_type_names[] = 
     {
     "Unknown", "Normal" , "Desktop", "Dock", "Toolbar", "Menu", "Dialog",
@@ -312,7 +290,7 @@ NET::WindowType Workspace::txtToWindowType( const char* txt )
 // KWin's focus stealing prevention causes problems with user interaction
 // during session save, as it prevents possible dialogs from getting focus.
 // Therefore it's temporarily disabled during session saving. Start of
-// session saving can be detected in SessionManaged::saveState() above,
+// session saving can be detected in SessionManager::saveState() above,
 // but Qt doesn't have API for saying when session saved finished (either
 // successfully, or was canceled). Therefore, create another connection
 // to session manager, that will provide this information.

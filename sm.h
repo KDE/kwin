@@ -15,6 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QDataStream>
 #include <X11/SM/SMlib.h>
 #include <kapplication.h>
+#include <ksessionmanager.h>
 #include <netwm_def.h>
 
 class QSocketNotifier;
@@ -77,8 +78,8 @@ class SessionSaveDoneHelper
     };
 
 
-class SessionManaged
-    : public KSessionManaged
+class SessionManager
+    : public KSessionManager
     {
     public:
         virtual bool saveState( QSessionManager& sm );
