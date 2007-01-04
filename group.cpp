@@ -994,10 +994,11 @@ void Client::checkGroup( Group* set_group, bool force )
                 in_group->removeMember( this );            
                 in_group = NULL;
                 }
-            in_group = new_group;
-            if( in_group == NULL )
+            if( new_group == NULL )
+                new_group = new Group( None, workspace() );
+            if( in_group != new_group )
                 {
-                in_group = new Group( None, workspace());
+                in_group = new_group;
                 in_group->addMember( this );
                 }
             }
