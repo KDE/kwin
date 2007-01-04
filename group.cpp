@@ -60,6 +60,16 @@ bool performTransiencyCheck()
         {
         if( (*it1)->deleting )
             continue;
+        if( (*it1)->in_group == NULL )
+            {
+            kdDebug() << "TC: " << *it1 << " in not in a group" << endl;
+            ret = false;
+            }
+        else if( !(*it1)->in_group->members().contains( *it1 ))
+            {
+            kdDebug() << "TC: " << *it1 << " has a group " << (*it1)->in_group << " but group does not contain it" << endl;
+            ret = false;
+            }
         if( !(*it1)->isTransient())
             {
             if( !(*it1)->mainClients().isEmpty())
@@ -108,6 +118,23 @@ bool performTransiencyCheck()
             if( !(*it2)->mainClients().contains( *it1 ))
                 {
                 kdDebug() << "TC:" << *it1 << " has transient " << *it2 << " but transient does not have it as a main client" << endl;
+                ret = false;
+                }
+            }
+        }
+    GroupList groups = Workspace::self()->groups;
+    for( GroupList::ConstIterator it1 = groups.begin();
+         it1 != groups.end();
+         ++it1 )
+        {
+        ClientList members = (*it1)->members();
+        for( ClientList::ConstIterator it2 = members.begin();
+             it2 != members.end();
+             ++it2 )
+            {
+            if( (*it2)->in_group != *it1 )
+                {
+                kdDebug() << "TC: Group " << *it1 << " contains client " << *it2 << " but client is not in that group" << endl;
                 ret = false;
                 }
             }
