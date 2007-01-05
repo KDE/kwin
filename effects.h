@@ -15,6 +15,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "scene.h"
 
+#include <qpair.h>
+
 namespace KWinInternal
 {
 
@@ -73,6 +75,7 @@ class Effect
         virtual void windowAdded( Toplevel* c );
         virtual void windowDeleted( Toplevel* c );
         virtual void windowActivated( Toplevel* c );
+        virtual void windowInputMouseEvent( Window w, QEvent* e );
     };
 
 class EffectsHandler
@@ -87,14 +90,26 @@ class EffectsHandler
         void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         void postPaintWindow( Scene::Window* w );
+        // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
+        // covering the whole screen is created and all mouse events will be intercepted by it.
+        // The effect's windowInputMouseEvent() will get called with such events.
+        Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
+        Window createInputWindow( Effect* e, const QRect& r, const QCursor& cursor );
+        void destroyInputWindow( Window w );
+        // functions that allow controlling windows/desktop
+        void activateWindow( Client* c );
         // internal (used by kwin core or compositing code)
         void startPaint();
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowAdded( Toplevel* c );
         void windowDeleted( Toplevel* c );
         void windowActivated( Toplevel* c );
+        bool checkInputWindowEvent( XEvent* e );
+        void checkInputWindowStacking();
     private:
         QVector< Effect* > effects;
+        typedef QPair< Effect*, Window > InputWindowPair;
+        QList< InputWindowPair > input_windows;
         int current_paint_window;
         int current_paint_screen;
     };

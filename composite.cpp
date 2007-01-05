@@ -117,7 +117,7 @@ void Workspace::setupCompositing()
         kDebug( 1212 ) << "XRender compositing" << endl;
     else if( dynamic_cast< SceneBasic* >( scene ))
         kDebug( 1212 ) << "X compositing" << endl;
-    effects = new EffectsHandler( this );
+    new EffectsHandler( this ); // sets also the 'effects' pointer
     addDamageFull();
     foreach( Client* c, clients )
         c->setupCompositing();

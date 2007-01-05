@@ -11,6 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "unmanaged.h"
 
 #include "workspace.h"
+#include "effects.h"
 
 #include <X11/extensions/shape.h>
 
@@ -62,6 +63,8 @@ bool Unmanaged::track( Window w )
     detectShape( w );
     setupCompositing();
     ungrabXServer();
+    if( effects )
+        effects->checkInputWindowStacking();
     return true;
     }
 

@@ -24,6 +24,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/showfps.h"
 #include "effects/zoom.h"
 
+#include "effects/test_input.h"
+
 namespace KWinInternal
 {
 
@@ -48,6 +50,10 @@ void Effect::windowDeleted( Toplevel* )
     }
 
 void Effect::windowActivated( Toplevel* )
+    {
+    }
+
+void Effect::windowInputMouseEvent( Window, QEvent* )
     {
     }
 
@@ -91,6 +97,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     {
     if( !compositing())
         return;
+    KWinInternal::effects = this;
     effects.append( new ShowFpsEffect( ws ));
 //    effects.append( new ZoomEffect( ws ));
 //    effects.append( new HowtoEffect );
@@ -100,12 +107,16 @@ EffectsHandler::EffectsHandler( Workspace* ws )
 //    effects.append( new FadeInEffect );
 //    effects.append( new ScaleInEffect );
 //    effects.append( new DialogParentEffect );
+
+//    effects.append( new TestInputEffect );
     }
 
 EffectsHandler::~EffectsHandler()
     {
     foreach( Effect* e, effects )
         delete e;
+    foreach( InputWindowPair pos, input_windows )
+        XDestroyWindow( display(), pos.second );
     }
 
 void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last )
@@ -200,6 +211,93 @@ void EffectsHandler::postPaintWindow( Scene::Window* w )
         --current_paint_window;
         }
     // no special final code
+    }
+
+Window EffectsHandler::createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor )
+    {
+    XSetWindowAttributes attrs;
+    attrs.override_redirect = True;
+    Window win = XCreateWindow( display(), rootWindow(), x, y, w, h, 0, 0, InputOnly, CopyFromParent,
+        CWOverrideRedirect, &attrs );
+// TODO keeping on top?
+// TODO enter/leave notify?
+    XSelectInput( display(), win, ButtonPressMask | ButtonReleaseMask | PointerMotionMask );
+    XDefineCursor( display(), win, cursor.handle());
+    XMapWindow( display(), win );
+    input_windows.append( qMakePair( e, win ));
+    return win;
+    }
+
+Window EffectsHandler::createInputWindow( Effect* e, const QRect& r, const QCursor& cursor )
+    {
+    return createInputWindow( e, r.x(), r.y(), r.width(), r.height(), cursor );
+    }
+
+void EffectsHandler::destroyInputWindow( Window w )
+    {
+    foreach( InputWindowPair pos, input_windows )
+        {
+        if( pos.second == w )
+            {
+            input_windows.removeAll( pos );
+            XDestroyWindow( display(), w );
+            return;
+            }
+        }
+    assert( false );
+    }
+
+bool EffectsHandler::checkInputWindowEvent( XEvent* e )
+    {
+    if( e->type != ButtonPress && e->type != ButtonRelease && e->type != MotionNotify )
+        return false;
+    foreach( InputWindowPair pos, input_windows )
+        {
+        if( pos.second == e->xany.window )
+            {
+            switch( e->type )
+                {
+                case ButtonPress:
+                case ButtonRelease:
+                    {
+                    XButtonEvent* e2 = &e->xbutton;
+                    QMouseEvent ev( e->type == ButtonPress ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                        QPoint( e2->x, e2->y ), QPoint( e2->x_root, e2->y_root ), x11ToQtMouseButton( e2->button ),
+                        x11ToQtMouseButtons( e2->state ), x11ToQtKeyboardModifiers( e2->state ));
+                    pos.first->windowInputMouseEvent( pos.second, &ev );
+                    break; // --->
+                    }
+                case MotionNotify:
+                    {
+                    XMotionEvent* e2 = &e->xmotion;
+                    QMouseEvent ev( QEvent::MouseMove, QPoint( e2->x, e2->y ), QPoint( e2->x_root, e2->y_root ),
+                        Qt::NoButton, x11ToQtMouseButtons( e2->state ), x11ToQtKeyboardModifiers( e2->state ));
+                    pos.first->windowInputMouseEvent( pos.second, &ev );
+                    break; // --->
+                    }
+                }
+            return true; // eat event
+            }
+        }
+    return false;
+    }
+
+void EffectsHandler::checkInputWindowStacking()
+    {
+    if( input_windows.count() == 0 )
+        return;
+    Window* wins = new Window[ input_windows.count() ];
+    int pos = 0;
+    foreach( InputWindowPair it, input_windows )
+        wins[ pos++ ] = it.second;
+    XRaiseWindow( display(), wins[ 0 ] );
+    XRestackWindows( display(), wins, pos );
+    delete[] wins;
+    }
+
+void EffectsHandler::activateWindow( Client* c )
+    {
+    Workspace::self()->activateClient( c, true );
     }
 
 EffectsHandler* effects;

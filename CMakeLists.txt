@@ -60,6 +60,7 @@ set(kwin_KDEINIT_SRCS
    effects/dialogparent.cpp
    effects/showfps.cpp
    effects/zoom.cpp
+   effects/test_input.cpp
    )
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWinInternal::Workspace )

@@ -23,6 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 #include "unmanaged.h"
 #include "scene.h"
+#include "effects.h"
 
 #include <QWhatsThis>
 #include <QApplication>
@@ -220,6 +221,8 @@ bool Workspace::workspaceEvent( XEvent * e )
                 tab_box->handleMouseEvent( e );
                 return true;
                 }
+            if( effects && effects->checkInputWindowEvent( e ))
+                return true;
             break;
         case KeyPress:
             {
@@ -1634,6 +1637,8 @@ void Unmanaged::unmapNotifyEvent( XUnmapEvent* )
 
 void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     {
+    if( effects )
+        effects->checkInputWindowStacking(); // keep them on top
     QRect newgeom( e->x, e->y, e->width, e->height );
     if( newgeom == geom )
         return;
