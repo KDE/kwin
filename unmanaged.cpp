@@ -31,10 +31,17 @@ Unmanaged::~Unmanaged()
 bool Unmanaged::track( Window w )
     {
     XWindowAttributes attr;
+    grabXServer();
     if( !XGetWindowAttributes(display(), w, &attr))
+        {
+        ungrabXServer();
         return false;
+        }
     if( attr.c_class == InputOnly )
+        {
+        ungrabXServer();
         return false;
+        }
     setHandle( w );
     XSelectInput( display(), w, StructureNotifyMask );
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
@@ -54,6 +61,7 @@ bool Unmanaged::track( Window w )
         XShapeSelectInput( display(), w, ShapeNotifyMask );
     detectShape( w );
     setupCompositing();
+    ungrabXServer();
     return true;
     }
 
