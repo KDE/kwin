@@ -69,9 +69,7 @@ NET::WindowType Bridge::windowType( unsigned long supported_types ) const
 
 QIcon Bridge::icon() const
     {
-#ifdef __GNUC__
 #warning KDE4 drop me ?
-#endif	    
     return QIcon( /*c->miniIcon(),*/ c->icon());
     }
 
@@ -128,7 +126,7 @@ void Bridge::titlebarDblClickOperation()
 
 void Bridge::titlebarMouseWheelOperation( int delta )
     {
-    c->performMouseCommand( options->operationTitlebarMouseWheel( delta ), QCursor::pos());
+    c->performMouseCommand( options->operationTitlebarMouseWheel( delta ), cursorPos());
     }
 
 void Bridge::setShade( bool set )

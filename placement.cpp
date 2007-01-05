@@ -453,7 +453,7 @@ void Placement::placeUnderMouse(Client* c, QRect& area, Policy /*next*/ )
     {
     area = checkArea( c, area );
     QRect geom = c->geometry();
-    geom.moveCenter( QCursor::pos());
+    geom.moveCenter( cursorPos());
     c->move( geom.topLeft());
     c->keepInArea( area ); // make sure it's kept inside workarea
     }

@@ -43,7 +43,7 @@ void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         {
         data.xScale *= zoom;
         data.yScale *= zoom;
-        QPoint cursor = QCursor::pos(); // TODO this is one X roundtrip
+        QPoint cursor = cursorPos();
         // set the position so that the cursor is in the same position in the scaled view
         data.xTranslate = - int( cursor.x() * ( zoom - 1 ));
         data.yTranslate = - int( cursor.y() * ( zoom - 1 ));

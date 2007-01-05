@@ -66,7 +66,7 @@ PopupInfo::~PopupInfo()
  */
 void PopupInfo::reset()
     {
-    QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
+    QRect r = KGlobalSettings::desktopGeometry(cursorPos());
 
     int w = fontMetrics().width( m_infoString ) + 30;
 

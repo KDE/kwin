@@ -274,6 +274,8 @@ int displayHeight()
     return XDisplayHeight( display(), DefaultScreen( display()));
     }
 
+QPoint cursorPos();
+
 class Scene;
 extern Scene* scene;
 inline bool compositing() { return scene != NULL; }

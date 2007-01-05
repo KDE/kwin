@@ -1552,7 +1552,7 @@ void Client::keyPressEvent( uint key_code )
     bool is_alt = key_code & Qt::ALT;
     key_code = key_code & 0xffff;
     int delta = is_control?1:is_alt?32:8;
-    QPoint pos = QCursor::pos();
+    QPoint pos = cursorPos();
     switch ( key_code ) 
         {
 		case Qt::Key_Left:

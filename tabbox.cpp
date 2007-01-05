@@ -139,7 +139,7 @@ void TabBox::reset()
     {
     int w, h, cw = 0, wmax = 0;
 
-    QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
+    QRect r = KGlobalSettings::desktopGeometry(cursorPos());
 
     // calculate height of 1 line
     // fontheight + 1 pixel above + 1 pixel below, or 32x32 icon + 2 pixel above + below

@@ -442,16 +442,16 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     switch ( op ) 
         {
         case Options::MoveOp:
-            c->performMouseCommand( Options::MouseMove, QCursor::pos() );
+            c->performMouseCommand( Options::MouseMove, cursorPos() );
             break;
         case Options::UnrestrictedMoveOp:
-            c->performMouseCommand( Options::MouseUnrestrictedMove, QCursor::pos() );
+            c->performMouseCommand( Options::MouseUnrestrictedMove, cursorPos() );
             break;
         case Options::ResizeOp:
-            c->performMouseCommand( Options::MouseResize, QCursor::pos() );
+            c->performMouseCommand( Options::MouseResize, cursorPos() );
             break;
         case Options::UnrestrictedResizeOp:
-            c->performMouseCommand( Options::MouseUnrestrictedResize, QCursor::pos() );
+            c->performMouseCommand( Options::MouseUnrestrictedResize, cursorPos() );
             break;
         case Options::CloseOp:
             c->closeWindow();
@@ -473,7 +473,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             c->minimize();
             break;
         case Options::ShadeOp:
-            c->performMouseCommand( Options::MouseShade, QCursor::pos());
+            c->performMouseCommand( Options::MouseShade, cursorPos());
             break;
         case Options::OnAllDesktopsOp:
             c->setOnAllDesktops( !c->isOnAllDesktops() );
@@ -503,7 +503,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             break;
             }
         case Options::OperationsOp:
-            c->performMouseCommand( Options::MouseShade, QCursor::pos());
+            c->performMouseCommand( Options::MouseShade, cursorPos());
             break;
         case Options::WindowRulesOp:
             editWindowRules( c, false );

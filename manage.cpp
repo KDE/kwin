@@ -212,7 +212,7 @@ bool Client::manage( Window w, bool isMapped )
     if( isMapped || session )
         area = workspace()->clientArea( FullArea, geom.center(), desktop());
     else if( options->xineramaPlacementEnabled )
-        area = workspace()->clientArea( PlacementArea, QCursor::pos(), desktop());
+        area = workspace()->clientArea( PlacementArea, cursorPos(), desktop());
     else
         area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
 

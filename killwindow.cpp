@@ -76,7 +76,7 @@ void KillWindow::start()
                     mx /= 10;
                     my /= 10;
                     }
-                QCursor::setPos(QCursor::pos()+QPoint(mx, my));
+                QCursor::setPos(cursorPos()+QPoint(mx, my));
                 }
 
             if (ev.type == ButtonRelease) 
