@@ -25,6 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <assert.h>
 #include <kdebug.h>
 #include <kshortcut.h>
+#include <kkeyserver.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
@@ -351,6 +352,77 @@ bool grabbedXServer()
     {
     return server_grab_count > 0;
     }
+
+// converting between X11 mouse/keyboard state mask and Qt button/keyboard states
+
+int qtToX11Button( Qt::MouseButton button )
+    {
+    if( button == Qt::LeftButton )
+        return Button1;
+    else if( button == Qt::MidButton )
+        return Button2;
+    else if( button == Qt::RightButton )
+        return Button3;
+    return AnyButton; // 0
+    }
+
+Qt::MouseButton x11ToQtMouseButton( int button )
+    {
+    if( button == Button1 )
+        return Qt::LeftButton;
+    if( button == Button2 )
+        return Qt::MidButton;
+    if( button == Button3 )
+        return Qt::RightButton;
+    return Qt::NoButton;
+    }
+
+int qtToX11State( Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
+    {
+    int ret = 0;
+    if( buttons & Qt::LeftButton )
+        ret |= Button1Mask;
+    if( buttons & Qt::MidButton )
+        ret |= Button2Mask;
+    if( buttons & Qt::RightButton )
+        ret |= Button3Mask;
+    if( modifiers & Qt::ShiftModifier )
+        ret |= ShiftMask;
+    if( modifiers & Qt::ControlModifier )
+        ret |= ControlMask;
+    if( modifiers & Qt::AltModifier )
+        ret |= KKeyServer::modXAlt();
+    if( modifiers & Qt::MetaModifier )
+        ret |= KKeyServer::modXMeta();
+    return ret;
+    }
+
+Qt::MouseButtons x11ToQtMouseButtons( int state )
+    {
+    Qt::MouseButtons ret = 0;
+    if( state & Button1Mask )
+        ret |= Qt::LeftButton;
+    if( state & Button2Mask )
+        ret |= Qt::MidButton;
+    if( state & Button3Mask )
+        ret |= Qt::RightButton;
+    return ret;
+    }
+
+Qt::KeyboardModifiers x11ToQtKeyboardModifiers( int state )
+    {
+    Qt::KeyboardModifiers ret = 0;
+    if( state & ShiftMask )
+        ret |= Qt::ShiftModifier;
+    if( state & ControlMask )
+        ret |= Qt::ControlModifier;
+    if( state & KKeyServer::modXAlt())
+        ret |= Qt::AltModifier;
+    if( state & KKeyServer::modXMeta())
+        ret |= Qt::MetaModifier;
+    return ret;
+    }
+
 #endif
 
 bool isLocalMachine( const QByteArray& host )

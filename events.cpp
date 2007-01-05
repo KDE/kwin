@@ -1093,37 +1093,6 @@ void Client::updateMouseGrab()
         }
     }
 
-int qtToX11Button( Qt::ButtonState button )
-    {
-    if( button == Qt::LeftButton )
-        return Button1;
-    else if( button == Qt::MidButton )
-        return Button2;
-    else if( button == Qt::RightButton )
-        return Button3;
-    return AnyButton;
-    }
-    
-int qtToX11State( Qt::ButtonState buttons, Qt::KeyboardModifiers modifiers )
-    {
-    int ret = 0;
-    if( buttons & Qt::LeftButton )
-        ret |= Button1Mask;
-    if( buttons & Qt::MidButton )
-        ret |= Button2Mask;
-    if( buttons & Qt::RightButton )
-        ret |= Button3Mask;
-    if( modifiers & Qt::ShiftModifier )
-        ret |= ShiftMask;
-    if( modifiers & Qt::ControlModifier )
-        ret |= ControlMask;
-    if( modifiers & Qt::AltModifier )
-        ret |= KKeyServer::modXAlt();
-    if( modifiers & Qt::MetaModifier )
-        ret |= KKeyServer::modXMeta();
-    return ret;
-    }
-
 // Qt propagates mouse events up the widget hierachy, which means events
 // for the decoration window cannot be (easily) intercepted as X11 events
 bool Client::eventFilter( QObject* o, QEvent* e )
