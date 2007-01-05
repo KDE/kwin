@@ -30,13 +30,13 @@ Unmanaged::~Unmanaged()
 
 bool Unmanaged::track( Window w )
     {
-    XSelectInput( display(), w, StructureNotifyMask );
     XWindowAttributes attr;
     if( !XGetWindowAttributes(display(), w, &attr))
         return false;
     if( attr.c_class == InputOnly )
         return false;
     setHandle( w );
+    XSelectInput( display(), w, StructureNotifyMask );
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
     vis = attr.visual;
     bit_depth = attr.depth;
