@@ -370,7 +370,7 @@ void Workspace::init()
             XGetWindowAttributes(display(), wins[i], &attr);
             if (attr.override_redirect )
                 {
-                if( attr.map_state != IsUnmapped && attr.c_class != InputOnly && compositing())
+                if( compositing())
                     createUnmanaged( wins[ i ] );
                 continue;
                 }

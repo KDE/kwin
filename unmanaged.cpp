@@ -33,7 +33,7 @@ bool Unmanaged::track( Window w )
     {
     XWindowAttributes attr;
     grabXServer();
-    if( !XGetWindowAttributes(display(), w, &attr))
+    if( !XGetWindowAttributes(display(), w, &attr) || attr.map_state != IsViewable )
         {
         ungrabXServer();
         return false;
