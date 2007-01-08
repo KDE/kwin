@@ -54,11 +54,14 @@ class Scene
             PAINT_WINDOW_TRANSLUCENT    = 1 << 1,
             // Window will be painted with transformed geometry.
             PAINT_WINDOW_TRANSFORMED    = 1 << 2,
+            // When set, the window won't be painted (set by default
+            // for hidden windows, can be unset in pre-paint).
+            PAINT_WINDOW_DISABLED       = 1 << 3,
             // Paint only a region of the screen (can be optimized, cannot
             // be used together with TRANSFORMED flags).
-            PAINT_SCREEN_REGION         = 1 << 3,
+            PAINT_SCREEN_REGION         = 1 << 4,
             // Whole screen will be painted with transformed geometry.
-            PAINT_SCREEN_TRANSFORMED    = 1 << 4
+            PAINT_SCREEN_TRANSFORMED    = 1 << 5,
             };
         // there's nothing to paint (adjust time_diff later)
         void idle();

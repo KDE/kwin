@@ -218,10 +218,7 @@ void Workspace::performCompositing()
          ++i )
         {
         if( Client* c = findClient( FrameIdMatchPredicate( children[ i ] )))
-            {
-            if( c->isShown( true ) && c->isOnCurrentDesktop())
-                windows.append( c );
-            }
+            windows.append( c );
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }

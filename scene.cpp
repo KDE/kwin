@@ -155,12 +155,14 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
     paintBackground( infiniteRegion());
     foreach( Window* w, stacking_order ) // bottom to top
         {
-        if( !w->isVisible())
-            continue;
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        if( !w->isVisible())
+            mask |= PAINT_WINDOW_DISABLED;
         QRegion damage = infiniteRegion();
         // preparation step
         effects->prePaintWindow( w, &mask, &damage, time_diff );
+        if( mask & PAINT_WINDOW_DISABLED )
+            continue;
         paintWindow( w, mask, damage );
         }
     }
@@ -182,14 +184,16 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
          --i )
         {
         Window* w = stacking_order[ i ];
-        if( !w->isVisible())
-            continue;
         if( region.isEmpty()) // completely clipped
             continue;
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        if( !w->isVisible())
+            mask |= PAINT_WINDOW_DISABLED;
         QRegion damage = region;
         // preparation step
         effects->prePaintWindow( w, &mask, &damage, time_diff );
+        if( mask & PAINT_WINDOW_DISABLED )
+            continue;
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.
         if( mask & PAINT_WINDOW_TRANSLUCENT )
