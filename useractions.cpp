@@ -60,7 +60,7 @@ QMenu* Workspace::clientPopup()
         advanced_popup->setFont(KGlobalSettings::menuFont());
 
         mKeepAboveOpAction = advanced_popup->addAction( i18n("Keep &Above Others") );
-        mKeepAboveOpAction->setIcon( SmallIconSet( "up" ) );
+        mKeepAboveOpAction->setIcon( KIcon( "up" ) );
         KAction *kaction = qobject_cast<KAction*>( keys->action("Window Above Other Windows") );
         if ( kaction!=0 )
             mKeepAboveOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -68,7 +68,7 @@ QMenu* Workspace::clientPopup()
         mKeepAboveOpAction->setData( Options::KeepAboveOp );
 
         mKeepBelowOpAction = advanced_popup->addAction( i18n("Keep &Below Others") );
-        mKeepBelowOpAction->setIcon( SmallIconSet( "down" ) );
+        mKeepBelowOpAction->setIcon( KIcon( "down" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Below Other Windows") );
         if ( kaction!=0 )
             mKeepBelowOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -76,7 +76,7 @@ QMenu* Workspace::clientPopup()
         mKeepBelowOpAction->setData( Options::KeepBelowOp );
 
         mFullScreenOpAction = advanced_popup->addAction( i18n("&Fullscreen") );
-        mFullScreenOpAction->setIcon( SmallIconSet( "window_fullscreen" ) );
+        mFullScreenOpAction->setIcon( KIcon( "window_fullscreen" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Fullscreen") );
         if ( kaction!=0 )
             mFullScreenOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -91,18 +91,18 @@ QMenu* Workspace::clientPopup()
         mNoBorderOpAction->setData( Options::NoBorderOp );
 
         QAction *action = advanced_popup->addAction( i18n("Window &Shortcut...") );
-        action->setIcon( SmallIconSet("key_bindings") );
+        action->setIcon( KIcon("key_bindings") );
         kaction = qobject_cast<KAction*>( keys->action("Setup Window Shortcut") );
         if ( kaction!=0 )
             action->setShortcut( kaction->globalShortcut().primary() );
         action->setData( Options::SetupWindowShortcutOp );
 
         action = advanced_popup->addAction( i18n("&Special Window Settings...") );
-        action->setIcon( SmallIconSet( "wizard" ) );
+        action->setIcon( KIcon( "wizard" ) );
         action->setData( Options::WindowRulesOp );
 
         action = advanced_popup->addAction( i18n("&Special Application Settings...") );
-        action->setIcon( SmallIconSet( "wizard" ) );
+        action->setIcon( KIcon( "wizard" ) );
         action->setData( Options::ApplicationRulesOp );
 
         action = popup->addMenu( advanced_popup );
@@ -111,24 +111,28 @@ QMenu* Workspace::clientPopup()
         desk_popup_index = popup->actions().count();
 
         if (options->useTranslucency){
-            trans_popup = new QMenu( popup );
-            trans_popup->setFont(KGlobalSettings::menuFont());
-            connect( trans_popup, SIGNAL( triggered(QAction*) ), this, SLOT( setPopupClientOpacity(QAction*)));
-            const int levels[] = { 100, 90, 75, 50, 25, 10 };
-            for( unsigned int i = 0;
-                 i < sizeof( levels ) / sizeof( levels[ 0 ] );
-                 ++i )
-                {
-                action = trans_popup->addAction( QString::number( levels[ i ] ) + "%" );
-                action->setCheckable( true );
-                action->setData( levels[ i ] );
-                }
+            QMenu *trans_popup = new QMenu( popup );
+            QVBoxLayout *transLayout = new QVBoxLayout(trans_popup);
+            trans_popup->setLayout( transLayout );
+            transButton = new QPushButton(trans_popup);
+            transButton->setObjectName("transButton");
+            transButton->setToolTip( i18n("Reset opacity to default value"));
+            transSlider = new QSlider(trans_popup);
+            transSlider->setObjectName( "transSlider" );
+            transSlider->setRange( 0, 100 );
+            transSlider->setValue( 100 );
+            transSlider->setOrientation( Qt::Vertical );
+            transSlider->setToolTip( i18n("Slide this to set the window's opacity"));
+            connect(transButton, SIGNAL(clicked()), SLOT(resetClientOpacity()));
+            connect(transButton, SIGNAL(clicked()), trans_popup, SLOT(hide()));
+            connect(transSlider, SIGNAL(valueChanged(int)), SLOT(setTransButtonText(int)));
+            connect(transSlider, SIGNAL(valueChanged(int)), this, SLOT(setPopupClientOpacity(int)));
             action = popup->addMenu( trans_popup );
             action->setText( i18n("&Opacity") );
         }
 
         mMoveOpAction = popup->addAction( i18n("&Move") );
-        mMoveOpAction->setIcon( SmallIconSet( "move" ) );
+        mMoveOpAction->setIcon( KIcon( "move" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Move") );
         if ( kaction!=0 )
             mMoveOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -166,13 +170,13 @@ QMenu* Workspace::clientPopup()
             !KAuthorized::authorizeControlModules(Workspace::configModules(true)).isEmpty())
             {
               action = popup->addAction( i18n("Configur&e Window Behavior...") );
-              action->setIcon( SmallIconSet( "configure" ) );
+              action->setIcon( KIcon( "configure" ) );
               connect( action, SIGNAL( triggered() ), this, SLOT( configureWM() ) );
               popup->addSeparator();
             }
 
         mCloseOpAction = popup->addAction( i18n("&Close") );
-        mCloseOpAction->setIcon( SmallIconSet( "fileclose" ) );
+        mCloseOpAction->setIcon( KIcon( "fileclose" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Close") );
         if ( kaction!=0 )
             mCloseOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -181,13 +185,30 @@ QMenu* Workspace::clientPopup()
     return popup;
     }
 
-void Workspace::setPopupClientOpacity( QAction* action )
+//sets the transparency of the client to given value(given by slider)
+void Workspace::setPopupClientOpacity(int value)
     {
-    if( active_popup_client == NULL )
-        return;
-    int level = action->data().toInt();
-    active_popup_client->setOpacity( level / 100.0 );
+    // TODO
     }
+
+void Workspace::setTransButtonText(int value)
+    {
+    value = 100 - value;
+    if(value < 0)
+        transButton->setText("000 %");
+    else if (value >= 100 )
+        transButton->setText("100 %");
+    else if(value < 10)
+        transButton->setText("00"+QString::number(value)+" %");
+    else if(value < 100)
+        transButton->setText('0'+QString::number(value)+" %");
+    }
+
+void Workspace::resetClientOpacity()
+    {
+    // TODO
+    }
+
 
 /*!
   The client popup menu will become visible soon.
@@ -223,16 +244,6 @@ void Workspace::clientPopupAboutToShow()
     mNoBorderOpAction->setChecked( active_popup_client->noBorder() );
     mMinimizeOpAction->setEnabled( active_popup_client->isMinimizable() );
     mCloseOpAction->setEnabled( active_popup_client->isCloseable() );
-    if (options->useTranslucency)
-        {
-        foreach( QAction* action, trans_popup->actions())
-            {
-            if( action->data().toInt() == qRound( active_popup_client->opacity() * 100 ))
-                action->setChecked( true );
-            else
-                action->setChecked( false );
-            }
-        }
     }
 
 
@@ -304,7 +315,7 @@ void Workspace::initShortcuts()
     {
     keys = new KActionCollection( this );
     KActionCollection* actionCollection = keys;
-    KAction* a = 0L;
+    QAction* a = 0L;
 
     // a separate KActionCollection is needed for the shortcut for disabling global shortcuts,
     // otherwise it would also disable itself
@@ -430,7 +441,7 @@ void Workspace::clientPopupActivated( QAction *action )
     }
 
 
-void Workspace::performWindowOperation( Client* c, Options::WindowOperation op ) 
+void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     {
     if ( !c )
         return;
@@ -439,19 +450,19 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
         QCursor::setPos( c->geometry().center() );
     if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp )
         QCursor::setPos( c->geometry().bottomRight());
-    switch ( op ) 
+    switch ( op )
         {
         case Options::MoveOp:
-            c->performMouseCommand( Options::MouseMove, cursorPos() );
+            c->performMouseCommand( Options::MouseMove, QCursor::pos() );
             break;
         case Options::UnrestrictedMoveOp:
-            c->performMouseCommand( Options::MouseUnrestrictedMove, cursorPos() );
+            c->performMouseCommand( Options::MouseUnrestrictedMove, QCursor::pos() );
             break;
         case Options::ResizeOp:
-            c->performMouseCommand( Options::MouseResize, cursorPos() );
+            c->performMouseCommand( Options::MouseResize, QCursor::pos() );
             break;
         case Options::UnrestrictedResizeOp:
-            c->performMouseCommand( Options::MouseUnrestrictedResize, cursorPos() );
+            c->performMouseCommand( Options::MouseUnrestrictedResize, QCursor::pos() );
             break;
         case Options::CloseOp:
             c->closeWindow();
@@ -473,7 +484,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             c->minimize();
             break;
         case Options::ShadeOp:
-            c->performMouseCommand( Options::MouseShade, cursorPos());
+            c->performMouseCommand( Options::MouseShade, QCursor::pos());
             break;
         case Options::OnAllDesktopsOp:
             c->setOnAllDesktops( !c->isOnAllDesktops() );
@@ -503,7 +514,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             break;
             }
         case Options::OperationsOp:
-            c->performMouseCommand( Options::MouseShade, cursorPos());
+            c->performMouseCommand( Options::MouseShade, QCursor::pos());
             break;
         case Options::WindowRulesOp:
             editWindowRules( c, false );
@@ -528,7 +539,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos, bool handled )
     {
     bool replay = false;
-    switch (command) 
+    switch (command)
         {
         case Options::MouseRaise:
             workspace()->raiseClient( this );
@@ -668,10 +679,10 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             workspace()->windowToNextDesktop( this );
             break;
         case Options::MouseOpacityMore:
-            setOpacity( qMin( opacity() + 0.1, 1.0 ));
+            // TODO
             break;
         case Options::MouseOpacityLess:
-            setOpacity( qMax( opacity() - 0.1, 0.0 ));
+            // TODO
             break;
         case Options::MouseNothing:
             replay = true;
@@ -695,13 +706,13 @@ void Workspace::slotActivateAttentionWindow()
 void Workspace::slotSwitchDesktopNext()
     {
     int d = currentDesktop() + 1;
-     if ( d > numberOfDesktops() ) 
+     if ( d > numberOfDesktops() )
         {
-        if ( options->rollOverDesktops ) 
+        if ( options->rollOverDesktops )
             {
             d = 1;
             }
-        else 
+        else
             {
             return;
             }
@@ -712,7 +723,7 @@ void Workspace::slotSwitchDesktopNext()
 void Workspace::slotSwitchDesktopPrevious()
     {
     int d = currentDesktop() - 1;
-    if ( d <= 0 ) 
+    if ( d <= 0 )
         {
         if ( options->rollOverDesktops )
           d = numberOfDesktops();
@@ -897,7 +908,7 @@ void Workspace::slotWindowToNextDesktop()
     {
     windowToNextDesktop( active_popup_client ? active_popup_client : active_client );
     }
-    
+
 void Workspace::windowToNextDesktop( Client* c )
     {
     int d = currentDesktop() + 1;
@@ -919,7 +930,7 @@ void Workspace::slotWindowToPreviousDesktop()
     {
     windowToPreviousDesktop( active_popup_client ? active_popup_client : active_client );
     }
-    
+
 void Workspace::windowToPreviousDesktop( Client* c )
     {
     int d = currentDesktop() - 1;
@@ -1014,7 +1025,7 @@ void Workspace::slotSendToDesktop( QAction *action )
       int desk = action->data().toInt();
     if ( !active_popup_client )
         return;
-    if ( desk == 0 ) 
+    if ( desk == 0 )
         { // the 'on_all_desktops' menu entry
         active_popup_client->setOnAllDesktops( !active_popup_client->isOnAllDesktops());
         return;
@@ -1173,7 +1184,7 @@ bool Workspace::shortcutAvailable( const KShortcut& cut, Client* ignore ) const
          ++it )
         {
         if( (*it) != ignore && (*it)->shortcut() == cut )
-            return false;    
+            return false;
         }
     return true;
     }

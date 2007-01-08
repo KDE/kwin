@@ -1,27 +1,33 @@
 #ifndef NOSLOTS
 # define DEF2( name, descr, key, fnSlot ) \
-   a = new KAction( i18n(descr), actionCollection, name ); \
-   a->setGlobalShortcut(KShortcut(key)); \
+   a = actionCollection->addAction( name );                        \
+   a->setText( i18n(descr) );                                      \
+   qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot))
 # define DEF( name, key, fnSlot ) \
-   a = new KAction( i18n(name), actionCollection, name ); \
-   a->setGlobalShortcut(KShortcut(key)); \
+   a = actionCollection->addAction( name );                        \
+   a->setText( i18n(name) );                                       \
+   qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot))
 #else
 # define DEF2( name, descr, key, fnSlot ) \
-   a = new KAction( i18n(descr), actionCollection, name ); \
-   a->setGlobalShortcut(KShortcut(key));
+   a = actionCollection->addAction( name );                        \
+   a->setText( i18n(descr) );                                      \
+   qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key));
 # define DEF( name, key, fnSlot ) \
-   a = new KAction( i18n(name), actionCollection, name ); \
-   a->setGlobalShortcut(KShortcut(key));
+   a = actionCollection->addAction( name );                        \
+   a->setText( i18n(name) );                                       \
+   qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key));
 #endif
 
 // some shortcuts have Tarzan-speech like names, they need extra normal human descriptions with DEF2()
 // the others can use DEF()
 
-	new KAction( i18n("System"), actionCollection, "Program:kwin" );
+        a = actionCollection->addAction( "Program:kwin" );
+        a->setText( i18n("System") );
 
-	new KAction( i18n("Navigation"), actionCollection, "Group:Navigation" );
+        a = actionCollection->addAction( "Group:Navigation" );
+        a->setText( i18n("Navigation") );
 	DEF( I18N_NOOP("Walk Through Windows"),               Qt::ALT+Qt::Key_Tab, slotWalkThroughWindows() );
 	DEF( I18N_NOOP("Walk Through Windows (Reverse)"),     Qt::ALT+Qt::SHIFT+Qt::Key_Tab, slotWalkBackThroughWindows() );
 	DEF( I18N_NOOP("Walk Through Desktops"),              0, slotWalkThroughDesktops() );
@@ -29,7 +35,8 @@
 	DEF( I18N_NOOP("Walk Through Desktop List"),          0, slotWalkThroughDesktopList() );
 	DEF( I18N_NOOP("Walk Through Desktop List (Reverse)"), 0, slotWalkBackThroughDesktopList() );
 
-	new KAction( i18n("Windows"), actionCollection, "Group:Windows" );
+        a = actionCollection->addAction( "Group:Windows" );
+        a->setText( i18n("Windows") );
 	DEF( I18N_NOOP("Window Operations Menu"),             Qt::ALT+Qt::Key_F3, slotWindowOperations() );
 	DEF2( "Window Close", I18N_NOOP("Close Window"),
             Qt::ALT+Qt::Key_F4, slotWindowClose() );
@@ -60,9 +67,9 @@
             0, slotWindowAbove() );
         DEF2( "Window Below Other Windows", I18N_NOOP("Keep Window Below Others"),
             0, slotWindowBelow() );
-        DEF( I18N_NOOP("Activate Window Demanding Attention"), 
+        DEF( I18N_NOOP("Activate Window Demanding Attention"),
             Qt::CTRL+Qt::ALT+Qt::Key_A, slotActivateAttentionWindow());
-        DEF( I18N_NOOP("Setup Window Shortcut"), 
+        DEF( I18N_NOOP("Setup Window Shortcut"),
             0, slotSetupWindowShortcut());
         DEF2( "Window Pack Right", I18N_NOOP("Pack Window to the Right"),
             0, slotWindowPackRight() );
@@ -81,7 +88,8 @@
         DEF2( "Window Shrink Vertical", I18N_NOOP("Pack Shrink Window Vertically"),
             0, slotWindowShrinkVertical() );
 
-	new KAction( i18n("Window & Desktop"), actionCollection, "Group:Window Desktop" );
+        a = actionCollection->addAction( "Group:Window Desktop" );
+        a->setText( i18n("Window & Desktop") );
         DEF2( "Window On All Desktops", I18N_NOOP("Keep Window on All Desktops"),
             0, slotWindowOnAllDesktops() );
 	DEF( I18N_NOOP("Window to Desktop 1"),                0, slotWindowToDesktop1() );
@@ -111,7 +119,8 @@
 	DEF( I18N_NOOP("Window One Desktop Up"),              0, slotWindowToDesktopUp() );
 	DEF( I18N_NOOP("Window One Desktop Down"),            0, slotWindowToDesktopDown() );
 
-	new KAction( i18n("Desktop Switching"), actionCollection, "Group:Desktop Switching" );
+        a = actionCollection->addAction( "Group:Desktop Switching" );
+        a->setText( i18n("Desktop Switching") );
 	DEF( I18N_NOOP("Switch to Desktop 1"), Qt::CTRL+Qt::Key_F1, slotSwitchToDesktop1() );
 	DEF( I18N_NOOP("Switch to Desktop 2"), Qt::CTRL+Qt::Key_F2, slotSwitchToDesktop2() );
 	DEF( I18N_NOOP("Switch to Desktop 3"), Qt::CTRL+Qt::Key_F3, slotSwitchToDesktop3() );
@@ -139,11 +148,12 @@
 	DEF( I18N_NOOP("Switch One Desktop Up"),              0, slotSwitchDesktopUp() );
 	DEF( I18N_NOOP("Switch One Desktop Down"),            0, slotSwitchDesktopDown() );
 
-	new KAction( i18n("Miscellaneous"), actionCollection, "Group:Miscellaneous" );
+        a = actionCollection->addAction( "Group:Miscellaneous" );
+        a->setText( i18n("Miscellaneous") );
 	DEF( I18N_NOOP("Mouse Emulation"),                    Qt::ALT+Qt::Key_F12, slotMouseEmulation() );
 	DEF( I18N_NOOP("Kill Window"),                        Qt::CTRL+Qt::Key_Delete, slotKillWindow() );
-	DEF( I18N_NOOP("Window Screenshot"),                  Qt::ALT+Qt::Key_Print, slotGrabWindow() );
-	DEF( I18N_NOOP("Desktop Screenshot"),                 Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
+	DEF( I18N_NOOP("Window Screenshot To Clipboard"),     Qt::ALT+Qt::Key_Print, slotGrabWindow() );
+	DEF( I18N_NOOP("Desktop Screenshot To Clipboard"),    Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
         DEF( I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 
 /*This belongs in taskbar rather than here, so it'll have to wait until after 2.2 is done.
