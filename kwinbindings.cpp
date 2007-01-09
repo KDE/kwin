@@ -152,8 +152,8 @@
         a->setText( i18n("Miscellaneous") );
 	DEF( I18N_NOOP("Mouse Emulation"),                    Qt::ALT+Qt::Key_F12, slotMouseEmulation() );
 	DEF( I18N_NOOP("Kill Window"),                        Qt::CTRL+Qt::Key_Delete, slotKillWindow() );
-	DEF( I18N_NOOP("Window Screenshot To Clipboard"),     Qt::ALT+Qt::Key_Print, slotGrabWindow() );
-	DEF( I18N_NOOP("Desktop Screenshot To Clipboard"),    Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
+	DEF( I18N_NOOP("Window Screenshot"),                  Qt::ALT+Qt::Key_Print, slotGrabWindow() );
+	DEF( I18N_NOOP("Desktop Screenshot"),                 Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
         DEF( I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 
 /*This belongs in taskbar rather than here, so it'll have to wait until after 2.2 is done.
