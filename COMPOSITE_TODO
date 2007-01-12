@@ -57,6 +57,11 @@ General TODO
     - there's 5ms grace period per repaint to avoid overloading the system with just compositing
         and not letting the system do anything else - check and evaluate 
 
++ support for new window types from the wm spec for compositing
+
++ make effects configurable without having to recompile
+    - possibly also add something like KWIN_COMPOSE for debugging purposes
+
 
 OpenGL TODO
 =================================
