@@ -75,6 +75,8 @@ class Effect
         virtual void windowAdded( Toplevel* c );
         virtual void windowDeleted( Toplevel* c );
         virtual void windowActivated( Toplevel* c );
+        virtual void windowMinimized( Toplevel* c );
+        virtual void windowUnminimized( Toplevel* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
 
         // Interpolates between x and y
@@ -110,6 +112,8 @@ class EffectsHandler
         void windowAdded( Toplevel* c );
         void windowDeleted( Toplevel* c );
         void windowActivated( Toplevel* c );
+        void windowMinimized( Toplevel* c );
+        void windowUnminimized( Toplevel* c );
         bool checkInputWindowEvent( XEvent* e );
         void checkInputWindowStacking();
     private:

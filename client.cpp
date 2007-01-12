@@ -29,6 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "rules.h"
 #include "scene.h"
+#include "effects.h"
 
 #include <X11/extensions/shape.h>
 #include <QX11Info>
@@ -556,6 +557,8 @@ void Client::minimize( bool avoid_animation )
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
+    if( effects )
+        effects->windowMinimized( this );
     }
 
 void Client::unminimize( bool avoid_animation )
@@ -574,6 +577,8 @@ void Client::unminimize( bool avoid_animation )
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
+    if( effects )
+        effects->windowUnminimized( this );
     }
 
 extern bool         blockAnimation;

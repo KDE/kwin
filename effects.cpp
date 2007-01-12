@@ -53,6 +53,14 @@ void Effect::windowActivated( Toplevel* )
     {
     }
 
+void Effect::windowMinimized( Toplevel* )
+    {
+    }
+
+void Effect::windowUnminimized( Toplevel* )
+    {
+    }
+
 void Effect::windowInputMouseEvent( Window, QEvent* )
     {
     }
@@ -141,6 +149,18 @@ void EffectsHandler::windowActivated( Toplevel* c )
     {
     foreach( Effect* e, effects )
         e->windowActivated( c );
+    }
+
+void EffectsHandler::windowMinimized( Toplevel* c )
+    {
+    foreach( Effect* e, effects )
+        e->windowMinimized( c );
+    }
+
+void EffectsHandler::windowUnminimized( Toplevel* c )
+    {
+    foreach( Effect* e, effects )
+        e->windowUnminimized( c );
     }
 
 // start another painting pass
