@@ -76,6 +76,12 @@ class Effect
         virtual void windowDeleted( Toplevel* c );
         virtual void windowActivated( Toplevel* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
+
+        // Interpolates between x and y
+        static float interpolate(float x, float y, float a)
+            {
+            return x * (1 - a) + y * a;
+            }
     };
 
 class EffectsHandler
