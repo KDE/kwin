@@ -299,6 +299,14 @@ void Toplevel::finishCompositing()
     damage_region = QRegion();
     }
 
+void Toplevel::discardWindowPixmap()
+    {
+    if( window_pix == None )
+        return;
+    XFreePixmap( display(), window_pix );
+    window_pix = None;
+    }
+
 Pixmap Toplevel::createWindowPixmap() const
     {
     assert( compositing());

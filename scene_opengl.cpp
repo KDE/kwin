@@ -622,8 +622,7 @@ void SceneOpenGL::Window::bindTexture()
         return;
         }
     // Get the pixmap with the window contents
-    Pixmap window_pix = toplevel->createWindowPixmap();
-    Pixmap pix = window_pix;
+    Pixmap pix = toplevel->windowPixmap();
     // HACK
     // When a window uses ARGB visual and has a decoration, the decoration
     // does use ARGB visual. When converting such window to a texture
@@ -698,21 +697,24 @@ void SceneOpenGL::Window::bindTexture()
                 }
             XFreeGC( display(), gc );
             }
-        // the pixmap is no longer needed, the texture will be updated
-        // only when the window changes anyway, so no need to cache
-        // the pixmap
-        XFreePixmap( display(), pix );
+        // if using copy_buffer, the pixmap is no longer needed, the
+        // texture will be updated only when the window changes anyway,
+        // so no need to cache the pixmap
+        if( copy_buffer )
+            XFreePixmap( display(), pix );
         texture_y_inverted = true;
         toplevel->resetDamage( toplevel->rect());
         }
     else if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
+        // TODO what should the lifetime of bound_pixmap be?
         if( texture == None )
             glGenTextures( 1, &texture );
         if( bound_pixmap != None && !strict_binding ) // release old if needed
             {
             glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
+            // TODO bound_pixmap shouldn't always be freed
             XFreePixmap( display(), bound_pixmap );
             }
         static const int attrs[] =
@@ -765,10 +767,11 @@ void SceneOpenGL::Window::bindTexture()
                 }
             }
         glXWaitGL();
-        // the pixmap is no longer needed, the texture will be updated
-        // only when the window changes anyway, so no need to cache
-        // the pixmap
-        XFreePixmap( display(), pix );
+        // if using copy_buffer, the pixmap is no longer needed, the
+        // texture will be updated only when the window changes anyway,
+        // so no need to cache the pixmap
+        if( copy_buffer )
+            XFreePixmap( display(), pix );
         if( db )
             glDrawBuffer( GL_BACK );
         glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
@@ -776,8 +779,6 @@ void SceneOpenGL::Window::bindTexture()
         texture_y_inverted = false;
         toplevel->resetDamage( toplevel->rect());
         }
-    if( copy_buffer )
-        XFreePixmap( display(), window_pix );
     }
 
 
@@ -839,7 +840,12 @@ void SceneOpenGL::Window::discardTexture()
             if( !strict_binding )
                 glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
-            XFreePixmap( display(), bound_pixmap );
+            // TODO this is broken, and may need changing anyway depending on
+            // how tfp_mode deals with the new windowPixmap()
+            if( bound_pixmap != toplevel->windowPixmap( false ) )
+                // if using copy_buffer, bound_pixmap is independent of
+                // windowPixmap(), so free it now
+                XFreePixmap( display(), bound_pixmap );
             bound_pixmap = None;
             bound_glxpixmap = None;
             }

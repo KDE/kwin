@@ -53,7 +53,7 @@ class Toplevel
         bool isSplash() const;
         bool isUtility() const;
 
-        Pixmap createWindowPixmap() const;
+        Pixmap windowPixmap( bool allow_create = true ); // for use with compositing
         Visual* visual() const;
         bool shape() const;
         virtual double opacity() const = 0;
@@ -70,6 +70,8 @@ class Toplevel
         void setHandle( Window id );
         void detectShape( Window id );
         void damageNotifyEvent( XDamageNotifyEvent* e );
+        Pixmap createWindowPixmap() const;
+        void discardWindowPixmap();
         QRect geom;
         Visual* vis;
         int bit_depth;
@@ -78,6 +80,7 @@ class Toplevel
     private:
         Window id;
         Workspace* wspace;
+        Pixmap window_pix;
         Damage damage_handle;
         QRegion damage_region;
         bool is_shape;
@@ -187,6 +190,13 @@ inline bool Toplevel::isDialog() const
 inline bool Toplevel::isNormalWindow() const
     {
     return windowType() == NET::Normal;
+    }
+
+inline Pixmap Toplevel::windowPixmap( bool allow_create )
+    {
+    if( window_pix == None && allow_create )
+        window_pix = createWindowPixmap();
+    return window_pix;
     }
 
 inline QRegion Toplevel::damage() const

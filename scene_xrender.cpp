@@ -305,8 +305,7 @@ Picture SceneXrender::Window::picture()
     if( _picture == None && format != NULL )
         {
         // Get the pixmap with the window contents.
-        Pixmap window_pix = toplevel->createWindowPixmap();
-        Pixmap pix = window_pix;
+        Pixmap pix = toplevel->windowPixmap();
         // HACK the same alpha clear hack like with opengl, see there
         Client* c = dynamic_cast< Client* >( toplevel );
         bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
@@ -336,10 +335,9 @@ Picture SceneXrender::Window::picture()
             XFreeGC( display(), gc );
             }
         _picture = XRenderCreatePicture( display(), pix, format, 0, 0 );
-        XFreePixmap( display(), pix ); // the picture owns the pixmap
 #ifdef ALPHA_CLEAR_COPY
         if( alpha_clear )
-            XFreePixmap( display(), window_pix );
+            XFreePixmap( display(), pix );
 #endif
         toplevel->resetDamage( toplevel->rect());
         }

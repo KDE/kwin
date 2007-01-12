@@ -1615,6 +1615,8 @@ bool Unmanaged::windowEvent( XEvent* e )
                 {
                 detectShape( handle());
                 addDamageFull();
+                if( compositing() )
+                    discardWindowPixmap();
                 if( scene != NULL )
                     scene->windowGeometryShapeChanged( this );
                 }
