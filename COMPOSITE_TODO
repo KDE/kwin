@@ -58,6 +58,7 @@ General TODO
         and not letting the system do anything else - check and evaluate 
 
 + support for new window types from the wm spec for compositing
+    - this will have to be done in Qt, kdecore and kwin
 
 + make effects configurable without having to recompile
     - possibly also add something like KWIN_COMPOSE for debugging purposes
