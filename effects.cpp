@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/fadein.h"
 #include "effects/howto.h"
 #include "effects/maketransparent.h"
+#include "effects/presentwindows.h"
 #include "effects/scalein.h"
 #include "effects/shakymove.h"
 #include "effects/shiftworkspaceup.h"
@@ -108,6 +109,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     KWinInternal::effects = this;
     effects.append( new ShowFpsEffect( ws ));
 //    effects.append( new ZoomEffect( ws ));
+//    effects.append( new PresentWindowsEffect( ws ));
 //    effects.append( new HowtoEffect );
 //    effects.append( new MakeTransparentEffect );
 //    effects.append( new ShakyMoveEffect );
