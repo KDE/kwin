@@ -52,6 +52,7 @@ set(kwin_KDEINIT_SRCS
    glutils.cpp
    effects.cpp
    effects/fadein.cpp
+   effects/fadeout.cpp
    effects/maketransparent.cpp
    effects/scalein.cpp
    effects/shakymove.cpp

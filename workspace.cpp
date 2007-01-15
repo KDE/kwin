@@ -583,10 +583,6 @@ void Workspace::removeClient( Client* c, allowed_t )
         Notify::raise( Notify::Delete );
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
-    if( scene )
-        scene->windowDeleted( c );
-    if( effects )
-        effects->windowDeleted( c );
     clients.removeAll( c );
     desktops.removeAll( c );
     unconstrained_stacking_order.removeAll( c );
@@ -620,16 +616,31 @@ void Workspace::removeClient( Client* c, allowed_t )
        tab_box->repaint();
 
     updateClientArea();
+
+    addDeleted( c, Allowed );
     }
 
 void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
     {
     assert( unmanaged.contains( c ));
+    unmanaged.removeAll( c );
+    addDeleted( c, Allowed );
+    }
+
+void Workspace::addDeleted( Toplevel* c, allowed_t )
+    {
+    assert( !pending_deleted.contains( c ));
+    pending_deleted.append( c );
+    }
+
+void Workspace::removeDeleted( Toplevel* c )
+    {
+    assert( pending_deleted.contains( c ));
     if( scene )
         scene->windowDeleted( c );
     if( effects )
         effects->windowDeleted( c );
-    unmanaged.removeAll( c );
+    pending_deleted.removeAll( c );
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )

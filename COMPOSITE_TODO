@@ -45,9 +45,6 @@ General TODO
     - maybe posted paint events need to be processed immediatelly, or maybe the compositing
         code should not update the window until the decoration is finished painting
 
-/ handle XRandr changes
-    - output buffers and similar probably need recreating when the screen size changes
-
 ! compile even without OpenGL or XRender
     - kwin_composite currently requires both OpenGL and XRender to build
     - compiling without either results in compile errors, needs to be fixed
@@ -65,6 +62,10 @@ General TODO
 
 + make effects configurable without having to recompile
     - possibly also add something like KWIN_COMPOSE for debugging purposes
+
+* handle properly stacking order of deleted windows for showing in effects
+
+* handle properly deleted windows that reappear (windowReadded() function?)
 
 
 OpenGL TODO
@@ -147,10 +148,7 @@ XRender TODO
 Effects framework TODO
 ==============================
 
-/ design framework for graphical effects
-    - modelling it after compiz seems to make a lot of sense
-
-* solve somehow disappearing windows
+/ solve somehow disappearing windows
     - i.e. when a window is e.g. closed, the Client/Unmanaged object is destroyed, but animations
         should be going on
 ?   - maybe animations could be done actually before the state change, it makes sense to destroy
@@ -184,6 +182,14 @@ Effects framework TODO
     - currently prePaintWindow() is done only after paintScreen() has already started,
         which means that if an effect sets PAINT_WINDOW_TRANSFORMED it needs to set it
         also in prePaintScreen()
+
+* PAINT_WINDOW_DISABLED turning off from effects needs some utility functions
+    - a window may have painting disabled for various reasons and their numbers may increase
+        over time
+        - so e.g. an effect showing minimized windows cannot simply turn off DISABLED
+            for minimized windows, because it may be disabled also for other reasons
+        - there should be some utility function that will be called by the effect
+            with arguments saying which disabled windows it wants enabled
 
 
 Effects TODO
@@ -219,10 +225,8 @@ Effects TODO
     - Client::animateMinimizeOrUnminimize()
     - Client::setShade()
 
-+ zoom effect
+/ zoom effect
     - enlarge a portion of the screen
-!   - would require adding xScale/yScale to ScreenPaintData
-        - should be doable even for XRender
 
 + logout effect
 *   - should be triggered by ksmserver somehow

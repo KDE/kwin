@@ -15,6 +15,7 @@ namespace KWinInternal
 
 Toplevel::Toplevel( Workspace* ws )
     : vis( None )
+    , delete_refcount( -1 )
     , id( None )
     , wspace( ws )
     , window_pix( None )

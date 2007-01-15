@@ -222,6 +222,8 @@ void Workspace::performCompositing()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
+    foreach( Toplevel* c, pending_deleted ) // TODO remember stacking order somehow
+        windows.append( c );
     QRegion damage = damage_region;
     // clear all damage, so that post-pass can add damage for the next repaint
     damage_region = QRegion();
@@ -290,12 +292,13 @@ void Toplevel::setupCompositing()
     damage_region = QRegion( 0, 0, width(), height());
     }
 
-void Toplevel::finishCompositing()
+void Toplevel::finishCompositing( bool discard_pixmap )
     {
     if( damage_handle == None )
         return;
     XDamageDestroy( display(), damage_handle );
-    discardWindowPixmap();
+    if( discard_pixmap )
+        discardWindowPixmap();
     damage_handle = None;
     damage_region = QRegion();
     }

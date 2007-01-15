@@ -70,10 +70,26 @@ bool Unmanaged::track( Window w )
 
 void Unmanaged::release()
     {
-    workspace()->addDamage( geometry());
-    finishCompositing();
+    assert( !deleting());
+    delete_refcount = 1;
+    if( effects )
+        effects->windowClosed( this );
+    finishCompositing( false ); // don't discard pixmap
     workspace()->removeUnmanaged( this, Allowed );
-    delete this;
+    if( Extensions::shapeAvailable())
+        XShapeSelectInput( display(), handle(), NoEventMask );
+    XSelectInput( display(), handle(), NoEventMask );
+    unrefWindow(); // will delete if recount is == 0
+    }
+
+void Unmanaged::unrefWindow()
+    {
+    if( --delete_refcount > 0 )
+        return;
+    discardWindowPixmap();
+    workspace()->removeDeleted( this );
+    workspace()->addDamage( geometry());
+    deleteUnmanaged( this, Allowed );
     }
 
 void Unmanaged::deleteUnmanaged( Unmanaged* c, allowed_t )

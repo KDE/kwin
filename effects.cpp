@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "effects/dialogparent.h"
 #include "effects/fadein.h"
+#include "effects/fadeout.h"
 #include "effects/howto.h"
 #include "effects/maketransparent.h"
 #include "effects/presentwindows.h"
@@ -43,6 +44,10 @@ void Effect::windowUserMovedResized( Toplevel* , bool, bool )
     }
 
 void Effect::windowAdded( Toplevel* )
+    {
+    }
+
+void Effect::windowClosed( Toplevel* )
     {
     }
 
@@ -115,6 +120,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
 //    effects.append( new ShakyMoveEffect );
 //    effects.append( new ShiftWorkspaceUpEffect( ws ));
 //    effects.append( new FadeInEffect );
+    effects.append( new FadeOutEffect );
 //    effects.append( new ScaleInEffect );
 //    effects.append( new DialogParentEffect );
 
@@ -145,6 +151,12 @@ void EffectsHandler::windowDeleted( Toplevel* c )
     {
     foreach( Effect* e, effects )
         e->windowDeleted( c );
+    }
+
+void EffectsHandler::windowClosed( Toplevel* c )
+    {
+    foreach( Effect* e, effects )
+        e->windowClosed( c );
     }
 
 void EffectsHandler::windowActivated( Toplevel* c )

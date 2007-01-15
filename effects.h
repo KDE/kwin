@@ -74,6 +74,7 @@ class Effect
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void windowAdded( Toplevel* c );
         virtual void windowDeleted( Toplevel* c );
+        virtual void windowClosed( Toplevel* c );
         virtual void windowActivated( Toplevel* c );
         virtual void windowMinimized( Toplevel* c );
         virtual void windowUnminimized( Toplevel* c );
@@ -110,6 +111,7 @@ class EffectsHandler
         void startPaint();
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowAdded( Toplevel* c );
+        void windowClosed( Toplevel* c );
         void windowDeleted( Toplevel* c );
         void windowActivated( Toplevel* c );
         void windowMinimized( Toplevel* c );
