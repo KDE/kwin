@@ -67,6 +67,10 @@ General TODO
 
 * handle properly deleted windows that reappear (windowReadded() function?)
 
+? consider using an extra class for representing deleted windows
+    - cleaning up Client/Unmanaged instances may still leave e.g. timers around if they're overlooked
+    - an extra class could copy some interesting data and "replace" the old instance
+
 
 OpenGL TODO
 =================================
