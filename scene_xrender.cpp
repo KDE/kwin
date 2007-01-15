@@ -20,10 +20,10 @@ License. See the file "COPYING" for the exact licensing terms.
  Docs:
  
  XRender (the protocol, but the function calls map to it):
- http://gitweb.freedesktop.org/?p=xorg/doc/xorg-docs.git;a=blob_plain;hb=HEAD;f=specs/Render/protocol
+ http://gitweb.freedesktop.org/?p=xorg/proto/renderproto.git;a=blob_plain;hb=HEAD;f=renderproto.txt
  
  XFixes (again, the protocol):
- http://gitweb.freedesktop.org/?p=xorg/doc/xorg-docs.git;a=blob_plain;hb=HEAD;f=specs/Fixes/protocol
+ http://gitweb.freedesktop.org/?p=xorg/proto/fixesproto.git;a=blob_plain;hb=HEAD;f=fixesproto.txt
 
 */
 

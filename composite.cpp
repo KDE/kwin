@@ -15,10 +15,10 @@ License. See the file "COPYING" for the exact licensing terms.
  Docs:
  
  XComposite (the protocol, but the function calls map to it):
- http://gitweb.freedesktop.org/?p=xorg/doc/xorg-docs.git;a=blob_plain;hb=HEAD;f=specs/Composite/protocol
+ http://gitweb.freedesktop.org/?p=xorg/proto/compositeproto.git;a=blob_plain;hb=HEAD;f=compositeproto.txt
  
  XDamage (again the protocol):
- http://gitweb.freedesktop.org/?p=xorg/doc/xorg-docs.git;a=blob_plain;hb=HEAD;f=specs/Damage/protocol
+ http://gitweb.freedesktop.org/?p=xorg/proto/damageproto.git;a=blob_plain;hb=HEAD;f=damageproto.txt
 
  Composite HOWTO from Fredrik:
  http://ktown.kde.org/~fredrik/composite_howto.html
