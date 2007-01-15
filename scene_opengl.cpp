@@ -601,7 +601,6 @@ SceneOpenGL::Window::Window( Toplevel* c )
     : Scene::Window( c )
     , texture( 0 )
     , texture_y_inverted( false )
-    , bound_pixmap( None )
     , bound_glxpixmap( None )
     {
     }
@@ -697,32 +696,25 @@ void SceneOpenGL::Window::bindTexture()
                 }
             XFreeGC( display(), gc );
             }
-        // if using copy_buffer, the pixmap is no longer needed, the
-        // texture will be updated only when the window changes anyway,
-        // so no need to cache the pixmap
-        if( copy_buffer )
-            XFreePixmap( display(), pix );
         texture_y_inverted = true;
         toplevel->resetDamage( toplevel->rect());
         }
     else if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
-        // TODO what should the lifetime of bound_pixmap be?
         if( texture == None )
             glGenTextures( 1, &texture );
-        if( bound_pixmap != None && !strict_binding ) // release old if needed
+        if( bound_glxpixmap != None && !strict_binding ) // release old if needed
             {
             glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
-            // TODO bound_pixmap shouldn't always be freed
-            XFreePixmap( display(), bound_pixmap );
             }
         static const int attrs[] =
             {
             GLX_TEXTURE_FORMAT_EXT, GLX_TEXTURE_FORMAT_RGBA_EXT,
             None
             };
-        bound_pixmap = pix;
+        // the GLXPixmap will reference the X pixmap, so it will be freed automatically
+        // when no longer needed
         bound_glxpixmap = glXCreatePixmap( display(), fbcdrawable, pix, attrs );
         int value;
         glXGetFBConfigAttrib( display(), fbcdrawable, GLX_Y_INVERTED_EXT, &value );
@@ -767,11 +759,6 @@ void SceneOpenGL::Window::bindTexture()
                 }
             }
         glXWaitGL();
-        // if using copy_buffer, the pixmap is no longer needed, the
-        // texture will be updated only when the window changes anyway,
-        // so no need to cache the pixmap
-        if( copy_buffer )
-            XFreePixmap( display(), pix );
         if( db )
             glDrawBuffer( GL_BACK );
         glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
@@ -779,6 +766,10 @@ void SceneOpenGL::Window::bindTexture()
         texture_y_inverted = false;
         toplevel->resetDamage( toplevel->rect());
         }
+    // if using copy_buffer, the pixmap is no longer needed (either referenced
+    // by GLXPixmap in the tfp case or not needed at all in non-tfp cases)
+    if( copy_buffer )
+        XFreePixmap( display(), pix );
     }
 
 
@@ -804,7 +795,7 @@ void SceneOpenGL::Window::enableTexture()
     glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
     if( tfp_mode && strict_binding )
         {
-        assert( bound_pixmap != None );
+        assert( bound_glxpixmap != None );
         glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
     if( options->smoothScale != 0 ) // default to yes
@@ -823,7 +814,7 @@ void SceneOpenGL::Window::disableTexture()
     {
     if( tfp_mode && strict_binding )
         {
-        assert( bound_pixmap != None );
+        assert( bound_glxpixmap != None );
         glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
         glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
         }
@@ -840,13 +831,6 @@ void SceneOpenGL::Window::discardTexture()
             if( !strict_binding )
                 glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
-            // TODO this is broken, and may need changing anyway depending on
-            // how tfp_mode deals with the new windowPixmap()
-            if( bound_pixmap != toplevel->windowPixmap( false ) )
-                // if using copy_buffer, bound_pixmap is independent of
-                // windowPixmap(), so free it now
-                XFreePixmap( display(), bound_pixmap );
-            bound_pixmap = None;
             bound_glxpixmap = None;
             }
         glDeleteTextures( 1, &texture );

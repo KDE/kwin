@@ -81,7 +81,6 @@ class SceneOpenGL::Window
         QRegion optimizeBindDamage( const QRegion& reg, int limit );
         Texture texture;
         bool texture_y_inverted; // texture has y inverted
-        Pixmap bound_pixmap; // the pixmap the texture is bound to, only for tfp_mode
         GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
     };
 
