@@ -295,6 +295,7 @@ void Toplevel::finishCompositing()
     if( damage_handle == None )
         return;
     XDamageDestroy( display(), damage_handle );
+    discardWindowPixmap();
     damage_handle = None;
     damage_region = QRegion();
     }
