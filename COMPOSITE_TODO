@@ -35,6 +35,9 @@ General TODO
 * don't add workspace damage in Toplevel::addDamage()
     - instead add damage of windows to the screen only before doing the painting
     - this should prevent repaints because of changing obscured windows
+*   - also, provide a call to just mark a window as needing repaint but not being damaged
+        - this will prevent rebinding the pixmap or updating the texture
+        - http://lists.kde.org/?l=kwin&m=116836151626848&w=2
 
 * wait for decoration repaints
     - it is sometimes visible that the window contents are painted first and the decoration
