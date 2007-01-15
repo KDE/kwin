@@ -28,7 +28,6 @@ class Toplevel
     Q_OBJECT
     public:
         Toplevel( Workspace *ws );
-        virtual ~Toplevel();
         Window handle() const;
         Workspace* workspace() const;
         QRect geometry() const;
@@ -67,6 +66,7 @@ class Toplevel
         QRegion damage() const;
         void resetDamage( const QRect& r );
     protected:
+        virtual ~Toplevel();
         void setHandle( Window id );
         void detectShape( Window id );
         void damageNotifyEvent( XDamageNotifyEvent* e );

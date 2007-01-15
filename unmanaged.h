@@ -24,7 +24,6 @@ class Unmanaged
     Q_OBJECT
     public:
         Unmanaged( Workspace *ws );
-        virtual ~Unmanaged();
         bool windowEvent( XEvent* e );
         void release();
         bool track( Window w );
@@ -34,6 +33,7 @@ class Unmanaged
     protected:
         virtual void debug( kdbgstream& stream ) const;
     private:
+        virtual ~Unmanaged(); // use release()
     // handlers for X11 events
         void mapNotifyEvent( XMapEvent* e );
         void unmapNotifyEvent( XUnmapEvent*e );
