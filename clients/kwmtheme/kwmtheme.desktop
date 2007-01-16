@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KWM Theme
+Name[el]=Θέμα KWM
 Name[fr]=Thème KWM
 Name[x-test]=xxKWM Themexx
 X-KDE-Library=kwin3_kwmtheme

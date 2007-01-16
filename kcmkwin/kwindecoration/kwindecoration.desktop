@@ -11,13 +11,16 @@ X-KDE-FactoryName=kcm_kwindecoration
 X-KDE-ParentApp=kcontrol
 
 Name=Window Decorations
+Name[el]=Διακοσμήσεις παραθύρων
 Name[fr]=Décoration des fenêtres
 Name[x-test]=xxWindow Decorationsxx
 
 Comment=Configure the look and feel of window titles
+Comment[el]=Ρυθμίστε την εμφάνιση και την αίσθηση των τίτλων παραθύρου
 Comment[fr]=Configuration de l'apparence du titre des fenêtres
 Comment[x-test]=xxConfigure the look and feel of window titlesxx
 
 Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
+Keywords[el]=kwin,παράθυρο,διαχειριστής,περίγραμμα,στυλ,θέμα,εμφάνιση,αίσθηση,διάταξη,κουμπί,χειρισμός,άκρο,kwm,διακόσμηση
 Keywords[fr]=kwin,fenêtre,gestionnaire,bordure,style,thème,apparence,ergonomie,disposition,bouton,poignée,bord,kwm,décoration
 Keywords[x-test]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx

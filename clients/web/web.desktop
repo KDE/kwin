@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Web
+Name[el]=Ιστός
 Name[x-test]=xxWebxx
 X-KDE-Library=kwin3_web

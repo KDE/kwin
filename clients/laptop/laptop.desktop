@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Laptop
+Name[el]=Φορητό
 Name[fr]=Ordinateur portable
 Name[x-test]=xxLaptopxx
 X-KDE-Library=kwin3_laptop

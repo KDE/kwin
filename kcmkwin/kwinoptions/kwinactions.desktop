@@ -10,12 +10,15 @@ X-KDE-Library=kwinoptions
 X-KDE-FactoryName=kwinactions
 
 Name=Actions
+Name[el]=Ενέργειες
 Name[x-test]=xxActionsxx
 
 Comment=Configure keyboard and mouse settings
+Comment[el]=Ρυθμίστε το πληκτρολόγιο και το ποντίκι
 Comment[fr]=Configuration des réglages du clavier et de la souris
 Comment[x-test]=xxConfigure keyboard and mouse settingsxx
 
 Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+Keywords[el]=τύλιγμα,μεγιστοποίηση,μεγιστοποίηση,ελαχιστοποίηση,ελαχιστοποίηση,κατέβασμα,μενού χειρισμών,μπάρα τίτλου,αλλαγή μεγέθους
 Keywords[fr]=fondu,maximiser,enrouler,réduire,abaisser, menu des opérations,barre de titre,redimensionner
 Keywords[x-test]=xxshade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resizexx
