@@ -247,7 +247,7 @@ void Workspace::setActiveClient( Client* c, allowed_t )
     rootInfo->setActiveWindow( active_client? active_client->window() : 0 );
     updateColormap();
     if( effects )
-        effects->windowActivated( active_client );
+        effects->windowActivated( active_client ? active_client->effectWindow() : NULL );
     --set_active_client_recursion;
     }
 

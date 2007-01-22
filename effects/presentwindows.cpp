@@ -64,7 +64,7 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
     effects->prePaintScreen(mask, region, time);
     }
 
-void PresentWindowsEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
     if( mActiveness > 0.0f && mWindowData.contains(w->window()) )
         // This window will be transformed by the effect
@@ -73,7 +73,7 @@ void PresentWindowsEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion*
     effects->prePaintWindow( w, mask, region, time );
     }
 
-void PresentWindowsEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if(mActiveness > 0.0f && mWindowData.contains(w->window()))
         {
@@ -116,9 +116,9 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
         {
         if( it.value().area.contains(pos) )
             {
-            effects->activateWindow( (Client*)it.key() );  // All keys of mWindowData are Clients anyway
+            effects->activateWindow( it.key()->effectWindow());
             // Prevent re-minimizing when the effect terminates
-            mTemporarilyUnminimized.removeAll( (Client*)it.key() );
+            mTemporarilyUnminimized.removeAll( static_cast< Client* >(it.key()));
             }
         }
 
@@ -126,12 +126,12 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     setActive(false);
     }
 
-void PresentWindowsEffect::windowActivated( Toplevel* t )
+void PresentWindowsEffect::windowActivated( EffectWindow* )
     {
         rearrangeWindows();
     }
 
-void PresentWindowsEffect::windowClosed( Toplevel* t, Deleted* )
+void PresentWindowsEffect::windowClosed( EffectWindow* )
     {
         rearrangeWindows();
     }

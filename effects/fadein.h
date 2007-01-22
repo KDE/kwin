@@ -22,14 +22,14 @@ class FadeInEffect
     : public Effect
     {
     public:
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( Scene::Window* w );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void postPaintWindow( EffectWindow* w );
         // TODO react also on virtual desktop changes
-        virtual void windowAdded( Toplevel* c );
-        virtual void windowClosed( Toplevel* c, Deleted* );
+        virtual void windowAdded( EffectWindow* c );
+        virtual void windowClosed( EffectWindow* c );
     private:
-        QMap< const Toplevel*, double > windows;
+        QMap< const EffectWindow*, double > windows;
     };
 
 } // namespace

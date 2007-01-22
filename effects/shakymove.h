@@ -26,15 +26,15 @@ class ShakyMoveEffect
     Q_OBJECT
     public:
         ShakyMoveEffect();
-        virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowClosed( Toplevel* c, Deleted* );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+        virtual void windowClosed( EffectWindow* c );
     private slots:
         void tick();
     private:
-        QMap< const Toplevel*, int > windows;
+        QMap< const EffectWindow*, int > windows;
         QTimer timer;
     };
 

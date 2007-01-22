@@ -181,7 +181,7 @@ void Client::releaseWindow( bool on_shutdown )
     if( effects )
         {
         Deleted* del = Deleted::create( this );
-        effects->windowClosed( this, del );
+        effects->windowClosed( del->effectWindow()); // effectWindow is already 'del'
         scene->windowClosed( this, del );
         del->unrefWindow();
         }
@@ -247,7 +247,7 @@ void Client::destroyClient()
     if( effects )
         {
         Deleted* del = Deleted::create( this );
-        effects->windowClosed( this, del );
+        effects->windowClosed( del->effectWindow()); // effectWindow is already 'del'
         scene->windowClosed( this, del );
         del->unrefWindow();
         }
@@ -575,7 +575,7 @@ void Client::minimize( bool avoid_animation )
     updateWindowRules();
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
     if( effects )
-        effects->windowMinimized( this );
+        effects->windowMinimized( effectWindow());
     }
 
 void Client::unminimize( bool avoid_animation )
@@ -595,7 +595,7 @@ void Client::unminimize( bool avoid_animation )
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
     if( effects )
-        effects->windowUnminimized( this );
+        effects->windowUnminimized( effectWindow());
     }
 
 extern bool         blockAnimation;

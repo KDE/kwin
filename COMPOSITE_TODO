@@ -226,10 +226,6 @@ Effects TODO
                 initiated by the user or by the application
 *       - fade-out needs framework for disappearing windows (see the todo entry)
 
-+ add API that'll hide the internals (for making backwards compatibility easier, etc.)
-    - effects should have access only to classes from this API
-    - hide the fact that Client/Unmanaged become Deleted in windowClosed()
-
 + minimize/shade effects
     - to replace the ones from KWin core
     - Client::animateMinimizeOrUnminimize()
@@ -260,3 +256,6 @@ Effects TODO
         part of screen to clear its own painting, that triggers itself again next repaint)
 
 ? other effects
+
++ EffectWindow should be completely opaque when kept as the only API for effects
+    - no inlines, etc.

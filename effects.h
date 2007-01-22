@@ -22,6 +22,7 @@ namespace KWinInternal
 
 class Toplevel;
 class Workspace;
+class EffectWindow;
 
 class WindowPaintData
     {
@@ -67,17 +68,17 @@ class Effect
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( Scene::Window* w );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void postPaintWindow( EffectWindow* w );
         // called when moved/resized or once after it's finished
-        virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void windowAdded( Toplevel* c );
-        virtual void windowClosed( Toplevel* c, Deleted* deleted );
-        virtual void windowDeleted( Deleted* c );
-        virtual void windowActivated( Toplevel* c );
-        virtual void windowMinimized( Toplevel* c );
-        virtual void windowUnminimized( Toplevel* c );
+        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+        virtual void windowAdded( EffectWindow* c );
+        virtual void windowClosed( EffectWindow* c );
+        virtual void windowDeleted( EffectWindow* c );
+        virtual void windowActivated( EffectWindow* c );
+        virtual void windowMinimized( EffectWindow* c );
+        virtual void windowUnminimized( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
 
         // Interpolates between x and y
@@ -96,9 +97,9 @@ class EffectsHandler
         void prePaintScreen( int* mask, QRegion* region, int time );
         void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         void postPaintScreen();
-        void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        void postPaintWindow( Scene::Window* w );
+        void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        void postPaintWindow( EffectWindow* w );
         // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
         // covering the whole screen is created and all mouse events will be intercepted by it.
         // The effect's windowInputMouseEvent() will get called with such events.
@@ -106,16 +107,16 @@ class EffectsHandler
         Window createInputWindow( Effect* e, const QRect& r, const QCursor& cursor );
         void destroyInputWindow( Window w );
         // functions that allow controlling windows/desktop
-        void activateWindow( Client* c );
+        void activateWindow( EffectWindow* c );
         // internal (used by kwin core or compositing code)
         void startPaint();
-        void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        void windowAdded( Toplevel* c );
-        void windowClosed( Toplevel* c, Deleted* deleted );
-        void windowDeleted( Deleted* c );
-        void windowActivated( Toplevel* c );
-        void windowMinimized( Toplevel* c );
-        void windowUnminimized( Toplevel* c );
+        void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+        void windowAdded( EffectWindow* c );
+        void windowClosed( EffectWindow* c );
+        void windowDeleted( EffectWindow* c );
+        void windowActivated( EffectWindow* c );
+        void windowMinimized( EffectWindow* c );
+        void windowUnminimized( EffectWindow* c );
         bool checkInputWindowEvent( XEvent* e );
         void checkInputWindowStacking();
     private:
@@ -125,6 +126,25 @@ class EffectsHandler
         int current_paint_window;
         int current_paint_screen;
     };
+
+// This class is a representation of a window used by/for Effect classes.
+// The purpose is to hide internal data and also to serve as a single
+// representation for the case when Client/Unmanaged becomes Deleted.
+class EffectWindow
+    {
+    public:
+        const Toplevel* window() const;
+        Toplevel* window();
+        void setWindow( Toplevel* w ); // internal
+        void setSceneWindow( Scene::Window* w ); // internal
+        Scene::Window* sceneWindow(); // internal
+    private:
+        Toplevel* tw;
+        Scene::Window* sw; // This one is used only during paint pass.
+    };
+
+EffectWindow* effectWindow( Toplevel* w );
+EffectWindow* effectWindow( Scene::Window* w );
 
 extern EffectsHandler* effects;
 
@@ -147,6 +167,52 @@ ScreenPaintData::ScreenPaintData()
     , xTranslate( 0 )
     , yTranslate( 0 )
     {
+    }
+
+inline
+const Toplevel* EffectWindow::window() const
+    {
+    return tw;
+    }
+
+inline
+Toplevel* EffectWindow::window()
+    {
+    return tw;
+    }
+
+inline
+void EffectWindow::setWindow( Toplevel* w )
+    {
+    tw = w;
+    }
+
+inline
+void EffectWindow::setSceneWindow( Scene::Window* w )
+    {
+    sw = w;
+    }
+
+inline
+Scene::Window* EffectWindow::sceneWindow()
+    {
+    return sw;
+    }
+
+inline
+EffectWindow* effectWindow( Toplevel* w )
+    {
+    EffectWindow* ret = w->effectWindow();
+    ret->setSceneWindow( NULL ); // just in case
+    return ret;
+    }
+
+inline
+EffectWindow* effectWindow( Scene::Window* w )
+    {
+    EffectWindow* ret = w->window()->effectWindow();
+    ret->setSceneWindow( w );
+    return ret;
     }
 
 } // namespace

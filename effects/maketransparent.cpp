@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-void MakeTransparentEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void MakeTransparentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
     const Client* c = dynamic_cast< const Client* >( w->window());
     if(( c != NULL && ( c->isMove() || c->isResize())) || w->window()->isDialog())
@@ -26,7 +26,7 @@ void MakeTransparentEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion
     effects->prePaintWindow( w, mask, region, time );
     }
 
-void MakeTransparentEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     const Client* c = dynamic_cast< const Client* >( w->window());
     if( w->window()->isDialog())
@@ -36,10 +36,10 @@ void MakeTransparentEffect::paintWindow( Scene::Window* w, int mask, QRegion reg
     effects->paintWindow( w, mask, region, data );
     }
 
-void MakeTransparentEffect::windowUserMovedResized( Toplevel* c, bool first, bool last )
+void MakeTransparentEffect::windowUserMovedResized( EffectWindow* c, bool first, bool last )
     {
     if( first || last )
-        c->addDamageFull();
+        c->window()->addDamageFull();
     }
 
 } // namespace

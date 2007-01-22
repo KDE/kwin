@@ -61,7 +61,7 @@ void TestInputEffect::windowInputMouseEvent( Window w, QEvent* e )
         if( c->isShown( true ) && c->isOnCurrentDesktop()
             && c->geometry().contains( pos ))
             {
-            effects->activateWindow( c );
+            effects->activateWindow( c->effectWindow());
             return;
             }
         }

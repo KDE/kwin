@@ -44,6 +44,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "kwinadaptor.h"
 #include "unmanaged.h"
 #include "scene.h"
+#include "deleted.h"
 #include "effects.h"
 
 #include <X11/extensions/shape.h>
@@ -498,7 +499,7 @@ Client* Workspace::createClient( Window w, bool is_mapped )
     if( scene )
         scene->windowAdded( c );
     if( effects )
-        effects->windowAdded( c );
+        effects->windowAdded( c->effectWindow());
     return c;
     }
 
@@ -516,7 +517,7 @@ Unmanaged* Workspace::createUnmanaged( Window w )
     if( scene )
         scene->windowAdded( c );
     if( effects )
-        effects->windowAdded( c );
+        effects->windowAdded( c->effectWindow());
     return c;
     }
 
@@ -636,7 +637,7 @@ void Workspace::removeDeleted( Deleted* c, allowed_t )
     if( scene )
         scene->windowDeleted( c );
     if( effects )
-        effects->windowDeleted( c );
+        effects->windowDeleted( c->effectWindow());
     deleted.removeAll( c );
     }
 

@@ -295,6 +295,8 @@ void Toplevel::setupCompositing()
         return;
     damage_handle = XDamageCreate( display(), handle(), XDamageReportRawRectangles );
     damage_region = QRegion( 0, 0, width(), height());
+    effect_window = new EffectWindow();
+    effect_window->setWindow( this );
     }
 
 void Toplevel::finishCompositing()
@@ -305,6 +307,8 @@ void Toplevel::finishCompositing()
     discardWindowPixmap();
     damage_handle = None;
     damage_region = QRegion();
+    delete effect_window;
+    effect_window = NULL;
     }
 
 void Toplevel::discardWindowPixmap()

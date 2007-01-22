@@ -39,31 +39,31 @@ Effect::~Effect()
     {
     }
 
-void Effect::windowUserMovedResized( Toplevel* , bool, bool )
+void Effect::windowUserMovedResized( EffectWindow* , bool, bool )
     {
     }
 
-void Effect::windowAdded( Toplevel* )
+void Effect::windowAdded( EffectWindow* )
     {
     }
 
-void Effect::windowClosed( Toplevel*, Deleted* )
+void Effect::windowClosed( EffectWindow* )
     {
     }
 
-void Effect::windowDeleted( Deleted* )
+void Effect::windowDeleted( EffectWindow* )
     {
     }
 
-void Effect::windowActivated( Toplevel* )
+void Effect::windowActivated( EffectWindow* )
     {
     }
 
-void Effect::windowMinimized( Toplevel* )
+void Effect::windowMinimized( EffectWindow* )
     {
     }
 
-void Effect::windowUnminimized( Toplevel* )
+void Effect::windowUnminimized( EffectWindow* )
     {
     }
 
@@ -86,17 +86,17 @@ void Effect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-void Effect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void Effect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
     effects->prePaintWindow( w, mask, region, time );
     }
 
-void Effect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void Effect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     effects->paintWindow( w, mask, region, data );
     }
 
-void Effect::postPaintWindow( Scene::Window* w )
+void Effect::postPaintWindow( EffectWindow* w )
     {
     effects->postPaintWindow( w );
     }
@@ -135,43 +135,43 @@ EffectsHandler::~EffectsHandler()
         XDestroyWindow( display(), pos.second );
     }
 
-void EffectsHandler::windowUserMovedResized( Toplevel* c, bool first, bool last )
+void EffectsHandler::windowUserMovedResized( EffectWindow* c, bool first, bool last )
     {
     foreach( Effect* e, effects )
         e->windowUserMovedResized( c, first, last );
     }
 
-void EffectsHandler::windowAdded( Toplevel* c )
+void EffectsHandler::windowAdded( EffectWindow* c )
     {
     foreach( Effect* e, effects )
         e->windowAdded( c );
     }
 
-void EffectsHandler::windowDeleted( Deleted* c )
+void EffectsHandler::windowDeleted( EffectWindow* c )
     {
     foreach( Effect* e, effects )
         e->windowDeleted( c );
     }
 
-void EffectsHandler::windowClosed( Toplevel* c, Deleted* deleted )
+void EffectsHandler::windowClosed( EffectWindow* c )
     {
     foreach( Effect* e, effects )
-        e->windowClosed( c, deleted );
+        e->windowClosed( c );
     }
 
-void EffectsHandler::windowActivated( Toplevel* c )
+void EffectsHandler::windowActivated( EffectWindow* c )
     {
     foreach( Effect* e, effects )
         e->windowActivated( c );
     }
 
-void EffectsHandler::windowMinimized( Toplevel* c )
+void EffectsHandler::windowMinimized( EffectWindow* c )
     {
     foreach( Effect* e, effects )
         e->windowMinimized( c );
     }
 
-void EffectsHandler::windowUnminimized( Toplevel* c )
+void EffectsHandler::windowUnminimized( EffectWindow* c )
     {
     foreach( Effect* e, effects )
         e->windowUnminimized( c );
@@ -216,7 +216,7 @@ void EffectsHandler::postPaintScreen()
     // no special final code
     }
 
-void EffectsHandler::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void EffectsHandler::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
     if( current_paint_window < effects.size())
         {
@@ -226,7 +226,7 @@ void EffectsHandler::prePaintWindow( Scene::Window* w, int* mask, QRegion* regio
     // no special final code
     }
 
-void EffectsHandler::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void EffectsHandler::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( current_paint_window < effects.size())
         {
@@ -237,7 +237,7 @@ void EffectsHandler::paintWindow( Scene::Window* w, int mask, QRegion region, Wi
         scene->finalPaintWindow( w, mask, region, data );
     }
 
-void EffectsHandler::postPaintWindow( Scene::Window* w )
+void EffectsHandler::postPaintWindow( EffectWindow* w )
     {
     if( current_paint_window < effects.size())
         {
@@ -329,9 +329,10 @@ void EffectsHandler::checkInputWindowStacking()
     delete[] wins;
     }
 
-void EffectsHandler::activateWindow( Client* c )
+void EffectsHandler::activateWindow( EffectWindow* c )
     {
-    Workspace::self()->activateClient( c, true );
+    if( Client* cl = dynamic_cast< Client* >( c->window()))
+        Workspace::self()->activateClient( cl, true );
     }
 
 EffectsHandler* effects;

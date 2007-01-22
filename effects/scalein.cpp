@@ -23,49 +23,49 @@ void ScaleInEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen( mask, region, time );
     }
 
-void ScaleInEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void ScaleInEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
-    if( windows.contains( w->window()))
+    if( windows.contains( w ))
         {
-        windows[ w->window() ] += time / 500.; // complete change in 500ms
-        if( windows[ w->window() ] < 1 )
+        windows[ w ] += time / 500.; // complete change in 500ms
+        if( windows[ w ] < 1 )
             *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
         else
-            windows.remove( w->window());
+            windows.remove( w );
         }
     effects->prePaintWindow( w, mask, region, time );
     }
 
-void ScaleInEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void ScaleInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( windows.contains( w->window()))
+    if( windows.contains( w ))
         {
-        data.xScale *= windows[ w->window()];
-        data.yScale *= windows[ w->window()];
-        data.xTranslate += int( w->window()->width() / 2 * ( 1 - windows[ w->window()] ));
-        data.yTranslate += int( w->window()->height() / 2 * ( 1 - windows[ w->window()] ));
+        data.xScale *= windows[ w ];
+        data.yScale *= windows[ w ];
+        data.xTranslate += int( w->window()->width() / 2 * ( 1 - windows[ w ] ));
+        data.yTranslate += int( w->window()->height() / 2 * ( 1 - windows[ w ] ));
         }
     effects->paintWindow( w, mask, region, data );
     }
 
-void ScaleInEffect::postPaintWindow( Scene::Window* w )
+void ScaleInEffect::postPaintWindow( EffectWindow* w )
     {
-    if( windows.contains( w->window()))
+    if( windows.contains( w ))
         w->window()->addDamageFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     }
 
-void ScaleInEffect::windowAdded( Toplevel* c )
+void ScaleInEffect::windowAdded( EffectWindow* c )
     {
-    Client* cc = dynamic_cast< Client* >( c );
+    Client* cc = dynamic_cast< Client* >( c->window());
     if( cc == NULL || cc->isOnCurrentDesktop())
         {
         windows[ c ] = 0;
-        c->addDamageFull();
+        c->window()->addDamageFull();
         }
     }
 
-void ScaleInEffect::windowClosed( Toplevel* c, Deleted* )
+void ScaleInEffect::windowClosed( EffectWindow* c )
     {
     windows.remove( c );
     }

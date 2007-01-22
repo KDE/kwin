@@ -38,30 +38,27 @@ class HowtoEffect
 
         // A pre-paint function. It tells the compositing code how the painting will
         // be affected by this effect.        
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
         
         // A paint function. It actually performs the modifications to the painting.
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         
         // A post-paint function. It can be used for cleanups after painting, but with animations
         // it is also used to trigger repaints during the next painting pass by manually "damaging"
         // areas of the window.
-        virtual void postPaintWindow( Scene::Window* w );
+        virtual void postPaintWindow( EffectWindow* w );
         
         // Notification functions: These inform the effect about changes such as a new window
         // being activated.
 
-        // TODO
-        virtual void windowClosed( Toplevel* c, Deleted* d );
-        
-        // The given window has been deleted (destroyed).
-        virtual void windowDeleted( Deleted* c );
+        // The given window has been closed.
+        virtual void windowClosed( EffectWindow* c );
         
         // The given window has been activated.
-        virtual void windowActivated( Toplevel* c );
+        virtual void windowActivated( EffectWindow* c );
     private:
         // The window that will be faded out and in again.
-        Toplevel* fade_window;
+        EffectWindow* fade_window;
         
         // The progress of the fading.
         int progress;

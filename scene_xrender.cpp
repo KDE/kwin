@@ -173,7 +173,7 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         QRegion damage = region;
         // preparation step
-        effects->prePaintWindow( w, &mask, &damage, time_diff );
+        effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.
         if( mask & PAINT_WINDOW_TRANSLUCENT )

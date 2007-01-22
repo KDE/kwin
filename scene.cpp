@@ -113,7 +113,7 @@ void Scene::paintScreen( int* mask, QRegion* region )
     effects->paintScreen( *mask, *region, data );
     effects->postPaintScreen();
     foreach( Window* w, stacking_order )
-        effects->postPaintWindow( w );
+        effects->postPaintWindow( effectWindow( w ));
     }
 
 // Compute time since the last painting pass.
@@ -161,7 +161,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
             mask |= PAINT_WINDOW_DISABLED;
         QRegion damage = infiniteRegion();
         // preparation step
-        effects->prePaintWindow( w, &mask, &damage, time_diff );
+        effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
         if( mask & PAINT_WINDOW_DISABLED )
             continue;
         paintWindow( w, mask, damage );
@@ -192,7 +192,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
             mask |= PAINT_WINDOW_DISABLED;
         QRegion damage = region;
         // preparation step
-        effects->prePaintWindow( w, &mask, &damage, time_diff );
+        effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
         if( mask & PAINT_WINDOW_DISABLED )
             continue;
         // If the window is transparent, the transparent part will be done
@@ -223,13 +223,13 @@ void Scene::paintWindow( Window* w, int mask, QRegion region )
     {
     WindowPaintData data;
     data.opacity = w->window()->opacity();
-    effects->paintWindow( w, mask, region, data );
+    effects->paintWindow( effectWindow( w ), mask, region, data );
     }
 
 // the function that'll be eventually called by paintWindow() above
-void Scene::finalPaintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void Scene::finalPaintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    w->performPaint( mask, region, data );
+    w->sceneWindow()->performPaint( mask, region, data );
     }
 
 //****************************************

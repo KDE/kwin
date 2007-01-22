@@ -19,7 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-void DialogParentEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void DialogParentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
     const float changeTime = 200;
@@ -41,7 +41,7 @@ void DialogParentEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* r
     effects->prePaintWindow( w, mask, region, time );
     }
 
-void DialogParentEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void DialogParentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     float s = effectStrength[w];
     if(s > 0.0f)
@@ -56,7 +56,7 @@ void DialogParentEffect::paintWindow( Scene::Window* w, int mask, QRegion region
     effects->paintWindow( w, mask, region, data );
     }
 
-void DialogParentEffect::postPaintWindow( Scene::Window* w )
+void DialogParentEffect::postPaintWindow( EffectWindow* w )
     {
     float s = effectStrength[w];
 
@@ -69,12 +69,12 @@ void DialogParentEffect::postPaintWindow( Scene::Window* w )
     effects->postPaintWindow( w );
     }
 
-void DialogParentEffect::windowActivated( Toplevel* t )
+void DialogParentEffect::windowActivated( EffectWindow* t )
     {
     // If this window is a dialog, we need to damage it's parent window, so
     //  that the effect could be run for it
     // Set the window to be faded (or NULL if no window is active).
-    Client* c = qobject_cast<Client *>(t);
+    Client* c = qobject_cast<Client *>(t?t->window():NULL);
     if ( c && c->isModal() )
         {
         // c is a modal dialog
@@ -84,12 +84,12 @@ void DialogParentEffect::windowActivated( Toplevel* t )
         }
     }
 
-void DialogParentEffect::windowClosed( Toplevel* t, Deleted* )
+void DialogParentEffect::windowClosed( EffectWindow* t )
     {
     // If this window is a dialog, we need to damage it's parent window, so
     //  that the effect could be run for it
     // Set the window to be faded (or NULL if no window is active).
-    Client* c = qobject_cast<Client *>(t);
+    Client* c = qobject_cast<Client *>(t->window());
     if ( c && c->isModal() )
         {
         // c is a modal dialog

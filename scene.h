@@ -23,6 +23,7 @@ class Workspace;
 class Deleted;
 class WindowPaintData;
 class ScreenPaintData;
+class EffectWindow;
 
 // The base class for compositing backends.
 class Scene
@@ -83,7 +84,7 @@ class Scene
         // paint the background (not the desktop background - the whole background)
         virtual void paintBackground( QRegion region ) = 0;
         // called after all effects had their paintWindow() called
-        void finalPaintWindow( Window* w, int mask, QRegion region, WindowPaintData& data );
+        void finalPaintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         // shared implementation, starts painting the window
         virtual void paintWindow( Window* w, int mask, QRegion region );
         // infinite region, i.e. everything

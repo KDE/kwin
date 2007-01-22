@@ -74,7 +74,7 @@ void Unmanaged::release()
     if( effects )
         {
         Deleted* del = Deleted::create( this );
-        effects->windowClosed( this, del );
+        effects->windowClosed( del->effectWindow()); // effectWindow is already 'del'
         scene->windowClosed( this, del );
         del->unrefWindow();
         }

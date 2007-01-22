@@ -30,21 +30,21 @@ void ShakyMoveEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen( mask, region, time );
     }
 
-void ShakyMoveEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void ShakyMoveEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
-    if( windows.contains( w->window()))
+    if( windows.contains( w ))
         *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
     effects->prePaintWindow( w, mask, region, time );
     }
 
-void ShakyMoveEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void ShakyMoveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( windows.contains( w->window()))
-        data.xTranslate += shaky_diff[ windows[ w->window() ]];
+    if( windows.contains( w ))
+        data.xTranslate += shaky_diff[ windows[ w ]];
     effects->paintWindow( w, mask, region, data );
     }
 
-void ShakyMoveEffect::windowUserMovedResized( Toplevel* c, bool first, bool last )
+void ShakyMoveEffect::windowUserMovedResized( EffectWindow* c, bool first, bool last )
     {
     if( first )
         {
@@ -56,13 +56,13 @@ void ShakyMoveEffect::windowUserMovedResized( Toplevel* c, bool first, bool last
         {
         windows.remove( c );
         // just damage whole screen, transformation is involved
-        c->workspace()->addDamageFull();
+        c->window()->workspace()->addDamageFull();
         if( windows.isEmpty())
             timer.stop();
         }
     }
 
-void ShakyMoveEffect::windowClosed( Toplevel* c, Deleted* )
+void ShakyMoveEffect::windowClosed( EffectWindow* c )
     {
     windows.remove( c );
     if( windows.isEmpty())
@@ -72,7 +72,7 @@ void ShakyMoveEffect::windowClosed( Toplevel* c, Deleted* )
 // TODO use time provided with prePaintWindow() instead
 void ShakyMoveEffect::tick()
     {
-    for( QMap< const Toplevel*, int >::Iterator it = windows.begin();
+    for( QMap< const EffectWindow*, int >::Iterator it = windows.begin();
          it != windows.end();
          ++it )
         {
@@ -81,7 +81,7 @@ void ShakyMoveEffect::tick()
         else
             ++(*it);
         // just damage whole screen, transformation is involved
-        it.key()->workspace()->addDamageFull();
+        it.key()->window()->workspace()->addDamageFull();
         }
     }
 

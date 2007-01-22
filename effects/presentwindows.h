@@ -31,12 +31,12 @@ class PresentWindowsEffect
 
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
 
-        virtual void windowClosed( Toplevel* c, Deleted* );
-        virtual void windowActivated( Toplevel* c );
+        virtual void windowClosed( EffectWindow* c );
+        virtual void windowActivated( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
 
     public slots:

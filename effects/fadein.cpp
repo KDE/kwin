@@ -15,49 +15,49 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-void FadeInEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void FadeInEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
-    if( windows.contains( w->window()))
+    if( windows.contains( w ))
         {
-        windows[ w->window() ] += time / 1000.; // complete change in 1000ms
-        if( windows[ w->window() ] < 1 )
+        windows[ w ] += time / 1000.; // complete change in 1000ms
+        if( windows[ w ] < 1 )
             {
             *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
             *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
             }
         else
-            windows.remove( w->window());
+            windows.remove( w );
         }
     effects->prePaintWindow( w, mask, region, time );
     }
 
-void FadeInEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void FadeInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( windows.contains( w->window()))
+    if( windows.contains( w ))
         {
-        data.opacity *= windows[ w->window()];
+        data.opacity *= windows[ w ];
         }
     effects->paintWindow( w, mask, region, data );
     }
 
-void FadeInEffect::postPaintWindow( Scene::Window* w )
+void FadeInEffect::postPaintWindow( EffectWindow* w )
     {
-    if( windows.contains( w->window()))
+    if( windows.contains( w ))
         w->window()->addDamageFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     }
 
-void FadeInEffect::windowAdded( Toplevel* c )
+void FadeInEffect::windowAdded( EffectWindow* c )
     {
-    Client* cc = dynamic_cast< Client* >( c );
+    Client* cc = dynamic_cast< Client* >( c->window());
     if( cc == NULL || cc->isOnCurrentDesktop())
         {
         windows[ c ] = 0;
-        c->addDamageFull();
+        c->window()->addDamageFull();
         }
     }
 
-void FadeInEffect::windowClosed( Toplevel* c, Deleted* )
+void FadeInEffect::windowClosed( EffectWindow* c )
     {
     windows.remove( c );
     }

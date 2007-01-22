@@ -22,9 +22,9 @@ class MakeTransparentEffect
     : public Effect
     {
     public:
-        virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
     };
 
 } // namespace

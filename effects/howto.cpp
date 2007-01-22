@@ -38,13 +38,10 @@ namespace KWinInternal
 // region - the region of the screen that needs to be painted, support for modifying it
 //   is not fully implemented yet, do not use
 // time - time in milliseconds since the last paint, useful for animations
-void HowtoEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time )
+void HowtoEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
     // Is this window the one that is going to be faded out and in again?
-    // Note that since the effects framework is still work in progress, the window()
-    // function is used to access internal class Toplevel. The plan is to hide away
-    // internal classes and have only API for effects.
-    if( w->window() == fade_window )
+    if( w == fade_window )
         {
         // Simply add the time to the total progress. The value of progress will be used
         // to determine how far in effect is.
@@ -79,10 +76,10 @@ void HowtoEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region, 
 //   then special care needs to be taken, because the region may be infiniteRegion(), meaning
 //   everything needs to be painted
 // data - painting data that can be modified to do some simple transformations
-void HowtoEffect::paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data )
+void HowtoEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     // Is this the window to be faded out and in again?
-    if( w->window() == fade_window )
+    if( w == fade_window )
         {
         // This effect, after a window has been activated, fades it out to only 50% transparency
         // and then fades it in again to be fully opaque (assuming it's otherwise a fully opaque
@@ -112,12 +109,14 @@ void HowtoEffect::paintWindow( Scene::Window* w, int mask, QRegion region, Windo
 
 // The function that is called after the painting pass is finished. When an animation is going on,
 // it can damage some areas so that the next painting pass has to repaint them again.
-void HowtoEffect::postPaintWindow( Scene::Window* w )
+void HowtoEffect::postPaintWindow( EffectWindow* w )
     {
     // Is this the window to be faded out and in again?
-    if( w->window() == fade_window )
+    if( w == fade_window )
         {
         // Damage the whole window, this will cause it to be repainted the next painting pass.
+        // Currently the API for effects is not complete, so for now window() is used to access
+        // internal class Toplevel. This should change in the future.
         w->window()->addDamageFull(); // trigger next animation repaint
         }
     // Call the next effect.
@@ -125,7 +124,7 @@ void HowtoEffect::postPaintWindow( Scene::Window* w )
     }
 
 // This function is called when a new window becomes active.
-void HowtoEffect::windowActivated( Toplevel* c )
+void HowtoEffect::windowActivated( EffectWindow* c )
     {
     // Set the window to be faded (or NULL if no window is active).
     fade_window = c;
@@ -134,21 +133,14 @@ void HowtoEffect::windowActivated( Toplevel* c )
         // If there is a window to be faded, reset the progress to zero.
         progress = 0;
         // And damage the window so that it needs to be repainted.
-        c->addDamageFull();
+        c->window()->addDamageFull();
         }
     }
 
-// TODO
-void HowtoEffect::windowClosed( Toplevel* c, Deleted* d )
+// This function is called when a window is closed.
+void HowtoEffect::windowClosed( EffectWindow* c )
     {
-    if( fade_window == c )
-        fade_window = d;
-    }
-
-// This function is called when a window is destroyed.
-void HowtoEffect::windowDeleted( Deleted* c )
-    {
-    // If the window to be faded out and in is destroyed, just reset the pointer.
+    // If the window to be faded out and in is closed, just reset the pointer.
     // This effect then will do nothing and just call the next effect.
     if( fade_window == c )
         fade_window = NULL;

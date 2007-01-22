@@ -21,6 +21,7 @@ namespace KWinInternal
 {
 
 class Workspace;
+class EffectWindow;
 
 class Toplevel
     : public QObject, public KDecorationDefines
@@ -65,6 +66,7 @@ class Toplevel
         void addDamageFull();
         QRegion damage() const;
         void resetDamage( const QRect& r );
+        EffectWindow* effectWindow();
 
     protected:
         virtual ~Toplevel();
@@ -87,6 +89,7 @@ class Toplevel
         Damage damage_handle;
         QRegion damage_region;
         bool is_shape;
+        EffectWindow* effect_window;
     };
 
 inline Window Toplevel::handle() const
@@ -220,6 +223,12 @@ inline int Toplevel::depth() const
 inline bool Toplevel::hasAlpha() const
     {
     return depth() == 32;
+    }
+
+inline
+EffectWindow* Toplevel::effectWindow()
+    {
+    return effect_window;
     }
 
 #ifdef NDEBUG

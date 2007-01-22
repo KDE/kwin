@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "toplevel.h"
 
+#include "effects.h"
+
 namespace KWinInternal
 {
 
@@ -20,6 +22,7 @@ Toplevel::Toplevel( Workspace* ws )
     , window_pix( None )
     , damage_handle( None )
     , is_shape( false )
+    , effect_window( NULL )
     {
     }
 
@@ -91,6 +94,10 @@ void Toplevel::copyToDeleted( Toplevel* c )
     damage_handle = None;
     damage_region = c->damage_region;
     is_shape = c->is_shape;
+    // reassign the representation for Effect classes
+    effect_window = c->effect_window;
+    effect_window->setWindow( this );
+    c->effect_window = NULL;
     }
 
 } // namespace

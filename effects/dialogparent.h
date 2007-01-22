@@ -28,18 +28,18 @@ class DialogParentEffect
     : public Effect
     {
     public:
-        virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
-        virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( Scene::Window* w );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void postPaintWindow( EffectWindow* w );
 
-        virtual void windowClosed( Toplevel* c, Deleted* );
-        virtual void windowActivated( Toplevel* c );
+        virtual void windowClosed( EffectWindow* c );
+        virtual void windowActivated( EffectWindow* c );
 
     protected:
         bool hasModalWindow( Toplevel* t );
     private:
         // The progress of the fading.
-        QMap<Scene::Window*, float> effectStrength;
+        QMap<EffectWindow*, float> effectStrength;
     };
 
 } // namespace
