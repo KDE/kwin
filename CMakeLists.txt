@@ -50,6 +50,7 @@ set(kwin_KDEINIT_SRCS
    scene_xrender.cpp
    scene_opengl.cpp
    glutils.cpp
+   deleted.cpp
    effects.cpp
    effects/fadein.cpp
    effects/fadeout.cpp

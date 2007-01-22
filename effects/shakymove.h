@@ -30,7 +30,7 @@ class ShakyMoveEffect
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( Scene::Window* w, int* mask, QRegion* region, int time );
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowDeleted( Toplevel* c );
+        virtual void windowClosed( Toplevel* c, Deleted* );
     private slots:
         void tick();
     private:

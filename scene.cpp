@@ -64,6 +64,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/shape.h>
 
 #include "client.h"
+#include "deleted.h"
 #include "effects.h"
 
 namespace KWinInternal
@@ -290,7 +291,7 @@ QRegion Scene::Window::shape() const
 
 bool Scene::Window::isVisible() const
     {
-    if( toplevel->deleting())
+    if( dynamic_cast< Deleted* >( toplevel ) != NULL )
         return false;
     if( Client* c = dynamic_cast< Client* >( toplevel ))
         return c->isShown( true ) && c->isOnCurrentDesktop();

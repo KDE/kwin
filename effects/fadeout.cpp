@@ -11,6 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "fadeout.h"
 
 #include <client.h>
+#include <deleted.h>
 
 namespace KWinInternal
 {
@@ -28,7 +29,7 @@ void FadeOutEffect::prePaintWindow( Scene::Window* w, int* mask, QRegion* region
         else
             {
             windows.remove( w->window());
-            w->window()->unrefWindow();
+            static_cast< Deleted* >( w->window())->unrefWindow();
             }
         }
     effects->prePaintWindow( w, mask, region, time );
@@ -50,18 +51,18 @@ void FadeOutEffect::postPaintWindow( Scene::Window* w )
     effects->postPaintWindow( w );
     }
 
-void FadeOutEffect::windowClosed( Toplevel* c )
+void FadeOutEffect::windowClosed( Toplevel* c, Deleted* d )
     {
     Client* cc = dynamic_cast< Client* >( c );
     if( cc == NULL || cc->isOnCurrentDesktop())
         {
-        windows[ c ] = 1; // count down to 0
-        c->addDamageFull();
-        c->refWindow();
+        windows[ d ] = 1; // count down to 0
+        d->addDamageFull();
+        d->refWindow();
         }
     }
 
-void FadeOutEffect::windowDeleted( Toplevel* c )
+void FadeOutEffect::windowDeleted( Deleted* c )
     {
     windows.remove( c );
     }

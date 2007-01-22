@@ -35,7 +35,7 @@ class PresentWindowsEffect
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
 
-        virtual void windowDeleted( Toplevel* c );
+        virtual void windowClosed( Toplevel* c, Deleted* );
         virtual void windowActivated( Toplevel* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
 

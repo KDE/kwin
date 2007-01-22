@@ -84,7 +84,7 @@ void DialogParentEffect::windowActivated( Toplevel* t )
         }
     }
 
-void DialogParentEffect::windowDeleted( Toplevel* t )
+void DialogParentEffect::windowClosed( Toplevel* t, Deleted* )
     {
     // If this window is a dialog, we need to damage it's parent window, so
     //  that the effect could be run for it

@@ -51,8 +51,11 @@ class HowtoEffect
         // Notification functions: These inform the effect about changes such as a new window
         // being activated.
 
+        // TODO
+        virtual void windowClosed( Toplevel* c, Deleted* d );
+        
         // The given window has been deleted (destroyed).
-        virtual void windowDeleted( Toplevel* c );
+        virtual void windowDeleted( Deleted* c );
         
         // The given window has been activated.
         virtual void windowActivated( Toplevel* c );

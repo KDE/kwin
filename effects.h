@@ -73,8 +73,8 @@ class Effect
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( Toplevel* c, bool first, bool last );
         virtual void windowAdded( Toplevel* c );
-        virtual void windowDeleted( Toplevel* c );
-        virtual void windowClosed( Toplevel* c );
+        virtual void windowClosed( Toplevel* c, Deleted* deleted );
+        virtual void windowDeleted( Deleted* c );
         virtual void windowActivated( Toplevel* c );
         virtual void windowMinimized( Toplevel* c );
         virtual void windowUnminimized( Toplevel* c );
@@ -111,8 +111,8 @@ class EffectsHandler
         void startPaint();
         void windowUserMovedResized( Toplevel* c, bool first, bool last );
         void windowAdded( Toplevel* c );
-        void windowClosed( Toplevel* c );
-        void windowDeleted( Toplevel* c );
+        void windowClosed( Toplevel* c, Deleted* deleted );
+        void windowDeleted( Deleted* c );
         void windowActivated( Toplevel* c );
         void windowMinimized( Toplevel* c );
         void windowUnminimized( Toplevel* c );

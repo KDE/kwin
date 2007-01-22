@@ -20,6 +20,7 @@ namespace KWinInternal
 {
 
 class Workspace;
+class Deleted;
 class WindowPaintData;
 class ScreenPaintData;
 
@@ -43,8 +44,10 @@ class Scene
         virtual void windowOpacityChanged( Toplevel* ) = 0;
         // a new window has been created
         virtual void windowAdded( Toplevel* ) = 0;
+        // a window has been closed
+        virtual void windowClosed( Toplevel*, Deleted* ) = 0;
         // a window has been destroyed
-        virtual void windowDeleted( Toplevel* ) = 0;
+        virtual void windowDeleted( Deleted* ) = 0;
         // Flags controlling how painting is done.
         enum
             {
@@ -128,6 +131,7 @@ class Scene::Window
         // shape of the window
         QRegion shape() const;
         void discardShape();
+        void updateToplevel( Toplevel* c );
         Window() {} // QMap sucks even in Qt4
     protected:
         Toplevel* toplevel;
@@ -172,6 +176,12 @@ inline
 Toplevel* Scene::Window::window()
     {
     return toplevel;
+    }
+
+inline
+void Scene::Window::updateToplevel( Toplevel* c )
+    {
+    toplevel = c;
     }
 
 } // namespace

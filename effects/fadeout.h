@@ -26,8 +26,8 @@ class FadeOutEffect
         virtual void paintWindow( Scene::Window* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( Scene::Window* w );
         // TODO react also on virtual desktop changes
-        virtual void windowClosed( Toplevel* c );
-        virtual void windowDeleted( Toplevel* c );
+        virtual void windowClosed( Toplevel* c, Deleted* d );
+        virtual void windowDeleted( Deleted* c );
     private:
         QMap< const Toplevel*, double > windows;
     };

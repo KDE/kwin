@@ -616,31 +616,28 @@ void Workspace::removeClient( Client* c, allowed_t )
        tab_box->repaint();
 
     updateClientArea();
-
-    addDeleted( c, Allowed );
     }
 
 void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
     {
     assert( unmanaged.contains( c ));
     unmanaged.removeAll( c );
-    addDeleted( c, Allowed );
     }
 
-void Workspace::addDeleted( Toplevel* c, allowed_t )
+void Workspace::addDeleted( Deleted* c, allowed_t )
     {
-    assert( !pending_deleted.contains( c ));
-    pending_deleted.append( c );
+    assert( !deleted.contains( c ));
+    deleted.append( c );
     }
 
-void Workspace::removeDeleted( Toplevel* c )
+void Workspace::removeDeleted( Deleted* c, allowed_t )
     {
-    assert( pending_deleted.contains( c ));
+    assert( deleted.contains( c ));
     if( scene )
         scene->windowDeleted( c );
     if( effects )
         effects->windowDeleted( c );
-    pending_deleted.removeAll( c );
+    deleted.removeAll( c );
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )

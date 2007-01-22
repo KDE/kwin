@@ -27,7 +27,7 @@ class FadeInEffect
         virtual void postPaintWindow( Scene::Window* w );
         // TODO react also on virtual desktop changes
         virtual void windowAdded( Toplevel* c );
-        virtual void windowDeleted( Toplevel* c );
+        virtual void windowClosed( Toplevel* c, Deleted* );
     private:
         QMap< const Toplevel*, double > windows;
     };

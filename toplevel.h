@@ -59,17 +59,12 @@ class Toplevel
         int depth() const;
         bool hasAlpha() const;
         void setupCompositing();
-        void finishCompositing( bool discard_pixmap = true );
+        void finishCompositing();
         void addDamage( const QRect& r );
         void addDamage( int x, int y, int w, int h );
         void addDamageFull();
         QRegion damage() const;
         void resetDamage( const QRect& r );
-
-        // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
-        void refWindow();
-        virtual void unrefWindow() = 0;
-        bool deleting() const;
 
     protected:
         virtual ~Toplevel();
@@ -81,10 +76,11 @@ class Toplevel
         QRect geom;
         Visual* vis;
         int bit_depth;
-        int delete_refcount;
         virtual void debug( kdbgstream& stream ) const = 0;
+        void copyToDeleted( Toplevel* c );
         friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
     private:
+        // when adding new data members, check also copyToDeleted()
         Window id;
         Workspace* wspace;
         Pixmap window_pix;
@@ -224,17 +220,6 @@ inline int Toplevel::depth() const
 inline bool Toplevel::hasAlpha() const
     {
     return depth() == 32;
-    }
-
-inline void Toplevel::refWindow()
-    {
-    assert( delete_refcount >= 0 );
-    ++delete_refcount;
-    }
-
-inline bool Toplevel::deleting() const
-    {
-    return delete_refcount >= 0;
     }
 
 #ifdef NDEBUG

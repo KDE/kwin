@@ -29,6 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "client.h"
 #include "unmanaged.h"
+#include "deleted.h"
 #include "effects.h"
 #include "scene.h"
 #include "scene_basic.h"
@@ -137,12 +138,16 @@ void Workspace::finishCompositing()
         return;
     delete cm_selection;
     foreach( Client* c, clients )
-        scene->windowDeleted( c );
+        scene->windowClosed( c, NULL );
     foreach( Unmanaged* c, unmanaged )
+        scene->windowClosed( c, NULL );
+    foreach( Deleted* c, deleted )
         scene->windowDeleted( c );
     foreach( Client* c, clients )
         c->finishCompositing();
     foreach( Unmanaged* c, unmanaged )
+        c->finishCompositing();
+    foreach( Deleted* c, deleted )
         c->finishCompositing();
     XCompositeUnredirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     compositeTimer.stop();
@@ -222,7 +227,7 @@ void Workspace::performCompositing()
         else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
             windows.append( c );
         }
-    foreach( Toplevel* c, pending_deleted ) // TODO remember stacking order somehow
+    foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
         windows.append( c );
     QRegion damage = damage_region;
     // clear all damage, so that post-pass can add damage for the next repaint
@@ -292,13 +297,12 @@ void Toplevel::setupCompositing()
     damage_region = QRegion( 0, 0, width(), height());
     }
 
-void Toplevel::finishCompositing( bool discard_pixmap )
+void Toplevel::finishCompositing()
     {
     if( damage_handle == None )
         return;
     XDamageDestroy( display(), damage_handle );
-    if( discard_pixmap )
-        discardWindowPixmap();
+    discardWindowPixmap();
     damage_handle = None;
     damage_region = QRegion();
     }

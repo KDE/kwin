@@ -15,7 +15,6 @@ namespace KWinInternal
 
 Toplevel::Toplevel( Workspace* ws )
     : vis( None )
-    , delete_refcount( -1 )
     , id( None )
     , wspace( ws )
     , window_pix( None )
@@ -77,6 +76,21 @@ kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& list )
 void Toplevel::detectShape( Window id )
     {
     is_shape = Extensions::hasShape( id );
+    }
+
+// used only by Deleted::copy()
+void Toplevel::copyToDeleted( Toplevel* c )
+    {
+    geom = c->geom;
+    vis = c->vis;
+    bit_depth = c->bit_depth;
+    id = c->id;
+    wspace = c->wspace;
+    window_pix = c->window_pix;
+    c->window_pix = None;
+    damage_handle = None;
+    damage_region = c->damage_region;
+    is_shape = c->is_shape;
     }
 
 } // namespace

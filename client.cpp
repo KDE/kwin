@@ -30,6 +30,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 #include "scene.h"
 #include "effects.h"
+#include "deleted.h"
 
 #include <X11/extensions/shape.h>
 #include <QX11Info>
@@ -108,6 +109,7 @@ Client::Client( Workspace *ws )
 
     shade_mode = ShadeNone;
     active = false;
+    deleting = false;
     keep_above = false;
     keep_below = false;
     motif_noborder = false;
@@ -174,11 +176,16 @@ void Client::deleteClient( Client* c, allowed_t )
  */
 void Client::releaseWindow( bool on_shutdown )
     {
-    assert( !deleting());
-    delete_refcount = 1;
+    assert( !deleting );
+    deleting = true;
     if( effects )
-        effects->windowClosed( this );
-    finishCompositing( false ); // don't discard pixmap
+        {
+        Deleted* del = Deleted::create( this );
+        effects->windowClosed( this, del );
+        scene->windowClosed( this, del );
+        del->unrefWindow();
+        }
+    finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
@@ -193,9 +200,7 @@ void Client::releaseWindow( bool on_shutdown )
     if( !on_shutdown )
         workspace()->clientHidden( this );
     XUnmapWindow( display(), frameId()); // destroying decoration would cause ugly visual effect
-//    destroyDecoration();
-    delete decoration;
-    decoration = NULL;
+    destroyDecoration();
     cleanGrouping();
     if( !on_shutdown )
         {
@@ -203,11 +208,9 @@ void Client::releaseWindow( bool on_shutdown )
         // only when the window is being unmapped, not when closing down KWin
         // (NETWM sections 5.5,5.7)
         info->setDesktop( 0 );
-        // desk = 0; - do not reset internal state, it may still be used by effects
+        desk = 0;
         info->setState( 0, info->state()); // reset all state flags
         }
-    else
-        workspace()->addDeleted( this, Allowed );
     XDeleteProperty( display(), client, atoms->kde_net_wm_user_creation_time);
     XDeleteProperty( display(), client, atoms->net_frame_extents );
     XDeleteProperty( display(), client, atoms->kde_net_wm_frame_strut );
@@ -225,25 +228,30 @@ void Client::releaseWindow( bool on_shutdown )
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
         XUnmapWindow( display(), client ); 
         }
-    cleanUp();
     client = None;
     XDestroyWindow( display(), wrapper );
     wrapper = None;
     XDestroyWindow( display(), frameId());
 //    frame = None;
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
-    unrefWindow(); // will delete if recount is == 0
+    workspace()->addDamage( geometry());
+    deleteClient( this, Allowed );
     }
 
 // like releaseWindow(), but this one is called when the window has been already destroyed
 // (e.g. the application closed it)
 void Client::destroyClient()
     {
-    assert( !deleting());
-    delete_refcount = 1;
+    assert( !deleting );
+    deleting = true;
     if( effects )
-        effects->windowClosed( this );
-    finishCompositing( false ); // don't discard pixmap
+        {
+        Deleted* del = Deleted::create( this );
+        effects->windowClosed( this, del );
+        scene->windowClosed( this, del );
+        del->unrefWindow();
+        }
+    finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
     StackingUpdatesBlocker blocker( workspace());
     if (moveResizeMode)
@@ -255,50 +263,16 @@ void Client::destroyClient()
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
     workspace()->clientHidden( this );
-//    destroyDecoration();
-    delete decoration;
-    decoration = NULL;
+    destroyDecoration();
     cleanGrouping();
     workspace()->removeClient( this, Allowed );
-    cleanUp();
     client = None; // invalidate
     XDestroyWindow( display(), wrapper );
     wrapper = None;
     XDestroyWindow( display(), frameId());
 //    frame = None;
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
-    unrefWindow(); // will delete if recount is == 0
-    }
-
-// All clean-up code shared between releaseWindow() and destroyClient().
-// Clean up everything that should not affect a deleted Client until it's
-// really deleted by unrefWindow(). I.e. stop watching events, turn off timers
-// and so on.
-void Client::cleanUp()
-    {
-    if( Extensions::shapeAvailable())
-        XShapeSelectInput( display(), client, NoEventMask );
-    XSelectInput( display(), client, NoEventMask );
-    delete autoRaiseTimer;
-    autoRaiseTimer = NULL;
-    delete shadeHoverTimer;
-    shadeHoverTimer = NULL;
-    delete ping_timer;
-    ping_timer = NULL;
-    delete process_killer;
-    process_killer = NULL;
-    delete demandAttentionKNotifyTimer;
-    demandAttentionKNotifyTimer = NULL;
-    }
-
-void Client::unrefWindow()
-    {
-    if( --delete_refcount > 0 )
-        return;
-    workspace()->removeDeleted( this );
     workspace()->addDamage( geometry());
-    destroyDecoration( true ); // only now gravitate etc., otherwise window pixmap would be wrong
-    discardWindowPixmap();
     deleteClient( this, Allowed );
     }
 
@@ -343,9 +317,9 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     addDamageFull();
     }
 
-void Client::destroyDecoration( bool force )
+void Client::destroyDecoration()
     {
-    if( decoration != NULL || force )
+    if( decoration != NULL )
         {
         delete decoration;
         decoration = NULL;
@@ -360,7 +334,7 @@ void Client::destroyDecoration( bool force )
         workarea_diff_y = save_workarea_diff_y;
         if( compositing() )
             discardWindowPixmap();
-        if( scene != NULL && !deleting())
+        if( scene != NULL && !deleting ) 
             scene->windowGeometryShapeChanged( this );
         addDamageFull();
         }
@@ -895,7 +869,7 @@ void Client::toggleShade()
 
 void Client::updateVisibility()
     {
-    if( deleting())
+    if( deleting )
         return;
     bool show = true;
     if( hidden )
@@ -953,7 +927,7 @@ void Client::updateVisibility()
 void Client::setMappingState(int s)
     {
     assert( client != None );
-    assert( !deleting() || s == WithdrawnState );
+    assert( !deleting || s == WithdrawnState );
     if( mapping_state == s )
         return;
     bool was_unmanaged = ( mapping_state == WithdrawnState );

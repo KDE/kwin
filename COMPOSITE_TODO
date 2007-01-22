@@ -67,9 +67,11 @@ General TODO
 
 * handle properly deleted windows that reappear (windowReadded() function?)
 
-? consider using an extra class for representing deleted windows
+/ consider using an extra class for representing deleted windows
     - cleaning up Client/Unmanaged instances may still leave e.g. timers around if they're overlooked
     - an extra class could copy some interesting data and "replace" the old instance
+
++ Deleted::windowType() does not work
 
 
 OpenGL TODO
@@ -223,6 +225,10 @@ Effects TODO
             - not sure if this is doable for other opacity changes then the ones
                 initiated by the user or by the application
 *       - fade-out needs framework for disappearing windows (see the todo entry)
+
++ add API that'll hide the internals (for making backwards compatibility easier, etc.)
+    - effects should have access only to classes from this API
+    - hide the fact that Client/Unmanaged become Deleted in windowClosed()
 
 + minimize/shade effects
     - to replace the ones from KWin core

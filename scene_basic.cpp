@@ -77,7 +77,11 @@ void SceneBasic::windowAdded( Toplevel* )
     {
     }
 
-void SceneBasic::windowDeleted( Toplevel* )
+void SceneBasic::windowClosed( Toplevel*, Deleted* )
+    {
+    }
+
+void SceneBasic::windowDeleted( Deleted* )
     {
     }
 

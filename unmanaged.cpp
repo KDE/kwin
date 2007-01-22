@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "workspace.h"
 #include "effects.h"
+#include "deleted.h"
 
 #include <X11/extensions/shape.h>
 
@@ -70,24 +71,18 @@ bool Unmanaged::track( Window w )
 
 void Unmanaged::release()
     {
-    assert( !deleting());
-    delete_refcount = 1;
     if( effects )
-        effects->windowClosed( this );
-    finishCompositing( false ); // don't discard pixmap
+        {
+        Deleted* del = Deleted::create( this );
+        effects->windowClosed( this, del );
+        scene->windowClosed( this, del );
+        del->unrefWindow();
+        }
+    finishCompositing();
     workspace()->removeUnmanaged( this, Allowed );
     if( Extensions::shapeAvailable())
         XShapeSelectInput( display(), handle(), NoEventMask );
     XSelectInput( display(), handle(), NoEventMask );
-    unrefWindow(); // will delete if recount is == 0
-    }
-
-void Unmanaged::unrefWindow()
-    {
-    if( --delete_refcount > 0 )
-        return;
-    discardWindowPixmap();
-    workspace()->removeDeleted( this );
     workspace()->addDamage( geometry());
     deleteUnmanaged( this, Allowed );
     }

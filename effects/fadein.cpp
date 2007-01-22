@@ -57,7 +57,7 @@ void FadeInEffect::windowAdded( Toplevel* c )
         }
     }
 
-void FadeInEffect::windowDeleted( Toplevel* c )
+void FadeInEffect::windowClosed( Toplevel* c, Deleted* )
     {
     windows.remove( c );
     }

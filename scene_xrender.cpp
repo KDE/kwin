@@ -33,6 +33,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "toplevel.h"
 #include "client.h"
+#include "deleted.h"
 #include "effects.h"
 
 namespace KWinInternal
@@ -230,7 +231,24 @@ void SceneXrender::windowOpacityChanged( Toplevel* c )
     w.discardAlpha();
     }
 
-void SceneXrender::windowDeleted( Toplevel* c )
+void SceneXrender::windowClosed( Toplevel* c, Deleted* deleted )
+    {
+    assert( windows.contains( c ));
+    if( deleted != NULL )
+        { // replace c with deleted
+        Window& w = windows[ c ];
+        w.updateToplevel( deleted );
+        windows[ deleted ] = w;
+        windows.remove( c );
+        }
+    else
+        {
+        windows[ c ].free();
+        windows.remove( c );
+        }
+    }
+
+void SceneXrender::windowDeleted( Deleted* c )
     {
     assert( windows.contains( c ));
     windows[ c ].free();

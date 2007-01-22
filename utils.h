@@ -75,6 +75,7 @@ const QPoint invalidPoint( INT_MIN, INT_MIN );
 class Toplevel;
 class Client;
 class Unmanaged;
+class Deleted;
 class Group;
 class Options;
 
@@ -84,6 +85,8 @@ typedef QList< Client* > ClientList;
 typedef QList< const Client* > ConstClientList;
 typedef QList< Unmanaged* > UnmanagedList;
 typedef QList< const Unmanaged* > ConstUnmanagedList;
+typedef QList< Deleted* > DeletedList;
+typedef QList< const Deleted* > ConstDeletedList;
 
 typedef QList< Group* > GroupList;
 typedef QList< const Group* > ConstGroupList;

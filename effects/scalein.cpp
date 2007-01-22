@@ -65,7 +65,7 @@ void ScaleInEffect::windowAdded( Toplevel* c )
         }
     }
 
-void ScaleInEffect::windowDeleted( Toplevel* c )
+void ScaleInEffect::windowClosed( Toplevel* c, Deleted* )
     {
     windows.remove( c );
     }

@@ -247,8 +247,8 @@ class Workspace : public QObject, public KDecorationDefines
         Group* findClientLeaderGroup( const Client* c ) const;
 
         void removeUnmanaged( Unmanaged*, allowed_t ); // only called from Unmanaged::release()
-        void removeDeleted( Toplevel* );
-        void addDeleted( Toplevel*, allowed_t );
+        void removeDeleted( Deleted*, allowed_t );
+        void addDeleted( Deleted*, allowed_t );
 
         bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
@@ -558,7 +558,7 @@ class Workspace : public QObject, public KDecorationDefines
         ClientList clients;
         ClientList desktops;
         UnmanagedList unmanaged;
-        ToplevelList pending_deleted;
+        DeletedList deleted;
 
         ClientList unconstrained_stacking_order;
         ClientList stacking_order;

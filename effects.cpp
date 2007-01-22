@@ -47,11 +47,11 @@ void Effect::windowAdded( Toplevel* )
     {
     }
 
-void Effect::windowClosed( Toplevel* )
+void Effect::windowClosed( Toplevel*, Deleted* )
     {
     }
 
-void Effect::windowDeleted( Toplevel* )
+void Effect::windowDeleted( Deleted* )
     {
     }
 
@@ -147,16 +147,16 @@ void EffectsHandler::windowAdded( Toplevel* c )
         e->windowAdded( c );
     }
 
-void EffectsHandler::windowDeleted( Toplevel* c )
+void EffectsHandler::windowDeleted( Deleted* c )
     {
     foreach( Effect* e, effects )
         e->windowDeleted( c );
     }
 
-void EffectsHandler::windowClosed( Toplevel* c )
+void EffectsHandler::windowClosed( Toplevel* c, Deleted* deleted )
     {
     foreach( Effect* e, effects )
-        e->windowClosed( c );
+        e->windowClosed( c, deleted );
     }
 
 void EffectsHandler::windowActivated( Toplevel* c )

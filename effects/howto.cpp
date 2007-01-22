@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 // Include the class definition.
 #include "howto.h"
 
+#include "deleted.h"
 
 // Note that currently effects need to be manually enabled in the EffectsHandler
 // class constructor (in effects.cpp).
@@ -137,8 +138,15 @@ void HowtoEffect::windowActivated( Toplevel* c )
         }
     }
 
+// TODO
+void HowtoEffect::windowClosed( Toplevel* c, Deleted* d )
+    {
+    if( fade_window == c )
+        fade_window = d;
+    }
+
 // This function is called when a window is destroyed.
-void HowtoEffect::windowDeleted( Toplevel* c )
+void HowtoEffect::windowDeleted( Deleted* c )
     {
     // If the window to be faded out and in is destroyed, just reset the pointer.
     // This effect then will do nothing and just call the next effect.

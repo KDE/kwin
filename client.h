@@ -91,7 +91,6 @@ class Client
 
         void releaseWindow( bool on_shutdown = false );
         void destroyClient();
-        virtual void unrefWindow();
 
         enum Sizemode // how to resize the window in order to obey constains (mainly aspect ratios)
             {
@@ -358,7 +357,6 @@ class Client
         void updateWindowRules();
         void finishWindowRules();
         void setShortcutInternal( const KShortcut& cut );
-        void cleanUp();
 
         void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
@@ -387,7 +385,7 @@ class Client
 
         void embedClient( Window w, const XWindowAttributes &attr );    
         void detectNoBorder();
-        void destroyDecoration( bool force = false );
+        void destroyDecoration();
         void updateFrameExtents();
 
         void rawShow(); // just shows it
@@ -432,6 +430,7 @@ class Client
         ClientList transients_list; // SELI make this ordered in stacking order?
         ShadeMode shade_mode;
         uint active :1;
+        uint deleting : 1; // true when doing cleanup and destroying the client
         uint keep_above : 1; // NET::KeepAbove (was stays_on_top)
         uint skip_taskbar :1;
         uint original_skip_taskbar :1; // unaffected by KWin

@@ -33,7 +33,8 @@ class SceneXrender
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
         virtual void windowAdded( Toplevel* );
-        virtual void windowDeleted( Toplevel* );
+        virtual void windowClosed( Toplevel*, Deleted* );
+        virtual void windowDeleted( Deleted* );
         Picture bufferPicture();
     protected:
         virtual void paintBackground( QRegion region );

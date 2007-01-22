@@ -62,7 +62,7 @@ void ShakyMoveEffect::windowUserMovedResized( Toplevel* c, bool first, bool last
         }
     }
 
-void ShakyMoveEffect::windowDeleted( Toplevel* c )
+void ShakyMoveEffect::windowClosed( Toplevel* c, Deleted* )
     {
     windows.remove( c );
     if( windows.isEmpty())

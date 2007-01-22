@@ -131,7 +131,7 @@ void PresentWindowsEffect::windowActivated( Toplevel* t )
         rearrangeWindows();
     }
 
-void PresentWindowsEffect::windowDeleted( Toplevel* t )
+void PresentWindowsEffect::windowClosed( Toplevel* t, Deleted* )
     {
         rearrangeWindows();
     }
