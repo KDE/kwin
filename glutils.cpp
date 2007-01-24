@@ -26,6 +26,8 @@ int glTextureUnitsCount;
 
 // Function pointers
 glXGetProcAddress_func glXGetProcAddress;
+// GLX 1.3
+glXQueryDrawable_func glXQueryDrawable;
 // texture_from_pixmap extension functions
 glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 glXBindTexImageEXT_func glXBindTexImageEXT;
@@ -63,6 +65,7 @@ void initGLX()
     glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glXGetProcAddress" );
     if( glXGetProcAddress == NULL )
         glXGetProcAddress = (glXGetProcAddress_func) getProcAddress( "glXGetProcAddressARB" );
+    glXQueryDrawable = (glXQueryDrawable_func) getProcAddress( "glXQueryDrawable" );
     if( hasGLExtension( "GLX_EXT_texture_from_pixmap" ))
         {
         glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress( "glXBindTexImageEXT" );

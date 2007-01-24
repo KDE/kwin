@@ -86,6 +86,7 @@ bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::strict_binding; // intended for AIGLX
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
+bool SceneOpenGL::supports_npot_textures;
 bool SceneOpenGL::supports_saturation;
 bool SceneOpenGL::shm_mode;
 XShmSegmentInfo SceneOpenGL::shm;
@@ -180,6 +181,8 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     has_waitSync = glXGetVideoSync ? true : false;
 
     // Check whether certain features are supported
+    supports_npot_textures = hasGLExtension( "GL_ARB_texture_non_power_of_two" )
+        || hasGLVersion(2, 0);
     supports_saturation = ((hasGLExtension("GL_ARB_texture_env_crossbar")
         && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
         && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
@@ -619,6 +622,7 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
 SceneOpenGL::Window::Window( Toplevel* c )
     : Scene::Window( c )
     , texture( 0 )
+    , texture_target( 0 )
     , texture_y_inverted( false )
     , bound_glxpixmap( None )
     , currentXResolution( -1 )
@@ -711,6 +715,36 @@ void SceneOpenGL::Window::prepareForPainting()
     //  paint pass
     }
 
+void SceneOpenGL::Window::findTextureTarget()
+    {
+    unsigned int target = 0;
+    if( tfp_mode && glXQueryDrawable && bound_glxpixmap != None )
+        glXQueryDrawable( display(), bound_glxpixmap, GLX_TEXTURE_TARGET_EXT, &target );
+    else
+        {
+        if( supports_npot_textures ||
+            ( isPowerOfTwo( toplevel->width() ) && isPowerOfTwo( toplevel->height() )))
+            target = GLX_TEXTURE_2D_EXT;
+        else
+            target = GLX_TEXTURE_RECTANGLE_EXT;
+        }
+    switch( target )
+        {
+        case GLX_TEXTURE_2D_EXT:
+            texture_target = GL_TEXTURE_2D;
+            texture_scale_x = 1.0f / toplevel->width();
+            texture_scale_y = 1.0f / toplevel->height();
+          break;
+        case GLX_TEXTURE_RECTANGLE_EXT:
+            texture_target = GL_TEXTURE_RECTANGLE_ARB;
+            texture_scale_x = 1.0f;
+            texture_scale_y = 1.0f;
+          break;
+        default:
+            assert( false );
+        }
+    }
+
 // Bind the window pixmap to an OpenGL texture.
 void SceneOpenGL::Window::bindTexture()
     {
@@ -718,7 +752,7 @@ void SceneOpenGL::Window::bindTexture()
         && !options->glAlwaysRebind ) // interestingly with some gfx cards always rebinding is faster
         {
         // texture doesn't need updating, just bind it
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        glBindTexture( texture_target, texture );
         return;
         }
     // Get the pixmap with the window contents
@@ -762,20 +796,21 @@ void SceneOpenGL::Window::bindTexture()
         glXWaitX();
     if( shm_mode )
         { // non-tfp case, copy pixmap contents to a texture
+        findTextureTarget();
         if( texture == None )
             {
             glGenTextures( 1, &texture );
-            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            glBindTexture( texture_target, texture );
             texture_y_inverted = false;
-            glTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, toplevel->width(), toplevel->height(),
+            glTexImage2D( texture_target, 0, GL_RGBA, toplevel->width(), toplevel->height(),
                 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL );
             // TODO hasAlpha() ?
-//            glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+//            glCopyTexImage2D( texture_target, 0,
 //                toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
 //                0, 0, toplevel->width(), toplevel->height(), 0 );
             }
         else
-            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            glBindTexture( texture_target, texture );
         if( !toplevel->damage().isEmpty())
             {
             XGCValues xgcv;
@@ -790,7 +825,7 @@ void SceneOpenGL::Window::bindTexture()
                 XCopyArea( display(), pix, p, gc, r.x(), r.y(), r.width(), r.height(), 0, 0 );
                 XSync( display(), False );
                 glXWaitX();
-                glTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+                glTexSubImage2D( texture_target, 0,
                     r.x(), r.y(), r.width(), r.height(), GL_BGRA, GL_UNSIGNED_BYTE, shm.shmaddr );
                 glXWaitGL();
                 XFreePixmap( display(), p );
@@ -809,24 +844,34 @@ void SceneOpenGL::Window::bindTexture()
             glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
             }
+        // TODO works around a crash; check later whether we really need this
+        unsigned int tfp_target;
+        if( supports_npot_textures ||
+            ( isPowerOfTwo( toplevel->width() ) && isPowerOfTwo( toplevel->height() )))
+            tfp_target = GLX_TEXTURE_2D_EXT;
+        else
+            tfp_target = GLX_TEXTURE_RECTANGLE_EXT;
         static const int attrs[] =
             {
             GLX_TEXTURE_FORMAT_EXT, GLX_TEXTURE_FORMAT_RGBA_EXT,
+            GLX_TEXTURE_TARGET_EXT, tfp_target,
             None
             };
         // the GLXPixmap will reference the X pixmap, so it will be freed automatically
         // when no longer needed
         bound_glxpixmap = glXCreatePixmap( display(), fbcdrawable, pix, attrs );
+        findTextureTarget();
         int value;
         glXGetFBConfigAttrib( display(), fbcdrawable, GLX_Y_INVERTED_EXT, &value );
         texture_y_inverted = value ? true : false;
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        glBindTexture( texture_target, texture );
         if( !strict_binding )
             glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         toplevel->resetDamage( toplevel->rect());
         }
     else
         { // non-tfp case, copy pixmap contents to a texture
+        findTextureTarget();
         GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
         glXMakeContextCurrent( display(), pixmap, pixmap, ctxdrawable );
         if( last_pixmap != None )
@@ -839,15 +884,15 @@ void SceneOpenGL::Window::bindTexture()
         if( texture == None )
             {
             glGenTextures( 1, &texture );
-            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            glBindTexture( texture_target, texture );
             texture_y_inverted = false;
-            glCopyTexImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+            glCopyTexImage2D( texture_target, 0,
                 toplevel->hasAlpha() ? GL_RGBA : GL_RGB,
                 0, 0, toplevel->width(), toplevel->height(), 0 );
             }
         else
             {
-            glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+            glBindTexture( texture_target, texture );
             QRegion damage = optimizeBindDamage( toplevel->damage(), 30 * 30 );
             foreach( QRect r, damage.rects())
                 {
@@ -855,7 +900,7 @@ void SceneOpenGL::Window::bindTexture()
                 // the pixmap to a texture, this is not affected
                 // by using glOrtho() for the OpenGL scene)
                 int gly = toplevel->height() - r.y() - r.height();
-                glCopyTexSubImage2D( GL_TEXTURE_RECTANGLE_ARB, 0,
+                glCopyTexSubImage2D( texture_target, 0,
                     r.x(), gly, r.x(), gly, r.width(), r.height());
                 }
             }
@@ -863,7 +908,7 @@ void SceneOpenGL::Window::bindTexture()
         if( db )
             glDrawBuffer( GL_BACK );
         glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        glBindTexture( texture_target, texture );
         texture_y_inverted = false;
         toplevel->resetDamage( toplevel->rect());
         }
@@ -892,8 +937,8 @@ QRegion SceneOpenGL::Window::optimizeBindDamage( const QRegion& reg, int limit )
 
 void SceneOpenGL::Window::enableTexture()
     {
-    glEnable( GL_TEXTURE_RECTANGLE_ARB );
-    glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+    glEnable( texture_target );
+    glBindTexture( texture_target, texture );
     if( tfp_mode && strict_binding )
         {
         assert( bound_glxpixmap != None );
@@ -901,13 +946,13 @@ void SceneOpenGL::Window::enableTexture()
         }
     if( options->smoothScale != 0 ) // default to yes
         {
-        glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-        glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+        glTexParameteri( texture_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+        glTexParameteri( texture_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
         }
     else
         {
-        glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-        glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+        glTexParameteri( texture_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+        glTexParameteri( texture_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
         }
     }
 
@@ -916,11 +961,11 @@ void SceneOpenGL::Window::disableTexture()
     if( tfp_mode && strict_binding )
         {
         assert( bound_glxpixmap != None );
-        glBindTexture( GL_TEXTURE_RECTANGLE_ARB, texture );
+        glBindTexture( texture_target, texture );
         glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
         }
-    glBindTexture( GL_TEXTURE_RECTANGLE_ARB, 0 );
-    glDisable( GL_TEXTURE_RECTANGLE_ARB );
+    glBindTexture( texture_target, 0 );
+    glDisable( texture_target );
     }
 
 void SceneOpenGL::Window::discardTexture()
@@ -1097,6 +1142,18 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             }
         }
     enableTexture();
+    // update texture matrix to handle GL_TEXTURE_2D and GL_TEXTURE_RECTANGLE
+    glMatrixMode( GL_TEXTURE );
+    glLoadIdentity();
+    glScalef( texture_scale_x, texture_scale_y, 1 );
+    if( !texture_y_inverted )
+        {
+        // Modify texture matrix so that we could always use non-opengl
+        //  coordinates for textures
+        glScalef(1, -1, 1);
+        glTranslatef(0, -height(), 0);
+        }
+    glMatrixMode( GL_MODELVIEW );
     if(verticeslist.isEmpty())
         createVertexGrid(0, 0);
     // Enable arrays
@@ -1104,14 +1161,6 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex), verticeslist[0].pos);
     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), verticeslist[0].texcoord);
-    if( !texture_y_inverted )
-        {
-        // Modify texture matrix so that we could always use non-opengl
-        //  coordinates for textures
-        glMatrixMode(GL_TEXTURE);
-        glScalef(1, -1, 1);
-        glTranslatef(0, -height(), 0);
-        }
     // Render
     if( mask & PAINT_WINDOW_TRANSFORMED )
         // Just draw the entire window, no clipping
@@ -1132,11 +1181,9 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glDisable( GL_SCISSOR_TEST );
         }
     // Restore texture matrix
-    if( !texture_y_inverted )
-        {
-        glLoadIdentity();
-        glMatrixMode(GL_MODELVIEW);
-        }
+    glMatrixMode( GL_TEXTURE );
+    glLoadIdentity();
+    glMatrixMode( GL_MODELVIEW );
     // Disable arrays
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
@@ -1146,11 +1193,11 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         if( data.saturation != 1.0 && supports_saturation )
             {
             glActiveTexture(GL_TEXTURE3);
-            glDisable( GL_TEXTURE_RECTANGLE_ARB );
+            glDisable( texture_target );
             glActiveTexture(GL_TEXTURE2);
-            glDisable( GL_TEXTURE_RECTANGLE_ARB );
+            glDisable( texture_target );
             glActiveTexture(GL_TEXTURE1);
-            glDisable( GL_TEXTURE_RECTANGLE_ARB );
+            glDisable( texture_target );
             glActiveTexture(GL_TEXTURE0);
             }
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );

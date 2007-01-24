@@ -47,6 +47,7 @@ bool hasGLXVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
 bool hasGLExtension(const QString& extension);
 
+inline bool isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
 
 // Defines
 /*
@@ -73,6 +74,10 @@ bool hasGLExtension(const QString& extension);
 typedef void (*glXFuncPtr)();
 typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
 extern glXGetProcAddress_func glXGetProcAddress;
+// glXQueryDrawable (added in GLX 1.3)
+typedef void (*glXQueryDrawable_func)( Display* dpy, GLXDrawable drawable,
+    int attribute, unsigned int *value );
+extern glXQueryDrawable_func glXQueryDrawable;
 // texture_from_pixmap extension functions
 typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
     int buffer, const int* attrib_list );

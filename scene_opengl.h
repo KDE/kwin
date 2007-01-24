@@ -48,6 +48,7 @@ class SceneOpenGL
         void waitSync();
         void flushBuffer( int mask, QRegion damage );
         typedef GLuint Texture;
+        typedef GLenum Target;
         GC gcroot;
         Drawable buffer;
         GLXFBConfig fbcbuffer;
@@ -61,6 +62,7 @@ class SceneOpenGL
         static bool shm_mode;
         static bool strict_binding;
         static bool copy_buffer_hack;
+        static bool supports_npot_textures;
         static bool supports_saturation;
         QMap< Toplevel*, Window > windows;
         static XShmSegmentInfo shm;
@@ -74,6 +76,7 @@ class SceneOpenGL::Window
         virtual void free();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         virtual void prepareForPainting();
+        void findTextureTarget();
         void bindTexture();
         void enableTexture();
         void disableTexture();
@@ -118,6 +121,8 @@ class SceneOpenGL::Window
     private:
         QRegion optimizeBindDamage( const QRegion& reg, int limit );
         Texture texture;
+        Target texture_target;
+        float texture_scale_x, texture_scale_y; // to un-normalize GL_TEXTURE_2D
         bool texture_y_inverted; // texture has y inverted
         GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
 

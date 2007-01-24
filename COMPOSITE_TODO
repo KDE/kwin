@@ -118,10 +118,12 @@ OpenGL TODO
       one for the root window (or for the window used in the XComposite overlay)
       and the best one for every depth of drawables
 
-+ GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
-    - code currently uses GL_ARB_texture_rectangle (GL_TEXTURE_RECTANGLE_ARB), using
-        normal textures when GL_ARB_texture_non_power_of_two is available should(?) be
-        preferred
+/ GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
+%   - works; bugs in tfp_mode with power_of_two textures
+        - nvidia: tfp_target needed in bindTexture() else glXCreatePixmap fails;
+            shouldn't be necessary according to texture_from_pixmap spec
+        - ati (others?): power_of_two windows are drawn white unless non-tfp_mode
+            is forced in findTextureTarget()
 
 ? in SceneOpenGL::bindTexture() with tfp_mode, with some gfx cards it seems
     to be faster to not short-circuit the texture binding when there's been
