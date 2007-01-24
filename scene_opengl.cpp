@@ -644,10 +644,7 @@ void SceneOpenGL::Window::createVertexGrid(int xres, int yres)
     {
     int oldcount = verticeslist.count();
     verticeslist.clear();
-    // FIXME: this creates a QRegion out of rectangles just to get the list of
-    //  rectangles. Maybe the QRegion construction can be bypassed?
-    QRegion region = shape();
-    foreach( QRect r, region.rects())
+    foreach( QRect r, shape().rects())
         {
         // First calculate number of columns/rows that this rect will be
         //  divided into
@@ -673,7 +670,7 @@ void SceneOpenGL::Window::createVertexGrid(int xres, int yres)
             }
         }
     Client* c = qobject_cast<Client *>(window());
-    kDebug() << k_funcinfo << "'" << (c ? c->caption() : "") << "': Resized vertex grid from " <<
+    kDebug( 1212 ) << k_funcinfo << "'" << (c ? c->caption() : "") << "': Resized vertex grid from " <<
             oldcount/4 << " quads (minreso: " << currentXResolution << "x" << currentYResolution <<
             ") to " << verticeslist.count()/4 << " quads (minreso: " << xres << "x" << yres << ")" << endl;
 
