@@ -24,6 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/shakymove.h"
 #include "effects/shiftworkspaceup.h"
 #include "effects/showfps.h"
+#include "effects/wavywindows.h"
 #include "effects/zoom.h"
 
 #include "effects/test_input.h"
@@ -115,6 +116,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     effects.append( new ShowFpsEffect( ws ));
 //    effects.append( new ZoomEffect( ws ));
 //    effects.append( new PresentWindowsEffect( ws ));
+//    effects.append( new WavyWindowsEffect( ws ));
 //    effects.append( new HowtoEffect );
 //    effects.append( new MakeTransparentEffect );
 //    effects.append( new ShakyMoveEffect );
