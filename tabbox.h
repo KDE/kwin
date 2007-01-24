@@ -53,7 +53,6 @@ class TabBox : public Q3Frame
         Workspace* workspace() const;
 
         void reconfigure();
-        void updateKeyMapping();
 
     protected:
         void showEvent( QShowEvent* );
