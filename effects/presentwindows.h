@@ -74,7 +74,6 @@ class PresentWindowsEffect
             float scale;
             };
         QMap<Toplevel*, WindowData> mWindowData;
-        QList<Client*> mTemporarilyUnminimized;
     };
 
 } // namespace

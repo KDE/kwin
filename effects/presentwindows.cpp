@@ -67,8 +67,15 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
 void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
     if( mActiveness > 0.0f && mWindowData.contains(w->window()) )
+        {
         // This window will be transformed by the effect
         *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+        *mask &= ~Scene::PAINT_WINDOW_DISABLED;
+        // If it's minimized window and effect is not fully active, then apply
+        //  some transparency
+        if( mActiveness < 1.0f && static_cast< Client* >( w->window() )->isMinimized() )
+            *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
+        }
 
     effects->prePaintWindow( w, mask, region, time );
     }
@@ -86,6 +93,10 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         // Darken all windows except for the one under the cursor
         if( !windata.area.contains(cursorPos()) )
             data.brightness *= interpolate(1.0, 0.7, mActiveness);
+        // If it's minimized window and effect is not fully active, then apply
+        //  some transparency
+        if( mActiveness < 1.0f && static_cast< Client* >( w->window() )->isMinimized() )
+            data.opacity *= interpolate(0.0, 1.0, mActiveness);
         }
 
     // Call the next effect.
@@ -117,8 +128,6 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
         if( it.value().area.contains(pos) )
             {
             effects->activateWindow( it.key()->effectWindow());
-            // Prevent re-minimizing when the effect terminates
-            mTemporarilyUnminimized.removeAll( static_cast< Client* >(it.key()));
             }
         }
 
@@ -153,10 +162,6 @@ void PresentWindowsEffect::effectActivated()
 
 void PresentWindowsEffect::effectTerminated()
     {
-    // We need to re-minimize temporarily minimized windows
-    foreach( Client* client, mTemporarilyUnminimized )
-        client->minimize(true);
-
     // Destroy the temporary input window
     effects->destroyInputWindow( mInput );
     }
@@ -166,7 +171,6 @@ void PresentWindowsEffect::rearrangeWindows()
     if( !mActivated )
         return;
 
-    mTemporarilyUnminimized.clear();
     mWindowData.clear();
 
     const ClientList& originalclientlist = mWorkspace->stackingOrder();
@@ -180,13 +184,6 @@ void PresentWindowsEffect::rearrangeWindows()
         //  option)
         if( !client->isOnCurrentDesktop() )
             continue;
-        // Temporarily restore minimized windows
-        // TODO: make this configurable
-        if( client->isMinimized() )
-            {
-            mTemporarilyUnminimized.append(client);
-            client->unminimize(true);  // true = avoid animation
-            }
         clientlist.append(client);
         }
 
