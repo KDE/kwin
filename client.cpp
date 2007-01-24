@@ -598,6 +598,12 @@ void Client::unminimize( bool avoid_animation )
         effects->windowUnminimized( effectWindow());
     }
 
+QRect Client::iconGeometry() const
+    {
+    NETRect r = info->iconGeometry();
+    return QRect( r.pos.x, r.pos.y, r.size.width, r.size.height );
+    }
+
 extern bool         blockAnimation;
 
 void Client::animateMinimizeOrUnminimize( bool minimize )
@@ -627,8 +633,7 @@ void Client::animateMinimizeOrUnminimize( bool minimize )
 
     step = 40. * (11 - speed );
 
-    NETRect r = info->iconGeometry();
-    QRect icongeom( r.pos.x, r.pos.y, r.size.width, r.size.height );
+    QRect icongeom = iconGeometry();
     if ( !icongeom.isValid() )
         return;
 

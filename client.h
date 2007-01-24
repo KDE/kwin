@@ -130,6 +130,7 @@ class Client
         MaximizeMode maximizeMode() const;
         bool isMinimizable() const;
         void setMaximize( bool vertically, bool horizontally );
+        QRect iconGeometry() const;
 
         void setFullScreen( bool set, bool user );
         bool isFullScreen() const;
