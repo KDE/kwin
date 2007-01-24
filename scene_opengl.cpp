@@ -65,6 +65,7 @@ Sources and other compositing managers:
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <math.h>
 
 namespace KWinInternal
 {
@@ -620,12 +621,97 @@ SceneOpenGL::Window::Window( Toplevel* c )
     , texture( 0 )
     , texture_y_inverted( false )
     , bound_glxpixmap( None )
+    , currentXResolution( -1 )
+    , currentYResolution( -1 )
+    , requestedXResolution( 0 )
+    , requestedYResolution( 0 )
+    , verticesDirty( false )
     {
     }
 
 void SceneOpenGL::Window::free()
     {
     discardTexture();
+    }
+
+void SceneOpenGL::Window::requestVertexGrid(int maxquadsize)
+    {
+    requestedXResolution = (requestedXResolution <= 0) ? maxquadsize : qMin(maxquadsize, requestedXResolution);
+    requestedYResolution = (requestedYResolution <= 0) ? maxquadsize : qMin(maxquadsize, requestedYResolution);
+    }
+
+void SceneOpenGL::Window::createVertexGrid(int xres, int yres)
+    {
+    int oldcount = verticeslist.count();
+    verticeslist.clear();
+    // FIXME: this creates a QRegion out of rectangles just to get the list of
+    //  rectangles. Maybe the QRegion construction can be bypassed?
+    QRegion region = shape();
+    foreach( QRect r, region.rects())
+        {
+        // First calculate number of columns/rows that this rect will be
+        //  divided into
+        int cols = (xres <= 0) ? 1 : (int)ceilf( r.width() / (float)xres );
+        int rows = (yres <= 0) ? 1 : (int)ceilf( r.height() / (float)yres );
+        // Now calculate actual size of each cell
+        int cellw = r.width() / cols;
+        int cellh = r.height() / rows;
+        int maxx = r.x() + r.width();
+        int maxy = r.y() + r.height();
+        for( int x1 = r.x(); x1 < maxx; x1 += cellw )
+            {
+            int x2 = qMin(x1 + cellw, maxx);
+            for( int y1 = r.y(); y1 < maxy; y1 += cellh )
+                {
+                int y2 = qMin(y1 + cellh, maxy);
+                // Add this quad to vertices' list
+                verticeslist.append( Vertex( x1, y1 ));
+                verticeslist.append( Vertex( x1, y2 ));
+                verticeslist.append( Vertex( x2, y2 ));
+                verticeslist.append( Vertex( x2, y1 ));
+                }
+            }
+        }
+    Client* c = qobject_cast<Client *>(window());
+    kDebug() << k_funcinfo << "'" << (c ? c->caption() : "") << "': Resized vertex grid from " <<
+            oldcount/4 << " quads (minreso: " << currentXResolution << "x" << currentYResolution <<
+            ") to " << verticeslist.count()/4 << " quads (minreso: " << xres << "x" << yres << ")" << endl;
+
+    currentXResolution = xres;
+    currentYResolution = yres;
+    verticesDirty = false;
+    }
+
+void SceneOpenGL::Window::resetVertices()
+    {
+    // This assumes that texcoords of the vertices are unchanged. If they are,
+    //  we need to do this in some other way (or maybe the effects should then
+    // clean things up themselves)
+    for(int i = 0; i < verticeslist.count(); i++)
+        {
+        verticeslist[i].pos[0] = verticeslist[i].texcoord[0];
+        verticeslist[i].pos[1] = verticeslist[i].texcoord[1];
+        }
+    verticesDirty = false;
+    }
+
+void SceneOpenGL::Window::prepareVertices()
+    {
+    if( requestedXResolution != currentXResolution || requestedYResolution != currentYResolution )
+        createVertexGrid( requestedXResolution, requestedYResolution );
+    else if( verticesDirty )
+        resetVertices();
+
+    // Reset requests for the next painting
+    requestedXResolution = 0;
+    requestedYResolution = 0;
+    }
+
+void SceneOpenGL::Window::prepareForPainting()
+    {
+    prepareVertices();
+    // We should also bind texture here so that effects could access it in the
+    //  paint pass
     }
 
 // Bind the window pixmap to an OpenGL texture.
@@ -856,20 +942,6 @@ void SceneOpenGL::Window::discardTexture()
     texture = 0;
     }
 
-// paint a quad (rectangle), ty1/ty2 are texture coordinates (for handling
-// swapped y coordinate, see below)
-static void quadPaint( int x1, int y1, int x2, int y2, int ty1, int ty2 )
-    {
-    glTexCoord2i( x1, ty1 );
-    glVertex2i( x1, y1 );
-    glTexCoord2i( x2, ty1 );
-    glVertex2i( x2, y1 );
-    glTexCoord2i( x2, ty2 );
-    glVertex2i( x2, y2 );
-    glTexCoord2i( x1, ty2 );
-    glVertex2i( x1, y2 );
-    }
-
 // paint the window
 void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintData data )
     {
@@ -1028,24 +1100,49 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             }
         }
     enableTexture();
-    // actually paint the window
-    glBegin( GL_QUADS );
-    foreach( QRect r, region.rects())
+    if(verticeslist.isEmpty())
+        createVertexGrid(0, 0);
+    // Enable arrays
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), verticeslist[0].pos);
+    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), verticeslist[0].texcoord);
+    if( !texture_y_inverted )
         {
-        int y1 = r.y();
-        int y2 = r.y() + r.height();
-        int ty1 = y1;
-        int ty2 = y2;
-        // tfp can result in the texture having y coordinate inverted (because
-        // of the internal format), so do the inversion if needed
-        if( !texture_y_inverted ) // "!" because of converting to OpenGL coords
-            {
-            ty1 = height() - y1;
-            ty2 = height() - y2;
-            }
-        quadPaint( r.x(), y1, r.x() + r.width(), y2, ty1, ty2 );
+        // Modify texture matrix so that we could always use non-opengl
+        //  coordinates for textures
+        glMatrixMode(GL_TEXTURE);
+        glScalef(1, -1, 1);
+        glTranslatef(0, -height(), 0);
         }
-    glEnd();
+    // Render
+    if( mask & PAINT_WINDOW_TRANSFORMED )
+        // Just draw the entire window, no clipping
+        glDrawArrays( GL_QUADS, 0, verticeslist.count() );
+    else
+        {
+        // Make sure there's only a single quad (no transformed vertices)
+        // Clip using scissoring
+        glEnable( GL_SCISSOR_TEST );
+        region.translate( x, y);  // Back to screen coords
+        int dh = displayHeight();
+        foreach( QRect r, region.rects())
+            {
+            // Scissor rect has to be given in OpenGL coords
+            glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
+            glDrawArrays( GL_QUADS, 0, verticeslist.count() );
+            }
+        glDisable( GL_SCISSOR_TEST );
+        }
+    // Restore texture matrix
+    if( !texture_y_inverted )
+        {
+        glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
+        }
+    // Disable arrays
+    glDisableClientState( GL_VERTEX_ARRAY );
+    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
     glPopMatrix();
     if( data.opacity != 1.0 || data.saturation != 1.0 || data.brightness != 1.0f )
         {

@@ -223,6 +223,7 @@ void Scene::paintWindow( Window* w, int mask, QRegion region )
     {
     WindowPaintData data;
     data.opacity = w->window()->opacity();
+    w->prepareForPainting();
     effects->paintWindow( effectWindow( w ), mask, region, data );
     }
 

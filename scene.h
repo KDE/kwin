@@ -118,6 +118,7 @@ class Scene::Window
         virtual void free();
         // perform the actual painting of the window
         virtual void performPaint( int mask, QRegion region, WindowPaintData data ) = 0;
+        virtual void prepareForPainting()  {}
         int x() const;
         int y() const;
         int width() const;

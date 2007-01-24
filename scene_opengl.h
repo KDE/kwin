@@ -25,6 +25,7 @@ class SceneOpenGL
     : public Scene
     {
     public:
+        class Window;
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
         virtual void paint( QRegion damage, ToplevelList windows );
@@ -61,7 +62,6 @@ class SceneOpenGL
         static bool strict_binding;
         static bool copy_buffer_hack;
         static bool supports_saturation;
-        class Window;
         QMap< Toplevel*, Window > windows;
         static XShmSegmentInfo shm;
     };
@@ -73,16 +73,63 @@ class SceneOpenGL::Window
         Window( Toplevel* c );
         virtual void free();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
+        virtual void prepareForPainting();
         void bindTexture();
         void enableTexture();
         void disableTexture();
         void discardTexture();
         Window() {} // QMap sucks even in Qt4
+
+        /**
+         * @short Vertex class
+         * Vertex has position and texture coordinate which are equal at first,
+         *  however effects can e.g. modify position to move the window or part of it.
+         **/
+        class Vertex
+        {
+            public:
+                Vertex()  {}
+                Vertex(float x, float y)
+                {
+                    pos[0] = texcoord[0] = x; pos[1] = texcoord[1] = y; pos[2] = 0.0f;
+                }
+                Vertex(float x, float y, float u, float v)
+                {
+                    pos[0] = x; pos[1] = y; pos[2] = 0.0f; texcoord[0] = u; texcoord[1] = v;
+                }
+                float pos[3];
+                float texcoord[2];
+        };
+        // Returns list of vertices
+        QVector<Vertex>& vertices()  { return verticeslist; }
+        // Can be called in pre-paint pass. Makes sure that all quads that the
+        //  window consists of are not bigger than maxquadsize x maxquadsize
+        //  (in pixels) in the following paint pass.
+        void requestVertexGrid(int maxquadsize);
+        // Marks vertices of the window as dirty. Call this if you change
+        //  position of the vertices
+        void markVerticesDirty()  { verticesDirty = true; }
+    protected:
+        // Makes sure that vertex grid requests are fulfilled and that vertices
+        //  aren't dirty. Call this before paint pass
+        void prepareVertices();
+        void createVertexGrid(int xres, int yres);
+        void resetVertices();  // Resets positions of vertices
     private:
         QRegion optimizeBindDamage( const QRegion& reg, int limit );
         Texture texture;
         bool texture_y_inverted; // texture has y inverted
         GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
+
+        QVector<Vertex> verticeslist;
+        // Maximum size of the biggest quad that window currently has, in pixels
+        int currentXResolution;
+        int currentYResolution;
+        // Requested maximum size of the biggest quad that window would have
+        //  during the next paint pass, in pixels
+        int requestedXResolution;
+        int requestedYResolution;
+        bool verticesDirty;  // vertices have been modified in some way
     };
 
 } // namespace
