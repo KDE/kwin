@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/fadeout.h"
 #include "effects/howto.h"
 #include "effects/maketransparent.h"
+#include "effects/minimizeanimation.h"
 #include "effects/presentwindows.h"
 #include "effects/scalein.h"
 #include "effects/shakymove.h"
@@ -117,6 +118,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
 //    effects.append( new ZoomEffect( ws ));
 //    effects.append( new PresentWindowsEffect( ws ));
 //    effects.append( new WavyWindowsEffect( ws ));
+//    effects.append( new MinimizeAnimationEffect( ws ));
 //    effects.append( new HowtoEffect );
 //    effects.append( new MakeTransparentEffect );
 //    effects.append( new ShakyMoveEffect );

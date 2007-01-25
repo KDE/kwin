@@ -65,6 +65,7 @@ set(kwin_KDEINIT_SRCS
    effects/test_input.cpp
    effects/presentwindows.cpp
    effects/wavywindows.cpp
+   effects/minimizeanimation.cpp
    )
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWinInternal::Workspace )
