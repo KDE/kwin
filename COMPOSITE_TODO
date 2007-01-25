@@ -261,3 +261,6 @@ Effects TODO
 
 + EffectWindow should be completely opaque when kept as the only API for effects
     - no inlines, etc.
+
++ merge fadein and fadeout effects
+    - so that they don't conflict and share the progress
