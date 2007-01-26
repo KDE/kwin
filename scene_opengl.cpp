@@ -495,14 +495,23 @@ void SceneOpenGL::flushBuffer( int mask, QRegion damage )
                 { // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
                 glEnable( GL_SCISSOR_TEST );
                 glDrawBuffer( GL_FRONT );
+                int xpos = 0;
+                int ypos = 0;
                 foreach( QRect r, damage.rects())
                     {
                     // convert to OpenGL coordinates
                     int y = displayHeight() - r.y() - r.height();
-                    glRasterPos2f( r.x(), r.y() + r.height());
+                    // Move raster position relatively using glBitmap() rather
+                    // than using glRasterPos2f() - the latter causes drawing
+                    // artefacts at the bottom screen edge with some gfx cards
+//                    glRasterPos2f( r.x(), r.y() + r.height());
+                    glBitmap( 0, 0, 0, 0, r.x() - xpos, y - ypos, NULL );
+                    xpos = r.x();
+                    ypos = y;
                     glScissor( r.x(), y, r.width(), r.height());
                     glCopyPixels( r.x(), y, r.width(), r.height(), GL_COLOR );
                     }
+                glBitmap( 0, 0, 0, 0, -xpos, -ypos, NULL ); // move position back to 0,0
                 glDrawBuffer( GL_BACK );
                 glDisable( GL_SCISSOR_TEST );
                 }
