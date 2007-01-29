@@ -32,6 +32,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <QString>
 #include <QWidget>
+#include <kconfig.h>
 
 #include "kdecoration.h"
 
@@ -45,7 +46,7 @@ class KWIN_EXPORT KDecorationPlugins
     : public KDecorationProvides
     {
     public:
-        KDecorationPlugins( KConfig* cfg );
+        KDecorationPlugins(const KSharedConfigPtr &cfg);
         virtual ~KDecorationPlugins();
         bool loadPlugin( QString name );
         void destroyPreviousPlugin();
@@ -63,7 +64,7 @@ class KWIN_EXPORT KDecorationPlugins
         KLibrary *old_library;
         KDecorationFactory* old_fact;
         QString pluginStr;
-        KConfig* config;
+        KSharedConfigPtr config;
     };
 
 /*

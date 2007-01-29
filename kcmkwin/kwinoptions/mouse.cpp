@@ -134,7 +134,7 @@ void KTitleBarActionsConfig::paletteChanged()
 
 }
 
-KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget * parent)
+KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
   : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3;
@@ -593,7 +593,7 @@ void KTitleBarActionsConfig::defaults()
 }
 
 
-KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget * parent)
+KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
   : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3, strAllW;

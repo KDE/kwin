@@ -1,4 +1,6 @@
+#include "/home/mkretz/KDE/src/branches/work/kinstance-redesign/kdebase/workspace/kwin/lib/kdecoration_plugins_p.h"
 /*****************************************************************
+// vim: sw=4 sts=4 et tw=100
 This file is part of the KDE project.
 
 Copyright (C) 1999, 2000    Daniel M. Duley <mosfet@kde.org>
@@ -29,6 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #include <kdebug.h>
 #include <klocale.h>
 #include <klibloader.h>
+#include <kconfiggroup.h>
 #include <assert.h>
 
 #include <QDir>
@@ -36,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "kdecorationfactory.h"
 
-KDecorationPlugins::KDecorationPlugins( KConfig* cfg )
+KDecorationPlugins::KDecorationPlugins(const KSharedConfigPtr &cfg)
     :   create_ptr( NULL ),
         library( NULL ),
         fact( NULL ),

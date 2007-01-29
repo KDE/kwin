@@ -72,7 +72,7 @@ class KFocusConfig : public KCModule
 {
   Q_OBJECT
 public:
-  KFocusConfig( bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent );
+  KFocusConfig( bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent );
   ~KFocusConfig();
 
   void load();
@@ -128,7 +128,7 @@ class KMovingConfig : public KCModule
 {
   Q_OBJECT
 public:
-  KMovingConfig( bool _standAlone, KConfig *config, KInstance *inst, QWidget *parent );
+  KMovingConfig( bool _standAlone, KConfig *config, const KComponentData &inst, QWidget *parent );
   ~KMovingConfig();
 
   void load();
@@ -185,7 +185,7 @@ class KAdvancedConfig : public KCModule
 {
   Q_OBJECT
 public:
-  KAdvancedConfig( bool _standAlone, KConfig *config, KInstance *inst, QWidget *parent );
+  KAdvancedConfig( bool _standAlone, KConfig *config, const KComponentData &inst, QWidget *parent );
   ~KAdvancedConfig();
 
   void load();
@@ -238,7 +238,7 @@ class KTranslucencyConfig : public KCModule
 {
   Q_OBJECT
 public:
-  KTranslucencyConfig( bool _standAlone, KConfig *config, KInstance *inst, QWidget *parent);
+  KTranslucencyConfig( bool _standAlone, KConfig *config, const KComponentData &inst, QWidget *parent);
   ~KTranslucencyConfig();
   
   void load();

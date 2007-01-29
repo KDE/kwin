@@ -13,9 +13,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_SM_H
 
 #include <QDataStream>
-#include <X11/SM/SMlib.h>
 #include <kapplication.h>
 #include <ksessionmanager.h>
+#include <X11/SM/SMlib.h>
 #include <netwm_def.h>
 
 class QSocketNotifier;

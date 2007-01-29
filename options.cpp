@@ -47,9 +47,9 @@ Options::~Options()
 
 unsigned long Options::updateSettings()
     {
-    KConfig *config = KGlobal::config();
+    KSharedConfig::Ptr config = KGlobal::config();
     unsigned long changed = 0;
-    changed |= d->updateKWinSettings( config ); // read decoration settings
+    changed |= d->updateKWinSettings( config.data() ); // read decoration settings
 
     config->setGroup( "Windows" );
     moveMode = stringToMoveResizeMode( config->readEntry("MoveMode", "Opaque" ));
@@ -174,8 +174,9 @@ unsigned long Options::updateSettings()
     CmdAllWheel = mouseWheelCommand(config->readEntry("CommandAllWheel","Nothing"));
 
     //translucency settings - TODO
+    config->setGroup( "Notification Messages" );
+    useTranslucency = config->readEntry("UseTranslucency", QVariant(false)).toBool();
     config->setGroup( "Translucency");
-    useTranslucency = config->readEntry("UseTranslucency", QVariant(true)).toBool();
     translucentActiveWindows = config->readEntry("TranslucentActiveWindows", QVariant(false)).toBool();
     activeWindowOpacity = uint((config->readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config->readEntry("TranslucentInactiveWindows", QVariant(false)).toBool();
@@ -194,24 +195,6 @@ unsigned long Options::updateSettings()
     removeShadowsOnResize = config->readEntry("RemoveShadowsOnResize", QVariant(true)).toBool();
     onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", QVariant(false)).toBool();
     
-    refreshRate = config->readEntry( "RefreshRate", 0 );
-    smoothScale = qBound( -1, config->readEntry( "SmoothScale", -1 ), 1 );
-
-    QString glmode = config->readEntry("GLMode", "TFP" ).upper();
-    if( glmode == "TFP" )
-        glMode = GLTFP;
-    else if( glmode == "SHM" )
-        glMode = GLSHM;
-    else
-        glMode = GLFallback;
-    glAlwaysRebind = config->readEntry("GLAlwaysRebind", false );
-    glDirect = config->readEntry("GLDirect", true );
-    glVSync = config->readEntry("GLVSync", true );
-    
-    config->setGroup( "EffectShowFps" );
-    effectShowFpsAlpha = config->readEntry( "Alpha", 0.5 );
-    effectShowFpsX = config->readEntry( "X", -10000 );
-    effectShowFpsY = config->readEntry( "Y", 0 );
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the

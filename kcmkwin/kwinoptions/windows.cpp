@@ -103,7 +103,7 @@ KFocusConfig::~KFocusConfig ()
 }
 
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
-KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget * parent)
+KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
@@ -525,7 +525,7 @@ KAdvancedConfig::~KAdvancedConfig ()
         delete config;
 }
 
-KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent)
+KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
@@ -789,7 +789,7 @@ KMovingConfig::~KMovingConfig ()
         delete config;
 }
 
-KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent)
+KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
@@ -1242,7 +1242,7 @@ KTranslucencyConfig::~KTranslucencyConfig ()
         kompmgr->detach();
 }
 
-KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, KInstance *inst, QWidget *parent)
+KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent)
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   kompmgr = 0L;

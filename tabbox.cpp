@@ -34,6 +34,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QX11Info>
 #include <kactioncollection.h>
 #include <kkeyserver.h>
+#include <kconfiggroup.h>
 
 // specify externals before namespace
 
@@ -644,7 +645,7 @@ void TabBox::hide()
 
 void TabBox::reconfigure()
     {
-    KConfig * c(KGlobal::config());
+    KSharedConfigPtr c(KGlobal::config());
     c->setGroup("TabBox");
     options_traverse_all = c->readEntry("TraverseAll", false );
     }
@@ -669,7 +670,7 @@ void TabBox::reconfigure()
  */
 void TabBox::delayedShow()
     {
-    KConfig * c(KGlobal::config());
+    KSharedConfigPtr c(KGlobal::config());
     c->setGroup("TabBox");
     bool delay = c->readEntry("ShowDelay", true);
 

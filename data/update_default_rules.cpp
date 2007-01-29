@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kconfig.h>
 #include <kdebug.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kstandarddirs.h>
 #include <QtDBus/QtDBus>
 
@@ -20,7 +20,7 @@ int main( int argc, char* argv[] )
     {
     if( argc != 2 )
         return 1;
-    KInstance inst( "kwin_update_default_rules" );
+    KComponentData inst( "kwin_update_default_rules" );
     QString file = KStandardDirs::locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
     if( file.isEmpty())
         {

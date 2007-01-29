@@ -107,7 +107,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 
 		KDecorationPreview* preview;
 		KDecorationPlugins* plugins;
-		KConfig kwinConfig;
+		KSharedConfigPtr kwinConfig;
 
 		QCheckBox* cbUseCustomButtonPositions;
 	//	QCheckBox* cbUseMiniWindows;

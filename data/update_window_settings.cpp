@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <netwm_def.h>
 #include <kconfig.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <QRect>
 #include <QByteArray>
 #include <QList>
@@ -160,7 +160,7 @@ void writeRules( KConfig& cfg )
 
 int main()
     {
-    KInstance inst( "kwin_update_window_settings" );
+    KComponentData inst( "kwin_update_window_settings" );
     KConfig src_cfg( "kwinrc" );
     KConfig dest_cfg( "kwinrulesrc" );
     loadFakeSessionInfo( &src_cfg );

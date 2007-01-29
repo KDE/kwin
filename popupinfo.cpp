@@ -66,7 +66,7 @@ PopupInfo::~PopupInfo()
  */
 void PopupInfo::reset()
     {
-    QRect r = KGlobalSettings::desktopGeometry(cursorPos());
+    QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
 
     int w = fontMetrics().width( m_infoString ) + 30;
 
@@ -126,7 +126,7 @@ void PopupInfo::hide()
 
 void PopupInfo::reconfigure() 
     {
-    KConfig * c(KGlobal::config());
+    KSharedConfigPtr c(KGlobal::config());
     c->setGroup("PopupInfo");
     m_show = c->readEntry("ShowPopup", false );
     m_delayTime = c->readEntry("PopupHideDelay", 350 );

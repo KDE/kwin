@@ -83,7 +83,7 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
     
-    KConfig *config = KGlobal::config();
+    KSharedConfig::Ptr config = KGlobal::config();
     config->setGroup("General");
     QString tmpStr;
 
@@ -270,7 +270,7 @@ void KWMThemeClient::init()
     QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     layout->addLayout( hb, 1, 1 );
 
-    KConfig *config = KGlobal::config();
+    KSharedConfig::Ptr config = KGlobal::config();
     config->setGroup("Buttons");
     QString val;
     MyButton *btn;

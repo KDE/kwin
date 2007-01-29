@@ -69,12 +69,12 @@ typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") )
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
-	: KCModule(KWinDecoFactory::instance(), parent),
-          kwinConfig("kwinrc"),
-          pluginObject(0)
+    : KCModule(KWinDecoFactory::componentData(), parent),
+    kwinConfig(KSharedConfig::openConfig("kwinrc")),
+    pluginObject(0)
 {
-    kwinConfig.setGroup("Style");
-        plugins = new KDecorationPreviewPlugins( &kwinConfig );
+    kwinConfig->setGroup("Style");
+    plugins = new KDecorationPreviewPlugins(kwinConfig);
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setMargin(0);
@@ -172,8 +172,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 	// Set up the decoration lists and other UI settings
 	findDecorations();
 	createDecorationList();
-	readConfig( &kwinConfig );
-	resetPlugin( &kwinConfig );
+	readConfig( kwinConfig.data() );
+	resetPlugin( kwinConfig.data() );
 
 	tabWidget->addTab( pluginPage, i18n("&Window Decoration") );
 	tabWidget->addTab( buttonPage, i18n("&Buttons") );
