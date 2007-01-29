@@ -853,17 +853,9 @@ void SceneOpenGL::Window::bindTexture()
             glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
             }
-        // TODO works around a crash; check later whether we really need this
-        unsigned int tfp_target;
-        if( supports_npot_textures ||
-            ( isPowerOfTwo( toplevel->width() ) && isPowerOfTwo( toplevel->height() )))
-            tfp_target = GLX_TEXTURE_2D_EXT;
-        else
-            tfp_target = GLX_TEXTURE_RECTANGLE_EXT;
         static const int attrs[] =
             {
             GLX_TEXTURE_FORMAT_EXT, GLX_TEXTURE_FORMAT_RGBA_EXT,
-            GLX_TEXTURE_TARGET_EXT, tfp_target,
             None
             };
         // the GLXPixmap will reference the X pixmap, so it will be freed automatically

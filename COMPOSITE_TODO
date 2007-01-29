@@ -120,8 +120,6 @@ OpenGL TODO
 
 / GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
 %   - works; bugs in tfp_mode with power_of_two textures
-        - nvidia: tfp_target needed in bindTexture() else glXCreatePixmap fails;
-            shouldn't be necessary according to texture_from_pixmap spec
         - ati (others?): power_of_two windows are drawn white unless non-tfp_mode
             is forced in findTextureTarget()
 
