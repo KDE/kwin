@@ -83,14 +83,7 @@ void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion re
         Client* c = static_cast< Client* >( w->window() );
         QRect geo = c->geometry();
         QRect icon = c->iconGeometry();
-        // For dialogs, try to use parent window's taskbar entry
-        if( !icon.isValid() )
-            {
-            Client* parent = findParentWithIconGeometry( c );
-            if( parent )
-                icon = parent->iconGeometry();
-            }
-        // If everything else fails, minimize to the center of the screen
+        // If there's no icon geometry, minimize to the center of the screen
         if( !icon.isValid() )
             icon = QRect( displayWidth() / 2, displayHeight() / 2, 0, 0 );
 
@@ -130,16 +123,6 @@ void MinimizeAnimationEffect::windowUnminimized( EffectWindow* w )
         mAnimationProgress[w] = 1.0f;
         mActiveAnimations++;
         }
-    }
-
-Client* MinimizeAnimationEffect::findParentWithIconGeometry( Client* c )
-    {
-    if( c->iconGeometry().isValid() )
-        return c;
-    else if( c->transientFor() )
-        return findParentWithIconGeometry( c->transientFor() );
-    else
-        return 0;
     }
 
 } // namespace

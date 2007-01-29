@@ -35,9 +35,6 @@ class MinimizeAnimationEffect
         virtual void windowMinimized( EffectWindow* c );
         virtual void windowUnminimized( EffectWindow* c );
 
-    protected:
-        Client* findParentWithIconGeometry( Client* c );
-
     private:
         Workspace* mWorkspace;
         QMap< EffectWindow*, float > mAnimationProgress;

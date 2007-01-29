@@ -601,7 +601,21 @@ void Client::unminimize( bool avoid_animation )
 QRect Client::iconGeometry() const
     {
     NETRect r = info->iconGeometry();
-    return QRect( r.pos.x, r.pos.y, r.size.width, r.size.height );
+    QRect geom( r.pos.x, r.pos.y, r.size.width, r.size.height );
+    if( geom.isValid() )
+        return geom;
+    else
+    {
+        // Check all mainwindows of this window (recursively)
+        foreach( Client* mainwin, mainClients() )
+            {
+            geom = mainwin->iconGeometry();
+            if( geom.isValid() )
+                return geom;
+            }
+        // No mainwindow (or their parents) with icon geometry was found
+        return QRect();
+        }
     }
 
 extern bool         blockAnimation;
