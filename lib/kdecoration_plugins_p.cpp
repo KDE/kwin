@@ -1,4 +1,3 @@
-#include "/home/mkretz/KDE/src/branches/work/kinstance-redesign/kdebase/workspace/kwin/lib/kdecoration_plugins_p.h"
 /*****************************************************************
 // vim: sw=4 sts=4 et tw=100
 This file is part of the KDE project.
