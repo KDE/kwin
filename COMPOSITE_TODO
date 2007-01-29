@@ -143,6 +143,9 @@ OpenGL TODO
         obscured (makes a difference with many windows open)
     - http://lists.kde.org/?l=kwin&m=116585618111882&w=2
 
++ shm mode needs support for more data formats than GL_BGRA in order to support e.g. 16bpp mode
+    - http://www.xfree86.org/current/glTexImage2D.3.html
+
 
 XRender TODO
 ==============================

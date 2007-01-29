@@ -20,7 +20,7 @@ Sources and other compositing managers:
 
 - http://opengl.org
     - documentation
-        - OpenGL Redbook (http://opengl.org/documentation/red_book/)
+        - OpenGL Redbook (http://opengl.org/documentation/red_book/ - note it's only version 1.1)
         - GLX docs (http://opengl.org/documentation/specs/glx/glx1.4.pdf)
         - extensions docs (http://www.opengl.org/registry/)
 
