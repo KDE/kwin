@@ -22,10 +22,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <GL/glxext.h>
 
 
-#define MAKE_OPENGL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
-#define MAKE_GLX_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
-
-
 namespace KWinInternal
 {
 
